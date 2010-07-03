@@ -9,10 +9,16 @@ namespace s9e\toolkit\markup;
 
 class config_builder
 {
-	/**
-	* Default passes, in order of their execution
-	*/
 	protected $passes = array(
+		'autolink' => array(
+			'parser'       => array('self', 'getAutolinkTags'),
+			'bbcode'       => 'URL',
+			'param'        => 'href',
+			'limit'        => 1000,
+			'limit_action' => 'ignore'
+		),
+		'autoemail' => array(
+		),
 		'bbcode' => array(
 			'parser'       => array('self', 'getBBCodeTags'),
 			'limit'        => 1000,
@@ -25,21 +31,12 @@ class config_builder
 			'limit'        => 1000,
 			'limit_action' => 'warn'
 		),
-		'autolink' => array(
-			'parser'       => array('self', 'getAutolinkTags'),
-			'bbcode'       => 'URL',
-			'param'        => 'href',
-			'limit'        => 1000,
-			'limit_action' => 'ignore'
-		),
 		'smilies' => array(
 			'parser'       => array('self', 'getSmiliesTags'),
 			'bbcode'       => 'E',
 			'param'        => 'code',
 			'limit'        => 1000,
 			'limit_action' => 'ignore'
-		),
-		'autoemail' => array(
 		)
 	);
 
@@ -508,8 +505,8 @@ class config_builder
 	public function getParserConfig()
 	{
 		return array_filter(array(
-			'autolink' => $this->getAutolinkConfig(),
 			'bbcode'   => $this->getBBCodeConfig(),
+			'autolink' => $this->getAutolinkConfig(),
 			'censor'   => $this->getCensorConfig(),
 			'smilies'  => $this->getSmiliesConfig(),
 
