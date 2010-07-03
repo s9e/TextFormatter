@@ -733,6 +733,7 @@ class parser
 
 					if ($c === ' ')
 					{
+						++$rpos;
 						continue;
 					}
 
@@ -754,7 +755,12 @@ class parser
 						}
 
 						if ($rpos + $spn >= $text_len)
-						{
+						{	
+							$msgs['debug'][] = array(
+								'pos'    => $rpos,
+								'msg'    => 'Param name seems to extend till the end of $text',
+								'params' => array()
+							);
 							continue 2;
 						}
 
@@ -771,27 +777,25 @@ class parser
 							continue 2;
 						}
 
-						if (++$rpos <= $text_len)
-						{
-							continue 2;
-						}
+						++$rpos;
+						continue;
 					}
 
 					if ($c === '"' || $c === "'")
 					{
-						 $value_pos = $rpos + 1;
+						$value_pos = $rpos + 1;
 
-						 while (++$rpos < $text_len)
-						 {
-							 $rpos = strpos($text, $c, $rpos);
+						while (++$rpos < $text_len)
+						{
+							$rpos = strpos($text, $c, $rpos);
 
-							 if ($rpos === false)
-							 {
-								 /**
-								 * No matching quote, apparently that string never ends...
-								 */
-								 continue 2;
-							 }
+							if ($rpos === false)
+							{
+								/**
+								* No matching quote, apparently that string never ends...
+								*/
+								continue 2;
+							}
 
 							if ($text[$rpos - 1] === '\\')
 							{
@@ -812,6 +816,9 @@ class parser
 						}
 
 						$value = stripslashes(substr($text, $value_pos, $rpos - $value_pos));
+
+						// Skip past the closing quote
+						++$rpos;
 					}
 					else
 					{

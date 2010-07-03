@@ -63,6 +63,58 @@ class testTokenizers extends \PHPUnit_Framework_TestCase
 		$ret  = parser::getBBCodeTags($text, $config);
 	}
 
+	public function testParamInDoubleQuotesIsParsedCorrectly()
+	{
+		$text = '[x foo="bar"]xxx[/x]';
+		$ret  = parser::getBBCodeTags($text, $this->config['bbcode']);
+
+		if (!isset($ret['tags'][0]['params']['foo']))
+		{
+			$this->fail('No param');
+		}
+
+		$this->assertSame('bar', $ret['tags'][0]['params']['foo']);
+	}
+
+	public function testParamInSingleQuotesIsParsedCorrectly()
+	{
+		$text = "[x foo='bar']xxx[/x]";
+		$ret  = parser::getBBCodeTags($text, $this->config['bbcode']);
+
+		if (!isset($ret['tags'][0]['params']['foo']))
+		{
+			$this->fail('No param');
+		}
+
+		$this->assertSame('bar', $ret['tags'][0]['params']['foo']);
+	}
+
+	public function testParamWithoutQuotesIsParsedCorrectly()
+	{
+		$text = '[x foo=bar]xxx[/x]';
+		$ret  = parser::getBBCodeTags($text, $this->config['bbcode']);
+
+		if (!isset($ret['tags'][0]['params']['foo']))
+		{
+			$this->fail('No param');
+		}
+
+		$this->assertSame('bar', $ret['tags'][0]['params']['foo']);
+	}
+
+	public function testEscapedQuotesAreParsedCorrectly()
+	{
+		$text = '[x foo="\"b\"ar\""]xxx[/x]';
+		$ret  = parser::getBBCodeTags($text, $this->config['bbcode']);
+
+		if (!isset($ret['tags'][0]['params']['foo']))
+		{
+			$this->fail('No param');
+		}
+
+		$this->assertSame('"b"ar"', $ret['tags'][0]['params']['foo']);
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
@@ -75,6 +127,11 @@ class testTokenizers extends \PHPUnit_Framework_TestCase
 			'default_param'    => 'url',
 			'content_as_param' => true
 		));
+		$cb->addBBCode('x');
+		$cb->addBBCode('y');
+
+		$cb->addBBCodeParam('x', 'foo', 'string', false);
+		$cb->addBBCodeParam('y', 'foo', 'string', true);
 
 		$cb->addBBCodeParam('url', 'url', 'url', true);
 
