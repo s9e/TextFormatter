@@ -593,7 +593,7 @@ class parser
 			else
 			{
 				$msg_type = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-				$matches  = array_slice($matches, 0, $limit);
+				$matches  = array_slice($matches, 0, $config['limit']);
 
 				$msgs[$msg_type][] = array(
 					'pos'    => 0,

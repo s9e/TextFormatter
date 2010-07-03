@@ -43,9 +43,32 @@ class testTokenizers extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	public function testTokenizerLimitIsRespected()
+	{
+		$text = str_repeat('[b]x[/b] ', 6);
+		$ret  = parser::getBBCodeTags($text, $this->config['bbcode']);
+
+		$this->assertSame(10, count($ret['tags']));
+	}
+
+	/**
+	* @expectedException Exception
+	*/
+	public function testTokenizerLimitExceededWithActionAbortThrowsAnException()
+	{
+		$config = $this->config['bbcode'];
+		$config['limit_action'] = 'abort';
+
+		$text = str_repeat('[b]x[/b] ', 6);
+		$ret  = parser::getBBCodeTags($text, $config);
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
+
+		$cb->setBBCodeOption('limit', 10);
+		$cb->setBBCodeOption('limit_action', 'ignore');
 
 		$cb->addBBCode('b');
 		$cb->addBBCode('url', array(

@@ -54,7 +54,7 @@ class config_builder
 		)
 	);
 
-	public function setConfig($pass, $k, $v)
+	public function setOption($pass, $k, $v)
 	{
 		$this->passes[$pass][$k] = $v;
 	}
@@ -193,10 +193,13 @@ class config_builder
 			return false;
 		}
 
-		$bbcodes    = $this->bbcodes;
-		$bbcode_ids = array_keys($bbcodes);
+		$config = $this->passes['bbcode'];
+		$config['aliases'] = $this->bbcode_aliases;
+		$config['bbcodes'] = $this->bbcodes;
 
-		foreach ($bbcodes as $bbcode_id => &$bbcode)
+		$bbcode_ids = array_keys($this->bbcodes);
+
+		foreach ($config['bbcodes'] as $bbcode_id => &$bbcode)
 		{
 			$allow = array();
 
@@ -263,14 +266,10 @@ class config_builder
 		}
 
 		$regexp = self::buildRegexpFromList($aliases);
-		$regexp = '#\\[/?(' . preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp) . ')(?=[\\] =:])#i';
+		$config['regexp'] =
+			'#\\[/?(' . preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp) . ')(?=[\\] =:])#i';
 
-		return array(
-			'parser'  => array('self', 'getBBCodeTags'),
-			'regexp'  => $regexp,
-			'aliases' => $this->bbcode_aliases,
-			'bbcodes' => $bbcodes
-		);
+		return $config;
 	}
 
 	public function getDefaultBBCodeOptions()
