@@ -7,35 +7,6 @@
 */
 namespace s9e\toolkit\markup;
 
-/*
-
-BBCodes could optionally carry an ID (a number), to make it easier to include non-parsed BBCodes
-
-[b:1]Bold text uses [b] and [/b][/b:1]
-<m:b><st>[b:1]</st>Bold text uses [b] and [/b]<et>[/b:1]</et></m:b>
-
-===================
-
-[url]foo [tag="[/url]"] bar[/url]
-
-===================
-
-During parsing. If we need to use the content as param, we can grab the content right after parsing
-the first tag using stripos($text, '[/url]')
-
-===================
-
-Use case-sensitivity instead of namespace to differentiate BBCodes from other markup?
-
-<rt><S>strikethrough</S><s>:smiley:</s></rt>
-<rt xmlns:m="urn:markup"><m:s>strikethrough</m:s><s>:smiley:</s></rt>
-
-===================
-
-Add unique token to special BBCodes (from autolink, smilies, censors, etc...) so that the virtual close tag doesn't accidentally close an actual parent tag
-
-*/
-
 class parser
 {
 	/**
@@ -478,8 +449,9 @@ class parser
 
 				$bbcode_id = $aliases[$bbcode_id];
 			}
-			$bbcode = $bbcodes[$bbcode_id];
 
+			$bbcode = $bbcodes[$bbcode_id];
+			$suffix = (isset($tag['suffix'])) ? $tag['suffix'] : '';
 
 			//==================================================================
 			// Start tag
@@ -600,7 +572,6 @@ class parser
 
 				++$cnt_open[$bbcode_id];
 
-				$suffix = (isset($tag['suffix'])) ? $tag['suffix'] : '';
 				if (isset($open_tags[$bbcode_id . $suffix]))
 				{
 					++$open_tags[$bbcode_id . $suffix];
@@ -625,7 +596,7 @@ class parser
 			if ($tag['type'] & self::TAG_CLOSE)
 			{
 				if (empty($open_tags[$bbcode_id . $suffix]))
-				{print_r($tag);print_r($open_tags);	
+				{
 					/**
 					* This is an end tag but there's no matching start tag
 					*/
