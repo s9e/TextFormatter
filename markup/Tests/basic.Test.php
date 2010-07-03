@@ -46,11 +46,32 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$this->assertSame($text, $actual);
 	}
 
+	public function testNestingLimitIsRespected()
+	{
+		$text     = 'This is some [b][b]bold[/b] text.';
+		$expected = '<rt>This is some <B><st>[b]</st>[b]bold<et>[/b]</et></B> text.</rt>';
+		$actual   = $this->parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	/**
+	* @depends testNestingLimitIsRespected
+	*/
+	public function testBBCodeSuffix()
+	{
+		$text     = 'This is some [b:123][b]bold[/b][/b:123] text.';
+		$expected = '<rt>This is some <B><st>[b:123]</st>[b]bold[/b]<et>[/b:123]</et></B> text.</rt>';
+		$actual   = $this->parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
 
-		$cb->addBBCode('b');
+		$cb->addBBCode('b', array('nesting_limit' => 1));
 
 		$this->parser = new parser($cb->getParserConfig());
 	}

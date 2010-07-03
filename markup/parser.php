@@ -47,304 +47,6 @@ class parser
 		$this->config = $config;
 	}
 
-	static public function getBBCodeTags($text, array $config)
-	{
-		$tags = array();
-		$msgs = array();
-		$cnt  = preg_match_all($config['regexp'], $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-
-		if (!$cnt)
-		{
-			return;
-		}
-
-		if (!empty($config['limit'])
-		 && $cnt > $config['limit'])
-		{
-			if ($config['limit_action'] === 'abort')
-			{
-				throw new \RuntimeException('BBCode tags limit exceeded');
-			}
-			else
-			{
-				$msg_type = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-				$matches  = array_slice($matches, 0, $limit);
-
-				$msgs[$msg_type][] = array(
-					'pos'    => 0,
-					'msg'    => 'BBCode tags limit exceeded. Only the first %s tags will be processed',
-					'params' => array($config['limit'])
-				);
-			}
-		}
-
-		$bbcodes  = $config['bbcodes'];
-		$aliases  = $config['aliases'];
-		$text_len = strlen($text);
-
-		foreach ($matches as $m)
-		{
-			/**
-			* @var Position of the first character of current BBCode, which should be a [
-			*/
-			$lpos = $m[0][1];
-
-			/**
-			* @var Position of the last character of current BBCode, starts as the position of
-			*      the =, ] or : char, then moves to the right as the BBCode is parsed
-			*/
-			$rpos = $lpos + strlen($m[0][0]);
-
-			/**
-			* Check for BBCode suffix
-			*
-			* Used to skip the parsing of closing BBCodes, e.g.
-			*   [code:1][code]type your code here[/code][/code:1]
-			*
-			*/
-			if ($text[$rpos] === ':')
-			{
-				/**
-				* [code:1] or [/code:1]
-				* $suffix = ':1'
-				*/
-				$spn     = strspn($text, '1234567890', 1 + $rpos);
-				$suffix  = substr($text, $rpos, 1 + $spn);
-				$rpos   += 1 + $spn;
-			}
-			else
-			{
-				$suffix  = '';
-			}
-
-			$alias = strtoupper($m[1][0]);
-
-			if (!isset($aliases[$alias]))
-			{
-				// Not a known BBCode or alias
-				continue;
-			}
-
-			$bbcode_id = $aliases[$alias];
-			$bbcode    = $bbcodes[$bbcode_id];
-			$params    = array();
-
-			if (!empty($bbcode['internal_use']))
-			{
-				$msgs['warning'][] = array(
-					'pos'    => $lpos,
-					'msg'    => 'BBCode %s is for internal use only',
-					'params' => array($bbcode_id)
-				);
-				continue;
-			}
-
-			if ($m[0][0][1] === '/')
-			{
-				if ($text[$rpos] !== ']')
-				{
-					$msgs['warning'][] = array(
-						'pos'    => $rpos,
-						'msg'    => 'Unexpected character %s',
-						'params' => array($text[$rpos])
-					);
-					continue;
-				}
-			}
-			else
-			{
-				$well_formed = false;
-				$param       = null;
-
-				if ($text[$rpos] === '=')
-				{
-					/**
-					* [quote=
-					*
-					* Set the default param. If there's no default param, we issue a warning and
-					* reuse the BBCode's name instead
-					*/
-					if ($bbcode['default_param'])
-					{
-						$param = $bbcode['default_param'];
-					}
-					else
-					{
-						$param = strtolower($bbcode_id);
-
-						$msgs['warning'][] = array(
-							'pos'    => $rpos,
-							'msg'    => "BBCode %s does not have a default param, using BBCode's name as param name",
-							'params' => array($bbcode_id)
-						);
-					}
-
-					++$rpos;
-				}
-
-				while ($rpos < $text_len)
-				{
-					$c = $text[$rpos];
-
-					if ($c === ']')
-					{
-						if (isset($param))
-						{
-							/**
-							* [quote=]
-							* [quote username=]
-							*/
-							$msgs['warning'][] = array(
-								'pos'    => $rpos,
-								'msg'    => 'Unexpected character %s',
-								'params' => array($c)
-							);
-							continue 2;
-						}
-
-						$well_formed = true;
-						break;
-					}
-
-					if ($c === ' ')
-					{
-						continue;
-					}
-
-					if (!isset($param))
-					{
-						/**
-						* Capture the param name
-						*/
-						$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ', $rpos);
-
-						if (!$spn)
-						{
-							$msgs['warning'][] = array(
-								'pos'    => $rpos,
-								'msg'    => 'Unexpected character %s',
-								'params' => array($c)
-							);
-							continue 2;
-						}
-
-						if ($rpos + $spn >= $text_len)
-						{
-							continue 2;
-						}
-
-						$param = strtolower(substr($text, $rpos, $spn));
-						$rpos += $spn;
-
-						if ($text[$rpos] !== '=')
-						{
-							$msgs['warning'][] = array(
-								'pos'    => $rpos,
-								'msg'    => 'Unexpected character %s',
-								'params' => array($text[$rpos])
-							);
-							continue 2;
-						}
-
-						if (++$rpos <= $text_len)
-						{
-							continue 2;
-						}
-					}
-
-					if ($c === '"' || $c === "'")
-					{
-						 $value_pos = $rpos + 1;
-
-						 while (++$rpos < $text_len)
-						 {
-							 $rpos = strpos($text, $c, $rpos);
-
-							 if ($rpos === false)
-							 {
-								 /**
-								 * No matching quote, apparently that string never ends...
-								 */
-								 continue 2;
-							 }
-
-							if ($text[$rpos - 1] === '\\')
-							{
-								$n = 1;
-								do
-								{
-									++$n;
-								}
-								while ($text[$rpos - $n] === '\\');
-
-								if ($n % 2 === 0)
-								{
-									continue;
-								}
-							}
-
-							break;
-						}
-
-						$value = stripslashes(substr($text, $value_pos, $rpos - $value_pos));
-					}
-					else
-					{
-						$spn   = strcspn($text, "] \n\r", $rpos);
-						$value = substr($text, $rpos, $spn);
-
-						$rpos += $spn;
-					}
-
-					if (isset($bbcode['params'][$param]))
-					{
-						/**
-						* We only keep params that exist in the BBCode's definition
-						*/
-						$params[$param] = $value;
-					}
-
-					unset($param, $value);
-				}
-
-				if (!$well_formed)
-				{
-					continue;
-				}
-
-				if (isset($bbcode['default_param'])
-				 && !isset($params[$bbcode['default_param']])
-				 && !empty($bbcode['content_as_param']))
-				{
-					/**
-					* Capture the content of that tag and use it as param
-					*/
-					$pos = stripos($text, '[/' . $bbcode_id . ']', $rpos);
-
-					if ($pos)
-					{
-						$params[$bbcode['default_param']]
-							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
-					}
-				}
-			}
-
-			$tags[] = array(
-				'name'   => $bbcode_id,
-				'pos'    => $lpos,
-				'len'    => $rpos + 1 - $lpos,
-				'type'   => ($m[0][0][1] === '/') ? self::TAG_CLOSE  : self::TAG_OPEN,
-				'suffix' => $suffix,
-				'params' => $params
-			);
-		}
-
-		return array(
-			'tags' => $tags,
-			'msgs' => $msgs
-		);
-	}
-
 	public function parse($text)
 	{
 		$this->msgs = $tags = array();
@@ -385,7 +87,7 @@ class parser
 		if (empty($tags))
 		{
 			$xml->writeElement('pt', $text);
-			return nl2br(trim($xml->outputMemory()));
+			return nl2br(trim($xml->outputMemory(true)));
 		}
 
 		/**
@@ -721,7 +423,451 @@ class parser
 			$xml->writeElement('pt', $text);
 		}
 
-		return nl2br(trim($xml->outputMemory()));
+		return nl2br(trim($xml->outputMemory(true)));
+	}
+
+	public function filter($var, $type)
+	{
+		if (isset($this->filters[$type]['callback']))
+		{
+			return call_user_func($this->filters[$type]['callback'], $var, $this->filters[$type]);
+		}
+
+		switch ($type)
+		{
+			case 'url':
+				$var = filter_var($var, \FILTER_VALIDATE_URL);
+
+				if (!$var)
+				{
+					return false;
+				}
+
+				$p = parse_url($var);
+
+				if (!preg_match($this->filters['url']['allowed_schemes'], $p['scheme']))
+				{
+					return false;
+				}
+
+				if (isset($this->filters['url']['disallowed_hosts'])
+				 && preg_match($this->filters['url']['disallowed_hosts'], $p['host']))
+				{
+					return false;
+				}
+				return $var;
+
+			case 'email':
+				break;
+
+			case 'number':
+				if (!is_numeric($var))
+				{
+					return false;
+				}
+				return (float) $var;
+
+			case 'int':
+			case 'integer':
+				return filter_var($var, \FILTER_VALIDATE_INT);
+
+			case 'uint':
+				return filter_var($var, \FILTER_VALIDATE_INT, array(
+					'options' => array('min_range' => 0)
+				));
+
+			case 'range':
+				if (!preg_match('#^(-?\\d+),(-?\\d+)$#D', $extra, $m))
+				{
+					$this->msgs['debug'][] = array(
+						'msg'    => 'Could not interpret range %s',
+						'params' => array($extra)
+					);
+					return false;
+				}
+				return filter_var($var, \FILTER_VALIDATE_INT, array(
+					'options' => array(
+						'min_range' => $m[1],
+						'max_range' => $m[2]
+					)
+				));
+
+			default:
+				$this->msgs['debug'][] = array(
+					'msg'    => 'Unknown filter %s',
+					'params' => array($type)
+				);
+				return false;
+		}
+	}
+
+	//==========================================================================
+	// Tokenizers
+	//==========================================================================
+
+	static public function getAutolinkTags($text, array $config)
+	{
+		$tags = array();
+		$msgs = array();
+		$cnt  = preg_match_all($config['regexp'], $text, $matches, PREG_OFFSET_CAPTURE);
+
+		if (!$cnt)
+		{
+			return;
+		}
+
+		if (!empty($config['limit'])
+		 && $cnt > $config['limit'])
+		{
+			if ($config['limit_action'] === 'abort')
+			{
+				throw new \RuntimeException('Autolink limit exceeded');
+			}
+			else
+			{
+				$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
+				$matches[0] = array_slice($matches[0], 0, $limit);
+
+				$msgs[$msg_type][] = array(
+					'pos'    => 0,
+					'msg'    => 'Autolink limit exceeded. Only the first %s links will be processed',
+					'params' => array($config['limit'])
+				);
+			}
+		}
+
+		$bbcode = $config['bbcode'];
+		$param  = $config['param'];
+
+		foreach ($matches[0] as $m)
+		{
+			$url = $m[0];
+
+			/**
+			* Remove some trailing punctuation. We preserve right parentheses if there's a left
+			* parenthesis in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
+			*/
+			$url   = rtrim($url);
+			$rtrim = (strpos($url, '(')) ? '.' : ').';
+			$url   = rtrim($url, $rtrim);
+
+			$tags[] = array(
+				'pos'    => $m[1],
+				'name'   => $bbcode,
+				'type'   => self::TAG_OPEN,
+				'len'    => 0,
+				'params' => array($param => $url)
+			);
+			$tags[] = array(
+				'pos'    => $m[1] + strlen($url),
+				'name'   => $bbcode,
+				'type'   => self::TAG_CLOSE,
+				'len'    => 0
+			);
+		}
+
+		return array(
+			'tags' => $tags,
+			'msgs' => $msgs
+		);
+	}
+
+	static public function getBBCodeTags($text, array $config)
+	{
+		$tags = array();
+		$msgs = array();
+		$cnt  = preg_match_all($config['regexp'], $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+
+		if (!$cnt)
+		{
+			return;
+		}
+
+		if (!empty($config['limit'])
+		 && $cnt > $config['limit'])
+		{
+			if ($config['limit_action'] === 'abort')
+			{
+				throw new \RuntimeException('BBCode tags limit exceeded');
+			}
+			else
+			{
+				$msg_type = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
+				$matches  = array_slice($matches, 0, $limit);
+
+				$msgs[$msg_type][] = array(
+					'pos'    => 0,
+					'msg'    => 'BBCode tags limit exceeded. Only the first %s tags will be processed',
+					'params' => array($config['limit'])
+				);
+			}
+		}
+
+		$bbcodes  = $config['bbcodes'];
+		$aliases  = $config['aliases'];
+		$text_len = strlen($text);
+
+		foreach ($matches as $m)
+		{
+			/**
+			* @var Position of the first character of current BBCode, which should be a [
+			*/
+			$lpos = $m[0][1];
+
+			/**
+			* @var Position of the last character of current BBCode, starts as the position of
+			*      the =, ] or : char, then moves to the right as the BBCode is parsed
+			*/
+			$rpos = $lpos + strlen($m[0][0]);
+
+			/**
+			* Check for BBCode suffix
+			*
+			* Used to skip the parsing of closing BBCodes, e.g.
+			*   [code:1][code]type your code here[/code][/code:1]
+			*
+			*/
+			if ($text[$rpos] === ':')
+			{
+				/**
+				* [code:1] or [/code:1]
+				* $suffix = ':1'
+				*/
+				$spn     = strspn($text, '1234567890', 1 + $rpos);
+				$suffix  = substr($text, $rpos, 1 + $spn);
+				$rpos   += 1 + $spn;
+			}
+			else
+			{
+				$suffix  = '';
+			}
+
+			$alias = strtoupper($m[1][0]);
+
+			if (!isset($aliases[$alias]))
+			{
+				// Not a known BBCode or alias
+				continue;
+			}
+
+			$bbcode_id = $aliases[$alias];
+			$bbcode    = $bbcodes[$bbcode_id];
+			$params    = array();
+
+			if (!empty($bbcode['internal_use']))
+			{
+				$msgs['warning'][] = array(
+					'pos'    => $lpos,
+					'msg'    => 'BBCode %s is for internal use only',
+					'params' => array($bbcode_id)
+				);
+				continue;
+			}
+
+			if ($m[0][0][1] === '/')
+			{
+				if ($text[$rpos] !== ']')
+				{
+					$msgs['warning'][] = array(
+						'pos'    => $rpos,
+						'msg'    => 'Unexpected character %s',
+						'params' => array($text[$rpos])
+					);
+					continue;
+				}
+			}
+			else
+			{
+				$well_formed = false;
+				$param       = null;
+
+				if ($text[$rpos] === '=')
+				{
+					/**
+					* [quote=
+					*
+					* Set the default param. If there's no default param, we issue a warning and
+					* reuse the BBCode's name instead
+					*/
+					if ($bbcode['default_param'])
+					{
+						$param = $bbcode['default_param'];
+					}
+					else
+					{
+						$param = strtolower($bbcode_id);
+
+						$msgs['warning'][] = array(
+							'pos'    => $rpos,
+							'msg'    => "BBCode %s does not have a default param, using BBCode's name as param name",
+							'params' => array($bbcode_id)
+						);
+					}
+
+					++$rpos;
+				}
+
+				while ($rpos < $text_len)
+				{
+					$c = $text[$rpos];
+
+					if ($c === ']')
+					{
+						if (isset($param))
+						{
+							/**
+							* [quote=]
+							* [quote username=]
+							*/
+							$msgs['warning'][] = array(
+								'pos'    => $rpos,
+								'msg'    => 'Unexpected character %s',
+								'params' => array($c)
+							);
+							continue 2;
+						}
+
+						$well_formed = true;
+						break;
+					}
+
+					if ($c === ' ')
+					{
+						continue;
+					}
+
+					if (!isset($param))
+					{
+						/**
+						* Capture the param name
+						*/
+						$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ', $rpos);
+
+						if (!$spn)
+						{
+							$msgs['warning'][] = array(
+								'pos'    => $rpos,
+								'msg'    => 'Unexpected character %s',
+								'params' => array($c)
+							);
+							continue 2;
+						}
+
+						if ($rpos + $spn >= $text_len)
+						{
+							continue 2;
+						}
+
+						$param = strtolower(substr($text, $rpos, $spn));
+						$rpos += $spn;
+
+						if ($text[$rpos] !== '=')
+						{
+							$msgs['warning'][] = array(
+								'pos'    => $rpos,
+								'msg'    => 'Unexpected character %s',
+								'params' => array($text[$rpos])
+							);
+							continue 2;
+						}
+
+						if (++$rpos <= $text_len)
+						{
+							continue 2;
+						}
+					}
+
+					if ($c === '"' || $c === "'")
+					{
+						 $value_pos = $rpos + 1;
+
+						 while (++$rpos < $text_len)
+						 {
+							 $rpos = strpos($text, $c, $rpos);
+
+							 if ($rpos === false)
+							 {
+								 /**
+								 * No matching quote, apparently that string never ends...
+								 */
+								 continue 2;
+							 }
+
+							if ($text[$rpos - 1] === '\\')
+							{
+								$n = 1;
+								do
+								{
+									++$n;
+								}
+								while ($text[$rpos - $n] === '\\');
+
+								if ($n % 2 === 0)
+								{
+									continue;
+								}
+							}
+
+							break;
+						}
+
+						$value = stripslashes(substr($text, $value_pos, $rpos - $value_pos));
+					}
+					else
+					{
+						$spn   = strcspn($text, "] \n\r", $rpos);
+						$value = substr($text, $rpos, $spn);
+
+						$rpos += $spn;
+					}
+
+					if (isset($bbcode['params'][$param]))
+					{
+						/**
+						* We only keep params that exist in the BBCode's definition
+						*/
+						$params[$param] = $value;
+					}
+
+					unset($param, $value);
+				}
+
+				if (!$well_formed)
+				{
+					continue;
+				}
+
+				if (isset($bbcode['default_param'])
+				 && !isset($params[$bbcode['default_param']])
+				 && !empty($bbcode['content_as_param']))
+				{
+					/**
+					* Capture the content of that tag and use it as param
+					*/
+					$pos = stripos($text, '[/' . $bbcode_id . $suffix . ']', $rpos);
+
+					if ($pos)
+					{
+						$params[$bbcode['default_param']]
+							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
+					}
+				}
+			}
+
+			$tags[] = array(
+				'name'   => $bbcode_id,
+				'pos'    => $lpos,
+				'len'    => $rpos + 1 - $lpos,
+				'type'   => ($m[0][0][1] === '/') ? self::TAG_CLOSE  : self::TAG_OPEN,
+				'suffix' => $suffix,
+				'params' => $params
+			);
+		}
+
+		return array(
+			'tags' => $tags,
+			'msgs' => $msgs
+		);
 	}
 
 	static public function getCensorTags($text, array $config)
@@ -815,73 +961,6 @@ class parser
 		);
 	}
 
-	static public function getAutolinkTags($text, array $config)
-	{
-		$tags = array();
-		$msgs = array();
-		$cnt  = preg_match_all($config['regexp'], $text, $matches, PREG_OFFSET_CAPTURE);
-
-		if (!$cnt)
-		{
-			return;
-		}
-
-		if (!empty($config['limit'])
-		 && $cnt > $config['limit'])
-		{
-			if ($config['limit_action'] === 'abort')
-			{
-				throw new \RuntimeException('Autolink limit exceeded');
-			}
-			else
-			{
-				$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-				$matches[0] = array_slice($matches[0], 0, $limit);
-
-				$msgs[$msg_type][] = array(
-					'pos'    => 0,
-					'msg'    => 'Autolink limit exceeded. Only the first %s links will be processed',
-					'params' => array($config['limit'])
-				);
-			}
-		}
-
-		$bbcode = $config['bbcode'];
-		$param  = $config['param'];
-
-		foreach ($matches[0] as $m)
-		{
-			$url = $m[0];
-
-			/**
-			* Remove some trailing punctuation. We preserve right parentheses if there's a left
-			* parenthesis in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
-			*/
-			$url   = rtrim($url);
-			$rtrim = (strpos($url, '(')) ? '.' : ').';
-			$url   = rtrim($url, $rtrim);
-
-			$tags[] = array(
-				'pos'    => $m[1],
-				'name'   => $bbcode,
-				'type'   => self::TAG_OPEN,
-				'len'    => 0,
-				'params' => array($param => $url)
-			);
-			$tags[] = array(
-				'pos'    => $m[1] + strlen($url),
-				'name'   => $bbcode,
-				'type'   => self::TAG_CLOSE,
-				'len'    => 0
-			);
-		}
-
-		return array(
-			'tags' => $tags,
-			'msgs' => $msgs
-		);
-	}
-
 	static public function getSmileyTags($text, array $config)
 	{
 		$cnt = preg_match_all($config['regexp'], $text, $matches, PREG_OFFSET_CAPTURE);
@@ -925,81 +1004,9 @@ class parser
 			);
 		}
 
-		return $tags;
-	}
-
-	public function filter($var, $type)
-	{
-		if (isset($this->filters[$type]['callback']))
-		{
-			return call_user_func($this->filters[$type]['callback'], $var, $this->filters[$type]);
-		}
-
-		switch ($type)
-		{
-			case 'url':
-				$var = filter_var($var, \FILTER_VALIDATE_URL);
-
-				if (!$var)
-				{
-					return false;
-				}
-
-				$p = parse_url($var);
-
-				if (!preg_match($this->filters['url']['allowed_schemes'], $p['scheme']))
-				{
-					return false;
-				}
-
-				if (isset($this->filters['url']['disallowed_hosts'])
-				 && preg_match($this->filters['url']['disallowed_hosts'], $p['host']))
-				{
-					return false;
-				}
-				return $var;
-
-			case 'email':
-				break;
-
-			case 'number':
-				if (!is_numeric($var))
-				{
-					return false;
-				}
-				return (float) $var;
-
-			case 'int':
-			case 'integer':
-				return filter_var($var, \FILTER_VALIDATE_INT);
-
-			case 'uint':
-				return filter_var($var, \FILTER_VALIDATE_INT, array(
-					'options' => array('min_range' => 0)
-				));
-
-			case 'range':
-				if (!preg_match('#^(-?\\d+),(-?\\d+)$#D', $extra, $m))
-				{
-					$this->msgs['debug'][] = array(
-						'msg'    => 'Could not interpret range %s',
-						'params' => array($extra)
-					);
-					return false;
-				}
-				return filter_var($var, \FILTER_VALIDATE_INT, array(
-					'options' => array(
-						'min_range' => $m[1],
-						'max_range' => $m[2]
-					)
-				));
-
-			default:
-				$this->msgs['debug'][] = array(
-					'msg'    => 'Unknown filter %s',
-					'params' => array($type)
-				);
-				return false;
-		}
+		return array(
+			'tags' => $tags,
+			'msgs' => $msgs
+		);
 	}
 }

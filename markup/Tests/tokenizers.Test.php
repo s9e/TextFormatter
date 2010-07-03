@@ -25,6 +25,24 @@ class testTokenizers extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	public function testContentAsParamWithBBCodeSuffix()
+	{
+		$ret = parser::getBBCodeTags('[url:1]http://www.example.com/?q[/url]=1[/url:1]', $this->config['bbcode']);
+
+		if (empty($ret['tags']))
+		{
+			$this->fail('No tags were parsed');
+		}
+		elseif (!isset($ret['tags'][0]['params']['url']))
+		{
+			$this->fail('The "url" param is missing');
+		}
+		else
+		{
+			$this->assertSame('http://www.example.com/?q[/url]=1', $ret['tags'][0]['params']['url']);
+		}
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
