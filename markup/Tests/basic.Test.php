@@ -49,34 +49,8 @@ class testBasic extends \PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$cb = new config_builder;
+
 		$cb->addBBCode('b');
-		$cb->addBBCode('i');
-		$cb->addBBCode('u');
-		$cb->addBBCode('url', array(
-			'default_rule'     => 'deny',
-			'default_param'    => 'url',
-			'content_as_param' => true
-		));
-
-		$cb->addBBCodeRule('url', 'allow', 'b');
-		$cb->addBBCodeRule('url', 'allow', 'i');
-		$cb->addBBCodeRule('url', 'allow', 'u');
-
-		$cb->addBBCodeParam('url', 'url', 'url', true);
-		$cb->addBBCodeParam('url', 'title', 'text', false);
-
-		$cb->addBBCodeAlias('url', 'link');
-
-		$cb->addBBCode('code');
-
-		$cb->addSmiley(':)');
-		$cb->addSmiley(':[');
-
-		$cb->addBBCode('list');
-		$cb->addBBCode('li');
-		$cb->addBBCodeAlias('li', '*');
-		$cb->addBBCodeRule('li', 'require_parent', 'list');
-		$cb->addBBCodeRule('li', 'close_parent', 'li');
 
 		$this->parser = new parser($cb->getParserConfig());
 	}

@@ -193,9 +193,10 @@ class config_builder
 			return false;
 		}
 
-		$bbcode_ids = array_keys($this->bbcodes);
+		$bbcodes    = $this->bbcodes;
+		$bbcode_ids = array_keys($bbcodes);
 
-		foreach ($this->bbcodes as $bbcode_id => &$bbcode)
+		foreach ($bbcodes as $bbcode_id => &$bbcode)
 		{
 			$allow = array();
 
@@ -268,7 +269,7 @@ class config_builder
 			'parser'  => array('self', 'getBBCodeTags'),
 			'regexp'  => $regexp,
 			'aliases' => $this->bbcode_aliases,
-			'bbcodes' => $this->bbcodes
+			'bbcodes' => $bbcodes
 		);
 	}
 

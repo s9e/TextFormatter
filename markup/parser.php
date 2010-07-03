@@ -72,7 +72,7 @@ class parser
 
 				$msgs[$msg_type][] = array(
 					'pos'    => 0,
-					'msg'    => 'BBCode tags limit exceeded. Only the first %1s tags will be processed',
+					'msg'    => 'BBCode tags limit exceeded. Only the first %s tags will be processed',
 					'params' => array($config['limit'])
 				);
 			}
@@ -127,12 +127,13 @@ class parser
 
 			$bbcode_id = $aliases[$alias];
 			$bbcode    = $bbcodes[$bbcode_id];
+			$params    = array();
 
 			if (!empty($bbcode['internal_use']))
 			{
 				$msgs['warning'][] = array(
 					'pos'    => $lpos,
-					'msg'    => 'BBCode %1$s is for internal use only',
+					'msg'    => 'BBCode %s is for internal use only',
 					'params' => array($bbcode_id)
 				);
 				continue;
@@ -144,7 +145,7 @@ class parser
 				{
 					$msgs['warning'][] = array(
 						'pos'    => $rpos,
-						'msg'    => 'Unexpected character %1$s',
+						'msg'    => 'Unexpected character %s',
 						'params' => array($text[$rpos])
 					);
 					continue;
@@ -153,7 +154,6 @@ class parser
 			else
 			{
 				$well_formed = false;
-				$params      = array();
 				$param       = null;
 
 				if ($text[$rpos] === '=')
@@ -174,7 +174,7 @@ class parser
 
 						$msgs['warning'][] = array(
 							'pos'    => $rpos,
-							'msg'    => "BBCode %1$s does not have a default param, using BBCode's name as param name",
+							'msg'    => "BBCode %s does not have a default param, using BBCode's name as param name",
 							'params' => array($bbcode_id)
 						);
 					}
@@ -196,7 +196,7 @@ class parser
 							*/
 							$msgs['warning'][] = array(
 								'pos'    => $rpos,
-								'msg'    => 'Unexpected character %1$s',
+								'msg'    => 'Unexpected character %s',
 								'params' => array($c)
 							);
 							continue 2;
@@ -222,7 +222,7 @@ class parser
 						{
 							$msgs['warning'][] = array(
 								'pos'    => $rpos,
-								'msg'    => 'Unexpected character %1$s',
+								'msg'    => 'Unexpected character %s',
 								'params' => array($c)
 							);
 							continue 2;
@@ -240,7 +240,7 @@ class parser
 						{
 							$msgs['warning'][] = array(
 								'pos'    => $rpos,
-								'msg'    => 'Unexpected character %1$s',
+								'msg'    => 'Unexpected character %s',
 								'params' => array($text[$rpos])
 							);
 							continue 2;
@@ -310,6 +310,22 @@ class parser
 				if (!$well_formed)
 				{
 					continue;
+				}
+
+				if (isset($bbcode['default_param'])
+				 && !isset($params[$bbcode['default_param']])
+				 && !empty($bbcode['content_as_param']))
+				{
+					/**
+					* Capture the content of that tag and use it as param
+					*/
+					$pos = stripos($text, '[/' . $bbcode_id . ']', $rpos);
+
+					if ($pos)
+					{
+						$params[$bbcode['default_param']]
+							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
+					}
 				}
 			}
 
@@ -499,7 +515,7 @@ class parser
 				{
 					$this->msgs['debug'][] = array(
 						'pos'    => $tag['pos'],
-						'msg'    => 'BBCode %1$s is not allowed in this context',
+						'msg'    => 'BBCode %s is not allowed in this context',
 						'params' => array($bbcode_id)
 					);
 					continue;
@@ -535,6 +551,56 @@ class parser
 							);
 							continue 2;
 						}
+					}
+				}
+
+				if (isset($bbcode['params']))
+				{
+					/**
+					* Check for missing required params
+					*/
+					foreach (array_diff_key($bbcode['params'], $tag['params']) as $param => $param_conf)
+					{
+						if (empty($param_conf['is_required']))
+						{
+							continue;
+						}
+
+						$msgs['error'][] = array(
+							'pos'    => $tag['pos'],
+							'msg'    => 'Missing param %s',
+							'params' => array($param)
+						);
+
+						continue 2;
+					}
+
+					$invalid = array();
+					foreach ($tag['params'] as $k => &$v)
+					{
+						$v = $this->filter($v, $bbcode['params'][$k]['type']);
+
+						if ($v === false)
+						{
+							$msgs['error'][] = array(
+								'pos'    => $tag['pos'],
+								'msg'    => 'Invalid param %s',
+								'params' => array($param)
+							);
+
+							if ($bbcode['params'][$k]['is_required'])
+							{
+								// Skip this tag
+								continue 2;
+							}
+
+							$invalid[] = 1;
+						}
+					}
+
+					foreach ($invalid as $k)
+					{
+						unset($tag['params'][$k]);
 					}
 				}
 
@@ -602,7 +668,7 @@ class parser
 					*/
 					$this->msgs['debug'][] = array(
 						'pos'    => $tag['pos'],
-						'msg'    => 'Could not find a matching start tag for BBCode %1$s',
+						'msg'    => 'Could not find a matching start tag for BBCode %s',
 						'params' => array($bbcode_id . $suffix)
 					);
 					continue;
@@ -639,8 +705,21 @@ class parser
 		}
 		while (!empty($tags));
 
-		$xml->text(substr($text, $pos));
-		$xml->endDocument();
+		if ($pos)
+		{
+			$xml->text(substr($text, $pos));
+			$xml->endDocument();
+		}
+		else
+		{
+			/**
+			* If there was no valid tag, we rewrite the XML as a <pt/> element
+			*/
+			$xml = new \XMLWriter;
+			$xml->openMemory();
+
+			$xml->writeElement('pt', $text);
+		}
 
 		return nl2br(trim($xml->outputMemory()));
 	}
@@ -694,7 +773,7 @@ class parser
 
 					$msgs[$msg_type][] = array(
 						'pos'    => 0,
-						'msg'    => 'Censor limit exceeded. Only the first %1s matches will be processed',
+						'msg'    => 'Censor limit exceeded. Only the first %s matches will be processed',
 						'params' => array($config['limit'])
 					);
 				}
@@ -761,7 +840,7 @@ class parser
 
 				$msgs[$msg_type][] = array(
 					'pos'    => 0,
-					'msg'    => 'Autolink limit exceeded. Only the first %1s links will be processed',
+					'msg'    => 'Autolink limit exceeded. Only the first %s links will be processed',
 					'params' => array($config['limit'])
 				);
 			}
@@ -826,7 +905,7 @@ class parser
 
 				$msgs[$msg_type][] = array(
 					'pos'    => 0,
-					'msg'    => 'Smilies limit exceeded. Only the first %1s smilies will be processed',
+					'msg'    => 'Smilies limit exceeded. Only the first %s smilies will be processed',
 					'params' => array($config['limit'])
 				);
 			}
