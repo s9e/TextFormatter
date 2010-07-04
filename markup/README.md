@@ -24,8 +24,8 @@ We have 3 classes: config_builder, parser, and renderer.
 **renderer** *(WiP)* transforms that XML into the HTML you want, either via string manipulation in PHP or via XSLT.
 
 
-Implementation
---------------
+Implementation: parser
+----------------------
 Everything is a BBCode. At least internally.
 
 BBCodes are BBcodes, smilies are BBCodes, censored words are BBCodes, etc... Here's how it works. Each pass declares a set of BBCodes with their position and length.
@@ -33,7 +33,16 @@ BBCodes are BBcodes, smilies are BBCodes, censored words are BBCodes, etc... Her
 For instance, take the text `[b]xy :)[/b]`
 
  * the BBCode pass will declare
-   + `[B]` (open BBCode B) at position 0, length 3
-   + `[/B]` (close BBCode B) at position 8, length 4
+   + `<B>` (open BBCode B) at position 0, length 3
+   + `</B>` (close BBCode B) at position 8, length 4
  * the smilies pass will declare
-   + `[E /]` (self-closed BBCode E) at position 6, length 2
+   + `<E />` (self-closed BBCode E) at position 6, length 2
+
+It will have the same effect as if the original text was `<B>xy <E code=":)" /></B>`. Note that BBCode names B and E are independent of the name used in the original text. `[b]` could produce a BBCode named `<BOLD>`, I'm just saving a few bytes here. The same way, you define what BBCode to use for smilies using `config_builder::setEmoticonOption()`
+
+Another, perhaps better example: `My start page is http://example.com`. Here, the autolink pass will declare
+
+  * `<URL url="http://example.com">` at position 17, length 0
+  * `</URL>` at position 35, length 0
+
+In practice, some details may differ slightly, but you got the gist: everything is a BBCode. Once we have collected all the BBCodes, we sort them and process them in order. By making everything a BBCode, it's easy to define interactions between different passes. For instance, it's easy to disable emoticons inside of, say, <CODE> tags by disallowing <E/> inside of <CODE/>.

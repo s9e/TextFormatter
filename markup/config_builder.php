@@ -17,8 +17,6 @@ class config_builder
 			'limit'        => 1000,
 			'limit_action' => 'ignore'
 		),
-		'autoemail' => array(
-		),
 		'bbcode' => array(
 			'parser'       => array('self', 'getBBCodeTags'),
 			'limit'        => 1000,
@@ -65,7 +63,12 @@ class config_builder
 
 	public function getAutolinkConfig()
 	{
-		return $this->passes['autolink'] + array(
+		$config = $this->passes['autolink'];
+
+		if (!isset()
+		{
+		}
+		return  + array(
 			'regexp' => '#' . self::buildRegexpFromList($this->filters['url']['allowed_schemes']) . '://\\S+#iS'
 		);
 	}
@@ -362,26 +365,34 @@ class config_builder
 		$this->emoticons[$code] = preg_quote($code, '#');
 	}
 
-	public function getEmoticonsConfig()
+	public function setEmoticonOption($k, $v)
+	{
+		$this->setOption('emoticon', $k, $v);
+	}
+
+	public function getEmoticonConfig()
 	{
 		if (empty($this->emoticons))
 		{
 			return false;
 		}
 
-		/**
-		* Non-anchored pattern, will benefit from the S modifier
-		*/
-		$regexp = '#' . self::buildRegexpFromList($this->emoticons) . '#S';
+		$config = $this->passes['emoticon'];
 
-		if (preg_match('#[\\x80-\\xFF]#', $regexp))
+		if (!isset($this->bbcodes[$config['bbcode']]))
 		{
-			$regexp .= 'u';
+			throw new \Exception('Emoticons require a BBCode named ' . $config['bbcode'] . ' which has not been declared');
 		}
 
-		return array(
-			'regexp' => $regexp
-		);
+		// Non-anchored pattern, will benefit from the S modifier
+		$config['regexp'] = '#' . self::buildRegexpFromList($this->emoticons) . '#S';
+
+		if (preg_match('#[\\x80-\\xFF]#', $config['regexp']))
+		{
+			$config['regexp'] .= 'u';
+		}
+
+		return $config;
 	}
 
 	//==========================================================================
@@ -504,6 +515,16 @@ class config_builder
 
 	public function getParserConfig()
 	{
+		$config = array();
+
+		foreach ($this->passes as $pass => $conf)
+		{
+			if (!isset($conf['parser']))
+			{
+				trigger_error("Skipping unknown BBCode option '" . $k . "'", E_USER_NOTICE);
+				continue;
+			}
+		}
 		return array_filter(array(
 			'bbcode'   => $this->getBBCodeConfig(),
 			'autolink' => $this->getAutolinkConfig(),

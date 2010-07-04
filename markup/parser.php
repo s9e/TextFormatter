@@ -87,7 +87,7 @@ class parser
 		if (empty($tags))
 		{
 			$xml->writeElement('pt', $text);
-			return nl2br(trim($xml->outputMemory(true)));
+			return trim($xml->outputMemory(true));
 		}
 
 		/**
@@ -432,7 +432,7 @@ class parser
 			$xml->writeElement('pt', $text);
 		}
 
-		return nl2br(trim($xml->outputMemory(true)));
+		return trim($xml->outputMemory(true));
 	}
 
 	public function filter($var, $type)
