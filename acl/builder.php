@@ -117,6 +117,17 @@ class builder
 		}
 
 		/**
+		* Sort scope values so that the result bitfield is the same no matter in which order the
+		* settings were added. It doesn't cost much and in some cases it might help detect whether
+		* new settings have actually changed the ACL
+		*/
+		foreach ($used_scopes as $dim => &$scope_vals)
+		{
+			ksort($scope_vals);
+		}
+		unset($scope_vals);
+
+		/**
 		* Add global perms to $perm_dims
 		*/
 		$perm_dims += array_fill_keys(array_keys($acl), array());
