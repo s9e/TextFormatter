@@ -49,8 +49,8 @@ In practice, some details may differ slightly, but you got the gist: everything 
 
 The length given in those examples is how many characters that BBCode will consume. Each character can only be used by one BBCode. Here, we see that `<E/>` will have exclusive use of `:)` whereas the autolink pass does not consume any character and simply adds 0-length tags around the URL. Therefore, this text can be used by other passes, such as the censor pass. You can then end up with something like
 
-	`My start page is <URL href="http://naughty.example.com">http://<CENSOR replacement="nice">naughty</CENSOR.example.com</URL>`
+	My start page is <URL href="http://naughty.example.com">http://<CENSOR replacement="nice">naughty</CENSOR>.example.com</URL>
 
 ...which could then be rendered as this HTML:
 
-	`My start page is <a href="http://naughty.example.com">http://nice.example.com</a>`
+	My start page is <a href="http://naughty.example.com">http://nice.example.com</a>

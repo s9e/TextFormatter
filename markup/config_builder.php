@@ -12,8 +12,6 @@ class config_builder
 	protected $passes = array(
 		'autolink' => array(
 			'parser'       => array('self', 'getAutolinkTags'),
-			'bbcode'       => 'URL',
-			'param'        => 'href',
 			'limit'        => 1000,
 			'limit_action' => 'ignore'
 		),
@@ -24,15 +22,11 @@ class config_builder
 		),
 		'censor' => array(
 			'parser'       => array('self', 'getCensorTags'),
-			'bbcode'       => 'CENSOR',
-			'param'        => 'replacement',
 			'limit'        => 1000,
 			'limit_action' => 'warn'
 		),
 		'emoticon' => array(
 			'parser'       => array('self', 'getEmoticonTags'),
-			'bbcode'       => 'E',
-			'param'        => 'code',
 			'limit'        => 1000,
 			'limit_action' => 'ignore'
 		)
@@ -52,11 +46,6 @@ class config_builder
 		)
 	);
 
-	public function setOption($pass, $k, $v)
-	{
-		$this->passes[$pass][$k] = $v;
-	}
-
 	//==========================================================================
 	// Autolink
 	//==========================================================================
@@ -65,12 +54,15 @@ class config_builder
 	{
 		$config = $this->passes['autolink'];
 
-		if (!isset()
+		if (!isset($config['bbcode'], $config['param']))
 		{
+			return false;
 		}
-		return  + array(
-			'regexp' => '#' . self::buildRegexpFromList($this->filters['url']['allowed_schemes']) . '://\\S+#iS'
-		);
+
+		$config['regexp'] =
+			'#' . self::buildRegexpFromList($this->filters['url']['allowed_schemes']) . '://\\S+#iS';
+
+		return $config;
 	}
 
 	//==========================================================================
@@ -84,7 +76,7 @@ class config_builder
 
 	public function addBBCode($bbcode_id, array $options = array())
 	{
-		if (!$this->isValidId($bbcode_id))
+		if (!self::isValidId($bbcode_id))
 		{
 			throw new \InvalidArgumentException ("Invalid BBCode name '" . $bbcode_id . "'");
 		}
@@ -134,7 +126,8 @@ class config_builder
 		}
 
 		/**
-		* For the time being, restrict aliases to a-z, 0-9, _ and * with no restriction on first char
+		* For the time being, restrict aliases to a-z, 0-9, _ and * with no restriction on first
+		* char
 		*/
 		if (!preg_match('#^[A-Z_0-9\\*]+$#D', $alias))
 		{
@@ -149,6 +142,11 @@ class config_builder
 		if (!isset($this->bbcodes[$bbcode_id]))
 		{
 			throw new \Exception("Unknown BBCode '" . $bbcode_id . "'");
+		}
+
+		if (!self::isValidId($param_name))
+		{
+			throw new \InvalidArgumentException ("Invalid param name '" . $param_name . "'");
 		}
 
 		$param_name = strtolower($param_name);
@@ -191,11 +189,6 @@ class config_builder
 
 	public function getBBCodeConfig()
 	{
-		if (empty($this->bbcodes))
-		{
-			return false;
-		}
-
 		$config = $this->passes['bbcode'];
 		$config['aliases'] = $this->bbcode_aliases;
 		$config['bbcodes'] = $this->bbcodes;
@@ -335,7 +328,18 @@ class config_builder
 			return false;
 		}
 
-		$config = array();
+		$config = $this->passes['censor'];
+
+		if (!isset($config['bbcode']))
+		{
+			trigger_error('No BBCode assigned to the censor pass, it will be disabled', E_USER_WARNING);
+			return false;
+		}
+		if (!isset($config['param']))
+		{
+			trigger_error('No BBCode param assigned to the censor pass, it will be disabled', E_USER_WARNING);
+			return false;
+		}
 
 		foreach ($this->censor['words'] as $k => $words)
 		{
@@ -362,7 +366,7 @@ class config_builder
 
 	public function addEmoticon($code)
 	{
-		$this->emoticons[$code] = preg_quote($code, '#');
+		$this->emoticons[$code] = array();
 	}
 
 	public function setEmoticonOption($k, $v)
@@ -379,13 +383,19 @@ class config_builder
 
 		$config = $this->passes['emoticon'];
 
-		if (!isset($this->bbcodes[$config['bbcode']]))
+		if (!isset($config['bbcode']))
 		{
-			throw new \Exception('Emoticons require a BBCode named ' . $config['bbcode'] . ' which has not been declared');
+			trigger_error('No BBCode assigned to the emoticon pass, it will be disabled', E_USER_WARNING);
+			return false;
+		}
+		if (!isset($config['param']))
+		{
+			trigger_error('No BBCode param assigned to the emoticon pass, it will be disabled', E_USER_WARNING);
+			return false;
 		}
 
 		// Non-anchored pattern, will benefit from the S modifier
-		$config['regexp'] = '#' . self::buildRegexpFromList($this->emoticons) . '#S';
+		$config['regexp'] =	'#' . self::buildRegexpFromList(array_keys($this->emoticons)) . '#S';
 
 		if (preg_match('#[\\x80-\\xFF]#', $config['regexp']))
 		{
@@ -439,6 +449,42 @@ class config_builder
 	//==========================================================================
 	// Misc
 	//==========================================================================
+
+	public function setOption($pass, $k, $v)
+	{
+		if ($k === 'bbcode' || $k === 'param')
+		{
+			if (!self::isValidId($v))
+			{
+				throw new \InvalidArgumentException ("Invalid $k name '" . $v . "'");
+			}
+
+			if ($k === 'bbcode')
+			{
+				$v = strtoupper($v);
+
+				if (!isset($this->bbcodes[$v]))
+				{
+					trigger_error('Unknown BBCode ' . $v, E_USER_NOTICE);
+				}
+			}
+			else
+			{
+				$v = strtolower($v);
+
+				if (isset($this->passes[$pass]['bbcode']))
+				{
+					$bbcode = $this->passes[$pass]['bbcode'];
+
+					if (!isset($this->bbcodes[$bbcode]['params'][$v]))
+					{
+						trigger_error('Unknown BBCode param ' . $v, E_USER_NOTICE);
+					}
+				}
+			}
+		}
+		$this->passes[$pass][$k] = $v;
+	}
 
 	static public function buildRegexpFromList($words, array $esc = array())
 	{
@@ -521,7 +567,7 @@ class config_builder
 		{
 			if (!isset($conf['parser']))
 			{
-				trigger_error("Skipping unknown BBCode option '" . $k . "'", E_USER_NOTICE);
+				trigger_error("Skipping pass '" . $k . "' - no parser given", E_USER_NOTICE);
 				continue;
 			}
 		}
@@ -529,13 +575,13 @@ class config_builder
 			'bbcode'   => $this->getBBCodeConfig(),
 			'autolink' => $this->getAutolinkConfig(),
 			'censor'   => $this->getCensorConfig(),
-			'emoticons'  => $this->getEmoticonsConfig(),
+			'emoticon' => $this->getEmoticonConfig(),
 
 			'filters'  => $this->getFiltersConfig()
 		));
 	}
 
-	public function isValidId($id)
+	static public function isValidId($id)
 	{
 		return (bool) preg_match('#^[a-z][a-z_0-9]*#Di', $id);
 	}

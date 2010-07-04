@@ -535,7 +535,7 @@ class parser
 			else
 			{
 				$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-				$matches[0] = array_slice($matches[0], 0, $limit);
+				$matches[0] = array_slice($matches[0], 0, $config['limit']);
 
 				$msgs[$msg_type][] = array(
 					'pos'    => 0,
@@ -931,7 +931,7 @@ class parser
 				else
 				{
 					$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-					$matches[0] = array_slice($matches[0], 0, $limit);
+					$matches[0] = array_slice($matches[0], 0, $config['limit']);
 
 					$msgs[$msg_type][] = array(
 						'pos'    => 0,
@@ -996,7 +996,7 @@ class parser
 			else
 			{
 				$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-				$matches[0] = array_slice($matches[0], 0, $limit);
+				$matches[0] = array_slice($matches[0], 0, $config['limit']);
 
 				$msgs[$msg_type][] = array(
 					'pos'    => 0,
@@ -1010,7 +1010,7 @@ class parser
 		$bbcode = $config['bbcode'];
 		$param  = $config['param'];
 
-		foreach ($matches as $m)
+		foreach ($matches[0] as $m)
 		{
 			$tags[] = array(
 				'pos'    => $m[1],
