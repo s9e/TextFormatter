@@ -80,4 +80,105 @@ class reader
 
 		return (bool) (ord($space['mask'][$n >> 3]) & (1 << (7 - ($n & 7))));
 	}
+
+	public function getPredicate($perm, $k, $scope = null)
+	{
+		if (!isset($this->config[$perm]))
+		{
+			return array('type' => 'none');
+		}
+
+		$global = $this->isAllowed($perm, $scope);
+		$space  = $this->config[$perm];
+
+		if (!isset($space['scopes'][$k]))
+		{
+			// That scope doesn't exist, rely on global setting
+			return array('type' => ($global) ? 'all' : 'none');
+		}
+
+		$scopes = $space['scopes'];
+		$n      = $space['perms'][$perm];
+
+		if (isset($scope))
+		{
+			if (is_array($scope))
+			{
+				if (isset($scope[$k]))
+				{
+					throw new \InvalidArgumentException('$scope contains the same key we are looking for');
+				}
+
+				foreach ($scope as $scope_dim => $scope_val)
+				{
+					if ($scope_val === $this->any)
+					{
+						if (isset($space['any'][$scope_dim]))
+						{
+							$n += $space['any'][$scope_dim];
+						}
+					}
+					elseif (isset($space['scopes'][$scope_dim][$scope_val]))
+					{
+						$n += $space['scopes'][$scope_dim][$scope_val];
+					}
+				}
+			}
+			elseif ($scope === $this->any)
+			{
+				if (isset($space['any']))
+				{
+					$any = $space['any'];
+					unset($any[$k]);
+
+					$n += array_sum($any);
+				}
+			}
+			else
+			{
+				throw new \InvalidArgumentException('$scope is expected to be an array or $this->any');
+			}
+		}
+
+		$yes = $no = array();
+		foreach ($scopes[$k] as $scope_val => $pos)
+		{
+			$_n = $n + $pos;
+
+			if (ord($space['mask'][$_n >> 3]) & (1 << (7 - ($_n & 7))))
+			{
+				$yes[] = $scope_val;
+			}
+			else
+			{
+				$no[]  = $scope_val;
+			}
+		}
+
+		if ($global)
+		{
+			if (empty($no))
+			{
+				return array('type' => 'all');
+			}
+			else
+			{
+				return array(
+					'type'  => 'all_but',
+					'which' => $no
+				);
+			}
+		}
+		elseif (!empty($yes))
+		{
+			return array(
+				'type'  => 'some',
+				'which' => $yes
+			);
+		}
+		else
+		{
+			return array('type' => 'none');
+		}
+	}
 }
