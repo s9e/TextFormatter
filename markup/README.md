@@ -4,9 +4,9 @@ Overview
 s9e\toolkit\markup is a text formatting tool. By default, it supports:
 
  * BBCode
- * smilies (emoticons)
+ * emoticons
  * detection and replacement of banned words (censor)
- * detection of non-formatted links
+ * detection of non-formatted links (autolink)
 
 Each of those being completely customizable. In fact, there is no default BBCode or smilies so customization, or rather, configuration is a requirement.
 
@@ -42,7 +42,15 @@ It will have the same effect as if the original text was `<B>xy <E code=":)" /><
 
 Another, perhaps better example: `My start page is http://example.com`. Here, the autolink pass will declare
 
-  * `<URL url="http://example.com">` at position 17, length 0
+  * `<URL href="http://example.com">` at position 17, length 0
   * `</URL>` at position 35, length 0
 
-In practice, some details may differ slightly, but you got the gist: everything is a BBCode. Once we have collected all the BBCodes, we sort them and process them in order. By making everything a BBCode, it's easy to define interactions between different passes. For instance, it's easy to disable emoticons inside of, say, <CODE> tags by disallowing <E/> inside of <CODE/>.
+In practice, some details may differ slightly, but you got the gist: everything is a BBCode. Once we have collected all the BBCodes, we sort them and process them in order. By making everything a BBCode, it's easy to define interactions between different passes. For instance, it's easy to disable emoticons inside of, say, `<CODE>` tags by disallowing `<E/>` inside of `<CODE/>`.
+
+The length given in those examples is how many characters that BBCode will consume. Each character can only be used by one BBCode. Here, we see that `<E/>` will have exclusive use of `:)` whereas the autolink pass does not consume any character and simply adds 0-length tags around the URL. Therefore, this text can be used by other passes, such as the censor pass. You can then end up with something like
+
+	`My start page is <URL href="http://naughty.example.com">http://<CENSOR replacement="nice">naughty</CENSOR.example.com</URL>`
+
+...which could then be rendered as this HTML:
+
+	`My start page is <a href="http://naughty.example.com">http://nice.example.com</a>`
