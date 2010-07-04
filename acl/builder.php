@@ -514,7 +514,7 @@ class builder
 						/**
 						* More than one scope for that mask
 						*/
-						$scope_val = array_pop($scope_vals);
+						$scope_val = array_shift($scope_vals);
 						$scope_aliases[$dim][$scope_val] = $scope_vals;
 
 						$delete[$dim] += array_flip($scope_vals);
