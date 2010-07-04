@@ -5,7 +5,7 @@ namespace s9e\toolkit\markup;
 include_once __DIR__ . '/../config_builder.php';
 include_once __DIR__ . '/../parser.php';
 
-class testTokenizers extends \PHPUnit_Framework_TestCase
+class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 {
 	public function testContentAsParam()
 	{

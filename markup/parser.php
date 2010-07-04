@@ -321,21 +321,30 @@ class parser
 				$xml->startElement($bbcode_id);
 				if (!empty($tag['params']))
 				{
+					/**
+					* Sort params alphabetically. Can be useful if someone wants to process the
+					* output using regexp
+					*/
+					ksort($tag['params']);
 					foreach ($tag['params'] as $param => $value)
 					{
 						$xml->writeAttribute($param, $value);
 					}
 				}
 
+				if ($tag['type'] & self::TAG_CLOSE)
+				{
+					if ($tag['len'])
+					{
+						$xml->text(substr($text, $tag['pos'], $tag['len']));
+					}
+					$xml->endElement();
+					continue;
+				}
+
 				if ($tag['len'])
 				{
 					$xml->writeElement('st', substr($text, $tag['pos'], $tag['len']));
-				}
-
-				if ($tag['type'] & self::TAG_CLOSE)
-				{
-					$xml->endElement();
-					continue;
 				}
 
 				++$cnt_open[$bbcode_id];
@@ -968,7 +977,7 @@ class parser
 		);
 	}
 
-	static public function getSmileyTags($text, array $config)
+	static public function getEmoticonTags($text, array $config)
 	{
 		$cnt = preg_match_all($config['regexp'], $text, $matches, PREG_OFFSET_CAPTURE);
 
@@ -982,7 +991,7 @@ class parser
 		{
 			if ($config['limit_action'] === 'abort')
 			{
-				throw new \RuntimeException('Smilies limit exceeded');
+				throw new \RuntimeException('Emoticon limit exceeded');
 			}
 			else
 			{
@@ -991,7 +1000,7 @@ class parser
 
 				$msgs[$msg_type][] = array(
 					'pos'    => 0,
-					'msg'    => 'Smilies limit exceeded. Only the first %s smilies will be processed',
+					'msg'    => 'Emoticon limit exceeded. Only the first %s emoticons will be processed',
 					'params' => array($config['limit'])
 				);
 			}

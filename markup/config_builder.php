@@ -31,8 +31,8 @@ class config_builder
 			'limit'        => 1000,
 			'limit_action' => 'warn'
 		),
-		'smilies' => array(
-			'parser'       => array('self', 'getSmiliesTags'),
+		'emoticon' => array(
+			'parser'       => array('self', 'getEmoticonTags'),
 			'bbcode'       => 'E',
 			'param'        => 'code',
 			'limit'        => 1000,
@@ -46,7 +46,7 @@ class config_builder
 
 	protected $censor = array();
 
-	protected $smilies = array();
+	protected $emoticons = array();
 
 	protected $filters = array(
 		'url' => array(
@@ -354,17 +354,17 @@ class config_builder
 	}
 
 	//==========================================================================
-	// Smilies
+	// Emoticons
 	//==========================================================================
 
-	public function addSmiley($code)
+	public function addEmoticon($code)
 	{
-		$this->smilies[$code] = preg_quote($code, '#');
+		$this->emoticons[$code] = preg_quote($code, '#');
 	}
 
-	public function getSmiliesConfig()
+	public function getEmoticonsConfig()
 	{
-		if (empty($this->smilies))
+		if (empty($this->emoticons))
 		{
 			return false;
 		}
@@ -372,7 +372,7 @@ class config_builder
 		/**
 		* Non-anchored pattern, will benefit from the S modifier
 		*/
-		$regexp = '#' . self::buildRegexpFromList($this->smilies) . '#S';
+		$regexp = '#' . self::buildRegexpFromList($this->emoticons) . '#S';
 
 		if (preg_match('#[\\x80-\\xFF]#', $regexp))
 		{
@@ -508,7 +508,7 @@ class config_builder
 			'bbcode'   => $this->getBBCodeConfig(),
 			'autolink' => $this->getAutolinkConfig(),
 			'censor'   => $this->getCensorConfig(),
-			'smilies'  => $this->getSmiliesConfig(),
+			'emoticons'  => $this->getEmoticonsConfig(),
 
 			'filters'  => $this->getFiltersConfig()
 		));
