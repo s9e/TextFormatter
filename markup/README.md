@@ -2,6 +2,7 @@ Overview
 ========
 
 s9e\toolkit\markup is a text formatting tool. By default, it supports:
+
  * BBCode
  * smilies (emoticons)
  * detection and replacement of banned words (censor)
