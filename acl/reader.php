@@ -125,6 +125,8 @@ class reader
 			}
 			elseif ($scope === $this->any)
 			{
+				$global = $this->isAllowed($perm);
+
 				if (isset($space['any']))
 				{
 					$any = $space['any'];
@@ -133,10 +135,15 @@ class reader
 					$n += array_sum($any);
 				}
 			}
+			/**
+			* @codeCoverageIgnoreStart That case will normally be caught earlier in the first call
+			*                          to isAllowed()
+			*/
 			else
 			{
 				throw new \InvalidArgumentException('$scope is expected to be an array or $this->any');
 			}
+			// @codeCoverageIgnoreEnd
 		}
 
 		$yes = $no = array();

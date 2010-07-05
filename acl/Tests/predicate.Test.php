@@ -190,4 +190,15 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 		$builder->getReader()->getPredicate('read', 'forum_id', array('forum_id' => 4));
 	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testPredicateWithNonArrayNotAnyScopeThrowsAnException()
+	{
+		$builder = new builder;
+		$builder->allow('read', array('forum_id' => 4));
+
+		$builder->getReader()->getPredicate('read', 'forum_id', true);
+	}
 }
