@@ -583,6 +583,6 @@ class config_builder
 
 	static public function isValidId($id)
 	{
-		return (bool) preg_match('#^[a-z][a-z_0-9]*#Di', $id);
+		return (bool) preg_match('#^[a-z_][a-z_0-9]*#Di', $id);
 	}
 }
