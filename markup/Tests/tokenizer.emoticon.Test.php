@@ -23,7 +23,7 @@ class testTokenizerEmoticon extends \PHPUnit_Framework_TestCase
 		$config = $this->config['emoticon'];
 		$config['limit_action'] = 'abort';
 
-		$text = str_repeat(':)', 10);
+		$text = str_repeat(':)', 11);
 		$ret  = parser::getEmoticonTags($text, $config);
 	}
 

@@ -47,7 +47,7 @@ class parser
 		$this->config = $config;
 	}
 
-	public function parse($text)
+	public function parse($text, $writer = '\\XMLWriter')
 	{
 		$this->msgs = $tags = array();
 
@@ -81,7 +81,7 @@ class parser
 			}
 		}
 
-		$xml = new \XMLWriter;
+		$xml = new $writer;
 		$xml->openMemory();
 
 		if (empty($tags))
@@ -287,7 +287,7 @@ class parser
 							$msgs['error'][] = array(
 								'pos'    => $tag['pos'],
 								'msg'    => 'Invalid param %s',
-								'params' => array($param)
+								'params' => array($k)
 							);
 
 							if ($bbcode['params'][$k]['is_required'])
@@ -418,7 +418,10 @@ class parser
 
 		if ($pos)
 		{
-			$xml->text(substr($text, $pos));
+			if (isset($text[$pos]))
+			{
+				$xml->text(substr($text, $pos));
+			}
 			$xml->endDocument();
 		}
 		else
@@ -426,7 +429,7 @@ class parser
 			/**
 			* If there was no valid tag, we rewrite the XML as a <pt/> element
 			*/
-			$xml = new \XMLWriter;
+			$xml = new $writer;
 			$xml->openMemory();
 
 			$xml->writeElement('pt', $text);
@@ -466,7 +469,13 @@ class parser
 				}
 				return $var;
 
+			case 'string':
+				return $var;
+
 			case 'email':
+				/**
+				* @todo
+				*/
 				break;
 
 			case 'number':
@@ -1019,6 +1028,9 @@ class parser
 			return;
 		}
 
+		$tags = array();
+		$msgs = array();
+
 		if (!empty($config['limit'])
 		 && $cnt > $config['limit'])
 		{
@@ -1039,7 +1051,6 @@ class parser
 			}
 		}
 
-		$tags   = array();
 		$bbcode = $config['bbcode'];
 		$param  = $config['param'];
 
@@ -1047,6 +1058,7 @@ class parser
 		{
 			$tags[] = array(
 				'pos'    => $m[1],
+				'type'   => self::TAG_SELF,
 				'name'   => $bbcode,
 				'len'    => strlen($m[0]),
 				'params' => array($param => $m[0])

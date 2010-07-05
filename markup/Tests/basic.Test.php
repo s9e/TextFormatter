@@ -67,11 +67,30 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testEmoticon()
+	{
+		$text     = 'test :) :)';
+		$expected = '<rt>test <E code=":)">:)</E> <E code=":)">:)</E></rt>';
+		$actual   = $this->parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
 
 		$cb->addBBCode('b', array('nesting_limit' => 1));
+		$cb->addBBCode('e', array(
+			'default_param'    => 'code',
+			'content_as_param' => true
+		));
+		$cb->addBBCodeParam('e', 'code', 'string', true);
+
+		$cb->setEmoticonOption('bbcode', 'e');
+		$cb->setEmoticonOption('param', 'code');
+
+		$cb->addEmoticon(':)');
 
 		$this->parser = new parser($cb->getParserConfig());
 	}
