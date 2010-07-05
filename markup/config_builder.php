@@ -263,7 +263,7 @@ class config_builder
 
 		$regexp = self::buildRegexpFromList($aliases);
 		$config['regexp'] =
-			'#\\[/?(' . preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp) . ')(?=[\\] =:])#i';
+			'#\\[/?(' . preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp) . ')(?=[\\] =:/])#i';
 
 		return $config;
 	}

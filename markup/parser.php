@@ -684,9 +684,12 @@ class parser
 					);
 					continue;
 				}
+
+				$type = self::TAG_CLOSE;
 			}
 			else
 			{
+				$type        = self::TAG_OPEN;
 				$well_formed = false;
 				$param       = null;
 
@@ -720,8 +723,11 @@ class parser
 				{
 					$c = $text[$rpos];
 
-					if ($c === ']')
+					if ($c === ']' || $c === '/')
 					{
+						/**
+						* We're closing this tag
+						*/
 						if (isset($param))
 						{
 							/**
@@ -734,6 +740,32 @@ class parser
 								'params' => array($c)
 							);
 							continue 2;
+						}
+
+						if ($c === '/')
+						{
+							/**
+							* Self-closing tag, e.g. [foo/]
+							*/
+							$type = self::TAG_SELF;
+							++$rpos;
+
+							if ($rpos === $text_len)
+							{
+								// text ends with [some tag/
+								continue 2;
+							}
+
+							$c = $text[$rpos];
+							if ($c !== ']')
+							{
+								$msgs['warning'][] = array(
+									'pos'    => $rpos,
+									'msg'    => 'Unexpected character %s',
+									'params' => array($c)
+								);
+								continue 2;
+							}
 						}
 
 						$well_formed = true;
@@ -853,7 +885,8 @@ class parser
 					continue;
 				}
 
-				if (isset($bbcode['default_param'])
+				if ($type === self::TAG_OPEN
+				 && isset($bbcode['default_param'])
 				 && !isset($params[$bbcode['default_param']])
 				 && !empty($bbcode['content_as_param']))
 				{
@@ -874,7 +907,7 @@ class parser
 				'name'   => $bbcode_id,
 				'pos'    => $lpos,
 				'len'    => $rpos + 1 - $lpos,
-				'type'   => ($m[0][0][1] === '/') ? self::TAG_CLOSE  : self::TAG_OPEN,
+				'type'   => $type,
 				'suffix' => $suffix,
 				'params' => $params
 			);
