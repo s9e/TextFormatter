@@ -97,7 +97,6 @@ class reader
 			return array('type' => ($global) ? 'all' : 'none');
 		}
 
-		$scopes = $space['scopes'];
 		$n      = $space['perms'][$perm];
 
 		if (isset($scope))
@@ -141,7 +140,7 @@ class reader
 		}
 
 		$yes = $no = array();
-		foreach ($scopes[$k] as $scope_val => $pos)
+		foreach ($space['scopes'][$k] as $scope_val => $pos)
 		{
 			$_n = $n + $pos;
 
