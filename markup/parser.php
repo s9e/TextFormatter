@@ -65,12 +65,15 @@ class parser
 
 				if (!empty($ret['tags']))
 				{
-					$suffix = '-' . mt_rand();
 					foreach ($ret['tags'] as $tag)
 					{
 						if (!isset($tag['suffix']))
 						{
-							$tag['suffix'] = $suffix;
+							/**
+							* Add a suffix to tags that don't have one so that closing tags from a
+							* pass don't close tags opened by another pass
+							*/
+							$tag['suffix'] = '-' . $pass;
 						}
 						$tag['pass'] = $pass;
 						$tags[]      = $tag;

@@ -118,11 +118,11 @@ class config_builder
 
 		if (!isset($this->bbcodes[$bbcode_id]))
 		{
-			throw new \Exception("Unknown BBCode '" . $bbcode_id . "'");
+			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
 		}
 		if (isset($this->bbcodes[$alias]))
 		{
-			throw new \Exception("Cannot create alias '" . $alias . "' - a BBCode using that name already exists");
+			throw new \InvalidArgumentException("Cannot create alias '" . $alias . "' - a BBCode using that name already exists");
 		}
 
 		/**
@@ -141,7 +141,7 @@ class config_builder
 		$bbcode_id = strtoupper($bbcode_id);
 		if (!isset($this->bbcodes[$bbcode_id]))
 		{
-			throw new \Exception("Unknown BBCode '" . $bbcode_id . "'");
+			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
 		}
 
 		if (!self::isValidId($param_name))
@@ -192,6 +192,7 @@ class config_builder
 		$config = $this->passes['bbcode'];
 		$config['aliases'] = $this->bbcode_aliases;
 		$config['bbcodes'] = $this->bbcodes;
+		unset($config['tpl']);
 
 		$bbcode_ids = array_keys($this->bbcodes);
 
@@ -276,6 +277,34 @@ class config_builder
 			'default_rule'     => 'allow',
 			'content_as_param' => false
 		);
+	}
+
+	public function setBBCodeTemplate($bbcode_id, $tpl)
+	{
+		$bbcode_id = strtoupper($bbcode_id);
+		if (!isset($this->bbcodes[$bbcode_id]))
+		{
+			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
+		}
+
+		$tpl = '<xsl:template match="' . $bbcode_id . '">' . $tpl . '</xsl:template>';
+
+		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . $tpl
+		     . '</xsl:stylesheet>';
+
+		$old = libxml_use_internal_errors(true);
+		$dom = new \DOMDocument;
+		$res = $dom->loadXML($xsl);
+		libxml_use_internal_errors($old);
+
+		if (!$res)
+		{
+			$error = libxml_get_last_error();
+			throw new \InvalidArgumentException('Invalid XML - error was: ' . $error->message);
+		}
+
+		$this->bbcodes[$bbcode_id]['tpl'] = $tpl;
 	}
 
 	//==========================================================================
