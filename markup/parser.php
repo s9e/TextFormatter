@@ -904,6 +904,12 @@ class parser
 				{
 					/**
 					* Capture the content of that tag and use it as param
+					*
+					* @todo insert the corresponding closing tag now, to ensure that we captured
+					*       exactly what will end up being this tag pair's content. Would make a
+					*       difference in [a][b="[/a]"][/b][/a]
+					*
+					* @todo perhaps disable all BBCodes when the content is used as param? how?
 					*/
 					$pos = stripos($text, '[/' . $bbcode_id . $suffix . ']', $rpos);
 

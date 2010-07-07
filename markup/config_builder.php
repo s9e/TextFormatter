@@ -85,7 +85,7 @@ class config_builder
 
 		if (isset($this->bbcodes[$bbcode_id]))
 		{
-			throw new \Exception('BBCode ' . $bbcode_id . ' already exists');
+			throw new \InvalidArgumentException('BBCode ' . $bbcode_id . ' already exists');
 		}
 
 		$bbcode = $this->getDefaultBBCodeOptions();
@@ -150,6 +150,12 @@ class config_builder
 		}
 
 		$param_name = strtolower($param_name);
+
+		if (isset($this->bbcodes[$bbcode_id]['params'][$param_name]))
+		{
+			throw new \InvalidArgumentException('Param ' . $param_name . ' already exists');
+		}
+
 		$this->bbcodes[$bbcode_id]['params'][$param_name] = array(
 			'type'			=> $param_type,
 			'is_required'	=> $is_required
@@ -305,6 +311,159 @@ class config_builder
 		}
 
 		$this->bbcodes[$bbcode_id]['tpl'] = $tpl;
+	}
+
+	public function addBBCodeFromExample($def, $tpl, $allow_insecure = '')
+	{
+		$regexp = '#'
+		        . '\\[([a-zA-Z_][a-zA-Z_0-9]*)(=\\{[A-Z_]+\\})?'
+		        . '((?:\\s+[a-zA-Z_][a-zA-Z_0-9]*=\\{[A-Z_]+\\})*)'
+		        . '(?:\\s*/\\]|\\](\\{[A-Z_]+[0-9]*\\})?\\[/\\1])'
+		        . '$#';
+
+		if (!preg_match($regexp, trim($def), $m))
+		{
+			throw new \InvalidArgumentException('Cannot interpret the BBCode definition');
+		}
+
+		$old = libxml_use_internal_errors(true);
+		$dom = new \DOMDocument;
+		$res = $dom->loadXML('<t>' . $tpl . '</t>');
+		libxml_use_internal_errors($old);
+
+		if (!$res)
+		{
+			$error = libxml_get_last_error();
+			throw new \InvalidArgumentException('Invalid XML in template - error was: ' . $error->message);
+		}
+
+		$bbcode_id    = $m[1];
+		$options      = array();
+		$params       = array();
+		$placeholders = array();
+		$content      = false;
+
+		if ($m[2])
+		{
+			$m[3] = $m[1] . $m[2] . $m[3];
+		}
+
+		if (isset($m[4]))
+		{
+			$identifier = $m[4];
+
+			if ($m[4] === '{TEXT}')
+			{
+				$placeholders[$identifier] = '.';
+			}
+			else
+			{
+				/**
+				* We need to validate the content, means we should probably disable BBCodes, e.g.
+				* [email]{EMAIL}[/email]
+				*/
+				$type  = rtrim(strtolower(substr($identifier, 1, -1)), '1234567890');
+				$param = strtolower($bbcode_id);
+
+				$options['default_rule']     = 'deny';
+				$options['default_param']    = $param;
+				$options['content_as_param'] = true;
+
+				$params[$param] = array(
+					'type'        => $type,
+					'is_required' => true
+				);
+				$placeholders[$identifier] = '@' . $param;
+			}
+		}
+
+		foreach (preg_split('#\\s+#', $m[3], null, \PREG_SPLIT_NO_EMPTY) as $pair)
+		{
+			list($param, $identifier) = explode('=', $pair);
+
+			$param = strtolower($param);
+			$type  = rtrim(strtolower(substr($identifier, 1, -1)), '1234567890');
+
+			if (isset($params[$param]))
+			{
+				throw new \InvalidArgumentException('Param ' . $param . ' is defined twice');
+			}
+
+			if (isset($placeholders[$identifier]))
+			{
+				throw new \InvalidArgumentException('Placeholder ' . $identifier . ' is used twice');
+			}
+
+			$placeholders[$identifier] = '@' . $param;
+
+			$params[$param] = array(
+				'type'        => $type,
+				'is_required' => false
+			);
+		}
+
+		/**
+		* Replace placeholders in attributes
+		*/
+		$xpath = new \DOMXPath($dom);
+		foreach ($xpath->query('//@*') as $attr)
+		{
+			$attr->value = preg_replace_callback(
+				'#\\{[A-Z]+[0-9]*?\\}#',
+				function ($m) use (&$placeholders, &$params, $bbcode_id, $allow_insecure)
+				{
+					$identifier = $m[0];
+
+					if (!isset($placeholders[$identifier]))
+					{
+						throw new \Exception('Unknown placeholder ' . $identifier . ' found in template');
+					}
+
+					if ($placeholders[$identifier] === '.'
+					 && $allow_insecure !== 'ALLOW_INSECURE_TEMPLATES')
+					{
+						throw new \Exception('Using {TEXT} inside attributes is inherently insecure and has been disabled. Please pass "ALLOW_INSECURE_TEMPLATES" as a third parameter to ' . __METHOD__ . ' to enable it');
+					}
+
+					$param = substr($placeholders[$identifier], 1);
+					if (isset($params[$param]))
+					{
+						$params[$param]['is_required'] = true;
+					}
+
+					return '{' . $placeholders[$identifier] . '}';
+				},
+				$attr->value
+			);
+		}
+
+		/**
+		* Replace placeholders everywhere else: the lazy version
+		*/
+		$tpl = preg_replace_callback(
+			'#\\{[A-Z]+[0-9]*\\}#',
+			function ($m) use ($placeholders, &$params, $content)
+			{
+				if (!isset($placeholders[$m[0]]))
+				{
+					throw new \Exception('Unknown placeholder ' . $m[0] . ' found in template');
+				}
+
+				if ($placeholders[$m[0]] === '.')
+				{
+					return '<xsl:apply-templates/>';
+				}
+				return '<xsl:value-of select="' . $placeholders[$m[0]] . '"/>';
+			},
+			substr($dom->saveXML($dom->documentElement), 3, -4)
+		);
+
+		$this->addBBCode($bbcode_id, $options);
+		foreach ($params as $param => $_options)
+		{
+			$this->addBBCodeParam($bbcode_id, $param, $_options['type'], $_options['is_required']);
+		}
+		$this->setBBCodeTemplate($bbcode_id, $tpl, $allow_insecure);
 	}
 
 	//==========================================================================
@@ -613,5 +772,22 @@ class config_builder
 	static public function isValidId($id)
 	{
 		return (bool) preg_match('#^[a-z_][a-z_0-9]*#Di', $id);
+	}
+
+	public function getXSL()
+	{
+		$xsl = '<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:output method="xml" encoding="utf-8" />';
+
+		foreach ($this->bbcodes as $bbcode_id => $bbcode)
+		{
+			if (isset($bbcode['tpl']))
+			{
+				$xsl .= $bbcode['tpl'];
+			}
+		}
+
+		$xsl .= '<xsl:template match="st" /><xsl:template match="et" /></xsl:stylesheet>';
+
+		return $xsl;
 	}
 }
