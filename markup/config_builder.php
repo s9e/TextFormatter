@@ -371,7 +371,10 @@ class config_builder
 
 			if (preg_match('#^\\{TEXT[0-9]*\\}$#D', $identifier))
 			{
-				$placeholders[$identifier] = '.';
+				/**
+				* Use substring() to exclude the <st/> and <et/> children
+				*/
+				$placeholders[$identifier] = 'substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))';
 			}
 			else
 			{
@@ -466,7 +469,7 @@ class config_builder
 					throw new \Exception('Unknown placeholder ' . $m[0] . ' found in template');
 				}
 
-				if ($placeholders[$m[0]] === '.')
+				if ($placeholders[$m[0]][0] !== '@')
 				{
 					return '<xsl:apply-templates/>';
 				}

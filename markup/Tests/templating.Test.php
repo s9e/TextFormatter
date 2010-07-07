@@ -38,12 +38,12 @@ class testTemplating extends \PHPUnit_Framework_TestCase
 				$this->fail('Should have failed with an exception containing "' . $msg . '"');
 			}
 		}
-		catch (\PHPUnit_Framework_Error $e)
-		{
-			throw $e;
-		}
 		catch (\Exception $e)
 		{
+			if (strpos(get_class($e), 'PHPUnit') !== false)
+			{
+				throw $e;
+			}
 			$this->assertContains($msg, $e->getMessage());
 		}
 	}
@@ -80,6 +80,13 @@ class testTemplating extends \PHPUnit_Framework_TestCase
 				'My email is [email]none@example.com[/email]',
 				null,
 				'ALLOW_INSECURE_TEMPLATES'
+			),
+			array(
+				'[email]{TEXT}[/email]',
+				'<a href="mailto:{TEXT}">{TEXT}</a>',
+				'ALLOW_INSECURE_TEMPLATES',
+				'My email is [email]COULD BE ANYTHING[/email]',
+				'My email is <a href="mailto:COULD BE ANYTHING">COULD BE ANYTHING</a>'
 			)
 		);
 	}
