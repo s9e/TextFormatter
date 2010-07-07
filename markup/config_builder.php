@@ -285,7 +285,7 @@ class config_builder
 		);
 	}
 
-	public function setBBCodeTemplate($bbcode_id, $tpl)
+	public function setBBCodeTemplate($bbcode_id, $tpl, $allow_insecure = '')
 	{
 		$bbcode_id = strtoupper($bbcode_id);
 		if (!isset($this->bbcodes[$bbcode_id]))
@@ -310,6 +310,23 @@ class config_builder
 			throw new \InvalidArgumentException('Invalid XML - error was: ' . $error->message);
 		}
 
+		if ($allow_insecure !== 'ALLOW_INSECURE_TEMPLATES')
+		{
+			$xpath = new \DOMXPath($dom);
+
+			if ($xpath->query('//script[contains(@src, "{") or .//xsl:value-of]')->length)
+			{
+				throw new \Exception('It seems that your template contains <script> tag using user-supplied information. Those can be insecure and are disabled by default. Please pass "ALLOW_INSECURE_TEMPLATES" as a third parameter to setBBCodeTemplate() to enable it');
+			}
+
+			foreach ($xpath->query('//@style[contains(., "{")]') as $attr)
+			{
+				print_r($attr);
+				exit;
+			}
+		}
+
+# //@style[contains(., "{")] |
 		$this->bbcodes[$bbcode_id]['tpl'] = $tpl;
 	}
 
@@ -352,7 +369,7 @@ class config_builder
 		{
 			$identifier = $m[4];
 
-			if ($m[4] === '{TEXT}')
+			if (preg_match('#^\\{TEXT[0-9]*\\}$#D', $identifier))
 			{
 				$placeholders[$identifier] = '.';
 			}
@@ -419,10 +436,10 @@ class config_builder
 						throw new \Exception('Unknown placeholder ' . $identifier . ' found in template');
 					}
 
-					if ($placeholders[$identifier] === '.'
-					 && $allow_insecure !== 'ALLOW_INSECURE_TEMPLATES')
+					if ($allow_insecure !== 'ALLOW_INSECURE_TEMPLATES'
+					 && preg_match('#^\\{TEXT[0-9]*\\}$#D', $identifier))
 					{
-						throw new \Exception('Using {TEXT} inside attributes is inherently insecure and has been disabled. Please pass "ALLOW_INSECURE_TEMPLATES" as a third parameter to ' . __METHOD__ . ' to enable it');
+						throw new \Exception('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass "ALLOW_INSECURE_TEMPLATES" as a third parameter to addBBCodeFromExample() to enable it');
 					}
 
 					$param = substr($placeholders[$identifier], 1);
@@ -745,6 +762,24 @@ class config_builder
 		}
 
 		return $regexp . $suffix;
+	}
+
+	public function getParser()
+	{
+		if (!class_exists('parser'))
+		{
+			include_once(__DIR__ . '/parser.php');
+		}
+		return new parser($this->getParserConfig());
+	}
+
+	public function getRenderer()
+	{
+		if (!class_exists('renderer'))
+		{
+			include_once(__DIR__ . '/renderer.php');
+		}
+		return new renderer($this->getXSL());
 	}
 
 	public function getParserConfig()

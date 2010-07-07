@@ -470,16 +470,18 @@ class parser
 				{
 					return false;
 				}
-				return $var;
 
-			case 'string':
+				/**
+				* We escape quotes just in case someone would want to use the URL in some Javascript
+				* thingy
+				*/
+				return str_replace(array("'", '"'), array('%27', '%22'), $var);
+
+			case 'text':
 				return $var;
 
 			case 'email':
-				/**
-				* @todo
-				*/
-				break;
+				return filter_var($var, \FILTER_VALIDATE_EMAIL);
 
 			case 'number':
 				if (!is_numeric($var))
@@ -497,21 +499,8 @@ class parser
 					'options' => array('min_range' => 0)
 				));
 
-			case 'range':
-				if (!preg_match('#^(-?\\d+),(-?\\d+)$#D', $extra, $m))
-				{
-					$this->msgs['debug'][] = array(
-						'msg'    => 'Could not interpret range %s',
-						'params' => array($extra)
-					);
-					return false;
-				}
-				return filter_var($var, \FILTER_VALIDATE_INT, array(
-					'options' => array(
-						'min_range' => $m[1],
-						'max_range' => $m[2]
-					)
-				));
+			case 'color':
+				return (preg_match('/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di', $var)) ? $var : false;
 
 			default:
 				$this->msgs['debug'][] = array(
