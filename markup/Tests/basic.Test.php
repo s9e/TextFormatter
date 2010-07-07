@@ -76,6 +76,15 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testAutolink()
+	{
+		$text     = 'Go to http://www.example.com for more';
+		$expected = '<rt>Go to <A href="http://www.example.com">http://www.example.com</A> for more</rt>';
+		$actual   = $this->parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
@@ -91,6 +100,11 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$cb->setEmoticonOption('param', 'code');
 
 		$cb->addEmoticon(':)');
+
+		$cb->addBBCode('a');
+		$cb->addBBCodeParam('a', 'href', 'url', true);
+		$cb->setAutolinkOption('bbcode', 'a');
+		$cb->setAutolinkOption('param', 'href');
 
 		$this->parser = new parser($cb->getParserConfig());
 	}

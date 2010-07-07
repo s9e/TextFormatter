@@ -50,6 +50,11 @@ class config_builder
 	// Autolink
 	//==========================================================================
 
+	public function setAutolinkOption($k, $v)
+	{
+		$this->setOption('autolink', $k, $v);
+	}
+
 	public function getAutolinkConfig()
 	{
 		$config = $this->passes['autolink'];
