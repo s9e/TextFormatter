@@ -72,10 +72,8 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$text     = 'test :) :)';
 		$expected = '<rt>test <E code=":)">:)</E> <E code=":)">:)</E></rt>';
 		$actual   = $this->parser->parse($text);
-		print_r($this->parser->msgs);
 
 		$this->assertSame($expected, $actual);
-
 	}
 
 	public function setUp()
