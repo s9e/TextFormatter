@@ -38,7 +38,7 @@ class testTokenizerEmoticon extends \PHPUnit_Framework_TestCase
 			'default_param'    => 'code',
 			'content_as_param' => true
 		));
-		$cb->addBBCodeParam('e', 'code', 'string', true);
+		$cb->addBBCodeParam('e', 'code', 'text', true);
 
 		$cb->setEmoticonOption('bbcode', 'e');
 		$cb->setEmoticonOption('param', 'code');

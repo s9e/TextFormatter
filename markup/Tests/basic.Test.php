@@ -72,8 +72,10 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$text     = 'test :) :)';
 		$expected = '<rt>test <E code=":)">:)</E> <E code=":)">:)</E></rt>';
 		$actual   = $this->parser->parse($text);
+		print_r($this->parser->msgs);
 
 		$this->assertSame($expected, $actual);
+
 	}
 
 	public function setUp()
@@ -85,7 +87,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 			'default_param'    => 'code',
 			'content_as_param' => true
 		));
-		$cb->addBBCodeParam('e', 'code', 'string', true);
+		$cb->addBBCodeParam('e', 'code', 'text', true);
 
 		$cb->setEmoticonOption('bbcode', 'e');
 		$cb->setEmoticonOption('param', 'code');
