@@ -702,7 +702,7 @@ class parser
 					* Set the default param. If there's no default param, we issue a warning and
 					* reuse the BBCode's name instead
 					*/
-					if ($bbcode['default_param'])
+					if (isset($bbcode['default_param']))
 					{
 						$param = $bbcode['default_param'];
 					}

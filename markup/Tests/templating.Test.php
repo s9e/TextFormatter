@@ -38,6 +38,10 @@ class testTemplating extends \PHPUnit_Framework_TestCase
 				$this->fail('Should have failed with an exception containing "' . $msg . '"');
 			}
 		}
+		catch (\PHPUnit_Framework_Error $e)
+		{
+			throw $e;
+		}
 		catch (\Exception $e)
 		{
 			$this->assertContains($msg, $e->getMessage());
