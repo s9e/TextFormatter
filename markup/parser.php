@@ -836,7 +836,7 @@ class parser
 								/**
 								* No matching quote, apparently that string never ends...
 								*/
-								continue 2;
+								continue 3;
 							}
 
 							if ($text[$rpos - 1] === '\\')
