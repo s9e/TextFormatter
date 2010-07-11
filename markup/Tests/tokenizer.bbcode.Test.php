@@ -238,7 +238,11 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		foreach ($expected as $type => $content)
 		{
 			$this->assertArrayHasKey($type, $actual);
-			$this->assertSame(count($expected[$type]), count($actual[$type]), "Wrong $type count");
+
+			if (count($expected[$type]) !== count($actual[$type]))
+			{
+				$this->assertEquals($expected[$type], $actual[$type]);
+			}
 
 			switch ($type)
 			{

@@ -508,7 +508,7 @@ class config_builder
 		* 2 10 *word
 		* 3 11 *word*
 		*/
-		$k = ($word[0] === '*') << 1 + (substr($word, -1) === '*');
+		$k = (($word[0] === '*') << 1) + (substr($word, -1) === '*');
 
 		/**
 		* Remove leading and trailing asterisks

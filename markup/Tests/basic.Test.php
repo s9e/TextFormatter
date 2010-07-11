@@ -85,6 +85,15 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testBBCodesInsideParamsAreIgnored()
+	{
+		$text     = '[x foo="[b]bar[/b]" /]';
+		$expected = '<rt><X foo="[b]bar[/b]">[x foo=&quot;[b]bar[/b]&quot; /]</X></rt>';
+		$actual   = $this->parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
@@ -105,6 +114,9 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$cb->addBBCodeParam('a', 'href', 'url', true);
 		$cb->setAutolinkOption('bbcode', 'a');
 		$cb->setAutolinkOption('param', 'href');
+
+		$cb->addBBCode('x');
+		$cb->addBBCodeParam('x', 'foo', 'text', false);
 
 		$this->parser = new parser($cb->getParserConfig());
 	}

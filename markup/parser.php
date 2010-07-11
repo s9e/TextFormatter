@@ -937,6 +937,7 @@ class parser
 
 		$cnt  = 0;
 		$tags = array();
+		$msgs = array();
 
 		foreach ($config['regexp'] as $k => $regexp)
 		{
@@ -952,7 +953,11 @@ class parser
 
 				if ($is_utf8)
 				{
-					$regexp .= 'u';
+					/**
+					* Note: we assume that censored words don't contain backslashes, so there should
+					*       not be any escaped backslash in the regexp
+					*/
+					$regexp = str_replace('\\w*', '\\pL*', $regexp) . 'u';
 				}
 			}
 
@@ -987,7 +992,7 @@ class parser
 
 			$replacements = (isset($config['replacements'][$k])) ? $config['replacements'][$k] : array();
 
-			foreach ($matches as $m)
+			foreach ($matches[0] as $m)
 			{
 				$tag = array(
 					'pos'  => $m[1],
@@ -1005,13 +1010,7 @@ class parser
 					}
 				}
 
-				$tags[$pos] = $tag;
-			}
-
-			if (!empty($config['limit'])
-			 && $cnt > $config['limit'])
-			{
-				break;
+				$tags[] = $tag;
 			}
 		}
 
