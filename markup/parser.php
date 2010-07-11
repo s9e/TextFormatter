@@ -935,9 +935,10 @@ class parser
 		$bbcode = $config['bbcode'];
 		$param  = $config['param'];
 
-		$cnt  = 0;
-		$tags = array();
-		$msgs = array();
+		$cnt   = 0;
+		$tags  = array();
+		$msgs  = array();
+		$break = false;
 
 		foreach ($config['regexp'] as $k => $regexp)
 		{
@@ -979,14 +980,17 @@ class parser
 				}
 				else
 				{
+					$limit      = $config['limit'] + $_cnt - $cnt;
 					$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-					$matches[0] = array_slice($matches[0], 0, $config['limit']);
+					$matches[0] = array_slice($matches[0], 0, $limit);
 
 					$msgs[$msg_type][] = array(
 						'pos'    => 0,
 						'msg'    => 'Censor limit exceeded. Only the first %s matches will be processed',
 						'params' => array($config['limit'])
 					);
+
+					$break = true;
 				}
 			}
 
@@ -1011,6 +1015,11 @@ class parser
 				}
 
 				$tags[] = $tag;
+			}
+
+			if ($break)
+			{
+				break;
 			}
 		}
 
