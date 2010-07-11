@@ -271,7 +271,7 @@ class parser
 							continue;
 						}
 
-						$msgs['error'][] = array(
+						$this->msgs['error'][] = array(
 							'pos'    => $tag['pos'],
 							'msg'    => 'Missing param %s',
 							'params' => array($param)
@@ -287,7 +287,7 @@ class parser
 
 						if ($v === false)
 						{
-							$msgs['error'][] = array(
+							$this->msgs['error'][] = array(
 								'pos'    => $tag['pos'],
 								'msg'    => 'Invalid param %s',
 								'params' => array($k)

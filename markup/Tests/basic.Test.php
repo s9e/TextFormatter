@@ -76,19 +76,107 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testAutolink()
+	public function testBBCodesFromTokenizersAreUppercasedIfNeeded()
 	{
-		$text     = 'Go to http://www.example.com for more';
-		$expected = '<rt>Go to <A href="http://www.example.com">http://www.example.com</A> for more</rt>';
-		$actual   = $this->parser->parse($text);
+		$cb = new config_builder;
+		$cb->addBBCode('b');
+
+		$config = $cb->getParserConfig();
+
+		$config['custom'] = array(
+			'parser' => function()
+			{
+				return array(
+					'tags' => array(
+						array(
+							'pos'  => 0,
+							'len'  => 0,
+							'type' => parser::TAG_OPEN,
+							'name' => 'b'
+						),
+						array(
+							'pos'  => 3,
+							'len'  => 0,
+							'type' => parser::TAG_CLOSE,
+							'name' => 'B'
+						)
+					)
+				);
+			}
+		);
+
+		$parser = new parser($config);
+
+		$expected = '<rt><B>foo</B></rt>';
+		$actual   = $parser->parse('foo');
 
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testBBCodesInsideParamsAreIgnored()
+	public function testUnknownBBCodesAreIgnored()
 	{
-		$text     = '[x foo="[b]bar[/b]" /]';
-		$expected = '<rt><X foo="[b]bar[/b]">[x foo=&quot;[b]bar[/b]&quot; /]</X></rt>';
+		$cb = new config_builder;
+		$cb->addBBCode('b');
+		$cb->addBBCode('i');
+
+		/**
+		* It is possible that an application would selectively disable BBCodes by altering the
+		* config rather than regenerate a whole new one. We make sure stuff doesn't go haywire
+		*/
+		$config = $cb->getParserConfig();
+		unset($config['bbcode']['aliases']['I']);
+		unset($config['bbcode']['bbcodes']['I']);
+
+		$parser = new parser($config);
+
+		$text     = '[i]foo[/i]';
+		$expected = '<pt>[i]foo[/i]</pt>';
+		$actual   = $parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testUnknownBBCodesFromCustomPassesAreIgnored()
+	{
+		$cb = new config_builder;
+		$cb->addBBCode('b');
+
+		$config = $cb->getParserConfig();
+
+		$config['custom'] = array(
+			'parser' => function()
+			{
+				return array(
+					'tags' => array(
+						array(
+							'pos'  => 0,
+							'len'  => 0,
+							'type' => parser::TAG_OPEN,
+							'name' => 'Z'
+						),
+						array(
+							'pos'  => 3,
+							'len'  => 0,
+							'type' => parser::TAG_CLOSE,
+							'name' => 'Z'
+						)
+					)
+				);
+			}
+		);
+
+		$parser = new parser($config);
+
+		$expected = '<pt>foo</pt>';
+		$actual   = $parser->parse('foo');
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testAutolink()
+	{
+		$text     = 'Go to http://www.example.com for more';
+		$expected = '<rt>Go to <A href="http://www.example.com">http://www.example.com</A> for more</rt>';
 		$actual   = $this->parser->parse($text);
 
 		$this->assertSame($expected, $actual);

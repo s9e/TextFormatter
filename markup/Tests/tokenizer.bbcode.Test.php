@@ -43,6 +43,24 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	public function testDefaultParam()
+	{
+		$ret = parser::getBBCodeTags('[url=http://www.example.com]foo[/url]', $this->config['bbcode']);
+
+		if (empty($ret['tags']))
+		{
+			$this->fail('No tags were parsed');
+		}
+		elseif (!isset($ret['tags'][0]['params']['url']))
+		{
+			$this->fail('The "url" param is missing');
+		}
+		else
+		{
+			$this->assertSame('http://www.example.com', $ret['tags'][0]['params']['url']);
+		}
+	}
+
 	public function testTokenizerLimitIsRespected()
 	{
 		$text = str_repeat('[b]x[/b] ', 6);
