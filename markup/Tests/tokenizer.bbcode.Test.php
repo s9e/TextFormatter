@@ -151,7 +151,7 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	* @testSelfClosingTagsCanHaveParams
+	* @depends testSelfClosingTagsCanHaveParams
 	*/
 	public function testQuotesCanBeEscapedInsideParamValues()
 	{
@@ -172,7 +172,7 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	* @testSelfClosingTagsCanHaveParams
+	* @depends testSelfClosingTagsCanHaveParams
 	*/
 	public function testBackslashesAndQuotesCanBeEscapedInsideParamValues()
 	{
@@ -193,15 +193,21 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		$this->assertKindaEquals($expected, $actual);
 	}
 
-	public function testUnterminatedParamValueGeneratesAnError()
+	/**
+	* @depends testSelfClosingTagsCanHaveParams
+	*/
+	public function testParamValuesCanEndWithAnEscapedBackslash()
 	{
-		$text     = '[x foo=" /]';
+		// foo="ba\\\"r" -- that's one escaped backslash followed by one escaped quote
+		$text     = '[x foo="bar\\\\" /]';
 		$actual   = parser::getBBCodeTags($text, $this->config['bbcode']);
 		$expected = array(
-			'tags' => array(),
-			'msgs' => array(
-				'error' => array(
-					array('pos' => 7)
+			'tags' => array(
+				array(
+					'name'   => 'X',
+					'pos'    => 0,
+					'len'    => 17,
+					'params' => array('foo' => 'bar\\')
 				)
 			)
 		);
@@ -223,78 +229,163 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		$this->assertKindaEquals($expected, $actual);
 	}
 
-	public function testMalformedParamsRaiseAWarning()
+	/**
+	* @dataProvider getInvalidStuff
+	*/
+	public function testInvalidStuff($text, $expected)
 	{
-		$text = '[x foo=';
+		$actual = parser::getBBCodeTags($text, $this->config['bbcode']);
+		$this->assertKindaEquals($expected, $actual);
+	}
 
-		foreach (array(']', '/') as $c)
-		{
-			$actual   = parser::getBBCodeTags($text . $c . ']', $this->config['bbcode']);
-			$expected = array(
-				'tags' => array(),
-				'msgs' => array(
-					'warning' => array(
-						array(
-							'pos'    => 7,
-							'msg'    => 'Unexpected character %s',
-							'params' => array($c)
+	public function getInvalidStuff()
+	{
+		return array(
+
+			array(
+				'[x foo=" /]',
+				array(
+					'tags' => array(),
+					'msgs' => array(
+						'error' => array(
+							array('pos' => 7)
 						)
 					)
 				)
-			);
-
-			$this->assertKindaEquals($expected, $actual);
-		}
-	}
-
-	public function testClosingTagsCannotHaveParams()
-	{
-		$text = '[x]x[/x=123]';
-
-		$actual   = parser::getBBCodeTags($text, $this->config['bbcode']);
-		$expected = array(
-			'tags' => array(
+			),
+			array(
+				'[z][/z]',
 				array(
-					'name' => 'X',
-					'pos'  => 0,
-					'len'  => 3
+					'tags' => array(),
+					'msgs' => array(
+						'warning' => array(
+							array(
+								'pos'    => 0,
+								'msg'    => 'BBCode %s is for internal use only',
+								'params' => array('Z')
+							)
+						)
+					)
 				)
 			),
-			'msgs' => array(
-				'warning' => array(
-					array(
-						'pos'    => 7,
-						'msg'    => 'Unexpected character %s',
-						'params' => array('=')
+			array(
+				'[x]x[/x=123]',
+				array(
+					'tags' => array(
+						array(
+							'name' => 'X',
+							'pos'  => 0,
+							'len'  => 3
+						)
+					),
+					'msgs' => array(
+						'warning' => array(
+							array(
+								'pos'    => 7,
+								'msg'    => 'Unexpected character %s',
+								'params' => array('=')
+							)
+						)
 					)
 				)
-			)
-		);
-
-		$this->assertKindaEquals($expected, $actual);
-	}
-
-	public function testInternalBBCodesAreIgnored()
-	{
-		$config = $this->config['bbcode'];
-		$config['bbcodes']['X']['internal_use'] = true;
-
-		$text     = '[x][/x]';
-		$actual   = parser::getBBCodeTags($text, $config);
-		$expected = array(
-			'tags' => array(),
-			'msgs' => array(
-				'warning' => array(
-					array(
-						'pos'    => 3,
-						'msg'    => 'BBCode %s is for internal use only',
-						'params' => array('X')
+			),
+			array(
+				'[x foo=]',
+				array(
+					'tags' => array(),
+					'msgs' => array(
+						'warning' => array(
+							array(
+								'pos'    => 7,
+								'msg'    => 'Unexpected character %s',
+								'params' => array(']')
+							)
+						)
 					)
 				)
-			)
+			),
+			array(
+				'[x foo=/',
+				array(
+					'tags' => array(),
+					'msgs' => array(
+						'warning' => array(
+							array(
+								'pos'    => 7,
+								'msg'    => 'Unexpected character %s',
+								'params' => array('/')
+							)
+						)
+					)
+				)
+			),
+			array(
+				'[x/',
+				array(
+					'tags' => array(),
+					'msgs' => array()
+				)
+			),
+			array(
+				'[x//]',
+				array(
+					'tags' => array(),
+					'msgs' => array(
+						'warning' => array(
+							array(
+								'pos'    => 3,
+								'msg'    => 'Unexpected character: expected ] found %s',
+								'params' => array('/')
+							)
+						)
+					)
+				)
+			),
+			array(
+				'[x !]',
+				array(
+					'tags' => array(),
+					'msgs' => array(
+						'warning' => array(
+							array(
+								'pos'    => 3,
+								'msg'    => 'Unexpected character %s',
+								'params' => array('!')
+							)
+						)
+					)
+				)
+			),
+			array(
+				'[x param',
+				array(
+					'tags' => array(),
+					'msgs' => array(
+						'debug' => array(
+							array(
+								'pos'    => 3,
+								'msg'    => 'Param name seems to extend till the end of $text'
+							)
+						)
+					)
+				)
+			),
+			array(
+				'[x param]',
+				array(
+					'tags' => array(),
+					'msgs' => array(
+						'warning' => array(
+							array(
+								'pos'    => 8,
+								'msg'    => 'Unexpected character %s',
+								'params' => array(']')
+							)
+						)
+					)
+				)
+			),
 		);
-
-		$this->assertKindaEquals($expected, $actual);
 	}
 
 	public function setUp()
@@ -311,6 +402,7 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		));
 		$cb->addBBCode('x');
 		$cb->addBBCode('y');
+		$cb->addBBCode('z');
 
 		$cb->addBBCodeParam('x', 'foo', 'text', false);
 		$cb->addBBCodeParam('y', 'foo', 'text', true);
@@ -318,6 +410,9 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		$cb->addBBCodeParam('url', 'url', 'url', true);
 
 		$this->config = $cb->getParserConfig();
+
+		// we temper with the config to let us explore all code paths
+		$this->config['bbcode']['bbcodes']['Z']['internal_use'] = true;
 	}
 
 	protected function assertKindaEquals($expected, $actual)

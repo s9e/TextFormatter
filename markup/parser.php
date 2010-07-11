@@ -299,7 +299,7 @@ class parser
 								continue 2;
 							}
 
-							$invalid[] = 1;
+							$invalid[] = $k;
 						}
 					}
 
@@ -672,8 +672,11 @@ class parser
 				/**
 				* This is theorically impossible, as the regexp does not contain internal BBCodes.
 				*/
-				if ($m[0][0][1] === '/')
+				if ($m[0][0][1] !== '/')
 				{
+					/**
+					* We only warn about starting tags, no need to raise 2 warnings per pair
+					*/
 					$msgs['warning'][] = array(
 						'pos'    => $lpos,
 						'msg'    => 'BBCode %s is for internal use only',
@@ -772,7 +775,7 @@ class parser
 							{
 								$msgs['warning'][] = array(
 									'pos'    => $rpos,
-									'msg'    => 'Unexpected character %s',
+									'msg'    => 'Unexpected character: expected ] found %s',
 									'params' => array($c)
 								);
 								continue 2;
