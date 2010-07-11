@@ -180,6 +180,34 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
+	public function testGlobalSettingWithLocalScope()
+	{
+		$builder = new builder;
+		$builder->allow('perm');
+		$builder->deny('perm', array('x' => 1, 'y' => 1, 'z' => 1));
+		
+		$actual   = $builder->getReader()->getPredicate('perm', 'x', array('y' => 1));
+		$expected = array(
+			'type'  => 'all'
+		);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testExpectedPredicateAllWithLocalScope()
+	{
+		$builder = new builder;
+		$builder->allow('perm', array('x' => 1, 'y' => 1, 'z' => 0));
+		$builder->deny('perm', array('x' => 1, 'y' => 1, 'z' => 1));
+		
+		$actual   = $builder->getReader()->getPredicate('perm', 'x', array('y' => 1));
+		$expected = array(
+			'type'  => 'none'
+		);
+
+		$this->assertEquals($expected, $actual);
+	}
+
 	/**
 	* @expectedException InvalidArgumentException
 	*/

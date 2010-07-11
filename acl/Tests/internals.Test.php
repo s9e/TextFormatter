@@ -58,4 +58,33 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$this->assertFalse(isset($config['foo']['scopes']['scope'][123]));
 		$this->assertTrue(isset($config['foo']['scopes']['scope'][456]));
 	}
+
+	/**
+	* @dataProvider getMasks
+	*/
+	public function testMergeMasks($masks, $expected, $msg = null)
+	{
+		$method = new \ReflectionMethod('s9e\\toolkit\\acl\\builder', 'mergeMasks');
+		$method->setAccessible(true);
+
+		$this->assertSame(
+			$expected,
+			$method->invokeArgs(null, array($masks)),
+			$msg
+		);
+	}
+
+	public function getMasks()
+	{
+		return array(
+			array(
+				array('10000', '01001'),
+				'010010000'
+			),
+			array(
+				array('1111', '0000'),
+				'11110000'
+			)
+		);
+	}
 }

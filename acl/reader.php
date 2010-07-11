@@ -81,7 +81,7 @@ class reader
 		return (bool) (ord($space['mask'][$n >> 3]) & (1 << (7 - ($n & 7))));
 	}
 
-	public function getPredicate($perm, $k, $scope = null)
+	public function getPredicate($perm, $dim, $scope = null)
 	{
 		if (!isset($this->config[$perm]))
 		{
@@ -91,7 +91,7 @@ class reader
 		$global = $this->isAllowed($perm, $scope);
 		$space  = $this->config[$perm];
 
-		if (!isset($space['scopes'][$k]))
+		if (!isset($space['scopes'][$dim]))
 		{
 			// That scope doesn't exist, rely on global setting
 			return array('type' => ($global) ? 'all' : 'none');
@@ -103,7 +103,7 @@ class reader
 		{
 			if (is_array($scope))
 			{
-				if (isset($scope[$k]))
+				if (isset($scope[$dim]))
 				{
 					throw new \InvalidArgumentException('$scope contains the same key we are looking for');
 				}
@@ -130,7 +130,7 @@ class reader
 				if (isset($space['any']))
 				{
 					$any = $space['any'];
-					unset($any[$k]);
+					unset($any[$dim]);
 
 					$n += array_sum($any);
 				}
@@ -147,7 +147,7 @@ class reader
 		}
 
 		$yes = $no = array();
-		foreach ($space['scopes'][$k] as $scope_val => $pos)
+		foreach ($space['scopes'][$dim] as $scope_val => $pos)
 		{
 			$_n = $n + $pos;
 
