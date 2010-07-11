@@ -18,8 +18,42 @@ class testRules extends \PHPUnit_Framework_TestCase
 	public function testCloseParent()
 	{
 		$text     = '[list][*]one[*]two[/list]';
-		$expected = '<rt><LIST><st>[list]</st><LI><st>[*]</st>one</LI><LI><st>[*]</st>two</LI><et>[/list]</et></LIST></rt>';
+		$expected =
+		            '<rt><LIST><st>[list]</st><LI><st>[*]</st>one</LI><LI><st>[*]</st>two</LI><et>[/list]</et></LIST></rt>';
 		$actual   = $this->parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testDeny()
+	{
+		$cb = new config_builder;
+
+		$cb->addBBCode('b');
+		$cb->addBBCode('denied');
+
+		$cb->addBBCodeRule('b', 'deny', 'denied');
+
+		$text     = '[b][denied][/denied][/b]';
+		$expected = '<rt><B><st>[b]</st>[denied][/denied]<et>[/b]</et></B></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testRequireAscendant()
+	{
+		$cb = new config_builder;
+
+		$cb->addBBCode('foo');
+		$cb->addBBCode('bar');
+
+		$cb->addBBCodeRule('bar', 'require_ascendant', 'foo');
+
+		$text     = ' [bar/] [foo][bar][/bar][/foo]';
+		$expected =
+		            '<rt> [bar/] <FOO><st>[foo]</st><BAR><st>[bar]</st><et>[/bar]</et></BAR><et>[/foo]</et></FOO></rt>';
+		$actual   = $cb->getParser()->parse($text);
 
 		$this->assertSame($expected, $actual);
 	}
