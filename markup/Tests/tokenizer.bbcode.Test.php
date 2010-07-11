@@ -209,6 +209,94 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		$this->assertKindaEquals($expected, $actual);
 	}
 
+	public function testUnknownBBCodesAreIgnored()
+	{
+		$config = $this->config['bbcode'];
+		unset($config['aliases']['X']);
+
+		$text     = '[x][/x]';
+		$actual   = parser::getBBCodeTags($text, $config);
+		$expected = array(
+			'tags' => array()
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
+	public function testMalformedParamsRaiseAWarning()
+	{
+		$text = '[x foo=';
+
+		foreach (array(']', '/') as $c)
+		{
+			$actual   = parser::getBBCodeTags($text . $c . ']', $this->config['bbcode']);
+			$expected = array(
+				'tags' => array(),
+				'msgs' => array(
+					'warning' => array(
+						array(
+							'pos'    => 7,
+							'msg'    => 'Unexpected character %s',
+							'params' => array($c)
+						)
+					)
+				)
+			);
+
+			$this->assertKindaEquals($expected, $actual);
+		}
+	}
+
+	public function testClosingTagsCannotHaveParams()
+	{
+		$text = '[x]x[/x=123]';
+
+		$actual   = parser::getBBCodeTags($text, $this->config['bbcode']);
+		$expected = array(
+			'tags' => array(
+				array(
+					'name' => 'X',
+					'pos'  => 0,
+					'len'  => 3
+				)
+			),
+			'msgs' => array(
+				'warning' => array(
+					array(
+						'pos'    => 7,
+						'msg'    => 'Unexpected character %s',
+						'params' => array('=')
+					)
+				)
+			)
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
+	public function testInternalBBCodesAreIgnored()
+	{
+		$config = $this->config['bbcode'];
+		$config['bbcodes']['X']['internal_use'] = true;
+
+		$text     = '[x][/x]';
+		$actual   = parser::getBBCodeTags($text, $config);
+		$expected = array(
+			'tags' => array(),
+			'msgs' => array(
+				'warning' => array(
+					array(
+						'pos'    => 3,
+						'msg'    => 'BBCode %s is for internal use only',
+						'params' => array('X')
+					)
+				)
+			)
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
@@ -230,7 +318,6 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		$cb->addBBCodeParam('url', 'url', 'url', true);
 
 		$this->config = $cb->getParserConfig();
-		$this->parser = new parser($this->config);
 	}
 
 	protected function assertKindaEquals($expected, $actual)

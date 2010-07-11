@@ -590,7 +590,10 @@ class parser
 
 		if (!$cnt)
 		{
-			return;
+			return array(
+				'tags' => array(),
+				'msgs' => array()
+			);
 		}
 
 		if (!empty($config['limit'])
@@ -666,13 +669,20 @@ class parser
 
 			if (!empty($bbcode['internal_use']))
 			{
-				$msgs['warning'][] = array(
-					'pos'    => $lpos,
-					'msg'    => 'BBCode %s is for internal use only',
-					'params' => array($bbcode_id)
-				);
+				/**
+				* This is theorically impossible, as the regexp does not contain internal BBCodes.
+				*/
+				if ($m[0][0][1] === '/')
+				{
+					$msgs['warning'][] = array(
+						'pos'    => $lpos,
+						'msg'    => 'BBCode %s is for internal use only',
+						'params' => array($bbcode_id)
+					);
+				}
 				continue;
 			}
+			// @codeCoverageIgnoreEnd
 
 			if ($m[0][0][1] === '/')
 			{
