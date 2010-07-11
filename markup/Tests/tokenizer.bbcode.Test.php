@@ -129,6 +129,86 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 		$this->assertSame(5, $ret['tags'][1]['len']);
 	}
 
+	/**
+	* @depends testSelfClosingTagsAreParsedCorrectly
+	*/
+	public function testSelfClosingTagsCanHaveParams()
+	{
+		$text     = '[x foo="bar" /]';
+		$actual   = parser::getBBCodeTags($text, $this->config['bbcode']);
+		$expected = array(
+			'tags' => array(
+				array(
+					'name'   => 'X',
+					'pos'    => 0,
+					'len'    => 15,
+					'params' => array('foo' => 'bar')
+				)
+			)
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
+	/**
+	* @testSelfClosingTagsCanHaveParams
+	*/
+	public function testQuotesCanBeEscapedInsideParamValues()
+	{
+		$text     = '[x foo="ba\\"r" /]';
+		$actual   = parser::getBBCodeTags($text, $this->config['bbcode']);
+		$expected = array(
+			'tags' => array(
+				array(
+					'name'   => 'X',
+					'pos'    => 0,
+					'len'    => 17,
+					'params' => array('foo' => 'ba"r')
+				)
+			)
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
+	/**
+	* @testSelfClosingTagsCanHaveParams
+	*/
+	public function testBackslashesAndQuotesCanBeEscapedInsideParamValues()
+	{
+		// foo="ba\\\"r" -- that's one escaped backslash followed by one escaped quote
+		$text     = '[x foo="ba\\\\\\"r" /]';
+		$actual   = parser::getBBCodeTags($text, $this->config['bbcode']);
+		$expected = array(
+			'tags' => array(
+				array(
+					'name'   => 'X',
+					'pos'    => 0,
+					'len'    => 19,
+					'params' => array('foo' => 'ba\\"r')
+				)
+			)
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
+	public function testUnterminatedParamValueGeneratesAnError()
+	{
+		$text     = '[x foo=" /]';
+		$actual   = parser::getBBCodeTags($text, $this->config['bbcode']);
+		$expected = array(
+			'tags' => array(),
+			'msgs' => array(
+				'error' => array(
+					array('pos' => 7)
+				)
+			)
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
 	public function setUp()
 	{
 		$cb = new config_builder;
@@ -151,5 +231,37 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 
 		$this->config = $cb->getParserConfig();
 		$this->parser = new parser($this->config);
+	}
+
+	protected function assertKindaEquals($expected, $actual)
+	{
+		foreach ($expected as $type => $content)
+		{
+			$this->assertArrayHasKey($type, $actual);
+			$this->assertSame(count($expected[$type]), count($actual[$type]), "Wrong $type count");
+
+			switch ($type)
+			{
+				case 'msgs':
+					$this->assertKindaEquals($expected['msgs'], $actual['msgs']);
+					break;
+
+				case 'tags':
+				case 'error':
+				case 'warning':
+				case 'debug':
+					foreach ($content as $k => $v)
+					{
+						$this->assertEquals(
+							$v,
+							array_intersect_key($actual[$type][$k], $v)
+						);
+					}
+					break;
+
+				default:
+					$this->fail('Unknown key');
+			}
+		}
 	}
 }

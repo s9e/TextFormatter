@@ -836,6 +836,10 @@ class parser
 								/**
 								* No matching quote, apparently that string never ends...
 								*/
+								$msgs['error'][] = array(
+									'pos' => $value_pos - 1,
+									'msg' => 'Could not find matching quote'
+								);
 								continue 3;
 							}
 
