@@ -712,7 +712,6 @@ class parser
 				}
 				continue;
 			}
-			// @codeCoverageIgnoreEnd
 
 			if ($m[0][0][1] === '/')
 			{
@@ -750,7 +749,7 @@ class parser
 					{
 						$param = strtolower($bbcode_id);
 
-						$msgs['warning'][] = array(
+						$msgs['debug'][] = array(
 							'pos'    => $rpos,
 							'msg'    => "BBCode %s does not have a default param, using BBCode's name as param name",
 							'params' => array($bbcode_id)
