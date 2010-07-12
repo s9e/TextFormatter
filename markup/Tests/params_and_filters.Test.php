@@ -51,6 +51,10 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 				'<rt><URL href="http://www.example.com"><st>[url href=http://www.example.com]</st>foo<et>[/url]</et></URL></rt>'
 			),
 			array(
+				'[url href=http://bevil.example.com]foo[/url]',
+				'<rt><URL href="http://bevil.example.com"><st>[url href=http://bevil.example.com]</st>foo<et>[/url]</et></URL></rt>'
+			),
+			array(
 				'[url href="javascript:alert()"]foo[/url]',
 				'<pt>[url href=&quot;javascript:alert()&quot;]foo[/url]</pt>',
 				array(
@@ -157,6 +161,24 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 							'pos'    => 0,
 							'msg'    => 'URL host %s is not allowed',
 							'params' => array('evil.example.com')
+						),
+						array(
+							'pos'    => 0,
+							'msg'    => 'Invalid param %s',
+							'params' => array('href')
+						)
+					)
+				)
+			),
+			array(
+				'[url href="http://example.xxx"]foo[/url]',
+				'<pt>[url href=&quot;http://example.xxx&quot;]foo[/url]</pt>',
+				array(
+					'error' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'URL host %s is not allowed',
+							'params' => array('example.xxx')
 						),
 						array(
 							'pos'    => 0,
@@ -275,6 +297,7 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 		));
 
 		$cb->disallowHost('EVIL.example.com');
+		$cb->disallowHost('*.xxx');
 
 		$this->parser = $cb->getParser();
 	}

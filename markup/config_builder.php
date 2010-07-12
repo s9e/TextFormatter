@@ -640,7 +640,14 @@ class config_builder
 
 	public function disallowHost($host)
 	{
-		$this->filters['url']['disallowed_hosts'][] = $host;
+		/**
+		* Transform "*.tld" and ".tld" into the functionally equivalent "tld"
+		*
+		* As a side-effect, when someone bans *.example.com it also bans example.com (no subdomain)
+		* but that's usually what people were trying to achieve.
+		*/
+		$this->filters['url']['disallowed_hosts'][]
+			= preg_replace('#^\\*?\\.#', '', $host);
 	}
 
 	public function getFiltersConfig()
@@ -652,8 +659,13 @@ class config_builder
 
 		if (isset($filters['url']['disallowed_hosts']))
 		{
-			$filters['url']['disallowed_hosts'] =
-				'#' . self::buildRegexpFromList($filters['url']['disallowed_hosts']) . '$#DiS';
+			$filters['url']['disallowed_hosts']
+				= '#(?<![^\\.])'
+				. self::buildRegexpFromList(
+					$filters['url']['disallowed_hosts'],
+					array('*' => '.*?')
+				  )
+				. '#DiS';
 		}
 
 		return $filters;
@@ -819,7 +831,10 @@ class config_builder
 
 	public function getXSL()
 	{
-		$xsl = '<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:output method="xml" encoding="utf-8" />';
+		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
+		     . "\n"
+			 . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+			 . '<xsl:output method="xml" encoding="utf-8" />';
 
 		foreach ($this->bbcodes as $bbcode_id => $bbcode)
 		{
