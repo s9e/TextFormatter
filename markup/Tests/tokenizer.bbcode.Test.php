@@ -403,6 +403,13 @@ class testTokenizerBBCode extends \PHPUnit_Framework_TestCase
 					)
 				)
 			),
+			array(
+				'[x ',
+				array(
+					'tags' => array(),
+					'msgs' => array()
+				)
+			)
 		);
 	}
 
