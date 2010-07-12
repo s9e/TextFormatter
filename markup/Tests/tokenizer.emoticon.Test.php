@@ -10,7 +10,7 @@ class testTokenizerEmoticon extends \PHPUnit_Framework_TestCase
 	public function testTokenizerLimitIsRespected()
 	{
 		$text = str_repeat(':)', 11);
-		$ret  = parser::getEmoticonTags($text, $this->config['emoticon']);
+		$ret  = parser::getEmoticonTags($text, $this->config);
 
 		$this->assertSame(10, count($ret['tags']));
 	}
@@ -20,7 +20,7 @@ class testTokenizerEmoticon extends \PHPUnit_Framework_TestCase
 	*/
 	public function testTokenizerLimitExceededWithActionAbortThrowsAnException()
 	{
-		$config = $this->config['emoticon'];
+		$config = $this->config;
 		$config['limit_action'] = 'abort';
 
 		$text = str_repeat(':)', 11);
@@ -45,7 +45,6 @@ class testTokenizerEmoticon extends \PHPUnit_Framework_TestCase
 
 		$cb->addEmoticon(':)');
 
-		$this->config = $cb->getParserConfig();
-		$this->parser = new parser($this->config);
+		$this->config = $cb->getEmoticonConfig();
 	}
 }

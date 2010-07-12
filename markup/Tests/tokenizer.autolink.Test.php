@@ -10,7 +10,7 @@ class testTokenizerAutolink extends \PHPUnit_Framework_TestCase
 	public function testTokenizerLimitIsRespected()
 	{
 		$text = str_repeat('http://example.com ', 11);
-		$ret  = parser::getAutolinkTags($text, $this->config['autolink']);
+		$ret  = parser::getAutolinkTags($text, $this->config);
 
 		// each link is between 2 tags
 		$this->assertSame(20, count($ret['tags']));
@@ -21,7 +21,7 @@ class testTokenizerAutolink extends \PHPUnit_Framework_TestCase
 	*/
 	public function testTokenizerLimitExceededWithActionAbortThrowsAnException()
 	{
-		$config = $this->config['autolink'];
+		$config = $this->config;
 		$config['limit_action'] = 'abort';
 
 		$text = str_repeat('http://example.com ', 11);
@@ -44,6 +44,6 @@ class testTokenizerAutolink extends \PHPUnit_Framework_TestCase
 		$cb->setAutolinkOption('bbcode', 'url');
 		$cb->setAutolinkOption('param', 'url');
 
-		$this->config = $cb->getParserConfig();
+		$this->config = $cb->getAutolinkConfig();
 	}
 }

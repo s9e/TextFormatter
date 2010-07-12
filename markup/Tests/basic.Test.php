@@ -83,7 +83,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 		$config = $cb->getParserConfig();
 
-		$config['custom'] = array(
+		$config['passes']['custom'] = array(
 			'parser' => function()
 			{
 				return array(
@@ -124,8 +124,8 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		* config rather than regenerate a whole new one. We make sure stuff doesn't go haywire
 		*/
 		$config = $cb->getParserConfig();
-		unset($config['bbcode']['aliases']['I']);
-		unset($config['bbcode']['bbcodes']['I']);
+		unset($config['passes']['BBCode']['aliases']['I']);
+		unset($config['passes']['BBCode']['bbcodes']['I']);
 
 		$parser = new parser($config);
 
@@ -143,7 +143,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 		$config = $cb->getParserConfig();
 
-		$config['custom'] = array(
+		$config['passes']['custom'] = array(
 			'parser' => function()
 			{
 				return array(
@@ -180,6 +180,27 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		$actual   = $this->parser->parse($text);
 
 		$this->assertSame($expected, $actual);
+	}
+
+	public function testTagOpenHasPrecedenceOverTagSelf()
+	{
+		$cb = new config_builder;
+
+		$cb->addBBCode('b');
+		$cb->addBBCode('e', array(
+			'default_param'    => 'code',
+			'content_as_param' => true
+		));
+		$cb->addBBCodeParam('e', 'code', 'text', true);
+
+		$cb->setEmoticonOption('bbcode', 'e');
+		$cb->setEmoticonOption('param', 'code');
+
+		$cb->addEmoticon('[b]');
+
+		$parser = new parser($cb->getParserConfig());
+
+//		die($parser->parse('[b][/b]'));
 	}
 
 	public function setUp()

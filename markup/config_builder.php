@@ -10,23 +10,19 @@ namespace s9e\toolkit\markup;
 class config_builder
 {
 	protected $passes = array(
-		'autolink' => array(
-			'parser'       => array('self', 'getAutolinkTags'),
+		'BBCode' => array(
 			'limit'        => 1000,
 			'limit_action' => 'ignore'
 		),
-		'bbcode' => array(
-			'parser'       => array('self', 'getBBCodeTags'),
+		'Autolink' => array(
 			'limit'        => 1000,
 			'limit_action' => 'ignore'
 		),
-		'censor' => array(
-			'parser'       => array('self', 'getCensorTags'),
+		'Censor' => array(
 			'limit'        => 1000,
 			'limit_action' => 'warn'
 		),
-		'emoticon' => array(
-			'parser'       => array('self', 'getEmoticonTags'),
+		'Emoticon' => array(
 			'limit'        => 1000,
 			'limit_action' => 'ignore'
 		)
@@ -52,12 +48,12 @@ class config_builder
 
 	public function setAutolinkOption($k, $v)
 	{
-		$this->setOption('autolink', $k, $v);
+		$this->setOption('Autolink', $k, $v);
 	}
 
 	public function getAutolinkConfig()
 	{
-		$config = $this->passes['autolink'];
+		$config = $this->passes['Autolink'];
 
 		if (!isset($config['bbcode'], $config['param']))
 		{
@@ -76,7 +72,7 @@ class config_builder
 
 	public function setBBCodeOption($k, $v)
 	{
-		$this->setOption('bbcode', $k, $v);
+		$this->setOption('BBCode', $k, $v);
 	}
 
 	public function addBBCode($bbcode_id, array $options = array())
@@ -200,7 +196,7 @@ class config_builder
 
 	public function getBBCodeConfig()
 	{
-		$config = $this->passes['bbcode'];
+		$config = $this->passes['BBCode'];
 		$config['aliases'] = $this->bbcode_aliases;
 		$config['bbcodes'] = $this->bbcodes;
 		unset($config['tpl']);
@@ -324,14 +320,15 @@ class config_builder
 				throw new \Exception('It seems that your template contains <script> tag using user-supplied information. Those can be insecure and are disabled by default. Please pass "ALLOW_INSECURE_TEMPLATES" as a third parameter to setBBCodeTemplate() to enable it');
 			}
 
+/*
 			foreach ($xpath->query('//@style[contains(., "{")]') as $attr)
 			{
 				print_r($attr);
 				exit;
 			}
+*/
 		}
 
-# //@style[contains(., "{")] |
 		$this->bbcodes[$bbcode_id]['tpl'] = $tpl;
 	}
 
@@ -497,7 +494,7 @@ class config_builder
 
 	public function setCensorOption($k, $v)
 	{
-		$this->setOption('censor', $k, $v);
+		$this->setOption('Censor', $k, $v);
 	}
 
 	public function addCensor($word, $replacement = null)
@@ -541,7 +538,7 @@ class config_builder
 			return false;
 		}
 
-		$config = $this->passes['censor'];
+		$config = $this->passes['Censor'];
 
 		if (!isset($config['bbcode']))
 		{
@@ -584,7 +581,7 @@ class config_builder
 
 	public function setEmoticonOption($k, $v)
 	{
-		$this->setOption('emoticon', $k, $v);
+		$this->setOption('Emoticon', $k, $v);
 	}
 
 	public function getEmoticonConfig()
@@ -594,7 +591,7 @@ class config_builder
 			return false;
 		}
 
-		$config = $this->passes['emoticon'];
+		$config = $this->passes['Emoticon'];
 
 		if (!isset($config['bbcode']))
 		{
@@ -804,24 +801,33 @@ class config_builder
 
 	public function getParserConfig()
 	{
-		$config = array();
+		$passes = array('BBCode' => null);
 
-		foreach ($this->passes as $pass => $conf)
+		foreach (array_keys($this->passes) as $pass)
 		{
-			if (!isset($conf['parser']))
+			if ($pass === 'BBCode')
 			{
-				trigger_error("Skipping pass '" . $k . "' - no parser given", E_USER_NOTICE);
+				// do it later
 				continue;
 			}
-		}
-		return array_filter(array(
-			'bbcode'   => $this->getBBCodeConfig(),
-			'autolink' => $this->getAutolinkConfig(),
-			'censor'   => $this->getCensorConfig(),
-			'emoticon' => $this->getEmoticonConfig(),
 
-			'filters'  => $this->getFiltersConfig()
-		));
+			$method = 'get' . $pass . 'Config';
+			$config = $this->$method();
+
+			if ($config === false)
+			{
+				continue;
+			}
+
+			$passes[$pass] = $config;
+		}
+
+		$passes['BBCode'] = $this->getBBCodeConfig();
+
+		return array(
+			'passes'  => $passes,
+			'filters' => $this->getFiltersConfig()
+		);
 	}
 
 	static public function isValidId($id)

@@ -37,14 +37,17 @@ class parser
 	/**
 	* @var	array
 	*/
-	protected $config;
+	protected $passes;
+
+	/**
+	* @var	array
+	*/
+	protected $filters;
 
 	public function __construct(array $config)
 	{
+		$this->passes  = $config['passes'];
 		$this->filters = $config['filters'];
-		unset($config['filters']);
-
-		$this->config = $config;
 	}
 
 	public function parse($text, $writer = '\\XMLWriter')
@@ -52,36 +55,38 @@ class parser
 		$this->msgs = $tags = array();
 
 		$pass = 0;
-		foreach ($this->config as $config)
+		foreach ($this->passes as $name => $config)
 		{
-			if (isset($config['parser']))
+			if (!isset($config['parser']))
 			{
-				$ret = call_user_func($config['parser'], $text, $config);
-
-				if (!empty($ret['msgs']))
-				{
-					$this->msgs = array_merge_recursive($this->msgs, $ret['msgs']);
-				}
-
-				if (!empty($ret['tags']))
-				{
-					foreach ($ret['tags'] as $tag)
-					{
-						if (!isset($tag['suffix']))
-						{
-							/**
-							* Add a suffix to tags that don't have one so that closing tags from a
-							* pass don't close tags opened by another pass
-							*/
-							$tag['suffix'] = '-' . $pass;
-						}
-						$tag['pass'] = $pass;
-						$tags[]      = $tag;
-					}
-				}
-
-				++$pass;
+				$config['parser'] = array('self', 'get' . $name . 'Tags');
 			}
+
+			$ret = call_user_func($config['parser'], $text, $config);
+
+			if (!empty($ret['msgs']))
+			{
+				$this->msgs = array_merge_recursive($this->msgs, $ret['msgs']);
+			}
+
+			if (!empty($ret['tags']))
+			{
+				foreach ($ret['tags'] as $tag)
+				{
+					if (!isset($tag['suffix']))
+					{
+						/**
+						* Add a suffix to tags that don't have one so that closing tags from a
+						* pass don't close tags opened by another pass
+						*/
+						$tag['suffix'] = '-' . $pass;
+					}
+					$tag['pass'] = $pass;
+					$tags[]      = $tag;
+				}
+			}
+
+			++$pass;
 		}
 
 		$xml = new $writer;
@@ -107,8 +112,8 @@ class parser
 		// Time to get serious
 		//======================================================================
 
-		$aliases  = $this->config['bbcode']['aliases'];
-		$bbcodes  = $this->config['bbcode']['bbcodes'];
+		$aliases  = $this->passes['BBCode']['aliases'];
+		$bbcodes  = $this->passes['BBCode']['bbcodes'];
 
 		/**
 		* @var	array	Open BBCodes
@@ -155,6 +160,7 @@ class parser
 			$bbcode_id = $tag['name'];
 			if (!isset($bbcodes[$bbcode_id]))
 			{
+
 				$bbcode_id = strtoupper($bbcode_id);
 
 				if (!isset($aliases[$bbcode_id]))
