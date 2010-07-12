@@ -103,7 +103,6 @@ class parser
 			    ?: ($b['pass'] - $a['pass']);
 		});
 
-
 		//======================================================================
 		// Time to get serious
 		//======================================================================
@@ -283,7 +282,20 @@ class parser
 					$invalid = array();
 					foreach ($tag['params'] as $k => &$v)
 					{
-						$v = $this->filter($v, $bbcode['params'][$k]['type']);
+						$msgs = array();
+						$v    = $this->filter($v, $bbcode['params'][$k]['type'], $msgs);
+
+						if ($msgs)
+						{
+							foreach ($msgs as $type => $_msgs)
+							{
+								foreach ($_msgs as $msg)
+								{
+									$msg['pos'] = $tag['pos'];
+									$this->msgs[$type][] = $msg;
+								}
+							}
+						}
 
 						if ($v === false)
 						{
@@ -441,11 +453,18 @@ class parser
 		return trim($xml->outputMemory(true));
 	}
 
-	public function filter($var, $type)
+	public function filter($var, $type, array &$msgs = array())
 	{
 		if (isset($this->filters[$type]['callback']))
 		{
-			return call_user_func($this->filters[$type]['callback'], $var, $this->filters[$type]);
+			return call_user_func_array(
+				$this->filters[$type]['callback'],
+				array(
+					$var,
+					$this->filters[$type],
+					&$msgs
+				)
+			);
 		}
 
 		switch ($type)
@@ -462,12 +481,20 @@ class parser
 
 				if (!preg_match($this->filters['url']['allowed_schemes'], $p['scheme']))
 				{
+					$msgs['error'][] = array(
+						'msg'    => 'URL scheme %s is not allowed',
+						'params' => array($p['scheme'])
+					);
 					return false;
 				}
 
 				if (isset($this->filters['url']['disallowed_hosts'])
 				 && preg_match($this->filters['url']['disallowed_hosts'], $p['host']))
 				{
+					$msgs['error'][] = array(
+						'msg'    => 'URL host %s is not allowed',
+						'params' => array($p['host'])
+					);
 					return false;
 				}
 
@@ -503,7 +530,7 @@ class parser
 				return (preg_match('/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di', $var)) ? $var : false;
 
 			default:
-				$this->msgs['debug'][] = array(
+				$msgs['debug'][] = array(
 					'msg'    => 'Unknown filter %s',
 					'params' => array($type)
 				);

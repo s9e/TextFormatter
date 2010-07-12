@@ -155,6 +155,11 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 					'error' => array(
 						array(
 							'pos'    => 0,
+							'msg'    => 'URL host %s is not allowed',
+							'params' => array('evil.example.com')
+						),
+						array(
+							'pos'    => 0,
 							'msg'    => 'Invalid param %s',
 							'params' => array('href')
 						)
@@ -166,6 +171,11 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 				'<pt>[url href=&quot;evil://example.com&quot;]foo[/url]</pt>',
 				array(
 					'error' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'URL scheme %s is not allowed',
+							'params' => array('evil')
+						),
 						array(
 							'pos'    => 0,
 							'msg'    => 'Invalid param %s',
@@ -180,12 +190,39 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 				array(
 					'debug' => array(
 						array(
+							'pos'    => 0,
 							'msg'    => 'Unknown filter %s',
 							'params' => array('undefined')
 						)
 					)
 				)
 			),
+			array(
+				'[size=1]too small[/size]',
+				'<rt><SIZE size="7"><st>[size=1]</st>too small<et>[/size]</et></SIZE></rt>',
+				array(
+					'warning' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'Font size must be at least %d',
+							'params' => array(7)
+						)
+					)
+				)
+			),
+			array(
+				'[size=99]too big[/size]',
+				'<rt><SIZE size="20"><st>[size=99]</st>too big<et>[/size]</et></SIZE></rt>',
+				array(
+					'warning' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'Font size is limited to %d',
+							'params' => array(20)
+						)
+					)
+				)
+			)
 		);
 	}
 
@@ -209,8 +246,36 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 
 		$cb->setFilter('custom', function($v) { return $v; });
 
+		// [size] BBCode with custom font-size filter
+		$cb->addBBCode('size', array('default_param' => 'size'));
+		$cb->addBBCodeParam('size', 'size', 'font-size', true);
+		$callback = function($v, $conf, &$msgs)
+		{
+			if ($v < $conf['min'])
+			{
+				$msgs['warning'][] = array(
+					'msg'    => 'Font size must be at least %d',
+					'params' => array($conf['min'])
+				);
+				return $conf['min'];
+			}
+			elseif ($v > $conf['max'])
+			{
+				$msgs['warning'][] = array(
+					'msg'    => 'Font size is limited to %d',
+					'params' => array($conf['max'])
+				);
+				return $conf['max'];
+			}
+			return $v;
+		};
+		$cb->setFilter('font-size', $callback, array(
+			'min' => 7,
+			'max' => 20
+		));
+
 		$cb->disallowHost('EVIL.example.com');
 
-		$this->parser = new parser($cb->getParserConfig());
+		$this->parser = $cb->getParser();
 	}
 }
