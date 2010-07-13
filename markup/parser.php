@@ -1107,7 +1107,6 @@ class parser
 		}
 
 		$bbcode = $config['bbcode'];
-		$param  = $config['param'];
 
 		foreach ($matches[0] as $m)
 		{
@@ -1115,8 +1114,7 @@ class parser
 				'pos'    => $m[1],
 				'type'   => self::TAG_SELF,
 				'name'   => $bbcode,
-				'len'    => strlen($m[0]),
-				'params' => array($param => $m[0])
+				'len'    => strlen($m[0])
 			);
 		}
 

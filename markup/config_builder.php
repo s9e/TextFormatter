@@ -488,6 +488,21 @@ class config_builder
 		$this->setBBCodeTemplate($bbcode_id, $tpl, $allow_insecure);
 	}
 
+	protected function addInternalBBCode($prefix)
+	{
+		$prefix    = strtoupper($prefix);
+		$bbcode_id = $prefix;
+		$i         = 0;
+		while (isset($this->aliases[$bbcode_id]))
+		{
+			$bbcode_id = $prefix . $i;
+			++$i;
+		}
+
+		$this->addBBCode($bbcode_id, array('internal_use' => true));
+		return $bbcode_id;
+	}
+
 	//==========================================================================
 	// Censor
 	//==========================================================================
@@ -574,9 +589,15 @@ class config_builder
 	// Emoticons
 	//==========================================================================
 
-	public function addEmoticon($code)
+	/**
+	* Add an emoticon
+	*
+	* @param string $code Emoticon code
+	* @param string $tpl  Emoticon template, e.g. <img src="emot.png"/> -- must be well-formed XML
+	*/
+	public function addEmoticon($code, $tpl)
 	{
-		$this->emoticons[$code] = array();
+		$this->emoticons[$code] = $tpl;
 	}
 
 	public function setEmoticonOption($k, $v)
@@ -595,22 +616,33 @@ class config_builder
 
 		if (!isset($config['bbcode']))
 		{
-			trigger_error('No BBCode assigned to the emoticon pass, it will be disabled', E_USER_WARNING);
-			return false;
+			$config['bbcode']       = $this->addInternalBBCode('E');
+			$this->config['bbcode'] = $config['bbcode'];
 		}
-		if (!isset($config['param']))
+
+		/**
+		* Create a template for this BBCode.
+		* If one already exists, we overwrite it. That's how we roll
+		*/
+		$tpls = array();
+		foreach ($this->emoticons as $code => $_tpl)
 		{
-			trigger_error('No BBCode param assigned to the emoticon pass, it will be disabled', E_USER_WARNING);
-			return false;
+			$tpls[$_tpl][] = $code;
 		}
+
+		$tpl = '<xsl:choose>';
+		foreach ($tpls as $_tpl => $codes)
+		{
+			$tpl .= '<xsl:when test=".=\'' . implode("' or .='", $codes) . '\'">'
+			      . $_tpl
+			      . '</xsl:when>';
+		}
+		$tpl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
+
+		$this->setBBCodeTemplate($config['bbcode'], $tpl);
 
 		// Non-anchored pattern, will benefit from the S modifier
 		$config['regexp'] =	'#' . self::buildRegexpFromList(array_keys($this->emoticons)) . '#S';
-
-		if (preg_match('#[\\x80-\\xFF]#', $config['regexp']))
-		{
-			$config['regexp'] .= 'u';
-		}
 
 		return $config;
 	}
@@ -841,7 +873,7 @@ class config_builder
 		     . "\n"
 			 . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
 			 . '<xsl:output method="xml" encoding="utf-8" />'
-			 . '<xsl:template match="m">'
+			 . '<xsl:template match="/m">'
 			 . '<xsl:for-each select="*">'
 			 . '<xsl:apply-templates />'
 			 . '<xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid" /></xsl:if>'

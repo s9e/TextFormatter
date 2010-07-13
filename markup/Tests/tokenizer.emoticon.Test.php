@@ -34,16 +34,7 @@ class testTokenizerEmoticon extends \PHPUnit_Framework_TestCase
 		$cb->setEmoticonOption('limit', 10);
 		$cb->setEmoticonOption('limit_action', 'ignore');
 
-		$cb->addBBCode('e', array(
-			'default_param'    => 'code',
-			'content_as_param' => true
-		));
-		$cb->addBBCodeParam('e', 'code', 'text', true);
-
-		$cb->setEmoticonOption('bbcode', 'e');
-		$cb->setEmoticonOption('param', 'code');
-
-		$cb->addEmoticon(':)');
+		$cb->addEmoticon(':)', '<img src="happy.png" alt=":)" />');
 
 		$this->config = $cb->getEmoticonConfig();
 	}
