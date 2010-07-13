@@ -171,6 +171,24 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
+				'[url href="http://reallyevil.example.com"]foo[/url]',
+				'<pt>[url href=&quot;http://reallyevil.example.com&quot;]foo[/url]</pt>',
+				array(
+					'error' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'URL host %s is not allowed',
+							'params' => array('reallyevil.example.com')
+						),
+						array(
+							'pos'    => 0,
+							'msg'    => 'Invalid param %s',
+							'params' => array('href')
+						)
+					)
+				)
+			),
+			array(
 				'[url href="http://example.xxx"]foo[/url]',
 				'<pt>[url href=&quot;http://example.xxx&quot;]foo[/url]</pt>',
 				array(
@@ -298,6 +316,7 @@ class testParamsAndFilters extends \PHPUnit_Framework_TestCase
 
 		$cb->disallowHost('EVIL.example.com');
 		$cb->disallowHost('*.xxx');
+		$cb->disallowHost('reallyevil.*');
 
 		$this->parser = $cb->getParser();
 	}

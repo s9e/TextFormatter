@@ -555,15 +555,22 @@ class config_builder
 
 		$config = $this->passes['Censor'];
 
-		if (!isset($config['bbcode']))
+		if (!isset($config['bbcode'], $config['param']))
 		{
-			trigger_error('No BBCode assigned to the censor pass, it will be disabled', E_USER_WARNING);
-			return false;
+			$config['bbcode'] = $this->addInternalBBCode('C');
+			$config['param']  = 'with';
+
+			$this->addBBCodeParam($config['bbcode'], $config['param'], 'text', false);
+
+			$this->passes['Censor']['bbcode'] = $config['bbcode'];
+			$this->passes['Censor']['param']  = $config['param'];
 		}
-		if (!isset($config['param']))
+		if (!isset($this->bbcodes[$config['bbcode']]['tpl']))
 		{
-			trigger_error('No BBCode param assigned to the censor pass, it will be disabled', E_USER_WARNING);
-			return false;
+			$this->setBBCodeTemplate(
+				$config['bbcode'],
+				'<xsl:choose><xsl:when test="@with"><xsl:value-of select="@with"/></xsl:when><xsl:otherwise>****</xsl:otherwise></xsl:choose>'
+			);
 		}
 
 		foreach ($this->censor['words'] as $k => $words)

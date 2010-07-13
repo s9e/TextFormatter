@@ -81,6 +81,10 @@ class parser
 						*/
 						$tag['suffix'] = '-' . $pass;
 					}
+					if (!isset($tag['params']))
+					{
+						$tag['params'] = array();
+					}
 					$tag['pass'] = $pass;
 					$tags[]      = $tag;
 				}
