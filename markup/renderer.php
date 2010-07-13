@@ -25,4 +25,15 @@ class renderer
 
 		return trim(strpbrk($this->proc->transformToXML($dom), "\n"));
 	}
+
+	public function renderMulti(array $arr)
+	{
+		$uid = uniqid(mt_rand(), true);
+		$xml = '<m uid="' . $uid . '">' . implode('', $arr) . '</m>';
+
+		return array_combine(
+			array_keys($arr),
+			explode($uid, $this->render($xml))
+		);
+	}
 }

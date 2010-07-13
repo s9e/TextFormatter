@@ -840,7 +840,13 @@ class config_builder
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
 		     . "\n"
 			 . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-			 . '<xsl:output method="xml" encoding="utf-8" />';
+			 . '<xsl:output method="xml" encoding="utf-8" />'
+			 . '<xsl:template match="m">'
+			 . '<xsl:for-each select="*">'
+			 . '<xsl:apply-templates />'
+			 . '<xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid" /></xsl:if>'
+			 . '</xsl:for-each>'
+			 . '</xsl:template>';
 
 		foreach ($this->bbcodes as $bbcode_id => $bbcode)
 		{
