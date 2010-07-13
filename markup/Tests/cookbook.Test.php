@@ -31,13 +31,13 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 		$this->assertThatItWorks($cb, array(
 			'[url]http://example.com[/url]'
 			=> '<a href="http://example.com">http://example.com</a>',
-				
+
 			'[url=http://example.com]best site ever[/url]'
 			=> '<a href="http://example.com">best site ever</a>'
 		));
 	}
 
-	// #url
+	// #list
 	public function testList()
 	{
 		$cb = new config_builder;
@@ -122,6 +122,82 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 			'[size=50]too big[/size]'
 			=> '<span style="font-size: 20px">too big</span>'
 		));
+	}
+
+	// #nl2br-after-rendering
+	public function testNl2brAfterRendering()
+	{
+		$cb = new config_builder;
+
+		//======================================================================
+		$cb->addBBCodeFromExample(
+			'[quote={TEXT1}]{TEXT2}[/quote]',
+			'<div class="quote">
+				<div class="author">{TEXT1} wrote:</div>
+				<div class="content">{TEXT2}</div>
+			</div>'
+		);
+
+		$text = "[quote='Uncle Joe']First line.\nSecond line.[/quote]";
+		$xml  = $cb->getParser()->parse($text);
+		$html = $cb->getRenderer()->render($xml);
+
+		// Now add <br /> tags before displaying the content
+		$html = nl2br($html);
+		//======================================================================
+
+		$expected = '<div class="quote"><div class="author">Uncle Joe wrote:</div><div class="content">First line.' . "<br />\nSecond line.</div></div>";
+
+		$this->assertSame($expected, $html);
+	}
+
+	// #nl2br-before-rendering
+	public function testNl2brBeforeRendering()
+	{
+		$cb = new config_builder;
+
+		//======================================================================
+		$cb->addBBCodeFromExample(
+			'[quote={TEXT1}]{TEXT2}[/quote]',
+			'<div class="quote">
+				<div class="author">{TEXT1} wrote:</div>
+				<div class="content">{TEXT2}</div>
+			</div>'
+		);
+
+		// Add a template rule to the XSL, to preserve <br/> tags
+		$cb->addXSL('<xsl:template match="br"><br/></xsl:template>');
+
+		$text = "[quote='Uncle Joe']First line.\nSecond line.[/quote]";
+		$xml  = $cb->getParser()->parse($text);
+
+		// Add <br /> tags
+		$xml  = nl2br($xml);
+
+		$html = $cb->getRenderer()->render($xml);
+		//======================================================================
+
+		$expected = '<div class="quote"><div class="author">Uncle Joe wrote:</div><div class="content">First line.' . "<br/>\nSecond line.</div></div>";
+
+		$this->assertSame($expected, $html);
+	}
+
+	// #revert
+	public function testRevert()
+	{
+		$cb = new config_builder;
+
+		//======================================================================
+		$cb->addBBCodeFromExample('[b]{TEXT}[/b]', '<b>{TEXT}</b>');
+
+		$text = "Some [b]bold[/b] text.";
+		$xml  = $cb->getParser()->parse($text);
+
+		// Revert using plain PHP functions
+		$orig = html_entity_decode(strip_tags($xml), ENT_QUOTES, 'utf-8');
+		//======================================================================
+
+		$this->assertSame($text, $orig);
 	}
 
 	protected function assertThatItWorks(config_builder $cb, array $examples)

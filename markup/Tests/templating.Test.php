@@ -20,13 +20,13 @@ class testTemplating extends \PHPUnit_Framework_TestCase
 	/**
 	* @dataProvider BBCodeExamples
 	*/
-	public function testAddBBCodeFromExample($def, $tpl, $allow_insecure, $src, $expected, $msg = null)
+	public function testAddBBCodeFromExample($def, $tpl, $flags, $src, $expected, $msg = null)
 	{
 		$cb = new config_builder;
 
 		try
 		{
-			$cb->addBBCodeFromExample($def, $tpl, $allow_insecure);
+			$cb->addBBCodeFromExample($def, $tpl, $flags);
 			$actual = $cb->getRenderer()->render($cb->getParser()->parse($src));
 
 			if (isset($expected))
@@ -55,28 +55,28 @@ class testTemplating extends \PHPUnit_Framework_TestCase
 		array(
 				'[b]{TEXT}[/b]',
 				'<b>{TEXT}</b>',
-				false,
+				null,
 				'Some [b]bold[/b] text',
 				'Some <b>bold</b> text'
 			),
 			array(
 				'[email]{EMAIL}[/email]',
 				'<a href="mailto:{EMAIL}">{EMAIL}</a>',
-				false,
+				null,
 				'My email is [email]none@example.com[/email]',
 				'My email is <a href="mailto:none@example.com">none@example.com</a>'
 			),
 			array(
 				'[email={EMAIL}]{TEXT}[/email]',
 				'<a href="mailto:{EMAIL}">{TEXT}</a>',
-				false,
+				null,
 				'My email is [email=none@example.com]HERE[/email]',
 				'My email is <a href="mailto:none@example.com">HERE</a>'
 			),
 			array(
 				'[email]{TEXT}[/email]',
 				'<a href="mailto:{TEXT}">{TEXT}</a>',
-				false,
+				null,
 				'My email is [email]none@example.com[/email]',
 				null,
 				'ALLOW_INSECURE_TEMPLATES'
@@ -84,7 +84,7 @@ class testTemplating extends \PHPUnit_Framework_TestCase
 			array(
 				'[email]{TEXT}[/email]',
 				'<a href="mailto:{TEXT}">{TEXT}</a>',
-				'ALLOW_INSECURE_TEMPLATES',
+				config_builder::ALLOW_INSECURE_TEMPLATES,
 				'My email is [email]COULD BE ANYTHING[/email]',
 				'My email is <a href="mailto:COULD BE ANYTHING">COULD BE ANYTHING</a>'
 			)

@@ -9,6 +9,9 @@ namespace s9e\toolkit\markup;
 
 class config_builder
 {
+	const ALLOW_INSECURE_TEMPLATES = 1;
+	const PRESERVE_WHITESPACE      = 2;
+
 	protected $passes = array(
 		'BBCode' => array(
 			'limit'        => 1000,
@@ -41,6 +44,11 @@ class config_builder
 			'allowed_schemes' => array('http', 'https')
 		)
 	);
+
+	/**
+	* @var Extra XSL to append to the stylesheet
+	*/
+	protected $xsl = '';
 
 	//==========================================================================
 	// Autolink
@@ -286,7 +294,7 @@ class config_builder
 		);
 	}
 
-	public function setBBCodeTemplate($bbcode_id, $tpl, $allow_insecure = '')
+	public function setBBCodeTemplate($bbcode_id, $tpl, $flags = 0)
 	{
 		$bbcode_id = strtoupper($bbcode_id);
 		if (!isset($this->bbcodes[$bbcode_id]))
@@ -294,7 +302,15 @@ class config_builder
 			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
 		}
 
-		$tpl = '<xsl:template match="' . $bbcode_id . '">' . $tpl . '</xsl:template>';
+		if (!($flags & self::PRESERVE_WHITESPACE))
+		{
+			// Remove whitespace containing newlines from the template
+			$tpl = preg_replace('#>\\s*\\n\\s*<#', '><', $tpl);
+		}
+
+		$tpl = '<xsl:template match="' . $bbcode_id . '">'
+		     . $tpl
+		     . '</xsl:template>';
 
 		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
 		     . $tpl
@@ -311,13 +327,13 @@ class config_builder
 			throw new \InvalidArgumentException('Invalid XML - error was: ' . $error->message);
 		}
 
-		if ($allow_insecure !== 'ALLOW_INSECURE_TEMPLATES')
+		if (!($flags & self::ALLOW_INSECURE_TEMPLATES))
 		{
 			$xpath = new \DOMXPath($dom);
 
 			if ($xpath->query('//script[contains(@src, "{") or .//xsl:value-of]')->length)
 			{
-				throw new \Exception('It seems that your template contains <script> tag using user-supplied information. Those can be insecure and are disabled by default. Please pass "ALLOW_INSECURE_TEMPLATES" as a third parameter to setBBCodeTemplate() to enable it');
+				throw new \Exception('It seems that your template contains <script> tag using user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setBBCodeTemplate() to enable it');
 			}
 
 /*
@@ -329,13 +345,44 @@ class config_builder
 */
 		}
 
+		/**
+		* Strip the whitespace off that template, except in <xsl:text/> elements
+		*/
+/**
+		if (!isset($this->xslt))
+		{
+			$xsl = new \DOMDocument;
+			$xsl->loadXML('<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <xsl:output method="xml" encoding="utf-8" indent="no" />
+	<xsl:preserve-space elements="xsl:text" />
+
+    <xsl:template match="*">
+        <xsl:copy>
+            <xsl:copy-of select="@*" />
+            <xsl:apply-templates />
+        </xsl:copy>
+    </xsl:template>
+
+</xsl:stylesheet>');
+
+			$this->xslt = new \XSLTProcessor;
+			$this->xslt->importStylesheet($xsl);
+		}
+
+		$dom = $this->xslt->transformToDoc($dom);
+		$tpl = $dom->saveXML($dom->documentElement);
+		$tpl = substr($tpl, 1 + strpos($tpl, '>'), strrpos($tpl, '<') - strlen($tpl));
+/**/
+
 		$this->bbcodes[$bbcode_id]['tpl'] = $tpl;
 	}
 
-	public function addBBCodeFromExample($def, $tpl, $allow_insecure = '')
+	public function addBBCodeFromExample($def, $tpl, $flags = 0)
 	{
 		$regexp = '#'
-		        . '\\[([a-zA-Z_][a-zA-Z_0-9]*)(=\\{[A-Z_]+\\})?'
+		        . '\\[([a-zA-Z_][a-zA-Z_0-9]*)(=\\{[A-Z_]+[0-9]*\\})?'
 		        . '((?:\\s+[a-zA-Z_][a-zA-Z_0-9]*=\\{[A-Z_]+\\})*)'
 		        . '(?:\\s*/\\]|\\](\\{[A-Z_]+[0-9]*\\})?\\[/\\1])'
 		        . '$#';
@@ -432,7 +479,7 @@ class config_builder
 		{
 			$attr->value = preg_replace_callback(
 				'#\\{[A-Z]+[0-9]*?\\}#',
-				function ($m) use (&$placeholders, &$params, $bbcode_id, $allow_insecure)
+				function ($m) use (&$placeholders, &$params, $bbcode_id, $flags)
 				{
 					$identifier = $m[0];
 
@@ -441,10 +488,10 @@ class config_builder
 						throw new \Exception('Unknown placeholder ' . $identifier . ' found in template');
 					}
 
-					if ($allow_insecure !== 'ALLOW_INSECURE_TEMPLATES'
+					if (!($flags & config_builder::ALLOW_INSECURE_TEMPLATES)
 					 && preg_match('#^\\{TEXT[0-9]*\\}$#D', $identifier))
 					{
-						throw new \Exception('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass "ALLOW_INSECURE_TEMPLATES" as a third parameter to addBBCodeFromExample() to enable it');
+						throw new \Exception('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to addBBCodeFromExample() to enable it');
 					}
 
 					$param = substr($placeholders[$identifier], 1);
@@ -485,7 +532,7 @@ class config_builder
 		{
 			$this->addBBCodeParam($bbcode_id, $param, $_options['type'], $_options['is_required']);
 		}
-		$this->setBBCodeTemplate($bbcode_id, $tpl, $allow_insecure);
+		$this->setBBCodeTemplate($bbcode_id, $tpl, $flags);
 	}
 
 	protected function addInternalBBCode($prefix)
@@ -895,8 +942,29 @@ class config_builder
 			}
 		}
 
+		$xsl .= $this->xsl;
 		$xsl .= '<xsl:template match="st" /><xsl:template match="et" /></xsl:stylesheet>';
 
 		return $xsl;
+	}
+
+	public function addXSL($xsl)
+	{
+		$xml = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . $xsl
+		     . '</xsl:stylesheet>';
+
+		$old = libxml_use_internal_errors(true);
+		$dom = new \DOMDocument;
+		$res = $dom->loadXML($xml);
+		libxml_use_internal_errors($old);
+
+		if (!$res)
+		{
+			$error = libxml_get_last_error();
+			throw new \InvalidArgumentException('Invalid XSL - error was: ' . $error->message);
+		}
+
+		$this->xsl .= $xsl;
 	}
 }
