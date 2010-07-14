@@ -618,30 +618,34 @@ class parser
 				*/
 				return str_replace(array("'", '"'), array('%27', '%22'), $var);
 
+			case 'simpletext':
+				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+					'options' => array('regexp' => '#^[a-zA-Z0-9\\-+.,_ ]+$#D')
+				));
+
 			case 'text':
-				return $var;
+				return (string) $var;
 
 			case 'email':
 				return filter_var($var, \FILTER_VALIDATE_EMAIL);
-
-			case 'number':
-				if (!is_numeric($var))
-				{
-					return false;
-				}
-				return (float) $var;
 
 			case 'int':
 			case 'integer':
 				return filter_var($var, \FILTER_VALIDATE_INT);
 
+			case 'float':
+				return filter_var($var, \FILTER_VALIDATE_FLOAT);
+
+			case 'number':
 			case 'uint':
 				return filter_var($var, \FILTER_VALIDATE_INT, array(
 					'options' => array('min_range' => 0)
 				));
 
 			case 'color':
-				return (preg_match('/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di', $var)) ? $var : false;
+				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
+				));
 
 			default:
 				$msgs['debug'][] = array(
