@@ -245,14 +245,20 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 		//======================================================================
 		$cb->addBBCodeFromExample('[b]{TEXT}[/b]', '<b>{TEXT}</b>');
 
-		$text = "Some [b]bold[/b] text.";
-		$xml  = $cb->getParser()->parse($text);
+		$text  = "Some [b]bold[/b] text.";
+		$xml   = $cb->getParser()->parse($text);
 
 		// Revert using plain PHP functions
-		$orig = html_entity_decode(strip_tags($xml), ENT_QUOTES, 'utf-8');
+		$orig1 = html_entity_decode(strip_tags($xml), ENT_QUOTES, 'utf-8');
+
+		// Revert using DOM
+		$dom   = new DOMDocument;
+		$dom->loadXML($xml);
+		$orig2 = $dom->textContent;
 		//======================================================================
 
-		$this->assertSame($text, $orig);
+		$this->assertSame($text, $orig1);
+		$this->assertSame($text, $orig2);
 	}
 
 	protected function assertThatItWorks(config_builder $cb, array $examples)
