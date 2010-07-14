@@ -43,8 +43,14 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 		$cb = new config_builder;
 
 		//======================================================================
-		$cb->addBBCode('list');
-		$cb->addBBCode('li');
+		$cb->addBBCode('list', array(
+			'ltrim_content' => true,
+			'rtrim_content' => true
+		));
+		$cb->addBBCode('li', array(
+			'ltrim_content' => true,
+			'rtrim_content' => true
+		));
 
 		// create an alias so that [*] be interpreted as [li]
 		$cb->addBBCodeAlias('li', '*');
@@ -62,6 +68,14 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 
 		$this->assertThatItWorks($cb, array(
 			'[list][*]FIRST[*]SECOND[/list]'
+			=> '<ul><li>FIRST</li><li>SECOND</li></ul>'
+		));
+
+		$this->assertThatItWorks($cb, array(
+			'[list]
+				[*]FIRST
+				[*]SECOND
+			[/list]'
 			=> '<ul><li>FIRST</li><li>SECOND</li></ul>'
 		));
 	}

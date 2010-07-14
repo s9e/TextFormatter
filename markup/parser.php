@@ -361,7 +361,42 @@ class parser
 				{
 					if ($tag['len'])
 					{
-						$xml->text(substr($text, $tag['pos'], $tag['len']));
+						if (!empty($bbcode['ltrim_content']))
+						{
+							/**
+							* @see http://docs.php.net/manual/en/function.ltrim.php
+							*/
+							$spn = strspn($text, " \n\r\t\0\x0B", $tag['pos'], $tag['len']);
+
+							if ($spn)
+							{
+								$xml->writeElement('i', substr($text, $tag['pos'], $spn));
+								$tag['pos'] += $spn;
+								$tag['len'] -= $spn;
+							}
+						}
+
+						if (!empty($bbcode['rtrim_content']))
+						{
+							$content = rtrim(substr($text, $tag['pos'], $tag['len']));
+							$xml->text($content);
+
+							if (strlen($content) < $tag['len'])
+							{
+								$xml->writeElement(
+									'i',
+									substr(
+										$text,
+										$tag['pos'] + strlen($content),
+										$tag['len'] - strlen($content)
+									)
+								);
+							}
+						}
+						else
+						{
+							$xml->text(substr($text, $tag['pos'], $tag['len']));
+						}
 					}
 					$xml->endElement();
 					continue;
@@ -370,6 +405,17 @@ class parser
 				if ($tag['len'])
 				{
 					$xml->writeElement('st', substr($text, $tag['pos'], $tag['len']));
+				}
+
+				if (!empty($bbcode['ltrim_content']))
+				{
+					$spn = strspn($text, " \n\r\t\0\x0B", $pos);
+
+					if ($spn)
+					{
+						$xml->writeElement('i', substr($text, $pos, $spn));
+						$pos += $spn;
+					}
 				}
 
 				++$cnt_open[$bbcode_id];
@@ -412,7 +458,33 @@ class parser
 
 				if ($tag['pos'] > $pos)
 				{
-					$xml->text(substr($text, $pos, $tag['pos'] - $pos));
+					/**
+					* There's text between last tag and current tag
+					*/
+					if (empty($bbcode['rtrim_content']))
+					{
+						$xml->text(substr($text, $pos, $tag['pos'] - $pos));
+					}
+					else
+					{
+						$content = rtrim(substr($text, $pos, $tag['pos'] - $pos));
+						$xml->text($content);
+
+						/**
+						* Move $pos by the length of $content. If it does not catch up to current
+						* tag's pos, it means there's some whitespace in-between, which we write
+						* in a <i/> tag. "i" stands for "ignore"
+						*
+						* Alternatively, we could cram that whitespace into the <et/> tag, although
+						* it is not as semantically sound
+						*/
+						$pos += strlen($content);
+
+						if ($tag['pos'] > $pos)
+						{
+							$xml->writeElement('i', substr($text, $pos, $tag['pos'] - $pos));
+						}
+					}
 				}
 
 				$pos = $tag['pos'] + $tag['len'];

@@ -107,13 +107,16 @@ class config_builder
 				*/
 				settype($v, gettype($bbcode[$k]));
 			}
-			elseif ($k !== 'default_param' && $k !== 'internal_use')
-			{
-				trigger_error("Skipping unknown BBCode option '" . $k . "'", E_USER_NOTICE);
-				continue;
-			}
 
-			$bbcode[$k] = $v;
+			if ($k === 'trim_content')
+			{
+				$bbcode['ltrim_content'] = $v;
+				$bbcode['rtrim_content'] = $v;
+			}
+			else
+			{
+				$bbcode[$k] = $v;
+			}
 		}
 
 		$this->bbcodes[$bbcode_id] = $bbcode;
@@ -199,6 +202,46 @@ class config_builder
 		else
 		{
 			$this->bbcode_rules[$bbcode_id][$action][] = $target;
+		}
+	}
+
+	public function _addBBCodeRule($bbcode_id, $action, $target = '')
+	{
+		$bbcode_id = strtoupper($bbcode_id);
+		$target    = strtoupper($target);
+
+		switch ($action)
+		{
+			case 'allow':
+			case 'close_parent':
+			case 'deny':
+			case 'require_ascendant':
+				$this->bbcode_rules[$bbcode_id][$action][] = $target;
+				break;
+
+			case 'require_parent':
+				if (isset($this->bbcode_rules[$bbcode_id]['require_parent'])
+				 && $this->bbcode_rules[$bbcode_id]['require_parent'] !== $target)
+				{
+					throw new \RuntimeException("BBCode $bbcode_id already has a require_parent rule");
+				}
+				$this->bbcode_rules[$bbcode_id]['require_parent'] = $target;
+				break;
+
+			case 'trim_content':
+			case 'ltrim_content':
+			case 'rtrim_content':
+				break;
+
+			default:
+				throw new \UnexpectedValueException("Unknown rule action '" . $action . "'");
+		}
+
+		if ($action === 'require_parent')
+		{
+		}
+		else
+		{
 		}
 	}
 
@@ -943,7 +986,7 @@ class config_builder
 		}
 
 		$xsl .= $this->xsl;
-		$xsl .= '<xsl:template match="st" /><xsl:template match="et" /></xsl:stylesheet>';
+		$xsl .= '<xsl:template match="st" /><xsl:template match="et" /><xsl:template match="i" /></xsl:stylesheet>';
 
 		return $xsl;
 	}
