@@ -182,11 +182,15 @@ class builder
 		*/
 		$require = array_intersect_key($this->rules['require'], $acl);
 
+		//======================================================================
+		// This is the loop that builds the whole ACL
+		//======================================================================
+
 		do
 		{
-			/**
-			* STEP 1: apply inheritance
-			*/
+			//==================================================================
+			// STEP 1: apply inheritance
+			//==================================================================
 			foreach ($acl as $perm => &$settings)
 			{
 				foreach ($settings as $scope => &$setting)
@@ -212,9 +216,9 @@ class builder
 			}
 			unset($settings, $setting);
 
-			/**
-			* STEP 2: apply "grant" rules
-			*/
+			//==================================================================
+			// STEP 2: apply "grant" rules
+			//==================================================================
 			$grantors = $grantees = array();
 
 			foreach ($grant as $perm => $foreign_perms)
@@ -250,9 +254,9 @@ class builder
 				}
 			}
 
-			/**
-			* STEP 3: apply "require" rules
-			*/
+			//==================================================================
+			// STEP 3: apply "require" rules
+			//==================================================================
 			foreach ($require as $perm => $foreign_perms)
 			{
 				foreach ($acl[$perm] as $scope => &$setting)
@@ -334,9 +338,9 @@ class builder
 				unset($setting);
 			}
 
-			/**
-			* FINAL STEP: check whether the ACL has changed and exit the loop accordingly
-			*/
+			//==================================================================
+			// FINAL STEP: check whether the ACL has changed and exit the loop accordingly
+			//==================================================================
 			$hash = crc32(serialize($acl));
 			if (isset($hashes[$hash]))
 			{
@@ -345,6 +349,10 @@ class builder
 			$hashes[$hash] = 1;
 		}
 		while (1);
+
+		//======================================================================
+		// The ACL is ready, we prepare to reduce it
+		//======================================================================
 
 		/**
 		* Replace allow/null/deny settings with '0' and '1'
@@ -373,6 +381,10 @@ class builder
 			}
 		}
 
+		//======================================================================
+		// Here we reduce the ACL by optimizing away redundant stuff
+		//======================================================================
+
 		/**
 		* Sort perms by their dimensions to make sure we don't mix up perms with different scopings.
 		* We refer to the ensemble of their dimensions as their "space"
@@ -386,32 +398,13 @@ class builder
 
 		$ret = array();
 
-		if (isset($perms_per_space['a:0:{}']))
-		{
-			/**
-			* All that confusing array_* mumbo jumbo is to only keep perms that are allowed and
-			* assign them pos 0
-			*/
-			$allowed = array_keys(array_filter(array_map('array_filter', $perms_per_space['a:0:{}'])));
-
-			if ($allowed)
-			{
-				$space = array(
-					'mask'  => "\x80",
-					'perms' => array_fill_keys($allowed, 0)
-				);
-
-				foreach ($allowed as $perm)
-				{
-					$ret[$perm] =& $space;
-				}
-				unset($space);
-			}
-			unset($perms_per_space['a:0:{}']);
-		}
-
 		foreach ($perms_per_space as $space_id => $perms)
 		{
+			if ($space_id === 'a:0:{}')
+			{
+				continue;
+			}
+
 			$dims  = unserialize($space_id);
 			$space = array();
 
@@ -434,6 +427,10 @@ class builder
 
 				if (isset($masks[$mask]))
 				{
+					/**
+					* That mask is shared with another perm. With set the current perm as an alias
+					* of the other perm then remove it from the list
+					*/
 					$perm_aliases[$perm] = $masks[$mask];
 					unset($perms[$perm]);
 					continue;
@@ -546,7 +543,6 @@ class builder
 					}
 				}
 				unset($scope_vals, $settings);
-
 				foreach ($delete as $dim => $scope_vals)
 				{
 					$dim_scopes[$dim] = array_diff_key($dim_scopes[$dim], $scope_vals);
@@ -638,6 +634,29 @@ class builder
 				$ret[$perm] =& $space;
 			}
 			unset($space);
+		}
+
+		if (isset($perms_per_space['a:0:{}']))
+		{
+			/**
+			* All that confusing array_* mumbo jumbo is to only keep perms that are allowed and
+			* assign them pos 0
+			*/
+			$allowed = array_keys(array_filter(array_map('array_filter', $perms_per_space['a:0:{}'])));
+
+			if ($allowed)
+			{
+				$space = array(
+					'mask'  => "\x80",
+					'perms' => array_fill_keys($allowed, 0)
+				);
+
+				foreach ($allowed as $perm)
+				{
+					$ret[$perm] =& $space;
+				}
+				unset($space);
+			}
 		}
 
 		return $ret;
