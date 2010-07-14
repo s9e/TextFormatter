@@ -199,7 +199,9 @@ class builder
 						}
 
 						/**
-						* NOTE: here, $setting is either null or self::ALLOW
+						* NOTE: here, $setting is either null or self::ALLOW, and the inherited
+						*       setting is either self::ALLOW or self::DENY, both of which can
+						*       unconditionally overwrite the current setting
 						*/
 						if (isset($settings[$inherit_scope]))
 						{
@@ -235,7 +237,7 @@ class builder
 							*
 							* We also check whether the foreign perm has been granted during this
 							* iteration of the main loop. If it was, we record all the grantors so
-							* that we only revoked the foreign perm if ALL of them get revoked.
+							* that we only revoke the foreign perm if ALL of them get revoked.
 							*/
 							continue;
 						}
@@ -294,8 +296,8 @@ class builder
 						do
 						{
 							/**
-							* Holds the list of foreign perms that have been granted by each
-							* canceled perm
+							* @var array Holds the list of foreign perms that have been granted by
+							*            each canceled perm
 							*/
 							$cancel_grantees = array_intersect_key(
 							                      $grantors[$scope],
@@ -560,7 +562,7 @@ class builder
 			}
 
 			/**
-			* Add the "any" bit
+			* Prepare to add the "any" bits
 			*/
 			$mask = '';
 			foreach ($perms as $perm => $settings)
