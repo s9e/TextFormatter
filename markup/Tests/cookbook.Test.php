@@ -67,16 +67,57 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 		//======================================================================
 
 		$this->assertThatItWorks($cb, array(
-			'[list][*]FIRST[*]SECOND[/list]'
-			=> '<ul><li>FIRST</li><li>SECOND</li></ul>'
-		));
-
-		$this->assertThatItWorks($cb, array(
 			'[list]
 				[*]FIRST
 				[*]SECOND
 			[/list]'
 			=> '<ul><li>FIRST</li><li>SECOND</li></ul>'
+		));
+	}
+
+	// #quote
+	public function testQuote()
+	{
+		$cb = new config_builder;
+
+		//======================================================================
+		$cb->addBBCode('quote', array(
+			'nesting_limit' => 3,
+			'default_param' => 'author',
+			'trim_before'   => true,
+			'trim_after'    => true,
+			'ltrim_content' => true,
+			'rtrim_content' => true
+		));
+
+		$cb->addBBCodeParam('quote', 'author', 'text', false);
+		$cb->setBBCodeTemplate(
+			'quote',
+			'<div class="quote">
+				<xsl:choose>
+					<xsl:when test="@author">
+						<div class="author"><xsl:value-of select="@author" /> wrote:</div>
+					</xsl:when>
+					<xsl:otherwise>
+						<div class="noauthor">Generic quote</div>
+					</xsl:otherwise>
+				</xsl:choose>
+
+				<xsl:apply-templates />
+			</div>'
+		);
+		//======================================================================
+
+		$this->assertThatItWorks($cb, array(
+			"[quote]Lorem ipsum[/quote]
+				...Some text...
+			[quote=bob]Hello I'm Bob.[/quote]"
+			=>
+			'<div class="quote"><div class="noauthor">Generic quote</div>Lorem ipsum</div>...Some text...<div class="quote"><div class="author">bob wrote:</div>Hello I\'m Bob.</div>',
+
+			'[quote][quote][quote][quote][quote]Quote pyramids are so funny![/quote][/quote][/quote][/quote][/quote]'
+			=>
+			'<div class="quote"><div class="noauthor">Generic quote</div><div class="quote"><div class="noauthor">Generic quote</div><div class="quote"><div class="noauthor">Generic quote</div>[quote][quote]Quote pyramids are so funny!</div></div></div>[/quote][/quote]'
 		));
 	}
 

@@ -337,7 +337,28 @@ class parser
 
 				if ($tag['pos'] !== $pos)
 				{
-					$xml->text(substr($text, $pos, $tag['pos'] - $pos));
+					if (empty($bbcode['trim_before']))
+					{
+						$xml->text(substr($text, $pos, $tag['pos'] - $pos));
+					}
+					else
+					{
+						$len     = $tag['pos'] - $pos;
+						$content = rtrim(substr($text, $pos, $len));
+						$xml->text($content);
+
+						if (strlen($content) > $len)
+						{
+							$xml->writeElement(
+								'i',
+								substr(
+									$text,
+									$pos + strlen($content),
+									$len - strlen($content)
+								)
+							);
+						}
+					}
 				}
 				$pos = $tag['pos'] + $tag['len'];
 
@@ -509,6 +530,17 @@ class parser
 					$xml->endElement();
 				}
 				while ($cur);
+
+				if (!empty($bbcode['trim_after']))
+				{
+					$spn = strspn($text, " \n\r\t\0\x0B", $pos);
+
+					if ($spn)
+					{
+						$xml->writeElement('i', substr($text, $pos, $spn));
+						$pos += $spn;
+					}
+				}
 			}
 		}
 		while (!empty($tags));

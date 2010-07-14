@@ -108,15 +108,7 @@ class config_builder
 				settype($v, gettype($bbcode[$k]));
 			}
 
-			if ($k === 'trim_content')
-			{
-				$bbcode['ltrim_content'] = $v;
-				$bbcode['rtrim_content'] = $v;
-			}
-			else
-			{
-				$bbcode[$k] = $v;
-			}
+			$bbcode[$k] = $v;
 		}
 
 		$this->bbcodes[$bbcode_id] = $bbcode;
