@@ -386,19 +386,19 @@ class builder
 		//======================================================================
 
 		/**
-		* Sort perms by their dimensions to make sure we don't mix up perms with different scopings.
-		* We refer to the ensemble of their dimensions as their "space"
+		* First we sort perms by their dimensions
 		*/
-		$perms_per_space = array();
-		foreach ($perm_dims as $perm => $dims)
-		{
-			$perms_per_space[serialize($dims)][$perm] = $acl[$perm];
-		}
-		unset($acl);
+		$perms_per_space = self::seedUniverse($perm_dims, $acl);
+		unset($perm_dims, $acl);
 
 		$ret = array();
 
-		foreach ($perms_per_space as $space_id => $perms)
+		/**
+		* We iterate over $perms_per_space using references so that we operate on the original
+		* rather than a copy. This way, we can alter it and see the modifications in the next
+		* iteration. This property is essential for optimizing away whole dimensions
+		*/
+		foreach ($perms_per_space as $space_id => &$perms)
 		{
 			if ($space_id === 'a:0:{}')
 			{
@@ -412,7 +412,8 @@ class builder
 			* Remove perms sharing the same mask and perms that are not granted in any scope
 			*/
 			$masks = $perm_aliases = array();
-			foreach ($perms as $perm => $settings)
+
+			foreach ($perms as $perm => &$settings)
 			{
 				$mask = implode('', $settings);
 
@@ -436,7 +437,80 @@ class builder
 					continue;
 				}
 
+				/**
+				* We save the mask now because even if the perm gets moved to another space, another
+				* perm with the same mask would still be an alias and would get moved to the same
+				* space
+				*/
 				$masks[$mask] = $perm;
+
+				/**
+				* First we map all scope values for this space
+				*/
+				$delete = array_map('array_flip', array_intersect_key($used_scopes, $dims));
+
+				foreach ($settings as $scope => $setting)
+				{
+					foreach ($u[$scope] as $dim => $scope_val)
+					{
+						if ($setting !== $settings[$inherit[$scope][$dim]])
+						{
+							/**
+							* That setting differs from the setting it inherits from, we can't
+							* delete its scope value
+							*/
+							unset($delete[$dim][$scope_val]);
+						}
+					}
+				}
+
+				$delete_dims = array();
+				foreach ($delete as $dim => $scope_vals)
+				{
+					if (count($scope_vals) === count($used_scopes[$dim]))
+					{
+						/**
+						* None of the settings in that dimension differ from their global setting
+						* so we might as well remove that dimension altogether
+						*/
+						$delete_dims[$dim] = $dim;
+					}
+				}
+
+				if ($delete_dims)
+				{
+					echo "remove ",implode(',',$delete_dims)," from $perm\n";
+					foreach ($u as $scope => &$scope_vals)
+					{
+						if (isset($settings[$scope]))
+						{
+							foreach ($delete_dims as $dim)
+							{
+								if (isset($scope_vals[$dim]))
+								{
+									unset($settings[$scope]);
+								}
+							}
+						}
+					}
+					unset($scope_vals);
+
+					$new_dims     = array_diff_key($dims, $delete_dims);
+					$new_space_id = serialize($new_dims);
+
+					unset($perms[$perm]);
+
+					$perms_per_space[$new_space_id][$perm] = $settings;
+				}
+			}
+			unset($settings, $masks);
+
+			if (empty($perms))
+			{
+				/**
+				* No perms left in this space
+				*/
+				continue;
 			}
 
 			/**
@@ -470,6 +544,10 @@ class builder
 					{
 						if ($setting !== $settings[$inherit[$scope][$dim]])
 						{
+							/**
+							* That setting differs from the setting it inherits from, we can't
+							* delete its scope value
+							*/
 							unset($delete[$dim][$scope_val]);
 						}
 
@@ -501,7 +579,10 @@ class builder
 			}
 
 			/**
-			* Find and remove scoped masks that are identical to each others
+			* Find and remove scoped masks that are identical to each others.
+			*
+			* For example, if all settings where x=5 are identical to all settings where x=6 then
+			* we remove x=5 and declare 5 and alias of 6 in dimension x
 			*/
 			$scope_aliases = array();
 			foreach ($scopes_per_mask as $dim => $masks)
@@ -543,18 +624,26 @@ class builder
 					}
 				}
 				unset($scope_vals, $settings);
+
 				foreach ($delete as $dim => $scope_vals)
 				{
 					$dim_scopes[$dim] = array_diff_key($dim_scopes[$dim], $scope_vals);
 				}
-			}
 
-			if (empty($perms))
-			{
-				/**
-				* No perms left in this space
-				*/
-				continue;
+				$dim_scopes = array_filter($dim_scopes);
+
+				if (count($dim_scopes) < count($dims))
+				{
+					/**
+					* A whole dimension has been optimized away. We remove that perm from the
+					* current space and move it to its new space
+					*/
+					//unset($perms[$perm]);
+					echo "\ntransfer $perm from $space_id to ";
+					$new_space_id = serialize(array_intersect_key($dims, $dim_scopes));
+					//$perms_per_space[$space_id][$perm] = $settings;
+					echo "$new_space_id\n";
+				}
 			}
 
 			/**
@@ -635,6 +724,7 @@ class builder
 			}
 			unset($space);
 		}
+		unset($perms);
 
 		if (isset($perms_per_space['a:0:{}']))
 		{
@@ -795,5 +885,67 @@ class builder
 		}
 
 		return implode('', $masks);
+	}
+
+	/**
+	* Receive an array of spaces, create all subspaces
+	*
+	* This method will receive an array where keys are every existing perms and their value is an
+	* array containing their possible dimensions (both as keys and values).
+	*
+	* For instance, $perm_dims will look something like:
+	*    array('perm' => array('x' => 'x'), 'otherperm' => array('x' => 'x', 'y' => 'y'))
+	*
+	* It will return an array where keys are every possible space and subspace (for instance, in the
+	* previous example, it would return a serialized (x,y) space plus two subspaces (x) and (y) plus
+	* one global space) and their values are an array with perms are keys and and settings as
+	* values. All that ordering by their number of dimensions descending, so that if we remove a
+	* dimension from a perm during a loop, we can keep processing the perms normally and deal with
+	* the newly-reduced perm in a later iteration.
+	*/
+	static protected function seedUniverse(array $perm_dims, array $acl)
+	{
+		$perms_per_space = array('a:0:{}' => array());
+
+		foreach ($perm_dims as $perm => $dims)
+		{
+			$space_id = serialize($dims);
+
+			if (!isset($perms_per_space[$space_id]))
+			{
+				$dims = array_values($dims);
+				$i    = pow(2, count($dims));
+
+				while (--$i >= 0)
+				{
+					$subspace = array();
+					foreach ($dims as $k => $dim)
+					{
+						if ($i & pow(2, $k))
+						{
+							$subspace[$dim] = $dim;
+						}
+					}
+					$subspace_id = serialize($subspace);
+
+					if (!isset($perms_per_space[$subspace_id]))
+					{
+						$perms_per_space[$subspace_id] = array();
+					}
+				}
+			}
+
+			$perms_per_space[$space_id][$perm] = $acl[$perm];
+		}
+
+		/**
+		* Sort the spaces by their number of dimensions, descending
+		*/
+		uksort($perms_per_space, function($a, $b)
+		{
+			return count(unserialize($b)) - count(unserialize($a));
+		});
+
+		return $perms_per_space;
 	}
 }

@@ -46,17 +46,38 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$this->assertFalse(isset($config['bar']));
 	}
 
-	public function testUselessScopesAreOptimizedAway()
+	public function testScopesIdenticalToGlobalAreOptimizedAway()
 	{
 		$builder = new builder;
-		$builder->allow('foo');
-		$builder->allow('foo', array('scope' => 123));
-		$builder->allow('bar', array('scope' => 456));
+
+		$builder->allow('foo', array('x' => 1));
+		$builder->allow('foo', array('x' => 1, 'y' => 1));
+		$builder->allow('foo', array('x' => 2, 'y' => 2));
+		$builder->allow('foo', array('x' => 2));
+		$builder->allow('foo', array('x' => 2, 'y' => 1));
+		$builder->deny('foo', array('x' => 2, 'y' => 2));
 
 		$config = $builder->getReaderConfig();
 
-		$this->assertFalse(isset($config['foo']['scopes']['scope'][123]));
-		$this->assertTrue(isset($config['foo']['scopes']['scope'][456]));
+		$this->assertArrayHasKey(1, $config['foo']['scopes']['x']);
+		$this->assertArrayHasKey(2, $config['foo']['scopes']['x']);
+		$this->assertArrayNotHasKey(1, $config['foo']['scopes']['y']);
+		$this->assertArrayHasKey(2, $config['foo']['scopes']['y']);
+	}
+
+	public function testUnusedDimensionsAreOptimizedAway()
+	{
+		$builder = new builder;
+		$builder->allow('foo');
+		$builder->allow('bar', array('x' => 1));
+		$builder->allow('bar', array('y' => 1));
+//		$builder->deny('bar', array('y' => 2));
+
+		$builder->addRule('bar', 'require', 'foo');
+
+		$config = $builder->getReaderConfig();
+
+		print_r($config);
 	}
 
 	/**
@@ -64,7 +85,7 @@ class testInternals extends \PHPUnit_Framework_TestCase
 	*/
 	public function testMergeMasks($masks, $expected, $msg = null)
 	{
-		$method = new \ReflectionMethod('s9e\\toolkit\\acl\\builder', 'mergeMasks');
+		$method = new \ReflectionMethod(__NAMESPACE__ . '\\builder', 'mergeMasks');
 		$method->setAccessible(true);
 
 		$this->assertSame(
