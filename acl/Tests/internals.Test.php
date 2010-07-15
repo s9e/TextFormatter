@@ -16,8 +16,8 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$config = $builder->getReaderConfig();
 
 		$this->assertSame(
-			$config['foo']['perms']['foo'],
-			$config['bar']['perms']['foo']
+			$config['foo'][reader::KEY_PERMS]['foo'],
+			$config['bar'][reader::KEY_PERMS]['foo']
 		);
 	}
 
@@ -30,8 +30,8 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$config = $builder->getReaderConfig();
 
 		$this->assertSame(
-			$config['foo']['scopes']['scope'][123],
-			$config['foo']['scopes']['scope'][456]
+			$config['foo'][reader::KEY_SCOPES]['scope'][123],
+			$config['foo'][reader::KEY_SCOPES]['scope'][456]
 		);
 	}
 
@@ -55,8 +55,8 @@ class testInternals extends \PHPUnit_Framework_TestCase
 
 		$config = $builder->getReaderConfig();
 
-		$this->assertFalse(isset($config['foo']['scopes']['scope'][123]));
-		$this->assertTrue(isset($config['foo']['scopes']['scope'][456]));
+		$this->assertFalse(isset($config['foo'][reader::KEY_SCOPES]['scope'][123]));
+		$this->assertTrue(isset($config['foo'][reader::KEY_SCOPES]['scope'][456]));
 	}
 
 	/**
