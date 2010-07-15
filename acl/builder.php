@@ -91,7 +91,7 @@ class builder
 		$perm_dims = array();
 
 		/**
-		* Holds the list of scopes used for any permission
+		* @var array Holds the list of scopes used in any permission
 		*/
 		$used_scopes = array();
 		foreach ($this->settings as $setting)
@@ -134,23 +134,30 @@ class builder
 
 		do
 		{
-			$grant = array_intersect_key($this->rules['grant'], $acl);
 			$loop  = false;
 
-			foreach ($grant as $perm => $foreign_perms)
+			foreach ($this->rules as $type => $rules)
 			{
-				foreach ($foreign_perms as $foreign_perm)
+				foreach ($rules as $perm => $foreign_perms)
 				{
-					if (!isset($perm_dims[$foreign_perm]))
+					if (!isset($acl[$perm]))
 					{
-						/**
-						* We need to re-evaluate scopes whenever we create a new perm
-						*/
-						$loop = true;
-						$perm_dims[$foreign_perm] = $acl[$foreign_perm] = array();
+						continue;
 					}
 
-					$perm_dims[$foreign_perm] += $perm_dims[$perm];
+					foreach ($foreign_perms as $foreign_perm)
+					{
+						if (!isset($perm_dims[$foreign_perm]))
+						{
+							/**
+							* We need to re-evaluate scopes whenever we create a new perm
+							*/
+							$loop = true;
+							$perm_dims[$foreign_perm] = $acl[$foreign_perm] = array();
+						}
+
+						$perm_dims[$foreign_perm] += $perm_dims[$perm];
+					}
 				}
 			}
 		}
@@ -177,15 +184,12 @@ class builder
 		}
 		unset($dims);
 
-		/**
-		* After the ACL array has been set up, we prepare the "require" rules
-		*/
-		$require = array_intersect_key($this->rules['require'], $acl);
-
 		//======================================================================
 		// This is the loop that builds the whole ACL
 		//======================================================================
 
+		$grant   = array_intersect_key($this->rules['grant'], $acl);
+		$require = array_intersect_key($this->rules['require'], $acl);
 		do
 		{
 			//==================================================================
