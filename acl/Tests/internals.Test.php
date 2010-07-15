@@ -107,6 +107,10 @@ class testInternals extends \PHPUnit_Framework_TestCase
 			array(
 				array('1111', '0000'),
 				'11110000'
+			),
+			array(
+				array('11110', '11000', '11100'),
+				'1111000'
 			)
 		);
 	}
