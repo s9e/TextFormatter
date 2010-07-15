@@ -18,10 +18,13 @@ class builder
 	const ALLOW = 1;
 	const DENY  = 0;
 
+	/**
+	* Those must absolutely be kept in sync with the reader
+	*/
 	const KEY_PERMS  = 0,
 	      KEY_SCOPES = 1,
-		  KEY_ANY    = 2,
-		  KEY_MASK   = 3;
+	      KEY_ANY    = 2,
+	      KEY_MASK   = 3;
 
 	public function allow($perm, array $scope = array())
 	{
@@ -413,7 +416,8 @@ class builder
 		*/
 		foreach ($perms_per_space as $space_id => &$perms)
 		{
-			if ($space_id === 'a:0:{}')
+			if ($space_id === 'a:0:{}'
+			 || empty($perms))
 			{
 				continue;
 			}
@@ -664,17 +668,17 @@ class builder
 				$repeat      = 1 + count($scope_vals);
 				$chunk_len  *= $repeat;
 
-				$space['any'][$dim] = $chunk_len;
+				$space[self::KEY_ANY][$dim] = $chunk_len;
 
 				$i = 0;
 				foreach ($scope_vals as $scope_val)
 				{
 					$pos = ++$i * $step;
-					$space['scopes'][$dim][$scope_val] = $pos;
+					$space[self::KEY_SCOPES][$dim][$scope_val] = $pos;
 
 					if (isset($scope_aliases[$dim][$scope_val]))
 					{
-						$space['scopes'][$dim] += array_fill_keys($scope_aliases[$dim][$scope_val], $pos);
+						$space[self::KEY_SCOPES][$dim] += array_fill_keys($scope_aliases[$dim][$scope_val], $pos);
 					}
 				}
 
@@ -710,14 +714,14 @@ class builder
 			foreach (array_keys($perms) as $i => $perm)
 			{
 				$pos = strpos($space_mask, $perm_masks[$i]);
-				$space['perms'][$perm] = $pos;
+				$space[self::KEY_PERMS][$perm] = $pos;
 
-				$space['perms'] += array_fill_keys(array_keys($perm_aliases, $perm, true), $pos);
+				$space[self::KEY_PERMS] += array_fill_keys(array_keys($perm_aliases, $perm, true), $pos);
 			}
 
-			$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($space_mask . str_repeat('0', 8 - (strlen($space_mask) & 7)), 8))));
+			$space[self::KEY_MASK] = implode('', array_map('chr', array_map('bindec', str_split($space_mask . str_repeat('0', 8 - (strlen($space_mask) & 7)), 8))));
 
-			foreach ($space['perms'] as $perm => $pos)
+			foreach ($space[self::KEY_PERMS] as $perm => $pos)
 			{
 				$ret[$perm] =& $space;
 			}
@@ -736,8 +740,8 @@ class builder
 			if ($allowed)
 			{
 				$space = array(
-					'mask'  => "\x80",
-					'perms' => array_fill_keys($allowed, 0)
+					self::KEY_MASK  => "\x80",
+					self::KEY_PERMS => array_fill_keys($allowed, 0)
 				);
 
 				foreach ($allowed as $perm)

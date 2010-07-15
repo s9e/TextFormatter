@@ -16,8 +16,8 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$config = $builder->getReaderConfig();
 
 		$this->assertSame(
-			$config['foo']['perms']['foo'],
-			$config['bar']['perms']['foo']
+			$config['foo'][reader::KEY_PERMS]['foo'],
+			$config['bar'][reader::KEY_PERMS]['foo']
 		);
 	}
 
@@ -30,8 +30,8 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$config = $builder->getReaderConfig();
 
 		$this->assertSame(
-			$config['foo']['scopes']['scope'][123],
-			$config['foo']['scopes']['scope'][456]
+			$config['foo'][reader::KEY_SCOPES]['scope'][123],
+			$config['foo'][reader::KEY_SCOPES]['scope'][456]
 		);
 	}
 
@@ -59,22 +59,27 @@ class testInternals extends \PHPUnit_Framework_TestCase
 
 		$config = $builder->getReaderConfig();
 
-		$this->assertArrayHasKey(1, $config['foo']['scopes']['x']);
-		$this->assertArrayHasKey(2, $config['foo']['scopes']['x']);
-		$this->assertArrayNotHasKey(1, $config['foo']['scopes']['y']);
-		$this->assertArrayHasKey(2, $config['foo']['scopes']['y']);
+		$this->assertArrayHasKey(1, $config['foo'][reader::KEY_SCOPES]['x']);
+		$this->assertArrayHasKey(2, $config['foo'][reader::KEY_SCOPES]['x']);
+		$this->assertArrayNotHasKey(1, $config['foo'][reader::KEY_SCOPES]['y']);
+		$this->assertArrayHasKey(2, $config['foo'][reader::KEY_SCOPES]['y']);
 	}
 
 	public function testScopesIdenticalToGlobalAreOptimizedAwayOnAPerPermBasis()
 	{
 		$builder = new builder;
+
 		$builder->allow('foo', array('x' => 1));
 		$builder->allow('foo', array('x' => 1, 'y' => 1));
 
 		$builder->allow('bar', array('x' => 1, 'y' => 1));
 
 		$config = $builder->getReaderConfig();
-var_dump(serialize($config));
+
+		$this->assertArrayHasKey('x', $config['foo'][reader::KEY_SCOPES]);
+		$this->assertArrayNotHasKey('y', $config['foo'][reader::KEY_SCOPES]);
+		$this->assertArrayHasKey('x', $config['bar'][reader::KEY_SCOPES]);
+		$this->assertArrayHasKey('y', $config['bar'][reader::KEY_SCOPES]);
 	}
 
 	/**
