@@ -151,4 +151,22 @@ class testRules extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($reader->isAllowed('bar'));
 		$this->assertTrue($reader->isAllowed('baz'));
 	}
+
+	public function testRequireOnAPermWithDifferentDimensions()
+	{
+		$builder = new builder;
+
+		$builder->allow('foo');
+		$builder->allow('bar', array('x' => 1));
+		$builder->allow('bar', array('y' => 1));
+
+		$builder->addRule('bar', 'require', 'foo');
+
+		$reader = $builder->getReader();
+
+		$this->assertFalse($reader->isAllowed('bar'));
+		$this->assertTrue($reader->isAllowed('bar', array('x' => 1)));
+		$this->assertTrue($reader->isAllowed('bar', array('y' => 1)));
+		$this->assertTrue($reader->isAllowed('bar', array('x' => 1, 'y' => 1)));
+	}
 }
