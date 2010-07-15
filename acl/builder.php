@@ -119,8 +119,11 @@ class builder
 		/**
 		* Sort scope values so that the result bitfield is the same no matter in which order the
 		* settings were added. It doesn't cost much and in some cases it might help detect whether
-		* new settings have actually changed the ACL
+		* new settings have actually changed the ACL.
+		*
+		* Also sort the dimensions, this is necessary for the "any" bit loop
 		*/
+		ksort($used_scopes);
 		foreach ($used_scopes as $dim => &$scope_vals)
 		{
 			ksort($scope_vals);

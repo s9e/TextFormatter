@@ -82,6 +82,45 @@ class testScoping extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($reader->isAllowed('foo', array('baz' => $reader->any)));
 	}
 
+	/**
+	* Regression test for a bug where the "any" bits are generated in the wrong order because
+	* dimensions are not in alphabetical order
+	*/
+	public function testAnyOn3DAllow()
+	{
+		$builder = new builder;
+		$builder->allow('bbcode_use', array(
+			'forum_id' => 3
+		));
+
+		$builder->allow('bbcode_use', array(
+			'in'        => 'sig',
+			'bbcode_id' => 'b'
+		));
+
+		$builder->allow('bbcode_use', array(
+			'in'        => 'sig',
+			'bbcode_id' => 'url'
+		));
+
+		$builder->allow('bbcode_use', array(
+			'in'        => 'pm',
+			'bbcode_id' => 'i'
+		));
+
+		$reader = $builder->getReader();
+
+		$this->assertTrue($reader->isAllowed('bbcode_use', $reader->any));
+		$this->assertTrue($reader->isAllowed('bbcode_use', array(
+			'in'        => 'sig',
+			'bbcode_id' => $reader->any
+		)));
+		$this->assertTrue($reader->isAllowed('bbcode_use', array(
+			'in'       => 'forum',
+			'forum_id' => $reader->any
+		)));
+	}
+
 	public function testAnyOnUnknownScopeDefaultsToGlobal()
 	{
 		$builder = new builder;
