@@ -16,7 +16,12 @@ class builder
 	);
 
 	const ALLOW = 1;
-	const DENY = 0;
+	const DENY  = 0;
+
+	const KEY_PERMS  = 0,
+	      KEY_SCOPES = 1,
+		  KEY_ANY    = 2,
+		  KEY_MASK   = 3;
 
 	public function allow($perm, array $scope = array())
 	{
@@ -195,6 +200,7 @@ class builder
 			//==================================================================
 			// STEP 1: apply inheritance
 			//==================================================================
+
 			foreach ($acl as $perm => &$settings)
 			{
 				foreach ($settings as $scope => &$setting)
@@ -223,6 +229,7 @@ class builder
 			//==================================================================
 			// STEP 2: apply "grant" rules
 			//==================================================================
+
 			$grantors = $grantees = array();
 
 			foreach ($grant as $perm => $foreign_perms)
@@ -261,6 +268,7 @@ class builder
 			//==================================================================
 			// STEP 3: apply "require" rules
 			//==================================================================
+
 			foreach ($require as $perm => $foreign_perms)
 			{
 				foreach ($acl[$perm] as $scope => &$setting)
@@ -345,6 +353,7 @@ class builder
 			//==================================================================
 			// FINAL STEP: check whether the ACL has changed and exit the loop accordingly
 			//==================================================================
+
 			$hash = crc32(serialize($acl));
 			if (isset($hashes[$hash]))
 			{
@@ -483,7 +492,6 @@ class builder
 
 				if ($delete_dims)
 				{
-					echo "remove ",implode(',',$delete_dims)," from $perm\n";
 					foreach ($u as $scope => &$scope_vals)
 					{
 						if (isset($settings[$scope]))
@@ -635,19 +643,6 @@ class builder
 				}
 
 				$dim_scopes = array_filter($dim_scopes);
-
-				if (count($dim_scopes) < count($dims))
-				{
-					/**
-					* A whole dimension has been optimized away. We remove that perm from the
-					* current space and move it to its new space
-					*/
-					//unset($perms[$perm]);
-					echo "\ntransfer $perm from $space_id to ";
-					$new_space_id = serialize(array_intersect_key($dims, $dim_scopes));
-					//$perms_per_space[$space_id][$perm] = $settings;
-					echo "$new_space_id\n";
-				}
 			}
 
 			/**

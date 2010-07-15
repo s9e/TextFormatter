@@ -65,19 +65,16 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey(2, $config['foo']['scopes']['y']);
 	}
 
-	public function testUnusedDimensionsAreOptimizedAway()
+	public function testScopesIdenticalToGlobalAreOptimizedAwayOnAPerPermBasis()
 	{
 		$builder = new builder;
-		$builder->allow('foo');
-		$builder->allow('bar', array('x' => 1));
-		$builder->allow('bar', array('y' => 1));
-//		$builder->deny('bar', array('y' => 2));
+		$builder->allow('foo', array('x' => 1));
+		$builder->allow('foo', array('x' => 1, 'y' => 1));
 
-		$builder->addRule('bar', 'require', 'foo');
+		$builder->allow('bar', array('x' => 1, 'y' => 1));
 
 		$config = $builder->getReaderConfig();
-
-		print_r($config);
+var_dump(serialize($config));
 	}
 
 	/**
