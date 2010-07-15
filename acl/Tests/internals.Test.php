@@ -16,8 +16,8 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$config = $builder->getReaderConfig();
 
 		$this->assertSame(
-			$config['foo'][reader::KEY_PERMS]['foo'],
-			$config['bar'][reader::KEY_PERMS]['foo']
+			$config['foo']['perms']['foo'],
+			$config['bar']['perms']['foo']
 		);
 	}
 
@@ -30,8 +30,8 @@ class testInternals extends \PHPUnit_Framework_TestCase
 		$config = $builder->getReaderConfig();
 
 		$this->assertSame(
-			$config['foo'][reader::KEY_SCOPES]['scope'][123],
-			$config['foo'][reader::KEY_SCOPES]['scope'][456]
+			$config['foo']['scopes']['scope'][123],
+			$config['foo']['scopes']['scope'][456]
 		);
 	}
 
@@ -59,10 +59,10 @@ class testInternals extends \PHPUnit_Framework_TestCase
 
 		$config = $builder->getReaderConfig();
 
-		$this->assertArrayHasKey(1, $config['foo'][reader::KEY_SCOPES]['x']);
-		$this->assertArrayHasKey(2, $config['foo'][reader::KEY_SCOPES]['x']);
-		$this->assertArrayNotHasKey(1, $config['foo'][reader::KEY_SCOPES]['y']);
-		$this->assertArrayHasKey(2, $config['foo'][reader::KEY_SCOPES]['y']);
+		$this->assertArrayHasKey(1, $config['foo']['scopes']['x']);
+		$this->assertArrayHasKey(2, $config['foo']['scopes']['x']);
+		$this->assertArrayNotHasKey(1, $config['foo']['scopes']['y']);
+		$this->assertArrayHasKey(2, $config['foo']['scopes']['y']);
 	}
 
 	public function testScopesIdenticalToGlobalAreOptimizedAwayOnAPerPermBasis()
@@ -76,10 +76,10 @@ class testInternals extends \PHPUnit_Framework_TestCase
 
 		$config = $builder->getReaderConfig();
 
-		$this->assertArrayHasKey('x', $config['foo'][reader::KEY_SCOPES]);
-		$this->assertArrayNotHasKey('y', $config['foo'][reader::KEY_SCOPES]);
-		$this->assertArrayHasKey('x', $config['bar'][reader::KEY_SCOPES]);
-		$this->assertArrayHasKey('y', $config['bar'][reader::KEY_SCOPES]);
+		$this->assertArrayHasKey('x', $config['foo']['scopes']);
+		$this->assertArrayNotHasKey('y', $config['foo']['scopes']);
+		$this->assertArrayHasKey('x', $config['bar']['scopes']);
+		$this->assertArrayHasKey('y', $config['bar']['scopes']);
 	}
 
 	/**
