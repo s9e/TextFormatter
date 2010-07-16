@@ -43,7 +43,12 @@ class builder
 
 	public function getReaderConfig()
 	{
-		return $this->build();
+		return $this->build(false);
+	}
+
+	public function getReaderXML()
+	{
+		return $this->build(true);
 	}
 
 	protected function add($value, $perm, array $scope)
@@ -78,7 +83,7 @@ class builder
 		$this->settings[] = array($perm, $value, $scope);
 	}
 
-	protected function build()
+	protected function build($as_xml)
 	{
 		/**
 		* Holds the whole access control list
@@ -402,7 +407,10 @@ class builder
 		$perms_per_space = self::seedUniverse($perm_dims, $acl);
 		unset($perm_dims, $acl);
 
-		$ret = array();
+		/**
+		* @var array
+		*/
+		$spaces = array();
 
 		/**
 		* We iterate over $perms_per_space using references so that we operate on the original
@@ -721,11 +729,7 @@ class builder
 
 			$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($space_mask . str_repeat('0', 8 - (strlen($space_mask) & 7)), 8))));
 
-			foreach ($space['perms'] as $perm => $pos)
-			{
-				$ret[$perm] =& $space;
-			}
-			unset($space);
+			$spaces[] = $space;
 		}
 		unset($perms);
 
@@ -744,15 +748,72 @@ class builder
 					'perms' => array_fill_keys($allowed, 0)
 				);
 
-				foreach ($allowed as $perm)
-				{
-					$ret[$perm] =& $space;
-				}
-				unset($space);
+				$spaces[] = $space;
 			}
 		}
 
-		return $ret;
+		if ($as_xml)
+		{
+			$xml = new \XMLWriter;
+			$xml->openMemory();
+			$xml->startElement('acl');
+
+			foreach ($spaces as $space)
+			{
+				$xml->startElement('space');
+
+				foreach ($space['perms'] as $perm => $pos)
+				{
+					$xml->writeAttribute($perm, $pos);
+				}
+
+				if (!empty($space['scopes']))
+				{
+					$xml->startElement('scopes');
+					foreach ($space['scopes'] as $scope_dim => $scope_vals)
+					{
+						$xml->startElement($scope_dim);
+						foreach ($scope_vals as $scope_val => $pos)
+						{
+							$xml->writeAttribute('_' . $scope_val, $pos);
+						}
+						$xml->endElement();
+					}
+					$xml->endElement();
+				}
+
+				if (!empty($space['any']))
+				{
+					$xml->startElement('any');
+					foreach ($space['any'] as $scope_dim => $pos)
+					{
+						$xml->writeAttribute($scope_dim, $pos);
+					}
+					$xml->endElement();
+				}
+
+				foreach (str_split($space['mask']) as $c)
+				{
+					$xml->text(substr('0000000' . decbin(ord($c)), -8));
+				}
+
+				$xml->endElement();
+			}
+			$xml->endDocument();
+			return trim($xml->outputMemory(true));
+		}
+		else
+		{
+			$ret = array();
+			foreach ($spaces as &$space)
+			{
+				foreach ($space['perms'] as $perm => $pos)
+				{
+					$ret[$perm] =& $space;
+				}
+			}
+			return $ret;
+		}
 	}
 
 	static protected function unroll(array $dims, array $used_scopes, &$bootstrap, array &$inherit)
