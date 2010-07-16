@@ -423,7 +423,7 @@ class builder
 			/**
 			* Remove perms sharing the same mask and perms that are not granted in any scope
 			*/
-			$masks = $perm_aliases = array();
+			$masks = $perm_aliases = $move = array();
 
 			foreach ($perms as $perm => &$settings)
 			{
@@ -455,11 +455,7 @@ class builder
 				* space
 				*/
 				$masks[$mask] = $perm;
-
-				/**
-				* First we map all scope values for this space
-				*/
-				$delete = array_map('array_flip', array_intersect_key($used_scopes, $dims));
+				$delete_dims  = $dims;
 
 				foreach ($settings as $scope => $setting)
 				{
@@ -469,52 +465,61 @@ class builder
 						{
 							/**
 							* That setting differs from the setting it inherits from, we can't
-							* delete its scope value
+							* delete its dimensions
 							*/
-							unset($delete[$dim][$scope_val]);
-						}
-					}
-				}
+							unset($delete_dims[$dim]);
 
-				$delete_dims = array();
-				foreach ($delete as $dim => $scope_vals)
-				{
-					if (count($scope_vals) === count($used_scopes[$dim]))
-					{
-						/**
-						* None of the settings in that dimension differ from their global setting
-						* so we might as well remove that dimension altogether
-						*/
-						$delete_dims[$dim] = $dim;
+							if (empty($delete_dims))
+							{
+								break 2;
+							}
+						}
 					}
 				}
 
 				if ($delete_dims)
 				{
+					$new_dims     = array_diff_key($dims, $delete_dims);
+					$new_space_id = serialize($new_dims);
+
+					$move[$new_space_id][$perm] = $delete_dims;
+				}
+			}
+			unset($settings, $masks);
+
+			foreach ($move as $new_space_id => $moving_perms)
+			{
+				if (count($moving_perms) + count($perms_per_space[$new_space_id]) < 2)
+				{
+					/**
+					* Do not move that perm if it's going to be the only perm of that space. In that
+					* case it's more efficient to leave it in its current space rather than creating
+					* a new one because many perms can share the same space by reference at
+					* virtually no cost
+					*/
+					continue;
+				}
+
+				foreach ($moving_perms as $perm => $delete_dims)
+				{
 					foreach ($u as $scope => &$scope_vals)
 					{
-						if (isset($settings[$scope]))
+						if (isset($perms[$perm][$scope]))
 						{
 							foreach ($delete_dims as $dim)
 							{
 								if (isset($scope_vals[$dim]))
 								{
-									unset($settings[$scope]);
+									unset($perms[$perm][$scope]);
 								}
 							}
 						}
 					}
-					unset($scope_vals);
-
-					$new_dims     = array_diff_key($dims, $delete_dims);
-					$new_space_id = serialize($new_dims);
-
-					unset($perms[$perm]);
-
-					$perms_per_space[$new_space_id][$perm] = $settings;
+					$perms_per_space[$new_space_id][$perm] = $perms[$perm];
+					unset($perms[$perm], $scope_vals);
 				}
 			}
-			unset($settings, $masks);
+			unset($moving_perms);
 
 			if (empty($perms))
 			{
