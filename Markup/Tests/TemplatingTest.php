@@ -3,7 +3,7 @@
 namespace s9e\Toolkit\Markup;
 
 include_once __DIR__ . '/../ConfigBuilder.php';
-//include_once __DIR__ . '/../Parser.php';
+include_once __DIR__ . '/../Parser.php';
 
 class TemplatingTest extends \PHPUnit_Framework_TestCase
 {
@@ -48,11 +48,25 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	public function testBBCodeAliasCanBeUsedForSettingTemplate()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('b');
+		$cb->addBBCodeAlias('b', 'strong');
+		$cb->setBBCodeTemplate('strong', '<strong><xsl:apply-templates/></strong>');
+
+		$text     = '[b]bold[/b] [strong]strong[/strong]';
+		$expected = '<strong>bold</strong> <strong>strong</strong>';
+		$actual   = $cb->getRenderer()->render($cb->getParser()->parse($text));
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function BBCodeExamples()
 	{
 		return array(
-
-		array(
+			array(
 				'[b]{TEXT}[/b]',
 				'<b>{TEXT}</b>',
 				null,
