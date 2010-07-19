@@ -10,7 +10,7 @@ class TokenizerAutolinkTest extends \PHPUnit_Framework_TestCase
 	public function testTokenizerLimitIsRespected()
 	{
 		$text = str_repeat('http://example.com ', 11);
-		$ret  = parser::getAutolinkTags($text, $this->config);
+		$ret  = Parser::getAutolinkTags($text, $this->config);
 
 		// each link is between 2 tags
 		$this->assertSame(20, count($ret['tags']));
@@ -25,7 +25,7 @@ class TokenizerAutolinkTest extends \PHPUnit_Framework_TestCase
 		$config['limit_action'] = 'abort';
 
 		$text = str_repeat('http://example.com ', 11);
-		$ret  = parser::getAutolinkTags($text, $config);
+		$ret  = Parser::getAutolinkTags($text, $config);
 	}
 
 	public function setUp()

@@ -10,7 +10,7 @@ class TokenizerEmoticonTest extends \PHPUnit_Framework_TestCase
 	public function testTokenizerLimitIsRespected()
 	{
 		$text = str_repeat(':)', 11);
-		$ret  = parser::getEmoticonTags($text, $this->config);
+		$ret  = Parser::getEmoticonTags($text, $this->config);
 
 		$this->assertSame(10, count($ret['tags']));
 	}
@@ -24,7 +24,7 @@ class TokenizerEmoticonTest extends \PHPUnit_Framework_TestCase
 		$config['limit_action'] = 'abort';
 
 		$text = str_repeat(':)', 11);
-		$ret  = parser::getEmoticonTags($text, $config);
+		$ret  = Parser::getEmoticonTags($text, $config);
 	}
 
 	public function setUp()

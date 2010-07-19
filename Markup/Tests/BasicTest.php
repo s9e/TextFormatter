@@ -91,13 +91,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 						array(
 							'pos'  => 0,
 							'len'  => 0,
-							'type' => parser::TAG_OPEN,
+							'type' => Parser::TAG_OPEN,
 							'name' => 'b'
 						),
 						array(
 							'pos'  => 3,
 							'len'  => 0,
-							'type' => parser::TAG_CLOSE,
+							'type' => Parser::TAG_CLOSE,
 							'name' => 'B'
 						)
 					)
@@ -151,13 +151,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 						array(
 							'pos'  => 0,
 							'len'  => 0,
-							'type' => parser::TAG_OPEN,
+							'type' => Parser::TAG_OPEN,
 							'name' => 'Z'
 						),
 						array(
 							'pos'  => 3,
 							'len'  => 0,
-							'type' => parser::TAG_CLOSE,
+							'type' => Parser::TAG_CLOSE,
 							'name' => 'Z'
 						)
 					)

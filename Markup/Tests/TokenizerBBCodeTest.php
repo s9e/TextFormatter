@@ -9,7 +9,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 {
 	public function testContentAsParam()
 	{
-		$ret = parser::getBBCodeTags('[url]http://www.example.com[/url]', $this->config);
+		$ret = Parser::getBBCodeTags('[url]http://www.example.com[/url]', $this->config);
 
 		if (empty($ret['tags']))
 		{
@@ -27,7 +27,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 
 	public function testContentAsParamWithBBCodeSuffix()
 	{
-		$ret = parser::getBBCodeTags('[url:1]http://www.example.com/?q[/url]=1[/url:1]', $this->config);
+		$ret = Parser::getBBCodeTags('[url:1]http://www.example.com/?q[/url]=1[/url:1]', $this->config);
 
 		if (empty($ret['tags']))
 		{
@@ -45,7 +45,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 
 	public function testDefaultParam()
 	{
-		$ret = parser::getBBCodeTags('[url=http://www.example.com]foo[/url]', $this->config);
+		$ret = Parser::getBBCodeTags('[url=http://www.example.com]foo[/url]', $this->config);
 
 		if (empty($ret['tags']))
 		{
@@ -64,7 +64,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	public function testTokenizerLimitIsRespected()
 	{
 		$text = str_repeat('[b]x[/b] ', 6);
-		$ret  = parser::getBBCodeTags($text, $this->config);
+		$ret  = Parser::getBBCodeTags($text, $this->config);
 
 		$this->assertSame(10, count($ret['tags']));
 	}
@@ -78,13 +78,13 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 		$config['limit_action'] = 'abort';
 
 		$text = str_repeat('[b]x[/b] ', 6);
-		$ret  = parser::getBBCodeTags($text, $config);
+		$ret  = Parser::getBBCodeTags($text, $config);
 	}
 
 	public function testParamInDoubleQuotesIsParsedCorrectly()
 	{
 		$text = '[x foo="bar"]xxx[/x]';
-		$ret  = parser::getBBCodeTags($text, $this->config);
+		$ret  = Parser::getBBCodeTags($text, $this->config);
 
 		if (!isset($ret['tags'][0]['params']['foo']))
 		{
@@ -97,7 +97,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	public function testParamInSingleQuotesIsParsedCorrectly()
 	{
 		$text = "[x foo='bar']xxx[/x]";
-		$ret  = parser::getBBCodeTags($text, $this->config);
+		$ret  = Parser::getBBCodeTags($text, $this->config);
 
 		if (!isset($ret['tags'][0]['params']['foo']))
 		{
@@ -110,7 +110,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	public function testParamWithoutQuotesIsParsedCorrectly()
 	{
 		$text = '[x foo=bar]xxx[/x]';
-		$ret  = parser::getBBCodeTags($text, $this->config);
+		$ret  = Parser::getBBCodeTags($text, $this->config);
 
 		if (!isset($ret['tags'][0]['params']['foo']))
 		{
@@ -123,7 +123,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	public function testEscapedQuotesAreParsedCorrectly()
 	{
 		$text = '[x foo="\"b\"ar\""]xxx[/x]';
-		$ret  = parser::getBBCodeTags($text, $this->config);
+		$ret  = Parser::getBBCodeTags($text, $this->config);
 
 		if (!isset($ret['tags'][0]['params']['foo']))
 		{
@@ -136,13 +136,13 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	public function testSelfClosingTagsAreParsedCorrectly()
 	{
 		$text = '[x/] [x /]';
-		$ret  = parser::getBBCodeTags($text, $this->config);
+		$ret  = Parser::getBBCodeTags($text, $this->config);
 
 		$this->assertSame(2, count($ret['tags']));
 		$this->assertSame('X', $ret['tags'][0]['name']);
 		$this->assertSame('X', $ret['tags'][1]['name']);
-		$this->assertSame(parser::TAG_SELF, $ret['tags'][0]['type']);
-		$this->assertSame(parser::TAG_SELF, $ret['tags'][1]['type']);
+		$this->assertSame(Parser::TAG_SELF, $ret['tags'][0]['type']);
+		$this->assertSame(Parser::TAG_SELF, $ret['tags'][1]['type']);
 		$this->assertSame(4, $ret['tags'][0]['len']);
 		$this->assertSame(5, $ret['tags'][1]['len']);
 	}
@@ -153,7 +153,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	public function testSelfClosingTagsCanHaveParams()
 	{
 		$text     = '[x foo="bar" /]';
-		$actual   = parser::getBBCodeTags($text, $this->config);
+		$actual   = Parser::getBBCodeTags($text, $this->config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -174,7 +174,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	public function testQuotesCanBeEscapedInsideParamValues()
 	{
 		$text     = '[x foo="ba\\"r" /]';
-		$actual   = parser::getBBCodeTags($text, $this->config);
+		$actual   = Parser::getBBCodeTags($text, $this->config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -196,7 +196,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	{
 		// foo="ba\\\"r" -- that's one escaped backslash followed by one escaped quote
 		$text     = '[x foo="ba\\\\\\"r" /]';
-		$actual   = parser::getBBCodeTags($text, $this->config);
+		$actual   = Parser::getBBCodeTags($text, $this->config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -218,7 +218,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	{
 		// foo="ba\\\"r" -- that's one escaped backslash followed by one escaped quote
 		$text     = '[x foo="bar\\\\" /]';
-		$actual   = parser::getBBCodeTags($text, $this->config);
+		$actual   = Parser::getBBCodeTags($text, $this->config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -239,7 +239,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 		unset($config['aliases']['X']);
 
 		$text     = '[x][/x]';
-		$actual   = parser::getBBCodeTags($text, $config);
+		$actual   = Parser::getBBCodeTags($text, $config);
 		$expected = array(
 			'tags' => array()
 		);
@@ -252,7 +252,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	*/
 	public function testInvalidStuff($text, $expected)
 	{
-		$actual = parser::getBBCodeTags($text, $this->config);
+		$actual = Parser::getBBCodeTags($text, $this->config);
 		$this->assertKindaEquals($expected, $actual);
 	}
 
