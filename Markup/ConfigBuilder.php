@@ -327,7 +327,7 @@ class ConfigBuilder
 		if (!($flags & self::PRESERVE_WHITESPACE))
 		{
 			// Remove whitespace containing newlines from the template
-			$tpl = preg_replace('#>\\s*\\n\\s*<#', '><', $tpl);
+			$tpl = trim(preg_replace('#>\\s*\\n\\s*<#', '><', $tpl));
 		}
 
 		$tpl = '<xsl:template match="' . $bbcode_id . '">'
