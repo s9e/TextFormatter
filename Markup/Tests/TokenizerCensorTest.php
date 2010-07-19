@@ -12,7 +12,7 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 		$config   = $this->getConfig(array('apple' => 'pear'));
 
 		$text     = 'You dirty apple';
-		$actual   = Parser::getCensorTags($text, $config);
+		$actual   = $this->parse($text, $config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -33,7 +33,7 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 		$config   = $this->getConfig(array('apple' => null));
 
 		$text     = 'You dirty apple';
-		$actual   = Parser::getCensorTags($text, $config);
+		$actual   = $this->parse($text, $config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -53,7 +53,7 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 		$config   = $this->getConfig(array('apple' => 'pear'));
 
 		$text     = 'You dirty applepie';
-		$actual   = Parser::getCensorTags($text, $config);
+		$actual   = $this->parse($text, $config);
 		$expected = array(
 			'tags' => array(),
 			'msgs' => array()
@@ -67,7 +67,7 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 		$config   = $this->getConfig(array('apple*' => 'pear'));
 
 		$text     = 'You dirty applepie';
-		$actual   = Parser::getCensorTags($text, $config);
+		$actual   = $this->parse($text, $config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -88,7 +88,7 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 		$config   = $this->getConfig(array("pok\xC3\xA9*" => null));
 
 		$text     = "You dirty Pok\xC3\xA9man";
-		$actual   = Parser::getCensorTags($text, $config);
+		$actual   = $this->parse($text, $config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -109,7 +109,7 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 		$config   = $this->getConfig(array("pok*" => null));
 
 		$text     = "You dirty Pok\xC3\xA9man";
-		$actual   = Parser::getCensorTags($text, $config);
+		$actual   = $this->parse($text, $config);
 		$expected = array(
 			'tags' => array(
 				array(
@@ -123,29 +123,6 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->assertKindaEquals($expected, $actual);
-	}
-
-	public function testTokenizerLimitIsRespected()
-	{
-		$config = $this->getConfig(array('apple*' => null, 'banana' => null));
-		$config['limit_action'] = 'ignore';
-
-		$text = str_repeat('apple banana ', 6);
-		$ret  = Parser::getCensorTags($text, $config);
-
-		$this->assertSame(10, count($ret['tags']));
-	}
-
-	/**
-	* @expectedException Exception
-	*/
-	public function testTokenizerLimitExceededWithActionAbortThrowsAnException()
-	{
-		$config = $this->getConfig(array('apple*' => null, 'banana' => null));
-		$config['limit_action'] = 'abort';
-
-		$text = str_repeat('apple banana ', 6);
-		$ret  = Parser::getCensorTags($text, $config);
 	}
 
 	protected function getConfig($words)
@@ -201,5 +178,15 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 					$this->fail('Unknown key');
 			}
 		}
+	}
+
+	protected function parse($text, $config)
+	{
+		$matches = array();
+		foreach ($config['regexp'] as $k => $regexp)
+		{
+			preg_match_all($regexp, $text, $matches[$k], \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+		}
+		return Parser::getCensorTags($text, $config, $matches);
 	}
 }

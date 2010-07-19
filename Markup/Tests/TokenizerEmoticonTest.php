@@ -7,26 +7,6 @@ include_once __DIR__ . '/../Parser.php';
 
 class TokenizerEmoticonTest extends \PHPUnit_Framework_TestCase
 {
-	public function testTokenizerLimitIsRespected()
-	{
-		$text = str_repeat(':)', 11);
-		$ret  = Parser::getEmoticonTags($text, $this->config);
-
-		$this->assertSame(10, count($ret['tags']));
-	}
-
-	/**
-	* @expectedException Exception
-	*/
-	public function testTokenizerLimitExceededWithActionAbortThrowsAnException()
-	{
-		$config = $this->config;
-		$config['limit_action'] = 'abort';
-
-		$text = str_repeat(':)', 11);
-		$ret  = Parser::getEmoticonTags($text, $config);
-	}
-
 	public function setUp()
 	{
 		$cb = new ConfigBuilder;
@@ -37,5 +17,11 @@ class TokenizerEmoticonTest extends \PHPUnit_Framework_TestCase
 		$cb->addEmoticon(':)', '<img src="happy.png" alt=":)" />');
 
 		$this->config = $cb->getEmoticonConfig();
+	}
+
+	protected function parse($text, $config)
+	{
+		preg_match_all($config['regexp'], $text, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+		return Parser::getEmoticonTags($text, $config, $matches);
 	}
 }

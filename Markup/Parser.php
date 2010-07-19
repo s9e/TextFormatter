@@ -57,12 +57,67 @@ class Parser
 		$pass = 0;
 		foreach ($this->passes as $name => $config)
 		{
+			$matches = array();
+			if (isset($config['regexp']))
+			{
+				$is_array = is_array($config['regexp']);
+
+				$cnt  = 0;
+				$skip = false;
+
+				foreach ((array) $config['regexp'] as $k => $regexp)
+				{
+					if ($skip)
+					{
+						$matches[$k] = array();
+						continue;
+					}
+
+					$_cnt = preg_match_all($regexp, $text, $matches[$k], \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+
+					if (!$_cnt)
+					{
+						continue;
+					}
+
+					$cnt += $_cnt;
+
+					if (!empty($config['limit'])
+					 && $cnt > $config['limit'])
+					{
+						if ($config['limit_action'] === 'abort')
+						{
+							throw new \RuntimeException($name . ' limit exceeded');
+						}
+						else
+						{
+							$limit       = $config['limit'] + $_cnt - $cnt;
+							$msg_type    = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
+							$matches[$k] = array_slice($matches[$k], 0, $limit);
+
+							$msgs[$msg_type][] = array(
+								'pos'    => 0,
+								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
+								'params' => array($config['limit'])
+							);
+
+							$skip = true;
+						}
+					}
+				}
+
+				if (!$is_array)
+				{
+					$matches = $matches[0];
+				}
+			}
+
 			if (!isset($config['parser']))
 			{
 				$config['parser'] = array('self', 'get' . $name . 'Tags');
 			}
 
-			$ret = call_user_func($config['parser'], $text, $config);
+			$ret = call_user_func($config['parser'], $text, $config, $matches);
 
 			if (!empty($ret['msgs']))
 			{
@@ -660,43 +715,17 @@ class Parser
 	// Tokenizers
 	//==========================================================================
 
-	static public function getAutolinkTags($text, array $config)
+	static public function getAutolinkTags($text, array $config, array $matches)
 	{
 		$tags = array();
 		$msgs = array();
-		$cnt  = preg_match_all($config['regexp'], $text, $matches, PREG_OFFSET_CAPTURE);
-
-		if (!$cnt)
-		{
-			return;
-		}
-
-		if (!empty($config['limit'])
-		 && $cnt > $config['limit'])
-		{
-			if ($config['limit_action'] === 'abort')
-			{
-				throw new \RuntimeException('Autolink limit exceeded');
-			}
-			else
-			{
-				$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-				$matches[0] = array_slice($matches[0], 0, $config['limit']);
-
-				$msgs[$msg_type][] = array(
-					'pos'    => 0,
-					'msg'    => 'Autolink limit exceeded. Only the first %s links will be processed',
-					'params' => array($config['limit'])
-				);
-			}
-		}
 
 		$bbcode = $config['bbcode'];
 		$param  = $config['param'];
 
-		foreach ($matches[0] as $m)
+		foreach ($matches as $m)
 		{
-			$url = $m[0];
+			$url = $m[0][0];
 
 			/**
 			* Remove some trailing punctuation. We preserve right parentheses if there's a left
@@ -707,14 +736,14 @@ class Parser
 			$url   = rtrim($url, $rtrim);
 
 			$tags[] = array(
-				'pos'    => $m[1],
+				'pos'    => $m[0][1],
 				'name'   => $bbcode,
 				'type'   => self::TAG_OPEN,
 				'len'    => 0,
 				'params' => array($param => $url)
 			);
 			$tags[] = array(
-				'pos'    => $m[1] + strlen($url),
+				'pos'    => $m[0][1] + strlen($url),
 				'name'   => $bbcode,
 				'type'   => self::TAG_CLOSE,
 				'len'    => 0
@@ -727,39 +756,10 @@ class Parser
 		);
 	}
 
-	static public function getBBCodeTags($text, array $config)
+	static public function getBBCodeTags($text, array $config, array $matches)
 	{
 		$tags = array();
 		$msgs = array();
-		$cnt  = preg_match_all($config['regexp'], $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-
-		if (!$cnt)
-		{
-			return array(
-				'tags' => array(),
-				'msgs' => array()
-			);
-		}
-
-		if (!empty($config['limit'])
-		 && $cnt > $config['limit'])
-		{
-			if ($config['limit_action'] === 'abort')
-			{
-				throw new \RuntimeException('BBCode tags limit exceeded');
-			}
-			else
-			{
-				$msg_type = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-				$matches  = array_slice($matches, 0, $config['limit']);
-
-				$msgs[$msg_type][] = array(
-					'pos'    => 0,
-					'msg'    => 'BBCode tags limit exceeded. Only the first %s tags will be processed',
-					'params' => array($config['limit'])
-				);
-			}
-		}
 
 		$bbcodes  = $config['bbcodes'];
 		$aliases  = $config['aliases'];
@@ -1087,7 +1087,7 @@ class Parser
 		);
 	}
 
-	static public function getCensorTags($text, array $config)
+	static public function getCensorTags($text, array $config, array $matches)
 	{
 		$bbcode = $config['bbcode'];
 		$param  = $config['param'];
@@ -1097,74 +1097,22 @@ class Parser
 		$msgs  = array();
 		$break = false;
 
-		foreach ($config['regexp'] as $k => $regexp)
+		foreach ($matches as $k => $_matches)
 		{
-			if (substr($regexp, -1) !== 'u')
-			{
-				/**
-				* The regexp isn't Unicode-aware, does $text contain more than ASCII?
-				*/
-				if (!isset($is_utf8))
-				{
-					$is_utf8 = preg_match('#[\\x80-\\xff]#', $text);
-				}
-
-				if ($is_utf8)
-				{
-					/**
-					* Note: we assume that censored words don't contain backslashes, so there should
-					*       not be any escaped backslash in the regexp
-					*/
-					$regexp = str_replace('\\w*', '\\pL*', $regexp) . 'u';
-				}
-			}
-
-			$_cnt = preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE);
-
-			if (!$_cnt)
-			{
-				continue;
-			}
-
-			$cnt += $_cnt;
-
-			if (!empty($config['limit'])
-			 && $cnt > $config['limit'])
-			{
-				if ($config['limit_action'] === 'abort')
-				{
-					throw new \RuntimeException('Censor limit exceeded');
-				}
-				else
-				{
-					$limit      = $config['limit'] + $_cnt - $cnt;
-					$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-					$matches[0] = array_slice($matches[0], 0, $limit);
-
-					$msgs[$msg_type][] = array(
-						'pos'    => 0,
-						'msg'    => 'Censor limit exceeded. Only the first %s matches will be processed',
-						'params' => array($config['limit'])
-					);
-
-					$break = true;
-				}
-			}
-
 			$replacements = (isset($config['replacements'][$k])) ? $config['replacements'][$k] : array();
 
-			foreach ($matches[0] as $m)
+			foreach ($_matches as $m)
 			{
 				$tag = array(
-					'pos'  => $m[1],
+					'pos'  => $m[0][1],
 					'name' => $bbcode,
 					'type' => self::TAG_SELF,
-					'len'  => strlen($m[0])
+					'len'  => strlen($m[0][0])
 				);
 
 				foreach ($replacements as $mask => $replacement)
 				{
-					if (preg_match($mask, $m[0]))
+					if (preg_match($mask, $m[0][0]))
 					{
 						$tag['params'][$param] = $replacement;
 						break;

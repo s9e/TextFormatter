@@ -7,27 +7,6 @@ include_once __DIR__ . '/../Parser.php';
 
 class TokenizerAutolinkTest extends \PHPUnit_Framework_TestCase
 {
-	public function testTokenizerLimitIsRespected()
-	{
-		$text = str_repeat('http://example.com ', 11);
-		$ret  = Parser::getAutolinkTags($text, $this->config);
-
-		// each link is between 2 tags
-		$this->assertSame(20, count($ret['tags']));
-	}
-
-	/**
-	* @expectedException Exception
-	*/
-	public function testTokenizerLimitExceededWithActionAbortThrowsAnException()
-	{
-		$config = $this->config;
-		$config['limit_action'] = 'abort';
-
-		$text = str_repeat('http://example.com ', 11);
-		$ret  = Parser::getAutolinkTags($text, $config);
-	}
-
 	public function setUp()
 	{
 		$cb = new ConfigBuilder;
@@ -45,5 +24,11 @@ class TokenizerAutolinkTest extends \PHPUnit_Framework_TestCase
 		$cb->setAutolinkOption('param', 'url');
 
 		$this->config = $cb->getAutolinkConfig();
+	}
+
+	protected function parse($text, $config)
+	{
+		preg_match_all($config['regexp'], $text, $matches, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+		return Parser::getAutolinkTags($text, $config, $matches);
 	}
 }

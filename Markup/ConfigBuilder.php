@@ -657,13 +657,12 @@ class ConfigBuilder
 
 		foreach ($this->censor['words'] as $k => $words)
 		{
-			$regexp = self::buildRegexpFromList($words, array('*' => '\\w*'));
-			$pm     = (preg_match('#[\\x80-\\xff]#', $regexp)) ? 'u' : '';
+			$regexp = self::buildRegexpFromList($words, array('*' => '\\pL*'));
 
-			$config['regexp'][$k] = (($k & 2) ? '#\\w*?' : '#\\b')
+			$config['regexp'][$k] = (($k & 2) ? '#\\pL*?' : '#\\b')
 			                      . $regexp
-			                      . (($k & 1) ? '\\w*#i' : '\\b#i')
-			                      . $pm;
+			                      . (($k & 1) ? '\\pL*#i' : '\\b#i')
+			                      . 'u';
 		}
 
 		if (isset($this->censor['replacements']))
