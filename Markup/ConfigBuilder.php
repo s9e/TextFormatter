@@ -90,7 +90,7 @@ class ConfigBuilder
 			throw new \InvalidArgumentException ("Invalid BBCode name '" . $bbcode_id . "'");
 		}
 
-		$bbcode_id = strtoupper($bbcode_id);
+		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
 
 		if (isset($this->bbcodes[$bbcode_id]))
 		{
@@ -117,8 +117,8 @@ class ConfigBuilder
 
 	public function addBBCodeAlias($bbcode_id, $alias)
 	{
-		$bbcode_id = strtoupper($bbcode_id);
-		$alias     = strtoupper($alias);
+		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
+		$alias     = $this->normalizeBBCodeId($alias);
 
 		if (!isset($this->bbcodes[$bbcode_id]))
 		{
@@ -142,7 +142,7 @@ class ConfigBuilder
 
 	public function addBBCodeParam($bbcode_id, $param_name, $param_type, $is_required = true)
 	{
-		$bbcode_id = strtoupper($bbcode_id);
+		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
 		if (!isset($this->bbcodes[$bbcode_id]))
 		{
 			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
@@ -179,8 +179,8 @@ class ConfigBuilder
 			throw new \UnexpectedValueException("Unknown rule action '" . $action . "'");
 		}
 
-		$bbcode_id = strtoupper($bbcode_id);
-		$target    = strtoupper($target);
+		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
+		$target    = $this->normalizeBBCodeId($target);
 
 		if ($action === 'require_parent')
 		{
@@ -194,46 +194,6 @@ class ConfigBuilder
 		else
 		{
 			$this->bbcode_rules[$bbcode_id][$action][] = $target;
-		}
-	}
-
-	public function _addBBCodeRule($bbcode_id, $action, $target = '')
-	{
-		$bbcode_id = strtoupper($bbcode_id);
-		$target    = strtoupper($target);
-
-		switch ($action)
-		{
-			case 'allow':
-			case 'close_parent':
-			case 'deny':
-			case 'require_ascendant':
-				$this->bbcode_rules[$bbcode_id][$action][] = $target;
-				break;
-
-			case 'require_parent':
-				if (isset($this->bbcode_rules[$bbcode_id]['require_parent'])
-				 && $this->bbcode_rules[$bbcode_id]['require_parent'] !== $target)
-				{
-					throw new \RuntimeException("BBCode $bbcode_id already has a require_parent rule");
-				}
-				$this->bbcode_rules[$bbcode_id]['require_parent'] = $target;
-				break;
-
-			case 'trim_content':
-			case 'ltrim_content':
-			case 'rtrim_content':
-				break;
-
-			default:
-				throw new \UnexpectedValueException("Unknown rule action '" . $action . "'");
-		}
-
-		if ($action === 'require_parent')
-		{
-		}
-		else
-		{
 		}
 	}
 
@@ -331,7 +291,7 @@ class ConfigBuilder
 
 	public function setBBCodeTemplate($bbcode_id, $tpl, $flags = 0)
 	{
-		$bbcode_id = strtoupper($bbcode_id);
+		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
 		if (!isset($this->bbcodes[$bbcode_id]))
 		{
 			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
@@ -583,6 +543,19 @@ class ConfigBuilder
 
 		$this->addBBCode($bbcode_id, array('internal_use' => true));
 		return $bbcode_id;
+	}
+
+	/**
+	* Takes a lowercased BBCode name and return a canonical BBCode ID with aliases resolved
+	*
+	* @param  string $bbcode_id BBCode name
+	* @return string            BBCode ID, uppercased and with with aliases resolved
+	*/
+	protected function normalizeBBCodeId($bbcode_id)
+	{
+		$bbcode_id = strtoupper($bbcode_id);
+
+		return (isset($this->bbcode_aliases[$bbcode_id])) ? $this->bbcode_aliases[$bbcode_id] : $bbcode_id;
 	}
 
 	//==========================================================================

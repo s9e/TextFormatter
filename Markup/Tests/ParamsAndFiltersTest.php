@@ -22,6 +22,21 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	public function testBBCodeAliasesCanBeUsedWhenAddingParams()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('foo');
+		$cb->addBBCodeAlias('foo', 'bar');
+		$cb->addBBCodeParam('bar', 'baz', 'text');
+
+		$text     = '[foo baz=TEXT]contents[/foo]';
+		$expected = '<rt><FOO baz="TEXT"><st>[foo baz=TEXT]</st>contents<et>[/foo]</et></FOO></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function getParamStuff()
 	{
 		return array(

@@ -10,7 +10,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 	public function testRequireParent()
 	{
 		$text = '[*]list item';
-		$xml  = $this->parser->parse($text);
+		$xml  = $this->getParser()->parse($text);
 
 		$this->assertNotContains('<LI>', $xml);
 	}
@@ -20,7 +20,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$text     = '[list][*]one[*]two[/list]';
 		$expected =
 		            '<rt><LIST><st>[list]</st><LI><st>[*]</st>one</LI><LI><st>[*]</st>two</LI><et>[/list]</et></LIST></rt>';
-		$actual   = $this->parser->parse($text);
+		$actual   = $this->getParser()->parse($text);
 
 		$this->assertSame($expected, $actual);
 	}
@@ -58,7 +58,29 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-	public function setUp()
+	/**
+	* @depends testDeny
+	*/
+	public function testRulesCanBeSetOnAliases()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('b');
+		$cb->addBBCode('denied');
+
+		$cb->addBBCodeAlias('b', 'b_alias');
+		$cb->addBBCodeAlias('denied', 'denied_alias');
+
+		$cb->addBBCodeRule('b_alias', 'deny', 'denied_alias');
+
+		$text     = '[b][denied][/denied][/b]';
+		$expected = '<rt><B><st>[b]</st>[denied][/denied]<et>[/b]</et></B></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	protected function getParser()
 	{
 		$cb = new ConfigBuilder;
 
@@ -71,6 +93,6 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCodeRule('li', 'require_parent', 'list');
 		$cb->addBBCodeRule('li', 'close_parent', 'li');
 
-		$this->parser = new Parser($cb->getParserConfig());
+		return new Parser($cb->getParserConfig());
 	}
 }
