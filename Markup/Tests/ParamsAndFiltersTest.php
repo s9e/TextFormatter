@@ -37,6 +37,21 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testDefaultParamUsesBBCodeCanonicalName()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('foo');
+		$cb->addBBCodeAlias('foo', 'bar');
+		$cb->addBBCodeParam('foo', 'foo', 'text');
+
+		$text     = '[bar=TEXT]contents[/bar]';
+		$expected = '<rt><FOO foo="TEXT"><st>[bar=TEXT]</st>contents<et>[/bar]</et></FOO></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function getParamStuff()
 	{
 		return array(
