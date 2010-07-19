@@ -1,18 +1,18 @@
 <?php
 
-namespace s9e\toolkit\markup;
+namespace s9e\Toolkit\Markup;
 
-include_once __DIR__ . '/../config_builder.php';
-//include_once __DIR__ . '/../parser.php';
+include_once __DIR__ . '/../ConfigBuilder.php';
+//include_once __DIR__ . '/../Parser.php';
 
-class testTemplating extends \PHPUnit_Framework_TestCase
+class TemplatingTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	* @expectedException InvalidArgumentException
 	*/
 	public function testInvalidXMLThrowsAnException()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 		$cb->addBBCode('b');
 		$cb->setBBCodeTemplate('b', '<b><a></b>');
 	}
@@ -22,7 +22,7 @@ class testTemplating extends \PHPUnit_Framework_TestCase
 	*/
 	public function testAddBBCodeFromExample($def, $tpl, $flags, $src, $expected, $msg = null)
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		try
 		{
@@ -84,7 +84,7 @@ class testTemplating extends \PHPUnit_Framework_TestCase
 			array(
 				'[email]{TEXT}[/email]',
 				'<a href="mailto:{TEXT}">{TEXT}</a>',
-				config_builder::ALLOW_INSECURE_TEMPLATES,
+				ConfigBuilder::ALLOW_INSECURE_TEMPLATES,
 				'My email is [email]COULD BE ANYTHING[/email]',
 				'My email is <a href="mailto:COULD BE ANYTHING">COULD BE ANYTHING</a>'
 			)

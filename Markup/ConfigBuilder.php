@@ -1,13 +1,13 @@
 <?php
 
 /**
-* @package   s9e\toolkit
+* @package   s9e\Toolkit
 * @copyright Copyright (c) 2010 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\toolkit\markup;
+namespace s9e\Toolkit\Markup;
 
-class config_builder
+class ConfigBuilder
 {
 	const ALLOW_INSECURE_TEMPLATES = 1;
 	const PRESERVE_WHITESPACE      = 2;
@@ -523,7 +523,7 @@ class config_builder
 						throw new \Exception('Unknown placeholder ' . $identifier . ' found in template');
 					}
 
-					if (!($flags & config_builder::ALLOW_INSECURE_TEMPLATES)
+					if (!($flags & ConfigBuilder::ALLOW_INSECURE_TEMPLATES)
 					 && preg_match('#^\\{TEXT[0-9]*\\}$#D', $identifier))
 					{
 						throw new \Exception('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to addBBCodeFromExample() to enable it');
@@ -906,18 +906,18 @@ class config_builder
 	{
 		if (!class_exists('parser'))
 		{
-			include_once(__DIR__ . '/parser.php');
+			include_once(__DIR__ . '/Parser.php');
 		}
-		return new parser($this->getParserConfig());
+		return new Parser($this->getParserConfig());
 	}
 
 	public function getRenderer()
 	{
 		if (!class_exists('renderer'))
 		{
-			include_once(__DIR__ . '/renderer.php');
+			include_once(__DIR__ . '/Renderer.php');
 		}
-		return new renderer($this->getXSL());
+		return new Renderer($this->getXSL());
 	}
 
 	public function getParserConfig()

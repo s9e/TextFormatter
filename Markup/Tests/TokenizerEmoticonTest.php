@@ -1,11 +1,11 @@
 <?php
 
-namespace s9e\toolkit\markup;
+namespace s9e\Toolkit\Markup;
 
-include_once __DIR__ . '/../config_builder.php';
-include_once __DIR__ . '/../parser.php';
+include_once __DIR__ . '/../ConfigBuilder.php';
+include_once __DIR__ . '/../Parser.php';
 
-class testTokenizerEmoticon extends \PHPUnit_Framework_TestCase
+class TokenizerEmoticonTest extends \PHPUnit_Framework_TestCase
 {
 	public function testTokenizerLimitIsRespected()
 	{
@@ -29,7 +29,7 @@ class testTokenizerEmoticon extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->setEmoticonOption('limit', 10);
 		$cb->setEmoticonOption('limit_action', 'ignore');

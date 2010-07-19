@@ -1,14 +1,14 @@
 <?php
 
-namespace s9e\toolkit\markup;
+namespace s9e\Toolkit\Markup;
 
-include_once __DIR__ . '/../config_builder.php';
+include_once __DIR__ . '/../ConfigBuilder.php';
 
-class testRender extends \PHPUnit_Framework_TestCase
+class RenderTest extends \PHPUnit_Framework_TestCase
 {
 	public function testRenderMulti()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('b');
 		$cb->setBBCodeTemplate('b', '<b><xsl:apply-templates/></b>');

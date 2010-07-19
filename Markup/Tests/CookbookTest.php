@@ -1,19 +1,19 @@
 <?php
 
-use s9e\toolkit\markup\config_builder,
-    s9e\toolkit\markup\parser,
-    s9e\toolkit\markup\renderer;
+use s9e\Toolkit\Markup\ConfigBuilder,
+    s9e\Toolkit\Markup\Parser,
+    s9e\Toolkit\Markup\Renderer;
 
-include_once __DIR__ . '/../config_builder.php';
-include_once __DIR__ . '/../parser.php';
-include_once __DIR__ . '/../renderer.php';
+include_once __DIR__ . '/../ConfigBuilder.php';
+include_once __DIR__ . '/../Parser.php';
+include_once __DIR__ . '/../Renderer.php';
 
-class testCookbook extends \PHPUnit_Framework_TestCase
+class CookbookTest extends \PHPUnit_Framework_TestCase
 {
 	// #url
 	public function testUrl()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		//======================================================================
 		$cb->addBBCode('url', array(
@@ -40,7 +40,7 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 	// #list
 	public function testList()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		//======================================================================
 		$cb->addBBCode('list', array(
@@ -78,7 +78,7 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 	// #quote
 	public function testQuote()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		//======================================================================
 		$cb->addBBCode('quote', array(
@@ -124,7 +124,7 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 	// #size
 	public function testSize()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		//======================================================================
 		// Create a [size] BBCode, with its default param being "px"
@@ -182,7 +182,7 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 	// #nl2br-after-rendering
 	public function testNl2brAfterRendering()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		//======================================================================
 		$cb->addBBCodeFromExample(
@@ -209,7 +209,7 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 	// #nl2br-before-rendering
 	public function testNl2brBeforeRendering()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		//======================================================================
 		$cb->addBBCodeFromExample(
@@ -240,7 +240,7 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 	// #revert
 	public function testRevert()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		//======================================================================
 		$cb->addBBCodeFromExample('[b]{TEXT}[/b]', '<b>{TEXT}</b>');
@@ -261,7 +261,7 @@ class testCookbook extends \PHPUnit_Framework_TestCase
 		$this->assertSame($text, $orig2);
 	}
 
-	protected function assertThatItWorks(config_builder $cb, array $examples)
+	protected function assertThatItWorks(ConfigBuilder $cb, array $examples)
 	{
 		$parser   = $cb->getParser();
 		$renderer = $cb->getRenderer();

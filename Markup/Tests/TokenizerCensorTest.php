@@ -1,11 +1,11 @@
 <?php
 
-namespace s9e\toolkit\markup;
+namespace s9e\Toolkit\Markup;
 
-include_once __DIR__ . '/../config_builder.php';
-include_once __DIR__ . '/../parser.php';
+include_once __DIR__ . '/../ConfigBuilder.php';
+include_once __DIR__ . '/../Parser.php';
 
-class testTokenizerCensor extends \PHPUnit_Framework_TestCase
+class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 {
 	public function testExactCensoring()
 	{
@@ -150,7 +150,7 @@ class testTokenizerCensor extends \PHPUnit_Framework_TestCase
 
 	protected function getConfig($words)
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('censor');
 		$cb->addBBCodeParam('censor', 'replacement', 'text', false);

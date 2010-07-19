@@ -1,16 +1,16 @@
 <?php
 
-use s9e\toolkit\markup\config_builder,
-	s9e\toolkit\markup\parser;
+use s9e\Toolkit\Markup\ConfigBuilder,
+	s9e\Toolkit\Markup\Parser;
 
-include_once __DIR__ . '/../config_builder.php';
-include_once __DIR__ . '/../parser.php';
+include_once __DIR__ . '/../ConfigBuilder.php';
+include_once __DIR__ . '/../Parser.php';
 
-class test_phpbb_writer extends \PHPUnit_Framework_TestCase
+class WriterPhpbbTest extends \PHPUnit_Framework_TestCase
 {
 	public function testBBCodeWithParam()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('url', array(
 			'default_param'    => '_',
@@ -30,7 +30,7 @@ class test_phpbb_writer extends \PHPUnit_Framework_TestCase
 
 	public function test_phpBB3()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('quote', array(
 			'default_param' => 'author',
@@ -103,7 +103,7 @@ class test_phpbb_writer extends \PHPUnit_Framework_TestCase
 		//======================================================================
 
 		$config = $cb->getParserConfig();
-		$parser = new parser($config);
+		$parser = new Parser($config);
 
 		phpbb3_writer::$uid = '012345678';
 

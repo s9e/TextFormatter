@@ -1,11 +1,11 @@
 <?php
 
-namespace s9e\toolkit\markup;
+namespace s9e\Toolkit\Markup;
 
-include_once __DIR__ . '/../config_builder.php';
-include_once __DIR__ . '/../parser.php';
+include_once __DIR__ . '/../ConfigBuilder.php';
+include_once __DIR__ . '/../Parser.php';
 
-class testRules extends \PHPUnit_Framework_TestCase
+class RulesTest extends \PHPUnit_Framework_TestCase
 {
 	public function testRequireParent()
 	{
@@ -27,7 +27,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testDeny()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('b');
 		$cb->addBBCode('denied');
@@ -43,7 +43,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testRequireAscendant()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('foo');
 		$cb->addBBCode('bar');
@@ -60,7 +60,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('b');
 		$cb->addBBCode('list');
@@ -71,6 +71,6 @@ class testRules extends \PHPUnit_Framework_TestCase
 		$cb->addBBCodeRule('li', 'require_parent', 'list');
 		$cb->addBBCodeRule('li', 'close_parent', 'li');
 
-		$this->parser = new parser($cb->getParserConfig());
+		$this->parser = new Parser($cb->getParserConfig());
 	}
 }

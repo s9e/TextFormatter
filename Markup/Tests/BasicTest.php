@@ -1,11 +1,11 @@
 <?php
 
-namespace s9e\toolkit\markup;
+namespace s9e\Toolkit\Markup;
 
-include_once __DIR__ . '/../config_builder.php';
-include_once __DIR__ . '/../parser.php';
+include_once __DIR__ . '/../ConfigBuilder.php';
+include_once __DIR__ . '/../Parser.php';
 
-class testBasic extends \PHPUnit_Framework_TestCase
+class BasicTest extends \PHPUnit_Framework_TestCase
 {
 	public function testPlainText()
 	{
@@ -78,7 +78,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function testBBCodesFromTokenizersAreUppercasedIfNeeded()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 		$cb->addBBCode('b');
 
 		$config = $cb->getParserConfig();
@@ -105,7 +105,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 			}
 		);
 
-		$parser = new parser($config);
+		$parser = new Parser($config);
 
 		$expected = '<rt><B>foo</B></rt>';
 		$actual   = $parser->parse('foo');
@@ -115,7 +115,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function testUnknownBBCodesAreIgnored()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 		$cb->addBBCode('b');
 		$cb->addBBCode('i');
 
@@ -127,7 +127,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 		unset($config['passes']['BBCode']['aliases']['I']);
 		unset($config['passes']['BBCode']['bbcodes']['I']);
 
-		$parser = new parser($config);
+		$parser = new Parser($config);
 
 		$text     = '[i]foo[/i]';
 		$expected = '<pt>[i]foo[/i]</pt>';
@@ -138,7 +138,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function testUnknownBBCodesFromCustomPassesAreIgnored()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 		$cb->addBBCode('b');
 
 		$config = $cb->getParserConfig();
@@ -165,7 +165,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 			}
 		);
 
-		$parser = new parser($config);
+		$parser = new Parser($config);
 
 		$expected = '<pt>foo</pt>';
 		$actual   = $parser->parse('foo');
@@ -202,7 +202,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$cb = new config_builder;
+		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('b', array('nesting_limit' => 1));
 
