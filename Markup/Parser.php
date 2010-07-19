@@ -1134,47 +1134,18 @@ class Parser
 		);
 	}
 
-	static public function getEmoticonTags($text, array $config)
+	static public function getEmoticonTags($text, array $config, array $matches)
 	{
-		$cnt = preg_match_all($config['regexp'], $text, $matches, PREG_OFFSET_CAPTURE);
-
-		if (!$cnt)
-		{
-			return;
-		}
-
 		$tags = array();
 		$msgs = array();
 
-		if (!empty($config['limit'])
-		 && $cnt > $config['limit'])
-		{
-			if ($config['limit_action'] === 'abort')
-			{
-				throw new \RuntimeException('Emoticon limit exceeded');
-			}
-			else
-			{
-				$msg_type   = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-				$matches[0] = array_slice($matches[0], 0, $config['limit']);
-
-				$msgs[$msg_type][] = array(
-					'pos'    => 0,
-					'msg'    => 'Emoticon limit exceeded. Only the first %s emoticons will be processed',
-					'params' => array($config['limit'])
-				);
-			}
-		}
-
-		$bbcode = $config['bbcode'];
-
-		foreach ($matches[0] as $m)
+		foreach ($matches as $m)
 		{
 			$tags[] = array(
-				'pos'    => $m[1],
+				'pos'    => $m[0][1],
 				'type'   => self::TAG_SELF,
-				'name'   => $bbcode,
-				'len'    => strlen($m[0])
+				'name'   => $config['bbcode'],
+				'len'    => strlen($m[0][0])
 			);
 		}
 
