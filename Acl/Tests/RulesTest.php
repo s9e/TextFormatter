@@ -1,15 +1,15 @@
 <?php
 
-namespace s9e\toolkit\acl;
+namespace s9e\Toolkit\Acl;
 
-include_once __DIR__ . '/../builder.php';
-include_once __DIR__ . '/../reader.php';
+include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Reader.php';
 
-class testRules extends \PHPUnit_Framework_TestCase
+class RulesTest extends \PHPUnit_Framework_TestCase
 {
 	public function testGlobalGrant()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 		$builder->addRule('foo', 'grant', 'bar');
 
@@ -21,7 +21,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testLocalGrant()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', array('scope' => 123));
 		$builder->addRule('foo', 'grant', 'bar');
 
@@ -35,7 +35,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testGrantDoesNotOverrideGlobalDeny()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 		$builder->deny('bar');
 		$builder->addRule('foo', 'grant', 'bar');
@@ -48,7 +48,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testGrantDoesNotOverrideLocalDeny()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 		$builder->deny('bar', array('scope' => 123));
 		$builder->addRule('foo', 'grant', 'bar');
@@ -62,7 +62,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testGrantedPermsCanGrantOtherPerms()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$builder->addRule('bar', 'grant', 'baz');
@@ -77,7 +77,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testFulfilledRequireDoesNotInterfere()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 		$builder->allow('bar');
 
@@ -91,7 +91,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testUnfulfilledRequireUnsetsPerm()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 		$builder->allow('bar');
 
@@ -105,7 +105,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testRevokedGrantsCannotGrantOtherPerms()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$builder->addRule('foo', 'grant', 'bar');
@@ -120,7 +120,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testRevokedGrantsCannotGrantOtherPermsNoMatterHowIndirectly()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$builder->addRule('foo', 'grant', 'bar');
@@ -137,7 +137,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testRevokedGrantsDoNotInterfereWithOtherGrants()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 		$builder->allow('waldo');
 
@@ -154,7 +154,7 @@ class testRules extends \PHPUnit_Framework_TestCase
 
 	public function testRequireOnAPermWithDifferentDimensions()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 
 		$builder->allow('foo');
 		$builder->allow('bar', array('x' => 1));

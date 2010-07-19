@@ -1,15 +1,15 @@
 <?php
 
-namespace s9e\toolkit\acl;
+namespace s9e\Toolkit\Acl;
 
-include_once __DIR__ . '/../builder.php';
-include_once __DIR__ . '/../reader.php';
+include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Reader.php';
 
-class testPredicate extends \PHPUnit_Framework_TestCase
+class PredicateTest extends \PHPUnit_Framework_TestCase
 {
 	public function testPredicateSome()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('read', array('forum_id' => 3));
 		$builder->allow('read', array('forum_id' => 4));
 		$builder->allow('read', array('forum_id' => 5));
@@ -25,7 +25,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testPredicateAllBut()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('read');
 		$builder->deny('read', array('forum_id' => 4));
 		$builder->deny('read', array('forum_id' => 5));
@@ -41,7 +41,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testPredicateAll()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('read');
 
 		$actual   = $builder->getReader()->getPredicate('read', 'forum_id');
@@ -52,7 +52,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testPredicateNone()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->deny('read');
 
 		$actual   = $builder->getReader()->getPredicate('read', 'forum_id');
@@ -63,7 +63,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testPredicateNoneOnUnknownPerm()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 
 		$actual   = $builder->getReader()->getPredicate('read', 'forum_id');
 		$expected = array('type' => 'none');
@@ -73,7 +73,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testPredicateWithScope()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('perm', array('x' => 1, 'y' => 4));
 		$builder->allow('perm', array('x' => 2, 'y' => 4));
 		$builder->allow('perm', array('x' => 2, 'y' => 5));
@@ -124,7 +124,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testPredicateWithLocalAnyScope()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('perm', array('x' => 1, 'y' => 4));
 		$builder->allow('perm', array('x' => 2, 'y' => 4));
 		$builder->allow('perm', array('x' => 2, 'y' => 5));
@@ -153,7 +153,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testPredicateWithGlobalAnyScope()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('perm', array('x' => 1, 'y' => 4));
 		$builder->allow('perm', array('x' => 2, 'y' => 4));
 		$builder->allow('perm', array('x' => 2, 'y' => 5));
@@ -182,7 +182,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testGlobalSettingWithLocalScope()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('perm');
 		$builder->deny('perm', array('x' => 1, 'y' => 1, 'z' => 1));
 		
@@ -196,7 +196,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 
 	public function testExpectedPredicateAllWithLocalScope()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('perm', array('x' => 1, 'y' => 1, 'z' => 0));
 		$builder->deny('perm', array('x' => 1, 'y' => 1, 'z' => 1));
 		
@@ -213,7 +213,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 	*/
 	public function testPredicateWithSameScopeThrowsAnException()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('read', array('forum_id' => 4));
 
 		$builder->getReader()->getPredicate('read', 'forum_id', array('forum_id' => 4));
@@ -224,7 +224,7 @@ class testPredicate extends \PHPUnit_Framework_TestCase
 	*/
 	public function testPredicateWithNonArrayNotAnyScopeThrowsAnException()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('read', array('forum_id' => 4));
 
 		$builder->getReader()->getPredicate('read', 'forum_id', true);

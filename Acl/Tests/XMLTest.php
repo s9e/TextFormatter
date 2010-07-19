@@ -1,15 +1,15 @@
 <?php
 
-namespace s9e\toolkit\acl;
+namespace s9e\Toolkit\Acl;
 
-include_once __DIR__ . '/../builder.php';
-include_once __DIR__ . '/../reader.php';
+include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Reader.php';
 
-class testXML extends \PHPUnit_Framework_TestCase
+class XMLTest extends \PHPUnit_Framework_TestCase
 {
 	public function testACLCanBeQueriedInXML()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 		$builder->allow('foo', array('bar' => 456));
 		$builder->deny('foo', array('bar' => 456, 'baz' => 'DENY'));

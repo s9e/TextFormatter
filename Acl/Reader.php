@@ -5,9 +5,9 @@
 * @copyright Copyright (c) 2010 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\toolkit\acl;
+namespace s9e\Toolkit\Acl;
 
-class reader
+class Reader
 {
 	protected $config;
 	public $any;

@@ -1,15 +1,15 @@
 <?php
 
-namespace s9e\toolkit\acl;
+namespace s9e\Toolkit\Acl;
 
-include_once __DIR__ . '/../builder.php';
-include_once __DIR__ . '/../reader.php';
+include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Reader.php';
 
-class testScoping extends \PHPUnit_Framework_TestCase
+class ScopingTest extends \PHPUnit_Framework_TestCase
 {
 	public function testGlobalDenyOverridesLocalAllow()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->deny('foo');
 		$builder->allow('foo', array('bar' => 123));
 
@@ -18,7 +18,7 @@ class testScoping extends \PHPUnit_Framework_TestCase
 
 	public function testLocalDenyOverridesGlobalAllow()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 		$builder->deny('foo', array('bar' => 123));
 
@@ -30,7 +30,7 @@ class testScoping extends \PHPUnit_Framework_TestCase
 
 	public function testUnknownScopeDefaultsToGlobalScope()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$this->assertTrue($builder->getReader()->isAllowed('foo', array('bar' => 123)));
@@ -38,7 +38,7 @@ class testScoping extends \PHPUnit_Framework_TestCase
 
 	public function test2DInheritsFrom1D()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 		$builder->allow('foo', array('bar' => 456));
 
@@ -52,7 +52,7 @@ class testScoping extends \PHPUnit_Framework_TestCase
 
 	public function testGlobalAnyOn2DAllow()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
 		$reader = $builder->getReader();
@@ -62,7 +62,7 @@ class testScoping extends \PHPUnit_Framework_TestCase
 
 	public function test2DAnyOn2DAllow()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
 		$reader = $builder->getReader();
@@ -73,7 +73,7 @@ class testScoping extends \PHPUnit_Framework_TestCase
 
 	public function test1DAnyOn2DAllow()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
 		$reader = $builder->getReader();
@@ -88,7 +88,7 @@ class testScoping extends \PHPUnit_Framework_TestCase
 	*/
 	public function testAnyOn3DAllow()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('bbcode_use', array(
 			'forum_id' => 3
 		));
@@ -123,7 +123,7 @@ class testScoping extends \PHPUnit_Framework_TestCase
 
 	public function testAnyOnUnknownScopeDefaultsToGlobal()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 		$builder->allow('bar');
 

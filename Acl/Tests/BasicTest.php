@@ -1,15 +1,15 @@
 <?php
 
-namespace s9e\toolkit\acl;
+namespace s9e\Toolkit\Acl;
 
-include_once __DIR__ . '/../builder.php';
-include_once __DIR__ . '/../reader.php';
+include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Reader.php';
 
-class testBasic extends \PHPUnit_Framework_TestCase
+class BasicTest extends \PHPUnit_Framework_TestCase
 {
 	public function testOneGlobalPerm()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$this->assertTrue($builder->getReader()->isAllowed('foo'));
@@ -17,7 +17,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function testMultiGlobalPerms()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 		$builder->deny('bar');
 
@@ -29,7 +29,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function testUnknownPermsReturnFalse()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$this->assertFalse($builder->getReader()->isAllowed('bar'));
@@ -37,7 +37,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function testPermsCanBeUsedAsMagicMethod()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$this->assertTrue($builder->getReader()->foo());
@@ -45,7 +45,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function testDenyOverridesAllow()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->deny('foo');
 		$builder->allow('foo');
 
@@ -54,7 +54,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 
 	public function testReaderCanBeSerializedWithoutLosingStuff()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$reader  = $builder->getReader();
@@ -71,7 +71,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 	*/
 	public function testReaderRejectsNonArrayScope()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo');
 
 		$builder->getReader()->isAllowed('foo', 123);
@@ -82,7 +82,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 	*/
 	public function testBuilderRejectsNonArrayScope()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', 123);
 	}
 
@@ -91,7 +91,7 @@ class testBasic extends \PHPUnit_Framework_TestCase
 	*/
 	public function testBuilderRejectsNonStringNonIntegerScopeValues()
 	{
-		$builder = new builder;
+		$builder = new Builder;
 		$builder->allow('foo', array('scope' => true));
 	}
 }

@@ -5,9 +5,9 @@
 * @copyright Copyright (c) 2010 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\toolkit\acl;
+namespace s9e\Toolkit\Acl;
 
-class builder
+class Builder
 {
 	protected $settings = array();
 	protected $rules = array(
@@ -38,7 +38,7 @@ class builder
 
 	public function getReader()
 	{
-		return new reader($this->getReaderConfig());
+		return new Reader($this->getReaderConfig());
 	}
 
 	public function getReaderConfig()
