@@ -48,7 +48,7 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 		}
 	}
 
-	public function testBBCodeAliasCanBeUsedForSettingTemplate()
+	public function testBBCodeAliasCanBeUsedForSettingTemplates()
 	{
 		$cb = new ConfigBuilder;
 

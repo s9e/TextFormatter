@@ -51,6 +51,33 @@ class ConfigBuilder
 	protected $xsl = '';
 
 	//==========================================================================
+	// Passes
+	//==========================================================================
+
+	public function addPass($name, array $options)
+	{
+		if (isset($this->passes[$name]))
+		{
+			throw new \InvalidArgumentException('There is already a pass named ' . $name);
+		}
+
+		if (!isset($options['parser']))
+		{
+			throw new \InvalidArgumentException('You must specify a parser for pass ' . $name);
+		}
+
+		if (!is_callable($options['parser']))
+		{
+			throw new \InvalidArgumentException('The parser for pass ' . $name . ' must be a valid callback');
+		}
+
+		$this->passes[$name] = $options + array(
+			'limit'        => 1000,
+			'limit_action' => 'ignore'
+		);
+	}
+
+	//==========================================================================
 	// Autolink
 	//==========================================================================
 
@@ -777,7 +804,7 @@ class ConfigBuilder
 
 			if ($k === 'bbcode')
 			{
-				$v = strtoupper($v);
+				$v = $this->normalizeBBCodeId($v);
 
 				if (!isset($this->bbcodes[$v]))
 				{
@@ -897,7 +924,7 @@ class ConfigBuilder
 	{
 		$passes = array('BBCode' => null);
 
-		foreach (array_keys($this->passes) as $pass)
+		foreach ($this->passes as $pass => $config)
 		{
 			if ($pass === 'BBCode')
 			{
@@ -906,11 +933,18 @@ class ConfigBuilder
 			}
 
 			$method = 'get' . $pass . 'Config';
-			$config = $this->$method();
 
-			if ($config === false)
+			if (method_exists($this, $method))
 			{
-				continue;
+				/**
+				* Finalize the config
+				*/
+				$config = $this->$method();
+
+				if ($config === false)
+				{
+					continue;
+				}
 			}
 
 			$passes[$pass] = $config;
