@@ -65,15 +65,17 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey(2, $config['foo']['scopes']['y']);
 	}
 
-	/**
-	* @todo this test fails but it's expected: in this specific case, it's better to NOT
-	*       remove the "y" dimension from "foo"
-	*/
-	/*
-	public function testScopesIdenticalToGlobalAreOptimizedAwayOnAPerPermBasis()
+	public function testPermIsNotOptimizedAwayToAnotherSpaceIfItIsAloneInNewSpace()
 	{
 		$builder = new Builder;
 
+		/**
+		* foo and bar live in the (x,y) space.
+		*
+		* Dimension y has no bearing on foo, so foo could be moved to space (x)
+		* Space (x) does not exist though, and creating a space for one single perm is more
+		* expensive in terms of metadata than leaving it in its shared space, so foo stays in (x,y)
+		*/
 		$builder->allow('foo', array('x' => 1));
 		$builder->allow('foo', array('x' => 1, 'y' => 1));
 
@@ -82,11 +84,35 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 		$config = $builder->getReaderConfig();
 
 		$this->assertArrayHasKey('x', $config['foo']['scopes']);
+		$this->assertArrayHasKey('y', $config['foo']['scopes']);
+		$this->assertArrayHasKey('x', $config['bar']['scopes']);
+		$this->assertArrayHasKey('y', $config['bar']['scopes']);
+	}
+
+	public function testPermIsOptimizedAwayToAnotherSpaceIfItIsNotAloneInNewSpace()
+	{
+		$builder = new Builder;
+
+		/**
+		* foo and bar live in the (x,y) space. baz lives in (x)
+		*
+		* Dimension y has no bearing on foo, so it is moved to (x) where it will peacefully coexist
+		* with baz
+		*/
+		$builder->allow('foo', array('x' => 1));
+		$builder->allow('foo', array('x' => 1, 'y' => 1));
+
+		$builder->allow('bar', array('x' => 1, 'y' => 1));
+
+		$builder->allow('baz', array('x' => 1));
+
+		$config = $builder->getReaderConfig();
+
+		$this->assertArrayHasKey('x', $config['foo']['scopes']);
 		$this->assertArrayNotHasKey('y', $config['foo']['scopes']);
 		$this->assertArrayHasKey('x', $config['bar']['scopes']);
 		$this->assertArrayHasKey('y', $config['bar']['scopes']);
 	}
-	*/
 
 	/**
 	* @dataProvider getMasks
