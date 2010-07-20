@@ -357,9 +357,7 @@ class ConfigBuilder
 
 			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or xsl:attribute])'))
 			{
-				throw new \RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can 
-be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setBBCodeTemplate() to 
-enable it');
+				throw new \RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setBBCodeTemplate() to enable it');
 			}
 		}
 
@@ -382,9 +380,15 @@ enable it');
 			throw new \InvalidArgumentException('Cannot interpret the BBCode definition');
 		}
 
+		/**
+		* Generate a random tag name so that the user cannot inject stuff outside of that template.
+		* For instance, if the tag was <t>, one could input </t><xsl:evil-stuff/><t>
+		*/
+		$t = 't' . md5(microtime(true) . mt_rand());
+
 		$old = libxml_use_internal_errors(true);
 		$dom = new \DOMDocument;
-		$res = $dom->loadXML('<t>' . $tpl . '</t>');
+		$res = $dom->loadXML('<' . $t . '>' . $tpl . '</' . $t . '>');
 		libxml_use_internal_errors($old);
 
 		if (!$res)
@@ -514,7 +518,7 @@ enable it');
 				}
 				return '<xsl:value-of select="' . $placeholders[$m[0]] . '"/>';
 			},
-			substr($dom->saveXML($dom->documentElement), 3, -4)
+			substr(trim($dom->saveXML($dom->documentElement)), 35, -36)
 		);
 
 		$this->addBBCode($bbcode_id, $options);
