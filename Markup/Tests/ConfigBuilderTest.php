@@ -226,6 +226,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
+			$this->cb->addBBCode('foo', array('default_param' => 'undefined'));
 			$this->cb->getBBCodeConfig();
 		}
 		catch (\PHPUnit_Framework_Error $e)
@@ -270,15 +271,214 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @expectedException InvalidArgumentException
 	*/
-	public function testAddBBCodeFromExampleDoesNotAllowMultipleTemplates()
+	public function testAddBBCodeFromExampleDoesNotAllowInvalidXMLInTemplates()
 	{
 		try
 		{
-			$this->cb->addBBCodeFromExample('[foo==]{TEXT}[/foo]', '');
+			$this->cb->addBBCodeFromExample('[foo]{TEXT}[/foo]', '<b><a></b>');
 		}
 		catch (\InvalidArgumentException $e)
 		{
-			$this->assertContains('Cannot interpret the BBCode definition', $e->getMessage());
+			$this->assertContains('Invalid XML', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testAddBBCodeFromExampleThrowsAnExceptionOnDuplicateParams()
+	{
+		try
+		{
+			$this->cb->addBBCodeFromExample('[foo={URL1} FOO={URL2}]{TEXT}[/foo]', '<b/>');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('defined twice', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testAddBBCodeFromExampleThrowsAnExceptionOnDuplicatePlaceholders()
+	{
+		try
+		{
+			$this->cb->addBBCodeFromExample('[foo={URL} bar={URL}]{TEXT}[/foo]', '<b/>');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('used twice', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testAddBBCodeFromExampleThrowsAnExceptionOnDefaultParamAndNonTextContent()
+	{
+		try
+		{
+			$this->cb->addBBCodeFromExample('[foo={URL}]{COLOR}[/foo]', '<b>{COLOR}</b>');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains("Default param is already used to store this BBCode's content", $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testAddBBCodeFromExampleThrowsAnExceptionOnUnknownPlaceholdersUsedInAttributes()
+	{
+		try
+		{
+			$this->cb->addBBCodeFromExample('[foo={URL}]{TEXT}[/foo]', '<b style="color:{COLOR}">{TEXT}</b>');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('Unknown placeholder', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testAddBBCodeFromExampleThrowsAnExceptionOnUnknownPlaceholdersUsedInContent()
+	{
+		try
+		{
+			$this->cb->addBBCodeFromExample('[foo={URL}]{TEXT}[/foo]', '<b>{TEXT2}</b>');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('Unknown placeholder', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	public function testAddInternalBBCodeUsesSuffixToAvoidDupes()
+	{
+		$method = new \ReflectionMethod($this->cb, 'addInternalBBCode');
+		$method->setAccessible(true);
+
+		$this->assertSame('B0', $method->invokeArgs($this->cb, array('b')));
+	}
+
+	public function testGetCensorConfigAutomaticallyCreatesAnInternalBBCodeIfNeeded()
+	{
+		$this->cb->addCensor('foo');
+		$config = $this->cb->getParserConfig();
+
+		$this->assertArrayHasKey('bbcode', $config['passes']['Censor']);
+		$this->assertArrayHasKey('param', $config['passes']['Censor']);
+		$this->assertArrayHasKey(
+			$config['passes']['Censor']['bbcode'],
+			$config['passes']['BBCode']['bbcodes']
+		);
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testSetFilterThrowsAnExceptionOnInvalidCallback()
+	{
+		try
+		{
+			$this->cb->setFilter('foo', 'bar');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('valid callback', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testSetOptionThrowsAnExceptionOnInvalidBBCodeId()
+	{
+		try
+		{
+			$this->cb->setOption('Censor', 'bbcode', 'a:b');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('Invalid bbcode name', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testSetOptionThrowsAnExceptionOnInvalidParamId()
+	{
+		try
+		{
+			$this->cb->setOption('Censor', 'param', 'a:b');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('Invalid param name', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException PHPUnit_Framework_Error
+	*/
+	public function testSetOptionGeneratesAPHPNoticeOnUnknownBBCode()
+	{
+		try
+		{
+			$this->cb->setOption('Censor', 'bbcode', 'Z');
+		}
+		catch (\PHPUnit_Framework_Error $e)
+		{
+			$this->assertContains('Unknown BBCode Z', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException PHPUnit_Framework_Error
+	*/
+	public function testSetOptionGeneratesAPHPNoticeOnUnknownBBCodeParam()
+	{
+		try
+		{
+			$this->cb->addBBCode('z');
+			$this->cb->setOption('Censor', 'bbcode', 'Z');
+			$this->cb->setOption('Censor', 'param', 'Z');
+		}
+		catch (\PHPUnit_Framework_Error $e)
+		{
+			$this->assertContains('Unknown BBCode param z', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testAddXSLThrowsAnExceptionOnMalformedXML()
+	{
+		try
+		{
+			$this->cb->addXSL('<b><a></b>');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('Malformed', $e->getMessage());
 			throw $e;
 		}
 	}
@@ -287,7 +487,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->cb = new ConfigBuilder;
 		$this->cb->addBBCode('a');
-		$this->cb->addBBCode('b', array('default_param' => 'undefined'));
+		$this->cb->addBBCode('b');
 		$this->cb->addBBCodeParam('b', 'b', 'text');
 		$this->cb->addBBCodeRule('b', 'require_parent', 'a');
 	}

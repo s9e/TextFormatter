@@ -84,6 +84,10 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				'<rt><URL href="http://www.example.com"><st>[url href=http://www.example.com]</st>foo<et>[/url]</et></URL></rt>'
 			),
 			array(
+				'[url href=ftp://www.example.com]foo[/url]',
+				'<rt><URL href="ftp://www.example.com"><st>[url href=ftp://www.example.com]</st>foo<et>[/url]</et></URL></rt>'
+			),
+			array(
 				'[url href=http://bevil.example.com]foo[/url]',
 				'<rt><URL href="http://bevil.example.com"><st>[url href=http://bevil.example.com]</st>foo<et>[/url]</et></URL></rt>'
 			),
@@ -421,6 +425,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb->disallowHost('EVIL.example.com');
 		$cb->disallowHost('*.xxx');
 		$cb->disallowHost('reallyevil.*');
+		$cb->allowScheme('ftp');
 
 		$this->parser = $cb->getParser();
 	}

@@ -104,6 +104,28 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 		$this->assertKindaEquals($expected, $actual);
 	}
 
+	public function testCensoredUnicodeWordAppliesToASCIITextWithUnicodeReplacement()
+	{
+		$config   = $this->getConfig(array("pok\xC3\xA9man" => "Pok\xC3\xA9mon"));
+
+		$text     = "You dirty Pok\xC3\xA9man";
+		$actual   = $this->parse($text, $config);
+		$expected = array(
+			'tags' => array(
+				array(
+					'pos'    => 10,
+                    'name'   => 'CENSOR',
+					// length in bytes
+                    'len'    => 8,
+					'params' => array('replacement' => "Pok\xC3\xA9mon")
+				)
+			),
+			'msgs' => array()
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
 	public function testCensoredASCIIWordAppliesToUnicodeText()
 	{
 		$config   = $this->getConfig(array("pok*" => null));
