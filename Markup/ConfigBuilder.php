@@ -369,11 +369,15 @@ class ConfigBuilder
 
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
 	{
+		$bbcode_id   = '([a-zA-Z_][a-zA-Z_0-9]*)';
+		$placeholder = '\\{[A-Z_]+[0-9]*\\}';
+		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
+
 		$regexp = '#'
-		        . '\\[([a-zA-Z_][a-zA-Z_0-9]*)(=\\{[A-Z_]+[0-9]*\\})?'
-		        . '((?:\\s+[a-zA-Z_][a-zA-Z_0-9]*=\\{[A-Z_]+\\})*)'
-		        . '(?:\\s*/\\]|\\](\\{[A-Z_]+[0-9]*\\})?\\[/\\1])'
-		        . '$#';
+		        . '\\[' . $bbcode_id . '(=' . $placeholder . ')?'
+		        . '((?:\\s+' . $param . '=' . $placeholder . ')*)'
+		        . '(?:\\s*/\\]|\\](' . $placeholder . ')?\\[/\\1])'
+		        . '$#D';
 
 		if (!preg_match($regexp, trim($def), $m))
 		{
@@ -449,6 +453,11 @@ class ConfigBuilder
 
 			if (isset($params[$param]))
 			{
+				if (isset($options['default_param'], $options['content_as_param'])
+				 && $param === $options['default_param'])
+				{
+					throw new \InvalidArgumentException("Default param is already used to store this BBCode's content");
+				}
 				throw new \InvalidArgumentException('Param ' . $param . ' is defined twice');
 			}
 
@@ -479,7 +488,7 @@ class ConfigBuilder
 
 					if (!isset($placeholders[$identifier]))
 					{
-						throw new \Exception('Unknown placeholder ' . $identifier . ' found in template');
+						throw new \InvalidArgumentException('Unknown placeholder ' . $identifier . ' found in template');
 					}
 
 					if (!($flags & ConfigBuilder::ALLOW_INSECURE_TEMPLATES)
@@ -509,7 +518,7 @@ class ConfigBuilder
 			{
 				if (!isset($placeholders[$m[0]]))
 				{
-					throw new \Exception('Unknown placeholder ' . $m[0] . ' found in template');
+					throw new \InvalidArgumentException('Unknown placeholder ' . $m[0] . ' found in template');
 				}
 
 				if ($placeholders[$m[0]][0] !== '@')
@@ -783,7 +792,9 @@ class ConfigBuilder
 				if (!isset($this->bbcodes[$v]))
 				{
 					trigger_error('Unknown BBCode ' . $v, E_USER_NOTICE);
+					//@codeCoverageIgnoreStart
 				}
+				//@codeCoverageIgnoreEnd
 			}
 			else
 			{
@@ -796,7 +807,9 @@ class ConfigBuilder
 					if (!isset($this->bbcodes[$bbcode]['params'][$v]))
 					{
 						trigger_error('Unknown BBCode param ' . $v, E_USER_NOTICE);
+						//@codeCoverageIgnoreStart
 					}
+					//@codeCoverageIgnoreEnd
 				}
 			}
 		}
@@ -970,15 +983,16 @@ class ConfigBuilder
 		     . $xsl
 		     . '</xsl:stylesheet>';
 
-		$old = libxml_use_internal_errors(true);
 		$dom = new \DOMDocument;
+
+		$old = libxml_use_internal_errors(true);
 		$res = $dom->loadXML($xml);
 		libxml_use_internal_errors($old);
 
 		if (!$res)
 		{
 			$error = libxml_get_last_error();
-			throw new \InvalidArgumentException('Invalid XSL - error was: ' . $error->message);
+			throw new \InvalidArgumentException('Malformed XSL - error was: ' . $error->message);
 		}
 
 		$this->xsl .= $xsl;
