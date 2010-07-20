@@ -200,6 +200,34 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testTokenizerLimitIsRespected()
+	{
+		$config = $this->config;
+		$config['passes']['Censor']['limit'] = 1;
+		$config['passes']['Censor']['limit_action'] = 'ignore';
+
+		$parser = new Parser($config);
+
+		$text     = 'You dirty banana banana grape';
+		$expected = '<rt>You dirty <C with="pear">banana</C> banana grape</rt>';
+		$actual   = $parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	/**
+	* @expectedException Exception
+	*/
+	public function testTokenizerLimitExceededWithActionAbortThrowsAnException()
+	{
+		$config = $this->config;
+		$config['passes']['Censor']['limit'] = 1;
+		$config['passes']['Censor']['limit_action'] = 'abort';
+
+		$parser = new Parser($config);
+		$parser->parse('You dirty banana banana grape');
+	}
+
 	public function setUp()
 	{
 		$cb = new ConfigBuilder;
@@ -218,7 +246,15 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
 		$cb->addCensor('apple');
 		$cb->addCensor('banana', 'pear');
+		$cb->addCensor('grape*');
 
-		$this->parser = $cb->getParser();
+		$cb->addBBCode('c', array('internal_use' => true));
+		$cb->addBBCodeParam('c', 'with', 'text', false);
+
+		$cb->setCensorOption('bbcode', 'c');
+		$cb->setCensorOption('param', 'with');
+
+		$this->config = $cb->getParserConfig();
+		$this->parser = new Parser($this->config);
 	}
 }

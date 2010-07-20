@@ -562,7 +562,8 @@ class ConfigBuilder
 		$prefix    = strtoupper($prefix);
 		$bbcode_id = $prefix;
 		$i         = 0;
-		while (isset($this->aliases[$bbcode_id]))
+
+		while (isset($this->bbcodes[$bbcode_id]) || isset($this->aliases[$bbcode_id]))
 		{
 			$bbcode_id = $prefix . $i;
 			++$i;
@@ -635,25 +636,28 @@ class ConfigBuilder
 			return false;
 		}
 
-		$config = $this->passes['Censor'];
-
-		if (!isset($config['bbcode'], $config['param']))
+		
+		if (!isset($this->passes['Censor']['bbcode'], $this->passes['Censor']['param']))
 		{
-			$config['bbcode'] = $this->addInternalBBCode('C');
-			$config['param']  = 'with';
+			$bbcode_id = $this->addInternalBBCode('C');
 
-			$this->addBBCodeParam($config['bbcode'], $config['param'], 'text', false);
+			$this->addBBCodeParam($bbcode_id, 'with', 'text', false);
 
-			$this->passes['Censor']['bbcode'] = $config['bbcode'];
-			$this->passes['Censor']['param']  = $config['param'];
+			$this->setCensorOption('bbcode', $bbcode_id);
+			$this->setCensorOption('param', 'with');
 		}
-		if (!isset($this->bbcodes[$config['bbcode']]['tpl']))
+
+		$bbcode_id = $this->passes['Censor']['bbcode'];
+
+		if (!isset($this->bbcodes[$bbcode_id]['tpl']))
 		{
 			$this->setBBCodeTemplate(
-				$config['bbcode'],
+				$bbcode_id,
 				'<xsl:choose><xsl:when test="@with"><xsl:value-of select="@with"/></xsl:when><xsl:otherwise>****</xsl:otherwise></xsl:choose>'
 			);
 		}
+
+		$config = $this->passes['Censor'];
 
 		foreach ($this->censor['words'] as $k => $words)
 		{
@@ -700,13 +704,12 @@ class ConfigBuilder
 			return false;
 		}
 
-		$config = $this->passes['Emoticon'];
-
-		if (!isset($config['bbcode']))
+		if (!isset($this->passes['Emoticon']['bbcode']))
 		{
-			$config['bbcode']       = $this->addInternalBBCode('E');
-			$this->config['bbcode'] = $config['bbcode'];
+			$this->setEmoticonOption('bbcode', $this->addInternalBBCode('E'));
 		}
+
+		$config = $this->passes['Emoticon'];
 
 		/**
 		* Create a template for this BBCode.

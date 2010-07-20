@@ -1095,7 +1095,6 @@ class Parser
 		$cnt   = 0;
 		$tags  = array();
 		$msgs  = array();
-		$break = false;
 
 		foreach ($matches as $k => $_matches)
 		{
@@ -1120,11 +1119,6 @@ class Parser
 				}
 
 				$tags[] = $tag;
-			}
-
-			if ($break)
-			{
-				break;
 			}
 		}
 
