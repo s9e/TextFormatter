@@ -173,4 +173,45 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 			'msgs' => $msgs
 		);
 	}
+
+	//==========================================================================
+	// Insert [BR/] tags at each newline
+	//==========================================================================
+
+	public function testNewlines()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('br', array('internal_use' => true));
+		$cb->setBBCodeTemplate('br', '<br/>');
+
+		$cb->addPass('Newlines', array(
+			'parser' => function($text)
+			{
+				preg_match_all('#\\r?\\n#', $text, $matches, \PREG_OFFSET_CAPTURE);
+
+				$tags = array();
+				foreach ($matches[0] as $m)
+				{
+					$tags[] = array(
+						'name'   => 'BR',
+						'type'   => Parser::TAG_SELF,
+						'pos'    => $m[1],
+						'len'    => strlen($m[0])
+					);
+				}
+
+				return array(
+					'tags' => $tags,
+					'msgs' => array()
+				);
+			}
+		));
+
+		$text     = "Line 1.\nLine 2.\r\nLine 3.";
+		$expected = "Line 1.<br/>Line 2.<br/>Line 3.";
+		$actual   = $cb->getRenderer()->render($cb->getParser()->parse($text));
+
+		$this->assertSame($expected, $actual);
+	}
 }
