@@ -119,7 +119,7 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 	*/
 	public function testMergeMasks($masks, $expected, $msg = null)
 	{
-		$method = new \ReflectionMethod(__NAMESPACE__ . '\\builder', 'mergeMasks');
+		$method = new \ReflectionMethod(__NAMESPACE__ . '\\Builder', 'mergeMasks');
 		$method->setAccessible(true);
 
 		$this->assertSame(
