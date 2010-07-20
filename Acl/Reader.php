@@ -50,18 +50,18 @@ class Reader
 		{
 			if (is_array($scope))
 			{
-				foreach ($scope as $scope_dim => $scope_val)
+				foreach ($scope as $scopeDim => $scopeVal)
 				{
-					if ($scope_val === $this->any)
+					if ($scopeVal === $this->any)
 					{
-						if (isset($space['any'][$scope_dim]))
+						if (isset($space['any'][$scopeDim]))
 						{
-							$n += $space['any'][$scope_dim];
+							$n += $space['any'][$scopeDim];
 						}
 					}
-					elseif (isset($space['scopes'][$scope_dim][$scope_val]))
+					elseif (isset($space['scopes'][$scopeDim][$scopeVal]))
 					{
-						$n += $space['scopes'][$scope_dim][$scope_val];
+						$n += $space['scopes'][$scopeDim][$scopeVal];
 					}
 				}
 			}
@@ -108,18 +108,18 @@ class Reader
 					throw new \InvalidArgumentException('$scope contains the same key we are looking for');
 				}
 
-				foreach ($scope as $scope_dim => $scope_val)
+				foreach ($scope as $scopeDim => $scopeVal)
 				{
-					if ($scope_val === $this->any)
+					if ($scopeVal === $this->any)
 					{
-						if (isset($space['any'][$scope_dim]))
+						if (isset($space['any'][$scopeDim]))
 						{
-							$n += $space['any'][$scope_dim];
+							$n += $space['any'][$scopeDim];
 						}
 					}
-					elseif (isset($space['scopes'][$scope_dim][$scope_val]))
+					elseif (isset($space['scopes'][$scopeDim][$scopeVal]))
 					{
-						$n += $space['scopes'][$scope_dim][$scope_val];
+						$n += $space['scopes'][$scopeDim][$scopeVal];
 					}
 				}
 			}
@@ -146,24 +146,24 @@ class Reader
 			// @codeCoverageIgnoreEnd
 		}
 
-		$yes = $no = array();
-		foreach ($space['scopes'][$dim] as $scope_val => $pos)
+		$allowed = $denied = array();
+		foreach ($space['scopes'][$dim] as $scopeVal => $pos)
 		{
 			$_n = $n + $pos;
 
 			if (ord($space['mask'][$_n >> 3]) & (1 << (7 - ($_n & 7))))
 			{
-				$yes[] = $scope_val;
+				$allowed[] = $scopeVal;
 			}
 			else
 			{
-				$no[]  = $scope_val;
+				$denied[]  = $scopeVal;
 			}
 		}
 
 		if ($global)
 		{
-			if (empty($no))
+			if (empty($denied))
 			{
 				return array('type' => 'all');
 			}
@@ -171,15 +171,15 @@ class Reader
 			{
 				return array(
 					'type'  => 'all_but',
-					'which' => $no
+					'which' => $denied
 				);
 			}
 		}
-		elseif (!empty($yes))
+		elseif (!empty($allowed))
 		{
 			return array(
 				'type'  => 'some',
-				'which' => $yes
+				'which' => $allowed
 			);
 		}
 		else

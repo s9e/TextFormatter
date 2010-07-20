@@ -28,12 +28,12 @@ class Builder
 		return $this->add(self::DENY, $perm, $scope);
 	}
 
-	public function addRule($perm, $rule, $foreign_perm)
+	public function addRule($perm, $rule, $foreignPerm)
 	{
 		/**
 		* @todo validate params
 		*/
-		$this->rules[$rule][$perm][$foreign_perm] = $foreign_perm;
+		$this->rules[$rule][$perm][$foreignPerm] = $foreignPerm;
 	}
 
 	public function getReader()
@@ -83,7 +83,7 @@ class Builder
 		$this->settings[] = array($perm, $value, $scope);
 	}
 
-	protected function build($as_xml)
+	protected function build($asXml)
 	{
 		/**
 		* Holds the whole access control list
@@ -93,20 +93,20 @@ class Builder
 		/**
 		* Holds the dimensions used for each permission
 		*/
-		$perm_dims = array();
+		$permDims = array();
 
 		/**
 		* @var array Holds the list of scopes used in any permission
 		*/
-		$used_scopes = array();
+		$usedScopes = array();
 		foreach ($this->settings as $setting)
 		{
 			list($perm, $value, $scope) = $setting;
 
-			foreach ($scope as $dim => $scope_val)
+			foreach ($scope as $dim => $scopeVal)
 			{
-				$perm_dims[$perm][$dim] = $dim;
-				$used_scopes[$dim][$scope_val] = $scope_val;
+				$permDims[$perm][$dim] = $dim;
+				$usedScopes[$dim][$scopeVal] = $scopeVal;
 			}
 
 			$k = serialize($scope);
@@ -128,64 +128,64 @@ class Builder
 		*
 		* Also sort the dimensions, this is necessary for the "any" bit loop
 		*/
-		ksort($used_scopes);
-		foreach ($used_scopes as $dim => &$scope_vals)
+		ksort($usedScopes);
+		foreach ($usedScopes as $dim => &$scopeVals)
 		{
-			ksort($scope_vals);
+			ksort($scopeVals);
 		}
-		unset($scope_vals);
+		unset($scopeVals);
 
 		/**
-		* Add global perms to $perm_dims
+		* Add global perms to $permDims
 		*/
-		$perm_dims += array_fill_keys(array_keys($acl), array());
+		$permDims += array_fill_keys(array_keys($acl), array());
 
 		do
 		{
-			$loop  = false;
+			$loop = false;
 
 			foreach ($this->rules as $type => $rules)
 			{
-				foreach ($rules as $perm => $foreign_perms)
+				foreach ($rules as $perm => $foreignPerms)
 				{
 					if (!isset($acl[$perm]))
 					{
 						continue;
 					}
 
-					foreach ($foreign_perms as $foreign_perm)
+					foreach ($foreignPerms as $foreignPerm)
 					{
-						if (!isset($perm_dims[$foreign_perm]))
+						if (!isset($permDims[$foreignPerm]))
 						{
 							/**
 							* We need to re-evaluate scopes whenever we create a new perm
 							*/
 							$loop = true;
-							$perm_dims[$foreign_perm] = $acl[$foreign_perm] = array();
+							$permDims[$foreignPerm] = $acl[$foreignPerm] = array();
 						}
 
-						$perm_dims[$foreign_perm] += $perm_dims[$perm];
+						$permDims[$foreignPerm] += $permDims[$perm];
 					}
 				}
 			}
 		}
 		while ($loop);
 
-		$used_scopes = array_map('array_values', $used_scopes);
-		$bootstrap   = array();
-		$inherit     = array('a:0:{}' => array());
+		$usedScopes = array_map('array_values', $usedScopes);
+		$bootstrap  = array();
+		$inherit    = array('a:0:{}' => array());
 
 		$hash   = crc32(serialize($acl));
 		$hashes = array($hash => 1);
 
-		foreach ($perm_dims as $perm => &$dims)
+		foreach ($permDims as $perm => &$dims)
 		{
 			ksort($dims);
 			$key = serialize(array_keys($dims));
 
 			if (!isset($bootstrap[$key]))
 			{
-				self::unroll($dims, $used_scopes, $bootstrap[$key], $inherit);
+				self::unroll($dims, $usedScopes, $bootstrap[$key], $inherit);
 			}
 
 			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
@@ -235,7 +235,7 @@ class Builder
 
 			$grantors = $grantees = array();
 
-			foreach ($grant as $perm => $foreign_perms)
+			foreach ($grant as $perm => $foreignPerms)
 			{
 				foreach ($acl[$perm] as $scope => $setting)
 				{
@@ -244,10 +244,10 @@ class Builder
 						continue;
 					}
 
-					foreach ($foreign_perms as $foreign_perm)
+					foreach ($foreignPerms as $foreignPerm)
 					{
-						if (isset($acl[$foreign_perm][$scope])
-						 && !isset($grantees[$scope][$foreign_perm]))
+						if (isset($acl[$foreignPerm][$scope])
+						 && !isset($grantees[$scope][$foreignPerm]))
 						{
 							/**
 							* The foreign perm is either self::ALLOW, in which case there's nothing
@@ -260,10 +260,10 @@ class Builder
 							continue;
 						}
 
-						$acl[$foreign_perm][$scope] = self::ALLOW;
+						$acl[$foreignPerm][$scope] = self::ALLOW;
 
-						$grantors[$scope][$perm][$foreign_perm] = $foreign_perm;
-						$grantees[$scope][$foreign_perm][$perm] = $perm;
+						$grantors[$scope][$perm][$foreignPerm] = $foreignPerm;
+						$grantees[$scope][$foreignPerm][$perm] = $perm;
 					}
 				}
 			}
@@ -272,18 +272,18 @@ class Builder
 			// STEP 3: apply "require" rules
 			//==================================================================
 
-			foreach ($require as $perm => $foreign_perms)
+			foreach ($require as $perm => $foreignPerms)
 			{
 				foreach ($acl[$perm] as $scope => &$setting)
 				{
-					foreach ($foreign_perms as $foreign_perm)
+					foreach ($foreignPerms as $foreignPerm)
 					{
 						if ($setting !== self::ALLOW)
 						{
 							break;
 						}
 
-						if (isset($acl[$foreign_perm][$scope]))
+						if (isset($acl[$foreignPerm][$scope]))
 						{
 							/**
 							* Here we copy the foreign setting regarless of whether it's self::ALLOW
@@ -291,7 +291,7 @@ class Builder
 							* there is no way for this setting to ever be granted anyway, and the
 							* same goes for scopes that inherit from it.
 							*/
-							$setting = $acl[$foreign_perm][$scope];
+							$setting = $acl[$foreignPerm][$scope];
 						}
 						else
 						{
@@ -310,7 +310,7 @@ class Builder
 						* granted by (or because of) that permission. Eventually, those
 						* permissions will be granted back during the next iteration.
 						*/
-						$cancel_grantors = array($perm => $perm);
+						$cancelGrantors = array($perm => $perm);
 
 						do
 						{
@@ -318,13 +318,13 @@ class Builder
 							* @var array Holds the list of foreign perms that have been granted by
 							*            each canceled perm
 							*/
-							$cancel_grantees = array_intersect_key(
+							$cancelGrantees = array_intersect_key(
 							                      $grantors[$scope],
-							                      $cancel_grantors
+							                      $cancelGrantors
 							                   );
-							$cancel_grantors = array();
+							$cancelGrantors = array();
 
-							foreach ($cancel_grantees as $grantor => $_grantees)
+							foreach ($cancelGrantees as $grantor => $_grantees)
 							{
 								foreach ($_grantees as $grantee)
 								{
@@ -342,12 +342,12 @@ class Builder
 										* That grantee has no valid grantors left
 										*/
 										$acl[$grantee][$scope] = null;
-										$cancel_grantors[$grantee] = $grantee;
+										$cancelGrantors[$grantee] = $grantee;
 									}
 								}
 							}
 						}
-						while (!empty($cancel_grantors));
+						while (!empty($cancelGrantors));
 					}
 				}
 				unset($setting);
@@ -404,8 +404,8 @@ class Builder
 		/**
 		* First we sort perms by their dimensions
 		*/
-		$perms_per_space = self::seedUniverse($perm_dims, $acl);
-		unset($perm_dims, $acl);
+		$permsPerSpace = self::seedUniverse($permDims, $acl);
+		unset($permDims, $acl);
 
 		/**
 		* @var array
@@ -413,25 +413,25 @@ class Builder
 		$spaces = array();
 
 		/**
-		* We iterate over $perms_per_space using references so that we operate on the original
+		* We iterate over $permsPerSpace using references so that we operate on the original
 		* rather than a copy. This way, we can alter it and see the modifications in the next
 		* iteration. This property is essential for optimizing away whole dimensions
 		*/
-		foreach ($perms_per_space as $space_id => &$perms)
+		foreach ($permsPerSpace as $spaceId => &$perms)
 		{
-			if ($space_id === 'a:0:{}'
+			if ($spaceId === 'a:0:{}'
 			 || empty($perms))
 			{
 				continue;
 			}
 
-			$dims  = unserialize($space_id);
+			$dims  = unserialize($spaceId);
 			$space = array();
 
 			/**
 			* Remove perms sharing the same mask and perms that are not granted in any scope
 			*/
-			$masks = $perm_aliases = $move = array();
+			$masks = $permAliases = $move = array();
 
 			foreach ($perms as $perm => &$settings)
 			{
@@ -452,7 +452,7 @@ class Builder
 					* That mask is shared with another perm. With set the current perm as an alias
 					* of the other perm then remove it from the list
 					*/
-					$perm_aliases[$perm] = $masks[$mask];
+					$permAliases[$perm] = $masks[$mask];
 					unset($perms[$perm]);
 					continue;
 				}
@@ -463,11 +463,11 @@ class Builder
 				* space
 				*/
 				$masks[$mask] = $perm;
-				$delete_dims  = $dims;
+				$deleteDims   = $dims;
 
 				foreach ($settings as $scope => $setting)
 				{
-					foreach ($u[$scope] as $dim => $scope_val)
+					foreach ($u[$scope] as $dim => $scopeVal)
 					{
 						if ($setting !== $settings[$inherit[$scope][$dim]])
 						{
@@ -475,9 +475,9 @@ class Builder
 							* That setting differs from the setting it inherits from, we can't
 							* delete its dimensions
 							*/
-							unset($delete_dims[$dim]);
+							unset($deleteDims[$dim]);
 
-							if (empty($delete_dims))
+							if (empty($deleteDims))
 							{
 								break 2;
 							}
@@ -485,19 +485,19 @@ class Builder
 					}
 				}
 
-				if ($delete_dims)
+				if ($deleteDims)
 				{
-					$new_dims     = array_diff_key($dims, $delete_dims);
-					$new_space_id = serialize($new_dims);
+					$newDims    = array_diff_key($dims, $deleteDims);
+					$newSpaceId = serialize($newDims);
 
-					$move[$new_space_id][$perm] = $delete_dims;
+					$move[$newSpaceId][$perm] = $deleteDims;
 				}
 			}
 			unset($settings, $masks);
 
-			foreach ($move as $new_space_id => $moving_perms)
+			foreach ($move as $newSpaceId => $movingPerms)
 			{
-				if (count($moving_perms) + count($perms_per_space[$new_space_id]) < 2)
+				if (count($movingPerms) + count($permsPerSpace[$newSpaceId]) < 2)
 				{
 					/**
 					* Do not move that perm if it's going to be the only perm of that space. In that
@@ -508,26 +508,26 @@ class Builder
 					continue;
 				}
 
-				foreach ($moving_perms as $perm => $delete_dims)
+				foreach ($movingPerms as $perm => $deleteDims)
 				{
-					foreach ($u as $scope => &$scope_vals)
+					foreach ($u as $scope => &$scopeVals)
 					{
 						if (isset($perms[$perm][$scope]))
 						{
-							foreach ($delete_dims as $dim)
+							foreach ($deleteDims as $dim)
 							{
-								if (isset($scope_vals[$dim]))
+								if (isset($scopeVals[$dim]))
 								{
 									unset($perms[$perm][$scope]);
 								}
 							}
 						}
 					}
-					$perms_per_space[$new_space_id][$perm] = $perms[$perm];
-					unset($perms[$perm], $scope_vals);
+					$permsPerSpace[$newSpaceId][$perm] = $perms[$perm];
+					unset($perms[$perm], $scopeVals);
 				}
 			}
-			unset($moving_perms);
+			unset($movingPerms);
 
 			if (empty($perms))
 			{
@@ -538,33 +538,33 @@ class Builder
 			}
 
 			/**
-			* @var array Holds the used scope_vals for each dimension
+			* @var array Holds the used scopeVals for each dimension
 			*/
-			$dim_scopes = array_intersect_key($used_scopes, $dims);
+			$dimScopes = array_intersect_key($usedScopes, $dims);
 
 			/**
 			* Sort masks per dimension, detect scoped settings that are identical to the global
 			* setting
 			*/
-			$dim_masks = $delete = array();
+			$dimMasks = $delete = array();
 
-			foreach ($dim_scopes as $dim => &$scope_vals)
+			foreach ($dimScopes as $dim => &$scopeVals)
 			{
-				$scope_vals = array_combine($scope_vals, $scope_vals);
+				$scopeVals = array_combine($scopeVals, $scopeVals);
 
 				/**
 				* First mark every scope to be deleted, then unmark them individually as we confirm
 				* that they differ from their parent scope
 				*/
-				$delete[$dim] = array_fill_keys($scope_vals, true);
+				$delete[$dim] = array_fill_keys($scopeVals, true);
 			}
-			unset($scope_vals);
+			unset($scopeVals);
 
 			foreach ($perms as $perm => $settings)
 			{
 				foreach ($settings as $scope => $setting)
 				{
-					foreach ($u[$scope] as $dim => $scope_val)
+					foreach ($u[$scope] as $dim => $scopeVal)
 					{
 						if ($setting !== $settings[$inherit[$scope][$dim]])
 						{
@@ -572,10 +572,10 @@ class Builder
 							* That setting differs from the setting it inherits from, we can't
 							* delete its scope value
 							*/
-							unset($delete[$dim][$scope_val]);
+							unset($delete[$dim][$scopeVal]);
 						}
 
-						$mask =& $dim_masks[$dim][$scope_val];
+						$mask =& $dimMasks[$dim][$scopeVal];
 						if (!isset($mask))
 						{
 							$mask = '';
@@ -586,19 +586,19 @@ class Builder
 			}
 			unset($mask);
 
-			$scopes_per_mask = array();
-			foreach ($dim_masks as $dim => $masks)
+			$scopesPerMask = array();
+			foreach ($dimMasks as $dim => $masks)
 			{
-				foreach ($masks as $scope_val => $mask)
+				foreach ($masks as $scopeVal => $mask)
 				{
-					if (isset($delete[$dim][$scope_val]))
+					if (isset($delete[$dim][$scopeVal]))
 					{
 						/**
 						* Skip scopes that are already marked for deletion
 						*/
 						continue;
 					}
-					$scopes_per_mask[$dim][$mask][] = $scope_val;
+					$scopesPerMask[$dim][$mask][] = $scopeVal;
 				}
 			}
 
@@ -608,36 +608,36 @@ class Builder
 			* For example, if all settings where x=5 are identical to all settings where x=6 then
 			* we remove x=5 and declare 5 and alias of 6 in dimension x
 			*/
-			$scope_aliases = array();
-			foreach ($scopes_per_mask as $dim => $masks)
+			$scopeAliases = array();
+			foreach ($scopesPerMask as $dim => $masks)
 			{
-				foreach ($masks as $mask => $scope_vals)
+				foreach ($masks as $mask => $scopeVals)
 				{
-					if (isset($scope_vals[1]))
+					if (isset($scopeVals[1]))
 					{
 						/**
 						* More than one scope for that mask
 						*/
-						$scope_val = array_shift($scope_vals);
-						$scope_aliases[$dim][$scope_val] = $scope_vals;
+						$scopeVal = array_shift($scopeVals);
+						$scopeAliases[$dim][$scopeVal] = $scopeVals;
 
-						$delete[$dim] += array_flip($scope_vals);
+						$delete[$dim] += array_flip($scopeVals);
 					}
 				}
-				unset($scope_vals);
+				unset($scopeVals);
 			}
 			unset($masks);
 
 			if (!empty($delete))
 			{
 				/**
-				* @todo find out why creating $scope_vals as a reference is faster
+				* @todo find out why creating $scopeVals as a reference is faster
 				*/
-				foreach ($u as $scope => &$scope_vals)
+				foreach ($u as $scope => &$scopeVals)
 				{
-					foreach ($scope_vals as $dim => $scope_val)
+					foreach ($scopeVals as $dim => $scopeVal)
 					{
-						if (isset($delete[$dim][$scope_val]))
+						if (isset($delete[$dim][$scopeVal]))
 						{
 							foreach ($perms as $perm => &$settings)
 							{
@@ -647,14 +647,14 @@ class Builder
 						}
 					}
 				}
-				unset($scope_vals, $settings);
+				unset($scopeVals, $settings);
 
-				foreach ($delete as $dim => $scope_vals)
+				foreach ($delete as $dim => $scopeVals)
 				{
-					$dim_scopes[$dim] = array_diff_key($dim_scopes[$dim], $scope_vals);
+					$dimScopes[$dim] = array_diff_key($dimScopes[$dim], $scopeVals);
 				}
 
-				$dim_scopes = array_filter($dim_scopes);
+				$dimScopes = array_filter($dimScopes);
 			}
 
 			/**
@@ -666,32 +666,32 @@ class Builder
 				$mask .= implode('', $settings);
 			}
 
-			$step      = 1;
-			$chunk_len = 0;
+			$step     = 1;
+			$chunkLen = 0;
 
-			foreach ($dim_scopes as $dim => $scope_vals)
+			foreach ($dimScopes as $dim => $scopeVals)
 			{
-				$chunk_len  += $step;
-				$step        = $chunk_len;
-				$repeat      = 1 + count($scope_vals);
-				$chunk_len  *= $repeat;
+				$chunkLen  += $step;
+				$step       = $chunkLen;
+				$repeat     = 1 + count($scopeVals);
+				$chunkLen  *= $repeat;
 
-				$space['any'][$dim] = $chunk_len;
+				$space['any'][$dim] = $chunkLen;
 
 				$i = 0;
-				foreach ($scope_vals as $scope_val)
+				foreach ($scopeVals as $scopeVal)
 				{
 					$pos = ++$i * $step;
-					$space['scopes'][$dim][$scope_val] = $pos;
+					$space['scopes'][$dim][$scopeVal] = $pos;
 
-					if (isset($scope_aliases[$dim][$scope_val]))
+					if (isset($scopeAliases[$dim][$scopeVal]))
 					{
-						$space['scopes'][$dim] += array_fill_keys($scope_aliases[$dim][$scope_val], $pos);
+						$space['scopes'][$dim] += array_fill_keys($scopeAliases[$dim][$scopeVal], $pos);
 					}
 				}
 
 				$tmp = '';
-				foreach (str_split($mask, $chunk_len) as $chunk)
+				foreach (str_split($mask, $chunkLen) as $chunk)
 				{
 					$tmp .= $chunk;
 
@@ -716,30 +716,30 @@ class Builder
 				$mask = $tmp;
 			}
 
-			$perm_masks = str_split($mask, $chunk_len + $step);
-			$space_mask = self::mergeMasks($perm_masks);
+			$permMasks = str_split($mask, $chunkLen + $step);
+			$spaceMask = self::mergeMasks($permMasks);
 
 			foreach (array_keys($perms) as $i => $perm)
 			{
-				$pos = strpos($space_mask, $perm_masks[$i]);
+				$pos = strpos($spaceMask, $permMasks[$i]);
 				$space['perms'][$perm] = $pos;
 
-				$space['perms'] += array_fill_keys(array_keys($perm_aliases, $perm, true), $pos);
+				$space['perms'] += array_fill_keys(array_keys($permAliases, $perm, true), $pos);
 			}
 
-			$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($space_mask . str_repeat('0', 8 - (strlen($space_mask) & 7)), 8))));
+			$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($spaceMask . str_repeat('0', 8 - (strlen($spaceMask) & 7)), 8))));
 
 			$spaces[] = $space;
 		}
 		unset($perms);
 
-		if (isset($perms_per_space['a:0:{}']))
+		if (isset($permsPerSpace['a:0:{}']))
 		{
 			/**
 			* All that confusing array_* mumbo jumbo is to only keep perms that are allowed and
 			* assign them pos 0
 			*/
-			$allowed = array_keys(array_filter(array_map('array_filter', $perms_per_space['a:0:{}'])));
+			$allowed = array_keys(array_filter(array_map('array_filter', $permsPerSpace['a:0:{}'])));
 
 			if ($allowed)
 			{
@@ -752,7 +752,7 @@ class Builder
 			}
 		}
 
-		if ($as_xml)
+		if ($asXml)
 		{
 			$xml = new \XMLWriter;
 			$xml->openMemory();
@@ -770,12 +770,12 @@ class Builder
 				if (!empty($space['scopes']))
 				{
 					$xml->startElement('scopes');
-					foreach ($space['scopes'] as $scope_dim => $scope_vals)
+					foreach ($space['scopes'] as $scopeDim => $scopeVals)
 					{
-						$xml->startElement($scope_dim);
-						foreach ($scope_vals as $scope_val => $pos)
+						$xml->startElement($scopeDim);
+						foreach ($scopeVals as $scopeVal => $pos)
 						{
-							$xml->writeAttribute('_' . $scope_val, $pos);
+							$xml->writeAttribute('_' . $scopeVal, $pos);
 						}
 						$xml->endElement();
 					}
@@ -785,9 +785,9 @@ class Builder
 				if (!empty($space['any']))
 				{
 					$xml->startElement('any');
-					foreach ($space['any'] as $scope_dim => $pos)
+					foreach ($space['any'] as $scopeDim => $pos)
 					{
-						$xml->writeAttribute($scope_dim, $pos);
+						$xml->writeAttribute($scopeDim, $pos);
 					}
 					$xml->endElement();
 				}
@@ -816,7 +816,7 @@ class Builder
 		}
 	}
 
-	static protected function unroll(array $dims, array $used_scopes, &$bootstrap, array &$inherit)
+	static protected function unroll(array $dims, array $usedScopes, &$bootstrap, array &$inherit)
 	{
 		$bootstrap = array('a:0:{}' => null);
 
@@ -829,54 +829,54 @@ class Builder
 			case 1:
 				$dim = end($dims);
 
-				foreach ($used_scopes[$dim] as $scope_val)
+				foreach ($usedScopes[$dim] as $scopeVal)
 				{
-					$scope_key             = serialize(array($dim => $scope_val));
-					$bootstrap[$scope_key] = null;
-					$inherit[$scope_key]   = array($dim => 'a:0:{}');
+					$scopeKey             = serialize(array($dim => $scopeVal));
+					$bootstrap[$scopeKey] = null;
+					$inherit[$scopeKey]   = array($dim => 'a:0:{}');
 				}
 				return;
 
 			default:
-				$scope_cnt = array();
+				$scopeCnt = array();
 				foreach ($dims as $dim)
 				{
 					/**
 					* We add 1 for the global scope
 					*/
-					$scope_cnt[$dim] = 1 + count($used_scopes[$dim]);
+					$scopeCnt[$dim] = 1 + count($usedScopes[$dim]);
 				}
 
 				$n   = 0;
-				$max = array_product($scope_cnt);
+				$max = array_product($scopeCnt);
 
 				do
 				{
 					$scope = array();
 					$div   = 1;
 
-					foreach ($scope_cnt as $dim => $cnt)
+					foreach ($scopeCnt as $dim => $cnt)
 					{
 						$j    = (int) ($n / $div) % $cnt;
 						$div *= $cnt;
 
 						if ($j)
 						{
-							$scope[$dim] = $used_scopes[$dim][$j - 1];
+							$scope[$dim] = $usedScopes[$dim][$j - 1];
 						}
 					}
 
-					$scope_key = serialize($scope);
+					$scopeKey = serialize($scope);
 
-					foreach ($scope as $dim => $scope_val)
+					foreach ($scope as $dim => $scopeVal)
 					{
 						$tmp = $scope;
 						unset($tmp[$dim]);
 
-						$inherit[$scope_key][$dim] = serialize($tmp);
+						$inherit[$scopeKey][$dim] = serialize($tmp);
 					}
 
-					$bootstrap[$scope_key] = null;
+					$bootstrap[$scopeKey] = null;
 				}
 				while (++$n < $max);
 		}
@@ -957,7 +957,7 @@ class Builder
 	* This method will receive an array where keys are every existing perms and their value is an
 	* array containing their possible dimensions (both as keys and values).
 	*
-	* For instance, $perm_dims will look something like:
+	* For instance, $permDims will look something like:
 	*    array('perm' => array('x' => 'x'), 'otherperm' => array('x' => 'x', 'y' => 'y'))
 	*
 	* It will return an array where keys are every possible space and subspace (for instance, in the
@@ -967,15 +967,15 @@ class Builder
 	* dimension from a perm during a loop, we can keep processing the perms normally and deal with
 	* the newly-reduced perm in a later iteration.
 	*/
-	static protected function seedUniverse(array $perm_dims, array $acl)
+	static protected function seedUniverse(array $permDims, array $acl)
 	{
-		$perms_per_space = array('a:0:{}' => array());
+		$permsPerSpace = array('a:0:{}' => array());
 
-		foreach ($perm_dims as $perm => $dims)
+		foreach ($permDims as $perm => $dims)
 		{
-			$space_id = serialize($dims);
+			$spaceId = serialize($dims);
 
-			if (!isset($perms_per_space[$space_id]))
+			if (!isset($permsPerSpace[$spaceId]))
 			{
 				$dims = array_values($dims);
 				$i    = pow(2, count($dims));
@@ -990,26 +990,26 @@ class Builder
 							$subspace[$dim] = $dim;
 						}
 					}
-					$subspace_id = serialize($subspace);
+					$subspaceId = serialize($subspace);
 
-					if (!isset($perms_per_space[$subspace_id]))
+					if (!isset($permsPerSpace[$subspaceId]))
 					{
-						$perms_per_space[$subspace_id] = array();
+						$permsPerSpace[$subspaceId] = array();
 					}
 				}
 			}
 
-			$perms_per_space[$space_id][$perm] = $acl[$perm];
+			$permsPerSpace[$spaceId][$perm] = $acl[$perm];
 		}
 
 		/**
 		* Sort the spaces by their number of dimensions, descending
 		*/
-		uksort($perms_per_space, function($a, $b)
+		uksort($permsPerSpace, function($a, $b)
 		{
 			return count(unserialize($b)) - count(unserialize($a));
 		});
 
-		return $perms_per_space;
+		return $permsPerSpace;
 	}
 }
