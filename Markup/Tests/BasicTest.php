@@ -235,8 +235,32 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
+		$cb->addPass(
+			'Foo',
+			array(
+				'parser' => function($text)
+				{
+					preg_match_all('#(?: FOOWS |FOO)#', $text, $matches, \PREG_OFFSET_CAPTURE);
+
+					$tags = array();
+					foreach ($matches[0] as $m)
+					{
+						$tags[] = array(
+							'name' => 'foo',
+							'type' => Parser::TAG_SELF,
+							'pos'  => $m[1],
+							'len'  => strlen($m[0])
+						);
+					}
+
+					return array('tags' => $tags);
+				}
+			)
+		);
+
 		$cb->addBBCode('b');
 		$cb->addBBCode('foo', array($option => true));
+
 		$cb->setBBCodeTemplate('foo', '[foo]<xsl:apply-templates/>[/foo]');
 		$cb->setBBCodeTemplate('b', '[b]<xsl:apply-templates/>[/b]');
 
@@ -273,6 +297,30 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 				'[b] [foo] 1 [/foo] 2 [foo] 3 [/foo] [/b]',
 				'[b] [foo] 1 [/foo]2 [foo] 3 [/foo][/b]',
 				'<rt><B><st>[b]</st> <FOO><st>[foo]</st> 1 <et>[/foo]</et></FOO><i> </i>2 <FOO><st>[foo]</st> 3 <et>[/foo]</et></FOO><i> </i><et>[/b]</et></B></rt>'
+			),
+			array(
+				'ltrim_content',
+				'[b] FOOWS | FOOWS [/b]',
+				'[b][foo]FOOWS [/foo]|[foo]FOOWS [/foo][/b]',
+				'<rt><B><st>[b]</st><FOO><i> </i>FOOWS </FOO>|<FOO><i> </i>FOOWS </FOO><et>[/b]</et></B></rt>'
+			),
+			array(
+				'rtrim_content',
+				'[b] FOOWS | FOOWS [/b]',
+				'[b][foo] FOOWS[/foo]|[foo] FOOWS[/foo][/b]',
+				'<rt><B><st>[b]</st><FOO> FOOWS<i> </i></FOO>|<FOO> FOOWS<i> </i></FOO><et>[/b]</et></B></rt>'
+			),
+			array(
+				'trim_before',
+				'[b] FOO | FOO [/b]',
+				'[b][foo]FOO[/foo] |[foo]FOO[/foo] [/b]',
+				'<rt><B><st>[b]</st><i> </i><FOO>FOO</FOO> |<i> </i><FOO>FOO</FOO> <et>[/b]</et></B></rt>'
+			),
+			array(
+				'trim_after',
+				'[b] FOO | FOO [/b]',
+				'[b] [foo]FOO[/foo]| [foo]FOO[/foo][/b]',
+				'<rt><B><st>[b]</st> <FOO>FOO</FOO><i> </i>| <FOO>FOO</FOO><i> </i><et>[/b]</et></B></rt>'
 			)
 		);
 	}

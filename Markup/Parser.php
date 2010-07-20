@@ -474,7 +474,20 @@ class Parser
 							$xml->text(substr($text, $tag['pos'], $tag['len']));
 						}
 					}
+
 					$xml->endElement();
+
+					if (!empty($bbcode['trim_after']))
+					{
+						$spn = strspn($text, " \n\r\t\0\x0B", $pos);
+
+						if ($spn)
+						{
+							$xml->writeElement('i', substr($text, $pos, $spn));
+							$pos += $spn;
+						}
+					}
+
 					continue;
 				}
 
