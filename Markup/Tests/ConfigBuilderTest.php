@@ -251,6 +251,38 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testAddBBCodeFromExampleThrowsAnExceptionIfTheDefinitionIsMalformed()
+	{
+		try
+		{
+			$this->cb->addBBCodeFromExample('[foo==]{TEXT}[/foo]', '');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('Cannot interpret the BBCode definition', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testAddBBCodeFromExampleDoesNotAllowMultipleTemplates()
+	{
+		try
+		{
+			$this->cb->addBBCodeFromExample('[foo==]{TEXT}[/foo]', '');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('Cannot interpret the BBCode definition', $e->getMessage());
+			throw $e;
+		}
+	}
+
 	public function setUp()
 	{
 		$this->cb = new ConfigBuilder;
