@@ -63,6 +63,63 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	/**
+	* @expectedException RuntimeException
+	*/
+	public function testSetBBCodeTemplateDoesNotAcceptVariablesInScriptSrc()
+	{
+		$cb = new ConfigBuilder;
+		$cb->addBBCode('script');
+
+		try
+		{
+			$cb->setBBCodeTemplate('script', '<script src="{@src}"></script>');
+		}
+		catch (\RuntimeException $e)
+		{
+			$this->assertContains('ALLOW_INSECURE_TEMPLATES', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException RuntimeException
+	*/
+	public function testSetBBCodeTemplateDoesNotAcceptVariablesInScriptSrc2()
+	{
+		$cb = new ConfigBuilder;
+		$cb->addBBCode('script');
+
+		try
+		{
+			$cb->setBBCodeTemplate('script', '<script><xsl:attribute /></script>');
+		}
+		catch (\RuntimeException $e)
+		{
+			$this->assertContains('ALLOW_INSECURE_TEMPLATES', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException RuntimeException
+	*/
+	public function testSetBBCodeTemplateDoesNotAcceptVariablesInScriptContent()
+	{
+		$cb = new ConfigBuilder;
+		$cb->addBBCode('script');
+
+		try
+		{
+			$cb->setBBCodeTemplate('script', '<script><xsl:value-of select="@foo"/></script>');
+		}
+		catch (\RuntimeException $e)
+		{
+			$this->assertContains('ALLOW_INSECURE_TEMPLATES', $e->getMessage());
+			throw $e;
+		}
+	}
+
 	public function BBCodeExamples()
 	{
 		return array(

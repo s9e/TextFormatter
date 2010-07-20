@@ -355,51 +355,17 @@ class ConfigBuilder
 		{
 			$xpath = new \DOMXPath($dom);
 
-			if ($xpath->query('//script[contains(@src, "{") or .//xsl:value-of]')->length)
+			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or xsl:attribute])'))
 			{
-				throw new \Exception('It seems that your template contains <script> tag using user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setBBCodeTemplate() to enable it');
+				throw new \RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can 
+be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setBBCodeTemplate() to 
+enable it');
 			}
-
-/*
-			foreach ($xpath->query('//@style[contains(., "{")]') as $attr)
-			{
-				print_r($attr);
-				exit;
-			}
-*/
 		}
 
 		/**
 		* Strip the whitespace off that template, except in <xsl:text/> elements
 		*/
-/**
-		if (!isset($this->xslt))
-		{
-			$xsl = new \DOMDocument;
-			$xsl->loadXML('<?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-    <xsl:output method="xml" encoding="utf-8" indent="no" />
-	<xsl:preserve-space elements="xsl:text" />
-
-    <xsl:template match="*">
-        <xsl:copy>
-            <xsl:copy-of select="@*" />
-            <xsl:apply-templates />
-        </xsl:copy>
-    </xsl:template>
-
-</xsl:stylesheet>');
-
-			$this->xslt = new \XSLTProcessor;
-			$this->xslt->importStylesheet($xsl);
-		}
-
-		$dom = $this->xslt->transformToDoc($dom);
-		$tpl = $dom->saveXML($dom->documentElement);
-		$tpl = substr($tpl, 1 + strpos($tpl, '>'), strrpos($tpl, '<') - strlen($tpl));
-/**/
-
 		$this->bbcodes[$bbcode_id]['tpl'] = $tpl;
 	}
 
