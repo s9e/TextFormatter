@@ -191,11 +191,16 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		{
 			$this->cb->addBBCodeRule('b', 'fail', 'b');
 		}
-		catch (\InvalidArgumentException $e)
+		catch (\UnexpectedValueException $e)
 		{
 			$this->assertContains('Unknown rule action', $e->getMessage());
 			throw $e;
 		}
+	}
+
+	public function testAddBBCodeParamDoesNotThrowsAnExceptionIfWeTryToCreateMultipleIdenticalRequireParentRules()
+	{
+		$this->cb->addBBCodeRule('b', 'require_parent', 'a');
 	}
 
 	/**
@@ -207,23 +212,50 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		{
 			$this->cb->addBBCodeRule('b', 'require_parent', 'b');
 		}
-		catch (\InvalidArgumentException $e)
+		catch (\RuntimeException $e)
 		{
 			$this->assertContains('already has a require_parent rule', $e->getMessage());
 			throw $e;
 		}
 	}
 
-	public function testAddBBCodeParamDoesNotThrowsAnExceptionIfWeTryToCreateMultipleIdenticalRequireParentRules()
+	/**
+	* @expectedException PHPUnit_Framework_Error
+	*/
+	public function testGetBBCodeConfigGeneratesANoticeIfDefaultParamRefersToAnUnknownParam()
 	{
-		$this->cb->addBBCodeRule('b', 'require_parent', 'a');
+		try
+		{
+			$this->cb->getBBCodeConfig();
+		}
+		catch (\PHPUnit_Framework_Error $e)
+		{
+			$this->assertContains('unknown BBCode param', $e->getMessage());
+			throw $e;
+		}
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	*/
+	public function testSetBBCodeTemplateThrowsAnExceptionIfTheBBCodeDoesNotExist()
+	{
+		try
+		{
+			$this->cb->setBBCodeTemplate('foo', '');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('Unknown BBCode', $e->getMessage());
+			throw $e;
+		}
 	}
 
 	public function setUp()
 	{
 		$this->cb = new ConfigBuilder;
 		$this->cb->addBBCode('a');
-		$this->cb->addBBCode('b');
+		$this->cb->addBBCode('b', array('default_param' => 'undefined'));
 		$this->cb->addBBCodeParam('b', 'b', 'text');
 		$this->cb->addBBCodeRule('b', 'require_parent', 'a');
 	}

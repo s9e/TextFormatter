@@ -41,6 +41,23 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testAllow()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('b', array('default_rule' => 'deny'));
+		$cb->addBBCode('allowed');
+		$cb->addBBCode('denied');
+
+		$cb->addBBCodeRule('b', 'allow', 'allowed');
+
+		$text     = '[b][allowed/][denied/][/b]';
+		$expected = '<rt><B><st>[b]</st><ALLOWED>[allowed/]</ALLOWED>[denied/]<et>[/b]</et></B></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function testRequireAscendant()
 	{
 		$cb = new ConfigBuilder;

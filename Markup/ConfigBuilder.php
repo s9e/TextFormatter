@@ -285,8 +285,10 @@ class ConfigBuilder
 			if (isset($bbcode['default_param'])
 			 && !isset($bbcode['params'][$bbcode['default_param']]))
 			{
-				trigger_error("Skipping unknown BBCode param '" . $k . "'", E_USER_NOTICE);
+				trigger_error("Skipping unknown BBCode param '" . $bbcode['default_param'] . "'", E_USER_NOTICE);
+				//@codeCoverageIgnoreStart
 			}
+			//@codeCoverageIgnoreEnd
 		}
 		unset($bbcode);
 
