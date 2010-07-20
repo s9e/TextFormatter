@@ -402,7 +402,7 @@ class Parser
 						$content = rtrim(substr($text, $pos, $len));
 						$xml->text($content);
 
-						if (strlen($content) > $len)
+						if (strlen($content) < $len)
 						{
 							$xml->writeElement(
 								'i',

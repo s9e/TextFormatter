@@ -228,6 +228,55 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$parser->parse('You dirty banana banana grape');
 	}
 
+	/**
+	* @dataProvider getWhitespaceTrimming
+	*/
+	public function testWhitespaceTrimming($option, $text, $expected_html, $expected_xml)
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('b');
+		$cb->addBBCode('foo', array($option => true));
+		$cb->setBBCodeTemplate('foo', '[foo]<xsl:apply-templates/>[/foo]');
+		$cb->setBBCodeTemplate('b', '[b]<xsl:apply-templates/>[/b]');
+
+		$actual_xml = $cb->getParser()->parse($text);
+		$this->assertSame($expected_xml, $actual_xml);
+
+		$actual_html = $cb->getRenderer()->render($expected_xml);
+		$this->assertSame($expected_html, $actual_html);
+	}
+
+	public function getWhitespaceTrimming()
+	{
+		return array(
+			array(
+				'ltrim_content',
+				'[b] [foo] 1 [/foo] 2 [foo] 3 [/foo] [/b]',
+				'[b] [foo]1 [/foo] 2 [foo]3 [/foo] [/b]',
+				'<rt><B><st>[b]</st> <FOO><st>[foo]</st><i> </i>1 <et>[/foo]</et></FOO> 2 <FOO><st>[foo]</st><i> </i>3 <et>[/foo]</et></FOO> <et>[/b]</et></B></rt>'
+			),
+			array(
+				'rtrim_content',
+				'[b] [foo] 1 [/foo] 2 [foo] 3 [/foo] [/b]',
+				'[b] [foo] 1[/foo] 2 [foo] 3[/foo] [/b]',
+				'<rt><B><st>[b]</st> <FOO><st>[foo]</st> 1<i> </i><et>[/foo]</et></FOO> 2 <FOO><st>[foo]</st> 3<i> </i><et>[/foo]</et></FOO> <et>[/b]</et></B></rt>'
+			),
+			array(
+				'trim_before',
+				'[b] [foo] 1 [/foo] 2 [foo] 3 [/foo] [/b]',
+				'[b][foo] 1 [/foo] 2[foo] 3 [/foo] [/b]',
+				'<rt><B><st>[b]</st><i> </i><FOO><st>[foo]</st> 1 <et>[/foo]</et></FOO> 2<i> </i><FOO><st>[foo]</st> 3 <et>[/foo]</et></FOO> <et>[/b]</et></B></rt>'
+			),
+			array(
+				'trim_after',
+				'[b] [foo] 1 [/foo] 2 [foo] 3 [/foo] [/b]',
+				'[b] [foo] 1 [/foo]2 [foo] 3 [/foo][/b]',
+				'<rt><B><st>[b]</st> <FOO><st>[foo]</st> 1 <et>[/foo]</et></FOO><i> </i>2 <FOO><st>[foo]</st> 3 <et>[/foo]</et></FOO><i> </i><et>[/b]</et></B></rt>'
+			)
+		);
+	}
+
 	public function setUp()
 	{
 		$cb = new ConfigBuilder;
