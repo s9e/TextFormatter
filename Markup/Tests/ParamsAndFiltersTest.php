@@ -10,16 +10,19 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @dataProvider getParamStuff
 	*/
-	public function testParamStuff($text, $expected, $msgs = array())
+	public function testParamStuff($text, $expected, $expected_msgs = array())
 	{
 		$actual = $this->parser->parse($text);
 		$this->assertSame($expected, $actual);
 
-		foreach ($msgs as $type => $_msgs)
+		$actual_msgs = $this->parser->msgs;
+
+		if (!isset($expected_msgs['debug']))
 		{
-			$this->assertArrayHasKey($type, $this->parser->msgs);
-			$this->assertEquals($_msgs, $this->parser->msgs[$type]);
+			unset($actual_msgs['debug']);
 		}
+
+		$this->assertEquals($expected_msgs, $actual_msgs);
 	}
 
 	public function testBBCodeAliasesCanBeUsedWhenAddingParams()
@@ -183,6 +186,23 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				'<rt><X custom="foo">[x custom=&quot;foo&quot; /]</X></rt>'
 			),
 			array(
+				'[x simpletext="foo bar baz" /]',
+				'<rt><X simpletext="foo bar baz">[x simpletext=&quot;foo bar baz&quot; /]</X></rt>'
+			),
+			array(
+				'[x simpletext="foo \'bar\' baz" /]',
+				'<rt><X>[x simpletext=&quot;foo \'bar\' baz&quot; /]</X></rt>',
+				array(
+					'error' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'Invalid param %s',
+							'params' => array('simpletext')
+						)
+					)
+				)
+			),
+			array(
 				'[url href="http://evil.example.com"]foo[/url]',
 				'<pt>[url href=&quot;http://evil.example.com&quot;]foo[/url]</pt>',
 				array(
@@ -264,6 +284,59 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 							'msg'    => 'Unknown filter %s',
 							'params' => array('undefined')
 						)
+					),
+					'error' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'Invalid param %s',
+							'params' => array('undefined')
+						)
+					)
+				)
+			),
+			array(
+				'[x float=123 /]',
+				'<rt><X float="123">[x float=123 /]</X></rt>'
+			),
+			array(
+				'[x float=123.0 /]',
+				'<rt><X float="123">[x float=123.0 /]</X></rt>'
+			),
+			array(
+				'[x float=123.45 /]',
+				'<rt><X float="123.45">[x float=123.45 /]</X></rt>'
+			),
+			array(
+				'[x float=-123.45 /]',
+				'<rt><X float="-123.45">[x float=-123.45 /]</X></rt>'
+			),
+			array(
+				'[x float=123 /]',
+				'<rt><X float="123">[x float=123 /]</X></rt>'
+			),
+			array(
+				'[x float=123z /]',
+				'<rt><X>[x float=123z /]</X></rt>',
+				array(
+					'error' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'Invalid param %s',
+							'params' => array('float')
+						)
+					)
+				)
+			),
+			array(
+				' [x uint=-123 /]',
+				'<rt> <X>[x uint=-123 /]</X></rt>',
+				array(
+					'error' => array(
+						array(
+							'pos'    => 1,
+							'msg'    => 'Invalid param %s',
+							'params' => array('uint')
+						)
 					)
 				)
 			),
@@ -309,7 +382,8 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCode('x');
 		$cb->addBBCodeParam('x', 'foo', 'text', false);
 
-		foreach (array('custom', 'number', 'integer', 'int', 'uint', 'color', 'undefined') as $type)
+		$types = array('custom', 'float', 'number', 'integer', 'int', 'uint', 'color', 'simpletext', 'undefined');
+		foreach ($types as $type)
 		{
 			$cb->addBBCodeParam('x', $type, $type, false);
 		}

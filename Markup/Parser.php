@@ -350,15 +350,12 @@ class Parser
 						$msgs = array();
 						$v    = $this->filter($v, $bbcode['params'][$k]['type'], $msgs);
 
-						if ($msgs)
+						foreach ($msgs as $type => $_msgs)
 						{
-							foreach ($msgs as $type => $_msgs)
+							foreach ($_msgs as $msg)
 							{
-								foreach ($_msgs as $msg)
-								{
-									$msg['pos'] = $tag['pos'];
-									$this->msgs[$type][] = $msg;
-								}
+								$msg['pos'] = $tag['pos'];
+								$this->msgs[$type][] = $msg;
 							}
 						}
 
