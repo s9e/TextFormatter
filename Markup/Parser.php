@@ -60,7 +60,7 @@ class Parser
 			$matches = array();
 			if (isset($config['regexp']))
 			{
-				$is_array = is_array($config['regexp']);
+				$isArray = is_array($config['regexp']);
 
 				$cnt  = 0;
 				$skip = false;
@@ -92,10 +92,10 @@ class Parser
 						else
 						{
 							$limit       = $config['limit'] + $_cnt - $cnt;
-							$msg_type    = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
+							$msgType     = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
 							$matches[$k] = array_slice($matches[$k], 0, $limit);
 
-							$msgs[$msg_type][] = array(
+							$msgs[$msgType][] = array(
 								'pos'    => 0,
 								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
 								'params' => array($config['limit'])
@@ -106,7 +106,7 @@ class Parser
 					}
 				}
 
-				if (!$is_array)
+				if (!$isArray)
 				{
 					$matches = $matches[0];
 				}
@@ -171,13 +171,13 @@ class Parser
 		// Time to get serious
 		//======================================================================
 
-		$aliases  = $this->passes['BBCode']['aliases'];
-		$bbcodes  = $this->passes['BBCode']['bbcodes'];
+		$aliases = $this->passes['BBCode']['aliases'];
+		$bbcodes = $this->passes['BBCode']['bbcodes'];
 
 		/**
 		* @var	array	Open BBCodes
 		*/
-		$bbcode_stack = array();
+		$bbcodeStack = array();
 
 		/**
 		* @var	array	List of allowed BBCode tags in current context. Starts as a copy of $aliases
@@ -187,17 +187,17 @@ class Parser
 		/**
 		* @var	array	Number of times each BBCode has been used
 		*/
-		$cnt_total = array_fill_keys($allowed, 0);
+		$cntTotal = array_fill_keys($allowed, 0);
 
 		/**
 		* @var	array	Number of open tags for each bbcode_id
 		*/
-		$cnt_open = $cnt_total;
+		$cntOpen = $cntTotal;
 
 		/**
 		* @var	array	Keeps track open tags (tags carry their suffix)
 		*/
-		$open_tags = array();
+		$openTags = array();
 
 		$xml->startElement('rt');
 
@@ -216,26 +216,26 @@ class Parser
 				continue;
 			}
 
-			$bbcode_id = $tag['name'];
-			if (!isset($bbcodes[$bbcode_id]))
+			$bbcodeId = $tag['name'];
+			if (!isset($bbcodes[$bbcodeId]))
 			{
 
-				$bbcode_id = strtoupper($bbcode_id);
+				$bbcodeId = strtoupper($bbcodeId);
 
-				if (!isset($aliases[$bbcode_id]))
+				if (!isset($aliases[$bbcodeId]))
 				{
 					$this->msgs['debug'][] = array(
 						'pos'    => $tag['pos'],
 						'msg'    => 'Unknown BBCode %1$s from pass %2$s',
-						'params' => array($bbcode_id, $tag['pass'])
+						'params' => array($bbcodeId, $tag['pass'])
 					);
 					continue;
 				}
 
-				$bbcode_id = $aliases[$bbcode_id];
+				$bbcodeId = $aliases[$bbcodeId];
 			}
 
-			$bbcode = $bbcodes[$bbcode_id];
+			$bbcode = $bbcodes[$bbcodeId];
 			$suffix = (isset($tag['suffix'])) ? $tag['suffix'] : '';
 
 			//==================================================================
@@ -253,10 +253,10 @@ class Parser
 					/**
 					* Oh, wait, we may have to close its parent first
 					*/
-					$last_bbcode = end($bbcode_stack);
+					$lastBBCode = end($bbcodeStack);
 					foreach ($bbcode['close_parent'] as $parent)
 					{
-						if ($last_bbcode['bbcode_id'] === $parent)
+						if ($lastBBCode['bbcode_id'] === $parent)
 						{
 							/**
 							* So we do have to close that parent. First we reinsert current tag then
@@ -274,33 +274,33 @@ class Parser
 					}
 				}
 
-				if ($bbcode['nesting_limit'] <= $cnt_open[$bbcode_id]
-				 || $bbcode['tag_limit']     <= $cnt_total[$bbcode_id])
+				if ($bbcode['nesting_limit'] <= $cntOpen[$bbcodeId]
+				 || $bbcode['tag_limit']     <= $cntTotal[$bbcodeId])
 				{
 					continue;
 				}
 
-				if (!isset($allowed[$bbcode_id]))
+				if (!isset($allowed[$bbcodeId]))
 				{
 					$this->msgs['debug'][] = array(
 						'pos'    => $tag['pos'],
 						'msg'    => 'BBCode %s is not allowed in this context',
-						'params' => array($bbcode_id)
+						'params' => array($bbcodeId)
 					);
 					continue;
 				}
 
 				if (isset($bbcode['require_parent']))
 				{
-					$last_bbcode = end($bbcode_stack);
+					$lastBBCode = end($bbcodeStack);
 
-					if (!$last_bbcode
-					 || $last_bbcode['bbcode_id'] !== $bbcode['require_parent'])
+					if (!$lastBBCode
+					 || $lastBBCode['bbcode_id'] !== $bbcode['require_parent'])
 					{
 						$this->msgs['debug'][] = array(
 							'pos'    => $tag['pos'],
 							'msg'    => 'BBCode %1$s requires %2$s as parent',
-							'params' => array($bbcode_id, $bbcode['require_parent'])
+							'params' => array($bbcodeId, $bbcode['require_parent'])
 						);
 
 						continue;
@@ -311,12 +311,12 @@ class Parser
 				{
 					foreach ($bbcode['require_ascendant'] as $ascendant)
 					{
-						if (empty($cnt_open[$ascendant]))
+						if (empty($cntOpen[$ascendant]))
 						{
 							$this->msgs['debug'][] = array(
 								'pos'    => $tag['pos'],
 								'msg'    => 'BBCode %1$s requires %2$s as ascendant',
-								'params' => array($bbcode_id, $ascendant)
+								'params' => array($bbcodeId, $ascendant)
 							);
 							continue 2;
 						}
@@ -328,9 +328,9 @@ class Parser
 					/**
 					* Check for missing required params
 					*/
-					foreach (array_diff_key($bbcode['params'], $tag['params']) as $param => $param_conf)
+					foreach (array_diff_key($bbcode['params'], $tag['params']) as $param => $paramConf)
 					{
-						if (empty($param_conf['is_required']))
+						if (empty($paramConf['is_required']))
 						{
 							continue;
 						}
@@ -414,9 +414,9 @@ class Parser
 				}
 				$pos = $tag['pos'] + $tag['len'];
 
-				++$cnt_total[$bbcode_id];
+				++$cntTotal[$bbcodeId];
 
-				$xml->startElement($bbcode_id);
+				$xml->startElement($bbcodeId);
 				if (!empty($tag['params']))
 				{
 					/**
@@ -504,19 +504,19 @@ class Parser
 					}
 				}
 
-				++$cnt_open[$bbcode_id];
+				++$cntOpen[$bbcodeId];
 
-				if (isset($open_tags[$bbcode_id . $suffix]))
+				if (isset($openTags[$bbcodeId . $suffix]))
 				{
-					++$open_tags[$bbcode_id . $suffix];
+					++$openTags[$bbcodeId . $suffix];
 				}
 				else
 				{
-					$open_tags[$bbcode_id . $suffix] = 1;
+					$openTags[$bbcodeId . $suffix] = 1;
 				}
 
-				$bbcode_stack[] = array(
-					'bbcode_id' => $bbcode_id,
+				$bbcodeStack[] = array(
+					'bbcode_id' => $bbcodeId,
 					'suffix'	=> $suffix,
 					'allowed'   => $allowed
 				);
@@ -529,7 +529,7 @@ class Parser
 
 			if ($tag['type'] & self::TAG_CLOSE)
 			{
-				if (empty($open_tags[$bbcode_id . $suffix]))
+				if (empty($openTags[$bbcodeId . $suffix]))
 				{
 					/**
 					* This is an end tag but there's no matching start tag
@@ -537,7 +537,7 @@ class Parser
 					$this->msgs['debug'][] = array(
 						'pos'    => $tag['pos'],
 						'msg'    => 'Could not find a matching start tag for BBCode %s',
-						'params' => array($bbcode_id . $suffix)
+						'params' => array($bbcodeId . $suffix)
 					);
 					continue;
 				}
@@ -577,13 +577,13 @@ class Parser
 
 				do
 				{
-					$cur     = array_pop($bbcode_stack);
+					$cur     = array_pop($bbcodeStack);
 					$allowed = $cur['allowed'];
 
-					--$cnt_open[$cur['bbcode_id']];
-					--$open_tags[$cur['bbcode_id'] . $cur['suffix']];
+					--$cntOpen[$cur['bbcode_id']];
+					--$openTags[$cur['bbcode_id'] . $cur['suffix']];
 
-					if ($cur['bbcode_id'] === $bbcode_id)
+					if ($cur['bbcode_id'] === $bbcodeId)
 					{
 						if ($tag['len'])
 						{
@@ -771,9 +771,9 @@ class Parser
 		$tags = array();
 		$msgs = array();
 
-		$bbcodes  = $config['bbcodes'];
-		$aliases  = $config['aliases'];
-		$text_len = strlen($text);
+		$bbcodes = $config['bbcodes'];
+		$aliases = $config['aliases'];
+		$textLen = strlen($text);
 
 		foreach ($matches as $m)
 		{
@@ -818,9 +818,9 @@ class Parser
 				continue;
 			}
 
-			$bbcode_id = $aliases[$alias];
-			$bbcode    = $bbcodes[$bbcode_id];
-			$params    = array();
+			$bbcodeId = $aliases[$alias];
+			$bbcode   = $bbcodes[$bbcodeId];
+			$params   = array();
 
 			if (!empty($bbcode['internal_use']))
 			{
@@ -835,7 +835,7 @@ class Parser
 					$msgs['warning'][] = array(
 						'pos'    => $lpos,
 						'msg'    => 'BBCode %s is for internal use only',
-						'params' => array($bbcode_id)
+						'params' => array($bbcodeId)
 					);
 				}
 				continue;
@@ -857,9 +857,9 @@ class Parser
 			}
 			else
 			{
-				$type        = self::TAG_OPEN;
-				$well_formed = false;
-				$param       = null;
+				$type       = self::TAG_OPEN;
+				$wellFormed = false;
+				$param      = null;
 
 				if ($text[$rpos] === '=')
 				{
@@ -875,19 +875,19 @@ class Parser
 					}
 					else
 					{
-						$param = strtolower($bbcode_id);
+						$param = strtolower($bbcodeId);
 
 						$msgs['debug'][] = array(
 							'pos'    => $rpos,
 							'msg'    => "BBCode %s does not have a default param, using BBCode's name as param name",
-							'params' => array($bbcode_id)
+							'params' => array($bbcodeId)
 						);
 					}
 
 					++$rpos;
 				}
 
-				while ($rpos < $text_len)
+				while ($rpos < $textLen)
 				{
 					$c = $text[$rpos];
 
@@ -918,7 +918,7 @@ class Parser
 							$type = self::TAG_SELF;
 							++$rpos;
 
-							if ($rpos === $text_len)
+							if ($rpos === $textLen)
 							{
 								// text ends with [some tag/
 								continue 2;
@@ -936,7 +936,7 @@ class Parser
 							}
 						}
 
-						$well_formed = true;
+						$wellFormed = true;
 						break;
 					}
 
@@ -963,7 +963,7 @@ class Parser
 							continue 2;
 						}
 
-						if ($rpos + $spn >= $text_len)
+						if ($rpos + $spn >= $textLen)
 						{	
 							$msgs['debug'][] = array(
 								'pos'    => $rpos,
@@ -992,9 +992,9 @@ class Parser
 
 					if ($c === '"' || $c === "'")
 					{
-						$value_pos = $rpos + 1;
+						$valuePos = $rpos + 1;
 
-						while (++$rpos < $text_len)
+						while (++$rpos < $textLen)
 						{
 							$rpos = strpos($text, $c, $rpos);
 
@@ -1004,7 +1004,7 @@ class Parser
 								* No matching quote, apparently that string never ends...
 								*/
 								$msgs['error'][] = array(
-									'pos' => $value_pos - 1,
+									'pos' => $valuePos - 1,
 									'msg' => 'Could not find matching quote'
 								);
 								continue 3;
@@ -1028,7 +1028,7 @@ class Parser
 							break;
 						}
 
-						$value = stripslashes(substr($text, $value_pos, $rpos - $value_pos));
+						$value = stripslashes(substr($text, $valuePos, $rpos - $valuePos));
 
 						// Skip past the closing quote
 						++$rpos;
@@ -1052,7 +1052,7 @@ class Parser
 					unset($param, $value);
 				}
 
-				if (!$well_formed)
+				if (!$wellFormed)
 				{
 					continue;
 				}
@@ -1071,7 +1071,7 @@ class Parser
 					*
 					* @todo perhaps disable all BBCodes when the content is used as param? how?
 					*/
-					$pos = stripos($text, '[/' . $bbcode_id . $suffix . ']', $rpos);
+					$pos = stripos($text, '[/' . $bbcodeId . $suffix . ']', $rpos);
 
 					if ($pos)
 					{
@@ -1082,7 +1082,7 @@ class Parser
 			}
 
 			$tags[] = array(
-				'name'   => $bbcode_id,
+				'name'   => $bbcodeId,
 				'pos'    => $lpos,
 				'len'    => $rpos + 1 - $lpos,
 				'type'   => $type,

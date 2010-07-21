@@ -32,8 +32,8 @@ class ConfigBuilder
 	);
 
 	protected $bbcodes = array();
-	protected $bbcode_rules = array();
-	protected $bbcode_aliases = array();
+	protected $bbcodeRules = array();
+	protected $bbcodeAliases = array();
 
 	protected $censor = array();
 
@@ -110,18 +110,18 @@ class ConfigBuilder
 		$this->setOption('BBCode', $k, $v);
 	}
 
-	public function addBBCode($bbcode_id, array $options = array())
+	public function addBBCode($bbcodeId, array $options = array())
 	{
-		if (!self::isValidId($bbcode_id))
+		if (!self::isValidId($bbcodeId))
 		{
-			throw new \InvalidArgumentException ("Invalid BBCode name '" . $bbcode_id . "'");
+			throw new \InvalidArgumentException ("Invalid BBCode name '" . $bbcodeId . "'");
 		}
 
-		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
+		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
 
-		if (isset($this->bbcodes[$bbcode_id]))
+		if (isset($this->bbcodes[$bbcodeId]))
 		{
-			throw new \InvalidArgumentException('BBCode ' . $bbcode_id . ' already exists');
+			throw new \InvalidArgumentException('BBCode ' . $bbcodeId . ' already exists');
 		}
 
 		$bbcode = $this->getDefaultBBCodeOptions();
@@ -138,18 +138,18 @@ class ConfigBuilder
 			$bbcode[$k] = $v;
 		}
 
-		$this->bbcodes[$bbcode_id] = $bbcode;
-		$this->bbcode_aliases[$bbcode_id] = $bbcode_id;
+		$this->bbcodes[$bbcodeId] = $bbcode;
+		$this->bbcodeAliases[$bbcodeId] = $bbcodeId;
 	}
 
-	public function addBBCodeAlias($bbcode_id, $alias)
+	public function addBBCodeAlias($bbcodeId, $alias)
 	{
-		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
-		$alias     = $this->normalizeBBCodeId($alias);
+		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
+		$alias    = $this->normalizeBBCodeId($alias);
 
-		if (!isset($this->bbcodes[$bbcode_id]))
+		if (!isset($this->bbcodes[$bbcodeId]))
 		{
-			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
+			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
 		}
 		if (isset($this->bbcodes[$alias]))
 		{
@@ -164,36 +164,36 @@ class ConfigBuilder
 		{
 			throw new \InvalidArgumentException("Invalid alias name '" . $alias . "'");
 		}
-		$this->bbcode_aliases[$alias] = $bbcode_id;
+		$this->bbcodeAliases[$alias] = $bbcodeId;
 	}
 
-	public function addBBCodeParam($bbcode_id, $param_name, $param_type, $is_required = true)
+	public function addBBCodeParam($bbcodeId, $paramName, $paramType, $isRequired = true)
 	{
-		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
-		if (!isset($this->bbcodes[$bbcode_id]))
+		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
+		if (!isset($this->bbcodes[$bbcodeId]))
 		{
-			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
+			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
 		}
 
-		if (!self::isValidId($param_name))
+		if (!self::isValidId($paramName))
 		{
-			throw new \InvalidArgumentException ("Invalid param name '" . $param_name . "'");
+			throw new \InvalidArgumentException ("Invalid param name '" . $paramName . "'");
 		}
 
-		$param_name = strtolower($param_name);
+		$paramName = strtolower($paramName);
 
-		if (isset($this->bbcodes[$bbcode_id]['params'][$param_name]))
+		if (isset($this->bbcodes[$bbcodeId]['params'][$paramName]))
 		{
-			throw new \InvalidArgumentException('Param ' . $param_name . ' already exists');
+			throw new \InvalidArgumentException('Param ' . $paramName . ' already exists');
 		}
 
-		$this->bbcodes[$bbcode_id]['params'][$param_name] = array(
-			'type'			=> $param_type,
-			'is_required'	=> $is_required
+		$this->bbcodes[$bbcodeId]['params'][$paramName] = array(
+			'type'        => $paramType,
+			'is_required' => $isRequired
 		);
 	}
 
-	public function addBBCodeRule($bbcode_id, $action, $target)
+	public function addBBCodeRule($bbcodeId, $action, $target)
 	{
 		if (!in_array($action, array(
 			'allow',
@@ -206,45 +206,45 @@ class ConfigBuilder
 			throw new \UnexpectedValueException("Unknown rule action '" . $action . "'");
 		}
 
-		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
-		$target    = $this->normalizeBBCodeId($target);
+		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
+		$target   = $this->normalizeBBCodeId($target);
 
 		if ($action === 'require_parent')
 		{
-			if (isset($this->bbcode_rules[$bbcode_id]['require_parent'])
-			 && $this->bbcode_rules[$bbcode_id]['require_parent'] !== $target)
+			if (isset($this->bbcodeRules[$bbcodeId]['require_parent'])
+			 && $this->bbcodeRules[$bbcodeId]['require_parent'] !== $target)
 			{
-				throw new \RuntimeException("BBCode $bbcode_id already has a require_parent rule");
+				throw new \RuntimeException("BBCode $bbcodeId already has a require_parent rule");
 			}
-			$this->bbcode_rules[$bbcode_id]['require_parent'] = $target;
+			$this->bbcodeRules[$bbcodeId]['require_parent'] = $target;
 		}
 		else
 		{
-			$this->bbcode_rules[$bbcode_id][$action][] = $target;
+			$this->bbcodeRules[$bbcodeId][$action][] = $target;
 		}
 	}
 
 	public function getBBCodeConfig()
 	{
 		$config = $this->passes['BBCode'];
-		$config['aliases'] = $this->bbcode_aliases;
+		$config['aliases'] = $this->bbcodeAliases;
 		$config['bbcodes'] = $this->bbcodes;
 		unset($config['tpl']);
 
-		$bbcode_ids = array_keys($this->bbcodes);
+		$bbcodeIds = array_keys($this->bbcodes);
 
-		foreach ($config['bbcodes'] as $bbcode_id => &$bbcode)
+		foreach ($config['bbcodes'] as $bbcodeId => &$bbcode)
 		{
 			$allow = array();
 
-			if (isset($this->bbcode_rules[$bbcode_id]))
+			if (isset($this->bbcodeRules[$bbcodeId]))
 			{
 				/**
 				* Sort the rules so that "deny" overwrite "allow"
 				*/
-				ksort($this->bbcode_rules[$bbcode_id]);
+				ksort($this->bbcodeRules[$bbcodeId]);
 
-				foreach ($this->bbcode_rules[$bbcode_id] as $action => $targets)
+				foreach ($this->bbcodeRules[$bbcodeId] as $action => $targets)
 				{
 					switch ($action)
 					{
@@ -274,7 +274,7 @@ class ConfigBuilder
 
 			if ($bbcode['default_rule'] === 'allow')
 			{
-				$allow += array_fill_keys($bbcode_ids, true);
+				$allow += array_fill_keys($bbcodeIds, true);
 			}
 
 			/**
@@ -293,9 +293,9 @@ class ConfigBuilder
 		unset($bbcode);
 
 		$aliases = array();
-		foreach ($this->bbcode_aliases as $alias => $bbcode_id)
+		foreach ($this->bbcodeAliases as $alias => $bbcodeId)
 		{
-			if (empty($this->bbcodes[$bbcode_id]['internal_use']))
+			if (empty($this->bbcodes[$bbcodeId]['internal_use']))
 			{
 				$aliases[] = $alias;
 			}
@@ -318,12 +318,12 @@ class ConfigBuilder
 		);
 	}
 
-	public function setBBCodeTemplate($bbcode_id, $tpl, $flags = 0)
+	public function setBBCodeTemplate($bbcodeId, $tpl, $flags = 0)
 	{
-		$bbcode_id = $this->normalizeBBCodeId($bbcode_id);
-		if (!isset($this->bbcodes[$bbcode_id]))
+		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
+		if (!isset($this->bbcodes[$bbcodeId]))
 		{
-			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcode_id . "'");
+			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
 		}
 
 		if (!($flags & self::PRESERVE_WHITESPACE))
@@ -332,7 +332,7 @@ class ConfigBuilder
 			$tpl = trim(preg_replace('#>\\s*\\n\\s*<#', '><', $tpl));
 		}
 
-		$tpl = '<xsl:template match="' . $bbcode_id . '">'
+		$tpl = '<xsl:template match="' . $bbcodeId . '">'
 		     . $tpl
 		     . '</xsl:template>';
 
@@ -364,17 +364,17 @@ class ConfigBuilder
 		/**
 		* Strip the whitespace off that template, except in <xsl:text/> elements
 		*/
-		$this->bbcodes[$bbcode_id]['tpl'] = $tpl;
+		$this->bbcodes[$bbcodeId]['tpl'] = $tpl;
 	}
 
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
 	{
-		$bbcode_id   = '([a-zA-Z_][a-zA-Z_0-9]*)';
+		$bbcodeId    = '([a-zA-Z_][a-zA-Z_0-9]*)';
 		$placeholder = '\\{[A-Z_]+[0-9]*\\}';
 		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
 
 		$regexp = '#'
-		        . '\\[' . $bbcode_id . '(=' . $placeholder . ')?'
+		        . '\\[' . $bbcodeId . '(=' . $placeholder . ')?'
 		        . '((?:\\s+' . $param . '=' . $placeholder . ')*)'
 		        . '(?:\\s*/\\]|\\](' . $placeholder . ')?\\[/\\1])'
 		        . '$#D';
@@ -401,7 +401,7 @@ class ConfigBuilder
 			throw new \InvalidArgumentException('Invalid XML in template - error was: ' . $error->message);
 		}
 
-		$bbcode_id    = $m[1];
+		$bbcodeId     = $m[1];
 		$options      = array();
 		$params       = array();
 		$placeholders = array();
@@ -430,7 +430,7 @@ class ConfigBuilder
 				* [email]{EMAIL}[/email]
 				*/
 				$type  = rtrim(strtolower(substr($identifier, 1, -1)), '1234567890');
-				$param = strtolower($bbcode_id);
+				$param = strtolower($bbcodeId);
 
 				$options['default_rule']     = 'deny';
 				$options['default_param']    = $param;
@@ -482,7 +482,7 @@ class ConfigBuilder
 		{
 			$attr->value = preg_replace_callback(
 				'#\\{[A-Z]+[0-9]*?\\}#',
-				function ($m) use (&$placeholders, &$params, $bbcode_id, $flags)
+				function ($m) use (&$placeholders, &$params, $bbcodeId, $flags)
 				{
 					$identifier = $m[0];
 
@@ -530,41 +530,41 @@ class ConfigBuilder
 			substr(trim($dom->saveXML($dom->documentElement)), 35, -36)
 		);
 
-		$this->addBBCode($bbcode_id, $options);
+		$this->addBBCode($bbcodeId, $options);
 		foreach ($params as $param => $_options)
 		{
-			$this->addBBCodeParam($bbcode_id, $param, $_options['type'], $_options['is_required']);
+			$this->addBBCodeParam($bbcodeId, $param, $_options['type'], $_options['is_required']);
 		}
-		$this->setBBCodeTemplate($bbcode_id, $tpl, $flags);
+		$this->setBBCodeTemplate($bbcodeId, $tpl, $flags);
 	}
 
 	protected function addInternalBBCode($prefix)
 	{
-		$prefix    = strtoupper($prefix);
-		$bbcode_id = $prefix;
-		$i         = 0;
+		$prefix   = strtoupper($prefix);
+		$bbcodeId = $prefix;
+		$i        = 0;
 
-		while (isset($this->bbcodes[$bbcode_id]) || isset($this->aliases[$bbcode_id]))
+		while (isset($this->bbcodes[$bbcodeId]) || isset($this->aliases[$bbcodeId]))
 		{
-			$bbcode_id = $prefix . $i;
+			$bbcodeId = $prefix . $i;
 			++$i;
 		}
 
-		$this->addBBCode($bbcode_id, array('internal_use' => true));
-		return $bbcode_id;
+		$this->addBBCode($bbcodeId, array('internal_use' => true));
+		return $bbcodeId;
 	}
 
 	/**
 	* Takes a lowercased BBCode name and return a canonical BBCode ID with aliases resolved
 	*
-	* @param  string $bbcode_id BBCode name
+	* @param  string $bbcodeId BBCode name
 	* @return string            BBCode ID, uppercased and with with aliases resolved
 	*/
-	protected function normalizeBBCodeId($bbcode_id)
+	protected function normalizeBBCodeId($bbcodeId)
 	{
-		$bbcode_id = strtoupper($bbcode_id);
+		$bbcodeId = strtoupper($bbcodeId);
 
-		return (isset($this->bbcode_aliases[$bbcode_id])) ? $this->bbcode_aliases[$bbcode_id] : $bbcode_id;
+		return (isset($this->bbcodeAliases[$bbcodeId])) ? $this->bbcodeAliases[$bbcodeId] : $bbcodeId;
 	}
 
 	//==========================================================================
@@ -620,20 +620,20 @@ class ConfigBuilder
 		
 		if (!isset($this->passes['Censor']['bbcode'], $this->passes['Censor']['param']))
 		{
-			$bbcode_id = $this->addInternalBBCode('C');
+			$bbcodeId = $this->addInternalBBCode('C');
 
-			$this->addBBCodeParam($bbcode_id, 'with', 'text', false);
+			$this->addBBCodeParam($bbcodeId, 'with', 'text', false);
 
-			$this->setCensorOption('bbcode', $bbcode_id);
+			$this->setCensorOption('bbcode', $bbcodeId);
 			$this->setCensorOption('param', 'with');
 		}
 
-		$bbcode_id = $this->passes['Censor']['bbcode'];
+		$bbcodeId = $this->passes['Censor']['bbcode'];
 
-		if (!isset($this->bbcodes[$bbcode_id]['tpl']))
+		if (!isset($this->bbcodes[$bbcodeId]['tpl']))
 		{
 			$this->setBBCodeTemplate(
-				$bbcode_id,
+				$bbcodeId,
 				'<xsl:choose><xsl:when test="@with"><xsl:value-of select="@with"/></xsl:when><xsl:otherwise>****</xsl:otherwise></xsl:choose>'
 			);
 		}
@@ -963,7 +963,7 @@ class ConfigBuilder
 			 . '</xsl:for-each>'
 			 . '</xsl:template>';
 
-		foreach ($this->bbcodes as $bbcode_id => $bbcode)
+		foreach ($this->bbcodes as $bbcodeId => $bbcode)
 		{
 			if (isset($bbcode['tpl']))
 			{
