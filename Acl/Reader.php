@@ -48,10 +48,20 @@ class Reader
 
 		if (isset($scope))
 		{
+			if ($scope instanceof Resource)
+			{
+				$scope = $scope->getAclAttributes();
+			}
+
 			if (is_array($scope))
 			{
 				foreach ($scope as $scopeDim => $scopeVal)
 				{
+					if ($scopeVal instanceof Resource)
+					{
+						$scopeVal = $scopeVal->getAclId();
+					}
+
 					if ($scopeVal === $this->any)
 					{
 						if (isset($space['any'][$scopeDim]))

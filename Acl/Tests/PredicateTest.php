@@ -1,6 +1,10 @@
 <?php
 
-namespace s9e\Toolkit\Acl;
+namespace s9e\Toolkit\Acl\Tests;
+
+use s9e\Toolkit\Acl\Builder;
+use s9e\Toolkit\Acl\Predicate;
+use s9e\Toolkit\Acl\Reader;
 
 include_once __DIR__ . '/../Builder.php';
 include_once __DIR__ . '/../Reader.php';

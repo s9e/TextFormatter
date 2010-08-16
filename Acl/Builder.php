@@ -18,12 +18,12 @@ class Builder
 	const ALLOW = 1;
 	const DENY  = 0;
 
-	public function allow($perm, array $scope = array())
+	public function allow($perm, $scope = null)
 	{
 		return $this->add(self::ALLOW, $perm, $scope);
 	}
 
-	public function deny($perm, array $scope = array())
+	public function deny($perm, $scope = null)
 	{
 		return $this->add(self::DENY, $perm, $scope);
 	}
@@ -51,9 +51,20 @@ class Builder
 		return $this->build(true);
 	}
 
-	protected function add($value, $perm, array $scope)
+	protected function add($value, $perm, $scope)
 	{
-		if ($scope)
+		if (!isset($scope))
+		{
+			$scope = array();
+		}
+		elseif ($scope instanceof Resource)
+		{
+			$scope = array(
+				$scope->getAclResourceName() => $scope->getAclId()
+			);
+		}
+
+		if (is_array($scope))
 		{
 			foreach ($scope as $k => &$v)
 			{
@@ -76,8 +87,13 @@ class Builder
 						throw new \InvalidArgumentException('Invalid type for scope ' . $k . ': integer or string expected, ' . gettype($v) . ' given');
 				}
 			}
+			unset($v);
 
 			ksort($scope);
+		}
+		else
+		{
+			throw new \InvalidArgumentException('Scope must be an array or an object that implements ' . __NAMESPACE__ . '\\Resource');
 		}
 
 		$this->settings[] = array($perm, $value, $scope);
