@@ -1,12 +1,16 @@
 <?php
 
 /**
-* @package   s9e\toolkit
+* @package   s9e\Toolkit
 * @copyright Copyright (c) 2010 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\Toolkit\Acl;
 
+/**
+* This class is not meant to be as feature-rich as the default reader. Instead, it provides support
+* for querying an ACL stored in XML form.
+*/
 class XMLReader
 {
 	/**

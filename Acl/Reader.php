@@ -1,7 +1,7 @@
 <?php
 
 /**
-* @package   s9e\toolkit
+* @package   s9e\Toolkit
 * @copyright Copyright (c) 2010 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
@@ -111,6 +111,11 @@ class Reader
 
 		if (isset($scope))
 		{
+			if ($scope instanceof Resource)
+			{
+				$scope = $scope->getAclAttributes();
+			}
+
 			if (is_array($scope))
 			{
 				if (isset($scope[$dim]))
@@ -120,6 +125,11 @@ class Reader
 
 				foreach ($scope as $scopeDim => $scopeVal)
 				{
+					if ($scopeVal instanceof Resource)
+					{
+						$scopeVal = $scopeVal->getAclId();
+					}
+
 					if ($scopeVal === $this->any)
 					{
 						if (isset($space['any'][$scopeDim]))
@@ -151,7 +161,7 @@ class Reader
 			*/
 			else
 			{
-				throw new \InvalidArgumentException('$scope is expected to be an array or $this->any');
+				throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements ' . __NAMESPACE__ . '\\Resource, or $this->any');
 			}
 			// @codeCoverageIgnoreEnd
 		}

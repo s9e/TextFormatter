@@ -12,7 +12,7 @@ include_once __DIR__ . '/../Resource.php';
 
 class ResourceTest extends \PHPUnit_Framework_TestCase
 {
-	public function test()
+	public function testIsAllowed()
 	{
 		$user          = new User(123);
 		$someOtherUser = new User(456);
@@ -38,18 +38,38 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($user->can('post', array('forum' => $forum3)));
 
 		// The user has posted a topic in forum 3
-		$topic = new Topic(44, $forum3, $user);
-		$this->assertTrue($user->can('read', $topic));
-		$this->assertTrue($user->can('edit', $topic));
+		$topic44 = new Topic(44, $forum3, $user);
+		$this->assertTrue($user->can('read', $topic44));
+		$this->assertTrue($user->can('edit', $topic44));
 
 		// Someone else has posted a topic in forum 3
-		$topic = new Topic(44, $forum3, $someOtherUser);
-		$this->assertTrue($user->can('read', $topic));
-		$this->assertFalse($user->can('edit', $topic));
+		$topic55 = new Topic(55, $forum3, $someOtherUser);
+		$this->assertTrue($user->can('read', $topic55));
+		$this->assertFalse($user->can('edit', $topic55));
 
-		// Let's give that user the right to edit that topic even if it's not theirs
-		$user->acl()->allow('edit', $topic);
-		$this->assertTrue($user->can('edit', $topic));
+		// Let's give that user the right to edit that specific topic even if it's not theirs
+		$user->acl()->allow('edit', $topic55);
+		$this->assertTrue($user->can('edit', $topic55));
+	}
+
+	public function testGetPredicate()
+	{
+		$user  = new User(123);
+		$forum = new Forum(5);
+		$acl   = $user->acl();
+
+		$acl->allow('foo', array('forum' => $forum, 'bar' => 'baz'));
+		$acl->allow('foo', array('forum' => $forum, 'bar' => 'quux'));
+
+		$this->assertEquals(
+			array('type' => 'some', 'which' => array('baz', 'quux')),
+			$acl->getReader()->getPredicate('foo', 'bar', $forum)
+		);
+
+		$this->assertEquals(
+			array('type' => 'some', 'which' => array('baz', 'quux')),
+			$acl->getReader()->getPredicate('foo', 'bar', array('forum' => $forum))
+		);
 	}
 }
 
