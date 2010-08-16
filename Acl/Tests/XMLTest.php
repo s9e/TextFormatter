@@ -3,10 +3,10 @@
 namespace s9e\Toolkit\Acl\Tests;
 
 use s9e\Toolkit\Acl\Builder;
-use s9e\Toolkit\Acl\Reader;
+use s9e\Toolkit\Acl\XMLReader;
 
 include_once __DIR__ . '/../Builder.php';
-include_once __DIR__ . '/../Reader.php';
+include_once __DIR__ . '/../XMLReader.php';
 
 class XMLTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,13 +19,13 @@ class XMLTest extends \PHPUnit_Framework_TestCase
 
 		$xml = $builder->getReaderXML();
 
-		$dom = new \DOMDocument;
-		$dom->loadXML($xml);
+		$reader = new XMLReader($xml);
 
-		$x = new \DOMXPath($dom);
-
-		$this->assertSame('1', $x->evaluate('substring(/acl/space[@foo], 1 + concat("0", /acl/space[@foo]/scopes/bar/@_456), 1)'));
-
-		$this->assertSame('0', $x->evaluate('substring(/acl/space[@foo], 1 + concat("0", /acl/space[@foo]/scopes/bar/@_456) + concat("0", /acl/space[@foo]/scopes/baz/@_DENY), 1)'));
+		$this->assertFalse($reader->isAllowed('foo'));
+		$this->assertTrue($reader->isAllowed('foo', array('bar' => 456)));
+		$this->assertFalse($reader->isAllowed('foo', array('bar' => 456, 'baz' => 'DENY')));
+		$this->assertFalse($reader->isAllowed('foo', array('bar' => 123)));
+		$this->assertTrue($reader->isAllowed('foo', array('bar' => 123, 'baz' => 'xyz')));
+		$this->assertFalse($reader->isAllowed('zz', array('bar' => 123, 'baz' => 'xyz')));
 	}
 }
