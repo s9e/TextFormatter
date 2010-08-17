@@ -1,6 +1,10 @@
 <?php
 
-namespace s9e\Toolkit\Markup;
+namespace s9e\Toolkit\Markup\Tests;
+
+use s9e\Toolkit\Markup\ConfigBuilder,
+    s9e\Toolkit\Markup\Parser,
+    s9e\Toolkit\Markup\Renderer;
 
 include_once __DIR__ . '/../ConfigBuilder.php';
 

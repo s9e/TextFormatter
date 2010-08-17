@@ -1,5 +1,7 @@
 <?php
 
+namespace s9e\Toolkit\Markup\Tests;
+
 use s9e\Toolkit\Markup\ConfigBuilder,
 	s9e\Toolkit\Markup\Parser;
 
@@ -23,7 +25,7 @@ class WriterPhpbbTest extends \PHPUnit_Framework_TestCase
 		$expected =
 		            'a:5:{i:0;s:0:"";i:1;a:4:{i:-1;s:28:"[url=http://www.example.com]";i:0;i:1;i:1;s:3:"url";i:2;a:1:{s:1:"_";s:22:"http://www.example.com";}}i:2;s:11:"example.com";i:3;a:3:{i:-1;s:6:"[/url]";i:0;i:3;i:1;s:3:"url";}i:4;s:0:"";}';
 
-		$actual   = $cb->getParser()->parse($text, 'phpbb_writer');
+		$actual   = $cb->getParser()->parse($text, __NAMESPACE__ . '\\phpbb_writer');
 
 		$this->assertSame($expected, $actual);
 	}
@@ -58,7 +60,7 @@ class WriterPhpbbTest extends \PHPUnit_Framework_TestCase
 			'default_param' => 'size'
 		));
 		$cb->addBBCodeParam('size', 'size', 'font-size', true);
-		$cb->setFilter('font-size', array('phpbb3_writer', 'filterFontSize'), array(
+		$cb->setFilter('font-size', array(__NAMESPACE__ . '\\phpbb3_writer', 'filterFontSize'), array(
 			'min' => 7,
 			'max' => 20
 		));
@@ -108,7 +110,7 @@ class WriterPhpbbTest extends \PHPUnit_Framework_TestCase
 		phpbb3_writer::$uid = '012345678';
 
 		$text     = "[list][*][quote]\n[*][quote]test[/quote][/quote]:)[/list]";
-		$actual   = $parser->parse($text, 'phpbb3_writer');
+		$actual   = $parser->parse($text, __NAMESPACE__ . '\\phpbb3_writer');
 		$expected =
 			"[list:012345678][*:012345678][quote:012345678]\n[*][quote:012345678]test[/quote:012345678][/quote:012345678]<!-- s:) -->".'<img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->[/*:m:012345678][/list:012345678]';
 

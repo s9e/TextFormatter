@@ -1,8 +1,12 @@
 <?php
 
+namespace s9e\Toolkit\Markup\Tests;
+
 use s9e\Toolkit\Markup\ConfigBuilder,
     s9e\Toolkit\Markup\Parser,
     s9e\Toolkit\Markup\Renderer;
+
+use DOMDocument;
 
 include_once __DIR__ . '/../ConfigBuilder.php';
 include_once __DIR__ . '/../Parser.php';
@@ -159,7 +163,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 			return (int) $v;
 		};
 
-		$cb->setFilter('font-size', 'checkFontSize', array(
+		$cb->setFilter('font-size', __NAMESPACE__ . '\\checkFontSize', array(
 			'min' => 7,
 			'max' => 20
 		));
