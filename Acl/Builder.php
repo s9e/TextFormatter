@@ -51,6 +51,12 @@ class Builder
 		return $this->build(true);
 	}
 
+	public function import(Builder $builder)
+	{
+		$this->settings = array_merge($this->settings, $builder->settings);
+		$this->rules    = array_merge_recursive($this->rules, $builder->rules);
+	}
+
 	protected function add($value, $perm, $scope)
 	{
 		if (!isset($scope))
