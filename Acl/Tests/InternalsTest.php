@@ -2,20 +2,19 @@
 
 namespace s9e\Toolkit\Acl\Tests;
 
-use s9e\Toolkit\Acl\Builder;
-use s9e\Toolkit\Acl\Reader;
+use s9e\Toolkit\Acl\Acl;
 
-include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Acl.php';
 
 class InternalsTest extends \PHPUnit_Framework_TestCase
 {
 	public function testIdenticalPermsAreOptimizedAway()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('scope' => 123));
-		$builder->allow('bar', array('scope' => 123));
+		$acl = new Acl;
+		$acl->allow('foo', array('scope' => 123));
+		$acl->allow('bar', array('scope' => 123));
 
-		$config = $builder->getReaderConfig();
+		$config = $acl->getReaderConfig();
 
 		$this->assertSame(
 			$config['foo']['perms']['foo'],
@@ -25,11 +24,11 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 
 	public function testIdenticalScopesAreOptimizedAway()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('scope' => 123));
-		$builder->allow('foo', array('scope' => 456));
+		$acl = new Acl;
+		$acl->allow('foo', array('scope' => 123));
+		$acl->allow('foo', array('scope' => 456));
 
-		$config = $builder->getReaderConfig();
+		$config = $acl->getReaderConfig();
 
 		$this->assertSame(
 			$config['foo']['scopes']['scope'][123],
@@ -39,27 +38,27 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 
 	public function testUselessPermsAreOptimizedAway()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
-		$builder->deny('bar');
+		$acl = new Acl;
+		$acl->allow('foo');
+		$acl->deny('bar');
 
-		$config = $builder->getReaderConfig();
+		$config = $acl->getReaderConfig();
 
 		$this->assertFalse(isset($config['bar']));
 	}
 
 	public function testScopesIdenticalToGlobalAreOptimizedAway()
 	{
-		$builder = new Builder;
+		$acl = new Acl;
 
-		$builder->allow('foo', array('x' => 1));
-		$builder->allow('foo', array('x' => 1, 'y' => 1));
-		$builder->allow('foo', array('x' => 2, 'y' => 2));
-		$builder->allow('foo', array('x' => 2));
-		$builder->allow('foo', array('x' => 2, 'y' => 1));
-		$builder->deny('foo', array('x' => 2, 'y' => 2));
+		$acl->allow('foo', array('x' => 1));
+		$acl->allow('foo', array('x' => 1, 'y' => 1));
+		$acl->allow('foo', array('x' => 2, 'y' => 2));
+		$acl->allow('foo', array('x' => 2));
+		$acl->allow('foo', array('x' => 2, 'y' => 1));
+		$acl->deny('foo', array('x' => 2, 'y' => 2));
 
-		$config = $builder->getReaderConfig();
+		$config = $acl->getReaderConfig();
 
 		$this->assertArrayHasKey(1, $config['foo']['scopes']['x']);
 		$this->assertArrayHasKey(2, $config['foo']['scopes']['x']);
@@ -69,7 +68,7 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 
 	public function testPermIsNotOptimizedAwayToAnotherSpaceIfItIsAloneInNewSpace()
 	{
-		$builder = new Builder;
+		$acl = new Acl;
 
 		/**
 		* foo and bar live in the (x,y) space.
@@ -78,12 +77,12 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 		* Space (x) does not exist though, and creating a space for one single perm is more
 		* expensive in terms of metadata than leaving it in its shared space, so foo stays in (x,y)
 		*/
-		$builder->allow('foo', array('x' => 1));
-		$builder->allow('foo', array('x' => 1, 'y' => 1));
+		$acl->allow('foo', array('x' => 1));
+		$acl->allow('foo', array('x' => 1, 'y' => 1));
 
-		$builder->allow('bar', array('x' => 1, 'y' => 1));
+		$acl->allow('bar', array('x' => 1, 'y' => 1));
 
-		$config = $builder->getReaderConfig();
+		$config = $acl->getReaderConfig();
 
 		$this->assertArrayHasKey('x', $config['foo']['scopes']);
 		$this->assertArrayHasKey('y', $config['foo']['scopes']);
@@ -93,7 +92,7 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 
 	public function testPermIsOptimizedAwayToAnotherSpaceIfItIsNotAloneInNewSpace()
 	{
-		$builder = new Builder;
+		$acl = new Acl;
 
 		/**
 		* foo and bar live in the (x,y) space. baz lives in (x)
@@ -101,14 +100,14 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 		* Dimension y has no bearing on foo, so it is moved to (x) where it will peacefully coexist
 		* with baz
 		*/
-		$builder->allow('foo', array('x' => 1));
-		$builder->allow('foo', array('x' => 1, 'y' => 1));
+		$acl->allow('foo', array('x' => 1));
+		$acl->allow('foo', array('x' => 1, 'y' => 1));
 
-		$builder->allow('bar', array('x' => 1, 'y' => 1));
+		$acl->allow('bar', array('x' => 1, 'y' => 1));
 
-		$builder->allow('baz', array('x' => 1));
+		$acl->allow('baz', array('x' => 1));
 
-		$config = $builder->getReaderConfig();
+		$config = $acl->getReaderConfig();
 
 		$this->assertArrayHasKey('x', $config['foo']['scopes']);
 		$this->assertArrayNotHasKey('y', $config['foo']['scopes']);
@@ -121,7 +120,7 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 	*/
 	public function testMergeMasks($masks, $expected, $msg = null)
 	{
-		$method = new \ReflectionMethod('s9e\\Toolkit\\Acl\\Builder', 'mergeMasks');
+		$method = new \ReflectionMethod('s9e\\Toolkit\\Acl\\Acl', 'mergeMasks');
 		$method->setAccessible(true);
 
 		$this->assertSame(

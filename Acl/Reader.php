@@ -7,33 +7,23 @@
 */
 namespace s9e\Toolkit\Acl;
 
+/**
+* Not cryptographically strong but random enough to avoid false positives
+*/
+define('ANY', md5(mt_rand()));
+
 class Reader
 {
 	protected $config;
-	public $any;
 
 	public function __construct(array $config)
 	{
 		$this->config = $config;
-		$this->__wakeup();
 	}
 
-	public function __sleep()
+	public function any()
 	{
-		return array('config');
-	}
-
-	public function __wakeup()
-	{
-		/**
-		* Not cryptographically strong but random enough to avoid false positives
-		*/
-		$this->any = md5(mt_rand());
-	}
-
-	public function __call($perm, $args)
-	{
-		return $this->isAllowed($perm, (isset($args[0])) ? $args[0] : null);
+		return ANY;
 	}
 
 	public function isAllowed($perm, $scope = null)
@@ -66,7 +56,7 @@ class Reader
 						$scopeVal = (string) $scopeVal;
 					}
 
-					if ($scopeVal === $this->any)
+					if ($scopeVal === ANY)
 					{
 						if (isset($space['any'][$scopeDim]))
 						{
@@ -79,7 +69,7 @@ class Reader
 					}
 				}
 			}
-			elseif ($scope === $this->any)
+			elseif ($scope === ANY)
 			{
 				if (isset($space['any']))
 				{
@@ -88,7 +78,7 @@ class Reader
 			}
 			else
 			{
-				throw new \InvalidArgumentException('$scope is expected to be an array or $this->any');
+				throw new \InvalidArgumentException('$scope is expected to be an array or ' . __NAMESPACE__ . '\\ANY');
 			}
 		}
 
@@ -137,7 +127,7 @@ class Reader
 						$scopeVal = (string) $scopeVal;
 					}
 
-					if ($scopeVal === $this->any)
+					if ($scopeVal === ANY)
 					{
 						if (isset($space['any'][$scopeDim]))
 						{
@@ -150,7 +140,7 @@ class Reader
 					}
 				}
 			}
-			elseif ($scope === $this->any)
+			elseif ($scope === ANY)
 			{
 				$global = $this->isAllowed($perm);
 
@@ -168,7 +158,7 @@ class Reader
 			*/
 			else
 			{
-				throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements ' . __NAMESPACE__ . '\\Resource, or $this->any');
+				throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements ' . __NAMESPACE__ . '\\Resource, or ' . __NAMESPACE__ . '\\ANY');
 			}
 			// @codeCoverageIgnoreEnd
 		}

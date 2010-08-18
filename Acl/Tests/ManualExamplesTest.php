@@ -2,11 +2,11 @@
 
 namespace s9e\Toolkit\Acl\Tests;
 
-use s9e\Toolkit\Acl\Builder;
+use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\Resource;
 use s9e\Toolkit\Acl\Role;
 
-include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Acl.php';
 include_once __DIR__ . '/../Resource.php';
 include_once __DIR__ . '/../Role.php';
 
@@ -40,13 +40,13 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testBuilderGeneratesTheACLReaderReadsIt()
+	public function testAclGeneratesTheACLReaderReadsIt()
 	{
 		//======================================================================
-		$builder = new Builder;
-		$builder->allow('read');
+		$acl = new Acl;
+		$acl->allow('read');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 		var_dump($reader->isAllowed('read'));  // bool(true)
 		var_dump($reader->isAllowed('write')); // bool(false)
 		//======================================================================
@@ -57,18 +57,18 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 	public function testScoping()
 	{
 		//======================================================================
-		$builder = new Builder;
-		$builder->allow('read', array('category' => 1))
+		$acl = new Acl;
+		$acl->allow('read', array('category' => 1))
 				->allow('read', array('category' => 2));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 		var_dump($reader->isAllowed('read')); // bool(false) because "read" is not allowed globally
 		var_dump($reader->isAllowed('read', array('category' => 1)));   // bool(true)
 		var_dump($reader->isAllowed('read', array('category' => "1"))); // bool(true)
 		var_dump($reader->isAllowed('read', array('category' => 3)));   // bool(false)
 
-		var_dump($reader->isAllowed('read', $reader->any));                        // bool(true)
-		var_dump($reader->isAllowed('read', array('category' => $reader->any)));   // bool(true)
+		var_dump($reader->isAllowed('read', $reader->any()));                        // bool(true)
+		var_dump($reader->isAllowed('read', array('category' => $reader->any())));   // bool(true)
 		//======================================================================
 
 		$this->assertExampleIsCorrect(__METHOD__);
@@ -77,11 +77,11 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 	public function testPrecedence()
 	{
 		//======================================================================
-		$builder = new Builder;
-		$builder->allow('read')
+		$acl = new Acl;
+		$acl->allow('read')
 				->deny('read');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 		var_dump($reader->isAllowed('read')); // bool(false)
 		//======================================================================
 
@@ -91,30 +91,30 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 	public function testRules()
 	{
 		//======================================================================
-		$builder = new Builder;
-		$builder->addRule('post', 'grant', 'read')
+		$acl = new Acl;
+		$acl->addRule('post', 'grant', 'read')
 				->allow('post', array('category' => 1));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 		var_dump($reader->isAllowed('post', array('category' => 1))); // bool(true)
 		var_dump($reader->isAllowed('read', array('category' => 1))); // bool(true)
 
-		$builder = new Builder;
-		$builder->addRule('post', 'grant', 'read')
+		$acl = new Acl;
+		$acl->addRule('post', 'grant', 'read')
 				->allow('post', array('category' => 1));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 		var_dump($reader->isAllowed('post', array('category' => 1))); // bool(true)
 		var_dump($reader->isAllowed('read', array('category' => 1))); // bool(true)
 
-		$builder = new Builder;
-		$builder->addRule('post', 'grant', 'read')
+		$acl = new Acl;
+		$acl->addRule('post', 'grant', 'read')
 				->addRule('post', 'require', 'read')
 				->allow('post', array('category' => 1))
 				->allow('post', array('category' => 2))
 				->deny('read', array('category' => 2));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 		var_dump($reader->isAllowed('read', array('category' => 1))); // bool(true)
 		var_dump($reader->isAllowed('post', array('category' => 1))); // bool(true)
 		var_dump($reader->isAllowed('read', array('category' => 2))); // bool(false) - explicitly denied
@@ -134,10 +134,10 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		$editor->allow('edit');
 
 		// now build a user's ACL
-		$builder = new Builder;
-		$builder->import($editor);
+		$acl = new Acl;
+		$acl->import($editor);
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 		var_dump($reader->isAllowed('edit')); // bool(true)		//======================================================================
 
 		$this->assertExampleIsCorrect(__METHOD__);
@@ -152,12 +152,12 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		$anotherSedan    = new Car(4, 'white', 'sedan');
 		$yetAnotherSedan = new Car(5, 'white', 'sedan');
 
-		$builder = new Builder;
-		$builder->allow('drive', array('color' => 'green'))
+		$acl = new Acl;
+		$acl->allow('drive', array('color' => 'green'))
 		        ->allow('drive', array('color' => 'red', 'type' => 'sports'))
 		        ->allow('drive', array('car' => 3));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		var_dump($reader->isAllowed('drive', $greenPickup));     // bool(true)
 		var_dump($reader->isAllowed('drive', $redFerrari));      // bool(true)
@@ -169,10 +169,10 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		var_dump($reader->isAllowed('drive', array('car' => 3)));         // bool(true)
 
 		// let's specifically allow $anotherSedan
-		$builder->allow('drive', $anotherSedan);
+		$acl->allow('drive', $anotherSedan);
 
 		// the ACL has changed, we must create a new Reader
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 		var_dump($reader->isAllowed('drive', $anotherSedan));    // bool(true)  - specifically allowed
 		var_dump($reader->isAllowed('drive', $yetAnotherSedan)); // bool(false) - still no rules covering this one
 		//======================================================================

@@ -7,7 +7,7 @@
 */
 namespace s9e\Toolkit\Acl;
 
-class Role extends Builder
+class Role extends Acl
 {
 	/**
 	* @var string Name of this role

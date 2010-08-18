@@ -2,11 +2,10 @@
 
 namespace s9e\Toolkit\Acl\Tests;
 
-use s9e\Toolkit\Acl\Builder;
-use s9e\Toolkit\Acl\Reader;
+use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\Resource;
 
-include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Acl.php';
 include_once __DIR__ . '/../Resource.php';
 
 class AdvancedForumAclTest extends \PHPUnit_Framework_TestCase
@@ -183,7 +182,7 @@ class User
 	{
 		if (!isset($this->acl))
 		{
-			$this->acl = new Builder;
+			$this->acl = new Acl;
 		}
 
 		return $this->acl;

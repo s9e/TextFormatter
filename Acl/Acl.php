@@ -7,13 +7,18 @@
 */
 namespace s9e\Toolkit\Acl;
 
-class Builder
+class Acl
 {
 	protected $settings = array();
 	protected $rules = array(
 		'grant'   => array(),
 		'require' => array()
 	);
+
+	/**
+	* @var Reader
+	*/
+	protected $reader;
 
 	const ALLOW = 1;
 	const DENY  = 0;
@@ -35,17 +40,24 @@ class Builder
 		*/
 		$this->rules[$rule][$perm][$foreignPerm] = $foreignPerm;
 
+		unset($this->reader);
+
 		return $this;
 	}
 
 	public function getReader()
 	{
+		if (isset($this->reader))
+		{
+			return $this->reader;
+		}
+
 		if (!class_exists(__NAMESPACE__ . '\\Reader'))
 		{
 			include __DIR__ . '/Reader.php';
 		}
 
-		return new Reader($this->getReaderConfig());
+		return $this->reader = new Reader($this->getReaderConfig());
 	}
 
 	public function getReaderConfig()
@@ -58,12 +70,28 @@ class Builder
 		return $this->build(true);
 	}
 
-	public function import(Builder $builder)
+	public function import(Acl $acl)
 	{
-		$this->settings = array_merge($this->settings, $builder->settings);
-		$this->rules    = array_merge_recursive($this->rules, $builder->rules);
+		$this->settings = array_merge($this->settings, $acl->settings);
+		$this->rules    = array_merge_recursive($this->rules, $acl->rules);
+		unset($this->reader);
 
 		return $this;
+	}
+
+	public function isAllowed($perm, $scope = null)
+	{
+		return $this->getReader()->isAllowed($perm, $scope);
+	}
+
+	public function getPredicate($perm, $dim, $scope = null)
+	{
+		return $this->getReader()->getPredicate($perm, $dim, $scope);
+	}
+
+	public function any()
+	{
+		return $this->getReader()->any();
 	}
 
 	protected function add($value, $perm, $scope)
@@ -118,6 +146,8 @@ class Builder
 		}
 
 		$this->settings[] = array($perm, $value, $scope);
+
+		unset($this->reader);
 
 		return $this;
 	}

@@ -2,20 +2,19 @@
 
 namespace s9e\Toolkit\Acl\Tests;
 
-use s9e\Toolkit\Acl\Builder;
-use s9e\Toolkit\Acl\Reader;
+use s9e\Toolkit\Acl\Acl;
 
-include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Acl.php';
 
 class RulesTest extends \PHPUnit_Framework_TestCase
 {
 	public function testGlobalGrant()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
-		$builder->addRule('foo', 'grant', 'bar');
+		$acl = new Acl;
+		$acl->allow('foo');
+		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertTrue($reader->isAllowed('foo'));
 		$this->assertTrue($reader->isAllowed('bar'));
@@ -23,11 +22,11 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testLocalGrant()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('scope' => 123));
-		$builder->addRule('foo', 'grant', 'bar');
+		$acl = new Acl;
+		$acl->allow('foo', array('scope' => 123));
+		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertFalse($reader->isAllowed('foo'));
 		$this->assertFalse($reader->isAllowed('bar'));
@@ -37,12 +36,12 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testGrantDoesNotOverrideGlobalDeny()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
-		$builder->deny('bar');
-		$builder->addRule('foo', 'grant', 'bar');
+		$acl = new Acl;
+		$acl->allow('foo');
+		$acl->deny('bar');
+		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertTrue($reader->isAllowed('foo'));
 		$this->assertFalse($reader->isAllowed('bar'));
@@ -50,12 +49,12 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testGrantDoesNotOverrideLocalDeny()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
-		$builder->deny('bar', array('scope' => 123));
-		$builder->addRule('foo', 'grant', 'bar');
+		$acl = new Acl;
+		$acl->allow('foo');
+		$acl->deny('bar', array('scope' => 123));
+		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertTrue($reader->isAllowed('foo'));
 		$this->assertTrue($reader->isAllowed('bar'));
@@ -64,13 +63,13 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testGrantedPermsCanGrantOtherPerms()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
+		$acl = new Acl;
+		$acl->allow('foo');
 
-		$builder->addRule('bar', 'grant', 'baz');
-		$builder->addRule('foo', 'grant', 'bar');
+		$acl->addRule('bar', 'grant', 'baz');
+		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertTrue($reader->isAllowed('foo'));
 		$this->assertTrue($reader->isAllowed('bar'));
@@ -79,13 +78,13 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testFulfilledRequireDoesNotInterfere()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
-		$builder->allow('bar');
+		$acl = new Acl;
+		$acl->allow('foo');
+		$acl->allow('bar');
 
-		$builder->addRule('bar', 'require', 'foo');
+		$acl->addRule('bar', 'require', 'foo');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertTrue($reader->isAllowed('foo'));
 		$this->assertTrue($reader->isAllowed('bar'));
@@ -93,13 +92,13 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testUnfulfilledRequireUnsetsPerm()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
-		$builder->allow('bar');
+		$acl = new Acl;
+		$acl->allow('foo');
+		$acl->allow('bar');
 
-		$builder->addRule('bar', 'require', 'baz');
+		$acl->addRule('bar', 'require', 'baz');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertTrue($reader->isAllowed('foo'));
 		$this->assertFalse($reader->isAllowed('bar'));
@@ -107,14 +106,14 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testRevokedGrantsCannotGrantOtherPerms()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
+		$acl = new Acl;
+		$acl->allow('foo');
 
-		$builder->addRule('foo', 'grant', 'bar');
-		$builder->addRule('bar', 'grant', 'baz');
-		$builder->addRule('bar', 'require', 'quux');
+		$acl->addRule('foo', 'grant', 'bar');
+		$acl->addRule('bar', 'grant', 'baz');
+		$acl->addRule('bar', 'require', 'quux');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertFalse($reader->isAllowed('bar'));
 		$this->assertFalse($reader->isAllowed('baz'));
@@ -122,15 +121,15 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testRevokedGrantsCannotGrantOtherPermsNoMatterHowIndirectly()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
+		$acl = new Acl;
+		$acl->allow('foo');
 
-		$builder->addRule('foo', 'grant', 'bar');
-		$builder->addRule('bar', 'grant', 'baz');
-		$builder->addRule('baz', 'grant', 'quux');
-		$builder->addRule('bar', 'require', 'waldo');
+		$acl->addRule('foo', 'grant', 'bar');
+		$acl->addRule('bar', 'grant', 'baz');
+		$acl->addRule('baz', 'grant', 'quux');
+		$acl->addRule('bar', 'require', 'waldo');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertFalse($reader->isAllowed('bar'));
 		$this->assertFalse($reader->isAllowed('baz'));
@@ -139,16 +138,16 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testRevokedGrantsDoNotInterfereWithOtherGrants()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
-		$builder->allow('waldo');
+		$acl = new Acl;
+		$acl->allow('foo');
+		$acl->allow('waldo');
 
-		$builder->addRule('foo', 'grant', 'bar');
-		$builder->addRule('bar', 'grant', 'baz');
-		$builder->addRule('waldo', 'grant', 'baz');
-		$builder->addRule('bar', 'require', 'quux');
+		$acl->addRule('foo', 'grant', 'bar');
+		$acl->addRule('bar', 'grant', 'baz');
+		$acl->addRule('waldo', 'grant', 'baz');
+		$acl->addRule('bar', 'require', 'quux');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertFalse($reader->isAllowed('bar'));
 		$this->assertTrue($reader->isAllowed('baz'));
@@ -156,15 +155,15 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 	public function testRequireOnAPermWithDifferentDimensions()
 	{
-		$builder = new Builder;
+		$acl = new Acl;
 
-		$builder->allow('foo');
-		$builder->allow('bar', array('x' => 1));
-		$builder->allow('bar', array('y' => 1));
+		$acl->allow('foo');
+		$acl->allow('bar', array('x' => 1));
+		$acl->allow('bar', array('y' => 1));
 
-		$builder->addRule('bar', 'require', 'foo');
+		$acl->addRule('bar', 'require', 'foo');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertFalse($reader->isAllowed('bar'));
 		$this->assertTrue($reader->isAllowed('bar', array('x' => 1)));

@@ -2,29 +2,28 @@
 
 namespace s9e\Toolkit\Acl\Tests;
 
-use s9e\Toolkit\Acl\Builder;
-use s9e\Toolkit\Acl\Reader;
+use s9e\Toolkit\Acl\Acl;
 
-include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Acl.php';
 
 class ScopingTest extends \PHPUnit_Framework_TestCase
 {
 	public function testGlobalDenyOverridesLocalAllow()
 	{
-		$builder = new Builder;
-		$builder->deny('foo');
-		$builder->allow('foo', array('bar' => 123));
+		$acl = new Acl;
+		$acl->deny('foo');
+		$acl->allow('foo', array('bar' => 123));
 
-		$this->assertFalse($builder->getReader()->isAllowed('foo', array('bar' => 123)));
+		$this->assertFalse($acl->getReader()->isAllowed('foo', array('bar' => 123)));
 	}
 
 	public function testLocalDenyOverridesGlobalAllow()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
-		$builder->deny('foo', array('bar' => 123));
+		$acl = new Acl;
+		$acl->allow('foo');
+		$acl->deny('foo', array('bar' => 123));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertTrue($reader->isAllowed('foo'));
 		$this->assertFalse($reader->isAllowed('foo', array('bar' => 123)));
@@ -32,19 +31,19 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 
 	public function testUnknownScopeDefaultsToGlobalScope()
 	{
-		$builder = new Builder;
-		$builder->allow('foo');
+		$acl = new Acl;
+		$acl->allow('foo');
 
-		$this->assertTrue($builder->getReader()->isAllowed('foo', array('bar' => 123)));
+		$this->assertTrue($acl->getReader()->isAllowed('foo', array('bar' => 123)));
 	}
 
 	public function test2DInheritsFrom1D()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
-		$builder->allow('foo', array('bar' => 456));
+		$acl = new Acl;
+		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
+		$acl->allow('foo', array('bar' => 456));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
 		$this->assertFalse($reader->isAllowed('foo', array('bar' => 123)));
 		$this->assertTrue($reader->isAllowed('foo', array('bar' => 123, 'baz' => 'xyz')));
@@ -54,34 +53,34 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 
 	public function testGlobalAnyOn2DAllow()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
+		$acl = new Acl;
+		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
-		$this->assertTrue($reader->isAllowed('foo', $reader->any));
+		$this->assertTrue($reader->isAllowed('foo', $reader->any()));
 	}
 
 	public function test2DAnyOn2DAllow()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
+		$acl = new Acl;
+		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => $reader->any, 'baz' => 'xyz')));
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => 123, 'baz' => $reader->any)));
+		$this->assertTrue($reader->isAllowed('foo', array('bar' => $reader->any(), 'baz' => 'xyz')));
+		$this->assertTrue($reader->isAllowed('foo', array('bar' => 123, 'baz' => $reader->any())));
 	}
 
 	public function test1DAnyOn2DAllow()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
+		$acl = new Acl;
+		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
-		$this->assertFalse($reader->isAllowed('foo', array('bar' => $reader->any)));
-		$this->assertFalse($reader->isAllowed('foo', array('baz' => $reader->any)));
+		$this->assertFalse($reader->isAllowed('foo', array('bar' => $reader->any())));
+		$this->assertFalse($reader->isAllowed('foo', array('baz' => $reader->any())));
 	}
 
 	/**
@@ -90,48 +89,48 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 	*/
 	public function testAnyOn3DAllow()
 	{
-		$builder = new Builder;
-		$builder->allow('bbcode_use', array(
+		$acl = new Acl;
+		$acl->allow('bbcode_use', array(
 			'forum_id' => 3
 		));
 
-		$builder->allow('bbcode_use', array(
+		$acl->allow('bbcode_use', array(
 			'in'        => 'sig',
 			'bbcode_id' => 'b'
 		));
 
-		$builder->allow('bbcode_use', array(
+		$acl->allow('bbcode_use', array(
 			'in'        => 'sig',
 			'bbcode_id' => 'url'
 		));
 
-		$builder->allow('bbcode_use', array(
+		$acl->allow('bbcode_use', array(
 			'in'        => 'pm',
 			'bbcode_id' => 'i'
 		));
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
-		$this->assertTrue($reader->isAllowed('bbcode_use', $reader->any));
+		$this->assertTrue($reader->isAllowed('bbcode_use', $reader->any()));
 		$this->assertTrue($reader->isAllowed('bbcode_use', array(
 			'in'        => 'sig',
-			'bbcode_id' => $reader->any
+			'bbcode_id' => $reader->any()
 		)));
 		$this->assertTrue($reader->isAllowed('bbcode_use', array(
 			'in'       => 'forum',
-			'forum_id' => $reader->any
+			'forum_id' => $reader->any()
 		)));
 	}
 
 	public function testAnyOnUnknownScopeDefaultsToGlobal()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
-		$builder->allow('bar');
+		$acl = new Acl;
+		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
+		$acl->allow('bar');
 
-		$reader = $builder->getReader();
+		$reader = $acl->getReader();
 
-		$this->assertFalse($reader->isAllowed('foo', array('quux' => $reader->any)));
-		$this->assertTrue($reader->isAllowed('bar', array('quux' => $reader->any)));
+		$this->assertFalse($reader->isAllowed('foo', array('quux' => $reader->any())));
+		$this->assertTrue($reader->isAllowed('bar', array('quux' => $reader->any())));
 	}
 }

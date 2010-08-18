@@ -2,22 +2,22 @@
 
 namespace s9e\Toolkit\Acl\Tests;
 
-use s9e\Toolkit\Acl\Builder;
+use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\XMLReader;
 
-include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Acl.php';
 include_once __DIR__ . '/../XMLReader.php';
 
 class XMLTest extends \PHPUnit_Framework_TestCase
 {
 	public function testACLCanBeQueriedInXML()
 	{
-		$builder = new Builder;
-		$builder->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
-		$builder->allow('foo', array('bar' => 456));
-		$builder->deny('foo', array('bar' => 456, 'baz' => 'DENY'));
+		$acl = new Acl;
+		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
+		$acl->allow('foo', array('bar' => 456));
+		$acl->deny('foo', array('bar' => 456, 'baz' => 'DENY'));
 
-		$xml = $builder->getReaderXML();
+		$xml = $acl->getReaderXML();
 
 		$reader = new XMLReader($xml);
 
