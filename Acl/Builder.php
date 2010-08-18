@@ -62,6 +62,8 @@ class Builder
 	{
 		$this->settings = array_merge($this->settings, $builder->settings);
 		$this->rules    = array_merge_recursive($this->rules, $builder->rules);
+
+		return $this;
 	}
 
 	protected function add($value, $perm, $scope)

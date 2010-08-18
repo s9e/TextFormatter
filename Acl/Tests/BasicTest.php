@@ -115,6 +115,12 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($builder, $builder->addRule('foo', 'grant', 'bar'));
 	}
 
+	public function testBuilderImportIsChainable()
+	{
+		$builder = new Builder;
+		$this->assertSame($builder, $builder->import(new Builder));
+	}
+
 	public function testBuilderAcceptsBooleanScopeValues()
 	{
 		$builder = new Builder;
