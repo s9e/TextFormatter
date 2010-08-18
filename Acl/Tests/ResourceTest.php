@@ -11,46 +11,10 @@ include_once __DIR__ . '/../Resource.php';
 
 class ResourceTest extends \PHPUnit_Framework_TestCase
 {
-	public function testIsAllowed()
-	{
-		$user          = new User(123);
-		$someOtherUser = new User(456);
-
-		$forum3 = new Forum(3);
-		$forum5 = new Forum(5);
-
-		// The user can read in forums 3 and 5, write in forum 5
-		$user->acl()->allow('read', $forum3);
-		$user->acl()->allow('read', $forum5);
-		$user->acl()->allow('post', $forum5);
-
-		// The user can edit their own stuff
-		$user->acl()->allow('edit', array('author' => 123));
-
-		$this->assertTrue($user->can('read', $forum3));
-		$this->assertFalse($user->can('post', $forum3));
-		$this->assertTrue($user->can('read', $forum5));
-		$this->assertTrue($user->can('post', $forum5));
-
-		// The user has posted a topic in forum 3
-		$topic44 = new Topic(44, $forum3, $user);
-		$this->assertTrue($user->can('read', $topic44));
-		$this->assertTrue($user->can('edit', $topic44));
-
-		// Someone else has posted a topic in forum 3
-		$topic55 = new Topic(55, $forum3, $someOtherUser);
-		$this->assertTrue($user->can('read', $topic55));
-		$this->assertFalse($user->can('edit', $topic55));
-
-		// Let's give that user the right to edit that specific topic even if it's not theirs
-		$user->acl()->allow('edit', $topic55);
-		$this->assertTrue($user->can('edit', $topic55));
-	}
-
 	public function testGetPredicate()
 	{
-		$user  = new User(123);
-		$forum = new Forum(5);
+		$user  = new MyUser(123);
+		$forum = new MyForum(5);
 		$acl   = $user->acl();
 
 		$acl->allow('foo', array('forum' => $forum->id, 'bar' => 'baz'));
@@ -68,7 +32,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 	}
 }
 
-class Forum implements Resource
+class MyForum implements Resource
 {
 	public $id;
 
@@ -88,35 +52,7 @@ class Forum implements Resource
 	}
 }
 
-class Topic implements Resource
-{
-	public $id;
-	public $forum;
-	public $author;
-
-	public function __construct($id, Forum $forum, User $author)
-	{
-		$this->id     = $id;
-		$this->forum  = $forum;
-		$this->author = $author;
-	}
-
-	public function getAclBuilderScope()
-	{
-		return array('topic' => $this->id);
-	}
-
-	public function getAclReaderScope()
-	{
-		return array(
-			'topic'  => $this->id,
-			'forum'  => $this->forum->id,
-			'author' => $this->author->id
-		);
-	}
-}
-
-class User
+class MyUser
 {
 	public $id;
 	protected $acl;
