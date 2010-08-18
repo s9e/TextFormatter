@@ -19,12 +19,18 @@ interface Resource
 	/**
 	* Return the name of this kind of resource
 	*
+	* Will be used by the Builder when passed a Resource as a scope. It will be replaced by an array
+	* with one element using getAclResourceName() as key and getAclId() as value.
+	*
 	* @return string
 	*/
 	public function getAclResourceName();
 
 	/**
-	* Return the attributes used by the Acl to scope access to this resource
+	* Return the attributes used by the Reader to scope access to this resource
+	*
+	* Will typically contain the name and values returned by getAclResourceName() and getAclId()
+	* plus any relevant attribute.
 	*
 	* @return array
 	*/
