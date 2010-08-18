@@ -6,7 +6,6 @@ use s9e\Toolkit\Acl\Builder;
 use s9e\Toolkit\Acl\Reader;
 
 include_once __DIR__ . '/../Builder.php';
-include_once __DIR__ . '/../Reader.php';
 
 class RulesTest extends \PHPUnit_Framework_TestCase
 {

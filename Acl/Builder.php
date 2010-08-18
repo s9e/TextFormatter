@@ -40,6 +40,11 @@ class Builder
 
 	public function getReader()
 	{
+		if (!class_exists(__NAMESPACE__ . '\\Reader'))
+		{
+			include __DIR__ . '/Reader.php';
+		}
+
 		return new Reader($this->getReaderConfig());
 	}
 

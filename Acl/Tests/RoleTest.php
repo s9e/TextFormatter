@@ -7,7 +7,6 @@ use s9e\Toolkit\Acl\Reader;
 use s9e\Toolkit\Acl\Role;
 
 include_once __DIR__ . '/../Builder.php';
-include_once __DIR__ . '/../Reader.php';
 include_once __DIR__ . '/../Role.php';
 
 class RoleTest extends \PHPUnit_Framework_TestCase

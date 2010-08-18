@@ -8,7 +8,6 @@ use s9e\Toolkit\Acl\Role;
 use s9e\Toolkit\Acl\RoleCache;
 
 include_once __DIR__ . '/../Builder.php';
-include_once __DIR__ . '/../Reader.php';
 include_once __DIR__ . '/../Role.php';
 include_once __DIR__ . '/../RoleCache.php';
 
