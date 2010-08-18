@@ -97,4 +97,22 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$builder = new Builder;
 		$builder->allow('foo', array('scope' => true));
 	}
+
+	public function testBuilderAllowIsChainable()
+	{
+		$builder = new Builder;
+		$this->assertSame($builder, $builder->allow('foo'));
+	}
+
+	public function testBuilderDenyIsChainable()
+	{
+		$builder = new Builder;
+		$this->assertSame($builder, $builder->deny('foo'));
+	}
+
+	public function testBuilderAddRuleIChainable()
+	{
+		$builder = new Builder;
+		$this->assertSame($builder, $builder->addRule('foo', 'grant', 'bar'));
+	}
 }

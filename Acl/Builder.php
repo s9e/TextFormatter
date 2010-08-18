@@ -34,6 +34,8 @@ class Builder
 		* @todo validate params
 		*/
 		$this->rules[$rule][$perm][$foreignPerm] = $foreignPerm;
+
+		return $this;
 	}
 
 	public function getReader()
@@ -108,6 +110,8 @@ class Builder
 		}
 
 		$this->settings[] = array($perm, $value, $scope);
+
+		return $this;
 	}
 
 	protected function build($asXml)
