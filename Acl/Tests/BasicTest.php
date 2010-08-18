@@ -166,12 +166,24 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @depends testAclCanBeQueriedDirectly
 	*/
-	public function testAclCanBeQueriedDirectlyWithoutReturningStaleResults()
+	public function testAclCanBeQueriedDirectlyWithoutReturningStaleResultsAfterAllow()
 	{
 		$acl = new Acl;
 		$this->assertFalse($acl->isAllowed('foo'));
 		$acl->allow('foo');
 		$this->assertTrue($acl->isAllowed('foo'));
+	}
+
+	/**
+	* @depends testAclCanBeQueriedDirectly
+	*/
+	public function testAclCanBeQueriedDirectlyWithoutReturningStaleResultsAfterAddRule()
+	{
+		$acl = new Acl;
+		$acl->allow('foo');
+		$this->assertTrue($acl->isAllowed('foo'));
+		$acl->addRule('foo', 'require', 'bar');
+		$this->assertFalse($acl->isAllowed('foo'));
 	}
 
 	/**
