@@ -33,8 +33,8 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($user->can('post', $forum5));
 
 		// Resources can be used in values as well
-		$this->assertTrue($user->can('read', array('forum' => $forum3)));
-		$this->assertFalse($user->can('post', array('forum' => $forum3)));
+		$this->assertTrue($user->can('read', array('forum' => 3)));
+		$this->assertFalse($user->can('post', array('forum' => 3)));
 
 		// The user has posted a topic in forum 3
 		$topic44 = new Topic(44, $forum3, $user);
@@ -57,8 +57,8 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 		$forum = new Forum(5);
 		$acl   = $user->acl();
 
-		$acl->allow('foo', array('forum' => $forum, 'bar' => 'baz'));
-		$acl->allow('foo', array('forum' => $forum, 'bar' => 'quux'));
+		$acl->allow('foo', array('forum' => $forum->id, 'bar' => 'baz'));
+		$acl->allow('foo', array('forum' => $forum->id, 'bar' => 'quux'));
 
 		$this->assertEquals(
 			array('type' => 'some', 'which' => array('baz', 'quux')),
@@ -67,7 +67,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(
 			array('type' => 'some', 'which' => array('baz', 'quux')),
-			$acl->getReader()->getPredicate('foo', 'bar', array('forum' => $forum))
+			$acl->getReader()->getPredicate('foo', 'bar', array('forum' => $forum->id))
 		);
 	}
 }
@@ -81,17 +81,12 @@ class Forum implements Resource
 		$this->id = $id;
 	}
 
-	public function getAclId()
+	public function getAclBuilderScope()
 	{
-		return $this->id;
+		return array('forum' => $this->id);
 	}
 
-	public function getAclResourceName()
-	{
-		return 'forum';
-	}
-
-	public function getAclAttributes()
+	public function getAclReaderScope()
 	{
 		return array('forum' => $this->id);
 	}
@@ -110,17 +105,12 @@ class Topic implements Resource
 		$this->author = $author;
 	}
 
-	public function getAclId()
+	public function getAclBuilderScope()
 	{
-		return $this->id;
+		return array('topic' => $this->id);
 	}
 
-	public function getAclResourceName()
-	{
-		return 'topic';
-	}
-
-	public function getAclAttributes()
+	public function getAclReaderScope()
 	{
 		return array(
 			'topic'  => $this->id,

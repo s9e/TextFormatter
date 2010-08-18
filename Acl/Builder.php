@@ -72,20 +72,13 @@ class Builder
 		}
 		elseif ($scope instanceof Resource)
 		{
-			$scope = array(
-				$scope->getAclResourceName() => $scope->getAclId()
-			);
+			$scope = $scope->getAclBuilderScope();
 		}
 
 		if (is_array($scope))
 		{
 			foreach ($scope as $k => &$v)
 			{
-				if ($v instanceof Resource)
-				{
-					$v = $v->getAclId();
-				}
-
 				switch (gettype($v))
 				{
 					case 'integer':

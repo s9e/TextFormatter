@@ -146,16 +146,16 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 	public function testResources()
 	{
 		//======================================================================
-		$builder = new Builder;
-		$builder->allow('drive', array('color' => 'green'))
-		        ->allow('drive', array('color' => 'red', 'type' => 'sports'))
-		        ->allow('drive', array('car' => 3));
-
 		$greenPickup     = new Car(1, 'green', 'pickup');
 		$redFerrari      = new Car(2, 'red',   'sports');
 		$whiteSedan      = new Car(3, 'white', 'sedan');
 		$anotherSedan    = new Car(4, 'white', 'sedan');
 		$yetAnotherSedan = new Car(5, 'white', 'sedan');
+
+		$builder = new Builder;
+		$builder->allow('drive', array('color' => 'green'))
+		        ->allow('drive', array('color' => 'red', 'type' => 'sports'))
+		        ->allow('drive', array('car' => 3));
 
 		$reader = $builder->getReader();
 
@@ -164,6 +164,9 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		var_dump($reader->isAllowed('drive', $whiteSedan));      // bool(true)
 		var_dump($reader->isAllowed('drive', $anotherSedan));    // bool(false)
 		var_dump($reader->isAllowed('drive', $yetAnotherSedan)); // bool(false)
+
+		var_dump($reader->isAllowed('drive', array('color' => 'green'))); // bool(true)
+		var_dump($reader->isAllowed('drive', array('car' => 3)));         // bool(true)
 
 		// let's specifically allow $anotherSedan
 		$builder->allow('drive', $anotherSedan);
@@ -187,17 +190,12 @@ class Car implements Resource
 		$this->color = $color;
 	}
 
-	public function getAclResourceName()
+	public function getAclBuilderScope()
 	{
-		return 'car';
+		return array('car' => $this->id);
 	}
 
-	public function getAclId()
-	{
-		return $this->id;
-	}
-
-	public function getAclAttributes()
+	public function getAclReaderScope()
 	{
 		return array(
 			'car'   => $this->id,
