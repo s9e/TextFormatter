@@ -32,10 +32,6 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($user->can('read', $forum5));
 		$this->assertTrue($user->can('post', $forum5));
 
-		// Resources can be used in values as well
-		$this->assertTrue($user->can('read', array('forum' => 3)));
-		$this->assertFalse($user->can('post', array('forum' => 3)));
-
 		// The user has posted a topic in forum 3
 		$topic44 = new Topic(44, $forum3, $user);
 		$this->assertTrue($user->can('read', $topic44));
