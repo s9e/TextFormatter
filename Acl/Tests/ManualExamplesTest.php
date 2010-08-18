@@ -22,7 +22,7 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		ob_end_clean();
 	}
 
-	protected function assertExampleIsCorrect($method)
+	protected function assertThatExampleIsCorrect($method)
 	{
 		$method = substr($method, 1 + strrpos($method, ':'));
 		$regexp = '#public function ' . $method . '\\(\\)\\s*\\{\\s*//={70}(.*?)//={70}#s';
@@ -40,38 +40,23 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testAclGeneratesTheACLReaderReadsIt()
-	{
-		//======================================================================
-		$acl = new Acl;
-		$acl->allow('read');
-
-		$reader = $acl->getReader();
-		var_dump($reader->isAllowed('read'));  // bool(true)
-		var_dump($reader->isAllowed('write')); // bool(false)
-		//======================================================================
-
-		$this->assertExampleIsCorrect(__METHOD__);
-	}
-
 	public function testScoping()
 	{
 		//======================================================================
 		$acl = new Acl;
 		$acl->allow('read', array('category' => 1))
-				->allow('read', array('category' => 2));
+			->allow('read', array('category' => 2));
 
-		$reader = $acl->getReader();
-		var_dump($reader->isAllowed('read')); // bool(false) because "read" is not allowed globally
-		var_dump($reader->isAllowed('read', array('category' => 1)));   // bool(true)
-		var_dump($reader->isAllowed('read', array('category' => "1"))); // bool(true)
-		var_dump($reader->isAllowed('read', array('category' => 3)));   // bool(false)
+		var_dump($acl->isAllowed('read')); // bool(false) because "read" is not allowed globally
+		var_dump($acl->isAllowed('read', array('category' => 1)));   // bool(true)
+		var_dump($acl->isAllowed('read', array('category' => "1"))); // bool(true)
+		var_dump($acl->isAllowed('read', array('category' => 3)));   // bool(false)
 
-		var_dump($reader->isAllowed('read', $reader->any()));                        // bool(true)
-		var_dump($reader->isAllowed('read', array('category' => $reader->any())));   // bool(true)
+		var_dump($acl->isAllowed('read', $acl->any()));                      // bool(true)
+		var_dump($acl->isAllowed('read', array('category' => $acl->any()))); // bool(true)
 		//======================================================================
 
-		$this->assertExampleIsCorrect(__METHOD__);
+		$this->assertThatExampleIsCorrect(__METHOD__);
 	}
 
 	public function testPrecedence()
@@ -79,13 +64,12 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		//======================================================================
 		$acl = new Acl;
 		$acl->allow('read')
-				->deny('read');
+			->deny('read');
 
-		$reader = $acl->getReader();
-		var_dump($reader->isAllowed('read')); // bool(false)
+		var_dump($acl->isAllowed('read')); // bool(false)
 		//======================================================================
 
-		$this->assertExampleIsCorrect(__METHOD__);
+		$this->assertThatExampleIsCorrect(__METHOD__);
 	}
 
 	public function testRules()
@@ -93,35 +77,25 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		//======================================================================
 		$acl = new Acl;
 		$acl->addRule('post', 'grant', 'read')
-				->allow('post', array('category' => 1));
+			->allow('post', array('category' => 1));
 
-		$reader = $acl->getReader();
-		var_dump($reader->isAllowed('post', array('category' => 1))); // bool(true)
-		var_dump($reader->isAllowed('read', array('category' => 1))); // bool(true)
-
-		$acl = new Acl;
-		$acl->addRule('post', 'grant', 'read')
-				->allow('post', array('category' => 1));
-
-		$reader = $acl->getReader();
-		var_dump($reader->isAllowed('post', array('category' => 1))); // bool(true)
-		var_dump($reader->isAllowed('read', array('category' => 1))); // bool(true)
+		var_dump($acl->isAllowed('post', array('category' => 1))); // bool(true)
+		var_dump($acl->isAllowed('read', array('category' => 1))); // bool(true)
 
 		$acl = new Acl;
 		$acl->addRule('post', 'grant', 'read')
-				->addRule('post', 'require', 'read')
-				->allow('post', array('category' => 1))
-				->allow('post', array('category' => 2))
-				->deny('read', array('category' => 2));
+			->addRule('post', 'require', 'read')
+			->allow('post', array('category' => 1))
+			->allow('post', array('category' => 2))
+			->deny('read', array('category' => 2));
 
-		$reader = $acl->getReader();
-		var_dump($reader->isAllowed('read', array('category' => 1))); // bool(true)
-		var_dump($reader->isAllowed('post', array('category' => 1))); // bool(true)
-		var_dump($reader->isAllowed('read', array('category' => 2))); // bool(false) - explicitly denied
-		var_dump($reader->isAllowed('post', array('category' => 2))); // bool(false) - you can't post if you can't read
+		var_dump($acl->isAllowed('read', array('category' => 1))); // bool(true)
+		var_dump($acl->isAllowed('post', array('category' => 1))); // bool(true)
+		var_dump($acl->isAllowed('read', array('category' => 2))); // bool(false) - explicitly denied
+		var_dump($acl->isAllowed('post', array('category' => 2))); // bool(false) - you can't post if you can't read
 		//======================================================================
 
-		$this->assertExampleIsCorrect(__METHOD__);
+		$this->assertThatExampleIsCorrect(__METHOD__);
 	}
 
 	public function testRoles()
@@ -137,10 +111,10 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->import($editor);
 
-		$reader = $acl->getReader();
-		var_dump($reader->isAllowed('edit')); // bool(true)		//======================================================================
+		var_dump($acl->isAllowed('edit')); // bool(true)
+		//======================================================================
 
-		$this->assertExampleIsCorrect(__METHOD__);
+		$this->assertThatExampleIsCorrect(__METHOD__);
 	}
 
 	public function testResources()
@@ -154,30 +128,26 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 
 		$acl = new Acl;
 		$acl->allow('drive', array('color' => 'green'))
-		        ->allow('drive', array('color' => 'red', 'type' => 'sports'))
-		        ->allow('drive', array('car' => 3));
+		     ->allow('drive', array('color' => 'red', 'type' => 'sports'))
+		     ->allow('drive', array('car' => 3));
 
-		$reader = $acl->getReader();
+		var_dump($acl->isAllowed('drive', $greenPickup));     // bool(true)
+		var_dump($acl->isAllowed('drive', $redFerrari));      // bool(true)
+		var_dump($acl->isAllowed('drive', $whiteSedan));      // bool(true)
+		var_dump($acl->isAllowed('drive', $anotherSedan));    // bool(false)
+		var_dump($acl->isAllowed('drive', $yetAnotherSedan)); // bool(false)
 
-		var_dump($reader->isAllowed('drive', $greenPickup));     // bool(true)
-		var_dump($reader->isAllowed('drive', $redFerrari));      // bool(true)
-		var_dump($reader->isAllowed('drive', $whiteSedan));      // bool(true)
-		var_dump($reader->isAllowed('drive', $anotherSedan));    // bool(false)
-		var_dump($reader->isAllowed('drive', $yetAnotherSedan)); // bool(false)
-
-		var_dump($reader->isAllowed('drive', array('color' => 'green'))); // bool(true)
-		var_dump($reader->isAllowed('drive', array('car' => 3)));         // bool(true)
+		var_dump($acl->isAllowed('drive', array('color' => 'green'))); // bool(true)
+		var_dump($acl->isAllowed('drive', array('car' => 3)));         // bool(true)
 
 		// let's specifically allow $anotherSedan
 		$acl->allow('drive', $anotherSedan);
 
-		// the ACL has changed, we must create a new Reader
-		$reader = $acl->getReader();
-		var_dump($reader->isAllowed('drive', $anotherSedan));    // bool(true)  - specifically allowed
-		var_dump($reader->isAllowed('drive', $yetAnotherSedan)); // bool(false) - still no rules covering this one
+		var_dump($acl->isAllowed('drive', $anotherSedan));    // bool(true)  - specifically allowed
+		var_dump($acl->isAllowed('drive', $yetAnotherSedan)); // bool(false) - still no rules covering this one
 		//======================================================================
 
-		$this->assertExampleIsCorrect(__METHOD__);
+		$this->assertThatExampleIsCorrect(__METHOD__);
 	}
 }
 
