@@ -3,8 +3,12 @@
 namespace s9e\Toolkit\Acl\Tests;
 
 use s9e\Toolkit\Acl\Builder;
+use s9e\Toolkit\Acl\Resource;
+use s9e\Toolkit\Acl\Role;
 
 include_once __DIR__ . '/../Builder.php';
+include_once __DIR__ . '/../Resource.php';
+include_once __DIR__ . '/../Role.php';
 
 class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 {
@@ -118,5 +122,87 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		//======================================================================
 
 		$this->assertExampleIsCorrect(__METHOD__);
+	}
+
+	public function testRoles()
+	{
+		//======================================================================
+		// let's create an "editor" role
+		$editor = new Role('editor');
+		$editor->allow('post');
+		$editor->allow('read');
+		$editor->allow('edit');
+
+		// now build a user's ACL
+		$builder = new Builder;
+		$builder->import($editor);
+
+		$reader = $builder->getReader();
+		var_dump($reader->isAllowed('edit')); // bool(true)		//======================================================================
+
+		$this->assertExampleIsCorrect(__METHOD__);
+	}
+
+	public function testResources()
+	{
+		//======================================================================
+		$builder = new Builder;
+		$builder->allow('drive', array('color' => 'green'))
+		        ->allow('drive', array('color' => 'red', 'type' => 'sports'))
+		        ->allow('drive', array('car' => 3));
+
+		$greenPickup     = new Car(1, 'green', 'pickup');
+		$redFerrari      = new Car(2, 'red',   'sports');
+		$whiteSedan      = new Car(3, 'white', 'sedan');
+		$anotherSedan    = new Car(4, 'white', 'sedan');
+		$yetAnotherSedan = new Car(5, 'white', 'sedan');
+
+		$reader = $builder->getReader();
+
+		var_dump($reader->isAllowed('drive', $greenPickup));     // bool(true)
+		var_dump($reader->isAllowed('drive', $redFerrari));      // bool(true)
+		var_dump($reader->isAllowed('drive', $whiteSedan));      // bool(true)
+		var_dump($reader->isAllowed('drive', $anotherSedan));    // bool(false)
+		var_dump($reader->isAllowed('drive', $yetAnotherSedan)); // bool(false)
+
+		// let's specifically allow $anotherSedan
+		$builder->allow('drive', $anotherSedan);
+
+		// the ACL has changed, we must create a new Reader
+		$reader = $builder->getReader();
+		var_dump($reader->isAllowed('drive', $anotherSedan));    // bool(true)  - specifically allowed
+		var_dump($reader->isAllowed('drive', $yetAnotherSedan)); // bool(false) - still no rules covering this one
+		//======================================================================
+
+		$this->assertExampleIsCorrect(__METHOD__);
+	}
+}
+
+class Car implements Resource
+{
+	public function __construct($id, $color, $type)
+	{
+		$this->id    = $id;
+		$this->type  = $type;
+		$this->color = $color;
+	}
+
+	public function getAclResourceName()
+	{
+		return 'car';
+	}
+
+	public function getAclId()
+	{
+		return $this->id;
+	}
+
+	public function getAclAttributes()
+	{
+		return array(
+			'car'   => $this->id,
+			'type'  => $this->type,
+			'color' => $this->color
+		);
 	}
 }
