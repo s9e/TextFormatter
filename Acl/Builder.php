@@ -98,6 +98,10 @@ class Builder
 						$v = (int) $v;
 						break;
 
+					case 'double':
+						$v = (string) $v;
+						break;
+
 					default:
 						throw new \InvalidArgumentException('Invalid type for scope ' . $k . ': integer or string expected, ' . gettype($v) . ' given');
 				}

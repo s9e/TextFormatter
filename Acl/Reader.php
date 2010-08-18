@@ -57,6 +57,15 @@ class Reader
 			{
 				foreach ($scope as $scopeDim => $scopeVal)
 				{
+					if (is_float($scopeVal))
+					{
+						/**
+						* Floats need to be converted to strings. Booleans should be fine as they
+						* are automatically converted to integers when used as array keys
+						*/
+						$scopeVal = (string) $scopeVal;
+					}
+
 					if ($scopeVal === $this->any)
 					{
 						if (isset($space['any'][$scopeDim]))
@@ -120,6 +129,14 @@ class Reader
 
 				foreach ($scope as $scopeDim => $scopeVal)
 				{
+					if (is_float($scopeVal))
+					{
+						/**
+						* Doubles need to be converted to strings. Booleans should be fine
+						*/
+						$scopeVal = (string) $scopeVal;
+					}
+
 					if ($scopeVal === $this->any)
 					{
 						if (isset($space['any'][$scopeDim]))
