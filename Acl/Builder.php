@@ -94,6 +94,10 @@ class Builder
 						$v = key(array($v => 0));
 						break;
 
+					case 'boolean':
+						$v = (int) $v;
+						break;
+
 					default:
 						throw new \InvalidArgumentException('Invalid type for scope ' . $k . ': integer or string expected, ' . gettype($v) . ' given');
 				}

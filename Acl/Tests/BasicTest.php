@@ -91,10 +91,10 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @expectedException \InvalidArgumentException
 	*/
-	public function testBuilderRejectsNonStringNonIntegerScopeValues()
+	public function testBuilderRejectsNonStringNonIntegerNonBooleanScopeValues()
 	{
 		$builder = new Builder;
-		$builder->allow('foo', array('scope' => true));
+		$builder->allow('foo', array('scope' => 0.5));
 	}
 
 	public function testBuilderAllowIsChainable()
@@ -109,9 +109,32 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($builder, $builder->deny('foo'));
 	}
 
-	public function testBuilderAddRuleIChainable()
+	public function testBuilderAddRuleIsChainable()
 	{
 		$builder = new Builder;
 		$this->assertSame($builder, $builder->addRule('foo', 'grant', 'bar'));
+	}
+
+	public function testBuilderAcceptsBooleanScopeValues()
+	{
+		$builder = new Builder;
+		$builder->allow('foo', array('scope' => true));
+		$builder->allow('bar', array('scope' => false));
+	}
+
+	/**
+	* @depends testBuilderAcceptsBooleanScopeValues
+	*/
+	public function testReaderWorksWithBooleanScopeValues()
+	{
+		$builder = new Builder;
+		$builder->allow('foo', array('scope' => true));
+		$builder->allow('bar', array('scope' => false));
+
+		$reader = $builder->getReader();
+		$this->assertTrue($reader->isAllowed('foo', array('scope' => true)));
+		$this->assertFalse($reader->isAllowed('foo', array('scope' => false)));
+		$this->assertFalse($reader->isAllowed('bar', array('scope' => true)));
+		$this->assertTrue($reader->isAllowed('bar', array('scope' => false)));
 	}
 }

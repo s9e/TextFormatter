@@ -33,8 +33,8 @@ class AdvancedForumAclTest extends \PHPUnit_Framework_TestCase
 		// The user can edit their own posts as long as neither the post or topic is locked
 		$user->acl()->allow('edit', array(
 			'post.author.id' => $user->id,
-			'post.locked'    => 0,
-			'topic.locked'   => 0
+			'post.locked'    => false,
+			'topic.locked'   => false
 		));
 
 		// The user is a moderator in forum 5
@@ -62,7 +62,7 @@ class AdvancedForumAclTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($user->can('edit', $postFromTopic44));
 
 		// Let's lock this topic
-		$topic44->locked = 1;
+		$topic44->locked = true;
 
 		// Can the user edit their post? No, because the topic is locked
 		$this->assertFalse($user->can('edit', $postFromTopic44));
@@ -117,7 +117,7 @@ class Topic implements Resource
 		$this->id     = $id;
 		$this->forum  = $forum;
 		$this->author = $author;
-		$this->locked = (int) $locked;
+		$this->locked = $locked;
 	}
 
 	public function getAclBuilderScope()
@@ -149,7 +149,7 @@ class Post implements Resource
 		$this->id     = $id;
 		$this->topic  = $topic;
 		$this->author = $author;
-		$this->locked = (int) $locked;
+		$this->locked = $locked;
 	}
 
 	public function getAclBuilderScope()
