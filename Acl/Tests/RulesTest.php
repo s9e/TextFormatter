@@ -14,10 +14,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo');
 		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo'));
-		$this->assertTrue($reader->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertTrue($acl->isAllowed('bar'));
 	}
 
 	public function testLocalGrant()
@@ -26,12 +24,10 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo', array('scope' => 123));
 		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $acl->getReader();
-
-		$this->assertFalse($reader->isAllowed('foo'));
-		$this->assertFalse($reader->isAllowed('bar'));
-		$this->assertTrue($reader->isAllowed('foo', array('scope' => 123)));
-		$this->assertTrue($reader->isAllowed('bar', array('scope' => 123)));
+		$this->assertFalse($acl->isAllowed('foo'));
+		$this->assertFalse($acl->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('foo', array('scope' => 123)));
+		$this->assertTrue($acl->isAllowed('bar', array('scope' => 123)));
 	}
 
 	public function testGrantDoesNotOverrideGlobalDeny()
@@ -41,10 +37,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$acl->deny('bar');
 		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo'));
-		$this->assertFalse($reader->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertFalse($acl->isAllowed('bar'));
 	}
 
 	public function testGrantDoesNotOverrideLocalDeny()
@@ -54,11 +48,9 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$acl->deny('bar', array('scope' => 123));
 		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo'));
-		$this->assertTrue($reader->isAllowed('bar'));
-		$this->assertFalse($reader->isAllowed('bar', array('scope' => 123)));
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertTrue($acl->isAllowed('bar'));
+		$this->assertFalse($acl->isAllowed('bar', array('scope' => 123)));
 	}
 
 	public function testGrantedPermsCanGrantOtherPerms()
@@ -69,11 +61,9 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$acl->addRule('bar', 'grant', 'baz');
 		$acl->addRule('foo', 'grant', 'bar');
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo'));
-		$this->assertTrue($reader->isAllowed('bar'));
-		$this->assertTrue($reader->isAllowed('baz'));
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertTrue($acl->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('baz'));
 	}
 
 	public function testFulfilledRequireDoesNotInterfere()
@@ -84,10 +74,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 		$acl->addRule('bar', 'require', 'foo');
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo'));
-		$this->assertTrue($reader->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertTrue($acl->isAllowed('bar'));
 	}
 
 	public function testUnfulfilledRequireUnsetsPerm()
@@ -98,10 +86,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 		$acl->addRule('bar', 'require', 'baz');
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo'));
-		$this->assertFalse($reader->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertFalse($acl->isAllowed('bar'));
 	}
 
 	public function testRevokedGrantsCannotGrantOtherPerms()
@@ -113,10 +99,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$acl->addRule('bar', 'grant', 'baz');
 		$acl->addRule('bar', 'require', 'quux');
 
-		$reader = $acl->getReader();
-
-		$this->assertFalse($reader->isAllowed('bar'));
-		$this->assertFalse($reader->isAllowed('baz'));
+		$this->assertFalse($acl->isAllowed('bar'));
+		$this->assertFalse($acl->isAllowed('baz'));
 	}
 
 	public function testRevokedGrantsCannotGrantOtherPermsNoMatterHowIndirectly()
@@ -129,11 +113,9 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$acl->addRule('baz', 'grant', 'quux');
 		$acl->addRule('bar', 'require', 'waldo');
 
-		$reader = $acl->getReader();
-
-		$this->assertFalse($reader->isAllowed('bar'));
-		$this->assertFalse($reader->isAllowed('baz'));
-		$this->assertFalse($reader->isAllowed('quux'));
+		$this->assertFalse($acl->isAllowed('bar'));
+		$this->assertFalse($acl->isAllowed('baz'));
+		$this->assertFalse($acl->isAllowed('quux'));
 	}
 
 	public function testRevokedGrantsDoNotInterfereWithOtherGrants()
@@ -147,10 +129,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$acl->addRule('waldo', 'grant', 'baz');
 		$acl->addRule('bar', 'require', 'quux');
 
-		$reader = $acl->getReader();
-
-		$this->assertFalse($reader->isAllowed('bar'));
-		$this->assertTrue($reader->isAllowed('baz'));
+		$this->assertFalse($acl->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('baz'));
 	}
 
 	public function testRequireOnAPermWithDifferentDimensions()
@@ -163,11 +143,9 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 		$acl->addRule('bar', 'require', 'foo');
 
-		$reader = $acl->getReader();
-
-		$this->assertFalse($reader->isAllowed('bar'));
-		$this->assertTrue($reader->isAllowed('bar', array('x' => 1)));
-		$this->assertTrue($reader->isAllowed('bar', array('y' => 1)));
-		$this->assertTrue($reader->isAllowed('bar', array('x' => 1, 'y' => 1)));
+		$this->assertFalse($acl->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('bar', array('x' => 1)));
+		$this->assertTrue($acl->isAllowed('bar', array('y' => 1)));
+		$this->assertTrue($acl->isAllowed('bar', array('x' => 1, 'y' => 1)));
 	}
 }

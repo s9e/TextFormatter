@@ -18,11 +18,11 @@ class RoleTest extends \PHPUnit_Framework_TestCase
 
 		$user  = new Acl;
 
-		$this->assertFalse($user->getReader()->isAllowed('administer'));
+		$this->assertFalse($user->isAllowed('administer'));
 
 		$user->import($admin);
 
-		$this->assertTrue($user->getReader()->isAllowed('administer'));
-		$this->assertTrue($user->getReader()->isAllowed('supervise'));
+		$this->assertTrue($user->isAllowed('administer'));
+		$this->assertTrue($user->isAllowed('supervise'));
 	}
 }

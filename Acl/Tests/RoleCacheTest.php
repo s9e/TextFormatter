@@ -14,10 +14,10 @@ class RoleCacheTest extends \PHPUnit_Framework_TestCase
 {
 	public function testSimpleRole()
 	{
-		$user = new Acl;
-		$this->assertFalse($user->getReader()->isAllowed('administer'));
-		$user->import($this->roleCache->get('admin'));
-		$this->assertTrue($user->getReader()->isAllowed('administer'));
+		$acl = new Acl;
+		$this->assertFalse($acl->isAllowed('administer'));
+		$acl->import($this->roleCache->get('admin'));
+		$this->assertTrue($acl->isAllowed('administer'));
 	}
 
 	/**
@@ -35,10 +35,10 @@ class RoleCacheTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->roleCache->add(new Role('admin'), true);
 
-		$user = new Acl;
-		$this->assertFalse($user->getReader()->isAllowed('administer'));
-		$user->import($this->roleCache->get('admin'));
-		$this->assertFalse($user->getReader()->isAllowed('administer'));
+		$acl = new Acl;
+		$this->assertFalse($acl->isAllowed('administer'));
+		$acl->import($this->roleCache->get('admin'));
+		$this->assertFalse($acl->isAllowed('administer'));
 	}
 
 	/**

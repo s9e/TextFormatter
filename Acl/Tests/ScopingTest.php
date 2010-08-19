@@ -14,7 +14,7 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl->deny('foo');
 		$acl->allow('foo', array('bar' => 123));
 
-		$this->assertFalse($acl->getReader()->isAllowed('foo', array('bar' => 123)));
+		$this->assertFalse($acl->isAllowed('foo', array('bar' => 123)));
 	}
 
 	public function testLocalDenyOverridesGlobalAllow()
@@ -23,10 +23,8 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo');
 		$acl->deny('foo', array('bar' => 123));
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo'));
-		$this->assertFalse($reader->isAllowed('foo', array('bar' => 123)));
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertFalse($acl->isAllowed('foo', array('bar' => 123)));
 	}
 
 	public function testUnknownScopeDefaultsToGlobalScope()
@@ -34,7 +32,7 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo');
 
-		$this->assertTrue($acl->getReader()->isAllowed('foo', array('bar' => 123)));
+		$this->assertTrue($acl->isAllowed('foo', array('bar' => 123)));
 	}
 
 	public function test2DInheritsFrom1D()
@@ -43,12 +41,10 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 		$acl->allow('foo', array('bar' => 456));
 
-		$reader = $acl->getReader();
-
-		$this->assertFalse($reader->isAllowed('foo', array('bar' => 123)));
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => 123, 'baz' => 'xyz')));
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => 456)));
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => 456, 'baz' => 'xyz')));
+		$this->assertFalse($acl->isAllowed('foo', array('bar' => 123)));
+		$this->assertTrue($acl->isAllowed('foo', array('bar' => 123, 'baz' => 'xyz')));
+		$this->assertTrue($acl->isAllowed('foo', array('bar' => 456)));
+		$this->assertTrue($acl->isAllowed('foo', array('bar' => 456, 'baz' => 'xyz')));
 	}
 
 	public function testGlobalWildcardOn2DAllow()
@@ -56,9 +52,7 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo', $reader->wildcard()));
+		$this->assertTrue($acl->isAllowed('foo', $acl->wildcard()));
 	}
 
 	public function test2DWildcardOn2DAllow()
@@ -66,10 +60,8 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => $reader->wildcard(), 'baz' => 'xyz')));
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => 123, 'baz' => $reader->wildcard())));
+		$this->assertTrue($acl->isAllowed('foo', array('bar' => $acl->wildcard(), 'baz' => 'xyz')));
+		$this->assertTrue($acl->isAllowed('foo', array('bar' => 123, 'baz' => $acl->wildcard())));
 	}
 
 	public function test1DWildcardOn2DAllow()
@@ -77,10 +69,8 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$reader = $acl->getReader();
-
-		$this->assertFalse($reader->isAllowed('foo', array('bar' => $reader->wildcard())));
-		$this->assertFalse($reader->isAllowed('foo', array('baz' => $reader->wildcard())));
+		$this->assertFalse($acl->isAllowed('foo', array('bar' => $acl->wildcard())));
+		$this->assertFalse($acl->isAllowed('foo', array('baz' => $acl->wildcard())));
 	}
 
 	/**
@@ -109,16 +99,14 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 			'bbcode_id' => 'i'
 		));
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('bbcode_use', $reader->wildcard()));
-		$this->assertTrue($reader->isAllowed('bbcode_use', array(
+		$this->assertTrue($acl->isAllowed('bbcode_use', $acl->wildcard()));
+		$this->assertTrue($acl->isAllowed('bbcode_use', array(
 			'in'        => 'sig',
-			'bbcode_id' => $reader->wildcard()
+			'bbcode_id' => $acl->wildcard()
 		)));
-		$this->assertTrue($reader->isAllowed('bbcode_use', array(
+		$this->assertTrue($acl->isAllowed('bbcode_use', array(
 			'in'       => 'forum',
-			'forum_id' => $reader->wildcard()
+			'forum_id' => $acl->wildcard()
 		)));
 	}
 
@@ -128,10 +116,8 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 		$acl->allow('bar');
 
-		$reader = $acl->getReader();
-
-		$this->assertFalse($reader->isAllowed('foo', array('quux' => $reader->wildcard())));
-		$this->assertTrue($reader->isAllowed('bar', array('quux' => $reader->wildcard())));
+		$this->assertFalse($acl->isAllowed('foo', array('quux' => $acl->wildcard())));
+		$this->assertTrue($acl->isAllowed('bar', array('quux' => $acl->wildcard())));
 	}
 
 	public function testWildcardUsedAsAScopeKeyWithANormalScopeValue()

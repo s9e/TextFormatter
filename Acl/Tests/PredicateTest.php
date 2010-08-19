@@ -16,7 +16,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('read', array('forum_id' => 4));
 		$acl->allow('read', array('forum_id' => 5));
 
-		$actual   = $acl->getReader()->getPredicate('read', 'forum_id');
+		$actual   = $acl->getPredicate('read', 'forum_id');
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(3, 4, 5)
@@ -51,7 +51,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl->deny('read', array('forum_id' => 4));
 		$acl->deny('read', array('forum_id' => 5));
 
-		$actual   = $acl->getReader()->getPredicate('read', 'forum_id');
+		$actual   = $acl->getPredicate('read', 'forum_id');
 		$expected = array(
 			'type'  => 'all_but',
 			'which' => array(4, 5)
@@ -65,7 +65,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('read');
 
-		$actual   = $acl->getReader()->getPredicate('read', 'forum_id');
+		$actual   = $acl->getPredicate('read', 'forum_id');
 		$expected = array('type' => 'all');
 
 		$this->assertEquals($expected, $actual);
@@ -76,7 +76,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->deny('read');
 
-		$actual   = $acl->getReader()->getPredicate('read', 'forum_id');
+		$actual   = $acl->getPredicate('read', 'forum_id');
 		$expected = array('type' => 'none');
 
 		$this->assertEquals($expected, $actual);
@@ -86,7 +86,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 	{
 		$acl = new Acl;
 
-		$actual   = $acl->getReader()->getPredicate('read', 'forum_id');
+		$actual   = $acl->getPredicate('read', 'forum_id');
 		$expected = array('type' => 'none');
 
 		$this->assertEquals($expected, $actual);
@@ -100,7 +100,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('perm', array('x' => 2, 'y' => 5));
 		$acl->allow('perm', array('x' => 3, 'y' => 5));
 
-		$reader  = $acl->getReader();
+		$reader  = $acl;
 
 		$actual   = $reader->getPredicate('perm', 'x', array('y' => 4));
 		$expected = array(
@@ -153,7 +153,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl->deny('perm', array('x' => 9));
 		$acl->deny('perm', array('y' => 9));
 
-		$reader  = $acl->getReader();
+		$reader  = $acl;
 
 		$actual   = $reader->getPredicate('perm', 'x', array('y' => $reader->wildcard()));
 		$expected = array(
@@ -182,7 +182,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl->deny('perm', array('x' => 9));
 		$acl->deny('perm', array('y' => 9));
 
-		$reader  = $acl->getReader();
+		$reader  = $acl;
 
 		$actual   = $reader->getPredicate('perm', 'x', $reader->wildcard());
 		$expected = array(
@@ -207,7 +207,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('perm');
 		$acl->deny('perm', array('x' => 1, 'y' => 1, 'z' => 1));
 		
-		$actual   = $acl->getReader()->getPredicate('perm', 'x', array('y' => 1));
+		$actual   = $acl->getPredicate('perm', 'x', array('y' => 1));
 		$expected = array(
 			'type'  => 'all'
 		);
@@ -221,7 +221,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('perm', array('x' => 1, 'y' => 1, 'z' => 0));
 		$acl->deny('perm', array('x' => 1, 'y' => 1, 'z' => 1));
 		
-		$actual   = $acl->getReader()->getPredicate('perm', 'x', array('y' => 1));
+		$actual   = $acl->getPredicate('perm', 'x', array('y' => 1));
 		$expected = array(
 			'type'  => 'none'
 		);
@@ -237,7 +237,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('read', array('forum_id' => 4));
 
-		$acl->getReader()->getPredicate('read', 'forum_id', array('forum_id' => 4));
+		$acl->getPredicate('read', 'forum_id', array('forum_id' => 4));
 	}
 
 	/**
@@ -248,6 +248,6 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('read', array('forum_id' => 4));
 
-		$acl->getReader()->getPredicate('read', 'forum_id', true);
+		$acl->getPredicate('read', 'forum_id', true);
 	}
 }

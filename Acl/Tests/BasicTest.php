@@ -13,7 +13,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo');
 
-		$this->assertTrue($acl->getReader()->isAllowed('foo'));
+		$this->assertTrue($acl->isAllowed('foo'));
 	}
 
 	public function testMultiGlobalPerms()
@@ -22,10 +22,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo');
 		$acl->deny('bar');
 
-		$reader = $acl->getReader();
-
-		$this->assertTrue($reader->isAllowed('foo'));
-		$this->assertFalse($reader->isAllowed('bar'));
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertFalse($acl->isAllowed('bar'));
 	}
 
 	public function testUnknownPermsReturnFalse()
@@ -33,7 +31,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo');
 
-		$this->assertFalse($acl->getReader()->isAllowed('bar'));
+		$this->assertFalse($acl->isAllowed('bar'));
 	}
 
 	public function testDenyOverridesAllow()
@@ -42,7 +40,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$acl->deny('foo');
 		$acl->allow('foo');
 
-		$this->assertFalse($acl->getReader()->isAllowed('foo'));
+		$this->assertFalse($acl->isAllowed('foo'));
 	}
 
 	public function testReaderCanBeSerializedWithoutLosingStuff()
@@ -53,7 +51,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$reader  = $acl->getReader();
 		$reader2 = unserialize(serialize($reader));
 
-		$this->assertEquals($reader2, $reader);
+		$this->assertEquals($reader, $reader2);
 	}
 
 	/**
@@ -64,7 +62,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo');
 
-		$acl->getReader()->isAllowed('foo', 123);
+		$acl->isAllowed('foo', 123);
 	}
 
 	/**
@@ -125,11 +123,10 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo', array('scope' => true));
 		$acl->allow('bar', array('scope' => false));
 
-		$reader = $acl->getReader();
-		$this->assertTrue($reader->isAllowed('foo', array('scope' => true)));
-		$this->assertFalse($reader->isAllowed('foo', array('scope' => false)));
-		$this->assertFalse($reader->isAllowed('bar', array('scope' => true)));
-		$this->assertTrue($reader->isAllowed('bar', array('scope' => false)));
+		$this->assertTrue($acl->isAllowed('foo', array('scope' => true)));
+		$this->assertFalse($acl->isAllowed('foo', array('scope' => false)));
+		$this->assertFalse($acl->isAllowed('bar', array('scope' => true)));
+		$this->assertTrue($acl->isAllowed('bar', array('scope' => false)));
 	}
 
 	public function testAclAcceptsFloatScopeValues()
@@ -148,25 +145,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo', array('scope' => 1 / 3));
 		$acl->allow('bar', array('scope' => 0.5));
 
-		$reader = $acl->getReader();
-		$this->assertTrue($reader->isAllowed('foo', array('scope' => 1 / 3)));
-		$this->assertTrue($reader->isAllowed('bar', array('scope' => 0.5)));
-		$this->assertFalse($reader->isAllowed('bar', array('scope' => 0)));
-		$this->assertFalse($reader->isAllowed('bar', array('scope' => 1)));
+		$this->assertTrue($acl->isAllowed('foo', array('scope' => 1 / 3)));
+		$this->assertTrue($acl->isAllowed('bar', array('scope' => 0.5)));
+		$this->assertFalse($acl->isAllowed('bar', array('scope' => 0)));
+		$this->assertFalse($acl->isAllowed('bar', array('scope' => 1)));
 	}
 
-	public function testAclCanBeQueriedDirectly()
-	{
-		$acl = new Acl;
-		$acl->allow('foo');
-
-		$this->assertTrue($acl->isAllowed('foo'));
-	}
-
-	/**
-	* @depends testAclCanBeQueriedDirectly
-	*/
-	public function testAclCanBeQueriedDirectlyWithoutReturningStaleResultsAfterAllow()
+	public function testAclDoesNotReturnStaleResultsAfterAllow()
 	{
 		$acl = new Acl;
 		$this->assertFalse($acl->isAllowed('foo'));
@@ -174,25 +159,12 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($acl->isAllowed('foo'));
 	}
 
-	/**
-	* @depends testAclCanBeQueriedDirectly
-	*/
-	public function testAclCanBeQueriedDirectlyWithoutReturningStaleResultsAfterAddRule()
+	public function testAclDoesNotReturnStaleResultsAfterAddRule()
 	{
 		$acl = new Acl;
 		$acl->allow('foo');
 		$this->assertTrue($acl->isAllowed('foo'));
 		$acl->addRule('foo', 'require', 'bar');
 		$this->assertFalse($acl->isAllowed('foo'));
-	}
-
-	/**
-	* @depends testAclCanBeQueriedDirectly
-	*/
-	public function testAclCanBeQueriedUsingWildcard()
-	{
-		$acl = new Acl;
-		$acl->allow('foo', array('scope' => 1));
-		$this->assertTrue($acl->isAllowed('foo', array('scope' => $acl->wildcard())));
 	}
 }

@@ -21,12 +21,12 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(
 			array('type' => 'some', 'which' => array('baz', 'quux')),
-			$acl->getReader()->getPredicate('foo', 'bar', $forum)
+			$acl->getPredicate('foo', 'bar', $forum)
 		);
 
 		$this->assertEquals(
 			array('type' => 'some', 'which' => array('baz', 'quux')),
-			$acl->getReader()->getPredicate('foo', 'bar', array('forum' => $forum->id))
+			$acl->getPredicate('foo', 'bar', array('forum' => $forum->id))
 		);
 	}
 }
@@ -74,6 +74,6 @@ class MyUser
 	public function can($perm, $scope = null)
 	{
 		// in a real application, the reader should be cached for performance
-		return $this->acl->getReader()->isAllowed($perm, $scope);
+		return $this->acl()->isAllowed($perm, $scope);
 	}
 }
