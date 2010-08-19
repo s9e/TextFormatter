@@ -9,8 +9,12 @@ namespace s9e\Toolkit\Acl;
 
 /**
 * Not cryptographically strong but random enough to avoid false positives
+* @codeCoverageIgnore
 */
-define('ANY', md5(mt_rand()));
+if (!defined('ANY'))
+{
+	define('ANY', md5(mt_rand()));
+}
 
 class Reader
 {
@@ -28,12 +32,12 @@ class Reader
 
 	public function isAllowed($perm, $scope = null)
 	{
-		$n = $this->getBitNumber($perm, $scope);
-
-		if ($n === false)
+		if (!isset($this->config[$perm]))
 		{
 			return false;
 		}
+
+		$n = $this->getBitNumber($perm, $scope);
 
 		return (bool) (ord($this->config[$perm]['mask'][$n >> 3]) & (1 << (7 - ($n & 7))));
 	}
@@ -116,11 +120,6 @@ class Reader
 
 	protected function getBitNumber($perm, &$scope)
 	{
-		if (!isset($this->config[$perm]))
-		{
-			return false;
-		}
-
 		$space = $this->config[$perm];
 		$n     = $space['perms'][$perm];
 
@@ -166,7 +165,7 @@ class Reader
 			}
 			else
 			{
-				throw new \InvalidArgumentException('$scope is expected to be an array or ' . __NAMESPACE__ . '\\ANY');
+				throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->any()');
 			}
 		}
 

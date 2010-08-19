@@ -8,6 +8,15 @@
 namespace s9e\Toolkit\Acl;
 
 /**
+* Not cryptographically strong but random enough to avoid false positives
+* @codeCoverageIgnore
+*/
+if (!defined('ANY'))
+{
+	define('ANY', md5(mt_rand()));
+}
+
+/**
 * This class is not meant to be as feature-rich as the default reader. Instead, it provides support
 * for querying an ACL stored in XML form.
 */
@@ -34,29 +43,64 @@ class XMLReader
 	}
 
 	/**
+	* @return string
+	*/
+	public function any()
+	{
+		return ANY;
+	}
+
+	/**
 	* @return bool
 	*/
-	public function isAllowed($perm, array $scope = array())
+	public function isAllowed($perm, $scope = array())
 	{
 		return $this->xpath->evaluate("'1'=" . self::buildXPath($this->rootPath, $perm, $scope));
 	}
 
 	/**
-	* Build the XPath needed to retrieve the character ('0' or '1') representing given perm/scope
+	* Build the XPath needed to retrieve the character ('0' or '1') that represents given setting
 	*
 	* @param  string $rootPath XPath to the root node
 	* @param  string $perm
-	* @param  array  $scope
+	* @param  mixed  $scope
 	* @return string
 	*/
-	static public function buildXPath($rootPath, $perm, array $scope = array())
+	static public function buildXPath($rootPath, $perm, $scope = array())
 	{
 		$nodePath = $rootPath . '/space[@' . $perm . ']';
 		$xpath    = 'substring(' . $nodePath . ',1';
 
-		foreach ($scope as $scopeDim => $scopeVal)
+		if ($scope instanceof Resource)
 		{
-			$xpath .= '+concat("0",' . $nodePath . '/scopes/' . $scopeDim . '/@_' . $scopeVal . ')';
+			$scope = $scope->getAclReaderScope();
+		}
+
+		if ($scope === ANY)
+		{
+			$xpath .= '+sum(' . $nodePath . '/any/@*)';
+		}
+		elseif (is_array($scope))
+		{
+			foreach ($scope as $scopeDim => $scopeVal)
+			{
+				$xpath .= "+concat('0'," . $nodePath . '/';
+
+				if ($scopeVal === ANY)
+				{
+					$xpath .= 'any/@' . $scopeDim;
+				}
+				else
+				{
+					$xpath .= 'scopes/' . $scopeDim . '/@_' . $scopeVal;
+				}
+
+				$xpath .= ')';
+			}
+		}
+		else
+		{
+			throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->any()');
 		}
 
 		$xpath .= ',1)';
