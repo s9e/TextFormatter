@@ -132,6 +132,7 @@ class Topic implements Resource
 			'topic.locked'    => $this->locked
 		);
 
+		// Using composition, access control can be based on the forum it's been posted to
 		return $topicScope + $this->forum->getAclReaderScope();
 	}
 }
@@ -164,6 +165,8 @@ class Post implements Resource
 			'post.locked'    => $this->locked
 		);
 
+		// Using composition, access control can be based on the topic (and therefore, the forum)
+		// it's been posted to
 		return $postScope + $this->topic->getAclReaderScope();
 	}
 }
@@ -180,6 +183,7 @@ class User
 
 	public function acl()
 	{
+		// We use lazy initialization for performance
 		if (!isset($this->acl))
 		{
 			$this->acl = new Acl;
@@ -190,7 +194,7 @@ class User
 
 	public function can($perm, $scope = null)
 	{
-		// in a real application, the reader should be cached for performance
-		return $this->acl->getReader()->isAllowed($perm, $scope);
+		// in a real application, we would cache the reader should for performance
+		return $this->acl()->isAllowed($perm, $scope);
 	}
 }
