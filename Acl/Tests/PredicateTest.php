@@ -143,7 +143,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testPredicateWithLocalAnyScope()
+	public function testPredicateWithLocalWildcardScope()
 	{
 		$acl = new Acl;
 		$acl->allow('perm', array('x' => 1, 'y' => 4));
@@ -155,7 +155,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 
 		$reader  = $acl->getReader();
 
-		$actual   = $reader->getPredicate('perm', 'x', array('y' => $reader->any()));
+		$actual   = $reader->getPredicate('perm', 'x', array('y' => $reader->wildcard()));
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(1, 2, 3)
@@ -163,7 +163,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $actual);
 
-		$actual   = $reader->getPredicate('perm', 'y', array('x' => $reader->any()));
+		$actual   = $reader->getPredicate('perm', 'y', array('x' => $reader->wildcard()));
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(4, 5)
@@ -172,7 +172,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testPredicateWithGlobalAnyScope()
+	public function testPredicateWithGlobalWildcardScope()
 	{
 		$acl = new Acl;
 		$acl->allow('perm', array('x' => 1, 'y' => 4));
@@ -184,7 +184,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 
 		$reader  = $acl->getReader();
 
-		$actual   = $reader->getPredicate('perm', 'x', $reader->any());
+		$actual   = $reader->getPredicate('perm', 'x', $reader->wildcard());
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(1, 2, 3)
@@ -192,7 +192,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $actual);
 
-		$actual   = $reader->getPredicate('perm', 'y', $reader->any());
+		$actual   = $reader->getPredicate('perm', 'y', $reader->wildcard());
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(4, 5)
@@ -243,7 +243,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @expectedException InvalidArgumentException
 	*/
-	public function testPredicateWithNonArrayNotAnyScopeThrowsAnException()
+	public function testPredicateWithNonArrayNotWildcardScopeThrowsAnException()
 	{
 		$acl = new Acl;
 		$acl->allow('read', array('forum_id' => 4));

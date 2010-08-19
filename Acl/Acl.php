@@ -89,9 +89,9 @@ class Acl
 		return $this->getReader()->getPredicate($perm, $dim, $scope);
 	}
 
-	public function any()
+	public function wildcard()
 	{
-		return $this->getReader()->any();
+		return $this->getReader()->wildcard();
 	}
 
 	protected function add($value, $perm, $scope)
@@ -195,7 +195,7 @@ class Acl
 		* settings were added. It doesn't cost much and in some cases it might help detect whether
 		* new settings have actually changed the ACL.
 		*
-		* Also sort the dimensions, this is necessary for the "any" bit loop
+		* Also sort the dimensions, this is necessary for the "wildcard" bit loop
 		*/
 		ksort($usedScopes);
 		foreach ($usedScopes as $dim => &$scopeVals)
@@ -727,7 +727,7 @@ class Acl
 			}
 
 			/**
-			* Prepare to add the "any" bits
+			* Prepare to add the "wildcard" bits
 			*/
 			$mask = '';
 			foreach ($perms as $perm => $settings)
@@ -745,7 +745,7 @@ class Acl
 				$repeat     = 1 + count($scopeVals);
 				$chunkLen  *= $repeat;
 
-				$space['any'][$dim] = $chunkLen;
+				$space['wildcard'][$dim] = $chunkLen;
 
 				$i = 0;
 				foreach ($scopeVals as $scopeVal)
@@ -851,10 +851,10 @@ class Acl
 					$xml->endElement();
 				}
 
-				if (!empty($space['any']))
+				if (!empty($space['wildcard']))
 				{
-					$xml->startElement('any');
-					foreach ($space['any'] as $scopeDim => $pos)
+					$xml->startElement('wildcard');
+					foreach ($space['wildcard'] as $scopeDim => $pos)
 					{
 						$xml->writeAttribute($scopeDim, $pos);
 					}

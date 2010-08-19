@@ -33,16 +33,16 @@ class XMLTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($this->reader->isAllowed('zz', array('bar' => 123, 'baz' => 'xyz')));
 	}
 
-	public function testXMLReaderSupportsAnyAsScopeValue()
+	public function testXMLReaderSupportsWildcardAsScopeValue()
 	{
-		$this->assertTrue($this->reader->isAllowed('foo', array('bar' => $this->reader->any())));
-		$this->assertFalse($this->reader->isAllowed('foo', array('baz' => $this->reader->any())));
-		$this->assertTrue($this->reader->isAllowed('foo', array('bar' => $this->reader->any(), 'baz' => $this->reader->any())));
+		$this->assertTrue($this->reader->isAllowed('foo', array('bar' => $this->reader->wildcard())));
+		$this->assertFalse($this->reader->isAllowed('foo', array('baz' => $this->reader->wildcard())));
+		$this->assertTrue($this->reader->isAllowed('foo', array('bar' => $this->reader->wildcard(), 'baz' => $this->reader->wildcard())));
 	}
 
-	public function testXMLReaderSupportsAnyAsScope()
+	public function testXMLReaderSupportsWildcardAsScope()
 	{
-		$this->assertTrue($this->reader->isAllowed('foo', $this->reader->any()));
+		$this->assertTrue($this->reader->isAllowed('foo', $this->reader->wildcard()));
 	}
 
 	public function testXMLReaderSupportsResourcesAsScope()

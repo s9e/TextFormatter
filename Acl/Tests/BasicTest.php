@@ -189,10 +189,10 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @depends testAclCanBeQueriedDirectly
 	*/
-	public function testAclCanBeQueriedUsingAny()
+	public function testAclCanBeQueriedUsingWildcard()
 	{
 		$acl = new Acl;
 		$acl->allow('foo', array('scope' => 1));
-		$this->assertTrue($acl->isAllowed('foo', array('scope' => $acl->any())));
+		$this->assertTrue($acl->isAllowed('foo', array('scope' => $acl->wildcard())));
 	}
 }

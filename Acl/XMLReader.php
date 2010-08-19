@@ -11,9 +11,9 @@ namespace s9e\Toolkit\Acl;
 * Not cryptographically strong but random enough to avoid false positives
 * @codeCoverageIgnore
 */
-if (!defined('ANY'))
+if (!defined('WILDCARD'))
 {
-	define('ANY', md5(mt_rand()));
+	define('WILDCARD', md5(mt_rand()));
 }
 
 /**
@@ -45,9 +45,9 @@ class XMLReader
 	/**
 	* @return string
 	*/
-	public function any()
+	public function wildcard()
 	{
-		return ANY;
+		return WILDCARD;
 	}
 
 	/**
@@ -76,9 +76,9 @@ class XMLReader
 			$scope = $scope->getAclReaderScope();
 		}
 
-		if ($scope === ANY)
+		if ($scope === WILDCARD)
 		{
-			$xpath .= '+sum(' . $nodePath . '/any/@*)';
+			$xpath .= '+sum(' . $nodePath . '/wildcard/@*)';
 		}
 		elseif (is_array($scope))
 		{
@@ -86,9 +86,9 @@ class XMLReader
 			{
 				$xpath .= "+concat('0'," . $nodePath . '/';
 
-				if ($scopeVal === ANY)
+				if ($scopeVal === WILDCARD)
 				{
-					$xpath .= 'any/@' . $scopeDim;
+					$xpath .= 'wildcard/@' . $scopeDim;
 				}
 				else
 				{
@@ -100,7 +100,7 @@ class XMLReader
 		}
 		else
 		{
-			throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->any()');
+			throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->wildcard()');
 		}
 
 		$xpath .= ',1)';

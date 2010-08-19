@@ -51,43 +51,43 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($reader->isAllowed('foo', array('bar' => 456, 'baz' => 'xyz')));
 	}
 
-	public function testGlobalAnyOn2DAllow()
+	public function testGlobalWildcardOn2DAllow()
 	{
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
 		$reader = $acl->getReader();
 
-		$this->assertTrue($reader->isAllowed('foo', $reader->any()));
+		$this->assertTrue($reader->isAllowed('foo', $reader->wildcard()));
 	}
 
-	public function test2DAnyOn2DAllow()
+	public function test2DWildcardOn2DAllow()
 	{
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
 		$reader = $acl->getReader();
 
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => $reader->any(), 'baz' => 'xyz')));
-		$this->assertTrue($reader->isAllowed('foo', array('bar' => 123, 'baz' => $reader->any())));
+		$this->assertTrue($reader->isAllowed('foo', array('bar' => $reader->wildcard(), 'baz' => 'xyz')));
+		$this->assertTrue($reader->isAllowed('foo', array('bar' => 123, 'baz' => $reader->wildcard())));
 	}
 
-	public function test1DAnyOn2DAllow()
+	public function test1DWildcardOn2DAllow()
 	{
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
 		$reader = $acl->getReader();
 
-		$this->assertFalse($reader->isAllowed('foo', array('bar' => $reader->any())));
-		$this->assertFalse($reader->isAllowed('foo', array('baz' => $reader->any())));
+		$this->assertFalse($reader->isAllowed('foo', array('bar' => $reader->wildcard())));
+		$this->assertFalse($reader->isAllowed('foo', array('baz' => $reader->wildcard())));
 	}
 
 	/**
-	* Regression test for a bug where the "any" bits are generated in the wrong order because
+	* Regression test for a bug where the "wildcard" bits are generated in the wrong order because
 	* dimensions are not in alphabetical order
 	*/
-	public function testAnyOn3DAllow()
+	public function testWildcardOn3DAllow()
 	{
 		$acl = new Acl;
 		$acl->allow('bbcode_use', array(
@@ -111,18 +111,18 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 
 		$reader = $acl->getReader();
 
-		$this->assertTrue($reader->isAllowed('bbcode_use', $reader->any()));
+		$this->assertTrue($reader->isAllowed('bbcode_use', $reader->wildcard()));
 		$this->assertTrue($reader->isAllowed('bbcode_use', array(
 			'in'        => 'sig',
-			'bbcode_id' => $reader->any()
+			'bbcode_id' => $reader->wildcard()
 		)));
 		$this->assertTrue($reader->isAllowed('bbcode_use', array(
 			'in'       => 'forum',
-			'forum_id' => $reader->any()
+			'forum_id' => $reader->wildcard()
 		)));
 	}
 
-	public function testAnyOnUnknownScopeDefaultsToGlobal()
+	public function testWildcardOnUnknownScopeDefaultsToGlobal()
 	{
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
@@ -130,7 +130,7 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 
 		$reader = $acl->getReader();
 
-		$this->assertFalse($reader->isAllowed('foo', array('quux' => $reader->any())));
-		$this->assertTrue($reader->isAllowed('bar', array('quux' => $reader->any())));
+		$this->assertFalse($reader->isAllowed('foo', array('quux' => $reader->wildcard())));
+		$this->assertTrue($reader->isAllowed('bar', array('quux' => $reader->wildcard())));
 	}
 }

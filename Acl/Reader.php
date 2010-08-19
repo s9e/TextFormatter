@@ -11,9 +11,9 @@ namespace s9e\Toolkit\Acl;
 * Not cryptographically strong but random enough to avoid false positives
 * @codeCoverageIgnore
 */
-if (!defined('ANY'))
+if (!defined('WILDCARD'))
 {
-	define('ANY', md5(mt_rand()));
+	define('WILDCARD', md5(mt_rand()));
 }
 
 class Reader
@@ -25,9 +25,9 @@ class Reader
 		$this->config = $config;
 	}
 
-	public function any()
+	public function wildcard()
 	{
-		return ANY;
+		return WILDCARD;
 	}
 
 	public function isAllowed($perm, $scope = null)
@@ -51,9 +51,9 @@ class Reader
 
 		$space  = $this->config[$perm];
 
-		if ($scope === ANY)
+		if ($scope === WILDCARD)
 		{
-			$scope = array_fill_keys(array_keys($space['any']), ANY);
+			$scope = array_fill_keys(array_keys($space['wildcard']), WILDCARD);
 			unset($scope[$dim]);
 
 			$global = $this->isAllowed($perm);
@@ -143,11 +143,11 @@ class Reader
 						$scopeVal = (string) $scopeVal;
 					}
 
-					if ($scopeVal === ANY)
+					if ($scopeVal === WILDCARD)
 					{
-						if (isset($space['any'][$scopeDim]))
+						if (isset($space['wildcard'][$scopeDim]))
 						{
-							$n += $space['any'][$scopeDim];
+							$n += $space['wildcard'][$scopeDim];
 						}
 					}
 					elseif (isset($space['scopes'][$scopeDim][$scopeVal]))
@@ -156,16 +156,16 @@ class Reader
 					}
 				}
 			}
-			elseif ($scope === ANY)
+			elseif ($scope === WILDCARD)
 			{
-				if (isset($space['any']))
+				if (isset($space['wildcard']))
 				{
-					$n += array_sum($space['any']);
+					$n += array_sum($space['wildcard']);
 				}
 			}
 			else
 			{
-				throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->any()');
+				throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->wildcard()');
 			}
 		}
 

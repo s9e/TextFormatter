@@ -52,8 +52,8 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		var_dump($acl->isAllowed('read', array('category' => "1"))); // bool(true)
 		var_dump($acl->isAllowed('read', array('category' => 3)));   // bool(false)
 
-		var_dump($acl->isAllowed('read', $acl->any()));                      // bool(true)
-		var_dump($acl->isAllowed('read', array('category' => $acl->any()))); // bool(true)
+		var_dump($acl->isAllowed('read', $acl->wildcard()));                      // bool(true)
+		var_dump($acl->isAllowed('read', array('category' => $acl->wildcard()))); // bool(true)
 		//======================================================================
 
 		$this->assertThatExampleIsCorrect(__METHOD__);
