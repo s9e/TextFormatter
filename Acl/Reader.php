@@ -132,6 +132,12 @@ class Reader
 
 			if (is_array($scope))
 			{
+				if (isset($scope[WILDCARD]))
+				{
+					$scope += array_fill_keys(array_keys($space['wildcard']), $scope[WILDCARD]);
+					unset($scope[WILDCARD]);
+				}
+
 				foreach ($scope as $scopeDim => $scopeVal)
 				{
 					if (is_float($scopeVal))

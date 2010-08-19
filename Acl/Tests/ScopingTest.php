@@ -133,4 +133,35 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($reader->isAllowed('foo', array('quux' => $reader->wildcard())));
 		$this->assertTrue($reader->isAllowed('bar', array('quux' => $reader->wildcard())));
 	}
+
+	public function testWildcardUsedAsAScopeKeyWithANormalScopeValue()
+	{
+		$acl = new Acl;
+		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
+
+		$this->assertTrue($acl->isAllowed('foo', array(
+			'bar' => 123,
+			$acl->wildcard() => 'xyz'
+		)));
+	}
+
+	public function testWildcardUsedAsAScopeKeyWithAWildcardScopeValue()
+	{
+		$acl = new Acl;
+		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
+
+		$this->assertTrue($acl->isAllowed('foo', array(
+			'bar' => 123,
+			$acl->wildcard() => $acl->wildcard()
+		)));
+
+		$this->assertFalse($acl->isAllowed('foo', array(
+			'bar' => 123
+		)));
+
+		$this->assertFalse($acl->isAllowed('foo', array(
+			'bar' => 456,
+			$acl->wildcard() => $acl->wildcard()
+		)));
+	}
 }
