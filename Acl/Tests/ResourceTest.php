@@ -71,7 +71,7 @@ class MyUser
 		return $this->acl;
 	}
 
-	public function can($perm, $scope = null)
+	public function can($perm, $scope = array())
 	{
 		// in a real application, the reader should be cached for performance
 		return $this->acl()->isAllowed($perm, $scope);

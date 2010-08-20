@@ -77,10 +77,10 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @expectedException \InvalidArgumentException
 	*/
-	public function testAclRejectsNonScalarScopeValues()
+	public function testAclThrowsAnExceptionOnInvalidScopeValues()
 	{
 		$acl = new Acl;
-		$acl->allow('foo', array('scope' => new \stdClass));
+		$acl->allow('foo', array('scope' => null));
 	}
 
 	public function testAclAllowIsChainable()

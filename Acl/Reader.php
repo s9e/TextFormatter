@@ -30,7 +30,7 @@ class Reader
 		return WILDCARD;
 	}
 
-	public function isAllowed($perm, $scope = null)
+	public function isAllowed($perm, $scope = array())
 	{
 		if (!isset($this->config[$perm]))
 		{
@@ -42,7 +42,7 @@ class Reader
 		return (bool) (ord($this->config[$perm]['mask'][$n >> 3]) & (1 << (7 - ($n & 7))));
 	}
 
-	public function getPredicate($perm, $dim, $scope = null)
+	public function getPredicate($perm, $dim, $scope = array())
 	{
 		if (!isset($this->config[$perm]))
 		{
@@ -123,56 +123,56 @@ class Reader
 		$space = $this->config[$perm];
 		$n     = $space['perms'][$perm];
 
-		if (isset($scope))
+		if ($scope instanceof Resource)
 		{
-			if ($scope instanceof Resource)
+			$scope = $scope->getAclReaderScope();
+		}
+
+		if (is_array($scope))
+		{
+			if (isset($scope[WILDCARD]))
 			{
-				$scope = $scope->getAclReaderScope();
+				/**
+				* Wildcard used as a key
+				*/
+				$scope += array_fill_keys(array_keys($space['wildcard']), $scope[WILDCARD]);
+				unset($scope[WILDCARD]);
 			}
 
-			if (is_array($scope))
+			foreach ($scope as $scopeDim => $scopeVal)
 			{
-				if (isset($scope[WILDCARD]))
+				if (is_float($scopeVal))
 				{
-					$scope += array_fill_keys(array_keys($space['wildcard']), $scope[WILDCARD]);
-					unset($scope[WILDCARD]);
+					/**
+					* Floats need to be converted to strings. Booleans should be fine as they
+					* are automatically converted to integers when used as array keys
+					*/
+					$scopeVal = (string) $scopeVal;
 				}
 
-				foreach ($scope as $scopeDim => $scopeVal)
+				if (isset($space['scopes'][$scopeDim][$scopeVal]))
 				{
-					if (is_float($scopeVal))
+					$n += $space['scopes'][$scopeDim][$scopeVal];
+				}
+				elseif ($scopeVal === WILDCARD)
+				{
+					if (isset($space['wildcard'][$scopeDim]))
 					{
-						/**
-						* Floats need to be converted to strings. Booleans should be fine as they
-						* are automatically converted to integers when used as array keys
-						*/
-						$scopeVal = (string) $scopeVal;
-					}
-
-					if ($scopeVal === WILDCARD)
-					{
-						if (isset($space['wildcard'][$scopeDim]))
-						{
-							$n += $space['wildcard'][$scopeDim];
-						}
-					}
-					elseif (isset($space['scopes'][$scopeDim][$scopeVal]))
-					{
-						$n += $space['scopes'][$scopeDim][$scopeVal];
+						$n += $space['wildcard'][$scopeDim];
 					}
 				}
 			}
-			elseif ($scope === WILDCARD)
+		}
+		elseif ($scope === WILDCARD)
+		{
+			if (isset($space['wildcard']))
 			{
-				if (isset($space['wildcard']))
-				{
-					$n += array_sum($space['wildcard']);
-				}
+				$n += array_sum($space['wildcard']);
 			}
-			else
-			{
-				throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->wildcard()');
-			}
+		}
+		else
+		{
+			throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->wildcard(), ' . gettype($scope) . ' given');
 		}
 
 		return $n;

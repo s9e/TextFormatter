@@ -23,12 +23,12 @@ class Acl
 	const ALLOW = 1;
 	const DENY  = 0;
 
-	public function allow($perm, $scope = null)
+	public function allow($perm, $scope = array())
 	{
 		return $this->add(self::ALLOW, $perm, $scope);
 	}
 
-	public function deny($perm, $scope = null)
+	public function deny($perm, $scope = array())
 	{
 		return $this->add(self::DENY, $perm, $scope);
 	}
@@ -79,12 +79,12 @@ class Acl
 		return $this;
 	}
 
-	public function isAllowed($perm, $scope = null)
+	public function isAllowed($perm, $scope = array())
 	{
 		return $this->getReader()->isAllowed($perm, $scope);
 	}
 
-	public function getPredicate($perm, $dim, $scope = null)
+	public function getPredicate($perm, $dim, $scope = array())
 	{
 		return $this->getReader()->getPredicate($perm, $dim, $scope);
 	}
@@ -96,11 +96,7 @@ class Acl
 
 	protected function add($value, $perm, $scope)
 	{
-		if (!isset($scope))
-		{
-			$scope = array();
-		}
-		elseif ($scope instanceof Resource)
+		if ($scope instanceof Resource)
 		{
 			$scope = $scope->getAclBuilderScope();
 		}
@@ -142,7 +138,7 @@ class Acl
 		}
 		else
 		{
-			throw new \InvalidArgumentException('Scope must be an array or an object that implements ' . __NAMESPACE__ . '\\Resource');
+			throw new \InvalidArgumentException('Scope must be an array or an object that implements ' . __NAMESPACE__ . '\\Resource, ' . gettype($scope) . ' given');
 		}
 
 		$this->settings[] = array($perm, $value, $scope);
