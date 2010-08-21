@@ -5,10 +5,12 @@ namespace s9e\Toolkit\Acl\Tests;
 use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\Resource;
 use s9e\Toolkit\Acl\Role;
+use s9e\Toolkit\Acl\Wildcard;
 
 include_once __DIR__ . '/../Acl.php';
 include_once __DIR__ . '/../Resource.php';
 include_once __DIR__ . '/../Role.php';
+include_once __DIR__ . '/../Wildcard.php';
 
 class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,8 +54,8 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 		var_dump($acl->isAllowed('read', array('category' => "1"))); // bool(true)
 		var_dump($acl->isAllowed('read', array('category' => 3)));   // bool(false)
 
-		var_dump($acl->isAllowed('read', $acl->wildcard()));                      // bool(true)
-		var_dump($acl->isAllowed('read', array('category' => $acl->wildcard()))); // bool(true)
+		var_dump($acl->isAllowed('read', new Wildcard));                      // bool(true)
+		var_dump($acl->isAllowed('read', array('category' => new Wildcard))); // bool(true)
 		//======================================================================
 
 		$this->assertThatExampleIsCorrect(__METHOD__);

@@ -7,15 +7,6 @@
 */
 namespace s9e\Toolkit\Acl;
 
-/**
-* Not cryptographically strong but random enough to avoid false positives
-* @codeCoverageIgnore
-*/
-if (!defined('WILDCARD'))
-{
-	define('WILDCARD', md5(mt_rand()));
-}
-
 class Reader
 {
 	protected $config;
@@ -25,19 +16,14 @@ class Reader
 		$this->config = $config;
 	}
 
-	public function wildcard()
-	{
-		return WILDCARD;
-	}
-
-	public function isAllowed($perm, $scope = array())
+	public function isAllowed($perm, $scope = array(), $additionalScope = array())
 	{
 		if (!isset($this->config[$perm]))
 		{
 			return false;
 		}
 
-		$n = $this->getBitNumber($perm, $scope);
+		$n = $this->getBitNumber($perm, $scope, $additionalScope);
 
 		return (bool) (ord($this->config[$perm]['mask'][$n >> 3]) & (1 << (7 - ($n & 7))));
 	}
@@ -49,20 +35,20 @@ class Reader
 			return array('type' => 'none');
 		}
 
-		$space  = $this->config[$perm];
-
-		if ($scope === WILDCARD)
+		if ($scope instanceof Wildcard)
 		{
-			$scope = array_fill_keys(array_keys($space['wildcard']), WILDCARD);
+			$this->normalizeScope($perm, $scope);
 			unset($scope[$dim]);
 
 			$global = $this->isAllowed($perm);
 		}
 		else
 		{
+			$this->normalizeScope($perm, $scope);
 			$global = $this->isAllowed($perm, $scope);
 		}
 
+		$space= $this->config[$perm];
 		if (!isset($space['scopes'][$dim]))
 		{
 			// That scope doesn't exist, rely on global setting
@@ -118,28 +104,20 @@ class Reader
 		}
 	}
 
-	protected function getBitNumber($perm, &$scope)
+	protected function normalizeScope($perm, &$scope)
 	{
-		$space = $this->config[$perm];
-		$n     = $space['perms'][$perm];
-
 		if ($scope instanceof Resource)
 		{
 			$scope = $scope->getAclReaderScope();
 		}
 
-		if (is_array($scope))
+		if ($scope instanceof Wildcard)
 		{
-			if (isset($scope[WILDCARD]))
-			{
-				/**
-				* Wildcard used as a key
-				*/
-				$scope += array_fill_keys(array_keys($space['wildcard']), $scope[WILDCARD]);
-				unset($scope[WILDCARD]);
-			}
-
-			foreach ($scope as $scopeDim => $scopeVal)
+			$scope = array_fill_keys(array_keys($this->config[$perm]['wildcard']), $scope);
+		}
+		elseif (is_array($scope))
+		{
+			foreach ($scope as &$scopeVal)
 			{
 				if (is_float($scopeVal))
 				{
@@ -149,30 +127,34 @@ class Reader
 					*/
 					$scopeVal = (string) $scopeVal;
 				}
-
-				if (isset($space['scopes'][$scopeDim][$scopeVal]))
-				{
-					$n += $space['scopes'][$scopeDim][$scopeVal];
-				}
-				elseif ($scopeVal === WILDCARD)
-				{
-					if (isset($space['wildcard'][$scopeDim]))
-					{
-						$n += $space['wildcard'][$scopeDim];
-					}
-				}
-			}
-		}
-		elseif ($scope === WILDCARD)
-		{
-			if (isset($space['wildcard']))
-			{
-				$n += array_sum($space['wildcard']);
 			}
 		}
 		else
 		{
-			throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->wildcard(), ' . gettype($scope) . ' given');
+			throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or an instance of Wildcard, ' . gettype($scope) . ' given');
+		}
+	}
+
+	protected function getBitNumber($perm, $scope)
+	{
+		$space = $this->config[$perm];
+		$n     = $space['perms'][$perm];
+
+		$this->normalizeScope($perm, $scope);
+
+		foreach ($scope as $scopeDim => $scopeVal)
+		{
+			if ($scopeVal instanceof Wildcard)
+			{
+				if (isset($space['wildcard'][$scopeDim]))
+				{
+					$n += $space['wildcard'][$scopeDim];
+				}
+			}
+			elseif (isset($space['scopes'][$scopeDim][$scopeVal]))
+			{
+				$n += $space['scopes'][$scopeDim][$scopeVal];
+			}
 		}
 
 		return $n;

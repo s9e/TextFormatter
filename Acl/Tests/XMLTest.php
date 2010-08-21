@@ -4,9 +4,11 @@ namespace s9e\Toolkit\Acl\Tests;
 
 use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\Resource;
+use s9e\Toolkit\Acl\Wildcard;
 use s9e\Toolkit\Acl\XMLReader;
 
 include_once __DIR__ . '/../Acl.php';
+include_once __DIR__ . '/../Wildcard.php';
 include_once __DIR__ . '/../XMLReader.php';
 
 class XMLTest extends \PHPUnit_Framework_TestCase

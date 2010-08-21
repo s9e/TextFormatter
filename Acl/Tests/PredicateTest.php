@@ -4,8 +4,10 @@ namespace s9e\Toolkit\Acl\Tests;
 
 use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\Predicate;
+use s9e\Toolkit\Acl\Wildcard;
 
 include_once __DIR__ . '/../Acl.php';
+include_once __DIR__ . '/../Wildcard.php';
 
 class PredicateTest extends \PHPUnit_Framework_TestCase
 {
@@ -155,7 +157,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 
 		$reader  = $acl;
 
-		$actual   = $reader->getPredicate('perm', 'x', array('y' => $reader->wildcard()));
+		$actual   = $reader->getPredicate('perm', 'x', array('y' => new Wildcard));
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(1, 2, 3)
@@ -163,7 +165,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $actual);
 
-		$actual   = $reader->getPredicate('perm', 'y', array('x' => $reader->wildcard()));
+		$actual   = $reader->getPredicate('perm', 'y', array('x' => new Wildcard));
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(4, 5)
@@ -184,7 +186,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 
 		$reader  = $acl;
 
-		$actual   = $reader->getPredicate('perm', 'x', $reader->wildcard());
+		$actual   = $reader->getPredicate('perm', 'x', new Wildcard);
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(1, 2, 3)
@@ -192,7 +194,7 @@ class PredicateTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $actual);
 
-		$actual   = $reader->getPredicate('perm', 'y', $reader->wildcard());
+		$actual   = $reader->getPredicate('perm', 'y', new Wildcard);
 		$expected = array(
 			'type'  => 'some',
 			'which' => array(4, 5)

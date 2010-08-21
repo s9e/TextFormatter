@@ -123,11 +123,6 @@ class Acl
 		return $this->getReader()->getPredicate($perm, $dim, $scope);
 	}
 
-	public function wildcard()
-	{
-		return $this->getReader()->wildcard();
-	}
-
 	protected function unsetReader()
 	{
 		unset($this->reader);

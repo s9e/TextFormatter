@@ -3,8 +3,10 @@
 namespace s9e\Toolkit\Acl\Tests;
 
 use s9e\Toolkit\Acl\Acl;
+use s9e\Toolkit\Acl\Wildcard;
 
 include_once __DIR__ . '/../Acl.php';
+include_once __DIR__ . '/../Wildcard.php';
 
 class ScopingTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,7 +54,7 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$this->assertTrue($acl->isAllowed('foo', $acl->wildcard()));
+		$this->assertTrue($acl->isAllowed('foo', new Wildcard));
 	}
 
 	public function test2DWildcardOn2DAllow()
@@ -60,8 +62,8 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$this->assertTrue($acl->isAllowed('foo', array('bar' => $acl->wildcard(), 'baz' => 'xyz')));
-		$this->assertTrue($acl->isAllowed('foo', array('bar' => 123, 'baz' => $acl->wildcard())));
+		$this->assertTrue($acl->isAllowed('foo', array('bar' => new Wildcard, 'baz' => 'xyz')));
+		$this->assertTrue($acl->isAllowed('foo', array('bar' => 123, 'baz' => new Wildcard)));
 	}
 
 	public function test1DWildcardOn2DAllow()
@@ -69,8 +71,8 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl = new Acl;
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 
-		$this->assertFalse($acl->isAllowed('foo', array('bar' => $acl->wildcard())));
-		$this->assertFalse($acl->isAllowed('foo', array('baz' => $acl->wildcard())));
+		$this->assertFalse($acl->isAllowed('foo', array('bar' => new Wildcard)));
+		$this->assertFalse($acl->isAllowed('foo', array('baz' => new Wildcard)));
 	}
 
 	/**
@@ -99,14 +101,14 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 			'bbcode_id' => 'i'
 		));
 
-		$this->assertTrue($acl->isAllowed('bbcode_use', $acl->wildcard()));
+		$this->assertTrue($acl->isAllowed('bbcode_use', new Wildcard));
 		$this->assertTrue($acl->isAllowed('bbcode_use', array(
 			'in'        => 'sig',
-			'bbcode_id' => $acl->wildcard()
+			'bbcode_id' => new Wildcard
 		)));
 		$this->assertTrue($acl->isAllowed('bbcode_use', array(
 			'in'       => 'forum',
-			'forum_id' => $acl->wildcard()
+			'forum_id' => new Wildcard
 		)));
 	}
 
@@ -116,38 +118,7 @@ class ScopingTest extends \PHPUnit_Framework_TestCase
 		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
 		$acl->allow('bar');
 
-		$this->assertFalse($acl->isAllowed('foo', array('quux' => $acl->wildcard())));
-		$this->assertTrue($acl->isAllowed('bar', array('quux' => $acl->wildcard())));
-	}
-
-	public function testWildcardUsedAsAScopeKeyWithANormalScopeValue()
-	{
-		$acl = new Acl;
-		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
-
-		$this->assertTrue($acl->isAllowed('foo', array(
-			'bar' => 123,
-			$acl->wildcard() => 'xyz'
-		)));
-	}
-
-	public function testWildcardUsedAsAScopeKeyWithAWildcardScopeValue()
-	{
-		$acl = new Acl;
-		$acl->allow('foo', array('bar' => 123, 'baz' => 'xyz'));
-
-		$this->assertTrue($acl->isAllowed('foo', array(
-			'bar' => 123,
-			$acl->wildcard() => $acl->wildcard()
-		)));
-
-		$this->assertFalse($acl->isAllowed('foo', array(
-			'bar' => 123
-		)));
-
-		$this->assertFalse($acl->isAllowed('foo', array(
-			'bar' => 456,
-			$acl->wildcard() => $acl->wildcard()
-		)));
+		$this->assertFalse($acl->isAllowed('foo', array('quux' => new Wildcard)));
+		$this->assertTrue($acl->isAllowed('bar', array('quux' => new Wildcard)));
 	}
 }
