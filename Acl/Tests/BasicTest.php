@@ -104,7 +104,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	public function testAclImportIsChainable()
 	{
 		$acl = new Acl;
-		$this->assertSame($acl, $acl->import(new Acl));
+		$this->assertSame($acl, $acl->addParent(new Acl));
 	}
 
 	public function testAclAcceptsBooleanScopeValues()
@@ -166,5 +166,22 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($acl->isAllowed('foo'));
 		$acl->addRule('foo', 'require', 'bar');
 		$this->assertFalse($acl->isAllowed('foo'));
+	}
+
+	public function testChildrenAclAreInvalidated()
+	{
+		$parent = new Acl;
+		$parent->allow('foo');
+
+		$child = new Acl;
+		$child->addParent($parent);
+
+		$grandchild = new Acl;
+
+		$this->assertFalse($grandchild->isAllowed('foo'));
+		$grandchild->addParent($child);
+		$this->assertTrue($grandchild->isAllowed('foo'));
+		$parent->deny('foo');
+		$this->assertFalse($grandchild->isAllowed('foo'));
 	}
 }

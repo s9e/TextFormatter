@@ -109,7 +109,7 @@ class ManualExamplesTest extends \PHPUnit_Framework_TestCase
 
 		// now build a user's ACL
 		$acl = new Acl;
-		$acl->import($editor);
+		$acl->addParent($editor);
 
 		var_dump($acl->isAllowed('edit')); // bool(true)
 		//======================================================================

@@ -15,6 +15,10 @@ class Acl
 		'require' => array()
 	);
 
+	protected $parents = array();
+
+	protected $children = array();
+
 	/**
 	* @var Reader
 	*/
@@ -40,7 +44,7 @@ class Acl
 		*/
 		$this->rules[$rule][$perm][$foreignPerm] = $foreignPerm;
 
-		unset($this->reader);
+		$this->unsetReader();
 
 		return $this;
 	}
@@ -70,11 +74,35 @@ class Acl
 		return $this->build(true);
 	}
 
-	public function import(Acl $acl)
+	public function getSettings()
 	{
-		$this->settings = array_merge($this->settings, $acl->settings);
-		$this->rules    = array_merge_recursive($this->rules, $acl->rules);
-		unset($this->reader);
+		$combinedSettings = $this->settings;
+
+		foreach ($this->parents as $parent)
+		{
+			$combinedSettings = array_merge($combinedSettings, $parent->getSettings());
+		}
+
+		return $combinedSettings;
+	}
+
+	public function getRules()
+	{
+		$combinedRules = $this->rules;
+
+		foreach ($this->parents as $parent)
+		{
+			$combinedRules = array_merge_recursive($combinedRules, $parent->getRules());
+		}
+
+		return $combinedRules;
+	}
+
+	public function addParent(Acl $acl)
+	{
+		$this->parents[] = $acl;
+		$acl->children[] = $this;
+		$this->unsetReader();
 
 		return $this;
 	}
@@ -92,6 +120,16 @@ class Acl
 	public function wildcard()
 	{
 		return $this->getReader()->wildcard();
+	}
+
+	protected function unsetReader()
+	{
+		unset($this->reader);
+
+		foreach ($this->children as $child)
+		{
+			$child->unsetReader();
+		}
 	}
 
 	protected function add($value, $perm, $scope)
@@ -143,13 +181,23 @@ class Acl
 
 		$this->settings[] = array($perm, $value, $scope);
 
-		unset($this->reader);
+		$this->unsetReader();
 
 		return $this;
 	}
 
 	protected function build($asXml)
 	{
+		/**
+		* Holds this ACL's settings as well as its parents'
+		*/
+		$combinedSettings = $this->getSettings();
+
+		/**
+		* Holds this ACL's rulesas well as its parents'
+		*/
+		$combinedRules = $this->getRules();
+
 		/**
 		* Holds the whole access control list
 		*/
@@ -164,7 +212,8 @@ class Acl
 		* @var array Holds the list of scopes used in any permission
 		*/
 		$usedScopes = array();
-		foreach ($this->settings as $setting)
+
+		foreach ($combinedSettings as $setting)
 		{
 			list($perm, $value, $scope) = $setting;
 
@@ -209,7 +258,7 @@ class Acl
 		{
 			$loop = false;
 
-			foreach ($this->rules as $type => $rules)
+			foreach ($combinedRules as $type => $rules)
 			{
 				foreach ($rules as $perm => $foreignPerms)
 				{
@@ -261,8 +310,8 @@ class Acl
 		// This is the loop that builds the whole ACL
 		//======================================================================
 
-		$grant   = array_intersect_key($this->rules['grant'], $acl);
-		$require = array_intersect_key($this->rules['require'], $acl);
+		$grant   = array_intersect_key($combinedRules['grant'], $acl);
+		$require = array_intersect_key($combinedRules['require'], $acl);
 		do
 		{
 			//==================================================================

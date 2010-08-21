@@ -20,7 +20,7 @@ class RoleTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertFalse($user->isAllowed('administer'));
 
-		$user->import($admin);
+		$user->addParent($admin);
 
 		$this->assertTrue($user->isAllowed('administer'));
 		$this->assertTrue($user->isAllowed('supervise'));

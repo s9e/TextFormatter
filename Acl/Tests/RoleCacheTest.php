@@ -16,7 +16,7 @@ class RoleCacheTest extends \PHPUnit_Framework_TestCase
 	{
 		$acl = new Acl;
 		$this->assertFalse($acl->isAllowed('administer'));
-		$acl->import($this->roleCache->get('admin'));
+		$acl->addParent($this->roleCache->get('admin'));
 		$this->assertTrue($acl->isAllowed('administer'));
 	}
 
@@ -37,7 +37,7 @@ class RoleCacheTest extends \PHPUnit_Framework_TestCase
 
 		$acl = new Acl;
 		$this->assertFalse($acl->isAllowed('administer'));
-		$acl->import($this->roleCache->get('admin'));
+		$acl->addParent($this->roleCache->get('admin'));
 		$this->assertFalse($acl->isAllowed('administer'));
 	}
 
