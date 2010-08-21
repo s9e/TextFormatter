@@ -113,9 +113,9 @@ class Acl
 		return $this;
 	}
 
-	public function isAllowed($perm, $scope = array())
+	public function isAllowed($perm, $scope = array(), $additionalScope = array())
 	{
-		return $this->getReader()->isAllowed($perm, $scope);
+		return $this->getReader()->isAllowed($perm, $scope, $additionalScope);
 	}
 
 	public function getPredicate($perm, $dim, $scope = array())

@@ -23,7 +23,10 @@ class Reader
 			return false;
 		}
 
-		$n = $this->getBitNumber($perm, $scope, $additionalScope);
+		$this->normalizeScope($perm, $scope);
+		$this->normalizeScope($perm, $additionalScope);
+
+		$n = $this->getBitNumber($perm, $scope + $additionalScope);
 
 		return (bool) (ord($this->config[$perm]['mask'][$n >> 3]) & (1 << (7 - ($n & 7))));
 	}
@@ -45,6 +48,7 @@ class Reader
 		else
 		{
 			$this->normalizeScope($perm, $scope);
+
 			$global = $this->isAllowed($perm, $scope);
 		}
 
@@ -55,7 +59,7 @@ class Reader
 			return array('type' => ($global) ? 'all' : 'none');
 		}
 
-		if (is_array($scope) && isset($scope[$dim]))
+		if (isset($scope[$dim]))
 		{
 			throw new \InvalidArgumentException('$scope contains the same key we are looking for');
 		}
@@ -135,7 +139,7 @@ class Reader
 		}
 	}
 
-	protected function getBitNumber($perm, $scope)
+	protected function getBitNumber($perm, array $scope)
 	{
 		$space = $this->config[$perm];
 		$n     = $space['perms'][$perm];

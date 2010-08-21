@@ -3,8 +3,10 @@
 namespace s9e\Toolkit\Acl\Tests;
 
 use s9e\Toolkit\Acl\Acl;
+use s9e\Toolkit\Acl\Wildcard;
 
 include_once __DIR__ . '/../Acl.php';
+include_once __DIR__ . '/../Wildcard.php';
 
 class BasicTest extends \PHPUnit_Framework_TestCase
 {
@@ -183,5 +185,19 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($grandchild->isAllowed('foo'));
 		$parent->deny('foo');
 		$this->assertFalse($grandchild->isAllowed('foo'));
+	}
+
+	public function testAdditionalScopeIsAddedToScopeByReader()
+	{
+		$acl = new Acl;
+
+		// allow post #2 to be read from far (it's not like tests are supposed to make sense)
+		$acl->allow('read', array('post.id' => 2, 'from' => 'far'));
+
+		// this query asks "can post #2 be read from everywhere?"
+		$this->assertFalse($acl->isAllowed('read', array('post.id' => 2)));
+
+		// this query asks "can post #2 be read from anywhere?"
+		$this->assertTrue($acl->isAllowed('read', array('post.id' => 2), new Wildcard));
 	}
 }
