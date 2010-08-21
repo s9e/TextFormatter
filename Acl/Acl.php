@@ -74,25 +74,31 @@ class Acl
 		return $this->build(true);
 	}
 
-	public function getSettings()
+	public function getSettings($includeParents = true)
 	{
 		$combinedSettings = $this->settings;
 
-		foreach ($this->parents as $parent)
+		if ($includeParents)
 		{
-			$combinedSettings = array_merge($combinedSettings, $parent->getSettings());
+			foreach ($this->parents as $parent)
+			{
+				$combinedSettings = array_merge($combinedSettings, $parent->getSettings());
+			}
 		}
 
 		return $combinedSettings;
 	}
 
-	public function getRules()
+	public function getRules($includeParents = true)
 	{
 		$combinedRules = $this->rules;
 
-		foreach ($this->parents as $parent)
+		if ($includeParents)
 		{
-			$combinedRules = array_merge_recursive($combinedRules, $parent->getRules());
+			foreach ($this->parents as $parent)
+			{
+				$combinedRules = array_merge_recursive($combinedRules, $parent->getRules());
+			}
 		}
 
 		return $combinedRules;

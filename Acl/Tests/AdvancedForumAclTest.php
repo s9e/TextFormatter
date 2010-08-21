@@ -160,6 +160,7 @@ class Post implements Resource
 	public function getAclReaderScope()
 	{
 		$postScope = array(
+			'context'        => 'post',
 			'post.id'        => $this->id,
 			'post.author.id' => $this->author->id,
 			'post.locked'    => $this->locked
