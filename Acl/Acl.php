@@ -9,14 +9,27 @@ namespace s9e\Toolkit\Acl;
 
 class Acl
 {
+	/**
+	* @var array List of settings directly associated with this ACL 
+	*/
 	protected $settings = array();
+
+	/**
+	* @var array List of rules directly associated with this ACL 
+	*/
 	protected $rules = array(
 		'grant'   => array(),
 		'require' => array()
 	);
 
+	/**
+	* @var array List of instances of Acl that this ACL inherits from
+	*/
 	protected $parents = array();
 
+	/**
+	* @var array List of instances of Acl that inherit from this
+	*/
 	protected $children = array();
 
 	/**
@@ -27,16 +40,44 @@ class Acl
 	const ALLOW = 1;
 	const DENY  = 0;
 
+	/**
+	* Grant a permission in given scope
+	*
+	* This method is chainable.
+	*
+	* @param  string $perm  Permission name
+	* @param  array  $scope Permission scope
+	* @return Acl           $this
+	*/
 	public function allow($perm, $scope = array())
 	{
 		return $this->add(self::ALLOW, $perm, $scope);
 	}
 
+	/**
+	* Deny a permission in given scope
+	*
+	* This method is chainable.
+	*
+	* @param  string $perm  Permission name
+	* @param  array  $scope Permission scope
+	* @return Acl           $this
+	*/
 	public function deny($perm, $scope = array())
 	{
 		return $this->add(self::DENY, $perm, $scope);
 	}
 
+	/**
+	* Add a rule
+	*
+	* This method is chainable.
+	*
+	* @param  string $perm         Permission name
+	* @param  string $rule         Rule name: either "grant" or "require"
+	* @param  string $foreignPerm  Permission name
+	* @return Acl                  $this
+	*/
 	public function addRule($perm, $rule, $foreignPerm)
 	{
 		/**
