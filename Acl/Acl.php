@@ -331,9 +331,6 @@ class Acl
 		$bootstrap  = array();
 		$inherit    = array('a:0:{}' => array());
 
-		$hash   = crc32(serialize($acl));
-		$hashes = array($hash => 1);
-
 		foreach ($permDims as $perm => &$dims)
 		{
 			ksort($dims);
@@ -348,7 +345,7 @@ class Acl
 		}
 		unset($dims);
 
-		self::developAcl($acl, $combinedRules, $inherit);
+		self::resolveAcl($acl, $combinedRules, $inherit);
 
 		//======================================================================
 		// The ACL is ready, we prepare to reduce it
@@ -698,11 +695,22 @@ class Acl
 		return $permsPerSpace;
 	}
 
-	static protected function developAcl(array &$acl, array $rules, array $inherit)
+	/**
+	* Resolve inheritance/apply rules to an ACL
+	*
+	* @param  array &$acl
+	* @param  array $rules
+	* @param  array $inherit
+	* @return void
+	*/
+	static protected function resolveAcl(array &$acl, array $rules, array $inherit)
 	{
 		//======================================================================
 		// This is the loop that builds the whole ACL
 		//======================================================================
+
+		$hash    = crc32(serialize($acl));
+		$hashes  = array($hash => 1);
 
 		$grant   = array_intersect_key($rules['grant'], $acl);
 		$require = array_intersect_key($rules['require'], $acl);
