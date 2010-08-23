@@ -142,7 +142,7 @@ class Reader
 	protected function getBitNumber($perm, array $scope)
 	{
 		$space = $this->config[$perm];
-		$n     = $space['perms'][$perm];
+		$n     = (isset($space['perms'][$perm])) ? $space['perms'][$perm] : 0;
 
 		$this->normalizeScope($perm, $scope);
 

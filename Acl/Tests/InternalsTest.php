@@ -16,10 +16,7 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 
 		$config = $acl->getReaderConfig();
 
-		$this->assertSame(
-			$config['foo']['perms']['foo'],
-			$config['bar']['perms']['foo']
-		);
+		$this->assertSame($config['foo'], $config['bar']);
 	}
 
 	public function testIdenticalScopesAreOptimizedAway()
@@ -64,6 +61,28 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey(2, $config['foo']['scopes']['x']);
 		$this->assertArrayNotHasKey(1, $config['foo']['scopes']['y']);
 		$this->assertArrayHasKey(2, $config['foo']['scopes']['y']);
+	}
+
+	public function testGlobalPermsAtPositionZeroAreOptimizedAway()
+	{
+		$acl = new Acl;
+		$acl->allow('foo');
+
+		$config = $acl->getReaderConfig();
+
+		$this->assertTrue($acl->isAllowed('foo'));
+		$this->assertArrayNotHasKey('perms', $config['foo']);
+	}
+
+	public function testLocalPermsAtPositionZeroAreOptimizedAway()
+	{
+		$acl = new Acl;
+		$acl->allow('foo', array('x' => 1));
+
+		$config = $acl->getReaderConfig();
+
+		$this->assertTrue($acl->isAllowed('foo', array('x' => 1)));
+		$this->assertArrayNotHasKey('perms', $config['foo']);
 	}
 
 	public function testPermIsNotOptimizedAwayToAnotherSpaceIfItIsAloneInNewSpace()

@@ -967,6 +967,16 @@ class Acl
 				{
 					$ret[$perm] =& $space;
 				}
+
+				/**
+				* Remove perms that use position 0 from the list
+				*/
+				$space['perms'] = array_filter($space['perms']);
+
+				if (empty($space['perms']))
+				{
+					unset($space['perms']);
+				}
 			}
 			return $ret;
 		}
