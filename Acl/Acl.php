@@ -107,12 +107,12 @@ class Acl
 
 	public function getReaderConfig()
 	{
-		return $this->build(false);
+		return self::asArray($this->build());
 	}
 
 	public function getReaderXML()
 	{
-		return $this->build(true);
+		return self::asXML($this->build());
 	}
 
 	public function getSettings($includeParents = true)
@@ -228,7 +228,7 @@ class Acl
 		return $this;
 	}
 
-	protected function build($asXml)
+	protected function build()
 	{
 		/**
 		* Holds this ACL's settings as well as its parents'
@@ -908,78 +908,83 @@ class Acl
 			}
 		}
 
-		if ($asXml)
+		return $spaces;
+	}
+
+	static protected function asXML(array $spaces)
+	{
+		$xml = new \XMLWriter;
+		$xml->openMemory();
+		$xml->startElement('acl');
+
+		foreach ($spaces as $space)
 		{
-			$xml = new \XMLWriter;
-			$xml->openMemory();
-			$xml->startElement('acl');
+			$xml->startElement('space');
 
-			foreach ($spaces as $space)
+			foreach ($space['perms'] as $perm => $pos)
 			{
-				$xml->startElement('space');
+				$xml->writeAttribute($perm, $pos);
+			}
 
-				foreach ($space['perms'] as $perm => $pos)
+			if (!empty($space['scopes']))
+			{
+				$xml->startElement('scopes');
+				foreach ($space['scopes'] as $scopeDim => $scopeVals)
 				{
-					$xml->writeAttribute($perm, $pos);
-				}
-
-				if (!empty($space['scopes']))
-				{
-					$xml->startElement('scopes');
-					foreach ($space['scopes'] as $scopeDim => $scopeVals)
+					$xml->startElement($scopeDim);
+					foreach ($scopeVals as $scopeVal => $pos)
 					{
-						$xml->startElement($scopeDim);
-						foreach ($scopeVals as $scopeVal => $pos)
-						{
-							$xml->writeAttribute('_' . $scopeVal, $pos);
-						}
-						$xml->endElement();
+						$xml->writeAttribute('_' . $scopeVal, $pos);
 					}
 					$xml->endElement();
 				}
-
-				if (!empty($space['wildcard']))
-				{
-					$xml->startElement('wildcard');
-					foreach ($space['wildcard'] as $scopeDim => $pos)
-					{
-						$xml->writeAttribute($scopeDim, $pos);
-					}
-					$xml->endElement();
-				}
-
-				foreach (str_split($space['mask']) as $c)
-				{
-					$xml->text(substr('0000000' . decbin(ord($c)), -8));
-				}
-
 				$xml->endElement();
 			}
-			$xml->endDocument();
-			return trim($xml->outputMemory(true));
-		}
-		else
-		{
-			$ret = array();
-			foreach ($spaces as &$space)
+
+			if (!empty($space['wildcard']))
 			{
-				foreach ($space['perms'] as $perm => $pos)
+				$xml->startElement('wildcard');
+				foreach ($space['wildcard'] as $scopeDim => $pos)
 				{
-					$ret[$perm] =& $space;
+					$xml->writeAttribute($scopeDim, $pos);
 				}
-
-				/**
-				* Remove perms that use position 0 from the list
-				*/
-				$space['perms'] = array_filter($space['perms']);
-
-				if (empty($space['perms']))
-				{
-					unset($space['perms']);
-				}
+				$xml->endElement();
 			}
-			return $ret;
+
+			foreach (str_split($space['mask']) as $c)
+			{
+				$xml->text(substr('0000000' . decbin(ord($c)), -8));
+			}
+
+			$xml->endElement();
 		}
+		$xml->endDocument();
+
+		return trim($xml->outputMemory(true));
+	}
+
+	static protected function asArray(array $spaces)
+	{
+		$ret = array();
+		foreach ($spaces as &$space)
+		{
+			foreach ($space['perms'] as $perm => $pos)
+			{
+				$ret[$perm] =& $space;
+			}
+
+			/**
+			* Remove perms that use position 0 from the list
+			*/
+			$space['perms'] = array_filter($space['perms']);
+
+			if (empty($space['perms']))
+			{
+				unset($space['perms']);
+			}
+		}
+
+		return $ret;
 	}
 
 	static protected function unroll(array $dims, array $usedScopes, &$bootstrap, array &$inherit)
