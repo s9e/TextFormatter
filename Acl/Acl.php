@@ -107,12 +107,12 @@ class Acl
 
 	public function getReaderConfig()
 	{
-		return self::asArray($this->build());
+		return self::asArray($this->buildSpaces());
 	}
 
 	public function getReaderXML()
 	{
-		return self::asXML($this->build());
+		return self::asXML($this->buildSpaces());
 	}
 
 	public function getSettings($includeParents = true)
@@ -228,7 +228,7 @@ class Acl
 		return $this;
 	}
 
-	protected function build()
+	protected function buildSpaces()
 	{
 		/**
 		* Holds this ACL's settings as well as its parents'
@@ -348,179 +348,7 @@ class Acl
 		}
 		unset($dims);
 
-		//======================================================================
-		// This is the loop that builds the whole ACL
-		//======================================================================
-
-		$grant   = array_intersect_key($combinedRules['grant'], $acl);
-		$require = array_intersect_key($combinedRules['require'], $acl);
-		do
-		{
-			//==================================================================
-			// STEP 1: apply inheritance
-			//==================================================================
-
-			foreach ($acl as $perm => &$settings)
-			{
-				foreach ($settings as $scope => &$setting)
-				{
-					foreach ($inherit[$scope] as $inherit_scope)
-					{
-						if ($setting === self::DENY)
-						{
-							break;
-						}
-
-						/**
-						* NOTE: here, $setting is either null or self::ALLOW, and the inherited
-						*       setting is either self::ALLOW or self::DENY, both of which can
-						*       unconditionally overwrite the current setting
-						*/
-						if (isset($settings[$inherit_scope]))
-						{
-							$setting = $settings[$inherit_scope];
-						}
-					}
-				}
-			}
-			unset($settings, $setting);
-
-			//==================================================================
-			// STEP 2: apply "grant" rules
-			//==================================================================
-
-			$grantors = $grantees = array();
-
-			foreach ($grant as $perm => $foreignPerms)
-			{
-				foreach ($acl[$perm] as $scope => $setting)
-				{
-					if ($setting !== self::ALLOW)
-					{
-						continue;
-					}
-
-					foreach ($foreignPerms as $foreignPerm)
-					{
-						if (isset($acl[$foreignPerm][$scope])
-						 && !isset($grantees[$scope][$foreignPerm]))
-						{
-							/**
-							* The foreign perm is either self::ALLOW, in which case there's nothing
-							* to do, or self::DENY, which can't be overwritten anyway.
-							*
-							* We also check whether the foreign perm has been granted during this
-							* iteration of the main loop. If it was, we record all the grantors so
-							* that we only revoke the foreign perm if ALL of them get revoked.
-							*/
-							continue;
-						}
-
-						$acl[$foreignPerm][$scope] = self::ALLOW;
-
-						$grantors[$scope][$perm][$foreignPerm] = $foreignPerm;
-						$grantees[$scope][$foreignPerm][$perm] = $perm;
-					}
-				}
-			}
-
-			//==================================================================
-			// STEP 3: apply "require" rules
-			//==================================================================
-
-			foreach ($require as $perm => $foreignPerms)
-			{
-				foreach ($acl[$perm] as $scope => &$setting)
-				{
-					foreach ($foreignPerms as $foreignPerm)
-					{
-						if ($setting !== self::ALLOW)
-						{
-							break;
-						}
-
-						if (isset($acl[$foreignPerm][$scope]))
-						{
-							/**
-							* Here we copy the foreign setting regarless of whether it's self::ALLOW
-							* or self::DENY. This is because if the foreign setting is self::DENY,
-							* there is no way for this setting to ever be granted anyway, and the
-							* same goes for scopes that inherit from it.
-							*/
-							$setting = $acl[$foreignPerm][$scope];
-						}
-						else
-						{
-							$setting = null;
-							break;
-						}
-					}
-
-					if ($setting !== self::ALLOW
-					 && isset($grantors[$scope][$perm]))
-					{
-						/**
-						* That permission has been removed by a "require" rule
-						*
-						* Now, we are going to recursively remove permissions that were
-						* granted by (or because of) that permission. Eventually, those
-						* permissions will be granted back during the next iteration.
-						*/
-						$cancelGrantors = array($perm => $perm);
-
-						do
-						{
-							/**
-							* @var array Holds the list of foreign perms that have been granted by
-							*            each canceled perm
-							*/
-							$cancelGrantees = array_intersect_key(
-							                      $grantors[$scope],
-							                      $cancelGrantors
-							                   );
-							$cancelGrantors = array();
-
-							foreach ($cancelGrantees as $grantor => $_grantees)
-							{
-								foreach ($_grantees as $grantee)
-								{
-									/**
-									* Here we completely remove any trace of that grant
-									*/
-									unset(
-										$grantors[$scope][$grantor][$grantee],
-										$grantees[$scope][$grantee][$grantor]
-									);
-
-									if (empty($grantees[$scope][$grantee]))
-									{
-										/**
-										* That grantee has no valid grantors left
-										*/
-										$acl[$grantee][$scope] = null;
-										$cancelGrantors[$grantee] = $grantee;
-									}
-								}
-							}
-						}
-						while (!empty($cancelGrantors));
-					}
-				}
-				unset($setting);
-			}
-
-			//==================================================================
-			// FINAL STEP: check whether the ACL has changed and exit the loop accordingly
-			//==================================================================
-
-			$hash = crc32(serialize($acl));
-			if (isset($hashes[$hash]))
-			{
-				break;
-			}
-			$hashes[$hash] = 1;
-		}
-		while (1);
+		self::developAcl($acl, $combinedRules, $inherit);
 
 		//======================================================================
 		// The ACL is ready, we prepare to reduce it
@@ -1182,5 +1010,183 @@ class Acl
 		});
 
 		return $permsPerSpace;
+	}
+
+	static protected function developAcl(&$acl, array $rules, array $inherit)
+	{
+		//======================================================================
+		// This is the loop that builds the whole ACL
+		//======================================================================
+
+		$grant   = array_intersect_key($rules['grant'], $acl);
+		$require = array_intersect_key($rules['require'], $acl);
+
+		do
+		{
+			//==================================================================
+			// STEP 1: apply inheritance
+			//==================================================================
+
+			foreach ($acl as $perm => &$settings)
+			{
+				foreach ($settings as $scope => &$setting)
+				{
+					foreach ($inherit[$scope] as $inheritScope)
+					{
+						if ($setting === self::DENY)
+						{
+							break;
+						}
+
+						/**
+						* NOTE: here, $setting is either null or self::ALLOW, and the inherited
+						*       setting is either self::ALLOW or self::DENY, both of which can
+						*       unconditionally overwrite the current setting
+						*/
+						if (isset($settings[$inheritScope]))
+						{
+							$setting = $settings[$inheritScope];
+						}
+					}
+				}
+			}
+			unset($settings, $setting);
+
+			//==================================================================
+			// STEP 2: apply "grant" rules
+			//==================================================================
+
+			$grantors = $grantees = array();
+
+			foreach ($grant as $perm => $foreignPerms)
+			{
+				foreach ($acl[$perm] as $scope => $setting)
+				{
+					if ($setting !== self::ALLOW)
+					{
+						continue;
+					}
+
+					foreach ($foreignPerms as $foreignPerm)
+					{
+						if (isset($acl[$foreignPerm][$scope])
+						 && !isset($grantees[$scope][$foreignPerm]))
+						{
+							/**
+							* The foreign perm is either self::ALLOW, in which case there's nothing
+							* to do, or self::DENY, which can't be overwritten anyway.
+							*
+							* We also check whether the foreign perm has been granted during this
+							* iteration of the main loop. If it was, we record all the grantors so
+							* that we only revoke the foreign perm if ALL of them get revoked.
+							*/
+							continue;
+						}
+
+						$acl[$foreignPerm][$scope] = self::ALLOW;
+
+						$grantors[$scope][$perm][$foreignPerm] = $foreignPerm;
+						$grantees[$scope][$foreignPerm][$perm] = $perm;
+					}
+				}
+			}
+
+			//==================================================================
+			// STEP 3: apply "require" rules
+			//==================================================================
+
+			foreach ($require as $perm => $foreignPerms)
+			{
+				foreach ($acl[$perm] as $scope => &$setting)
+				{
+					foreach ($foreignPerms as $foreignPerm)
+					{
+						if ($setting !== self::ALLOW)
+						{
+							break;
+						}
+
+						if (isset($acl[$foreignPerm][$scope]))
+						{
+							/**
+							* Here we copy the foreign setting regarless of whether it's self::ALLOW
+							* or self::DENY. This is because if the foreign setting is self::DENY,
+							* there is no way for this setting to ever be granted anyway, and the
+							* same goes for scopes that inherit from it.
+							*/
+							$setting = $acl[$foreignPerm][$scope];
+						}
+						else
+						{
+							$setting = null;
+							break;
+						}
+					}
+
+					if ($setting !== self::ALLOW
+					 && isset($grantors[$scope][$perm]))
+					{
+						/**
+						* That permission has been removed by a "require" rule
+						*
+						* Now, we are going to recursively remove permissions that were
+						* granted by (or because of) that permission. Eventually, those
+						* permissions will be granted back during the next iteration.
+						*/
+						$cancelGrantors = array($perm => $perm);
+
+						do
+						{
+							/**
+							* @var array Holds the list of foreign perms that have been granted by
+							*            each canceled perm
+							*/
+							$cancelGrantees = array_intersect_key(
+							                      $grantors[$scope],
+							                      $cancelGrantors
+							                   );
+							$cancelGrantors = array();
+
+							foreach ($cancelGrantees as $grantor => $_grantees)
+							{
+								foreach ($_grantees as $grantee)
+								{
+									/**
+									* Here we completely remove any trace of that grant
+									*/
+									unset(
+										$grantors[$scope][$grantor][$grantee],
+										$grantees[$scope][$grantee][$grantor]
+									);
+
+									if (empty($grantees[$scope][$grantee]))
+									{
+										/**
+										* That grantee has no valid grantors left
+										*/
+										$acl[$grantee][$scope] = null;
+										$cancelGrantors[$grantee] = $grantee;
+									}
+								}
+							}
+						}
+						while (!empty($cancelGrantors));
+					}
+				}
+				unset($setting);
+			}
+
+			//==================================================================
+			// FINAL STEP: check whether the ACL has changed and exit the loop accordingly
+			//==================================================================
+
+			$hash = crc32(serialize($acl));
+			if (isset($hashes[$hash]))
+			{
+				break;
+			}
+			$hashes[$hash] = 1;
+		}
+		while (1);
 	}
 }
