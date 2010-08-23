@@ -357,29 +357,14 @@ class Acl
 		/**
 		* Replace allow/null/deny settings with '0' and '1'
 		*/
-		foreach ($acl as $perm => &$settings)
-		{
-			foreach ($settings as &$setting)
-			{
-				$setting = (string) (int) $setting;
-			}
-		}
-		unset($settings, $setting);
+		self::normalizeSettingsRepresentation($acl);
 
 		/**
 		* @var array unserialize() cache. Note: we could use a global cache that would be fed by the
 		*            first loop that creates $acl as well as the routine in $this->bootstrap(), but
 		*            the performance gain isn't very important in most cases
 		*/
-		$u = array();
-		foreach ($acl as $perm => $settings)
-		{
-			$scopes = array_keys(array_diff_key($settings, $u));
-			if ($scopes)
-			{
-				$u += array_combine($scopes, array_map('unserialize', $scopes));
-			}
-		}
+		$u = self::getUnserializeCache($acl);
 
 		//======================================================================
 		// Here we reduce the ACL by optimizing away redundant stuff
@@ -409,311 +394,12 @@ class Acl
 				continue;
 			}
 
-			$dims  = unserialize($spaceId);
-			$space = array();
+			$space = self::generateSpace($permsPerSpace, $spaceId, $usedScopes, $inherit, $u);
 
-			/**
-			* Remove perms sharing the same mask and perms that are not granted in any scope
-			*/
-			$masks = $permAliases = $move = array();
-
-			foreach ($perms as $perm => &$settings)
+			if ($space)
 			{
-				$mask = implode('', $settings);
-
-				if (strpos($mask, '1') === false)
-				{
-					/**
-					* This perm isn't granted in any scope, we just remove it
-					*/
-					unset($perms[$perm]);
-					continue;
-				}
-
-				if (isset($masks[$mask]))
-				{
-					/**
-					* That mask is shared with another perm. With set the current perm as an alias
-					* of the other perm then remove it from the list
-					*/
-					$permAliases[$perm] = $masks[$mask];
-					unset($perms[$perm]);
-					continue;
-				}
-
-				/**
-				* We save the mask now because even if the perm gets moved to another space, another
-				* perm with the same mask would still be an alias and would get moved to the same
-				* space
-				*/
-				$masks[$mask] = $perm;
-				$deleteDims   = $dims;
-
-				foreach ($settings as $scope => $setting)
-				{
-					foreach ($u[$scope] as $dim => $scopeVal)
-					{
-						if ($setting !== $settings[$inherit[$scope][$dim]])
-						{
-							/**
-							* That setting differs from the setting it inherits from, we can't
-							* delete its dimensions
-							*/
-							unset($deleteDims[$dim]);
-
-							if (empty($deleteDims))
-							{
-								break 2;
-							}
-						}
-					}
-				}
-
-				if ($deleteDims)
-				{
-					$newDims    = array_diff_key($dims, $deleteDims);
-					$newSpaceId = serialize($newDims);
-
-					$move[$newSpaceId][$perm] = $deleteDims;
-				}
+				$spaces[] = $space;
 			}
-			unset($settings, $masks);
-
-			foreach ($move as $newSpaceId => $movingPerms)
-			{
-				if (count($movingPerms) + count($permsPerSpace[$newSpaceId]) < 2)
-				{
-					/**
-					* Do not move that perm if it's going to be the only perm of that space. In that
-					* case it's more efficient to leave it in its current space rather than creating
-					* a new one because many perms can share the same space by reference at
-					* virtually no cost
-					*/
-					continue;
-				}
-
-				foreach ($movingPerms as $perm => $deleteDims)
-				{
-					foreach ($u as $scope => &$scopeVals)
-					{
-						if (isset($perms[$perm][$scope]))
-						{
-							foreach ($deleteDims as $dim)
-							{
-								if (isset($scopeVals[$dim]))
-								{
-									unset($perms[$perm][$scope]);
-								}
-							}
-						}
-					}
-					$permsPerSpace[$newSpaceId][$perm] = $perms[$perm];
-					unset($perms[$perm], $scopeVals);
-				}
-			}
-			unset($movingPerms);
-
-			if (empty($perms))
-			{
-				/**
-				* No perms left in this space
-				*/
-				continue;
-			}
-
-			/**
-			* @var array Holds the used scopeVals for each dimension
-			*/
-			$dimScopes = array_intersect_key($usedScopes, $dims);
-
-			/**
-			* Sort masks per dimension, detect scoped settings that are identical to the global
-			* setting
-			*/
-			$dimMasks = $delete = array();
-
-			foreach ($dimScopes as $dim => &$scopeVals)
-			{
-				$scopeVals = array_combine($scopeVals, $scopeVals);
-
-				/**
-				* First mark every scope to be deleted, then unmark them individually as we confirm
-				* that they differ from their parent scope
-				*/
-				$delete[$dim] = array_fill_keys($scopeVals, true);
-			}
-			unset($scopeVals);
-
-			foreach ($perms as $perm => $settings)
-			{
-				foreach ($settings as $scope => $setting)
-				{
-					foreach ($u[$scope] as $dim => $scopeVal)
-					{
-						if ($setting !== $settings[$inherit[$scope][$dim]])
-						{
-							/**
-							* That setting differs from the setting it inherits from, we can't
-							* delete its scope value
-							*/
-							unset($delete[$dim][$scopeVal]);
-						}
-
-						$mask =& $dimMasks[$dim][$scopeVal];
-						if (!isset($mask))
-						{
-							$mask = '';
-						}
-						$mask .= $setting;
-					}
-				}
-			}
-			unset($mask);
-
-			$scopesPerMask = array();
-			foreach ($dimMasks as $dim => $masks)
-			{
-				foreach ($masks as $scopeVal => $mask)
-				{
-					if (isset($delete[$dim][$scopeVal]))
-					{
-						/**
-						* Skip scopes that are already marked for deletion
-						*/
-						continue;
-					}
-					$scopesPerMask[$dim][$mask][] = $scopeVal;
-				}
-			}
-
-			/**
-			* Find and remove scoped masks that are identical to each others.
-			*
-			* For example, if all settings where x=5 are identical to all settings where x=6 then
-			* we remove x=5 and declare 5 and alias of 6 in dimension x
-			*/
-			$scopeAliases = array();
-			foreach ($scopesPerMask as $dim => $masks)
-			{
-				foreach ($masks as $mask => $scopeVals)
-				{
-					if (isset($scopeVals[1]))
-					{
-						/**
-						* More than one scope for that mask
-						*/
-						$scopeVal = array_shift($scopeVals);
-						$scopeAliases[$dim][$scopeVal] = $scopeVals;
-
-						$delete[$dim] += array_flip($scopeVals);
-					}
-				}
-				unset($scopeVals);
-			}
-			unset($masks);
-
-			if (!empty($delete))
-			{
-				/**
-				* @todo find out why creating $scopeVals as a reference is faster
-				*/
-				foreach ($u as $scope => &$scopeVals)
-				{
-					foreach ($scopeVals as $dim => $scopeVal)
-					{
-						if (isset($delete[$dim][$scopeVal]))
-						{
-							foreach ($perms as $perm => &$settings)
-							{
-								unset($settings[$scope]);
-							}
-							break;
-						}
-					}
-				}
-				unset($scopeVals, $settings);
-
-				foreach ($delete as $dim => $scopeVals)
-				{
-					$dimScopes[$dim] = array_diff_key($dimScopes[$dim], $scopeVals);
-				}
-
-				$dimScopes = array_filter($dimScopes);
-			}
-
-			/**
-			* Prepare to add the "wildcard" bits
-			*/
-			$mask = '';
-			foreach ($perms as $perm => $settings)
-			{
-				$mask .= implode('', $settings);
-			}
-
-			$step     = 1;
-			$chunkLen = 0;
-
-			foreach ($dimScopes as $dim => $scopeVals)
-			{
-				$chunkLen  += $step;
-				$step       = $chunkLen;
-				$repeat     = 1 + count($scopeVals);
-				$chunkLen  *= $repeat;
-
-				$space['wildcard'][$dim] = $chunkLen;
-
-				$i = 0;
-				foreach ($scopeVals as $scopeVal)
-				{
-					$pos = ++$i * $step;
-					$space['scopes'][$dim][$scopeVal] = $pos;
-
-					if (isset($scopeAliases[$dim][$scopeVal]))
-					{
-						$space['scopes'][$dim] += array_fill_keys($scopeAliases[$dim][$scopeVal], $pos);
-					}
-				}
-
-				$tmp = '';
-				foreach (str_split($mask, $chunkLen) as $chunk)
-				{
-					$tmp .= $chunk;
-
-					$i = 0;
-					do
-					{
-						$j = 0;
-						do
-						{
-							if ($chunk[$i + $j * $step] === '1')
-							{
-								$tmp .= '1';
-								continue 2;
-							}
-						}
-						while (++$j < $repeat);
-
-						$tmp .= '0';
-					}
-					while (++$i < $step);
-				}
-				$mask = $tmp;
-			}
-
-			$permMasks = str_split($mask, $chunkLen + $step);
-			$spaceMask = self::mergeMasks($permMasks);
-
-			foreach (array_keys($perms) as $i => $perm)
-			{
-				$pos = strpos($spaceMask, $permMasks[$i]);
-				$space['perms'][$perm] = $pos;
-
-				$space['perms'] += array_fill_keys(array_keys($permAliases, $perm, true), $pos);
-			}
-
-			$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($spaceMask . str_repeat('0', 8 - (strlen($spaceMask) & 7)), 8))));
-
-			$spaces[] = $space;
 		}
 		unset($perms);
 
@@ -1012,7 +698,7 @@ class Acl
 		return $permsPerSpace;
 	}
 
-	static protected function developAcl(&$acl, array $rules, array $inherit)
+	static protected function developAcl(array &$acl, array $rules, array $inherit)
 	{
 		//======================================================================
 		// This is the loop that builds the whole ACL
@@ -1188,5 +874,343 @@ class Acl
 			$hashes[$hash] = 1;
 		}
 		while (1);
+	}
+
+	static protected function normalizeSettingsRepresentation(&$acl)
+	{
+		foreach ($acl as $perm => &$settings)
+		{
+			foreach ($settings as &$setting)
+			{
+				$setting = (string) (int) $setting;
+			}
+		}
+	}
+
+	static protected function getUnserializeCache(array $acl)
+	{
+		$cache = array();
+
+		foreach ($acl as $perm => $settings)
+		{
+			$scopes = array_keys(array_diff_key($settings, $cache));
+			if ($scopes)
+			{
+				$cache += array_combine($scopes, array_map('unserialize', $scopes));
+			}
+		}
+
+		return $cache;
+	}
+
+	static protected function generateSpace(array &$permsPerSpace, $spaceId, array $usedScopes, array $inherit, array $u)
+	{
+		$perms =& $permsPerSpace[$spaceId];
+
+		$dims  = unserialize($spaceId);
+		$space = array();
+
+		/**
+		* Remove perms sharing the same mask and perms that are not granted in any scope
+		*/
+		$masks = $permAliases = $move = array();
+
+		foreach ($perms as $perm => &$settings)
+		{
+			$mask = implode('', $settings);
+
+			if (strpos($mask, '1') === false)
+			{
+				/**
+				* This perm isn't granted in any scope, we just remove it
+				*/
+				unset($perms[$perm]);
+				continue;
+			}
+
+			if (isset($masks[$mask]))
+			{
+				/**
+				* That mask is shared with another perm. With set the current perm as an alias
+				* of the other perm then remove it from the list
+				*/
+				$permAliases[$perm] = $masks[$mask];
+				unset($perms[$perm]);
+				continue;
+			}
+
+			/**
+			* We save the mask now because even if the perm gets moved to another space, another
+			* perm with the same mask would still be an alias and would get moved to the same
+			* space
+			*/
+			$masks[$mask] = $perm;
+			$deleteDims   = $dims;
+
+			foreach ($settings as $scope => $setting)
+			{
+				foreach ($u[$scope] as $dim => $scopeVal)
+				{
+					if ($setting !== $settings[$inherit[$scope][$dim]])
+					{
+						/**
+						* That setting differs from the setting it inherits from, we can't
+						* delete its dimensions
+						*/
+						unset($deleteDims[$dim]);
+
+						if (empty($deleteDims))
+						{
+							break 2;
+						}
+					}
+				}
+			}
+
+			if ($deleteDims)
+			{
+				$newDims    = array_diff_key($dims, $deleteDims);
+				$newSpaceId = serialize($newDims);
+
+				$move[$newSpaceId][$perm] = $deleteDims;
+			}
+		}
+		unset($settings, $masks);
+
+		foreach ($move as $newSpaceId => $movingPerms)
+		{
+			if (count($movingPerms) + count($permsPerSpace[$newSpaceId]) < 2)
+			{
+				/**
+				* Do not move that perm if it's going to be the only perm of that space. In that
+				* case it's more efficient to leave it in its current space rather than creating
+				* a new one because many perms can share the same space by reference at
+				* virtually no cost
+				*/
+				continue;
+			}
+
+			foreach ($movingPerms as $perm => $deleteDims)
+			{
+				foreach ($u as $scope => &$scopeVals)
+				{
+					if (isset($perms[$perm][$scope]))
+					{
+						foreach ($deleteDims as $dim)
+						{
+							if (isset($scopeVals[$dim]))
+							{
+								unset($perms[$perm][$scope]);
+							}
+						}
+					}
+				}
+				$permsPerSpace[$newSpaceId][$perm] = $perms[$perm];
+				unset($perms[$perm], $scopeVals);
+			}
+		}
+		unset($movingPerms);
+
+		if (empty($perms))
+		{
+			/**
+			* No perms left in this space
+			*/
+			return;
+		}
+
+		/**
+		* @var array Holds the used scopeVals for each dimension
+		*/
+		$dimScopes = array_intersect_key($usedScopes, $dims);
+
+		/**
+		* Sort masks per dimension, detect scoped settings that are identical to the global
+		* setting
+		*/
+		$dimMasks = $delete = array();
+
+		foreach ($dimScopes as $dim => &$scopeVals)
+		{
+			$scopeVals = array_combine($scopeVals, $scopeVals);
+
+			/**
+			* First mark every scope to be deleted, then unmark them individually as we confirm
+			* that they differ from their parent scope
+			*/
+			$delete[$dim] = array_fill_keys($scopeVals, true);
+		}
+		unset($scopeVals);
+
+		foreach ($perms as $perm => $settings)
+		{
+			foreach ($settings as $scope => $setting)
+			{
+				foreach ($u[$scope] as $dim => $scopeVal)
+				{
+					if ($setting !== $settings[$inherit[$scope][$dim]])
+					{
+						/**
+						* That setting differs from the setting it inherits from, we can't
+						* delete its scope value
+						*/
+						unset($delete[$dim][$scopeVal]);
+					}
+
+					$mask =& $dimMasks[$dim][$scopeVal];
+					if (!isset($mask))
+					{
+						$mask = '';
+					}
+					$mask .= $setting;
+				}
+			}
+		}
+		unset($mask);
+
+		$scopesPerMask = array();
+		foreach ($dimMasks as $dim => $masks)
+		{
+			foreach ($masks as $scopeVal => $mask)
+			{
+				if (isset($delete[$dim][$scopeVal]))
+				{
+					/**
+					* Skip scopes that are already marked for deletion
+					*/
+					continue;
+				}
+				$scopesPerMask[$dim][$mask][] = $scopeVal;
+			}
+		}
+
+		/**
+		* Find and remove scoped masks that are identical to each others.
+		*
+		* For example, if all settings where x=5 are identical to all settings where x=6 then
+		* we remove x=5 and declare 5 and alias of 6 in dimension x
+		*/
+		$scopeAliases = array();
+		foreach ($scopesPerMask as $dim => $masks)
+		{
+			foreach ($masks as $mask => $scopeVals)
+			{
+				if (isset($scopeVals[1]))
+				{
+					/**
+					* More than one scope for that mask
+					*/
+					$scopeVal = array_shift($scopeVals);
+					$scopeAliases[$dim][$scopeVal] = $scopeVals;
+
+					$delete[$dim] += array_flip($scopeVals);
+				}
+			}
+			unset($scopeVals);
+		}
+		unset($masks);
+
+		if (!empty($delete))
+		{
+			/**
+			* @todo find out why creating $scopeVals as a reference is faster
+			*/
+			foreach ($u as $scope => &$scopeVals)
+			{
+				foreach ($scopeVals as $dim => $scopeVal)
+				{
+					if (isset($delete[$dim][$scopeVal]))
+					{
+						foreach ($perms as $perm => &$settings)
+						{
+							unset($settings[$scope]);
+						}
+						break;
+					}
+				}
+			}
+			unset($scopeVals, $settings);
+
+			foreach ($delete as $dim => $scopeVals)
+			{
+				$dimScopes[$dim] = array_diff_key($dimScopes[$dim], $scopeVals);
+			}
+
+			$dimScopes = array_filter($dimScopes);
+		}
+
+		/**
+		* Prepare to add the "wildcard" bits
+		*/
+		$mask = '';
+		foreach ($perms as $perm => $settings)
+		{
+			$mask .= implode('', $settings);
+		}
+
+		$step     = 1;
+		$chunkLen = 0;
+
+		foreach ($dimScopes as $dim => $scopeVals)
+		{
+			$chunkLen  += $step;
+			$step       = $chunkLen;
+			$repeat     = 1 + count($scopeVals);
+			$chunkLen  *= $repeat;
+
+			$space['wildcard'][$dim] = $chunkLen;
+
+			$i = 0;
+			foreach ($scopeVals as $scopeVal)
+			{
+				$pos = ++$i * $step;
+				$space['scopes'][$dim][$scopeVal] = $pos;
+
+				if (isset($scopeAliases[$dim][$scopeVal]))
+				{
+					$space['scopes'][$dim] += array_fill_keys($scopeAliases[$dim][$scopeVal], $pos);
+				}
+			}
+
+			$tmp = '';
+			foreach (str_split($mask, $chunkLen) as $chunk)
+			{
+				$tmp .= $chunk;
+
+				$i = 0;
+				do
+				{
+					$j = 0;
+					do
+					{
+						if ($chunk[$i + $j * $step] === '1')
+						{
+							$tmp .= '1';
+							continue 2;
+						}
+					}
+					while (++$j < $repeat);
+
+					$tmp .= '0';
+				}
+				while (++$i < $step);
+			}
+			$mask = $tmp;
+		}
+
+		$permMasks = str_split($mask, $chunkLen + $step);
+		$spaceMask = self::mergeMasks($permMasks);
+
+		foreach (array_keys($perms) as $i => $perm)
+		{
+			$pos = strpos($spaceMask, $permMasks[$i]);
+			$space['perms'][$perm] = $pos;
+
+			$space['perms'] += array_fill_keys(array_keys($permAliases, $perm, true), $pos);
+		}
+
+		$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($spaceMask . str_repeat('0', 8 - (strlen($spaceMask) & 7)), 8))));
+
+		return $space;
 	}
 }
