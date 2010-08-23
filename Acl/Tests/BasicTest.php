@@ -200,4 +200,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		// this query asks "can post #2 be read from anywhere?"
 		$this->assertTrue($acl->isAllowed('read', array('post.id' => 2), new Wildcard));
 	}
+
+	public function testAdditionalScopeDoesNotOverwriteTheOriginalScope()
+	{
+		$acl = new Acl;
+		$acl->allow('read', array('post.id' => 2));
+
+		$this->assertFalse($acl->isAllowed('read', array('post.id' => 3), array('post.id' => 2)));
+		$this->assertTrue($acl->isAllowed('read', array('post.id' => 2), array('post.id' => 3)));
+	}
 }
