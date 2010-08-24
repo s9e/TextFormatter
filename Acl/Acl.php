@@ -1266,6 +1266,8 @@ class Acl
 	/**
 	* Deduplicate perms that share the same permission mask
 	*
+	* Will remove duplicates and return a list of aliases, if applicable
+	*
 	* @param  array &$perms
 	* @return array         A 2D array where keys are perms and values are aliases
 	*/
