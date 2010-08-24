@@ -301,13 +301,6 @@ class Acl
 		*/
 		self::normalizeSettingsRepresentation($acl);
 
-		/**
-		* @var array unserialize() cache. Note: we could use a global cache that would be fed by the
-		*            first loop that creates $acl as well as the routine in $this->bootstrap(), but
-		*            the performance gain isn't very important in most cases
-		*/
-		$u = self::getUnserializeCache($acl);
-
 		//======================================================================
 		// Here we reduce the ACL by optimizing away redundant stuff
 		//======================================================================
@@ -347,7 +340,7 @@ class Acl
 			*/
 			$permAliases = self::dedupPermsByMask($perms);
 
-			$space = self::generateSpace($permsPerSpace, $spaceId, $usedScopes, $u);
+			$space = self::generateSpace($permsPerSpace, $spaceId, $usedScopes);
 
 			foreach ($permAliases as $originalPerm => $aliases)
 			{
@@ -870,28 +863,7 @@ class Acl
 		}
 	}
 
-	/**
-	* Precompute the result of unserialize() applied to every the scopes of an ACL
-	*
-	* @param  array $acl
-	* @return array      array('a:1:{s:1:"x";i:1;}' => array('x' => 1))
-	*/
-	static protected function getUnserializeCache(array $acl)
-	{
-		$scopes = array();
-		foreach ($acl as $perm => $settings)
-		{
-			/**
-			* Accumulate all settings, even though we're only interested in their array key/scope
-			*/
-			$scopes += $settings;
-		}
-		$scopes = array_keys($scopes);
-
-		return array_combine($scopes, array_map('unserialize', $scopes));
-	}
-
-	static protected function generateSpace(array &$permsPerSpace, $spaceId, array $usedScopes, array $u)
+	static protected function generateSpace(array &$permsPerSpace, $spaceId, array $usedScopes)
 	{
 		$perms =& $permsPerSpace[$spaceId];
 
@@ -906,7 +878,7 @@ class Acl
 
 			foreach ($settings as $scope => $setting)
 			{
-				foreach ($u[$scope] as $dim => $scopeVal)
+				foreach (self::$unserializeCache[$scope] as $dim => $scopeVal)
 				{
 					if ($setting !== $settings[self::$inherit[$scope][$dim]])
 					{
@@ -949,7 +921,7 @@ class Acl
 
 			foreach ($movingPerms as $perm => $deleteDims)
 			{
-				foreach ($u as $scope => &$scopeVals)
+				foreach (self::$unserializeCache as $scope => &$scopeVals)
 				{
 					if (isset($perms[$perm][$scope]))
 					{
@@ -1003,7 +975,7 @@ class Acl
 		{
 			foreach ($settings as $scope => $setting)
 			{
-				foreach ($u[$scope] as $dim => $scopeVal)
+				foreach (self::$unserializeCache[$scope] as $dim => $scopeVal)
 				{
 					if ($setting !== $settings[self::$inherit[$scope][$dim]])
 					{
@@ -1071,8 +1043,9 @@ class Acl
 		{
 			/**
 			* @todo find out why creating $scopeVals as a reference is faster
+			* @todo reorder this loop, the global cache may hold entries that are not pertinent to this ACL
 			*/
-			foreach ($u as $scope => &$scopeVals)
+			foreach (self::$unserializeCache as $scope => &$scopeVals)
 			{
 				foreach ($scopeVals as $dim => $scopeVal)
 				{
