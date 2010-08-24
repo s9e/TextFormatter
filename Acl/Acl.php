@@ -429,7 +429,7 @@ class Acl
 		}
 		unset($perms);
 
-		if (isset($permsPerSpace['a:0:{}']))
+		if (!empty($permsPerSpace['a:0:{}']))
 		{
 			/**
 			* All that confusing array_* mumbo jumbo is to only keep perms that are allowed and
