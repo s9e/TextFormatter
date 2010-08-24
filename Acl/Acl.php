@@ -391,7 +391,24 @@ class Acl
 				continue;
 			}
 
+			self::removeEmptyPerms($perms);
+
+			/**
+			* Remove perms sharing the same mask and perms that are not granted in any scope
+			*/
+			$permAliases = self::dedupPermsByMask($perms);
+
 			$space = self::generateSpace($permsPerSpace, $spaceId, $usedScopes, $inherit, $u);
+
+			foreach ($permAliases as $originalPerm => $aliases)
+			{
+				$pos = $space['perms'][$originalPerm];
+
+				foreach ($aliases as $alias)
+				{
+					$space['perms'][$alias] = $pos;
+				}
+			}
 
 			if ($space)
 			{
@@ -918,12 +935,6 @@ class Acl
 		$dims  = unserialize($spaceId);
 		$space = array('perms' => array());
 
-		/**
-		* Remove perms sharing the same mask and perms that are not granted in any scope
-		*/
-		$permAliases = self::filterPermsPerMask($perms);
-		$perms = array_intersect_key($perms, $permAliases);
-
 		$move = array();
 
 		foreach ($perms as $perm => &$settings)
@@ -1186,9 +1197,9 @@ class Acl
 
 		foreach (array_keys($perms) as $i => $perm)
 		{
-			$pos = strpos($spaceMask, $permMasks[$i]);
+			$space['perms'][$perm] = strpos($spaceMask, $permMasks[$i]);
 
-			$space['perms'] += array_fill_keys($permAliases[$perm], $pos);
+//			$space['perms'] += array_fill_keys($permAliases[$perm], $pos);
 		}
 
 		$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($spaceMask . str_repeat('0', 8 - (strlen($spaceMask) & 7)), 8))));
@@ -1197,14 +1208,41 @@ class Acl
 	}
 
 	/**
-	* Remove perms that are not granted anywhere and sort the rest by their mask
+	* Remove perms that are not granted in any scope
 	*
-	* Will group perms according to their mask.
-	*
-	* @param  array $perms
-	* @return array        array('perm' => array('perm' => 'perm', 'otherPerm' => 'otherPerm'))
+	* @param  array &$perms
+	* @return void
 	*/
-	static protected function filterPermsPerMask(array $perms)
+	static protected function removeEmptyPerms(array &$perms)
+	{
+		$unsetPerms = array();
+
+		foreach ($perms as $perm => &$settings)
+		{
+			foreach ($settings as $setting)
+			{
+				if ($setting)
+				{
+					continue 2;
+				}
+			}
+
+			$unsetPerms[] = $perm;
+		}
+
+		foreach ($unsetPerms as $perm)
+		{
+			unset($perms[$perm]);
+		}
+	}
+
+	/**
+	* Deduplicate perms that share the same permission mask
+	*
+	* @param  array &$perms
+	* @return array         A 2D array where keys are perms and values are aliases
+	*/
+	static protected function dedupPermsByMask(array &$perms)
 	{
 		$permAliases = $masks = array();
 
@@ -1217,6 +1255,7 @@ class Acl
 				/**
 				* This perm isn't granted in any scope, we just remove it
 				*/
+				unset($perms[$perm]);
 				continue;
 			}
 
@@ -1229,6 +1268,8 @@ class Acl
 				$originalPerm = $masks[$mask];
 
 				$permAliases[$originalPerm][$perm] = $perm;
+
+				unset($perms[$perm]);
 				continue;
 			}
 
@@ -1236,11 +1277,6 @@ class Acl
 			* The mask belongs to the first perm that uses it
 			*/
 			$masks[$mask] = $perm;
-
-			/**
-			* The perm is set as an alias to itself
-			*/
-			$permAliases[$perm][$perm] = $perm;
 		}
 
 		return $permAliases;
