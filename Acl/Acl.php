@@ -347,6 +347,11 @@ class Acl
 
 		self::resolveAcl($acl, $combinedRules, $inherit);
 
+		if (empty($acl))
+		{
+			return array();
+		}
+
 		//======================================================================
 		// The ACL is ready, we prepare to reduce it
 		//======================================================================
@@ -906,7 +911,13 @@ class Acl
 		while (1);
 	}
 
-	static protected function normalizeSettingsRepresentation(&$acl)
+	/**
+	* Replace an ACL's settings with their text representation: '0' or '1'
+	*
+	* @param  array &$acl
+	* @return void
+	*/
+	static protected function normalizeSettingsRepresentation(array &$acl)
 	{
 		foreach ($acl as $perm => &$settings)
 		{
@@ -917,20 +928,25 @@ class Acl
 		}
 	}
 
+	/**
+	* Precompute the result of unserialize() applied to every the scopes of an ACL
+	*
+	* @param  array $acl
+	* @return array      array('a:1:{s:1:"x";i:1;}' => array('x' => 1))
+	*/
 	static protected function getUnserializeCache(array $acl)
 	{
-		$cache = array();
-
+		$scopes = array();
 		foreach ($acl as $perm => $settings)
 		{
-			$scopes = array_keys(array_diff_key($settings, $cache));
-			if ($scopes)
-			{
-				$cache += array_combine($scopes, array_map('unserialize', $scopes));
-			}
+			/**
+			* Accumulate all settings, even though we're only interested in their array key/scope
+			*/
+			$scopes += $settings;
 		}
+		$scopes = array_keys($scopes);
 
-		return $cache;
+		return array_combine($scopes, array_map('unserialize', $scopes));
 	}
 
 	static protected function generateSpace(array &$permsPerSpace, $spaceId, array $usedScopes, array $inherit, array $u)
