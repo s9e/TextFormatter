@@ -343,7 +343,7 @@ class Acl
 
 			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
 		}
-		unset($dims);
+		unset($dims, $bootstrap);
 
 		/**
 		* Apply inheritance, grant/require rules
