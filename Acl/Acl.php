@@ -388,9 +388,16 @@ class Acl
 			if ($spaceId === 'a:0:{}'
 			 || empty($perms))
 			{
+				/**
+				* We ignore empty spaces for obvious reasons, and we do the global space separately
+				* as it does not require all that processing: no wildcard, no dedup, etc...
+				*/
 				continue;
 			}
 
+			/**
+			* Remove perms that are not granted in any scope
+			*/
 			self::removeEmptyPerms($perms);
 
 			/**
@@ -427,12 +434,10 @@ class Acl
 
 			if ($allowed)
 			{
-				$space = array(
+				$spaces[] = array(
 					'mask'  => "\x80",
 					'perms' => array_fill_keys($allowed, 0)
 				);
-
-				$spaces[] = $space;
 			}
 		}
 
@@ -1198,8 +1203,6 @@ class Acl
 		foreach (array_keys($perms) as $i => $perm)
 		{
 			$space['perms'][$perm] = strpos($spaceMask, $permMasks[$i]);
-
-//			$space['perms'] += array_fill_keys($permAliases[$perm], $pos);
 		}
 
 		$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($spaceMask . str_repeat('0', 8 - (strlen($spaceMask) & 7)), 8))));
