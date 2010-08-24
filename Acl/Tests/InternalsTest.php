@@ -33,7 +33,7 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
-	public function testUselessPermsAreOptimizedAway()
+	public function testEmptyGlobalPermsAreOptimizedAway()
 	{
 		$acl = new Acl;
 		$acl->allow('foo');
@@ -41,7 +41,18 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 
 		$config = $acl->getReaderConfig();
 
-		$this->assertFalse(isset($config['bar']));
+		$this->assertArrayNotHasKey('bar', $config);
+	}
+
+	public function testEmptyLocalPermsAreOptimizedAway()
+	{
+		$acl = new Acl;
+		$acl->allow('foo', array('scope' => 1));
+		$acl->deny('bar', array('scope' => 1));
+
+		$config = $acl->getReaderConfig();
+
+		$this->assertArrayNotHasKey('bar', $config);
 	}
 
 	public function testScopesIdenticalToGlobalAreOptimizedAway()

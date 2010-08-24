@@ -345,7 +345,20 @@ class Acl
 		}
 		unset($dims);
 
+		/**
+		* Apply inheritance, grant/require rules
+		*/
 		self::resolveAcl($acl, $combinedRules, $inherit);
+
+		/**
+		* Remove perms that are not granted in any scope
+		*/
+		self::removeEmptyPerms($acl);
+
+		/**
+		* Adjust $permDims
+		*/
+		$permDims = array_intersect_key($permDims, $acl);
 
 		if (empty($acl))
 		{
@@ -399,11 +412,6 @@ class Acl
 				*/
 				continue;
 			}
-
-			/**
-			* Remove perms that are not granted in any scope
-			*/
-			self::removeEmptyPerms($perms);
 
 			/**
 			* Remove perms sharing the same mask and perms that are not granted in any scope
@@ -1229,14 +1237,14 @@ class Acl
 	/**
 	* Remove perms that are not granted in any scope
 	*
-	* @param  array &$perms
+	* @param  array &$acl
 	* @return void
 	*/
-	static protected function removeEmptyPerms(array &$perms)
+	static protected function removeEmptyPerms(array &$acl)
 	{
 		$unsetPerms = array();
 
-		foreach ($perms as $perm => &$settings)
+		foreach ($acl as $perm => &$settings)
 		{
 			foreach ($settings as $setting)
 			{
@@ -1251,7 +1259,7 @@ class Acl
 
 		foreach ($unsetPerms as $perm)
 		{
-			unset($perms[$perm]);
+			unset($acl[$perm]);
 		}
 	}
 
