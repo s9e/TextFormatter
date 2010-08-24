@@ -37,6 +37,9 @@ class Acl
 	*/
 	protected $reader;
 
+	/**
+	* @var array unserialize() cache
+	*/
 	static protected $unserializeCache = array();
 
 	/**
@@ -80,17 +83,17 @@ class Acl
 	*
 	* This method is chainable.
 	*
-	* @param  string $perm         Permission name
-	* @param  string $rule         Rule name: either "grant" or "require"
-	* @param  string $foreignPerm  Permission name
-	* @return Acl                  $this
+	* @param  string $srcPerm Permission name
+	* @param  string $rule    Rule name: either "grant" or "require"
+	* @param  string $trgPerm Permission name
+	* @return Acl             $this
 	*/
-	public function addRule($perm, $rule, $foreignPerm)
+	public function addRule($srcPerm, $rule, $trgPerm)
 	{
 		/**
 		* @todo validate params
 		*/
-		$this->rules[$rule][$perm][$foreignPerm] = $foreignPerm;
+		$this->rules[$rule][$srcPerm][$trgPerm] = $trgPerm;
 
 		$this->unsetReader();
 
@@ -257,6 +260,9 @@ class Acl
 		*/
 		$usedScopes = array();
 
+		/**
+		* Build the full initial ACL, based on settings
+		*/
 		$acl = self::buildAcl($combinedSettings, $combinedRules, $usedScopes);
 
 		/**
@@ -338,7 +344,7 @@ class Acl
 			/**
 			* Remove perms sharing the same mask and perms that are not granted in any scope
 			*/
-			$permAliases = self::dedupPermsByMask($perms);
+			$permAliases = self::dedupPerms($perms);
 
 			$space = self::generateSpace($permsPerSpace, $spaceId, $usedScopes);
 
@@ -714,35 +720,35 @@ class Acl
 
 			$grantors = $grantees = array();
 
-			foreach ($grant as $perm => $foreignPerms)
+			foreach ($grant as $srcPerm => $trgPerms)
 			{
-				foreach ($acl[$perm] as $scope => $setting)
+				foreach ($acl[$srcPerm] as $scope => $setting)
 				{
 					if ($setting !== self::ALLOW)
 					{
 						continue;
 					}
 
-					foreach ($foreignPerms as $foreignPerm)
+					foreach ($trgPerms as $trgPerm)
 					{
-						if (isset($acl[$foreignPerm][$scope])
-						 && !isset($grantees[$scope][$foreignPerm]))
+						if (isset($acl[$trgPerm][$scope])
+						 && !isset($grantees[$scope][$trgPerm]))
 						{
 							/**
-							* The foreign perm is either self::ALLOW, in which case there's nothing
-							* to do, or self::DENY, which can't be overwritten anyway.
+							* The target perm's setting is either self::ALLOW, in which case there's
+							* nothing to do, or self::DENY, which can't be overwritten anyway.
 							*
-							* We also check whether the foreign perm has been granted during this
+							* We also check whether the target perm has been granted during this
 							* iteration of the main loop. If it was, we record all the grantors so
-							* that we only revoke the foreign perm if ALL of them get revoked.
+							* that we only revoke the target perm if ALL of them get revoked.
 							*/
 							continue;
 						}
 
-						$acl[$foreignPerm][$scope] = self::ALLOW;
+						$acl[$trgPerm][$scope] = self::ALLOW;
 
-						$grantors[$scope][$perm][$foreignPerm] = $foreignPerm;
-						$grantees[$scope][$foreignPerm][$perm] = $perm;
+						$grantors[$scope][$srcPerm][$trgPerm] = $trgPerm;
+						$grantees[$scope][$trgPerm][$srcPerm] = $srcPerm;
 					}
 				}
 			}
@@ -751,26 +757,26 @@ class Acl
 			// STEP 3: apply "require" rules
 			//==================================================================
 
-			foreach ($require as $perm => $foreignPerms)
+			foreach ($require as $srcPerm => $trgPerms)
 			{
-				foreach ($acl[$perm] as $scope => &$setting)
+				foreach ($acl[$srcPerm] as $scope => &$setting)
 				{
-					foreach ($foreignPerms as $foreignPerm)
+					foreach ($trgPerms as $trgPerm)
 					{
 						if ($setting !== self::ALLOW)
 						{
 							break;
 						}
 
-						if (isset($acl[$foreignPerm][$scope]))
+						if (isset($acl[$trgPerm][$scope]))
 						{
 							/**
-							* Here we copy the foreign setting regarless of whether it's self::ALLOW
-							* or self::DENY. This is because if the foreign setting is self::DENY,
-							* there is no way for this setting to ever be granted anyway, and the
-							* same goes for scopes that inherit from it.
+							* Here we copy the target perm's setting regarless of whether it's
+							* self::ALLOW or self::DENY. This is because if the target perm's
+							* setting is self::DENY, there is no way for this setting to ever be
+							* granted anyway, and the same goes for scopes that inherit from it.
 							*/
-							$setting = $acl[$foreignPerm][$scope];
+							$setting = $acl[$trgPerm][$scope];
 						}
 						else
 						{
@@ -780,7 +786,7 @@ class Acl
 					}
 
 					if ($setting !== self::ALLOW
-					 && isset($grantors[$scope][$perm]))
+					 && isset($grantors[$scope][$srcPerm]))
 					{
 						/**
 						* That permission has been removed by a "require" rule
@@ -789,7 +795,7 @@ class Acl
 						* granted by (or because of) that permission. Eventually, those
 						* permissions will be granted back during the next iteration.
 						*/
-						$cancelGrantors = array($perm => $perm);
+						$cancelGrantors = array($srcPerm => $srcPerm);
 
 						do
 						{
@@ -1178,7 +1184,7 @@ class Acl
 	* @param  array &$perms
 	* @return array         A 2D array where keys are perms and values are aliases
 	*/
-	static protected function dedupPermsByMask(array &$perms)
+	static protected function dedupPerms(array &$perms)
 	{
 		$permAliases = $masks = array();
 
@@ -1290,25 +1296,25 @@ class Acl
 
 			foreach ($combinedRules as $type => $rules)
 			{
-				foreach ($rules as $perm => $foreignPerms)
+				foreach ($rules as $srcPerm => $trgPerms)
 				{
-					if (!isset($acl[$perm]))
+					if (!isset($acl[$srcPerm]))
 					{
 						continue;
 					}
 
-					foreach ($foreignPerms as $foreignPerm)
+					foreach ($trgPerms as $trgPerm)
 					{
-						if (!isset($permDims[$foreignPerm]))
+						if (!isset($permDims[$trgPerm]))
 						{
 							/**
 							* We need to re-evaluate scopes whenever we create a new perm
 							*/
 							$loop = true;
-							$permDims[$foreignPerm] = $acl[$foreignPerm] = array();
+							$permDims[$trgPerm] = $acl[$trgPerm] = array();
 						}
 
-						$permDims[$foreignPerm] += $permDims[$perm];
+						$permDims[$trgPerm] += $permDims[$perm];
 					}
 				}
 			}
