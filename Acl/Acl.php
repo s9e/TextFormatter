@@ -38,7 +38,11 @@ class Acl
 	protected $reader;
 
 	static protected $unserializeCache = array();
-	static protected $inherit = array();
+
+	/**
+	* @var array Holds the list of parent scopes a given scope inherits from
+	*/
+	static protected $inherit = array('a:0:{}' => array());
 
 	const ALLOW = 1;
 	const DENY  = 0;
@@ -253,12 +257,12 @@ class Acl
 		*/
 		$usedScopes = array();
 
-		$acl = self::buildAcl($combinedSettings, $combinedRules, $usedScopes, $inherit);
+		$acl = self::buildAcl($combinedSettings, $combinedRules, $usedScopes);
 
 		/**
 		* Apply inheritance, grant/require rules
 		*/
-		self::resolveAcl($acl, $combinedRules, $inherit);
+		self::resolveAcl($acl, $combinedRules);
 
 		/**
 		* Remove perms that are not granted in any scope
@@ -319,7 +323,7 @@ class Acl
 		*/
 		$spaces = array();
 
-		self::optimizePermsDimensions($acl, $inherit);
+		self::optimizePermsDimensions($acl);
 
 		/**
 		* We iterate over $permsPerSpace using references so that we operate on the original
@@ -343,7 +347,7 @@ class Acl
 			*/
 			$permAliases = self::dedupPermsByMask($perms);
 
-			$space = self::generateSpace($permsPerSpace, $spaceId, $usedScopes, $inherit, $u);
+			$space = self::generateSpace($permsPerSpace, $spaceId, $usedScopes, $u);
 
 			foreach ($permAliases as $originalPerm => $aliases)
 			{
@@ -458,7 +462,7 @@ class Acl
 		return $ret;
 	}
 
-	static protected function unroll(array $dims, array $usedScopes, &$bootstrap, array &$inherit)
+	static protected function unroll(array $dims, array $usedScopes, &$bootstrap)
 	{
 		$bootstrap = array('a:0:{}' => null);
 
@@ -476,7 +480,6 @@ class Acl
 					$scope                = array($dim => $scopeVal);
 					$scopeKey             = serialize($scope);
 					$bootstrap[$scopeKey] = null;
-					$inherit[$scopeKey]   = array($dim => 'a:0:{}');
 
 					self::$inherit[$scopeKey] = array($dim => 'a:0:{}');
 					self::$unserializeCache[$scopeKey] = $scope;
@@ -520,8 +523,6 @@ class Acl
 					{
 						$tmp = $scope;
 						unset($tmp[$dim]);
-
-						$inherit[$scopeKey][$dim] = serialize($tmp);
 
 						self::$inherit[$scopeKey][$dim] = serialize($tmp);
 						self::$unserializeCache[serialize($tmp)] = $tmp;
@@ -669,10 +670,9 @@ class Acl
 	*
 	* @param  array &$acl
 	* @param  array $rules
-	* @param  array $inherit
 	* @return void
 	*/
-	static protected function resolveAcl(array &$acl, array $rules, array $inherit)
+	static protected function resolveAcl(array &$acl, array $rules)
 	{
 		//======================================================================
 		// This is the loop that builds the whole ACL
@@ -694,7 +694,7 @@ class Acl
 			{
 				foreach ($settings as $scope => &$setting)
 				{
-					foreach ($inherit[$scope] as $inheritScope)
+					foreach (self::$inherit[$scope] as $inheritScope)
 					{
 						if ($setting === self::DENY)
 						{
@@ -891,7 +891,7 @@ class Acl
 		return array_combine($scopes, array_map('unserialize', $scopes));
 	}
 
-	static protected function generateSpace(array &$permsPerSpace, $spaceId, array $usedScopes, array $inherit, array $u)
+	static protected function generateSpace(array &$permsPerSpace, $spaceId, array $usedScopes, array $u)
 	{
 		$perms =& $permsPerSpace[$spaceId];
 
@@ -908,7 +908,7 @@ class Acl
 			{
 				foreach ($u[$scope] as $dim => $scopeVal)
 				{
-					if ($setting !== $settings[$inherit[$scope][$dim]])
+					if ($setting !== $settings[self::$inherit[$scope][$dim]])
 					{
 						/**
 						* That setting differs from the setting it inherits from, we can't
@@ -1005,7 +1005,7 @@ class Acl
 			{
 				foreach ($u[$scope] as $dim => $scopeVal)
 				{
-					if ($setting !== $settings[$inherit[$scope][$dim]])
+					if ($setting !== $settings[self::$inherit[$scope][$dim]])
 					{
 						/**
 						* That setting differs from the setting it inherits from, we can't
@@ -1236,7 +1236,7 @@ class Acl
 		return $permAliases;
 	}
 
-	static protected function optimizePermsDimensions(array &$acl, array $inherit)
+	static protected function optimizePermsDimensions(array &$acl)
 	{
 		$foo = $bar = array();
 		foreach ($acl as $perm => $settings)
@@ -1246,7 +1246,7 @@ class Acl
 				foreach (unserialize($scopeKey) as $scopeDim => $scopeVal)
 				{
 					$bar[$perm][$scopeDim][$scopeVal] = $scopeVal;
-					if ($setting !== $settings[$inherit[$scopeKey][$scopeDim]])
+					if ($setting !== $settings[self::$inherit[$scopeKey][$scopeDim]])
 					{
 						$foo[$perm][$scopeDim][$scopeVal] = $scopeVal;
 					}
@@ -1263,7 +1263,7 @@ class Acl
 	*
 	* @return array
 	*/
-	protected function buildAcl(array $combinedSettings, array $combinedRules, &$usedScopes, &$inherit)
+	protected function buildAcl(array $combinedSettings, array $combinedRules, &$usedScopes)
 	{
 		$acl      = array();
 		$permDims = array();
@@ -1344,7 +1344,6 @@ class Acl
 
 		$usedScopes = array_map('array_values', $usedScopes);
 		$bootstrap  = array();
-		$inherit    = array('a:0:{}' => array());
 
 		foreach ($permDims as $perm => &$dims)
 		{
@@ -1353,7 +1352,7 @@ class Acl
 
 			if (!isset($bootstrap[$key]))
 			{
-				self::unroll($dims, $usedScopes, $bootstrap[$key], $inherit);
+				self::unroll($dims, $usedScopes, $bootstrap[$key]);
 			}
 
 			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
