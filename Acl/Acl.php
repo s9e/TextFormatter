@@ -1253,15 +1253,6 @@ class Acl
 		{
 			$mask = implode('', $settings);
 
-			if (strpos($mask, '1') === false)
-			{
-				/**
-				* This perm isn't granted in any scope, we just remove it
-				*/
-				unset($perms[$perm]);
-				continue;
-			}
-
 			if (isset($masks[$mask]))
 			{
 				/**
