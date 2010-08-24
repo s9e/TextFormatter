@@ -37,6 +37,9 @@ class Acl
 	*/
 	protected $reader;
 
+	static protected $unserializeCache = array();
+	static protected $inherit = array();
+
 	const ALLOW = 1;
 	const DENY  = 0;
 
@@ -246,104 +249,11 @@ class Acl
 		$acl = array();
 
 		/**
-		* Holds the dimensions used for each permission
-		*/
-		$permDims = array();
-
-		/**
 		* @var array Holds the list of scopes used in any permission
 		*/
 		$usedScopes = array();
 
-		foreach ($combinedSettings as $setting)
-		{
-			list($perm, $value, $scope) = $setting;
-
-			foreach ($scope as $dim => $scopeVal)
-			{
-				$permDims[$perm][$dim] = $dim;
-				$usedScopes[$dim][$scopeVal] = $scopeVal;
-			}
-
-			$k = serialize($scope);
-
-			/**
-			* If the current value is not set or is ALLOW, overwrite it
-			*/
-			if (!isset($acl[$perm][$k])
-			 || $value === self::DENY)
-			{
-				$acl[$perm][$k] = $value;
-			}
-		}
-
-		/**
-		* Sort scope values so that the result bitfield is the same no matter in which order the
-		* settings were added. It doesn't cost much and in some cases it might help detect whether
-		* new settings have actually changed the ACL.
-		*
-		* Also sort the dimensions, this is necessary for the "wildcard" bit loop
-		*/
-		ksort($usedScopes);
-		foreach ($usedScopes as $dim => &$scopeVals)
-		{
-			ksort($scopeVals);
-		}
-		unset($scopeVals);
-
-		/**
-		* Add global perms to $permDims
-		*/
-		$permDims += array_fill_keys(array_keys($acl), array());
-
-		do
-		{
-			$loop = false;
-
-			foreach ($combinedRules as $type => $rules)
-			{
-				foreach ($rules as $perm => $foreignPerms)
-				{
-					if (!isset($acl[$perm]))
-					{
-						continue;
-					}
-
-					foreach ($foreignPerms as $foreignPerm)
-					{
-						if (!isset($permDims[$foreignPerm]))
-						{
-							/**
-							* We need to re-evaluate scopes whenever we create a new perm
-							*/
-							$loop = true;
-							$permDims[$foreignPerm] = $acl[$foreignPerm] = array();
-						}
-
-						$permDims[$foreignPerm] += $permDims[$perm];
-					}
-				}
-			}
-		}
-		while ($loop);
-
-		$usedScopes = array_map('array_values', $usedScopes);
-		$bootstrap  = array();
-		$inherit    = array('a:0:{}' => array());
-
-		foreach ($permDims as $perm => &$dims)
-		{
-			ksort($dims);
-			$key = serialize(array_keys($dims));
-
-			if (!isset($bootstrap[$key]))
-			{
-				self::unroll($dims, $usedScopes, $bootstrap[$key], $inherit);
-			}
-
-			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
-		}
-		unset($dims, $bootstrap);
+		$acl = self::buildAcl($combinedSettings, $combinedRules, $usedScopes, $inherit);
 
 		/**
 		* Apply inheritance, grant/require rules
@@ -355,11 +265,6 @@ class Acl
 		*/
 		self::removeEmptyPerms($acl);
 
-		/**
-		* Adjust $permDims
-		*/
-		$permDims = array_intersect_key($permDims, $acl);
-
 		if (empty($acl))
 		{
 			return array();
@@ -368,6 +273,24 @@ class Acl
 		//======================================================================
 		// The ACL is ready, we prepare to reduce it
 		//======================================================================
+
+		/**
+		* Holds the dimensions used for each permission
+		*/
+		$permDims = array();
+
+		foreach ($acl as $perm => $settings)
+		{
+			end($settings);
+			$scopeKey = key($settings);
+
+			$permDims[$perm] = array();
+
+			foreach (self::$unserializeCache[$scopeKey] as $scopeDim => $scopeVal)
+			{
+				$permDims[$perm][$scopeDim] = $scopeDim;
+			}
+		}
 
 		/**
 		* Replace allow/null/deny settings with '0' and '1'
@@ -389,12 +312,14 @@ class Acl
 		* First we sort perms by their dimensions
 		*/
 		$permsPerSpace = self::seedUniverse($permDims, $acl);
-		unset($permDims, $acl);
+//		unset($permDims, $acl);
 
 		/**
 		* @var array
 		*/
 		$spaces = array();
+
+		self::optimizePermsDimensions($acl, $inherit);
 
 		/**
 		* We iterate over $permsPerSpace using references so that we operate on the original
@@ -548,9 +473,13 @@ class Acl
 
 				foreach ($usedScopes[$dim] as $scopeVal)
 				{
-					$scopeKey             = serialize(array($dim => $scopeVal));
+					$scope                = array($dim => $scopeVal);
+					$scopeKey             = serialize($scope);
 					$bootstrap[$scopeKey] = null;
 					$inherit[$scopeKey]   = array($dim => 'a:0:{}');
+
+					self::$inherit[$scopeKey] = array($dim => 'a:0:{}');
+					self::$unserializeCache[$scopeKey] = $scope;
 				}
 				return;
 
@@ -585,12 +514,17 @@ class Acl
 
 					$scopeKey = serialize($scope);
 
+					self::$unserializeCache[$scopeKey] = $scope;
+
 					foreach ($scope as $dim => $scopeVal)
 					{
 						$tmp = $scope;
 						unset($tmp[$dim]);
 
 						$inherit[$scopeKey][$dim] = serialize($tmp);
+
+						self::$inherit[$scopeKey][$dim] = serialize($tmp);
+						self::$unserializeCache[serialize($tmp)] = $tmp;
 					}
 
 					$bootstrap[$scopeKey] = null;
@@ -1300,5 +1234,131 @@ class Acl
 		}
 
 		return $permAliases;
+	}
+
+	static protected function optimizePermsDimensions(array &$acl, array $inherit)
+	{
+		$foo = $bar = array();
+		foreach ($acl as $perm => $settings)
+		{
+			foreach ($settings as $scopeKey => $setting)
+			{
+				foreach (unserialize($scopeKey) as $scopeDim => $scopeVal)
+				{
+					$bar[$perm][$scopeDim][$scopeVal] = $scopeVal;
+					if ($setting !== $settings[$inherit[$scopeKey][$scopeDim]])
+					{
+						$foo[$perm][$scopeDim][$scopeVal] = $scopeVal;
+					}
+				}
+			}
+		}
+
+//		print_r($foo);
+//		print_r($bar);
+	}
+
+	/**
+	* 
+	*
+	* @return array
+	*/
+	protected function buildAcl(array $combinedSettings, array $combinedRules, &$usedScopes, &$inherit)
+	{
+		$acl      = array();
+		$permDims = array();
+
+		foreach ($combinedSettings as $setting)
+		{
+			list($perm, $value, $scope) = $setting;
+			$k = serialize($scope);
+
+			/**
+			* Do not overwrite DENY
+			*/
+			if (isset($acl[$perm][$k])
+			 && $acl[$perm][$k] === self::DENY)
+			{
+				continue;
+			}
+
+			if (!isset($permDims[$perm]))
+			{
+				$permDims[$perm] = array();
+			}
+
+			foreach ($scope as $dim => $scopeVal)
+			{
+				$permDims[$perm][$dim] = $dim;
+				$usedScopes[$dim][$scopeVal] = $scopeVal;
+			}
+
+			self::$unserializeCache[$k] = $scope;
+			$acl[$perm][$k] = $value;
+		}
+
+		/**
+		* Sort scope values so that the result bitfield is the same no matter in which order the
+		* settings were added. It doesn't cost much and in some cases it might help detect whether
+		* new settings have actually changed the ACL.
+		*
+		* Also sort the dimensions, this is necessary for the "wildcard" bit loop
+		*/
+		ksort($usedScopes);
+		foreach ($usedScopes as $dim => &$scopeVals)
+		{
+			ksort($scopeVals);
+		}
+		unset($scopeVals);
+
+		do
+		{
+			$loop = false;
+
+			foreach ($combinedRules as $type => $rules)
+			{
+				foreach ($rules as $perm => $foreignPerms)
+				{
+					if (!isset($acl[$perm]))
+					{
+						continue;
+					}
+
+					foreach ($foreignPerms as $foreignPerm)
+					{
+						if (!isset($permDims[$foreignPerm]))
+						{
+							/**
+							* We need to re-evaluate scopes whenever we create a new perm
+							*/
+							$loop = true;
+							$permDims[$foreignPerm] = $acl[$foreignPerm] = array();
+						}
+
+						$permDims[$foreignPerm] += $permDims[$perm];
+					}
+				}
+			}
+		}
+		while ($loop);
+
+		$usedScopes = array_map('array_values', $usedScopes);
+		$bootstrap  = array();
+		$inherit    = array('a:0:{}' => array());
+
+		foreach ($permDims as $perm => &$dims)
+		{
+			ksort($dims);
+			$key = serialize(array_keys($dims));
+
+			if (!isset($bootstrap[$key]))
+			{
+				self::unroll($dims, $usedScopes, $bootstrap[$key], $inherit);
+			}
+
+			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
+		}
+
+		return $acl;
 	}
 }
