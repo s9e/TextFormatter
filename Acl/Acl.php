@@ -916,44 +916,19 @@ class Acl
 		$perms =& $permsPerSpace[$spaceId];
 
 		$dims  = unserialize($spaceId);
-		$space = array();
+		$space = array('perms' => array());
 
 		/**
 		* Remove perms sharing the same mask and perms that are not granted in any scope
 		*/
-		$masks = $permAliases = $move = array();
+		$permAliases = self::filterPermsPerMask($perms);
+		$perms = array_intersect_key($perms, $permAliases);
+
+		$move = array();
 
 		foreach ($perms as $perm => &$settings)
 		{
-			$mask = implode('', $settings);
-
-			if (strpos($mask, '1') === false)
-			{
-				/**
-				* This perm isn't granted in any scope, we just remove it
-				*/
-				unset($perms[$perm]);
-				continue;
-			}
-
-			if (isset($masks[$mask]))
-			{
-				/**
-				* That mask is shared with another perm. With set the current perm as an alias
-				* of the other perm then remove it from the list
-				*/
-				$permAliases[$perm] = $masks[$mask];
-				unset($perms[$perm]);
-				continue;
-			}
-
-			/**
-			* We save the mask now because even if the perm gets moved to another space, another
-			* perm with the same mask would still be an alias and would get moved to the same
-			* space
-			*/
-			$masks[$mask] = $perm;
-			$deleteDims   = $dims;
+			$deleteDims = $dims;
 
 			foreach ($settings as $scope => $setting)
 			{
@@ -983,7 +958,7 @@ class Acl
 				$move[$newSpaceId][$perm] = $deleteDims;
 			}
 		}
-		unset($settings, $masks);
+		unset($settings);
 
 		foreach ($move as $newSpaceId => $movingPerms)
 		{
@@ -1024,7 +999,7 @@ class Acl
 			/**
 			* No perms left in this space
 			*/
-			return;
+			return array();
 		}
 
 		/**
@@ -1212,13 +1187,62 @@ class Acl
 		foreach (array_keys($perms) as $i => $perm)
 		{
 			$pos = strpos($spaceMask, $permMasks[$i]);
-			$space['perms'][$perm] = $pos;
 
-			$space['perms'] += array_fill_keys(array_keys($permAliases, $perm, true), $pos);
+			$space['perms'] += array_fill_keys($permAliases[$perm], $pos);
 		}
 
 		$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($spaceMask . str_repeat('0', 8 - (strlen($spaceMask) & 7)), 8))));
 
 		return $space;
+	}
+
+	/**
+	* Remove perms that are not granted anywhere and sort the rest by their mask
+	*
+	* Will group perms according to their mask.
+	*
+	* @param  array $perms
+	* @return array        array('perm' => array('perm' => 'perm', 'otherPerm' => 'otherPerm'))
+	*/
+	static protected function filterPermsPerMask(array $perms)
+	{
+		$permAliases = $masks = array();
+
+		foreach ($perms as $perm => $settings)
+		{
+			$mask = implode('', $settings);
+
+			if (strpos($mask, '1') === false)
+			{
+				/**
+				* This perm isn't granted in any scope, we just remove it
+				*/
+				continue;
+			}
+
+			if (isset($masks[$mask]))
+			{
+				/**
+				* That mask is shared with another perm. We mark the current perm as an alias
+				* of the other perm then remove it from the list
+				*/
+				$originalPerm = $masks[$mask];
+
+				$permAliases[$originalPerm][$perm] = $perm;
+				continue;
+			}
+
+			/**
+			* The mask belongs to the first perm that uses it
+			*/
+			$masks[$mask] = $perm;
+
+			/**
+			* The perm is set as an alias to itself
+			*/
+			$permAliases[$perm][$perm] = $perm;
+		}
+
+		return $permAliases;
 	}
 }
