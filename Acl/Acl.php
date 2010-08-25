@@ -1112,6 +1112,12 @@ class Acl
 	*
 	* Will remove duplicates and return a list of aliases, if applicable.
 	*
+	* NOTE: there are many ways to do find dupes. For instance, it could be done once, globally by
+	*       serializing every perm; perms with the same scopes and same settings could be optimized
+	*       away. Or we could iterate over $acl and use array_keys() in strict mode to see if
+	*       there are other identical sets of permissions. Or we could even NOT dedup perms and
+	*       rely on the mask merging to optimize the result.
+	*
 	* @param  array &$acl
 	* @return array       A 2D array where keys are perms and values are aliases
 	*/
