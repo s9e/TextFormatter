@@ -151,9 +151,9 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @dataProvider getMasks
 	*/
-	public function testMergeMasks($masks, $expected, $msg = null)
+	public function testMergedMasks($masks, $expected, $msg = null)
 	{
-		$method = new \ReflectionMethod('s9e\\Toolkit\\Acl\\Acl', 'mergeMasks');
+		$method = new \ReflectionMethod('s9e\\Toolkit\\Acl\\Acl', 'generateMergedMask');
 		$method->setAccessible(true);
 
 		$this->assertSame(

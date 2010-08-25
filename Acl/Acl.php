@@ -175,9 +175,16 @@ class Acl
 	}
 
 	//==============================================================================================
-	// INTERNAL STUFF: misc
+	// INTERNAL STUFF: main stuff
 	//==============================================================================================
 
+	/**
+	* Unset the cached Reader
+	*
+	* Called everytime a new setting, rule or parent is added.
+	*
+	* @return void
+	*/
 	protected function unsetReader()
 	{
 		unset($this->reader);
@@ -188,6 +195,16 @@ class Acl
 		}
 	}
 
+	/**
+	* Add a setting
+	*
+	* @param  integer        $value self::ALLOW or self::DENY
+	* @param  string         $perm  Setting's perm
+	* @param  array|Resource $scope Setting's scope. If a Resource is passed, its
+	*                               getAclBuilderScope() method will be called and the result will
+	*                               be used as scope
+	* @return $this
+	*/
 	protected function add($value, $perm, $scope)
 	{
 		if ($scope instanceof Resource)
@@ -242,6 +259,9 @@ class Acl
 		return $this;
 	}
 
+	/**
+	* 
+	*/
 	protected function buildSpaces()
 	{
 		/**
@@ -257,7 +277,7 @@ class Acl
 		/**
 		* Build the full initial ACL, based on settings
 		*/
-		$acl = self::buildAcl($combinedSettings, $combinedRules);
+		$acl = self::buildInitialAcl($combinedSettings, $combinedRules);
 
 		/**
 		* Apply inheritance, grant/require rules
@@ -332,6 +352,12 @@ class Acl
 		return $spaces;
 	}
 
+	/**
+	* Format the ACL's spaces as XML
+	*
+	* @param  array $spaces
+	* @return string
+	*/
 	static protected function asXML(array $spaces)
 	{
 		$xml = new \XMLWriter;
@@ -384,6 +410,12 @@ class Acl
 		return trim($xml->outputMemory(true));
 	}
 
+	/**
+	* Format the ACL's spaces as an array
+	*
+	* @param  array $spaces
+	* @return array
+	*/
 	static protected function asArray(array $spaces)
 	{
 		$ret = array();
@@ -406,6 +438,116 @@ class Acl
 		}
 
 		return $ret;
+	}
+
+	//==============================================================================================
+	// INTERNAL STUFF: methods that generate stuff
+	//==============================================================================================
+
+	/**
+	* Build the initial ACL
+	*
+	* @param  array $combinedSettings
+	* @param  array $combinedRules
+	* @return array
+	*/
+	static protected function buildInitialAcl(array $combinedSettings, array $combinedRules)
+	{
+		$acl        = array();
+		$permDims   = array();
+		$usedScopes = array();
+
+		foreach ($combinedSettings as $setting)
+		{
+			list($perm, $value, $scope) = $setting;
+			$k = serialize($scope);
+
+			/**
+			* Do not overwrite DENY
+			*/
+			if (isset($acl[$perm][$k])
+			 && $acl[$perm][$k] === self::DENY)
+			{
+				continue;
+			}
+
+			if (!isset($permDims[$perm]))
+			{
+				$permDims[$perm] = array();
+			}
+
+			foreach ($scope as $dim => $scopeVal)
+			{
+				$permDims[$perm][$dim] = $dim;
+				$usedScopes[$dim][$scopeVal] = $scopeVal;
+			}
+
+			self::$unserializeCache[$k] = $scope;
+			$acl[$perm][$k] = $value;
+		}
+
+		/**
+		* Sort scope values so that the result bitfield is the same no matter in which order the
+		* settings were added. It doesn't cost much and in some cases it might help detect whether
+		* new settings have actually changed the ACL.
+		*
+		* Also sort the dimensions, this is necessary for the "wildcard" bit loop
+		*/
+		ksort($usedScopes);
+		foreach ($usedScopes as $dim => &$scopeVals)
+		{
+			ksort($scopeVals);
+		}
+		unset($scopeVals);
+
+		do
+		{
+			$loop = false;
+
+			foreach ($combinedRules as $type => $rules)
+			{
+				foreach ($rules as $srcPerm => $trgPerms)
+				{
+					if (!isset($acl[$srcPerm]))
+					{
+						continue;
+					}
+
+					foreach ($trgPerms as $trgPerm)
+					{
+						if (!isset($permDims[$trgPerm]))
+						{
+							/**
+							* We need to re-evaluate scopes whenever we create a new perm
+							*/
+							$loop = true;
+							$permDims[$trgPerm] = $acl[$trgPerm] = array();
+						}
+
+						$permDims[$trgPerm] += $permDims[$perm];
+					}
+				}
+			}
+		}
+		while ($loop);
+
+		$usedScopes = array_map('array_values', $usedScopes);
+		$bootstrap  = array();
+
+		foreach ($permDims as $perm => &$dims)
+		{
+			ksort($dims);
+			$key = serialize($dims);
+
+			if (!isset($bootstrap[$key]))
+			{
+				$bootstrap[$key] = self::generateBootstrap(array_intersect_key($usedScopes, $dims));
+			}
+
+			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
+		}
+
+		return $acl;
 	}
 
 	/**
@@ -496,7 +638,114 @@ class Acl
 		return $bootstrap;
 	}
 
-	static protected function mergeMasks(array $masks)
+	static protected function generateSpace(array $acl, array $permAliases, array $scopeAliases)
+	{
+		$usedScopes = array();
+
+		foreach ($acl as $perm => $settings)
+		{
+			foreach ($settings as $scopeKey => $setting)
+			{
+				foreach (self::$unserializeCache[$scopeKey] as $scopeDim => $scopeVal)
+				{
+					$usedScopes[$scopeDim][$scopeVal] = $scopeVal;
+				}
+			}
+		}
+
+		/**
+		* Prepare to add the "wildcard" bits
+		*/
+		$mask = '';
+		foreach ($acl as $perm => $settings)
+		{
+			$mask .= implode('', $settings);
+		}
+
+		$step     = 1;
+		$chunkLen = 0;
+
+		foreach ($usedScopes as $scopeDim => $scopeVals)
+		{
+			$chunkLen  += $step;
+			$step       = $chunkLen;
+			$repeat     = 1 + count($scopeVals);
+			$chunkLen  *= $repeat;
+
+			$space['wildcard'][$scopeDim] = $chunkLen;
+
+			$i = 0;
+			foreach ($scopeVals as $scopeVal)
+			{
+				$pos = ++$i * $step;
+				$space['scopes'][$scopeDim][$scopeVal] = $pos;
+
+				if (isset($scopeAliases[$scopeDim][$scopeVal]))
+				{
+					$space['scopes'][$scopeDim] += array_fill_keys($scopeAliases[$scopeDim][$scopeVal], $pos);
+				}
+			}
+
+			$tmp = '';
+			foreach (str_split($mask, $chunkLen) as $chunk)
+			{
+				$tmp .= $chunk;
+
+				$i = 0;
+				do
+				{
+					$j = 0;
+					do
+					{
+						if ($chunk[$i + $j * $step] === '1')
+						{
+							$tmp .= '1';
+							continue 2;
+						}
+					}
+					while (++$j < $repeat);
+
+					$tmp .= '0';
+				}
+				while (++$i < $step);
+			}
+			$mask = $tmp;
+		}
+
+		$permMasks = str_split($mask, $chunkLen + $step);
+		$spaceMask = self::generateMergedMask($permMasks);
+
+		foreach (array_keys($acl) as $i => $perm)
+		{
+			$space['perms'][$perm] = strpos($spaceMask, $permMasks[$i]);
+		}
+
+		foreach ($permAliases as $originalPerm => $aliases)
+		{
+			$pos = $space['perms'][$originalPerm];
+
+			foreach ($aliases as $alias)
+			{
+				$space['perms'][$alias] = $pos;
+			}
+		}
+
+		$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($spaceMask . str_repeat('0', 8 - (strlen($spaceMask) & 7)), 8))));
+
+		return $space;
+	}
+
+	/**
+	* Merge a list of masks into the shortest string possible
+	*
+	* Masks are strings made entirely of '0' and '1'. The array must be numerically indexed. The
+	* result isn't exactly the shortest string possible but it should be very close. The result
+	* contains all the masks, e.g. given ('1100', '0110') as input, it will return '01100'.
+	*
+	* @param  array  $masks Numerically-indexed array of strings
+	* @return string
+	*/
+	static protected function generateMergedMask(array $masks)
 	{
 		$i   = count($masks);
 		$max = max(array_map('strlen', $masks)) - 1;
@@ -564,6 +813,65 @@ class Acl
 
 		return implode('', $masks);
 	}
+
+	//==============================================================================================
+	// INTERNAL STUFF: methods that extract data from stuff
+	//==============================================================================================
+
+	/**
+	* Return given ACL split by space
+	*
+	* @param  array $acl
+	* @return array      spaceId as key, hash of (perm => settings) as value
+	*/
+	static protected function getAclBySpace($acl)
+	{
+		$permDims    = self::getPermsDims($acl);
+		$aclPerSpace = array();
+
+		foreach ($permDims as $perm => $dims)
+		{
+			$aclPerSpace[serialize($dims)][$perm] = $acl[$perm];
+		}
+
+		return $aclPerSpace;
+	}
+
+	/**
+	* Get the dimensions of every perm
+	*
+	* The last setting of a perm always contains all of its dimensions, we use that property to
+	* easily compute each perm's dimensions
+	*
+	* @param  array $acl
+	* @return array
+	*/
+	static protected function getPermsDims(array $acl)
+	{
+		$permDims = array();
+
+		foreach ($acl as $perm => $settings)
+		{
+			end($settings);
+			$scopeKey = key($settings);
+
+			if ($scopeKey === 'a:0:{}')
+			{
+				$permDims[$perm] = array();
+			}
+			else
+			{
+				$dims            = array_keys(self::$unserializeCache[$scopeKey]);
+				$permDims[$perm] = array_combine($dims, $dims);
+			}
+		}
+
+		return $permDims;
+	}
+
+	//==============================================================================================
+	// INTERNAL STUFF: methods that alter an ACL in place
+	//==============================================================================================
 
 	/**
 	* Resolve inheritance/apply rules to an ACL
@@ -768,103 +1076,6 @@ class Acl
 				$setting = (string) (int) $setting;
 			}
 		}
-	}
-
-	static protected function generateSpace(array $spaceAcl, array $permAliases, array $scopeAliases)
-	{
-		$usedScopes = array();
-
-		foreach ($spaceAcl as $perm => $settings)
-		{
-			foreach ($settings as $scopeKey => $setting)
-			{
-				foreach (self::$unserializeCache[$scopeKey] as $scopeDim => $scopeVal)
-				{
-					$usedScopes[$scopeDim][$scopeVal] = $scopeVal;
-				}
-			}
-		}
-
-		/**
-		* Prepare to add the "wildcard" bits
-		*/
-		$mask = '';
-		foreach ($spaceAcl as $perm => $settings)
-		{
-			$mask .= implode('', $settings);
-		}
-
-		$step     = 1;
-		$chunkLen = 0;
-
-		foreach ($usedScopes as $scopeDim => $scopeVals)
-		{
-			$chunkLen  += $step;
-			$step       = $chunkLen;
-			$repeat     = 1 + count($scopeVals);
-			$chunkLen  *= $repeat;
-
-			$space['wildcard'][$scopeDim] = $chunkLen;
-
-			$i = 0;
-			foreach ($scopeVals as $scopeVal)
-			{
-				$pos = ++$i * $step;
-				$space['scopes'][$scopeDim][$scopeVal] = $pos;
-
-				if (isset($scopeAliases[$scopeDim][$scopeVal]))
-				{
-					$space['scopes'][$scopeDim] += array_fill_keys($scopeAliases[$scopeDim][$scopeVal], $pos);
-				}
-			}
-
-			$tmp = '';
-			foreach (str_split($mask, $chunkLen) as $chunk)
-			{
-				$tmp .= $chunk;
-
-				$i = 0;
-				do
-				{
-					$j = 0;
-					do
-					{
-						if ($chunk[$i + $j * $step] === '1')
-						{
-							$tmp .= '1';
-							continue 2;
-						}
-					}
-					while (++$j < $repeat);
-
-					$tmp .= '0';
-				}
-				while (++$i < $step);
-			}
-			$mask = $tmp;
-		}
-
-		$permMasks = str_split($mask, $chunkLen + $step);
-		$spaceMask = self::mergeMasks($permMasks);
-
-		foreach (array_keys($spaceAcl) as $i => $perm)
-		{
-			$space['perms'][$perm] = strpos($spaceMask, $permMasks[$i]);
-		}
-
-		foreach ($permAliases as $originalPerm => $aliases)
-		{
-			$pos = $space['perms'][$originalPerm];
-
-			foreach ($aliases as $alias)
-			{
-				$space['perms'][$alias] = $pos;
-			}
-		}
-
-		$space['mask'] = implode('', array_map('chr', array_map('bindec', str_split($spaceMask . str_repeat('0', 8 - (strlen($spaceMask) & 7)), 8))));
-
-		return $space;
 	}
 
 	/**
@@ -1124,25 +1335,6 @@ class Acl
 	}
 
 	/**
-	* Return given ACL split by space
-	*
-	* @param  array $acl
-	* @return array      spaceId as key, hash of (perm => settings) as value
-	*/
-	static protected function getAclBySpace($acl)
-	{
-		$permDims    = self::getPermsDims($acl);
-		$aclPerSpace = array();
-
-		foreach ($permDims as $perm => $dims)
-		{
-			$aclPerSpace[serialize($dims)][$perm] = $acl[$perm];
-		}
-
-		return $aclPerSpace;
-	}
-
-	/**
 	* Remove all settings that match a scope, in place
 	*
 	* @param  array      &$settings
@@ -1160,143 +1352,5 @@ class Acl
 				unset($settings[$scopeKey]);
 			}
 		}
-	}
-
-	/**
-	* Build the initial ACL
-	*
-	* @param  array $combinedSettings
-	* @param  array $combinedRules
-	* @return array
-	*/
-	protected function buildAcl(array $combinedSettings, array $combinedRules)
-	{
-		$acl        = array();
-		$permDims   = array();
-		$usedScopes = array();
-
-		foreach ($combinedSettings as $setting)
-		{
-			list($perm, $value, $scope) = $setting;
-			$k = serialize($scope);
-
-			/**
-			* Do not overwrite DENY
-			*/
-			if (isset($acl[$perm][$k])
-			 && $acl[$perm][$k] === self::DENY)
-			{
-				continue;
-			}
-
-			if (!isset($permDims[$perm]))
-			{
-				$permDims[$perm] = array();
-			}
-
-			foreach ($scope as $dim => $scopeVal)
-			{
-				$permDims[$perm][$dim] = $dim;
-				$usedScopes[$dim][$scopeVal] = $scopeVal;
-			}
-
-			self::$unserializeCache[$k] = $scope;
-			$acl[$perm][$k] = $value;
-		}
-
-		/**
-		* Sort scope values so that the result bitfield is the same no matter in which order the
-		* settings were added. It doesn't cost much and in some cases it might help detect whether
-		* new settings have actually changed the ACL.
-		*
-		* Also sort the dimensions, this is necessary for the "wildcard" bit loop
-		*/
-		ksort($usedScopes);
-		foreach ($usedScopes as $dim => &$scopeVals)
-		{
-			ksort($scopeVals);
-		}
-		unset($scopeVals);
-
-		do
-		{
-			$loop = false;
-
-			foreach ($combinedRules as $type => $rules)
-			{
-				foreach ($rules as $srcPerm => $trgPerms)
-				{
-					if (!isset($acl[$srcPerm]))
-					{
-						continue;
-					}
-
-					foreach ($trgPerms as $trgPerm)
-					{
-						if (!isset($permDims[$trgPerm]))
-						{
-							/**
-							* We need to re-evaluate scopes whenever we create a new perm
-							*/
-							$loop = true;
-							$permDims[$trgPerm] = $acl[$trgPerm] = array();
-						}
-
-						$permDims[$trgPerm] += $permDims[$perm];
-					}
-				}
-			}
-		}
-		while ($loop);
-
-		$usedScopes = array_map('array_values', $usedScopes);
-		$bootstrap  = array();
-
-		foreach ($permDims as $perm => &$dims)
-		{
-			ksort($dims);
-			$key = serialize($dims);
-
-			if (!isset($bootstrap[$key]))
-			{
-				$bootstrap[$key] = self::generateBootstrap(array_intersect_key($usedScopes, $dims));
-			}
-
-			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
-		}
-
-		return $acl;
-	}
-
-	/**
-	* Get the dimensions of every perm
-	*
-	* The last setting of a perm always contains all of its dimensions, we use that property to
-	* easily compute each perm's dimensions
-	*
-	* @param  array $acl
-	* @return array
-	*/
-	static protected function getPermsDims(array $acl)
-	{
-		$permDims = array();
-
-		foreach ($acl as $perm => $settings)
-		{
-			end($settings);
-			$scopeKey = key($settings);
-
-			if ($scopeKey === 'a:0:{}')
-			{
-				$permDims[$perm] = array();
-			}
-			else
-			{
-				$dims            = array_keys(self::$unserializeCache[$scopeKey]);
-				$permDims[$perm] = array_combine($dims, $dims);
-			}
-		}
-
-		return $permDims;
 	}
 }
