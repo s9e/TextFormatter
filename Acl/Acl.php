@@ -251,11 +251,6 @@ class Acl
 		$combinedRules = $this->getRules();
 
 		/**
-		* Holds the whole access control list
-		*/
-		$acl = array();
-
-		/**
 		* @var array Holds the list of scopes used in any permission
 		*/
 		$usedScopes = array();
@@ -311,18 +306,18 @@ class Acl
 		// Here we reduce the ACL by optimizing away redundant stuff
 		//======================================================================
 
+//		self::optimizePermsDimensions($acl);
+
 		/**
 		* First we sort perms by their dimensions
 		*/
 		$permsPerSpace = self::seedUniverse($permDims, $acl);
-//		unset($permDims, $acl);
+		unset($permDims, $acl);
 
 		/**
 		* @var array
 		*/
 		$spaces = array();
-
-		self::optimizePermsDimensions($acl);
 
 		/**
 		* We iterate over $permsPerSpace using references so that we operate on the original
@@ -461,39 +456,51 @@ class Acl
 		return $ret;
 	}
 
-	static protected function unroll(array $dims, array $usedScopes, &$bootstrap)
+	/**
+	* Generate a bootstrap ACL array containing all possible scopes with null settings
+	*
+	* @param  array $spaceVals 2D array with scope dimensions first and all possible values second
+	* @return array
+	*/
+	static protected function getBootstrap(array $spaceVals)
 	{
 		$bootstrap = array('a:0:{}' => null);
 
-		switch (count($dims))
+		switch (count($spaceVals))
 		{
 			case 0:
 				// do nothing
-				return;
+				break;
 
 			case 1:
-				$dim = end($dims);
-
-				foreach ($usedScopes[$dim] as $scopeVal)
+				foreach ($spaceVals as $scopeDim => $scopeVals)
 				{
-					$scope                = array($dim => $scopeVal);
-					$scopeKey             = serialize($scope);
-					$bootstrap[$scopeKey] = null;
+					foreach ($scopeVals as $scopeVal)
+					{
+						$scope                = array($scopeDim => $scopeVal);
+						$scopeKey             = serialize($scope);
+						$bootstrap[$scopeKey] = null;
 
-					self::$inherit[$scopeKey] = array($dim => 'a:0:{}');
-					self::$unserializeCache[$scopeKey] = $scope;
+						self::$unserializeCache[$scopeKey] = $scope;
+						self::$inherit[$scopeKey]          = array($scopeDim => 'a:0:{}');
+					}
 				}
-				return;
+				break;
 
 			default:
 				$scopeCnt = array();
-				foreach ($dims as $dim)
+				foreach ($spaceVals as $scopeDim => $scopeVals)
 				{
 					/**
 					* We add 1 for the global scope
 					*/
-					$scopeCnt[$dim] = 1 + count($usedScopes[$dim]);
+					$scopeCnt[$scopeDim] = 1 + count($scopeVals);
 				}
+
+				/**
+				* Make sure the second dimension of the array is indexed numerically
+				*/
+				$spaceVals = array_map('array_values', $spaceVals);
 
 				$n   = 0;
 				$max = array_product($scopeCnt);
@@ -503,14 +510,14 @@ class Acl
 					$scope = array();
 					$div   = 1;
 
-					foreach ($scopeCnt as $dim => $cnt)
+					foreach ($scopeCnt as $scopeDim => $cnt)
 					{
 						$j    = (int) ($n / $div) % $cnt;
 						$div *= $cnt;
 
 						if ($j)
 						{
-							$scope[$dim] = $usedScopes[$dim][$j - 1];
+							$scope[$scopeDim] = $spaceVals[$scopeDim][$j - 1];
 						}
 					}
 
@@ -518,19 +525,23 @@ class Acl
 
 					self::$unserializeCache[$scopeKey] = $scope;
 
-					foreach ($scope as $dim => $scopeVal)
+					foreach ($scope as $scopeDim => $scopeVal)
 					{
 						$tmp = $scope;
-						unset($tmp[$dim]);
+						unset($tmp[$scopeDim]);
 
-						self::$inherit[$scopeKey][$dim] = serialize($tmp);
-						self::$unserializeCache[serialize($tmp)] = $tmp;
+						$tmpKey = serialize($tmp);
+
+						self::$inherit[$scopeKey][$scopeDim] = $tmpKey;
+						self::$unserializeCache[$tmpKey]     = $tmp;
 					}
 
 					$bootstrap[$scopeKey] = null;
 				}
 				while (++$n < $max);
 		}
+
+		return $bootstrap;
 	}
 
 	static protected function mergeMasks(array $masks)
@@ -1217,24 +1228,98 @@ class Acl
 
 	static protected function optimizePermsDimensions(array &$acl)
 	{
-		$foo = $bar = array();
+		/**
+		* @var array Holds all the scopes (in array form) for all the perms
+		*/
+		$allScopes = array();
+		
+		/**
+		* @var array Holds the scope values that cannot be deleted without corrupting the ACL
+		*/
+		$keepScopes = array();
+
+		/**
+		* @var array Holds the dimensions used for each permission
+		*/
+		$permDims = array();
+
 		foreach ($acl as $perm => $settings)
 		{
+			$allScopes[$perm] = $keepScopes[$perm] = array();
+
 			foreach ($settings as $scopeKey => $setting)
 			{
-				foreach (unserialize($scopeKey) as $scopeDim => $scopeVal)
+				foreach (self::$unserializeCache[$scopeKey] as $scopeDim => $scopeVal)
 				{
-					$bar[$perm][$scopeDim][$scopeVal] = $scopeVal;
+					$allScopes[$perm][$scopeDim][$scopeVal] = $scopeVal;
 					if ($setting !== $settings[self::$inherit[$scopeKey][$scopeDim]])
 					{
-						$foo[$perm][$scopeDim][$scopeVal] = $scopeVal;
+						$keepScopes[$perm][$scopeDim][$scopeVal] = $scopeVal;
 					}
+				}
+			}
+
+			/**
+			* The last setting of a perm always contains all of its dimensions, we'll use that
+			* property to easily compute this perm's dimensions
+			*/
+			$dims            = array_keys(self::$unserializeCache[$scopeKey]);
+			$permDims[$perm] = array_combine($dims, $dims);
+		}
+
+		if ($keepScopes == $allScopes)
+		{
+			return;
+		}
+
+		/**
+		* @var array Holds the scope values that could be deleted safely (with no side-effects)
+		*            for each perm
+		*/
+		$deleteScopes = array();
+
+		/**
+		* @var array Holds the dimensions that could be deleted safely (with no side-effects)
+		*            for each perm
+		*/
+		$deleteDims = array();
+
+		foreach ($allScopes as $perm => $scopes)
+		{
+			foreach ($scopes as $scopeDim => $scopeVals)
+			{
+				if (isset($keepScopes[$perm][$scopeDim]))
+				{
+					$deleteScopes[$perm][$scopeDim]
+						= array_diff_key($scopeVals, $keepScopes[$perm][$scopeDim]);
+				}
+				else
+				{
+					/**
+					* We don't need to keep any values for that dimension, therefore we can safely
+					* remove the whole dimension
+					*/
+					$deleteDims[$perm][$scopeDim] = $scopeDim;
+				}
+			}
+		}
+		
+		foreach ($deleteDims as $perm => $dims)
+		{
+			foreach ($acl[$perm] as $scopeKey => $setting)
+			{
+				if (isset(self::$unserializeCache[$scopeKey][$scopeDim]))
+				{
 				}
 			}
 		}
 
-//		print_r($foo);
-//		print_r($bar);
+		$deleteScopes = array_filter(array_map('array_filter', $deleteScopes));
+
+		if (!$deleteScopes)
+		{
+			return;
+		}
 	}
 
 	/**
@@ -1327,11 +1412,11 @@ class Acl
 		foreach ($permDims as $perm => &$dims)
 		{
 			ksort($dims);
-			$key = serialize(array_keys($dims));
+			$key = serialize($dims);
 
 			if (!isset($bootstrap[$key]))
 			{
-				self::unroll($dims, $usedScopes, $bootstrap[$key]);
+				$bootstrap[$key] = self::getBootstrap(array_intersect_key($usedScopes, $dims));
 			}
 
 			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
