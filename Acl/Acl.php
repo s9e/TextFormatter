@@ -40,7 +40,7 @@ class Acl
 	/**
 	* @var array unserialize() cache
 	*/
-	static protected $unserializeCache = array();
+	static protected $unserializeCache = array('a:0:{}' => array());
 
 	/**
 	* @var array Holds the list of parent scopes a given scope inherits from
@@ -275,23 +275,18 @@ class Acl
 			return array();
 		}
 
-		//======================================================================
-		// The ACL is ready, we prepare to reduce it
-		//======================================================================
-
 		/**
 		* Replace allow/null/deny settings with '0' and '1'
 		*/
 		self::normalizeSettingsRepresentation($acl);
 
-		//======================================================================
-		// Here we reduce the ACL by optimizing away redundant stuff
-		//======================================================================
-
+		/**
+		* Remove unused dimensions and scopes
+		*/
 		self::optimizePermsDimensions($acl);
 
 		/**
-		* First we sort perms by their dimensions
+		* Sort perms by their dimensions
 		*/
 		$permsPerSpace = self::seedUniverse($acl);
 
@@ -300,15 +295,10 @@ class Acl
 		*/
 		$spaces = array();
 
-		/**
-		* We iterate over $permsPerSpace using references so that we operate on the original
-		* rather than a copy. This way, we can alter it and see the modifications in the next
-		* iteration. This property is essential for optimizing away whole dimensions
-		*/
-		foreach ($permsPerSpace as $spaceId => &$perms)
+		foreach ($permsPerSpace as $spaceId => $spacePerms)
 		{
 			if ($spaceId === 'a:0:{}'
-			 || empty($perms))
+			 || empty($spacePerms))
 			{
 				/**
 				* We ignore empty spaces for obvious reasons, and we do the global space separately
@@ -318,11 +308,29 @@ class Acl
 			}
 
 			/**
-			* Remove perms sharing the same mask and perms that are not granted in any scope.
-			* This has to be done space by space, because perms from different spaces could generate
-			* the same mask regardless of their dimensions
+			* Remove perms sharing the same mask. This has to be done space by space, because perms
+			* from different spaces could generate the same mask regardless of their dimensions
 			*/
-			$permAliases = self::dedupPerms($perms);
+			$permAliases = self::dedupPerms($spacePerms);
+
+			/**
+			* Remove scopes sharing the same mask
+			*/
+/*
+			$scopeAliases = self::dedupScopes($spacePerms);
+
+			foreach ($scopeAliases as $scopeDim => $scopeVals)
+			{
+				foreach ($scopeVals as $scopeVal => $aliases)
+				{
+					foreach ($aliases as $alias)
+					{
+						unset($usedScopes[$scopeDim][array_search($alias, $usedScopes[$scopeDim])]);
+					}
+				}
+			}
+			$usedScopes = array_map('array_values', $usedScopes);
+*/
 
 			$space = self::generateSpace($permsPerSpace, $spaceId, $usedScopes);
 
@@ -341,7 +349,6 @@ class Acl
 				$spaces[] = $space;
 			}
 		}
-		unset($perms);
 
 		if (!empty($permsPerSpace['a:0:{}']))
 		{
@@ -1174,16 +1181,16 @@ class Acl
 	/**
 	* Deduplicate perms that share the same permission mask
 	*
-	* Will remove duplicates and return a list of aliases, if applicable
+	* Will remove duplicates and return a list of aliases, if applicable.
 	*
-	* @param  array &$perms
-	* @return array         A 2D array where keys are perms and values are aliases
+	* @param  array &$spacePerms
+	* @return array              A 2D array where keys are perms and values are aliases
 	*/
-	static protected function dedupPerms(array &$perms)
+	static protected function dedupPerms(array &$spacePerms)
 	{
 		$permAliases = $masks = array();
 
-		foreach ($perms as $perm => $settings)
+		foreach ($spacePerms as $perm => $settings)
 		{
 			$mask = implode('', $settings);
 
@@ -1195,9 +1202,9 @@ class Acl
 				*/
 				$originalPerm = $masks[$mask];
 
-				$permAliases[$originalPerm][$perm] = $perm;
+				$permAliases[$originalPerm][] = $perm;
 
-				unset($perms[$perm]);
+				unset($spacePerms[$perm]);
 				continue;
 			}
 
@@ -1210,6 +1217,81 @@ class Acl
 		return $permAliases;
 	}
 
+	/**
+	* Deduplicate scopes that share the same permission mask
+	*
+	* Will remove duplicates and return a list of aliases perm dimension, if applicable.
+	*
+	* @param  array &$spacePerms
+	* @return array
+	*/
+	static protected function dedupScopes(array &$spacePerms)
+	{
+		/**
+		* @var array 2D array holding the mask of every dimension/scope value
+		*/
+		$scopeMasks = array();
+
+		foreach ($spacePerms as $perm => $settings)
+		{
+			foreach ($settings as $scopeKey => $setting)
+			{
+				foreach (self::$unserializeCache[$scopeKey] as $scopeDim => $scopeVal)
+				{
+					if (!isset($scopeMasks[$scopeDim][$scopeVal]))
+					{
+						$scopeMasks[$scopeDim][$scopeVal] = '';
+					}
+
+					$scopeMasks[$scopeDim][$scopeVal] .= $setting;
+				}
+			}
+		}
+
+		/**
+		* @var array 2D array using the dimension name as first key, a mask as second key and a list
+		*            of scopes using this mask as values
+		*/
+		$scopesPerMasks = array();
+
+		foreach ($scopeMasks as $scopeDim => $masks)
+		{
+			foreach ($masks as $scopeVal => $mask)
+			{
+				$scopesPerMask[$scopeDim][$mask][] = $scopeVal;
+			}
+		}
+
+		$scopeAliases = array();
+		foreach ($scopesPerMask as $scopeDim => $masks)
+		{
+			foreach ($masks as $mask => $scopeVals)
+			{
+				if (isset($scopeVals[1]))
+				{
+					$scopeAliases[$scopeDim][array_pop($scopeVals)] = $scopeVals;
+
+					foreach ($scopeVals as $scopeVal)
+					{
+						foreach ($spacePerms as $perm => &$settings)
+						{
+							self::removeSettingsByScopeVal($settings, $scopeDim, $scopeVal);
+						}
+						unset($settings);
+					}
+				}
+			}
+		}
+
+		return $scopeAliases;
+	}
+
+	/**
+	* Remove unused dimensions and scopes, in place
+	*
+	* @param  array &$acl
+	* @return void
+	*/
 	static protected function optimizePermsDimensions(array &$acl)
 	{
 		/**
@@ -1221,11 +1303,6 @@ class Acl
 		* @var array Holds the scope values that cannot be deleted without corrupting the ACL
 		*/
 		$keepScopes = array();
-
-		/**
-		* @var array Holds the dimensions used for each permission
-		*/
-		$permDims = self::getPermsDims($acl);
 
 		foreach ($acl as $perm => $settings)
 		{
@@ -1283,8 +1360,6 @@ class Acl
 							unset($acl[$perm][$scopeKey]);
 						}
 					}
-
-					unset($permDims[$perm][$scopeDim]);
 				}
 			}
 		}
@@ -1294,6 +1369,80 @@ class Acl
 		if (!$deleteScopes)
 		{
 			return;
+		}
+
+		/**
+		* @var array Holds the dimensions used for each permission
+		*/
+		$permDims = self::getPermsDims($acl);
+
+		/**
+		* @var array Sorts perms per space: spaceId as key, list of perms as value
+		*/
+		$permsPerSpace = array();
+
+		foreach ($permDims as $perm => $dims)
+		{
+			$permsPerSpace[serialize($dims)][] = $perm;
+		}
+
+		foreach ($permsPerSpace as $spaceId => $spacePerms)
+		{
+			/**
+			* We take the first perm of that space, see if any of its scope can be removed and test
+			* whether it can be removed for all the perms in that space
+			*/
+			$perm = $spacePerms[0];
+
+			if (!isset($deleteScopes[$perm]))
+			{
+				/**
+				* Nothing to delete
+				*/
+				continue;
+			}
+
+			foreach ($deleteScopes[$perm] as $scopeDim => $scopeVals)
+			{
+				foreach ($scopeVals as $scopeVal => $void)
+				{
+					foreach ($spacePerms as $spacePerm)
+					{
+						if (!isset($deleteScopes[$spacePerm][$scopeDim][$scopeVal]))
+						{
+							continue 3;
+						}
+					}
+
+					/**
+					* That scope can be removed safely
+					*/
+					foreach ($spacePerms as $spacePerm)
+					{
+						self::removeSettingsByScopeVal($acl[$spacePerm], $scopeDim, $scopeVal);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	* Remove all settings that match a scope, in place
+	*
+	* @param  array      &$settings
+	* @param  string     $scopeDim
+	* @param  int|string $scopeVal
+	* @return void
+	*/
+	static protected function removeSettingsByScopeVal(array &$settings, $scopeDim, $scopeVal)
+	{
+		foreach ($settings as $scopeKey => $setting)
+		{
+			if (isset(self::$unserializeCache[$scopeKey][$scopeDim])
+			 && self::$unserializeCache[$scopeKey][$scopeDim] === $scopeVal)
+			{
+				unset($settings[$scopeKey]);
+			}
 		}
 	}
 
