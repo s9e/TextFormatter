@@ -96,7 +96,10 @@ class InternalsTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayNotHasKey('perms', $config['foo']);
 	}
 
-	public function testPermIsNotOptimizedAwayToAnotherSpaceIfItIsAloneInNewSpace()
+	/**
+	* Currently disabled
+	*/
+	public function _testPermIsNotOptimizedAwayToAnotherSpaceIfItIsAloneInNewSpace()
 	{
 		$acl = new Acl;
 

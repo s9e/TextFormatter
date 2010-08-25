@@ -288,7 +288,7 @@ class Acl
 		// Here we reduce the ACL by optimizing away redundant stuff
 		//======================================================================
 
-//		self::optimizePermsDimensions($acl);
+		self::optimizePermsDimensions($acl);
 
 		/**
 		* First we sort perms by their dimensions
@@ -318,7 +318,9 @@ class Acl
 			}
 
 			/**
-			* Remove perms sharing the same mask and perms that are not granted in any scope
+			* Remove perms sharing the same mask and perms that are not granted in any scope.
+			* This has to be done space by space, because perms from different spaces could generate
+			* the same mask regardless of their dimensions
 			*/
 			$permAliases = self::dedupPerms($perms);
 
