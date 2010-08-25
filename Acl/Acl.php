@@ -1050,12 +1050,6 @@ class Acl
 		*/
 		$deleteScopes = array();
 
-		/**
-		* @var array Holds the dimensions that could be deleted safely (with no side-effects)
-		*            for each perm
-		*/
-		$deleteDims = array();
-
 		foreach ($allScopes as $perm => $scopes)
 		{
 			foreach ($scopes as $scopeDim => $scopeVals)
