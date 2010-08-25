@@ -443,7 +443,7 @@ class Acl
 	* @param  array $spaceVals 2D array with scope dimensions first and all possible values second
 	* @return array
 	*/
-	static protected function getBootstrap(array $spaceVals)
+	static protected function generateBootstrap(array $spaceVals)
 	{
 		$bootstrap = array('a:0:{}' => null);
 
@@ -1389,7 +1389,7 @@ class Acl
 
 			if (!isset($bootstrap[$key]))
 			{
-				$bootstrap[$key] = self::getBootstrap(array_intersect_key($usedScopes, $dims));
+				$bootstrap[$key] = self::generateBootstrap(array_intersect_key($usedScopes, $dims));
 			}
 
 			$acl[$perm] = array_merge($bootstrap[$key], $acl[$perm]);
