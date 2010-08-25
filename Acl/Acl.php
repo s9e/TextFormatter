@@ -280,24 +280,6 @@ class Acl
 		//======================================================================
 
 		/**
-		* Holds the dimensions used for each permission
-		*/
-		$permDims = array();
-
-		foreach ($acl as $perm => $settings)
-		{
-			end($settings);
-			$scopeKey = key($settings);
-
-			$permDims[$perm] = array();
-
-			foreach (self::$unserializeCache[$scopeKey] as $scopeDim => $scopeVal)
-			{
-				$permDims[$perm][$scopeDim] = $scopeDim;
-			}
-		}
-
-		/**
 		* Replace allow/null/deny settings with '0' and '1'
 		*/
 		self::normalizeSettingsRepresentation($acl);
@@ -311,8 +293,7 @@ class Acl
 		/**
 		* First we sort perms by their dimensions
 		*/
-		$permsPerSpace = self::seedUniverse($permDims, $acl);
-		unset($permDims, $acl);
+		$permsPerSpace = self::seedUniverse($acl);
 
 		/**
 		* @var array
@@ -629,8 +610,9 @@ class Acl
 	* dimension from a perm during a loop, we can keep processing the perms normally and deal with
 	* the newly-reduced perm in a later iteration.
 	*/
-	static protected function seedUniverse(array $permDims, array $acl)
+	static protected function seedUniverse(array $acl)
 	{
+		$permDims      = self::getPermsDims($acl);
 		$permsPerSpace = array('a:0:{}' => array());
 
 		foreach ($permDims as $perm => $dims)
@@ -1241,7 +1223,7 @@ class Acl
 		/**
 		* @var array Holds the dimensions used for each permission
 		*/
-		$permDims = array();
+		$permDims = self::getPermsDims($acl);
 
 		foreach ($acl as $perm => $settings)
 		{
@@ -1258,13 +1240,6 @@ class Acl
 					}
 				}
 			}
-
-			/**
-			* The last setting of a perm always contains all of its dimensions, we'll use that
-			* property to easily compute this perm's dimensions
-			*/
-			$dims            = array_keys(self::$unserializeCache[$scopeKey]);
-			$permDims[$perm] = array_combine($dims, $dims);
 		}
 
 		if ($keepScopes == $allScopes)
@@ -1299,17 +1274,15 @@ class Acl
 					* We don't need to keep any values for that dimension, therefore we can safely
 					* remove the whole dimension
 					*/
-					$deleteDims[$perm][$scopeDim] = $scopeDim;
-				}
-			}
-		}
-		
-		foreach ($deleteDims as $perm => $dims)
-		{
-			foreach ($acl[$perm] as $scopeKey => $setting)
-			{
-				if (isset(self::$unserializeCache[$scopeKey][$scopeDim]))
-				{
+					foreach ($acl[$perm] as $scopeKey => $setting)
+					{
+						if (isset(self::$unserializeCache[$scopeKey][$scopeDim]))
+						{
+							unset($acl[$perm][$scopeKey]);
+						}
+					}
+
+					unset($permDims[$perm][$scopeDim]);
 				}
 			}
 		}
@@ -1423,5 +1396,37 @@ class Acl
 		}
 
 		return $acl;
+	}
+
+	/**
+	* Get the dimensions of every perm
+	*
+	* The last setting of a perm always contains all of its dimensions, we use that property to
+	* easily compute each perm's dimensions
+	*
+	* @param  array $acl
+	* @return array
+	*/
+	static protected function getPermsDims(array $acl)
+	{
+		$permDims = array();
+
+		foreach ($acl as $perm => $settings)
+		{
+			end($settings);
+			$scopeKey = key($settings);
+
+			if ($scopeKey === 'a:0:{}')
+			{
+				$permDims[$perm] = array();
+			}
+			else
+			{
+				$dims            = array_keys(self::$unserializeCache[$scopeKey]);
+				$permDims[$perm] = array_combine($dims, $dims);
+			}
+		}
+
+		return $permDims;
 	}
 }
