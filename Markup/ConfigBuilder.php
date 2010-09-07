@@ -7,10 +7,6 @@
 */
 namespace s9e\Toolkit\Markup;
 
-/**
-* @todo Move the creation of internal BBCodes in add*() methods? The reason is that if we call
-*       getXSL() before generating a config, the stylesheet won't have the default templates
-*/
 class ConfigBuilder
 {
 	const ALLOW_INSECURE_TEMPLATES = 1;
@@ -959,6 +955,11 @@ class ConfigBuilder
 
 	public function getXSL()
 	{
+		/**
+		* Force the automatic creation of default BBCodes for Autolink/Censor/Emoticons
+		*/
+		$this->getParserConfig();
+
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
 		     . "\n"
 			 . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
