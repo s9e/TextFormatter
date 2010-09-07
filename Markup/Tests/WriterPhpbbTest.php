@@ -100,7 +100,7 @@ class WriterPhpbbTest extends \PHPUnit_Framework_TestCase
 		$cb->addEmoticon(':lol:', '');
 		phpbb3_writer::$smilies[':lol:'] = '<!-- s:lol: --><img src="{SMILIES_PATH}/icon_lol.gif" alt=":lol:" title="Laughing" /><!-- s:lol: -->';
 
-		$cb->addBBCode('smiley');
+		$cb->addBBCode('smiley', array('internal_use' => true));
 		$cb->setEmoticonOption('bbcode', 'smiley');
 		//======================================================================
 
