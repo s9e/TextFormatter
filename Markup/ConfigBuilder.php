@@ -617,7 +617,6 @@ class ConfigBuilder
 		{
 			return false;
 		}
-
 		
 		if (!isset($this->passes['Censor']['bbcode'], $this->passes['Censor']['param']))
 		{
