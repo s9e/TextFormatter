@@ -229,7 +229,6 @@ class ConfigBuilder
 		$config = $this->passes['BBCode'];
 		$config['aliases'] = $this->bbcodeAliases;
 		$config['bbcodes'] = $this->bbcodes;
-		unset($config['tpl']);
 
 		$bbcodeIds = array_keys($this->bbcodes);
 
@@ -289,6 +288,8 @@ class ConfigBuilder
 				//@codeCoverageIgnoreStart
 			}
 			//@codeCoverageIgnoreEnd
+
+			unset($bbcode['tpl']);
 		}
 		unset($bbcode);
 
