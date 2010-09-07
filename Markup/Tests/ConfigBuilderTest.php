@@ -487,6 +487,20 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	public function testTemplatesAreStrippedOffBBCodeConfig()
+	{
+		$this->cb->setBBCodeTemplate('b', '<b></b>');
+		$config = $this->cb->getParserConfig();
+		$this->assertArrayNotHasKey('tpl', $config['passes']['BBCode']['bbcodes']['B']);
+	}
+
+	public function testDefaultReplacementIsStrippedOffCensorConfig()
+	{
+		$this->cb->addCensor('foo');
+		$config = $this->cb->getParserConfig();
+		$this->assertArrayNotHasKey('default_replacement', $config['passes']['Censor']);
+	}
+
 	public function setUp()
 	{
 		$this->cb = new ConfigBuilder;

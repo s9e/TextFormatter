@@ -7,6 +7,10 @@
 */
 namespace s9e\Toolkit\Markup;
 
+/**
+* @todo Move the creation of internal BBCodes in add*() methods? The reason is that if we call
+*       getXSL() before generating a config, the stylesheet won't have the default templates
+*/
 class ConfigBuilder
 {
 	const ALLOW_INSECURE_TEMPLATES = 1;
@@ -22,8 +26,9 @@ class ConfigBuilder
 			'limit_action' => 'ignore'
 		),
 		'Censor' => array(
-			'limit'        => 1000,
-			'limit_action' => 'warn'
+			'limit'               => 1000,
+			'limit_action'        => 'warn',
+			'default_replacement' => '****'
 		),
 		'Emoticon' => array(
 			'limit'        => 1000,
@@ -552,6 +557,7 @@ class ConfigBuilder
 		}
 
 		$this->addBBCode($bbcodeId, array('internal_use' => true));
+
 		return $bbcodeId;
 	}
 
@@ -628,17 +634,16 @@ class ConfigBuilder
 			$this->setCensorOption('param', 'with');
 		}
 
-		$bbcodeId = $this->passes['Censor']['bbcode'];
+		$config   = $this->passes['Censor'];
+		$bbcodeId = $config['bbcode'];
 
 		if (!isset($this->bbcodes[$bbcodeId]['tpl']))
 		{
 			$this->setBBCodeTemplate(
 				$bbcodeId,
-				'<xsl:choose><xsl:when test="@with"><xsl:value-of select="@with"/></xsl:when><xsl:otherwise>****</xsl:otherwise></xsl:choose>'
+				'<xsl:choose><xsl:when test="@with"><xsl:value-of select="@with"/></xsl:when><xsl:otherwise>' . htmlspecialchars($config['default_replacement']) . '</xsl:otherwise></xsl:choose>'
 			);
 		}
-
-		$config = $this->passes['Censor'];
 
 		foreach ($this->censor['words'] as $k => $words)
 		{
@@ -654,6 +659,8 @@ class ConfigBuilder
 		{
 			$config['replacements'] = $this->censor['replacements'];
 		}
+
+		unset($config['default_replacement']);
 
 		return $config;
 	}

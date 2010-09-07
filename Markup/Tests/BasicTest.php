@@ -186,52 +186,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testCensor()
-	{
-		$text     = 'You dirty apple';
-		$expected = '<rt>You dirty <C>apple</C></rt>';
-		$actual   = $this->parser->parse($text);
-
-		$this->assertSame($expected, $actual);
-	}
-
-	public function testCensorWithReplacement()
-	{
-		$text     = 'You dirty banana';
-		$expected = '<rt>You dirty <C with="pear">banana</C></rt>';
-		$actual   = $this->parser->parse($text);
-
-		$this->assertSame($expected, $actual);
-	}
-
-	public function testTokenizerLimitIsRespected()
-	{
-		$config = $this->config;
-		$config['passes']['Censor']['limit'] = 1;
-		$config['passes']['Censor']['limit_action'] = 'ignore';
-
-		$parser = new Parser($config);
-
-		$text     = 'You dirty banana banana grape';
-		$expected = '<rt>You dirty <C with="pear">banana</C> banana grape</rt>';
-		$actual   = $parser->parse($text);
-
-		$this->assertSame($expected, $actual);
-	}
-
-	/**
-	* @expectedException Exception
-	*/
-	public function testTokenizerLimitExceededWithActionAbortThrowsAnException()
-	{
-		$config = $this->config;
-		$config['passes']['Censor']['limit'] = 1;
-		$config['passes']['Censor']['limit_action'] = 'abort';
-
-		$parser = new Parser($config);
-		$parser->parse('You dirty banana banana grape');
-	}
-
 	/**
 	* @dataProvider getWhitespaceTrimming
 	*/
