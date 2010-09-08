@@ -95,7 +95,7 @@ class Parser
 							$msgType     = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
 							$matches[$k] = array_slice($matches[$k], 0, $limit);
 
-							$msgs[$msgType][] = array(
+							$this->msgs[$msgType][] = array(
 								'pos'    => 0,
 								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
 								'params' => array($config['limit'])
