@@ -32,7 +32,7 @@ class Parser
 	/**
 	* @var	array
 	*/
-	public $msgs;
+	protected $log;
 
 	/**
 	* @var	array
@@ -50,9 +50,19 @@ class Parser
 		$this->filters = $config['filters'];
 	}
 
+	/**
+	* Return the message log
+	*
+	* @return array
+	*/
+	public function getLog()
+	{
+		return $this->log;
+	}
+
 	public function parse($text, $writer = '\\XMLWriter')
 	{
-		$this->msgs = array();
+		$this->log = array();
 
 		$tags = $this->getAllTags($text);
 
@@ -106,11 +116,10 @@ class Parser
 
 			if ($pos > $tag['pos'])
 			{
-				$this->msgs['debug'][] = array(
-					'pos'    => $tag['pos'],
-					'msg'    => 'Tag skipped',
-					'params' => array()
-				);
+				$this->log('debug', array(
+					'pos' => $tag['pos'],
+					'msg' => 'Tag skipped'
+				));
 				continue;
 			}
 
@@ -122,11 +131,11 @@ class Parser
 
 				if (!isset($aliases[$bbcodeId]))
 				{
-					$this->msgs['debug'][] = array(
+					$this->log('debug', array(
 						'pos'    => $tag['pos'],
 						'msg'    => 'Unknown BBCode %1$s from pass %2$s',
 						'params' => array($bbcodeId, $tag['pass'])
-					);
+					));
 					continue;
 				}
 
@@ -180,11 +189,11 @@ class Parser
 
 				if (!isset($allowed[$bbcodeId]))
 				{
-					$this->msgs['debug'][] = array(
+					$this->log('debug', array(
 						'pos'    => $tag['pos'],
 						'msg'    => 'BBCode %s is not allowed in this context',
 						'params' => array($bbcodeId)
-					);
+					));
 					continue;
 				}
 
@@ -195,11 +204,11 @@ class Parser
 					if (!$lastBBCode
 					 || $lastBBCode['bbcode_id'] !== $bbcode['require_parent'])
 					{
-						$this->msgs['debug'][] = array(
+						$this->log('debug', array(
 							'pos'    => $tag['pos'],
 							'msg'    => 'BBCode %1$s requires %2$s as parent',
 							'params' => array($bbcodeId, $bbcode['require_parent'])
-						);
+						));
 
 						continue;
 					}
@@ -211,11 +220,11 @@ class Parser
 					{
 						if (empty($cntOpen[$ascendant]))
 						{
-							$this->msgs['debug'][] = array(
+							$this->log('debug', array(
 								'pos'    => $tag['pos'],
 								'msg'    => 'BBCode %1$s requires %2$s as ascendant',
 								'params' => array($bbcodeId, $ascendant)
-							);
+							));
 							continue 2;
 						}
 					}
@@ -233,11 +242,11 @@ class Parser
 							continue;
 						}
 
-						$this->msgs['error'][] = array(
+						$this->log('error', array(
 							'pos'    => $tag['pos'],
 							'msg'    => 'Missing param %s',
 							'params' => array($param)
-						);
+						));
 
 						continue 2;
 					}
@@ -253,17 +262,17 @@ class Parser
 							foreach ($_msgs as $msg)
 							{
 								$msg['pos'] = $tag['pos'];
-								$this->msgs[$type][] = $msg;
+								$this->log($type, $msg);
 							}
 						}
 
 						if ($v === false)
 						{
-							$this->msgs['error'][] = array(
+							$this->log('error', array(
 								'pos'    => $tag['pos'],
 								'msg'    => 'Invalid param %s',
 								'params' => array($k)
-							);
+							));
 
 							if ($bbcode['params'][$k]['is_required'])
 							{
@@ -432,11 +441,11 @@ class Parser
 					/**
 					* This is an end tag but there's no matching start tag
 					*/
-					$this->msgs['debug'][] = array(
+					$this->log('debug', array(
 						'pos'    => $tag['pos'],
 						'msg'    => 'Could not find a matching start tag for BBCode %s',
 						'params' => array($bbcodeId . $suffix)
-					);
+					));
 					continue;
 				}
 
@@ -864,9 +873,8 @@ class Parser
 						if ($rpos + $spn >= $textLen)
 						{	
 							$msgs['debug'][] = array(
-								'pos'    => $rpos,
-								'msg'    => 'Param name seems to extend till the end of $text',
-								'params' => array()
+								'pos' => $rpos,
+								'msg' => 'Param name seems to extend till the end of $text'
 							);
 							continue 2;
 						}
@@ -1062,6 +1070,18 @@ class Parser
 	//==========================================================================
 
 	/**
+	* Add a message to the error log
+	*
+	* @param  string $type  Message type: debug, warning or error
+	* @param  array  $entry Log info
+	* @return void
+	*/
+	protected function log($type, array $entry)
+	{
+		$this->log[$type][] = $entry;
+	}
+
+	/**
 	* Return all the tags that apply to given text, sorted by precedence
 	*
 	* @param  string $text
@@ -1112,11 +1132,10 @@ class Parser
 							$msgType     = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
 							$matches[$k] = array_slice($matches[$k], 0, $limit);
 
-							$this->msgs[$msgType][] = array(
-								'pos'    => 0,
+							$this->log($msgType, array(
 								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
 								'params' => array($config['limit'])
-							);
+							));
 
 							$skip = true;
 						}
@@ -1138,7 +1157,13 @@ class Parser
 
 			if (!empty($ret['msgs']))
 			{
-				$this->msgs = array_merge_recursive($this->msgs, $ret['msgs']);
+				foreach ($ret['msgs'] as $type => $_msgs)
+				{
+					foreach ($_msgs as $msg)
+					{
+						$this->log($type, $msg);
+					}
+				}
 			}
 
 			if (!empty($ret['tags']))

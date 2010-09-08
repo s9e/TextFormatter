@@ -203,12 +203,11 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array(
 			'debug' => array(
 				array(
-					'pos'    => 0,
 					'msg'    => 'Censor limit exceeded. Only the first %s matches will be processed',
 					'params' => array(1)
 				)
 			)
-		), $parser->msgs);
+		), $parser->getLog());
 	}
 
 	/**

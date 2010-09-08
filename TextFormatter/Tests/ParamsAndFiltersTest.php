@@ -19,7 +19,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$actual = $this->parser->parse($text);
 		$this->assertSame($expected, $actual);
 
-		$actual_msgs = $this->parser->msgs;
+		$actual_msgs = $this->parser->getLog();
 
 		if (!isset($expected_msgs['debug']))
 		{
