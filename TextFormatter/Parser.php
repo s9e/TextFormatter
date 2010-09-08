@@ -30,17 +30,17 @@ class Parser
 	const TAG_SELF  = 3;
 
 	/**
-	* @var	array
+	* @var array
 	*/
 	protected $log;
 
 	/**
-	* @var	array
+	* @var array
 	*/
 	protected $passes;
 
 	/**
-	* @var	array
+	* @var array
 	*/
 	protected $filters;
 
@@ -83,27 +83,27 @@ class Parser
 		$bbcodes = $this->passes['BBCode']['bbcodes'];
 
 		/**
-		* @var	array	Open BBCodes
+		* @var array Open BBCodes
 		*/
 		$bbcodeStack = array();
 
 		/**
-		* @var	array	List of allowed BBCode tags in current context. Starts as a copy of $aliases
+		* @var array List of allowed BBCode tags in current context. Starts as a copy of $aliases
 		*/
 		$allowed = $aliases;
 
 		/**
-		* @var	array	Number of times each BBCode has been used
+		* @var array Number of times each BBCode has been used
 		*/
 		$cntTotal = array_fill_keys($allowed, 0);
 
 		/**
-		* @var	array	Number of open tags for each bbcode_id
+		* @var array Number of open tags for each bbcode_id
 		*/
 		$cntOpen = $cntTotal;
 
 		/**
-		* @var	array	Keeps track open tags (tags carry their suffix)
+		* @var array Keeps track open tags (tags carry their suffix)
 		*/
 		$openTags = array();
 
