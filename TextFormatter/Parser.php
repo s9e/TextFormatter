@@ -52,101 +52,9 @@ class Parser
 
 	public function parse($text, $writer = '\\XMLWriter')
 	{
-		$this->msgs = $tags = array();
+		$this->msgs = array();
 
-		$pass = 0;
-		foreach ($this->passes as $name => $config)
-		{
-			$matches = array();
-			if (isset($config['regexp']))
-			{
-				$isArray = is_array($config['regexp']);
-
-				$cnt  = 0;
-				$skip = false;
-
-				foreach ((array) $config['regexp'] as $k => $regexp)
-				{
-					if ($skip)
-					{
-						$matches[$k] = array();
-						continue;
-					}
-
-					$_cnt = preg_match_all($regexp, $text, $matches[$k], \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
-
-					if (!$_cnt)
-					{
-						continue;
-					}
-
-					$cnt += $_cnt;
-
-					if (!empty($config['limit'])
-					 && $cnt > $config['limit'])
-					{
-						if ($config['limit_action'] === 'abort')
-						{
-							throw new \RuntimeException($name . ' limit exceeded');
-						}
-						else
-						{
-							$limit       = $config['limit'] + $_cnt - $cnt;
-							$msgType     = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-							$matches[$k] = array_slice($matches[$k], 0, $limit);
-
-							$this->msgs[$msgType][] = array(
-								'pos'    => 0,
-								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
-								'params' => array($config['limit'])
-							);
-
-							$skip = true;
-						}
-					}
-				}
-
-				if (!$isArray)
-				{
-					$matches = $matches[0];
-				}
-			}
-
-			if (!isset($config['parser']))
-			{
-				$config['parser'] = array('self', 'get' . $name . 'Tags');
-			}
-
-			$ret = call_user_func($config['parser'], $text, $config, $matches);
-
-			if (!empty($ret['msgs']))
-			{
-				$this->msgs = array_merge_recursive($this->msgs, $ret['msgs']);
-			}
-
-			if (!empty($ret['tags']))
-			{
-				foreach ($ret['tags'] as $tag)
-				{
-					if (!isset($tag['suffix']))
-					{
-						/**
-						* Add a suffix to tags that don't have one so that closing tags from a
-						* pass don't close tags opened by another pass
-						*/
-						$tag['suffix'] = '-' . $pass;
-					}
-					if (!isset($tag['params']))
-					{
-						$tag['params'] = array();
-					}
-					$tag['pass'] = $pass;
-					$tags[]      = $tag;
-				}
-			}
-
-			++$pass;
-		}
+		$tags = $this->getAllTags($text);
 
 		$xml = new $writer;
 		$xml->openMemory();
@@ -156,16 +64,6 @@ class Parser
 			$xml->writeElement('pt', $text);
 			return trim($xml->outputMemory(true));
 		}
-
-		/**
-		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), pass descending
-		*/
-		usort($tags, function($a, $b)
-		{
-			return ($b['pos'] - $a['pos'])
-			    ?: ($a['type'] - $b['type'])
-			    ?: ($b['pass'] - $a['pass']);
-		});
 
 		//======================================================================
 		// Time to get serious
@@ -1157,5 +1055,126 @@ class Parser
 			'tags' => $tags,
 			'msgs' => $msgs
 		);
+	}
+
+	//==========================================================================
+	// Internal stuff
+	//==========================================================================
+
+	/**
+	* Return all the tags that apply to given text, sorted by precedence
+	*
+	* @param  string $text
+	* @return array
+	*/
+	protected function getAllTags($text)
+	{
+		$tags = array();
+
+		$pass = 0;
+		foreach ($this->passes as $name => $config)
+		{
+			$matches = array();
+			if (isset($config['regexp']))
+			{
+				$isArray = is_array($config['regexp']);
+
+				$cnt  = 0;
+				$skip = false;
+
+				foreach ((array) $config['regexp'] as $k => $regexp)
+				{
+					if ($skip)
+					{
+						$matches[$k] = array();
+						continue;
+					}
+
+					$_cnt = preg_match_all($regexp, $text, $matches[$k], \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+
+					if (!$_cnt)
+					{
+						continue;
+					}
+
+					$cnt += $_cnt;
+
+					if (!empty($config['limit'])
+					 && $cnt > $config['limit'])
+					{
+						if ($config['limit_action'] === 'abort')
+						{
+							throw new \RuntimeException($name . ' limit exceeded');
+						}
+						else
+						{
+							$limit       = $config['limit'] + $_cnt - $cnt;
+							$msgType     = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
+							$matches[$k] = array_slice($matches[$k], 0, $limit);
+
+							$this->msgs[$msgType][] = array(
+								'pos'    => 0,
+								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
+								'params' => array($config['limit'])
+							);
+
+							$skip = true;
+						}
+					}
+				}
+
+				if (!$isArray)
+				{
+					$matches = $matches[0];
+				}
+			}
+
+			if (!isset($config['parser']))
+			{
+				$config['parser'] = array('self', 'get' . $name . 'Tags');
+			}
+
+			$ret = call_user_func($config['parser'], $text, $config, $matches);
+
+			if (!empty($ret['msgs']))
+			{
+				$this->msgs = array_merge_recursive($this->msgs, $ret['msgs']);
+			}
+
+			if (!empty($ret['tags']))
+			{
+				foreach ($ret['tags'] as $tag)
+				{
+					if (!isset($tag['suffix']))
+					{
+						/**
+						* Add a suffix to tags that don't have one so that closing tags from a
+						* pass don't close tags opened by another pass
+						*/
+						$tag['suffix'] = '-' . $pass;
+					}
+					if (!isset($tag['params']))
+					{
+						$tag['params'] = array();
+					}
+					$tag['pass'] = $pass;
+					$tags[]      = $tag;
+				}
+			}
+
+			++$pass;
+		}
+
+		/**
+		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), pass descending
+		*/
+		usort($tags, function($a, $b)
+		{
+			return ($b['pos'] - $a['pos'])
+			    ?: ($a['type'] - $b['type'])
+			    ?: ($b['pass'] - $a['pass']);
+		});
+
+		return $tags;
 	}
 }
