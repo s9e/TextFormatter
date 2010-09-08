@@ -126,7 +126,6 @@ class Parser
 			$bbcodeId = $tag['name'];
 			if (!isset($bbcodes[$bbcodeId]))
 			{
-
 				$bbcodeId = strtoupper($bbcodeId);
 
 				if (!isset($aliases[$bbcodeId]))
