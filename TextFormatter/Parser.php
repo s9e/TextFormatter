@@ -29,20 +29,38 @@ class Parser
 	*/
 	const TAG_SELF  = 3;
 
+	//==============================================================================================
+	// Application stuff
+	//==============================================================================================
+
 	/**
-	* @var array
+	* @var array  Logged messages, reinitialized whenever a text is parsed
 	*/
 	protected $log;
 
 	/**
-	* @var array
+	* @var array  Formatting passes
 	*/
 	protected $passes;
 
 	/**
-	* @var array
+	* @var array  Parameter filters
 	*/
 	protected $filters;
+
+	//==============================================================================================
+	// Per-formatting vars
+	//==============================================================================================
+
+	/**
+	* @var string Text being parsed
+	*/
+	protected $text;
+
+	/**
+	* @var array  Tags associated to current text
+	*/
+	protected $tags;
 
 	public function __construct(array $config)
 	{
@@ -62,9 +80,34 @@ class Parser
 
 	public function parse($text, $writer = '\\XMLWriter')
 	{
-		$this->log = array();
+		$this->text = $text;
+		$this->log  = array();
 
-		$tags = $this->getAllTags($text);
+		/**
+		* Capture all tags
+		*/
+		$this->captureTags();
+
+		/**
+		* Sort them by position and precedence
+		*/
+		$this->sortTags();
+
+		/**
+		* Remove overlapping tags, filter invalid tags, etc...
+		*/
+		return $this->processTags($writer);
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function processTags($writer)
+	{
+		$text = $this->text;
+		$tags = $this->tags;
 
 		$xml = new $writer;
 		$xml->openMemory();
@@ -1081,14 +1124,13 @@ class Parser
 	}
 
 	/**
-	* Return all the tags that apply to given text, sorted by precedence
+	* Capture all the tags that apply to given text, sorted by precedence
 	*
-	* @param  string $text
-	* @return array
+	* @return void
 	*/
-	protected function getAllTags($text)
+	protected function captureTags()
 	{
-		$tags = array();
+		$this->tags = array();
 
 		$pass = 0;
 		foreach ($this->passes as $name => $config)
@@ -1096,20 +1138,29 @@ class Parser
 			$matches = array();
 			if (isset($config['regexp']))
 			{
+				/**
+				* Some passes have several regexps in an array, others have a single regexp as a
+				* string. We convert the latter to an array so that we can iterate over it.
+				*/
 				$isArray = is_array($config['regexp']);
+				$regexps = ($isArray) ? $config['regexp'] : array($config['regexp']);
 
-				$cnt  = 0;
+				/**
+				* @var bool If true, skip the rest of the regexps
+				*/
 				$skip = false;
 
-				foreach ((array) $config['regexp'] as $k => $regexp)
+				$cnt = 0;
+				foreach ($regexps as $k => $regexp)
 				{
+					$matches[$k] = array();
+
 					if ($skip)
 					{
-						$matches[$k] = array();
 						continue;
 					}
 
-					$_cnt = preg_match_all($regexp, $text, $matches[$k], \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+					$_cnt = preg_match_all($regexp, $this->text, $matches[$k], \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
 
 					if (!$_cnt)
 					{
@@ -1141,6 +1192,14 @@ class Parser
 					}
 				}
 
+				if (!$cnt)
+				{
+					/**
+					* No matches? skip this pass
+					*/
+					continue;
+				}
+
 				if (!$isArray)
 				{
 					$matches = $matches[0];
@@ -1152,13 +1211,13 @@ class Parser
 				$config['parser'] = array('self', 'get' . $name . 'Tags');
 			}
 
-			$ret = call_user_func($config['parser'], $text, $config, $matches);
+			$ret = call_user_func($config['parser'], $this->text, $config, $matches);
 
 			if (!empty($ret['msgs']))
 			{
-				foreach ($ret['msgs'] as $type => $_msgs)
+				foreach ($ret['msgs'] as $type => $msgs)
 				{
-					foreach ($_msgs as $msg)
+					foreach ($msgs as $msg)
 					{
 						$this->log($type, $msg);
 					}
@@ -1177,28 +1236,36 @@ class Parser
 						*/
 						$tag['suffix'] = '-' . $pass;
 					}
+
 					if (!isset($tag['params']))
 					{
 						$tag['params'] = array();
 					}
-					$tag['pass'] = $pass;
-					$tags[]      = $tag;
+
+					$tag['pass']  = $pass;
+					$this->tags[] = $tag;
 				}
 			}
 
 			++$pass;
 		}
+	}
 
+	/**
+	* Sort tags by position and precedence
+	*
+	* @return void
+	*/
+	protected function sortTags()
+	{
 		/**
 		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), pass descending
 		*/
-		usort($tags, function($a, $b)
+		usort($this->tags, function($a, $b)
 		{
 			return ($b['pos'] - $a['pos'])
 			    ?: ($a['type'] - $b['type'])
 			    ?: ($b['pass'] - $a['pass']);
 		});
-
-		return $tags;
 	}
 }
