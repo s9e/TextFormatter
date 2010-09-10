@@ -10,24 +10,24 @@ namespace s9e\Toolkit\TextFormatter;
 class Parser
 {
 	/**
-	* Opening tag, e.g. [b]
+	* Start tag, e.g. [b]
 	* -- becomes <B><st>[b]</st>
 	*/
-	const TAG_OPEN  = 1;
+	const START_TAG  = 1;
 
 	/**
-	* Closing tag, e.g. [/b]
+	* End tag, e.g. [/b]
 	* -- becomes <et>[/b]</et></B>
 	*/
-	const TAG_CLOSE = 2;
+	const END_TAG = 2;
 
 	/**
 	* Self-closing tag, e.g. [img="http://..." /]
 	* -- becomes <IMG>[img="http://..." /]</IMG>
 	*
-	* NOTE: TAG_SELF = TAG_OPEN | TAG_CLOSE
+	* NOTE: SELF_CLOSING_TAG = START_TAG | END_TAG
 	*/
-	const TAG_SELF  = 3;
+	const SELF_CLOSING_TAG  = 3;
 
 	/**
 	* Characters that are removed by the trim_* config directives
@@ -163,7 +163,7 @@ class Parser
 				$text = substr($text, 0, -$tag['trim_after']);
 			}
 
-			if ($tag['type'] & self::TAG_OPEN)
+			if ($tag['type'] & self::START_TAG)
 			{
 				$xml->startElement($tag['name']);
 
@@ -177,7 +177,7 @@ class Parser
 
 				if ($text > '')
 				{
-					if ($tag['type'] & self::TAG_CLOSE)
+					if ($tag['type'] & self::END_TAG)
 					{
 						$xml->text($text);
 						$xml->endElement();
@@ -279,8 +279,8 @@ class Parser
 			* Original: "  [b]  -text-  [/b]  "
 			* Matches:  "XX[b]  -text-XX[/b]  "
 			*/
-			if (($tag['type']  &  self::TAG_OPEN  && !empty($bbcode['trim_before']))
-			 || ($tag['type'] === self::TAG_CLOSE && !empty($bbcode['rtrim_content'])))
+			if (($tag['type']  &  self::START_TAG  && !empty($bbcode['trim_before']))
+			 || ($tag['type'] === self::END_TAG && !empty($bbcode['rtrim_content'])))
 			{
 				$tag['trim_before'] = strspn(strrev(substr($this->text, $pos, $tag['pos'] - $pos)), self::TRIM_CHARLIST);
 				$tag['len']        += $tag['trim_before'];
@@ -296,8 +296,8 @@ class Parser
 			* Original: "  [b]  -text-  [/b]  "
 			* Matches:  "  [b]XX-text-  [/b]XX"
 			*/
-			if (($tag['type'] === self::TAG_OPEN  && !empty($bbcode['ltrim_content']))
-			 || ($tag['type']  &  self::TAG_CLOSE && !empty($bbcode['trim_after'])))
+			if (($tag['type'] === self::START_TAG  && !empty($bbcode['ltrim_content']))
+			 || ($tag['type']  &  self::END_TAG && !empty($bbcode['trim_after'])))
 			{
 				$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $pos);
 				$tag['len']        += $tag['trim_after'];
@@ -372,7 +372,7 @@ class Parser
 			// Start tag
 			//==================================================================
 
-			if ($tag['type'] & self::TAG_OPEN)
+			if ($tag['type'] & self::START_TAG)
 			{
 				//==============================================================
 				// Check that this BBCode is allowed here
@@ -397,7 +397,7 @@ class Parser
 								'pos'  => $tag['pos'],
 								'name' => $parentBBCodeId,
 								'len'  => 0,
-								'type' => self::TAG_CLOSE
+								'type' => self::END_TAG
 								/** @todo TEST ME
 								'suffix' => $lastBBCode['suffix']
 								*/
@@ -521,7 +521,7 @@ class Parser
 
 				++$cntTotal[$bbcodeId];
 
-				if ($tag['type'] & self::TAG_CLOSE)
+				if ($tag['type'] & self::END_TAG)
 				{
 					continue;
 				}
@@ -549,7 +549,7 @@ class Parser
 			// End tag
 			//==================================================================
 
-			if ($tag['type'] & self::TAG_CLOSE)
+			if ($tag['type'] & self::END_TAG)
 			{
 				if (empty($openTags[$bbcodeId . $suffix]))
 				{
@@ -580,7 +580,7 @@ class Parser
 							'name' => $cur['bbcode_id'],
 							'pos'  => $tag['pos'],
 							'len'  => 0,
-							'type' => self::TAG_CLOSE
+							'type' => self::END_TAG
 						);
 					}
 					break;
@@ -709,14 +709,14 @@ class Parser
 			$tags[] = array(
 				'pos'    => $m[0][1],
 				'name'   => $bbcode,
-				'type'   => self::TAG_OPEN,
+				'type'   => self::START_TAG,
 				'len'    => 0,
 				'params' => array($param => $url)
 			);
 			$tags[] = array(
 				'pos'    => $m[0][1] + strlen($url),
 				'name'   => $bbcode,
-				'type'   => self::TAG_CLOSE,
+				'type'   => self::END_TAG,
 				'len'    => 0
 			);
 		}
@@ -814,11 +814,11 @@ class Parser
 					continue;
 				}
 
-				$type = self::TAG_CLOSE;
+				$type = self::END_TAG;
 			}
 			else
 			{
-				$type       = self::TAG_OPEN;
+				$type       = self::START_TAG;
 				$wellFormed = false;
 				$param      = null;
 
@@ -876,7 +876,7 @@ class Parser
 							/**
 							* Self-closing tag, e.g. [foo/]
 							*/
-							$type = self::TAG_SELF;
+							$type = self::SELF_CLOSING_TAG;
 							++$rpos;
 
 							if ($rpos === $textLen)
@@ -1017,7 +1017,7 @@ class Parser
 					continue;
 				}
 
-				if ($type === self::TAG_OPEN
+				if ($type === self::START_TAG
 				 && isset($bbcode['default_param'])
 				 && !isset($params[$bbcode['default_param']])
 				 && !empty($bbcode['content_as_param']))
@@ -1075,7 +1075,7 @@ class Parser
 				$tag = array(
 					'pos'  => $m[0][1],
 					'name' => $bbcode,
-					'type' => self::TAG_SELF,
+					'type' => self::SELF_CLOSING_TAG,
 					'len'  => strlen($m[0][0])
 				);
 
@@ -1107,7 +1107,7 @@ class Parser
 		{
 			$tags[] = array(
 				'pos'    => $m[0][1],
-				'type'   => self::TAG_SELF,
+				'type'   => self::SELF_CLOSING_TAG,
 				'name'   => $config['bbcode'],
 				'len'    => strlen($m[0][0])
 			);
