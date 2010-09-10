@@ -125,6 +125,7 @@ class phpbb3_writer
 
 	protected $ret = '';
 	protected $tag_closed = false;
+	protected $bbcodes = array();
 
 	public function openMemory()
 	{
