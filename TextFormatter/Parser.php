@@ -97,15 +97,26 @@ class Parser
 		unset($this->text);
 	}
 
-	public function parse($text, $writer = '\\XMLWriter')
+	public function parse($text)
 	{
 		$this->clear();
 		$this->text = $text;
+		$this->prepareTags();
 
+		return $this->output();
+	}
+
+	protected function output()
+	{
+		return $this->asXML();
+	}
+
+	protected function prepareTags()
+	{
 		/**
 		* Capture all tags
 		*/
-		$this->captureTags();
+		$this->executePasses();
 
 		/**
 		* Normalize tag names and remove unknown tags
@@ -121,14 +132,22 @@ class Parser
 		* Remove overlapping tags, filter invalid tags, apply BBCode rules and stuff
 		*/
 		$this->processTags();
+	}
 
-
-		$xml = new $writer;
+	/**
+	* 
+	*
+	* @return string
+	*/
+	protected function asXML()
+	{
+		$xml = new \XMLWriter;
 		$xml->openMemory();
 
 		if (empty($this->tags))
 		{
 			$xml->writeElement('pt', $this->text);
+
 			return trim($xml->outputMemory(true));
 		}
 
@@ -1163,11 +1182,11 @@ class Parser
 	}
 
 	/**
-	* Capture all the tags that apply to given text, sorted by precedence
+	* Execute all the passes and store their tags/messages
 	*
 	* @return void
 	*/
-	protected function captureTags()
+	protected function executePasses()
 	{
 		$this->tagStack = array();
 
