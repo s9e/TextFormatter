@@ -111,8 +111,6 @@ class Parser
 		* Normalize tag names and remove unknown tags
 		*/
 		$this->normalizeTags();
-print_r($this->log);
-die('k');
 
 		/**
 		* Sort them by position and precedence
@@ -120,9 +118,94 @@ die('k');
 		$this->sortTags();
 
 		/**
+		* Add the info related to whitespace trimming
+		*/
+		$this->addTrimmingInfo();
+
+		/**
 		* Remove overlapping tags, filter invalid tags, apply BBCode rules and stuff
 		*/
 		$this->processTags();
+
+
+		$xml = new $writer;
+		$xml->openMemory();
+
+		if (empty($this->tags))
+		{
+			$xml->writeElement('pt', $this->text);
+			return trim($xml->outputMemory(true));
+		}
+
+		$xml->startElement('rt');
+		$pos = 0;
+		foreach ($this->tags as $tag)
+		{
+			$xml->text(substr($this->text, $pos, $tag['pos'] - $pos));
+
+			/**
+			* 
+			*/
+			$text = substr($this->text, $tag['pos'], $tag['len']);
+
+			if (!empty($tag['trim_before']))
+			{
+				$xml->writeElement('i', substr($this->text, $pos, $tag['trim_before']));
+
+				$text = substr($text, $tag['trim_before']);
+			}
+
+			if (!empty($tag['trim_after']))
+			{
+				$text = substr($text, 0, -$tag['trim_after']);
+			}
+
+			$pos = $tag['pos'] + $tag['len'];
+
+			if ($tag['type'] & self::TAG_OPEN)
+			{
+				$xml->startElement($tag['name']);
+
+				if (!empty($tag['params']))
+				{
+					foreach ($tag['params'] as $k => $v)
+					{
+						$xml->writeAttribute($k, $v);
+					}
+				}
+
+				if ($text !== '')
+				{
+					if ($tag['type'] & self::TAG_CLOSE)
+					{
+						$xml->text($text);
+						$xml->endElement();
+					}
+					else
+					{
+						$xml->writeElement('st', $text);
+					}
+				}
+			}
+			else
+			{
+				if ($text !== '')
+				{
+					$xml->writeElement('et', $text);
+				}
+				$xml->endElement();
+			}
+
+			if (!empty($tag['trim_after']))
+			{
+				$xml->writeElement('i', substr($this->text, $pos - $tag['trim_after'], $tag['trim_after']));
+			}
+		}
+
+		$xml->text(substr($this->text, $pos));
+		$xml->endDocument();
+
+		return trim($xml->outputMemory(true));
 	}
 
 	/**
@@ -132,6 +215,9 @@ die('k');
 	*/
 	protected function normalizeTags()
 	{
+		$bbcodes = $this->passes['BBCode']['bbcodes'];
+		$aliases = $this->passes['BBCode']['bbcodes'];
+
 		foreach ($this->tagStack as $k => &$tag)
 		{
 			/**
@@ -180,7 +266,7 @@ die('k');
 		$bbcodes = $this->passes['BBCode']['bbcodes'];
 
 		$pos = 0;
-		foreach ($this->tags as &$tag)
+		foreach ($this->tagStack as &$tag)
 		{
 			$bbcode = $bbcodes[$tag['name']];
 
@@ -188,8 +274,8 @@ die('k');
 			* Original: "  [b]  -text-  [/b]  "
 			* Matches:  "XX[b]  -text-XX[/b]  "
 			*/
-			if (($tag['type']  &  self::OPEN  && $bbcode['trim_before'])
-			 || ($tag['type'] === self::CLOSE && $bbcode['rtrim_content']))
+			if (($tag['type']  &  self::TAG_OPEN  && !empty($bbcode['trim_before']))
+			 || ($tag['type'] === self::TAG_CLOSE && !empty($bbcode['rtrim_content'])))
 			{
 				$tag['trim_before'] = strspn(strrev(substr($this->text, $pos, $tag['pos'] - $pos)), self::TRIM_CHARLIST);
 				$tag['len']        += $tag['trim_before'];
@@ -200,8 +286,8 @@ die('k');
 			* Original: "  [b]  -text-  [/b]  "
 			* Matches:  "  [b]XX-text-  [/b]XX"
 			*/
-			if (($tag['type'] === self::OPEN  && $bbcode['ltrim_content'])
-			 || ($tag['type']  &  self::CLOSE && $bbcode['trim_after']))
+			if (($tag['type'] === self::TAG_OPEN  && !empty($bbcode['ltrim_content']))
+			 || ($tag['type']  &  self::TAG_CLOSE && !empty($bbcode['trim_after'])))
 			{
 				$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $tag['pos'] - $pos);
 				$tag['len']        += $tag['trim_after'];
@@ -269,8 +355,9 @@ die('k');
 				continue;
 			}
 
-			$bbcode = $bbcodes[$bbcodeId];
-			$suffix = (isset($tag['suffix'])) ? $tag['suffix'] : '';
+			$bbcodeId = $tag['name'];
+			$bbcode   = $bbcodes[$bbcodeId];
+			$suffix   = (isset($tag['suffix'])) ? $tag['suffix'] : '';
 
 			//==================================================================
 			// Start tag
@@ -478,9 +565,20 @@ die('k');
 					--$cntOpen[$cur['bbcode_id']];
 					--$openTags[$cur['bbcode_id'] . $cur['suffix']];
 
-					$this->tags[] = $cur;
+					if ($cur['bbcode_id'] !== $bbcodeId)
+					{
+						$this->tags[] = array(
+							'name' => $cur['bbcode_id'],
+							'pos'  => $tag['pos'],
+							'len'  => 0,
+							'type' => self::TAG_CLOSE
+						);
+					}
+					break;
 				}
-				while ($cur['bbcode_id'] !== $bbcodeId);
+				while (1);
+
+				$this->tags[] = $tag;
 			}
 		}
 		while (!empty($this->tagStack));
