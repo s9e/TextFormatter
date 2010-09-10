@@ -29,6 +29,19 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	/**
+	* @depends testCloseParent
+	*/
+	public function testCloseParentWorksOnParentsWithSuffix()
+	{
+		$text     = '[list][*:123]one[*:456]two[/list]';
+		$expected =
+		            '<rt><LIST><st>[list]</st><LI><st>[*:123]</st>one</LI><LI><st>[*:456]</st>two</LI><et>[/list]</et></LIST></rt>';
+		$actual   = $this->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function testDeny()
 	{
 		$cb = new ConfigBuilder;

@@ -730,14 +730,13 @@ class Parser
 							* ...then we create a new end tag which we put on top of the stack
 							*/
 							$tag = array(
-								'pos'  => $tag['pos'],
-								'name' => $parentBBCodeId,
-								'len'  => 0,
-								'type' => self::END_TAG
-								/** @todo TEST ME
-								'suffix' => $lastBBCode['suffix']
-								*/
+								'pos'    => $tag['pos'],
+								'name'   => $parentBBCodeId,
+								'suffix' => $lastBBCode['suffix'],
+								'len'    => 0,
+								'type'   => self::END_TAG
 							);
+
 							$this->addTrimmingInfoToTag($tag, $pos);
 							$this->tagStack[] = $tag;
 
