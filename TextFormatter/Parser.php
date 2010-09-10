@@ -29,6 +29,12 @@ class Parser
 	*/
 	const TAG_SELF  = 3;
 
+	/**
+	* Characters that are removed by the trim_* config directives
+	* @link http://docs.php.net/manual/en/function.trim.php
+	*/
+	const TRIM_CHARLIST = " \n\r\t\0\x0B";
+
 	//==============================================================================================
 	// Application stuff
 	//==============================================================================================
@@ -58,7 +64,12 @@ class Parser
 	protected $text;
 
 	/**
-	* @var array  Tags associated to current text
+	* @var array  Unprocessed tags, in reverse order
+	*/
+	protected $tagStack;
+
+	/**
+	* @var array  Processed tags, in document order
 	*/
 	protected $tags;
 
@@ -78,10 +89,18 @@ class Parser
 		return $this->log;
 	}
 
+	public function clear()
+	{
+		$this->log      = array();
+		$this->tagStack = array();
+		$this->tags     = array();
+		unset($this->text);
+	}
+
 	public function parse($text, $writer = '\\XMLWriter')
 	{
+		$this->clear();
 		$this->text = $text;
-		$this->log  = array();
 
 		/**
 		* Capture all tags
@@ -89,14 +108,107 @@ class Parser
 		$this->captureTags();
 
 		/**
+		* Normalize tag names and remove unknown tags
+		*/
+		$this->normalizeTags();
+print_r($this->log);
+die('k');
+
+		/**
 		* Sort them by position and precedence
 		*/
 		$this->sortTags();
 
 		/**
-		* Remove overlapping tags, filter invalid tags, etc...
+		* Remove overlapping tags, filter invalid tags, apply BBCode rules and stuff
 		*/
-		return $this->processTags($writer);
+		$this->processTags();
+	}
+
+	/**
+	* Normalize tag names and remove unknown tags
+	*
+	* @return void
+	*/
+	protected function normalizeTags()
+	{
+		foreach ($this->tagStack as $k => &$tag)
+		{
+			/**
+			* Normalize the tag name
+			*/
+			if (!isset($bbcodes[$tag['name']]))
+			{
+				$bbcodeId = strtoupper($tag['name']);
+
+				if (!isset($aliases[$bbcodeId]))
+				{
+					$this->log('debug', array(
+						'pos'    => $tag['pos'],
+						'msg'    => 'Removed unknown BBCode %1$s from pass %2$s',
+						'params' => array($tag['name'], $tag['pass'])
+					));
+
+					unset($this->tagStack[$k]);
+					continue;
+				}
+
+				$bbcodeId = $aliases[$bbcodeId];
+			}
+
+			/**
+			* Sort params alphabetically. Can be useful if someone wants to process the
+			* output using regexp
+			*/
+			ksort($tag['params']);
+		}
+	}
+
+	/**
+	* Add trimming info to tags
+	*
+	* For tags where one of the trim* directive is set, the "pos" and "len" attributes are adjusted
+	* to comprise the surrounding whitespace and two attributes, "trim_before" and "trim_after" are
+	* added.
+	*
+	* @todo rename config settings to trim_before_start, trim_after_start, trim_before_end, trim_after_end
+	*
+	* @return void
+	*/
+	protected function addTrimmingInfo()
+	{
+		$bbcodes = $this->passes['BBCode']['bbcodes'];
+
+		$pos = 0;
+		foreach ($this->tags as &$tag)
+		{
+			$bbcode = $bbcodes[$tag['name']];
+
+			/**
+			* Original: "  [b]  -text-  [/b]  "
+			* Matches:  "XX[b]  -text-XX[/b]  "
+			*/
+			if (($tag['type']  &  self::OPEN  && $bbcode['trim_before'])
+			 || ($tag['type'] === self::CLOSE && $bbcode['rtrim_content']))
+			{
+				$tag['trim_before'] = strspn(strrev(substr($this->text, $pos, $tag['pos'] - $pos)), self::TRIM_CHARLIST);
+				$tag['len']        += $tag['trim_before'];
+				$tag['pos']        -= $tag['trim_before'];
+			}
+
+			/**
+			* Original: "  [b]  -text-  [/b]  "
+			* Matches:  "  [b]XX-text-  [/b]XX"
+			*/
+			if (($tag['type'] === self::OPEN  && $bbcode['ltrim_content'])
+			 || ($tag['type']  &  self::CLOSE && $bbcode['trim_after']))
+			{
+				$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $tag['pos'] - $pos);
+				$tag['len']        += $tag['trim_after'];
+			}
+
+			$pos = $tag['pos'] + $tag['len'];
+		}
 	}
 
 	/**
@@ -104,18 +216,11 @@ class Parser
 	*
 	* @return void
 	*/
-	protected function processTags($writer)
+	protected function processTags()
 	{
-		$text = $this->text;
-		$tags = $this->tags;
-
-		$xml = new $writer;
-		$xml->openMemory();
-
-		if (empty($tags))
+		if (empty($this->tagStack))
 		{
-			$xml->writeElement('pt', $text);
-			return trim($xml->outputMemory(true));
+			return;
 		}
 
 		//======================================================================
@@ -150,12 +255,10 @@ class Parser
 		*/
 		$openTags = array();
 
-		$xml->startElement('rt');
-
 		$pos = 0;
 		do
 		{
-			$tag = array_pop($tags);
+			$tag = array_pop($this->tagStack);
 
 			if ($pos > $tag['pos'])
 			{
@@ -164,24 +267,6 @@ class Parser
 					'msg' => 'Tag skipped'
 				));
 				continue;
-			}
-
-			$bbcodeId = $tag['name'];
-			if (!isset($bbcodes[$bbcodeId]))
-			{
-				$bbcodeId = strtoupper($bbcodeId);
-
-				if (!isset($aliases[$bbcodeId]))
-				{
-					$this->log('debug', array(
-						'pos'    => $tag['pos'],
-						'msg'    => 'Unknown BBCode %1$s from pass %2$s',
-						'params' => array($bbcodeId, $tag['pass'])
-					));
-					continue;
-				}
-
-				$bbcodeId = $aliases[$bbcodeId];
 			}
 
 			$bbcode = $bbcodes[$bbcodeId];
@@ -203,20 +288,23 @@ class Parser
 					* Oh, wait, we may have to close its parent first
 					*/
 					$lastBBCode = end($bbcodeStack);
-					foreach ($bbcode['close_parent'] as $parent)
+					foreach ($bbcode['close_parent'] as $parentBBCodeId)
 					{
-						if ($lastBBCode['bbcode_id'] === $parent)
+						if ($lastBBCode['bbcode_id'] === $parentBBCodeId)
 						{
 							/**
 							* So we do have to close that parent. First we reinsert current tag then
 							* we append a new closing tag for the parent.
 							*/
-							$tags[] = $tag;
-							$tags[] = array(
+							$this->tagStack[] = $tag;
+							$this->tagStack[] = array(
 								'pos'  => $tag['pos'],
-								'name' => $parent,
+								'name' => $parentBBCodeId,
 								'len'  => 0,
 								'type' => self::TAG_CLOSE
+								/** @todo TEST ME
+								'suffix' => $lastBBCode['suffix']
+								*/
 							);
 							continue 2;
 						}
@@ -322,135 +410,24 @@ class Parser
 								continue 2;
 							}
 
-							$invalid[] = $k;
+							unset($tag['params'][$k]);
 						}
-					}
-
-					foreach ($invalid as $k)
-					{
-						unset($tag['params'][$k]);
 					}
 				}
 
 				//==============================================================
-				// Ok, so we have a valid BBCode, we can append it to the XML
+				// Ok, so we have a valid BBCode
 				//==============================================================
 
-				if ($tag['pos'] !== $pos)
-				{
-					if (empty($bbcode['trim_before']))
-					{
-						$xml->text(substr($text, $pos, $tag['pos'] - $pos));
-					}
-					else
-					{
-						$len     = $tag['pos'] - $pos;
-						$content = rtrim(substr($text, $pos, $len));
-						$xml->text($content);
+				$this->tags[] = $tag;
 
-						if (strlen($content) < $len)
-						{
-							$xml->writeElement(
-								'i',
-								substr(
-									$text,
-									$pos + strlen($content),
-									$len - strlen($content)
-								)
-							);
-						}
-					}
-				}
 				$pos = $tag['pos'] + $tag['len'];
 
 				++$cntTotal[$bbcodeId];
 
-				$xml->startElement($bbcodeId);
-				if (!empty($tag['params']))
-				{
-					/**
-					* Sort params alphabetically. Can be useful if someone wants to process the
-					* output using regexp
-					*/
-					ksort($tag['params']);
-					foreach ($tag['params'] as $param => $value)
-					{
-						$xml->writeAttribute($param, $value);
-					}
-				}
-
 				if ($tag['type'] & self::TAG_CLOSE)
 				{
-					if ($tag['len'])
-					{
-						if (!empty($bbcode['ltrim_content']))
-						{
-							/**
-							* @see http://docs.php.net/manual/en/function.ltrim.php
-							*/
-							$spn = strspn($text, " \n\r\t\0\x0B", $tag['pos'], $tag['len']);
-
-							if ($spn)
-							{
-								$xml->writeElement('i', substr($text, $tag['pos'], $spn));
-								$tag['pos'] += $spn;
-								$tag['len'] -= $spn;
-							}
-						}
-
-						if (!empty($bbcode['rtrim_content']))
-						{
-							$content = rtrim(substr($text, $tag['pos'], $tag['len']));
-							$xml->text($content);
-
-							if (strlen($content) < $tag['len'])
-							{
-								$xml->writeElement(
-									'i',
-									substr(
-										$text,
-										$tag['pos'] + strlen($content),
-										$tag['len'] - strlen($content)
-									)
-								);
-							}
-						}
-						else
-						{
-							$xml->text(substr($text, $tag['pos'], $tag['len']));
-						}
-					}
-
-					$xml->endElement();
-
-					if (!empty($bbcode['trim_after']))
-					{
-						$spn = strspn($text, " \n\r\t\0\x0B", $pos);
-
-						if ($spn)
-						{
-							$xml->writeElement('i', substr($text, $pos, $spn));
-							$pos += $spn;
-						}
-					}
-
 					continue;
-				}
-
-				if ($tag['len'])
-				{
-					$xml->writeElement('st', substr($text, $tag['pos'], $tag['len']));
-				}
-
-				if (!empty($bbcode['ltrim_content']))
-				{
-					$spn = strspn($text, " \n\r\t\0\x0B", $pos);
-
-					if ($spn)
-					{
-						$xml->writeElement('i', substr($text, $pos, $spn));
-						$pos += $spn;
-					}
 				}
 
 				++$cntOpen[$bbcodeId];
@@ -491,37 +468,6 @@ class Parser
 					continue;
 				}
 
-				if ($tag['pos'] > $pos)
-				{
-					/**
-					* There's text between last tag and current tag
-					*/
-					if (empty($bbcode['rtrim_content']))
-					{
-						$xml->text(substr($text, $pos, $tag['pos'] - $pos));
-					}
-					else
-					{
-						$content = rtrim(substr($text, $pos, $tag['pos'] - $pos));
-						$xml->text($content);
-
-						/**
-						* Move $pos by the length of $content. If it does not catch up to current
-						* tag's pos, it means there's some whitespace in-between, which we write
-						* in a <i/> tag. "i" stands for "ignore"
-						*
-						* Alternatively, we could cram that whitespace into the <et/> tag, although
-						* it is not as semantically sound
-						*/
-						$pos += strlen($content);
-
-						if ($tag['pos'] > $pos)
-						{
-							$xml->writeElement('i', substr($text, $pos, $tag['pos'] - $pos));
-						}
-					}
-				}
-
 				$pos = $tag['pos'] + $tag['len'];
 
 				do
@@ -532,53 +478,12 @@ class Parser
 					--$cntOpen[$cur['bbcode_id']];
 					--$openTags[$cur['bbcode_id'] . $cur['suffix']];
 
-					if ($cur['bbcode_id'] === $bbcodeId)
-					{
-						if ($tag['len'])
-						{
-							$xml->writeElement('et', substr($text, $tag['pos'], $tag['len']));
-						}
-						$xml->endElement();
-						break;
-					}
-					$xml->endElement();
+					$this->tags[] = $cur;
 				}
-				while ($cur);
-
-				if (!empty($bbcode['trim_after']))
-				{
-					$spn = strspn($text, " \n\r\t\0\x0B", $pos);
-
-					if ($spn)
-					{
-						$xml->writeElement('i', substr($text, $pos, $spn));
-						$pos += $spn;
-					}
-				}
+				while ($cur['bbcode_id'] !== $bbcodeId);
 			}
 		}
-		while (!empty($tags));
-
-		if ($pos)
-		{
-			if (isset($text[$pos]))
-			{
-				$xml->text(substr($text, $pos));
-			}
-			$xml->endDocument();
-		}
-		else
-		{
-			/**
-			* If there was no valid tag, we rewrite the XML as a <pt/> element
-			*/
-			$xml = new $writer;
-			$xml->openMemory();
-
-			$xml->writeElement('pt', $text);
-		}
-
-		return trim($xml->outputMemory(true));
+		while (!empty($this->tagStack));
 	}
 
 	public function filter($var, $type, array &$msgs = array())
@@ -913,7 +818,7 @@ class Parser
 						}
 
 						if ($rpos + $spn >= $textLen)
-						{	
+						{
 							$msgs['debug'][] = array(
 								'pos' => $rpos,
 								'msg' => 'Param name seems to extend till the end of $text'
@@ -1130,7 +1035,7 @@ class Parser
 	*/
 	protected function captureTags()
 	{
-		$this->tags = array();
+		$this->tagStack = array();
 
 		$pass = 0;
 		foreach ($this->passes as $name => $config)
@@ -1243,7 +1148,7 @@ class Parser
 					}
 
 					$tag['pass']  = $pass;
-					$this->tags[] = $tag;
+					$this->tagStack[] = $tag;
 				}
 			}
 
@@ -1261,7 +1166,7 @@ class Parser
 		/**
 		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), pass descending
 		*/
-		usort($this->tags, function($a, $b)
+		usort($this->tagStack, function($a, $b)
 		{
 			return ($b['pos'] - $a['pos'])
 			    ?: ($a['type'] - $b['type'])
