@@ -282,23 +282,6 @@ class Parser
 	}
 
 	/**
-	* Add trimming info to tags
-	*
-	* NOTE: expects tags to be sorted by pos
-	*
-	* @return void
-	*/
-	protected function addTrimmingInfoToTags()
-	{
-		$offset = 0;
-		foreach ($this->tagStack as &$tag)
-		{
-			$this->addTrimmingInfoToTag($tag, $offset);
-			$offset = $tag['pos'] + $tag['len'];
-		}
-	}
-
-	/**
 	* Add trimming info to a tag
 	*
 	* For tags where one of the trim* directive is set, the "pos" and "len" attributes are adjusted
