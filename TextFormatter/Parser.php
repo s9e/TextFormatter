@@ -73,6 +73,16 @@ class Parser
 	*/
 	protected $tags;
 
+	//==============================================================================================
+	// Public stuff
+	//==============================================================================================
+
+	/**
+	* Constructor
+	*
+	* @param  array $config The config array returned by ConfigBuilder->getParserConfig()
+	* @return void
+	*/
 	public function __construct(array $config)
 	{
 		$this->passes  = $config['passes'];
@@ -82,13 +92,21 @@ class Parser
 	/**
 	* Return the message log
 	*
-	* @return array
+	* @return array 2D array, first dimension is the message type: "debug", "warning" or "error"
 	*/
 	public function getLog()
 	{
 		return $this->log;
 	}
 
+	/**
+	* Clear this instance's properties
+	*
+	* Used internally at the beginning of a new parsing. I suppose some memory-obsessive users will
+	* appreciate to be able to do it whenever they feel like it
+	*
+	* @return void
+	*/
 	public function clear()
 	{
 		$this->log      = array();
@@ -97,6 +115,12 @@ class Parser
 		unset($this->text);
 	}
 
+	/**
+	* Parse given text, return the default (XML) representation
+	*
+	* @param  string $text Text to parse
+	* @return string       XML representation
+	*/
 	public function parse($text)
 	{
 		$this->clear();
@@ -106,11 +130,119 @@ class Parser
 		return $this->output();
 	}
 
-	protected function output()
+	/**
+	* Filter a var according to the configuration's filters
+	*
+	* Used internally but made public so that developers can test in advance whether a var would be
+	* invalid. It mostly relies on PHP's own ext/filter extension but individual filters can be
+	* overwritten by the config
+	*
+	* @param  mixed   $var  Param value to be filtered/sanitized
+	* @param  string  $type Type of the param, e.g. "string" or "int"
+	* @param  array  &$msgs Messages to be added to the log
+	* @return mixed         The sanitized value of this param, or false if it was invalid
+	*/
+	public function filter($var, $type, array &$msgs = array())
 	{
-		return $this->asXML();
+		if (isset($this->filters[$type]['callback']))
+		{
+			return call_user_func_array(
+				$this->filters[$type]['callback'],
+				array(
+					$var,
+					$this->filters[$type],
+					&$msgs
+				)
+			);
+		}
+
+		switch ($type)
+		{
+			case 'url':
+				$var = filter_var($var, \FILTER_VALIDATE_URL);
+
+				if (!$var)
+				{
+					return false;
+				}
+
+				$p = parse_url($var);
+
+				if (!preg_match($this->filters['url']['allowed_schemes'], $p['scheme']))
+				{
+					$msgs['error'][] = array(
+						'msg'    => 'URL scheme %s is not allowed',
+						'params' => array($p['scheme'])
+					);
+					return false;
+				}
+
+				if (isset($this->filters['url']['disallowed_hosts'])
+				 && preg_match($this->filters['url']['disallowed_hosts'], $p['host']))
+				{
+					$msgs['error'][] = array(
+						'msg'    => 'URL host %s is not allowed',
+						'params' => array($p['host'])
+					);
+					return false;
+				}
+
+				/**
+				* We escape quotes just in case someone would want to use the URL in some Javascript
+				* thingy
+				*/
+				return str_replace(array("'", '"'), array('%27', '%22'), $var);
+
+			case 'simpletext':
+				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+					'options' => array('regexp' => '#^[a-zA-Z0-9\\-+.,_ ]+$#D')
+				));
+
+			case 'text':
+				return (string) $var;
+
+			case 'email':
+				return filter_var($var, \FILTER_VALIDATE_EMAIL);
+
+			case 'int':
+			case 'integer':
+				return filter_var($var, \FILTER_VALIDATE_INT);
+
+			case 'float':
+				return filter_var($var, \FILTER_VALIDATE_FLOAT);
+
+			case 'number':
+			case 'uint':
+				return filter_var($var, \FILTER_VALIDATE_INT, array(
+					'options' => array('min_range' => 0)
+				));
+
+			case 'color':
+				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
+				));
+
+			default:
+				$msgs['debug'][] = array(
+					'msg'    => 'Unknown filter %s',
+					'params' => array($type)
+				);
+				return false;
+		}
 	}
 
+	//==============================================================================================
+	// The big cheese
+	//==============================================================================================
+
+	/**
+	* Capture tabs and process them
+	*
+	* That's the main loop. It execute all the passes to capture this text's tags, clean them up
+	* then apply rules and stuff
+	*
+	* @return void
+	*/
 	protected function prepareTags()
 	{
 		/**
@@ -135,7 +267,20 @@ class Parser
 	}
 
 	/**
-	* 
+	* Default output format
+	*
+	* The purpose of this method is to be overwritten by child classes that want to output the
+	* parsed text in their own format
+	*
+	* @return string XML representation of the parsed text
+	*/
+	protected function output()
+	{
+		return $this->asXML();
+	}
+
+	/**
+	* Generate a XML representation of the text after parsing has completed
 	*
 	* @return string
 	*/
@@ -225,6 +370,23 @@ class Parser
 		return trim($xml->outputMemory(true));
 	}
 
+
+	//==========================================================================
+	// Internal stuff
+	//==========================================================================
+
+	/**
+	* Add a message to the error log
+	*
+	* @param  string $type  Message type: debug, warning or error
+	* @param  array  $entry Log info
+	* @return void
+	*/
+	protected function log($type, array $entry)
+	{
+		$this->log[$type][] = $entry;
+	}
+
 	/**
 	* Append a tag to the list of processed tags
 	*
@@ -256,48 +418,6 @@ class Parser
 		$this->addTrimmingInfoToTag($tag, $offset);
 
 		$this->tags[] = $tag;
-	}
-
-	/**
-	* Normalize tag names and remove unknown tags
-	*
-	* @return void
-	*/
-	protected function normalizeTags()
-	{
-		$bbcodes = $this->passes['BBCode']['bbcodes'];
-		$aliases = $this->passes['BBCode']['aliases'];
-
-		foreach ($this->tagStack as $k => &$tag)
-		{
-			/**
-			* Normalize the tag name
-			*/
-			if (!isset($bbcodes[$tag['name']]))
-			{
-				$bbcodeId = strtoupper($tag['name']);
-
-				if (!isset($aliases[$bbcodeId]))
-				{
-					$this->log('debug', array(
-						'pos'    => $tag['pos'],
-						'msg'    => 'Removed unknown BBCode %1$s from pass %2$s',
-						'params' => array($tag['name'], $tag['pass'])
-					));
-
-					unset($this->tagStack[$k]);
-					continue;
-				}
-
-				$tag['name'] = $aliases[$bbcodeId];
-			}
-
-			/**
-			* Sort params alphabetically. Can be useful if someone wants to process the
-			* output using regexp
-			*/
-			ksort($tag['params']);
-		}
 	}
 
 	/**
@@ -347,7 +467,180 @@ class Parser
 	}
 
 	/**
-	* 
+	* Execute all the passes and store their tags/messages
+	*
+	* @return void
+	*/
+	protected function executePasses()
+	{
+		$this->tagStack = array();
+
+		$pass = 0;
+		foreach ($this->passes as $name => $config)
+		{
+			$matches = array();
+			if (isset($config['regexp']))
+			{
+				/**
+				* Some passes have several regexps in an array, others have a single regexp as a
+				* string. We convert the latter to an array so that we can iterate over it.
+				*/
+				$isArray = is_array($config['regexp']);
+				$regexps = ($isArray) ? $config['regexp'] : array($config['regexp']);
+
+				/**
+				* @var bool If true, skip the rest of the regexps
+				*/
+				$skip = false;
+
+				$cnt = 0;
+				foreach ($regexps as $k => $regexp)
+				{
+					$matches[$k] = array();
+
+					if ($skip)
+					{
+						continue;
+					}
+
+					$_cnt = preg_match_all($regexp, $this->text, $matches[$k], \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+
+					if (!$_cnt)
+					{
+						continue;
+					}
+
+					$cnt += $_cnt;
+
+					if (!empty($config['limit'])
+					 && $cnt > $config['limit'])
+					{
+						if ($config['limit_action'] === 'abort')
+						{
+							throw new \RuntimeException($name . ' limit exceeded');
+						}
+						else
+						{
+							$limit       = $config['limit'] + $_cnt - $cnt;
+							$msgType     = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
+							$matches[$k] = array_slice($matches[$k], 0, $limit);
+
+							$this->log($msgType, array(
+								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
+								'params' => array($config['limit'])
+							));
+
+							$skip = true;
+						}
+					}
+				}
+
+				if (!$cnt)
+				{
+					/**
+					* No matches? skip this pass
+					*/
+					continue;
+				}
+
+				if (!$isArray)
+				{
+					$matches = $matches[0];
+				}
+			}
+
+			if (!isset($config['parser']))
+			{
+				$config['parser'] = array('self', 'get' . $name . 'Tags');
+			}
+
+			$ret = call_user_func($config['parser'], $this->text, $config, $matches);
+
+			if (!empty($ret['msgs']))
+			{
+				foreach ($ret['msgs'] as $type => $msgs)
+				{
+					foreach ($msgs as $msg)
+					{
+						$this->log($type, $msg);
+					}
+				}
+			}
+
+			if (!empty($ret['tags']))
+			{
+				foreach ($ret['tags'] as $tag)
+				{
+					if (!isset($tag['suffix']))
+					{
+						/**
+						* Add a suffix to tags that don't have one so that closing tags from a
+						* pass don't close tags opened by another pass
+						*/
+						$tag['suffix'] = '-' . $pass;
+					}
+
+					if (!isset($tag['params']))
+					{
+						$tag['params'] = array();
+					}
+
+					$tag['pass']  = $pass;
+					$this->tagStack[] = $tag;
+				}
+			}
+
+			++$pass;
+		}
+	}
+
+	/**
+	* Normalize tag names and remove unknown tags
+	*
+	* @return void
+	*/
+	protected function normalizeTags()
+	{
+		$bbcodes = $this->passes['BBCode']['bbcodes'];
+		$aliases = $this->passes['BBCode']['aliases'];
+
+		foreach ($this->tagStack as $k => &$tag)
+		{
+			/**
+			* Normalize the tag name
+			*/
+			if (!isset($bbcodes[$tag['name']]))
+			{
+				$bbcodeId = strtoupper($tag['name']);
+
+				if (!isset($aliases[$bbcodeId]))
+				{
+					$this->log('debug', array(
+						'pos'    => $tag['pos'],
+						'msg'    => 'Removed unknown BBCode %1$s from pass %2$s',
+						'params' => array($tag['name'], $tag['pass'])
+					));
+
+					unset($this->tagStack[$k]);
+					continue;
+				}
+
+				$tag['name'] = $aliases[$bbcodeId];
+			}
+
+			/**
+			* Sort params alphabetically. Can be useful if someone wants to process the
+			* output using regexp
+			*/
+			ksort($tag['params']);
+		}
+	}
+
+	/**
+	* Process the captured tags
+	*
+	* Removes overlapping tags, filter tags with invalid params, tags used in illegal places,
+	* applies rules
 	*
 	* @return void
 	*/
@@ -639,99 +932,41 @@ class Parser
 		while (!empty($this->tagStack));
 	}
 
-	public function filter($var, $type, array &$msgs = array())
+	/**
+	* Sort tags by position and precedence
+	*
+	* @return void
+	*/
+	protected function sortTags()
 	{
-		if (isset($this->filters[$type]['callback']))
+		/**
+		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), pass descending
+		*/
+		usort($this->tagStack, function($a, $b)
 		{
-			return call_user_func_array(
-				$this->filters[$type]['callback'],
-				array(
-					$var,
-					$this->filters[$type],
-					&$msgs
-				)
-			);
-		}
-
-		switch ($type)
-		{
-			case 'url':
-				$var = filter_var($var, \FILTER_VALIDATE_URL);
-
-				if (!$var)
-				{
-					return false;
-				}
-
-				$p = parse_url($var);
-
-				if (!preg_match($this->filters['url']['allowed_schemes'], $p['scheme']))
-				{
-					$msgs['error'][] = array(
-						'msg'    => 'URL scheme %s is not allowed',
-						'params' => array($p['scheme'])
-					);
-					return false;
-				}
-
-				if (isset($this->filters['url']['disallowed_hosts'])
-				 && preg_match($this->filters['url']['disallowed_hosts'], $p['host']))
-				{
-					$msgs['error'][] = array(
-						'msg'    => 'URL host %s is not allowed',
-						'params' => array($p['host'])
-					);
-					return false;
-				}
-
-				/**
-				* We escape quotes just in case someone would want to use the URL in some Javascript
-				* thingy
-				*/
-				return str_replace(array("'", '"'), array('%27', '%22'), $var);
-
-			case 'simpletext':
-				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
-					'options' => array('regexp' => '#^[a-zA-Z0-9\\-+.,_ ]+$#D')
-				));
-
-			case 'text':
-				return (string) $var;
-
-			case 'email':
-				return filter_var($var, \FILTER_VALIDATE_EMAIL);
-
-			case 'int':
-			case 'integer':
-				return filter_var($var, \FILTER_VALIDATE_INT);
-
-			case 'float':
-				return filter_var($var, \FILTER_VALIDATE_FLOAT);
-
-			case 'number':
-			case 'uint':
-				return filter_var($var, \FILTER_VALIDATE_INT, array(
-					'options' => array('min_range' => 0)
-				));
-
-			case 'color':
-				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
-					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
-				));
-
-			default:
-				$msgs['debug'][] = array(
-					'msg'    => 'Unknown filter %s',
-					'params' => array($type)
-				);
-				return false;
-		}
+			return ($b['pos'] - $a['pos'])
+			    ?: ($a['type'] - $b['type'])
+			    ?: ($b['pass'] - $a['pass']);
+		});
 	}
 
 	//==========================================================================
 	// Tokenizers
 	//==========================================================================
 
+	/**@+
+	* Capture tags
+	*
+	* Tokenizers share the same signature. They don't need to be part of the Parser.
+	* If this pass's config contains one of more regexps, the matches are passed as the third
+	* parameter. Tokenizers must return an array with up to two elements: "tags" which contains
+	* the captured tags, and "msgs" which contains messages to be logged
+	*
+	* @param  string $text    Text to parse
+	* @param  array  $config  This pass's config, as generated by ConfigBuilder
+	* @param  array  $matches Regexp's matches, if applicable
+	* @return array           2D array
+	*/
 	static public function getAutolinkTags($text, array $config, array $matches)
 	{
 		$tags = array();
@@ -1164,166 +1399,5 @@ class Parser
 			'msgs' => $msgs
 		);
 	}
-
-	//==========================================================================
-	// Internal stuff
-	//==========================================================================
-
-	/**
-	* Add a message to the error log
-	*
-	* @param  string $type  Message type: debug, warning or error
-	* @param  array  $entry Log info
-	* @return void
-	*/
-	protected function log($type, array $entry)
-	{
-		$this->log[$type][] = $entry;
-	}
-
-	/**
-	* Execute all the passes and store their tags/messages
-	*
-	* @return void
-	*/
-	protected function executePasses()
-	{
-		$this->tagStack = array();
-
-		$pass = 0;
-		foreach ($this->passes as $name => $config)
-		{
-			$matches = array();
-			if (isset($config['regexp']))
-			{
-				/**
-				* Some passes have several regexps in an array, others have a single regexp as a
-				* string. We convert the latter to an array so that we can iterate over it.
-				*/
-				$isArray = is_array($config['regexp']);
-				$regexps = ($isArray) ? $config['regexp'] : array($config['regexp']);
-
-				/**
-				* @var bool If true, skip the rest of the regexps
-				*/
-				$skip = false;
-
-				$cnt = 0;
-				foreach ($regexps as $k => $regexp)
-				{
-					$matches[$k] = array();
-
-					if ($skip)
-					{
-						continue;
-					}
-
-					$_cnt = preg_match_all($regexp, $this->text, $matches[$k], \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
-
-					if (!$_cnt)
-					{
-						continue;
-					}
-
-					$cnt += $_cnt;
-
-					if (!empty($config['limit'])
-					 && $cnt > $config['limit'])
-					{
-						if ($config['limit_action'] === 'abort')
-						{
-							throw new \RuntimeException($name . ' limit exceeded');
-						}
-						else
-						{
-							$limit       = $config['limit'] + $_cnt - $cnt;
-							$msgType     = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
-							$matches[$k] = array_slice($matches[$k], 0, $limit);
-
-							$this->log($msgType, array(
-								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
-								'params' => array($config['limit'])
-							));
-
-							$skip = true;
-						}
-					}
-				}
-
-				if (!$cnt)
-				{
-					/**
-					* No matches? skip this pass
-					*/
-					continue;
-				}
-
-				if (!$isArray)
-				{
-					$matches = $matches[0];
-				}
-			}
-
-			if (!isset($config['parser']))
-			{
-				$config['parser'] = array('self', 'get' . $name . 'Tags');
-			}
-
-			$ret = call_user_func($config['parser'], $this->text, $config, $matches);
-
-			if (!empty($ret['msgs']))
-			{
-				foreach ($ret['msgs'] as $type => $msgs)
-				{
-					foreach ($msgs as $msg)
-					{
-						$this->log($type, $msg);
-					}
-				}
-			}
-
-			if (!empty($ret['tags']))
-			{
-				foreach ($ret['tags'] as $tag)
-				{
-					if (!isset($tag['suffix']))
-					{
-						/**
-						* Add a suffix to tags that don't have one so that closing tags from a
-						* pass don't close tags opened by another pass
-						*/
-						$tag['suffix'] = '-' . $pass;
-					}
-
-					if (!isset($tag['params']))
-					{
-						$tag['params'] = array();
-					}
-
-					$tag['pass']  = $pass;
-					$this->tagStack[] = $tag;
-				}
-			}
-
-			++$pass;
-		}
-	}
-
-	/**
-	* Sort tags by position and precedence
-	*
-	* @return void
-	*/
-	protected function sortTags()
-	{
-		/**
-		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), pass descending
-		*/
-		usort($this->tagStack, function($a, $b)
-		{
-			return ($b['pos'] - $a['pos'])
-			    ?: ($a['type'] - $b['type'])
-			    ?: ($b['pass'] - $a['pass']);
-		});
-	}
+	/**@- */
 }

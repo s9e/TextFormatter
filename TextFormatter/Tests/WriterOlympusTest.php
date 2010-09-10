@@ -23,6 +23,10 @@ class WriterOlympusTest extends \PHPUnit_Framework_TestCase
 	}
 }
 
+/**
+* Obviously this is a very crude "parser". It only supports 3 tags, doesn't handle nl2br() doesn't
+* follow the custom escaping rules required for [code] tags, etc...
+*/
 class OlympusParser extends Parser
 {
 	protected $smilies = array();
