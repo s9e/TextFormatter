@@ -113,14 +113,16 @@ class Parser
 		$this->normalizeTags();
 
 		/**
+		* Add the info related to whitespace trimming. From the parser's perspective, whitespace
+		* becomes part of the tag; therefore, leading whitespace changes the tag's position, which
+		* is why we do this _before_ sorting the tags
+		*/
+		$this->addTrimmingInfo();
+
+		/**
 		* Sort them by position and precedence
 		*/
 		$this->sortTags();
-
-		/**
-		* Add the info related to whitespace trimming
-		*/
-		$this->addTrimmingInfo();
 
 		/**
 		* Remove overlapping tags, filter invalid tags, apply BBCode rules and stuff
@@ -174,7 +176,7 @@ class Parser
 					}
 				}
 
-				if ($text !== '')
+				if ($text > '')
 				{
 					if ($tag['type'] & self::TAG_CLOSE)
 					{
@@ -189,7 +191,7 @@ class Parser
 			}
 			else
 			{
-				if ($text !== '')
+				if ($text > '')
 				{
 					$xml->writeElement('et', $text);
 				}
@@ -216,7 +218,7 @@ class Parser
 	protected function normalizeTags()
 	{
 		$bbcodes = $this->passes['BBCode']['bbcodes'];
-		$aliases = $this->passes['BBCode']['bbcodes'];
+		$aliases = $this->passes['BBCode']['aliases'];
 
 		foreach ($this->tagStack as $k => &$tag)
 		{
@@ -239,7 +241,7 @@ class Parser
 					continue;
 				}
 
-				$bbcodeId = $aliases[$bbcodeId];
+				$tag['name'] = $aliases[$bbcodeId];
 			}
 
 			/**
