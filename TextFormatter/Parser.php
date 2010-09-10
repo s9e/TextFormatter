@@ -146,9 +146,10 @@ class Parser
 			$xml->text(substr($this->text, $pos, $tag['pos'] - $pos));
 
 			/**
-			* 
+			* Capture the part of the text that belongs to this tag then move the cursor
 			*/
 			$text = substr($this->text, $tag['pos'], $tag['len']);
+			$pos  = $tag['pos'] + $tag['len'];
 
 			if (!empty($tag['trim_before']))
 			{
@@ -161,8 +162,6 @@ class Parser
 			{
 				$text = substr($text, 0, -$tag['trim_after']);
 			}
-
-			$pos = $tag['pos'] + $tag['len'];
 
 			if ($tag['type'] & self::TAG_OPEN)
 			{
@@ -204,7 +203,11 @@ class Parser
 			}
 		}
 
-		$xml->text(substr($this->text, $pos));
+		if ($pos < strlen($this->text))
+		{
+			$xml->text(substr($this->text, $pos));
+		}
+
 		$xml->endDocument();
 
 		return trim($xml->outputMemory(true));
@@ -285,17 +288,21 @@ class Parser
 			}
 
 			/**
+			* Move the cursor past the tag
+			*/
+			$pos = $tag['pos'] + $tag['len'];
+
+			/**
 			* Original: "  [b]  -text-  [/b]  "
 			* Matches:  "  [b]XX-text-  [/b]XX"
 			*/
 			if (($tag['type'] === self::TAG_OPEN  && !empty($bbcode['ltrim_content']))
 			 || ($tag['type']  &  self::TAG_CLOSE && !empty($bbcode['trim_after'])))
 			{
-				$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $tag['pos'] - $pos);
+				$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $pos);
 				$tag['len']        += $tag['trim_after'];
+				$pos               += $tag['trim_after'];
 			}
-
-			$pos = $tag['pos'] + $tag['len'];
 		}
 	}
 

@@ -275,6 +275,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 				'[b] [foo]1 [/foo] 2 [foo]3 [/foo] [/b]',
 				'<rt><B><st>[b]</st> <FOO><st>[foo]</st><i> </i>1 <et>[/foo]</et></FOO> 2 <FOO><st>[foo]</st><i> </i>3 <et>[/foo]</et></FOO> <et>[/b]</et></B></rt>'
 			),
+/**
 			array(
 				'rtrim_content',
 				'[b] [foo] 1 [/foo] 2 [foo] 3 [/foo] [/b]',
@@ -317,6 +318,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 				'[b] [foo]FOO[/foo]| [foo]FOO[/foo][/b]',
 				'<rt><B><st>[b]</st> <FOO>FOO</FOO><i> </i>| <FOO>FOO</FOO><i> </i><et>[/b]</et></B></rt>'
 			)
+/**/
 		);
 	}
 
