@@ -113,13 +113,6 @@ class Parser
 		$this->normalizeTags();
 
 		/**
-		* Add the info related to whitespace trimming. From the parser's perspective, whitespace
-		* becomes part of the tag; therefore, leading whitespace changes the tag's position, which
-		* is why we do this _before_ sorting the tags
-		*/
-		$this->addTrimmingInfo();
-
-		/**
 		* Sort them by position and precedence
 		*/
 		$this->sortTags();
@@ -214,6 +207,39 @@ class Parser
 	}
 
 	/**
+	* Append a tag to the list of processed tags
+	*
+	* @param  array $tag
+	* @return void
+	*/
+	protected function appendTag(array $tag)
+	{
+		$offset = 0;
+
+		if (!empty($this->tags))
+		{
+			/**
+			* The left boundary is right after the last tag
+			*/
+			$lastTag = end($this->tags);
+			$offset  = $lastTag['pos'] + $lastTag['len'];
+		}
+
+		/**
+		* Add the info related to whitespace trimming. We have to do that here for several reasons:
+		*
+		*  1. We have to account for tags that are automatically closed (e.g. close_parent)
+		*  2. If we do that before sorting the tags, there are some cases where multiple tags would
+		*     attempt to claim the same whitespace
+		*  3. If we do that after the sort, the order may become incorrect since leading whitespace
+		*     becomes part of the tag, therefore changing its position
+		*/
+		$this->addTrimmingInfoToTag($tag, $offset);
+
+		$this->tags[] = $tag;
+	}
+
+	/**
 	* Normalize tag names and remove unknown tags
 	*
 	* @return void
@@ -258,51 +284,63 @@ class Parser
 	/**
 	* Add trimming info to tags
 	*
+	* NOTE: expects tags to be sorted by pos
+	*
+	* @return void
+	*/
+	protected function addTrimmingInfoToTags()
+	{
+		$offset = 0;
+		foreach ($this->tagStack as &$tag)
+		{
+			$this->addTrimmingInfoToTag($tag, $offset);
+			$offset = $tag['pos'] + $tag['len'];
+		}
+	}
+
+	/**
+	* Add trimming info to a tag
+	*
 	* For tags where one of the trim* directive is set, the "pos" and "len" attributes are adjusted
 	* to comprise the surrounding whitespace and two attributes, "trim_before" and "trim_after" are
 	* added.
 	*
 	* @todo rename config settings to trim_before_start, trim_after_start, trim_before_end, trim_after_end
 	*
+	* @param  array &$tag    Tag to which we add trimming info
+	* @param  int    $offset Leftmost boundary when looking for whitespace before a tag
 	* @return void
 	*/
-	protected function addTrimmingInfo()
+	protected function addTrimmingInfoToTag(array &$tag, $offset)
 	{
-		$bbcodes = $this->passes['BBCode']['bbcodes'];
+		$bbcode = $this->passes['BBCode']['bbcodes'][$tag['name']];
 
-		$pos = 0;
-		foreach ($this->tagStack as &$tag)
+		/**
+		* Original: "  [b]  -text-  [/b]  "
+		* Matches:  "XX[b]  -text-XX[/b]  "
+		*/
+		if (($tag['type']  &  self::START_TAG  && !empty($bbcode['trim_before']))
+		 || ($tag['type'] === self::END_TAG && !empty($bbcode['rtrim_content'])))
 		{
-			$bbcode = $bbcodes[$tag['name']];
+			$tag['trim_before'] = strspn(strrev(substr($this->text, $offset, $tag['pos'] - $offset)), self::TRIM_CHARLIST);
+			$tag['len']        += $tag['trim_before'];
+			$tag['pos']        -= $tag['trim_before'];
+		}
 
-			/**
-			* Original: "  [b]  -text-  [/b]  "
-			* Matches:  "XX[b]  -text-XX[/b]  "
-			*/
-			if (($tag['type']  &  self::START_TAG  && !empty($bbcode['trim_before']))
-			 || ($tag['type'] === self::END_TAG && !empty($bbcode['rtrim_content'])))
-			{
-				$tag['trim_before'] = strspn(strrev(substr($this->text, $pos, $tag['pos'] - $pos)), self::TRIM_CHARLIST);
-				$tag['len']        += $tag['trim_before'];
-				$tag['pos']        -= $tag['trim_before'];
-			}
+		/**
+		* Move the cursor past the tag
+		*/
+		$offset = $tag['pos'] + $tag['len'];
 
-			/**
-			* Move the cursor past the tag
-			*/
-			$pos = $tag['pos'] + $tag['len'];
-
-			/**
-			* Original: "  [b]  -text-  [/b]  "
-			* Matches:  "  [b]XX-text-  [/b]XX"
-			*/
-			if (($tag['type'] === self::START_TAG  && !empty($bbcode['ltrim_content']))
-			 || ($tag['type']  &  self::END_TAG && !empty($bbcode['trim_after'])))
-			{
-				$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $pos);
-				$tag['len']        += $tag['trim_after'];
-				$pos               += $tag['trim_after'];
-			}
+		/**
+		* Original: "  [b]  -text-  [/b]  "
+		* Matches:  "  [b]XX-text-  [/b]XX"
+		*/
+		if (($tag['type'] === self::START_TAG  && !empty($bbcode['ltrim_content']))
+		 || ($tag['type']  &  self::END_TAG && !empty($bbcode['trim_after'])))
+		{
+			$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $offset);
+			$tag['len']        += $tag['trim_after'];
 		}
 	}
 
@@ -389,11 +427,14 @@ class Parser
 						if ($lastBBCode['bbcode_id'] === $parentBBCodeId)
 						{
 							/**
-							* So we do have to close that parent. First we reinsert current tag then
-							* we append a new closing tag for the parent.
+							* So we do have to close that parent. First we reinsert current tag... 
 							*/
 							$this->tagStack[] = $tag;
-							$this->tagStack[] = array(
+
+							/**
+							* ...then we create a new end tag which we put on top of the stack
+							*/
+							$tag = array(
 								'pos'  => $tag['pos'],
 								'name' => $parentBBCodeId,
 								'len'  => 0,
@@ -402,6 +443,9 @@ class Parser
 								'suffix' => $lastBBCode['suffix']
 								*/
 							);
+							$this->addTrimmingInfoToTag($tag, $pos);
+							$this->tagStack[] = $tag;
+
 							continue 2;
 						}
 					}
@@ -515,7 +559,7 @@ class Parser
 				// Ok, so we have a valid BBCode
 				//==============================================================
 
-				$this->tags[] = $tag;
+				$this->appendTag($tag);
 
 				$pos = $tag['pos'] + $tag['len'];
 
@@ -576,18 +620,18 @@ class Parser
 
 					if ($cur['bbcode_id'] !== $bbcodeId)
 					{
-						$this->tags[] = array(
+						$this->appendTag(array(
 							'name' => $cur['bbcode_id'],
 							'pos'  => $tag['pos'],
 							'len'  => 0,
 							'type' => self::END_TAG
-						);
+						));
 					}
 					break;
 				}
 				while (1);
 
-				$this->tags[] = $tag;
+				$this->appendTag($tag);
 			}
 		}
 		while (!empty($this->tagStack));
