@@ -427,7 +427,7 @@ class Parser
 	* to comprise the surrounding whitespace and two attributes, "trim_before" and "trim_after" are
 	* added.
 	*
-	* @todo rename config settings to trim_before_start, trim_after_start, trim_before_end, trim_after_end
+	* Note that whitespace that is part of what a pass defines as a tag is left untouched.
 	*
 	* @param  array &$tag    Tag to which we add trimming info
 	* @param  int    $offset Leftmost boundary when looking for whitespace before a tag

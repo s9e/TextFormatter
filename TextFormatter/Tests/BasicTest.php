@@ -275,7 +275,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 				'[b] [foo]1 [/foo] 2 [foo]3 [/foo] [/b]',
 				'<rt><B><st>[b]</st> <FOO><st>[foo]</st><i> </i>1 <et>[/foo]</et></FOO> 2 <FOO><st>[foo]</st><i> </i>3 <et>[/foo]</et></FOO> <et>[/b]</et></B></rt>'
 			),
-/**
 			array(
 				'rtrim_content',
 				'[b] [foo] 1 [/foo] 2 [foo] 3 [/foo] [/b]',
@@ -294,17 +293,22 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 				'[b] [foo] 1 [/foo]2 [foo] 3 [/foo][/b]',
 				'<rt><B><st>[b]</st> <FOO><st>[foo]</st> 1 <et>[/foo]</et></FOO><i> </i>2 <FOO><st>[foo]</st> 3 <et>[/foo]</et></FOO><i> </i><et>[/b]</et></B></rt>'
 			),
+			/**
+			* In the following two examples, the space around FOOWS will not be removed. This is
+			* because the pass defines it as part of the tag. Therefore, it makes sense to actually
+			* preserve it
+			*/
 			array(
 				'ltrim_content',
 				'[b] FOOWS | FOOWS [/b]',
-				'[b][foo]FOOWS [/foo]|[foo]FOOWS [/foo][/b]',
-				'<rt><B><st>[b]</st><FOO><i> </i>FOOWS </FOO>|<FOO><i> </i>FOOWS </FOO><et>[/b]</et></B></rt>'
+				'[b][foo] FOOWS [/foo]|[foo] FOOWS [/foo][/b]',
+				'<rt><B><st>[b]</st><FOO> FOOWS </FOO>|<FOO> FOOWS </FOO><et>[/b]</et></B></rt>'
 			),
 			array(
 				'rtrim_content',
 				'[b] FOOWS | FOOWS [/b]',
-				'[b][foo] FOOWS[/foo]|[foo] FOOWS[/foo][/b]',
-				'<rt><B><st>[b]</st><FOO> FOOWS<i> </i></FOO>|<FOO> FOOWS<i> </i></FOO><et>[/b]</et></B></rt>'
+				'[b][foo] FOOWS [/foo]|[foo] FOOWS [/foo][/b]',
+				'<rt><B><st>[b]</st><FOO> FOOWS </FOO>|<FOO> FOOWS </FOO><et>[/b]</et></B></rt>'
 			),
 			array(
 				'trim_before',
@@ -318,7 +322,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 				'[b] [foo]FOO[/foo]| [foo]FOO[/foo][/b]',
 				'<rt><B><st>[b]</st> <FOO>FOO</FOO><i> </i>| <FOO>FOO</FOO><i> </i><et>[/b]</et></B></rt>'
 			)
-/**/
 		);
 	}
 
