@@ -47,7 +47,7 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 
 			$tags[] = array(
 				'name'   => 'URL',
-				'type'   => Parser::TAG_OPEN,
+				'type'   => Parser::START_TAG,
 				'pos'    => $pos,
 				'len'    => 0,
 				'params' => array('url' => 'http://bugs.example.com/' . $bugId)
@@ -55,7 +55,7 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 
 			$tags[] = array(
 				'name'   => 'URL',
-				'type'   => Parser::TAG_CLOSE,
+				'type'   => Parser::END_TAG,
 				'pos'    => $pos + $len,
 				'len'    => 0
 			);
@@ -107,7 +107,7 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 
 				$tags[] = array(
 					'name'   => 'STRONG',
-					'type'   => Parser::TAG_OPEN,
+					'type'   => Parser::START_TAG,
 					'pos'    => $pos,
 					// consume the opening ** or __
 					'len'    => 2
@@ -115,7 +115,7 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 
 				$tags[] = array(
 					'name'   => 'STRONG',
-					'type'   => Parser::TAG_CLOSE,
+					'type'   => Parser::END_TAG,
 					'pos'    => $pos + strlen($m[0]) - 2,
 					// consume the closing ** or __
 					'len'    => 2
@@ -132,14 +132,14 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 
 				$tags[] = array(
 					'name'   => 'EM',
-					'type'   => Parser::TAG_OPEN,
+					'type'   => Parser::START_TAG,
 					'pos'    => $pos,
 					'len'    => 1
 				);
 
 				$tags[] = array(
 					'name'   => 'EM',
-					'type'   => Parser::TAG_CLOSE,
+					'type'   => Parser::END_TAG,
 					'pos'    => $pos + strlen($m[0]) - 1,
 					'len'    => 1
 				);
@@ -154,7 +154,7 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 			{
 				$tags[] = array(
 					'name'   => 'URL',
-					'type'   => Parser::TAG_OPEN,
+					'type'   => Parser::START_TAG,
 					'pos'    => $m[0][1],
 					// consume the first [
 					'len'    => 1,
@@ -163,7 +163,7 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 
 				$tags[] = array(
 					'name'   => 'URL',
-					'type'   => Parser::TAG_CLOSE,
+					'type'   => Parser::END_TAG,
 					// position the closing tag at the first ]
 					'pos'    => $m[2][1] - 2,
 					// consume everything from the ] to the )
@@ -199,7 +199,7 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 				{
 					$tags[] = array(
 						'name'   => 'BR',
-						'type'   => Parser::TAG_SELF,
+						'type'   => Parser::SELF_CLOSING_TAG,
 						'pos'    => $m[1],
 						'len'    => strlen($m[0])
 					);

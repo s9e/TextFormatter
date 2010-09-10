@@ -95,13 +95,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 						array(
 							'pos'  => 0,
 							'len'  => 0,
-							'type' => Parser::TAG_OPEN,
+							'type' => Parser::START_TAG,
 							'name' => 'b'
 						),
 						array(
 							'pos'  => 3,
 							'len'  => 0,
-							'type' => Parser::TAG_CLOSE,
+							'type' => Parser::END_TAG,
 							'name' => 'B'
 						)
 					)
@@ -155,13 +155,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 						array(
 							'pos'  => 0,
 							'len'  => 0,
-							'type' => Parser::TAG_OPEN,
+							'type' => Parser::START_TAG,
 							'name' => 'Z'
 						),
 						array(
 							'pos'  => 3,
 							'len'  => 0,
-							'type' => Parser::TAG_CLOSE,
+							'type' => Parser::END_TAG,
 							'name' => 'Z'
 						)
 					)
@@ -242,7 +242,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 					{
 						$tags[] = array(
 							'name' => 'foo',
-							'type' => Parser::TAG_SELF,
+							'type' => Parser::SELF_CLOSING_TAG,
 							'pos'  => $m[1],
 							'len'  => strlen($m[0])
 						);

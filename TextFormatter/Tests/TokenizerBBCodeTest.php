@@ -125,8 +125,8 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(2, count($ret['tags']));
 		$this->assertSame('X', $ret['tags'][0]['name']);
 		$this->assertSame('X', $ret['tags'][1]['name']);
-		$this->assertSame(Parser::TAG_SELF, $ret['tags'][0]['type']);
-		$this->assertSame(Parser::TAG_SELF, $ret['tags'][1]['type']);
+		$this->assertSame(Parser::SELF_CLOSING_TAG, $ret['tags'][0]['type']);
+		$this->assertSame(Parser::SELF_CLOSING_TAG, $ret['tags'][1]['type']);
 		$this->assertSame(4, $ret['tags'][0]['len']);
 		$this->assertSame(5, $ret['tags'][1]['len']);
 	}
