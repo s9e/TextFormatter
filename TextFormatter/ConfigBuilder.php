@@ -894,7 +894,7 @@ class ConfigBuilder
 
 	public function getParser()
 	{
-		if (!class_exists('parser'))
+		if (!class_exists('Parser'))
 		{
 			include_once(__DIR__ . '/Parser.php');
 		}
@@ -903,7 +903,7 @@ class ConfigBuilder
 
 	public function getRenderer()
 	{
-		if (!class_exists('renderer'))
+		if (!class_exists('Renderer'))
 		{
 			include_once(__DIR__ . '/Renderer.php');
 		}
