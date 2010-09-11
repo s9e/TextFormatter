@@ -1,7 +1,7 @@
 Overview
 ========
 
-s9e\toolkit\markup is a text formatting tool. By default, it supports:
+s9e\Toolkit\TextFormatter is a text formatting tool. By default, it supports:
 
  * BBCode
  * emoticons
@@ -15,16 +15,16 @@ It is designed to be fully extensible and could be used to parse other markup la
 
 Technical design
 ----------------
-We have 3 classes: config_builder, parser, and renderer.
+We have 3 classes: ConfigBuilder, Parser, and Renderer.
 
-**config_builder** will let you define which BBCode or smilies to parse, configure what links to format (by default, all http and https URLs but you can add other protocols to that list) and what words to censor. In return, it will give you an array containing your whole configuration, which you can serialize and store for later for better performance.
+**ConfigBuilder** will let you define which BBCode or smilies to parse, configure what links to format (by default, all http and https URLs but you can add other protocols to that list) and what words to censor. In return, it will give you an array containing your whole configuration, which you can serialize and store for later for better performance.
 
-**parser** reads the original text and returns an intermediate XML representation, following your configuration. That processus is designed to be easily reversible.
+**Parser** reads the original text and returns an intermediate XML representation, following your configuration. That processus is designed to be easily reversible.
 
-**renderer** *(WiP)* transforms that XML into the HTML you want, either via string manipulation in PHP or via XSLT.
+**Renderer** transforms that XML into the HTML you want using XSLT.
 
 
-Implementation: parser
+Implementation: Parser
 ----------------------
 Everything is a BBCode. At least internally.
 
@@ -38,7 +38,7 @@ For instance, take the text `[b]xy :)[/b]`
  * the smilies pass will declare
    + `<E />` (self-closed BBCode E) at position 6, length 2
 
-It will have the same effect as if the original text was `<B>xy <E code=":)" /></B>`. Note that BBCode names B and E are independent of the name used in the original text. `[b]` could produce a BBCode named `<BOLD>`, I'm just saving a few bytes here. The same way, you define what BBCode to use for smilies using `config_builder::setEmoticonOption()`
+It will have the same effect as if the original text was `<B>xy <E code=":)" /></B>`. Note that BBCode names B and E are independent of the name used in the original text. `[b]` could produce a BBCode named `<BOLD>`, I'm just saving a few bytes here. The same way, you define what BBCode to use for smilies using `ConfigBuilder::setEmoticonOption()`
 
 Another, perhaps better example: `My start page is http://example.com`. Here, the autolink pass will declare
 
