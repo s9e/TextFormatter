@@ -815,7 +815,6 @@ class Parser
 						continue 2;
 					}
 
-					$invalid = array();
 					foreach ($tag['params'] as $k => &$v)
 					{
 						$msgs = array();
