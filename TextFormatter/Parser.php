@@ -476,17 +476,17 @@ class Parser
 		$this->tagStack = array();
 
 		$pass = 0;
-		foreach ($this->passes as $name => $config)
+		foreach ($this->passes as $passName => $passConfig)
 		{
 			$matches = array();
-			if (isset($config['regexp']))
+			if (isset($passConfig['regexp']))
 			{
 				/**
 				* Some passes have several regexps in an array, others have a single regexp as a
 				* string. We convert the latter to an array so that we can iterate over it.
 				*/
-				$isArray = is_array($config['regexp']);
-				$regexps = ($isArray) ? $config['regexp'] : array($config['regexp']);
+				$isArray = is_array($passConfig['regexp']);
+				$regexps = ($isArray) ? $passConfig['regexp'] : array($passConfig['regexp']);
 
 				/**
 				* @var bool If true, skip the rest of the regexps
@@ -512,22 +512,22 @@ class Parser
 
 					$cnt += $_cnt;
 
-					if (!empty($config['limit'])
-					 && $cnt > $config['limit'])
+					if (!empty($passConfig['limit'])
+					 && $cnt > $passConfig['limit'])
 					{
-						if ($config['limit_action'] === 'abort')
+						if ($passConfig['limit_action'] === 'abort')
 						{
-							throw new \RuntimeException($name . ' limit exceeded');
+							throw new \RuntimeException($passName . ' limit exceeded');
 						}
 						else
 						{
-							$limit       = $config['limit'] + $_cnt - $cnt;
-							$msgType     = ($config['limit_action'] === 'ignore') ? 'debug' : 'warning';
+							$limit       = $passConfig['limit'] + $_cnt - $cnt;
+							$msgType     = ($passConfig['limit_action'] === 'ignore') ? 'debug' : 'warning';
 							$matches[$k] = array_slice($matches[$k], 0, $limit);
 
 							$this->log($msgType, array(
-								'msg'    => $name . ' limit exceeded. Only the first %s matches will be processed',
-								'params' => array($config['limit'])
+								'msg'    => $passName . ' limit exceeded. Only the first %s matches will be processed',
+								'params' => array($passConfig['limit'])
 							));
 
 							$skip = true;
@@ -549,12 +549,12 @@ class Parser
 				}
 			}
 
-			if (!isset($config['parser']))
+			if (!isset($passConfig['parser']))
 			{
-				$config['parser'] = array('self', 'get' . $name . 'Tags');
+				$passConfig['parser'] = array('self', 'get' . $passName . 'Tags');
 			}
 
-			$ret = call_user_func($config['parser'], $this->text, $config, $matches);
+			$ret = call_user_func($passConfig['parser'], $this->text, $passConfig, $matches);
 
 			if (!empty($ret['msgs']))
 			{
@@ -577,7 +577,7 @@ class Parser
 						* Add a suffix to tags that don't have one so that closing tags from a
 						* pass don't close tags opened by another pass
 						*/
-						$tag['suffix'] = '-' . $name;
+						$tag['suffix'] = '-' . $passName;
 					}
 
 					if (!isset($tag['params']))
