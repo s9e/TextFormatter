@@ -577,7 +577,7 @@ class Parser
 						* Add a suffix to tags that don't have one so that closing tags from a
 						* pass don't close tags opened by another pass
 						*/
-						$tag['suffix'] = '-' . $pass;
+						$tag['suffix'] = '-' . $name;
 					}
 
 					if (!isset($tag['params']))
@@ -585,7 +585,7 @@ class Parser
 						$tag['params'] = array();
 					}
 
-					$tag['pass']  = $pass;
+					$tag['pass']      = $pass;
 					$this->tagStack[] = $tag;
 				}
 			}
