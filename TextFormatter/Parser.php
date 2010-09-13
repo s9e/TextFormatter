@@ -679,7 +679,7 @@ class Parser
 		$cntOpen = $cntTotal;
 
 		/**
-		* @var array Keeps track open tags (tags carry their suffix)
+		* @var array Keeps track of open tags (tags carry their suffix)
 		*/
 		$openTags = array();
 
@@ -799,7 +799,7 @@ class Parser
 					/**
 					* Check for missing required params
 					*/
-					foreach (array_diff_key($bbcode['params'], $tag['params']) as $param => $paramConf)
+					foreach (array_diff_key($bbcode['params'], $tag['params']) as $paramName => $paramConf)
 					{
 						if (empty($paramConf['is_required']))
 						{
@@ -809,7 +809,7 @@ class Parser
 						$this->log('error', array(
 							'pos'    => $tag['pos'],
 							'msg'    => 'Missing param %s',
-							'params' => array($param)
+							'params' => array($paramName)
 						));
 
 						continue 2;
