@@ -948,6 +948,15 @@ class ConfigBuilder
 		);
 	}
 
+	public function getJavascriptParserConfig()
+	{
+		$config = $this->getParserConfig();
+
+		$config['xsl'] = $this->getXSL();
+
+		return json_encode($config);
+	}
+
 	static public function isValidId($id)
 	{
 		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $id);
