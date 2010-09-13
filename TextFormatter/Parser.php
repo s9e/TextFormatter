@@ -441,8 +441,8 @@ class Parser
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "XX[b]  -text-XX[/b]  "
 		*/
-		if (($tag['type']  &  self::START_TAG  && !empty($bbcode['trim_before']))
-		 || ($tag['type'] === self::END_TAG    && !empty($bbcode['rtrim_content'])))
+		if (($tag['type']  &  self::START_TAG && !empty($bbcode['trim_before']))
+		 || ($tag['type'] === self::END_TAG   && !empty($bbcode['rtrim_content'])))
 		{
 			$tag['trim_before'] = strspn(strrev(substr($this->text, $offset, $tag['pos'] - $offset)), self::TRIM_CHARLIST);
 			$tag['len']        += $tag['trim_before'];
@@ -458,8 +458,8 @@ class Parser
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "  [b]XX-text-  [/b]XX"
 		*/
-		if (($tag['type'] === self::START_TAG  && !empty($bbcode['ltrim_content']))
-		 || ($tag['type']  &  self::END_TAG    && !empty($bbcode['trim_after'])))
+		if (($tag['type'] === self::START_TAG && !empty($bbcode['ltrim_content']))
+		 || ($tag['type']  &  self::END_TAG   && !empty($bbcode['trim_after'])))
 		{
 			$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $offset);
 			$tag['len']        += $tag['trim_after'];
