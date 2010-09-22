@@ -236,7 +236,7 @@ Parser = function()
 			cntTotal = {},
 			cntOpen  = {},
 
-			openTags = [],
+			openTags = {},
 
 			pos = 0;
 
@@ -471,7 +471,8 @@ Parser = function()
 
 				if (tag['type'] & END_TAG)
 				{
-					if (typeof openTags[bbcodeId + suffix] == 'undefined')
+					if (typeof openTags[bbcodeId + suffix] == 'undefined'
+					 || !openTags[bbcodeId + suffix])
 					{
 						/**
 						* This is an end tag but there's no matching start tag
@@ -615,12 +616,19 @@ Parser = function()
 			tagStack = [];
 			tags     = [];
 
+			log = {
+				debug:   [],
+				warning: [],
+				error:   []
+			}
+
 			executePasses();
 			normalizeTags();
 			sortTags();
 			processTags();
 
 			var frag = xslt.transformToFragment(asDOM(),document);
+			return frag;
 
 //			console.dir(frag);
 		},
