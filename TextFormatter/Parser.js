@@ -72,22 +72,21 @@ Parser = function()
 
 			if (typeof passConfig['regexp'] != 'undefined')
 			{
-				var regexps = passConfig['regexp'],
-					isArray = regexps instanceof Array,
+				var regexps    = passConfig['regexp'],
+					isObject   = (typeof regexps == 'object'),
 
-					i   = -1,
-					cnt = 0;
+					matchesCnt = 0;
 
-				if (!isArray)
+				if (!isObject)
 				{
-					regexps = [regexps];
+					regexps = { '0': regexps };
 				}
 
-				while (++i < regexps.length && cnt < passConfig['limit'])
+				for (var k in regexps)
 				{
-					var m = getMatches(regexps[i]);
+					var m = getMatches(regexps[k]);
 
-					if (cnt + m.length > passConfig['limit'])
+					if (matchesCnt + m.length > passConfig['limit'])
 					{
 						Parser.log('warning', {
 							msg:    passName + ' limit exceeded. Only the first %s matches will be processed',
@@ -95,13 +94,18 @@ Parser = function()
 						});
 					}
 
-					matches.push(m.slice(0, passConfig['limit'] - cnt));
-					cnt += m.length;
+					matches.push(m.slice(0, passConfig['limit'] - matchesCnt));
+					matchesCnt += m.length;
+
+					if (matchesCnt < passConfig['limit'])
+					{
+						break;
+					}
 				}
 
-				if (!isArray)
+				if (!isObject)
 				{
-					matches = matches[0];
+					matches = matches['0'];
 				}
 			}
 
