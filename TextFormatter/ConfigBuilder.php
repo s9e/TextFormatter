@@ -286,9 +286,9 @@ class ConfigBuilder
 			 && !isset($bbcode['params'][$bbcode['default_param']]))
 			{
 				trigger_error("Skipping unknown BBCode param '" . $bbcode['default_param'] . "'", E_USER_NOTICE);
-				//@codeCoverageIgnoreStart
+				// @codeCoverageIgnoreStart
 			}
-			//@codeCoverageIgnoreEnd
+			// @codeCoverageIgnoreEnd
 
 			unset($bbcode['tpl']);
 		}
@@ -795,9 +795,9 @@ class ConfigBuilder
 				if (!isset($this->bbcodes[$v]))
 				{
 					trigger_error('Unknown BBCode ' . $v, E_USER_NOTICE);
-					//@codeCoverageIgnoreStart
+					// @codeCoverageIgnoreStart
 				}
-				//@codeCoverageIgnoreEnd
+				// @codeCoverageIgnoreEnd
 			}
 			else
 			{
@@ -810,9 +810,9 @@ class ConfigBuilder
 					if (!isset($this->bbcodes[$bbcode]['params'][$v]))
 					{
 						trigger_error('Unknown BBCode param ' . $v, E_USER_NOTICE);
-						//@codeCoverageIgnoreStart
+						// @codeCoverageIgnoreStart
 					}
-					//@codeCoverageIgnoreEnd
+					// @codeCoverageIgnoreEnd
 				}
 			}
 		}
