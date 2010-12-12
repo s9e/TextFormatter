@@ -70,7 +70,7 @@ Parser = function()
 			var passConfig = passes[passName],
 				matches    = [];
 
-			if (typeof passConfig['regexp'] != 'undefined')
+			if ('regexp' in passConfig)
 			{
 				var regexps    = passConfig['regexp'],
 					isObject   = (typeof regexps == 'object'),
@@ -135,11 +135,11 @@ Parser = function()
 			/**
 			* Normalize the tag name
 			*/
-			if (typeof bbcodes[tag['name']])
+			if (!(tag['name'] in bbcodes))
 			{
 				var bbcodeId = tag['name'].toUpperCase();
 
-				if (typeof aliases[bbcodeId] == 'undefined')
+				if (!(bbcodeId in aliases))
 				{
 					Parser.log('debug', {
 						'pos'    : tag['pos'],
@@ -176,8 +176,8 @@ Parser = function()
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "XX[b]  -text-XX[/b]  "
 		*/
-		if ((tag['type']  &  START_TAG && typeof bbcode['trim_before']   != 'undefined' && bbcode['trim_before'])
-		 || (tag['type'] === END_TAG   && typeof bbcode['rtrim_content'] != 'undefined' && bbcode['rtrim_content']))
+		if ((tag['type']  &  START_TAG && 'trim_before'   in bbcode && bbcode['trim_before'])
+		 || (tag['type'] === END_TAG   && 'rtrim_content' in bbcode && bbcode['rtrim_content']))
 		{
 			tag['trim_before']  = rtrimRegexp.exec(text.substr(0, offset))[0].length;
 			tag['len']         += tag['trim_before'];
@@ -193,8 +193,8 @@ Parser = function()
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "  [b]XX-text-  [/b]XX"
 		*/
-		if ((tag['type'] === START_TAG && typeof bbcode['ltrim_content'] != 'undefined' && bbcode['ltrim_content'])
-		 || (tag['type']  &  END_TAG   && typeof bbcode['trim_after']    != 'undefined' && bbcode['trim_after']))
+		if ((tag['type'] === START_TAG && 'ltrim_content' in bbcode && bbcode['ltrim_content'])
+		 || (tag['type']  &  END_TAG   && 'trim_after'    in bbcode && bbcode['trim_after']))
 		{
 			tag['trim_after']  = ltrimRegexp.exec(text.substr(offset))[0].length;
 			tag['len']        += tag['trim_after'];
@@ -267,7 +267,7 @@ Parser = function()
 
 				var bbcodeId = tag['name'],
 					bbcode   = bbcodes[bbcodeId],
-					suffix   = (typeof tag['suffix'] != 'undefined') ? tag['suffix'] : '';
+					suffix   = ('suffix' in tag) ? tag['suffix'] : '';
 
 				//==================================================================
 				// Start tag
@@ -279,7 +279,7 @@ Parser = function()
 					// Check that this BBCode is allowed here
 					//==============================================================
 
-					if (typeof bbcode['close_parent'] == 'object' && bbcode['close_parent'].length)
+					if ('close_parent' in bbcode && bbcode['close_parent'].length)
 					{
 						/**
 						* Oh, wait, we may have to close its parent first
@@ -333,7 +333,7 @@ Parser = function()
 						continue;
 					}
 
-					if (typeof bbcode['require_parent'] != 'undefined')
+					if ('require_parent' in bbcode)
 					{
 						var lastBBCode = bbcodeStack[bbcodeStack.length - 1];
 
@@ -350,13 +350,13 @@ Parser = function()
 						}
 					}
 
-					if (typeof bbcode['require_ascendant'] != 'undefined')
+					if ('require_ascendant' in bbcode)
 					{
 						for (var k in bbcode['require_ascendant'])
 						{
-							var ascendant = bbcode['require_ascendant'][k]
-							if (typeof cntOpen[ascendant] == 'undefined'
-							 || !cntOpen[ascendant])
+							var ascendant = bbcode['require_ascendant'][k];
+
+							if (!cntOpen[ascendant])
 							{
 								Parser.log('debug', {
 									'pos'    : tag['pos'],
@@ -368,7 +368,7 @@ Parser = function()
 						}
 					}
 
-					if (typeof bbcode['params'] != 'undefined')
+					if ('params' in bbcode['params'])
 					{
 						/**
 						* Check for missing required params
@@ -379,7 +379,7 @@ Parser = function()
 							paramConf = bbcode['params'][paramName];
 
 							if (!paramConf['is_required']
-							 || typeof tag['params'][paramName] != 'undefined')
+							 || paramName in tag['params'])
 							{
 								continue;
 							}
@@ -444,7 +444,7 @@ Parser = function()
 
 					++cntOpen[bbcodeId];
 
-					if (typeof openTags[bbcodeId + suffix] != 'undefined')
+					if ((bbcodeId + suffix) in openTags)
 					{
 						++openTags[bbcodeId + suffix];
 					}
@@ -461,7 +461,7 @@ Parser = function()
 
 					for (var k in allowed)
 					{
-						if (typeof bbcode['allow'][k] == 'undefined')
+						if (!bbcode['allow'][k])
 						{
 							// TODO: test this
 							delete allowed[k];
@@ -475,8 +475,7 @@ Parser = function()
 
 				if (tag['type'] & END_TAG)
 				{
-					if (typeof openTags[bbcodeId + suffix] == 'undefined'
-					 || !openTags[bbcodeId + suffix])
+					if (!openTags[bbcodeId + suffix])
 					{
 						/**
 						* This is an end tag but there's no matching start tag
@@ -613,6 +612,11 @@ Parser = function()
 			log[type].push(entry);
 		},
 
+		'getLog': function()
+		{
+			return log;
+		},
+
 		'parse': function(_text)
 		{
 			text = _text;
@@ -679,7 +683,7 @@ Parser = function()
 
 					var alias = m[1][0].toUpperCase();
 
-					if (typeof aliases[alias] == 'undefined')
+					if (!(alias in aliases))
 					{
 						// Not a known BBCode or alias
 						continue;
@@ -740,7 +744,7 @@ Parser = function()
 							* Set the default param. If there's no default param, we issue a warning and
 							* reuse the BBCode's name instead
 							*/
-							if (typeof bbcode['default_param'] != 'undefined')
+							if ('default_param' in bbcode)
 							{
 								param = bbcode['default_param'];
 							}
@@ -915,7 +919,7 @@ Parser = function()
 								rpos += value.length;
 							}
 
-							if (typeof bbcode['params'][param] != 'undefined')
+							if (param in bbcode['params'])
 							{
 								/**
 								* We only keep params that exist in the BBCode's definition
@@ -932,8 +936,8 @@ Parser = function()
 						}
 
 						if (type === START_TAG
-						 && typeof bbcode['default_param'] != 'undefined'
-						 && typeof params[bbcode['default_param']] == 'undefined'
+						 && 'default_param' in bbcode
+						 && bbcode['default_param'] in params
 						 && bbcode['content_as_param'])
 						{
 							var pos = text.toUpperCase().indexOf('[/' + bbcodeId + suffix + ']', rpos);
