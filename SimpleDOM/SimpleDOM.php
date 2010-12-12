@@ -284,28 +284,6 @@ namespace s9e\Toolkit\SimpleDOM
 		}
 
 		/**
-		* Delete this node from document
-		*
-		* This is a convenience method. The same result can be achieved with
-		* <code>
-		* $node->parentNode()->removeChild($node);
-		* </code>
-		*
-		* @return	void
-		*/
-		public function delete()
-		{
-			$tmp = dom_import_simplexml($this);
-
-			if ($tmp->isSameNode($tmp->ownerDocument->documentElement))
-			{
-				throw new BadMethodCallException('delete() cannot be used to delete the root node');
-			}
-
-			$tmp->parentNode->removeChild($tmp);
-		}
-
-		/**
 		* Remove this node from document
 		*
 		* This is a convenience method. The same result can be achieved with
@@ -346,21 +324,6 @@ namespace s9e\Toolkit\SimpleDOM
 
 			$node = $old->parentNode->replaceChild($new, $old);
 			return static::import($node);
-		}
-
-		/**
-		* Delete all elements matching a XPath expression
-		*
-		* @param	string	$xpath	XPath expression
-		* @return	integer			Number of nodes removed
-		*/
-		public function deleteNodes($xpath)
-		{
-			if (!is_string($xpath))
-			{
-				throw new InvalidArgumentException('Argument 1 passed to deleteNodes() must be a string, ' . gettype($xpath) . ' given');
-			}
-			return $this->zapNodes($xpath, 'deleteNodes');
 		}
 
 		/**
@@ -964,16 +927,11 @@ namespace s9e\Toolkit\SimpleDOM
 			{
 				if ($node->isSameNode($node->ownerDocument->documentElement))
 				{
-					throw new BadMethodCallException($method . '() cannot be used to delete the root node');
+					throw new BadMethodCallException($method . '() cannot be used to remove the root node');
 				}
 
 				switch ($method)
 				{
-					case 'deleteNodes':
-						$node->parentNode->removeChild($node);
-						++$cnt;
-						break;
-
 					case 'removeNodes':
 						$ret[] = static::import($node->parentNode->removeChild($node));
 						break;
@@ -989,7 +947,7 @@ namespace s9e\Toolkit\SimpleDOM
 				}
 			}
 
-			return ($method === 'deleteNodes') ? $cnt : $ret;
+			return $ret;
 		}
 
 		static protected function fromHTML($method, $arg, &$errors)
