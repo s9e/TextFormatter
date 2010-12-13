@@ -302,8 +302,7 @@ namespace s9e\Toolkit\SimpleDOM
 				throw new BadMethodCallException('remove() cannot be used to remove the root node');
 			}
 
-			$node = $tmp->parentNode->removeChild($tmp);
-			return static::import($node);
+			return static::import($tmp->parentNode->removeChild($tmp));
 		}
 
 		/**
@@ -322,8 +321,7 @@ namespace s9e\Toolkit\SimpleDOM
 			$old = dom_import_simplexml($this);
 			$new = $old->ownerDocument->importNode(dom_import_simplexml($new), true);
 
-			$node = $old->parentNode->replaceChild($new, $old);
-			return static::import($node);
+			return static::import($old->parentNode->replaceChild($new, $old));
 		}
 
 		/**
@@ -473,16 +471,16 @@ namespace s9e\Toolkit\SimpleDOM
 			$fragment = $tmp->ownerDocument->createDocumentFragment();
 
 			/**
-			* Disable error reporting
+			* Use internal errors while we append the XML
 			*/
 			$useErrors = libxml_use_internal_errors(true);
+			$success   = $fragment->appendXML($xml);
+			libxml_use_internal_errors($useErrors);
 
-			if (!$fragment->appendXML($xml))
+			if (!$success)
 			{
-				libxml_use_internal_errors($useErrors);
 				throw new InvalidArgumentException(libxml_get_last_error()->message);
 			}
-			libxml_use_internal_errors($useErrors);
 
 			$this->insertNode($tmp, $fragment, $mode);
 
@@ -864,9 +862,9 @@ namespace s9e\Toolkit\SimpleDOM
 		{
 			$tmp	= dom_import_simplexml($this);
 			$method = 'create' . $type;
+			$new    = $tmp->ownerDocument->$method($content);
 
-			$node = $tmp->ownerDocument->$method($content);
-			return $this->insertNode($tmp, $node, $mode);
+			return $this->insertNode($tmp, $new, $mode);
 		}
 
 		protected function insertNode(DOMNode $tmp, DOMNode $node, $mode)
