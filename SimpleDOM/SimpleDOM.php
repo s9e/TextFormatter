@@ -17,7 +17,7 @@ namespace
 	/**
 	* Alias for simplexml_load_file()
 	*
-	* @return	SimpleDOM
+	* @return SimpleDOM
 	*/
 	function simpledom_load_file($filename)
 	{
@@ -34,7 +34,7 @@ namespace
 	/**
 	* Alias for simplexml_load_string()
 	*
-	* @return	SimpleDOM
+	* @return SimpleDOM
 	*/
 	function simpledom_load_string($string)
 	{
@@ -78,10 +78,10 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Create a SimpleDOM object from a HTML string
 		*
-		* @param	string		$source		HTML source
-		* @param	mixed		&$errors	Passed by reference. Will be replaced by an array of
-		*									LibXMLError objects if applicable
-		* @return	SimpleDOM
+		* @param  string $source  HTML source
+		* @param  mixed  &$errors Passed by reference. Will be replaced by an array of
+		*                         LibXMLError objects if applicable
+		* @return SimpleDOM
 		*/
 		static public function loadHTML($source, &$errors = null)
 		{
@@ -91,10 +91,10 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Create a SimpleDOM object from a HTML file
 		*
-		* @param	string		$filename	Path/URL to HTML file
-		* @param	mixed		&$errors	Passed by reference. Will be replaced by an array of
-		*									LibXMLError objects if applicable
-		* @return	SimpleDOM
+		* @param  string $filename Path/URL to HTML file
+		* @param  mixed  &$errors  Passed by reference. Will be replaced by an array of
+		*                          LibXMLError objects if applicable
+		* @return SimpleDOM
 		*/
 		static public function loadHTMLFile($filename, &$errors = null)
 		{
@@ -253,8 +253,8 @@ namespace s9e\Toolkit\SimpleDOM
 		* $node->parentNode()->insertBefore($new, $node);
 		* </code>
 		*
-		* @param	SimpleXMLElement	$new	New node
-		* @return	SimpleDOM					The inserted node
+		* @param  SimpleXMLElement $new New node
+		* @return SimpleDOM             The inserted node
 		*/
 		public function insertBeforeSelf(SimpleXMLElement $new)
 		{
@@ -272,8 +272,8 @@ namespace s9e\Toolkit\SimpleDOM
 		* $node->parentNode()->insertBefore($new, $node->nextSibling());
 		* </code>
 		*
-		* @param	SimpleXMLElement	$new	New node
-		* @return	SimpleDOM					The inserted node
+		* @param  SimpleXMLElement $new New node
+		* @return SimpleDOM             The inserted node
 		*/
 		public function insertAfterSelf(SimpleXMLElement $new)
 		{
@@ -291,7 +291,7 @@ namespace s9e\Toolkit\SimpleDOM
 		* $node->parentNode()->removeChild($node);
 		* </code>
 		*
-		* @return	SimpleDOM		The removed node
+		* @return SimpleDOM The removed node
 		*/
 		public function remove()
 		{
@@ -313,8 +313,8 @@ namespace s9e\Toolkit\SimpleDOM
 		* $node->parentNode()->replaceChild($new, $node);
 		* </code>
 		*
-		* @param	SimpleXMLElement	$new	New node
-		* @return	SimpleDOM					Replaced node on success
+		* @param  SimpleXMLElement $new New node
+		* @return SimpleDOM             Replaced node on success
 		*/
 		public function replace(SimpleXMLElement $new)
 		{
@@ -327,8 +327,8 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Remove all elements matching a XPath expression
 		*
-		* @param	string	$xpath	XPath expression
-		* @return	array			Array of removed nodes on success or FALSE on failure
+		* @param  string $xpath XPath expression
+		* @return array         Array of removed nodes on success or FALSE on failure
 		*/
 		public function removeNodes($xpath)
 		{
@@ -338,9 +338,9 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Remove all elements matching a XPath expression
 		*
-		* @param	string				$xpath	XPath expression
-		* @param	SimpleXMLElement	$new	Replacement node
-		* @return	array						Array of replaced nodes on success or FALSE on failure
+		* @param  string           $xpath XPath expression
+		* @param  SimpleXMLElement $new   Replacement node
+		* @return array                   Array of replaced nodes on success or FALSE on failure
 		*/
 		public function replaceNodes($xpath, SimpleXMLElement $new)
 		{
@@ -350,10 +350,10 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Copy all attributes from a node to current node
 		*
-		* @param	SimpleXMLElement	$src		Source node
-		* @param	bool				$overwrite	If TRUE, overwrite existing attributes.
-		*											Otherwise, ignore duplicate attributes
-		* @return	SimpleDOM						Current node
+		* @param  SimpleXMLElement $src       Source node
+		* @param  bool             $overwrite If TRUE, overwrite existing attributes.
+		*                                     Otherwise, ignore duplicate attributes
+		* @return SimpleDOM                   Current node
 		*/
 		public function copyAttributesFrom(SimpleXMLElement $src, $overwrite = true)
 		{
@@ -377,9 +377,9 @@ namespace s9e\Toolkit\SimpleDOM
 		* This method takes a snapshot of the children nodes then append them in order to avoid infinite
 		* recursion if the destination node is a descendant of or the source node it
 		*
-		* @param	SimpleXMLElement	$src	Source node
-		* @param	bool				$deep	If TRUE, clone descendant nodes as well
-		* @return	SimpleDOM					Current node
+		* @param  SimpleXMLElement $src  Source node
+		* @param  bool             $deep If TRUE, clone descendant nodes as well
+		* @return SimpleDOM              Current node
 		*/
 		public function cloneChildrenFrom(SimpleXMLElement $src, $deep = true)
 		{
@@ -400,8 +400,8 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Return the first node of the result of an XPath expression
 		*
-		* @param	string	$xpath	XPath expression
-		* @return	mixed			SimpleDOM object if any node was returned, NULL otherwise
+		* @param  string $xpath XPath expression
+		* @return mixed         SimpleDOM object if any node was returned, NULL otherwise
 		*/
 		public function firstOf($xpath)
 		{
@@ -417,10 +417,10 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Insert a CDATA section
 		*
-		* @param	string		$content	CDATA content
-		* @param	string		$mode		Where to add this node: 'append' to current node,
-		*									'before' current node or 'after' current node
-		* @return	SimpleDOM				Current node
+		* @param  string    $content CDATA content
+		* @param  string    $mode    Where to add this node: 'append' to current node,
+		*                            'before' current node or 'after' current node
+		* @return SimpleDOM          Current node
 		*/
 		public function insertCDATA($content, $mode = 'append')
 		{
@@ -431,10 +431,10 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Insert a comment node
 		*
-		* @param	string		$content	Comment content
-		* @param	string		$mode		Where to add this node: 'append' to current node,
-		*									'before' current node or 'after' current node
-		* @return	SimpleDOM				Current node
+		* @param  string    $content Comment content
+		* @param  string    $mode    Where to add this node: 'append' to current node,
+		*                            'before' current node or 'after' current node
+		* @return SimpleDOM          Current node
 		*/
 		public function insertComment($content, $mode = 'append')
 		{
@@ -445,10 +445,10 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Insert a text node
 		*
-		* @param	string		$content	CDATA content
-		* @param	string		$mode		Where to add this node: 'append' to current node,
-		*									'before' current node or 'after' current node
-		* @return	SimpleDOM				Current node
+		* @param  string    $content CDATA content
+		* @param  string    $mode    Where to add this node: 'append' to current node,
+		*                            'before' current node or 'after' current node
+		* @return SimpleDOM          Current node
 		*/
 		public function insertText($content, $mode = 'append')
 		{
@@ -460,10 +460,10 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Insert raw XML data
 		*
-		* @param	string		$xml	XML to insert
-		* @param	string		$mode	Where to add this tag: 'append' to current node,
-		*								'before' current node or 'after' current node
-		* @return	SimpleDOM			Current node
+		* @param  string    $xml  XML to insert
+		* @param  string    $mode Where to add this tag: 'append' to current node,
+		*                         'before' current node or 'after' current node
+		* @return SimpleDOM       Current node
 		*/
 		public function insertXML($xml, $mode = 'append')
 		{
@@ -492,9 +492,9 @@ namespace s9e\Toolkit\SimpleDOM
 		*
 		* The content of the PI can be passed either as string or as an associative array.
 		*
-		* @param	string			$target		Target of the processing instruction
-		* @param	string|array	$data		Content of the processing instruction
-		* @return	bool						TRUE on success, FALSE on failure
+		* @param  string       $target Target of the processing instruction
+		* @param  string|array $data   Content of the processing instruction
+		* @return bool                 TRUE on success, FALSE on failure
 		*/
 		public function insertPI($target, $data = null, $mode = 'before')
 		{
@@ -536,9 +536,9 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Set several attributes at once
 		*
-		* @param	array		$attr	Attributes as name => value pairs
-		* @param	string		$ns		Namespace for the attributes
-		* @return	SimpleDOM			Current node
+		* @param  array     $attr Attributes as name => value pairs
+		* @param  string    $ns   Namespace for the attributes
+		* @return SimpleDOM       Current node
 		*/
 		public function setAttributes(array $attr, $ns = null)
 		{
@@ -558,7 +558,7 @@ namespace s9e\Toolkit\SimpleDOM
 		*
 		* @todo Write a test for HTML entities that can't be represented in the document's encoding
 		*
-		* @return	string			Content of current node
+		* @return string Content of current node
 		*/
 		public function innerHTML()
 		{
@@ -577,7 +577,7 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Return the XML content of current node as a string
 		*
-		* @return	string			Content of current node
+		* @return string Content of current node
 		*/
 		public function innerXML()
 		{
@@ -592,7 +592,7 @@ namespace s9e\Toolkit\SimpleDOM
 		*
 		* NOTE: unlike asXML() it doesn't return the XML prolog
 		*
-		* @return	string			Content of current node
+		* @return string Content of current node
 		*/
 		public function outerXML()
 		{
@@ -605,8 +605,8 @@ namespace s9e\Toolkit\SimpleDOM
 		*
 		* Should work like DOM0's method
 		*
-		* @param	string	$class		Class name
-		* @return	array				Array of SimpleDOM nodes
+		* @param  string $class Class name
+		* @return array         Array of SimpleDOM nodes
 		*/
 		public function getElementsByClassName($class)
 		{
@@ -623,8 +623,8 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Test whether current node has given class
 		*
-		* @param	string	$class		Class name
-		* @return	bool
+		* @param  string $class Class name
+		* @return bool
 		*/
 		public function hasClass($class)
 		{
@@ -634,8 +634,8 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Add given class to current node
 		*
-		* @param	string		$class	Class name
-		* @return	SimpleDOM			Current node
+		* @param  string    $class Class name
+		* @return SimpleDOM        Current node
 		*/
 		public function addClass($class)
 		{
@@ -658,8 +658,8 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Remove given class from current node
 		*
-		* @param	string		$class	Class name
-		* @return	SimpleDOM			Current node
+		* @param  string    $class Class name
+		* @return SimpleDOM        Current node
 		*/
 		public function removeClass($class)
 		{
@@ -678,7 +678,7 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Return the current element as a DOMElement
 		*
-		* @return	DOMElement
+		* @return DOMElement
 		*/
 		public function asDOM()
 		{
@@ -691,10 +691,10 @@ namespace s9e\Toolkit\SimpleDOM
 		* Elements will be indented, empty elements will be minified. The result isn't mean to be
 		* perfect, I'm sure there are better prettifiers out there.
 		*
-		* @param	string	$filepath	If set, save the result to this file
-		* @return	mixed				If $filepath is set, will return TRUE if the file was
-		*								succesfully written or FALSE otherwise. If $filepath isn't set,
-		*								it returns the result as a string
+		* @param  string $filepath If set, save the result to this file
+		* @return mixed            If $filepath is set, will return TRUE if the file was succesfully
+		*                          written or FALSE otherwise. If $filepath isn't set, it returns
+		*                          the result as a string
 		*/
 		public function asPrettyXML($filepath = null)
 		{
@@ -716,14 +716,14 @@ namespace s9e\Toolkit\SimpleDOM
 		* Will take advantage of {@link http://pecl.php.net/package/xslcache PECL's xslcache}
 		* if available
 		*
-		* @param	string	$filepath		Path to stylesheet
-		* @param	bool	$use_xslcache	If TRUE, use the XSL Cache extension if available
-		* @return	string					Result
+		* @param  string $filepath    Path to stylesheet
+		* @param  bool   $useXSLCache If TRUE, use the XSL Cache extension if available
+		* @return string              Result
 		*/
-		public function XSLT($filepath, $use_xslcache = true)
+		public function XSLT($filepath, $useXSLCache = true)
 		{
 			// @codeCoverageIgnoreStart
-			if ($use_xslcache && extension_loaded('xslcache'))
+			if ($useXSLCache && extension_loaded('xslcache'))
 			{
 				$xslt = new XSLTCache;
 				$xslt->importStylesheet($filepath);
@@ -755,8 +755,8 @@ namespace s9e\Toolkit\SimpleDOM
 		* $root->sortedXPath('//x', '@foo', SORT_NUMERIC, '@bar', SORT_STRING, SORT_DESC);
 		* </code>
 		*
-		* @param	string	$xpath		XPath expression
-		* @return	void
+		* @param  string $xpath XPath expression
+		* @return void
 		*/
 		public function sortedXPath($xpath)
 		{
@@ -775,7 +775,7 @@ namespace s9e\Toolkit\SimpleDOM
 		* ATTENTION: text nodes are not supported. If current node has text nodes, they may be lost
 		*            in the process
 		*
-		* @return	SimpleDOM		This node
+		* @return SimpleDOM This node
 		*/
 		public function sortChildren()
 		{
@@ -802,8 +802,8 @@ namespace s9e\Toolkit\SimpleDOM
 		*
 		* @see sortedXPath
 		*
-		* @param	array	&$nodes		Array of SimpleXMLElement
-		* @return	void
+		* @param  array &$nodes Array of SimpleXMLElement
+		* @return void
 		*/
 		static public function sort(array &$nodes)
 		{
