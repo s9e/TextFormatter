@@ -847,6 +847,21 @@ class ConfigBuilder
 		// replace (?:x)? with x?
 		$regexp = preg_replace('#\\(\\?:(.)\\)\\?#us', '$1?', $regexp);
 
+		// replace (?:x|y) with [xy]
+		$regexp = preg_replace_callback(
+			/**
+			* Here, we only try to match single letters and numbers because trying to match escaped
+			* characters is much more complicated and increases the potential of letting a bug slip
+			* by unnoticed, without much gain in return. Just letters and numbers is simply safer
+			*/
+			'#\\(\\?:([\\pL\\pN](?:\\|[\\pL\\pN])*)\\)#u',
+			function($m)
+			{
+				return '[' . preg_quote(str_replace('|', '', $m[1]), '#') . ']';
+			},
+			$regexp
+		);
+
 		return $regexp;
 	}
 
