@@ -8,7 +8,8 @@
 namespace s9e\Toolkit\Acl;
 
 use DOMDocument,
-    DOMXPath;
+    DOMXPath,
+	InvalidArgumentException;
 
 /**
 * Not cryptographically strong but random enough to avoid false positives
@@ -103,7 +104,7 @@ class XMLReader
 		}
 		else
 		{
-			throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->wildcard()');
+			throw new InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or $this->wildcard()');
 		}
 
 		$xpath .= ',1)';
