@@ -7,6 +7,9 @@
 */
 namespace s9e\Toolkit\Acl;
 
+use DOMDocument,
+    DOMXPath;
+
 /**
 * Not cryptographically strong but random enough to avoid false positives
 * @codeCoverageIgnore
@@ -34,10 +37,10 @@ class XMLReader
 
 	public function __construct($xml, $rootPath = '/acl')
 	{
-		$dom = new \DOMDocument;
+		$dom = new DOMDocument;
 		$dom->loadXML($xml);
 
-		$this->xpath = new \DOMXPath($dom);
+		$this->xpath = new DOMXPath($dom);
 
 		$this->rootPath = rtrim($rootPath, '/');
 	}

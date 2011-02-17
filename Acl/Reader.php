@@ -7,6 +7,8 @@
 */
 namespace s9e\Toolkit\Acl;
 
+use InvalidArgumentException;
+
 class Reader
 {
 	protected $config;
@@ -61,7 +63,7 @@ class Reader
 
 		if (isset($scope[$dim]))
 		{
-			throw new \InvalidArgumentException('$scope contains the same key we are looking for');
+			throw new InvalidArgumentException('$scope contains the same key we are looking for');
 		}
 
 		$n = $this->getBitNumber($perm, $scope);
@@ -135,7 +137,7 @@ class Reader
 		}
 		else
 		{
-			throw new \InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or an instance of Wildcard, ' . gettype($scope) . ' given');
+			throw new InvalidArgumentException('$scope is expected to be an array, an object that implements Resource or an instance of Wildcard, ' . gettype($scope) . ' given');
 		}
 	}
 

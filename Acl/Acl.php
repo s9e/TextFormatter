@@ -7,6 +7,9 @@
 */
 namespace s9e\Toolkit\Acl;
 
+use InvalidArgumentException,
+    XMLWriter;
+
 class Acl
 {
 	/**
@@ -240,7 +243,7 @@ class Acl
 						break;
 
 					default:
-						throw new \InvalidArgumentException('Invalid type for scope ' . $k . ': integer or string expected, ' . gettype($v) . ' given');
+						throw new InvalidArgumentException('Invalid type for scope ' . $k . ': integer or string expected, ' . gettype($v) . ' given');
 				}
 			}
 			unset($v);
@@ -249,7 +252,7 @@ class Acl
 		}
 		else
 		{
-			throw new \InvalidArgumentException('Scope must be an array or an object that implements ' . __NAMESPACE__ . '\\Resource, ' . gettype($scope) . ' given');
+			throw new InvalidArgumentException('Scope must be an array or an object that implements ' . __NAMESPACE__ . '\\Resource, ' . gettype($scope) . ' given');
 		}
 
 		$this->settings[] = array($perm, $value, $scope);
@@ -360,7 +363,7 @@ class Acl
 	*/
 	static protected function asXML(array $spaces)
 	{
-		$xml = new \XMLWriter;
+		$xml = new XMLWriter;
 		$xml->openMemory();
 		$xml->startElement('acl');
 

@@ -7,6 +7,12 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
+use DOMDocument,
+    DOMXPath,
+    InvalidArgumentException,
+    RuntimeException,
+    UnexpectedValueException;
+
 class ConfigBuilder
 {
 	const ALLOW_INSECURE_TEMPLATES = 1;
@@ -59,17 +65,17 @@ class ConfigBuilder
 	{
 		if (isset($this->passes[$name]))
 		{
-			throw new \InvalidArgumentException('There is already a pass named ' . $name);
+			throw new InvalidArgumentException('There is already a pass named ' . $name);
 		}
 
 		if (!isset($options['parser']))
 		{
-			throw new \InvalidArgumentException('You must specify a parser for pass ' . $name);
+			throw new InvalidArgumentException('You must specify a parser for pass ' . $name);
 		}
 
 		if (!is_callable($options['parser']))
 		{
-			throw new \InvalidArgumentException('The parser for pass ' . $name . ' must be a valid callback');
+			throw new InvalidArgumentException('The parser for pass ' . $name . ' must be a valid callback');
 		}
 
 		$this->passes[$name] = $options + array(
@@ -115,14 +121,14 @@ class ConfigBuilder
 	{
 		if (!self::isValidId($bbcodeId))
 		{
-			throw new \InvalidArgumentException ("Invalid BBCode name '" . $bbcodeId . "'");
+			throw new InvalidArgumentException ("Invalid BBCode name '" . $bbcodeId . "'");
 		}
 
 		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
 
 		if (isset($this->bbcodes[$bbcodeId]))
 		{
-			throw new \InvalidArgumentException('BBCode ' . $bbcodeId . ' already exists');
+			throw new InvalidArgumentException('BBCode ' . $bbcodeId . ' already exists');
 		}
 
 		$bbcode = $this->getDefaultBBCodeOptions();
@@ -150,11 +156,11 @@ class ConfigBuilder
 
 		if (!isset($this->bbcodes[$bbcodeId]))
 		{
-			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
+			throw new InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
 		}
 		if (isset($this->bbcodes[$alias]))
 		{
-			throw new \InvalidArgumentException("Cannot create alias '" . $alias . "' - a BBCode using that name already exists");
+			throw new InvalidArgumentException("Cannot create alias '" . $alias . "' - a BBCode using that name already exists");
 		}
 
 		/**
@@ -163,7 +169,7 @@ class ConfigBuilder
 		*/
 		if (!preg_match('#^[A-Z_0-9\\*]+$#D', $alias))
 		{
-			throw new \InvalidArgumentException("Invalid alias name '" . $alias . "'");
+			throw new InvalidArgumentException("Invalid alias name '" . $alias . "'");
 		}
 		$this->bbcodeAliases[$alias] = $bbcodeId;
 	}
@@ -173,19 +179,19 @@ class ConfigBuilder
 		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
 		if (!isset($this->bbcodes[$bbcodeId]))
 		{
-			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
+			throw new InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
 		}
 
 		if (!self::isValidId($paramName))
 		{
-			throw new \InvalidArgumentException ("Invalid param name '" . $paramName . "'");
+			throw new InvalidArgumentException ("Invalid param name '" . $paramName . "'");
 		}
 
 		$paramName = strtolower($paramName);
 
 		if (isset($this->bbcodes[$bbcodeId]['params'][$paramName]))
 		{
-			throw new \InvalidArgumentException('Param ' . $paramName . ' already exists');
+			throw new InvalidArgumentException('Param ' . $paramName . ' already exists');
 		}
 
 		$this->bbcodes[$bbcodeId]['params'][$paramName] = array(
@@ -204,7 +210,7 @@ class ConfigBuilder
 			'require_ascendant'
 		), true))
 		{
-			throw new \UnexpectedValueException("Unknown rule action '" . $action . "'");
+			throw new UnexpectedValueException("Unknown rule action '" . $action . "'");
 		}
 
 		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
@@ -215,7 +221,7 @@ class ConfigBuilder
 			if (isset($this->bbcodeRules[$bbcodeId]['require_parent'])
 			 && $this->bbcodeRules[$bbcodeId]['require_parent'] !== $target)
 			{
-				throw new \RuntimeException("BBCode $bbcodeId already has a require_parent rule");
+				throw new RuntimeException("BBCode $bbcodeId already has a require_parent rule");
 			}
 			$this->bbcodeRules[$bbcodeId]['require_parent'] = $target;
 		}
@@ -325,7 +331,7 @@ class ConfigBuilder
 		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
 		if (!isset($this->bbcodes[$bbcodeId]))
 		{
-			throw new \InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
+			throw new InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
 		}
 
 		if (!($flags & self::PRESERVE_WHITESPACE))
@@ -343,23 +349,23 @@ class ConfigBuilder
 		     . '</xsl:stylesheet>';
 
 		$old = libxml_use_internal_errors(true);
-		$dom = new \DOMDocument;
+		$dom = new DOMDocument;
 		$res = $dom->loadXML($xsl);
 		libxml_use_internal_errors($old);
 
 		if (!$res)
 		{
 			$error = libxml_get_last_error();
-			throw new \InvalidArgumentException('Invalid XML - error was: ' . $error->message);
+			throw new InvalidArgumentException('Invalid XML - error was: ' . $error->message);
 		}
 
 		if (!($flags & self::ALLOW_INSECURE_TEMPLATES))
 		{
-			$xpath = new \DOMXPath($dom);
+			$xpath = new DOMXPath($dom);
 
 			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or xsl:attribute])'))
 			{
-				throw new \RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setBBCodeTemplate() to enable it');
+				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setBBCodeTemplate() to enable it');
 			}
 		}
 
@@ -383,7 +389,7 @@ class ConfigBuilder
 
 		if (!preg_match($regexp, trim($def), $m))
 		{
-			throw new \InvalidArgumentException('Cannot interpret the BBCode definition');
+			throw new InvalidArgumentException('Cannot interpret the BBCode definition');
 		}
 
 		/**
@@ -393,14 +399,14 @@ class ConfigBuilder
 		$t = 't' . md5(microtime(true) . mt_rand());
 
 		$old = libxml_use_internal_errors(true);
-		$dom = new \DOMDocument;
+		$dom = new DOMDocument;
 		$res = $dom->loadXML('<' . $t . '>' . $tpl . '</' . $t . '>');
 		libxml_use_internal_errors($old);
 
 		if (!$res)
 		{
 			$error = libxml_get_last_error();
-			throw new \InvalidArgumentException('Invalid XML in template - error was: ' . $error->message);
+			throw new InvalidArgumentException('Invalid XML in template - error was: ' . $error->message);
 		}
 
 		$bbcodeId     = $m[1];
@@ -458,14 +464,14 @@ class ConfigBuilder
 				if (isset($options['default_param'], $options['content_as_param'])
 				 && $param === $options['default_param'])
 				{
-					throw new \InvalidArgumentException("Default param is already used to store this BBCode's content");
+					throw new InvalidArgumentException("Default param is already used to store this BBCode's content");
 				}
-				throw new \InvalidArgumentException('Param ' . $param . ' is defined twice');
+				throw new InvalidArgumentException('Param ' . $param . ' is defined twice');
 			}
 
 			if (isset($placeholders[$identifier]))
 			{
-				throw new \InvalidArgumentException('Placeholder ' . $identifier . ' is used twice');
+				throw new InvalidArgumentException('Placeholder ' . $identifier . ' is used twice');
 			}
 
 			$placeholders[$identifier] = '@' . $param;
@@ -479,7 +485,7 @@ class ConfigBuilder
 		/**
 		* Replace placeholders in attributes
 		*/
-		$xpath = new \DOMXPath($dom);
+		$xpath = new DOMXPath($dom);
 		foreach ($xpath->query('//@*') as $attr)
 		{
 			$attr->value = preg_replace_callback(
@@ -490,13 +496,13 @@ class ConfigBuilder
 
 					if (!isset($placeholders[$identifier]))
 					{
-						throw new \InvalidArgumentException('Unknown placeholder ' . $identifier . ' found in template');
+						throw new InvalidArgumentException('Unknown placeholder ' . $identifier . ' found in template');
 					}
 
 					if (!($flags & ConfigBuilder::ALLOW_INSECURE_TEMPLATES)
 					 && preg_match('#^\\{TEXT[0-9]*\\}$#D', $identifier))
 					{
-						throw new \Exception('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to addBBCodeFromExample() to enable it');
+						throw new RuntimeException('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to addBBCodeFromExample() to enable it');
 					}
 
 					$param = substr($placeholders[$identifier], 1);
@@ -520,7 +526,7 @@ class ConfigBuilder
 			{
 				if (!isset($placeholders[$m[0]]))
 				{
-					throw new \InvalidArgumentException('Unknown placeholder ' . $m[0] . ' found in template');
+					throw new InvalidArgumentException('Unknown placeholder ' . $m[0] . ' found in template');
 				}
 
 				if ($placeholders[$m[0]][0] !== '@')
@@ -730,7 +736,7 @@ class ConfigBuilder
 	{
 		if (!is_callable($callback))
 		{
-			throw new \InvalidArgumentException('The second argument passed to ' . __METHOD__ . ' is expected to be a valid callback');
+			throw new InvalidArgumentException('The second argument passed to ' . __METHOD__ . ' is expected to be a valid callback');
 		}
 
 		$config['callback']   = $callback;
@@ -785,7 +791,7 @@ class ConfigBuilder
 		{
 			if (!self::isValidId($v))
 			{
-				throw new \InvalidArgumentException ("Invalid $k name '" . $v . "'");
+				throw new InvalidArgumentException ("Invalid $k name '" . $v . "'");
 			}
 
 			if ($k === 'bbcode')
@@ -1015,7 +1021,7 @@ class ConfigBuilder
 		     . $xsl
 		     . '</xsl:stylesheet>';
 
-		$dom = new \DOMDocument;
+		$dom = new DOMDocument;
 
 		$old = libxml_use_internal_errors(true);
 		$res = $dom->loadXML($xml);
@@ -1024,7 +1030,7 @@ class ConfigBuilder
 		if (!$res)
 		{
 			$error = libxml_get_last_error();
-			throw new \InvalidArgumentException('Malformed XSL - error was: ' . $error->message);
+			throw new InvalidArgumentException('Malformed XSL - error was: ' . $error->message);
 		}
 
 		$this->xsl .= $xsl;

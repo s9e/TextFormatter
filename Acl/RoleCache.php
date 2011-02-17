@@ -7,6 +7,8 @@
 */
 namespace s9e\Toolkit\Acl;
 
+use InvalidArgumentException;
+
 class RoleCache
 {
 	/**
@@ -27,7 +29,7 @@ class RoleCache
 
 		if (!$overwrite && isset($this->roles[$name]))
 		{
-			throw new \InvalidArgumentException('There is already a role named ' . $name);
+			throw new InvalidArgumentException('There is already a role named ' . $name);
 		}
 
 		$this->roles[$name] = $role;
@@ -58,7 +60,7 @@ class RoleCache
 	{
 		if (!isset($this->roles[$name]))
 		{
-			throw new \InvalidArgumentException('There is no role named ' . $name);
+			throw new InvalidArgumentException('There is no role named ' . $name);
 		}
 
 		return $this->roles[$name];

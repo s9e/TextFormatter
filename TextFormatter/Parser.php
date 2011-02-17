@@ -7,6 +7,9 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
+use RuntimeException,
+    XMLWriter;
+
 class Parser
 {
 	/**
@@ -292,7 +295,7 @@ class Parser
 	*/
 	protected function asXML()
 	{
-		$xml = new \XMLWriter;
+		$xml = new XMLWriter;
 		$xml->openMemory();
 
 		if (empty($this->tags))
@@ -523,7 +526,7 @@ class Parser
 					{
 						if ($passConfig['limit_action'] === 'abort')
 						{
-							throw new \RuntimeException($passName . ' limit exceeded');
+							throw new RuntimeException($passName . ' limit exceeded');
 						}
 						else
 						{

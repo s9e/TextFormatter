@@ -7,20 +7,23 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
+use DOMDocument,
+    XSLTProcessor;
+
 class Renderer
 {
 	public function __construct($stylesheet)
 	{
-		$xsl = new \DOMDocument;
+		$xsl = new DOMDocument;
 		$xsl->loadXML($stylesheet);
 
-		$this->proc = new \XSLTProcessor;
+		$this->proc = new XSLTProcessor;
 		$this->proc->importStylesheet($xsl);
 	}
 
 	public function render($xml)
 	{
-		$dom  = new \DOMDocument;
+		$dom  = new DOMDocument;
 		$dom->loadXML($xml);
 
 		return trim(strpbrk($this->proc->transformToXML($dom), "\n"));
