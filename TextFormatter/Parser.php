@@ -193,6 +193,12 @@ class Parser
 				*/
 				return str_replace(array("'", '"'), array('%27', '%22'), $var);
 
+			case 'identifier':
+			case 'id':
+				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+					'options' => array('regexp' => '#^[a-zA-Z0-9-_]+$#D')
+				));
+
 			case 'simpletext':
 				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '#^[a-zA-Z0-9\\-+.,_ ]+$#D')

@@ -169,6 +169,35 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
+				'[x id=123 /]',
+				'<rt><X id="123">[x id=123 /]</X></rt>'
+			),
+			array(
+				'[x id=123abc /]',
+				'<rt><X id="123abc">[x id=123abc /]</X></rt>'
+			),
+			array(
+				'[x id=-123_abc /]',
+				'<rt><X id="-123_abc">[x id=-123_abc /]</X></rt>'
+			),
+			array(
+				'[x identifier="-123_abc" /]',
+				'<rt><X identifier="-123_abc">[x identifier=&quot;-123_abc&quot; /]</X></rt>'
+			),
+			array(
+				'[x identifier="123 abc" /]',
+				'<rt><X>[x identifier=&quot;123 abc&quot; /]</X></rt>',
+				array(
+					'error' => array(
+						array(
+							'pos'    => 0,
+							'msg'    => 'Invalid param %s',
+							'params' => array('identifier')
+						)
+					)
+				)
+			),
+			array(
 				'[x color=#123 /]',
 				'<rt><X color="#123">[x color=#123 /]</X></rt>'
 			),
@@ -390,7 +419,17 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCode('x');
 		$cb->addBBCodeParam('x', 'foo', 'text', false);
 
-		$types = array('custom', 'float', 'number', 'integer', 'int', 'uint', 'color', 'simpletext', 'undefined');
+		$types = array(
+			'custom',
+			'float',
+			'integer', 'int',
+			'number', 'uint',
+			'id', 'identifier',
+			'color',
+			'simpletext',
+			'undefined'
+		);
+
 		foreach ($types as $type)
 		{
 			$cb->addBBCodeParam('x', $type, $type, false);
