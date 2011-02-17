@@ -92,7 +92,7 @@ class loadHTMLTest extends \PHPUnit_Framework_TestCase
 
 		$node = SimpleDOM::loadHTML($html, $errors);
 
-		$this->assertType('array', $errors, '$errors was not initialized as an array');
+		$this->assertInternalType('array', $errors, '$errors was not initialized as an array');
 
 		if (is_array($errors))
 		{
