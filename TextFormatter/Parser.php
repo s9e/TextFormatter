@@ -67,6 +67,11 @@ class Parser
 	protected $text;
 
 	/**
+	* @var integer Cursor position during parsing
+	*/
+	protected $pos;
+
+	/**
 	* @var array  Unprocessed tags, in reverse order
 	*/
 	protected $tagStack;
@@ -125,6 +130,7 @@ class Parser
 		$this->log      = array();
 		$this->tagStack = array();
 		$this->tags     = array();
+
 		unset($this->text, $this->currentTag, $this->currentParam);
 	}
 
@@ -297,6 +303,11 @@ class Parser
 			case 'color':
 				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
+				));
+
+			case 'regexp':
+				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+					'options' => array('regexp' => $paramConf['regexp'])
 				));
 
 			default:

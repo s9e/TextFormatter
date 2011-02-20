@@ -391,12 +391,15 @@ class ConfigBuilder
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
 	{
 		$bbcodeId    = '([a-zA-Z_][a-zA-Z_0-9]*)';
-		$placeholder = '\\{[A-Z_]+[0-9]*\\}';
+		$placeholder = '\\{(?:REGEXP[0-9]*:/[^/]+/i?|[A-Z_]+[0-9]*)\\}';
 		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
 
 		$regexp = '#'
+		        // [BBCODE(=paramval)?
 		        . '\\[' . $bbcodeId . '(=' . $placeholder . ')?'
+		        // foo=fooval bar=barval
 		        . '((?:\\s+' . $param . '=' . $placeholder . ')*)'
+		        // /]({TEXT})[/BBCODE]
 		        . '(?:\\s*/\\]|\\](' . $placeholder . ')?\\[/\\1])'
 		        . '$#D';
 
@@ -428,10 +431,7 @@ class ConfigBuilder
 		$placeholders = array();
 		$content      = false;
 
-		if ($m[2])
-		{
-			$m[3] = $m[1] . $m[2] . $m[3];
-		}
+		$attrs = ($m[2]) ? $m[1] . $m[2] . $m[3] : $m[3];
 
 		if (isset($m[4]))
 		{
@@ -457,29 +457,35 @@ class ConfigBuilder
 				$options['default_param']    = $param;
 				$options['content_as_param'] = true;
 
-				$params[$param] = array(
-					'type'        => $type,
-					'is_required' => true
-				);
-				$placeholders[$identifier] = '@' . $param;
+				$attrs .= ' ' . $param . '=' . $identifier;
 			}
 		}
 
-		foreach (preg_split('#\\s+#', $m[3], null, \PREG_SPLIT_NO_EMPTY) as $pair)
+		foreach (preg_split('#\\s+#', $attrs, null, \PREG_SPLIT_NO_EMPTY) as $pair)
 		{
-			list($param, $identifier) = explode('=', $pair);
+			list($paramName, $identifier) = explode('=', $pair);
+			$paramName = strtolower($paramName);
 
-			$param = strtolower($param);
-			$type  = rtrim(strtolower(substr($identifier, 1, -1)), '1234567890');
+			$paramConf = array(
+				'is_required' => false
+			);
 
-			if (isset($params[$param]))
+			if (preg_match('#^\\{(REGEXP[0-9]*):(/[^/]+/i?)\\}$#D', $identifier, $m))
 			{
-				if (isset($options['default_param'], $options['content_as_param'])
-				 && $param === $options['default_param'])
-				{
-					throw new InvalidArgumentException("Default param is already used to store this BBCode's content");
-				}
-				throw new InvalidArgumentException('Param ' . $param . ' is defined twice');
+				$identifier = '{' . $m[1] . '}';
+
+				$paramConf['type']   = 'regexp';
+				$paramConf['regexp'] = $m[2];
+			}
+			else
+			{
+				$paramConf['type'] =
+					rtrim(strtolower(substr($identifier, 1, -1)), '1234567890');
+			}
+
+			if (isset($params[$paramName]))
+			{
+				throw new InvalidArgumentException('Param ' . $paramName . ' is defined twice');
 			}
 
 			if (isset($placeholders[$identifier]))
@@ -487,12 +493,9 @@ class ConfigBuilder
 				throw new InvalidArgumentException('Placeholder ' . $identifier . ' is used twice');
 			}
 
-			$placeholders[$identifier] = '@' . $param;
+			$placeholders[$identifier] = '@' . $paramName;
 
-			$params[$param] = array(
-				'type'        => $type,
-				'is_required' => false
-			);
+			$params[$paramName] = $paramConf;
 		}
 
 		/**

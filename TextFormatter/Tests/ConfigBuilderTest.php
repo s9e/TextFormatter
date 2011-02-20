@@ -501,6 +501,38 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayNotHasKey('default_replacement', $config['passes']['Censor']);
 	}
 
+	public function testAddBBCodeFromExampleAllowsRegexp()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[align={REGEXP:/^(?:left|center|right)$/i}]{TEXT}[/align]',
+			'<div style="align:{REGEXP}">{TEXT}</div>'
+		);
+		$config = $this->cb->getParserConfig();
+
+		$this->assertArrayHasKey('BBCode', $config['passes']);
+		$this->assertArrayHasKey('bbcodes', $config['passes']['BBCode']);
+		$this->assertArrayHasKey('ALIGN', $config['passes']['BBCode']['bbcodes']);
+		$this->assertArrayHasKey('params', $config['passes']['BBCode']['bbcodes']['ALIGN']);
+		$this->assertArrayHasKey(
+			'align', $config['passes']['BBCode']['bbcodes']['ALIGN']['params']
+		);
+		$this->assertArrayHasKey(
+			'type', $config['passes']['BBCode']['bbcodes']['ALIGN']['params']['align']
+		);
+		$this->assertArrayHasKey(
+			'regexp', $config['passes']['BBCode']['bbcodes']['ALIGN']['params']['align']
+		);
+
+		$this->assertSame(
+			'regexp',
+			$config['passes']['BBCode']['bbcodes']['ALIGN']['params']['align']['type']
+		);
+		$this->assertSame(
+			'/^(?:left|center|right)$/i',
+			$config['passes']['BBCode']['bbcodes']['ALIGN']['params']['align']['regexp']
+		);
+	}
+
 	public function setUp()
 	{
 		$this->cb = new ConfigBuilder;
