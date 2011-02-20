@@ -343,7 +343,10 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->cb->addBBCodeFromExample('[foo={URL}]{TEXT}[/foo]', '<b style="color:{COLOR}">{TEXT}</b>');
+			$this->cb->addBBCodeFromExample(
+				'[foo={URL}]{TEXT}[/foo]',
+				'<b style="color:{COLOR}">{TEXT}</b>'
+			);
 		}
 		catch (\InvalidArgumentException $e)
 		{
