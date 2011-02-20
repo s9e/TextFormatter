@@ -332,12 +332,12 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCode('b', array('nesting_limit' => 1));
 
 		$cb->addBBCode('a');
-		$cb->addBBCodeParam('a', 'href', 'url', true);
+		$cb->addBBCodeParam('a', 'href', 'url');
 		$cb->setAutolinkOption('bbcode', 'a');
 		$cb->setAutolinkOption('param', 'href');
 
 		$cb->addBBCode('x');
-		$cb->addBBCodeParam('x', 'foo', 'text', false);
+		$cb->addBBCodeParam('x', 'foo', 'text', array('is_required' => false));
 
 		$cb->addEmoticon(':)', '<img src="happy.png" alt=":)" />');
 
@@ -346,7 +346,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$cb->addCensor('grape*');
 
 		$cb->addBBCode('c', array('internal_use' => true));
-		$cb->addBBCodeParam('c', 'with', 'text', false);
+		$cb->addBBCodeParam('c', 'with', 'text', array('is_required' => false));
 
 		$cb->setCensorOption('bbcode', 'c');
 		$cb->setCensorOption('param', 'with');

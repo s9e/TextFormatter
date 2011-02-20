@@ -42,12 +42,12 @@ class OlympusParser extends Parser
 			'default_param' => 'author',
 			'nesting_limit' => 10
 		));
-		$cb->addBBCodeParam('quote', 'author', 'text', false);
+		$cb->addBBCodeParam('quote', 'author', 'text', array('is_required' => false));
 
 		$cb->addBBCode('list', array(
 			'default_param' => 'type'
 		));
-		$cb->addBBCodeParam('list', 'type', 'simpletext', false);
+		$cb->addBBCodeParam('list', 'type', 'simpletext', array('is_required' => false));
 
 		$cb->addBBCode('li');
 		$cb->addBBCodeAlias('li', '*');

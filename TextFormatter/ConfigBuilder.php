@@ -174,8 +174,23 @@ class ConfigBuilder
 		$this->bbcodeAliases[$alias] = $bbcodeId;
 	}
 
-	public function addBBCodeParam($bbcodeId, $paramName, $paramType, $isRequired = true)
+	/**
+	* Add a param to a BBCode
+	*
+	* @param string $bbcodeId
+	* @param string $paramName
+	* @param string $paramType
+	* @param array  $conf
+	*/
+	public function addBBCodeParam($bbcodeId, $paramName, $paramType, array $paramConf = array())
 	{
+		/**
+		* Add default config
+		*/
+		$paramConf += array(
+			'is_required' => true
+		);
+
 		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
 		if (!isset($this->bbcodes[$bbcodeId]))
 		{
@@ -194,10 +209,8 @@ class ConfigBuilder
 			throw new InvalidArgumentException('Param ' . $paramName . ' already exists');
 		}
 
-		$this->bbcodes[$bbcodeId]['params'][$paramName] = array(
-			'type'        => $paramType,
-			'is_required' => $isRequired
-		);
+		$paramConf['type'] = $paramType;
+		$this->bbcodes[$bbcodeId]['params'][$paramName] = $paramConf;
 	}
 
 	public function addBBCodeRule($bbcodeId, $action, $target)
@@ -539,9 +552,14 @@ class ConfigBuilder
 		);
 
 		$this->addBBCode($bbcodeId, $options);
-		foreach ($params as $param => $_options)
+		foreach ($params as $paramName => $paramConf)
 		{
-			$this->addBBCodeParam($bbcodeId, $param, $_options['type'], $_options['is_required']);
+			$this->addBBCodeParam(
+				$bbcodeId,
+				$paramName,
+				$paramConf['type'],
+				$paramConf
+			);
 		}
 		$this->setBBCodeTemplate($bbcodeId, $tpl, $flags);
 	}
@@ -630,7 +648,7 @@ class ConfigBuilder
 		{
 			$bbcodeId = $this->addInternalBBCode('C');
 
-			$this->addBBCodeParam($bbcodeId, 'with', 'text', false);
+			$this->addBBCodeParam($bbcodeId, 'with', 'text', array('is_required' => false));
 
 			$this->setCensorOption('bbcode', $bbcodeId);
 			$this->setCensorOption('param', 'with');
@@ -732,15 +750,29 @@ class ConfigBuilder
 	// Filters
 	//==========================================================================
 
-	public function setFilter($name, $callback, array $config = array())
+	/**
+	* Set the filter used to validate a param type
+	*
+	* @param string   $type     Param type
+	* @param callback $callback Callback
+	* @param array    $conf     Optional config, will be appended to the param config and passed
+	*                           to the callback
+	*/
+	public function setFilter($type, $callback, array $conf = null)
 	{
 		if (!is_callable($callback))
 		{
 			throw new InvalidArgumentException('The second argument passed to ' . __METHOD__ . ' is expected to be a valid callback');
 		}
 
-		$config['callback']   = $callback;
-		$this->filters[$name] = $config;
+		$this->filters[$type] = array(
+			'callback' => $callback
+		);
+
+		if (isset($conf))
+		{
+			$this->filters[$type]['conf'] = $conf;
+		}
 	}
 
 	public function allowScheme($scheme)

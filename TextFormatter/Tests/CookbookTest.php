@@ -27,7 +27,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 
 		// BBCode name, param name, param type (incidentally all identical)
 		// followed by whether it's a required param
-		$cb->addBBCodeParam('url', 'url', 'url', true);
+		$cb->addBBCodeParam('url', 'url', 'url');
 
 		$cb->setBBCodeTemplate('url', '<a href="{@url}"><xsl:apply-templates/></a>');
 		//======================================================================
@@ -94,7 +94,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 			'rtrim_content' => true
 		));
 
-		$cb->addBBCodeParam('quote', 'author', 'text', false);
+		$cb->addBBCodeParam('quote', 'author', 'text', array('is_required' => false));
 		$cb->setBBCodeTemplate(
 			'quote',
 			'<div class="quote">
@@ -136,37 +136,41 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCode('size', array('default_param' => 'px'));
 
 		// BBCode name, param name, param type, is_required
-		$cb->addBBCodeParam('size', 'px', 'font-size', true);
-
-		// Now we need a custom filter for the "font-size" type
-		function checkFontSize($v, $conf, &$msgs)
-		{
-			if ($v < $conf['min'])
-			{
-				// We can pass error messages back to the parser if we want
-				$msgs['warning'][] = array(
-					'msg'    => 'Font size must be at least %d',
-					'params' => array($conf['min'])
-				);
-				return $conf['min'];
-			}
-			elseif ($v > $conf['max'])
-			{
-				$msgs['warning'][] = array(
-					'msg'    => 'Font size is limited to %d',
-					'params' => array($conf['max'])
-				);
-				return $conf['max'];
-			}
-
-			// Make sure it's a number, you don't want to add XSS to your tags!
-			return (int) $v;
-		};
-
-		$cb->setFilter('font-size', __NAMESPACE__ . '\\checkFontSize', array(
+		$cb->addBBCodeParam('size', 'px', 'font-size', array(
 			'min' => 7,
 			'max' => 20
 		));
+
+		// Now we need a custom filter for the "font-size" type
+		function checkFontSize($paramVal, $paramConf)
+		{
+			if ($paramVal < $paramConf['min'])
+			{
+				// We can pass error messages back to the parser if we want
+/**
+				$msgs['warning'][] = array(
+					'msg'    => 'Font size must be at least %d',
+					'params' => array($paramConf['min'])
+				);
+/**/
+				return $paramConf['min'];
+			}
+			elseif ($paramVal > $paramConf['max'])
+			{
+/**
+				$msgs['warning'][] = array(
+					'msg'    => 'Font size is limited to %d',
+					'params' => array($paramConf['max'])
+				);
+/**/
+				return $paramConf['max'];
+			}
+
+			// Make sure it's a number, you don't want to add XSS to your tags!
+			return (int) $paramVal;
+		};
+
+		$cb->setFilter('font-size', __NAMESPACE__ . '\\checkFontSize');
 
 		$cb->setBBCodeTemplate('size', '<span style="font-size: {@px}px"><xsl:apply-templates/></span>');
 		//======================================================================

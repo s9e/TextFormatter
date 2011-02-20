@@ -413,10 +413,10 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCode('y');
 		$cb->addBBCode('z');
 
-		$cb->addBBCodeParam('x', 'foo', 'text', false);
-		$cb->addBBCodeParam('y', 'foo', 'text', true);
+		$cb->addBBCodeParam('x', 'foo', 'text', array('is_required' => false));
+		$cb->addBBCodeParam('y', 'foo', 'text');
 
-		$cb->addBBCodeParam('url', 'url', 'url', true);
+		$cb->addBBCodeParam('url', 'url', 'url');
 
 		$this->config = $cb->getBBCodeConfig();
 

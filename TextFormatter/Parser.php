@@ -76,6 +76,16 @@ class Parser
 	*/
 	protected $tags;
 
+	/**
+	* @var array  Tag currently being processed, used in processTags()
+	*/
+	protected $currentTag;
+
+	/**
+	* @var string Name of the param currently being validated, used in processTags()
+	*/
+	protected $currentParam;
+
 	//==============================================================================================
 	// Public stuff
 	//==============================================================================================
@@ -115,7 +125,7 @@ class Parser
 		$this->log      = array();
 		$this->tagStack = array();
 		$this->tags     = array();
-		unset($this->text);
+		unset($this->text, $this->currentTag, $this->currentParam);
 	}
 
 	/**
@@ -134,59 +144,117 @@ class Parser
 	}
 
 	/**
+	* Add a message to the error log
+	*
+	* @param  string $type  Message type: debug, warning or error
+	* @param  array  $entry Log info
+	* @return void
+	*/
+	public function log($type, array $entry)
+	{
+		if (isset($this->currentTag))
+		{
+			$entry['bbcodeId'] = $this->currentTag['name'];
+
+			if (isset($this->currentParam))
+			{
+				$entry['paramName'] = $this->currentParam;
+			}
+
+			if (!isset($entry['pos']))
+			{
+				$entry['pos'] = $this->currentTag['pos'];
+			}
+		}
+
+		$this->log[$type][] = $entry;
+	}
+
+	/**
+	* Return the current tag
+	*
+	* Should only be called during tags processing by param filters
+	*
+	* @return array
+	*/
+	public function getCurrentTag()
+	{
+		return $this->currentTag;
+	}
+
+	/**
+	* Return the definition of the param currently being validated
+	*
+	* Should only be called during tags processing by param filters
+	*
+	* @return array
+	*/
+	public function getCurrentParam()
+	{
+		return $this->currentParam;
+	}
+
+	/**
 	* Filter a var according to the configuration's filters
 	*
 	* Used internally but made public so that developers can test in advance whether a var would be
 	* invalid. It mostly relies on PHP's own ext/filter extension but individual filters can be
 	* overwritten by the config
 	*
-	* @param  mixed   $var  Param value to be filtered/sanitized
-	* @param  string  $type Type of the param, e.g. "string" or "int"
-	* @param  array  &$msgs Messages to be added to the log
-	* @return mixed         The sanitized value of this param, or false if it was invalid
+	* @param  mixed  $paramVal  Param value to be filtered/sanitized
+	* @param  array  $paramConf Param configuration
+	* @return mixed             The sanitized value of this param, or false if it was invalid
 	*/
-	public function filter($var, $type, array &$msgs = array())
+	public function filter($paramVal, array $paramConf)
 	{
-		if (isset($this->filters[$type]['callback']))
+		$paramType = $paramConf['type'];
+
+		if (isset($this->filters[$paramType]['callback']))
 		{
-			return call_user_func_array(
-				$this->filters[$type]['callback'],
-				array(
-					$var,
-					$this->filters[$type],
-					&$msgs
-				)
+			if (isset($this->filters[$paramType]['conf']))
+			{
+				/**
+				* Add the filter's config to the param
+				* NOTE: it doesn't overwrite the param's existing config
+				*/
+				$paramConf += $this->filters[$paramType]['conf'];
+			}
+
+			return call_user_func(
+				$this->filters[$paramType]['callback'],
+				$paramVal,
+				$paramConf
 			);
 		}
 
-		switch ($type)
+		switch ($paramType)
 		{
 			case 'url':
-				$var = filter_var($var, \FILTER_VALIDATE_URL);
+				$paramVal = filter_var($paramVal, \FILTER_VALIDATE_URL);
 
-				if (!$var)
+				if (!$paramVal)
 				{
 					return false;
 				}
 
-				$p = parse_url($var);
+				$p = parse_url($paramVal);
 
 				if (!preg_match($this->filters['url']['allowed_schemes'], $p['scheme']))
 				{
-					$msgs['error'][] = array(
+					$this->log('error', array(
 						'msg'    => 'URL scheme %s is not allowed',
 						'params' => array($p['scheme'])
-					);
+					));
 					return false;
 				}
 
 				if (isset($this->filters['url']['disallowed_hosts'])
 				 && preg_match($this->filters['url']['disallowed_hosts'], $p['host']))
 				{
-					$msgs['error'][] = array(
+					$this->log('error', array(
 						'msg'    => 'URL host %s is not allowed',
 						'params' => array($p['host'])
-					);
+					));
 					return false;
 				}
 
@@ -194,48 +262,48 @@ class Parser
 				* We escape quotes just in case someone would want to use the URL in some Javascript
 				* thingy
 				*/
-				return str_replace(array("'", '"'), array('%27', '%22'), $var);
+				return str_replace(array("'", '"'), array('%27', '%22'), $paramVal);
 
 			case 'identifier':
 			case 'id':
-				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '#^[a-zA-Z0-9-_]+$#D')
 				));
 
 			case 'simpletext':
-				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '#^[a-zA-Z0-9\\-+.,_ ]+$#D')
 				));
 
 			case 'text':
-				return (string) $var;
+				return (string) $paramVal;
 
 			case 'email':
-				return filter_var($var, \FILTER_VALIDATE_EMAIL);
+				return filter_var($paramVal, \FILTER_VALIDATE_EMAIL);
 
 			case 'int':
 			case 'integer':
-				return filter_var($var, \FILTER_VALIDATE_INT);
+				return filter_var($paramVal, \FILTER_VALIDATE_INT);
 
 			case 'float':
-				return filter_var($var, \FILTER_VALIDATE_FLOAT);
+				return filter_var($paramVal, \FILTER_VALIDATE_FLOAT);
 
 			case 'number':
 			case 'uint':
-				return filter_var($var, \FILTER_VALIDATE_INT, array(
+				return filter_var($paramVal, \FILTER_VALIDATE_INT, array(
 					'options' => array('min_range' => 0)
 				));
 
 			case 'color':
-				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
 				));
 
 			default:
-				$msgs['debug'][] = array(
+				$this->log('debug', array(
 					'msg'    => 'Unknown filter %s',
-					'params' => array($type)
-				);
+					'params' => array($paramType)
+				));
 				return false;
 		}
 	}
@@ -383,18 +451,6 @@ class Parser
 	//==========================================================================
 	// Internal stuff
 	//==========================================================================
-
-	/**
-	* Add a message to the error log
-	*
-	* @param  string $type  Message type: debug, warning or error
-	* @param  array  $entry Log info
-	* @return void
-	*/
-	protected function log($type, array $entry)
-	{
-		$this->log[$type][] = $entry;
-	}
 
 	/**
 	* Append a tag to the list of processed tags
@@ -695,26 +751,26 @@ class Parser
 		$pos = 0;
 		do
 		{
-			$tag = array_pop($this->tagStack);
+			$this->currentTag = array_pop($this->tagStack);
 
-			if ($pos > $tag['pos'])
+			if ($pos > $this->currentTag['pos'])
 			{
 				$this->log('debug', array(
-					'pos' => $tag['pos'],
+					'pos' => $this->currentTag['pos'],
 					'msg' => 'Tag skipped'
 				));
 				continue;
 			}
 
-			$bbcodeId = $tag['name'];
+			$bbcodeId = $this->currentTag['name'];
 			$bbcode   = $bbcodes[$bbcodeId];
-			$suffix   = (isset($tag['suffix'])) ? $tag['suffix'] : '';
+			$suffix   = (isset($this->currentTag['suffix'])) ? $this->currentTag['suffix'] : '';
 
 			//==================================================================
 			// Start tag
 			//==================================================================
 
-			if ($tag['type'] & self::START_TAG)
+			if ($this->currentTag['type'] & self::START_TAG)
 			{
 				//==============================================================
 				// Check that this BBCode is allowed here
@@ -733,21 +789,21 @@ class Parser
 							/**
 							* So we do have to close that parent. First we reinsert current tag... 
 							*/
-							$this->tagStack[] = $tag;
+							$this->tagStack[] = $this->currentTag;
 
 							/**
 							* ...then we create a new end tag which we put on top of the stack
 							*/
-							$tag = array(
-								'pos'    => $tag['pos'],
+							$this->currentTag = array(
+								'pos'    => $this->currentTag['pos'],
 								'name'   => $parentBBCodeId,
 								'suffix' => $lastBBCode['suffix'],
 								'len'    => 0,
 								'type'   => self::END_TAG
 							);
 
-							$this->addTrimmingInfoToTag($tag, $pos);
-							$this->tagStack[] = $tag;
+							$this->addTrimmingInfoToTag($this->currentTag, $pos);
+							$this->tagStack[] = $this->currentTag;
 
 							continue 2;
 						}
@@ -763,7 +819,7 @@ class Parser
 				if (!isset($allowed[$bbcodeId]))
 				{
 					$this->log('debug', array(
-						'pos'    => $tag['pos'],
+						'pos'    => $this->currentTag['pos'],
 						'msg'    => 'BBCode %s is not allowed in this context',
 						'params' => array($bbcodeId)
 					));
@@ -778,7 +834,7 @@ class Parser
 					 || $lastBBCode['bbcode_id'] !== $bbcode['require_parent'])
 					{
 						$this->log('debug', array(
-							'pos'    => $tag['pos'],
+							'pos'    => $this->currentTag['pos'],
 							'msg'    => 'BBCode %1$s requires %2$s as parent',
 							'params' => array($bbcodeId, $bbcode['require_parent'])
 						));
@@ -794,7 +850,7 @@ class Parser
 						if (empty($cntOpen[$ascendant]))
 						{
 							$this->log('debug', array(
-								'pos'    => $tag['pos'],
+								'pos'    => $this->currentTag['pos'],
 								'msg'    => 'BBCode %1$s requires %2$s as ascendant',
 								'params' => array($bbcodeId, $ascendant)
 							));
@@ -808,7 +864,9 @@ class Parser
 					/**
 					* Check for missing required params
 					*/
-					foreach (array_diff_key($bbcode['params'], $tag['params']) as $paramName => $paramConf)
+					$missingParams = array_diff_key($bbcode['params'], $this->currentTag['params']);
+
+					foreach ($missingParams as $paramName => $paramConf)
 					{
 						if (empty($paramConf['is_required']))
 						{
@@ -816,7 +874,7 @@ class Parser
 						}
 
 						$this->log('error', array(
-							'pos'    => $tag['pos'],
+							'pos'    => $this->currentTag['pos'],
 							'msg'    => 'Missing param %s',
 							'params' => array($paramName)
 						));
@@ -824,50 +882,57 @@ class Parser
 						continue 2;
 					}
 
-					foreach ($tag['params'] as $k => &$v)
+					foreach ($this->currentTag['params'] as $paramName => &$paramVal)
 					{
-						$msgs = array();
-						$v    = $this->filter($v, $bbcode['params'][$k]['type'], $msgs);
+						$this->currentParam = $paramName;
 
-						foreach ($msgs as $type => $_msgs)
-						{
-							foreach ($_msgs as $msg)
-							{
-								$msg['pos'] = $tag['pos'];
-								$this->log($type, $msg);
-							}
-						}
 
-						if ($v === false)
+						$paramConf   = $bbcode['params'][$paramName];
+						$filteredVal = $this->filter($paramVal, $paramConf);
+
+						if ($filteredVal === false)
 						{
 							$this->log('error', array(
-								'pos'    => $tag['pos'],
+								'pos'    => $this->currentTag['pos'],
 								'msg'    => 'Invalid param %s',
-								'params' => array($k)
+								'params' => array($paramName)
 							));
 
-							if ($bbcode['params'][$k]['is_required'])
+							if ($paramConf['is_required'])
 							{
 								// Skip this tag
 								continue 2;
 							}
 
-							unset($tag['params'][$k]);
+							unset($this->currentTag['params'][$paramName]);
 						}
+						elseif ((string) $filteredVal !== (string) $paramVal)
+						{
+							$this->log('debug', array(
+								'pos'    => $this->currentTag['pos'],
+								'msg'    => 'Param value was altered by the filter '
+								          . '(paramName: $1%s, paramVal: $2%s, filteredVal: $3%s)',
+								'params' => array($paramName, $paramVal, $filteredVal)
+							));
+						}
+
+						$paramVal = (string) $filteredVal;
 					}
+
+					unset($paramVal, $this->currentParam);
 				}
 
 				//==============================================================
 				// Ok, so we have a valid BBCode
 				//==============================================================
 
-				$this->appendTag($tag);
+				$this->appendTag($this->currentTag);
 
-				$pos = $tag['pos'] + $tag['len'];
+				$pos = $this->currentTag['pos'] + $this->currentTag['len'];
 
 				++$cntTotal[$bbcodeId];
 
-				if ($tag['type'] & self::END_TAG)
+				if ($this->currentTag['type'] & self::END_TAG)
 				{
 					continue;
 				}
@@ -895,7 +960,7 @@ class Parser
 			// End tag
 			//==================================================================
 
-			if ($tag['type'] & self::END_TAG)
+			if ($this->currentTag['type'] & self::END_TAG)
 			{
 				if (empty($openTags[$bbcodeId . $suffix]))
 				{
@@ -903,14 +968,14 @@ class Parser
 					* This is an end tag but there's no matching start tag
 					*/
 					$this->log('debug', array(
-						'pos'    => $tag['pos'],
+						'pos'    => $this->currentTag['pos'],
 						'msg'    => 'Could not find a matching start tag for BBCode %s',
 						'params' => array($bbcodeId . $suffix)
 					));
 					continue;
 				}
 
-				$pos = $tag['pos'] + $tag['len'];
+				$pos = $this->currentTag['pos'] + $this->currentTag['len'];
 
 				do
 				{
@@ -924,7 +989,7 @@ class Parser
 					{
 						$this->appendTag(array(
 							'name' => $cur['bbcode_id'],
-							'pos'  => $tag['pos'],
+							'pos'  => $this->currentTag['pos'],
 							'len'  => 0,
 							'type' => self::END_TAG
 						));
@@ -933,7 +998,7 @@ class Parser
 				}
 				while (1);
 
-				$this->appendTag($tag);
+				$this->appendTag($this->currentTag);
 			}
 		}
 		while (!empty($this->tagStack));

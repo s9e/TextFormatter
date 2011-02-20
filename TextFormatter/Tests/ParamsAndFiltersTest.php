@@ -76,9 +76,10 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Missing param %s',
-							'params' => array('href')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'msg'       => 'Missing param %s',
+							'params'    => array('href')
 						)
 					)
 				)
@@ -101,9 +102,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('href')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('href')
 						)
 					)
 				)
@@ -115,9 +118,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('number')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'number',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('number')
 						)
 					)
 				)
@@ -144,9 +149,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('integer')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'integer',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('integer')
 						)
 					)
 				)
@@ -161,9 +168,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('uint')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'uint',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('uint')
 						)
 					)
 				)
@@ -190,9 +199,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('identifier')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'identifier',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('identifier')
 						)
 					)
 				)
@@ -211,9 +222,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('color')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'color',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('color')
 						)
 					)
 				)
@@ -232,9 +245,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('simpletext')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'simpletext',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('simpletext')
 						)
 					)
 				)
@@ -245,14 +260,18 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'URL host %s is not allowed',
-							'params' => array('evil.example.com')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'URL host %s is not allowed',
+							'params'   => array('evil.example.com')
 						),
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('href')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('href')
 						)
 					)
 				)
@@ -263,14 +282,18 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'URL host %s is not allowed',
-							'params' => array('reallyevil.example.com')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'URL host %s is not allowed',
+							'params'    => array('reallyevil.example.com')
 						),
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('href')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('href')
 						)
 					)
 				)
@@ -281,14 +304,18 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'URL host %s is not allowed',
-							'params' => array('example.xxx')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'URL host %s is not allowed',
+							'params'    => array('example.xxx')
 						),
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('href')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('href')
 						)
 					)
 				)
@@ -299,14 +326,18 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'URL scheme %s is not allowed',
-							'params' => array('evil')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'URL scheme %s is not allowed',
+							'params'    => array('evil')
 						),
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('href')
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'paramName' => 'href',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('href')
 						)
 					)
 				)
@@ -317,16 +348,20 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'debug' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Unknown filter %s',
-							'params' => array('undefined')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'undefined',
+							'msg'       => 'Unknown filter %s',
+							'params'    => array('undefined')
 						)
 					),
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('undefined')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'undefined',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('undefined')
 						)
 					)
 				)
@@ -357,9 +392,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Invalid param %s',
-							'params' => array('float')
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'float',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('float')
 						)
 					)
 				)
@@ -370,9 +407,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'error' => array(
 						array(
-							'pos'    => 1,
-							'msg'    => 'Invalid param %s',
-							'params' => array('uint')
+							'pos'       => 1,
+							'bbcodeId'  => 'X',
+							'paramName' => 'uint',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('uint')
 						)
 					)
 				)
@@ -383,9 +422,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'warning' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Font size must be at least %d',
-							'params' => array(7)
+							'pos'       => 0,
+							'bbcodeId'  => 'SIZE',
+							'paramName' => 'size',
+							'msg'       => 'Font size must be at least %d',
+							'params'    => array(7)
 						)
 					)
 				)
@@ -396,9 +437,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				array(
 					'warning' => array(
 						array(
-							'pos'    => 0,
-							'msg'    => 'Font size is limited to %d',
-							'params' => array(20)
+							'pos'       => 0,
+							'bbcodeId'  => 'SIZE',
+							'paramName' => 'size',
+							'msg'       => 'Font size is limited to %d',
+							'params'    => array(20)
 						)
 					)
 				)
@@ -413,11 +456,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCode('b');
 
 		$cb->addBBCode('url');
-		$cb->addBBCodeParam('url', 'href', 'url', true);
-		$cb->addBBCodeParam('url', 'title', 'text', false);
+		$cb->addBBCodeParam('url', 'href', 'url');
+		$cb->addBBCodeParam('url', 'title', 'text', array('is_required' => false));
 
 		$cb->addBBCode('x');
-		$cb->addBBCodeParam('x', 'foo', 'text', false);
+		$cb->addBBCodeParam('x', 'foo', 'text', array('is_required' => false));
 
 		$types = array(
 			'custom',
@@ -432,30 +475,32 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 
 		foreach ($types as $type)
 		{
-			$cb->addBBCodeParam('x', $type, $type, false);
+			$cb->addBBCodeParam('x', $type, $type, array('is_required' => false));
 		}
 
 		$cb->setFilter('custom', function($v) { return $v; });
 
 		// [size] BBCode with custom font-size filter
 		$cb->addBBCode('size', array('default_param' => 'size'));
-		$cb->addBBCodeParam('size', 'size', 'font-size', true);
-		$callback = function($v, $conf, &$msgs)
+		$cb->addBBCodeParam('size', 'size', 'font-size');
+
+		$that = $this;
+		$callback = function($v, $conf) use ($that)
 		{
 			if ($v < $conf['min'])
 			{
-				$msgs['warning'][] = array(
+				$that->parser->log('warning', array(
 					'msg'    => 'Font size must be at least %d',
 					'params' => array($conf['min'])
-				);
+				));
 				return $conf['min'];
 			}
 			elseif ($v > $conf['max'])
 			{
-				$msgs['warning'][] = array(
+				$that->parser->log('warning', array(
 					'msg'    => 'Font size is limited to %d',
 					'params' => array($conf['max'])
-				);
+				));
 				return $conf['max'];
 			}
 			return $v;
