@@ -44,10 +44,12 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 		}
 		catch (\Exception $e)
 		{
-			if (strpos(get_class($e), 'PHPUnit') !== false)
+			if (!isset($msg)
+			 || strpos(get_class($e), 'PHPUnit') !== false)
 			{
 				throw $e;
 			}
+
 			$this->assertContains($msg, $e->getMessage());
 		}
 	}

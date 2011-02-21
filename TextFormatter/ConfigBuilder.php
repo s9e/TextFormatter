@@ -390,20 +390,9 @@ class ConfigBuilder
 
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
 	{
-		$bbcodeId    = '([a-zA-Z_][a-zA-Z_0-9]*)';
-		$placeholder = '\\{(?:REGEXP[0-9]*:/[^/]+/i?|[A-Z_]+[0-9]*)\\}';
-		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
+		$p = $this->parseBBCodeDefinition($def);
 
-		$regexp = '#'
-		        // [BBCODE(=paramval)?
-		        . '\\[' . $bbcodeId . '(=' . $placeholder . ')?'
-		        // foo=fooval bar=barval
-		        . '((?:\\s+' . $param . '=' . $placeholder . ')*)'
-		        // /]({TEXT})[/BBCODE]
-		        . '(?:\\s*/\\]|\\](' . $placeholder . ')?\\[/\\1])'
-		        . '$#D';
-
-		if (!preg_match($regexp, trim($def), $m))
+		if ($p === false)
 		{
 			throw new InvalidArgumentException('Cannot interpret the BBCode definition');
 		}
@@ -425,78 +414,10 @@ class ConfigBuilder
 			throw new InvalidArgumentException('Invalid XML in template - error was: ' . $error->message);
 		}
 
-		$bbcodeId     = $m[1];
-		$options      = array();
-		$params       = array();
-		$placeholders = array();
-		$content      = false;
-
-		$attrs = ($m[2]) ? $m[1] . $m[2] . $m[3] : $m[3];
-
-		if (isset($m[4]))
-		{
-			$identifier = $m[4];
-
-			if (preg_match('#^\\{TEXT[0-9]*\\}$#D', $identifier))
-			{
-				/**
-				* Use substring() to exclude the <st/> and <et/> children
-				*/
-				$placeholders[$identifier] = 'substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))';
-			}
-			else
-			{
-				/**
-				* We need to validate the content, means we should probably disable BBCodes, e.g.
-				* [email]{EMAIL}[/email]
-				*/
-				$type  = rtrim(strtolower(substr($identifier, 1, -1)), '1234567890');
-				$param = strtolower($bbcodeId);
-
-				$options['default_rule']     = 'deny';
-				$options['default_param']    = $param;
-				$options['content_as_param'] = true;
-
-				$attrs .= ' ' . $param . '=' . $identifier;
-			}
-		}
-
-		foreach (preg_split('#\\s+#', $attrs, null, \PREG_SPLIT_NO_EMPTY) as $pair)
-		{
-			list($paramName, $identifier) = explode('=', $pair);
-			$paramName = strtolower($paramName);
-
-			$paramConf = array(
-				'is_required' => false
-			);
-
-			if (preg_match('#^\\{(REGEXP[0-9]*):(/[^/]+/i?)\\}$#D', $identifier, $m))
-			{
-				$identifier = '{' . $m[1] . '}';
-
-				$paramConf['type']   = 'regexp';
-				$paramConf['regexp'] = $m[2];
-			}
-			else
-			{
-				$paramConf['type'] =
-					rtrim(strtolower(substr($identifier, 1, -1)), '1234567890');
-			}
-
-			if (isset($params[$paramName]))
-			{
-				throw new InvalidArgumentException('Param ' . $paramName . ' is defined twice');
-			}
-
-			if (isset($placeholders[$identifier]))
-			{
-				throw new InvalidArgumentException('Placeholder ' . $identifier . ' is used twice');
-			}
-
-			$placeholders[$identifier] = '@' . $paramName;
-
-			$params[$paramName] = $paramConf;
-		}
+		$bbcodeId     = $p['bbcodeId'];
+		$params       = $p['params'];
+		$placeholders = $p['placeholders'];
+		$options      = $p['options'];
 
 		/**
 		* Replace placeholders in attributes
@@ -506,9 +427,9 @@ class ConfigBuilder
 		{
 			$attr->value = preg_replace_callback(
 				'#\\{[A-Z]+[0-9]*?\\}#',
-				function ($m) use (&$placeholders, &$params, $bbcodeId, $flags)
+				function ($m) use ($placeholders, &$params, $flags)
 				{
-					$identifier = $m[0];
+					$identifier = substr($m[0], 1, -1);
 
 					if (!isset($placeholders[$identifier]))
 					{
@@ -516,7 +437,7 @@ class ConfigBuilder
 					}
 
 					if (!($flags & ConfigBuilder::ALLOW_INSECURE_TEMPLATES)
-					 && preg_match('#^\\{TEXT[0-9]*\\}$#D', $identifier))
+					 && preg_match('#^TEXT[0-9]*$#D', $identifier))
 					{
 						throw new RuntimeException('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to addBBCodeFromExample() to enable it');
 					}
@@ -538,18 +459,20 @@ class ConfigBuilder
 		*/
 		$tpl = preg_replace_callback(
 			'#\\{[A-Z]+[0-9]*\\}#',
-			function ($m) use ($placeholders, &$params, $content)
+			function ($m) use ($placeholders, &$params)
 			{
-				if (!isset($placeholders[$m[0]]))
+				$identifier = substr($m[0], 1, -1);
+
+				if (!isset($placeholders[$identifier]))
 				{
-					throw new InvalidArgumentException('Unknown placeholder ' . $m[0] . ' found in template');
+					throw new InvalidArgumentException('Unknown placeholder ' . $identifier . ' found in template');
 				}
 
-				if ($placeholders[$m[0]][0] !== '@')
+				if ($placeholders[$identifier][0] !== '@')
 				{
 					return '<xsl:apply-templates/>';
 				}
-				return '<xsl:value-of select="' . $placeholders[$m[0]] . '"/>';
+				return '<xsl:value-of select="' . $placeholders[$identifier] . '"/>';
 			},
 			substr(trim($dom->saveXML($dom->documentElement)), 35, -36)
 		);
@@ -565,6 +488,129 @@ class ConfigBuilder
 			);
 		}
 		$this->setBBCodeTemplate($bbcodeId, $tpl, $flags);
+	}
+
+	public function parseBBCodeDefinition($def)
+	{
+		$bbcodeId    = '[a-zA-Z_][a-zA-Z_0-9]*';
+		$placeholder = '\\{(?:REGEXP[0-9]*:/[^/]+/i?|[A-Z_]+[0-9]*)\\}';
+		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
+
+		$regexp = '#'
+		        // [(BBCODE)(=paramval)?
+		        . '\\[(' . $bbcodeId . ')(=' . $placeholder . ')?'
+		        // (foo=fooval bar=barval)
+		        . '((?:\\s+' . $param . '=' . $placeholder . ')*)'
+		        // ]({TEXT})[/BBCODE]
+		        . '(?:\\s*/\\]|\\](' . $placeholder . ')?\\[/\\1])'
+		        . '$#D';
+
+		if (!preg_match($regexp, trim($def), $m))
+		{
+			return false;
+		}
+
+		$bbcodeId     = $m[1];
+		$options      = array();
+		$params       = array();
+		$placeholders = array();
+
+		/**
+		* If we have a default param in $m[2], we prepend the definition to the attribute pairs.
+		* e.g. [a href={URL}]           => $attrs = "href={URL}"
+		*      [url={URL} title={TEXT}] => $attrs = "url={URL} title={TEXT}"
+		*/
+		$attrs = ($m[2]) ? $m[1] . $m[2] . $m[3] : $m[3];
+
+		/**
+		* Here we process the content's placeholder
+		*
+		* e.g. [spoiler]{TEXT}[/spoiler] => {TEXT}
+		*      [img]{URL}[/img]          => {URL}
+		*
+		* {TEXT} doesn't require validation, so we don't copy its content into an attribute in order
+		* to save space. Instead, templates will rely on the node's textContent, which we adjust to
+		* ignore the node's <st/> and <et/> children
+		*/
+		if (isset($m[4]))
+		{
+			// TEXT or TEXT1
+			$identifier = substr($m[4], 1, -1);
+
+			if (preg_match('#^TEXT[0-9]*$#D', $identifier))
+			{
+				/**
+				* Use substring() to exclude the <st/> and <et/> children
+				*/
+				$placeholders[$identifier] =
+					'substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))';
+			}
+			else
+			{
+				/**
+				* We need to validate the content, means we should probably disable BBCodes,
+				* e.g. [email]{EMAIL}[/email]
+				*/
+				$param = strtolower($bbcodeId);
+
+				$options['default_rule']     = 'deny';
+				$options['default_param']    = $param;
+				$options['content_as_param'] = true;
+
+				/**
+				* We append the placeholder to the attributes, using the BBCode's name as param name
+				*/
+				$attrs .= ' ' . $param . '={' . $identifier . '}';
+			}
+		}
+
+		foreach (preg_split('#\\s+#', $attrs, null, \PREG_SPLIT_NO_EMPTY) as $pair)
+		{
+			list($paramName, $identifier) = explode('=', $pair);
+
+			/**
+			* Normalize the param name, remove the braces around the identifier
+			*/
+			$paramName  = strtolower($paramName);
+			$identifier = substr($identifier, 1, -1);
+
+			if (isset($params[$paramName]))
+			{
+				throw new InvalidArgumentException('Param ' . $paramName . ' is defined twice');
+			}
+
+			$paramConf = array(
+				'is_required' => false
+			);
+
+			if (preg_match('#^(REGEXP[0-9]*):(/[^/]+/i?)$#D', $identifier, $m))
+			{
+				$identifier = $m[1];
+
+				$paramConf['type']   = 'regexp';
+				$paramConf['regexp'] = $m[2];
+			}
+			else
+			{
+				$paramConf['type'] = rtrim(strtolower($identifier), '1234567890');
+			}
+
+			if (isset($placeholders[$identifier]))
+			{
+				throw new InvalidArgumentException('Placeholder ' . $identifier . ' is used twice');
+			}
+
+			$placeholders[$identifier] = '@' . $paramName;
+
+			$params[$paramName] = $paramConf;
+		}
+
+		return array(
+			'bbcodeId'     => $bbcodeId,
+			'options'      => $options,
+			'params'       => $params,
+			'placeholders' => $placeholders
+		);
 	}
 
 	protected function addInternalBBCode($prefix)
