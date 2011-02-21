@@ -331,7 +331,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		}
 		catch (\InvalidArgumentException $e)
 		{
-			$this->assertContains("Default param is already used to store this BBCode's content", $e->getMessage());
+			$this->assertSame("Param foo is defined twice", $e->getMessage());
 			throw $e;
 		}
 	}
