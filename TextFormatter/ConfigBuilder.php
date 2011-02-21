@@ -445,7 +445,7 @@ class ConfigBuilder
 		{
 			$attr->value = preg_replace_callback(
 				'#\\{[A-Z]+[0-9]*?\\}#',
-				function ($m) use ($placeholders, &$params, $flags)
+				function ($m) use ($placeholders, $flags)
 				{
 					$identifier = substr($m[0], 1, -1);
 
@@ -458,12 +458,6 @@ class ConfigBuilder
 					 && preg_match('#^TEXT[0-9]*$#D', $identifier))
 					{
 						throw new RuntimeException('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to addBBCodeFromExample() to enable it');
-					}
-
-					$param = substr($placeholders[$identifier], 1);
-					if (isset($params[$param]))
-					{
-						$params[$param]['is_required'] = true;
 					}
 
 					return '{' . $placeholders[$identifier] . '}';
@@ -588,7 +582,7 @@ class ConfigBuilder
 			}
 
 			$paramConf = array(
-				'is_required' => false
+				'is_required' => true
 			);
 
 			if (preg_match('#^(REGEXP[0-9]*):(/[^/]+/i?)$#D', $identifier, $m))
