@@ -402,6 +402,25 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
+				'[align=left]content[/align]',
+				'<rt><ALIGN align="left"><st>[align=left]</st>content<et>[/align]</et></ALIGN></rt>'
+			),
+			array(
+				'[align=INVALID]content[/align]',
+				'<pt>[align=INVALID]content[/align]</pt>',
+				array(
+					'error' => array(
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'ALIGN',
+							'paramName' => 'align',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('align')
+						)
+					)
+				)
+			),
+			array(
 				' [x uint=-123 /]',
 				'<rt> <X>[x uint=-123 /]</X></rt>',
 				array(
@@ -514,6 +533,10 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb->disallowHost('*.xxx');
 		$cb->disallowHost('reallyevil.*');
 		$cb->allowScheme('ftp');
+
+		// Regexp stuff
+		$cb->addBBCode('align');
+		$cb->addBBCodeParam('align', 'align', 'regexp', array('regexp' => '/^(left|right)$/i'));
 
 		$this->parser = $cb->getParser();
 	}

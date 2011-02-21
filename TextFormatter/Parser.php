@@ -306,7 +306,7 @@ class Parser
 				));
 
 			case 'regexp':
-				return filter_var($var, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => $paramConf['regexp'])
 				));
 
