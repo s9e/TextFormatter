@@ -484,6 +484,7 @@ class ConfigBuilder
 				{
 					return '<xsl:apply-templates/>';
 				}
+
 				return '<xsl:value-of select="' . $placeholders[$identifier] . '"/>';
 			},
 			substr(trim($dom->saveXML($dom->documentElement)), 35, -36)
