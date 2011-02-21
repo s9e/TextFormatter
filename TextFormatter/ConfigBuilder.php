@@ -390,13 +390,31 @@ class ConfigBuilder
 
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
 	{
-		$p = $this->parseBBCodeDefinition($def);
+		$def = $this->parseBBCodeDefinition($def);
 
-		if ($p === false)
+		if ($def === false)
 		{
 			throw new InvalidArgumentException('Cannot interpret the BBCode definition');
 		}
 
+		$tpl = $this->convertTemplate($tpl, $def, $flags);
+
+		$this->addBBCode($def['bbcodeId'], $def['options']);
+		foreach ($def['params'] as $paramName => $paramConf)
+		{
+			$this->addBBCodeParam(
+				$def['bbcodeId'],
+				$paramName,
+				$paramConf['type'],
+				$paramConf
+			);
+		}
+
+		$this->setBBCodeTemplate($def['bbcodeId'], $tpl, $flags);
+	}
+
+	protected function convertTemplate($tpl, array $def, $flags)
+	{
 		/**
 		* Generate a random tag name so that the user cannot inject stuff outside of that template.
 		* For instance, if the tag was <t>, one could input </t><xsl:evil-stuff/><t>
@@ -414,10 +432,10 @@ class ConfigBuilder
 			throw new InvalidArgumentException('Invalid XML in template - error was: ' . $error->message);
 		}
 
-		$bbcodeId     = $p['bbcodeId'];
-		$params       = $p['params'];
-		$placeholders = $p['placeholders'];
-		$options      = $p['options'];
+		$bbcodeId     = $def['bbcodeId'];
+		$params       = $def['params'];
+		$placeholders = $def['placeholders'];
+		$options      = $def['options'];
 
 		/**
 		* Replace placeholders in attributes
@@ -477,17 +495,7 @@ class ConfigBuilder
 			substr(trim($dom->saveXML($dom->documentElement)), 35, -36)
 		);
 
-		$this->addBBCode($bbcodeId, $options);
-		foreach ($params as $paramName => $paramConf)
-		{
-			$this->addBBCodeParam(
-				$bbcodeId,
-				$paramName,
-				$paramConf['type'],
-				$paramConf
-			);
-		}
-		$this->setBBCodeTemplate($bbcodeId, $tpl, $flags);
+		return $tpl;
 	}
 
 	public function parseBBCodeDefinition($def)
