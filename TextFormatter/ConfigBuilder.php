@@ -471,7 +471,7 @@ class ConfigBuilder
 		*/
 		$tpl = preg_replace_callback(
 			'#\\{[A-Z]+[0-9]*\\}#',
-			function ($m) use ($placeholders, &$params)
+			function ($m) use ($placeholders)
 			{
 				$identifier = substr($m[0], 1, -1);
 
