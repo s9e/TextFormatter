@@ -54,7 +54,17 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'S',
 				'[S]strike [S]still striked[/S][/S]',
 				'<span style="text-decoration: line-through">strike <span style="text-decoration: line-through">still striked</span></span>'
-			)
+			),
+			array(
+				'URL',
+				'[URL]http://www.example.org[/URL]',
+				'<a href="http://www.example.org">http://www.example.org</a>'
+			),
+			array(
+				'URL',
+				'[URL=http://www.example.org]example.org[/URL]',
+				'<a href="http://www.example.org">example.org</a>'
+			),
 		);
 	}
 }

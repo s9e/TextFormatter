@@ -39,6 +39,25 @@ class PredefinedBBCodes
 			'<span style="text-decoration: line-through">{TEXT}</span>'
 		);
 	}
+
+	/**
+	* Polymorphic URL tag
+	*
+	* [URL]http://www.example.org[/URL]
+	* [URL=http://www.example.org]example.org[/URL]
+	*/
+	public function addURL()
+	{
+		$this->cb->addBBCode('url', array(
+			'default_param'    => 'url',
+			'content_as_param' => true
+		));
+
+		$this->cb->addBBCodeParam('url', 'url', 'url');
+
+		$this->cb->setBBCodeTemplate('url', '<a href="{@url}"><xsl:apply-templates/></a>');
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{
