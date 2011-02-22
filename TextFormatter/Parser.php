@@ -897,9 +897,29 @@ class Parser
 					{
 						$this->currentParam = $paramName;
 
-
 						$paramConf   = $bbcode['params'][$paramName];
-						$filteredVal = $this->filter($paramVal, $paramConf);
+						$filteredVal = $paramVal;
+
+						// execute pre-filter callbacks
+						if (!empty($paramConf['pre_filter']))
+						{
+							foreach ($paramConf['pre_filter'] as $callback)
+							{
+								$filteredVal = call_user_func($callback, $filteredVal);
+							}
+						}
+
+						// filter the value
+						$filteredVal = $this->filter($filteredVal, $paramConf);
+
+						// execute post-filter callbacks
+						if (!empty($paramConf['post_filter']))
+						{
+							foreach ($paramConf['post_filter'] as $callback)
+							{
+								$filteredVal = call_user_func($callback, $filteredVal);
+							}
+						}
 
 						if ($filteredVal === false)
 						{

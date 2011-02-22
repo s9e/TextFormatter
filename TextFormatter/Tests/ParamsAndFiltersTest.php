@@ -59,6 +59,55 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testPreFilter()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X');
+		$cb->addBBCodeParam('X', 'y', 'text', array('pre_filter' => array('trim', 'strtolower')));
+
+		$text     = '[X y=" ABC "][/X]';
+		$expected = '<rt><X y="abc"><st>[X y=&quot; ABC &quot;]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testPostFilter()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X');
+		$cb->addBBCodeParam('X', 'y', 'text', array('post_filter' => array('trim', 'strtolower')));
+
+		$text     = '[X y=" ABC "][/X]';
+		$expected = '<rt><X y="abc"><st>[X y=&quot; ABC &quot;]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	/**
+	* @depends testPreFilter
+	* @depends testPostFilter
+	*/
+	public function testPreFilterAndPostFilterOrder()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X');
+		$cb->addBBCodeParam('X', 'y', 'text', array(
+			'pre_filter'  => array('strtolower'),
+			'post_filter' => array('trim', 'strtoupper')
+		));
+
+		$text     = '[X y=" ABC "][/X]';
+		$expected = '<rt><X y="ABC"><st>[X y=&quot; ABC &quot;]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function getParamStuff()
 	{
 		return array(

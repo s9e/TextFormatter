@@ -522,8 +522,36 @@ class ConfigBuilder
 
 	public function parseBBCodeDefinition($def)
 	{
+		/**
+		* That's the pre-filter and post-filter callbacks we allow in BBCode definitions.
+		* We use a whitelist approach because there are so many different risky callbacks that
+		* it would be highly likely to let something dangerous slip by, e.g.: unlink, system, etc...
+		*/
+		$allowedCallbacks = '(?:' . implode('|', array(
+			'strtolower',
+			'strtoupper',
+			'mb_strtolower',
+			'mb_strtoupper',
+			'ucfirst',
+			'ucwords',
+			'ltrim',
+			'rtrim',
+			'trim',
+			'htmlspecialchars',
+			'htmlentities',
+			'html_entity_decode',
+			'addslashes',
+			'stripslashes',
+			'addcslashes',
+			'stripcslashes',
+			'intval'
+		)) . ')';
+
 		$bbcodeId    = '[a-zA-Z_][a-zA-Z_0-9]*';
-		$placeholder = '\\{(?:REGEXP[0-9]*:/[^/]+/i?|[A-Z_]+[0-9]*)\\}';
+		$preFilter   = '((?:' . $allowedCallbacks . ':)*)';
+		$postFilter  = '((?::' . $allowedCallbacks . ')*)';
+		$type        = '(REGEXP[0-9]*:/[^/]+/i?|[A-Z_]+[0-9]*)';
+		$placeholder = '\\{' . $preFilter . $type . $postFilter. '\\}';
 		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
 
 		$regexp = '#'
@@ -550,7 +578,7 @@ class ConfigBuilder
 		* e.g. [a href={URL}]           => $attrs = "href={URL}"
 		*      [url={URL} title={TEXT}] => $attrs = "url={URL} title={TEXT}"
 		*/
-		$attrs = ($m[2]) ? $m[1] . $m[2] . $m[3] : $m[3];
+		$attrs = ($m[2]) ? $m[1] . $m[2] . $m[6] : $m[6];
 
 		/**
 		* Here we process the content's placeholder
@@ -562,10 +590,10 @@ class ConfigBuilder
 		* to save space. Instead, templates will rely on the node's textContent, which we adjust to
 		* ignore the node's <st/> and <et/> children
 		*/
-		if (isset($m[4]))
+		if (isset($m[10]))
 		{
 			// TEXT or TEXT1
-			$identifier = substr($m[4], 1, -1);
+			$identifier = $m[12];
 
 			if (preg_match('#^TEXT[0-9]*$#D', $identifier))
 			{
@@ -581,28 +609,30 @@ class ConfigBuilder
 				* We need to validate the content, means we should probably disable BBCodes,
 				* e.g. [email]{EMAIL}[/email]
 				*/
-				$param = strtolower($bbcodeId);
+				$paramName = strtolower($bbcodeId);
 
 				$options['default_rule']     = 'deny';
-				$options['default_param']    = $param;
+				$options['default_param']    = $paramName;
 				$options['content_as_param'] = true;
 
 				/**
 				* We append the placeholder to the attributes, using the BBCode's name as param name
 				*/
-				$attrs .= ' ' . $param . '={' . $identifier . '}';
+				$attrs .= ' ' . $paramName . '=' . $m[10];
 			}
 		}
 
 		foreach (preg_split('#\\s+#', $attrs, null, \PREG_SPLIT_NO_EMPTY) as $pair)
 		{
-			list($paramName, $identifier) = explode('=', $pair);
+			if (!preg_match('#^(' . $param . ')=' . $placeholder . '$#D', $pair, $m))
+			{
+				throw new RuntimeException('Could not interpret pair ' . $pair);
+			}
 
-			/**
-			* Normalize the param name, remove the braces around the identifier
-			*/
-			$paramName  = strtolower($paramName);
-			$identifier = substr($identifier, 1, -1);
+			$paramName  = strtolower($m[1]);
+			$preFilter  = $m[2];
+			$identifier = $m[3];
+			$postFilter = (isset($m[4])) ? $m[4] : null;
 
 			if (isset($params[$paramName]))
 			{
@@ -631,6 +661,16 @@ class ConfigBuilder
 			}
 
 			$placeholders[$identifier] = '@' . $paramName;
+
+			if ($preFilter)
+			{
+				$paramConf['pre_filter'] = explode(':', rtrim($preFilter, ':'));
+			}
+
+			if ($postFilter)
+			{
+				$paramConf['post_filter'] = explode(':', ltrim($postFilter, ':'));
+			}
 
 			$params[$paramName] = $paramConf;
 		}

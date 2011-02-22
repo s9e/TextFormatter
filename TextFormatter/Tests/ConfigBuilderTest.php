@@ -536,6 +536,40 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
+	public function testAddBBCodeFromExampleAllowsPreFilter()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[X={strtolower:rtrim:IDENTIFIER} foo={TEXT2}]{TEXT}[/X]',
+			'<div style="align:{IDENTIFIER}">{TEXT}</div>'
+		);
+		$config = $this->cb->getParserConfig();
+
+		$this->assertTrue(
+			isset($config['passes']['BBCode']['bbcodes']['X']['params']['x']['pre_filter'])
+		);
+		$this->assertSame(
+			array('strtolower', 'rtrim'),
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['pre_filter']
+		);
+	}
+
+	public function testAddBBCodeFromExampleAllowsPostFilter()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[X={IDENTIFIER:strtolower:rtrim} foo={TEXT2}]{TEXT}[/X]',
+			'<div style="align:{IDENTIFIER}">{TEXT}</div>'
+		);
+		$config = $this->cb->getParserConfig();
+
+		$this->assertTrue(
+			isset($config['passes']['BBCode']['bbcodes']['X']['params']['x']['post_filter'])
+		);
+		$this->assertSame(
+			array('strtolower', 'rtrim'),
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['post_filter']
+		);
+	}
+
 	public function setUp()
 	{
 		$this->cb = new ConfigBuilder;
