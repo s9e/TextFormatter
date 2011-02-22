@@ -88,8 +88,8 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	* @depends testPreFilter
-	* @depends testPostFilter
+	* @depends testParamPreFilter
+	* @depends testParamPostFilter
 	*/
 	public function testParamPreFilterAndPostFilterOrder()
 	{
