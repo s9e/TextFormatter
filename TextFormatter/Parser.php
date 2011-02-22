@@ -335,9 +335,21 @@ class Parser
 				));
 
 			case 'regexp':
-				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
+				$paramVal = filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => $paramConf['regexp'])
 				));
+
+				if ($paramVal === false)
+				{
+					return false;
+				}
+
+				if (isset($paramConf['replace']))
+				{
+					return preg_replace($paramConf['regexp'], $paramConf['replace'], $paramVal);
+				}
+
+				return $paramVal;
 
 			default:
 				$this->log('debug', array(

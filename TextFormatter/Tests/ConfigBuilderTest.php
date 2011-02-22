@@ -590,6 +590,43 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
+	public function testAddBBCodeFromExampleAllowsRegexpReplacement()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[X={REPLACE:/(FOO)(BAR)/:$2$1}][/X]',
+			'{REPLACE}'
+		);
+		$config = $this->cb->getParserConfig();
+
+		$this->assertTrue(
+			isset($config['passes']['BBCode']['bbcodes']['X']['params']['x'])
+		);
+		$this->assertArrayHasKey(
+			'type',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
+		);
+		$this->assertArrayHasKey(
+			'regexp',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
+		);
+		$this->assertArrayHasKey(
+			'replace',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
+		);
+		$this->assertEquals(
+			'regexp',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['type']
+		);
+		$this->assertEquals(
+			'/(FOO)(BAR)/',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['regexp']
+		);
+		$this->assertEquals(
+			'$2$1',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['replace']
+		);
+	}
+
 	public function testAddBBCodeFromExampleAllowsPostFilter()
 	{
 		$this->cb->addBBCodeFromExample(

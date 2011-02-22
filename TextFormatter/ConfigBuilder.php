@@ -550,7 +550,11 @@ class ConfigBuilder
 		$bbcodeId    = '[a-zA-Z_][a-zA-Z_0-9]*';
 		$preFilter   = '((?:' . $allowedCallbacks . ':)*)';
 		$postFilter  = '((?::' . $allowedCallbacks . ')*)';
-		$type        = '(REGEXP[0-9]*:/[^/]+/i?|[A-Z_]+[0-9]*|RANGE[0-9]*:-?[0-9]+,-?[0-9]+)';
+		$type        = '(REGEXP[0-9]*:/[^/]+/i?'
+		             . '|REPLACE[0-9]*:/[^/]+/i?:.*?'
+		             . '|[A-Z_]+[0-9]*'
+		             . '|RANGE[0-9]*:-?[0-9]+,-?[0-9]+'
+		             . ')';
 		$placeholder = '\\{' . $preFilter . $type . $postFilter. '\\}';
 		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
 
@@ -626,7 +630,9 @@ class ConfigBuilder
 		{
 			if (!preg_match('#^(' . $param . ')=' . $placeholder . '$#D', $pair, $m))
 			{
+				// @codeCoverageIgnoreStart
 				throw new RuntimeException('Could not interpret pair ' . $pair);
+				// @codeCoverageIgnoreEnd
 			}
 
 			$paramName  = strtolower($m[1]);
@@ -643,12 +649,17 @@ class ConfigBuilder
 				'is_required' => true
 			);
 
-			if (preg_match('#^(REGEXP[0-9]*):(/[^/]+/i?)$#D', $identifier, $m))
+			if (preg_match('#^(RE(?:GEXP|PLACE)[0-9]*):(/[^/]+/i?)(?::(.*))?$#D', $identifier, $m))
 			{
 				$identifier = $m[1];
 
 				$paramConf['type']   = 'regexp';
 				$paramConf['regexp'] = $m[2];
+
+				if (isset($m[3]))
+				{
+					$paramConf['replace'] = $m[3];
+				}
 			}
 			elseif (preg_match('#^(RANGE[0-9]*):(-?[0-9]+),(-?[0-9]+)$#D', $identifier, $m))
 			{

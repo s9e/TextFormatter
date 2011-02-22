@@ -621,6 +621,10 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
+				'[x range=7 /]',
+				'<rt><X range="7">[x range=7 /]</X></rt>'
+			),
+			array(
 				'[x range=123 /]',
 				'<rt><X range="77">[x range=123 /]</X></rt>',
 				array(
@@ -649,6 +653,10 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 						)
 					)
 				)
+			),
+			array(
+				'[x replace=FOOBAR][/x]',
+				'<rt><X replace="BARFOO"><st>[x replace=FOOBAR]</st><et>[/x]</et></X></rt>'
 			),
 			array(
 				'[size=1]too small[/size]',
@@ -696,6 +704,11 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCode('x');
 		$cb->addBBCodeParam('x', 'foo', 'text', array('is_required' => false));
 		$cb->addBBCodeParam('x', 'range', 'range', array('is_required' => false, 'min' => 7, 'max' => 77));
+		$cb->addBBCodeParam('x', 'replace', 'regexp', array(
+			'is_required' => false,
+			'regexp'  => '/^(FOO)(BAR)$/',
+			'replace' => '$2$1'
+		));
 
 		$types = array(
 			'custom',
