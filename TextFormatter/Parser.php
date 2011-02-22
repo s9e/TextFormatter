@@ -1007,7 +1007,7 @@ class Parser
 					* Sort params alphabetically. Can be useful if someone wants to process the
 					* output using regexps
 					*/
-					ksort($tag['params']);
+					ksort($this->currentTag['params']);
 				}
 
 				//==============================================================
