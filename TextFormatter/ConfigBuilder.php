@@ -53,9 +53,14 @@ class ConfigBuilder
 	);
 
 	/**
-	* @var Extra XSL to append to the stylesheet
+	* @var string Extra XSL to append to the stylesheet
 	*/
 	protected $xsl = '';
+
+	/**
+	* @var PredefinedBBCodes
+	*/
+	protected $predefinedBBCodes;
 
 	//==========================================================================
 	// Passes
@@ -386,6 +391,28 @@ class ConfigBuilder
 		* Strip the whitespace off that template, except in <xsl:text/> elements
 		*/
 		$this->bbcodes[$bbcodeId]['tpl'] = $tpl;
+	}
+
+	public function addPredefinedBBCode($bbcodeId)
+	{
+		if (!isset($this->predefinedBBCodes))
+		{
+			if (!class_exists('PredefinedBBCodes'))
+			{
+				include_once __DIR__ . '/PredefinedBBCodes.php';
+			}
+
+			$this->predefinedBBCodes = new PredefinedBBCodes($this);
+		}
+
+		$method = 'add' . strtoupper($bbcodeId);
+
+		if (!is_callable(array($this->predefinedBBCodes, $method)))
+		{
+			throw new InvalidArgumentException('Unknown BBCode ' . $bbcodeId);
+		}
+
+		$this->predefinedBBCodes->$method();
 	}
 
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
