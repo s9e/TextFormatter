@@ -552,8 +552,9 @@ class ConfigBuilder
 		$postFilter  = '((?::' . $allowedCallbacks . ')*)';
 		$type        = '(REGEXP[0-9]*:/[^/]+/i?'
 		             . '|REPLACE[0-9]*:/[^/]+/i?:.*?'
-		             . '|[A-Z_]+[0-9]*'
 		             . '|RANGE[0-9]*:-?[0-9]+,-?[0-9]+'
+		             . '|CHOICE[0-9]*:[^:\\}]+'
+		             . '|[A-Z_]+[0-9]*'
 		             . ')';
 		$placeholder = '\\{' . $preFilter . $type . $postFilter. '\\}';
 		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
@@ -660,6 +661,14 @@ class ConfigBuilder
 				{
 					$paramConf['replace'] = $m[3];
 				}
+			}
+			elseif (preg_match('#^(CHOICE[0-9]*):(.*)#', $identifier, $m))
+			{
+				$identifier = $m[1];
+
+				$paramConf['type'] = 'regexp';
+				$paramConf['regexp'] =
+					'/^' . self::buildRegexpFromList(explode(',', $m[2])) . '$/iDu';
 			}
 			elseif (preg_match('#^(RANGE[0-9]*):(-?[0-9]+),(-?[0-9]+)$#D', $identifier, $m))
 			{
