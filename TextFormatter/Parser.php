@@ -265,8 +265,8 @@ class Parser
 				}
 
 				/**
-				* We escape quotes just in case someone would want to use the URL in some Javascript
-				* thingy
+				* We URL-encode quotes just in case someone would want to use the URL in some
+				* Javascript thingy
 				*/
 				return str_replace(array("'", '"'), array('%27', '%22'), $paramVal);
 
