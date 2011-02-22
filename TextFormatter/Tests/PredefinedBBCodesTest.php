@@ -152,6 +152,36 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
 				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"/><param name="wmode" value="transparent"/></object>'
 			),
+			array(
+				'ALIGN',
+				'[ALIGN=left]left[/ALIGN]',
+				'<div style="text-align:left">left</div>'
+			),
+			array(
+				'ALIGN',
+				'[ALIGN=left;color:red]LOL HAX[/ALIGN]',
+				'[ALIGN=left;color:red]LOL HAX[/ALIGN]'
+			),
+			array(
+				'LEFT',
+				'[LEFT]left-aligned text[/LEFT]',
+				'<div style="text-align:left">left-aligned text</div>'
+			),
+			array(
+				'RIGHT',
+				'[RIGHT]right-aligned text[/RIGHT]',
+				'<div style="text-align:right">right-aligned text</div>'
+			),
+			array(
+				'CENTER',
+				'[CENTER]centered text[/CENTER]',
+				'<div style="text-align:center">centered text</div>'
+			),
+			array(
+				'JUSTIFY',
+				'[JUSTIFY]justified text[/JUSTIFY]',
+				'<div style="text-align:justify">justified text</div>'
+			),
 		);
 	}
 }

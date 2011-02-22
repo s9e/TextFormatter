@@ -189,6 +189,46 @@ class PredefinedBBCodes
 		);
 	}
 
+	public function addALIGN()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[align={CHOICE:left,right,center,justify}]{TEXT}[/align]',
+			'<div style="text-align:{CHOICE}">{TEXT}</div>'
+		);
+	}
+
+	public function addLEFT()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[left]{TEXT}[/left]',
+			'<div style="text-align:left">{TEXT}</div>'
+		);
+	}
+
+	public function addRIGHT()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[right]{TEXT}[/right]',
+			'<div style="text-align:right">{TEXT}</div>'
+		);
+	}
+
+	public function addCENTER()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[center]{TEXT}[/center]',
+			'<div style="text-align:center">{TEXT}</div>'
+		);
+	}
+
+	public function addJUSTIFY()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[justify]{TEXT}[/justify]',
+			'<div style="text-align:justify">{TEXT}</div>'
+		);
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{
