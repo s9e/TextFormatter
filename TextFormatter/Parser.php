@@ -744,12 +744,6 @@ class Parser
 
 				$tag['name'] = $aliases[$bbcodeId];
 			}
-
-			/**
-			* Sort params alphabetically. Can be useful if someone wants to process the
-			* output using regexp
-			*/
-			ksort($tag['params']);
 		}
 	}
 
@@ -1008,6 +1002,12 @@ class Parser
 
 						continue 2;
 					}
+
+					/**
+					* Sort params alphabetically. Can be useful if someone wants to process the
+					* output using regexps
+					*/
+					ksort($tag['params']);
 				}
 
 				//==============================================================
