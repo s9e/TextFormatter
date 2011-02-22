@@ -553,6 +553,43 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
+	public function testAddBBCodeFromExampleAllowsRanges()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[X={RANGE:-2,99}][/X]',
+			'<x/>'
+		);
+		$config = $this->cb->getParserConfig();
+
+		$this->assertTrue(
+			isset($config['passes']['BBCode']['bbcodes']['X']['params']['x'])
+		);
+		$this->assertArrayHasKey(
+			'type',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
+		);
+		$this->assertArrayHasKey(
+			'min',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
+		);
+		$this->assertArrayHasKey(
+			'max',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
+		);
+		$this->assertEquals(
+			'range',
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['type']
+		);
+		$this->assertEquals(
+			-2,
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['min']
+		);
+		$this->assertEquals(
+			99,
+			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['max']
+		);
+	}
+
 	public function testAddBBCodeFromExampleAllowsPostFilter()
 	{
 		$this->cb->addBBCodeFromExample(
