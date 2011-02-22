@@ -63,6 +63,31 @@ class PredefinedBBCodes
 		);
 	}
 
+	/**
+	* Polymorphic IMG tag with optional support for "title" and "alt"
+	*
+	* Note that no attempt is made to verify that the image's source is actually an image.
+	*
+	* [IMG]http://www.example.org/img.png[/IMG]
+	*/
+	public function addIMG()
+	{
+		$this->cb->addBBCode('IMG', array(
+			'default_param'    => 'src',
+			'content_as_param' => true,
+			'default_rule'     => 'deny'
+		));
+
+		$this->cb->addBBCodeParam('IMG', 'src', 'url');
+		$this->cb->addBBCodeParam('IMG', 'alt', 'text', array('is_required' => false));
+		$this->cb->addBBCodeParam('IMG', 'title', 'text', array('is_required' => false));
+
+		$this->cb->setBBCodeTemplate(
+			'IMG',
+			'<img src="{@src}"><xsl:if test="@alt"><xsl:attribute name="alt"><xsl:value-of select="@alt"/></xsl:attribute></xsl:if><xsl:if test="@title"><xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute></xsl:if></img>'
+		);
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{

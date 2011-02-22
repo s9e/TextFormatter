@@ -70,6 +70,33 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[URL url=http://www.example.org title="The best site ever"]GO THERE[/URL]',
 				'<a href="http://www.example.org" title="The best site ever">GO THERE</a>'
 			),
+			array(
+				'IMG',
+				'[IMG]http://www.example.org/img.png[/IMG]',
+				'<img src="http://www.example.org/img.png"/>'
+			),
+			array(
+				'IMG',
+				// no closing tag needed
+				'[IMG=http://www.example.org/img.png]',
+				'<img src="http://www.example.org/img.png"/>'
+			),
+			array(
+				'IMG',
+				// extraneous content is ignored
+				'[IMG=http://www.example.org/img.png]TEXT[/IMG]',
+				'<img src="http://www.example.org/img.png"/>'
+			),
+			array(
+				'IMG',
+				'[IMG alt="alt text"]http://www.example.org/img.png[/IMG]',
+				'<img src="http://www.example.org/img.png" alt="alt text"/>'
+			),
+			array(
+				'IMG',
+				'[IMG title="Title"]http://www.example.org/img.png[/IMG]',
+				'<img src="http://www.example.org/img.png" title="Title"/>'
+			),
 		);
 	}
 }
