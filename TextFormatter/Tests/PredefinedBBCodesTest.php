@@ -109,13 +109,38 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 			),
 			array(
 				'LIST',
-				'[LIST=a][*]one[*]two[/LIST]',
+				'[LIST=01][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:decimal-leading-zero"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'LIST',
+				'[LIST=i][*]one[*]two[/LIST]',
 				'<ol style="list-style-type:lower-roman"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'LIST',
+				'[LIST=I][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:upper-roman"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'LIST',
+				'[LIST=a][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:lower-alpha"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'LIST',
+				'[LIST=A][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:upper-alpha"><li>one</li><li>two</li></ol>'
 			),
 			array(
 				'LIST',
 				'[LIST=INVALID][*]one[*]two[/LIST]',
 				'<ol style="list-style-type:disc"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'LIST',
+				'[LIST=square][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:square"><li>one</li><li>two</li></ol>'
 			),
 		);
 	}
