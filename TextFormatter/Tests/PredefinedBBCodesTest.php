@@ -142,6 +142,16 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[LIST=square][*]one[*]two[/LIST]',
 				'<ol style="list-style-type:square"><li>one</li><li>two</li></ol>'
 			),
+			array(
+				'GOOGLEVIDEO',
+				'[GOOGLEVIDEO]-4381488634998231167[/GOOGLEVIDEO]',
+				'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId=-4381488634998231167" width="400" height="326"><param name="movie" value="http://video.google.com/googleplayer.swf?docId=-4381488634998231167"/><param name="allowScriptAcess" value="sameDomain"/><param name="quality" value="best"/><param name="scale" value="noScale"/><param name="salign" value="TL"/><param name="FlashVars" value="playerMode=embedded"/></object>'
+			),
+			array(
+				'YOUTUBE',
+				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
+				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"/><param name="wmode" value="transparent"/></object>'
+			),
 		);
 	}
 }

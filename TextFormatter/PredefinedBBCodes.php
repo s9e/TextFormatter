@@ -7,6 +7,12 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
+/**
+* This class attempts to hold the definitions of the most commonly requested BBCodes.
+* It is partially based on user requests found in forum software-oriented websites.
+*
+* @link http://www.phpbb.com/kb/article/adding-custom-bbcodes-in-phpbb3/
+*/
 class PredefinedBBCodes
 {
 	public function __construct(ConfigBuilder $cb)
@@ -165,6 +171,22 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeRule('LI', 'close_parent', 'LI');
 
 		$this->cb->setBBCodeTemplate('LI', '<li><xsl:apply-templates/></li>');
+	}
+
+	public function addGOOGLEVIDEO()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[googlevideo]{INT}[/googlevideo]',
+			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={INT}" width="400" height="326"><param name="movie" value="http://video.google.com/googleplayer.swf?docId={INT}"/><param name="allowScriptAcess" value="sameDomain"/><param name="quality" value="best"/><param name="scale" value="noScale"/><param name="salign" value="TL"/><param name="FlashVars" value="playerMode=embedded"/></object>'
+		);
+	}
+
+	public function addYOUTUBE()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[youtube]{IDENTIFIER}[/youtube]',
+			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{IDENTIFIER}" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/{IDENTIFIER}" /><param name="wmode" value="transparent" /></object>'
+		);
 	}
 
 /**
