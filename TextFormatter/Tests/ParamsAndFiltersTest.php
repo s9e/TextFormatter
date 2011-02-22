@@ -636,6 +636,21 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
+				'[x range=TWENTY /]',
+				'<rt><X>[x range=TWENTY /]</X></rt>',
+				array(
+					'error' => array(
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'range',
+							'msg'       => 'Invalid param %s',
+							'params'    => array('range')
+						)
+					)
+				)
+			),
+			array(
 				'[size=1]too small[/size]',
 				'<rt><SIZE size="7"><st>[size=1]</st>too small<et>[/size]</et></SIZE></rt>',
 				array(
