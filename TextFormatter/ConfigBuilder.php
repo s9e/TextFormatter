@@ -550,7 +550,7 @@ class ConfigBuilder
 		$bbcodeId    = '[a-zA-Z_][a-zA-Z_0-9]*';
 		$preFilter   = '((?:' . $allowedCallbacks . ':)*)';
 		$postFilter  = '((?::' . $allowedCallbacks . ')*)';
-		$type        = '(REGEXP[0-9]*:/[^/]+/i?|[A-Z_]+[0-9]*)';
+		$type        = '(REGEXP[0-9]*:/[^/]+/i?|[A-Z_]+[0-9]*|RANGE[0-9]*:-?[0-9]+,-?[0-9]+)';
 		$placeholder = '\\{' . $preFilter . $type . $postFilter. '\\}';
 		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
 
@@ -649,6 +649,14 @@ class ConfigBuilder
 
 				$paramConf['type']   = 'regexp';
 				$paramConf['regexp'] = $m[2];
+			}
+			elseif (preg_match('#^(RANGE[0-9]*):(-?[0-9]+),(-?[0-9]+)$#D', $identifier, $m))
+			{
+				$identifier = $m[1];
+
+				$paramConf['type'] = 'range';
+				$paramConf['min']  = (int) $m[2];
+				$paramConf['max']  = (int) $m[3];
 			}
 			else
 			{

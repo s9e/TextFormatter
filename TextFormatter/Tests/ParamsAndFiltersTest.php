@@ -606,6 +606,36 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
+				'[x range=-123 /]',
+				'<rt><X range="7">[x range=-123 /]</X></rt>',
+				array(
+					'info' => array(
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'range',
+							'msg'       => 'Minimum range value adjusted to %s',
+							'params'    => array(7)
+						)
+					)
+				)
+			),
+			array(
+				'[x range=123 /]',
+				'<rt><X range="77">[x range=123 /]</X></rt>',
+				array(
+					'info' => array(
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'X',
+							'paramName' => 'range',
+							'msg'       => 'Maximum range value adjusted to %s',
+							'params'    => array(77)
+						)
+					)
+				)
+			),
+			array(
 				'[size=1]too small[/size]',
 				'<rt><SIZE size="7"><st>[size=1]</st>too small<et>[/size]</et></SIZE></rt>',
 				array(
@@ -650,6 +680,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 
 		$cb->addBBCode('x');
 		$cb->addBBCodeParam('x', 'foo', 'text', array('is_required' => false));
+		$cb->addBBCodeParam('x', 'range', 'range', array('is_required' => false, 'min' => 7, 'max' => 77));
 
 		$types = array(
 			'custom',

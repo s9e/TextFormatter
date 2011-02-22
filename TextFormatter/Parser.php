@@ -300,6 +300,35 @@ class Parser
 					'options' => array('min_range' => 0)
 				));
 
+			case 'range':
+				$paramVal = filter_var($paramVal, \FILTER_VALIDATE_INT);
+
+				if ($paramVal === false)
+				{
+					return false;
+				}
+
+				if ($paramVal < $paramConf['min'])
+				{
+					$this->log('info', array(
+						'msg'    => 'Minimum range value adjusted to %s',
+						'params' => array($paramConf['min'])
+					));
+					return $paramConf['min'];
+				}
+
+				if ($paramVal > $paramConf['max'])
+				{
+					$this->log('info', array(
+						'msg'    => 'Maximum range value adjusted to %s',
+						'params' => array($paramConf['max'])
+					));
+					return $paramConf['max'];
+				}
+
+				return $paramVal;
+
+
 			case 'color':
 				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
