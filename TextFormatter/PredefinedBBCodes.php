@@ -41,21 +41,26 @@ class PredefinedBBCodes
 	}
 
 	/**
-	* Polymorphic URL tag
+	* Polymorphic URL tag with optional support for the "title" attribute
 	*
 	* [URL]http://www.example.org[/URL]
 	* [URL=http://www.example.org]example.org[/URL]
+	* [URL title="The best site ever"]http://www.example.org[/URL]
 	*/
 	public function addURL()
 	{
-		$this->cb->addBBCode('url', array(
+		$this->cb->addBBCode('URL', array(
 			'default_param'    => 'url',
 			'content_as_param' => true
 		));
 
-		$this->cb->addBBCodeParam('url', 'url', 'url');
+		$this->cb->addBBCodeParam('URL', 'url', 'url');
+		$this->cb->addBBCodeParam('URL', 'title', 'text', array('is_required' => false));
 
-		$this->cb->setBBCodeTemplate('url', '<a href="{@url}"><xsl:apply-templates/></a>');
+		$this->cb->setBBCodeTemplate(
+			'URL',
+			'<a href="{@url}"><xsl:if test="@title"><xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>'
+		);
 	}
 
 /**

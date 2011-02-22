@@ -65,6 +65,11 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[URL=http://www.example.org]example.org[/URL]',
 				'<a href="http://www.example.org">example.org</a>'
 			),
+			array(
+				'URL',
+				'[URL url=http://www.example.org title="The best site ever"]GO THERE[/URL]',
+				'<a href="http://www.example.org" title="The best site ever">GO THERE</a>'
+			),
 		);
 	}
 }
