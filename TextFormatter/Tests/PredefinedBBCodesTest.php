@@ -97,6 +97,26 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[IMG title="Title"]http://www.example.org/img.png[/IMG]',
 				'<img src="http://www.example.org/img.png" title="Title"/>'
 			),
+			array(
+				'LIST',
+				'[LIST][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:disc"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'LIST',
+				'[LIST=1][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:decimal"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'LIST',
+				'[LIST=a][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:lower-roman"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'LIST',
+				'[LIST=INVALID][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:disc"><li>one</li><li>two</li></ol>'
+			),
 		);
 	}
 }
