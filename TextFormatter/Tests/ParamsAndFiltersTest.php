@@ -59,7 +59,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testPreFilter()
+	public function testParamPreFilter()
 	{
 		$cb = new ConfigBuilder;
 
@@ -73,7 +73,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-	public function testPostFilter()
+	public function testParamPostFilter()
 	{
 		$cb = new ConfigBuilder;
 
@@ -91,7 +91,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	* @depends testPreFilter
 	* @depends testPostFilter
 	*/
-	public function testPreFilterAndPostFilterOrder()
+	public function testParamPreFilterAndPostFilterOrder()
 	{
 		$cb = new ConfigBuilder;
 
@@ -107,6 +107,91 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame($expected, $actual);
 	}
+
+	public function testParamsPreFilter()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->addBBCodeParam('X', 'y', 'text');
+
+		$text     = '[X y=FOO][/X]';
+		$expected = '<rt><X y="Y"><st>[X y=FOO]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testParamsPreFilterWithNoParamInInput()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->addBBCodeParam('X', 'y', 'text');
+
+		$text     = '[X][/X]';
+		$expected = '<rt><X y="Y"><st>[X]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testParamsPreFilterWithInvalidParam()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->addBBCodeParam('X', 'y', 'int');
+
+		$text     = '[X y=FOO][/X]';
+		$expected = '<pt>[X y=FOO][/X]</pt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testParamsPostFilter()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->addBBCodeParam('X', 'y', 'text');
+
+		$text     = '[X y=FOO][/X]';
+		$expected = '<rt><X y="Y"><st>[X y=FOO]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testParamsPostFilterWithNoParamInInput()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->addBBCodeParam('X', 'y', 'text');
+
+		$text     = '[X][/X]';
+		$expected = '<rt><X y="Y"><st>[X]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testParamsPostFilterAllowsInvalidParams()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->addBBCodeParam('X', 'y', 'int');
+
+		$text     = '[X y=FOO][/X]';
+		$expected = '<rt><X y="Y"><st>[X y=FOO]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 
 	public function getParamStuff()
 	{
@@ -155,6 +240,12 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 							'bbcodeId'  => 'URL',
 							'paramName' => 'href',
 							'msg'       => 'Invalid param %s',
+							'params'    => array('href')
+						),
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'msg'       => 'Missing param %s',
 							'params'    => array('href')
 						)
 					)
@@ -321,6 +412,12 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 							'paramName' => 'href',
 							'msg'       => 'Invalid param %s',
 							'params'    => array('href')
+						),
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'msg'       => 'Missing param %s',
+							'params'    => array('href')
 						)
 					)
 				)
@@ -342,6 +439,12 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 							'bbcodeId'  => 'URL',
 							'paramName' => 'href',
 							'msg'       => 'Invalid param %s',
+							'params'    => array('href')
+						),
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'msg'       => 'Missing param %s',
 							'params'    => array('href')
 						)
 					)
@@ -365,6 +468,12 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 							'paramName' => 'href',
 							'msg'       => 'Invalid param %s',
 							'params'    => array('href')
+						),
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'msg'       => 'Missing param %s',
+							'params'    => array('href')
 						)
 					)
 				)
@@ -386,6 +495,12 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 							'bbcodeId'  => 'URL',
 							'paramName' => 'href',
 							'msg'       => 'Invalid param %s',
+							'params'    => array('href')
+						),
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'URL',
+							'msg'       => 'Missing param %s',
 							'params'    => array('href')
 						)
 					)
@@ -464,6 +579,12 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 							'bbcodeId'  => 'ALIGN',
 							'paramName' => 'align',
 							'msg'       => 'Invalid param %s',
+							'params'    => array('align')
+						),
+						array(
+							'pos'       => 0,
+							'bbcodeId'  => 'ALIGN',
+							'msg'       => 'Missing param %s',
 							'params'    => array('align')
 						)
 					)

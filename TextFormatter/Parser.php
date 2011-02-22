@@ -872,25 +872,13 @@ class Parser
 
 				if (isset($bbcode['params']))
 				{
-					/**
-					* Check for missing required params
-					*/
-					$missingParams = array_diff_key($bbcode['params'], $this->currentTag['params']);
-
-					foreach ($missingParams as $paramName => $paramConf)
+					if (isset($bbcode['pre_filter']))
 					{
-						if (empty($paramConf['is_required']))
+						foreach ($bbcode['pre_filter'] as $callback)
 						{
-							continue;
+							$this->currentTag['params'] =
+								call_user_func($callback, $this->currentTag['params']);
 						}
-
-						$this->log('error', array(
-							'pos'    => $this->currentTag['pos'],
-							'msg'    => 'Missing param %s',
-							'params' => array($paramName)
-						));
-
-						continue 2;
 					}
 
 					foreach ($this->currentTag['params'] as $paramName => &$paramVal)
@@ -929,13 +917,12 @@ class Parser
 								'params' => array($paramName)
 							));
 
+							unset($this->currentTag['params'][$paramName]);
+
 							if ($paramConf['is_required'])
 							{
-								// Skip this tag
-								continue 2;
+								continue;
 							}
-
-							unset($this->currentTag['params'][$paramName]);
 						}
 						elseif ((string) $filteredVal !== (string) $paramVal)
 						{
@@ -949,8 +936,37 @@ class Parser
 
 						$paramVal = (string) $filteredVal;
 					}
-
 					unset($paramVal, $this->currentParam);
+
+					if (isset($bbcode['post_filter']))
+					{
+						foreach ($bbcode['post_filter'] as $callback)
+						{
+							$this->currentTag['params'] =
+								call_user_func($callback, $this->currentTag['params']);
+						}
+					}
+
+					/**
+					* Check for missing required params
+					*/
+					$missingParams = array_diff_key($bbcode['params'], $this->currentTag['params']);
+
+					foreach ($missingParams as $paramName => $paramConf)
+					{
+						if (empty($paramConf['is_required']))
+						{
+							continue;
+						}
+
+						$this->log('error', array(
+							'pos'    => $this->currentTag['pos'],
+							'msg'    => 'Missing param %s',
+							'params' => array($paramName)
+						));
+
+						continue 2;
+					}
 				}
 
 				//==============================================================
