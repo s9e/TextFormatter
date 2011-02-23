@@ -311,18 +311,21 @@ class Parser
 				));
 
 			case 'regexp':
-				$paramVal = filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
-					'options' => array('regexp' => $paramConf['regexp'])
-				));
-
-				if ($paramVal === false)
+				if (!preg_match($paramConf['regexp'], $paramVal, $match))
 				{
 					return false;
 				}
 
 				if (isset($paramConf['replace']))
 				{
-					return preg_replace($paramConf['regexp'], $paramConf['replace'], $paramVal);
+					return preg_replace_callback(
+						'#\\$([0-9]+)#',
+						function($m) use ($match)
+						{
+							return $match[$m[1]];
+						},
+						$paramConf['replace']
+					);
 				}
 
 				return $paramVal;

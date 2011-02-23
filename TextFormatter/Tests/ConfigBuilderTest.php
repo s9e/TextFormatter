@@ -554,7 +554,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
-				'[X={REPLACE:/(FOO)(BAR)/:$2$1}][/X]',
+				'[X={REGEXP:/(FOO)(BAR)/:$2$1}][/X]',
 				array(
 					'type'    => 'regexp',
 					'regexp'  => '/(FOO)(BAR)/',

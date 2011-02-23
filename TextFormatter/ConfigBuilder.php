@@ -550,8 +550,7 @@ class ConfigBuilder
 		$bbcodeId    = '[a-zA-Z_][a-zA-Z_0-9]*';
 		$preFilter   = '((?:' . $allowedCallbacks . ':)*)';
 		$postFilter  = '((?::' . $allowedCallbacks . ')*)';
-		$type        = '(REGEXP[0-9]*:/[^/]+/i?'
-		             . '|REPLACE[0-9]*:/[^/]+/i?:.*?'
+		$type        = '(REGEXP[0-9]*:/[^/]+/i?(?::.*?)?'
 		             . '|RANGE[0-9]*:-?[0-9]+,-?[0-9]+'
 		             . '|CHOICE[0-9]*:[^:\\}]+'
 		             . '|[A-Z_]+[0-9]*'
@@ -650,7 +649,7 @@ class ConfigBuilder
 				'is_required' => true
 			);
 
-			if (preg_match('#^(RE(?:GEXP|PLACE)[0-9]*):(/[^/]+/i?)(?::(.*))?$#D', $identifier, $m))
+			if (preg_match('#^(REGEXP[0-9]*):(/[^/]+/i?)(:.*?)?$#', $identifier, $m))
 			{
 				$identifier = $m[1];
 
@@ -659,7 +658,7 @@ class ConfigBuilder
 
 				if (isset($m[3]))
 				{
-					$paramConf['replace'] = $m[3];
+					$paramConf['replace'] = substr($m[3], 1);
 				}
 			}
 			elseif (preg_match('#^(CHOICE[0-9]*):(.*)#', $identifier, $m))

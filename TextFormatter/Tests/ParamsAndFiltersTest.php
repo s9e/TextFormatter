@@ -192,6 +192,18 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testRegexpParamWithReplacement()
+	{
+		$cb = new ConfigBuilder;
+		$cb->addBBCodeFromExample('[X={REGEXP:/(FOO)(BAR)/i:$2$2$1} /]', '<x id="{REGEXP}"/>');
+
+		$text     = '[X=http://foobar.com][/X]';
+		$expected = '<rt><X x="barbarfoo"><st>[X=http://foobar.com]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function getParamStuff()
 	{
 		return array(
