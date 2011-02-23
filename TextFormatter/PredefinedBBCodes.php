@@ -300,6 +300,80 @@ class PredefinedBBCodes
 		);
 	}
 
+	/**
+	* Basic [TABLE], [TR], [TH] and [TD] tags.
+	* [TD] accepts two optional arguments: colspan and rowspan.
+	*
+	* Misplaced text, e.g. [TR]xxx[TD][/TD][/TR], is parsed normally but doesn't appear in the
+	* HTML ouput.
+	*/
+	public function addTABLE()
+	{
+		// limit table nesting to 2, which should be enough for everybody
+		$this->cb->addBBCode('TABLE', array('nesting_limit' => 2));
+		$this->cb->setBBCodeTemplate(
+			'TABLE',
+			'<table>
+				<xsl:apply-templates select="TR" />
+			</table>'
+		);
+
+		$this->cb->addBBCode('TR');
+		$this->cb->addBBCodeRule('TR', 'require_parent', 'TABLE');
+		$this->cb->setBBCodeTemplate(
+			'TR',
+			'<tr>
+				<xsl:apply-templates select="TD | TH" />
+			</tr>'
+		);
+
+		$this->cb->addBBCode('TH');
+		$this->cb->addBBCodeRule('TH', 'require_parent', 'TR');
+		$this->cb->addBBCodeParam('TH', 'colspan', 'uint', array('is_required' => false));
+		$this->cb->addBBCodeParam('TH', 'rowspan', 'uint', array('is_required' => false));
+		$this->cb->setBBCodeTemplate(
+			'TH',
+			'<th>
+				<xsl:if test="@colspan">
+					<xsl:attribute name="colspan">
+						<xsl:value-of select="@colspan" />
+					</xsl:attribute>
+				</xsl:if>
+
+				<xsl:if test="@rowspan">
+					<xsl:attribute name="rowspan">
+						<xsl:value-of select="@rowspan" />
+					</xsl:attribute>
+				</xsl:if>
+
+				<xsl:apply-templates />
+			</th>'
+		);
+
+		$this->cb->addBBCode('TD');
+		$this->cb->addBBCodeRule('TD', 'require_parent', 'TR');
+		$this->cb->addBBCodeParam('TD', 'colspan', 'uint', array('is_required' => false));
+		$this->cb->addBBCodeParam('TD', 'rowspan', 'uint', array('is_required' => false));
+		$this->cb->setBBCodeTemplate(
+			'TD',
+			'<td>
+				<xsl:if test="@colspan">
+					<xsl:attribute name="colspan">
+						<xsl:value-of select="@colspan" />
+					</xsl:attribute>
+				</xsl:if>
+
+				<xsl:if test="@rowspan">
+					<xsl:attribute name="rowspan">
+						<xsl:value-of select="@rowspan" />
+					</xsl:attribute>
+				</xsl:if>
+
+				<xsl:apply-templates />
+			</td>'
+		);
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{

@@ -183,6 +183,35 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[super]{TEXT}[/super]',
 				'<span style="vertical-align:super">{TEXT}</span>'
 			),
+			array(
+				'[TABLE]
+					==MISPLACED TEXT IS IGNORED==
+					[TR]
+						[TH]col1[/TH]
+						[TH]col2[/TH]
+					[/TR]
+					[TR]
+						==MISPLACED TEXT IS IGNORED==
+						[TD]cell1[/TD]
+						[TD]cell2[/TD]
+					[/TR]
+					[TR]
+						[TD rowspan=2]double height[/TD]
+						[TD][/TD]
+					[/TR]
+					[TR]
+						[TD][/TD]
+					[/TR]
+					[TR]
+						[TD]cell1[/TD]
+						[TD]cell2[/TD]
+					[/TR]
+					[TR]
+						[TD colspan=2]double width[/TD]
+					[/TR]
+				[/TABLE]',
+				'<table><tr><th>col1</th><th>col2</th></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td rowspan="2">double height</td><td/></tr><tr><td/></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td colspan="2">double width</td></tr></table>'
+			),
 		);
 	}
 }
