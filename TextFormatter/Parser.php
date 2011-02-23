@@ -318,11 +318,21 @@ class Parser
 
 				if (isset($paramConf['replace']))
 				{
+					/**
+					* Even numbers of backslashes are replaced by half their number of backslashes.
+					* A dollar sign followed by a number is replaced by the corresponding $match,
+					* unless it's preceded by a backslash.
+					*/
 					return preg_replace_callback(
-						'#\\$([0-9]+)#',
+						'#(?:\\\\\\\\)+|(\\\\)?\\$([0-9]+)#',
 						function($m) use ($match)
 						{
-							return $match[$m[1]];
+							if (!isset($m[2]))
+							{
+								return stripslashes($m[0]);
+							}
+
+							return ($m[1]) ? '$' . $m[2] : $match[$m[2]];
 						},
 						$paramConf['replace']
 					);

@@ -195,10 +195,30 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	public function testRegexpParamWithReplacement()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCodeFromExample('[X={REGEXP:/(FOO)(BAR)/i:$2$2$1} /]', '<x id="{REGEXP}"/>');
+		$cb->addBBCodeFromExample('[X={REGEXP:/(L)(R)/i:$2$2$1} /]', '<x id="{REGEXP}"/>');
 
-		$text     = '[X=http://foobar.com][/X]';
-		$expected = '<rt><X x="barbarfoo"><st>[X=http://foobar.com]</st><et>[/X]</et></X></rt>';
+		$text     = '[X=http://lr.com][/X]';
+		$expected = '<rt><X x="rrl"><st>[X=http://lr.com]</st><et>[/X]</et></X></rt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function testRegexpParamWithReplacementThatContainsEscapeSequences()
+	{
+		$cb = new ConfigBuilder;
+		$cb->addBBCodeFromExample(
+			// here we have the $2 token, followed by the literal "$2" followed by the $1 token
+			// followed by the literal "\" (one backslash) followed by the $1 token followed by
+			// the literal "\$1" (one backslash then dollar sign then 1) followed by the literal
+			// "\\" (two backslashes)
+			// The result should be "bar$2foo\foo\$1\\"
+			'[X={REGEXP:/(L)(R)/i:$2\\$2$1\\\\$1\\\\\\$1\\\\\\\\} /]',
+			'<x id="{REGEXP}"/>'
+		);
+
+		$text     = '[X=http://lr.com][/X]';
+		$expected = '<rt><X x="r$2l\\l\\$1\\\\"><st>[X=http://lr.com]</st><et>[/X]</et></X></rt>';
 		$actual   = $cb->getParser()->parse($text);
 
 		$this->assertSame($expected, $actual);
