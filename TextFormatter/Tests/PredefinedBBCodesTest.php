@@ -182,6 +182,11 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[JUSTIFY]justified text[/JUSTIFY]',
 				'<div style="text-align:justify">justified text</div>'
 			),
+			array(
+				'BACKGROUND',
+				'[BACKGROUND=red]text[/BACKGROUND]',
+				'<span style="background-color:red">text</span>'
+			),
 		);
 	}
 }

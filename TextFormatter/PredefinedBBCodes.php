@@ -229,6 +229,14 @@ class PredefinedBBCodes
 		);
 	}
 
+	public function addBACKGROUND()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[background={COLOR}]{TEXT}[/background]',
+			'<span style="background-color:{COLOR}">{TEXT}</span>'
+		);
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{
