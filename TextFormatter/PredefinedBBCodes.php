@@ -237,6 +237,14 @@ class PredefinedBBCodes
 		);
 	}
 
+	public function addFONT()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[font={SIMPLETEXT}]{TEXT}[/font]',
+			'<span style="font-family:{SIMPLETEXT}">{TEXT}</span>'
+		);
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{

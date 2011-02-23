@@ -187,6 +187,11 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[BACKGROUND=red]text[/BACKGROUND]',
 				'<span style="background-color:red">text</span>'
 			),
+			array(
+				'FONT',
+				'[FONT="Times New Roman"]text[/FONT]',
+				'<span style="font-family:Times New Roman">text</span>'
+			),
 		);
 	}
 }
