@@ -71,8 +71,7 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'<img src="http://www.example.org/img.png"/>'
 			),
 			array(
-				// no closing tag needed
-				'[IMG=http://www.example.org/img.png]',
+				'[IMG=http://www.example.org/img.png /]',
 				'<img src="http://www.example.org/img.png"/>'
 			),
 			array(
