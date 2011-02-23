@@ -245,6 +245,30 @@ class PredefinedBBCodes
 		);
 	}
 
+	public function addBLINK()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[blink]{TEXT}[/blink]',
+			'<span style="text-decoration:blink">{TEXT}</span>'
+		);
+	}
+
+	public function addSUB()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[sub]{TEXT}[/sub]',
+			'<span style="vertical-align:sub">{TEXT}</span>'
+		);
+	}
+
+	public function addSUPER()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[super]{TEXT}[/super]',
+			'<span style="vertical-align:super">{TEXT}</span>'
+		);
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{

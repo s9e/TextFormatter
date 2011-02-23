@@ -164,6 +164,18 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[FONT="Times New Roman"]text[/FONT]',
 				'<span style="font-family:Times New Roman">text</span>'
 			),
+			array(
+				'[blink]{TEXT}[/blink]',
+				'<span style="text-decoration:blink">{TEXT}</span>'
+			),
+			array(
+				'[sub]{TEXT}[/sub]',
+				'<span style="vertical-align:sub">{TEXT}</span>'
+			),
+			array(
+				'[super]{TEXT}[/super]',
+				'<span style="vertical-align:super">{TEXT}</span>'
+			),
 		);
 	}
 }
