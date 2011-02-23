@@ -149,7 +149,28 @@ class PredefinedBBCodes
 
 		$this->cb->setBBCodeTemplate(
 			'LIST',
-			'<ol><xsl:attribute name="style">list-style-type:<xsl:choose><xsl:when test="not(@style)">disc</xsl:when><xsl:when test="@style=\'1\'">decimal</xsl:when><xsl:when test="@style=\'01\'">decimal-leading-zero</xsl:when><xsl:when test="@style=\'a\'">lower-alpha</xsl:when><xsl:when test="@style=\'A\'">upper-alpha</xsl:when><xsl:when test="@style=\'i\'">lower-roman</xsl:when><xsl:when test="@style=\'I\'">upper-roman</xsl:when><xsl:otherwise><xsl:value-of select="@style"/></xsl:otherwise></xsl:choose></xsl:attribute><xsl:if test="@start"><xsl:attribute name="start"><xsl:value-of select="@start"/></xsl:attribute></xsl:if><xsl:apply-templates/></ol>'
+			'<ol>
+				<xsl:attribute name="style">list-style-type:<xsl:choose>
+					<xsl:when test="not(@style)">disc</xsl:when>
+					<xsl:when test="@style=\'1\'">decimal</xsl:when>
+					<xsl:when test="@style=\'01\'">decimal-leading-zero</xsl:when>
+					<xsl:when test="@style=\'a\'">lower-alpha</xsl:when>
+					<xsl:when test="@style=\'A\'">upper-alpha</xsl:when>
+					<xsl:when test="@style=\'i\'">lower-roman</xsl:when>
+					<xsl:when test="@style=\'I\'">upper-roman</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@style"/>
+					</xsl:otherwise>
+				</xsl:choose></xsl:attribute>
+
+				<xsl:if test="@start">
+					<xsl:attribute name="start">
+						<xsl:value-of select="@start"/>
+					</xsl:attribute>
+				</xsl:if>
+
+				<xsl:apply-templates/>
+			</ol>'
 		);
 
 		// [LI]
