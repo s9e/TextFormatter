@@ -177,30 +177,6 @@ class Parser
 	}
 
 	/**
-	* Return the current tag
-	*
-	* Should only be called during tags processing by param filters
-	*
-	* @return array
-	*/
-	public function getCurrentTag()
-	{
-		return $this->currentTag;
-	}
-
-	/**
-	* Return the definition of the param currently being validated
-	*
-	* Should only be called during tags processing by param filters
-	*
-	* @return array
-	*/
-	public function getCurrentParam()
-	{
-		return $this->currentParam;
-	}
-
-	/**
 	* Filter a var according to the configuration's filters
 	*
 	* Used internally but made public so that developers can test in advance whether a var would be
