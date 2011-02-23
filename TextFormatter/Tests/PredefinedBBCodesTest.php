@@ -133,7 +133,7 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"/><param name="wmode" value="transparent"/></object>'
 			),
 			array(
-				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak[/YOUTUBE]',
+				'[YOUTUBE]http://nl.youtube.com/watch?v=-cEzsCAzTak[/YOUTUBE]',
 				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"/><param name="wmode" value="transparent"/></object>'
 			),
 			array(
