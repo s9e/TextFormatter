@@ -504,6 +504,15 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayNotHasKey('default_replacement', $config['passes']['Censor']);
 	}
 
+	public function testJavascriptConfig()
+	{
+		$config = $this->cb->getParserConfig();
+		$jsConf = json_decode($this->cb->getJavascriptParserConfig());
+
+		$this->assertObjectHasAttribute('passes', $jsConf);
+		$this->assertObjectHasAttribute('xsl', $jsConf);
+	}
+
 	/**
 	* @dataProvider getSpecialPlaceholdersData
 	*/

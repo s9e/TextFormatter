@@ -192,7 +192,6 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-
 	public function getParamStuff()
 	{
 		return array(
