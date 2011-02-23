@@ -417,7 +417,7 @@ class ConfigBuilder
 
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
 	{
-		$def = $this->parseBBCodeDefinition($def);
+		$def = self::parseBBCodeDefinition($def);
 
 		if ($def === false)
 		{
@@ -520,7 +520,7 @@ class ConfigBuilder
 		return $tpl;
 	}
 
-	public function parseBBCodeDefinition($def)
+	static public function parseBBCodeDefinition($def)
 	{
 		/**
 		* That's the pre-filter and post-filter callbacks we allow in BBCode definitions.
@@ -665,10 +665,16 @@ class ConfigBuilder
 			elseif (preg_match('#^(CHOICE[0-9]*):(.*)#', $identifier, $m))
 			{
 				$identifier = $m[1];
+				$regexp = '/^' . self::buildRegexpFromList(explode(',', $m[2])) . '$/iD';
 
-				$paramConf['type'] = 'regexp';
-				$paramConf['regexp'] =
-					'/^' . self::buildRegexpFromList(explode(',', $m[2])) . '$/iDu';
+				if (preg_match('#[\\x80-\\xff]#', $regexp))
+				{
+					// Unicode mode needed
+					$regexp .= 'u';
+				}
+
+				$paramConf['type']   = 'regexp';
+				$paramConf['regexp'] = $regexp;
 			}
 			elseif (preg_match('#^(RANGE[0-9]*):(-?[0-9]+),(-?[0-9]+)$#D', $identifier, $m))
 			{

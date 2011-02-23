@@ -504,126 +504,68 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayNotHasKey('default_replacement', $config['passes']['Censor']);
 	}
 
-	public function testAddBBCodeFromExampleAllowsRegexp()
+	/**
+	* @dataProvider getSpecialPlaceholdersData
+	*/
+	public function testParseSpecialPlaceholders($def, $expected)
 	{
-		$this->cb->addBBCodeFromExample(
-			'[align={REGEXP:/^(?:left|center|right)$/i}]{TEXT}[/align]',
-			'<div style="align:{REGEXP}">{TEXT}</div>'
-		);
-		$config = $this->cb->getParserConfig();
+		$def = ConfigBuilder::parseBBCodeDefinition($def, '');
 
-		$this->assertArrayHasKey('BBCode', $config['passes']);
-		$this->assertArrayHasKey('bbcodes', $config['passes']['BBCode']);
-		$this->assertArrayHasKey('ALIGN', $config['passes']['BBCode']['bbcodes']);
-		$this->assertArrayHasKey('params', $config['passes']['BBCode']['bbcodes']['ALIGN']);
-		$this->assertArrayHasKey(
-			'align', $config['passes']['BBCode']['bbcodes']['ALIGN']['params']
-		);
-		$this->assertArrayHasKey(
-			'type', $config['passes']['BBCode']['bbcodes']['ALIGN']['params']['align']
-		);
-		$this->assertArrayHasKey(
-			'regexp', $config['passes']['BBCode']['bbcodes']['ALIGN']['params']['align']
-		);
+		$this->assertArrayHasKey('x', $def['params']);
 
-		$this->assertSame(
-			'regexp',
-			$config['passes']['BBCode']['bbcodes']['ALIGN']['params']['align']['type']
-		);
-		$this->assertSame(
-			'/^(?:left|center|right)$/i',
-			$config['passes']['BBCode']['bbcodes']['ALIGN']['params']['align']['regexp']
-		);
+		foreach ($expected as $k => $v)
+		{
+			$this->assertArrayHasKey($k, $def['params']['x']);
+			$this->assertSame($v, $def['params']['x'][$k], "Incorrect value for '$k'");
+		}
 	}
 
-	public function testAddBBCodeFromExampleAllowsPreFilter()
+	public function getSpecialPlaceholdersData()
 	{
-		$this->cb->addBBCodeFromExample(
-			'[X={strtolower:rtrim:IDENTIFIER} foo={TEXT2}]{TEXT}[/X]',
-			'<div style="align:{IDENTIFIER}">{TEXT}</div>'
-		);
-		$config = $this->cb->getParserConfig();
-
-		$this->assertTrue(
-			isset($config['passes']['BBCode']['bbcodes']['X']['params']['x']['pre_filter'])
-		);
-		$this->assertSame(
-			array('strtolower', 'rtrim'),
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['pre_filter']
-		);
-	}
-
-	public function testAddBBCodeFromExampleAllowsRanges()
-	{
-		$this->cb->addBBCodeFromExample(
-			'[X={RANGE:-2,99}][/X]',
-			'<x/>'
-		);
-		$config = $this->cb->getParserConfig();
-
-		$this->assertTrue(
-			isset($config['passes']['BBCode']['bbcodes']['X']['params']['x'])
-		);
-		$this->assertArrayHasKey(
-			'type',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
-		);
-		$this->assertArrayHasKey(
-			'min',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
-		);
-		$this->assertArrayHasKey(
-			'max',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
-		);
-		$this->assertEquals(
-			'range',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['type']
-		);
-		$this->assertEquals(
-			-2,
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['min']
-		);
-		$this->assertEquals(
-			99,
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['max']
-		);
-	}
-
-	public function testAddBBCodeFromExampleAllowsRegexpReplacement()
-	{
-		$this->cb->addBBCodeFromExample(
-			'[X={REPLACE:/(FOO)(BAR)/:$2$1}][/X]',
-			'{REPLACE}'
-		);
-		$config = $this->cb->getParserConfig();
-
-		$this->assertTrue(
-			isset($config['passes']['BBCode']['bbcodes']['X']['params']['x'])
-		);
-		$this->assertArrayHasKey(
-			'type',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
-		);
-		$this->assertArrayHasKey(
-			'regexp',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
-		);
-		$this->assertArrayHasKey(
-			'replace',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']
-		);
-		$this->assertEquals(
-			'regexp',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['type']
-		);
-		$this->assertEquals(
-			'/(FOO)(BAR)/',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['regexp']
-		);
-		$this->assertEquals(
-			'$2$1',
-			$config['passes']['BBCode']['bbcodes']['X']['params']['x']['replace']
+		return array(
+			array(
+				'[x={REGEXP:/^(?:left|center|right)$/i}]{TEXT}[/x]',
+				array(
+					'type'   => 'regexp',
+					'regexp' => '/^(?:left|center|right)$/i'
+				)
+			),
+			array(
+				'[X={strtolower:rtrim:IDENTIFIER} foo={TEXT2}]{TEXT}[/X]',
+				array(
+					'pre_filter' => array('strtolower', 'rtrim')
+				)
+			),
+			array(
+				'[X={RANGE:-2,99}][/X]',
+				array(
+					'type' => 'range',
+					'min'  => -2,
+					'max'  => 99
+				)
+			),
+			array(
+				'[X={REPLACE:/(FOO)(BAR)/:$2$1}][/X]',
+				array(
+					'type'    => 'regexp',
+					'regexp'  => '/(FOO)(BAR)/',
+					'replace' => '$2$1'
+				)
+			),
+			array(
+				'[X={CHOICE:foo,bar}][/X]',
+				array(
+					'type'   => 'regexp',
+					'regexp' => '/^(?:foo|bar)$/iD'
+				)
+			),
+			array(
+				'[X={CHOICE:pokémon,digimon}][/X]',
+				array(
+					'type'   => 'regexp',
+					'regexp' => '/^(?:pokémon|digimon)$/iDu'
+				)
+			)
 		);
 	}
 
