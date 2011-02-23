@@ -181,11 +181,17 @@ class PredefinedBBCodes
 		);
 	}
 
+	/**
+	* Accepts both URLs and identifiers:
+	* [YOUTUBE]-cEzsCAzTak[/YOUTUBE]
+	* [YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]
+	*/
 	public function addYOUTUBE()
 	{
 		$this->cb->addBBCodeFromExample(
-			'[youtube]{IDENTIFIER}[/youtube]',
-			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{IDENTIFIER}" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/{IDENTIFIER}" /><param name="wmode" value="transparent" /></object>'
+			// 
+			'[youtube]{REGEXP:/^(?:http:\\x2F\\x2Fwww\\.youtube\\.com\\x2Fwatch\\?v=)?([A-Za-z_0-9\\-]+)(&.*)?$/:$1}[/youtube]',
+			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/{REGEXP}" /><param name="wmode" value="transparent" /></object>'
 		);
 	}
 
