@@ -189,9 +189,13 @@ class PredefinedBBCodes
 	public function addYOUTUBE()
 	{
 		$this->cb->addBBCodeFromExample(
-			// 
+			/**
+			* Using forward slashes / in regexps messes the ConfigBuilder, that's why we're using
+			* the escape sequence \x2F instead. Alternatively, we could just use the standard way
+			* to add BBCodes, via addBBCode() and the likes
+			*/
 			'[youtube]{REGEXP:/^(?:http:\\x2F\\x2Fwww\\.youtube\\.com\\x2Fwatch\\?v=)?([A-Za-z_0-9\\-]+)(&.*)?$/:$1}[/youtube]',
-			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/{REGEXP}" /><param name="wmode" value="transparent" /></object>'
+			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/{REGEXP}" /><param name="wmode" value="transparent"/></object>'
 		);
 	}
 
