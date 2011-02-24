@@ -576,6 +576,7 @@ class ConfigBuilder
 		$options      = array();
 		$params       = array();
 		$placeholders = array();
+		$content      = (isset($m['content'])) ? $m['content'] : null;
 
 		/**
 		* If we have a default param in $m[2], we prepend the definition to the attribute pairs.
@@ -594,10 +595,12 @@ class ConfigBuilder
 		* to save space. Instead, templates will rely on the node's textContent, which we adjust to
 		* ignore the node's <st/> and <et/> children
 		*/
-		if (isset($m['content']))
+		if (isset($content))
 		{
+			preg_match('#^' . $placeholder . '$#', $content, $m);
+
 			// TEXT or TEXT1
-			$identifier = $m[12];
+			$identifier = $m[2];
 
 			if (preg_match('#^TEXT[0-9]*$#D', $identifier))
 			{
@@ -622,23 +625,23 @@ class ConfigBuilder
 				/**
 				* We append the placeholder to the attributes, using the BBCode's name as param name
 				*/
-				$attrs .= ' ' . $paramName . '=' . $m['content'];
+				$attrs .= ' ' . $paramName . '=' . $content;
 			}
 		}
 
-		foreach (preg_split('#\\s+#', $attrs, null, \PREG_SPLIT_NO_EMPTY) as $pair)
-		{
-			if (!preg_match('#^(' . $param . ')=' . $placeholder . '$#D', $pair, $m))
-			{
-				// @codeCoverageIgnoreStart
-				throw new RuntimeException('Could not interpret pair ' . $pair);
-				// @codeCoverageIgnoreEnd
-			}
+		preg_match_all(
+			'#(' . $param . ')=' . $placeholder . '#',
+			$attrs,
+			$matches,
+			\PREG_SET_ORDER
+		);
 
+		foreach ($matches as $m)
+		{
 			$paramName  = strtolower($m[1]);
 			$preFilter  = $m[2];
 			$identifier = $m[3];
-			$postFilter = (isset($m[4])) ? $m[4] : null;
+			$postFilter = $m[4];
 
 			if (isset($params[$paramName]))
 			{
