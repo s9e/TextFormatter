@@ -220,10 +220,10 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 					[/TR]
 					[TR]
 						[TD rowspan=2]double height[/TD]
-						[TD][/TD]
+						[TD]x[/TD]
 					[/TR]
 					[TR]
-						[TD][/TD]
+						[TD]x[/TD]
 					[/TR]
 					[TR]
 						[TD]cell1[/TD]
@@ -234,11 +234,11 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 						[TD colspan=2]double width[/TD]
 					[/TR]
 				[/TABLE]',
-				'<table><tr><th>col1</th><th>col2</th></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td rowspan="2">double height</td><td/></tr><tr><td/></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td colspan="2">double width</td></tr></table>',
+				'<table><tr><th>col1</th><th>col2</th></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td rowspan="2">double height</td><td>x</td></tr><tr><td>x</td></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td colspan="2">double width</td></tr></table>',
 				array(
 					'error' => array(
 						array (
-							'pos'      => 395,
+							'pos'      => 397,
 							'msg'      => 'BBCode %1$s requires %2$s as parent',
 							'params'   => array('TR', 'TABLE'),
 							'bbcodeId' => 'TR'

@@ -162,8 +162,8 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 				'[email]{TEXT}[/email]',
 				'<a href="mailto:{TEXT}">{TEXT}</a>',
 				ConfigBuilder::ALLOW_INSECURE_TEMPLATES,
-				'My email is [email]COULD BE ANYTHING[/email]',
-				'My email is <a href="mailto:COULD BE ANYTHING">COULD BE ANYTHING</a>'
+				'My email is [email]COULD_BE_ANYTHING[/email]',
+				'My email is <a href="mailto:COULD_BE_ANYTHING">COULD_BE_ANYTHING</a>'
 			)
 		);
 	}
