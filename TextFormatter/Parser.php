@@ -896,6 +896,9 @@ class Parser
 
 				if (isset($bbcode['params']))
 				{
+					/**
+					* BBCode-level pre-filter
+					*/
 					if (isset($bbcode['pre_filter']))
 					{
 						foreach ($bbcode['pre_filter'] as $callback)
@@ -905,6 +908,9 @@ class Parser
 						}
 					}
 
+					/**
+					* Filter each param
+					*/
 					foreach ($this->currentTag['params'] as $paramName => &$paramVal)
 					{
 						$this->currentParam = $paramName;
@@ -936,17 +942,39 @@ class Parser
 
 						if ($filteredVal === false)
 						{
+							/**
+							* Bad param value
+							*/
 							$this->log('error', array(
 								'pos'    => $this->currentTag['pos'],
 								'msg'    => 'Invalid param %s',
 								'params' => array($paramName)
 							));
 
-							unset($this->currentTag['params'][$paramName]);
-
-							if ($paramConf['is_required'])
+							if (isset($paramConf['default_value']))
 							{
-								continue;
+								/**
+								* Use the default value
+								*/
+								$filteredVal = $paramConf['default_value'];
+
+								$this->log('debug', array(
+									'pos'    => $this->currentTag['pos'],
+									'msg'    => 'Using default value %1$s for param %2$s',
+									'params' => array($paramConf['default_value'], $paramName)
+								));
+							}
+							else
+							{
+								/**
+								* Remove the param altogether
+								*/
+								unset($this->currentTag['params'][$paramName]);
+
+								if ($paramConf['is_required'])
+								{
+									continue;
+								}
 							}
 						}
 						elseif ((string) $filteredVal !== (string) $paramVal)
@@ -963,6 +991,9 @@ class Parser
 					}
 					unset($paramVal, $this->currentParam);
 
+					/**
+					* BBCode-level post-filter
+					*/
 					if (isset($bbcode['post_filter']))
 					{
 						foreach ($bbcode['post_filter'] as $callback)
