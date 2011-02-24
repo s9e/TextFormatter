@@ -22,7 +22,7 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @dataProvider provider
 	*/
-	public function testPredefinedBBCodes($text, $expected)
+	public function testPredefinedBBCodes($text, $expected, array $expectedLog = array())
 	{
 		preg_match('#[a-z_0-9]+#i', $text, $m);
 		$bbcodeId = $m[0];
@@ -30,9 +30,18 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 		$cb = new ConfigBuilder;
 		$cb->addPredefinedBBCode($bbcodeId);
 
-		$actual = $cb->getRenderer()->render($cb->getParser()->parse($text));
+		$parser = $cb->getParser();
 
+		$actual = $cb->getRenderer()->render($parser->parse($text));
 		$this->assertSame($expected, $actual);
+
+		$actualLog = $parser->getLog();
+
+		foreach (array_keys($expectedLog) as $type)
+		{
+			$this->assertArrayHasKey($type, $actualLog);
+			$this->assertEquals($expectedLog[$type], $actualLog[$type]);
+		}
 	}
 
 	public function provider()
@@ -207,10 +216,21 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 						[TD]cell2[/TD]
 					[/TR]
 					[TR]
+						[TR]
 						[TD colspan=2]double width[/TD]
 					[/TR]
 				[/TABLE]',
-				'<table><tr><th>col1</th><th>col2</th></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td rowspan="2">double height</td><td/></tr><tr><td/></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td colspan="2">double width</td></tr></table>'
+				'<table><tr><th>col1</th><th>col2</th></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td rowspan="2">double height</td><td/></tr><tr><td/></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td colspan="2">double width</td></tr></table>',
+				array(
+					'error' => array(
+						array (
+							'pos'      => 395,
+							'msg'      => 'BBCode %1$s requires %2$s as parent',
+							'params'   => array('TR', 'TABLE'),
+							'bbcodeId' => 'TR'
+						)
+					)
+				)
 			),
 		);
 	}

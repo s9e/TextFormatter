@@ -868,7 +868,7 @@ class Parser
 					if (!$lastBBCode
 					 || $lastBBCode['bbcode_id'] !== $bbcode['require_parent'])
 					{
-						$this->log('debug', array(
+						$this->log('error', array(
 							'pos'    => $this->currentTag['pos'],
 							'msg'    => 'BBCode %1$s requires %2$s as parent',
 							'params' => array($bbcodeId, $bbcode['require_parent'])
