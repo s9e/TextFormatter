@@ -547,14 +547,17 @@ class ConfigBuilder
 			'intval'
 		)) . ')';
 
+		$typeRegexps = array(
+			'regexp' => 'REGEXP[0-9]*:/[^/]+/i?(?::.*?)?',
+			'range'  => 'RANGE[0-9]*:-?[0-9]+,-?[0-9]+',
+			'choice' => 'CHOICE[0-9]*:[^:\\}]+',
+			'other'  => '[A-Z_]+[0-9]*'
+		);
+
 		$bbcodeId    = '[a-zA-Z_][a-zA-Z_0-9]*';
-		$preFilter   = '((?:' . $allowedCallbacks . ':)*)';
-		$postFilter  = '((?::' . $allowedCallbacks . ')*)';
-		$type        = '(REGEXP[0-9]*:/[^/]+/i?(?::.*?)?'
-		             . '|RANGE[0-9]*:-?[0-9]+,-?[0-9]+'
-		             . '|CHOICE[0-9]*:[^:\\}]+'
-		             . '|[A-Z_]+[0-9]*'
-		             . ')';
+		$preFilter   = '(?P<preFilter>(?:' . $allowedCallbacks . ':)*)';
+		$postFilter  = '(?P<postFilter>(?::' . $allowedCallbacks . ')*)';
+		$type        = '(?P<type>' . implode('|', $typeRegexps) . ')';
 		$placeholder = '\\{' . $preFilter . $type . $postFilter. '\\}';
 		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
 
@@ -566,6 +569,20 @@ class ConfigBuilder
 		        // ]({TEXT})[/BBCODE]
 		        . '(?:\\s*/\\]|\\](?P<content>' . $placeholder . ')?\\[/\\1])'
 		        . '$#D';
+
+		/**
+		* Remove the duplicate named captures from the global regexp
+		*/
+		$duplicateNamedCaptures = array(
+			'preFilter',
+			'postFilter',
+			'type'
+		);
+
+		foreach ($duplicateNamedCaptures as $name)
+		{
+			$regexp = str_replace('(?P<' . $name . '>', '(', $regexp);
+		}
 
 		if (!preg_match($regexp, trim($def), $m))
 		{
@@ -599,15 +616,12 @@ class ConfigBuilder
 		{
 			preg_match('#^' . $placeholder . '$#', $content, $m);
 
-			// TEXT or TEXT1
-			$identifier = $m[2];
-
-			if (preg_match('#^TEXT[0-9]*$#D', $identifier))
+			if (preg_match('#^TEXT[0-9]*$#D', $m['type']))
 			{
 				/**
 				* Use substring() to exclude the <st/> and <et/> children
 				*/
-				$placeholders[$identifier] =
+				$placeholders[$m['type']] =
 					'substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))';
 			}
 			else
@@ -639,9 +653,9 @@ class ConfigBuilder
 		foreach ($matches as $m)
 		{
 			$paramName  = strtolower($m[1]);
-			$preFilter  = $m[2];
-			$identifier = $m[3];
-			$postFilter = $m[4];
+			$preFilter  = $m['preFilter'];
+			$identifier = $m['type'];
+			$postFilter = $m['postFilter'];
 
 			if (isset($params[$paramName]))
 			{
