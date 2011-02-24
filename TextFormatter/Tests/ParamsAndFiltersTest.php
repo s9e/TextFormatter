@@ -88,6 +88,23 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	* Post-filter callbacks shouldn't be executed if the param value was invalid
+	*/
+	public function testParamPostFilterOnInvalidParamValue()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X');
+		$cb->addBBCodeParam('X', 'y', 'identifier', array('post_filter' => array('trim')));
+
+		$text     = '[X y=" ABC "][/X]';
+		$expected = '<pt>[X y=&quot; ABC &quot;][/X]</pt>';
+		$actual   = $cb->getParser()->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
+	/**
 	* @depends testParamPreFilter
 	* @depends testParamPostFilter
 	*/

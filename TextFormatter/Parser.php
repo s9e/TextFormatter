@@ -924,8 +924,9 @@ class Parser
 						// filter the value
 						$filteredVal = $this->filter($filteredVal, $paramConf);
 
-						// execute post-filter callbacks
-						if (!empty($paramConf['post_filter']))
+						// execute post-filter callbacks if the value was valid
+						if ($filteredVal !== false
+						 && !empty($paramConf['post_filter']))
 						{
 							foreach ($paramConf['post_filter'] as $callback)
 							{
