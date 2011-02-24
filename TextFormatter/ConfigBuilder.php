@@ -548,9 +548,9 @@ class ConfigBuilder
 		)) . ')';
 
 		$typeRegexps = array(
-			'regexp' => 'REGEXP[0-9]*:/[^/]+/i?(?::.*?)?',
-			'range'  => 'RANGE[0-9]*:-?[0-9]+,-?[0-9]+',
-			'choice' => 'CHOICE[0-9]*:[^:\\}]+',
+			'regexp' => 'REGEXP[0-9]*:(?P<regexp>/[^/]+/i?)(?::(?P<replace>.*?))?',
+			'range'  => 'RANGE[0-9]*:(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
+			'choice' => 'CHOICE[0-9]*:(?P<choices>[^:\\}]+)',
 			'other'  => '[A-Z_]+[0-9]*'
 		);
 
@@ -574,6 +574,11 @@ class ConfigBuilder
 		* Remove the duplicate named captures from the global regexp
 		*/
 		$duplicateNamedCaptures = array(
+			'regexp',
+			'replace',
+			'min',
+			'max',
+			'choices',
 			'preFilter',
 			'postFilter',
 			'type'
@@ -666,43 +671,57 @@ class ConfigBuilder
 				'is_required' => true
 			);
 
-			if (preg_match('#^(REGEXP[0-9]*):(/[^/]+/i?)(:.*?)?$#', $identifier, $m))
+			foreach ($typeRegexps as $type => $regexp)
 			{
-				$identifier = $m[1];
-
-				$paramConf['type']   = 'regexp';
-				$paramConf['regexp'] = $m[2];
-
-				if (isset($m[3]))
+				if (preg_match('#^' . $regexp . '$#D', $identifier, $m))
 				{
-					$paramConf['replace'] = substr($m[3], 1);
+					$paramConf['type'] = $type;
+
+					switch ($type)
+					{
+						case 'regexp':
+							$paramConf['regexp'] = $m['regexp'];
+						
+							if (isset($m['replace']))
+							{
+								$paramConf['replace'] = $m['replace'];
+							}
+							break;
+
+						case 'choice':
+							$regexp = '/^' . self::buildRegexpFromList(explode(',', $m['choices'])) . '$/iD';
+
+							if (preg_match('#[\\x80-\\xff]#', $regexp))
+							{
+								// Unicode mode needed
+								$regexp .= 'u';
+							}
+
+							$paramConf['type']   = 'regexp';
+							$paramConf['regexp'] = $regexp;
+							break;
+
+						case 'range':
+							$paramConf['min']  = (int) $m['min'];
+							$paramConf['max']  = (int) $m['max'];
+							break;
+
+						default:
+							$paramConf['type'] = rtrim(strtolower($identifier), '1234567890');
+					}
 				}
 			}
-			elseif (preg_match('#^(CHOICE[0-9]*):(.*)#', $identifier, $m))
+
+			// @codeCoverageIgnoreStart
+			if (!isset($paramConf['type']))
 			{
-				$identifier = $m[1];
-				$regexp = '/^' . self::buildRegexpFromList(explode(',', $m[2])) . '$/iD';
-
-				if (preg_match('#[\\x80-\\xff]#', $regexp))
-				{
-					// Unicode mode needed
-					$regexp .= 'u';
-				}
-
-				$paramConf['type']   = 'regexp';
-				$paramConf['regexp'] = $regexp;
+				throw new RuntimeException('Cannot determine the param type of ' . $identifier);
 			}
-			elseif (preg_match('#^(RANGE[0-9]*):(-?[0-9]+),(-?[0-9]+)$#D', $identifier, $m))
-			{
-				$identifier = $m[1];
+			// @codeCoverageIgnoreEnd
 
-				$paramConf['type'] = 'range';
-				$paramConf['min']  = (int) $m[2];
-				$paramConf['max']  = (int) $m[3];
-			}
-			else
+			if ($pos = strpos($identifier, ':'))
 			{
-				$paramConf['type'] = rtrim(strtolower($identifier), '1234567890');
+				$identifier = substr($identifier, 0, $pos);
 			}
 
 			if (isset($placeholders[$identifier]))
