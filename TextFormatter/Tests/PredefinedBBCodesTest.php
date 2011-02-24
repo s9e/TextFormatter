@@ -4,6 +4,7 @@ namespace s9e\Toolkit\TextFormatter\Tests;
 
 use s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\Parser,
+    s9e\Toolkit\TextFormatter\PredefinedBBCodes,
     s9e\Toolkit\TextFormatter\Renderer;
 
 include_once __DIR__ . '/../ConfigBuilder.php';
@@ -17,6 +18,19 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 		$cb->addPredefinedBBCode('UNKNOWN');
+	}
+
+	public function testGetCODEstx()
+	{
+		$cb = new ConfigBuilder;
+		$cb->addPredefinedBBCode('CODE');
+
+		$xml = $cb->getParser()->parse('[code=php]//[/code][code=php]//[/code][code=html][/code]');
+
+		$this->assertEquals(
+			array('php', 'html'),
+			PredefinedBBCodes::getCODEstx($xml)
+		);
 	}
 
 	/**
@@ -232,6 +246,32 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 					)
 				)
 			),
+			array(
+				'[CODE=js]
+					function foo()
+					{
+						alert("Hello world");
+					}
+				[/CODE]
+				[CODE:123=php]
+					function foo()
+					{
+						echo "[CODE]lol nested tags[/CODE]";
+					}
+				[/CODE:123]',
+				'<pre class="brush:js">
+					function foo()
+					{
+						alert("Hello world");
+					}
+				</pre>
+				<pre class="brush:php">
+					function foo()
+					{
+						echo "[CODE]lol nested tags[/CODE]";
+					}
+				</pre>'
+			)
 		);
 	}
 }

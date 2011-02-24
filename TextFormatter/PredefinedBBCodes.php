@@ -374,6 +374,50 @@ class PredefinedBBCodes
 		);
 	}
 
+	/**
+	* A simple implementation of a [CODE] tag
+	*
+	* It has one default, optional parameter "stx" and it's designed to work with Alex Gorbatchev's
+	* SyntaxHighlighter library. See getCODEstx() for an example of how to retrieve the list of
+	* syntaxes used so that you can load the appropriate brushes.
+	*
+	* @see  getCODEstx
+	* @link http://alexgorbatchev.com/SyntaxHighlighter/
+	*/
+	public function addCODE()
+	{
+		$this->cb->addBBCode('CODE', array(
+			'default_rule'  => 'deny',
+			'default_param' => 'stx'
+		));
+
+		$this->cb->addBBCodeParam('CODE', 'stx', 'identifier', array(
+			'is_required' => false,
+			'pre_filter'  => array('strtolower')
+		));
+
+		$this->cb->setBBCodeTemplate(
+			'CODE',
+			'<pre class="brush:{@stx}"><xsl:value-of select="text()" /></pre>'
+		);
+	}
+
+	static public function getCODEstx($xml)
+	{
+		if (strpos($xml, '<CODE') === false)
+		{
+			return array();
+		}
+
+		// array_values() will reset the keys so that there's no gap in numbering, just in case
+		return array_values(array_unique(
+			array_map(
+				'strval',
+				simplexml_load_string($xml)->xpath('//CODE/@stx')
+			)
+		));
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{
