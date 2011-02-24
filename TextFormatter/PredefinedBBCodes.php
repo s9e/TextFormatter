@@ -404,11 +404,6 @@ class PredefinedBBCodes
 
 	static public function getCODEstx($xml)
 	{
-		if (strpos($xml, '<CODE') === false)
-		{
-			return array();
-		}
-
 		// array_values() will reset the keys so that there's no gap in numbering, just in case
 		return array_values(array_unique(
 			array_map(
