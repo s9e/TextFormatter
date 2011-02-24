@@ -91,24 +91,24 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 			),
 			array(
 				'[IMG]http://www.example.org/img.png[/IMG]',
-				'<img src="http://www.example.org/img.png"/>'
+				'<img src="http://www.example.org/img.png">'
 			),
 			array(
 				'[IMG=http://www.example.org/img.png /]',
-				'<img src="http://www.example.org/img.png"/>'
+				'<img src="http://www.example.org/img.png">'
 			),
 			array(
 				// extraneous content is ignored
 				'[IMG=http://www.example.org/img.png]TEXT[/IMG]',
-				'<img src="http://www.example.org/img.png"/>'
+				'<img src="http://www.example.org/img.png">'
 			),
 			array(
 				'[IMG alt="alt text"]http://www.example.org/img.png[/IMG]',
-				'<img src="http://www.example.org/img.png" alt="alt text"/>'
+				'<img src="http://www.example.org/img.png" alt="alt text">'
 			),
 			array(
 				'[IMG title="Title"]http://www.example.org/img.png[/IMG]',
-				'<img src="http://www.example.org/img.png" title="Title"/>'
+				'<img src="http://www.example.org/img.png" title="Title">'
 			),
 			array(
 				'[LIST][*]one[*]two[/LIST]',
@@ -148,19 +148,19 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 			),
 			array(
 				'[GOOGLEVIDEO]-4381488634998231167[/GOOGLEVIDEO]',
-				'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId=-4381488634998231167" width="400" height="326"><param name="movie" value="http://video.google.com/googleplayer.swf?docId=-4381488634998231167"/><param name="allowScriptAcess" value="sameDomain"/><param name="quality" value="best"/><param name="scale" value="noScale"/><param name="salign" value="TL"/><param name="FlashVars" value="playerMode=embedded"/></object>'
+				'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId=-4381488634998231167" width="400" height="326"><param name="movie" value="http://video.google.com/googleplayer.swf?docId=-4381488634998231167"><param name="allowScriptAcess" value="sameDomain"><param name="quality" value="best"><param name="scale" value="noScale"><param name="salign" value="TL"><param name="FlashVars" value="playerMode=embedded"></object>'
 			),
 			array(
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"/><param name="wmode" value="transparent"/></object>'
+				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"><param name="wmode" value="transparent"></object>'
 			),
 			array(
 				'[YOUTUBE]http://nl.youtube.com/watch?v=-cEzsCAzTak[/YOUTUBE]',
-				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"/><param name="wmode" value="transparent"/></object>'
+				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"><param name="wmode" value="transparent"></object>'
 			),
 			array(
 				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
-				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"/><param name="wmode" value="transparent"/></object>'
+				'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/-cEzsCAzTak" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/-cEzsCAzTak"><param name="wmode" value="transparent"></object>'
 			),
 			array(
 				'[ALIGN=left]left[/ALIGN]',

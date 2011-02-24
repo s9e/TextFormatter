@@ -240,7 +240,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		$html = $cb->getRenderer()->render($xml);
 		//======================================================================
 
-		$expected = '<div class="quote"><div class="author">Uncle Joe wrote:</div><div class="content">First line.' . "<br/>\nSecond line.</div></div>";
+		$expected = '<div class="quote"><div class="author">Uncle Joe wrote:</div><div class="content">First line.' . "<br>\nSecond line.</div></div>";
 
 		$this->assertSame($expected, $html);
 	}

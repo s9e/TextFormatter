@@ -213,7 +213,7 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 		));
 
 		$text     = "Line 1.\nLine 2.\r\nLine 3.";
-		$expected = "Line 1.<br/>Line 2.<br/>Line 3.";
+		$expected = "Line 1.<br>Line 2.<br>Line 3.";
 		$actual   = $cb->getRenderer()->render($cb->getParser()->parse($text));
 
 		$this->assertSame($expected, $actual);
