@@ -560,11 +560,11 @@ class ConfigBuilder
 
 		$regexp = '#'
 		        // [(BBCODE)(=paramval)?
-		        . '\\[(' . $bbcodeId . ')(=' . $placeholder . ')?'
+		        . '\\[(?P<bbcodeId>' . $bbcodeId . ')(?P<defaultParam>=' . $placeholder . ')?'
 		        // (foo=fooval bar=barval)
-		        . '((?:\\s+' . $param . '=' . $placeholder . ')*)'
+		        . '(?P<attrs>(?:\\s+' . $param . '=' . $placeholder . ')*)'
 		        // ]({TEXT})[/BBCODE]
-		        . '(?:\\s*/\\]|\\](' . $placeholder . ')?\\[/\\1])'
+		        . '(?:\\s*/\\]|\\](?P<content>' . $placeholder . ')?\\[/\\1])'
 		        . '$#D';
 
 		if (!preg_match($regexp, trim($def), $m))
@@ -572,7 +572,7 @@ class ConfigBuilder
 			return false;
 		}
 
-		$bbcodeId     = $m[1];
+		$bbcodeId     = $m['bbcodeId'];
 		$options      = array();
 		$params       = array();
 		$placeholders = array();
@@ -582,7 +582,7 @@ class ConfigBuilder
 		* e.g. [a href={URL}]           => $attrs = "href={URL}"
 		*      [url={URL} title={TEXT}] => $attrs = "url={URL} title={TEXT}"
 		*/
-		$attrs = ($m[2]) ? $m[1] . $m[2] . $m[6] : $m[6];
+		$attrs = (($m['defaultParam']) ? $m['bbcodeId'] . $m['defaultParam'] : '') . $m['attrs'];
 
 		/**
 		* Here we process the content's placeholder
@@ -594,7 +594,7 @@ class ConfigBuilder
 		* to save space. Instead, templates will rely on the node's textContent, which we adjust to
 		* ignore the node's <st/> and <et/> children
 		*/
-		if (isset($m[10]))
+		if (isset($m['content']))
 		{
 			// TEXT or TEXT1
 			$identifier = $m[12];
@@ -622,7 +622,7 @@ class ConfigBuilder
 				/**
 				* We append the placeholder to the attributes, using the BBCode's name as param name
 				*/
-				$attrs .= ' ' . $paramName . '=' . $m[10];
+				$attrs .= ' ' . $paramName . '=' . $m['content'];
 			}
 		}
 
