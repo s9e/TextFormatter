@@ -897,6 +897,19 @@ class Parser
 				if (isset($bbcode['params']))
 				{
 					/**
+					* Add default values
+					*/
+					$missingParams = array_diff_key($bbcode['params'], $this->currentTag['params']);
+
+					foreach ($missingParams as $paramName => $paramConf)
+					{
+						if (isset($paramConf['default_value']))
+						{
+							$this->currentTag['params'][$paramName] = $paramConf['default_value'];
+						}
+					}
+
+					/**
 					* BBCode-level pre-filter
 					*/
 					if (isset($bbcode['pre_filter']))

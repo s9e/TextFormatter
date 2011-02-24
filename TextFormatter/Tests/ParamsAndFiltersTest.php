@@ -257,6 +257,22 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $actual);
 	}
 
+	public function testDefaultParamValueOnMissingParam()
+	{
+		$cb = new ConfigBuilder;
+
+		$cb->addBBCode('X');
+		$cb->addBBCodeParam('X', 'y', 'int', array('default_value' => 123));
+
+		$parser = $cb->getParser();
+
+		$text     = '[X][/X]';
+		$expected = '<rt><X y="123"><st>[X]</st><et>[/X]</et></X></rt>';
+		$actual   = $parser->parse($text);
+
+		$this->assertSame($expected, $actual);
+	}
+
 	public function getParamStuff()
 	{
 		return array(
