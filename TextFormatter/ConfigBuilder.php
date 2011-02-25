@@ -548,7 +548,7 @@ class ConfigBuilder
 		)) . ')';
 
 		$typeRegexps = array(
-			'regexp' => 'REGEXP[0-9]*:(?P<regexp>/[^/]+/i?)(?::(?P<replace>.*?))?',
+			'regexp' => 'REGEXP[0-9]*:(?P<regexp>/.*?/i?)(?::(?P<replace>.*?))?',
 			'range'  => 'RANGE[0-9]*:(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
 			'choice' => 'CHOICE[0-9]*:(?P<choices>[^:\\}]+)',
 			'other'  => '[A-Z_]+[0-9]*'
