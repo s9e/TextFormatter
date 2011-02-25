@@ -238,7 +238,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 
 		$config = $cb->getBBCodeConfig();
 
-		$text     = '[x crc32="foo" /]';
+		$text     = '[x crc32="123" /]';
 		$actual   = $this->parse($text, $config);
 		$expected = array(
 			'tags' => array(
@@ -246,7 +246,7 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 					'name'   => 'X',
 					'pos'    => 0,
 					'len'    => 17,
-					'params' => array('crc32' => 'foo')
+					'params' => array('crc32' => '123')
 				)
 			)
 		);
