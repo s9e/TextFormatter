@@ -197,9 +197,19 @@ class PredefinedBBCodes
 
 	public function addGOOGLEVIDEO()
 	{
+		$regexp =
+			'/^(?:' . preg_quote('http://video.google.com/videoplay?docid=', '/') . ')?(-?\\d+)/';
+
 		$this->cb->addBBCodeFromExample(
-			'[googlevideo]{INT}[/googlevideo]',
-			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={INT}" width="400" height="326"><param name="movie" value="http://video.google.com/googleplayer.swf?docId={INT}"/><param name="allowScriptAcess" value="sameDomain"/><param name="quality" value="best"/><param name="scale" value="noScale"/><param name="salign" value="TL"/><param name="FlashVars" value="playerMode=embedded"/></object>'
+			'[googlevideo]{REGEXP:' . $regexp . ':$1}[/googlevideo]',
+			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={REGEXP}" width="400" height="326">
+				<param name="movie" value="http://video.google.com/googleplayer.swf?docId={REGEXP}"/>
+				<param name="allowScriptAcess" value="sameDomain"/>
+				<param name="quality" value="best"/>
+				<param name="scale" value="noScale"/>
+				<param name="salign" value="TL"/>
+				<param name="FlashVars" value="playerMode=embedded"/>
+			</object>'
 		);
 	}
 
