@@ -405,14 +405,17 @@ class ConfigBuilder
 			$this->predefinedBBCodes = new PredefinedBBCodes($this);
 		}
 
-		$method = 'add' . strtoupper($bbcodeId);
+		$callback = array(
+			$this->predefinedBBCodes,
+			'add' . strtoupper($bbcodeId)
+		);
 
-		if (!is_callable(array($this->predefinedBBCodes, $method)))
+		if (!is_callable($callback))
 		{
 			throw new InvalidArgumentException('Unknown BBCode ' . $bbcodeId);
 		}
 
-		$this->predefinedBBCodes->$method();
+		call_user_func_array($callback, array_slice(func_get_args(), 1));
 	}
 
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
