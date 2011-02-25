@@ -451,6 +451,7 @@ class PredefinedBBCodes
 	* The author can be specified in the default param.
 	* You can limit the nesting level (which is set to 3 by default) and you can localize the author
 	* string.
+	* The markup used is intentionally compatible with phpBB themes.
 	*
 	* @param integer $nestingLevel
 	* @param string  $authorStr
