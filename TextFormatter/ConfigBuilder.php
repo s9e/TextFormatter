@@ -1222,8 +1222,8 @@ class ConfigBuilder
 			 . '<xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" indent="no"/>'
 			 . '<xsl:template match="/m">'
 			 . '<xsl:for-each select="*">'
-			 . '<xsl:apply-templates />'
-			 . '<xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid" /></xsl:if>'
+			 . '<xsl:apply-templates/>'
+			 . '<xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if>'
 			 . '</xsl:for-each>'
 			 . '</xsl:template>';
 
@@ -1235,8 +1235,11 @@ class ConfigBuilder
 			}
 		}
 
-		$xsl .= $this->xsl;
-		$xsl .= '<xsl:template match="st" /><xsl:template match="et" /><xsl:template match="i" /></xsl:stylesheet>';
+		$xsl .= $this->xsl
+		      . '<xsl:template match="st"/>'
+		      . '<xsl:template match="et"/>'
+		      . '<xsl:template match="i"/>'
+		      . '</xsl:stylesheet>';
 
 		return $xsl;
 	}
