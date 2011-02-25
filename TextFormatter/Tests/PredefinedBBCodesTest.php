@@ -36,25 +36,28 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 	/**
 	* @dataProvider provider
 	*/
-	public function testPredefinedBBCodes($text, $expected, array $expectedLog = array())
+	public function testPredefinedBBCodes($text, $expected, $expectedLog = array(), $args = array())
 	{
 		preg_match('#(?<=\\[)[a-z_0-9]+#i', $text, $m);
-		$bbcodeId = $m[0];
+		array_unshift($args, $m[0]);
 
 		$cb = new ConfigBuilder;
-		$cb->addPredefinedBBCode($bbcodeId);
+		call_user_func_array(array($cb, 'addPredefinedBBCode'), $args);
 
 		$parser = $cb->getParser();
 
 		$actual = $cb->getRenderer()->render($parser->parse($text));
 		$this->assertSame($expected, $actual);
 
-		$actualLog = $parser->getLog();
-
-		foreach (array_keys($expectedLog) as $type)
+		if (isset($expectedLog))
 		{
-			$this->assertArrayHasKey($type, $actualLog);
-			$this->assertEquals($expectedLog[$type], $actualLog[$type]);
+			$actualLog = $parser->getLog();
+
+			foreach (array_keys($expectedLog) as $type)
+			{
+				$this->assertArrayHasKey($type, $actualLog);
+				$this->assertEquals($expectedLog[$type], $actualLog[$type]);
+			}
 		}
 	}
 
@@ -296,6 +299,28 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				[HR /]
 				b',
 				'a<hr>b'
+			),
+			array(
+				'[QUOTE]this is a quote[/QUOTE]',
+				'<blockquote class="uncited"><div>this is a quote</div></blockquote>'
+			),
+			array(
+				'[QUOTE="Author"]this is a quote[/QUOTE]',
+				'<blockquote><div><cite>Author wrote:</cite>this is a quote</div></blockquote>'
+			),
+			// change the "%s wrote:" string
+			array(
+				'[QUOTE="Author"]this is a quote[/QUOTE]',
+				'<blockquote><div><cite>Author said:</cite>this is a quote</div></blockquote>',
+				null,
+				array(99, '%s said:')
+			),
+			// limit quote nesting to 2
+			array(
+				'[QUOTE][QUOTE][QUOTE="Author"]this is a quote[/QUOTE][/QUOTE][/QUOTE]',
+				'<blockquote class="uncited"><div><blockquote class="uncited"><div>[QUOTE="Author"]this is a quote</div></blockquote></div></blockquote>[/QUOTE]',
+				null,
+				array(2)
 			),
 		);
 	}

@@ -445,9 +445,57 @@ class PredefinedBBCodes
 		$this->cb->setBBCodeTemplate('HR', '<hr/>');
 	}
 
-/**
-	public function addQUOTE($nestingLevel = 3)
+	/**
+	* Classic [QUOTE] tag
+	*
+	* The author can be specified in the default param.
+	* You can limit the nesting level (which is set to 3 by default) and you can localize the author
+	* string.
+	*
+	* @param integer $nestingLevel
+	* @param string  $authorStr
+	*/
+	public function addQUOTE($nestingLevel = 3, $authorStr = '%s wrote:')
 	{
+		$this->cb->addBBCode('QUOTE', array(
+			'nesting_limit' => $nestingLevel,
+			'default_param' => 'author',
+			'trim_before'   => true,
+			'trim_after'    => true,
+			'ltrim_content' => true,
+			'rtrim_content' => true
+		));
+
+		$authorXml = str_replace(
+			'%s',
+			'<xsl:value-of select="@author" />',
+			htmlspecialchars($authorStr)
+		);
+
+		$this->cb->addBBCodeParam('QUOTE', 'author', 'text', array('is_required' => false));
+		$this->cb->setBBCodeTemplate(
+			'QUOTE',
+			'<xsl:choose>
+				<xsl:when test="@author">
+
+					<blockquote>
+						<div>
+							<cite>' . $authorXml . '</cite>
+							<xsl:apply-templates />
+						</div>
+					</blockquote>
+
+				</xsl:when>
+				<xsl:otherwise>
+
+					<blockquote class="uncited">
+						<div>
+							<xsl:apply-templates />
+						</div>
+					</blockquote>
+
+				</xsl:otherwise>
+			</xsl:choose>'
+		);
 	}
-/**/
 }
