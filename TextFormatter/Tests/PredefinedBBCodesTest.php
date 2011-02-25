@@ -247,6 +247,17 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
+				'[TABLE]
+					[COL]
+					[COL align=right]
+					[TR]
+						[TD]cell1[/TD]
+						[TD]cell2[/TD]
+					[/TR]
+				',
+				'<table><col><col style="text-align:right"><tr><td>cell1</td><td>cell2</td></tr></table>'
+			),
+			array(
 				'[CODE=js]
 					function foo()
 					{

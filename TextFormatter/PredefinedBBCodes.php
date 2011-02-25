@@ -315,8 +315,27 @@ class PredefinedBBCodes
 		$this->cb->setBBCodeTemplate(
 			'TABLE',
 			'<table>
+				<xsl:apply-templates select="COL" />
 				<xsl:apply-templates select="TR" />
 			</table>'
+		);
+
+		$this->cb->addBBCode('COL', array(
+			'default_rule' => 'deny',
+			'auto_close'   => true
+		));
+		$this->cb->addBBCodeRule('COL', 'require_parent', 'TABLE');
+		$this->cb->addBBCodeParam('COL', 'align', 'regexp', array(
+			'is_required' => false,
+			'regexp'      => '/^(?:left|right|center|align)$/iD'
+		));
+		$this->cb->setBBCodeTemplate(
+			'COL',
+			'<col>
+				<xsl:if test="@align">
+					<xsl:attribute name="style">text-align:<xsl:value-of select="@align" /></xsl:attribute>
+				</xsl:if>
+			</col>'
 		);
 
 		$this->cb->addBBCode('TR');
