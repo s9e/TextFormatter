@@ -569,6 +569,14 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
+				'[X={CHOICE:foo,bar:DEFAULT=foo}][/X]',
+				array(
+					'type'   => 'regexp',
+					'regexp' => '/^(?:foo|bar)$/iD',
+					'default_value' => 'foo'
+				)
+			),
+			array(
 				'[X={CHOICE:pokémon,digimon}][/X]',
 				array(
 					'type'   => 'regexp',

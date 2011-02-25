@@ -561,7 +561,8 @@ class ConfigBuilder
 		$preFilter   = '(?P<preFilter>(?:' . $allowedCallbacks . ':)*)';
 		$postFilter  = '(?P<postFilter>(?::' . $allowedCallbacks . ')*)';
 		$type        = '(?P<type>' . implode('|', $typeRegexps) . ')';
-		$placeholder = '\\{' . $preFilter . $type . $postFilter. '\\}';
+		$defaultVal  = '(?P<defaultVal>\\:DEFAULT=.+?)?';
+		$placeholder = '\\{' . $preFilter . $type . $defaultVal . $postFilter. '\\}';
 		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
 
 		$regexp = '#'
@@ -584,6 +585,7 @@ class ConfigBuilder
 			'choices',
 			'preFilter',
 			'postFilter',
+			'defaultVal',
 			'type'
 		);
 
@@ -664,6 +666,7 @@ class ConfigBuilder
 			$preFilter  = $m['preFilter'];
 			$identifier = $m['type'];
 			$postFilter = $m['postFilter'];
+			$defaultVal = ($m['defaultVal']) ? substr($m['defaultVal'], 9) : null;
 
 			if (isset($params[$paramName]))
 			{
@@ -747,6 +750,11 @@ class ConfigBuilder
 			if ($postFilter)
 			{
 				$paramConf['post_filter'] = explode(':', ltrim($postFilter, ':'));
+			}
+
+			if (isset($defaultVal))
+			{
+				$paramConf['default_value'] = $defaultVal;
 			}
 
 			$params[$paramName] = $paramConf;
