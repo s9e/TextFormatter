@@ -981,8 +981,7 @@ class ConfigBuilder
 		* As a side-effect, when someone bans *.example.com it also bans example.com (no subdomain)
 		* but that's usually what people were trying to achieve.
 		*/
-		$this->filters['url']['disallowed_hosts'][]
-			= preg_replace('#^\\*?\\.#', '', $host);
+		$this->filters['url']['disallowed_hosts'][] = ltrim($host, '*.');
 	}
 
 	public function getFiltersConfig()
