@@ -778,7 +778,7 @@ class ConfigBuilder
 	* Takes a lowercased BBCode name and return a canonical BBCode ID with aliases resolved
 	*
 	* @param  string $bbcodeId BBCode name
-	* @return string            BBCode ID, uppercased and with with aliases resolved
+	* @return string           BBCode ID, uppercased and with with aliases resolved
 	*/
 	protected function normalizeBBCodeId($bbcodeId)
 	{
