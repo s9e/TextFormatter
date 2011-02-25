@@ -38,7 +38,7 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 	*/
 	public function testPredefinedBBCodes($text, $expected, array $expectedLog = array())
 	{
-		preg_match('#[a-z_0-9]+#i', $text, $m);
+		preg_match('#(?<=\\[)[a-z_0-9]+#i', $text, $m);
 		$bbcodeId = $m[0];
 
 		$cb = new ConfigBuilder;
@@ -271,7 +271,21 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 						echo "[CODE]lol nested tags[/CODE]";
 					}
 				</pre>'
-			)
+			),
+			array(
+				'a[HR /]b',
+				'a<hr>b'
+			),
+			array(
+				'a[HR][/HR]b',
+				'a<hr>b'
+			),
+			array(
+				'a
+				[HR /]
+				b',
+				'a<hr>b'
+			),
 		);
 	}
 }

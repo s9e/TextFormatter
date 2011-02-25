@@ -413,6 +413,17 @@ class PredefinedBBCodes
 		));
 	}
 
+	public function addHR()
+	{
+		$this->cb->addBBCode('HR', array(
+			'default_rule' => 'deny',
+			'trim_before'  => true,
+			'trim_after'   => true
+		));
+
+		$this->cb->setBBCodeTemplate('HR', '<hr/>');
+	}
+
 /**
 	public function addQUOTE($nestingLevel = 3)
 	{
