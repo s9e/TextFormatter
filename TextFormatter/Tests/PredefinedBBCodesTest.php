@@ -322,6 +322,18 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				null,
 				array(2)
 			),
+			array(
+				'[EMAIL]admin@example.org[/EMAIL]',
+				'<a href="mailto:admin%40example.org">admin@example.org</a>'
+			),
+			array(
+				'[EMAIL=admin@example.org]email me![/EMAIL]',
+				'<a href="mailto:admin%40example.org">email me!</a>'
+			),
+			array(
+				'[EMAIL=admin@example.org subject="hello admin@example.org!"]email me![/EMAIL]',
+				'<a href="mailto:admin%40example.org?subject=hello%20admin%40example.org%21">email me!</a>'
+			),
 		);
 	}
 }

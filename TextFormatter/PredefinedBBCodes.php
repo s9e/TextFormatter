@@ -499,4 +499,37 @@ class PredefinedBBCodes
 			</xsl:choose>'
 		);
 	}
+
+	/**
+	* Basic [EMAIL] tag with an optional "subject" parameter
+	*
+	* The email address will be published in clear for all spambots to harvest, so you may want
+	* to write your own solution instead.
+	*/
+	public function addEMAIL()
+	{
+		$this->cb->addBBCode('EMAIL', array(
+			'default_param'    => 'email',
+			'content_as_param' => true,
+			'default_rule'     => 'deny'
+		));
+
+		$this->cb->addBBCodeParam('EMAIL', 'email', 'email', array(
+			// this will encode the @ into %40, possibly messing up with the lamest of spambots
+			'post_filter' => array('rawurlencode')
+		));
+
+		$this->cb->addBBCodeParam('EMAIL', 'subject', 'text', array(
+			'is_required' => false,
+			'post_filter' => array('rawurlencode')
+		));
+
+		$this->cb->setBBCodeTemplate(
+			'EMAIL',
+			'<a>
+				<xsl:attribute name="href">mailto:<xsl:value-of select="@email" /><xsl:if test="@subject">?subject=<xsl:value-of select="@subject" /></xsl:if></xsl:attribute>
+				<xsl:apply-templates />
+			</a>'
+		);
+	}
 }
