@@ -1227,7 +1227,7 @@ class ConfigBuilder
 			 . '</xsl:for-each>'
 			 . '</xsl:template>';
 
-		foreach ($this->bbcodes as $bbcodeId => $bbcode)
+		foreach ($this->bbcodes as $bbcode)
 		{
 			if (isset($bbcode['tpl']))
 			{
