@@ -231,6 +231,29 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 		$this->assertKindaEquals($expected, $actual);
 	}
 
+	public function testDigitsAreAllowedInParamNames()
+	{
+		$cb = new ConfigBuilder;
+		$cb->addBBCodeFromExample('[x crc32={INT}][/x]', '<br/>');
+
+		$config = $cb->getBBCodeConfig();
+
+		$text     = '[x crc32="foo" /]';
+		$actual   = $this->parse($text, $config);
+		$expected = array(
+			'tags' => array(
+				array(
+					'name'   => 'X',
+					'pos'    => 0,
+					'len'    => 17,
+					'params' => array('crc32' => 'foo')
+				)
+			)
+		);
+
+		$this->assertKindaEquals($expected, $actual);
+	}
+
 	/**
 	* @dataProvider getInvalidStuff
 	*/
@@ -243,7 +266,6 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 	public function getInvalidStuff()
 	{
 		return array(
-
 			array(
 				'[x foo=" /]',
 				array(

@@ -1386,10 +1386,8 @@ class Parser
 					{
 						/**
 						* Capture the param name
-						*
-						* @todo ConfigBuilder allows digits in param names
 						*/
-						$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ', $rpos);
+						$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', $rpos);
 
 						if (!$spn)
 						{
