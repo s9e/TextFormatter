@@ -195,6 +195,12 @@ class PredefinedBBCodes
 		$this->cb->setBBCodeTemplate('LI', '<li><xsl:apply-templates/></li>');
 	}
 
+	/**
+	* Accepts both URLs and identifiers:
+	*
+	* [GOOGLEVIDEO]-4381488634998231167[/GOOGLEVIDEO]
+	* [GOOGLEVIDEO]http://video.google.com/videoplay?docid=-4381488634998231167[/GOOGLEVIDEO]
+	*/
 	public function addGOOGLEVIDEO()
 	{
 		$regexp =
@@ -215,17 +221,13 @@ class PredefinedBBCodes
 
 	/**
 	* Accepts both URLs and identifiers:
+	*
 	* [YOUTUBE]-cEzsCAzTak[/YOUTUBE]
 	* [YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]
 	*/
 	public function addYOUTUBE()
 	{
 		$this->cb->addBBCodeFromExample(
-			/**
-			* Using forward slashes / in regexps messes the ConfigBuilder, that's why we're using
-			* the escape sequence \x2F instead. Alternatively, we could just use the standard way
-			* to add BBCodes, via addBBCode() and the likes
-			*/
 			'[youtube]{REGEXP:/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?([A-Za-z_0-9\\-]+)(&.*)?$/:$1}[/youtube]',
 			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/{REGEXP}" /><param name="wmode" value="transparent"/></object>'
 		);
