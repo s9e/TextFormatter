@@ -144,6 +144,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeParam('LIST', 'start', 'uint', array('is_required' => false));
 
 		$this->cb->addBBCodeParam('LIST', 'style', 'regexp', array(
+			'default_value' => 'disc',
 			'is_required' => false,
 			'regexp' => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
 		));
@@ -152,7 +153,6 @@ class PredefinedBBCodes
 			'LIST',
 			'<ol>
 				<xsl:attribute name="style">list-style-type:<xsl:choose>
-					<xsl:when test="not(@style)">disc</xsl:when>
 					<xsl:when test="@style=\'1\'">decimal</xsl:when>
 					<xsl:when test="@style=\'01\'">decimal-leading-zero</xsl:when>
 					<xsl:when test="@style=\'a\'">lower-alpha</xsl:when>
