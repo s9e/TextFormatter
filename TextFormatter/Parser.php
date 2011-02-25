@@ -1492,6 +1492,8 @@ class Parser
 					continue;
 				}
 
+				$usesContent = false;
+
 				if ($type === self::START_TAG
 				 && isset($bbcode['default_param'])
 				 && !isset($params[$bbcode['default_param']])
@@ -1512,8 +1514,18 @@ class Parser
 					{
 						$params[$bbcode['default_param']]
 							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
+
+						$usesContent = true;
 					}
 				}
+			}
+
+			if ($type === self::START_TAG
+			 && !$usesContent
+			 && !empty($bbcode['auto_close'])
+			 && strtoupper(substr($text, 1 + $rpos, 3 + strlen($bbcodeId))) !== '[/' . $bbcodeId . ']')
+			{
+				$type |= self::END_TAG;
 			}
 
 			$tags[] = array(

@@ -81,6 +81,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCode('IMG', array(
 			'default_param'    => 'src',
 			'content_as_param' => true,
+			'auto_close'       => true,
 			'default_rule'     => 'deny'
 		));
 
@@ -417,6 +418,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->addBBCode('HR', array(
 			'default_rule' => 'deny',
+			'auto_close'   => true,
 			'trim_before'  => true,
 			'trim_after'   => true
 		));

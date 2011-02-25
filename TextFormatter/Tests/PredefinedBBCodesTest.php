@@ -98,9 +98,9 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'<img src="http://www.example.org/img.png">'
 			),
 			array(
-				// extraneous content is ignored
+				// [IMG] tag is automatically closed if it doesn't use its content as URL
 				'[IMG=http://www.example.org/img.png]TEXT[/IMG]',
-				'<img src="http://www.example.org/img.png">'
+				'<img src="http://www.example.org/img.png">TEXT[/IMG]'
 			),
 			array(
 				'[IMG alt="alt text"]http://www.example.org/img.png[/IMG]',
