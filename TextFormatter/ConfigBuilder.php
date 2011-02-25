@@ -673,43 +673,48 @@ class ConfigBuilder
 
 			foreach ($typeRegexps as $type => $regexp)
 			{
-				if (preg_match('#^' . $regexp . '$#D', $identifier, $m))
+				if (!preg_match('#^' . $regexp . '$#D', $identifier, $m))
 				{
-					$paramConf['type'] = $type;
-
-					switch ($type)
-					{
-						case 'regexp':
-							$paramConf['regexp'] = $m['regexp'];
-						
-							if (isset($m['replace']))
-							{
-								$paramConf['replace'] = $m['replace'];
-							}
-							break;
-
-						case 'choice':
-							$regexp = '/^' . self::buildRegexpFromList(explode(',', $m['choices'])) . '$/iD';
-
-							if (preg_match('#[\\x80-\\xff]#', $regexp))
-							{
-								// Unicode mode needed
-								$regexp .= 'u';
-							}
-
-							$paramConf['type']   = 'regexp';
-							$paramConf['regexp'] = $regexp;
-							break;
-
-						case 'range':
-							$paramConf['min']  = (int) $m['min'];
-							$paramConf['max']  = (int) $m['max'];
-							break;
-
-						default:
-							$paramConf['type'] = rtrim(strtolower($identifier), '1234567890');
-					}
+					continue;
 				}
+
+				switch ($type)
+				{
+					case 'regexp':
+						$paramConf['type']   = 'regexp';
+						$paramConf['regexp'] = $m['regexp'];
+					
+						if (isset($m['replace']))
+						{
+							$paramConf['replace'] = $m['replace'];
+						}
+						break;
+
+					case 'choice':
+						$regexp = '/^' . self::buildRegexpFromList(explode(',', $m['choices'])) . '$/iD';
+
+						if (preg_match('#[\\x80-\\xff]#', $regexp))
+						{
+							// Unicode mode needed
+							$regexp .= 'u';
+						}
+
+						$paramConf['type']   = 'regexp';
+						$paramConf['regexp'] = $regexp;
+						break;
+
+					case 'range':
+						$paramConf['type'] = 'range';
+						$paramConf['min']  = (int) $m['min'];
+						$paramConf['max']  = (int) $m['max'];
+						break;
+
+					default:
+						$paramConf['type'] = rtrim(strtolower($identifier), '1234567890');
+				}
+
+				// exit the loop once we've got a hit
+				break;
 			}
 
 			// @codeCoverageIgnoreStart
