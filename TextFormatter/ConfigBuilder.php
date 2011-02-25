@@ -1086,7 +1086,7 @@ class ConfigBuilder
 			* simply safer. Also, we only match low ASCII because we don't know whether the final
 			* regexp will be run in Unicode mode.
 			*/
-			'#\\(\\?:([A-Z_0-9](?:\\|[A-Z_0-9])*)\\)#u',
+			'#\\(\\?:([A-Z_0-9](?:\\|[A-Z_0-9])*)\\)#',
 			function($m)
 			{
 				return '[' . preg_quote(str_replace('|', '', $m[1]), '#') . ']';
