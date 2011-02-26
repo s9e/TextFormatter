@@ -338,6 +338,10 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[EMAIL=admin@example.org subject="hello admin@example.org!"]email me![/EMAIL]',
 				'<a href="mailto:admin%40example.org?subject=hello%20admin%40example.org%21">email me!</a>'
 			),
+			array(
+				'[JUSTIN]http://www.justin.tv/justin[/JUSTIN]',
+				'<object type="application/x-shockwave-flash" height="300" width="400" data="http://www.justin.tv/widgets/live_embed_player.swf?channel=justin" bgcolor="#000000"><param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always"><param name="allowNetworking" value="all"><param name="movie" value="http://www.justin.tv/widgets/live_embed_player.swf"><param name="flashvars" value="channel=justin&amp;auto_play=false"></object>'
+			),
 		);
 	}
 }

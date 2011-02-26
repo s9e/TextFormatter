@@ -544,4 +544,26 @@ class PredefinedBBCodes
 			</a>'
 		);
 	}
+
+	/**
+	* Accepts both URLs and identifiers:
+	*
+	* [JUSTIN]justin[/JUSTIN]
+	* [JUSTIN]http://www.justin.tv/justin[/JUSTIN]
+	*/
+	public function addJUSTIN()
+	{
+		$regexp = '/(?:' . preg_quote('http://www.justin.tv/', '/') . ')?([A-Za-z_0-9]+)/';
+
+		$this->cb->addBBCodeFromExample(
+			'[JUSTIN]{REGEXP:' . $regexp . ':$1}[/JUSTIN]',
+			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={REGEXP}" bgcolor="#000000">
+				<param name="allowFullScreen" value="true" />
+				<param name="allowScriptAccess" value="always" />
+				<param name="allowNetworking" value="all" />
+				<param name="movie" value="http://www.justin.tv/widgets/live_embed_player.swf" />
+				<param name="flashvars" value="channel={REGEXP}&amp;auto_play=false" />
+			</object>'
+		);
+	}
 }
