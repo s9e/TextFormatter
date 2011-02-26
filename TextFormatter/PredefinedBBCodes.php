@@ -553,7 +553,7 @@ class PredefinedBBCodes
 	*/
 	public function addJUSTIN()
 	{
-		$regexp = '/(?:' . preg_quote('http://www.justin.tv/', '/') . ')?([A-Za-z_0-9]+)/';
+		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?([A-Za-z_0-9]+)/';
 
 		$this->cb->addBBCodeFromExample(
 			'[JUSTIN]{REGEXP:' . $regexp . ':$1}[/JUSTIN]',
