@@ -473,7 +473,7 @@ class ConfigBuilder
 		$xpath = new DOMXPath($dom);
 		foreach ($xpath->query('//@*') as $attr)
 		{
-			$attr->value = preg_replace_callback(
+			$attr->value = htmlspecialchars(preg_replace_callback(
 				'#\\{[A-Z]+[0-9]*?\\}#',
 				function ($m) use ($placeholders, $flags)
 				{
@@ -493,7 +493,7 @@ class ConfigBuilder
 					return '{' . $placeholders[$identifier] . '}';
 				},
 				$attr->value
-			);
+			));
 		}
 
 		/**
