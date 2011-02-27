@@ -1529,7 +1529,7 @@ class Parser
 				/**
 				* Make sure that the start tag isn't immediately followed by an endtag
 				*/
-				if (!preg_match('#' . preg_quote($endTag, '#') . '#iA', $text, $void, 0, 1 + $rpos))
+				if (strtoupper(substr($text, 1 + $rpos, strlen($endTag))) !== $endTag)
 				{
 					$type |= self::END_TAG;
 				}
