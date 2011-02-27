@@ -1522,10 +1522,17 @@ class Parser
 
 			if ($type === self::START_TAG
 			 && !$usesContent
-			 && !empty($bbcode['auto_close'])
-			 && strtoupper(substr($text, 1 + $rpos, 3 + strlen($bbcodeId))) !== '[/' . $bbcodeId . ']')
+			 && !empty($bbcode['auto_close']))
 			{
-				$type |= self::END_TAG;
+				$endTag = '[/' . $bbcodeId . $suffix . ']';
+
+				/**
+				* Make sure that the start tag isn't immediately followed by an endtag
+				*/
+				if (!preg_match('#' . preg_quote($endTag, '#') . '#iA', $text, $void, 0, 1 + $rpos))
+				{
+					$type |= self::END_TAG;
+				}
 			}
 
 			$tags[] = array(

@@ -106,6 +106,10 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'<img src="http://www.example.org/img.png">TEXT[/IMG]'
 			),
 			array(
+				'[IMG:1=http://www.example.org/img.png][/IMG:1]',
+				'<img src="http://www.example.org/img.png">'
+			),
+			array(
 				'[IMG alt="alt text"]http://www.example.org/img.png[/IMG]',
 				'<img src="http://www.example.org/img.png" alt="alt text">'
 			),
