@@ -12,6 +12,11 @@ use DOMDocument,
 
 class Renderer
 {
+	/**
+	* @var XSLTProcessor
+	*/
+	protected $proc;
+
 	public function __construct($stylesheet)
 	{
 		$xsl = new DOMDocument;
