@@ -176,7 +176,10 @@ namespace s9e\Toolkit\SimpleDOM
 					if (!empty($args)
 					 && $args[0] instanceof SimpleXMLElement)
 					{
-						$args[0] = $dom->ownerDocument->importNode(dom_import_simplexml($args[0]), true);
+						$args[0] = $dom->ownerDocument->importNode(
+							dom_import_simplexml($args[0]),
+							true
+						);
 					}
 					// no break; here
 
@@ -231,7 +234,9 @@ namespace s9e\Toolkit\SimpleDOM
 				while (++$i < $ret->length)
 				{
 					$node = $ret->item($i);
-					$list[$i] = ($node instanceof DOMText) ? $node->textContent : simplexml_import_dom($node, $class);
+					$list[$i] = ($node instanceof DOMText)
+					          ? $node->textContent
+					          : simplexml_import_dom($node, $class);
 				}
 
 				return $list;
