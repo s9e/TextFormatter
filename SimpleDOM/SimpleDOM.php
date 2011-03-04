@@ -727,13 +727,11 @@ namespace s9e\Toolkit\SimpleDOM
 		*/
 		public function XSLT($filepath, $useXSLCache = true)
 		{
-			// @codeCoverageIgnoreStart
 			if ($useXSLCache && extension_loaded('xslcache'))
 			{
 				$xslt = new XSLTCache;
 				$xslt->importStylesheet($filepath);
 			}
-			// @codeCoverageIgnoreEnd
 			else
 			{
 				$xsl = new DOMDocument;
