@@ -91,6 +91,19 @@ class removeNodesTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($expected_return, $return);
 	}
 
+	public function testTextNodesCanBeRemoved()
+	{
+		$node = new SimpleDOM(
+			'<foo>
+				<bar/>
+			</foo>'
+		);
+
+		$node->removeNodes('//text()');
+
+		$this->assertContains('<foo><bar/></foo>', $node->asXML());
+	}
+
 	/**
 	* @expectedException InvalidArgumentException
 	*/

@@ -967,6 +967,11 @@ namespace s9e\Toolkit\SimpleDOM
 
 		static protected function import(DOMNode $node)
 		{
+			if ($node instanceof DOMText)
+			{
+				return $node->textContent;
+			}
+
 			return simplexml_import_dom($node, get_called_class());
 		}
 		/**#@-*/
