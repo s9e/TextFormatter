@@ -42,4 +42,28 @@ class innerHTMLTest extends \PHPUnit_Framework_TestCase
 			$div->innerHTML()
 		);
 	}
+
+	public function testWriteInnerHTML()
+	{
+		$div = new SimpleDOM(
+			'<div>
+				<p>first paragraph</p>
+				<p><b>second paragraph</b></p>
+			</div>'
+		);
+
+		$ret = $div->p[0]->innerHTML('the <b>new</b> first paragraph');
+
+		// test whether it's chainable
+		$this->assertEquals($div->p[0], $ret);
+
+		// now test the result
+		$this->assertXmlStringEqualsXmlString(
+			'<div>
+				<p>the <b>new</b> first paragraph</p>
+				<p><b>second paragraph</b></p>
+			</div>',
+			$div->asXML()
+		);
+	}
 }

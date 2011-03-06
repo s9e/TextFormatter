@@ -556,16 +556,50 @@ namespace s9e\Toolkit\SimpleDOM
 		}
 
 		/**
-		* Return the content of current node as a string
+		* Return the content of current node as a string, or change its content
 		*
-		* Currently an alias for innerXML(). innerHTML implementations vary from one browser to
-		* another and I could not find a reliable specs, so innerXML will do for now.
+		* The read side is currently an alias for innerXML(). innerHTML implementations vary from
+		* one browser to another and I could not find a reliable specs, so innerXML will do for now.
 		*
-		* @return string Content of current node
+		* Note: I'm not a fan of having a method do two completely different things depending on the
+		*       number of arguments passed. However, that's how the other DOM properties work so
+		*       at least it's consistent.
+		*
+		* @param  string $html (Optional) The HTML to replace this node's content with
+		* @return string                  Content of current node 
 		*/
-		public function innerHTML()
+		public function innerHTML($html = null)
 		{
-			return $this->innerXML();
+			if (!func_num_args())
+			{
+				return $this->innerXML();
+			}
+
+			$dom = dom_import_simplexml($this);
+			$doc = $dom->ownerDocument;
+
+			while ($dom->lastChild)
+			{
+				$dom->removeChild($dom->lastChild);
+			}
+
+			$useErrors = libxml_use_internal_errors(true);
+
+			/**
+			* Create a temporary document, load the HTML.
+			* We enclose it within <html> and <body> tags so that DOM won't add them automagically
+			*/
+			$tmp = new DOMDocument;
+			$tmp->loadHTML('<html><body>' . $html . '</body></html>');
+
+			libxml_use_internal_errors($useErrors);
+
+			foreach ($tmp->getElementsByTagName('body')->item(0)->childNodes as $child)
+			{
+				$dom->appendChild($doc->importNode($child->cloneNode(true), true));
+			}
+
+			return $this;
 		}
 
 		/**
