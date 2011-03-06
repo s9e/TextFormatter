@@ -23,12 +23,12 @@ class innerHTMLTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
-	public function testHTMLEntitiesAreResolved()
+	public function testHTMLSpecialCharsAreEscaped()
 	{
 		$div = new SimpleDOM('<div>This is an &amp;ampersand</div>');
 
 		$this->assertSame(
-			'This is an &ampersand',
+			'This is an &amp;ampersand',
 			$div->innerHTML()
 		);
 	}
@@ -39,16 +39,6 @@ class innerHTMLTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame(
 			'This is an a and a n',
-			$div->innerHTML()
-		);
-	}
-
-	public function testCDATASectionsAreResolved()
-	{
-		$div = new SimpleDOM('<div>This is a <![CDATA[<CDATA>]]> section</div>');
-
-		$this->assertSame(
-			'This is a <CDATA> section',
 			$div->innerHTML()
 		);
 	}

@@ -558,25 +558,14 @@ namespace s9e\Toolkit\SimpleDOM
 		/**
 		* Return the content of current node as a string
 		*
-		* Roughly emulates the innerHTML property found in browsers, although it is not meant to
-		* perfectly match any specific implementation.
-		*
-		* @todo Write a test for HTML entities that can't be represented in the document's encoding
+		* Currently an alias for innerXML(). innerHTML implementations vary from one browser to
+		* another and I could not find a reliable specs, so innerXML will do for now.
 		*
 		* @return string Content of current node
 		*/
 		public function innerHTML()
 		{
-			$dom = dom_import_simplexml($this);
-			$doc = $dom->ownerDocument;
-
-			$html = '';
-			foreach ($dom->childNodes as $child)
-			{
-				$html .= ($child instanceof DOMText) ? $child->textContent : $doc->saveXML($child);
-			}
-
-			return $html;
+			return $this->innerXML();
 		}
 
 		/**
@@ -589,6 +578,7 @@ namespace s9e\Toolkit\SimpleDOM
 			$xml = $this->outerXML();
 			$pos = 1 + strpos($xml, '>');
 			$len = strrpos($xml, '<') - $pos;
+
 			return substr($xml, $pos, $len);
 		}
 
@@ -602,6 +592,7 @@ namespace s9e\Toolkit\SimpleDOM
 		public function outerXML()
 		{
 			$dom = dom_import_simplexml($this);
+
 			return $dom->ownerDocument->saveXML($dom);
 		}
 
