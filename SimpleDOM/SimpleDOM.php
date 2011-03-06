@@ -129,6 +129,7 @@ namespace s9e\Toolkit\SimpleDOM
 
 				'cloneNode'          => 'method',
 				'getLineNo'          => 'method',
+				'getNodePath'        => 'method',
 				'hasAttributes'      => 'method',
 				'hasChildNodes'      => 'method',
 				'isSameNode'         => 'method',
