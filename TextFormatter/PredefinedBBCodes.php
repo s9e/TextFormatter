@@ -565,6 +565,5 @@ class PredefinedBBCodes
 				<param name="flashvars" value="channel={REGEXP}&amp;auto_play=false" />
 			</object>'
 		);
-
 	}
 }
