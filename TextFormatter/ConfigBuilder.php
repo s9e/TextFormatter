@@ -478,10 +478,18 @@ class ConfigBuilder
 		*/
 		$t = 't' . md5(microtime(true) . mt_rand());
 
-		$old = libxml_use_internal_errors(true);
+		$useErrors = libxml_use_internal_errors(true);
+
 		$dom = new DOMDocument;
-		$res = $dom->loadXML('<' . $t . '>' . $tpl . '</' . $t . '>');
-		libxml_use_internal_errors($old);
+		$dom->formatOutput = false;
+		$dom->preserveWhiteSpace = false;
+
+		$res = $dom->loadXML(
+			'<?xml version="1.0" encoding="utf-8" ?>
+			<' . $t . ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $tpl . '</' . $t . '>'
+		);
+
+		libxml_use_internal_errors($useErrors);
 
 		if (!$res)
 		{
@@ -544,7 +552,7 @@ class ConfigBuilder
 
 				return '<xsl:value-of select="' . $placeholders[$identifier] . '"/>';
 			},
-			substr(trim($dom->saveXML($dom->documentElement)), 35, -36)
+			substr(trim($dom->saveXML($dom->documentElement)), 84, -36)
 		);
 
 		return $tpl;
