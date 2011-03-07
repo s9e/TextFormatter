@@ -74,11 +74,11 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 			),
 			array(
 				'[U]underlined [U]well, still underlined[/U][/U]',
-				'<span style="text-decoration: underline">underlined <span style="text-decoration: underline">well, still underlined</span></span>'
+				'<span style="text-decoration:underline">underlined <span style="text-decoration:underline">well, still underlined</span></span>'
 			),
 			array(
 				'[S]strike [S]still striked[/S][/S]',
-				'<span style="text-decoration: line-through">strike <span style="text-decoration: line-through">still striked</span></span>'
+				'<span style="text-decoration:line-through">strike <span style="text-decoration:line-through">still striked</span></span>'
 			),
 			array(
 				'[URL]http://www.example.org[/URL]',
