@@ -1152,7 +1152,7 @@ class Parser
 	* Capture tags
 	*
 	* Tokenizers share the same signature. They don't need to be part of the Parser.
-	* If this pass's config contains one of more regexps, the matches are passed as the third
+	* If this pass's config contains one or more regexps, the matches are passed as the third
 	* parameter. Tokenizers must return an array with up to two elements: "tags" which contains
 	* the captured tags, and "msgs" which contains messages to be logged
 	*
