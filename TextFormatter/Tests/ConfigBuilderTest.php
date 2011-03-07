@@ -629,12 +629,17 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
-	public function setUp()
+	public function __get($k)
 	{
-		$this->cb = new ConfigBuilder;
-		$this->cb->addBBCode('a');
-		$this->cb->addBBCode('b');
-		$this->cb->addBBCodeParam('b', 'b', 'text');
-		$this->cb->addBBCodeRule('b', 'require_parent', 'a');
+		if ($k === 'cb')
+		{
+			$this->cb = new ConfigBuilder;
+			$this->cb->addBBCode('a');
+			$this->cb->addBBCode('b');
+			$this->cb->addBBCodeParam('b', 'b', 'text');
+			$this->cb->addBBCodeRule('b', 'require_parent', 'a');
+
+			return $this->cb;
+		}
 	}
 }
