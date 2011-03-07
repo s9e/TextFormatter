@@ -697,6 +697,12 @@ class ConfigBuilder
 				}
 			}
 
+			/**
+			* Make sure the param type cannot be set via param options. I can't think of any way
+			* to exploit that but better safe than sorry
+			*/
+			unset($paramConf['type']);
+
 			foreach ($r['type'] as $type => $regexp)
 			{
 				if (!preg_match('#^' . $regexp . '$#D', $identifier, $m))
