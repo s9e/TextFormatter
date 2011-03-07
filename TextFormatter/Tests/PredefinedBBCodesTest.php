@@ -348,7 +348,7 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 			),
 			array(
 				'[LOCALTIME]2005/09/17 12:55:09 PST[/LOCALTIME]',
-				'<script type="text/javascript">document.write(new Date(1126990509*1000).toLocaleString())</script><noscript>2005/09/17 12:55:09 PST</noscript>'
+				'<span class="localtime" title="2005/09/17 12:55:09 PST"><script type="text/javascript">document.write(new Date(1126990509*1000).toLocaleString())</script><noscript>2005/09/17 12:55:09 PST</noscript></span>'
 			),
 			array(
 				'[LOCALTIME]LOL HAX?[/LOCALTIME]',
