@@ -248,7 +248,7 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'<table><tr><th>col1</th><th>col2</th></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td rowspan="2">double height</td><td>x</td></tr><tr><td>x</td></tr><tr><td>cell1</td><td>cell2</td></tr><tr><td colspan="2">double width</td></tr></table>',
 				array(
 					'error' => array(
-						array (
+						array(
 							'pos'      => 397,
 							'msg'      => 'BBCode %1$s requires %2$s as parent',
 							'params'   => array('TR', 'TABLE'),
@@ -345,6 +345,31 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 			array(
 				'[JUSTIN]http://www.justin.tv/justin[/JUSTIN]',
 				'<object type="application/x-shockwave-flash" height="300" width="400" data="http://www.justin.tv/widgets/live_embed_player.swf?channel=justin" bgcolor="#000000"><param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always"><param name="allowNetworking" value="all"><param name="movie" value="http://www.justin.tv/widgets/live_embed_player.swf"><param name="flashvars" value="channel=justin&amp;auto_play=false"></object>'
+			),
+			array(
+				'[LOCALTIME]2005/09/17 12:55:09 PST[/LOCALTIME]',
+				'<script type="text/javascript">document.write(new Date(1126990509*1000).toLocaleString())</script><noscript>2005/09/17 12:55:09 PST</noscript>'
+			),
+			array(
+				'[LOCALTIME]LOL HAX?[/LOCALTIME]',
+				'[LOCALTIME]LOL HAX?[/LOCALTIME]',
+				array(
+					'error' => array(
+						array(
+							'pos'       => 0,
+							'msg'       => 'Invalid param %s',
+							'params'    => array('localtime'),
+							'bbcodeId'  => 'LOCALTIME',
+							'paramName' => 'localtime'
+						),
+						array(
+							'pos'       => 0,
+							'msg'       => 'Missing param %s',
+							'params'    => array('localtime'),
+							'bbcodeId'  => 'LOCALTIME'
+						)
+					)
+				)
 			),
 		);
 	}

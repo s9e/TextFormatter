@@ -566,4 +566,34 @@ class PredefinedBBCodes
 			</object>'
 		);
 	}
+
+	/**
+	* Display a date using browser's locale via Javascript
+	*
+	* e.g. [LOCALTIME]2005/09/17 12:55:09 PST[/LOCALTIME]
+	*
+	* The date is parsed in PHP with strtotime(), which is used as a pre-filter, then it is
+	* validated as a number. strtotime() returns false on invalid date, so it invalid dates will be
+	* automatically rejected.
+	*
+	* Using user-supplied data in <script> tags is disallowed by ConfigBuilder by default, and the
+	* limitation has to be removed by using the third parameter. The template should still be
+	* secure, though, as only numbers are allowed and it should be impossible to inject any
+	* Javascript using the [LOCALTIME] BBCode.
+	*
+	* Finally, if Javascript is disabled, the original content is displayed via a <noscript> tag.
+	*
+	* Note the use of <xsl:apply-templates/> instead of the {NUMBER} placeholder. This is because
+	* {NUMBER} will display the value returned by strtotime() whereas <xsl:apply-templates/> will
+	* display the UNFILTERED value.
+	*/
+	public function addLOCALTIME()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[LOCALTIME]{NUMBER;PRE_FILTER=strtotime}[/LOCALTIME]',
+			'<script type="text/javascript">document.write(new Date({NUMBER}*1000).toLocaleString())</script>
+			<noscript><xsl:apply-templates /></noscript>',
+			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+		);
+	}
 }
