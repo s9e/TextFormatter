@@ -34,7 +34,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->addBBCodeFromExample(
 			'[U]{TEXT}[/U]',
-			'<span style="text-decoration: underline">{TEXT}</span>'
+			'<span style="text-decoration:underline">{TEXT}</span>'
 		);
 	}
 
@@ -42,7 +42,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->addBBCodeFromExample(
 			'[S]{TEXT}[/S]',
-			'<span style="text-decoration: line-through">{TEXT}</span>'
+			'<span style="text-decoration:line-through">{TEXT}</span>'
 		);
 	}
 
