@@ -903,9 +903,9 @@ class Parser
 
 					foreach ($missingParams as $paramName => $paramConf)
 					{
-						if (isset($paramConf['default_value']))
+						if (isset($paramConf['default']))
 						{
-							$this->currentTag['params'][$paramName] = $paramConf['default_value'];
+							$this->currentTag['params'][$paramName] = $paramConf['default'];
 						}
 					}
 
@@ -964,17 +964,17 @@ class Parser
 								'params' => array($paramName)
 							));
 
-							if (isset($paramConf['default_value']))
+							if (isset($paramConf['default']))
 							{
 								/**
 								* Use the default value
 								*/
-								$filteredVal = $paramConf['default_value'];
+								$filteredVal = $paramConf['default'];
 
 								$this->log('debug', array(
 									'pos'    => $this->currentTag['pos'],
 									'msg'    => 'Using default value %1$s for param %2$s',
-									'params' => array($paramConf['default_value'], $paramName)
+									'params' => array($paramConf['default'], $paramName)
 								));
 							}
 							else

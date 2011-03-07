@@ -62,6 +62,33 @@ class ConfigBuilder
 	*/
 	protected $predefinedBBCodes;
 
+	/**
+	* @var array Pre-filter and post-filter callbacks we allow in BBCode definitions.
+	*            We use a whitelist approach because there are so many different risky callbacks
+	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
+	*            system, etc...
+	*/
+	public $BBCodeFiltersAllowedCallbacks = array(
+		'strtolower',
+		'strtoupper',
+		'mb_strtolower',
+		'mb_strtoupper',
+		'ucfirst',
+		'ucwords',
+		'ltrim',
+		'rtrim',
+		'trim',
+		'htmlspecialchars',
+		'htmlentities',
+		'html_entity_decode',
+		'addslashes',
+		'stripslashes',
+		'addcslashes',
+		'stripcslashes',
+		'intval',
+		'strtotime'
+	);
+
 	//==========================================================================
 	// Passes
 	//==========================================================================
@@ -420,7 +447,7 @@ class ConfigBuilder
 
 	public function addBBCodeFromExample($def, $tpl, $flags = 0)
 	{
-		$def = self::parseBBCodeDefinition($def);
+		$def = $this->parseBBCodeDefinition($def);
 
 		if ($def === false)
 		{
@@ -523,76 +550,40 @@ class ConfigBuilder
 		return $tpl;
 	}
 
-	static public function parseBBCodeDefinition($def)
+	public function parseBBCodeDefinition($def)
 	{
 		/**
-		* That's the pre-filter and post-filter callbacks we allow in BBCode definitions.
-		* We use a whitelist approach because there are so many different risky callbacks that
-		* it would be highly likely to let something dangerous slip by, e.g.: unlink, system, etc...
+		* The various regexps used to parse the definition
 		*/
-		$allowedCallbacks = '(?:' . implode('|', array(
-			'strtolower',
-			'strtoupper',
-			'mb_strtolower',
-			'mb_strtoupper',
-			'ucfirst',
-			'ucwords',
-			'ltrim',
-			'rtrim',
-			'trim',
-			'htmlspecialchars',
-			'htmlentities',
-			'html_entity_decode',
-			'addslashes',
-			'stripslashes',
-			'addcslashes',
-			'stripcslashes',
-			'intval'
-		)) . ')';
-
-		$typeRegexps = array(
-			'regexp' => 'REGEXP[0-9]*:(?P<regexp>/.*?/i?)(?::(?P<replace>.*?))?',
-			'range'  => 'RANGE[0-9]*:(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
-			'choice' => 'CHOICE[0-9]*:(?P<choices>[^:\\}]+)',
-			'other'  => '[A-Z_]+[0-9]*'
+		$r = array(
+			'bbcodeId'  => '[a-zA-Z_][a-zA-Z_0-9]*',
+			'paramName' => '[a-zA-Z_][a-zA-Z_0-9]*',
+			'type' => array(
+				'regexp' => 'REGEXP[0-9]*=(?P<regexp>/.*?/i?)',
+				'range'  => 'RANGE[0-9]*=(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
+				'choice' => 'CHOICE[0-9]*=(?P<choices>.+?)',
+				'other'  => '[A-Z_]+[0-9]*'
+			),
+			'paramOptions' => '[A-Z_]+=[^;]+?'
 		);
+		$r['placeholder'] =
+			  '\\{'
+			. '(?P<type>' . implode('|', $r['type']) . ')'
+			. '(?P<paramOptions>;(?:' . $r['paramOptions'] . '))*;?'
+			. '\\}';
 
-		$bbcodeId    = '[a-zA-Z_][a-zA-Z_0-9]*';
-		$preFilter   = '(?P<preFilter>(?:' . $allowedCallbacks . ':)*)';
-		$postFilter  = '(?P<postFilter>(?::' . $allowedCallbacks . ')*)';
-		$type        = '(?P<type>' . implode('|', $typeRegexps) . ')';
-		$defaultVal  = '(?P<defaultVal>\\:DEFAULT=.+?)?';
-		$placeholder = '\\{' . $preFilter . $type . $defaultVal . $postFilter. '\\}';
-		$param       = '[a-zA-Z_][a-zA-Z_0-9]*';
+		// we remove all named captures from the placeholder for the global regexp to avoid dupes
+		$placeholder = preg_replace('#\\?P<[a-zA-Z]+>#', '?:', $r['placeholder']);
 
-		$regexp = '#'
-		        // [(BBCODE)(=paramval)?
-		        . '\\[(?P<bbcodeId>' . $bbcodeId . ')(?P<defaultParam>=' . $placeholder . ')?'
+		$regexp = '#\\['
+		        // (BBCODE)(=paramval)?
+		        . '(?P<bbcodeId>' . $r['bbcodeId'] . ')'
+		        . '(?P<defaultParam>=' . $placeholder . ')?'
 		        // (foo=fooval bar=barval)
-		        . '(?P<attrs>(?:\\s+' . $param . '=' . $placeholder . ')*)'
+		        . '(?P<attrs>(?:\\s+' . $r['paramName'] . '=' . $placeholder . ')*)'
 		        // ]({TEXT})[/BBCODE]
 		        . '(?:\\s*/\\]|\\](?P<content>' . $placeholder . ')?\\[/\\1])'
 		        . '$#D';
-
-		/**
-		* Remove the duplicate named captures from the global regexp
-		*/
-		$duplicateNamedCaptures = array(
-			'regexp',
-			'replace',
-			'min',
-			'max',
-			'choices',
-			'preFilter',
-			'postFilter',
-			'defaultVal',
-			'type'
-		);
-
-		foreach ($duplicateNamedCaptures as $name)
-		{
-			$regexp = str_replace('(?P<' . $name . '>', '(', $regexp);
-		}
 
 		if (!preg_match($regexp, trim($def), $m))
 		{
@@ -624,7 +615,7 @@ class ConfigBuilder
 		*/
 		if (isset($content))
 		{
-			preg_match('#^' . $placeholder . '$#', $content, $m);
+			preg_match('#^' . $r['placeholder'] . '$#', $content, $m);
 
 			if (preg_match('#^TEXT[0-9]*$#D', $m['type']))
 			{
@@ -654,7 +645,7 @@ class ConfigBuilder
 		}
 
 		preg_match_all(
-			'#(' . $param . ')=' . $placeholder . '#',
+			'#(' . $r['paramName'] . ')=' . $r['placeholder'] . '#',
 			$attrs,
 			$matches,
 			\PREG_SET_ORDER
@@ -663,10 +654,7 @@ class ConfigBuilder
 		foreach ($matches as $m)
 		{
 			$paramName  = strtolower($m[1]);
-			$preFilter  = $m['preFilter'];
 			$identifier = $m['type'];
-			$postFilter = $m['postFilter'];
-			$defaultVal = ($m['defaultVal']) ? substr($m['defaultVal'], 9) : null;
 
 			if (isset($params[$paramName]))
 			{
@@ -677,7 +665,37 @@ class ConfigBuilder
 				'is_required' => true
 			);
 
-			foreach ($typeRegexps as $type => $regexp)
+			if (isset($m['paramOptions']))
+			{
+				foreach (explode(';', trim($m['paramOptions'], ';')) as $pair)
+				{
+					$pos = strpos($pair, '=');
+
+					$optionName  = strtolower(substr($pair, 0, $pos));
+					$optionValue = substr($pair, 1 + $pos);
+
+					switch ($optionName)
+					{
+						case 'pre_filter':
+						case 'post_filter':
+							foreach (explode(',', $optionValue) as $callback)
+							{
+								if (!in_array($callback, $this->BBCodeFiltersAllowedCallbacks))
+								{
+									throw new \RuntimeException('Callback ' . $callback . ' is not allowed');
+								}
+
+								$paramConf[$optionName][] = $callback;
+							}
+							break;
+
+						default:
+							$paramConf[$optionName] = $optionValue;
+					}
+				}
+			}
+
+			foreach ($r['type'] as $type => $regexp)
 			{
 				if (!preg_match('#^' . $regexp . '$#D', $identifier, $m))
 				{
@@ -689,15 +707,11 @@ class ConfigBuilder
 					case 'regexp':
 						$paramConf['type']   = 'regexp';
 						$paramConf['regexp'] = $m['regexp'];
-					
-						if (isset($m['replace']))
-						{
-							$paramConf['replace'] = $m['replace'];
-						}
 						break;
 
 					case 'choice':
-						$regexp = '/^' . self::buildRegexpFromList(explode(',', $m['choices'])) . '$/iD';
+						$choices = explode(',', $m['choices']);
+						$regexp  = '/^' . self::buildRegexpFromList($choices) . '$/iD';
 
 						if (preg_match('#[\\x80-\\xff]#', $regexp))
 						{
@@ -730,7 +744,7 @@ class ConfigBuilder
 			}
 			// @codeCoverageIgnoreEnd
 
-			if ($pos = strpos($identifier, ':'))
+			if ($pos = strpos($identifier, '='))
 			{
 				$identifier = substr($identifier, 0, $pos);
 			}
@@ -741,21 +755,6 @@ class ConfigBuilder
 			}
 
 			$placeholders[$identifier] = '@' . $paramName;
-
-			if ($preFilter)
-			{
-				$paramConf['pre_filter'] = explode(':', rtrim($preFilter, ':'));
-			}
-
-			if ($postFilter)
-			{
-				$paramConf['post_filter'] = explode(':', ltrim($postFilter, ':'));
-			}
-
-			if (isset($defaultVal))
-			{
-				$paramConf['default_value'] = $defaultVal;
-			}
 
 			$params[$paramName] = $paramConf;
 		}

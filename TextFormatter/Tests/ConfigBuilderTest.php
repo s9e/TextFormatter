@@ -518,7 +518,8 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	*/
 	public function testParseSpecialPlaceholders($def, $expected)
 	{
-		$def = ConfigBuilder::parseBBCodeDefinition($def, '');
+		$cb  = new ConfigBuilder;
+		$def = $cb->parseBBCodeDefinition($def, '');
 
 		$this->assertArrayHasKey('x', $def['params']);
 
@@ -533,20 +534,20 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		return array(
 			array(
-				'[x={REGEXP:/^(?:left|center|right)$/i}]{TEXT}[/x]',
+				'[x={REGEXP=/^(?:left|center|right)$/i}]{TEXT}[/x]',
 				array(
 					'type'   => 'regexp',
 					'regexp' => '/^(?:left|center|right)$/i'
 				)
 			),
 			array(
-				'[X={strtolower:rtrim:IDENTIFIER} foo={TEXT2}]{TEXT}[/X]',
+				'[X={IDENTIFIER;PRE_FILTER=strtolower,rtrim} foo={TEXT2}]{TEXT}[/X]',
 				array(
 					'pre_filter' => array('strtolower', 'rtrim')
 				)
 			),
 			array(
-				'[X={RANGE:-2,99}][/X]',
+				'[X={RANGE=-2,99}][/X]',
 				array(
 					'type' => 'range',
 					'min'  => -2,
@@ -554,7 +555,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
-				'[X={REGEXP:/(FOO)(BAR)/:$2$1}][/X]',
+				'[X={REGEXP=/(FOO)(BAR)/;REPLACE=$2$1}][/X]',
 				array(
 					'type'    => 'regexp',
 					'regexp'  => '/(FOO)(BAR)/',
@@ -562,22 +563,22 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 				)
 			),
 			array(
-				'[X={CHOICE:foo,bar}][/X]',
+				'[X={CHOICE=foo,bar}][/X]',
 				array(
 					'type'   => 'regexp',
 					'regexp' => '/^(?:foo|bar)$/iD'
 				)
 			),
 			array(
-				'[X={CHOICE:foo,bar:DEFAULT=foo}][/X]',
+				'[X={CHOICE=foo,bar;DEFAULT=foo}][/X]',
 				array(
 					'type'   => 'regexp',
 					'regexp' => '/^(?:foo|bar)$/iD',
-					'default_value' => 'foo'
+					'default' => 'foo'
 				)
 			),
 			array(
-				'[X={CHOICE:pokémon,digimon}][/X]',
+				'[X={CHOICE=pokémon,digimon}][/X]',
 				array(
 					'type'   => 'regexp',
 					'regexp' => '/^(?:pokémon|digimon)$/iDu'
@@ -589,7 +590,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	public function testAddBBCodeFromExampleAllowsPostFilter()
 	{
 		$this->cb->addBBCodeFromExample(
-			'[X={IDENTIFIER:strtolower:rtrim} foo={TEXT2}]{TEXT}[/X]',
+			'[X={IDENTIFIER;POST_FILTER=strtolower,rtrim} foo={TEXT2}]{TEXT}[/X]',
 			'<div style="align:{IDENTIFIER}">{TEXT}</div>'
 		);
 		$config = $this->cb->getParserConfig();

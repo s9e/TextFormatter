@@ -212,7 +212,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	public function testRegexpParam()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCodeFromExample('[X={REGEXP:/^foo/i} /]', '');
+		$cb->addBBCodeFromExample('[X={REGEXP=/^foo/i} /]', '');
 
 		$text     = '[X=foobar][/X]';
 		$expected = '<rt><X x="foobar"><st>[X=foobar]</st><et>[/X]</et></X></rt>';
@@ -224,7 +224,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	public function testRegexpParamWithReplacement()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCodeFromExample('[X={REGEXP:/(L)(R)/i:$2$2$1} /]', '<x id="{REGEXP}"/>');
+		$cb->addBBCodeFromExample('[X={REGEXP=/(L)(R)/i;REPLACE=$2$2$1} /]', '<x id="{REGEXP}"/>');
 
 		$text     = '[X=http://lr.com][/X]';
 		$expected = '<rt><X x="rrl"><st>[X=http://lr.com]</st><et>[/X]</et></X></rt>';
@@ -242,7 +242,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 			// the literal "\$1" (one backslash then dollar sign then 1) followed by the literal
 			// "\\" (two backslashes)
 			// The result should be "bar$2foo\foo\$1\\"
-			'[X={REGEXP:/(L)(R)/i:$2\\$2$1\\\\$1\\\\\\$1\\\\\\\\} /]',
+			'[X={REGEXP=/(L)(R)/i;REPLACE=$2\\$2$1\\\\$1\\\\\\$1\\\\\\\\} /]',
 			'<x id="{REGEXP}"/>'
 		);
 
@@ -258,7 +258,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('X');
-		$cb->addBBCodeParam('X', 'y', 'int', array('default_value' => 123));
+		$cb->addBBCodeParam('X', 'y', 'int', array('default' => 123));
 
 		$parser = $cb->getParser();
 
@@ -274,7 +274,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb = new ConfigBuilder;
 
 		$cb->addBBCode('X');
-		$cb->addBBCodeParam('X', 'y', 'int', array('default_value' => 123));
+		$cb->addBBCodeParam('X', 'y', 'int', array('default' => 123));
 
 		$parser = $cb->getParser();
 

@@ -144,7 +144,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeParam('LIST', 'start', 'uint', array('is_required' => false));
 
 		$this->cb->addBBCodeParam('LIST', 'style', 'regexp', array(
-			'default_value' => 'disc',
+			'default' => 'disc',
 			'is_required' => false,
 			'regexp' => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
 		));
@@ -207,7 +207,7 @@ class PredefinedBBCodes
 			'/^(?:' . preg_quote('http://video.google.com/videoplay?docid=', '/') . ')?(-?\\d+)/';
 
 		$this->cb->addBBCodeFromExample(
-			'[googlevideo]{REGEXP:' . $regexp . ':$1}[/googlevideo]',
+			'[googlevideo]{REGEXP=' . $regexp . ';REPLACE=$1}[/googlevideo]',
 			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={REGEXP}" width="400" height="326">
 				<param name="movie" value="http://video.google.com/googleplayer.swf?docId={REGEXP}"/>
 				<param name="allowScriptAcess" value="sameDomain"/>
@@ -228,7 +228,7 @@ class PredefinedBBCodes
 	public function addYOUTUBE()
 	{
 		$this->cb->addBBCodeFromExample(
-			'[youtube]{REGEXP:/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?([A-Za-z_0-9\\-]+)(&.*)?$/:$1}[/youtube]',
+			'[youtube]{REGEXP=/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?([A-Za-z_0-9\\-]+)(&.*)?$/;REPLACE=$1}[/youtube]',
 			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/{REGEXP}" /><param name="wmode" value="transparent"/></object>'
 		);
 	}
@@ -236,7 +236,7 @@ class PredefinedBBCodes
 	public function addALIGN()
 	{
 		$this->cb->addBBCodeFromExample(
-			'[align={CHOICE:left,right,center,justify}]{TEXT}[/align]',
+			'[align={CHOICE=left,right,center,justify}]{TEXT}[/align]',
 			'<div style="text-align:{CHOICE}">{TEXT}</div>'
 		);
 	}
@@ -556,7 +556,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?([A-Za-z_0-9]+)/';
 
 		$this->cb->addBBCodeFromExample(
-			'[JUSTIN]{REGEXP:' . $regexp . ':$1}[/JUSTIN]',
+			'[JUSTIN]{REGEXP=' . $regexp . ';REPLACE=$1}[/JUSTIN]',
 			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={REGEXP}" bgcolor="#000000">
 				<param name="allowFullScreen" value="true" />
 				<param name="allowScriptAccess" value="always" />
@@ -565,5 +565,6 @@ class PredefinedBBCodes
 				<param name="flashvars" value="channel={REGEXP}&amp;auto_play=false" />
 			</object>'
 		);
+
 	}
 }
