@@ -582,7 +582,7 @@ class ConfigBuilder
 		        // (foo=fooval bar=barval)
 		        . '(?P<attrs>(?:\\s+' . $r['paramName'] . '=' . $placeholder . ')*)'
 		        // ]({TEXT})[/BBCODE]
-		        . '(?:\\s*/\\]|\\](?P<content>' . $placeholder . ')?\\[/\\1])'
+		        . '(?:\\s*/?\\]|\\](?P<content>' . $placeholder . ')?(?P<endTag>\\[/\\1]))'
 		        . '$#D';
 
 		if (!preg_match($regexp, trim($def), $m))
@@ -594,7 +594,15 @@ class ConfigBuilder
 		$options      = array();
 		$params       = array();
 		$placeholders = array();
-		$content      = (isset($m['content'])) ? $m['content'] : null;
+		$content      = (isset($m['content'])) ? $m['content'] : '';
+
+		/**
+		* Auto-close the BBCode if no end tag is specified
+		*/
+		if (empty($m['endTag']))
+		{
+			$options['auto_close'] = true;
+		}
 
 		/**
 		* If we have a default param in $m[2], we prepend the definition to the attribute pairs.
@@ -613,7 +621,7 @@ class ConfigBuilder
 		* to save space. Instead, templates will rely on the node's textContent, which we adjust to
 		* ignore the node's <st/> and <et/> children
 		*/
-		if (isset($content))
+		if ($content !== '')
 		{
 			preg_match('#^' . $r['placeholder'] . '$#', $content, $m);
 

@@ -629,6 +629,16 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
+	public function testAddBBCodeFromExampleHandlesSingletons()
+	{
+		$this->cb->addBBCodeFromExample('[HR/]', '<hr/>');
+
+		$config = $this->cb->getBBCodeConfig();
+
+		$this->assertArrayHasKey('auto_close', $config['bbcodes']['HR']);
+		$this->assertTrue($config['bbcodes']['HR']['auto_close']);
+	}
+
 	public function setUp()
 	{
 		$this->cb = new ConfigBuilder;
