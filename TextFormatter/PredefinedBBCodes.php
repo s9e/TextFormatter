@@ -596,4 +596,31 @@ class PredefinedBBCodes
 			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
 		);
 	}
+
+	/**
+	* Basic [SPOILER] tag
+	*
+	* It is unstyled, you have to style it yourself. Each section was given a nice class name for
+	* that purpose.
+	*
+	* Note that because of XSL, curly braces { } inside of attribute values have to be escaped.
+	* You can escape them by having two of them, e.g. "if (true) {{ dostuff(); }}"
+	*/
+	public function addSPOILER($spoilerStr = 'Spoiler:', $showStr = 'Show', $hideStr = 'Hide')
+	{
+		$this->cb->addBBCodeFromExample(
+			'[SPOILER={TEXT1;IS_REQUIRED=0}]{TEXT2}[/SPOILER]',
+			'<div class="spoiler">
+				<div class="spoiler-header">
+					<input type="button" value="' . $showStr . '" onclick="'
+						. 'var s=this.parentNode.nextSibling.style;'
+						. "if(s.display!=''){{s.display='';this.value='" . $hideStr . "'}}"
+						. "else{{s.display='none';this.value='" . $showStr . "'}}"
+					. '"/>
+					<span class="spoiler-title">' . $spoilerStr . ' {TEXT1}</span>
+				</div>
+				<div class="spoiler-content" style="display:none">{TEXT2}</div>
+			</div>'
+		);
+	}
 }

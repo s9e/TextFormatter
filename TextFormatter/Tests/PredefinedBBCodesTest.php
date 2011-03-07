@@ -371,6 +371,14 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 					)
 				)
 			),
+			array(
+				'[SPOILER]Spoiler content[/SPOILER]',
+				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none">Spoiler content</div></div>'
+			),
+			array(
+				'[SPOILER="Spoiler title"]Spoiler content[/SPOILER]',
+				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: Spoiler title</span></div><div class="spoiler-content" style="display:none">Spoiler content</div></div>'
+			),
 		);
 	}
 }
