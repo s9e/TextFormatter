@@ -530,6 +530,14 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		}
 	}
 
+	/**
+	* @expectedException RuntimeException allowed
+	*/
+	public function testAddBBCodeFromExampleRejectsUnauthorizedCallbacks()
+	{
+		$this->cb->addBBCodeFromExample('[B={TEXT;POST_FILTER=eval}][/B]', 'LOL HAX');
+	}
+
 	public function getSpecialPlaceholdersData()
 	{
 		return array(
