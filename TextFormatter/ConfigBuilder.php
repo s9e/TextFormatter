@@ -685,7 +685,9 @@ class ConfigBuilder
 									throw new \RuntimeException('Callback ' . $callback . ' is not allowed');
 								}
 
-								$paramConf[$optionName][] = $callback;
+								$paramConf[$optionName][] = (strpos($callback, '::') !== false)
+								                          ? explode('::', $callback)
+								                          : $callback;
 							}
 							break;
 

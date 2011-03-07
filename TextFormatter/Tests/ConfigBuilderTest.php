@@ -538,6 +538,23 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->cb->addBBCodeFromExample('[B={TEXT;POST_FILTER=eval}][/B]', 'LOL HAX');
 	}
 
+	public function testAddBBCodeFromExampleAcceptsStaticCallbacks()
+	{
+		$cb = new ConfigBuilder;
+		$cb->BBCodeFiltersAllowedCallbacks[] = 'class::method';
+
+		$cb->addBBCodeFromExample('[B={TEXT;POST_FILTER=class::method}][/B]', '');
+
+		$config = $cb->getBBCodeConfig();
+
+		$this->assertTrue(isset($config['bbcodes']['B']['params']['b']));
+		$this->assertArrayHasKey('post_filter', $config['bbcodes']['B']['params']['b']);
+		$this->assertEquals(
+			array(array('class', 'method')),
+			$config['bbcodes']['B']['params']['b']['post_filter']
+		);
+	}
+
 	public function getSpecialPlaceholdersData()
 	{
 		return array(
