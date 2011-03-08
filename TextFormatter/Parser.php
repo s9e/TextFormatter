@@ -421,14 +421,15 @@ class Parser
 			$xml->text(substr($this->text, $pos, $tag['pos'] - $pos));
 
 			/**
-			* Capture the part of the text that belongs to this tag then move the cursor
+			* Capture the part of the text that belongs to this tag then move the cursor past
+			* current tag
 			*/
 			$text = substr($this->text, $tag['pos'], $tag['len']);
 			$pos  = $tag['pos'] + $tag['len'];
 
 			if (!empty($tag['trim_before']))
 			{
-				$xml->writeElement('i', substr($this->text, $pos, $tag['trim_before']));
+				$xml->writeElement('i', substr($text, 0, $tag['trim_before']));
 
 				$text = substr($text, $tag['trim_before']);
 			}
@@ -541,6 +542,11 @@ class Parser
 	*/
 	protected function addTrimmingInfoToTag(array &$tag, $offset)
 	{
+		$tag += array(
+			'trim_before' => 0,
+			'trim_after'  => 0
+		);
+
 		$bbcode = $this->passes['BBCode']['bbcodes'][$tag['name']];
 
 		/**
@@ -550,9 +556,14 @@ class Parser
 		if (($tag['type']  &  self::START_TAG && !empty($bbcode['trim_before']))
 		 || ($tag['type'] === self::END_TAG   && !empty($bbcode['rtrim_content'])))
 		{
-			$tag['trim_before'] = strspn(strrev(substr($this->text, $offset, $tag['pos'] - $offset)), self::TRIM_CHARLIST);
-			$tag['len']        += $tag['trim_before'];
-			$tag['pos']        -= $tag['trim_before'];
+			$spn = strspn(
+				strrev(substr($this->text, $offset, $tag['pos'] - $offset)),
+				self::TRIM_CHARLIST
+			);
+
+			$tag['trim_before'] += $spn;
+			$tag['len']         += $spn;
+			$tag['pos']         -= $spn;
 		}
 
 		/**
@@ -567,8 +578,10 @@ class Parser
 		if (($tag['type'] === self::START_TAG && !empty($bbcode['ltrim_content']))
 		 || ($tag['type']  &  self::END_TAG   && !empty($bbcode['trim_after'])))
 		{
-			$tag['trim_after']  = strspn($this->text, self::TRIM_CHARLIST, $offset);
-			$tag['len']        += $tag['trim_after'];
+			$spn = strspn($this->text, self::TRIM_CHARLIST, $offset);
+
+			$tag['trim_after'] += $spn;
+			$tag['len']        += $spn;
 		}
 	}
 
