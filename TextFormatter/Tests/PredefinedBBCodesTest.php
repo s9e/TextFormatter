@@ -379,6 +379,14 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[SPOILER="Spoiler title"]Spoiler content[/SPOILER]',
 				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: Spoiler title</span></div><div class="spoiler-content" style="display:none">Spoiler content</div></div>'
 			),
+			array(
+				'[COLOR=red]Red stuff[/COLOR]',
+				'<span style="color:red">Red stuff</span>'
+			),
+			array(
+				'[COLOR=#ff0]Yellow stuff[/COLOR]',
+				'<span style="color:#ff0">Yellow stuff</span>'
+			),
 		);
 	}
 }

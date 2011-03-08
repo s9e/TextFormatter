@@ -625,4 +625,12 @@ class PredefinedBBCodes
 			</div>'
 		);
 	}
+
+	public function addCOLOR()
+	{
+		$this->cb->addBBCodeFromExample(
+			'[COLOR={COLOR}]{TEXT}[/COLOR]',
+			'<span style="color:{COLOR}">{TEXT}</span>'
+		);
+	}
 }
