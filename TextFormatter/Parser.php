@@ -418,25 +418,35 @@ class Parser
 		$pos = 0;
 		foreach ($this->tags as $tag)
 		{
+			/**
+			* Append the text that's between last tag and this one
+			*/
 			$xml->text(substr($this->text, $pos, $tag['pos'] - $pos));
 
 			/**
 			* Capture the part of the text that belongs to this tag then move the cursor past
 			* current tag
 			*/
-			$text = substr($this->text, $tag['pos'], $tag['len']);
-			$pos  = $tag['pos'] + $tag['len'];
+			$tagText = substr($this->text, $tag['pos'], $tag['len']);
+			$pos = $tag['pos'] + $tag['len'];
 
-			if (!empty($tag['trim_before']))
+			$wsBefore = $wsAfter = '';
+
+			if ($tag['trim_before'])
 			{
-				$xml->writeElement('i', substr($text, 0, $tag['trim_before']));
-
-				$text = substr($text, $tag['trim_before']);
+				$wsBefore = substr($tagText, 0, $tag['trim_before']);
+				$tagText  = substr($tagText, $tag['trim_before']);
 			}
 
-			if (!empty($tag['trim_after']))
+			if ($tag['trim_after'])
 			{
-				$text = substr($text, 0, -$tag['trim_after']);
+				$wsAfter = substr($tagText, -$tag['trim_after']);
+				$tagText = substr($tagText, 0, -$tag['trim_after']);
+			}
+
+			if ($wsBefore > '')
+			{
+				$xml->writeElement('i', $wsBefore);
 			}
 
 			if ($tag['type'] & self::START_TAG)
@@ -451,34 +461,37 @@ class Parser
 					}
 				}
 
-				if ($text > '')
+				if ($tagText > '')
 				{
 					if ($tag['type'] & self::END_TAG)
 					{
-						$xml->text($text);
+						$xml->text($tagText);
 						$xml->endElement();
 					}
 					else
 					{
-						$xml->writeElement('st', $text);
+						$xml->writeElement('st', $tagText);
 					}
 				}
 			}
 			else
 			{
-				if ($text > '')
+				if ($tagText > '')
 				{
-					$xml->writeElement('et', $text);
+					$xml->writeElement('et', $tagText);
 				}
 				$xml->endElement();
 			}
 
-			if (!empty($tag['trim_after']))
+			if ($wsAfter > '')
 			{
-				$xml->writeElement('i', substr($this->text, $pos - $tag['trim_after'], $tag['trim_after']));
+				$xml->writeElement('i', $wsAfter);
 			}
 		}
 
+		/**
+		* Append the rest of the text, past the last tag
+		*/
 		if ($pos < strlen($this->text))
 		{
 			$xml->text(substr($this->text, $pos));
