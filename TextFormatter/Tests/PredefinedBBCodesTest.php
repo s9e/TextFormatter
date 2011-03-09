@@ -410,6 +410,14 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[SIZE=200]big [SIZE=200]bigger?[/SIZE][/SIZE]',
 				'<span style="font-size:200%">big [SIZE=200]bigger?</span>[/SIZE]'
 			),
+			array(
+				'[BLIP]4854905[/BLIP]',
+				'<embed src="http://blip.tv/play/4854905" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
+			),
+			array(
+				'[BLIP]http://blip.tv/file/4854905/[/BLIP]',
+				'<embed src="http://blip.tv/play/4854905" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
+			),
 		);
 	}
 }

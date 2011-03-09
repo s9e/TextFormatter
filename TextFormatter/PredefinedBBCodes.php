@@ -677,4 +677,15 @@ class PredefinedBBCodes
 			array('nesting_limit' => 1)
 		);
 	}
+
+	public function addBLIP()
+	{
+		$regexp = '/^(?:' . preg_quote('http://blip.tv/file/', '/') . ')?([0-9]+)/';
+
+		// HTML taken straight from Blip's player "Copy embed code" feature
+		$this->cb->addBBCodeFromExample(
+			'[BLIP]{REGEXP=' . $regexp . ';REPLACE=$1}[/BLIP]',
+			'<embed src="http://blip.tv/play/{REGEXP}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
+		);
+	}
 }
