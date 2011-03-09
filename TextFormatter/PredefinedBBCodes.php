@@ -245,8 +245,9 @@ class PredefinedBBCodes
 	*/
 	public function addYOUTUBE()
 	{
+		// note, we capture 5 chars or more {5,} to avoid capturing "http"
 		$regexp = '/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?'
-		        . '([A-Za-z_0-9\\-]+)(?:&.*)?$/';
+		        . '([A-Za-z_0-9\\-]{5,})/';
 
 		$this->cb->addBBCodeFromExample(
 			'[youtube]{REGEXP=' . $regexp . ';REPLACE=$1}[/youtube]',
