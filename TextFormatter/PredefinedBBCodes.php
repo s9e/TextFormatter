@@ -699,4 +699,21 @@ class PredefinedBBCodes
 			'<iframe src="http://player.vimeo.com/video/{REGEXP}" width="400" height="225" frameborder="0"></iframe>'
 		);
 	}
+
+	public function addDAILYMOTION()
+	{
+		$regexp = '/^(?:' . preg_quote('http://www.dailymotion.com/video/', '/') . ')?([0-9a-z]+)/';
+
+		// HTML taken straight from Dailymotion's Export->embed feature
+		$this->cb->addBBCodeFromExample(
+			'[DAILYMOTION]{REGEXP=' . $regexp . ';REPLACE=$1}[/DAILYMOTION]',
+			'<object width="480" height="270">
+				<param name="movie" value="http://www.dailymotion.com/swf/video/{REGEXP}"></param>
+				<param name="allowFullScreen" value="true"></param>
+				<param name="allowScriptAccess" value="always"></param>
+				
+				<embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/{REGEXP}" width="480" height="270" allowfullscreen="true" allowscriptaccess="always"></embed>
+			</object>'
+		);
+	}
 }

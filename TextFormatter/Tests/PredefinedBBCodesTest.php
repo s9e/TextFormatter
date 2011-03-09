@@ -426,6 +426,14 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[VIMEO]http://vimeo.com/20800127[/VIMEO]',
 				'<iframe src="http://player.vimeo.com/video/20800127" width="400" height="225" frameborder="0"></iframe>'
 			),
+			array(
+				'[DAILYMOTION]xf633p[/DAILYMOTION]',
+				'<object width="480" height="270"><param name="movie" value="http://www.dailymotion.com/swf/video/xf633p"><param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/xf633p" width="480" height="270" allowfullscreen="true" allowscriptaccess="always"></embed></object>'
+			),
+			array(
+				'[DAILYMOTION]http://www.dailymotion.com/video/xf633p_dailymotion-cloud_tech[/DAILYMOTION]',
+				'<object width="480" height="270"><param name="movie" value="http://www.dailymotion.com/swf/video/xf633p"><param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/xf633p" width="480" height="270" allowfullscreen="true" allowscriptaccess="always"></embed></object>'
+			),
 		);
 	}
 }
