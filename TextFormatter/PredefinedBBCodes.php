@@ -688,4 +688,15 @@ class PredefinedBBCodes
 			'<embed src="http://blip.tv/play/{REGEXP}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
 		);
 	}
+
+	public function addVIMEO()
+	{
+		$regexp = '/^(?:' . preg_quote('http://vimeo.com/', '/') . ')?([0-9]+)/';
+
+		// HTML taken straight from Vimeo's player "EMBED" feature
+		$this->cb->addBBCodeFromExample(
+			'[VIMEO]{REGEXP=' . $regexp . ';REPLACE=$1}[/VIMEO]',
+			'<iframe src="http://player.vimeo.com/video/{REGEXP}" width="400" height="225" frameborder="0"></iframe>'
+		);
+	}
 }

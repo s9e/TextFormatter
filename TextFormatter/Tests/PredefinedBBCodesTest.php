@@ -418,6 +418,14 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[BLIP]http://blip.tv/file/4854905/[/BLIP]',
 				'<embed src="http://blip.tv/play/4854905" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
 			),
+			array(
+				'[VIMEO]20800127[/VIMEO]',
+				'<iframe src="http://player.vimeo.com/video/20800127" width="400" height="225" frameborder="0"></iframe>'
+			),
+			array(
+				'[VIMEO]http://vimeo.com/20800127[/VIMEO]',
+				'<iframe src="http://player.vimeo.com/video/20800127" width="400" height="225" frameborder="0"></iframe>'
+			),
 		);
 	}
 }
