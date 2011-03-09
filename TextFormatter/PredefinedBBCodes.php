@@ -65,7 +65,14 @@ class PredefinedBBCodes
 
 		$this->cb->setBBCodeTemplate(
 			'URL',
-			'<a href="{@url}"><xsl:if test="@title"><xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>'
+			'<a href="{@url}">
+				<xsl:if test="@title">
+					<xsl:attribute name="title">
+						<xsl:value-of select="@title" />
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:apply-templates/>
+			</a>'
 		);
 	}
 
@@ -91,7 +98,18 @@ class PredefinedBBCodes
 
 		$this->cb->setBBCodeTemplate(
 			'IMG',
-			'<img src="{@src}"><xsl:if test="@alt"><xsl:attribute name="alt"><xsl:value-of select="@alt"/></xsl:attribute></xsl:if><xsl:if test="@title"><xsl:attribute name="title"><xsl:value-of select="@title"/></xsl:attribute></xsl:if></img>'
+			'<img src="{@src}">
+				<xsl:if test="@alt">
+					<xsl:attribute name="alt">
+						<xsl:value-of select="@alt" />
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="@title">
+					<xsl:attribute name="title">
+						<xsl:value-of select="@title" />
+					</xsl:attribute>
+				</xsl:if>
+			</img>'
 		);
 	}
 
@@ -227,9 +245,15 @@ class PredefinedBBCodes
 	*/
 	public function addYOUTUBE()
 	{
+		$regexp = '/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?'
+		        . '([A-Za-z_0-9\\-]+)(?:&.*)?$/';
+
 		$this->cb->addBBCodeFromExample(
-			'[youtube]{REGEXP=/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?([A-Za-z_0-9\\-]+)(&.*)?$/;REPLACE=$1}[/youtube]',
-			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350"><param name="movie" value="http://www.youtube.com/v/{REGEXP}" /><param name="wmode" value="transparent"/></object>'
+			'[youtube]{REGEXP=' . $regexp . ';REPLACE=$1}[/youtube]',
+			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350">
+				<param name="movie" value="http://www.youtube.com/v/{REGEXP}" />
+				<param name="wmode" value="transparent" />
+			</object>'
 		);
 	}
 
