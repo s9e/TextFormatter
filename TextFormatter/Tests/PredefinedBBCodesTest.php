@@ -387,6 +387,29 @@ class PredefinedBBCodesTest extends \PHPUnit_Framework_TestCase
 				'[COLOR=#ff0]Yellow stuff[/COLOR]',
 				'<span style="color:#ff0">Yellow stuff</span>'
 			),
+			array(
+				'[SIZE=50]Small[/SIZE]',
+				'<span style="font-size:50%">Small</span>'
+			),
+			array(
+				'[SIZE=250]Too big[/SIZE]',
+				'<span style="font-size:200%">Too big</span>',
+				array(
+					'warning' => array(
+						array(
+							'pos'       => 0,
+							'msg'       => 'Maximum range value adjusted to %s',
+							'params'    => array(200),
+							'bbcodeId'  => 'SIZE',
+							'paramName' => 'size'
+						)
+					)
+				)
+			),
+			array(
+				'[SIZE=200]big [SIZE=200]bigger?[/SIZE][/SIZE]',
+				'<span style="font-size:200%">big [SIZE=200]bigger?</span>[/SIZE]'
+			),
 		);
 	}
 }

@@ -445,7 +445,7 @@ class ConfigBuilder
 		call_user_func_array($callback, array_slice(func_get_args(), 1));
 	}
 
-	public function addBBCodeFromExample($def, $tpl, $flags = 0)
+	public function addBBCodeFromExample($def, $tpl, $flags = 0, array $options = array())
 	{
 		$def = $this->parseBBCodeDefinition($def);
 
@@ -456,7 +456,9 @@ class ConfigBuilder
 
 		$tpl = $this->convertTemplate($tpl, $def, $flags);
 
-		$this->addBBCode($def['bbcodeId'], $def['options']);
+		// Options set via $options override the ones we have parsed from the definition
+		$this->addBBCode($def['bbcodeId'], $options + $def['options']);
+
 		foreach ($def['params'] as $paramName => $paramConf)
 		{
 			$this->addBBCodeParam(

@@ -633,4 +633,23 @@ class PredefinedBBCodes
 			'<span style="color:{COLOR}">{TEXT}</span>'
 		);
 	}
+
+	/**
+	* [SIZE] tag with size expressed in %
+	*
+	* Note that we don't allow [SIZE] tags to be nested in order to prevent users for exceeding the
+	* size limits
+	*
+	* @param integer $minSize  Minimum size
+	* @param integer $maxnSize Maximum size
+	*/
+	public function addSIZE($minSize = 50, $maxSize = 200)
+	{
+		$this->cb->addBBCodeFromExample(
+			'[SIZE={RANGE=' . $minSize . ',' . $maxSize . '}]{TEXT}[/SIZE]',
+			'<span style="font-size:{RANGE}%">{TEXT}</span>',
+			0,
+			array('nesting_limit' => 1)
+		);
+	}
 }
