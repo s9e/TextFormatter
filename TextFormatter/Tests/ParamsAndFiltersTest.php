@@ -701,7 +701,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				'[x range=-123 /]',
 				'<rt><X range="7">[x range=-123 /]</X></rt>',
 				array(
-					'info' => array(
+					'warning' => array(
 						array(
 							'pos'       => 0,
 							'bbcodeId'  => 'X',
@@ -720,7 +720,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 				'[x range=123 /]',
 				'<rt><X range="77">[x range=123 /]</X></rt>',
 				array(
-					'info' => array(
+					'warning' => array(
 						array(
 							'pos'       => 0,
 							'bbcodeId'  => 'X',

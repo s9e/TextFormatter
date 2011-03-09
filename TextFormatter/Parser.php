@@ -286,7 +286,7 @@ class Parser
 
 				if ($paramVal < $paramConf['min'])
 				{
-					$this->log('info', array(
+					$this->log('warning', array(
 						'msg'    => 'Minimum range value adjusted to %s',
 						'params' => array($paramConf['min'])
 					));
@@ -295,7 +295,7 @@ class Parser
 
 				if ($paramVal > $paramConf['max'])
 				{
-					$this->log('info', array(
+					$this->log('warning', array(
 						'msg'    => 'Maximum range value adjusted to %s',
 						'params' => array($paramConf['max'])
 					));
