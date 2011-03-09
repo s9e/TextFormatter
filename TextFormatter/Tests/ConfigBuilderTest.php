@@ -639,6 +639,16 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($config['bbcodes']['HR']['auto_close']);
 	}
 
+	public function testAddBBCodeFromExampleSetsDefaultParam()
+	{
+		$this->cb->addBBCodeFromExample('[X={INT}/]', '');
+
+		$config = $this->cb->getBBCodeConfig();
+
+		$this->assertArrayHasKey('default_param', $config['bbcodes']['X']);
+		$this->assertSame('x', $config['bbcodes']['X']['default_param']);
+	}
+
 	public function setUp()
 	{
 		$this->cb = new ConfigBuilder;

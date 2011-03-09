@@ -605,6 +605,7 @@ class ConfigBuilder
 		$params       = array();
 		$placeholders = array();
 		$content      = (isset($m['content'])) ? $m['content'] : '';
+		$attrs        = $m['attrs'];
 
 		/**
 		* Auto-close the BBCode if no end tag is specified
@@ -619,7 +620,12 @@ class ConfigBuilder
 		* e.g. [a href={URL}]           => $attrs = "href={URL}"
 		*      [url={URL} title={TEXT}] => $attrs = "url={URL} title={TEXT}"
 		*/
-		$attrs = (($m['defaultParam']) ? $m['bbcodeId'] . $m['defaultParam'] : '') . $m['attrs'];
+		if ($m['defaultParam'])
+		{
+			$attrs = $m['bbcodeId'] . $m['defaultParam'] . $attrs;
+
+			$options['default_param'] = strtolower($m['bbcodeId']);
+		}
 
 		/**
 		* Here we process the content's placeholder
