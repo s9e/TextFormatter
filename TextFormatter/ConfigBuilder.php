@@ -242,7 +242,7 @@ class ConfigBuilder
 		/**
 		* We test whether the class exists. If a filepath was provided, we disable autoload
 		*/
-		if (!class_exists($className, !isset($classFilepath)))
+		if (!class_exists($className, !isset($classFilepath))
 		 && isset($classFilepath))
 		{
 			include $classFilepath;
