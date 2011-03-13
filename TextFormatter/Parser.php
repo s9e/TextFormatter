@@ -193,13 +193,13 @@ class Parser
 
 		if (isset($this->filters[$paramType]['callback']))
 		{
-			if (isset($this->filters[$paramType]['conf']))
+			if (isset($this->filters[$paramType]['config']))
 			{
 				/**
 				* Add the filter's config to the param
 				* NOTE: it doesn't overwrite the param's existing config
 				*/
-				$paramConf += $this->filters[$paramType]['conf'];
+				$paramConf += $this->filters[$paramType]['config'];
 			}
 
 			return call_user_func(
@@ -221,7 +221,7 @@ class Parser
 
 				$p = parse_url($paramVal);
 
-				if (!preg_match($this->filters['url']['allowed_schemes'], $p['scheme']))
+				if (!preg_match($this->filters['url']['allowedSchemes'], $p['scheme']))
 				{
 					$this->log('error', array(
 						'msg'    => 'URL scheme %s is not allowed',
@@ -230,8 +230,8 @@ class Parser
 					return false;
 				}
 
-				if (isset($this->filters['url']['disallowed_hosts'])
-				 && preg_match($this->filters['url']['disallowed_hosts'], $p['host']))
+				if (isset($this->filters['url']['disallowedHosts'])
+				 && preg_match($this->filters['url']['disallowedHosts'], $p['host']))
 				{
 					$this->log('error', array(
 						'msg'    => 'URL host %s is not allowed',
@@ -529,7 +529,7 @@ class Parser
 		/**
 		* Add the info related to whitespace trimming. We have to do that here for several reasons:
 		*
-		*  1. We have to account for tags that are automatically closed (e.g. close_parent)
+		*  1. We have to account for tags that are automatically closed (e.g. closeParent)
 		*  2. If we do that before sorting the tags, there are some cases where multiple tags would
 		*     attempt to claim the same whitespace
 		*  3. If we do that after the sort, the order may become incorrect since leading whitespace
@@ -647,14 +647,14 @@ class Parser
 					if (!empty($passConfig['limit'])
 					 && $cnt > $passConfig['limit'])
 					{
-						if ($passConfig['limit_action'] === 'abort')
+						if ($passConfig['limitAction'] === 'abort')
 						{
 							throw new RuntimeException($passName . ' limit exceeded');
 						}
 						else
 						{
 							$limit       = $passConfig['limit'] + $_cnt - $cnt;
-							$msgType     = ($passConfig['limit_action'] === 'ignore') ? 'debug' : 'warning';
+							$msgType     = ($passConfig['limitAction'] === 'ignore') ? 'debug' : 'warning';
 							$matches[$k] = array_slice($matches[$k], 0, $limit);
 
 							$this->log($msgType, array(
@@ -837,13 +837,13 @@ class Parser
 				// Check that this BBCode is allowed here
 				//==============================================================
 
-				if (!empty($bbcode['close_parent']))
+				if (!empty($bbcode['closeParent']))
 				{
 					/**
 					* Oh, wait, we may have to close its parent first
 					*/
 					$lastBBCode = end($bbcodeStack);
-					foreach ($bbcode['close_parent'] as $parentBBCodeId)
+					foreach ($bbcode['closeParent'] as $parentBBCodeId)
 					{
 						if ($lastBBCode['bbcode_id'] === $parentBBCodeId)
 						{
@@ -887,26 +887,26 @@ class Parser
 					continue;
 				}
 
-				if (isset($bbcode['require_parent']))
+				if (isset($bbcode['requireParent']))
 				{
 					$lastBBCode = end($bbcodeStack);
 
 					if (!$lastBBCode
-					 || $lastBBCode['bbcode_id'] !== $bbcode['require_parent'])
+					 || $lastBBCode['bbcode_id'] !== $bbcode['requireParent'])
 					{
 						$this->log('error', array(
 							'pos'    => $this->currentTag['pos'],
 							'msg'    => 'BBCode %1$s requires %2$s as parent',
-							'params' => array($bbcodeId, $bbcode['require_parent'])
+							'params' => array($bbcodeId, $bbcode['requireParent'])
 						));
 
 						continue;
 					}
 				}
 
-				if (isset($bbcode['require_ascendant']))
+				if (isset($bbcode['requireAscendant']))
 				{
-					foreach ($bbcode['require_ascendant'] as $ascendant)
+					foreach ($bbcode['requireAscendant'] as $ascendant)
 					{
 						if (empty($cntOpen[$ascendant]))
 						{
@@ -1010,7 +1010,7 @@ class Parser
 								*/
 								unset($this->currentTag['params'][$paramName]);
 
-								if ($paramConf['is_required'])
+								if ($paramConf['isRequired'])
 								{
 									continue;
 								}
@@ -1049,7 +1049,7 @@ class Parser
 
 					foreach ($missingParams as $paramName => $paramConf)
 					{
-						if (empty($paramConf['is_required']))
+						if (empty($paramConf['isRequired']))
 						{
 							continue;
 						}
@@ -1290,9 +1290,9 @@ class Parser
 					* Set the default param. If there's no default param, we issue a warning and
 					* reuse the BBCode's name instead
 					*/
-					if (isset($bbcode['default_param']))
+					if (isset($bbcode['defaultParam']))
 					{
-						$param = $bbcode['default_param'];
+						$param = $bbcode['defaultParam'];
 					}
 					else
 					{
@@ -1480,8 +1480,8 @@ class Parser
 				$usesContent = false;
 
 				if ($type === self::START_TAG
-				 && isset($bbcode['default_param'])
-				 && !isset($params[$bbcode['default_param']])
+				 && isset($bbcode['defaultParam'])
+				 && !isset($params[$bbcode['defaultParam']])
 				 && !empty($bbcode['content_as_param']))
 				{
 					/**
@@ -1497,7 +1497,7 @@ class Parser
 
 					if ($pos)
 					{
-						$params[$bbcode['default_param']]
+						$params[$bbcode['defaultParam']]
 							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
 
 						$usesContent = true;

@@ -48,7 +48,7 @@ class CensorTest extends \PHPUnit_Framework_TestCase
 	*/
 	public function testRendererBasicCensorWithCustomReplacement()
 	{
-		$this->cb->setCensorOption('default_replacement', '@$#!');
+		$this->cb->setCensorOption('defaultReplacement', '@$#!');
 
 		$text     = 'You dirty apple';
 		$expected = 'You dirty @$#!';

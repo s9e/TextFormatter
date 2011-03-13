@@ -56,12 +56,12 @@ class PredefinedBBCodes
 	public function addURL()
 	{
 		$this->cb->addBBCode('URL', array(
-			'default_param'    => 'url',
+			'defaultParam'    => 'url',
 			'content_as_param' => true
 		));
 
 		$this->cb->addBBCodeParam('URL', 'url', 'url');
-		$this->cb->addBBCodeParam('URL', 'title', 'text', array('is_required' => false));
+		$this->cb->addBBCodeParam('URL', 'title', 'text', array('isRequired' => false));
 
 		$this->cb->setBBCodeTemplate(
 			'URL',
@@ -86,15 +86,15 @@ class PredefinedBBCodes
 	public function addIMG()
 	{
 		$this->cb->addBBCode('IMG', array(
-			'default_param'    => 'src',
+			'defaultParam'    => 'src',
 			'content_as_param' => true,
 			'auto_close'       => true,
-			'default_rule'     => 'deny'
+			'defaultRule'     => 'deny'
 		));
 
 		$this->cb->addBBCodeParam('IMG', 'src', 'url');
-		$this->cb->addBBCodeParam('IMG', 'alt', 'text', array('is_required' => false));
-		$this->cb->addBBCodeParam('IMG', 'title', 'text', array('is_required' => false));
+		$this->cb->addBBCodeParam('IMG', 'alt', 'text', array('isRequired' => false));
+		$this->cb->addBBCodeParam('IMG', 'title', 'text', array('isRequired' => false));
 
 		$this->cb->setBBCodeTemplate(
 			'IMG',
@@ -152,18 +152,18 @@ class PredefinedBBCodes
 
 		// [LIST]
 		$this->cb->addBBCode('LIST', array(
-			'default_param' => 'style',
+			'defaultParam' => 'style',
 			'trim_before'   => true,
 			'trim_after'    => true,
 			'ltrim_content' => true,
 			'rtrim_content' => true
 		));
 
-		$this->cb->addBBCodeParam('LIST', 'start', 'uint', array('is_required' => false));
+		$this->cb->addBBCodeParam('LIST', 'start', 'uint', array('isRequired' => false));
 
 		$this->cb->addBBCodeParam('LIST', 'style', 'regexp', array(
 			'default' => 'disc',
-			'is_required' => false,
+			'isRequired' => false,
 			'regexp' => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
 		));
 
@@ -204,11 +204,11 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeAlias('LI', '*');
 
 		// [*] should only be used directly under [LIST]
-		$this->cb->addBBCodeRule('LI', 'require_parent', 'list');
+		$this->cb->addBBCodeRule('LI', 'requireParent', 'list');
 
 		// also, let's make so that when we have two consecutive [*] we close
 		// the first one when opening the second, instead of it behind its child
-		$this->cb->addBBCodeRule('LI', 'close_parent', 'LI');
+		$this->cb->addBBCodeRule('LI', 'closeParent', 'LI');
 
 		$this->cb->setBBCodeTemplate('LI', '<li><xsl:apply-templates/></li>');
 	}
@@ -358,12 +358,12 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->addBBCode('COL', array(
-			'default_rule' => 'deny',
+			'defaultRule' => 'deny',
 			'auto_close'   => true
 		));
-		$this->cb->addBBCodeRule('COL', 'require_parent', 'TABLE');
+		$this->cb->addBBCodeRule('COL', 'requireParent', 'TABLE');
 		$this->cb->addBBCodeParam('COL', 'align', 'regexp', array(
-			'is_required' => false,
+			'isRequired' => false,
 			'regexp'      => '/^(?:left|right|center|align)$/iD'
 		));
 		$this->cb->setBBCodeTemplate(
@@ -376,7 +376,7 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->addBBCode('TR');
-		$this->cb->addBBCodeRule('TR', 'require_parent', 'TABLE');
+		$this->cb->addBBCodeRule('TR', 'requireParent', 'TABLE');
 		$this->cb->setBBCodeTemplate(
 			'TR',
 			'<tr>
@@ -385,9 +385,9 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->addBBCode('TH');
-		$this->cb->addBBCodeRule('TH', 'require_parent', 'TR');
-		$this->cb->addBBCodeParam('TH', 'colspan', 'uint', array('is_required' => false));
-		$this->cb->addBBCodeParam('TH', 'rowspan', 'uint', array('is_required' => false));
+		$this->cb->addBBCodeRule('TH', 'requireParent', 'TR');
+		$this->cb->addBBCodeParam('TH', 'colspan', 'uint', array('isRequired' => false));
+		$this->cb->addBBCodeParam('TH', 'rowspan', 'uint', array('isRequired' => false));
 		$this->cb->setBBCodeTemplate(
 			'TH',
 			'<th>
@@ -408,9 +408,9 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->addBBCode('TD');
-		$this->cb->addBBCodeRule('TD', 'require_parent', 'TR');
-		$this->cb->addBBCodeParam('TD', 'colspan', 'uint', array('is_required' => false));
-		$this->cb->addBBCodeParam('TD', 'rowspan', 'uint', array('is_required' => false));
+		$this->cb->addBBCodeRule('TD', 'requireParent', 'TR');
+		$this->cb->addBBCodeParam('TD', 'colspan', 'uint', array('isRequired' => false));
+		$this->cb->addBBCodeParam('TD', 'rowspan', 'uint', array('isRequired' => false));
 		$this->cb->setBBCodeTemplate(
 			'TD',
 			'<td>
@@ -444,12 +444,12 @@ class PredefinedBBCodes
 	public function addCODE()
 	{
 		$this->cb->addBBCode('CODE', array(
-			'default_rule'  => 'deny',
-			'default_param' => 'stx'
+			'defaultRule'  => 'deny',
+			'defaultParam' => 'stx'
 		));
 
 		$this->cb->addBBCodeParam('CODE', 'stx', 'identifier', array(
-			'is_required' => false,
+			'isRequired' => false,
 			'pre_filter'  => array('strtolower')
 		));
 
@@ -473,7 +473,7 @@ class PredefinedBBCodes
 	public function addHR()
 	{
 		$this->cb->addBBCode('HR', array(
-			'default_rule' => 'deny',
+			'defaultRule' => 'deny',
 			'auto_close'   => true,
 			'trim_before'  => true,
 			'trim_after'   => true
@@ -497,7 +497,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->addBBCode('QUOTE', array(
 			'nesting_limit' => $nestingLevel,
-			'default_param' => 'author',
+			'defaultParam' => 'author',
 			'trim_before'   => true,
 			'trim_after'    => true,
 			'ltrim_content' => true,
@@ -510,7 +510,7 @@ class PredefinedBBCodes
 			htmlspecialchars($authorStr)
 		);
 
-		$this->cb->addBBCodeParam('QUOTE', 'author', 'text', array('is_required' => false));
+		$this->cb->addBBCodeParam('QUOTE', 'author', 'text', array('isRequired' => false));
 		$this->cb->setBBCodeTemplate(
 			'QUOTE',
 			'<xsl:choose>
@@ -546,9 +546,9 @@ class PredefinedBBCodes
 	public function addEMAIL()
 	{
 		$this->cb->addBBCode('EMAIL', array(
-			'default_param'    => 'email',
+			'defaultParam'    => 'email',
 			'content_as_param' => true,
-			'default_rule'     => 'deny'
+			'defaultRule'     => 'deny'
 		));
 
 		$this->cb->addBBCodeParam('EMAIL', 'email', 'email', array(
@@ -557,7 +557,7 @@ class PredefinedBBCodes
 		));
 
 		$this->cb->addBBCodeParam('EMAIL', 'subject', 'text', array(
-			'is_required' => false,
+			'isRequired' => false,
 			'post_filter' => array('rawurlencode')
 		));
 

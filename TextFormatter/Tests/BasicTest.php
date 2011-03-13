@@ -190,7 +190,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	{
 		$config = $this->config;
 		$config['passes']['Censor']['limit'] = 1;
-		$config['passes']['Censor']['limit_action'] = 'ignore';
+		$config['passes']['Censor']['limitAction'] = 'ignore';
 
 		$parser = new Parser($config);
 
@@ -217,7 +217,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	{
 		$config = $this->config;
 		$config['passes']['Censor']['limit'] = 1;
-		$config['passes']['Censor']['limit_action'] = 'abort';
+		$config['passes']['Censor']['limitAction'] = 'abort';
 
 		$parser = new Parser($config);
 		$parser->parse('You dirty banana banana grape');
@@ -337,7 +337,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$cb->setAutolinkOption('param', 'href');
 
 		$cb->addBBCode('x');
-		$cb->addBBCodeParam('x', 'foo', 'text', array('is_required' => false));
+		$cb->addBBCodeParam('x', 'foo', 'text', array('isRequired' => false));
 
 		$cb->addEmoticon(':)', '<img src="happy.png" alt=":)" />');
 
@@ -346,7 +346,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$cb->addCensor('grape*');
 
 		$cb->addBBCode('c', array('internal_use' => true));
-		$cb->addBBCodeParam('c', 'with', 'text', array('is_required' => false));
+		$cb->addBBCodeParam('c', 'with', 'text', array('isRequired' => false));
 
 		$cb->setCensorOption('bbcode', 'c');
 		$cb->setCensorOption('param', 'with');

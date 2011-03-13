@@ -21,7 +21,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 
 		//======================================================================
 		$cb->addBBCode('url', array(
-			'default_param'    => 'url',
+			'defaultParam'    => 'url',
 			'content_as_param' => true
 		));
 
@@ -60,11 +60,11 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCodeAlias('li', '*');
 
 		// [*] should only be used directly under [list]
-		$cb->addBBCodeRule('li', 'require_parent', 'list');
+		$cb->addBBCodeRule('li', 'requireParent', 'list');
 
 		// also, let's make so that when we have two consecutive [*] we close
 		// the first one when opening the second, instead of it behind its child
-		$cb->addBBCodeRule('li', 'close_parent', 'li');
+		$cb->addBBCodeRule('li', 'closeParent', 'li');
 
 		$cb->setBBCodeTemplate('list', '<ul><xsl:apply-templates/></ul>');
 		$cb->setBBCodeTemplate('li',   '<li><xsl:apply-templates/></li>');
@@ -87,14 +87,14 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		//======================================================================
 		$cb->addBBCode('quote', array(
 			'nesting_limit' => 3,
-			'default_param' => 'author',
+			'defaultParam' => 'author',
 			'trim_before'   => true,
 			'trim_after'    => true,
 			'ltrim_content' => true,
 			'rtrim_content' => true
 		));
 
-		$cb->addBBCodeParam('quote', 'author', 'text', array('is_required' => false));
+		$cb->addBBCodeParam('quote', 'author', 'text', array('isRequired' => false));
 		$cb->setBBCodeTemplate(
 			'quote',
 			'<div class="quote">
@@ -133,9 +133,9 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		//======================================================================
 		// Create a [size] BBCode, with its default param being "px"
 		// [size=10] is the same as [size px=10]
-		$cb->addBBCode('size', array('default_param' => 'px'));
+		$cb->addBBCode('size', array('defaultParam' => 'px'));
 
-		// BBCode name, param name, param type, is_required
+		// BBCode name, param name, param type, isRequired
 		$cb->addBBCodeParam('size', 'px', 'font-size', array(
 			'min' => 7,
 			'max' => 20

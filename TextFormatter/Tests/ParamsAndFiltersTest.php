@@ -791,13 +791,13 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 
 		$cb->addBBCode('url');
 		$cb->addBBCodeParam('url', 'href', 'url');
-		$cb->addBBCodeParam('url', 'title', 'text', array('is_required' => false));
+		$cb->addBBCodeParam('url', 'title', 'text', array('isRequired' => false));
 
 		$cb->addBBCode('x');
-		$cb->addBBCodeParam('x', 'foo', 'text', array('is_required' => false));
-		$cb->addBBCodeParam('x', 'range', 'range', array('is_required' => false, 'min' => 7, 'max' => 77));
+		$cb->addBBCodeParam('x', 'foo', 'text', array('isRequired' => false));
+		$cb->addBBCodeParam('x', 'range', 'range', array('isRequired' => false, 'min' => 7, 'max' => 77));
 		$cb->addBBCodeParam('x', 'replace', 'regexp', array(
-			'is_required' => false,
+			'isRequired' => false,
 			'regexp'  => '/^(FOO)(BAR)$/',
 			'replace' => '$2$1'
 		));
@@ -815,13 +815,13 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 
 		foreach ($types as $type)
 		{
-			$cb->addBBCodeParam('x', $type, $type, array('is_required' => false));
+			$cb->addBBCodeParam('x', $type, $type, array('isRequired' => false));
 		}
 
 		$cb->setFilter('custom', function($v) { return $v; });
 
 		// [size] BBCode with custom font-size filter
-		$cb->addBBCode('size', array('default_param' => 'size'));
+		$cb->addBBCode('size', array('defaultParam' => 'size'));
 		$cb->addBBCodeParam('size', 'size', 'font-size');
 
 		$that = $this;

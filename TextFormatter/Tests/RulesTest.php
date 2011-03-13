@@ -62,7 +62,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b', array('default_rule' => 'deny'));
+		$cb->addBBCode('b', array('defaultRule' => 'deny'));
 		$cb->addBBCode('allowed');
 		$cb->addBBCode('denied');
 
@@ -82,7 +82,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 		$cb->addBBCode('foo');
 		$cb->addBBCode('bar');
 
-		$cb->addBBCodeRule('bar', 'require_ascendant', 'foo');
+		$cb->addBBCodeRule('bar', 'requireAscendant', 'foo');
 
 		$text     = ' [bar/] [foo][bar][/bar][/foo]';
 		$expected =
@@ -124,8 +124,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
 		$cb->addBBCodeAlias('li', '*');
 
-		$cb->addBBCodeRule('li', 'require_parent', 'list');
-		$cb->addBBCodeRule('li', 'close_parent', 'li');
+		$cb->addBBCodeRule('li', 'requireParent', 'list');
+		$cb->addBBCodeRule('li', 'closeParent', 'li');
 
 		return new Parser($cb->getParserConfig());
 	}

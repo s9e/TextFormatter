@@ -204,7 +204,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 
 	public function testAddBBCodeParamDoesNotThrowsAnExceptionIfWeTryToCreateMultipleIdenticalRequireParentRules()
 	{
-		$this->cb->addBBCodeRule('b', 'require_parent', 'a');
+		$this->cb->addBBCodeRule('b', 'requireParent', 'a');
 	}
 
 	/**
@@ -214,11 +214,11 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->cb->addBBCodeRule('b', 'require_parent', 'b');
+			$this->cb->addBBCodeRule('b', 'requireParent', 'b');
 		}
 		catch (\RuntimeException $e)
 		{
-			$this->assertContains('already has a require_parent rule', $e->getMessage());
+			$this->assertContains('already has a requireParent rule', $e->getMessage());
 			throw $e;
 		}
 	}
@@ -230,7 +230,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->cb->addBBCode('foo', array('default_param' => 'undefined'));
+			$this->cb->addBBCode('foo', array('defaultParam' => 'undefined'));
 			$this->cb->getBBCodeConfig();
 		}
 		catch (\PHPUnit_Framework_Error $e)
@@ -494,14 +494,14 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->cb->setBBCodeTemplate('b', '<b></b>');
 		$config = $this->cb->getParserConfig();
-		$this->assertArrayNotHasKey('tpl', $config['passes']['BBCode']['bbcodes']['B']);
+		$this->assertArrayNotHasKey('xsl', $config['passes']['BBCode']['bbcodes']['B']);
 	}
 
 	public function testDefaultReplacementIsStrippedOffCensorConfig()
 	{
 		$this->cb->addCensor('foo');
 		$config = $this->cb->getParserConfig();
-		$this->assertArrayNotHasKey('default_replacement', $config['passes']['Censor']);
+		$this->assertArrayNotHasKey('defaultReplacement', $config['passes']['Censor']);
 	}
 
 	public function testJavascriptConfig()
@@ -645,8 +645,8 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 
 		$config = $this->cb->getBBCodeConfig();
 
-		$this->assertArrayHasKey('default_param', $config['bbcodes']['X']);
-		$this->assertSame('x', $config['bbcodes']['X']['default_param']);
+		$this->assertArrayHasKey('defaultParam', $config['bbcodes']['X']);
+		$this->assertSame('x', $config['bbcodes']['X']['defaultParam']);
 	}
 
 	public function setUp()
@@ -655,6 +655,6 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->cb->addBBCode('a');
 		$this->cb->addBBCode('b');
 		$this->cb->addBBCodeParam('b', 'b', 'text');
-		$this->cb->addBBCodeRule('b', 'require_parent', 'a');
+		$this->cb->addBBCodeRule('b', 'requireParent', 'a');
 	}
 }

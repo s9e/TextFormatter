@@ -39,20 +39,20 @@ class OlympusParser extends Parser
 		* Add BBCodes
 		*/
 		$cb->addBBCode('quote', array(
-			'default_param' => 'author',
+			'defaultParam' => 'author',
 			'nesting_limit' => 10
 		));
-		$cb->addBBCodeParam('quote', 'author', 'text', array('is_required' => false));
+		$cb->addBBCodeParam('quote', 'author', 'text', array('isRequired' => false));
 
 		$cb->addBBCode('list', array(
-			'default_param' => 'type'
+			'defaultParam' => 'type'
 		));
-		$cb->addBBCodeParam('list', 'type', 'simpletext', array('is_required' => false));
+		$cb->addBBCodeParam('list', 'type', 'simpletext', array('isRequired' => false));
 
 		$cb->addBBCode('li');
 		$cb->addBBCodeAlias('li', '*');
-		$cb->addBBCodeRule('li', 'require_parent', 'list');
-		$cb->addBBCodeRule('li', 'close_parent', 'li');
+		$cb->addBBCodeRule('li', 'requireParent', 'list');
+		$cb->addBBCodeRule('li', 'closeParent', 'li');
 
 		/**
 		* Add smilies

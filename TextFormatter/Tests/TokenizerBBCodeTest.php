@@ -424,18 +424,18 @@ class TokenizerBBCodeTest extends \PHPUnit_Framework_TestCase
 		$cb = new ConfigBuilder;
 
 		$cb->setBBCodeOption('limit', 10);
-		$cb->setBBCodeOption('limit_action', 'ignore');
+		$cb->setBBCodeOption('limitAction', 'ignore');
 
 		$cb->addBBCode('b');
 		$cb->addBBCode('url', array(
-			'default_param'    => 'url',
+			'defaultParam'    => 'url',
 			'content_as_param' => true
 		));
 		$cb->addBBCode('x');
 		$cb->addBBCode('y');
 		$cb->addBBCode('z');
 
-		$cb->addBBCodeParam('x', 'foo', 'text', array('is_required' => false));
+		$cb->addBBCodeParam('x', 'foo', 'text', array('isRequired' => false));
 		$cb->addBBCodeParam('y', 'foo', 'text');
 
 		$cb->addBBCodeParam('url', 'url', 'url');
