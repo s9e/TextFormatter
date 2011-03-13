@@ -16,7 +16,7 @@ class Parser
 	* Start tag, e.g. [b]
 	* -- becomes <B><st>[b]</st>
 	*/
-	const START_TAG  = 1;
+	const START_TAG = 1;
 
 	/**
 	* End tag, e.g. [/b]
@@ -30,7 +30,7 @@ class Parser
 	*
 	* NOTE: SELF_CLOSING_TAG = START_TAG | END_TAG
 	*/
-	const SELF_CLOSING_TAG  = 3;
+	const SELF_CLOSING_TAG = 3;
 
 	/**
 	* Characters that are removed by the trim_* config directives
@@ -1187,47 +1187,6 @@ class Parser
 	* @param  array  $matches Regexp's matches, if applicable
 	* @return array           2D array
 	*/
-	static public function getAutolinkTags($text, array $config, array $matches)
-	{
-		$tags = array();
-		$msgs = array();
-
-		$bbcode = $config['bbcode'];
-		$param  = $config['param'];
-
-		foreach ($matches as $m)
-		{
-			$url = $m[0][0];
-
-			/**
-			* Remove some trailing punctuation. We preserve right parentheses if there's a left
-			* parenthesis in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
-			*/
-			$url   = rtrim($url);
-			$rtrim = (strpos($url, '(')) ? '.' : ').';
-			$url   = rtrim($url, $rtrim);
-
-			$tags[] = array(
-				'pos'    => $m[0][1],
-				'name'   => $bbcode,
-				'type'   => self::START_TAG,
-				'len'    => 0,
-				'params' => array($param => $url)
-			);
-			$tags[] = array(
-				'pos'    => $m[0][1] + strlen($url),
-				'name'   => $bbcode,
-				'type'   => self::END_TAG,
-				'len'    => 0
-			);
-		}
-
-		return array(
-			'tags' => $tags,
-			'msgs' => $msgs
-		);
-	}
-
 	static public function getBBCodeTags($text, array $config, array $matches)
 	{
 		$tags = array();
@@ -1610,27 +1569,6 @@ class Parser
 
 				$tags[] = $tag;
 			}
-		}
-
-		return array(
-			'tags' => $tags,
-			'msgs' => $msgs
-		);
-	}
-
-	static public function getEmoticonTags($text, array $config, array $matches)
-	{
-		$tags = array();
-		$msgs = array();
-
-		foreach ($matches as $m)
-		{
-			$tags[] = array(
-				'pos'    => $m[0][1],
-				'type'   => self::SELF_CLOSING_TAG,
-				'name'   => $config['bbcode'],
-				'len'    => strlen($m[0][0])
-			);
 		}
 
 		return array(
