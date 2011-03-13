@@ -14,10 +14,10 @@ class AutolinkParser extends PluginParser
 {
 	public function getTags($text, array $matches)
 	{
-		$tags = array();
+		$tags  = array();
 
-		$bbcode = $config['bbcode'];
-		$param  = $config['param'];
+		$tagName  = $this->config['tagName'];
+		$attrName = $this->config['attrName'];
 
 		foreach ($matches as $m)
 		{
@@ -32,17 +32,18 @@ class AutolinkParser extends PluginParser
 			$url   = rtrim($url, $rtrim);
 
 			$tags[] = array(
-				'pos'    => $m[0][1],
-				'name'   => $bbcode,
-				'type'   => Parser::START_TAG,
-				'len'    => 0,
-				'params' => array($param => $url)
+				'pos'   => $m[0][1],
+				'name'  => $tagName,
+				'type'  => Parser::START_TAG,
+				'len'   => 0,
+				'attrs' => array($attrName => $url)
 			);
+
 			$tags[] = array(
-				'pos'    => $m[0][1] + strlen($url),
-				'name'   => $bbcode,
-				'type'   => Parser::END_TAG,
-				'len'    => 0
+				'pos'   => $m[0][1] + strlen($url),
+				'name'  => $tagName,
+				'type'  => Parser::END_TAG,
+				'len'   => 0
 			);
 		}
 

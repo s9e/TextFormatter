@@ -42,12 +42,12 @@ class ConfigBuilder
 	/**
 	* Define a new tag
 	*
-	* @param string $tagName    Name of the tag {@see isValidId()}
+	* @param string $tagName    Name of the tag {@see isValidName()}
 	* @param array  $tagOptions Tag options (automatically augmented by $this->defaultTagOptions)
 	*/
 	public function addTag($tagName, array $tagOptions = array())
 	{
-		if (!ConfigBuilder::isValidId($tagName))
+		if (!ConfigBuilder::isValidName($tagName))
 		{
 			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
 		}
@@ -114,12 +114,12 @@ class ConfigBuilder
 	*/
 	public function addAttribute($tagName, $attrName, $attrType, array $attrConf = array())
 	{
-		if (!ConfigBuilder::isValidId($tagName))
+		if (!ConfigBuilder::isValidName($tagName))
 		{
 			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
 		}
 
-		if (!ConfigBuilder::isValidId($attrName))
+		if (!ConfigBuilder::isValidName($attrName))
 		{
 			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
 		}
@@ -157,12 +157,12 @@ class ConfigBuilder
 	*/
 	public function addRule($tagName, $action, $target)
 	{
-		if (!ConfigBuilder::isValidId($tagName))
+		if (!ConfigBuilder::isValidName($tagName))
 		{
 			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
 		}
 
-		if (!ConfigBuilder::isValidId($target))
+		if (!ConfigBuilder::isValidName($target))
 		{
 			throw new InvalidArgumentException ("Invalid tag name '" . $target . "'");
 		}
@@ -239,7 +239,10 @@ class ConfigBuilder
 			$classFilepath = __DIR__ . '/Plugins/' . $pluginName . 'Config.php';
 		}
 
-		if (!class_exists($className)
+		/**
+		* We test whether the class exists. If a filepath was provided, we disable autoload
+		*/
+		if (!class_exists($className, !isset($classFilepath)))
 		 && isset($classFilepath))
 		{
 			include $classFilepath;
@@ -585,9 +588,15 @@ class ConfigBuilder
 		return $regexp . $suffix;
 	}
 
-	static public function isValidId($id)
+	/**
+	* Return whether a string is a valid tag name
+	*
+	* @param  string $tagName
+	* @return bool
+	*/
+	static public function isValidName($tagName)
 	{
-		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $id);
+		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $tagName);
 	}
 
 	//==========================================================================

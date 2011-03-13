@@ -1536,45 +1536,5 @@ class Parser
 		);
 	}
 
-	static public function getCensorTags($text, array $config, array $matches)
-	{
-		$bbcode = $config['bbcode'];
-		$param  = $config['param'];
-
-		$cnt   = 0;
-		$tags  = array();
-		$msgs  = array();
-
-		foreach ($matches as $k => $_matches)
-		{
-			$replacements = (isset($config['replacements'][$k])) ? $config['replacements'][$k] : array();
-
-			foreach ($_matches as $m)
-			{
-				$tag = array(
-					'pos'  => $m[0][1],
-					'name' => $bbcode,
-					'type' => self::SELF_CLOSING_TAG,
-					'len'  => strlen($m[0][0])
-				);
-
-				foreach ($replacements as $mask => $replacement)
-				{
-					if (preg_match($mask, $m[0][0]))
-					{
-						$tag['params'][$param] = $replacement;
-						break;
-					}
-				}
-
-				$tags[] = $tag;
-			}
-		}
-
-		return array(
-			'tags' => $tags,
-			'msgs' => $msgs
-		);
-	}
 	/**@- */
 }

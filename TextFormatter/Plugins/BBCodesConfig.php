@@ -7,7 +7,11 @@
 */
 namespace s9e\Toolkit\TextFormatter\Plugins;
 
-use s9e\Toolkit\TextFormatter\ConfigBuilder,
+use DOMDocument,
+    DOMXPath,
+    InvalidArgumentException,
+    RuntimeException,
+    s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\PluginConfig;
 
 class BBCodesConfig extends PluginConfig
@@ -47,95 +51,83 @@ class BBCodesConfig extends PluginConfig
 	*/
 	protected $predefinedBBCodes;
 
+	/**
+	* @var array Array where keys are BBCode names and values are the tag they map to
+	*/
 	protected $bbcodes = array();
-	protected $rules = array();
-	protected $aliases = array();
 
-
-	public function add($bbcodeId, array $options = array())
+	/**
+	* Create a new BBCode
+	*
+	* Will automatically create the corresponding tag. Attributes to be created can be passed via
+	* the $options array, using "attributes" as key. Same for "rules".
+	*
+	* @param string $bbcodeName
+	* @param array  $options
+	*/
+	public function add($bbcodeName, array $options = array())
 	{
-		if (!ConfigBuilder::isValidId($bbcodeId))
-		{
-			throw new InvalidArgumentException ("Invalid BBCode name '" . $bbcodeId . "'");
-		}
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
 
-		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
+		$this->cb->addTag($bbcodeName, $options);
 
-		if (isset($this->bbcodes[$bbcodeId]))
-		{
-			throw new InvalidArgumentException('BBCode ' . $bbcodeId . ' already exists');
-		}
-
-		$bbcode = $this->getDefaultBBCodeOptions();
-		foreach ($options as $k => $v)
-		{
-			if (isset($bbcode[$k]))
-			{
-				/**
-				* Preserve the PHP type of that option
-				*/
-				settype($v, gettype($bbcode[$k]));
-			}
-
-			$bbcode[$k] = $v;
-		}
-
-		$this->bbcodes[$bbcodeId] = $bbcode;
-		$this->aliases[$bbcodeId] = $bbcodeId;
+		$this->bbcodes[$bbcodeName] = $bbcodeName;
 	}
 
-	public function addBBCodeAlias($bbcodeId, $alias)
+	/**
+	* Create a new BBCode that maps to an existing tag
+	*
+	* @param string $bbcodeName
+	* @param string $tagName
+	*/
+	public function addAlias($bbcodeName, $tagName)
 	{
-		$bbcodeId = $this->normalizeBBCodeId($bbcodeId);
-		$alias    = $this->normalizeBBCodeId($alias);
+		$bbcodeName = $this->normalizeBBCodeId($bbcodeName);
+		$tagName    = $this->normalizeBBCodeId($tagName);
 
-		if (!isset($this->bbcodes[$bbcodeId]))
+		if (!$this->cb->tagExists($tagName))
 		{
-			throw new InvalidArgumentException("Unknown BBCode '" . $bbcodeId . "'");
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
 		}
-		if (isset($this->bbcodes[$alias]))
+
+		if (!isset($this->bbcodes[$bbcodeName]))
 		{
-			throw new InvalidArgumentException("Cannot create alias '" . $alias . "' - a BBCode using that name already exists");
+			throw new InvalidArgumentException("Unknown BBCode '" . $bbcodeName . "'");
 		}
+
+		if (isset($this->bbcodes[$bbcodeName]))
+		{
+			throw new InvalidArgumentException("Cannot create alias '" . $bbcodeName . "' - a BBCode using that name already exists");
+		}
+
+		$this->bbcodes[$bbcodeName] = $tagName;
+	}
+
+	public function getConfig()
+	{
+		/**
+		* Sort the BBCodes by name. It doesn't serve any real purpose but help canonicalize the
+		* output of this method
+		*/
+		ksort($this->bbcodes);
 
 		/**
-		* For the time being, restrict aliases to a-z, 0-9, _ and * with no restriction on first
-		* char
+		* Build the regexp that matches all the BBCode names, and remove the extraneous
+		* non-capturing expression around it
 		*/
-		if (!preg_match('#^[A-Z_0-9\\*]+$#D', $alias))
-		{
-			throw new InvalidArgumentException("Invalid alias name '" . $alias . "'");
-		}
+		$regexp = self::buildRegexpFromList(array_keys($this->bbcodes));
+		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
 
-		$this->aliases[$alias] = $bbcodeId;
+		return array(
+			'bbcodes' => $this->bbcodes,
+			'regexp'  => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#i'
+		);
 	}
 
-	public function getBBCodeConfig()
+	public function addPredefinedBBCode($bbcodeName)
 	{
-		$config = $this->passes['BBCode'];
-		$config['aliases'] = $this->aliases;
-		$config['bbcodes'] = $this->bbcodes;
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
 
-		$bbcodeIds = array_keys($this->bbcodes);
-
-		$aliases = array();
-		foreach ($this->aliases as $alias => $bbcodeId)
-		{
-			if (empty($this->bbcodes[$bbcodeId]['internal_use']))
-			{
-				$aliases[] = $alias;
-			}
-		}
-
-		$regexp = self::buildRegexpFromList($aliases);
-		$config['regexp'] =
-			'#\\[/?(' . preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp) . ')(?=[\\] =:/])#i';
-
-		return $config;
-	}
-
-	public function addPredefinedBBCode($bbcodeId)
-	{
 		if (!isset($this->predefinedBBCodes))
 		{
 			if (!class_exists('PredefinedBBCodes'))
@@ -148,12 +140,12 @@ class BBCodesConfig extends PluginConfig
 
 		$callback = array(
 			$this->predefinedBBCodes,
-			'add' . strtoupper($bbcodeId)
+			'add' . $bbcodeName
 		);
 
 		if (!is_callable($callback))
 		{
-			throw new InvalidArgumentException('Unknown BBCode ' . $bbcodeId);
+			throw new InvalidArgumentException('Unknown BBCode ' . $bbcodeName);
 		}
 
 		call_user_func_array($callback, array_slice(func_get_args(), 1));
@@ -171,19 +163,19 @@ class BBCodesConfig extends PluginConfig
 		$tpl = $this->convertTemplate($tpl, $def, $flags);
 
 		// Options set via $options override the ones we have parsed from the definition
-		$this->addBBCode($def['bbcodeId'], $options + $def['options']);
+		$this->add($def['bbcodeName'], $options + $def['options']);
 
 		foreach ($def['params'] as $paramName => $paramConf)
 		{
-			$this->addBBCodeParam(
-				$def['bbcodeId'],
+			$this->cb->addAttribute(
+				$def['bbcodeName'],
 				$paramName,
 				$paramConf['type'],
 				$paramConf
 			);
 		}
 
-		$this->setBBCodeTemplate($def['bbcodeId'], $tpl, $flags);
+		$this->setBBCodeTemplate($def['bbcodeName'], $tpl, $flags);
 	}
 
 	protected function convertTemplate($tpl, array $def, $flags)
@@ -213,7 +205,7 @@ class BBCodesConfig extends PluginConfig
 			throw new InvalidArgumentException('Invalid XML in template - error was: ' . $error->message);
 		}
 
-		$bbcodeId     = $def['bbcodeId'];
+		$bbcodeName     = $def['bbcodeName'];
 		$params       = $def['params'];
 		$placeholders = $def['placeholders'];
 		$options      = $def['options'];
@@ -280,7 +272,7 @@ class BBCodesConfig extends PluginConfig
 		* The various regexps used to parse the definition
 		*/
 		$r = array(
-			'bbcodeId'  => '[a-zA-Z_][a-zA-Z_0-9]*',
+			'bbcodeName'  => '[a-zA-Z_][a-zA-Z_0-9]*',
 			'paramName' => '[a-zA-Z_][a-zA-Z_0-9]*',
 			'type' => array(
 				'regexp' => 'REGEXP[0-9]*=(?P<regexp>/.*?/i?)',
@@ -301,7 +293,7 @@ class BBCodesConfig extends PluginConfig
 
 		$regexp = '#\\['
 		        // (BBCODE)(=paramval)?
-		        . '(?P<bbcodeId>' . $r['bbcodeId'] . ')'
+		        . '(?P<bbcodeName>' . $r['bbcodeName'] . ')'
 		        . '(?P<defaultParam>=' . $placeholder . ')?'
 		        // (foo=fooval bar=barval)
 		        . '(?P<attrs>(?:\\s+' . $r['paramName'] . '=' . $placeholder . ')*)'
@@ -314,7 +306,7 @@ class BBCodesConfig extends PluginConfig
 			return false;
 		}
 
-		$bbcodeId     = $m['bbcodeId'];
+		$bbcodeName   = $m['bbcodeName'];
 		$options      = array();
 		$params       = array();
 		$placeholders = array();
@@ -336,9 +328,9 @@ class BBCodesConfig extends PluginConfig
 		*/
 		if ($m['defaultParam'])
 		{
-			$attrs = $m['bbcodeId'] . $m['defaultParam'] . $attrs;
+			$attrs = $m['bbcodeName'] . $m['defaultParam'] . $attrs;
 
-			$options['defaultParam'] = strtolower($m['bbcodeId']);
+			$options['defaultParam'] = strtolower($m['bbcodeName']);
 		}
 
 		/**
@@ -369,7 +361,7 @@ class BBCodesConfig extends PluginConfig
 				* We need to validate the content, means we should probably disable BBCodes,
 				* e.g. [email]{EMAIL}[/email]
 				*/
-				$paramName = strtolower($bbcodeId);
+				$paramName = strtolower($bbcodeName);
 
 				$options['defaultRule']     = 'deny';
 				$options['defaultParam']    = $paramName;
@@ -506,40 +498,37 @@ class BBCodesConfig extends PluginConfig
 		}
 
 		return array(
-			'bbcodeId'     => $bbcodeId,
+			'bbcodeName'   => $bbcodeName,
 			'options'      => $options,
 			'params'       => $params,
 			'placeholders' => $placeholders
 		);
 	}
 
-	protected function addInternalBBCode($prefix)
+	/**
+	* Validate and normalize a BBCode name
+	*
+	* @param  string $bbcodeName Original BBCode name
+	* @return string             Normalized BBCode name, in uppercase
+	*/
+	protected function normalizeBBCodeName($bbcodeName)
 	{
-		$prefix   = strtoupper($prefix);
-		$bbcodeId = $prefix;
-		$i        = 0;
-
-		while (isset($this->bbcodes[$bbcodeId]) || isset($this->aliases[$bbcodeId]))
+		if (!$this->isValidBBCodeName($bbcodeName))
 		{
-			$bbcodeId = $prefix . $i;
-			++$i;
+			throw new InvalidArgumentException ("Invalid BBCode name '" . $bbcodeName . "'");
 		}
 
-		$this->addBBCode($bbcodeId, array('internal_use' => true));
-
-		return $bbcodeId;
+		return strtoupper($bbcodeName);
 	}
 
 	/**
-	* Takes a lowercased BBCode name and return a canonical BBCode ID with aliases resolved
+	* Return whether a string is a valid BBCode name
 	*
-	* @param  string $bbcodeId BBCode name
-	* @return string           BBCode ID, uppercased and with with aliases resolved
+	* @param  string $bbcodeName
+	* @return bool
 	*/
-	protected function normalizeBBCodeId($bbcodeId)
+	static public function isValidName($bbcodeName)
 	{
-		$bbcodeId = strtoupper($bbcodeId);
-
-		return (isset($this->aliases[$bbcodeId])) ? $this->aliases[$bbcodeId] : $bbcodeId;
+		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*|\\*)$#Di', $bbcodeName);
 	}
 }
