@@ -40,6 +40,17 @@ class ConfigBuilder
 	//==========================================================================
 
 	/**
+	* Return whether a tag exists
+	*
+	* @param  string $tagName
+	* @return bool
+	*/
+	public function tagExists($tagName)
+	{
+		return isset($this->tags[$this->normalizeTagName($tagName)]);
+	}
+
+	/**
 	* Define a new tag
 	*
 	* @param string $tagName    Name of the tag {@see isValidName()}
@@ -47,12 +58,7 @@ class ConfigBuilder
 	*/
 	public function addTag($tagName, array $tagOptions = array())
 	{
-		if (!ConfigBuilder::isValidName($tagName))
-		{
-			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
-		}
-
-		$tagName = strtoupper($tagName);
+		$tagName = $this->normalizeTagName($tagName);
 
 		if (isset($this->tags[$tagName]))
 		{
@@ -114,18 +120,8 @@ class ConfigBuilder
 	*/
 	public function addAttribute($tagName, $attrName, $attrType, array $attrConf = array())
 	{
-		if (!ConfigBuilder::isValidName($tagName))
-		{
-			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
-		}
-
-		if (!ConfigBuilder::isValidName($attrName))
-		{
-			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
-		}
-
-		$tagName  = strtoupper($tagName);
-		$attrName = strtolower($attrName);
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
 
 		if (!isset($this->tags[$tagName]))
 		{
@@ -144,7 +140,11 @@ class ConfigBuilder
 			'isRequired' => true
 		);
 
+		/**
+		* Set attribute type
+		*/
 		$attrConf['type'] = $attrType;
+
 		$this->tags[$tagName]['attributes'][$attrName] = $attrConf;
 	}
 
@@ -157,18 +157,8 @@ class ConfigBuilder
 	*/
 	public function addRule($tagName, $action, $target)
 	{
-		if (!ConfigBuilder::isValidName($tagName))
-		{
-			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
-		}
-
-		if (!ConfigBuilder::isValidName($target))
-		{
-			throw new InvalidArgumentException ("Invalid tag name '" . $target . "'");
-		}
-
-		$tagName = strtoupper($tagName);
-		$target  = strtoupper($target);
+		$tagName = $this->normalizeTagName($tagName);
+		$target  = $this->normalizeTagName($target);
 
 		if (!isset($this->tags[$tagName]))
 		{
@@ -266,6 +256,7 @@ class ConfigBuilder
 		{
 			include_once(__DIR__ . '/Parser.php');
 		}
+
 		return new Parser($this->getParserConfig());
 	}
 
@@ -280,6 +271,7 @@ class ConfigBuilder
 		{
 			include_once(__DIR__ . '/Renderer.php');
 		}
+
 		return new Renderer($this->getXSL());
 	}
 
@@ -365,11 +357,24 @@ class ConfigBuilder
 	{
 		$config = array();
 
-		foreach (get_object_vars($this) as $k => $v)
+		foreach (get_object_vars($this) as $pluginName => $plugin)
 		{
-			if ($v instanceof PluginConfig)
+			if ($plugin instanceof PluginConfig)
 			{
-				$config[$k] = $v->getConfig();
+				$pluginConfig = $plugin->getConfig();
+
+				/**
+				* Add some default config if missing
+				*/
+				foreach (array('limit', 'limitAction') as $k)
+				{
+					if (!isset($pluginConfig[$k]))
+					{
+						$pluginConfig[$k] = $plugin->$k;
+					}
+				}
+
+				$config[$pluginName] = $pluginConfig;
 			}
 		}
 
@@ -589,7 +594,7 @@ class ConfigBuilder
 	}
 
 	/**
-	* Return whether a string is a valid tag name
+	* Return whether a string is a valid tag or attribute name
 	*
 	* @param  string $tagName
 	* @return bool
@@ -597,6 +602,38 @@ class ConfigBuilder
 	static public function isValidName($tagName)
 	{
 		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $tagName);
+	}
+
+	/**
+	* Validate and normalize a tag name
+	*
+	* @param  string $tagName Original tag name
+	* @return string          Normalized tag name, in uppercase
+	*/
+	protected function normalizeTagName($tagName)
+	{
+		if (!static::isValidName($tagName))
+		{
+			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
+		}
+
+		return strtoupper($tagName);
+	}
+
+	/**
+	* Validate and normalize an attribute name
+	*
+	* @param  string $attrName Original attribute name
+	* @return string           Normalized attribute name, in lowercase
+	*/
+	protected function normalizeAttributeName($attrName)
+	{
+		if (!static::isValidName($attrName))
+		{
+			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
+		}
+
+		return strtolower($attrName);
 	}
 
 	//==========================================================================

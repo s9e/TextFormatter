@@ -14,7 +14,7 @@ class AutolinkParser extends PluginParser
 {
 	public function getTags($text, array $matches)
 	{
-		$tags  = array();
+		$tags = array();
 
 		$tagName  = $this->config['tagName'];
 		$attrName = $this->config['attrName'];
