@@ -79,6 +79,13 @@ class ConfigBuilder
 			unset($tagOptions['rules']);
 		}
 
+		$template = null;
+		if (isset($tagOptions['template']))
+		{
+			$template = $tagOptions['template'];
+			unset($tagOptions['template']);
+		}
+
 		foreach ($this->defaultTagOptions as $k => $v)
 		{
 			if (isset($tagOptions[$k]))
@@ -107,6 +114,11 @@ class ConfigBuilder
 			{
 				$this->addRule($tagName, $action, $target);
 			}
+		}
+
+		if (isset($template))
+		{
+			$this->setTemplate($tagName, $template);
 		}
 	}
 
@@ -503,13 +515,22 @@ class ConfigBuilder
 	// Misc tools
 	//==========================================================================
 
+	/**
+	* Create a regexp pattern that matches a list of words
+	*
+	* @param  array  $words Words to sort (UTF-8 expected)
+	* @param  array  $esc   Array that caches how each individual characters should be escaped
+	* @return string
+	*/
 	static public function buildRegexpFromList($words, array $esc = array())
 	{
-		$arr = array();
+		// Sort the words to produce the same regexp regardless of the words' order
+		sort($words);
 
-		foreach ($words as $str)
+		$arr = array();
+		foreach ($words as $word)
 		{
-			if (preg_match_all('#.#us', $str, $matches))
+			if (preg_match_all('#.#us', $word, $matches))
 			{
 				$cur =& $arr;
 				foreach ($matches[0] as $c)
@@ -531,7 +552,7 @@ class ConfigBuilder
 		// replace (?:x)? with x?
 		$regexp = preg_replace('#\\(\\?:(.)\\)\\?#us', '$1?', $regexp);
 
-		// replace (?:x|y) with [xy]
+		// replace (?:x|y|z) with [xyz]
 		$regexp = preg_replace_callback(
 			/**
 			* Here, we only try to match single letters and numbers because trying to match escaped
@@ -691,7 +712,12 @@ class ConfigBuilder
 		$this->xsl .= $xsl;
 	}
 
-	public function setBBCodeTemplate($tagName, $tpl, $flags = 0)
+	/**
+	* @param string          $tagName
+	* @param string|callback $tpl
+	* @param integer         $flags
+	*/
+	public function setTemplate($tagName, $tpl, $flags = 0)
 	{
 		$tagName = $this->normalizeBBCodeId($tagName);
 		if (!isset($this->bbcodes[$tagName]))

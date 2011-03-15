@@ -348,7 +348,7 @@ class PredefinedBBCodes
 	public function addTABLE()
 	{
 		// limit table nesting to 2, which should be enough for everybody
-		$this->cb->addBBCode('TABLE', array('nesting_limit' => 2));
+		$this->cb->addBBCode('TABLE', array('nestingLimit' => 2));
 		$this->cb->setBBCodeTemplate(
 			'TABLE',
 			'<table>
@@ -496,7 +496,7 @@ class PredefinedBBCodes
 	public function addQUOTE($nestingLevel = 3, $authorStr = '%s wrote:')
 	{
 		$this->cb->addBBCode('QUOTE', array(
-			'nesting_limit' => $nestingLevel,
+			'nestingLimit' => $nestingLevel,
 			'defaultParam' => 'author',
 			'trim_before'   => true,
 			'trim_after'    => true,
@@ -674,7 +674,7 @@ class PredefinedBBCodes
 			'[SIZE={RANGE=' . $minSize . ',' . $maxSize . '}]{TEXT}[/SIZE]',
 			'<span style="font-size:{RANGE}%">{TEXT}</span>',
 			0,
-			array('nesting_limit' => 1)
+			array('nestingLimit' => 1)
 		);
 	}
 

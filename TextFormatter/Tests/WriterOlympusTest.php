@@ -40,7 +40,7 @@ class OlympusParser extends Parser
 		*/
 		$cb->addBBCode('quote', array(
 			'defaultParam' => 'author',
-			'nesting_limit' => 10
+			'nestingLimit' => 10
 		));
 		$cb->addBBCodeParam('quote', 'author', 'text', array('isRequired' => false));
 

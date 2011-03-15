@@ -329,7 +329,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b', array('nesting_limit' => 1));
+		$cb->addBBCode('b', array('nestingLimit' => 1));
 
 		$cb->addBBCode('a');
 		$cb->addBBCodeParam('a', 'href', 'url');

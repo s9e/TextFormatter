@@ -23,7 +23,7 @@ class EmoticonsConfig extends PluginConfig
 
 	public function setUp()
 	{
-		$this->cb->BBCode->add(static::$tagName, array(
+		$this->cb->addTag(static::$tagName, array(
 			'defaultRule' => 'deny'
 		));
 	}
@@ -37,6 +37,7 @@ class EmoticonsConfig extends PluginConfig
 	public function add($code, $tpl)
 	{
 		$this->emoticons[$code] = $tpl;
+		$this->commitXSL();
 	}
 
 	/**
@@ -44,12 +45,19 @@ class EmoticonsConfig extends PluginConfig
 	*/
 	public function getConfig()
 	{
-		$config = array();
+		// Non-anchored pattern, will benefit from the S modifier
+		$regexp = '#' . ConfigBuilder::buildRegexpFromList(array_keys($this->emoticons)) . '#S';
 
-		/**
-		* Create a template for this BBCode.
-		* If one already exists, we overwrite it. That's how we roll
-		*/
+		return array(
+			'regexp' => $regexp;
+		);
+	}
+
+	/**
+	* Commit the XSL needed to render emoticons to ConfigBuilder
+	*/
+	protected function commitXSL()
+	{
 		$tpls = array();
 		foreach ($this->emoticons as $code => $tpl)
 		{
@@ -65,12 +73,6 @@ class EmoticonsConfig extends PluginConfig
 		}
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
 
-		$this->cb->BBCode->setTemplate(static::$tagName, $xsl);
-
-		// Non-anchored pattern, will benefit from the S modifier
-		$config['regexp'] =
-			'#' . ConfigBuilder::buildRegexpFromList(array_keys($this->emoticons)) . '#S';
-
-		return $config;
+		$this->cb->setTemplate(static::$tagName, $xsl);
 	}
 }

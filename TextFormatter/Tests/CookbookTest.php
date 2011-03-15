@@ -86,7 +86,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 
 		//======================================================================
 		$cb->addBBCode('quote', array(
-			'nesting_limit' => 3,
+			'nestingLimit' => 3,
 			'defaultParam' => 'author',
 			'trim_before'   => true,
 			'trim_after'    => true,

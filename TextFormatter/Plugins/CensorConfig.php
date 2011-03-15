@@ -7,19 +7,25 @@
 */
 namespace s9e\Toolkit\TextFormatter\Plugins;
 
-use s9e\Toolkit\TextFormatter\PluginConfig;
+use s9e\Toolkit\TextFormatter\ConfigBuilder,
+    s9e\Toolkit\TextFormatter\PluginConfig;
 
 class CensorConfig extends PluginConfig
 {
 	/**
 	* @var string Name of the tag used to mark censored words
 	*/
-	public $tagName = 'C';
+	static public $tagName = 'C';
+
+	/**
+	* @var string Name of attribute used to for the replacement
+	*/
+	static public $attrName = 'with';
 
 	/**
 	* @var string Default string used to replace censored words
 	*/
-	public $defaultReplacement = '****';
+	static public $defaultReplacement = '****';
 
 	/**
 	* @var array
@@ -33,19 +39,38 @@ class CensorConfig extends PluginConfig
 
 	public function setUp()
 	{
-		$this->cb->addTag(self::TAG_ID, array(
-			'defaultRule' => 'deny'
-		));
+		$this->cb->addTag(
+			static::$tagName,
+			array(
+				'defaultRule' => 'deny',
 
-		$this->cb->addTagAttr($bbcodeId, 'with', 'text', array('isRequired' => false));
+				'attributes' => array(
+					static::$attrName => array(
+						'type'       => 'text',
+						'isRequired' => false
+					)
+				),
 
-		$this->setTagTemplate(
-			self::TAG_ID,
-			'<xsl:choose><xsl:when test="@with"><xsl:value-of select="@with"/></xsl:when><xsl:otherwise>' . htmlspecialchars($defaultReplacement) . '</xsl:otherwise></xsl:choose>'
+				'template' =>
+					'<xsl:choose>' .
+						'<xsl:when test="@with">' .
+							'<xsl:value-of select="@with"/>' .
+						'</xsl:when>' .
+						'<xsl:otherwise>' .
+							htmlspecialchars(static::$defaultReplacement) .
+						'</xsl:otherwise>' .
+					'</xsl:choose>'
+			)
 		);
 	}
 
-	public function addCensor($word, $replacement = null)
+	/**
+	* Add a word to the censor list
+	*
+	* @param string $word
+	* @param string $replacement If left null, static::$defaultReplacement will be used
+	*/
+	public function add($word, $replacement = null)
 	{
 		/**
 		* 0 00 word
@@ -81,7 +106,10 @@ class CensorConfig extends PluginConfig
 
 	public function getConfig()
 	{
-		$config = array();
+		$config = array(
+			'tagName'  => static::$tagName,
+			'attrName' => static::$attrName
+		);
 
 		foreach ($this->words as $k => $words)
 		{

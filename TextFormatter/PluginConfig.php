@@ -27,6 +27,12 @@ abstract class PluginConfig
 	*/
 	public $limitAction = 'ignore';
 
+	/**
+	* @var integer Order in which each parser is executed. A lower value gives this plugin's parser
+	*              a higher priority
+	*/
+	public $parsingOrder = 10000;
+
 	public function __construct(ConfigBuilder $cb)
 	{
 		$this->cb = $cb;

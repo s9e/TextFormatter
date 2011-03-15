@@ -878,8 +878,8 @@ class Parser
 					}
 				}
 
-				if ($bbcode['nesting_limit'] <= $cntOpen[$bbcodeId]
-				 || $bbcode['tag_limit']     <= $cntTotal[$bbcodeId])
+				if ($bbcode['nestingLimit'] <= $cntOpen[$bbcodeId]
+				 || $bbcode['tagLimit']     <= $cntTotal[$bbcodeId])
 				{
 					continue;
 				}
