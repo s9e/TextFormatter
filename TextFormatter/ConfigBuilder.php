@@ -13,8 +13,27 @@ use InvalidArgumentException,
 
 class ConfigBuilder
 {
+	/**
+	* Allow user-supplied data to be used in sensitive area of a template
+	* @see self::setTemplate()
+	*/
+	const ALLOW_INSECURE_TEMPLATES = 1;
+
+	/**
+	* Whether or not preserve redundant whitespace in a template
+	* @see  self::setTemplate()
+	* @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.preservewhitespace
+	*/
+	const PRESERVE_WHITESPACE      = 2;
+
+	/**
+	* @var array Tags repository
+	*/
 	protected $tags = array();
 
+	/**
+	* @var array Holds filters' configuration
+	*/
 	protected $filters = array(
 		'url' => array(
 			'allowedSchemes' => array('http', 'https')
@@ -212,6 +231,9 @@ class ConfigBuilder
 	// Plugins
 	//==========================================================================
 
+	/**
+	* Magic __get automatically loads plugins
+	*/
 	public function __get($pluginName)
 	{
 		return $this->loadPlugin($pluginName);
@@ -230,7 +252,7 @@ class ConfigBuilder
 	*/
 	public function loadPlugin($pluginName, $className = null, $classFilepath = null)
 	{
-		if (!preg_match('#^[A-Z][a-z_0-9]+$#D', $pluginName))
+		if (!preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $pluginName))
 		{
 			throw new InvalidArgumentException('Invalid plugin name "' . $pluginName . '"');
 		}
@@ -241,12 +263,22 @@ class ConfigBuilder
 			$classFilepath = __DIR__ . '/Plugins/' . $pluginName . 'Config.php';
 		}
 
+		$useAutoload = !isset($classFilepath);
+
 		/**
 		* We test whether the class exists. If a filepath was provided, we disable autoload
 		*/
-		if (!class_exists($className, !isset($classFilepath))
+		if (!class_exists($className, $useAutoload)
 		 && isset($classFilepath))
 		{
+			/**
+			* Load the PluginConfig abstract class if necessary
+			*/
+			if (!class_exists('PluginConfig', $useAutoload))
+			{
+				include __DIR__ . '/PluginConfig.php';
+			}
+
 			include $classFilepath;
 		}
 
@@ -354,9 +386,9 @@ class ConfigBuilder
 	public function getParserConfig()
 	{
 		return array(
-			'tags'    => $this->getTags(),
+			'filters' => $this->getFiltersConfig(),
 			'plugins' => $this->getPluginsConfig(),
-			'filters' => $this->getFiltersConfig()
+			'tags'    => $this->getTagsConfig()
 		);
 	}
 
@@ -469,8 +501,8 @@ class ConfigBuilder
 						case 'requireAscendant':
 						case 'closeParent':
 						default:
-							$bbcode[$action] = array_unique($targets);
-							sort($bbcode[$action]);
+							$tag[$action] = array_unique($targets);
+							sort($tag[$action]);
 					}
 				}
 			}
@@ -713,36 +745,45 @@ class ConfigBuilder
 	}
 
 	/**
-	* @param string          $tagName
-	* @param string|callback $tpl
-	* @param integer         $flags
+	* Set or replace the template associated with a tag
+	*
+	* @param string  $tagName Name of the tag
+	* @param string  $tpl     Tag's template. Must be XSL with the root <xsl:template> node omitted
+	* @param integer $flags
 	*/
 	public function setTemplate($tagName, $tpl, $flags = 0)
 	{
-		$tagName = $this->normalizeBBCodeId($tagName);
-		if (!isset($this->bbcodes[$tagName]))
+		$tagName = $this->normalizeTagName($tagName);
+
+		if (!isset($this->tags[$tagName]))
 		{
-			throw new InvalidArgumentException("Unknown BBCode '" . $tagName . "'");
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
 		}
 
-		if (!($flags & self::PRESERVE_WHITESPACE))
-		{
-			// Remove whitespace containing newlines from the template
-			$tpl = trim(preg_replace('#>\\s*\\n\\s*<#', '><', $tpl));
-		}
-
+		/**
+		* Enclose the tag's template within <xsl:template> tags
+		*/
 		$tpl = '<xsl:template match="' . $tagName . '">'
 		     . $tpl
 		     . '</xsl:template>';
 
+		/**
+		* Prepare a temporary stylesheet so that we can load the template and make sure it's valid
+		*/
 		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
 		     . $tpl
 		     . '</xsl:stylesheet>';
 
-		$old = libxml_use_internal_errors(true);
+		/**
+		* Load the stylesheet with libxml's internal errors temporarily enabled
+		*/
+		$useInternalErrors = libxml_use_internal_errors(true);
+
 		$dom = new DOMDocument;
+		$dom->preserveWhiteSpace = (bool) ($flags & self::PRESERVE_WHITESPACE);
 		$res = $dom->loadXML($xsl);
-		libxml_use_internal_errors($old);
+
+		libxml_use_internal_errors($useInternalErrors);
 
 		if (!$res)
 		{
@@ -754,12 +795,21 @@ class ConfigBuilder
 		{
 			$xpath = new DOMXPath($dom);
 
-			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or xsl:attribute])'))
+			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or .//xsl:attribute])'))
 			{
-				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setBBCodeTemplate() to enable it');
+				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setTemplate() to enable it');
 			}
 		}
 
-		$this->bbcodes[$tagName]['xsl'] = $tpl;
+		/**
+		* Rebuild the XSL by serializing and concatenating all the root node's children
+		*/
+		$xsl = '';
+		foreach ($dom->documentElement->childNodes as $childNode)
+		{
+			$xsl .= $dom->saveXML($childNode);
+		}
+
+		$this->tags[$tagName]['xsl'] = $xsl;
 	}
 }

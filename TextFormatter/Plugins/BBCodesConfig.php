@@ -16,9 +16,6 @@ use DOMDocument,
 
 class BBCodesConfig extends PluginConfig
 {
-	const ALLOW_INSECURE_TEMPLATES = 1;
-	const PRESERVE_WHITESPACE      = 2;
-
 	/**
 	* @var array Pre-filter and post-filter callbacks we allow in BBCode definitions.
 	*            We use a whitelist approach because there are so many different risky callbacks
@@ -527,7 +524,7 @@ class BBCodesConfig extends PluginConfig
 	* @param  string $bbcodeName
 	* @return bool
 	*/
-	static public function isValidName($bbcodeName)
+	static public function isValidBBCodeName($bbcodeName)
 	{
 		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*|\\*)$#Di', $bbcodeName);
 	}

@@ -164,7 +164,7 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 			array(
 				'[email]{TEXT}[/email]',
 				'<a href="mailto:{TEXT}">{TEXT}</a>',
-				BBCodesConfig::ALLOW_INSECURE_TEMPLATES,
+				ConfigBuilder::ALLOW_INSECURE_TEMPLATES,
 				'My email is [email]COULD_BE_ANYTHING[/email]',
 				'My email is <a href="mailto:COULD_BE_ANYTHING">COULD_BE_ANYTHING</a>'
 			)
