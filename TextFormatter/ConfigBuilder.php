@@ -70,6 +70,18 @@ class ConfigBuilder
 	}
 
 	/**
+	* Return whether a tag's attribute exists
+	*
+	* @param  string $tagName
+	* @param  string $attrName
+	* @return bool
+	*/
+	public function attributeExists($tagName, $attrName)
+	{
+		return isset($this->tags[$this->normalizeTagName($tagName)]['attributes'][$attrName]);
+	}
+
+	/**
 	* Define a new tag
 	*
 	* @param string $tagName    Name of the tag {@see isValidName()}
@@ -516,7 +528,7 @@ class ConfigBuilder
 			* Keep only the tags that are allowed
 			*/
 			$tag['allow'] = array_filter($allow);
-			sort($tag['allow']);
+			ksort($tag['allow']);
 
 			/**
 			* We don't need the tag's template
