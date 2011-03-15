@@ -55,8 +55,44 @@ class ConfigBuilder
 	);
 
 	//==========================================================================
-	// Tag stuff
+	// Tag-related methods
 	//==========================================================================
+
+	/**
+	* Define a new tag
+	*
+	* @param string $tagName    Name of the tag {@see isValidTagName()}
+	* @param array  $tagOptions Tag options (automatically augmented by $this->defaultTagOptions)
+	*/
+	public function addTag($tagName, array $tagOptions = array())
+	{
+		$tagName = $this->normalizeTagName($tagName);
+
+		if (isset($this->tags[$tagName]))
+		{
+			throw new InvalidArgumentException("Tag '" . $tagName . "' already exists");
+		}
+
+		/**
+		* Create the tag with the default options
+		*/
+		$this->tags[$tagName] = $this->defaultTagOptions;
+
+		/**
+		* Set the user-supplied options
+		*/
+		$this->setTagOptions($tagName, $tagOptions);
+	}
+
+	/**
+	* Remove a tag from the config
+	*
+	* @param string $tagName
+	*/
+	public function removeTag($tagName)
+	{
+		unset($this->tags[$this->normalizeTagName($tagName)]);
+	}
 
 	/**
 	* Return whether a tag exists
@@ -70,88 +106,94 @@ class ConfigBuilder
 	}
 
 	/**
-	* Return whether a tag's attribute exists
+	* Return whether a string is a valid tag name
 	*
 	* @param  string $tagName
-	* @param  string $attrName
 	* @return bool
 	*/
-	public function attributeExists($tagName, $attrName)
+	static public function isValidTagName($tagName)
 	{
-		return isset($this->tags[$this->normalizeTagName($tagName)]['attributes'][$attrName]);
+		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $tagName);
 	}
 
 	/**
-	* Define a new tag
+	* Validate and normalize a tag name
 	*
-	* @param string $tagName    Name of the tag {@see isValidName()}
-	* @param array  $tagOptions Tag options (automatically augmented by $this->defaultTagOptions)
+	* @param  string $tagName Original tag name
+	* @return string          Normalized tag name, in uppercase
 	*/
-	public function addTag($tagName, array $tagOptions = array())
+	protected function normalizeTagName($tagName)
 	{
-		$tagName = $this->normalizeTagName($tagName);
-
-		if (isset($this->tags[$tagName]))
+		if (!static::isValidTagName($tagName))
 		{
-			throw new InvalidArgumentException("Tag '" . $tagName . "' already exists");
+			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
 		}
 
-		$attributes = array();
-		if (isset($tagOptions['attributes']))
-		{
-			$attributes = $tagOptions['attributes'];
-			unset($tagOptions['attributes']);
-		}
+		return strtoupper($tagName);
+	}
 
-		$rules = array();
-		if (isset($tagOptions['rules']))
+	/**
+	* Set several options for a tag
+	*
+	* @param string $tagName
+	* @param array  $tagOptions
+	*/
+	public function setTagOptions($tagName, array $tagOptions)
+	{
+		foreach ($tagOptions as $optionName => $optionValue)
 		{
-			$rules = $tagOptions['rules'];
-			unset($tagOptions['rules']);
-		}
-
-		$template = null;
-		if (isset($tagOptions['template']))
-		{
-			$template = $tagOptions['template'];
-			unset($tagOptions['template']);
-		}
-
-		foreach ($this->defaultTagOptions as $k => $v)
-		{
-			if (isset($tagOptions[$k]))
-			{
-				/**
-				* Preserve the PHP type of that option
-				*/
-				settype($v, gettype($tagOptions[$k]));
-			}
-			else
-			{
-				$tagOptions[$k] = $v;
-			}
-		}
-
-		$this->tags[$tagName] = $tagOptions;
-
-		foreach ($attributes as $attrName => $attrConf)
-		{
-			$this->addAttribute($tagName, $attrName, $attrConf['type'], $attrConf);
-		}
-
-		foreach ($rules as $action => $targets)
-		{
-			foreach ($targets as $target)
-			{
-				$this->addRule($tagName, $action, $target);
-			}
-		}
-
-		if (isset($template))
-		{
-			$this->setTemplate($tagName, $template);
+			$this->setTagOption($tagName, $optionName, $optionValue);
 		}
 	}
+
+	/**
+	* Set a tag's option
+	*
+	* @param string $tagName
+	* @param string $optionName
+	* @param mixed  $optionValue
+	*/
+	public function setTagOption($tagName, $optionName, $optionValue)
+	{
+		switch ($optionName)
+		{
+			case 'attributes':
+				foreach ($optionValue as $attrName => $attrConf)
+				{
+					$this->addAttribute($tagName, $attrName, $attrConf['type'], $attrConf);
+				}
+				break;
+
+			case 'rules':
+				foreach ($optionValue as $action => $targets)
+				{
+					foreach ($targets as $target)
+					{
+						$this->addRule($tagName, $action, $target);
+					}
+				}
+				break;
+
+			case 'template':
+				$this->setTemplate($tagName, $optionValue);
+				break;
+
+			default:
+				if (isset($this->defaultTagOptions[$optionName]))
+				{
+					/**
+					* Preserve the PHP type of that option, if applicable
+					*/
+					settype($optionValue, gettype($this->defaultTagOptions[$optionName]));
+				}
+
+				$this->tags[$tagName][$optionName] = $optionValue;
+		}
+	}
+
+	//==========================================================================
+	// Attribute-related methods
+	//==========================================================================
 
 	/**
 	* Define an attribute for a tag
@@ -190,6 +232,49 @@ class ConfigBuilder
 
 		$this->tags[$tagName]['attributes'][$attrName] = $attrConf;
 	}
+
+	/**
+	* Remove an attribute from a tag
+	*
+	* @param string $tagName
+	* @param string $attrName
+	*/
+	public function removeAttribute($tagName, $attrName)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+		unset($this->tags[$tagName]['attributes'][$attrName]);
+	}
+
+	/**
+	* Return whether a tag's attribute exists
+	*
+	* @param  string $tagName
+	* @param  string $attrName
+	* @return bool
+	*/
+	public function attributeExists($tagName, $attrName)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		return isset($this->tags[$tagName]['attributes'][$attrName]);
+	}
+
+	/**
+	* Return whether a string is a valid attribute name
+	*
+	* @param  string $attrName
+	* @return bool
+	*/
+	static public function isValidAttributeName($attrName)
+	{
+		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $attrName);
+	}
+
+	//==========================================================================
+	// Rule-related methods
+	//==========================================================================
 
 	/**
 	* Define a rule
@@ -231,12 +316,27 @@ class ConfigBuilder
 			{
 				throw new RuntimeException("Tag '" . $tagName . "' already has a different 'requireParent' rule, and both cannot be satisfied at the same time. Perhaps did you mean to create a 'requireAscendant' rule?");
 			}
-			$this->tags['rules'][$tagName]['requireParent'] = $target;
+			$this->tags[$tagName]['rules']['requireParent'] = $target;
 		}
 		else
 		{
-			$this->tags['rules'][$tagName][$action][] = $target;
+			$this->tags[$tagName]['rules'][$action][$target] = $target;
 		}
+	}
+
+	/**
+	* Remove a tag's rule
+	*
+	* @param string $tagName
+	* @param string $action
+	* @param string $target
+	*/
+	public function removeRule($tagName, $action, $target)
+	{
+		$tagName = $this->normalizeTagName($tagName);
+		$target  = $this->normalizeTagName($target);
+
+		unset($this->tags[$tagName]['rules'][$action][$target]);
 	}
 
 	//==========================================================================
@@ -397,10 +497,101 @@ class ConfigBuilder
 	*/
 	public function getParserConfig()
 	{
+		$tagsConfig = $this->getTagsConfig();
+
+		foreach ($tagsConfig as &$tag)
+		{
+			/**
+			* Build the list of allowed descendants and remove everything that's not needed by the
+			* global parser
+			*/
+			$allow = array();
+
+			if (isset($tag['rules']))
+			{
+				/**
+				* Sort the rules so that "deny" overwrites "allow"
+				*/
+				ksort($tag['rules']);
+
+				foreach ($tag['rules'] as $action => &$targets)
+				{
+					switch ($action)
+					{
+						case 'allow':
+							foreach ($targets as $target)
+							{
+								$allow[$target] = true;
+							}
+
+							// We don't need those anymore
+							unset($tag['rules']['allow']);
+							break;
+
+						case 'deny':
+							foreach ($targets as $target)
+							{
+								$allow[$target] = false;
+							}
+
+							// We don't need those anymore
+							unset($tag['rules']['deny']);
+							break;
+
+						case 'requireParent':
+							/**
+							* $targets will be a string here, as we allow only one requireParent
+							* rule per tag
+							*/
+							$target = $targets;
+							if (!isset($tagsConfig[$target]))
+							{
+								unset($tag['rules']['requireParent']);
+							}
+							break;
+
+						case 'requireAscendant':
+						case 'closeParent':
+						default:
+							// keep only the rules that target existing tags
+							$targets = array_intersect_key($targets, $tagsConfig);
+
+							// This will sort the array and reset the keys
+							sort($targets);
+					}
+				}
+				unset($targets);
+
+				/**
+				* Remove rules with no targets
+				*/
+				$tag['rules'] = array_filter($tag['rules']);
+
+				if (empty($tag['rules']))
+				{
+					unset($tag['rules']);
+				}
+			}
+
+			if ($tag['defaultRule'] === 'allow')
+			{
+				$allow += array_fill_keys(array_keys($tagsConfig), true);
+			}
+
+			/**
+			* Keep only the tags that are allowed
+			*/
+			$tag['allow'] = array_filter($allow);
+			ksort($tag['allow']);
+
+			unset($tag['defaultRule']);
+		}
+		unset($tag);
+
 		return array(
 			'filters' => $this->getFiltersConfig(),
 			'plugins' => $this->getPluginsConfig(),
-			'tags'    => $this->getTagsConfig()
+			'tags'    => $tagsConfig
 		);
 	}
 
@@ -475,61 +666,6 @@ class ConfigBuilder
 
 		foreach ($tags as $tagName => &$tag)
 		{
-			$allow = array();
-
-			if (!empty($tag['rules']))
-			{
-				/**
-				* Sort the rules so that "deny" overwrites "allow"
-				*/
-				ksort($tag['rules']);
-
-				foreach ($tag['rules'] as $action => $targets)
-				{
-					switch ($action)
-					{
-						case 'allow':
-							foreach ($targets as $target)
-							{
-								$allow[$target] = true;
-							}
-							break;
-
-						case 'deny':
-							foreach ($targets as $target)
-							{
-								$allow[$target] = false;
-							}
-							break;
-
-						case 'requireParent':
-							/**
-							* $targets will be a string here, as we allow only one requireParent
-							* rule per tag
-							*/
-							$tag['requireParent'] = $targets;
-							break;
-
-						case 'requireAscendant':
-						case 'closeParent':
-						default:
-							$tag[$action] = array_unique($targets);
-							sort($tag[$action]);
-					}
-				}
-			}
-
-			if ($tag['defaultRule'] === 'allow')
-			{
-				$allow += array_fill_keys(array_keys($tags), true);
-			}
-
-			/**
-			* Keep only the tags that are allowed
-			*/
-			$tag['allow'] = array_filter($allow);
-			ksort($tag['allow']);
-
 			/**
 			* We don't need the tag's template
 			*/
@@ -659,33 +795,6 @@ class ConfigBuilder
 	}
 
 	/**
-	* Return whether a string is a valid tag or attribute name
-	*
-	* @param  string $tagName
-	* @return bool
-	*/
-	static public function isValidName($tagName)
-	{
-		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $tagName);
-	}
-
-	/**
-	* Validate and normalize a tag name
-	*
-	* @param  string $tagName Original tag name
-	* @return string          Normalized tag name, in uppercase
-	*/
-	protected function normalizeTagName($tagName)
-	{
-		if (!static::isValidName($tagName))
-		{
-			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
-		}
-
-		return strtoupper($tagName);
-	}
-
-	/**
 	* Validate and normalize an attribute name
 	*
 	* @param  string $attrName Original attribute name
@@ -693,7 +802,7 @@ class ConfigBuilder
 	*/
 	protected function normalizeAttributeName($attrName)
 	{
-		if (!static::isValidName($attrName))
+		if (!static::isValidAttributeName($attrName))
 		{
 			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
 		}
