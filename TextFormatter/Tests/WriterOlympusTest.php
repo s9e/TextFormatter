@@ -38,18 +38,18 @@ class OlympusParser extends Parser
 		/**
 		* Add BBCodes
 		*/
-		$cb->addBBCode('quote', array(
+		$cb->BBCodes->add('quote', array(
 			'defaultParam' => 'author',
 			'nestingLimit' => 10
 		));
 		$cb->addBBCodeParam('quote', 'author', 'text', array('isRequired' => false));
 
-		$cb->addBBCode('list', array(
+		$cb->BBCodes->add('list', array(
 			'defaultParam' => 'type'
 		));
 		$cb->addBBCodeParam('list', 'type', 'simpletext', array('isRequired' => false));
 
-		$cb->addBBCode('li');
+		$cb->BBCodes->add('li');
 		$cb->addBBCodeAlias('li', '*');
 		$cb->addBBCodeRule('li', 'requireParent', 'list');
 		$cb->addBBCodeRule('li', 'closeParent', 'li');
@@ -65,7 +65,7 @@ class OlympusParser extends Parser
 		$this->smilies[':lol:'] =
 			'<!-- s:lol: --><img src="{SMILIES_PATH}/icon_lol.gif" alt=":lol:" title="Laughing" /><!-- s:lol: -->';
 
-		$cb->addBBCode('smiley', array('internal_use' => true));
+		$cb->BBCodes->add('smiley', array('internal_use' => true));
 		$cb->setEmoticonOption('bbcode', 'smiley');
 
 		/**

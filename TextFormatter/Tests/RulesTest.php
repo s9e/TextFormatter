@@ -46,8 +46,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b');
-		$cb->addBBCode('denied');
+		$cb->BBCodes->add('b');
+		$cb->BBCodes->add('denied');
 
 		$cb->addBBCodeRule('b', 'deny', 'denied');
 
@@ -62,9 +62,9 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b', array('defaultRule' => 'deny'));
-		$cb->addBBCode('allowed');
-		$cb->addBBCode('denied');
+		$cb->BBCodes->add('b', array('defaultRule' => 'deny'));
+		$cb->BBCodes->add('allowed');
+		$cb->BBCodes->add('denied');
 
 		$cb->addBBCodeRule('b', 'allow', 'allowed');
 
@@ -79,8 +79,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('foo');
-		$cb->addBBCode('bar');
+		$cb->BBCodes->add('foo');
+		$cb->BBCodes->add('bar');
 
 		$cb->addBBCodeRule('bar', 'requireAscendant', 'foo');
 
@@ -99,8 +99,8 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b');
-		$cb->addBBCode('denied');
+		$cb->BBCodes->add('b');
+		$cb->BBCodes->add('denied');
 
 		$cb->addBBCodeAlias('b', 'b_alias');
 		$cb->addBBCodeAlias('denied', 'denied_alias');
@@ -118,9 +118,9 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b');
-		$cb->addBBCode('list');
-		$cb->addBBCode('li');
+		$cb->BBCodes->add('b');
+		$cb->BBCodes->add('list');
+		$cb->BBCodes->add('li');
 
 		$cb->addBBCodeAlias('li', '*');
 

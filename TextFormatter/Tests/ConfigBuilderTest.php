@@ -65,7 +65,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->cb->addBBCode('foo:bar');
+			$this->cb->BBCodes->add('foo:bar');
 		}
 		catch (\InvalidArgumentException $e)
 		{
@@ -81,7 +81,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->cb->addBBCode('b');
+			$this->cb->BBCodes->add('b');
 		}
 		catch (\InvalidArgumentException $e)
 		{
@@ -230,7 +230,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->cb->addBBCode('foo', array('defaultParam' => 'undefined'));
+			$this->cb->BBCodes->add('foo', array('defaultParam' => 'undefined'));
 			$this->cb->getBBCodeConfig();
 		}
 		catch (\PHPUnit_Framework_Error $e)
@@ -247,7 +247,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->cb->setBBCodeTemplate('foo', '');
+			$this->cb->setTemplate('foo', '');
 		}
 		catch (\InvalidArgumentException $e)
 		{
@@ -463,7 +463,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	{
 		try
 		{
-			$this->cb->addBBCode('z');
+			$this->cb->BBCodes->add('z');
 			$this->cb->setOption('Censor', 'bbcode', 'Z');
 			$this->cb->setOption('Censor', 'param', 'Z');
 		}
@@ -492,7 +492,7 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 
 	public function testTemplatesAreStrippedOffBBCodeConfig()
 	{
-		$this->cb->setBBCodeTemplate('b', '<b></b>');
+		$this->cb->setTemplate('b', '<b></b>');
 		$config = $this->cb->getParserConfig();
 		$this->assertArrayNotHasKey('xsl', $config['passes']['BBCode']['bbcodes']['B']);
 	}
@@ -652,8 +652,8 @@ class ConfigBuilderTest extends \PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$this->cb = new ConfigBuilder;
-		$this->cb->addBBCode('a');
-		$this->cb->addBBCode('b');
+		$this->cb->BBCodes->add('a');
+		$this->cb->BBCodes->add('b');
 		$this->cb->addBBCodeParam('b', 'b', 'text');
 		$this->cb->addBBCodeRule('b', 'requireParent', 'a');
 	}

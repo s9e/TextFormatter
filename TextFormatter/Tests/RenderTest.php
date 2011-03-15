@@ -14,11 +14,11 @@ class RenderTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b');
-		$cb->setBBCodeTemplate('b', '<b><xsl:apply-templates/></b>');
+		$cb->BBCodes->add('b');
+		$cb->setTemplate('b', '<b><xsl:apply-templates/></b>');
 
-		$cb->addBBCode('i');
-		$cb->setBBCodeTemplate('i', '<i><xsl:apply-templates/></i>');
+		$cb->BBCodes->add('i');
+		$cb->setTemplate('i', '<i><xsl:apply-templates/></i>');
 
 		$texts = array(
 			'Some [b]bold[/b] text.',

@@ -175,7 +175,7 @@ class BBCodesConfig extends PluginConfig
 			);
 		}
 
-		$this->setBBCodeTemplate($def['bbcodeName'], $tpl, $flags);
+		$this->cb->setTemplate($def['bbcodeName'], $tpl, $flags);
 	}
 
 	protected function convertTemplate($tpl, array $def, $flags)

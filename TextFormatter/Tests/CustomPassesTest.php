@@ -186,8 +186,8 @@ class CustomPassesTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('br', array('internal_use' => true));
-		$cb->setBBCodeTemplate('br', '<br/>');
+		$cb->BBCodes->add('br', array('internal_use' => true));
+		$cb->setTemplate('br', '<br/>');
 
 		$cb->addPass('Newlines', array(
 			'parser' => function($text)

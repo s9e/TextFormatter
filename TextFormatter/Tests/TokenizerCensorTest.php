@@ -155,7 +155,7 @@ class TokenizerCensorTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('censor');
+		$cb->BBCodes->add('censor');
 		$cb->addBBCodeParam('censor', 'replacement', 'text', array('isRequired' => false));
 
 		$cb->setCensorOption('bbcode', 'censor');

@@ -4,10 +4,13 @@ namespace s9e\Toolkit\TextFormatter\Tests;
 
 use s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\Parser,
-    s9e\Toolkit\TextFormatter\Renderer;
+    s9e\Toolkit\TextFormatter\Renderer,
+    s9e\Toolkit\TextFormatter\Plugins\BBCodesConfig;
 
 include_once __DIR__ . '/../ConfigBuilder.php';
 include_once __DIR__ . '/../Parser.php';
+include_once __DIR__ . '/../PluginConfig.php';
+include_once __DIR__ . '/../Plugins/BBCodesConfig.php';
 
 class TemplatingTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,8 +20,8 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 	public function testInvalidXMLThrowsAnException()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCode('b');
-		$cb->setBBCodeTemplate('b', '<b><a></b>');
+		$cb->BBCodes->add('b');
+		$cb->setTemplate('b', '<b><a></b>');
 	}
 
 	/**
@@ -58,9 +61,9 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b');
+		$cb->BBCodes->add('b');
 		$cb->addBBCodeAlias('b', 'strong');
-		$cb->setBBCodeTemplate('strong', '<strong><xsl:apply-templates/></strong>');
+		$cb->setTemplate('strong', '<strong><xsl:apply-templates/></strong>');
 
 		$text     = '[b]bold[/b] [strong]strong[/strong]';
 		$expected = '<strong>bold</strong> <strong>strong</strong>';
@@ -75,11 +78,11 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 	public function testSetBBCodeTemplateDoesNotAcceptVariablesInScriptSrc()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCode('script');
+		$cb->BBCodes->add('script');
 
 		try
 		{
-			$cb->setBBCodeTemplate('script', '<script src="{@src}"></script>');
+			$cb->setTemplate('script', '<script src="{@src}"></script>');
 		}
 		catch (\RuntimeException $e)
 		{
@@ -94,11 +97,11 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 	public function testSetBBCodeTemplateDoesNotAcceptVariablesInScriptSrc2()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCode('script');
+		$cb->BBCodes->add('script');
 
 		try
 		{
-			$cb->setBBCodeTemplate('script', '<script><xsl:attribute /></script>');
+			$cb->setTemplate('script', '<script><xsl:attribute /></script>');
 		}
 		catch (\RuntimeException $e)
 		{
@@ -113,11 +116,11 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 	public function testSetBBCodeTemplateDoesNotAcceptVariablesInScriptContent()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCode('script');
+		$cb->BBCodes->add('script');
 
 		try
 		{
-			$cb->setBBCodeTemplate('script', '<script><xsl:value-of select="@foo"/></script>');
+			$cb->setTemplate('script', '<script><xsl:value-of select="@foo"/></script>');
 		}
 		catch (\RuntimeException $e)
 		{
@@ -161,7 +164,7 @@ class TemplatingTest extends \PHPUnit_Framework_TestCase
 			array(
 				'[email]{TEXT}[/email]',
 				'<a href="mailto:{TEXT}">{TEXT}</a>',
-				ConfigBuilder::ALLOW_INSECURE_TEMPLATES,
+				BBCodesConfig::ALLOW_INSECURE_TEMPLATES,
 				'My email is [email]COULD_BE_ANYTHING[/email]',
 				'My email is <a href="mailto:COULD_BE_ANYTHING">COULD_BE_ANYTHING</a>'
 			)

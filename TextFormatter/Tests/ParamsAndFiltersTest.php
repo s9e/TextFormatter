@@ -33,7 +33,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('foo');
+		$cb->BBCodes->add('foo');
 		$cb->addBBCodeAlias('foo', 'bar');
 		$cb->addBBCodeParam('bar', 'baz', 'text');
 
@@ -48,7 +48,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('foo');
+		$cb->BBCodes->add('foo');
 		$cb->addBBCodeAlias('foo', 'bar');
 		$cb->addBBCodeParam('foo', 'foo', 'text');
 
@@ -63,7 +63,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X');
+		$cb->BBCodes->add('X');
 		$cb->addBBCodeParam('X', 'y', 'text', array('pre_filter' => array('trim', 'strtolower')));
 
 		$text     = '[X y=" ABC "][/X]';
@@ -77,7 +77,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X');
+		$cb->BBCodes->add('X');
 		$cb->addBBCodeParam('X', 'y', 'text', array('post_filter' => array('trim', 'strtolower')));
 
 		$text     = '[X y=" ABC "][/X]';
@@ -94,7 +94,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X');
+		$cb->BBCodes->add('X');
 		$cb->addBBCodeParam('X', 'y', 'identifier', array('post_filter' => array('trim')));
 
 		$text     = '[X y=" ABC "][/X]';
@@ -112,7 +112,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X');
+		$cb->BBCodes->add('X');
 		$cb->addBBCodeParam('X', 'y', 'text', array(
 			'pre_filter'  => array('strtolower'),
 			'post_filter' => array('trim', 'strtoupper')
@@ -129,7 +129,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->BBCodes->add('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
 		$cb->addBBCodeParam('X', 'y', 'text');
 
 		$text     = '[X y=FOO][/X]';
@@ -143,7 +143,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->BBCodes->add('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
 		$cb->addBBCodeParam('X', 'y', 'text');
 
 		$text     = '[X][/X]';
@@ -157,7 +157,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->BBCodes->add('X', array('pre_filter' => array(function() { return array('y' => 'Y'); })));
 		$cb->addBBCodeParam('X', 'y', 'int');
 
 		$text     = '[X y=FOO][/X]';
@@ -171,7 +171,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->BBCodes->add('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
 		$cb->addBBCodeParam('X', 'y', 'text');
 
 		$text     = '[X y=FOO][/X]';
@@ -185,7 +185,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->BBCodes->add('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
 		$cb->addBBCodeParam('X', 'y', 'text');
 
 		$text     = '[X][/X]';
@@ -199,7 +199,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
+		$cb->BBCodes->add('X', array('post_filter' => array(function() { return array('y' => 'Y'); })));
 		$cb->addBBCodeParam('X', 'y', 'int');
 
 		$text     = '[X y=FOO][/X]';
@@ -257,7 +257,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X');
+		$cb->BBCodes->add('X');
 		$cb->addBBCodeParam('X', 'y', 'int', array('default' => 123));
 
 		$parser = $cb->getParser();
@@ -273,7 +273,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('X');
+		$cb->BBCodes->add('X');
 		$cb->addBBCodeParam('X', 'y', 'int', array('default' => 123));
 
 		$parser = $cb->getParser();
@@ -787,13 +787,13 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b');
+		$cb->BBCodes->add('b');
 
-		$cb->addBBCode('url');
+		$cb->BBCodes->add('url');
 		$cb->addBBCodeParam('url', 'href', 'url');
 		$cb->addBBCodeParam('url', 'title', 'text', array('isRequired' => false));
 
-		$cb->addBBCode('x');
+		$cb->BBCodes->add('x');
 		$cb->addBBCodeParam('x', 'foo', 'text', array('isRequired' => false));
 		$cb->addBBCodeParam('x', 'range', 'range', array('isRequired' => false, 'min' => 7, 'max' => 77));
 		$cb->addBBCodeParam('x', 'replace', 'regexp', array(
@@ -821,7 +821,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb->setFilter('custom', function($v) { return $v; });
 
 		// [size] BBCode with custom font-size filter
-		$cb->addBBCode('size', array('defaultParam' => 'size'));
+		$cb->BBCodes->add('size', array('defaultParam' => 'size'));
 		$cb->addBBCodeParam('size', 'size', 'font-size');
 
 		$that = $this;
@@ -856,7 +856,7 @@ class ParamsAndFiltersTest extends \PHPUnit_Framework_TestCase
 		$cb->allowScheme('ftp');
 
 		// Regexp stuff
-		$cb->addBBCode('align');
+		$cb->BBCodes->add('align');
 		$cb->addBBCodeParam('align', 'align', 'regexp', array('regexp' => '/^(left|right)$/i'));
 
 		$this->parser = $cb->getParser();

@@ -83,7 +83,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	public function testBBCodesFromTokenizersAreUppercasedIfNeeded()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCode('b');
+		$cb->BBCodes->add('b');
 
 		$config = $cb->getParserConfig();
 
@@ -120,8 +120,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	public function testUnknownBBCodesAreIgnored()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCode('b');
-		$cb->addBBCode('i');
+		$cb->BBCodes->add('b');
+		$cb->BBCodes->add('i');
 
 		/**
 		* It is possible that an application would selectively disable BBCodes by altering the
@@ -143,7 +143,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	public function testUnknownBBCodesFromCustomPassesAreIgnored()
 	{
 		$cb = new ConfigBuilder;
-		$cb->addBBCode('b');
+		$cb->BBCodes->add('b');
 
 		$config = $cb->getParserConfig();
 
@@ -253,11 +253,11 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 			)
 		);
 
-		$cb->addBBCode('b');
-		$cb->addBBCode('foo', array($option => true));
+		$cb->BBCodes->add('b');
+		$cb->BBCodes->add('foo', array($option => true));
 
-		$cb->setBBCodeTemplate('foo', '[foo]<xsl:apply-templates/>[/foo]');
-		$cb->setBBCodeTemplate('b', '[b]<xsl:apply-templates/>[/b]');
+		$cb->setTemplate('foo', '[foo]<xsl:apply-templates/>[/foo]');
+		$cb->setTemplate('b', '[b]<xsl:apply-templates/>[/b]');
 
 		$actual_xml = $cb->getParser()->parse($text);
 		$this->assertSame($expected_xml, $actual_xml);
@@ -329,14 +329,14 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 	{
 		$cb = new ConfigBuilder;
 
-		$cb->addBBCode('b', array('nestingLimit' => 1));
+		$cb->BBCodes->add('b', array('nestingLimit' => 1));
 
-		$cb->addBBCode('a');
+		$cb->BBCodes->add('a');
 		$cb->addBBCodeParam('a', 'href', 'url');
 		$cb->setAutolinkOption('bbcode', 'a');
 		$cb->setAutolinkOption('param', 'href');
 
-		$cb->addBBCode('x');
+		$cb->BBCodes->add('x');
 		$cb->addBBCodeParam('x', 'foo', 'text', array('isRequired' => false));
 
 		$cb->addEmoticon(':)', '<img src="happy.png" alt=":)" />');
@@ -345,7 +345,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 		$cb->addCensor('banana', 'pear');
 		$cb->addCensor('grape*');
 
-		$cb->addBBCode('c', array('internal_use' => true));
+		$cb->BBCodes->add('c', array('internal_use' => true));
 		$cb->addBBCodeParam('c', 'with', 'text', array('isRequired' => false));
 
 		$cb->setCensorOption('bbcode', 'c');

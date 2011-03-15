@@ -39,10 +39,13 @@ abstract class PluginConfig
 		$this->setUp();
 	}
 
+	/**
+	* Executed by constructor
+	*/
 	protected function setUp() {}
 
 	/**
 	* @return array
 	*/
-	public function getConfig();
+	abstract public function getConfig();
 }

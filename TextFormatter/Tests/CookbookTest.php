@@ -20,7 +20,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		$cb = new ConfigBuilder;
 
 		//======================================================================
-		$cb->addBBCode('url', array(
+		$cb->BBCodes->add('url', array(
 			'defaultParam'    => 'url',
 			'content_as_param' => true
 		));
@@ -29,7 +29,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		// followed by whether it's a required param
 		$cb->addBBCodeParam('url', 'url', 'url');
 
-		$cb->setBBCodeTemplate('url', '<a href="{@url}"><xsl:apply-templates/></a>');
+		$cb->setTemplate('url', '<a href="{@url}"><xsl:apply-templates/></a>');
 		//======================================================================
 
 		$this->assertThatItWorks($cb, array(
@@ -47,11 +47,11 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		$cb = new ConfigBuilder;
 
 		//======================================================================
-		$cb->addBBCode('list', array(
+		$cb->BBCodes->add('list', array(
 			'ltrim_content' => true,
 			'rtrim_content' => true
 		));
-		$cb->addBBCode('li', array(
+		$cb->BBCodes->add('li', array(
 			'ltrim_content' => true,
 			'rtrim_content' => true
 		));
@@ -66,8 +66,8 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		// the first one when opening the second, instead of it behind its child
 		$cb->addBBCodeRule('li', 'closeParent', 'li');
 
-		$cb->setBBCodeTemplate('list', '<ul><xsl:apply-templates/></ul>');
-		$cb->setBBCodeTemplate('li',   '<li><xsl:apply-templates/></li>');
+		$cb->setTemplate('list', '<ul><xsl:apply-templates/></ul>');
+		$cb->setTemplate('li',   '<li><xsl:apply-templates/></li>');
 		//======================================================================
 
 		$this->assertThatItWorks($cb, array(
@@ -85,7 +85,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		$cb = new ConfigBuilder;
 
 		//======================================================================
-		$cb->addBBCode('quote', array(
+		$cb->BBCodes->add('quote', array(
 			'nestingLimit' => 3,
 			'defaultParam' => 'author',
 			'trim_before'   => true,
@@ -95,7 +95,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		));
 
 		$cb->addBBCodeParam('quote', 'author', 'text', array('isRequired' => false));
-		$cb->setBBCodeTemplate(
+		$cb->setTemplate(
 			'quote',
 			'<div class="quote">
 				<xsl:choose>
@@ -133,7 +133,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 		//======================================================================
 		// Create a [size] BBCode, with its default param being "px"
 		// [size=10] is the same as [size px=10]
-		$cb->addBBCode('size', array('defaultParam' => 'px'));
+		$cb->BBCodes->add('size', array('defaultParam' => 'px'));
 
 		// BBCode name, param name, param type, isRequired
 		$cb->addBBCodeParam('size', 'px', 'font-size', array(
@@ -172,7 +172,7 @@ class CookbookTest extends \PHPUnit_Framework_TestCase
 
 		$cb->setFilter('font-size', __NAMESPACE__ . '\\checkFontSize');
 
-		$cb->setBBCodeTemplate('size', '<span style="font-size: {@px}px"><xsl:apply-templates/></span>');
+		$cb->setTemplate('size', '<span style="font-size: {@px}px"><xsl:apply-templates/></span>');
 		//======================================================================
 
 		$this->assertThatItWorks($cb, array(

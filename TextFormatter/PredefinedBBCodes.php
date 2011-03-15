@@ -55,7 +55,7 @@ class PredefinedBBCodes
 	*/
 	public function addURL()
 	{
-		$this->cb->addBBCode('URL', array(
+		$this->cb->BBCodes->add('URL', array(
 			'defaultParam'    => 'url',
 			'content_as_param' => true
 		));
@@ -63,7 +63,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeParam('URL', 'url', 'url');
 		$this->cb->addBBCodeParam('URL', 'title', 'text', array('isRequired' => false));
 
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'URL',
 			'<a href="{@url}">
 				<xsl:if test="@title">
@@ -85,7 +85,7 @@ class PredefinedBBCodes
 	*/
 	public function addIMG()
 	{
-		$this->cb->addBBCode('IMG', array(
+		$this->cb->BBCodes->add('IMG', array(
 			'defaultParam'    => 'src',
 			'content_as_param' => true,
 			'auto_close'       => true,
@@ -96,7 +96,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeParam('IMG', 'alt', 'text', array('isRequired' => false));
 		$this->cb->addBBCodeParam('IMG', 'title', 'text', array('isRequired' => false));
 
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'IMG',
 			'<img src="{@src}">
 				<xsl:if test="@alt">
@@ -151,7 +151,7 @@ class PredefinedBBCodes
 		);
 
 		// [LIST]
-		$this->cb->addBBCode('LIST', array(
+		$this->cb->BBCodes->add('LIST', array(
 			'defaultParam' => 'style',
 			'trim_before'   => true,
 			'trim_after'    => true,
@@ -167,7 +167,7 @@ class PredefinedBBCodes
 			'regexp' => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
 		));
 
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'LIST',
 			'<ol>
 				<xsl:attribute name="style">list-style-type:<xsl:choose>
@@ -193,7 +193,7 @@ class PredefinedBBCodes
 		);
 
 		// [LI]
-		$this->cb->addBBCode('LI', array(
+		$this->cb->BBCodes->add('LI', array(
 			'trim_before'   => true,
 			'trim_after'    => true,
 			'ltrim_content' => true,
@@ -210,7 +210,7 @@ class PredefinedBBCodes
 		// the first one when opening the second, instead of it behind its child
 		$this->cb->addBBCodeRule('LI', 'closeParent', 'LI');
 
-		$this->cb->setBBCodeTemplate('LI', '<li><xsl:apply-templates/></li>');
+		$this->cb->setTemplate('LI', '<li><xsl:apply-templates/></li>');
 	}
 
 	/**
@@ -348,8 +348,8 @@ class PredefinedBBCodes
 	public function addTABLE()
 	{
 		// limit table nesting to 2, which should be enough for everybody
-		$this->cb->addBBCode('TABLE', array('nestingLimit' => 2));
-		$this->cb->setBBCodeTemplate(
+		$this->cb->BBCodes->add('TABLE', array('nestingLimit' => 2));
+		$this->cb->setTemplate(
 			'TABLE',
 			'<table>
 				<xsl:apply-templates select="COL" />
@@ -357,7 +357,7 @@ class PredefinedBBCodes
 			</table>'
 		);
 
-		$this->cb->addBBCode('COL', array(
+		$this->cb->BBCodes->add('COL', array(
 			'defaultRule' => 'deny',
 			'auto_close'   => true
 		));
@@ -366,7 +366,7 @@ class PredefinedBBCodes
 			'isRequired' => false,
 			'regexp'      => '/^(?:left|right|center|align)$/iD'
 		));
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'COL',
 			'<col>
 				<xsl:if test="@align">
@@ -375,20 +375,20 @@ class PredefinedBBCodes
 			</col>'
 		);
 
-		$this->cb->addBBCode('TR');
+		$this->cb->BBCodes->add('TR');
 		$this->cb->addBBCodeRule('TR', 'requireParent', 'TABLE');
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'TR',
 			'<tr>
 				<xsl:apply-templates select="TD | TH" />
 			</tr>'
 		);
 
-		$this->cb->addBBCode('TH');
+		$this->cb->BBCodes->add('TH');
 		$this->cb->addBBCodeRule('TH', 'requireParent', 'TR');
 		$this->cb->addBBCodeParam('TH', 'colspan', 'uint', array('isRequired' => false));
 		$this->cb->addBBCodeParam('TH', 'rowspan', 'uint', array('isRequired' => false));
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'TH',
 			'<th>
 				<xsl:if test="@colspan">
@@ -407,11 +407,11 @@ class PredefinedBBCodes
 			</th>'
 		);
 
-		$this->cb->addBBCode('TD');
+		$this->cb->BBCodes->add('TD');
 		$this->cb->addBBCodeRule('TD', 'requireParent', 'TR');
 		$this->cb->addBBCodeParam('TD', 'colspan', 'uint', array('isRequired' => false));
 		$this->cb->addBBCodeParam('TD', 'rowspan', 'uint', array('isRequired' => false));
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'TD',
 			'<td>
 				<xsl:if test="@colspan">
@@ -443,7 +443,7 @@ class PredefinedBBCodes
 	*/
 	public function addCODE()
 	{
-		$this->cb->addBBCode('CODE', array(
+		$this->cb->BBCodes->add('CODE', array(
 			'defaultRule'  => 'deny',
 			'defaultParam' => 'stx'
 		));
@@ -453,7 +453,7 @@ class PredefinedBBCodes
 			'pre_filter'  => array('strtolower')
 		));
 
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'CODE',
 			'<pre class="brush:{@stx}"><xsl:value-of select="text()" /></pre>'
 		);
@@ -472,14 +472,14 @@ class PredefinedBBCodes
 
 	public function addHR()
 	{
-		$this->cb->addBBCode('HR', array(
+		$this->cb->BBCodes->add('HR', array(
 			'defaultRule' => 'deny',
 			'auto_close'   => true,
 			'trim_before'  => true,
 			'trim_after'   => true
 		));
 
-		$this->cb->setBBCodeTemplate('HR', '<hr/>');
+		$this->cb->setTemplate('HR', '<hr/>');
 	}
 
 	/**
@@ -495,7 +495,7 @@ class PredefinedBBCodes
 	*/
 	public function addQUOTE($nestingLevel = 3, $authorStr = '%s wrote:')
 	{
-		$this->cb->addBBCode('QUOTE', array(
+		$this->cb->BBCodes->add('QUOTE', array(
 			'nestingLimit' => $nestingLevel,
 			'defaultParam' => 'author',
 			'trim_before'   => true,
@@ -511,7 +511,7 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->addBBCodeParam('QUOTE', 'author', 'text', array('isRequired' => false));
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'QUOTE',
 			'<xsl:choose>
 				<xsl:when test="@author">
@@ -545,7 +545,7 @@ class PredefinedBBCodes
 	*/
 	public function addEMAIL()
 	{
-		$this->cb->addBBCode('EMAIL', array(
+		$this->cb->BBCodes->add('EMAIL', array(
 			'defaultParam'    => 'email',
 			'content_as_param' => true,
 			'defaultRule'     => 'deny'
@@ -561,7 +561,7 @@ class PredefinedBBCodes
 			'post_filter' => array('rawurlencode')
 		));
 
-		$this->cb->setBBCodeTemplate(
+		$this->cb->setTemplate(
 			'EMAIL',
 			'<a>
 				<xsl:attribute name="href">mailto:<xsl:value-of select="@email" /><xsl:if test="@subject">?subject=<xsl:value-of select="@subject" /></xsl:if></xsl:attribute>
