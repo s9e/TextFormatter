@@ -32,7 +32,10 @@ abstract class PluginParser
 	}
 
 	/**
+	* @param  string $text
+	* @param  array  $matches If the config array has a "regexp" key, the corresponding matches are
+	*                passed as second parameter. Otherwise, an empty array is passed
 	* @return array
 	*/
-	public function getTags();
+	public function getTags($text, array $matches);
 }

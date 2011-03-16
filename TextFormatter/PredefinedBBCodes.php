@@ -153,10 +153,10 @@ class PredefinedBBCodes
 		// [LIST]
 		$this->cb->BBCodes->add('LIST', array(
 			'defaultParam' => 'style',
-			'trim_before'   => true,
-			'trim_after'    => true,
-			'ltrim_content' => true,
-			'rtrim_content' => true
+			'trimBefore'   => true,
+			'trimAfter'    => true,
+			'ltrimContent' => true,
+			'rtrimContent' => true
 		));
 
 		$this->cb->addTagAttribute('LIST', 'start', 'uint', array('isRequired' => false));
@@ -194,10 +194,10 @@ class PredefinedBBCodes
 
 		// [LI]
 		$this->cb->BBCodes->add('LI', array(
-			'trim_before'   => true,
-			'trim_after'    => true,
-			'ltrim_content' => true,
-			'rtrim_content' => true
+			'trimBefore'   => true,
+			'trimAfter'    => true,
+			'ltrimContent' => true,
+			'rtrimContent' => true
 		));
 
 		// create an alias so that [*] be interpreted as [LI]
@@ -475,8 +475,8 @@ class PredefinedBBCodes
 		$this->cb->BBCodes->add('HR', array(
 			'defaultRule' => 'deny',
 			'auto_close'   => true,
-			'trim_before'  => true,
-			'trim_after'   => true
+			'trimBefore'  => true,
+			'trimAfter'   => true
 		));
 
 		$this->cb->setTagTemplate('HR', '<hr/>');
@@ -498,10 +498,10 @@ class PredefinedBBCodes
 		$this->cb->BBCodes->add('QUOTE', array(
 			'nestingLimit' => $nestingLevel,
 			'defaultParam' => 'author',
-			'trim_before'   => true,
-			'trim_after'    => true,
-			'ltrim_content' => true,
-			'rtrim_content' => true
+			'trimBefore'   => true,
+			'trimAfter'    => true,
+			'ltrimContent' => true,
+			'rtrimContent' => true
 		));
 
 		$authorXml = str_replace(

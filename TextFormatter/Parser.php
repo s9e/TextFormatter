@@ -48,12 +48,17 @@ class Parser
 	protected $log;
 
 	/**
-	* @var array  Formatting passes
+	* @var array  Tags config
 	*/
-	protected $passes;
+	protected $tagsConfig;
 
 	/**
-	* @var array  Parameter filters
+	* @var array  Plugins config
+	*/
+	protected $plugins;
+
+	/**
+	* @var array  Attribute filters
 	*/
 	protected $filters;
 
@@ -87,9 +92,9 @@ class Parser
 	protected $currentTag;
 
 	/**
-	* @var string Name of the param currently being validated, used in processTags()
+	* @var string Name of the attribute currently being validated, used in processTags()
 	*/
-	protected $currentParam;
+	protected $currentAttribute;
 
 	//==============================================================================================
 	// Public stuff
@@ -103,8 +108,9 @@ class Parser
 	*/
 	public function __construct(array $config)
 	{
-		$this->passes  = $config['passes'];
-		$this->filters = $config['filters'];
+		$this->filters    = $config['filters'];
+		$this->plugins    = $config['plugins'];
+		$this->tagsConfig = $config['tags'];
 	}
 
 	/**
@@ -131,7 +137,7 @@ class Parser
 		$this->tagStack = array();
 		$this->tags     = array();
 
-		unset($this->text, $this->currentTag, $this->currentParam);
+		unset($this->text, $this->currentTag, $this->currentAttribute);
 	}
 
 	/**
@@ -160,11 +166,11 @@ class Parser
 	{
 		if (isset($this->currentTag))
 		{
-			$entry['bbcodeId'] = $this->currentTag['name'];
+			$entry['tagName'] = $this->currentTag['name'];
 
-			if (isset($this->currentParam))
+			if (isset($this->currentAttribute))
 			{
-				$entry['paramName'] = $this->currentParam;
+				$entry['attrName'] = $this->currentAttribute;
 			}
 
 			if (!isset($entry['pos']))
@@ -183,13 +189,13 @@ class Parser
 	* invalid. It mostly relies on PHP's own ext/filter extension but individual filters can be
 	* overwritten by the config
 	*
-	* @param  mixed  $paramVal  Param value to be filtered/sanitized
-	* @param  array  $paramConf Param configuration
+	* @param  mixed  $attrVal  Attr value to be filtered/sanitized
+	* @param  array  $attrConf Attr configuration
 	* @return mixed             The sanitized value of this param, or false if it was invalid
 	*/
-	public function filter($paramVal, array $paramConf)
+	public function filter($attrVal, array $attrConf)
 	{
-		$paramType = $paramConf['type'];
+		$paramType = $attrConf['type'];
 
 		if (isset($this->filters[$paramType]['callback']))
 		{
@@ -199,27 +205,27 @@ class Parser
 				* Add the filter's config to the param
 				* NOTE: it doesn't overwrite the param's existing config
 				*/
-				$paramConf += $this->filters[$paramType]['config'];
+				$attrConf += $this->filters[$paramType]['config'];
 			}
 
 			return call_user_func(
 				$this->filters[$paramType]['callback'],
-				$paramVal,
-				$paramConf
+				$attrVal,
+				$attrConf
 			);
 		}
 
 		switch ($paramType)
 		{
 			case 'url':
-				$paramVal = filter_var($paramVal, \FILTER_VALIDATE_URL);
+				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_URL);
 
-				if (!$paramVal)
+				if (!$attrVal)
 				{
 					return false;
 				}
 
-				$p = parse_url($paramVal);
+				$p = parse_url($attrVal);
 
 				if (!preg_match($this->filters['url']['allowedSchemes'], $p['scheme']))
 				{
@@ -244,79 +250,79 @@ class Parser
 				* We URL-encode quotes just in case someone would want to use the URL in some
 				* Javascript thingy
 				*/
-				return str_replace(array("'", '"'), array('%27', '%22'), $paramVal);
+				return str_replace(array("'", '"'), array('%27', '%22'), $attrVal);
 
 			case 'identifier':
 			case 'id':
-				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '#^[a-zA-Z0-9-_]+$#D')
 				));
 
 			case 'simpletext':
-				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '#^[a-zA-Z0-9\\-+.,_ ]+$#D')
 				));
 
 			case 'text':
-				return (string) $paramVal;
+				return (string) $attrVal;
 
 			case 'email':
-				return filter_var($paramVal, \FILTER_VALIDATE_EMAIL);
+				return filter_var($attrVal, \FILTER_VALIDATE_EMAIL);
 
 			case 'int':
 			case 'integer':
-				return filter_var($paramVal, \FILTER_VALIDATE_INT);
+				return filter_var($attrVal, \FILTER_VALIDATE_INT);
 
 			case 'float':
-				return filter_var($paramVal, \FILTER_VALIDATE_FLOAT);
+				return filter_var($attrVal, \FILTER_VALIDATE_FLOAT);
 
 			case 'number':
 			case 'uint':
-				return filter_var($paramVal, \FILTER_VALIDATE_INT, array(
+				return filter_var($attrVal, \FILTER_VALIDATE_INT, array(
 					'options' => array('min_range' => 0)
 				));
 
 			case 'range':
-				$paramVal = filter_var($paramVal, \FILTER_VALIDATE_INT);
+				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_INT);
 
-				if ($paramVal === false)
+				if ($attrVal === false)
 				{
 					return false;
 				}
 
-				if ($paramVal < $paramConf['min'])
+				if ($attrVal < $attrConf['min'])
 				{
 					$this->log('warning', array(
 						'msg'    => 'Minimum range value adjusted to %s',
-						'params' => array($paramConf['min'])
+						'params' => array($attrConf['min'])
 					));
-					return $paramConf['min'];
+					return $attrConf['min'];
 				}
 
-				if ($paramVal > $paramConf['max'])
+				if ($attrVal > $attrConf['max'])
 				{
 					$this->log('warning', array(
 						'msg'    => 'Maximum range value adjusted to %s',
-						'params' => array($paramConf['max'])
+						'params' => array($attrConf['max'])
 					));
-					return $paramConf['max'];
+					return $attrConf['max'];
 				}
 
-				return $paramVal;
+				return $attrVal;
 
 
 			case 'color':
-				return filter_var($paramVal, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
 				));
 
 			case 'regexp':
-				if (!preg_match($paramConf['regexp'], $paramVal, $match))
+				if (!preg_match($attrConf['regexp'], $attrVal, $match))
 				{
 					return false;
 				}
 
-				if (isset($paramConf['replace']))
+				if (isset($attrConf['replace']))
 				{
 					/**
 					* Even numbers of backslashes are replaced by half their number of backslashes.
@@ -334,11 +340,11 @@ class Parser
 
 							return ($m[1]) ? '$' . $m[2] : $match[$m[2]];
 						},
-						$paramConf['replace']
+						$attrConf['replace']
 					);
 				}
 
-				return $paramVal;
+				return $attrVal;
 
 			default:
 				$this->log('debug', array(
@@ -379,7 +385,7 @@ class Parser
 		$this->sortTags();
 
 		/**
-		* Remove overlapping tags, filter invalid tags, apply BBCode rules and stuff
+		* Remove overlapping tags, filter invalid tags, apply tag rules and stuff
 		*/
 		$this->processTags();
 	}
@@ -432,16 +438,16 @@ class Parser
 
 			$wsBefore = $wsAfter = '';
 
-			if ($tag['trim_before'])
+			if ($tag['trimBefore'])
 			{
-				$wsBefore = substr($tagText, 0, $tag['trim_before']);
-				$tagText  = substr($tagText, $tag['trim_before']);
+				$wsBefore = substr($tagText, 0, $tag['trimBefore']);
+				$tagText  = substr($tagText, $tag['trimBefore']);
 			}
 
-			if ($tag['trim_after'])
+			if ($tag['trimAfter'])
 			{
-				$wsAfter = substr($tagText, -$tag['trim_after']);
-				$tagText = substr($tagText, 0, -$tag['trim_after']);
+				$wsAfter = substr($tagText, -$tag['trimAfter']);
+				$tagText = substr($tagText, 0, -$tag['trimAfter']);
 			}
 
 			if ($wsBefore > '')
@@ -453,9 +459,9 @@ class Parser
 			{
 				$xml->startElement($tag['name']);
 
-				if (!empty($tag['params']))
+				if (!empty($tag['attrs']))
 				{
-					foreach ($tag['params'] as $k => $v)
+					foreach ($tag['attrs'] as $k => $v)
 					{
 						$xml->writeAttribute($k, $v);
 					}
@@ -522,8 +528,8 @@ class Parser
 			/**
 			* The left boundary is right after the last tag
 			*/
-			$lastTag = end($this->tags);
-			$offset  = $lastTag['pos'] + $lastTag['len'];
+			$parentTag = end($this->tags);
+			$offset  = $parentTag['pos'] + $parentTag['len'];
 		}
 
 		/**
@@ -544,7 +550,7 @@ class Parser
 	* Add trimming info to a tag
 	*
 	* For tags where one of the trim* directive is set, the "pos" and "len" attributes are adjusted
-	* to comprise the surrounding whitespace and two attributes, "trim_before" and "trim_after" are
+	* to comprise the surrounding whitespace and two attributes, "trimBefore" and "trimAfter" are
 	* added.
 	*
 	* Note that whitespace that is part of what a pass defines as a tag is left untouched.
@@ -556,27 +562,27 @@ class Parser
 	protected function addTrimmingInfoToTag(array &$tag, $offset)
 	{
 		$tag += array(
-			'trim_before' => 0,
-			'trim_after'  => 0
+			'trimBefore' => 0,
+			'trimAfter'  => 0
 		);
 
-		$bbcode = $this->passes['BBCode']['bbcodes'][$tag['name']];
+		$tagConfig = $this->tagsConfig[$tag['name']];
 
 		/**
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "XX[b]  -text-XX[/b]  "
 		*/
-		if (($tag['type']  &  self::START_TAG && !empty($bbcode['trim_before']))
-		 || ($tag['type'] === self::END_TAG   && !empty($bbcode['rtrim_content'])))
+		if (($tag['type']  &  self::START_TAG && !empty($tagConfig['trimBefore']))
+		 || ($tag['type'] === self::END_TAG   && !empty($tagConfig['rtrimContent'])))
 		{
 			$spn = strspn(
 				strrev(substr($this->text, $offset, $tag['pos'] - $offset)),
 				self::TRIM_CHARLIST
 			);
 
-			$tag['trim_before'] += $spn;
-			$tag['len']         += $spn;
-			$tag['pos']         -= $spn;
+			$tag['trimBefore'] += $spn;
+			$tag['len']        += $spn;
+			$tag['pos']        -= $spn;
 		}
 
 		/**
@@ -588,18 +594,18 @@ class Parser
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "  [b]XX-text-  [/b]XX"
 		*/
-		if (($tag['type'] === self::START_TAG && !empty($bbcode['ltrim_content']))
-		 || ($tag['type']  &  self::END_TAG   && !empty($bbcode['trim_after'])))
+		if (($tag['type'] === self::START_TAG && !empty($tagConfig['ltrimContent']))
+		 || ($tag['type']  &  self::END_TAG   && !empty($tagConfig['trimAfter'])))
 		{
 			$spn = strspn($this->text, self::TRIM_CHARLIST, $offset);
 
-			$tag['trim_after'] += $spn;
-			$tag['len']        += $spn;
+			$tag['trimAfter'] += $spn;
+			$tag['len']       += $spn;
 		}
 	}
 
 	/**
-	* Execute all the passes and store their tags/messages
+	* Execute all the plugins and store their tags
 	*
 	* @return void
 	*/
@@ -690,46 +696,38 @@ class Parser
 
 			if (!isset($pluginConfig['parser']))
 			{
-				$pluginConfig['parser'] = array('self', 'get' . $pluginName . 'Tags');
+				$pluginConfig['parser'] = array(
+					__NAMESPACE__ . '\\Plugins\\' . $pluginName . 'Parser',
+					'getTags'
+				);
+
+				$pluginConfig['parserFilepath'] =
+					__DIR__ . '/Plugins/' . $pluginName . 'Parser.php';
 			}
 
-			$ret = call_user_func($pluginConfig['parser'], $this->text, $pluginConfig, $matches);
+			$tags = call_user_func($pluginConfig['parser'], $this->text, $pluginConfig, $matches);
 
-			if (!empty($ret['msgs']))
+			foreach ($tags as $tag)
 			{
-				foreach ($ret['msgs'] as $type => $msgs)
+				if (!isset($tag['suffix']))
 				{
-					foreach ($msgs as $msg)
-					{
-						$this->log($type, $msg);
-					}
+					/**
+					* Add a suffix to tags that don't have one so that closing tags from a plugin
+					* do not close tags opened by another plugin. Those special suffixes use the
+					* minus character - instead of the colon : so that they don't get mixed up with
+					* user-supplied suffixes used in BBCodes
+					*/
+					$tag['suffix'] = '-' . $pluginName;
 				}
-			}
 
-			if (!empty($ret['tags']))
-			{
-				foreach ($ret['tags'] as $tag)
+				if (!isset($tag['attrs']))
 				{
-					if (!isset($tag['suffix']))
-					{
-						/**
-						* Add a suffix to tags that don't have one so that closing tags from a
-						* pass don't close tags opened by another pass
-						*/
-						$tag['suffix'] = '-' . $pluginName;
-					}
-
-					if (!isset($tag['params']))
-					{
-						$tag['params'] = array();
-					}
-
-					$tag['pass']      = $plugin;
-					$this->tagStack[] = $tag;
+					$tag['attrs'] = array();
 				}
-			}
 
-			++$plugin;
+				$tag['pluginName'] = $pluginName;
+				$this->tagStack[]  = $tag;
+			}
 		}
 	}
 
@@ -740,31 +738,23 @@ class Parser
 	*/
 	protected function normalizeTags()
 	{
-		$bbcodes = $this->passes['BBCode']['bbcodes'];
-		$aliases = $this->passes['BBCode']['aliases'];
-
 		foreach ($this->tagStack as $k => &$tag)
 		{
 			/**
 			* Normalize the tag name
 			*/
-			if (!isset($bbcodes[$tag['name']]))
+			$tag['name'] = strtoupper($tag['name']);
+
+			if (!isset($this->tagsConfig[$tag['name']]))
 			{
-				$bbcodeId = strtoupper($tag['name']);
+				$this->log('debug', array(
+					'pos'    => $tag['pos'],
+					'msg'    => 'Removed unknown tag %1$s from plugin %2$s',
+					'params' => array($tag['name'], $tag['pluginName'])
+				));
 
-				if (!isset($aliases[$bbcodeId]))
-				{
-					$this->log('debug', array(
-						'pos'    => $tag['pos'],
-						'msg'    => 'Removed unknown BBCode %1$s from pass %2$s',
-						'params' => array($tag['name'], $tag['pass'])
-					));
-
-					unset($this->tagStack[$k]);
-					continue;
-				}
-
-				$tag['name'] = $aliases[$bbcodeId];
+				unset($this->tagStack[$k]);
+				continue;
 			}
 		}
 	}
@@ -788,26 +778,23 @@ class Parser
 		// Time to get serious
 		//======================================================================
 
-		$aliases = $this->passes['BBCode']['aliases'];
-		$bbcodes = $this->passes['BBCode']['bbcodes'];
-
 		/**
-		* @var array Open BBCodes
+		* @var array Open tags
 		*/
-		$bbcodeStack = array();
+		$tagStack = array();
 
 		/**
-		* @var array List of allowed BBCode tags in current context. Starts as a copy of $aliases
+		* @var array List of allowed tags in current context
 		*/
-		$allowed = $aliases;
+		$allowed = array_combine(array_keys($this->tagsConfig), array_keys($this->tagsConfig));
 
 		/**
-		* @var array Number of times each BBCode has been used
+		* @var array Number of times each tag has been used
 		*/
 		$cntTotal = array_fill_keys($allowed, 0);
 
 		/**
-		* @var array Number of open tags for each bbcode_id
+		* @var array Number of open tags for each tagName
 		*/
 		$cntOpen = $cntTotal;
 
@@ -830,9 +817,9 @@ class Parser
 				continue;
 			}
 
-			$bbcodeId = $this->currentTag['name'];
-			$bbcode   = $bbcodes[$bbcodeId];
-			$suffix   = (isset($this->currentTag['suffix'])) ? $this->currentTag['suffix'] : '';
+			$tagName   = $this->currentTag['name'];
+			$tagConfig = $this->tagsConfig[$tagName];
+			$suffix    = (isset($this->currentTag['suffix'])) ? $this->currentTag['suffix'] : '';
 
 			//==================================================================
 			// Start tag
@@ -841,18 +828,19 @@ class Parser
 			if ($this->currentTag['type'] & self::START_TAG)
 			{
 				//==============================================================
-				// Check that this BBCode is allowed here
+				// Check that this tag is allowed here
 				//==============================================================
 
-				if (!empty($bbcode['closeParent']))
+				if (!empty($tagConfig['rules']['closeParent']))
 				{
 					/**
 					* Oh, wait, we may have to close its parent first
 					*/
-					$lastBBCode = end($bbcodeStack);
-					foreach ($bbcode['closeParent'] as $parentBBCodeId)
+					$parentTag = end($tagStack);
+
+					foreach ($tagConfig['rules']['closeParent'] as $parentTagName)
 					{
-						if ($lastBBCode['bbcode_id'] === $parentBBCodeId)
+						if ($parentTag['name'] === $parentTagName)
 						{
 							/**
 							* So we do have to close that parent. First we reinsert current tag... 
@@ -864,8 +852,8 @@ class Parser
 							*/
 							$this->currentTag = array(
 								'pos'    => $this->currentTag['pos'],
-								'name'   => $parentBBCodeId,
-								'suffix' => $lastBBCode['suffix'],
+								'name'   => $parentTagName,
+								'suffix' => $parentTag['suffix'],
 								'len'    => 0,
 								'type'   => self::END_TAG
 							);
@@ -878,109 +866,109 @@ class Parser
 					}
 				}
 
-				if ($bbcode['nestingLimit'] <= $cntOpen[$bbcodeId]
-				 || $bbcode['tagLimit']     <= $cntTotal[$bbcodeId])
+				if ($tagConfig['nestingLimit'] <= $cntOpen[$tagName]
+				 || $tagConfig['tagLimit']     <= $cntTotal[$tagName])
 				{
 					continue;
 				}
 
-				if (!isset($allowed[$bbcodeId]))
+				if (!isset($allowed[$tagName]))
 				{
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'BBCode %s is not allowed in this context',
-						'params' => array($bbcodeId)
+						'msg'    => 'Tag %s is not allowed in this context',
+						'params' => array($tagName)
 					));
 					continue;
 				}
 
-				if (isset($bbcode['requireParent']))
+				if (isset($tagConfig['rules']['requireParent']))
 				{
-					$lastBBCode = end($bbcodeStack);
+					$parentTag = end($tagStack);
 
-					if (!$lastBBCode
-					 || $lastBBCode['bbcode_id'] !== $bbcode['requireParent'])
+					if (!$parentTag
+					 || $parentTag['name'] !== $tagConfig['rules']['requireParent'])
 					{
 						$this->log('error', array(
 							'pos'    => $this->currentTag['pos'],
-							'msg'    => 'BBCode %1$s requires %2$s as parent',
-							'params' => array($bbcodeId, $bbcode['requireParent'])
+							'msg'    => 'Tag %1$s requires %2$s as parent',
+							'params' => array($tagName, $tagConfig['rules']['requireParent'])
 						));
 
 						continue;
 					}
 				}
 
-				if (isset($bbcode['requireAscendant']))
+				if (isset($tagConfig['rules']['requireAscendant']))
 				{
-					foreach ($bbcode['requireAscendant'] as $ascendant)
+					foreach ($tagConfig['rules']['requireAscendant'] as $ascendant)
 					{
 						if (empty($cntOpen[$ascendant]))
 						{
 							$this->log('debug', array(
 								'pos'    => $this->currentTag['pos'],
-								'msg'    => 'BBCode %1$s requires %2$s as ascendant',
-								'params' => array($bbcodeId, $ascendant)
+								'msg'    => 'Tag %1$s requires %2$s as ascendant',
+								'params' => array($tagName, $ascendant)
 							));
 							continue 2;
 						}
 					}
 				}
 
-				if (isset($bbcode['params']))
+				if (isset($tagConfig['attrs']))
 				{
 					/**
 					* Add default values
 					*/
-					$missingParams = array_diff_key($bbcode['params'], $this->currentTag['params']);
+					$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
 
-					foreach ($missingParams as $paramName => $paramConf)
+					foreach ($missingAttrs as $attrName => $attrConf)
 					{
-						if (isset($paramConf['default']))
+						if (isset($attrConf['default']))
 						{
-							$this->currentTag['params'][$paramName] = $paramConf['default'];
+							$this->currentTag['attrs'][$attrName] = $attrConf['default'];
 						}
 					}
 
 					/**
 					* BBCode-level pre-filter
 					*/
-					if (isset($bbcode['pre_filter']))
+					if (isset($tagConfig['preFilter']))
 					{
-						foreach ($bbcode['pre_filter'] as $callback)
+						foreach ($tagConfig['preFilter'] as $callback)
 						{
-							$this->currentTag['params'] =
-								call_user_func($callback, $this->currentTag['params']);
+							$this->currentTag['attrs'] =
+								call_user_func($callback, $this->currentTag['attrs']);
 						}
 					}
 
 					/**
 					* Filter each param
 					*/
-					foreach ($this->currentTag['params'] as $paramName => &$paramVal)
+					foreach ($this->currentTag['attrs'] as $attrName => &$attrVal)
 					{
-						$this->currentParam = $paramName;
+						$this->currentAttribute = $attrName;
 
-						$paramConf   = $bbcode['params'][$paramName];
-						$filteredVal = $paramVal;
+						$attrConf   = $tagConfig['attrs'][$attrName];
+						$filteredVal = $attrVal;
 
 						// execute pre-filter callbacks
-						if (!empty($paramConf['pre_filter']))
+						if (!empty($attrConf['preFilter']))
 						{
-							foreach ($paramConf['pre_filter'] as $callback)
+							foreach ($attrConf['preFilter'] as $callback)
 							{
 								$filteredVal = call_user_func($callback, $filteredVal);
 							}
 						}
 
 						// filter the value
-						$filteredVal = $this->filter($filteredVal, $paramConf);
+						$filteredVal = $this->filter($filteredVal, $attrConf);
 
 						// execute post-filter callbacks if the value was valid
 						if ($filteredVal !== false
-						 && !empty($paramConf['post_filter']))
+						 && !empty($attrConf['postFilter']))
 						{
-							foreach ($paramConf['post_filter'] as $callback)
+							foreach ($attrConf['postFilter'] as $callback)
 							{
 								$filteredVal = call_user_func($callback, $filteredVal);
 							}
@@ -989,82 +977,82 @@ class Parser
 						if ($filteredVal === false)
 						{
 							/**
-							* Bad param value
+							* Bad attribute value
 							*/
 							$this->log('error', array(
 								'pos'    => $this->currentTag['pos'],
-								'msg'    => 'Invalid param %s',
-								'params' => array($paramName)
+								'msg'    => 'Invalid attribute %s',
+								'params' => array($attrName)
 							));
 
-							if (isset($paramConf['default']))
+							if (isset($attrConf['default']))
 							{
 								/**
 								* Use the default value
 								*/
-								$filteredVal = $paramConf['default'];
+								$filteredVal = $attrConf['default'];
 
 								$this->log('debug', array(
 									'pos'    => $this->currentTag['pos'],
-									'msg'    => 'Using default value %1$s for param %2$s',
-									'params' => array($paramConf['default'], $paramName)
+									'msg'    => 'Using default value %1$s for attribute %2$s',
+									'params' => array($attrConf['default'], $attrName)
 								));
 							}
 							else
 							{
 								/**
-								* Remove the param altogether
+								* Remove the attribute altogether
 								*/
-								unset($this->currentTag['params'][$paramName]);
+								unset($this->currentTag['attrs'][$attrName]);
 
-								if ($paramConf['isRequired'])
+								if ($attrConf['isRequired'])
 								{
 									continue;
 								}
 							}
 						}
-						elseif ((string) $filteredVal !== (string) $paramVal)
+						elseif ((string) $filteredVal !== (string) $attrVal)
 						{
 							$this->log('debug', array(
 								'pos'    => $this->currentTag['pos'],
-								'msg'    => 'Param value was altered by the filter '
-								          . '(paramName: $1%s, paramVal: $2%s, filteredVal: $3%s)',
-								'params' => array($paramName, $paramVal, $filteredVal)
+								'msg'    => 'Attr value was altered by the filter '
+								          . '(attrName: $1%s, attrVal: $2%s, filteredVal: $3%s)',
+								'params' => array($attrName, $attrVal, $filteredVal)
 							));
 						}
 
-						$paramVal = (string) $filteredVal;
+						$attrVal = (string) $filteredVal;
 					}
-					unset($paramVal, $this->currentParam);
+					unset($attrVal, $this->currentAttribute);
 
 					/**
-					* BBCode-level post-filter
+					* Tag-level post-filter
 					*/
-					if (isset($bbcode['post_filter']))
+					if (isset($tagConfig['postFilter']))
 					{
-						foreach ($bbcode['post_filter'] as $callback)
+						foreach ($tagConfig['postFilter'] as $callback)
 						{
-							$this->currentTag['params'] =
-								call_user_func($callback, $this->currentTag['params']);
+							$this->currentTag['attrs'] =
+								call_user_func($callback, $this->currentTag['attrs']);
 						}
 					}
 
 					/**
-					* Check for missing required params
+					* Check for missing required attributes
 					*/
-					$missingParams = array_diff_key($bbcode['params'], $this->currentTag['params']);
+					$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
 
-					foreach ($missingParams as $paramName => $paramConf)
+					foreach ($missingAttrs as $attrName => $attrConf)
 					{
-						if (empty($paramConf['isRequired']))
+						if (empty($attrConf['isRequired']))
 						{
 							continue;
 						}
 
 						$this->log('error', array(
 							'pos'    => $this->currentTag['pos'],
-							'msg'    => 'Missing param %s',
-							'params' => array($paramName)
+							'msg'    => 'Missing attribute %s',
+							'params' => array($attrName)
 						));
 
 						continue 2;
@@ -1074,7 +1062,7 @@ class Parser
 					* Sort params alphabetically. Can be useful if someone wants to process the
 					* output using regexps
 					*/
-					ksort($this->currentTag['params']);
+					ksort($this->currentTag['attrs']);
 				}
 
 				//==============================================================
@@ -1085,30 +1073,30 @@ class Parser
 
 				$pos = $this->currentTag['pos'] + $this->currentTag['len'];
 
-				++$cntTotal[$bbcodeId];
+				++$cntTotal[$tagName];
 
 				if ($this->currentTag['type'] & self::END_TAG)
 				{
 					continue;
 				}
 
-				++$cntOpen[$bbcodeId];
+				++$cntOpen[$tagName];
 
-				if (isset($openTags[$bbcodeId . $suffix]))
+				if (isset($openTags[$tagName . $suffix]))
 				{
-					++$openTags[$bbcodeId . $suffix];
+					++$openTags[$tagName . $suffix];
 				}
 				else
 				{
-					$openTags[$bbcodeId . $suffix] = 1;
+					$openTags[$tagName . $suffix] = 1;
 				}
 
-				$bbcodeStack[] = array(
-					'bbcode_id' => $bbcodeId,
+				$tagStack[] = array(
+					'name' => $tagName,
 					'suffix'	=> $suffix,
 					'allowed'   => $allowed
 				);
-				$allowed = array_intersect_key($allowed, $bbcode['allow']);
+				$allowed = array_intersect_key($allowed, $tagConfig['allow']);
 			}
 
 			//==================================================================
@@ -1117,7 +1105,7 @@ class Parser
 
 			if ($this->currentTag['type'] & self::END_TAG)
 			{
-				if (empty($openTags[$bbcodeId . $suffix]))
+				if (empty($openTags[$tagName . $suffix]))
 				{
 					/**
 					* This is an end tag but there's no matching start tag
@@ -1125,7 +1113,7 @@ class Parser
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
 						'msg'    => 'Could not find a matching start tag for BBCode %s',
-						'params' => array($bbcodeId . $suffix)
+						'params' => array($tagName . $suffix)
 					));
 					continue;
 				}
@@ -1134,16 +1122,16 @@ class Parser
 
 				do
 				{
-					$cur     = array_pop($bbcodeStack);
+					$cur     = array_pop($tagStack);
 					$allowed = $cur['allowed'];
 
-					--$cntOpen[$cur['bbcode_id']];
-					--$openTags[$cur['bbcode_id'] . $cur['suffix']];
+					--$cntOpen[$cur['name']];
+					--$openTags[$cur['name'] . $cur['suffix']];
 
-					if ($cur['bbcode_id'] !== $bbcodeId)
+					if ($cur['name'] !== $tagName)
 					{
 						$this->appendTag(array(
-							'name' => $cur['bbcode_id'],
+							'name' => $cur['name'],
 							'pos'  => $this->currentTag['pos'],
 							'len'  => 0,
 							'type' => self::END_TAG
@@ -1167,13 +1155,13 @@ class Parser
 	protected function sortTags()
 	{
 		/**
-		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), pass descending
+		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), plugin name
 		*/
 		usort($this->tagStack, function($a, $b)
 		{
 			return ($b['pos'] - $a['pos'])
 			    ?: ($a['type'] - $b['type'])
-			    ?: ($b['pass'] - $a['pass']);
+			    ?: strcmp($a['pluginName'], $b['pluginName']);
 		});
 	}
 }
