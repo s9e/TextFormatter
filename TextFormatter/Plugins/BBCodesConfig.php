@@ -12,7 +12,8 @@ use DOMDocument,
     InvalidArgumentException,
     RuntimeException,
     s9e\Toolkit\TextFormatter\ConfigBuilder,
-    s9e\Toolkit\TextFormatter\PluginConfig;
+    s9e\Toolkit\TextFormatter\PluginConfig,
+    s9e\Toolkit\TextFormatter\PredefinedBBCodes;
 
 class BBCodesConfig extends PluginConfig
 {
@@ -100,6 +101,19 @@ class BBCodesConfig extends PluginConfig
 		$this->bbcodes[$bbcodeName] = $tagName;
 	}
 
+	/**
+	* Test whether a BBCode of given name exists
+	*
+	* @param  string $bbcodeName
+	* @return bool
+	*/
+	public function exists($bbcodeName)
+	{
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+
+		return isset($this->bbcodes[$bbcodeName]);
+	}
+
 	public function getConfig()
 	{
 		/**
@@ -112,7 +126,7 @@ class BBCodesConfig extends PluginConfig
 		* Build the regexp that matches all the BBCode names, and remove the extraneous
 		* non-capturing expression around it
 		*/
-		$regexp = self::buildRegexpFromList(array_keys($this->bbcodes));
+		$regexp = ConfigBuilder::buildRegexpFromList(array_keys($this->bbcodes));
 		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
 
 		return array(
@@ -127,12 +141,15 @@ class BBCodesConfig extends PluginConfig
 
 		if (!isset($this->predefinedBBCodes))
 		{
-			if (!class_exists('PredefinedBBCodes'))
+			$className = implode('\\', array_slice(explode('\\', __NAMESPACE__), 0, -1))
+			           . '\\PredefinedBBCodes';
+
+			if (!class_exists($className))
 			{
-				include_once __DIR__ . '/PredefinedBBCodes.php';
+				include __DIR__ . '/../PredefinedBBCodes.php';
 			}
 
-			$this->predefinedBBCodes = new PredefinedBBCodes($this);
+			$this->predefinedBBCodes = new PredefinedBBCodes($this->cb);
 		}
 
 		$callback = array(
@@ -446,7 +463,7 @@ class BBCodesConfig extends PluginConfig
 
 					case 'choice':
 						$choices = explode(',', $m['choices']);
-						$regexp  = '/^' . self::buildRegexpFromList($choices) . '$/iD';
+						$regexp  = '/^' . ConfigBuilder::buildRegexpFromList($choices) . '$/iD';
 
 						if (preg_match('#[\\x80-\\xff]#', $regexp))
 						{

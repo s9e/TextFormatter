@@ -7,7 +7,8 @@
 */
 namespace s9e\Toolkit\TextFormatter\Plugins;
 
-use s9e\Toolkit\TextFormatter\PluginConfig;
+use s9e\Toolkit\TextFormatter\ConfigBuilder,
+    s9e\Toolkit\TextFormatter\PluginConfig;
 
 class EmoticonsConfig extends PluginConfig
 {
@@ -15,6 +16,11 @@ class EmoticonsConfig extends PluginConfig
 	* @var string Name of the tag used by this plugin
 	*/
 	static public $tagName = 'E';
+
+	/**
+	* @var bool
+	*/
+	static public $disableAutoUpdate = false;
 
 	/**
 	* @var array
@@ -37,7 +43,11 @@ class EmoticonsConfig extends PluginConfig
 	public function add($code, $tpl)
 	{
 		$this->emoticons[$code] = $tpl;
-		$this->commitXSL();
+
+		if (!static::$disableAutoUpdate)
+		{
+			$this->commitXSL();
+		}
 	}
 
 	/**
@@ -56,7 +66,7 @@ class EmoticonsConfig extends PluginConfig
 	/**
 	* Commit the XSL needed to render emoticons to ConfigBuilder
 	*/
-	protected function commitXSL()
+	public function commitXSL()
 	{
 		$tpls = array();
 		foreach ($this->emoticons as $code => $tpl)

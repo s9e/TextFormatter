@@ -562,7 +562,7 @@ class ConfigBuilder
 			/**
 			* Load the PluginConfig abstract class if necessary
 			*/
-			if (!class_exists('PluginConfig', $useAutoload))
+			if (!class_exists(__NAMESPACE__ . '\\PluginConfig', $useAutoload))
 			{
 				include __DIR__ . '/PluginConfig.php';
 			}
