@@ -73,6 +73,6 @@ class EmoticonsConfig extends PluginConfig
 		}
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
 
-		$this->cb->setTemplate(static::$tagName, $xsl);
+		$this->cb->setTagTemplate(static::$tagName, $xsl);
 	}
 }

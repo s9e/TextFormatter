@@ -164,7 +164,7 @@ class BBCodesConfig extends PluginConfig
 
 		foreach ($def['params'] as $paramName => $paramConf)
 		{
-			$this->cb->addAttribute(
+			$this->cb->addTagAttribute(
 				$def['bbcodeName'],
 				$paramName,
 				$paramConf['type'],
@@ -172,7 +172,7 @@ class BBCodesConfig extends PluginConfig
 			);
 		}
 
-		$this->cb->setTemplate($def['bbcodeName'], $tpl, $flags);
+		$this->cb->setTagTemplate($def['bbcodeName'], $tpl, $flags);
 	}
 
 	protected function convertTemplate($tpl, array $def, $flags)

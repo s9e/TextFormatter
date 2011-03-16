@@ -63,7 +63,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeParam('URL', 'url', 'url');
 		$this->cb->addBBCodeParam('URL', 'title', 'text', array('isRequired' => false));
 
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'URL',
 			'<a href="{@url}">
 				<xsl:if test="@title">
@@ -96,7 +96,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeParam('IMG', 'alt', 'text', array('isRequired' => false));
 		$this->cb->addBBCodeParam('IMG', 'title', 'text', array('isRequired' => false));
 
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'IMG',
 			'<img src="{@src}">
 				<xsl:if test="@alt">
@@ -167,7 +167,7 @@ class PredefinedBBCodes
 			'regexp' => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
 		));
 
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'LIST',
 			'<ol>
 				<xsl:attribute name="style">list-style-type:<xsl:choose>
@@ -210,7 +210,7 @@ class PredefinedBBCodes
 		// the first one when opening the second, instead of it behind its child
 		$this->cb->addBBCodeRule('LI', 'closeParent', 'LI');
 
-		$this->cb->setTemplate('LI', '<li><xsl:apply-templates/></li>');
+		$this->cb->setTagTemplate('LI', '<li><xsl:apply-templates/></li>');
 	}
 
 	/**
@@ -349,7 +349,7 @@ class PredefinedBBCodes
 	{
 		// limit table nesting to 2, which should be enough for everybody
 		$this->cb->BBCodes->add('TABLE', array('nestingLimit' => 2));
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'TABLE',
 			'<table>
 				<xsl:apply-templates select="COL" />
@@ -366,7 +366,7 @@ class PredefinedBBCodes
 			'isRequired' => false,
 			'regexp'      => '/^(?:left|right|center|align)$/iD'
 		));
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'COL',
 			'<col>
 				<xsl:if test="@align">
@@ -377,7 +377,7 @@ class PredefinedBBCodes
 
 		$this->cb->BBCodes->add('TR');
 		$this->cb->addBBCodeRule('TR', 'requireParent', 'TABLE');
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'TR',
 			'<tr>
 				<xsl:apply-templates select="TD | TH" />
@@ -388,7 +388,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeRule('TH', 'requireParent', 'TR');
 		$this->cb->addBBCodeParam('TH', 'colspan', 'uint', array('isRequired' => false));
 		$this->cb->addBBCodeParam('TH', 'rowspan', 'uint', array('isRequired' => false));
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'TH',
 			'<th>
 				<xsl:if test="@colspan">
@@ -411,7 +411,7 @@ class PredefinedBBCodes
 		$this->cb->addBBCodeRule('TD', 'requireParent', 'TR');
 		$this->cb->addBBCodeParam('TD', 'colspan', 'uint', array('isRequired' => false));
 		$this->cb->addBBCodeParam('TD', 'rowspan', 'uint', array('isRequired' => false));
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'TD',
 			'<td>
 				<xsl:if test="@colspan">
@@ -453,7 +453,7 @@ class PredefinedBBCodes
 			'pre_filter'  => array('strtolower')
 		));
 
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'CODE',
 			'<pre class="brush:{@stx}"><xsl:value-of select="text()" /></pre>'
 		);
@@ -479,7 +479,7 @@ class PredefinedBBCodes
 			'trim_after'   => true
 		));
 
-		$this->cb->setTemplate('HR', '<hr/>');
+		$this->cb->setTagTemplate('HR', '<hr/>');
 	}
 
 	/**
@@ -511,7 +511,7 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->addBBCodeParam('QUOTE', 'author', 'text', array('isRequired' => false));
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'QUOTE',
 			'<xsl:choose>
 				<xsl:when test="@author">
@@ -561,7 +561,7 @@ class PredefinedBBCodes
 			'post_filter' => array('rawurlencode')
 		));
 
-		$this->cb->setTemplate(
+		$this->cb->setTagTemplate(
 			'EMAIL',
 			'<a>
 				<xsl:attribute name="href">mailto:<xsl:value-of select="@email" /><xsl:if test="@subject">?subject=<xsl:value-of select="@subject" /></xsl:if></xsl:attribute>

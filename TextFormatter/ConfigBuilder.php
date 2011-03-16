@@ -7,7 +7,9 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
-use InvalidArgumentException,
+use DOMDocument,
+	DOMXPath,
+	InvalidArgumentException,
     RuntimeException,
     UnexpectedValueException;
 
@@ -15,13 +17,13 @@ class ConfigBuilder
 {
 	/**
 	* Allow user-supplied data to be used in sensitive area of a template
-	* @see self::setTemplate()
+	* @see self::setTagTemplate()
 	*/
 	const ALLOW_INSECURE_TEMPLATES = 1;
 
 	/**
 	* Whether or not preserve redundant whitespace in a template
-	* @see  self::setTemplate()
+	* @see  self::setTagTemplate()
 	* @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.preservewhitespace
 	*/
 	const PRESERVE_WHITESPACE      = 2;
@@ -132,6 +134,52 @@ class ConfigBuilder
 		return strtoupper($tagName);
 	}
 
+	//==========================================================================
+	// Tag options-related methods
+	//==========================================================================
+
+	/**
+	* Get all of a tag's options
+	*
+	* @param  string $tagName
+	* @return array
+	*/
+	public function getTagOptions($tagName)
+	{
+		$tagName = $this->normalizeTagName($tagName);
+
+		if (!isset($this->tags[$tagName]))
+		{
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+		}
+
+		return $this->tags[$tagName];
+	}
+
+	/**
+	* Get a tag's option
+	*
+	* @param  string $tagName
+	* @param  string $optionName
+	* @return array
+	*/
+	public function getTagOption($tagName, $optionName)
+	{
+		$tagName = $this->normalizeTagName($tagName);
+
+		if (!isset($this->tags[$tagName]))
+		{
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+		}
+
+		if (!isset($this->tags[$tagName][$optionName]))
+		{
+			throw new InvalidArgumentException("Unknown option '" . $optionName . "' from tag '" . $tagName . "'");
+		}
+
+		return $this->tags[$tagName][$optionName];
+	}
+
 	/**
 	* Set several options for a tag
 	*
@@ -155,12 +203,14 @@ class ConfigBuilder
 	*/
 	public function setTagOption($tagName, $optionName, $optionValue)
 	{
+		$tagName = $this->normalizeTagName($tagName);
+
 		switch ($optionName)
 		{
 			case 'attributes':
 				foreach ($optionValue as $attrName => $attrConf)
 				{
-					$this->addAttribute($tagName, $attrName, $attrConf['type'], $attrConf);
+					$this->addTagAttribute($tagName, $attrName, $attrConf['type'], $attrConf);
 				}
 				break;
 
@@ -169,13 +219,17 @@ class ConfigBuilder
 				{
 					foreach ($targets as $target)
 					{
-						$this->addRule($tagName, $action, $target);
+						$this->addTagRule($tagName, $action, $target);
 					}
 				}
 				break;
 
 			case 'template':
-				$this->setTemplate($tagName, $optionValue);
+				$this->setTagTemplate($tagName, $optionValue);
+				break;
+
+			case 'xsl':
+				$this->setTagXSL($tagName, $optionValue);
 				break;
 
 			default:
@@ -203,7 +257,7 @@ class ConfigBuilder
 	* @param string $attrType
 	* @param array  $conf
 	*/
-	public function addAttribute($tagName, $attrName, $attrType, array $attrConf = array())
+	public function addTagAttribute($tagName, $attrName, $attrType, array $attrConf = array())
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
@@ -272,6 +326,22 @@ class ConfigBuilder
 		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $attrName);
 	}
 
+	/**
+	* Validate and normalize an attribute name
+	*
+	* @param  string $attrName Original attribute name
+	* @return string           Normalized attribute name, in lowercase
+	*/
+	protected function normalizeAttributeName($attrName)
+	{
+		if (!static::isValidAttributeName($attrName))
+		{
+			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
+		}
+
+		return strtolower($attrName);
+	}
+
 	//==========================================================================
 	// Rule-related methods
 	//==========================================================================
@@ -283,7 +353,7 @@ class ConfigBuilder
 	* @param string $action
 	* @param string $target
 	*/
-	public function addRule($tagName, $action, $target)
+	public function addTagRule($tagName, $action, $target)
 	{
 		$tagName = $this->normalizeTagName($tagName);
 		$target  = $this->normalizeTagName($target);
@@ -311,8 +381,8 @@ class ConfigBuilder
 
 		if ($action === 'requireParent')
 		{
-			if (isset($this->rules[$tagName]['requireParent'])
-			 && $this->rules[$tagName]['requireParent'] !== $target)
+			if (isset($this->tags[$tagName]['rules']['requireParent'])
+			 && $this->tags[$tagName]['rules']['requireParent'] !== $target)
 			{
 				throw new RuntimeException("Tag '" . $tagName . "' already has a different 'requireParent' rule, and both cannot be satisfied at the same time. Perhaps did you mean to create a 'requireAscendant' rule?");
 			}
@@ -337,6 +407,112 @@ class ConfigBuilder
 		$target  = $this->normalizeTagName($target);
 
 		unset($this->tags[$tagName]['rules'][$action][$target]);
+	}
+
+	//==========================================================================
+	// Tag template-related methods
+	//==========================================================================
+
+	/**
+	* Return the XSL associated with a tag
+	*
+	* @param  string $tagName Name of the tag
+	* @return string
+	*/
+	public function getTagXSL($tagName)
+	{
+		$tagName = $this->normalizeTagName($tagName);
+
+		if (!isset($this->tags[$tagName]))
+		{
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+		}
+
+		if (!isset($this->tags[$tagName]['xsl']))
+		{
+			throw new InvalidArgumentException("No XSL set for tag '" . $tagName . "'");
+		}
+
+		return $this->tags[$tagName]['xsl'];
+	}
+
+	/**
+	* Set the template associated with a tag
+	*
+	* @param string  $tagName Name of the tag
+	* @param string  $tpl     Must be the contents of a valid <xsl:template> element
+	* @param integer $flags
+	*/
+	public function setTagTemplate($tagName, $tpl, $flags = 0)
+	{
+		$tagName = $this->normalizeTagName($tagName);
+
+		$xsl = '<xsl:template match="' . $tagName . '">'
+		     . $tpl
+		     . '</xsl:template>';
+
+		$this->setTagXSL($tagName, $xsl, $flags);
+	}
+
+	/**
+	* Set or replace the XSL associated with a tag
+	*
+	* @param string  $tagName Name of the tag
+	* @param string  $xsl     Must be valid XSL elements. A root node is not required
+	* @param integer $flags
+	*/
+	public function setTagXSL($tagName, $xsl, $flags = 0)
+	{
+		$tagName = $this->normalizeTagName($tagName);
+
+		if (!isset($this->tags[$tagName]))
+		{
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+		}
+		/**
+		* Prepare a temporary stylesheet so that we can load the template and make sure it's valid
+		*/
+		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . $xsl
+		     . '</xsl:stylesheet>';
+
+		/**
+		* Load the stylesheet with libxml's internal errors temporarily enabled
+		*/
+		$useInternalErrors = libxml_use_internal_errors(true);
+
+		$dom = new DOMDocument;
+		$dom->preserveWhiteSpace = (bool) ($flags & self::PRESERVE_WHITESPACE);
+		$res = $dom->loadXML($xsl);
+
+		libxml_use_internal_errors($useInternalErrors);
+
+		if (!$res)
+		{
+			$error = libxml_get_last_error();
+			throw new InvalidArgumentException('Invalid XML - error was: ' . $error->message);
+		}
+
+		if (!($flags & self::ALLOW_INSECURE_TEMPLATES))
+		{
+			$xpath = new DOMXPath($dom);
+
+			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or .//xsl:attribute])'))
+			{
+				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setTagTemplate() to enable it');
+			}
+		}
+
+		/**
+		* Rebuild the XSL by serializing and concatenating each of the root node's children
+		*/
+		$xsl = '';
+		foreach ($dom->documentElement->childNodes as $childNode)
+		{
+			$xsl .= $dom->saveXML($childNode);
+		}
+
+		$this->tags[$tagName]['xsl'] = $xsl;
 	}
 
 	//==========================================================================
@@ -794,22 +970,6 @@ class ConfigBuilder
 		return $regexp . $suffix;
 	}
 
-	/**
-	* Validate and normalize an attribute name
-	*
-	* @param  string $attrName Original attribute name
-	* @return string           Normalized attribute name, in lowercase
-	*/
-	protected function normalizeAttributeName($attrName)
-	{
-		if (!static::isValidAttributeName($attrName))
-		{
-			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
-		}
-
-		return strtolower($attrName);
-	}
-
 	//==========================================================================
 	// XSL stuff
 	//==========================================================================
@@ -863,74 +1023,5 @@ class ConfigBuilder
 		}
 
 		$this->xsl .= $xsl;
-	}
-
-	/**
-	* Set or replace the template associated with a tag
-	*
-	* @param string  $tagName Name of the tag
-	* @param string  $tpl     Tag's template. Must be XSL with the root <xsl:template> node omitted
-	* @param integer $flags
-	*/
-	public function setTemplate($tagName, $tpl, $flags = 0)
-	{
-		$tagName = $this->normalizeTagName($tagName);
-
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
-
-		/**
-		* Enclose the tag's template within <xsl:template> tags
-		*/
-		$tpl = '<xsl:template match="' . $tagName . '">'
-		     . $tpl
-		     . '</xsl:template>';
-
-		/**
-		* Prepare a temporary stylesheet so that we can load the template and make sure it's valid
-		*/
-		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $tpl
-		     . '</xsl:stylesheet>';
-
-		/**
-		* Load the stylesheet with libxml's internal errors temporarily enabled
-		*/
-		$useInternalErrors = libxml_use_internal_errors(true);
-
-		$dom = new DOMDocument;
-		$dom->preserveWhiteSpace = (bool) ($flags & self::PRESERVE_WHITESPACE);
-		$res = $dom->loadXML($xsl);
-
-		libxml_use_internal_errors($useInternalErrors);
-
-		if (!$res)
-		{
-			$error = libxml_get_last_error();
-			throw new InvalidArgumentException('Invalid XML - error was: ' . $error->message);
-		}
-
-		if (!($flags & self::ALLOW_INSECURE_TEMPLATES))
-		{
-			$xpath = new DOMXPath($dom);
-
-			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or .//xsl:attribute])'))
-			{
-				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setTemplate() to enable it');
-			}
-		}
-
-		/**
-		* Rebuild the XSL by serializing and concatenating all the root node's children
-		*/
-		$xsl = '';
-		foreach ($dom->documentElement->childNodes as $childNode)
-		{
-			$xsl .= $dom->saveXML($childNode);
-		}
-
-		$this->tags[$tagName]['xsl'] = $xsl;
 	}
 }
