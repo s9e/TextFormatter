@@ -207,7 +207,7 @@ class ConfigBuilder
 
 		switch ($optionName)
 		{
-			case 'attributes':
+			case 'attrs':
 				foreach ($optionValue as $attrName => $attrConf)
 				{
 					$this->addTagAttribute($tagName, $attrName, $attrConf['type'], $attrConf);
@@ -267,7 +267,7 @@ class ConfigBuilder
 			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
 		}
 
-		if (isset($this->tags[$tagName]['attributes'][$attrName]))
+		if (isset($this->tags[$tagName]['attrs'][$attrName]))
 		{
 			throw new InvalidArgumentException("Attribute '" . $attrName . "' already exists");
 		}
@@ -284,7 +284,7 @@ class ConfigBuilder
 		*/
 		$attrConf['type'] = $attrType;
 
-		$this->tags[$tagName]['attributes'][$attrName] = $attrConf;
+		$this->tags[$tagName]['attrs'][$attrName] = $attrConf;
 	}
 
 	/**
@@ -297,7 +297,7 @@ class ConfigBuilder
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
-		unset($this->tags[$tagName]['attributes'][$attrName]);
+		unset($this->tags[$tagName]['attrs'][$attrName]);
 	}
 
 	/**
@@ -312,7 +312,7 @@ class ConfigBuilder
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
 
-		return isset($this->tags[$tagName]['attributes'][$attrName]);
+		return isset($this->tags[$tagName]['attrs'][$attrName]);
 	}
 
 	/**

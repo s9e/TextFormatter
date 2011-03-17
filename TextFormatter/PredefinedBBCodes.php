@@ -56,8 +56,8 @@ class PredefinedBBCodes
 	public function addURL()
 	{
 		$this->cb->BBCodes->addBBCode('URL', array(
-			'defaultParam'    => 'url',
-			'content_as_param' => true
+			'defaultAttr'    => 'url',
+			'useContent' => true
 		));
 
 		$this->cb->addTagAttribute('URL', 'url', 'url');
@@ -86,10 +86,10 @@ class PredefinedBBCodes
 	public function addIMG()
 	{
 		$this->cb->BBCodes->addBBCode('IMG', array(
-			'defaultParam'    => 'src',
-			'content_as_param' => true,
-			'auto_close'       => true,
-			'defaultRule'     => 'deny'
+			'defaultAttr' => 'src',
+			'useContent'  => true,
+			'autoClose'   => true,
+			'defaultRule' => 'deny'
 		));
 
 		$this->cb->addTagAttribute('IMG', 'src', 'url');
@@ -152,7 +152,7 @@ class PredefinedBBCodes
 
 		// [LIST]
 		$this->cb->BBCodes->addBBCode('LIST', array(
-			'defaultParam' => 'style',
+			'defaultAttr' => 'style',
 			'trimBefore'   => true,
 			'trimAfter'    => true,
 			'ltrimContent' => true,
@@ -357,9 +357,9 @@ class PredefinedBBCodes
 
 		$this->cb->BBCodes->addBBCode('COL', array(
 			'defaultRule' => 'deny',
-			'auto_close'   => true
+			'autoClose'   => true
 		));
-		$this->cb->BBCodes->addBBCodeRule('COL', 'requireParent', 'TABLE');
+		$this->cb->addTagRule('COL', 'requireParent', 'TABLE');
 		$this->cb->addTagAttribute('COL', 'align', 'regexp', array(
 			'isRequired' => false,
 			'regexp'      => '/^(?:left|right|center|align)$/iD'
@@ -374,7 +374,7 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->BBCodes->addBBCode('TR');
-		$this->cb->BBCodes->addBBCodeRule('TR', 'requireParent', 'TABLE');
+		$this->cb->addTagRule('TR', 'requireParent', 'TABLE');
 		$this->cb->setTagTemplate(
 			'TR',
 			'<tr>
@@ -383,7 +383,7 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->BBCodes->addBBCode('TH');
-		$this->cb->BBCodes->addBBCodeRule('TH', 'requireParent', 'TR');
+		$this->cb->addTagRule('TH', 'requireParent', 'TR');
 		$this->cb->addTagAttribute('TH', 'colspan', 'uint', array('isRequired' => false));
 		$this->cb->addTagAttribute('TH', 'rowspan', 'uint', array('isRequired' => false));
 		$this->cb->setTagTemplate(
@@ -406,7 +406,7 @@ class PredefinedBBCodes
 		);
 
 		$this->cb->BBCodes->addBBCode('TD');
-		$this->cb->BBCodes->addBBCodeRule('TD', 'requireParent', 'TR');
+		$this->cb->addTagRule('TD', 'requireParent', 'TR');
 		$this->cb->addTagAttribute('TD', 'colspan', 'uint', array('isRequired' => false));
 		$this->cb->addTagAttribute('TD', 'rowspan', 'uint', array('isRequired' => false));
 		$this->cb->setTagTemplate(
@@ -443,7 +443,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->BBCodes->addBBCode('CODE', array(
 			'defaultRule'  => 'deny',
-			'defaultParam' => 'stx'
+			'defaultAttr' => 'stx'
 		));
 
 		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
@@ -472,7 +472,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->BBCodes->addBBCode('HR', array(
 			'defaultRule' => 'deny',
-			'auto_close'   => true,
+			'autoClose'   => true,
 			'trimBefore'  => true,
 			'trimAfter'   => true
 		));
@@ -495,7 +495,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->BBCodes->addBBCode('QUOTE', array(
 			'nestingLimit' => $nestingLevel,
-			'defaultParam' => 'author',
+			'defaultAttr' => 'author',
 			'trimBefore'   => true,
 			'trimAfter'    => true,
 			'ltrimContent' => true,
@@ -544,8 +544,8 @@ class PredefinedBBCodes
 	public function addEMAIL()
 	{
 		$this->cb->BBCodes->addBBCode('EMAIL', array(
-			'defaultParam'    => 'email',
-			'content_as_param' => true,
+			'defaultAttr'    => 'email',
+			'useContent' => true,
 			'defaultRule'     => 'deny'
 		));
 

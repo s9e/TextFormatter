@@ -78,8 +78,10 @@ class BBCodesConfig extends PluginConfig
 		* "defaultAttr"
 		*/
 		$bbcodeSpecificConfig = array(
+			'autoClose'   => 1,
 			'defaultAttr' => 1,
-			'tagName'     => 1
+			'tagName'     => 1,
+			'useContent'  => 1
 		);
 
 		$bbcodeConfig = array_intersect_key($config, $bbcodeSpecificConfig);

@@ -278,14 +278,7 @@ class BBCodesParser extends PluginParser
 						$rpos += $spn;
 					}
 
-					if (isset($tagConfig['attrs'][$attrName]))
-					{
-						/**
-						* We only keep attributes that exist in the tag's definition
-						*/
-						$attrs[$attrName] = $value;
-					}
-
+					$attrs[$attrName] = $value;
 					unset($attrName, $value);
 				}
 
@@ -297,9 +290,9 @@ class BBCodesParser extends PluginParser
 				$usesContent = false;
 
 				if ($type === Parser::START_TAG
-				 && isset($tagConfig['defaultParam'])
-				 && !isset($attrs[$tagConfig['defaultParam']])
-				 && !empty($tagConfig['content_as_param']))
+				 && isset($bbcodeConfig['defaultAttr'])
+				 && !isset($attrs[$bbcodeConfig['defaultAttr']])
+				 && !empty($bbcodeConfig['useContent']))
 				{
 					/**
 					* Capture the content of that tag and use it as param
@@ -314,7 +307,7 @@ class BBCodesParser extends PluginParser
 
 					if ($pos)
 					{
-						$attrs[$tagConfig['defaultParam']]
+						$attrs[$bbcodeConfig['defaultAttr']]
 							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
 
 						$usesContent = true;
@@ -324,7 +317,7 @@ class BBCodesParser extends PluginParser
 
 			if ($type === Parser::START_TAG
 			 && !$usesContent
-			 && !empty($tagConfig['auto_close']))
+			 && !empty($bbcodeConfig['autoClose']))
 			{
 				$endTag = '[/' . $bbcodeName . $suffix . ']';
 
