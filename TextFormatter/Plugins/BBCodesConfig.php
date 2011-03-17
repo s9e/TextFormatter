@@ -50,26 +50,49 @@ class BBCodesConfig extends PluginConfig
 	protected $predefinedBBCodes;
 
 	/**
-	* @var array Array where keys are BBCode names and values are the tag they map to
+	* @var array Per-BBCode configuration
 	*/
-	protected $bbcodes = array();
+	protected $bbcodesConfig = array();
 
 	/**
-	* Create a new BBCode
+	* Create a new BBCode and its corresponding tag
 	*
-	* Will automatically create the corresponding tag. Attributes to be created can be passed via
-	* the $options array, using "attributes" as key. Same for "rules".
+	* Will automatically create a tag of the same name, unless a different name is specified in
+	* $config['tagName']. Attributes to be created can be passed via using "attributes" as key. The
+	* same applies for "rules" and "template" or "xsl".
 	*
 	* @param string $bbcodeName
-	* @param array  $options
+	* @param array  $config
 	*/
-	public function add($bbcodeName, array $options = array())
+	public function addBBCode($bbcodeName, array $config = array())
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
 
-		$this->cb->addTag($bbcodeName, $options);
+		if (isset($this->bbcodesConfig[$bbcodeName]))
+		{
+			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' already exists");
+		}
 
-		$this->bbcodes[$bbcodeName] = $bbcodeName;
+		/**
+		* Separate tag options such as "trimBefore" from BBCodes-specific options such as
+		* "defaultAttr"
+		*/
+		$bbcodeSpecificConfig = array(
+			'defaultAttr' => 1,
+			'tagName'     => 1
+		);
+
+		$bbcodeConfig = array_intersect_key($config, $bbcodeSpecificConfig);
+		$tagConfig    = array_diff_key($config, $bbcodeSpecificConfig);
+
+		if (!isset($bbcodeConfig['tagName']))
+		{
+			$bbcodeConfig['tagName'] = $bbcodeName;
+		}
+
+		$this->cb->addTag($bbcodeConfig['tagName'], $config);
+
+		$this->bbcodesConfig[$bbcodeName] = $bbcodeConfig;
 	}
 
 	/**
@@ -77,28 +100,26 @@ class BBCodesConfig extends PluginConfig
 	*
 	* @param string $bbcodeName
 	* @param string $tagName
+	* @param array  $bbcodeConfig
 	*/
-	public function addAlias($bbcodeName, $tagName)
+	public function addBBCodeAlias($bbcodeName, $tagName, array $bbcodeConfig = array())
 	{
-		$bbcodeName = $this->normalizeBBCodeId($bbcodeName);
-		$tagName    = $this->normalizeBBCodeId($tagName);
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+		$tagName    = $this->normalizeBBCodeName($tagName);
 
 		if (!$this->cb->tagExists($tagName))
 		{
 			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
 		}
 
-		if (!isset($this->bbcodes[$bbcodeName]))
+		if (isset($this->bbcodesConfig[$bbcodeName]))
 		{
-			throw new InvalidArgumentException("Unknown BBCode '" . $bbcodeName . "'");
+			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' already exists");
 		}
 
-		if (isset($this->bbcodes[$bbcodeName]))
-		{
-			throw new InvalidArgumentException("Cannot create alias '" . $bbcodeName . "' - a BBCode using that name already exists");
-		}
+		$bbcodeConfig['tagName'] = $tagName;
 
-		$this->bbcodes[$bbcodeName] = $tagName;
+		$this->bbcodesConfig[$bbcodeName] = $bbcodeConfig;
 	}
 
 	/**
@@ -117,21 +138,15 @@ class BBCodesConfig extends PluginConfig
 	public function getConfig()
 	{
 		/**
-		* Sort the BBCodes by name. It doesn't serve any real purpose but help canonicalize the
-		* output of this method
-		*/
-		ksort($this->bbcodes);
-
-		/**
-		* Build the regexp that matches all the BBCode names, and remove the extraneous
+		* Build the regexp that matches all the BBCode names, then remove the extraneous
 		* non-capturing expression around it
 		*/
-		$regexp = ConfigBuilder::buildRegexpFromList(array_keys($this->bbcodes));
+		$regexp = ConfigBuilder::buildRegexpFromList(array_keys($this->bbcodesConfig));
 		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
 
 		return array(
-			'bbcodes' => $this->bbcodes,
-			'regexp'  => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#i'
+			'bbcodesConfig' => $this->bbcodesConfig,
+			'regexp'        => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#i'
 		);
 	}
 
@@ -177,7 +192,7 @@ class BBCodesConfig extends PluginConfig
 		$tpl = $this->convertTemplate($tpl, $def, $flags);
 
 		// Options set via $options override the ones we have parsed from the definition
-		$this->add($def['bbcodeName'], $options + $def['options']);
+		$this->addBBCode($def['bbcodeName'], $options + $def['options']);
 
 		foreach ($def['params'] as $paramName => $paramConf)
 		{

@@ -43,24 +43,29 @@ class Parser
 	//==============================================================================================
 
 	/**
-	* @var array  Logged messages, reinitialized whenever a text is parsed
+	* @var array Logged messages, reinitialized whenever a text is parsed
 	*/
 	protected $log;
 
 	/**
-	* @var array  Tags config
+	* @var array Tags config
 	*/
 	protected $tagsConfig;
 
 	/**
-	* @var array  Plugins config
+	* @var array Plugins config
 	*/
-	protected $plugins;
+	protected $pluginsConfig;
 
 	/**
-	* @var array  Attribute filters
+	* @var array Filters config
 	*/
-	protected $filters;
+	protected $filtersConfig;
+
+	/**
+	* @var array Array of PluginParser instances
+	*/
+	protected $pluginParsers = array();
 
 	//==============================================================================================
 	// Per-formatting vars
@@ -108,9 +113,19 @@ class Parser
 	*/
 	public function __construct(array $config)
 	{
-		$this->filters    = $config['filters'];
-		$this->plugins    = $config['plugins'];
-		$this->tagsConfig = $config['tags'];
+		$this->filtersConfig = $config['filters'];
+		$this->pluginsConfig = $config['plugins'];
+		$this->tagsConfig    = $config['tags'];
+	}
+
+	/**
+	* Return the tags' config
+	*
+	* @return array
+	*/
+	public function getTagsConfig()
+	{
+		return $this->tagsConfig;
 	}
 
 	/**
@@ -189,33 +204,24 @@ class Parser
 	* invalid. It mostly relies on PHP's own ext/filter extension but individual filters can be
 	* overwritten by the config
 	*
-	* @param  mixed  $attrVal  Attr value to be filtered/sanitized
-	* @param  array  $attrConf Attr configuration
-	* @return mixed             The sanitized value of this param, or false if it was invalid
+	* @param  mixed  $attrVal  Attribute value to be filtered/sanitized
+	* @param  array  $attrConf Attribute configuration
+	* @return mixed            The sanitized value of this attribute, or false if it was invalid
 	*/
 	public function filter($attrVal, array $attrConf)
 	{
-		$paramType = $attrConf['type'];
+		$attrType = $attrConf['type'];
 
-		if (isset($this->filters[$paramType]['callback']))
+		if (isset($this->filtersConfig[$attrType]['callback']))
 		{
-			if (isset($this->filters[$paramType]['config']))
-			{
-				/**
-				* Add the filter's config to the param
-				* NOTE: it doesn't overwrite the param's existing config
-				*/
-				$attrConf += $this->filters[$paramType]['config'];
-			}
-
 			return call_user_func(
-				$this->filters[$paramType]['callback'],
+				$this->filtersConfig[$attrType]['callback'],
 				$attrVal,
 				$attrConf
 			);
 		}
 
-		switch ($paramType)
+		switch ($attrType)
 		{
 			case 'url':
 				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_URL);
@@ -227,7 +233,7 @@ class Parser
 
 				$p = parse_url($attrVal);
 
-				if (!preg_match($this->filters['url']['allowedSchemes'], $p['scheme']))
+				if (!preg_match($this->filtersConfig['url']['allowedSchemes'], $p['scheme']))
 				{
 					$this->log('error', array(
 						'msg'    => 'URL scheme %s is not allowed',
@@ -236,8 +242,8 @@ class Parser
 					return false;
 				}
 
-				if (isset($this->filters['url']['disallowedHosts'])
-				 && preg_match($this->filters['url']['disallowedHosts'], $p['host']))
+				if (isset($this->filtersConfig['url']['disallowedHosts'])
+				 && preg_match($this->filtersConfig['url']['disallowedHosts'], $p['host']))
 				{
 					$this->log('error', array(
 						'msg'    => 'URL host %s is not allowed',
@@ -349,7 +355,7 @@ class Parser
 			default:
 				$this->log('debug', array(
 					'msg'    => 'Unknown filter %s',
-					'params' => array($paramType)
+					'params' => array($attrType)
 				));
 				return false;
 		}
@@ -614,7 +620,7 @@ class Parser
 		$this->tagStack = array();
 
 		$pass = 0;
-		foreach ($this->plugins as $pluginName => $pluginConfig)
+		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
 		{
 			$matches = array();
 			if (isset($pluginConfig['regexp']))
@@ -694,18 +700,42 @@ class Parser
 				}
 			}
 
-			if (!isset($pluginConfig['parser']))
+			if (!isset($pluginConfig['parserClassName']))
 			{
-				$pluginConfig['parser'] = array(
-					__NAMESPACE__ . '\\Plugins\\' . $pluginName . 'Parser',
-					'getTags'
-				);
+				$pluginConfig['parserClassName'] =
+					__NAMESPACE__ . '\\Plugins\\' . $pluginName . 'Parser';
 
 				$pluginConfig['parserFilepath'] =
 					__DIR__ . '/Plugins/' . $pluginName . 'Parser.php';
 			}
 
-			$tags = call_user_func($pluginConfig['parser'], $this->text, $pluginConfig, $matches);
+			/**
+			* Check whether an instance is ready, the class exists or if we have to load it
+			*/
+			if (!isset($this->pluginParsers[$pluginName]))
+			{
+				$useAutoload = !isset($pluginConfig['parserFilepath']);
+
+				if (!class_exists($pluginConfig['parserClassName'], $useAutoload)
+				 && isset($pluginConfig['parserFilepath']))
+				{
+					/**
+					* Check for the PluginParser class
+					*/
+					if (!class_exists(__NAMESPACE__ . '\\PluginParser'))
+					{
+						include __DIR__ . '/PluginParser.php';
+					}
+
+					include $pluginConfig['parserFilepath'];
+				}
+
+				$className = $pluginConfig['parserClassName'];
+
+				$this->pluginParsers[$pluginName] = new $className($this, $pluginConfig);
+			}
+
+			$tags = $this->pluginParsers[$pluginName]->getTags($this->text, $matches);
 
 			foreach ($tags as $tag)
 			{
@@ -762,7 +792,7 @@ class Parser
 	/**
 	* Process the captured tags
 	*
-	* Removes overlapping tags, filter tags with invalid params, tags used in illegal places,
+	* Removes overlapping tags, filter tags with invalid attributes, tags used in illegal places,
 	* applies rules
 	*
 	* @return void
@@ -943,13 +973,13 @@ class Parser
 					}
 
 					/**
-					* Filter each param
+					* Filter each attribute
 					*/
 					foreach ($this->currentTag['attrs'] as $attrName => &$attrVal)
 					{
 						$this->currentAttribute = $attrName;
 
-						$attrConf   = $tagConfig['attrs'][$attrName];
+						$attrConf    = $tagConfig['attrs'][$attrName];
 						$filteredVal = $attrVal;
 
 						// execute pre-filter callbacks
@@ -1015,7 +1045,7 @@ class Parser
 						{
 							$this->log('debug', array(
 								'pos'    => $this->currentTag['pos'],
-								'msg'    => 'Attr value was altered by the filter '
+								'msg'    => 'Attribute value was altered by the filter '
 								          . '(attrName: $1%s, attrVal: $2%s, filteredVal: $3%s)',
 								'params' => array($attrName, $attrVal, $filteredVal)
 							));
@@ -1059,7 +1089,7 @@ class Parser
 					}
 
 					/**
-					* Sort params alphabetically. Can be useful if someone wants to process the
+					* Sort attributes alphabetically. Can be useful if someone wants to process the
 					* output using regexps
 					*/
 					ksort($this->currentTag['attrs']);

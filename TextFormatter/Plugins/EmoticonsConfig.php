@@ -59,7 +59,7 @@ class EmoticonsConfig extends PluginConfig
 		$regexp = '#' . ConfigBuilder::buildRegexpFromList(array_keys($this->emoticons)) . '#S';
 
 		return array(
-			'regexp' => $regexp;
+			'regexp' => $regexp
 		);
 	}
 

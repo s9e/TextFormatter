@@ -22,17 +22,17 @@ class PredefinedBBCodes
 
 	public function addB()
 	{
-		$this->cb->addBBCodeFromExample('[B]{TEXT}[/B]', '<strong>{TEXT}</strong>');
+		$this->cb->BBCodes->addBBCodeFromExample('[B]{TEXT}[/B]', '<strong>{TEXT}</strong>');
 	}
 
 	public function addI()
 	{
-		$this->cb->addBBCodeFromExample('[I]{TEXT}[/I]', '<em>{TEXT}</em>');
+		$this->cb->BBCodes->addBBCodeFromExample('[I]{TEXT}[/I]', '<em>{TEXT}</em>');
 	}
 
 	public function addU()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[U]{TEXT}[/U]',
 			'<span style="text-decoration:underline">{TEXT}</span>'
 		);
@@ -40,7 +40,7 @@ class PredefinedBBCodes
 
 	public function addS()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[S]{TEXT}[/S]',
 			'<span style="text-decoration:line-through">{TEXT}</span>'
 		);
@@ -55,7 +55,7 @@ class PredefinedBBCodes
 	*/
 	public function addURL()
 	{
-		$this->cb->BBCodes->add('URL', array(
+		$this->cb->BBCodes->addBBCode('URL', array(
 			'defaultParam'    => 'url',
 			'content_as_param' => true
 		));
@@ -85,7 +85,7 @@ class PredefinedBBCodes
 	*/
 	public function addIMG()
 	{
-		$this->cb->BBCodes->add('IMG', array(
+		$this->cb->BBCodes->addBBCode('IMG', array(
 			'defaultParam'    => 'src',
 			'content_as_param' => true,
 			'auto_close'       => true,
@@ -151,7 +151,7 @@ class PredefinedBBCodes
 		);
 
 		// [LIST]
-		$this->cb->BBCodes->add('LIST', array(
+		$this->cb->BBCodes->addBBCode('LIST', array(
 			'defaultParam' => 'style',
 			'trimBefore'   => true,
 			'trimAfter'    => true,
@@ -162,9 +162,9 @@ class PredefinedBBCodes
 		$this->cb->addTagAttribute('LIST', 'start', 'uint', array('isRequired' => false));
 
 		$this->cb->addTagAttribute('LIST', 'style', 'regexp', array(
-			'default' => 'disc',
+			'default'    => 'disc',
 			'isRequired' => false,
-			'regexp' => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
+			'regexp'     => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
 		));
 
 		$this->cb->setTagTemplate(
@@ -192,23 +192,21 @@ class PredefinedBBCodes
 			</ol>'
 		);
 
-		// [LI]
-		$this->cb->BBCodes->add('LI', array(
+		// [*] maps to <LI>
+		$this->cb->BBCodes->addBBCode('*', array(
+			'tagName'      => 'LI',
 			'trimBefore'   => true,
 			'trimAfter'    => true,
 			'ltrimContent' => true,
 			'rtrimContent' => true
 		));
 
-		// create an alias so that [*] be interpreted as [LI]
-		$this->cb->addBBCodeAlias('LI', '*');
-
 		// [*] should only be used directly under [LIST]
-		$this->cb->addBBCodeRule('LI', 'requireParent', 'list');
+		$this->cb->addTagRule('LI', 'requireParent', 'LIST');
 
 		// also, let's make so that when we have two consecutive [*] we close
 		// the first one when opening the second, instead of it behind its child
-		$this->cb->addBBCodeRule('LI', 'closeParent', 'LI');
+		$this->cb->addTagRule('LI', 'closeParent', 'LI');
 
 		$this->cb->setTagTemplate('LI', '<li><xsl:apply-templates/></li>');
 	}
@@ -224,7 +222,7 @@ class PredefinedBBCodes
 		$regexp =
 			'/^(?:' . preg_quote('http://video.google.com/videoplay?docid=', '/') . ')?(-?\\d+)/';
 
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[googlevideo]{REGEXP=' . $regexp . ';REPLACE=$1}[/googlevideo]',
 			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={REGEXP}" width="400" height="326">
 				<param name="movie" value="http://video.google.com/googleplayer.swf?docId={REGEXP}"/>
@@ -249,7 +247,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?'
 		        . '([A-Za-z_0-9\\-]{5,})/';
 
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[youtube]{REGEXP=' . $regexp . ';REPLACE=$1}[/youtube]',
 			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350">
 				<param name="movie" value="http://www.youtube.com/v/{REGEXP}" />
@@ -260,7 +258,7 @@ class PredefinedBBCodes
 
 	public function addALIGN()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[align={CHOICE=left,right,center,justify}]{TEXT}[/align]',
 			'<div style="text-align:{CHOICE}">{TEXT}</div>'
 		);
@@ -268,7 +266,7 @@ class PredefinedBBCodes
 
 	public function addLEFT()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[left]{TEXT}[/left]',
 			'<div style="text-align:left">{TEXT}</div>'
 		);
@@ -276,7 +274,7 @@ class PredefinedBBCodes
 
 	public function addRIGHT()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[right]{TEXT}[/right]',
 			'<div style="text-align:right">{TEXT}</div>'
 		);
@@ -284,7 +282,7 @@ class PredefinedBBCodes
 
 	public function addCENTER()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[center]{TEXT}[/center]',
 			'<div style="text-align:center">{TEXT}</div>'
 		);
@@ -292,7 +290,7 @@ class PredefinedBBCodes
 
 	public function addJUSTIFY()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[justify]{TEXT}[/justify]',
 			'<div style="text-align:justify">{TEXT}</div>'
 		);
@@ -300,7 +298,7 @@ class PredefinedBBCodes
 
 	public function addBACKGROUND()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[background={COLOR}]{TEXT}[/background]',
 			'<span style="background-color:{COLOR}">{TEXT}</span>'
 		);
@@ -308,7 +306,7 @@ class PredefinedBBCodes
 
 	public function addFONT()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[font={SIMPLETEXT}]{TEXT}[/font]',
 			'<span style="font-family:{SIMPLETEXT}">{TEXT}</span>'
 		);
@@ -316,7 +314,7 @@ class PredefinedBBCodes
 
 	public function addBLINK()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[blink]{TEXT}[/blink]',
 			'<span style="text-decoration:blink">{TEXT}</span>'
 		);
@@ -324,7 +322,7 @@ class PredefinedBBCodes
 
 	public function addSUB()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[sub]{TEXT}[/sub]',
 			'<span style="vertical-align:sub">{TEXT}</span>'
 		);
@@ -332,7 +330,7 @@ class PredefinedBBCodes
 
 	public function addSUPER()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[super]{TEXT}[/super]',
 			'<span style="vertical-align:super">{TEXT}</span>'
 		);
@@ -348,7 +346,7 @@ class PredefinedBBCodes
 	public function addTABLE()
 	{
 		// limit table nesting to 2, which should be enough for everybody
-		$this->cb->BBCodes->add('TABLE', array('nestingLimit' => 2));
+		$this->cb->BBCodes->addBBCode('TABLE', array('nestingLimit' => 2));
 		$this->cb->setTagTemplate(
 			'TABLE',
 			'<table>
@@ -357,11 +355,11 @@ class PredefinedBBCodes
 			</table>'
 		);
 
-		$this->cb->BBCodes->add('COL', array(
+		$this->cb->BBCodes->addBBCode('COL', array(
 			'defaultRule' => 'deny',
 			'auto_close'   => true
 		));
-		$this->cb->addBBCodeRule('COL', 'requireParent', 'TABLE');
+		$this->cb->BBCodes->addBBCodeRule('COL', 'requireParent', 'TABLE');
 		$this->cb->addTagAttribute('COL', 'align', 'regexp', array(
 			'isRequired' => false,
 			'regexp'      => '/^(?:left|right|center|align)$/iD'
@@ -375,8 +373,8 @@ class PredefinedBBCodes
 			</col>'
 		);
 
-		$this->cb->BBCodes->add('TR');
-		$this->cb->addBBCodeRule('TR', 'requireParent', 'TABLE');
+		$this->cb->BBCodes->addBBCode('TR');
+		$this->cb->BBCodes->addBBCodeRule('TR', 'requireParent', 'TABLE');
 		$this->cb->setTagTemplate(
 			'TR',
 			'<tr>
@@ -384,8 +382,8 @@ class PredefinedBBCodes
 			</tr>'
 		);
 
-		$this->cb->BBCodes->add('TH');
-		$this->cb->addBBCodeRule('TH', 'requireParent', 'TR');
+		$this->cb->BBCodes->addBBCode('TH');
+		$this->cb->BBCodes->addBBCodeRule('TH', 'requireParent', 'TR');
 		$this->cb->addTagAttribute('TH', 'colspan', 'uint', array('isRequired' => false));
 		$this->cb->addTagAttribute('TH', 'rowspan', 'uint', array('isRequired' => false));
 		$this->cb->setTagTemplate(
@@ -407,8 +405,8 @@ class PredefinedBBCodes
 			</th>'
 		);
 
-		$this->cb->BBCodes->add('TD');
-		$this->cb->addBBCodeRule('TD', 'requireParent', 'TR');
+		$this->cb->BBCodes->addBBCode('TD');
+		$this->cb->BBCodes->addBBCodeRule('TD', 'requireParent', 'TR');
 		$this->cb->addTagAttribute('TD', 'colspan', 'uint', array('isRequired' => false));
 		$this->cb->addTagAttribute('TD', 'rowspan', 'uint', array('isRequired' => false));
 		$this->cb->setTagTemplate(
@@ -443,7 +441,7 @@ class PredefinedBBCodes
 	*/
 	public function addCODE()
 	{
-		$this->cb->BBCodes->add('CODE', array(
+		$this->cb->BBCodes->addBBCode('CODE', array(
 			'defaultRule'  => 'deny',
 			'defaultParam' => 'stx'
 		));
@@ -472,7 +470,7 @@ class PredefinedBBCodes
 
 	public function addHR()
 	{
-		$this->cb->BBCodes->add('HR', array(
+		$this->cb->BBCodes->addBBCode('HR', array(
 			'defaultRule' => 'deny',
 			'auto_close'   => true,
 			'trimBefore'  => true,
@@ -495,7 +493,7 @@ class PredefinedBBCodes
 	*/
 	public function addQUOTE($nestingLevel = 3, $authorStr = '%s wrote:')
 	{
-		$this->cb->BBCodes->add('QUOTE', array(
+		$this->cb->BBCodes->addBBCode('QUOTE', array(
 			'nestingLimit' => $nestingLevel,
 			'defaultParam' => 'author',
 			'trimBefore'   => true,
@@ -545,7 +543,7 @@ class PredefinedBBCodes
 	*/
 	public function addEMAIL()
 	{
-		$this->cb->BBCodes->add('EMAIL', array(
+		$this->cb->BBCodes->addBBCode('EMAIL', array(
 			'defaultParam'    => 'email',
 			'content_as_param' => true,
 			'defaultRule'     => 'deny'
@@ -580,7 +578,7 @@ class PredefinedBBCodes
 	{
 		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?([A-Za-z_0-9]+)/';
 
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[JUSTIN]{REGEXP=' . $regexp . ';REPLACE=$1}[/JUSTIN]',
 			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={REGEXP}" bgcolor="#000000">
 				<param name="allowFullScreen" value="true" />
@@ -614,7 +612,7 @@ class PredefinedBBCodes
 	*/
 	public function addLOCALTIME()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[LOCALTIME]{NUMBER;PRE_FILTER=strtotime}[/LOCALTIME]',
 			'<span class="localtime" title="{text()}">
 				<script type="text/javascript">document.write(new Date({NUMBER}*1000).toLocaleString())</script>
@@ -635,7 +633,7 @@ class PredefinedBBCodes
 	*/
 	public function addSPOILER($spoilerStr = 'Spoiler:', $showStr = 'Show', $hideStr = 'Hide')
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[SPOILER={TEXT1;IS_REQUIRED=0}]{TEXT2}[/SPOILER]',
 			'<div class="spoiler">
 				<div class="spoiler-header">
@@ -653,7 +651,7 @@ class PredefinedBBCodes
 
 	public function addCOLOR()
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[COLOR={COLOR}]{TEXT}[/COLOR]',
 			'<span style="color:{COLOR}">{TEXT}</span>'
 		);
@@ -670,7 +668,7 @@ class PredefinedBBCodes
 	*/
 	public function addSIZE($minSize = 50, $maxSize = 200)
 	{
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[SIZE={RANGE=' . $minSize . ',' . $maxSize . '}]{TEXT}[/SIZE]',
 			'<span style="font-size:{RANGE}%">{TEXT}</span>',
 			0,
@@ -683,7 +681,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:' . preg_quote('http://blip.tv/file/', '/') . ')?([0-9]+)/';
 
 		// HTML taken straight from Blip's player "Copy embed code" feature
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[BLIP]{REGEXP=' . $regexp . ';REPLACE=$1}[/BLIP]',
 			'<embed src="http://blip.tv/play/{REGEXP}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
 		);
@@ -694,7 +692,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:' . preg_quote('http://vimeo.com/', '/') . ')?([0-9]+)/';
 
 		// HTML taken straight from Vimeo's player "EMBED" feature
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[VIMEO]{REGEXP=' . $regexp . ';REPLACE=$1}[/VIMEO]',
 			'<iframe src="http://player.vimeo.com/video/{REGEXP}" width="400" height="225" frameborder="0"></iframe>'
 		);
@@ -705,7 +703,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:' . preg_quote('http://www.dailymotion.com/video/', '/') . ')?([0-9a-z]+)/';
 
 		// HTML taken straight from Dailymotion's Export->embed feature
-		$this->cb->addBBCodeFromExample(
+		$this->cb->BBCodes->addBBCodeFromExample(
 			'[DAILYMOTION]{REGEXP=' . $regexp . ';REPLACE=$1}[/DAILYMOTION]',
 			'<object width="480" height="270">
 				<param name="movie" value="http://www.dailymotion.com/swf/video/{REGEXP}"></param>

@@ -10,18 +10,37 @@ namespace s9e\Toolkit\TextFormatter\Plugins;
 use s9e\Toolkit\TextFormatter\Parser,
     s9e\Toolkit\TextFormatter\PluginParser;
 
-class EmoticonsParser extends PluginParser
+class BBCodesParser extends PluginParser
 {
+	protected $tagsConfig;
+	protected $bbcodesConfig;
+
+	public function setUp()
+	{
+		$this->tagsConfig    = $this->parser->getTagsConfig();
+		$this->bbcodesConfig = $this->config['bbcodesConfig'];
+	}
+
 	public function getTags($text, array $matches)
 	{
 		$tags = array();
 
-		$bbcodes = $config['bbcodes'];
-		$aliases = $config['aliases'];
 		$textLen = strlen($text);
 
 		foreach ($matches as $m)
 		{
+			$bbcodeName = strtoupper($m[1][0]);
+
+			if (!isset($this->bbcodesConfig[$bbcodeName]))
+			{
+				// Not a known BBCode
+				continue;
+			}
+
+			$bbcodeConfig = $this->bbcodesConfig[$bbcodeName];
+			$tagName      = $bbcodeConfig['tagName'];
+			$tagConfig    = $this->tagsConfig[$tagName];
+
 			/**
 			* @var Position of the first character of current BBCode, which should be a [
 			*/
@@ -32,6 +51,11 @@ class EmoticonsParser extends PluginParser
 			*      the =, ] or : char, then moves to the right as the BBCode is parsed
 			*/
 			$rpos = $lpos + strlen($m[0][0]);
+
+			/**
+			* @var Attributes parsed from the text
+			*/
+			$attrs = array();
 
 			/**
 			* Check for BBCode suffix
@@ -55,56 +79,25 @@ class EmoticonsParser extends PluginParser
 				$suffix  = '';
 			}
 
-			$alias = strtoupper($m[1][0]);
-
-			if (!isset($aliases[$alias]))
-			{
-				// Not a known BBCode or alias
-				continue;
-			}
-
-			$bbcodeId = $aliases[$alias];
-			$bbcode   = $bbcodes[$bbcodeId];
-			$params   = array();
-
-			if (!empty($bbcode['internal_use']))
-			{
-				/**
-				* This is theorically impossible, as the regexp does not contain internal BBCodes.
-				*/
-				if ($m[0][0][1] !== '/')
-				{
-					/**
-					* We only warn about starting tags, no need to raise 2 warnings per pair
-					*/
-					$msgs['warning'][] = array(
-						'pos'    => $lpos,
-						'msg'    => 'BBCode %s is for internal use only',
-						'params' => array($bbcodeId)
-					);
-				}
-				continue;
-			}
-
 			if ($m[0][0][1] === '/')
 			{
 				if ($text[$rpos] !== ']')
 				{
-					$msgs['warning'][] = array(
+					$this->parser->log('warning', array(
 						'pos'    => $rpos,
 						'msg'    => 'Unexpected character %s',
 						'params' => array($text[$rpos])
-					);
+					));
 					continue;
 				}
 
-				$type = self::END_TAG;
+				$type = Parser::END_TAG;
 			}
 			else
 			{
-				$type       = self::START_TAG;
+				$type       = Parser::START_TAG;
 				$wellFormed = false;
-				$param      = null;
+				$attrName   = null;
 
 				if ($text[$rpos] === '=')
 				{
@@ -114,19 +107,19 @@ class EmoticonsParser extends PluginParser
 					* Set the default param. If there's no default param, we issue a warning and
 					* reuse the BBCode's name instead
 					*/
-					if (isset($bbcode['defaultParam']))
+					if (isset($tagConfig['defaultAttr']))
 					{
-						$param = $bbcode['defaultParam'];
+						$attrName = $tagConfig['defaultAttr'];
 					}
 					else
 					{
-						$param = strtolower($bbcodeId);
+						$attrName = strtolower($tagName);
 
-						$msgs['debug'][] = array(
+						$this->parser->log('debug', array(
 							'pos'    => $rpos,
-							'msg'    => "BBCode %s does not have a default param, using BBCode's name as param name",
-							'params' => array($bbcodeId)
-						);
+							'msg'    => 'BBCode %1$s does not have a default attribute, using tag\'s name %2$s as attribute name',
+							'params' => array($bbcodeName, $tagName)
+						));
 					}
 
 					++$rpos;
@@ -141,17 +134,17 @@ class EmoticonsParser extends PluginParser
 						/**
 						* We're closing this tag
 						*/
-						if (isset($param))
+						if (isset($attrName))
 						{
 							/**
 							* [quote=]
 							* [quote username=]
 							*/
-							$msgs['warning'][] = array(
+							$this->parser->log('warning', array(
 								'pos'    => $rpos,
 								'msg'    => 'Unexpected character %s',
 								'params' => array($c)
-							);
+							));
 							continue 2;
 						}
 
@@ -160,7 +153,7 @@ class EmoticonsParser extends PluginParser
 							/**
 							* Self-closing tag, e.g. [foo/]
 							*/
-							$type = self::SELF_CLOSING_TAG;
+							$type = Parser::SELF_CLOSING_TAG;
 							++$rpos;
 
 							if ($rpos === $textLen)
@@ -172,11 +165,11 @@ class EmoticonsParser extends PluginParser
 							$c = $text[$rpos];
 							if ($c !== ']')
 							{
-								$msgs['warning'][] = array(
+								$this->parser->log('warning', array(
 									'pos'    => $rpos,
 									'msg'    => 'Unexpected character: expected ] found %s',
 									'params' => array($c)
-								);
+								));
 								continue 2;
 							}
 						}
@@ -191,42 +184,42 @@ class EmoticonsParser extends PluginParser
 						continue;
 					}
 
-					if (!isset($param))
+					if (!isset($attrName))
 					{
 						/**
-						* Capture the param name
+						* Capture the attribute name
 						*/
 						$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', $rpos);
 
 						if (!$spn)
 						{
-							$msgs['warning'][] = array(
+							$this->parser->log('warning', array(
 								'pos'    => $rpos,
 								'msg'    => 'Unexpected character %s',
 								'params' => array($c)
-							);
+							));
 							continue 2;
 						}
 
 						if ($rpos + $spn >= $textLen)
 						{
-							$msgs['debug'][] = array(
+							$this->parser->log('debug', array(
 								'pos' => $rpos,
 								'msg' => 'Param name seems to extend till the end of $text'
-							);
+							));
 							continue 2;
 						}
 
-						$param = strtolower(substr($text, $rpos, $spn));
+						$attrName = strtolower(substr($text, $rpos, $spn));
 						$rpos += $spn;
 
 						if ($text[$rpos] !== '=')
 						{
-							$msgs['warning'][] = array(
+							$this->parser->log('debug', array(
 								'pos'    => $rpos,
 								'msg'    => 'Unexpected character %s',
 								'params' => array($text[$rpos])
-							);
+							));
 							continue 2;
 						}
 
@@ -247,10 +240,10 @@ class EmoticonsParser extends PluginParser
 								/**
 								* No matching quote, apparently that string never ends...
 								*/
-								$msgs['error'][] = array(
+								$this->parser->log('error', array(
 									'pos' => $valuePos - 1,
 									'msg' => 'Could not find matching quote'
-								);
+								));
 								continue 3;
 							}
 
@@ -285,15 +278,15 @@ class EmoticonsParser extends PluginParser
 						$rpos += $spn;
 					}
 
-					if (isset($bbcode['params'][$param]))
+					if (isset($tagConfig['attrs'][$attrName]))
 					{
 						/**
-						* We only keep params that exist in the BBCode's definition
+						* We only keep attributes that exist in the tag's definition
 						*/
-						$params[$param] = $value;
+						$attrs[$attrName] = $value;
 					}
 
-					unset($param, $value);
+					unset($attrName, $value);
 				}
 
 				if (!$wellFormed)
@@ -303,10 +296,10 @@ class EmoticonsParser extends PluginParser
 
 				$usesContent = false;
 
-				if ($type === self::START_TAG
-				 && isset($bbcode['defaultParam'])
-				 && !isset($params[$bbcode['defaultParam']])
-				 && !empty($bbcode['content_as_param']))
+				if ($type === Parser::START_TAG
+				 && isset($tagConfig['defaultParam'])
+				 && !isset($attrs[$tagConfig['defaultParam']])
+				 && !empty($tagConfig['content_as_param']))
 				{
 					/**
 					* Capture the content of that tag and use it as param
@@ -317,11 +310,11 @@ class EmoticonsParser extends PluginParser
 					*
 					* @todo perhaps disable all BBCodes when the content is used as param? how?
 					*/
-					$pos = stripos($text, '[/' . $bbcodeId . $suffix . ']', $rpos);
+					$pos = stripos($text, '[/' . $bbcodeName . $suffix . ']', $rpos);
 
 					if ($pos)
 					{
-						$params[$bbcode['defaultParam']]
+						$attrs[$tagConfig['defaultParam']]
 							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
 
 						$usesContent = true;
@@ -329,28 +322,28 @@ class EmoticonsParser extends PluginParser
 				}
 			}
 
-			if ($type === self::START_TAG
+			if ($type === Parser::START_TAG
 			 && !$usesContent
-			 && !empty($bbcode['auto_close']))
+			 && !empty($tagConfig['auto_close']))
 			{
-				$endTag = '[/' . $bbcodeId . $suffix . ']';
+				$endTag = '[/' . $bbcodeName . $suffix . ']';
 
 				/**
 				* Make sure that the start tag isn't immediately followed by an endtag
 				*/
 				if (strtoupper(substr($text, 1 + $rpos, strlen($endTag))) !== $endTag)
 				{
-					$type |= self::END_TAG;
+					$type |= Parser::END_TAG;
 				}
 			}
 
 			$tags[] = array(
-				'name'   => $bbcodeId,
+				'name'   => $tagName,
 				'pos'    => $lpos,
 				'len'    => $rpos + 1 - $lpos,
 				'type'   => $type,
 				'suffix' => $suffix,
-				'params' => $params
+				'attrs'  => $attrs
 			);
 		}
 

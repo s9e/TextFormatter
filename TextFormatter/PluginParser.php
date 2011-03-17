@@ -37,5 +37,5 @@ abstract class PluginParser
 	*                passed as second parameter. Otherwise, an empty array is passed
 	* @return array
 	*/
-	public function getTags($text, array $matches);
+	abstract public function getTags($text, array $matches);
 }
