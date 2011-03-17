@@ -584,9 +584,9 @@ class ConfigBuilder
 	*/
 	public function getParser()
 	{
-		if (!class_exists('Parser'))
+		if (!class_exists(__NAMESPACE__ . '\\Parser'))
 		{
-			include_once(__DIR__ . '/Parser.php');
+			include(__DIR__ . '/Parser.php');
 		}
 
 		return new Parser($this->getParserConfig());
@@ -599,9 +599,9 @@ class ConfigBuilder
 	*/
 	public function getRenderer()
 	{
-		if (!class_exists('Renderer'))
+		if (!class_exists(__NAMESPACE__ . '\\Renderer'))
 		{
-			include_once(__DIR__ . '/Renderer.php');
+			include(__DIR__ . '/Renderer.php');
 		}
 
 		return new Renderer($this->getXSL());

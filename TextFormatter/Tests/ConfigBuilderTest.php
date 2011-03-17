@@ -3,10 +3,16 @@
 namespace s9e\Toolkit\TextFormatter\Tests;
 
 use s9e\Toolkit\TextFormatter\ConfigBuilder,
+    s9e\Toolkit\TextFormatter\Parser,
+    s9e\Toolkit\TextFormatter\Renderer,
     s9e\Toolkit\TextFormatter\Plugins\EmoticonsConfig;
 
+include_once __DIR__ . '/../ConfigBuilder.php';
 include_once __DIR__ . '/Test.php';
 
+/**
+* @covers s9e\Toolkit\TextFormatter\ConfigBuilder
+*/
 class ConfigBuilderTest extends Test
 {
 	public function setUp()
@@ -529,4 +535,41 @@ class ConfigBuilderTest extends Test
 	{
 		$this->cb->{'../foo'};
 	}
+
+	/**
+	* @runInSeparateProcess
+	*/
+	public function testCanAutoloadParser()
+	{
+		$this->assertTrue($this->cb->getParser() instanceof Parser);
+	}
+
+	/**
+	* @runInSeparateProcess
+	* @depends testCanAutoloadParser
+	*/
+	public function testDoesNotIncludeParserTwice()
+	{
+		$this->assertTrue($this->cb->getParser() instanceof Parser);
+		$this->assertTrue($this->cb->getParser() instanceof Parser);
+	}
+
+	/**
+	* @runInSeparateProcess
+	*/
+	public function testCanAutoloadRenderer()
+	{
+		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
+	}
+
+	/**
+	* @runInSeparateProcess
+	* @depends testCanAutoloadRenderer
+	*/
+	public function testDoesNotIncludeRendererTwice()
+	{
+		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
+		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
+	}
+
 }

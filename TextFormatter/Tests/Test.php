@@ -2,10 +2,6 @@
 
 namespace s9e\Toolkit\TextFormatter\Tests;
 
-include_once __DIR__ . '/../ConfigBuilder.php';
-include_once __DIR__ . '/../Parser.php';
-include_once __DIR__ . '/../Renderer.php';
-
 abstract class Test extends \PHPUnit_Framework_TestCase
 {
 	protected function assertArrayMatches(array $expected, array $actual)

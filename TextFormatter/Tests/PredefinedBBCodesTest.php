@@ -7,8 +7,14 @@ use s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\PredefinedBBCodes,
     s9e\Toolkit\TextFormatter\Renderer;
 
+include_once __DIR__ . '/../ConfigBuilder.php';
+include_once __DIR__ . '/../Parser.php';
+include_once __DIR__ . '/../Renderer.php';
 include_once __DIR__ . '/Test.php';
 
+/**
+* @covers s9e\Toolkit\TextFormatter\PredefinedBBCodes
+*/
 class PredefinedBBCodesTest extends Test
 {
 	/**
