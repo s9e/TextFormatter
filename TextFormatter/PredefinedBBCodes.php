@@ -223,7 +223,7 @@ class PredefinedBBCodes
 			'/^(?:' . preg_quote('http://video.google.com/videoplay?docid=', '/') . ')?(-?\\d+)/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[googlevideo]{REGEXP=' . $regexp . ';REPLACE=$1}[/googlevideo]',
+			'[googlevideo]{REGEXP=' . $regexp . ';replace=$1}[/googlevideo]',
 			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={REGEXP}" width="400" height="326">
 				<param name="movie" value="http://video.google.com/googleplayer.swf?docId={REGEXP}"/>
 				<param name="allowScriptAcess" value="sameDomain"/>
@@ -248,7 +248,7 @@ class PredefinedBBCodes
 		        . '([A-Za-z_0-9\\-]{5,})/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[youtube]{REGEXP=' . $regexp . ';REPLACE=$1}[/youtube]',
+			'[youtube]{REGEXP=' . $regexp . ';replace=$1}[/youtube]',
 			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350">
 				<param name="movie" value="http://www.youtube.com/v/{REGEXP}" />
 				<param name="wmode" value="transparent" />
@@ -448,7 +448,7 @@ class PredefinedBBCodes
 
 		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
 			'isRequired' => false,
-			'pre_filter'  => array('strtolower')
+			'preFilter'  => array('strtolower')
 		));
 
 		$this->cb->setTagTemplate(
@@ -544,19 +544,19 @@ class PredefinedBBCodes
 	public function addEMAIL()
 	{
 		$this->cb->BBCodes->addBBCode('EMAIL', array(
-			'defaultAttr'    => 'email',
-			'useContent' => true,
-			'defaultRule'     => 'deny'
+			'defaultAttr' => 'email',
+			'useContent'  => true,
+			'defaultRule' => 'deny'
 		));
 
 		$this->cb->addTagAttribute('EMAIL', 'email', 'email', array(
 			// this will encode the @ into %40, possibly messing up with the lamest of spambots
-			'post_filter' => array('rawurlencode')
+			'postFilter' => array('rawurlencode')
 		));
 
 		$this->cb->addTagAttribute('EMAIL', 'subject', 'text', array(
 			'isRequired' => false,
-			'post_filter' => array('rawurlencode')
+			'postFilter' => array('rawurlencode')
 		));
 
 		$this->cb->setTagTemplate(
@@ -579,7 +579,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?([A-Za-z_0-9]+)/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[JUSTIN]{REGEXP=' . $regexp . ';REPLACE=$1}[/JUSTIN]',
+			'[JUSTIN]{REGEXP=' . $regexp . ';replace=$1}[/JUSTIN]',
 			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={REGEXP}" bgcolor="#000000">
 				<param name="allowFullScreen" value="true" />
 				<param name="allowScriptAccess" value="always" />
@@ -613,7 +613,7 @@ class PredefinedBBCodes
 	public function addLOCALTIME()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[LOCALTIME]{NUMBER;PRE_FILTER=strtotime}[/LOCALTIME]',
+			'[LOCALTIME]{NUMBER;preFilter=strtotime}[/LOCALTIME]',
 			'<span class="localtime" title="{text()}">
 				<script type="text/javascript">document.write(new Date({NUMBER}*1000).toLocaleString())</script>
 				<noscript><xsl:apply-templates /></noscript>
@@ -634,7 +634,7 @@ class PredefinedBBCodes
 	public function addSPOILER($spoilerStr = 'Spoiler:', $showStr = 'Show', $hideStr = 'Hide')
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[SPOILER={TEXT1;IS_REQUIRED=0}]{TEXT2}[/SPOILER]',
+			'[SPOILER={TEXT1;isRequired=0}]{TEXT2}[/SPOILER]',
 			'<div class="spoiler">
 				<div class="spoiler-header">
 					<input type="button" value="' . $showStr . '" onclick="'
@@ -682,7 +682,7 @@ class PredefinedBBCodes
 
 		// HTML taken straight from Blip's player "Copy embed code" feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[BLIP]{REGEXP=' . $regexp . ';REPLACE=$1}[/BLIP]',
+			'[BLIP]{REGEXP=' . $regexp . ';replace=$1}[/BLIP]',
 			'<embed src="http://blip.tv/play/{REGEXP}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
 		);
 	}
@@ -693,7 +693,7 @@ class PredefinedBBCodes
 
 		// HTML taken straight from Vimeo's player "EMBED" feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[VIMEO]{REGEXP=' . $regexp . ';REPLACE=$1}[/VIMEO]',
+			'[VIMEO]{REGEXP=' . $regexp . ';replace=$1}[/VIMEO]',
 			'<iframe src="http://player.vimeo.com/video/{REGEXP}" width="400" height="225" frameborder="0"></iframe>'
 		);
 	}
@@ -704,7 +704,7 @@ class PredefinedBBCodes
 
 		// HTML taken straight from Dailymotion's Export->embed feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[DAILYMOTION]{REGEXP=' . $regexp . ';REPLACE=$1}[/DAILYMOTION]',
+			'[DAILYMOTION]{REGEXP=' . $regexp . ';replace=$1}[/DAILYMOTION]',
 			'<object width="480" height="270">
 				<param name="movie" value="http://www.dailymotion.com/swf/video/{REGEXP}"></param>
 				<param name="allowFullScreen" value="true"></param>

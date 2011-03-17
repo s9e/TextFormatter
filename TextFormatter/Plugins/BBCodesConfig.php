@@ -196,13 +196,13 @@ class BBCodesConfig extends PluginConfig
 		// Options set via $options override the ones we have parsed from the definition
 		$this->addBBCode($def['bbcodeName'], $options + $def['options']);
 
-		foreach ($def['params'] as $paramName => $paramConf)
+		foreach ($def['params'] as $attrName => $attrConf)
 		{
 			$this->cb->addTagAttribute(
 				$def['bbcodeName'],
-				$paramName,
-				$paramConf['type'],
-				$paramConf
+				$attrName,
+				$attrConf['type'],
+				$attrConf
 			);
 		}
 
@@ -303,20 +303,20 @@ class BBCodesConfig extends PluginConfig
 		* The various regexps used to parse the definition
 		*/
 		$r = array(
-			'bbcodeName'  => '[a-zA-Z_][a-zA-Z_0-9]*',
-			'paramName' => '[a-zA-Z_][a-zA-Z_0-9]*',
+			'bbcodeName' => '[a-zA-Z_][a-zA-Z_0-9]*',
+			'attrName'   => '[a-zA-Z_][a-zA-Z_0-9]*',
 			'type' => array(
 				'regexp' => 'REGEXP[0-9]*=(?P<regexp>/.*?/i?)',
 				'range'  => 'RANGE[0-9]*=(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
 				'choice' => 'CHOICE[0-9]*=(?P<choices>.+?)',
 				'other'  => '[A-Z_]+[0-9]*'
 			),
-			'paramOptions' => '[A-Z_]+=[^;]+?'
+			'attrOptions' => '[A-Z_a-z]+=[^;]+?'
 		);
 		$r['placeholder'] =
 			  '\\{'
 			. '(?P<type>' . implode('|', $r['type']) . ')'
-			. '(?P<paramOptions>;(?:' . $r['paramOptions'] . '))*;?'
+			. '(?P<attrOptions>;(?:' . $r['attrOptions'] . '))*;?'
 			. '\\}';
 
 		// we remove all named captures from the placeholder for the global regexp to avoid dupes
@@ -325,9 +325,9 @@ class BBCodesConfig extends PluginConfig
 		$regexp = '#\\['
 		        // (BBCODE)(=paramval)?
 		        . '(?P<bbcodeName>' . $r['bbcodeName'] . ')'
-		        . '(?P<defaultParam>=' . $placeholder . ')?'
+		        . '(?P<defaultAttr>=' . $placeholder . ')?'
 		        // (foo=fooval bar=barval)
-		        . '(?P<attrs>(?:\\s+' . $r['paramName'] . '=' . $placeholder . ')*)'
+		        . '(?P<attrs>(?:\\s+' . $r['attrName'] . '=' . $placeholder . ')*)'
 		        // ]({TEXT})[/BBCODE]
 		        . '(?:\\s*/?\\]|\\](?P<content>' . $placeholder . ')?(?P<endTag>\\[/\\1]))'
 		        . '$#D';
@@ -349,7 +349,7 @@ class BBCodesConfig extends PluginConfig
 		*/
 		if (empty($m['endTag']))
 		{
-			$options['auto_close'] = true;
+			$options['autoClose'] = true;
 		}
 
 		/**
@@ -357,11 +357,11 @@ class BBCodesConfig extends PluginConfig
 		* e.g. [a href={URL}]           => $attrs = "href={URL}"
 		*      [url={URL} title={TEXT}] => $attrs = "url={URL} title={TEXT}"
 		*/
-		if ($m['defaultParam'])
+		if ($m['defaultAttr'])
 		{
-			$attrs = $m['bbcodeName'] . $m['defaultParam'] . $attrs;
+			$attrs = $m['bbcodeName'] . $m['defaultAttr'] . $attrs;
 
-			$options['defaultParam'] = strtolower($m['bbcodeName']);
+			$options['defaultAttr'] = strtolower($m['bbcodeName']);
 		}
 
 		/**
@@ -392,21 +392,21 @@ class BBCodesConfig extends PluginConfig
 				* We need to validate the content, means we should probably disable BBCodes,
 				* e.g. [email]{EMAIL}[/email]
 				*/
-				$paramName = strtolower($bbcodeName);
+				$attrName = strtolower($bbcodeName);
 
-				$options['defaultRule']     = 'deny';
-				$options['defaultParam']    = $paramName;
-				$options['content_as_param'] = true;
+				$options['defaultRule'] = 'deny';
+				$options['defaultAttr'] = $attrName;
+				$options['useContent']  = true;
 
 				/**
 				* We append the placeholder to the attributes, using the BBCode's name as param name
 				*/
-				$attrs .= ' ' . $paramName . '=' . $content;
+				$attrs .= ' ' . $attrName . '=' . $content;
 			}
 		}
 
 		preg_match_all(
-			'#(' . $r['paramName'] . ')=' . $r['placeholder'] . '#',
+			'#(' . $r['attrName'] . ')=' . $r['placeholder'] . '#',
 			$attrs,
 			$matches,
 			\PREG_SET_ORDER
@@ -414,31 +414,31 @@ class BBCodesConfig extends PluginConfig
 
 		foreach ($matches as $m)
 		{
-			$paramName  = strtolower($m[1]);
+			$attrName  = strtolower($m[1]);
 			$identifier = $m['type'];
 
-			if (isset($params[$paramName]))
+			if (isset($params[$attrName]))
 			{
-				throw new InvalidArgumentException('Param ' . $paramName . ' is defined twice');
+				throw new InvalidArgumentException('Param ' . $attrName . ' is defined twice');
 			}
 
-			$paramConf = array(
+			$attrConf = array(
 				'isRequired' => true
 			);
 
-			if (isset($m['paramOptions']))
+			if (isset($m['attrOptions']))
 			{
-				foreach (explode(';', trim($m['paramOptions'], ';')) as $pair)
+				foreach (explode(';', trim($m['attrOptions'], ';')) as $pair)
 				{
 					$pos = strpos($pair, '=');
 
-					$optionName  = strtolower(substr($pair, 0, $pos));
+					$optionName  = substr($pair, 0, $pos);
 					$optionValue = substr($pair, 1 + $pos);
 
 					switch ($optionName)
 					{
-						case 'pre_filter':
-						case 'post_filter':
+						case 'preFilter':
+						case 'postFilter':
 							foreach (explode(',', $optionValue) as $callback)
 							{
 								if (!in_array($callback, $this->BBCodeFiltersAllowedCallbacks))
@@ -446,14 +446,14 @@ class BBCodesConfig extends PluginConfig
 									throw new \RuntimeException('Callback ' . $callback . ' is not allowed');
 								}
 
-								$paramConf[$optionName][] = (strpos($callback, '::') !== false)
-								                          ? explode('::', $callback)
-								                          : $callback;
+								$attrConf[$optionName][] = (strpos($callback, '::') !== false)
+								                         ? explode('::', $callback)
+								                         : $callback;
 							}
 							break;
 
 						default:
-							$paramConf[$optionName] = $optionValue;
+							$attrConf[$optionName] = $optionValue;
 					}
 				}
 			}
@@ -462,7 +462,7 @@ class BBCodesConfig extends PluginConfig
 			* Make sure the param type cannot be set via param options. I can't think of any way
 			* to exploit that but better safe than sorry
 			*/
-			unset($paramConf['type']);
+			unset($attrConf['type']);
 
 			foreach ($r['type'] as $type => $regexp)
 			{
@@ -474,8 +474,8 @@ class BBCodesConfig extends PluginConfig
 				switch ($type)
 				{
 					case 'regexp':
-						$paramConf['type']   = 'regexp';
-						$paramConf['regexp'] = $m['regexp'];
+						$attrConf['type']   = 'regexp';
+						$attrConf['regexp'] = $m['regexp'];
 						break;
 
 					case 'choice':
@@ -488,18 +488,18 @@ class BBCodesConfig extends PluginConfig
 							$regexp .= 'u';
 						}
 
-						$paramConf['type']   = 'regexp';
-						$paramConf['regexp'] = $regexp;
+						$attrConf['type']   = 'regexp';
+						$attrConf['regexp'] = $regexp;
 						break;
 
 					case 'range':
-						$paramConf['type'] = 'range';
-						$paramConf['min']  = (int) $m['min'];
-						$paramConf['max']  = (int) $m['max'];
+						$attrConf['type'] = 'range';
+						$attrConf['min']  = (int) $m['min'];
+						$attrConf['max']  = (int) $m['max'];
 						break;
 
 					default:
-						$paramConf['type'] = rtrim(strtolower($identifier), '1234567890');
+						$attrConf['type'] = rtrim(strtolower($identifier), '1234567890');
 				}
 
 				// exit the loop once we've got a hit
@@ -507,7 +507,7 @@ class BBCodesConfig extends PluginConfig
 			}
 
 			// @codeCoverageIgnoreStart
-			if (!isset($paramConf['type']))
+			if (!isset($attrConf['type']))
 			{
 				throw new RuntimeException('Cannot determine the param type of ' . $identifier);
 			}
@@ -523,9 +523,9 @@ class BBCodesConfig extends PluginConfig
 				throw new InvalidArgumentException('Placeholder ' . $identifier . ' is used twice');
 			}
 
-			$placeholders[$identifier] = '@' . $paramName;
+			$placeholders[$identifier] = '@' . $attrName;
 
-			$params[$paramName] = $paramConf;
+			$params[$attrName] = $attrConf;
 		}
 
 		return array(
