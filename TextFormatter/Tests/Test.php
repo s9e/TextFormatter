@@ -8,7 +8,7 @@ include_once __DIR__ . '/../Renderer.php';
 
 abstract class Test extends \PHPUnit_Framework_TestCase
 {
-	public function assertArrayMatches(array $expected, array $actual)
+	protected function assertArrayMatches(array $expected, array $actual)
 	{
 		$this->reduceAndSortArrays($expected, $actual);
 		$this->assertSame($expected, $actual);

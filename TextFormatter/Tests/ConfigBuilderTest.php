@@ -514,6 +514,9 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
+	/**
+	* @runInSeparateProcess
+	*/
 	public function testConfigBuilderLoadsPluginOnMagicGet()
 	{
 		$this->assertTrue($this->cb->Emoticons instanceof EmoticonsConfig);
