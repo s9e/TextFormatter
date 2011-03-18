@@ -661,16 +661,16 @@ class Parser
 
 					$cnt += $_cnt;
 
-					if ($cnt > $pluginConfig['limit'])
+					if ($cnt > $pluginConfig['regexpLimit'])
 					{
-						if ($pluginConfig['limitAction'] === 'abort')
+						if ($pluginConfig['regexpLimitAction'] === 'abort')
 						{
 							throw new RuntimeException($pluginName . ' limit exceeded');
 						}
 						else
 						{
-							$limit   = $pluginConfig['limit'] + $_cnt - $cnt;
-							$msgType = ($pluginConfig['limitAction'] === 'ignore')
+							$limit   = $pluginConfig['regexpLimit'] + $_cnt - $cnt;
+							$msgType = ($pluginConfig['regexpLimitAction'] === 'ignore')
 							         ? 'debug'
 							         : 'warning';
 
@@ -678,7 +678,7 @@ class Parser
 
 							$this->log($msgType, array(
 								'msg'    => $pluginName . ' limit exceeded. Only the first %s matches will be processed',
-								'params' => array($pluginConfig['limit'])
+								'params' => array($pluginConfig['regexpLimit'])
 							));
 
 							$skip = true;
