@@ -48,7 +48,7 @@ abstract class PluginConfig
 	protected function setUp() {}
 
 	/**
-	* @return array
+	* @return array|bool This plugin's config, or FALSE to disable this plugin
 	*/
 	abstract public function getConfig();
 }

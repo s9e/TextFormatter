@@ -55,6 +55,11 @@ class EmoticonsConfig extends PluginConfig
 	*/
 	public function getConfig()
 	{
+		if (empty($this->emoticons))
+		{
+			return false;
+		}
+
 		// Non-anchored pattern, will benefit from the S modifier
 		$regexp = '#' . ConfigBuilder::buildRegexpFromList(array_keys($this->emoticons)) . '#S';
 

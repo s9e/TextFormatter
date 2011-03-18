@@ -783,6 +783,14 @@ class ConfigBuilder
 			{
 				$pluginConfig = $plugin->getConfig();
 
+				if ($pluginConfig === false)
+				{
+					/**
+					* This plugin is disabled
+					*/
+					continue;
+				}
+
 				/**
 				* Add some default config if missing
 				*/

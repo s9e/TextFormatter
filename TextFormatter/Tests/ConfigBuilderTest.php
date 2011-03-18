@@ -866,4 +866,14 @@ class ConfigBuilderTest extends Test
 			$this->cb->getPluginsConfig()
 		);
 	}
+
+	public function testPluginsCanBeDisabledByReturningFalseInsteadOfConfig()
+	{
+		$this->cb->loadPlugin('Emoticons');
+
+		$this->assertSame(
+			array(),
+			$this->cb->getPluginsConfig()
+		);
+	}
 }

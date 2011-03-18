@@ -106,6 +106,11 @@ class CensorConfig extends PluginConfig
 
 	public function getConfig()
 	{
+		if (empty($this->words))
+		{
+			return false;
+		}
+
 		$config = array(
 			'tagName'  => $this->tagName,
 			'attrName' => $this->attrName
