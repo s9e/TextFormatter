@@ -718,14 +718,9 @@ class ConfigBuilder
 
 						case 'requireParent':
 							/**
-							* $targets will be a string here, as we allow only one requireParent
-							* rule per tag
+							* Nothing to do here. If the target tag does not exist, this tag will
+							* never be valid but we still leave it in the configuration
 							*/
-							$target = $targets;
-							if (!isset($tagsConfig[$target]))
-							{
-								unset($tag['rules']['requireParent']);
-							}
 							break;
 
 						case 'requireAscendant':
