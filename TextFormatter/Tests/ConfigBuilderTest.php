@@ -792,7 +792,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testGetParserConfigFlattensAllowAndDenyRulesIntoTheAllowArray
+	* @depends testCanCreateRule
 	* @depends testCanRemoveTag
 	*/
 	public function testGetParserConfigRemovesRulesThatPertainToNonExistingTags()
@@ -816,6 +816,31 @@ class ConfigBuilderTest extends Test
 					'B' => array(
 						'rules' => array(
 							'closeParent' => array('A')
+						)
+					)
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
+
+	/**
+	* @depends testCanCreateRule
+	* @depends testCanRemoveTag
+	*/
+	public function testGetParserConfigKeepsRequireParentRuleAsAString()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTag('b');
+
+		$this->cb->addTagRule('a', 'requireParent', 'b');
+
+		$this->assertArrayMatches(
+			array(
+				'tags' => array(
+					'A' => array(
+						'rules' => array(
+							'requireParent' => 'B'
 						)
 					)
 				)
