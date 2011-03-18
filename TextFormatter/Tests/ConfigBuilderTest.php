@@ -848,4 +848,22 @@ class ConfigBuilderTest extends Test
 			$this->cb->getParserConfig()
 		);
 	}
+
+	/**
+	* @depends testLoadsPluginOnMagicGet
+	*/
+	public function testGetPluginsConfigAddsDefaultConfigIfMissing()
+	{
+		$this->cb->Emoticons->addEmoticon(':)', '<img src="smile.png" />');
+
+		$this->assertArrayMatches(
+			array(
+				'Emoticons' => array(
+					'regexpLimit'       => $this->cb->Emoticons->regexpLimit,
+					'regexpLimitAction' => $this->cb->Emoticons->regexpLimitAction
+				)
+			),
+			$this->cb->getPluginsConfig()
+		);
+	}
 }

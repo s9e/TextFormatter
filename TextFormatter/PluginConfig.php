@@ -18,14 +18,14 @@ abstract class PluginConfig
 	* @var integer Maximum amount of matches to process - used by the parser when running the global
 	*              regexp
 	*/
-	public $limit = 1000;
+	public $regexpLimit = 1000;
 
 	/**
 	* @var string  What to do if the number of matches exceeds the limit. Values can be: "ignore"
 	*              (ignore matches past limit), "warn" (same as "ignore" but also log a warning) and
 	*              "abort" (abort parsing)
 	*/
-	public $limitAction = 'ignore';
+	public $regexpLimitAction = 'ignore';
 
 	/**
 	* @param ConfigBuilder $cb

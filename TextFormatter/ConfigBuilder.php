@@ -786,11 +786,14 @@ class ConfigBuilder
 				/**
 				* Add some default config if missing
 				*/
-				foreach (array('limit', 'limitAction') as $k)
+				if (isset($pluginConfig['regexp']))
 				{
-					if (!isset($pluginConfig[$k]))
+					foreach (array('regexpLimit', 'regexpLimitAction') as $k)
 					{
-						$pluginConfig[$k] = $plugin->$k;
+						if (!isset($pluginConfig[$k]))
+						{
+							$pluginConfig[$k] = $plugin->$k;
+						}
 					}
 				}
 
