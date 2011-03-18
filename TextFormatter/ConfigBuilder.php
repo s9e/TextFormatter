@@ -907,26 +907,6 @@ class ConfigBuilder
 
 		$regexp = self::buildRegexpFromTrie($arr);
 
-		// replace (?:x) with x
-		$regexp = preg_replace('#\\(\\?:([^\\\\])\\)#us', '$1', $regexp);
-
-		// replace (?:x|y|z) with [xyz]
-		$regexp = preg_replace_callback(
-			/**
-			* Here, we only try to match single letters and numbers because trying to match escaped
-			* characters is much more complicated and increases the potential of letting a bug slip
-			* by unnoticed, without much gain in return. Just letters, numbers and the underscore is
-			* simply safer. Also, we only match low ASCII because we don't know whether the final
-			* regexp will be run in Unicode mode.
-			*/
-			'#\\(\\?:([A-Z_0-9](?:\\|[A-Z_0-9])*)\\)#i',
-			function($m)
-			{
-				return '[' . preg_quote(str_replace('|', '', $m[1]), '#') . ']';
-			},
-			$regexp
-		);
-
 		return $regexp;
 	}
 
@@ -943,7 +923,7 @@ class ConfigBuilder
 
 		$regexp = '';
 		$suffix = '';
-		$cnt    = 0;
+		$cnt    = count($arr);
 
 		if (isset($arr['']))
 		{
@@ -955,7 +935,44 @@ class ConfigBuilder
 			}
 
 			$suffix = '?';
-			++$cnt;
+		}
+
+		/**
+		* See if we can use a character class to produce [xy] instead of (?:x|y)
+		*/
+		$useCharacterClass = (bool) ($cnt > 1);
+		foreach ($arr as $c => $sub)
+		{
+			/**
+			* If this is not the last character, we can't use a character class
+			*/
+			if ($sub !== array('' => false))
+			{
+				$useCharacterClass = false;
+				break;
+			}
+
+			/**
+			* If this is a special character, we can't use a character class
+			*/
+			if ($c !== preg_quote(stripslashes($c), '#'))
+			{
+				$useCharacterClass = false;
+				break;
+			}
+		}
+
+		if ($useCharacterClass)
+		{
+			if ($cnt === 2 && $suffix)
+			{
+				/**
+				* Produce x? instead of [x]?
+				*/
+				return implode('', array_keys($arr)) . $suffix;
+			}
+
+			return '[' . implode('', array_keys($arr)) . ']' . $suffix;
 		}
 
 		$sep = '';
@@ -963,8 +980,6 @@ class ConfigBuilder
 		{
 			$regexp .= $sep . $c . self::buildRegexpFromTrie($sub);
 			$sep = '|';
-
-			++$cnt;
 		}
 
 		if ($cnt > 1)

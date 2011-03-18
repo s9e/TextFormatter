@@ -711,7 +711,7 @@ class ConfigBuilderTest extends Test
 	public function testOptimizesRegexpThatUsesParentheses()
 	{
 		$this->assertSame(
-			'\\:(?:\\(|\\))',
+			'\\:[\\(\\)]',
 			ConfigBuilder::buildRegexpFromList(array(':)', ':('))
 		);
 	}
