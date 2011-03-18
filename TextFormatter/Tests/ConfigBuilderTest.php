@@ -715,4 +715,12 @@ class ConfigBuilderTest extends Test
 			ConfigBuilder::buildRegexpFromList(array(':)', ':('))
 		);
 	}
+
+	public function testOptimizesRegexpByUsingLookaheadAssertion()
+	{
+		$this->assertSame(
+			'(?=[bf])(?:bar|foo)',
+			ConfigBuilder::buildRegexpFromList(array('foo', 'bar'))
+		);
+	}
 }

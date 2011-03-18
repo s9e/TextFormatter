@@ -885,11 +885,18 @@ class ConfigBuilder
 		// Sort the words to produce the same regexp regardless of the words' order
 		sort($words);
 
+		$initials = array();
+
 		$arr = array();
 		foreach ($words as $word)
 		{
 			if (preg_match_all('#.#us', $word, $matches))
 			{
+				/**
+				* Store the initial for later
+				*/
+				$initials[$matches[0][0]] = true;
+
 				$cur =& $arr;
 				foreach ($matches[0] as $c)
 				{
@@ -905,7 +912,30 @@ class ConfigBuilder
 		}
 		unset($cur);
 
-		$regexp = self::buildRegexpFromTrie($arr);
+		$regexp = '';
+
+		/**
+		* Test whether none of the initials has a special meaning
+		*/
+		if (count($initials) > 1)
+		{
+			$useLookahead = true;
+			foreach ($initials as $initial => $void)
+			{
+				if ($esc[$initial] !== preg_quote($initial, '#'))
+				{
+					$useLookahead = false;
+					break;
+				}
+			}
+
+			if ($useLookahead)
+			{
+				$regexp .= '(?=[' . implode('', array_keys($initials)) . '])';
+			}
+		}
+
+		$regexp .= self::buildRegexpFromTrie($arr);
 
 		return $regexp;
 	}
