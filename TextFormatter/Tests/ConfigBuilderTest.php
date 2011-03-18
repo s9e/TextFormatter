@@ -876,4 +876,40 @@ class ConfigBuilderTest extends Test
 			$this->cb->getPluginsConfig()
 		);
 	}
+
+	public function testCanAddGenericXSL()
+	{
+		$xsl = '<xsl:param name="foo"/>';
+		$this->cb->addXSL($xsl);
+
+		$this->assertContains(
+			$xsl,
+			$this->cb->getXSL()
+		);
+	}
+
+	/**
+	* @expectedException InvalidArgumentException Premature
+	*/
+	public function testCannotAddInvalidXSL()
+	{
+		$this->cb->addXSL('<lol>');
+	}
+
+	/**
+	* @depends testCanCreateTagWithXSL
+	*/
+	public function testXSLFromTagsAppearsInOutput()
+	{
+		$xsl = '<xsl:template match="A"><a/></xsl:template>';
+
+		$this->cb->addTag('a', array(
+			'xsl' => $xsl
+		));
+
+		$this->assertContains(
+			$xsl,
+			$this->cb->getXSL()
+		);
+	}
 }

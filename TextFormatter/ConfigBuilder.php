@@ -469,50 +469,8 @@ class ConfigBuilder
 		{
 			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
 		}
-		/**
-		* Prepare a temporary stylesheet so that we can load the template and make sure it's valid
-		*/
-		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $xsl
-		     . '</xsl:stylesheet>';
 
-		/**
-		* Load the stylesheet with libxml's internal errors temporarily enabled
-		*/
-		$useInternalErrors = libxml_use_internal_errors(true);
-
-		$dom = new DOMDocument;
-		$dom->preserveWhiteSpace = (bool) ($flags & self::PRESERVE_WHITESPACE);
-		$res = $dom->loadXML($xsl);
-
-		libxml_use_internal_errors($useInternalErrors);
-
-		if (!$res)
-		{
-			$error = libxml_get_last_error();
-			throw new InvalidArgumentException('Invalid XML - error was: ' . $error->message);
-		}
-
-		if (!($flags & self::ALLOW_INSECURE_TEMPLATES))
-		{
-			$xpath = new DOMXPath($dom);
-
-			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or .//xsl:attribute])'))
-			{
-				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setTagTemplate() to enable it');
-			}
-		}
-
-		/**
-		* Rebuild the XSL by serializing and concatenating each of the root node's children
-		*/
-		$xsl = '';
-		foreach ($dom->documentElement->childNodes as $childNode)
-		{
-			$xsl .= $dom->saveXML($childNode);
-		}
-
-		$this->tags[$tagName]['xsl'] = $xsl;
+		$this->tags[$tagName]['xsl'] = $this->normalizeXSL($xsl, $flags);
 	}
 
 	//==========================================================================
@@ -1060,24 +1018,73 @@ class ConfigBuilder
 		return $xsl;
 	}
 
-	public function addXSL($xsl)
+	/**
+	* Add generic XSL
+	*
+	* This XSL will be output in the final stylesheet before tag-specific templates.
+	*
+	* @param string  $xsl     Must be valid XSL elements. A root node is not required
+	* @param integer $flags
+	*/
+	public function addXSL($xsl, $flags = 0)
 	{
-		$xml = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		$this->xsl .= $this->normalizeXSL($xsl, $flags);
+	}
+
+	/**
+	* Normalize XSL
+	*
+	* Check for well-formedness, remove whitespace if applicable. Check for insecure content.
+	*
+	* @param  string  $xsl     Must be valid XSL elements. A root node is not required
+	* @param  integer $flags
+	* @return string
+	*/
+	protected function normalizeXSL($xsl, $flags)
+	{
+		/**
+		* Prepare a temporary stylesheet so that we can load the template and make sure it's valid
+		*/
+		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
 		     . $xsl
 		     . '</xsl:stylesheet>';
 
-		$dom = new DOMDocument;
+		/**
+		* Load the stylesheet with libxml's internal errors temporarily enabled
+		*/
+		$useInternalErrors = libxml_use_internal_errors(true);
 
-		$old = libxml_use_internal_errors(true);
-		$res = $dom->loadXML($xml);
-		libxml_use_internal_errors($old);
+		$dom = new DOMDocument;
+		$dom->preserveWhiteSpace = (bool) ($flags & self::PRESERVE_WHITESPACE);
+		$res = $dom->loadXML($xsl);
+
+		libxml_use_internal_errors($useInternalErrors);
 
 		if (!$res)
 		{
 			$error = libxml_get_last_error();
-			throw new InvalidArgumentException('Malformed XSL - error was: ' . $error->message);
+			throw new InvalidArgumentException('Invalid XML - error was: ' . $error->message);
 		}
 
-		$this->xsl .= $xsl;
+		if (!($flags & self::ALLOW_INSECURE_TEMPLATES))
+		{
+			$xpath = new DOMXPath($dom);
+
+			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or .//xsl:attribute])'))
+			{
+				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to setTagTemplate() to enable it');
+			}
+		}
+
+		/**
+		* Rebuild the XSL by serializing and concatenating each of the root node's children
+		*/
+		$xsl = '';
+		foreach ($dom->documentElement->childNodes as $childNode)
+		{
+			$xsl .= $dom->saveXML($childNode);
+		}
+
+		return $xsl;
 	}
 }
