@@ -531,19 +531,21 @@ class ConfigBuilder
 	* Load a plugin
 	*
 	* If a plugin of the same name exists, it will be overwritten. This method knows how to load
+	* core plugins. Otherwise, you have to include the appropriate files beforehand.
 	*
-	* @param string $pluginName    Name of the plugin
-	* @param string $className     Name of the plugin's config class (required for custom plugins)
-	* @param string $classFilepath Path to the file that contains the plugin (required if the class
-	*                              is not automatically loaded)
-	* @param PluginConfig
+	* @param  string $pluginName    Name of the plugin
+	* @param  string $className     Name of the plugin's config class (required for custom plugins)
+	* @param  array  $overrideProps Properties of the plugin will be overwritten with those
+	* @return PluginConfig
 	*/
-	public function loadPlugin($pluginName, $className = null, $classFilepath = null)
+	public function loadPlugin($pluginName, $className = null, array $overrideProps = array())
 	{
 		if (!preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $pluginName))
 		{
 			throw new InvalidArgumentException('Invalid plugin name "' . $pluginName . '"');
 		}
+
+		$classFilepath = null;
 
 		if (!isset($className))
 		{
@@ -570,7 +572,7 @@ class ConfigBuilder
 			include $classFilepath;
 		}
 
-		return $this->$pluginName = new $className($this);
+		return $this->$pluginName = new $className($this, $overrideProps);
 	}
 
 	//==========================================================================
@@ -586,7 +588,7 @@ class ConfigBuilder
 	{
 		if (!class_exists(__NAMESPACE__ . '\\Parser'))
 		{
-			include(__DIR__ . '/Parser.php');
+			include __DIR__ . '/Parser.php';
 		}
 
 		return new Parser($this->getParserConfig());
@@ -601,7 +603,7 @@ class ConfigBuilder
 	{
 		if (!class_exists(__NAMESPACE__ . '\\Renderer'))
 		{
-			include(__DIR__ . '/Renderer.php');
+			include __DIR__ . '/Renderer.php';
 		}
 
 		return new Renderer($this->getXSL());

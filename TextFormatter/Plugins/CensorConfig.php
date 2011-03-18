@@ -15,37 +15,37 @@ class CensorConfig extends PluginConfig
 	/**
 	* @var string Name of the tag used to mark censored words
 	*/
-	static public $tagName = 'C';
+	protected $tagName = 'C';
 
 	/**
 	* @var string Name of attribute used to for the replacement
 	*/
-	static public $attrName = 'with';
+	protected $attrName = 'with';
 
 	/**
 	* @var string Default string used to replace censored words
 	*/
-	static public $defaultReplacement = '****';
+	protected $defaultReplacement = '****';
 
 	/**
-	* @var array
+	* @var array  2D array of censored words/masks. First dimension is the type of masks
 	*/
 	protected $words = array();
 
 	/**
-	* @var array
+	* @var array  Hash of replacements
 	*/
 	protected $replacements = array();
 
 	public function setUp()
 	{
 		$this->cb->addTag(
-			static::$tagName,
+			$this->tagName,
 			array(
 				'defaultRule' => 'deny',
 
 				'attributes' => array(
-					static::$attrName => array(
+					$this->attrName => array(
 						'type'       => 'text',
 						'isRequired' => false
 					)
@@ -57,7 +57,7 @@ class CensorConfig extends PluginConfig
 							'<xsl:value-of select="@with"/>' .
 						'</xsl:when>' .
 						'<xsl:otherwise>' .
-							htmlspecialchars(static::$defaultReplacement) .
+							htmlspecialchars($this->defaultReplacement) .
 						'</xsl:otherwise>' .
 					'</xsl:choose>'
 			)
@@ -68,7 +68,7 @@ class CensorConfig extends PluginConfig
 	* Add a word to the censor list
 	*
 	* @param string $word
-	* @param string $replacement If left null, static::$defaultReplacement will be used
+	* @param string $replacement If left null, $this->defaultReplacement will be used
 	*/
 	public function add($word, $replacement = null)
 	{
@@ -107,8 +107,8 @@ class CensorConfig extends PluginConfig
 	public function getConfig()
 	{
 		$config = array(
-			'tagName'  => static::$tagName,
-			'attrName' => static::$attrName
+			'tagName'  => $this->tagName,
+			'attrName' => $this->attrName
 		);
 
 		foreach ($this->words as $k => $words)

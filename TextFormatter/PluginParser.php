@@ -27,9 +27,11 @@ abstract class PluginParser
 		$this->setUp();
 	}
 
+	// @codeCoverageIgnoreStart
 	public function setUp()
 	{
 	}
+	// @codeCoverageIgnoreEnd
 
 	/**
 	* @param  string $text

@@ -20,6 +20,58 @@ class ConfigBuilderTest extends Test
 		$this->cb = new ConfigBuilder;
 	}
 
+	/**
+	* @runInSeparateProcess
+	*/
+	public function testLoadsPluginOnMagicGet()
+	{
+		$this->assertTrue($this->cb->Emoticons instanceof EmoticonsConfig);
+	}
+
+	/**
+	* @expectedException InvalidArgumentException name
+	*/
+	public function testDoesNotLoadInvalidPluginName()
+	{
+		$this->cb->{'../foo'};
+	}
+
+	/**
+	* @runInSeparateProcess
+	*/
+	public function testCanAutoloadParser()
+	{
+		$this->assertTrue($this->cb->getParser() instanceof Parser);
+	}
+
+	/**
+	* @runInSeparateProcess
+	* @depends testCanAutoloadParser
+	*/
+	public function testDoesNotIncludeParserTwice()
+	{
+		$this->assertTrue($this->cb->getParser() instanceof Parser);
+		$this->assertTrue($this->cb->getParser() instanceof Parser);
+	}
+
+	/**
+	* @runInSeparateProcess
+	*/
+	public function testCanAutoloadRenderer()
+	{
+		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
+	}
+
+	/**
+	* @runInSeparateProcess
+	* @depends testCanAutoloadRenderer
+	*/
+	public function testDoesNotIncludeRendererTwice()
+	{
+		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
+		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
+	}
+
 	public function testCanCreateTag()
 	{
 		$this->cb->addTag('a');
@@ -520,56 +572,53 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
-	/**
-	* @runInSeparateProcess
-	*/
-	public function testConfigBuilderLoadsPluginOnMagicGet()
+	public function testCanSetCustomFilter()
 	{
-		$this->assertTrue($this->cb->Emoticons instanceof EmoticonsConfig);
+		$this->cb->setFilter('text', 'trim');
+
+		$this->assertArrayMatches(
+			array(
+				'text' => array(
+					'callback' => 'trim'
+				)
+			),
+			$this->cb->getFiltersConfig()
+		);
+	}
+
+	public function testCanSetCustomFilterWithExtraConfig()
+	{
+		$filterFunc = function() {};
+
+		$this->cb->setFilter(
+			'range', $filterFunc
+		);
+
+		$this->assertArrayMatches(
+			array(
+				'range' => array(
+					'callback' => $filterFunc
+				)
+			),
+			$this->cb->getFiltersConfig()
+		);
 	}
 
 	/**
-	* @expectedException InvalidArgumentException name
+	* @expectedException InvalidArgumentException
 	*/
-	public function testConfigBuilderDoesNotLoadInvalidPluginName()
+	public function testSetFilterThrowsAnExceptionOnInvalidCallback()
 	{
-		$this->cb->{'../foo'};
+		try
+		{
+			$this->cb->setFilter('foo', 'bar');
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			$this->assertContains('valid callback', $e->getMessage());
+			throw $e;
+		}
 	}
 
-	/**
-	* @runInSeparateProcess
-	*/
-	public function testCanAutoloadParser()
-	{
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
-	}
-
-	/**
-	* @runInSeparateProcess
-	* @depends testCanAutoloadParser
-	*/
-	public function testDoesNotIncludeParserTwice()
-	{
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
-	}
-
-	/**
-	* @runInSeparateProcess
-	*/
-	public function testCanAutoloadRenderer()
-	{
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
-	}
-
-	/**
-	* @runInSeparateProcess
-	* @depends testCanAutoloadRenderer
-	*/
-	public function testDoesNotIncludeRendererTwice()
-	{
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
-	}
 
 }

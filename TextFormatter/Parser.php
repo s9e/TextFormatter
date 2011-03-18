@@ -961,111 +961,9 @@ class Parser
 					}
 
 					/**
-					* BBCode-level pre-filter
+					* Filter attributes
 					*/
-					if (isset($tagConfig['preFilter']))
-					{
-						foreach ($tagConfig['preFilter'] as $callback)
-						{
-							$this->currentTag['attrs'] =
-								call_user_func($callback, $this->currentTag['attrs']);
-						}
-					}
-
-					/**
-					* Filter each attribute
-					*/
-					foreach ($this->currentTag['attrs'] as $attrName => &$attrVal)
-					{
-						$this->currentAttribute = $attrName;
-
-						$attrConf    = $tagConfig['attrs'][$attrName];
-						$filteredVal = $attrVal;
-
-						// execute pre-filter callbacks
-						if (!empty($attrConf['preFilter']))
-						{
-							foreach ($attrConf['preFilter'] as $callback)
-							{
-								$filteredVal = call_user_func($callback, $filteredVal);
-							}
-						}
-
-						// filter the value
-						$filteredVal = $this->filter($filteredVal, $attrConf);
-
-						// execute post-filter callbacks if the value was valid
-						if ($filteredVal !== false
-						 && !empty($attrConf['postFilter']))
-						{
-							foreach ($attrConf['postFilter'] as $callback)
-							{
-								$filteredVal = call_user_func($callback, $filteredVal);
-							}
-						}
-
-						if ($filteredVal === false)
-						{
-							/**
-							* Bad attribute value
-							*/
-							$this->log('error', array(
-								'pos'    => $this->currentTag['pos'],
-								'msg'    => 'Invalid attribute %s',
-								'params' => array($attrName)
-							));
-
-							if (isset($attrConf['default']))
-							{
-								/**
-								* Use the default value
-								*/
-								$filteredVal = $attrConf['default'];
-
-								$this->log('debug', array(
-									'pos'    => $this->currentTag['pos'],
-									'msg'    => 'Using default value %1$s for attribute %2$s',
-									'params' => array($attrConf['default'], $attrName)
-								));
-							}
-							else
-							{
-								/**
-								* Remove the attribute altogether
-								*/
-								unset($this->currentTag['attrs'][$attrName]);
-
-								if ($attrConf['isRequired'])
-								{
-									continue;
-								}
-							}
-						}
-						elseif ((string) $filteredVal !== (string) $attrVal)
-						{
-							$this->log('debug', array(
-								'pos'    => $this->currentTag['pos'],
-								'msg'    => 'Attribute value was altered by the filter '
-								          . '(attrName: $1%s, attrVal: $2%s, filteredVal: $3%s)',
-								'params' => array($attrName, $attrVal, $filteredVal)
-							));
-						}
-
-						$attrVal = (string) $filteredVal;
-					}
-					unset($attrVal, $this->currentAttribute);
-
-					/**
-					* Tag-level post-filter
-					*/
-					if (isset($tagConfig['postFilter']))
-					{
-						foreach ($tagConfig['postFilter'] as $callback)
-						{
-							$this->currentTag['attrs'] =
-								call_user_func($callback, $this->currentTag['attrs']);
-						}
-					}
+					$this->filterCurrentAttributes();
 
 					/**
 					* Check for missing required attributes
@@ -1193,5 +1091,122 @@ class Parser
 			    ?: ($a['type'] - $b['type'])
 			    ?: strcmp($a['pluginName'], $b['pluginName']);
 		});
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function filterCurrentAttributes()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		/**
+		* Tag-level pre-filter
+		*/
+		if (isset($tagConfig['preFilter']))
+		{
+			foreach ($tagConfig['preFilter'] as $callback)
+			{
+				$this->currentTag['attrs'] =
+					call_user_func($callback, $this->currentTag['attrs']);
+			}
+		}
+
+		/**
+		* Filter each attribute
+		*/
+		foreach ($this->currentTag['attrs'] as $attrName => &$attrVal)
+		{
+			$this->currentAttribute = $attrName;
+
+			$attrConf    = $this->tagsConfig[$this->currentTag['name']]['attrs'][$attrName];
+			$filteredVal = $attrVal;
+
+			// execute pre-filter callbacks
+			if (!empty($attrConf['preFilter']))
+			{
+				foreach ($attrConf['preFilter'] as $callback)
+				{
+					$filteredVal = call_user_func($callback, $filteredVal);
+				}
+			}
+
+			// filter the value
+			$filteredVal = $this->filter($filteredVal, $attrConf);
+
+			// execute post-filter callbacks if the value was valid
+			if ($filteredVal !== false
+			 && !empty($attrConf['postFilter']))
+			{
+				foreach ($attrConf['postFilter'] as $callback)
+				{
+					$filteredVal = call_user_func($callback, $filteredVal);
+				}
+			}
+
+			if ($filteredVal === false)
+			{
+				/**
+				* Bad attribute value
+				*/
+				$this->log('error', array(
+					'pos'    => $this->currentTag['pos'],
+					'msg'    => 'Invalid attribute %s',
+					'params' => array($attrName)
+				));
+
+				if (isset($attrConf['default']))
+				{
+					/**
+					* Use the default value
+					*/
+					$filteredVal = $attrConf['default'];
+
+					$this->log('debug', array(
+						'pos'    => $this->currentTag['pos'],
+						'msg'    => 'Using default value %1$s for attribute %2$s',
+						'params' => array($attrConf['default'], $attrName)
+					));
+				}
+				else
+				{
+					/**
+					* Remove the attribute altogether
+					*/
+					unset($this->currentTag['attrs'][$attrName]);
+
+					if ($attrConf['isRequired'])
+					{
+						continue;
+					}
+				}
+			}
+			elseif ((string) $filteredVal !== (string) $attrVal)
+			{
+				$this->log('debug', array(
+					'pos'    => $this->currentTag['pos'],
+					'msg'    => 'Attribute value was altered by the filter '
+							  . '(attrName: $1%s, attrVal: $2%s, filteredVal: $3%s)',
+					'params' => array($attrName, $attrVal, $filteredVal)
+				));
+			}
+
+			$attrVal = (string) $filteredVal;
+		}
+		unset($attrVal, $this->currentAttribute);
+
+		/**
+		* Tag-level post-filter
+		*/
+		if (isset($tagConfig['postFilter']))
+		{
+			foreach ($tagConfig['postFilter'] as $callback)
+			{
+				$this->currentTag['attrs'] =
+					call_user_func($callback, $this->currentTag['attrs']);
+			}
+		}
 	}
 }

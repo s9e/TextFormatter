@@ -28,13 +28,16 @@ abstract class PluginConfig
 	public $limitAction = 'ignore';
 
 	/**
-	* @var integer Order in which each parser is executed. A lower value gives this plugin's parser
-	*              a higher priority
+	* @param ConfigBuilder $cb
+	* @param array         $overrideProps Properties of the plugin will be overwritten with those
 	*/
-	public $parsingOrder = 10000;
-
-	public function __construct(ConfigBuilder $cb)
+	public function __construct(ConfigBuilder $cb, array $overrideProps = array())
 	{
+		foreach ($overrideProps as $k => $v)
+		{
+			$this->$k = $v;
+		}
+
 		$this->cb = $cb;
 		$this->setUp();
 	}

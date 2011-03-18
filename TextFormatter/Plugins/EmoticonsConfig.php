@@ -15,12 +15,12 @@ class EmoticonsConfig extends PluginConfig
 	/**
 	* @var string Name of the tag used by this plugin
 	*/
-	static public $tagName = 'E';
+	protected $tagName = 'E';
 
 	/**
-	* @var bool
+	* @var bool   Whether to update this plugin's XSL after each new addition
 	*/
-	static public $disableAutoUpdate = false;
+	protected $autoUpdate = true;
 
 	/**
 	* @var array
@@ -29,7 +29,7 @@ class EmoticonsConfig extends PluginConfig
 
 	public function setUp()
 	{
-		$this->cb->addTag(static::$tagName, array(
+		$this->cb->addTag($this->tagName, array(
 			'defaultRule' => 'deny'
 		));
 	}
@@ -40,11 +40,11 @@ class EmoticonsConfig extends PluginConfig
 	* @param string $code Emoticon code
 	* @param string $tpl  Emoticon template, e.g. <img src="emot.png"/> -- must be well-formed XML
 	*/
-	public function add($code, $tpl)
+	public function addEmoticon($code, $tpl)
 	{
 		$this->emoticons[$code] = $tpl;
 
-		if (!static::$disableAutoUpdate)
+		if ($this->autoUpdate)
 		{
 			$this->commitXSL();
 		}
@@ -64,7 +64,7 @@ class EmoticonsConfig extends PluginConfig
 	}
 
 	/**
-	* Commit the XSL needed to render emoticons to ConfigBuilder
+	* Commit to ConfigBuilder the XSL needed to render emoticons
 	*/
 	public function commitXSL()
 	{
@@ -83,6 +83,22 @@ class EmoticonsConfig extends PluginConfig
 		}
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
 
-		$this->cb->setTagTemplate(static::$tagName, $xsl);
+		$this->cb->setTagTemplate($this->tagName, $xsl);
+	}
+
+	/**
+	* Disable the automatic update of this plugin's XSL after each addition
+	*/
+	public function disableAutoUpdate()
+	{
+		$this->autoUpdate = false;
+	}
+
+	/**
+	* Enable the automatic update of this plugin's XSL after each addition
+	*/
+	public function enableAutoUpdate()
+	{
+		$this->autoUpdate = true;
 	}
 }
