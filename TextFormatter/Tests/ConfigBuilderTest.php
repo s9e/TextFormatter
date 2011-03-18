@@ -751,4 +751,44 @@ class ConfigBuilderTest extends Test
 			)
 		);
 	}
+
+	/**
+	* @depends testCanCreateRule
+	*/
+	public function testGetParserConfigFlattensAllowAndDenyRulesIntoTheAllowArray()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTag('b');
+		$this->cb->addTag('c');
+
+		$this->cb->addTagRule('a', 'deny', 'c');
+		$this->cb->addTagRule('b', 'deny', 'a');
+		$this->cb->addTagRule('c', 'deny', 'b');
+
+		$this->assertArrayMatches(
+			array(
+				'tags' => array(
+					'A' => array(
+						'allow' => array(
+							'A' => true,
+							'B' => true
+						)
+					),
+					'B' => array(
+						'allow' => array(
+							'B' => true,
+							'C' => true
+						)
+					),
+					'C' => array(
+						'allow' => array(
+							'C' => true,
+							'A' => true
+						)
+					)
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
 }
