@@ -908,7 +908,7 @@ class ConfigBuilder
 		$regexp = self::buildRegexpFromTrie($arr);
 
 		// replace (?:x) with x
-		$regexp = preg_replace('#\\(\\?:(.)\\)#us', '$1', $regexp);
+		$regexp = preg_replace('#\\(\\?:([^\\\\])\\)#us', '$1', $regexp);
 
 		// replace (?:x|y|z) with [xyz]
 		$regexp = preg_replace_callback(

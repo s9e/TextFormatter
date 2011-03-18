@@ -704,4 +704,15 @@ class ConfigBuilderTest extends Test
 			)
 		);
 	}
+
+	/**
+	* @depends testOptimizesRegexpByMergingHeads
+	*/
+	public function testOptimizesRegexpThatUsesParentheses()
+	{
+		$this->assertSame(
+			'\\:(?:\\(|\\))',
+			ConfigBuilder::buildRegexpFromList(array(':)', ':('))
+		);
+	}
 }
