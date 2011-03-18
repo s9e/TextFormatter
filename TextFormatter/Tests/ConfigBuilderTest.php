@@ -757,13 +757,13 @@ class ConfigBuilderTest extends Test
 	*/
 	public function testGetParserConfigFlattensAllowAndDenyRulesIntoTheAllowArray()
 	{
-		$this->cb->addTag('a');
-		$this->cb->addTag('b');
-		$this->cb->addTag('c');
+		$this->cb->addTag('a', array('defaultRule' => 'allow'));
+		$this->cb->addTag('b', array('defaultRule' => 'allow'));
+		$this->cb->addTag('c', array('defaultRule' => 'deny'));
 
 		$this->cb->addTagRule('a', 'deny', 'c');
 		$this->cb->addTagRule('b', 'deny', 'a');
-		$this->cb->addTagRule('c', 'deny', 'b');
+		$this->cb->addTagRule('c', 'allow', 'a');
 
 		$this->assertArrayMatches(
 			array(
@@ -782,8 +782,40 @@ class ConfigBuilderTest extends Test
 					),
 					'C' => array(
 						'allow' => array(
-							'C' => true,
 							'A' => true
+						)
+					)
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
+
+	/**
+	* @depends testGetParserConfigFlattensAllowAndDenyRulesIntoTheAllowArray
+	* @depends testCanRemoveTag
+	*/
+	public function testGetParserConfigRemovesRulesThatPertainToNonExistingTags()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTag('b');
+		$this->cb->addTag('c');
+
+		$this->cb->addTagRule('a', 'closeParent', 'c');
+		$this->cb->addTagRule('b', 'closeParent', 'a');
+
+		$this->cb->removeTag('c');
+
+		$this->assertArrayMatches(
+			array(
+				'tags' => array(
+					'A' => array(
+						// means there should NOT be a 'rules' key in this array
+						'rules' => null
+					),
+					'B' => array(
+						'rules' => array(
+							'closeParent' => array('A')
 						)
 					)
 				)

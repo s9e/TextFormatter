@@ -24,6 +24,14 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 				$this->reduceAndSortArrays($expected[$k], $v);
 			}
 		}
+
+		/**
+		* Remove null values from $expected, they indicate that the key should NOT appear in $actual
+		*/
+		foreach (array_keys($expected, null, true) as $k)
+		{
+			unset($expected[$k]);
+		}
 	}
 
 	protected function assertArrayHasNestedKeys($array)
