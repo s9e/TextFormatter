@@ -907,8 +907,8 @@ class ConfigBuilder
 
 		$regexp = self::buildRegexpFromTrie($arr);
 
-		// replace (?:x)? with x?
-		$regexp = preg_replace('#\\(\\?:(.)\\)\\?#us', '$1?', $regexp);
+		// replace (?:x) with x
+		$regexp = preg_replace('#\\(\\?:(.)\\)#us', '$1', $regexp);
 
 		// replace (?:x|y|z) with [xyz]
 		$regexp = preg_replace_callback(
@@ -919,7 +919,7 @@ class ConfigBuilder
 			* simply safer. Also, we only match low ASCII because we don't know whether the final
 			* regexp will be run in Unicode mode.
 			*/
-			'#\\(\\?:([A-Z_0-9](?:\\|[A-Z_0-9])*)\\)#',
+			'#\\(\\?:([A-Z_0-9](?:\\|[A-Z_0-9])*)\\)#i',
 			function($m)
 			{
 				return '[' . preg_quote(str_replace('|', '', $m[1]), '#') . ']';
@@ -932,10 +932,13 @@ class ConfigBuilder
 
 	static protected function buildRegexpFromTrie($arr)
 	{
-		if (isset($arr['.*?'])
-		 && $arr['.*?'] === array('' => false))
+		foreach (array('.*', '.*?') as $expr)
 		{
-			return '.*?';
+			if (isset($arr[$expr])
+			 && $arr[$expr] === array('' => false))
+			{
+				return $expr;
+			}
 		}
 
 		$regexp = '';

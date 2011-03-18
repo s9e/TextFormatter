@@ -660,4 +660,48 @@ class ConfigBuilderTest extends Test
 
 		$this->assertRegexp($filtersConfig['url']['disallowedHosts'], 'example.org');
 	}
+
+	public function testOptimizesRegexpByMergingHeads()
+	{
+		$this->assertSame(
+			'ap(?:ple|ril)',
+			ConfigBuilder::buildRegexpFromList(array('apple', 'april'))
+		);
+	}
+
+	/**
+	* @depends testOptimizesRegexpByMergingHeads
+	*/
+	public function testOptimizesRegexpByUsingCharacterClasses()
+	{
+		$this->assertSame(
+			'ba[rz]',
+			ConfigBuilder::buildRegexpFromList(array('bar', 'baz'))
+		);
+	}
+
+	/**
+	* @depends testOptimizesRegexpByMergingHeads
+	*/
+	public function testOptimizesRegexpByUsingQuantifier()
+	{
+		$this->assertSame(
+			'fool?',
+			ConfigBuilder::buildRegexpFromList(array('foo', 'fool'))
+		);
+	}
+
+	/**
+	* @depends testOptimizesRegexpByMergingHeads
+	*/
+	public function testOptimizesRegexpThatUsesWildcards()
+	{
+		$this->assertSame(
+			'apple.*?',
+			ConfigBuilder::buildRegexpFromList(
+				array('apple*', 'applepie'),
+				array('*' => '.*?')
+			)
+		);
+	}
 }
