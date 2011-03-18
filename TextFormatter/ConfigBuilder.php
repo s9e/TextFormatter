@@ -1034,7 +1034,8 @@ class ConfigBuilder
 	/**
 	* Normalize XSL
 	*
-	* Check for well-formedness, remove whitespace if applicable. Check for insecure content.
+	* Check for well-formedness, remove whitespace if applicable.
+	* Check for insecure script tags.
 	*
 	* @param  string  $xsl     Must be valid XSL elements. A root node is not required
 	* @param  integer $flags
