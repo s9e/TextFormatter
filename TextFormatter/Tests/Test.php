@@ -25,4 +25,17 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 			}
 		}
 	}
+
+	protected function assertArrayHasNestedKeys($array)
+	{
+		$keys = array_slice(func_get_args(), 1);
+
+		$this->assertInternalType('array', $array);
+
+		foreach ($keys as $key)
+		{
+			$this->assertArrayHasKey($key, $array);
+			$array =& $array[$key];
+		}
+	}
 }

@@ -586,18 +586,23 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
+	/**
+	* @depends testCanSetCustomFilter
+	*/
 	public function testCanSetCustomFilterWithExtraConfig()
 	{
 		$filterFunc = function() {};
 
-		$this->cb->setFilter(
-			'range', $filterFunc
-		);
+		$this->cb->setFilter('range', $filterFunc, array('min' => 2, 'max' => 5));
 
 		$this->assertArrayMatches(
 			array(
 				'range' => array(
-					'callback' => $filterFunc
+					'callback' => $filterFunc,
+					'config'   => array(
+						'min' => 2,
+						'max' => 5
+					)
 				)
 			),
 			$this->cb->getFiltersConfig()
@@ -605,20 +610,54 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException InvalidArgumentException
+	* @expectedException InvalidArgumentException callback
 	*/
 	public function testSetFilterThrowsAnExceptionOnInvalidCallback()
 	{
-		try
-		{
-			$this->cb->setFilter('foo', 'bar');
-		}
-		catch (\InvalidArgumentException $e)
-		{
-			$this->assertContains('valid callback', $e->getMessage());
-			throw $e;
-		}
+		$this->cb->setFilter('foo', 'bar');
 	}
 
+	public function testUrlFilterIsConfiguredToAllowHttpAndHttpsSchemesByDefault()
+	{
+		$filtersConfig = $this->cb->getFiltersConfig();
 
+		$this->assertArrayHasNestedKeys(
+			$filtersConfig,
+			'url',
+			'allowedSchemes'
+		);
+
+		$this->assertRegexp($filtersConfig['url']['allowedSchemes'], 'http');
+		$this->assertRegexp($filtersConfig['url']['allowedSchemes'], 'https');
+	}
+
+	/**
+	* @depends testUrlFilterIsConfiguredToAllowHttpAndHttpsSchemesByDefault
+	*/
+	public function testUrlFilterCanBeConfiguredAllowAdditionalSchemes()
+	{
+		// first we check that the regexp isn't borked and doesn't allow just about anything
+		$filtersConfig = $this->cb->getFiltersConfig();
+		$this->assertNotRegexp($filtersConfig['url']['allowedSchemes'], 'foo');
+
+		$this->cb->allowScheme('foo');
+
+		$filtersConfig = $this->cb->getFiltersConfig();
+		$this->assertRegexp($filtersConfig['url']['allowedSchemes'], 'foo');
+	}
+
+	public function testUrlFilterCanBeConfiguredToDisallowHosts()
+	{
+		$this->cb->disallowHost('example.org');
+
+		$filtersConfig = $this->cb->getFiltersConfig();
+
+		$this->assertArrayHasNestedKeys(
+			$filtersConfig,
+			'url',
+			'disallowedHosts'
+		);
+
+		$this->assertRegexp($filtersConfig['url']['disallowedHosts'], 'example.org');
+	}
 }

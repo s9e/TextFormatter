@@ -816,7 +816,7 @@ class ConfigBuilder
 		$filters = $this->filters;
 
 		$filters['url']['allowedSchemes']
-			= '#' . self::buildRegexpFromList($filters['url']['allowedSchemes']) . '$#ADi';
+			= '#^' . self::buildRegexpFromList($filters['url']['allowedSchemes']) . '$#Di';
 
 		if (isset($filters['url']['disallowedHosts']))
 		{
@@ -824,9 +824,9 @@ class ConfigBuilder
 				= '#(?<![^\\.])'
 				. self::buildRegexpFromList(
 					$filters['url']['disallowedHosts'],
-					array('*' => '.*?')
+					array('*' => '.*')
 				  )
-				. '#DiS';
+				. '$#DiS';
 		}
 
 		return $filters;
