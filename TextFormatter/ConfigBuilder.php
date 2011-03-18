@@ -931,7 +931,7 @@ class ConfigBuilder
 
 			if ($useLookahead)
 			{
-				$regexp .= '(?=[' . implode('', array_keys($initials)) . '])';
+				$regexp .= '(?=[' . implode('', array_intersect_key($esc, $initials)) . '])';
 			}
 		}
 

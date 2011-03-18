@@ -723,4 +723,32 @@ class ConfigBuilderTest extends Test
 			ConfigBuilder::buildRegexpFromList(array('foo', 'bar'))
 		);
 	}
+
+	/**
+	* @depends testOptimizesRegexpByUsingLookaheadAssertion
+	*/
+	public function testOptimizesRegexpByUsingLookaheadAssertionWithEscapedCharacters()
+	{
+		$this->assertSame(
+			'(?=[\\*\\\\])(?:\\*foo|\\\\bar)',
+			ConfigBuilder::buildRegexpFromList(array('*foo', '\\bar'))
+		);
+	}
+
+	/**
+	* @depends testOptimizesRegexpByUsingLookaheadAssertion
+	*/
+	public function testDoesNotOptimizeRegexpByUsingLookaheadAssertionWithSpecialSequences()
+	{
+		$this->assertSame(
+			'(?:.|bar)',
+
+			// Here, we build a regexp that matches one single character or the word "bar"
+			// The joker ? is replaced by the special character .
+			ConfigBuilder::buildRegexpFromList(
+				array('?', 'bar'),
+				array('?' => '.')
+			)
+		);
+	}
 }
