@@ -290,12 +290,11 @@ class BBCodesParser extends PluginParser
 				$usesContent = false;
 
 				if ($type === Parser::START_TAG
-				 && isset($bbcodeConfig['defaultAttr'])
-				 && !isset($attrs[$bbcodeConfig['defaultAttr']])
-				 && !empty($bbcodeConfig['useContent']))
+				 && isset($bbcodeConfig['contentAttr'])
+				 && !isset($attrs[$bbcodeConfig['contentAttr']]))
 				{
 					/**
-					* Capture the content of that tag and use it as param
+					* Capture the content of that tag and use it as attribute value
 					*
 					* @todo insert the corresponding closing tag now, to ensure that we captured
 					*       exactly what will end up being this tag pair's content. Would make a
@@ -307,7 +306,7 @@ class BBCodesParser extends PluginParser
 
 					if ($pos)
 					{
-						$attrs[$bbcodeConfig['defaultAttr']]
+						$attrs[$bbcodeConfig['contentAttr']]
 							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
 
 						$usesContent = true;

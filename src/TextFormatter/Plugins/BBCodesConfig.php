@@ -82,7 +82,7 @@ class BBCodesConfig extends PluginConfig
 			'autoClose'   => 1,
 			'defaultAttr' => 1,
 			'tagName'     => 1,
-			'useContent'  => 1
+			'contentAttr' => 1
 		);
 
 		$bbcodeConfig = array_intersect_key($config, $bbcodeSpecificConfig);
@@ -298,6 +298,9 @@ class BBCodesConfig extends PluginConfig
 		return $tpl;
 	}
 
+	/**
+	* @todo separate contentAttr from defaultAttr
+	*/
 	public function parseBBCodeDefinition($def)
 	{
 		/**
@@ -307,10 +310,11 @@ class BBCodesConfig extends PluginConfig
 			'bbcodeName' => '[a-zA-Z_][a-zA-Z_0-9]*',
 			'attrName'   => '[a-zA-Z_][a-zA-Z_0-9]*',
 			'type' => array(
-				'regexp' => 'REGEXP[0-9]*=(?P<regexp>/.*?/i?)',
-				'range'  => 'RANGE[0-9]*=(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
-				'choice' => 'CHOICE[0-9]*=(?P<choices>.+?)',
-				'other'  => '[A-Z_]+[0-9]*'
+				'regexp'   => 'REGEXP[0-9]*=(?P<regexp>/.*?/i?)',
+				'compound' => 'COMPOUND[0-9]*=(?P<compoundRegexp>/.*?/i?)',
+				'range'    => 'RANGE[0-9]*=(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
+				'choice'   => 'CHOICE[0-9]*=(?P<choices>.+?)',
+				'other'    => '[A-Z_]+[0-9]*'
 			),
 			'attrOptions' => '[A-Z_a-z]+=[^;]+?'
 		);
@@ -397,7 +401,7 @@ class BBCodesConfig extends PluginConfig
 
 				$options['defaultRule'] = 'deny';
 				$options['defaultAttr'] = $attrName;
-				$options['useContent']  = true;
+				$options['contentAttr'] = $attrName;
 
 				/**
 				* We append the placeholder to the attributes, using the BBCode's name as param name
@@ -420,6 +424,7 @@ class BBCodesConfig extends PluginConfig
 
 			if (isset($params[$attrName]))
 			{
+				print_r($matches);print_r($params);exit;
 				throw new InvalidArgumentException('Param ' . $attrName . ' is defined twice');
 			}
 
@@ -477,6 +482,11 @@ class BBCodesConfig extends PluginConfig
 					case 'regexp':
 						$attrConf['type']   = 'regexp';
 						$attrConf['regexp'] = $m['regexp'];
+						break;
+
+					case 'compound':
+						$attrConf['type']   = 'compound';
+						$attrConf['regexp'] = $m['compoundRegexp'];
 						break;
 
 					case 'choice':
@@ -559,7 +569,7 @@ class BBCodesConfig extends PluginConfig
 	* @param  string $bbcodeName
 	* @return bool
 	*/
-	static public function isValidBBCodeName($bbcodeName)
+	public function isValidBBCodeName($bbcodeName)
 	{
 		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*|\\*)$#Di', $bbcodeName);
 	}

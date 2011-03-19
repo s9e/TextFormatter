@@ -449,6 +449,11 @@ class PredefinedBBCodesTest extends Test
 				'[DEL]del[/DEL]',
 				'<del>del</del>'
 			),
+			array(
+				'[FLASH=200,100]http://www.adobe.com/swf/software/flash/about/flashAbout_info_small.swf[/FLASH]',
+				'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="200" height="100"><param name="movie" value="http://www.adobe.com/swf/software/flash/about/flashAbout_info_small.swf"><param name="quality" value="high"><param name="wmode" value="opaque"><param name="play" value="false"><param name="loop" value="false"><param name="allowScriptAccess" value="never"><param name="allowNetworking" value="internal"><embed src="http://www.adobe.com/swf/software/flash/about/flashAbout_info_small.swf" quality="high" width="200" height="100" wmode="opaque" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" play="false" loop="false" allowscriptaccess="never" allownetworking="internal"></embed></object>
+'
+			),
 		);
 	}
 }

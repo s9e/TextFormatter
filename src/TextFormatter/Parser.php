@@ -973,9 +973,14 @@ class Parser
 					}
 
 					/**
+					* Handle compound attributes
+					*/
+					$this->splitCompoundAttributes();
+
+					/**
 					* Filter attributes
 					*/
-					$this->filterCurrentAttributes();
+					$this->filterAttributes();
 
 					/**
 					* Check for missing required attributes
@@ -1110,7 +1115,7 @@ class Parser
 	*
 	* @return void
 	*/
-	protected function filterCurrentAttributes()
+	protected function filterAttributes()
 	{
 		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
 
@@ -1220,5 +1225,46 @@ class Parser
 					call_user_func($callback, $this->currentTag['attrs']);
 			}
 		}
+	}
+
+	/**
+	* Split compound attributes and append them to the existing attributes
+	*/
+	protected function splitCompoundAttributes()
+	{
+		$tagConfig   = $this->tagsConfig[$this->currentTag['name']];
+		$attrsConfig = array_intersect_key($tagConfig['attrs'], $this->currentTag['attrs']);
+
+		$attrs = array();
+
+		foreach ($attrsConfig as $attrName => $attrConfig)
+		{
+			if ($attrConfig['type'] !== 'compound')
+			{
+				continue;
+			}
+
+			if (preg_match($attrConfig['regexp'], $this->currentTag['attrs'][$attrName], $m))
+			{
+				foreach ($m as $k => $v)
+				{
+					if (!is_numeric($k))
+					{
+						$attrs[$k] = $v;
+					}
+				}
+			}
+
+			/**
+			* Compound attributes are removed from the aray
+			*/
+			unset($this->currentTag['attrs'][$attrName]);
+		}
+
+		/**
+		* Append the split attributes to the existing attributes. Values from split attributes won't
+		* overwrite existing values
+		*/
+		$this->currentTag['attrs'] += $attrs;
 	}
 }

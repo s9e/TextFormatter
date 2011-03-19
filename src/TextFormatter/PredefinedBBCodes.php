@@ -56,8 +56,8 @@ class PredefinedBBCodes
 	public function addURL()
 	{
 		$this->cb->BBCodes->addBBCode('URL', array(
-			'defaultAttr'    => 'url',
-			'useContent' => true
+			'defaultAttr' => 'url',
+			'contentAttr' => 'url'
 		));
 
 		$this->cb->addTagAttribute('URL', 'url', 'url');
@@ -87,7 +87,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->BBCodes->addBBCode('IMG', array(
 			'defaultAttr' => 'src',
-			'useContent'  => true,
+			'contentAttr' => 'src',
 			'autoClose'   => true,
 			'defaultRule' => 'deny'
 		));
@@ -545,7 +545,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->BBCodes->addBBCode('EMAIL', array(
 			'defaultAttr' => 'email',
-			'useContent'  => true,
+			'contentAttr' => 'email',
 			'defaultRule' => 'deny'
 		));
 
@@ -733,6 +733,54 @@ class PredefinedBBCodes
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[DEL]{TEXT}[/DEL]',
 			'<del>{TEXT}</del>'
+		);
+	}
+
+	/**
+	* [FLASH] tag
+	*
+	* Should be compatible with phpBB's [flash] tag.
+	*
+	* "allowScriptAccess" is set to "never"
+	* "allowNetworking" is set to "internal" -- not the most restrictive setting, but that's what
+	* people seem to generally use
+	*
+	* The rest was based off Adobe's site.
+	*
+	* @link http://kb2.adobe.com/cps/164/tn_16494.html
+	* @link http://help.adobe.com/en_US/ActionScript/3.0_ProgrammingAS3/WS1EFE2EDA-026D-4d14-864E-79DFD56F87C6.html
+	*/
+	public function addFLASH()
+	{
+		$this->cb->BBCodes->addBBCode(
+			'FLASH',
+			array(
+				'defaultAttr' => 'dimensions',
+				'contentAttr' => 'url',
+				'attrs' => array(
+					'width'  => array('type' => 'number'),
+					'height' => array('type' => 'number'),
+					'url'    => array('type' => 'url'),
+					'dimensions' => array(
+						'type'       => 'compound',
+						'regexp'     => '/(?P<width>[0-9]+),(?P<height>[0-9]+)/',
+						'isRequired' => false
+					)
+				),
+				'template' =>
+					'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="{@width}" height="{@height}">
+						<param name="movie" value="{@url}" />
+						<param name="quality" value="high" />
+						<param name="wmode" value="opaque" />
+						<param name="play" value="false" />
+						<param name="loop" value="false" />
+
+						<param name="allowScriptAccess" value="never" />
+						<param name="allowNetworking" value="internal" />
+
+						<embed src="{@url}" quality="high" width="{@width}" height="{@height}" wmode="opaque" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" play="false" loop="false" allowscriptaccess="never" allownetworking="internal"></embed>
+					</object>'
+			)
 		);
 	}
 }
