@@ -29,7 +29,8 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException InvalidArgumentException name
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid plugin name "../foo"
 	*/
 	public function testDoesNotLoadInvalidPluginName()
 	{
@@ -133,7 +134,8 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanCreateAttribute
-	* @expectedException InvalidArgumentException FOO
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown tag 'FOO'
 	*/
 	public function testCannotCreateAttributeOnNonExistingTag()
 	{
@@ -142,7 +144,8 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException InvalidArgumentException XYZ*
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid tag name 'XYZ*'
 	*/
 	public function testInvalidTagNamesAreRejected()
 	{
@@ -151,7 +154,8 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanCreateAttribute
-	* @expectedException InvalidArgumentException ns:href
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid attribute name 'ns:href'
 	*/
 	public function testInvalidAttributeNamesAreRejected()
 	{
@@ -160,7 +164,8 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException InvalidArgumentException TAG
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Tag 'TAG' already exists
 	*/
 	public function testDuplicateTagNamesAreRejected()
 	{
@@ -169,7 +174,8 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException InvalidArgumentException href
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Attribute 'href' already exists
 	*/
 	public function testDuplicateAttributeNamesAreRejected()
 	{
@@ -240,7 +246,8 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanCreateTag
-	* @expectedException InvalidArgumentException FOO
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown tag 'FOO'
 	*/
 	public function testCannotCreateRuleOnNonExistentTag()
 	{
@@ -250,7 +257,8 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanCreateRule
-	* @expectedException UnexpectedValueException shootFoot
+	* @expectedException UnexpectedValueException
+	* @expectedExceptionMessage Unknown rule action 'shootFoot'
 	*/
 	public function testCannotCreateUnknownRule()
 	{
@@ -261,7 +269,8 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanCreateRule
-	* @expectedException RuntimeException satisfied
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Tag 'FOO' already has a different 'requireParent' rule
 	*/
 	public function testCannotCreateMultipeRequireParentRulesOnDifferentTargets()
 	{
@@ -285,7 +294,8 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanCreateTag
-	* @expectedException InvalidArgumentException BAR
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown target tag 'BAR'
 	*/
 	public function testCannotCreateRuleOnNonExistentTargetTag()
 	{
