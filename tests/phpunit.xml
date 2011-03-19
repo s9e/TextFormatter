@@ -11,8 +11,8 @@
          verbose="true"
 >
 	<filter>
-		<blacklist>
-			<directory>./</directory>
-		</blacklist>
+		<whitelist>
+			<directory>../src</directory>
+		</whitelist>
 	</filter>
 </phpunit>
