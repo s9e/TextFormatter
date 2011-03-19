@@ -6,20 +6,19 @@ cd $(readlink -f $(dirname $(dirname $(dirname "$0"))))/tests
 
 for FILEPATH in $(git diff-index --name-only HEAD)
 do
-	POS=`expr index "$FILEPATH" /`
-
-	if [[ $POS == 0 ]]
+	if [[ $FILEPATH != src/* ]]
 	then
 		continue;
 	fi
 
-	DIR=${FILEPATH:0:$POS}
+	POS=`expr index ${FILEPATH:4} /`
+	DIR=${FILEPATH:4:$POS}
 
 	if [[ `expr index "$DONE" "$DIR"` == 0 ]]
 	then
 		DONE="$DONE $DIR"
 
-		phpunit $DIR | tee $TMP
+		phpunit -c phpunit.xml $DIR | tee $TMP
 
 		if [[ `tail -n2 $TMP` != *OK* ]]
 		then
