@@ -550,8 +550,13 @@ class PredefinedBBCodes
 		));
 
 		$this->cb->addTagAttribute('EMAIL', 'email', 'email', array(
-			// this will encode the @ into %40, possibly messing up with the lamest of spambots
-			'postFilter' => array('rawurlencode')
+			/**
+			* This will URL-encode every character in the link, messing up with the less proficient
+			* spambots. Note that the email address may still appear as text in the output,
+			* defeating the purpose. So take this more as a demo of the "forceUrlencode" option than
+			* an actual spambot countermeasure.
+			*/
+			'forceUrlencode' => true
 		));
 
 		$this->cb->addTagAttribute('EMAIL', 'subject', 'text', array(
