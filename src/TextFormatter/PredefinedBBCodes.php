@@ -722,11 +722,17 @@ class PredefinedBBCodes
 
 	public function addINS()
 	{
-		$this->cc->BBCodes->addBBCode('INS');
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[INS]{TEXT}[/INS]',
+			'<ins>{TEXT}</ins>'
+		);
 	}
 
 	public function addDEL()
 	{
-		$this->cc->BBCodes->addBBCode('INS');
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[DEL]{TEXT}[/DEL]',
+			'<del>{TEXT}</del>'
+		);
 	}
 }
