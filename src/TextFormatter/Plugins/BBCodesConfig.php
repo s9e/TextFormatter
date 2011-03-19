@@ -545,7 +545,7 @@ class BBCodesConfig extends PluginConfig
 	*/
 	protected function normalizeBBCodeName($bbcodeName)
 	{
-		if (!$this->isValidBBCodeName($bbcodeName))
+		if (!static::isValidBBCodeName($bbcodeName))
 		{
 			throw new InvalidArgumentException ("Invalid BBCode name '" . $bbcodeName . "'");
 		}
