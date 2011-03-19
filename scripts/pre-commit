@@ -1,0 +1,36 @@
+#!/bin/sh
+TMP=/dev/shm/phpunit.out
+DONE=
+
+cd $(readlink -f $(dirname $(dirname $(dirname "$0"))))/tests
+
+for FILEPATH in $(git diff-index --name-only HEAD)
+do
+	POS=`expr index "$FILEPATH" /`
+
+	if [[ $POS == 0 ]]
+	then
+		continue;
+	fi
+
+	DIR=${FILEPATH:0:$POS}
+
+	if [[ `expr index "$DONE" "$DIR"` == 0 ]]
+	then
+		DONE="$DONE $DIR"
+
+		phpunit $DIR | tee $TMP
+
+		if [[ `tail -n2 $TMP` != *OK* ]]
+		then
+			BRANCH=`git branch --color=never | grep ^\\*`
+
+#			if [[ $BRANCH == *master* ]]
+#			then
+				exit 1;
+#			fi
+		fi
+	fi
+done
+
+exit 0
