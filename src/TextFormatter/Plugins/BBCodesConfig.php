@@ -41,7 +41,8 @@ class BBCodesConfig extends PluginConfig
 		'addcslashes',
 		'stripcslashes',
 		'intval',
-		'strtotime'
+		'strtotime',
+		'strrev'
 	);
 
 	/**
