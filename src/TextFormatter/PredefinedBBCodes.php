@@ -714,4 +714,14 @@ class PredefinedBBCodes
 			</object>'
 		);
 	}
+
+	public function addINS()
+	{
+		$this->cc->BBCodes->addBBCode('INS');
+	}
+
+	public function addDEL()
+	{
+		$this->cc->BBCodes->addBBCode('INS');
+	}
 }

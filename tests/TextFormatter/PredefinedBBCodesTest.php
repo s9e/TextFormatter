@@ -441,6 +441,14 @@ class PredefinedBBCodesTest extends Test
 				'[DAILYMOTION]http://www.dailymotion.com/video/xf633p_dailymotion-cloud_tech[/DAILYMOTION]',
 				'<object width="480" height="270"><param name="movie" value="http://www.dailymotion.com/swf/video/xf633p"><param name="allowFullScreen" value="true"><param name="allowScriptAccess" value="always"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/xf633p" width="480" height="270" allowfullscreen="true" allowscriptaccess="always"></embed></object>'
 			),
+			array(
+				'[INS]ins[/INS]',
+				'<ins>ins</ins>'
+			),
+			array(
+				'[DEL]del[/DEL]',
+				'<del>del</del>'
+			),
 		);
 	}
 }
