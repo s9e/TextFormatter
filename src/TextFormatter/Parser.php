@@ -273,7 +273,19 @@ class Parser
 				return (string) $attrVal;
 
 			case 'email':
-				return filter_var($attrVal, \FILTER_VALIDATE_EMAIL);
+				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_EMAIL);
+
+				if (!$attrVal)
+				{
+					return false;
+				}
+
+				if (!empty($attrConf['forceUrlencode']))
+				{
+					$attrVal = '%' . implode('%', str_split(bin2hex($attrVal), 2));
+				}
+
+				return $attrVal;
 
 			case 'int':
 			case 'integer':
@@ -354,7 +366,7 @@ class Parser
 
 			default:
 				$this->log('debug', array(
-					'msg'    => 'Unknown filter %s',
+					'msg'    => "Unknown filter '%s'",
 					'params' => array($attrType)
 				));
 				return false;
