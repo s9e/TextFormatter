@@ -26,7 +26,7 @@ THE SOFTWARE.
 namespace s9e\Toolkit\SimpleDOM\Tests;
 use s9e\Toolkit\SimpleDOM\SimpleDOM;
 
-include_once __DIR__ . '/../SimpleDOM.php';
+include_once __DIR__ . '/../../src/SimpleDOM/SimpleDOM.php';
  
 class removeClassTest extends \PHPUnit_Framework_TestCase
 {

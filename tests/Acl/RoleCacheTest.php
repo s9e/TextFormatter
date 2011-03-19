@@ -6,9 +6,9 @@ use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\Role;
 use s9e\Toolkit\Acl\RoleCache;
 
-include_once __DIR__ . '/../Acl.php';
-include_once __DIR__ . '/../Role.php';
-include_once __DIR__ . '/../RoleCache.php';
+include_once __DIR__ . '/../../src/Acl/Acl.php';
+include_once __DIR__ . '/../../src/Acl/Role.php';
+include_once __DIR__ . '/../../src/Acl/RoleCache.php';
 
 class RoleCacheTest extends \PHPUnit_Framework_TestCase
 {

@@ -7,9 +7,9 @@ use s9e\Toolkit\Acl\Resource;
 use s9e\Toolkit\Acl\Wildcard;
 use s9e\Toolkit\Acl\XMLReader;
 
-include_once __DIR__ . '/../Acl.php';
-include_once __DIR__ . '/../Wildcard.php';
-include_once __DIR__ . '/../XMLReader.php';
+include_once __DIR__ . '/../../src/Acl/Acl.php';
+include_once __DIR__ . '/../../src/Acl/Wildcard.php';
+include_once __DIR__ . '/../../src/Acl/XMLReader.php';
 
 class XMLTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace s9e\Toolkit\TextFormatter\Tests;
+namespace s9e\Toolkit\Tests;
 
 use s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\Parser,
     s9e\Toolkit\TextFormatter\Renderer,
     s9e\Toolkit\TextFormatter\Plugins\EmoticonsConfig;
 
-include_once __DIR__ . '/../ConfigBuilder.php';
-include_once __DIR__ . '/Test.php';
+include_once __DIR__ . '/../../src/TextFormatter/ConfigBuilder.php';
+include_once __DIR__ . '/../Test.php';
 
 /**
 * @covers s9e\Toolkit\TextFormatter\ConfigBuilder

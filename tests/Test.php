@@ -1,6 +1,6 @@
 <?php
 
-namespace s9e\Toolkit\TextFormatter\Tests;
+namespace s9e\Toolkit\Tests;
 
 abstract class Test extends \PHPUnit_Framework_TestCase
 {

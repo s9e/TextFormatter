@@ -5,8 +5,8 @@ namespace s9e\Toolkit\Acl\Tests;
 use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\Wildcard;
 
-include_once __DIR__ . '/../Acl.php';
-include_once __DIR__ . '/../Wildcard.php';
+include_once __DIR__ . '/../../src/Acl/Acl.php';
+include_once __DIR__ . '/../../src/Acl/Wildcard.php';
 
 class BasicTest extends \PHPUnit_Framework_TestCase
 {

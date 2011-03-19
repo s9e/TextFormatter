@@ -1,13 +1,13 @@
 <?php
 
-namespace s9e\Toolkit\TextFormatter\Tests;
+namespace s9e\Toolkit\Tests;
 
 use s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\PluginConfig;
 
-include_once __DIR__ . '/../ConfigBuilder.php';
-include_once __DIR__ . '/../PluginConfig.php';
-include_once __DIR__ . '/Test.php';
+include_once __DIR__ . '/../../src/TextFormatter/ConfigBuilder.php';
+include_once __DIR__ . '/../../src/TextFormatter/PluginConfig.php';
+include_once __DIR__ . '/../Test.php';
 
 class MyConfig extends PluginConfig
 {

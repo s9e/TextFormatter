@@ -4,7 +4,7 @@ namespace s9e\Toolkit\Acl\Tests;
 
 use s9e\Toolkit\Acl\Acl;
 
-include_once __DIR__ . '/../Acl.php';
+include_once __DIR__ . '/../../src/Acl/Acl.php';
 
 class InternalsTest extends \PHPUnit_Framework_TestCase
 {

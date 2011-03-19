@@ -5,8 +5,8 @@ namespace s9e\Toolkit\Acl\Tests;
 use s9e\Toolkit\Acl\Acl;
 use s9e\Toolkit\Acl\Resource;
 
-include_once __DIR__ . '/../Acl.php';
-include_once __DIR__ . '/../Resource.php';
+include_once __DIR__ . '/../../src/Acl/Acl.php';
+include_once __DIR__ . '/../../src/Acl/Resource.php';
 
 class ResourceTest extends \PHPUnit_Framework_TestCase
 {
