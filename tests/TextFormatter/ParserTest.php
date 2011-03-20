@@ -543,6 +543,26 @@ class ParserTest extends Test
 		$this->assertAttributeInvalid('number', '12.3');
 	}
 
+	public function testIntegerFilterAcceptNumbers()
+	{
+		$this->assertAttributeValid('integer', '123');
+	}
+
+	public function testIntegerFilterRejectsPartialNumbers()
+	{
+		$this->assertAttributeInvalid('integer', '123abc');
+	}
+
+	public function testIntegerFilterAcceptsNegativeNumbers()
+	{
+		$this->assertAttributeValid('integer', '-123');
+	}
+
+	public function testIntegerFilterRejectsDecimalNumbers()
+	{
+		$this->assertAttributeInvalid('integer', '12.3');
+	}
+
 	public function testIntFilterAcceptNumbers()
 	{
 		$this->assertAttributeValid('int', '123');
@@ -583,63 +603,59 @@ class ParserTest extends Test
 		$this->assertAttributeInvalid('uint', '12.3');
 	}
 
+	public function testIdFilterAcceptsNumbers()
+	{
+		$this->assertAttributeValid('id', '123');
+	}
+
+	public function testIdFilterAcceptsLowercaseLetters()
+	{
+		$this->assertAttributeValid('id', 'abc');
+	}
+
+	public function testIdFilterAcceptsUppercaseLetters()
+	{
+		$this->assertAttributeValid('id', 'ABC');
+	}
+
+	public function testIdFilterAcceptsDashes()
+	{
+		$this->assertAttributeValid('id', '---');
+	}
+
+	public function testIdFilterAcceptsUnderscores()
+	{
+		$this->assertAttributeValid('id', '___');
+	}
+
+	public function testIdFilterRejectsSpaces()
+	{
+		$this->assertAttributeInvalid('id', '123 abc');
+	}
+
+	public function testIdentifierFilterIsAnAliasForTheIdFilter()
+	{
+		$this->assertAttributeValid('id', '-123abc_XYZ');
+	}
+
+	public function testColorFilterAcceptsRgbHexValues()
+	{
+		$this->assertAttributeValid('color', '#123abc');
+	}
+
+	public function testColorFilterRejectsInvalidRgbHexValues()
+	{
+		$this->assertAttributeInvalid('color', '#1234567');
+	}
+
+	public function testColorFilterAcceptsValuesMadeEntirelyOfLetters()
+	{
+		$this->assertAttributeValid('color', 'blueish');
+	}
+
 	public function getParamStuff()
 	{
 		return array(
-			array(
-				'[x id=123 /]',
-				'<rt><X id="123">[x id=123 /]</X></rt>'
-			),
-			array(
-				'[x id=123abc /]',
-				'<rt><X id="123abc">[x id=123abc /]</X></rt>'
-			),
-			array(
-				'[x id=-123_abc /]',
-				'<rt><X id="-123_abc">[x id=-123_abc /]</X></rt>'
-			),
-			array(
-				'[x identifier="-123_abc" /]',
-				'<rt><X identifier="-123_abc">[x identifier=&quot;-123_abc&quot; /]</X></rt>'
-			),
-			array(
-				'[x identifier="123 abc" /]',
-				'<rt><X>[x identifier=&quot;123 abc&quot; /]</X></rt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'identifier',
-							'msg'    => "Invalid attribute '%s'",
-							'params' => array('identifier')
-						)
-					)
-				)
-			),
-			array(
-				'[x color=#123 /]',
-				'<rt><X color="#123">[x color=#123 /]</X></rt>'
-			),
-			array(
-				'[x color=blue /]',
-				'<rt><X color="blue">[x color=blue /]</X></rt>'
-			),
-			array(
-				'[x color=123 /]',
-				'<rt><X>[x color=123 /]</X></rt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'color',
-							'msg'    => "Invalid attribute '%s'",
-							'params' => array('color')
-						)
-					)
-				)
-			),
 			array(
 				'[x custom="foo" /]',
 				'<rt><X custom="foo">[x custom=&quot;foo&quot; /]</X></rt>'
