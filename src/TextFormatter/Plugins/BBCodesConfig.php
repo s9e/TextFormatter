@@ -428,9 +428,7 @@ class BBCodesConfig extends PluginConfig
 				throw new InvalidArgumentException('Param ' . $attrName . ' is defined twice');
 			}
 
-			$attrConf = array(
-				'isRequired' => true
-			);
+			$attrConf = array();
 
 			if (isset($m['attrOptions']))
 			{
@@ -487,6 +485,10 @@ class BBCodesConfig extends PluginConfig
 					case 'compound':
 						$attrConf['type']   = 'compound';
 						$attrConf['regexp'] = $m['compoundRegexp'];
+
+						if (!i)
+						{
+						}
 						break;
 
 					case 'choice':
@@ -520,7 +522,7 @@ class BBCodesConfig extends PluginConfig
 			// @codeCoverageIgnoreStart
 			if (!isset($attrConf['type']))
 			{
-				throw new RuntimeException('Cannot determine the param type of ' . $identifier);
+				throw new RuntimeException('Cannot determine the attribute type of ' . $identifier);
 			}
 			// @codeCoverageIgnoreEnd
 
@@ -536,6 +538,9 @@ class BBCodesConfig extends PluginConfig
 
 			$placeholders[$identifier] = '@' . $attrName;
 
+			/**
+			* Add the attribute to the list
+			*/
 			$params[$attrName] = $attrConf;
 		}
 

@@ -273,18 +273,20 @@ class ConfigBuilder
 		}
 
 		/**
-		* Add default config
-		*/
-		$attrConf += array(
-			'isRequired' => true
-		);
-
-		/**
 		* Set attribute type
 		*/
 		$attrConf['type'] = $attrType;
 
-		$this->tags[$tagName]['attrs'][$attrName] = $attrConf;
+		/**
+		* Add the attribute and append the default config
+		*/
+		$this->tags[$tagName]['attrs'][$attrName] = $attrConf + array(
+			/**
+			* Compound attributes are not required by default. The attributes they split into
+			* should be already. Plus, we remove compound attributes during parsing.
+			*/
+			'isRequired' => (bool) ($attrType !== 'compound')
+		);
 	}
 
 	/**
