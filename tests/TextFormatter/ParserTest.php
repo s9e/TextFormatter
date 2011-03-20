@@ -29,6 +29,46 @@ class ParserTest extends Test
 		$this->assertArrayMatches($expectedLog, $parser->getLog());
 	}
 
+	protected function assertAttributeValid($type, $value)
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'attr' => array('type' => $type)
+			))
+		);
+
+		$value = htmlspecialchars($value);
+
+		$this->assertParsing(
+			'[x attr="' . $value . '"][/x]',
+			'<rt><X attr="' . $value . '"><st>[x attr=&quot;' . $value . '&quot;]</st><et>[/x]</et></X></rt>'
+		);
+	}
+
+	protected function assertAttributeInvalid($type, $value)
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'attr' => array('type' => $type)
+			))
+		);
+
+		$value = htmlspecialchars($value);
+
+		$this->assertParsing(
+			'[x attr="' . $value . '"][/x]',
+			'<pt>[x attr=&quot;' . $value . '&quot;][/x]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('attr')
+					)
+				)
+			)
+		);
+	}
+
 	protected function addA()
 	{
 		$this->cb->BBCodes->addBBCode('a',
@@ -485,222 +525,62 @@ class ParserTest extends Test
 
 	public function testNumberFilterAcceptNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'number' => array('type' => 'number')
-			))
-		);
-		$this->assertParsing(
-			'[x number=123 /]',
-			'<rt><X number="123">[x number=123 /]</X></rt>'
-		);
+		$this->assertAttributeValid('number', '123');
 	}
 
 	public function testNumberFilterRejectsPartialNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'number' => array('type' => 'number')
-			))
-		);
-		$this->assertParsing(
-			'[x number=123abc /]',
-			'<pt>[x number=123abc /]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('number')
-					)
-				)
-			)
-		);
+		$this->assertAttributeInvalid('number', '123abc');
 	}
 
 	public function testNumberFilterRejectsNegativeNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'number' => array('type' => 'number')
-			))
-		);
-		$this->assertParsing(
-			'[x number=-123 /]',
-			'<pt>[x number=-123 /]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('number')
-					)
-				)
-			)
-		);
+		$this->assertAttributeInvalid('number', '-123');
 	}
 
 	public function testNumberFilterRejectsDecimalNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'number' => array('type' => 'number')
-			))
-		);
-		$this->assertParsing(
-			'[x number=12.3 /]',
-			'<pt>[x number=12.3 /]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('number')
-					)
-				)
-			)
-		);
+		$this->assertAttributeInvalid('number', '12.3');
 	}
 
 	public function testIntFilterAcceptNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'int' => array('type' => 'int')
-			))
-		);
-		$this->assertParsing(
-			'[x int=123 /]',
-			'<rt><X int="123">[x int=123 /]</X></rt>'
-		);
+		$this->assertAttributeValid('int', '123');
 	}
 
 	public function testIntFilterRejectsPartialNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'int' => array('type' => 'int')
-			))
-		);
-		$this->assertParsing(
-			'[x int=123abc /]',
-			'<pt>[x int=123abc /]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('int')
-					)
-				)
-			)
-		);
+		$this->assertAttributeInvalid('int', '123abc');
 	}
 
 	public function testIntFilterAcceptsNegativeNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'int' => array('type' => 'int')
-			))
-		);
-		$this->assertParsing(
-			'[x int=-123 /]',
-			'<rt><X int="-123">[x int=-123 /]</X></rt>'
-		);
+		$this->assertAttributeValid('int', '-123');
 	}
 
 	public function testIntFilterRejectsDecimalNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'int' => array('type' => 'int')
-			))
-		);
-		$this->assertParsing(
-			'[x int=12.3 /]',
-			'<pt>[x int=12.3 /]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('int')
-					)
-				)
-			)
-		);
+		$this->assertAttributeInvalid('int', '12.3');
 	}
 
 	public function testUintFilterAcceptNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'uint' => array('type' => 'uint')
-			))
-		);
-		$this->assertParsing(
-			'[x uint=123 /]',
-			'<rt><X uint="123">[x uint=123 /]</X></rt>'
-		);
+		$this->assertAttributeValid('uint', '123');
 	}
 
 	public function testUintFilterRejectsPartialNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'uint' => array('type' => 'uint')
-			))
-		);
-		$this->assertParsing(
-			'[x uint=123abc /]',
-			'<pt>[x uint=123abc /]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('uint')
-					)
-				)
-			)
-		);
+		$this->assertAttributeInvalid('uint', '123abc');
 	}
 
 	public function testUintFilterRejectsNegativeNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'uint' => array('type' => 'uint')
-			))
-		);
-		$this->assertParsing(
-			'[x uint=-123 /]',
-			'<pt>[x uint=-123 /]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('uint')
-					)
-				)
-			)
-		);
+		$this->assertAttributeInvalid('uint', '-123');
 	}
 
 	public function testUintFilterRejectsDecimalNumbers()
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'uint' => array('type' => 'uint')
-			))
-		);
-		$this->assertParsing(
-			'[x uint=12.3 /]',
-			'<pt>[x uint=12.3 /]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('uint')
-					)
-				)
-			)
-		);
+		$this->assertAttributeInvalid('uint', '12.3');
 	}
 
 	public function getParamStuff()
