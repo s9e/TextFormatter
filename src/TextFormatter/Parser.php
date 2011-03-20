@@ -945,7 +945,7 @@ class Parser
 					{
 						if (empty($cntOpen[$ascendant]))
 						{
-							$this->log('debug', array(
+							$this->log('error', array(
 								'pos'    => $this->currentTag['pos'],
 								'msg'    => 'Tag %1$s requires %2$s as ascendant',
 								'params' => array($tagName, $ascendant)
