@@ -12,6 +12,11 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 	protected function reduceAndSortArrays(array &$expected, array &$actual)
 	{
+		if (empty($expected))
+		{
+			return;
+		}
+
 		ksort($expected);
 		ksort($actual);
 

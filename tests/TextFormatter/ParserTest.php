@@ -20,56 +20,73 @@ class ParserTest extends Test
 		$this->cb = new ConfigBuilder;
 	}
 
+	protected function assertParsing($text, $expectedXml, $expectedLog = array('error' => null))
+	{
+		$parser    = $this->cb->getParser();
+		$actualXml = $parser->parse($text);
+
+		$this->assertArrayMatches($expectedLog, $parser->getLog());
+		$this->assertSame($expectedXml, $actualXml);
+	}
+
 	public function testRequireParentRuleIsApplied()
 	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('b', 'requireParent', 'a');
+
+		$this->assertParsing(
+			'[b]stuff[/b]',
+			'<pt>[b]stuff[/b]</pt>',
+			array(
+				'error' => array(
+					array(
+						'pos'     => 0,
+						'msg'     => 'Tag %1$s requires %2$s as parent',
+						'params'  => array('B', 'A'),
+						'tagName' => 'B'
+					)
+				)
+			)
+		);
+	}
+
+	public function testCloseParentRuleIsApplied()
+	{
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeParent', 'p');
+
+		$this->assertParsing(
+			'[p]one[p]two',
+			'<rt><P><st>[p]</st>one</P><P><st>[p]</st>two</P></rt>'
+		);
 	}
 
 	/**
-	* @dataProvider getRulesTestData
+	* @depends testCloseParentRuleIsApplied
 	*/
-	public function testRulesAreApplied($bbcodeName, $text, $expected, $expectedLog = array())
+	public function testCloseParentRuleIsAppliedOnTagWithIdenticalSuffix()
 	{
-		$this->cb->BBCodes->addPredefinedBBCode($bbcodeName);
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeParent', 'p');
 
-		$parser = $this->cb->getParser();
-		$actual = $parser->parse($text);
-
-		$this->assertSame($expected, $actual);
-
-		$this->assertArrayMatches($parser->getLog(), $expectedLog);
+		$this->assertParsing(
+			'[p:123]one[p:123]two',
+			'<rt><P><st>[p:123]</st>one</P><P><st>[p:123]</st>two</P></rt>'
+		);
 	}
 
-	public function getRulesTestData()
+	/**
+	* @depends testCloseParentRuleIsApplied
+	*/
+	public function testCloseParentRuleIsAppliedOnTagWithDifferentSuffix()
 	{
-		return array(
-			// requireParent
-			array(
-				'LIST',
-				'[*]list item',
-				'<pt>[*]list item</pt>',
-				array(
-					'error' => array(
-						array(
-							'pos'     => 0,
-							'msg'     => 'Tag %1$s requires %2$s as parent',
-							'params'  => array('LI', 'LIST'),
-							'tagName' => 'LI'
-						)
-					)
-				)
-			),
-			// closeParent
-			array(
-				'LIST',
-				'[list][*]one[*]two[/list]',
-				'<rt><LIST style="disc"><st>[list]</st><LI><st>[*]</st>one</LI><LI><st>[*]</st>two</LI><et>[/list]</et></LIST></rt>'
-			),
-			// closeParent with tag suffixes
-			array(
-				'LIST',
-				'[list][*:123]one[*:456]two[/list]',
-				'<rt><LIST style="disc"><st>[list]</st><LI><st>[*:123]</st>one</LI><LI><st>[*:456]</st>two</LI><et>[/list]</et></LIST></rt>'
-			),
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeParent', 'p');
+
+		$this->assertParsing(
+			'[p:123]one[p:456]two',
+			'<rt><P><st>[p:123]</st>one</P><P><st>[p:456]</st>two</P></rt>'
 		);
 	}
 }
