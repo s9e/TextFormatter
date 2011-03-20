@@ -236,7 +236,7 @@ class Parser
 				if (!preg_match($this->filtersConfig['url']['allowedSchemes'], $p['scheme']))
 				{
 					$this->log('error', array(
-						'msg'    => 'URL scheme %s is not allowed',
+						'msg'    => "URL scheme '%s' is not allowed",
 						'params' => array($p['scheme'])
 					));
 					return false;
@@ -246,7 +246,7 @@ class Parser
 				 && preg_match($this->filtersConfig['url']['disallowedHosts'], $p['host']))
 				{
 					$this->log('error', array(
-						'msg'    => 'URL host %s is not allowed',
+						'msg'    => "URL host '%s' is not allowed",
 						'params' => array($p['host'])
 					));
 					return false;
@@ -955,7 +955,14 @@ class Parser
 					}
 				}
 
-				if (isset($tagConfig['attrs']))
+				if (empty($tagConfig['attrs']))
+				{
+					/**
+					* Remove all attributes if none are defined for this tag
+					*/
+					$this->currentTag['attrs'] = array();
+				}
+				else
 				{
 					/**
 					* Add default values
@@ -994,7 +1001,7 @@ class Parser
 
 						$this->log('error', array(
 							'pos'    => $this->currentTag['pos'],
-							'msg'    => 'Missing attribute %s',
+							'msg'    => "Missing attribute '%s'",
 							'params' => array($attrName)
 						));
 
@@ -1177,7 +1184,7 @@ class Parser
 				*/
 				$this->log('error', array(
 					'pos'    => $this->currentTag['pos'],
-					'msg'    => 'Invalid attribute %s',
+					'msg'    => "Invalid attribute '%s'",
 					'params' => array($attrName)
 				));
 

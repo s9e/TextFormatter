@@ -364,14 +364,14 @@ class PredefinedBBCodesTest extends Test
 					'error' => array(
 						array(
 							'pos'       => 0,
-							'msg'       => 'Invalid attribute %s',
+							'msg'       => "Invalid attribute '%s'",
 							'params'    => array('localtime'),
 							'tagName'  => 'LOCALTIME',
 							'attrName' => 'localtime'
 						),
 						array(
 							'pos'       => 0,
-							'msg'       => 'Missing attribute %s',
+							'msg'       => "Missing attribute '%s'",
 							'params'    => array('localtime'),
 							'tagName'  => 'LOCALTIME'
 						)

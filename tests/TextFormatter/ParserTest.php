@@ -29,6 +29,15 @@ class ParserTest extends Test
 		$this->assertArrayMatches($expectedLog, $parser->getLog());
 	}
 
+	protected function addA()
+	{
+		$this->cb->BBCodes->addBBCode('a',
+			array('attrs' => array(
+				'href' => array('type' => 'url')
+			))
+		);
+	}
+
 	//==========================================================================
 	// Rules
 	//==========================================================================
@@ -69,10 +78,8 @@ class ParserTest extends Test
 			array(
 				'error' => array(
 					array(
-						'pos'     => 0,
 						'msg'     => 'Tag %1$s requires %2$s as parent',
-						'params'  => array('B', 'A'),
-						'tagName' => 'B'
+						'params'  => array('B', 'A')
 					)
 				)
 			)
@@ -92,10 +99,8 @@ class ParserTest extends Test
 			array(
 				'error' => array(
 					array(
-						'pos'     => 6,
 						'msg'     => 'Tag %1$s requires %2$s as parent',
-						'params'  => array('B', 'A'),
-						'tagName' => 'B'
+						'params'  => array('B', 'A')
 					)
 				)
 			)
@@ -233,10 +238,8 @@ class ParserTest extends Test
 			array(
 				'error' => array(
 					array(
-						'pos'     => 0,
 						'msg'     => 'Tag %1$s requires %2$s as ascendant',
-						'params'  => array('B', 'A'),
-						'tagName' => 'B'
+						'params'  => array('B', 'A')
 					)
 				)
 			)
@@ -250,7 +253,7 @@ class ParserTest extends Test
 	/**
 	* @dataProvider getParamStuff
 	*/
-	public function testParamStuff()
+	public function estParamStuff()
 	{
 		$this->cb->BBCodes->addBBCode('b');
 
@@ -327,130 +330,382 @@ class ParserTest extends Test
 		call_user_func_array(array($this, 'assertParsing'), func_get_args());
 	}
 
+	public function testUndefinedAttributesDoNotAppearInXml()
+	{
+		$this->cb->BBCodes->addBBCode('x');
+		$this->assertParsing(
+			'[x unknown=123 /]',
+			'<rt><X>[x unknown=123 /]</X></rt>'
+		);
+	}
+
+	public function testOverlappingTagsAreSortedOut()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'foo' => array('type' => 'text')
+			))
+		);
+		$this->assertParsing(
+			'[x foo="[b]bar[/b]" /]',
+			'<rt><X foo="[b]bar[/b]">[x foo=&quot;[b]bar[/b]&quot; /]</X></rt>'
+		);
+	}
+
+	public function testInvalidUrlsAreRejected()
+	{
+		$this->addA();
+		$this->assertParsing(
+			'[a href=invalid][/a]',
+			'<pt>[a href=invalid][/a]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('href')
+					)
+				)
+			)
+		);
+	}
+
+	public function testValidUrlsAreAccepted()
+	{
+		$this->addA();
+		$this->assertParsing(
+			'[a href="http://www.example.com"][/a]',
+			'<rt><A href="http://www.example.com"><st>[a href=&quot;http://www.example.com&quot;]</st><et>[/a]</et></A></rt>'
+		);
+	}
+
+	public function testUrlFilterRejectsNotAllowedSchemes()
+	{
+		$this->addA();
+		$this->assertParsing(
+			'[a href="ftp://www.example.com"][/a]',
+			'<pt>[a href=&quot;ftp://www.example.com&quot;][/a]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "URL scheme '%s' is not allowed",
+						'params' => array('ftp')
+					)
+				)
+			)
+		);
+	}
+
+	public function testUrlFilterCanAcceptNonHttpSchemes()
+	{
+		$this->addA();
+		$this->cb->allowScheme('ftp');
+
+		$this->assertParsing(
+			'[a href="ftp://www.example.com"][/a]',
+			'<rt><A href="ftp://www.example.com"><st>[a href=&quot;ftp://www.example.com&quot;]</st><et>[/a]</et></A></rt>'
+		);
+	}
+
+	public function testUrlFilterRejectsDisallowedHost()
+	{
+		$this->addA();
+		$this->cb->disallowHost('evil.example.com');
+
+		$this->assertParsing(
+			'[a href="http://evil.example.com"][/a]',
+			'<pt>[a href=&quot;http://evil.example.com&quot;][/a]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('evil.example.com')
+					)
+				)
+			)
+		);
+	}
+
+	public function testUrlFilterRejectsDisallowedHostMask()
+	{
+		$this->addA();
+		$this->cb->disallowHost('*.example.com');
+
+		$this->assertParsing(
+			'[a href="http://evil.example.com"][/a]',
+			'<pt>[a href=&quot;http://evil.example.com&quot;][/a]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('evil.example.com')
+					)
+				)
+			)
+		);
+	}
+
+	public function testUrlFilterRejectsDisallowedTld()
+	{
+		$this->addA();
+		$this->cb->disallowHost('*.com');
+
+		$this->assertParsing(
+			'[a href="http://evil.example.com"][/a]',
+			'<pt>[a href=&quot;http://evil.example.com&quot;][/a]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('evil.example.com')
+					)
+				)
+			)
+		);
+	}
+
+	public function testUrlFilterDoesNotRejectHostOnPartialMatch()
+	{
+		$this->addA();
+		$this->cb->disallowHost('example.com');
+
+		$this->assertParsing(
+			'[a href="http://anotherexample.com"][/a]',
+			'<rt><A href="http://anotherexample.com"><st>[a href=&quot;http://anotherexample.com&quot;]</st><et>[/a]</et></A></rt>'
+		);
+	}
+
+	public function testUrlFilterRejectsPseudoSchemes()
+	{
+		$this->addA();
+		$this->assertParsing(
+			'[url href="javascript:alert(\'@http://www.com\')"]foo[/url]',
+			'<pt>[url href=&quot;javascript:alert(\'@http://www.com\')&quot;]foo[/url]</pt>'
+		);
+	}
+
+	public function testNumberFilterAcceptNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'number' => array('type' => 'number')
+			))
+		);
+		$this->assertParsing(
+			'[x number=123 /]',
+			'<rt><X number="123">[x number=123 /]</X></rt>'
+		);
+	}
+
+	public function testNumberFilterRejectsPartialNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'number' => array('type' => 'number')
+			))
+		);
+		$this->assertParsing(
+			'[x number=123abc /]',
+			'<pt>[x number=123abc /]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('number')
+					)
+				)
+			)
+		);
+	}
+
+	public function testNumberFilterRejectsNegativeNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'number' => array('type' => 'number')
+			))
+		);
+		$this->assertParsing(
+			'[x number=-123 /]',
+			'<pt>[x number=-123 /]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('number')
+					)
+				)
+			)
+		);
+	}
+
+	public function testNumberFilterRejectsDecimalNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'number' => array('type' => 'number')
+			))
+		);
+		$this->assertParsing(
+			'[x number=12.3 /]',
+			'<pt>[x number=12.3 /]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('number')
+					)
+				)
+			)
+		);
+	}
+
+	public function testIntFilterAcceptNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'int' => array('type' => 'int')
+			))
+		);
+		$this->assertParsing(
+			'[x int=123 /]',
+			'<rt><X int="123">[x int=123 /]</X></rt>'
+		);
+	}
+
+	public function testIntFilterRejectsPartialNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'int' => array('type' => 'int')
+			))
+		);
+		$this->assertParsing(
+			'[x int=123abc /]',
+			'<pt>[x int=123abc /]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('int')
+					)
+				)
+			)
+		);
+	}
+
+	public function testIntFilterAcceptsNegativeNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'int' => array('type' => 'int')
+			))
+		);
+		$this->assertParsing(
+			'[x int=-123 /]',
+			'<rt><X int="-123">[x int=-123 /]</X></rt>'
+		);
+	}
+
+	public function testIntFilterRejectsDecimalNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'int' => array('type' => 'int')
+			))
+		);
+		$this->assertParsing(
+			'[x int=12.3 /]',
+			'<pt>[x int=12.3 /]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('int')
+					)
+				)
+			)
+		);
+	}
+
+	public function testUintFilterAcceptNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'uint' => array('type' => 'uint')
+			))
+		);
+		$this->assertParsing(
+			'[x uint=123 /]',
+			'<rt><X uint="123">[x uint=123 /]</X></rt>'
+		);
+	}
+
+	public function testUintFilterRejectsPartialNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'uint' => array('type' => 'uint')
+			))
+		);
+		$this->assertParsing(
+			'[x uint=123abc /]',
+			'<pt>[x uint=123abc /]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('uint')
+					)
+				)
+			)
+		);
+	}
+
+	public function testUintFilterRejectsNegativeNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'uint' => array('type' => 'uint')
+			))
+		);
+		$this->assertParsing(
+			'[x uint=-123 /]',
+			'<pt>[x uint=-123 /]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('uint')
+					)
+				)
+			)
+		);
+	}
+
+	public function testUintFilterRejectsDecimalNumbers()
+	{
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'uint' => array('type' => 'uint')
+			))
+		);
+		$this->assertParsing(
+			'[x uint=12.3 /]',
+			'<pt>[x uint=12.3 /]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('uint')
+					)
+				)
+			)
+		);
+	}
+
 	public function getParamStuff()
 	{
 		return array(
-			array(
-				'[x unknown=123 /]',
-				'<rt><X>[x unknown=123 /]</X></rt>'
-			),
-			array(
-				'[x foo="[b]bar[/b]" /]',
-				'<rt><X foo="[b]bar[/b]">[x foo=&quot;[b]bar[/b]&quot; /]</X></rt>'
-			),
-			array(
-				'[url]foo[/url]',
-				'<pt>[url]foo[/url]</pt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'URL',
-							'msg'       => 'Missing attribute %s',
-							'params'    => array('href')
-						)
-					)
-				)
-			),
-			array(
-				'[url href=http://www.example.com]foo[/url]',
-				'<rt><URL href="http://www.example.com"><st>[url href=http://www.example.com]</st>foo<et>[/url]</et></URL></rt>'
-			),
-			array(
-				'[url href=ftp://www.example.com]foo[/url]',
-				'<rt><URL href="ftp://www.example.com"><st>[url href=ftp://www.example.com]</st>foo<et>[/url]</et></URL></rt>'
-			),
-			array(
-				'[url href=http://bevil.example.com]foo[/url]',
-				'<rt><URL href="http://bevil.example.com"><st>[url href=http://bevil.example.com]</st>foo<et>[/url]</et></URL></rt>'
-			),
-			array(
-				'[url href="javascript:alert()"]foo[/url]',
-				'<pt>[url href=&quot;javascript:alert()&quot;]foo[/url]</pt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'URL',
-							'attrName' => 'href',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('href')
-						),
-						array(
-							'pos'       => 0,
-							'tagName'  => 'URL',
-							'msg'       => 'Missing attribute %s',
-							'params'    => array('href')
-						)
-					)
-				)
-			),
-			// optional attribute has invalid content - we keep the tag, discard the invalid param
-			array(
-				'[x number=123abc /]',
-				'<rt><X>[x number=123abc /]</X></rt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'number',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('number')
-						)
-					)
-				)
-			),
-			array(
-				'[x number=123 /]',
-				'<rt><X number="123">[x number=123 /]</X></rt>'
-			),
-			array(
-				'[x integer=123 /]',
-				'<rt><X integer="123">[x integer=123 /]</X></rt>'
-			),
-			array(
-				'[x int=123 /]',
-				'<rt><X int="123">[x int=123 /]</X></rt>'
-			),
-			array(
-				'[x int=-123 /]',
-				'<rt><X int="-123">[x int=-123 /]</X></rt>'
-			),
-			array(
-				'[x integer=123.1 /]',
-				'<rt><X>[x integer=123.1 /]</X></rt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'integer',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('integer')
-						)
-					)
-				)
-			),
-			array(
-				'[x uint=123 /]',
-				'<rt><X uint="123">[x uint=123 /]</X></rt>'
-			),
-			array(
-				'[x uint=-123 /]',
-				'<rt><X>[x uint=-123 /]</X></rt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'uint',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('uint')
-						)
-					)
-				)
-			),
 			array(
 				'[x id=123 /]',
 				'<rt><X id="123">[x id=123 /]</X></rt>'
@@ -476,8 +731,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'identifier',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('identifier')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('identifier')
 						)
 					)
 				)
@@ -499,8 +754,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'color',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('color')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('color')
 						)
 					)
 				)
@@ -522,8 +777,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'simpletext',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('simpletext')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('simpletext')
 						)
 					)
 				)
@@ -544,13 +799,13 @@ class ParserTest extends Test
 							'pos'      => 0,
 							'tagName'  => 'URL',
 							'attrName' => 'href',
-							'msg'      => 'Invalid attribute %s',
+							'msg'      => "Invalid attribute '%s'",
 							'params'   => array('href')
 						),
 						array(
 							'pos'      => 0,
 							'tagName'  => 'URL',
-							'msg'      => 'Missing attribute %s',
+							'msg'      => "Missing attribute '%s'",
 							'params'   => array('href')
 						)
 					)
@@ -565,21 +820,21 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'URL',
 							'attrName' => 'href',
-							'msg'       => 'URL host %s is not allowed',
-							'params'    => array('reallyevil.example.com')
+							'msg'    => 'URL host %s is not allowed',
+							'params' => array('reallyevil.example.com')
 						),
 						array(
 							'pos'       => 0,
 							'tagName'  => 'URL',
 							'attrName' => 'href',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('href')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('href')
 						),
 						array(
 							'pos'       => 0,
 							'tagName'  => 'URL',
-							'msg'       => 'Missing attribute %s',
-							'params'    => array('href')
+							'msg'    => "Missing attribute '%s'",
+							'params' => array('href')
 						)
 					)
 				)
@@ -593,21 +848,21 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'URL',
 							'attrName' => 'href',
-							'msg'       => 'URL host %s is not allowed',
-							'params'    => array('example.xxx')
+							'msg'    => 'URL host %s is not allowed',
+							'params' => array('example.xxx')
 						),
 						array(
 							'pos'       => 0,
 							'tagName'  => 'URL',
 							'attrName' => 'href',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('href')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('href')
 						),
 						array(
 							'pos'       => 0,
 							'tagName'  => 'URL',
-							'msg'       => 'Missing attribute %s',
-							'params'    => array('href')
+							'msg'    => "Missing attribute '%s'",
+							'params' => array('href')
 						)
 					)
 				)
@@ -621,21 +876,21 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'URL',
 							'attrName' => 'href',
-							'msg'       => 'URL scheme %s is not allowed',
-							'params'    => array('evil')
+							'msg'    => "URL scheme '%s' is not allowed",
+							'params' => array('evil')
 						),
 						array(
 							'pos'       => 0,
 							'tagName'  => 'URL',
 							'attrName' => 'href',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('href')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('href')
 						),
 						array(
 							'pos'       => 0,
 							'tagName'  => 'URL',
-							'msg'       => 'Missing attribute %s',
-							'params'    => array('href')
+							'msg'    => "Missing attribute '%s'",
+							'params' => array('href')
 						)
 					)
 				)
@@ -649,8 +904,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'undefined',
-							'msg'       => "Unknown filter '%s'",
-							'params'    => array('undefined')
+							'msg'    => "Unknown filter '%s'",
+							'params' => array('undefined')
 						)
 					),
 					'error' => array(
@@ -658,8 +913,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'undefined',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('undefined')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('undefined')
 						)
 					)
 				)
@@ -693,8 +948,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'float',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('float')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('float')
 						)
 					)
 				)
@@ -712,14 +967,14 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'ALIGN',
 							'attrName' => 'align',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('align')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('align')
 						),
 						array(
 							'pos'       => 0,
 							'tagName'  => 'ALIGN',
-							'msg'       => 'Missing attribute %s',
-							'params'    => array('align')
+							'msg'    => "Missing attribute '%s'",
+							'params' => array('align')
 						)
 					)
 				)
@@ -733,8 +988,8 @@ class ParserTest extends Test
 							'pos'       => 1,
 							'tagName'  => 'X',
 							'attrName' => 'uint',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('uint')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('uint')
 						)
 					)
 				)
@@ -748,8 +1003,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'range',
-							'msg'       => 'Minimum range value adjusted to %s',
-							'params'    => array(7)
+							'msg'    => 'Minimum range value adjusted to %s',
+							'params' => array(7)
 						)
 					)
 				)
@@ -767,8 +1022,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'range',
-							'msg'       => 'Maximum range value adjusted to %s',
-							'params'    => array(77)
+							'msg'    => 'Maximum range value adjusted to %s',
+							'params' => array(77)
 						)
 					)
 				)
@@ -782,8 +1037,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'X',
 							'attrName' => 'range',
-							'msg'       => 'Invalid attribute %s',
-							'params'    => array('range')
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('range')
 						)
 					)
 				)
@@ -802,8 +1057,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'SIZE',
 							'attrName' => 'size',
-							'msg'       => 'Font size must be at least %d',
-							'params'    => array(7)
+							'msg'    => 'Font size must be at least %d',
+							'params' => array(7)
 						)
 					)
 				)
@@ -817,8 +1072,8 @@ class ParserTest extends Test
 							'pos'       => 0,
 							'tagName'  => 'SIZE',
 							'attrName' => 'size',
-							'msg'       => 'Font size is limited to %d',
-							'params'    => array(20)
+							'msg'    => 'Font size is limited to %d',
+							'params' => array(20)
 						)
 					)
 				)
