@@ -1131,13 +1131,21 @@ class Parser
 		}
 
 		/**
+		* Remove undefined attributes
+		*/
+		$this->currentTag['attrs'] = array_intersect_key(
+			$this->currentTag['attrs'],
+			$tagConfig['attrs']
+		);
+
+		/**
 		* Filter each attribute
 		*/
 		foreach ($this->currentTag['attrs'] as $attrName => &$attrVal)
 		{
 			$this->currentAttribute = $attrName;
 
-			$attrConf    = $this->tagsConfig[$this->currentTag['name']]['attrs'][$attrName];
+			$attrConf    = $tagConfig['attrs'][$attrName];
 			$filteredVal = $attrVal;
 
 			// execute pre-filter callbacks
