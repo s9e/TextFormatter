@@ -576,7 +576,7 @@ class PredefinedBBCodes
 				*/
 				'content' => array(
 					'type'   => 'compound',
-					'regexp' => '/(?P<revtext>(?P<email>.*))/'
+					'regexp' => '/(?P<revtext>(?P<email>.*))/s'
 				),
 				'revtext' => array(
 					'type' => 'text',
