@@ -536,39 +536,69 @@ class PredefinedBBCodes
 	}
 
 	/**
-	* Basic [EMAIL] tag with an optional "subject" parameter
+	* [EMAIL] tag with an optional "subject" parameter
 	*
-	* The email address will be published in clear for all spambots to harvest, so you may want
-	* to write your own solution instead.
+	* [EMAIL]user@example.org[/EMAIL]
+	* [EMAIL=user@example.org]email me![/EMAIL]
+	*
+	* This tag uses tricks and hacks all over the place. A "compound" attribute named "content" is
+	* used to copy the tag's content into two other attributes so that it can be used in two
+	* different ways (see below.) The link starts as a single hash "#" and some Javascript is used
+	* to change it to the relevant "mailto:" URL. The content of the tag is reversed twice, once in
+	* PHP with strrev() then in CSS, so that the email doesn't appear in clear in the HTML source.
+	* The idea comes from a 2008 article from tillate.com (link below.) Weirdly enough, the HTML
+	* generated successfully validates as HTML 4.01 Strict, XHTML 1.0 Strict and HTML5.
+	*
+	* @link http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compar
 	*/
 	public function addEMAIL()
 	{
 		$this->cb->BBCodes->addBBCode('EMAIL', array(
 			'defaultAttr' => 'email',
-			'contentAttr' => 'email',
-			'defaultRule' => 'deny'
-		));
-
-		$this->cb->addTagAttribute('EMAIL', 'email', 'email', array(
-			/**
-			* This will URL-encode every character in the link, messing up with the less proficient
-			* spambots. Note that the email address may still appear as text in the output,
-			* defeating the purpose. So take this more as a demo of the "forceUrlencode" option than
-			* an actual spambot countermeasure.
-			*/
-			'forceUrlencode' => true
-		));
-
-		$this->cb->addTagAttribute('EMAIL', 'subject', 'text', array(
-			'isRequired' => false,
-			'postFilter' => array('rawurlencode')
+			'contentAttr' => 'content',
+			'defaultRule' => 'deny',
+			'attrs' => array(
+				'email'   => array(
+					'type' => 'email',
+					'postFilter' => array('strrev')
+				),
+				'subject' => array(
+					'type' => 'text',
+					'isRequired' => false,
+					'postFilter' => array('rawurlencode', 'strrev')
+				),
+				/**
+				* We set the "content" attribute as a compound attribute with a regexp that will
+				* match virtually anything. Its value will be used for the "email" attribute if
+				* the latter was not provided. The idea is to have a "content" attribute that is
+				* filled with the tag's content and copy its value to "email" and "revtext" so that
+				* they receive a different treatment via validation/postFilter
+				*/
+				'content' => array(
+					'type'   => 'compound',
+					'regexp' => '/(?P<revtext>(?P<email>.*))/'
+				),
+				'revtext' => array(
+					'type' => 'text',
+					'postFilter' => array('strrev')
+				)
+			)
 		));
 
 		$this->cb->setTagTemplate(
 			'EMAIL',
-			'<a>
-				<xsl:attribute name="href">mailto:<xsl:value-of select="@email" /><xsl:if test="@subject">?subject=<xsl:value-of select="@subject" /></xsl:if></xsl:attribute>
-				<xsl:apply-templates />
+			'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()">
+				<xsl:attribute name="onmouseover">
+					<xsl:text>this.href=\'</xsl:text>
+					<xsl:if test="@subject">
+						<xsl:value-of select="@subject" />
+						<xsl:text>=tcejbus?</xsl:text>
+					</xsl:if>
+					<xsl:value-of select="@email" />
+					<xsl:text>:otliam\'.split(\'\').reverse().join(\'\')</xsl:text>
+				</xsl:attribute>
+
+				<xsl:value-of select="@revtext" />
 			</a>'
 		);
 	}

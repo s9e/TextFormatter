@@ -339,15 +339,15 @@ class PredefinedBBCodesTest extends Test
 			),
 			array(
 				'[EMAIL]admin@example.org[/EMAIL]',
-				'<a href="mailto:%61%64%6d%69%6e%40%65%78%61%6d%70%6c%65%2e%6f%72%67">admin@example.org</a>'
+				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'gro.elpmaxe@nimda:otliam\'.split(\'\').reverse().join(\'\')">gro.elpmaxe@nimda</a>'
 			),
 			array(
 				'[EMAIL=admin@example.org]email me![/EMAIL]',
-				'<a href="mailto:%61%64%6d%69%6e%40%65%78%61%6d%70%6c%65%2e%6f%72%67">email me!</a>'
+				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'gro.elpmaxe@nimda:otliam\'.split(\'\').reverse().join(\'\')">!em liame</a>'
 			),
 			array(
 				'[EMAIL=admin@example.org subject="hello admin@example.org!"]email me![/EMAIL]',
-				'<a href="mailto:%61%64%6d%69%6e%40%65%78%61%6d%70%6c%65%2e%6f%72%67?subject=hello%20admin%40example.org%21">email me!</a>'
+				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'12%gro.elpmaxe04%nimda02%olleh=tcejbus?gro.elpmaxe@nimda:otliam\'.split(\'\').reverse().join(\'\')">!em liame</a>'
 			),
 			array(
 				'[JUSTIN]http://www.justin.tv/justin[/JUSTIN]',
