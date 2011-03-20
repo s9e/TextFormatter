@@ -751,18 +751,7 @@ class Parser
 
 			foreach ($tags as $tag)
 			{
-				$tag += array(
-					'suffix' => '',
-					'attrs'  => array()
-				);
-
 				$tag['pluginName'] = $pluginName;
-
-				/**
-				* Append the plugin's name to tags so that tags created by one plugin doesn't get
-				* closed by tags created by another
-				*/
-				$tag['suffix'] .= '-' . $pluginName;
 
 				$this->tagStack[]  = $tag;
 			}
@@ -794,6 +783,14 @@ class Parser
 				unset($this->tagStack[$k]);
 				continue;
 			}
+
+			/**
+			* Some methods expect those keys to always be set
+			*/
+			$tag += array(
+				'suffix' => '',
+				'attrs'  => array()
+			);
 		}
 	}
 
@@ -857,7 +854,11 @@ class Parser
 
 			$tagName   = $this->currentTag['name'];
 			$tagConfig = $this->tagsConfig[$tagName];
-			$suffix    = (isset($this->currentTag['suffix'])) ? $this->currentTag['suffix'] : '';
+
+			/**
+			* Make a tag ID based on its name, suffix and plugin
+			*/
+			$tagId = self::getTagId($this->currentTag);
 
 			//==================================================================
 			// Start tag
@@ -891,6 +892,7 @@ class Parser
 							$this->currentTag = array(
 								'pos'    => $this->currentTag['pos'],
 								'name'   => $parentTagName,
+								'pluginName' => $parentTag['pluginName'],
 								'suffix' => $parentTag['suffix'],
 								'len'    => 0,
 								'type'   => self::END_TAG
@@ -1023,19 +1025,20 @@ class Parser
 
 				++$cntOpen[$tagName];
 
-				if (isset($openTags[$tagName . $suffix]))
+				if (isset($openTags[$tagId]))
 				{
-					++$openTags[$tagName . $suffix];
+					++$openTags[$tagId];
 				}
 				else
 				{
-					$openTags[$tagName . $suffix] = 1;
+					$openTags[$tagId] = 1;
 				}
 
 				$tagStack[] = array(
-					'name' => $tagName,
-					'suffix'	=> $suffix,
-					'allowed'   => $allowed
+					'name'       => $tagName,
+					'pluginName' => $this->currentTag['pluginName'],
+					'suffix'     => $this->currentTag['suffix'],
+					'allowed'    => $allowed
 				);
 				$allowed = array_intersect_key($allowed, $tagConfig['allow']);
 			}
@@ -1046,15 +1049,15 @@ class Parser
 
 			if ($this->currentTag['type'] & self::END_TAG)
 			{
-				if (empty($openTags[$tagName . $suffix]))
+				if (empty($openTags[$tagId]))
 				{
 					/**
 					* This is an end tag but there's no matching start tag
 					*/
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'Could not find a matching start tag for tag %s',
-						'params' => array($tagName . $suffix)
+						'msg'    => 'Could not find a matching start tag for tag %1$s from %2$s',
+						'params' => array($tagName, $this->currentTag['pluginName'])
 					));
 					continue;
 				}
@@ -1067,7 +1070,7 @@ class Parser
 					$allowed = $cur['allowed'];
 
 					--$cntOpen[$cur['name']];
-					--$openTags[$cur['name'] . $cur['suffix']];
+					--$openTags[self::getTagId($cur)];
 
 					if ($cur['name'] !== $tagName)
 					{
@@ -1262,5 +1265,16 @@ class Parser
 		* overwrite existing values
 		*/
 		$this->currentTag['attrs'] += $attrs;
+	}
+
+	/**
+	* Generate an ID for a tag, based on its name, suffix and plugin
+	*
+	* @param  array $tag
+	* @return string
+	*/
+	static protected function getTagId(array $tag)
+	{
+		return $tag['name'] . $tag['suffix'] . '-' . $tag['pluginName'];
 	}
 }
