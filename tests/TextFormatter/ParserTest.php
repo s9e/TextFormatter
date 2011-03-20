@@ -25,8 +25,8 @@ class ParserTest extends Test
 		$parser    = $this->cb->getParser();
 		$actualXml = $parser->parse($text);
 
-		$this->assertArrayMatches($expectedLog, $parser->getLog());
 		$this->assertSame($expectedXml, $actualXml);
+		$this->assertArrayMatches($expectedLog, $parser->getLog());
 	}
 
 	public function testRequireParentRuleIsApplied()
@@ -87,6 +87,18 @@ class ParserTest extends Test
 		$this->assertParsing(
 			'[p:123]one[p:456]two',
 			'<rt><P><st>[p:123]</st>one</P><P><st>[p:456]</st>two</P></rt>'
+		);
+	}
+
+	public function testDenyRuleIsApplied()
+	{
+		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'allow'));
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('a', 'deny', 'b');
+
+		$this->assertParsing(
+			'[a]..[b][/b]..[/a]',
+			'<rt><A><st>[a]</st>..[b][/b]..<et>[/a]</et></A></rt>'
 		);
 	}
 }
