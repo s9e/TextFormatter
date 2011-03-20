@@ -762,7 +762,7 @@ class Parser
 				* Append the plugin's name to tags so that tags created by one plugin doesn't get
 				* closed by tags created by another
 				*/
-				$tag['suffix'] = '-' . $pluginName;
+				$tag['suffix'] .= '-' . $pluginName;
 
 				$this->tagStack[]  = $tag;
 			}

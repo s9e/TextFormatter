@@ -2,23 +2,23 @@
 TMP=/dev/shm/phpunit.out
 DONE=
 
-cd $(readlink -f $(dirname $(dirname $(dirname "$0"))))/tests
+cd $(readlink -f $(dirname $(dirname $(dirname "$0"))))
 
 for FILEPATH in $(git diff-index --name-only HEAD)
 do
-	if [[ $FILEPATH != src/* ]]
+	if [[ $FILEPATH != src/* ]] && [[ $FILEPATH != tests/* ]];
 	then
 		continue;
 	fi
 
-	POS=`expr index ${FILEPATH:4} /`
-	DIR=${FILEPATH:4:$POS}
+	MODULE=${FILEPATH#*/}
+	MODULE=${MODULE%%/*}
 
-	if [[ `expr index "$DONE" "$DIR"` == 0 ]]
+	if [[ `expr index "$DONE" "$MODULE"` == 0 ]]
 	then
-		DONE="$DONE $DIR"
+		DONE="$DONE $MODULE"
 
-		phpunit -c phpunit.xml $DIR | tee $TMP
+		phpunit -c tests/phpunit.xml tests/$DIR | tee $TMP
 
 		if [[ `tail -n2 $TMP` != *OK* ]]
 		then

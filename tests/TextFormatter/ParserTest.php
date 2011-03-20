@@ -20,9 +20,8 @@ class ParserTest extends Test
 		$this->cb = new ConfigBuilder;
 	}
 
-	protected function getParser()
+	public function testRequireParentRuleIsApplied()
 	{
-		return $this->cb->getParser();
 	}
 
 	/**
@@ -33,9 +32,8 @@ class ParserTest extends Test
 		$this->cb->BBCodes->addPredefinedBBCode($bbcodeName);
 
 		$parser = $this->cb->getParser();
-		$xml = $parser->parse($text);
+		$actual = $parser->parse($text);
 
-		$actual = $this->cb->getRenderer()->render($xml);
 		$this->assertSame($expected, $actual);
 
 		$this->assertArrayMatches($parser->getLog(), $expectedLog);
@@ -44,10 +42,11 @@ class ParserTest extends Test
 	public function getRulesTestData()
 	{
 		return array(
+			// requireParent
 			array(
 				'LIST',
 				'[*]list item',
-				'[*]list item',
+				'<pt>[*]list item</pt>',
 				array(
 					'error' => array(
 						array(
@@ -58,7 +57,19 @@ class ParserTest extends Test
 						)
 					)
 				)
-			)
+			),
+			// closeParent
+			array(
+				'LIST',
+				'[list][*]one[*]two[/list]',
+				'<rt><LIST style="disc"><st>[list]</st><LI><st>[*]</st>one</LI><LI><st>[*]</st>two</LI><et>[/list]</et></LIST></rt>'
+			),
+			// closeParent with tag suffixes
+			array(
+				'LIST',
+				'[list][*:123]one[*:456]two[/list]',
+				'<rt><LIST style="disc"><st>[list]</st><LI><st>[*:123]</st>one</LI><LI><st>[*:456]</st>two</LI><et>[/list]</et></LIST></rt>'
+			),
 		);
 	}
 }
