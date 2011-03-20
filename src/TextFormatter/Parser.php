@@ -751,7 +751,7 @@ class Parser
 
 			foreach ($tags as $tag)
 			{
-				$tag += array
+				$tag += array(
 					'suffix' => '',
 					'attrs'  => array()
 				);
