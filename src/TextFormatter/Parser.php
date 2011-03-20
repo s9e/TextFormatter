@@ -751,23 +751,19 @@ class Parser
 
 			foreach ($tags as $tag)
 			{
-				if (!isset($tag['suffix']))
-				{
-					/**
-					* Add a suffix to tags that don't have one so that closing tags from a plugin
-					* do not close tags opened by another plugin. Those special suffixes use the
-					* minus character - instead of the colon : so that they don't get mixed up with
-					* user-supplied suffixes used in BBCodes
-					*/
-					$tag['suffix'] = '-' . $pluginName;
-				}
-
-				if (!isset($tag['attrs']))
-				{
-					$tag['attrs'] = array();
-				}
+				$tag += array
+					'suffix' => '',
+					'attrs'  => array()
+				);
 
 				$tag['pluginName'] = $pluginName;
+
+				/**
+				* Append the plugin's name to tags so that tags created by one plugin doesn't get
+				* closed by tags created by another
+				*/
+				$tag['suffix'] = '-' . $pluginName;
+
 				$this->tagStack[]  = $tag;
 			}
 		}
@@ -1011,7 +1007,7 @@ class Parser
 				}
 
 				//==============================================================
-				// Ok, so we have a valid BBCode
+				// Ok, so we have a valid tag
 				//==============================================================
 
 				$this->appendTag($this->currentTag);
@@ -1057,7 +1053,7 @@ class Parser
 					*/
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'Could not find a matching start tag for BBCode %s',
+						'msg'    => 'Could not find a matching start tag for tag %s',
 						'params' => array($tagName . $suffix)
 					));
 					continue;
