@@ -18,7 +18,7 @@ do
 	then
 		DONE="$DONE $MODULE"
 
-		phpunit -c tests/phpunit.xml tests/$DIR | tee $TMP
+		phpunit -c tests/phpunit.xml tests/$MODULE | tee $TMP
 
 		if [[ `tail -n2 $TMP` != *OK* ]]
 		then
