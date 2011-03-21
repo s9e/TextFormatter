@@ -574,12 +574,11 @@ class ConfigBuilder
 	//==========================================================================
 
 	/**
-	* Set the filter used to validate a param type
+	* Set the filter used to validate an attribute type
 	*
-	* @param string   $type     Param type
+	* @param string   $type     Attribute type
 	* @param callback $callback Callback
-	* @param array    $conf     Optional config, will be appended to the param config and passed
-	*                           to the callback
+	* @param array    $config   Optional config, will be passed to the callback
 	*/
 	public function setFilter($type, $callback, array $config = array())
 	{
@@ -596,6 +595,28 @@ class ConfigBuilder
 		{
 			$this->filters[$type]['config'] = $config;
 		}
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function getFilterOption($type, $optionName)
+	{
+		return (isset($this->filters[$type][$optionName]))
+		     ? $this->filters[$type][$optionName]
+		     : null;
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function setFilterOption($type, $optionName, $optionValue)
+	{
+		$this->filters[$type][$optionName] = $optionValue;
 	}
 
 	/**
