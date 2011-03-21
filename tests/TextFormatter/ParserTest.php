@@ -943,12 +943,12 @@ class ParserTest extends Test
 	/**
 	* @dataProvider getWhitespaceTrimming
 	*/
-	public function testWhitespaceTrimmingWorks($option, $text, $expectedHtml, $expectedXml)
+	public function testWhitespaceTrimmingWorks($options, $text, $expectedHtml, $expectedXml)
 	{
 		$this->cb->loadPlugin(
 			'Whitespace',
 			__NAMESPACE__ . '\\WhitespaceConfig',
-			array('trimOption' => $option)
+			array('options' => $options)
 		);
 
 		$actualXml = $this->parser->parse($text);
@@ -963,7 +963,7 @@ class ParserTest extends Test
 		/**
 		* The elements, in order:
 		*
-		* - trim option that is set to TRUE for the [mark] BBCode
+		* - the BBCode options that are set for the [mark] BBCode
 		* - text input
 		* - HTML rendering
 		* - intermediate representation in XML
@@ -976,54 +976,78 @@ class ParserTest extends Test
 		*/
 		return array(
 			array(
-				'ltrimContent',
+				array('ltrimContent' => true),
 				'[b] [mark] 1 [/mark] 2 [mark] 3 [/mark] [/b]',
 				'[b] [mark]1 [/mark] 2 [mark]3 [/mark] [/b]',
 				'<rt><B><st>[b]</st> <MARK><st>[mark]</st><i> </i>1 <et>[/mark]</et></MARK> 2 <MARK><st>[mark]</st><i> </i>3 <et>[/mark]</et></MARK> <et>[/b]</et></B></rt>'
 			),
 			array(
-				'rtrimContent',
+				array('rtrimContent' => true),
 				'[b] [mark] 1 [/mark] 2 [mark] 3 [/mark] [/b]',
 				'[b] [mark] 1[/mark] 2 [mark] 3[/mark] [/b]',
 				'<rt><B><st>[b]</st> <MARK><st>[mark]</st> 1<i> </i><et>[/mark]</et></MARK> 2 <MARK><st>[mark]</st> 3<i> </i><et>[/mark]</et></MARK> <et>[/b]</et></B></rt>'
 			),
 			array(
-				'trimBefore',
+				array('ltrimContent' => true, 'rtrimContent' => true),
+				'[b] [mark] 1 [/mark] 2 [mark] 3 [/mark] [/b]',
+				'[b] [mark]1[/mark] 2 [mark]3[/mark] [/b]',
+				'<rt><B><st>[b]</st> <MARK><st>[mark]</st><i> </i>1<i> </i><et>[/mark]</et></MARK> 2 <MARK><st>[mark]</st><i> </i>3<i> </i><et>[/mark]</et></MARK> <et>[/b]</et></B></rt>'
+			),
+			array(
+				array('trimBefore' => true),
 				'[b] [mark] 1 [/mark] 2 [mark] 3 [/mark] [/b]',
 				'[b][mark] 1 [/mark] 2[mark] 3 [/mark] [/b]',
 				'<rt><B><st>[b]</st><i> </i><MARK><st>[mark]</st> 1 <et>[/mark]</et></MARK> 2<i> </i><MARK><st>[mark]</st> 3 <et>[/mark]</et></MARK> <et>[/b]</et></B></rt>'
 			),
 			array(
-				'trimAfter',
+				array('trimAfter' => true),
 				'[b] [mark] 1 [/mark] 2 [mark] 3 [/mark] [/b]',
 				'[b] [mark] 1 [/mark]2 [mark] 3 [/mark][/b]',
 				'<rt><B><st>[b]</st> <MARK><st>[mark]</st> 1 <et>[/mark]</et></MARK><i> </i>2 <MARK><st>[mark]</st> 3 <et>[/mark]</et></MARK><i> </i><et>[/b]</et></B></rt>'
 			),
+			array(
+				array('trimBefore' => true, 'trimAfter' => true),
+				'[b] [mark] 1 [/mark] 2 [mark] 3 [/mark] [/b]',
+				'[b][mark] 1 [/mark]2[mark] 3 [/mark][/b]',
+				'<rt><B><st>[b]</st><i> </i><MARK><st>[mark]</st> 1 <et>[/mark]</et></MARK><i> </i>2<i> </i><MARK><st>[mark]</st> 3 <et>[/mark]</et></MARK><i> </i><et>[/b]</et></B></rt>'
+			),
 			/**
-			* In the following two examples, the space around "tagws" will not be removed. This is
+			* In the following examples, the one space around "tagws" will not be removed. This is
 			* because the plugin's parser defines it as part of the tag. Therefore, it makes sense
 			* to actually preserve it
 			*/
 			array(
-				'ltrimContent',
-				'[b] tagws | tagws [/b]',
-				'[b][mark] tagws [/mark]|[mark] tagws [/mark][/b]',
-				'<rt><B><st>[b]</st><MARK> tagws </MARK>|<MARK> tagws </MARK><et>[/b]</et></B></rt>'
+				array('ltrimContent' => true),
+				'[b]  tagws  |  tagws  [/b]',
+				'[b] [mark] tagws [/mark] | [mark] tagws [/mark] [/b]',
+				'<rt><B><st>[b]</st> <MARK> tagws </MARK> | <MARK> tagws </MARK> <et>[/b]</et></B></rt>'
 			),
 			array(
-				'rtrimContent',
-				'[b] tagws | tagws [/b]',
-				'[b][mark] tagws [/mark]|[mark] tagws [/mark][/b]',
-				'<rt><B><st>[b]</st><MARK> tagws </MARK>|<MARK> tagws </MARK><et>[/b]</et></B></rt>'
+				array('rtrimContent' => true),
+				'[b]  tagws  |  tagws  [/b]',
+				'[b] [mark] tagws [/mark] | [mark] tagws [/mark] [/b]',
+				'<rt><B><st>[b]</st> <MARK> tagws </MARK> | <MARK> tagws </MARK> <et>[/b]</et></B></rt>'
 			),
 			array(
-				'trimBefore',
+				array('trimBefore' => true),
+				'[b]  tagws  |  tagws  [/b]',
+				'[b][mark] tagws [/mark] |[mark] tagws [/mark] [/b]',
+				'<rt><B><st>[b]</st><i> </i><MARK> tagws </MARK> |<i> </i><MARK> tagws </MARK> <et>[/b]</et></B></rt>'
+			),
+			array(
+				array('trimAfter' => true),
+				'[b]  tagws  |  tagws  [/b]',
+				'[b] [mark] tagws [/mark]| [mark] tagws [/mark][/b]',
+				'<rt><B><st>[b]</st> <MARK> tagws </MARK><i> </i>| <MARK> tagws </MARK><i> </i><et>[/b]</et></B></rt>'
+			),
+			array(
+				array('trimBefore' => true),
 				'[b] tag | tag [/b]',
 				'[b][mark]tag[/mark] |[mark]tag[/mark] [/b]',
 				'<rt><B><st>[b]</st><i> </i><MARK>tag</MARK> |<i> </i><MARK>tag</MARK> <et>[/b]</et></B></rt>'
 			),
 			array(
-				'trimAfter',
+				array('trimAfter' => true),
 				'[b] tag | tag [/b]',
 				'[b] [mark]tag[/mark]| [mark]tag[/mark][/b]',
 				'<rt><B><st>[b]</st> <MARK>tag</MARK><i> </i>| <MARK>tag</MARK><i> </i><et>[/b]</et></B></rt>'
@@ -1037,7 +1061,7 @@ class WhitespaceConfig extends PluginConfig
 	public function setUp()
 	{
 		$this->cb->BBCodes->addBBCode('B');
-		$this->cb->BBCodes->addBBCode('MARK', array($this->trimOption => true));
+		$this->cb->BBCodes->addBBCode('MARK', $this->options);
 
 		$this->cb->setTagTemplate('MARK', '[mark]<xsl:apply-templates/>[/mark]');
 		$this->cb->setTagTemplate('B', '[b]<xsl:apply-templates/>[/b]');
