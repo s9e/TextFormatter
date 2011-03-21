@@ -2,12 +2,6 @@
 
 namespace s9e\Toolkit\Tests;
 
-use s9e\Toolkit\TextFormatter\ConfigBuilder,
-    s9e\Toolkit\TextFormatter\Parser,
-    s9e\Toolkit\TextFormatter\Renderer,
-    s9e\Toolkit\TextFormatter\Plugins\EmoticonsConfig;
-
-include_once __DIR__ . '/../../src/TextFormatter/ConfigBuilder.php';
 include_once __DIR__ . '/../Test.php';
 
 /**
@@ -15,25 +9,24 @@ include_once __DIR__ . '/../Test.php';
 */
 class ParserTest extends Test
 {
-	public function setUp()
-	{
-		$this->cb = new ConfigBuilder;
-	}
-
 	protected function assertParsing($text, $expectedXml, $expectedLog = array('error' => null))
 	{
-		$parser    = $this->cb->getParser();
-		$actualXml = $parser->parse($text);
+		$actualXml = $this->parser->parse($text);
 
 		$this->assertSame($expectedXml, $actualXml);
-		$this->assertArrayMatches($expectedLog, $parser->getLog());
+		$this->assertArrayMatches($expectedLog, $this->parser->getLog());
 	}
 
-	protected function assertAttributeValid($type, $value)
+	protected function assertAttributeValid($conf, $value)
 	{
+		if (!is_array($conf))
+		{
+			$conf = array('type' => $conf);
+		}
+
 		$this->cb->BBCodes->addBBCode('x',
 			array('attrs' => array(
-				'attr' => array('type' => $type)
+				'attr' => $conf
 			))
 		);
 
@@ -45,11 +38,31 @@ class ParserTest extends Test
 		);
 	}
 
-	protected function assertAttributeInvalid($type, $value)
+	protected function getAttributeXml($conf, $value)
 	{
+		if (!is_array($conf))
+		{
+			$conf = array('type' => $conf);
+		}
+
 		$this->cb->BBCodes->addBBCode('x',
 			array('attrs' => array(
-				'attr' => array('type' => $type)
+				'attr' => $conf
+			))
+		);
+
+	}
+
+	protected function assertAttributeInvalid($conf, $value)
+	{
+		if (!is_array($conf))
+		{
+			$conf = array('type' => $conf);
+		}
+
+		$this->cb->BBCodes->addBBCode('x',
+			array('attrs' => array(
+				'attr' => $conf
 			))
 		);
 
@@ -653,6 +666,19 @@ class ParserTest extends Test
 		$this->assertAttributeValid('color', 'blueish');
 	}
 
+	public function testRangeFilterAdjustsValuesBelowRange()
+	{
+		return;
+		$this->assertAttributeValid(
+			array(
+				'type' => 'range',
+				'min'  => 5,
+				'max'  => 10
+			),
+			3
+		);
+	}
+
 	public function getParamStuff()
 	{
 		return array(
@@ -871,21 +897,6 @@ class ParserTest extends Test
 							'tagName'  => 'ALIGN',
 							'msg'    => "Missing attribute '%s'",
 							'params' => array('align')
-						)
-					)
-				)
-			),
-			array(
-				' [x uint=-123 /]',
-				'<rt> <X>[x uint=-123 /]</X></rt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 1,
-							'tagName'  => 'X',
-							'attrName' => 'uint',
-							'msg'    => "Invalid attribute '%s'",
-							'params' => array('uint')
 						)
 					)
 				)

@@ -2,8 +2,30 @@
 
 namespace s9e\Toolkit\Tests;
 
+use s9e\Toolkit\TextFormatter\ConfigBuilder;
+
+include_once __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
+
 abstract class Test extends \PHPUnit_Framework_TestCase
 {
+	public function __get($k)
+	{
+		switch ($k)
+		{
+			case 'cb':
+				return $this->cb = new ConfigBuilder;
+
+			case 'parser':
+				return $this->parser = $this->cb->getParser();
+
+			case 'renderer':
+				return $this->renderer = $this->parser->getRenderer();
+
+			default:
+				throw new RuntimeException("Bad __get('$k')");
+		}
+	}
+
 	protected function assertArrayMatches(array $expected, array $actual)
 	{
 		$this->reduceAndSortArrays($expected, $actual);
