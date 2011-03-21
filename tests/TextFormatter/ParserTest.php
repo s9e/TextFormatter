@@ -967,4 +967,19 @@ class ParserTest extends Test
 			'R$2L\\L\\$1\\\\'
 		);
 	}
+
+	public function testEmailFilterAcceptsValidEmails()
+	{
+		$this->assertAttributeIsValid('email', 'example@example.com');
+	}
+
+	public function testEmailFilterRejectsInvalidEmails()
+	{
+		$this->assertAttributeIsInvalid('email', 'example@example.com?');
+	}
+
+	public function testUndefinedFilterRejectsEverything()
+	{
+		$this->assertAttributeIsInvalid('whoknows', 'foobar');
+	}
 }

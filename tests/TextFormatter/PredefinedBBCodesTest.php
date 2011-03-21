@@ -7,9 +7,6 @@ use s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\PredefinedBBCodes,
     s9e\Toolkit\TextFormatter\Renderer;
 
-include_once __DIR__ . '/../../src/TextFormatter/ConfigBuilder.php';
-include_once __DIR__ . '/../../src/TextFormatter/Parser.php';
-include_once __DIR__ . '/../../src/TextFormatter/Renderer.php';
 include_once __DIR__ . '/../Test.php';
 
 /**
