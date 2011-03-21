@@ -19,7 +19,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 				return $this->parser = $this->cb->getParser();
 
 			case 'renderer':
-				return $this->renderer = $this->parser->getRenderer();
+				return $this->renderer = $this->cb->getRenderer();
 
 			default:
 				throw new RuntimeException("Bad __get('$k')");
