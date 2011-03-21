@@ -551,7 +551,7 @@ class ParserTest extends Test
 		$this->assertAttributeValid('number', '123');
 	}
 
-	public function testNumberFilterAcceptsNumbersThatCannotBeRepresentedByThePhpIntType()
+	public function testNumberFilterAcceptsNumbersThatCannotBeRepresentedByThePhpIntegerType()
 	{
 		$this->assertAttributeValid('number', str_repeat('9', 100));
 	}
@@ -571,24 +571,9 @@ class ParserTest extends Test
 		$this->assertAttributeInvalid('number', '12.3');
 	}
 
-	public function testIntegerFilterAcceptNumbers()
+	public function testIntegerFilterIsAnAliasForInt()
 	{
 		$this->assertAttributeValid('integer', '123');
-	}
-
-	public function testIntegerFilterRejectsPartialNumbers()
-	{
-		$this->assertAttributeInvalid('integer', '123abc');
-	}
-
-	public function testIntegerFilterAcceptsNegativeNumbers()
-	{
-		$this->assertAttributeValid('integer', '-123');
-	}
-
-	public function testIntegerFilterRejectsDecimalNumbers()
-	{
-		$this->assertAttributeInvalid('integer', '12.3');
 	}
 
 	public function testIntFilterAcceptNumbers()
@@ -601,9 +586,19 @@ class ParserTest extends Test
 		$this->assertAttributeValid('int', PHP_INT_MAX);
 	}
 
-	public function testIntFilterRejectsNumbersThatCannotBeRepresentedByThePhpIntType()
+	public function testIntFilterRejectsNumbersThatCannotBeRepresentedByThePhpIntegerType()
 	{
 		$this->assertAttributeInvalid('int', str_repeat('9', 100));
+	}
+
+	public function testIntFilterRejectsNumbersInOctalNotation()
+	{
+		$this->assertAttributeInvalid('int', '0123');
+	}
+
+	public function testIntFilterRejectsNumbersInScientificNotation()
+	{
+		$this->assertAttributeInvalid('int', '12e3');
 	}
 
 	public function testIntFilterRejectsPartialNumbers()
@@ -624,6 +619,26 @@ class ParserTest extends Test
 	public function testUintFilterAcceptNumbers()
 	{
 		$this->assertAttributeValid('uint', '123');
+	}
+
+	public function testUintFilterAcceptBigIntegers()
+	{
+		$this->assertAttributeValid('uint', PHP_INT_MAX);
+	}
+
+	public function testUintFilterRejectsNumbersThatCannotBeRepresentedByThePhpIntegerType()
+	{
+		$this->assertAttributeInvalid('uint', str_repeat('9', 100));
+	}
+
+	public function testUintFilterRejectsNumbersInOctalNotation()
+	{
+		$this->assertAttributeInvalid('uint', '0123');
+	}
+
+	public function testUintFilterRejectsNumbersInScientificNotation()
+	{
+		$this->assertAttributeInvalid('uint', '12e3');
 	}
 
 	public function testUintFilterRejectsPartialNumbers()
