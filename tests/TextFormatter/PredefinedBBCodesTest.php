@@ -404,9 +404,9 @@ class PredefinedBBCodesTest extends Test
 				array(
 					'warning' => array(
 						array(
-							'pos'       => 0,
-							'msg'       => 'Maximum range value adjusted to %s',
-							'params'    => array(200),
+							'pos'      => 0,
+							'msg'      => 'Attribute \'%1$s\' outside of range, value adjusted down to %2$d',
+							'params'   => array(200),
 							'tagName'  => 'SIZE',
 							'attrName' => 'size'
 						)

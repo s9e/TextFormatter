@@ -311,7 +311,7 @@ class Parser
 				if ($attrVal < $attrConf['min'])
 				{
 					$this->log('warning', array(
-						'msg'    => 'Minimum range value adjusted to %s',
+						'msg' => 'Attribute \'%1$s\' outside of range, value adjusted up to %2$d',
 						'params' => array($attrConf['min'])
 					));
 					return $attrConf['min'];
@@ -320,7 +320,7 @@ class Parser
 				if ($attrVal > $attrConf['max'])
 				{
 					$this->log('warning', array(
-						'msg'    => 'Maximum range value adjusted to %s',
+						'msg' => 'Attribute \'%1$s\' outside of range, value adjusted down to %2$d',
 						'params' => array($attrConf['max'])
 					));
 					return $attrConf['max'];

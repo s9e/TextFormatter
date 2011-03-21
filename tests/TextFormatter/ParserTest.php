@@ -26,14 +26,15 @@ class ParserTest extends Test
 			$conf = array('type' => $conf);
 		}
 
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'attr' => $conf
-			))
+		$this->cb->BBCodes->addBBCode(
+			'X',
+			array(
+				'attrs' => array('attr' => $conf)
+			)
 		);
 
-		$st = '[x attr="' . addslashes($value) . '"]';
-		$et = '[/x]';
+		$st = '[X attr="' . addslashes($value) . '"]';
+		$et = '[/X]';
 		$text = $st . $et;
 
 		if ($valid)
@@ -69,10 +70,13 @@ class ParserTest extends Test
 
 	protected function addA()
 	{
-		$this->cb->BBCodes->addBBCode('a',
-			array('attrs' => array(
-				'href' => array('type' => 'url')
-			))
+		$this->cb->BBCodes->addBBCode(
+			'a',
+			array(
+				'attrs' => array(
+					'href' => array('type' => 'url')
+				)
+			)
 		);
 	}
 
@@ -653,14 +657,59 @@ class ParserTest extends Test
 
 	public function testRangeFilterAdjustsValuesBelowRange()
 	{
-		return;
-		$this->assertAttributeValid(
+		$this->cb->BBCodes->addBBCode(
+			'X',
 			array(
-				'type' => 'range',
-				'min'  => 5,
-				'max'  => 10
-			),
-			3
+				'attrs' => array(
+					'attr' => array(
+						'type' => 'range',
+						'min'  => 5,
+						'max'  => 10
+					)
+				)
+			)
+		);
+
+		$this->assertParsing(
+			'[X attr="3"][/X]',
+			'<rt><X attr="5"><st>[X attr="3"]</st><et>[/X]</et></X></rt>',
+			array(
+				'warning' => array(
+					array(
+						'msg' => 'Attribute \'%1$s\' outside of range, value adjusted up to %2$d',
+						'params' => array(5)
+					)
+				)
+			)
+		);
+	}
+
+	public function testRangeFilterAdjustsValuesAboveRange()
+	{
+		$this->cb->BBCodes->addBBCode(
+			'X',
+			array(
+				'attrs' => array(
+					'attr' => array(
+						'type' => 'range',
+						'min'  => 5,
+						'max'  => 10
+					)
+				)
+			)
+		);
+
+		$this->assertParsing(
+			'[X attr="30"][/X]',
+			'<rt><X attr="10"><st>[X attr="30"]</st><et>[/X]</et></X></rt>',
+			array(
+				'warning' => array(
+					array(
+						'msg' => 'Attribute \'%1$s\' outside of range, value adjusted down to %2$d',
+						'params' => array(10)
+					)
+				)
+			)
 		);
 	}
 
