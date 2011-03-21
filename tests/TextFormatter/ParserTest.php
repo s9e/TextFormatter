@@ -978,6 +978,23 @@ class ParserTest extends Test
 		$this->assertAttributeIsInvalid('email', 'example@example.com?');
 	}
 
+	public function testEmailFilterCanUrlencodeEveryCharacterOfAValidEmailIfForceUrlencodeIsOn()
+	{
+		$this->assertAttributeIsValid(
+			array('type' => 'email', 'forceUrlencode' => true),
+			'example@example.com',
+			'%65%78%61%6d%70%6c%65%40%65%78%61%6d%70%6c%65%2e%63%6f%6d'
+		);
+	}
+
+	public function testEmailFilterWillNotUrlencodeAnInvalidEmailEvenIfForceUrlencodeIsOn()
+	{
+		$this->assertAttributeIsInvalid(
+			array('type' => 'email', 'forceUrlencode' => true),
+			'example@invalid?'
+		);
+	}
+
 	public function testUndefinedFilterRejectsEverything()
 	{
 		$this->assertAttributeIsInvalid('whoknows', 'foobar');
