@@ -31,12 +31,15 @@ class ParserTest extends Test
 			$outputValue = $value;
 		}
 
-		$this->cb->BBCodes->addBBCode(
-			'X',
-			array(
-				'attrs' => array('attr' => $conf)
-			)
-		);
+		if (!$this->cb->tagExists('X'))
+		{
+			$this->cb->BBCodes->addBBCode(
+				'X',
+				array(
+					'attrs' => array('attr' => $conf)
+				)
+			);
+		}
 
 		$st = '[X attr="' . addslashes($value) . '"]';
 		$et = '[/X]';
@@ -47,8 +50,8 @@ class ParserTest extends Test
 			$rt = simplexml_load_string('<rt><X/></rt>');
 
 			$rt->X['attr'] = $outputValue;
-			$rt->X->addChild('st', $st);
-			$rt->X->addChild('et', $et);
+			$rt->X->st = $st;
+			$rt->X->et = $et;
 
 			$expectedXml = $rt->asXml();
 			$expectedLog = array();
@@ -56,9 +59,9 @@ class ParserTest extends Test
 		else
 		{
 			$root = simplexml_load_string('<root/>');
-			$pt   = $root->addChild('pt', $text);
+			$root->pt = $text;
 
-			$expectedXml = $pt->asXml();
+			$expectedXml = $root->pt->asXml();
 			$expectedLog =
 				array(
 					'error' => array(
@@ -903,56 +906,51 @@ class ParserTest extends Test
 		);
 	}
 
+	public function testSimpletextFilterAcceptsLettersNumbersMinusAndPlusSignsDotsCommasUnderscoresAndSpaces()
+	{
+		$this->assertAttributeIsValid(
+			'simpletext',
+			'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+.,_ '
+		);
+	}
+
+	public function testSimpletextFilterRejectsEverythingElse()
+	{
+		$allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+.,_ ';
+
+		for ($i = 32; $i <= 255; ++$i)
+		{
+			$c = chr($i);
+
+			if (strpos($allowed, $c) === false)
+			{
+				$this->assertAttributeIsInvalid('simpletext', utf8_encode($c));
+			}
+		}
+	}
+
+	public function testRegexpFilterAcceptsContentThatMatches()
+	{
+		$this->assertAttributeIsValid(
+			array('type' => 'regexp', 'regexp' => '#^[A-Z]$#D'),
+			'J'
+		);
+	}
+
+	public function testRegexpFilterRejectsContentThatDoesNotMatch()
+	{
+		$this->assertAttributeIsInvalid(
+			array('type' => 'regexp', 'regexp' => '#^[A-Z]$#D'),
+			'8'
+		);
+	}
+
 	public function getParamStuff()
 	{
 		return array(
 			array(
 				'[x custom="foo" /]',
 				'<rt><X custom="foo">[x custom=&quot;foo&quot; /]</X></rt>'
-			),
-			array(
-				'[x simpletext="foo bar baz" /]',
-				'<rt><X simpletext="foo bar baz">[x simpletext=&quot;foo bar baz&quot; /]</X></rt>'
-			),
-			array(
-				'[x simpletext="foo \'bar\' baz" /]',
-				'<rt><X>[x simpletext=&quot;foo \'bar\' baz&quot; /]</X></rt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'simpletext',
-							'msg'    => "Invalid attribute '%s'",
-							'params' => array('simpletext')
-						)
-					)
-				)
-			),
-			array(
-				'[align=left]content[/align]',
-				'<rt><ALIGN align="left"><st>[align=left]</st>content<et>[/align]</et></ALIGN></rt>'
-			),
-			array(
-				'[align=INVALID]content[/align]',
-				'<pt>[align=INVALID]content[/align]</pt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'ALIGN',
-							'attrName' => 'align',
-							'msg'    => "Invalid attribute '%s'",
-							'params' => array('align')
-						),
-						array(
-							'pos'       => 0,
-							'tagName'  => 'ALIGN',
-							'msg'    => "Missing attribute '%s'",
-							'params' => array('align')
-						)
-					)
-				)
 			),
 			array(
 				'[x replace=FOOBAR][/x]',
