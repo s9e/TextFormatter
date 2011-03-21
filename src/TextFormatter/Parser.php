@@ -1167,21 +1167,9 @@ class Parser
 			// filter the value
 			$filteredVal = $this->filter($filteredVal, $attrConf);
 
-			// execute post-filter callbacks if the value was valid
-			if ($filteredVal !== false
-			 && !empty($attrConf['postFilter']))
-			{
-				foreach ($attrConf['postFilter'] as $callback)
-				{
-					$filteredVal = call_user_func($callback, $filteredVal);
-				}
-			}
-
+			// if the value is invalid, remove it/replace if, log it then skip to the next attribute
 			if ($filteredVal === false)
 			{
-				/**
-				* Bad attribute value
-				*/
 				$this->log('error', array(
 					'pos'    => $this->currentTag['pos'],
 					'msg'    => "Invalid attribute '%s'",
@@ -1193,11 +1181,11 @@ class Parser
 					/**
 					* Use the default value
 					*/
-					$filteredVal = $attrConf['default'];
+					$attrVal = $attrConf['default'];
 
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'Using default value %1$s for attribute %2$s',
+						'msg'    => "Using default value '%1\$s' for attribute '%2\$s'",
 						'params' => array($attrConf['default'], $attrName)
 					));
 				}
@@ -1207,24 +1195,31 @@ class Parser
 					* Remove the attribute altogether
 					*/
 					unset($this->currentTag['attrs'][$attrName]);
+				}
 
-					if ($attrConf['isRequired'])
-					{
-						continue;
-					}
+				continue;
+			}
+
+			// execute post-filter callbacks
+			if (!empty($attrConf['postFilter']))
+			{
+				foreach ($attrConf['postFilter'] as $callback)
+				{
+					$filteredVal = call_user_func($callback, $filteredVal);
 				}
 			}
-			elseif ((string) $filteredVal !== (string) $attrVal)
+
+			if ($filteredVal != $attrVal)
 			{
 				$this->log('debug', array(
 					'pos'    => $this->currentTag['pos'],
 					'msg'    => 'Attribute value was altered by the filter '
-							  . '(attrName: $1%s, attrVal: $2%s, filteredVal: $3%s)',
-					'params' => array($attrName, $attrVal, $filteredVal)
+					          . '(attrName: $1%s, attrVal: $2%s, filteredVal: $3%s)',
+					'params' => array($attrName, serialize($attrVal), serialize($filteredVal))
 				));
 			}
 
-			$attrVal = (string) $filteredVal;
+			$attrVal = $filteredVal;
 		}
 		unset($attrVal, $this->currentAttribute);
 
