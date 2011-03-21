@@ -80,6 +80,22 @@ class ParserTest extends Test
 		);
 	}
 
+	protected function addRangedBBCode($min = 5, $max = 10)
+	{
+		$this->cb->BBCodes->addBBCode(
+			'X',
+			array(
+				'attrs' => array(
+					'attr' => array(
+						'type' => 'range',
+						'min'  => $min,
+						'max'  => $max
+					)
+				)
+			)
+		);
+	}
+
 	//==========================================================================
 	// Rules
 	//==========================================================================
@@ -655,20 +671,47 @@ class ParserTest extends Test
 		$this->assertAttributeValid('color', 'blueish');
 	}
 
-	public function testRangeFilterAdjustsValuesBelowRange()
+	public function testRangeFilterAllowsIntegersWithinRange()
 	{
-		$this->cb->BBCodes->addBBCode(
-			'X',
+		$this->addRangedBBCode();
+
+		$this->assertParsing(
+			'[X attr="8"][/X]',
+			'<rt><X attr="8"><st>[X attr="8"]</st><et>[/X]</et></X></rt>'
+		);
+	}
+
+	public function testRangeFilterAllowsNegativeIntegersWithinRange()
+	{
+		$this->addRangedBBCode(-10, 10);
+
+		$this->assertParsing(
+			'[X attr="-8"][/X]',
+			'<rt><X attr="-8"><st>[X attr="-8"]</st><et>[/X]</et></X></rt>'
+		);
+	}
+
+	public function testRangeFilterRejectsDecimalNumbers()
+	{
+		$this->addRangedBBCode();
+
+		$this->assertParsing(
+			'[X attr="3.1"][/X]',
+			'<pt>[X attr="3.1"][/X]</pt>',
 			array(
-				'attrs' => array(
-					'attr' => array(
-						'type' => 'range',
-						'min'  => 5,
-						'max'  => 10
+				'error' => array(
+					array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array('attr')
 					)
 				)
 			)
 		);
+	}
+
+	public function testRangeFilterAdjustsValuesBelowRange()
+	{
+		$this->addRangedBBCode();
 
 		$this->assertParsing(
 			'[X attr="3"][/X]',
@@ -686,18 +729,7 @@ class ParserTest extends Test
 
 	public function testRangeFilterAdjustsValuesAboveRange()
 	{
-		$this->cb->BBCodes->addBBCode(
-			'X',
-			array(
-				'attrs' => array(
-					'attr' => array(
-						'type' => 'range',
-						'min'  => 5,
-						'max'  => 10
-					)
-				)
-			)
-		);
+		$this->addRangedBBCode();
 
 		$this->assertParsing(
 			'[X attr="30"][/X]',
