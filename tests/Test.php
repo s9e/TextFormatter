@@ -79,6 +79,11 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$actualXml = $this->parser->parse($text);
 		$actualLog = $this->parser->getLog();
 
+		if (!isset($expectedLog['debug']))
+		{
+			unset($actualLog['debug']);
+		}
+
 		$this->assertXmlStringEqualsXmlString($expectedXml, $actualXml);
 		$this->assertArrayMatches($expectedLog, $actualLog);
 	}

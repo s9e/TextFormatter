@@ -81,18 +81,6 @@ class ParserTest extends Test
 		$this->assertParsing($text, $expectedXml, $expectedLog);
 	}
 
-	protected function addA()
-	{
-		$this->cb->BBCodes->addBBCode(
-			'a',
-			array(
-				'attrs' => array(
-					'href' => array('type' => 'url')
-				)
-			)
-		);
-	}
-
 	protected function addRangedBBCode($min = 5, $max = 10)
 	{
 		$this->cb->BBCodes->addBBCode(
@@ -945,49 +933,38 @@ class ParserTest extends Test
 		);
 	}
 
-	public function getParamStuff()
+	public function testRegexpFilterReplacesContentWithThePatternFoundInReplaceIfValid()
 	{
-		return array(
-			array(
-				'[x custom="foo" /]',
-				'<rt><X custom="foo">[x custom=&quot;foo&quot; /]</X></rt>'
-			),
-			array(
-				'[x replace=FOOBAR][/x]',
-				'<rt><X replace="BARFOO"><st>[x replace=FOOBAR]</st><et>[/x]</et></X></rt>'
-			),
-/**
-			array(
-				'[size=1]too small[/size]',
-				'<rt><SIZE size="7"><st>[size=1]</st>too small<et>[/size]</et></SIZE></rt>',
-				array(
-					'warning' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'SIZE',
-							'attrName' => 'size',
-							'msg'    => 'Font size must be at least %d',
-							'params' => array(7)
-						)
-					)
-				)
-			),
-			array(
-				'[size=99]too big[/size]',
-				'<rt><SIZE size="20"><st>[size=99]</st>too big<et>[/size]</et></SIZE></rt>',
-				array(
-					'warning' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'SIZE',
-							'attrName' => 'size',
-							'msg'    => 'Font size is limited to %d',
-							'params' => array(20)
-						)
-					)
-				)
-			)
-/**/
+		$this->assertAttributeIsValid(
+			array('type' => 'regexp', 'regexp' => '#^([A-Z])$#D', 'replace' => 'x$1x'),
+			'J',
+			'xJx'
+		);
+	}
+
+	public function testRegexpFilterDoesNotReplaceContentWithThePatternFoundInReplaceIfInvalid()
+	{
+		$this->assertAttributeIsInvalid(
+			array('type' => 'regexp', 'regexp' => '#^([A-Z])$#D', 'replace' => 'x$1x'),
+			'8'
+		);
+	}
+
+	public function testRegexpFilterCorrectlyHandlesBackslashesInReplacePattern()
+	{
+		/**
+		* Here we have the $2 token, followed by the literal "$2" followed by the $1 token
+		* followed by the literal "\" (one backslash) followed by the $1 token followed by
+		* the literal "\$1" (one backslash then dollar sign then 1) followed by the literal
+		* "\\" (two backslashes)
+		*
+		* The result should be R$2L\L\$1\\
+		*/
+		$replace = '$2\\$2$1\\\\$1\\\\\\$1\\\\\\\\';
+		$this->assertAttributeIsValid(
+			array('type' => 'regexp', 'regexp' => '#^(L)(R)$#D', 'replace' => $replace),
+			'LR',
+			'R$2L\\L\\$1\\\\'
 		);
 	}
 }
