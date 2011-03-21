@@ -9,52 +9,18 @@ include_once __DIR__ . '/../Test.php';
 */
 class ParserTest extends Test
 {
-	protected function assertParsing($text, $expectedXml, $expectedLog = array('error' => null))
-	{
-		$actualXml = $this->parser->parse($text);
-
-		$this->assertSame($expectedXml, $actualXml);
-		$this->assertArrayMatches($expectedLog, $this->parser->getLog());
-	}
-
 	protected function assertAttributeValid($conf, $value)
 	{
-		if (!is_array($conf))
-		{
-			$conf = array('type' => $conf);
-		}
-
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'attr' => $conf
-			))
-		);
-
-		$value = htmlspecialchars($value);
-
-		$this->assertParsing(
-			'[x attr="' . $value . '"][/x]',
-			'<rt><X attr="' . $value . '"><st>[x attr=&quot;' . $value . '&quot;]</st><et>[/x]</et></X></rt>'
-		);
-	}
-
-	protected function getAttributeXml($conf, $value)
-	{
-		if (!is_array($conf))
-		{
-			$conf = array('type' => $conf);
-		}
-
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'attr' => $conf
-			))
-		);
-
+		$this->assertAttributeValidity($conf, $value, true);
 	}
 
 	protected function assertAttributeInvalid($conf, $value)
 	{
+		$this->assertAttributeValidity($conf, $value, false);
+	}
+
+	protected function assertAttributeValidity($conf, $value, $valid)
+	{
 		if (!is_array($conf))
 		{
 			$conf = array('type' => $conf);
@@ -66,20 +32,39 @@ class ParserTest extends Test
 			))
 		);
 
-		$value = htmlspecialchars($value);
+		$st = '[x attr="' . addslashes($value) . '"]';
+		$et = '[/x]';
+		$text = $st . $et;
 
-		$this->assertParsing(
-			'[x attr="' . $value . '"][/x]',
-			'<pt>[x attr=&quot;' . $value . '&quot;][/x]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('attr')
+		if ($valid)
+		{
+			$rt = simplexml_load_string('<rt><X/></rt>');
+
+			$rt->X['attr'] = $value;
+			$rt->X->addChild('st', $st);
+			$rt->X->addChild('et', $et);
+
+			$expectedXml = $rt->asXml();
+			$expectedLog = array();
+		}
+		else
+		{
+			$root = simplexml_load_string('<root/>');
+			$pt   = $root->addChild('pt', $text);
+
+			$expectedXml = $pt->asXml();
+			$expectedLog =
+				array(
+					'error' => array(
+						array(
+							'msg'    => "Invalid attribute '%s'",
+							'params' => array('attr')
+						)
 					)
-				)
-			)
-		);
+				);
+		}
+
+		$this->assertParsing($text, $expectedXml, $expectedLog);
 	}
 
 	protected function addA()

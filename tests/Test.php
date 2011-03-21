@@ -73,4 +73,13 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 			$array =& $array[$key];
 		}
 	}
+
+	protected function assertParsing($text, $expectedXml, $expectedLog = array('error' => null))
+	{
+		$actualXml = $this->parser->parse($text);
+		$actualLog = $this->parser->getLog();
+
+		$this->assertXmlStringEqualsXmlString($expectedXml, $actualXml);
+		$this->assertArrayMatches($expectedLog, $actualLog);
+	}
 }
