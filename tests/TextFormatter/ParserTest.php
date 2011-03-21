@@ -9,21 +9,26 @@ include_once __DIR__ . '/../Test.php';
 */
 class ParserTest extends Test
 {
-	protected function assertAttributeValid($conf, $value)
+	protected function assertAttributeValid($conf, $value, $outputValue = null)
 	{
-		$this->assertAttributeValidity($conf, $value, true);
+		$this->assertAttributeValidity($conf, $value, $outputValue, true);
 	}
 
-	protected function assertAttributeInvalid($conf, $value)
+	protected function assertAttributeInvalid($conf, $value, $outputValue = null)
 	{
-		$this->assertAttributeValidity($conf, $value, false);
+		$this->assertAttributeValidity($conf, $value, $outputValue, false);
 	}
 
-	protected function assertAttributeValidity($conf, $value, $valid)
+	protected function assertAttributeValidity($conf, $value, $outputValue, $valid)
 	{
 		if (!is_array($conf))
 		{
 			$conf = array('type' => $conf);
+		}
+
+		if (!isset($outputValue))
+		{
+			$outputValue = $value;
 		}
 
 		$this->cb->BBCodes->addBBCode(
@@ -41,7 +46,7 @@ class ParserTest extends Test
 		{
 			$rt = simplexml_load_string('<rt><X/></rt>');
 
-			$rt->X['attr'] = $value;
+			$rt->X['attr'] = $outputValue;
 			$rt->X->addChild('st', $st);
 			$rt->X->addChild('et', $et);
 
@@ -546,6 +551,11 @@ class ParserTest extends Test
 		$this->assertAttributeValid('number', '123');
 	}
 
+	public function testNumberFilterAcceptsNumbersThatCannotBeRepresentedByThePhpIntType()
+	{
+		$this->assertAttributeValid('number', str_repeat('9', 100));
+	}
+
 	public function testNumberFilterRejectsPartialNumbers()
 	{
 		$this->assertAttributeInvalid('number', '123abc');
@@ -584,6 +594,16 @@ class ParserTest extends Test
 	public function testIntFilterAcceptNumbers()
 	{
 		$this->assertAttributeValid('int', '123');
+	}
+
+	public function testIntFilterAcceptBigIntegers()
+	{
+		$this->assertAttributeValid('int', PHP_INT_MAX);
+	}
+
+	public function testIntFilterRejectsNumbersThatCannotBeRepresentedByThePhpIntType()
+	{
+		$this->assertAttributeInvalid('int', str_repeat('9', 100));
 	}
 
 	public function testIntFilterRejectsPartialNumbers()
@@ -744,6 +764,32 @@ class ParserTest extends Test
 			)
 		);
 	}
+
+	public function testFloatFilterAcceptsIntegers()
+	{
+		$this->assertAttributeValid('float', 12);
+	}
+
+	public function testFloatFilterAcceptsDecimalNumbers()
+	{
+		$this->assertAttributeValid('float', '12.3');
+	}
+
+	public function testFloatFilterAcceptsNegativeNumbers()
+	{
+		$this->assertAttributeValid('float', '-12.3');
+	}
+
+	public function testFloatFilterAcceptsScientificNotation()
+	{
+		$this->assertAttributeValid('float', '12.3e-5', '0.000123');
+	}
+
+	public function testFloatFilterRejectsPartialNumbers()
+	{
+		$this->assertAttributeInvalid('float', '123abc');
+	}
+
 
 	public function getParamStuff()
 	{
@@ -963,55 +1009,6 @@ class ParserTest extends Test
 							'tagName'  => 'ALIGN',
 							'msg'    => "Missing attribute '%s'",
 							'params' => array('align')
-						)
-					)
-				)
-			),
-			array(
-				'[x range=-123 /]',
-				'<rt><X range="7">[x range=-123 /]</X></rt>',
-				array(
-					'warning' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'range',
-							'msg'    => 'Minimum range value adjusted to %s',
-							'params' => array(7)
-						)
-					)
-				)
-			),
-			array(
-				'[x range=7 /]',
-				'<rt><X range="7">[x range=7 /]</X></rt>'
-			),
-			array(
-				'[x range=123 /]',
-				'<rt><X range="77">[x range=123 /]</X></rt>',
-				array(
-					'warning' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'range',
-							'msg'    => 'Maximum range value adjusted to %s',
-							'params' => array(77)
-						)
-					)
-				)
-			),
-			array(
-				'[x range=TWENTY /]',
-				'<rt><X>[x range=TWENTY /]</X></rt>',
-				array(
-					'error' => array(
-						array(
-							'pos'       => 0,
-							'tagName'  => 'X',
-							'attrName' => 'range',
-							'msg'    => "Invalid attribute '%s'",
-							'params' => array('range')
 						)
 					)
 				)

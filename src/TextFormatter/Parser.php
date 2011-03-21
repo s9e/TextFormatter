@@ -295,6 +295,10 @@ class Parser
 				return filter_var($attrVal, \FILTER_VALIDATE_FLOAT);
 
 			case 'number':
+				return (preg_match('#^[0-9]+$#D', $attrVal))
+				      ? $attrVal
+				      : false;
+
 			case 'uint':
 				return filter_var($attrVal, \FILTER_VALIDATE_INT, array(
 					'options' => array('min_range' => 0)
