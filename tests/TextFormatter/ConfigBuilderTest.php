@@ -601,21 +601,19 @@ class ConfigBuilderTest extends Test
 	*/
 	public function testCanSetCustomFilterWithExtraConfig()
 	{
-		$filterFunc = function() {};
+		$filterFunc = function($value, $min, $max) {};
 
-		$this->cb->setFilter('range', $filterFunc, array('min' => 2, 'max' => 5));
+		$this->cb->setFilter('range', $filterFunc, array('value' => null, 2, 5));
 
 		$this->assertArrayMatches(
 			array(
 				'range' => array(
 					'callback' => $filterFunc,
-					'config'   => array(
-						'min' => 2,
-						'max' => 5
-					)
+					'params'   => array('value' => null, 2, 5)
 				)
 			),
-			$this->cb->getFiltersConfig()
+			$this->cb->getFiltersConfig(),
+			false
 		);
 	}
 

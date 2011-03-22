@@ -448,7 +448,9 @@ class PredefinedBBCodes
 
 		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
 			'isRequired' => false,
-			'preFilter'  => array('strtolower')
+			'preFilter'  => array(
+				array('callback' => 'strtolower')
+			)
 		));
 
 		$this->cb->setTagTemplate(
@@ -560,12 +562,17 @@ class PredefinedBBCodes
 			'attrs' => array(
 				'email'   => array(
 					'type' => 'email',
-					'postFilter' => array('strrev')
+					'postFilter' => array(
+						array('callback' => 'strrev')
+					)
 				),
 				'subject' => array(
 					'type' => 'text',
 					'isRequired' => false,
-					'postFilter' => array('rawurlencode', 'strrev')
+					'postFilter' => array(
+						array('callback' => 'rawurlencode'),
+						array('callback' => 'strrev')
+					)
 				),
 				/**
 				* We set the "content" attribute as a compound attribute with a regexp that will
@@ -580,7 +587,9 @@ class PredefinedBBCodes
 				),
 				'revtext' => array(
 					'type' => 'text',
-					'postFilter' => array('strrev')
+					'postFilter' => array(
+						array('callback' => 'strrev')
+					)
 				)
 			)
 		));

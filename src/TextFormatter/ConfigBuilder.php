@@ -232,6 +232,19 @@ class ConfigBuilder
 				$this->setTagXSL($tagName, $optionValue);
 				break;
 
+			case 'preFilter':
+			case 'postFilter':
+				$this->tags[$tagName][$optionName] = array();
+
+				foreach ($optionValue as $filterConf)
+				{
+					$this->tags[$tagName][$optionName][] = $this->prepareCallback(
+						$filterConf['callback'],
+						(isset($filterConf['params'])) ? $filterConf['params'] : null
+					);
+				}
+				break;
+
 			default:
 				if (isset($this->defaultTagOptions[$optionName]))
 				{
@@ -278,15 +291,86 @@ class ConfigBuilder
 		$attrConf['type'] = $attrType;
 
 		/**
-		* Add the attribute and append the default config
+		* Add the attribute with default config values;
 		*/
-		$this->tags[$tagName]['attrs'][$attrName] = $attrConf + array(
+		$this->tags[$tagName]['attrs'][$attrName] = array(
 			/**
 			* Compound attributes are not required by default. The attributes they split into
 			* should be already. Plus, we remove compound attributes during parsing.
 			*/
 			'isRequired' => (bool) ($attrType !== 'compound')
 		);
+
+		foreach ($attrConf as $optionName => $optionValue)
+		{
+			$this->setTagAttributeOption($tagName, $attrName, $optionName, $optionValue);
+		}
+	}
+
+	/**
+	* Set an option in a tag's attribute config
+	*
+	* @param string $tagName
+	* @param string $attrName
+	* @param string $optionName
+	* @param mixed  $optionValue
+	*/
+	public function setTagAttributeOption($tagName, $attrName, $optionName, $optionValue)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		if (!isset($this->tags[$tagName]))
+		{
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+		}
+
+		if (!isset($this->tags[$tagName]['attrs'][$attrName]))
+		{
+			throw new InvalidArgumentException("Tag '" . $tagName . "' does not have an attribute named '" . $attrName . "'");
+		}
+
+		switch ($optionName)
+		{
+			case 'preFilter':
+			case 'postFilter':
+				$this->tags[$tagName]['attrs'][$attrName][$optionName] = array();
+
+				foreach ($optionValue as $filterConf)
+				{
+					$this->tags[$tagName]['attrs'][$attrName][$optionName][] = $this->prepareCallback(
+						$filterConf['callback'],
+						(isset($filterConf['params'])) ? $filterConf['params'] : null
+					);
+				}
+				break;
+
+			default:
+				$this->tags[$tagName]['attrs'][$attrName][$optionName] = $optionValue;
+		}
+	}
+
+	/**
+	* Return the value of an option in a tag's attribute config
+	*
+	* @param string $tagName
+	* @param string $attrName
+	* @param string $optionName
+	* @param mixed  $optionValue
+	*/
+	public function getTagAttributeOption($tagName, $attrName, $optionName)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		if (!isset($this->tags[$tagName]))
+		{
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+		}
+
+		return (isset($this->tags[$tagName]['attrs'][$attrName]))
+		     ? $this->tags[$tagName]['attrs'][$attrName]
+		     : null;
 	}
 
 	/**
@@ -576,47 +660,54 @@ class ConfigBuilder
 	/**
 	* Set the filter used to validate an attribute type
 	*
+	*
+	*
 	* @param string   $type     Attribute type
 	* @param callback $callback Callback
-	* @param array    $config   Optional config, will be passed to the callback
+	* @param array    $params   Parameters order
 	*/
-	public function setFilter($type, $callback, array $config = array())
+	public function setFilter($type, $callback, array $params = null)
+	{
+		$this->filters[$type] = $this->prepareCallback($callback, $params);
+	}
+
+	/**
+	* 
+	*
+	* @param  callback   $callback
+	* @param  array|null $params
+	* @return array
+	*/
+	protected function prepareCallback($callback, $params)
 	{
 		if (!is_callable($callback))
 		{
-			throw new InvalidArgumentException('The second argument passed to ' . __METHOD__ . ' is expected to be a valid callback');
+			throw new InvalidArgumentException('Not a valid callback');
 		}
 
-		$this->filters[$type] = array(
+		$ret = array(
 			'callback' => $callback
 		);
 
-		if (!empty($config))
+		if (isset($params))
 		{
-			$this->filters[$type]['config'] = $config;
+			foreach ($params as $k => &$v)
+			{
+				if (!is_numeric($k))
+				{
+					/**
+					* Elements indexed by non-numeric keys will be replaced by the value to filter.
+					* They won't be used, so we null them now.
+					*/
+					$v = null;
+				}
+			}
+			unset($v);
+
+			$ret['params'] = $params;
 		}
-	}
 
-	/**
-	* 
-	*
-	* @return void
-	*/
-	public function getFilterOption($type, $optionName)
-	{
-		return (isset($this->filters[$type][$optionName]))
-		     ? $this->filters[$type][$optionName]
-		     : null;
-	}
-
-	/**
-	* 
-	*
-	* @return void
-	*/
-	public function setFilterOption($type, $optionName, $optionValue)
-	{
-		$this->filters[$type][$optionName] = $optionValue;
+		return $ret;
 	}
 
 	/**

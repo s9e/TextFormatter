@@ -447,12 +447,17 @@ class BBCodesConfig extends PluginConfig
 							{
 								if (!in_array($callback, $this->BBCodeFiltersAllowedCallbacks))
 								{
-									throw new \RuntimeException('Callback ' . $callback . ' is not allowed');
+									throw new RuntimeException('Callback ' . $callback . ' is not allowed');
 								}
 
-								$attrConf[$optionName][] = (strpos($callback, '::') !== false)
-								                         ? explode('::', $callback)
-								                         : $callback;
+								if (strpos($callback, '::') !== false)
+								{
+									$callback = explode('::', $callback);
+								}
+
+								$attrConf[$optionName][] = array(
+									'callback' => $callback
+								);
 							}
 							break;
 

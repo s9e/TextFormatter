@@ -210,18 +210,16 @@ class Parser
 	*/
 	public function filter($attrVal, array $attrConf)
 	{
-		$attrType = $attrConf['type'];
-
-		if (isset($this->filtersConfig[$attrType]['callback']))
+		if (isset($this->filtersConfig[$attrConf['type']]['callback']))
 		{
 			return call_user_func(
-				$this->filtersConfig[$attrType]['callback'],
+				$this->filtersConfig[$attrConf['type']]['callback'],
 				$attrVal,
 				$attrConf
 			);
 		}
 
-		switch ($attrType)
+		switch ($attrConf['type'])
 		{
 			case 'url':
 				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_URL);
@@ -371,7 +369,7 @@ class Parser
 			default:
 				$this->log('debug', array(
 					'msg'    => "Unknown filter '%s'",
-					'params' => array($attrType)
+					'params' => array($attrConf['type'])
 				));
 				return false;
 		}
@@ -1134,10 +1132,12 @@ class Parser
 		*/
 		if (isset($tagConfig['preFilter']))
 		{
-			foreach ($tagConfig['preFilter'] as $callback)
+			foreach ($tagConfig['preFilter'] as $callbackConf)
 			{
-				$this->currentTag['attrs'] =
-					call_user_func($callback, $this->currentTag['attrs']);
+				$this->currentTag['attrs'] = $this->applyCallback(
+					$callbackConf, 
+					$this->currentTag['attrs']
+				);
 			}
 		}
 
@@ -1162,9 +1162,12 @@ class Parser
 			// execute pre-filter callbacks
 			if (!empty($attrConf['preFilter']))
 			{
-				foreach ($attrConf['preFilter'] as $callback)
+				foreach ($attrConf['preFilter'] as $callbackConf)
 				{
-					$filteredVal = call_user_func($callback, $filteredVal);
+					$filteredVal = $this->applyCallback(
+						$callbackConf, 
+						$filteredVal
+					);
 				}
 			}
 
@@ -1207,9 +1210,12 @@ class Parser
 			// execute post-filter callbacks
 			if (!empty($attrConf['postFilter']))
 			{
-				foreach ($attrConf['postFilter'] as $callback)
+				foreach ($attrConf['postFilter'] as $callbackConf)
 				{
-					$filteredVal = call_user_func($callback, $filteredVal);
+					$filteredVal = $this->applyCallback(
+						$callbackConf, 
+						$filteredVal
+					);
 				}
 			}
 
@@ -1232,12 +1238,46 @@ class Parser
 		*/
 		if (isset($tagConfig['postFilter']))
 		{
-			foreach ($tagConfig['postFilter'] as $callback)
+			foreach ($tagConfig['postFilter'] as $callbackConf)
 			{
-				$this->currentTag['attrs'] =
-					call_user_func($callback, $this->currentTag['attrs']);
+				$this->currentTag['attrs'] = $this->applyCallback(
+					$callbackConf, 
+					$this->currentTag['attrs']
+				);
 			}
 		}
+	}
+
+	/**
+	* Apply a callback and return the result
+	*
+	* @param  array $conf  Callback configuration. Must have a "callback" element and can have an 
+	*                      optional "params" element. If there's no "params" element, $value is
+	*                      passed as the only argument to the callback
+	* @param  mixed $value
+	* @return mixed
+	*/
+	protected function applyCallback(array $conf, $value)
+	{
+		if (isset($conf['params']))
+		{
+			$params = $conf['params'];
+
+			foreach ($params as $k => &$v)
+			{
+				if (!is_numeric($k))
+				{
+					$v = $value;
+				}
+			}
+			unset($v);
+		}
+		else
+		{
+			$params = array($value);
+		}
+
+		return call_user_func_array($conf['callback'], $params);
 	}
 
 	/**

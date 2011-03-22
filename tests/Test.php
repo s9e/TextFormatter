@@ -26,13 +26,13 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 	}
 
-	protected function assertArrayMatches(array $expected, array $actual)
+	protected function assertArrayMatches(array $expected, array $actual, $removeNull = true)
 	{
-		$this->reduceAndSortArrays($expected, $actual);
+		$this->reduceAndSortArrays($expected, $actual, $removeNull);
 		$this->assertSame($expected, $actual);
 	}
 
-	protected function reduceAndSortArrays(array &$expected, array &$actual)
+	protected function reduceAndSortArrays(array &$expected, array &$actual, $removeNull = true)
 	{
 		if (empty($expected))
 		{
@@ -48,16 +48,19 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		{
 			if (is_array($expected[$k]) && is_array($v))
 			{
-				$this->reduceAndSortArrays($expected[$k], $v);
+				$this->reduceAndSortArrays($expected[$k], $v, $removeNull);
 			}
 		}
 
 		/**
 		* Remove null values from $expected, they indicate that the key should NOT appear in $actual
 		*/
-		foreach (array_keys($expected, null, true) as $k)
+		if ($removeNull)
 		{
-			unset($expected[$k]);
+			foreach (array_keys($expected, null, true) as $k)
+			{
+				unset($expected[$k]);
+			}
 		}
 	}
 
