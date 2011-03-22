@@ -16,26 +16,21 @@ include_once __DIR__ . '/../../src/TextFormatter/PluginParser.php';
 */
 class ParserTest extends Test
 {
-	protected function assertAttributeIsValid($attrConf, $attrVal, $expectedVal = null, $expectedError = null)
+	protected function assertAttributeIsValid($attrConf, $attrVal, $expectedVal = null, $expectedLog = array())
 	{
-		$this->assertAttributeValidity($attrConf, $attrVal, $expectedVal, true, $expectedError);
+		$this->assertAttributeValidity($attrConf, $attrVal, $expectedVal, true, $expectedLog);
 	}
 
-	protected function assertAttributeIsInvalid($attrConf, $attrVal, $expectedVal = null, $expectedError = null)
+	protected function assertAttributeIsInvalid($attrConf, $attrVal, $expectedVal = null, $expectedLog = array())
 	{
-		$this->assertAttributeValidity($attrConf, $attrVal, $expectedVal, false, $expectedError);
+		$this->assertAttributeValidity($attrConf, $attrVal, $expectedVal, false, $expectedLog);
 	}
 
-	protected function assertAttributeValidity($attrConf, $attrVal, $expectedVal, $valid, $expectedError)
+	protected function assertAttributeValidity($attrConf, $attrVal, $expectedVal, $valid, $expectedLog)
 	{
 		if (!is_array($attrConf))
 		{
 			$attrConf = array('type' => $attrConf);
-		}
-
-		if (!isset($expectedVal))
-		{
-			$expectedVal = $attrVal;
 		}
 
 		$filtersConfig = $this->cb->getFiltersConfig();
@@ -54,6 +49,11 @@ class ParserTest extends Test
 
 		if ($valid)
 		{
+			if (!isset($expectedVal))
+			{
+				$expectedVal = $attrVal;
+			}
+
 			$this->assertEquals($expectedVal, $actualVal);
 		}
 		else
@@ -61,28 +61,7 @@ class ParserTest extends Test
 			$this->assertFalse($actualVal, 'Invalid attrVal did not return false');
 		}
 
-		if (isset($expectedError))
-		{
-			$expectedError = array($expectedError);
-		}
-
-		$this->assertArrayMatches(array('error' => $expectedError), $this->parser->getLog());
-	}
-
-	protected function addRangedBBCode($min = 5, $max = 10)
-	{
-		$this->cb->BBCodes->addBBCode(
-			'X',
-			array(
-				'attrs' => array(
-					'attr' => array(
-						'type' => 'range',
-						'min'  => $min,
-						'max'  => $max
-					)
-				)
-			)
-		);
+		$this->assertArrayMatches($expectedLog, $this->parser->getLog());
 	}
 
 	//==========================================================================
@@ -571,8 +550,12 @@ class ParserTest extends Test
 			'ftp://www.example.com',
 			null,
 			array(
-				'msg'    => "URL scheme '%s' is not allowed",
-				'params' => array('ftp')
+				'error' => array(
+					array(
+						'msg'    => "URL scheme '%s' is not allowed",
+						'params' => array('ftp')
+					)
+				)
 			)
 		);
 	}
@@ -593,8 +576,12 @@ class ParserTest extends Test
 			'http://evil.example.com',
 			null,
 			array(
-				'msg'    => "URL host '%s' is not allowed",
-				'params' => array('evil.example.com')
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('evil.example.com')
+					)
+				)
 			)
 		);
 	}
@@ -608,8 +595,12 @@ class ParserTest extends Test
 			'http://evil.example.com',
 			null,
 			array(
-				'msg'    => "URL host '%s' is not allowed",
-				'params' => array('evil.example.com')
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('evil.example.com')
+					)
+				)
 			)
 		);
 	}
@@ -623,8 +614,12 @@ class ParserTest extends Test
 			'http://evil.example.com',
 			null,
 			array(
-				'msg'    => "URL host '%s' is not allowed",
-				'params' => array('evil.example.com')
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('evil.example.com')
+					)
+				)
 			)
 		);
 	}
@@ -638,8 +633,12 @@ class ParserTest extends Test
 			'http://evil.example.com',
 			null,
 			array(
-				'msg'    => "URL host '%s' is not allowed",
-				'params' => array('evil.example.com')
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('evil.example.com')
+					)
+				)
 			)
 		);
 	}
@@ -708,49 +707,50 @@ class ParserTest extends Test
 
 	public function testRangeFilterAllowsIntegersWithinRange()
 	{
-		$this->addRangedBBCode();
-
-		$this->assertParsing(
-			'[X attr="8"][/X]',
-			'<rt><X attr="8"><st>[X attr="8"]</st><et>[/X]</et></X></rt>'
+		$this->assertAttributeIsValid(
+			array(
+				'type' => 'range',
+				'min'  => 5,
+				'max'  => 10
+			),
+			8
 		);
 	}
 
 	public function testRangeFilterAllowsNegativeIntegersWithinRange()
 	{
-		$this->addRangedBBCode(-10, 10);
-
-		$this->assertParsing(
-			'[X attr="-8"][/X]',
-			'<rt><X attr="-8"><st>[X attr="-8"]</st><et>[/X]</et></X></rt>'
+		$this->assertAttributeIsValid(
+			array(
+				'type' => 'range',
+				'min'  => -5,
+				'max'  => 10
+			),
+			8
 		);
 	}
 
 	public function testRangeFilterRejectsDecimalNumbers()
 	{
-		$this->addRangedBBCode();
-
-		$this->assertParsing(
-			'[X attr="3.1"][/X]',
-			'<pt>[X attr="3.1"][/X]</pt>',
+		$this->assertAttributeIsInvalid(
 			array(
-				'error' => array(
-					array(
-						'msg'    => "Invalid attribute '%s'",
-						'params' => array('attr')
-					)
-				)
-			)
+				'type' => 'range',
+				'min'  => 5,
+				'max'  => 10
+			),
+			8.4
 		);
 	}
 
 	public function testRangeFilterAdjustsValuesBelowRange()
 	{
-		$this->addRangedBBCode();
-
-		$this->assertParsing(
-			'[X attr="3"][/X]',
-			'<rt><X attr="5"><st>[X attr="3"]</st><et>[/X]</et></X></rt>',
+		$this->assertAttributeIsValid(
+			array(
+				'type' => 'range',
+				'min'  => 5,
+				'max'  => 10
+			),
+			3,
+			5,
 			array(
 				'warning' => array(
 					array(
@@ -764,11 +764,14 @@ class ParserTest extends Test
 
 	public function testRangeFilterAdjustsValuesAboveRange()
 	{
-		$this->addRangedBBCode();
-
-		$this->assertParsing(
-			'[X attr="30"][/X]',
-			'<rt><X attr="10"><st>[X attr="30"]</st><et>[/X]</et></X></rt>',
+		$this->assertAttributeIsValid(
+			array(
+				'type' => 'range',
+				'min'  => 5,
+				'max'  => 10
+			),
+			30,
+			10,
 			array(
 				'warning' => array(
 					array(
@@ -883,7 +886,19 @@ class ParserTest extends Test
 
 	public function testUndefinedFilterRejectsEverything()
 	{
-		$this->assertAttributeIsInvalid('whoknows', 'foobar');
+		$this->assertAttributeIsInvalid(
+			'whoknows',
+			'foobar',
+			null,
+			array(
+				'debug' => array(
+					array(
+						'msg'    => "Unknown filter '%s'",
+						'params' => array('whoknows')
+					)
+				)
+			)
+		);
 	}
 
 	//==========================================================================
