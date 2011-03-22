@@ -45,7 +45,7 @@ class Parser
 	/**
 	* @var array Logged messages, reinitialized whenever a text is parsed
 	*/
-	protected $log;
+	protected $log = array();
 
 	/**
 	* @var array Tags config
@@ -204,21 +204,14 @@ class Parser
 	* invalid. It mostly relies on PHP's own ext/filter extension but individual filters can be
 	* overwritten by the config
 	*
-	* @param  mixed  $attrVal  Attribute value to be filtered/sanitized
-	* @param  array  $attrConf Attribute configuration
-	* @return mixed            The sanitized value of this attribute, or false if it was invalid
+	* @param  mixed  $attrVal    Attribute value to be filtered/sanitized
+	* @param  array  $attrConf   Attribute configuration
+	* @param  array  $filterConf Filter configuration
+	* @param  Parser $parser     The Parser instance that's called this filter
+	* @return mixed              The sanitized value of this attribute, or false if it was invalid
 	*/
-	public function filter($attrVal, array $attrConf)
+	static public function filter($attrVal, array $attrConf, array $filterConf, Parser $parser)
 	{
-		if (isset($this->filtersConfig[$attrConf['type']]['callback']))
-		{
-			return call_user_func(
-				$this->filtersConfig[$attrConf['type']]['callback'],
-				$attrVal,
-				$attrConf
-			);
-		}
-
 		switch ($attrConf['type'])
 		{
 			case 'url':
@@ -231,19 +224,19 @@ class Parser
 
 				$p = parse_url($attrVal);
 
-				if (!preg_match($this->filtersConfig['url']['allowedSchemes'], $p['scheme']))
+				if (!preg_match($filterConf['allowedSchemes'], $p['scheme']))
 				{
-					$this->log('error', array(
+					$parser->log('error', array(
 						'msg'    => "URL scheme '%s' is not allowed",
 						'params' => array($p['scheme'])
 					));
 					return false;
 				}
 
-				if (isset($this->filtersConfig['url']['disallowedHosts'])
-				 && preg_match($this->filtersConfig['url']['disallowedHosts'], $p['host']))
+				if (isset($filterConf['disallowedHosts'])
+				 && preg_match($filterConf['disallowedHosts'], $p['host']))
 				{
-					$this->log('error', array(
+					$parser->log('error', array(
 						'msg'    => "URL host '%s' is not allowed",
 						'params' => array($p['host'])
 					));
@@ -312,7 +305,7 @@ class Parser
 
 				if ($attrVal < $attrConf['min'])
 				{
-					$this->log('warning', array(
+					$parser->log('warning', array(
 						'msg' => 'Attribute \'%1$s\' outside of range, value adjusted up to %2$d',
 						'params' => array($attrConf['min'])
 					));
@@ -321,7 +314,7 @@ class Parser
 
 				if ($attrVal > $attrConf['max'])
 				{
-					$this->log('warning', array(
+					$parser->log('warning', array(
 						'msg' => 'Attribute \'%1$s\' outside of range, value adjusted down to %2$d',
 						'params' => array($attrConf['max'])
 					));
@@ -367,7 +360,7 @@ class Parser
 				return $attrVal;
 
 			default:
-				$this->log('debug', array(
+				$parser->log('debug', array(
 					'msg'    => "Unknown filter '%s'",
 					'params' => array($attrConf['type'])
 				));
@@ -1154,6 +1147,9 @@ class Parser
 			$this->currentAttribute = $attrName;
 
 			$attrConf    = $tagConfig['attrs'][$attrName];
+			$filterConf  = (isset($this->filtersConfig[$attrConf['type']]))
+			             ? $this->filtersConfig[$attrConf['type']]
+			             : array();
 			$originalVal = $attrVal;
 
 			// execute pre-filter callbacks
@@ -1168,8 +1164,26 @@ class Parser
 				}
 			}
 
+			// if a filter isn't set for that type, use the built-in method
+			if (!isset($filterConf['callback']))
+			{
+				$filterConf['callback'] = array(__CLASS__, 'filter');
+				$filterConf['params']   = array(
+					'attrVal'    => null,
+					'attrConf'   => null,
+					'filterConf' => $filterConf,
+					'parser'     => null
+				);
+			}
+
 			// filter the value
-			$attrVal = $this->filter($attrVal, $attrConf);
+			$attrVal = $this->applyCallback(
+				$filterConf,
+				array(
+					'attrVal'  => $attrVal,
+					'attrConf' => $attrConf
+				)
+			);
 
 			// if the value is invalid, remove it/replace if, log it then skip to the next attribute
 			if ($attrVal === false)
@@ -1260,6 +1274,7 @@ class Parser
 			* Replace the dynamic parameters with their current value
 			*/
 			$values += array(
+				'parser'           => $this,
 				'currentTag'       => $this->currentTag,
 				'currentAttribute' => $this->currentAttribute,
 				'tagsConfig'       => $this->tagsConfig,

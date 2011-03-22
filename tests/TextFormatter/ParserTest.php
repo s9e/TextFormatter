@@ -16,76 +16,57 @@ include_once __DIR__ . '/../../src/TextFormatter/PluginParser.php';
 */
 class ParserTest extends Test
 {
-	protected function assertAttributeIsValid($conf, $value, $outputValue = null, $error = null)
+	protected function assertAttributeIsValid($attrConf, $attrVal, $expectedVal = null, $expectedError = null)
 	{
-		$this->assertAttributeValidity($conf, $value, $outputValue, true, $error);
+		$this->assertAttributeValidity($attrConf, $attrVal, $expectedVal, true, $expectedError);
 	}
 
-	protected function assertAttributeIsInvalid($conf, $value, $outputValue = null, $error = null)
+	protected function assertAttributeIsInvalid($attrConf, $attrVal, $expectedVal = null, $expectedError = null)
 	{
-		$this->assertAttributeValidity($conf, $value, $outputValue, false, $error);
+		$this->assertAttributeValidity($attrConf, $attrVal, $expectedVal, false, $expectedError);
 	}
 
-	protected function assertAttributeValidity($conf, $value, $outputValue, $valid, $error)
+	protected function assertAttributeValidity($attrConf, $attrVal, $expectedVal, $valid, $expectedError)
 	{
-		if (!is_array($conf))
+		if (!is_array($attrConf))
 		{
-			$conf = array('type' => $conf);
+			$attrConf = array('type' => $attrConf);
 		}
 
-		if (!isset($outputValue))
+		if (!isset($expectedVal))
 		{
-			$outputValue = $value;
+			$expectedVal = $attrVal;
 		}
 
-		if (!$this->cb->tagExists('X'))
+		$filtersConfig = $this->cb->getFiltersConfig();
+
+		if (!isset($filtersConfig[$attrConf['type']]))
 		{
-			$this->cb->BBCodes->addBBCode(
-				'X',
-				array(
-					'attrs' => array('attr' => $conf)
-				)
-			);
+			$filtersConfig[$attrConf['type']] = array();
 		}
 
-		$st = '[X attr="' . addslashes($value) . '"]';
-		$et = '[/X]';
-		$text = $st . $et;
+		$actualVal = Parser::filter(
+			$attrVal,
+			$attrConf,
+			$filtersConfig[$attrConf['type']],
+			$this->parser
+		);
 
 		if ($valid)
 		{
-			$rt = simplexml_load_string('<rt><X/></rt>');
-
-			$rt->X['attr'] = $outputValue;
-			$rt->X->st = $st;
-			$rt->X->et = $et;
-
-			$expectedXml = $rt->asXml();
-			$expectedLog = array();
+			$this->assertEquals($expectedVal, $actualVal);
 		}
 		else
 		{
-			$root = simplexml_load_string('<root/>');
-			$root->pt = $text;
-
-			$expectedXml = $root->pt->asXml();
-			$expectedLog =
-				array(
-					'error' => array(
-						array(
-							'msg'    => "Invalid attribute '%s'",
-							'params' => array('attr')
-						)
-					)
-				);
-
-			if (isset($error))
-			{
-				array_unshift($expectedLog['error'], $error);
-			}
+			$this->assertFalse($actualVal, 'Invalid attrVal did not return false');
 		}
 
-		$this->assertParsing($text, $expectedXml, $expectedLog);
+		if (isset($expectedError))
+		{
+			$expectedError = array($expectedError);
+		}
+
+		$this->assertArrayMatches(array('error' => $expectedError), $this->parser->getLog());
 	}
 
 	protected function addRangedBBCode($min = 5, $max = 10)
