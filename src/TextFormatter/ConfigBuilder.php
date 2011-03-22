@@ -238,10 +238,17 @@ class ConfigBuilder
 
 				foreach ($optionValue as $filterConf)
 				{
-					$this->tags[$tagName][$optionName][] = $this->prepareCallback(
-						$filterConf['callback'],
-						(isset($filterConf['params'])) ? $filterConf['params'] : null
-					);
+					if (!isset($filterConf['params']))
+					{
+						$filterConf['params'] = array();
+					}
+
+					if (!is_callable($filterConf['callback']))
+					{
+						throw new InvalidArgumentException('Not a callback');
+					}
+
+					$this->tags[$tagName][$optionName][] = $filterConf;
 				}
 				break;
 
@@ -330,23 +337,32 @@ class ConfigBuilder
 			throw new InvalidArgumentException("Tag '" . $tagName . "' does not have an attribute named '" . $attrName . "'");
 		}
 
+		$attrConf =& $this->tags[$tagName]['attrs'][$attrName];
+
 		switch ($optionName)
 		{
 			case 'preFilter':
 			case 'postFilter':
-				$this->tags[$tagName]['attrs'][$attrName][$optionName] = array();
+				$attrConf[$optionName] = array();
 
 				foreach ($optionValue as $filterConf)
 				{
-					$this->tags[$tagName]['attrs'][$attrName][$optionName][] = $this->prepareCallback(
-						$filterConf['callback'],
-						(isset($filterConf['params'])) ? $filterConf['params'] : null
-					);
+					if (!isset($filterConf['params']))
+					{
+						$filterConf['params'] = array('attrVal' => null);
+					}
+
+					if (!is_callable($filterConf['callback']))
+					{
+						throw new InvalidException('Not a callback');
+					}
+
+					$attrConf[$optionName][] = $filterConf;
 				}
 				break;
 
 			default:
-				$this->tags[$tagName]['attrs'][$attrName][$optionName] = $optionValue;
+				$attrConf[$optionName] = $optionValue;
 		}
 	}
 
@@ -660,54 +676,22 @@ class ConfigBuilder
 	/**
 	* Set the filter used to validate an attribute type
 	*
-	*
-	*
-	* @param string   $type     Attribute type
-	* @param callback $callback Callback
-	* @param array    $params   Parameters order
+	* @param string $filterType Attribute type this filter is in charge of
+	* @param array  $filterConf Callback
 	*/
-	public function setFilter($type, $callback, array $params = null)
+	public function setFilter($filterType, array $filterConf)
 	{
-		$this->filters[$type] = $this->prepareCallback($callback, $params);
-	}
-
-	/**
-	* 
-	*
-	* @param  callback   $callback
-	* @param  array|null $params
-	* @return array
-	*/
-	protected function prepareCallback($callback, $params)
-	{
-		if (!is_callable($callback))
+		if (!isset($filterConf['params']))
 		{
-			throw new InvalidArgumentException('Not a valid callback');
+			$filterConf['params'] = array();
 		}
 
-		$ret = array(
-			'callback' => $callback
-		);
-
-		if (isset($params))
+		if (!is_callable($filterConf['callback']))
 		{
-			foreach ($params as $k => &$v)
-			{
-				if (!is_numeric($k))
-				{
-					/**
-					* Elements indexed by non-numeric keys will be replaced by the value to filter.
-					* They won't be used, so we null them now.
-					*/
-					$v = null;
-				}
-			}
-			unset($v);
-
-			$ret['params'] = $params;
+			throw new InvalidArgumentException('Not a callback');
 		}
 
-		return $ret;
+		$this->filters[$filterType] = $filterConf;
 	}
 
 	/**

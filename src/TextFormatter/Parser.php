@@ -1134,10 +1134,7 @@ class Parser
 		{
 			foreach ($tagConfig['preFilter'] as $callbackConf)
 			{
-				$this->currentTag['attrs'] = $this->applyCallback(
-					$callbackConf, 
-					$this->currentTag['attrs']
-				);
+				$this->currentTag['attrs'] = $this->applyCallback($callbackConf);
 			}
 		}
 
@@ -1157,25 +1154,25 @@ class Parser
 			$this->currentAttribute = $attrName;
 
 			$attrConf    = $tagConfig['attrs'][$attrName];
-			$filteredVal = $attrVal;
+			$originalVal = $attrVal;
 
 			// execute pre-filter callbacks
 			if (!empty($attrConf['preFilter']))
 			{
 				foreach ($attrConf['preFilter'] as $callbackConf)
 				{
-					$filteredVal = $this->applyCallback(
+					$attrVal = $this->applyCallback(
 						$callbackConf, 
-						$filteredVal
+						array('attrVal' => $attrVal)
 					);
 				}
 			}
 
 			// filter the value
-			$filteredVal = $this->filter($filteredVal, $attrConf);
+			$attrVal = $this->filter($attrVal, $attrConf);
 
 			// if the value is invalid, remove it/replace if, log it then skip to the next attribute
-			if ($filteredVal === false)
+			if ($attrVal === false)
 			{
 				$this->log('error', array(
 					'pos'    => $this->currentTag['pos'],
@@ -1212,24 +1209,22 @@ class Parser
 			{
 				foreach ($attrConf['postFilter'] as $callbackConf)
 				{
-					$filteredVal = $this->applyCallback(
+					$attrVal = $this->applyCallback(
 						$callbackConf, 
-						$filteredVal
+						array('attrVal' => $attrVal)
 					);
 				}
 			}
 
-			if ($filteredVal != $attrVal)
+			if ($originalVal != $attrVal)
 			{
 				$this->log('debug', array(
 					'pos'    => $this->currentTag['pos'],
 					'msg'    => 'Attribute value was altered by the filter '
-					          . '(attrName: $1%s, attrVal: $2%s, filteredVal: $3%s)',
-					'params' => array($attrName, serialize($attrVal), serialize($filteredVal))
+					          . '(attrName: $1%s, originalVal: $2%s, attrVal: $3%s)',
+					'params' => array($attrName, serialize($originalVal), serialize($attrVal))
 				));
 			}
-
-			$attrVal = $filteredVal;
 		}
 		unset($attrVal, $this->currentAttribute);
 
@@ -1257,24 +1252,28 @@ class Parser
 	* @param  mixed $value
 	* @return mixed
 	*/
-	protected function applyCallback(array $conf, $value)
+	protected function applyCallback(array $conf, array $values)
 	{
 		if (isset($conf['params']))
 		{
-			$params = $conf['params'];
+			/**
+			* Replace the dynamic parameters with their current value
+			*/
+			$values += array(
+				'currentTag'       => $this->currentTag,
+				'currentAttribute' => $this->currentAttribute,
+				'tagsConfig'       => $this->tagsConfig,
+				'filtersConfig'    => $this->filtersConfig
+			);
 
-			foreach ($params as $k => &$v)
-			{
-				if (!is_numeric($k))
-				{
-					$v = $value;
-				}
-			}
-			unset($v);
+			$params = array_replace(
+				$conf['params'],
+				array_intersect_key($values, $conf['params'])
+			);
 		}
 		else
 		{
-			$params = array($value);
+			$params = array();
 		}
 
 		return call_user_func_array($conf['callback'], $params);

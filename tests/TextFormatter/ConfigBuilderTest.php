@@ -584,7 +584,7 @@ class ConfigBuilderTest extends Test
 
 	public function testCanSetCustomFilter()
 	{
-		$this->cb->setFilter('text', 'trim');
+		$this->cb->setFilter('text', array('callback' => 'trim'));
 
 		$this->assertArrayMatches(
 			array(
@@ -601,19 +601,16 @@ class ConfigBuilderTest extends Test
 	*/
 	public function testCanSetCustomFilterWithExtraConfig()
 	{
-		$filterFunc = function($value, $min, $max) {};
+		$filterConf = array(
+			'callback' => function($value, $min, $max) {},
+			'params'   => array('attrVal'  => false, 2, 5)
+		);
 
-		$this->cb->setFilter('range', $filterFunc, array('value' => null, 2, 5));
+		$this->cb->setFilter('range', $filterConf);
 
 		$this->assertArrayMatches(
-			array(
-				'range' => array(
-					'callback' => $filterFunc,
-					'params'   => array('value' => null, 2, 5)
-				)
-			),
-			$this->cb->getFiltersConfig(),
-			false
+			array('range' => $filterConf),
+			$this->cb->getFiltersConfig()
 		);
 	}
 
@@ -622,7 +619,7 @@ class ConfigBuilderTest extends Test
 	*/
 	public function testSetFilterThrowsAnExceptionOnInvalidCallback()
 	{
-		$this->cb->setFilter('foo', 'bar');
+		$this->cb->setFilter('foo', array('callback' => 'bar'));
 	}
 
 	public function testUrlFilterIsConfiguredToAllowHttpAndHttpsSchemesByDefault()
