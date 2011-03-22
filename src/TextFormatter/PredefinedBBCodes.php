@@ -152,7 +152,7 @@ class PredefinedBBCodes
 
 		// [LIST]
 		$this->cb->BBCodes->addBBCode('LIST', array(
-			'defaultAttr' => 'style',
+			'defaultAttr'  => 'style',
 			'trimBefore'   => true,
 			'trimAfter'    => true,
 			'ltrimContent' => true,
@@ -442,7 +442,7 @@ class PredefinedBBCodes
 	public function addCODE()
 	{
 		$this->cb->BBCodes->addBBCode('CODE', array(
-			'defaultRule'  => 'deny',
+			'defaultRule' => 'deny',
 			'defaultAttr' => 'stx'
 		));
 
@@ -497,7 +497,7 @@ class PredefinedBBCodes
 	{
 		$this->cb->BBCodes->addBBCode('QUOTE', array(
 			'nestingLimit' => $nestingLevel,
-			'defaultAttr' => 'author',
+			'defaultAttr'  => 'author',
 			'trimBefore'   => true,
 			'trimAfter'    => true,
 			'ltrimContent' => true,
