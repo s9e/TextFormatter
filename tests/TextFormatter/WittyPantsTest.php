@@ -70,8 +70,8 @@ class WittyPantsTest extends Test
 	public function testThreeConsecutiveHypensAreConvertedToAnEmDash()
 	{
 		$this->assertWit(
-			'foo--bar',
-			'foo–bar'
+			'foo---bar',
+			'foo—bar'
 		);
 	}
 }
