@@ -36,7 +36,7 @@ class WittyPantsConfig extends PluginConfig
 			'attrName' => $this->attrName,
 
 			'regexp' => array(
-				'singletons' => "#(?:---?|\\.\\.\\.)#Su",
+				'singletons' => "#(?:---?|\\.\\.\\.)#S",
 				'quotation'  => '#(?<!=)(["\'])(?:.+?)(?<!=)\\1#S'
 			),
 
