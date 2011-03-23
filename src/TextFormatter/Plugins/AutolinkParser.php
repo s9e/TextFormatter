@@ -16,9 +16,6 @@ class AutolinkParser extends PluginParser
 	{
 		$tags = array();
 
-		$tagName  = $this->config['tagName'];
-		$attrName = $this->config['attrName'];
-
 		foreach ($matches as $m)
 		{
 			$url = $m[0][0];
@@ -33,10 +30,10 @@ class AutolinkParser extends PluginParser
 
 			$tags[] = array(
 				'pos'   => $m[0][1],
-				'name'  => $tagName,
+				'name'  => 'URL',
 				'type'  => Parser::START_TAG,
 				'len'   => 0,
-				'attrs' => array($attrName => $url)
+				'attrs' => array('url' => $url)
 			);
 
 			$tags[] = array(
