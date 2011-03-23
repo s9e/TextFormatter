@@ -294,10 +294,8 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanCreateTag
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Unknown target tag 'BAR'
 	*/
-	public function testCannotCreateRuleOnNonExistentTargetTag()
+	public function testCanCreateRuleOnNonExistentTargetTag()
 	{
 		$this->cb->addTag('FOO');
 		$this->cb->addTagRule('FOO', 'deny', 'BAR');

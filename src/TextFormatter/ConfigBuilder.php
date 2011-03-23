@@ -451,6 +451,11 @@ class ConfigBuilder
 	/**
 	* Define a rule
 	*
+	* The first tag must already exist at the time the rule is created.
+	* The target tag doesn't have to exist though, so that we can set all the rules related to a tag
+	* during its creation, regardless on whether target tags exist or not. Rules that pertain to
+	* inexistent tags do not appear in the final configuration.
+	*
 	* @param string $tagName
 	* @param string $action
 	* @param string $target
@@ -463,11 +468,6 @@ class ConfigBuilder
 		if (!isset($this->tags[$tagName]))
 		{
 			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
-
-		if (!isset($this->tags[$target]))
-		{
-			throw new InvalidArgumentException("Unknown target tag '" . $target . "'");
 		}
 
 		if (!in_array($action, array(
