@@ -822,4 +822,16 @@ class PredefinedBBCodes
 			)
 		);
 	}
+
+	public function addEM()
+	{
+		$this->cb->BBCodes->addBBCode('EM');
+		$this->cb->setTagTemplate('EM', '<em><xsl:apply-templates/></em>');
+	}
+
+	public function addSTRONG()
+	{
+		$this->cb->BBCodes->addBBCode('STRONG');
+		$this->cb->setTagTemplate('STRONG', '<strong><xsl:apply-templates/></strong>');
+	}
 }
