@@ -58,6 +58,19 @@ class WittyPantsParser extends PluginParser
 			);
 		}
 
+		foreach ($matches['symbols'] as $m)
+		{
+			$tags[] = array(
+				'pos'   => $m[0][1],
+				'type'  => Parser::SELF_CLOSING_TAG,
+				'name'  => $tagName,
+				'len'   => strlen($m[0][0]),
+				'attrs' => array(
+					$attrName => $replacements['symbols'][strtr($m[0][0], "CTMR", 'ctmr')]
+				)
+			);
+		}
+
 		return $tags;
 	}
 }

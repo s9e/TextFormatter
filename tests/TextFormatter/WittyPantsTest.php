@@ -74,4 +74,52 @@ class WittyPantsTest extends Test
 			'foo—bar'
 		);
 	}
+
+	public function testParenthesesAroundTheLettersTmInLowercaseAreReplacedWithTheTrademarkSymbol()
+	{
+		$this->assertWit(
+			'(tm)',
+			'™'
+		);
+	}
+
+	public function testParenthesesAroundTheLettersTmInUppercaseAreReplacedWithTheTrademarkSymbol()
+	{
+		$this->assertWit(
+			'(TM)',
+			'™'
+		);
+	}
+
+	public function testParenthesesAroundTheLetterCInLowercaseAreReplacedWithTheCopyrightSymbol()
+	{
+		$this->assertWit(
+			'(c)',
+			'©'
+		);
+	}
+
+	public function testParenthesesAroundTheLetterCInUppercaseAreReplacedWithTheCopyrightSymbol()
+	{
+		$this->assertWit(
+			'(C)',
+			'©'
+		);
+	}
+
+	public function testParenthesesAroundTheLetterRInLowercaseAreReplacedWithTheRegisteredSymbol()
+	{
+		$this->assertWit(
+			'(r)',
+			'®'
+		);
+	}
+
+	public function testParenthesesAroundTheLetterRInUppercaseAreReplacedWithTheRegisteredSymbol()
+	{
+		$this->assertWit(
+			'(R)',
+			'®'
+		);
+	}
 }

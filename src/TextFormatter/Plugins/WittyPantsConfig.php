@@ -10,6 +10,12 @@ namespace s9e\Toolkit\TextFormatter\Plugins;
 use s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\PluginConfig;
 
+/**
+* This plugin combines some of the functionalities found in SmartyPants and Textile.
+*
+* @link http://daringfireball.net/projects/smartypants/
+* @link http://textile.thresholdstate.com/
+*/
 class WittyPantsConfig extends PluginConfig
 {
 	/**
@@ -37,7 +43,8 @@ class WittyPantsConfig extends PluginConfig
 
 			'regexp' => array(
 				'singletons' => "#(?:---?|\\.\\.\\.)#S",
-				'quotation'  => '#(?<!=)(["\'])(?:.+?)(?<!=)\\1#S'
+				'quotation'  => '#(?<!=)(["\'])(?:.+?)(?<!=)\\1#S',
+				'symbols'    => '#\\((?:tm|r|c)\\)#i'
 			),
 
 			'replacements' => array(
@@ -49,6 +56,11 @@ class WittyPantsConfig extends PluginConfig
 				'quotation' => array(
 					"'" => array("\xE2\x80\x98", "\xE2\x80\x99"),
 					'"' => array("\xE2\x80\x9C", "\xE2\x80\x9D")
+				),
+				'symbols' => array(
+					'(tm)' => "\xE2\x84\xA2",
+					'(r)'  => "\xC2\xAE",
+					'(c)'  => "\xC2\xA9"
 				)
 			)
 		);
