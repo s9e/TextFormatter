@@ -36,14 +36,20 @@ class WittyPantsConfig extends PluginConfig
 			'attrName' => $this->attrName,
 
 			'regexp' => array(
-				'singletons' => '#(?:---?|\\.\\.\\.)#S',
-				'quotes' => '#"(?:.*)"#s'
+				'singletons' => "#(?:---?|\\.\\.\\.)#Su",
+				'quotation'  => '#(?<!=)(["\'])(?:.+?)(?<!=)\\1#S'
 			),
 
 			'replacements' => array(
-				'--'  => "\xE2\x80\x93",
-				'---' => "\xE2\x80\x94",
-				'...' => "\xE2\x80\xA6"
+				'singletons' => array(
+					'--'  => "\xE2\x80\x93",
+					'---' => "\xE2\x80\x94",
+					'...' => "\xE2\x80\xA6"
+				),
+				'quotation' => array(
+					"'" => array("\xE2\x80\x98", "\xE2\x80\x99"),
+					'"' => array("\xE2\x80\x9C", "\xE2\x80\x9D")
+				)
 			)
 		);
 	}

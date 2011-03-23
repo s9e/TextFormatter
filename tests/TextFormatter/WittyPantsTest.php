@@ -19,11 +19,59 @@ class WittyPantsTest extends Test
 		);
 	}
 
-	public function testThreeConsecutiveDotsAreConvertedIntoAnEllipsis()
+	public function testSingleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
+	{
+		$this->assertWit(
+			"'Good morning, Frank,' greeted HAL.",
+			"‘Good morning, Frank,’ greeted HAL."
+		);
+	}
+
+	public function testDoubleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
+	{
+		$this->assertWit(
+			'"Good morning, Frank," greeted HAL.',
+			'“Good morning, Frank,” greeted HAL.'
+		);
+	}
+
+	public function testSingleQuotesAfterAnEqualSignAreNotConvertedToQuotationMarks()
+	{
+		$this->assertWit(
+			"[url='some url']",
+			"[url='some url']"
+		);
+	}
+
+	public function testDoubleQuotesAfterAnEqualSignAreNotConvertedToQuotationMarks()
+	{
+		$this->assertWit(
+			'[url="some url"]',
+			'[url="some url"]'
+		);
+	}
+
+	public function testThreeConsecutiveDotsAreConvertedToAnEllipsis()
 	{
 		$this->assertWit(
 			'Hello world...',
-			"Hello world\xE2\x80\xA6"
+			'Hello world…'
+		);
+	}
+
+	public function testTwoConsecutiveHypensAreConvertedToAnEnDash()
+	{
+		$this->assertWit(
+			'foo--bar',
+			'foo–bar'
+		);
+	}
+
+	public function testThreeConsecutiveHypensAreConvertedToAnEmDash()
+	{
+		$this->assertWit(
+			'foo--bar',
+			'foo–bar'
 		);
 	}
 }

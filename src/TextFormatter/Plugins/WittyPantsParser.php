@@ -28,7 +28,32 @@ class WittyPantsParser extends PluginParser
 				'name'  => $tagName,
 				'len'   => strlen($m[0][0]),
 				'attrs' => array(
-					$attrName => $replacements[$m[0][0]]
+					$attrName => $replacements['singletons'][$m[0][0]]
+				)
+			);
+		}
+
+		foreach ($matches['quotation'] as $m)
+		{
+			// left character
+			$tags[] = array(
+				'pos'   => $m[0][1],
+				'type'  => Parser::SELF_CLOSING_TAG,
+				'name'  => $tagName,
+				'len'   => 1,
+				'attrs' => array(
+					$attrName => $replacements['quotation'][$m[1][0]][0]
+				)
+			);
+
+			// right character
+			$tags[] = array(
+				'pos'   => $m[0][1] + strlen($m[0][0]) - 1,
+				'type'  => Parser::SELF_CLOSING_TAG,
+				'name'  => $tagName,
+				'len'   => 1,
+				'attrs' => array(
+					$attrName => $replacements['quotation'][$m[1][0]][1]
 				)
 			);
 		}
