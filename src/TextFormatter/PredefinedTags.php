@@ -559,4 +559,30 @@ class PredefinedTags
 		$this->cb->addTag('STRONG');
 		$this->cb->setTagTemplate('STRONG', '<strong><xsl:apply-templates /></strong>');
 	}
+
+	public function addSPAN()
+	{
+		$this->cb->addTag('SPAN');
+		$this->cb->addTagAttribute('SPAN', 'class', 'id', array('isRequired' => false));
+		$this->cb->setTagTemplate(
+			'SPAN',
+			'<span>
+				<xsl:if test="@class">
+					<xsl:attribute name="class">
+						<xsl:value-of select="@class" />
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:apply-templates />
+			</span>'
+		);
+	}
+
+	public function addNOPARSE()
+	{
+		$this->cb->addTag('NOPARSE', array('defaultRule' => 'deny'));
+		$this->cb->setTagTemplate(
+			'NOPARSE',
+			'<xsl:value-of select="." />'
+		);
+	}
 }
