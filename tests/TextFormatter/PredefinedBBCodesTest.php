@@ -16,15 +16,6 @@ include_once __DIR__ . '/../Test.php';
 */
 class PredefinedBBCodesTest extends Test
 {
-	/**
-	* @expectedException InvalidArgumentException UNKNOWN
-	*/
-	public function testAddPredefinedBBCodeThrowsAnExceptionOnUnknownBBCodes()
-	{
-		$cb = new ConfigBuilder;
-		$cb->BBCodes->addPredefinedBBCode('UNKNOWN');
-	}
-
 	public function testGetCODEstx()
 	{
 		$cb = new ConfigBuilder;
