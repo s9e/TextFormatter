@@ -10,9 +10,13 @@ include_once __DIR__ . '/../Test.php';
 
 class WittyPantsTest extends Test
 {
-	protected function assertWit($text, $expected)
+	public function setUp()
 	{
 		$this->cb->loadPlugin('WittyPants');
+	}
+
+	protected function assertWit($text, $expected)
+	{
 		$this->assertSame(
 			$expected,
 			$this->renderer->render($this->parser->parse($text))
@@ -21,7 +25,7 @@ class WittyPantsTest extends Test
 
 	public function testSingleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			"'Good morning, Frank,' greeted HAL.",
 			"‘Good morning, Frank,’ greeted HAL."
 		);
@@ -29,7 +33,7 @@ class WittyPantsTest extends Test
 
 	public function testDoubleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'"Good morning, Frank," greeted HAL.',
 			'“Good morning, Frank,” greeted HAL.'
 		);
@@ -37,7 +41,7 @@ class WittyPantsTest extends Test
 
 	public function testSingleQuotesAfterAnEqualSignAreNotConvertedToQuotationMarks()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			"[url='some url']",
 			"[url='some url']"
 		);
@@ -45,7 +49,7 @@ class WittyPantsTest extends Test
 
 	public function testDoubleQuotesAfterAnEqualSignAreNotConvertedToQuotationMarks()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'[url="some url"]',
 			'[url="some url"]'
 		);
@@ -53,7 +57,7 @@ class WittyPantsTest extends Test
 
 	public function testThreeConsecutiveDotsAreConvertedToAnEllipsis()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'Hello world...',
 			'Hello world…'
 		);
@@ -61,7 +65,7 @@ class WittyPantsTest extends Test
 
 	public function testTwoConsecutiveHypensAreConvertedToAnEnDash()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'foo--bar',
 			'foo–bar'
 		);
@@ -69,7 +73,7 @@ class WittyPantsTest extends Test
 
 	public function testThreeConsecutiveHypensAreConvertedToAnEmDash()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'foo---bar',
 			'foo—bar'
 		);
@@ -77,7 +81,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLettersTmInLowercaseAreReplacedWithTheTrademarkSymbol()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'(tm)',
 			'™'
 		);
@@ -85,7 +89,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLettersTmInUppercaseAreReplacedWithTheTrademarkSymbol()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'(TM)',
 			'™'
 		);
@@ -93,7 +97,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLetterCInLowercaseAreReplacedWithTheCopyrightSymbol()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'(c)',
 			'©'
 		);
@@ -101,7 +105,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLetterCInUppercaseAreReplacedWithTheCopyrightSymbol()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'(C)',
 			'©'
 		);
@@ -109,7 +113,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLetterRInLowercaseAreReplacedWithTheRegisteredSymbol()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'(r)',
 			'®'
 		);
@@ -117,7 +121,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLetterRInUppercaseAreReplacedWithTheRegisteredSymbol()
 	{
-		$this->assertWit(
+		$this->assertRendering(
 			'(R)',
 			'®'
 		);

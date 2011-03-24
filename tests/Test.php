@@ -90,4 +90,15 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$this->assertXmlStringEqualsXmlString($expectedXml, $actualXml);
 		$this->assertArrayMatches($expectedLog, $actualLog);
 	}
+
+	protected function assertRendering($text, $expectedHtml, $expectedLog = array('error' => null))
+	{
+		$actualXml = $this->parser->parse($text);
+		$actualLog = $this->parser->getLog();
+
+		$this->assertArrayMatches($expectedLog, $actualLog);
+
+		$actualHtml = $this->renderer->render($actualXml);
+		$this->assertSame($expectedHtml, $actualHtml);
+	}
 }
