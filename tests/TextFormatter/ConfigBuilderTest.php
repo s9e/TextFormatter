@@ -34,7 +34,7 @@ class ConfigBuilderTest extends Test
 	*/
 	public function testDoesNotLoadInvalidPluginName()
 	{
-		$this->cb->{'../foo'};
+		$this->cb->loadPlugin('../foo');
 	}
 
 	/**

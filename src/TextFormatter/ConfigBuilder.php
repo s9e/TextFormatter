@@ -596,7 +596,12 @@ class ConfigBuilder
 			return $this->predefinedTags = new PredefinedTags($this);
 		}
 
-		return $this->loadPlugin($k);
+		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
+		{
+			return $this->loadPlugin($k);
+		}
+
+		throw new RuntimeException('Undefined property: ' . __CLASS__ . '::$' . $k);
 	}
 
 	/**
@@ -714,6 +719,16 @@ class ConfigBuilder
 	public function allowScheme($scheme)
 	{
 		$this->filters['url']['allowedSchemes'][] = $scheme;
+	}
+
+	/**
+	* Return the list of allowed URL schemes
+	*
+	* @return array
+	*/
+	public function getAllowedSchemes()
+	{
+		return $this->filters['url']['allowedSchemes'];
 	}
 
 	/**
