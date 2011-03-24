@@ -107,9 +107,9 @@ class BBCodesParser extends PluginParser
 					* Set the default param. If there's no default param, we issue a warning and
 					* reuse the BBCode's name instead
 					*/
-					if (isset($tagConfig['defaultAttr']))
+					if (isset($bbcodeConfig['defaultAttr']))
 					{
-						$attrName = $tagConfig['defaultAttr'];
+						$attrName = $bbcodeConfig['defaultAttr'];
 					}
 					else
 					{
