@@ -17,8 +17,13 @@ class FabricTest extends Test
 
 	public function testLink()
 	{
-		$this->assertRendering(
+		$this->assertTransformation(
 			'"link text":http://www.example.com',
+			'<rt>
+				<URL url="http://www.example.com">
+					<st>"</st>link text<et>":http://www.example.com</et>
+				</URL>
+			</rt>',
 			'<a href="http://www.example.com">link text</a>'
 		);
 	}
@@ -28,24 +33,33 @@ class FabricTest extends Test
 	*/
 	public function testLinkWithTitle()
 	{
-		$this->assertRendering(
+		$this->assertTransformation(
 			'"link text(with title)":http://www.example.com',
+			'<rt>
+				<URL title="with title" url="http://www.example.com">
+					<st>"</st>link text<et>(with title)":http://www.example.com</et>
+				</URL>
+			</rt>',
 			'<a href="http://www.example.com" title="with title">link text</a>'
 		);
 	}
 
 	public function testLinkWithNoUrl()
 	{
-		$this->assertRendering(
+		$this->assertTransformation(
 			'"link text(with title)"',
+			'<pt>"link text(with title)"</pt>',
 			'"link text(with title)"'
 		);
 	}
 
 	public function testImage()
 	{
-		$this->assertRendering(
+		$this->assertTransformation(
 			'!http://example.com/img.png!',
+			'<rt>
+				<IMG src="http://example.com/img.png">!http://example.com/img.png!</IMG>
+			</rt>',
 			'<img src="http://example.com/img.png">'
 		);
 	}
@@ -55,8 +69,11 @@ class FabricTest extends Test
 	*/
 	public function testImageWithAltText()
 	{
-		$this->assertRendering(
+		$this->assertTransformation(
 			'!http://example.com/img.png(alt text)!',
+			'<rt>
+				<IMG alt="alt text" src="http://example.com/img.png" title="alt text">!http://example.com/img.png(alt text)!</IMG>
+			</rt>',
 			'<img src="http://example.com/img.png" alt="alt text" title="alt text">'
 		);
 	}
@@ -66,8 +83,15 @@ class FabricTest extends Test
 	*/
 	public function testImageWithLink()
 	{
-		$this->assertRendering(
+		$this->assertTransformation(
 			'!http://example.com/img.png!:http://www.example.com',
+			'<rt>
+				<URL url="http://www.example.com">
+					<st>!</st>
+					<IMG src="http://example.com/img.png">http://example.com/img.png!</IMG>
+					<et>:http://www.example.com</et>
+				</URL>
+			</rt>',
 			'<a href="http://www.example.com"><img src="http://example.com/img.png"></a>'
 		);
 	}
@@ -79,16 +103,28 @@ class FabricTest extends Test
 	*/
 	public function testImageWithAltTextAndLink()
 	{
-		$this->assertRendering(
+		$this->assertTransformation(
 			'!http://example.com/img.png(alt text)!:http://www.example.com',
+			'<rt>
+				<URL url="http://www.example.com">
+					<st>!</st>
+					<IMG alt="alt text" src="http://example.com/img.png" title="alt text">http://example.com/img.png(alt text)!</IMG>
+					<et>:http://www.example.com</et>
+				</URL>
+			</rt>',
 			'<a href="http://www.example.com"><img src="http://example.com/img.png" alt="alt text" title="alt text"></a>'
 		);
 	}
 /*
 	public function testEM()
 	{
-		$this->assertRendering(
+		$this->assertTransformation(
 			'_emphasis_',
+			'<rt>
+				<URL url="http://www.example.com">
+					<st>"</st>link text<et>":http://www.example.com</et>
+				</URL>
+			</rt>',
 			'<i>emphasis</i>'
 		);
 	}

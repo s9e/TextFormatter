@@ -101,4 +101,19 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$actualHtml = $this->renderer->render($actualXml);
 		$this->assertSame($expectedHtml, $actualHtml);
 	}
+
+	protected function assertTransformation($text, $expectedXml, $expectedHtml, $expectedLog = array('error' => null))
+	{
+		$actualXml = $this->parser->parse($text);
+		$actualLog = $this->parser->getLog();
+
+		$this->assertArrayMatches($expectedLog, $actualLog);
+		$this->assertXmlStringEqualsXmlString($expectedXml, $actualXml);
+
+		$actualHtml = $this->renderer->render($actualXml);
+		$this->assertSame($expectedHtml, $actualHtml);
+
+		$revertedText = html_entity_decode(strip_tags($actualXml));
+		$this->assertSame($text, $revertedText, 'Could not revert to plain text');
+	}
 }

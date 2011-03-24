@@ -22,6 +22,7 @@ class FabricParser extends PluginParser
 			$attr = (isset($m['attr']) && $m['attr'][1] > -1) ? substr($m['attr'][0], 1, -1) : null;
 
 			$startTagPos = $m[0][1];
+			$endTagPos   = strlen($m[0][0]);
 
 			if (isset($m['url']))
 			{
@@ -43,14 +44,23 @@ class FabricParser extends PluginParser
 					'attrs' => $attrs
 				);
 
+				/**
+				* The first character belongs to this tag, therefore if there's an IMG tag it will
+				* have to start right after it
+				*/
 				++$startTagPos;
 
-				$endTagPos = ($m['attr'][1] === -1)
-				           ? $m['url'][1] - 1
-				           : $m['attr'][1];
+				/**
+				* If this is a link (no image) then <URL>'s end tag starts right after $m['text']
+				* and includes the link's title if applicable. If this is an image, it starts with
+				* the colon at the start of $m['url']
+				*/
+				$endTagPos = ($type === 'link')
+				           ? $m['text'][1] + strlen($m['text'][0])
+				           : $m['url'][1];
 
 				$tags[] = array(
-					'pos'  => $m['text'][1] + strlen($m['text'][0]),
+					'pos'  => $endTagPos,
 					'len'  => strlen($m[0][0]) - $endTagPos,
 					'name' => 'URL',
 					'type' => Parser::END_TAG
@@ -76,7 +86,7 @@ class FabricParser extends PluginParser
 
 				$tags[] = array(
 					'pos'   => $startTagPos,
-					'len'   => $m[0][1],
+					'len'   => $endTagPos - $startTagPos,
 					'name'  => 'IMG',
 					'type'  => Parser::SELF_CLOSING_TAG,
 					'attrs' => $attrs
