@@ -300,6 +300,10 @@ class PredefinedBBCodesTest extends Test
 				</pre>'
 			),
 			array(
+				'[CODE]echo "Hello world";[/CODE]',
+				'<pre class="brush:plain">echo "Hello world";</pre>'
+			),
+			array(
 				'a[HR /]b',
 				'a<hr>b'
 			),

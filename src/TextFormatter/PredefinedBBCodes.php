@@ -15,12 +15,11 @@ namespace s9e\Toolkit\TextFormatter;
 */
 class PredefinedBBCodes extends PredefinedTags
 {
-	protected function forwardCall($tagName, array $bbcodeConfig = array())
+	protected function forwardCall($tagName, array $bbcodeConfig = array(), array $callParams = array())
 	{
 		if (!$this->cb->tagExists($tagName))
 		{
-			$method = 'add' . $tagName;
-			parent::$method();
+			call_user_func_array(array('parent', 'add' . $tagName), $callParams);
 		}
 
 		$this->cb->BBCodes->addBBCodeAlias($tagName, $tagName, $bbcodeConfig);
@@ -221,45 +220,16 @@ class PredefinedBBCodes extends PredefinedTags
 	*/
 	public function addCODE()
 	{
-		$this->cb->BBCodes->addBBCode('CODE', array(
-			'defaultRule' => 'deny',
+		$this->forwardCall('CODE', array(
 			'defaultAttr' => 'stx'
-		));
-
-		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
-			'isRequired' => false,
-			'preFilter'  => array(
-				array('callback' => 'strtolower')
-			)
-		));
-
-		$this->cb->setTagTemplate(
-			'CODE',
-			'<pre class="brush:{@stx}"><xsl:value-of select="text()" /></pre>'
-		);
-	}
-
-	static public function getCODEstx($xml)
-	{
-		// array_values() will reset the keys so that there's no gap in numbering, just in case
-		return array_values(array_unique(
-			array_map(
-				'strval',
-				simplexml_load_string($xml)->xpath('//CODE/@stx')
-			)
 		));
 	}
 
 	public function addHR()
 	{
-		$this->cb->BBCodes->addBBCode('HR', array(
-			'defaultRule' => 'deny',
-			'autoClose'   => true,
-			'trimBefore'  => true,
-			'trimAfter'   => true
+		$this->forwardCall('HR', array(
+			'autoClose' => true
 		));
-
-		$this->cb->setTagTemplate('HR', '<hr/>');
 	}
 
 	/**
@@ -275,45 +245,10 @@ class PredefinedBBCodes extends PredefinedTags
 	*/
 	public function addQUOTE($nestingLevel = 3, $authorStr = '%s wrote:')
 	{
-		$this->cb->BBCodes->addBBCode('QUOTE', array(
-			'nestingLimit' => $nestingLevel,
-			'defaultAttr'  => 'author',
-			'trimBefore'   => true,
-			'trimAfter'    => true,
-			'ltrimContent' => true,
-			'rtrimContent' => true
-		));
-
-		$authorXml = str_replace(
-			'%s',
-			'<xsl:value-of select="@author" />',
-			htmlspecialchars($authorStr)
-		);
-
-		$this->cb->addTagAttribute('QUOTE', 'author', 'text', array('isRequired' => false));
-		$this->cb->setTagTemplate(
+		$this->forwardCall(
 			'QUOTE',
-			'<xsl:choose>
-				<xsl:when test="@author">
-
-					<blockquote>
-						<div>
-							<cite>' . $authorXml . '</cite>
-							<xsl:apply-templates />
-						</div>
-					</blockquote>
-
-				</xsl:when>
-				<xsl:otherwise>
-
-					<blockquote class="uncited">
-						<div>
-							<xsl:apply-templates />
-						</div>
-					</blockquote>
-
-				</xsl:otherwise>
-			</xsl:choose>'
+			array('defaultAttr' => 'author'),
+			array($nestingLevel, $authorStr)
 		);
 	}
 
@@ -335,61 +270,10 @@ class PredefinedBBCodes extends PredefinedTags
 	*/
 	public function addEMAIL()
 	{
-		$this->cb->BBCodes->addBBCode('EMAIL', array(
+		$this->forwardCall('EMAIL', array(
 			'defaultAttr' => 'email',
-			'contentAttr' => 'content',
-			'defaultRule' => 'deny',
-			'attrs' => array(
-				'email'   => array(
-					'type' => 'email',
-					'postFilter' => array(
-						array('callback' => 'strrev')
-					)
-				),
-				'subject' => array(
-					'type' => 'text',
-					'isRequired' => false,
-					'postFilter' => array(
-						array('callback' => 'rawurlencode'),
-						array('callback' => 'strrev')
-					)
-				),
-				/**
-				* We set the "content" attribute as a compound attribute with a regexp that will
-				* match virtually anything. Its value will be used for the "email" attribute if
-				* the latter was not provided. The idea is to have a "content" attribute that is
-				* filled with the tag's content and copy its value to "email" and "revtext" so that
-				* they receive a different treatment via validation/postFilter
-				*/
-				'content' => array(
-					'type'   => 'compound',
-					'regexp' => '/(?P<revtext>(?P<email>.*))/s'
-				),
-				'revtext' => array(
-					'type' => 'text',
-					'postFilter' => array(
-						array('callback' => 'strrev')
-					)
-				)
-			)
+			'contentAttr' => 'content'
 		));
-
-		$this->cb->setTagTemplate(
-			'EMAIL',
-			'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()">
-				<xsl:attribute name="onmouseover">
-					<xsl:text>this.href=\'</xsl:text>
-					<xsl:if test="@subject">
-						<xsl:value-of select="@subject" />
-						<xsl:text>=tcejbus?</xsl:text>
-					</xsl:if>
-					<xsl:value-of select="@email" />
-					<xsl:text>:otliam\'.split(\'\').reverse().join(\'\')</xsl:text>
-				</xsl:attribute>
-
-				<xsl:value-of select="@revtext" />
-			</a>'
-		);
 	}
 
 	/**
@@ -541,18 +425,12 @@ class PredefinedBBCodes extends PredefinedTags
 
 	public function addINS()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[INS]{TEXT}[/INS]',
-			'<ins>{TEXT}</ins>'
-		);
+		$this->forwardCall('INS');
 	}
 
 	public function addDEL()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[DEL]{TEXT}[/DEL]',
-			'<del>{TEXT}</del>'
-		);
+		$this->forwardCall('DEL');
 	}
 
 	/**
@@ -605,13 +483,11 @@ class PredefinedBBCodes extends PredefinedTags
 
 	public function addEM()
 	{
-		$this->cb->BBCodes->addBBCode('EM');
-		$this->cb->setTagTemplate('EM', '<em><xsl:apply-templates/></em>');
+		$this->forwardCall('EM');
 	}
 
 	public function addSTRONG()
 	{
-		$this->cb->BBCodes->addBBCode('STRONG');
-		$this->cb->setTagTemplate('STRONG', '<strong><xsl:apply-templates/></strong>');
+		$this->forwardCall('STRONG');
 	}
 }

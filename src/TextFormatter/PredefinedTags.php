@@ -363,10 +363,10 @@ class PredefinedTags
 	{
 		$this->cb->addTag('CODE', array(
 			'defaultRule' => 'deny',
-			'defaultAttr' => 'stx'
 		));
 
 		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
+			'default'    => 'plain',
 			'isRequired' => false,
 			'preFilter'  => array(
 				array('callback' => 'strtolower')
@@ -394,7 +394,6 @@ class PredefinedTags
 	{
 		$this->cb->addTag('HR', array(
 			'defaultRule' => 'deny',
-			'autoClose'   => true,
 			'trimBefore'  => true,
 			'trimAfter'   => true
 		));
@@ -417,7 +416,6 @@ class PredefinedTags
 	{
 		$this->cb->addTag('QUOTE', array(
 			'nestingLimit' => $nestingLevel,
-			'defaultAttr'  => 'author',
 			'trimBefore'   => true,
 			'trimAfter'    => true,
 			'ltrimContent' => true,
@@ -476,8 +474,6 @@ class PredefinedTags
 	public function addEMAIL()
 	{
 		$this->cb->addTag('EMAIL', array(
-			'defaultAttr' => 'email',
-			'contentAttr' => 'content',
 			'defaultRule' => 'deny',
 			'attrs' => array(
 				'email'   => array(
@@ -532,215 +528,25 @@ class PredefinedTags
 		);
 	}
 
-	/**
-	* Accepts both URLs and identifiers:
-	*
-	* [JUSTIN]justin[/JUSTIN]
-	* [JUSTIN]http://www.justin.tv/justin[/JUSTIN]
-	*/
-	public function addJUSTIN()
-	{
-		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?([A-Za-z_0-9]+)/';
-
-		$this->cb->addTagFromExample(
-			'[JUSTIN]{REGEXP=' . $regexp . ';replace=$1}[/JUSTIN]',
-			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={REGEXP}" bgcolor="#000000">
-				<param name="allowFullScreen" value="true" />
-				<param name="allowScriptAccess" value="always" />
-				<param name="allowNetworking" value="all" />
-				<param name="movie" value="http://www.justin.tv/widgets/live_embed_player.swf" />
-				<param name="flashvars" value="channel={REGEXP}&amp;auto_play=false" />
-			</object>'
-		);
-	}
-
-	/**
-	* Display a date using browser's locale via Javascript
-	*
-	* e.g. [LOCALTIME]2005/09/17 12:55:09 PST[/LOCALTIME]
-	*
-	* The date is parsed in PHP with strtotime(), which is used as a pre-filter, then it is
-	* validated as a number. strtotime() returns false on invalid date, so it invalid dates will be
-	* automatically rejected.
-	*
-	* Using user-supplied data in <script> tags is disallowed by ConfigBuilder by default, and the
-	* limitation has to be removed by using the third parameter. The template should still be
-	* secure, though, as only numbers are allowed and it should be impossible to inject any
-	* Javascript using the [LOCALTIME] BBCode.
-	*
-	* Finally, if Javascript is disabled, the original content is displayed via a <noscript> tag.
-	*
-	* Note the use of <xsl:apply-templates /> instead of the {NUMBER} placeholder. This is because
-	* {NUMBER} will display the value returned by strtotime() whereas <xsl:apply-templates /> will
-	* display the UNFILTERED value.
-	*/
-	public function addLOCALTIME()
-	{
-		$this->cb->addTagFromExample(
-			'[LOCALTIME]{NUMBER;preFilter=strtotime}[/LOCALTIME]',
-			'<span class="localtime" title="{text()}">
-				<script type="text/javascript">document.write(new Date({NUMBER}*1000).toLocaleString())</script>
-				<noscript><xsl:apply-templates /></noscript>
-			</span>',
-			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
-		);
-	}
-
-	/**
-	* Basic [SPOILER] tag
-	*
-	* It is unstyled, you have to style it yourself. Each section was given a nice class name for
-	* that purpose.
-	*
-	* Note that because of XSL, curly braces { } inside of attribute values have to be escaped.
-	* You can escape them by having two of them, e.g. "if (true) {{ dostuff(); }}"
-	*/
-	public function addSPOILER($spoilerStr = 'Spoiler:', $showStr = 'Show', $hideStr = 'Hide')
-	{
-		$this->cb->addTagFromExample(
-			'[SPOILER={TEXT1;isRequired=0}]{TEXT2}[/SPOILER]',
-			'<div class="spoiler">
-				<div class="spoiler-header">
-					<input type="button" value="' . $showStr . '" onclick="'
-						. 'var s=this.parentNode.nextSibling.style;'
-						. "if(s.display!=''){{s.display='';this.value='" . $hideStr . "'}}"
-						. "else{{s.display='none';this.value='" . $showStr . "'}}"
-					. '"/>
-					<span class="spoiler-title">' . $spoilerStr . ' {TEXT1}</span>
-				</div>
-				<div class="spoiler-content" style="display:none">{TEXT2}</div>
-			</div>'
-		);
-	}
-
 	public function addCOLOR()
 	{
-		$this->cb->addTagFromExample(
-			'[COLOR={COLOR}]{TEXT}[/COLOR]',
-			'<span style="color:{COLOR}">{TEXT}</span>'
-		);
-	}
-
-	/**
-	* [SIZE] tag with size expressed in %
-	*
-	* Note that we don't allow [SIZE] tags to be nested in order to prevent users for exceeding the
-	* size limits
-	*
-	* @param integer $minSize  Minimum size
-	* @param integer $maxnSize Maximum size
-	*/
-	public function addSIZE($minSize = 50, $maxSize = 200)
-	{
-		$this->cb->addTagFromExample(
-			'[SIZE={RANGE=' . $minSize . ',' . $maxSize . '}]{TEXT}[/SIZE]',
-			'<span style="font-size:{RANGE}%">{TEXT}</span>',
-			0,
-			array('nestingLimit' => 1)
-		);
-	}
-
-	public function addBLIP()
-	{
-		$regexp = '/^(?:' . preg_quote('http://blip.tv/file/', '/') . ')?([0-9]+)/';
-
-		// HTML taken straight from Blip's player "Copy embed code" feature
-		$this->cb->addTagFromExample(
-			'[BLIP]{REGEXP=' . $regexp . ';replace=$1}[/BLIP]',
-			'<embed src="http://blip.tv/play/{REGEXP}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
-		);
-	}
-
-	public function addVIMEO()
-	{
-		$regexp = '/^(?:' . preg_quote('http://vimeo.com/', '/') . ')?([0-9]+)/';
-
-		// HTML taken straight from Vimeo's player "EMBED" feature
-		$this->cb->addTagFromExample(
-			'[VIMEO]{REGEXP=' . $regexp . ';replace=$1}[/VIMEO]',
-			'<iframe src="http://player.vimeo.com/video/{REGEXP}" width="400" height="225" frameborder="0"></iframe>'
-		);
-	}
-
-	public function addDAILYMOTION()
-	{
-		$regexp = '/^(?:' . preg_quote('http://www.dailymotion.com/video/', '/') . ')?([0-9a-z]+)/';
-
-		// HTML taken straight from Dailymotion's Export->embed feature
-		$this->cb->addTagFromExample(
-			'[DAILYMOTION]{REGEXP=' . $regexp . ';replace=$1}[/DAILYMOTION]',
-			'<object width="480" height="270">
-				<param name="movie" value="http://www.dailymotion.com/swf/video/{REGEXP}"></param>
-				<param name="allowFullScreen" value="true"></param>
-				<param name="allowScriptAccess" value="always"></param>
-				
-				<embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/{REGEXP}" width="480" height="270" allowfullscreen="true" allowscriptaccess="always"></embed>
-			</object>'
+		$this->cb->addTag('COLOR');
+		$this->cb->addTagAttribute('COLOR', 'color', 'color');
+		$this->cb->setTagTemplate(
+			'COLOR', '<span style="color:{@color}"><xsl:apply-templates /></span>'
 		);
 	}
 
 	public function addINS()
 	{
-		$this->cb->addTagFromExample(
-			'[INS]{TEXT}[/INS]',
-			'<ins>{TEXT}</ins>'
-		);
+		$this->cb->addTag('INS');
+		$this->cb->setTagTemplate('INS', '<ins><xsl:apply-templates /></ins>');
 	}
 
 	public function addDEL()
 	{
-		$this->cb->addTagFromExample(
-			'[DEL]{TEXT}[/DEL]',
-			'<del>{TEXT}</del>'
-		);
-	}
-
-	/**
-	* [FLASH] tag
-	*
-	* Should be compatible with phpBB's [flash] tag.
-	*
-	* "allowScriptAccess" is set to "never"
-	* "allowNetworking" is set to "internal" -- not the most restrictive setting, but that's what
-	* people seem to generally use
-	*
-	* The rest was based off Adobe's site.
-	*
-	* @link http://kb2.adobe.com/cps/164/tn_16494.html
-	* @link http://help.adobe.com/en_US/ActionScript/3.0_ProgrammingAS3/WS1EFE2EDA-026D-4d14-864E-79DFD56F87C6.html
-	*/
-	public function addFLASH()
-	{
-		$this->cb->addTag(
-			'FLASH',
-			array(
-				'defaultAttr' => 'dimensions',
-				'contentAttr' => 'url',
-				'attrs' => array(
-					'width'  => array('type' => 'number'),
-					'height' => array('type' => 'number'),
-					'url'    => array('type' => 'url'),
-					'dimensions' => array(
-						'type'       => 'compound',
-						'regexp'     => '/(?P<width>[0-9]+),(?P<height>[0-9]+)/',
-						'isRequired' => false
-					)
-				),
-				'template' =>
-					'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="{@width}" height="{@height}">
-						<param name="movie" value="{@url}" />
-						<param name="quality" value="high" />
-						<param name="wmode" value="opaque" />
-						<param name="play" value="false" />
-						<param name="loop" value="false" />
-
-						<param name="allowScriptAccess" value="never" />
-						<param name="allowNetworking" value="internal" />
-
-						<embed src="{@url}" quality="high" width="{@width}" height="{@height}" wmode="opaque" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" play="false" loop="false" allowscriptaccess="never" allownetworking="internal"></embed>
-					</object>'
-			)
-		);
+		$this->cb->addTag('DEL');
+		$this->cb->setTagTemplate('DEL', '<del><xsl:apply-templates /></del>');
 	}
 
 	public function addEM()
