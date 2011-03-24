@@ -13,13 +13,26 @@ namespace s9e\Toolkit\TextFormatter;
 *
 * @link http://www.phpbb.com/kb/article/adding-custom-bbcodes-in-phpbb3/
 */
-class PredefinedBBCodes extends PredefinedTags
+class PredefinedBBCodes
 {
+	/**
+	* @var ConfigBuilder
+	*/
+	protected $cb;
+
+	public function __construct(ConfigBuilder $cb)
+	{
+		$this->cb = $cb;
+	}
+
 	protected function forwardCall($tagName, array $bbcodeConfig = array(), array $callParams = array())
 	{
 		if (!$this->cb->tagExists($tagName))
 		{
-			call_user_func_array(array('parent', 'add' . $tagName), $callParams);
+			call_user_func_array(
+				array($this->cb->predefinedTags, 'add' . $tagName),
+				$callParams
+			);
 		}
 
 		$this->cb->BBCodes->addBBCodeAlias($tagName, $tagName, $bbcodeConfig);

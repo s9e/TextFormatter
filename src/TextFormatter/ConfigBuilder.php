@@ -580,11 +580,23 @@ class ConfigBuilder
 	//==========================================================================
 
 	/**
-	* Magic __get automatically loads plugins
+	* Magic __get automatically loads plugins, PredefinedTags class
 	*/
-	public function __get($pluginName)
+	public function __get($k)
 	{
-		return $this->loadPlugin($pluginName);
+		if ($k === 'predefinedTags')
+		{
+			$className = __NAMESPACE__ . '\\PredefinedTags';
+
+			if (!class_exists($className))
+			{
+				include __DIR__ . '/PredefinedTags.php';
+			}
+
+			return $this->predefinedTags = new PredefinedTags($this);
+		}
+
+		return $this->loadPlugin($k);
 	}
 
 	/**

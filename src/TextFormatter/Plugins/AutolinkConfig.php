@@ -14,9 +14,9 @@ class AutolinkConfig extends PluginConfig
 {
 	public function setUp()
 	{
-		if (!$this->cb->BBCodes->exists('URL'))
+		if (!$this->cb->tagExists('URL'))
 		{
-			$this->cb->BBCodes->addPredefinedBBCode('URL');
+			$this->cb->addPredefinedTag('URL');
 		}
 	}
 

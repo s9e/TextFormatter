@@ -7,14 +7,13 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
-/**
-* This class attempts to hold the definitions of the most commonly requested BBCodes.
-* It is partially based on user requests found in forum software-oriented websites.
-*
-* @link http://www.phpbb.com/kb/article/adding-custom-bbcodes-in-phpbb3/
-*/
 class PredefinedTags
 {
+	/**
+	* @var ConfigBuilder
+	*/
+	protected $cb;
+
 	public function __construct(ConfigBuilder $cb)
 	{
 		$this->cb = $cb;

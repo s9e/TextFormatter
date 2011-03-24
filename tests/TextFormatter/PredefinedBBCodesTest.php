@@ -4,13 +4,14 @@ namespace s9e\Toolkit\Tests;
 
 use s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\Parser,
+    s9e\Toolkit\TextFormatter\PredefinedTags,
     s9e\Toolkit\TextFormatter\PredefinedBBCodes,
     s9e\Toolkit\TextFormatter\Renderer;
 
 include_once __DIR__ . '/../Test.php';
 
 /**
-* @covers s9e\Toolkit\TextFormatter\PredefinedTags
+* covers s9e\Toolkit\TextFormatter\PredefinedTags
 * @covers s9e\Toolkit\TextFormatter\PredefinedBBCodes
 */
 class PredefinedBBCodesTest extends Test
@@ -33,7 +34,7 @@ class PredefinedBBCodesTest extends Test
 
 		$this->assertEquals(
 			array('php', 'html'),
-			PredefinedBBCodes::getCODEstx($xml)
+			PredefinedTags::getCODEstx($xml)
 		);
 	}
 

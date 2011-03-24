@@ -177,13 +177,6 @@ class BBCodesConfig extends PluginConfig
 
 			if (!class_exists($className))
 			{
-				$parentClassName = substr($className, 0, -7) . 'Tags';
-
-				if (!class_exists($parentClassName))
-				{
-					include __DIR__ . '/../PredefinedTags.php';
-				}
-
 				include __DIR__ . '/../PredefinedBBCodes.php';
 			}
 
