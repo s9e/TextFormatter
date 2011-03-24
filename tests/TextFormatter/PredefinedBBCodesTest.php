@@ -10,6 +10,7 @@ use s9e\Toolkit\TextFormatter\ConfigBuilder,
 include_once __DIR__ . '/../Test.php';
 
 /**
+* @covers s9e\Toolkit\TextFormatter\PredefinedTags
 * @covers s9e\Toolkit\TextFormatter\PredefinedBBCodes
 */
 class PredefinedBBCodesTest extends Test
@@ -70,11 +71,11 @@ class PredefinedBBCodesTest extends Test
 		return array(
 		array(
 				'[B]bold [B]bolder[/B][/B]',
-				'<strong>bold <strong>bolder</strong></strong>'
+				'<b>bold <b>bolder</b></b>'
 			),
 			array(
 				'[I]italic [I]italicer[/I][/I]',
-				'<em>italic <em>italicer</em></em>'
+				'<i>italic <i>italicer</i></i>'
 			),
 			array(
 				'[U]underlined [U]well, still underlined[/U][/U]',

@@ -138,6 +138,19 @@ class BBCodesConfig extends PluginConfig
 		return isset($this->bbcodes[$bbcodeName]);
 	}
 
+	public function setBBCodeOptions($bbcodeName, array $bbcodeOptions)
+	{
+		foreach ($bbcodeOptions as $optionName => $optionValue)
+		{
+			$this->setBBCodeOption($bbcodeName, $optionName, $optionValue);
+		}
+	}
+
+	public function setBBCodeOption($bbcodeName, $optionName, $optionValue)
+	{
+		$this->bbcodesConfig[$bbcodeName][$optionName] = $optionValue;
+	}
+
 	public function getConfig()
 	{
 		/**
@@ -160,10 +173,17 @@ class BBCodesConfig extends PluginConfig
 		if (!isset($this->predefinedBBCodes))
 		{
 			$className = implode('\\', array_slice(explode('\\', __NAMESPACE__), 0, -1))
-			           . '\\PredefinedBBCodes';
+					   . '\\PredefinedBBCodes';
 
 			if (!class_exists($className))
 			{
+				$parentClassName = substr($className, 0, -7) . 'Tags';
+
+				if (!class_exists($parentClassName))
+				{
+					include __DIR__ . '/../PredefinedTags.php';
+				}
+
 				include __DIR__ . '/../PredefinedBBCodes.php';
 			}
 
@@ -424,7 +444,6 @@ class BBCodesConfig extends PluginConfig
 
 			if (isset($params[$attrName]))
 			{
-				print_r($matches);print_r($params);exit;
 				throw new InvalidArgumentException('Param ' . $attrName . ' is defined twice');
 			}
 
