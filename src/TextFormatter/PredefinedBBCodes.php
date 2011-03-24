@@ -7,6 +7,8 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
+use RuntimeException;
+
 /**
 * This class attempts to hold the definitions of the most commonly requested BBCodes.
 * It is partially based on user requests found in forum software-oriented websites.
@@ -25,6 +27,16 @@ class PredefinedBBCodes
 		$this->cb = $cb;
 	}
 
+	public function __call($methodName, $args)
+	{
+		if (!preg_match('#^add([A-Z]+)$#D', $methodName))
+		{
+			throw new RuntimeException('Call to undefined method ' . __METHOD__ . '()');
+		}
+
+		$this->forwardCall(substr($methodName, 3), array(), $args);
+	}
+
 	protected function forwardCall($tagName, array $bbcodeConfig = array(), array $callParams = array())
 	{
 		if (!$this->cb->tagExists($tagName))
@@ -36,26 +48,6 @@ class PredefinedBBCodes
 		}
 
 		$this->cb->BBCodes->addBBCodeAlias($tagName, $tagName, $bbcodeConfig);
-	}
-
-	public function addB()
-	{
-		$this->forwardCall('B');
-	}
-
-	public function addI()
-	{
-		$this->forwardCall('I');
-	}
-
-	public function addU()
-	{
-		$this->forwardCall('U');
-	}
-
-	public function addS()
-	{
-		$this->forwardCall('S');
 	}
 
 	/**
@@ -151,26 +143,6 @@ class PredefinedBBCodes
 		));
 	}
 
-	public function addLEFT()
-	{
-		$this->forwardCall('LEFT');
-	}
-
-	public function addRIGHT()
-	{
-		$this->forwardCall('RIGHT');
-	}
-
-	public function addCENTER()
-	{
-		$this->forwardCall('CENTER');
-	}
-
-	public function addJUSTIFY()
-	{
-		$this->forwardCall('JUSTIFY');
-	}
-
 	public function addBACKGROUND()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
@@ -193,16 +165,6 @@ class PredefinedBBCodes
 			'[blink]{TEXT}[/blink]',
 			'<span style="text-decoration:blink">{TEXT}</span>'
 		);
-	}
-
-	public function addSUB()
-	{
-		$this->forwardCall('SUB');
-	}
-
-	public function addSUPER()
-	{
-		$this->forwardCall('SUPER');
 	}
 
 	/**
@@ -436,16 +398,6 @@ class PredefinedBBCodes
 		);
 	}
 
-	public function addINS()
-	{
-		$this->forwardCall('INS');
-	}
-
-	public function addDEL()
-	{
-		$this->forwardCall('DEL');
-	}
-
 	/**
 	* [FLASH] tag
 	*
@@ -492,15 +444,5 @@ class PredefinedBBCodes
 					</object>'
 			)
 		);
-	}
-
-	public function addEM()
-	{
-		$this->forwardCall('EM');
-	}
-
-	public function addSTRONG()
-	{
-		$this->forwardCall('STRONG');
 	}
 }
