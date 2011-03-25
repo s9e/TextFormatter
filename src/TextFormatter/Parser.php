@@ -786,6 +786,11 @@ class Parser
 				'suffix' => '',
 				'attrs'  => array()
 			);
+
+			/**
+			* This will serve as a tiebreaker in case two tags start at the same position
+			*/
+			$tag['_tb'] = $k;
 		}
 	}
 
@@ -1101,13 +1106,15 @@ class Parser
 	protected function sortTags()
 	{
 		/**
-		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), plugin name
+		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), and position in the
+		* original array (aka stable sorting)
 		*/
 		usort($this->tagStack, function($a, $b)
 		{
 			return ($b['pos'] - $a['pos'])
 			    ?: ($a['type'] - $b['type'])
-			    ?: strcmp($a['pluginName'], $b['pluginName']);
+			    ?: strcmp($a['pluginName'], $b['pluginName'])
+			    ?: ($a['_tb'] - $b['_tb']);
 		});
 	}
 
