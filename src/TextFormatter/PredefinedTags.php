@@ -559,7 +559,12 @@ class PredefinedTags
 	public function addSPAN()
 	{
 		$this->cb->addTag('SPAN');
-		$this->cb->addTagAttribute('SPAN', 'class', 'id', array('isRequired' => false));
+
+		$this->cb->addTagAttribute('SPAN', 'class', 'regexp', array(
+			'isRequired' => false,
+			'regexp' => '/^[a-z_0-9 ]+$/Di'
+		));
+
 		$this->cb->setTagTemplate(
 			'SPAN',
 			'<span>

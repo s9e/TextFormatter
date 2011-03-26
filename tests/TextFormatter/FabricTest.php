@@ -212,4 +212,63 @@ class FabricTest extends Test
 			'<sub>subscript</sub>'
 		);
 	}
+
+	public function testPhraseModifierSpan()
+	{
+		$this->assertTransformation(
+			'%span%',
+			'<rt>
+				<SPAN><st>%</st>span<et>%</et></SPAN>
+			</rt>',
+			'<span>span</span>'
+		);
+	}
+
+	public function testPhraseModifierSpanWithClass()
+	{
+		$this->assertTransformation(
+			'%(foo)span%',
+			'<rt>
+				<SPAN class="foo"><st>%(foo)</st>span<et>%</et></SPAN>
+			</rt>',
+			'<span class="foo">span</span>'
+		);
+	}
+
+	public function testPhraseModifierSpanWithMultipleClasses()
+	{
+		$this->assertTransformation(
+			'%(foo bar)span%',
+			'<rt>
+				<SPAN class="foo bar"><st>%(foo bar)</st>span<et>%</et></SPAN>
+			</rt>',
+			'<span class="foo bar">span</span>'
+		);
+	}
+
+	public function testPhraseModifierCode()
+	{
+		$this->assertTransformation(
+			'@code@',
+			'<rt>
+				<CODE stx="plain"><st>@</st>code<et>@</et></CODE>
+			</rt>',
+			'<pre class="brush:plain">code</pre>'
+		);
+	}
+
+	/**
+	* This is an extension to the Textile syntax
+	*/
+	public function testPhraseModifierCodeWithStx()
+	{
+		$this->assertTransformation(
+			'@(php)code@',
+			'<rt>
+				<CODE stx="php"><st>@(php)</st>code<et>@</et></CODE>
+			</rt>',
+			'<pre class="brush:php">code</pre>'
+		);
+	}
+
 }

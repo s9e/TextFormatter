@@ -37,11 +37,38 @@ class FabricParser extends PluginParser
 
 		foreach ($matches['phraseModifiers'] as $m)
 		{
+			$tagName = $tagNames[$m[1][0]];
+			$startTagLen = strlen($m[1][0]);
+			$attrs = array();
+
+			if ($m[0][0][1] === '(')
+			{
+				/**
+				* This phrase modifier has an attribute, e.g. %(class)text% or @(stx)text@
+				*/
+				if ($pos = strpos($m[0][0], ')', 3))
+				{
+					$attr = substr($m[0][0], 2, $pos - 2);
+
+					if ($tagName === 'SPAN')
+					{
+						$attrs['class'] = $attr;
+					}
+					elseif ($tagName === 'CODE')
+					{
+						$attrs['stx'] = $attr;
+					}
+
+					$startTagLen += 2 + strlen($attr);
+				}
+			}
+
 			$tags[] = array(
 				'pos'   => $m[0][1],
-				'len'   => strlen($m[1][0]),
+				'len'   => $startTagLen,
 				'type'  => Parser::START_TAG,
-				'name'  => $tagNames[$m[1][0]]
+				'name'  => $tagName,
+				'attrs' => $attrs
 			);
 
 			$tags[] = array(
