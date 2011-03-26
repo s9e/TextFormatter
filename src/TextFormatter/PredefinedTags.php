@@ -595,4 +595,11 @@ class PredefinedTags
 		$this->cb->addTag('CITE');
 		$this->cb->setTagTemplate('CITE', '<cite><xsl:apply-templates /></cite>');
 	}
+
+	public function addACRONYM()
+	{
+		$this->cb->addTag('ACRONYM');
+		$this->cb->addTagAttribute('ACRONYM', 'title', 'text');
+		$this->cb->setTagTemplate('ACRONYM', '<acronym title="{@title}"><xsl:apply-templates /></acronym>');
+	}
 }

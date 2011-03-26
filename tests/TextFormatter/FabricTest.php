@@ -271,4 +271,14 @@ class FabricTest extends Test
 		);
 	}
 
+	public function testAcronym()
+	{
+		$this->assertTransformation(
+			'ABC(Always Be Closing)',
+			'<rt>
+				<ACRONYM title="Always Be Closing">ABC<et>(Always Be Closing)</et></ACRONYM>
+			</rt>',
+			'<acronym title="Always Be Closing">ABC</acronym>'
+		);
+	}
 }

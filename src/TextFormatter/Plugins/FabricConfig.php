@@ -18,8 +18,11 @@ use s9e\Toolkit\TextFormatter\ConfigBuilder,
 class FabricConfig extends PluginConfig
 {
 	protected $tagsNeeded = array(
+		// imagesAndLinks
 		'URL',
 		'IMG',
+
+		// phraseModifiers
 		'_'  => 'EM',
 		'__' => 'I',
 		'*'  => 'STRONG',
@@ -31,7 +34,10 @@ class FabricConfig extends PluginConfig
 		'~'  => 'SUB',
 		'@'  => 'CODE',
 		'%'  => 'SPAN',
-		'==' => 'NOPARSE'
+		'==' => 'NOPARSE',
+
+		// acronyms
+		'ACRONYM'
 	);
 
 	public function setUp()
