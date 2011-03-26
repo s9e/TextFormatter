@@ -16,70 +16,16 @@ class FabricParser extends PluginParser
 	{
 		$tags = array();
 
-		foreach ($matches['blockModifiers'] as $m)
-		{
-		}
+//		$this->getBlockModifiersTags($tags, $text, $matches['blockModifiers']);
+		$this->getPhraseModifiersTags($tags, $text, $matches['phraseModifiers']);
+		$this->getImagesAndLinksTags($tags, $text, $matches['imagesAndLinks']);
 
-		$tagNames = array(
-			'_'  => 'EM',
-			'__' => 'I',
-			'*'  => 'STRONG',
-			'**' => 'B',
-			'??' => 'CITE',
-			'-'  => 'DEL',
-			'+'  => 'INS',
-			'^'  => 'SUPER',
-			'~'  => 'SUB',
-			'@'  => 'CODE',
-			'%'  => 'SPAN',
-			'==' => 'NOPARSE'
-		);
+		return $tags;
+	}
 
-		foreach ($matches['phraseModifiers'] as $m)
-		{
-			$tagName = $tagNames[$m[1][0]];
-			$startTagLen = strlen($m[1][0]);
-			$attrs = array();
-
-			if ($m[0][0][1] === '(')
-			{
-				/**
-				* This phrase modifier has an attribute, e.g. %(class)text% or @(stx)text@
-				*/
-				if ($pos = strpos($m[0][0], ')', 3))
-				{
-					$attr = substr($m[0][0], 2, $pos - 2);
-
-					if ($tagName === 'SPAN')
-					{
-						$attrs['class'] = $attr;
-					}
-					elseif ($tagName === 'CODE')
-					{
-						$attrs['stx'] = $attr;
-					}
-
-					$startTagLen += 2 + strlen($attr);
-				}
-			}
-
-			$tags[] = array(
-				'pos'   => $m[0][1],
-				'len'   => $startTagLen,
-				'type'  => Parser::START_TAG,
-				'name'  => $tagName,
-				'attrs' => $attrs
-			);
-
-			$tags[] = array(
-				'pos'   => $m[2][1],
-				'len'   => strlen($m[2][0]),
-				'type'  => Parser::END_TAG,
-				'name'  => $tagNames[$m[2][0]]
-			);
-		}
-
-		foreach ($matches['imagesAndLinks'] as $m)
+	protected function getImagesAndLinksTags(&$tags, $text, array $matches)
+	{
+		foreach ($matches as $m)
 		{
 			$type = ($m[0][0][0] === '!') ? 'img' : 'link';
 			$attr = (isset($m['attr']) && $m['attr'][1] > -1) ? substr($m['attr'][0], 1, -1) : null;
@@ -156,7 +102,67 @@ class FabricParser extends PluginParser
 				);
 			}
 		}
+	}
 
-		return $tags;
+	protected function getPhraseModifiersTags(&$tags, $text, array $matches)
+	{
+		$tagNames = array(
+			'_'  => 'EM',
+			'__' => 'I',
+			'*'  => 'STRONG',
+			'**' => 'B',
+			'??' => 'CITE',
+			'-'  => 'DEL',
+			'+'  => 'INS',
+			'^'  => 'SUPER',
+			'~'  => 'SUB',
+			'@'  => 'CODE',
+			'%'  => 'SPAN',
+			'==' => 'NOPARSE'
+		);
+
+		foreach ($matches as $m)
+		{
+			$tagName = $tagNames[$m[1][0]];
+			$startTagLen = strlen($m[1][0]);
+			$attrs = array();
+
+			if ($m[0][0][1] === '(')
+			{
+				/**
+				* This phrase modifier has an attribute, e.g. %(class)text% or @(stx)text@
+				*/
+				if ($pos = strpos($m[0][0], ')', 3))
+				{
+					$attr = substr($m[0][0], 2, $pos - 2);
+
+					if ($tagName === 'SPAN')
+					{
+						$attrs['class'] = $attr;
+					}
+					elseif ($tagName === 'CODE')
+					{
+						$attrs['stx'] = $attr;
+					}
+
+					$startTagLen += 2 + strlen($attr);
+				}
+			}
+
+			$tags[] = array(
+				'pos'   => $m[0][1],
+				'len'   => $startTagLen,
+				'type'  => Parser::START_TAG,
+				'name'  => $tagName,
+				'attrs' => $attrs
+			);
+
+			$tags[] = array(
+				'pos'   => $m[2][1],
+				'len'   => strlen($m[2][0]),
+				'type'  => Parser::END_TAG,
+				'name'  => $tagNames[$m[2][0]]
+			);
+		}
 	}
 }
