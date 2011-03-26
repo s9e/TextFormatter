@@ -16,6 +16,42 @@ class FabricParser extends PluginParser
 	{
 		$tags = array();
 
+		foreach ($matches['blockModifiers'] as $m)
+		{
+		}
+
+		$tagNames = array(
+			'_'  => 'EM',
+			'__' => 'I',
+			'*'  => 'STRONG',
+			'**' => 'B',
+			'??' => 'CITE',
+			'-'  => 'DEL',
+			'+'  => 'INS',
+			'^'  => 'SUPER',
+			'~'  => 'SUB',
+			'@'  => 'CODE',
+			'%'  => 'SPAN',
+			'==' => 'NOPARSE'
+		);
+
+		foreach ($matches['phraseModifiers'] as $m)
+		{
+			$tags[] = array(
+				'pos'   => $m[0][1],
+				'len'   => strlen($m[1][0]),
+				'type'  => Parser::START_TAG,
+				'name'  => $tagNames[$m[1][0]]
+			);
+
+			$tags[] = array(
+				'pos'   => $m[2][1],
+				'len'   => strlen($m[2][0]),
+				'type'  => Parser::END_TAG,
+				'name'  => $tagNames[$m[2][0]]
+			);
+		}
+
 		foreach ($matches['imagesAndLinks'] as $m)
 		{
 			$type = ($m[0][0][0] === '!') ? 'img' : 'link';
@@ -93,8 +129,6 @@ class FabricParser extends PluginParser
 				);
 			}
 		}
-
-//print_r($matches);print_r($tags);exit;
 
 		return $tags;
 	}

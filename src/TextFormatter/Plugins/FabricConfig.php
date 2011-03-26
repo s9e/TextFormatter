@@ -17,12 +17,14 @@ use s9e\Toolkit\TextFormatter\ConfigBuilder,
 */
 class FabricConfig extends PluginConfig
 {
-	protected $phraseModifiers = array(
+	protected $tagsNeeded = array(
+		'URL',
+		'IMG',
 		'_'  => 'EM',
 		'__' => 'I',
 		'*'  => 'STRONG',
 		'**' => 'B',
-		'??' => 'QUOTE',
+		'??' => 'CITE',
 		'-'  => 'DEL',
 		'+'  => 'INS',
 		'^'  => 'SUPER',
@@ -32,16 +34,9 @@ class FabricConfig extends PluginConfig
 		'==' => 'NOPARSE'
 	);
 
-	protected $tagsNeeded = array(
-		'URL',
-		'IMG'
-	);
-
 	public function setUp()
 	{
-		$tagsNeeded = array_merge($this->phraseModifiers, $this->tagsNeeded);
-
-		foreach ($tagsNeeded as $modifier => $tagName)
+		foreach ($this->tagsNeeded as $tagName)
 		{
 			if (!$this->cb->tagExists($tagName))
 			{
@@ -54,13 +49,28 @@ class FabricConfig extends PluginConfig
 	{
 		$urlRegexp = ConfigBuilder::buildRegexpFromList($this->cb->getAllowedSchemes()) . '://\\S+';
 
+		$blockModifiers = array(
+			'[\\#\\*]+ ',
+			'::? ',
+			';;? ',
+			'h[1-6]\\. ',
+			'p\\. ',
+			'bq\\.(?: |:' . $urlRegexp . ')',
+			'fn[1-9][0-9]{,2}\\. '
+		);
+
 		return array(
 			'regexp' => array(
 				'imagesAndLinks' =>
 					'#([!"])(?P<text>.*?)(?P<attr>\\(.*?\\))?\\1(?P<url>:' . $urlRegexp . ')?#iS',
 
-				'phraseModifiers' => '#(__|\\*\\*|\\?\\?|==|[_*\\-+^~@%])(?=.*?\\1)#S',
+				'blockModifiers' => '#^(?:' . implode('|', $blockModifiers) . ')#Sm',
+
+				'phraseModifiers' =>
+					'#(?<!\\pL)(__|\\*\\*|\\?\\?|==|[_*\\-+^~@%]).+?(\\1)(?!\\pL)#Su',
+
 				'acronyms' => '#([A-Z0-9]+)\\(([^\\)]+)\\)#S',
+
 				'tableRow' => '#^\\s*\\|.*\\|$#ms'
 			)
 		);
