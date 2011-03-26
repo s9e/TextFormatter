@@ -208,11 +208,11 @@ class PredefinedBBCodesTest extends Test
 			),
 			array(
 				'[sub]{TEXT}[/sub]',
-				'<span style="vertical-align:sub">{TEXT}</span>'
+				'<sub>{TEXT}</sub>'
 			),
 			array(
 				'[super]{TEXT}[/super]',
-				'<span style="vertical-align:super">{TEXT}</span>'
+				'<sup>{TEXT}</sup>'
 			),
 			array(
 				'[TABLE]

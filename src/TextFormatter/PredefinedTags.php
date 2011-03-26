@@ -243,17 +243,13 @@ class PredefinedTags
 	public function addSUB()
 	{
 		$this->cb->addTag('SUB');
-		$this->cb->setTagTemplate(
-			'SUB', '<span style="vertical-align:sub"><xsl:apply-templates /></span>'
-		);
+		$this->cb->setTagTemplate('SUB', '<sub><xsl:apply-templates /></sub>');
 	}
 
 	public function addSUPER()
 	{
 		$this->cb->addTag('SUPER');
-		$this->cb->setTagTemplate(
-			'SUPER', '<span style="vertical-align:super"><xsl:apply-templates /></span>'
-		);
+		$this->cb->setTagTemplate('SUPER', '<sup><xsl:apply-templates /></sup>');
 	}
 
 	/**
@@ -584,5 +580,14 @@ class PredefinedTags
 			'NOPARSE',
 			'<xsl:value-of select="." />'
 		);
+	}
+
+	/**
+	* @todo allow/deny the appropriate tags
+	*/
+	public function addCITE()
+	{
+		$this->cb->addTag('CITE');
+		$this->cb->setTagTemplate('CITE', '<cite><xsl:apply-templates /></cite>');
 	}
 }
