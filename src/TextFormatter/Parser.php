@@ -1125,7 +1125,15 @@ class Parser
 		// This block orders zero-width tags
 		if ($a['len'] <> $b['len'])
 		{
-			return $b['len'] - $a['len'];
+			if (!$b['len'])
+			{
+				return -1;
+			}
+
+			if (!$a['len'])
+			{
+				return 1;
+			}
 		}
 
 		if ($a['type'] <> $b['type'])
