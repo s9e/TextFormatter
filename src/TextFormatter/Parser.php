@@ -1105,17 +1105,43 @@ class Parser
 	*/
 	protected function sortTags()
 	{
-		/**
-		* Sort by pos descending, tag type ascending (OPEN, CLOSE, SELF), and position in the
-		* original array (aka stable sorting)
-		*/
-		usort($this->tagStack, function($a, $b)
+		usort($this->tagStack, array(__CLASS__, 'compareTags'));
+	}
+
+	/**
+	* sortTags() callback
+	*
+	* @param  array   First tag to compare
+	* @param  array   Second tag to compare
+	* @return integer
+	*/
+	static public function compareTags(array $a, array $b)
+	{
+		if ($a['pos'] <> $b['pos'])
 		{
-			return ($b['pos'] - $a['pos'])
-			    ?: ($a['type'] - $b['type'])
-			    ?: strcmp($a['pluginName'], $b['pluginName'])
-			    ?: ($a['_tb'] - $b['_tb']);
-		});
+			return $b['pos'] - $a['pos'];
+		}
+
+		// This block orders zero-width tags
+		if ($a['len'] <> $b['len'])
+		{
+			return $b['len'] - $a['len'];
+		}
+
+		if ($a['type'] <> $b['type'])
+		{
+			$order = array(
+				self::END_TAG => 2,
+				self::SELF_CLOSING_TAG => 1,
+				self::START_TAG => 0
+			);
+
+			return $order[$a['type']] - $order[$b['type']];
+		}
+
+		return ($a['type'] === self::END_TAG)
+		     ? ($a['_tb'] - $b['_tb'])
+		     : ($b['_tb'] - $a['_tb']);
 	}
 
 	/**

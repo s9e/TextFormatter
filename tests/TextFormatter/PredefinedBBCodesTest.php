@@ -11,8 +11,8 @@ use s9e\Toolkit\TextFormatter\ConfigBuilder,
 include_once __DIR__ . '/../Test.php';
 
 /**
-* covers s9e\Toolkit\TextFormatter\PredefinedTags
-* covers s9e\Toolkit\TextFormatter\PredefinedBBCodes
+* @covers s9e\Toolkit\TextFormatter\PredefinedTags
+* @covers s9e\Toolkit\TextFormatter\PredefinedBBCodes
 */
 class PredefinedBBCodesTest extends Test
 {

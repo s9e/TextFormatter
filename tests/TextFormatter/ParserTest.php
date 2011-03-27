@@ -902,21 +902,8 @@ class ParserTest extends Test
 	}
 
 	//==========================================================================
-	// Tags and attributes
+	// Tags stuff
 	//==========================================================================
-
-	public function testOverlappingTagsAreSortedOut()
-	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'foo' => array('type' => 'text')
-			))
-		);
-		$this->assertParsing(
-			'[x foo="[b]bar[/b]" /]',
-			'<rt><X foo="[b]bar[/b]">[x foo=&quot;[b]bar[/b]&quot; /]</X></rt>'
-		);
-	}
 
 	public function testPlainTextIsReturnedWithinPtTags()
 	{
@@ -929,6 +916,79 @@ class ParserTest extends Test
 		$this->assertParsing(
 			'[x unknown=123 /]',
 			'<rt><X>[x unknown=123 /]</X></rt>'
+		);
+	}
+
+	public function testTagsAreSortedCorrectly()
+	{
+		$_tb = 0;
+
+		$tags = array();
+
+		foreach (array(0, 1) as $pos)
+		{
+			// Create zero-width tags around the character
+			foreach (array('B', 'I') as $tagName)
+			{
+				$tags[] = array(
+					'name' => $tagName . $pos,
+					'pos'  => $pos,
+					'len'  => 0,
+					'type' => Parser::START_TAG,
+					'_tb'  => ++$_tb
+				);
+
+				$tags[] = array(
+					'name' => $tagName . $pos,
+					'pos'  => 1 + $pos,
+					'len'  => 0,
+					'type' => Parser::END_TAG,
+					'_tb'  => ++$_tb
+				);
+			}
+
+			// Add a self-closing tag that consumes the character
+			$tags[] = array(
+				'name' => 'E' . $pos,
+				'pos'  => $pos,
+				'len'  => 1,
+				'type' => Parser::SELF_CLOSING_TAG,
+				'_tb'  => ++$_tb
+			);
+		}
+
+		foreach (array(0, 1, 2) as $pos)
+		{
+			// Add a zero-width self-closing tag at given position
+			$tags[] = array(
+				'name' => 'Z' . $pos,
+				'pos'  => $pos,
+				'len'  => 0,
+				'type' => Parser::SELF_CLOSING_TAG,
+				'_tb'  => ++$_tb
+			);
+		}
+
+		// sort the tags
+		usort($tags, array('s9e\\Toolkit\\TextFormatter\\Parser', 'compareTags'));
+
+		// reverse the order to make it more readable (the sort method is designed for a stack,
+		// therefore it sorts tags in reverse order)
+		$tags = array_reverse($tags);
+
+		$result = '';
+		foreach ($tags as $tag)
+		{
+			$result .= '<'
+			         . (($tag['type'] === Parser::END_TAG) ? '/' : '')
+			         . $tag['name']
+			         . (($tag['type'] === Parser::SELF_CLOSING_TAG) ? '/' : '')
+			         . '>';
+		}
+
+		$this->assertSame(
+			'<Z0/><B0><I0><E0/></I0></B0><Z1/><B1><I1><E1/></I1></B1><Z2/>',
+			$result
 		);
 	}
 
