@@ -731,8 +731,10 @@ class Parser
 					*/
 					if (!class_exists(__NAMESPACE__ . '\\PluginParser'))
 					{
+						// @codeCoverageIgnoreStart
 						include __DIR__ . '/PluginParser.php';
 					}
+					// @codeCoverageIgnoreEnd
 
 					include $pluginConfig['parserFilepath'];
 				}

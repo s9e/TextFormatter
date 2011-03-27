@@ -1063,6 +1063,22 @@ class ParserTest extends Test
 		$this->parser->parse('00 00');
 	}
 
+	public function testUnknownTagsAreIgnored()
+	{
+		$this->cb->loadPlugin('UnknownTag', __NAMESPACE__ . '\\UnknownTagConfig');
+
+		$this->assertParsing(
+			'00 00',
+			'<pt>00 00</pt>',
+			array(
+				'debug' => array(array(
+					'msg' => 'Removed unknown tag %1$s from plugin %2$s',
+					'params' => array('X', 'UnknownTag')
+				))
+			)
+		);
+	}
+
 	//==========================================================================
 	// Whitespace trimming
 	//==========================================================================
@@ -1257,5 +1273,13 @@ class MultiRegexpParser extends PluginParser
 		}
 
 		return $tags;
+	}
+}
+
+class UnknownTagConfig extends MultiRegexpConfig
+{
+	public function setUp()
+	{
+		// do nothing, the <X> tag won't be created
 	}
 }
