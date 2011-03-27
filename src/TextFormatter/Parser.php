@@ -1134,9 +1134,9 @@ class Parser
 			{
 				return 1;
 			}
-			//codeCoverageIgnoreStart
+			// @codeCoverageIgnoreStart
 		}
-		//codeCoverageIgnoreEnd
+		// @codeCoverageIgnoreEnd
 
 		if ($a['type'] <> $b['type'])
 		{
