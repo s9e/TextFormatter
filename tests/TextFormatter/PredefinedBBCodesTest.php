@@ -12,7 +12,7 @@ include_once __DIR__ . '/../Test.php';
 
 /**
 * covers s9e\Toolkit\TextFormatter\PredefinedTags
-* @covers s9e\Toolkit\TextFormatter\PredefinedBBCodes
+* covers s9e\Toolkit\TextFormatter\PredefinedBBCodes
 */
 class PredefinedBBCodesTest extends Test
 {
@@ -61,7 +61,7 @@ class PredefinedBBCodesTest extends Test
 	public function provider()
 	{
 		return array(
-		array(
+			array(
 				'[B]bold [B]bolder[/B][/B]',
 				'<b>bold <b>bolder</b></b>'
 			),
@@ -454,7 +454,54 @@ class PredefinedBBCodesTest extends Test
 			array(
 				'[STRONG]text[/STRONG]',
 				'<strong>text</strong>'
-			)
+			),
+			array(
+				'[SPAN class="foo bar"]text[/SPAN]',
+				'<span class="foo bar">text</span>'
+			),
+			array(
+				'[NOPARSE:1][NOPARSE]text[/NOPARSE][/NOPARSE:1]',
+				'[NOPARSE]text[/NOPARSE]'
+			),
+			array(
+				'[CITE]text[/CITE]',
+				'<cite>text</cite>'
+			),
+			array(
+				'[ACRONYM="acrotitle"]text[/ACRONYM]',
+				'<acronym title="acrotitle">text</acronym>'
+			),
+			array(
+				'[H1]text[/H1]',
+				'<h1>text</h1>'
+			),
+			array(
+				'[H2]text[/H2]',
+				'<h2>text</h2>'
+			),
+			array(
+				'[H3]text[/H3]',
+				'<h3>text</h3>'
+			),
+			array(
+				'[H4]text[/H4]',
+				'<h4>text</h4>'
+			),
+			array(
+				'[H5]text[/H5]',
+				'<h5>text</h5>'
+			),
+			array(
+				'[H6]text[/H6]',
+				'<h6>text</h6>'
+			),
+			array(
+				'[DL]
+					[DT]term
+					[DD]description
+				[/DL]',
+				'<dl><dt>term</dt><dd>description</dd></dl>'
+			),
 		);
 	}
 }

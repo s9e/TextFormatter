@@ -583,7 +583,7 @@ class PredefinedTags
 		$this->cb->addTag('NOPARSE', array('defaultRule' => 'deny'));
 		$this->cb->setTagTemplate(
 			'NOPARSE',
-			'<xsl:value-of select="." />'
+			'<xsl:value-of select="text()" />'
 		);
 	}
 
@@ -601,5 +601,73 @@ class PredefinedTags
 		$this->cb->addTag('ACRONYM');
 		$this->cb->addTagAttribute('ACRONYM', 'title', 'text');
 		$this->cb->setTagTemplate('ACRONYM', '<acronym title="{@title}"><xsl:apply-templates /></acronym>');
+	}
+
+	/**
+	* @todo allow/deny the appropriate tags
+	*/
+	public function addH1()
+	{
+		$this->cb->addTag('H1');
+		$this->cb->setTagTemplate('H1', '<h1><xsl:apply-templates /></h1>');
+	}
+
+	public function addH2()
+	{
+		$this->cb->addTag('H2');
+		$this->cb->setTagTemplate('H2', '<h2><xsl:apply-templates /></h2>');
+	}
+
+	public function addH3()
+	{
+		$this->cb->addTag('H3');
+		$this->cb->setTagTemplate('H3', '<h3><xsl:apply-templates /></h3>');
+	}
+
+	public function addH4()
+	{
+		$this->cb->addTag('H4');
+		$this->cb->setTagTemplate('H4', '<h4><xsl:apply-templates /></h4>');
+	}
+
+	public function addH5()
+	{
+		$this->cb->addTag('H5');
+		$this->cb->setTagTemplate('H5', '<h5><xsl:apply-templates /></h5>');
+	}
+
+	public function addH6()
+	{
+		$this->cb->addTag('H6');
+		$this->cb->setTagTemplate('H6', '<h6><xsl:apply-templates /></h6>');
+	}
+
+	public function addDL()
+	{
+		$this->cb->addTag('DL', array(
+			'trimBefore'   => true,
+			'trimAfter'    => true,
+			'ltrimContent' => true,
+			'rtrimContent' => true
+		));
+
+		$this->cb->setTagTemplate('DL', '<dl><xsl:apply-templates select="DT | DD" /></dl>');
+
+		foreach (array('DT', 'DD') as $tagName)
+		{
+			$this->cb->addTag($tagName, array(
+				'trimBefore'   => true,
+				'trimAfter'    => true,
+				'ltrimContent' => true,
+				'rtrimContent' => true
+			));
+
+			$this->cb->addTagRule($tagName, 'requireParent', 'DL');
+			$this->cb->addTagRule($tagName, 'closeParent', 'DT');
+			$this->cb->addTagRule($tagName, 'closeParent', 'DD');
+		}
+
+		$this->cb->setTagTemplate('DT', '<dt><xsl:apply-templates /></dt>');
+		$this->cb->setTagTemplate('DD', '<dd><xsl:apply-templates /></dd>');
 	}
 }

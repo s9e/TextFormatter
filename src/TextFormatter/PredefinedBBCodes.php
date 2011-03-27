@@ -29,12 +29,14 @@ class PredefinedBBCodes
 
 	public function __call($methodName, $args)
 	{
-		if (!preg_match('#^add([A-Z]+)$#D', $methodName))
+		if (!preg_match('#^add([A-Z0-9]+)$#D', $methodName, $m))
 		{
-			throw new RuntimeException('Call to undefined method ' . __METHOD__ . '()');
+			// @codeCoverageIgnoreStart
+			throw new RuntimeException('Call to undefined method ' . __CLASS__ . '::' . $methodName . '()');
+			// @codeCoverageIgnoreEnd
 		}
 
-		$this->forwardCall(substr($methodName, 3), array(), $args);
+		$this->forwardCall($m[1], array(), $args);
 	}
 
 	protected function forwardCall($tagName, array $bbcodeConfig = array(), array $callParams = array())
@@ -334,10 +336,9 @@ class PredefinedBBCodes
 
 	public function addCOLOR()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[COLOR={COLOR}]{TEXT}[/COLOR]',
-			'<span style="color:{COLOR}">{TEXT}</span>'
-		);
+		$this->forwardCall('COLOR', array(
+			'defaultAttr' => 'color'
+		));
 	}
 
 	/**
@@ -444,5 +445,19 @@ class PredefinedBBCodes
 					</object>'
 			)
 		);
+	}
+
+	public function addACRONYM()
+	{
+		$this->forwardCall('ACRONYM', array(
+			'defaultAttr' => 'title'
+		));
+	}
+
+	public function addDL()
+	{
+		$this->forwardCall('DL');
+		$this->cb->BBCodes->addBBCodeAlias('DT', 'DT');
+		$this->cb->BBCodes->addBBCodeAlias('DD', 'DD');
 	}
 }

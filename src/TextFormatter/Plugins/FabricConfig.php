@@ -22,6 +22,11 @@ class FabricConfig extends PluginConfig
 		'URL',
 		'IMG',
 
+		// blockModifiers
+		'DL',
+		'DT',
+		'DD',
+
 		// phraseModifiers
 		'_'  => 'EM',
 		'__' => 'I',
