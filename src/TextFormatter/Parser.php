@@ -684,8 +684,8 @@ class Parser
 							$matches[$k] = array_slice($matches[$k], 0, $limit);
 
 							$this->log($msgType, array(
-								'msg'    => $pluginName . ' limit exceeded. Only the first %s matches will be processed',
-								'params' => array($pluginConfig['regexpLimit'])
+								'msg'    => '%1$s limit exceeded. Only the first %2$s matches will be processed',
+								'params' => array($pluginName, $pluginConfig['regexpLimit'])
 							));
 
 							$skip = true;

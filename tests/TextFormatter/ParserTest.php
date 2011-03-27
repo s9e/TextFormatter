@@ -992,6 +992,77 @@ class ParserTest extends Test
 		);
 	}
 
+	public function testTheNumberOfRegexpMatchesCanBeLimitedWithExtraMatchesIgnored()
+	{
+		$this->cb->loadPlugin('MultiRegexp', __NAMESPACE__ . '\\MultiRegexpConfig');
+
+		$this->cb->MultiRegexp->regexpLimit = 3;
+		$this->cb->MultiRegexp->regexpLimitAction = 'ignore';
+
+		$this->assertParsing(
+			'00 00',
+			'<rt><X>0</X><X>0</X> <X>0</X>0</rt>',
+			array(
+				'debug' => array(array(
+					'msg' => '%1$s limit exceeded. Only the first %2$s matches will be processed',
+					'params' => array('MultiRegexp', 3)
+				))
+			)
+		);
+	}
+
+	public function testTheNumberOfRegexpMatchesCanBeLimitedWithExtraMatchesIgnoredAndAWarning()
+	{
+		$this->cb->loadPlugin('MultiRegexp', __NAMESPACE__ . '\\MultiRegexpConfig');
+
+		$this->cb->MultiRegexp->regexpLimit = 3;
+		$this->cb->MultiRegexp->regexpLimitAction = 'warn';
+
+		$this->assertParsing(
+			'00 00',
+			'<rt><X>0</X><X>0</X> <X>0</X>0</rt>',
+			array(
+				'warning' => array(array(
+					'msg' => '%1$s limit exceeded. Only the first %2$s matches will be processed',
+					'params' => array('MultiRegexp', 3)
+				))
+			)
+		);
+	}
+
+	public function testTheNumberOfRegexpMatchesCanBeLimitedAcrossMultipleRegexpsWithExtraMatchesIgnored()
+	{
+		$this->cb->loadPlugin('MultiRegexp', __NAMESPACE__ . '\\MultiRegexpConfig');
+
+		$this->cb->MultiRegexp->regexpLimit = 3;
+		$this->cb->MultiRegexp->regexpLimitAction = 'ignore';
+
+		$this->assertParsing(
+			'00 11',
+			'<rt><X>0</X><X>0</X> <X>1</X>1</rt>',
+			array(
+				'debug' => array(array(
+					'msg' => '%1$s limit exceeded. Only the first %2$s matches will be processed',
+					'params' => array('MultiRegexp', 3)
+				))
+			)
+		);
+	}
+
+	/**
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage MultiRegexp limit exceeded
+	*/
+	public function testTheNumberOfRegexpMatchesCanBeLimitedAndParsingAbortedIfLimitExceeded()
+	{
+		$this->cb->loadPlugin('MultiRegexp', __NAMESPACE__ . '\\MultiRegexpConfig');
+
+		$this->cb->MultiRegexp->regexpLimit = 3;
+		$this->cb->MultiRegexp->regexpLimitAction = 'abort';
+
+		$this->parser->parse('00 00');
+	}
+
 	//==========================================================================
 	// Whitespace trimming
 	//==========================================================================
@@ -1145,6 +1216,44 @@ class WhitespaceParser extends PluginParser
 				'pos'  => $m[0][1],
 				'len'  => strlen($m[0][0])
 			);
+		}
+
+		return $tags;
+	}
+}
+
+class MultiRegexpConfig extends PluginConfig
+{
+	public function setUp()
+	{
+		$this->cb->addTag('X');
+	}
+
+	public function getConfig()
+	{
+		return array(
+			'regexp' => array('#0#', '#1#'),
+			'parserClassName' => __NAMESPACE__ . '\\MultiRegexpParser'
+		);
+	}
+}
+
+class MultiRegexpParser extends PluginParser
+{
+	public function getTags($text, array $matches)
+	{
+		$tags = array();
+		foreach ($matches as $k => $_matches)
+		{
+			foreach ($_matches as $m)
+			{
+				$tags[] = array(
+					'name' => 'X',
+					'type' => Parser::SELF_CLOSING_TAG,
+					'pos'  => $m[0][1],
+					'len'  => 1
+				);
+			}
 		}
 
 		return $tags;
