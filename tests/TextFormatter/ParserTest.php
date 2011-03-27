@@ -1065,7 +1065,16 @@ class ParserTest extends Test
 
 	public function testUnknownTagsAreIgnored()
 	{
-		$this->cb->loadPlugin('UnknownTag', __NAMESPACE__ . '\\UnknownTagConfig');
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->Canned->tags = array(
+			array(
+				'pos'  => 0,
+				'len'  => 1,
+				'name' => 'X',
+				'type' => Parser::START_TAG
+			)
+		);
 
 		$this->assertParsing(
 			'00 00',
@@ -1073,7 +1082,7 @@ class ParserTest extends Test
 			array(
 				'debug' => array(array(
 					'msg' => 'Removed unknown tag %1$s from plugin %2$s',
-					'params' => array('X', 'UnknownTag')
+					'params' => array('X', 'Canned')
 				))
 			)
 		);
@@ -1276,10 +1285,21 @@ class MultiRegexpParser extends PluginParser
 	}
 }
 
-class UnknownTagConfig extends MultiRegexpConfig
+class CannedConfig extends PluginConfig
 {
-	public function setUp()
+	public function getConfig()
 	{
-		// do nothing, the <X> tag won't be created
+		return array(
+			'parserClassName' => __NAMESPACE__ . '\\CannedParser',
+			'tags' => $this->tags
+		);
+	}
+}
+
+class CannedParser extends PluginParser
+{
+	public function getTags($text, array $matches)
+	{
+		return $this->config['tags'];
 	}
 }
