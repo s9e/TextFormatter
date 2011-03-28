@@ -1263,6 +1263,49 @@ class ParserTest extends Test
 		);
 	}
 
+	public function testTagsLeftOpenGetClosedWhenTheirAncestorGetsClosed()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X');
+		$this->cb->addTag('Y');
+		$this->cb->addTag('Z');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 0,
+			'name'  => 'X',
+			'type'  => Parser::START_TAG
+		);
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 1,
+			'len'   => 0,
+			'name'  => 'Y',
+			'type'  => Parser::START_TAG
+		);
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 2,
+			'len'   => 0,
+			'name'  => 'Z',
+			'type'  => Parser::START_TAG
+		);
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 3,
+			'len'   => 0,
+			'name'  => 'X',
+			'type'  => Parser::END_TAG
+		);
+
+		$this->assertParsing(
+			'012',
+			'<rt><X>0<Y>1<Z>2</Z></Y></X></rt>'
+		);
+	}
+
 	//==========================================================================
 	// Whitespace trimming
 	//==========================================================================
