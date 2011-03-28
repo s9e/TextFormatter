@@ -27,6 +27,7 @@
 			<file>./TextFormatter/ParserTest.php</file>
 			<file>./TextFormatter/PluginConfigTest.php</file>
 			<file>./TextFormatter/PredefinedBBCodesTest.php</file>
+			<file>./TextFormatter/RendererTest.php</file>
 			<file>./TextFormatter/WittyPantsTest.php</file>
 		</testsuite>
 	</testsuites>
