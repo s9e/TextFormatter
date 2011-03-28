@@ -5,7 +5,7 @@ namespace s9e\Toolkit\Tests\TextFormatter;
 use s9e\Toolkit\Tests\Test,
     s9e\Toolkit\TextFormatter\Parser,
     s9e\Toolkit\TextFormatter\Renderer,
-    s9e\Toolkit\TextFormatter\Plugins\EmoticonsConfig;
+    s9e\Toolkit\TextFormatter\Plugins\BBCodesConfig;
 
 include_once __DIR__ . '/../Test.php';
 
@@ -16,7 +16,7 @@ class AutoloadersTest extends Test
 	*/
 	public function testConfigBuilderLoadsCorePluginsFiles()
 	{
-		$this->assertTrue($this->cb->loadPlugin('Emoticons') instanceof EmoticonsConfig);
+		$this->assertTrue($this->cb->loadPlugin('BBCodes') instanceof BBCodesConfig);
 	}
 
 	/**
