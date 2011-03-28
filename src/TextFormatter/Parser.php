@@ -1310,6 +1310,8 @@ class Parser
 	*/
 	protected function applyCallback(array $conf, array $values = array())
 	{
+		$params = array();
+
 		if (isset($conf['params']))
 		{
 			/**
@@ -1333,10 +1335,6 @@ class Parser
 				$conf['params'],
 				array_intersect_key($values, $conf['params'])
 			);
-		}
-		else
-		{
-			$params = array();
 		}
 
 		return call_user_func_array($conf['callback'], $params);
