@@ -1176,6 +1176,70 @@ class ParserTest extends Test
 		);
 	}
 
+	public function testTagsNestingLimitIsEnforced()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', array('nestingLimit' => 2));
+
+		foreach (array(0, 1, 2) as $pos)
+		{
+			$this->cb->Canned->tags[] = array(
+				'pos'   => $pos,
+				'len'   => 1,
+				'name'  => 'X',
+				'type'  => Parser::START_TAG
+			);
+
+			$this->cb->Canned->tags[] = array(
+				'pos'   => 5 - $pos,
+				'len'   => 1,
+				'name'  => 'X',
+				'type'  => Parser::END_TAG
+			);
+		}
+
+		$this->assertParsing(
+			'SSSEEE',
+			'<rt>
+				<X>
+					<st>S</st>
+					<X>
+						<st>S</st>'
+						. 'S' .
+						'<et>E</et>
+					</X>
+					<et>E</et>
+				</X>'
+			. 'E'
+			. '</rt>'
+		);
+	}
+
+	public function testTagsTagLimitIsEnforced()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', array('tagLimit' => 2));
+
+		foreach (array(0, 1, 2) as $pos)
+		{
+			$this->cb->Canned->tags[] = array(
+				'pos'   => $pos,
+				'len'   => 1,
+				'name'  => 'X',
+				'type'  => Parser::SELF_CLOSING_TAG
+			);
+		}
+
+		$this->assertParsing(
+			'012',
+			'<rt><X>0</X><X>1</X>2</rt>'
+		);
+	}
+
 	//==========================================================================
 	// Whitespace trimming
 	//==========================================================================
