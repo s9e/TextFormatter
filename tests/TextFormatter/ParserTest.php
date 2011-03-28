@@ -1034,6 +1034,117 @@ class ParserTest extends Test
 		);
 	}
 
+	public function testCompoundAttributesAreSplitIfValidThenRemoved()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addTagAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addTagAttribute('X', 'xy', 'compound', array(
+			'regexp' => '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D'
+		));
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array('xy' => '123,456')
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X x="123" y="456">.</X></rt>'
+		);
+	}
+
+	/**
+	* @depends testCompoundAttributesAreSplitIfValidThenRemoved
+	*/
+	public function testCompoundAttributesDoNotOverwriteExistingValues()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addTagAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addTagAttribute('X', 'xy', 'compound', array(
+			'regexp' => '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D'
+		));
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array('xy' => '123,456', 'x' => 999)
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X x="999" y="456">.</X></rt>'
+		);
+	}
+
+	public function testCompoundAttributesAreRemovedIfInvalid()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addTagAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addTagAttribute('X', 'xy', 'compound', array(
+			'regexp' => '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D',
+			'isRequired' => false
+		));
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array('xy' => 'invalid')
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X>.</X></rt>'
+		);
+	}
+
+	/**
+	* @depends testCompoundAttributesAreRemovedIfInvalid
+	*/
+	public function testCompoundAttributesAreOptionalByDefault()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addTagAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addTagAttribute('X', 'xy', 'compound', array(
+			'regexp' => '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D'
+		));
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array('xy' => 'invalid')
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X>.</X></rt>'
+		);
+	}
+
 	//==========================================================================
 	// Tags stuff
 	//==========================================================================
