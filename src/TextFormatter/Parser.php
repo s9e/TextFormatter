@@ -1166,7 +1166,10 @@ class Parser
 		{
 			foreach ($tagConfig['preFilter'] as $callbackConf)
 			{
-				$this->currentTag['attrs'] = $this->applyCallback($callbackConf);
+				$this->currentTag['attrs'] = $this->applyCallback(
+					$callbackConf,
+					array('attrs' => $this->currentTag['attrs'])
+				);
 			}
 		}
 
@@ -1289,8 +1292,8 @@ class Parser
 			foreach ($tagConfig['postFilter'] as $callbackConf)
 			{
 				$this->currentTag['attrs'] = $this->applyCallback(
-					$callbackConf, 
-					$this->currentTag['attrs']
+					$callbackConf,
+					array('attrs' => $this->currentTag['attrs'])
 				);
 			}
 		}
@@ -1299,13 +1302,13 @@ class Parser
 	/**
 	* Apply a callback and return the result
 	*
-	* @param  array $conf  Callback configuration. Must have a "callback" element and can have an 
-	*                      optional "params" element. If there's no "params" element, $value is
-	*                      passed as the only argument to the callback
-	* @param  mixed $value
+	* @param  array $conf   Callback configuration. Must have a "callback" element and can have an 
+	*                       optional "params" element. If there's no "params" element, $value is
+	*                       passed as the only argument to the callback
+	* @param  array $values Values used to replace values found in the "params" element
 	* @return mixed
 	*/
-	protected function applyCallback(array $conf, array $values)
+	protected function applyCallback(array $conf, array $values = array())
 	{
 		if (isset($conf['params']))
 		{
@@ -1314,11 +1317,17 @@ class Parser
 			*/
 			$values += array(
 				'parser'           => $this,
-				'currentTag'       => $this->currentTag,
-				'currentAttribute' => $this->currentAttribute,
 				'tagsConfig'       => $this->tagsConfig,
 				'filtersConfig'    => $this->filtersConfig
 			);
+
+			foreach (array('currentTag', 'currentAttribute') as $k)
+			{
+				if (isset($this->$k) && !isset($values[$k]))
+				{
+					$values[$k] = $this->$k;
+				}
+			}
 
 			$params = array_replace(
 				$conf['params'],

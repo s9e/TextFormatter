@@ -240,7 +240,7 @@ class ConfigBuilder
 				{
 					if (!isset($filterConf['params']))
 					{
-						$filterConf['params'] = array();
+						$filterConf['params'] = array('attrs' => null);
 					}
 
 					if (!is_callable($filterConf['callback']))

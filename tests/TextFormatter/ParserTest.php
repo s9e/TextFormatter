@@ -954,6 +954,86 @@ class ParserTest extends Test
 		);
 	}
 
+	public function testTagLevelPreFilterReceivesAnAssociativeArrayOfAttributesValuesWhichgetsReplacedByItsReturnValue()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', array(
+			'preFilter' => array(
+				array(
+					'callback' =>
+						function($attrs)
+						{
+							// add an attribute
+							$attrs['z'] = 'zval';
+
+							return array_map('strtoupper', $attrs);
+						}
+				)
+			)
+		));
+		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addTagAttribute('X', 'y', 'text');
+		$this->cb->addTagAttribute('X', 'z', 'text');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array(
+				'x' => 'xval',
+				'y' => 'yval'
+			)
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X x="XVAL" y="YVAL" z="ZVAL">.</X></rt>'
+		);
+	}
+
+	public function testTagLevelPostFilterReceivesAnAssociativeArrayOfAttributesValuesWhichgetsReplacedByItsReturnValue()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', array(
+			'postFilter' => array(
+				array(
+					'callback' =>
+						function($attrs)
+						{
+							// add an attribute
+							$attrs['z'] = 'zval';
+
+							return array_map('strtoupper', $attrs);
+						}
+				)
+			)
+		));
+		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addTagAttribute('X', 'y', 'text');
+		$this->cb->addTagAttribute('X', 'z', 'text');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array(
+				'x' => 'xval',
+				'y' => 'yval'
+			)
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X x="XVAL" y="YVAL" z="ZVAL">.</X></rt>'
+		);
+	}
+
 	//==========================================================================
 	// Tags stuff
 	//==========================================================================
