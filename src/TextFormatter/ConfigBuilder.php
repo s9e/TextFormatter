@@ -649,6 +649,11 @@ class ConfigBuilder
 			include $classFilepath;
 		}
 
+		if (!class_exists($className))
+		{
+			throw new RuntimeException("Class '" . $className . "' not found");
+		}
+
 		return $this->$pluginName = new $className($this, $overrideProps);
 	}
 

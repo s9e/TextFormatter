@@ -10,6 +10,27 @@
          stopOnFailure="true"
          verbose="true"
 >
+	<testsuites>
+		<testsuite name="Acl">
+			<directory>./Acl</directory>
+		</testsuite>
+
+		<testsuite name="SimpleDOM">
+			<directory>./SimpleDOM</directory>
+		</testsuite>
+
+		<testsuite name="TextFormatter">
+			<file>./TextFormatter/AutoloadersTest.php</file>
+			<file>./TextFormatter/BBCodesTest.php</file>
+			<file>./TextFormatter/ConfigBuilderTest.php</file>
+			<file>./TextFormatter/FabricTest.php</file>
+			<file>./TextFormatter/ParserTest.php</file>
+			<file>./TextFormatter/PluginConfigTest.php</file>
+			<file>./TextFormatter/PredefinedBBCodesTest.php</file>
+			<file>./TextFormatter/WittyPantsTest.php</file>
+		</testsuite>
+	</testsuites>
+
 	<filter>
 		<whitelist>
 			<directory>../src</directory>

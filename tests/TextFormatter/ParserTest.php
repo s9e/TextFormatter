@@ -1,15 +1,13 @@
 <?php
 
-namespace s9e\Toolkit\Tests;
+namespace s9e\Toolkit\Tests\TextFormatter;
 
-use s9e\Toolkit\TextFormatter\Parser,
+use s9e\Toolkit\Tests\Test,
+    s9e\Toolkit\TextFormatter\Parser,
     s9e\Toolkit\TextFormatter\PluginConfig,
     s9e\Toolkit\TextFormatter\PluginParser;
 
 include_once __DIR__ . '/../Test.php';
-include_once __DIR__ . '/../../src/TextFormatter/Parser.php';
-include_once __DIR__ . '/../../src/TextFormatter/PluginConfig.php';
-include_once __DIR__ . '/../../src/TextFormatter/PluginParser.php';
 
 /**
 * @covers s9e\Toolkit\TextFormatter\Parser
@@ -28,6 +26,8 @@ class ParserTest extends Test
 
 	protected function assertAttributeValidity($attrConf, $attrVal, $expectedVal, $valid, $expectedLog)
 	{
+		include_once __DIR__ . '/../../src/TextFormatter/Parser.php';
+
 		if (!is_array($attrConf))
 		{
 			$attrConf = array('type' => $attrConf);
@@ -994,6 +994,7 @@ class ParserTest extends Test
 
 	public function testTheNumberOfRegexpMatchesCanBeLimitedWithExtraMatchesIgnored()
 	{
+		include_once __DIR__ . '/includes/MultiRegexpConfig.php';
 		$this->cb->loadPlugin('MultiRegexp', __NAMESPACE__ . '\\MultiRegexpConfig');
 
 		$this->cb->MultiRegexp->regexpLimit = 3;
@@ -1013,6 +1014,7 @@ class ParserTest extends Test
 
 	public function testTheNumberOfRegexpMatchesCanBeLimitedWithExtraMatchesIgnoredAndAWarning()
 	{
+		include_once __DIR__ . '/includes/MultiRegexpConfig.php';
 		$this->cb->loadPlugin('MultiRegexp', __NAMESPACE__ . '\\MultiRegexpConfig');
 
 		$this->cb->MultiRegexp->regexpLimit = 3;
@@ -1032,6 +1034,7 @@ class ParserTest extends Test
 
 	public function testTheNumberOfRegexpMatchesCanBeLimitedAcrossMultipleRegexpsWithExtraMatchesIgnored()
 	{
+		include_once __DIR__ . '/includes/MultiRegexpConfig.php';
 		$this->cb->loadPlugin('MultiRegexp', __NAMESPACE__ . '\\MultiRegexpConfig');
 
 		$this->cb->MultiRegexp->regexpLimit = 3;
@@ -1055,6 +1058,7 @@ class ParserTest extends Test
 	*/
 	public function testTheNumberOfRegexpMatchesCanBeLimitedAndParsingAbortedIfLimitExceeded()
 	{
+		include_once __DIR__ . '/includes/MultiRegexpConfig.php';
 		$this->cb->loadPlugin('MultiRegexp', __NAMESPACE__ . '\\MultiRegexpConfig');
 
 		$this->cb->MultiRegexp->regexpLimit = 3;
@@ -1065,6 +1069,7 @@ class ParserTest extends Test
 
 	public function testUnknownTagsAreIgnored()
 	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->Canned->tags = array(
@@ -1097,6 +1102,8 @@ class ParserTest extends Test
 	*/
 	public function testWhitespaceTrimmingWorks($options, $text, $expectedHtml, $expectedXml)
 	{
+		include_once __DIR__ . '/includes/WhitespaceConfig.php';
+
 		$this->cb->loadPlugin(
 			'Whitespace',
 			__NAMESPACE__ . '\\WhitespaceConfig',
@@ -1205,101 +1212,5 @@ class ParserTest extends Test
 				'<rt><B><st>[b]</st> <MARK>tag</MARK><i> </i>| <MARK>tag</MARK><i> </i><et>[/b]</et></B></rt>'
 			)
 		);
-	}
-}
-
-class WhitespaceConfig extends PluginConfig
-{
-	public function setUp()
-	{
-		$this->cb->BBCodes->addBBCode('B');
-		$this->cb->BBCodes->addBBCode('MARK', $this->options);
-
-		$this->cb->setTagTemplate('MARK', '[mark]<xsl:apply-templates/>[/mark]');
-		$this->cb->setTagTemplate('B', '[b]<xsl:apply-templates/>[/b]');
-	}
-
-	public function getConfig()
-	{
-		return array(
-			'regexp' => '#(?: tagws |tag)#',
-			'parserClassName' => __NAMESPACE__ . '\\WhitespaceParser'
-		);
-	}
-}
-
-class WhitespaceParser extends PluginParser
-{
-	public function getTags($text, array $matches)
-	{
-		$tags = array();
-		foreach ($matches as $m)
-		{
-			$tags[] = array(
-				'name' => 'mark',
-				'type' => Parser::SELF_CLOSING_TAG,
-				'pos'  => $m[0][1],
-				'len'  => strlen($m[0][0])
-			);
-		}
-
-		return $tags;
-	}
-}
-
-class MultiRegexpConfig extends PluginConfig
-{
-	public function setUp()
-	{
-		$this->cb->addTag('X');
-	}
-
-	public function getConfig()
-	{
-		return array(
-			'regexp' => array('#0#', '#1#'),
-			'parserClassName' => __NAMESPACE__ . '\\MultiRegexpParser'
-		);
-	}
-}
-
-class MultiRegexpParser extends PluginParser
-{
-	public function getTags($text, array $matches)
-	{
-		$tags = array();
-		foreach ($matches as $k => $_matches)
-		{
-			foreach ($_matches as $m)
-			{
-				$tags[] = array(
-					'name' => 'X',
-					'type' => Parser::SELF_CLOSING_TAG,
-					'pos'  => $m[0][1],
-					'len'  => 1
-				);
-			}
-		}
-
-		return $tags;
-	}
-}
-
-class CannedConfig extends PluginConfig
-{
-	public function getConfig()
-	{
-		return array(
-			'parserClassName' => __NAMESPACE__ . '\\CannedParser',
-			'tags' => $this->tags
-		);
-	}
-}
-
-class CannedParser extends PluginParser
-{
-	public function getTags($text, array $matches)
-	{
-		return $this->config['tags'];
 	}
 }

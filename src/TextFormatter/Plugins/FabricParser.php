@@ -16,7 +16,7 @@ class FabricParser extends PluginParser
 	{
 		$tags = array();
 
-//		$this->getBlockModifiersTags($tags, $text, $matches['blockModifiers']);
+		$this->getBlockModifiersTags($tags, $text, $matches['blockModifiers']);
 		$this->getPhraseModifiersTags($tags, $text, $matches['phraseModifiers']);
 		$this->getImagesAndLinksTags($tags, $text, $matches['imagesAndLinks']);
 		$this->getAcronymsTags($tags, $text, $matches['acronyms']);

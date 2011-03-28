@@ -1,8 +1,9 @@
 <?php
 
-namespace s9e\Toolkit\Tests;
+namespace s9e\Toolkit\Tests\TextFormatter;
 
-use s9e\Toolkit\TextFormatter\ConfigBuilder,
+use s9e\Toolkit\Tests\Test,
+    s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\Parser,
     s9e\Toolkit\TextFormatter\PredefinedTags,
     s9e\Toolkit\TextFormatter\PredefinedBBCodes,
