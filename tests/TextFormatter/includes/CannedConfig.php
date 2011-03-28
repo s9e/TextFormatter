@@ -8,6 +8,8 @@ include_once __DIR__ . '/../../../src/TextFormatter/PluginConfig.php';
 
 class CannedConfig extends PluginConfig
 {
+	public $tags = array();
+
 	public function getConfig()
 	{
 		return array(

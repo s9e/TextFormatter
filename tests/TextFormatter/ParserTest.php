@@ -906,6 +906,55 @@ class ParserTest extends Test
 	}
 
 	//==========================================================================
+	// Attributes stuff
+	//==========================================================================
+
+	public function testAttributeNameIsAddedToLogEntriesWhenAvailable()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'y', 'mytype');
+
+		$that = $this;
+		$this->cb->setFilter(
+			'mytype',
+			array(
+				'callback' =>
+					function() use ($that)
+					{
+						$that->parser->log('error', array('msg' => 'mytype error'));
+						return false;
+					}
+			)
+		);
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 1,
+			'len'   => 0,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array('y' => 0)
+		);
+
+		$this->assertParsing(
+			'text',
+			'<pt>text</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg' => 'mytype error',
+						'pos' => 1,
+						'tagName'  => 'X',
+						'attrName' => 'y'
+					)
+				)
+			)
+		);
+	}
+
+	//==========================================================================
 	// Tags stuff
 	//==========================================================================
 
