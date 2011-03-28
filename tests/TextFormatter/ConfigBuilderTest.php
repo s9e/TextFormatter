@@ -20,9 +20,6 @@ class ConfigBuilderTest extends Test
 		$this->cb = new ConfigBuilder;
 	}
 
-	/**
-	* @runInSeparateProcess
-	*/
 	public function testLoadsPluginOnMagicGet()
 	{
 		$this->assertTrue($this->cb->Emoticons instanceof EmoticonsConfig);
@@ -35,42 +32,6 @@ class ConfigBuilderTest extends Test
 	public function testDoesNotLoadInvalidPluginName()
 	{
 		$this->cb->loadPlugin('../foo');
-	}
-
-	/**
-	* @runInSeparateProcess
-	*/
-	public function testCanAutoloadParser()
-	{
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
-	}
-
-	/**
-	* @runInSeparateProcess
-	* @depends testCanAutoloadParser
-	*/
-	public function testDoesNotIncludeParserTwice()
-	{
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
-	}
-
-	/**
-	* @runInSeparateProcess
-	*/
-	public function testCanAutoloadRenderer()
-	{
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
-	}
-
-	/**
-	* @runInSeparateProcess
-	* @depends testCanAutoloadRenderer
-	*/
-	public function testDoesNotIncludeRendererTwice()
-	{
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
 	}
 
 	public function testCanCreateTag()
