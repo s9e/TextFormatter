@@ -400,7 +400,7 @@ class PredefinedBBCodesTest extends Test
 					'warning' => array(
 						array(
 							'pos'      => 0,
-							'msg'      => 'Attribute \'%1$s\' outside of range, value adjusted down to %2$d',
+							'msg'      => 'Value outside of range, adjusted down to %d',
 							'params'   => array(200),
 							'tagName'  => 'SIZE',
 							'attrName' => 'size'

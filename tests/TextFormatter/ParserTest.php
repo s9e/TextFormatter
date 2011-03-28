@@ -758,7 +758,7 @@ class ParserTest extends Test
 			array(
 				'warning' => array(
 					array(
-						'msg' => 'Attribute \'%1$s\' outside of range, value adjusted up to %2$d',
+						'msg' => 'Value outside of range, adjusted up to %d',
 						'params' => array(5)
 					)
 				)
@@ -779,7 +779,7 @@ class ParserTest extends Test
 			array(
 				'warning' => array(
 					array(
-						'msg' => 'Attribute \'%1$s\' outside of range, value adjusted down to %2$d',
+						'msg' => 'Value outside of range, adjusted down to %d',
 						'params' => array(10)
 					)
 				)
