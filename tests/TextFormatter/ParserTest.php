@@ -14,6 +14,12 @@ include_once __DIR__ . '/../Test.php';
 */
 class ParserTest extends Test
 {
+	public function setUp()
+	{
+		parent::setUp();
+		include_once __DIR__ . '/../../src/TextFormatter/Parser.php';
+	}
+
 	protected function assertAttributeIsValid($attrConf, $attrVal, $expectedVal = null, $expectedLog = array())
 	{
 		$this->assertAttributeValidity($attrConf, $attrVal, $expectedVal, true, $expectedLog);
@@ -26,8 +32,6 @@ class ParserTest extends Test
 
 	protected function assertAttributeValidity($attrConf, $attrVal, $expectedVal, $valid, $expectedLog)
 	{
-		include_once __DIR__ . '/../../src/TextFormatter/Parser.php';
-
 		if (!is_array($attrConf))
 		{
 			$attrConf = array('type' => $attrConf);
@@ -916,6 +920,36 @@ class ParserTest extends Test
 		$this->assertParsing(
 			'[x unknown=123 /]',
 			'<rt><X>[x unknown=123 /]</X></rt>'
+		);
+	}
+
+	public function testOverlappingTagsAreRemoved()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		foreach (array(1, 2, 0, 4) as $pos)
+		{
+			$this->cb->addTag('X' . $pos);
+
+			$this->cb->Canned->tags[] = array(
+				'pos'  => $pos,
+				'len'  => 2,
+				'name' => 'X' . $pos,
+				'type' => Parser::SELF_CLOSING_TAG
+			);
+		}
+
+		$this->assertParsing(
+			'012345',
+			'<rt><X0>01</X0><X2>23</X2><X4>45</X4></rt>',
+			array(
+				'debug' => array(array(
+					'msg' => 'Tag skipped',
+					'pos' => 1,
+					'tagName' => 'X1'
+				))
+			)
 		);
 	}
 
