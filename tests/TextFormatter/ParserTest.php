@@ -1240,6 +1240,29 @@ class ParserTest extends Test
 		);
 	}
 
+	public function testZeroWidthTagsAreCorrectlyOuput()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', array('tagLimit' => 2));
+
+		foreach (array(0, 1, 2) as $pos)
+		{
+			$this->cb->Canned->tags[] = array(
+				'pos'   => $pos,
+				'len'   => 0,
+				'name'  => 'X',
+				'type'  => Parser::SELF_CLOSING_TAG
+			);
+		}
+
+		$this->assertParsing(
+			'012',
+			'<rt><X />0<X />12</rt>'
+		);
+	}
+
 	//==========================================================================
 	// Whitespace trimming
 	//==========================================================================

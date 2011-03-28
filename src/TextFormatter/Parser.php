@@ -480,17 +480,14 @@ class Parser
 					}
 				}
 
-				if ($tagText > '')
+				if ($tag['type'] & self::END_TAG)
 				{
-					if ($tag['type'] & self::END_TAG)
-					{
-						$xml->text($tagText);
-						$xml->endElement();
-					}
-					else
-					{
-						$xml->writeElement('st', $tagText);
-					}
+					$xml->text($tagText);
+					$xml->endElement();
+				}
+				elseif ($tagText > '')
+				{
+					$xml->writeElement('st', $tagText);
 				}
 			}
 			else
