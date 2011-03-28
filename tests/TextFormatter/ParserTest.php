@@ -917,14 +917,14 @@ class ParserTest extends Test
 		$this->cb->addTag('X');
 		$this->cb->addTagAttribute('X', 'y', 'mytype');
 
-		$that = $this;
 		$this->cb->setFilter(
 			'mytype',
 			array(
+				'params' => array('parser' => null),
 				'callback' =>
-					function() use ($that)
+					function($parser)
 					{
-						$that->parser->log('error', array('msg' => 'mytype error'));
+						$parser->log('error', array('msg' => 'mytype error'));
 						return false;
 					}
 			)
