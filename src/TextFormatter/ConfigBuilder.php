@@ -354,7 +354,7 @@ class ConfigBuilder
 
 					if (!is_callable($filterConf['callback']))
 					{
-						throw new InvalidException('Not a callback');
+						throw new InvalidArgumentException('Not a callback');
 					}
 
 					$attrConf[$optionName][] = $filterConf;

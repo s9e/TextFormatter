@@ -1196,6 +1196,54 @@ class ParserTest extends Test
 		);
 	}
 
+	public function testAttributeValueIsReplacedByAttributePreFilter()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'int', array('preFilter' => array(
+			array('callback' => function($attrVal) { return 42; })
+		)));
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array('x' => 'invalid')
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X x="42">.</X></rt>'
+		);
+	}
+
+	public function testAttributeValueIsReplacedByAttributePostFilterEvenIfItMakesItInvalid()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'int', array('postFilter' => array(
+			array('callback' => function($attrVal) { return 'invalid'; })
+		)));
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array('x' => 42)
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X x="invalid">.</X></rt>'
+		);
+	}
+
 	//==========================================================================
 	// Tags stuff
 	//==========================================================================
