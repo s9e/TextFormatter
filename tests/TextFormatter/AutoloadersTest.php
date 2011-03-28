@@ -54,5 +54,4 @@ class AutoloadersTest extends Test
 		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
 		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
 	}
-
 }
