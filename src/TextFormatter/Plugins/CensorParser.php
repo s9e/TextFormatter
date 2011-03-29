@@ -19,32 +19,29 @@ class CensorParser extends PluginParser
 		$tagName  = $this->config['tagName'];
 		$attrName = $this->config['attrName'];
 
-		foreach ($matches as $k => $_matches)
+		$replacements = (isset($this->config['replacements']))
+		              ? $this->config['replacements']
+		              : array();
+
+		foreach ($matches as $m)
 		{
-			$replacements = (isset($this->config['replacements'][$k]))
-			              ? $this->config['replacements'][$k]
-			              : array();
+			$tag = array(
+				'pos'  => $m[0][1],
+				'name' => $tagName,
+				'type' => Parser::SELF_CLOSING_TAG,
+				'len'  => strlen($m[0][0])
+			);
 
-			foreach ($_matches as $m)
+			foreach ($replacements as $mask => $replacement)
 			{
-				$tag = array(
-					'pos'  => $m[0][1],
-					'name' => $tagName,
-					'type' => Parser::SELF_CLOSING_TAG,
-					'len'  => strlen($m[0][0])
-				);
-
-				foreach ($replacements as $mask => $replacement)
+				if (preg_match($mask, $m[0][0]))
 				{
-					if (preg_match($mask, $m[0][0]))
-					{
-						$tag['attrs'][$attrName] = $replacement;
-						break;
-					}
+					$tag['attrs'][$attrName] = $replacement;
+					break;
 				}
-
-				$tags[] = $tag;
 			}
+
+			$tags[] = $tag;
 		}
 
 		return $tags;

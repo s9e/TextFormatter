@@ -72,35 +72,21 @@ class CensorConfig extends PluginConfig
 	*/
 	public function addWord($word, $replacement = null)
 	{
-		/**
-		* 0 00 word
-		* 1 01 word*
-		* 2 10 *word
-		* 3 11 *word*
-		*/
-		$k = (($word[0] === '*') << 1) + (substr($word, -1) === '*');
-
-		/**
-		* Remove leading and trailing asterisks
-		*/
-		$word = trim($word, '*');
-		$this->words[$k][] = $word;
+		$this->words[] = $word;
 
 		if (isset($replacement))
 		{
-			$mask = (($k & 2) ? '#' : '#^')
-			      . str_replace('\\*', '.*', str_replace('\\?', '.?', preg_quote($word, '#')))
-			      . (($k & 1) ? '#i' : '$#iD');
+			$mask = '#^'
+			      . strtr(
+			        	preg_quote($word, '#'),
+			        	array(
+			        		'\\*' => '.*',
+			        		'\\?' => '.?'
+			        	)
+			        )
+			      . '$#iDu';
 
-			if (preg_match('#[\\?\\x80-\\xFF]#', $word))
-			{
-				/**
-				* Non-ASCII characters and question mark jokers get the Unicode treatment
-				*/
-				$mask .= 'u';
-			}
-
-			$this->replacements[$k][$mask] = $replacement;
+			$this->replacements[$mask] = $replacement;
 		}
 	}
 
@@ -111,23 +97,16 @@ class CensorConfig extends PluginConfig
 			return false;
 		}
 
-		$config = array(
-			'tagName'  => $this->tagName,
-			'attrName' => $this->attrName
+		$regexp = ConfigBuilder::buildRegexpFromList(
+			$this->words,
+			array('*' => '\\pL*', '?' => '.?')
 		);
 
-		foreach ($this->words as $k => $words)
-		{
-			$regexp = ConfigBuilder::buildRegexpFromList(
-				$words,
-				array('*' => '\\pL*', '?' => '.?')
-			);
-
-			$config['regexp'][$k] = (($k & 2) ? '#\\b\\pL*?' : '#\\b')
-			                      . $regexp
-			                      . (($k & 1) ? '\\pL*#i' : '\\b#i')
-			                      . 'u';
-		}
+		$config = array(
+			'tagName'  => $this->tagName,
+			'attrName' => $this->attrName,
+			'regexp'   => '#\\b' . $regexp . '\\b#iu'
+		);
 
 		if (!empty($this->replacements))
 		{
