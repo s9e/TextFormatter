@@ -178,7 +178,7 @@ class CensorTest extends Test
 		);
 	}
 
-	public function testCensoredWordsCanUseAQuestionMarkAsAJokerForOneLetter()
+	public function testCensoredWordsCanUseAQuestionMarkAsAJokerForOneCharacter()
 	{
 		$this->cb->Censor->addWord('?pple');
 
@@ -189,10 +189,21 @@ class CensorTest extends Test
 		);
 	}
 
+	public function testCensoredWordsCanUseAQuestionMarkAsAJokerForZeroCharacter()
+	{
+		$this->cb->Censor->addWord('appl?');
+
+		$this->assertTransformation(
+			'You dirty appl',
+			'<rt>You dirty <C>appl</C></rt>',
+			'You dirty ****'
+		);
+	}
+
 	/**
-	* @depends testCensoredWordsCanUseAQuestionMarkAsAJokerForOneLetter
+	* @depends testCensoredWordsCanUseAQuestionMarkAsAJokerForOneCharacter
 	*/
-	public function testTheQuestionMarkDoesNotMatchMultipleLetters()
+	public function testTheQuestionMarkDoesNotMatchMultipleCharacters()
 	{
 		$this->cb->Censor->addWord('?pple');
 
@@ -203,22 +214,30 @@ class CensorTest extends Test
 		);
 	}
 
-	/**
-	* @depends testCensoredWordsCanUseAQuestionMarkAsAJokerForOneLetter
-	*/
-	public function testTheQuestionMarkDoesNotMatchZeroLetters()
+	public function testTheQuestionMarkCanMatchADigit()
 	{
-		$this->cb->Censor->addWord('?pple');
+		$this->cb->Censor->addWord('Pok?man');
 
 		$this->assertTransformation(
-			'You dirty pple',
-			'<pt>You dirty pple</pt>',
-			'You dirty pple'
+			'You dirty Pok3man',
+			'<rt>You dirty <C>Pok3man</C></rt>',
+			'You dirty ****'
+		);
+	}
+
+	public function testTheQuestionMarkCanMatchASymbol()
+	{
+		$this->cb->Censor->addWord('Pok?man');
+
+		$this->assertTransformation(
+			'You dirty Pok#man',
+			'<rt>You dirty <C>Pok#man</C></rt>',
+			'You dirty ****'
 		);
 	}
 
 	/**
-	* @depends testCensoredWordsCanUseAQuestionMarkAsAJokerForOneLetter
+	* @depends testCensoredWordsCanUseAQuestionMarkAsAJokerForOneCharacter
 	*/
 	public function testTheQuestionMarkCanMatchAnUnicodeLetter()
 	{

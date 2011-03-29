@@ -89,7 +89,7 @@ class CensorConfig extends PluginConfig
 		if (isset($replacement))
 		{
 			$mask = (($k & 2) ? '#' : '#^')
-			      . str_replace('\\*', '.*', str_replace('\\?', '\\pL', preg_quote($word, '#')))
+			      . str_replace('\\*', '.*', str_replace('\\?', '.?', preg_quote($word, '#')))
 			      . (($k & 1) ? '#i' : '$#iD');
 
 			if (preg_match('#[\\?\\x80-\\xFF]#', $word))
@@ -120,7 +120,7 @@ class CensorConfig extends PluginConfig
 		{
 			$regexp = ConfigBuilder::buildRegexpFromList(
 				$words,
-				array('*' => '\\pL*', '?' => '\\pL')
+				array('*' => '\\pL*', '?' => '.?')
 			);
 
 			$config['regexp'][$k] = (($k & 2) ? '#\\b\\pL*?' : '#\\b')
