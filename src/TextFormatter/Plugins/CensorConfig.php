@@ -89,13 +89,13 @@ class CensorConfig extends PluginConfig
 		if (isset($replacement))
 		{
 			$mask = (($k & 2) ? '#' : '#^')
-			      . str_replace('\\*', '.*', preg_quote($word, '#'))
+			      . str_replace('\\*', '.*', str_replace('\\?', '\\pL', preg_quote($word, '#')))
 			      . (($k & 1) ? '#i' : '$#iD');
 
-			if (preg_match('#[\\x80-\\xFF]#', $word))
+			if (preg_match('#[\\?\\x80-\\xFF]#', $word))
 			{
 				/**
-				* Non-ASCII characters get the Unicode treatment
+				* Non-ASCII characters and question mark jokers get the Unicode treatment
 				*/
 				$mask .= 'u';
 			}
@@ -118,7 +118,10 @@ class CensorConfig extends PluginConfig
 
 		foreach ($this->words as $k => $words)
 		{
-			$regexp = ConfigBuilder::buildRegexpFromList($words, array('*' => '\\pL*'));
+			$regexp = ConfigBuilder::buildRegexpFromList(
+				$words,
+				array('*' => '\\pL*', '?' => '\\pL')
+			);
 
 			$config['regexp'][$k] = (($k & 2) ? '#\\pL*?' : '#\\b')
 			                      . $regexp
