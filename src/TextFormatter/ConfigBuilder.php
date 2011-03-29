@@ -950,20 +950,6 @@ class ConfigBuilder
 		return $tags;
 	}
 
-	/**
-	* Return the complete config, with its XSL stylesheet, in JSON
-	*
-	* @return array
-	*/
-	public function getJavascriptParserConfig()
-	{
-		$config = $this->getParserConfig();
-
-		$config['xsl'] = $this->getXSL();
-
-		return json_encode($config);
-	}
-
 	//==========================================================================
 	// Misc tools
 	//==========================================================================
