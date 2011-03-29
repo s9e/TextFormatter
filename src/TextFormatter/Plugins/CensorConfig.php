@@ -44,7 +44,7 @@ class CensorConfig extends PluginConfig
 			array(
 				'defaultRule' => 'deny',
 
-				'attributes' => array(
+				'attrs' => array(
 					$this->attrName => array(
 						'type'       => 'text',
 						'isRequired' => false
@@ -53,8 +53,8 @@ class CensorConfig extends PluginConfig
 
 				'template' =>
 					'<xsl:choose>' .
-						'<xsl:when test="@with">' .
-							'<xsl:value-of select="@with"/>' .
+						'<xsl:when test="@' . htmlspecialchars($this->attrName) . '">' .
+							'<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>' .
 						'</xsl:when>' .
 						'<xsl:otherwise>' .
 							htmlspecialchars($this->defaultReplacement) .
@@ -70,7 +70,7 @@ class CensorConfig extends PluginConfig
 	* @param string $word
 	* @param string $replacement If left null, $this->defaultReplacement will be used
 	*/
-	public function add($word, $replacement = null)
+	public function addWord($word, $replacement = null)
 	{
 		/**
 		* 0 00 word
