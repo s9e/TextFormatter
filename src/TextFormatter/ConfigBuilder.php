@@ -586,9 +586,7 @@ class ConfigBuilder
 	{
 		if ($k === 'predefinedTags')
 		{
-			$className = __NAMESPACE__ . '\\PredefinedTags';
-
-			if (!class_exists($className))
+			if (!class_exists(__NAMESPACE__ . '\\PredefinedTags'))
 			{
 				include __DIR__ . '/PredefinedTags.php';
 			}
@@ -646,7 +644,10 @@ class ConfigBuilder
 				include __DIR__ . '/PluginConfig.php';
 			}
 
-			include $classFilepath;
+			if (file_exists($classFilepath))
+			{
+				include $classFilepath;
+			}
 		}
 
 		if (!class_exists($className))

@@ -26,12 +26,30 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Undefined property: s9e\Toolkit\TextFormatter\ConfigBuilder::$foo
+	*/
+	public function testThrowsAnExceptionOnUnsupportedMagicGet()
+	{
+		$this->cb->foo;
+	}
+
+	/**
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid plugin name "../foo"
 	*/
-	public function testDoesNotLoadInvalidPluginName()
+	public function testLoadPluginThrowsAnExceptionOnInvalidPluginName()
 	{
 		$this->cb->loadPlugin('../foo');
+	}
+
+	/**
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Class 's9e\Toolkit\TextFormatter\Plugins\FoobarConfig' not found
+	*/
+	public function testLoadPluginThrowsAnExceptionOnUnknownPlugin()
+	{
+		$this->cb->loadPlugin('Foobar');
 	}
 
 	public function testCanCreateTag()
