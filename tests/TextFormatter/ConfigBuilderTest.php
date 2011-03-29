@@ -372,7 +372,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testDefaultOptionsAreSetOnNewTags
 	*/
-	public function testTagOptionsPHPTypeIsPreserved()
+	public function testTagOptionsPhpTypeIsPreserved()
 	{
 		$this->cb->addTag('a', array('nestingLimit' => '123'));
 
@@ -422,7 +422,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanCreateTag
 	*/
-	public function testCanSetTagXSL()
+	public function testCanSetTagXsl()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagXSL('a', '<xsl:template match="A"><a/></xsl:template>');
@@ -445,7 +445,7 @@ class ConfigBuilderTest extends Test
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException Invalid
 	*/
-	public function testCannotSetTagTemplateWithInvalidXSL()
+	public function testCannotSetTagTemplateWithInvalidXsl()
 	{
 		$this->cb->addTag('br');
 		$this->cb->setTagTemplate('br', '<br>');
@@ -454,7 +454,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @expectedException InvalidArgumentException FOO
 	*/
-	public function testCannotGetTagXSLOnUnknownTag()
+	public function testCannotGetTagXslOnUnknownTag()
 	{
 		$this->cb->getTagXSL('FOO');
 	}
@@ -463,7 +463,7 @@ class ConfigBuilderTest extends Test
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException No
 	*/
-	public function testCannotGetTagXSLOnTagWithoutXSL()
+	public function testCannotGetTagXslOnTagWithoutXsl()
 	{
 		$this->cb->addTag('FOO');
 		$this->cb->getTagXSL('FOO');
@@ -485,9 +485,9 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testCanSetTagXSL
+	* @depends testCanSetTagXsl
 	*/
-	public function testCanCreateTagWithXSL()
+	public function testCanCreateTagWithXsl()
 	{
 		$this->cb->addTag('a', array(
 			'xsl' => '<xsl:template match="A"><a/></xsl:template>'
@@ -500,9 +500,9 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testCanSetTagXSL
+	* @depends testCanSetTagXsl
 	*/
-	public function testCanSetTagXSLWithPreservedWhitespace()
+	public function testCanSetTagXslWithPreservedWhitespace()
 	{
 		$xsl =
 			'<xsl:template match="A">
@@ -859,7 +859,7 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
-	public function testCanAddGenericXSL()
+	public function testCanAddGenericXsl()
 	{
 		$xsl = '<xsl:param name="foo"/>';
 		$this->cb->addXSL($xsl);
@@ -873,15 +873,15 @@ class ConfigBuilderTest extends Test
 	/**
 	* @expectedException InvalidArgumentException Premature
 	*/
-	public function testCannotAddInvalidXSL()
+	public function testCannotAddInvalidXsl()
 	{
 		$this->cb->addXSL('<lol>');
 	}
 
 	/**
-	* @depends testCanCreateTagWithXSL
+	* @depends testCanCreateTagWithXsl
 	*/
-	public function testXSLFromTagsAppearsInOutput()
+	public function testXslFromTagsAppearsInOutput()
 	{
 		$xsl = '<xsl:template match="A"><a/></xsl:template>';
 
