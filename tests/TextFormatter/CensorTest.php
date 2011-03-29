@@ -263,4 +263,18 @@ class CensorTest extends Test
 			'You dirty Pikaboy'
 		);
 	}
+
+	/**
+	* @depends testTheQuestionMarkCanMatchAnUnicodeLetter
+	*/
+	public function testCensoredWordsAreCaseInsensitive()
+	{
+		$this->cb->Censor->addWord('Pokéman');
+
+		$this->assertTransformation(
+			'You dirty POKÉMAN',
+			'<rt>You dirty <C>POKÉMAN</C></rt>',
+			'You dirty ****'
+		);
+	}
 }
