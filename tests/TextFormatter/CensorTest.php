@@ -253,7 +253,7 @@ class CensorTest extends Test
 	/**
 	* @depends testTheQuestionMarkCanMatchAnUnicodeLetter
 	*/
-	public function testCanCensoredUnicodeWordsWithCustomReplacement()
+	public function testCanReplaceCensoredUnicodeWordsWithCustomReplacement()
 	{
 		$this->cb->Censor->addWord('Pok?man', 'Pikaboy');
 
