@@ -15,7 +15,7 @@ class FabricTest extends Test
 		$this->cb->loadPlugin('Fabric');
 	}
 
-	public function testLink()
+	public function testSupportsLink()
 	{
 		$this->assertTransformation(
 			'"link text":http://www.example.com',
@@ -29,9 +29,9 @@ class FabricTest extends Test
 	}
 
 	/**
-	* @depends testLink
+	* @depends testSupportsLink
 	*/
-	public function testLinkWithTitle()
+	public function testSupportsLinkWithTitle()
 	{
 		$this->assertTransformation(
 			'"link text(with title)":http://www.example.com',
@@ -44,7 +44,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testLinkWithNoUrl()
+	public function testSupportsLinkWithNoUrl()
 	{
 		$this->assertTransformation(
 			'"link text(with title)"',
@@ -53,7 +53,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testImage()
+	public function testSupportsImage()
 	{
 		$this->assertTransformation(
 			'!http://example.com/img.png!',
@@ -65,9 +65,9 @@ class FabricTest extends Test
 	}
 
 	/**
-	* @depends testImage
+	* @depends testSupportsImage
 	*/
-	public function testImageWithAltText()
+	public function testSupportsImageWithAltText()
 	{
 		$this->assertTransformation(
 			'!http://example.com/img.png(alt text)!',
@@ -79,9 +79,9 @@ class FabricTest extends Test
 	}
 
 	/**
-	* @depends testImage
+	* @depends testSupportsImage
 	*/
-	public function testImageWithLink()
+	public function testSupportsImageWithLink()
 	{
 		$this->assertTransformation(
 			'!http://example.com/img.png!:http://www.example.com',
@@ -97,10 +97,10 @@ class FabricTest extends Test
 	}
 
 	/**
-	* @depends testImageWithAltText
-	* @depends testImageWithLink
+	* @depends testSupportsImageWithAltText
+	* @depends testSupportsImageWithLink
 	*/
-	public function testImageWithAltTextAndLink()
+	public function testSupportsImageWithAltTextAndLink()
 	{
 		$this->assertTransformation(
 			'!http://example.com/img.png(alt text)!:http://www.example.com',
@@ -114,7 +114,7 @@ class FabricTest extends Test
 			'<a href="http://www.example.com"><img src="http://example.com/img.png" alt="alt text" title="alt text"></a>'
 		);
 	}
-		public function testPhraseModifierEmphasis()
+		public function testSupportsPhraseModifierEmphasis()
 	{
 		$this->assertTransformation(
 			'_emphasis_',
@@ -125,7 +125,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierStrong()
+	public function testSupportsPhraseModifierStrong()
 	{
 		$this->assertTransformation(
 			'*strong*',
@@ -136,7 +136,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierItalic()
+	public function testSupportsPhraseModifierItalic()
 	{
 		$this->assertTransformation(
 			'__italic__',
@@ -147,7 +147,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierBold()
+	public function testSupportsPhraseModifierBold()
 	{
 		$this->assertTransformation(
 			'**bold**',
@@ -158,7 +158,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierCitation()
+	public function testSupportsPhraseModifierCitation()
 	{
 		$this->assertTransformation(
 			'??citation??',
@@ -169,7 +169,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierDeletedText()
+	public function testSupportsPhraseModifierDeletedText()
 	{
 		$this->assertTransformation(
 			'-deleted text-',
@@ -180,7 +180,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierInsertedText()
+	public function testSupportsPhraseModifierInsertedText()
 	{
 		$this->assertTransformation(
 			'+inserted text+',
@@ -191,7 +191,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierSuperscript()
+	public function testSupportsPhraseModifierSuperscript()
 	{
 		$this->assertTransformation(
 			'^superscript^',
@@ -202,7 +202,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierSubscript()
+	public function testSupportsPhraseModifierSubscript()
 	{
 		$this->assertTransformation(
 			'~subscript~',
@@ -213,7 +213,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierSpan()
+	public function testSupportsPhraseModifierSpan()
 	{
 		$this->assertTransformation(
 			'%span%',
@@ -224,7 +224,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierSpanWithClass()
+	public function testSupportsPhraseModifierSpanWithClass()
 	{
 		$this->assertTransformation(
 			'%(foo)span%',
@@ -235,7 +235,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierSpanWithMultipleClasses()
+	public function testSupportsPhraseModifierSpanWithMultipleClasses()
 	{
 		$this->assertTransformation(
 			'%(foo bar)span%',
@@ -246,7 +246,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testPhraseModifierCode()
+	public function testSupportsPhraseModifierCode()
 	{
 		$this->assertTransformation(
 			'@code@',
@@ -260,7 +260,7 @@ class FabricTest extends Test
 	/**
 	* This is an extension to the Textile syntax
 	*/
-	public function testPhraseModifierCodeWithStx()
+	public function testSupportsPhraseModifierCodeWithStx()
 	{
 		$this->assertTransformation(
 			'@(php)code@',
@@ -271,7 +271,7 @@ class FabricTest extends Test
 		);
 	}
 
-	public function testAcronym()
+	public function testSupportsAcronyms()
 	{
 		$this->assertTransformation(
 			'ABC(Always Be Closing)',
