@@ -32,7 +32,7 @@ class WittyPantsConfig extends PluginConfig
 	{
 		$this->cb->addTag($this->tagName);
 		$this->cb->addTagAttribute($this->tagName, $this->attrName, 'text');
-		$this->cb->setTagTemplate($this->tagName, '<xsl:value-of select="@' . $this->attrName . '"/>');
+		$this->cb->setTagTemplate($this->tagName, '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
 	}
 
 	public function getConfig()
