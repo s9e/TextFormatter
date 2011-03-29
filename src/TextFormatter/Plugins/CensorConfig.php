@@ -123,7 +123,7 @@ class CensorConfig extends PluginConfig
 				array('*' => '\\pL*', '?' => '\\pL')
 			);
 
-			$config['regexp'][$k] = (($k & 2) ? '#\\pL*?' : '#\\b')
+			$config['regexp'][$k] = (($k & 2) ? '#\\b\\pL*?' : '#\\b')
 			                      . $regexp
 			                      . (($k & 1) ? '\\pL*#i' : '\\b#i')
 			                      . 'u';
