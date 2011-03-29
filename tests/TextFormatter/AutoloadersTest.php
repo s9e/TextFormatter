@@ -2,10 +2,7 @@
 
 namespace s9e\Toolkit\Tests\TextFormatter;
 
-use s9e\Toolkit\Tests\Test,
-    s9e\Toolkit\TextFormatter\Parser,
-    s9e\Toolkit\TextFormatter\Renderer,
-    s9e\Toolkit\TextFormatter\Plugins\BBCodesConfig;
+use s9e\Toolkit\Tests\Test;
 
 include_once __DIR__ . '/../Test.php';
 
@@ -16,7 +13,10 @@ class AutoloadersTest extends Test
 	*/
 	public function testConfigBuilderLoadsCorePluginsFiles()
 	{
-		$this->assertTrue($this->cb->loadPlugin('BBCodes') instanceof BBCodesConfig);
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Plugins\\BBCodesConfig',
+			$this->cb->loadPlugin('BBCodes')
+		);
 	}
 
 	/**
@@ -24,7 +24,10 @@ class AutoloadersTest extends Test
 	*/
 	public function testConfigBuilderCanAutoloadParser()
 	{
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Parser',
+			$this->cb->getParser()
+		);
 	}
 
 	/**
@@ -33,8 +36,14 @@ class AutoloadersTest extends Test
 	*/
 	public function testConfigBuilderDoesNotIncludeParserTwice()
 	{
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
-		$this->assertTrue($this->cb->getParser() instanceof Parser);
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Parser',
+			$this->cb->getParser()
+		);
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Parser',
+			$this->cb->getParser()
+		);
 	}
 
 	/**
@@ -42,7 +51,10 @@ class AutoloadersTest extends Test
 	*/
 	public function testConfigBuilderCanAutoloadRenderer()
 	{
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Renderer',
+			$this->cb->getRenderer()
+		);
 	}
 
 	/**
@@ -51,7 +63,13 @@ class AutoloadersTest extends Test
 	*/
 	public function testConfigBuilderDoesNotIncludeRendererTwice()
 	{
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
-		$this->assertTrue($this->cb->getRenderer() instanceof Renderer);
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Renderer',
+			$this->cb->getRenderer()
+		);
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Renderer',
+			$this->cb->getRenderer()
+		);
 	}
 }

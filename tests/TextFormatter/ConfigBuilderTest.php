@@ -3,10 +3,7 @@
 namespace s9e\Toolkit\Tests\TextFormatter;
 
 use s9e\Toolkit\Tests\Test,
-    s9e\Toolkit\TextFormatter\ConfigBuilder,
-    s9e\Toolkit\TextFormatter\Parser,
-    s9e\Toolkit\TextFormatter\Renderer,
-    s9e\Toolkit\TextFormatter\Plugins\EmoticonsConfig;
+    s9e\Toolkit\TextFormatter\ConfigBuilder;
 
 include_once __DIR__ . '/../Test.php';
 
@@ -15,14 +12,12 @@ include_once __DIR__ . '/../Test.php';
 */
 class ConfigBuilderTest extends Test
 {
-	public function setUp()
-	{
-		$this->cb = new ConfigBuilder;
-	}
-
 	public function testLoadsPluginOnMagicGet()
 	{
-		$this->assertTrue($this->cb->Emoticons instanceof EmoticonsConfig);
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Plugins\\EmoticonsConfig',
+			$this->cb->Emoticons
+		);
 	}
 
 	/**
