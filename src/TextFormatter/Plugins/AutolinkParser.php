@@ -24,18 +24,17 @@ class AutolinkParser extends PluginParser
 			* Remove trailing dots. We preserve right parentheses if there's the right number of
 			* parentheses in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
 			*/
-			do
+			cleanUrl:
 			{
-				$tmp = $url;
 				$url = rtrim($url, '.');
 
-				if (substr_count($url, '(') < substr_count($url, ')')
-				 && substr($url, -1) === ')')
+				if (substr($url, -1) === ')'
+				 && substr_count($url, '(') < substr_count($url, ')'))
 				{
 					$url = substr($url, 0, -1);
+					goto cleanUrl;
 				}
 			}
-			while ($tmp != $url);
 
 			$tags[] = array(
 				'pos'   => $m[0][1],
