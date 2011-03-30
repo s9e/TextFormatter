@@ -84,6 +84,28 @@ class ParserTest extends Test
 		);
 	}
 
+	/**
+	* @depends testFulfilledRequireParentRuleAllowsTag
+	*/
+	public function testRequireParentRuleWithMultipleTargetsIsFulfilledIfAnyTargetIsTheParent()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('c');
+		$this->cb->addTagRule('b', 'requireParent', 'a');
+		$this->cb->addTagRule('b', 'requireParent', 'c');
+
+		$this->assertParsing(
+			'[a][b]stuff[/b][/a]',
+			'<rt><A><st>[a]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a]</et></A></rt>'
+		);
+
+		$this->assertParsing(
+			'[c][b]stuff[/b][/c]',
+			'<rt><C><st>[c]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/c]</et></C></rt>'
+		);
+	}
+
 	public function testFulfilledRequireParentRuleAllowsTagDespitePrefix()
 	{
 		$this->cb->BBCodes->addBBCode('a');

@@ -481,19 +481,7 @@ class ConfigBuilder
 			throw new UnexpectedValueException("Unknown rule action '" . $action . "'");
 		}
 
-		if ($action === 'requireParent')
-		{
-			if (isset($this->tags[$tagName]['rules']['requireParent'])
-			 && $this->tags[$tagName]['rules']['requireParent'] !== $target)
-			{
-				throw new RuntimeException("Tag '" . $tagName . "' already has a different 'requireParent' rule, and both cannot be satisfied at the same time. Perhaps did you mean to create a 'requireAscendant' rule?");
-			}
-			$this->tags[$tagName]['rules']['requireParent'] = $target;
-		}
-		else
-		{
-			$this->tags[$tagName]['rules'][$action][$target] = $target;
-		}
+		$this->tags[$tagName]['rules'][$action][$target] = $target;
 	}
 
 	/**

@@ -923,12 +923,16 @@ class Parser
 					$parentTag = end($tagStack);
 
 					if (!$parentTag
-					 || $parentTag['name'] !== $tagConfig['rules']['requireParent'])
+					 || !isset($tagConfig['rules']['requireParent'][$parentTag['name']]))
 					{
+						$msg = (count($tagConfig['rules']['requireParent']) === 1)
+						     ? 'Tag %1$s requires %2$s as parent'
+						     : 'Tag %1$s requires as parent any of: %2$s';
+
 						$this->log('error', array(
 							'pos'    => $this->currentTag['pos'],
-							'msg'    => 'Tag %1$s requires %2$s as parent',
-							'params' => array($tagName, $tagConfig['rules']['requireParent'])
+							'msg'    => $msg,
+							'params' => array($tagName, implode(', ', $tagConfig['rules']['requireParent']))
 						));
 
 						continue;
