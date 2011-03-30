@@ -24,6 +24,7 @@
 			<file>./TextFormatter/BBCodesTest.php</file>
 			<file>./TextFormatter/CensorTest.php</file>
 			<file>./TextFormatter/ConfigBuilderTest.php</file>
+			<file>./TextFormatter/EmoticonsTest.php</file>
 			<file>./TextFormatter/FabricTest.php</file>
 			<file>./TextFormatter/ParserTest.php</file>
 			<file>./TextFormatter/PluginConfigTest.php</file>

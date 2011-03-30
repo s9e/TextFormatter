@@ -7,8 +7,8 @@ use s9e\Toolkit\Tests\Test;
 include_once __DIR__ . '/../Test.php';
 
 /**
-* covers s9e\Toolkit\TextFormatter\Plugins\CensorConfig
-* covers s9e\Toolkit\TextFormatter\Plugins\CensorParser
+* covers s9e\Toolkit\TextFormatter\Plugins\EmoticonsConfig
+* covers s9e\Toolkit\TextFormatter\Plugins\EmoticonsParser
 */
 class EmoticonsTest extends Test
 {
@@ -44,6 +44,17 @@ class EmoticonsTest extends Test
 		);
 	}
 
+	public function testEmoticonsAreReplacedEverywhereInTheText()
+	{
+		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
+
+		$this->assertTransformation(
+			'Hello :):):)text:):)',
+			'<rt>Hello <E>:)</E><E>:)</E><E>:)</E>text<E>:)</E><E>:)</E></rt>',
+			'Hello <img src="smiley.png"><img src="smiley.png"><img src="smiley.png">text<img src="smiley.png"><img src="smiley.png">'
+		);
+	}
+
 	/**
 	* @depends testAnEmoticonCanBeReplacedByAnImgTag
 	*/
@@ -57,5 +68,49 @@ class EmoticonsTest extends Test
 			'<rt>Hello <EMOTICON>:)</EMOTICON></rt>',
 			'Hello <img src="smiley.png">'
 		);
+	}
+
+	public function testEmoticonsXslIsAutomaticallyUpdatedWhenEmoticonsAreAdded()
+	{
+		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
+		$this->assertContains(':)', $this->cb->getXSL());
+		$this->assertNotContains(':lol:', $this->cb->getXSL());
+
+		$this->cb->Emoticons->addEmoticon(':lol:', '<img src="lol.png" />');
+		$this->assertContains(':lol:', $this->cb->getXSL());
+	}
+
+	/**
+	* @depends testEmoticonsXslIsAutomaticallyUpdatedWhenEmoticonsAreAdded
+	*/
+	public function testXslAutoUpdateCanBeDisabledByCallingTheDisableAutoUpdateMethod()
+	{
+		$this->cb->Emoticons->disableAutoUpdate();
+
+		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
+		$this->assertNotContains(':)', $this->cb->getXSL());
+	}
+
+	/**
+	* @depends testXslAutoUpdateCanBeDisabledByCallingTheDisableAutoUpdateMethod
+	*/
+	public function testXslAutoUpdateCanBeReenabledByCallingTheEnableAutoUpdateMethod()
+	{
+		$this->cb->Emoticons->disableAutoUpdate();
+		$this->cb->Emoticons->enableAutoUpdate();
+
+		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
+		$this->assertContains(':)', $this->cb->getXSL());
+	}
+
+	/**
+	* @depends testXslAutoUpdateCanBeDisabledByCallingTheDisableAutoUpdateMethod
+	*/
+	public function testXslUpdateCanBeManuallyTriggeredByCallingTheUpdateXslMethod()
+	{
+		$this->cb->Emoticons->disableAutoUpdate();
+		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
+		$this->cb->Emoticons->updateXSL();
+		$this->assertContains(':)', $this->cb->getXSL());
 	}
 }

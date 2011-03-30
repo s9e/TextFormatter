@@ -46,7 +46,7 @@ class EmoticonsConfig extends PluginConfig
 
 		if ($this->autoUpdate)
 		{
-			$this->commitXSL();
+			$this->updateXSL();
 		}
 	}
 
@@ -72,7 +72,7 @@ class EmoticonsConfig extends PluginConfig
 	/**
 	* Commit to ConfigBuilder the XSL needed to render emoticons
 	*/
-	public function commitXSL()
+	public function updateXSL()
 	{
 		$tpls = array();
 		foreach ($this->emoticons as $code => $tpl)
