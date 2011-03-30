@@ -21,12 +21,21 @@ class AutolinkParser extends PluginParser
 			$url = $m[0][0];
 
 			/**
-			* Remove some trailing punctuation. We preserve right parentheses if there's a left
-			* parenthesis in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
+			* Remove trailing dots. We preserve right parentheses if there's the right number of
+			* parentheses in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
 			*/
-			$url   = rtrim($url);
-			$rtrim = (strpos($url, '(')) ? '.' : ').';
-			$url   = rtrim($url, $rtrim);
+			do
+			{
+				$tmp = $url;
+				$url = rtrim($url, '.');
+
+				if (substr_count($url, '(') < substr_count($url, ')')
+				 && substr($url, -1) === ')')
+				{
+					$url = substr($url, 0, -1);
+				}
+			}
+			while ($tmp != $url);
 
 			$tags[] = array(
 				'pos'   => $m[0][1],

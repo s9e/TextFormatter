@@ -63,4 +63,46 @@ class AutolinkTest extends Test
 			'Go to <a href="ftp://www.example.com">ftp://www.example.com</a> for more info'
 		);
 	}
+
+	/**
+	* @depends testHttpUrlsAreLinkifiedByDefault
+	*/
+	public function testTrailingDotsAreNotLinkified()
+	{
+		$this->cb->loadPlugin('Autolink');
+
+		$this->assertTransformation(
+			'Go to http://www.example.com. Or the kitten dies.',
+			'<rt>Go to <URL url="http://www.example.com">http://www.example.com</URL>. Or the kitten dies.</rt>',
+			'Go to <a href="http://www.example.com">http://www.example.com</a>. Or the kitten dies.'
+		);
+	}
+
+	/**
+	* @depends testHttpUrlsAreLinkifiedByDefault
+	*/
+	public function testBalancedRightParenthesesAreLinkified()
+	{
+		$this->cb->loadPlugin('Autolink');
+
+		$this->assertTransformation(
+			'Mars (http://en.wikipedia.org/wiki/Mars_(planet)) is the fourth planet from the Sun',
+			'<rt>Mars (<URL url="http://en.wikipedia.org/wiki/Mars_(planet)">http://en.wikipedia.org/wiki/Mars_(planet)</URL>) is the fourth planet from the Sun</rt>',
+			'Mars (<a href="http://en.wikipedia.org/wiki/Mars_(planet)">http://en.wikipedia.org/wiki/Mars_(planet)</a>) is the fourth planet from the Sun'
+		);
+	}
+
+	/**
+	* @depends testHttpUrlsAreLinkifiedByDefault
+	*/
+	public function testNonBalancedRightParenthesesAreNotLinkified()
+	{
+		$this->cb->loadPlugin('Autolink');
+
+		$this->assertTransformation(
+			'Mars (http://en.wikipedia.org/wiki/Mars) can mean many things',
+			'<rt>Mars (<URL url="http://en.wikipedia.org/wiki/Mars">http://en.wikipedia.org/wiki/Mars</URL>) can mean many things</rt>',
+			'Mars (<a href="http://en.wikipedia.org/wiki/Mars">http://en.wikipedia.org/wiki/Mars</a>) can mean many things'
+		);
+	}
 }
