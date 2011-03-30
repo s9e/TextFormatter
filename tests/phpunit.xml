@@ -21,6 +21,7 @@
 
 		<testsuite name="TextFormatter">
 			<file>./TextFormatter/AutoloadersTest.php</file>
+			<file>./TextFormatter/AutolinkTest.php</file>
 			<file>./TextFormatter/BBCodesTest.php</file>
 			<file>./TextFormatter/CensorTest.php</file>
 			<file>./TextFormatter/ConfigBuilderTest.php</file>

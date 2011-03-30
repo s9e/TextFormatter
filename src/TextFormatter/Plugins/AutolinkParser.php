@@ -38,7 +38,7 @@ class AutolinkParser extends PluginParser
 
 			$tags[] = array(
 				'pos'   => $m[0][1] + strlen($url),
-				'name'  => $tagName,
+				'name'  => 'URL',
 				'type'  => Parser::END_TAG,
 				'len'   => 0
 			);
