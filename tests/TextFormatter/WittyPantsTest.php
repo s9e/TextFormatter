@@ -15,14 +15,6 @@ class WittyPantsTest extends Test
 		$this->cb->loadPlugin('WittyPants');
 	}
 
-	protected function assertWit($text, $expected)
-	{
-		$this->assertSame(
-			$expected,
-			$this->renderer->render($this->parser->parse($text))
-		);
-	}
-
 	public function testSingleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
 	{
 		$this->assertRendering(
@@ -124,6 +116,50 @@ class WittyPantsTest extends Test
 		$this->assertRendering(
 			'(R)',
 			'®'
+		);
+	}
+
+	public function testASingleQuoteBeforeALetterAtTheStartOfALineIsReplacedWithAnApostrophe()
+	{
+		$this->assertRendering(
+			"'Twas the night.\n'Twas the night before Christmas.",
+			"’Twas the night.\n’Twas the night before Christmas."
+		);
+	}
+
+
+	public function testASingleQuoteBetweenTwoLettersIsReplacedWithAnApostrophe()
+	{
+		$this->assertRendering(
+			"Occam's razor",
+			"Occam’s razor"
+		);
+	}
+
+	public function testASingleQuoteBeforeATwoDigitsNumberAtTheStartOfALineIsReplacedWithAnApostrophe()
+	{
+		$this->assertRendering(
+			"'88 was the year.\n'88 was the year indeed.",
+			"’88 was the year.\n’88 was the year indeed."
+		);
+	}
+
+	/**
+	* @depends testSingleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks
+	*/
+	public function testASingleQuoteThatIsPartOfAPairOfQuotationMarksIsNotReplacedWithAnApostrophe()
+	{
+		$this->assertRendering(
+			"'88 bottles of beer on the wall'",
+			"‘88 bottles of beer on the wall’"
+		);
+	}
+
+	public function testASingleQuoteAfterADigitsAndBeforeTheLetterSIsReplacedWithAnApostrophe()
+	{
+		$this->assertRendering(
+			"1950's",
+			"1950’s"
 		);
 	}
 }

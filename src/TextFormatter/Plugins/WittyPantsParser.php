@@ -71,6 +71,19 @@ class WittyPantsParser extends PluginParser
 			);
 		}
 
+		foreach ($matches['apostrophe'] as $m)
+		{
+			$tags[] = array(
+				'pos'   => $m[0][1],
+				'type'  => Parser::SELF_CLOSING_TAG,
+				'name'  => $tagName,
+				'len'   => 1,
+				'attrs' => array(
+					$attrName => $replacements['apostrophe']
+				)
+			);
+		}
+
 		return $tags;
 	}
 }
