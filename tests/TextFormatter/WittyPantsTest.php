@@ -155,7 +155,7 @@ class WittyPantsTest extends Test
 		);
 	}
 
-	public function testASingleQuoteAfterADigitsAndBeforeTheLetterSIsReplacedWithAnApostrophe()
+	public function testASingleQuoteAfterADigitAndBeforeTheLetterSIsReplacedWithAnApostrophe()
 	{
 		$this->assertRendering(
 			"1950's",
