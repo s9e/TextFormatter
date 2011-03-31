@@ -45,7 +45,6 @@ class FabricParser extends PluginParser
 		}
 	}
 
-
 	protected function getBlockModifiersTags(&$tags, $text, array $matches)
 	{
 	}
