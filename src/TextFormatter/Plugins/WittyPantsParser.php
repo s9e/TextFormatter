@@ -104,6 +104,19 @@ class WittyPantsParser extends PluginParser
 			}
 		}
 
+		foreach ($matches['multiply'] as $m)
+		{
+			$tags[] = array(
+				'pos'   => $m[1][1],
+				'type'  => Parser::SELF_CLOSING_TAG,
+				'name'  => $tagName,
+				'len'   => 1,
+				'attrs' => array(
+					$attrName => $replacements['multiply']
+				)
+			);
+		}
+
 		return $tags;
 	}
 }

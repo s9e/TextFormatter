@@ -178,4 +178,32 @@ class WittyPantsTest extends Test
 			'12″ vynil'
 		);
 	}
+
+	public function testTheLetterXPrecededByANumberAndFollowedByANumberIsReplacedWithAMultiplicationSign()
+	{
+		$this->assertRendering(
+			'3x3',
+			'3×3'
+		);
+	}
+
+	public function testTheLetterXPrecededByANumberAndWhitespaceAndFollowedByWhitespaceAndANumberIsReplacedWithAMultiplicationSign()
+	{
+		$this->assertRendering(
+			'3 x 3',
+			'3 × 3'
+		);
+	}
+
+	/**
+	* @depends testADoubleQuoteAfterADigitIsReplacedWithADoublePrime
+	* @depends testTheLetterXPrecededByANumberAndWhitespaceAndFollowedByWhitespaceAndANumberIsReplacedWithAMultiplicationSign
+	*/
+	public function testTheLetterXBetweenNumbersWithPrimesIsReplacedWithAMultiplicationSign()
+	{
+		$this->assertRendering(
+			'3" x 3"',
+			'3″ × 3″'
+		);
+	}
 }
