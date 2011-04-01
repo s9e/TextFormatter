@@ -162,4 +162,20 @@ class WittyPantsTest extends Test
 			"1950’s"
 		);
 	}
+
+	public function testASingleQuoteAfterADigitIsReplacedWithAPrime()
+	{
+		$this->assertRendering(
+			"I am 7' tall",
+			"I am 7′ tall"
+		);
+	}
+
+	public function testADoubleQuoteAfterADigitIsReplacedWithADoublePrime()
+	{
+		$this->assertRendering(
+			'12" vynil',
+			'12″ vynil'
+		);
+	}
 }

@@ -45,6 +45,7 @@ class WittyPantsConfig extends PluginConfig
 				'singletons' => "#(?:---?|\\.\\.\\.)#S",
 				'quotation'  => '#(?<!=)(["\'])(?:.+?)(?<!=)\\1#S',
 				'symbols'    => '#\\((?:tm|r|c)\\)#i',
+				'primes'     => "#(?<=[0-9])['\"]#S",
 				'apostrophe' => "#(?<=\\pL)'(?=\\pL)|(?<=^|\\n)'(?=\\pL|[0-9]{2})|(?<=[0-9])'(?=s)#u"
 			),
 
@@ -62,6 +63,10 @@ class WittyPantsConfig extends PluginConfig
 					'(tm)' => "\xE2\x84\xA2",
 					'(r)'  => "\xC2\xAE",
 					'(c)'  => "\xC2\xA9"
+				),
+				'primes' => array(
+					"'"   => "\xE2\x80\xB2",
+					'"'   => "\xE2\x80\xB3"
 				),
 				'apostrophe' => "\xE2\x80\x99"
 			)
