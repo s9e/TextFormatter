@@ -10,16 +10,31 @@ include_once __DIR__ . '/../Test.php';
 
 class BBCodesTest extends Test
 {
-	public function testOverlappingTagsAreSortedOut()
+	protected function addBBCode($bbcodeName)
 	{
-		$this->cb->BBCodes->addBBCode('x',
-			array('attrs' => array(
-				'foo' => array('type' => 'text')
-			))
+		call_user_func_array(
+			array(
+				$this->cb->predefinedBBCodes,
+				'add' . $bbcodeName
+			),
+			array_slice(func_get_args(), 1)
 		);
-		$this->assertParsing(
-			'[x foo="[b]bar[/b]" /]',
-			'<rt><X foo="[b]bar[/b]">[x foo=&quot;[b]bar[/b]&quot; /]</X></rt>'
+	}
+
+	public function testBbcodeTagsCanUseAColonFollowedByDigitsAsASuffixToControlHowStartTagsAndEndTagsArePaired()
+	{
+		$this->cb->BBCodes->addBBCode(
+			'B',
+			array(
+				'nestingLimit' => 1,
+				'template' => '<b><xsl:apply-templates /></b>'
+			)
+		);
+
+		$this->assertTransformation(
+			'[B:123]bold tags: [B]text[/B][/B:123]',
+			'<rt><B><st>[B:123]</st>bold tags: [B]text[/B]<et>[/B:123]</et></B></rt>',
+			'<b>bold tags: [B]text[/B]</b>'
 		);
 	}
 }
