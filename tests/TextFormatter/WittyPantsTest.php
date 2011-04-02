@@ -10,13 +10,9 @@ include_once __DIR__ . '/../Test.php';
 
 class WittyPantsTest extends Test
 {
-	public function setUp()
-	{
-		$this->cb->loadPlugin('WittyPants');
-	}
-
 	public function testSingleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"'Good morning, Frank,' greeted HAL.",
 			"‘Good morning, Frank,’ greeted HAL."
@@ -25,6 +21,7 @@ class WittyPantsTest extends Test
 
 	public function testDoubleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'"Good morning, Frank," greeted HAL.',
 			'“Good morning, Frank,” greeted HAL.'
@@ -33,6 +30,7 @@ class WittyPantsTest extends Test
 
 	public function testSingleQuotesAfterAnEqualSignAreNotConvertedToQuotationMarks()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"[url='some url']",
 			"[url='some url']"
@@ -41,6 +39,7 @@ class WittyPantsTest extends Test
 
 	public function testDoubleQuotesAfterAnEqualSignAreNotConvertedToQuotationMarks()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'[url="some url"]',
 			'[url="some url"]'
@@ -49,6 +48,7 @@ class WittyPantsTest extends Test
 
 	public function testThreeConsecutiveDotsAreConvertedToAnEllipsis()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'Hello world...',
 			'Hello world…'
@@ -57,6 +57,7 @@ class WittyPantsTest extends Test
 
 	public function testTwoConsecutiveHypensAreConvertedToAnEnDash()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'foo--bar',
 			'foo–bar'
@@ -65,6 +66,7 @@ class WittyPantsTest extends Test
 
 	public function testThreeConsecutiveHypensAreConvertedToAnEmDash()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'foo---bar',
 			'foo—bar'
@@ -73,6 +75,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLettersTmInLowercaseAreReplacedWithTheTrademarkSymbol()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'(tm)',
 			'™'
@@ -81,6 +84,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLettersTmInUppercaseAreReplacedWithTheTrademarkSymbol()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'(TM)',
 			'™'
@@ -89,6 +93,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLetterCInLowercaseAreReplacedWithTheCopyrightSymbol()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'(c)',
 			'©'
@@ -97,6 +102,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLetterCInUppercaseAreReplacedWithTheCopyrightSymbol()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'(C)',
 			'©'
@@ -105,6 +111,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLetterRInLowercaseAreReplacedWithTheRegisteredSymbol()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'(r)',
 			'®'
@@ -113,6 +120,7 @@ class WittyPantsTest extends Test
 
 	public function testParenthesesAroundTheLetterRInUppercaseAreReplacedWithTheRegisteredSymbol()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'(R)',
 			'®'
@@ -121,6 +129,7 @@ class WittyPantsTest extends Test
 
 	public function testASingleQuoteBeforeALetterAtTheStartOfALineIsReplacedWithAnApostrophe()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"'Twas the night.\n'Twas the night before Christmas.",
 			"’Twas the night.\n’Twas the night before Christmas."
@@ -130,6 +139,7 @@ class WittyPantsTest extends Test
 
 	public function testASingleQuoteBetweenTwoLettersIsReplacedWithAnApostrophe()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"Occam's razor",
 			"Occam’s razor"
@@ -138,6 +148,7 @@ class WittyPantsTest extends Test
 
 	public function testASingleQuoteBeforeATwoDigitsNumberAtTheStartOfALineIsReplacedWithAnApostrophe()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"'88 was the year.\n'88 was the year indeed.",
 			"’88 was the year.\n’88 was the year indeed."
@@ -149,6 +160,7 @@ class WittyPantsTest extends Test
 	*/
 	public function testASingleQuoteThatIsPartOfAPairOfQuotationMarksIsNotReplacedWithAnApostrophe()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"'88 bottles of beer on the wall'",
 			"‘88 bottles of beer on the wall’"
@@ -157,6 +169,7 @@ class WittyPantsTest extends Test
 
 	public function testASingleQuoteAfterADigitAndBeforeTheLetterSIsReplacedWithAnApostrophe()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"1950's",
 			"1950’s"
@@ -165,6 +178,7 @@ class WittyPantsTest extends Test
 
 	public function testASingleQuoteAfterADigitIsReplacedWithAPrime()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"I am 7' tall",
 			"I am 7′ tall"
@@ -173,6 +187,7 @@ class WittyPantsTest extends Test
 
 	public function testADoubleQuoteAfterADigitIsReplacedWithADoublePrime()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'12" vynil',
 			'12″ vynil'
@@ -181,6 +196,7 @@ class WittyPantsTest extends Test
 
 	public function testTheLetterXPrecededByANumberAndFollowedByANumberIsReplacedWithAMultiplicationSign()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'3x3',
 			'3×3'
@@ -189,6 +205,7 @@ class WittyPantsTest extends Test
 
 	public function testTheLetterXPrecededByANumberAndWhitespaceAndFollowedByWhitespaceAndANumberIsReplacedWithAMultiplicationSign()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'3 x 3',
 			'3 × 3'
@@ -201,9 +218,44 @@ class WittyPantsTest extends Test
 	*/
 	public function testTheLetterXBetweenNumbersWithPrimesIsReplacedWithAMultiplicationSign()
 	{
+		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'3" x 3"',
 			'3″ × 3″'
+		);
+	}
+
+	public function testDoesNotAttemptToCreateItsTagIfItAlreadyExists()
+	{
+		$this->cb->loadPlugin('WittyPants');
+		$this->cb->loadPlugin('WittyPants');
+	}
+
+	/**
+	* @depends testThreeConsecutiveDotsAreConvertedToAnEllipsis
+	*/
+	public function testTagNameCanBeCustomizedAtLoadingTime()
+	{
+		$this->cb->loadPlugin('WittyPants', null, array('tagName' => 'XYZ'));
+
+		$this->assertTransformation(
+			'Hello world...',
+			'<rt>Hello world<XYZ char="…">...</XYZ></rt>',
+			'Hello world…'
+		);
+	}
+
+	/**
+	* @depends testThreeConsecutiveDotsAreConvertedToAnEllipsis
+	*/
+	public function testAttributeNameCanBeCustomizedAtLoadingTime()
+	{
+		$this->cb->loadPlugin('WittyPants', null, array('attrName' => 'xyz'));
+
+		$this->assertTransformation(
+			'Hello world...',
+			'<rt>Hello world<WP xyz="…">...</WP></rt>',
+			'Hello world…'
 		);
 	}
 }
