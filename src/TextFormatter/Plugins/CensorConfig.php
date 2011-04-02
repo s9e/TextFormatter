@@ -39,6 +39,11 @@ class CensorConfig extends PluginConfig
 
 	public function setUp()
 	{
+		if ($this->cb->tagExists($this->tagName))
+		{
+			return;
+		}
+
 		$this->cb->addTag(
 			$this->tagName,
 			array(

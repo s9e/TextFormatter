@@ -277,4 +277,10 @@ class CensorTest extends Test
 			'You dirty orange'
 		);
 	}
+
+	public function testDoesNotAttemptToCreateItsTagIfItAlreadyExists()
+	{
+		$this->cb->loadPlugin('Censor');
+		$this->cb->loadPlugin('Censor');
+	}
 }
