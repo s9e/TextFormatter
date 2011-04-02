@@ -569,6 +569,9 @@ class ConfigBuilder
 
 	/**
 	* Magic __get automatically loads plugins, PredefinedTags class
+	*
+	* @param  string $k Property name
+	* @return mixed
 	*/
 	public function __get($k)
 	{

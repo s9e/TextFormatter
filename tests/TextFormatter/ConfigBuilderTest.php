@@ -12,6 +12,39 @@ include_once __DIR__ . '/../Test.php';
 */
 class ConfigBuilderTest extends Test
 {
+	public function testCanLoadPlugins()
+	{
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\Plugins\\EmoticonsConfig',
+			$this->cb->loadPlugin('Emoticons')
+		);
+	}
+
+	/**
+	* @depends testCanLoadPlugins
+	*/
+	public function testLoadedPluginsAreAvailableAsAPublicProperty()
+	{
+		$this->cb->loadPlugin('Emoticons');
+
+		$this->assertObjectHasAttribute('Emoticons', $this->cb);
+		$this->assertTrue(isset($this->cb->Emoticons), 'Could not assert that $this->cb->Emoticons is set');
+	}
+
+	/**
+	* @depends testLoadedPluginsAreAvailableAsAPublicProperty
+	*/
+	public function testCanUnloadPluginsByUnsettingThem()
+	{
+		$this->cb->loadPlugin('Emoticons');
+		unset($this->cb->Emoticons);
+
+		$this->assertObjectNotHasAttribute('Emoticons', $this->cb);
+	}
+
+	/**
+	* @depends testCanLoadPlugins
+	*/
 	public function testLoadsPluginOnMagicGet()
 	{
 		$this->assertInstanceOf(
