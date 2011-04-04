@@ -23,7 +23,7 @@ class BBCodesConfig extends PluginConfig
 	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
 	*            system, etc...
 	*/
-	public $BBCodeFiltersAllowedCallbacks = array(
+	public $bbcodeFiltersAllowedCallbacks = array(
 		'strtolower',
 		'strtoupper',
 		'mb_strtolower',
@@ -131,7 +131,7 @@ class BBCodesConfig extends PluginConfig
 	* @param  string $bbcodeName
 	* @return bool
 	*/
-	public function exists($bbcodeName)
+	public function bbcodeExists($bbcodeName)
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
 
@@ -457,7 +457,7 @@ class BBCodesConfig extends PluginConfig
 						case 'postFilter':
 							foreach (explode(',', $optionValue) as $callback)
 							{
-								if (!in_array($callback, $this->BBCodeFiltersAllowedCallbacks))
+								if (!in_array($callback, $this->bbcodeFiltersAllowedCallbacks))
 								{
 									throw new RuntimeException('Callback ' . $callback . ' is not allowed');
 								}
