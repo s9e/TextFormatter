@@ -195,6 +195,7 @@ class User
 
 	public function can($perm, $scope = array())
 	{
+		// in a real application, we would cache the reader for performance
 		return $this->acl()->isAllowed($perm, $scope);
 	}
 }
