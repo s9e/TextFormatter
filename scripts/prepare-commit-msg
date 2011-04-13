@@ -12,7 +12,7 @@ do
 		fi
 
 		# will match src/ and tests/
-		LEN=`expr match "$LINE" '#\s*[modif]*ed[new file]*:\s*[srct]*/'`
+		LEN=`expr match "$LINE" '#\s*[modified]*[new file]*:\s*[srct]*/'`
 
 		if [[ $LEN -eq 0 ]]
 		then
