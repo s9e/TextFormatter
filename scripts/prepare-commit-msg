@@ -1,0 +1,26 @@
+#!/bin/sh
+DONE=
+MSG=`cat $1`
+echo -n > $1
+
+echo "$MSG" | while read LINE
+do
+		# will match src/ and tests/
+		LEN=`expr match "$LINE" '#\s*[modif]*ed[new file]*:\s*[srct]*/'`
+
+		if [[ $LEN -eq 0 ]]
+		then
+			continue;
+		fi
+
+		MODULE=${LINE:$LEN}
+		MODULE=${MODULE%%/*}
+
+		if [[ `expr index "$DONE" "$MODULE"` == 0 ]]
+		then
+			echo "$MODULE:" >> $1
+			DONE="$DONE $MODULE"
+		fi
+done
+
+echo "$MSG" >> $1
