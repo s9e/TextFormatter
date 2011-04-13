@@ -130,8 +130,30 @@ class BBCodesTest extends Test
 				'warning' => array(
 					array(
 						'pos'    => 4,
-						'msg'    => 'Unexpected character: expected ] found %s',
-						'params' => array('z')
+						'msg'    => 'Unexpected character: expected $1%s found $2%s',
+						'params' => array(']', 'z')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @depends testSimpleBbcodesAreParsed
+	*/
+	public function testJunkAfterTheNameOfAClosingBbcodeTagGeneratesAWarning()
+	{
+		$this->cb->BBCodes->addBBCode('B');
+
+		$this->assertParsing(
+			'[B]xxx[/B ]',
+			'<rt><B><st>[B]</st>xxx[/B ]</B></rt>',
+			array(
+				'warning' => array(
+					array(
+						'pos'    => 9,
+						'msg'    => 'Unexpected character: expected $1%s found $2%s',
+						'params' => array(']', ' ')
 					)
 				)
 			)
