@@ -39,6 +39,19 @@ class BBCodesTest extends Test
 	/**
 	* @depends testSimpleBbcodesAreParsed
 	*/
+	public function testBbcodeNamesAreCaseInsensitive()
+	{
+		$this->cb->BBCodes->addBBCode('B');
+
+		$this->assertParsing(
+			'[b]bold[/B]',
+			'<rt><B><st>[b]</st>bold<et>[/B]</et></B></rt>'
+		);
+	}
+
+	/**
+	* @depends testSimpleBbcodesAreParsed
+	*/
 	public function testBbcodesRemovedFromTheConfigAreIgnored()
 	{
 		$this->cb->BBCodes->addBBCode('B');
@@ -74,6 +87,54 @@ class BBCodesTest extends Test
 		$this->assertParsing(
 			'[B:123]bold tags: [B]text[/B][/B:123]',
 			'<rt><B><st>[B:123]</st>bold tags: [B]text[/B]<et>[/B:123]</et></B></rt>'
+		);
+	}
+
+	/**
+	* @depends testSimpleBbcodesAreParsed
+	*/
+	public function testBbcodeTagsCanBeUsedAsSingletonsLikeSelfClosingXmlTags()
+	{
+		$this->cb->BBCodes->addBBCode('B');
+
+		$this->assertParsing(
+			'[B/]',
+			'<rt><B>[B/]</B></rt>'
+		);
+	}
+
+	/**
+	* @depends testBbcodeTagsCanBeUsedAsSingletonsLikeSelfClosingXmlTags
+	*/
+	public function testWhitespaceInsideBBCodesIsIgnored()
+	{
+		$this->cb->BBCodes->addBBCode('B');
+
+		$this->assertParsing(
+			'[B  /]',
+			'<rt><B>[B  /]</B></rt>'
+		);
+	}
+
+	/**
+	* @depends testBbcodeTagsCanBeUsedAsSingletonsLikeSelfClosingXmlTags
+	*/
+	public function testJunkAfterTheSlashOfASelfClosingBbcodeTagGeneratesAWarning()
+	{
+		$this->cb->BBCodes->addBBCode('B');
+
+		$this->assertParsing(
+			'[B /z]',
+			'<pt>[B /z]</pt>',
+			array(
+				'warning' => array(
+					array(
+						'pos'    => 4,
+						'msg'    => 'Unexpected character: expected ] found %s',
+						'params' => array('z')
+					)
+				)
+			)
 		);
 	}
 }
