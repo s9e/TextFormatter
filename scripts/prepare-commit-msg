@@ -5,6 +5,12 @@ echo -n > $1
 
 echo "$MSG" | while read LINE
 do
+		if [[ `expr index "$LINE" "git add"` -gt 0 ]]
+		then
+			# stop before we get to the unstaged/untracked files
+			exit
+		fi
+
 		# will match src/ and tests/
 		LEN=`expr match "$LINE" '#\s*[modif]*ed[new file]*:\s*[srct]*/'`
 
