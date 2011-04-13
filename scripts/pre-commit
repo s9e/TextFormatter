@@ -11,10 +11,16 @@ do
 		continue;
 	fi
 
+	if [[ `expr match "$LINE" ".*git add"` -gt 0 ]]
+	then
+		# stop before we get to the unstaged/untracked files
+		exit
+	fi
+
 	MODULE=${FILEPATH#*/}
 	MODULE=${MODULE%%/*}
 
-	if [[ `expr index "$DONE" "$MODULE"` == 0 ]]
+	if [[ `expr match "$DONE" ".* $MODULE"` == 0 ]]
 	then
 		DONE="$DONE $MODULE"
 
