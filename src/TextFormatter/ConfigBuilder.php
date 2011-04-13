@@ -68,7 +68,7 @@ class ConfigBuilder
 	*/
 	public function addTag($tagName, array $tagOptions = array())
 	{
-		$tagName = $this->normalizeTagName($tagName);
+		$tagName = $this->normalizeTagName($tagName, false);
 
 		if (isset($this->tags[$tagName]))
 		{
@@ -104,7 +104,7 @@ class ConfigBuilder
 	*/
 	public function tagExists($tagName)
 	{
-		return isset($this->tags[$this->normalizeTagName($tagName)]);
+		return isset($this->tags[$this->normalizeTagName($tagName, false)]);
 	}
 
 	/**
@@ -121,17 +121,25 @@ class ConfigBuilder
 	/**
 	* Validate and normalize a tag name
 	*
-	* @param  string $tagName Original tag name
-	* @return string          Normalized tag name, in uppercase
+	* @param  string $tagName      Original tag name
+	* @param  bool   $tagMustExist If TRUE, throw an exception if the tag does not exist
+	* @return string               Normalized tag name, in uppercase
 	*/
-	protected function normalizeTagName($tagName)
+	protected function normalizeTagName($tagName, $tagMustExist = true)
 	{
 		if (!static::isValidTagName($tagName))
 		{
 			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
 		}
 
-		return strtoupper($tagName);
+		$tagName = strtoupper($tagName);
+
+		if ($tagMustExist && !isset($this->tags[$tagName]))
+		{
+			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+		}
+
+		return $tagName;
 	}
 
 	//==========================================================================
@@ -148,11 +156,6 @@ class ConfigBuilder
 	{
 		$tagName = $this->normalizeTagName($tagName);
 
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
-
 		return $this->tags[$tagName];
 	}
 
@@ -166,11 +169,6 @@ class ConfigBuilder
 	public function getTagOption($tagName, $optionName)
 	{
 		$tagName = $this->normalizeTagName($tagName);
-
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
 
 		if (!isset($this->tags[$tagName][$optionName]))
 		{
@@ -282,11 +280,6 @@ class ConfigBuilder
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
 
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
-
 		if (isset($this->tags[$tagName]['attrs'][$attrName]))
 		{
 			throw new InvalidArgumentException("Attribute '" . $attrName . "' already exists");
@@ -326,11 +319,6 @@ class ConfigBuilder
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
-
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
 
 		if (!isset($this->tags[$tagName]['attrs'][$attrName]))
 		{
@@ -378,11 +366,6 @@ class ConfigBuilder
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
-
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
 
 		return (isset($this->tags[$tagName]['attrs'][$attrName]))
 		     ? $this->tags[$tagName]['attrs'][$attrName]
@@ -463,12 +446,7 @@ class ConfigBuilder
 	public function addTagRule($tagName, $action, $target)
 	{
 		$tagName = $this->normalizeTagName($tagName);
-		$target  = $this->normalizeTagName($target);
-
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
+		$target  = $this->normalizeTagName($target, false);
 
 		if (!in_array($action, array(
 			'allow',
@@ -513,11 +491,6 @@ class ConfigBuilder
 	{
 		$tagName = $this->normalizeTagName($tagName);
 
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
-
 		if (!isset($this->tags[$tagName]['xsl']))
 		{
 			throw new InvalidArgumentException("No XSL set for tag '" . $tagName . "'");
@@ -554,11 +527,6 @@ class ConfigBuilder
 	public function setTagXSL($tagName, $xsl, $flags = 0)
 	{
 		$tagName = $this->normalizeTagName($tagName);
-
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
-		}
 
 		$this->tags[$tagName]['xsl'] = $this->normalizeXSL($xsl, $flags);
 	}

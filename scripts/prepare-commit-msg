@@ -5,9 +5,11 @@ echo -n > $1
 
 echo "$MSG" | while read LINE
 do
-		if [[ `expr index "$LINE" "git add"` -gt 0 ]]
+		if [[ `expr match "$LINE" "git add"` -gt 0 ]]
 		then
 			# stop before we get to the unstaged/untracked files
+echo "stopped at $LINE"
+echo `expr index "$LINE" "git add"`
 			exit
 		fi
 
