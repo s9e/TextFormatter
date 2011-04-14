@@ -1,32 +1,25 @@
 #!/bin/sh
-DONE=
-MSG=`cat $1`
-echo -n > $1
+MSG=
 
-echo "$MSG" | while read LINE
+for FILEPATH in $(git diff --cached --name-only)
 do
-		if [[ `expr match "$LINE" ".*git add"` -gt 0 ]]
-		then
-			# stop before we get to the unstaged/untracked files
-			exit
-		fi
+	if [[ $FILEPATH != src/* ]] && [[ $FILEPATH != tests/*/* ]];
+	then
+		continue;
+	fi
 
-		# will match src/ and tests/
-		LEN=`expr match "$LINE" '#\s*[modified]*[new file]*:\s*[srct]*/'`
+	MODULE=${FILEPATH#*/}
+	MODULE=${MODULE%%/*}
 
-		if [[ $LEN -eq 0 ]]
-		then
-			continue;
-		fi
-
-		MODULE=${LINE:$LEN}
-		MODULE=${MODULE%%/*}
-
-		if [[ `expr match "$DONE" ".* $MODULE"` == 0 ]]
-		then
-			echo "$MODULE:" >> $1
-			DONE="$DONE $MODULE"
-		fi
+	if [[ `expr match "$DONE" ".* $MODULE"` == 0 ]]
+	then
+		MSG="$MSG$MODULE: 
+"
+	fi
 done
 
-echo "$MSG" >> $1
+if [[ -n "$MSG" ]]
+then
+	MSG="$MSG $(cat $1)"
+	echo "$MSG" > $1
+fi
