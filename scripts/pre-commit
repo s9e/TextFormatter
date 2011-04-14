@@ -2,19 +2,11 @@
 TMP=/dev/shm/phpunit.out
 DONE=
 
-cd $(readlink -f $(dirname $(dirname $(dirname "$0"))))
-
-for FILEPATH in $(git diff-index --name-only HEAD)
+for FILEPATH in $(git diff --cached --name-only)
 do
 	if [[ $FILEPATH != src/* ]] && [[ $FILEPATH != tests/*/* ]];
 	then
 		continue;
-	fi
-
-	if [[ `expr match "$LINE" ".*git add"` -gt 0 ]]
-	then
-		# stop before we get to the unstaged/untracked files
-		exit
 	fi
 
 	MODULE=${FILEPATH#*/}
