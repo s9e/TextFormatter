@@ -162,6 +162,44 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanCreateAttribute
+	*/
+	public function testCanGetTagAttributeOptions()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'href', 'url', array('isRequired' => true));
+
+		$this->assertArrayMatches(
+			array('isRequired' => true),
+			$this->cb->getTagAttributeOptions('a', 'href')
+		);
+	}
+
+	/**
+	* @depends testCanCreateAttribute
+	*/
+	public function testCanGetTagAttributeOption()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'href', 'url', array('isRequired' => true));
+
+		$this->assertTrue($this->cb->getTagAttributeOption('a', 'href', 'isRequired'));
+	}
+
+	/**
+	* @depends testCanGetTagAttributeOption
+	*/
+	public function testCanSetTagAttributeOption()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'href', 'url', array('isRequired' => true));
+
+		$this->cb->setTagAttributeOption('a', 'href', 'isRequired', false);
+
+		$this->assertFalse($this->cb->getTagAttributeOption('a', 'href', 'isRequired'));
+	}
+
+	/**
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'XYZ*'
 	*/

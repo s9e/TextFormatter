@@ -363,19 +363,34 @@ class ConfigBuilder
 	}
 
 	/**
+	* Return all the options of a tag's attribute
+	*
+	* @param  string $tagName
+	* @param  string $attrName
+	* @return array
+	*/
+	public function getTagAttributeOptions($tagName, $attrName)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName, $tagName);
+
+		return $this->tags[$tagName]['attrs'][$attrName];
+	}
+
+	/**
 	* Return the value of an option in a tag's attribute config
 	*
-	* @param string $tagName
-	* @param string $attrName
-	* @param string $optionName
-	* @param mixed  $optionValue
+	* @param  string $tagName
+	* @param  string $attrName
+	* @param  string $optionName
+	* @return mixed 
 	*/
 	public function getTagAttributeOption($tagName, $attrName, $optionName)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName, $tagName);
 
-		return $this->tags[$tagName]['attrs'][$attrName];
+		return $this->tags[$tagName]['attrs'][$attrName][$optionName];
 	}
 
 	/**
