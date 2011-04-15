@@ -131,12 +131,23 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanTellIfAttributeExists
 	*/
-	public function testCanRemoveAttribute()
+	public function testCanRemoveAttributeIfItExists()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'href', 'url');
 		$this->cb->removeAttribute('a', 'href');
 		$this->assertFalse($this->cb->attributeExists('a', 'href'));
+	}
+
+	/**
+	* @depends testCanTellIfAttributeExists
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Tag 'A' does not have an attribute named 'href'
+	*/
+	public function testThrowsAnExceptionIfRemoveAttributeIsCalledForAnAttributeThatDoesNotExist()
+	{
+		$this->cb->addTag('a');
+		$this->cb->removeAttribute('a', 'href');
 	}
 
 	/**

@@ -121,11 +121,11 @@ class ConfigBuilder
 	/**
 	* Validate and normalize a tag name
 	*
-	* @param  string $tagName      Original tag name
-	* @param  bool   $tagMustExist If TRUE, throw an exception if the tag does not exist
-	* @return string               Normalized tag name, in uppercase
+	* @param  string $tagName   Original tag name
+	* @param  bool   $mustExist If TRUE, throw an exception if the tag does not exist
+	* @return string            Normalized tag name, in uppercase
 	*/
-	protected function normalizeTagName($tagName, $tagMustExist = true)
+	protected function normalizeTagName($tagName, $mustExist = true)
 	{
 		if (!static::isValidTagName($tagName))
 		{
@@ -134,7 +134,7 @@ class ConfigBuilder
 
 		$tagName = strtoupper($tagName);
 
-		if ($tagMustExist && !isset($this->tags[$tagName]))
+		if ($mustExist && !isset($this->tags[$tagName]))
 		{
 			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
 		}
@@ -318,12 +318,7 @@ class ConfigBuilder
 	public function setTagAttributeOption($tagName, $attrName, $optionName, $optionValue)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName);
-
-		if (!isset($this->tags[$tagName]['attrs'][$attrName]))
-		{
-			throw new InvalidArgumentException("Tag '" . $tagName . "' does not have an attribute named '" . $attrName . "'");
-		}
+		$attrName = $this->normalizeAttributeName($attrName, $tagName);
 
 		$attrConf =& $this->tags[$tagName]['attrs'][$attrName];
 
@@ -365,11 +360,9 @@ class ConfigBuilder
 	public function getTagAttributeOption($tagName, $attrName, $optionName)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName);
+		$attrName = $this->normalizeAttributeName($attrName, $tagName);
 
-		return (isset($this->tags[$tagName]['attrs'][$attrName]))
-		     ? $this->tags[$tagName]['attrs'][$attrName]
-		     : null;
+		return $this->tags[$tagName]['attrs'][$attrName];
 	}
 
 	/**
@@ -381,7 +374,7 @@ class ConfigBuilder
 	public function removeAttribute($tagName, $attrName)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName);
+		$attrName = $this->normalizeAttributeName($attrName, $tagName);
 		unset($this->tags[$tagName]['attrs'][$attrName]);
 	}
 
@@ -415,16 +408,30 @@ class ConfigBuilder
 	* Validate and normalize an attribute name
 	*
 	* @param  string $attrName Original attribute name
+	* @param  string $tagName  If set, check that the attribute exists for given tag and throw an
+	*                          exception otherwise
 	* @return string           Normalized attribute name, in lowercase
 	*/
-	protected function normalizeAttributeName($attrName)
+	protected function normalizeAttributeName($attrName, $tagName = null)
 	{
 		if (!static::isValidAttributeName($attrName))
 		{
 			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
 		}
 
-		return strtolower($attrName);
+		$attrName = strtolower($attrName);
+
+		if (isset($tagName))
+		{
+			$tagName = $this->normalizeTagName($tagName);
+
+			if (!isset($this->tags[$tagName]['attrs'][$attrName]))
+			{
+				throw new InvalidArgumentException("Tag '" . $tagName . "' does not have an attribute named '" . $attrName . "'");
+			}
+		}
+
+		return $attrName;
 	}
 
 	//==========================================================================
