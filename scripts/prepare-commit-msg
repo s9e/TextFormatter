@@ -11,7 +11,7 @@ do
 	MODULE=${FILEPATH#*/}
 	MODULE=${MODULE%%/*}
 
-	if [[ `expr match "$DONE" ".* $MODULE"` == 0 ]]
+	if [[ `expr match "$MSG" ".* $MODULE"` == 0 ]]
 	then
 		MSG="$MSG$MODULE: 
 "
