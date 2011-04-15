@@ -338,17 +338,15 @@ class ConfigBuilder
 		{
 			case 'preFilter':
 			case 'postFilter':
-				$methodName = 'clearTagAttribute' . ucfirst($optionName) . 'Callbacks';
-				$this->$methodName($tagName, $attrName);
-
-				$methodName = 'addTagAttribute' . ucfirst($optionName) . 'Callback';
+				$this->clearTagAttributeCallbacks($optionName, $tagName, $attrName);
 
 				foreach ($optionValue as $callbackConf)
 				{
 					// add the default params config if it's not set
 					$callbackConf += array('params' => array('attrVal' => null));
 
-					$this->$methodName(
+					$this->addTagAttributeCallback(
+						$optionName,
 						$tagName,
 						$attrName,
 						$callbackConf['callback'],
