@@ -885,7 +885,8 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException InvalidArgumentException Premature
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Premature end of data in tag stylesheet line 1
 	*/
 	public function testCannotAddInvalidXsl()
 	{
