@@ -417,7 +417,8 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException InvalidArgumentException FOO
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown tag 'FOO'
 	*/
 	public function testGetTagOptionsFailsOnUnknownTags()
 	{
@@ -425,7 +426,8 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @expectedException InvalidArgumentException FOO
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown tag 'FOO'
 	*/
 	public function testGetTagOptionFailsOnUnknownTags()
 	{
