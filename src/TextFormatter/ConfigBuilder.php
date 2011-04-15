@@ -339,7 +339,7 @@ class ConfigBuilder
 			case 'preFilter':
 			case 'postFilter':
 				$methodName = 'clearTagAttribute' . ucfirst($optionName) . 'Callbacks';
-				$this->clearTagAttributePreFilterCallbacks($tagName, $attrName);
+				$this->$methodName($tagName, $attrName);
 
 				$methodName = 'addTagAttribute' . ucfirst($optionName) . 'Callback';
 
