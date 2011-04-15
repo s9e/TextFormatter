@@ -1094,8 +1094,6 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
-//===========================================================================
-
 	/**
 	* @depends testCanCreateAttribute
 	*/
