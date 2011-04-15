@@ -301,7 +301,19 @@ class ConfigBuilder
 			'isRequired' => (bool) ($attrType !== 'compound')
 		);
 
-		foreach ($attrConf as $optionName => $optionValue)
+		$this->setTagAttributeOptions($tagName, $attrName, $attrConf);
+	}
+
+	/**
+	* Set several options in a tag's attribute config
+	*
+	* @param string $tagName
+	* @param string $attrName
+	* @param array  $options
+	*/
+	public function setTagAttributeOptions($tagName, $attrName, $options)
+	{
+		foreach ($options as $optionName => $optionValue)
 		{
 			$this->setTagAttributeOption($tagName, $attrName, $optionName, $optionValue);
 		}
