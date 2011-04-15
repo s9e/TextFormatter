@@ -232,21 +232,18 @@ class ConfigBuilder
 
 			case 'preFilter':
 			case 'postFilter':
-				$this->tags[$tagName][$optionName] = array();
-
-				foreach ($optionValue as $filterConf)
+				$this->clearTagCallbacks($optionName, $tagName);
+				foreach ($optionValue as $callbackConf)
 				{
-					if (!isset($filterConf['params']))
-					{
-						$filterConf['params'] = array('attrs' => null);
-					}
+					// add the default params config if it's not set
+					$callbackConf += array('params' => array('attrs' => null));
 
-					if (!is_callable($filterConf['callback']))
-					{
-						throw new InvalidArgumentException('Not a callback');
-					}
-
-					$this->tags[$tagName][$optionName][] = $filterConf;
+					$this->addTagCallback(
+						$optionName,
+						$tagName,
+						$callbackConf['callback'],
+						$callbackConf['params']
+					);
 				}
 				break;
 
@@ -261,6 +258,86 @@ class ConfigBuilder
 
 				$this->tags[$tagName][$optionName] = $optionValue;
 		}
+	}
+
+	/**
+	* Remove all preFilter callbacks associated with a tag
+	*
+	* @param string $tagName
+	*/
+	public function clearTagPreFilterCallbacks($tagName)
+	{
+		$this->clearTagCallbacks('preFilter', $tagName);
+	}
+
+	/**
+	* Remove all postFilter callbacks associated with a tag
+	*
+	* @param string $tagName
+	*/
+	public function clearTagPostFilterCallbacks($tagName)
+	{
+		$this->clearTagCallbacks('postFilter', $tagName);
+	}
+
+	/**
+	* Remove all phase callbacks associated with a tag
+	*
+	* @param string $phase    Either 'preFilter' or 'postFilter'
+	* @param string $tagName
+	*/
+	protected function clearTagCallbacks($phase, $tagName)
+	{
+		$tagName = $this->normalizeTagName($tagName);
+
+		unset($this->tags[$tagName][$phase]);
+	}
+
+	/**
+	* Add a preFilter callback to a tag
+	*
+	* @param string   $tagName
+	* @param callback $callback
+	* @param array    $params
+	*/
+	public function addTagPreFilterCallback($tagName, $callback, array $params = array('attrs' => null))
+	{
+		$this->addTagCallback('preFilter', $tagName, $callback, $params);
+	}
+
+	/**
+	* Add a postFilter callback to a tag's attribute
+	*
+	* @param string   $tagName
+	* @param callback $callback
+	* @param array    $params
+	*/
+	public function addTagPostFilterCallback($tagName, $callback, array $params = array('attrs' => null))
+	{
+		$this->addTagCallback('postFilter', $tagName, $callback, $params);
+	}
+
+	/**
+	* Add a phase callback to a tag
+	*
+	* @param string   $phase    Either 'preFilter' or 'postFilter'
+	* @param string   $tagName
+	* @param callback $callback
+	* @param array    $params
+	*/
+	protected function addTagCallback($phase, $tagName, $callback, array $params)
+	{
+		$tagName = $this->normalizeTagName($tagName);
+
+		if (!is_callable($callback))
+		{
+			throw new InvalidArgumentException('Not a callback');
+		}
+
+		$this->tags[$tagName][$phase][] = array(
+			'callback' => $callback,
+			'params'   => $params
+		);
 	}
 
 	//==========================================================================

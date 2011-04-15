@@ -949,6 +949,154 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanCreateTag
+	*/
+	public function testCanAddAPreFilterCallbackToATag()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagPreFilterCallback('a', 'trim');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'preFilter' => array(
+						array('callback' => 'trim')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanCreateTag
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Not a callback
+	*/
+	public function testMethodAddTagPreFilterCallbackThrowsAnExceptionIfCallbackIsNotCallable()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagPreFilterCallback('a', 'uncallable');
+	}
+
+	/**
+	* @depends testCanCreateTag
+	*/
+	public function testCanSetPreFilterCallbacksViaSetTagOption()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagOption('a', 'preFilter', array(
+			array('callback' => 'trim')
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'preFilter' => array(
+						array('callback' => 'trim')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanAddAPreFilterCallbackToATag
+	*/
+	public function testCanClearAllPreFilterCallbacksFromATag()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagPreFilterCallback('a', 'trim');
+
+		$this->cb->clearTagPreFilterCallbacks('a');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'preFilter' => null
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanCreateTag
+	*/
+	public function testCanAddAPostFilterCallbackToATag()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagPostFilterCallback('a', 'trim');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'postFilter' => array(
+						array('callback' => 'trim')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanCreateTag
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Not a callback
+	*/
+	public function testMethodAddTagPostFilterCallbackThrowsAnExceptionIfCallbackIsNotCallable()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagPostFilterCallback('a', 'uncallable');
+	}
+
+	/**
+	* @depends testCanCreateTag
+	*/
+	public function testCanSetPostFilterCallbacksViaSetTagOption()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagOption('a', 'postFilter', array(
+			array('callback' => 'trim')
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'postFilter' => array(
+						array('callback' => 'trim')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanAddAPostFilterCallbackToATag
+	*/
+	public function testCanClearAllPostFilterCallbacksFromATag()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagPostFilterCallback('a', 'trim');
+
+		$this->cb->clearTagPostFilterCallbacks('a');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'postFilter' => null
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+//===========================================================================
+
+	/**
 	* @depends testCanCreateAttribute
 	*/
 	public function testCanAddAPreFilterCallbackToATagAttribute()
