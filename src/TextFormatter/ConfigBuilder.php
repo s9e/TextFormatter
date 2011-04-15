@@ -326,21 +326,22 @@ class ConfigBuilder
 		{
 			case 'preFilter':
 			case 'postFilter':
-				$attrConf[$optionName] = array();
+				$methodName = 'clearTagAttribute' . ucfirst($optionName) . 'Callbacks';
+				$this->clearTagAttributePreFilterCallbacks($tagName, $attrName);
 
-				foreach ($optionValue as $filterConf)
+				$methodName = 'addTagAttribute' . ucfirst($optionName) . 'Callback';
+
+				foreach ($optionValue as $callbackConf)
 				{
-					if (!isset($filterConf['params']))
-					{
-						$filterConf['params'] = array('attrVal' => null);
-					}
+					// add the default params config if it's not set
+					$callbackConf += array('params' => array('attrVal' => null));
 
-					if (!is_callable($filterConf['callback']))
-					{
-						throw new InvalidArgumentException('Not a callback');
-					}
-
-					$attrConf[$optionName][] = $filterConf;
+					$this->$methodName(
+						$tagName,
+						$attrName,
+						$callbackConf['callback'],
+						$callbackConf['params']
+					);
 				}
 				break;
 
@@ -432,6 +433,94 @@ class ConfigBuilder
 		}
 
 		return $attrName;
+	}
+
+	/**
+	* Remove all preFilter callbacks associated with an attribute
+	*
+	* @param string $tagName
+	* @param string $attrName
+	*/
+	public function clearTagAttributePreFilterCallbacks($tagName, $attrName)
+	{
+		$this->clearTagAttributeCallbacks('preFilter', $tagName, $attrName);
+	}
+
+	/**
+	* Remove all postFilter callbacks associated with an attribute
+	*
+	* @param string $tagName
+	* @param string $attrName
+	*/
+	public function clearTagAttributePostFilterCallbacks($tagName, $attrName)
+	{
+		$this->clearTagAttributeCallbacks('postFilter', $tagName, $attrName);
+	}
+
+	/**
+	* Remove all phase callbacks associated with an attribute
+	*
+	* @param string $phase    Either 'preFilter' or 'postFilter'
+	* @param string $tagName
+	* @param string $attrName
+	*/
+	protected function clearTagAttributeCallbacks($phase, $tagName, $attrName)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		unset($this->tags[$tagName]['attrs'][$attrName][$phase]);
+	}
+
+	/**
+	* Add a preFilter callback to a tag's attribute
+	*
+	* @param string   $tagName
+	* @param string   $attrName
+	* @param callback $callback
+	* @param array    $params
+	*/
+	public function addTagAttributePreFilterCallback($tagName, $attrName, $callback, array $params = array('attrVal' => null))
+	{
+		$this->addTagAttributeCallback('preFilter', $tagName, $attrName, $callback, $params);
+	}
+
+	/**
+	* Add a postFilter callback to a tag's attribute
+	*
+	* @param string   $tagName
+	* @param string   $attrName
+	* @param callback $callback
+	* @param array    $params
+	*/
+	public function addTagAttributePostFilterCallback($tagName, $attrName, $callback, array $params = array('attrVal' => null))
+	{
+		$this->addTagAttributeCallback('postFilter', $tagName, $attrName, $callback, $params);
+	}
+
+	/**
+	* Add a phase callback to a tag's attribute
+	*
+	* @param string   $phase    Either 'preFilter' or 'postFilter'
+	* @param string   $tagName
+	* @param string   $attrName
+	* @param callback $callback
+	* @param array    $params
+	*/
+	protected function addTagAttributeCallback($phase, $tagName, $attrName, $callback, array $params)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		if (!is_callable($callback))
+		{
+			throw new InvalidArgumentException('Not a callback');
+		}
+
+		$this->tags[$tagName]['attrs'][$attrName][$phase][] = array(
+			'callback' => $callback,
+			'params'   => $params
+		);
 	}
 
 	//==========================================================================

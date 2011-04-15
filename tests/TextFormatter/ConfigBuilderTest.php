@@ -909,4 +909,182 @@ class ConfigBuilderTest extends Test
 			$this->cb->getXSL()
 		);
 	}
+
+	/**
+	* @depends testCanCreateAttribute
+	*/
+	public function testCanAddAPreFilterCallbackToATagAttribute()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'title', 'text');
+		$this->cb->addTagAttributePreFilterCallback('a', 'title', 'trim');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attrs' => array(
+						'title' => array(
+							'preFilter' => array(
+								array('callback' => 'trim')
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanCreateAttribute
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Not a callback
+	*/
+	public function testMethodAddTagAttributePreFilterCallbackThrowsAnExceptionIfCallbackIsNotCallable()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'title', 'text');
+		$this->cb->addTagAttributePreFilterCallback('a', 'title', 'uncallable');
+	}
+
+	/**
+	* @depends testCanCreateAttribute
+	*/
+	public function testCanSetPreFilterCallbacksViaSetTagAttributeOption()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'title', 'text');
+		$this->cb->setTagAttributeOption('a', 'title', 'preFilter', array(
+			array('callback' => 'trim')
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attrs' => array(
+						'title' => array(
+							'preFilter' => array(
+								array('callback' => 'trim')
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanAddAPreFilterCallbackToATagAttribute
+	*/
+	public function testCanClearAllPreFilterCallbacksFromATagAttribute()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'title', 'text');
+		$this->cb->addTagAttributePreFilterCallback('a', 'title', 'trim');
+
+		$this->cb->clearTagAttributePreFilterCallbacks('a', 'title');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attrs' => array(
+						'title' => array(
+							'preFilter' => null
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanCreateAttribute
+	*/
+	public function testCanAddAPostFilterCallbackToATagAttribute()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'title', 'text');
+		$this->cb->addTagAttributePostFilterCallback('a', 'title', 'trim');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attrs' => array(
+						'title' => array(
+							'postFilter' => array(
+								array('callback' => 'trim')
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanCreateAttribute
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Not a callback
+	*/
+	public function testMethodAddTagAttributePostFilterCallbackThrowsAnExceptionIfCallbackIsNotCallable()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'title', 'text');
+		$this->cb->addTagAttributePostFilterCallback('a', 'title', 'uncallable');
+	}
+
+	/**
+	* @depends testCanCreateAttribute
+	*/
+	public function testCanSetPostFilterCallbacksViaSetTagAttributeOption()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'title', 'text');
+		$this->cb->setTagAttributeOption('a', 'title', 'postFilter', array(
+			array('callback' => 'trim')
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attrs' => array(
+						'title' => array(
+							'postFilter' => array(
+								array('callback' => 'trim')
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testCanAddAPostFilterCallbackToATagAttribute
+	*/
+	public function testCanClearAllPostFilterCallbacksFromATagAttribute()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'title', 'text');
+		$this->cb->addTagAttributePostFilterCallback('a', 'title', 'trim');
+
+		$this->cb->clearTagAttributePostFilterCallbacks('a', 'title');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attrs' => array(
+						'title' => array(
+							'postFilter' => null
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
 }
