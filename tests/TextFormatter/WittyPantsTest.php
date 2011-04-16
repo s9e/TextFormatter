@@ -28,24 +28,6 @@ class WittyPantsTest extends Test
 		);
 	}
 
-	public function testSingleQuotesAfterAnEqualSignAreNotConvertedToQuotationMarks()
-	{
-		$this->cb->loadPlugin('WittyPants');
-		$this->assertRendering(
-			"[url='some url']",
-			"[url='some url']"
-		);
-	}
-
-	public function testDoubleQuotesAfterAnEqualSignAreNotConvertedToQuotationMarks()
-	{
-		$this->cb->loadPlugin('WittyPants');
-		$this->assertRendering(
-			'[url="some url"]',
-			'[url="some url"]'
-		);
-	}
-
 	public function testThreeConsecutiveDotsAreConvertedToAnEllipsis()
 	{
 		$this->cb->loadPlugin('WittyPants');
