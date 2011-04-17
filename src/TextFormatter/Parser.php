@@ -539,7 +539,7 @@ class Parser
 			* The left boundary is right after the last tag
 			*/
 			$parentTag = end($this->tags);
-			$offset  = $parentTag['pos'] + $parentTag['len'];
+			$offset    = $parentTag['pos'] + $parentTag['len'];
 		}
 
 		/**
