@@ -240,4 +240,15 @@ class WittyPantsTest extends Test
 			'Hello world…'
 		);
 	}
+
+	public function testASingleQuoteBetweenTwoLettersIsConvertedToAnApostrophe()
+	{
+		$this->cb->loadPlugin('WittyPants');
+
+		$this->assertTransformation(
+			"O'Connor's pants",
+			'<rt>O<WP char="&#x2019;">\'</WP>Connor<WP char="&#x2019;">\'</WP>s pants</rt>',
+			'O’Connor’s pants'
+		);
+	}
 }

@@ -46,7 +46,7 @@ class WittyPantsConfig extends PluginConfig
 
 			'regexp' => array(
 				'singletons' => "#(?:---?|\\.\\.\\.)#S",
-				'quotation'  => '#(?<![0-9])(["\'])(?:.+?)\\1#S',
+				'quotation'  => '#(?<![0-9\\pL])(["\'])(?:.+?)\\1(?![0-9\\pL])#Su',
 				'symbols'    => '#\\((?:tm|r|c)\\)#i',
 				'primes'     => "#(?<=[0-9])['\"]#S",
 				'multiply'   => '#(?:[0-9]["\']? ?)(x)(?= ?[0-9])#S',
