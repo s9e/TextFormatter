@@ -1322,9 +1322,9 @@ class Parser
 			* Replace the dynamic parameters with their current value
 			*/
 			$values += array(
-				'parser'           => $this,
-				'tagsConfig'       => $this->tagsConfig,
-				'filtersConfig'    => $this->filtersConfig
+				'parser'        => $this,
+				'tagsConfig'    => $this->tagsConfig,
+				'filtersConfig' => $this->filtersConfig
 			);
 
 			foreach (array('currentTag', 'currentAttribute') as $k)
