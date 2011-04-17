@@ -741,9 +741,19 @@ class Parser
 
 			$tags = $this->pluginParsers[$pluginName]->getTags($this->text, $matches);
 
-			foreach ($tags as $tag)
+			foreach ($tags as $k => $tag)
 			{
+				$tag['id'] = $pluginName . $k;
 				$tag['pluginName'] = $pluginName;
+
+				if (isset($tag['requires']))
+				{
+					foreach ($tag['requires'] as &$tagId)
+					{
+						$tagId = $pluginName . $tagId;
+					}
+					unset($tagId);
+				}
 
 				$this->tagStack[]  = $tag;
 			}
@@ -846,6 +856,28 @@ class Parser
 					'msg' => 'Tag skipped'
 				));
 				continue;
+			}
+
+			if (isset($this->currentTag['requires']))
+			{
+				foreach ($this->currentTag['requires'] as $tagId)
+				{
+					foreach ($this->tags as $tag)
+					{
+						if (isset($tag['id'])
+						 && $tag['id'] === $tagId)
+						{
+							// found the tag, continue with the next required tag
+							continue 2;
+						}
+					}
+
+					// required tag not found, we skip current tag
+					$this->log('debug', array(
+						'msg' => 'Tag skipped'
+					));
+					continue 2;
+				}
 			}
 
 			$tagName   = $this->currentTag['name'];
