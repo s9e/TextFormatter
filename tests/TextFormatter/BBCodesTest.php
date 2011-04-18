@@ -160,13 +160,23 @@ class BBCodesTest extends Test
 		);
 	}
 
+	public function testABbcodeCanMapToATagOfADifferentName()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('tagName' => 'Z'));
+
+		$this->assertParsing(
+			'[X/]',
+			'<rt><Z>[X/]</Z></rt>'
+		);
+	}
+
 	public function testAnEqualSignFollowingTheTagNameDefinesTheValueOfTheDefaultAttribute()
 	{
 		$this->cb->BBCodes->addBBCode('X', array(
 			'defaultAttr' => 'z'
 		));
 
-		$this->cb->addTagAttribute('X', 'z', 'text');
+		$this->cb->addTagAttribute('X', 'z', 'text', array('isRequired' => false));
 
 		$this->assertParsing(
 			'[X="123"][/X]',
@@ -175,17 +185,18 @@ class BBCodesTest extends Test
 	}
 
 	/**
+	* @depends testABbcodeCanMapToATagOfADifferentName
 	* @depends testAnEqualSignFollowingTheTagNameDefinesTheValueOfTheDefaultAttribute
 	*/
 	public function testIfNoDefaultAttributeIsSpecifiedTheNameOfTheBbcodeIsUsedAsTheNameOfTheDefaultAttribute()
 	{
-		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->BBCodes->addBBCode('X', array('tagName' => 'Z'));
 
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addTagAttribute('Z', 'x', 'text', array('isRequired' => false));
 
 		$this->assertParsing(
 			'[X="123"][/X]',
-			'<rt><X x="123"><st>[X="123"]</st><et>[/X]</et></X></rt>'
+			'<rt><Z x="123"><st>[X="123"]</st><et>[/X]</et></Z></rt>'
 		);
 	}
 }

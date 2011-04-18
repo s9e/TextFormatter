@@ -113,12 +113,12 @@ class BBCodesParser extends PluginParser
 					}
 					else
 					{
-						$attrName = strtolower($tagName);
+						$attrName = strtolower($bbcodeName);
 
 						$this->parser->log('debug', array(
 							'pos'    => $rpos,
-							'msg'    => 'BBCode %1$s does not have a default attribute, using tag\'s name %2$s as attribute name',
-							'params' => array($bbcodeName, $tagName)
+							'msg'    => 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
+							'params' => array($bbcodeName)
 						));
 					}
 
