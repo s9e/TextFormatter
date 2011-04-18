@@ -159,4 +159,33 @@ class BBCodesTest extends Test
 			)
 		);
 	}
+
+	public function testAnEqualSignFollowingTheTagNameDefinesTheValueOfTheDefaultAttribute()
+	{
+		$this->cb->BBCodes->addBBCode('X', array(
+			'defaultAttr' => 'z'
+		));
+
+		$this->cb->addTagAttribute('X', 'z', 'text');
+
+		$this->assertParsing(
+			'[X="123"][/X]',
+			'<rt><X z="123"><st>[X="123"]</st><et>[/X]</et></X></rt>'
+		);
+	}
+
+	/**
+	* @depends testAnEqualSignFollowingTheTagNameDefinesTheValueOfTheDefaultAttribute
+	*/
+	public function testIfNoDefaultAttributeIsSpecifiedTheNameOfTheBbcodeIsUsedAsTheNameOfTheDefaultAttribute()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X="123"][/X]',
+			'<rt><X x="123"><st>[X="123"]</st><et>[/X]</et></X></rt>'
+		);
+	}
 }
