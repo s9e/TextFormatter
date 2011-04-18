@@ -250,7 +250,7 @@ class BBCodesConfig extends PluginConfig
 			throw new InvalidArgumentException('Invalid XML in template - error was: ' . $error->message);
 		}
 
-		$bbcodeName     = $def['bbcodeName'];
+		$bbcodeName   = $def['bbcodeName'];
 		$params       = $def['params'];
 		$placeholders = $def['placeholders'];
 		$options      = $def['options'];
