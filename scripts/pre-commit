@@ -14,19 +14,17 @@ do
 
 	if [[ `expr match "$DONE" ".* $MODULE"` == 0 ]]
 	then
-		DONE="$DONE $MODULE"
-
-		echo "Running PHPUnit on $MODULE"
-		phpunit -c tests/phpunit.xml tests/$MODULE | tee $TMP
-
-		if [[ `tail -n2 $TMP` != *OK* ]]
+		if [[ -n `git diff --cached -b "src/$MODULE" "tests/$MODULE"` ]]
 		then
-			BRANCH=`git branch --color=never | grep ^\\*`
+			DONE="$DONE $MODULE"
 
-#			if [[ $BRANCH == *master* ]]
-#			then
+			echo "Running PHPUnit on $MODULE"
+			phpunit -c tests/phpunit.xml tests/$MODULE | tee $TMP
+
+			if [[ `tail -n2 $TMP` != *OK* ]]
+			then
 				exit 1;
-#			fi
+			fi
 		fi
 	fi
 done
