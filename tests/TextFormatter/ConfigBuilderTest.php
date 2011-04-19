@@ -611,6 +611,19 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCannotSetTagTemplateWithVariableInScriptSrc
+	*/
+	public function testCanSetTagTemplateWithVariableInScriptSrcWithInsecureFlag()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<script src="http://{TEXT}"/>',
+			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+		);
+	}
+
+	/**
 	* @depends testCanSetTagTemplate
 	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
 	*/
@@ -624,14 +637,40 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testCannotSetTagTemplateWithVariableInScriptSrc
+	* @depends testCannotSetTagTemplateWithVariableInScriptContent
 	*/
-	public function testCanSetTagTemplateWithVariableInScriptSrcWithInsecureFlag()
+	public function testCanSetTagTemplateWithVariableInScriptContentWithInsecureFlag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagTemplate(
 			'a',
-			'<script src="http://{TEXT}"/>',
+			'<script><xsl:value-of select="@LOL"/></script>',
+			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+		);
+	}
+
+	/**
+	* @depends testCanSetTagTemplate
+	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	*/
+	public function testCannotSetTagTemplateWithDisableOutputEscaping()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<xsl:value-of select="@LOL" disable-output-escaping="yes" />'
+		);
+	}
+
+	/**
+	* @depends testCannotSetTagTemplateWithDisableOutputEscaping
+	*/
+	public function testCanSetTagTemplateWithDisableOutputEscapingWithInsecureFlag()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<xsl:value-of select="@LOL" disable-output-escaping="yes" />',
 			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
 		);
 	}
