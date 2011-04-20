@@ -16,92 +16,146 @@ class FabricConfigTest extends Test
 		$this->cb->loadPlugin('Fabric');
 	}
 
-	public function testCreatesAnUrlTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_an_URL_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('URL'));
 	}
 
-	public function testCreatesAnImgTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_an_Img_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('IMG'));
 	}
 
-	public function testCreatesADlTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_DL_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('DL'));
 	}
 
-	public function testCreatesADtTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_DT_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('DT'));
 	}
 
-	public function testCreatesADdTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_DD_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('DD'));
 	}
 
-	public function testCreatesAnEmTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_an_EM_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('EM'));
 	}
 
-	public function testCreatesAnITagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_an_I_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('I'));
 	}
 
-	public function testCreatesAStrongTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_STRONG_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('STRONG'));
 	}
 
-	public function testCreatesABTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_B_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('B'));
 	}
 
-	public function testCreatesACiteTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_CITE_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('CITE'));
 	}
 
-	public function testCreatesADelTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_DEL_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('DEL'));
 	}
 
-	public function testCreatesAnInsTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_an_INS_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('INS'));
 	}
 
-	public function testCreatesASuperTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_SUPER_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('SUPER'));
 	}
 
-	public function testCreatesASubTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_SUB_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('SUB'));
 	}
 
-	public function testCreatesACodeTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_CODE_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('CODE'));
 	}
 
-	public function testCreatesASpanTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_SPAN_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('SPAN'));
 	}
 
-	public function testCreatesANoparseTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_a_NOPARSE_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('NOPARSE'));
 	}
 
-	public function testCreatesAnAcronymTagByDefault()
+	/**
+	* @test
+	*/
+	public function Creates_an_ACRONYM_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('ACRONYM'));
 	}

@@ -1,0 +1,396 @@
+s9e\Toolkit\Tests\TextFormatter\PluginConfig
+ [x] Overrides properties with values passed in second parameter
+
+s9e\Toolkit\Tests\TextFormatter\PredefinedBBCodes
+ [x] Get c o d estx
+ [x] Predefined b b codes
+
+s9e\Toolkit\Tests\TextFormatter\Autoloaders
+ [x] Config builder loads core plugins files
+ [x] Config builder can autoload parser
+ [x] Config builder does not include parser twice
+ [x] Config builder can autoload renderer
+ [x] Config builder does not include renderer twice
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkConfig
+ [x] Automatically creates an url tag
+ [x] Generates a regexp that matches all possible urls
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
+ [x] Tag name can be customized at loading time
+ [x] Attribute name can be customized at loading time
+ [x] Does not attempt to create its tag if it already exists
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\CensorParser
+ [x] Replaces censored words with default replacement
+ [x] Can censor unicode words
+ [x] Replaces censored words with custom replacement
+ [x] Censored words can use an asterisk at the start as a joker
+ [x] Censored words can use an asterisk in the middle as a joker
+ [x] Censored words can use an asterisk at the end as a joker
+ [x] The asterisk can match multiple letters
+ [x] The asterisk can match zero letters
+ [x] The asterisk can match unicode letters
+ [x] Censored words can use a question mark as a joker for one character
+ [x] Censored words can use a question mark as a joker for zero character
+ [x] The question mark does not match multiple characters
+ [x] The question mark can match a digit
+ [x] The question mark can match a symbol
+ [x] The question mark can match an unicode letter
+ [x] Can replace censored unicode words with custom replacement
+ [x] Censored words are case insensitive
+ [x] Default replacement can be customized at loading time
+ [x] Tag name can be customized at loading time
+ [x] Attribute name can be customized at loading time
+ [x] Does not attempt to create its tag if it already exists
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsParser
+ [x] Single quotes enclosing text with no line break are converted to quotation marks
+ [x] Double quotes enclosing text with no line break are converted to quotation marks
+ [x] Three consecutive dots are converted to an ellipsis
+ [x] Two consecutive hypens are converted to an en dash
+ [x] Three consecutive hypens are converted to an em dash
+ [x] Parentheses around the letters tm in lowercase are replaced with the trademark symbol
+ [x] Parentheses around the letters tm in uppercase are replaced with the trademark symbol
+ [x] Parentheses around the letter c in lowercase are replaced with the copyright symbol
+ [x] Parentheses around the letter c in uppercase are replaced with the copyright symbol
+ [x] Parentheses around the letter r in lowercase are replaced with the registered symbol
+ [x] Parentheses around the letter r in uppercase are replaced with the registered symbol
+ [x] A single quote before a letter at the start of a line is replaced with an apostrophe
+ [x] A single quote between two letters is replaced with an apostrophe
+ [x] A single quote before a two digits number at the start of a line is replaced with an apostrophe
+ [x] A single quote that is part of a pair of quotation marks is not replaced with an apostrophe
+ [x] A single quote after a digit and before the letter s is replaced with an apostrophe
+ [x] A single quote after a digit is replaced with a prime
+ [x] A double quote after a digit is replaced with a double prime
+ [x] The letter x preceded by a number and followed by a number is replaced with a multiplication sign
+ [x] The letter x preceded by a number and whitespace and followed by whitespace and a number is replaced with a multiplication sign
+ [x] The letter x between numbers with primes is replaced with a multiplication sign
+ [x] A single quote between two letters is converted to an apostrophe
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
+ [x] getConfig returns false if no words were added
+ [x] Generates a regexp
+ [x] Accept custom replacement for specific words
+ [x] Default replacement can be customized at loading time
+ [x] Tag name can be customized at loading time
+ [x] Attribute name can be customized at loading time
+ [x] Does not attempt to create its tag if it already exists
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\EmoticonsConfig
+ [x] getConfig returns false if no emoticons were added
+ [x] Tag name can be customized at loading time
+ [x] Emoticons xsl is automatically updated when emoticons are added
+ [x] Xsl auto update can be disabled by calling disableAutoUpdate
+ [x] Xsl auto update can be reenabled by calling enableAutoUpdate
+ [x] Xsl update can be manually triggered by calling updateXSL
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
+ [x] Simple bbcodes are parsed
+ [x] Bbcode names are case insensitive
+ [x] Bbcodes removed from the config are ignored
+ [x] Overlapping tags are sorted out
+ [x] Bbcode tags can use a colon followed by digits as a suffix to control how start tags and end tags are paired
+ [x] Bbcode tags can be used as singletons like self closing xml tags
+ [x] Whitespace inside bbcodes is ignored
+ [x] Junk after the slash of a self closing bbcode tag generates a warning
+ [x] Junk after the name of a closing bbcode tag generates a warning
+ [x] A bbcode can map to a tag of a different name
+ [x] An equal sign following the tag name defines the value of the default attribute
+ [x] If no default attribute is specified the name of the bbcode is used as the name of the default attribute
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\FabricParser
+ [x] Supports link
+ [x] Supports link with title
+ [x] Supports link with no url
+ [x] Supports image
+ [x] Supports image with alt text
+ [x] Supports image with link
+ [x] Supports image with alt text and link
+ [x] Supports phrase modifier emphasis
+ [x] Supports phrase modifier strong
+ [x] Supports phrase modifier italic
+ [x] Supports phrase modifier bold
+ [x] Supports phrase modifier citation
+ [x] Supports phrase modifier deleted text
+ [x] Supports phrase modifier inserted text
+ [x] Supports phrase modifier superscript
+ [x] Supports phrase modifier subscript
+ [x] Supports phrase modifier span
+ [x] Supports phrase modifier span with class
+ [x] Supports phrase modifier span with multiple classes
+ [x] Supports phrase modifier code
+ [x] Supports phrase modifier code with stx
+ [x] Supports acronyms
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\FabricConfig
+ [x] Creates an URL tag by default
+ [x] Creates an Img tag by default
+ [x] Creates a DL tag by default
+ [x] Creates a DT tag by default
+ [x] Creates a DD tag by default
+ [x] Creates an EM tag by default
+ [x] Creates an I tag by default
+ [x] Creates a STRONG tag by default
+ [x] Creates a B tag by default
+ [x] Creates a CITE tag by default
+ [x] Creates a DEL tag by default
+ [x] Creates an INS tag by default
+ [x] Creates a SUPER tag by default
+ [x] Creates a SUB tag by default
+ [x] Creates a CODE tag by default
+ [x] Creates a SPAN tag by default
+ [x] Creates a NOPARSE tag by default
+ [x] Creates an ACRONYM tag by default
+ [x] Generates a regexp for images and links
+ [x] Generates a regexp for block modifiers
+ [x] Generates a regexp for phrase modifiers
+ [x] Generates a regexp for acronyms
+ [x] Generates a regexp for table row
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
+ [x] Http urls are linkified by default
+ [x] Https urls are linkified by default
+ [x] Ftp urls are not linkified by default
+ [x] Ftp urls are linkified if the scheme has been allowed in config builder
+ [x] Trailing dots are not linkified
+ [x] Balanced right parentheses are linkified
+ [x] Non balanced right parentheses are not linkified
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
+ [x] Bbcodes are mapped to a tag of the same name by default
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\EmoticonsParser
+ [x] An emoticon can be replaced by an img tag
+ [x] An emoticon can be replaced by any html
+ [x] Emoticons are replaced everywhere in the text
+
+s9e\Toolkit\Tests\TextFormatter\Renderer
+ [x] Render multi
+
+s9e\Toolkit\Tests\TextFormatter\Parser
+ [x] Fulfilled requireParent rule allows tag
+ [x] requireParent rule with multiple targets is fulfilled if any of the targets is the parent
+ [x] Fulfilled requireParent rule allows tag despite BBCode suffix
+ [x] Unfulfilled requireParent rule blocks tag
+ [x] Unfulfilled requireParent rule blocks tag despite ascendant
+ [x] closeParent rule is enforced
+ [x] closeParent rule is enforced on tag with identical suffix
+ [x] closeParent rule is enforced on tag with different suffix
+ [x] deny rule blocks tag
+ [x] allow rule allows tag
+ [x] requireAscendant rule is fulfilled by parent
+ [x] requireAscendant rule is fulfilled by parent with suffix
+ [x] requireAscendant rule is fulfilled by ascendant
+ [x] requireAscendant rule is fulfilled by ascendant with suffix
+ [x] Unfulfilled requireAscendant rule blocks tag
+ [x] Int filter accepts whole numbers
+ [x] Int filter rejects partial numbers
+ [x] Int filter accepts integers
+ [x] Int filter rejects numbers that start with a zero
+ [x] Int filter rejects numbers in scientific notation
+ [x] Int filter accepts negative numbers
+ [x] Int filter rejects decimal numbers
+ [x] Int filter rejects floats
+ [x] Int filter rejects numbers too big for the php integer type
+ [x] Int filter rejects numbers in hex notation
+ [x] Integer filter accepts whole numbers
+ [x] Integer filter rejects partial numbers
+ [x] Integer filter accepts integers
+ [x] Integer filter rejects numbers that start with a zero
+ [x] Integer filter rejects numbers in scientific notation
+ [x] Integer filter accepts negative numbers
+ [x] Integer filter rejects decimal numbers
+ [x] Integer filter rejects floats
+ [x] Integer filter rejects numbers too big for the php integer type
+ [x] Integer filter rejects numbers in hex notation
+ [x] Uint filter accepts whole numbers
+ [x] Uint filter rejects partial numbers
+ [x] Uint filter accepts integers
+ [x] Uint filter rejects numbers that start with a zero
+ [x] Uint filter rejects numbers in scientific notation
+ [x] Uint filter rejects negative numbers
+ [x] Uint filter rejects decimal numbers
+ [x] Uint filter rejects floats
+ [x] Uint filter rejects numbers too big for the php integer type
+ [x] Uint filter rejects numbers in hex notation
+ [x] Number filter accepts whole numbers
+ [x] Number filter rejects partial numbers
+ [x] Number filter accepts integers
+ [x] Number filter accepts numbers that start with a zero
+ [x] Number filter rejects numbers in scientific notation
+ [x] Number filter rejects negative numbers
+ [x] Number filter rejects decimal numbers
+ [x] Number filter rejects floats
+ [x] Number filter accepts numbers too big for the php integer type
+ [x] Number filter rejects numbers in hex notation
+ [x] Float filter accepts whole numbers
+ [x] Float filter rejects partial numbers
+ [x] Float filter accepts integers
+ [x] Float filter accepts numbers that start with a zero
+ [x] Float filter accepts numbers in scientific notation
+ [x] Float filter accepts negative numbers
+ [x] Float filter accepts decimal numbers
+ [x] Float filter accepts floats
+ [x] Float filter accepts numbers too big for the php integer type
+ [x] Float filter rejects numbers in hex notation
+ [x] Invalid urls are rejected
+ [x] Urls with no host are rejected
+ [x] Urls with no path are accepted
+ [x] Url filter rejects not allowed schemes
+ [x] Url filter can accept non http schemes
+ [x] Url filter rejects disallowed host
+ [x] Url filter rejects disallowed host mask
+ [x] Url filter rejects subdomains
+ [x] Url filter rejects disallowed tld
+ [x] Url filter does not reject host on partial match
+ [x] Url filter rejects pseudo schemes
+ [x] Id filter accepts numbers
+ [x] Id filter accepts lowercase letters
+ [x] Id filter accepts uppercase letters
+ [x] Id filter accepts dashes
+ [x] Id filter accepts underscores
+ [x] Id filter rejects spaces
+ [x] Identifier filter is an alias for the id filter
+ [x] Color filter accepts rgb hex values
+ [x] Color filter rejects invalid rgb hex values
+ [x] Color filter accepts values made entirely of letters
+ [x] Range filter allows integers within range
+ [x] Range filter allows negative integers within range
+ [x] Range filter rejects decimal numbers
+ [x] Range filter adjusts values below range
+ [x] Range filter adjusts values above range
+ [x] Simpletext filter accepts letters numbers minus and plus signs dots commas underscores and spaces
+ [x] Simpletext filter rejects everything else
+ [x] Regexp filter accepts content that matches
+ [x] Regexp filter rejects content that does not match
+ [x] Regexp filter replaces content with the pattern found in replace if valid
+ [x] Regexp filter does not replace content with the pattern found in replace if invalid
+ [x] Regexp filter correctly handles backslashes in replace pattern
+ [x] Email filter accepts valid emails
+ [x] Email filter rejects invalid emails
+ [x] Email filter can urlencode every character of a valid email if force urlencode is on
+ [x] Email filter will not urlencode an invalid email even if force urlencode is on
+ [x] Undefined filter rejects everything
+ [x] Attribute name is added to log entries when available
+ [x] Tag level pre filter receives an associative array of attributes values whichgets replaced by its return value
+ [x] Tag level post filter receives an associative array of attributes values whichgets replaced by its return value
+ [x] Compound attributes are split if valid then removed
+ [x] Compound attributes do not overwrite existing values
+ [x] Compound attributes are removed if invalid
+ [x] Compound attributes are optional by default
+ [x] Invalid attributes use their default value if set
+ [x] Missing attributes use their default value if set
+ [x] Attribute value is replaced by attribute pre filter
+ [x] Attribute value is replaced by attribute post filter even if it makes it invalid
+ [x] Plain text is returned within pt tags
+ [x] Undefined attributes do not appear in xml
+ [x] Overlapping tags are removed
+ [x] Tags are sorted correctly
+ [x] The number of regexp matches can be limited with extra matches ignored
+ [x] The number of regexp matches can be limited with extra matches ignored and a warning
+ [x] The number of regexp matches can be limited across multiple regexps with extra matches ignored
+ [x] The number of regexp matches can be limited and parsing aborted if limit exceeded
+ [x] Unknown tags are ignored
+ [x] Tags nesting limit is enforced
+ [x] Tags tag limit is enforced
+ [x] Zero width tags are correctly ouput
+ [x] Tags left open get closed when their ancestor gets closed
+ [x] Tags can specify a list of tags that are required
+ [x] Tags can specify a list of tags that are required and be skipped if any required tag is absent
+ [x] Whitespace trimming works
+
+s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
+ [x] Can load plugins
+ [x] Loaded plugins are available as a public property
+ [x] Can unload plugins by unsetting them
+ [x] Loads plugin on magic get
+ [x] Has a magic property predefinedTags that loads and creates an instance of PredefinedTags
+ [x] Throws an exception on unsupported magic get
+ [x] Load plugin throws an exception on invalid plugin name
+ [x] Load plugin throws an exception on unknown plugin
+ [x] Can create tag
+ [x] Can tell if tag exists
+ [x] Can remove tag
+ [x] Can create attribute
+ [x] Can tell if attribute exists
+ [x] Can remove attribute if it exists
+ [x] Throws an exception if remove attribute is called for an attribute that does not exist
+ [x] Cannot create attribute on non existing tag
+ [x] Can get tag attribute options
+ [x] Can get tag attribute option
+ [x] Can set tag attribute option
+ [x] Invalid tag names are rejected
+ [x] Invalid attribute names are rejected
+ [x] Duplicate tag names are rejected
+ [x] Duplicate attribute names are rejected
+ [x] Different tags can have attributes of the same name
+ [x] Can create tag with attributes
+ [x] Can create rule
+ [x] Cannot create rule on non existent tag
+ [x] Cannot create unknown rule
+ [x] Can create multipe require parent rules on different targets
+ [x] Can create multipe require parent rules on same target
+ [x] Can create rule that targets a non existent tag
+ [x] Can remove rule
+ [x] Can create tag with rules
+ [x] Can set unknown tag option
+ [x] Default options are set on new tags
+ [x] Tag options php type is preserved
+ [x] Get tag options fails on unknown tags
+ [x] Get tag option fails on unknown tags
+ [x] Get tag option fails on unset options
+ [x] Can set tag template
+ [x] Can set tag xsl
+ [x] Cannot set tag template on unknown tag
+ [x] Cannot set tag template with invalid xsl
+ [x] Cannot get tag xsl on unknown tag
+ [x] Cannot get tag xsl on tag without xsl
+ [x] Can create tag with template
+ [x] Can create tag with xsl
+ [x] Can set tag xsl with preserved whitespace
+ [x] Cannot set tag template with variable in script src
+ [x] Can set tag template with variable in script src with insecure flag
+ [x] Cannot set tag template with variable in script content
+ [x] Can set tag template with variable in script content with insecure flag
+ [x] Cannot set tag template with disable output escaping
+ [x] Can set tag template with disable output escaping with insecure flag
+ [x] Can set custom filter
+ [x] Can set custom filter with extra config
+ [x] setFilter throws an exception on invalid callback
+ [x] HTTP and HTTPS schemes are allowed by default
+ [x] Url filter allows default schemes
+ [x] Url filter can be configured to allow additional schemes
+ [x] Url filter can be configured to disallow hosts
+ [x] Optimizes regexp by merging heads
+ [x] Optimizes regexp by using character classes
+ [x] Optimizes regexp by using quantifier
+ [x] Optimizes regexp that uses wildcards
+ [x] Optimizes regexp that uses parentheses
+ [x] Optimizes regexp by using lookahead assertion
+ [x] Optimizes regexp by using lookahead assertion with escaped characters
+ [x] Does not optimize regexp by using lookahead assertion with special sequences
+ [x] getParserConfig flattens allow and deny rules into the allow array
+ [x] getParserConfig removes rules that target non existing tags
+ [x] getParserConfig preserves requireParent rules that target non existing tags
+ [x] getPluginsConfig adds default config if missing
+ [x] Plugins can be disabled by returning false instead of config
+ [x] Can add generic xsl
+ [x] Cannot add invalid xsl
+ [x] Xsl from tags appears in output
+ [x] Can add a pre filter callback to a tag
+ [x] addTagPreFilterCallback throws an exception if callback is not callable
+ [x] Can set pre filter callbacks via set tag option
+ [x] Can add a postFilter callback to a tag
+ [x] addTagPostFilterCallback throws an exception if callback is not callable
+ [x] Can set postFilter callbacks via setTagOption
+ [x] Can clear all postFilter callbacks from a tag
+ [x] Can add a pre filter callback to a tag attribute
+ [x] addTagAttributePreFilterCallback throws an exception if callback is not callable
+ [x] Can set preFilter callbacks via setTagAttributeOption
+ [x] Can clear all preFilter callbacks from a tag attribute
+ [x] Can add a postFilter callback to a tag attribute
+ [x] addTagAttributePostFilterCallback throws an exception if callback is not callable
+ [x] Can set postFilter callbacks via setTagAttributeOption
+ [x] Can clear all postFilter callbacks from a tag attribute
+
