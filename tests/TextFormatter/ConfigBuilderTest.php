@@ -1049,11 +1049,12 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Not a callback
 	*/
-	public function testMethodAddTagPreFilterCallbackThrowsAnExceptionIfCallbackIsNotCallable()
+	public function addTagPreFilterCallback_throws_an_exception_if_callback_is_not_callable()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagPreFilterCallback('a', 'uncallable');
