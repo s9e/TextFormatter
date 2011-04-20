@@ -54,6 +54,17 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
+	*/
+	public function Has_a_magic_property_predefinedTags_that_creates_an_instance_of_PredefinedTags()
+	{
+		$this->assertInstanceOf(
+			's9e\\Toolkit\\TextFormatter\\PredefinedTags',
+			$this->cb->predefinedTags
+		);
+	}
+
+	/**
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Undefined property: s9e\Toolkit\TextFormatter\ConfigBuilder::$foo
 	*/
