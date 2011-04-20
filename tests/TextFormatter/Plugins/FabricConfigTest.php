@@ -27,7 +27,7 @@ class FabricConfigTest extends Test
 	/**
 	* @test
 	*/
-	public function Creates_an_Img_tag_by_default()
+	public function Creates_an_IMG_tag_by_default()
 	{
 		$this->assertTrue($this->cb->tagExists('IMG'));
 	}

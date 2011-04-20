@@ -125,7 +125,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\FabricParser
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\FabricConfig
  [x] Creates an URL tag by default
- [x] Creates an Img tag by default
+ [x] Creates an IMG tag by default
  [x] Creates a DL tag by default
  [x] Creates a DT tag by default
  [x] Creates a DD tag by default
