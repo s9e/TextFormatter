@@ -11,7 +11,10 @@ include_once __DIR__ . '/../../Test.php';
 */
 class AutolinkConfigTest extends Test
 {
-	public function testAutomaticallyCreatesAnUrlTag()
+	/**
+	* @test
+	*/
+	public function Automatically_creates_an_URL_tag()
 	{
 		$this->cb->loadPlugin('Autolink');
 		$this->assertTrue($this->cb->tagExists('URL'));

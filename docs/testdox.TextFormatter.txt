@@ -13,7 +13,7 @@ s9e\Toolkit\Tests\TextFormatter\Autoloaders
  [x] Config builder does not include renderer twice
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkConfig
- [x] Automatically creates an url tag
+ [x] Automatically creates an URL tag
  [x] Generates a regexp that matches all possible urls
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
