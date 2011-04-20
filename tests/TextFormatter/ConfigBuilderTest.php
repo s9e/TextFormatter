@@ -360,7 +360,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanCreateTag
 	*/
-	public function testCanCreateRuleOnNonExistentTargetTag()
+	public function testCanCreateRuleThatTargetsANonExistentTag()
 	{
 		$this->cb->addTag('FOO');
 		$this->cb->addTagRule('FOO', 'deny', 'BAR');
@@ -915,19 +915,13 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @test
-	* @depends testCanCreateRule
-	* @depends testCanRemoveTag
+	* @depends testCanCreateRuleThatTargetsANonExistentTag
 	*/
 	public function getParserConfig_removes_rules_that_target_non_existing_tags()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addTag('b');
-		$this->cb->addTag('c');
 
-		$this->cb->addTagRule('a', 'closeParent', 'c');
-		$this->cb->addTagRule('b', 'closeParent', 'a');
-
-		$this->cb->removeTag('c');
+		$this->cb->addTagRule('a', 'closeParent', 'b');
 
 		$this->assertArrayMatches(
 			array(
@@ -935,10 +929,31 @@ class ConfigBuilderTest extends Test
 					'A' => array(
 						// means there should NOT be a 'rules' key in this array
 						'rules' => null
-					),
-					'B' => array(
+					)
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
+
+	/**
+	* @test
+	* @depends testCanCreateRuleThatTargetsANonExistentTag
+	*/
+	public function getParserConfig_preserves_requireParent_rules_that_target_non_existing_tags()
+	{
+		$this->cb->addTag('a');
+
+		$this->cb->addTagRule('a', 'requireParent', 'b');
+
+		$this->assertArrayMatches(
+			array(
+				'tags' => array(
+					'A' => array(
 						'rules' => array(
-							'closeParent' => array('A')
+							'requireParent' => array(
+								'B' => 'B'
+							)
 						)
 					)
 				)
