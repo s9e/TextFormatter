@@ -1,72 +1,29 @@
 <?php
 
-namespace s9e\Toolkit\Tests\TextFormatter;
+namespace s9e\Toolkit\Tests\TextFormatter\Plugins;
 
 use s9e\Toolkit\Tests\Test;
 
-include_once __DIR__ . '/../Test.php';
+include_once __DIR__ . '/../../Test.php';
 
 /**
-* covers s9e\Toolkit\TextFormatter\Plugins\EmoticonsConfig
-* covers s9e\Toolkit\TextFormatter\Plugins\EmoticonsParser
+* @covers s9e\Toolkit\TextFormatter\Plugins\EmoticonsConfig
 */
-class EmoticonsTest extends Test
+class EmoticonsConfigTest extends Test
 {
-	public function testEmoticonsPluginIsOptimizedAwayIfNoEmoticonsAreAdded()
+	public function testReturnsFalseIfNoEmoticonsAreAdded()
 	{
-		$this->cb->loadPlugin('Emoticons');
-
-		$this->assertArrayNotHasKey(
-			'Emoticons',
-			$this->cb->getPluginsConfig()
-		);
+		$this->assertFalse($this->cb->Emoticons->getConfig());
 	}
 
-	public function testAnEmoticonCanBeReplacedByAnImgTag()
-	{
-		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
-
-		$this->assertTransformation(
-			'Hello :)',
-			'<rt>Hello <E>:)</E></rt>',
-			'Hello <img src="smiley.png">'
-		);
-	}
-
-	public function testAnEmoticonCanBeReplacedByAnyHtml()
-	{
-		$this->cb->Emoticons->addEmoticon(':)', '<span class="smiley"></span>');
-
-		$this->assertTransformation(
-			'Hello :)',
-			'<rt>Hello <E>:)</E></rt>',
-			'Hello <span class="smiley"></span>'
-		);
-	}
-
-	public function testEmoticonsAreReplacedEverywhereInTheText()
-	{
-		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
-
-		$this->assertTransformation(
-			'Hello :):):)text:):)',
-			'<rt>Hello <E>:)</E><E>:)</E><E>:)</E>text<E>:)</E><E>:)</E></rt>',
-			'Hello <img src="smiley.png"><img src="smiley.png"><img src="smiley.png">text<img src="smiley.png"><img src="smiley.png">'
-		);
-	}
-
-	/**
-	* @depends testAnEmoticonCanBeReplacedByAnImgTag
-	*/
 	public function testTagNameCanBeCustomizedAtLoadingTime()
 	{
-		$this->cb->loadPlugin('Emoticons', null, array('tagName' => 'emoticon'));
+		$this->cb->loadPlugin('Emoticons', null, array('tagName' => 'EMOTICON'));
 		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
 
-		$this->assertTransformation(
-			'Hello :)',
-			'<rt>Hello <EMOTICON>:)</EMOTICON></rt>',
-			'Hello <img src="smiley.png">'
+		$this->assertArrayMatches(
+			array('tagName' => 'EMOTICON'),
+			$this->cb->Emoticons->getConfig()
 		);
 	}
 

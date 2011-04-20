@@ -1,27 +1,16 @@
 <?php
 
-namespace s9e\Toolkit\Tests\TextFormatter;
+namespace s9e\Toolkit\Tests\TextFormatter\Plugins;
 
 use s9e\Toolkit\Tests\Test;
 
-include_once __DIR__ . '/../Test.php';
+include_once __DIR__ . '/../../Test.php';
 
 /**
-* covers s9e\Toolkit\TextFormatter\Plugins\CensorConfig
-* covers s9e\Toolkit\TextFormatter\Plugins\CensorParser
+* @covers s9e\Toolkit\TextFormatter\Plugins\CensorParser
 */
-class CensorTest extends Test
+class CensorParserTest extends Test
 {
-	public function testCensorPluginIsOptimizedAwayIfNoWordsAreAdded()
-	{
-		$this->cb->loadPlugin('Censor');
-
-		$this->assertArrayNotHasKey(
-			'Censor',
-			$this->cb->getPluginsConfig()
-		);
-	}
-
 	public function testReplacesCensoredWordsWithDefaultReplacement()
 	{
 		$this->cb->Censor->addWord('apple');

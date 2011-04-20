@@ -1,14 +1,15 @@
 <?php
 
-namespace s9e\Toolkit\Tests\TextFormatter;
+namespace s9e\Toolkit\Tests\TextFormatter\Plugins;
 
-use s9e\Toolkit\Tests\Test,
-    s9e\Toolkit\TextFormatter\ConfigBuilder,
-    s9e\Toolkit\TextFormatter\PluginConfig;
+use s9e\Toolkit\Tests\Test;
 
-include_once __DIR__ . '/../Test.php';
+include_once __DIR__ . '/../../Test.php';
 
-class WittyPantsTest extends Test
+/**
+* @covers s9e\Toolkit\TextFormatter\Plugins\WittyPantsParser
+*/
+class WittyPantsParserTest extends Test
 {
 	public function testSingleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
 	{
@@ -204,40 +205,6 @@ class WittyPantsTest extends Test
 		$this->assertRendering(
 			'3" x 3"',
 			'3″ × 3″'
-		);
-	}
-
-	public function testDoesNotAttemptToCreateItsTagIfItAlreadyExists()
-	{
-		$this->cb->loadPlugin('WittyPants');
-		$this->cb->loadPlugin('WittyPants');
-	}
-
-	/**
-	* @depends testThreeConsecutiveDotsAreConvertedToAnEllipsis
-	*/
-	public function testTagNameCanBeCustomizedAtLoadingTime()
-	{
-		$this->cb->loadPlugin('WittyPants', null, array('tagName' => 'XYZ'));
-
-		$this->assertTransformation(
-			'Hello world...',
-			'<rt>Hello world<XYZ char="…">...</XYZ></rt>',
-			'Hello world…'
-		);
-	}
-
-	/**
-	* @depends testThreeConsecutiveDotsAreConvertedToAnEllipsis
-	*/
-	public function testAttributeNameCanBeCustomizedAtLoadingTime()
-	{
-		$this->cb->loadPlugin('WittyPants', null, array('attrName' => 'xyz'));
-
-		$this->assertTransformation(
-			'Hello world...',
-			'<rt>Hello world<WP xyz="…">...</WP></rt>',
-			'Hello world…'
 		);
 	}
 

@@ -1,31 +1,14 @@
 <?php
 
-namespace s9e\Toolkit\Tests\TextFormatter;
+namespace s9e\Toolkit\Tests\TextFormatter\Plugins;
 
 use s9e\Toolkit\Tests\Test,
-    s9e\Toolkit\TextFormatter\Parser,
-    s9e\Toolkit\TextFormatter\ConfigBuilder,
-    s9e\Toolkit\TextFormatter\PluginConfig;
+    s9e\Toolkit\TextFormatter\Parser;
 
-include_once __DIR__ . '/../Test.php';
+include_once __DIR__ . '/../../Test.php';
 
 class BBCodesTest extends Test
 {
-	public function testBbcodesAreMappedToATagOfTheSameNameByDefault()
-	{
-		$this->cb->BBCodes->addBBCode('B');
-
-		$parserConfig = $this->cb->getParserConfig();
-
-		$this->assertArrayHasKey('B', $parserConfig['tags']);
-		$this->assertSame(
-			'B', $parserConfig['plugins']['BBCodes']['bbcodesConfig']['B']['tagName']
-		);
-	}
-
-	/**
-	* @depends testBbcodesAreMappedToATagOfTheSameNameByDefault
-	*/
 	public function testSimpleBbcodesAreParsed()
 	{
 		$this->cb->BBCodes->addBBCode('B');

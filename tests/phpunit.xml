@@ -21,17 +21,23 @@
 
 		<testsuite name="TextFormatter">
 			<file>./TextFormatter/AutoloadersTest.php</file>
-			<file>./TextFormatter/AutolinkTest.php</file>
-			<file>./TextFormatter/BBCodesTest.php</file>
-			<file>./TextFormatter/CensorTest.php</file>
 			<file>./TextFormatter/ConfigBuilderTest.php</file>
-			<file>./TextFormatter/EmoticonsTest.php</file>
-			<file>./TextFormatter/FabricTest.php</file>
 			<file>./TextFormatter/ParserTest.php</file>
 			<file>./TextFormatter/PluginConfigTest.php</file>
 			<file>./TextFormatter/PredefinedBBCodesTest.php</file>
 			<file>./TextFormatter/RendererTest.php</file>
-			<file>./TextFormatter/WittyPantsTest.php</file>
+			<file>./TextFormatter/Plugins/AutolinkConfigTest.php</file>
+			<file>./TextFormatter/Plugins/AutolinkParserTest.php</file>
+			<file>./TextFormatter/Plugins/BBCodesConfigTest.php</file>
+			<file>./TextFormatter/Plugins/BBCodesParserTest.php</file>
+			<file>./TextFormatter/Plugins/CensorConfigTest.php</file>
+			<file>./TextFormatter/Plugins/CensorParserTest.php</file>
+			<file>./TextFormatter/Plugins/EmoticonsConfigTest.php</file>
+			<file>./TextFormatter/Plugins/EmoticonsParserTest.php</file>
+			<file>./TextFormatter/Plugins/FabricConfigTest.php</file>
+			<file>./TextFormatter/Plugins/FabricParserTest.php</file>
+			<file>./TextFormatter/Plugins/WittyPantsConfigTest.php</file>
+			<file>./TextFormatter/Plugins/WittyPantsParserTest.php</file>
 		</testsuite>
 	</testsuites>
 

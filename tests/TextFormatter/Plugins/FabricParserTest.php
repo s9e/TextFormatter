@@ -1,14 +1,15 @@
 <?php
 
-namespace s9e\Toolkit\Tests\TextFormatter;
+namespace s9e\Toolkit\Tests\TextFormatter\Plugins;
 
-use s9e\Toolkit\Tests\Test,
-    s9e\Toolkit\TextFormatter\ConfigBuilder,
-    s9e\Toolkit\TextFormatter\PluginConfig;
+use s9e\Toolkit\Tests\Test;
 
-include_once __DIR__ . '/../Test.php';
+include_once __DIR__ . '/../../Test.php';
 
-class FabricTest extends Test
+/**
+* @covers s9e\Toolkit\TextFormatter\Plugins\FabricParser
+*/
+class FabricParserTest extends Test
 {
 	public function setUp()
 	{
