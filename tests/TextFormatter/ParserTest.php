@@ -72,7 +72,10 @@ class ParserTest extends Test
 	// Rules
 	//==========================================================================
 
-	public function testFulfilledRequireParentRuleAllowsTag()
+	/**
+	* @test
+	*/
+	public function Fulfilled_requireParent_rule_allows_tag()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -85,9 +88,10 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @depends testFulfilledRequireParentRuleAllowsTag
+	* @test
+	* @depends Fulfilled_requireParent_rule_allows_tag
 	*/
-	public function testRequireParentRuleWithMultipleTargetsIsFulfilledIfAnyTargetIsTheParent()
+	public function requireParent_rule_with_multiple_targets_is_fulfilled_if_any_of_the_targets_is_the_parent()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -106,7 +110,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testFulfilledRequireParentRuleAllowsTagDespitePrefix()
+	/**
+	* @test
+	*/
+	public function Fulfilled_requireParent_rule_allows_tag_despite_BBCode_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -118,7 +125,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testUnfulfilledRequireParentRuleBlocksTag()
+	/**
+	* @test
+	*/
+	public function Unfulfilled_requireParent_rule_blocks_tag()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -138,7 +148,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testUnfulfilledRequireParentRuleBlocksTagDespiteAscendant()
+	/**
+	* @test
+	*/
+	public function Unfulfilled_requireParent_rule_blocks_tag_despite_ascendant()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -159,7 +172,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testCloseParentRuleIsApplied()
+	/**
+	* @test
+	*/
+	public function closeParent_rule_is_enforced()
 	{
 		$this->cb->BBCodes->addBBCode('p');
 		$this->cb->addTagRule('p', 'closeParent', 'p');
@@ -171,9 +187,10 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @depends testCloseParentRuleIsApplied
+	* @test
+	* @depends closeParent_rule_is_enforced
 	*/
-	public function testCloseParentRuleIsAppliedOnTagWithIdenticalSuffix()
+	public function closeParent_rule_is_enforced_on_tag_with_identical_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('p');
 		$this->cb->addTagRule('p', 'closeParent', 'p');
@@ -185,9 +202,10 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @depends testCloseParentRuleIsApplied
+	* @test
+	* @depends closeParent_rule_is_enforced
 	*/
-	public function testCloseParentRuleIsAppliedOnTagWithDifferentSuffix()
+	public function closeParent_rule_is_enforced_on_tag_with_different_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('p');
 		$this->cb->addTagRule('p', 'closeParent', 'p');
@@ -198,7 +216,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testDenyRuleBlocksTag()
+	/**
+	* @test
+	*/
+	public function deny_rule_blocks_tag()
 	{
 		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'allow'));
 		$this->cb->BBCodes->addBBCode('b');
@@ -210,7 +231,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testAllowRuleAllowsTag()
+	/**
+	* @test
+	*/
+	public function allow_rule_allows_tag()
 	{
 		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'deny'));
 		$this->cb->BBCodes->addBBCode('b');
@@ -222,7 +246,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testRequireAscendantRuleIsFulfilledByParent()
+	/**
+	* @test
+	*/
+	public function requireAscendant_rule_is_fulfilled_by_parent()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -235,9 +262,10 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @depends testRequireAscendantRuleIsFulfilledByParent
+	* @test
+	* @depends requireAscendant_rule_is_fulfilled_by_parent
 	*/
-	public function testRequireAscendantRuleIsFulfilledByParentWithSuffix()
+	public function requireAscendant_rule_is_fulfilled_by_parent_with_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -249,7 +277,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testRequireAscendantRuleIsFulfilledByAscendant()
+	/**
+	* @test
+	*/
+	public function requireAscendant_rule_is_fulfilled_by_ascendant()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -263,9 +294,10 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @depends testRequireAscendantRuleIsFulfilledByAscendant
+	* @test
+	* @depends requireAscendant_rule_is_fulfilled_by_ascendant
 	*/
-	public function testRequireAscendantRuleIsFulfilledByAscendantWithSuffix()
+	public function requireAscendant_rule_is_fulfilled_by_ascendant_with_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -278,7 +310,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testUnfulfilledRequireAscendantRuleBlocksTag()
+	/**
+	* @test
+	*/
+	public function Unfulfilled_requireAscendant_rule_blocks_tag()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
