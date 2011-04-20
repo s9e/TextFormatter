@@ -1084,7 +1084,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanAddAPreFilterCallbackToATag
 	*/
-	public function testCanClearAllPreFilterCallbacksFromATag()
+	public function Can_clear_all_preFilter_callbacks_from_a_tag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagPreFilterCallback('a', 'trim');
@@ -1102,9 +1102,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateTag
 	*/
-	public function testCanAddAPostFilterCallbackToATag()
+	public function Can_add_a_postFilter_callback_to_a_tag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagPostFilterCallback('a', 'trim');
@@ -1122,20 +1123,22 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Not a callback
 	*/
-	public function testMethodAddTagPostFilterCallbackThrowsAnExceptionIfCallbackIsNotCallable()
+	public function addTagPostFilterCallback_throws_an_exception_if_callback_is_not_callable()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagPostFilterCallback('a', 'uncallable');
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateTag
 	*/
-	public function testCanSetPostFilterCallbacksViaSetTagOption()
+	public function Can_set_postFilter_callbacks_via_setTagOption()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagOption('a', 'postFilter', array(
@@ -1155,9 +1158,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testCanAddAPostFilterCallbackToATag
+	* @test
+	* @depends Can_add_a_postFilter_callback_to_a_tag
 	*/
-	public function testCanClearAllPostFilterCallbacksFromATag()
+	public function Can_clear_all_postFilter_callbacks_from_a_tag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagPostFilterCallback('a', 'trim');
@@ -1175,6 +1179,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateAttribute
 	*/
 	public function testCanAddAPreFilterCallbackToATagAttribute()
@@ -1200,11 +1205,12 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateAttribute
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Not a callback
 	*/
-	public function testMethodAddTagAttributePreFilterCallbackThrowsAnExceptionIfCallbackIsNotCallable()
+	public function addTagAttributePreFilterCallback_throws_an_exception_if_callback_is_not_callable()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'title', 'text');
@@ -1212,9 +1218,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateAttribute
 	*/
-	public function testCanSetPreFilterCallbacksViaSetTagAttributeOption()
+	public function Can_set_preFilter_callbacks_via_setTagAttributeOption()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'title', 'text');
@@ -1239,9 +1246,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanAddAPreFilterCallbackToATagAttribute
 	*/
-	public function testCanClearAllPreFilterCallbacksFromATagAttribute()
+	public function Can_clear_all_preFilter_callbacks_from_a_tag_attribute()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'title', 'text');
@@ -1264,9 +1272,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateAttribute
 	*/
-	public function testCanAddAPostFilterCallbackToATagAttribute()
+	public function Can_add_a_postFilter_callback_to_a_tag_attribute()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'title', 'text');
@@ -1289,11 +1298,12 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateAttribute
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Not a callback
 	*/
-	public function testMethodAddTagAttributePostFilterCallbackThrowsAnExceptionIfCallbackIsNotCallable()
+	public function addTagAttributePostFilterCallback_throws_an_exception_if_callback_is_not_callable()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'title', 'text');
@@ -1301,9 +1311,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateAttribute
 	*/
-	public function testCanSetPostFilterCallbacksViaSetTagAttributeOption()
+	public function Can_set_postFilter_callbacks_via_setTagAttributeOption()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'title', 'text');
@@ -1328,9 +1339,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testCanAddAPostFilterCallbackToATagAttribute
+	* @test
+	* @depends Can_add_a_postFilter_callback_to_a_tag_attribute
 	*/
-	public function testCanClearAllPostFilterCallbacksFromATagAttribute()
+	public function Can_clear_all_postFilter_callbacks_from_a_tag_attribute()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'title', 'text');
