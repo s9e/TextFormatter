@@ -719,9 +719,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @expectedException InvalidArgumentException callback
 	*/
-	public function testSetFilterThrowsAnExceptionOnInvalidCallback()
+	public function setFilter_throws_an_exception_on_invalid_callback()
 	{
 		$this->cb->setFilter('foo', array('callback' => 'bar'));
 	}
