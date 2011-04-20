@@ -11,7 +11,10 @@ include_once __DIR__ . '/../../Test.php';
 */
 class EmoticonsConfigTest extends Test
 {
-	public function testReturnsFalseIfNoEmoticonsAreAdded()
+	/**
+	* @test
+	*/
+	public function getConfig_returns_false_if_no_emoticons_were_added()
 	{
 		$this->assertFalse($this->cb->Emoticons->getConfig());
 	}
@@ -38,9 +41,10 @@ class EmoticonsConfigTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testEmoticonsXslIsAutomaticallyUpdatedWhenEmoticonsAreAdded
 	*/
-	public function testXslAutoUpdateCanBeDisabledByCallingTheDisableAutoUpdateMethod()
+	public function Xsl_auto_update_can_be_disabled_by_calling_disableAutoUpdate()
 	{
 		$this->cb->Emoticons->disableAutoUpdate();
 
@@ -49,9 +53,10 @@ class EmoticonsConfigTest extends Test
 	}
 
 	/**
-	* @depends testXslAutoUpdateCanBeDisabledByCallingTheDisableAutoUpdateMethod
+	* @test
+	* @depends Xsl_auto_update_can_be_disabled_by_calling_disableAutoUpdate
 	*/
-	public function testXslAutoUpdateCanBeReenabledByCallingTheEnableAutoUpdateMethod()
+	public function Xsl_auto_update_can_be_reenabled_by_calling_enableAutoUpdate()
 	{
 		$this->cb->Emoticons->disableAutoUpdate();
 		$this->cb->Emoticons->enableAutoUpdate();
@@ -61,9 +66,10 @@ class EmoticonsConfigTest extends Test
 	}
 
 	/**
-	* @depends testXslAutoUpdateCanBeDisabledByCallingTheDisableAutoUpdateMethod
+	* @test
+	* @depends Xsl_auto_update_can_be_disabled_by_calling_disableAutoUpdate
 	*/
-	public function testXslUpdateCanBeManuallyTriggeredByCallingTheUpdateXslMethod()
+	public function Xsl_update_can_be_manually_triggered_by_calling_updateXSL()
 	{
 		$this->cb->Emoticons->disableAutoUpdate();
 		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');

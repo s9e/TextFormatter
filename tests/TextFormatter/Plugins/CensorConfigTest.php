@@ -11,7 +11,10 @@ include_once __DIR__ . '/../../Test.php';
 */
 class CensorConfigTest extends Test
 {
-	public function testGetConfigReturnsFalseIfNoWordsAreAdded()
+	/**
+	* @test
+	*/
+	public function getConfig_returns_false_if_no_words_were_added()
 	{
 		$this->assertFalse($this->cb->loadPlugin('Censor')->getConfig());
 	}
