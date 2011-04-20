@@ -6,6 +6,9 @@ use s9e\Toolkit\Tests\Test;
 
 include_once __DIR__ . '/../../Test.php';
 
+/**
+* @covers s9e\Toolkit\TextFormatter\Plugins\BBCodesConfig
+*/
 class BBCodesConfigTest extends Test
 {
 	public function testBbcodesAreMappedToATagOfTheSameNameByDefault()

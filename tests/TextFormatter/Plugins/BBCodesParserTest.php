@@ -7,7 +7,10 @@ use s9e\Toolkit\Tests\Test,
 
 include_once __DIR__ . '/../../Test.php';
 
-class BBCodesTest extends Test
+/**
+* @covers s9e\Toolkit\TextFormatter\Plugins\BBCodesParser
+*/
+class BBCodesParserTest extends Test
 {
 	public function testSimpleBbcodesAreParsed()
 	{
@@ -89,7 +92,7 @@ class BBCodesTest extends Test
 	/**
 	* @depends testBbcodeTagsCanBeUsedAsSingletonsLikeSelfClosingXmlTags
 	*/
-	public function testWhitespaceInsideBBCodesIsIgnored()
+	public function testWhitespaceInsideBbcodesIsIgnored()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
