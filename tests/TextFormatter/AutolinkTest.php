@@ -15,7 +15,7 @@ class AutolinkTest extends Test
 	public function testAutolinkPluginAutomaticallyCreatesAnUrlTag()
 	{
 		$this->cb->loadPlugin('Autolink');
-		$this->cb->tagExists('URL');
+		$this->assertTrue($this->cb->tagExists('URL'));
 	}
 
 	public function testHttpUrlsAreLinkifiedByDefault()
