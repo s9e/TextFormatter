@@ -6,11 +6,11 @@ s9e\Toolkit\Tests\TextFormatter\PredefinedBBCodes
  [x] Predefined b b codes
 
 s9e\Toolkit\Tests\TextFormatter\Autoloaders
- [x] Config builder loads core plugins files
- [x] Config builder can autoload parser
- [x] Config builder does not include parser twice
- [x] Config builder can autoload renderer
- [x] Config builder does not include renderer twice
+ [x] ConfigBuilder loads core plugins files
+ [x] ConfigBuilder can autoload Parser
+ [x] ConfigBuilder does not include Parser twice
+ [x] ConfigBuilder can autoload Renderer
+ [x] ConfigBuilder does not include Renderer twice
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkConfig
  [x] Automatically creates an URL tag

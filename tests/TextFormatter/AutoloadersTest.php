@@ -9,9 +9,10 @@ include_once __DIR__ . '/../Test.php';
 class AutoloadersTest extends Test
 {
 	/**
+	* @test
 	* @runInSeparateProcess
 	*/
-	public function testConfigBuilderLoadsCorePluginsFiles()
+	public function ConfigBuilder_loads_core_plugins_files()
 	{
 		$this->assertInstanceOf(
 			's9e\\Toolkit\\TextFormatter\\Plugins\\BBCodesConfig',
@@ -20,9 +21,10 @@ class AutoloadersTest extends Test
 	}
 
 	/**
+	* @test
 	* @runInSeparateProcess
 	*/
-	public function testConfigBuilderCanAutoloadParser()
+	public function ConfigBuilder_can_autoload_Parser()
 	{
 		$this->assertInstanceOf(
 			's9e\\Toolkit\\TextFormatter\\Parser',
@@ -31,10 +33,11 @@ class AutoloadersTest extends Test
 	}
 
 	/**
+	* @test
 	* @runInSeparateProcess
-	* @depends testConfigBuilderCanAutoloadParser
+	* @depends ConfigBuilder_can_autoload_Parser
 	*/
-	public function testConfigBuilderDoesNotIncludeParserTwice()
+	public function ConfigBuilder_does_not_include_Parser_twice()
 	{
 		$this->assertInstanceOf(
 			's9e\\Toolkit\\TextFormatter\\Parser',
@@ -47,9 +50,10 @@ class AutoloadersTest extends Test
 	}
 
 	/**
+	* @test
 	* @runInSeparateProcess
 	*/
-	public function testConfigBuilderCanAutoloadRenderer()
+	public function ConfigBuilder_can_autoload_Renderer()
 	{
 		$this->assertInstanceOf(
 			's9e\\Toolkit\\TextFormatter\\Renderer',
@@ -58,10 +62,11 @@ class AutoloadersTest extends Test
 	}
 
 	/**
+	* @test
 	* @runInSeparateProcess
-	* @depends testConfigBuilderCanAutoloadRenderer
+	* @depends ConfigBuilder_can_autoload_Renderer
 	*/
-	public function testConfigBuilderDoesNotIncludeRendererTwice()
+	public function ConfigBuilder_does_not_include_Renderer_twice()
 	{
 		$this->assertInstanceOf(
 			's9e\\Toolkit\\TextFormatter\\Renderer',
