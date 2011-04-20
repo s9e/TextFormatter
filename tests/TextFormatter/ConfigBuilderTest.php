@@ -726,7 +726,18 @@ class ConfigBuilderTest extends Test
 		$this->cb->setFilter('foo', array('callback' => 'bar'));
 	}
 
-	public function testUrlFilterIsConfiguredToAllowHttpAndHttpsSchemesByDefault()
+	/**
+	* @test
+	*/
+	public function HTTP_and_HTTPS_schemes_are_allowed_by_default()
+	{
+		$this->assertEquals(
+			array('http', 'https'),
+			$this->cb->getAllowedSchemes()
+		);
+	}
+
+	public function testUrlFilterAllowsDefaultSchemes()
 	{
 		$filtersConfig = $this->cb->getFiltersConfig();
 
@@ -741,9 +752,9 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testUrlFilterIsConfiguredToAllowHttpAndHttpsSchemesByDefault
+	* @depends testUrlFilterAllowsDefaultSchemes
 	*/
-	public function testUrlFilterCanBeConfiguredAllowAdditionalSchemes()
+	public function testUrlFilterCanBeConfiguredToAllowAdditionalSchemes()
 	{
 		// first we check that the regexp isn't borked and doesn't allow just about anything
 		$filtersConfig = $this->cb->getFiltersConfig();
