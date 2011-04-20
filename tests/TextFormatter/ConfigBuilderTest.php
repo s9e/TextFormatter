@@ -874,9 +874,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateRule
 	*/
-	public function testGetParserConfigFlattensAllowAndDenyRulesIntoTheAllowArray()
+	public function getParserConfig_flattens_allow_and_deny_rules_into_the_allow_array()
 	{
 		$this->cb->addTag('a', array('defaultRule' => 'allow'));
 		$this->cb->addTag('b', array('defaultRule' => 'allow'));
@@ -913,10 +914,11 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateRule
 	* @depends testCanRemoveTag
 	*/
-	public function testGetParserConfigRemovesRulesThatPertainToNonExistingTags()
+	public function getParserConfig_removes_rules_that_target_non_existing_tags()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTag('b');
@@ -946,9 +948,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testLoadsPluginOnMagicGet
 	*/
-	public function testGetPluginsConfigAddsDefaultConfigIfMissing()
+	public function getPluginsConfig_adds_default_config_if_missing()
 	{
 		$this->cb->Emoticons->addEmoticon(':)', '<img src="smile.png" />');
 
