@@ -130,7 +130,7 @@ class BBCodesConfig extends PluginConfig
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
 
-		return isset($this->bbcodes[$bbcodeName]);
+		return isset($this->bbcodesConfig[$bbcodeName]);
 	}
 
 	public function setBBCodeOptions($bbcodeName, array $bbcodeOptions)

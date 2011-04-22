@@ -118,4 +118,26 @@ class BBCodesConfigTest extends Test
 	{
 		$this->cb->BBCodes->addBBCodeAlias('A', 'A');
 	}
+
+	/**
+	* @test
+	* @depend BBCodes_are_mapped_to_a_tag_of_the_same_name_by_default
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage BBCode 'A' already exists
+	*/
+	public function addBBCodeAlias_throws_an_exception_if_the_BBCode_already_exisst()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->BBCodes->addBBCodeAlias('A', 'A');
+	}
+
+	/**
+	* @test
+	*/
+	public function Can_tell_whether_a_BBCode_exists()
+	{
+		$this->assertFalse($this->cb->BBCodes->bbcodeExists('A'));
+		$this->cb->BBCodes->addBBCode('A');
+		$this->assertTrue($this->cb->BBCodes->bbcodeExists('A'));
+	}
 }

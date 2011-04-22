@@ -265,6 +265,8 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCode throws an exception if the BBCode name is already in use
  [x] A BBCode can map to a tag of a different name
  [x] addBBCodeAlias throws an exception if the tag does not exist
+ [x] addBBCodeAlias throws an exception if the BBCode already exisst
+ [x] Can tell whether a BBCode exists
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple bbcodes are parsed
