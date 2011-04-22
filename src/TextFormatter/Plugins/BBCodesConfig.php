@@ -107,7 +107,7 @@ class BBCodesConfig extends PluginConfig
 
 		if (!$this->cb->tagExists($tagName))
 		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+			throw new InvalidArgumentException("Tag '" . $tagName . "' does not exist");
 		}
 
 		if (isset($this->bbcodesConfig[$bbcodeName]))

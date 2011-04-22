@@ -136,7 +136,7 @@ class ConfigBuilder
 
 		if ($mustExist && !isset($this->tags[$tagName]))
 		{
-			throw new InvalidArgumentException("Unknown tag '" . $tagName . "'");
+			throw new InvalidArgumentException("Tag '" . $tagName . "' does not exist");
 		}
 
 		return $tagName;

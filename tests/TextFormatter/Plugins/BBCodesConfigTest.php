@@ -109,7 +109,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Unknown tag 'A'
+	* @expectedExceptionMessage Tag 'A' does not exist
 	*/
 	public function addBBCodeAlias_throws_an_exception_if_the_tag_does_not_exist()
 	{

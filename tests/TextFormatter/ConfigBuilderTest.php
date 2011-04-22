@@ -164,7 +164,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanCreateAttribute
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Unknown tag 'FOO'
+	* @expectedExceptionMessage Tag 'FOO' does not exist
 	*/
 	public function testCannotCreateAttributeOnNonExistingTag()
 	{
@@ -314,7 +314,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Unknown tag 'FOO'
+	* @expectedExceptionMessage Tag 'FOO' does not exist
 	*/
 	public function testCannotCreateRuleOnNonExistentTag()
 	{
@@ -458,7 +458,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Unknown tag 'FOO'
+	* @expectedExceptionMessage Tag 'FOO' does not exist
 	*/
 	public function getTagOptions_fails_on_unknown_tags()
 	{
@@ -468,7 +468,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Unknown tag 'FOO'
+	* @expectedExceptionMessage Tag 'FOO' does not exist
 	*/
 	public function getTagOption_fails_on_unknown_tags()
 	{
