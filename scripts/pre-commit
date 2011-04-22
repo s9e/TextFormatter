@@ -2,6 +2,8 @@
 TMP=/dev/shm/phpunit.out
 DONE=
 
+ROOT=`pwd`
+
 for FILEPATH in $(git diff --cached --name-only)
 do
 	if [[ $FILEPATH != src/* ]] && [[ $FILEPATH != tests/*/* ]];
@@ -14,19 +16,21 @@ do
 
 	if [[ `expr match "$DONE" ".* $MODULE"` == 0 ]]
 	then
-		if [[ -n `git diff --cached -b "src/$MODULE" "tests/$MODULE"` ]]
+		if [[ -n `git diff --cached -b "$ROOT/src/$MODULE" "$ROOT/tests/$MODULE"` ]]
 		then
 			DONE="$DONE $MODULE"
 
+			cd "$ROOT/tests/$MODULE"
 			echo "Running PHPUnit on $MODULE"
-			phpunit --testdox-text docs/testdox.$MODULE.txt -c tests/phpunit.xml tests/$MODULE | tee $TMP
+			phpunit --testdox-text "$ROOT/docs/testdox.$MODULE.txt" -c "$ROOT/tests/$MODULE/phpunit.xml" | tee $TMP
 
 			if [[ `tail -n2 $TMP` != *OK* ]]
 			then
 				exit 1;
 			fi
 
-			git update-index --add docs/testdox.$MODULE.txt
+			cd "$ROOT"
+			git update-index --add "docs/testdox.$MODULE.txt"
 		fi
 	fi
 done
