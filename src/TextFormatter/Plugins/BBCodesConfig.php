@@ -87,15 +87,10 @@ class BBCodesConfig extends PluginConfig
 
 		$bbcodeConfig = array_intersect_key($config, $bbcodeSpecificConfig);
 		$tagConfig    = array_diff_key($config, $bbcodeSpecificConfig);
+		$tagName      = (isset($bbcodeConfig['tagName'])) ? $bbcodeConfig['tagName'] : $bbcodeName;
 
-		if (!isset($bbcodeConfig['tagName']))
-		{
-			$bbcodeConfig['tagName'] = $bbcodeName;
-		}
-
-		$this->cb->addTag($bbcodeConfig['tagName'], $config);
-
-		$this->bbcodesConfig[$bbcodeName] = $bbcodeConfig;
+		$this->cb->addTag($tagName, $tagConfig);
+		$this->addBBCodeAlias($bbcodeName, $tagName, $bbcodeConfig);
 	}
 
 	/**

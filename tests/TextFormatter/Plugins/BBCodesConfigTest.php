@@ -74,6 +74,18 @@ class BBCodesConfigTest extends Test
 		$this->cb->BBCodes->addBBCode(']');
 	}
 
+	public function testBbcodesAreMappedToATagOfTheSameNameByDefault()
+	{
+		$this->cb->BBCodes->addBBCode('B');
+
+		$parserConfig = $this->cb->getParserConfig();
+
+		$this->assertArrayHasKey('B', $parserConfig['tags']);
+		$this->assertSame(
+			'B', $parserConfig['plugins']['BBCodes']['bbcodesConfig']['B']['tagName']
+		);
+	}
+
 	/**
 	* @test
 	* @expectedException InvalidArgumentException
@@ -85,15 +97,22 @@ class BBCodesConfigTest extends Test
 		$this->cb->BBCodes->addBBCode('A');
 	}
 
-	public function testBbcodesAreMappedToATagOfTheSameNameByDefault()
+	/**
+	* @test
+	*/
+	public function A_BBCode_can_map_to_a_tag_of_a_different_name()
 	{
-		$this->cb->BBCodes->addBBCode('B');
+		$this->cb->BBCodes->addBBCode('A', array('tagName' => 'B'));
+		$this->assertTrue($this->cb->tagExists('B'));
+	}
 
-		$parserConfig = $this->cb->getParserConfig();
-
-		$this->assertArrayHasKey('B', $parserConfig['tags']);
-		$this->assertSame(
-			'B', $parserConfig['plugins']['BBCodes']['bbcodesConfig']['B']['tagName']
-		);
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown tag 'A'
+	*/
+	public function addBBCodeAlias_throws_an_exception_if_the_tag_does_not_exist()
+	{
+		$this->cb->BBCodes->addBBCodeAlias('A', 'A');
 	}
 }

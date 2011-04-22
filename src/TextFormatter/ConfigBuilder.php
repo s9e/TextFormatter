@@ -26,7 +26,7 @@ class ConfigBuilder
 	* @see  self::setTagTemplate()
 	* @link http://www.php.net/manual/en/class.domdocument.php#domdocument.props.preservewhitespace
 	*/
-	const PRESERVE_WHITESPACE      = 2;
+	const PRESERVE_WHITESPACE = 2;
 
 	/**
 	* @var array Tags repository
