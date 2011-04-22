@@ -1023,9 +1023,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateTag
 	*/
-	public function testCanAddAPreFilterCallbackToATag()
+	public function Can_add_a_preFilter_callback_to_a_tag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagPreFilterCallback('a', 'trim');
@@ -1055,9 +1056,10 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateTag
 	*/
-	public function testCanSetPreFilterCallbacksViaSetTagOption()
+	public function Can_set_preFilter_callbacks_via_setTagOption()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagOption('a', 'preFilter', array(
@@ -1077,7 +1079,8 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testCanAddAPreFilterCallbackToATag
+	* @test
+	* @depends Can_add_a_preFilter_callback_to_a_tag
 	*/
 	public function Can_clear_all_preFilter_callbacks_from_a_tag()
 	{

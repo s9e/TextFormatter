@@ -82,9 +82,10 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can add generic xsl
  [x] Cannot add invalid xsl
  [x] Xsl from tags appears in output
- [x] Can add a pre filter callback to a tag
+ [x] Can add a preFilter callback to a tag
  [x] addTagPreFilterCallback throws an exception if callback is not callable
- [x] Can set pre filter callbacks via set tag option
+ [x] Can set preFilter callbacks via setTagOption
+ [x] Can clear all preFilter callbacks from a tag
  [x] Can add a postFilter callback to a tag
  [x] addTagPostFilterCallback throws an exception if callback is not callable
  [x] Can set postFilter callbacks via setTagOption
