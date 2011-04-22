@@ -151,11 +151,12 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanTellIfAttributeExists
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Tag 'A' does not have an attribute named 'href'
 	*/
-	public function testThrowsAnExceptionIfRemoveAttributeIsCalledForAnAttributeThatDoesNotExist()
+	public function Throws_an_exception_if_removeAttribute_is_called_for_an_attribute_that_does_not_exist()
 	{
 		$this->cb->addTag('a');
 		$this->cb->removeAttribute('a', 'href');

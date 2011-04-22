@@ -20,7 +20,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can create attribute
  [x] Can tell if attribute exists
  [x] Can remove attribute if it exists
- [x] Throws an exception if remove attribute is called for an attribute that does not exist
+ [x] Throws an exception if removeAttribute is called for an attribute that does not exist
  [x] Cannot create attribute on non existing tag
  [x] Can get tag attribute options
  [x] Can get tag attribute option
