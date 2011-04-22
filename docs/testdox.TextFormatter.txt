@@ -261,7 +261,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] BBCode names cannot start with anything else
  [x] BBCode names can only contain letters numbers and underscores
  [x] addBBCode rejects invalid BBCode names
- [x] Bbcodes are mapped to a tag of the same name by default
+ [x] BBCodes are mapped to a tag of the same name by default
  [x] addBBCode throws an exception if the BBCode name is already in use
  [x] A BBCode can map to a tag of a different name
  [x] addBBCodeAlias throws an exception if the tag does not exist

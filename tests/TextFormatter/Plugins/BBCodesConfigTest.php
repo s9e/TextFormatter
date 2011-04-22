@@ -74,7 +74,10 @@ class BBCodesConfigTest extends Test
 		$this->cb->BBCodes->addBBCode(']');
 	}
 
-	public function testBbcodesAreMappedToATagOfTheSameNameByDefault()
+	/**
+	* @test
+	*/
+	public function BBCodes_are_mapped_to_a_tag_of_the_same_name_by_default()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
