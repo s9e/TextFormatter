@@ -338,7 +338,7 @@ class ConfigBuilderTest extends Test
 	* @test
 	* @depends testCanCreateRule
 	*/
-	public function Can_create_multipe_requireParent_rules_on_different_targets()
+	public function Can_create_multiple_requireParent_rules_on_different_targets()
 	{
 		$this->cb->addTag('FOO');
 		$this->cb->addTag('BAR');

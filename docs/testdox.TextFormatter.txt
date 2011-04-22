@@ -34,7 +34,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can create rule
  [x] Cannot create rule on non existent tag
  [x] Cannot create unknown rule
- [x] Can create multipe requireParent rules on different targets
+ [x] Can create multiple requireParent rules on different targets
  [x] Can create rule that targets a non existent tag
  [x] Can remove rule
  [x] Can create tag with rules
