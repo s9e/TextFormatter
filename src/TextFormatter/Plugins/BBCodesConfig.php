@@ -593,6 +593,6 @@ class BBCodesConfig extends PluginConfig
 	*/
 	public function isValidBBCodeName($bbcodeName)
 	{
-		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*|\\*)$#Di', $bbcodeName);
+		return (bool) preg_match('#^(?:[a-z][a-z_0-9]*|\\*)$#Di', $bbcodeName);
 	}
 }

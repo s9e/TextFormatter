@@ -255,6 +255,13 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
  [x] Non balanced right parentheses are not linkified
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
+ [x] A single asterisk is accepted as a BBCode name
+ [x] An asterisk followed by anything is rejected as a BBCode name
+ [x] BBCode names can start with a letter
+ [x] BBCode names cannot start with anything else
+ [x] BBCode names can only contain letters numbers and underscores
+ [x] addBBCode rejects invalid BBCode names
+ [x] addBBCode throws an exception if the BBCode name is already in use
  [x] Bbcodes are mapped to a tag of the same name by default
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
