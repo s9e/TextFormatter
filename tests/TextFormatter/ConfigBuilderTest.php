@@ -335,26 +335,16 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateRule
 	*/
-	public function testCanCreateMultipeRequireParentRulesOnDifferentTargets()
+	public function Can_create_multipe_requireParent_rules_on_different_targets()
 	{
 		$this->cb->addTag('FOO');
 		$this->cb->addTag('BAR');
 		$this->cb->addTag('BAZ');
 		$this->cb->addTagRule('FOO', 'requireParent', 'BAR');
 		$this->cb->addTagRule('FOO', 'requireParent', 'BAZ');
-	}
-
-	/**
-	* @depends testCanCreateRule
-	*/
-	public function testCanCreateMultipeRequireParentRulesOnSameTarget()
-	{
-		$this->cb->addTag('FOO');
-		$this->cb->addTag('BAR');
-		$this->cb->addTagRule('FOO', 'requireParent', 'BAR');
-		$this->cb->addTagRule('FOO', 'requireParent', 'BAR');
 	}
 
 	/**
