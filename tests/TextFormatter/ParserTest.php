@@ -1011,7 +1011,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testTagLevelPreFilterReceivesAnAssociativeArrayOfAttributesValuesWhichgetsReplacedByItsReturnValue()
+	/**
+	* @test
+	*/
+	public function Tag_level_preFilter_callback_receives_an_associative_array_of_attributes_which_gets_replaced_by_its_return_value()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
@@ -1051,7 +1054,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testTagLevelPostFilterReceivesAnAssociativeArrayOfAttributesValuesWhichgetsReplacedByItsReturnValue()
+	/**
+	* @test
+	*/
+	public function Tag_level_postFilter_callback_receives_an_associative_array_of_attributes_which_gets_replaced_by_its_return_value()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
@@ -1253,7 +1259,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testAttributeValueIsReplacedByAttributePreFilter()
+	/**
+	* @test
+	*/
+	public function Attribute_value_is_replaced_by_the_return_value_of_the_attribute_preFilter_callbacks()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
@@ -1277,7 +1286,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testAttributeValueIsReplacedByAttributePostFilterEvenIfItMakesItInvalid()
+	/**
+	* @test
+	*/
+	public function Attribute_value_is_replaced_by_the_return_value_of_the_attribute_postFilter_callbacks_even_if_it_makes_it_invalid()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');

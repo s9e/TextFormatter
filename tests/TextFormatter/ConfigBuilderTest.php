@@ -1180,7 +1180,7 @@ class ConfigBuilderTest extends Test
 	* @test
 	* @depends testCanCreateAttribute
 	*/
-	public function testCanAddAPreFilterCallbackToATagAttribute()
+	public function Can_add_a_preFilter_callback_to_a_tag_attribute()
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTagAttribute('a', 'title', 'text');
@@ -1245,7 +1245,7 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @test
-	* @depends testCanAddAPreFilterCallbackToATagAttribute
+	* @depends Can_add_a_preFilter_callback_to_a_tag_attribute
 	*/
 	public function Can_clear_all_preFilter_callbacks_from_a_tag_attribute()
 	{

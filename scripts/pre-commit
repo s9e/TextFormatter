@@ -22,7 +22,7 @@ do
 
 			cd "$ROOT/tests/$MODULE"
 			echo "Running PHPUnit on $MODULE"
-			phpunit --testdox-text "$ROOT/docs/testdox.$MODULE.txt" -c "$ROOT/tests/$MODULE/phpunit.xml" | tee $TMP
+			phpunit -c "$ROOT/tests/$MODULE/phpunit.xml" | tee $TMP
 
 			if [[ `tail -n2 $TMP` != *OK* ]]
 			then

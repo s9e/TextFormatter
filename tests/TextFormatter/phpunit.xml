@@ -10,6 +10,10 @@
          stopOnFailure="true"
          verbose="true"
 >
+	<logging>
+		<log type="testdox-text" target="../../docs/testdox.TextFormatter.txt" />
+	</logging>
+
 	<testsuites>
 		<testsuite name="TextFormatter">
 			<file>AutoloadersTest.php</file>

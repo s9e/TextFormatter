@@ -90,7 +90,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] addTagPostFilterCallback throws an exception if callback is not callable
  [x] Can set postFilter callbacks via setTagOption
  [x] Can clear all postFilter callbacks from a tag
- [x] Can add a pre filter callback to a tag attribute
+ [x] Can add a preFilter callback to a tag attribute
  [x] addTagAttributePreFilterCallback throws an exception if callback is not callable
  [x] Can set preFilter callbacks via setTagAttributeOption
  [x] Can clear all preFilter callbacks from a tag attribute
@@ -204,16 +204,16 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Email filter will not urlencode an invalid email even if force urlencode is on
  [x] Undefined filter rejects everything
  [x] Attribute name is added to log entries when available
- [x] Tag level pre filter receives an associative array of attributes values whichgets replaced by its return value
- [x] Tag level post filter receives an associative array of attributes values whichgets replaced by its return value
+ [x] Tag level preFilter callback receives an associative array of attributes which gets replaced by its return value
+ [x] Tag level postFilter callback receives an associative array of attributes which gets replaced by its return value
  [x] Compound attributes are split if valid then removed
  [x] Compound attributes do not overwrite existing values
  [x] Compound attributes are removed if invalid
  [x] Compound attributes are optional by default
  [x] Invalid attributes use their default value if set
  [x] Missing attributes use their default value if set
- [x] Attribute value is replaced by attribute pre filter
- [x] Attribute value is replaced by attribute post filter even if it makes it invalid
+ [x] Attribute value is replaced by the return value of the attribute preFilter callbacks
+ [x] Attribute value is replaced by the return value of the attribute postFilter callbacks even if it makes it invalid
  [x] Plain text is returned within pt tags
  [x] Undefined attributes do not appear in xml
  [x] Overlapping tags are removed
