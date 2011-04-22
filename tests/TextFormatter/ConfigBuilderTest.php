@@ -456,28 +456,32 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Unknown tag 'FOO'
 	*/
-	public function testGetTagOptionsFailsOnUnknownTags()
+	public function getTagOptions_fails_on_unknown_tags()
 	{
 		$this->cb->getTagOptions('foo');
 	}
 
 	/**
+	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Unknown tag 'FOO'
 	*/
-	public function testGetTagOptionFailsOnUnknownTags()
+	public function getTagOption_fails_on_unknown_tags()
 	{
 		$this->cb->getTagOption('foo', 'nestingLimit');
 	}
 
 	/**
+	* @test
 	* @depends testCanCreateTag
-	* @expectedException InvalidArgumentException bar
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown option 'bar' from tag 'A'
 	*/
-	public function testGetTagOptionFailsOnUnsetOptions()
+	public function getTagOption_fails_on_unset_options()
 	{
 		$this->cb->addTag('a');
 		$this->cb->getTagOption('a', 'bar');

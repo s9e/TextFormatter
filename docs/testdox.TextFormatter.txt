@@ -41,9 +41,9 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can set unknown tag option
  [x] Default options are set on new tags
  [x] Tag options php type is preserved
- [x] Get tag options fails on unknown tags
- [x] Get tag option fails on unknown tags
- [x] Get tag option fails on unset options
+ [x] getTagOptions fails on unknown tags
+ [x] getTagOption fails on unknown tags
+ [x] getTagOption fails on unset options
  [x] Can set tag template
  [x] Can set tag xsl
  [x] Cannot set tag template on unknown tag
