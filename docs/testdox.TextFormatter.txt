@@ -255,6 +255,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
  [x] Non balanced right parentheses are not linkified
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
+ [x] getConfig returns false if no BBCodes were added
  [x] A single asterisk is accepted as a BBCode name
  [x] An asterisk followed by anything is rejected as a BBCode name
  [x] BBCode names can start with a letter

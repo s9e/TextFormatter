@@ -133,6 +133,12 @@ class BBCodesConfig extends PluginConfig
 		return isset($this->bbcodesConfig[$bbcodeName]);
 	}
 
+	/**
+	* Set several options of a BBCode
+	*
+	* @param string $bbcodeName
+	* @param array  $bbcodeOptions Associative array of $optionName => $optionValue
+	*/
 	public function setBBCodeOptions($bbcodeName, array $bbcodeOptions)
 	{
 		foreach ($bbcodeOptions as $optionName => $optionValue)
@@ -141,6 +147,13 @@ class BBCodesConfig extends PluginConfig
 		}
 	}
 
+	/**
+	* Set several options of a BBCode
+	*
+	* @param string $bbcodeName
+	* @param string $optionName
+	* @param mixed  $optionValue
+	*/
 	public function setBBCodeOption($bbcodeName, $optionName, $optionValue)
 	{
 		$this->bbcodesConfig[$bbcodeName][$optionName] = $optionValue;
@@ -148,6 +161,11 @@ class BBCodesConfig extends PluginConfig
 
 	public function getConfig()
 	{
+		if (empty($this->bbcodesConfig))
+		{
+			return false;
+		}
+
 		/**
 		* Build the regexp that matches all the BBCode names, then remove the extraneous
 		* non-capturing expression around it

@@ -14,6 +14,14 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	*/
+	public function getConfig_returns_false_if_no_BBCodes_were_added()
+	{
+		$this->assertFalse($this->cb->BBCodes->getConfig());
+	}
+
+	/**
+	* @test
+	*/
 	public function A_single_asterisk_is_accepted_as_a_BBCode_name()
 	{
 		$this->assertTrue($this->cb->BBCodes->isValidBBCodeName('*'));
