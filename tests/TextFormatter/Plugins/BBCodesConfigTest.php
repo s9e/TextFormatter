@@ -133,10 +133,21 @@ class BBCodesConfigTest extends Test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage BBCode 'A' already exists
 	*/
-	public function addBBCodeAlias_throws_an_exception_if_the_BBCode_already_exisst()
+	public function addBBCodeAlias_throws_an_exception_if_the_BBCode_already_exists()
 	{
 		$this->cb->BBCodes->addBBCode('A');
 		$this->cb->BBCodes->addBBCodeAlias('A', 'A');
+	}
+
+	/**
+	* @test
+	* @depend BBCodes_are_mapped_to_a_tag_of_the_same_name_by_default
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid tag name '*'
+	*/
+	public function addBBCodeAlias_cannot_create_an_alias_to_an_invalid_tag_name()
+	{
+		$this->cb->BBCodes->addBBCodeAlias('A', '*');
 	}
 
 	/**

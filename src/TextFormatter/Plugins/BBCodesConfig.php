@@ -103,12 +103,7 @@ class BBCodesConfig extends PluginConfig
 	public function addBBCodeAlias($bbcodeName, $tagName, array $bbcodeConfig = array())
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
-		$tagName    = $this->normalizeBBCodeName($tagName);
-
-		if (!$this->cb->tagExists($tagName))
-		{
-			throw new InvalidArgumentException("Tag '" . $tagName . "' does not exist");
-		}
+		$tagName    = $this->cb->normalizeTagName($tagName);
 
 		if (isset($this->bbcodesConfig[$bbcodeName]))
 		{
