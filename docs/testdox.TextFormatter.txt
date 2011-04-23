@@ -277,6 +277,8 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] getBBCodeOptions throws an exception if the BBCode does not exist
  [x] getBBCodeOption throws an exception if the BBCode does not exist
  [x] getBBCodeOption throws an exception if the option does not exist
+ [x] setBBCodeOption cannot set a defaultAttr with an invalid name
+ [x] setBBCodeOption cannot set a contentAttr with an invalid name
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple bbcodes are parsed

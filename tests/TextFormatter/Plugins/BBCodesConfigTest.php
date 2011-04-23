@@ -227,4 +227,26 @@ class BBCodesConfigTest extends Test
 		$this->cb->BBCodes->addBBCode('A');
 		$this->cb->BBCodes->getBBCodeOption('A', 'XYZ');
 	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid attribute name '**'
+	*/
+	public function setBBCodeOption_cannot_set_a_defaultAttr_with_an_invalid_name()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->BBCodes->setBBCodeOption('A', 'defaultAttr', '**');
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid attribute name '**'
+	*/
+	public function setBBCodeOption_cannot_set_a_contentAttr_with_an_invalid_name()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttr', '**');
+	}
 }
