@@ -279,6 +279,9 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] getBBCodeOption throws an exception if the option does not exist
  [x] setBBCodeOption cannot set a defaultAttr with an invalid name
  [x] setBBCodeOption cannot set a contentAttr with an invalid name
+ [x] addBBCodeFromExample works on simple BBCodes
+ [x] addBBCodeFromExample allows a single start tag with no end tag and enables autoClose
+ [x] addBBCodeFromExample allows a self closed tag and enables autoClose
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple bbcodes are parsed

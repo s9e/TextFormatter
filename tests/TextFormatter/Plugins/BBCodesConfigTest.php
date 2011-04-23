@@ -249,4 +249,38 @@ class BBCodesConfigTest extends Test
 		$this->cb->BBCodes->addBBCode('A');
 		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttr', '**');
 	}
+
+	/**
+	* @test
+	* @depends Can_tell_whether_a_BBCode_exists
+	*/
+	public function addBBCodeFromExample_works_on_simple_BBCodes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[B]{TEXT}[/B]', '<b>{TEXT}</b>');
+		$this->assertTrue($this->cb->BBCodes->BBCodeExists('B'));
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_works_on_simple_BBCodes
+	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	*/
+	public function addBBCodeFromExample_allows_a_single_start_tag_with_no_end_tag_and_enables_autoClose()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[HR]', '<hr />');
+		$this->assertTrue($this->cb->BBCodes->BBCodeExists('HR'));
+		$this->assertTrue($this->cb->BBCodes->getBBCodeOption('HR', 'autoClose'));
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_works_on_simple_BBCodes
+	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	*/
+	public function addBBCodeFromExample_allows_a_self_closed_tag_and_enables_autoClose()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[HR /]', '<hr />');
+		$this->assertTrue($this->cb->BBCodes->BBCodeExists('HR'));
+		$this->assertTrue($this->cb->BBCodes->getBBCodeOption('HR', 'autoClose'));
+	}
 }
