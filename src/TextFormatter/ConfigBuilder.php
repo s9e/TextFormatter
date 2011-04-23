@@ -113,7 +113,7 @@ class ConfigBuilder
 	* @param  string $tagName
 	* @return bool
 	*/
-	static public function isValidTagName($tagName)
+	public function isValidTagName($tagName)
 	{
 		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $tagName);
 	}
@@ -125,9 +125,9 @@ class ConfigBuilder
 	* @param  bool   $mustExist If TRUE, throw an exception if the tag does not exist
 	* @return string            Normalized tag name, in uppercase
 	*/
-	protected function normalizeTagName($tagName, $mustExist = true)
+	public function normalizeTagName($tagName, $mustExist = true)
 	{
-		if (!static::isValidTagName($tagName))
+		if (!$this->isValidTagName($tagName))
 		{
 			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
 		}
@@ -517,7 +517,7 @@ class ConfigBuilder
 	*/
 	protected function normalizeAttributeName($attrName, $tagName = null)
 	{
-		if (!static::isValidAttributeName($attrName))
+		if (!$this->isValidAttributeName($attrName))
 		{
 			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
 		}
