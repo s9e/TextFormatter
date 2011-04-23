@@ -283,4 +283,23 @@ class BBCodesConfigTest extends Test
 		$this->assertTrue($this->cb->BBCodes->BBCodeExists('HR'));
 		$this->assertTrue($this->cb->BBCodes->getBBCodeOption('HR', 'autoClose'));
 	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_works_on_simple_BBCodes
+	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	*/
+	public function addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[A={URL}]{TEXT}[/A]',
+			'<a href="{URL}">{TEXT}</a>'
+		);
+
+		$this->assertTrue($this->cb->BBCodes->BBCodeExists('A'));
+		$this->assertSame('a', $this->cb->BBCodes->getBBCodeOption('A', 'defaultAttr'));
+
+		$this->assertTrue($this->cb->attributeExists('A', 'a'));
+		$this->assertSame('url', $this->cb->getTagAttributeOption('A', 'a', 'type'));
+	}
 }

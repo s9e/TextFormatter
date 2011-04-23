@@ -282,6 +282,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeFromExample works on simple BBCodes
  [x] addBBCodeFromExample allows a single start tag with no end tag and enables autoClose
  [x] addBBCodeFromExample allows a self closed tag and enables autoClose
+ [x] addBBCodeFromExample handles default attribute and gives it the same name as the tag
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple bbcodes are parsed

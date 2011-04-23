@@ -458,7 +458,7 @@ class ConfigBuilder
 	* @param  string $tagName
 	* @param  string $attrName
 	* @param  string $optionName
-	* @return mixed 
+	* @return mixed
 	*/
 	public function getTagAttributeOption($tagName, $attrName, $optionName)
 	{
