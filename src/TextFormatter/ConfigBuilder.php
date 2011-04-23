@@ -164,13 +164,13 @@ class ConfigBuilder
 	*
 	* @param  string $tagName
 	* @param  string $optionName
-	* @return array
+	* @return mixed
 	*/
 	public function getTagOption($tagName, $optionName)
 	{
 		$tagName = $this->normalizeTagName($tagName);
 
-		if (!isset($this->tags[$tagName][$optionName]))
+		if (!array_key_exists($optionName, $this->tags[$tagName]))
 		{
 			throw new InvalidArgumentException("Unknown option '" . $optionName . "' from tag '" . $tagName . "'");
 		}

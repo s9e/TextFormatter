@@ -15,6 +15,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Load plugin throws an exception on invalid plugin name
  [x] Load plugin throws an exception on unknown plugin
  [x] Can create tag
+ [x] Can create tag with option
  [x] Can tell if tag exists
  [x] Can remove tag
  [x] Can create attribute
@@ -44,6 +45,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getTagOptions fails on unknown tags
  [x] getTagOption fails on unknown tags
  [x] getTagOption fails on unset options
+ [x] getTagOption can return a null option
  [x] Can set tag template
  [x] Can set tag xsl
  [x] Cannot set tag template on unknown tag

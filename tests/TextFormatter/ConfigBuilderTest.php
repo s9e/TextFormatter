@@ -100,6 +100,18 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanCreateTag
 	*/
+	public function testCanCreateTagWithOption()
+	{
+		$this->cb->addTag('a', array('foo' => 'bar'));
+
+		$config = $this->cb->getTagsConfig();
+		$this->assertArrayHasKey('foo', $config['A']);
+		$this->assertSame('bar', $config['A']['foo']);
+	}
+
+	/**
+	* @depends testCanCreateTag
+	*/
 	public function testCanTellIfTagExists()
 	{
 		$this->cb->addTag('a');
@@ -265,6 +277,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanCreateTagWithOption
 	* @depends testCanCreateAttribute
 	*/
 	public function testCanCreateTagWithAttributes()
@@ -387,6 +400,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanCreateTagWithOption
 	* @depends testCanCreateRule
 	*/
 	public function testCanCreateTagWithRules()
@@ -489,6 +503,16 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
+	* @depends testCanCreateTag
+	*/
+	public function getTagOption_can_return_a_null_option()
+	{
+		$this->cb->addTag('a', array('bar' => null));
+		$this->assertNull($this->cb->getTagOption('a', 'bar'));
+	}
+
+	/**
 	* @depends testCanCreateTag
 	*/
 	public function testCanSetTagTemplate()
@@ -553,6 +577,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanCreateTagWithOption
 	* @depends testCanSetTagTemplate
 	*/
 	public function testCanCreateTagWithTemplate()
@@ -568,6 +593,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanCreateTagWithOption
 	* @depends testCanSetTagXsl
 	*/
 	public function testCanCreateTagWithXsl()
