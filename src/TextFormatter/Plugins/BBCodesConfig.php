@@ -100,9 +100,9 @@ class BBCodesConfig extends PluginConfig
 		*/
 		$bbcodeSpecificConfig = array(
 			'autoClose'   => 1,
+			'contentAttr' => 1,
 			'defaultAttr' => 1,
-			'tagName'     => 1,
-			'contentAttr' => 1
+			'tagName'     => 1
 		);
 
 		$bbcodeConfig = array_intersect_key($config, $bbcodeSpecificConfig);
@@ -123,21 +123,23 @@ class BBCodesConfig extends PluginConfig
 	public function addBBCodeAlias($bbcodeName, $tagName, array $bbcodeConfig = array())
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
-		$tagName    = $this->cb->normalizeTagName($tagName);
-
-		if (!$this->cb->tagExists($tagName))
-		{
-			throw new InvalidArgumentException("Tag '" . $tagName . "' does not exist");
-		}
 
 		if (isset($this->bbcodesConfig[$bbcodeName]))
 		{
 			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' already exists");
 		}
 
-		$bbcodeConfig['tagName'] = $tagName;
+		/**
+		* This line of code has two purposes: first, it ensure that the tag name passed as second
+		* parameter is not overwritten by the tagName element that may exist in $bbcodeConfig.
+		*
+		* Additionally, it ensures that tagName appears first in the array, so that it is available
+		* when other options are set.
+		*/
+		$bbcodeConfig = array('tagName' => $tagName) + $bbcodeConfig;
 
-		$this->bbcodesConfig[$bbcodeName] = $bbcodeConfig;
+		$this->bbcodesConfig[$bbcodeName] = array();
+		$this->setBBCodeOptions($bbcodeName, $bbcodeConfig);
 	}
 
 	/**
@@ -208,6 +210,20 @@ class BBCodesConfig extends PluginConfig
 	*/
 	public function setBBCodeOption($bbcodeName, $optionName, $optionValue)
 	{
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+
+		switch ($optionName)
+		{
+			case 'tagName':
+				$optionValue = $this->cb->normalizeTagName($optionValue);
+				break;
+
+			case 'defaultAttr':
+			case 'contentAttr':
+				$optionValue = $this->cb->normalizeAttributeName($optionValue);
+				break;
+		}
+
 		$this->bbcodesConfig[$bbcodeName][$optionName] = $optionValue;
 	}
 

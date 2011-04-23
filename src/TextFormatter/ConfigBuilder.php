@@ -515,7 +515,7 @@ class ConfigBuilder
 	*                          exception otherwise
 	* @return string           Normalized attribute name, in lowercase
 	*/
-	protected function normalizeAttributeName($attrName, $tagName = null)
+	public function normalizeAttributeName($attrName, $tagName = null)
 	{
 		if (!$this->isValidAttributeName($attrName))
 		{

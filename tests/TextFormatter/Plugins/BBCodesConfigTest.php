@@ -190,8 +190,8 @@ class BBCodesConfigTest extends Test
 	*/
 	public function Can_return_the_value_of_an_option_of_a_BBCode_even_if_it_is_null()
 	{
-		$this->cb->BBCodes->addBBCode('A', array('defaultAttr' => null));
-		$this->assertNull($this->cb->BBCodes->getBBCodeOption('A', 'defaultAttr'));
+		$this->cb->BBCodes->addBBCode('A', array('autoClose' => null));
+		$this->assertNull($this->cb->BBCodes->getBBCodeOption('A', 'autoClose'));
 	}
 
 	/**
