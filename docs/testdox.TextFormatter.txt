@@ -271,6 +271,12 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeAlias throws an exception if the BBCode already exists
  [x] addBBCodeAlias cannot create an alias to an invalid tag name
  [x] Can tell whether a BBCode exists
+ [x] Can return all options of a BBCode
+ [x] Can return the value of an option of a BBCode
+ [x] Can return the value of an option of a BBCode even if it is null
+ [x] getBBCodeOptions throws an exception if the BBCode does not exist
+ [x] getBBCodeOption throws an exception if the BBCode does not exist
+ [x] getBBCodeOption throws an exception if the option does not exist
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple bbcodes are parsed

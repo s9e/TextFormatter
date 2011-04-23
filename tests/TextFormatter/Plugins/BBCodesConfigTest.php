@@ -159,4 +159,72 @@ class BBCodesConfigTest extends Test
 		$this->cb->BBCodes->addBBCode('A');
 		$this->assertTrue($this->cb->BBCodes->bbcodeExists('A'));
 	}
+
+	/**
+	* @test
+	* @depends BBCodes_are_mapped_to_a_tag_of_the_same_name_by_default
+	*/
+	public function Can_return_all_options_of_a_BBCode()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+
+		$this->assertArrayMatches(
+			array('tagName' => 'A'),
+			$this->cb->BBCodes->getBBCodeOptions('A')
+		);
+	}
+
+	/**
+	* @test
+	* @depends BBCodes_are_mapped_to_a_tag_of_the_same_name_by_default
+	*/
+	public function Can_return_the_value_of_an_option_of_a_BBCode()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->assertSame('A', $this->cb->BBCodes->getBBCodeOption('A', 'tagName'));
+	}
+
+	/**
+	* @test
+	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	*/
+	public function Can_return_the_value_of_an_option_of_a_BBCode_even_if_it_is_null()
+	{
+		$this->cb->BBCodes->addBBCode('A', array('defaultAttr' => null));
+		$this->assertNull($this->cb->BBCodes->getBBCodeOption('A', 'defaultAttr'));
+	}
+
+	/**
+	* @test
+	* @depends Can_return_all_options_of_a_BBCode
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage BBCode 'A' does not exist
+	*/
+	public function getBBCodeOptions_throws_an_exception_if_the_BBCode_does_not_exist()
+	{
+		$this->cb->BBCodes->getBBCodeOptions('A');
+	}
+
+	/**
+	* @test
+	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage BBCode 'A' does not exist
+	*/
+	public function getBBCodeOption_throws_an_exception_if_the_BBCode_does_not_exist()
+	{
+		$this->cb->BBCodes->getBBCodeOption('A', 'tagName');
+	}
+
+	/**
+	* @test
+	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown option 'XYZ' from BBCode 'A'
+	*/
+	public function getBBCodeOption_throws_an_exception_if_the_option_does_not_exist()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->BBCodes->getBBCodeOption('A', 'XYZ');
+	}
 }

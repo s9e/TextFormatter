@@ -55,6 +55,26 @@ class BBCodesConfig extends PluginConfig
 	*/
 	protected $bbcodesConfig = array();
 
+	public function getConfig()
+	{
+		if (empty($this->bbcodesConfig))
+		{
+			return false;
+		}
+
+		/**
+		* Build the regexp that matches all the BBCode names, then remove the extraneous
+		* non-capturing expression around it
+		*/
+		$regexp = ConfigBuilder::buildRegexpFromList(array_keys($this->bbcodesConfig));
+		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
+
+		return array(
+			'bbcodesConfig' => $this->bbcodesConfig,
+			'regexp'        => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#i'
+		);
+	}
+
 	/**
 	* Create a new BBCode and its corresponding tag
 	*
@@ -67,7 +87,7 @@ class BBCodesConfig extends PluginConfig
 	*/
 	public function addBBCode($bbcodeName, array $config = array())
 	{
-		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
 
 		if (isset($this->bbcodesConfig[$bbcodeName]))
 		{
@@ -102,8 +122,13 @@ class BBCodesConfig extends PluginConfig
 	*/
 	public function addBBCodeAlias($bbcodeName, $tagName, array $bbcodeConfig = array())
 	{
-		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
 		$tagName    = $this->cb->normalizeTagName($tagName);
+
+		if (!$this->cb->tagExists($tagName))
+		{
+			throw new InvalidArgumentException("Tag '" . $tagName . "' does not exist");
+		}
 
 		if (isset($this->bbcodesConfig[$bbcodeName]))
 		{
@@ -123,9 +148,41 @@ class BBCodesConfig extends PluginConfig
 	*/
 	public function bbcodeExists($bbcodeName)
 	{
-		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
 
 		return isset($this->bbcodesConfig[$bbcodeName]);
+	}
+
+	/**
+	* Return all of a BBCode's options
+	*
+	* @param  string $bbcodeName
+	* @return array
+	*/
+	public function getBBCodeOptions($bbcodeName)
+	{
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+
+		return $this->bbcodesConfig[$bbcodeName];
+	}
+
+	/**
+	* Return a BBCode's option
+	*
+	* @param  string $bbcodeName
+	* @param  string $optionName
+	* @return mixed
+	*/
+	public function getBBCodeOption($bbcodeName, $optionName)
+	{
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+
+		if (!array_key_exists($optionName, $this->bbcodesConfig[$bbcodeName]))
+		{
+			throw new InvalidArgumentException("Unknown option '" . $optionName . "' from BBCode '" . $bbcodeName . "'");
+		}
+
+		return $this->bbcodesConfig[$bbcodeName][$optionName];
 	}
 
 	/**
@@ -154,34 +211,18 @@ class BBCodesConfig extends PluginConfig
 		$this->bbcodesConfig[$bbcodeName][$optionName] = $optionValue;
 	}
 
-	public function getConfig()
-	{
-		if (empty($this->bbcodesConfig))
-		{
-			return false;
-		}
-
-		/**
-		* Build the regexp that matches all the BBCode names, then remove the extraneous
-		* non-capturing expression around it
-		*/
-		$regexp = ConfigBuilder::buildRegexpFromList(array_keys($this->bbcodesConfig));
-		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
-
-		return array(
-			'bbcodesConfig' => $this->bbcodesConfig,
-			'regexp'        => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#i'
-		);
-	}
-
+	/**
+	* Add a BBCode defined in the PredefinedBBCodes class
+	*
+	* @param string $bbcodeName
+	*/
 	public function addPredefinedBBCode($bbcodeName)
 	{
-		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
+		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
 
 		if (!isset($this->predefinedBBCodes))
 		{
-			$className = implode('\\', array_slice(explode('\\', __NAMESPACE__), 0, -1))
-					   . '\\PredefinedBBCodes';
+			$className = 's9e\\Toolkit\\TextFormatter\\PredefinedBBCodes';
 
 			if (!class_exists($className))
 			{
@@ -204,6 +245,14 @@ class BBCodesConfig extends PluginConfig
 		call_user_func_array($callback, array_slice(func_get_args(), 1));
 	}
 
+	/**
+	* Create a BBCode defined based on a given example
+	*
+	* @param string $def     Definition
+	* @param string $tpl     Template
+	* @param int    $flags
+	* @param array  $options Additional BBCode options
+	*/
 	public function addBBCodeFromExample($def, $tpl, $flags = 0, array $options = array())
 	{
 		$def = $this->parseBBCodeDefinition($def);
@@ -581,16 +630,24 @@ class BBCodesConfig extends PluginConfig
 	* Validate and normalize a BBCode name
 	*
 	* @param  string $bbcodeName Original BBCode name
+	* @param  bool   $mustExist  If TRUE, throw an exception if the BBCode does not exist
 	* @return string             Normalized BBCode name, in uppercase
 	*/
-	protected function normalizeBBCodeName($bbcodeName)
+	protected function normalizeBBCodeName($bbcodeName, $mustExist = true)
 	{
 		if (!$this->isValidBBCodeName($bbcodeName))
 		{
 			throw new InvalidArgumentException ("Invalid BBCode name '" . $bbcodeName . "'");
 		}
 
-		return strtoupper($bbcodeName);
+		$bbcodeName = strtoupper($bbcodeName);
+
+		if ($mustExist && !isset($this->bbcodesConfig[$bbcodeName]))
+		{
+			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' does not exist");
+		}
+
+		return $bbcodeName;
 	}
 
 	/**
