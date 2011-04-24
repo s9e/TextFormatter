@@ -280,6 +280,12 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] setBBCodeOption cannot set a defaultAttr with an invalid name
  [x] setBBCodeOption cannot set a contentAttr with an invalid name
  [x] addBBCodeFromExample works on simple BBCodes
+ [x] addBBCodeFromExample throws an exception if the definition is malformed
+ [x] addBBCodeFromExample throws an exception if the template is not wellformed XML
+ [x] addBBCodeFromExample throws an exception if an undefined placeholder is found in an attribute
+ [x] addBBCodeFromExample throws an exception if an undefined placeholder is found anywhere
+ [x] addBBCodeFromExample throws an exception if a TEXT placeholder is found in an attribute
+ [x] addBBCodeFromExample does not throw an exception if a TEXT placeholder is found in an attribute but ALLOW INSECURE TEMPLATES flag is set
  [x] addBBCodeFromExample allows a single start tag with no end tag and enables autoClose
  [x] addBBCodeFromExample allows a self closed tag and enables autoClose
  [x] addBBCodeFromExample handles default attribute and gives it the same name as the tag

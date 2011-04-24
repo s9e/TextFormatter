@@ -2,7 +2,8 @@
 
 namespace s9e\Toolkit\Tests\TextFormatter\Plugins;
 
-use s9e\Toolkit\Tests\Test;
+use s9e\Toolkit\Tests\Test,
+	s9e\Toolkit\TextFormatter\ConfigBuilder;
 
 include_once __DIR__ . '/../../Test.php';
 
@@ -258,6 +259,68 @@ class BBCodesConfigTest extends Test
 	{
 		$this->cb->BBCodes->addBBCodeFromExample('[B]{TEXT}[/B]', '<b>{TEXT}</b>');
 		$this->assertTrue($this->cb->BBCodes->BBCodeExists('B'));
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Cannot interpret the BBCode definition
+	*/
+	public function addBBCodeFromExample_throws_an_exception_if_the_definition_is_malformed()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[foo==]{TEXT}[/foo]', '');
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid XML in template - error was: Premature end of data
+	*/
+	public function addBBCodeFromExample_throws_an_exception_if_the_template_is_not_wellformed_XML()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[HR][/HR]', '<hr>');
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Undefined placeholder {ID} found in template
+	*/
+	public function addBBCodeFromExample_throws_an_exception_if_an_undefined_placeholder_is_found_in_an_attribute()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[B][/B]', '<b id="{ID}"></b>');
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Undefined placeholder {TEXT} found in template
+	*/
+	public function addBBCodeFromExample_throws_an_exception_if_an_undefined_placeholder_is_found_anywhere()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[B][/B]', '<b>{TEXT}{</b>');
+	}
+
+	/**
+	* @test
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage ALLOW_INSECURE_TEMPLATES
+	*/
+	public function addBBCodeFromExample_throws_an_exception_if_a_TEXT_placeholder_is_found_in_an_attribute()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[B={TEXT}][/B]', '<b id="{TEXT}"></b>');
+	}
+
+	/**
+	* @test
+	*/
+	public function addBBCodeFromExample_does_not_throw_an_exception_if_a_TEXT_placeholder_is_found_in_an_attribute_but_ALLOW_INSECURE_TEMPLATES_flag_is_set()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={TEXT}][/B]',
+			'<b id="{TEXT}"></b>',
+			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+		);
 	}
 
 	/**

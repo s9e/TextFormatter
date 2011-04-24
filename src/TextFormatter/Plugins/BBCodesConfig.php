@@ -342,7 +342,7 @@ class BBCodesConfig extends PluginConfig
 
 					if (!isset($placeholders[$identifier]))
 					{
-						throw new InvalidArgumentException('Unknown placeholder ' . $identifier . ' found in template');
+						throw new InvalidArgumentException('Undefined placeholder {' . $identifier . '} found in template');
 					}
 
 					if (!($flags & ConfigBuilder::ALLOW_INSECURE_TEMPLATES)
@@ -368,7 +368,7 @@ class BBCodesConfig extends PluginConfig
 
 				if (!isset($placeholders[$identifier]))
 				{
-					throw new InvalidArgumentException('Unknown placeholder ' . $identifier . ' found in template');
+					throw new InvalidArgumentException('Undefined placeholder {' . $identifier . '} found in template');
 				}
 
 				if ($placeholders[$identifier][0] !== '@')
