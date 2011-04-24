@@ -13,8 +13,8 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Loads plugin on magic get
  [x] Has a magic property predefinedTags that loads and creates an instance of PredefinedTags
  [x] Throws an exception on unsupported magic get
- [x] Load plugin throws an exception on invalid plugin name
- [x] Load plugin throws an exception on unknown plugin
+ [x] loadPlugin throws an exception on invalid plugin name
+ [x] loadPlugin throws an exception on unknown plugin
  [x] Can create tag
  [x] Can create tag with option
  [x] Can tell if tag exists

@@ -74,19 +74,21 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid plugin name "../foo"
 	*/
-	public function testLoadPluginThrowsAnExceptionOnInvalidPluginName()
+	public function loadPlugin_throws_an_exception_on_invalid_plugin_name()
 	{
 		$this->cb->loadPlugin('../foo');
 	}
 
 	/**
+	* @test
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Class 's9e\Toolkit\TextFormatter\Plugins\FoobarConfig' not found
 	*/
-	public function testLoadPluginThrowsAnExceptionOnUnknownPlugin()
+	public function loadPlugin_throws_an_exception_on_unknown_plugin()
 	{
 		$this->cb->loadPlugin('Foobar');
 	}
