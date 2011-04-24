@@ -77,4 +77,20 @@ class AutoloadersTest extends Test
 			$this->cb->getRenderer()
 		);
 	}
+
+	/**
+	* @test
+	* @runInSeparateProcess
+	*/
+	public function BBCodesConfig_addPredefinedBBCode_autoloads_PredefinedBBCodes()
+	{
+		if (class_exists('s9e\\Toolkit\\TextFormatter\\PredefinedBBCodes', false))
+		{
+			$this->markTestSkipped();
+			return;
+		}
+
+		$this->cb->BBCodes->addPredefinedBBCode('B');
+		$this->assertTrue(class_exists('s9e\\Toolkit\\TextFormatter\\PredefinedBBCodes', false));
+	}
 }

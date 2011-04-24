@@ -4,6 +4,7 @@ s9e\Toolkit\Tests\TextFormatter\Autoloaders
  [x] ConfigBuilder does not include Parser twice
  [x] ConfigBuilder can autoload Renderer
  [x] ConfigBuilder does not include Renderer twice
+ [x] BBCodesConfig addPredefinedBBCode autoloads PredefinedBBCodes
 
 s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can load plugins
