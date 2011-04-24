@@ -253,11 +253,6 @@ class BBCodesConfig extends PluginConfig
 			'add' . $bbcodeName
 		);
 
-		if (!is_callable($callback))
-		{
-			throw new InvalidArgumentException('Unknown BBCode ' . $bbcodeName);
-		}
-
 		call_user_func_array($callback, array_slice(func_get_args(), 1));
 	}
 

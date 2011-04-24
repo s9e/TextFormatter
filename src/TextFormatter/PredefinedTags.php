@@ -348,10 +348,10 @@ class PredefinedTags
 	* A simple implementation of a [CODE] tag
 	*
 	* It has one default, optional parameter "stx" and it's designed to work with Alex Gorbatchev's
-	* SyntaxHighlighter library. See getCODEstx() for an example of how to retrieve the list of
-	* syntaxes used so that you can load the appropriate brushes.
+	* SyntaxHighlighter library. See PredefinedTags::getUsedCodeStx() for an example of how to
+	* retrieve the list of syntaxes used so that you can load the appropriate brushes.
 	*
-	* @see  getCODEstx
+	* @see  getUsedCodeStx
 	* @link http://alexgorbatchev.com/SyntaxHighlighter/
 	*/
 	public function addCODE()
@@ -374,7 +374,7 @@ class PredefinedTags
 		);
 	}
 
-	static public function getCODEstx($xml)
+	static public function getUsedCodeStx($xml)
 	{
 		// array_values() will reset the keys so that there's no gap in numbering, just in case
 		return array_values(array_unique(

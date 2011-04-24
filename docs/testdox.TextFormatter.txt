@@ -238,8 +238,9 @@ s9e\Toolkit\Tests\TextFormatter\PluginConfig
  [x] Overrides properties with values passed in second parameter
 
 s9e\Toolkit\Tests\TextFormatter\PredefinedBBCodes
- [x] Get c o d estx
- [x] Predefined b b codes
+ [x] Throws an exception if the BBCode does not exist
+ [x] getUsedCodeStx returns all values of stx in CODE tags
+ [x] Predefined BBCodes
 
 s9e\Toolkit\Tests\TextFormatter\Renderer
  [x] Render multi

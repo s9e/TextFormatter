@@ -17,7 +17,20 @@ include_once __DIR__ . '/../Test.php';
 */
 class PredefinedBBCodesTest extends Test
 {
-	public function testGetCODEstx()
+	/**
+	* @test
+	* @expectedException BadMethodCallException
+	* @expectedExceptionMessage Undefined BBCode 'XYZ'
+	*/
+	public function Throws_an_exception_if_the_BBCode_does_not_exist()
+	{
+		$this->cb->BBCodes->addPredefinedBBCode('XYZ');
+	}
+
+	/**
+	* @test
+	*/
+	public function getUsedCodeStx_returns_all_values_of_stx_in_CODE_tags()
 	{
 		$cb = new ConfigBuilder;
 		$cb->BBCodes->addPredefinedBBCode('CODE');
@@ -26,14 +39,15 @@ class PredefinedBBCodesTest extends Test
 
 		$this->assertEquals(
 			array('php', 'html'),
-			PredefinedTags::getCODEstx($xml)
+			PredefinedTags::getUsedCodeStx($xml)
 		);
 	}
 
 	/**
+	* @test
 	* @dataProvider provider
 	*/
-	public function testPredefinedBBCodes($text, $expected, $expectedLog = array(), $args = array())
+	public function Predefined_BBCodes($text, $expected, $expectedLog = array(), $args = array())
 	{
 		preg_match('#(?<=\\[)[a-z_0-9]+#i', $text, $m);
 		array_unshift($args, $m[0]);

@@ -7,7 +7,8 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
-use RuntimeException;
+use BadMethodCallException,
+    RuntimeException;
 
 /**
 * This class attempts to hold the definitions of the most commonly requested BBCodes.
@@ -43,6 +44,11 @@ class PredefinedBBCodes
 	{
 		if (!$this->cb->tagExists($tagName))
 		{
+			if (!method_exists($this->cb->predefinedTags, 'add' . $tagName))
+			{
+				throw new BadMethodCallException("Undefined BBCode '" . $tagName . "'");
+			}
+
 			call_user_func_array(
 				array($this->cb->predefinedTags, 'add' . $tagName),
 				$callParams
@@ -189,10 +195,10 @@ class PredefinedBBCodes
 	* A simple implementation of a [CODE] tag
 	*
 	* It has one default, optional parameter "stx" and it's designed to work with Alex Gorbatchev's
-	* SyntaxHighlighter library. See getCODEstx() for an example of how to retrieve the list of
-	* syntaxes used so that you can load the appropriate brushes.
+	* SyntaxHighlighter library. See PredefinedTags::getUsedCodeStx() for an example of how to
+	* retrieve the list of syntaxes used so that you can load the appropriate brushes.
 	*
-	* @see  getCODEstx
+	* @see  PredefinedTags::getUsedCodeStx
 	* @link http://alexgorbatchev.com/SyntaxHighlighter/
 	*/
 	public function addCODE()
