@@ -47,29 +47,22 @@ class PredefinedBBCodesTest extends Test
 	* @test
 	* @dataProvider provider
 	*/
-	public function Predefined_BBCodes($text, $expected, $expectedLog = array(), $args = array())
+	public function Predefined_BBCodes($text, $expectedHtml, $expectedLog = null, $args = array())
 	{
 		preg_match('#(?<=\\[)[a-z_0-9]+#i', $text, $m);
 		array_unshift($args, $m[0]);
 
-		$cb = new ConfigBuilder;
-		call_user_func_array(array($cb->BBCodes, 'addPredefinedBBCode'), $args);
+		call_user_func_array(array($this->cb->BBCodes, 'addPredefinedBBCode'), $args);
 
-		$parser = $cb->getParser();
-		$xml = $parser->parse($text);
-
-		$actual = $cb->getRenderer()->render($xml);
-		$this->assertSame($expected, $actual);
+		$actualHtml = $this->renderer->render($this->parser->parse($text));
+		$this->assertSame($expectedHtml, $actualHtml);
 
 		if (isset($expectedLog))
 		{
-			$actualLog = $parser->getLog();
-
-			foreach (array_keys($expectedLog) as $type)
-			{
-				$this->assertArrayHasKey($type, $actualLog);
-				$this->assertEquals($expectedLog[$type], $actualLog[$type]);
-			}
+			$this->assertArrayMatches(
+				$expectedLog,
+				$this->parser->getLog()
+			);
 		}
 	}
 
