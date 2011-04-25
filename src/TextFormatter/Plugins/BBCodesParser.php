@@ -240,7 +240,7 @@ class BBCodesParser extends PluginParser
 								/**
 								* No matching quote, apparently that string never ends...
 								*/
-								$this->parser->log('error', array(
+								$this->parser->log('warning', array(
 									'pos' => $valuePos - 1,
 									'msg' => 'Could not find matching quote'
 								));

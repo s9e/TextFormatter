@@ -335,6 +335,21 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] An unterminated BBCode with an attribute name that extends till the end of the text is ignored
  [x] Junk characters at the start of an attribute name are detected
  [x] Junk characters in an attribute name are detected
+ [x] Attribute values can be enclosed within single quotes
+ [x] Attribute values can be enclosed within double quotes
+ [x] Attribute values within single quotes can contain spaces
+ [x] Attribute values within double quotes can contain spaces
+ [x] Attribute values within single quotes can contain single quotes each escaped with a backslash
+ [x] Attribute values within double quotes can contain double quotes each escaped with a backslash
+ [x] Attribute values within single quotes can contain unescaped double quotes
+ [x] Attribute values within double quotes can contain unescaped single quotes
+ [x] Attribute values within single quotes can contain backslashes each escaped with another backslash
+ [x] Attribute values within double quotes can contain backslashes each escaped with another backslash
+ [x] Attribute values within single quotes can contain newlines
+ [x] Attribute values within double quotes can contain newlines
+ [x] An attribute value not within quotes cannot contain spaces
+ [x] An attribute value not within quotes cannot contain newlines
+ [x] An unterminated attribute that start with a quote generates a warning
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] getConfig returns false if no words were added

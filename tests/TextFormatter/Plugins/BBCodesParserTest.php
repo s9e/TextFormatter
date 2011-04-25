@@ -301,4 +301,222 @@ class BBCodesParserTest extends Test
 			)
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_can_be_enclosed_within_single_quotes()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x='abc' /]",
+			'<rt><X x="abc">[X x=\'abc\' /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_can_be_enclosed_within_double_quotes()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X x="abc" /]',
+			'<rt><X x="abc">[X x="abc" /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_single_quotes_can_contain_spaces()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x=' a b c ' /]",
+			'<rt><X x=" a b c ">[X x=\' a b c \' /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_double_quotes_can_contain_spaces()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X x=" a b c " /]',
+			'<rt><X x=" a b c ">[X x=" a b c " /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_single_quotes_can_contain_single_quotes_each_escaped_with_a_backslash()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x='\\'a\\'b\\'c\\'' /]",
+			"<rt><X x=\"'a'b'c'\">[X x='\\'a\\'b\\'c\\'' /]</X></rt>"
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_double_quotes_can_contain_double_quotes_each_escaped_with_a_backslash()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X x="\\"a\\"b\\"c\\"" /]',
+			'<rt><X x="&quot;a&quot;b&quot;c&quot;">[X x="\\"a\\"b\\"c\\"" /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_single_quotes_can_contain_unescaped_double_quotes()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X x=\'"a"b"c"\' /]',
+			'<rt><X x="&quot;a&quot;b&quot;c&quot;">[X x=\'"a"b"c"\' /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_double_quotes_can_contain_unescaped_single_quotes()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x=\"'a'b'c'\" /]",
+			"<rt><X x=\"'a'b'c'\">[X x=\"'a'b'c'\" /]</X></rt>"
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_single_quotes_can_contain_backslashes_each_escaped_with_another_backslash()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x='\\\\a\\\\b\\\\c\\\\' /]",
+			'<rt><X x="\\a\\b\\c\\">[X x=\'\\\\a\\\\b\\\\c\\\\\' /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_double_quotes_can_contain_backslashes_each_escaped_with_another_backslash()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X x="\\\\a\\\\b\\\\c\\\\" /]',
+			'<rt><X x="\\a\\b\\c\\">[X x="\\\\a\\\\b\\\\c\\\\" /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_single_quotes_can_contain_newlines()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x='\na\nb\nc\n' /]",
+			"<rt><X x=\"&#10;a&#10;b&#10;c&#10;\">[X x='\na\nb\nc\n' /]</X></rt>"
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Attribute_values_within_double_quotes_can_contain_newlines()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x=\"\na\nb\nc\n\" /]",
+			"<rt><X x=\"&#10;a&#10;b&#10;c&#10;\">[X x=\"\na\nb\nc\n\" /]</X></rt>"
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function An_attribute_value_not_within_quotes_cannot_contain_spaces()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x=a b /]",
+			"<pt>[X x=a b /]</pt>"
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function An_attribute_value_not_within_quotes_cannot_contain_newlines()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x=a\nb /]",
+			"<pt>[X x=a\nb /]</pt>"
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function An_unterminated_attribute_that_start_with_a_quote_generates_a_warning()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			"[X x='a /]",
+			"<pt>[X x='a /]</pt>",
+			array(
+				'warning' => array(
+					array(
+						'pos' => 5,
+						'msg' => 'Could not find matching quote'
+					)
+				)
+			)
+		);
+	}
 }
