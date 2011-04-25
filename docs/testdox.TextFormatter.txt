@@ -350,6 +350,9 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] An attribute value not within quotes cannot contain spaces
  [x] An attribute value not within quotes cannot contain newlines
  [x] An unterminated attribute that start with a quote generates a warning
+ [x] Malformed BBCodes are ignored
+ [x] A BBCode with autoClose enabled is automatically closed after the start tag
+ [x] A BBCode with autoClose enabled is not automatically closed after the start tag if it is immediately followed by its end tag
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] getConfig returns false if no words were added

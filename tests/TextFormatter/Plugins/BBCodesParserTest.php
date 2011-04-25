@@ -58,7 +58,10 @@ class BBCodesParserTest extends Test
 		);
 	}
 
-	public function testOverlappingTagsAreSortedOut()
+	/**
+	* @test
+	*/
+	public function Overlapping_tags_are_sorted_out()
 	{
 		$this->cb->BBCodes->addBBCode(
 			'x',
@@ -171,7 +174,10 @@ class BBCodesParserTest extends Test
 		);
 	}
 
-	public function testAnEqualSignFollowingTheTagNameDefinesTheValueOfTheDefaultAttribute()
+	/**
+	* @test
+	*/
+	public function An_equal_sign_following_the_tag_name_defines_the_value_of_the_default_attribute()
 	{
 		$this->cb->BBCodes->addBBCode('X', array(
 			'defaultAttr' => 'z'
@@ -188,7 +194,7 @@ class BBCodesParserTest extends Test
 	/**
 	* @test
 	* @depends A_BBCode_can_map_to_a_tag_of_a_different_name
-	* @depends testAnEqualSignFollowingTheTagNameDefinesTheValueOfTheDefaultAttribute
+	* @depends An_equal_sign_following_the_tag_name_defines_the_value_of_the_default_attribute
 	*/
 	public function If_no_default_attribute_is_specified_the_name_of_the_BBCode_is_used_as_the_name_of_the_default_attribute()
 	{
@@ -517,6 +523,45 @@ class BBCodesParserTest extends Test
 					)
 				)
 			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Malformed_BBCodes_are_ignored()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$this->assertParsing(
+			'[X ',
+			'<pt>[X </pt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function A_BBCode_with_autoClose_enabled_is_automatically_closed_after_the_start_tag()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('autoClose' => true));
+
+		$this->assertParsing(
+			'xxx[X]xxx',
+			'<rt>xxx<X>[X]</X>xxx</rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function A_BBCode_with_autoClose_enabled_is_not_automatically_closed_after_the_start_tag_if_it_is_immediately_followed_by_its_end_tag()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('autoClose' => true));
+
+		$this->assertParsing(
+			'xxx[X][/X]xxx',
+			'<rt>xxx<X><st>[X]</st><et>[/X]</et></X>xxx</rt>'
 		);
 	}
 }
