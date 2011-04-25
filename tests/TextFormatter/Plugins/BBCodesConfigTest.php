@@ -370,7 +370,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
 	*/
-	public function addBBCodeFromExample_handles_single_preFilter_callback_in_attributes()
+	public function addBBCodeFromExample_handles_single_preFilter_callback_in_attribute()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[B={ID;preFilter=strtolower}]{TEXT}[/B]',
@@ -387,9 +387,9 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
-	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attributes
+	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attribute
 	*/
-	public function addBBCodeFromExample_handles_multiple_preFilter_callbacks_in_attributes()
+	public function addBBCodeFromExample_handles_multiple_preFilter_callbacks_in_attribute()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[B={ID;preFilter=strtolower,ucfirst}]{TEXT}[/B]',
@@ -407,11 +407,11 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
-	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attributes
+	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attribute
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Callback 'system' is not allowed
 	*/
-	public function addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attributes()
+	public function addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attribute()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[B={ID;preFilter=system}]{TEXT}[/B]',
@@ -423,7 +423,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
 	*/
-	public function addBBCodeFromExample_handles_single_postFilter_callback_in_attributes()
+	public function addBBCodeFromExample_handles_single_postFilter_callback_in_attribute()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[B={ID;postFilter=strtolower}]{TEXT}[/B]',
@@ -440,9 +440,9 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
-	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attributes
+	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attribute
 	*/
-	public function addBBCodeFromExample_handles_multiple_postFilter_callbacks_in_attributes()
+	public function addBBCodeFromExample_handles_multiple_postFilter_callbacks_in_attribute()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[B={ID;postFilter=strtolower,ucfirst}]{TEXT}[/B]',
@@ -460,11 +460,11 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
-	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attributes
+	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attribute
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Callback 'system' is not allowed
 	*/
-	public function addBBCodeFromExample_rejects_unauthorized_postFilter_callbacks_in_attributes()
+	public function addBBCodeFromExample_rejects_unauthorized_postFilter_callbacks_in_attribute()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[B={ID;postFilter=system}]{TEXT}[/B]',
@@ -474,7 +474,7 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
-	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attributes
+	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attribute
 	*/
 	public function Custom_callbacks_can_be_added_via_BBCodesConfig_allowPhaseFiltersCallback()
 	{
@@ -500,7 +500,7 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
-	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attributes
+	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attribute
 	*/
 	public function Static_method_callbacks_can_be_added_via_BBCodesConfig_allowPhaseFiltersCallback()
 	{
