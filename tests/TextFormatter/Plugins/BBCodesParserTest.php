@@ -12,7 +12,10 @@ include_once __DIR__ . '/../../Test.php';
 */
 class BBCodesParserTest extends Test
 {
-	public function testSimpleBbcodesAreParsed()
+	/**
+	* @test
+	*/
+	public function Simple_BBcodes_are_parsed()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
@@ -23,9 +26,10 @@ class BBCodesParserTest extends Test
 	}
 
 	/**
-	* @depends testSimpleBbcodesAreParsed
+	* @test
+	* @depends Simple_BBcodes_are_parsed
 	*/
-	public function testBbcodeNamesAreCaseInsensitive()
+	public function BBCode_names_are_case_insensitive()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
@@ -36,9 +40,10 @@ class BBCodesParserTest extends Test
 	}
 
 	/**
-	* @depends testSimpleBbcodesAreParsed
+	* @test
+	* @depends Simple_BBcodes_are_parsed
 	*/
-	public function testBbcodesRemovedFromTheConfigAreIgnored()
+	public function BBCodes_removed_from_the_config_are_ignored()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
@@ -66,7 +71,10 @@ class BBCodesParserTest extends Test
 		);
 	}
 
-	public function testBbcodeTagsCanUseAColonFollowedByDigitsAsASuffixToControlHowStartTagsAndEndTagsArePaired()
+	/**
+	* @test
+	*/
+	public function BBCode_tags_can_use_a_colon_followed_by_digits_as_a_suffix_to_control_how_start_tags_and_end_tags_are_paired()
 	{
 		$this->cb->BBCodes->addBBCode('B', array('nestingLimit' => 1));
 
@@ -77,9 +85,10 @@ class BBCodesParserTest extends Test
 	}
 
 	/**
-	* @depends testSimpleBbcodesAreParsed
+	* @test
+	* @depends Simple_BBcodes_are_parsed
 	*/
-	public function testBbcodeTagsCanBeUsedAsSingletonsLikeSelfClosingXmlTags()
+	public function BBCode_tags_can_be_used_as_singletons_like_self_closing_XML_tags()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
@@ -90,9 +99,10 @@ class BBCodesParserTest extends Test
 	}
 
 	/**
-	* @depends testBbcodeTagsCanBeUsedAsSingletonsLikeSelfClosingXmlTags
+	* @test
+	* @depends BBCode_tags_can_be_used_as_singletons_like_self_closing_XML_tags
 	*/
-	public function testWhitespaceInsideBbcodesIsIgnored()
+	public function Whitespace_inside_BBCodes_is_ignored()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
@@ -103,9 +113,10 @@ class BBCodesParserTest extends Test
 	}
 
 	/**
-	* @depends testBbcodeTagsCanBeUsedAsSingletonsLikeSelfClosingXmlTags
+	* @test
+	* @depends BBCode_tags_can_be_used_as_singletons_like_self_closing_XML_tags
 	*/
-	public function testJunkAfterTheSlashOfASelfClosingBbcodeTagGeneratesAWarning()
+	public function Junk_after_the_slash_of_a_self_closing_BBCode_tag_generates_a_warning()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
@@ -125,9 +136,10 @@ class BBCodesParserTest extends Test
 	}
 
 	/**
-	* @depends testSimpleBbcodesAreParsed
+	* @test
+	* @depends Simple_BBcodes_are_parsed
 	*/
-	public function testJunkAfterTheNameOfAClosingBbcodeTagGeneratesAWarning()
+	public function Junk_after_the_name_of_a_closing_bbcode_tag_generates_a_warning()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 
@@ -146,7 +158,10 @@ class BBCodesParserTest extends Test
 		);
 	}
 
-	public function testABbcodeCanMapToATagOfADifferentName()
+	/**
+	* @test
+	*/
+	public function A_BBCode_can_map_to_a_tag_of_a_different_name()
 	{
 		$this->cb->BBCodes->addBBCode('X', array('tagName' => 'Z'));
 
@@ -171,10 +186,11 @@ class BBCodesParserTest extends Test
 	}
 
 	/**
-	* @depends testABbcodeCanMapToATagOfADifferentName
+	* @test
+	* @depends A_BBCode_can_map_to_a_tag_of_a_different_name
 	* @depends testAnEqualSignFollowingTheTagNameDefinesTheValueOfTheDefaultAttribute
 	*/
-	public function testIfNoDefaultAttributeIsSpecifiedTheNameOfTheBbcodeIsUsedAsTheNameOfTheDefaultAttribute()
+	public function If_no_default_attribute_is_specified_the_name_of_the_BBCode_is_used_as_the_name_of_the_default_attribute()
 	{
 		$this->cb->BBCodes->addBBCode('X', array('tagName' => 'Z'));
 

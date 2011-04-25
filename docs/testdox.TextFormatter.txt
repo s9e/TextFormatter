@@ -318,18 +318,18 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeFromExample handles CHOICE placeholders with Unicode values
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
- [x] Simple bbcodes are parsed
- [x] Bbcode names are case insensitive
- [x] Bbcodes removed from the config are ignored
+ [x] Simple BBcodes are parsed
+ [x] BBCode names are case insensitive
+ [x] BBCodes removed from the config are ignored
  [x] Overlapping tags are sorted out
- [x] Bbcode tags can use a colon followed by digits as a suffix to control how start tags and end tags are paired
- [x] Bbcode tags can be used as singletons like self closing xml tags
- [x] Whitespace inside bbcodes is ignored
- [x] Junk after the slash of a self closing bbcode tag generates a warning
+ [x] BBCode tags can use a colon followed by digits as a suffix to control how start tags and end tags are paired
+ [x] BBCode tags can be used as singletons like self closing XML tags
+ [x] Whitespace inside BBCodes is ignored
+ [x] Junk after the slash of a self closing BBCode tag generates a warning
  [x] Junk after the name of a closing bbcode tag generates a warning
- [x] A bbcode can map to a tag of a different name
+ [x] A BBCode can map to a tag of a different name
  [x] An equal sign following the tag name defines the value of the default attribute
- [x] If no default attribute is specified the name of the bbcode is used as the name of the default attribute
+ [x] If no default attribute is specified the name of the BBCode is used as the name of the default attribute
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] getConfig returns false if no words were added
