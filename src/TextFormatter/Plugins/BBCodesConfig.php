@@ -24,25 +24,26 @@ class BBCodesConfig extends PluginConfig
 	*            system, etc...
 	*/
 	public $bbcodeFiltersAllowedCallbacks = array(
-		'strtolower',
-		'strtoupper',
+		'addcslashes',
+		'addslashes',
+		'html_entity_decode',
+		'htmlentities',
+		'htmlspecialchars',
+		'intval',
+		'ltrim',
 		'mb_strtolower',
 		'mb_strtoupper',
-		'ucfirst',
-		'ucwords',
-		'ltrim',
 		'rtrim',
-		'trim',
-		'htmlspecialchars',
-		'htmlentities',
-		'html_entity_decode',
-		'addslashes',
-		'stripslashes',
-		'addcslashes',
+		'str_rot13',
 		'stripcslashes',
-		'intval',
+		'stripslashes',
+		'strrev',
+		'strtolower',
 		'strtotime',
-		'strrev'
+		'strtoupper',
+		'trim',
+		'ucfirst',
+		'ucwords'
 	);
 
 	/**
@@ -525,7 +526,7 @@ class BBCodesConfig extends PluginConfig
 						case 'postFilter':
 							foreach (explode(',', $optionValue) as $callback)
 							{
-								if (!in_array($callback, $this->bbcodeFiltersAllowedCallbacks))
+								if (!in_array($callback, $this->bbcodeFiltersAllowedCallbacks, true))
 								{
 									throw new RuntimeException('Callback ' . $callback . ' is not allowed');
 								}
