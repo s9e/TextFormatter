@@ -564,4 +564,63 @@ class BBCodesParserTest extends Test
 			'<rt>xxx<X><st>[X]</st><et>[/X]</et></X>xxx</rt>'
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function If_contentAttr_is_set_and_the_corresponding_attribute_is_not_specified_in_tag_everything_from_the_end_of_the_start_tag_and_what_could_be_the_end_tag_is_used_as_value()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('contentAttr' => 'b'));
+		$this->cb->addTagAttribute('X', 'b', 'text');
+
+		$this->assertParsing(
+			'[X]xxx[/X]',
+			'<rt><X b="xxx"><st>[X]</st>xxx<et>[/X]</et></X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function If_contentAttr_is_set_but_the_corresponding_attribute_is_specified_in_tag_the_content_is_not_used_as_value()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('contentAttr' => 'b'));
+		$this->cb->addTagAttribute('X', 'b', 'text');
+
+		$this->assertParsing(
+			'[X b="yyy"]xxx[/X]',
+			'<rt><X b="yyy"><st>[X b="yyy"]</st>xxx<et>[/X]</et></X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends If_contentAttr_is_set_and_the_corresponding_attribute_is_not_specified_in_tag_everything_from_the_end_of_the_start_tag_and_what_could_be_the_end_tag_is_used_as_value
+	*/
+	public function When_looking_for_the_end_tag_while_capturing_content_for_contentAttr_the_search_is_case_insensitive()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('contentAttr' => 'b'));
+		$this->cb->addTagAttribute('X', 'b', 'text');
+
+		$this->assertParsing(
+			'[X]xxx[/x]',
+			'<rt><X b="xxx"><st>[X]</st>xxx<et>[/x]</et></X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends BBCode_tags_can_use_a_colon_followed_by_digits_as_a_suffix_to_control_how_start_tags_and_end_tags_are_paired
+	* @depends If_contentAttr_is_set_and_the_corresponding_attribute_is_not_specified_in_tag_everything_from_the_end_of_the_start_tag_and_what_could_be_the_end_tag_is_used_as_value
+	*/
+	public function When_looking_for_the_end_tag_while_capturing_content_for_contentAttr_the_suffix_is_taken_into_account()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('contentAttr' => 'b'));
+		$this->cb->addTagAttribute('X', 'b', 'text');
+
+		$this->assertParsing(
+			'[X:1]xxx[/X][/X:1]',
+			'<rt><X b="xxx[/X]"><st>[X:1]</st>xxx[/X]<et>[/X:1]</et></X></rt>'
+		);
+	}
 }

@@ -353,6 +353,10 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Malformed BBCodes are ignored
  [x] A BBCode with autoClose enabled is automatically closed after the start tag
  [x] A BBCode with autoClose enabled is not automatically closed after the start tag if it is immediately followed by its end tag
+ [x] If contentAttr is set and the corresponding attribute is not specified in tag everything from the end of the start tag and what could be the end tag is used as value
+ [x] If contentAttr is set but the corresponding attribute is specified in tag the content is not used as value
+ [x] When looking for the end tag while capturing content for contentAttr the search is case insensitive
+ [x] When looking for the end tag while capturing content for contentAttr the suffix is taken into account
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] getConfig returns false if no words were added
