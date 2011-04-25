@@ -366,6 +366,70 @@ class BBCodesConfigTest extends Test
 		$this->assertSame('url', $this->cb->getTagAttributeOption('A', 'a', 'type'));
 	}
 
+	/**
+	* @test
+	* @depends addBBCodeFromExample_works_on_simple_BBCodes
+	*/
+	public function addBBCodeFromExample_does_not_create_an_attribute_for_the_tag_content_if_it_is_TEXT_with_no_other_options_set()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[A={URL}]{TEXT}[/A]',
+			'<a href="{URL}">{TEXT}</a>'
+		);
+
+		$this->assertTrue($this->cb->BBCodes->BBCodeExists('A'));
+		$this->assertArrayNotHasKey('contentAttr', $this->cb->BBCodes->getBBCodeOptions('A'));
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_works_on_simple_BBCodes
+	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	*/
+	public function addBBCodeFromExample_creates_an_attribute_named_content_for_the_tag_content()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[EMAIL]{EMAIL}[/EMAIL]',
+			'<b>{EMAIL}</b>'
+		);
+
+		$this->assertTrue($this->cb->BBCodes->BBCodeExists('EMAIL'));
+		$this->assertSame('content', $this->cb->BBCodes->getBBCodeOption('EMAIL', 'contentAttr'));
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_creates_an_attribute_named_content_for_the_tag_content
+	*/
+	public function addBBCodeFromExample_replaces_placeholders_in_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[EMAIL]{EMAIL}[/EMAIL]',
+			'<a href="mailto:{EMAIL}">{EMAIL}</a>'
+		);
+
+		$this->assertSame(
+			'<xsl:template match="EMAIL"><a href="mailto:{@content}"><xsl:value-of select="@content"/></a></xsl:template>',
+			$this->cb->getTagXSL('EMAIL')
+		);
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_creates_an_attribute_named_content_for_the_tag_content
+	*/
+	public function addBBCodeFromExample_replaces_placeholders_in_content()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[EMAIL]{EMAIL}[/EMAIL]',
+			'Mail me at {EMAIL}'
+		);
+
+		$this->assertSame(
+			'<xsl:template match="EMAIL">Mail me at <xsl:value-of select="@content"/></xsl:template>',
+			$this->cb->getTagXSL('EMAIL')
+		);
+	}
 
 	/**
 	* @test
@@ -407,6 +471,6 @@ class BBCodesConfigTest extends Test
 	*/
 	public function addBBCodeFromExample_throws_an_exception_on_undefined_placeholders_used_in_content()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample('[foo={URL}]{TEXT}[/foo]', '<b>{TEXT2}</b>');
+		$this->cb->BBCodes->addBBCodeFromExample('[B]{TEXT}[/B]', '<b>{TEXT2}</b>');
 	}
 }
