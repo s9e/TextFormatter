@@ -311,6 +311,11 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeFromExample throws an exception on undefined placeholders used in attributes
  [x] addBBCodeFromExample throws an exception on undefined placeholders used in content
  [x] addBBCodeFromExample allows arbitrary options in attribute
+ [x] addBBCodeFromExample handles REGEXP placeholders
+ [x] addBBCodeFromExample handles COMPOUND placeholders
+ [x] addBBCodeFromExample handles RANGE placeholders
+ [x] addBBCodeFromExample handles CHOICE placeholders
+ [x] addBBCodeFromExample handles CHOICE placeholders with Unicode values
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple bbcodes are parsed

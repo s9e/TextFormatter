@@ -579,10 +579,6 @@ class BBCodesConfig extends PluginConfig
 					case 'compound':
 						$attrConf['type']   = 'compound';
 						$attrConf['regexp'] = $m['compoundRegexp'];
-
-						if (!i)
-						{
-						}
 						break;
 
 					case 'choice':

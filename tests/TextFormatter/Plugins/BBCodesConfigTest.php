@@ -641,4 +641,80 @@ class BBCodesConfigTest extends Test
 		$this->assertSame('bar', $this->cb->getTagAttributeOption('B', 'b', 'foo'));
 		$this->assertSame('quux', $this->cb->getTagAttributeOption('B', 'b', 'baz'));
 	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	*/
+	public function addBBCodeFromExample_handles_REGEXP_placeholders()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={REGEXP=/^foo$/}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertSame('regexp', $this->cb->getTagAttributeOption('B', 'b', 'type'));
+		$this->assertSame('/^foo$/', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	*/
+	public function addBBCodeFromExample_handles_COMPOUND_placeholders()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={COMPOUND=/^(?P<foo>foo)$/}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertSame('compound', $this->cb->getTagAttributeOption('B', 'b', 'type'));
+		$this->assertSame('/^(?P<foo>foo)$/', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	*/
+	public function addBBCodeFromExample_handles_RANGE_placeholders()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={RANGE=-10,20}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertSame('range', $this->cb->getTagAttributeOption('B', 'b', 'type'));
+		$this->assertSame(-10, $this->cb->getTagAttributeOption('B', 'b', 'min'));
+		$this->assertSame(20, $this->cb->getTagAttributeOption('B', 'b', 'max'));
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	*/
+	public function addBBCodeFromExample_handles_CHOICE_placeholders()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={CHOICE=foo,bar,quux}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertSame('regexp', $this->cb->getTagAttributeOption('B', 'b', 'type'));
+		$this->assertSame('/^(?=[bfq])(?:bar|foo|quux)$/iD', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_CHOICE_placeholders
+	*/
+	public function addBBCodeFromExample_handles_CHOICE_placeholders_with_Unicode_values()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={CHOICE=オレンジ,桜}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertSame('regexp', $this->cb->getTagAttributeOption('B', 'b', 'type'));
+		$this->assertSame('/^(?=[オ桜])(?:オレンジ|桜)$/iDu', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
+	}
 }
