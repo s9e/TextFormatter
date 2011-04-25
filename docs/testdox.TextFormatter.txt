@@ -310,6 +310,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeFromExample throws an exception on duplicate placeholders
  [x] addBBCodeFromExample throws an exception on undefined placeholders used in attributes
  [x] addBBCodeFromExample throws an exception on undefined placeholders used in content
+ [x] addBBCodeFromExample allows arbitrary options in attribute
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple bbcodes are parsed

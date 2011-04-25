@@ -406,7 +406,7 @@ class BBCodesConfig extends PluginConfig
 		$r['placeholder'] =
 			  '\\{'
 			. '(?P<type>' . implode('|', $r['type']) . ')'
-			. '(?P<attrOptions>;(?:' . $r['attrOptions'] . '))*;?'
+			. '(?P<attrOptions>(?:;' . $r['attrOptions'] . ')*);?'
 			. '\\}';
 
 		// we remove all named captures from the placeholder for the global regexp to avoid dupes
@@ -516,7 +516,7 @@ class BBCodesConfig extends PluginConfig
 
 			$attrConf = array();
 
-			if (isset($m['attrOptions']))
+			if (!empty($m['attrOptions']))
 			{
 				foreach (explode(';', trim($m['attrOptions'], ';')) as $pair)
 				{

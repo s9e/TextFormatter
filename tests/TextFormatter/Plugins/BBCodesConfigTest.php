@@ -626,4 +626,19 @@ class BBCodesConfigTest extends Test
 	{
 		$this->cb->BBCodes->addBBCodeFromExample('[B]{TEXT}[/B]', '<b>{TEXT2}</b>');
 	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	*/
+	public function addBBCodeFromExample_allows_arbitrary_options_in_attribute()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;foo=bar;baz=quux}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertSame('bar', $this->cb->getTagAttributeOption('B', 'b', 'foo'));
+		$this->assertSame('quux', $this->cb->getTagAttributeOption('B', 'b', 'baz'));
+	}
 }
