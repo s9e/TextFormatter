@@ -294,6 +294,14 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeFromExample allows a single start tag with no end tag and enables autoClose
  [x] addBBCodeFromExample allows a self closed tag and enables autoClose
  [x] addBBCodeFromExample handles default attribute and gives it the same name as the tag
+ [x] addBBCodeFromExample handles single preFilter callback in attributes
+ [x] addBBCodeFromExample handles multiple preFilter callbacks in attributes
+ [x] addBBCodeFromExample rejects unauthorized preFilter callbacks in attributes
+ [x] addBBCodeFromExample handles single postFilter callback in attributes
+ [x] addBBCodeFromExample handles multiple postFilter callbacks in attributes
+ [x] addBBCodeFromExample rejects unauthorized postFilter callbacks in attributes
+ [x] Custom callbacks can be added via BBCodesConfig allowPhaseFiltersCallback
+ [x] Static method callbacks can be added via BBCodesConfig allowPhaseFiltersCallback
  [x] addBBCodeFromExample does not create an attribute for the tag content if it is TEXT with no other options set
  [x] addBBCodeFromExample creates an attribute named content for the tag content
  [x] addBBCodeFromExample replaces placeholders in attributes

@@ -23,7 +23,7 @@ class BBCodesConfig extends PluginConfig
 	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
 	*            system, etc...
 	*/
-	public $bbcodeFiltersAllowedCallbacks = array(
+	protected $allowedPhaseFiltersCallbacks = array(
 		'addcslashes',
 		'addslashes',
 		'html_entity_decode',
@@ -531,14 +531,17 @@ class BBCodesConfig extends PluginConfig
 						case 'postFilter':
 							foreach (explode(',', $optionValue) as $callback)
 							{
-								if (!in_array($callback, $this->bbcodeFiltersAllowedCallbacks, true))
-								{
-									throw new RuntimeException('Callback ' . $callback . ' is not allowed');
-								}
-
+								/**
+								* Turn stdClass::method() into array('stdClass', 'method')
+								*/
 								if (strpos($callback, '::') !== false)
 								{
 									$callback = explode('::', $callback);
+								}
+
+								if (!in_array($callback, $this->allowedPhaseFiltersCallbacks, true))
+								{
+									throw new RuntimeException("Callback '" . $callback . "' is not allowed");
 								}
 
 								$attrConf[$optionName][] = array(
@@ -676,5 +679,15 @@ class BBCodesConfig extends PluginConfig
 	public function isValidBBCodeName($bbcodeName)
 	{
 		return (bool) preg_match('#^(?:[a-z][a-z_0-9]*|\\*)$#Di', $bbcodeName);
+	}
+
+	/**
+	* Add a callback to the list of allowed callbacks
+	*
+	* @param callback $callback
+	*/
+	public function allowPhaseFiltersCallback($callback)
+	{
+		$this->allowedPhaseFiltersCallbacks[] = $callback;
 	}
 }

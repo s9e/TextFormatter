@@ -368,6 +368,159 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
+	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	*/
+	public function addBBCodeFromExample_handles_single_preFilter_callback_in_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;preFilter=strtolower}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				array('callback' => 'strtolower')
+			),
+			$this->cb->getTagAttributeOption('B', 'b', 'preFilter')
+		);
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attributes
+	*/
+	public function addBBCodeFromExample_handles_multiple_preFilter_callbacks_in_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;preFilter=strtolower,ucfirst}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				array('callback' => 'strtolower'),
+				array('callback' => 'ucfirst')
+			),
+			$this->cb->getTagAttributeOption('B', 'b', 'preFilter')
+		);
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attributes
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Callback 'system' is not allowed
+	*/
+	public function addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;preFilter=system}]{TEXT}[/B]',
+			'<b/>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	*/
+	public function addBBCodeFromExample_handles_single_postFilter_callback_in_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;postFilter=strtolower}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				array('callback' => 'strtolower')
+			),
+			$this->cb->getTagAttributeOption('B', 'b', 'postFilter')
+		);
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attributes
+	*/
+	public function addBBCodeFromExample_handles_multiple_postFilter_callbacks_in_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;postFilter=strtolower,ucfirst}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				array('callback' => 'strtolower'),
+				array('callback' => 'ucfirst')
+			),
+			$this->cb->getTagAttributeOption('B', 'b', 'postFilter')
+		);
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attributes
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Callback 'system' is not allowed
+	*/
+	public function addBBCodeFromExample_rejects_unauthorized_postFilter_callbacks_in_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;postFilter=system}]{TEXT}[/B]',
+			'<b/>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attributes
+	*/
+	public function Custom_callbacks_can_be_added_via_BBCodesConfig_allowPhaseFiltersCallback()
+	{
+		$this->cb->BBCodes->allowPhaseFiltersCallback('system');
+
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;preFilter=system}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				array('callback' => 'system')
+			),
+			$this->cb->getTagAttributeOption('B', 'b', 'preFilter')
+		);
+	}
+
+	static public function foo($str)
+	{
+		return $str;
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attributes
+	*/
+	public function Static_method_callbacks_can_be_added_via_BBCodesConfig_allowPhaseFiltersCallback()
+	{
+		$this->cb->BBCodes->allowPhaseFiltersCallback(array(__CLASS__, 'foo'));
+
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B={ID;preFilter=' . __CLASS__ . '::foo}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				array('callback' => array(__CLASS__, 'foo'))
+			),
+			$this->cb->getTagAttributeOption('B', 'b', 'preFilter')
+		);
+	}
+
+	/**
+	* @test
 	* @depends addBBCodeFromExample_works_on_simple_BBCodes
 	*/
 	public function addBBCodeFromExample_does_not_create_an_attribute_for_the_tag_content_if_it_is_TEXT_with_no_other_options_set()
