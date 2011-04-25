@@ -330,6 +330,11 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] A BBCode can map to a tag of a different name
  [x] An equal sign following the tag name defines the value of the default attribute
  [x] If no default attribute is specified the name of the BBCode is used as the name of the default attribute
+ [x] A BBCode cannot end with an open attribute
+ [x] An unterminated self closing BBCode at the end of the text is ignored
+ [x] An unterminated BBCode with an attribute name that extends till the end of the text is ignored
+ [x] Junk characters at the start of an attribute name are detected
+ [x] Junk characters in an attribute name are detected
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] getConfig returns false if no words were added

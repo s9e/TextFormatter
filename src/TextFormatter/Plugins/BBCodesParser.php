@@ -205,7 +205,7 @@ class BBCodesParser extends PluginParser
 						{
 							$this->parser->log('debug', array(
 								'pos' => $rpos,
-								'msg' => 'Param name seems to extend till the end of $text'
+								'msg' => 'Attribute name seems to extend till the end of text'
 							));
 							continue 2;
 						}

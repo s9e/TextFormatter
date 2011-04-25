@@ -201,4 +201,104 @@ class BBCodesParserTest extends Test
 			'<rt><Z x="123"><st>[X="123"]</st><et>[/X]</et></Z></rt>'
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function A_BBCode_cannot_end_with_an_open_attribute()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$this->assertParsing(
+			'[X=][/X]',
+			'<pt>[X=][/X]</pt>',
+			array(
+				'warning' => array(
+					array(
+						'pos'    => 3,
+						'msg'    => 'Unexpected character %s',
+						'params' => array(']')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function An_unterminated_self_closing_BBCode_at_the_end_of_the_text_is_ignored()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$this->assertParsing(
+			'[X /',
+			'<pt>[X /</pt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function An_unterminated_BBCode_with_an_attribute_name_that_extends_till_the_end_of_the_text_is_ignored()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$this->assertParsing(
+			'[X attr',
+			'<pt>[X attr</pt>',
+			array(
+				'debug' => array(
+					array(
+						'pos'    => 3,
+						'msg'    => 'Attribute name seems to extend till the end of text'
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Junk_characters_at_the_start_of_an_attribute_name_are_detected()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$this->assertParsing(
+			'[X !b=1 /]',
+			'<pt>[X !b=1 /]</pt>',
+			array(
+				'warning' => array(
+					array(
+						'pos'    => 3,
+						'msg'    => 'Unexpected character %s',
+						'params' => array('!')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Junk_characters_in_an_attribute_name_are_detected()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$this->assertParsing(
+			'[X a!b=1 /]',
+			'<pt>[X a!b=1 /]</pt>',
+			array(
+				'debug' => array(
+					array(
+						'pos'    => 4,
+						'msg'    => 'Unexpected character: expected $1%s found $2%s',
+						'params' => array('=', '!')
+					)
+				)
+			)
+		);
+	}
 }
