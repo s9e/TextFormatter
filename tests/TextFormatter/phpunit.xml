@@ -20,6 +20,7 @@
 			<file>ConfigBuilderTest.php</file>
 			<file>ParserTest.php</file>
 			<file>PluginConfigTest.php</file>
+			<file>PluginParserTest.php</file>
 			<file>PredefinedBBCodesTest.php</file>
 			<file>RendererTest.php</file>
 			<file>Plugins/AutolinkConfigTest.php</file>

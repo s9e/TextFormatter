@@ -237,6 +237,9 @@ s9e\Toolkit\Tests\TextFormatter\Parser
 s9e\Toolkit\Tests\TextFormatter\PluginConfig
  [x] Overrides properties with values passed in second parameter
 
+s9e\Toolkit\Tests\TextFormatter\PluginParser
+ [x] setUp is called once after initialization
+
 s9e\Toolkit\Tests\TextFormatter\PredefinedBBCodes
  [x] Throws an exception if the BBCode does not exist
  [x] getUsedCodeStx returns all values of stx in CODE tags
