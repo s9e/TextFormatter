@@ -279,7 +279,7 @@ class BBCodesConfig extends PluginConfig
 		// Options set via $options override the ones we have parsed from the definition
 		$this->addBBCode($def['bbcodeName'], $options + $def['options']);
 
-		foreach ($def['params'] as $attrName => $attrConf)
+		foreach ($def['attrs'] as $attrName => $attrConf)
 		{
 			$this->cb->addTagAttribute(
 				$def['bbcodeName'],
@@ -320,7 +320,7 @@ class BBCodesConfig extends PluginConfig
 		}
 
 		$bbcodeName   = $def['bbcodeName'];
-		$params       = $def['params'];
+		$attrs       = $def['attrs'];
 		$placeholders = $def['placeholders'];
 		$options      = $def['options'];
 
@@ -429,10 +429,10 @@ class BBCodesConfig extends PluginConfig
 
 		$bbcodeName   = $m['bbcodeName'];
 		$options      = array();
-		$params       = array();
+		$attrs        = array();
 		$placeholders = array();
 		$content      = (isset($m['content'])) ? $m['content'] : '';
-		$attrs        = $m['attrs'];
+		$attrsDef     = $m['attrs'];
 
 		/**
 		* Auto-close the BBCode if no end tag is specified
@@ -443,13 +443,13 @@ class BBCodesConfig extends PluginConfig
 		}
 
 		/**
-		* If we have a default param in $m[2], we prepend the definition to the attribute pairs.
-		* e.g. [a href={URL}]           => $attrs = "href={URL}"
-		*      [url={URL} title={TEXT}] => $attrs = "url={URL} title={TEXT}"
+		* If we have a default attribute in $m[2], we prepend the definition to the attribute pairs.
+		* e.g. [a href={URL}]           => $attrsDef = "href={URL}"
+		*      [url={URL} title={TEXT}] => $attrsDef = "url={URL} title={TEXT}"
 		*/
 		if ($m['defaultAttr'])
 		{
-			$attrs = $m['bbcodeName'] . $m['defaultAttr'] . $attrs;
+			$attrsDef = $m['bbcodeName'] . $m['defaultAttr'] . $attrsDef;
 
 			$options['defaultAttr'] = strtolower($m['bbcodeName']);
 		}
@@ -493,13 +493,13 @@ class BBCodesConfig extends PluginConfig
 				/**
 				* We append the placeholder to the attributes, using the BBCode's name as param name
 				*/
-				$attrs .= ' ' . $attrName . '=' . $content;
+				$attrsDef .= ' ' . $attrName . '=' . $content;
 			}
 		}
 
 		preg_match_all(
 			'#(' . $r['attrName'] . ')=' . $r['placeholder'] . '#',
-			$attrs,
+			$attrsDef,
 			$matches,
 			\PREG_SET_ORDER
 		);
@@ -509,7 +509,7 @@ class BBCodesConfig extends PluginConfig
 			$attrName  = strtolower($m[1]);
 			$identifier = $m['type'];
 
-			if (isset($params[$attrName]))
+			if (isset($attrs[$attrName]))
 			{
 				throw new InvalidArgumentException("Attribute '" . $attrName . "' is defined twice");
 			}
@@ -631,13 +631,13 @@ class BBCodesConfig extends PluginConfig
 			/**
 			* Add the attribute to the list
 			*/
-			$params[$attrName] = $attrConf;
+			$attrs[$attrName] = $attrConf;
 		}
 
 		return array(
 			'bbcodeName'   => $bbcodeName,
 			'options'      => $options,
-			'params'       => $params,
+			'attrs'       => $attrs,
 			'placeholders' => $placeholders
 		);
 	}
