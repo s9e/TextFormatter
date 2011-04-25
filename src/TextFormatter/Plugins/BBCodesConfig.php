@@ -381,7 +381,10 @@ class BBCodesConfig extends PluginConfig
 	}
 
 	/**
-	* @todo separate contentAttr from defaultAttr
+	* Parse a BBCode definition
+	*
+	* @param  string $def BBCode definition, e.g. [B]{TEXT}[/b]
+	* @return array
 	*/
 	public function parseBBCodeDefinition($def)
 	{
@@ -459,18 +462,19 @@ class BBCodesConfig extends PluginConfig
 		*
 		* {TEXT} doesn't require validation, so we don't copy its content into an attribute in order
 		* to save space. Instead, templates will rely on the node's textContent, which we adjust to
-		* ignore the node's <st/> and <et/> children
+		* ignore the node's <st/> and <et/> children. This is only applicable if no postprocessing
+		* is performed. For instance, no preFilter or postFilter callbacks.
 		*/
 		if ($content !== '')
 		{
 			preg_match('#^' . $r['placeholder'] . '$#', $content, $m);
 
-			if (preg_match('#^TEXT[0-9]*$#D', $m['type']))
+			if (preg_match('#^\\{TEXT[0-9]*\\}$#D', $content))
 			{
 				/**
 				* Use substring() to exclude the <st/> and <et/> children
 				*/
-				$placeholders[$m['type']] =
+				$placeholders[substr($content, 1, -1)] =
 					'substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))';
 			}
 			else
@@ -478,11 +482,12 @@ class BBCodesConfig extends PluginConfig
 				/**
 				* We need to validate the content, means we should probably disable BBCodes,
 				* e.g. [email]{EMAIL}[/email]
+				*
+				* We use "content" as the name of the attribute
 				*/
-				$attrName = strtolower($bbcodeName);
+				$attrName = 'content';
 
 				$options['defaultRule'] = 'deny';
-				$options['defaultAttr'] = $attrName;
 				$options['contentAttr'] = $attrName;
 
 				/**
@@ -506,7 +511,7 @@ class BBCodesConfig extends PluginConfig
 
 			if (isset($params[$attrName]))
 			{
-				throw new InvalidArgumentException('Param ' . $attrName . ' is defined twice');
+				throw new InvalidArgumentException("Attribute '" . $attrName . "' is defined twice");
 			}
 
 			$attrConf = array();
@@ -619,7 +624,7 @@ class BBCodesConfig extends PluginConfig
 
 			if (isset($placeholders[$identifier]))
 			{
-				throw new InvalidArgumentException('Placeholder ' . $identifier . ' is used twice');
+				throw new InvalidArgumentException('Placeholder {' . $identifier . '} is used twice');
 			}
 
 			$placeholders[$identifier] = '@' . $attrName;

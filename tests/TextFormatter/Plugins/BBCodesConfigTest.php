@@ -365,4 +365,48 @@ class BBCodesConfigTest extends Test
 		$this->assertTrue($this->cb->attributeExists('A', 'a'));
 		$this->assertSame('url', $this->cb->getTagAttributeOption('A', 'a', 'type'));
 	}
+
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Attribute 'foo' is defined twice
+	*/
+	public function addBBCodeFromExample_throws_an_exception_on_duplicate_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[foo={URL1} FOO={URL2}]{TEXT}[/foo]', '<b/>');
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Placeholder {URL} is used twice
+	*/
+	public function addBBCodeFromExample_throws_an_exception_on_duplicate_placeholders()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[foo={URL} bar={URL}]{TEXT}[/foo]', '<b/>');
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Undefined placeholder {COLOR}
+	*/
+	public function addBBCodeFromExample_throws_an_exception_on_undefined_placeholders_used_in_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[foo={URL}]{TEXT}[/foo]',
+			'<b style="color:{COLOR}">{TEXT}</b>'
+		);
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Undefined placeholder {TEXT2}
+	*/
+	public function addBBCodeFromExample_throws_an_exception_on_undefined_placeholders_used_in_content()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample('[foo={URL}]{TEXT}[/foo]', '<b>{TEXT2}</b>');
+	}
 }
