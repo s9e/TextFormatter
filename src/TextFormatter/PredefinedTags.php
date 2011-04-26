@@ -40,7 +40,7 @@ class PredefinedTags
 	public function addS()
 	{
 		$this->cb->addTag('S');
-		$this->cb->setTagTemplate('S', '<span style="text-decoration:line-through"><xsl:apply-templates /></span>');
+		$this->cb->setTagTemplate('S', '<s><xsl:apply-templates /></s>');
 	}
 
 	/**

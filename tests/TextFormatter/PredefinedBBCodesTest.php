@@ -83,7 +83,7 @@ class PredefinedBBCodesTest extends Test
 			),
 			array(
 				'[S]strike [S]still striked[/S][/S]',
-				'<span style="text-decoration:line-through">strike <span style="text-decoration:line-through">still striked</span></span>'
+				'<s>strike <s>still striked</s></s>'
 			),
 			array(
 				'[URL]http://www.example.org[/URL]',
