@@ -46,7 +46,7 @@ class GenericConfig extends PluginConfig
 		/**
 		* Generate a tag name based on the regexp
 		*/
-		$tagName = 'g' . dechex(crc32($regexp));
+		$tagName = 'G' . strtr(dechex(crc32($regexp)), 'abcdef', 'ABCDEF');
 
 		/**
 		* Create the tag
