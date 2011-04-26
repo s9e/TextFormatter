@@ -33,6 +33,8 @@
 			<file>Plugins/EmoticonsParserTest.php</file>
 			<file>Plugins/FabricConfigTest.php</file>
 			<file>Plugins/FabricParserTest.php</file>
+			<file>Plugins/GenericConfigTest.php</file>
+			<file>Plugins/GenericParserTest.php</file>
 			<file>Plugins/WittyPantsConfigTest.php</file>
 			<file>Plugins/WittyPantsParserTest.php</file>
 		</testsuite>

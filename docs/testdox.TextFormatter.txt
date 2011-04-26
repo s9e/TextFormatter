@@ -452,6 +452,18 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\FabricParser
  [x] Supports phrase modifier code with stx
  [x] Supports acronyms
 
+s9e\Toolkit\Tests\TextFormatter\Plugins\GenericConfig
+ [x] getConfig returns false if no replacements were added
+ [x] getConfig creates a regexp for each replacement
+ [x] addReplacement returns the name of the tag created
+ [x] addReplacement creates attributes named after Python style subpatterns
+ [x] addReplacement creates attributes named after Perl angle brackets style subpatterns
+ [x] addReplacement creates attributes named after Perl single quotes style subpatterns
+ [x] addReplacement throws an exception if the regexp is invalid
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\GenericParser
+ [x] Handles attributes
+
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
  [x] Tag name can be customized at loading time
  [x] Attribute name can be customized at loading time

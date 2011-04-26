@@ -37,6 +37,8 @@
 			<file>./TextFormatter/Plugins/EmoticonsParserTest.php</file>
 			<file>./TextFormatter/Plugins/FabricConfigTest.php</file>
 			<file>./TextFormatter/Plugins/FabricParserTest.php</file>
+			<file>./TextFormatter/Plugins/GenericConfigTest.php</file>
+			<file>./TextFormatter/Plugins/GenericParserTest.php</file>
 			<file>./TextFormatter/Plugins/WittyPantsConfigTest.php</file>
 			<file>./TextFormatter/Plugins/WittyPantsParserTest.php</file>
 		</testsuite>
