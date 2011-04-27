@@ -1094,7 +1094,7 @@ class Parser
 					*/
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'Could not find a matching start tag for tag %1$s from %2$s',
+						'msg'    => 'Could not find a matching start tag for tag %1$s from plugin %2$s',
 						'params' => array($tagName, $this->currentTag['pluginName'])
 					));
 					continue;
@@ -1118,6 +1118,8 @@ class Parser
 							'len'  => 0,
 							'type' => self::END_TAG
 						));
+
+						continue;
 					}
 					break;
 				}

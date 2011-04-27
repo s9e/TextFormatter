@@ -1630,6 +1630,7 @@ class ParserTest extends Test
 		$this->cb->addTag('X');
 		$this->cb->addTag('Y');
 		$this->cb->addTag('Z');
+		$this->cb->addTag('A');
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1659,9 +1660,16 @@ class ParserTest extends Test
 			'type'  => Parser::END_TAG
 		);
 
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 3,
+			'len'   => 1,
+			'name'  => 'A',
+			'type'  => Parser::SELF_CLOSING_TAG
+		);
+
 		$this->assertParsing(
-			'012',
-			'<rt><X>0<Y>1<Z>2</Z></Y></X></rt>'
+			'0123',
+			'<rt><X>0<Y>1<Z>2</Z></Y></X><A>3</A></rt>'
 		);
 	}
 
