@@ -119,7 +119,6 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
-
 	public function testASingleQuoteBetweenTwoLettersIsReplacedWithAnApostrophe()
 	{
 		$this->cb->loadPlugin('WittyPants');

@@ -323,7 +323,6 @@ class Parser
 
 				return $attrVal;
 
-
 			case 'color':
 				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')

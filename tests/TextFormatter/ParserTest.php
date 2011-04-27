@@ -1695,7 +1695,6 @@ class ParserTest extends Test
 			'requires' => array(0, 1)
 		);
 
-
 		$this->assertParsing(
 			'012',
 			'<rt><X>0</X><X>1</X><X>2</X></rt>'
