@@ -128,6 +128,33 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	public function testASingleQuoteBetweenALettersAndWhitespaceIsReplacedWithAnApostrophe()
+	{
+		$this->cb->loadPlugin('WittyPants');
+		$this->assertRendering(
+			"Ridin' dirty",
+			"Ridin’ dirty"
+		);
+	}
+
+	public function testASingleQuoteAfterALettersAtTheEndOfTheTextIsReplacedWithAnApostrophe()
+	{
+		$this->cb->loadPlugin('WittyPants');
+		$this->assertRendering(
+			"Get rich or die tryin'",
+			"Get rich or die tryin’"
+		);
+	}
+
+	public function testASingleQuoteBetweenALettersAndPunctuationIsReplacedWithAnApostrophe()
+	{
+		$this->cb->loadPlugin('WittyPants');
+		$this->assertRendering(
+			"Get rich or die tryin', yo.",
+			"Get rich or die tryin’, yo."
+		);
+	}
+
 	public function testASingleQuoteBeforeATwoDigitsNumberAtTheStartOfALineIsReplacedWithAnApostrophe()
 	{
 		$this->cb->loadPlugin('WittyPants');
