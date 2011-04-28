@@ -69,271 +69,6 @@ class ParserTest extends Test
 	}
 
 	//==========================================================================
-	// Rules
-	//==========================================================================
-
-	/**
-	* @test
-	*/
-	public function Fulfilled_requireParent_rule_allows_tag()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireParent', 'a');
-
-		$this->assertParsing(
-			'[a][b]stuff[/b][/a]',
-			'<rt><A><st>[a]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a]</et></A></rt>'
-		);
-	}
-
-	/**
-	* @test
-	* @depends Fulfilled_requireParent_rule_allows_tag
-	*/
-	public function requireParent_rule_with_multiple_targets_is_fulfilled_if_any_of_the_targets_is_the_parent()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->BBCodes->addBBCode('c');
-		$this->cb->addTagRule('b', 'requireParent', 'a');
-		$this->cb->addTagRule('b', 'requireParent', 'c');
-
-		$this->assertParsing(
-			'[a][b]stuff[/b][/a]',
-			'<rt><A><st>[a]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a]</et></A></rt>'
-		);
-
-		$this->assertParsing(
-			'[c][b]stuff[/b][/c]',
-			'<rt><C><st>[c]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/c]</et></C></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function Fulfilled_requireParent_rule_allows_tag_despite_BBCode_suffix()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireParent', 'a');
-
-		$this->assertParsing(
-			'[a:123][b]stuff[/b][/a:123]',
-			'<rt><A><st>[a:123]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a:123]</et></A></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function Unfulfilled_requireParent_rule_blocks_tag()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireParent', 'a');
-
-		$this->assertParsing(
-			'[b]stuff[/b]',
-			'<pt>[b]stuff[/b]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'     => 'Tag %1$s requires %2$s as parent',
-						'params'  => array('B', 'A')
-					)
-				)
-			)
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function Unfulfilled_requireParent_rule_blocks_tag_despite_ascendant()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->BBCodes->addBBCode('c');
-		$this->cb->addTagRule('b', 'requireParent', 'a');
-
-		$this->assertParsing(
-			'[a][c][b]stuff[/b][/c][/a]',
-			'<rt><A><st>[a]</st><C><st>[c]</st>[b]stuff[/b]<et>[/c]</et></C><et>[/a]</et></A></rt>',
-			array(
-				'error' => array(
-					array(
-						'msg'     => 'Tag %1$s requires %2$s as parent',
-						'params'  => array('B', 'A')
-					)
-				)
-			)
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function closeParent_rule_is_enforced()
-	{
-		$this->cb->BBCodes->addBBCode('p');
-		$this->cb->addTagRule('p', 'closeParent', 'p');
-
-		$this->assertParsing(
-			'[p]one[p]two',
-			'<rt><P><st>[p]</st>one</P><P><st>[p]</st>two</P></rt>'
-		);
-	}
-
-	/**
-	* @test
-	* @depends closeParent_rule_is_enforced
-	*/
-	public function closeParent_rule_is_enforced_on_tag_with_identical_suffix()
-	{
-		$this->cb->BBCodes->addBBCode('p');
-		$this->cb->addTagRule('p', 'closeParent', 'p');
-
-		$this->assertParsing(
-			'[p:123]one[p:123]two',
-			'<rt><P><st>[p:123]</st>one</P><P><st>[p:123]</st>two</P></rt>'
-		);
-	}
-
-	/**
-	* @test
-	* @depends closeParent_rule_is_enforced
-	*/
-	public function closeParent_rule_is_enforced_on_tag_with_different_suffix()
-	{
-		$this->cb->BBCodes->addBBCode('p');
-		$this->cb->addTagRule('p', 'closeParent', 'p');
-
-		$this->assertParsing(
-			'[p:123]one[p:456]two',
-			'<rt><P><st>[p:123]</st>one</P><P><st>[p:456]</st>two</P></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function deny_rule_blocks_tag()
-	{
-		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'allow'));
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('a', 'deny', 'b');
-
-		$this->assertParsing(
-			'[a]..[b][/b]..[/a]',
-			'<rt><A><st>[a]</st>..[b][/b]..<et>[/a]</et></A></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function allow_rule_allows_tag()
-	{
-		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'deny'));
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('a', 'allow', 'b');
-
-		$this->assertParsing(
-			'[a][b][/b][/a]',
-			'<rt><A><st>[a]</st><B><st>[b]</st><et>[/b]</et></B><et>[/a]</et></A></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function requireAscendant_rule_is_fulfilled_by_parent()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
-
-		$this->assertParsing(
-			'[a][b][/b][/a]',
-			'<rt><A><st>[a]</st><B><st>[b]</st><et>[/b]</et></B><et>[/a]</et></A></rt>'
-		);
-	}
-
-	/**
-	* @test
-	* @depends requireAscendant_rule_is_fulfilled_by_parent
-	*/
-	public function requireAscendant_rule_is_fulfilled_by_parent_with_suffix()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
-
-		$this->assertParsing(
-			'[a:123][b][/b][/a:123]',
-			'<rt><A><st>[a:123]</st><B><st>[b]</st><et>[/b]</et></B><et>[/a:123]</et></A></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function requireAscendant_rule_is_fulfilled_by_ascendant()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->BBCodes->addBBCode('c');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
-
-		$this->assertParsing(
-			'[a][c][b][/b][/c][/a]',
-			'<rt><A><st>[a]</st><C><st>[c]</st><B><st>[b]</st><et>[/b]</et></B><et>[/c]</et></C><et>[/a]</et></A></rt>'
-		);
-	}
-
-	/**
-	* @test
-	* @depends requireAscendant_rule_is_fulfilled_by_ascendant
-	*/
-	public function requireAscendant_rule_is_fulfilled_by_ascendant_with_suffix()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->BBCodes->addBBCode('c');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
-
-		$this->assertParsing(
-			'[a:123][c][b][/b][/c][/a:123]',
-			'<rt><A><st>[a:123]</st><C><st>[c]</st><B><st>[b]</st><et>[/b]</et></B><et>[/c]</et></C><et>[/a:123]</et></A></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function Unfulfilled_requireAscendant_rule_blocks_tag()
-	{
-		$this->cb->BBCodes->addBBCode('a');
-		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
-
-		$this->assertParsing(
-			'[b]stuff[/b]',
-			'<pt>[b]stuff[/b]</pt>',
-			array(
-				'error' => array(
-					array(
-						'msg'     => 'Tag %1$s requires %2$s as ascendant',
-						'params'  => array('B', 'A')
-					)
-				)
-			)
-		);
-	}
-
-	//==========================================================================
 	// Filters
 	//==========================================================================
 
@@ -1622,7 +1357,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testTagsLeftOpenGetClosedWhenTheirAncestorGetsClosed()
+	/**
+	* @test
+	*/
+	public function Tags_left_open_get_closed_when_their_ancestor_gets_closed()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
@@ -1745,6 +1483,333 @@ class ParserTest extends Test
 		$this->assertParsing(
 			'012',
 			'<rt><X>0</X>12</rt>'
+		);
+	}
+
+	//==========================================================================
+	// Rules
+	//==========================================================================
+
+	/**
+	* @test
+	*/
+	public function Fulfilled_requireParent_rule_allows_tag()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('b', 'requireParent', 'a');
+
+		$this->assertParsing(
+			'[a][b]stuff[/b][/a]',
+			'<rt><A><st>[a]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends Fulfilled_requireParent_rule_allows_tag
+	*/
+	public function requireParent_rule_with_multiple_targets_is_fulfilled_if_any_of_the_targets_is_the_parent()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('c');
+		$this->cb->addTagRule('b', 'requireParent', 'a');
+		$this->cb->addTagRule('b', 'requireParent', 'c');
+
+		$this->assertParsing(
+			'[a][b]stuff[/b][/a]',
+			'<rt><A><st>[a]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a]</et></A></rt>'
+		);
+
+		$this->assertParsing(
+			'[c][b]stuff[/b][/c]',
+			'<rt><C><st>[c]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/c]</et></C></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Fulfilled_requireParent_rule_allows_tag_despite_BBCode_suffix()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('b', 'requireParent', 'a');
+
+		$this->assertParsing(
+			'[a:123][b]stuff[/b][/a:123]',
+			'<rt><A><st>[a:123]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a:123]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Unfulfilled_requireParent_rule_blocks_tag()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('b', 'requireParent', 'a');
+
+		$this->assertParsing(
+			'[b]stuff[/b]',
+			'<pt>[b]stuff[/b]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'     => 'Tag %1$s requires %2$s as parent',
+						'params'  => array('B', 'A')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Unfulfilled_requireParent_rule_blocks_tag_despite_ascendant()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('c');
+		$this->cb->addTagRule('b', 'requireParent', 'a');
+
+		$this->assertParsing(
+			'[a][c][b]stuff[/b][/c][/a]',
+			'<rt><A><st>[a]</st><C><st>[c]</st>[b]stuff[/b]<et>[/c]</et></C><et>[/a]</et></A></rt>',
+			array(
+				'error' => array(
+					array(
+						'msg'     => 'Tag %1$s requires %2$s as parent',
+						'params'  => array('B', 'A')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function closeParent_rule_is_enforced()
+	{
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeParent', 'p');
+
+		$this->assertParsing(
+			'[p]one[p]two',
+			'<rt><P><st>[p]</st>one</P><P><st>[p]</st>two</P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends closeParent_rule_is_enforced
+	*/
+	public function closeParent_rule_is_enforced_on_tag_with_identical_suffix()
+	{
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeParent', 'p');
+
+		$this->assertParsing(
+			'[p:123]one[p:123]two',
+			'<rt><P><st>[p:123]</st>one</P><P><st>[p:123]</st>two</P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends closeParent_rule_is_enforced
+	*/
+	public function closeParent_rule_is_enforced_on_tag_with_different_suffix()
+	{
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeParent', 'p');
+
+		$this->assertParsing(
+			'[p:123]one[p:456]two',
+			'<rt><P><st>[p:123]</st>one</P><P><st>[p:456]</st>two</P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function closeAscendant_rule_is_applied_to_parent_tag()
+	{
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeAscendant', 'p');
+
+		$this->assertParsing(
+			'[p]one[p]two',
+			'<rt><P><st>[p]</st>one</P><P><st>[p]</st>two</P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends Tags_left_open_get_closed_when_their_ancestor_gets_closed
+	*/
+	public function closeAscendant_rule_is_applied_to_ascendant_tag()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeAscendant', 'p');
+
+		$this->assertParsing(
+			'[p]one[b]bold[p]two',
+			'<rt><P><st>[p]</st>one<B><st>[b]</st>bold</B></P><P><st>[p]</st>two</P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends closeAscendant_rule_is_applied_to_ascendant_tag
+	*/
+	public function closeAscendant_rule_is_applied_to_tag_with_identical_suffix()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeAscendant', 'p');
+
+		$this->assertParsing(
+			'[p:123]one[b]bold[p:123]two',
+			'<rt><P><st>[p:123]</st>one<B><st>[b]</st>bold</B></P><P><st>[p:123]</st>two</P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends closeAscendant_rule_is_applied_to_ascendant_tag
+	*/
+	public function closeAscendant_rule_is_applied_to_tag_with_different_suffix()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->addTagRule('p', 'closeAscendant', 'p');
+
+		$this->assertParsing(
+			'[p:123]one[b]bold[p:456]two',
+			'<rt><P><st>[p:123]</st>one<B><st>[b]</st>bold</B></P><P><st>[p:456]</st>two</P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function deny_rule_blocks_tag()
+	{
+		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'allow'));
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('a', 'deny', 'b');
+
+		$this->assertParsing(
+			'[a]..[b][/b]..[/a]',
+			'<rt><A><st>[a]</st>..[b][/b]..<et>[/a]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function allow_rule_allows_tag()
+	{
+		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'deny'));
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('a', 'allow', 'b');
+
+		$this->assertParsing(
+			'[a][b][/b][/a]',
+			'<rt><A><st>[a]</st><B><st>[b]</st><et>[/b]</et></B><et>[/a]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function requireAscendant_rule_is_fulfilled_by_parent()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+
+		$this->assertParsing(
+			'[a][b][/b][/a]',
+			'<rt><A><st>[a]</st><B><st>[b]</st><et>[/b]</et></B><et>[/a]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends requireAscendant_rule_is_fulfilled_by_parent
+	*/
+	public function requireAscendant_rule_is_fulfilled_by_parent_with_suffix()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+
+		$this->assertParsing(
+			'[a:123][b][/b][/a:123]',
+			'<rt><A><st>[a:123]</st><B><st>[b]</st><et>[/b]</et></B><et>[/a:123]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function requireAscendant_rule_is_fulfilled_by_ascendant()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('c');
+		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+
+		$this->assertParsing(
+			'[a][c][b][/b][/c][/a]',
+			'<rt><A><st>[a]</st><C><st>[c]</st><B><st>[b]</st><et>[/b]</et></B><et>[/c]</et></C><et>[/a]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends requireAscendant_rule_is_fulfilled_by_ascendant
+	*/
+	public function requireAscendant_rule_is_fulfilled_by_ascendant_with_suffix()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('c');
+		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+
+		$this->assertParsing(
+			'[a:123][c][b][/b][/c][/a:123]',
+			'<rt><A><st>[a:123]</st><C><st>[c]</st><B><st>[b]</st><et>[/b]</et></B><et>[/c]</et></C><et>[/a:123]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Unfulfilled_requireAscendant_rule_blocks_tag()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+
+		$this->assertParsing(
+			'[b]stuff[/b]',
+			'<pt>[b]stuff[/b]</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'     => 'Tag %1$s requires %2$s as ascendant',
+						'params'  => array('B', 'A')
+					)
+				)
+			)
 		);
 	}
 

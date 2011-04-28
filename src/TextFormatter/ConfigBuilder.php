@@ -650,6 +650,7 @@ class ConfigBuilder
 		if (!in_array($action, array(
 			'allow',
 			'closeParent',
+			'closeAscendant',
 			'deny',
 			'requireParent',
 			'requireAscendant'
@@ -971,8 +972,8 @@ class ConfigBuilder
 							*/
 							break;
 
+						case 'closeAscendant':
 						case 'closeParent':
-						default:
 							// keep only the rules that target existing tags
 							$targets = array_intersect_key($targets, $tagsConfig);
 					}

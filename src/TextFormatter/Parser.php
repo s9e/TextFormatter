@@ -894,7 +894,7 @@ class Parser
 			if ($this->currentTag['type'] & self::START_TAG)
 			{
 				//==============================================================
-				// Apply closeParent rules
+				// Apply closeParent and closeAscendant rules
 				//==============================================================
 
 				if (!empty($tagStack)
@@ -926,6 +926,43 @@ class Parser
 						$this->tagStack[] = $this->currentTag;
 
 						continue;
+					}
+				}
+
+
+				if (!empty($tagConfig['rules']['closeAscendant']))
+				{
+					$i = count($tagStack);
+
+					while (--$i >= 0)
+					{
+						$ascendantTag     = $tagStack[$i];
+						$ascendantTagName = $ascendantTag['name'];
+
+						if (isset($tagConfig['rules']['closeAscendant'][$ascendantTagName]))
+						{
+							/**
+							* We have to close this ascendant. First we reinsert current tag...
+							*/
+							$this->tagStack[] = $this->currentTag;
+
+							/**
+							* ...then we create a new end tag which we put on top of the stack
+							*/
+							$this->currentTag = array(
+								'pos'    => $this->currentTag['pos'],
+								'name'   => $ascendantTagName,
+								'pluginName' => $ascendantTag['pluginName'],
+								'suffix' => $ascendantTag['suffix'],
+								'len'    => 0,
+								'type'   => self::END_TAG
+							);
+
+							$this->addTrimmingInfoToTag($this->currentTag, $pos);
+							$this->tagStack[] = $this->currentTag;
+
+							continue 2;
+						}
 					}
 				}
 

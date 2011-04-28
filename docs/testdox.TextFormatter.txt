@@ -104,21 +104,6 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can clear all postFilter callbacks from a tag attribute
 
 s9e\Toolkit\Tests\TextFormatter\Parser
- [x] Fulfilled requireParent rule allows tag
- [x] requireParent rule with multiple targets is fulfilled if any of the targets is the parent
- [x] Fulfilled requireParent rule allows tag despite BBCode suffix
- [x] Unfulfilled requireParent rule blocks tag
- [x] Unfulfilled requireParent rule blocks tag despite ascendant
- [x] closeParent rule is enforced
- [x] closeParent rule is enforced on tag with identical suffix
- [x] closeParent rule is enforced on tag with different suffix
- [x] deny rule blocks tag
- [x] allow rule allows tag
- [x] requireAscendant rule is fulfilled by parent
- [x] requireAscendant rule is fulfilled by parent with suffix
- [x] requireAscendant rule is fulfilled by ascendant
- [x] requireAscendant rule is fulfilled by ascendant with suffix
- [x] Unfulfilled requireAscendant rule blocks tag
  [x] Int filter accepts whole numbers
  [x] Int filter rejects partial numbers
  [x] Int filter accepts integers
@@ -233,6 +218,25 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Tags left open get closed when their ancestor gets closed
  [x] Tags can specify a list of tags that are required
  [x] Tags can specify a list of tags that are required and be skipped if any required tag is absent
+ [x] Fulfilled requireParent rule allows tag
+ [x] requireParent rule with multiple targets is fulfilled if any of the targets is the parent
+ [x] Fulfilled requireParent rule allows tag despite BBCode suffix
+ [x] Unfulfilled requireParent rule blocks tag
+ [x] Unfulfilled requireParent rule blocks tag despite ascendant
+ [x] closeParent rule is enforced
+ [x] closeParent rule is enforced on tag with identical suffix
+ [x] closeParent rule is enforced on tag with different suffix
+ [x] closeAscendant rule is applied to parent tag
+ [x] closeAscendant rule is applied to ascendant tag
+ [x] closeAscendant rule is applied to tag with identical suffix
+ [x] closeAscendant rule is applied to tag with different suffix
+ [x] deny rule blocks tag
+ [x] allow rule allows tag
+ [x] requireAscendant rule is fulfilled by parent
+ [x] requireAscendant rule is fulfilled by parent with suffix
+ [x] requireAscendant rule is fulfilled by ascendant
+ [x] requireAscendant rule is fulfilled by ascendant with suffix
+ [x] Unfulfilled requireAscendant rule blocks tag
  [x] Whitespace trimming works
 
 s9e\Toolkit\Tests\TextFormatter\PluginConfig
