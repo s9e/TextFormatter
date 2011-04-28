@@ -80,6 +80,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getParserConfig flattens allow and deny rules into the allow array
  [x] getParserConfig removes rules that target non existing tags
  [x] getParserConfig preserves requireParent rules that target non existing tags
+ [x] getParserConfig preserves requireAscendant rules that target non existing tags
  [x] getPluginsConfig adds default config if missing
  [x] Plugins can be disabled by returning false instead of config
  [x] Can add generic xsl

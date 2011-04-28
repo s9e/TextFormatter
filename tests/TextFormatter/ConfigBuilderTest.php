@@ -987,6 +987,32 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @test
+	* @depends testCanCreateRuleThatTargetsANonExistentTag
+	*/
+	public function getParserConfig_preserves_requireAscendant_rules_that_target_non_existing_tags()
+	{
+		$this->cb->addTag('a');
+
+		$this->cb->addTagRule('a', 'requireAscendant', 'b');
+
+		$this->assertArrayMatches(
+			array(
+				'tags' => array(
+					'A' => array(
+						'rules' => array(
+							'requireAscendant' => array(
+								'B' => 'B'
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
+
+	/**
+	* @test
 	* @depends testLoadsPluginOnMagicGet
 	*/
 	public function getPluginsConfig_adds_default_config_if_missing()
