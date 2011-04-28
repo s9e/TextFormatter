@@ -343,7 +343,7 @@ class Parser
 					*/
 					return preg_replace_callback(
 						'#(?:\\\\\\\\)+|(\\\\)?\\$([0-9]+)#',
-						function($m) use ($match)
+						function ($m) use ($match)
 						{
 							if (!isset($m[2]))
 							{
