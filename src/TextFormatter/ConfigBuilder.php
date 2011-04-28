@@ -640,6 +640,7 @@ class ConfigBuilder
 	* @param string $tagName
 	* @param string $action
 	* @param string $target
+	* @todo add closeAscendant
 	*/
 	public function addTagRule($tagName, $action, $target)
 	{

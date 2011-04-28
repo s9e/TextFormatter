@@ -583,7 +583,7 @@ class BBCodesConfig extends PluginConfig
 
 					case 'choice':
 						$choices = explode(',', $m['choices']);
-						$regexp  = '/^' . ConfigBuilder::buildRegexpFromList($choices) . '$/iD';
+						$regexp  = '#^' . ConfigBuilder::buildRegexpFromList($choices) . '$#iD';
 
 						if (preg_match('#[\\x80-\\xff]#', $regexp))
 						{

@@ -314,7 +314,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeFromExample handles REGEXP placeholders
  [x] addBBCodeFromExample handles COMPOUND placeholders
  [x] addBBCodeFromExample handles RANGE placeholders
- [x] addBBCodeFromExample handles CHOICE placeholders
+ [x] addBBCodeFromExample handles CHOICE placeholders and turns them into regexps
  [x] addBBCodeFromExample handles CHOICE placeholders with Unicode values
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
