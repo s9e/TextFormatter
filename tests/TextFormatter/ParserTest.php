@@ -1593,7 +1593,7 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function closeParent_rule_is_enforced()
+	public function closeParent_rule_is_applied_to_matching_parent_tag()
 	{
 		$this->cb->BBCodes->addBBCode('p');
 		$this->cb->addTagRule('p', 'closeParent', 'p');
@@ -1606,9 +1606,39 @@ class ParserTest extends Test
 
 	/**
 	* @test
-	* @depends closeParent_rule_is_enforced
 	*/
-	public function closeParent_rule_is_enforced_on_tag_with_identical_suffix()
+	public function closeParent_rule_is_not_applied_to_non_matching_parent_tag()
+	{
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('p', 'closeParent', 'p');
+
+		$this->assertParsing(
+			'[b]bold[p]para[/p][/b]',
+			'<rt><B><st>[b]</st>bold<P><st>[p]</st>para<et>[/p]</et></P><et>[/b]</et></B></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function closeParent_rule_is_not_applied_to_ascendant_tag()
+	{
+		$this->cb->BBCodes->addBBCode('p');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('p', 'closeParent', 'p');
+
+		$this->assertParsing(
+			'[p]one[b]bold[p]two[/p][/b][/p]',
+			'<rt><P><st>[p]</st>one<B><st>[b]</st>bold<P><st>[p]</st>two<et>[/p]</et></P><et>[/b]</et></B><et>[/p]</et></P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends closeParent_rule_is_applied_to_matching_parent_tag
+	*/
+	public function closeParent_rule_is_applied_to_matching_parent_tag_with_identical_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('p');
 		$this->cb->addTagRule('p', 'closeParent', 'p');
@@ -1621,9 +1651,9 @@ class ParserTest extends Test
 
 	/**
 	* @test
-	* @depends closeParent_rule_is_enforced
+	* @depends closeParent_rule_is_applied_to_matching_parent_tag
 	*/
-	public function closeParent_rule_is_enforced_on_tag_with_different_suffix()
+	public function closeParent_rule_is_applied_to_matching_parent_tag_with_different_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('p');
 		$this->cb->addTagRule('p', 'closeParent', 'p');

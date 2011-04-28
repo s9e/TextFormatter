@@ -223,9 +223,11 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Fulfilled requireParent rule allows tag despite BBCode suffix
  [x] Unfulfilled requireParent rule blocks tag
  [x] Unfulfilled requireParent rule blocks tag despite ascendant
- [x] closeParent rule is enforced
- [x] closeParent rule is enforced on tag with identical suffix
- [x] closeParent rule is enforced on tag with different suffix
+ [x] closeParent rule is applied to matching parent tag
+ [x] closeParent rule is not applied to non matching parent tag
+ [x] closeParent rule is not applied to ascendant tag
+ [x] closeParent rule is applied to matching parent tag with identical suffix
+ [x] closeParent rule is applied to matching parent tag with different suffix
  [x] closeAscendant rule is applied to parent tag
  [x] closeAscendant rule is applied to ascendant tag
  [x] closeAscendant rule is applied to tag with identical suffix
