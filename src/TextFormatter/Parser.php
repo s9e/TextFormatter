@@ -825,14 +825,19 @@ class Parser
 		$tagStack = array();
 
 		/**
-		* @var array List of allowed tags in current context
+		* @var array Current context
 		*/
-		$allowedTags = array_combine(array_keys($this->tagsConfig), array_keys($this->tagsConfig));
+		$context = array(
+			'allowedTags' => array_combine(
+				array_keys($this->tagsConfig),
+				array_keys($this->tagsConfig)
+			)
+		);
 
 		/**
 		* @var array Number of times each tag has been used
 		*/
-		$cntTotal = array_fill_keys($allowedTags, 0);
+		$cntTotal = array_fill_keys($context['allowedTags'], 0);
 
 		/**
 		* @var array Number of open tags for each tagName
@@ -976,7 +981,7 @@ class Parser
 				// Check that this tag is allowed here
 				//==============================================================
 
-				if (!isset($allowedTags[$tagName]))
+				if (!isset($context['allowedTags'][$tagName]))
 				{
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
@@ -1113,11 +1118,13 @@ class Parser
 					'name'       => $tagName,
 					'pluginName' => $this->currentTag['pluginName'],
 					'suffix'     => $this->currentTag['suffix'],
-					'context'    => array(
-						'allowedTags' => $allowedTags
-					)
+					'context'    => $context
 				);
-				$allowedTags = array_intersect_key($allowedTags, $tagConfig['allow']);
+
+				$context['allowedTags'] = array_intersect_key(
+					$context['allowedTags'],
+					$tagConfig['allow']
+				);
 			}
 
 			//==================================================================
@@ -1144,7 +1151,7 @@ class Parser
 				do
 				{
 					$cur = array_pop($tagStack);
-					$allowedTags = $cur['context']['allowedTags'];
+					$context = $cur['context'];
 
 					--$cntOpen[$cur['name']];
 					--$openTags[self::getTagId($cur)];
