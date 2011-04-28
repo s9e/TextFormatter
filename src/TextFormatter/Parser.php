@@ -306,7 +306,7 @@ class Parser
 				if ($attrVal < $attrConf['min'])
 				{
 					$parser->log('warning', array(
-						'msg' => 'Value outside of range, adjusted up to %d',
+						'msg'    => 'Value outside of range, adjusted up to %d',
 						'params' => array($attrConf['min'])
 					));
 					return $attrConf['min'];
@@ -315,7 +315,7 @@ class Parser
 				if ($attrVal > $attrConf['max'])
 				{
 					$parser->log('warning', array(
-						'msg' => 'Value outside of range, adjusted down to %d',
+						'msg'    => 'Value outside of range, adjusted down to %d',
 						'params' => array($attrConf['max'])
 					));
 					return $attrConf['max'];
