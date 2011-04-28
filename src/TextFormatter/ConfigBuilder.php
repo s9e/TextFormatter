@@ -975,9 +975,6 @@ class ConfigBuilder
 						default:
 							// keep only the rules that target existing tags
 							$targets = array_intersect_key($targets, $tagsConfig);
-
-							// This will sort the array and reset the keys
-							sort($targets);
 					}
 				}
 				unset($targets);

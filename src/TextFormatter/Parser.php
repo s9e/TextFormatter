@@ -894,42 +894,38 @@ class Parser
 			if ($this->currentTag['type'] & self::START_TAG)
 			{
 				//==============================================================
-				// Check that this tag is allowed here
+				// Apply closeParent rules
 				//==============================================================
 
-				if (!empty($tagConfig['rules']['closeParent']))
+				if (!empty($tagStack)
+				 && !empty($tagConfig['rules']['closeParent']))
 				{
-					/**
-					* Oh, wait, we may have to close its parent first
-					*/
-					$parentTag = end($tagStack);
+					$parentTag     = end($tagStack);
+					$parentTagName = $parentTag['name'];
 
-					foreach ($tagConfig['rules']['closeParent'] as $parentTagName)
+					if (isset($tagConfig['rules']['closeParent'][$parentTagName]))
 					{
-						if ($parentTag['name'] === $parentTagName)
-						{
-							/**
-							* So we do have to close that parent. First we reinsert current tag... 
-							*/
-							$this->tagStack[] = $this->currentTag;
+						/**
+						* We have to close that parent. First we reinsert current tag...
+						*/
+						$this->tagStack[] = $this->currentTag;
 
-							/**
-							* ...then we create a new end tag which we put on top of the stack
-							*/
-							$this->currentTag = array(
-								'pos'    => $this->currentTag['pos'],
-								'name'   => $parentTagName,
-								'pluginName' => $parentTag['pluginName'],
-								'suffix' => $parentTag['suffix'],
-								'len'    => 0,
-								'type'   => self::END_TAG
-							);
+						/**
+						* ...then we create a new end tag which we put on top of the stack
+						*/
+						$this->currentTag = array(
+							'pos'    => $this->currentTag['pos'],
+							'name'   => $parentTagName,
+							'pluginName' => $parentTag['pluginName'],
+							'suffix' => $parentTag['suffix'],
+							'len'    => 0,
+							'type'   => self::END_TAG
+						);
 
-							$this->addTrimmingInfoToTag($this->currentTag, $pos);
-							$this->tagStack[] = $this->currentTag;
+						$this->addTrimmingInfoToTag($this->currentTag, $pos);
+						$this->tagStack[] = $this->currentTag;
 
-							continue 2;
-						}
+						continue;
 					}
 				}
 
@@ -938,6 +934,10 @@ class Parser
 				{
 					continue;
 				}
+
+				//==============================================================
+				// Check that this tag is allowed here
+				//==============================================================
 
 				if (!isset($allowed[$tagName]))
 				{
