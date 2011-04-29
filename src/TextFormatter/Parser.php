@@ -72,7 +72,7 @@ class Parser
 	//==============================================================================================
 
 	/**
-	* @var string Text being parsed
+	* @var string  Text being parsed
 	*/
 	protected $text;
 
@@ -82,22 +82,22 @@ class Parser
 	protected $pos;
 
 	/**
-	* @var array  Unprocessed tags, in reverse order
+	* @var array   Unprocessed tags, in reverse order
 	*/
 	protected $unprocessedTags;
 
 	/**
-	* @var array  Processed tags, in document order
+	* @var array   Processed tags, in document order
 	*/
 	protected $processedTags;
 
 	/**
-	* @var array  Tag currently being processed, used in processTags()
+	* @var array   Tag currently being processed, used in processTags()
 	*/
 	protected $currentTag;
 
 	/**
-	* @var string Name of the attribute currently being validated, used in processTags()
+	* @var string  Name of the attribute currently being validated, used in processTags()
 	*/
 	protected $currentAttribute;
 
