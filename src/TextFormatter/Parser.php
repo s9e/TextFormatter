@@ -441,17 +441,17 @@ class Parser
 			* current tag
 			*/
 			$tagText = substr($this->text, $tag['pos'], $tag['len']);
-			$pos = $tag['pos'] + $tag['len'];
+			$pos     = $tag['pos'] + $tag['len'];
 
 			$wsBefore = $wsAfter = '';
 
-			if ($tag['trimBefore'])
+			if (!empty($tag['trimBefore']))
 			{
 				$wsBefore = substr($tagText, 0, $tag['trimBefore']);
 				$tagText  = substr($tagText, $tag['trimBefore']);
 			}
 
-			if ($tag['trimAfter'])
+			if (!empty($tag['trimAfter']))
 			{
 				$wsAfter = substr($tagText, -$tag['trimAfter']);
 				$tagText = substr($tagText, 0, -$tag['trimAfter']);
@@ -546,11 +546,6 @@ class Parser
 	*/
 	protected function addTrimmingInfoToTag(array &$tag)
 	{
-		$tag += array(
-			'trimBefore' => 0,
-			'trimAfter'  => 0
-		);
-
 		$tagConfig = $this->tagsConfig[$tag['name']];
 
 		/**
@@ -565,7 +560,7 @@ class Parser
 				self::TRIM_CHARLIST
 			);
 
-			$tag['trimBefore'] += $spn;
+			$tag['trimBefore']  = $spn;
 			$tag['len']        += $spn;
 			$tag['pos']        -= $spn;
 		}
@@ -579,7 +574,7 @@ class Parser
 		{
 			$spn = strspn($this->text, self::TRIM_CHARLIST, $tag['pos'] + $tag['len']);
 
-			$tag['trimAfter'] += $spn;
+			$tag['trimAfter']  = $spn;
 			$tag['len']       += $spn;
 		}
 	}
