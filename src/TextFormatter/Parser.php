@@ -77,11 +77,6 @@ class Parser
 	protected $text;
 
 	/**
-	* @var integer Cursor position during parsing
-	*/
-	protected $pos;
-
-	/**
 	* @var array   Unprocessed tags, in reverse order
 	*/
 	protected $unprocessedTags;
@@ -530,29 +525,11 @@ class Parser
 	*/
 	protected function appendTag(array $tag)
 	{
-		$offset = 0;
-
-		if (!empty($this->processedTags))
-		{
-			/**
-			* The left boundary is right after the last tag
-			*/
-			$parentTag = end($this->processedTags);
-			$offset    = $parentTag['pos'] + $parentTag['len'];
-		}
-
-		/**
-		* Add the info related to whitespace trimming. We have to do that here for several reasons:
-		*
-		*  1. We have to account for tags that are automatically closed (e.g. closeParent)
-		*  2. If we do that before sorting the tags, there are some cases where multiple tags would
-		*     attempt to claim the same whitespace
-		*  3. If we do that after the sort, the order may become incorrect since leading whitespace
-		*     becomes part of the tag, therefore changing its position
-		*/
-		$this->addTrimmingInfoToTag($tag, $offset);
+		$this->addTrimmingInfoToTag($tag);
 
 		$this->processedTags[] = $tag;
+
+		$this->pos = $tag['pos'] + $tag['len'];
 	}
 
 	/**
@@ -565,10 +542,9 @@ class Parser
 	* Note that whitespace that is part of what a pass defines as a tag is left untouched.
 	*
 	* @param  array &$tag    Tag to which we add trimming info
-	* @param  int    $offset Leftmost boundary when looking for whitespace before a tag
 	* @return void
 	*/
-	protected function addTrimmingInfoToTag(array &$tag, $offset)
+	protected function addTrimmingInfoToTag(array &$tag)
 	{
 		$tag += array(
 			'trimBefore' => 0,
@@ -585,7 +561,7 @@ class Parser
 		 || ($tag['type'] === self::END_TAG   && !empty($tagConfig['rtrimContent'])))
 		{
 			$spn = strspn(
-				strrev(substr($this->text, $offset, $tag['pos'] - $offset)),
+				strrev(substr($this->text, $this->pos, $tag['pos'] - $this->pos)),
 				self::TRIM_CHARLIST
 			);
 
@@ -595,18 +571,13 @@ class Parser
 		}
 
 		/**
-		* Move the cursor past the tag
-		*/
-		$offset = $tag['pos'] + $tag['len'];
-
-		/**
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "  [b]XX-text-  [/b]XX"
 		*/
 		if (($tag['type'] === self::START_TAG && !empty($tagConfig['ltrimContent']))
 		 || ($tag['type']  &  self::END_TAG   && !empty($tagConfig['trimAfter'])))
 		{
-			$spn = strspn($this->text, self::TRIM_CHARLIST, $offset);
+			$spn = strspn($this->text, self::TRIM_CHARLIST, $tag['pos'] + $tag['len']);
 
 			$tag['trimAfter'] += $spn;
 			$tag['len']       += $spn;
@@ -849,12 +820,12 @@ class Parser
 		*/
 		$openTags = array();
 
-		$pos = 0;
+		$this->pos = 0;
 		do
 		{
 			$this->currentTag = array_pop($this->unprocessedTags);
 
-			if ($pos > $this->currentTag['pos'])
+			if ($this->pos > $this->currentTag['pos'])
 			{
 				$this->log('debug', array(
 					'msg' => 'Tag skipped'
@@ -927,7 +898,6 @@ class Parser
 							'type'   => self::END_TAG
 						);
 
-						$this->addTrimmingInfoToTag($this->currentTag, $pos);
 						$this->unprocessedTags[] = $this->currentTag;
 
 						continue;
@@ -963,7 +933,6 @@ class Parser
 								'type'   => self::END_TAG
 							);
 
-							$this->addTrimmingInfoToTag($this->currentTag, $pos);
 							$this->unprocessedTags[] = $this->currentTag;
 
 							continue 2;
@@ -1094,8 +1063,6 @@ class Parser
 
 				$this->appendTag($this->currentTag);
 
-				$pos = $this->currentTag['pos'] + $this->currentTag['len'];
-
 				++$cntTotal[$tagName];
 
 				if ($this->currentTag['type'] & self::END_TAG)
@@ -1145,8 +1112,6 @@ class Parser
 					));
 					continue;
 				}
-
-				$pos = $this->currentTag['pos'] + $this->currentTag['len'];
 
 				do
 				{
