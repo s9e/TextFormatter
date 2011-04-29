@@ -443,7 +443,7 @@ class Parser
 			$tagText = substr($this->text, $tag['pos'], $tag['len']);
 			$pos     = $tag['pos'] + $tag['len'];
 
-			$wsBefore = $wsAfter = '';
+			$wsBefore = $wsAfter = false;
 
 			if (!empty($tag['trimBefore']))
 			{
@@ -457,7 +457,7 @@ class Parser
 				$tagText = substr($tagText, 0, -$tag['trimAfter']);
 			}
 
-			if ($wsBefore > '')
+			if ($wsBefore !== false)
 			{
 				$xml->writeElement('i', $wsBefore);
 			}
@@ -493,7 +493,7 @@ class Parser
 				$xml->endElement();
 			}
 
-			if ($wsAfter > '')
+			if ($wsAfter !== false)
 			{
 				$xml->writeElement('i', $wsAfter);
 			}
