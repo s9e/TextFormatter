@@ -84,12 +84,12 @@ class Parser
 	/**
 	* @var array  Unprocessed tags, in reverse order
 	*/
-	protected $tagStack;
+	protected $unprocessedTags;
 
 	/**
 	* @var array  Processed tags, in document order
 	*/
-	protected $tags;
+	protected $processedTags;
 
 	/**
 	* @var array  Tag currently being processed, used in processTags()
@@ -148,9 +148,9 @@ class Parser
 	*/
 	public function clear()
 	{
-		$this->log      = array();
-		$this->tagStack = array();
-		$this->tags     = array();
+		$this->log = array();
+		$this->unprocessedTags = array();
+		$this->processedTags   = array();
 
 		unset($this->text, $this->currentTag, $this->currentAttribute);
 	}
@@ -425,7 +425,7 @@ class Parser
 		$xml = new XMLWriter;
 		$xml->openMemory();
 
-		if (empty($this->tags))
+		if (empty($this->processedTags))
 		{
 			$xml->writeElement('pt', $this->text);
 
@@ -434,7 +434,7 @@ class Parser
 
 		$xml->startElement('rt');
 		$pos = 0;
-		foreach ($this->tags as $tag)
+		foreach ($this->processedTags as $tag)
 		{
 			/**
 			* Append the text that's between last tag and this one
@@ -532,12 +532,12 @@ class Parser
 	{
 		$offset = 0;
 
-		if (!empty($this->tags))
+		if (!empty($this->processedTags))
 		{
 			/**
 			* The left boundary is right after the last tag
 			*/
-			$parentTag = end($this->tags);
+			$parentTag = end($this->processedTags);
 			$offset    = $parentTag['pos'] + $parentTag['len'];
 		}
 
@@ -552,7 +552,7 @@ class Parser
 		*/
 		$this->addTrimmingInfoToTag($tag, $offset);
 
-		$this->tags[] = $tag;
+		$this->processedTags[] = $tag;
 	}
 
 	/**
@@ -620,7 +620,7 @@ class Parser
 	*/
 	protected function executePasses()
 	{
-		$this->tagStack = array();
+		$this->unprocessedTags = array();
 
 		$pass = 0;
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
@@ -754,7 +754,7 @@ class Parser
 					unset($tagId);
 				}
 
-				$this->tagStack[]  = $tag;
+				$this->unprocessedTags[] = $tag;
 			}
 		}
 	}
@@ -766,7 +766,7 @@ class Parser
 	*/
 	protected function normalizeTags()
 	{
-		foreach ($this->tagStack as $k => &$tag)
+		foreach ($this->unprocessedTags as $k => &$tag)
 		{
 			/**
 			* Normalize the tag name
@@ -781,7 +781,7 @@ class Parser
 					'params' => array($tag['name'], $tag['pluginName'])
 				));
 
-				unset($this->tagStack[$k]);
+				unset($this->unprocessedTags[$k]);
 				continue;
 			}
 
@@ -810,7 +810,7 @@ class Parser
 	*/
 	protected function processTags()
 	{
-		if (empty($this->tagStack))
+		if (empty($this->unprocessedTags))
 		{
 			return;
 		}
@@ -852,7 +852,7 @@ class Parser
 		$pos = 0;
 		do
 		{
-			$this->currentTag = array_pop($this->tagStack);
+			$this->currentTag = array_pop($this->unprocessedTags);
 
 			if ($pos > $this->currentTag['pos'])
 			{
@@ -866,7 +866,7 @@ class Parser
 			{
 				foreach ($this->currentTag['requires'] as $tagId)
 				{
-					foreach ($this->tags as $tag)
+					foreach ($this->processedTags as $tag)
 					{
 						if (isset($tag['id'])
 						 && $tag['id'] === $tagId)
@@ -913,7 +913,7 @@ class Parser
 						/**
 						* We have to close that parent. First we reinsert current tag...
 						*/
-						$this->tagStack[] = $this->currentTag;
+						$this->unprocessedTags[] = $this->currentTag;
 
 						/**
 						* ...then we create a new end tag which we put on top of the stack
@@ -928,7 +928,7 @@ class Parser
 						);
 
 						$this->addTrimmingInfoToTag($this->currentTag, $pos);
-						$this->tagStack[] = $this->currentTag;
+						$this->unprocessedTags[] = $this->currentTag;
 
 						continue;
 					}
@@ -949,7 +949,7 @@ class Parser
 							/**
 							* We have to close this ascendant. First we reinsert current tag...
 							*/
-							$this->tagStack[] = $this->currentTag;
+							$this->unprocessedTags[] = $this->currentTag;
 
 							/**
 							* ...then we create a new end tag which we put on top of the stack
@@ -964,7 +964,7 @@ class Parser
 							);
 
 							$this->addTrimmingInfoToTag($this->currentTag, $pos);
-							$this->tagStack[] = $this->currentTag;
+							$this->unprocessedTags[] = $this->currentTag;
 
 							continue 2;
 						}
@@ -1174,7 +1174,7 @@ class Parser
 				$this->appendTag($this->currentTag);
 			}
 		}
-		while (!empty($this->tagStack));
+		while (!empty($this->unprocessedTags));
 	}
 
 	/**
@@ -1184,7 +1184,7 @@ class Parser
 	*/
 	protected function sortTags()
 	{
-		usort($this->tagStack, array(__CLASS__, 'compareTags'));
+		usort($this->unprocessedTags, array(__CLASS__, 'compareTags'));
 	}
 
 	/**
