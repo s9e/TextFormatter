@@ -799,6 +799,16 @@ class Parser
 	}
 
 	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function nextTag()
+	{
+		$this->currentTag = array_pop($this->unprocessedTags);
+	}
+
+	/**
 	* Process the captured tags
 	*
 	* Removes overlapping tags, filter tags with invalid attributes, tags used in illegal places,
@@ -813,14 +823,10 @@ class Parser
 			return;
 		}
 
-		//======================================================================
-		// Time to get serious
-		//======================================================================
-
 		/**
 		* @var array Current context
 		*/
-		$context = array(
+		$this->context = array(
 			'allowedTags' => array_combine(
 				array_keys($this->tagsConfig),
 				array_keys($this->tagsConfig)
@@ -830,7 +836,7 @@ class Parser
 		/**
 		* @var array Number of times each tag has been used
 		*/
-		$this->cntTotal = array_fill_keys($context['allowedTags'], 0);
+		$this->cntTotal = array_fill_keys($this->context['allowedTags'], 0);
 
 		/**
 		* Number of open tags for each tagName
@@ -840,168 +846,13 @@ class Parser
 		/**
 		* @var array Keeps track of open tags (tags carry their suffix)
 		*/
-		$openTags = array();
+		$this->_openTags = array();
 
 		$this->pos = 0;
 		do
 		{
-			$this->currentTag = array_pop($this->unprocessedTags);
-
-			if ($this->pos > $this->currentTag['pos'])
-			{
-				$this->log('debug', array(
-					'msg' => 'Tag skipped'
-				));
-				continue;
-			}
-
-			if ($this->currentTagRequiresMissingTag())
-			{
-				$this->log('debug', array(
-					'msg' => 'Tag skipped'
-				));
-				continue;
-			}
-
-			$tagName   = $this->currentTag['name'];
-			$tagConfig = $this->tagsConfig[$tagName];
-
-			/**
-			* Make a tag ID based on its name, suffix and plugin
-			*/
-			$tagId = self::getTagId($this->currentTag);
-
-			//==================================================================
-			// Start tag
-			//==================================================================
-
-			if ($this->currentTag['type'] & self::START_TAG)
-			{
-				//==============================================================
-				// Apply closeParent and closeAscendant rules
-				//==============================================================
-
-				if ($this->closeParent())
-				{
-					continue;
-				}
-
-				if ($this->closeAscendant())
-				{
-					continue;
-				}
-
-				if ($tagConfig['nestingLimit'] <= $this->cntOpen[$tagName]
-				 || $tagConfig['tagLimit']     <= $this->cntTotal[$tagName])
-				{
-					continue;
-				}
-
-				//==============================================================
-				// Check that this tag is allowed here
-				//==============================================================
-
-				if (!isset($context['allowedTags'][$tagName]))
-				{
-					$this->log('debug', array(
-						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'Tag %s is not allowed in this context',
-						'params' => array($tagName)
-					));
-					continue;
-				}
-
-				if ($this->requireParent())
-				{
-					continue;
-				}
-
-				if ($this->requireAscendant())
-				{
-					continue;
-				}
-
-				if ($this->processCurrentTagAttributes())
-				{
-					continue;
-				}
-
-				//==============================================================
-				// Ok, so we have a valid tag
-				//==============================================================
-
-				$this->appendTag($this->currentTag);
-
-				if ($this->currentTag['type'] & self::END_TAG)
-				{
-					continue;
-				}
-
-				if (isset($openTags[$tagId]))
-				{
-					++$openTags[$tagId];
-				}
-				else
-				{
-					$openTags[$tagId] = 1;
-				}
-
-				$this->openTags[] = array(
-					'name'       => $tagName,
-					'pluginName' => $this->currentTag['pluginName'],
-					'suffix'     => $this->currentTag['suffix'],
-					'context'    => $context
-				);
-
-				$context['allowedTags'] = array_intersect_key(
-					$context['allowedTags'],
-					$tagConfig['allow']
-				);
-			}
-
-			//==================================================================
-			// End tag
-			//==================================================================
-
-			if ($this->currentTag['type'] & self::END_TAG)
-			{
-				if (empty($openTags[$tagId]))
-				{
-					/**
-					* This is an end tag but there's no matching start tag
-					*/
-					$this->log('debug', array(
-						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'Could not find a matching start tag for tag %1$s from plugin %2$s',
-						'params' => array($tagName, $this->currentTag['pluginName'])
-					));
-					continue;
-				}
-
-				do
-				{
-					$cur = array_pop($this->openTags);
-					$context = $cur['context'];
-
-					--$openTags[self::getTagId($cur)];
-
-					if ($cur['name'] !== $tagName)
-					{
-						$this->appendTag(array(
-							'name' => $cur['name'],
-							'pos'  => $this->currentTag['pos'],
-							'len'  => 0,
-							'type' => self::END_TAG
-						));
-
-						continue;
-					}
-					break;
-				}
-				while (1);
-
-				$this->appendTag($this->currentTag);
-			}
+			$this->nextTag();
+			$this->processTag();
 		}
 		while (!empty($this->unprocessedTags));
 
@@ -1017,6 +868,181 @@ class Parser
 				'type' => self::END_TAG
 			));
 		}
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function processTag()
+	{
+		if ($this->pos > $this->currentTag['pos'])
+		{
+			$this->log('debug', array(
+				'msg' => 'Tag skipped'
+			));
+			return;
+		}
+
+		if ($this->currentTagRequiresMissingTag())
+		{
+			$this->log('debug', array(
+				'msg' => 'Tag skipped'
+			));
+			return;
+		}
+
+		if ($this->currentTag['type'] & self::START_TAG)
+		{
+			$this->processStartTag();
+		}
+		else
+		{
+			$this->processEndTag();
+		}
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function processStartTag()
+	{
+		/**
+		* Make a tag ID based on its name, suffix and plugin
+		*/
+		$tagId = self::getTagId($this->currentTag);
+
+		//==============================================================
+		// Apply closeParent and closeAscendant rules
+		//==============================================================
+
+		if ($this->closeParent())
+		{
+			return;
+		}
+
+		if ($this->closeAscendant())
+		{
+			return;
+		}
+
+		$tagName   = $this->currentTag['name'];
+		$tagConfig = $this->tagsConfig[$tagName];
+
+		if ($tagConfig['nestingLimit'] <= $this->cntOpen[$tagName]
+		 || $tagConfig['tagLimit']     <= $this->cntTotal[$tagName])
+		{
+			return;
+		}
+
+		//==============================================================
+		// Check that this tag is allowed here
+		//==============================================================
+
+		if (!isset($this->context['allowedTags'][$tagName]))
+		{
+			$this->log('debug', array(
+				'pos'    => $this->currentTag['pos'],
+				'msg'    => 'Tag %s is not allowed in this context',
+				'params' => array($tagName)
+			));
+			return;
+		}
+
+		if ($this->requireParent())
+		{
+			return;
+		}
+
+		if ($this->requireAscendant())
+		{
+			return;
+		}
+
+		if ($this->processCurrentTagAttributes())
+		{
+			return;
+		}
+
+		//==============================================================
+		// Ok, so we have a valid tag
+		//==============================================================
+
+		$this->appendTag($this->currentTag);
+
+		if ($this->currentTag['type'] & self::END_TAG)
+		{
+			return;
+		}
+
+		if (isset($this->_openTags[$tagId]))
+		{
+			++$this->_openTags[$tagId];
+		}
+		else
+		{
+			$this->_openTags[$tagId] = 1;
+		}
+
+		$this->openTags[] = array(
+			'name'       => $tagName,
+			'pluginName' => $this->currentTag['pluginName'],
+			'suffix'     => $this->currentTag['suffix'],
+			'context'    => $this->context
+		);
+
+		$this->context['allowedTags'] = array_intersect_key(
+			$this->context['allowedTags'],
+			$tagConfig['allow']
+		);
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function processEndTag()
+	{
+		if (empty($this->_openTags[self::getTagId($this->currentTag)]))
+		{
+			/**
+			* This is an end tag but there's no matching start tag
+			*/
+			$this->log('debug', array(
+				'pos'    => $this->currentTag['pos'],
+				'msg'    => 'Could not find a matching start tag for tag %1$s from plugin %2$s',
+				'params' => array($this->currentTag['name'], $this->currentTag['pluginName'])
+			));
+			return;
+		}
+
+		do
+		{
+			$cur = array_pop($this->openTags);
+			$this->context = $cur['context'];
+
+			--$this->_openTags[self::getTagId($cur)];
+
+			if ($cur['name'] !== $this->currentTag['name'])
+			{
+				$this->appendTag(array(
+					'name' => $cur['name'],
+					'pos'  => $this->currentTag['pos'],
+					'len'  => 0,
+					'type' => self::END_TAG
+				));
+
+				continue;
+			}
+			break;
+		}
+		while (1);
+
+		$this->appendTag($this->currentTag);
 	}
 
 	/**
