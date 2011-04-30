@@ -92,6 +92,12 @@ class Parser
 	protected $openTags;
 
 	/**
+	* @var array   Number of tags currently open, using the tag's name, suffix and plugin's name as
+	*              key
+	*/
+	protected $openStartTags;
+
+	/**
 	* @var array   Number of open tags for each tag name
 	*/
 	protected $cntOpen;
@@ -162,6 +168,7 @@ class Parser
 		$this->unprocessedTags = array();
 		$this->processedTags   = array();
 		$this->openTags        = array();
+		$this->openStartTags   = array();
 		$this->cntOpen         = array();
 		$this->cntTotal        = array();
 
@@ -537,6 +544,11 @@ class Parser
 
 		$this->pos = $tag['pos'] + $tag['len'];
 
+		/**
+		* Maintain counters
+		*/
+		$tagId = self::getTagId($tag);
+
 		if ($tag['type'] & self::START_TAG)
 		{
 			++$this->cntTotal[$tag['name']];
@@ -544,11 +556,21 @@ class Parser
 			if ($tag['type'] === self::START_TAG)
 			{
 				++$this->cntOpen[$tag['name']];
+
+				if (isset($this->openStartTags[$tagId]))
+				{
+					++$this->openStartTags[$tagId];
+				}
+				else
+				{
+					$this->openStartTags[$tagId] = 1;
+				}
 			}
 		}
 		elseif ($tag['type'] & self::END_TAG)
 		{
 			--$this->cntOpen[$tag['name']];
+			--$this->openStartTags[$tagId];
 		}
 	}
 
@@ -787,16 +809,6 @@ class Parser
 	}
 
 	/**
-	* 
-	*
-	* @return void
-	*/
-	protected function nextTag()
-	{
-		$this->currentTag = array_pop($this->unprocessedTags);
-	}
-
-	/**
 	* Process the captured tags
 	*
 	* Removes overlapping tags, filter tags with invalid attributes, tags used in illegal places,
@@ -822,46 +834,40 @@ class Parser
 		);
 
 		/**
-		* Number of times each tag has been used
+		* Seed the tag counters with 0 for each tag
 		*/
 		$this->cntTotal = array_fill_keys($this->context['allowedTags'], 0);
-
-		/**
-		* Number of open tags for each tagName
-		*/
-		$this->cntOpen = $this->cntTotal;
-
-		/**
-		* @var array Keeps track of open tags (tags carry their suffix)
-		*/
-		$this->_openTags = array();
+		$this->cntOpen  = $this->cntTotal;
 
 		$this->pos = 0;
-		do
+
+		while ($this->nextTag())
 		{
-			$this->nextTag();
 			$this->processTag();
 		}
-		while (!empty($this->unprocessedTags));
 
 		/**
 		* Close tags that were left open
 		*/
 		foreach (array_reverse($this->openTags) as $tag)
 		{
-			$this->appendTag(array(
-				'pos'  => strlen($this->text),
-				'len'  => 0,
-				'name' => $tag['name'],
-				'type' => self::END_TAG
-			));
+			$this->currentTag = $this->createEndTag($tag, strlen($this->text));
+			$this->processTag();
 		}
 	}
 
 	/**
-	* 
+	* Pop the top unprocessed tag, put it in $this->currentTag and return it
 	*
-	* @return void
+	* @return array
+	*/
+	protected function nextTag()
+	{
+		return $this->currentTag = array_pop($this->unprocessedTags);
+	}
+
+	/**
+	* Process currentTag
 	*/
 	protected function processTag()
 	{
@@ -892,17 +898,10 @@ class Parser
 	}
 
 	/**
-	* 
-	*
-	* @return void
+	* Process current tag, which is a START_TAG
 	*/
 	protected function processStartTag()
 	{
-		/**
-		* Make a tag ID based on its name, suffix and plugin
-		*/
-		$tagId = self::getTagId($this->currentTag);
-
 		//==============================================================
 		// Apply closeParent and closeAscendant rules
 		//==============================================================
@@ -920,8 +919,8 @@ class Parser
 		$tagName   = $this->currentTag['name'];
 		$tagConfig = $this->tagsConfig[$tagName];
 
-		if ($tagConfig['nestingLimit'] <= $this->cntOpen[$tagName]
-		 || $tagConfig['tagLimit']     <= $this->cntTotal[$tagName])
+		if ($this->cntOpen[$tagName]  >= $tagConfig['nestingLimit']
+		 || $this->cntTotal[$tagName] >= $tagConfig['tagLimit'])
 		{
 			return;
 		}
@@ -966,15 +965,6 @@ class Parser
 			return;
 		}
 
-		if (isset($this->_openTags[$tagId]))
-		{
-			++$this->_openTags[$tagId];
-		}
-		else
-		{
-			$this->_openTags[$tagId] = 1;
-		}
-
 		$this->openTags[] = array(
 			'name'       => $tagName,
 			'pluginName' => $this->currentTag['pluginName'],
@@ -995,7 +985,7 @@ class Parser
 	*/
 	protected function processEndTag()
 	{
-		if (empty($this->_openTags[self::getTagId($this->currentTag)]))
+		if (empty($this->openStartTags[self::getTagId($this->currentTag)]))
 		{
 			/**
 			* This is an end tag but there's no matching start tag
@@ -1013,17 +1003,9 @@ class Parser
 			$cur = array_pop($this->openTags);
 			$this->context = $cur['context'];
 
-			--$this->_openTags[self::getTagId($cur)];
-
 			if ($cur['name'] !== $this->currentTag['name'])
 			{
-				$this->appendTag(array(
-					'name' => $cur['name'],
-					'pos'  => $this->currentTag['pos'],
-					'len'  => 0,
-					'type' => self::END_TAG
-				));
-
+				$this->appendTag($this->createEndTag($cur, $this->currentTag['pos']));
 				continue;
 			}
 			break;
@@ -1031,6 +1013,23 @@ class Parser
 		while (1);
 
 		$this->appendTag($this->currentTag);
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function createEndTag(array $tag, $pos)
+	{
+		return array(
+			'name'   => $tag['name'],
+			'pos'    => $pos,
+			'len'    => 0,
+			'type'   => self::END_TAG,
+			'suffix' => $tag['suffix'],
+			'pluginName' => $tag['pluginName']
+		);
 	}
 
 	/**
