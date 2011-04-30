@@ -548,6 +548,20 @@ class Parser
 		$this->processedTags[] = $tag;
 
 		$this->pos = $tag['pos'] + $tag['len'];
+
+		if ($tag['type'] & self::START_TAG)
+		{
+			++$this->cntTotal[$tag['name']];
+
+			if ($tag['type'] === self::START_TAG)
+			{
+				++$this->cntOpen[$tag['name']];
+			}
+		}
+		elseif ($tag['type'] & self::END_TAG)
+		{
+			--$this->cntOpen[$tag['name']];
+		}
 	}
 
 	/**
@@ -918,14 +932,10 @@ class Parser
 
 				$this->appendTag($this->currentTag);
 
-				++$this->cntTotal[$tagName];
-
 				if ($this->currentTag['type'] & self::END_TAG)
 				{
 					continue;
 				}
-
-				++$this->cntOpen[$tagName];
 
 				if (isset($openTags[$tagId]))
 				{
@@ -973,7 +983,6 @@ class Parser
 					$cur = array_pop($this->openTags);
 					$context = $cur['context'];
 
-					--$this->cntOpen[$cur['name']];
 					--$openTags[self::getTagId($cur)];
 
 					if ($cur['name'] !== $tagName)
@@ -995,6 +1004,19 @@ class Parser
 			}
 		}
 		while (!empty($this->unprocessedTags));
+
+		/**
+		* Close tags that were left open
+		*/
+		foreach (array_reverse($this->openTags) as $tag)
+		{
+			$this->appendTag(array(
+				'pos'  => strlen($this->text),
+				'len'  => 0,
+				'name' => $tag['name'],
+				'type' => self::END_TAG
+			));
+		}
 	}
 
 	/**
