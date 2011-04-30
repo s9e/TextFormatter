@@ -87,6 +87,11 @@ class Parser
 	protected $processedTags;
 
 	/**
+	* @var array   Tags currently open, in document order
+	*/
+	protected $openTags;
+
+	/**
 	* @var array   Tag currently being processed, used in processTags()
 	*/
 	protected $currentTag;
@@ -146,6 +151,7 @@ class Parser
 		$this->log = array();
 		$this->unprocessedTags = array();
 		$this->processedTags   = array();
+		$this->openTags        = array();
 
 		unset($this->text, $this->currentTag, $this->currentAttribute);
 	}
@@ -786,11 +792,6 @@ class Parser
 		//======================================================================
 
 		/**
-		* @var array Open tags
-		*/
-		$tagStack = array();
-
-		/**
 		* @var array Current context
 		*/
 		$context = array(
@@ -854,71 +855,14 @@ class Parser
 				// Apply closeParent and closeAscendant rules
 				//==============================================================
 
-				if (!empty($tagStack)
-				 && !empty($tagConfig['rules']['closeParent']))
+				if ($this->closeParent())
 				{
-					$parentTag     = end($tagStack);
-					$parentTagName = $parentTag['name'];
-
-					if (isset($tagConfig['rules']['closeParent'][$parentTagName]))
-					{
-						/**
-						* We have to close that parent. First we reinsert current tag...
-						*/
-						$this->unprocessedTags[] = $this->currentTag;
-
-						/**
-						* ...then we create a new end tag which we put on top of the stack
-						*/
-						$this->currentTag = array(
-							'pos'    => $this->currentTag['pos'],
-							'name'   => $parentTagName,
-							'pluginName' => $parentTag['pluginName'],
-							'suffix' => $parentTag['suffix'],
-							'len'    => 0,
-							'type'   => self::END_TAG
-						);
-
-						$this->unprocessedTags[] = $this->currentTag;
-
-						continue;
-					}
+					continue;
 				}
 
-
-				if (!empty($tagConfig['rules']['closeAscendant']))
+				if ($this->closeAscendant())
 				{
-					$i = count($tagStack);
-
-					while (--$i >= 0)
-					{
-						$ascendantTag     = $tagStack[$i];
-						$ascendantTagName = $ascendantTag['name'];
-
-						if (isset($tagConfig['rules']['closeAscendant'][$ascendantTagName]))
-						{
-							/**
-							* We have to close this ascendant. First we reinsert current tag...
-							*/
-							$this->unprocessedTags[] = $this->currentTag;
-
-							/**
-							* ...then we create a new end tag which we put on top of the stack
-							*/
-							$this->currentTag = array(
-								'pos'    => $this->currentTag['pos'],
-								'name'   => $ascendantTagName,
-								'pluginName' => $ascendantTag['pluginName'],
-								'suffix' => $ascendantTag['suffix'],
-								'len'    => 0,
-								'type'   => self::END_TAG
-							);
-
-							$this->unprocessedTags[] = $this->currentTag;
-
-							continue 2;
-						}
-					}
+					continue;
 				}
 
 				if ($tagConfig['nestingLimit'] <= $cntOpen[$tagName]
@@ -943,7 +887,7 @@ class Parser
 
 				if (isset($tagConfig['rules']['requireParent']))
 				{
-					$parentTag = end($tagStack);
+					$parentTag = end($this->openTags);
 
 					if (!$parentTag
 					 || !isset($tagConfig['rules']['requireParent'][$parentTag['name']]))
@@ -1062,7 +1006,7 @@ class Parser
 					$openTags[$tagId] = 1;
 				}
 
-				$tagStack[] = array(
+				$this->openTags[] = array(
 					'name'       => $tagName,
 					'pluginName' => $this->currentTag['pluginName'],
 					'suffix'     => $this->currentTag['suffix'],
@@ -1096,7 +1040,7 @@ class Parser
 
 				do
 				{
-					$cur = array_pop($tagStack);
+					$cur = array_pop($this->openTags);
 					$context = $cur['context'];
 
 					--$cntOpen[$cur['name']];
@@ -1121,6 +1065,96 @@ class Parser
 			}
 		}
 		while (!empty($this->unprocessedTags));
+	}
+
+	/**
+	* 
+	*
+	* @return boolean
+	*/
+	protected function closeParent()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (!empty($this->openTags)
+		 && !empty($tagConfig['rules']['closeParent']))
+		{
+			$parentTag     = end($this->openTags);
+			$parentTagName = $parentTag['name'];
+
+			if (isset($tagConfig['rules']['closeParent'][$parentTagName]))
+			{
+				/**
+				* We have to close that parent. First we reinsert current tag...
+				*/
+				$this->unprocessedTags[] = $this->currentTag;
+
+				/**
+				* ...then we create a new end tag which we put on top of the stack
+				*/
+				$this->currentTag = array(
+					'pos'    => $this->currentTag['pos'],
+					'name'   => $parentTagName,
+					'pluginName' => $parentTag['pluginName'],
+					'suffix' => $parentTag['suffix'],
+					'len'    => 0,
+					'type'   => self::END_TAG
+				);
+
+				$this->unprocessedTags[] = $this->currentTag;
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function closeAscendant()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (!empty($tagConfig['rules']['closeAscendant']))
+		{
+			$i = count($this->openTags);
+
+			while (--$i >= 0)
+			{
+				$ascendantTag     = $this->openTags[$i];
+				$ascendantTagName = $ascendantTag['name'];
+
+				if (isset($tagConfig['rules']['closeAscendant'][$ascendantTagName]))
+				{
+					/**
+					* We have to close this ascendant. First we reinsert current tag...
+					*/
+					$this->unprocessedTags[] = $this->currentTag;
+
+					/**
+					* ...then we create a new end tag which we put on top of the stack
+					*/
+					$this->currentTag = array(
+						'pos'    => $this->currentTag['pos'],
+						'name'   => $ascendantTagName,
+						'pluginName' => $ascendantTag['pluginName'],
+						'suffix' => $ascendantTag['suffix'],
+						'len'    => 0,
+						'type'   => self::END_TAG
+					);
+
+					$this->unprocessedTags[] = $this->currentTag;
+
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
