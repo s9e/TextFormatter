@@ -92,6 +92,16 @@ class Parser
 	protected $openTags;
 
 	/**
+	* @var array   Number of open tags for each tag name
+	*/
+	protected $cntOpen;
+
+	/**
+	* @var array   Number of times each tag has been used
+	*/
+	protected $cntTotal;
+
+	/**
 	* @var array   Tag currently being processed, used in processTags()
 	*/
 	protected $currentTag;
@@ -152,6 +162,8 @@ class Parser
 		$this->unprocessedTags = array();
 		$this->processedTags   = array();
 		$this->openTags        = array();
+		$this->cntOpen         = array();
+		$this->cntTotal        = array();
 
 		unset($this->text, $this->currentTag, $this->currentAttribute);
 	}
@@ -804,12 +816,12 @@ class Parser
 		/**
 		* @var array Number of times each tag has been used
 		*/
-		$cntTotal = array_fill_keys($context['allowedTags'], 0);
+		$this->cntTotal = array_fill_keys($context['allowedTags'], 0);
 
 		/**
-		* @var array Number of open tags for each tagName
+		* Number of open tags for each tagName
 		*/
-		$cntOpen = $cntTotal;
+		$this->cntOpen = $this->cntTotal;
 
 		/**
 		* @var array Keeps track of open tags (tags carry their suffix)
@@ -865,8 +877,8 @@ class Parser
 					continue;
 				}
 
-				if ($tagConfig['nestingLimit'] <= $cntOpen[$tagName]
-				 || $tagConfig['tagLimit']     <= $cntTotal[$tagName])
+				if ($tagConfig['nestingLimit'] <= $this->cntOpen[$tagName]
+				 || $tagConfig['tagLimit']     <= $this->cntTotal[$tagName])
 				{
 					continue;
 				}
@@ -885,101 +897,19 @@ class Parser
 					continue;
 				}
 
-				if (isset($tagConfig['rules']['requireParent']))
+				if ($this->requireParent())
 				{
-					$parentTag = end($this->openTags);
-
-					if (!$parentTag
-					 || !isset($tagConfig['rules']['requireParent'][$parentTag['name']]))
-					{
-						$msg = (count($tagConfig['rules']['requireParent']) === 1)
-						     ? 'Tag %1$s requires %2$s as parent'
-						     : 'Tag %1$s requires as parent any of: %2$s';
-
-						$this->log('error', array(
-							'pos'    => $this->currentTag['pos'],
-							'msg'    => $msg,
-							'params' => array($tagName, implode(', ', $tagConfig['rules']['requireParent']))
-						));
-
-						continue;
-					}
+					continue;
 				}
 
-				if (isset($tagConfig['rules']['requireAscendant']))
+				if ($this->requireAscendant())
 				{
-					foreach ($tagConfig['rules']['requireAscendant'] as $ascendant)
-					{
-						if (empty($cntOpen[$ascendant]))
-						{
-							$this->log('error', array(
-								'pos'    => $this->currentTag['pos'],
-								'msg'    => 'Tag %1$s requires %2$s as ascendant',
-								'params' => array($tagName, $ascendant)
-							));
-							continue 2;
-						}
-					}
+					continue;
 				}
 
-				if (empty($tagConfig['attrs']))
+				if ($this->processCurrentTagAttributes())
 				{
-					/**
-					* Remove all attributes if none are defined for this tag
-					*/
-					$this->currentTag['attrs'] = array();
-				}
-				else
-				{
-					/**
-					* Add default values
-					*/
-					$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
-
-					foreach ($missingAttrs as $attrName => $attrConf)
-					{
-						if (isset($attrConf['default']))
-						{
-							$this->currentTag['attrs'][$attrName] = $attrConf['default'];
-						}
-					}
-
-					/**
-					* Handle compound attributes
-					*/
-					$this->splitCompoundAttributes();
-
-					/**
-					* Filter attributes
-					*/
-					$this->filterAttributes();
-
-					/**
-					* Check for missing required attributes
-					*/
-					$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
-
-					foreach ($missingAttrs as $attrName => $attrConf)
-					{
-						if (empty($attrConf['isRequired']))
-						{
-							continue;
-						}
-
-						$this->log('error', array(
-							'pos'    => $this->currentTag['pos'],
-							'msg'    => "Missing attribute '%s'",
-							'params' => array($attrName)
-						));
-
-						continue 2;
-					}
-
-					/**
-					* Sort attributes alphabetically. Can be useful if someone wants to process the
-					* output using regexps
-					*/
-					ksort($this->currentTag['attrs']);
+					continue;
 				}
 
 				//==============================================================
@@ -988,14 +918,14 @@ class Parser
 
 				$this->appendTag($this->currentTag);
 
-				++$cntTotal[$tagName];
+				++$this->cntTotal[$tagName];
 
 				if ($this->currentTag['type'] & self::END_TAG)
 				{
 					continue;
 				}
 
-				++$cntOpen[$tagName];
+				++$this->cntOpen[$tagName];
 
 				if (isset($openTags[$tagId]))
 				{
@@ -1043,7 +973,7 @@ class Parser
 					$cur = array_pop($this->openTags);
 					$context = $cur['context'];
 
-					--$cntOpen[$cur['name']];
+					--$this->cntOpen[$cur['name']];
 					--$openTags[self::getTagId($cur)];
 
 					if ($cur['name'] !== $tagName)
@@ -1065,6 +995,78 @@ class Parser
 			}
 		}
 		while (!empty($this->unprocessedTags));
+	}
+
+	/**
+	* 
+	*
+	* @return boolean
+	*/
+	protected function processCurrentTagAttributes()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (empty($tagConfig['attrs']))
+		{
+			/**
+			* Remove all attributes if none are defined for this tag
+			*/
+			$this->currentTag['attrs'] = array();
+		}
+		else
+		{
+			/**
+			* Add default values
+			*/
+			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
+
+			foreach ($missingAttrs as $attrName => $attrConf)
+			{
+				if (isset($attrConf['defaultValue']))
+				{
+					$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
+				}
+			}
+
+			/**
+			* Handle compound attributes
+			*/
+			$this->splitCompoundAttributes();
+
+			/**
+			* Filter attributes
+			*/
+			$this->filterAttributes();
+
+			/**
+			* Check for missing required attributes
+			*/
+			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
+
+			foreach ($missingAttrs as $attrName => $attrConf)
+			{
+				if (empty($attrConf['isRequired']))
+				{
+					continue;
+				}
+
+				$this->log('error', array(
+					'pos'    => $this->currentTag['pos'],
+					'msg'    => "Missing attribute '%s'",
+					'params' => array($attrName)
+				));
+
+				return true;
+			}
+
+			/**
+			* Sort attributes alphabetically. Can be useful if someone wants to process the
+			* output using regexps
+			*/
+			ksort($this->currentTag['attrs']);
+		}
+
+		return false;
 	}
 
 	/**
@@ -1148,6 +1150,71 @@ class Parser
 					);
 
 					$this->unprocessedTags[] = $this->currentTag;
+
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* 
+	*
+	* @return boolean
+	*/
+	protected function requireParent()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (isset($tagConfig['rules']['requireParent']))
+		{
+			$parentTag = end($this->openTags);
+
+			if (!$parentTag
+			 || !isset($tagConfig['rules']['requireParent'][$parentTag['name']]))
+			{
+				$msg = (count($tagConfig['rules']['requireParent']) === 1)
+					 ? 'Tag %1$s requires %2$s as parent'
+					 : 'Tag %1$s requires as parent any of: %2$s';
+
+				$this->log('error', array(
+					'pos'    => $this->currentTag['pos'],
+					'msg'    => $msg,
+					'params' => array(
+						$this->currentTag['name'],
+						implode(', ', $tagConfig['rules']['requireParent'])
+					)
+				));
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* 
+	*
+	* @return boolean
+	*/
+	protected function requireAscendant()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (isset($tagConfig['rules']['requireAscendant']))
+		{
+			foreach ($tagConfig['rules']['requireAscendant'] as $ascendant)
+			{
+				if (empty($this->cntOpen[$ascendant]))
+				{
+					$this->log('error', array(
+						'pos'    => $this->currentTag['pos'],
+						'msg'    => 'Tag %1$s requires %2$s as ascendant',
+						'params' => array($this->currentTag['name'], $ascendant)
+					));
 
 					return true;
 				}
@@ -1328,17 +1395,17 @@ class Parser
 					'params' => array($attrName)
 				));
 
-				if (isset($attrConf['default']))
+				if (isset($attrConf['defaultValue']))
 				{
 					/**
 					* Use the default value
 					*/
-					$attrVal = $attrConf['default'];
+					$attrVal = $attrConf['defaultValue'];
 
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
 						'msg'    => "Using default value '%1\$s' for attribute '%2\$s'",
-						'params' => array($attrConf['default'], $attrName)
+						'params' => array($attrConf['defaultValue'], $attrName)
 					));
 				}
 				else

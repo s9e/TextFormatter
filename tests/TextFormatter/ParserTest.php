@@ -949,7 +949,7 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false, 'default' => 42));
+		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -979,7 +979,7 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false, 'default' => 42));
+		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
