@@ -532,7 +532,7 @@ class BBCodesConfig extends PluginConfig
 							foreach (explode(',', $optionValue) as $callback)
 							{
 								/**
-								* Turn stdClass::method() into array('stdClass', 'method')
+								* Turn 'stdClass::method()' into array('stdClass', 'method')
 								*/
 								if (strpos($callback, '::') !== false)
 								{
