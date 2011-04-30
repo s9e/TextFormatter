@@ -828,26 +828,12 @@ class Parser
 				continue;
 			}
 
-			if (isset($this->currentTag['requires']))
+			if ($this->currentTagRequiresMissingTag())
 			{
-				foreach ($this->currentTag['requires'] as $tagId)
-				{
-					foreach ($this->processedTags as $tag)
-					{
-						if (isset($tag['id'])
-						 && $tag['id'] === $tagId)
-						{
-							// found the tag, continue with the next required tag
-							continue 2;
-						}
-					}
-
-					// required tag not found, we skip current tag
-					$this->log('debug', array(
-						'msg' => 'Tag skipped'
-					));
-					continue 2;
-				}
+				$this->log('debug', array(
+					'msg' => 'Tag skipped'
+				));
+				continue;
 			}
 
 			$tagName   = $this->currentTag['name'];
@@ -1135,6 +1121,35 @@ class Parser
 			}
 		}
 		while (!empty($this->unprocessedTags));
+	}
+
+	/**
+	* Test whether the current tag requires another tag and that tag is missing
+	*
+	* @return boolean TRUE if the tag's requirements were NOT fulfilled, FALSE otherwise
+	*/
+	protected function currentTagRequiresMissingTag()
+	{
+		if (isset($this->currentTag['requires']))
+		{
+			foreach ($this->currentTag['requires'] as $tagId)
+			{
+				foreach ($this->processedTags as $tag)
+				{
+					if (isset($tag['id'])
+					 && $tag['id'] === $tagId)
+					{
+						// found the tag, continue with the next required tag
+						continue 2;
+					}
+				}
+
+				// required tag not found, we skip current tag
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
