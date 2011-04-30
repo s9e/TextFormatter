@@ -87,6 +87,27 @@ class Parser
 	protected $processedTags;
 
 	/**
+	* @var array   Tags currently open, in document order
+	*/
+	protected $openTags;
+
+	/**
+	* @var array   Number of tags currently open, using the tag's name, suffix and plugin's name as
+	*              key
+	*/
+	protected $openStartTags;
+
+	/**
+	* @var array   Number of open tags for each tag name
+	*/
+	protected $cntOpen;
+
+	/**
+	* @var array   Number of times each tag has been used
+	*/
+	protected $cntTotal;
+
+	/**
 	* @var array   Tag currently being processed, used in processTags()
 	*/
 	protected $currentTag;
@@ -146,6 +167,10 @@ class Parser
 		$this->log = array();
 		$this->unprocessedTags = array();
 		$this->processedTags   = array();
+		$this->openTags        = array();
+		$this->openStartTags   = array();
+		$this->cntOpen         = array();
+		$this->cntTotal        = array();
 
 		unset($this->text, $this->currentTag, $this->currentAttribute);
 	}
@@ -160,7 +185,26 @@ class Parser
 	{
 		$this->clear();
 		$this->text = $text;
-		$this->prepareTags();
+
+		/**
+		* Capture all tags
+		*/
+		$this->executePasses();
+
+		/**
+		* Normalize tag names and remove unknown tags
+		*/
+		$this->normalizeTags();
+
+		/**
+		* Sort them by position and precedence
+		*/
+		$this->sortTags();
+
+		/**
+		* Remove overlapping tags, filter invalid tags, apply tag rules and stuff
+		*/
+		$this->processTags();
 
 		return $this->output();
 	}
@@ -367,37 +411,6 @@ class Parser
 	//==============================================================================================
 
 	/**
-	* Capture tabs and process them
-	*
-	* That's the main loop. It execute all the passes to capture this text's tags, clean them up
-	* then apply rules and stuff
-	*
-	* @return void
-	*/
-	protected function prepareTags()
-	{
-		/**
-		* Capture all tags
-		*/
-		$this->executePasses();
-
-		/**
-		* Normalize tag names and remove unknown tags
-		*/
-		$this->normalizeTags();
-
-		/**
-		* Sort them by position and precedence
-		*/
-		$this->sortTags();
-
-		/**
-		* Remove overlapping tags, filter invalid tags, apply tag rules and stuff
-		*/
-		$this->processTags();
-	}
-
-	/**
 	* Default output format
 	*
 	* The purpose of this method is to be overwritten by child classes that want to output the
@@ -530,6 +543,35 @@ class Parser
 		$this->processedTags[] = $tag;
 
 		$this->pos = $tag['pos'] + $tag['len'];
+
+		/**
+		* Maintain counters
+		*/
+		$tagId = self::getTagId($tag);
+
+		if ($tag['type'] & self::START_TAG)
+		{
+			++$this->cntTotal[$tag['name']];
+
+			if ($tag['type'] === self::START_TAG)
+			{
+				++$this->cntOpen[$tag['name']];
+
+				if (isset($this->openStartTags[$tagId]))
+				{
+					++$this->openStartTags[$tagId];
+				}
+				else
+				{
+					$this->openStartTags[$tagId] = 1;
+				}
+			}
+		}
+		elseif ($tag['type'] & self::END_TAG)
+		{
+			--$this->cntOpen[$tag['name']];
+			--$this->openStartTags[$tagId];
+		}
 	}
 
 	/**
@@ -781,19 +823,10 @@ class Parser
 			return;
 		}
 
-		//======================================================================
-		// Time to get serious
-		//======================================================================
-
-		/**
-		* @var array Open tags
-		*/
-		$tagStack = array();
-
 		/**
 		* @var array Current context
 		*/
-		$context = array(
+		$this->context = array(
 			'allowedTags' => array_combine(
 				array_keys($this->tagsConfig),
 				array_keys($this->tagsConfig)
@@ -801,326 +834,357 @@ class Parser
 		);
 
 		/**
-		* @var array Number of times each tag has been used
+		* Seed the tag counters with 0 for each tag
 		*/
-		$cntTotal = array_fill_keys($context['allowedTags'], 0);
-
-		/**
-		* @var array Number of open tags for each tagName
-		*/
-		$cntOpen = $cntTotal;
-
-		/**
-		* @var array Keeps track of open tags (tags carry their suffix)
-		*/
-		$openTags = array();
+		$this->cntTotal = array_fill_keys($this->context['allowedTags'], 0);
+		$this->cntOpen  = $this->cntTotal;
 
 		$this->pos = 0;
+
+		while ($this->nextTag())
+		{
+			$this->processTag();
+		}
+
+		/**
+		* Close tags that were left open
+		*/
+		foreach (array_reverse($this->openTags) as $tag)
+		{
+			$this->currentTag = $this->createEndTag($tag, strlen($this->text));
+			$this->processTag();
+		}
+	}
+
+	/**
+	* Pop the top unprocessed tag, put it in $this->currentTag and return it
+	*
+	* @return array
+	*/
+	protected function nextTag()
+	{
+		return $this->currentTag = array_pop($this->unprocessedTags);
+	}
+
+	/**
+	* Process currentTag
+	*/
+	protected function processTag()
+	{
+		if ($this->pos > $this->currentTag['pos'])
+		{
+			$this->log('debug', array(
+				'msg' => 'Tag skipped'
+			));
+			return;
+		}
+
+		if ($this->currentTagRequiresMissingTag())
+		{
+			$this->log('debug', array(
+				'msg' => 'Tag skipped'
+			));
+			return;
+		}
+
+		if ($this->currentTag['type'] & self::START_TAG)
+		{
+			$this->processStartTag();
+		}
+		else
+		{
+			$this->processEndTag();
+		}
+	}
+
+	/**
+	* Process current tag, which is a START_TAG
+	*/
+	protected function processStartTag()
+	{
+		//==============================================================
+		// Apply closeParent and closeAscendant rules
+		//==============================================================
+
+		if ($this->closeParent())
+		{
+			return;
+		}
+
+		if ($this->closeAscendant())
+		{
+			return;
+		}
+
+		$tagName   = $this->currentTag['name'];
+		$tagConfig = $this->tagsConfig[$tagName];
+
+		if ($this->cntOpen[$tagName]  >= $tagConfig['nestingLimit']
+		 || $this->cntTotal[$tagName] >= $tagConfig['tagLimit'])
+		{
+			return;
+		}
+
+		//==============================================================
+		// Check that this tag is allowed here
+		//==============================================================
+
+		if (!isset($this->context['allowedTags'][$tagName]))
+		{
+			$this->log('debug', array(
+				'pos'    => $this->currentTag['pos'],
+				'msg'    => 'Tag %s is not allowed in this context',
+				'params' => array($tagName)
+			));
+			return;
+		}
+
+		if ($this->requireParent())
+		{
+			return;
+		}
+
+		if ($this->requireAscendant())
+		{
+			return;
+		}
+
+		if ($this->processCurrentTagAttributes())
+		{
+			return;
+		}
+
+		//==============================================================
+		// Ok, so we have a valid tag
+		//==============================================================
+
+		$this->appendTag($this->currentTag);
+
+		if ($this->currentTag['type'] & self::END_TAG)
+		{
+			return;
+		}
+
+		$this->openTags[] = array(
+			'name'       => $tagName,
+			'pluginName' => $this->currentTag['pluginName'],
+			'suffix'     => $this->currentTag['suffix'],
+			'context'    => $this->context
+		);
+
+		$this->context['allowedTags'] = array_intersect_key(
+			$this->context['allowedTags'],
+			$tagConfig['allow']
+		);
+	}
+
+	/**
+	* Process current tag, which is a END_TAG
+	*/
+	protected function processEndTag()
+	{
+		if (empty($this->openStartTags[self::getTagId($this->currentTag)]))
+		{
+			/**
+			* This is an end tag but there's no matching start tag
+			*/
+			$this->log('debug', array(
+				'pos'    => $this->currentTag['pos'],
+				'msg'    => 'Could not find a matching start tag for tag %1$s from plugin %2$s',
+				'params' => array($this->currentTag['name'], $this->currentTag['pluginName'])
+			));
+			return;
+		}
+
 		do
 		{
-			$this->currentTag = array_pop($this->unprocessedTags);
+			$cur = array_pop($this->openTags);
+			$this->context = $cur['context'];
 
-			if ($this->pos > $this->currentTag['pos'])
+			if ($cur['name'] !== $this->currentTag['name'])
 			{
-				$this->log('debug', array(
-					'msg' => 'Tag skipped'
-				));
+				$this->appendTag($this->createEndTag($cur, $this->currentTag['pos']));
 				continue;
 			}
+			break;
+		}
+		while (1);
 
-			if ($this->currentTagRequiresMissingTag())
+		$this->appendTag($this->currentTag);
+	}
+
+	/**
+	* Create an END_TAG at given position, for given START_TAG
+	*
+	* @param  array   $tag
+	* @param  integer $pos
+	* @return array
+	*/
+	protected function createEndTag(array $tag, $pos)
+	{
+		return array(
+			'name'   => $tag['name'],
+			'pos'    => $pos,
+			'len'    => 0,
+			'type'   => self::END_TAG,
+			'suffix' => $tag['suffix'],
+			'pluginName' => $tag['pluginName']
+		);
+	}
+
+	/**
+	* Apply closeParent rules from current tag
+	*
+	* @return boolean Whether a new tag has been added
+	*/
+	protected function closeParent()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (!empty($this->openTags)
+		 && !empty($tagConfig['rules']['closeParent']))
+		{
+			$parentTag     = end($this->openTags);
+			$parentTagName = $parentTag['name'];
+
+			if (isset($tagConfig['rules']['closeParent'][$parentTagName]))
 			{
-				$this->log('debug', array(
-					'msg' => 'Tag skipped'
-				));
-				continue;
-			}
+				/**
+				* We have to close that parent. First we reinsert current tag...
+				*/
+				$this->unprocessedTags[] = $this->currentTag;
 
-			$tagName   = $this->currentTag['name'];
-			$tagConfig = $this->tagsConfig[$tagName];
-
-			/**
-			* Make a tag ID based on its name, suffix and plugin
-			*/
-			$tagId = self::getTagId($this->currentTag);
-
-			//==================================================================
-			// Start tag
-			//==================================================================
-
-			if ($this->currentTag['type'] & self::START_TAG)
-			{
-				//==============================================================
-				// Apply closeParent and closeAscendant rules
-				//==============================================================
-
-				if (!empty($tagStack)
-				 && !empty($tagConfig['rules']['closeParent']))
-				{
-					$parentTag     = end($tagStack);
-					$parentTagName = $parentTag['name'];
-
-					if (isset($tagConfig['rules']['closeParent'][$parentTagName]))
-					{
-						/**
-						* We have to close that parent. First we reinsert current tag...
-						*/
-						$this->unprocessedTags[] = $this->currentTag;
-
-						/**
-						* ...then we create a new end tag which we put on top of the stack
-						*/
-						$this->currentTag = array(
-							'pos'    => $this->currentTag['pos'],
-							'name'   => $parentTagName,
-							'pluginName' => $parentTag['pluginName'],
-							'suffix' => $parentTag['suffix'],
-							'len'    => 0,
-							'type'   => self::END_TAG
-						);
-
-						$this->unprocessedTags[] = $this->currentTag;
-
-						continue;
-					}
-				}
-
-
-				if (!empty($tagConfig['rules']['closeAscendant']))
-				{
-					$i = count($tagStack);
-
-					while (--$i >= 0)
-					{
-						$ascendantTag     = $tagStack[$i];
-						$ascendantTagName = $ascendantTag['name'];
-
-						if (isset($tagConfig['rules']['closeAscendant'][$ascendantTagName]))
-						{
-							/**
-							* We have to close this ascendant. First we reinsert current tag...
-							*/
-							$this->unprocessedTags[] = $this->currentTag;
-
-							/**
-							* ...then we create a new end tag which we put on top of the stack
-							*/
-							$this->currentTag = array(
-								'pos'    => $this->currentTag['pos'],
-								'name'   => $ascendantTagName,
-								'pluginName' => $ascendantTag['pluginName'],
-								'suffix' => $ascendantTag['suffix'],
-								'len'    => 0,
-								'type'   => self::END_TAG
-							);
-
-							$this->unprocessedTags[] = $this->currentTag;
-
-							continue 2;
-						}
-					}
-				}
-
-				if ($tagConfig['nestingLimit'] <= $cntOpen[$tagName]
-				 || $tagConfig['tagLimit']     <= $cntTotal[$tagName])
-				{
-					continue;
-				}
-
-				//==============================================================
-				// Check that this tag is allowed here
-				//==============================================================
-
-				if (!isset($context['allowedTags'][$tagName]))
-				{
-					$this->log('debug', array(
-						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'Tag %s is not allowed in this context',
-						'params' => array($tagName)
-					));
-					continue;
-				}
-
-				if (isset($tagConfig['rules']['requireParent']))
-				{
-					$parentTag = end($tagStack);
-
-					if (!$parentTag
-					 || !isset($tagConfig['rules']['requireParent'][$parentTag['name']]))
-					{
-						$msg = (count($tagConfig['rules']['requireParent']) === 1)
-						     ? 'Tag %1$s requires %2$s as parent'
-						     : 'Tag %1$s requires as parent any of: %2$s';
-
-						$this->log('error', array(
-							'pos'    => $this->currentTag['pos'],
-							'msg'    => $msg,
-							'params' => array($tagName, implode(', ', $tagConfig['rules']['requireParent']))
-						));
-
-						continue;
-					}
-				}
-
-				if (isset($tagConfig['rules']['requireAscendant']))
-				{
-					foreach ($tagConfig['rules']['requireAscendant'] as $ascendant)
-					{
-						if (empty($cntOpen[$ascendant]))
-						{
-							$this->log('error', array(
-								'pos'    => $this->currentTag['pos'],
-								'msg'    => 'Tag %1$s requires %2$s as ascendant',
-								'params' => array($tagName, $ascendant)
-							));
-							continue 2;
-						}
-					}
-				}
-
-				if (empty($tagConfig['attrs']))
-				{
-					/**
-					* Remove all attributes if none are defined for this tag
-					*/
-					$this->currentTag['attrs'] = array();
-				}
-				else
-				{
-					/**
-					* Add default values
-					*/
-					$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
-
-					foreach ($missingAttrs as $attrName => $attrConf)
-					{
-						if (isset($attrConf['default']))
-						{
-							$this->currentTag['attrs'][$attrName] = $attrConf['default'];
-						}
-					}
-
-					/**
-					* Handle compound attributes
-					*/
-					$this->splitCompoundAttributes();
-
-					/**
-					* Filter attributes
-					*/
-					$this->filterAttributes();
-
-					/**
-					* Check for missing required attributes
-					*/
-					$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
-
-					foreach ($missingAttrs as $attrName => $attrConf)
-					{
-						if (empty($attrConf['isRequired']))
-						{
-							continue;
-						}
-
-						$this->log('error', array(
-							'pos'    => $this->currentTag['pos'],
-							'msg'    => "Missing attribute '%s'",
-							'params' => array($attrName)
-						));
-
-						continue 2;
-					}
-
-					/**
-					* Sort attributes alphabetically. Can be useful if someone wants to process the
-					* output using regexps
-					*/
-					ksort($this->currentTag['attrs']);
-				}
-
-				//==============================================================
-				// Ok, so we have a valid tag
-				//==============================================================
-
-				$this->appendTag($this->currentTag);
-
-				++$cntTotal[$tagName];
-
-				if ($this->currentTag['type'] & self::END_TAG)
-				{
-					continue;
-				}
-
-				++$cntOpen[$tagName];
-
-				if (isset($openTags[$tagId]))
-				{
-					++$openTags[$tagId];
-				}
-				else
-				{
-					$openTags[$tagId] = 1;
-				}
-
-				$tagStack[] = array(
-					'name'       => $tagName,
-					'pluginName' => $this->currentTag['pluginName'],
-					'suffix'     => $this->currentTag['suffix'],
-					'context'    => $context
+				/**
+				* ...then we create a new end tag which we put on top of the stack
+				*/
+				$this->currentTag = array(
+					'pos'    => $this->currentTag['pos'],
+					'name'   => $parentTagName,
+					'pluginName' => $parentTag['pluginName'],
+					'suffix' => $parentTag['suffix'],
+					'len'    => 0,
+					'type'   => self::END_TAG
 				);
 
-				$context['allowedTags'] = array_intersect_key(
-					$context['allowedTags'],
-					$tagConfig['allow']
-				);
-			}
+				$this->unprocessedTags[] = $this->currentTag;
 
-			//==================================================================
-			// End tag
-			//==================================================================
-
-			if ($this->currentTag['type'] & self::END_TAG)
-			{
-				if (empty($openTags[$tagId]))
-				{
-					/**
-					* This is an end tag but there's no matching start tag
-					*/
-					$this->log('debug', array(
-						'pos'    => $this->currentTag['pos'],
-						'msg'    => 'Could not find a matching start tag for tag %1$s from plugin %2$s',
-						'params' => array($tagName, $this->currentTag['pluginName'])
-					));
-					continue;
-				}
-
-				do
-				{
-					$cur = array_pop($tagStack);
-					$context = $cur['context'];
-
-					--$cntOpen[$cur['name']];
-					--$openTags[self::getTagId($cur)];
-
-					if ($cur['name'] !== $tagName)
-					{
-						$this->appendTag(array(
-							'name' => $cur['name'],
-							'pos'  => $this->currentTag['pos'],
-							'len'  => 0,
-							'type' => self::END_TAG
-						));
-
-						continue;
-					}
-					break;
-				}
-				while (1);
-
-				$this->appendTag($this->currentTag);
+				return true;
 			}
 		}
-		while (!empty($this->unprocessedTags));
+
+		return false;
+	}
+
+	/**
+	* Apply closeAscendant rules from current tag
+	*
+	* @return boolean Whether a new tag has been added
+	*/
+	protected function closeAscendant()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (!empty($tagConfig['rules']['closeAscendant']))
+		{
+			$i = count($this->openTags);
+
+			while (--$i >= 0)
+			{
+				$ascendantTag     = $this->openTags[$i];
+				$ascendantTagName = $ascendantTag['name'];
+
+				if (isset($tagConfig['rules']['closeAscendant'][$ascendantTagName]))
+				{
+					/**
+					* We have to close this ascendant. First we reinsert current tag...
+					*/
+					$this->unprocessedTags[] = $this->currentTag;
+
+					/**
+					* ...then we create a new end tag which we put on top of the stack
+					*/
+					$this->currentTag = array(
+						'pos'    => $this->currentTag['pos'],
+						'name'   => $ascendantTagName,
+						'pluginName' => $ascendantTag['pluginName'],
+						'suffix' => $ascendantTag['suffix'],
+						'len'    => 0,
+						'type'   => self::END_TAG
+					);
+
+					$this->unprocessedTags[] = $this->currentTag;
+
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* Apply requireParent rules from current tag
+	*
+	* @return boolean Whether current tag is invalid
+	*/
+	protected function requireParent()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (isset($tagConfig['rules']['requireParent']))
+		{
+			$parentTag = end($this->openTags);
+
+			if (!$parentTag
+			 || !isset($tagConfig['rules']['requireParent'][$parentTag['name']]))
+			{
+				$msg = (count($tagConfig['rules']['requireParent']) === 1)
+					 ? 'Tag %1$s requires %2$s as parent'
+					 : 'Tag %1$s requires as parent any of: %2$s';
+
+				$this->log('error', array(
+					'pos'    => $this->currentTag['pos'],
+					'msg'    => $msg,
+					'params' => array(
+						$this->currentTag['name'],
+						implode(', ', $tagConfig['rules']['requireParent'])
+					)
+				));
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* Apply requireAscendant rules from current tag
+	*
+	* @return boolean Whether current tag is invalid
+	*/
+	protected function requireAscendant()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (isset($tagConfig['rules']['requireAscendant']))
+		{
+			foreach ($tagConfig['rules']['requireAscendant'] as $ascendant)
+			{
+				if (empty($this->cntOpen[$ascendant]))
+				{
+					$this->log('error', array(
+						'pos'    => $this->currentTag['pos'],
+						'msg'    => 'Tag %1$s requires %2$s as ascendant',
+						'params' => array($this->currentTag['name'], $ascendant)
+					));
+
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -1209,9 +1273,81 @@ class Parser
 	}
 
 	/**
-	* 
+	* Process attributes from current tag
 	*
-	* @return void
+	* Will add default values, execute phase callbacks and remove undefined attributes.
+	*
+	* @return boolean Whether the set of attributes is invalid
+	*/
+	protected function processCurrentTagAttributes()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (empty($tagConfig['attrs']))
+		{
+			/**
+			* Remove all attributes if none are defined for this tag
+			*/
+			$this->currentTag['attrs'] = array();
+		}
+		else
+		{
+			/**
+			* Add default values
+			*/
+			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
+
+			foreach ($missingAttrs as $attrName => $attrConf)
+			{
+				if (isset($attrConf['defaultValue']))
+				{
+					$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
+				}
+			}
+
+			/**
+			* Handle compound attributes
+			*/
+			$this->splitCompoundAttributes();
+
+			/**
+			* Filter attributes
+			*/
+			$this->filterAttributes();
+
+			/**
+			* Check for missing required attributes
+			*/
+			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
+
+			foreach ($missingAttrs as $attrName => $attrConf)
+			{
+				if (empty($attrConf['isRequired']))
+				{
+					continue;
+				}
+
+				$this->log('error', array(
+					'pos'    => $this->currentTag['pos'],
+					'msg'    => "Missing attribute '%s'",
+					'params' => array($attrName)
+				));
+
+				return true;
+			}
+
+			/**
+			* Sort attributes alphabetically. Can be useful if someone wants to process the
+			* output using regexps
+			*/
+			ksort($this->currentTag['attrs']);
+		}
+
+		return false;
+	}
+
+	/**
+	* Filter attributes from current tag
 	*/
 	protected function filterAttributes()
 	{
@@ -1294,17 +1430,17 @@ class Parser
 					'params' => array($attrName)
 				));
 
-				if (isset($attrConf['default']))
+				if (isset($attrConf['defaultValue']))
 				{
 					/**
 					* Use the default value
 					*/
-					$attrVal = $attrConf['default'];
+					$attrVal = $attrConf['defaultValue'];
 
 					$this->log('debug', array(
 						'pos'    => $this->currentTag['pos'],
 						'msg'    => "Using default value '%1\$s' for attribute '%2\$s'",
-						'params' => array($attrConf['default'], $attrName)
+						'params' => array($attrConf['defaultValue'], $attrName)
 					));
 				}
 				else

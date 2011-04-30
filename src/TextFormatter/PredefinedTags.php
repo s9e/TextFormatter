@@ -150,7 +150,7 @@ class PredefinedTags
 		$this->cb->addTagAttribute('LIST', 'start', 'uint', array('isRequired' => false));
 
 		$this->cb->addTagAttribute('LIST', 'style', 'regexp', array(
-			'default'    => 'disc',
+			'defaultValue'    => 'disc',
 			'isRequired' => false,
 			'regexp'     => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
 		));
@@ -361,9 +361,9 @@ class PredefinedTags
 		));
 
 		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
-			'default'    => 'plain',
-			'isRequired' => false,
-			'preFilter'  => array(
+			'defaultValue' => 'plain',
+			'isRequired'   => false,
+			'preFilter'    => array(
 				array('callback' => 'strtolower')
 			)
 		));
