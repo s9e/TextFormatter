@@ -979,9 +979,7 @@ class Parser
 	}
 
 	/**
-	* 
-	*
-	* @return void
+	* Process current tag, which is a END_TAG
 	*/
 	protected function processEndTag()
 	{
@@ -1016,9 +1014,11 @@ class Parser
 	}
 
 	/**
-	* 
+	* Create an END_TAG at given position, for given START_TAG
 	*
-	* @return void
+	* @param  array   $tag
+	* @param  integer $pos
+	* @return array
 	*/
 	protected function createEndTag(array $tag, $pos)
 	{
@@ -1033,81 +1033,9 @@ class Parser
 	}
 
 	/**
-	* 
+	* Apply closeParent rules from current tag
 	*
-	* @return boolean
-	*/
-	protected function processCurrentTagAttributes()
-	{
-		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
-
-		if (empty($tagConfig['attrs']))
-		{
-			/**
-			* Remove all attributes if none are defined for this tag
-			*/
-			$this->currentTag['attrs'] = array();
-		}
-		else
-		{
-			/**
-			* Add default values
-			*/
-			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
-
-			foreach ($missingAttrs as $attrName => $attrConf)
-			{
-				if (isset($attrConf['defaultValue']))
-				{
-					$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
-				}
-			}
-
-			/**
-			* Handle compound attributes
-			*/
-			$this->splitCompoundAttributes();
-
-			/**
-			* Filter attributes
-			*/
-			$this->filterAttributes();
-
-			/**
-			* Check for missing required attributes
-			*/
-			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
-
-			foreach ($missingAttrs as $attrName => $attrConf)
-			{
-				if (empty($attrConf['isRequired']))
-				{
-					continue;
-				}
-
-				$this->log('error', array(
-					'pos'    => $this->currentTag['pos'],
-					'msg'    => "Missing attribute '%s'",
-					'params' => array($attrName)
-				));
-
-				return true;
-			}
-
-			/**
-			* Sort attributes alphabetically. Can be useful if someone wants to process the
-			* output using regexps
-			*/
-			ksort($this->currentTag['attrs']);
-		}
-
-		return false;
-	}
-
-	/**
-	* 
-	*
-	* @return boolean
+	* @return boolean Whether a new tag has been added
 	*/
 	protected function closeParent()
 	{
@@ -1148,9 +1076,9 @@ class Parser
 	}
 
 	/**
-	* 
+	* Apply closeAscendant rules from current tag
 	*
-	* @return void
+	* @return boolean Whether a new tag has been added
 	*/
 	protected function closeAscendant()
 	{
@@ -1195,9 +1123,9 @@ class Parser
 	}
 
 	/**
-	* 
+	* Apply requireParent rules from current tag
 	*
-	* @return boolean
+	* @return boolean Whether current tag is invalid
 	*/
 	protected function requireParent()
 	{
@@ -1231,9 +1159,9 @@ class Parser
 	}
 
 	/**
-	* 
+	* Apply requireAscendant rules from current tag
 	*
-	* @return boolean
+	* @return boolean Whether current tag is invalid
 	*/
 	protected function requireAscendant()
 	{
@@ -1345,9 +1273,81 @@ class Parser
 	}
 
 	/**
-	* 
+	* Process attributes from current tag
 	*
-	* @return void
+	* Will add default values, execute phase callbacks and remove undefined attributes.
+	*
+	* @return boolean Whether the set of attributes is invalid
+	*/
+	protected function processCurrentTagAttributes()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (empty($tagConfig['attrs']))
+		{
+			/**
+			* Remove all attributes if none are defined for this tag
+			*/
+			$this->currentTag['attrs'] = array();
+		}
+		else
+		{
+			/**
+			* Add default values
+			*/
+			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
+
+			foreach ($missingAttrs as $attrName => $attrConf)
+			{
+				if (isset($attrConf['defaultValue']))
+				{
+					$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
+				}
+			}
+
+			/**
+			* Handle compound attributes
+			*/
+			$this->splitCompoundAttributes();
+
+			/**
+			* Filter attributes
+			*/
+			$this->filterAttributes();
+
+			/**
+			* Check for missing required attributes
+			*/
+			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
+
+			foreach ($missingAttrs as $attrName => $attrConf)
+			{
+				if (empty($attrConf['isRequired']))
+				{
+					continue;
+				}
+
+				$this->log('error', array(
+					'pos'    => $this->currentTag['pos'],
+					'msg'    => "Missing attribute '%s'",
+					'params' => array($attrName)
+				));
+
+				return true;
+			}
+
+			/**
+			* Sort attributes alphabetically. Can be useful if someone wants to process the
+			* output using regexps
+			*/
+			ksort($this->currentTag['attrs']);
+		}
+
+		return false;
+	}
+
+	/**
+	* Filter attributes from current tag
 	*/
 	protected function filterAttributes()
 	{
