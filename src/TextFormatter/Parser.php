@@ -178,7 +178,26 @@ class Parser
 	{
 		$this->clear();
 		$this->text = $text;
-		$this->prepareTags();
+
+		/**
+		* Capture all tags
+		*/
+		$this->executePasses();
+
+		/**
+		* Normalize tag names and remove unknown tags
+		*/
+		$this->normalizeTags();
+
+		/**
+		* Sort them by position and precedence
+		*/
+		$this->sortTags();
+
+		/**
+		* Remove overlapping tags, filter invalid tags, apply tag rules and stuff
+		*/
+		$this->processTags();
 
 		return $this->output();
 	}
@@ -383,37 +402,6 @@ class Parser
 	//==============================================================================================
 	// The big cheese
 	//==============================================================================================
-
-	/**
-	* Capture tabs and process them
-	*
-	* That's the main loop. It execute all the passes to capture this text's tags, clean them up
-	* then apply rules and stuff
-	*
-	* @return void
-	*/
-	protected function prepareTags()
-	{
-		/**
-		* Capture all tags
-		*/
-		$this->executePasses();
-
-		/**
-		* Normalize tag names and remove unknown tags
-		*/
-		$this->normalizeTags();
-
-		/**
-		* Sort them by position and precedence
-		*/
-		$this->sortTags();
-
-		/**
-		* Remove overlapping tags, filter invalid tags, apply tag rules and stuff
-		*/
-		$this->processTags();
-	}
 
 	/**
 	* Default output format
@@ -834,7 +822,7 @@ class Parser
 		);
 
 		/**
-		* @var array Number of times each tag has been used
+		* Number of times each tag has been used
 		*/
 		$this->cntTotal = array_fill_keys($this->context['allowedTags'], 0);
 
