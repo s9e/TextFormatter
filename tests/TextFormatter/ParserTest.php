@@ -1283,25 +1283,20 @@ class ParserTest extends Test
 
 		$this->cb->addTag('X', array('nestingLimit' => 2));
 
-		foreach (array(0, 1, 2) as $pos)
+		$text = 'SSSEEE';
+
+		foreach (str_split($text, 1) as $pos => $c)
 		{
 			$this->cb->Canned->tags[] = array(
 				'pos'   => $pos,
 				'len'   => 1,
 				'name'  => 'X',
-				'type'  => Parser::START_TAG
-			);
-
-			$this->cb->Canned->tags[] = array(
-				'pos'   => 5 - $pos,
-				'len'   => 1,
-				'name'  => 'X',
-				'type'  => Parser::END_TAG
+				'type'  => ($c === 'S') ? Parser::START_TAG : Parser::END_TAG
 			);
 		}
 
 		$this->assertParsing(
-			'SSSEEE',
+			$text,
 			'<rt>
 				<X>
 					<st>S</st>
@@ -1314,6 +1309,57 @@ class ParserTest extends Test
 				</X>'
 			. 'E'
 			. '</rt>'
+		);
+	}
+
+	/**
+	* @test
+	*
+	* This test exists to ensure that the parser correctly decrements the nesting counter when
+	* tags are closed
+	*
+	* @todo add a test for interactions between nestingLimit and closeParent/closeAscendant and
+	*       tags that are automatically closed as their ascendant is closed
+	*/
+	public function Tags_nestingLimit_does_not_incorrectly_count_siblings()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', array('nestingLimit' => 2));
+
+		$text = 'SSESESEE';
+
+		foreach (str_split($text, 1) as $pos => $c)
+		{
+			$this->cb->Canned->tags[] = array(
+				'pos'   => $pos,
+				'len'   => 1,
+				'name'  => 'X',
+				'type'  => ($c === 'S') ? Parser::START_TAG : Parser::END_TAG
+			);
+		}
+
+		$this->assertParsing(
+			$text,
+			'<rt>
+				<X>
+					<st>S</st>
+					<X>
+						<st>S</st>
+						<et>E</et>
+					</X>
+					<X>
+						<st>S</st>
+						<et>E</et>
+					</X>
+					<X>
+						<st>S</st>
+						<et>E</et>
+					</X>
+					<et>E</et>
+				</X>
+			</rt>'
 		);
 	}
 
