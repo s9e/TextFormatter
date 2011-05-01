@@ -204,7 +204,7 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Attribute value is replaced by the return value of the attribute preFilter callbacks
  [x] Attribute value is replaced by the return value of the attribute postFilter callbacks even if it makes it invalid
  [x] Plain text is returned within pt tags
- [x] Undefined attributes do not appear in xml
+ [x] Undefined attributes do not appear in XML
  [x] Overlapping tags are removed
  [x] Tags are sorted correctly
  [x] The number of regexp matches can be limited with extra matches ignored
@@ -212,8 +212,8 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] The number of regexp matches can be limited across multiple regexps with extra matches ignored
  [x] The number of regexp matches can be limited and parsing aborted if limit exceeded
  [x] Unknown tags are ignored
- [x] Tags nesting limit is enforced
- [x] Tags tag limit is enforced
+ [x] Tags nestingLimit is enforced
+ [x] Tags tagLimit is enforced
  [x] Zero width tags are correctly ouput
  [x] Tags left open get closed when their ancestor gets closed
  [x] Tags can specify a list of tags that are required

@@ -1057,7 +1057,10 @@ class ParserTest extends Test
 		$this->assertParsing('plain text', '<pt>plain text</pt>');
 	}
 
-	public function testUndefinedAttributesDoNotAppearInXml()
+	/**
+	* @test
+	*/
+	public function Undefined_attributes_do_not_appear_in_XML()
 	{
 		$this->cb->BBCodes->addBBCode('x');
 		$this->assertParsing(
@@ -1270,7 +1273,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testTagsNestingLimitIsEnforced()
+	/**
+	* @test
+	*/
+	public function Tags_nestingLimit_is_enforced()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
@@ -1311,7 +1317,10 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testTagsTagLimitIsEnforced()
+	/**
+	* @test
+	*/
+	public function Tags_tagLimit_is_enforced()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
