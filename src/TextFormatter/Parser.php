@@ -190,7 +190,7 @@ class Parser
 		/**
 		* Capture all tags
 		*/
-		$this->executePasses();
+		$this->executePluginParsers();
 
 		/**
 		* Normalize tag names and remove unknown tags
@@ -627,11 +627,10 @@ class Parser
 	*
 	* @return void
 	*/
-	protected function executePasses()
+	protected function executePluginParsers()
 	{
 		$this->unprocessedTags = array();
 
-		$pass = 0;
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
 		{
 			$matches = array();
