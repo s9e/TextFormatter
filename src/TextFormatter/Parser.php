@@ -155,15 +155,17 @@ class Parser
 	}
 
 	/**
-	* Clear this instance's properties
+	* Reset this instance's properties
 	*
 	* Used internally at the beginning of a new parsing. I suppose some memory-obsessive users will
 	* appreciate to be able to do it whenever they feel like it
 	*
 	* @return void
 	*/
-	public function clear()
+	public function reset($text)
 	{
+		$this->text = $text;
+
 		$this->log = array();
 		$this->unprocessedTags = array();
 		$this->processedTags   = array();
@@ -172,7 +174,7 @@ class Parser
 		$this->cntOpen         = array();
 		$this->cntTotal        = array();
 
-		unset($this->text, $this->currentTag, $this->currentAttribute);
+		unset($this->currentTag, $this->currentAttribute);
 	}
 
 	/**
@@ -183,8 +185,7 @@ class Parser
 	*/
 	public function parse($text)
 	{
-		$this->clear();
-		$this->text = $text;
+		$this->reset($text);
 
 		/**
 		* Capture all tags
