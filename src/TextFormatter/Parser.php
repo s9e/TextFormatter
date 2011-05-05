@@ -623,6 +623,87 @@ class Parser
 	}
 
 	/**
+	* Execute a plugin's regexps
+	*
+	* Takes care of regexpLimit/regexpAction
+	*
+	* @param  string   $pluginName
+	* @param  array    $pluginConfig
+	* @param  array   &$matches      Matches container, passed by reference
+	* @return integer                Total number of matches
+	*/
+	protected function executePluginRegexp($pluginName, array $pluginConfig, array &$matches)
+	{
+		/**
+		* Some plugins have several regexps in an array, others have a single regexp as a
+		* string. We convert the latter to an array so that we can iterate over it.
+		*/
+		$isArray = is_array($pluginConfig['regexp']);
+		$regexps = ($isArray) ? $pluginConfig['regexp'] : array($pluginConfig['regexp']);
+
+		/**
+		* @var bool If true, skip the rest of the regexps
+		*/
+		$skip = false;
+
+		$cnt = 0;
+		foreach ($regexps as $k => $regexp)
+		{
+			$matches[$k] = array();
+
+			if ($skip)
+			{
+				continue;
+			}
+
+			$_cnt = preg_match_all(
+				$regexp,
+				$this->text,
+				$matches[$k],
+				\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
+			);
+
+			if (!$_cnt)
+			{
+				continue;
+			}
+
+			$cnt += $_cnt;
+
+			if ($cnt > $pluginConfig['regexpLimit'])
+			{
+				if ($pluginConfig['regexpLimitAction'] === 'abort')
+				{
+					throw new RuntimeException($pluginName . ' limit exceeded');
+				}
+				else
+				{
+					$limit   = $pluginConfig['regexpLimit'] + $_cnt - $cnt;
+					$msgType = ($pluginConfig['regexpLimitAction'] === 'ignore')
+							 ? 'debug'
+							 : 'warning';
+
+					$matches[$k] = array_slice($matches[$k], 0, $limit);
+
+					$this->log($msgType, array(
+						'msg' => '%1$s limit exceeded. Only the first %2$s matches will be processed',
+						'params' => array($pluginName, $pluginConfig['regexpLimit'])
+					));
+
+					$skip = true;
+				}
+			}
+		}
+
+		if (!$isArray)
+		{
+			$matches = $matches[0];
+		}
+
+		return $cnt;
+	}
+
+	/**
 	* Execute all the plugins and store their tags
 	*
 	* @return void
@@ -634,80 +715,15 @@ class Parser
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
 		{
 			$matches = array();
+
 			if (isset($pluginConfig['regexp']))
 			{
-				/**
-				* Some plugins have several regexps in an array, others have a single regexp as a
-				* string. We convert the latter to an array so that we can iterate over it.
-				*/
-				$isArray = is_array($pluginConfig['regexp']);
-				$regexps = ($isArray) ? $pluginConfig['regexp'] : array($pluginConfig['regexp']);
-
-				/**
-				* @var bool If true, skip the rest of the regexps
-				*/
-				$skip = false;
-
-				$cnt = 0;
-				foreach ($regexps as $k => $regexp)
-				{
-					$matches[$k] = array();
-
-					if ($skip)
-					{
-						continue;
-					}
-
-					$_cnt = preg_match_all(
-						$regexp,
-						$this->text,
-						$matches[$k],
-						\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
-					);
-
-					if (!$_cnt)
-					{
-						continue;
-					}
-
-					$cnt += $_cnt;
-
-					if ($cnt > $pluginConfig['regexpLimit'])
-					{
-						if ($pluginConfig['regexpLimitAction'] === 'abort')
-						{
-							throw new RuntimeException($pluginName . ' limit exceeded');
-						}
-						else
-						{
-							$limit   = $pluginConfig['regexpLimit'] + $_cnt - $cnt;
-							$msgType = ($pluginConfig['regexpLimitAction'] === 'ignore')
-							         ? 'debug'
-							         : 'warning';
-
-							$matches[$k] = array_slice($matches[$k], 0, $limit);
-
-							$this->log($msgType, array(
-								'msg'    => '%1$s limit exceeded. Only the first %2$s matches will be processed',
-								'params' => array($pluginName, $pluginConfig['regexpLimit'])
-							));
-
-							$skip = true;
-						}
-					}
-				}
-
-				if (!$cnt)
+				if (!$this->executePluginRegexp($pluginName, $pluginConfig, $matches))
 				{
 					/**
 					* No matches? skip this plugin
 					*/
 					continue;
-				}
-
-				if (!$isArray)
-				{
-					$matches = $matches[0];
 				}
 			}
 
