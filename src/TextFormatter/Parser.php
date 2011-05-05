@@ -628,12 +628,13 @@ class Parser
 	* Takes care of regexpLimit/regexpAction
 	*
 	* @param  string   $pluginName
-	* @param  array    $pluginConfig
 	* @param  array   &$matches      Matches container, passed by reference
 	* @return integer                Total number of matches
 	*/
-	protected function executePluginRegexp($pluginName, array $pluginConfig, array &$matches)
+	protected function executePluginRegexp($pluginName, array &$matches)
 	{
+		$pluginConfig = $this->pluginsConfig[$pluginName];
+
 		/**
 		* Some plugins have several regexps in an array, others have a single regexp as a
 		* string. We convert the latter to an array so that we can iterate over it.
@@ -704,28 +705,19 @@ class Parser
 	}
 
 	/**
-	* Execute all the plugins and store their tags
+	* Return a cached instance of a PluginParser
 	*
-	* @return void
+	* @param  string $pluginName
+	* @return PluginParser
 	*/
-	protected function executePluginParsers()
+	protected function getPluginParser($pluginName)
 	{
-		$this->unprocessedTags = array();
-
-		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
+		/**
+		* Check whether an instance is ready, the class exists or if we have to load it
+		*/
+		if (!isset($this->pluginParsers[$pluginName]))
 		{
-			$matches = array();
-
-			if (isset($pluginConfig['regexp']))
-			{
-				if (!$this->executePluginRegexp($pluginName, $pluginConfig, $matches))
-				{
-					/**
-					* No matches? skip this plugin
-					*/
-					continue;
-				}
-			}
+			$pluginConfig = $this->pluginsConfig[$pluginName];
 
 			if (!isset($pluginConfig['parserClassName']))
 			{
@@ -736,33 +728,53 @@ class Parser
 					__DIR__ . '/Plugins/' . $pluginName . 'Parser.php';
 			}
 
-			/**
-			* Check whether an instance is ready, the class exists or if we have to load it
-			*/
-			if (!isset($this->pluginParsers[$pluginName]))
+			$useAutoload = !isset($pluginConfig['parserFilepath']);
+
+			if (!class_exists($pluginConfig['parserClassName'], $useAutoload)
+			 && isset($pluginConfig['parserFilepath']))
 			{
-				$useAutoload = !isset($pluginConfig['parserFilepath']);
-
-				if (!class_exists($pluginConfig['parserClassName'], $useAutoload)
-				 && isset($pluginConfig['parserFilepath']))
+				/**
+				* Check for the PluginParser class
+				*/
+				if (!class_exists(__NAMESPACE__ . '\\PluginParser'))
 				{
-					/**
-					* Check for the PluginParser class
-					*/
-					if (!class_exists(__NAMESPACE__ . '\\PluginParser'))
-					{
-						include __DIR__ . '/PluginParser.php';
-					}
-
-					include $pluginConfig['parserFilepath'];
+					include __DIR__ . '/PluginParser.php';
 				}
 
-				$className = $pluginConfig['parserClassName'];
-
-				$this->pluginParsers[$pluginName] = new $className($this, $pluginConfig);
+				include $pluginConfig['parserFilepath'];
 			}
 
-			$tags = $this->pluginParsers[$pluginName]->getTags($this->text, $matches);
+			$className = $pluginConfig['parserClassName'];
+
+			$this->pluginParsers[$pluginName] = new $className($this, $pluginConfig);
+		}
+
+		return $this->pluginParsers[$pluginName];
+	}
+
+	/**
+	* Execute all the plugins and store their tags
+	*
+	* @return void
+	*/
+	protected function executePluginParsers()
+	{
+		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
+		{
+			$matches = array();
+
+			if (isset($pluginConfig['regexp']))
+			{
+				if (!$this->executePluginRegexp($pluginName, $matches))
+				{
+					/**
+					* No matches? skip this plugin
+					*/
+					continue;
+				}
+			}
+
+			$tags = $this->getPluginParser($pluginName)->getTags($this->text, $matches);
 
 			foreach ($tags as $k => $tag)
 			{
