@@ -934,12 +934,8 @@ class Parser
 		// Apply closeParent and closeAscendant rules
 		//==============================================================
 
-		if ($this->closeParent())
-		{
-			return;
-		}
-
-		if ($this->closeAscendant())
+		if ($this->closeParent()
+		 || $this->closeAscendant())
 		{
 			return;
 		}
@@ -967,17 +963,9 @@ class Parser
 			return;
 		}
 
-		if ($this->requireParent())
-		{
-			return;
-		}
-
-		if ($this->requireAscendant())
-		{
-			return;
-		}
-
-		if ($this->processCurrentTagAttributes())
+		if ($this->requireParent()
+		 || $this->requireAscendant()
+		 || $this->processCurrentTagAttributes())
 		{
 			return;
 		}
