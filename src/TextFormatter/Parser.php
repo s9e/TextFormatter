@@ -614,15 +614,15 @@ class Parser
 	}
 
 	/**
-	* Execute a plugin's regexps
+	* Execute a plugin's regexps and return the result
 	*
 	* Takes care of regexpLimit/regexpAction
 	*
-	* @param  string   $pluginName
-	* @param  array   &$matches      Matches container, passed by reference
-	* @return integer                Total number of matches
+	* @param  string $pluginName
+	* @return mixed              An array of matches, a 2D array of matches, FALSE if no regexp
+	*                            produced any matches or NULL if there's no regexp for this plugin
 	*/
-	protected function executePluginRegexp($pluginName, array &$matches)
+	protected function executePluginRegexp($pluginName)
 	{
 		$pluginConfig = $this->pluginsConfig[$pluginName];
 
@@ -638,7 +638,9 @@ class Parser
 		*/
 		$skip = false;
 
+		$matches = array();
 		$cnt = 0;
+
 		foreach ($regexps as $k => $regexp)
 		{
 			$matches[$k] = array();
@@ -687,12 +689,17 @@ class Parser
 			}
 		}
 
+		if (!$cnt)
+		{
+			return false;
+		}
+
 		if (!$isArray)
 		{
 			$matches = $matches[0];
 		}
 
-		return $cnt;
+		return $matches;
 	}
 
 	/**
@@ -756,11 +763,10 @@ class Parser
 
 			if (isset($pluginConfig['regexp']))
 			{
-				if (!$this->executePluginRegexp($pluginName, $matches))
+				$matches = $this->executePluginRegexp($pluginName);
+
+				if ($matches === false)
 				{
-					/**
-					* No matches? skip this plugin
-					*/
 					continue;
 				}
 			}
