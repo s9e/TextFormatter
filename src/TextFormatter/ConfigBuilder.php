@@ -1105,6 +1105,19 @@ class ConfigBuilder
 		return $tags;
 	}
 
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function getJSParser()
+	{
+		include_once __DIR__ . '/JSParserGenerator.php';
+
+		$jspg = new JSParserGenerator($this);
+		return $jspg->get();
+	}
+
 	//==========================================================================
 	// Misc tools
 	//==========================================================================

@@ -1,24 +1,22 @@
 s9e = {};
+
+/**
+* @typedef {{
+*	pos: !number,
+*	name: !string,
+*   type: !number,
+*	requires: Array.<number>,
+*	attrs: Object
+* }}
+*/
+var Tag;
+
 s9e['Parser'] = function()
 {
-	/**
-	* @typedef {{
-	*	name: string,
-	*	requires: ?Array
-	* }}
-	*/
-	var Tag;
-
-	/**
-	* @typedef {{
-	*	name: string,
-	*	requires: ?Array
-	* }}
-	*/
-	var NormalizedTag;
-
-
 	var
+		/** @const */
+		DEBUG = true,
+
 		/** @const */
 		START_TAG        = 1,
 		/** @const */
@@ -63,10 +61,11 @@ s9e['Parser'] = function()
 	{
 		text = _text;
 
-		_log = {};
-		_log['debug'] = [];
-		_log['warning'] = [];
-		_log['error'] = [];
+		_log = {
+			'debug': [],
+			'warning': [],
+			'error': []
+		};
 
 		unprocessedTags = [];
 		processedTags   = [];
@@ -195,7 +194,7 @@ s9e['Parser'] = function()
 
 				if (!tagsConfig[tag.name])
 				{
-					log('debug', {
+					DEBUG && log('debug', {
 						'pos'    : tag.pos,
 						'msg'    : 'Removed unknown tag %1$s from plugin %2$s',
 						'params' : [tag.name, tag.pluginName]
@@ -276,7 +275,7 @@ s9e['Parser'] = function()
 		if (pos > currentTag.pos
 		 || currentTagRequiresMissingTag())
 		{
-			log('debug', {
+			DEBUG && log('debug', {
 				'msg': 'Tag skipped'
 			});
 			return;
@@ -319,7 +318,7 @@ s9e['Parser'] = function()
 
 		if (!context.allowedTags[tagName])
 		{
-			log('debug', {
+			DEBUG && log('debug', {
 				'msg'    : 'Tag %s is not allowed in this context',
 				'params' : [tagName]
 			});
@@ -368,7 +367,7 @@ s9e['Parser'] = function()
 			/**
 			* This is an end tag but there's no matching start tag
 			*/
-			log('debug', {
+			DEBUG && log('debug', {
 				'msg'    : 'Could not find a matching start tag for tag %1$s from plugin %2$s',
 				'params' : [currentTag.name, currentTag.pluginName]
 			});
@@ -392,15 +391,19 @@ s9e['Parser'] = function()
 		appendTag(currentTag);
 	}
 
+	/**
+	* @param {Tag}    tag
+	* @param {number} _pos
+	*/
 	function createEndTag(tag, _pos)
 	{
 		return {
-			'name'   : tag.name,
-			'pos'    : _pos,
-			'len'    : 0,
-			'type'   : END_TAG,
-			'suffix' : tag.suffix,
-			'pluginName' : tag.pluginName
+			name   : tag.name,
+			pos    : _pos,
+			len    : 0,
+			type   : END_TAG,
+			suffix : tag.suffix,
+			pluginName : tag.pluginName
 		};
 	}
 
