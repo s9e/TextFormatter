@@ -117,6 +117,11 @@ class Parser
 	*/
 	protected $currentAttribute;
 
+	/**
+	* @var array  Current context
+	*/
+	protected $context;
+
 	//==============================================================================================
 	// Public stuff
 	//==============================================================================================
@@ -848,9 +853,6 @@ class Parser
 			return;
 		}
 
-		/**
-		* @var array Current context
-		*/
 		$this->context = array(
 			'allowedTags' => array_combine(
 				array_keys($this->tagsConfig),
@@ -1248,13 +1250,13 @@ class Parser
 	*/
 	static public function compareTags(array $a, array $b)
 	{
-		if ($a['pos'] <> $b['pos'])
+		if ($a['pos'] !== $b['pos'])
 		{
 			return $b['pos'] - $a['pos'];
 		}
 
 		// This block orders zero-width tags
-		if ($a['len'] <> $b['len'])
+		if ($a['len'] !== $b['len'])
 		{
 			if (!$b['len'])
 			{
@@ -1269,7 +1271,7 @@ class Parser
 		}
 		// @codeCoverageIgnoreEnd
 
-		if ($a['type'] <> $b['type'])
+		if ($a['type'] !== $b['type'])
 		{
 			$order = array(
 				self::END_TAG => 2,
