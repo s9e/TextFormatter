@@ -286,7 +286,7 @@ foreach(matches, function(m)
 		/**
 		* Make sure that the start tag isn't immediately followed by an endtag
 		*/
-		if (text.substr(1 + rpos, endTag.length).toUpperCase !== endTag)
+		if (text.substr(1 + rpos, endTag.length).toUpperCase() !== endTag)
 		{
 			type = SELF_CLOSING_TAG;
 		}

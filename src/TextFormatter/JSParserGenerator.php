@@ -122,6 +122,7 @@ class JSParserGenerator
 		$this->removeDeadRules();
 		$this->removeAttributesProcessing();
 		$this->removeDeadFilters();
+		$this->removeWhitespaceTrimming();
 	}
 
 	/**
@@ -276,9 +277,76 @@ class JSParserGenerator
 				continue;
 			}
 
+			$appendConfig = '';
+
+			/**
+			* Remove useless settings
+			*/
 			unset($pluginConf['parserClassName'], $pluginConf['parserFilepath']);
 
+			/**
+			* Convert the regexp
+			*/
+			if (!empty($pluginConf['regexp']))
+			{
+				$isArray = is_array($pluginConf['regexp']);
+
+				if (!$isArray)
+				{
+					$pluginConf['regexp'] = array($pluginConf['regexp']);
+				}
+
+				foreach ($pluginConf['regexp'] as &$regexp)
+				{
+					$pos = strrpos($regexp, $regexp[0]);
+
+					$modifiers = substr($regexp, $pos + 1);
+					$regexp    = substr($regexp, 1, $pos - 1);
+
+					if (strpos($modifiers, 's') !== false)
+					{
+						/**
+						* Uses the "s" modifier, which doesn't exist in Javascript RegExp and has
+						* to be replaced with the character class [\s\S]
+						*/
+						$regexp = preg_replace('#(?<!\\)(?:\\\\\\\\)*\\.#', '[\\s\\S]', $regexp);
+					}
+
+					$modifiers = preg_replace('#[Sus]#', '', $modifiers);
+
+					$regexp = 'new RegExp("' . addslashes($regexp) . '"'
+					        . (($modifiers === '') ? '' : ',"' . $modifiers . '"')
+					        . ')';
+				}
+				unset($regexp);
+
+				if ($isArray)
+				{
+					$appendConfig .= ',regexp:{';
+
+					foreach ($pluginConf['regexp'] as $k => $regexp)
+					{
+						$appendConfig .= $k . ':' . $regexp . ',';
+					}
+
+					$appendConfig = substr($appendConfig, 0, -1) . '}';
+				}
+				else
+				{
+					$appendConfig .= ',regexp:' . array_pop($pluginConf['regexp']);
+				}
+				unset($pluginConf['regexp']);
+			}
+
+			/**
+			* Prepare the plugin config
+			*/
 			$config = json_encode($pluginConf, JSON_HEX_QUOT);
+
+			if ($appendConfig)
+			{
+				$config = substr($config, 0, -1) . $appendConfig . '}';
+			}
 
 			$preserveProps = $this->cb->$pluginName->getPreservedJSProps();
 			$regexp = '#"'
@@ -293,5 +361,22 @@ class JSParserGenerator
 		$js = substr($js, 0, -1) . '}';
 
 		return $js;
+	}
+
+	/**
+	* Remove JS code related to whitespace trimming if not used
+	*/
+	protected function removeWhitespaceTrimming()
+	{
+		foreach ($this->parserConfig['tags'] as $tagConfig)
+		{
+			if (!empty($tagConfig['trimBefore'])
+			 || !empty($tagConfig['trimAfter']))
+			{
+				return;
+			}
+		}
+
+		$this->removeFunctions('addTrimmingInfoToTag');
 	}
 }

@@ -34,6 +34,8 @@ s9e['Parser'] = function()
 
 		/** @const */
 		TRIM_CHARLIST = " \n\r\t\0\x0B",
+		rtrimRegExp = new RegExp('[' + TRIM_CHARLIST + ']*$'),
+		ltrimRegExp = new RegExp('^[' + TRIM_CHARLIST + ']*'),
 
 		/** @type {!Object} */
 		tagsConfig = {/* DO NOT EDIT*/},
@@ -45,29 +47,73 @@ s9e['Parser'] = function()
 		/** @type {!Object.<string, function(!string, !Object)>} */
 		pluginParsers = {/* DO NOT EDIT*/},
 
-		/** @type {string} */
+		/** @type {!string} */
 		text,
-		/** @type {Array.<Tag>} */
+		/** @type {!Array.<Tag>} */
 		unprocessedTags,
-		/** @type {Array.<Tag>} */
+		/** @type {!Array.<Tag>} */
 		processedTags,
-		/** @type {Object} */
+		/** @type {!Object} */
 		openTags,
-		/** @type {Object} */
+		/** @type {!Object} */
 		openStartTags,
-		/** @type {Object} */
+		/** @type {!Object} */
 		cntOpen,
-		/** @type {Object} */
+		/** @type {!Object} */
 		cntTotal,
-		/** @type {?Tag} */
+		/** @type {!Tag} */
 		currentTag,
-		/** @type {?string} */
+		/** @type {!string} */
 		currentAttribute,
-		/** @type {Object} */
+		/** @type {!Object} */
 		context,
-		/** @type {Object} */
+		/** @type {!Object} */
 		_log
 	;
+
+	/**
+	* @param {!Object}   obj
+	* @param {!Function} callback
+	*/
+	function foreach(obj, callback)
+	{
+		for (var k in obj)
+		{
+			callback(obj[k], k);
+		}
+	}
+
+	/** @param {!Object} obj */
+	function clone(obj)
+	{
+		return JSON.parse(JSON.stringify(obj));
+	}
+
+	/**
+	* @param {!RegExp} regexp
+	* @param {!Array}  container
+	*/
+	function getMatches(regexp, container)
+	{
+		var matches;
+
+		while (matches = regexp.exec(text))
+		{
+			var pos   = matches.index,
+				match = [[matches.shift(), pos]],
+				str;
+
+			while (str = matches.shift())
+			{
+				match.push([str, text.indexOf(str, pos)]);
+				pos += str.length;
+			}
+
+			container.push(match);
+		}
+
+		return container.length;
+	}
 
 	/** @param {!string} _text */
 	function reset(_text)
@@ -87,8 +133,8 @@ s9e['Parser'] = function()
 		cntOpen         = [];
 		cntTotal        = [];
 
-		currentTag = null;
-		currentAttribute = null;
+		delete currentTag;
+		delete currentAttribute;
 	}
 
 	/**
@@ -115,40 +161,152 @@ s9e['Parser'] = function()
 		_log[type].push(entry);
 	}
 
-	/** @param {!RegExp} regexp */
-	function getMatches(regexp)
+	/** @param {!Tag} tag */
+	function appendTag(tag)
 	{
-		var ret = [],
-			matches;
+		addTrimmingInfoToTag(tag);
 
-		while (matches = regexp.exec(text))
+		processedTags.push(tag);
+
+		pos = tag.pos + tag.len;
+
+		/**
+		* Maintain counters
+		*/
+		var tagId = getTagId(tag);
+
+		if (tag.type & START_TAG)
 		{
-			var pos   = matches.index,
-				match = [[matches.shift(), pos]],
-				str;
+			++cntTotal[tag.name];
 
-			while (str = matches.shift())
+			if (tag.type === START_TAG)
 			{
-				match.push([str, text.indexOf(str, pos)]);
-				pos += str.length;
+				++cntOpen[tag.name];
+
+				if (openStartTags[tagId])
+				{
+					++openStartTags[tagId];
+				}
+				else
+				{
+					openStartTags[tagId] = 1;
+				}
 			}
-
-			ret.push(match);
 		}
-
-		return ret;
+		else if (tag.type & END_TAG)
+		{
+			--cntOpen[tag.name];
+			--openStartTags[tagId];
+		}
 	}
 
-	/**
-	* @param {!Object}   obj
-	* @param {!Function} callback
-	*/
-	function foreach(obj, callback)
+	/** @param {!Tag} tag */
+	function addTrimmingInfoToTag(tag)
 	{
-		for (var k in obj)
+		var tagConfig = tagsConfig[tag.name];
+
+		/**
+		* Original: "  [b]  -text-  [/b]  "
+		* Matches:  "XX[b]  -text-XX[/b]  "
+		*/
+		if ((tag.type  &  START_TAG && tagConfig.trimBefore)
+		 || (tag.type === END_TAG   && tagConfig.rtrimContent))
 		{
-			callback(obj[k], k);
+			tag.trimBefore  = rtrimRegExp.exec(text.substr(0, offset))[0].length;
+			tag.len        += tag.trimBefore;
+			tag.pos        -= tag.trimBefore;
 		}
+
+		/**
+		* Original: "  [b]  -text-  [/b]  "
+		* Matches:  "  [b]XX-text-  [/b]XX"
+		*/
+		if ((tag.type === START_TAG && tagConfig.ltrimContent)
+		 || (tag.type  &  END_TAG   && tagConfig.trimAfter))
+		{
+			tag.trimAfter  = ltrimRegExp.exec(text.substr(offset))[0].length;
+			tag.len       += tag.trimAfter;
+		}
+	}
+
+	function executePluginRegexp(pluginName)
+	{
+		var pluginConfig = pluginsConfig[pluginName];
+
+		/**
+		* Some plugins have several regexps in an array, others have a single regexp as a
+		* string. We convert the latter to an array so that we can iterate over it.
+		*/
+		var isArray = (typeof pluginConfig.regexp == 'object');
+
+		var regexps = (isArray) ? pluginConfig.regexp : { 'r': pluginConfig.regexp };
+
+		var skip = false,
+			matches = {},
+			cnt = 0;
+
+		foreach(regexps, function(regexp, k)
+		{
+			matches[k] = [];
+
+			if (skip)
+			{
+				return;
+			}
+
+			var _cnt = getMatches(
+				regexp,
+				matches[k]
+			);
+
+			if (!_cnt)
+			{
+				return;
+			}
+
+			cnt += _cnt;
+
+			if (cnt > pluginConfig.regexpLimit)
+			{
+				if (pluginConfig.regexpLimitAction === 'abort')
+				{
+					throw pluginName + ' limit exceeded';
+				}
+				else
+				{
+					var limit = pluginConfig.regexpLimit + _cnt - cnt,
+						msg   = {
+							'msg' : '%1$s limit exceeded. Only the first %2$s matches will be processed',
+							'params' : [pluginName, pluginConfig.regexpLimit]
+						};
+
+					matches[k] = matches[k].slice(0, limit);
+
+					if (pluginConfig.regexpLimitAction === 'ignore')
+					{
+						log('debug', msg);
+					}
+					else
+					{
+						log('warning', msg);
+					}
+
+					skip = true;
+				}
+			}
+		});
+
+		if (!cnt)
+		{
+			return false;
+		}
+
+		if (!isArray)
+		{
+			matches = matches['r'];
+		}
+
+		return matches;
 	}
 
 	function executePluginParsers()
@@ -171,7 +329,7 @@ s9e['Parser'] = function()
 				pluginParsers[pluginName](text, matches),
 
 				/**
-				* @param {Tag}    tag
+				* @param {!Tag}    tag
 				* @param {string} k
 				*/
 				function(tag, k)
@@ -195,11 +353,11 @@ s9e['Parser'] = function()
 
 	function normalizeTags()
 	{
-		var k = 0, normalizedTags = [];
+		var k = 0;
 
 		unprocessedTags.forEach(
 			/**
-			* @param {Tag} tag
+			* @param {!Tag} tag
 			*/
 			function(tag)
 			{
@@ -233,12 +391,8 @@ s9e['Parser'] = function()
 				* This will serve as a tiebreaker in case two tags start at the same position
 				*/
 				tag._tb = k++;
-
-				normalizedTags.push(tag);
 			}
 		);
-
-		unprocessedTags = normalizedTags;
 	}
 
 	function processTags()
@@ -252,14 +406,14 @@ s9e['Parser'] = function()
 			allowedTags: {}
 		};
 		cntTotal = {}
+		cntOpen = {}
 
 		for (var tagName in tagsConfig)
 		{
 			context.allowedTags[tagName] = tagName;
 			cntTotal[tagName] = 0;
+			cntOpen[tagName] = 0;
 		}
-
-		cntOpen = cntTotal;
 
 		pos = 0;
 
@@ -317,7 +471,7 @@ s9e['Parser'] = function()
 		}
 
 		var tagName   = currentTag.name,
-		    tagConfig = tagsConfig[tagName];
+			tagConfig = tagsConfig[tagName];
 
 		if (cntOpen[tagName]  >= tagConfig.nestingLimit
 		 || cntTotal[tagName] >= tagConfig.tagLimit)
@@ -360,14 +514,13 @@ s9e['Parser'] = function()
 			name       : tagName,
 			pluginName : currentTag.pluginName,
 			suffix     : currentTag.suffix,
-			context    : context
+			context    : clone(context)
 		});
 
 		for (var k in context.allowedTags)
 		{
 			if (!tagConfig.allow[k])
 			{
-				// TODO: test this
 				delete context.allowedTags[k];
 			}
 		}
@@ -405,8 +558,9 @@ s9e['Parser'] = function()
 	}
 
 	/**
-	* @param {Tag}    tag
-	* @param {number} _pos
+	* @param  {!Tag}    tag
+	* @param  {number} _pos
+	* @return {Tag}
 	*/
 	function createEndTag(tag, _pos)
 	{
@@ -429,7 +583,7 @@ s9e['Parser'] = function()
 		 && tagConfig.rules.closeParent)
 		{
 			var parentTag     = openTags[openTags.length - 1],
-			    parentTagName = parentTag.name;
+				parentTagName = parentTag.name;
 
 			if (tagConfig.rules.closeParent[parentTagName])
 			{
@@ -471,7 +625,7 @@ s9e['Parser'] = function()
 			while (--i >= 0)
 			{
 				var ascendantTag     = openTags[i],
-				    ascendantTagName = ascendantTag.name;
+					ascendantTagName = ascendantTag.name;
 
 				if (tagConfig.rules.closeAscendant[ascendantTagName])
 				{
@@ -519,7 +673,7 @@ s9e['Parser'] = function()
 				        : 'Tag %1$s requires as parent any of: %2$s';
 
 				var requiredParents = [],
-				    tagName;
+					tagName;
 
 				for (tagName in tagConfig.rules.requireParent)
 				{
@@ -601,8 +755,8 @@ s9e['Parser'] = function()
 	}
 
 	/**
-	* @param {Tag} a
-	* @param {Tag} b
+	* @param {!Tag} a
+	* @param {!Tag} b
 	*/
 	function compareTags(a, b)
 	{
@@ -699,8 +853,14 @@ s9e['Parser'] = function()
 		return false;
 	}
 
+	/** @param {!Tag} tag */
+	function getTagId(tag)
+	{
+		return tag.name + tag.suffix + '-' + tag.pluginName;
+	}
+
 	return {
-		parse: function(_text)
+		'parse': function(_text)
 		{
 			reset(_text);
 			executePluginParsers();
@@ -709,6 +869,11 @@ s9e['Parser'] = function()
 			processTags();
 
 			return output();
+		},
+
+		'getLog': function()
+		{
+			return _log;
 		}
 	}
 }();
