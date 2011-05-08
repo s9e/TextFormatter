@@ -3,20 +3,28 @@ s9e = {};
 /**
 * @typedef {{
 *	pos: !number,
+*	len: !number,
+*	name: !string,
+*   type: !number
+* }}
+*/
+var Tag;
+
+/**
+* @typedef {{
+*	pos: !number,
+*	len: !number,
 *	name: !string,
 *   type: !number,
 *	requires: Array.<number>,
 *	attrs: Object
 * }}
 */
-var Tag;
+var NormalizedTag;
 
 s9e['Parser'] = function()
 {
 	var
-		/** @const */
-		DEBUG = true,
-
 		/** @const */
 		START_TAG        = 1,
 		/** @const */
@@ -27,18 +35,21 @@ s9e['Parser'] = function()
 		/** @const */
 		TRIM_CHARLIST = " \n\r\t\0\x0B",
 
-		tagsConfig = {},
-		pluginsConfig = {},
-		filtersConfig = {},
+		/** @type {!Object} */
+		tagsConfig = {/* DO NOT EDIT*/},
+		/** @type {!Object} */
+		pluginsConfig = {/* DO NOT EDIT*/},
+		/** @type {!Object} */
+		filtersConfig = {/* DO NOT EDIT*/},
 
-		/** @type {Object.<string, function(!string, !Object)>} */
-		pluginParsers = {},
+		/** @type {!Object.<string, function(!string, !Object)>} */
+		pluginParsers = {/* DO NOT EDIT*/},
 
 		/** @type {string} */
 		text,
-		/** @type {Array} */
+		/** @type {Array.<Tag>} */
 		unprocessedTags,
-		/** @type {Array} */
+		/** @type {Array.<Tag>} */
 		processedTags,
 		/** @type {Object} */
 		openTags,
@@ -48,12 +59,14 @@ s9e['Parser'] = function()
 		cntOpen,
 		/** @type {Object} */
 		cntTotal,
-		/** @type {Object|boolean} */
+		/** @type {?Tag} */
 		currentTag,
-		/** @type {string|boolean} */
+		/** @type {?string} */
 		currentAttribute,
 		/** @type {Object} */
-		context
+		context,
+		/** @type {Object} */
+		_log
 	;
 
 	/** @param {!string} _text */
@@ -74,8 +87,8 @@ s9e['Parser'] = function()
 		cntOpen         = [];
 		cntTotal        = [];
 
-		currentTag = false;
-		currentAttribute = false;
+		currentTag = null;
+		currentAttribute = null;
 	}
 
 	/**
@@ -110,7 +123,7 @@ s9e['Parser'] = function()
 
 		while (matches = regexp.exec(text))
 		{
-			var pos   = regexp.lastIndex - matches[0].length,
+			var pos   = matches.index,
 				match = [[matches.shift(), pos]],
 				str;
 
@@ -194,7 +207,7 @@ s9e['Parser'] = function()
 
 				if (!tagsConfig[tag.name])
 				{
-					DEBUG && log('debug', {
+					log('debug', {
 						'pos'    : tag.pos,
 						'msg'    : 'Removed unknown tag %1$s from plugin %2$s',
 						'params' : [tag.name, tag.pluginName]
@@ -275,7 +288,7 @@ s9e['Parser'] = function()
 		if (pos > currentTag.pos
 		 || currentTagRequiresMissingTag())
 		{
-			DEBUG && log('debug', {
+			log('debug', {
 				'msg': 'Tag skipped'
 			});
 			return;
@@ -318,7 +331,7 @@ s9e['Parser'] = function()
 
 		if (!context.allowedTags[tagName])
 		{
-			DEBUG && log('debug', {
+			log('debug', {
 				'msg'    : 'Tag %s is not allowed in this context',
 				'params' : [tagName]
 			});
@@ -367,7 +380,7 @@ s9e['Parser'] = function()
 			/**
 			* This is an end tag but there's no matching start tag
 			*/
-			DEBUG && log('debug', {
+			log('debug', {
 				'msg'    : 'Could not find a matching start tag for tag %1$s from plugin %2$s',
 				'params' : [currentTag.name, currentTag.pluginName]
 			});
@@ -587,6 +600,10 @@ s9e['Parser'] = function()
 		unprocessedTags.sort(compareTags);
 	}
 
+	/**
+	* @param {Tag} a
+	* @param {Tag} b
+	*/
 	function compareTags(a, b)
 	{
 		if (a.pos !== b.pos)

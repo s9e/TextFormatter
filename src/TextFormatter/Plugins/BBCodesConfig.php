@@ -686,4 +686,18 @@ class BBCodesConfig extends PluginConfig
 	{
 		$this->allowedPhaseFiltersCallbacks[] = $callback;
 	}
+
+	//==========================================================================
+	// JS Parser stuff
+	//==========================================================================
+
+	public function getJSParser()
+	{
+		return file_get_contents(__DIR__ . '/BBCodesParser.js');
+	}
+
+	public function getPreservedJSProps()
+	{
+		return array_keys($this->bbcodesConfig);
+	}
 }

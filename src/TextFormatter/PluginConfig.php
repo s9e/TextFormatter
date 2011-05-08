@@ -51,4 +51,20 @@ abstract class PluginConfig
 	* @return array|bool This plugin's config, or FALSE to disable this plugin
 	*/
 	abstract public function getConfig();
+
+	/**
+	* @return string|boolean JS parser, or false if unsupported
+	*/
+	public function getJSParser()
+	{
+		return false;
+	}
+
+	/**
+	* @return array Array of property names that must be preserved when generating the JS config
+	*/
+	public function getPreservedJSProps()
+	{
+		return array();
+	}
 }
