@@ -77,6 +77,8 @@ class JSParserGenerator
 			);
 		}
 
+		$this->injectXSL();
+
 		if ($options['compilation'] !== 'none')
 		{
 			$this->compile($options['compilation']);
@@ -378,5 +380,17 @@ class JSParserGenerator
 		}
 
 		$this->removeFunctions('addTrimmingInfoToTag');
+	}
+
+	protected function injectXSL()
+	{
+		$pos = 58 + strpos(
+			$this->src,
+			"xslt['importStylesheet'](new DOMParser().parseFromString('', 'text/xml'));"
+		);
+
+		$this->src = substr($this->src, 0, $pos)
+		           . addcslashes($this->cb->getXSL(), "'\\\r\n")
+		           . substr($this->src, $pos);
 	}
 }

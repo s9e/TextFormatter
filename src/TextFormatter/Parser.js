@@ -68,8 +68,12 @@ s9e['Parser'] = function()
 		/** @type {!Object} */
 		context,
 		/** @type {!Object} */
-		_log
+		_log,
+
+		xslt = new XSLTProcessor()
 	;
+
+	xslt['importStylesheet'](new DOMParser().parseFromString('', 'text/xml'));
 
 	/**
 	* @param {!Object}   obj
@@ -159,6 +163,110 @@ s9e['Parser'] = function()
 		}
 
 		_log[type].push(entry);
+	}
+
+	function output()
+	{
+		return asDOM();
+	}
+
+	function asDOM()
+	{
+		var stack = [],
+			pos   = 0,
+			i     = -1,
+			cnt   = processedTags.length,
+			DOM   = document.implementation.createDocument('', (cnt) ? 'rt' : 'pt', null),
+			el    = DOM.documentElement;
+
+		function writeElement(tagName, content)
+		{
+			el.appendChild(DOM.createElement(tagName)).textContent = content;
+		}
+
+		while (++i < cnt)
+		{
+			var tag = tags[i];
+
+			/**
+			* Append the text that's between last tag and this one
+			*/
+			if (tag.pos > pos)
+			{
+				el.appendChild(DOM.createTextNode(text.substr(pos, tag.pos - pos)));
+			}
+
+			/**
+			* Capture the part of the text that belongs to this tag then move the cursor past
+			* current tag
+			*/
+			var tagText = text.substr(tag.pos, tag.len);
+			pos = tag.pos + tag.len;
+
+			var wsBefore = '',
+				wsAfter  = '';
+
+			if (tag.trimBefore)
+			{
+				wsBefore = tagText.substr(0, tag.trimBefore);
+				tagText  = tagText.substr(tag.trimBefore);
+			}
+
+			if (tag.trimAfter)
+			{
+				wsAfter = tagText.substr(-tag.trimAfter);
+				tagText = tagText.substr(0, -tag.trimAfter);
+			}
+
+			if (wsBefore !== '')
+			{
+				writeElement('i', wsBefore);
+			}
+
+			if (tag.type & START_TAG)
+			{
+				stack.push(el);
+				el = el.appendChild(DOM.createElement(tag.name));
+
+				for (var attrName in tag.attrs)
+				{
+					el.setAttribute(attrName, tag.attrs[attrName]);
+				}
+
+				if (tag.type & END_TAG)
+				{
+					el.textContent = tagText;
+					el = stack.pop();
+				}
+				else if (tagText > '')
+				{
+					writeElement('st', tagText);
+				}
+			}
+			else
+			{
+				if (tagText > '')
+				{
+					writeElement('et', tagText);
+				}
+				el = stack.pop();
+			}
+
+			if (wsAfter !== '')
+			{
+				writeElement('i', wsAfter);
+			}
+		}
+
+		/**
+		* Append the rest of the text, past the last tag
+		*/
+		if (pos < text.length)
+		{
+			el.appendChild(DOM.createTextNode(text.substr(pos)));
+		}
+
+		return DOM;
 	}
 
 	/** @param {!Tag} tag */
@@ -869,6 +977,12 @@ s9e['Parser'] = function()
 			processTags();
 
 			return output();
+		},
+
+		/** @param {Document} DOM */
+		'render': function(DOM)
+		{
+			return xslt['transformToFragment'](DOM, document);
 		},
 
 		'getLog': function()
