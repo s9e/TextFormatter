@@ -12,12 +12,10 @@ use s9e\Toolkit\TextFormatter\Parser,
 
 class BBCodesParser extends PluginParser
 {
-	protected $tagsConfig;
 	protected $bbcodesConfig;
 
 	public function setUp()
 	{
-		$this->tagsConfig    = $this->parser->getTagsConfig();
 		$this->bbcodesConfig = $this->config['bbcodesConfig'];
 	}
 
@@ -39,7 +37,6 @@ class BBCodesParser extends PluginParser
 
 			$bbcodeConfig = $this->bbcodesConfig[$bbcodeName];
 			$tagName      = $bbcodeConfig['tagName'];
-			$tagConfig    = $this->tagsConfig[$tagName];
 
 			/**
 			* @var Position of the first character of current BBCode, which should be a [

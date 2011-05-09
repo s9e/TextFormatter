@@ -118,9 +118,14 @@ class Parser
 	protected $currentAttribute;
 
 	/**
-	* @var array  Current context
+	* @var array   Current context
 	*/
 	protected $context;
+
+	/**
+	* @var integer Current position in the text
+	*/
+	protected $pos;
 
 	//==============================================================================================
 	// Public stuff

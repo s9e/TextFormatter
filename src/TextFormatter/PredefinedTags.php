@@ -102,43 +102,11 @@ class PredefinedTags
 		);
 	}
 
+	/**
+	* Note: <LIST> will only be transformed if it contains at least one <LI>
+	*/
 	public function addLIST()
 	{
-		$styles = array(
-			'1',
-			'01',
-			'a',
-			'i',
-			/**
-			* @see http://www.w3.org/TR/2002/WD-css3-lists-20021107/#list-content
-			*/
-			'normal', 'none',
-			/**
-			* @see http://www.w3.org/TR/2002/WD-css3-lists-20021107/#glyphs
-			*/
-			'box', 'check', 'circle', 'diamond', 'disc', 'hyphen', 'square',
-			/**
-			* @see http://www.w3.org/TR/2002/WD-css3-lists-20021107/#algorithmic
-			*/
-			'armenian', 'cjk-ideographic', 'ethiopic-numeric', 'georgian', 'hebrew', 'japanese-formal', 'japanese-informal', 'lower-armenian', 'lower-roman', 'simp-chinese-formal', 'simp-chinese-informal', 'syriac', 'tamil', 'trad-chinese-formal', 'trad-chinese-informal', 'upper-armenian', 'upper-roman',
-			/**
-			* @see http://www.w3.org/TR/2002/WD-css3-lists-20021107/#algorithmic
-			*/
-			'arabic-indic', 'binary', 'bengali', 'cambodian', 'decimal', 'decimal-leading-zero', 'devanagari', 'gujarati', 'gurmukhi', 'kannada', 'khmer', 'lao', 'lower-hexadecimal', 'malayalam', 'mongolian', 'myanmar', 'octal', 'oriya', 'persian', 'telugu', 'tibetan', 'thai', 'upper-hexadecimal', 'urdu',
-			/**
-			* @see http://www.w3.org/TR/2002/WD-css3-lists-20021107/#alphabetic
-			*/
-			'afar', 'amharic', 'amharic-abegede', 'cjk-earthly-branch', 'cjk-heavenly-stem', 'ethiopic', 'ethiopic-abegede', 'ethiopic-abegede-am-et', 'ethiopic-abegede-gez', 'ethiopic-abegede-ti-er', 'ethiopic-abegede-ti-et', 'ethiopic-halehame-aa-er', 'ethiopic-halehame-aa-et', 'ethiopic-halehame-am-et', 'ethiopic-halehame-gez', 'ethiopic-halehame-om-et', 'ethiopic-halehame-sid-et', 'ethiopic-halehame-so-et', 'ethiopic-halehame-ti-er', 'ethiopic-halehame-ti-et', 'ethiopic-halehame-tig', 'hangul', 'hangul-consonant', 'hiragana', 'hiragana-iroha', 'katakana', 'katakana-iroha', 'lower-alpha', 'lower-greek', 'lower-norwegian', 'lower-latin', 'oromo', 'sidama', 'somali', 'tigre', 'tigrinya-er', 'tigrinya-er-abegede', 'tigrinya-et', 'tigrinya-et-abegede', 'upper-alpha', 'upper-greek', 'upper-norwegian', 'upper-latin',
-			/**
-			* @see http://www.w3.org/TR/2002/WD-css3-lists-20021107/#symbolic
-			*/
-			'asterisks', 'footnotes',
-			/**
-			* @see http://www.w3.org/TR/2002/WD-css3-lists-20021107/#non-repeating
-			*/
-			'circled-decimal', 'circled-lower-latin', 'circled-upper-latin', 'dotted-decimal', 'double-circled-decimal', 'filled-circled-decimal', 'parenthesised-decimal', 'parenthesised-lower-latin'
-		);
-
 		// [LIST]
 		$this->cb->addTag('LIST', array(
 			'trimBefore'   => true,
@@ -150,34 +118,36 @@ class PredefinedTags
 		$this->cb->addTagAttribute('LIST', 'start', 'uint', array('isRequired' => false));
 
 		$this->cb->addTagAttribute('LIST', 'style', 'regexp', array(
-			'defaultValue'    => 'disc',
-			'isRequired' => false,
-			'regexp'     => '/^' . ConfigBuilder::buildRegexpFromList($styles) . '$/iD'
+			'defaultValue' => 'disc',
+			'isRequired'   => false,
+			'regexp'       => '/^(?:[a-z\\-]+|[0-9]+)$/iD'
 		));
 
-		$this->cb->setTagTemplate(
+		$this->cb->setTagXSL(
 			'LIST',
-			'<ol>
-				<xsl:attribute name="style">list-style-type:<xsl:choose>
-					<xsl:when test="@style=\'1\'">decimal</xsl:when>
-					<xsl:when test="@style=\'01\'">decimal-leading-zero</xsl:when>
-					<xsl:when test="@style=\'a\'">lower-alpha</xsl:when>
-					<xsl:when test="@style=\'A\'">upper-alpha</xsl:when>
-					<xsl:when test="@style=\'i\'">lower-roman</xsl:when>
-					<xsl:when test="@style=\'I\'">upper-roman</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="@style" />
-					</xsl:otherwise>
-				</xsl:choose></xsl:attribute>
+			'<xsl:template match="LIST[LI]">
+				<ol>
+					<xsl:attribute name="style">list-style-type:<xsl:choose>
+						<xsl:when test="contains(\'123456789\',substring(@style,1,1))">decimal</xsl:when>
+						<xsl:when test="starts-with(@style,\'0\')">decimal-leading-zero</xsl:when>
+						<xsl:when test="@style=\'a\'">lower-alpha</xsl:when>
+						<xsl:when test="@style=\'A\'">upper-alpha</xsl:when>
+						<xsl:when test="@style=\'i\'">lower-roman</xsl:when>
+						<xsl:when test="@style=\'I\'">upper-roman</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@style" />
+						</xsl:otherwise>
+					</xsl:choose></xsl:attribute>
 
-				<xsl:if test="@start">
-					<xsl:attribute name="start">
-						<xsl:value-of select="@start" />
-					</xsl:attribute>
-				</xsl:if>
+					<xsl:if test="@start">
+						<xsl:attribute name="start">
+							<xsl:value-of select="@start" />
+						</xsl:attribute>
+					</xsl:if>
 
-				<xsl:apply-templates />
-			</ol>'
+					<xsl:apply-templates />
+				</ol>
+			</xsl:template>'
 		);
 
 		$this->cb->addTag('LI', array(
