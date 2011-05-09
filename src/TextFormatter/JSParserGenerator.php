@@ -269,6 +269,9 @@ class JSParserGenerator
 
 			$tagsConfig .= $prepend . '"' . $tagName . '":';
 			$tagsConfig .= preg_replace(
+				/**
+				* @todo must preserve keys used in rules
+				*/
 				'#(?<=[\\{,])"([a-z]+)"(?=[:\\}])#i',
 				'$1',
 				json_encode($tagConfig, JSON_HEX_QUOT)

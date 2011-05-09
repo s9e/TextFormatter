@@ -42,7 +42,7 @@ foreach(matches, function(m)
 	{
 		/**
 		* [code:1] or [/code:1]
-		* $suffix = ':1'
+		* suffix = ':1'
 		*/
 		suffix  = /^[0-9]*/.exec(text.substr(rpos));
 		rpos   += suffix.length;
@@ -138,9 +138,9 @@ foreach(matches, function(m)
 					if (c !== ']')
 					{
 						log('warning', {
-							'pos'    : $rpos,
+							'pos'    : rpos,
 							'msg'    : 'Unexpected character: expected $1%s found $2%s',
-							'params' : [']', $c]
+							'params' : [']', c]
 						});
 						return;
 					}

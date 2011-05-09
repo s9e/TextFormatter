@@ -52,11 +52,11 @@ ob_start();
 
 			text = textarea.value;
 
-			var newPRE = document.createElement('pre');
+			var newPRE = document.createElement('pre'),
+				xml = s9e.TextFormatter.parse(text);
+
 			newPRE.appendChild(
-				s9e.TextFormatter.render(
-					s9e.TextFormatter.parse(text)
-				)
+				s9e.TextFormatter.render(xml)
 			);
 
 			pre.parentNode.replaceChild(newPRE, pre)
