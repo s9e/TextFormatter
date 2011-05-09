@@ -151,12 +151,16 @@ class PredefinedBBCodesTest extends Test
 				'<ol style="list-style-type:upper-alpha"><li>one</li><li>two</li></ol>'
 			),
 			array(
-				'[LIST=INVALID][*]one[*]two[/LIST]',
+				'[LIST=a;color:red][*]one[*]two[/LIST]',
 				'<ol style="list-style-type:disc"><li>one</li><li>two</li></ol>'
 			),
 			array(
 				'[LIST=square][*]one[*]two[/LIST]',
 				'<ol style="list-style-type:square"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'[LIST]some text[/LIST]',
+				'some text'
 			),
 			array(
 				'[GOOGLEVIDEO]-4381488634998231167[/GOOGLEVIDEO]',
