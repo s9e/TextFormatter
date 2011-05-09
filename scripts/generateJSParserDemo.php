@@ -14,13 +14,11 @@ $cb->BBCodes->addPredefinedBBCode('LIST');
 $cb->BBCodes->addPredefinedBBCode('COLOR');
 
 $jsParser = $cb->getJSParser(array(
-	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
-//	'compilation'     => 'none',
+//	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
+	'compilation'     => 'none',
 	'disableLogTypes' => array(),
 	'removeDeadCode'  => true
 ));
-
-file_put_contents('/tmp/foo.js', $jsParser);
 
 ob_start();
 ?><!DOCTYPE html>

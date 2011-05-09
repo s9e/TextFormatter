@@ -259,6 +259,38 @@ class JSParserGenerator
 			ksort($tagConfig['allow']);
 
 			/**
+			* Replace booleans with 1/0
+			*/
+			array_walk_recursive($tagConfig, function(&$v)
+			{
+				if (is_bool($v))
+				{
+					$v = (int) $v;
+				}
+			});
+
+			if (!empty($tagConfig['rules']))
+			{
+				foreach ($tagConfig['rules'] as $rule => &$tagNames)
+				{
+					/**
+					* Values are actually never used, the keys are. Therefore we must preserve them.
+					*/
+					$md5 = md5(microtime(true) . mt_rand());
+
+					$replace[$md5] = json_encode(
+						array_fill_keys(
+							$tagNames,
+							1
+						)
+					);
+
+					$tagNames = $md5;
+				}
+				unset($tagNames);
+			}
+
+			/**
 			* We replace the "allow" object with a token that we will later replace with the
 			* original value in order to preserve quotes around tag names
 			*/
