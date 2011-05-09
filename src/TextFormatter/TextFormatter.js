@@ -22,7 +22,7 @@ var Tag;
 */
 var NormalizedTag;
 
-s9e['Parser'] = function()
+s9e['TextFormatter'] = function()
 {
 	var
 		/** @const */
@@ -38,12 +38,13 @@ s9e['Parser'] = function()
 		ltrimRegExp = new RegExp('^[' + TRIM_CHARLIST + ']*'),
 
 		/** @type {!Object} */
+		_log,
+		/** @type {!Object} */
 		tagsConfig = {/* DO NOT EDIT*/},
 		/** @type {!Object} */
-		pluginsConfig = {/* DO NOT EDIT*/},
-		/** @type {!Object} */
 		filtersConfig = {/* DO NOT EDIT*/},
-
+		/** @type {!Object} */
+		pluginsConfig = {/* DO NOT EDIT*/},
 		/** @type {!Object.<string, function(!string, !Object)>} */
 		pluginParsers = {/* DO NOT EDIT*/},
 
@@ -67,8 +68,8 @@ s9e['Parser'] = function()
 		currentAttribute,
 		/** @type {!Object} */
 		context,
-		/** @type {!Object} */
-		_log,
+		/** @type {!number} */
+		pos,
 
 		xslt = new XSLTProcessor()
 	;
@@ -186,7 +187,7 @@ s9e['Parser'] = function()
 
 		while (++i < cnt)
 		{
-			var tag = tags[i];
+			var tag = processedTags[i];
 
 			/**
 			* Append the text that's between last tag and this one
@@ -320,7 +321,7 @@ s9e['Parser'] = function()
 		if ((tag.type  &  START_TAG && tagConfig.trimBefore)
 		 || (tag.type === END_TAG   && tagConfig.rtrimContent))
 		{
-			tag.trimBefore  = rtrimRegExp.exec(text.substr(0, offset))[0].length;
+			tag.trimBefore  = rtrimRegExp.exec(text.substr(pos, tag.pos - pos))[0].length;
 			tag.len        += tag.trimBefore;
 			tag.pos        -= tag.trimBefore;
 		}
@@ -332,7 +333,7 @@ s9e['Parser'] = function()
 		if ((tag.type === START_TAG && tagConfig.ltrimContent)
 		 || (tag.type  &  END_TAG   && tagConfig.trimAfter))
 		{
-			tag.trimAfter  = ltrimRegExp.exec(text.substr(offset))[0].length;
+			tag.trimAfter  = ltrimRegExp.exec(text.substr(tag.pos + tag.len))[0].length;
 			tag.len       += tag.trimAfter;
 		}
 	}
@@ -345,7 +346,7 @@ s9e['Parser'] = function()
 		* Some plugins have several regexps in an array, others have a single regexp as a
 		* string. We convert the latter to an array so that we can iterate over it.
 		*/
-		var isArray = (typeof pluginConfig.regexp == 'object');
+		var isArray = !(pluginConfig.regexp instanceof RegExp);
 
 		var regexps = (isArray) ? pluginConfig.regexp : { 'r': pluginConfig.regexp };
 
@@ -959,6 +960,14 @@ s9e['Parser'] = function()
 		}
 
 		return false;
+	}
+
+	function filterAttributes()
+	{
+	}
+
+	function splitCompoundAttributes()
+	{
 	}
 
 	/** @param {!Tag} tag */

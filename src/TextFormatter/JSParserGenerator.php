@@ -30,6 +30,16 @@ class JSParserGenerator
 	protected $parserConfig;
 
 	/**
+	* @var array JS plugins parsers
+	*/
+	protected $pluginParsers;
+
+	/**
+	* @var array JS plugins config
+	*/
+	protected $pluginsConfig;
+
+	/**
 	* 
 	*
 	* @return void
@@ -38,7 +48,7 @@ class JSParserGenerator
 	{
 		$this->cb = $cb;
 
-		$this->tpl = file_get_contents(__DIR__ . '/Parser.js');
+		$this->tpl = file_get_contents(__DIR__ . '/TextFormatter.js');
 	}
 
 	/**
@@ -64,6 +74,7 @@ class JSParserGenerator
 
 		$this->injectTagsConfig();
 		$this->injectPluginParsers();
+		$this->injectPluginsConfig();
 
 		/**
 		* Turn off logging selectively
@@ -208,9 +219,22 @@ class JSParserGenerator
 
 	protected function injectPluginParsers()
 	{
+		$this->generatePluginParsers();
+
 		$this->src = str_replace(
 			'pluginParsers = {/* DO NOT EDIT*/}',
-			'pluginParsers = ' . $this->generatePluginParsers(),
+			'pluginParsers = {' . implode(',', $this->pluginParsers) . '}',
+			$this->src
+		);
+	}
+
+	protected function injectPluginsConfig()
+	{
+		$this->generatePluginsConfig();
+
+		$this->src = str_replace(
+			'pluginsConfig = {/* DO NOT EDIT*/}',
+			'pluginsConfig = {' . implode(',', $this->pluginsConfig) . '}',
 			$this->src
 		);
 	}
@@ -266,29 +290,18 @@ class JSParserGenerator
 		return $tagsConfig;
 	}
 
-	protected function generatePluginParsers()
+	protected function generatePluginsConfig()
 	{
-		$js = '{';
+		$this->pluginsConfig = array();
 
-		foreach ($this->parserConfig['plugins'] as $pluginName => $pluginConf)
+		foreach ($this->pluginParsers as $pluginName => $parserJS)
 		{
-			$parserJS = $this->cb->$pluginName->getJSParser();
-
-			if (!$parserJS)
-			{
-				continue;
-			}
-
-			$appendConfig = '';
+			$pluginConf = $this->parserConfig['plugins'][$pluginName];
 
 			/**
-			* Remove useless settings
+			* Prepare the regexp
 			*/
-			unset($pluginConf['parserClassName'], $pluginConf['parserFilepath']);
-
-			/**
-			* Convert the regexp
-			*/
+			$regexpJS = '';
 			if (!empty($pluginConf['regexp']))
 			{
 				$isArray = is_array($pluginConf['regexp']);
@@ -316,53 +329,86 @@ class JSParserGenerator
 
 					$modifiers = preg_replace('#[Sus]#', '', $modifiers);
 
-					$regexp = 'new RegExp("' . addslashes($regexp) . '"'
-					        . (($modifiers === '') ? '' : ',"' . $modifiers . '"')
-					        . ')';
+					$regexp = 'new RegExp("' . addslashes($regexp) . '", "g' . $modifiers . '")';
 				}
 				unset($regexp);
 
+				$regexpJS = ',regexp:';
+
 				if ($isArray)
 				{
-					$appendConfig .= ',regexp:{';
+					$regexpJS .= '{';
 
+					$sep = '';
 					foreach ($pluginConf['regexp'] as $k => $regexp)
 					{
-						$appendConfig .= $k . ':' . $regexp . ',';
+						$regexpJS .= $sep . $k . ':' . $regexp;
+						$sep = ',';
 					}
 
-					$appendConfig = substr($appendConfig, 0, -1) . '}';
+					$regexpJS .= '}';
 				}
 				else
 				{
-					$appendConfig .= ',regexp:' . array_pop($pluginConf['regexp']);
+					$regexpJS .= array_pop($pluginConf['regexp']);
 				}
-				unset($pluginConf['regexp']);
 			}
+
+			/**
+			* Remove useless settings as well as the original regexp value
+			*/
+			unset(
+				$pluginConf['regexp'],
+				$pluginConf['parserClassName'],
+				$pluginConf['parserFilepath']
+			);
 
 			/**
 			* Prepare the plugin config
 			*/
 			$config = json_encode($pluginConf, JSON_HEX_QUOT);
 
-			if ($appendConfig)
+			/**
+			* Append the regexp(s) if applicable
+			*/
+			if ($regexpJS)
 			{
-				$config = substr($config, 0, -1) . $appendConfig . '}';
+				$config = substr($config, 0, -1) . $regexpJS . '}';
 			}
 
-			$preserveProps = $this->cb->$pluginName->getPreservedJSProps();
+			$preserveProps = array_map(
+				function ($str)
+				{
+					return preg_quote($str, '#');
+				},
+				$this->cb->$pluginName->getPreservedJSProps()
+			);
+
 			$regexp = '#"'
 			        . (($preserveProps) ? '(?!' . implode('|', $preserveProps) . ')' : '')
 			        . '([A-Za-z_][A-Za-z_0-9]*)"(?=:)#';
 
-			$config = 'var config=' . preg_replace($regexp, '$1', $config) . ';';
-
-			$js .= '"' . $pluginName . '":function(text,matches){' . $config . $parserJS . '},';
+			$this->pluginsConfig[$pluginName] =
+				json_encode($pluginName) . ':' . preg_replace($regexp, '$1', $config);
 		}
+	}
 
-		$js = substr($js, 0, -1) . '}';
+	protected function generatePluginParsers()
+	{
+		$this->pluginParsers = array();
 
-		return $js;
+		foreach ($this->parserConfig['plugins'] as $pluginName => $pluginConf)
+		{
+			$js = $this->cb->$pluginName->getJSParser();
+
+			if (!$js)
+			{
+				continue;
+			}
+
+			$this->pluginParsers[$pluginName] =
+				'"' . $pluginName . "\":function(text,matches){var config=pluginsConfig['" . $pluginName . "'];" . $js . '}';
+		}
 	}
 
 	/**
