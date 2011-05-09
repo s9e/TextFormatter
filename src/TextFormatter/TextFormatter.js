@@ -10,18 +10,6 @@ s9e = {};
 */
 var Tag;
 
-/**
-* @typedef {{
-*	pos: !number,
-*	len: !number,
-*	name: !string,
-*   type: !number,
-*	requires: Array.<number>,
-*	attrs: Object
-* }}
-*/
-var NormalizedTag;
-
 s9e['TextFormatter'] = function()
 {
 	var
