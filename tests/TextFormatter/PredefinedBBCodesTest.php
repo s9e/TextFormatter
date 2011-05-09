@@ -131,7 +131,15 @@ class PredefinedBBCodesTest extends Test
 				'<ol style="list-style-type:decimal"><li>one</li><li>two</li></ol>'
 			),
 			array(
+				'[LIST=102][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:decimal"><li>one</li><li>two</li></ol>'
+			),
+			array(
 				'[LIST=01][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:decimal-leading-zero"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'[LIST=05][*]one[*]two[/LIST]',
 				'<ol style="list-style-type:decimal-leading-zero"><li>one</li><li>two</li></ol>'
 			),
 			array(
