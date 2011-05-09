@@ -117,6 +117,11 @@ class Parser
 	*/
 	protected $currentAttribute;
 
+	/**
+	* @var array  Current context
+	*/
+	protected $context;
+
 	//==============================================================================================
 	// Public stuff
 	//==============================================================================================
@@ -848,9 +853,6 @@ class Parser
 			return;
 		}
 
-		/**
-		* @var array Current context
-		*/
 		$this->context = array(
 			'allowedTags' => array_combine(
 				array_keys($this->tagsConfig),
@@ -953,7 +955,6 @@ class Parser
 		if (!isset($this->context['allowedTags'][$tagName]))
 		{
 			$this->log('debug', array(
-				'pos'    => $this->currentTag['pos'],
 				'msg'    => 'Tag %s is not allowed in this context',
 				'params' => array($tagName)
 			));
@@ -1002,7 +1003,6 @@ class Parser
 			* This is an end tag but there's no matching start tag
 			*/
 			$this->log('debug', array(
-				'pos'    => $this->currentTag['pos'],
 				'msg'    => 'Could not find a matching start tag for tag %1$s from plugin %2$s',
 				'params' => array($this->currentTag['name'], $this->currentTag['pluginName'])
 			));
@@ -1156,7 +1156,6 @@ class Parser
 					 : 'Tag %1$s requires as parent any of: %2$s';
 
 				$this->log('error', array(
-					'pos'    => $this->currentTag['pos'],
 					'msg'    => $msg,
 					'params' => array(
 						$this->currentTag['name'],
@@ -1187,7 +1186,6 @@ class Parser
 				if (empty($this->cntOpen[$ascendant]))
 				{
 					$this->log('error', array(
-						'pos'    => $this->currentTag['pos'],
 						'msg'    => 'Tag %1$s requires %2$s as ascendant',
 						'params' => array($this->currentTag['name'], $ascendant)
 					));
@@ -1248,13 +1246,13 @@ class Parser
 	*/
 	static public function compareTags(array $a, array $b)
 	{
-		if ($a['pos'] <> $b['pos'])
+		if ($a['pos'] !== $b['pos'])
 		{
 			return $b['pos'] - $a['pos'];
 		}
 
 		// This block orders zero-width tags
-		if ($a['len'] <> $b['len'])
+		if ($a['len'] !== $b['len'])
 		{
 			if (!$b['len'])
 			{
@@ -1269,7 +1267,7 @@ class Parser
 		}
 		// @codeCoverageIgnoreEnd
 
-		if ($a['type'] <> $b['type'])
+		if ($a['type'] !== $b['type'])
 		{
 			$order = array(
 				self::END_TAG => 2,
@@ -1341,7 +1339,6 @@ class Parser
 				}
 
 				$this->log('error', array(
-					'pos'    => $this->currentTag['pos'],
 					'msg'    => "Missing attribute '%s'",
 					'params' => array($attrName)
 				));
@@ -1438,7 +1435,6 @@ class Parser
 			if ($attrVal === false)
 			{
 				$this->log('error', array(
-					'pos'    => $this->currentTag['pos'],
 					'msg'    => "Invalid attribute '%s'",
 					'params' => array($attrName)
 				));
@@ -1451,7 +1447,6 @@ class Parser
 					$attrVal = $attrConf['defaultValue'];
 
 					$this->log('debug', array(
-						'pos'    => $this->currentTag['pos'],
 						'msg'    => "Using default value '%1\$s' for attribute '%2\$s'",
 						'params' => array($attrConf['defaultValue'], $attrName)
 					));
@@ -1482,7 +1477,6 @@ class Parser
 			if ($originalVal != $attrVal)
 			{
 				$this->log('debug', array(
-					'pos'    => $this->currentTag['pos'],
 					'msg'    => 'Attribute value was altered by the filter '
 					          . '(attrName: $1%s, originalVal: $2%s, attrVal: $3%s)',
 					'params' => array($attrName, serialize($originalVal), serialize($attrVal))
