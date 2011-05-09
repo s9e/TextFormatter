@@ -107,4 +107,13 @@ class EmoticonsConfig extends PluginConfig
 	{
 		$this->autoUpdate = true;
 	}
+
+	//==========================================================================
+	// JS Parser stuff
+	//==========================================================================
+
+	public function getJSParser()
+	{
+		return file_get_contents(__DIR__ . '/EmoticonsParser.js');
+	}
 }

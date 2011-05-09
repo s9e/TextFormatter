@@ -13,10 +13,12 @@ $cb->BBCodes->addPredefinedBBCode('URL');
 $cb->BBCodes->addPredefinedBBCode('LIST');
 $cb->BBCodes->addPredefinedBBCode('COLOR');
 
+$cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
+
 $jsParser = $cb->getJSParser(array(
-//	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
+	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
 //	'disableLogTypes' => array('debug', 'warning', 'error'),
-	'compilation'     => 'none',
+//	'compilation'     => 'none',
 	'disableLogTypes' => array(),
 	'removeDeadCode'  => true
 ));
@@ -57,7 +59,7 @@ A few BBCodes have been added such as:
 	[*][b]bold[/b],
 	[*][i]italic[/i],
 	[*][color=#f05]color[/color],
-	[*]+ a few others
+	[*]+ a few others :)
 [/list]
 
 The code required has been minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url] but the raw sources can be found at GitHub in the [url=https://github.com/s9e/Toolkit/tree/TextFormatter-JSParser/src/TextFormatter]TextFormatter-JSParser branch[/url].
