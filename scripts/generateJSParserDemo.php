@@ -102,7 +102,6 @@ The code required has been minified to a few kilobytes with [url=http://closure-
 
 		function refreshOutput()
 		{
-			console.dir(rendercheck);
 			if (rendercheck.checked)
 			{
 				var newPRE = document.createElement('pre');
@@ -132,10 +131,10 @@ The code required has been minified to a few kilobytes with [url=http://closure-
 				{
 					msgs.push(
 						'[' + type + '] ' + entry.msg.replace(
-							/%([0-9]\$)?[sd]/g,
-							function(m)
+							/(?:\$([0-9]))?%[sd]/g,
+							function(str, p1)
 							{
-								return entry.params[m[1] ? m[1] - 1 : 0];
+								return entry.params[(p1 ? p1 - 1 : 0)];
 							}
 						)
 					);
