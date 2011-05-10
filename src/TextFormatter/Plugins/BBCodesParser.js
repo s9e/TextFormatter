@@ -1,4 +1,5 @@
-var textLen = text.length;
+var tags = [],
+	textLen = text.length;
 
 foreach(matches, function(m)
 {
@@ -292,7 +293,7 @@ foreach(matches, function(m)
 		}
 	}
 
-	unprocessedTags.push({
+	tags.push({
 		name   : tagName,
 		pos    : lpos,
 		len    : rpos + 1 - lpos,
@@ -301,3 +302,5 @@ foreach(matches, function(m)
 		attrs  : attrs
 	});
 });
+
+return tags;

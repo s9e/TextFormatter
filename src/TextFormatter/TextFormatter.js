@@ -5,10 +5,20 @@ s9e = {};
 *	pos: !number,
 *	len: !number,
 *	name: !string,
-*   type: !number
+*	type: !number
 * }}
 */
 var Tag;
+
+/**
+* @typedef {{
+*	name: !string,
+*	pluginName: !string,
+*	suffix: !string,
+*	context: !Object
+* }}
+*/
+var StubTag;
 
 s9e['TextFormatter'] = function()
 {
@@ -35,7 +45,7 @@ s9e['TextFormatter'] = function()
 		filtersConfig = {/* DO NOT EDIT*/},
 		/** @const @type {!Object} */
 		pluginsConfig = {/* DO NOT EDIT*/},
-		/** @const @type {!Object.<string, function(!string, !Object)>} */
+		/** @const @type {!Object.<string, function(!string, !Object):Array>} */
 		pluginParsers = {/* DO NOT EDIT*/},
 
 		/** @type {!string} */
@@ -44,7 +54,7 @@ s9e['TextFormatter'] = function()
 		unprocessedTags,
 		/** @type {!Array.<Tag>} */
 		processedTags,
-		/** @type {!Object} */
+		/** @type {!Array.<StubTag>} */
 		openTags,
 		/** @type {!Object} */
 		openStartTags,
@@ -84,6 +94,17 @@ s9e['TextFormatter'] = function()
 		return JSON.parse(JSON.stringify(obj));
 	}
 
+	/** @param {!Object} obj */
+	function count(obj)
+	{
+		var cnt = 0, k;
+		for (k in obj)
+		{
+			++cnt;
+		}
+		return cnt;
+	}
+
 	/**
 	* @param {!string} regexp
 	* @param {!string} str
@@ -120,7 +141,8 @@ s9e['TextFormatter'] = function()
 	*/
 	function getMatches(regexp, container)
 	{
-		var matches;
+		var cnt = 0,
+			matches;
 
 		while (matches = regexp.exec(text))
 		{
@@ -135,9 +157,10 @@ s9e['TextFormatter'] = function()
 			}
 
 			container.push(match);
+			++cnt;
 		}
 
-		return container.length;
+		return cnt;
 	}
 
 	/** @param {!string} _text */
@@ -154,9 +177,9 @@ s9e['TextFormatter'] = function()
 		unprocessedTags = [];
 		processedTags   = [];
 		openTags        = [];
-		openStartTags   = [];
-		cntOpen         = [];
-		cntTotal        = [];
+		openStartTags   = {};
+		cntOpen         = {};
+		cntTotal        = {};
 
 		delete currentTag;
 		delete currentAttribute;
@@ -205,6 +228,11 @@ s9e['TextFormatter'] = function()
 			el.appendChild(DOM.createElement(tagName)).textContent = content;
 		}
 
+		function appendText(content)
+		{
+			el.appendChild(DOM.createTextNode(content));
+		}
+
 		while (++i < cnt)
 		{
 			var tag = processedTags[i];
@@ -214,7 +242,7 @@ s9e['TextFormatter'] = function()
 			*/
 			if (tag.pos > pos)
 			{
-				el.appendChild(DOM.createTextNode(text.substr(pos, tag.pos - pos)));
+				appendText(text.substr(pos, tag.pos - pos));
 			}
 
 			/**
@@ -284,7 +312,7 @@ s9e['TextFormatter'] = function()
 		*/
 		if (pos < text.length)
 		{
-			el.appendChild(DOM.createTextNode(text.substr(pos)));
+			appendText(text.substr(pos));
 		}
 
 		return DOM;
@@ -454,9 +482,7 @@ s9e['TextFormatter'] = function()
 				}
 			}
 
-			foreach(
-				pluginParsers[pluginName](text, matches),
-
+			pluginParsers[pluginName](text, matches).forEach(
 				/**
 				* @param {!Tag}    tag
 				* @param {string} k
@@ -687,8 +713,8 @@ s9e['TextFormatter'] = function()
 	}
 
 	/**
-	* @param  {!Tag}    tag
-	* @param  {number} _pos
+	* @param  {!StubTag}    tag
+	* @param  {!number} _pos
 	* @return {Tag}
 	*/
 	function createEndTag(tag, _pos)
@@ -712,9 +738,15 @@ s9e['TextFormatter'] = function()
 		 && tagConfig.rules.closeParent)
 		{
 			var parentTag     = openTags[openTags.length - 1],
-				parentTagName = parentTag.name;
+				parentTagName = parentTag.name
+				parentMatches = tagConfig.rules.closeParent.some(
+					function(tagName)
+					{
+						return (tagName === parentTagName);
+					}
+				);
 
-			if (tagConfig.rules.closeParent[parentTagName])
+			if (parentMatches)
 			{
 				/**
 				* We have to close that parent. First we reinsert current tag...
@@ -750,6 +782,8 @@ s9e['TextFormatter'] = function()
 		 && tagConfig.rules.closeAscendant)
 		{
 			var i = openTags.length;
+
+alert('fix me');
 
 			while (--i >= 0)
 			{
@@ -792,28 +826,31 @@ s9e['TextFormatter'] = function()
 		if (tagConfig.rules
 		 && tagConfig.rules.requireParent)
 		{
-			var parentTag = (openTags.length) ? openTags[openTags.length - 1] : false;
+			var parentTag, parentTagName, parentMatches;
 
-			if (!parentTag
-			 || !tagConfig.rules.requireParent[parentTag.name])
+			if (openTags.length)
+			{
+				parentTag     = openTags[openTags.length - 1];
+				parentTagName = parentTag.name;
+				parentMatches = tagConfig.rules.requireParent.some(
+					function(tagName)
+					{
+						return (tagName === parentTagName);
+					}
+				);
+			}
+
+			if (!parentMatches)
 			{
 				var msg = (tagConfig.rules.requireParent.length === 1)
 				        ? 'Tag %1$s requires %2$s as parent'
 				        : 'Tag %1$s requires as parent any of: %2$s';
 
-				var requiredParents = [],
-					tagName;
-
-				for (tagName in tagConfig.rules.requireParent)
-				{
-					requiredParents.push(tagName);
-				}
-
 				log('error', {
 					'msg'    : msg,
 					'params' : [
 						currentTag.name,
-						requiredParents.join(',')
+						tagConfig.rules.requireParent.join(', ')
 					]
 				})
 
@@ -828,7 +865,7 @@ s9e['TextFormatter'] = function()
 	{
 		var tagConfig = tagsConfig[currentTag.name],
 			ascendantTagName;
-
+alert('fix me');
 		if (tagConfig.rules
 		 && tagConfig.rules.requireAscendant)
 		{

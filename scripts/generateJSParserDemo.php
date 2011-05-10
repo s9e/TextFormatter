@@ -18,9 +18,9 @@ $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/
 $cb->Censor->addWord('apple', 'banana');
 
 $jsParser = $cb->getJSParser(array(
-//	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
+	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
 //	'disableLogTypes' => array('debug', 'warning', 'error'),
-	'compilation'     => 'none',
+//	'compilation'     => 'none',
 	'disableLogTypes' => array(),
 	'removeDeadCode'  => true
 ));

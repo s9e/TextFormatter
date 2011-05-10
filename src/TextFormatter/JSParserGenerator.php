@@ -116,6 +116,7 @@ class JSParserGenerator
 			'js_code' => $this->src,
 			'compilation_level' => $level,
 			'output_format' => 'text',
+			'formatting' => 'pretty_print',
 			'output_info' => 'compiled_code'
 		));
 
@@ -262,12 +263,9 @@ class JSParserGenerator
 				foreach ($tagConfig['rules'] as $rule => &$tagNames)
 				{
 					/**
-					* Values are actually never used, the keys are.
+					* The PHP parser uses the keys, but the JS parser uses an Array instead
 					*/
-					$tagNames = array_fill_keys(
-						$tagNames,
-						1
-					);
+					$tagNames = array_keys($tagNames);
 				}
 				unset($tagNames);
 			}
@@ -278,8 +276,7 @@ class JSParserGenerator
 			$tagsConfig,
 			array(
 				array(true),
-				array(true, 'allow', true),
-				array(true, 'rules', true, true)
+				array(true, 'allow', true)
 			)
 		);
 	}
@@ -459,6 +456,7 @@ class JSParserGenerator
 		foreach ($arr as $k => $v)
 		{
 			if (in_array(array((string) $k), $preserveKeys, true)
+			 || in_array(array(true), $preserveKeys, true)
 			 || preg_match(self::RESERVED_WORDS_REGEXP, $k)
 			 || !preg_match('#^[a-z_0-9]+$#Di', $k))
 			{
