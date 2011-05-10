@@ -82,7 +82,7 @@ class BBCodesParser extends PluginParser
 				{
 					$this->parser->log('warning', array(
 						'pos'    => $rpos,
-						'msg'    => 'Unexpected character: expected $1%s found $2%s',
+						'msg'    => 'Unexpected character: expected %1$s found %2$s',
 						'params' => array(']', $text[$rpos])
 					));
 					continue;
@@ -164,7 +164,7 @@ class BBCodesParser extends PluginParser
 							{
 								$this->parser->log('warning', array(
 									'pos'    => $rpos,
-									'msg'    => 'Unexpected character: expected $1%s found $2%s',
+									'msg'    => 'Unexpected character: expected %1$s found %2$s',
 									'params' => array(']', $c)
 								));
 								continue 2;
@@ -214,7 +214,7 @@ class BBCodesParser extends PluginParser
 						{
 							$this->parser->log('debug', array(
 								'pos'    => $rpos,
-								'msg'    => 'Unexpected character: expected $1%s found $2%s',
+								'msg'    => 'Unexpected character: expected %1$s found %2$s',
 								'params' => array('=', $text[$rpos])
 							));
 							continue 2;
