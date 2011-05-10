@@ -236,7 +236,7 @@ s9e['TextFormatter'] = function()
 			if (tag.trimAfter)
 			{
 				wsAfter = tagText.substr(-tag.trimAfter);
-				tagText = tagText.substr(0, -tag.trimAfter);
+				tagText = tagText.substr(0, tagText.length - tag.trimAfter);
 			}
 
 			if (wsBefore !== '')
