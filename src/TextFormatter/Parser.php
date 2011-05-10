@@ -1483,7 +1483,7 @@ class Parser
 			{
 				$this->log('debug', array(
 					'msg'    => 'Attribute value was altered by the filter '
-					          . '(attrName: $1%s, originalVal: $2%s, attrVal: $3%s)',
+					          . '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
 					'params' => array($attrName, serialize($originalVal), serialize($attrVal))
 				));
 			}
