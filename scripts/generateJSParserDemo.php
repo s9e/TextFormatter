@@ -137,7 +137,7 @@ The code required has been minified to a few kilobytes with [url=http://closure-
 				{
 					msgs.push(
 						'[' + type + '] ' + entry.msg.replace(
-							/(?:\$([0-9]))?%[sd]/g,
+							/%(?:([0-9])\$)?[sd]/g,
 							function(str, p1)
 							{
 								return entry.params[(p1 ? p1 - 1 : 0)];

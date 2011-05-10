@@ -56,7 +56,7 @@ foreach(matches, function(m)
 		{
 			log('warning', {
 				'pos'    : rpos,
-				'msg'    : 'Unexpected character: expected $1%s found $2%s',
+				'msg'    : 'Unexpected character: expected %1$s found %2$s',
 				'params' : [']', text[rpos]]
 			});
 			return;
@@ -139,7 +139,7 @@ foreach(matches, function(m)
 					{
 						log('warning', {
 							'pos'    : rpos,
-							'msg'    : 'Unexpected character: expected $1%s found $2%s',
+							'msg'    : 'Unexpected character: expected %1$s found %2$s',
 							'params' : [']', c]
 						});
 						return;
@@ -188,7 +188,7 @@ foreach(matches, function(m)
 				{
 					log('debug', {
 						'pos'    : rpos,
-						'msg'    : 'Unexpected character: expected $1%s found $2%s',
+						'msg'    : 'Unexpected character: expected %1$s found %2$s',
 						'params' : ['=', text[rpos]]
 					});
 					return;
