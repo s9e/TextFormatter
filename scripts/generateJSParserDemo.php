@@ -60,9 +60,9 @@ ob_start();
 A few BBCodes have been added such as:
 
 [list]
-	[*][b]bold[/b],
-	[*][i]italic[/i],
-	[*][color=#f05]color[/color],
+	[*][b]bold,[/b]
+	[*][i]italic,[/i]
+	[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
 	[*]+ a few others :)
 [/list]
 

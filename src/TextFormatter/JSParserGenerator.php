@@ -41,10 +41,13 @@ class JSParserGenerator
 
 	/**
 	* List of Javascript reserved words
+	*
 	* @link https://developer.mozilla.org/en/JavaScript/Reference/Reserved_Words
+	*
+	* Also, Closure Compiler doesn't like "char"
 	*/
 	const RESERVED_WORDS_REGEXP =
-		'#^(?:break|case|catch|continue|debugger|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|this|throw|try|typeof|var|void|while|with|class|enum|export|extends|import|super|implements|interface|let|package|private|protected|public|static|yield)$#D';
+		'#^(?:break|case|catch|continue|debugger|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|this|throw|try|typeof|var|void|while|with|class|enum|export|extends|import|super|implements|interface|let|package|private|protected|public|static|yield|char)$#D';
 
 	/**
 	* 
@@ -116,7 +119,7 @@ class JSParserGenerator
 			'js_code' => $this->src,
 			'compilation_level' => $level,
 			'output_format' => 'text',
-			'formatting' => 'pretty_print',
+//			'formatting' => 'pretty_print',
 			'output_info' => 'compiled_code'
 		));
 
@@ -276,7 +279,8 @@ class JSParserGenerator
 			$tagsConfig,
 			array(
 				array(true),
-				array(true, 'allow', true)
+				array(true, 'allow', true),
+				array(true, 'attrs', true)
 			)
 		);
 	}
