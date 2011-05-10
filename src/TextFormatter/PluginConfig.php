@@ -61,7 +61,8 @@ abstract class PluginConfig
 	}
 
 	/**
-	* @return array Array of property names that must be preserved when generating the JS config
+	* @return array List of path to properties whose name must be preserved when generating the JS
+	*               config
 	*/
 	public function getPreservedJSProps()
 	{

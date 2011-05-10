@@ -40,6 +40,13 @@ class JSParserGenerator
 	protected $pluginsConfig;
 
 	/**
+	* List of Javascript reserved words
+	* @link https://developer.mozilla.org/en/JavaScript/Reference/Reserved_Words
+	*/
+	const RESERVED_WORDS_REGEXP =
+		'#^(?:break|case|catch|continue|debugger|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|this|throw|try|typeof|var|void|while|with|class|enum|export|extends|import|super|implements|interface|let|package|private|protected|public|static|yield)$#D';
+
+	/**
 	* 
 	*
 	* @return void
@@ -241,85 +248,40 @@ class JSParserGenerator
 
 	protected function generateTagsConfig()
 	{
-		$tagsConfig = '';
-		$prepend = '{';
+		$tagsConfig = $this->parserConfig['tags'];
 
-		$replace = array();
-
-		foreach ($this->parserConfig['tags'] as $tagName => $tagConfig)
+		foreach ($tagsConfig as $tagName => &$tagConfig)
 		{
-			/**
-			* Replace true/false with 1/0
-			*/
-			$tagConfig['allow'] = array_map('intval', $tagConfig['allow']);
-
 			/**
 			* Sort tags alphabetically. It can improve the compression if the source gets gzip'ed
 			*/
 			ksort($tagConfig['allow']);
-
-			/**
-			* Replace booleans with 1/0
-			*/
-			array_walk_recursive($tagConfig, function(&$v)
-			{
-				if (is_bool($v))
-				{
-					$v = (int) $v;
-				}
-			});
 
 			if (!empty($tagConfig['rules']))
 			{
 				foreach ($tagConfig['rules'] as $rule => &$tagNames)
 				{
 					/**
-					* Values are actually never used, the keys are. Therefore we must preserve them.
+					* Values are actually never used, the keys are.
 					*/
-					$md5 = md5(microtime(true) . mt_rand());
-
-					$replace[$md5] = json_encode(
-						array_fill_keys(
-							$tagNames,
-							1
-						)
+					$tagNames = array_fill_keys(
+						$tagNames,
+						1
 					);
-
-					$tagNames = $md5;
 				}
 				unset($tagNames);
 			}
-
-			/**
-			* We replace the "allow" object with a token that we will later replace with the
-			* original value in order to preserve quotes around tag names
-			*/
-			$json = json_encode($tagConfig['allow']);
-			$md5  = md5($json);
-			$replace[$md5] = $json;
-			$tagConfig['allow'] = $md5;
-
-			$tagsConfig .= $prepend . '"' . $tagName . '":';
-			$tagsConfig .= preg_replace(
-				'#(?<=[\\{,])"([a-z]+)"(?=[:\\}])#i',
-				'$1',
-				json_encode($tagConfig, JSON_HEX_QUOT)
-			);
-
-			$prepend = ',';
 		}
-		$tagsConfig .= '}';
+		unset($tagConfig);
 
-		$tagsConfig = preg_replace_callback(
-			'#([\'"])(' . implode('|', array_keys($replace)) . ')\1#',
-			function ($m) use ($replace)
-			{
-				return $replace[$m[2]];
-			},
-			$tagsConfig
+		return self::encode(
+			$tagsConfig,
+			array(
+				array(true),
+				array(true, 'allow', true),
+				array(true, 'rules', true, true)
+			)
 		);
-
-		return $tagsConfig;
 	}
 
 	protected function generatePluginsConfig()
@@ -398,7 +360,10 @@ class JSParserGenerator
 			/**
 			* Prepare the plugin config
 			*/
-			$config = json_encode($pluginConf, JSON_HEX_QUOT);
+			$config = self::encode(
+				$pluginConf,
+				$this->cb->$pluginName->getPreservedJSProps()
+			);
 
 			/**
 			* Append the regexp(s) if applicable
@@ -408,20 +373,7 @@ class JSParserGenerator
 				$config = substr($config, 0, -1) . $regexpJS . '}';
 			}
 
-			$preserveProps = array_map(
-				function ($str)
-				{
-					return preg_quote($str, '#');
-				},
-				$this->cb->$pluginName->getPreservedJSProps()
-			);
-
-			$regexp = '#"'
-			        . (($preserveProps) ? '(?!' . implode('|', $preserveProps) . ')' : '')
-			        . '([A-Za-z_][A-Za-z_0-9]*)"(?=:)#';
-
-			$this->pluginsConfig[$pluginName] =
-				json_encode($pluginName) . ':' . preg_replace($regexp, '$1', $config);
+			$this->pluginsConfig[$pluginName] = json_encode($pluginName) . ':' . $config;
 		}
 	}
 
@@ -439,7 +391,7 @@ class JSParserGenerator
 			}
 
 			$this->pluginParsers[$pluginName] =
-				'"' . $pluginName . "\":function(text,matches){var config=pluginsConfig['" . $pluginName . "'];" . $js . '}';
+				'"' . $pluginName . "\":function(text,matches){/** @const */var config=pluginsConfig['" . $pluginName . "'];" . $js . '}';
 		}
 	}
 
@@ -470,5 +422,67 @@ class JSParserGenerator
 		$this->src = substr($this->src, 0, $pos)
 		           . addcslashes($this->cb->getXSL(), "'\\\r\n")
 		           . substr($this->src, $pos);
+	}
+
+	static public function encode(array $arr, array $preserveKeys = array())
+	{
+		/**
+		* Replace booleans with 1/0
+		*/
+		array_walk_recursive($arr, function(&$v)
+		{
+			if (is_bool($v))
+			{
+				$v = (int) $v;
+			}
+		});
+
+		return self::encodeArray($arr, $preserveKeys);
+	}
+
+	static public function encodeArray(array $arr, array $preserveKeys = array())
+	{
+		foreach ($arr as $k => &$v)
+		{
+			$v = (is_array($v))
+			   ? self::encodeArray($v, self::filterKeyPaths($preserveKeys, $k))
+			   : json_encode($v);
+		}
+		unset($v);
+
+		if (array_keys($arr) === range(0, count($arr) - 1))
+		{
+			return '[' . implode(',', $arr) . ']';
+		}
+
+		$ret = array();
+		foreach ($arr as $k => $v)
+		{
+			if (in_array(array((string) $k), $preserveKeys, true)
+			 || preg_match(self::RESERVED_WORDS_REGEXP, $k)
+			 || !preg_match('#^[a-z_0-9]+$#Di', $k))
+			{
+				$k = json_encode($k);
+			}
+
+			$ret[] = "$k:" . $v;
+		}
+
+		return '{' . implode(',', $ret) . '}';
+	}
+
+	static protected function filterKeyPaths(array $keypaths, $key)
+	{
+		$ret = array();
+		foreach ($keypaths as $keypath)
+		{
+			if ($keypath[0] === $key
+			 || $keypath[0] === true)
+			{
+				$ret[] = array_slice($keypath, 1);
+			}
+		}
+
+		return array_filter($ret);
 	}
 }

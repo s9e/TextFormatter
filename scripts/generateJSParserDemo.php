@@ -15,6 +15,8 @@ $cb->BBCodes->addPredefinedBBCode('COLOR');
 
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
+$cb->Censor->addWord('apple', 'banana');
+
 $jsParser = $cb->getJSParser(array(
 	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
 //	'disableLogTypes' => array('debug', 'warning', 'error'),
@@ -22,6 +24,8 @@ $jsParser = $cb->getJSParser(array(
 	'disableLogTypes' => array(),
 	'removeDeadCode'  => true
 ));
+
+file_put_contents('/tmp/foo.js', $jsParser);
 
 ob_start();
 ?><!DOCTYPE html>

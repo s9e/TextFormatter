@@ -120,4 +120,13 @@ class CensorConfig extends PluginConfig
 
 		return $config;
 	}
+
+	//==========================================================================
+	// JS Parser stuff
+	//==========================================================================
+
+	public function getJSParser()
+	{
+		return file_get_contents(__DIR__ . '/CensorParser.js');
+	}
 }

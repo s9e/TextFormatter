@@ -22,18 +22,20 @@ s9e['TextFormatter'] = function()
 
 		/** @const */
 		TRIM_CHARLIST = " \n\r\t\0\x0B",
+		/** @const */
 		rtrimRegExp = new RegExp('[' + TRIM_CHARLIST + ']*$'),
+		/** @const */
 		ltrimRegExp = new RegExp('^[' + TRIM_CHARLIST + ']*'),
 
 		/** @type {!Object} */
 		_log,
-		/** @type {!Object} */
+		/** @const @type {!Object} */
 		tagsConfig = {/* DO NOT EDIT*/},
-		/** @type {!Object} */
+		/** @const @type {!Object} */
 		filtersConfig = {/* DO NOT EDIT*/},
-		/** @type {!Object} */
+		/** @const @type {!Object} */
 		pluginsConfig = {/* DO NOT EDIT*/},
-		/** @type {!Object.<string, function(!string, !Object)>} */
+		/** @const @type {!Object.<string, function(!string, !Object)>} */
 		pluginParsers = {/* DO NOT EDIT*/},
 
 		/** @type {!string} */
@@ -80,6 +82,36 @@ s9e['TextFormatter'] = function()
 	function clone(obj)
 	{
 		return JSON.parse(JSON.stringify(obj));
+	}
+
+	/**
+	* @param {!string} regexp
+	* @param {!string} str
+	*/
+	function preg_match(regexp, str)
+	{
+		var m = /^(.)(.*)\1([a-zA-Z]*)$/.exec(regexp),
+			modifiers = m[3];
+
+		regexp = m[2];
+
+		if (modifiers.indexOf('s') > -1)
+		{
+			// replace the s modifier
+			regexp.replace(
+				/\\*\./g,
+				function(match)
+				{
+					if (match.length % 2)
+					{
+						match = match.substr(0, match.length - 1) + '[\\s\\S]';
+					}
+					return match;
+				}
+			);
+		}
+
+		return new RegExp(regexp, modifiers.replace(/[SusD]/g, '')).test(str);
 	}
 
 	/**

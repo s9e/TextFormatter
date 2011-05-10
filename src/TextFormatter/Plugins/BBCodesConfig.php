@@ -698,6 +698,11 @@ class BBCodesConfig extends PluginConfig
 
 	public function getPreservedJSProps()
 	{
-		return array_keys($this->bbcodesConfig);
+		$preserve = array();
+		foreach (array_keys($this->bbcodesConfig) as $bbcodeName)
+		{
+			$preserve[] = array($bbcodeName);
+		}
+		return $preserve;
 	}
 }
