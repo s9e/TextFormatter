@@ -1052,6 +1052,15 @@ class ParserTest extends Test
 	// Tags stuff
 	//==========================================================================
 
+	/**
+	* @test
+	*/
+	public function getTagsConfig_returns_the_tags_config()
+	{
+		$this->cb->addTag('X');
+		$this->assertArrayHasKey('X', $this->parser->getTagsConfig());
+	}
+
 	public function testPlainTextIsReturnedWithinPtTags()
 	{
 		$this->assertParsing('plain text', '<pt>plain text</pt>');
