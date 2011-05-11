@@ -130,7 +130,7 @@ class BBCodesParserTest extends Test
 				'warning' => array(
 					array(
 						'pos'    => 4,
-						'msg'    => 'Unexpected character: expected $1%s found $2%s',
+						'msg'    => 'Unexpected character: expected %1$s found %2$s',
 						'params' => array(']', 'z')
 					)
 				)
@@ -153,7 +153,7 @@ class BBCodesParserTest extends Test
 				'warning' => array(
 					array(
 						'pos'    => 9,
-						'msg'    => 'Unexpected character: expected $1%s found $2%s',
+						'msg'    => 'Unexpected character: expected %1$s found %2$s',
 						'params' => array(']', ' ')
 					)
 				)
@@ -300,7 +300,7 @@ class BBCodesParserTest extends Test
 				'debug' => array(
 					array(
 						'pos'    => 4,
-						'msg'    => 'Unexpected character: expected $1%s found $2%s',
+						'msg'    => 'Unexpected character: expected %1$s found %2$s',
 						'params' => array('=', '!')
 					)
 				)
