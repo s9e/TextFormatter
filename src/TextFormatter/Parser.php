@@ -241,6 +241,7 @@ class Parser
 			if (!isset($entry['pos']))
 			{
 				$entry['pos'] = $this->currentTag['pos'];
+				$entry['len'] = $this->currentTag['len'];
 			}
 		}
 
@@ -820,6 +821,7 @@ class Parser
 			{
 				$this->log('debug', array(
 					'pos'    => $tag['pos'],
+					'len'    => $tag['len'],
 					'msg'    => 'Removed unknown tag %1$s from plugin %2$s',
 					'params' => array($tag['name'], $tag['pluginName'])
 				));

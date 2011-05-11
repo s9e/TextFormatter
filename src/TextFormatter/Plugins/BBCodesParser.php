@@ -82,6 +82,7 @@ class BBCodesParser extends PluginParser
 				{
 					$this->parser->log('warning', array(
 						'pos'    => $rpos,
+						'len'    => 1,
 						'msg'    => 'Unexpected character: expected %1$s found %2$s',
 						'params' => array(']', $text[$rpos])
 					));
@@ -114,6 +115,7 @@ class BBCodesParser extends PluginParser
 
 						$this->parser->log('debug', array(
 							'pos'    => $rpos,
+							'len'    => 1,
 							'msg'    => 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
 							'params' => array($bbcodeName)
 						));
@@ -139,6 +141,7 @@ class BBCodesParser extends PluginParser
 							*/
 							$this->parser->log('warning', array(
 								'pos'    => $rpos,
+								'len'    => 1,
 								'msg'    => 'Unexpected character %s',
 								'params' => array($c)
 							));
@@ -164,6 +167,7 @@ class BBCodesParser extends PluginParser
 							{
 								$this->parser->log('warning', array(
 									'pos'    => $rpos,
+									'len'    => 1,
 									'msg'    => 'Unexpected character: expected %1$s found %2$s',
 									'params' => array(']', $c)
 								));
@@ -192,6 +196,7 @@ class BBCodesParser extends PluginParser
 						{
 							$this->parser->log('warning', array(
 								'pos'    => $rpos,
+								'len'    => 1,
 								'msg'    => 'Unexpected character %s',
 								'params' => array($c)
 							));
@@ -202,6 +207,7 @@ class BBCodesParser extends PluginParser
 						{
 							$this->parser->log('debug', array(
 								'pos' => $rpos,
+								'len' => $spn,
 								'msg' => 'Attribute name seems to extend till the end of text'
 							));
 							continue 2;
@@ -214,6 +220,7 @@ class BBCodesParser extends PluginParser
 						{
 							$this->parser->log('debug', array(
 								'pos'    => $rpos,
+								'len'    => 1,
 								'msg'    => 'Unexpected character: expected %1$s found %2$s',
 								'params' => array('=', $text[$rpos])
 							));
@@ -239,6 +246,7 @@ class BBCodesParser extends PluginParser
 								*/
 								$this->parser->log('warning', array(
 									'pos' => $valuePos - 1,
+									'len' => 1,
 									'msg' => 'Could not find matching quote'
 								));
 								continue 3;
