@@ -756,14 +756,10 @@ s9e['TextFormatter'] = function()
 				/**
 				* ...then we create a new end tag which we put on top of the stack
 				*/
-				currentTag = {
-					pos    : currentTag.pos,
-					name   : parentTagName,
-					pluginName : parentTag.pluginName,
-					suffix : parentTag.suffix,
-					len    : 0,
-					type   : END_TAG
-				};
+				currentTag = createEndTag(
+					parentTag,
+					currentTag.pos
+				);
 
 				unprocessedTags.push(currentTag);
 
@@ -783,14 +779,18 @@ s9e['TextFormatter'] = function()
 		{
 			var i = openTags.length;
 
-alert('fix me');
-
 			while (--i >= 0)
 			{
 				var ascendantTag     = openTags[i],
-					ascendantTagName = ascendantTag.name;
+					ascendantTagName = ascendantTag.name
+					ascendantMatches = tagConfig.rules.closeAscendant.some(
+						function(tagName)
+						{
+							return (tagName === ascendantTagName);
+						}
+					);
 
-				if (tagConfig.rules.closeAscendant[ascendantTagName])
+				if (ascendantMatches)
 				{
 					/**
 					* We have to close this ascendant. First we reinsert current tag...
@@ -800,14 +800,10 @@ alert('fix me');
 					/**
 					* ...then we create a new end tag which we put on top of the stack
 					*/
-					currentTag = {
-						pos    : currentTag.pos,
-						name   : ascendantTagName,
-						pluginName : ascendantTag.pluginName,
-						suffix : ascendantTag.suffix,
-						len    : 0,
-						type   : END_TAG
-					};
+					currentTag = createEndTag(
+						ascendantTag,
+						currentTag.pos
+					);
 
 					unprocessedTags.push(currentTag);
 
