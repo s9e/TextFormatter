@@ -203,6 +203,7 @@ s9e['TextFormatter'] = function()
 			if (!('pos' in entry))
 			{
 				entry['pos'] = currentTag.pos;
+				entry['len'] = currentTag.len;
 			}
 		}
 
@@ -522,6 +523,7 @@ s9e['TextFormatter'] = function()
 				{
 					log('debug', {
 						'pos'    : tag.pos,
+						'len'    : tag.len,
 						'msg'    : 'Removed unknown tag %1$s from plugin %2$s',
 						'params' : [tag.name, tag.pluginName]
 					});

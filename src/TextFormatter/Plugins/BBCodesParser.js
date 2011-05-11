@@ -57,6 +57,7 @@ foreach(matches, function(m)
 		{
 			log('warning', {
 				'pos'    : rpos,
+				'len'    : 1,
 				'msg'    : 'Unexpected character: expected %1$s found %2$s',
 				'params' : [']', text[rpos]]
 			});
@@ -90,6 +91,7 @@ foreach(matches, function(m)
 
 				log('debug', {
 					'pos'    : rpos,
+					'len'    : 1,
 					'msg'    : 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
 					'params' : [bbcodeName]
 				});
@@ -115,6 +117,7 @@ foreach(matches, function(m)
 					*/
 					log('warning', {
 						'pos'    : rpos,
+						'len'    : 1,
 						'msg'    : 'Unexpected character %s',
 						'params' : [c]
 					});
@@ -140,6 +143,7 @@ foreach(matches, function(m)
 					{
 						log('warning', {
 							'pos'    : rpos,
+							'len'    : 1,
 							'msg'    : 'Unexpected character: expected %1$s found %2$s',
 							'params' : [']', c]
 						});
@@ -168,6 +172,7 @@ foreach(matches, function(m)
 				{
 					log('warning', {
 						'pos'    : rpos,
+						'len'    : 1,
 						'msg'    : 'Unexpected character %s',
 						'params' : [c]
 					});
@@ -178,6 +183,7 @@ foreach(matches, function(m)
 				{
 					log('debug', {
 						'pos' : rpos,
+						'len' : attrName.length,
 						'msg' : 'Attribute name seems to extend till the end of text'
 					});
 					return;
@@ -189,6 +195,7 @@ foreach(matches, function(m)
 				{
 					log('debug', {
 						'pos'    : rpos,
+						'len'    : 1,
 						'msg'    : 'Unexpected character: expected %1$s found %2$s',
 						'params' : ['=', text[rpos]]
 					});
@@ -214,6 +221,7 @@ foreach(matches, function(m)
 						*/
 						log('warning', {
 							'pos' : valuePos - 1,
+							'len' : 1,
 							'msg' : 'Could not find matching quote'
 						});
 						return;

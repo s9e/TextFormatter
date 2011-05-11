@@ -12,15 +12,16 @@ $cb->BBCodes->addPredefinedBBCode('S');
 $cb->BBCodes->addPredefinedBBCode('URL');
 $cb->BBCodes->addPredefinedBBCode('LIST');
 $cb->BBCodes->addPredefinedBBCode('COLOR');
+$cb->BBCodes->addPredefinedBBCode('NOPARSE');
 
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
 $cb->Censor->addWord('apple', 'banana');
 
 $jsParser = $cb->getJSParser(array(
-	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
+//	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
 //	'disableLogTypes' => array('debug', 'warning', 'error'),
-//	'compilation'     => 'none',
+	'compilation'     => 'none',
 	'disableLogTypes' => array(),
 	'removeDeadCode'  => true
 ));
@@ -60,9 +61,9 @@ ob_start();
 A few BBCodes have been added such as:
 
 [list]
-	[*][b]bold,[/b]
-	[*][i]italic,[/i]
+	[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
 	[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
+	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123]
 	[*]+ a few others :)
 [/list]
 
@@ -85,13 +86,21 @@ The code required has been minified to a few kilobytes with [url=http://closure-
 
 			textarea = document.getElementsByTagName('textarea')[0],
 			pre = document.getElementsByTagName('pre')[0],
+
 			rendercheck = document.getElementById('rendercheck'),
+
 			logcheck = document.getElementById('logcheck'),
 			logdiv = document.getElementById('logdiv'),
+			autoHighlight = true,
 
 			s = new XMLSerializer();
 
 		rendercheck.onchange = refreshOutput;
+
+		textarea.onmouseout = function()
+		{
+			autoHighlight = true;
+		}
 
 		logcheck.onchange = function()
 		{
@@ -135,19 +144,44 @@ The code required has been minified to a few kilobytes with [url=http://closure-
 			{
 				log[type].forEach(function(entry)
 				{
-					msgs.push(
-						'[' + type + '] ' + entry.msg.replace(
+					var msg = '[' + type + '] ' + entry.msg.replace(
 							/%(?:([0-9])\$)?[sd]/g,
 							function(str, p1)
 							{
 								return entry.params[(p1 ? p1 - 1 : 0)];
 							}
-						)
-					);
+						);
+
+					if (entry.pos)
+					{
+						if (!entry.len)
+						{
+							entry.len = 0;
+						}
+
+						msg = '<a style="cursor:pointer" onmouseover="highlight(' + entry.pos + ',' + (entry.pos + entry.len) + ')" onclick="select(' + entry.pos + ',' + (entry.pos + entry.len) + ')">' + msg + '</a>';
+					}
+
+					msgs.push(msg);
 				});
 			}
 
 			logdiv.innerHTML = (msgs.length) ? msgs.join("\n") : 'No log';
+		}
+
+		function select(lpos, rpos)
+		{
+			autoHighlight = false;
+			textarea.focus();
+			textarea.setSelectionRange(lpos, rpos);
+		}
+
+		function highlight(lpos, rpos)
+		{
+			if (autoHighlight)
+			{
+				textarea.setSelectionRange(lpos, rpos);
+			}
 		}
 
 		window.setInterval(function()
