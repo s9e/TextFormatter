@@ -1075,13 +1075,9 @@ class Parser
 				/**
 				* ...then we create a new end tag which we put on top of the stack
 				*/
-				$this->currentTag = array(
-					'pos'    => $this->currentTag['pos'],
-					'name'   => $parentTagName,
-					'pluginName' => $parentTag['pluginName'],
-					'suffix' => $parentTag['suffix'],
-					'len'    => 0,
-					'type'   => self::END_TAG
+				$this->currentTag = $this->createEndTag(
+					$parentTag,
+					$this->currentTag['pos']
 				);
 
 				$this->unprocessedTags[] = $this->currentTag;
@@ -1121,13 +1117,9 @@ class Parser
 					/**
 					* ...then we create a new end tag which we put on top of the stack
 					*/
-					$this->currentTag = array(
-						'pos'    => $this->currentTag['pos'],
-						'name'   => $ascendantTagName,
-						'pluginName' => $ascendantTag['pluginName'],
-						'suffix' => $ascendantTag['suffix'],
-						'len'    => 0,
-						'type'   => self::END_TAG
+					$this->currentTag = $this->createEndTag(
+						$ascendantTag,
+						$this->currentTag['pos']
 					);
 
 					$this->unprocessedTags[] = $this->currentTag;
