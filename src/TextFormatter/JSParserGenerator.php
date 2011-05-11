@@ -256,6 +256,8 @@ class JSParserGenerator
 
 		foreach ($tagsConfig as $tagName => &$tagConfig)
 		{
+			$this->fixTagAttributesRegexp($tagConfig);
+
 			/**
 			* Sort tags alphabetically. It can improve the compression if the source gets gzip'ed
 			*/
@@ -283,6 +285,47 @@ class JSParserGenerator
 				array(true, 'attrs', true)
 			)
 		);
+	}
+
+	protected function fixTagAttributesRegexp(array &$tagConfig)
+	{
+		if (empty($tagConfig['attrs']))
+		{
+			return;
+		}
+
+		foreach ($tagConfig['attrs'] as &$attrConf)
+		{
+			if (!isset($attrConf['regexp']))
+			{
+				continue;
+			}
+
+			$backslashes = '(?<!\\\\)(?<backslashes>(?:\\\\\\\\)*)';
+			$nonCapturing = '(?<nonCapturing>\\?[a-zA-Z]*:)';
+			$name = '(?<name>[A-Za-z_0-9]+)';
+			$namedCapture = implode('|', array(
+				'\\?P?<' . $name . '>',
+				"\\?'" . $name . "'"
+			));
+
+			$k = 0;
+			$attrConf['regexp'] = preg_replace_callback(
+				'#' . $backslashes . '\\((?J:' . $nonCapturing . '|' . $namedCapture . ')#',
+				function ($m) use (&$attrConf, &$k)
+				{
+					if ($m['nonCapturing'])
+					{
+						return $m[0];
+					}
+
+					$attrConf['regexpMap'][$m['name']] = ++$k;
+
+					return $m['backslashes'] . '(';
+				},
+				$attrConf['regexp']
+			);
+		}
 	}
 
 	protected function generatePluginsConfig()
