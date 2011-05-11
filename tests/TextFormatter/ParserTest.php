@@ -1886,6 +1886,29 @@ class ParserTest extends Test
 
 	/**
 	* @test
+	* @depends requireAscendant_rule_is_fulfilled_by_parent_with_suffix
+	*/
+	public function requireAscendant_rule_with_multiple_targets_is_fulfilled_if_any_of_the_targets_is_an_ascendant()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('c');
+		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+		$this->cb->addTagRule('b', 'requireAscendant', 'c');
+
+		$this->assertParsing(
+			'[a][b]stuff[/b][/a]',
+			'<rt><A><st>[a]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a]</et></A></rt>'
+		);
+
+		$this->assertParsing(
+			'[c][b]stuff[/b][/c]',
+			'<rt><C><st>[c]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/c]</et></C></rt>'
+		);
+	}
+
+	/**
+	* @test
 	*/
 	public function Unfulfilled_requireAscendant_rule_blocks_tag()
 	{

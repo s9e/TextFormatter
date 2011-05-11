@@ -1180,16 +1180,25 @@ class Parser
 		{
 			foreach ($tagConfig['rules']['requireAscendant'] as $ascendant)
 			{
-				if (empty($this->cntOpen[$ascendant]))
+				if (!empty($this->cntOpen[$ascendant]))
 				{
-					$this->log('error', array(
-						'msg'    => 'Tag %1$s requires %2$s as ascendant',
-						'params' => array($this->currentTag['name'], $ascendant)
-					));
-
-					return true;
+					return false;
 				}
 			}
+
+			$msg = (count($tagConfig['rules']['requireAscendant']) === 1)
+				 ? 'Tag %1$s requires %2$s as ascendant'
+				 : 'Tag %1$s requires as ascendant any of: %2$s';
+
+			$this->log('error', array(
+				'msg'    => $msg,
+				'params' => array(
+					$this->currentTag['name'],
+					implode(', ', $tagConfig['rules']['requireAscendant'])
+				)
+			));
+
+			return true;
 		}
 
 		return false;

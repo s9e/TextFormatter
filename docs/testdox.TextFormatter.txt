@@ -203,6 +203,7 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Missing attributes use their default value if set
  [x] Attribute value is replaced by the return value of the attribute preFilter callbacks
  [x] Attribute value is replaced by the return value of the attribute postFilter callbacks even if it makes it invalid
+ [x] getTagsConfig returns the tags config
  [x] Plain text is returned within pt tags
  [x] Undefined attributes do not appear in XML
  [x] Overlapping tags are removed
@@ -239,6 +240,7 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] requireAscendant rule is fulfilled by parent with suffix
  [x] requireAscendant rule is fulfilled by ascendant
  [x] requireAscendant rule is fulfilled by ascendant with suffix
+ [x] requireAscendant rule with multiple targets is fulfilled if any of the targets is an ascendant
  [x] Unfulfilled requireAscendant rule blocks tag
  [x] Whitespace trimming works
 
