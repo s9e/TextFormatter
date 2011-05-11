@@ -45,7 +45,7 @@ foreach(matches, function(m)
 		* [code:1] or [/code:1]
 		* suffix = ':1'
 		*/
-		suffix  = /^[0-9]*/.exec(text.substr(++rpos))[0];
+		suffix  = /^:[0-9]*/.exec(text.substr(rpos))[0];
 		rpos   += suffix.length;
 	}
 
