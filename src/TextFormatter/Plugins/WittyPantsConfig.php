@@ -48,7 +48,11 @@ class WittyPantsConfig extends PluginConfig
 				'singletons' => "#(?:---?|\\.\\.\\.)#S",
 				'quotation'  => '#(?<![0-9\\pL])(["\'])(?:.+?)\\1(?![0-9\\pL])#Su',
 				'symbols'    => '#\\((?:tm|r|c)\\)#i',
-				'primes'     => "#(?<=[0-9])['\"]#S",
+				/**
+				* Here, we use a non-capturing subpattern rather than a lookbehind assertion because
+				* [0-9] occurs less frequently in text than ["'] so it's more efficient this way
+				*/
+				'primes'     => "#(?:[0-9])['\"]#S",
 				'multiply'   => '#(?:[0-9]["\']? ?)(x)(?= ?[0-9])#S',
 				'apostrophe' => "#(?<=\\pL)'|(?<=^|\\n)'(?=\\pL|[0-9]{2})|(?<=[0-9])'(?=s)#u"
 			),

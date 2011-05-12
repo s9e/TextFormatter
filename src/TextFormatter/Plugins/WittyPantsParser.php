@@ -86,23 +86,20 @@ class WittyPantsParser extends PluginParser
 		}
 
 		/**
-		* We do "primes" after "apostrophe" so that the character in "80's" gets handled by the
-		* former rather than the latter
+		* We do "primes" after "apostrophe" so that the character in "80's" gets replaced by an
+		* apostrophe rather than a prime
 		*/
 		foreach ($matches['primes'] as $m)
 		{
-			if (isset($replacements['primes'][$m[0][0]]))
-			{
-				$tags[] = array(
-					'pos'   => $m[0][1],
-					'type'  => Parser::SELF_CLOSING_TAG,
-					'name'  => $tagName,
-					'len'   => strlen($m[0][0]),
-					'attrs' => array(
-						$attrName => $replacements['primes'][$m[0][0]]
-					)
-				);
-			}
+			$tags[] = array(
+				'pos'   => 1 + $m[0][1],
+				'type'  => Parser::SELF_CLOSING_TAG,
+				'name'  => $tagName,
+				'len'   => 1,
+				'attrs' => array(
+					$attrName => $replacements['primes'][$m[0][0][1]]
+				)
+			);
 		}
 
 		foreach ($matches['multiply'] as $m)
