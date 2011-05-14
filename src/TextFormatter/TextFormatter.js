@@ -94,17 +94,6 @@ s9e['TextFormatter'] = function()
 		return JSON.parse(JSON.stringify(obj));
 	}
 
-	/** @param {!Object} obj */
-	function count(obj)
-	{
-		var cnt = 0, k;
-		for (k in obj)
-		{
-			++cnt;
-		}
-		return cnt;
-	}
-
 	/**
 	* @param {!string} regexp
 	* @param {!string} str
@@ -1019,10 +1008,197 @@ alert('fix me');
 
 	function filterAttributes()
 	{
+		var tagConfig = tagsConfig[currentTag.name];
+
+		/**
+		* Tag-level pre-filter
+		*/
+		if (tagConfig.preFilter)
+		{
+			tagConfig.preFilter.forEach(function(callbackConf)
+			{
+				currentTag.attrs = applyCallback(
+					callbackConf,
+					{ attrs: currentTag.attrs }
+				);
+			});
+		}
+
+		/**
+		* Remove undefined attributes
+		*/
+		for (var attrName in currentTag.attrs)
+		{
+			if (!tagConfig[attrName])
+			{
+				delete currentTag.attrs[attrName];
+			}
+		}
+
+		/**
+		* Filter each attribute
+		*/
+		foreach(currentTag.attrs, function(attrVal, attrName)
+		{
+			currentAttribute = attrName;
+
+			var attrConf    = tagConfig.attrs[attrName],
+			    filterConf  = filtersConfig[attrConf.type] || {},
+			    originalVal = attrVal;
+
+			// execute pre-filter callbacks
+			if (attrConf.preFilter)
+			{
+				attrConf.preFilter.forEach(function(callbackConf)
+				{
+					attrVal = applyCallback(
+						callbackConf,
+						{ attrVal: attrVal }
+					);
+				});
+			}
+
+			// filter the value
+			// There's no custom filters, so we can call the function directly
+			attrVal = filter(attrVal, attrConf);
+
+			// if the value is invalid, remove it/replace if, log it then skip to the next attribute
+			if (attrVal === false)
+			{
+				log('error', {
+					'msg'    : "Invalid attribute '%s'",
+					'params' : [attrName]
+				});
+
+				if (attrConf.defaultValue !== undefined)
+				{
+					/**
+					* Use the default value
+					*/
+					attrVal = attrConf.defaultValue;
+
+					log('debug', {
+						'msg'    : "Using default value '%1$s' for attribute '%2$s'",
+						'params' : [attrConf.defaultValue, attrName]
+					});
+				}
+				else
+				{
+					/**
+					* Remove the attribute altogether
+					*/
+					delete currentTag.attrs[attrName];
+				}
+
+				return;
+			}
+
+			// execute post-filter callbacks
+			if (attrConf.postFilter)
+			{
+				attrConf.postFilter.forEach(function(callbackConf)
+				{
+					attrVal = applyCallback(
+						callbackConf,
+						{ attrVal: attrVal }
+					);
+				});
+			}
+
+			if (originalVal != attrVal)
+			{
+				log('debug', {
+					'msg'    : 'Attribute value was altered by the filter '
+					         + '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
+					'params' : [attrName, originalVal, attrVal]
+				});
+			}
+
+			currentTag.attrs[attrName] = attrVal;
+		});
+		delete currentAttribute;
+
+		/**
+		* Tag-level post-filter
+		*/
+		if (tagConfig.postFilter)
+		{
+			tagConfig.postFilter.forEach(function(callbackConf)
+			{
+				currentTag.attrs = applyCallback(
+					callbackConf,
+					{ attrs: currentTag.attrs }
+				);
+			});
+		}
 	}
 
+	function applyCallback(conf, values)
+	{
+		var params = {};
+
+		if (conf.params)
+		{
+			/**
+			* Replace the dynamic parameters with their current value
+			*/
+/*
+			values += array(
+				tagsConfig    => tagsConfig,
+				filtersConfig => filtersConfig
+			);
+
+			foreach (array(currentTag, currentAttribute) as k)
+			{
+				if (isset(k) && !isset(values[k]))
+				{
+					values[k] = k;
+				}
+			}
+
+			params = array_replace(
+				conf[params],
+				array_intersect_key(values, conf[params])
+			);
+		}
+
+		return call_user_func_array(conf[callback], params);
+*/
+	}
+
+	/*
+	* As with its PHP counterpart, the behaviour of multiple compound attributes trying to set the same
+	* attributes is undefined
+	*/
 	function splitCompoundAttributes()
 	{
+		var tagConfig = tagsConfig[currentTag.name];
+
+		foreach(tagsConfig[currentTag.name].attrs, function(attrConfig, attrName)
+		{
+			if (attrConfig.type !== 'compound')
+			{
+				return;
+			}
+
+			if (attrConfig.regexpMap)
+			{
+				var m = attrConfig.regexp.exec(currentTag.attrs[attrName]);
+
+				foreach(attrConfig.regexpMap, function(v, k)
+				{
+					if (!(k in currentTag.attrs))
+					{
+						currentTag.attrs[k] = v;
+					}
+				});
+			}
+
+			/**
+			* Compound attributes are removed
+			*/
+			delete currentTag.attrs[attrName];
+		});
 	}
 
 	/** @param {!Tag} tag */

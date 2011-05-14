@@ -147,6 +147,7 @@ class JSParserGenerator
 		$this->removeAttributesProcessing();
 		$this->removeDeadFilters();
 		$this->removeWhitespaceTrimming();
+		$this->removeCompoundAttritutesSplitting();
 	}
 
 	/**
@@ -195,7 +196,29 @@ class JSParserGenerator
 			}
 		}
 
-		$this->removeFunctions('processCurrentTagAttributes');
+		$this->removeFunctions('filterAttributes|filter');
+	}
+
+	/**
+	* Remove JS code related to compound attributes if none exist
+	*/
+	protected function removeCompoundAttritutesSplitting()
+	{
+		foreach ($this->parserConfig['tags'] as $tagConfig)
+		{
+			if (!empty($tagConfig['attrs']))
+			{
+				foreach ($tagConfig['attrs'] as $attrConf)
+				{
+					if ($attrConf['type'] === 'compound')
+					{
+						return;
+					}
+				}
+			}
+		}
+
+		$this->removeFunctions('splitCompoundAttributes');
 	}
 
 	/**
