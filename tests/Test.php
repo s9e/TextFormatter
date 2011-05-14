@@ -2,7 +2,8 @@
 
 namespace s9e\Toolkit\Tests;
 
-use s9e\Toolkit\TextFormatter\ConfigBuilder;
+use ReflectionClass,
+    s9e\Toolkit\TextFormatter\ConfigBuilder;
 
 include_once __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
 
@@ -89,6 +90,9 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		$this->assertXmlStringEqualsXmlString($expectedXml, $actualXml);
 		$this->assertArrayMatches($expectedLog, $actualLog);
+
+		$this->assertReversible($text, $actualXml);
+		$this->assertParserIsInACleanState();
 	}
 
 	protected function assertRendering($text, $expectedHtml, $expectedLog = array('error' => null))
@@ -100,6 +104,9 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		$actualHtml = $this->renderer->render($actualXml);
 		$this->assertSame($expectedHtml, $actualHtml);
+
+		$this->assertReversible($text, $actualXml);
+		$this->assertParserIsInACleanState();
 	}
 
 	protected function assertTransformation($text, $expectedXml, $expectedHtml, $expectedLog = array('error' => null))
@@ -113,7 +120,40 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$actualHtml = $this->renderer->render($actualXml);
 		$this->assertSame($expectedHtml, $actualHtml);
 
-		$revertedText = html_entity_decode(strip_tags($actualXml));
-		$this->assertSame($text, $revertedText, 'Could not revert to plain text');
+		$this->assertReversible($text, $actualXml);
+		$this->assertParserIsInACleanState();
+	}
+
+	protected function assertReversible($text, $actualXml)
+	{
+		$this->assertSame(
+			$text,
+			html_entity_decode(strip_tags($actualXml)),
+			'Could not revert to plain text'
+		);
+	}
+
+	protected function assertParserIsInACleanState()
+	{
+		$r = new ReflectionClass($this->parser);
+
+		$propNames = array(
+			'unprocessedTags',
+			'openTags',
+			'openStartTags',
+			'cntOpen'
+		);
+
+		foreach ($propNames as $propName)
+		{
+			$p = $r->getProperty($propName);
+			$p->setAccessible(true);
+
+			$this->assertSame(
+				array(),
+				array_filter($p->getValue($this->parser)),
+				'The parser did not end up in a clean state: ' . $propName . ' is not empty'
+			);
+		}
 	}
 }
