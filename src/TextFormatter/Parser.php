@@ -1412,7 +1412,7 @@ class Parser
 				foreach ($attrConf['preFilter'] as $callbackConf)
 				{
 					$attrVal = $this->applyCallback(
-						$callbackConf, 
+						$callbackConf,
 						array('attrVal' => $attrVal)
 					);
 				}
@@ -1476,7 +1476,7 @@ class Parser
 				foreach ($attrConf['postFilter'] as $callbackConf)
 				{
 					$attrVal = $this->applyCallback(
-						$callbackConf, 
+						$callbackConf,
 						array('attrVal' => $attrVal)
 					);
 				}
@@ -1511,7 +1511,7 @@ class Parser
 	/**
 	* Apply a callback and return the result
 	*
-	* @param  array $conf   Callback configuration. Must have a "callback" element and can have an 
+	* @param  array $conf   Callback configuration. Must have a "callback" element and can have an
 	*                       optional "params" element. If there's no "params" element, $value is
 	*                       passed as the only argument to the callback
 	* @param  array $values Values used to replace values found in the "params" element
