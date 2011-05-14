@@ -729,7 +729,7 @@ s9e['TextFormatter'] = function()
 		 && tagConfig.rules.closeParent)
 		{
 			var parentTag     = openTags[openTags.length - 1],
-				parentTagName = parentTag.name
+				parentTagName = parentTag.name,
 				parentMatches = tagConfig.rules.closeParent.some(
 					function(tagName)
 					{
@@ -773,7 +773,7 @@ s9e['TextFormatter'] = function()
 			while (--i >= 0)
 			{
 				var ascendantTag     = openTags[i],
-					ascendantTagName = ascendantTag.name
+					ascendantTagName = ascendantTag.name,
 					ascendantMatches = tagConfig.rules.closeAscendant.some(
 						function(tagName)
 						{
@@ -1160,10 +1160,10 @@ alert('fix me');
 				conf[params],
 				array_intersect_key(values, conf[params])
 			);
+*/
 		}
 
-		return call_user_func_array(conf[callback], params);
-*/
+//		return call_user_func_array(conf[callback], params);
 	}
 
 	/*
