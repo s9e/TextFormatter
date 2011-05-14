@@ -11,7 +11,10 @@ include_once __DIR__ . '/../../Test.php';
 */
 class AutolinkParserTest extends Test
 {
-	public function testHttpUrlsAreLinkifiedByDefault()
+	/**
+	* @test
+	*/
+	public function HTTP_urls_are_linkified_by_default()
 	{
 		$this->cb->loadPlugin('Autolink');
 
@@ -22,7 +25,10 @@ class AutolinkParserTest extends Test
 		);
 	}
 
-	public function testHttpsUrlsAreLinkifiedByDefault()
+	/**
+	* @test
+	*/
+	public function HTTPS_urls_are_linkified_by_default()
 	{
 		$this->cb->loadPlugin('Autolink');
 
@@ -33,7 +39,10 @@ class AutolinkParserTest extends Test
 		);
 	}
 
-	public function testFtpUrlsAreNotLinkifiedByDefault()
+	/**
+	* @test
+	*/
+	public function FTP_urls_are_not_linkified_by_default()
 	{
 		$this->cb->loadPlugin('Autolink');
 
@@ -44,7 +53,10 @@ class AutolinkParserTest extends Test
 		);
 	}
 
-	public function testFtpUrlsAreLinkifiedIfTheSchemeHasBeenAllowedInConfigBuilder()
+	/**
+	* @test
+	*/
+	public function FTP_urls_are_linkified_if_the_scheme_has_been_allowed_in_configBuilder()
 	{
 		$this->cb->loadPlugin('Autolink');
 
@@ -58,9 +70,10 @@ class AutolinkParserTest extends Test
 	}
 
 	/**
-	* @depends testHttpUrlsAreLinkifiedByDefault
+	* @test
+	* @depends HTTP_urls_are_linkified_by_default
 	*/
-	public function testTrailingDotsAreNotLinkified()
+	public function Trailing_dots_are_not_linkified()
 	{
 		$this->cb->loadPlugin('Autolink');
 
@@ -72,9 +85,55 @@ class AutolinkParserTest extends Test
 	}
 
 	/**
-	* @depends testHttpUrlsAreLinkifiedByDefault
+	* @test
+	* @depends HTTP_urls_are_linkified_by_default
 	*/
-	public function testBalancedRightParenthesesAreLinkified()
+	public function Trailing_punctuation_is_not_linkified()
+	{
+		$this->cb->loadPlugin('Autolink');
+
+		$this->assertTransformation(
+			'Go to http://www.example.com! Or the kitten dies.',
+			'<rt>Go to <URL url="http://www.example.com">http://www.example.com</URL>! Or the kitten dies.</rt>',
+			'Go to <a href="http://www.example.com">http://www.example.com</a>! Or the kitten dies.'
+		);
+	}
+
+	/**
+	* @test
+	* @depends Trailing_punctuation_is_not_linkified
+	*/
+	public function Trailing_slash_is_linkified()
+	{
+		$this->cb->loadPlugin('Autolink');
+
+		$this->assertTransformation(
+			'Go to http://www.example.com/!',
+			'<rt>Go to <URL url="http://www.example.com/">http://www.example.com/</URL>!</rt>',
+			'Go to <a href="http://www.example.com/">http://www.example.com/</a>!'
+		);
+	}
+
+	/**
+	* @test
+	* @depends Trailing_punctuation_is_not_linkified
+	*/
+	public function Trailing_equal_sign_is_linkified()
+	{
+		$this->cb->loadPlugin('Autolink');
+
+		$this->assertTransformation(
+			'Go to http://www.example.com/?q=!',
+			'<rt>Go to <URL url="http://www.example.com/?q=">http://www.example.com/?q=</URL>!</rt>',
+			'Go to <a href="http://www.example.com/?q=">http://www.example.com/?q=</a>!'
+		);
+	}
+
+	/**
+	* @test
+	* @depends HTTP_urls_are_linkified_by_default
+	*/
+	public function Balanced_right_parentheses_are_linkified()
 	{
 		$this->cb->loadPlugin('Autolink');
 
@@ -86,9 +145,10 @@ class AutolinkParserTest extends Test
 	}
 
 	/**
-	* @depends testHttpUrlsAreLinkifiedByDefault
+	* @test
+	* @depends HTTP_urls_are_linkified_by_default
 	*/
-	public function testNonBalancedRightParenthesesAreNotLinkified()
+	public function Non_balanced_right_parentheses_are_not_linkified()
 	{
 		$this->cb->loadPlugin('Autolink');
 

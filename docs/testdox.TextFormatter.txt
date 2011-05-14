@@ -263,11 +263,14 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkConfig
  [x] Generates a regexp that matches all possible urls
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
- [x] Http urls are linkified by default
- [x] Https urls are linkified by default
- [x] Ftp urls are not linkified by default
- [x] Ftp urls are linkified if the scheme has been allowed in config builder
+ [x] HTTP urls are linkified by default
+ [x] HTTPS urls are linkified by default
+ [x] FTP urls are not linkified by default
+ [x] FTP urls are linkified if the scheme has been allowed in configBuilder
  [x] Trailing dots are not linkified
+ [x] Trailing punctuation is not linkified
+ [x] Trailing slash is linkified
+ [x] Trailing equal sign is linkified
  [x] Balanced right parentheses are linkified
  [x] Non balanced right parentheses are not linkified
 
