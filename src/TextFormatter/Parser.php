@@ -408,14 +408,13 @@ class Parser
 				}
 
 				return $attrVal;
-
-			default:
-				$parser->log('debug', array(
-					'msg'    => "Unknown filter '%s'",
-					'params' => array($attrConf['type'])
-				));
-				return false;
 		}
+
+		$parser->log('debug', array(
+			'msg'    => "Unknown filter '%s'",
+			'params' => array($attrConf['type'])
+		));
+		return false;
 	}
 
 	/**
