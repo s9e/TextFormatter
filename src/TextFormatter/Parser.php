@@ -1374,24 +1374,12 @@ class Parser
 		/**
 		* Tag-level pre-filter
 		*/
-		if (isset($tagConfig['preFilter']))
-		{
-			foreach ($tagConfig['preFilter'] as $callbackConf)
-			{
-				$this->currentTag['attrs'] = $this->applyCallback(
-					$callbackConf,
-					array('attrs' => $this->currentTag['attrs'])
-				);
-			}
-		}
+		$this->applyTagPreFilterCallbacks();
 
 		/**
 		* Remove undefined attributes
 		*/
-		$this->currentTag['attrs'] = array_intersect_key(
-			$this->currentTag['attrs'],
-			$tagConfig['attrs']
-		);
+		$this->removeUndefinedAttributesFromCurrentTag();
 
 		/**
 		* Filter each attribute
@@ -1401,43 +1389,12 @@ class Parser
 			$this->currentAttribute = $attrName;
 
 			$attrConf    = $tagConfig['attrs'][$attrName];
-			$filterConf  = (isset($this->filtersConfig[$attrConf['type']]))
-			             ? $this->filtersConfig[$attrConf['type']]
-			             : array();
 			$originalVal = $attrVal;
 
-			// execute pre-filter callbacks
-			if (!empty($attrConf['preFilter']))
-			{
-				foreach ($attrConf['preFilter'] as $callbackConf)
-				{
-					$attrVal = $this->applyCallback(
-						$callbackConf,
-						array('attrVal' => $attrVal)
-					);
-				}
-			}
+			// execute preFilter callbacks
+			$this->applyAttributePreFilterCallbacks();
 
-			// if a filter isn't set for that type, use the built-in method
-			if (!isset($filterConf['callback']))
-			{
-				$filterConf['callback'] = array(__CLASS__, 'filter');
-				$filterConf['params']   = array(
-					'attrVal'    => null,
-					'attrConf'   => null,
-					'filterConf' => $filterConf,
-					'parser'     => null
-				);
-			}
-
-			// filter the value
-			$attrVal = $this->applyCallback(
-				$filterConf,
-				array(
-					'attrVal'  => $attrVal,
-					'attrConf' => $attrConf
-				)
-			);
+			$this->filterCurrentAttribute();
 
 			// if the value is invalid, remove it/replace if, log it then skip to the next attribute
 			if ($attrVal === false)
@@ -1470,17 +1427,8 @@ class Parser
 				continue;
 			}
 
-			// execute post-filter callbacks
-			if (!empty($attrConf['postFilter']))
-			{
-				foreach ($attrConf['postFilter'] as $callbackConf)
-				{
-					$attrVal = $this->applyCallback(
-						$callbackConf,
-						array('attrVal' => $attrVal)
-					);
-				}
-			}
+			// execute postFilter callbacks
+			$this->applyAttributePostFilterCallbacks();
 
 			if ($originalVal != $attrVal)
 			{
@@ -1496,6 +1444,79 @@ class Parser
 		/**
 		* Tag-level post-filter
 		*/
+		$this->applyTagPostFilterCallbacks();
+	}
+
+	/**
+	* Removed undefined attributes from current tag
+	*/
+	protected function removeUndefinedAttributesFromCurrentTag()
+	{
+		$this->currentTag['attrs'] = array_intersect_key(
+			$this->currentTag['attrs'],
+			$this->tagsConfig[$this->currentTag['name']]['attrs']
+		);
+	}
+
+	/**
+	* Filter current attribute
+	*/
+	protected function filterCurrentAttribute()
+	{
+		$tagConfig   = $this->tagsConfig[$this->currentTag['name']];
+		$attrConf    = $tagConfig['attrs'][$this->currentAttribute];
+		$filterConf  = (isset($this->filtersConfig[$attrConf['type']]))
+		             ? $this->filtersConfig[$attrConf['type']]
+		             : array();
+
+		// if a filter isn't set for that type, use the built-in method
+		if (!isset($filterConf['callback']))
+		{
+			$filterConf['callback'] = array(__CLASS__, 'filter');
+			$filterConf['params']   = array(
+				'attrVal'    => null,
+				'attrConf'   => null,
+				'filterConf' => $filterConf,
+				'parser'     => null
+			);
+		}
+
+		// filter the value
+		$this->currentTag['attrs'][$this->currentAttribute] = $this->applyCallback(
+			$filterConf,
+			array(
+				'attrVal'  => $this->currentTag['attrs'][$this->currentAttribute],
+				'attrConf' => $attrConf
+			)
+		);
+	}
+
+	/**
+	* Execute/apply the preFilter callbacks from current tag
+	*/
+	protected function applyTagPreFilterCallbacks()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (isset($tagConfig['preFilter']))
+		{
+			foreach ($tagConfig['preFilter'] as $callbackConf)
+			{
+				$this->currentTag['attrs'] = $this->applyCallback(
+					$callbackConf,
+					array('attrs' => $this->currentTag['attrs'])
+				);
+			}
+		}
+	}
+
+	/**
+	* Execute/apply the postFilter callbacks from current tag
+	*/
+	protected function applyTagPostFilterCallbacks()
+	{
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
 		if (isset($tagConfig['postFilter']))
 		{
 			foreach ($tagConfig['postFilter'] as $callbackConf)
@@ -1503,6 +1524,44 @@ class Parser
 				$this->currentTag['attrs'] = $this->applyCallback(
 					$callbackConf,
 					array('attrs' => $this->currentTag['attrs'])
+				);
+			}
+		}
+	}
+
+	/**
+	* Execute/apply preFilter callbacks to current attribute
+	*/
+	protected function applyAttributePreFilterCallbacks()
+	{
+		$attrConf = $this->tagsConfig[$this->currentTag['name']]['attrs'][$this->currentAttribute];
+
+		if (!empty($attrConf['preFilter']))
+		{
+			foreach ($attrConf['preFilter'] as $callbackConf)
+			{
+				$this->currentTag['attrs'][$this->currentAttribute] = $this->applyCallback(
+					$callbackConf,
+					array('attrVal' => $this->currentTag['attrs'][$this->currentAttribute])
+				);
+			}
+		}
+	}
+
+	/**
+	* Execute/apply postFilter callbacks to current attribute
+	*/
+	protected function applyAttributePostFilterCallbacks()
+	{
+		$attrConf = $this->tagsConfig[$this->currentTag['name']]['attrs'][$this->currentAttribute];
+
+		if (!empty($attrConf['postFilter']))
+		{
+			foreach ($attrConf['postFilter'] as $callbackConf)
+			{
+				$this->currentTag['attrs'][$this->currentAttribute] = $this->applyCallback(
+					$callbackConf,
+					array('attrVal' => $this->currentTag['attrs'][$this->currentAttribute])
 				);
 			}
 		}
