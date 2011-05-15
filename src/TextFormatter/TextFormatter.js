@@ -1278,9 +1278,10 @@ alert('fix me');
 
 				foreach(attrConfig.regexpMap, function(v, k)
 				{
-					if (!(k in currentTag.attrs))
+					if (!(k in currentTag.attrs)
+					 && m[v] !== undefined)
 					{
-						currentTag.attrs[k] = v;
+						currentTag.attrs[k] = m[v];
 					}
 				});
 			}

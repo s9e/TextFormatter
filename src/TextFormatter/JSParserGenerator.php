@@ -390,23 +390,28 @@ class JSParserGenerator
 	{
 		$filtersConfig = $this->parserConfig['filters'];
 
-		$js = '{url:{allowedSchemes:new RegExp('
-		    . json_encode(substr($filtersConfig['url']['allowedSchemes'], 1, -3))
-		    . ',"i")';
-
 		if (isset($filtersConfig['url']['disallowedHosts']))
 		{
-			$regexp = substr($filtersConfig['url']['disallowedHosts'], 1, -4);
-
 			// replace the unsupported lookbehind assertion with a non-capturing subpattern
-			$regexp = str_replace('(?<![^\\.])', '(?:^|\\.)', $regexp);
-
-			$js .= ',disallowedHosts:new RegExp(' . json_encode($regexp) . ',"i")';
+			$filtersConfig['url']['disallowedHosts'] = str_replace(
+				'(?<![^\\.])',
+				'(?:^|\\.)',
+				$filtersConfig['url']['disallowedHosts']
+			);
 		}
 
-		$js .= '}}';
-
-		return $js;
+		return self::encode(
+			$filtersConfig,
+			array(
+				'preserveKeys' => array(
+					array(true)
+				),
+				'isRegexp' => array(
+					array('url', 'allowedSchemes'),
+					array('url', 'disallowedHosts')
+				)
+			)
+		);
 	}
 
 	protected function generateTagsConfig()
@@ -439,9 +444,14 @@ class JSParserGenerator
 		return self::encode(
 			$tagsConfig,
 			array(
-				array(true),
-				array(true, 'allow', true),
-				array(true, 'attrs', true)
+				'preserveKeys' => array(
+					array(true),
+					array(true, 'allow', true),
+					array(true, 'attrs', true)
+				),
+				'isRegexp' => array(
+					array(true, 'attrs', true, 'regexp')
+				)
 			)
 		);
 	}
@@ -493,88 +503,29 @@ class JSParserGenerator
 
 		foreach ($this->pluginParsers as $pluginName => $parserJS)
 		{
-			$pluginConf = $this->parserConfig['plugins'][$pluginName];
+			$pluginConfig = $this->parserConfig['plugins'][$pluginName];
 
 			/**
-			* Prepare the regexp
-			*/
-			$regexpJS = '';
-			if (!empty($pluginConf['regexp']))
-			{
-				$isArray = is_array($pluginConf['regexp']);
-
-				if (!$isArray)
-				{
-					$pluginConf['regexp'] = array($pluginConf['regexp']);
-				}
-
-				foreach ($pluginConf['regexp'] as &$regexp)
-				{
-					$pos = strrpos($regexp, $regexp[0]);
-
-					$modifiers = substr($regexp, $pos + 1);
-					$regexp    = substr($regexp, 1, $pos - 1);
-
-					if (strpos($modifiers, 's') !== false)
-					{
-						/**
-						* Uses the "s" modifier, which doesn't exist in Javascript RegExp and has
-						* to be replaced with the character class [\s\S]
-						*/
-						$regexp = preg_replace('#(?<!\\)(?:\\\\\\\\)*\\.#', '[\\s\\S]', $regexp);
-					}
-
-					$modifiers = preg_replace('#[Sus]#', '', $modifiers);
-
-					$regexp = 'new RegExp("' . addslashes($regexp) . '", "g' . $modifiers . '")';
-				}
-				unset($regexp);
-
-				$regexpJS = ',regexp:';
-
-				if ($isArray)
-				{
-					$regexpJS .= '{';
-
-					$sep = '';
-					foreach ($pluginConf['regexp'] as $k => $regexp)
-					{
-						$regexpJS .= $sep . $k . ':' . $regexp;
-						$sep = ',';
-					}
-
-					$regexpJS .= '}';
-				}
-				else
-				{
-					$regexpJS .= array_pop($pluginConf['regexp']);
-				}
-			}
-
-			/**
-			* Remove useless settings as well as the original regexp value
+			* Remove useless settings
 			*/
 			unset(
-				$pluginConf['regexp'],
-				$pluginConf['parserClassName'],
-				$pluginConf['parserFilepath']
+				$pluginConfig['parserClassName'],
+				$pluginConfig['parserFilepath']
 			);
 
 			/**
 			* Prepare the plugin config
 			*/
 			$config = self::encode(
-				$pluginConf,
-				$this->cb->$pluginName->getPreservedJSProps()
+				$pluginConfig,
+				array(
+					'preserveKeys' => $this->cb->$pluginName->getPreservedJSProps(),
+					'isGlobalRegexp' => array(
+						array('regexp'),
+						array('regexp', true)
+					)
+				)
 			);
-
-			/**
-			* Append the regexp(s) if applicable
-			*/
-			if ($regexpJS)
-			{
-				$config = substr($config, 0, -1) . $regexpJS . '}';
-			}
 
 			$this->pluginsConfig[$pluginName] = json_encode($pluginName) . ':' . $config;
 		}
@@ -584,7 +535,7 @@ class JSParserGenerator
 	{
 		$this->pluginParsers = array();
 
-		foreach ($this->parserConfig['plugins'] as $pluginName => $pluginConf)
+		foreach ($this->parserConfig['plugins'] as $pluginName => $pluginConfig)
 		{
 			$js = $this->cb->$pluginName->getJSParser();
 
@@ -627,7 +578,7 @@ class JSParserGenerator
 		           . substr($this->src, $pos);
 	}
 
-	static public function encode(array $arr, array $preserveKeys = array())
+	static public function encode(array $arr, array $struct)
 	{
 		/**
 		* Replace booleans with 1/0
@@ -640,16 +591,69 @@ class JSParserGenerator
 			}
 		});
 
-		return self::encodeArray($arr, $preserveKeys);
+		return self::encodeArray($arr, $struct);
 	}
 
-	static public function encodeArray(array $arr, array $preserveKeys = array())
+	static public function convertRegexp($regexp, $flags = '')
 	{
+		$pos = strrpos($regexp, $regexp[0]);
+
+		$modifiers = substr($regexp, $pos + 1);
+		$regexp    = substr($regexp, 1, $pos - 1);
+
+		if (strpos($modifiers, 's') !== false)
+		{
+			/**
+			* Uses the "s" modifier, which doesn't exist in Javascript RegExp and has
+			* to be replaced with the character class [\s\S]
+			*/
+			$regexp = preg_replace('#(?<!\\)(?:\\\\\\\\)*\\.#', '[\\s\\S]', $regexp);
+		}
+
+		$modifiers = preg_replace('#[SusD]#', '', $modifiers);
+
+		$js = 'new RegExp(' . json_encode($regexp)
+		    . (($flags || $modifiers) ?  ',' . json_encode($flags . $modifiers) : '')
+		    . ')';
+
+		return $js;
+	}
+
+	static public function encodeArray(array $arr, array $struct)
+	{
+		$match = array();
+
+		foreach ($struct as $name => $keypaths)
+		{
+			foreach ($arr as $k => $v)
+			{
+				$match[$name][$k] =
+					(in_array(array((string) $k), $keypaths, true)
+					|| in_array(array(true), $keypaths, true));
+			}
+		}
+
 		foreach ($arr as $k => &$v)
 		{
-			$v = (is_array($v))
-			   ? self::encodeArray($v, self::filterKeyPaths($preserveKeys, $k))
-			   : json_encode($v);
+			if (!empty($match['isRegexp'][$k]))
+			{
+				$v = self::convertRegexp($v);
+			}
+			elseif (!empty($match['isGlobalRegexp'][$k]))
+			{
+				$v = self::convertRegexp($v, 'g');
+			}
+			elseif (is_array($v))
+			{
+				$v = self::encodeArray(
+					$v,
+					self::filterKeyPaths($struct, $k)
+				);
+			}
+			else
+			{
+				$v = json_encode($v);
+			}
 		}
 		unset($v);
 
@@ -661,8 +665,7 @@ class JSParserGenerator
 		$ret = array();
 		foreach ($arr as $k => $v)
 		{
-			if (in_array(array((string) $k), $preserveKeys, true)
-			 || in_array(array(true), $preserveKeys, true)
+			if (!empty($match['preserveKey'][$k])
 			 || preg_match(self::RESERVED_WORDS_REGEXP, $k)
 			 || !preg_match('#^[a-z_0-9]+$#Di', $k))
 			{
@@ -675,18 +678,21 @@ class JSParserGenerator
 		return '{' . implode(',', $ret) . '}';
 	}
 
-	static protected function filterKeyPaths(array $keypaths, $key)
+	static protected function filterKeyPaths(array $struct, $key)
 	{
 		$ret = array();
-		foreach ($keypaths as $keypath)
+		foreach ($struct as $name => $keypaths)
 		{
-			if ($keypath[0] === $key
-			 || $keypath[0] === true)
+			foreach ($keypaths as $keypath)
 			{
-				$ret[] = array_slice($keypath, 1);
+				if ($keypath[0] === $key
+				 || $keypath[0] === true)
+				{
+					$ret[$name][] = array_slice($keypath, 1);
+				}
 			}
 		}
 
-		return array_filter($ret);
+		return array_map('array_filter', $ret);
 	}
 }
