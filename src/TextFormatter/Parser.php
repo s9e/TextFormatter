@@ -1310,11 +1310,6 @@ class Parser
 		else
 		{
 			/**
-			* Add default values
-			*/
-			$this->addDefaultAttributeValuesToCurrentTag();
-
-			/**
 			* Handle compound attributes
 			*/
 			$this->splitCompoundAttributes();
@@ -1323,6 +1318,11 @@ class Parser
 			* Filter attributes
 			*/
 			$this->filterAttributes();
+
+			/**
+			* Add default values
+			*/
+			$this->addDefaultAttributeValuesToCurrentTag();
 
 			/**
 			* Check for missing required attributes
@@ -1399,7 +1399,7 @@ class Parser
 		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
 
 		/**
-		* Tag-level pre-filter
+		* Tag-level preFilter callbacks
 		*/
 		$this->applyTagPreFilterCallbacks();
 
@@ -1421,7 +1421,8 @@ class Parser
 			// do filter/validate current attribute
 			$this->filterCurrentAttribute();
 
-			// if the value is invalid, remove or replace it, log it then skip to the next attribute
+			// if the value is invalid, log the occurence, remove the attribute then skip to the
+			// next attribute
 			if ($this->currentTag['attrs'][$attrName] === false)
 			{
 				$this->log('error', array(
@@ -1429,27 +1430,7 @@ class Parser
 					'params' => array($attrName)
 				));
 
-				$attrConf = $tagConfig['attrs'][$attrName];
-
-				if (isset($attrConf['defaultValue']))
-				{
-					/**
-					* Use the default value
-					*/
-					$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
-
-					$this->log('debug', array(
-						'msg'    => "Using default value '%1\$s' for attribute '%2\$s'",
-						'params' => array($attrConf['defaultValue'], $attrName)
-					));
-				}
-				else
-				{
-					/**
-					* Remove the attribute altogether
-					*/
-					unset($this->currentTag['attrs'][$attrName]);
-				}
+				unset($this->currentTag['attrs'][$attrName]);
 
 				continue;
 			}
@@ -1473,7 +1454,7 @@ class Parser
 		unset($this->currentAttribute);
 
 		/**
-		* Tag-level post-filter
+		* Tag-level postFilter callbacks
 		*/
 		$this->applyTagPostFilterCallbacks();
 	}
