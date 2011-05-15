@@ -51,10 +51,15 @@ ob_start();
 			font-family: sans;
 			white-space: pre-wrap;
 		}
+
+		label
+		{
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
-	<div>
+	<div style="float:left">
 		<form>
 			<textarea cols="80" rows="15">This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter]s9e\TextFormatter[/url].
 
@@ -74,6 +79,16 @@ The code required can been minified to a few kilobytes with [url=http://closure-
 			<input type="checkbox" id="logcheck"><label for="logcheck"> Show log</label>
 		</form>
 	</div>
+
+	<div style="float:left">
+		<form>
+			<input type="checkbox" id="BBCodes" checked="checked" onchange="toggle(this)"><label for="BBCodes"> BBCodes</label><br>
+			<input type="checkbox" id="Censor" checked="checked" onchange="toggle(this)"><label for="Censor"> Censor</label><br>
+			<input type="checkbox" id="Emoticons" checked="checked" onchange="toggle(this)"><label for="Emoticons"> Emoticons</label>
+		</form>
+	</div>
+
+	<div style="clear:both"></div>
 
 	<div id="logdiv" style="display:none"></div>
 
@@ -182,6 +197,12 @@ The code required can been minified to a few kilobytes with [url=http://closure-
 			{
 				textarea.setSelectionRange(lpos, rpos);
 			}
+		}
+
+		function toggle(el)
+		{
+			s9e.TextFormatter[(el.checked) ? 'enablePlugin' : 'disablePlugin'](el.id);
+			text = '';
 		}
 
 		window.setInterval(function()

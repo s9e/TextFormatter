@@ -465,6 +465,11 @@ s9e['TextFormatter'] = function()
 	{
 		foreach(pluginsConfig, function(pluginConfig, pluginName)
 		{
+			if (pluginConfig.disabled)
+			{
+				return;
+			}
+
 			var matches;
 
 			if (pluginConfig.regexp)
@@ -1271,6 +1276,16 @@ alert('fix me');
 		'getLog': function()
 		{
 			return _log;
+		},
+
+		'disablePlugin': function(pluginName)
+		{
+			pluginsConfig[pluginName].disabled = 1;
+		},
+
+		'enablePlugin': function(pluginName)
+		{
+			pluginsConfig[pluginName].disabled = 0;
 		}
 	}
 }();
