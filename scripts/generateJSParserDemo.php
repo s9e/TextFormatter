@@ -63,11 +63,11 @@ A few BBCodes have been added such as:
 [list]
 	[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
 	[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123]
+	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], [NOPARSE][LIST][/NOPARSE],
 	[*]+ a few others :)
 [/list]
 
-The code required has been minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url] but the raw sources can be found at GitHub in the [url=https://github.com/s9e/Toolkit/tree/TextFormatter-JSParser/src/TextFormatter]TextFormatter-JSParser branch[/url].
+The code required can been minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url] and the raw sources can be found [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter]at GitHub[/url].
 </textarea>
 			<br>
 			<input type="checkbox" id="rendercheck" checked="checked"><label for="rendercheck"> Render</label>

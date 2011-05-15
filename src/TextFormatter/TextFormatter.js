@@ -199,6 +199,11 @@ s9e['TextFormatter'] = function()
 		_log[type].push(entry);
 	}
 
+	function filter(attrVal, attrConf, filterConf)
+	{
+		return attrVal;
+	}
+
 	function output()
 	{
 		return asDOM();
@@ -988,7 +993,9 @@ alert('fix me');
 
 	function currentTagRequiresMissingAttribute()
 	{
-		for (var attrName in tagsConfig[currentTag.name].attrs)
+		var tagConfig = tagsConfig[currentTag.name];
+
+		for (var attrName in tagConfig.attrs)
 		{
 			if (tagConfig.attrs[attrName].isRequired
 			 && currentTag.attrs[attrName] === undefined)
@@ -1007,6 +1014,8 @@ alert('fix me');
 
 	function addDefaultAttributeValuesToCurrentTag()
 	{
+		var tagConfig = tagsConfig[currentTag.name];
+
 		for (var attrName in tagConfig.attrs)
 		{
 			if (currentTag.attrs[attrName] === undefined
@@ -1086,7 +1095,8 @@ alert('fix me');
 	{
 		for (var attrName in currentTag.attrs)
 		{
-			if (!tagConfig[attrName])
+			if (!tagsConfig[currentTag.name].attrs
+			 || !tagsConfig[currentTag.name].attrs[attrName])
 			{
 				delete currentTag.attrs[attrName];
 			}
@@ -1095,11 +1105,14 @@ alert('fix me');
 
 	function filterCurrentAttribute()
 	{
+		var tagConfig  = tagsConfig[currentTag.name],
+			attrConfig = tagConfig.attrs[currentAttribute];
+
 		// no custom filters, we can hardcode the call to filter()
 		currentTag.attrs[currentAttribute] = filter(
 			currentTag.attrs[currentAttribute],
-			tagConfig.attrs[currentAttribute],
-			filtersConfig[tagConfig.attrs[currentAttribute].type]
+			attrConfig,
+			filtersConfig[attrConfig.type]
 		);
 	}
 

@@ -149,6 +149,53 @@ class JSParserGenerator
 		$this->removeWhitespaceTrimming();
 		$this->removeCompoundAttritutesSplitting();
 		$this->removePhaseCallbacksProcessing();
+		$this->removeAttributesDefaultValueProcessing();
+		$this->removeRequiredAttributesProcessing();
+	}
+
+	/**
+	* Remove the code related to attributes' default value if no attribute has a default value
+	*/
+	protected function removeAttributesDefaultValueProcessing()
+	{
+		foreach ($this->parserConfig['tags'] as $tagConfig)
+		{
+			if (!empty($tagConfig['attrs']))
+			{
+				foreach ($tagConfig['attrs'] as $attrName => $attrConf)
+				{
+					if (isset($attrConf['defaultValue']))
+					{
+						return;
+					}
+				}
+			}
+		}
+
+		$this->removeFunctions('addDefaultAttributeValuesToCurrentTag');
+	}
+
+	/**
+	* Remove the code checks whether all required attributes have been filled in for a tag, if
+	* there no required attribute for any tag
+	*/
+	protected function removeRequiredAttributesProcessing()
+	{
+		foreach ($this->parserConfig['tags'] as $tagConfig)
+		{
+			if (!empty($tagConfig['attrs']))
+			{
+				foreach ($tagConfig['attrs'] as $attrName => $attrConf)
+				{
+					if (isset($attrConf['isRequired']))
+					{
+						return;
+					}
+				}
+			}
+		}
+
+		$this->removeFunctions('currentTagRequiresMissingAttribute');
 	}
 
 	/**
