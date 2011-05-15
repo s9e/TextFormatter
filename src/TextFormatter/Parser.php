@@ -1300,9 +1300,7 @@ class Parser
 	*/
 	protected function processCurrentTagAttributes()
 	{
-		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
-
-		if (empty($tagConfig['attrs']))
+		if (empty($this->tagsConfig[$this->currentTag['name']]['attrs']))
 		{
 			/**
 			* Remove all attributes if none are defined for this tag
@@ -1314,15 +1312,7 @@ class Parser
 			/**
 			* Add default values
 			*/
-			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
-
-			foreach ($missingAttrs as $attrName => $attrConf)
-			{
-				if (isset($attrConf['defaultValue']))
-				{
-					$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
-				}
-			}
+			$this->addDefaultAttributeValuesToCurrentTag();
 
 			/**
 			* Handle compound attributes
@@ -1337,20 +1327,8 @@ class Parser
 			/**
 			* Check for missing required attributes
 			*/
-			$missingAttrs = array_diff_key($tagConfig['attrs'], $this->currentTag['attrs']);
-
-			foreach ($missingAttrs as $attrName => $attrConf)
+			if ($this->currentTagRequiresMissingAttribute())
 			{
-				if (empty($attrConf['isRequired']))
-				{
-					continue;
-				}
-
-				$this->log('error', array(
-					'msg'    => "Missing attribute '%s'",
-					'params' => array($attrName)
-				));
-
 				return true;
 			}
 
@@ -1362,6 +1340,55 @@ class Parser
 		}
 
 		return false;
+	}
+
+	/**
+	* Test whether current tag is missing any required attributes
+	*
+	* @return boolean
+	*/
+	protected function currentTagRequiresMissingAttribute()
+	{
+		$missingAttrs = array_diff_key(
+			$this->tagsConfig[$this->currentTag['name']]['attrs'],
+			$this->currentTag['attrs']
+		);
+
+		foreach ($missingAttrs as $attrName => $attrConf)
+		{
+			if (empty($attrConf['isRequired']))
+			{
+				continue;
+			}
+
+			$this->log('error', array(
+				'msg'    => "Missing attribute '%s'",
+				'params' => array($attrName)
+			));
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	* Add default values to current tag's attributes
+	*/
+	protected function addDefaultAttributeValuesToCurrentTag()
+	{
+		$missingAttrs = array_diff_key(
+			$this->tagsConfig[$this->currentTag['name']]['attrs'],
+			$this->currentTag['attrs']
+		);
+
+		foreach ($missingAttrs as $attrName => $attrConf)
+		{
+			if (isset($attrConf['defaultValue']))
+			{
+				$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
+			}
+		}
 	}
 
 	/**
@@ -1384,32 +1411,32 @@ class Parser
 		/**
 		* Filter each attribute
 		*/
-		foreach ($this->currentTag['attrs'] as $attrName => &$attrVal)
+		foreach ($this->currentTag['attrs'] as $attrName => $originalVal)
 		{
 			$this->currentAttribute = $attrName;
-
-			$attrConf    = $tagConfig['attrs'][$attrName];
-			$originalVal = $attrVal;
 
 			// execute preFilter callbacks
 			$this->applyAttributePreFilterCallbacks();
 
+			// do filter/validate current attribute
 			$this->filterCurrentAttribute();
 
-			// if the value is invalid, remove it/replace if, log it then skip to the next attribute
-			if ($attrVal === false)
+			// if the value is invalid, remove or replace it, log it then skip to the next attribute
+			if ($this->currentTag['attrs'][$attrName] === false)
 			{
 				$this->log('error', array(
 					'msg'    => "Invalid attribute '%s'",
 					'params' => array($attrName)
 				));
 
+				$attrConf = $tagConfig['attrs'][$attrName];
+
 				if (isset($attrConf['defaultValue']))
 				{
 					/**
 					* Use the default value
 					*/
-					$attrVal = $attrConf['defaultValue'];
+					$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
 
 					$this->log('debug', array(
 						'msg'    => "Using default value '%1\$s' for attribute '%2\$s'",
@@ -1430,16 +1457,20 @@ class Parser
 			// execute postFilter callbacks
 			$this->applyAttributePostFilterCallbacks();
 
-			if ($originalVal !== $attrVal)
+			if ($originalVal !== $this->currentTag['attrs'][$attrName])
 			{
 				$this->log('debug', array(
 					'msg'    => 'Attribute value was altered by the filter '
 					          . '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
-					'params' => array($attrName, serialize($originalVal), serialize($attrVal))
+					'params' => array(
+						$attrName,
+						var_export($originalVal, true),
+						var_export($this->currentTag['attrs'][$attrName], true)
+					)
 				));
 			}
 		}
-		unset($attrVal, $this->currentAttribute);
+		unset($this->currentAttribute);
 
 		/**
 		* Tag-level post-filter
