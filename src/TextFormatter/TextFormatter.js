@@ -950,9 +950,7 @@ alert('fix me');
 
 	function processCurrentTagAttributes()
 	{
-		var tagConfig = tagsConfig[currentTag.name];
-
-		if (!tagConfig.attrs)
+		if (!tagsConfig[currentTag.name].attrs)
 		{
 			/**
 			* Remove all attributes if none are defined for this tag
@@ -961,18 +959,6 @@ alert('fix me');
 		}
 		else
 		{
-			/**
-			* Add default values
-			*/
-			for (var attrName in tagConfig.attrs)
-			{
-				if (tagConfig.attrs[attrName].defaultValue !== undefined
-				 && currentTag.attrs[attrName] === undefined)
-				{
-					currentTag.attrs[attrName] = tagConfig.attrs[attrName].defaultValue;
-				}
-			}
-
 			/**
 			* Handle compound attributes
 			*/
@@ -984,26 +970,51 @@ alert('fix me');
 			filterAttributes();
 
 			/**
+			* Add default values
+			*/
+			addDefaultAttributeValuesToCurrentTag();
+
+			/**
 			* Check for missing required attributes
 			*/
-			for (var attrName in tagConfig.attrs)
+			if (currentTagRequiresMissingAttribute())
 			{
-				if (tagConfig.attrs[attrName].isRequired
-				 && currentTag.attrs[attrName] === undefined)
-				{
-					currentTag.attrs[attrName] = tagConfig.attrs[attrName].defaultValue;
+				return true;
+			}
+		}
 
-					log('error', {
-						'msg'    : "Missing attribute '%s'",
-						'params' : [attrName]
-					});
+		return false
+	}
 
-					return true;
-				}
+	function currentTagRequiresMissingAttribute()
+	{
+		for (var attrName in tagsConfig[currentTag.name].attrs)
+		{
+			if (tagConfig.attrs[attrName].isRequired
+			 && currentTag.attrs[attrName] === undefined)
+			{
+				log('error', {
+					'msg'    : "Missing attribute '%s'",
+					'params' : [attrName]
+				});
+
+				return true;
 			}
 		}
 
 		return false;
+	}
+
+	function addDefaultAttributeValuesToCurrentTag()
+	{
+		for (var attrName in tagConfig.attrs)
+		{
+			if (currentTag.attrs[attrName] === undefined
+			 && tagConfig.attrs[attrName].defaultValue !== undefined)
+			{
+				currentTag.attrs[attrName] = tagConfig.attrs[attrName].defaultValue;
+			}
+		}
 	}
 
 	function filterAttributes()
@@ -1011,22 +1022,68 @@ alert('fix me');
 		var tagConfig = tagsConfig[currentTag.name];
 
 		/**
-		* Tag-level pre-filter
+		* Tag-level preFilter callbacks
 		*/
-		if (tagConfig.preFilter)
-		{
-			tagConfig.preFilter.forEach(function(callbackConf)
-			{
-				currentTag.attrs = applyCallback(
-					callbackConf,
-					{ attrs: currentTag.attrs }
-				);
-			});
-		}
+		applyTagPreFilterCallbacks();
 
 		/**
 		* Remove undefined attributes
 		*/
+		removeUndefinedAttributesFromCurrentTag();
+
+		/**
+		* Filter each attribute
+		*/
+		foreach(currentTag.attrs, function(originalVal, attrName)
+		{
+			currentAttribute = attrName;
+
+			// execute preFilter callbacks
+			applyAttributePreFilterCallbacks();
+
+			// do filter/validate current attribute
+			filterCurrentAttribute();
+
+			// if the value is invalid, log the occurence, remove the attribute then skip to the
+			// next attribute
+			if (currentTag.attrs[attrName] === false)
+			{
+				log('error', {
+					'msg'    : "Invalid attribute '%s'",
+					'params' : [attrName]
+				});
+
+				delete currentTag.attrs[attrName];
+
+				return;
+			}
+
+			// execute postFilter callbacks
+			applyAttributePostFilterCallbacks();
+
+			if (originalVal !== currentTag.attrs[attrName])
+			{
+				log('debug', {
+					'msg'    : 'Attribute value was altered by the filter '
+					         + '(attrName: %1s, originalVal: %2s, attrVal: %3s)',
+					'params' : [
+						attrName,
+						JSON.stringify(originalVal),
+						JSON.stringify(currentTag.attrs[attrName])
+					]
+				});
+			}
+		});
+		delete currentAttribute;
+
+		/**
+		* Tag-level postFilter callbacks
+		*/
+		applyTagPostFilterCallbacks();
+	}
+
+	function removeUndefinedAttributesFromCurrentTag()
+	{
 		for (var attrName in currentTag.attrs)
 		{
 			if (!tagConfig[attrName])
@@ -1034,100 +1091,73 @@ alert('fix me');
 				delete currentTag.attrs[attrName];
 			}
 		}
+	}
 
-		/**
-		* Filter each attribute
-		*/
-		foreach(currentTag.attrs, function(attrVal, attrName)
+	function filterCurrentAttribute()
+	{
+		// no custom filters, we can hardcode the call to filter()
+		currentTag.attrs[currentAttribute] = filter(
+			currentTag.attrs[currentAttribute],
+			tagConfig.attrs[currentAttribute],
+			filtersConfig[tagConfig.attrs[currentAttribute].type]
+		);
+	}
+
+	function applyTagPreFilterCallbacks()
+	{
+		if (tagsConfig[currentTag.name].preFilter)
 		{
-			currentAttribute = attrName;
-
-			var attrConf    = tagConfig.attrs[attrName],
-			    filterConf  = filtersConfig[attrConf.type] || {},
-			    originalVal = attrVal;
-
-			// execute pre-filter callbacks
-			if (attrConf.preFilter)
-			{
-				attrConf.preFilter.forEach(function(callbackConf)
-				{
-					attrVal = applyCallback(
-						callbackConf,
-						{ attrVal: attrVal }
-					);
-				});
-			}
-
-			// filter the value
-			// There's no custom filters, so we can call the function directly
-			attrVal = filter(attrVal, attrConf);
-
-			// if the value is invalid, remove it/replace if, log it then skip to the next attribute
-			if (attrVal === false)
-			{
-				log('error', {
-					'msg'    : "Invalid attribute '%s'",
-					'params' : [attrName]
-				});
-
-				if (attrConf.defaultValue !== undefined)
-				{
-					/**
-					* Use the default value
-					*/
-					attrVal = attrConf.defaultValue;
-
-					log('debug', {
-						'msg'    : "Using default value '%1$s' for attribute '%2$s'",
-						'params' : [attrConf.defaultValue, attrName]
-					});
-				}
-				else
-				{
-					/**
-					* Remove the attribute altogether
-					*/
-					delete currentTag.attrs[attrName];
-				}
-
-				return;
-			}
-
-			// execute post-filter callbacks
-			if (attrConf.postFilter)
-			{
-				attrConf.postFilter.forEach(function(callbackConf)
-				{
-					attrVal = applyCallback(
-						callbackConf,
-						{ attrVal: attrVal }
-					);
-				});
-			}
-
-			if (originalVal != attrVal)
-			{
-				log('debug', {
-					'msg'    : 'Attribute value was altered by the filter '
-					         + '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
-					'params' : [attrName, originalVal, attrVal]
-				});
-			}
-
-			currentTag.attrs[attrName] = attrVal;
-		});
-		delete currentAttribute;
-
-		/**
-		* Tag-level post-filter
-		*/
-		if (tagConfig.postFilter)
-		{
-			tagConfig.postFilter.forEach(function(callbackConf)
+			tagsConfig[currentTag.name].preFilter.forEach(function(callbackConf)
 			{
 				currentTag.attrs = applyCallback(
 					callbackConf,
 					{ attrs: currentTag.attrs }
+				);
+			});
+		}
+	}
+
+	function applyTagPostFilterCallbacks()
+	{
+		if (tagsConfig[currentTag.name].postFilter)
+		{
+			tagsConfig[currentTag.name].postFilter.forEach(function(callbackConf)
+			{
+				currentTag.attrs = applyCallback(
+					callbackConf,
+					{ attrs: currentTag.attrs }
+				);
+			});
+		}
+	}
+
+	function applyAttributePreFilterCallbacks()
+	{
+		var attrConf = tagsConfig[currentTag.name].attrs[currentAttribute];
+
+		if (attrConf.preFilter)
+		{
+			attrConf.preFilter.forEach(function(callbackConf)
+			{
+				currentTag.attrs[currentAttribute] = applyCallback(
+					callbackConf,
+					{ attrVal: currentTag.attrs[currentAttribute] }
+				);
+			});
+		}
+	}
+
+	function applyAttributePostFilterCallbacks()
+	{
+		var attrConf = tagsConfig[currentTag.name].attrs[currentAttribute];
+
+		if (attrConf.postFilter)
+		{
+			attrConf.postFilter.forEach(function(callbackConf)
+			{
+				currentTag.attrs[currentAttribute] = applyCallback(
+					callbackConf,
+					{ attrVal: currentTag.attrs[currentAttribute] }
 				);
 			});
 		}

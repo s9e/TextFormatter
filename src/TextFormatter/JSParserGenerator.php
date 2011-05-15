@@ -148,6 +148,59 @@ class JSParserGenerator
 		$this->removeDeadFilters();
 		$this->removeWhitespaceTrimming();
 		$this->removeCompoundAttritutesSplitting();
+		$this->removePhaseCallbacksProcessing();
+	}
+
+	/**
+	* Remove the code related to preFilter/postFilter callbacks
+	*/
+	protected function removePhaseCallbacksProcessing()
+	{
+		$remove = array(
+			'applyTagPreFilterCallbacks' => 1,
+			'applyTagPostFilterCallbacks' => 1,
+			'applyAttributePreFilterCallbacks' => 1,
+			'applyAttributePostFilterCallbacks' => 1
+		);
+
+		foreach ($this->parserConfig['tags'] as $tagConfig)
+		{
+			if (!empty($tagConfig['preFilter']))
+			{
+				unset($remove['applyTagPreFilterCallbacks']);
+			}
+
+			if (!empty($tagConfig['postFilter']))
+			{
+				unset($remove['applyTagPostFilterCallbacks']);
+			}
+
+			if (!empty($tagConfig['attrs']))
+			{
+				foreach ($tagConfig['attrs'] as $attrName => $attrConf)
+				{
+					if (!empty($attrConf['preFilter']))
+					{
+						unset($remove['applyAttributePreFilterCallbacks']);
+					}
+
+					if (!empty($attrConf['postFilter']))
+					{
+						unset($remove['applyAttributePostFilterCallbacks']);
+					}
+				}
+			}
+		}
+
+		if (count($remove) === 4)
+		{
+			$remove['applyCallback'] = 1;
+		}
+
+		if ($remove)
+		{
+			$this->removeFunctions(implode('|', array_keys($remove)));
+		}
 	}
 
 	/**
