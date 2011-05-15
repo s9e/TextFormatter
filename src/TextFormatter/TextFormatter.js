@@ -201,7 +201,50 @@ s9e['TextFormatter'] = function()
 
 	function filter(attrVal, attrConf, filterConf)
 	{
+		switch (attrConf.type)
+		{
+			case 'url':
+				var m =/^[a-z0-9]+(?=:\/\/)/.exec(attrVal);
+
+				if (!m)
+				{
+					return false;
+				}
+
+				if (!filterConf.allowedSchemes.test(m[0]))
+				{
+					log('error', {
+						'msg'    : "URL scheme '%s' is not allowed",
+						'params' : [m[0]]
+					});
+					return false;
+				}
+
+				var a = document.createElement('a');
+				a.href = attrVal;
+
+				if (filterConf.disallowedHosts
+				 && filterConf.disallowedHosts.test(a.host))
+				{
+					log('error', {
+						'msg'    : "URL host '%s' is not allowed",
+						'params' : [a.host]
+					});
+					return false;
+				}
+
+				return attrVal.replace(/'/, '%27').replace(/"/, '%22');
+		}
+
+		log('debug', {
+			'msg'    : "Unknown filter '%s'",
+			'params' : [attrConf.type]
+		});
+
+		// REMOVEME
 		return attrVal;
+
+		return false;
 	}
 
 	function output()

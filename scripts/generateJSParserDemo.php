@@ -5,6 +5,8 @@ include __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
 
 $cb = new \s9e\Toolkit\TextFormatter\ConfigBuilder;
 
+$cb->disallowHost('*.example.com');
+
 $cb->BBCodes->addPredefinedBBCode('B');
 $cb->BBCodes->addPredefinedBBCode('I');
 $cb->BBCodes->addPredefinedBBCode('U');
@@ -68,11 +70,14 @@ A few BBCodes have been added such as:
 [list]
 	[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
 	[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], [NOPARSE][LIST][/NOPARSE],
-	[*]+ a few others :)
+	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], and [NOPARSE][LIST][/NOPARSE]
 [/list]
 
-The code required can been minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url] and the raw sources can be found [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter]at GitHub[/url].
+Additionally, one emoticon :) has been added, the word "apple" is censored and automatically replaced with "banana" and links to [url]http://example.com[/url] are disabled.
+
+Take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
+
+This page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]a script[/url] and can be minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url]. The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
 </textarea>
 			<br>
 			<input type="checkbox" id="rendercheck" checked="checked"><label for="rendercheck"> Render</label>
@@ -167,7 +172,7 @@ The code required can been minified to a few kilobytes with [url=http://closure-
 							}
 						);
 
-					if (entry.pos)
+					if (entry.pos !== undefined)
 					{
 						if (!entry.len)
 						{

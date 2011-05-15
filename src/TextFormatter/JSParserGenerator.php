@@ -85,6 +85,7 @@ class JSParserGenerator
 		$this->injectTagsConfig();
 		$this->injectPluginParsers();
 		$this->injectPluginsConfig();
+		$this->injectFiltersConfig();
 
 		/**
 		* Turn off logging selectively
@@ -371,6 +372,41 @@ class JSParserGenerator
 			'pluginsConfig = {' . implode(',', $this->pluginsConfig) . '}',
 			$this->src
 		);
+	}
+
+	protected function injectFiltersConfig()
+	{
+		$this->src = str_replace(
+			'filtersConfig = {/* DO NOT EDIT*/}',
+			'filtersConfig = ' . $this->generateFiltersConfig(),
+			$this->src
+		);
+	}
+
+	/**
+	* Kind of hardcoding stuff here, will need to be cleaned up at some point
+	*/
+	protected function generateFiltersConfig()
+	{
+		$filtersConfig = $this->parserConfig['filters'];
+
+		$js = '{url:{allowedSchemes:new RegExp('
+		    . json_encode(substr($filtersConfig['url']['allowedSchemes'], 1, -3))
+		    . ',"i")';
+
+		if (isset($filtersConfig['url']['disallowedHosts']))
+		{
+			$regexp = substr($filtersConfig['url']['disallowedHosts'], 1, -4);
+
+			// replace the unsupported lookbehind assertion with a non-capturing subpattern
+			$regexp = str_replace('(?<![^\\.])', '(?:^|\\.)', $regexp);
+
+			$js .= ',disallowedHosts:new RegExp(' . json_encode($regexp) . ',"i")';
+		}
+
+		$js .= '}}';
+
+		return $js;
 	}
 
 	protected function generateTagsConfig()
