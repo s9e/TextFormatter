@@ -1430,7 +1430,7 @@ class Parser
 			// execute postFilter callbacks
 			$this->applyAttributePostFilterCallbacks();
 
-			if ($originalVal != $attrVal)
+			if ($originalVal !== $attrVal)
 			{
 				$this->log('debug', array(
 					'msg'    => 'Attribute value was altered by the filter '
