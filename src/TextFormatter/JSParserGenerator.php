@@ -665,7 +665,7 @@ class JSParserGenerator
 		$ret = array();
 		foreach ($arr as $k => $v)
 		{
-			if (!empty($match['preserveKey'][$k])
+			if (!empty($match['preserveKeys'][$k])
 			 || preg_match(self::RESERVED_WORDS_REGEXP, $k)
 			 || !preg_match('#^[a-z_0-9]+$#Di', $k))
 			{
