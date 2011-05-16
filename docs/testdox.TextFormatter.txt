@@ -499,7 +499,8 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsParser
  [x] A single quote between a letters and whitespace is replaced with an apostrophe
  [x] A single quote after a letters at the end of the text is replaced with an apostrophe
  [x] A single quote between a letters and punctuation is replaced with an apostrophe
- [x] A single quote before a two digits number at the start of a line is replaced with an apostrophe
+ [x] A single quote before two digits at the start of a line is replaced with an apostrophe
+ [x] A single quote before two digits after some whistespace is replaced with an apostrophe
  [x] A single quote that is part of a pair of quotation marks is not replaced with an apostrophe
  [x] A single quote after a digit and before the letter s is replaced with an apostrophe
  [x] A single quote after a digit is replaced with a prime

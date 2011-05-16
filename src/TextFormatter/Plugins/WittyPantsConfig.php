@@ -54,7 +54,7 @@ class WittyPantsConfig extends PluginConfig
 				*/
 				'primes'     => "#(?:[0-9])['\"]#S",
 				'multiply'   => '#[0-9]["\']? ?(x)(?= ?[0-9])#S',
-				'apostrophe' => "#(?<=\\pL)'|(?<=^|\\n)'(?=\\pL|[0-9]{2})|(?<=[0-9])'(?=s)#uS"
+				'apostrophe' => "#(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})|(?<=[0-9])'(?=s)#uS"
 			),
 
 			'replacements' => array(

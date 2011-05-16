@@ -155,12 +155,21 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
-	public function testASingleQuoteBeforeATwoDigitsNumberAtTheStartOfALineIsReplacedWithAnApostrophe()
+	public function testASingleQuoteBeforeTwoDigitsAtTheStartOfALineIsReplacedWithAnApostrophe()
 	{
 		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			"'88 was the year.\n'88 was the year indeed.",
 			"’88 was the year.\n’88 was the year indeed."
+		);
+	}
+
+	public function testASingleQuoteBeforeTwoDigitsAfterSomeWhistespaceIsReplacedWithAnApostrophe()
+	{
+		$this->cb->loadPlugin('WittyPants');
+		$this->assertRendering(
+			"'88 was the year. '88 was the year indeed.",
+			"’88 was the year. ’88 was the year indeed."
 		);
 	}
 
