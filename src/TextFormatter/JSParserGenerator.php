@@ -607,7 +607,7 @@ class JSParserGenerator
 			* Uses the "s" modifier, which doesn't exist in Javascript RegExp and has
 			* to be replaced with the character class [\s\S]
 			*/
-			$regexp = preg_replace('#(?<!\\)(?:\\\\\\\\)*\\.#', '[\\s\\S]', $regexp);
+			$regexp = preg_replace('#(?<!\\)((?:\\\\\\\\)*)\\.#', '$1[\\s\\S]', $regexp);
 		}
 
 		$modifiers = preg_replace('#[SusD]#', '', $modifiers);
