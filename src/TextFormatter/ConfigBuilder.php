@@ -922,93 +922,10 @@ class ConfigBuilder
 	*/
 	public function getParserConfig()
 	{
-		$tagsConfig = $this->getTagsConfig();
-
-		foreach ($tagsConfig as &$tag)
-		{
-			/**
-			* Build the list of allowed descendants and remove everything that's not needed by the
-			* global parser
-			*/
-			$allow = array();
-
-			if (isset($tag['rules']))
-			{
-				/**
-				* Sort the rules so that "deny" overwrites "allow"
-				*/
-				ksort($tag['rules']);
-
-				foreach ($tag['rules'] as $action => &$targets)
-				{
-					switch ($action)
-					{
-						case 'allow':
-							foreach ($targets as $target)
-							{
-								$allow[$target] = true;
-							}
-
-							// We don't need those anymore
-							unset($tag['rules']['allow']);
-							break;
-
-						case 'deny':
-							foreach ($targets as $target)
-							{
-								$allow[$target] = false;
-							}
-
-							// We don't need those anymore
-							unset($tag['rules']['deny']);
-							break;
-
-						case 'requireParent':
-						case 'requireAscendant':
-							/**
-							* Nothing to do here. If the target tag does not exist, this tag will
-							* never be valid but we still leave it in the configuration
-							*/
-							break;
-
-						case 'closeAscendant':
-						case 'closeParent':
-							// keep only the rules that target existing tags
-							$targets = array_intersect_key($targets, $tagsConfig);
-					}
-				}
-				unset($targets);
-
-				/**
-				* Remove rules with no targets
-				*/
-				$tag['rules'] = array_filter($tag['rules']);
-
-				if (empty($tag['rules']))
-				{
-					unset($tag['rules']);
-				}
-			}
-
-			if ($tag['defaultRule'] === 'allow')
-			{
-				$allow += array_fill_keys(array_keys($tagsConfig), true);
-			}
-
-			/**
-			* Keep only the tags that are allowed
-			*/
-			$tag['allow'] = array_filter($allow);
-			ksort($tag['allow']);
-
-			unset($tag['defaultRule']);
-		}
-		unset($tag);
-
 		return array(
 			'filters' => $this->getFiltersConfig(),
 			'plugins' => $this->getPluginsConfig(),
-			'tags'    => $tagsConfig
+			'tags'    => $this->getTagsConfig(true)
 		);
 	}
 
@@ -1085,15 +1002,97 @@ class ConfigBuilder
 	/**
 	* Return the tags' config, normalized and sorted, minus the tags' templates
 	*
+	* @param  bool  $reduce If true, remove unnecessary/empty entries and build the list of allowed
+	*                       decendants for each tag
 	* @return array
 	*/
-	public function getTagsConfig()
+	public function getTagsConfig($reduce = false)
 	{
-		$tags = $this->tags;
-		ksort($tags);
+		$tagsConfig = $this->tags;
+		ksort($tagsConfig);
 
-		foreach ($tags as $tagName => &$tag)
+		foreach ($tagsConfig as $tagName => &$tag)
 		{
+			if ($reduce)
+			{
+				/**
+				* Build the list of allowed descendants and remove everything that's not needed by the
+				* global parser
+				*/
+				$allow = array();
+
+				if (isset($tag['rules']))
+				{
+					/**
+					* Sort the rules so that "deny" overwrites "allow"
+					*/
+					ksort($tag['rules']);
+
+					foreach ($tag['rules'] as $action => &$targets)
+					{
+						switch ($action)
+						{
+							case 'allow':
+								foreach ($targets as $target)
+								{
+									$allow[$target] = true;
+								}
+
+								// We don't need those anymore
+								unset($tag['rules']['allow']);
+								break;
+
+							case 'deny':
+								foreach ($targets as $target)
+								{
+									$allow[$target] = false;
+								}
+
+								// We don't need those anymore
+								unset($tag['rules']['deny']);
+								break;
+
+							case 'requireParent':
+							case 'requireAscendant':
+								/**
+								* Nothing to do here. If the target tag does not exist, this tag will
+								* never be valid but we still leave it in the configuration
+								*/
+								break;
+
+							case 'closeAscendant':
+							case 'closeParent':
+								// keep only the rules that target existing tags
+								$targets = array_intersect_key($targets, $tagsConfig);
+						}
+					}
+					unset($targets);
+
+					/**
+					* Remove rules with no targets
+					*/
+					$tag['rules'] = array_filter($tag['rules']);
+
+					if (empty($tag['rules']))
+					{
+						unset($tag['rules']);
+					}
+				}
+
+				if ($tag['defaultRule'] === 'allow')
+				{
+					$allow += array_fill_keys(array_keys($tagsConfig), true);
+				}
+
+				/**
+				* Keep only the tags that are allowed
+				*/
+				$tag['allow'] = array_filter($allow);
+				ksort($tag['allow']);
+
+				unset($tag['defaultRule']);
+			}
+
 			/**
 			* We don't need the tag's template
 			*/
@@ -1102,7 +1101,7 @@ class ConfigBuilder
 			ksort($tag);
 		}
 
-		return $tags;
+		return $tagsConfig;
 	}
 
 	/**
