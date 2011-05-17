@@ -52,20 +52,28 @@ abstract class PluginConfig
 	*/
 	abstract public function getConfig();
 
+
+	/**
+	* @return array
+	*/
+	public function getJSConfig()
+	{
+		return $this->getConfig();
+	}
+
+	/**
+	* @return array
+	*/
+	public function getJSConfigMeta()
+	{
+		return array();
+	}
+
 	/**
 	* @return string|boolean JS parser, or false if unsupported
 	*/
 	public function getJSParser()
 	{
 		return false;
-	}
-
-	/**
-	* @return array List of path to properties whose name must be preserved when generating the JS
-	*               config
-	*/
-	public function getPreservedJSProps()
-	{
-		return array();
 	}
 }

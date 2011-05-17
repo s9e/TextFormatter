@@ -691,15 +691,17 @@ class BBCodesConfig extends PluginConfig
 	// JS Parser stuff
 	//==========================================================================
 
+	public function getJSConfigMeta()
+	{
+		return array(
+			'preserveKeys' => array(
+				array('bbcodesConfig', true)
+			)
+		);
+	}
+
 	public function getJSParser()
 	{
 		return file_get_contents(__DIR__ . '/BBCodesParser.js');
-	}
-
-	public function getPreservedJSProps()
-	{
-		return array(
-			array('bbcodesConfig', true)
-		);
 	}
 }

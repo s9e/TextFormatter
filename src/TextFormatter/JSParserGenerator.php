@@ -25,19 +25,9 @@ class JSParserGenerator
 	protected $src;
 
 	/**
-	* @var array Parser's config
+	* @var array Tags' config
 	*/
-	protected $parserConfig;
-
-	/**
-	* @var array JS plugins parsers
-	*/
-	protected $pluginParsers;
-
-	/**
-	* @var array JS plugins config
-	*/
-	protected $pluginsConfig;
+	protected $tagsConfig;
 
 	/**
 	* List of Javascript reserved words
@@ -74,7 +64,7 @@ class JSParserGenerator
 			'removeDeadCode'  => true
 		);
 
-		$this->parserConfig = $this->cb->getParserConfig();
+		$this->tagsConfig = $this->cb->getTagsConfig(true);
 		$this->src = $this->tpl;
 
 		if ($options['removeDeadCode'])
@@ -83,8 +73,7 @@ class JSParserGenerator
 		}
 
 		$this->injectTagsConfig();
-		$this->injectPluginParsers();
-		$this->injectPluginsConfig();
+		$this->injectPlugins();
 		$this->injectFiltersConfig();
 
 		/**
@@ -159,7 +148,7 @@ class JSParserGenerator
 	*/
 	protected function removeAttributesDefaultValueProcessing()
 	{
-		foreach ($this->parserConfig['tags'] as $tagConfig)
+		foreach ($this->tagsConfig as $tagConfig)
 		{
 			if (!empty($tagConfig['attrs']))
 			{
@@ -182,7 +171,7 @@ class JSParserGenerator
 	*/
 	protected function removeRequiredAttributesProcessing()
 	{
-		foreach ($this->parserConfig['tags'] as $tagConfig)
+		foreach ($this->tagsConfig as $tagConfig)
 		{
 			if (!empty($tagConfig['attrs']))
 			{
@@ -211,7 +200,7 @@ class JSParserGenerator
 			'applyAttributePostFilterCallbacks' => 1
 		);
 
-		foreach ($this->parserConfig['tags'] as $tagConfig)
+		foreach ($this->tagsConfig as $tagConfig)
 		{
 			if (!empty($tagConfig['preFilter']))
 			{
@@ -267,7 +256,7 @@ class JSParserGenerator
 
 		foreach ($rules as $rule)
 		{
-			foreach ($this->parserConfig['tags'] as $tagConfig)
+			foreach ($this->tagsConfig as $tagConfig)
 			{
 				if (!empty($tagConfig['rules'][$rule]))
 				{
@@ -289,7 +278,7 @@ class JSParserGenerator
 	*/
 	protected function removeAttributesProcessing()
 	{
-		foreach ($this->parserConfig['tags'] as $tagConfig)
+		foreach ($this->tagsConfig as $tagConfig)
 		{
 			if (!empty($tagConfig['attrs']))
 			{
@@ -305,7 +294,7 @@ class JSParserGenerator
 	*/
 	protected function removeCompoundAttritutesSplitting()
 	{
-		foreach ($this->parserConfig['tags'] as $tagConfig)
+		foreach ($this->tagsConfig as $tagConfig)
 		{
 			if (!empty($tagConfig['attrs']))
 			{
@@ -352,24 +341,50 @@ class JSParserGenerator
 		);
 	}
 
-	protected function injectPluginParsers()
+	protected function injectPlugins()
 	{
-		$this->generatePluginParsers();
+		$pluginParsers = array();
+		$pluginsConfig = array();
+
+		foreach ($this->cb->getJSPlugins() as $pluginName => $plugin)
+		{
+			$js = self::encodeConfig(
+				$plugin['config'],
+				$plugin['meta']
+			);
+
+			$pluginsConfig[] = json_encode($pluginName) . ':' . $js;
+			$pluginParsers[] =
+				json_encode($pluginName) . ':function(text,matches){/** @const */var config=pluginsConfig["' . $pluginName . '"];' . $plugin['parser'] . '}';
+		}
+
+		$this->src = str_replace(
+			'pluginsConfig = {/* DO NOT EDIT*/}',
+			'pluginsConfig = {' . implode(',', $pluginsConfig) . '}',
+			$this->src
+		);
 
 		$this->src = str_replace(
 			'pluginParsers = {/* DO NOT EDIT*/}',
-			'pluginParsers = {' . implode(',', $this->pluginParsers) . '}',
+			'pluginParsers = {' . implode(',', $pluginParsers) . '}',
+			$this->src
+		);
+	}
+
+	protected function injectPluginParsers()
+	{
+		$this->src = str_replace(
+			'pluginParsers = {/* DO NOT EDIT*/}',
+			'pluginParsers = {' . $this->generatePluginParsers() . '}',
 			$this->src
 		);
 	}
 
 	protected function injectPluginsConfig()
 	{
-		$this->generatePluginsConfig();
-
 		$this->src = str_replace(
 			'pluginsConfig = {/* DO NOT EDIT*/}',
-			'pluginsConfig = {' . implode(',', $this->pluginsConfig) . '}',
+			'pluginsConfig = {' . $this->generatePluginsConfig() . '}',
 			$this->src
 		);
 	}
@@ -388,7 +403,7 @@ class JSParserGenerator
 	*/
 	protected function generateFiltersConfig()
 	{
-		$filtersConfig = $this->parserConfig['filters'];
+		$filtersConfig = $this->cb->getFiltersConfig();
 
 		if (isset($filtersConfig['url']['disallowedHosts']))
 		{
@@ -416,7 +431,7 @@ class JSParserGenerator
 
 	protected function generateTagsConfig()
 	{
-		$tagsConfig = $this->parserConfig['tags'];
+		$tagsConfig = $this->tagsConfig;
 
 		foreach ($tagsConfig as $tagName => &$tagConfig)
 		{
@@ -497,56 +512,40 @@ class JSParserGenerator
 		}
 	}
 
-	protected function generatePluginsConfig()
-	{
-		$this->pluginsConfig = array();
-
-		foreach ($this->pluginParsers as $pluginName => $parserJS)
-		{
-			$pluginConfig = $this->parserConfig['plugins'][$pluginName];
-
-			/**
-			* Remove useless settings
-			*/
-			unset(
-				$pluginConfig['parserClassName'],
-				$pluginConfig['parserFilepath']
-			);
-
-			/**
-			* Prepare the plugin config
-			*/
-			$config = self::encode(
-				$pluginConfig,
-				array(
-					'preserveKeys' => $this->cb->$pluginName->getPreservedJSProps(),
-					'isGlobalRegexp' => array(
-						array('regexp'),
-						array('regexp', true)
-					)
-				)
-			);
-
-			$this->pluginsConfig[$pluginName] = json_encode($pluginName) . ':' . $config;
-		}
-	}
-
 	protected function generatePluginParsers()
 	{
-		$this->pluginParsers = array();
+		$pluginParsers = array();
 
-		foreach ($this->parserConfig['plugins'] as $pluginName => $pluginConfig)
+		foreach ($this->cb->getLoadedPlugins() as $pluginName => $plugin)
 		{
-			$js = $this->cb->$pluginName->getJSParser();
+			$js = $plugin->getJSParser();
 
 			if (!$js)
 			{
 				continue;
 			}
 
-			$this->pluginParsers[$pluginName] =
-				'"' . $pluginName . "\":function(text,matches){/** @const */var config=pluginsConfig['" . $pluginName . "'];" . $js . '}';
+			$pluginParsers[] = json_encode($pluginName) . ':function(text,matches){' . $js . '}';
 		}
+
+		return implode(',', $pluginParsers);
+	}
+
+	protected function generatePluginsConfig()
+	{
+		$pluginsConfig = array();
+
+		foreach ($this->cb->getLoadedPlugins() as $pluginName => $plugin)
+		{
+			$js = self::encodeConfig(
+				$plugin->getJSConfig(),
+				$plugin->getJSConfigMeta()
+			);
+
+			$pluginsConfig[] = json_encode($pluginName) . ':' . $js;
+		}
+
+		return implode(',', $pluginsConfig);
 	}
 
 	/**
@@ -554,7 +553,7 @@ class JSParserGenerator
 	*/
 	protected function removeWhitespaceTrimming()
 	{
-		foreach ($this->parserConfig['tags'] as $tagConfig)
+		foreach ($this->tagsConfig as $tagConfig)
 		{
 			if (!empty($tagConfig['trimBefore'])
 			 || !empty($tagConfig['trimAfter']))
@@ -578,7 +577,31 @@ class JSParserGenerator
 		           . substr($this->src, $pos);
 	}
 
-	static public function encode(array $arr, array $struct)
+	static public function encodeConfig(array $pluginConfig, array $struct)
+	{
+		unset(
+			$pluginConfig['parserClassName'],
+			$pluginConfig['parserFilepath']
+		);
+
+		// mark the plugin's regexp(s) as global regexps
+		if (!empty($pluginConfig['regexp']))
+		{
+			$keypath = (is_array($pluginConfig['regexp']))
+			         ? array('regexp', true)
+			         : array('regexp');
+
+			$struct = array_merge_recursive($struct, array(
+				'isGlobalRegexp' => array(
+					$keypath
+				)
+			));
+		}
+
+		return self::encodeArray($pluginConfig, $struct);
+	}
+
+	static public function encode(array $arr, array $struct = array())
 	{
 		/**
 		* Replace booleans with 1/0
@@ -619,7 +642,7 @@ class JSParserGenerator
 		return $js;
 	}
 
-	static public function encodeArray(array $arr, array $struct)
+	static public function encodeArray(array $arr, array $struct = array())
 	{
 		$match = array();
 

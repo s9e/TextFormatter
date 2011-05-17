@@ -81,4 +81,26 @@ class WittyPantsConfig extends PluginConfig
 			)
 		);
 	}
+
+	//==========================================================================
+	// JS Parser stuff
+	//==========================================================================
+
+	public function getJSConfig()
+	{
+		$config = $this->getConfig();
+
+		$config['regexp']['quotation']
+			= '#(?:^|(?![0-9\\pL]).)(["\'])(?:.+?)\\1(?![0-9\\pL])#Su';
+
+		$config['regexp']['apostrophe']
+			= "#'#uS";
+
+		return $config;
+	}
+
+	public function getJSParser()
+	{
+		return file_get_contents(__DIR__ . '/WittyPantsParser.js');
+	}
 }

@@ -21,9 +21,11 @@ $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/
 
 $cb->Censor->addWord('apple', 'banana');
 
+$cb->loadPlugin('WittyPants');
+
 $jsParser = $cb->getJSParser(array(
 	'compilation'     => (empty($_SERVER['argv'][1])) ? 'none' : 'ADVANCED_OPTIMIZATIONS',
-	'disableLogTypes' => (empty($_SERVER['argv'][1])) ? array() : array('debug', 'warning', 'error'),
+	'disableLogTypes' => (empty($_SERVER['argv'][1])) ? array('debug', 'warning', 'error') : array(),
 	'removeDeadCode'  => true
 ));
 
@@ -72,7 +74,14 @@ A few BBCodes have been added such as:
 	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], and [NOPARSE][LIST][/NOPARSE]
 [/list]
 
-Additionally, one emoticon :) has been added, the word "apple" is censored and automatically replaced with "banana" and links to [url]http://example.com[/url] are disabled.
+Additionally, in order to demonstrate the other features:
+
+[list]
+	[*]one emoticon :) has been added,
+	[*]the word "apple" is censored and automatically replaced with "banana"
+	[*]some typography is enhanced, e.g. (c) (tm) and "quotes"
+	[*]links to [url]http://example.com[/url] are disabled
+[/list]
 
 Take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
@@ -88,7 +97,8 @@ This page has been generated via [url=https://github.com/s9e/Toolkit/blob/master
 		<form>
 			<input type="checkbox" id="BBCodes" checked="checked" onchange="toggle(this)"><label for="BBCodes"> BBCodes</label><br>
 			<input type="checkbox" id="Censor" checked="checked" onchange="toggle(this)"><label for="Censor"> Censor</label><br>
-			<input type="checkbox" id="Emoticons" checked="checked" onchange="toggle(this)"><label for="Emoticons"> Emoticons</label>
+			<input type="checkbox" id="Emoticons" checked="checked" onchange="toggle(this)"><label for="Emoticons"> Emoticons</label><br>
+			<input type="checkbox" id="WittyPants" checked="checked" onchange="toggle(this)"><label for="WittyPants"> WittyPants</label>
 		</form>
 	</div>
 
