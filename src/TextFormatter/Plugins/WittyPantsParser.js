@@ -17,15 +17,14 @@ matches.singletons.forEach(function(m)
 	});
 });
 
-matches.quotation.forEach(function(m)
+function doQuotation(m)
 {
-	var attrs = {};
-	attrs[attrName] = replacements.quotation[m[1][0]][0];
+	var attrs = {}, q = m[0][0].substr(-1);
+	attrs[attrName] = replacements.quotation[q][0];
 
 	// left character
 	tags.push({
-		// unlink the PHP parser, the position is based on the first capture
-		pos   : m[1][1],
+		pos   : m[0][1] + m[0][0].indexOf(q),
 		type  : SELF_CLOSING_TAG,
 		name  : tagName,
 		len   : 1,
@@ -33,7 +32,7 @@ matches.quotation.forEach(function(m)
 	});
 
 	var attrs = {};
-	attrs[attrName] = replacements.quotation[m[1][0]][1];
+	attrs[attrName] = replacements.quotation[q][1];
 
 	// right character
 	tags.push({
@@ -44,7 +43,10 @@ matches.quotation.forEach(function(m)
 		attrs : attrs,
 		requires : [tags.length - 1]
 	});
-});
+}
+
+matches.quotationSingle.forEach(doQuotation);
+matches.quotationDouble.forEach(doQuotation);
 
 matches.symbols.forEach(function(m)
 {
@@ -66,7 +68,8 @@ matches.apostrophe.forEach(function(m)
 	attrs[attrName] = replacements.apostrophe;
 
 	tags.push({
-		pos   : m[0][1],
+		// adjust the pos to take the lookbehind-assertions-turned-subpatterns into account
+		pos   : m[0][1] + m[0][0].length - 1,
 		type  : SELF_CLOSING_TAG,
 		name  : tagName,
 		len   : 1,

@@ -90,11 +90,20 @@ class WittyPantsConfig extends PluginConfig
 	{
 		$config = $this->getConfig();
 
-		$config['regexp']['quotation']
-			= '#(?:^|(?![0-9\\pL]).)(["\'])(?:.+?)\\1(?![0-9\\pL])#Su';
+		unset($config['regexp']['quotation']);
+
+		/**
+		* Need to make one regexp for each otherwise "'xxx'" wouldn't match because the first
+		* character would need to be consumed twice
+		*/
+		$config['regexp']['quotationSingle']
+			= "#(?:^|(?![0-9\\pL]).)'(?:.+?)'(?![0-9\\pL])#Su";
+
+		$config['regexp']['quotationDouble']
+			= '#(?:^|(?![0-9\\pL]).)"(?:.+?)"(?![0-9\\pL])#Su';
 
 		$config['regexp']['apostrophe']
-			= "#'#uS";
+			= "#(?:\\w)'|(?:^|(?!\\S).)'(?=\\w|[0-9]{2})|(?:[0-9])'(?=s)#uS";
 
 		return $config;
 	}
