@@ -633,6 +633,12 @@ class JSParserGenerator
 			$regexp = preg_replace('#(?<!\\)((?:\\\\\\\\)*)\\.#', '$1[\\s\\S]', $regexp);
 		}
 
+		/**
+		* Replace \pL with \w because Javascript doesn't support Unicode properties. Other Unicode
+		* properties are currently unsupported.
+		*/
+		$regexp = str_replace('\\pL', '\\w', $regexp);
+
 		$modifiers = preg_replace('#[SusD]#', '', $modifiers);
 
 		$js = 'new RegExp(' . json_encode($regexp)

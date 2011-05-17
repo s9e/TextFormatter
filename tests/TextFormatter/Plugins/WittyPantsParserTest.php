@@ -119,6 +119,15 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	public function testASingleQuoteBeforeALetterAfterWhitespaceIsReplacedWithAnApostrophe()
+	{
+		$this->cb->loadPlugin('WittyPants');
+		$this->assertRendering(
+			"Say. 'Twas the night before Christmas.",
+			"Say. ’Twas the night before Christmas."
+		);
+	}
+
 	public function testASingleQuoteBetweenTwoLettersIsReplacedWithAnApostrophe()
 	{
 		$this->cb->loadPlugin('WittyPants');
