@@ -1,7 +1,7 @@
 var tags = [],
 	textLen = text.length;
 
-foreach(matches, function(m)
+matches.forEach(function(m)
 {
 	var bbcodeName = m[1][0].toUpperCase();
 

@@ -1,6 +1,6 @@
 var tags = [];
 
-foreach(matches, function(m)
+matches.forEach(function(m)
 {
 	tags.push({
 		pos  : m[0][1],

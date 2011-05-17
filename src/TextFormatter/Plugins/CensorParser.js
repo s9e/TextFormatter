@@ -2,7 +2,7 @@ var tags = [],
 	tagName  = config.tagName,
 	attrName = config.attrName;
 
-foreach(matches, function(m)
+matches.forEach(function(m)
 {
 	var tag = {
 		pos  : m[0][1],

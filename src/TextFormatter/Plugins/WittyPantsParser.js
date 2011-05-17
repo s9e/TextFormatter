@@ -3,7 +3,7 @@ var tags = [],
 	attrName = config.attrName,
 	replacements = config.replacements;
 
-foreach(matches.singletons, function(m)
+matches.singletons.forEach(function(m)
 {
 	var attrs = {};
 	attrs[attrName] = replacements.singletons[m[0][0]];
@@ -17,7 +17,7 @@ foreach(matches.singletons, function(m)
 	});
 });
 
-foreach(matches.quotation, function(m)
+matches.quotation.forEach(function(m)
 {
 	var attrs = {};
 	attrs[attrName] = replacements.quotation[m[1][0]][0];
@@ -46,7 +46,7 @@ foreach(matches.quotation, function(m)
 	});
 });
 
-foreach(matches.symbols, function(m)
+matches.symbols.forEach(function(m)
 {
 	var attrs = {};
 	attrs[attrName] = replacements.symbols[m[0][0].toLowerCase()]
@@ -60,7 +60,7 @@ foreach(matches.symbols, function(m)
 	});
 });
 
-foreach(matches.apostrophe, function(m)
+matches.apostrophe.forEach(function(m)
 {
 	var attrs = {};
 	attrs[attrName] = replacements.apostrophe;
@@ -78,7 +78,7 @@ foreach(matches.apostrophe, function(m)
 * We do "primes" after "apostrophe" so that the character in "80s" gets handled by the
 * former rather than the latter
 */
-foreach(matches.primes, function(m)
+matches.primes.forEach(function(m)
 {
 	if (replacements.primes[m[0][0]])
 	{
@@ -95,7 +95,7 @@ foreach(matches.primes, function(m)
 	}
 });
 
-foreach(matches.multiply, function(m)
+matches.multiply.forEach(function(m)
 {
 	var attrs = {};
 	attrs[attrName] = replacements.multiply;
