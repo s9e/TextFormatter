@@ -97,13 +97,13 @@ class WittyPantsConfig extends PluginConfig
 		* character would need to be consumed twice
 		*/
 		$config['regexp']['quotationSingle']
-			= "#(?:^|(?![0-9\\pL]).)'(?:.+?)'(?![0-9\\pL])#Su";
+			= "#(?:^|(?![\\w]).)'(?:.+?)'(?![0-9\\pL])#";
 
 		$config['regexp']['quotationDouble']
-			= '#(?:^|(?![0-9\\pL]).)"(?:.+?)"(?![0-9\\pL])#Su';
+			= '#(?:^|(?![\\w]).)"(?:.+?)"(?![0-9\\pL])#';
 
 		$config['regexp']['apostrophe']
-			= "#(?:\\w)'|(?:^|\\s)'(?=\\w|[0-9]{2})|(?:[0-9])'(?=s)#Su";
+			= "#(?![0-9])(?:\\w)'|(?:^|\\s)'(?=\\w|[0-9]{2})|(?:[0-9])'(?=s)#";
 
 		return $config;
 	}

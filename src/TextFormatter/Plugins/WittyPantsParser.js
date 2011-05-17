@@ -83,19 +83,16 @@ matches.apostrophe.forEach(function(m)
 */
 matches.primes.forEach(function(m)
 {
-	if (replacements.primes[m[0][0]])
-	{
-		var attrs = {};
-		attrs[attrName] = replacements.primes[m[0][0]];
+	var attrs = {};
+	attrs[attrName] = replacements.primes[m[0][0].substr(-1)];
 
-		tags.push({
-			pos   : m[0][1],
-			type  : SELF_CLOSING_TAG,
-			name  : tagName,
-			len   : m[0][0].length,
-			attrs : attrs
-		});
-	}
+	tags.push({
+		pos   : m[0][1] + 1,
+		type  : SELF_CLOSING_TAG,
+		name  : tagName,
+		len   : 1,
+		attrs : attrs
+	});
 });
 
 matches.multiply.forEach(function(m)
