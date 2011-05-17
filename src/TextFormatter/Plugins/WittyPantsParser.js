@@ -31,7 +31,7 @@ function doQuotation(m)
 		attrs : attrs
 	});
 
-	var attrs = {};
+	attrs = {};
 	attrs[attrName] = replacements.quotation[q][1];
 
 	// right character

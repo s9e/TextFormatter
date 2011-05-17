@@ -133,6 +133,9 @@ s9e['TextFormatter'] = function()
 		var cnt = 0,
 			matches;
 
+		// reset the regexp
+		regexp.lastIndex = 0;
+
 		while (matches = regexp.exec(text))
 		{
 			var pos   = matches.index,
