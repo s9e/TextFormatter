@@ -203,6 +203,9 @@ s9e['TextFormatter'] = function()
 	{
 		switch (attrConf.type)
 		{
+			case 'text':
+				return attrVal;
+
 			case 'url':
 				var m =/^[a-z0-9]+(?=:\/\/)/.exec(attrVal);
 
