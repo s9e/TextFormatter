@@ -206,9 +206,6 @@ s9e['TextFormatter'] = function()
 	{
 		switch (attrConf.type)
 		{
-			case 'text':
-				return attrVal;
-
 			case 'url':
 				var m =/^[a-z0-9]+(?=:\/\/)/.exec(attrVal);
 
@@ -240,15 +237,88 @@ s9e['TextFormatter'] = function()
 				}
 
 				return attrVal.replace(/'/, '%27').replace(/"/, '%22');
+
+			case 'identifier':
+			case 'id':
+				return /^[a-zA-Z0-9-_]+$/.test(attrVal) ? attrVal : false;
+
+			case 'simpletext':
+				return /^[a-zA-Z0-9\-+.,_ ]+$/.test(attrVal) ? attrVal : false;
+
+			case 'text':
+				return attrVal;
+
+			case 'email':
+				/**
+				* NOTE: obviously, this is not meant to match precisely the whole set of theorically
+				*       valid addresses. It's only there to catch honest mistakes. The actual
+				*       validation should be performed by PHP's ext/filter.
+				*/
+				if (!/^[\w\.\-_]+@[\w\.\-_]$/.test(attrVal))
+				{
+					return false;
+				}
+
+				if (attrConf.forceUrlencode)
+				{
+					return attrVal
+						.split('')
+						.map(function(c)
+						{
+							return '%' + c.charCodeAt(0).toString(16);
+						})
+						.join('');
+				}
+
+				return attrVal;
+
+			case 'int':
+			case 'integer':
+				return /^-?[1-9][0-9]*$/.test(attrVal) ? attrVal : false;
+
+			case 'float':
+				return /^-?[0-9]+(?:\.[0-9]+)?(?:e[1-9][0-9]*)?$/i.test(attrVal) ? attrVal : false;
+
+			case 'number':
+				return /^[0-9]+$/.test(attrVal) ? attrVal : false;
+
+			case 'uint':
+				return /^[1-9][0-9]*$/.test(attrVal) ? attrVal : false;
+
+			case 'range':
+				if (!/^-?[1-9][0-9]*$/.test(attrVal))
+				{
+					return false;
+				}
+
+				if (attrVal < attrConf.min)
+				{
+					log('warning', {
+						'msg'    : 'Value outside of range, adjusted up to %d',
+						'params' : [attrConf.min]
+					});
+					return attrConf.min;
+				}
+
+				if (attrVal > attrConf.max)
+				{
+					log('warning', {
+						'msg'    : 'Value outside of range, adjusted down to %d',
+						'params' : [attrConf.max]
+					});
+					return attrConf.max;
+				}
+
+				return attrVal;
+
+			case 'color':
+				return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrVal) ? attrVal : false;
 		}
 
 		log('debug', {
 			'msg'    : "Unknown filter '%s'",
 			'params' : [attrConf.type]
 		});
-
-		// REMOVEME
-		return attrVal;
 
 		return false;
 	}

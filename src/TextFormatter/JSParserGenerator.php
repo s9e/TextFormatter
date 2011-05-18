@@ -316,6 +316,44 @@ class JSParserGenerator
 	*/
 	protected function removeDeadFilters()
 	{
+		$keepFilters = array();
+
+		foreach ($this->tagsConfig as $tagConfig)
+		{
+			if (!empty($tagConfig['attrs']))
+			{
+				foreach ($tagConfig['attrs'] as $attrConf)
+				{
+					$keepFilters[$attrConf['type']] = 1;
+				}
+			}
+		}
+		$keepFilters = array_keys($keepFilters);
+
+		$this->src = preg_replace_callback(
+			"#\n\tfunction filter\\(.*?\n\t\}#s",
+			function ($functionBlock) use ($keepFilters)
+			{
+				return preg_replace_callback(
+					"#\n\t\t\tcase .*?\n\t\t\t\treturn[^\n]+\n#s",
+					function ($caseBlock) use ($keepFilters)
+					{
+						preg_match_all("#\n\t\t\tcase '([a-z]+)#", $caseBlock[0], $m);
+
+						if (array_intersect($m[1], $keepFilters))
+						{
+							// at least one of those case can happen, we keep the whole block
+							return $caseBlock[0];
+						}
+
+						// remove block
+						return '';
+					},
+					$functionBlock[0]
+				);
+			},
+			$this->src
+		);
 	}
 
 	/**
