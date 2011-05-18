@@ -105,56 +105,71 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can clear all postFilter callbacks from a tag attribute
 
 s9e\Toolkit\Tests\TextFormatter\Parser
- [x] Int filter accepts whole numbers
- [x] Int filter rejects partial numbers
- [x] Int filter accepts integers
- [x] Int filter rejects numbers that start with a zero
- [x] Int filter rejects numbers in scientific notation
- [x] Int filter accepts negative numbers
- [x] Int filter rejects decimal numbers
- [x] Int filter rejects floats
- [x] Int filter rejects numbers too big for the php integer type
- [x] Int filter rejects numbers in hex notation
- [x] Integer filter accepts whole numbers
- [x] Integer filter rejects partial numbers
- [x] Integer filter accepts integers
- [x] Integer filter rejects numbers that start with a zero
- [x] Integer filter rejects numbers in scientific notation
- [x] Integer filter accepts negative numbers
- [x] Integer filter rejects decimal numbers
- [x] Integer filter rejects floats
- [x] Integer filter rejects numbers too big for the php integer type
- [x] Integer filter rejects numbers in hex notation
- [x] Uint filter accepts whole numbers
- [x] Uint filter rejects partial numbers
- [x] Uint filter accepts integers
- [x] Uint filter rejects numbers that start with a zero
- [x] Uint filter rejects numbers in scientific notation
- [x] Uint filter rejects negative numbers
- [x] Uint filter rejects decimal numbers
- [x] Uint filter rejects floats
- [x] Uint filter rejects numbers too big for the php integer type
- [x] Uint filter rejects numbers in hex notation
- [x] Number filter accepts whole numbers
- [x] Number filter rejects partial numbers
- [x] Number filter accepts integers
- [x] Number filter accepts numbers that start with a zero
- [x] Number filter rejects numbers in scientific notation
- [x] Number filter rejects negative numbers
- [x] Number filter rejects decimal numbers
- [x] Number filter rejects floats
- [x] Number filter accepts numbers too big for the php integer type
- [x] Number filter rejects numbers in hex notation
- [x] Float filter accepts whole numbers
- [x] Float filter rejects partial numbers
- [x] Float filter accepts integers
- [x] Float filter accepts numbers that start with a zero
- [x] Float filter accepts numbers in scientific notation
- [x] Float filter accepts negative numbers
- [x] Float filter accepts decimal numbers
- [x] Float filter accepts floats
- [x] Float filter accepts numbers too big for the php integer type
- [x] Float filter rejects numbers in hex notation
+ [x] Filter int accepts strings made entirely of digits
+ [x] Filter int rejects strings that starts with digits
+ [x] Filter int accepts integers
+ [x] Filter int rejects numbers that start with a zero
+ [x] Filter int accepts negative numbers
+ [x] Filter int rejects decimal numbers
+ [x] Filter int rejects floats
+ [x] Filter int rejects numbers too big for the PHP integer type
+ [x] Filter int rejects positive numbers in E notation
+ [x] Filter int rejects negative numbers in E notation
+ [x] Filter int rejects positive numbers in E notation with a negative exponent
+ [x] Filter int rejects negative numbers in E notation with a negative exponent
+ [x] Filter int rejects numbers in hex notation
+ [x] Filter integer accepts strings made entirely of digits
+ [x] Filter integer rejects strings that starts with digits
+ [x] Filter integer accepts integers
+ [x] Filter integer rejects numbers that start with a zero
+ [x] Filter integer accepts negative numbers
+ [x] Filter integer rejects decimal numbers
+ [x] Filter integer rejects floats
+ [x] Filter integer rejects numbers too big for the PHP integer type
+ [x] Filter integer rejects positive numbers in E notation
+ [x] Filter integer rejects negative numbers in E notation
+ [x] Filter integer rejects positive numbers in E notation with a negative exponent
+ [x] Filter integer rejects negative numbers in E notation with a negative exponent
+ [x] Filter integer rejects numbers in hex notation
+ [x] Filter uint accepts strings made entirely of digits
+ [x] Filter uint rejects strings that starts with digits
+ [x] Filter uint accepts integers
+ [x] Filter uint rejects numbers that start with a zero
+ [x] Filter uint rejects negative numbers
+ [x] Filter uint rejects decimal numbers
+ [x] Filter uint rejects floats
+ [x] Filter uint rejects numbers too big for the PHP integer type
+ [x] Filter uint rejects positive numbers in E notation
+ [x] Filter uint rejects negative numbers in E notation
+ [x] Filter uint rejects positive numbers in E notation with a negative exponent
+ [x] Filter uint rejects negative numbers in E notation with a negative exponent
+ [x] Filter uint rejects numbers in hex notation
+ [x] Filter number accepts strings made entirely of digits
+ [x] Filter number rejects strings that starts with digits
+ [x] Filter number accepts integers
+ [x] Filter number accepts numbers that start with a zero
+ [x] Filter number rejects negative numbers
+ [x] Filter number rejects decimal numbers
+ [x] Filter number rejects floats
+ [x] Filter number accepts numbers too big for the PHP integer type
+ [x] Filter number rejects positive numbers in E notation
+ [x] Filter number rejects negative numbers in E notation
+ [x] Filter number rejects positive numbers in E notation with a negative exponent
+ [x] Filter number rejects negative numbers in E notation with a negative exponent
+ [x] Filter number rejects numbers in hex notation
+ [x] Filter float accepts strings made entirely of digits
+ [x] Filter float rejects strings that starts with digits
+ [x] Filter float accepts integers
+ [x] Filter float accepts numbers that start with a zero
+ [x] Filter float accepts negative numbers
+ [x] Filter float accepts decimal numbers
+ [x] Filter float accepts floats
+ [x] Filter float accepts numbers too big for the PHP integer type
+ [x] Filter float accepts positive numbers in E notation
+ [x] Filter float accepts negative numbers in E notation
+ [x] Filter float accepts positive numbers in E notation with a negative exponent
+ [x] Filter float accepts negative numbers in E notation with a negative exponent
+ [x] Filter float rejects numbers in hex notation
  [x] Invalid urls are rejected
  [x] Urls with no host are rejected
  [x] Urls with no path are accepted

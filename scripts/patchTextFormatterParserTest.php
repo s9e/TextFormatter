@@ -2,33 +2,39 @@
 <?php
 
 $filters = array(
-	'int'     => '1010010000',
-	'integer' => '1010010000',
-	'uint'    => '1010000000',
-	'number'  => '1011000010',
-	'float'   => '1011111110'
+	'int'     => '1010100000000',
+	'integer' => '1010100000000',
+	'uint'    => '1010000000000',
+	'number'  => '1011000100000',
+	'float'   => '1011111111110'
 );
 
 $values = array(
-	'WholeNumbers'
+	'strings_made_entirely_of_digits'
 		=> '123',
-	'PartialNumbers'
+	'strings_that_starts_with_digits'
 		=> '123abc',
-	'Integers'
+	'integers'
 		=> 123,
-	'NumbersThatStartWithAZero'
+	'numbers_that_start_with_a_zero'
 		=> '0123',
-	'NumbersInScientificNotation'
-		=> '12e3',
-	'NegativeNumbers'
+	'negative_numbers'
 		=> '-123',
-	'DecimalNumbers'
+	'decimal_numbers'
 		=> '12.3',
-	'Floats'
+	'floats'
 		=> 12.3,
-	'NumbersTooBigForThePhpIntegerType'
+	'numbers_too_big_for_the_PHP_integer_type'
 		=> '9999999999999999999',
-	'NumbersInHexNotation'
+	'positive_numbers_in_E_notation'
+		=> '12e3',
+	'negative_numbers_in_E_notation'
+		=> '-12e3',
+	'positive_numbers_in_E_notation_with_a_negative_exponent'
+		=> '12e-3',
+	'negative_numbers_in_E_notation_with_a_negative_exponent'
+		=> '-12e-3',
+	'numbers_in_hex_notation'
 		=> '0x123',
 );
 
@@ -44,12 +50,11 @@ foreach ($filters as $filter => $mask)
 	$i = 0;
 	foreach ($values as $name => $value)
 	{
-		$php .= "\n\tpublic function test"
-		      . ucfirst($filter)
-		      . 'Filter'
-		      . (($mask[$i]) ? 'Accepts' : 'Rejects')
+		$php .= "\n\t/** @test */\n\tpublic function Filter_"
+		      . $filter
+		      . (($mask[$i]) ? '_accepts_' : '_rejects_')
 		      . $name
-		      . "()\n\t{\n\t\t\$this->assertAttribute"
+		      . "()\n\t{\n\t\t\$this->assertAttributeIs"
 		      . (($mask[$i]) ? 'Valid' : 'Invalid')
 		      . "('$filter', "
 		      . var_export($value, true)
