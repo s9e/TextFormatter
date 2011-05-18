@@ -868,7 +868,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @depends testOptimizesRegexpByMergingHeads
+	* @depends testOptimizesRegexpByUsingCharacterClasses
 	*/
 	public function testOptimizesRegexpThatUsesParentheses()
 	{
