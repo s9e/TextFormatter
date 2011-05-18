@@ -165,12 +165,16 @@ This page has been generated via [url=https://github.com/s9e/Toolkit/blob/master
 
 		function refreshLog()
 		{
-			var type,
-				log = s9e.TextFormatter.getLog(),
+			var log = s9e.TextFormatter.getLog(),
 				msgs = [];
 
-			for (type in log)
+			['error', 'warning', 'debug'].forEach(function(type)
 			{
+				if (!log[type])
+				{
+					return;
+				}
+
 				log[type].forEach(function(entry)
 				{
 					var msg = '[' + type + '] ' + entry.msg.replace(
@@ -193,7 +197,7 @@ This page has been generated via [url=https://github.com/s9e/Toolkit/blob/master
 
 					msgs.push(msg);
 				});
-			}
+			});
 
 			logdiv.innerHTML = (msgs.length) ? msgs.join("\n") : 'No log';
 		}
