@@ -26,4 +26,13 @@ class AutolinkConfig extends PluginConfig
 			'regexp' => '#' . ConfigBuilder::buildRegexpFromList($this->cb->getAllowedSchemes()) . '://\\S+#iS'
 		);
 	}
+
+	//==========================================================================
+	// JS Parser stuff
+	//==========================================================================
+
+	public function getJSParser()
+	{
+		return file_get_contents(__DIR__ . '/AutolinkParser.js');
+	}
 }

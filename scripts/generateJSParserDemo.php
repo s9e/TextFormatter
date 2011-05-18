@@ -21,6 +21,7 @@ $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/
 
 $cb->Censor->addWord('apple', 'banana');
 
+$cb->loadPlugin('Autolink');
 $cb->loadPlugin('WittyPants');
 
 $jsParser = $cb->getJSParser(array(
@@ -80,7 +81,8 @@ Additionally, in order to demonstrate the other features:
 	[*]one emoticon :) has been added,
 	[*]the word "apple" is censored and automatically replaced with "banana"
 	[*]some typography is enhanced, e.g. (c) (tm) and "quotes"
-	[*]links to [url]http://example.com[/url] are disabled
+	[*]links to [url=http://example.com]example.com[/url] are disabled
+	[*]loose URLs such as http://github.com are automatically transformed into links
 [/list]
 
 Take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
@@ -95,6 +97,7 @@ This page has been generated via [url=https://github.com/s9e/Toolkit/blob/master
 
 	<div style="float:left">
 		<form>
+			<input type="checkbox" id="Autolink" checked="checked" onchange="toggle(this)"><label for="Autolink"> Autolink</label><br>
 			<input type="checkbox" id="BBCodes" checked="checked" onchange="toggle(this)"><label for="BBCodes"> BBCodes</label><br>
 			<input type="checkbox" id="Censor" checked="checked" onchange="toggle(this)"><label for="Censor"> Censor</label><br>
 			<input type="checkbox" id="Emoticons" checked="checked" onchange="toggle(this)"><label for="Emoticons"> Emoticons</label><br>
@@ -177,7 +180,7 @@ This page has been generated via [url=https://github.com/s9e/Toolkit/blob/master
 
 				log[type].forEach(function(entry)
 				{
-					var msg = '[' + type + '] ' + entry.msg.replace(
+					var msg = '[' + type + '] [' + entry.pluginName + '] ' + entry.msg.replace(
 							/%(?:([0-9])\$)?[sd]/g,
 							function(str, p1)
 							{

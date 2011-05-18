@@ -186,6 +186,7 @@ s9e['TextFormatter'] = function()
 		if (currentTag)
 		{
 			entry['tagName'] = currentTag.name;
+			entry['pluginName'] = currentTag.pluginName;
 
 			if (currentAttribute)
 			{
@@ -207,18 +208,18 @@ s9e['TextFormatter'] = function()
 		switch (attrConf.type)
 		{
 			case 'url':
-				var m =/^[a-z0-9]+(?=:\/\/)/.exec(attrVal);
+				var m =/^([a-z0-9]+):\/\/[\w\-\.]+(?:\/.*)?$/.exec(attrVal);
 
 				if (!m)
 				{
 					return false;
 				}
 
-				if (!filterConf.allowedSchemes.test(m[0]))
+				if (!filterConf.allowedSchemes.test(m[1]))
 				{
 					log('error', {
 						'msg'    : "URL scheme '%s' is not allowed",
-						'params' : [m[0]]
+						'params' : [m[1]]
 					});
 					return false;
 				}
