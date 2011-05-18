@@ -979,24 +979,36 @@ s9e['TextFormatter'] = function()
 
 	function requireAscendant()
 	{
-		var tagConfig = tagsConfig[currentTag.name],
-			ascendantTagName;
-alert('fix me');
+		var tagConfig = tagsConfig[currentTag.name];
+
 		if (tagConfig.rules
 		 && tagConfig.rules.requireAscendant)
 		{
-			for (ascendantTagName in tagConfig.rules.requireAscendant)
-			{
-				if (!cntOpen[ascendantTagName])
-				{
-					log('error', {
-						'msg'    : 'Tag %1$s requires %2$s as ascendant',
-						'params' : [currentTag.name, ascendantTagName]
-					});
+			var i = 0,
+				cnt = tagConfig.rules.requireAscendant.length;
 
-					return true;
+			do
+			{
+				if (cntOpen[tagConfig.rules.requireAscendant[i]])
+				{
+					return false;
 				}
 			}
+			while (++i < cnt);
+
+			var msg = (cnt === 1)
+			        ? 'Tag %1$s requires %2$s as ascendant'
+			        : 'Tag %1$s requires as ascendant any of: %2$s';
+
+			log('error', {
+				'msg'    : msg,
+				'params' : [
+					currentTag.name,
+					tagConfig.rules.requireAscendant.join(', ')
+				]
+			});
+
+			return true;
 		}
 
 		return false;
