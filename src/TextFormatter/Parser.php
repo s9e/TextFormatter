@@ -232,6 +232,7 @@ class Parser
 		if (isset($this->currentTag))
 		{
 			$entry['tagName'] = $this->currentTag['name'];
+			$entry['pluginName'] = $this->currentTag['pluginName'];
 
 			if (isset($this->currentAttribute))
 			{
