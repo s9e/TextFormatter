@@ -711,15 +711,33 @@ class ConfigBuilderTest extends Test
 
 	public function testCanSetCustomFilter()
 	{
-		$this->cb->setFilter('text', array('callback' => 'trim'));
+		$this->cb->setFilter('foo', array('callback' => 'trim'));
 
 		$this->assertArrayMatches(
 			array(
-				'text' => array(
+				'foo' => array(
 					'callback' => 'trim'
 				)
 			),
 			$this->cb->getFiltersConfig()
+		);
+	}
+
+	/**
+	* @depends testCanSetCustomFilter
+	*/
+	public function testCustomFiltersArePassedTheAttributeValueIfNoParamsArrayWasSpecified()
+	{
+		$this->cb->setFilter('foo', array('callback' => 'trim'));
+
+		$filtersConfig = $this->cb->getFiltersConfig();
+
+		$this->assertEquals(
+			array(
+				'callback' => 'trim',
+				'params'   => array('attrVal' => null)
+			),
+			$filtersConfig['foo']			
 		);
 	}
 
