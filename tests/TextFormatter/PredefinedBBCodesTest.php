@@ -353,15 +353,15 @@ class PredefinedBBCodesTest extends Test
 			),
 			array(
 				'[EMAIL]admin@example.org[/EMAIL]',
-				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'gro.elpmaxe@nimda:otliam\'.split(\'\').reverse().join(\'\')">gro.elpmaxe@nimda</a>'
+				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'gro.elpmaxe@nimda:ot\\u006ciam\'.split(\'\').reverse().join(\'\')">gro.elpmaxe@nimda</a>'
 			),
 			array(
 				'[EMAIL=admin@example.org]email me![/EMAIL]',
-				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'gro.elpmaxe@nimda:otliam\'.split(\'\').reverse().join(\'\')">!em liame</a>'
+				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'gro.elpmaxe@nimda:ot\\u006ciam\'.split(\'\').reverse().join(\'\')">!em liame</a>'
 			),
 			array(
 				'[EMAIL=admin@example.org subject="hello admin@example.org!"]email me![/EMAIL]',
-				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'12%gro.elpmaxe04%nimda02%olleh=tcejbus?gro.elpmaxe@nimda:otliam\'.split(\'\').reverse().join(\'\')">!em liame</a>'
+				'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()" onmouseover="this.href=\'12%gro.elpmaxe04%nimda02%olleh=tcejbus?gro.elpmaxe@nimda:ot\\u006ciam\'.split(\'\').reverse().join(\'\')">!em liame</a>'
 			),
 			array(
 				'[JUSTIN]http://www.justin.tv/justin[/JUSTIN]',

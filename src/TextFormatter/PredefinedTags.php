@@ -477,19 +477,21 @@ class PredefinedTags
 
 		$this->cb->setTagTemplate(
 			'EMAIL',
-			'<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()">
-				<xsl:attribute name="onmouseover">
-					<xsl:text>this.href=\'</xsl:text>
-					<xsl:if test="@subject">
-						<xsl:value-of select="@subject" />
-						<xsl:text>=tcejbus?</xsl:text>
-					</xsl:if>
-					<xsl:value-of select="@email" />
-					<xsl:text>:otliam\'.split(\'\').reverse().join(\'\')</xsl:text>
-				</xsl:attribute>
+			<<<'EOT'
+				<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()">
+					<xsl:attribute name="onmouseover">
+						<xsl:text>this.href='</xsl:text>
+						<xsl:if test="@subject">
+							<xsl:value-of select="@subject" />
+							<xsl:text>=tcejbus?</xsl:text>
+						</xsl:if>
+						<xsl:value-of select="@email" />
+						<xsl:text>:ot\u006ciam'.split('').reverse().join('')</xsl:text>
+					</xsl:attribute>
 
-				<xsl:value-of select="@revtext" />
-			</a>'
+					<xsl:value-of select="@revtext" />
+				</a>
+EOT
 		);
 	}
 
