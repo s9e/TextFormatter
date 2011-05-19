@@ -418,6 +418,8 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\CensorParser
  [x] Tag name can be customized at loading time
  [x] Attribute name can be customized at loading time
  [x] Does not attempt to create its tag if it already exists
+ [x] The dollar symbol has no special meaning in replacement
+ [x] The backslash has no special meaning in replacement
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\EmoticonsConfig
  [x] getConfig returns false if no emoticons were added

@@ -272,4 +272,26 @@ class CensorParserTest extends Test
 		$this->cb->loadPlugin('Censor');
 		$this->cb->loadPlugin('Censor');
 	}
+
+	public function testTheDollarSymbolHasNoSpecialMeaningInReplacement()
+	{
+		$this->cb->Censor->addWord('apple', '$0');
+
+		$this->assertTransformation(
+			'Hello apple',
+			'<rt>Hello <C with="$0">apple</C></rt>',
+			'Hello $0'
+		);
+	}
+
+	public function testTheBackslashHasNoSpecialMeaningInReplacement()
+	{
+		$this->cb->Censor->addWord('apple', '\\0');
+
+		$this->assertTransformation(
+			'Hello apple',
+			'<rt>Hello <C with="\\0">apple</C></rt>',
+			'Hello \\0'
+		);
+	}
 }
