@@ -434,6 +434,12 @@ class PredefinedTags
 	* The idea comes from a 2008 article from tillate.com (link below.) Weirdly enough, the HTML
 	* generated successfully validates as HTML 4.01 Strict, XHTML 1.0 Strict and HTML5.
 	*
+	* NOTE: the "mailto:" link is generated dynamically using onmouseover/onfocus events. This is 
+	*       for two reasons: first, it doesn't have the performance concerns historically associated
+	*       with document.write, and secondly it ensures at least some level of interaction. IOW, a
+	*       bot using a scripted browser would have to be programmed to hover links in order to grab
+	*       its mailto.
+	*
 	* @link http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compar
 	*/
 	public function addEMAIL()
