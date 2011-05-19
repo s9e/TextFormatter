@@ -24,18 +24,14 @@ class BBCodesConfig extends PluginConfig
 	*            system, etc...
 	*/
 	protected $allowedPhaseFiltersCallbacks = array(
-		'addcslashes',
 		'addslashes',
-		'html_entity_decode',
-		'htmlentities',
-		'htmlspecialchars',
 		'intval',
 		'ltrim',
 		'mb_strtolower',
 		'mb_strtoupper',
+		'rawurlencode',
 		'rtrim',
 		'str_rot13',
-		'stripcslashes',
 		'stripslashes',
 		'strrev',
 		'strtolower',
@@ -43,7 +39,8 @@ class BBCodesConfig extends PluginConfig
 		'strtoupper',
 		'trim',
 		'ucfirst',
-		'ucwords'
+		'ucwords',
+		'urlencode'
 	);
 
 	/**
