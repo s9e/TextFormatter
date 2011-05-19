@@ -39,6 +39,7 @@ s9e['TextFormatter'] = function()
 
 		/** @type {!Object} */
 		_log,
+
 		/** @const @type {!Object} */
 		tagsConfig = {/* DO NOT EDIT*/},
 		/** @const @type {!Object} */
@@ -47,6 +48,8 @@ s9e['TextFormatter'] = function()
 		pluginsConfig = {/* DO NOT EDIT*/},
 		/** @const @type {!Object.<string, function(!string, !Object):Array>} */
 		pluginParsers = {/* DO NOT EDIT*/},
+		/** @const @type {!Object.<string, function>} */
+		callbacks = {/* DO NOT EDIT*/},
 
 		/** @type {!string} */
 		text,
@@ -225,7 +228,7 @@ s9e['TextFormatter'] = function()
 				*       valid addresses. It's only there to catch honest mistakes. The actual
 				*       validation should be performed by PHP's ext/filter.
 				*/
-				if (!/^[\w\.\-_]+@[\w\.\-_]$/.test(attrVal))
+				if (!/^[\w\.\-_]+@[\w\.\-_]+$/.test(attrVal))
 				{
 					return false;
 				}
@@ -1181,7 +1184,7 @@ s9e['TextFormatter'] = function()
 			{
 				log('debug', {
 					'msg'    : 'Attribute value was altered by the filter '
-					         + '(attrName: %1s, originalVal: %2s, attrVal: %3s)',
+					         + '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
 					'params' : [
 						attrName,
 						JSON.stringify(originalVal),
@@ -1285,35 +1288,33 @@ s9e['TextFormatter'] = function()
 
 	function applyCallback(conf, values)
 	{
-		var params = {};
+		var params = [];
 
 		if (conf.params)
 		{
 			/**
 			* Replace the dynamic parameters with their current value
 			*/
-/*
-			values += array(
-				tagsConfig    => tagsConfig,
-				filtersConfig => filtersConfig
-			);
+			values['tagsConfig'] = tagsConfig;
+			values['filtersConfig'] = filtersConfig;
 
-			foreach (array(currentTag, currentAttribute) as k)
+			if (currentTag)
 			{
-				if (isset(k) && !isset(values[k]))
+				values['currentTag'] = currentTag;
+
+				if (currentAttribute)
 				{
-					values[k] = k;
+					values['currentAttribute'] = currentAttribute;
 				}
 			}
 
-			params = array_replace(
-				conf[params],
-				array_intersect_key(values, conf[params])
-			);
-*/
+			for (var k in conf.params)
+			{
+				params.push(values[k] || conf.params[k]);
+			}
 		}
 
-//		return call_user_func_array(conf[callback], params);
+		return callbacks[conf.callback].apply(this, params);
 	}
 
 	/*

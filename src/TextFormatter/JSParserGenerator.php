@@ -7,6 +7,8 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
+use RuntimeException;
+
 class JSParserGenerator
 {
 	/**
@@ -75,6 +77,7 @@ class JSParserGenerator
 		$this->injectTagsConfig();
 		$this->injectPlugins();
 		$this->injectFiltersConfig();
+		$this->injectCallbacks();
 
 		/**
 		* Turn off logging selectively
@@ -436,6 +439,85 @@ class JSParserGenerator
 		);
 	}
 
+	protected function injectCallbacks()
+	{
+		$this->src = str_replace(
+			'callbacks = {/* DO NOT EDIT*/}',
+			'callbacks = ' . $this->generateCallbacks(),
+			$this->src
+		);
+	}
+
+	protected function generateCallbacks()
+	{
+		$usedCallbacks = array();
+
+		foreach ($this->tagsConfig as $tagConfig)
+		{
+			if (!empty($tagConfig['preFilter']))
+			{
+				foreach ($tagConfig['preFilter'] as $callbackConf)
+				{
+					$usedCallbacks[] = $callbackConf['callback'];
+				}
+			}
+
+			if (!empty($tagConfig['postFilter']))
+			{
+				foreach ($tagConfig['postFilter'] as $callbackConf)
+				{
+					$usedCallbacks[] = $callbackConf['callback'];
+				}
+			}
+
+			if (!empty($tagConfig['attrs']))
+			{
+				foreach ($tagConfig['attrs'] as $attrName => $attrConf)
+				{
+					if (!empty($attrConf['preFilter']))
+					{
+						foreach ($attrConf['preFilter'] as $callbackConf)
+						{
+							$usedCallbacks[] = $callbackConf['callback'];
+						}
+					}
+
+					if (!empty($attrConf['postFilter']))
+					{
+						foreach ($attrConf['postFilter'] as $callbackConf)
+						{
+							$usedCallbacks[] = $callbackConf['callback'];
+						}
+					}
+				}
+			}
+		}
+
+		$jsCallbacks = array();
+
+		foreach (array_unique($usedCallbacks) as $funcName)
+		{
+			if (!preg_match('#^[a-z_0-9]+$#Di', $funcName))
+			{
+				/**
+				* This cannot actually happen because callbacks are validated in ConfigBuilder.
+				* HOWEVER, if there was a way to get around this validation, this method could be
+				* used to get the content of any file in the filesystem, so we're still validating
+				* the callback name here as a failsafe.
+				*/
+				throw new RuntimeException("Invalid callback name '" . $funcName . "'");
+			}
+
+			$filepath = __DIR__ . '/jsFunctions/' . $funcName . '.js';
+			if (file_exists($filepath))
+			{
+				$jsCallbacks[] = json_encode($funcName) . ':' . file_get_contents($filepath);
+			}
+		}
+
+		return '{' . implode(',', $jsCallbacks) . '}';
+	}
+
 	/**
 	* Kind of hardcoding stuff here, will need to be cleaned up at some point
 	*/
@@ -668,7 +750,7 @@ class JSParserGenerator
 			* Uses the "s" modifier, which doesn't exist in Javascript RegExp and has
 			* to be replaced with the character class [\s\S]
 			*/
-			$regexp = preg_replace('#(?<!\\)((?:\\\\\\\\)*)\\.#', '$1[\\s\\S]', $regexp);
+			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\.#', '$1[\\s\\S]', $regexp);
 		}
 
 		/**

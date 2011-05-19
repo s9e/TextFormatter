@@ -15,7 +15,7 @@ $cb->BBCodes->addPredefinedBBCode('URL');
 $cb->BBCodes->addPredefinedBBCode('LIST');
 $cb->BBCodes->addPredefinedBBCode('COLOR');
 $cb->BBCodes->addPredefinedBBCode('NOPARSE');
-//$cb->BBCodes->addPredefinedBBCode('FLASH');
+//$cb->BBCodes->addPredefinedBBCode('EMAIL');
 
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
