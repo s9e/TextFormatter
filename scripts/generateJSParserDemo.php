@@ -87,7 +87,7 @@ Additionally, in order to demonstrate the other features:
 
 Take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
-This page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]a script[/url] and can be minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url]. The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
+This parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url]. It can be minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url]. The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
 </textarea>
 			<br>
 			<input type="checkbox" id="rendercheck" checked="checked"><label for="rendercheck"> Render</label>

@@ -636,7 +636,7 @@ class JSParserGenerator
 			));
 		}
 
-		return self::encodeArray($pluginConfig, $struct);
+		return self::encode($pluginConfig, $struct);
 	}
 
 	static public function encode(array $arr, array $struct = array())
@@ -695,7 +695,7 @@ class JSParserGenerator
 			foreach ($arr as $k => $v)
 			{
 				$match[$name][$k] =
-					(in_array(array((string) $k), $keypaths, true)
+					(in_array(array($k), $keypaths, true)
 					|| in_array(array(true), $keypaths, true));
 			}
 		}

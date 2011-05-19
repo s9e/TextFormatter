@@ -13,15 +13,19 @@ matches.forEach(function(m)
 
 	if (config.replacements)
 	{
-		for (var mask in config.replacements)
+		var i = 0,
+			cnt = config.replacements.length;
+
+		do
 		{
-			if (preg_match(mask, m[0][0]))
+			if (config.replacements[i][0].test(m[0][0]))
 			{
 				tag.attrs = {};
-				tag.attrs[attrName] = config.replacements[mask];
+				tag.attrs[attrName] = config.replacements[i][1];
 				break;
 			}
 		}
+		while (++i < cnt);
 	}
 
 	tags.push(tag);

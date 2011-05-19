@@ -95,36 +95,6 @@ s9e['TextFormatter'] = function()
 	}
 
 	/**
-	* @param {!string} regexp
-	* @param {!string} str
-	*/
-	function preg_match(regexp, str)
-	{
-		var m = /^(.)(.*)\1([a-zA-Z]*)$/.exec(regexp),
-			modifiers = m[3];
-
-		regexp = m[2];
-
-		if (modifiers.indexOf('s') > -1)
-		{
-			// replace the s modifier
-			regexp.replace(
-				/\\*\./g,
-				function(match)
-				{
-					if (match.length % 2)
-					{
-						match = match.substr(0, match.length - 1) + '[\\s\\S]';
-					}
-					return match;
-				}
-			);
-		}
-
-		return new RegExp(regexp, modifiers.replace(/[SusD]/g, '')).test(str);
-	}
-
-	/**
 	* @param {!RegExp} regexp
 	* @param {!Array}  container
 	*/

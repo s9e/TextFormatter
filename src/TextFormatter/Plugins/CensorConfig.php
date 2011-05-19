@@ -125,6 +125,34 @@ class CensorConfig extends PluginConfig
 	// JS Parser stuff
 	//==========================================================================
 
+	public function getJSConfig()
+	{
+		$config = $this->getConfig();
+
+		if (isset($config['replacements']))
+		{
+			$replacements = array();
+
+			foreach ($config['replacements'] as $regexp => $replacement)
+			{
+				$replacements[] = array($regexp, $replacement);
+			}
+
+			$config['replacements'] = $replacements;
+		}
+
+		return $config;
+	}
+
+	public function getJSConfigMeta()
+	{
+		return array(
+			'isRegexp' => array(
+				array('replacements', true, 0)
+			)
+		);
+	}
+
 	public function getJSParser()
 	{
 		return file_get_contents(__DIR__ . '/CensorParser.js');
