@@ -287,6 +287,32 @@ s9e['TextFormatter'] = function()
 
 			case 'color':
 				return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrVal) ? attrVal : false;
+
+			case 'regexp':
+				var match = attrConf.regexp.exec(attrVal);
+
+				if (!match)
+				{
+					return false;
+				}
+
+				if (attrConf.replaceWith)
+				{
+					/**
+					* Two consecutive backslashes[1] are replaced with a single backslash.
+					* A dollar sign followed by digits and preceded by a backslash[2] is preserved.
+					* Otherwise, the corresponding match[3] is used.
+					*/
+					return attrConf.replaceWith.replace(
+						/(\\\\)|(\\)?\$([0-9]+)/g,
+						function (str, p1, p2, p3)
+						{
+							return (p1) ? '\\' : ((p2) ? '$' + p3 : match[p3]);
+						}
+					);
+				}
+
+				return attrVal;
 		}
 
 		log('debug', {

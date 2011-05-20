@@ -386,25 +386,20 @@ class Parser
 					return false;
 				}
 
-				if (isset($attrConf['replace']))
+				if (isset($attrConf['replaceWith']))
 				{
 					/**
-					* Even numbers of backslashes are replaced by half their number of backslashes.
-					* A dollar sign followed by a number is replaced by the corresponding $match,
-					* unless it's preceded by a backslash.
+					* Two consecutive backslashes[1] are replaced with a single backslash.
+					* A dollar sign followed by digits and preceded by a backslash[2] is preserved.
+					* Otherwise, the corresponding match[3] is used.
 					*/
 					return preg_replace_callback(
-						'#(?:\\\\\\\\)+|(\\\\)?\\$([0-9]+)#',
+						'#(\\\\\\\\)|(\\\\)?\\$([0-9]+)#',
 						function ($m) use ($match)
 						{
-							if (!isset($m[2]))
-							{
-								return stripslashes($m[0]);
-							}
-
-							return ($m[1]) ? '$' . $m[2] : $match[$m[2]];
+							return ($m[1]) ? '\\' : (($m[2]) ? '$' . $m[3] : $match[$m[3]]);
 						},
-						$attrConf['replace']
+						$attrConf['replaceWith']
 					);
 				}
 

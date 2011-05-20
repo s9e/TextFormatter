@@ -761,7 +761,7 @@ class ParserTest extends Test
 	public function testRegexpFilterReplacesContentWithThePatternFoundInReplaceIfValid()
 	{
 		$this->assertAttributeIsValid(
-			array('type' => 'regexp', 'regexp' => '#^([A-Z])$#D', 'replace' => 'x$1x'),
+			array('type' => 'regexp', 'regexp' => '#^([A-Z])$#D', 'replaceWith' => 'x$1x'),
 			'J',
 			'xJx'
 		);
@@ -770,7 +770,7 @@ class ParserTest extends Test
 	public function testRegexpFilterDoesNotReplaceContentWithThePatternFoundInReplaceIfInvalid()
 	{
 		$this->assertAttributeIsInvalid(
-			array('type' => 'regexp', 'regexp' => '#^([A-Z])$#D', 'replace' => 'x$1x'),
+			array('type' => 'regexp', 'regexp' => '#^([A-Z])$#D', 'replaceWith' => 'x$1x'),
 			'8'
 		);
 	}
@@ -787,7 +787,7 @@ class ParserTest extends Test
 		*/
 		$replace = '$2\\$2$1\\\\$1\\\\\\$1\\\\\\\\';
 		$this->assertAttributeIsValid(
-			array('type' => 'regexp', 'regexp' => '#^(L)(R)$#D', 'replace' => $replace),
+			array('type' => 'regexp', 'regexp' => '#^(L)(R)$#D', 'replaceWith' => $replace),
 			'LR',
 			'R$2L\\L\\$1\\\\'
 		);

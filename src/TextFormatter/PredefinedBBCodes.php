@@ -111,7 +111,7 @@ class PredefinedBBCodes
 			'/^(?:' . preg_quote('http://video.google.com/videoplay?docid=', '/') . ')?(-?\\d+)/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[googlevideo]{REGEXP=' . $regexp . ';replace=$1}[/googlevideo]',
+			'[googlevideo]{REGEXP=' . $regexp . ';replaceWith=$1}[/googlevideo]',
 			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={REGEXP}" width="400" height="326">
 				<param name="movie" value="http://video.google.com/googleplayer.swf?docId={REGEXP}"/>
 				<param name="allowScriptAcess" value="sameDomain"/>
@@ -136,7 +136,7 @@ class PredefinedBBCodes
 		        . '([A-Za-z_0-9\\-]{5,})/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[youtube]{REGEXP=' . $regexp . ';replace=$1}[/youtube]',
+			'[youtube]{REGEXP=' . $regexp . ';replaceWith=$1}[/youtube]',
 			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350">
 				<param name="movie" value="http://www.youtube.com/v/{REGEXP}" />
 				<param name="wmode" value="transparent" />
@@ -270,7 +270,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?([A-Za-z_0-9]+)/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[JUSTIN]{REGEXP=' . $regexp . ';replace=$1}[/JUSTIN]',
+			'[JUSTIN]{REGEXP=' . $regexp . ';replaceWith=$1}[/JUSTIN]',
 			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={REGEXP}" bgcolor="#000000">
 				<param name="allowFullScreen" value="true" />
 				<param name="allowScriptAccess" value="always" />
@@ -372,7 +372,7 @@ class PredefinedBBCodes
 
 		// HTML taken straight from Blip's player "Copy embed code" feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[BLIP]{REGEXP=' . $regexp . ';replace=$1}[/BLIP]',
+			'[BLIP]{REGEXP=' . $regexp . ';replaceWith=$1}[/BLIP]',
 			'<embed src="http://blip.tv/play/{REGEXP}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
 		);
 	}
@@ -383,7 +383,7 @@ class PredefinedBBCodes
 
 		// HTML taken straight from Vimeo's player "EMBED" feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[VIMEO]{REGEXP=' . $regexp . ';replace=$1}[/VIMEO]',
+			'[VIMEO]{REGEXP=' . $regexp . ';replaceWith=$1}[/VIMEO]',
 			'<iframe src="http://player.vimeo.com/video/{REGEXP}" width="400" height="225" frameborder="0"></iframe>'
 		);
 	}
@@ -394,7 +394,7 @@ class PredefinedBBCodes
 
 		// HTML taken straight from Dailymotion's Export->embed feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[DAILYMOTION]{REGEXP=' . $regexp . ';replace=$1}[/DAILYMOTION]',
+			'[DAILYMOTION]{REGEXP=' . $regexp . ';replaceWith=$1}[/DAILYMOTION]',
 			'<object width="480" height="270">
 				<param name="movie" value="http://www.dailymotion.com/swf/video/{REGEXP}"></param>
 				<param name="allowFullScreen" value="true"></param>
