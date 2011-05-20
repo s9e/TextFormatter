@@ -16,6 +16,7 @@ $cb->BBCodes->addPredefinedBBCode('LIST');
 $cb->BBCodes->addPredefinedBBCode('COLOR');
 $cb->BBCodes->addPredefinedBBCode('NOPARSE');
 //$cb->BBCodes->addPredefinedBBCode('EMAIL');
+$cb->BBCodes->addPredefinedBBCode('YOUTUBE');
 
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
@@ -50,7 +51,7 @@ ob_start();
 		}
 
 		#logdiv,
-		#preview pre
+		#preview
 		{
 			font-family: sans;
 			white-space: pre-wrap;
@@ -109,7 +110,7 @@ This parser/renderer used on this page page has been generated via [url=https://
 
 	<div id="logdiv" style="display:none"></div>
 
-	<div id="preview"><pre></pre></div>
+	<pre id="preview"></pre>
 
 	<script type="text/javascript"><?php echo $jsParser; ?>
 
@@ -117,7 +118,7 @@ This parser/renderer used on this page page has been generated via [url=https://
 			xml,
 
 			textarea = document.getElementsByTagName('textarea')[0],
-			pre = document.getElementsByTagName('pre')[0],
+			preview = document.getElementById('preview'),
 
 			rendercheck = document.getElementById('rendercheck'),
 
@@ -151,19 +152,70 @@ This parser/renderer used on this page page has been generated via [url=https://
 		{
 			if (rendercheck.checked)
 			{
-				var newPRE = document.createElement('pre');
+				var newPreview = document.createElement('pre');
 
-				newPRE.appendChild(
+				newPreview.appendChild(
 					s9e.TextFormatter.render(xml)
 				);
 
-				pre.parentNode.replaceChild(newPRE, pre);
-				pre = newPRE;
+				refreshElement(preview, newPreview);
 			}
 			else
 			{
 				pre.textContent = s.serializeToString(xml)
 			}
+		}
+
+		function refreshElement(oldEl, newEl)
+		{
+			if (oldEl.isEqualNode(newEl))
+			{
+				return;
+			}
+
+			if (newEl.nodeType !== oldEl.nodeType
+			 || newEl.nodeName !== oldEl.nodeName
+			 || newEl.nodeType === Node.TEXT_NODE)
+			{
+				oldEl.parentNode.replaceChild(newEl.cloneNode(true), oldEl);
+				return;
+			}
+
+			syncAttributes(newEl, oldEl);
+
+			var oldCnt = oldEl.childNodes.length,
+				newCnt = newEl.childNodes.length,
+				minCnt = Math.min(oldCnt, newCnt),
+				i;
+
+			if (oldCnt > newCnt)
+			{
+				i = oldCnt - newCnt;
+				do
+				{
+					oldEl.removeChild(oldEl.childNodes[newCnt]);
+				}
+				while (--i);
+			}
+
+			i = -1;
+			while (++i < minCnt)
+			{
+				refreshElement(oldEl.childNodes[i], newEl.childNodes[i]);
+			}
+
+			if (i < newCnt)
+			{
+				do
+				{
+					oldEl.appendChild(newEl.childNodes[i].cloneNode(true));
+				}
+				while (++i < newCnt);
+			}
+		}
+
+		function syncAttributes(oldEl, newEl)
+		{
 		}
 
 		function refreshLog()
@@ -195,7 +247,7 @@ This parser/renderer used on this page page has been generated via [url=https://
 							entry.len = 0;
 						}
 
-						msg = '<a style="cursor:pointer" onmouseover="highlight(' + entry.pos + ',' + (entry.pos + entry.len) + ')" onclick="select(' + entry.pos + ',' + (entry.pos + entry.len) + ')">' + msg + '</a>';
+						msg = '<a style="cursor:pointer" onmouseover="highlight(' + entry.pos + ',' + entry.len + ')" onclick="select(' + entry.pos + ',' + entry.len + ')">' + msg + '</a>';
 					}
 
 					msgs.push(msg);
@@ -205,18 +257,18 @@ This parser/renderer used on this page page has been generated via [url=https://
 			logdiv.innerHTML = (msgs.length) ? msgs.join("\n") : 'No log';
 		}
 
-		function select(lpos, rpos)
+		function select(pos, len)
 		{
 			autoHighlight = false;
 			textarea.focus();
-			textarea.setSelectionRange(lpos, rpos);
+			textarea.setSelectionRange(pos, pos + len);
 		}
 
-		function highlight(lpos, rpos)
+		function highlight(pos, len)
 		{
 			if (autoHighlight)
 			{
-				textarea.setSelectionRange(lpos, rpos);
+				textarea.setSelectionRange(pos, pos + len);
 			}
 		}
 
