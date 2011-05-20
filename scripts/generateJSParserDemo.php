@@ -181,7 +181,7 @@ This parser/renderer used on this page page has been generated via [url=https://
 				return;
 			}
 
-			syncAttributes(newEl, oldEl);
+			syncAttributes(oldEl, newEl);
 
 			var oldCnt = oldEl.childNodes.length,
 				newCnt = newEl.childNodes.length,
@@ -216,6 +216,31 @@ This parser/renderer used on this page page has been generated via [url=https://
 
 		function syncAttributes(oldEl, newEl)
 		{
+			var oldCnt = oldEl.attributes.length,
+				newCnt = newEl.attributes.length,
+				i;
+
+			if (oldCnt > newCnt)
+			{
+				i = oldCnt;
+
+				while (--i >= 0)
+				{
+					var oldAttr = oldEl.attributes[i];
+
+					if (!newEl.hasAttributeNS(oldAttr.namespaceURI, oldAttr.name))
+					{
+						oldEl.removeAttributeNS(oldAttr.namespaceURI, oldAttr.name);
+					}
+				}
+			}
+
+			i = newCnt;
+			while (--i >= 0)
+			{
+				var newAttr = newEl.attributes[i];
+				oldEl.setAttributeNS(newAttr.namespaceURI, newAttr.name, newAttr.value);
+			}
 		}
 
 		function refreshLog()
