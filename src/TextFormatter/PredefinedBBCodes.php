@@ -306,7 +306,7 @@ class PredefinedBBCodes
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[LOCALTIME]{NUMBER;preFilter=strtotime}[/LOCALTIME]',
 			'<span class="localtime" title="{text()}">
-				<script type="text/javascript">document.write(new Date({NUMBER}*1000).toLocaleString())</script>
+				<script type="text/javascript">document.write(new Date({NUMBER}000).toLocaleString())</script>
 				<noscript><xsl:apply-templates /></noscript>
 			</span>',
 			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
