@@ -19,7 +19,9 @@ matches.singletons.forEach(function(m)
 
 function doQuotation(m)
 {
-	var attrs = {}, q = m[0][0].substr(-1);
+	var attrs = {},
+		q = m[0][0].substr(-1);
+
 	attrs[attrName] = replacements.quotation[q][0];
 
 	// left character
