@@ -111,7 +111,7 @@ This parser/renderer used on this page page has been generated via [url=https://
 
 	<div id="preview"><pre></pre></div>
 
-	<script type="text/javascript"><?php echo $jsParser ?>
+	<script type="text/javascript"><?php echo $jsParser; ?>
 
 		var text,
 			xml,
@@ -242,7 +242,7 @@ This parser/renderer used on this page page has been generated via [url=https://
 			{
 				refreshLog();
 			}
-		}, 50);
+		}, 20);
 	</script>
 </body>
 </html><?php
