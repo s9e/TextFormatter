@@ -61,9 +61,10 @@ class JSParserGenerator
 	public function get(array $options = array())
 	{
 		$options += array(
-			'compilation'     => 'none',
-			'disableLogTypes' => array(),
-			'removeDeadCode'  => true
+			'compilation'        => 'none',
+			'disableLogTypes'    => array(),
+			'removeDeadCode'     => true,
+			'escapeScriptEndTag' => true
 		);
 
 		$this->tagsConfig = $this->cb->getTagsConfig(true);
@@ -96,6 +97,11 @@ class JSParserGenerator
 		if ($options['compilation'] !== 'none')
 		{
 			$this->compile($options['compilation']);
+		}
+
+		if ($options['escapeScriptEndTag'])
+		{
+			$this->src = preg_replace('#</(script)#i', '<\\/$1', $this->src);
 		}
 
 		return $this->src;
