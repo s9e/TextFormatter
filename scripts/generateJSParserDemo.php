@@ -18,6 +18,9 @@ $cb->BBCodes->addPredefinedBBCode('NOPARSE');
 //$cb->BBCodes->addPredefinedBBCode('EMAIL');
 $cb->BBCodes->addPredefinedBBCode('YOUTUBE');
 
+// Force YouTube vids to autoplay
+$cb->setTagAttributeOption('YOUTUBE', 'content', 'replaceWith', '$1&amp;autoplay=1');
+
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
 $cb->Censor->addWord('apple', 'banana');
@@ -79,16 +82,19 @@ A few BBCodes have been added such as:
 Additionally, in order to demonstrate the other features:
 
 [list]
-	[*]one emoticon :) has been added,
+	[*]one emoticon :) has been added
 	[*]the word "apple" is censored and automatically replaced with "banana"
 	[*]some typography is enhanced, e.g. (c) (tm) and "quotes"
 	[*]links to [url=http://example.com]example.com[/url] are disabled
 	[*]loose URLs such as http://github.com are automatically transformed into links
+	[*]a YouTube video keeps playing as you're editing the other content
 [/list]
 
 Take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
 This parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url]. It can be minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url]. The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
+
+[youtube]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube]
 </textarea>
 			<br>
 			<input type="checkbox" id="rendercheck" checked="checked"><label for="rendercheck"> Render</label>
@@ -162,55 +168,107 @@ This parser/renderer used on this page page has been generated via [url=https://
 			}
 			else
 			{
-				pre.textContent = s.serializeToString(xml)
+				preview.textContent = s.serializeToString(xml)
 			}
+		}
+
+		var
+			/** @const */
+			CONTINUE = 1,
+
+			/** @const */
+			BREAK = 2;
+
+		function processNodes(oldNode, newNode)
+		{
+			if (oldNode.nodeType  !== newNode.nodeType
+			 || oldNode.localName !== newNode.localName)
+			{
+				return 0;
+			}
+
+			if (oldNode.isEqualNode(newNode))
+			{
+				return 1;
+			}
+
+			if (oldNode.nodeType === Node.TEXT_NODE)
+			{
+				oldNode.textContent = newNode.textContent;
+				return 1;
+			}
+
+			syncAttributes(oldNode, newNode);
+			refreshElement(oldNode, newNode);
+
+			return 1;
 		}
 
 		function refreshElement(oldEl, newEl)
 		{
-			if (oldEl.isEqualNode(newEl))
-			{
-				return;
-			}
-
-			if (newEl.nodeType !== oldEl.nodeType
-			 || newEl.nodeName !== oldEl.nodeName
-			 || newEl.nodeType === Node.TEXT_NODE)
-			{
-				oldEl.parentNode.replaceChild(newEl.cloneNode(true), oldEl);
-				return;
-			}
-
-			syncAttributes(oldEl, newEl);
-
 			var oldCnt = oldEl.childNodes.length,
 				newCnt = newEl.childNodes.length,
-				minCnt = Math.min(oldCnt, newCnt),
-				i;
+				i = 0;
 
-			if (oldCnt > newCnt)
+			while (i < oldCnt && i < newCnt)
 			{
-				i = oldCnt - newCnt;
-				do
+				var oldNode = oldEl.childNodes[i],
+					newNode = newEl.childNodes[i];
+
+				if (!processNodes(oldNode, newNode))
 				{
-					oldEl.removeChild(oldEl.childNodes[newCnt]);
+					break;
 				}
-				while (--i);
+
+				++i;
 			}
 
-			i = -1;
-			while (++i < minCnt)
+			var left = i,
+				right = 0,
+				maxRight = Math.min(oldCnt - left, newCnt - left);
+
+			while (right < maxRight)
 			{
-				refreshElement(oldEl.childNodes[i], newEl.childNodes[i]);
+				var oldNode = oldEl.childNodes[oldCnt - (right + 1)],
+					newNode = newEl.childNodes[newCnt - (right + 1)];
+
+				if (processNodes(oldNode, newNode))
+				{
+					++right;
+				}
+				else
+				{
+					break;
+				}
 			}
 
-			if (i < newCnt)
+			/**
+			* Clone the new nodes from newEl
+			*/
+			var frag = document.createDocumentFragment();
+			i = left;
+			while (i < (newCnt - right))
 			{
-				do
-				{
-					oldEl.appendChild(newEl.childNodes[i].cloneNode(true));
-				}
-				while (++i < newCnt);
+				frag.appendChild(newEl.childNodes[i].cloneNode(true));
+				++i;
+			}
+
+			/**
+			* Remove the dirty nodes from oldEl
+			*/
+			i = oldCnt - right;
+			while (--i >= left)
+			{
+				oldEl.removeChild(oldEl.childNodes[i]);
+			}
+
+			if (left === oldCnt)
+			{
+				oldEl.appendChild(frag);
+			}
+			else
+			{
+				oldEl.insertBefore(frag, oldEl.childNodes[left]);
 			}
 		}
 
@@ -218,20 +276,15 @@ This parser/renderer used on this page page has been generated via [url=https://
 		{
 			var oldCnt = oldEl.attributes.length,
 				newCnt = newEl.attributes.length,
-				i;
-
-			if (oldCnt > newCnt)
-			{
 				i = oldCnt;
 
-				while (--i >= 0)
-				{
-					var oldAttr = oldEl.attributes[i];
+			while (--i >= 0)
+			{
+				var oldAttr = oldEl.attributes[i];
 
-					if (!newEl.hasAttributeNS(oldAttr.namespaceURI, oldAttr.name))
-					{
-						oldEl.removeAttributeNS(oldAttr.namespaceURI, oldAttr.name);
-					}
+				if (!newEl.hasAttributeNS(oldAttr.namespaceURI, oldAttr.name))
+				{
+					oldEl.removeAttributeNS(oldAttr.namespaceURI, oldAttr.name);
 				}
 			}
 
