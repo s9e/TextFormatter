@@ -34,6 +34,8 @@ $jsParser = $cb->getJSParser(array(
 	'removeDeadCode'  => (isset($_SERVER['argv'][3])) ? (bool) $_SERVER['argv'][3] : true
 ));
 
+$closureCompilerNote = (empty($_SERVER['argv'][1])) ? '' : ' It has been minified to ' . round(strlen($jsParser) / 1024, 1) . 'KB (' . round(strlen(gzencode($jsParser, 9)) / 1024, 1) . 'KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].';
+
 file_put_contents('/tmp/foo.js', $jsParser);
 
 ob_start();
@@ -76,23 +78,23 @@ A few BBCodes have been added such as:
 [list]
 	[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
 	[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], and [NOPARSE][LIST][/NOPARSE]
+	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], [NOPARSE][YOUTUBE][/NOPARSE], and [NOPARSE][LIST][/NOPARSE]
 [/list]
 
-Additionally, in order to demonstrate the other features:
+Additionally, in order to demonstrate some other features:
 
 [list]
-	[*]one emoticon :) has been added
-	[*]the word "apple" is censored and automatically replaced with "banana"
-	[*]some typography is enhanced, e.g. (c) (tm) and "quotes"
-	[*]links to [url=http://example.com]example.com[/url] are disabled
-	[*]loose URLs such as http://github.com are automatically transformed into links
-	[*]a YouTube video keeps playing as you're editing the other content
+	[*]one emoticon :) has been added [i](Emoticons plugin)[/i]
+	[*]the word "apple" is censored and automatically replaced with "banana" [i](Censor plugin)[/i]
+	[*]some typography is enhanced, e.g. (c) (tm) and "quotes" [i](WittyPants plugin)[/i]
+	[*]links to [url=http://example.com]example.com[/url] are disabled [i](ConfigBuilder::disallowHost())[/i]
+	[*]loose URLs such as http://github.com are automatically transformed into links [i](Autolink plugin)[/i]
+	[*]a YouTube video---at the bottom---keeps playing as you're editing the other content, to demonstrate the partial-update algorithm used to refresh the preview
 [/list]
 
 Take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
-This parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url]. It can be minified to a few kilobytes with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url]. The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
+The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url].<?php echo $closureCompilerNote; ?> The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
 
 [youtube]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube]
 </textarea>
@@ -174,8 +176,8 @@ This parser/renderer used on this page page has been generated via [url=https://
 
 		function processNodes(oldNode, newNode)
 		{
-			if (oldNode.nodeType  !== newNode.nodeType
-			 || oldNode.localName !== newNode.localName)
+			if (oldNode.localName !== newNode.localName
+			 || oldNode.nodeType  !== newNode.nodeType)
 			{
 				return 0;
 			}
