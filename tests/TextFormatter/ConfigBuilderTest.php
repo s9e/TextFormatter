@@ -761,6 +761,19 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
+	/**
+	* @depends testCannotSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOn
+	*/
+	public function testCanSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOnWithInsecureFlag()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<a onmouseover="{@lol}"/>',
+			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+		);
+	}
+
 	public function testCanSetCustomFilter()
 	{
 		$this->cb->setFilter('foo', array('callback' => 'trim'));

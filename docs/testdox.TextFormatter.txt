@@ -66,6 +66,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can set tag template with disable output escaping with insecure flag
  [x] Cannot set tag template with variable in an attribute whose name starts with on
  [x] Cannot set tag template with variable in an attribute whose name starts with on regardless of the case
+ [x] Can set tag template with variable in an attribute whose name starts with on with insecure flag
  [x] Can set custom filter
  [x] Custom filters are passed the attribute value if no params array was specified
  [x] Can set custom filter with extra config
