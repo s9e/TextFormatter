@@ -1401,7 +1401,18 @@ class ConfigBuilder
 		{
 			$xpath = new DOMXPath($dom);
 
-			if ($xpath->evaluate('count(//script[contains(@src, "{") or .//xsl:value-of or .//xsl:attribute])'))
+			$hasInsecureScript = (bool) $xpath->evaluate(
+				'count(
+					//*[translate(name(), "SCRIPT", "script") = "script"]
+					   [
+					       @*[translate(name(), "SRC", "src") = "src"][contains(., "{")]
+					    or .//xsl:value-of
+					    or .//xsl:attribute
+					   ]
+				)'
+			);
+
+			if ($hasInsecureScript)
 			{
 				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please use the ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES flag to enable it');
 			}
@@ -1411,6 +1422,26 @@ class ConfigBuilder
 				throw new RuntimeException("It seems that your template contains a 'disable-output-escaping' attribute. Those can be insecure and are disabled by default. Please use the " . __CLASS__ . "::ALLOW_INSECURE_TEMPLATES flag to enable it");
 			}
 
+			$attrs = $xpath->query(
+				'//@*[starts-with(translate(name(), "ON", "on"), "on")][contains(., "{")]'
+			);
+
+			foreach ($attrs as $attr)
+			{
+				// test for false-positives, IOW escaped brackets
+				preg_match_all('#\\{.#', $attr->value, $matches);
+
+				foreach ($matches[0] as $m)
+				{
+					if ($m !== '{{')
+					{
+						throw new RuntimeException("It seems that your template contains at least one attribute named '" . $attr->name . "' using user-supplied content. Those can be insecure and are disabled by default. Please use the " . __CLASS__ . "::ALLOW_INSECURE_TEMPLATES flag to enable it");
+					}
+				}
+			}
+
+			// TODO: add another check for attributes that start with "on", created via
+			//       xsl:attribute
 		}
 
 		/**

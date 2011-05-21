@@ -645,6 +645,19 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanSetTagTemplate
+	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	*/
+	public function testCannotSetTagTemplateWithVariableInScriptSrcRegardlessOfTheCase()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<SCRIPT SRC="http://{TEXT}"/>'
+		);
+	}
+
+	/**
 	* @depends testCannotSetTagTemplateWithVariableInScriptSrc
 	*/
 	public function testCanSetTagTemplateWithVariableInScriptSrcWithInsecureFlag()
@@ -687,6 +700,19 @@ class ConfigBuilderTest extends Test
 	* @depends testCanSetTagTemplate
 	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
 	*/
+	public function testCannotSetTagTemplateWithVariableInScriptContentRegardlessOfTheCase()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<SCRIPT><xsl:value-of select="@LOL"/></SCRIPT>'
+		);
+	}
+
+	/**
+	* @depends testCanSetTagTemplate
+	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	*/
 	public function testCannotSetTagTemplateWithDisableOutputEscaping()
 	{
 		$this->cb->addTag('a');
@@ -706,6 +732,32 @@ class ConfigBuilderTest extends Test
 			'a',
 			'<xsl:value-of select="@LOL" disable-output-escaping="yes" />',
 			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+		);
+	}
+
+	/**
+	* @depends testCanSetTagTemplate
+	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	*/
+	public function testCannotSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOn()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<a onmouseover="{@lol}"/>'
+		);
+	}
+
+	/**
+	* @depends testCanSetTagTemplate
+	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	*/
+	public function testCannotSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOnRegardlessOfTheCase()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<A ONMOUSEOVER="{@lol}"/>'
 		);
 	}
 

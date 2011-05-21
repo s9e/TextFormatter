@@ -57,11 +57,15 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can create tag with xsl
  [x] Can set tag xsl with preserved whitespace
  [x] Cannot set tag template with variable in script src
+ [x] Cannot set tag template with variable in script src regardless of the case
  [x] Can set tag template with variable in script src with insecure flag
  [x] Cannot set tag template with variable in script content
  [x] Can set tag template with variable in script content with insecure flag
+ [x] Cannot set tag template with variable in script content regardless of the case
  [x] Cannot set tag template with disable output escaping
  [x] Can set tag template with disable output escaping with insecure flag
+ [x] Cannot set tag template with variable in an attribute whose name starts with on
+ [x] Cannot set tag template with variable in an attribute whose name starts with on regardless of the case
  [x] Can set custom filter
  [x] Custom filters are passed the attribute value if no params array was specified
  [x] Can set custom filter with extra config
