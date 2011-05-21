@@ -172,13 +172,6 @@ This parser/renderer used on this page page has been generated via [url=https://
 			}
 		}
 
-		var
-			/** @const */
-			CONTINUE = 1,
-
-			/** @const */
-			BREAK = 2;
-
 		function processNodes(oldNode, newNode)
 		{
 			if (oldNode.nodeType  !== newNode.nodeType
