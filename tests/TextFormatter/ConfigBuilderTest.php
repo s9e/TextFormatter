@@ -774,6 +774,15 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
+	public function testCanSetTagTemplateWithEscapedCurlyBracketsInAnAttributeWhoseNameStartsWithOnWithoutInsecureFlag()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<a onmouseover="a={{}}"/>'
+		);
+	}
+
 	public function testCanSetCustomFilter()
 	{
 		$this->cb->setFilter('foo', array('callback' => 'trim'));
