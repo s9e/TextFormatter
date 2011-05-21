@@ -150,6 +150,13 @@ class PredefinedBBCodes
 		));
 	}
 
+	public function addFLOAT()
+	{
+		$this->forwardCall('FLOAT', array(
+			'defaultAttr' => 'float'
+		));
+	}
+
 	public function addBACKGROUND()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(

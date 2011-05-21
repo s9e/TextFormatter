@@ -522,6 +522,34 @@ class PredefinedBBCodesTest extends Test
 				[/DL]',
 				'<dl><dt>term</dt><dd>description</dd></dl>'
 			),
+			array(
+				'[FLOAT=left]left[/FLOAT]',
+				'<div style="float:left">left</div>'
+			),
+			array(
+				'[FLOAT=right]right[/FLOAT]',
+				'<div style="float:right">right</div>'
+			),
+			array(
+				'[FLOAT=none]none[/FLOAT]',
+				'<div style="float:none">none</div>'
+			),
+			array(
+				'[CLEAR=left]left[/CLEAR]',
+				'<div style="clear:left">left</div>'
+			),
+			array(
+				'[CLEAR=right]right[/CLEAR]',
+				'<div style="clear:right">right</div>'
+			),
+			array(
+				'[CLEAR=both]both[/CLEAR]',
+				'<div style="clear:both">both</div>'
+			),
+			array(
+				'[CLEAR]both[/CLEAR]',
+				'<div style="clear:both">both</div>'
+			),
 		);
 	}
 }

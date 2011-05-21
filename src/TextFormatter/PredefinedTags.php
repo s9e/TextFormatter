@@ -648,4 +648,29 @@ EOT
 		$this->cb->setTagTemplate('DT', '<dt><xsl:apply-templates /></dt>');
 		$this->cb->setTagTemplate('DD', '<dd><xsl:apply-templates /></dd>');
 	}
+
+	public function addFLOAT()
+	{
+		$this->cb->addTag('FLOAT');
+		$this->cb->addTagAttribute(
+			'FLOAT', 'float', 'regexp', array('regexp' => '#^(?:left|right|none)$#Di')
+		);
+		$this->cb->setTagTemplate(
+			'FLOAT', '<div style="float:{@float}"><xsl:apply-templates /></div>'
+		);
+	}
+
+	public function addCLEAR()
+	{
+		$this->cb->addTag('CLEAR');
+		$this->cb->addTagAttribute(
+			'CLEAR', 'clear', 'regexp', array(
+				'regexp' => '#^(?:left|right|both)$#Di',
+				'defaultValue' => 'both'
+			)
+		);
+		$this->cb->setTagTemplate(
+			'CLEAR', '<div style="clear:{@clear}"><xsl:apply-templates /></div>'
+		);
+	}
 }
