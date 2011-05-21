@@ -131,13 +131,12 @@ class PredefinedBBCodes
 	*/
 	public function addYOUTUBE()
 	{
-		// note, we capture 5 chars or more {5,} to avoid capturing "http"
 		$regexp = '/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?'
-		        . '([A-Za-z_0-9\\-]{5,})/';
+		        . '([A-Za-z_0-9\\-]+)(?!\\:)/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[youtube]{REGEXP=' . $regexp . ';replaceWith=$1}[/youtube]',
-			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="425" height="350">
+			'[youtube width={RANGE1=80,800;defaultValue=425} height={RANGE2=60,600;defaultValue=350}]{REGEXP=' . $regexp . ';replaceWith=$1}[/youtube]',
+			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="{@width}" height="{@height}">
 				<param name="movie" value="http://www.youtube.com/v/{REGEXP}" />
 				<param name="wmode" value="transparent" />
 			</object>'
