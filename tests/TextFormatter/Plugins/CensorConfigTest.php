@@ -90,4 +90,21 @@ class CensorConfigTest extends Test
 			$this->cb->Censor->getJSParser()
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function getJSConfig_returns_the_replacements_as_pairs_in_a_numerically_indexed_array()
+	{
+		$this->cb->Censor->addWord('foo', 'bar');
+
+		$this->assertArrayMatches(
+			array(
+				'replacements' => array(
+					array('#^foo$#iDu', 'bar')
+				)
+			),
+			$this->cb->Censor->getJSConfig()
+		);
+	}
 }
