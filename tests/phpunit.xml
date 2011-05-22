@@ -22,6 +22,7 @@
 		<testsuite name="TextFormatter">
 			<file>./TextFormatter/AutoloadersTest.php</file>
 			<file>./TextFormatter/ConfigBuilderTest.php</file>
+			<file>./TextFormatter/JSParserGeneratorTest.php</file>
 			<file>./TextFormatter/ParserTest.php</file>
 			<file>./TextFormatter/PluginConfigTest.php</file>
 			<file>./TextFormatter/PluginParserTest.php</file>

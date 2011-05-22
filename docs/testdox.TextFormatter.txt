@@ -112,6 +112,14 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getJSPlugins returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
  [x] getJSPlugins ignores plugins with no Javascript parser
 
+s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
+ [x] encodeArray can encode arrays to objects
+ [x] encodeArray can encode arrays to Arrays
+ [x] encodeArray can preserve a key of an array
+ [x] encodeArray can preserve a key of a nested array
+ [x] encodeArray can use TRUE as a wildcard
+ [x] encodeArray preserves reserved words
+
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Filter int accepts strings made entirely of digits
  [x] Filter int rejects strings that starts with digits
@@ -410,7 +418,6 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] Does not attempt to create its tag if it already exists
  [x] getJSParser returns the source of its Javascript parser
  [x] getJSConfig returns the replacements as pairs in a numerically indexed array
- [x] Javascript replacements regexp strings are converted to RegExp objects
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorParser
  [x] Replaces censored words with default replacement

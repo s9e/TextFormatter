@@ -18,6 +18,7 @@
 		<testsuite name="TextFormatter">
 			<file>AutoloadersTest.php</file>
 			<file>ConfigBuilderTest.php</file>
+			<file>JSParserGeneratorTest.php</file>
 			<file>ParserTest.php</file>
 			<file>PluginConfigTest.php</file>
 			<file>PluginParserTest.php</file>

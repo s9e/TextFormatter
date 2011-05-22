@@ -50,9 +50,15 @@ class JSParserGeneratorTest extends Test
 			'b' => 2
 		);
 
+		$struct = array(
+			'preserveKeys' => array(
+				array('a')
+			)
+		);
+
 		$this->assertSame(
 			'{"a":1,b:2}',
-			JSParserGenerator::encodeArray($arr, array(array('a')))
+			JSParserGenerator::encodeArray($arr, $struct)
 		);
 	}
 
@@ -67,9 +73,15 @@ class JSParserGeneratorTest extends Test
 			'b' => 2
 		);
 
+		$struct = array(
+			'preserveKeys' => array(
+				array('a', 'z')
+			)
+		);
+
 		$this->assertSame(
 			'{a:{"z":1,b:2},b:2}',
-			JSParserGenerator::encodeArray($arr, array(array('a', 'z')))
+			JSParserGenerator::encodeArray($arr, $struct)
 		);
 	}
 
@@ -77,16 +89,22 @@ class JSParserGeneratorTest extends Test
 	* @ŧest
 	* @depends encodeArray_can_preserve_a_key_of_a_nested_array
 	*/
-	public function test_encodeArray_preserves_keys_at_the_correct_depth()
+	public function encodeArray_preserves_keys_at_the_correct_depth()
 	{
 		$arr = array(
 			'a' => array('a' => 1, 'b' => 2),
 			'b' => 2
 		);
 
+		$struct = array(
+			'preserveKeys' => array(
+				array('a', 'a')
+			)
+		);
+
 		$this->assertSame(
 			'{a:{"a":1,b:2},b:2}',
-			JSParserGenerator::encodeArray($arr, array(array('a', 'a')))
+			JSParserGenerator::encodeArray($arr, $struct)
 		);
 	}
 
@@ -94,23 +112,29 @@ class JSParserGeneratorTest extends Test
 	* @test
 	* @depends encodeArray_can_preserve_a_key_of_an_array
 	*/
-	public function test_encodeArray_can_use_TRUE_as_a_wildcard()
+	public function encodeArray_can_use_TRUE_as_a_wildcard()
 	{
 		$arr = array(
 			'a' => array('a' => 1, 'b' => 2),
 			'b' => array('a' => 1, 'b' => 2)
 		);
 
+		$struct = array(
+			'preserveKeys' => array(
+				array('a', true)
+			)
+		);
+
 		$this->assertSame(
 			'{a:{"a":1,"b":2},b:{a:1,b:2}}',
-			JSParserGenerator::encodeArray($arr, array(array('a', true)))
+			JSParserGenerator::encodeArray($arr, $struct)
 		);
 	}
 
 	/**
 	* @test
 	*/
-	public function test_encodeArray_preserves_reserved_words()
+	public function encodeArray_preserves_reserved_words()
 	{
 		$arr = array(
 			'a'    => 1,
