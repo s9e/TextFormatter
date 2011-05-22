@@ -186,7 +186,7 @@ class JSParserGenerator
 			{
 				foreach ($tagConfig['attrs'] as $attrName => $attrConf)
 				{
-					if (isset($attrConf['isRequired']))
+					if (!empty($attrConf['isRequired']))
 					{
 						return;
 					}

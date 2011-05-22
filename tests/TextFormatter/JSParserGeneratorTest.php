@@ -202,7 +202,7 @@ class JSParserGeneratorTest extends Test
 	* @test
 	* @dataProvider deadCodeProvider
 	*/
-	public function Useless_code_is_removed_from_the_source($funcNames, $tagConfig)
+	public function Useless_code_is_removed_from_the_source($funcNames, $keepConfig, $removeConfig = array())
 	{
 		$regexps = array();
 
@@ -213,8 +213,8 @@ class JSParserGeneratorTest extends Test
 
 		$jspg = new JSParserGenerator($this->cb);
 
-		$this->cb->addTag('A');
 		$this->cb->addTag('B');
+		$this->cb->addTag('A', $removeConfig);
 
 		// First we test that the code is removed by default
 		foreach ($regexps as $funcName => $regexp)
@@ -227,7 +227,7 @@ class JSParserGeneratorTest extends Test
 		}
 
 		$this->cb->removeTag('A');
-		$this->cb->addTag('A', $tagConfig);
+		$this->cb->addTag('A', $keepConfig);
 
 		// Then we make sure it's not applicable
 		foreach ($regexps as $funcName => $regexp)
@@ -252,7 +252,8 @@ class JSParserGeneratorTest extends Test
 			// attributes
 			array(
 				'currentTagRequiresMissingAttribute',
-				array('attrs' => array('foo' => array('type' => 'int', 'isRequired' => true)))
+				array('attrs' => array('foo' => array('type' => 'int', 'isRequired' => true))),
+				array('attrs' => array('foo' => array('type' => 'int', 'isRequired' => false)))
 			),
 			array(
 				array('filterAttributes', 'filter'),
