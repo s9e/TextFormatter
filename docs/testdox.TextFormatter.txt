@@ -109,6 +109,8 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] addTagAttributePostFilterCallback throws an exception if callback is not callable
  [x] Can set postFilter callbacks via setTagAttributeOption
  [x] Can clear all postFilter callbacks from a tag attribute
+ [x] getJSPlugins returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
+ [x] getJSPlugins ignores plugins with no Javascript parser
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Filter int accepts strings made entirely of digits

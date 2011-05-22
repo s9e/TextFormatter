@@ -3,7 +3,8 @@
 namespace s9e\Toolkit\Tests\TextFormatter;
 
 use s9e\Toolkit\Tests\Test,
-    s9e\Toolkit\TextFormatter\ConfigBuilder;
+    s9e\Toolkit\TextFormatter\ConfigBuilder,
+    s9e\Toolkit\TextFormatter\PluginConfig;
 
 include_once __DIR__ . '/../Test.php';
 
@@ -1506,6 +1507,42 @@ class ConfigBuilderTest extends Test
 				)
 			),
 			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function getJSPlugins_returns_an_array_of_all_plugins_with_a_Javascript_parser_as_well_as_their_config_and_the_associated_metadata()
+	{
+		include_once __DIR__ . '/includes/MyJsPluginConfig.php';
+
+		$this->cb->loadPlugin('MyJsPlugin', __NAMESPACE__ . '\\MyJsPluginConfig');
+
+		$this->assertEquals(
+			array(
+				'MyJsPlugin' => array(
+					'config' => array('foo' => 'bar'),
+					'meta'   => array('baz' => 'quux'),
+					'parser' => 'alert("Hello mom")'
+				)
+			),
+			$this->cb->getJSPlugins()
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function getJSPlugins_ignores_plugins_with_no_Javascript_parser()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->assertEquals(
+			array(),
+			$this->cb->getJSPlugins()
 		);
 	}
 }

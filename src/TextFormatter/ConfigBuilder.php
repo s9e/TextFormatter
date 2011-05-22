@@ -755,34 +755,6 @@ class ConfigBuilder
 	}
 
 	/**
-	* Return JS parsers and their config
-	*
-	* @return array
-	*/
-	public function getJSPlugins()
-	{
-		$plugins = array();
-
-		foreach ($this->getPluginsConfig('getJSConfig') as $pluginName => $pluginConfig)
-		{
-			$js = $this->$pluginName->getJSParser();
-
-			if (!$js)
-			{
-				continue;
-			}
-
-			$plugins[$pluginName] = array(
-				'parser' => $js,
-				'config' => $pluginConfig,
-				'meta'   => $this->$pluginName->getJSConfigMeta()
-			);
-		}
-
-		return $plugins;
-	}
-
-	/**
 	* Magic __get automatically loads plugins, PredefinedTags class
 	*
 	* @param  string $k Property name
@@ -1150,19 +1122,6 @@ class ConfigBuilder
 		return $tagsConfig;
 	}
 
-	/**
-	* 
-	*
-	* @return void
-	*/
-	public function getJSParser(array $options = array())
-	{
-		include_once __DIR__ . '/JSParserGenerator.php';
-
-		$jspg = new JSParserGenerator($this);
-		return $jspg->get($options);
-	}
-
 	//==========================================================================
 	// Misc tools
 	//==========================================================================
@@ -1454,5 +1413,51 @@ class ConfigBuilder
 		}
 
 		return $xsl;
+	}
+
+	//==========================================================================
+	// Javascript parser stuff
+	//==========================================================================
+
+	/**
+	* Return the Javascript parser that corresponds to this configuration
+	*
+	* @return string
+	*/
+	public function getJSParser(array $options = array())
+	{
+		include_once __DIR__ . '/JSParserGenerator.php';
+
+		$jspg = new JSParserGenerator($this);
+
+		return $jspg->get($options);
+	}
+
+	/**
+	* Return JS parsers and their config
+	*
+	* @return array
+	*/
+	public function getJSPlugins()
+	{
+		$plugins = array();
+
+		foreach ($this->getPluginsConfig('getJSConfig') as $pluginName => $pluginConfig)
+		{
+			$js = $this->$pluginName->getJSParser();
+
+			if (!$js)
+			{
+				continue;
+			}
+
+			$plugins[$pluginName] = array(
+				'parser' => $js,
+				'config' => $pluginConfig,
+				'meta'   => $this->$pluginName->getJSConfigMeta()
+			);
+		}
+
+		return $plugins;
 	}
 }
