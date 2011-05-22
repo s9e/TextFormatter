@@ -41,6 +41,57 @@ class JSParserGeneratorTest extends Test
 
 	/**
 	* @test
+	*/
+	public function encodeArray_can_convert_regexp_strings_to_RegExp_objects()
+	{
+		$arr = array('/foo/');
+
+		$struct = array(
+			'isRegexp' => array(
+				array(true)
+			)
+		);
+
+		$this->assertContains(
+			'new RegExp("foo")',
+			JSParserGenerator::encodeArray($arr, $struct)
+		);
+	}
+
+
+	/**
+	* @test
+	*/
+	public function encodeArray_can_convert_regexp_strings_to_RegExp_objects_with_g_flag()
+	{
+		$arr = array('/foo/');
+
+		$struct = array(
+			'isGlobalRegexp' => array(
+				array(true)
+			)
+		);
+
+		$this->assertContains(
+			'new RegExp("foo","g")',
+			JSParserGenerator::encodeArray($arr, $struct)
+		);
+	}
+
+	/**
+	* @test
+	* @depends encodeArray_can_encode_arrays_to_Arrays
+	*/
+	public function encode_encodes_booleans_to_0_and_1()
+	{
+		$this->assertSame(
+			'[1,0,1]',
+			JSParserGenerator::encode(array(true, false, true))
+		);
+	}
+
+	/**
+	* @test
 	* @depends encodeArray_can_encode_arrays_to_objects
 	*/
 	public function encodeArray_can_preserve_a_key_of_an_array()

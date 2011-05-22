@@ -115,6 +115,9 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
 s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray can encode arrays to objects
  [x] encodeArray can encode arrays to Arrays
+ [x] encodeArray can convert regexp strings to RegExp objects
+ [x] encodeArray can convert regexp strings to RegExp objects with g flag
+ [x] encode encodes booleans to 0 and 1
  [x] encodeArray can preserve a key of an array
  [x] encodeArray can preserve a key of a nested array
  [x] encodeArray can use TRUE as a wildcard
