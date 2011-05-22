@@ -410,6 +410,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] Does not attempt to create its tag if it already exists
  [x] getJSParser returns the source of its Javascript parser
  [x] getJSConfig returns the replacements as pairs in a numerically indexed array
+ [x] Javascript replacements regexp strings are converted to RegExp objects
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorParser
  [x] Replaces censored words with default replacement
