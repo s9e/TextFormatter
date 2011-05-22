@@ -197,4 +197,107 @@ class JSParserGeneratorTest extends Test
 			JSParserGenerator::encodeArray($arr)
 		);
 	}
+
+	/**
+	* @test
+	* @dataProvider deadCodeProvider
+	*/
+	public function Useless_code_is_removed_from_the_source($funcNames, $tagConfig)
+	{
+		$regexps = array();
+
+		foreach ((array) $funcNames as $funcName)
+		{
+			$regexps[$funcName] = '#function ' . $funcName . '\\([^\\)]*\\)\\s*\\{\\s*\\}#';
+		}
+
+		$jspg = new JSParserGenerator($this->cb);
+
+		$this->cb->addTag('A');
+		$this->cb->addTag('B');
+
+		// First we test that the code is removed by default
+		foreach ($regexps as $funcName => $regexp)
+		{
+			$this->assertRegExp(
+				$regexp,
+				$this->cb->getJSParser(array('compilation' => 'none')),
+				$funcName . ' did not get removed'
+			);
+		}
+
+		$this->cb->removeTag('A');
+		$this->cb->addTag('A', $tagConfig);
+
+		// Then we make sure it's not applicable
+		foreach ($regexps as $funcName => $regexp)
+		{
+			$this->assertNotRegExp(
+				$regexp,
+				$this->cb->getJSParser(array('compilation' => 'none')),
+				$funcName . ' incorrectly got removed'
+			);
+		}
+	}
+
+	public function deadCodeProvider()
+	{
+		return array(
+			// rules
+			array('closeParent',      array('rules' => array('closeParent' => array('B')))),
+			array('closeAscendant',   array('rules' => array('closeAscendant' => array('B')))),
+			array('requireParent',    array('rules' => array('requireParent' => array('B')))),
+			array('requireAscendant', array('rules' => array('requireAscendant' => array('B')))),
+
+			// attributes
+			array(
+				'currentTagRequiresMissingAttribute',
+				array('attrs' => array('foo' => array('type' => 'int', 'isRequired' => true)))
+			),
+			array(
+				array('filterAttributes', 'filter'),
+				array('attrs' => array('foo' => array('type' => 'int')))
+			),
+			array(
+				'splitCompoundAttributes',
+				array('attrs' => array('foo' => array('type' => 'compound')))
+			),
+			array(
+				'addDefaultAttributeValuesToCurrentTag',
+				array('attrs' => array('foo' => array('type' => 'int', 'defaultValue' => 42)))
+			),
+
+			// callbacks
+			array(
+				array('applyCallback', 'applyTagPreFilterCallbacks'),
+				array('preFilter' => array(array('callback' => 'array_unique')))
+			),
+			array(
+				array('applyCallback', 'applyTagPostFilterCallbacks'),
+				array('postFilter' => array(array('callback' => 'array_unique')))
+			),
+			array(
+				array('applyCallback', 'applyAttributePreFilterCallbacks'),
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'int',
+							'preFilter' => array(array('callback' => 'trim'))
+						)
+					)
+				)
+			),
+			array(
+				array('applyCallback', 'applyAttributePostFilterCallbacks'),
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'int',
+							'postFilter' => array(array('callback' => 'trim'))
+						)
+					)
+				)
+			),
+		);
+	}
 }

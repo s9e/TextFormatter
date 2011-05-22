@@ -122,6 +122,7 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray can preserve a key of a nested array
  [x] encodeArray can use TRUE as a wildcard
  [x] encodeArray preserves reserved words
+ [x] Useless code is removed from the source
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Filter int accepts strings made entirely of digits
