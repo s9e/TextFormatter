@@ -29,7 +29,18 @@ class AutolinkConfigTest extends Test
 			array(
 				'regexp' => '#https?://\S+#iS'
 			),
-			$this->cb->loadPlugin('Autolink')->getConfig()
+			$this->cb->Autolink->getConfig()
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function getJSParser_returns_the_source_of_its_Javascript_parser()
+	{
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../../src/TextFormatter/Plugins/AutolinkParser.js',
+			$this->cb->Autolink->getJSParser()
 		);
 	}
 }

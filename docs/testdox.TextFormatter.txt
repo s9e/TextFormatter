@@ -286,6 +286,7 @@ s9e\Toolkit\Tests\TextFormatter\Renderer
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkConfig
  [x] Automatically creates an URL tag
  [x] Generates a regexp that matches all possible URLs
+ [x] getJSParser returns the source of its Javascript parser
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
  [x] HTTP urls are linkified by default
@@ -354,6 +355,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeFromExample handles RANGE placeholders
  [x] addBBCodeFromExample handles CHOICE placeholders and turns them into regexps
  [x] addBBCodeFromExample handles CHOICE placeholders with Unicode values
+ [x] getJSParser returns the source of its Javascript parser
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple BBcodes are parsed
@@ -404,6 +406,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] Tag name can be customized at loading time
  [x] Attribute name can be customized at loading time
  [x] Does not attempt to create its tag if it already exists
+ [x] getJSParser returns the source of its Javascript parser
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorParser
  [x] Replaces censored words with default replacement
@@ -437,6 +440,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\EmoticonsConfig
  [x] Xsl auto update can be disabled by calling disableAutoUpdate
  [x] Xsl auto update can be reenabled by calling enableAutoUpdate
  [x] Xsl update can be manually triggered by calling updateXSL
+ [x] getJSParser returns the source of its Javascript parser
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\EmoticonsParser
  [x] An emoticon can be replaced by an img tag
@@ -508,6 +512,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
  [x] Tag name can be customized at loading time
  [x] Attribute name can be customized at loading time
  [x] Does not attempt to create its tag if it already exists
+ [x] getJSParser returns the source of its Javascript parser
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsParser
  [x] Single quotes enclosing text with no line break are converted to quotation marks

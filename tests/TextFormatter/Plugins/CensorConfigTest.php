@@ -79,4 +79,15 @@ class CensorConfigTest extends Test
 		unset($this->cb->Censor);
 		$this->cb->loadPlugin('Censor');
 	}
+
+	/**
+	* @test
+	*/
+	public function getJSParser_returns_the_source_of_its_Javascript_parser()
+	{
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../../src/TextFormatter/Plugins/CensorParser.js',
+			$this->cb->Censor->getJSParser()
+		);
+	}
 }

@@ -37,4 +37,15 @@ class WittyPantsConfigTest extends Test
 		unset($this->cb->WittyPants);
 		$this->cb->loadPlugin('WittyPants');
 	}
+
+	/**
+	* @test
+	*/
+	public function getJSParser_returns_the_source_of_its_Javascript_parser()
+	{
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../../src/TextFormatter/Plugins/WittyPantsParser.js',
+			$this->cb->WittyPants->getJSParser()
+		);
+	}
 }

@@ -76,4 +76,15 @@ class EmoticonsConfigTest extends Test
 		$this->cb->Emoticons->updateXSL();
 		$this->assertContains(':)', $this->cb->getXSL());
 	}
+
+	/**
+	* @test
+	*/
+	public function getJSParser_returns_the_source_of_its_Javascript_parser()
+	{
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../../src/TextFormatter/Plugins/EmoticonsParser.js',
+			$this->cb->Emoticons->getJSParser()
+		);
+	}
 }

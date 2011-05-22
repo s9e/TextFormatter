@@ -717,4 +717,15 @@ class BBCodesConfigTest extends Test
 		$this->assertSame('regexp', $this->cb->getTagAttributeOption('B', 'b', 'type'));
 		$this->assertSame('#^(?=[オ桜])(?:オレンジ|桜)$#iDu', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
 	}
+
+	/**
+	* @test
+	*/
+	public function getJSParser_returns_the_source_of_its_Javascript_parser()
+	{
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../../src/TextFormatter/Plugins/BBCodesParser.js',
+			$this->cb->BBCodes->getJSParser()
+		);
+	}
 }
