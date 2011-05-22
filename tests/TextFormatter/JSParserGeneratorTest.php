@@ -301,4 +301,48 @@ class JSParserGeneratorTest extends Test
 			),
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function generateFiltersConfig_return_allowedSchemes_regexp_as_an_object()
+	{
+		$jspg = new JSParserGenerator($this->cb);
+
+		$this->assertContains(
+			'allowedSchemes:new RegExp("^https?$","i")',
+			$this->call($jspg, 'generateFiltersConfig')
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function generateFiltersConfig_return_disallowedHosts_regexp_as_an_object()
+	{
+		$jspg = new JSParserGenerator($this->cb);
+
+		$this->cb->disallowHost('example.com');
+
+		$this->assertContains(
+			'disallowedHosts:new RegExp',
+			$this->call($jspg, 'generateFiltersConfig')
+		);
+	}
+
+	/**
+	* @test
+	* @depends generateFiltersConfig_return_disallowedHosts_regexp_as_an_object
+	*/
+	public function generateFiltersConfig_converts_unsupported_lookbehind_assertions_from_disallowedHosts_regexp()
+	{
+		$jspg = new JSParserGenerator($this->cb);
+
+		$this->cb->disallowHost('example.com');
+
+		$this->assertContains(
+			'new RegExp("(?:^|\\\\.)example\\\\.com$","i")',
+			$this->call($jspg, 'generateFiltersConfig')
+		);
+	}
 }

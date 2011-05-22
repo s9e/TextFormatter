@@ -123,6 +123,9 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray can use TRUE as a wildcard
  [x] encodeArray preserves reserved words
  [x] Useless code is removed from the source
+ [x] generateFiltersConfig return allowedSchemes regexp as an object
+ [x] generateFiltersConfig return disallowedHosts regexp as an object
+ [x] generateFiltersConfig converts unsupported lookbehind assertions from disallowedHosts regexp
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Filter int accepts strings made entirely of digits

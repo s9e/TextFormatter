@@ -3,6 +3,8 @@
 namespace s9e\Toolkit\Tests;
 
 use ReflectionClass,
+    ReflectionMethod,
+    stdClass,
     s9e\Toolkit\TextFormatter\ConfigBuilder;
 
 include_once __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
@@ -155,5 +157,13 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 				'The parser did not end up in a clean state: ' . $propName . ' is not empty'
 			);
 		}
+	}
+
+	protected function call($obj, $methodName, array $args = array())
+	{
+		$r = new ReflectionMethod($obj, $methodName);
+		$r->setAccessible(true);
+
+		return $r->invokeArgs($obj, $args);
 	}
 }
