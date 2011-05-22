@@ -20,7 +20,10 @@ class AutolinkConfigTest extends Test
 		$this->assertTrue($this->cb->tagExists('URL'));
 	}
 
-	public function testGeneratesARegexpThatMatchesAllPossibleUrls()
+	/**
+	* @test
+	*/
+	public function Generates_a_regexp_that_matches_all_possible_URLs()
 	{
 		$this->assertArrayMatches(
 			array(

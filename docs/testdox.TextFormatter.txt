@@ -285,7 +285,7 @@ s9e\Toolkit\Tests\TextFormatter\Renderer
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkConfig
  [x] Automatically creates an URL tag
- [x] Generates a regexp that matches all possible urls
+ [x] Generates a regexp that matches all possible URLs
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
  [x] HTTP urls are linkified by default
