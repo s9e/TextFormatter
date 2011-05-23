@@ -332,7 +332,6 @@ class PredefinedTags
 
 		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
 			'defaultValue' => 'plain',
-			'isRequired'   => false,
 			'preFilter'    => array(
 				array('callback' => 'strtolower')
 			)
