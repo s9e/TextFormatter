@@ -387,7 +387,10 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] A BBCode can map to a tag of a different name
  [x] An equal sign following the tag name defines the value of the default attribute
  [x] If no default attribute is specified the name of the BBCode is used as the name of the default attribute
- [x] A BBCode cannot end with an open attribute
+ [x] An attribute at the end of a tag with no specified value is considered an empty string
+ [x] An attribute in the middle of a tag with no specified value is considered an empty string
+ [x] A default attribute with no specified value is considered an empty string
+ [x] An attribute not followed by an equal sign is ignored
  [x] An unterminated self closing BBCode at the end of the text is ignored
  [x] An unterminated BBCode with an attribute name that extends till the end of the text is ignored
  [x] Junk characters at the start of an attribute name are detected

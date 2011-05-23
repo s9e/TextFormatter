@@ -211,22 +211,56 @@ class BBCodesParserTest extends Test
 	/**
 	* @test
 	*/
-	public function A_BBCode_cannot_end_with_an_open_attribute()
+	public function An_attribute_at_the_end_of_a_tag_with_no_specified_value_is_considered_an_empty_string()
 	{
 		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
-			'[X=][/X]',
-			'<pt>[X=][/X]</pt>',
-			array(
-				'warning' => array(
-					array(
-						'pos'    => 3,
-						'msg'    => 'Unexpected character %s',
-						'params' => array(']')
-					)
-				)
-			)
+			'[X x=][/X]',
+			'<rt><X x=""><st>[X x=]</st><et>[/X]</et></X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function An_attribute_in_the_middle_of_a_tag_with_no_specified_value_is_considered_an_empty_string()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X x= y=2][/X]',
+			'<rt><X x=""><st>[X x= y=2]</st><et>[/X]</et></X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function A_default_attribute_with_no_specified_value_is_considered_an_empty_string()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X= ][/X]',
+			'<rt><X x=""><st>[X= ]</st><et>[/X]</et></X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function An_attribute_not_followed_by_an_equal_sign_is_ignored()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text', array('isRequired' => false));
+
+		$this->assertParsing(
+			'[X x][/X]',
+			'<rt><X><st>[X x]</st><et>[/X]</et></X></rt>'
 		);
 	}
 

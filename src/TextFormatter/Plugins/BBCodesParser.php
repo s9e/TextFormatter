@@ -135,17 +135,8 @@ class BBCodesParser extends PluginParser
 						*/
 						if (isset($attrName))
 						{
-							/**
-							* [quote=]
-							* [quote username=]
-							*/
-							$this->parser->log('warning', array(
-								'pos'    => $rpos,
-								'len'    => 1,
-								'msg'    => 'Unexpected character %s',
-								'params' => array($c)
-							));
-							continue 2;
+							$attrs[$attrName] = '';
+							unset($attrName);
 						}
 
 						if ($c === '/')
@@ -179,14 +170,14 @@ class BBCodesParser extends PluginParser
 						break;
 					}
 
-					if ($c === ' ')
-					{
-						++$rpos;
-						continue;
-					}
-
 					if (!isset($attrName))
 					{
+						if ($c === ' ')
+						{
+							++$rpos;
+							continue;
+						}
+
 						/**
 						* Capture the attribute name
 						*/
@@ -218,6 +209,14 @@ class BBCodesParser extends PluginParser
 
 						if ($text[$rpos] !== '=')
 						{
+							if ($text[$rpos] === ']'
+							 || substr($text, $rpos, 2) === '/]')
+							{
+								 // remove the current attribute then go on and close this tag
+								 unset($attrName);
+								 continue;
+							}
+
 							$this->parser->log('debug', array(
 								'pos'    => $rpos,
 								'len'    => 1,

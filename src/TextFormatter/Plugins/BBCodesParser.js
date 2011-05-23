@@ -115,13 +115,8 @@ matches.forEach(function(m)
 					* [quote=]
 					* [quote username=]
 					*/
-					log('warning', {
-						'pos'    : rpos,
-						'len'    : 1,
-						'msg'    : 'Unexpected character %s',
-						'params' : [c]
-					});
-					return;
+					attrs[attrName] = ''
+					attrName = '';
 				}
 
 				if (c === '/')
@@ -155,14 +150,14 @@ matches.forEach(function(m)
 				break;
 			}
 
-			if (c === ' ')
-			{
-				++rpos;
-				continue;
-			}
-
 			if (!attrName)
 			{
+				if (c === ' ')
+				{
+					++rpos;
+					continue;
+				}
+
 				/**
 				* Capture the attribute name
 				*/
@@ -193,6 +188,14 @@ matches.forEach(function(m)
 
 				if (text[rpos] !== '=')
 				{
+					if (text[rpos] === ']'
+					 || text.substr(rpos, 2) === '/]')
+					{
+						 // remove the current attribute then go on and close this tag
+						 attrName = '';
+						 continue;
+					}
+
 					log('debug', {
 						'pos'    : rpos,
 						'len'    : 1,
