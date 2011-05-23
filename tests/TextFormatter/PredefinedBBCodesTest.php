@@ -32,10 +32,9 @@ class PredefinedBBCodesTest extends Test
 	*/
 	public function getUsedCodeStx_returns_all_values_of_stx_in_CODE_tags()
 	{
-		$cb = new ConfigBuilder;
-		$cb->BBCodes->addPredefinedBBCode('CODE');
+		$this->cb->BBCodes->addPredefinedBBCode('CODE');
 
-		$xml = $cb->getParser()->parse('[code=php]//[/code][code=php]//[/code][code=html][/code]');
+		$xml = $this->parser->parse('[code=php]//[/code][code=php]//[/code][code=html][/code]');
 
 		$this->assertEquals(
 			array('php', 'html'),
