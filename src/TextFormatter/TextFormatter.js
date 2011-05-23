@@ -257,10 +257,10 @@ s9e['TextFormatter'] = function()
 				return /^[0-9]+$/.test(attrVal) ? attrVal : false;
 
 			case 'uint':
-				return /^[1-9][0-9]*$/.test(attrVal) ? attrVal : false;
+				return /^(?:0|[1-9][0-9]*)$/.test(attrVal) ? attrVal : false;
 
 			case 'range':
-				if (!/^-?[1-9][0-9]*$/.test(attrVal))
+				if (!/^(?:0|-?[1-9][0-9]*)$/.test(attrVal))
 				{
 					return false;
 				}
