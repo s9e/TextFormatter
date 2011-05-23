@@ -14,10 +14,13 @@ $cb->BBCodes->addPredefinedBBCode('S');
 $cb->BBCodes->addPredefinedBBCode('URL');
 $cb->BBCodes->addPredefinedBBCode('LIST');
 $cb->BBCodes->addPredefinedBBCode('COLOR');
-$cb->BBCodes->addPredefinedBBCode('NOPARSE');
-//$cb->BBCodes->addPredefinedBBCode('EMAIL');
 $cb->BBCodes->addPredefinedBBCode('YOUTUBE');
 $cb->BBCodes->addPredefinedBBCode('FLOAT');
+
+$cb->BBCodes->addBBCode('PRE', array(
+	'template' => '<pre class="inline"><xsl:apply-templates/></pre>',
+	'defaultRule' => 'deny'
+));
 
 // Force YouTube vids to autoplay
 $cb->setTagAttributeOption('YOUTUBE', 'content', 'replaceWith', '$1&amp;autoplay=1');
@@ -44,7 +47,7 @@ ob_start();
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title>s9e\TextFormatter &bull; Demo</title>
+	<title>s9e\Toolkit\TextFormatter &bull; Demo</title>
 	<style type="text/css">
 		div
 		{
@@ -53,7 +56,8 @@ ob_start();
 
 		#logdiv
 		{
-			border: dashed 1px #8af;
+			max-height: 120px;
+			overflow: auto;
 		}
 
 		#logdiv,
@@ -61,11 +65,23 @@ ob_start();
 		{
 			font-family: sans;
 			white-space: pre-wrap;
+			padding: 5px;
+			background-color: #eee;
+			border: dashed 1px #8af;
+			border-radius: 5px;
 		}
 
 		label
 		{
 			cursor: pointer;
+		}
+
+		pre.inline
+		{
+			display: inline;
+			padding: 3px;
+			background-color: #fff;
+			border-radius: 3px;
 		}
 	</style>
 </head>
@@ -74,14 +90,14 @@ ob_start();
 		<form>
 			<textarea cols="80" rows="15">[float=right][youtube width=240 height=180]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
 
-This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter]s9e\TextFormatter[/url].
+This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter title="s9e\Toolkit\TextFormatter at GitHub.com"]s9e\Toolkit\TextFormatter[/url].
 
 A few BBCodes have been added such as:
 
 [list]
 	[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
 	[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], [NOPARSE][YOUTUBE][/NOPARSE], [NOPARSE][FLOAT][/NOPARSE], and [NOPARSE][LIST][/NOPARSE]
+	[*][PRE][URL][/PRE], [PRE:123][PRE][/PRE:123], [PRE][YOUTUBE][/PRE], [PRE][FLOAT][/PRE], and [PRE][LIST][/PRE]
 [/list]
 
 Additionally, in order to demonstrate some other features:
