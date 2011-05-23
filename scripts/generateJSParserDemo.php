@@ -17,6 +17,7 @@ $cb->BBCodes->addPredefinedBBCode('COLOR');
 $cb->BBCodes->addPredefinedBBCode('NOPARSE');
 //$cb->BBCodes->addPredefinedBBCode('EMAIL');
 $cb->BBCodes->addPredefinedBBCode('YOUTUBE');
+$cb->BBCodes->addPredefinedBBCode('FLOAT');
 
 // Force YouTube vids to autoplay
 $cb->setTagAttributeOption('YOUTUBE', 'content', 'replaceWith', '$1&amp;autoplay=1');
@@ -71,14 +72,16 @@ ob_start();
 <body>
 	<div style="float:left">
 		<form>
-			<textarea cols="80" rows="15">This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter]s9e\TextFormatter[/url].
+			<textarea cols="80" rows="15">[float=right][youtube width=240 height=180]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
+
+This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter]s9e\TextFormatter[/url].
 
 A few BBCodes have been added such as:
 
 [list]
 	[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
 	[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], [NOPARSE][YOUTUBE][/NOPARSE], and [NOPARSE][LIST][/NOPARSE]
+	[*][NOPARSE][URL][/NOPARSE], [NOPARSE:123][NOPARSE][/NOPARSE:123], [NOPARSE][YOUTUBE][/NOPARSE], [NOPARSE][FLOAT][/NOPARSE], and [NOPARSE][LIST][/NOPARSE]
 [/list]
 
 Additionally, in order to demonstrate some other features:
@@ -89,14 +92,12 @@ Additionally, in order to demonstrate some other features:
 	[*]some typography is enhanced, e.g. (c) (tm) and "quotes" [i](WittyPants plugin)[/i]
 	[*]links to [url=http://example.com]example.com[/url] are disabled [i](ConfigBuilder::disallowHost())[/i]
 	[*]loose URLs such as http://github.com are automatically transformed into links [i](Autolink plugin)[/i]
-	[*]a YouTube video---at the bottom---keeps playing as you're editing the other content, to demonstrate the partial-update algorithm used to refresh the preview
+	[*]a YouTube video---at the right---keeps playing as you're editing the text [i](including its own tag!)[/i], to demonstrate the partial-update algorithm used to refresh the preview
 [/list]
 
 Take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
 The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url].<?php echo $closureCompilerNote; ?> The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
-
-[youtube]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube]
 </textarea>
 			<br>
 			<input type="checkbox" id="rendercheck" checked="checked"><label for="rendercheck"> Render</label>
@@ -287,7 +288,11 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			while (--i >= 0)
 			{
 				var newAttr = newEl.attributes[i];
-				oldEl.setAttributeNS(newAttr.namespaceURI, newAttr.name, newAttr.value);
+
+				if (newAttr.value !== oldEl.getAttributeNS(newAttr.namespaceURI, newAttr.name))
+				{
+					oldEl.setAttributeNS(newAttr.namespaceURI, newAttr.name, newAttr.value);
+				}
 			}
 		}
 
