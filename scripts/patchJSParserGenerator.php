@@ -43,6 +43,9 @@ $supportedProperties = array_flip(array(
 	'Zl', 'Zp', 'Zs'
 ));
 
+// only support \pL for now
+$supportedProperties = array('L&' => 1);
+
 $lines = file('/tmp/props.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 $ranges = array();
@@ -67,6 +70,8 @@ foreach ($lines as $line)
 	$ranges[$propName][$range] = 0;
 	$ranges[$propName[0]][$range] = 0;
 }
+
+unset($ranges['L&']);
 
 foreach ($ranges as $propName => $propRanges)
 {
