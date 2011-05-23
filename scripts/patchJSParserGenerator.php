@@ -27,18 +27,40 @@ function pcreChr($cp)
 	return '\\u' . sprintf('%04X', $cp);
 }
 
-//$file = file_get_contents('http://unicode.org/Public/UNIDATA/PropList.txt');
-$lines = file('/tmp/PropList.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+if (!file_exists('/tmp/props.txt'))
+{
+	file_put_contents(
+		'/tmp/props.txt',
+		file_get_contents('http://unicode.org/Public/UNIDATA/PropList.txt') . "\n" . file_get_contents('http://unicode.org/Public/UNIDATA/DerivedCoreProperties.txt')
+	);
+}
+
+$supportedProperties = array_flip(array(
+	'L&', 'Ll', 'Lm', 'Lo', 'Lt', 'Lu',
+	'Nd', 'Nl', 'No',
+	'Pc', 'Pd', 'Pe', 'Pf', 'Pi', 'Po', 'Ps',
+	'Sc', 'Sk', 'Sm', 'So',
+	'Zl', 'Zp', 'Zs'
+));
+
+$lines = file('/tmp/props.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 $ranges = array();
 foreach ($lines as $line)
 {
-	if ($line[0] === '#')
+	if ($line[0] === '#'
+	 || ($line[4] !== ' ' && $line[4] !== '.'))
 	{
+		// Ignore comments and stuff outside of the BMP
 		continue;
 	}
 
 	$propName = substr($line, strpos($line, '# ') + 2, 2);
+
+	if (!isset($supportedProperties[$propName]))
+	{
+		continue;
+	}
 
 	$range = substr($line, 0, 4) . substr($line, 6 * ($line[4] === '.'), 4);
 
@@ -75,7 +97,9 @@ foreach ($ranges as $propName => $propRanges)
 		{
 			// dump the buffered range and unset it
 			$str .= generateRange($bufStart, $bufEnd);
-			unset($bufStart, $bufEnd);
+
+			$bufStart = $curStart;
+			$bufEnd   = $curEnd;
 		}
 	}
 
@@ -96,8 +120,14 @@ $php = " = array(\n\t\t" . $php . "\n\t)";
 
 $file = file_get_contents(__DIR__ . '/../src/TextFormatter/JSParserGenerator.php');
 $file = preg_replace(
-	'#(static public \\$unicodeProps)([^;]*);#',
-	'$1' . str_replace('\\', '\\\\', $php) . ';',
+	'#(static public \\$unicodeProps)(.*?)\\n\\t\\);#s',
+	'$1;',
+	$file
+);
+
+$file = str_replace(
+	'static public $unicodeProps;',
+	'static public $unicodeProps' . $php . ';',
 	$file
 );
 
