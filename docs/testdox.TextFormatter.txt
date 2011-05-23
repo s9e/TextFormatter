@@ -392,6 +392,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] A default attribute with no specified value is considered an empty string
  [x] An attribute not followed by an equal sign is ignored
  [x] An unterminated self closing BBCode at the end of the text is ignored
+ [x] An unterminated start tag with a default attribute at the end of the text is ignored
  [x] An unterminated BBCode with an attribute name that extends till the end of the text is ignored
  [x] Junk characters at the start of an attribute name are detected
  [x] Junk characters in an attribute name are detected

@@ -277,6 +277,20 @@ class BBCodesParserTest extends Test
 		);
 	}
 
+
+	/**
+	* @test
+	*/
+	public function An_unterminated_start_tag_with_a_default_attribute_at_the_end_of_the_text_is_ignored()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$this->assertParsing(
+			'[X=',
+			'<pt>[X=</pt>'
+		);
+	}
+
 	/**
 	* @test
 	*/
