@@ -71,54 +71,17 @@ matches.forEach(function(m)
 		type = START_TAG;
 
 		var wellFormed = false,
-		    attrName   = '';
-
-		if (text[rpos] === '=')
-		{
-			/**
-			* [quote=
-			*
-			* Set the default param. If there's no default param, we issue a warning and
-			* reuse the BBCode's name instead
-			*/
-			if (bbcodeConfig.defaultAttr)
-			{
-				attrName = bbcodeConfig.defaultAttr;
-			}
-			else
-			{
-				attrName = bbcodeName.toLowerCase();
-
-				log('debug', {
-					'pos'    : rpos,
-					'len'    : 1,
-					'msg'    : 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
-					'params' : [bbcodeName]
-				});
-			}
-
-			++rpos;
-		}
+		    firstPos   = rpos;
 
 		while (rpos < textLen)
 		{
-			var c = text[rpos];
+			c = text[rpos];
 
 			if (c === ']' || c === '/')
 			{
 				/**
 				* We're closing this tag
 				*/
-				if (attrName)
-				{
-					/**
-					* [quote=]
-					* [quote username=]
-					*/
-					attrs[attrName] = ''
-					attrName = '';
-				}
-
 				if (c === '/')
 				{
 					/**
@@ -150,30 +113,19 @@ matches.forEach(function(m)
 				break;
 			}
 
-			if (!attrName)
+			if (c === ' ')
 			{
-				if (c === ' ')
-				{
-					++rpos;
-					continue;
-				}
+				++rpos;
+				continue;
+			}
 
-				/**
-				* Capture the attribute name
-				*/
-				attrName = /^[a-z_0-9]*/i.exec(text.substr(rpos))[0].toLowerCase();
+			/**
+			* Capture the attribute name
+			*/
+			var attrName = /^[a-z_0-9]*/i.exec(text.substr(rpos))[0].toLowerCase();
 
-				if (!attrName)
-				{
-					log('warning', {
-						'pos'    : rpos,
-						'len'    : 1,
-						'msg'    : 'Unexpected character %s',
-						'params' : [c]
-					});
-					return;
-				}
-
+			if (attrName)
+			{
 				if (rpos + attrName.length >= textLen)
 				{
 					log('debug', {
@@ -185,30 +137,69 @@ matches.forEach(function(m)
 				}
 
 				rpos += attrName.length;
-
-				if (text[rpos] !== '=')
+			}
+			else
+			{
+				if (c === '='
+				 && rpos === firstPos)
 				{
-					if (text[rpos] === ']'
-					 || text.substr(rpos, 2) === '/]')
+					/**
+					* [quote=
+					*
+					* This is the default param. If there's no default param, we issue a
+					* warning and reuse the BBCode's name instead.
+					*/
+					if (bbcodeConfig.defaultAttr)
 					{
-						 // remove the current attribute then go on and close this tag
-						 attrName = '';
-						 continue;
+						attrName = bbcodeConfig.defaultAttr;
 					}
+					else
+					{
+						attrName = bbcodeName.toLowerCase();
 
-					log('debug', {
+						log('debug', {
+							'pos'    : rpos,
+							'len'    : 1,
+							'msg'    : 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
+							'params' : [bbcodeName]
+						});
+					}
+				}
+				else
+				{
+					log('warning', {
 						'pos'    : rpos,
 						'len'    : 1,
-						'msg'    : 'Unexpected character: expected %1$s found %2$s',
-						'params' : ['=', text[rpos]]
+						'msg'    : 'Unexpected character %s',
+						'params' : [c]
 					});
 					return;
 				}
+			}
 
-				++rpos;
+			if (text[rpos] !== '=')
+			{
+				/**
+				* It's an attribute name not followed by an equal sign, let's just
+				* ignore it
+				*/
 				continue;
 			}
 
+			/**
+			* Move past the = and make sure we're not at the end of the text
+			*/
+			if (++rpos >= textLen)
+			{
+				log('debug', {
+					'pos' : rpos,
+					'len' : spn,
+					'msg' : 'Attribute definition seems to extend till the end of text'
+				});
+				return;
+			}
+
+			c = text[rpos];
 			if (c === '"' || c === "'")
 			{
 				var valuePos = rpos + 1;
@@ -260,7 +251,6 @@ matches.forEach(function(m)
 			}
 
 			attrs[attrName] = value;
-			attrName = '';
 		}
 
 		if (!wellFormed)
