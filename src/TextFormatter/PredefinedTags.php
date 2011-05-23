@@ -651,7 +651,10 @@ EOT
 
 	public function addFLOAT()
 	{
-		$this->cb->addTag('FLOAT');
+		$this->cb->addTag('FLOAT', array(
+			'trimBefore' => true,
+			'trimAfter'  => true
+		));
 		$this->cb->addTagAttribute(
 			'FLOAT', 'float', 'regexp', array('regexp' => '#^(?:left|right|none)$#Di')
 		);
