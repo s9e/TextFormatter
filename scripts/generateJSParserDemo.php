@@ -44,7 +44,7 @@ ob_start();
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title></title>
+	<title>s9e\TextFormatter &bull; Demo</title>
 	<style type="text/css">
 		div
 		{
