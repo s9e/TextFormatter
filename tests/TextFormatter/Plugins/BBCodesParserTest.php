@@ -499,6 +499,20 @@ class BBCodesParserTest extends Test
 	/**
 	* @test
 	*/
+	public function A_backslash_before_a_regular_character_is_preserved()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'x', 'text');
+
+		$this->assertParsing(
+			'[X x="a\\b\\c" /]',
+			'<rt><X x="a\\b\\c">[X x="a\\b\\c" /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
 	public function Attribute_values_within_single_quotes_can_contain_newlines()
 	{
 		$this->cb->BBCodes->addBBCode('X');

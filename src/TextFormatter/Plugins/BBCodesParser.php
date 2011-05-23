@@ -264,7 +264,12 @@ class BBCodesParser extends PluginParser
 							break;
 						}
 
-						$value = stripslashes(substr($text, $valuePos, $rpos - $valuePos));
+						// Unescape special characters ' " and \
+						$value = preg_replace(
+							'#\\\\([\\\\\'"])#',
+							'$1',
+							substr($text, $valuePos, $rpos - $valuePos)
+						);
 
 						// Skip past the closing quote
 						++$rpos;

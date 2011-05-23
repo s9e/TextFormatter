@@ -239,7 +239,7 @@ matches.forEach(function(m)
 					break;
 				}
 
-				value = text.substr(valuePos, rpos - valuePos).replace(/\\(.)/g, '$1');
+				value = text.substr(valuePos, rpos - valuePos).replace(/\\([\\'"])/g, '$1');
 
 				// Skip past the closing quote
 				++rpos;

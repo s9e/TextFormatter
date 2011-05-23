@@ -406,6 +406,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Attribute values within double quotes can contain unescaped single quotes
  [x] Attribute values within single quotes can contain backslashes each escaped with another backslash
  [x] Attribute values within double quotes can contain backslashes each escaped with another backslash
+ [x] A backslash before a regular character is preserved
  [x] Attribute values within single quotes can contain newlines
  [x] Attribute values within double quotes can contain newlines
  [x] An attribute value not within quotes cannot contain spaces
