@@ -331,11 +331,11 @@ class BBCodesParserTest extends Test
 			'[X a!b=1 /]',
 			'<pt>[X a!b=1 /]</pt>',
 			array(
-				'debug' => array(
+				'warning' => array(
 					array(
 						'pos'    => 4,
-						'msg'    => 'Unexpected character: expected %1$s found %2$s',
-						'params' => array('=', '!')
+						'msg'    => 'Unexpected character %s',
+						'params' => array('!')
 					)
 				)
 			)
@@ -512,6 +512,7 @@ class BBCodesParserTest extends Test
 
 	/**
 	* @test
+	* @depends An_attribute_not_followed_by_an_equal_sign_is_ignored
 	*/
 	public function An_attribute_value_not_within_quotes_cannot_contain_spaces()
 	{
@@ -520,7 +521,7 @@ class BBCodesParserTest extends Test
 
 		$this->assertParsing(
 			"[X x=a b /]",
-			"<pt>[X x=a b /]</pt>"
+			'<rt><X x="a">[X x=a b /]</X></rt>'
 		);
 	}
 

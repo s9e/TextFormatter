@@ -95,34 +95,7 @@ class BBCodesParser extends PluginParser
 			{
 				$type       = Parser::START_TAG;
 				$wellFormed = false;
-				$attrName   = null;
-
-				if ($text[$rpos] === '=')
-				{
-					/**
-					* [quote=
-					*
-					* Set the default param. If there's no default param, we issue a warning and
-					* reuse the BBCode's name instead
-					*/
-					if (isset($bbcodeConfig['defaultAttr']))
-					{
-						$attrName = $bbcodeConfig['defaultAttr'];
-					}
-					else
-					{
-						$attrName = strtolower($bbcodeName);
-
-						$this->parser->log('debug', array(
-							'pos'    => $rpos,
-							'len'    => 1,
-							'msg'    => 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
-							'params' => array($bbcodeName)
-						));
-					}
-
-					++$rpos;
-				}
+				$firstPos   = $rpos;
 
 				while ($rpos < $textLen)
 				{
@@ -133,12 +106,6 @@ class BBCodesParser extends PluginParser
 						/**
 						* We're closing this tag
 						*/
-						if (isset($attrName))
-						{
-							$attrs[$attrName] = '';
-							unset($attrName);
-						}
-
 						if ($c === '/')
 						{
 							/**
@@ -170,30 +137,19 @@ class BBCodesParser extends PluginParser
 						break;
 					}
 
-					if (!isset($attrName))
+					if ($c === ' ')
 					{
-						if ($c === ' ')
-						{
-							++$rpos;
-							continue;
-						}
+						++$rpos;
+						continue;
+					}
 
-						/**
-						* Capture the attribute name
-						*/
-						$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', $rpos);
+					/**
+					* Capture the attribute name
+					*/
+					$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', $rpos);
 
-						if (!$spn)
-						{
-							$this->parser->log('warning', array(
-								'pos'    => $rpos,
-								'len'    => 1,
-								'msg'    => 'Unexpected character %s',
-								'params' => array($c)
-							));
-							continue 2;
-						}
-
+					if ($spn)
+					{
 						if ($rpos + $spn >= $textLen)
 						{
 							$this->parser->log('debug', array(
@@ -206,30 +162,69 @@ class BBCodesParser extends PluginParser
 
 						$attrName = strtolower(substr($text, $rpos, $spn));
 						$rpos += $spn;
-
-						if ($text[$rpos] !== '=')
+					}
+					else
+					{
+						if ($c === '='
+						 && $rpos === $firstPos)
 						{
-							if ($text[$rpos] === ']'
-							 || substr($text, $rpos, 2) === '/]')
+							/**
+							* [quote=
+							*
+							* This is the default param. If there's no default param, we issue a
+							* warning and reuse the BBCode's name instead.
+							*/
+							if (isset($bbcodeConfig['defaultAttr']))
 							{
-								 // remove the current attribute then go on and close this tag
-								 unset($attrName);
-								 continue;
+								$attrName = $bbcodeConfig['defaultAttr'];
 							}
+							else
+							{
+								$attrName = strtolower($bbcodeName);
 
-							$this->parser->log('debug', array(
+								$this->parser->log('debug', array(
+									'pos'    => $rpos,
+									'len'    => 1,
+									'msg'    => 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
+									'params' => array($bbcodeName)
+								));
+							}
+						}
+						else
+						{
+							$this->parser->log('warning', array(
 								'pos'    => $rpos,
 								'len'    => 1,
-								'msg'    => 'Unexpected character: expected %1$s found %2$s',
-								'params' => array('=', $text[$rpos])
+								'msg'    => 'Unexpected character %s',
+								'params' => array($c)
 							));
 							continue 2;
 						}
+					}
 
-						++$rpos;
+					if ($text[$rpos] !== '=')
+					{
+						/**
+						* It's an attribute name not followed by an equal sign, let's just
+						* ignore it
+						*/
 						continue;
 					}
 
+					/**
+					* Move past the = and make sure we're not at the end of the text
+					*/
+					if (++$rpos >= $textLen)
+					{
+						$this->parser->log('debug', array(
+							'pos' => $rpos,
+							'len' => $spn,
+							'msg' => 'Attribute definition seems to extend till the end of text'
+						));
+						continue 2;
+					}
+
+					$c = $text[$rpos];
 					if ($c === '"' || $c === "'")
 					{
 						$valuePos = $rpos + 1;
@@ -283,7 +278,6 @@ class BBCodesParser extends PluginParser
 					}
 
 					$attrs[$attrName] = $value;
-					unset($attrName, $value);
 				}
 
 				if (!$wellFormed)
