@@ -722,10 +722,8 @@ class JSParserGenerator
 
 	static protected function encodeConfig(array $pluginConfig, array $struct)
 	{
-		unset(
-			$pluginConfig['parserClassName'],
-			$pluginConfig['parserFilepath']
-		);
+		unset($pluginConfig['parserClassName']);
+		unset($pluginConfig['parserFilepath']);
 
 		// mark the plugin's regexp(s) as global regexps
 		if (!empty($pluginConfig['regexp']))

@@ -48,4 +48,15 @@ class WittyPantsConfigTest extends Test
 			$this->cb->WittyPants->getJSParser()
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function getJSConfig_returns_no_regexp_with_lookbehind_assertions()
+	{
+		$this->assertNotContains(
+			'(?<',
+			serialize($this->cb->WittyPants->getJSConfig())
+		);
+	}
 }

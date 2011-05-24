@@ -377,6 +377,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] addBBCodeFromExample handles CHOICE placeholders and turns them into regexps
  [x] addBBCodeFromExample handles CHOICE placeholders with Unicode values
  [x] getJSParser returns the source of its Javascript parser
+ [x] BBCode names are preserved in Javascript config
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] Simple BBcodes are parsed
@@ -434,6 +435,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
  [x] Does not attempt to create its tag if it already exists
  [x] getJSParser returns the source of its Javascript parser
  [x] getJSConfig returns the replacements as pairs in a numerically indexed array
+ [x] Replacements regexps are converted to RegExp objects in Javascript config
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorParser
  [x] Replaces censored words with default replacement
@@ -540,6 +542,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
  [x] Attribute name can be customized at loading time
  [x] Does not attempt to create its tag if it already exists
  [x] getJSParser returns the source of its Javascript parser
+ [x] getJSConfig returns no regexp with lookbehind assertions
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsParser
  [x] Single quotes enclosing text with no line break are converted to quotation marks

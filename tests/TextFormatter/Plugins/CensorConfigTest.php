@@ -107,4 +107,25 @@ class CensorConfigTest extends Test
 			$this->cb->Censor->getJSConfig()
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function Replacements_regexps_are_converted_to_RegExp_objects_in_Javascript_config()
+	{
+		include_once __DIR__ . '/../../../src/TextFormatter/JSParserGenerator.php';
+		$this->cb->Censor->addWord('foo', 'bar');
+
+		$this->assertContains(
+			'new RegExp("^foo$","i")',
+			$this->call(
+				's9e\\Toolkit\\TextFormatter\\JSParserGenerator',
+				'encodeConfig',
+				array(
+					$this->cb->Censor->getJSConfig(),
+					$this->cb->Censor->getJSConfigMeta()
+				)
+			)
+		);
+	}
 }

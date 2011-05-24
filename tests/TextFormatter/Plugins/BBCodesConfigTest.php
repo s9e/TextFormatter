@@ -728,4 +728,25 @@ class BBCodesConfigTest extends Test
 			$this->cb->BBCodes->getJSParser()
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function BBCode_names_are_preserved_in_Javascript_config()
+	{
+		include_once __DIR__ . '/../../../src/TextFormatter/JSParserGenerator.php';
+		$this->cb->BBCodes->addBBCode('FOOBAR');
+
+		$this->assertStringStartsWith(
+			'{bbcodesConfig:{"FOOBAR"',
+			$this->call(
+				's9e\\Toolkit\\TextFormatter\\JSParserGenerator',
+				'encodeConfig',
+				array(
+					$this->cb->BBCodes->getJSConfig(),
+					$this->cb->BBCodes->getJSConfigMeta()
+				)
+			)
+		);
+	}
 }
