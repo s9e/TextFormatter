@@ -11,13 +11,16 @@ include_once __DIR__ . '/../../Test.php';
 */
 class AutolinkParserTest extends Test
 {
+	public function setUp()
+	{
+		$this->cb->loadPlugin('Autolink');
+	}
+
 	/**
 	* @test
 	*/
 	public function HTTP_urls_are_linkified_by_default()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Go to http://www.example.com for more info',
 			'<rt>Go to <URL url="http://www.example.com">http://www.example.com</URL> for more info</rt>',
@@ -30,8 +33,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function HTTPS_urls_are_linkified_by_default()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Go to https://www.example.com for more info',
 			'<rt>Go to <URL url="https://www.example.com">https://www.example.com</URL> for more info</rt>',
@@ -44,8 +45,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function FTP_urls_are_not_linkified_by_default()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Go to ftp://www.example.com for more info',
 			'<pt>Go to ftp://www.example.com for more info</pt>',
@@ -58,8 +57,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function FTP_urls_are_linkified_if_the_scheme_has_been_allowed_in_configBuilder()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->cb->allowScheme('ftp');
 
 		$this->assertTransformation(
@@ -75,8 +72,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function Trailing_dots_are_not_linkified()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Go to http://www.example.com. Or the kitten dies.',
 			'<rt>Go to <URL url="http://www.example.com">http://www.example.com</URL>. Or the kitten dies.</rt>',
@@ -90,8 +85,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function Trailing_punctuation_is_not_linkified()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Go to http://www.example.com! Or the kitten dies.',
 			'<rt>Go to <URL url="http://www.example.com">http://www.example.com</URL>! Or the kitten dies.</rt>',
@@ -105,8 +98,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function Trailing_slash_is_linkified()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Go to http://www.example.com/!',
 			'<rt>Go to <URL url="http://www.example.com/">http://www.example.com/</URL>!</rt>',
@@ -120,8 +111,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function Trailing_equal_sign_is_linkified()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Go to http://www.example.com/?q=!',
 			'<rt>Go to <URL url="http://www.example.com/?q=">http://www.example.com/?q=</URL>!</rt>',
@@ -135,8 +124,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function Balanced_right_parentheses_are_linkified()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Mars (http://en.wikipedia.org/wiki/Mars_(planet)) is the fourth planet from the Sun',
 			'<rt>Mars (<URL url="http://en.wikipedia.org/wiki/Mars_(planet)">http://en.wikipedia.org/wiki/Mars_(planet)</URL>) is the fourth planet from the Sun</rt>',
@@ -150,8 +137,6 @@ class AutolinkParserTest extends Test
 	*/
 	public function Non_balanced_right_parentheses_are_not_linkified()
 	{
-		$this->cb->loadPlugin('Autolink');
-
 		$this->assertTransformation(
 			'Mars (http://en.wikipedia.org/wiki/Mars) can mean many things',
 			'<rt>Mars (<URL url="http://en.wikipedia.org/wiki/Mars">http://en.wikipedia.org/wiki/Mars</URL>) can mean many things</rt>',
