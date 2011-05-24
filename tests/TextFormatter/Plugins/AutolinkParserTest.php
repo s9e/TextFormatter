@@ -143,4 +143,17 @@ class AutolinkParserTest extends Test
 			'Mars (<a href="http://en.wikipedia.org/wiki/Mars">http://en.wikipedia.org/wiki/Mars</a>) can mean many things'
 		);
 	}
+
+	/**
+	* @test
+	* @link http://area51.phpbb.com/phpBB/viewtopic.php?p=203955#p203955
+	*/
+	public function IDNs_are_linkified()
+	{
+		$this->assertTransformation(
+			'http://www.xn--lyp-plada.com for http://www.älypää.com',
+			'<rt><URL url="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</URL> for <URL url="http://www.xn--lyp-plada.com">http://www.älypää.com</URL></rt>',
+			'<a href="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</a> for <a href="http://www.xn--lyp-plada.com">http://www.älypää.com</a>'
+		);
+	}
 }

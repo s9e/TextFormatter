@@ -267,6 +267,21 @@ class Parser
 		switch ($attrConf['type'])
 		{
 			case 'url':
+				if (preg_match('#[\x80-\xff]#', $attrVal)
+				 && function_exists('idn_to_ascii'))
+				{
+					$p = parse_url($attrVal);
+
+					if ($p)
+					{
+						$pos = strpos($attrVal, $p['host']);
+
+						$attrVal = substr($attrVal, 0, $pos)
+						         . idn_to_ascii($p['host'])
+						         . substr($attrVal, $pos + strlen($p['host']));
+					}
+				}
+
 				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_URL);
 
 				if (!$attrVal)

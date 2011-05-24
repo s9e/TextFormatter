@@ -321,6 +321,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
  [x] Trailing equal sign is linkified
  [x] Balanced right parentheses are linkified
  [x] Non balanced right parentheses are not linkified
+ [x] IDNs are linkified
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] getConfig returns false if no BBCodes were added
