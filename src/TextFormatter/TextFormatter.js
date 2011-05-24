@@ -181,7 +181,7 @@ s9e['TextFormatter'] = function()
 		switch (attrConf.type)
 		{
 			case 'url':
-				var m =/^([a-z0-9]+):\/\/[\w\-\.]+(?:\/.*)?$/.exec(attrVal);
+				var m =/^([a-z0-9]+):\/\/\S+(?:\/.*)?$/.exec(attrVal);
 
 				if (!m)
 				{
