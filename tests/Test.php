@@ -5,7 +5,8 @@ namespace s9e\Toolkit\Tests;
 use ReflectionClass,
     ReflectionMethod,
     stdClass,
-    s9e\Toolkit\TextFormatter\ConfigBuilder;
+    s9e\Toolkit\TextFormatter\ConfigBuilder,
+    s9e\Toolkit\TextFormatter\JSParserGenerator;
 
 include_once __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
 
@@ -23,6 +24,9 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 			case 'renderer':
 				return $this->renderer = $this->cb->getRenderer();
+
+			case 'jspg':
+				return $this->jspg = new JSParserGenerator($this->cb);
 
 			default:
 				throw new RuntimeException("Bad __get('$k')");
@@ -159,11 +163,11 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 	}
 
-	protected function call($obj, $methodName, array $args = array())
+	protected function call($class, $methodName, array $args = array())
 	{
-		$r = new ReflectionMethod($obj, $methodName);
+		$r = new ReflectionMethod($class, $methodName);
 		$r->setAccessible(true);
 
-		return $r->invokeArgs($obj, $args);
+		return $r->invokeArgs((is_object($class) ? $class : null), $args);
 	}
 }

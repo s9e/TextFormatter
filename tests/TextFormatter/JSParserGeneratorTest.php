@@ -10,6 +10,15 @@ include_once __DIR__ . '/../../src/TextFormatter/JSParserGenerator.php';
 
 class JSParserGeneratorTest extends Test
 {
+	protected function encodeArray(array $arr)
+	{
+		return $this->call(
+			's9e\\Toolkit\\TextFormatter\\JSParserGenerator',
+			'encodeArray',
+			func_get_args()
+		);
+	}
+
 	/**
 	* @test
 	*/
@@ -22,7 +31,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{a:1,b:2}',
-			JSParserGenerator::encodeArray($arr)
+			$this->encodeArray($arr)
 		);
 	}
 
@@ -35,7 +44,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'[1,2]',
-			JSParserGenerator::encodeArray($arr)
+			$this->encodeArray($arr)
 		);
 	}
 
@@ -54,7 +63,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertContains(
 			'new RegExp("foo")',
-			JSParserGenerator::encodeArray($arr, $struct)
+			$this->encodeArray($arr, $struct)
 		);
 	}
 
@@ -74,7 +83,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertContains(
 			'new RegExp("foo","g")',
-			JSParserGenerator::encodeArray($arr, $struct)
+			$this->encodeArray($arr, $struct)
 		);
 	}
 
@@ -109,7 +118,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{"a":1,b:2}',
-			JSParserGenerator::encodeArray($arr, $struct)
+			$this->encodeArray($arr, $struct)
 		);
 	}
 
@@ -132,7 +141,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{a:{"z":1,b:2},b:2}',
-			JSParserGenerator::encodeArray($arr, $struct)
+			$this->encodeArray($arr, $struct)
 		);
 	}
 
@@ -155,7 +164,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{a:{"a":1,b:2},b:2}',
-			JSParserGenerator::encodeArray($arr, $struct)
+			$this->encodeArray($arr, $struct)
 		);
 	}
 
@@ -178,7 +187,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{a:{"a":1,"b":2},b:{a:1,b:2}}',
-			JSParserGenerator::encodeArray($arr, $struct)
+			$this->encodeArray($arr, $struct)
 		);
 	}
 
@@ -194,7 +203,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{a:1,"with":2}',
-			JSParserGenerator::encodeArray($arr)
+			$this->encodeArray($arr)
 		);
 	}
 
@@ -210,8 +219,6 @@ class JSParserGeneratorTest extends Test
 		{
 			$regexps[$funcName] = '#function ' . $funcName . '\\([^\\)]*\\)\\s*\\{\\s*\\}#';
 		}
-
-		$jspg = new JSParserGenerator($this->cb);
 
 		$this->cb->addTag('B');
 		$this->cb->addTag('A', $removeConfig);
@@ -325,11 +332,9 @@ class JSParserGeneratorTest extends Test
 	*/
 	public function generateFiltersConfig_return_allowedSchemes_regexp_as_an_object()
 	{
-		$jspg = new JSParserGenerator($this->cb);
-
 		$this->assertContains(
 			'allowedSchemes:new RegExp("^https?$","i")',
-			$this->call($jspg, 'generateFiltersConfig')
+			$this->call($this->jspg, 'generateFiltersConfig')
 		);
 	}
 
@@ -338,13 +343,11 @@ class JSParserGeneratorTest extends Test
 	*/
 	public function generateFiltersConfig_return_disallowedHosts_regexp_as_an_object()
 	{
-		$jspg = new JSParserGenerator($this->cb);
-
 		$this->cb->disallowHost('example.com');
 
 		$this->assertContains(
 			'disallowedHosts:new RegExp',
-			$this->call($jspg, 'generateFiltersConfig')
+			$this->call($this->jspg, 'generateFiltersConfig')
 		);
 	}
 
@@ -354,13 +357,11 @@ class JSParserGeneratorTest extends Test
 	*/
 	public function generateFiltersConfig_converts_unsupported_lookbehind_assertions_from_disallowedHosts_regexp()
 	{
-		$jspg = new JSParserGenerator($this->cb);
-
 		$this->cb->disallowHost('example.com');
 
 		$this->assertContains(
 			'new RegExp("(?:^|\\\\.)example\\\\.com$","i")',
-			$this->call($jspg, 'generateFiltersConfig')
+			$this->call($this->jspg, 'generateFiltersConfig')
 		);
 	}
 }

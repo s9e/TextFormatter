@@ -720,7 +720,7 @@ class JSParserGenerator
 		           . substr($this->src, $pos);
 	}
 
-	static public function encodeConfig(array $pluginConfig, array $struct)
+	static protected function encodeConfig(array $pluginConfig, array $struct)
 	{
 		unset(
 			$pluginConfig['parserClassName'],
@@ -760,38 +760,7 @@ class JSParserGenerator
 		return self::encodeArray($arr, $struct);
 	}
 
-	static public function convertRegexp($regexp, $flags = '')
-	{
-		$pos = strrpos($regexp, $regexp[0]);
-
-		$modifiers = substr($regexp, $pos + 1);
-		$regexp    = substr($regexp, 1, $pos - 1);
-
-		if (strpos($modifiers, 's') !== false)
-		{
-			/**
-			* Uses the "s" modifier, which doesn't exist in Javascript RegExp and has
-			* to be replaced with the character class [\s\S]
-			*/
-			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\.#', '$1[\\s\\S]', $regexp);
-		}
-
-		/**
-		* Replace \pL with the corresponding Unicode codepoints. Other properties are
-		* currently unsupported. Also, this will NOT work inside of a character class.
-		*/
-		$regexp = str_replace('\\pL', '[' . self::$unicodeProps['L'] . ']', $regexp);
-
-		$modifiers = preg_replace('#[SusD]#', '', $modifiers);
-
-		$js = 'new RegExp(' . json_encode($regexp)
-		    . (($flags || $modifiers) ?  ',' . json_encode($flags . $modifiers) : '')
-		    . ')';
-
-		return $js;
-	}
-
-	static public function encodeArray(array $arr, array $struct = array())
+	static protected function encodeArray(array $arr, array $struct = array())
 	{
 		$match = array();
 
@@ -866,5 +835,36 @@ class JSParserGenerator
 		}
 
 		return array_map('array_filter', $ret);
+	}
+
+	static public function convertRegexp($regexp, $flags = '')
+	{
+		$pos = strrpos($regexp, $regexp[0]);
+
+		$modifiers = substr($regexp, $pos + 1);
+		$regexp    = substr($regexp, 1, $pos - 1);
+
+		if (strpos($modifiers, 's') !== false)
+		{
+			/**
+			* Uses the "s" modifier, which doesn't exist in Javascript RegExp and has
+			* to be replaced with the character class [\s\S]
+			*/
+			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\.#', '$1[\\s\\S]', $regexp);
+		}
+
+		/**
+		* Replace \pL with the corresponding Unicode codepoints. Other properties are
+		* currently unsupported. Also, this will NOT work inside of a character class.
+		*/
+		$regexp = str_replace('\\pL', '[' . self::$unicodeProps['L'] . ']', $regexp);
+
+		$modifiers = preg_replace('#[SusD]#', '', $modifiers);
+
+		$js = 'new RegExp(' . json_encode($regexp)
+		    . (($flags || $modifiers) ?  ',' . json_encode($flags . $modifiers) : '')
+		    . ')';
+
+		return $js;
 	}
 }
