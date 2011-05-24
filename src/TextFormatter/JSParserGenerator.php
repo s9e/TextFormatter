@@ -9,6 +9,14 @@ namespace s9e\Toolkit\TextFormatter;
 
 use RuntimeException;
 
+/**
+* KNOWN LIMITATIONS:
+*
+* - when converting regexps, using the dot . inside of a of character class, e.g. [.] when the "s"
+*   modifier is set will result in an invalid regexp
+* - Unicode properties are not supported in regexps
+* - only a subset of all possible PHP callbacks have a Javascript port
+*/
 class JSParserGenerator
 {
 	/**
@@ -689,7 +697,9 @@ class JSParserGenerator
 		foreach ($this->tagsConfig as $tagConfig)
 		{
 			if (!empty($tagConfig['trimBefore'])
-			 || !empty($tagConfig['trimAfter']))
+			 || !empty($tagConfig['trimAfter'])
+			 || !empty($tagConfig['ltrimContent'])
+			 || !empty($tagConfig['rtrimContent']))
 			{
 				return;
 			}
@@ -739,7 +749,7 @@ class JSParserGenerator
 		/**
 		* Replace booleans with 1/0
 		*/
-		array_walk_recursive($arr, function(&$v)
+		array_walk_recursive($arr, function (&$v)
 		{
 			if (is_bool($v))
 			{

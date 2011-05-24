@@ -299,6 +299,24 @@ class JSParserGeneratorTest extends Test
 					)
 				)
 			),
+
+			// whitespace trimming
+			array(
+				'addTrimmingInfoToTag',
+				array('trimBefore' => true)
+			),
+			array(
+				'addTrimmingInfoToTag',
+				array('trimAfter' => true)
+			),
+			array(
+				'addTrimmingInfoToTag',
+				array('ltrimContent' => true)
+			),
+			array(
+				'addTrimmingInfoToTag',
+				array('rtrimContent' => true)
+			),
 		);
 	}
 
