@@ -19,6 +19,15 @@ class JSParserGeneratorTest extends Test
 		);
 	}
 
+	protected function encodeConfig(array $config)
+	{
+		return $this->call(
+			's9e\\Toolkit\\TextFormatter\\JSParserGenerator',
+			'encodeConfig',
+			func_get_args()
+		);
+	}
+
 	/**
 	* @test
 	*/
@@ -362,6 +371,79 @@ class JSParserGeneratorTest extends Test
 		$this->assertContains(
 			'new RegExp("(?:^|\\\\.)example\\\\.com$","i")',
 			$this->call($this->jspg, 'generateFiltersConfig')
+		);
+	}
+
+	/**
+	* @test
+	* @depends encodeArray_can_encode_arrays_to_objects
+	*/
+	public function encodeConfig_removes_parserClassName_from_config()
+	{
+		$this->assertSame(
+			'{foo:1}',
+			$this->encodeConfig(
+				array(
+					'parserClassName' => 'foo',
+					'foo' => 1
+				),
+				array()
+			)
+		);
+	}
+
+	/**
+	* @test
+	* @depends encodeArray_can_encode_arrays_to_objects
+	*/
+	public function encodeConfig_removes_parserFilepath_from_config()
+	{
+		$this->assertSame(
+			'{foo:1}',
+			$this->encodeConfig(
+				array(
+					'parserFilepath' => 'foo',
+					'foo' => 1
+				),
+				array()
+			)
+		);
+	}
+
+	/**
+	* @test
+	* @depends encodeArray_can_encode_arrays_to_objects
+	*/
+	public function encodeConfig_convert_scalar_regexp_to_a_RegExp_object_with_g_flag()
+	{
+		$this->assertSame(
+			'{regexp:new RegExp("foo","g")}',
+			$this->encodeConfig(
+				array(
+					'regexp' => '#foo#'
+				),
+				array()
+			)
+		);
+	}
+
+	/**
+	* @test
+	* @depends encodeArray_can_encode_arrays_to_objects
+	*/
+	public function encodeConfig_convert_array_regexp_to_an_object_with_RegExp_objects_with_g_flag_as_properties()
+	{
+		$this->assertSame(
+			'{regexp:{bar:new RegExp("bar","g"),baz:new RegExp("baz","g")}}',
+			$this->encodeConfig(
+				array(
+					'regexp' => array(
+						'bar' => '#bar#',
+						'baz' => '#baz#'
+					)
+				),
+				array()
+			)
 		);
 	}
 }

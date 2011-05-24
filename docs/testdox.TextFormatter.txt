@@ -126,6 +126,10 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] generateFiltersConfig return allowedSchemes regexp as an object
  [x] generateFiltersConfig return disallowedHosts regexp as an object
  [x] generateFiltersConfig converts unsupported lookbehind assertions from disallowedHosts regexp
+ [x] encodeConfig removes parserClassName from config
+ [x] encodeConfig removes parserFilepath from config
+ [x] encodeConfig convert scalar regexp to a RegExp object with g flag
+ [x] encodeConfig convert array regexp to an object with RegExp objects with g flag as properties
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Filter int accepts strings made entirely of digits
