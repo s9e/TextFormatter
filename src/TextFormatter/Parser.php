@@ -435,97 +435,111 @@ class Parser
 	{
 		$xml = new XMLWriter;
 		$xml->openMemory();
+		$xml->startDocument('1.0', 'utf-8');
 
 		if (empty($this->processedTags))
 		{
 			$xml->writeElement('pt', $this->text);
-
-			return trim($xml->outputMemory(true));
 		}
-
-		$xml->startElement('rt');
-		$pos = 0;
-		foreach ($this->processedTags as $tag)
+		else
 		{
-			/**
-			* Append the text that's between last tag and this one
-			*/
-			$xml->text(substr($this->text, $pos, $tag['pos'] - $pos));
-
-			/**
-			* Capture the part of the text that belongs to this tag then move the cursor past
-			* current tag
-			*/
-			$tagText = substr($this->text, $tag['pos'], $tag['len']);
-			$pos     = $tag['pos'] + $tag['len'];
-
-			$wsBefore = $wsAfter = false;
-
-			if (!empty($tag['trimBefore']))
+			$xml->startElement('rt');
+			$pos = 0;
+			foreach ($this->processedTags as $tag)
 			{
-				$wsBefore = substr($tagText, 0, $tag['trimBefore']);
-				$tagText  = substr($tagText, $tag['trimBefore']);
-			}
+				/**
+				* Append the text that's between last tag and this one
+				*/
+				$xml->text(substr($this->text, $pos, $tag['pos'] - $pos));
 
-			if (!empty($tag['trimAfter']))
-			{
-				$wsAfter = substr($tagText, -$tag['trimAfter']);
-				$tagText = substr($tagText, 0, -$tag['trimAfter']);
-			}
+				/**
+				* Capture the part of the text that belongs to this tag then move the cursor past
+				* current tag
+				*/
+				$tagText = substr($this->text, $tag['pos'], $tag['len']);
+				$pos     = $tag['pos'] + $tag['len'];
 
-			if ($wsBefore !== false)
-			{
-				$xml->writeElement('i', $wsBefore);
-			}
+				$wsBefore = $wsAfter = false;
 
-			if ($tag['type'] & self::START_TAG)
-			{
-				$xml->startElement($tag['name']);
-
-				if (!empty($tag['attrs']))
+				if (!empty($tag['trimBefore']))
 				{
-					foreach ($tag['attrs'] as $k => $v)
+					$wsBefore = substr($tagText, 0, $tag['trimBefore']);
+					$tagText  = substr($tagText, $tag['trimBefore']);
+				}
+
+				if (!empty($tag['trimAfter']))
+				{
+					$wsAfter = substr($tagText, -$tag['trimAfter']);
+					$tagText = substr($tagText, 0, -$tag['trimAfter']);
+				}
+
+				if ($wsBefore !== false)
+				{
+					$xml->writeElement('i', $wsBefore);
+				}
+
+				if ($tag['type'] & self::START_TAG)
+				{
+					$xml->startElement($tag['name']);
+
+					if (!empty($tag['attrs']))
 					{
-						$xml->writeAttribute($k, $v);
+						foreach ($tag['attrs'] as $k => $v)
+						{
+							$xml->writeAttribute($k, $v);
+						}
+					}
+
+					if ($tag['type'] & self::END_TAG)
+					{
+						$xml->text($tagText);
+						$xml->endElement();
+					}
+					elseif ($tagText > '')
+					{
+						$xml->writeElement('st', $tagText);
 					}
 				}
-
-				if ($tag['type'] & self::END_TAG)
+				else
 				{
-					$xml->text($tagText);
+					if ($tagText > '')
+					{
+						$xml->writeElement('et', $tagText);
+					}
 					$xml->endElement();
 				}
-				elseif ($tagText > '')
+
+				if ($wsAfter !== false)
 				{
-					$xml->writeElement('st', $tagText);
+					$xml->writeElement('i', $wsAfter);
 				}
 			}
-			else
-			{
-				if ($tagText > '')
-				{
-					$xml->writeElement('et', $tagText);
-				}
-				$xml->endElement();
-			}
 
-			if ($wsAfter !== false)
+			/**
+			* Append the rest of the text, past the last tag
+			*/
+			if ($pos < strlen($this->text))
 			{
-				$xml->writeElement('i', $wsAfter);
+				$xml->text(substr($this->text, $pos));
 			}
-		}
-
-		/**
-		* Append the rest of the text, past the last tag
-		*/
-		if ($pos < strlen($this->text))
-		{
-			$xml->text(substr($this->text, $pos));
 		}
 
 		$xml->endDocument();
 
-		return trim($xml->outputMemory(true));
+		/**
+		* Flush the buffer/destroy the writer
+		*/
+		$xml = $xml->outputMemory(true);
+
+		/**
+		* Remove the XML prolog
+		*/
+		if ($xml[1] === '?')
+		{
+			$xml = substr($xml, strpos($xml, '<', 2));
+		}
+
+		return rtrim($xml);
 	}
 
 	/**

@@ -132,6 +132,7 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeConfig convert array regexp to an object with RegExp objects with g flag as properties
 
 s9e\Toolkit\Tests\TextFormatter\Parser
+ [x] Ouput is UTF8
  [x] Filter int accepts strings made entirely of digits
  [x] Filter int rejects strings that starts with digits
  [x] Filter int accepts integers
