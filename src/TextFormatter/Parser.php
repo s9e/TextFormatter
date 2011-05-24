@@ -267,8 +267,7 @@ class Parser
 		switch ($attrConf['type'])
 		{
 			case 'url':
-				if (preg_match('#[\x80-\xff]#', $attrVal)
-				 && function_exists('idn_to_ascii'))
+				if (preg_match('#[\x80-\xff]#', $attrVal))
 				{
 					$p = parse_url($attrVal);
 
@@ -279,9 +278,12 @@ class Parser
 						/**
 						* Encode IDNs
 						*/
-						$attrVal = substr($attrVal, 0, $pos)
-						         . idn_to_ascii($p['host'])
-						         . substr($attrVal, $pos + strlen($p['host']));
+						if (function_exists('idn_to_ascii'))
+						{
+							$attrVal = substr($attrVal, 0, $pos)
+									 . idn_to_ascii($p['host'])
+									 . substr($attrVal, $pos + strlen($p['host']));
+						}
 
 						/**
 						* URL-encode non-ASCII stuff
