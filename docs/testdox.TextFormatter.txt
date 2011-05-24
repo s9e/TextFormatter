@@ -198,6 +198,8 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Filter float accepts positive numbers in E notation with a negative exponent
  [x] Filter float accepts negative numbers in E notation with a negative exponent
  [x] Filter float rejects numbers in hex notation
+ [x] Url filter converts IDNs
+ [x] Url filter urlencodes non ASCII chars
  [x] Invalid urls are rejected
  [x] Urls with no host are rejected
  [x] Urls with no path are accepted
@@ -205,9 +207,9 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Url filter can accept non http schemes
  [x] Url filter rejects disallowed host
  [x] Url filter rejects disallowed host mask
- [x] Url filter rejects subdomains
+ [x] Url filter rejects subdomains of disallowed hosts
  [x] Url filter rejects disallowed tld
- [x] Url filter does not reject host on partial match
+ [x] Url filter does not reject host on partial match of a disallowed host
  [x] Url filter rejects pseudo schemes
  [x] Id filter accepts numbers
  [x] Id filter accepts lowercase letters
@@ -322,6 +324,8 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
  [x] Balanced right parentheses are linkified
  [x] Non balanced right parentheses are not linkified
  [x] IDNs are linkified
+ [x] URLs with non ASCII chars are linkified
+ [x] URLs that end with a non ASCII char are linkified
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] getConfig returns false if no BBCodes were added

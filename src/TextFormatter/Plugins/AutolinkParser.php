@@ -26,7 +26,7 @@ class AutolinkParser extends PluginParser
 			*/
 			cleanUrl:
 			{
-				$url = preg_replace('#[^\\w\\)=\\-/]+$#D', '', $url);
+				$url = preg_replace('#(?![\\)=\\-/])\\pP+$#Du', '', $url);
 
 				if (substr($url, -1) === ')'
 				 && substr_count($url, '(') < substr_count($url, ')'))

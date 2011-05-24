@@ -276,9 +276,24 @@ class Parser
 					{
 						$pos = strpos($attrVal, $p['host']);
 
+						/**
+						* Encode IDNs
+						*/
 						$attrVal = substr($attrVal, 0, $pos)
 						         . idn_to_ascii($p['host'])
 						         . substr($attrVal, $pos + strlen($p['host']));
+
+						/**
+						* URL-encode non-ASCII stuff
+						*/
+						$attrVal = preg_replace_callback(
+							'#[^\x00-\x7f]#u',
+							function ($m)
+							{
+								return urlencode($m[0]);
+							},
+							$attrVal
+						);
 					}
 				}
 

@@ -156,4 +156,30 @@ class AutolinkParserTest extends Test
 			'<a href="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</a> for <a href="http://www.xn--lyp-plada.com">http://www.älypää.com</a>'
 		);
 	}
+
+	/**
+	* @test
+	* @link http://area51.phpbb.com/phpBB/viewtopic.php?p=203955#p203955
+	*/
+	public function URLs_with_non_ASCII_chars_are_linkified()
+	{
+		$this->assertTransformation(
+			'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen for http://en.wikipedia.org/wiki/Matti_Nykänen',
+			'<rt><URL url="http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen">http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen</URL> for <URL url="http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen">http://en.wikipedia.org/wiki/Matti_Nykänen</URL></rt>',
+			'<a href="http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen">http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen</a> for <a href="http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen">http://en.wikipedia.org/wiki/Matti_Nykänen</a>'
+		);
+	}
+
+	/**
+	* @test
+	* @link http://area51.phpbb.com/phpBB/viewtopic.php?p=203955#p203955
+	*/
+	public function URLs_that_end_with_a_non_ASCII_char_are_linkified()
+	{
+		$this->assertTransformation(
+			'Check this out http://en.wikipedia.org/wiki/♥',
+			'<rt>Check this out <URL url="http://en.wikipedia.org/wiki/%E2%99%A5">http://en.wikipedia.org/wiki/&#x2665;</URL></rt>',
+			'Check this out <a href="http://en.wikipedia.org/wiki/%E2%99%A5">http://en.wikipedia.org/wiki/♥</a>'
+		);
+	}
 }
