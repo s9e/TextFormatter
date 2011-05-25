@@ -76,6 +76,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Url filter allows default schemes
  [x] Url filter can be configured to allow additional schemes
  [x] Url filter can be configured to disallow hosts
+ [x] Url filter can be configured to resolve redirects from a given host
  [x] Disallowed IDNs are punycoded
  [x] Optimizes regexp by merging heads
  [x] Optimizes regexp by using character classes

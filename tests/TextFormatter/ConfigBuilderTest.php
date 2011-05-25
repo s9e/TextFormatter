@@ -901,6 +901,24 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	*/
+	public function Url_filter_can_be_configured_to_resolve_redirects_from_a_given_host()
+	{
+		$this->cb->resolveRedirectsFrom('bit.ly');
+
+		$filtersConfig = $this->cb->getFiltersConfig();
+
+		$this->assertArrayHasNestedKeys(
+			$filtersConfig,
+			'url',
+			'resolveRedirectsHosts'
+		);
+
+		$this->assertRegexp($filtersConfig['url']['resolveRedirectsHosts'], 'bit.ly');
+	}
+
+	/**
+	* @test
+	*/
 	public function Disallowed_IDNs_are_punycoded()
 	{
 		$this->cb->disallowHost('pаypal.com');
