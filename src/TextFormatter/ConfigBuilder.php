@@ -918,11 +918,29 @@ class ConfigBuilder
 	/**
 	* Disallow a hostname (or hostname mask) from being used in URLs
 	*
-	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
+	* @param string $host Hostname or hostmask
 	*/
 	public function disallowHost($host)
 	{
-		if (preg_match('#[\\x80-\\xff]#', $host))
+		$this->addHostmask('disallowedHosts', $host);
+	}
+
+	/**
+	* Force URLs from given hostmask to be followed and resolved to their true location
+	*
+	* @param string $host Hostname or hostmask
+	*/
+	public function resolveRedirectsFrom($host)
+	{
+		$this->addHostmask('resolveRedirectsHosts', $host);
+	}
+
+	/**
+	* @param string $host Hostname or hostmask
+	*/
+	protected function addHostmask($type, $host)
+	{
+		if (preg_match('#[\\x80-\xff]#', $host))
 		{
 			// @codeCoverageIgnoreStart
 			if (!function_exists('idn_to_ascii'))
@@ -940,7 +958,7 @@ class ConfigBuilder
 		* As a side-effect, when someone bans *.example.com it also bans example.com (no subdomain)
 		* but that's usually what people were trying to achieve.
 		*/
-		$this->filters['url']['disallowedHosts'][] = ltrim($host, '*.');
+		$this->filters['url'][$type][] = ltrim($host, '*.');
 	}
 
 	//==========================================================================
@@ -1015,15 +1033,18 @@ class ConfigBuilder
 		$filters['url']['allowedSchemes']
 			= '#^' . self::buildRegexpFromList($filters['url']['allowedSchemes']) . '$#Di';
 
-		if (isset($filters['url']['disallowedHosts']))
+		foreach (array('disallowedHosts', 'resolveRedirectsHosts') as $k)
 		{
-			$filters['url']['disallowedHosts']
-				= '#(?<![^\\.])'
-				. self::buildRegexpFromList(
-					$filters['url']['disallowedHosts'],
-					array('*' => '.*')
-				  )
-				. '$#DiS';
+			if (isset($filters['url'][$k]))
+			{
+				$filters['url'][$k]
+					= '#(?<![^\\.])'
+					. self::buildRegexpFromList(
+						$filters['url'][$k],
+						array('*' => '.*')
+					  )
+					. '$#DiS';
+			}
 		}
 
 		return $filters;

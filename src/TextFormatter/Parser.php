@@ -259,7 +259,7 @@ class Parser
 	* @param  mixed  $attrVal    Attribute value to be filtered/sanitized
 	* @param  array  $attrConf   Attribute configuration
 	* @param  array  $filterConf Filter configuration
-	* @param  Parser $parser     The Parser instance that's called this filter
+	* @param  Parser $parser     The Parser instance that has called this filter
 	* @return mixed              The sanitized value of this attribute, or false if it was invalid
 	*/
 	static public function filter($attrVal, array $attrConf, array $filterConf, Parser $parser)
@@ -267,6 +267,9 @@ class Parser
 		switch ($attrConf['type'])
 		{
 			case 'url':
+				$followedUrls = array();
+				checkUrl:
+
 				/**
 				* Test whether the URL contains non-ASCII characters
 				*/
@@ -328,6 +331,61 @@ class Parser
 						'params' => array($p['host'])
 					));
 					return false;
+				}
+
+				if (isset($filterConf['resolveRedirectsHosts'])
+				 && preg_match($filterConf['resolveRedirectsHosts'], $p['host'])
+				 && preg_match('#^https?#i', $p['scheme']))
+				{
+					if (isset($followedUrls[$attrVal]))
+					{
+						$parser->log('error', array(
+							'msg'    => 'Infinite recursion detected while following %s',
+							'params' => array($attrVal)
+						));
+						return false;
+					}
+
+					unset($http_response_header);
+
+					@file_get_contents(
+						$attrVal,
+						false,
+						stream_context_create(array(
+							'http' => array(
+								'method' => 'HEAD',
+								'header' => "Connection: close\r\n",
+								'follow_location' => false
+							)
+						))
+					);
+
+					if (!isset($http_response_header))
+					{
+						$parser->log('error', array(
+							'msg'    => 'Could not resolve %s',
+							'params' => array($attrVal)
+						));
+						return false;
+					}
+
+					foreach ($http_response_header as $header)
+					{
+						if (preg_match('#^Location:(.*)#i', $header, $m))
+						{
+							$url = trim($m[1]);
+
+							$parser->log('debug', array(
+								'msg'    => 'Followed redirect from %1$s to %2$s',
+								'params' => array($attrVal, $url)
+							));
+
+							$followedUrls[$attrVal] = 1;
+							$attrVal = $url;
+
+							goto checkUrl;
+						}
+					}
 				}
 
 				/**

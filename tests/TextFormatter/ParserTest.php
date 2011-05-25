@@ -22,6 +22,7 @@ class ParserTest extends Test
 
 	protected function assertAttributeIsValid($attrConf, $attrVal, $expectedVal = null, $expectedLog = array())
 	{
+		$expectedLog += array('error' => null);
 		$this->assertAttributeValidity($attrConf, $attrVal, $expectedVal, true, $expectedLog);
 	}
 
@@ -51,6 +52,8 @@ class ParserTest extends Test
 			$this->parser
 		);
 
+		$this->assertArrayMatches($expectedLog, $this->parser->getLog());
+
 		if ($valid)
 		{
 			if (!isset($expectedVal))
@@ -64,8 +67,6 @@ class ParserTest extends Test
 		{
 			$this->assertFalse($actualVal, 'Invalid attrVal did not return false');
 		}
-
-		$this->assertArrayMatches($expectedLog, $this->parser->getLog());
 	}
 
 	//==========================================================================
@@ -654,6 +655,54 @@ class ParserTest extends Test
 	public function testUrlFilterRejectsPseudoSchemes()
 	{
 		$this->assertAttributeIsInvalid('url', 'javascript:alert(\'@http://www.com\')');
+	}
+
+	/**
+	* @test
+	*/
+	public function Url_filter_can_resolve_redirects_from_specified_hosts()
+	{
+		$this->cb->resolveRedirectsFrom('bit.ly');
+
+		$this->assertAttributeIsValid(
+			'url',
+			'http://bit.ly/2lkCBm',
+			'http://bit.ly/',
+			array(
+				'debug' => array(
+					array(
+						'msg'    => 'Followed redirect from %1$s to %2$s',
+						'params' => array('http://bit.ly/2lkCBm', 'http://bit.ly/')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Url_filter_can_resolve_chained_redirects_from_specified_hosts()
+	{
+		$this->cb->resolveRedirectsFrom('bit.ly');
+
+		$this->assertAttributeIsValid(
+			'url',
+			'http://bit.ly/go',
+			'http://bit.ly/',
+			array(
+				'debug' => array(
+					array(
+						'msg'    => 'Followed redirect from %1$s to %2$s',
+						'params' => array('http://bit.ly/go', 'http://bit.ly/2lkCBm')
+					),
+					array(
+						'msg'    => 'Followed redirect from %1$s to %2$s',
+						'params' => array('http://bit.ly/2lkCBm', 'http://bit.ly/')
+					)
+				)
+			)
+		);
 	}
 
 	public function testIdFilterAcceptsNumbers()
