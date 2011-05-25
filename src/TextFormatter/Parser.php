@@ -267,7 +267,10 @@ class Parser
 		switch ($attrConf['type'])
 		{
 			case 'url':
-				if (preg_match('#[\x80-\xff]#', $attrVal))
+				/**
+				* Test whether the URL contains non-ASCII characters
+				*/
+				if (preg_match('#[\\x80-\\xff]#', $attrVal))
 				{
 					$p = parse_url($attrVal);
 
@@ -289,7 +292,7 @@ class Parser
 						* URL-encode non-ASCII stuff
 						*/
 						$attrVal = preg_replace_callback(
-							'#[^\x00-\x7f]#u',
+							'#[^\\x00-\\x7f]#u',
 							function ($m)
 							{
 								return urlencode($m[0]);
