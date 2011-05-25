@@ -20,6 +20,14 @@ class ParserTest extends Test
 		include_once __DIR__ . '/../../src/TextFormatter/Parser.php';
 	}
 
+	public function tearDown()
+	{
+		if (!empty($this->restoreHttpWrapper))
+		{
+			stream_wrapper_restore('http');
+		}
+	}
+
 	protected function assertAttributeIsValid($attrConf, $attrVal, $expectedVal = null, $expectedLog = array())
 	{
 		$expectedLog += array('error' => null);
@@ -66,6 +74,29 @@ class ParserTest extends Test
 		else
 		{
 			$this->assertFalse($actualVal, 'Invalid attrVal did not return false');
+		}
+	}
+
+	protected function fakeRedirect($from, $to)
+	{
+		$this->restoreHttpWrapper = true;
+
+		stream_wrapper_unregister('http');
+		stream_wrapper_register('http', __NAMESPACE__ . '\\FakeRedirect');
+
+		$i = 2;
+
+		while (1)
+		{
+			FakeRedirect::$redirectTo[$from] = $to;
+
+			if (++$i >= func_num_args())
+			{
+				break;
+			}
+
+			$from = $to;
+			$to = func_get_arg($i);
 		}
 	}
 
@@ -664,6 +695,8 @@ class ParserTest extends Test
 	{
 		$this->cb->resolveRedirectsFrom('bit.ly');
 
+		$this->fakeRedirect('http://bit.ly/2lkCBm', 'http://bit.ly/');
+
 		$this->assertAttributeIsValid(
 			'url',
 			'http://bit.ly/2lkCBm',
@@ -686,6 +719,8 @@ class ParserTest extends Test
 	{
 		$this->cb->resolveRedirectsFrom('bit.ly');
 
+		$this->fakeRedirect('http://bit.ly/go', 'http://bit.ly/2lkCBm', 'http://bit.ly/');
+
 		$this->assertAttributeIsValid(
 			'url',
 			'http://bit.ly/go',
@@ -699,6 +734,83 @@ class ParserTest extends Test
 					array(
 						'msg'    => 'Followed redirect from %1$s to %2$s',
 						'params' => array('http://bit.ly/2lkCBm', 'http://bit.ly/')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Url_filter_rejects_redirects_that_it_cannot_retrieve()
+	{
+		$this->cb->resolveRedirectsFrom('bit.ly');
+
+		$this->fakeRedirect('http://bit.ly/2lkCBm', false);
+
+		$this->assertAttributeIsInvalid(
+			'url',
+			'http://bit.ly/2lkCBm',
+			null,
+			array(
+				'error' => array(
+					array(
+						'msg'    => 'Could not resolve %s',
+						'params' => array('http://bit.ly/2lkCBm')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Url_filter_rejects_redirect_that_redirects_to_itself()
+	{
+		$this->cb->resolveRedirectsFrom('bit.ly');
+
+		$this->fakeRedirect('http://bit.ly/2lkCBm', 'http://bit.ly/2lkCBm');
+
+		$this->assertAttributeIsInvalid(
+			'url',
+			'http://bit.ly/2lkCBm',
+			null,
+			array(
+				'error' => array(
+					array(
+						'msg'    => 'Infinite recursion detected while following %s',
+						'params' => array('http://bit.ly/2lkCBm')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Url_filter_rejects_redirects_that_form_an_infinite_loop()
+	{
+		$this->cb->resolveRedirectsFrom('bit.ly');
+
+		$this->fakeRedirect(
+			'http://bit.ly/foo',
+			'http://bit.ly/bar',
+			'http://bit.ly/baz',
+			'http://bit.ly/foo'
+		);
+
+		$this->assertAttributeIsInvalid(
+			'url',
+			'http://bit.ly/foo',
+			null,
+			array(
+				'error' => array(
+					array(
+						'msg'    => 'Infinite recursion detected while following %s',
+						'params' => array('http://bit.ly/foo')
 					)
 				)
 			)
@@ -2303,5 +2415,40 @@ class ParserTest extends Test
 				'<rt><B><st>[b]</st> <MARK>tag</MARK><i> </i>| <MARK>tag</MARK><i> </i><et>[/b]</et></B></rt>'
 			)
 		);
+	}
+}
+
+class FakeRedirect
+{
+	static public $redirectTo = array();
+
+	public function stream_open($url)
+	{
+		if (isset(self::$redirectTo[$url]))
+		{
+			if (self::$redirectTo[$url] === false)
+			{
+				return false;
+			}
+
+			$this->{'0'} = 'Location: ' . self::$redirectTo[$url];
+		}
+
+		return true;
+	}
+
+	public function stream_stat()
+	{
+		return false;
+	}
+
+	public function stream_read()
+	{
+		return '';
+	}
+
+	public function stream_eof()
+	{
+		return true;
 	}
 }

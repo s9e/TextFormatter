@@ -215,6 +215,9 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Url filter rejects pseudo schemes
  [x] Url filter can resolve redirects from specified hosts
  [x] Url filter can resolve chained redirects from specified hosts
+ [x] Url filter rejects redirects that it cannot retrieve
+ [x] Url filter rejects redirect that redirects to itself
+ [x] Url filter rejects redirects that form an infinite loop
  [x] Id filter accepts numbers
  [x] Id filter accepts lowercase letters
  [x] Id filter accepts uppercase letters
