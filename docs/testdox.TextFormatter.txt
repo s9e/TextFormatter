@@ -309,7 +309,7 @@ s9e\Toolkit\Tests\TextFormatter\PredefinedBBCodes
  [x] Predefined BBCodes
 
 s9e\Toolkit\Tests\TextFormatter\Renderer
- [x] Render multi
+ [x] renderMulti can render multiple messages at once
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkConfig
  [x] Automatically creates an URL tag

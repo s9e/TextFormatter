@@ -11,7 +11,10 @@ include_once __DIR__ . '/../Test.php';
 */
 class RendererTest extends Test
 {
-	public function testRenderMulti()
+	/**
+	* @test
+	*/
+	public function renderMulti_can_render_multiple_messages_at_once()
 	{
 		$this->cb->BBCodes->addBBCode('B');
 		$this->cb->setTagTemplate('B', '<b><xsl:apply-templates/></b>');
