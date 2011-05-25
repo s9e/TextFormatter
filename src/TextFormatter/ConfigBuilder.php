@@ -922,6 +922,12 @@ class ConfigBuilder
 	*/
 	public function disallowHost($host)
 	{
+		if (preg_match('#[\x80-\xff]#', $host)
+		 && function_exists('idn_to_ascii'))
+		{
+			$host = idn_to_ascii($host);
+		}
+
 		/**
 		* Transform "*.tld" and ".tld" into the functionally equivalent "tld"
 		*

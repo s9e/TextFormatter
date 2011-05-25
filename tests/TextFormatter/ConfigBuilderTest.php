@@ -898,6 +898,27 @@ class ConfigBuilderTest extends Test
 		$this->assertRegexp($filtersConfig['url']['disallowedHosts'], 'example.org');
 	}
 
+	/**
+	* @test
+	*/
+	public function Disallowed_IDNs_are_punycoded()
+	{
+		$this->cb->disallowHost('pаypal.com');
+
+		$filtersConfig = $this->cb->getFiltersConfig();
+
+		$this->assertArrayHasNestedKeys(
+			$filtersConfig,
+			'url',
+			'disallowedHosts'
+		);
+
+		$this->assertContains(
+			'xn\-\-pypal\-4ve\.com',
+			$filtersConfig['url']['disallowedHosts']
+		);
+	}
+
 	public function testOptimizesRegexpByMergingHeads()
 	{
 		$this->assertSame(
