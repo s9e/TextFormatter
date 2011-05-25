@@ -346,21 +346,9 @@ class Parser
 						return false;
 					}
 
-					unset($http_response_header);
+					$url = self::getRedirectLocation($attrVal);
 
-					@file_get_contents(
-						$attrVal,
-						false,
-						stream_context_create(array(
-							'http' => array(
-								'method' => 'HEAD',
-								'header' => "Connection: close\r\n",
-								'follow_location' => false
-							)
-						))
-					);
-
-					if (!isset($http_response_header))
+					if ($url === false)
 					{
 						$parser->log('error', array(
 							'msg'    => 'Could not resolve %s',
@@ -369,23 +357,23 @@ class Parser
 						return false;
 					}
 
-					foreach ($http_response_header as $header)
+					if (isset($url))
 					{
-						if (preg_match('#^Location:(.*)#i', $header, $m))
-						{
-							$url = trim($m[1]);
+						$parser->log('debug', array(
+							'msg'    => 'Followed redirect from %1$s to %2$s',
+							'params' => array($attrVal, $url)
+						));
 
-							$parser->log('debug', array(
-								'msg'    => 'Followed redirect from %1$s to %2$s',
-								'params' => array($attrVal, $url)
-							));
+						$followedUrls[$attrVal] = 1;
+						$attrVal = $url;
 
-							$followedUrls[$attrVal] = 1;
-							$attrVal = $url;
-
-							goto checkUrl;
-						}
+						goto checkUrl;
 					}
+
+					$parser->log('debug', array(
+						'msg'    => 'No Location: received from %1$s',
+						'params' => array($attrVal)
+					));
 				}
 
 				/**
@@ -1772,5 +1760,47 @@ class Parser
 	static protected function getTagId(array $tag)
 	{
 		return $tag['name'] . $tag['suffix'] . '-' . $tag['pluginName'];
+	}
+
+	/**
+	* Get the Location: value return by a HTTP(S) query
+	*
+	* @param  string $url Request URL
+	* @return mixed       Location URL if applicable, FALSE in case of error, NULL if no Location
+	*/
+	static protected function getRedirectLocation($url)
+	{
+		$fp = @fopen(
+			$url,
+			'rb',
+			false,
+			stream_context_create(array(
+				'http' => array(
+					// Bit.ly doesn't like HEAD =\
+//					'method' => 'HEAD',
+					'header' => "Connection: close\r\n",
+					'follow_location' => false
+				)
+			))
+		);
+
+		if (!$fp)
+		{
+			return false;
+		}
+
+		$meta = stream_get_meta_data($fp);
+		fclose($fp);
+
+		foreach ($meta['wrapper_data'] as $k => $line)
+		{
+			if (is_numeric($k)
+			 && preg_match('#^Location:(.*)#i', $line, $m))
+			{
+				return trim($m[1]);
+			}
+		}
+
+		return null;
 	}
 }
