@@ -371,7 +371,7 @@ class Parser
 					}
 
 					$parser->log('debug', array(
-						'msg'    => 'No Location: received from %1$s',
+						'msg'    => 'No Location: received from %s',
 						'params' => array($attrVal)
 					));
 				}

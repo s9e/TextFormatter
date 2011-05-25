@@ -84,19 +84,15 @@ class ParserTest extends Test
 		stream_wrapper_unregister('http');
 		stream_wrapper_register('http', __NAMESPACE__ . '\\FakeRedirect');
 
-		$i = 2;
+		FakeRedirect::$redirectTo = array($from => $to);
 
-		while (1)
+		$i = 1;
+		while (++$i < func_num_args())
 		{
-			FakeRedirect::$redirectTo[$from] = $to;
-
-			if (++$i >= func_num_args())
-			{
-				break;
-			}
-
 			$from = $to;
 			$to = func_get_arg($i);
+
+			FakeRedirect::$redirectTo[$from] = $to;
 		}
 	}
 
@@ -734,6 +730,10 @@ class ParserTest extends Test
 					array(
 						'msg'    => 'Followed redirect from %1$s to %2$s',
 						'params' => array('http://bit.ly/2lkCBm', 'http://bit.ly/')
+					),
+					array(
+						'msg'    => 'No Location: received from %s',
+						'params' => array('http://bit.ly/')
 					)
 				)
 			)
