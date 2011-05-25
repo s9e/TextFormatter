@@ -406,17 +406,15 @@ class BBCodesConfig extends PluginConfig
 			. '(?P<attrOptions>(?:;' . $r['attrOptions'] . ')*);?'
 			. '\\}';
 
-		// we remove all named captures from the placeholder for the global regexp to avoid dupes
-		$placeholder = preg_replace('#\\?P<[a-zA-Z]+>#', '?:', $r['placeholder']);
 
-		$regexp = '#\\['
+		$regexp = '#(?J)\\['
 		        // (BBCODE)(=paramval)?
 		        . '(?P<bbcodeName>' . $r['bbcodeName'] . ')'
-		        . '(?P<defaultAttr>=' . $placeholder . ')?'
+		        . '(?P<defaultAttr>=' . $r['placeholder'] . ')?'
 		        // (foo=fooval bar=barval)
-		        . '(?P<attrs>(?:\\s+' . $r['attrName'] . '=' . $placeholder . ')*)'
+		        . '(?P<attrs>(?:\\s+' . $r['attrName'] . '=' . $r['placeholder'] . ')*)'
 		        // ]({TEXT})[/BBCODE]
-		        . '(?:\\s*/?\\]|\\](?P<content>' . $placeholder . ')?(?P<endTag>\\[/\\1]))'
+		        . '(?:\\s*/?\\]|\\](?P<content>' . $r['placeholder'] . ')?(?P<endTag>\\[/\\1]))'
 		        . '$#D';
 
 		if (!preg_match($regexp, trim($def), $m))
