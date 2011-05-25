@@ -207,6 +207,7 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Url filter rejects not allowed schemes
  [x] Url filter can accept non http schemes
  [x] Url filter rejects disallowed host
+ [x] Url filter rejects disallowed IDNs
  [x] Url filter rejects disallowed host mask
  [x] Url filter rejects subdomains of disallowed hosts
  [x] Url filter rejects disallowed tld
