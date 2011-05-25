@@ -565,6 +565,28 @@ class ParserTest extends Test
 		);
 	}
 
+	/**
+	* @test
+	*/
+	public function Url_filter_rejects_disallowed_IDNs()
+	{
+		$this->cb->disallowHost('pаypal.com');
+
+		$this->assertAttributeIsInvalid(
+			'url',
+			'http://www.pаypal.com',
+			null,
+			array(
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('www.xn--pypal-4ve.com')
+					)
+				)
+			)
+		);
+	}
+
 	public function testUrlFilterRejectsDisallowedHostMask()
 	{
 		$this->cb->disallowHost('*.example.com');
