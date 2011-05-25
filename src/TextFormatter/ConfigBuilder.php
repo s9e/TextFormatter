@@ -922,9 +922,15 @@ class ConfigBuilder
 	*/
 	public function disallowHost($host)
 	{
-		if (preg_match('#[\x80-\xff]#', $host)
-		 && function_exists('idn_to_ascii'))
+		if (preg_match('#[\\x80-\\xff]#', $host))
 		{
+			// @codeCoverageIgnoreStart
+			if (!function_exists('idn_to_ascii'))
+			{
+				throw new RuntimeException('Cannot handle IDNs without the Intl PHP extension');
+			}
+			// @codeCoverageIgnoreEnd
+
 			$host = idn_to_ascii($host);
 		}
 
