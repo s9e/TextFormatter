@@ -817,6 +817,32 @@ class ParserTest extends Test
 		);
 	}
 
+	/**
+	* @test testUrlFilterRejectsDisallowedHost
+	* @test Url_filter_can_resolve_redirects_from_specified_hosts
+	*/
+	public function Url_filter_rejects_disallowed_hosts_behind_a_redirect()
+	{
+		$this->cb->disallowHost('evil.tld');
+		$this->cb->resolveRedirectsFrom('redirector.tld');
+
+		$this->fakeRedirect('http://redirector.tld/abc', 'http://evil.tld');
+
+		$this->assertAttributeIsInvalid(
+			'url',
+			'http://redirector.tld/abc',
+			null,
+			array(
+				'error' => array(
+					array(
+						'msg'    => "URL host '%s' is not allowed",
+						'params' => array('evil.tld')
+					)
+				)
+			)
+		);
+	}
+
 	public function testIdFilterAcceptsNumbers()
 	{
 		$this->assertAttributeIsValid('id', '123');
