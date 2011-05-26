@@ -281,7 +281,7 @@ class PredefinedBBCodesTest extends Test
 						[TD]cell1[/TD]
 						[TD]cell2[/TD]
 					[/TR]
-				',
+				[/TABLE]',
 				'<table><col><col style="text-align:right"><tr><td>cell1</td><td>cell2</td></tr></table>'
 			),
 			array(
