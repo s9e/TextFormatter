@@ -30,6 +30,7 @@ $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/
 $cb->Censor->addWord('apple', 'banana');
 
 $cb->loadPlugin('Autolink');
+$cb->loadPlugin('HTMLEntities')->disableEntity('&lt;');
 $cb->loadPlugin('WittyPants');
 
 $jsParser = $cb->getJSParser(array(
@@ -92,26 +93,38 @@ ob_start();
 
 This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter title="s9e\Toolkit\TextFormatter at GitHub.com"]s9e\Toolkit\TextFormatter[/url].
 
-A few BBCodes have been added such as:
+Several plugins have been enabled:
 
 [list]
-	[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
-	[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-	[*][PRE][URL][/PRE], [PRE:123][PRE][/PRE:123], [PRE][YOUTUBE][/PRE], [PRE][FLOAT][/PRE], and [PRE][LIST][/PRE]
+	[*][b]Autolink[/b] --- loose URLs such as http://github.com are automatically turned into links
+
+	[*][b]BBCodes[/b]
+	[list=square]
+
+		[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
+		[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
+		[*][PRE][URL][/PRE], [PRE:123][PRE][/PRE:123], [PRE][YOUTUBE][/PRE], [PRE][FLOAT][/PRE], and [PRE][LIST][/PRE]
+
+	[/list][/*]
+
+	[*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
+
+	[*][b]Emoticons[/b] --- one emoticon :) has been added
+
+	[*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
+
+	[*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
 Additionally, in order to demonstrate some other features:
 
 [list]
-	[*]one emoticon :) has been added [i](Emoticons plugin)[/i]
-	[*]the word "apple" is censored and automatically replaced with "banana" [i](Censor plugin)[/i]
-	[*]some typography is enhanced, e.g. (c) (tm) and "quotes" [i](WittyPants plugin)[/i]
-	[*]links to [url=http://example.com]example.com[/url] are disabled [i](ConfigBuilder::disallowHost())[/i]
-	[*]loose URLs such as http://github.com are automatically transformed into links [i](Autolink plugin)[/i]
-	[*]a YouTube video---at the right---keeps playing as you're editing the text [i](including its own tag!)[/i], to demonstrate the partial-update algorithm used to refresh the preview
+	[*]ConfigBuilder::disallowHost() --- links to [url=http://example.com]example.com[/url] are disabled
+	[*]HTMLEntitiesConfig::disableEntity() --- the HTML entity &amp;lt; is arbitrarily disabled
+	[*]a YouTube video, at the right, keeps playing as you're editing the text [i](including its own tag!)[/i] to demonstrate the partial-update algorithm used to refresh the preview
 [/list]
 
-Take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
+You can take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
 The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url].<?php echo $closureCompilerNote; ?> The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
 </textarea>
@@ -127,6 +140,7 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			<input type="checkbox" id="BBCodes" checked="checked" onchange="toggle(this)"><label for="BBCodes"> BBCodes</label><br>
 			<input type="checkbox" id="Censor" checked="checked" onchange="toggle(this)"><label for="Censor"> Censor</label><br>
 			<input type="checkbox" id="Emoticons" checked="checked" onchange="toggle(this)"><label for="Emoticons"> Emoticons</label><br>
+			<input type="checkbox" id="HTMLEntities" checked="checked" onchange="toggle(this)"><label for="HTMLEntities"> HTMLEntities</label><br>
 			<input type="checkbox" id="WittyPants" checked="checked" onchange="toggle(this)"><label for="WittyPants"> WittyPants</label>
 		</form>
 	</div>
