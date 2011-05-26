@@ -2,7 +2,8 @@
 
 namespace s9e\Toolkit\Tests\TextFormatter;
 
-use s9e\Toolkit\Tests\Test,
+use DOMDocument,
+    s9e\Toolkit\Tests\Test,
     s9e\Toolkit\TextFormatter\Parser,
     s9e\Toolkit\TextFormatter\PluginConfig,
     s9e\Toolkit\TextFormatter\PluginParser;
@@ -75,6 +76,20 @@ class ParserTest extends Test
 		{
 			$this->assertFalse($actualVal, 'Invalid attrVal did not return false');
 		}
+	}
+
+	protected function assertHtmlStringKindOfEqualsHtmlString($expectedHtml, $actualHtml)
+	{
+		$expectedDOM = new DOMDocument;
+		$expectedDOM->loadHTML($expectedHtml);
+
+		$actualDOM = new DOMDocument;
+		$actualDOM->loadHTML($actualHtml);
+
+		$this->assertXmlStringEqualsXmlString(
+			$actualDOM->saveXML(),
+			$expectedDOM->saveXML()
+		);
 	}
 
 	protected function fakeRedirect($from, $to)
