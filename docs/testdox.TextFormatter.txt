@@ -132,6 +132,8 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeConfig removes parserFilepath from config
  [x] encodeConfig convert scalar regexp to a RegExp object with g flag
  [x] encodeConfig convert array regexp to an object with RegExp objects with g flag as properties
+ [x] Injects plugins parsers into source
+ [x] Injects plugins configs into source
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Ouput is UTF8

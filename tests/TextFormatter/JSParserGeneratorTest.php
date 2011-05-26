@@ -446,4 +446,34 @@ class JSParserGeneratorTest extends Test
 			)
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function Injects_plugins_parsers_into_source()
+	{
+		$this->cb->loadPlugin('Autolink');
+
+		$jsParser = $this->jspg->get();
+
+		$this->assertContains(
+			'pluginParsers = {"Autolink":function',
+			$jsParser
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Injects_plugins_configs_into_source()
+	{
+		$this->cb->loadPlugin('Autolink');
+
+		$jsParser = $this->jspg->get();
+
+		$this->assertContains(
+			'pluginsConfig = {"Autolink":{',
+			$jsParser
+		);
+	}
 }
