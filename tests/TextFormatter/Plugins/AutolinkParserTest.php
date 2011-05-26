@@ -172,7 +172,6 @@ class AutolinkParserTest extends Test
 
 	/**
 	* @test
-	* @link http://area51.phpbb.com/phpBB/viewtopic.php?p=203955#p203955
 	*/
 	public function URLs_that_end_with_a_non_ASCII_char_are_linkified()
 	{
@@ -180,6 +179,42 @@ class AutolinkParserTest extends Test
 			'Check this out http://en.wikipedia.org/wiki/♥',
 			'<rt>Check this out <URL url="http://en.wikipedia.org/wiki/%E2%99%A5">http://en.wikipedia.org/wiki/&#x2665;</URL></rt>',
 			'Check this out <a href="http://en.wikipedia.org/wiki/%E2%99%A5">http://en.wikipedia.org/wiki/♥</a>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function URLs_that_contain_an_empty_pair_of_square_brackets_are_linkified()
+	{
+		$this->assertTransformation(
+			'Check those out: http://example.com/list.php?cat[]=1&cat[]=2',
+			'<rt>Check those out: <URL url="http://example.com/list.php?cat[]=1&amp;cat[]=2">http://example.com/list.php?cat[]=1&amp;cat[]=2</URL></rt>',
+			'Check those out: <a href="http://example.com/list.php?cat%5B%5D=1&amp;cat%5B%5D=2">http://example.com/list.php?cat[]=1&amp;cat[]=2</a>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function URLs_that_contain_pair_of_square_brackets_that_contain_ASCII_letters_and_digits_are_linkified()
+	{
+		$this->assertTransformation(
+			'Check those out: http://example.com/list.php?cat[1a]=1&cat[1b]=2',
+			'<rt>Check those out: <URL url="http://example.com/list.php?cat[1a]=1&amp;cat[1b]=2">http://example.com/list.php?cat[1a]=1&amp;cat[1b]=2</URL></rt>',
+			'Check those out: <a href="http://example.com/list.php?cat%5B1a%5D=1&amp;cat%5B1b%5D=2">http://example.com/list.php?cat[1a]=1&amp;cat[1b]=2</a>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Ignores_the_right_square_bracket_of_a_BBCode_tag()
+	{
+		$this->assertTransformation(
+			'[url=http://example.com]Non-existent URL tag[/url]',
+			'<rt>[url=<URL url="http://example.com">http://example.com</URL>]Non-existent URL tag[/url]</rt>',
+			'[url=<a href="http://example.com">http://example.com</a>]Non-existent URL tag[/url]'
 		);
 	}
 }

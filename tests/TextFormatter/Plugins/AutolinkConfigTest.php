@@ -23,14 +23,9 @@ class AutolinkConfigTest extends Test
 	/**
 	* @test
 	*/
-	public function Generates_a_regexp_that_matches_all_possible_URLs()
+	public function Generates_a_regexp()
 	{
-		$this->assertArrayMatches(
-			array(
-				'regexp' => '#https?://\S+#iS'
-			),
-			$this->cb->Autolink->getConfig()
-		);
+		$this->assertArrayHasKey('regexp', $this->cb->Autolink->getConfig());
 	}
 
 	/**
@@ -41,6 +36,17 @@ class AutolinkConfigTest extends Test
 		$this->assertStringEqualsFile(
 			__DIR__ . '/../../../src/TextFormatter/Plugins/AutolinkParser.js',
 			$this->cb->Autolink->getJSParser()
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function getJSConfig_removes_the_possessive_quantifier_from_the_regexp()
+	{
+		$this->assertNotContains(
+			'++',
+			$this->cb->Autolink->getJSConfig()
 		);
 	}
 }

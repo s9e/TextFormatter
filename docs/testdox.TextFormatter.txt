@@ -318,8 +318,9 @@ s9e\Toolkit\Tests\TextFormatter\Renderer
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkConfig
  [x] Automatically creates an URL tag
- [x] Generates a regexp that matches all possible URLs
+ [x] Generates a regexp
  [x] getJSParser returns the source of its Javascript parser
+ [x] getJSConfig removes the possessive quantifier from the regexp
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
  [x] HTTP urls are linkified by default
@@ -335,6 +336,9 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\AutolinkParser
  [x] IDNs are linkified
  [x] URLs with non ASCII chars are linkified
  [x] URLs that end with a non ASCII char are linkified
+ [x] URLs that contain an empty pair of square brackets are linkified
+ [x] URLs that contain pair of square brackets that contain ASCII letters and digits are linkified
+ [x] Ignores the right square bracket of a BBCode tag
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesConfig
  [x] getConfig returns false if no BBCodes were added

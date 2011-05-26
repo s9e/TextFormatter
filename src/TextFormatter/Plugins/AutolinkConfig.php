@@ -23,7 +23,7 @@ class AutolinkConfig extends PluginConfig
 	public function getConfig()
 	{
 		return array(
-			'regexp' => '#' . ConfigBuilder::buildRegexpFromList($this->cb->getAllowedSchemes()) . '://\\S+#iS'
+			'regexp' => '#' . ConfigBuilder::buildRegexpFromList($this->cb->getAllowedSchemes()) . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS'
 		);
 	}
 
@@ -34,5 +34,15 @@ class AutolinkConfig extends PluginConfig
 	public function getJSParser()
 	{
 		return file_get_contents(__DIR__ . '/AutolinkParser.js');
+	}
+
+	public function getJSConfig()
+	{
+		$config = $this->getConfig();
+
+		// Javascript regexps don't support PCRE's possessive quantifier
+		$config['regexp'] = str_replace('++', '+', $config['regexp']);
+
+		return $config;
 	}
 }

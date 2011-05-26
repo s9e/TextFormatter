@@ -21,8 +21,8 @@ class AutolinkParser extends PluginParser
 			$url = $m[0][0];
 
 			/**
-			* Remove trailing dots. We preserve right parentheses if there's the right number of
-			* parentheses in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
+			* Remove trailing punctuation. We preserve right parentheses if there's the right number
+			* of parentheses in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
 			*/
 			cleanUrl:
 			{
