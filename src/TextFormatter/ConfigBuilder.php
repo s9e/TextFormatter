@@ -1067,8 +1067,8 @@ class ConfigBuilder
 			if ($reduce)
 			{
 				/**
-				* Build the list of allowed descendants and remove everything that's not needed by the
-				* global parser
+				* Build the list of allowed descendants and remove everything that's not needed by
+				* the global parser
 				*/
 				$allow = array();
 

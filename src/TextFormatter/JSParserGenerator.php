@@ -433,24 +433,6 @@ class JSParserGenerator
 		);
 	}
 
-	protected function injectPluginParsers()
-	{
-		$this->src = str_replace(
-			'pluginParsers = {/* DO NOT EDIT*/}',
-			'pluginParsers = {' . $this->generatePluginParsers() . '}',
-			$this->src
-		);
-	}
-
-	protected function injectPluginsConfig()
-	{
-		$this->src = str_replace(
-			'pluginsConfig = {/* DO NOT EDIT*/}',
-			'pluginsConfig = {' . $this->generatePluginsConfig() . '}',
-			$this->src
-		);
-	}
-
 	protected function injectFiltersConfig()
 	{
 		$this->src = str_replace(
@@ -651,42 +633,6 @@ class JSParserGenerator
 				$attrConf['regexp']
 			);
 		}
-	}
-
-	protected function generatePluginParsers()
-	{
-		$pluginParsers = array();
-
-		foreach ($this->cb->getLoadedPlugins() as $pluginName => $plugin)
-		{
-			$js = $plugin->getJSParser();
-
-			if (!$js)
-			{
-				continue;
-			}
-
-			$pluginParsers[] = json_encode($pluginName) . ':function(text,matches){' . $js . '}';
-		}
-
-		return implode(',', $pluginParsers);
-	}
-
-	protected function generatePluginsConfig()
-	{
-		$pluginsConfig = array();
-
-		foreach ($this->cb->getLoadedPlugins() as $pluginName => $plugin)
-		{
-			$js = self::encodeConfig(
-				$plugin->getJSConfig(),
-				$plugin->getJSConfigMeta()
-			);
-
-			$pluginsConfig[] = json_encode($pluginName) . ':' . $js;
-		}
-
-		return implode(',', $pluginsConfig);
 	}
 
 	/**
