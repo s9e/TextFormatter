@@ -18,7 +18,7 @@ class CensorConfig extends PluginConfig
 	protected $tagName = 'C';
 
 	/**
-	* @var string Name of attribute used to for the replacement
+	* @var string Name of attribute used for the replacement
 	*/
 	protected $attrName = 'with';
 
