@@ -558,6 +558,22 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\GenericConfig
 s9e\Toolkit\Tests\TextFormatter\Plugins\GenericParser
  [x] Handles attributes
 
+s9e\Toolkit\Tests\TextFormatter\Plugins\HTMLEntitiesConfig
+ [x] tagName can be customized at loading time
+ [x] attrName can be customized at loading time
+ [x] Does not attempt to create its tag if it already exists
+ [x] Individual HTML entities can be disabled via disableEntity
+ [x] disableEntity throws an exception on invalid entities
+ [x] getJSParser returns the source of its Javascript parser
+ [x] Disabled entities are preserved in Javascript config
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\HTMLEntitiesParser
+ [x] Basic entities are replaced
+ [x] Disabled entities are ignored
+ [x] Entities are replaced by their UTF8 representation
+ [x] Entities are case sensitive
+ [x] Unknown entities are ignored
+
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
  [x] Tag name can be customized at loading time
  [x] Attribute name can be customized at loading time

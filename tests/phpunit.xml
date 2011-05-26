@@ -40,6 +40,8 @@
 			<file>./TextFormatter/Plugins/FabricParserTest.php</file>
 			<file>./TextFormatter/Plugins/GenericConfigTest.php</file>
 			<file>./TextFormatter/Plugins/GenericParserTest.php</file>
+			<file>./TextFormatter/Plugins/HTMLEntitiesConfigTest.php</file>
+			<file>./TextFormatter/Plugins/HTMLEntitiesParserTest.php</file>
 			<file>./TextFormatter/Plugins/WittyPantsConfigTest.php</file>
 			<file>./TextFormatter/Plugins/WittyPantsParserTest.php</file>
 		</testsuite>

@@ -584,7 +584,7 @@ s9e['TextFormatter'] = function()
 	{
 		foreach(pluginsConfig, function(pluginConfig, pluginName)
 		{
-			if (pluginConfig.disabled)
+			if (pluginConfig.__disabled)
 			{
 				return;
 			}
@@ -1410,12 +1410,12 @@ s9e['TextFormatter'] = function()
 
 		'disablePlugin': function(pluginName)
 		{
-			pluginsConfig[pluginName].disabled = 1;
+			pluginsConfig[pluginName].__disabled = 1;
 		},
 
 		'enablePlugin': function(pluginName)
 		{
-			pluginsConfig[pluginName].disabled = 0;
+			pluginsConfig[pluginName].__disabled = 0;
 		}
 	}
 }();

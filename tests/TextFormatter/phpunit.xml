@@ -36,6 +36,8 @@
 			<file>Plugins/FabricParserTest.php</file>
 			<file>Plugins/GenericConfigTest.php</file>
 			<file>Plugins/GenericParserTest.php</file>
+			<file>Plugins/HTMLEntitiesConfigTest.php</file>
+			<file>Plugins/HTMLEntitiesParserTest.php</file>
 			<file>Plugins/WittyPantsConfigTest.php</file>
 			<file>Plugins/WittyPantsParserTest.php</file>
 		</testsuite>
