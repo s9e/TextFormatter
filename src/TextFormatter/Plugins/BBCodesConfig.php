@@ -61,11 +61,9 @@ class BBCodesConfig extends PluginConfig
 		}
 
 		/**
-		* Build the regexp that matches all the BBCode names, then remove the extraneous
-		* non-capturing expression around it
+		* Build the regexp that matches all the BBCode names
 		*/
 		$regexp = ConfigBuilder::buildRegexpFromList(array_keys($this->bbcodesConfig));
-		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
 
 		return array(
 			'bbcodesConfig' => $this->bbcodesConfig,
