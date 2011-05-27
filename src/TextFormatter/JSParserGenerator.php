@@ -403,21 +403,37 @@ class JSParserGenerator
 		);
 	}
 
+	protected function getPlugins()
+	{
+		$plugins = array();
+
+		foreach ($this->cb->getJSPlugins() as $pluginName => $plugin)
+		{
+			$config = self::encodeConfig(
+				$plugin['config'],
+				$plugin['meta']
+			);
+
+			$parser = 'function(text,matches){/** @const */var config=pluginsConfig["' . $pluginName . '"];' . $plugin['parser'] . '}';
+
+			$plugins[$pluginName] = array(
+				'config' => $config,
+				'parser' => $parser
+			);
+		}
+
+		return $plugins;
+	}
+
 	protected function injectPlugins()
 	{
 		$pluginParsers = array();
 		$pluginsConfig = array();
 
-		foreach ($this->cb->getJSPlugins() as $pluginName => $plugin)
+		foreach ($this->getPlugins() as $pluginName => $plugin)
 		{
-			$js = self::encodeConfig(
-				$plugin['config'],
-				$plugin['meta']
-			);
-
-			$pluginsConfig[] = json_encode($pluginName) . ':' . $js;
-			$pluginParsers[] =
-				json_encode($pluginName) . ':function(text,matches){/** @const */var config=pluginsConfig["' . $pluginName . '"];' . $plugin['parser'] . '}';
+			$pluginsConfig[] = json_encode($pluginName) . ':' . $plugin['config'];
+			$pluginParsers[] = json_encode($pluginName) . ':' . $plugin['parser'];
 		}
 
 		$this->src = str_replace(
