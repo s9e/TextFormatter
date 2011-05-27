@@ -87,6 +87,11 @@ class Parser
 	protected $processedTags;
 
 	/**
+	* @var array   The IDs of all the processed tags
+	*/
+	protected $processedTagIds;
+
+	/**
 	* @var array   Tags currently open, in document order
 	*/
 	protected $openTags;
@@ -179,6 +184,7 @@ class Parser
 		$this->log = array();
 		$this->unprocessedTags = array();
 		$this->processedTags   = array();
+		$this->processedTagIds = array();
 		$this->openTags        = array();
 		$this->openStartTags   = array();
 		$this->cntOpen         = array();
@@ -634,6 +640,7 @@ class Parser
 		$this->addTrimmingInfoToTag($tag);
 
 		$this->processedTags[] = $tag;
+		$this->processedTagIds[$tag['id']] = 1;
 
 		$this->pos = $tag['pos'] + $tag['len'];
 
@@ -858,6 +865,8 @@ class Parser
 	*/
 	protected function executePluginParsers()
 	{
+		$tagId = 0;
+
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
 		{
 			$matches = array();
@@ -874,18 +883,30 @@ class Parser
 
 			$tags = $this->getPluginParser($pluginName)->getTags($this->text, $matches);
 
-			foreach ($tags as $k => $tag)
+			/**
+			* First add an ID to every tag
+			*/
+			foreach ($tags as &$tag)
 			{
-				$tag['id'] = $pluginName . $k;
+				$tag['id'] = ++$tagId;
 				$tag['pluginName'] = $pluginName;
+			}
+			unset($tag);
 
+			/**
+			* Now that all tags have a unique ID, deal with 'requires' then add them
+			*/
+			foreach ($tags as $tag)
+			{
 				if (isset($tag['requires']))
 				{
-					foreach ($tag['requires'] as &$tagId)
+					$requires = array();
+					foreach ($tag['requires'] as $k)
 					{
-						$tagId = $pluginName . $tagId;
+						$requires[$tags[$k]['id']] = 1;
 					}
-					unset($tagId);
+
+					$tag['requires'] = $requires;
 				}
 
 				$this->unprocessedTags[] = $tag;
@@ -927,11 +948,6 @@ class Parser
 				'suffix' => '',
 				'attrs'  => array()
 			);
-
-			/**
-			* This will serve as a tiebreaker in case two tags start at the same position
-			*/
-			$tag['_tb'] = $k;
 		}
 	}
 
@@ -1133,6 +1149,7 @@ class Parser
 	protected function createEndTag(array $tag, $pos)
 	{
 		return array(
+			'id'     => -1,
 			'name'   => $tag['name'],
 			'pos'    => $pos,
 			'len'    => 0,
@@ -1305,21 +1322,10 @@ class Parser
 	{
 		if (isset($this->currentTag['requires']))
 		{
-			foreach ($this->currentTag['requires'] as $tagId)
-			{
-				foreach ($this->processedTags as $tag)
-				{
-					if (isset($tag['id'])
-					 && $tag['id'] === $tagId)
-					{
-						// found the tag, continue with the next required tag
-						continue 2;
-					}
-				}
-
-				// required tag not found, we skip current tag
-				return true;
-			}
+			return (bool) array_diff_key(
+				$this->currentTag['requires'],
+				$this->processedTagIds
+			);
 		}
 
 		return false;
@@ -1377,8 +1383,8 @@ class Parser
 		}
 
 		return ($a['type'] === self::END_TAG)
-		     ? ($a['_tb'] - $b['_tb'])
-		     : ($b['_tb'] - $a['_tb']);
+		     ? ($a['id'] - $b['id'])
+		     : ($b['id'] - $a['id']);
 	}
 
 	/**

@@ -1517,7 +1517,7 @@ class ParserTest extends Test
 
 	public function testTagsAreSortedCorrectly()
 	{
-		$_tb = 0;
+		$tagId = 0;
 
 		$tags = array();
 
@@ -1527,29 +1527,29 @@ class ParserTest extends Test
 			foreach (array('B', 'I') as $tagName)
 			{
 				$tags[] = array(
+					'id'   => ++$tagId,
 					'name' => $tagName . $pos,
 					'pos'  => $pos,
 					'len'  => 0,
-					'type' => Parser::START_TAG,
-					'_tb'  => ++$_tb
+					'type' => Parser::START_TAG
 				);
 
 				$tags[] = array(
+					'id'   => ++$tagId,
 					'name' => $tagName . $pos,
 					'pos'  => 1 + $pos,
 					'len'  => 0,
-					'type' => Parser::END_TAG,
-					'_tb'  => ++$_tb
+					'type' => Parser::END_TAG
 				);
 			}
 
 			// Add a self-closing tag that consumes the character
 			$tags[] = array(
+				'id'   => ++$tagId,
 				'name' => 'E' . $pos,
 				'pos'  => $pos,
 				'len'  => 1,
-				'type' => Parser::SELF_CLOSING_TAG,
-				'_tb'  => ++$_tb
+				'type' => Parser::SELF_CLOSING_TAG
 			);
 		}
 
@@ -1557,11 +1557,11 @@ class ParserTest extends Test
 		{
 			// Add a zero-width self-closing tag at given position
 			$tags[] = array(
+				'id'   => ++$tagId,
 				'name' => 'Z' . $pos,
 				'pos'  => $pos,
 				'len'  => 0,
 				'type' => Parser::SELF_CLOSING_TAG,
-				'_tb'  => ++$_tb
 			);
 		}
 
