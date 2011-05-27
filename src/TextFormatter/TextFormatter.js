@@ -57,6 +57,8 @@ s9e['TextFormatter'] = function()
 		unprocessedTags,
 		/** @type {!Array.<Tag>} */
 		processedTags,
+		/** @type {!Object.<Number,1>} */
+		processedTagIds,
 		/** @type {!Array.<StubTag>} */
 		openTags,
 		/** @type {!Object} */
@@ -141,6 +143,7 @@ s9e['TextFormatter'] = function()
 
 		unprocessedTags = [];
 		processedTags   = [];
+		processedTagIds = {};
 		openTags        = [];
 		openStartTags   = {};
 		cntOpen         = {};
@@ -438,6 +441,7 @@ s9e['TextFormatter'] = function()
 		addTrimmingInfoToTag(tag);
 
 		processedTags.push(tag);
+		processedTagIds[tag.id] = 1;
 
 		pos = tag.pos + tag.len;
 
@@ -582,6 +586,8 @@ s9e['TextFormatter'] = function()
 
 	function executePluginParsers()
 	{
+		var tagId = 0;
+
 		foreach(pluginsConfig, function(pluginConfig, pluginName)
 		{
 			if (pluginConfig.__disabled)
@@ -601,21 +607,30 @@ s9e['TextFormatter'] = function()
 				}
 			}
 
-			pluginParsers[pluginName](text, matches).forEach(
+			var tags = pluginParsers[pluginName](text, matches);
+
+			tags.forEach(
 				/**
 				* @param {!Tag}    tag
-				* @param {string} k
 				*/
-				function(tag, k)
+				function(tag)
 				{
-					tag.id = pluginName + k;
+					tag.id = ++tagId;
 					tag.pluginName = pluginName;
+				}
+			);
 
+			tags.forEach(
+				/**
+				* @param {!Tag}    tag
+				*/
+				function(tag)
+				{
 					if (tag.requires)
 					{
-						tag.requires.forEach(function(tagId, i)
+						tag.requires.forEach(function(k, i)
 						{
-							tag.requires[i] = pluginName + tagId;
+							tag.requires[i] = tags[k].id;
 						});
 					}
 
@@ -661,11 +676,6 @@ s9e['TextFormatter'] = function()
 				{
 					tag.attrs = {};
 				}
-
-				/**
-				* This will serve as a tiebreaker in case two tags start at the same position
-				*/
-				tag._tb = k++;
 			}
 		);
 	}
@@ -840,6 +850,7 @@ s9e['TextFormatter'] = function()
 	function createEndTag(tag, _pos)
 	{
 		return {
+			id     : -1,
 			name   : tag.name,
 			pos    : _pos,
 			len    : 0,
@@ -1022,18 +1033,7 @@ s9e['TextFormatter'] = function()
 
 			while (--i >= 0)
 			{
-				var j = processedTags.length;
-
-				while (--j >= 0)
-				{
-					if (processedTags[j].id
-					 && processedTags[j].id === currentTag.requires[i])
-					{
-						break;
-					}
-				}
-
-				if (j < 0)
+				if (!processedTagIds[currentTag.requires[i]])
 				{
 					return true;
 				}
@@ -1085,8 +1085,8 @@ s9e['TextFormatter'] = function()
 		}
 
 		return (a.type === END_TAG)
-		     ? (a._tb - b._tb)
-		     : (b._tb - a._tb);
+		     ? (a.id - b.id)
+		     : (b.id - a.id);
 	}
 
 	function processCurrentTagAttributes()
