@@ -4,6 +4,7 @@ namespace s9e\Toolkit\Tests;
 
 use ReflectionClass,
     ReflectionMethod,
+    RuntimeException,
     stdClass,
     s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\JSParserGenerator;
