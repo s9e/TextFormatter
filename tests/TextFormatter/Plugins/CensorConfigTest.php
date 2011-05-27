@@ -14,6 +14,54 @@ class CensorConfigTest extends Test
 	/**
 	* @test
 	*/
+	public function tagName_can_be_customized_at_loading_time()
+	{
+		$this->cb->loadPlugin('Censor', null, array('tagName' => 'CENSORED'));
+		$this->cb->Censor->addWord('apple');
+
+		$this->assertArrayMatches(
+			array('tagName' => 'CENSORED'),
+			$this->cb->Censor->getConfig()
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function attrName_can_be_customized_at_loading_time()
+	{
+		$this->cb->loadPlugin('Censor', null, array('attrName' => 'replacement'));
+		$this->cb->Censor->addWord('apple');
+
+		$this->assertArrayMatches(
+			array('attrName' => 'replacement'),
+			$this->cb->Censor->getConfig()
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function defaultReplacement_can_be_customized_at_loading_time()
+	{
+		$this->cb->loadPlugin('Censor', null, array('defaultReplacement' => '####'));
+
+		$this->assertContains(
+			'####',
+			$this->cb->getXSL()
+		);
+	}
+
+	public function testDoesNotAttemptToCreateItsTagIfItAlreadyExists()
+	{
+		$this->cb->loadPlugin('Censor');
+		unset($this->cb->Censor);
+		$this->cb->loadPlugin('Censor');
+	}
+
+	/**
+	* @test
+	*/
 	public function getConfig_returns_false_if_no_words_were_added()
 	{
 		$this->assertFalse($this->cb->loadPlugin('Censor')->getConfig());
@@ -39,45 +87,6 @@ class CensorConfigTest extends Test
 			),
 			$this->cb->Censor->getConfig()
 		);
-	}
-
-	public function testDefaultReplacementCanBeCustomizedAtLoadingTime()
-	{
-		$this->cb->loadPlugin('Censor', null, array('defaultReplacement' => '####'));
-
-		$this->assertContains(
-			'####',
-			$this->cb->getXSL()
-		);
-	}
-
-	public function testTagNameCanBeCustomizedAtLoadingTime()
-	{
-		$this->cb->loadPlugin('Censor', null, array('tagName' => 'CENSORED'));
-		$this->cb->Censor->addWord('apple');
-
-		$this->assertArrayMatches(
-			array('tagName' => 'CENSORED'),
-			$this->cb->Censor->getConfig()
-		);
-	}
-
-	public function testAttributeNameCanBeCustomizedAtLoadingTime()
-	{
-		$this->cb->loadPlugin('Censor', null, array('attrName' => 'replacement'));
-		$this->cb->Censor->addWord('apple');
-
-		$this->assertArrayMatches(
-			array('attrName' => 'replacement'),
-			$this->cb->Censor->getConfig()
-		);
-	}
-
-	public function testDoesNotAttemptToCreateItsTagIfItAlreadyExists()
-	{
-		$this->cb->loadPlugin('Censor');
-		unset($this->cb->Censor);
-		$this->cb->loadPlugin('Censor');
 	}
 
 	/**

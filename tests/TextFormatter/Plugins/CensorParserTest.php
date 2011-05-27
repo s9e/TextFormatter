@@ -223,24 +223,10 @@ class CensorParserTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testReplacesCensoredWordsWithDefaultReplacement
 	*/
-	public function testDefaultReplacementCanBeCustomizedAtLoadingTime()
-	{
-		$this->cb->loadPlugin('Censor', null, array('defaultReplacement' => '####'));
-		$this->cb->Censor->addWord('apple');
-
-		$this->assertTransformation(
-			'You dirty apple',
-			'<rt>You dirty <C>apple</C></rt>',
-			'You dirty ####'
-		);
-	}
-
-	/**
-	* @depends testReplacesCensoredWordsWithDefaultReplacement
-	*/
-	public function testTagNameCanBeCustomizedAtLoadingTime()
+	public function Can_use_a_custom_tagName()
 	{
 		$this->cb->loadPlugin('Censor', null, array('tagName' => 'censored'));
 		$this->cb->Censor->addWord('apple');
@@ -253,9 +239,10 @@ class CensorParserTest extends Test
 	}
 
 	/**
+	* @test
 	* @depends testReplacesCensoredWordsWithCustomReplacement
 	*/
-	public function testAttributeNameCanBeCustomizedAtLoadingTime()
+	public function Can_use_a_custom_attrName()
 	{
 		$this->cb->loadPlugin('Censor', null, array('attrName' => 'replacement'));
 		$this->cb->Censor->addWord('apple', 'orange');
@@ -264,6 +251,22 @@ class CensorParserTest extends Test
 			'You dirty apple',
 			'<rt>You dirty <C replacement="orange">apple</C></rt>',
 			'You dirty orange'
+		);
+	}
+
+	/**
+	* @test
+	* @depends testReplacesCensoredWordsWithDefaultReplacement
+	*/
+	public function Can_use_a_custom_defaultReplacement()
+	{
+		$this->cb->loadPlugin('Censor', null, array('defaultReplacement' => '####'));
+		$this->cb->Censor->addWord('apple');
+
+		$this->assertTransformation(
+			'You dirty apple',
+			'<rt>You dirty <C>apple</C></rt>',
+			'You dirty ####'
 		);
 	}
 

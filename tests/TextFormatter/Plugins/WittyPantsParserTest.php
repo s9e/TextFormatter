@@ -11,6 +11,34 @@ include_once __DIR__ . '/../../Test.php';
 */
 class WittyPantsParserTest extends Test
 {
+	/**
+	* @test
+	*/
+	public function Can_use_a_custom_tagName()
+	{
+		$this->cb->loadPlugin('WittyPants', null, array('tagName' => 'XYZ'));
+
+		$this->assertTransformation(
+			'...',
+			'<rt><XYZ char="…">...</XYZ></rt>',
+			'…'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Can_use_a_custom_attrName()
+	{
+		$this->cb->loadPlugin('WittyPants', null, array('attrName' => 'xyz'));
+
+		$this->assertTransformation(
+			'...',
+			'<rt><WP xyz="…">...</WP></rt>',
+			'…'
+		);
+	}
+
 	public function testSingleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
 	{
 		$this->cb->loadPlugin('WittyPants');

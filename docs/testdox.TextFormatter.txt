@@ -447,13 +447,13 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\BBCodesParser
  [x] When looking for the end tag while capturing content for contentAttr the suffix is taken into account
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\CensorConfig
+ [x] tagName can be customized at loading time
+ [x] attrName can be customized at loading time
+ [x] defaultReplacement can be customized at loading time
+ [x] Does not attempt to create its tag if it already exists
  [x] getConfig returns false if no words were added
  [x] Generates a regexp
  [x] Accept custom replacement for specific words
- [x] Default replacement can be customized at loading time
- [x] Tag name can be customized at loading time
- [x] Attribute name can be customized at loading time
- [x] Does not attempt to create its tag if it already exists
  [x] getJSParser returns the source of its Javascript parser
  [x] getJSConfig returns the replacements as pairs in a numerically indexed array
  [x] Replacements regexps are converted to RegExp objects in Javascript config
@@ -476,16 +476,16 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\CensorParser
  [x] The question mark can match an unicode letter
  [x] Can replace censored unicode words with custom replacement
  [x] Censored words are case insensitive
- [x] Default replacement can be customized at loading time
- [x] Tag name can be customized at loading time
- [x] Attribute name can be customized at loading time
+ [x] Can use a custom tagName
+ [x] Can use a custom attrName
+ [x] Can use a custom defaultReplacement
  [x] Does not attempt to create its tag if it already exists
  [x] The dollar symbol has no special meaning in replacement
  [x] The backslash has no special meaning in replacement
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\EmoticonsConfig
+ [x] tagName can be customized at loading time
  [x] getConfig returns false if no emoticons were added
- [x] Tag name can be customized at loading time
  [x] Emoticons xsl is automatically updated when emoticons are added
  [x] Xsl auto update can be disabled by calling disableAutoUpdate
  [x] Xsl auto update can be reenabled by calling enableAutoUpdate
@@ -496,6 +496,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\EmoticonsParser
  [x] An emoticon can be replaced by an img tag
  [x] An emoticon can be replaced by any html
  [x] Emoticons are replaced everywhere in the text
+ [x] Can use a custom tagName
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\FabricConfig
  [x] Creates an URL tag by default
@@ -575,13 +576,15 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\HTMLEntitiesParser
  [x] Unknown entities are ignored
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
- [x] Tag name can be customized at loading time
- [x] Attribute name can be customized at loading time
+ [x] tagName can be customized at loading time
+ [x] attrName can be customized at loading time
  [x] Does not attempt to create its tag if it already exists
  [x] getJSParser returns the source of its Javascript parser
  [x] getJSConfig returns no regexp with lookbehind assertions
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsParser
+ [x] Can use a custom tagName
+ [x] Can use a custom attrName
  [x] Single quotes enclosing text with no line break are converted to quotation marks
  [x] Double quotes enclosing text with no line break are converted to quotation marks
  [x] Three consecutive dots are converted to an ellipsis

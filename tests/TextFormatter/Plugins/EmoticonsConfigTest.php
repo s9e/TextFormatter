@@ -14,12 +14,7 @@ class EmoticonsConfigTest extends Test
 	/**
 	* @test
 	*/
-	public function getConfig_returns_false_if_no_emoticons_were_added()
-	{
-		$this->assertFalse($this->cb->Emoticons->getConfig());
-	}
-
-	public function testTagNameCanBeCustomizedAtLoadingTime()
+	public function tagName_can_be_customized_at_loading_time()
 	{
 		$this->cb->loadPlugin('Emoticons', null, array('tagName' => 'EMOTICON'));
 		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
@@ -28,6 +23,14 @@ class EmoticonsConfigTest extends Test
 			array('tagName' => 'EMOTICON'),
 			$this->cb->Emoticons->getConfig()
 		);
+	}
+
+	/**
+	* @test
+	*/
+	public function getConfig_returns_false_if_no_emoticons_were_added()
+	{
+		$this->assertFalse($this->cb->Emoticons->getConfig());
 	}
 
 	public function testEmoticonsXslIsAutomaticallyUpdatedWhenEmoticonsAreAdded()

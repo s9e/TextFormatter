@@ -11,7 +11,10 @@ include_once __DIR__ . '/../../Test.php';
 */
 class WittyPantsConfigTest extends Test
 {
-	public function testTagNameCanBeCustomizedAtLoadingTime()
+	/**
+	* @test
+	*/
+	public function tagName_can_be_customized_at_loading_time()
 	{
 		$this->cb->loadPlugin('WittyPants', null, array('tagName' => 'XYZ'));
 
@@ -21,7 +24,10 @@ class WittyPantsConfigTest extends Test
 		);
 	}
 
-	public function testAttributeNameCanBeCustomizedAtLoadingTime()
+	/**
+	* @test
+	*/
+	public function attrName_can_be_customized_at_loading_time()
 	{
 		$this->cb->loadPlugin('WittyPants', null, array('attrName' => 'xyz'));
 

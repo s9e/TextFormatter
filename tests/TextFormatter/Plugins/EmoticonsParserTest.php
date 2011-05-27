@@ -43,4 +43,20 @@ class EmoticonsParserTest extends Test
 			'Hello <img src="smiley.png"><img src="smiley.png"><img src="smiley.png">text<img src="smiley.png"><img src="smiley.png">'
 		);
 	}
+
+	/**
+	* @test
+	* @depends testAnEmoticonCanBeReplacedByAnImgTag
+	*/
+	public function Can_use_a_custom_tagName()
+	{
+		$this->cb->loadPlugin('Emoticons', null, array('tagName' => 'EMOTICON'));
+		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
+
+		$this->assertTransformation(
+			'Hello :)',
+			'<rt>Hello <EMOTICON>:)</EMOTICON></rt>',
+			'Hello <img src="smiley.png">'
+		);
+	}
 }
