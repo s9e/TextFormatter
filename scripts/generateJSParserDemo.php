@@ -93,7 +93,7 @@ ob_start();
 
 This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter title="s9e\Toolkit\TextFormatter at GitHub.com"]s9e\Toolkit\TextFormatter[/url].
 
-Several plugins have been enabled:
+The following plugins have been enabled:
 
 [list]
 	[*][b]Autolink[/b] --- loose URLs such as http://github.com are automatically turned into links
