@@ -1919,6 +1919,21 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @test
+	* @testdox Start tags only get closed by the right tagMate (same pluginName, same tagName, same differentiator if applicable)
+	* @depends Tags_left_open_get_closed_when_their_ancestor_gets_closed
+	*/
+	public function Start_tags_only_get_closed_by_the_right_tagMate()
+	{
+		$this->cb->BBCodes->addBBCode('B');
+
+		$this->assertParsing(
+			'[b]x[b:123]x[/b]x',
+			'<rt><B><st>[b]</st>x<B><st>[b:123]</st>x</B><et>[/b]</et></B>x</rt>'
+		);
+	}
+
+	/**
 	* @depends testOverlappingTagsAreRemoved
 	*/
 	public function testTagsCanSpecifyAListOfTagsThatAreRequiredAndBeSkippedIfAnyRequiredTagIsAbsent()

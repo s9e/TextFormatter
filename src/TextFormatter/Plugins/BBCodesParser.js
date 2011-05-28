@@ -295,12 +295,12 @@ matches.forEach(function(m)
 	}
 
 	tags.push({
-		name   : tagName,
-		pos    : lpos,
-		len    : rpos + 1 - lpos,
-		type   : type,
-		suffix : suffix,
-		attrs  : attrs
+		name    : tagName,
+		pos     : lpos,
+		len     : rpos + 1 - lpos,
+		type    : type,
+		tagMate : (suffix > '') ? suffix.substr(1) : '',
+		attrs   : attrs
 	});
 });
 

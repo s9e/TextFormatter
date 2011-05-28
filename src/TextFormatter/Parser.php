@@ -1117,8 +1117,8 @@ class Parser
 			* This is an end tag but there's no matching start tag
 			*/
 			$this->log('debug', array(
-				'msg'    => 'Could not find a matching start tag for tag %1$s from plugin %2$s',
-				'params' => array($this->currentTag['name'], $this->currentTag['pluginName'])
+				'msg'    => 'Could not find a matching start tag for %s',
+				'params' => array($this->currentTag['tagMate'])
 			));
 			return;
 		}
@@ -1128,10 +1128,7 @@ class Parser
 			$cur = array_pop($this->openTags);
 			$this->context = $cur['context'];
 
-			/**
-			* @todo should use tagMate rather than name
-			*/
-			if ($cur['name'] !== $this->currentTag['name'])
+			if ($cur['tagMate'] !== $this->currentTag['tagMate'])
 			{
 				$this->appendTag($this->createEndTag($cur, $this->currentTag['pos']));
 				continue;

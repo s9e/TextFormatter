@@ -822,8 +822,8 @@ s9e['TextFormatter'] = function()
 			* This is an end tag but there's no matching start tag
 			*/
 			log('debug', {
-				'msg'    : 'Could not find a matching start tag for tag %1$s from plugin %2$s',
-				'params' : [currentTag.name, currentTag.pluginName]
+				'msg'    : 'Could not find a matching start tag for %s',
+				'params' : [currentTag.tagMate]
 			});
 			return;
 		}
@@ -833,7 +833,7 @@ s9e['TextFormatter'] = function()
 			var cur = openTags.pop();
 			context = cur.context;
 
-			if (cur.name !== currentTag.name)
+			if (cur.tagMate !== currentTag.tagMate)
 			{
 				appendTag(createEndTag(cur, currentTag.pos));
 				continue;
