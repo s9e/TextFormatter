@@ -15,7 +15,7 @@ var Tag;
 * @typedef {{
 *	name: !string,
 *	pluginName: !string,
-*	suffix: !string,
+*	tagMate: !string,
 *	context: !Object
 * }}
 */
@@ -449,8 +449,6 @@ s9e['TextFormatter'] = function()
 		/**
 		* Maintain counters
 		*/
-		var tagId = getTagId(tag);
-
 		if (tag.type & START_TAG)
 		{
 			++cntTotal[tag.name];
@@ -459,20 +457,20 @@ s9e['TextFormatter'] = function()
 			{
 				++cntOpen[tag.name];
 
-				if (openStartTags[tagId])
+				if (openStartTags[tag.tagMate])
 				{
-					++openStartTags[tagId];
+					++openStartTags[tag.tagMate];
 				}
 				else
 				{
-					openStartTags[tagId] = 1;
+					openStartTags[tag.tagMate] = 1;
 				}
 			}
 		}
 		else if (tag.type & END_TAG)
 		{
 			--cntOpen[tag.name];
-			--openStartTags[tagId];
+			--openStartTags[tag.tagMate];
 		}
 	}
 
@@ -668,15 +666,19 @@ s9e['TextFormatter'] = function()
 				/**
 				* Some methods expect those keys to always be set
 				*/
-				if (tag.suffix === undefined)
+				if (tag.tagMate === undefined)
 				{
-					tag.suffix = '';
+					tag.tagMate = '';
 				}
 
 				if (tag.attrs === undefined)
 				{
 					tag.attrs = {};
 				}
+
+				tag.tagMate = tag.pluginName
+				            + '-' + tag.name
+				            + ((tag.tagMate > '') ? ':' + tag.tagMate : '');
 			}
 		);
 	}
@@ -799,7 +801,7 @@ s9e['TextFormatter'] = function()
 		openTags.push({
 			name       : tagName,
 			pluginName : currentTag.pluginName,
-			suffix     : currentTag.suffix,
+			tagMate    : currentTag.tagMate,
 			context    : clone(context)
 		});
 
@@ -814,7 +816,7 @@ s9e['TextFormatter'] = function()
 
 	function processCurrentEndTag()
 	{
-		if (!openStartTags[getTagId(currentTag)])
+		if (!openStartTags[currentTag.tagMate])
 		{
 			/**
 			* This is an end tag but there's no matching start tag
@@ -856,7 +858,7 @@ s9e['TextFormatter'] = function()
 			pos    : _pos,
 			len    : 0,
 			type   : END_TAG,
-			suffix : tag.suffix,
+			tagMate    : tag.tagMate,
 			pluginName : tag.pluginName
 		};
 	}
@@ -1378,12 +1380,6 @@ s9e['TextFormatter'] = function()
 			*/
 			delete currentTag.attrs[attrName];
 		});
-	}
-
-	/** @param {!Tag} tag */
-	function getTagId(tag)
-	{
-		return tag.name + tag.suffix + '-' + tag.pluginName;
 	}
 
 	return {

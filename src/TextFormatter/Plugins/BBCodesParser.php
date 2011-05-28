@@ -333,12 +333,12 @@ class BBCodesParser extends PluginParser
 			}
 
 			$tags[] = array(
-				'name'   => $tagName,
-				'pos'    => $lpos,
-				'len'    => $rpos + 1 - $lpos,
-				'type'   => $type,
-				'suffix' => $suffix,
-				'attrs'  => $attrs
+				'name'    => $tagName,
+				'pos'     => $lpos,
+				'len'     => $rpos + 1 - $lpos,
+				'type'    => $type,
+				'tagMate' => ($suffix) ? substr($suffix, 1) : '',
+				'attrs'   => $attrs
 			);
 		}
 

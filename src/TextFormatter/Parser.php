@@ -97,8 +97,7 @@ class Parser
 	protected $openTags;
 
 	/**
-	* @var array   Number of tags currently open, using the tag's name, suffix and plugin's name as
-	*              key
+	* @var array   Number of tags currently open, using the tag's tagMate value
 	*/
 	protected $openStartTags;
 
@@ -647,8 +646,6 @@ class Parser
 		/**
 		* Maintain counters
 		*/
-		$tagId = self::getTagId($tag);
-
 		if ($tag['type'] & self::START_TAG)
 		{
 			++$this->cntTotal[$tag['name']];
@@ -657,20 +654,20 @@ class Parser
 			{
 				++$this->cntOpen[$tag['name']];
 
-				if (isset($this->openStartTags[$tagId]))
+				if (isset($this->openStartTags[$tag['tagMate']]))
 				{
-					++$this->openStartTags[$tagId];
+					++$this->openStartTags[$tag['tagMate']];
 				}
 				else
 				{
-					$this->openStartTags[$tagId] = 1;
+					$this->openStartTags[$tag['tagMate']] = 1;
 				}
 			}
 		}
 		elseif ($tag['type'] & self::END_TAG)
 		{
 			--$this->cntOpen[$tag['name']];
-			--$this->openStartTags[$tagId];
+			--$this->openStartTags[$tag['tagMate']];
 		}
 	}
 
@@ -945,9 +942,13 @@ class Parser
 			* Some methods expect those keys to always be set
 			*/
 			$tag += array(
-				'suffix' => '',
-				'attrs'  => array()
+				'attrs'   => array(),
+				'tagMate' => ''
 			);
+
+			$tag['tagMate'] = $tag['pluginName']
+			                . '-' . $tag['name']
+			                . (($tag['tagMate'] > '') ? ':' . $tag['tagMate'] : '');
 		}
 	}
 
@@ -1095,7 +1096,7 @@ class Parser
 		$this->openTags[] = array(
 			'name'       => $tagName,
 			'pluginName' => $this->currentTag['pluginName'],
-			'suffix'     => $this->currentTag['suffix'],
+			'tagMate'    => $this->currentTag['tagMate'],
 			'context'    => $this->context
 		);
 
@@ -1110,7 +1111,7 @@ class Parser
 	*/
 	protected function processCurrentEndTag()
 	{
-		if (empty($this->openStartTags[self::getTagId($this->currentTag)]))
+		if (empty($this->openStartTags[$this->currentTag['tagMate']]))
 		{
 			/**
 			* This is an end tag but there's no matching start tag
@@ -1127,6 +1128,9 @@ class Parser
 			$cur = array_pop($this->openTags);
 			$this->context = $cur['context'];
 
+			/**
+			* @todo should use tagMate rather than name
+			*/
 			if ($cur['name'] !== $this->currentTag['name'])
 			{
 				$this->appendTag($this->createEndTag($cur, $this->currentTag['pos']));
@@ -1154,7 +1158,7 @@ class Parser
 			'pos'    => $pos,
 			'len'    => 0,
 			'type'   => self::END_TAG,
-			'suffix' => $tag['suffix'],
+			'tagMate'    => $tag['tagMate'],
 			'pluginName' => $tag['pluginName']
 		);
 	}
@@ -1755,17 +1759,6 @@ class Parser
 		* overwrite existing values
 		*/
 		$this->currentTag['attrs'] += $attrs;
-	}
-
-	/**
-	* Generate an ID for a tag, based on its name, suffix and plugin
-	*
-	* @param  array $tag
-	* @return string
-	*/
-	static protected function getTagId(array $tag)
-	{
-		return $tag['name'] . $tag['suffix'] . '-' . $tag['pluginName'];
 	}
 
 	/**
