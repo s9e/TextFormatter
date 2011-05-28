@@ -705,7 +705,7 @@ s9e['TextFormatter'] = function()
 
 		while (nextTag())
 		{
-			processTag();
+			processCurrentTag();
 		}
 
 		/**
@@ -714,7 +714,7 @@ s9e['TextFormatter'] = function()
 		foreach(openTags.reverse(), function(tag)
 		{
 			currentTag = createEndTag(tag, text.length);
-			processTag();
+			processCurrentTag();
 		});
 	}
 
@@ -723,7 +723,7 @@ s9e['TextFormatter'] = function()
 		return currentTag = unprocessedTags.pop();
 	}
 
-	function processTag()
+	function processCurrentTag()
 	{
 		if (pos > currentTag.pos
 		 || currentTagRequiresMissingTag())
@@ -736,15 +736,15 @@ s9e['TextFormatter'] = function()
 
 		if (currentTag.type & START_TAG)
 		{
-			processStartTag();
+			processCurrentStartTag();
 		}
 		else
 		{
-			processEndTag();
+			processCurrentEndTag();
 		}
 	}
 
-	function processStartTag()
+	function processCurrentStartTag()
 	{
 		//==============================================================
 		// Apply closeParent and closeAscendant rules
@@ -812,7 +812,7 @@ s9e['TextFormatter'] = function()
 		}
 	}
 
-	function processEndTag()
+	function processCurrentEndTag()
 	{
 		if (!openStartTags[getTagId(currentTag)])
 		{

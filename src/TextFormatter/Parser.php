@@ -983,7 +983,7 @@ class Parser
 
 		while ($this->nextTag())
 		{
-			$this->processTag();
+			$this->processCurrentTag();
 		}
 
 		/**
@@ -992,7 +992,7 @@ class Parser
 		foreach (array_reverse($this->openTags) as $tag)
 		{
 			$this->currentTag = $this->createEndTag($tag, strlen($this->text));
-			$this->processTag();
+			$this->processCurrentTag();
 		}
 	}
 
@@ -1009,7 +1009,7 @@ class Parser
 	/**
 	* Process currentTag
 	*/
-	protected function processTag()
+	protected function processCurrentTag()
 	{
 		if ($this->pos > $this->currentTag['pos'])
 		{
@@ -1029,18 +1029,18 @@ class Parser
 
 		if ($this->currentTag['type'] & self::START_TAG)
 		{
-			$this->processStartTag();
+			$this->processCurrentStartTag();
 		}
 		else
 		{
-			$this->processEndTag();
+			$this->processCurrentEndTag();
 		}
 	}
 
 	/**
 	* Process current tag, which is a START_TAG
 	*/
-	protected function processStartTag()
+	protected function processCurrentStartTag()
 	{
 		//==============================================================
 		// Apply closeParent and closeAscendant rules
@@ -1108,7 +1108,7 @@ class Parser
 	/**
 	* Process current tag, which is a END_TAG
 	*/
-	protected function processEndTag()
+	protected function processCurrentEndTag()
 	{
 		if (empty($this->openStartTags[self::getTagId($this->currentTag)]))
 		{
