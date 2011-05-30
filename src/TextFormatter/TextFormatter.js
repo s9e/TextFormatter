@@ -205,11 +205,11 @@ s9e['TextFormatter'] = function()
 				a.href = attrVal;
 
 				if (filterConf.disallowedHosts
-				 && filterConf.disallowedHosts.test(a.host))
+				 && filterConf.disallowedHosts.test(a.hostname))
 				{
 					log('error', {
 						'msg'    : "URL host '%s' is not allowed",
-						'params' : [a.host]
+						'params' : [a.hostname]
 					});
 					return false;
 				}
