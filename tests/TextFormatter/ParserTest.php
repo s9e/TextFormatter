@@ -1733,9 +1733,6 @@ class ParserTest extends Test
 	*
 	* This test exists to ensure that the parser correctly decrements the nesting counter when
 	* tags are closed
-	*
-	* @todo add a test for interactions between nestingLimit and closeParent/closeAscendant and
-	*       tags that are automatically closed as their ascendant is closed
 	*/
 	public function Tags_nestingLimit_does_not_incorrectly_count_siblings()
 	{
@@ -2152,6 +2149,40 @@ class ParserTest extends Test
 
 	/**
 	* @test
+	* @depends Tags_nestingLimit_is_enforced
+	* @depends closeParent_rule_is_applied_to_matching_parent_tag
+	*/
+	public function closeParent_rule_is_applied_before_nestingLimit_is_checked()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', array('nestingLimit' => 1));
+
+		$this->cb->addTagRule('X', 'closeParent', 'X');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 1,
+			'len'   => 0,
+			'name'  => 'X',
+			'type'  => Parser::START_TAG
+		);
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 2,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG
+		);
+
+		$this->assertParsing(
+			'0123',
+			'<rt>0<X>1</X><X>2</X>3</rt>'
+		);
+	}
+
+	/**
+	* @test
 	*/
 	public function closeAscendant_rule_is_applied_to_parent_tag()
 	{
@@ -2209,6 +2240,40 @@ class ParserTest extends Test
 		$this->assertParsing(
 			'[p:123]one[b]bold[p:456]two',
 			'<rt><P><st>[p:123]</st>one<B><st>[b]</st>bold</B></P><P><st>[p:456]</st>two</P></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends Tags_nestingLimit_is_enforced
+	* @depends closeAscendant_rule_is_applied_to_parent_tag
+	*/
+	public function closeAscendant_rule_is_applied_before_nestingLimit_is_checked()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', array('nestingLimit' => 1));
+
+		$this->cb->addTagRule('X', 'closeAscendant', 'X');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 1,
+			'len'   => 0,
+			'name'  => 'X',
+			'type'  => Parser::START_TAG
+		);
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 2,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG
+		);
+
+		$this->assertParsing(
+			'0123',
+			'<rt>0<X>1</X><X>2</X>3</rt>'
 		);
 	}
 
