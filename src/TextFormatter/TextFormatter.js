@@ -132,22 +132,19 @@ s9e['TextFormatter'] = function()
 	}
 
 	/**
-	* @param {!string} str1
-	* @param {!string} str2
+	* @param {!Array} a1
+	* @param {!Array} a2
 	*/
-	function bitwiseAnd(str1, str2)
+	function contextAnd(a1, a2)
 	{
-		var ret = [],
-			pos = 0,
-			len = str1.length;
+		var ret = [];
 
-		do
+		a1.forEach(function(v, k)
 		{
-			ret.push(str1.charAt(pos) & str2.charAt(pos));
-		}
-		while (++pos < len);
+			ret.push(v & a2[k]);
+		});
 
-		return ret.join('');
+		return ret;
 	}
 
 	/** @param {!string} _text */
@@ -709,21 +706,25 @@ s9e['TextFormatter'] = function()
 			return;
 		}
 
+		context = {
+			allowedChildren: [],
+			allowedDescendants: []
+		};
 		cntTotal = {}
 		cntOpen = {}
 
-		var i = -1, str = "";
+		var i = -1;
 		for (var tagName in tagsConfig)
 		{
-			str += "1";
+			if (!(++i & 7))
+			{
+				context.allowedChildren.push(255);
+				context.allowedDescendants.push(255);
+			}
+
 			cntTotal[tagName] = 0;
 			cntOpen[tagName] = 0;
 		}
-
-		context = {
-			allowedChildren: str,
-			allowedDescendants: str
-		};
 
 		pos = 0;
 
@@ -793,7 +794,7 @@ s9e['TextFormatter'] = function()
 		// Check that this tag is allowed here
 		//==============================================================
 
-		if (!currentTagIsAllowed(tagName))
+		if (!tagIsAllowed(tagName))
 		{
 			log('debug', {
 				'msg'    : 'Tag %s is not allowed in this context',
@@ -824,25 +825,26 @@ s9e['TextFormatter'] = function()
 			name       : tagName,
 			pluginName : currentTag.pluginName,
 			tagMate    : currentTag.tagMate,
-			context    : clone(context)
+			context    : context
 		});
 
-		context.allowedChildren = bitwiseAnd(
-			tagsConfig[currentTag.name].allowedChildren,
-			context.allowedDescendants
-		);
-
-		context.allowedDescendants = bitwiseAnd(
-			tagsConfig[currentTag.name].allowedDescendants,
-			context.allowedDescendants
-		);
+		context = {
+			allowedChildren: contextAnd(
+				tagsConfig[currentTag.name].allowedChildren,
+				context.allowedDescendants
+			),
+			allowedDescendants: contextAnd(
+				tagsConfig[currentTag.name].allowedDescendants,
+				context.allowedDescendants
+			)
+		}
 	}
 
-	function currentTagIsAllowed()
+	function tagIsAllowed(tagName)
 	{
-		var n = tagsConfig[currentTag.name].n;
+		var n = tagsConfig[tagName].n;
 
-		return (context.allowedChildren.charAt(n) === "1");
+		return !!(context.allowedChildren[n >> 3] & (1 << (n & 7)));
 	}
 
 	function processCurrentEndTag()

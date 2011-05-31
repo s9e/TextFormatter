@@ -591,8 +591,8 @@ class JSParserGenerator
 				unset($tagNames);
 			}
 
-			$tagConfig['allowedChildren'] = self::raw2bin($tagConfig['allowedChildren']);
-			$tagConfig['allowedDescendants'] = self::raw2bin($tagConfig['allowedDescendants']);
+			$tagConfig['allowedChildren'] = array_map('ord', str_split($tagConfig['allowedChildren'], 1));
+			$tagConfig['allowedDescendants'] = array_map('ord', str_split($tagConfig['allowedDescendants'], 1));
 		}
 		unset($tagConfig);
 

@@ -1064,7 +1064,7 @@ class Parser
 		// Check that this tag is allowed here
 		//==============================================================
 
-		if (!$this->currentTagIsAllowed())
+		if (!$this->tagIsAllowed($tagName))
 		{
 			$this->log('debug', array(
 				'msg'    => 'Tag %s is not allowed in this context',
@@ -1110,11 +1110,12 @@ class Parser
 	/**
 	* Test whether current tag is allowed in current context
 	*
+	* @param  string $tagName
 	* @return bool
 	*/
-	protected function currentTagIsAllowed()
+	protected function tagIsAllowed($tagName)
 	{
-		$n = $this->tagsConfig[$this->currentTag['name']]['n'];
+		$n = $this->tagsConfig[$tagName]['n'];
 
 		return (bool) (ord($this->context['allowedChildren'][$n >> 8]) & (1 << ($n & 7)));
 	}
