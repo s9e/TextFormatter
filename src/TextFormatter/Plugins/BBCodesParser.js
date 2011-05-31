@@ -192,8 +192,6 @@ matches.forEach(function(m)
 			if (++rpos >= textLen)
 			{
 				log('debug', {
-					'pos' : rpos,
-					'len' : spn,
 					'msg' : 'Attribute definition seems to extend till the end of text'
 				});
 				return;

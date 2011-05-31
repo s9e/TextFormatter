@@ -217,8 +217,6 @@ class BBCodesParser extends PluginParser
 					if (++$rpos >= $textLen)
 					{
 						$this->parser->log('debug', array(
-							'pos' => $rpos,
-							'len' => $spn,
 							'msg' => 'Attribute definition seems to extend till the end of text'
 						));
 						continue 2;
