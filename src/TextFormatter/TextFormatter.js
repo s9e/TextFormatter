@@ -131,6 +131,25 @@ s9e['TextFormatter'] = function()
 		return cnt;
 	}
 
+	/**
+	* @param {!string} str1
+	* @param {!string} str2
+	*/
+	function bitwiseAnd(str1, str2)
+	{
+		var ret = [],
+			pos = 0,
+			len = str1.length;
+
+		do
+		{
+			ret.push(str1.charAt(pos) & str2.charAt(pos));
+		}
+		while (++pos < len);
+
+		return ret.join('');
+	}
+
 	/** @param {!string} _text */
 	function reset(_text)
 	{
@@ -690,18 +709,21 @@ s9e['TextFormatter'] = function()
 			return;
 		}
 
-		context = {
-			allowedTags: {}
-		};
 		cntTotal = {}
 		cntOpen = {}
 
+		var i = -1, str = "";
 		for (var tagName in tagsConfig)
 		{
-			context.allowedTags[tagName] = tagName;
+			str += "1";
 			cntTotal[tagName] = 0;
 			cntOpen[tagName] = 0;
 		}
+
+		context = {
+			allowedChildren: str,
+			allowedDescendants: str,
+		};
 
 		pos = 0;
 
@@ -771,7 +793,7 @@ s9e['TextFormatter'] = function()
 		// Check that this tag is allowed here
 		//==============================================================
 
-		if (!context.allowedTags[tagName])
+		if (!currentTagIsAllowed(tagName))
 		{
 			log('debug', {
 				'msg'    : 'Tag %s is not allowed in this context',
@@ -805,13 +827,22 @@ s9e['TextFormatter'] = function()
 			context    : clone(context)
 		});
 
-		for (var k in context.allowedTags)
-		{
-			if (!tagConfig.allow[k])
-			{
-				delete context.allowedTags[k];
-			}
-		}
+		context.allowedChildren = bitwiseAnd(
+			tagsConfig[currentTag.name].allowedChildren,
+			context.allowedDescendants
+		);
+
+		context.allowedDescendants = bitwiseAnd(
+			tagsConfig[currentTag.name].allowedDescendants,
+			context.allowedDescendants
+		);
+	}
+
+	function currentTagIsAllowed()
+	{
+		var n = tagsConfig[currentTag.name].n;
+
+		return (context.allowedChildren.charAt(n) === "1");
 	}
 
 	function processCurrentEndTag()

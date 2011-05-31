@@ -1029,7 +1029,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @test
+	* test
 	* @depends testCanCreateRule
 	*/
 	public function getParserConfig_flattens_allow_and_deny_rules_into_the_allow_array()

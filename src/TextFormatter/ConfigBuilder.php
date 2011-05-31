@@ -1062,15 +1062,25 @@ class ConfigBuilder
 		$tagsConfig = $this->tags;
 		ksort($tagsConfig);
 
+		$n = -1;
+
 		foreach ($tagsConfig as $tagName => &$tag)
 		{
+			$tag['n'] = ++$n;
+
 			if ($reduce)
 			{
 				/**
-				* Build the list of allowed descendants and remove everything that's not needed by
-				* the global parser
+				* Build the list of allowed children and descendants. Note: $default is already
+				* sorted.
 				*/
-				$allow = array();
+				$default = array_fill_keys(
+					array_keys($tagsConfig),
+					($tag['defaultRule'] === 'allow') ? '1' : '0'
+				);
+
+				$allowedChildren = $default;
+				$allowedDescendants = $default;
 
 				if (isset($tag['rules']))
 				{
@@ -1086,7 +1096,8 @@ class ConfigBuilder
 							case 'allow':
 								foreach ($targets as $target)
 								{
-									$allow[$target] = true;
+									$allowedChildren[$target] = '1';
+									$allowedDescendants[$target] = '1';
 								}
 
 								// We don't need those anymore
@@ -1096,7 +1107,8 @@ class ConfigBuilder
 							case 'deny':
 								foreach ($targets as $target)
 								{
-									$allow[$target] = false;
+									$allowedChildren[$target] = '0';
+									$allowedDescendants[$target] = '0';
 								}
 
 								// We don't need those anymore
@@ -1130,29 +1142,28 @@ class ConfigBuilder
 					}
 				}
 
-				if ($tag['defaultRule'] === 'allow')
-				{
-					$allow += array_fill_keys(array_keys($tagsConfig), true);
-				}
+				unset($tag['defaultRule']);
 
 				/**
-				* Keep only the tags that are allowed
+				* We don't need the tag's template
 				*/
-				$tag['allow'] = array_filter($allow);
-				ksort($tag['allow']);
+				unset($tag['xsl']);
 
-				unset($tag['defaultRule']);
+				$tag['allowedChildren'] = self::bin2raw($allowedChildren);
+				$tag['allowedDescendants'] = self::bin2raw($allowedDescendants);
 			}
-
-			/**
-			* We don't need the tag's template
-			*/
-			unset($tag['xsl']);
 
 			ksort($tag);
 		}
 
 		return $tagsConfig;
+	}
+
+	static protected function bin2raw($values)
+	{
+		$bin = implode('', $values) . str_repeat('0', (((count($values) + 7) & 7) ^ 7));
+
+		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bin, 8)))));
 	}
 
 	//==========================================================================

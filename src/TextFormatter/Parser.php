@@ -968,16 +968,14 @@ class Parser
 		}
 
 		$this->context = array(
-			'allowedTags' => array_combine(
-				array_keys($this->tagsConfig),
-				array_keys($this->tagsConfig)
-			)
+			'allowedChildren' => str_repeat("\xff", ceil(count($this->tagsConfig) / 8)),
+			'allowedDescendants' => str_repeat("\xff", ceil(count($this->tagsConfig) / 8))
 		);
 
 		/**
 		* Seed the tag counters with 0 for each tag
 		*/
-		$this->cntTotal = array_fill_keys($this->context['allowedTags'], 0);
+		$this->cntTotal = array_fill_keys(array_keys($this->tagsConfig), 0);
 		$this->cntOpen  = $this->cntTotal;
 
 		$this->pos = 0;
@@ -1066,7 +1064,7 @@ class Parser
 		// Check that this tag is allowed here
 		//==============================================================
 
-		if (!isset($this->context['allowedTags'][$tagName]))
+		if (!$this->currentTagIsAllowed())
 		{
 			$this->log('debug', array(
 				'msg'    => 'Tag %s is not allowed in this context',
@@ -1094,16 +1092,31 @@ class Parser
 		}
 
 		$this->openTags[] = array(
-			'name'       => $tagName,
+			'name'       => $this->currentTag['name'],
 			'pluginName' => $this->currentTag['pluginName'],
 			'tagMate'    => $this->currentTag['tagMate'],
 			'context'    => $this->context
 		);
 
-		$this->context['allowedTags'] = array_intersect_key(
-			$this->context['allowedTags'],
-			$tagConfig['allow']
-		);
+		$this->context['allowedChildren']
+			= $this->tagsConfig[$this->currentTag['name']]['allowedChildren']
+			& $this->context['allowedDescendants'];
+
+		$this->context['allowedDescendants']
+			= $this->tagsConfig[$this->currentTag['name']]['allowedDescendants']
+			& $this->context['allowedDescendants'];
+	}
+
+	/**
+	* Test whether current tag is allowed in current context
+	*
+	* @return bool
+	*/
+	protected function currentTagIsAllowed()
+	{
+		$n = $this->tagsConfig[$this->currentTag['name']]['n'];
+
+		return (bool) (ord($this->context['allowedChildren'][$n >> 8]) & (1 << ($n & 7)));
 	}
 
 	/**

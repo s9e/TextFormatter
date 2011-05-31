@@ -579,11 +579,6 @@ class JSParserGenerator
 		{
 			$this->fixTagAttributesRegexp($tagConfig);
 
-			/**
-			* Sort tags alphabetically. It can improve the compression if the source gets gzip'ed
-			*/
-			ksort($tagConfig['allow']);
-
 			if (!empty($tagConfig['rules']))
 			{
 				foreach ($tagConfig['rules'] as $rule => &$tagNames)
@@ -595,6 +590,9 @@ class JSParserGenerator
 				}
 				unset($tagNames);
 			}
+
+			$tagConfig['allowedChildren'] = self::raw2bin($tagConfig['allowedChildren']);
+			$tagConfig['allowedDescendants'] = self::raw2bin($tagConfig['allowedDescendants']);
 		}
 		unset($tagConfig);
 
@@ -603,7 +601,6 @@ class JSParserGenerator
 			array(
 				'preserveKeys' => array(
 					array(true),
-					array(true, 'allow', true),
 					array(true, 'attrs', true)
 				),
 				'isRegexp' => array(
@@ -611,6 +608,17 @@ class JSParserGenerator
 				)
 			)
 		);
+	}
+
+	static protected function raw2bin($raw)
+	{
+		$bin = '';
+		foreach (str_split($raw, 1) as $c)
+		{
+			$bin .= substr(strrev(decbin(ord($c))) . '0000000', 0, 8);
+		}
+
+		return $bin;
 	}
 
 	protected function fixTagAttributesRegexp(array &$tagConfig)
