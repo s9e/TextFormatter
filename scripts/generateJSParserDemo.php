@@ -87,9 +87,9 @@ ob_start();
 	</style>
 </head>
 <body>
-	<div style="float:left">
+	<div style="float:left;width:80%;max-width:800px">
 		<form>
-			<textarea cols="80" rows="15">[float=right][youtube width=240 height=180]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
+			<textarea style="width:99%" rows="15">[float=right][youtube width=240 height=180]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
 
 This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter title="s9e\Toolkit\TextFormatter at GitHub.com"]s9e\Toolkit\TextFormatter[/url].
 
@@ -134,14 +134,14 @@ The parser/renderer used on this page page has been generated via [url=https://g
 		</form>
 	</div>
 
-	<div style="float:left">
+	<div style="float:left;">
 		<form>
-			<input type="checkbox" id="Autolink" checked="checked" onchange="toggle(this)"><label for="Autolink"> Autolink</label><br>
-			<input type="checkbox" id="BBCodes" checked="checked" onchange="toggle(this)"><label for="BBCodes"> BBCodes</label><br>
-			<input type="checkbox" id="Censor" checked="checked" onchange="toggle(this)"><label for="Censor"> Censor</label><br>
-			<input type="checkbox" id="Emoticons" checked="checked" onchange="toggle(this)"><label for="Emoticons"> Emoticons</label><br>
-			<input type="checkbox" id="HTMLEntities" checked="checked" onchange="toggle(this)"><label for="HTMLEntities"> HTMLEntities</label><br>
-			<input type="checkbox" id="WittyPants" checked="checked" onchange="toggle(this)"><label for="WittyPants"> WittyPants</label>
+			<input type="checkbox" id="Autolink" checked="checked" onchange="toggle(this)"><label for="Autolink">&nbsp;Autolink</label><br>
+			<input type="checkbox" id="BBCodes" checked="checked" onchange="toggle(this)"><label for="BBCodes">&nbsp;BBCodes</label><br>
+			<input type="checkbox" id="Censor" checked="checked" onchange="toggle(this)"><label for="Censor">&nbsp;Censor</label><br>
+			<input type="checkbox" id="Emoticons" checked="checked" onchange="toggle(this)"><label for="Emoticons">&nbsp;Emoticons</label><br>
+			<input type="checkbox" id="HTMLEntities" checked="checked" onchange="toggle(this)"><label for="HTMLEntities">&nbsp;HTMLEntities</label><br>
+			<input type="checkbox" id="WittyPants" checked="checked" onchange="toggle(this)"><label for="WittyPants">&nbsp;WittyPants</label>
 		</form>
 	</div>
 
