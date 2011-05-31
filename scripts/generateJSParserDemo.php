@@ -96,32 +96,27 @@ This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tre
 The following plugins have been enabled:
 
 [list]
-	[*][b]Autolink[/b] --- loose URLs such as http://github.com are automatically turned into links
+  [*][b]Autolink[/b] --- loose URLs such as http://github.com are automatically turned into links
 
-	[*][b]BBCodes[/b]
-	[list=square]
+  [*][b]BBCodes[/b]
+  [list=square]
+    [*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
+    [*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
+    [*][PRE][URL][/PRE], [PRE:123][PRE][/PRE:123], [PRE][YOUTUBE][/PRE], [PRE][FLOAT][/PRE], and [PRE][LIST][/PRE]
+  [/list][/*]
 
-		[*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
-		[*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-		[*][PRE][URL][/PRE], [PRE:123][PRE][/PRE:123], [PRE][YOUTUBE][/PRE], [PRE][FLOAT][/PRE], and [PRE][LIST][/PRE]
-
-	[/list][/*]
-
-	[*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
-
-	[*][b]Emoticons[/b] --- one emoticon :) has been added
-
-	[*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
-
-	[*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
+  [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
+  [*][b]Emoticons[/b] --- one emoticon :) has been added
+  [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
+  [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
 Additionally, in order to demonstrate some other features:
 
 [list]
-	[*]ConfigBuilder::disallowHost() --- links to [url=http://example.com]example.com[/url] are disabled
-	[*]HTMLEntitiesConfig::disableEntity() --- the HTML entity &amp;lt; is arbitrarily disabled
-	[*]a YouTube video, at the right, keeps playing as you're editing the text [i](including its own tag!)[/i] to demonstrate the partial-update algorithm used to refresh the preview
+  [*]ConfigBuilder::disallowHost() --- links to [url=http://example.com]example.com[/url] are disabled
+  [*]HTMLEntitiesConfig::disableEntity() --- the HTML entity &amp;lt; is arbitrarily disabled
+  [*]a YouTube video, at the right, keeps playing as you're editing the text [i](including its own tag!)[/i] to demonstrate the partial-update algorithm used to refresh the preview
 [/list]
 
 You can take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
