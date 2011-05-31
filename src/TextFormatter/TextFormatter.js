@@ -722,7 +722,7 @@ s9e['TextFormatter'] = function()
 
 		context = {
 			allowedChildren: str,
-			allowedDescendants: str,
+			allowedDescendants: str
 		};
 
 		pos = 0;
