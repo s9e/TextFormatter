@@ -86,7 +86,6 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Optimizes regexp by using lookahead assertion
  [x] Optimizes regexp by using lookahead assertion with escaped characters
  [x] Does not optimize regexp by using lookahead assertion with special sequences
- [x] getParserConfig flattens allow and deny rules into the allow array
  [x] getParserConfig removes rules that target non existing tags
  [x] getParserConfig preserves requireParent rules that target non existing tags
  [x] getParserConfig preserves requireAscendant rules that target non existing tags

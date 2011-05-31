@@ -53,6 +53,7 @@ class PredefinedTags
 	public function addURL()
 	{
 		$this->cb->addTag('URL');
+		$this->cb->addTagRule('URL', 'deny', 'URL');
 
 		$this->cb->addTagAttribute('URL', 'url', 'url');
 		$this->cb->addTagAttribute('URL', 'title', 'text', array('isRequired' => false));
