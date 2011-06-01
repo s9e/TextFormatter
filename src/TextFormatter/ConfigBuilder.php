@@ -53,7 +53,8 @@ class ConfigBuilder
 	public $defaultTagOptions = array(
 		'tagLimit'     => 100,
 		'nestingLimit' => 10,
-		'defaultRule'  => 'allow'
+		'defaultChildRule'      => 'allow',
+		'defaultDescendantRule' => 'allow'
 	);
 
 	//==========================================================================
@@ -647,10 +648,12 @@ class ConfigBuilder
 		$target  = $this->normalizeTagName($target, false);
 
 		if (!in_array($action, array(
-			'allow',
+			'allowChild',
+			'allowDescendant',
 			'closeParent',
 			'closeAscendant',
-			'deny',
+			'denyChild',
+			'denyDescendant',
 			'requireParent',
 			'requireAscendant'
 		), true))
@@ -659,6 +662,15 @@ class ConfigBuilder
 		}
 
 		$this->tags[$tagName]['rules'][$action][$target] = $target;
+
+		/**
+		* Replicate *Descendant rules to *Child
+		*/
+		if ($action === 'denyDescendant'
+		 || $action === 'allowDescendant')
+		{
+			 $this->addTagRule($tagName, substr($action, 0, -10) . 'Child', $target);
+		}
 	}
 
 	/**
@@ -1071,16 +1083,17 @@ class ConfigBuilder
 			if ($reduce)
 			{
 				/**
-				* Build the list of allowed children and descendants. Note: $default is already
-				* sorted.
+				* Build the list of allowed children and descendants.
+				* Note: $tagsConfig is already sorted, so we don't have to sort the list
 				*/
-				$default = array_fill_keys(
+				$tag['allowedChildren'] = array_fill_keys(
 					array_keys($tagsConfig),
-					($tag['defaultRule'] === 'allow') ? '1' : '0'
+					($tag['defaultChildRule'] === 'allow') ? '1' : '0'
 				);
-
-				$allowedChildren = $default;
-				$allowedDescendants = $default;
+				$tag['allowedDescendants'] = array_fill_keys(
+					array_keys($tagsConfig),
+					($tag['defaultDescendantRule'] === 'allow') ? '1' : '0'
+				);
 
 				if (isset($tag['rules']))
 				{
@@ -1093,33 +1106,34 @@ class ConfigBuilder
 					{
 						switch ($action)
 						{
-							case 'allow':
+							case 'allowChild':
+							case 'allowDescendant':
+							case 'denyChild':
+							case 'denyDescendant':
+								$k = (substr($action, -5) === 'Child')
+								   ? 'allowedChildren'
+								   : 'allowedDescendants';
+
+								$v = (substr($action, 0, 4) === 'deny') ? '0' : '1';
+
 								foreach ($targets as $target)
 								{
-									$allowedChildren[$target] = '1';
-									$allowedDescendants[$target] = '1';
+									// make sure the target really exists
+									if (isset($tag[$k][$target]))
+									{
+										$tag[$k][$target] = $v;
+									}
 								}
 
 								// We don't need those anymore
-								unset($tag['rules']['allow']);
-								break;
-
-							case 'deny':
-								foreach ($targets as $target)
-								{
-									$allowedChildren[$target] = '0';
-									$allowedDescendants[$target] = '0';
-								}
-
-								// We don't need those anymore
-								unset($tag['rules']['deny']);
+								unset($tag['rules'][$action]);
 								break;
 
 							case 'requireParent':
 							case 'requireAscendant':
 								/**
-								* Nothing to do here. If the target tag does not exist, this tag will
-								* never be valid but we still leave it in the configuration
+								* Nothing to do here. If the target tag does not exist, this tag
+								* will never be valid but we still leave it in the configuration
 								*/
 								break;
 
@@ -1142,15 +1156,28 @@ class ConfigBuilder
 					}
 				}
 
-				unset($tag['defaultRule']);
+				unset($tag['defaultChildRule']);
+				unset($tag['defaultDescendantRule']);
 
 				/**
 				* We don't need the tag's template
 				*/
 				unset($tag['xsl']);
 
-				$tag['allowedChildren'] = self::bin2raw($allowedChildren);
-				$tag['allowedDescendants'] = self::bin2raw($allowedDescendants);
+				/**
+				* Generate a proper (binary) bitfield
+				*/
+				$tag['allowedChildren'] = self::bin2raw($tag['allowedChildren']);
+				$tag['allowedDescendants'] = self::bin2raw($tag['allowedDescendants']);
+
+				/**
+				* Children are descendants of current node, so we apply denyDescendant rules to them
+				* as well.
+				*
+				* @todo This largely overlaps with the replication of *Descendant rules into *Child
+				*       rules in addTagRule() and should be looked into at some point
+				*/
+				$tag['allowedChildren'] &= $tag['allowedDescendants'];
 			}
 
 			ksort($tag);

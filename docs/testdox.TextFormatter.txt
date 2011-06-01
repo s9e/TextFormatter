@@ -293,8 +293,11 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] closeAscendant rule is applied to tag with identical suffix
  [x] closeAscendant rule is applied to tag with different suffix
  [x] closeAscendant rule is applied before nestingLimit is checked
- [x] deny rule blocks tag
- [x] allow rule allows tag
+ [x] denyChild rule blocks child tag
+ [x] denyChild rule does not block descendant tag
+ [x] denyDescendant rule blocks child tag
+ [x] denyDescendant rule blocks descendant tag
+ [x] allowChild rule allows child tag despite defaultChildRule being deny
  [x] requireAscendant rule is fulfilled by parent
  [x] requireAscendant rule is fulfilled by parent with suffix
  [x] requireAscendant rule is fulfilled by ascendant

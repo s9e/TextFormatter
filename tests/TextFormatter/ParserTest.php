@@ -2280,11 +2280,11 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function deny_rule_blocks_tag()
+	public function denyChild_rule_blocks_child_tag()
 	{
-		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'allow'));
+		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('a', 'deny', 'b');
+		$this->cb->addTagRule('a', 'denyChild', 'b');
 
 		$this->assertParsing(
 			'[a]..[b][/b]..[/a]',
@@ -2295,11 +2295,78 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function allow_rule_allows_tag()
+	public function denyChild_rule_does_not_block_descendant_tag()
 	{
-		$this->cb->BBCodes->addBBCode('a', array('defaultRule' => 'deny'));
+		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('a', 'allow', 'b');
+		$this->cb->BBCodes->addBBCode('c');
+		$this->cb->addTagRule('a', 'denyChild', 'c');
+
+		$this->assertParsing(
+			'[a][b][c][/c][/b][/a]',
+			'<rt>
+				<A>
+					<st>[a]</st>
+					<B>
+						<st>[b]</st>
+						<C>
+							<st>[c]</st>
+							<et>[/c]</et>
+						</C>
+						<et>[/b]</et>
+					</B>
+					<et>[/a]</et>
+				</A>
+			</rt>'
+		);
+	}
+
+
+	/**
+	* @test
+	*/
+	public function denyDescendant_rule_blocks_child_tag()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('a', 'denyDescendant', 'b');
+
+		$this->assertParsing(
+			'[a]..[b][/b]..[/a]',
+			'<rt><A><st>[a]</st>..[b][/b]..<et>[/a]</et></A></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function denyDescendant_rule_blocks_descendant_tag()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('c');
+		$this->cb->addTagRule('a', 'denyDescendant', 'c');
+
+		$this->assertParsing(
+			'[a][b][c][/c][/b][/a]',
+			'<rt>
+				<A>
+					<st>[a]</st>
+					<B><st>[b]</st>[c][/c]<et>[/b]</et></B>
+					<et>[/a]</et>
+				</A>
+			</rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function allowChild_rule_allows_child_tag_despite_defaultChildRule_being_deny()
+	{
+		$this->cb->BBCodes->addBBCode('a', array('defaultChildRule' => 'deny'));
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->addTagRule('a', 'allowChild', 'b');
 
 		$this->assertParsing(
 			'[a][b][/b][/a]',

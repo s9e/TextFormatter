@@ -53,7 +53,8 @@ class PredefinedTags
 	public function addURL()
 	{
 		$this->cb->addTag('URL');
-		$this->cb->addTagRule('URL', 'deny', 'URL');
+		$this->cb->addTagRule('URL', 'denyChild', 'URL');
+		$this->cb->addTagRule('URL', 'denyDescendant', 'URL');
 
 		$this->cb->addTagAttribute('URL', 'url', 'url');
 		$this->cb->addTagAttribute('URL', 'title', 'text', array('isRequired' => false));
@@ -79,7 +80,8 @@ class PredefinedTags
 	public function addIMG()
 	{
 		$this->cb->addTag('IMG', array(
-			'defaultRule' => 'deny'
+			'defaultChildRule' => 'deny',
+			'defaultDescendantRule' => 'deny'
 		));
 
 		$this->cb->addTagAttribute('IMG', 'src', 'url');
@@ -243,7 +245,8 @@ class PredefinedTags
 		);
 
 		$this->cb->addTag('COL', array(
-			'defaultRule' => 'deny'
+			'defaultChildRule' => 'deny',
+			'defaultDescendantRule' => 'deny'
 		));
 		$this->cb->addTagRule('COL', 'requireParent', 'TABLE');
 		$this->cb->addTagAttribute('COL', 'align', 'regexp', array(
@@ -328,7 +331,8 @@ class PredefinedTags
 	public function addCODE()
 	{
 		$this->cb->addTag('CODE', array(
-			'defaultRule' => 'deny',
+			'defaultChildRule' => 'deny',
+			'defaultDescendantRule' => 'deny'
 		));
 
 		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
@@ -358,7 +362,8 @@ class PredefinedTags
 	public function addHR()
 	{
 		$this->cb->addTag('HR', array(
-			'defaultRule' => 'deny',
+			'defaultChildRule' => 'deny',
+			'defaultDescendantRule' => 'deny',
 			'trimBefore'  => true,
 			'trimAfter'   => true
 		));
@@ -445,7 +450,8 @@ class PredefinedTags
 	public function addEMAIL()
 	{
 		$this->cb->addTag('EMAIL', array(
-			'defaultRule' => 'deny',
+			'defaultChildRule' => 'deny',
+			'defaultDescendantRule' => 'deny',
 			'attrs' => array(
 				'email'   => array(
 					'type' => 'email',
@@ -558,7 +564,10 @@ EOT
 
 	public function addNOPARSE()
 	{
-		$this->cb->addTag('NOPARSE', array('defaultRule' => 'deny'));
+		$this->cb->addTag('NOPARSE', array(
+			'defaultChildRule' => 'deny',
+			'defaultDescendantRule' => 'deny'
+		));
 		$this->cb->setTagTemplate(
 			'NOPARSE',
 			'<xsl:value-of select="text()" />'

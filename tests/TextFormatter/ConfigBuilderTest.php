@@ -336,7 +336,7 @@ class ConfigBuilderTest extends Test
 	public function testCannotCreateRuleOnNonExistentTag()
 	{
 		$this->cb->addTag('BAR');
-		$this->cb->addTagRule('FOO', 'deny', 'BAR');
+		$this->cb->addTagRule('FOO', 'denyChild', 'BAR');
 	}
 
 	/**
@@ -370,7 +370,7 @@ class ConfigBuilderTest extends Test
 	public function testCanCreateRuleThatTargetsANonExistentTag()
 	{
 		$this->cb->addTag('FOO');
-		$this->cb->addTagRule('FOO', 'deny', 'BAR');
+		$this->cb->addTagRule('FOO', 'denyChild', 'BAR');
 	}
 
 	/**
@@ -380,19 +380,19 @@ class ConfigBuilderTest extends Test
 	{
 		$this->cb->addTag('a');
 		$this->cb->addTag('b');
-		$this->cb->addTagRule('a', 'allow', 'b');
-		$this->cb->addTagRule('a', 'deny', 'b');
-		$this->cb->addTagRule('a', 'allow', 'b');
-		$this->cb->removeRule('a', 'allow', 'b');
+		$this->cb->addTagRule('a', 'allowChild', 'b');
+		$this->cb->addTagRule('a', 'denyChild', 'b');
+		$this->cb->addTagRule('a', 'allowChild', 'b');
+		$this->cb->removeRule('a', 'allowChild', 'b');
 
 		$tagsConfig = $this->cb->getTagsConfig();
 
 		$expected = array(
 			'A' => array(
 				'rules' => array(
-					'allow' => array(),
+					'allowChild' => array(),
 
-					'deny' => array(
+					'denyChild' => array(
 						'B' => 'B'
 					)
 				)
@@ -414,18 +414,18 @@ class ConfigBuilderTest extends Test
 
 		$this->cb->addTag('a', array(
 			'rules' => array(
-				'allow' => array('B'),
-				'deny'  => array('C', 'D')
+				'allowChild' => array('B'),
+				'denyChild'  => array('C', 'D')
 			)
 		));
 
 		$expected = array(
 			'A' => array(
 				'rules' => array(
-					'allow' => array(
+					'allowChild' => array(
 						'B' => 'B'
 					),
-					'deny' => array(
+					'denyChild' => array(
 						'C' => 'C',
 						'D' => 'D'
 					)
@@ -1025,46 +1025,6 @@ class ConfigBuilderTest extends Test
 				array('?', 'bar'),
 				array('?' => '.')
 			)
-		);
-	}
-
-	/**
-	* test
-	* @depends testCanCreateRule
-	*/
-	public function getParserConfig_flattens_allow_and_deny_rules_into_the_allow_array()
-	{
-		$this->cb->addTag('a', array('defaultRule' => 'allow'));
-		$this->cb->addTag('b', array('defaultRule' => 'allow'));
-		$this->cb->addTag('c', array('defaultRule' => 'deny'));
-
-		$this->cb->addTagRule('a', 'deny', 'c');
-		$this->cb->addTagRule('b', 'deny', 'a');
-		$this->cb->addTagRule('c', 'allow', 'a');
-
-		$this->assertArrayMatches(
-			array(
-				'tags' => array(
-					'A' => array(
-						'allow' => array(
-							'A' => true,
-							'B' => true
-						)
-					),
-					'B' => array(
-						'allow' => array(
-							'B' => true,
-							'C' => true
-						)
-					),
-					'C' => array(
-						'allow' => array(
-							'A' => true
-						)
-					)
-				)
-			),
-			$this->cb->getParserConfig()
 		);
 	}
 

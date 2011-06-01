@@ -480,7 +480,8 @@ class BBCodesConfig extends PluginConfig
 				*/
 				$attrName = 'content';
 
-				$options['defaultRule'] = 'deny';
+				$options['defaultChildRule'] = 'deny';
+				$options['defaultDescendantRule'] = 'deny';
 				$options['contentAttr'] = $attrName;
 
 				/**
