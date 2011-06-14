@@ -1544,7 +1544,7 @@ class ConfigBuilder
 		'area'=>array('c'=>3),
 		'article'=>array('c'=>257,'ac'=>1),
 		'aside'=>array('c'=>257,'ac'=>1),
-		'audio'=>array('c'=>23,'c2'=>'@controls','ac'=>4119,'ac12'=>'@src','ac0'=>'not(@src)','ac1'=>'not(@src)','ac4'=>'not(@src)','ac2'=>'not(@src)'),
+		'audio'=>array('c'=>23,'c2'=>'@controls','ac'=>4119,'ac12'=>'@src'),
 		'b'=>array('c'=>3,'ac'=>2),
 		'bdi'=>array('c'=>3,'ac'=>2),
 		'bdo'=>array('c'=>3,'ac'=>2),
@@ -1633,7 +1633,7 @@ class ConfigBuilder
 		'u'=>array('c'=>3,'ac'=>2),
 		'ul'=>array('c'=>1,'ac'=>2147483648),
 		'var'=>array('c'=>3,'ac'=>2),
-		'video'=>array('c'=>23,'c2'=>'@controls','ac'=>4119,'ac12'=>'@src','ac0'=>'not(@src)','ac1'=>'not(@src)','ac4'=>'not(@src)','ac2'=>'not(@src)'),
+		'video'=>array('c'=>23,'c2'=>'@controls','ac'=>4119,'ac12'=>'@src'),
 		'wbr'=>array('c'=>3)
 	);
 }

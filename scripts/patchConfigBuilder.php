@@ -337,7 +337,9 @@ foreach ($elements as $elName => &$element)
 
 			if (!isset($xpaths['']))
 			{
-				foreach ($xpaths as $xpath => $void)
+				$xpath = implode(' or ', array_keys($xpaths));
+
+				if (!preg_match('#^(@[a-z]+) or not\\(\\1\\)$#D', $xpath))
 				{
 					$el[$v . $bitNumber] = $xpath;
 				}
