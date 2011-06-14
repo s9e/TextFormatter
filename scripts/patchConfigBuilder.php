@@ -19,6 +19,58 @@ if (!file_exists($filepath))
 
 $page = SimpleDOM::loadHTMLFile($filepath);
 
+
+//==============================================================================
+// End tags that can be omitted => closeParent rules
+//==============================================================================
+
+$closeParent = array();
+
+foreach ($page->xpath('//h5[@id="optional-tags"]/following-sibling::p[following-sibling::h5/@id="element-restrictions"]') as $p)
+{
+	$text = preg_replace('#\\s+#', ' ', $p->textContent());
+
+	if (!preg_match("#^An? ([a-z0-5]+) element's end tag may be omitted if the \\1 element is immediately followed by a(?:n(other)?)? #", $text, $m))
+	{
+		continue;
+	}
+
+	$elName = $m[1];
+
+	$text = substr($text, strlen($m[0]));
+	$text = preg_replace('# or if there is no more content in the parent element\\.$#', '', $text);
+	$text = rtrim($text, ' .,');
+
+	if (preg_match('#^([a-z]+) element$#', $text, $m))
+	{
+		$closeParent[$elName][$m[1]] = 0;
+	}
+	elseif (preg_match('#^([a-z]+) element or an? ([a-z]+) element$#', $text, $m)
+	     || preg_match('#^([a-z]+) or ([a-z]+) element$#', $text, $m)
+	     || preg_match('#^([a-z]+) element, or if it is immediately followed by an? ([a-z]+) element$#', $text, $m))
+	{
+		$closeParent[$elName][$m[1]] = 0;
+		$closeParent[$elName][$m[2]] = 0;
+	}
+	elseif (preg_match('#([a-z0-9 ,]+), or ([a-z]+), element, or if there is no more content in the parent element and the parent element is not an a element$#', $text, $m))
+	{
+		$closeParent[$elName][$m[2]] = 0;
+
+		foreach (explode(', ', $m[1]) as $target)
+		{
+			$closeParent[$elName][$target] = 0;
+		}
+	}
+	else
+	{
+		die("Could not interpret '$text'\n");
+	}
+}
+
+//==============================================================================
+// Content models
+//==============================================================================
+
 $elements = array();
 
 foreach ($page->body->h4 as $h4)
@@ -299,7 +351,6 @@ foreach ($elements as &$element)
 unset($element);
 
 ksort($elements);
-print_r($elements);
 
 foreach ($categories as $k => &$v)
 {
@@ -313,7 +364,7 @@ $categories = array_flip(array_keys($categories));
 $arr = array();
 foreach ($elements as $elName => &$element)
 {
-	$el = array('c'  => 0);
+	$el = array();
 
 	$fields = array(
 		'categories' => 'c',
@@ -354,11 +405,19 @@ $php = '';
 foreach ($arr as $elName => $values)
 {
 	$sep = "\n\t\t'" . $elName . "'=>array(";
+
 	foreach ($values as $k => $v)
 	{
 		$php .= $sep . "'$k'=>" . var_export($v, true);
 		$sep = ',';
 	}
+
+	if (isset($closeParent[$elName]))
+	{
+		ksort($closeParent[$elName]);
+		$php .= $sep . "'cp'=>array('" . implode("','", array_keys($closeParent[$elName])) . "')";
+	}
+
 	$php .= '),';
 }
 
