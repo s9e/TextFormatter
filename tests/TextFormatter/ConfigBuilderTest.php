@@ -1567,6 +1567,29 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox HTML specs: <span> does not allow <div> as a child even with a <span> sibling
+	*/
+	public function testHTMLRules1b()
+	{
+		$this->cb->addTag('DIV', array(
+			'template' => '<span>xxx</span><div><xsl:apply-templates/></div>'
+		));
+		$this->cb->addTag('SPAN', array('template' => '<span><xsl:apply-templates/></span>'));
+
+		$this->assertEquals(
+			array(
+				'DIV' => array(
+					'allowChild' => array('DIV', 'SPAN')
+				),
+				'SPAN' => array(
+					'allowChild' => array('SPAN')
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
+
+	/**
 	* @testdox HTML specs: <li> closes parent <li>
 	*/
 	public function testHTMLRules2()

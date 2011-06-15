@@ -113,6 +113,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getJSPlugins returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
  [x] getJSPlugins ignores plugins with no Javascript parser
  [x] HTML specs: <span> does not allow <div> as a child
+ [x] HTML specs: <span> does not allow <div> as a child even with a <span> sibling
  [x] HTML specs: <li> closes parent <li>
  [x] HTML specs: <div> or <p> closes parent <p>
  [x] HTML specs: <a> denies <a> as descendant
