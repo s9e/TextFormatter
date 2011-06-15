@@ -113,6 +113,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getJSPlugins returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
  [x] getJSPlugins ignores plugins with no Javascript parser
  [x] Can generate rules to deny children that would be invalid as per HTML specs
+ [x] Can generate rules to close parent tags in a way compatible with HTML optional end tags
 
 s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray can encode arrays to objects

@@ -1565,4 +1565,26 @@ class ConfigBuilderTest extends Test
 			$this->cb->generateRulesFromHTML5Specs()
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function Can_generate_rules_to_close_parent_tags_in_a_way_compatible_with_HTML_optional_end_tags()
+	{
+		$this->cb->addTag('LI',  array('template' => '<li><xsl:apply-templates/></li>'));
+		$this->cb->addTag('UL',  array('template' => '<ul><xsl:apply-templates/></ul>'));
+
+		$this->assertEquals(
+			array(
+				'LI' => array(
+					'allowChild'  => array('UL'),
+					'closeParent' => array('LI')
+				),
+				'UL' => array(
+					'allowChild' => array('LI')
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
 }

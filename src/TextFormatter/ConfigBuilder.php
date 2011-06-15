@@ -1656,14 +1656,16 @@ class ConfigBuilder
 		$rules = array();
 
 		/**
-		* For each tag we store 4 values:
+		* For each tag we store 6 values:
 		*
 		* ac: bitfield representing all the categories allowed for child tags
 		* dd: bitfield representing all the categories that would get a descendant tag to be denied
-		*
 		* _ac/_dd: the values against which ac/dd is checked against
+		* cp: names of the HTML elements whose end tag can be omitted when followed by any of the
+		*     first HTML elements of this tag's templates
+		* _cp: names of the closest HTML ancestor to the tag's <xsl:apply-templates /> elements
 		*/
-		$tagBitfields = array();
+		$tagsInfo = array();
 
 		foreach ($this->tags as $tagName => $tag)
 		{
@@ -1671,7 +1673,7 @@ class ConfigBuilder
 				'<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $tag['xsl'] . '</xsl:stylesheet>'
 			);
 
-			$catBitfields = array();
+			$cp = $_cp = array();
 
 			$ac = $_ac = $maxCat;
 			$dd = $_dd = 0;
@@ -1700,6 +1702,11 @@ class ConfigBuilder
 					{
 						$isFirst = false;
 						$_ac &= $bitfield;
+
+						if (isset($this->htmlElements[$elName]['cp']))
+						{
+							$cp += array_flip($this->htmlElements[$elName]['cp']);
+						}
 					}
 
 					if (isset($this->htmlElements[$elName]['dd']))
@@ -1707,6 +1714,8 @@ class ConfigBuilder
 						$dd |= $this->filterHTMLRulesBitfield($elName, 'dd', $node);
 					}
 				}
+
+				$_cp[$elName] = 1;
 
 				if (empty($this->htmlElements[$elName]['ac']))
 				{
@@ -1718,26 +1727,33 @@ class ConfigBuilder
 				}
 			}
 
-			$tagBitfields[$tagName] = array(
+			$tagsInfo[$tagName] = array(
 				'ac'  => $ac,
 				'_ac' => $_ac,
 				'dd'  => $dd,
-				'_dd' => $_dd
+				'_dd' => $_dd,
+				'cp'  => $cp,
+				'_cp' => $_cp
 			);
 		}
 
-		foreach ($tagBitfields as $tagName => $bitfields)
+		foreach ($tagsInfo as $tagName => $tagInfo)
 		{
-			foreach ($tagBitfields as $target => $targetBitfields)
+			foreach ($tagsInfo as $target => $targetInfo)
 			{
-				if ($bitfields['ac'] & $targetBitfields['_ac'])
+				if ($tagInfo['ac'] & $targetInfo['_ac'])
 				{
 					$rules[$tagName]['allowChild'][] = $target;
 				}
 
-				if ($bitfields['dd'] & $targetBitfields['_dd'])
+				if ($tagInfo['dd'] & $targetInfo['_dd'])
 				{
 					$rules[$tagName]['denyDescendant'][] = $target;
+				}
+
+				if (array_intersect_key($tagInfo['cp'], $targetInfo['_cp']))
+				{
+					$rules[$tagName]['closeParent'][] = $target;
 				}
 			}
 		}
