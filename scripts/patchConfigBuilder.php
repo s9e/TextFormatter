@@ -1,10 +1,6 @@
 #!/usr/bin/php
 <?php
 
-/**
-* @todo use http://dev.w3.org/html5/spec/syntax.html#optional-tags for closeParent rules
-*/
-
 use s9e\Toolkit\SimpleDOM\SimpleDOM;
 
 include __DIR__ . '/../src/SimpleDOM/SimpleDOM.php';

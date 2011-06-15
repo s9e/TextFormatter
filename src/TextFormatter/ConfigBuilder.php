@@ -1657,7 +1657,17 @@ class ConfigBuilder
 	/**
 	* Generate rules based on HTML5 content models
 	*
+	* We use the HTML5 specs to determine which children or descendants should be allowed or denied
+	* based on HTML5 content models. While it does not exactly match HTML5 content models, it gets
+	* pretty close. We also use HTML5 "optional end tag" rules to create closeParent rules.
+	*
+	* Currently, this method does not evaluate elements created with <xsl:element> correctly, or
+	* attributes created with <xsl:attribute> and may never will due to the increased complexity it
+	* would entail. Additionally, it does not evaluate the scope of <xsl:apply-templates/>. For
+	* instance, it will treat <xsl:apply-templates select="LI"/> as if it was <xsl:apply-templates/>
+	*
 	* @link http://dev.w3.org/html5/spec/content-models.html#content-models
+	* @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
 	* @see  ../../scripts/patchConfigBuilder.php
 	*
 	* @return array
