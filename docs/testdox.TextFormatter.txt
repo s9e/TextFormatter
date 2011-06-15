@@ -114,6 +114,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getJSPlugins ignores plugins with no Javascript parser
  [x] Can generate rules to deny children that would be invalid as per HTML specs
  [x] Can generate rules to close parent tags in a way compatible with HTML optional end tags
+ [x] H t m l rules 4
 
 s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray can encode arrays to objects

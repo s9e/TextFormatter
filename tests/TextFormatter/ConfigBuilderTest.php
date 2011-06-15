@@ -1609,4 +1609,21 @@ class ConfigBuilderTest extends Test
 			$this->cb->generateRulesFromHTML5Specs()
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function testHTMLRules4()
+	{
+		$this->cb->addTag('A', array('template' => '<a><xsl:apply-templates/></a>'));
+
+		$this->assertEquals(
+			array(
+				'A' => array(
+					'denyDescendant' => array('A')
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
 }

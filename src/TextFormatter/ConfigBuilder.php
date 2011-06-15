@@ -1538,7 +1538,7 @@ class ConfigBuilder
 	//==========================================================================
 
 	protected $htmlElements = array(
-		'a'=>array('c'=>7,'ac'=>7,'dd'=>4),
+		'a'=>array('c'=>7,'ac'=>3,'dd'=>4),
 		'abbr'=>array('c'=>3,'ac'=>2),
 		'address'=>array('c'=>513,'ac'=>1,'dd'=>776,'cp'=>array('p')),
 		'area'=>array('c'=>3),
@@ -1758,14 +1758,19 @@ class ConfigBuilder
 		{
 			foreach ($tagsInfo as $target => $targetInfo)
 			{
-				if ($tagInfo['ac'] & $targetInfo['_ac'])
-				{
-					$rules[$tagName]['allowChild'][] = $target;
-				}
-
+				/**
+				* Create a denyDescendant rule if applicable, otherwise create an allowChild rule
+				* if applicable. In some cases such as the <a> element, both rules could be created
+				* but since deny overrides allow there's no point creating the former if we also
+				* create the latter.
+				*/
 				if ($tagInfo['dd'] & $targetInfo['_dd'])
 				{
 					$rules[$tagName]['denyDescendant'][] = $target;
+				}
+				elseif ($tagInfo['ac'] & $targetInfo['_ac'])
+				{
+					$rules[$tagName]['allowChild'][] = $target;
 				}
 
 				if (array_intersect_key($tagInfo['cp'], $targetInfo['_cp']))

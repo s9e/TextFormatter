@@ -398,6 +398,12 @@ foreach ($elements as $elName => &$element)
 		}
 	}
 
+	// No point allowing a child that we also deny as a descendant
+	if (isset($el['ac'], $el['dd']))
+	{
+		$el['ac'] &=~ $el['dd'];
+	}
+
 	$arr[$elName] = $el;
 }
 
