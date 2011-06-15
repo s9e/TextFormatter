@@ -1546,9 +1546,9 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox HTML specs: <span> does not allow <div> as a child
 	*/
-	public function Can_generate_rules_to_deny_children_that_would_be_invalid_as_per_HTML_specs()
+	public function testHTMLRules1()
 	{
 		$this->cb->addTag('DIV',  array('template' => '<div><xsl:apply-templates/></div>'));
 		$this->cb->addTag('SPAN', array('template' => '<span><xsl:apply-templates/></span>'));
@@ -1567,9 +1567,9 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox HTML specs: <li> closes parent <li>
 	*/
-	public function Can_generate_rules_to_close_parent_tags_in_a_way_compatible_with_HTML_optional_end_tags()
+	public function testHTMLRules2()
 	{
 		$this->cb->addTag('LI', array('template' => '<li><xsl:apply-templates/></li>'));
 		$this->cb->addTag('UL', array('template' => '<ul><xsl:apply-templates/></ul>'));
@@ -1589,9 +1589,9 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox HTML specs: <div> or <p> closes parent <p>
 	*/
-	public function Can_generate_rules_to_close_parent_tags_in_a_way_compatible_with_HTML_optional_end_tags2()
+	public function testHTMLRules3()
 	{
 		$this->cb->addTag('DIV', array('template' => '<div><xsl:apply-templates/></div>'));
 		$this->cb->addTag('P',   array('template' => '<p><xsl:apply-templates/></p>'));
@@ -1611,7 +1611,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox HTML specs: <a> denies <a> as descendant
 	*/
 	public function testHTMLRules4()
 	{

@@ -1664,12 +1664,6 @@ class ConfigBuilder
 	*/
 	public function generateRulesFromHTML5Specs()
 	{
-		$maxCat = 0;
-		foreach ($this->htmlElements as $element)
-		{
-			$maxCat |= $element['c'];
-		}
-
 		$rules = array();
 
 		/**
@@ -1692,39 +1686,69 @@ class ConfigBuilder
 
 			$cp = $_cp = array();
 
-			$ac = $_ac = $maxCat;
+			$ac = $_ac = null;
 			$dd = $_dd = 0;
 
+			/**
+			* Get the first HTML element from every branch of every template and compute the values
+			* for _ac and cp
+			*/
+			foreach ($root->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]') as $node)
+			{
+				$elName = $node->getName();
+
+				if (!isset($this->htmlElements[$elName]))
+				{
+					// Skip unknown HTML elements
+					continue;
+				}
+
+				$bitfield = $this->filterHTMLRulesBitfield($elName, 'c', $node);
+
+				if (isset($_ac))
+				{
+					$_ac &= $bitfield;
+				}
+				else
+				{
+					$_ac = $bitfield;
+				}
+
+				if (isset($this->htmlElements[$elName]['cp']))
+				{
+					$cp += array_flip($this->htmlElements[$elName]['cp']);
+				}
+			}
+
+			/**
+			* Get every HTML element from every branch of every template and compute the value
+			* for _dd
+			*/
+			foreach ($root->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
+			{
+				$elName = $node->getName();
+
+				if (!isset($this->htmlElements[$elName]))
+				{
+					// Skip unknown HTML elements
+					continue;
+				}
+
+				$_dd |= $this->filterHTMLRulesBitfield($elName, 'c', $node);
+			}
+
+			/**
+			* Get every HTML element from every branch that contains a <xsl:apply-templates/> node
+			* in every template of current tag and build the dd value as well as the ac value and
+			* the list of tags for _cp
+			*/
 			foreach ($root->xpath('//xsl:apply-templates') as $at)
 			{
 				unset($elName);
 
-				$isFirst = true;
-
 				foreach ($at->xpath('./ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
 				{
 					$elName = $node->getName();
-
-					if (!isset($this->htmlElements[$elName]))
-					{
-						// Skip unknown HTML elements
-						continue;
-					}
-
-					$bitfield = $this->filterHTMLRulesBitfield($elName, 'c', $node);
-
-					$_dd |= $bitfield;
-
-					if ($isFirst)
-					{
-						$isFirst = false;
-						$_ac &= $bitfield;
-
-						if (isset($this->htmlElements[$elName]['cp']))
-						{
-							$cp += array_flip($this->htmlElements[$elName]['cp']);
-						}
-					}
 
 					if (isset($this->htmlElements[$elName]['dd']))
 					{
@@ -1740,13 +1764,32 @@ class ConfigBuilder
 				}
 				else
 				{
-					$ac &= $this->filterHTMLRulesBitfield($elName, 'ac', $node);
+					$bitfield = $this->filterHTMLRulesBitfield($elName, 'ac', $node);
+
+					if (isset($ac))
+					{
+						$ac &= $bitfield;
+					}
+					else
+					{
+						$ac = $bitfield;
+					}
 				}
 			}
 
+			/**
+			* @todo should probably be changed into allowChild rules. Also needs similar code for
+			*       defaultDescendantRule === 'deny'
+			*/
+			if (!$ac && $tag['defaultChildRule'] === 'allow')
+			{
+				$dd = $maxCat;
+			}
+
 			$tagsInfo[$tagName] = array(
-				'ac'  => $ac,
-				'_ac' => $_ac,
+				// NOTE: $ac and $_ac might be null, which should be converted to 0
+				'ac'  => (int) $ac,
+				'_ac' => (int) $_ac,
 				'dd'  => $dd,
 				'_dd' => $_dd,
 				'cp'  => $cp,

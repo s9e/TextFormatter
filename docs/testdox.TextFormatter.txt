@@ -112,9 +112,10 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can clear all postFilter callbacks from a tag attribute
  [x] getJSPlugins returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
  [x] getJSPlugins ignores plugins with no Javascript parser
- [x] Can generate rules to deny children that would be invalid as per HTML specs
- [x] Can generate rules to close parent tags in a way compatible with HTML optional end tags
- [x] H t m l rules 4
+ [x] HTML specs: <span> does not allow <div> as a child
+ [x] HTML specs: <li> closes parent <li>
+ [x] HTML specs: <div> or <p> closes parent <p>
+ [x] HTML specs: <a> denies <a> as descendant
 
 s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray can encode arrays to objects
