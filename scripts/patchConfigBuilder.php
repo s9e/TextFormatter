@@ -408,7 +408,17 @@ foreach ($arr as $elName => $values)
 
 	foreach ($values as $k => $v)
 	{
-		$php .= $sep . "'$k'=>" . var_export($v, true);
+		$php .= $sep . "'$k'=>";
+
+		if (is_int($v) && $v > 0x7fffffff)
+		{
+			$php .= '0x' . dechex($v);
+		}
+		else
+		{
+			$php .= var_export($v, true);
+		}
+
 		$sep = ',';
 	}
 
