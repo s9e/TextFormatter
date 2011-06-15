@@ -116,6 +116,8 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] HTML specs: <li> closes parent <li>
  [x] HTML specs: <div> or <p> closes parent <p>
  [x] HTML specs: <a> denies <a> as descendant
+ [x] HTML specs: <a> allows <img> with no usemap attribute
+ [x] HTML specs: <a> denies <img> with usemap attribute
 
 s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray can encode arrays to objects

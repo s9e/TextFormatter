@@ -1664,6 +1664,12 @@ class ConfigBuilder
 	*/
 	public function generateRulesFromHTML5Specs()
 	{
+		$maxCat = 0;
+		foreach ($this->htmlElements as $element)
+		{
+			$maxCat |= $element['c'];
+		}
+
 		$rules = array();
 
 		/**

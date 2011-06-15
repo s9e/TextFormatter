@@ -1626,4 +1626,47 @@ class ConfigBuilderTest extends Test
 			$this->cb->generateRulesFromHTML5Specs()
 		);
 	}
+
+	/**
+	* @testdox HTML specs: <a> allows <img> with no usemap attribute
+	*/
+	public function testHTMLRules5()
+	{
+		$this->cb->addTag('A', array('template' => '<a><xsl:apply-templates/></a>'));
+		$this->cb->addTag('IMG', array('template' => '<img/>'));
+
+		$this->assertEquals(
+			array(
+				'A' => array(
+					'denyDescendant' => array('A'),
+					'allowChild' => array('IMG'),
+				),
+				'IMG' => array(
+					'denyDescendant' => array('A', 'IMG')
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
+
+	/**
+	* @testdox HTML specs: <a> denies <img> with usemap attribute
+	*/
+	public function testHTMLRules6()
+	{
+		$this->cb->addTag('A', array('template' => '<a><xsl:apply-templates/></a>'));
+		$this->cb->addTag('IMG', array('template' => '<img usemap="#foo"/>'));
+
+		$this->assertEquals(
+			array(
+				'A' => array(
+					'denyDescendant' => array('A', 'IMG')
+				),
+				'IMG' => array(
+					'denyDescendant' => array('A', 'IMG')
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
 }
