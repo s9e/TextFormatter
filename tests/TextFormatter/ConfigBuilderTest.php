@@ -1544,4 +1544,25 @@ class ConfigBuilderTest extends Test
 			$this->cb->getJSPlugins()
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function Can_generate_rules_to_deny_children_that_would_be_invalid_as_per_HTML_specs()
+	{
+		$this->cb->addTag('DIV',  array('template' => '<div><xsl:apply-templates/></div>'));
+		$this->cb->addTag('SPAN', array('template' => '<span><xsl:apply-templates/></span>'));
+
+		$this->assertEquals(
+			array(
+				'DIV' => array(
+					'allowChild' => array('DIV', 'SPAN')
+				),
+				'SPAN' => array(
+					'allowChild' => array('SPAN')
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
 }

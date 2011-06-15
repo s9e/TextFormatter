@@ -11,6 +11,7 @@ use DOMDocument,
 	DOMXPath,
 	InvalidArgumentException,
     RuntimeException,
+	SimpleXMLElement,
     UnexpectedValueException;
 
 class ConfigBuilder
@@ -1532,7 +1533,6 @@ class ConfigBuilder
 		return $plugins;
 	}
 
-
 	//==========================================================================
 	// HTML guessing stuff
 	//==========================================================================
@@ -1636,4 +1636,138 @@ class ConfigBuilder
 		'video'=>array('c'=>23,'c2'=>'@controls','ac'=>4119,'ac12'=>'@src'),
 		'wbr'=>array('c'=>3)
 	);
+
+	/**
+	* Generate rules based on HTML5 content models
+	*
+	* @link http://dev.w3.org/html5/spec/content-models.html#content-models
+	* @see  ../../scripts/patchConfigBuilder.php
+	*
+	* @return array
+	*/
+	public function generateRulesFromHTML5Specs()
+	{
+		$maxCat = 0;
+		foreach ($this->htmlElements as $element)
+		{
+			$maxCat |= $element['c'];
+		}
+
+		$rules = array();
+
+		/**
+		* For each tag we store 4 values:
+		*
+		* ac: bitfield representing all the categories allowed for child tags
+		* dd: bitfield representing all the categories that would get a descendant tag to be denied
+		*
+		* _ac/_dd: the values against which ac/dd is checked against
+		*/
+		$tagBitfields = array();
+
+		foreach ($this->tags as $tagName => $tag)
+		{
+			$root = simplexml_load_string(
+				'<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $tag['xsl'] . '</xsl:stylesheet>'
+			);
+
+			$catBitfields = array();
+
+			$ac = $_ac = $maxCat;
+			$dd = $_dd = 0;
+
+			foreach ($root->xpath('//xsl:apply-templates') as $at)
+			{
+				unset($elName);
+
+				$isFirst = true;
+
+				foreach ($at->xpath('./ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
+				{
+					$elName = $node->getName();
+
+					if (!isset($this->htmlElements[$elName]))
+					{
+						// Skip unknown HTML elements
+						continue;
+					}
+
+					$bitfield = $this->filterHTMLRulesBitfield($elName, 'c', $node);
+
+					$_dd |= $bitfield;
+
+					if ($isFirst)
+					{
+						$isFirst = false;
+						$_ac &= $bitfield;
+					}
+
+					if (isset($this->htmlElements[$elName]['dd']))
+					{
+						$dd |= $this->filterHTMLRulesBitfield($elName, 'dd', $node);
+					}
+				}
+
+				if (empty($this->htmlElements[$elName]['ac']))
+				{
+					$ac = 0;
+				}
+				else
+				{
+					$ac &= $this->filterHTMLRulesBitfield($elName, 'ac', $node);
+				}
+			}
+
+			$tagBitfields[$tagName] = array(
+				'ac'  => $ac,
+				'_ac' => $_ac,
+				'dd'  => $dd,
+				'_dd' => $_dd
+			);
+		}
+
+		foreach ($tagBitfields as $tagName => $bitfields)
+		{
+			foreach ($tagBitfields as $target => $targetBitfields)
+			{
+				if ($bitfields['ac'] & $targetBitfields['_ac'])
+				{
+					$rules[$tagName]['allowChild'][] = $target;
+				}
+
+				if ($bitfields['dd'] & $targetBitfields['_dd'])
+				{
+					$rules[$tagName]['denyDescendant'][] = $target;
+				}
+			}
+		}
+
+		return $rules;
+	}
+
+	protected function filterHTMLRulesBitfield($elName, $k, SimpleXMLElement $node)
+	{
+		if (empty($this->htmlElements[$elName][$k]))
+		{
+			return 0;
+		}
+
+		$bitfield = $this->htmlElements[$elName][$k];
+
+		foreach (str_split(strrev(decbin($bitfield)), 1) as $n => $v)
+		{
+			if (!$v)
+			{
+				continue;
+			}
+
+			if (isset($this->htmlElements[$elName][$k . $n])
+			 && !$node->xpath($this->htmlElements[$elName][$k . $n]))
+			{
+				$bitfield ^= 1 << $n;
+			}
+		}
+
+		return $bitfield;
+	}
 }
