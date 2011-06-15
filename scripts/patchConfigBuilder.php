@@ -43,22 +43,22 @@ foreach ($page->xpath('//h5[@id="optional-tags"]/following-sibling::p[following-
 
 	if (preg_match('#^([a-z]+) element$#', $text, $m))
 	{
-		$closeParent[$elName][$m[1]] = 0;
+		$closeParent[$m[1]][$elName] = 0;
 	}
 	elseif (preg_match('#^([a-z]+) element or an? ([a-z]+) element$#', $text, $m)
 	     || preg_match('#^([a-z]+) or ([a-z]+) element$#', $text, $m)
 	     || preg_match('#^([a-z]+) element, or if it is immediately followed by an? ([a-z]+) element$#', $text, $m))
 	{
-		$closeParent[$elName][$m[1]] = 0;
-		$closeParent[$elName][$m[2]] = 0;
+		$closeParent[$m[1]][$elName] = 0;
+		$closeParent[$m[2]][$elName] = 0;
 	}
 	elseif (preg_match('#([a-z0-9 ,]+), or ([a-z]+), element, or if there is no more content in the parent element and the parent element is not an a element$#', $text, $m))
 	{
-		$closeParent[$elName][$m[2]] = 0;
+		$closeParent[$m[2]][$elName] = 0;
 
 		foreach (explode(', ', $m[1]) as $target)
 		{
-			$closeParent[$elName][$target] = 0;
+			$closeParent[$target][$elName] = 0;
 		}
 	}
 	else
