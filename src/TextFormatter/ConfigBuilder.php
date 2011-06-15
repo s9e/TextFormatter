@@ -1638,6 +1638,23 @@ class ConfigBuilder
 	);
 
 	/**
+	* Add rules generated from the HTML5 specs
+	*/
+	public function addRulesFromHTML5Specs()
+	{
+		foreach ($this->generateRulesFromHTML5Specs() as $tagName => $rules)
+		{
+			foreach ($rules as $action => $targets)
+			{
+				foreach ($targets as $target)
+				{
+					$this->addTagRule($tagName, $action, $target);
+				}
+			}
+		}
+	}
+
+	/**
 	* Generate rules based on HTML5 content models
 	*
 	* @link http://dev.w3.org/html5/spec/content-models.html#content-models
