@@ -1571,8 +1571,8 @@ class ConfigBuilderTest extends Test
 	*/
 	public function Can_generate_rules_to_close_parent_tags_in_a_way_compatible_with_HTML_optional_end_tags()
 	{
-		$this->cb->addTag('LI',  array('template' => '<li><xsl:apply-templates/></li>'));
-		$this->cb->addTag('UL',  array('template' => '<ul><xsl:apply-templates/></ul>'));
+		$this->cb->addTag('LI', array('template' => '<li><xsl:apply-templates/></li>'));
+		$this->cb->addTag('UL', array('template' => '<ul><xsl:apply-templates/></ul>'));
 
 		$this->assertEquals(
 			array(
