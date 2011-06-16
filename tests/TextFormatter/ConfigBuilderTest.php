@@ -1556,10 +1556,15 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'DIV' => array(
-					'allowChild' => array('DIV', 'SPAN')
+					'rules' => array(
+						'allowChild' => array('DIV', 'SPAN')
+					)
 				),
 				'SPAN' => array(
-					'allowChild' => array('SPAN')
+					'rules' => array(
+						'allowChild' => array('SPAN'),
+						'denyChild'  => array('DIV')
+					)
 				)
 			),
 			$this->cb->generateRulesFromHTML5Specs()
@@ -1579,10 +1584,44 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'DIV' => array(
-					'allowChild' => array('DIV', 'SPAN')
+					'rules' => array(
+						'allowChild' => array('DIV', 'SPAN')
+					)
 				),
 				'SPAN' => array(
-					'allowChild' => array('SPAN')
+					'rules' => array(
+						'allowChild' => array('SPAN'),
+						'denyChild'  => array('DIV')
+					)
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
+
+	/**
+	* @testdox HTML specs: <span> with a <div> sibling does not allow <div> as a child
+	*/
+	public function testHTMLRules1c()
+	{
+		$this->cb->addTag('DIV', array(
+			'template' => '<span><xsl:apply-templates/></span><div><xsl:apply-templates/></div>'
+		));
+		$this->cb->addTag('SPAN', array('template' => '<span><xsl:apply-templates/></span>'));
+
+		$this->assertEquals(
+			array(
+				'DIV' => array(
+					'rules' => array(
+						'allowChild' => array('SPAN'),
+						'denyChild'  => array('DIV')
+					)
+				),
+				'SPAN' => array(
+					'rules' => array(
+						'allowChild' => array('SPAN'),
+						'denyChild'  => array('DIV')
+					)
 				)
 			),
 			$this->cb->generateRulesFromHTML5Specs()
@@ -1600,11 +1639,17 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'LI' => array(
-					'allowChild'  => array('UL'),
-					'closeParent' => array('LI')
+					'rules' => array(
+						'allowChild'  => array('UL'),
+						'denyChild'   => array('LI'),
+						'closeParent' => array('LI')
+					)
 				),
 				'UL' => array(
-					'allowChild' => array('LI')
+					'rules' => array(
+						'allowChild' => array('LI'),
+						'denyChild'  => array('UL')
+					)
 				)
 			),
 			$this->cb->generateRulesFromHTML5Specs()
@@ -1622,11 +1667,16 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'DIV' => array(
-					'allowChild'  => array('DIV', 'P'),
-					'closeParent' => array('P')
+					'rules' => array(
+						'allowChild'  => array('DIV', 'P'),
+						'closeParent' => array('P')
+					)
 				),
 				'P' => array(
-					'closeParent' => array('P')
+					'rules' => array(
+						'denyChild'   => array('DIV', 'P'),
+						'closeParent' => array('P')
+					)
 				)
 			),
 			$this->cb->generateRulesFromHTML5Specs()
@@ -1643,7 +1693,9 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'A' => array(
-					'denyDescendant' => array('A')
+					'rules' => array(
+						'denyDescendant' => array('A')
+					)
 				)
 			),
 			$this->cb->generateRulesFromHTML5Specs()
@@ -1661,11 +1713,15 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'A' => array(
-					'denyDescendant' => array('A'),
-					'allowChild' => array('IMG'),
+					'rules' => array(
+						'denyDescendant' => array('A'),
+						'allowChild' => array('IMG')
+					)
 				),
 				'IMG' => array(
-					'denyDescendant' => array('A', 'IMG')
+					'rules' => array(
+						'denyChild' => array('A', 'IMG')
+					)
 				)
 			),
 			$this->cb->generateRulesFromHTML5Specs()
@@ -1683,10 +1739,14 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'A' => array(
-					'denyDescendant' => array('A', 'IMG')
+					'rules' => array(
+						'denyDescendant' => array('A', 'IMG')
+					)
 				),
 				'IMG' => array(
-					'denyDescendant' => array('A', 'IMG')
+					'rules' => array(
+						'denyChild' => array('A', 'IMG')
+					)
 				)
 			),
 			$this->cb->generateRulesFromHTML5Specs()

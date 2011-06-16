@@ -1674,172 +1674,178 @@ class ConfigBuilder
 	*/
 	public function generateRulesFromHTML5Specs()
 	{
-		$maxCat = 0;
-		foreach ($this->htmlElements as $element)
-		{
-			$maxCat |= $element['c'];
-		}
-
-		$rules = array();
-
-		/**
-		* For each tag we store 6 values:
-		*
-		* ac: bitfield representing all the categories allowed for child tags
-		* dd: bitfield representing all the categories that would get a descendant tag to be denied
-		* _ac/_dd: the values against which ac/dd is checked against
-		* cp: names of the HTML elements whose end tag can be omitted when followed by any of the
-		*     first HTML elements of this tag's templates
-		* _cp: names of the closest HTML ancestor to the tag's <xsl:apply-templates /> elements
-		*/
 		$tagsInfo = array();
 
 		foreach ($this->tags as $tagName => $tag)
 		{
-			$root = simplexml_load_string(
+			$tagInfo = array();
+
+			$tagInfo['root'] = simplexml_load_string(
 				'<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $tag['xsl'] . '</xsl:stylesheet>'
 			);
 
-			$cp = $_cp = array();
-
-			$ac = $_ac = null;
-			$dd = $_dd = 0;
+			/**
+			* Get every HTML element with no HTML ancestor
+			*/
+			$tagInfo['firstChildren'] = $tagInfo['root']->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]');
 
 			/**
-			* Get the first HTML element from every branch of every template and compute the values
-			* for _ac and cp
+			* Compute the category bitfield of every first element
 			*/
-			foreach ($root->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]') as $node)
+			$tagInfo['firstChildrenCategoryBitfield'] = array();
+
+			foreach ($tagInfo['firstChildren'] as $firstChild)
 			{
-				$elName = $node->getName();
-
-				if (!isset($this->htmlElements[$elName]))
-				{
-					// Skip unknown HTML elements
-					continue;
-				}
-
-				$bitfield = $this->filterHTMLRulesBitfield($elName, 'c', $node);
-
-				if (isset($_ac))
-				{
-					$_ac &= $bitfield;
-				}
-				else
-				{
-					$_ac = $bitfield;
-				}
-
-				if (isset($this->htmlElements[$elName]['cp']))
-				{
-					$cp += array_flip($this->htmlElements[$elName]['cp']);
-				}
+				$tagInfo['firstChildrenCategoryBitfield'][]
+					= $this->filterHTMLRulesBitfield($firstChild->getName(), 'c', $firstChild);
 			}
 
 			/**
-			* Get every HTML element from every branch of every template and compute the value
-			* for _dd
+			* Get the closest HTML ancestor for every <xsl:apply-templates/> element
 			*/
-			foreach ($root->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
+			$tagInfo['lastChildren'] = $tagInfo['root']->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(descendant::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])][descendant::xsl:apply-templates]');
+
+			/**
+			* Get every HTML element from this tag's template(s) and generate a bitfield that
+			* represents all the content models in use
+			*/
+			$tagInfo['usedCategories'] = 0;
+
+			foreach ($tagInfo['root']->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
 			{
-				$elName = $node->getName();
-
-				if (!isset($this->htmlElements[$elName]))
-				{
-					// Skip unknown HTML elements
-					continue;
-				}
-
-				$_dd |= $this->filterHTMLRulesBitfield($elName, 'c', $node);
+				$tagInfo['usedCategories']
+					|= $this->filterHTMLRulesBitfield($node->getName(), 'c', $node);
 			}
 
 			/**
-			* Get every HTML element from every branch that contains a <xsl:apply-templates/> node
-			* in every template of current tag and build the dd value as well as the ac value and
-			* the list of tags for _cp
+			* Get every HTML ancestor from every <xsl:apply-templates/> and build a bitfield that
+			* matches all denied descendants
 			*/
-			foreach ($root->xpath('//xsl:apply-templates') as $at)
+			$tagInfo['denyDescendantsBitfield'] = 0;
+
+			foreach ($tagInfo['root']->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][descendant::xsl:apply-templates]') as $node)
 			{
-				unset($elName);
-
-				foreach ($at->xpath('./ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
-				{
-					$elName = $node->getName();
-
-					if (isset($this->htmlElements[$elName]['dd']))
-					{
-						$dd |= $this->filterHTMLRulesBitfield($elName, 'dd', $node);
-					}
-				}
-
-				$_cp[$elName] = 1;
-
-				if (empty($this->htmlElements[$elName]['ac']))
-				{
-					$ac = 0;
-				}
-				else
-				{
-					$bitfield = $this->filterHTMLRulesBitfield($elName, 'ac', $node);
-
-					if (isset($ac))
-					{
-						$ac &= $bitfield;
-					}
-					else
-					{
-						$ac = $bitfield;
-					}
-				}
+				$tagInfo['denyDescendantsBitfield']
+					|= $this->filterHTMLRulesBitfield($node->getName(), 'dd', $node);
 			}
 
-			/**
-			* @todo should probably be changed into allowChild rules. Also needs similar code for
-			*       defaultDescendantRule === 'deny'
-			*/
-			if (!$ac && $tag['defaultChildRule'] === 'allow')
-			{
-				$dd = $maxCat;
-			}
-
-			$tagsInfo[$tagName] = array(
-				// NOTE: $ac and $_ac might be null, which should be converted to 0
-				'ac'  => (int) $ac,
-				'_ac' => (int) $_ac,
-				'dd'  => $dd,
-				'_dd' => $_dd,
-				'cp'  => $cp,
-				'_cp' => $_cp
-			);
+			$tagsInfo[$tagName] = $tagInfo;
 		}
 
+		$ret = array();
+
+		/**
+		* Generate closeParent rules
+		*/
 		foreach ($tagsInfo as $tagName => $tagInfo)
 		{
-			foreach ($tagsInfo as $target => $targetInfo)
+			foreach ($tagInfo['firstChildren'] as $firstChild)
 			{
-				/**
-				* Create a denyDescendant rule if applicable, otherwise create an allowChild rule
-				* if applicable. In some cases such as the <a> element, both rules could be created
-				* but since deny overrides allow there's no point creating the former if we also
-				* create the latter.
-				*/
-				if ($tagInfo['dd'] & $targetInfo['_dd'])
+				$elName = $firstChild->getName();
+
+				if (!isset($this->htmlElements[$elName]['cp']))
 				{
-					$rules[$tagName]['denyDescendant'][] = $target;
-				}
-				elseif ($tagInfo['ac'] & $targetInfo['_ac'])
-				{
-					$rules[$tagName]['allowChild'][] = $target;
+					continue;
 				}
 
-				if (array_intersect_key($tagInfo['cp'], $targetInfo['_cp']))
+				foreach ($tagsInfo as $targetName => $targetInfo)
 				{
-					$rules[$tagName]['closeParent'][] = $target;
+					foreach ($targetInfo['lastChildren'] as $lastChild)
+					{
+						if (in_array($lastChild->getName(), $this->htmlElements[$elName]['cp'], true))
+						{
+							$ret[$tagName]['rules']['closeParent'][] = $targetName;
+						}
+					}
 				}
 			}
 		}
 
-		return $rules;
+		/**
+		* Generate allowChild/denyChild rules
+		*/
+		foreach ($tagsInfo as $tagName => $tagInfo)
+		{
+			if (empty($tagInfo['lastChildren']))
+			{
+				foreach (array_keys($this->tags) as $targetName)
+				{
+					$ret[$tagName]['rules']['denyChild'][] = $targetName;
+				}
+			}
+
+			foreach ($tagInfo['lastChildren'] as $lastChild)
+			{
+				$allowChildrenBitfield
+					= $this->filterHTMLRulesBitfield($lastChild->getName(), 'ac', $lastChild);
+
+				foreach ($tagsInfo as $targetName => $targetInfo)
+				{
+					foreach ($targetInfo['firstChildrenCategoryBitfield'] as $bitfield)
+					{
+						$action = ($allowChildrenBitfield & $bitfield)
+						        ? 'allowChild'
+						        : 'denyChild';
+
+						$ret[$tagName]['rules'][$action][] = $targetName;
+					}
+				}
+			}
+		}
+
+		/**
+		* Generate denyDescendant rules
+		*/
+		foreach ($tagsInfo as $tagName => $tagInfo)
+		{
+			foreach ($tagsInfo as $targetName => $targetInfo)
+			{
+				if ($tagInfo['denyDescendantsBitfield'] & $targetInfo['usedCategories'])
+				{
+					$ret[$tagName]['rules']['denyDescendant'][] = $targetName;
+				}
+			}
+		}
+
+		/**
+		* Deduplicate rules and resolve conflicting rules
+		*/
+		$precedence = array(
+			array('denyDescendant', 'denyChild'),
+			array('denyDescendant', 'allowChild'),
+			array('denyChild', 'allowChild')
+		);
+
+		foreach ($ret as $tagName => &$tagOptions)
+		{
+			// flip the rules targets
+			$tagOptions['rules'] = array_map('array_flip', $tagOptions['rules']);
+
+			// apply precedence, e.g. if there's a denyChild rule, remove any allowChild rules
+			foreach ($precedence as $pair)
+			{
+				list($k1, $k2) = $pair;
+
+				if (!isset($tagOptions['rules'][$k1], $tagOptions['rules'][$k2]))
+				{
+					continue;
+				}
+
+				$tagOptions['rules'][$k2] = array_diff_key(
+					$tagOptions['rules'][$k2],
+					$tagOptions['rules'][$k1]
+				);
+			}
+
+			// flip the rules again
+			$tagOptions['rules'] = array_map('array_keys', $tagOptions['rules']);
+
+			// remove empty rules
+			$tagOptions['rules'] = array_filter($tagOptions['rules']);
+		}
+		unset($tagOptions);
+
+		return $ret;
 	}
 
 	protected function filterHTMLRulesBitfield($elName, $k, SimpleXMLElement $node)

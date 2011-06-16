@@ -114,6 +114,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getJSPlugins ignores plugins with no Javascript parser
  [x] HTML specs: <span> does not allow <div> as a child
  [x] HTML specs: <span> does not allow <div> as a child even with a <span> sibling
+ [x] HTML specs: <span> with a <div> sibling does not allow <div> as a child
  [x] HTML specs: <li> closes parent <li>
  [x] HTML specs: <div> or <p> closes parent <p>
  [x] HTML specs: <a> denies <a> as descendant
