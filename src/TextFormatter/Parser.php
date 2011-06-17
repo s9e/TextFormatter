@@ -631,6 +631,8 @@ class Parser
 	/**
 	* Append a tag to the list of processed tags
 	*
+	* Takes care of whitespace trimming and maintaining counters
+	*
 	* @param  array $tag
 	* @return void
 	*/
@@ -1099,11 +1101,11 @@ class Parser
 		);
 
 		$this->context['allowedChildren']
-			= $this->tagsConfig[$this->currentTag['name']]['allowedChildren']
+			= $tagConfig['allowedChildren']
 			& $this->context['allowedDescendants'];
 
 		$this->context['allowedDescendants']
-			= $this->tagsConfig[$this->currentTag['name']]['allowedDescendants']
+			= $tagConfig['allowedDescendants']
 			& $this->context['allowedDescendants'];
 	}
 
