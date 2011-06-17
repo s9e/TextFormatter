@@ -80,7 +80,7 @@ foreach ($page->body->h4 as $h4)
 	{
 		$elName = (string) $code;
 
-		if (!$elName || preg_match('#^(?:html|head|base|link|meta|title|style|script|noscript|body|iframe)$#', $elName))
+		if (!$elName || preg_match('#^(?:html|head|base|link|meta|title|style|script|noscript|body|iframe|command)$#', $elName))
 		{
 			continue;
 		}
@@ -282,6 +282,50 @@ foreach ($page->body->h4 as $h4)
 	}
 }
 
+// flatten XPath queries
+foreach ($elements as &$element)
+{
+	$flatten = array(
+		'categories',
+		'allowChildElement',
+		'allowChildCategory',
+		'denyChildElement',
+		'denyChildCategory',
+		'allowDescendantElement',
+		'allowDescendantCategory',
+		'denyDescendantElement',
+		'denyDescendantCategory'
+	);
+
+	foreach ($flatten as $k)
+	{
+		if (!isset($element[$k]))
+		{
+			continue;
+		}
+
+		foreach ($element[$k] as &$xpath)
+		{
+			if (isset($xpath['']))
+			{
+				$xpath = '';
+			}
+			else
+			{
+				$xpath = implode(' or ', array_keys($xpath));
+
+				// optimize "@foo or not(@foo)" away
+				if (preg_match('#^(@[a-z]+) or not\\(\\1\\)$#D', $xpath))
+				{
+					$xpath = '';
+				}
+			}
+		}
+		unset($xpath);
+	}
+}
+unset($element);
+
 $categories = array();
 
 // Create special categories for specific tag groups
@@ -299,48 +343,38 @@ foreach ($elements as &$element)
 			ksort($element[$k]);
 			$category = serialize(array_keys($element[$k]));
 
-			foreach ($element[$k] as $elName => $xpaths)
+			foreach ($element[$k] as $elName => $xpath)
 			{
-				foreach ($xpaths as $xpath => $void)
-				{
-					$elements[$elName]['categories'][$category][$xpath] = 0;
-				}
+				$elements[$elName]['categories'][$category] = $xpath;
 			}
 
-			$element[preg_replace('#Element$#D', 'Category', $k)][$category][$xpath] = 0;
+			$element[preg_replace('#Element$#D', 'Category', $k)][$category] = $xpath;
 		}
 	}
 }
 
-// Count the number of tags per category and replace the "transparent" pseudo-category
-foreach ($elements as &$element)
+// Count the number of tags per category and remove the "transparent" pseudo-category
+foreach ($elements as $elName => &$element)
 {
 	$element += array(
 		'categories' => array()
 	);
 
-	foreach ($element['categories'] as $category => $xpaths)
+	foreach ($element['categories'] as $category => $xpath)
 	{
-		foreach ($xpaths as $xpath => $void)
+		if (isset($categories[$category]))
 		{
-			if (isset($categories[$category]))
-			{
-				++$categories[$category];
-			}
-			else
-			{
-				$categories[$category] = 1;
-			}
+			++$categories[$category];
+		}
+		else
+		{
+			$categories[$category] = 1;
 		}
 	}
 
 	if (isset($element['allowChildCategory']['transparent']))
 	{
-		foreach ($element['categories'] as $catName => $xpaths)
-		{
-			$element['allowChildCategory'][$catName] = $element['allowChildCategory']['transparent'];
-		}
-
+		$element['transparent'] = 1;
 		unset($element['allowChildCategory']['transparent']);
 	}
 }
@@ -377,19 +411,14 @@ foreach ($elements as $elName => &$element)
 
 		$el[$v] = 0;
 
-		foreach ($element[$k] as $category => $xpaths)
+		foreach ($element[$k] as $category => $xpath)
 		{
 			$bitNumber = $categories[$category];
 			$el[$v]  |= 1 << $bitNumber;
 
-			if (!isset($xpaths['']))
+			if ($xpath)
 			{
-				$xpath = implode(' or ', array_keys($xpaths));
-
-				if (!preg_match('#^(@[a-z]+) or not\\(\\1\\)$#D', $xpath))
-				{
-					$el[$v . $bitNumber] = $xpath;
-				}
+				$el[$v . $bitNumber] = $xpath;
 			}
 		}
 	}
@@ -398,6 +427,11 @@ foreach ($elements as $elName => &$element)
 	if (isset($el['ac'], $el['dd']))
 	{
 		$el['ac'] &=~ $el['dd'];
+	}
+
+	if (!empty($element['transparent']))
+	{
+		$el['t'] = 1;
 	}
 
 	$arr[$elName] = $el;

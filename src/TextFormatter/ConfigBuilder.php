@@ -1538,41 +1538,40 @@ class ConfigBuilder
 	//==========================================================================
 
 	protected $htmlElements = array(
-		'a'=>array('c'=>7,'ac'=>3,'dd'=>4),
+		'a'=>array('c'=>7,'ac'=>0,'dd'=>4,'t'=>1),
 		'abbr'=>array('c'=>3,'ac'=>2),
 		'address'=>array('c'=>513,'ac'=>1,'dd'=>776,'cp'=>array('p')),
 		'area'=>array('c'=>3),
 		'article'=>array('c'=>257,'ac'=>1,'cp'=>array('p')),
 		'aside'=>array('c'=>257,'ac'=>1,'cp'=>array('p')),
-		'audio'=>array('c'=>23,'c2'=>'@controls','ac'=>4119,'ac12'=>'@src'),
+		'audio'=>array('c'=>23,'c2'=>'@controls','ac'=>4096,'ac12'=>'@src','t'=>1),
 		'b'=>array('c'=>3,'ac'=>2),
 		'bdi'=>array('c'=>3,'ac'=>2),
 		'bdo'=>array('c'=>3,'ac'=>2),
 		'blockquote'=>array('c'=>129,'ac'=>1,'cp'=>array('p')),
 		'br'=>array('c'=>3),
 		'button'=>array('c'=>7,'ac'=>2,'dd'=>4),
-		'canvas'=>array('c'=>19,'ac'=>19),
-		'caption'=>array('c'=>32,'ac'=>1,'dd'=>4194304),
+		'canvas'=>array('c'=>19,'ac'=>0,'t'=>1),
+		'caption'=>array('c'=>32,'ac'=>1,'dd'=>2097152),
 		'cite'=>array('c'=>3,'ac'=>2),
 		'code'=>array('c'=>3,'ac'=>2),
-		'col'=>array('c'=>536870912,'c29'=>'not(@span)'),
-		'colgroup'=>array('c'=>32,'ac'=>536870912,'ac29'=>'not(@span)'),
-		'command'=>array('c'=>131075),
-		'datalist'=>array('c'=>3,'ac'=>1048578),
+		'col'=>array('c'=>268435456,'c28'=>'not(@span)'),
+		'colgroup'=>array('c'=>32,'ac'=>268435456,'ac28'=>'not(@span)'),
+		'datalist'=>array('c'=>3,'ac'=>524290),
 		'dd'=>array('c'=>65536,'ac'=>1,'cp'=>array('dd','dt')),
-		'del'=>array('c'=>3,'ac'=>3),
-		'details'=>array('c'=>133,'ac'=>524289),
-		'dfn'=>array('c'=>268435459,'ac'=>2,'dd'=>268435456),
+		'del'=>array('c'=>3,'ac'=>0,'t'=>1),
+		'details'=>array('c'=>133,'ac'=>262145),
+		'dfn'=>array('c'=>134217731,'ac'=>2,'dd'=>134217728),
 		'div'=>array('c'=>1,'ac'=>1,'cp'=>array('p')),
 		'dl'=>array('c'=>1,'ac'=>65536,'cp'=>array('p')),
 		'dt'=>array('c'=>65536,'ac'=>2,'cp'=>array('dd','dt')),
 		'em'=>array('c'=>3,'ac'=>2),
 		'embed'=>array('c'=>23),
-		'fieldset'=>array('c'=>129,'ac'=>2097153,'cp'=>array('p')),
-		'figcaption'=>array('c'=>0x100000000,'ac'=>1),
-		'figure'=>array('c'=>129,'ac'=>0x100000001),
+		'fieldset'=>array('c'=>129,'ac'=>1048577,'cp'=>array('p')),
+		'figcaption'=>array('c'=>0x80000000,'ac'=>1),
+		'figure'=>array('c'=>129,'ac'=>0x80000001),
 		'footer'=>array('c'=>8705,'ac'=>1,'dd'=>8192,'cp'=>array('p')),
-		'form'=>array('c'=>134217729,'ac'=>1,'dd'=>134217728,'cp'=>array('p')),
+		'form'=>array('c'=>67108865,'ac'=>1,'dd'=>67108864,'cp'=>array('p')),
 		'h1'=>array('c'=>73,'ac'=>2,'cp'=>array('p')),
 		'h2'=>array('c'=>73,'ac'=>2,'cp'=>array('p')),
 		'h3'=>array('c'=>73,'ac'=>2,'cp'=>array('p')),
@@ -1585,26 +1584,26 @@ class ConfigBuilder
 		'i'=>array('c'=>3,'ac'=>2),
 		'img'=>array('c'=>23,'c2'=>'@usemap'),
 		'input'=>array('c'=>7,'c2'=>'@type!="hidden"'),
-		'ins'=>array('c'=>3,'ac'=>3),
+		'ins'=>array('c'=>3,'ac'=>0,'t'=>1),
 		'kbd'=>array('c'=>3,'ac'=>2),
 		'keygen'=>array('c'=>7),
-		'label'=>array('c'=>33554439,'ac'=>2,'dd'=>33554432),
-		'legend'=>array('c'=>2097152,'ac'=>2),
-		'li'=>array('c'=>0x80000000,'ac'=>1,'cp'=>array('li')),
-		'map'=>array('c'=>3,'ac'=>3),
+		'label'=>array('c'=>16777223,'ac'=>2,'dd'=>16777216),
+		'legend'=>array('c'=>1048576,'ac'=>2),
+		'li'=>array('c'=>1073741824,'ac'=>1,'cp'=>array('li')),
+		'map'=>array('c'=>3,'ac'=>0,'t'=>1),
 		'mark'=>array('c'=>3,'ac'=>2),
-		'menu'=>array('c'=>5,'c2'=>'@type="toolbar"','ac'=>0x80000001,'cp'=>array('p')),
-		'meter'=>array('c'=>16778243,'ac'=>2,'dd'=>16777216),
+		'menu'=>array('c'=>5,'c2'=>'@type="toolbar"','ac'=>1073741825,'cp'=>array('p')),
+		'meter'=>array('c'=>8389635,'ac'=>2,'dd'=>8388608),
 		'nav'=>array('c'=>257,'ac'=>1,'cp'=>array('p')),
-		'object'=>array('c'=>23,'c2'=>'@usemap','ac'=>8388631),
-		'ol'=>array('c'=>1,'ac'=>0x80000000,'cp'=>array('p')),
-		'optgroup'=>array('c'=>2048,'ac'=>1048576,'cp'=>array('optgroup','option')),
-		'option'=>array('c'=>1050624,'cp'=>array('option')),
+		'object'=>array('c'=>23,'c2'=>'@usemap','ac'=>4194304,'t'=>1),
+		'ol'=>array('c'=>1,'ac'=>1073741824,'cp'=>array('p')),
+		'optgroup'=>array('c'=>2048,'ac'=>524288,'cp'=>array('optgroup','option')),
+		'option'=>array('c'=>526336,'cp'=>array('option')),
 		'output'=>array('c'=>3,'ac'=>2),
 		'p'=>array('c'=>1,'ac'=>2,'cp'=>array('p')),
-		'param'=>array('c'=>8388608),
+		'param'=>array('c'=>4194304),
 		'pre'=>array('c'=>1,'ac'=>2,'cp'=>array('p')),
-		'progress'=>array('c'=>263171,'ac'=>2,'dd'=>262144),
+		'progress'=>array('c'=>132099,'ac'=>2,'dd'=>131072),
 		'q'=>array('c'=>3,'ac'=>2),
 		'rp'=>array('c'=>32768,'ac'=>2,'cp'=>array('rp','rt')),
 		'rt'=>array('c'=>32768,'ac'=>2,'cp'=>array('rp','rt')),
@@ -1618,22 +1617,22 @@ class ConfigBuilder
 		'span'=>array('c'=>3,'ac'=>2),
 		'strong'=>array('c'=>3,'ac'=>2),
 		'sub'=>array('c'=>3,'ac'=>2),
-		'summary'=>array('c'=>524288,'ac'=>2),
+		'summary'=>array('c'=>262144,'ac'=>2),
 		'sup'=>array('c'=>3,'ac'=>2),
-		'table'=>array('c'=>4194305,'ac'=>32,'cp'=>array('p')),
-		'tbody'=>array('c'=>32,'ac'=>1073741824,'cp'=>array('tbody','tfoot','thead')),
+		'table'=>array('c'=>2097153,'ac'=>32,'cp'=>array('p')),
+		'tbody'=>array('c'=>32,'ac'=>536870912,'cp'=>array('tbody','tfoot','thead')),
 		'td'=>array('c'=>16512,'ac'=>1,'cp'=>array('td','th')),
 		'textarea'=>array('c'=>7),
-		'tfoot'=>array('c'=>32,'ac'=>1073741824,'cp'=>array('tbody','thead')),
+		'tfoot'=>array('c'=>32,'ac'=>536870912,'cp'=>array('tbody','thead')),
 		'th'=>array('c'=>16384,'ac'=>2,'cp'=>array('td','th')),
-		'thead'=>array('c'=>32,'ac'=>1073741824),
-		'time'=>array('c'=>67108867,'ac'=>2,'dd'=>67108864),
-		'tr'=>array('c'=>1073741856,'ac'=>16384,'cp'=>array('tr')),
+		'thead'=>array('c'=>32,'ac'=>536870912),
+		'time'=>array('c'=>33554435,'ac'=>2,'dd'=>33554432),
+		'tr'=>array('c'=>536870944,'ac'=>16384,'cp'=>array('tr')),
 		'track'=>array('c'=>4096,'c12'=>'@src'),
 		'u'=>array('c'=>3,'ac'=>2),
-		'ul'=>array('c'=>1,'ac'=>0x80000000,'cp'=>array('p')),
+		'ul'=>array('c'=>1,'ac'=>1073741824,'cp'=>array('p')),
 		'var'=>array('c'=>3,'ac'=>2),
-		'video'=>array('c'=>23,'c2'=>'@controls','ac'=>4119,'ac12'=>'@src'),
+		'video'=>array('c'=>23,'c2'=>'@controls','ac'=>4096,'ac12'=>'@src','t'=>1),
 		'wbr'=>array('c'=>3)
 	);
 
@@ -1701,11 +1700,6 @@ class ConfigBuilder
 			}
 
 			/**
-			* Get the closest HTML ancestor for every <xsl:apply-templates/> element
-			*/
-			$tagInfo['lastChildren'] = $tagInfo['root']->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(descendant::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])][descendant::xsl:apply-templates]');
-
-			/**
 			* Get every HTML element from this tag's template(s) and generate a bitfield that
 			* represents all the content models in use
 			*/
@@ -1718,15 +1712,52 @@ class ConfigBuilder
 			}
 
 			/**
-			* Get every HTML ancestor from every <xsl:apply-templates/> and build a bitfield that
-			* matches all denied descendants
+			* For each <xsl:apply-templates/> element, iterate over all the HTML ancestors, compute
+			* the allowChildBitfields and denyDescendantBitfield values, and save the last HTML
+			* child of the branch
 			*/
-			$tagInfo['denyDescendantsBitfield'] = 0;
+			$tagInfo['denyDescendantBitfield'] = 0;
 
-			foreach ($tagInfo['root']->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][descendant::xsl:apply-templates]') as $node)
+			foreach ($tagInfo['root']->xpath('//xsl:apply-templates') as $at)
 			{
-				$tagInfo['denyDescendantsBitfield']
-					|= $this->filterHTMLRulesBitfield($node->getName(), 'dd', $node);
+				$allowChildBitfield = null;
+
+				foreach ($at->xpath('ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
+				{
+					$elName = $node->getName();
+
+					if (empty($this->htmlElements[$elName]['t']))
+					{
+						/**
+						* If this element does not use the transparent content model, we discard its
+						* parent's bitfield
+						*/
+						$allowChildBitfield = 0;
+					}
+					elseif (!isset($allowChildBitfield))
+					{
+						/**
+						* If this element uses the transparent content model and this is the first
+						* HTML element of this template, we reuse its category bitfield. It's not
+						* exactly how it should work though, as at this point we don't know what
+						* category enabled this tag
+						*/
+						$allowChildBitfield
+							= $this->filterHTMLRulesBitfield($elName, 'c', $node);
+
+						/**
+						* Accumulate the denied descendants
+						*/
+						$tagInfo['denyDescendantBitfield']
+							|= $this->filterHTMLRulesBitfield($elName, 'dd', $node);
+					}
+
+					$allowChildBitfield
+						|= $this->filterHTMLRulesBitfield($elName, 'ac', $node);
+				}
+
+				$tagInfo['allowChildBitfields'][] = $allowChildBitfield;
+				$tagInfo['lastChildren'][] = $node;
 			}
 
 			$tagsInfo[$tagName] = $tagInfo;
@@ -1766,26 +1797,28 @@ class ConfigBuilder
 		*/
 		foreach ($tagsInfo as $tagName => $tagInfo)
 		{
-			if (empty($tagInfo['lastChildren']))
+			/**
+			* If this tag allows no children, we deny every one of them
+			*/
+			if (empty($tagInfo['allowChildBitfields']))
 			{
-				foreach (array_keys($this->tags) as $targetName)
+				foreach ($tagsInfo as $targetName => $targetInfo)
 				{
 					$ret[$tagName]['rules']['denyChild'][] = $targetName;
 				}
+
+				continue;
 			}
 
-			foreach ($tagInfo['lastChildren'] as $lastChild)
+			foreach ($tagInfo['allowChildBitfields'] as $allowChildBitfield)
 			{
-				$allowChildrenBitfield
-					= $this->filterHTMLRulesBitfield($lastChild->getName(), 'ac', $lastChild);
-
 				foreach ($tagsInfo as $targetName => $targetInfo)
 				{
-					foreach ($targetInfo['firstChildrenCategoryBitfield'] as $bitfield)
+					foreach ($targetInfo['firstChildrenCategoryBitfield'] as $firstChildBitfield)
 					{
-						$action = ($allowChildrenBitfield & $bitfield)
-						        ? 'allowChild'
-						        : 'denyChild';
+						$action = ($allowChildBitfield & $firstChildBitfield)
+								? 'allowChild'
+								: 'denyChild';
 
 						$ret[$tagName]['rules'][$action][] = $targetName;
 					}
@@ -1800,7 +1833,7 @@ class ConfigBuilder
 		{
 			foreach ($tagsInfo as $targetName => $targetInfo)
 			{
-				if ($tagInfo['denyDescendantsBitfield'] & $targetInfo['usedCategories'])
+				if ($tagInfo['denyDescendantBitfield'] & $targetInfo['usedCategories'])
 				{
 					$ret[$tagName]['rules']['denyDescendant'][] = $targetName;
 				}

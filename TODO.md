@@ -3,6 +3,7 @@ TODO
 
 Acl
 ---
+
 - rewrite test names for testdox
 
 TextFormatter
@@ -16,3 +17,4 @@ TextFormatter
 - create a plugin for filtered HTML
 - create a plugin for raw HTML
 - write documentation, el oh el
+- find a workaround for <span><a><div> (which is currently accepted, although it's invalid)
