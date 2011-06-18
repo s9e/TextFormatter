@@ -17,9 +17,9 @@ $cb->BBCodes->addPredefinedBBCode('COLOR');
 $cb->BBCodes->addPredefinedBBCode('YOUTUBE');
 $cb->BBCodes->addPredefinedBBCode('FLOAT');
 
-$cb->BBCodes->addBBCode('PRE', array(
-	'template' => '<pre class="inline"><xsl:apply-templates/></pre>',
-	'defaultRule' => 'deny'
+$cb->BBCodes->addBBCode('CODE', array(
+	'template' => '<code><xsl:apply-templates/></code>',
+	'defaultDescendantRule' => 'deny'
 ));
 
 // Force YouTube vids to autoplay
@@ -79,7 +79,7 @@ ob_start();
 			cursor: pointer;
 		}
 
-		pre.inline
+		code
 		{
 			display: inline;
 			padding: 3px;
@@ -104,7 +104,7 @@ The following plugins have been enabled:
   [list=square]
     [*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
     [*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
-    [*][PRE][URL][/PRE], [PRE:123][PRE][/PRE:123], [PRE][YOUTUBE][/PRE], [PRE][FLOAT][/PRE], and [PRE][LIST][/PRE]
+    [*][CODE][URL][/CODE], [CODE:123][CODE][/CODE:123], [CODE][YOUTUBE][/CODE], [CODE][FLOAT][/CODE], and [CODE][LIST][/CODE]
   [/list][/*]
 
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
@@ -146,7 +146,7 @@ The parser/renderer used on this page page has been generated via [url=https://g
 
 	<div id="logdiv" style="display:none"></div>
 
-	<pre id="preview"></pre>
+	<div id="preview"></div>
 
 	<script type="text/javascript"><?php echo $jsParser; ?>
 
