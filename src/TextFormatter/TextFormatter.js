@@ -126,6 +126,11 @@ s9e['TextFormatter'] = function()
 
 			container.push(match);
 			++cnt;
+
+			if (regexp.lastIndex === 0)
+			{
+				regexp.lastIndex = 1;
+			}
 		}
 
 		return cnt;

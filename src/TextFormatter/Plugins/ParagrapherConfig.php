@@ -40,8 +40,17 @@ class ParagrapherConfig extends PluginConfig
 	public function getConfig()
 	{
 		return array(
-			'regexp'  => '#(?:^|\\n)#',
+			'regexp'  => '#(?:^|[\\r\\n]+)#',
 			'tagName' => $this->tagName
 		);
+	}
+
+	//==========================================================================
+	// JS Parser stuff
+	//==========================================================================
+
+	public function getJSParser()
+	{
+		return file_get_contents(__DIR__ . '/ParagrapherParser.js');
 	}
 }
