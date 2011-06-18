@@ -38,6 +38,7 @@ class ParagrapherParserTest extends Test
 	*/
 	public function testWhitespaceAtTheBeginningOfAParagraphIsRemoved()
 	{
+		$this->markTestSkipped('Temporarily disabled');
 		$this->cb->loadPlugin('Paragrapher');
 
 		$this->assertTransformation(

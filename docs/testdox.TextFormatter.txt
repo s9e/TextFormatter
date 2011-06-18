@@ -598,7 +598,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\ParagrapherConfig
 s9e\Toolkit\Tests\TextFormatter\Plugins\ParagrapherParser
  [x] A text with no linebreaks is rendered as a single paragraph
  [x] Consecutive linebreaks generate one paragraph
- [x] Whitespace at the beginning of a paragraph is removed
+ [ ] Whitespace at the beginning of a paragraph is removed
  [x] Whitespace at the end of a paragraph is removed
  [x] Can use a custom tagName
  [x] Does not attempt to create its tag if it already exists

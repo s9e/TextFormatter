@@ -222,6 +222,11 @@ class Parser
 		*/
 		$this->processTags();
 
+		/**
+		* Add whitespace trimming info to processed tags
+		*/
+		$this->addTrimmingInfoToTags();
+
 		return $this->output();
 	}
 
@@ -631,15 +636,13 @@ class Parser
 	/**
 	* Append a tag to the list of processed tags
 	*
-	* Takes care of whitespace trimming, maintaining counters and updating the context
+	* Takes care of maintaining counters and updating the context
 	*
 	* @param  array $tag
 	* @return void
 	*/
 	protected function appendTag(array $tag)
 	{
-		$this->addTrimmingInfoToTag($tag);
-
 		$this->processedTags[] = $tag;
 		$this->processedTagIds[$tag['id']] = 1;
 
@@ -697,7 +700,7 @@ class Parser
 	}
 
 	/**
-	* Add trimming info to a tag
+	* Add trimming info to processed tags
 	*
 	* For tags where one of the trim* directive is set, the "pos" and "len" attributes are adjusted
 	* to comprise the surrounding whitespace and two attributes, "trimBefore" and "trimAfter" are
@@ -705,41 +708,64 @@ class Parser
 	*
 	* Note that whitespace that is part of what a pass defines as a tag is left untouched.
 	*
-	* @param  array &$tag    Tag to which we add trimming info
 	* @return void
 	*/
-	protected function addTrimmingInfoToTag(array &$tag)
+	protected function addTrimmingInfoToTags()
 	{
-		$tagConfig = $this->tagsConfig[$tag['name']];
-
-		/**
-		* Original: "  [b]  -text-  [/b]  "
-		* Matches:  "XX[b]  -text-XX[/b]  "
-		*/
-		if (($tag['type']  &  self::START_TAG && !empty($tagConfig['trimBefore']))
-		 || ($tag['type'] === self::END_TAG   && !empty($tagConfig['rtrimContent'])))
+		if (empty($this->processedTags))
 		{
-			$spn = strspn(
-				strrev(substr($this->text, $this->pos, $tag['pos'] - $this->pos)),
-				self::TRIM_CHARLIST
-			);
-
-			$tag['trimBefore']  = $spn;
-			$tag['len']        += $spn;
-			$tag['pos']        -= $spn;
+			return;
 		}
 
-		/**
-		* Original: "  [b]  -text-  [/b]  "
-		* Matches:  "  [b]XX-text-  [/b]XX"
-		*/
-		if (($tag['type'] === self::START_TAG && !empty($tagConfig['ltrimContent']))
-		 || ($tag['type']  &  self::END_TAG   && !empty($tagConfig['trimAfter'])))
-		{
-			$spn = strspn($this->text, self::TRIM_CHARLIST, $tag['pos'] + $tag['len']);
+		$i = 0;
+		$last = count($this->processedTags) - 1;
+		$lpos = 0;
 
-			$tag['trimAfter']  = $spn;
-			$tag['len']       += $spn;
+		foreach ($this->processedTags as $i => &$tag)
+		{
+			$rpos = ($i < $last)
+			      ? $this->processedTags[$i + 1]['pos']
+			      : strlen($this->text);
+
+			$tagConfig = $this->tagsConfig[$tag['name']];
+
+			/**
+			* Original: "  [b]  -text-  [/b]  "
+			* Matches:  "XX[b]  -text-XX[/b]  "
+			*/
+			if (($tag['type']  &  self::START_TAG && !empty($tagConfig['trimBefore']))
+			 || ($tag['type'] === self::END_TAG   && !empty($tagConfig['rtrimContent'])))
+			{
+				$spn = strspn(
+					strrev(substr($this->text, $lpos, $tag['pos'] - $lpos)),
+					self::TRIM_CHARLIST
+				);
+
+				$tag['trimBefore']  = $spn;
+				$tag['len']        += $spn;
+				$tag['pos']        -= $spn;
+			}
+
+			$lpos = $tag['pos'] + $tag['len'];
+
+			/**
+			* Original: "  [b]  -text-  [/b]  "
+			* Matches:  "  [b]XX-text-  [/b]XX"
+			*/
+			if (($tag['type'] === self::START_TAG && !empty($tagConfig['ltrimContent']))
+			 || ($tag['type']  &  self::END_TAG   && !empty($tagConfig['trimAfter'])))
+			{
+				$spn = strspn(
+					$this->text,
+					self::TRIM_CHARLIST,
+					$lpos,
+					$rpos - $lpos
+				);
+
+				$tag['trimAfter']  = $spn;
+				$tag['len']       += $spn;
+				$lpos             += $spn;
+			}
 		}
 	}
 
