@@ -1671,7 +1671,9 @@ class ConfigBuilder
 
 		foreach ($this->tags as $tagName => $tag)
 		{
-			$tagInfo = array();
+			$tagInfo = array(
+				'lastChildren' => array()
+			);
 
 			$tagInfo['root'] = simplexml_load_string(
 				'<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $tag['xsl'] . '</xsl:stylesheet>'

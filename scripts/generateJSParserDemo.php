@@ -33,6 +33,8 @@ $cb->loadPlugin('Autolink');
 $cb->loadPlugin('HTMLEntities')->disableEntity('&lt;');
 $cb->loadPlugin('WittyPants');
 
+$cb->addRulesFromHTML5Specs();
+
 $jsParser = $cb->getJSParser(array(
 	'compilation'     => (empty($_SERVER['argv'][1])) ? 'none' : 'ADVANCED_OPTIMIZATIONS',
 	'disableLogTypes' => (empty($_SERVER['argv'][2])) ? array() : array('debug', 'warning', 'error'),

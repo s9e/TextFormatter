@@ -675,14 +675,14 @@ class Parser
 		/**
 		* Update the context
 		*/
-		if ($this->currentTag['type'] === self::START_TAG)
+		if ($tag['type'] === self::START_TAG)
 		{
-			$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+			$tagConfig = $this->tagsConfig[$tag['name']];
 
 			$this->openTags[] = array(
-				'name'       => $this->currentTag['name'],
-				'pluginName' => $this->currentTag['pluginName'],
-				'tagMate'    => $this->currentTag['tagMate'],
+				'name'       => $tag['name'],
+				'pluginName' => $tag['pluginName'],
+				'tagMate'    => $tag['tagMate'],
 				'context'    => $this->context
 			);
 

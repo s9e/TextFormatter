@@ -488,6 +488,29 @@ s9e['TextFormatter'] = function()
 			--cntOpen[tag.name];
 			--openStartTags[tag.tagMate];
 		}
+
+		/**
+		* Update the context
+		*/
+		if (tag.type === START_TAG)
+		{
+			var tagConfig = tagsConfig[tag.name];
+
+			openTags.push({
+				name       : tag.name,
+				pluginName : tag.pluginName,
+				tagMate    : tag.tagMate,
+				context    : context
+			});
+
+			var allowedChildren    = (tagConfig.isTransparent) ? context.allowedChildren : tagConfig.allowedChildren,
+				allowedDescendants = contextAnd(context.allowedDescendants, tagConfig.allowedDescendants);
+
+			context = {
+				allowedChildren:    contextAnd(context.allowedDescendants, allowedChildren),
+				allowedDescendants: allowedDescendants
+			}
+		}
 	}
 
 	/** @param {!Tag} tag */
@@ -811,33 +834,10 @@ s9e['TextFormatter'] = function()
 		}
 
 		//==============================================================
-		// Ok, so we have a valid tag
+		// We have a valid tag, append it to the list of processed tags
 		//==============================================================
 
 		appendTag(currentTag);
-
-		if (currentTag.type & END_TAG)
-		{
-			return;
-		}
-
-		openTags.push({
-			name       : tagName,
-			pluginName : currentTag.pluginName,
-			tagMate    : currentTag.tagMate,
-			context    : context
-		});
-
-		context = {
-			allowedChildren: contextAnd(
-				tagsConfig[currentTag.name].allowedChildren,
-				context.allowedDescendants
-			),
-			allowedDescendants: contextAnd(
-				tagsConfig[currentTag.name].allowedDescendants,
-				context.allowedDescendants
-			)
-		}
 	}
 
 	function tagIsAllowed(tagName)
