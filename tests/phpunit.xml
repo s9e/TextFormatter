@@ -42,6 +42,8 @@
 			<file>./TextFormatter/Plugins/GenericParserTest.php</file>
 			<file>./TextFormatter/Plugins/HTMLEntitiesConfigTest.php</file>
 			<file>./TextFormatter/Plugins/HTMLEntitiesParserTest.php</file>
+			<file>./TextFormatter/Plugins/ParagrapherConfigTest.php</file>
+			<file>./TextFormatter/Plugins/ParagrapherParserTest.php</file>
 			<file>./TextFormatter/Plugins/WittyPantsConfigTest.php</file>
 			<file>./TextFormatter/Plugins/WittyPantsParserTest.php</file>
 		</testsuite>
