@@ -37,7 +37,8 @@ class ParagrapherConfig extends PluginConfig
 						'closeParent' => array($this->paragraphTagName)
 					),
 
-					'template' => '<p><xsl:apply-templates/></p>'
+					'template' =>
+						'<xsl:if test="normalize-space(.)"><p><xsl:apply-templates/></p></xsl:if>'
 				)
 			);
 		}

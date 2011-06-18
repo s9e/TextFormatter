@@ -62,6 +62,20 @@ class ParagrapherParserTest extends Test
 	}
 
 	/**
+	* @depends testATextWithNoLinebreaksIsRenderedAsASingleParagraph
+	*/
+	public function testEmptyParagraphsAreIgnored()
+	{
+		$this->cb->loadPlugin('Paragrapher');
+
+		$this->assertTransformation(
+			' ',
+			'<rt><P><i> </i></P></rt>',
+			''
+		);
+	}
+
+	/**
 	* @testdox A single linefeed is rendered as a <br> tag
 	*/
 	public function testSingleLF()
