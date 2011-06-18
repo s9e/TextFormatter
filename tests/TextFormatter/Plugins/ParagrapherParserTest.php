@@ -38,7 +38,6 @@ class ParagrapherParserTest extends Test
 	*/
 	public function testWhitespaceAtTheBeginningOfAParagraphIsRemoved()
 	{
-		$this->markTestSkipped('Temporarily disabled');
 		$this->cb->loadPlugin('Paragrapher');
 
 		$this->assertTransformation(
@@ -63,12 +62,40 @@ class ParagrapherParserTest extends Test
 	}
 
 	/**
-	* @testdox Can use a custom tagName
+	* @testdox A single linefeed is rendered as a <br> tag
+	*/
+	public function testSingleLF()
+	{
+		$this->cb->loadPlugin('Paragrapher');
+
+		$this->assertTransformation(
+			"Y helo thar\nOh, hai",
+			"<rt><P>Y helo thar<BR/><i>\n</i>Oh, hai</P></rt>",
+			'<p>Y helo thar<br>Oh, hai</p>'
+		);
+	}
+
+	/**
+	* @testdox Two consecutive linefeeds are rendered as a new paragraph
+	*/
+	public function testTwoLF()
+	{
+		$this->cb->loadPlugin('Paragrapher');
+
+		$this->assertTransformation(
+			"Y helo thar\n\nOh, hai",
+			"<rt><P>Y helo thar</P><P><i>\n\n</i>Oh, hai</P></rt>",
+			'<p>Y helo thar</p><p>Oh, hai</p>'
+		);
+	}
+
+	/**
+	* @testdox Can use a custom tag name for paragraphs
 	* @depends testATextWithNoLinebreaksIsRenderedAsASingleParagraph
 	*/
-	public function testCustomTagName()
+	public function testCustomParagraphTagName()
 	{
-		$this->cb->loadPlugin('Paragrapher', null, array('tagName' => 'PARA'));
+		$this->cb->loadPlugin('Paragrapher', null, array('paragraphTagName' => 'PARA'));
 
 		$this->assertTransformation(
 			"Y helo thar",
@@ -77,10 +104,18 @@ class ParagrapherParserTest extends Test
 		);
 	}
 
-	public function testDoesNotAttemptToCreateItsTagIfItAlreadyExists()
+	/**
+	* @testdox Can use a custom tag name for linebreaks
+	* @depends testSingleLF
+	*/
+	public function testCustomLinebreakTagName()
 	{
-		$this->cb->loadPlugin('Paragrapher');
-		unset($this->cb->Paragrapher);
-		$this->cb->loadPlugin('Paragrapher');
+		$this->cb->loadPlugin('Paragrapher', null, array('linebreakTagName' => 'LB'));
+
+		$this->assertTransformation(
+			"Y helo thar\nOh, hai",
+			"<rt><P>Y helo thar<LB/><i>\n</i>Oh, hai</P></rt>",
+			'<p>Y helo thar<br>Oh, hai</p>'
+		);
 	}
 }

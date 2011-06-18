@@ -18,12 +18,24 @@ class ParagrapherParser extends PluginParser
 
 		foreach ($matches as $m)
 		{
-			$tags[] = array(
-				'pos'   => $m[0][1],
-				'type'  => Parser::START_TAG,
-				'name'  => $this->config['tagName'],
-				'len'   => 0
-			);
+			if (!$m[0][1] || strlen($m[0][0]) > 1)
+			{
+				$tags[] = array(
+					'pos'   => $m[0][1],
+					'type'  => Parser::START_TAG,
+					'name'  => $this->config['paragraphTagName'],
+					'len'   => 0
+				);
+			}
+			elseif ($this->config['linebreakTagName'])
+			{
+				$tags[] = array(
+					'pos'   => $m[0][1],
+					'type'  => Parser::SELF_CLOSING_TAG,
+					'name'  => $this->config['linebreakTagName'],
+					'len'   => 0
+				);
+			}
 		}
 
 		return $tags;

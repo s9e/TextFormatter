@@ -14,13 +14,45 @@ class ParagrapherConfigTest extends Test
 	/**
 	* @test
 	*/
-	public function tagName_can_be_customized_at_loading_time()
+	public function paragraphTagName_can_be_customized_at_loading_time()
 	{
-		$this->cb->loadPlugin('Paragrapher', null, array('tagName' => 'PARA'));
+		$this->cb->loadPlugin('Paragrapher', null, array('paragraphTagName' => 'PARA'));
 
 		$this->assertArrayMatches(
-			array('tagName' => 'PARA'),
+			array('paragraphTagName' => 'PARA'),
 			$this->cb->Paragrapher->getConfig()
 		);
+	}
+
+	/**
+	* @test
+	*/
+	public function linebreakTagName_can_be_customized_at_loading_time()
+	{
+		$this->cb->loadPlugin('Paragrapher', null, array('linebreakTagName' => 'LB'));
+
+		$this->assertArrayMatches(
+			array('linebreakTagName' => 'LB'),
+			$this->cb->Paragrapher->getConfig()
+		);
+	}
+
+	public function testDoesNotAttemptToCreateItsParagraphTagIfItAlreadyExists()
+	{
+		$this->cb->loadPlugin('Paragrapher');
+		unset($this->cb->Paragrapher);
+		$this->cb->loadPlugin('Paragrapher');
+	}
+
+	public function testDoesNotAttemptToCreateItsLinebreakTagIfItAlreadyExists()
+	{
+		$this->cb->loadPlugin('Paragrapher');
+		unset($this->cb->Paragrapher);
+		$this->cb->loadPlugin('Paragrapher');
+	}
+
+	public function testDoesNotAttemptToCreateItsLinebreakTagIfFalse()
+	{
+		$this->cb->loadPlugin('Paragrapher', null, array('linebreakTagName' => false));
 	}
 }

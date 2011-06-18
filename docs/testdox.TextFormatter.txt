@@ -593,15 +593,21 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\HTMLEntitiesParser
  [x] Unknown entities are ignored
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\ParagrapherConfig
- [x] tagName can be customized at loading time
+ [x] paragraphTagName can be customized at loading time
+ [x] linebreakTagName can be customized at loading time
+ [x] Does not attempt to create its paragraph tag if it already exists
+ [x] Does not attempt to create its linebreak tag if it already exists
+ [x] Does not attempt to create its linebreak tag if false
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\ParagrapherParser
  [x] A text with no linebreaks is rendered as a single paragraph
  [x] Consecutive linebreaks generate one paragraph
- [ ] Whitespace at the beginning of a paragraph is removed
+ [x] Whitespace at the beginning of a paragraph is removed
  [x] Whitespace at the end of a paragraph is removed
- [x] Can use a custom tagName
- [x] Does not attempt to create its tag if it already exists
+ [x] A single linefeed is rendered as a <br> tag
+ [x] Two consecutive linefeeds are rendered as a new paragraph
+ [x] Can use a custom tag name for paragraphs
+ [x] Can use a custom tag name for linebreaks
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
  [x] tagName can be customized at loading time

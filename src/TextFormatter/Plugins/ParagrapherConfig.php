@@ -12,26 +12,49 @@ use s9e\Toolkit\TextFormatter\PluginConfig;
 class ParagrapherConfig extends PluginConfig
 {
 	/**
-	* @var string Name of the tag used by this plugin
+	* @var string Name of the tag used for paragraphs
 	*/
-	protected $tagName = 'P';
+	protected $paragraphTagName = 'P';
+
+	/**
+	* @var string|boolean Name of the tag used for single linebreaks, or FALSE to disable linebreaks
+	*/
+	protected $linebreakTagName = 'BR';
 
 	public function setUp()
 	{
-		if (!$this->cb->tagExists($this->tagName))
+		if (!$this->cb->tagExists($this->paragraphTagName))
 		{
 			$this->cb->addTag(
-				$this->tagName,
+				$this->paragraphTagName,
 				array(
 					'trimBefore'   => true,
+					'trimAfter'    => true,
 					'ltrimContent' => true,
 					'rtrimContent' => true,
 
 					'rules' => array(
-						'closeAscendant' => array($this->tagName)
+						'closeParent' => array($this->paragraphTagName)
 					),
 
 					'template' => '<p><xsl:apply-templates/></p>'
+				)
+			);
+		}
+
+		if ($this->linebreakTagName && !$this->cb->tagExists($this->linebreakTagName))
+		{
+			$this->cb->addTag(
+				$this->linebreakTagName,
+				array(
+					'trimBefore'   => true,
+					'trimAfter'    => true,
+					'ltrimContent' => true,
+					'rtrimContent' => true,
+
+					'defaultDescendantRule' => 'deny',
+
+					'template' => '<br/>'
 				)
 			);
 		}
@@ -40,8 +63,9 @@ class ParagrapherConfig extends PluginConfig
 	public function getConfig()
 	{
 		return array(
-			'regexp'  => '#(?:^|[\\r\\n]+)#',
-			'tagName' => $this->tagName
+			'regexp' => '#^\\s*|\\n[\\r\\n]*#',
+			'paragraphTagName' => $this->paragraphTagName,
+			'linebreakTagName' => $this->linebreakTagName
 		);
 	}
 
