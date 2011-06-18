@@ -1969,6 +1969,66 @@ class ParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox HTML specs: <div><a> allows <div>
+	*/
+	public function testHTMLRules7a()
+	{
+		$this->cb->BBCodes->addBBCode('A', array('template' => '<a><xsl:apply-templates/></a>'));
+		$this->cb->BBCodes->addBBCode('DIV', array(
+			'template' => '<div><xsl:apply-templates/></div>'
+		));
+
+		$this->cb->addRulesFromHTML5Specs();
+
+		$this->assertParsing(
+			'[DIV][A][DIV][/DIV][/A][/DIV]',
+			'<rt>
+				<DIV>
+					<st>[DIV]</st>
+					<A>
+						<st>[A]</st>
+						<DIV>
+							<st>[DIV]</st>
+							<et>[/DIV]</et>
+						</DIV>
+						<et>[/A]</et>
+					</A>
+					<et>[/DIV]</et>
+				</DIV>
+			</rt>'
+		);
+	}
+
+	/**
+	* @testdox HTML specs: <span><a> denies <div>
+	*/
+	public function testHTMLRules7b()
+	{
+		$this->cb->BBCodes->addBBCode('A', array('template' => '<a><xsl:apply-templates/></a>'));
+		$this->cb->BBCodes->addBBCode('DIV', array(
+			'template' => '<div><xsl:apply-templates/></div>'
+		));
+		$this->cb->BBCodes->addBBCode('SPAN', array(
+			'template' => '<span><xsl:apply-templates/></span>'
+		));
+
+		$this->cb->addRulesFromHTML5Specs();
+
+		$this->assertParsing(
+			'[SPAN][A][DIV][/DIV][/A][/SPAN]',
+			'<rt>
+				<SPAN>
+					<st>[SPAN]</st>
+					<A>
+						<st>[A]</st>[DIV][/DIV]<et>[/A]</et>
+					</A>
+					<et>[/SPAN]</et>
+				</SPAN>
+			</rt>'
+		);
+	}
+
 	//==========================================================================
 	// Rules
 	//==========================================================================

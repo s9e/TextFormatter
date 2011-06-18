@@ -970,7 +970,7 @@ class Parser
 		}
 
 		$this->context = array(
-			'allowedChildren' => str_repeat("\xff", ceil(count($this->tagsConfig) / 8)),
+			'allowedChildren'    => str_repeat("\xff", ceil(count($this->tagsConfig) / 8)),
 			'allowedDescendants' => str_repeat("\xff", ceil(count($this->tagsConfig) / 8))
 		);
 
@@ -1100,13 +1100,13 @@ class Parser
 			'context'    => $this->context
 		);
 
-		$this->context['allowedChildren']
-			= $tagConfig['allowedChildren']
-			& $this->context['allowedDescendants'];
+		if (empty($tagConfig['isTransparent']))
+		{
+			$this->context['allowedChildren'] = $tagConfig['allowedChildren'];
+		}
 
-		$this->context['allowedDescendants']
-			= $tagConfig['allowedDescendants']
-			& $this->context['allowedDescendants'];
+		$this->context['allowedDescendants'] &= $tagConfig['allowedDescendants'];
+		$this->context['allowedChildren']    &= $this->context['allowedDescendants'];
 	}
 
 	/**

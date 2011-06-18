@@ -1693,6 +1693,7 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'A' => array(
+					'isTransparent' => true,
 					'rules' => array(
 						'denyDescendant' => array('A')
 					)
@@ -1713,6 +1714,7 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'A' => array(
+					'isTransparent' => true,
 					'rules' => array(
 						'denyDescendant' => array('A'),
 						'allowChild' => array('IMG')
@@ -1739,6 +1741,7 @@ class ConfigBuilderTest extends Test
 		$this->assertEquals(
 			array(
 				'A' => array(
+					'isTransparent' => true,
 					'rules' => array(
 						'denyDescendant' => array('A', 'IMG')
 					)
@@ -1746,6 +1749,69 @@ class ConfigBuilderTest extends Test
 				'IMG' => array(
 					'rules' => array(
 						'denyChild' => array('A', 'IMG')
+					)
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
+
+	/**
+	* @testdox HTML specs: <div><a> allows <div>
+	*/
+	public function testHTMLRules7a()
+	{
+		$this->cb->BBCodes->addBBCode('A', array('template' => '<a><xsl:apply-templates/></a>'));
+		$this->cb->BBCodes->addBBCode('DIV', array(
+			'template' => '<div><xsl:apply-templates/></div>'
+		));
+
+		$this->assertEquals(
+			array(
+				'A' => array(
+					'isTransparent' => true,
+					'rules' => array(
+						'allowChild' => array('DIV'),
+						'denyDescendant' => array('A')
+					)
+				),
+				'DIV' => array(
+					'rules' => array(
+						'allowChild' => array('A', 'DIV'),
+					)
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
+
+	/**
+	* @testdox HTML specs: <span><a> denies <div>
+	*/
+	public function testHTMLRules7b()
+	{
+		$this->cb->addTag('A', array('template' => '<a><xsl:apply-templates/></a>'));
+		$this->cb->addTag('DIV', array('template' => '<div><xsl:apply-templates/></div>'));
+		$this->cb->addTag('SPAN', array('template' => '<span><xsl:apply-templates/></span>'));
+
+		$this->assertEquals(
+			array(
+				'A' => array(
+					'isTransparent' => true,
+					'rules' => array(
+						'allowChild' => array('DIV', 'SPAN'),
+						'denyDescendant' => array('A')
+					)
+				),
+				'DIV' => array(
+					'rules' => array(
+						'allowChild' => array('A', 'DIV', 'SPAN')
+					)
+				),
+				'SPAN' => array(
+					'rules' => array(
+						'allowChild' => array('A', 'SPAN'),
+						'denyChild' => array('DIV')
 					)
 				)
 			),

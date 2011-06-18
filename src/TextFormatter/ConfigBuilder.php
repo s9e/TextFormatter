@@ -1641,15 +1641,9 @@ class ConfigBuilder
 	*/
 	public function addRulesFromHTML5Specs()
 	{
-		foreach ($this->generateRulesFromHTML5Specs() as $tagName => $rules)
+		foreach ($this->generateRulesFromHTML5Specs() as $tagName => $tagOptions)
 		{
-			foreach ($rules as $action => $targets)
-			{
-				foreach ($targets as $target)
-				{
-					$this->addTagRule($tagName, $action, $target);
-				}
-			}
+			$this->setTagOptions($tagName, $tagOptions);
 		}
 	}
 
@@ -1733,6 +1727,8 @@ class ConfigBuilder
 						* parent's bitfield
 						*/
 						$allowChildBitfield = 0;
+
+						$tagInfo['isTransparent'] = false;
 					}
 					elseif (!isset($allowChildBitfield))
 					{
@@ -1750,6 +1746,11 @@ class ConfigBuilder
 						*/
 						$tagInfo['denyDescendantBitfield']
 							|= $this->filterHTMLRulesBitfield($elName, 'dd', $node);
+
+						if (!isset($tagInfo['isTransparent']))
+						{
+							$tagInfo['isTransparent'] = true;
+						}
 					}
 
 					$allowChildBitfield
@@ -1763,13 +1764,18 @@ class ConfigBuilder
 			$tagsInfo[$tagName] = $tagInfo;
 		}
 
-		$ret = array();
+		$tagsOptions = array();
 
 		/**
 		* Generate closeParent rules
 		*/
 		foreach ($tagsInfo as $tagName => $tagInfo)
 		{
+			if (!empty($tagInfo['isTransparent']))
+			{
+				$tagsOptions[$tagName]['isTransparent'] = true;
+			}
+
 			foreach ($tagInfo['firstChildren'] as $firstChild)
 			{
 				$elName = $firstChild->getName();
@@ -1785,7 +1791,7 @@ class ConfigBuilder
 					{
 						if (in_array($lastChild->getName(), $this->htmlElements[$elName]['cp'], true))
 						{
-							$ret[$tagName]['rules']['closeParent'][] = $targetName;
+							$tagsOptions[$tagName]['rules']['closeParent'][] = $targetName;
 						}
 					}
 				}
@@ -1804,7 +1810,7 @@ class ConfigBuilder
 			{
 				foreach ($tagsInfo as $targetName => $targetInfo)
 				{
-					$ret[$tagName]['rules']['denyChild'][] = $targetName;
+					$tagsOptions[$tagName]['rules']['denyChild'][] = $targetName;
 				}
 
 				continue;
@@ -1820,7 +1826,7 @@ class ConfigBuilder
 								? 'allowChild'
 								: 'denyChild';
 
-						$ret[$tagName]['rules'][$action][] = $targetName;
+						$tagsOptions[$tagName]['rules'][$action][] = $targetName;
 					}
 				}
 			}
@@ -1835,7 +1841,7 @@ class ConfigBuilder
 			{
 				if ($tagInfo['denyDescendantBitfield'] & $targetInfo['usedCategories'])
 				{
-					$ret[$tagName]['rules']['denyDescendant'][] = $targetName;
+					$tagsOptions[$tagName]['rules']['denyDescendant'][] = $targetName;
 				}
 			}
 		}
@@ -1849,8 +1855,13 @@ class ConfigBuilder
 			array('denyChild', 'allowChild')
 		);
 
-		foreach ($ret as $tagName => &$tagOptions)
+		foreach ($tagsOptions as $tagName => &$tagOptions)
 		{
+			if (!isset($tagOptions['rules']))
+			{
+				continue;
+			}
+
 			// flip the rules targets
 			$tagOptions['rules'] = array_map('array_flip', $tagOptions['rules']);
 
@@ -1878,7 +1889,7 @@ class ConfigBuilder
 		}
 		unset($tagOptions);
 
-		return $ret;
+		return $tagsOptions;
 	}
 
 	protected function filterHTMLRulesBitfield($elName, $k, SimpleXMLElement $node)

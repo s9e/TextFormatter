@@ -287,6 +287,8 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Tags can specify a list of tags that are required
  [x] Start tags only get closed by the right tagMate (same pluginName, same tagName, same differentiator if applicable)
  [x] Tags can specify a list of tags that are required and be skipped if any required tag is absent
+ [x] HTML specs: <div><a> allows <div>
+ [x] HTML specs: <span><a> denies <div>
  [x] Fulfilled requireParent rule allows tag
  [x] requireParent rule with multiple targets is fulfilled if any of the targets is the parent
  [x] Fulfilled requireParent rule allows tag despite BBCode suffix
