@@ -24,7 +24,7 @@ do
 			echo "Running PHPUnit on $MODULE"
 			phpunit -c "$ROOT/tests/$MODULE/phpunit.xml" | tee $TMP
 
-			if [[ `tail -n2 $TMP` != *OK* ]]
+			if [[ `tail -n3 $TMP` != *OK* ]]
 			then
 				exit 1;
 			fi
