@@ -168,6 +168,12 @@ class PredefinedTags
 		$this->cb->addTagRule('LI', 'closeParent', 'LI');
 
 		$this->cb->setTagTemplate('LI', '<li><xsl:apply-templates /></li>');
+
+		// make [LIST] and [LI] play nice with the Paragrapher plugin
+		$this->cb->addTagRule('LIST', 'denyChild', 'P');
+		$this->cb->addTagRule('LIST', 'denyChild', 'BR');
+		$this->cb->addTagRule('LI', 'denyChild', 'P');
+		$this->cb->addTagRule('LI', 'denyChild', 'BR');
 	}
 
 	public function addALIGN()

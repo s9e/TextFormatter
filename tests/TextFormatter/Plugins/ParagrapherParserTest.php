@@ -76,6 +76,25 @@ class ParagrapherParserTest extends Test
 	}
 
 	/**
+	* @testdox Tries to play nice with whitespace found in [LIST] and [LI]
+	* @depends testEmptyParagraphsAreIgnored
+	*/
+	public function testList()
+	{
+		$this->cb->loadPlugin('Paragrapher');
+
+		$this->cb->BBCodes->addPredefinedBBCode('LIST');
+
+		// <ol> closes <p>
+		$this->cb->addRulesFromHTML5Specs();
+
+		$this->assertRendering(
+			"[list]\n[*]one\n[*]two\n\n[*]three[/list]",
+			'<ol style="list-style-type:disc"><li>one</li><li>two</li><li>three</li></ol>'
+		);
+	}
+
+	/**
 	* @testdox A single linefeed is rendered as a <br> tag
 	*/
 	public function testSingleLF()
