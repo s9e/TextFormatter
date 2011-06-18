@@ -631,7 +631,7 @@ class Parser
 	/**
 	* Append a tag to the list of processed tags
 	*
-	* Takes care of whitespace trimming and maintaining counters
+	* Takes care of whitespace trimming, maintaining counters and updating the context
 	*
 	* @param  array $tag
 	* @return void
@@ -670,6 +670,29 @@ class Parser
 		{
 			--$this->cntOpen[$tag['name']];
 			--$this->openStartTags[$tag['tagMate']];
+		}
+
+		/**
+		* Update the context
+		*/
+		if ($this->currentTag['type'] === self::START_TAG)
+		{
+			$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+			$this->openTags[] = array(
+				'name'       => $this->currentTag['name'],
+				'pluginName' => $this->currentTag['pluginName'],
+				'tagMate'    => $this->currentTag['tagMate'],
+				'context'    => $this->context
+			);
+
+			if (empty($tagConfig['isTransparent']))
+			{
+				$this->context['allowedChildren'] = $tagConfig['allowedChildren'];
+			}
+
+			$this->context['allowedDescendants'] &= $tagConfig['allowedDescendants'];
+			$this->context['allowedChildren']    &= $this->context['allowedDescendants'];
 		}
 	}
 
@@ -1083,30 +1106,10 @@ class Parser
 		}
 
 		//==============================================================
-		// Ok, so we have a valid tag
+		// We have a valid tag, append it to the list of processed tags
 		//==============================================================
 
 		$this->appendTag($this->currentTag);
-
-		if ($this->currentTag['type'] & self::END_TAG)
-		{
-			return;
-		}
-
-		$this->openTags[] = array(
-			'name'       => $this->currentTag['name'],
-			'pluginName' => $this->currentTag['pluginName'],
-			'tagMate'    => $this->currentTag['tagMate'],
-			'context'    => $this->context
-		);
-
-		if (empty($tagConfig['isTransparent']))
-		{
-			$this->context['allowedChildren'] = $tagConfig['allowedChildren'];
-		}
-
-		$this->context['allowedDescendants'] &= $tagConfig['allowedDescendants'];
-		$this->context['allowedChildren']    &= $this->context['allowedDescendants'];
 	}
 
 	/**
