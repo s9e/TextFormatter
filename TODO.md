@@ -17,3 +17,4 @@ TextFormatter
 - create a plugin for filtered HTML
 - create a plugin for raw HTML
 - write documentation, el oh el
+- ConfigBuilder::buildRegexpFromList() -- find in which cases using lookahead assertion is beneficial and in which case it is not
