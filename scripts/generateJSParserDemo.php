@@ -43,8 +43,6 @@ $jsParser = $cb->getJSParser(array(
 
 $closureCompilerNote = (empty($_SERVER['argv'][1])) ? '' : ' It has been minified to ' . round(strlen($jsParser) / 1024, 1) . 'KB (' . round(strlen(gzencode($jsParser, 9)) / 1024, 1) . 'KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].';
 
-file_put_contents('/tmp/foo.js', $jsParser);
-
 ob_start();
 ?><!DOCTYPE html>
 <html>
@@ -101,7 +99,7 @@ The following plugins have been enabled:
   [*][b]Autolink[/b] --- loose URLs such as http://github.com are automatically turned into links
 
   [*][b]BBCodes[/b]
-  [list=square]
+  [list=circle]
     [*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
     [*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
     [*][CODE][URL][/CODE], [CODE:123][CODE][/CODE:123], [CODE][YOUTUBE][/CODE], [CODE][FLOAT][/CODE], and [CODE][LIST][/CODE]
@@ -132,14 +130,17 @@ The parser/renderer used on this page page has been generated via [url=https://g
 	</div>
 
 	<div style="float:left;">
-		<form>
-			<input type="checkbox" id="Autolink" checked="checked" onchange="toggle(this)"><label for="Autolink">&nbsp;Autolink</label><br>
-			<input type="checkbox" id="BBCodes" checked="checked" onchange="toggle(this)"><label for="BBCodes">&nbsp;BBCodes</label><br>
-			<input type="checkbox" id="Censor" checked="checked" onchange="toggle(this)"><label for="Censor">&nbsp;Censor</label><br>
-			<input type="checkbox" id="Emoticons" checked="checked" onchange="toggle(this)"><label for="Emoticons">&nbsp;Emoticons</label><br>
-			<input type="checkbox" id="HTMLEntities" checked="checked" onchange="toggle(this)"><label for="HTMLEntities">&nbsp;HTMLEntities</label><br>
-			<input type="checkbox" id="WittyPants" checked="checked" onchange="toggle(this)"><label for="WittyPants">&nbsp;WittyPants</label>
-		</form>
+		<form><?php
+
+			$plugins = $cb->getLoadedPlugins();
+			ksort($plugins);
+
+			foreach ($plugins as $pluginName => $plugin)
+			{
+				echo '<input type="checkbox" id="', $pluginName, '" checked="checked" onchange="toggle(this)"><label for="', $pluginName, '">&nbsp;', $pluginName, '</label><br>';
+			}
+
+		?></form>
 	</div>
 
 	<div style="clear:both"></div>
