@@ -39,7 +39,7 @@ matches.forEach(function(m)
 	*/
 	var suffix = '';
 
-	if (text[rpos] === ':')
+	if (text.charAt(rpos) === ':')
 	{
 		/**
 		* [code:1] or [/code:1]
@@ -51,15 +51,15 @@ matches.forEach(function(m)
 
 	var type;
 
-	if (m[0][0][1] === '/')
+	if (m[0][0].charAt(1) === '/')
 	{
-		if (text[rpos] !== ']')
+		if (text.charAt(rpos) !== ']')
 		{
 			log('warning', {
 				'pos'    : rpos,
 				'len'    : 1,
 				'msg'    : 'Unexpected character: expected %1$s found %2$s',
-				'params' : [']', text[rpos]]
+				'params' : [']', text.charAt(rpos)]
 			});
 			return;
 		}
@@ -75,7 +75,7 @@ matches.forEach(function(m)
 
 		while (rpos < textLen)
 		{
-			c = text[rpos];
+			c = text.charAt(rpos);
 
 			if (c === ']' || c === '/')
 			{
@@ -96,7 +96,7 @@ matches.forEach(function(m)
 						return;
 					}
 
-					c = text[rpos];
+					c = text.charAt(rpos);
 					if (c !== ']')
 					{
 						log('warning', {
@@ -177,7 +177,7 @@ matches.forEach(function(m)
 				}
 			}
 
-			if (text[rpos] !== '=')
+			if (text.charAt(rpos) !== '=')
 			{
 				/**
 				* It's an attribute name not followed by an equal sign, let's just
@@ -197,7 +197,7 @@ matches.forEach(function(m)
 				return;
 			}
 
-			c = text[rpos];
+			c = text.charAt(rpos);
 			if (c === '"' || c === "'")
 			{
 				var valuePos = rpos + 1;
@@ -219,14 +219,14 @@ matches.forEach(function(m)
 						return;
 					}
 
-					if (text[rpos - 1] === '\\')
+					if (text.charAt(rpos - 1) === '\\')
 					{
 						var n = 1;
 						do
 						{
 							++n;
 						}
-						while (text[rpos - n] === '\\');
+						while (text.charAt(rpos - n) === '\\');
 
 						if (n % 2 === 0)
 						{

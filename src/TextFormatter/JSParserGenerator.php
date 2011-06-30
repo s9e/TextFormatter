@@ -683,14 +683,11 @@ class JSParserGenerator
 
 	protected function injectXSL()
 	{
-		$pos = 58 + strpos(
-			$this->src,
-			"xslt['importStylesheet'](new DOMParser().parseFromString('', 'text/xml'));"
+		$this->src = str_replace(
+			"xsl = ''",
+			'xsl = ' . json_encode($this->cb->getXSL()),
+			$this->src
 		);
-
-		$this->src = substr($this->src, 0, $pos)
-		           . addcslashes($this->cb->getXSL(), "'\\\r\n")
-		           . substr($this->src, $pos);
 	}
 
 	static protected function encodeConfig(array $pluginConfig, array $struct)

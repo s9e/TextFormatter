@@ -20,7 +20,7 @@ matches.singletons.forEach(function(m)
 function doQuotation(m)
 {
 	var attrs = {},
-		q = m[0][0].substr(-1);
+		q = m[0][0].substr(m[0][0].length - 1);
 
 	attrs[attrName] = replacements.quotation[q][0];
 
@@ -86,7 +86,7 @@ matches.apostrophe.forEach(function(m)
 matches.primes.forEach(function(m)
 {
 	var attrs = {};
-	attrs[attrName] = replacements.primes[m[0][0].substr(-1)];
+	attrs[attrName] = replacements.primes[m[0][0].substr(m[0][0].length - 1)];
 
 	tags.push({
 		pos   : m[0][1] + 1,

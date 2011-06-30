@@ -123,8 +123,7 @@ Additionally, in order to demonstrate some other features:
 
 You can take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
-The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url].<?php echo $closureCompilerNote; ?> The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].
-</textarea>
+The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url].<?php echo $closureCompilerNote; ?> The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].</textarea>
 			<br>
 			<input type="checkbox" id="rendercheck" checked="checked"><label for="rendercheck"> Render</label>
 			<input type="checkbox" id="logcheck"><label for="logcheck"> Show log</label>
@@ -162,7 +161,7 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			logdiv = document.getElementById('logdiv'),
 			autoHighlight = true,
 
-			s = new XMLSerializer();
+			ENABLE_IE_WORKAROUNDS = true;
 
 		rendercheck.onchange = refreshOutput;
 
@@ -188,36 +187,36 @@ The parser/renderer used on this page page has been generated via [url=https://g
 		{
 			if (rendercheck.checked)
 			{
-				var newPreview = document.createElement('pre');
-
-				newPreview.appendChild(
-					s9e.TextFormatter.render(xml)
-				);
-
-				refreshElement(preview, newPreview);
+				refreshElement(preview, s9e.TextFormatter.renderDOM(xml));
+			}
+			else if ('innerText' in preview)
+			{
+				preview.innerText = xml.xml;
 			}
 			else
 			{
-				preview.textContent = s.serializeToString(xml)
+				preview.textContent = new XMLSerializer().serializeToString(xml);
 			}
 		}
 
 		function processNodes(oldNode, newNode)
 		{
-			if (oldNode.localName !== newNode.localName
-			 || oldNode.nodeType  !== newNode.nodeType)
+			if (oldNode.nodeName !== newNode.nodeName
+			 || oldNode.nodeType !== newNode.nodeType)
 			{
 				return 0;
 			}
 
-			if (oldNode.isEqualNode(newNode))
+			if ((oldNode.isEqualNode && oldNode.isEqualNode(newNode))
+			 || (oldNode.outerHTML   && oldNode.outerHTML === newNode.outerHTML))
 			{
 				return 1;
 			}
 
-			if (oldNode.nodeType === Node.TEXT_NODE)
+			// IE 7.0 doesn't seem to have Node.TEXT_NODE
+			if (oldNode.nodeType === 3)
 			{
-				oldNode.textContent = newNode.textContent;
+				oldNode.nodeValue = newNode.nodeValue;
 				return 1;
 			}
 
@@ -229,31 +228,38 @@ The parser/renderer used on this page page has been generated via [url=https://g
 
 		function refreshElement(oldEl, newEl)
 		{
-			var oldCnt = oldEl.childNodes.length,
-				newCnt = newEl.childNodes.length,
-				i = 0;
+			/**
+			* Skip the leftmost matching nodes
+			*/
+			var oldNodes = oldEl.childNodes,
+				newNodes = newEl.childNodes,
+				oldCnt = oldNodes.length,
+				newCnt = newNodes.length,
+				left  = 0,
+				right = 0;
 
-			while (i < oldCnt && i < newCnt)
+			while (left < oldCnt && left < newCnt)
 			{
-				var oldNode = oldEl.childNodes[i],
-					newNode = newEl.childNodes[i];
+				var oldNode = oldNodes[left],
+					newNode = newNodes[left];
 
 				if (!processNodes(oldNode, newNode))
 				{
 					break;
 				}
 
-				++i;
+				++left;
 			}
 
-			var left = i,
-				right = 0,
-				maxRight = Math.min(oldCnt - left, newCnt - left);
+			/**
+			* Skip the rightmost matching nodes
+			*/
+			var maxRight = Math.min(oldCnt - left, newCnt - left);
 
 			while (right < maxRight)
 			{
-				var oldNode = oldEl.childNodes[oldCnt - (right + 1)],
-					newNode = newEl.childNodes[newCnt - (right + 1)];
+				var oldNode = oldNodes[oldCnt - (right + 1)],
+					newNode = newNodes[newCnt - (right + 1)];
 
 				if (processNodes(oldNode, newNode))
 				{
@@ -266,26 +272,30 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			}
 
 			/**
-			* Clone the new nodes from newEl
+			* Clone the new nodes
 			*/
-			var frag = document.createDocumentFragment();
-			i = left;
+			var frag = document.createDocumentFragment(),
+				i = left;
+
 			while (i < (newCnt - right))
 			{
-				frag.appendChild(newEl.childNodes[i].cloneNode(true));
+				frag.appendChild(newNodes[i].cloneNode(true));
 				++i;
 			}
 
 			/**
-			* Remove the dirty nodes from oldEl
+			* Remove the old dirty nodes in the middle of the tree
 			*/
 			i = oldCnt - right;
 			while (--i >= left)
 			{
-				oldEl.removeChild(oldEl.childNodes[i]);
+				oldEl.removeChild(oldNodes[i]);
 			}
 
-			if (left === oldCnt)
+			/**
+			* If we haven't skipped any nodes, we can just append the fragment
+			*/
+			if (!right)
 			{
 				oldEl.appendChild(frag);
 			}
@@ -305,7 +315,14 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			{
 				var oldAttr = oldEl.attributes[i];
 
-				if (!newEl.hasAttributeNS(oldAttr.namespaceURI, oldAttr.name))
+				if (ENABLE_IE_WORKAROUNDS && !('hasAttributeNS' in newEl))
+				{
+					if (!(oldAttr.name in oldEl))
+					{
+						oldEl.removeAttribute(oldAttr.name);
+					}
+				}
+				else if (!newEl.hasAttributeNS(oldAttr.namespaceURI, oldAttr.name))
 				{
 					oldEl.removeAttributeNS(oldAttr.namespaceURI, oldAttr.name);
 				}
@@ -316,7 +333,14 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			{
 				var newAttr = newEl.attributes[i];
 
-				if (newAttr.value !== oldEl.getAttributeNS(newAttr.namespaceURI, newAttr.name))
+				if (ENABLE_IE_WORKAROUNDS && !('getAttributeNS' in newEl))
+				{
+					if (newAttr.value !== oldEl.getAttribute(newAttr.name))
+					{
+						oldEl.setAttribute(newAttr.name, newAttr.value);
+					}
+				}
+				else
 				{
 					oldEl.setAttributeNS(newAttr.namespaceURI, newAttr.name, newAttr.value);
 				}

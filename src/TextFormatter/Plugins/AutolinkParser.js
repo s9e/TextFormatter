@@ -12,7 +12,7 @@ matches.forEach(function(m)
 	{
 		url = url.replace(/[^\w\)=\-\/]+$/, '');
 
-		if (url.substr(-1) === ')'
+		if (url.substr(url.length - 1) === ')'
 		 && url.replace(/[^\(]+/g, '').length < url.replace(/[^\)]+/g, '').length)
 		{
 			url = url.substr(0, url.length - 1);

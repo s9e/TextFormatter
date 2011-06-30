@@ -1,5 +1,8 @@
 s9e = {};
 
+/** @define {boolean} */
+var ENABLE_IE_WORKAROUNDS = true;
+
 /**
 * @typedef {{
 *   id:  !number,
@@ -23,6 +26,40 @@ var StubTag;
 
 s9e['TextFormatter'] = function()
 {
+	if (ENABLE_IE_WORKAROUNDS)
+	{
+		if (!Array.prototype.forEach)
+		{
+			Array.prototype.forEach = function(fn)
+			{
+				var i = -1, cnt = this.length;
+
+				while (++i < cnt)
+				{
+					fn(this[i], i);
+				}
+			}
+		}
+
+		if (!Array.prototype.some)
+		{
+			Array.prototype.some = function(fn)
+			{
+				var i = -1, cnt = this.length;
+
+				while (++i < cnt)
+				{
+					if (fn(this[i], i))
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
+	}
+
 	var
 		/** @const */
 		START_TAG        = 1,
@@ -77,10 +114,55 @@ s9e['TextFormatter'] = function()
 		/** @type {!number} */
 		pos,
 
-		xslt = new XSLTProcessor()
-	;
+		/** @const */
+		xsl = '',
 
-	xslt['importStylesheet'](new DOMParser().parseFromString('', 'text/xml'));
+		MSXML = ENABLE_IE_WORKAROUNDS && !('XSLTProcessor' in window && 'DOMParser' in window);
+
+	if (MSXML)
+	{
+		var xslt = new ActiveXObject('MSXML2.DOMDocument.3.0');
+		xslt.async = false;
+		xslt.validateOnParse = false;
+		xslt.loadXML(xsl);
+	}
+	else
+	{
+		var xslt = new XSLTProcessor();
+		xslt['importStylesheet'](new DOMParser().parseFromString(xsl, 'text/xml'));
+	}
+
+	/** @param {Document} DOM */
+	function renderDOM(DOM)
+	{
+		if (MSXML)
+		{
+			var div  = document.createElement('div'),
+				frag = document.createDocumentFragment();
+
+			div.innerHTML = DOM.transformNode(xslt);
+
+			while (div.firstChild)
+			{
+				frag.appendChild(div.removeChild(div.firstChild));
+			}
+
+			return frag;
+		}
+
+		return xslt['transformToFragment'](DOM, document);
+	}
+
+	/** @param {Document} DOM */
+	function renderHTML(DOM)
+	{
+		if (MSXML)
+		{
+			return DOM.transformNode(xslt);
+		}
+
+		return xslt['transformToXML'](DOM);
+	}
 
 	/**
 	* @param {!Object}   obj
@@ -92,12 +174,6 @@ s9e['TextFormatter'] = function()
 		{
 			callback(obj[k], k);
 		}
-	}
-
-	/** @param {!Object} obj */
-	function clone(obj)
-	{
-		return JSON.parse(JSON.stringify(obj));
 	}
 
 	/**
@@ -355,21 +431,51 @@ s9e['TextFormatter'] = function()
 
 	function asDOM()
 	{
+		function createDOM(elName)
+		{
+			if (ENABLE_IE_WORKAROUNDS && !document.implementation.createDocument)
+			{
+				var DOM = new ActiveXObject('MSXML2.DOMDocument.3.0');
+				DOM.async = false;
+				DOM.validateOnParse = false;
+				DOM.loadXML('<' + elName + '/>');
+
+				return DOM;
+			}
+
+			return document.implementation.createDocument('', elName, null);
+		}
+
 		var stack = [],
 			pos   = 0,
 			i     = -1,
 			cnt   = processedTags.length,
-			DOM   = document.implementation.createDocument('', (cnt) ? 'rt' : 'pt', null),
+			DOM   = createDOM((cnt) ? 'rt' : 'pt'),
 			el    = DOM.documentElement;
 
 		function writeElement(tagName, content)
 		{
-			el.appendChild(DOM.createElement(tagName)).textContent = content;
+			setTextContent(
+				el.appendChild(DOM.createElement(tagName)),
+				content
+			);
 		}
 
 		function appendText(content)
 		{
 			el.appendChild(DOM.createTextNode(content));
+		}
+
+		function setTextContent(el, content)
+		{
+			if (ENABLE_IE_WORKAROUNDS && !('textContent' in el))
+			{
+				el.appendChild(DOM.createTextNode(content));
+			}
+			else
+			{
+				el.textContent = content;
+			}
 		}
 
 		while (++i < cnt)
@@ -402,7 +508,7 @@ s9e['TextFormatter'] = function()
 
 			if (tag.trimAfter)
 			{
-				wsAfter = tagText.substr(-tag.trimAfter);
+				wsAfter = tagText.substr(tagText.length - tag.trimAfter);
 				tagText = tagText.substr(0, tagText.length - tag.trimAfter);
 			}
 
@@ -423,7 +529,7 @@ s9e['TextFormatter'] = function()
 
 				if (tag.type & END_TAG)
 				{
-					el.textContent = tagText;
+					setTextContent(el, tagText);
 					el = stack.pop();
 				}
 				else if (tagText > '')
@@ -764,7 +870,7 @@ s9e['TextFormatter'] = function()
 		/**
 		* Close tags that were left open
 		*/
-		foreach(openTags.reverse(), function(tag)
+		openTags.reverse().forEach(function(tag)
 		{
 			currentTag = createEndTag(tag, text.length);
 			processCurrentTag();
@@ -1254,8 +1360,8 @@ s9e['TextFormatter'] = function()
 					         + '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
 					'params' : [
 						attrName,
-						JSON.stringify(originalVal),
-						JSON.stringify(currentTag.attrs[attrName])
+						originalVal,
+						currentTag.attrs[attrName]
 					]
 				});
 			}
@@ -1432,11 +1538,8 @@ s9e['TextFormatter'] = function()
 			return output();
 		},
 
-		/** @param {Document} DOM */
-		'render': function(DOM)
-		{
-			return xslt['transformToFragment'](DOM, document);
-		},
+		'renderDOM': renderDOM,
+		'renderHTML': renderHTML,
 
 		'getLog': function()
 		{
