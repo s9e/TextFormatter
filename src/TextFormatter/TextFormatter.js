@@ -1,7 +1,7 @@
 s9e = {};
 
-/** @define {boolean} */
-var ENABLE_IE_WORKAROUNDS = true;
+/** @const */
+var ENABLE_IE_WORKAROUNDS = 7;
 
 /**
 * @typedef {{
@@ -26,7 +26,7 @@ var StubTag;
 
 s9e['TextFormatter'] = function()
 {
-	if (ENABLE_IE_WORKAROUNDS)
+	if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
 	{
 		if (!Array.prototype.forEach)
 		{
@@ -130,38 +130,6 @@ s9e['TextFormatter'] = function()
 	{
 		var xslt = new XSLTProcessor();
 		xslt['importStylesheet'](new DOMParser().parseFromString(xsl, 'text/xml'));
-	}
-
-	/** @param {Document} DOM */
-	function renderDOM(DOM)
-	{
-		if (MSXML)
-		{
-			var div  = document.createElement('div'),
-				frag = document.createDocumentFragment();
-
-			div.innerHTML = DOM.transformNode(xslt);
-
-			while (div.firstChild)
-			{
-				frag.appendChild(div.removeChild(div.firstChild));
-			}
-
-			return frag;
-		}
-
-		return xslt['transformToFragment'](DOM, document);
-	}
-
-	/** @param {Document} DOM */
-	function renderHTML(DOM)
-	{
-		if (MSXML)
-		{
-			return DOM.transformNode(xslt);
-		}
-
-		return xslt['transformToXML'](DOM);
 	}
 
 	/**
@@ -433,7 +401,7 @@ s9e['TextFormatter'] = function()
 	{
 		function createDOM(elName)
 		{
-			if (ENABLE_IE_WORKAROUNDS && !document.implementation.createDocument)
+			if (MSXML)
 			{
 				var DOM = new ActiveXObject('MSXML2.DOMDocument.3.0');
 				DOM.async = false;
@@ -468,13 +436,13 @@ s9e['TextFormatter'] = function()
 
 		function setTextContent(el, content)
 		{
-			if (ENABLE_IE_WORKAROUNDS && !('textContent' in el))
+			if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('textContent' in el))
 			{
 				el.appendChild(DOM.createTextNode(content));
 			}
 			else
 			{
-				el.textContent = content;
+				el.nodeValue = content;
 			}
 		}
 
@@ -1527,6 +1495,10 @@ s9e['TextFormatter'] = function()
 	}
 
 	return {
+		/**
+		* @param {!string} _text
+		* @return {Document}
+		*/
 		'parse': function(_text)
 		{
 			reset(_text);
@@ -1538,8 +1510,215 @@ s9e['TextFormatter'] = function()
 			return output();
 		},
 
-		'renderDOM': renderDOM,
-		'renderHTML': renderHTML,
+		/**
+		* @param {!Document} DOM Intermediate representation
+		* @param {!HTMLElement} target Target element
+		*/
+		'renderLive': function (DOM, target)
+		{
+			var document = target.ownerDocument,
+				frag;
+
+			if (MSXML)
+			{
+				frag = document.createDocumentFragment();
+
+				var div  = document.createElement('div');
+				div.innerHTML = DOM.transformNode(xslt);
+
+				while (div.firstChild)
+				{
+					frag.appendChild(div.removeChild(div.firstChild));
+				}
+			}
+			else
+			{
+				frag = xslt['transformToFragment'](DOM, document);
+			}
+
+			/**
+			* Update the content of given element oldEl to match element newEl
+			*
+			* @param {!HTMLElement} oldEl
+			* @param {!HTMLElement} newEl
+			*/
+			function refreshElementContent(oldEl, newEl)
+			{
+				/**
+				* Skip the leftmost matching nodes
+				*/
+				var oldNodes = oldEl.childNodes,
+					newNodes = newEl.childNodes,
+					oldCnt = oldNodes.length,
+					newCnt = newNodes.length,
+					left  = 0,
+					right = 0;
+
+				while (left < oldCnt && left < newCnt)
+				{
+					var oldNode = oldNodes[left],
+						newNode = newNodes[left];
+
+					if (!refreshNode(oldNode, newNode))
+					{
+						break;
+					}
+
+					++left;
+				}
+
+				/**
+				* Skip the rightmost matching nodes
+				*/
+				var maxRight = Math.min(oldCnt - left, newCnt - left);
+
+				while (right < maxRight)
+				{
+					var oldNode = oldNodes[oldCnt - (right + 1)],
+						newNode = newNodes[newCnt - (right + 1)];
+
+					if (refreshNode(oldNode, newNode))
+					{
+						++right;
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				/**
+				* Clone the new nodes
+				*/
+				var frag = document.createDocumentFragment(),
+					i = left;
+
+				while (i < (newCnt - right))
+				{
+					frag.appendChild(newNodes[i].cloneNode(true));
+					++i;
+				}
+
+				/**
+				* Remove the old dirty nodes in the middle of the tree
+				*/
+				i = oldCnt - right;
+				while (--i >= left)
+				{
+					oldEl.removeChild(oldNodes[i]);
+				}
+
+				/**
+				* If we haven't skipped any nodes to the right, we can just append the fragment
+				*/
+				if (!right)
+				{
+					oldEl.appendChild(frag);
+				}
+				else
+				{
+					oldEl.insertBefore(frag, oldEl.childNodes[left]);
+				}
+			}
+
+			/**
+			* Update given node oldNode to make it match newNode
+			*
+			* @param {!HTMLElement} oldNode
+			* @param {!HTMLElement} newNode
+			* @return boolean TRUE if the nodes were made to match, FALSE otherwise
+			*/
+			function refreshNode(oldNode, newNode)
+			{
+				if (oldNode.nodeName !== newNode.nodeName
+				 || oldNode.nodeType !== newNode.nodeType)
+				{
+					return false;
+				}
+
+				if ((oldNode.isEqualNode && oldNode.isEqualNode(newNode))
+				 || (oldNode.outerHTML   && oldNode.outerHTML === newNode.outerHTML))
+				{
+					return true;
+				}
+
+				// IE 7.0 doesn't seem to have Node.TEXT_NODE
+				if (oldNode.nodeType === 3)
+				{
+					oldNode.nodeValue = newNode.nodeValue;
+					return true;
+				}
+
+				syncElementAttributes(oldNode, newNode);
+				refreshElementContent(oldNode, newNode);
+
+				return true;
+			}
+
+			/**
+			* Make the set of attributes of given element oldEl match newEl's
+			*
+			* @param {!HTMLElement} oldEl
+			* @param {!HTMLElement} newEl
+			*/
+			function syncElementAttributes(oldEl, newEl)
+			{
+				var oldCnt = oldEl.attributes.length,
+					newCnt = newEl.attributes.length,
+					i = oldCnt;
+
+				while (--i >= 0)
+				{
+					var oldAttr = oldEl.attributes[i];
+
+					if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('hasAttributeNS' in newEl))
+					{
+						if (!(oldAttr.name in oldEl))
+						{
+							oldEl.removeAttribute(oldAttr.name);
+						}
+					}
+					else if (!newEl.hasAttributeNS(oldAttr.namespaceURI, oldAttr.name))
+					{
+						oldEl.removeAttributeNS(oldAttr.namespaceURI, oldAttr.name);
+					}
+				}
+
+				i = newCnt;
+				while (--i >= 0)
+				{
+					var newAttr = newEl.attributes[i];
+
+					if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('getAttributeNS' in newEl))
+					{
+						if (newAttr.value !== oldEl.getAttribute(newAttr.name))
+						{
+							oldEl.setAttribute(newAttr.name, newAttr.value);
+						}
+					}
+					else
+					{
+						oldEl.setAttributeNS(newAttr.namespaceURI, newAttr.name, newAttr.value);
+					}
+				}
+			}
+
+			refreshElementContent(target, frag);
+		},
+
+		/**
+		* @param {!Document} DOM Intermediate representation
+		* @return string
+		*/
+		'renderHTML': function (DOM)
+		{
+			if (MSXML)
+			{
+				return DOM.transformNode(xslt);
+			}
+
+			return xslt['transformToXML'](DOM);
+		},
 
 		'getLog': function()
 		{
