@@ -31,6 +31,7 @@ $cb->Censor->addWord('apple', 'banana');
 
 $cb->loadPlugin('Autolink');
 $cb->loadPlugin('HTMLEntities')->disableEntity('&lt;');
+$cb->loadPlugin('Linebreaker');
 $cb->loadPlugin('WittyPants');
 
 $cb->addRulesFromHTML5Specs();
@@ -67,7 +68,6 @@ ob_start();
 		#preview
 		{
 			font-family: sans;
-			white-space: pre-wrap;
 			padding: 5px;
 			background-color: #eee;
 			border: dashed 1px #8af;
