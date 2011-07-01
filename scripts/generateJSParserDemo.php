@@ -108,6 +108,7 @@ The following plugins have been enabled:
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
   [*][b]Emoticons[/b] --- one emoticon :) has been added
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
+  [*][b]Linebreaker[/b] --- Linefeeds are converted to &lt;br&gt;
   [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
