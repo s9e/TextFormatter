@@ -159,13 +159,13 @@ The parser/renderer used on this page page has been generated via [url=https://g
 
 			logcheck = document.getElementById('logcheck'),
 			logdiv = document.getElementById('logdiv'),
-			autoHighlight = 'setSelectionRange' in textarea;
+			disableHighlight = false;
 
 		rendercheck.onchange = refreshOutput;
 
 		textarea.onmouseout = function()
 		{
-			autoHighlight = 'setSelectionRange' in textarea;
+			disableHighlight = false;
 		}
 
 		logcheck.onchange = function()
@@ -241,19 +241,33 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			logdiv.innerHTML = (msgs.length) ? msgs.join('<br/>') : 'No log';
 		}
 
-		function select(pos, len)
-		{
-			autoHighlight = false;
-			textarea.focus();
-			textarea.setSelectionRange(pos, pos + len);
-		}
-
 		function highlight(pos, len)
 		{
-			if (autoHighlight)
+			if (disableHighlight)
+			{
+				return;
+			}
+
+			if (textarea.setSelectionRange)
 			{
 				textarea.setSelectionRange(pos, pos + len);
 			}
+			else
+			{
+				var range = textarea.createTextRange();
+				range.collapse(true);
+				range.moveEnd('character', pos + len);
+				range.moveStart('character', pos);
+				range.select();
+			}
+		}
+
+		function select(pos, len)
+		{
+			disableHighlight = false;
+			textarea.focus();
+			highlight(pos, len);
+			disableHighlight = true;
 		}
 
 		function toggle(el)
