@@ -537,8 +537,6 @@ s9e['TextFormatter'] = function()
 	/** @param {!Tag} tag */
 	function appendTag(tag)
 	{
-		addTrimmingInfoToTag(tag);
-
 		processedTags.push(tag);
 		processedTagIds[tag.id] = 1;
 
@@ -607,7 +605,7 @@ s9e['TextFormatter'] = function()
 		if ((tag.type  &  START_TAG && tagConfig.trimBefore)
 		 || (tag.type === END_TAG   && tagConfig.rtrimContent))
 		{
-			tag.trimBefore  = rtrimRegExp.exec(text.substr(pos, tag.pos - pos))[0].length;
+			tag.trimBefore  = rtrimRegExp.exec(text.substr(0, tag.pos))[0].length;
 			tag.len        += tag.trimBefore;
 			tag.pos        -= tag.trimBefore;
 		}
@@ -760,7 +758,7 @@ s9e['TextFormatter'] = function()
 		});
 	}
 
-	function normalizeTags()
+	function normalizeUnprocessedTags()
 	{
 		var k = 0;
 
@@ -800,6 +798,11 @@ s9e['TextFormatter'] = function()
 				tag.tagMate = tag.pluginName
 				            + '-' + tag.name
 				            + ((tag.tagMate > '') ? ':' + tag.tagMate : '');
+
+				/**
+				* Add trimming info
+				*/
+				addTrimmingInfoToTag(tag);
 			}
 		);
 	}
@@ -855,6 +858,19 @@ s9e['TextFormatter'] = function()
 
 	function processCurrentTag()
 	{
+		if (currentTag.trimBefore
+		 && pos > currentTag.pos)
+		{
+			var spn = pos - currentTag.pos;
+
+			if (spn <= currentTag.trimBefore)
+			{
+				currentTag.pos        += spn;
+				currentTag.len        -= spn;
+				currentTag.trimBefore -= spn;
+			}
+		}
+
 		if (pos > currentTag.pos
 		 || currentTagRequiresMissingTag())
 		{
@@ -961,21 +977,25 @@ s9e['TextFormatter'] = function()
 	}
 
 	/**
-	* @param  {!StubTag}    tag
-	* @param  {!number} _pos
+	* @param  {!StubTag} startTag
+	* @param  {!number}  _pos
 	* @return {Tag}
 	*/
-	function createEndTag(tag, _pos)
+	function createEndTag(startTag, _pos)
 	{
-		return {
+		var endTag = {
 			id     : -1,
-			name   : tag.name,
+			name   : startTag.name,
 			pos    : _pos,
 			len    : 0,
 			type   : END_TAG,
-			tagMate    : tag.tagMate,
-			pluginName : tag.pluginName
+			tagMate    : startTag.tagMate,
+			pluginName : startTag.pluginName
 		};
+
+		addTrimmingInfoToTag(endTag);
+
+		return endTag;
 	}
 
 	function closeParent()
@@ -1506,7 +1526,7 @@ s9e['TextFormatter'] = function()
 		{
 			reset(_text);
 			executePluginParsers();
-			normalizeTags();
+			normalizeUnprocessedTags();
 			sortTags();
 			processTags();
 

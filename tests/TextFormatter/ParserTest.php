@@ -2568,6 +2568,40 @@ class ParserTest extends Test
 		$this->assertSame($expectedHtml, $actualHtml);
 	}
 
+	/**
+	* @depends testOverlappingTagsAreRemoved
+	* @depends testWhitespaceTrimmingWorks
+	*/
+	public function testWhitespaceTrimmingDoesNotCauseTagsToOverlap()
+	{
+		$this->cb->BBCodes->addBBCode('X', array(
+			'trimBefore'   => true,
+			'trimAfter'    => true,
+			'ltrimContent' => true,
+			'rtrimContent' => true,
+
+			'template' => '<b><xsl:apply-templates /></b>'
+		));
+
+		$this->assertTransformation(
+			'
+				[X]
+					[X]
+						[X] [/X]
+					[/X]
+				[/X]
+			',
+			'<rt><i>
+				</i><X><st>[X]</st><i>
+					</i><X><st>[X]</st><i>
+						</i><X><st>[X]</st><i> </i><et>[/X]</et></X><i>
+					</i><et>[/X]</et></X><i>
+				</i><et>[/X]</et></X><i>
+			</i></rt>',
+			'<b><b><b></b></b></b>'
+		);
+	}
+
 	public function getWhitespaceTrimming()
 	{
 		/**

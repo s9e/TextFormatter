@@ -210,7 +210,7 @@ class Parser
 		/**
 		* Normalize tag names and remove unknown tags
 		*/
-		$this->normalizeTags();
+		$this->normalizeUnprocessedTags();
 
 		/**
 		* Sort them by position and precedence
@@ -221,11 +221,6 @@ class Parser
 		* Remove overlapping tags, filter invalid tags, apply tag rules and stuff
 		*/
 		$this->processTags();
-
-		/**
-		* Add whitespace trimming info to processed tags
-		*/
-		$this->addTrimmingInfoToTags();
 
 		return $this->output();
 	}
@@ -700,7 +695,7 @@ class Parser
 	}
 
 	/**
-	* Add trimming info to processed tags
+	* Add trimming info to a tag
 	*
 	* For tags where one of the trim* directive is set, the "pos" and "len" attributes are adjusted
 	* to comprise the surrounding whitespace and two attributes, "trimBefore" and "trimAfter" are
@@ -708,64 +703,45 @@ class Parser
 	*
 	* Note that whitespace that is part of what a pass defines as a tag is left untouched.
 	*
+	* @param  array &$tag
 	* @return void
 	*/
-	protected function addTrimmingInfoToTags()
+	protected function addTrimmingInfoToTag(&$tag)
 	{
-		if (empty($this->processedTags))
+		$tagConfig = $this->tagsConfig[$tag['name']];
+
+		/**
+		* Original: "  [b]  -text-  [/b]  "
+		* Matches:  "XX[b]  -text-XX[/b]  "
+		*/
+		if (($tag['type']  &  self::START_TAG && !empty($tagConfig['trimBefore']))
+		 || ($tag['type'] === self::END_TAG   && !empty($tagConfig['rtrimContent'])))
 		{
-			return;
+			$spn = strspn(
+				strrev(substr($this->text, 0, $tag['pos'])),
+				self::TRIM_CHARLIST
+			);
+
+			$tag['trimBefore']  = $spn;
+			$tag['len']        += $spn;
+			$tag['pos']        -= $spn;
 		}
 
-		$i = 0;
-		$last = count($this->processedTags) - 1;
-		$lpos = 0;
-
-		foreach ($this->processedTags as $i => &$tag)
+		/**
+		* Original: "  [b]  -text-  [/b]  "
+		* Matches:  "  [b]XX-text-  [/b]XX"
+		*/
+		if (($tag['type'] === self::START_TAG && !empty($tagConfig['ltrimContent']))
+		 || ($tag['type']  &  self::END_TAG   && !empty($tagConfig['trimAfter'])))
 		{
-			$rpos = ($i < $last)
-			      ? $this->processedTags[$i + 1]['pos']
-			      : strlen($this->text);
+			$spn = strspn(
+				$this->text,
+				self::TRIM_CHARLIST,
+				$tag['pos'] + $tag['len']
+			);
 
-			$tagConfig = $this->tagsConfig[$tag['name']];
-
-			/**
-			* Original: "  [b]  -text-  [/b]  "
-			* Matches:  "XX[b]  -text-XX[/b]  "
-			*/
-			if (($tag['type']  &  self::START_TAG && !empty($tagConfig['trimBefore']))
-			 || ($tag['type'] === self::END_TAG   && !empty($tagConfig['rtrimContent'])))
-			{
-				$spn = strspn(
-					strrev(substr($this->text, $lpos, $tag['pos'] - $lpos)),
-					self::TRIM_CHARLIST
-				);
-
-				$tag['trimBefore']  = $spn;
-				$tag['len']        += $spn;
-				$tag['pos']        -= $spn;
-			}
-
-			$lpos = $tag['pos'] + $tag['len'];
-
-			/**
-			* Original: "  [b]  -text-  [/b]  "
-			* Matches:  "  [b]XX-text-  [/b]XX"
-			*/
-			if (($tag['type'] === self::START_TAG && !empty($tagConfig['ltrimContent']))
-			 || ($tag['type']  &  self::END_TAG   && !empty($tagConfig['trimAfter'])))
-			{
-				$spn = strspn(
-					$this->text,
-					self::TRIM_CHARLIST,
-					$lpos,
-					$rpos - $lpos
-				);
-
-				$tag['trimAfter']  = $spn;
-				$tag['len']       += $spn;
-				$lpos             += $spn;
-			}
+			$tag['trimAfter']  = $spn;
+			$tag['len']       += $spn;
 		}
 	}
 
@@ -963,11 +939,11 @@ class Parser
 	}
 
 	/**
-	* Normalize tag names and remove unknown tags
+	* Normalize tag names, remove unknown tags and add trimming info
 	*
 	* @return void
 	*/
-	protected function normalizeTags()
+	protected function normalizeUnprocessedTags()
 	{
 		foreach ($this->unprocessedTags as $k => &$tag)
 		{
@@ -1000,6 +976,11 @@ class Parser
 			$tag['tagMate'] = $tag['pluginName']
 			                . '-' . $tag['name']
 			                . (($tag['tagMate'] > '') ? ':' . $tag['tagMate'] : '');
+
+			/**
+			* Add trimming info
+			*/
+			$this->addTrimmingInfoToTag($tag);
 		}
 	}
 
@@ -1029,8 +1010,14 @@ class Parser
 		$this->cntTotal = array_fill_keys(array_keys($this->tagsConfig), 0);
 		$this->cntOpen  = $this->cntTotal;
 
+		/**
+		* Reset the cursor
+		*/
 		$this->pos = 0;
 
+		/**
+		* Iterate over unprocessed tags
+		*/
 		while ($this->nextTag())
 		{
 			$this->processCurrentTag();
@@ -1061,6 +1048,32 @@ class Parser
 	*/
 	protected function processCurrentTag()
 	{
+		/**
+		* Try to be less greedy with whitespace before current tag if it would make it overlap
+		* with previous tag
+		*/
+		if (!empty($this->currentTag['trimBefore'])
+		 && $this->pos > $this->currentTag['pos'])
+		{
+			/**
+			* This is how much the tags overlap
+			*/
+			$spn = $this->pos - $this->currentTag['pos'];
+
+			if ($spn <= $this->currentTag['trimBefore'])
+			{
+				/**
+				* All of the overlap is whitespace, therefore we can reduce it to make the tags fit
+				*/
+				$this->currentTag['pos']        += $spn;
+				$this->currentTag['len']        -= $spn;
+				$this->currentTag['trimBefore'] -= $spn;
+			}
+		}
+
+		/**
+		* Test whether the current tag overlaps with previous tag
+		*/
 		if ($this->pos > $this->currentTag['pos'])
 		{
 			$this->log('debug', array(
@@ -1072,7 +1085,7 @@ class Parser
 		if ($this->currentTagRequiresMissingTag())
 		{
 			$this->log('debug', array(
-				'msg' => 'Tag skipped'
+				'msg' => 'Tag skipped due to dependence'
 			));
 			return;
 		}
@@ -1188,21 +1201,25 @@ class Parser
 	/**
 	* Create an END_TAG at given position, for given START_TAG
 	*
-	* @param  array   $tag
+	* @param  array   $startTag
 	* @param  integer $pos
 	* @return array
 	*/
-	protected function createEndTag(array $tag, $pos)
+	protected function createEndTag(array $startTag, $pos)
 	{
-		return array(
+		$endTag = array(
 			'id'     => -1,
-			'name'   => $tag['name'],
+			'name'   => $startTag['name'],
 			'pos'    => $pos,
 			'len'    => 0,
 			'type'   => self::END_TAG,
-			'tagMate'    => $tag['tagMate'],
-			'pluginName' => $tag['pluginName']
+			'tagMate'    => $startTag['tagMate'],
+			'pluginName' => $startTag['pluginName']
 		);
+
+		$this->addTrimmingInfoToTag($endTag);
+
+		return $endTag;
 	}
 
 	/**

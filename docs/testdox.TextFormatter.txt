@@ -317,6 +317,7 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] requireAscendant rule with multiple targets is fulfilled if any of the targets is an ascendant
  [x] Unfulfilled requireAscendant rule blocks tag
  [x] Whitespace trimming works
+ [x] Whitespace trimming does not cause tags to overlap
 
 s9e\Toolkit\Tests\TextFormatter\PluginConfig
  [x] Overrides properties with values passed in second parameter
