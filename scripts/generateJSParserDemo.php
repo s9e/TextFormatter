@@ -150,7 +150,6 @@ The parser/renderer used on this page page has been generated via [url=https://g
 	<script type="text/javascript"><?php echo $jsParser; ?>
 
 		var text,
-			xml,
 
 			textarea = document.getElementsByTagName('textarea')[0],
 			preview = document.getElementById('preview'),
@@ -159,15 +158,13 @@ The parser/renderer used on this page page has been generated via [url=https://g
 
 			logcheck = document.getElementById('logcheck'),
 			logdiv = document.getElementById('logdiv'),
-			autoHighlight = true,
-
-			ENABLE_IE_WORKAROUNDS = true;
+			autoHighlight = 'setSelectionRange' in textarea;
 
 		rendercheck.onchange = refreshOutput;
 
 		textarea.onmouseout = function()
 		{
-			autoHighlight = true;
+			autoHighlight = 'setSelectionRange' in textarea;
 		}
 
 		logcheck.onchange = function()
@@ -187,15 +184,20 @@ The parser/renderer used on this page page has been generated via [url=https://g
 		{
 			if (rendercheck.checked)
 			{
-				s9e.TextFormatter.renderLive(xml, preview);
-			}
-			else if ('innerText' in preview)
-			{
-				preview.innerText = xml.xml;
+				s9e.TextFormatter.preview(text, preview);
 			}
 			else
 			{
-				preview.textContent = new XMLSerializer().serializeToString(xml);
+				var xml = s9e.TextFormatter.parse(text);
+
+				if ('innerText' in preview)
+				{
+					preview.innerText = xml.xml;
+				}
+				else
+				{
+					preview.textContent = new XMLSerializer().serializeToString(xml);
+				}
 			}
 		}
 
@@ -235,7 +237,7 @@ The parser/renderer used on this page page has been generated via [url=https://g
 				});
 			});
 
-			logdiv.innerHTML = (msgs.length) ? msgs.join("\n") : 'No log';
+			logdiv.innerHTML = (msgs.length) ? msgs.join('<br/>') : 'No log';
 		}
 
 		function select(pos, len)
@@ -267,8 +269,6 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			}
 
 			text = textarea.value;
-			xml = s9e.TextFormatter.parse(text);
-
 			refreshOutput();
 
 			if (logcheck.checked)

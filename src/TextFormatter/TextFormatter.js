@@ -1,8 +1,5 @@
 s9e = {};
 
-/** @const */
-var ENABLE_IE_WORKAROUNDS = 7;
-
 /**
 * @typedef {{
 *   id:  !number,
@@ -26,40 +23,6 @@ var StubTag;
 
 s9e['TextFormatter'] = function()
 {
-	if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
-	{
-		if (!Array.prototype.forEach)
-		{
-			Array.prototype.forEach = function(fn)
-			{
-				var i = -1, cnt = this.length;
-
-				while (++i < cnt)
-				{
-					fn(this[i], i);
-				}
-			}
-		}
-
-		if (!Array.prototype.some)
-		{
-			Array.prototype.some = function(fn)
-			{
-				var i = -1, cnt = this.length;
-
-				while (++i < cnt)
-				{
-					if (fn(this[i], i))
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-		}
-	}
-
 	var
 		/** @const */
 		START_TAG        = 1,
@@ -117,6 +80,12 @@ s9e['TextFormatter'] = function()
 		/** @const */
 		xsl = '',
 
+		/** @const */
+		ENABLE_IE_WORKAROUNDS = 7,
+
+		/** @const */
+		ENABLE_LIVE_PREVIEW = true,
+
 		MSXML = ENABLE_IE_WORKAROUNDS && !('XSLTProcessor' in window && 'DOMParser' in window);
 
 	if (MSXML)
@@ -130,6 +99,40 @@ s9e['TextFormatter'] = function()
 	{
 		var xslt = new XSLTProcessor();
 		xslt['importStylesheet'](new DOMParser().parseFromString(xsl, 'text/xml'));
+	}
+
+	if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
+	{
+		if (!Array.prototype.forEach)
+		{
+			Array.prototype.forEach = function(fn)
+			{
+				var i = -1, cnt = this.length;
+
+				while (++i < cnt)
+				{
+					fn(this[i], i);
+				}
+			}
+		}
+
+		if (!Array.prototype.some)
+		{
+			Array.prototype.some = function(fn)
+			{
+				var i = -1, cnt = this.length;
+
+				while (++i < cnt)
+				{
+					if (fn(this[i], i))
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
 	}
 
 	/**
@@ -1512,11 +1515,46 @@ s9e['TextFormatter'] = function()
 
 		/**
 		* @param {!Document} DOM Intermediate representation
+		* @return string
+		*/
+		'render': function (DOM)
+		{
+			if (MSXML)
+			{
+				return DOM.transformNode(xslt);
+			}
+
+			return xslt['transformToXML'](DOM);
+		},
+
+		'getLog': function()
+		{
+			return _log;
+		},
+
+		'disablePlugin': function(pluginName)
+		{
+			pluginsConfig[pluginName].__disabled = 1;
+		},
+
+		'enablePlugin': function(pluginName)
+		{
+			pluginsConfig[pluginName].__disabled = 0;
+		},
+
+		/**
+		* @param {!string} text Text to parse
 		* @param {!HTMLElement} target Target element
 		*/
-		'renderLive': function (DOM, target)
+		'preview': function(text, target)
 		{
-			var document = target.ownerDocument,
+			if (!ENABLE_LIVE_PREVIEW)
+			{
+				throw 'Live preview is disabled';
+			}
+
+			var DOM = this.parse(text),
+				document = target.ownerDocument,
 				frag;
 
 			if (MSXML)
@@ -1704,35 +1742,6 @@ s9e['TextFormatter'] = function()
 			}
 
 			refreshElementContent(target, frag);
-		},
-
-		/**
-		* @param {!Document} DOM Intermediate representation
-		* @return string
-		*/
-		'renderHTML': function (DOM)
-		{
-			if (MSXML)
-			{
-				return DOM.transformNode(xslt);
-			}
-
-			return xslt['transformToXML'](DOM);
-		},
-
-		'getLog': function()
-		{
-			return _log;
-		},
-
-		'disablePlugin': function(pluginName)
-		{
-			pluginsConfig[pluginName].__disabled = 1;
-		},
-
-		'enablePlugin': function(pluginName)
-		{
-			pluginsConfig[pluginName].__disabled = 0;
 		}
 	}
 }();
