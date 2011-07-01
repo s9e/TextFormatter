@@ -445,7 +445,7 @@ s9e['TextFormatter'] = function()
 			}
 			else
 			{
-				el.nodeValue = content;
+				el.textContent = content;
 			}
 		}
 
