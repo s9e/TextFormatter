@@ -153,11 +153,11 @@ s9e['TextFormatter'] = function()
 	*/
 	function getMatches(regexp, container)
 	{
-		var cnt = 0,
-			matches;
-
 		// reset the regexp
 		regexp.lastIndex = 0;
+
+		var cnt = 0,
+			matches;
 
 		while (matches = regexp.exec(text))
 		{
@@ -1675,7 +1675,7 @@ s9e['TextFormatter'] = function()
 				}
 
 				if ((oldNode.isEqualNode && oldNode.isEqualNode(newNode))
-				 || (oldNode.outerHTML   && oldNode.outerHTML === newNode.outerHTML))
+				 || (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && oldNode.outerHTML && oldNode.outerHTML === newNode.outerHTML))
 				{
 					return true;
 				}
