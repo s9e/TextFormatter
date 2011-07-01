@@ -18,3 +18,4 @@ TextFormatter
 - create a plugin for raw HTML
 - write documentation, el oh el
 - ConfigBuilder::buildRegexpFromList() -- find in which cases using lookahead assertion is beneficial and in which case it is not
+- add an option to toggle whether current tag's ancestors can be closed by current tag's descendants, e.g. [b][i][/b][/i]
