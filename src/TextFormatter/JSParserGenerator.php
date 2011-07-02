@@ -79,10 +79,12 @@ class JSParserGenerator
 	public function get(array $options = array())
 	{
 		$options += array(
-			'compilation'        => 'none',
-			'disableLogTypes'    => array(),
-			'removeDeadCode'     => true,
-			'escapeScriptEndTag' => true
+			'compilation'         => 'none',
+			'disableLogTypes'     => array(),
+			'removeDeadCode'      => true,
+			'escapeScriptEndTag'  => true,
+			'enableIEWorkarounds' => true,
+			'enableLivePreview'   => true
 		);
 
 		$this->tagsConfig = $this->cb->getTagsConfig(true);
@@ -92,6 +94,22 @@ class JSParserGenerator
 		{
 			$this->removeDeadCode();
 		}
+
+		/**
+		* Enable/disable IE workarounds
+		*/
+		$this->replaceConstant(
+			'ENABLE_IE_WORKAROUNDS',
+			($options['enableIEWorkarounds'] === true) ? 7 : (int) $options['enableIEWorkarounds']
+		);
+
+		/**
+		* Enable/disable live preview
+		*/
+		$this->replaceConstant(
+			'ENABLE_LIVE_PREVIEW',
+			var_export((bool) $options['enableLivePreview'], true)
+		);
 
 		$this->injectTagsConfig();
 		$this->injectPlugins();
@@ -117,6 +135,9 @@ class JSParserGenerator
 			$this->compile($options['compilation']);
 		}
 
+		/**
+		* NOTE: Google Closure Compiler also escapes them
+		*/
 		if ($options['escapeScriptEndTag'])
 		{
 			$this->src = preg_replace('#</(script)#i', '<\\/$1', $this->src);
@@ -834,5 +855,21 @@ class JSParserGenerator
 		    . ')';
 
 		return $js;
+	}
+
+	protected function replaceConstant($name, $value)
+	{
+		$this->src = preg_replace(
+			'#' . $name . '\\s*=.+(?=[,;]\\n)#',
+			$name . '=' . $value,
+			$this->src,
+			-1,
+			$cnt
+		);
+
+		if ($cnt !== 1)
+		{
+			throw new RuntimeException('Tried to replace constant ' . $name . ', ' . $cnt . ' occurences found');
+		}
 	}
 }
