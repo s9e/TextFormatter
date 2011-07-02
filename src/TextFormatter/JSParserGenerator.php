@@ -147,7 +147,8 @@ class JSParserGenerator
 		}
 
 		/**
-		* NOTE: Google Closure Compiler also escapes them
+		* NOTE: json_encode() and Google Closure Compiler also escape them, so this block is more
+		*       of a failsafe than anything
 		*/
 		if ($options['escapeScriptEndTag'])
 		{
