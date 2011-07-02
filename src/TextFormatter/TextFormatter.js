@@ -21,7 +21,7 @@ var Tag;
 */
 var StubTag;
 
-s9e['TextFormatter'] = function()
+s9e['TextFormatter'] = function(xsl)
 {
 	var
 		/** @const */
@@ -76,9 +76,6 @@ s9e['TextFormatter'] = function()
 		context,
 		/** @type {!number} */
 		pos,
-
-		/** @const */
-		xsl = '',
 
 		/** @const */
 		ENABLE_IE_WORKAROUNDS = 7,
@@ -1775,4 +1772,4 @@ s9e['TextFormatter'] = function()
 			refreshElementContent(target, frag);
 		}
 	}
-}();
+}(/** XSL goes here **/);

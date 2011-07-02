@@ -747,8 +747,8 @@ class JSParserGenerator
 	protected function injectXSL()
 	{
 		$this->src = str_replace(
-			"xsl = ''",
-			'xsl = ' . json_encode($this->cb->getXSL()),
+			'/** XSL goes here **/',
+			json_encode($this->cb->getXSL()),
 			$this->src
 		);
 	}

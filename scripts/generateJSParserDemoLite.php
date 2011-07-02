@@ -27,8 +27,7 @@ $cb->addRulesFromHTML5Specs();
 
 $jsParser = $cb->getJSParser(array(
 	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
-	'disableLogTypes' => array('debug', 'warning', 'error'),
-	'enableIEWorkarounds' => false
+	'disableLogTypes' => array('debug', 'warning', 'error')
 ));
 
 ob_start();
@@ -62,9 +61,9 @@ ob_start();
 		<form>
 			<textarea style="width:99%" rows="15">This is a light version of the TextFormatter parser/renderer, optimized for size.
 			
-Here, logging has been disabled as well as Internet Explorer compatibility. The source has been minified to <?php echo round(strlen($jsParser) / 1024, 1); ?>KB (<?php echo round(strlen(gzencode($jsParser, 9)) / 1024, 1); ?>KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].
+Logging has been disabled and only some of the plugins have been enabled. The source has been minified to <?php echo round(strlen($jsParser) / 1024, 1); ?>KB (<?php echo round(strlen(gzencode($jsParser, 9)) / 1024, 1); ?>KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].
 
-The following plugins have been enabled:
+The included plugins are:
 
 [list]
   [*][b]Autolink[/b] — loose URLs such as http://github.com are automatically turned into links
