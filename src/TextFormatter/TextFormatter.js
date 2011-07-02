@@ -845,11 +845,14 @@ s9e['TextFormatter'] = function()
 		/**
 		* Close tags that were left open
 		*/
-		openTags.reverse().forEach(function(tag)
+		while (openTags.length)
 		{
-			currentTag = createEndTag(tag, text.length);
+			currentTag = createEndTag(
+				openTags[openTags.length - 1],
+				text.length
+			);
 			processCurrentTag();
-		});
+		}
 	}
 
 	function nextTag()

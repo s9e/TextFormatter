@@ -1026,9 +1026,12 @@ class Parser
 		/**
 		* Close tags that were left open
 		*/
-		foreach (array_reverse($this->openTags) as $tag)
+		while ($this->openTags)
 		{
-			$this->currentTag = $this->createEndTag($tag, strlen($this->text));
+			$this->currentTag = $this->createEndTag(
+				end($this->openTags),
+				strlen($this->text)
+			);
 			$this->processCurrentTag();
 		}
 	}
