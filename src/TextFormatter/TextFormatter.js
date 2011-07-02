@@ -86,6 +86,7 @@ s9e['TextFormatter'] = function()
 		/** @const */
 		ENABLE_LIVE_PREVIEW = true,
 
+		/** @const */
 		MSXML = ENABLE_IE_WORKAROUNDS && !('XSLTProcessor' in window && 'DOMParser' in window);
 
 	if (MSXML)
