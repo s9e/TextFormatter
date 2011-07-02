@@ -1603,9 +1603,6 @@ s9e['TextFormatter'] = function()
 			*/
 			function refreshElementContent(oldEl, newEl)
 			{
-				/**
-				* Skip the leftmost matching nodes
-				*/
 				var oldNodes = oldEl.childNodes,
 					newNodes = newEl.childNodes,
 					oldCnt = oldNodes.length,
@@ -1613,6 +1610,9 @@ s9e['TextFormatter'] = function()
 					left  = 0,
 					right = 0;
 
+				/**
+				* Skip the leftmost matching nodes
+				*/
 				while (left < oldCnt && left < newCnt)
 				{
 					var oldNode = oldNodes[left],
@@ -1636,14 +1636,12 @@ s9e['TextFormatter'] = function()
 					var oldNode = oldNodes[oldCnt - (right + 1)],
 						newNode = newNodes[newCnt - (right + 1)];
 
-					if (refreshNode(oldNode, newNode))
-					{
-						++right;
-					}
-					else
+					if (!refreshNode(oldNode, newNode))
 					{
 						break;
 					}
+
+					++right;
 				}
 
 				/**
@@ -1695,16 +1693,16 @@ s9e['TextFormatter'] = function()
 					return false;
 				}
 
-				if ((oldNode.isEqualNode && oldNode.isEqualNode(newNode))
-				 || (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && oldNode.outerHTML && oldNode.outerHTML === newNode.outerHTML))
-				{
-					return true;
-				}
-
 				// IE 7.0 doesn't seem to have Node.TEXT_NODE
 				if (oldNode.nodeType === 3)
 				{
 					oldNode.nodeValue = newNode.nodeValue;
+					return true;
+				}
+
+				if ((oldNode.isEqualNode && oldNode.isEqualNode(newNode))
+				 || (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && oldNode.outerHTML && oldNode.outerHTML === newNode.outerHTML))
+				{
 					return true;
 				}
 
