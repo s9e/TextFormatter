@@ -82,12 +82,17 @@ s9e['TextFormatter'] = function()
 
 		/** @const */
 		ENABLE_IE_WORKAROUNDS = 7,
+		/** @const */
+		MSXML = ENABLE_IE_WORKAROUNDS && !('XSLTProcessor' in window && 'DOMParser' in window),
 
 		/** @const */
 		ENABLE_LIVE_PREVIEW = true,
 
 		/** @const */
-		MSXML = ENABLE_IE_WORKAROUNDS && !('XSLTProcessor' in window && 'DOMParser' in window);
+		HINT_REGEXP_REPLACEWITH = true,
+		/** @const */
+		HINT_DISALLOWED_HOSTS = true
+	;
 
 	if (MSXML)
 	{
@@ -270,17 +275,21 @@ s9e['TextFormatter'] = function()
 					return false;
 				}
 
-				var a = document.createElement('a');
-				a.href = attrVal;
 
-				if (filterConf.disallowedHosts
-				 && filterConf.disallowedHosts.test(a.hostname))
+				if (HINT_DISALLOWED_HOSTS
+				 && filterConf.disallowedHosts)
 				{
-					log('error', {
-						'msg'    : "URL host '%s' is not allowed",
-						'params' : [a.hostname]
-					});
-					return false;
+					var a = document.createElement('a');
+					a.href = attrVal;
+
+					if (filterConf.disallowedHosts.test(a.hostname))
+					{
+						log('error', {
+							'msg'    : "URL host '%s' is not allowed",
+							'params' : [a.hostname]
+						});
+						return false;
+					}
 				}
 
 				return attrVal.replace(/'/, '%27').replace(/"/, '%22');
@@ -369,7 +378,7 @@ s9e['TextFormatter'] = function()
 					return false;
 				}
 
-				if (attrConf.replaceWith)
+				if (HINT_REGEXP_REPLACEWITH && attrConf.replaceWith)
 				{
 					/**
 					* Two consecutive backslashes[1] are replaced with a single backslash.

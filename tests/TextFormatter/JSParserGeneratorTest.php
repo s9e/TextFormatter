@@ -341,6 +341,8 @@ class JSParserGeneratorTest extends Test
 	*/
 	public function generateFiltersConfig_return_allowedSchemes_regexp_as_an_object()
 	{
+		$this->call($this->jspg, 'init');
+
 		$this->assertContains(
 			'allowedSchemes:new RegExp("^https?$","i")',
 			$this->call($this->jspg, 'generateFiltersConfig')
@@ -353,6 +355,7 @@ class JSParserGeneratorTest extends Test
 	public function generateFiltersConfig_return_disallowedHosts_regexp_as_an_object()
 	{
 		$this->cb->disallowHost('example.com');
+		$this->call($this->jspg, 'init');
 
 		$this->assertContains(
 			'disallowedHosts:new RegExp',
@@ -367,6 +370,7 @@ class JSParserGeneratorTest extends Test
 	public function generateFiltersConfig_converts_unsupported_lookbehind_assertions_from_disallowedHosts_regexp()
 	{
 		$this->cb->disallowHost('example.com');
+		$this->call($this->jspg, 'init');
 
 		$this->assertContains(
 			'new RegExp("(?:^|\\\\.)example\\\\.com$","i")',

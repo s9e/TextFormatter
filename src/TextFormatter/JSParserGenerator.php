@@ -43,6 +43,11 @@ class JSParserGenerator
 	protected $tagsConfig;
 
 	/**
+	* @var array Filters' config
+	*/
+	protected $filtersConfig;
+
+	/**
 	* List of Javascript reserved words
 	*
 	* @link https://developer.mozilla.org/en/JavaScript/Reference/Reserved_Words
@@ -71,6 +76,13 @@ class JSParserGenerator
 		$this->tpl = file_get_contents(__DIR__ . '/TextFormatter.js');
 	}
 
+	protected function init()
+	{
+		$this->tagsConfig    = $this->cb->getTagsConfig(true);
+		$this->filtersConfig = $this->cb->getFiltersConfig();
+		$this->src = $this->tpl;
+	}
+
 	/**
 	* 
 	*
@@ -78,6 +90,8 @@ class JSParserGenerator
 	*/
 	public function get(array $options = array())
 	{
+		$this->init();
+
 		$options += array(
 			'compilation'         => 'none',
 			'disableLogTypes'     => array(),
@@ -86,9 +100,6 @@ class JSParserGenerator
 			'enableIEWorkarounds' => true,
 			'enableLivePreview'   => true
 		);
-
-		$this->tagsConfig = $this->cb->getTagsConfig(true);
-		$this->src = $this->tpl;
 
 		if ($options['removeDeadCode'])
 		{
@@ -108,7 +119,7 @@ class JSParserGenerator
 		*/
 		$this->replaceConstant(
 			'ENABLE_LIVE_PREVIEW',
-			var_export((bool) $options['enableLivePreview'], true)
+			(bool) $options['enableLivePreview']
 		);
 
 		$this->injectTagsConfig();
@@ -189,6 +200,36 @@ class JSParserGenerator
 		$this->removePhaseCallbacksProcessing();
 		$this->removeAttributesDefaultValueProcessing();
 		$this->removeRequiredAttributesProcessing();
+
+		$this->setOptimizationHints();
+	}
+
+	protected function setOptimizationHints()
+	{
+		$hints = array(
+			'REGEXP_REPLACEWITH' => false,
+			'DISALLOWED_HOSTS'   => isset($this->filtersConfig['url']['disallowedHosts'])
+		);
+
+		foreach ($this->tagsConfig as $tagConfig)
+		{
+			if (!empty($tagConfig['attrs']))
+			{
+				foreach ($tagConfig['attrs'] as $attrName => $attrConf)
+				{
+					if (isset($attrConf['replaceWith']))
+					{
+						$hints['REGEXP_REPLACEWITH'] = true;
+						break 2;
+					}
+				}
+			}
+		}
+
+		foreach ($hints as $name => $value)
+		{
+			$this->replaceConstant('HINT_' . $name, $value);
+		}
 	}
 
 	/**
@@ -566,7 +607,7 @@ class JSParserGenerator
 	*/
 	protected function generateFiltersConfig()
 	{
-		$filtersConfig = $this->cb->getFiltersConfig();
+		$filtersConfig = $this->filtersConfig;
 
 		if (isset($filtersConfig['url']['disallowedHosts']))
 		{
@@ -859,8 +900,10 @@ class JSParserGenerator
 
 	protected function replaceConstant($name, $value)
 	{
+		$value = json_encode($value);
+
 		$this->src = preg_replace(
-			'#' . $name . '\\s*=.+(?=[,;]\\n)#',
+			'#' . $name . '\\s*=.+?(?<![,;])(?=[,;]?\\n)#',
 			$name . '=' . $value,
 			$this->src,
 			-1,
