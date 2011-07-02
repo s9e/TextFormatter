@@ -39,9 +39,9 @@ $values = array(
 );
 
 $output = array();
-$output['float']['NumbersThatStartWithAZero'] = '123';
-$output['float']['NumbersInScientificNotation'] = '12000';
-$output['float']['NumbersTooBigForThePhpIntegerType'] = '1.0E+19';
+$output['float']['numbers_that_start_with_a_zero'] = '123';
+$output['float']['numbers_in_scientific_notation'] = '12000';
+$output['float']['numbers_too_big_for_the_PHP_integer_type'] = '1.0E+19';
 
 $php = '';
 
@@ -50,11 +50,19 @@ foreach ($filters as $filter => $mask)
 	$i = 0;
 	foreach ($values as $name => $value)
 	{
-		$php .= "\n\t/** @test */\n\tpublic function Filter_"
-		      . $filter
-		      . (($mask[$i]) ? '_accepts_' : '_rejects_')
-		      . $name
-		      . "()\n\t{\n\t\t\$this->assertAttributeIs"
+		$testName =
+			'Filter_' . $filter
+			. (($mask[$i]) ? '_accepts_' : '_rejects_')
+			. $name;
+
+		$testdoxName =
+			'Filter "' . $filter . '"'
+			. (($mask[$i]) ? ' accepts ' : ' rejects ')
+			. str_replace('_', ' ', $name);
+
+		$php .= "\n\t/**\n\t* @test\n\t* @testdox " . $testdoxName . "\n\t*/"
+		      . "\n\tpublic function " . $testName . '()'
+		      . "\n\t{\n\t\t\$this->assertAttributeIs"
 		      . (($mask[$i]) ? 'Valid' : 'Invalid')
 		      . "('$filter', "
 		      . var_export($value, true)
