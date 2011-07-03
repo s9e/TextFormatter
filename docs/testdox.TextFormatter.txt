@@ -595,6 +595,16 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\HTMLEntitiesParser
  [x] Entities are case sensitive
  [x] Unknown entities are ignored
 
+s9e\Toolkit\Tests\TextFormatter\Plugins\LinebreakerConfig
+ [x] Automatically creates a BR tag
+ [x] Does not attempt to create its tag if it already exists
+ [x] Generates a regexp
+ [x] getJSParser returns the source of its Javascript parser
+
+s9e\Toolkit\Tests\TextFormatter\Plugins\LinebreakerParser
+ [x] LF characters are replaced with a BR tag
+ [x] CRLF character pairs are replaced with a BR tag
+
 s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsConfig
  [x] tagName can be customized at loading time
  [x] attrName can be customized at loading time

@@ -28,9 +28,7 @@ class LinebreakerConfig extends PluginConfig
 
 	public function getConfig()
 	{
-		return array(
-			'regexp' => '#\\r?\\n#'
-		);
+		return array('regexp' => '#\\r?\\n#');
 	}
 
 	//==========================================================================

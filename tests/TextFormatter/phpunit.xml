@@ -38,6 +38,8 @@
 			<file>Plugins/GenericParserTest.php</file>
 			<file>Plugins/HTMLEntitiesConfigTest.php</file>
 			<file>Plugins/HTMLEntitiesParserTest.php</file>
+			<file>Plugins/LinebreakerConfigTest.php</file>
+			<file>Plugins/LinebreakerParserTest.php</file>
 			<file>Plugins/WittyPantsConfigTest.php</file>
 			<file>Plugins/WittyPantsParserTest.php</file>
 		</testsuite>
