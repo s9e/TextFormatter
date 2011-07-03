@@ -1762,7 +1762,7 @@ s9e['TextFormatter'] = function(xsl)
 							oldEl.setAttribute(newAttr.name, newAttr.value);
 						}
 					}
-					else
+					else if (newAttr.value !== oldEl.getAttributeNS(newAttr.namespaceURI, newAttr.name))
 					{
 						oldEl.setAttributeNS(newAttr.namespaceURI, newAttr.name, newAttr.value);
 					}
