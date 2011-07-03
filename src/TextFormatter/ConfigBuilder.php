@@ -1371,9 +1371,7 @@ class ConfigBuilder
 		}
 
 		$xsl .= $this->xsl
-		      . '<xsl:template match="st"/>'
-		      . '<xsl:template match="et"/>'
-		      . '<xsl:template match="i"/>'
+		      . '<xsl:template match="st|et|i"/>'
 		      . '</xsl:stylesheet>';
 
 		return $xsl;
