@@ -1577,6 +1577,36 @@ class ConfigBuilder
 	// HTML guessing stuff
 	//==========================================================================
 
+	/**
+	* What is this? you might ask. This is basically a compressed version of the HTML5 content
+	* models, with some liberties taken.
+	*
+	* For each element, up to three bitfields are defined: "c", "ac" and "dd". Bitfields are stored
+	* as a number for convenience.
+	*
+	* "c" represents the categories the element belongs to. The categories are comprised of HTML5
+	* content models (such as "phrasing content" or "interactive content") plus a few special
+	* categories created dynamically (part of the specs refer to "a group of X and Y elements"
+	* rather than a specific content model, in which case a special category is formed for those
+	* elements.)
+	*
+	* "ac" represents the categories that are allowed as children of given element.
+	*
+	* "dd" represents the categories that may not appear as a descendant of given element.
+	*
+	* Sometimes, HTML5 specifies some restrictions on when an element can accept certain children,
+	* or what categories the element belongs to. For example, an <img> element is only part of the
+	* "interactive content" category if it has a "usemap" attribute. Those restrictions are
+	* expressed as an XPath expression and stored using the concatenation of the key of the bitfield
+	* plus the bit number of the category. For instance, if "interactive content" got assigned to
+	* bit 2, the definition of the <img> element will contain a key "c2" with value "@usemap".
+	*
+	* There is a special content model defined in HTML5, the "transparent" content model. If an
+	* element uses the "transparent" content model, the key "t" is non-empty (set to 1.)
+	*
+	* In addition, HTML5 defines "optional end tag" rules, where one element automatically closes
+	* its predecessor. Those are used to generate closeParent rules and are stored in the "cp" key.
+	*/
 	protected $htmlElements = array(
 		'a'=>array('c'=>7,'ac'=>0,'dd'=>4,'t'=>1),
 		'abbr'=>array('c'=>3,'ac'=>2),
@@ -1934,6 +1964,14 @@ class ConfigBuilder
 		return $tagsOptions;
 	}
 
+	/**
+	* Filter a bitfield according to its context node
+	*
+	* @param  string           $elName Name of the HTML element
+	* @param  string           $k      Bitfield name: either 'c', 'ac' or 'dd'
+	* @param  SimpleXMLElement $node   Context node
+	* @return integer
+	*/
 	protected function filterHTMLRulesBitfield($elName, $k, SimpleXMLElement $node)
 	{
 		if (empty($this->htmlElements[$elName][$k]))
