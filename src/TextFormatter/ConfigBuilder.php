@@ -8,10 +8,11 @@
 namespace s9e\Toolkit\TextFormatter;
 
 use DOMDocument,
-	DOMXPath,
-	InvalidArgumentException,
+    DOMXPath,
+    InvalidArgumentException,
     RuntimeException,
-	SimpleXMLElement,
+    SimpleXMLElement,
+    XSLTProcessor,
     UnexpectedValueException;
 
 class ConfigBuilder
@@ -1349,7 +1350,13 @@ class ConfigBuilder
 	// XSL stuff
 	//==========================================================================
 
-	public function getXSL()
+	/**
+	* Return the XSL used for rendering
+	*
+	* @param  string $prefix Prefix to use for XSL elements (defaults to "xsl")
+	* @return string
+	*/
+	public function getXSL($prefix = 'xsl')
 	{
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
 		     . "\n"
@@ -1373,6 +1380,41 @@ class ConfigBuilder
 		$xsl .= $this->xsl
 		      . '<xsl:template match="st|et|i"/>'
 		      . '</xsl:stylesheet>';
+
+		if ($prefix !== 'xsl')
+		{
+			$trans = new DOMDocument;
+			$trans->loadXML(
+				'<?xml version="1.0" encoding="utf-8"?>
+				<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:' . $prefix . '="http://www.w3.org/1999/XSL/Transform">
+
+					<xsl:output method="xml" encoding="utf-8" />
+
+					<xsl:template match="xsl:*">
+						<xsl:element name="' . $prefix . ':{local-name()}" namespace="http://www.w3.org/1999/XSL/Transform">
+							<xsl:copy-of select="@*" />
+							<xsl:apply-templates />
+						</xsl:element>
+					</xsl:template>
+
+					<xsl:template match="node()">
+						<xsl:copy>
+							<xsl:copy-of select="@*" />
+							<xsl:apply-templates />
+						</xsl:copy>
+					</xsl:template>
+
+				</xsl:stylesheet>'
+			);
+
+			$xslt = new XSLTProcessor;
+			$xslt->importStylesheet($trans);
+
+			$_xsl = new DOMDocument;
+			$_xsl->loadXML($xsl);
+
+			$xsl = rtrim($xslt->transformToXml($_xsl));
+		}
 
 		return $xsl;
 	}

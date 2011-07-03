@@ -28,7 +28,8 @@ $cb->addRulesFromHTML5Specs();
 $jsParser = $cb->getJSParser(array(
 	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
 	'disableLogTypes' => array('debug', 'warning', 'error'),
-	'unsafeMinification' => true
+	'unsafeMinification' => true,
+	'xslNamespacePrefix' => 'x'
 ));
 
 ob_start();

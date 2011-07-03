@@ -101,7 +101,8 @@ class JSParserGenerator
 			'escapeScriptEndTag'  => true,
 			'enableIEWorkarounds' => true,
 			'enableLivePreview'   => true,
-			'unsafeMinification'  => false
+			'unsafeMinification'  => false,
+			'xslNamespacePrefix'  => 'xsl'
 		);
 
 		if ($options['removeDeadCode'])
@@ -174,7 +175,7 @@ class JSParserGenerator
 			);
 		}
 
-		$this->injectXSL();
+		$this->injectXSL($options['xslNamespacePrefix']);
 
 		if ($options['compilation'] !== 'none')
 		{
@@ -779,16 +780,16 @@ class JSParserGenerator
 		$this->removeFunctions('addTrimmingInfoToTag');
 	}
 
-	protected function injectXSL()
+	protected function injectXSL($prefix)
 	{
 		$xsl = new DOMDocument;
-		$xsl->loadXML($this->cb->getXSL());
+		$xsl->loadXML($this->cb->getXSL($prefix));
 
 		/**
 		* Remove the "/m" template, which is only used when rendering multiple texts
 		*/
 		$xpath = new DOMXPath($xsl);
-		foreach ($xpath->query('//xsl:template[@match="/m"]') as $node)
+		foreach ($xpath->query('//' . $prefix . ':template[@match="/m"]') as $node)
 		{
 			$node->parentNode->removeChild($node);
 		}
