@@ -1743,8 +1743,7 @@ class ConfigBuilder
 
 			foreach ($tagInfo['root']->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
 			{
-				$tagInfo['usedCategories']
-					|= $this->filterHTMLRulesBitfield($node->getName(), 'c', $node);
+				$tagInfo['usedCategories'] |= $this->filterHTMLRulesBitfield($node->getName(), 'c', $node);
 			}
 
 			/**
@@ -1786,8 +1785,7 @@ class ConfigBuilder
 						/**
 						* Accumulate the denied descendants
 						*/
-						$tagInfo['denyDescendantBitfield']
-							|= $this->filterHTMLRulesBitfield($elName, 'dd', $node);
+						$tagInfo['denyDescendantBitfield'] |= $this->filterHTMLRulesBitfield($elName, 'dd', $node);
 
 						if (!isset($tagInfo['isTransparent']))
 						{
@@ -1901,7 +1899,9 @@ class ConfigBuilder
 		{
 			if (!isset($tagOptions['rules']))
 			{
+				// @codeCoverageIgnoreStart
 				continue;
+				// @codeCoverageIgnoreEnd
 			}
 
 			// flip the rules targets
