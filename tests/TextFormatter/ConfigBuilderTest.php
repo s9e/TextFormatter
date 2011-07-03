@@ -1761,10 +1761,8 @@ class ConfigBuilderTest extends Test
 	*/
 	public function testHTMLRules7a()
 	{
-		$this->cb->BBCodes->addBBCode('A', array('template' => '<a><xsl:apply-templates/></a>'));
-		$this->cb->BBCodes->addBBCode('DIV', array(
-			'template' => '<div><xsl:apply-templates/></div>'
-		));
+		$this->cb->addTag('A', array('template' => '<a><xsl:apply-templates/></a>'));
+		$this->cb->addTag('DIV', array('template' => '<div><xsl:apply-templates/></div>'));
 
 		$this->assertEquals(
 			array(
@@ -1816,6 +1814,56 @@ class ConfigBuilderTest extends Test
 				)
 			),
 			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
+
+	/**
+	* @depends testHTMLRules1
+	* @testdox addRulesFromHTML5Specs() creates rules based on HTML5 specs
+	*/
+	public function testAddRulesAddsRules()
+	{
+		$this->cb->addTag('DIV',  array('template' => '<div><xsl:apply-templates/></div>'));
+		$this->cb->addTag('SPAN', array('template' => '<span><xsl:apply-templates/></span>'));
+
+		$this->cb->addRulesFromHTML5Specs();
+
+		$this->assertArrayMatches(
+			array(
+				'DIV' => array(
+					'rules' => array(
+						'allowChild' => array('DIV' => 'DIV', 'SPAN' => 'SPAN')
+					)
+				),
+				'SPAN' => array(
+					'rules' => array(
+						'allowChild' => array('SPAN' => 'SPAN'),
+						'denyChild'  => array('DIV' => 'DIV')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testHTMLRules7a
+	* @testdox addRulesFromHTML5Specs() sets options based on HTML5 specs
+	*/
+	public function testAddRulesSetsOptions()
+	{
+		$this->cb->addTag('A', array('template' => '<a><xsl:apply-templates/></a>'));
+		$this->cb->addTag('DIV', array('template' => '<div><xsl:apply-templates/></div>'));
+
+		$this->cb->addRulesFromHTML5Specs();
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'isTransparent' => true
+				)
+			),
+			$this->cb->getTagsConfig()
 		);
 	}
 }

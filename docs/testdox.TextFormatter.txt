@@ -122,6 +122,8 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] HTML specs: <a> denies <img> with usemap attribute
  [x] HTML specs: <div><a> allows <div>
  [x] HTML specs: <span><a> denies <div>
+ [x] addRulesFromHTML5Specs() creates rules based on HTML5 specs
+ [x] addRulesFromHTML5Specs() sets options based on HTML5 specs
 
 s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray can encode arrays to objects
