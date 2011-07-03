@@ -7,7 +7,9 @@
 */
 namespace s9e\Toolkit\TextFormatter;
 
-use RuntimeException;
+use DOMDocument,
+    DOMXPath,
+    RuntimeException;
 
 /**
 * KNOWN LIMITATIONS:
@@ -779,9 +781,21 @@ class JSParserGenerator
 
 	protected function injectXSL()
 	{
+		$xsl = new DOMDocument;
+		$xsl->loadXML($this->cb->getXSL());
+
+		/**
+		* Remove the "/m" template, which is only used when rendering multiple texts
+		*/
+		$xpath = new DOMXPath($xsl);
+		foreach ($xpath->query('//xsl:template[@match="/m"]') as $node)
+		{
+			$node->parentNode->removeChild($node);
+		}
+
 		$this->src = str_replace(
 			'/** XSL goes here **/',
-			json_encode($this->cb->getXSL()),
+			json_encode($xsl->saveXML()),
 			$this->src
 		);
 	}
