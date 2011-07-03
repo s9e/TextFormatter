@@ -796,7 +796,7 @@ class JSParserGenerator
 
 		$this->src = str_replace(
 			'/** XSL goes here **/',
-			json_encode($xsl->saveXML()),
+			json_encode(rtrim($xsl->saveXML())),
 			$this->src
 		);
 	}
