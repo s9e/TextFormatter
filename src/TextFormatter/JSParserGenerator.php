@@ -98,7 +98,8 @@ class JSParserGenerator
 			'removeDeadCode'      => true,
 			'escapeScriptEndTag'  => true,
 			'enableIEWorkarounds' => true,
-			'enableLivePreview'   => true
+			'enableLivePreview'   => true,
+			'unsafeMinification'  => false
 		);
 
 		if ($options['removeDeadCode'])
@@ -126,6 +127,38 @@ class JSParserGenerator
 		$this->injectPlugins();
 		$this->injectFiltersConfig();
 		$this->injectCallbacks();
+
+		/**
+		* Rename property names that are preserved by Google Closure Compiler by default.
+		* For instance, "tag.name" will be renamed "tag._name" so that Google Closure Compiler will
+		* rename it to a shorter form. This operation is _UNSAFE_ as its name implies, because it
+		* doesn't have any context.
+		*/
+		if ($options['unsafeMinification'])
+		{
+			$rename = array(
+				'name',
+				'type',
+				'rules',
+				'defaultValue',
+				'tagName',
+				'attrName'
+			);
+
+			// tag.name
+			$this->src = preg_replace(
+				'#(?<=\\.)(?=' . implode('|', $rename) . ')#',
+				'_',
+				$this->src
+			);
+
+			// name:
+			$this->src = preg_replace(
+				'#(?<=\\W)(?=(?:' . implode('|', $rename) . ')(?=\\s*:))#',
+				'_',
+				$this->src
+			);
+		}
 
 		/**
 		* Turn off logging selectively

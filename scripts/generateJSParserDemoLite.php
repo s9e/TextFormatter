@@ -27,7 +27,8 @@ $cb->addRulesFromHTML5Specs();
 
 $jsParser = $cb->getJSParser(array(
 	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
-	'disableLogTypes' => array('debug', 'warning', 'error')
+	'disableLogTypes' => array('debug', 'warning', 'error'),
+	'unsafeMinification' => true
 ));
 
 ob_start();
