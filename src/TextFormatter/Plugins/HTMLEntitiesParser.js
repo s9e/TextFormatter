@@ -13,13 +13,17 @@ matches.forEach(function(m)
 
 	b.innerHTML = m[0][0];
 
-	if (b.textContent === m[0][0])
+	var chr = (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
+	        ? b.innerText || b.textContent
+	        : b.textContent;
+
+	if (chr === m[0][0])
 	{
 		return;
 	}
 
 	var attrs = {};
-	attrs[attrName] = b.textContent;
+	attrs[attrName] = chr;
 
 	tags.push({
 		pos   : m[0][1],
