@@ -1181,6 +1181,17 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Can use a custom prefix for XSL namespace
+	*/
+	public function testXSLPrefix()
+	{
+		$this->assertContains(
+			'<xxx:stylesheet',
+			$this->cb->getXSL('xxx')
+		);
+	}
+
+	/**
 	* @test
 	* @depends testCanCreateTag
 	*/

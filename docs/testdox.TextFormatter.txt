@@ -93,6 +93,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can add generic XSL
  [x] Cannot add invalid XSL
  [x] XSL from tags appear in output
+ [x] Can use a custom prefix for XSL namespace
  [x] Can add a preFilter callback to a tag
  [x] addTagPreFilterCallback throws an exception if callback is not callable
  [x] Can set preFilter callbacks via setTagOption
