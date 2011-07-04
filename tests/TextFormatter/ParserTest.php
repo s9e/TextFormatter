@@ -2307,7 +2307,7 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function Unfulfilled_requireParent_rule_blocks_tag_despite_ascendant()
+	public function Unfulfilled_requireParent_rule_blocks_tag_despite_ancestor()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
@@ -2360,7 +2360,7 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function closeParent_rule_is_not_applied_to_ascendant_tag()
+	public function closeParent_rule_is_not_applied_to_ancestor_tag()
 	{
 		$this->cb->BBCodes->addBBCode('p');
 		$this->cb->BBCodes->addBBCode('b');
@@ -2439,10 +2439,10 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function closeAscendant_rule_is_applied_to_parent_tag()
+	public function closeAncestor_rule_is_applied_to_parent_tag()
 	{
 		$this->cb->BBCodes->addBBCode('p');
-		$this->cb->addTagRule('p', 'closeAscendant', 'p');
+		$this->cb->addTagRule('p', 'closeAncestor', 'p');
 
 		$this->assertParsing(
 			'[p]one[p]two',
@@ -2454,11 +2454,11 @@ class ParserTest extends Test
 	* @test
 	* @depends Tags_left_open_get_closed_when_their_ancestor_gets_closed
 	*/
-	public function closeAscendant_rule_is_applied_to_ascendant_tag()
+	public function closeAncestor_rule_is_applied_to_ancestor_tag()
 	{
 		$this->cb->BBCodes->addBBCode('b');
 		$this->cb->BBCodes->addBBCode('p');
-		$this->cb->addTagRule('p', 'closeAscendant', 'p');
+		$this->cb->addTagRule('p', 'closeAncestor', 'p');
 
 		$this->assertParsing(
 			'[p]one[b]bold[p]two',
@@ -2468,13 +2468,13 @@ class ParserTest extends Test
 
 	/**
 	* @test
-	* @depends closeAscendant_rule_is_applied_to_ascendant_tag
+	* @depends closeAncestor_rule_is_applied_to_ancestor_tag
 	*/
-	public function closeAscendant_rule_is_applied_to_tag_with_identical_suffix()
+	public function closeAncestor_rule_is_applied_to_tag_with_identical_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('b');
 		$this->cb->BBCodes->addBBCode('p');
-		$this->cb->addTagRule('p', 'closeAscendant', 'p');
+		$this->cb->addTagRule('p', 'closeAncestor', 'p');
 
 		$this->assertParsing(
 			'[p:123]one[b]bold[p:123]two',
@@ -2484,13 +2484,13 @@ class ParserTest extends Test
 
 	/**
 	* @test
-	* @depends closeAscendant_rule_is_applied_to_ascendant_tag
+	* @depends closeAncestor_rule_is_applied_to_ancestor_tag
 	*/
-	public function closeAscendant_rule_is_applied_to_tag_with_different_suffix()
+	public function closeAncestor_rule_is_applied_to_tag_with_different_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('b');
 		$this->cb->BBCodes->addBBCode('p');
-		$this->cb->addTagRule('p', 'closeAscendant', 'p');
+		$this->cb->addTagRule('p', 'closeAncestor', 'p');
 
 		$this->assertParsing(
 			'[p:123]one[b]bold[p:456]two',
@@ -2501,16 +2501,16 @@ class ParserTest extends Test
 	/**
 	* @test
 	* @depends Tags_nestingLimit_is_enforced
-	* @depends closeAscendant_rule_is_applied_to_parent_tag
+	* @depends closeAncestor_rule_is_applied_to_parent_tag
 	*/
-	public function closeAscendant_rule_is_applied_before_nestingLimit_is_checked()
+	public function closeAncestor_rule_is_applied_before_nestingLimit_is_checked()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X', array('nestingLimit' => 1));
 
-		$this->cb->addTagRule('X', 'closeAscendant', 'X');
+		$this->cb->addTagRule('X', 'closeAncestor', 'X');
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 1,
@@ -2632,11 +2632,11 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function requireAscendant_rule_is_fulfilled_by_parent()
+	public function requireAncestor_rule_is_fulfilled_by_parent()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+		$this->cb->addTagRule('b', 'requireAncestor', 'a');
 
 		$this->assertParsing(
 			'[a][b][/b][/a]',
@@ -2646,13 +2646,13 @@ class ParserTest extends Test
 
 	/**
 	* @test
-	* @depends requireAscendant_rule_is_fulfilled_by_parent
+	* @depends requireAncestor_rule_is_fulfilled_by_parent
 	*/
-	public function requireAscendant_rule_is_fulfilled_by_parent_with_suffix()
+	public function requireAncestor_rule_is_fulfilled_by_parent_with_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+		$this->cb->addTagRule('b', 'requireAncestor', 'a');
 
 		$this->assertParsing(
 			'[a:123][b][/b][/a:123]',
@@ -2663,12 +2663,12 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function requireAscendant_rule_is_fulfilled_by_ascendant()
+	public function requireAncestor_rule_is_fulfilled_by_ancestor()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
 		$this->cb->BBCodes->addBBCode('c');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+		$this->cb->addTagRule('b', 'requireAncestor', 'a');
 
 		$this->assertParsing(
 			'[a][c][b][/b][/c][/a]',
@@ -2678,14 +2678,14 @@ class ParserTest extends Test
 
 	/**
 	* @test
-	* @depends requireAscendant_rule_is_fulfilled_by_ascendant
+	* @depends requireAncestor_rule_is_fulfilled_by_ancestor
 	*/
-	public function requireAscendant_rule_is_fulfilled_by_ascendant_with_suffix()
+	public function requireAncestor_rule_is_fulfilled_by_ancestor_with_suffix()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
 		$this->cb->BBCodes->addBBCode('c');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+		$this->cb->addTagRule('b', 'requireAncestor', 'a');
 
 		$this->assertParsing(
 			'[a:123][c][b][/b][/c][/a:123]',
@@ -2695,15 +2695,15 @@ class ParserTest extends Test
 
 	/**
 	* @test
-	* @depends requireAscendant_rule_is_fulfilled_by_parent_with_suffix
+	* @depends requireAncestor_rule_is_fulfilled_by_parent_with_suffix
 	*/
-	public function requireAscendant_rule_with_multiple_targets_is_fulfilled_if_any_of_the_targets_is_an_ascendant()
+	public function requireAncestor_rule_with_multiple_targets_is_fulfilled_if_any_of_the_targets_is_an_ancestor()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
 		$this->cb->BBCodes->addBBCode('c');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
-		$this->cb->addTagRule('b', 'requireAscendant', 'c');
+		$this->cb->addTagRule('b', 'requireAncestor', 'a');
+		$this->cb->addTagRule('b', 'requireAncestor', 'c');
 
 		$this->assertParsing(
 			'[a][b]stuff[/b][/a]',
@@ -2719,11 +2719,11 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function Unfulfilled_requireAscendant_rule_blocks_tag()
+	public function Unfulfilled_requireAncestor_rule_blocks_tag()
 	{
 		$this->cb->BBCodes->addBBCode('a');
 		$this->cb->BBCodes->addBBCode('b');
-		$this->cb->addTagRule('b', 'requireAscendant', 'a');
+		$this->cb->addTagRule('b', 'requireAncestor', 'a');
 
 		$this->assertParsing(
 			'[b]stuff[/b]',
@@ -2731,7 +2731,7 @@ class ParserTest extends Test
 			array(
 				'error' => array(
 					array(
-						'msg'     => 'Tag %1$s requires %2$s as ascendant',
+						'msg'     => 'Tag %1$s requires %2$s as ancestor',
 						'params'  => array('B', 'A')
 					)
 				)

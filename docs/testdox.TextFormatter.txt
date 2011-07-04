@@ -87,7 +87,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Does not optimize regexp by using lookahead assertion with special sequences
  [x] getParserConfig removes rules that target non existing tags
  [x] getParserConfig preserves requireParent rules that target non existing tags
- [x] getParserConfig preserves requireAscendant rules that target non existing tags
+ [x] getParserConfig preserves requireAncestor rules that target non existing tags
  [x] getPluginsConfig adds default config if missing
  [x] Plugins can be disabled by returning false instead of config
  [x] Can add generic XSL
@@ -295,29 +295,29 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] requireParent rule with multiple targets is fulfilled if any of the targets is the parent
  [x] Fulfilled requireParent rule allows tag despite BBCode suffix
  [x] Unfulfilled requireParent rule blocks tag
- [x] Unfulfilled requireParent rule blocks tag despite ascendant
+ [x] Unfulfilled requireParent rule blocks tag despite ancestor
  [x] closeParent rule is applied to matching parent tag
  [x] closeParent rule is not applied to non matching parent tag
- [x] closeParent rule is not applied to ascendant tag
+ [x] closeParent rule is not applied to ancestor tag
  [x] closeParent rule is applied to matching parent tag with identical suffix
  [x] closeParent rule is applied to matching parent tag with different suffix
  [x] closeParent rule is applied before nestingLimit is checked
- [x] closeAscendant rule is applied to parent tag
- [x] closeAscendant rule is applied to ascendant tag
- [x] closeAscendant rule is applied to tag with identical suffix
- [x] closeAscendant rule is applied to tag with different suffix
- [x] closeAscendant rule is applied before nestingLimit is checked
+ [x] closeAncestor rule is applied to parent tag
+ [x] closeAncestor rule is applied to ancestor tag
+ [x] closeAncestor rule is applied to tag with identical suffix
+ [x] closeAncestor rule is applied to tag with different suffix
+ [x] closeAncestor rule is applied before nestingLimit is checked
  [x] denyChild rule blocks child tag
  [x] denyChild rule does not block descendant tag
  [x] denyDescendant rule blocks child tag
  [x] denyDescendant rule blocks descendant tag
  [x] allowChild rule allows child tag despite defaultChildRule being deny
- [x] requireAscendant rule is fulfilled by parent
- [x] requireAscendant rule is fulfilled by parent with suffix
- [x] requireAscendant rule is fulfilled by ascendant
- [x] requireAscendant rule is fulfilled by ascendant with suffix
- [x] requireAscendant rule with multiple targets is fulfilled if any of the targets is an ascendant
- [x] Unfulfilled requireAscendant rule blocks tag
+ [x] requireAncestor rule is fulfilled by parent
+ [x] requireAncestor rule is fulfilled by parent with suffix
+ [x] requireAncestor rule is fulfilled by ancestor
+ [x] requireAncestor rule is fulfilled by ancestor with suffix
+ [x] requireAncestor rule with multiple targets is fulfilled if any of the targets is an ancestor
+ [x] Unfulfilled requireAncestor rule blocks tag
  [x] Whitespace trimming works
  [x] Whitespace trimming does not cause tags to overlap
 

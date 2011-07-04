@@ -1109,11 +1109,11 @@ class Parser
 	protected function processCurrentStartTag()
 	{
 		//==============================================================
-		// Apply closeParent and closeAscendant rules
+		// Apply closeParent and closeAncestor rules
 		//==============================================================
 
 		if ($this->closeParent()
-		 || $this->closeAscendant())
+		 || $this->closeAncestor())
 		{
 			return;
 		}
@@ -1141,7 +1141,7 @@ class Parser
 		}
 
 		if ($this->requireParent()
-		 || $this->requireAscendant()
+		 || $this->requireAncestor()
 		 || $this->processCurrentTagAttributes())
 		{
 			return;
@@ -1265,27 +1265,27 @@ class Parser
 	}
 
 	/**
-	* Apply closeAscendant rules from current tag
+	* Apply closeAncestor rules from current tag
 	*
 	* @return boolean Whether a new tag has been added
 	*/
-	protected function closeAscendant()
+	protected function closeAncestor()
 	{
 		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
 
-		if (!empty($tagConfig['rules']['closeAscendant']))
+		if (!empty($tagConfig['rules']['closeAncestor']))
 		{
 			$i = count($this->openTags);
 
 			while (--$i >= 0)
 			{
-				$ascendantTag     = $this->openTags[$i];
-				$ascendantTagName = $ascendantTag['name'];
+				$ancestorTag     = $this->openTags[$i];
+				$ancestorTagName = $ancestorTag['name'];
 
-				if (isset($tagConfig['rules']['closeAscendant'][$ascendantTagName]))
+				if (isset($tagConfig['rules']['closeAncestor'][$ancestorTagName]))
 				{
 					/**
-					* We have to close this ascendant. First we reinsert current tag...
+					* We have to close this ancestor. First we reinsert current tag...
 					*/
 					$this->unprocessedTags[] = $this->currentTag;
 
@@ -1293,7 +1293,7 @@ class Parser
 					* ...then we create a new end tag which we put on top of the stack
 					*/
 					$this->currentTag = $this->createEndTag(
-						$ascendantTag,
+						$ancestorTag,
 						$this->currentTag['pos']
 					);
 
@@ -1343,33 +1343,33 @@ class Parser
 	}
 
 	/**
-	* Apply requireAscendant rules from current tag
+	* Apply requireAncestor rules from current tag
 	*
 	* @return boolean Whether current tag is invalid
 	*/
-	protected function requireAscendant()
+	protected function requireAncestor()
 	{
 		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
 
-		if (isset($tagConfig['rules']['requireAscendant']))
+		if (isset($tagConfig['rules']['requireAncestor']))
 		{
-			foreach ($tagConfig['rules']['requireAscendant'] as $ascendant)
+			foreach ($tagConfig['rules']['requireAncestor'] as $ancestor)
 			{
-				if (!empty($this->cntOpen[$ascendant]))
+				if (!empty($this->cntOpen[$ancestor]))
 				{
 					return false;
 				}
 			}
 
-			$msg = (count($tagConfig['rules']['requireAscendant']) === 1)
-				 ? 'Tag %1$s requires %2$s as ascendant'
-				 : 'Tag %1$s requires as ascendant any of: %2$s';
+			$msg = (count($tagConfig['rules']['requireAncestor']) === 1)
+				 ? 'Tag %1$s requires %2$s as ancestor'
+				 : 'Tag %1$s requires as ancestor any of: %2$s';
 
 			$this->log('error', array(
 				'msg'    => $msg,
 				'params' => array(
 					$this->currentTag['name'],
-					implode(', ', $tagConfig['rules']['requireAscendant'])
+					implode(', ', $tagConfig['rules']['requireAncestor'])
 				)
 			));
 

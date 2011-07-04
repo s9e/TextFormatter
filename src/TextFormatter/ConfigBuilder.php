@@ -653,11 +653,11 @@ class ConfigBuilder
 			'allowChild',
 			'allowDescendant',
 			'closeParent',
-			'closeAscendant',
+			'closeAncestor',
 			'denyChild',
 			'denyDescendant',
 			'requireParent',
-			'requireAscendant'
+			'requireAncestor'
 		), true))
 		{
 			throw new UnexpectedValueException("Unknown rule action '" . $action . "'");
@@ -1132,14 +1132,14 @@ class ConfigBuilder
 								break;
 
 							case 'requireParent':
-							case 'requireAscendant':
+							case 'requireAncestor':
 								/**
 								* Nothing to do here. If the target tag does not exist, this tag
 								* will never be valid but we still leave it in the configuration
 								*/
 								break;
 
-							case 'closeAscendant':
+							case 'closeAncestor':
 							case 'closeParent':
 								// keep only the rules that target existing tags
 								$targets = array_intersect_key($targets, $tagsConfig);

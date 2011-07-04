@@ -261,9 +261,9 @@ class JSParserGeneratorTest extends Test
 		return array(
 			// rules
 			array('closeParent',      array('rules' => array('closeParent' => array('B')))),
-			array('closeAscendant',   array('rules' => array('closeAscendant' => array('B')))),
+			array('closeAncestor',   array('rules' => array('closeAncestor' => array('B')))),
 			array('requireParent',    array('rules' => array('requireParent' => array('B')))),
-			array('requireAscendant', array('rules' => array('requireAscendant' => array('B')))),
+			array('requireAncestor', array('rules' => array('requireAncestor' => array('B')))),
 
 			// attributes
 			array(

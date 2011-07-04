@@ -373,9 +373,9 @@ class JSParserGenerator
 	{
 		$rules = array(
 			'closeParent',
-			'closeAscendant',
+			'closeAncestor',
 			'requireParent',
-			'requireAscendant'
+			'requireAncestor'
 		);
 
 		$remove = array();

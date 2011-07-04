@@ -1087,18 +1087,18 @@ class ConfigBuilderTest extends Test
 	* @test
 	* @depends testCanCreateRuleThatTargetsANonExistentTag
 	*/
-	public function getParserConfig_preserves_requireAscendant_rules_that_target_non_existing_tags()
+	public function getParserConfig_preserves_requireAncestor_rules_that_target_non_existing_tags()
 	{
 		$this->cb->addTag('a');
 
-		$this->cb->addTagRule('a', 'requireAscendant', 'b');
+		$this->cb->addTagRule('a', 'requireAncestor', 'b');
 
 		$this->assertArrayMatches(
 			array(
 				'tags' => array(
 					'A' => array(
 						'rules' => array(
-							'requireAscendant' => array(
+							'requireAncestor' => array(
 								'B' => 'B'
 							)
 						)

@@ -903,11 +903,11 @@ s9e['TextFormatter'] = function(xsl)
 	function processCurrentStartTag()
 	{
 		//==============================================================
-		// Apply closeParent and closeAscendant rules
+		// Apply closeParent and closeAncestor rules
 		//==============================================================
 
 		if (closeParent()
-		 || closeAscendant())
+		 || closeAncestor())
 		{
 			return;
 		}
@@ -935,7 +935,7 @@ s9e['TextFormatter'] = function(xsl)
 		}
 
 		if (requireParent()
-		 || requireAscendant()
+		 || requireAncestor()
 		 || processCurrentTagAttributes())
 		{
 			return;
@@ -1049,30 +1049,30 @@ s9e['TextFormatter'] = function(xsl)
 		return false;
 	}
 
-	function closeAscendant()
+	function closeAncestor()
 	{
 		var tagConfig = tagsConfig[currentTag.name];
 
 		if (tagConfig.rules
-		 && tagConfig.rules.closeAscendant)
+		 && tagConfig.rules.closeAncestor)
 		{
 			var i = openTags.length;
 
 			while (--i >= 0)
 			{
-				var ascendantTag     = openTags[i],
-					ascendantTagName = ascendantTag.name,
-					ascendantMatches = tagConfig.rules.closeAscendant.some(
+				var ancestorTag     = openTags[i],
+					ancestorTagName = ancestorTag.name,
+					ancestorMatches = tagConfig.rules.closeAncestor.some(
 						function(tagName)
 						{
-							return (tagName === ascendantTagName);
+							return (tagName === ancestorTagName);
 						}
 					);
 
-				if (ascendantMatches)
+				if (ancestorMatches)
 				{
 					/**
-					* We have to close this ascendant. First we reinsert current tag...
+					* We have to close this ancestor. First we reinsert current tag...
 					*/
 					unprocessedTags.push(currentTag);
 
@@ -1080,7 +1080,7 @@ s9e['TextFormatter'] = function(xsl)
 					* ...then we create a new end tag which we put on top of the stack
 					*/
 					currentTag = createEndTag(
-						ascendantTag,
+						ancestorTag,
 						currentTag.pos
 					);
 
@@ -1136,19 +1136,19 @@ s9e['TextFormatter'] = function(xsl)
 		return false;
 	}
 
-	function requireAscendant()
+	function requireAncestor()
 	{
 		var tagConfig = tagsConfig[currentTag.name];
 
 		if (tagConfig.rules
-		 && tagConfig.rules.requireAscendant)
+		 && tagConfig.rules.requireAncestor)
 		{
 			var i = 0,
-				cnt = tagConfig.rules.requireAscendant.length;
+				cnt = tagConfig.rules.requireAncestor.length;
 
 			do
 			{
-				if (cntOpen[tagConfig.rules.requireAscendant[i]])
+				if (cntOpen[tagConfig.rules.requireAncestor[i]])
 				{
 					return false;
 				}
@@ -1156,14 +1156,14 @@ s9e['TextFormatter'] = function(xsl)
 			while (++i < cnt);
 
 			var msg = (cnt === 1)
-			        ? 'Tag %1$s requires %2$s as ascendant'
-			        : 'Tag %1$s requires as ascendant any of: %2$s';
+			        ? 'Tag %1$s requires %2$s as ancestor'
+			        : 'Tag %1$s requires as ancestor any of: %2$s';
 
 			log('error', {
 				'msg'    : msg,
 				'params' : [
 					currentTag.name,
-					tagConfig.rules.requireAscendant.join(', ')
+					tagConfig.rules.requireAncestor.join(', ')
 				]
 			});
 
