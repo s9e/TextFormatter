@@ -530,6 +530,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Can set tag XSL
 	* @depends testCanCreateTag
 	*/
 	public function testCanSetTagXsl()
@@ -552,6 +553,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Cannot set tag template with invalid XSL
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException Invalid
 	*/
@@ -562,6 +564,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Cannot get tag XSL on unknown tag
 	* @expectedException InvalidArgumentException FOO
 	*/
 	public function testCannotGetTagXslOnUnknownTag()
@@ -570,6 +573,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Cannot get tag XSL on tag without XSL
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException No
 	*/
@@ -596,6 +600,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Can create tag with XSL
 	* @depends testCanCreateTagWithOption
 	* @depends testCanSetTagXsl
 	*/
@@ -612,6 +617,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Can set tag XSL
 	* @depends testCanSetTagXsl
 	*/
 	public function testCanSetTagXslWithPreservedWhitespace()
@@ -1132,6 +1138,9 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
+	/**
+	* @testdox Can add generic XSL
+	*/
 	public function testCanAddGenericXsl()
 	{
 		$xsl = '<xsl:param name="foo"/>';
@@ -1144,6 +1153,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Cannot add invalid XSL
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Premature end of data in tag stylesheet line 1
 	*/
@@ -1153,6 +1163,7 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox XSL from tags appear in output
 	* @depends testCanCreateTagWithXsl
 	*/
 	public function testXslFromTagsAppearsInOutput()

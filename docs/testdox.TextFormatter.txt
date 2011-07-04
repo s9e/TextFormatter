@@ -48,14 +48,13 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getTagOption fails on unset options
  [x] getTagOption can return a null option
  [x] Can set tag template
- [x] Can set tag xsl
+ [x] Can set tag XSL
  [x] Cannot set tag template on unknown tag
- [x] Cannot set tag template with invalid xsl
- [x] Cannot get tag xsl on unknown tag
- [x] Cannot get tag xsl on tag without xsl
+ [x] Cannot set tag template with invalid XSL
+ [x] Cannot get tag XSL on unknown tag
+ [x] Cannot get tag XSL on tag without XSL
  [x] Can create tag with template
- [x] Can create tag with xsl
- [x] Can set tag xsl with preserved whitespace
+ [x] Can create tag with XSL
  [x] Cannot set tag template with variable in script src
  [x] Cannot set tag template with variable in script src regardless of the case
  [x] Can set tag template with variable in script src with insecure flag
@@ -91,9 +90,9 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] getParserConfig preserves requireAscendant rules that target non existing tags
  [x] getPluginsConfig adds default config if missing
  [x] Plugins can be disabled by returning false instead of config
- [x] Can add generic xsl
- [x] Cannot add invalid xsl
- [x] Xsl from tags appears in output
+ [x] Can add generic XSL
+ [x] Cannot add invalid XSL
+ [x] XSL from tags appear in output
  [x] Can add a preFilter callback to a tag
  [x] addTagPreFilterCallback throws an exception if callback is not callable
  [x] Can set preFilter callbacks via setTagOption
