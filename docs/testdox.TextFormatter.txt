@@ -145,6 +145,7 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeConfig convert array regexp to an object with RegExp objects with g flag as properties
  [x] Injects plugins parsers into source
  [x] Injects plugins configs into source
+ [x] replaceConstant() throws an exception if no replacement occurs
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Ouput is UTF8

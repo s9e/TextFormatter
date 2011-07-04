@@ -480,4 +480,15 @@ class JSParserGeneratorTest extends Test
 			$jsParser
 		);
 	}
+
+	/**
+	* @testdox replaceConstant() throws an exception if no replacement occurs
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Tried to replace constant UNKNOWN, 0 occurences found
+	*/
+	public function testReplaceConstantFailZeroMatch()
+	{
+		$this->call($this->jspg, 'init');
+		$this->call($this->jspg, 'replaceConstant', array('UNKNOWN', 2));
+	}
 }
