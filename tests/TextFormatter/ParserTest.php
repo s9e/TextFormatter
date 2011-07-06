@@ -776,19 +776,37 @@ class ParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox Invalid URLs are rejected
+	*/
 	public function testInvalidUrlsAreRejected()
 	{
 		$this->assertAttributeIsInvalid('url', 'invalid');
 	}
 
+	/**
+	* @testdox URLs with no host are rejected
+	*/
 	public function testUrlsWithNoHostAreRejected()
 	{
 		$this->assertAttributeIsInvalid('url', '/path/to/file');
 	}
 
+	/**
+	* @testdox URLs with no path are accepted
+	*/
 	public function testUrlsWithNoPathAreAccepted()
 	{
 		$this->assertAttributeIsValid('url', 'http://www.example.com');
+	}
+
+	/**
+	* @testdox Whitespace around URLs is removed
+	* @depends testUrlsWithNoPathAreAccepted
+	*/
+	public function testWhitespaceIsRemovedFromURLs()
+	{
+		$this->assertAttributeIsValid('url', '  http://example.com  ', 'http://example.com');
 	}
 
 	public function testUrlFilterRejectsNotAllowedSchemes()

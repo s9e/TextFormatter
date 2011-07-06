@@ -276,6 +276,12 @@ class Parser
 				checkUrl:
 
 				/**
+				* Trim the URL to conform with HTML5
+				* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
+				*/
+				$attrVal = trim($attrVal);
+
+				/**
 				* Test whether the URL contains non-ASCII characters
 				*/
 				if (preg_match('#[\\x80-\\xff]#', $attrVal))

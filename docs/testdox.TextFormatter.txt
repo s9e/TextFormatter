@@ -218,9 +218,10 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Url filter urlencodes non ASCII chars
  [x] Url filter does lose parts of an URL that contains non ASCII chars
  [x] Url filter does not punyencode credentials that match an IDN
- [x] Invalid urls are rejected
- [x] Urls with no host are rejected
- [x] Urls with no path are accepted
+ [x] Invalid URLs are rejected
+ [x] URLs with no host are rejected
+ [x] URLs with no path are accepted
+ [x] Whitespace around URLs is removed
  [x] Url filter rejects not allowed schemes
  [x] Url filter can accept non http schemes
  [x] Url filter rejects disallowed host
