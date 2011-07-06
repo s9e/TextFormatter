@@ -214,8 +214,10 @@ s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Filter "float" accepts positive numbers in E notation with a negative exponent
  [x] Filter "float" accepts negative numbers in E notation with a negative exponent
  [x] Filter "float" rejects numbers in hex notation
- [x] Url filter converts IDNs
+ [x] Url filter punyencodes IDNs
  [x] Url filter urlencodes non ASCII chars
+ [x] Url filter does lose parts of an URL that contains non ASCII chars
+ [x] Url filter does not punyencode credentials that match an IDN
  [x] Invalid urls are rejected
  [x] Urls with no host are rejected
  [x] Urls with no path are accepted

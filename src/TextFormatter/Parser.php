@@ -284,20 +284,55 @@ class Parser
 
 					if ($p)
 					{
-						$pos = strpos($attrVal, $p['host']);
-
 						/**
 						* Encode IDNs
 						*/
 						if (function_exists('idn_to_ascii'))
 						{
-							$attrVal = substr($attrVal, 0, $pos)
-									 . idn_to_ascii($p['host'])
-									 . substr($attrVal, $pos + strlen($p['host']));
+							$p['host'] = idn_to_ascii($p['host']);
 						}
 
 						/**
-						* URL-encode non-ASCII stuff
+						* Rebuild the URL
+						*/
+						$url = $p['scheme'] . '://';
+
+						if (isset($p['user']))
+						{
+							$url .= $p['user'];
+
+							if (isset($p['pass']))
+							{
+								$url .= ':' . $p['pass'];
+							}
+
+							$url .= '@';
+						}
+
+						$url .= $p['host'];
+
+						if (isset($p['port']))
+						{
+							$url .= ':' . $p['port'];
+						}
+
+						if (isset($p['path']))
+						{
+							$url .= $p['path'];
+						}
+
+						if (isset($p['query']))
+						{
+							$url .= '?' . $p['query'];
+						}
+
+						if (isset($p['fragment']))
+						{
+							$url .= '#' . $p['fragment'];
+						}
+
+						/**
+						* URL-encode non-ASCII stuff and use the result as new value for attribute
 						*/
 						$attrVal = preg_replace_callback(
 							'#[^\\x00-\\x7f]#u',
@@ -305,7 +340,7 @@ class Parser
 							{
 								return urlencode($m[0]);
 							},
-							$attrVal
+							$url
 						);
 					}
 				}

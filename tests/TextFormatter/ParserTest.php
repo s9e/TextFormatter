@@ -720,7 +720,7 @@ class ParserTest extends Test
 	/**
 	* @test
 	*/
-	public function Url_filter_converts_IDNs()
+	public function Url_filter_punyencodes_IDNs()
 	{
 		$this->assertAttributeValidity(
 			'url',
@@ -740,6 +740,37 @@ class ParserTest extends Test
 			'url',
 			'http://en.wikipedia.org/wiki/Matti_Nykänen',
 			'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen',
+			true,
+			array()
+		);
+	}
+
+	/**
+	* @test
+	* @depends Url_filter_urlencodes_non_ASCII_chars
+	*/
+	public function Url_filter_does_lose_parts_of_an_URL_that_contains_non_ASCII_chars()
+	{
+		$this->assertAttributeValidity(
+			'url',
+			'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nykänen?foo&bar#baz',
+			'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nyk%C3%A4nen?foo&bar#baz',
+			true,
+			array()
+		);
+	}
+
+	/**
+	* @test
+	* depends Url_filter_punyencodes_IDNs
+	* depends Url_filter_urlencodes_non_ASCII_chars
+	*/
+	public function Url_filter_does_not_punyencode_credentials_that_match_an_IDN()
+	{
+		$this->assertAttributeValidity(
+			'url',
+			'http://älypää.com:älypää.com@älypää.com',
+			'http://%C3%A4lyp%C3%A4%C3%A4.com:%C3%A4lyp%C3%A4%C3%A4.com@xn--lyp-plada.com',
 			true,
 			array()
 		);
