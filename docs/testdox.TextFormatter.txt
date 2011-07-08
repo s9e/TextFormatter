@@ -598,6 +598,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\GenericConfig
  [x] addReplacement() accepts subpatterns using the (?<name>) syntax
  [x] addReplacement() accepts subpatterns using the (?'name') syntax
  [x] addReplacement() throws an exception if the regexp is invalid
+ [x] addReplacement() throws a RuntimeException on duplicate named subpatterns
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\GenericParser
  [x] Handles attributes

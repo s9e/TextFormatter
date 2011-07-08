@@ -85,4 +85,14 @@ class GenericConfigTest extends Test
 	{
 		$this->cb->Generic->addReplacement('invalid', '<b>a</b>');
 	}
+
+	/**
+	* @testdox addReplacement() throws a RuntimeException on duplicate named subpatterns
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Duplicate named subpatterns are not allowed
+	*/
+	public function testDuplicateSubpatterns()
+	{
+		$this->cb->Generic->addReplacement('#(?J)(?<foo>x)(?<foo>z)#', '<b>a</b>');
+	}
 }

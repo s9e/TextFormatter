@@ -9,9 +9,13 @@ namespace s9e\Toolkit\TextFormatter\Plugins;
 
 use Exception,
     InvalidArgumentException,
+	RuntimeException,
     s9e\Toolkit\TextFormatter\ConfigBuilder,
     s9e\Toolkit\TextFormatter\PluginConfig;
 
+/**
+* NOTE: does not support duplicate named captures
+*/
 class GenericConfig extends PluginConfig
 {
 	/**
@@ -62,27 +66,29 @@ class GenericConfig extends PluginConfig
 			if ($tok['type'] === 'capturingSubpatternStart'
 			 && isset($tok['name']))
 			{
+				$attrName = $tok['name'];
+
+				if (isset($tagOptions['attrs'][$attrName]))
+				{
+					throw new RuntimeException('Duplicate named subpatterns are not allowed');
+				}
+
 				$lpos = $tok['pos'];
 				$rpos = $regexpInfo['tokens'][$tok['endToken']]['pos']
 				      + $regexpInfo['tokens'][$tok['endToken']]['len'];
 
-				$attrs[$tok['name']][] = substr($regexpInfo['regexp'], $lpos, 1 + $rpos - $lpos);
+				$attrRegexp = $regexpInfo['delimiter']
+				            . '^' . substr($regexpInfo['regexp'], $lpos, 1 + $rpos - $lpos) . '$'
+				            . $regexpInfo['delimiter']
+				            . $regexpInfo['modifiers']
+				            . 'D';
+
+				$tagOptions['attrs'][$attrName] = array(
+					'type'       => 'regexp',
+					'regexp'     => $attrRegexp,
+					'isRequired' => true
+				);
 			}
-		}
-
-		foreach ($attrs as $attrName => $regexps)
-		{
-			$attrRegexp = $regexpInfo['delimiter']
-			            . '^(?J)' . implode('|', $regexps) . '$'
-			            . $regexpInfo['delimiter']
-			            . $regexpInfo['modifiers']
-			            . 'D';
-
-			$tagOptions['attrs'][$attrName] = array(
-				'type'       => 'regexp',
-				'regexp'     => $attrRegexp,
-				'isRequired' => true
-			);
 		}
 
 		/**
