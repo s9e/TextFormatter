@@ -12,17 +12,17 @@ include_once __DIR__ . '/../../Test.php';
 class GenericConfigTest extends Test
 {
 	/**
-	* @test
+	* @testdox getConfig() returns false if no replacements were added
 	*/
-	public function getConfig_returns_false_if_no_replacements_were_added()
+	public function testReturnsFalseIfNoReplacements()
 	{
 		$this->assertFalse($this->cb->loadPlugin('Generic')->getConfig());
 	}
 
 	/**
-	* @test
+	* @testdox getConfig() creates a regexp for each replacement
 	*/
-	public function getConfig_creates_a_regexp_for_each_replacement()
+	public function testRegexpsAreCreatedForEachReplacement()
 	{
 		$this->cb->Generic->addReplacement('#a#', '<b>a</b>');
 		$this->cb->Generic->addReplacement('#b#', '<b>b</b>');
@@ -34,9 +34,9 @@ class GenericConfigTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox addReplacement() returns the name of the tag created
 	*/
-	public function addReplacement_returns_the_name_of_the_tag_created()
+	public function testTagNameIsReturned()
 	{
 		$tagName = $this->cb->Generic->addReplacement('#a#', '<b>a</b>');
 
@@ -44,9 +44,9 @@ class GenericConfigTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox addReplacement() accepts subpatterns using the (?P<name>) syntax
 	*/
-	public function addReplacement_creates_attributes_named_after_Python_style_subpatterns()
+	public function testPythonStyleRegexp()
 	{
 		$tagName = $this->cb->Generic->addReplacement('#(?P<xy>(?P<zz>a))#', '<b>a</b>');
 
@@ -55,9 +55,9 @@ class GenericConfigTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox addReplacement() accepts subpatterns using the (?<name>) syntax
 	*/
-	public function addReplacement_creates_attributes_named_after_Perl_angle_brackets_style_subpatterns()
+	public function testPerlBracketsStyleRegexp()
 	{
 		$tagName = $this->cb->Generic->addReplacement('#(?<xy>(?<zz>a))#', '<b>a</b>');
 
@@ -66,9 +66,9 @@ class GenericConfigTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox addReplacement() accepts subpatterns using the (?'name') syntax
 	*/
-	public function addReplacement_creates_attributes_named_after_Perl_single_quotes_style_subpatterns()
+	public function testPerlQuotesStyleRegexp()
 	{
 		$tagName = $this->cb->Generic->addReplacement("#(?'xy'(?'zz'a))#", '<b>a</b>');
 
@@ -77,11 +77,11 @@ class GenericConfigTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox addReplacement() throws an exception if the regexp is invalid
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid regexp
 	*/
-	public function addReplacement_throws_an_exception_if_the_regexp_is_invalid()
+	public function testInvalidRegexp()
 	{
 		$this->cb->Generic->addReplacement('invalid', '<b>a</b>');
 	}
