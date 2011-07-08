@@ -44,6 +44,48 @@ class GenericConfig extends PluginConfig
 		}
 
 		/**
+		* Tag options, will store attributes and template
+		*/
+		$tagOptions = array(
+			'template' => $template
+		);
+
+		/**
+		* Parse the regexp, and generate an attribute for every named capture
+		*/
+		$regexpInfo = ConfigBuilder::parseRegexp($regexp);
+
+		$attrs = array();
+
+		foreach ($regexpInfo['tokens'] as $tok)
+		{
+			if ($tok['type'] === 'capturingSubpatternStart'
+			 && isset($tok['name']))
+			{
+				$lpos = $tok['pos'];
+				$rpos = $regexpInfo['tokens'][$tok['endToken']]['pos']
+				      + $regexpInfo['tokens'][$tok['endToken']]['len'];
+
+				$attrs[$tok['name']][] = substr($regexpInfo['regexp'], $lpos, 1 + $rpos - $lpos);
+			}
+		}
+
+		foreach ($attrs as $attrName => $regexps)
+		{
+			$attrRegexp = $regexpInfo['delimiter']
+			            . '^(?J)' . implode('|', $regexps) . '$'
+			            . $regexpInfo['delimiter']
+			            . $regexpInfo['modifiers']
+			            . 'D';
+
+			$tagOptions['attrs'][$attrName] = array(
+				'type'       => 'regexp',
+				'regexp'     => $attrRegexp,
+				'isRequired' => true
+			);
+		}
+
+		/**
 		* Generate a tag name based on the regexp
 		*/
 		$tagName = 'G' . strtr(dechex(crc32($regexp)), 'abcdef', 'ABCDEF');
@@ -51,25 +93,7 @@ class GenericConfig extends PluginConfig
 		/**
 		* Create the tag
 		*/
-		$this->cb->addTag($tagName);
-
-		/**
-		* Capture the attribute names
-		*
-		* Theorically, it could capture invalid stuff like \\(?P<foo' but the chance of having
-		* a real-world valid regexp that uses such a construct is nil
-		*/
-		preg_match_all("#\\(\\?(?:P?\\<|')([a-z_0-9]+)[\\>']#", $regexp, $m);
-
-		foreach ($m[1] as $attrName)
-		{
-			$this->cb->addTagAttribute($tagName, $attrName, 'text');
-		}
-
-		/**
-		* Set the template
-		*/
-		$this->cb->setTagTemplate($tagName, $template);
+		$this->cb->addTag($tagName, $tagOptions);
 
 		/**
 		* Finally, record the replacement
@@ -87,5 +111,29 @@ class GenericConfig extends PluginConfig
 		}
 
 		return array('regexp' => $this->regexp);
+	}
+
+	//==========================================================================
+	// JS Parser stuff
+	//==========================================================================
+
+	public function getJSConfig()
+	{
+		$config = $this->getConfig();
+
+		if ($config)
+		{
+			foreach ($config['regexp'] as $k => $regexp)
+			{
+				preg_match('#(\\\\*)\\((\\?<?');
+			}
+		}
+
+		return $config;
+	}
+
+	public function getJSParser()
+	{
+		return file_get_contents(__DIR__ . '/GenericParser.js');
 	}
 }

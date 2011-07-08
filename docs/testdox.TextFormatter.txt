@@ -85,6 +85,25 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Optimizes regexp by using lookahead assertion
  [x] Optimizes regexp by using lookahead assertion with escaped characters
  [x] Does not optimize regexp by using lookahead assertion with special sequences
+ [x] ConfigBuilder::parseRegexp() can parse plain regexps
+ [x] ConfigBuilder::parseRegexp() throws a RuntimeException if delimiters can't be parsed
+ [x] ConfigBuilder::parseRegexp() parses pattern modifiers
+ [x] ConfigBuilder::parseRegexp() parses character classes
+ [x] ConfigBuilder::parseRegexp() parses character classes with quantifiers
+ [x] ConfigBuilder::parseRegexp() parses character classes that end with an escaped ]
+ [x] ConfigBuilder::parseRegexp() throws a RuntimeException if a character class is not properly closed
+ [x] ConfigBuilder::parseRegexp() correctly parses escaped brackets
+ [x] ConfigBuilder::parseRegexp() correctly parses escaped parentheses
+ [x] ConfigBuilder::parseRegexp() parses non-capturing subpatterns
+ [x] ConfigBuilder::parseRegexp() parses non-capturing subpatterns with quantifiers
+ [x] ConfigBuilder::parseRegexp() parses non-capturing subpatterns with options
+ [x] ConfigBuilder::parseRegexp() parses option settings
+ [x] ConfigBuilder::parseRegexp() parses named subpatterns using the (?<name>) syntax
+ [x] ConfigBuilder::parseRegexp() parses named subpatterns using the (?P<name>) syntax
+ [x] ConfigBuilder::parseRegexp() parses named subpatterns using the (?'name') syntax
+ [x] ConfigBuilder::parseRegexp() parses capturing subpatterns
+ [x] ConfigBuilder::parseRegexp() throws a RuntimeException if an unmatched right parenthesis is found
+ [x] ConfigBuilder::parseRegexp() throws a RuntimeException if an unmatched left parenthesis is found
  [x] getParserConfig removes rules that target non existing tags
  [x] getParserConfig preserves requireParent rules that target non existing tags
  [x] getParserConfig preserves requireAncestor rules that target non existing tags

@@ -1346,6 +1346,162 @@ class ConfigBuilder
 		return $regexp . $suffix;
 	}
 
+	/**
+	* @param  string $regexp
+	* @return array
+	*/
+	static public function parseRegexp($regexp)
+	{
+		if (!preg_match('#(.)(.*?)\\1([a-zA-Z]*)$#D', $regexp, $m))
+		{
+			throw new RuntimeException('Could not parse regexp delimiters');
+		}
+
+		$ret = array(
+			'delimiter' => $m[1],
+			'modifiers' => $m[3],
+			'regexp' => $m[2],
+			'tokens' => array()
+		);
+
+		$regexp = $m[2];
+
+		$openSubpatterns = array();
+
+		$pos = 0;
+		$regexpLen = strlen($regexp);
+
+		while ($pos < $regexpLen)
+		{
+			switch ($regexp[$pos])
+			{
+				case '\\':
+					// skip next character
+					$pos += 2;
+					break;
+
+				case '[':
+					if (!preg_match('#\\[(.*?(?<!\\\\)(?:\\\\\\\\)*)\\]([\\+\\*]*)#', $regexp, $m, 0, $pos))
+					{
+						throw new RuntimeException('Could not find matching bracket from pos ' . $pos);
+					}
+
+					$ret['tokens'][] = array(
+						'pos'         => $pos,
+						'len'         => strlen($m[0]),
+						'type'        => 'characterClass',
+						'content'     => $m[1],
+						'quantifiers' => $m[2]
+					);
+
+					$pos += strlen($m[0]);
+					break;
+
+				case '(';
+					if (preg_match('#\\(\\?([a-z]*)\\)#i', $regexp, $m, 0, $pos))
+					{
+						/**
+						* This is an option (?i) so we skip past the right parenthesis
+						*/
+						$ret['tokens'][] = array(
+							'pos'     => $pos,
+							'len'     => strlen($m[0]),
+							'type'    => 'option',
+							'options' => $m[1]
+						);
+
+						$pos += strlen($m[0]);
+						break;
+					}
+
+					/**
+					* This should be a subpattern, we just have to sniff which kind
+					*/
+					if (preg_match("#(?J)\\(\\?(?:P?<(?<name>[a-z]+)>|'(?<name>[a-z]+)')#", $regexp, $m, \PREG_OFFSET_CAPTURE, $pos))
+					{
+						/**
+						* This is a named capture
+						*/
+						$tok = array(
+							'pos'  => $pos,
+							'len'  => strlen($m[0][0]),
+							'type' => 'capturingSubpatternStart',
+							'name' => $m['name'][0]
+						);
+
+						$pos += strlen($m[0][0]);
+					}
+					elseif (preg_match('#\\(\\?([a-z]*):#i', $regexp, $m, 0, $pos))
+					{
+						/**
+						* This is a non-capturing subpattern (?:xxx)
+						*/
+						$tok = array(
+							'pos'     => $pos,
+							'len'     => strlen($m[0]),
+							'type'    => 'nonCapturingSubpatternStart',
+							'options' => $m[1]
+						);
+
+						$pos += strlen($m[0]);
+					}
+					else
+					{
+						/**
+						* This should be a normal capture
+						*/
+						$tok = array(
+							'pos'  => $pos,
+							'len'  => 1,
+							'type' => 'capturingSubpatternStart'
+						);
+
+						++$pos;
+					}
+
+					$openSubpatterns[] = count($ret['tokens']);
+					$ret['tokens'][] = $tok;
+					break;
+
+				case ')':
+					if (empty($openSubpatterns))
+					{
+						throw new RuntimeException('Could not find matching pattern start for right parenthesis at pos ' . $pos);
+					}
+
+					$k = array_pop($openSubpatterns);
+					$ret['tokens'][$k]['endToken'] = count($ret['tokens']);
+
+
+					/**
+					* Look for quantifiers after the subpattern, e.g. (?:ab)++
+					*/
+					$spn = strspn($regexp, '+*', 1 + $pos);
+					$quantifiers = substr($regexp, 1 + $pos, $spn);
+
+					$ret['tokens'][] = array(
+						'pos'  => $pos,
+						'len'  => 1 + $spn,
+						'type' => substr($ret['tokens'][$k]['type'], 0, -5) . 'End',
+						'quantifiers' => $quantifiers
+					);
+
+					$pos += 1 + $spn;
+					break;
+
+				default:
+					++$pos;
+			}
+		}
+
+		if (!empty($openSubpatterns))
+		{
+			throw new RuntimeException('Could not find matching pattern start for left parenthesis at pos ' . $ret['tokens'][$openSubpatterns[0]]['pos']);
+		}
+
+		return $ret;
+	}
+
 	//==========================================================================
 	// XSL stuff
 	//==========================================================================

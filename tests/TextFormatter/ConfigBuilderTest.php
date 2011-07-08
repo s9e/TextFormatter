@@ -1035,6 +1035,456 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox ConfigBuilder::parseRegexp() can parse plain regexps
+	*/
+	public function testCanParseRegexps1()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => 'foo',
+				'tokens'    => array()
+			),
+			ConfigBuilder::parseRegexp(
+				'#foo#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() throws a RuntimeException if delimiters can't be parsed
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Could not parse regexp delimiters
+	*/
+	public function testInvalidRegexpsException1()
+	{
+		ConfigBuilder::parseRegexp('#foo/iD');
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses pattern modifiers
+	*/
+	public function testCanParseRegexps2()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => 'iD',
+				'regexp'    => 'foo',
+				'tokens'    => array()
+			),
+			ConfigBuilder::parseRegexp(
+				'#foo#iD'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses character classes
+	*/
+	public function testCanParseRegexps3()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '[a-z]',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 5,
+						'type' => 'characterClass',
+						'content' => 'a-z',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#[a-z]#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses character classes with quantifiers
+	*/
+	public function testCanParseRegexps4()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '[a-z]+',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 6,
+						'type' => 'characterClass',
+						'content' => 'a-z',
+						'quantifiers' => '+'
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#[a-z]+#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses character classes that end with an escaped ]
+	*/
+	public function testCanParseRegexps5()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '[a-z\\]]',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 7,
+						'type' => 'characterClass',
+						'content' => 'a-z\\]',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#[a-z\\]]#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() throws a RuntimeException if a character class is not properly closed
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Could not find matching bracket from pos 0
+	*/
+	public function testInvalidRegexpsException2()
+	{
+		ConfigBuilder::parseRegexp('#[a-z)#');
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() correctly parses escaped brackets
+	*/
+	public function testCanParseRegexps6()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '\\[x\\]',
+				'tokens'    => array()
+			),
+			ConfigBuilder::parseRegexp(
+				'#\\[x\\]#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() correctly parses escaped parentheses
+	*/
+	public function testCanParseRegexps7()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '\\(x\\)',
+				'tokens'    => array()
+			),
+			ConfigBuilder::parseRegexp(
+				'#\\(x\\)#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses non-capturing subpatterns
+	*/
+	public function testCanParseRegexps8()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?:x+)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 3,
+						'type' => 'nonCapturingSubpatternStart',
+						'options' => '',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 5,
+						'len' => 1,
+						'type' => 'nonCapturingSubpatternEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?:x+)#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses non-capturing subpatterns with quantifiers
+	*/
+	public function testCanParseRegexps9()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?:x+)++',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 3,
+						'type' => 'nonCapturingSubpatternStart',
+						'options' => '',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 5,
+						'len' => 3,
+						'type' => 'nonCapturingSubpatternEnd',
+						'quantifiers' => '++'
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?:x+)++#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses non-capturing subpatterns with options
+	*/
+	public function testCanParseRegexps10()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?i:x+)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 4,
+						'type' => 'nonCapturingSubpatternStart',
+						'options' => 'i',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 6,
+						'len' => 1,
+						'type' => 'nonCapturingSubpatternEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?i:x+)#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses option settings
+	*/
+	public function testCanParseRegexps11()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?i)abc',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 4,
+						'type' => 'option',
+						'options' => 'i'
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?i)abc#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses named subpatterns using the (?<name>) syntax
+	*/
+	public function testCanParseRegexps12()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?<foo>x+)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 7,
+						'type' => 'capturingSubpatternStart',
+						'name' => 'foo',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 9,
+						'len' => 1,
+						'type' => 'capturingSubpatternEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?<foo>x+)#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses named subpatterns using the (?P<name>) syntax
+	*/
+	public function testCanParseRegexps13()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?P<foo>x+)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 8,
+						'type' => 'capturingSubpatternStart',
+						'name' => 'foo',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 10,
+						'len' => 1,
+						'type' => 'capturingSubpatternEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?P<foo>x+)#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses named subpatterns using the (?'name') syntax
+	*/
+	public function testCanParseRegexps14()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => "(?'foo'x+)",
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 7,
+						'type' => 'capturingSubpatternStart',
+						'name' => 'foo',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 9,
+						'len' => 1,
+						'type' => 'capturingSubpatternEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				"#(?'foo'x+)#"
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses capturing subpatterns
+	*/
+	public function testCanParseRegexps15()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '/',
+				'modifiers' => '',
+				'regexp'    => '(x+)(abc\\d+)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 1,
+						'type' => 'capturingSubpatternStart',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 3,
+						'len' => 1,
+						'type' => 'capturingSubpatternEnd',
+						'quantifiers' => ''
+					),
+					array(
+						'pos' => 4,
+						'len' => 1,
+						'type' => 'capturingSubpatternStart',
+						'endToken' => 3
+					),
+					array(
+						'pos' => 11,
+						'len' => 1,
+						'type' => 'capturingSubpatternEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'/(x+)(abc\\d+)/'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() throws a RuntimeException if an unmatched right parenthesis is found
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Could not find matching pattern start for right parenthesis at pos 3
+	*/
+	public function testInvalidRegexpsException4()
+	{
+		ConfigBuilder::parseRegexp('#a-z)#');
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() throws a RuntimeException if an unmatched left parenthesis is found
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Could not find matching pattern start for left parenthesis at pos 0
+	*/
+	public function testInvalidRegexpsException5()
+	{
+		ConfigBuilder::parseRegexp('#(a-z#');
+	}
+
+	/**
 	* @test
 	* @depends testCanCreateRuleThatTargetsANonExistentTag
 	*/
