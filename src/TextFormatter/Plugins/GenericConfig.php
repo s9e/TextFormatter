@@ -112,28 +112,4 @@ class GenericConfig extends PluginConfig
 
 		return array('regexp' => $this->regexp);
 	}
-
-	//==========================================================================
-	// JS Parser stuff
-	//==========================================================================
-
-	public function getJSConfig()
-	{
-		$config = $this->getConfig();
-
-		if ($config)
-		{
-			foreach ($config['regexp'] as $k => $regexp)
-			{
-				preg_match('#(\\\\*)\\((\\?<?');
-			}
-		}
-
-		return $config;
-	}
-
-	public function getJSParser()
-	{
-		return file_get_contents(__DIR__ . '/GenericParser.js');
-	}
 }
