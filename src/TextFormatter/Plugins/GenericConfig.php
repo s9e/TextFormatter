@@ -78,7 +78,7 @@ class GenericConfig extends PluginConfig
 				      + $regexpInfo['tokens'][$tok['endToken']]['len'];
 
 				$attrRegexp = $regexpInfo['delimiter']
-				            . '^' . substr($regexpInfo['regexp'], $lpos, 1 + $rpos - $lpos) . '$'
+				            . '^' . substr($regexpInfo['regexp'], $lpos, $rpos - $lpos) . '$'
 				            . $regexpInfo['delimiter']
 				            . $regexpInfo['modifiers']
 				            . 'D';

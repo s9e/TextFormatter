@@ -95,4 +95,23 @@ class GenericConfigTest extends Test
 	{
 		$this->cb->Generic->addReplacement('#(?J)(?<foo>x)(?<foo>z)#', '<b>a</b>');
 	}
+
+	/**
+	* @testdox addReplacement() creates a regexp for every attribute
+	* @depends testPerlBracketsStyleRegexp
+	*/
+	public function testAttributesRegexps()
+	{
+		$tagName = $this->cb->Generic->addReplacement('#(?<xy>(?<zz>a))#', '<b>a</b>');
+
+		$this->assertSame(
+			'#^(?<xy>(?<zz>a))$#D',
+			$this->cb->getTagAttributeOption($tagName, 'xy', 'regexp')
+		);
+
+		$this->assertSame(
+			'#^(?<zz>a)$#D',
+			$this->cb->getTagAttributeOption($tagName, 'zz', 'regexp')
+		);
+	}
 }
