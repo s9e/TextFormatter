@@ -815,6 +815,23 @@ class JSParserGenerator
 					$regexp .= ']' . $tok['quantifiers'];
 					break;
 
+				case 'lookaheadAssertionStart':
+					$regexp .= '(?=';
+					break;
+
+				case 'negativeLookaheadAssertionStart':
+					$regexp .= '(?!';
+					break;
+
+				case 'lookbehindAssertionStart':
+				case 'negativeLookbehindAssertionStart':
+					throw new RuntimeException('Lookbehind assertions are not supported');
+
+				case 'lookaheadAssertionEnd':
+				case 'negativeLookaheadAssertionEnd':
+					$regexp .= ')';
+					break;
+
 				// @codeCoverageIgnoreStart
 				default:
 					throw new RuntimeException("Unknown token type '" . $tok['type'] . "' encountered while parsing regexp");

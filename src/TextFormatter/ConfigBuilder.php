@@ -1431,7 +1431,7 @@ class ConfigBuilder
 
 						$pos += strlen($m[0][0]);
 					}
-					elseif (preg_match('#\\(\\?([a-z]*):#i', $regexp, $m, 0, $pos))
+					elseif (preg_match('#\\(\\?([a-z]*):#iA', $regexp, $m, 0, $pos))
 					{
 						/**
 						* This is a non-capturing subpattern (?:xxx)
@@ -1444,6 +1444,30 @@ class ConfigBuilder
 						);
 
 						$pos += strlen($m[0]);
+					}
+					elseif (preg_match('#\\(\\?(<?[!=])#A', $regexp, $m, 0, $pos))
+					{
+						/**
+						* This is an assertion
+						*/
+						$assertions = array(
+							'='  => 'lookahead',
+							'<=' => 'lookbehind',
+							'!'  => 'negativeLookahead',
+							'<!' => 'negativeLookbehind'
+						);
+
+						$tok = array(
+							'pos'     => $pos,
+							'len'     => strlen($m[0]),
+							'type'    => $assertions[$m[1]] . 'AssertionStart'
+						);
+
+						$pos += strlen($m[0]);
+					}
+					elseif (preg_match('#\\(\\?#A', $regexp, $m, 0, $pos))
+					{
+						throw new RuntimeException('Unsupported subpattern at pos ' . $pos);
 					}
 					else
 					{
