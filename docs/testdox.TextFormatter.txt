@@ -150,23 +150,24 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] addRulesFromHTML5Specs() sets options based on HTML5 specs
 
 s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
- [x] encodeArray can encode arrays to objects
- [x] encodeArray can encode arrays to Arrays
- [x] encodeArray can convert regexp strings to RegExp objects
- [x] encodeArray can convert regexp strings to RegExp objects with g flag
- [x] encode encodes booleans to 0 and 1
- [x] encodeArray can preserve a key of an array
- [x] encodeArray can preserve a key of a nested array
- [x] encodeArray can use TRUE as a wildcard
- [x] encodeArray preserves reserved words
+ [x] encodeArray() can encode arrays to objects
+ [x] encodeArray() can encode arrays to Arrays
+ [x] encodeArray() can convert regexp strings to RegExp objects
+ [x] encodeArray() can convert regexp strings to RegExp objects with g flag
+ [x] encode() encodes booleans to 0 and 1
+ [x] encodeArray() can preserve a key of an array
+ [x] encodeArray() can preserve a key of a nested array
+ [x] encodeArray() preserves keys at the correct depth
+ [x] encodeArray() can use TRUE as a wildcard
+ [x] encodeArray() preserves reserved words
  [x] Useless code is removed from the source
- [x] generateFiltersConfig return allowedSchemes regexp as an object
- [x] generateFiltersConfig return disallowedHosts regexp as an object
- [x] generateFiltersConfig converts unsupported lookbehind assertions from disallowedHosts regexp
- [x] encodeConfig removes parserClassName from config
- [x] encodeConfig removes parserFilepath from config
- [x] encodeConfig convert scalar regexp to a RegExp object with g flag
- [x] encodeConfig convert array regexp to an object with RegExp objects with g flag as properties
+ [x] generateFiltersConfig() returns allowedSchemes regexp as an object
+ [x] generateFiltersConfig() returns disallowedHosts regexp as an object
+ [x] generateFiltersConfig() converts unsupported lookbehind assertions from disallowedHosts regexp
+ [x] encodeConfig() removes parserClassName from config
+ [x] encodeConfig() removes parserFilepath from config
+ [x] encodeConfig() convert scalar regexp to a RegExp object with g flag
+ [x] encodeConfig() convert array regexp to an object with RegExp objects with g flag as properties
  [x] Injects plugins parsers into source
  [x] Injects plugins configs into source
  [x] replaceConstant() throws an exception if no replacement occurs

@@ -29,9 +29,9 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox encodeArray() can encode arrays to objects
 	*/
-	public function encodeArray_can_encode_arrays_to_objects()
+	public function test_encodeArray_can_encode_arrays_to_objects()
 	{
 		$arr = array(
 			'a' => 1,
@@ -45,9 +45,9 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox encodeArray() can encode arrays to Arrays
 	*/
-	public function encodeArray_can_encode_arrays_to_Arrays()
+	public function test_encodeArray_can_encode_arrays_to_Arrays()
 	{
 		$arr = array(1, 2);
 
@@ -58,9 +58,9 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox encodeArray() can convert regexp strings to RegExp objects
 	*/
-	public function encodeArray_can_convert_regexp_strings_to_RegExp_objects()
+	public function test_encodeArray_can_convert_regexp_strings_to_RegExp_objects()
 	{
 		$arr = array('/foo/');
 
@@ -78,9 +78,9 @@ class JSParserGeneratorTest extends Test
 
 
 	/**
-	* @test
+	* @testdox encodeArray() can convert regexp strings to RegExp objects with g flag
 	*/
-	public function encodeArray_can_convert_regexp_strings_to_RegExp_objects_with_g_flag()
+	public function test_encodeArray_can_convert_regexp_strings_to_RegExp_objects_with_g_flag()
 	{
 		$arr = array('/foo/');
 
@@ -97,10 +97,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends encodeArray_can_encode_arrays_to_Arrays
+	* @testdox encode() encodes booleans to 0 and 1
+	* @depends test_encodeArray_can_encode_arrays_to_Arrays
 	*/
-	public function encode_encodes_booleans_to_0_and_1()
+	public function test_encode_encodes_booleans_to_0_and_1()
 	{
 		$this->assertSame(
 			'[1,0,1]',
@@ -109,10 +109,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends encodeArray_can_encode_arrays_to_objects
+	* @testdox encodeArray() can preserve a key of an array
+	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function encodeArray_can_preserve_a_key_of_an_array()
+	public function test_encodeArray_can_preserve_a_key_of_an_array()
 	{
 		$arr = array(
 			'a' => 1,
@@ -132,10 +132,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends encodeArray_can_preserve_a_key_of_an_array
+	* @testdox encodeArray() can preserve a key of a nested array
+	* @depends test_encodeArray_can_preserve_a_key_of_an_array
 	*/
-	public function encodeArray_can_preserve_a_key_of_a_nested_array()
+	public function test_encodeArray_can_preserve_a_key_of_a_nested_array()
 	{
 		$arr = array(
 			'a' => array('z' => 1, 'b' => 2),
@@ -155,10 +155,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @ŧest
-	* @depends encodeArray_can_preserve_a_key_of_a_nested_array
+	* @testdox encodeArray() preserves keys at the correct depth
+	* @depends test_encodeArray_can_preserve_a_key_of_a_nested_array
 	*/
-	public function encodeArray_preserves_keys_at_the_correct_depth()
+	public function test_encodeArray_preserves_keys_at_the_correct_depth()
 	{
 		$arr = array(
 			'a' => array('a' => 1, 'b' => 2),
@@ -178,10 +178,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends encodeArray_can_preserve_a_key_of_an_array
+	* @testdox encodeArray() can use TRUE as a wildcard
+	* @depends test_encodeArray_can_preserve_a_key_of_an_array
 	*/
-	public function encodeArray_can_use_TRUE_as_a_wildcard()
+	public function test_encodeArray_can_use_TRUE_as_a_wildcard()
 	{
 		$arr = array(
 			'a' => array('a' => 1, 'b' => 2),
@@ -201,9 +201,9 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox encodeArray() preserves reserved words
 	*/
-	public function encodeArray_preserves_reserved_words()
+	public function test_encodeArray_preserves_reserved_words()
 	{
 		$arr = array(
 			'a'    => 1,
@@ -337,9 +337,9 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox generateFiltersConfig() returns allowedSchemes regexp as an object
 	*/
-	public function generateFiltersConfig_return_allowedSchemes_regexp_as_an_object()
+	public function test_generateFiltersConfig_returns_allowedSchemes_regexp_as_an_object()
 	{
 		$this->call($this->jspg, 'init');
 
@@ -350,9 +350,9 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox generateFiltersConfig() returns disallowedHosts regexp as an object
 	*/
-	public function generateFiltersConfig_return_disallowedHosts_regexp_as_an_object()
+	public function test_generateFiltersConfig_returns_disallowedHosts_regexp_as_an_object()
 	{
 		$this->cb->disallowHost('example.com');
 		$this->call($this->jspg, 'init');
@@ -364,10 +364,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends generateFiltersConfig_return_disallowedHosts_regexp_as_an_object
+	* @testdox generateFiltersConfig() converts unsupported lookbehind assertions from disallowedHosts regexp
+	* @depends test_generateFiltersConfig_returns_disallowedHosts_regexp_as_an_object
 	*/
-	public function generateFiltersConfig_converts_unsupported_lookbehind_assertions_from_disallowedHosts_regexp()
+	public function test_generateFiltersConfig_converts_unsupported_lookbehind_assertions_from_disallowedHosts_regexp()
 	{
 		$this->cb->disallowHost('example.com');
 		$this->call($this->jspg, 'init');
@@ -379,10 +379,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends encodeArray_can_encode_arrays_to_objects
+	* @testdox encodeConfig() removes parserClassName from config
+	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function encodeConfig_removes_parserClassName_from_config()
+	public function test_encodeConfig_removes_parserClassName_from_config()
 	{
 		$this->assertSame(
 			'{foo:1}',
@@ -397,10 +397,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends encodeArray_can_encode_arrays_to_objects
+	* @testdox encodeConfig() removes parserFilepath from config
+	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function encodeConfig_removes_parserFilepath_from_config()
+	public function test_encodeConfig_removes_parserFilepath_from_config()
 	{
 		$this->assertSame(
 			'{foo:1}',
@@ -415,10 +415,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends encodeArray_can_encode_arrays_to_objects
+	* @testdox encodeConfig() convert scalar regexp to a RegExp object with g flag
+	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function encodeConfig_convert_scalar_regexp_to_a_RegExp_object_with_g_flag()
+	public function test_encodeConfig_convert_scalar_regexp_to_a_RegExp_object_with_g_flag()
 	{
 		$this->assertSame(
 			'{regexp:/foo/g}',
@@ -432,10 +432,10 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends encodeArray_can_encode_arrays_to_objects
+	* @testdox encodeConfig() convert array regexp to an object with RegExp objects with g flag as properties
+	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function encodeConfig_convert_array_regexp_to_an_object_with_RegExp_objects_with_g_flag_as_properties()
+	public function test_encodeConfig_convert_array_regexp_to_an_object_with_RegExp_objects_with_g_flag_as_properties()
 	{
 		$this->assertSame(
 			'{regexp:{bar:/bar/g,baz:/baz/g}}',
