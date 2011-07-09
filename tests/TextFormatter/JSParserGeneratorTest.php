@@ -735,4 +735,37 @@ class JSParserGeneratorTest extends Test
 	{
 		JSParserGenerator::convertRegexp('#(?<!foo)x#');
 	}
+
+	/**
+	* @testdox convertRegexp() converts . to [\s\S] outside of character classes is the "s" modifier is set
+	*/
+	public function testConvertRegexpDotAll()
+	{
+		$this->assertEquals(
+			'/foo([\\s\\S]*)bar/',
+			JSParserGenerator::convertRegexp('#foo(.*)bar#s')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() does not convert . to [\s\S] if the "s" modifier is not set
+	*/
+	public function testConvertRegexpDotWithoutDotAll()
+	{
+		$this->assertEquals(
+			'/foo(.*)bar/',
+			JSParserGenerator::convertRegexp('#foo(.*)bar#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() does not convert . inside of character classes
+	*/
+	public function testConvertRegexpDotInCharacterClasses()
+	{
+		$this->assertEquals(
+			'/foo[.]+bar/',
+			JSParserGenerator::convertRegexp('#foo[.]+bar#s')
+		);
+	}
 }

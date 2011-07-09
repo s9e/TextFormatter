@@ -192,6 +192,9 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] convertRegexp() can convert regexps with negative lookahead assertions
  [x] convertRegexp() throws a RuntimeException on lookbehind assertions
  [x] convertRegexp() throws a RuntimeException on negative lookbehind assertions
+ [x] convertRegexp() converts . to [\s\S] outside of character classes is the "s" modifier is set
+ [x] convertRegexp() does not convert . to [\s\S] if the "s" modifier is not set
+ [x] convertRegexp() does not convert . inside of character classes
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Ouput is UTF8
