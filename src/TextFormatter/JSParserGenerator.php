@@ -771,10 +771,9 @@ class JSParserGenerator
 	* Convert a PCRE regexp to a Javascript regexp
 	*
 	* @param  string $regexp PCRE regexp
-	* @param  string $flags  Extra flags to add to the Javascript regexp
 	* @return string
 	*/
-	static public function convertRegexp($regexp, $flags = '')
+	static public function convertRegexp($regexp)
 	{
 		$regexpInfo = ConfigBuilder::parseRegexp($regexp);
 
@@ -862,7 +861,7 @@ class JSParserGenerator
 		}
 
 		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
-		$regexp = '/' . $regexp . '/' . $modifiers . $flags;
+		$regexp = '/' . $regexp . '/' . $modifiers;
 
 		return $regexp;
 	}
@@ -1053,7 +1052,7 @@ class JSParserGenerator
 			}
 			elseif (!empty($match['isGlobalRegexp'][$k]))
 			{
-				$v = self::convertRegexp($v, 'g');
+				$v = self::convertRegexp($v) . 'g';
 			}
 			elseif (is_array($v))
 			{
