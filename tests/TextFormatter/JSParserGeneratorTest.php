@@ -768,4 +768,33 @@ class JSParserGeneratorTest extends Test
 			JSParserGenerator::convertRegexp('#foo[.]+bar#s')
 		);
 	}
+
+	/**
+	* @testdox convertRegexp() converts named captures into normal captures
+	*/
+	public function testConvertRegexpNamedCaptures()
+	{
+		$this->assertEquals(
+			'/x([0-9]+)([a-z]+)x/',
+			JSParserGenerator::convertRegexp('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#', $map)
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() replaces its second parameter with an array that maps named captures to their index
+	*/
+	public function testConvertRegexpNamedCapturesMap()
+	{
+		$map = null;
+
+		$this->assertEquals(
+			'/x([0-9]+)([a-z]+)x/',
+			JSParserGenerator::convertRegexp('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#', $map)
+		);
+
+		$this->assertEquals(
+			array('foo' => 1, 'bar' => 2),
+			$map
+		);
+	}
 }

@@ -770,10 +770,11 @@ class JSParserGenerator
 	/**
 	* Convert a PCRE regexp to a Javascript regexp
 	*
-	* @param  string $regexp PCRE regexp
+	* @param  string  $regexp    PCRE regexp
+	* @param  array  &$regexpMap Will be replaced with an array mapping named capture to their index
 	* @return string
 	*/
-	static public function convertRegexp($regexp)
+	static public function convertRegexp($regexp, &$regexpMap = null)
 	{
 		$regexpInfo = ConfigBuilder::parseRegexp($regexp);
 
@@ -781,6 +782,10 @@ class JSParserGenerator
 
 		$regexp = '';
 		$pos = 0;
+
+		$captureIndex = 0;
+		$regexpMap    = array();
+
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
 			$regexp .= static::replaceRegexpSpecialChars(
@@ -796,6 +801,13 @@ class JSParserGenerator
 
 				case 'capturingSubpatternStart':
 					$regexp .= '(';
+
+					++$captureIndex;
+
+					if (isset($tok['name']))
+					{
+						$regexpMap[$tok['name']] = $captureIndex;
+					}
 					break;
 
 				case 'nonCapturingSubpatternStart':
