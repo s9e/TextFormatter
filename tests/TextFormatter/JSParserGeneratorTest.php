@@ -71,7 +71,7 @@ class JSParserGeneratorTest extends Test
 		);
 
 		$this->assertContains(
-			'new RegExp("foo")',
+			'/foo/',
 			$this->encodeArray($arr, $struct)
 		);
 	}
@@ -91,7 +91,7 @@ class JSParserGeneratorTest extends Test
 		);
 
 		$this->assertContains(
-			'new RegExp("foo","g")',
+			'/foo/g',
 			$this->encodeArray($arr, $struct)
 		);
 	}
@@ -344,7 +344,7 @@ class JSParserGeneratorTest extends Test
 		$this->call($this->jspg, 'init');
 
 		$this->assertContains(
-			'allowedSchemes:new RegExp("^https?$","i")',
+			'allowedSchemes:/^https?$/i',
 			$this->call($this->jspg, 'generateFiltersConfig')
 		);
 	}
@@ -358,7 +358,7 @@ class JSParserGeneratorTest extends Test
 		$this->call($this->jspg, 'init');
 
 		$this->assertContains(
-			'disallowedHosts:new RegExp',
+			'disallowedHosts:/',
 			$this->call($this->jspg, 'generateFiltersConfig')
 		);
 	}
@@ -373,7 +373,7 @@ class JSParserGeneratorTest extends Test
 		$this->call($this->jspg, 'init');
 
 		$this->assertContains(
-			'new RegExp("(?:^|\\\\.)example\\\\.com$","i")',
+			'/(?:^|\\.)example\\.com$/i',
 			$this->call($this->jspg, 'generateFiltersConfig')
 		);
 	}
@@ -421,7 +421,7 @@ class JSParserGeneratorTest extends Test
 	public function encodeConfig_convert_scalar_regexp_to_a_RegExp_object_with_g_flag()
 	{
 		$this->assertSame(
-			'{regexp:new RegExp("foo","g")}',
+			'{regexp:/foo/g}',
 			$this->encodeConfig(
 				array(
 					'regexp' => '#foo#'
@@ -438,7 +438,7 @@ class JSParserGeneratorTest extends Test
 	public function encodeConfig_convert_array_regexp_to_an_object_with_RegExp_objects_with_g_flag_as_properties()
 	{
 		$this->assertSame(
-			'{regexp:{bar:new RegExp("bar","g"),baz:new RegExp("baz","g")}}',
+			'{regexp:{bar:/bar/g,baz:/baz/g}}',
 			$this->encodeConfig(
 				array(
 					'regexp' => array(
@@ -490,5 +490,148 @@ class JSParserGeneratorTest extends Test
 	{
 		$this->call($this->jspg, 'init');
 		$this->call($this->jspg, 'replaceConstant', array('UNKNOWN', 2));
+	}
+
+	/**
+	* @testdox convertRegexp() can convert plain regexps
+	*/
+	public function testConvertRegexp1()
+	{
+		$this->assertEquals(
+			'/foo/',
+			JSParserGenerator::convertRegexp('#foo#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() escapes forward slashes
+	*/
+	public function testConvertRegexpEscape()
+	{
+		$this->assertEquals(
+			'/fo\\/o/',
+			JSParserGenerator::convertRegexp('#fo/o#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() does not double-escape forward slashes that are already escaped
+	*/
+	public function testConvertRegexpNoDoubleEscape()
+	{
+		$this->assertEquals(
+			'/fo\\/o/',
+			JSParserGenerator::convertRegexp('#fo\\/o#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() does not "eat" backslashes while escaping forward slashes
+	*/
+	public function testConvertRegexpDoesNotEatEscapedBackslashes()
+	{
+		$this->assertEquals(
+			'/fo\\\\\\/o/',
+			JSParserGenerator::convertRegexp('#fo\\\\/o#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() can convert regexps with the "i" modifier
+	*/
+	public function testConvertRegexp2()
+	{
+		$this->assertEquals(
+			'/foo/i',
+			JSParserGenerator::convertRegexp('#foo#i')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() can convert regexps with capturing subpatterns
+	*/
+	public function testConvertRegexp3()
+	{
+		$this->assertEquals(
+			'/f(o)o/',
+			JSParserGenerator::convertRegexp('#f(o)o#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() can convert regexps with non-capturing subpatterns
+	*/
+	public function testConvertRegexp4()
+	{
+		$this->assertEquals(
+			'/f(?:o)o/',
+			JSParserGenerator::convertRegexp('#f(?:o)o#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() can convert regexps with non-capturing subpatterns with a quantifier
+	*/
+	public function testConvertRegexp5()
+	{
+		$this->assertEquals(
+			'/f(?:oo)+/',
+			JSParserGenerator::convertRegexp('#f(?:oo)+#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() throws a RuntimeException on options (?i)
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Regexp options are not supported
+	*/
+	public function testConvertRegexpException1()
+	{
+		JSParserGenerator::convertRegexp('#(?i)x#');
+	}
+
+	/**
+	* @testdox convertRegexp() throws a RuntimeException on subpattern options (?i:)
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Subpattern options are not supported
+	*/
+	public function testConvertRegexpException2()
+	{
+		JSParserGenerator::convertRegexp('#(?i:x)#');
+	}
+
+	/**
+	* @testdox convertRegexp() can convert regexps with character classes with a quantifier
+	*/
+	public function testConvertRegexp6()
+	{
+		$this->assertEquals(
+			'/[a-z]+/',
+			JSParserGenerator::convertRegexp('#[a-z]+#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() replaces \pL with the full character range in character classes
+	*/
+	public function testConvertRegexp7()
+	{
+		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
+		$this->assertRegexp(
+			'#^/\\[0-9' . $unicodeRange . '\\]/$#D',
+			JSParserGenerator::convertRegexp('#[0-9\\pL]#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() replaces \pL outside of character classes with a character class containing the full character range
+	*/
+	public function testConvertRegexp8()
+	{
+		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
+		$this->assertRegexp(
+			'#^/\\[' . $unicodeRange . '\\]00\\[' . $unicodeRange . '\\]/$#D',
+			JSParserGenerator::convertRegexp('#\\pL00\\pL#')
+		);
 	}
 }

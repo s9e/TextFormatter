@@ -126,7 +126,7 @@ class CensorConfigTest extends Test
 		$this->cb->Censor->addWord('foo', 'bar');
 
 		$this->assertContains(
-			'new RegExp("^foo$","i")',
+			'/^foo$/i',
 			$this->call(
 				's9e\\Toolkit\\TextFormatter\\JSParserGenerator',
 				'encodeConfig',

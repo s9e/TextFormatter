@@ -43,9 +43,6 @@ $supportedProperties = array_flip(array(
 	'Zl', 'Zp', 'Zs'
 ));
 
-// only support \pL for now
-$supportedProperties = array('L&' => 1);
-
 $lines = file('/tmp/props.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 $ranges = array();
@@ -67,16 +64,46 @@ foreach ($lines as $line)
 
 	$range = substr($line, 0, 4) . substr($line, 6 * ($line[4] === '.'), 4);
 
-	$ranges[$propName][$range] = 0;
-	$ranges[$propName[0]][$range] = 0;
+	$ranges['p' . $propName][$range] = false;
+	$ranges['p' . $propName[0]][$range] = false;
 }
 
-unset($ranges['L&']);
+unset($ranges['pL&']);
 
-foreach ($ranges as $propName => $propRanges)
+/**
+* Sort ranges and create anti-ranges for \P properties
+*/
+foreach ($ranges as $propName => &$propRanges)
 {
 	ksort($propRanges, SORT_STRING);
 
+	$nextCp = 0;
+	$tmp = array();
+
+	foreach ($propRanges as $range => $void)
+	{
+		$startCp = hexdec(substr($range, 0, 4));
+
+		if ($startCp - 1 > $nextCp)
+		{
+			$tmp[sprintf('%04X%04X', $nextCp, $startCp - 1)] = false;
+		}
+
+		$nextCp = max($nextCp, 1 + hexdec(substr($range, 4)));
+	}
+
+	if ($nextCp <= 0xFFFF)
+	{
+		$tmp[sprintf('%04X%04X', $nextCp, 0xFFFF)] = false;
+	}
+
+	$propName[0] = 'P';
+	$ranges[$propName] = $tmp;
+}
+unset($propRanges);
+
+foreach ($ranges as $propName => $propRanges)
+{
 	$str = '';
 
 	unset($bufStart, $bufEnd);
@@ -125,14 +152,14 @@ $php = " = array(\n\t\t" . $php . "\n\t)";
 
 $file = file_get_contents(__DIR__ . '/../src/TextFormatter/JSParserGenerator.php');
 $file = preg_replace(
-	'#(static public \\$unicodeProps)(.*?)\\n\\t\\);#s',
+	'#(static protected \\$unicodeProps)(.*?)\\n\\t\\);#s',
 	'$1;',
 	$file
 );
 
 $file = str_replace(
-	'static public $unicodeProps;',
-	'static public $unicodeProps' . $php . ';',
+	'static protected $unicodeProps;',
+	'static protected $unicodeProps' . $php . ';',
 	$file
 );
 

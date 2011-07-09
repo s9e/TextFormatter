@@ -165,6 +165,19 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] Injects plugins parsers into source
  [x] Injects plugins configs into source
  [x] replaceConstant() throws an exception if no replacement occurs
+ [x] convertRegexp() can convert plain regexps
+ [x] convertRegexp() escapes forward slashes
+ [x] convertRegexp() does not double-escape forward slashes that are already escaped
+ [x] convertRegexp() does not "eat" backslashes while escaping forward slashes
+ [x] convertRegexp() can convert regexps with the "i" modifier
+ [x] convertRegexp() can convert regexps with capturing subpatterns
+ [x] convertRegexp() can convert regexps with non-capturing subpatterns
+ [x] convertRegexp() can convert regexps with non-capturing subpatterns with a quantifier
+ [x] convertRegexp() throws a RuntimeException on options (?i)
+ [x] convertRegexp() throws a RuntimeException on subpattern options (?i:)
+ [x] convertRegexp() can convert regexps with character classes with a quantifier
+ [x] convertRegexp() replaces \pL with the full character range in character classes
+ [x] convertRegexp() replaces \pL outside of character classes with a character class containing the full character range
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Ouput is UTF8
