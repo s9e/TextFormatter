@@ -104,6 +104,11 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] ConfigBuilder::parseRegexp() parses capturing subpatterns
  [x] ConfigBuilder::parseRegexp() throws a RuntimeException if an unmatched right parenthesis is found
  [x] ConfigBuilder::parseRegexp() throws a RuntimeException if an unmatched left parenthesis is found
+ [x] ConfigBuilder::parseRegexp() throws a RuntimeException on unsupported subpatterns
+ [x] ConfigBuilder::parseRegexp() parses lookahead assertions
+ [x] ConfigBuilder::parseRegexp() parses negative lookahead assertions
+ [x] ConfigBuilder::parseRegexp() parses lookbehind assertions
+ [x] ConfigBuilder::parseRegexp() parses negative lookbehind assertions
  [x] getParserConfig removes rules that target non existing tags
  [x] getParserConfig preserves requireParent rules that target non existing tags
  [x] getParserConfig preserves requireAncestor rules that target non existing tags
@@ -178,6 +183,10 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] convertRegexp() can convert regexps with character classes with a quantifier
  [x] convertRegexp() replaces \pL with the full character range in character classes
  [x] convertRegexp() replaces \pL outside of character classes with a character class containing the full character range
+ [x] convertRegexp() can convert regexps with lookahead assertions
+ [x] convertRegexp() can convert regexps with negative lookahead assertions
+ [x] convertRegexp() throws a RuntimeException on lookbehind assertions
+ [x] convertRegexp() throws a RuntimeException on negative lookbehind assertions
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Ouput is UTF8

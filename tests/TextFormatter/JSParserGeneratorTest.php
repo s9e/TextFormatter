@@ -634,4 +634,46 @@ class JSParserGeneratorTest extends Test
 			JSParserGenerator::convertRegexp('#\\pL00\\pL#')
 		);
 	}
+
+	/**
+	* @testdox convertRegexp() can convert regexps with lookahead assertions
+	*/
+	public function testConvertRegexpLookahead()
+	{
+		$this->assertEquals(
+			'/(?=foo)|(?=bar)/',
+			JSParserGenerator::convertRegexp('#(?=foo)|(?=bar)#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() can convert regexps with negative lookahead assertions
+	*/
+	public function testConvertRegexpNegativeLookahead()
+	{
+		$this->assertEquals(
+			'/(?!foo)|(?!bar)/',
+			JSParserGenerator::convertRegexp('#(?!foo)|(?!bar)#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() throws a RuntimeException on lookbehind assertions
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Lookbehind assertions are not supported
+	*/
+	public function testConvertRegexpExceptionOnLookbehind()
+	{
+		JSParserGenerator::convertRegexp('#(?<=foo)x#');
+	}
+
+	/**
+	* @testdox convertRegexp() throws a RuntimeException on negative lookbehind assertions
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Negative lookbehind assertions are not supported
+	*/
+	public function testConvertRegexpExceptionOnNegativeLookbehind()
+	{
+		JSParserGenerator::convertRegexp('#(?<!foo)x#');
+	}
 }

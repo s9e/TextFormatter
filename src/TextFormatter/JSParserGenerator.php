@@ -824,8 +824,10 @@ class JSParserGenerator
 					break;
 
 				case 'lookbehindAssertionStart':
-				case 'negativeLookbehindAssertionStart':
 					throw new RuntimeException('Lookbehind assertions are not supported');
+
+				case 'negativeLookbehindAssertionStart':
+					throw new RuntimeException('Negative lookbehind assertions are not supported');
 
 				case 'lookaheadAssertionEnd':
 				case 'negativeLookaheadAssertionEnd':

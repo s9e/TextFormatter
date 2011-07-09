@@ -1485,6 +1485,140 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox ConfigBuilder::parseRegexp() throws a RuntimeException on unsupported subpatterns
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Unsupported subpattern type at pos 0
+	*/
+	public function testInvalidRegexpsUnsupportedSubpatternException()
+	{
+		ConfigBuilder::parseRegexp('#(?(condition)yes-pattern|no-pattern)#');
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses lookahead assertions
+	*/
+	public function testCanParseRegexps16()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?=foo)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 3,
+						'type' => 'lookaheadAssertionStart',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 6,
+						'len' => 1,
+						'type' => 'lookaheadAssertionEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?=foo)#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses negative lookahead assertions
+	*/
+	public function testCanParseRegexps17()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?!foo)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 3,
+						'type' => 'negativeLookaheadAssertionStart',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 6,
+						'len' => 1,
+						'type' => 'negativeLookaheadAssertionEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?!foo)#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses lookbehind assertions
+	*/
+	public function testCanParseRegexps18()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?<=foo)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 4,
+						'type' => 'lookbehindAssertionStart',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 7,
+						'len' => 1,
+						'type' => 'lookbehindAssertionEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?<=foo)#'
+			)
+		);
+	}
+
+	/**
+	* @testdox ConfigBuilder::parseRegexp() parses negative lookbehind assertions
+	*/
+	public function testCanParseRegexps19()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?<!foo)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 4,
+						'type' => 'negativeLookbehindAssertionStart',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 7,
+						'len' => 1,
+						'type' => 'negativeLookbehindAssertionEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?<!foo)#'
+			)
+		);
+	}
+
+	/**
 	* @test
 	* @depends testCanCreateRuleThatTargetsANonExistentTag
 	*/

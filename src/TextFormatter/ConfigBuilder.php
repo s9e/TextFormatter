@@ -1467,7 +1467,7 @@ class ConfigBuilder
 					}
 					elseif (preg_match('#\\(\\?#A', $regexp, $m, 0, $pos))
 					{
-						throw new RuntimeException('Unsupported subpattern at pos ' . $pos);
+						throw new RuntimeException('Unsupported subpattern type at pos ' . $pos);
 					}
 					else
 					{
