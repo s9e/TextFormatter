@@ -624,6 +624,18 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox convertRegexp() replaces \p{L} with the full character range in character classes
+	*/
+	public function testConvertRegexp7b()
+	{
+		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
+		$this->assertRegexp(
+			'#^/\\[0-9' . $unicodeRange . '\\]/$#D',
+			JSParserGenerator::convertRegexp('#[0-9\\p{L}]#')
+		);
+	}
+
+	/**
 	* @testdox convertRegexp() replaces \pL outside of character classes with a character class containing the full character range
 	*/
 	public function testConvertRegexp8()
@@ -632,6 +644,18 @@ class JSParserGeneratorTest extends Test
 		$this->assertRegexp(
 			'#^/\\[' . $unicodeRange . '\\]00\\[' . $unicodeRange . '\\]/$#D',
 			JSParserGenerator::convertRegexp('#\\pL00\\pL#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() replaces \p{L} outside of character classes with a character class containing the full character range
+	*/
+	public function testConvertRegexp8b()
+	{
+		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
+		$this->assertRegexp(
+			'#^/\\[' . $unicodeRange . '\\]00\\[' . $unicodeRange . '\\]/$#D',
+			JSParserGenerator::convertRegexp('#\\p{L}00\\p{L}#')
 		);
 	}
 
