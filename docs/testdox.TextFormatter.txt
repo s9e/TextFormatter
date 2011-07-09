@@ -185,6 +185,9 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] convertRegexp() replaces \p{L} with the full character range in character classes
  [x] convertRegexp() replaces \pL outside of character classes with a character class containing the full character range
  [x] convertRegexp() replaces \p{L} outside of character classes with a character class containing the full character range
+ [x] convertRegexp() replaces \p{^L} with a character class containing the full character range
+ [x] convertRegexp() replaces \p{^L} with a character class equivalent to \PL
+ [x] convertRegexp() replaces \P{^L} with a character class equivalent to \pL
  [x] convertRegexp() can convert regexps with lookahead assertions
  [x] convertRegexp() can convert regexps with negative lookahead assertions
  [x] convertRegexp() throws a RuntimeException on lookbehind assertions

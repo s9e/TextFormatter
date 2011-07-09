@@ -660,6 +660,41 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox convertRegexp() replaces \p{^L} with a character class containing the full character range
+	*/
+	public function testConvertRegexp8c()
+	{
+		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
+
+		$this->assertRegexp(
+			'#^/\\[' . $unicodeRange . '\\]/$#D',
+			JSParserGenerator::convertRegexp('#\\p{^L}#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() replaces \p{^L} with a character class equivalent to \PL
+	*/
+	public function testConvertRegexp8d()
+	{
+		$this->assertSame(
+			JSParserGenerator::convertRegexp('#\\PL#'),
+			JSParserGenerator::convertRegexp('#\\p{^L}#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() replaces \P{^L} with a character class equivalent to \pL
+	*/
+	public function testConvertRegexp8e()
+	{
+		$this->assertSame(
+			JSParserGenerator::convertRegexp('#\\pL#'),
+			JSParserGenerator::convertRegexp('#\\P{^L}#')
+		);
+	}
+
+	/**
 	* @testdox convertRegexp() can convert regexps with lookahead assertions
 	*/
 	public function testConvertRegexpLookahead()
