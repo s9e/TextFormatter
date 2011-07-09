@@ -767,6 +767,13 @@ class JSParserGenerator
 		return $bin;
 	}
 
+	/**
+	* Convert a PCRE regexp to a Javascript regexp
+	*
+	* @param  string $regexp PCRE regexp
+	* @param  string $flags  Extra flags to add to the Javascript regexp
+	* @return string
+	*/
 	static public function convertRegexp($regexp, $flags = '')
 	{
 		$regexpInfo = ConfigBuilder::parseRegexp($regexp);
