@@ -75,7 +75,7 @@ unset($ranges['L&']);
 
 foreach ($ranges as $propName => $propRanges)
 {
-	ksort($propRanges);
+	ksort($propRanges, SORT_STRING);
 
 	$str = '';
 
