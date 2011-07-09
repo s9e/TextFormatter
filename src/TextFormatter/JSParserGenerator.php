@@ -864,21 +864,12 @@ class JSParserGenerator
 	{
 		$unicodeProps = static::$unicodeProps;
 
-		$negated = ($inCharacterClass && $str[0] === '^');
-
 		$str = preg_replace_callback(
 			'#(?<!\\\\)((?:\\\\\\\\)*)\\\\(' . implode('|', array_keys(static::$unicodeProps)) . ')#',
-			function ($m) use ($unicodeProps, $inCharacterClass, $negated)
+			function ($m) use ($unicodeProps, $inCharacterClass)
 			{
-				$propName = $m[2];
-
-				if ($negated)
-				{
-					$propName[0] = ($propName[0] === 'p') ? 'P' : 'p';
-				}
-
 				return (($inCharacterClass) ? '' : '[')
-				     . $unicodeProps[$propName]
+				     . $unicodeProps[$m[2]]
 				     . (($inCharacterClass) ? '' : ']');
 			},
 			$str
