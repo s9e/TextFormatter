@@ -198,6 +198,7 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] Injects plugins parsers into source
  [x] Injects plugins configs into source
  [x] replaceConstant() throws an exception if no replacement occurs
+ [x] A regexp map is created for compound attributes
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Ouput is UTF8

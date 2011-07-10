@@ -582,7 +582,7 @@ class JSParserGeneratorTest extends Test
 			),
 			array(
 				'splitCompoundAttributes',
-				array('attrs' => array('foo' => array('type' => 'compound')))
+				array('attrs' => array('foo' => array('type' => 'compound', 'regexp' => '##')))
 			),
 			array(
 				'addDefaultAttributeValuesToCurrentTag',
@@ -795,5 +795,23 @@ class JSParserGeneratorTest extends Test
 	{
 		$this->call($this->jspg, 'init');
 		$this->call($this->jspg, 'replaceConstant', array('UNKNOWN', 2));
+	}
+
+	/**
+	* @testdox A regexp map is created for compound attributes
+	*/
+	public function testCompoundAttributesHaveARegexpMap()
+	{
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'compound', array(
+			'regexp' => '#^(?<width>[0-9]+),(?<height>[0-9]+)$#'
+		));
+
+		$this->call($this->jspg, 'init');
+
+		$this->assertContains(
+			'attrs:{"x":{isRequired:0,regexp:/^([0-9]+),([0-9]+)$/,type:"compound",regexpMap:{width:1,height:2}}}',
+			$this->call($this->jspg, 'generateTagsConfig')
+		);
 	}
 }

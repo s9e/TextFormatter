@@ -735,6 +735,18 @@ class JSParserGenerator
 				unset($tagNames);
 			}
 
+			if (!empty($tagConfig['attrs']))
+			{
+				foreach ($tagConfig['attrs'] as $attrName => &$attrConf)
+				{
+					if ($attrConf['type'] === 'compound')
+					{
+						static::convertRegexp($attrConf['regexp'], $attrConf['regexpMap']);
+					}
+				}
+				unset($attrConf);
+			}
+
 			$tagConfig['allowedChildren'] = array_map('ord', str_split($tagConfig['allowedChildren'], 1));
 			$tagConfig['allowedDescendants'] = array_map('ord', str_split($tagConfig['allowedDescendants'], 1));
 		}
