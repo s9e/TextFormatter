@@ -871,7 +871,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'SUCCESS',
-			$this->jspg->get(array('compilation' => 'ADVANCED'))
+			$this->jspg->get(array('compilation' => 'ADVANCED_OPTIMIZATIONS'))
 		);
 	}
 }
