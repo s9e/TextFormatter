@@ -125,4 +125,43 @@ class GenericConfigTest extends Test
 			$this->cb->Generic->getJSParser()
 		);
 	}
+
+	/**
+	* @testdox getJSConfig() creates a regexp map for every regexp
+	*/
+	public function testRegexpMaps()
+	{
+		include_once __DIR__ . '/../../../src/TextFormatter/JSParserGenerator.php';
+
+		$this->cb->Generic->addReplacement('#(?<foo>x)#', '<b/>');
+		$this->cb->Generic->addReplacement('#(?<bar>x)#', '<b/>');
+
+		$this->assertEquals(
+			array(
+				'regexp' => array(
+					'GAD082E00' => '#(?<foo>x)#',
+					'GFB3D3850' => '#(?<bar>x)#'
+				),
+				'regexpMap' => array(
+					'GAD082E00' => array('foo' => 1),
+					'GFB3D3850' => array('bar' => 1)
+				)
+			),
+			$this->cb->Generic->getJSConfig()
+		);
+	}
+
+	/**
+	* @testdox Tag names and attribute names are preserved in the JS config
+	*/
+	public function testJSConfigPreserveKeys()
+	{
+		$this->cb->Generic->addReplacement('#(?<foo>x)#', '<b/>');
+		$this->cb->Generic->addReplacement('#(?<bar>x)#', '<b/>');
+
+		$this->assertContains(
+			'"Generic":{regexp:{"GAD082E00":/(x)/g,"GFB3D3850":/(x)/g},regexpMap:{"GAD082E00":{"foo":1},"GFB3D3850":{"bar":1}}',
+			$this->cb->getJSParser()
+		);
+	}
 }

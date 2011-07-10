@@ -635,6 +635,8 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\GenericConfig
  [x] addReplacement() throws a RuntimeException on duplicate named subpatterns
  [x] addReplacement() creates a regexp for every attribute
  [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfig() creates a regexp map for every regexp
+ [x] Tag names and attribute names are preserved in the JS config
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\GenericParser
  [x] Handles attributes
