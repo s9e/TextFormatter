@@ -200,6 +200,9 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] Injects plugins configs into source
  [x] replaceConstant() throws an exception if no replacement occurs
  [x] A regexp map is created for compound attributes
+ [x] Optimization hint HINT_REGEXP_REPLACEWITH is false by default
+ [x] Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has a "replaceWith" option set
+ [x] The source is minified with Google Closure Compiler if "compilation" is not set to "none"
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Ouput is UTF8

@@ -836,4 +836,42 @@ class JSParserGeneratorTest extends Test
 			$this->call($this->jspg, 'generateTagsConfig')
 		);
 	}
+
+	/**
+	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is false by default
+	*/
+	public function test_Optimization_hint_REGEXP_REPLACEWITH_false_by_default()
+	{
+		$this->assertRegexp(
+			'#HINT_REGEXP_REPLACEWITH\\s*=\\s*false#',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
+	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has a "replaceWith" option set
+	*/
+	public function test_Optimization_hint_REGEXP_REPLACEWITH()
+	{
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'regexp', array('replaceWith' => 'xx'));
+
+		$this->assertRegexp(
+			'#HINT_REGEXP_REPLACEWITH\\s*=\\s*true#',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
+	* @testdox The source is minified with Google Closure Compiler if "compilation" is not set to "none"
+	*/
+	public function test_Closure_Compiler()
+	{
+		$this->jspg->closureCompilerURL = 'data:text/plain,SUCCESS';
+
+		$this->assertSame(
+			'SUCCESS',
+			$this->jspg->get(array('compilation' => 'ADVANCED'))
+		);
+	}
 }

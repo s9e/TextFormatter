@@ -25,6 +25,11 @@ use DOMDocument,
 class JSParserGenerator
 {
 	/**
+	* @var string URL to the Closure Compiler service
+	*/
+	public $closureCompilerURL = 'http://closure-compiler.appspot.com/compile';
+
+	/**
 	* @var ConfigBuilder
 	*/
 	protected $cb;
@@ -249,15 +254,14 @@ class JSParserGenerator
 	protected function compile($level)
 	{
 		$content = http_build_query(array(
-			'js_code' => $this->src,
-			'compilation_level' => $level,
 			'output_format' => 'text',
-//			'formatting' => 'pretty_print',
-			'output_info' => 'compiled_code'
+			'output_info' => 'compiled_code',
+			'compilation_level' => $level,
+			'js_code' => $this->src
 		));
 
 		$this->src = file_get_contents(
-			'http://closure-compiler.appspot.com/compile',
+			$this->closureCompilerURL,
 			false,
 			stream_context_create(array(
 				'http' => array(
