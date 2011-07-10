@@ -766,17 +766,6 @@ class JSParserGenerator
 		);
 	}
 
-	static protected function raw2bin($raw)
-	{
-		$bin = '';
-		foreach (str_split($raw, 1) as $c)
-		{
-			$bin .= substr(strrev(decbin(ord($c))) . '0000000', 0, 8);
-		}
-
-		return $bin;
-	}
-
 	/**
 	* Convert a PCRE regexp to a Javascript regexp
 	*
