@@ -187,6 +187,7 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray() preserves keys at the correct depth
  [x] encodeArray() can use TRUE as a wildcard
  [x] encodeArray() preserves reserved words
+ [x] encodeArray() can preserve raw JS
  [x] Useless code is removed from the source
  [x] generateFiltersConfig() returns allowedSchemes regexp as an object
  [x] generateFiltersConfig() returns disallowedHosts regexp as an object

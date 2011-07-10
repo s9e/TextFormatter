@@ -370,7 +370,7 @@ class JSParserGeneratorTest extends Test
 	{
 		$arr = array('/foo/');
 
-		$struct = array(
+		$meta = array(
 			'isRegexp' => array(
 				array(true)
 			)
@@ -378,7 +378,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertContains(
 			'/foo/',
-			$this->encodeArray($arr, $struct)
+			$this->encodeArray($arr, $meta)
 		);
 	}
 
@@ -389,7 +389,7 @@ class JSParserGeneratorTest extends Test
 	{
 		$arr = array('/foo/');
 
-		$struct = array(
+		$meta = array(
 			'isGlobalRegexp' => array(
 				array(true)
 			)
@@ -397,7 +397,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertContains(
 			'/foo/g',
-			$this->encodeArray($arr, $struct)
+			$this->encodeArray($arr, $meta)
 		);
 	}
 
@@ -424,7 +424,7 @@ class JSParserGeneratorTest extends Test
 			'b' => 2
 		);
 
-		$struct = array(
+		$meta = array(
 			'preserveKeys' => array(
 				array('a')
 			)
@@ -432,7 +432,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{"a":1,b:2}',
-			$this->encodeArray($arr, $struct)
+			$this->encodeArray($arr, $meta)
 		);
 	}
 
@@ -447,7 +447,7 @@ class JSParserGeneratorTest extends Test
 			'b' => 2
 		);
 
-		$struct = array(
+		$meta = array(
 			'preserveKeys' => array(
 				array('a', 'z')
 			)
@@ -455,7 +455,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{a:{"z":1,b:2},b:2}',
-			$this->encodeArray($arr, $struct)
+			$this->encodeArray($arr, $meta)
 		);
 	}
 
@@ -470,7 +470,7 @@ class JSParserGeneratorTest extends Test
 			'b' => 2
 		);
 
-		$struct = array(
+		$meta = array(
 			'preserveKeys' => array(
 				array('a', 'a')
 			)
@@ -478,7 +478,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{a:{"a":1,b:2},b:2}',
-			$this->encodeArray($arr, $struct)
+			$this->encodeArray($arr, $meta)
 		);
 	}
 
@@ -493,7 +493,7 @@ class JSParserGeneratorTest extends Test
 			'b' => array('a' => 1, 'b' => 2)
 		);
 
-		$struct = array(
+		$meta = array(
 			'preserveKeys' => array(
 				array('a', true)
 			)
@@ -501,7 +501,7 @@ class JSParserGeneratorTest extends Test
 
 		$this->assertSame(
 			'{a:{"a":1,"b":2},b:{a:1,b:2}}',
-			$this->encodeArray($arr, $struct)
+			$this->encodeArray($arr, $meta)
 		);
 	}
 
@@ -518,6 +518,28 @@ class JSParserGeneratorTest extends Test
 		$this->assertSame(
 			'{a:1,"with":2}',
 			$this->encodeArray($arr)
+		);
+	}
+
+	/**
+	* @testdox encodeArray() can preserve raw JS
+	*/
+	public function test_encodeArray_can_preserve_raw_JS()
+	{
+		$arr = array(
+			'a' => 1,
+			'b' => 'foo()'
+		);
+
+		$meta = array(
+			'isRawJS' => array(
+				array('b')
+			)
+		);
+
+		$this->assertSame(
+			'{a:1,b:foo()}',
+			$this->encodeArray($arr, $meta)
 		);
 	}
 
