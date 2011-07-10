@@ -677,7 +677,9 @@ class JSParserGenerator
 				* used to get the content of any file in the filesystem, so we're still validating
 				* the callback name here as a failsafe.
 				*/
+				// @codeCoverageIgnoreStart
 				throw new RuntimeException("Invalid callback name '" . $funcName . "'");
+				// @codeCoverageIgnoreEnd
 			}
 
 			$filepath = __DIR__ . '/jsFunctions/' . $funcName . '.js';
