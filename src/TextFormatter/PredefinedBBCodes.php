@@ -315,7 +315,7 @@ class PredefinedBBCodes
 				<script type="text/javascript">document.write(new Date({NUMBER}000).toLocaleString())</script>
 				<noscript><xsl:apply-templates /></noscript>
 			</span>',
-			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+			ConfigBuilder::ALLOW_UNSAFE_TEMPLATES
 		);
 	}
 

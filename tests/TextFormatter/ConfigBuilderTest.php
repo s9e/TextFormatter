@@ -640,7 +640,7 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanSetTagTemplate
-	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	* @expectedException RuntimeException ALLOW_UNSAFE_TEMPLATES
 	*/
 	public function testCannotSetTagTemplateWithVariableInScriptSrc()
 	{
@@ -653,7 +653,7 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanSetTagTemplate
-	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	* @expectedException RuntimeException ALLOW_UNSAFE_TEMPLATES
 	*/
 	public function testCannotSetTagTemplateWithVariableInScriptSrcRegardlessOfTheCase()
 	{
@@ -667,19 +667,19 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCannotSetTagTemplateWithVariableInScriptSrc
 	*/
-	public function testCanSetTagTemplateWithVariableInScriptSrcWithInsecureFlag()
+	public function testCanSetTagTemplateWithVariableInScriptSrcWithUnsafeFlag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagTemplate(
 			'a',
 			'<script src="http://{TEXT}"/>',
-			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+			ConfigBuilder::ALLOW_UNSAFE_TEMPLATES
 		);
 	}
 
 	/**
 	* @depends testCanSetTagTemplate
-	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	* @expectedException RuntimeException ALLOW_UNSAFE_TEMPLATES
 	*/
 	public function testCannotSetTagTemplateWithVariableInScriptContent()
 	{
@@ -693,19 +693,19 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCannotSetTagTemplateWithVariableInScriptContent
 	*/
-	public function testCanSetTagTemplateWithVariableInScriptContentWithInsecureFlag()
+	public function testCanSetTagTemplateWithVariableInScriptContentWithUnsafeFlag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagTemplate(
 			'a',
 			'<script><xsl:value-of select="@LOL"/></script>',
-			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+			ConfigBuilder::ALLOW_UNSAFE_TEMPLATES
 		);
 	}
 
 	/**
 	* @depends testCanSetTagTemplate
-	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	* @expectedException RuntimeException ALLOW_UNSAFE_TEMPLATES
 	*/
 	public function testCannotSetTagTemplateWithVariableInScriptContentRegardlessOfTheCase()
 	{
@@ -718,7 +718,7 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanSetTagTemplate
-	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	* @expectedException RuntimeException ALLOW_UNSAFE_TEMPLATES
 	*/
 	public function testCannotSetTagTemplateWithDisableOutputEscaping()
 	{
@@ -732,19 +732,19 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCannotSetTagTemplateWithDisableOutputEscaping
 	*/
-	public function testCanSetTagTemplateWithDisableOutputEscapingWithInsecureFlag()
+	public function testCanSetTagTemplateWithDisableOutputEscapingWithUnsafeFlag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagTemplate(
 			'a',
 			'<xsl:value-of select="@LOL" disable-output-escaping="yes" />',
-			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+			ConfigBuilder::ALLOW_UNSAFE_TEMPLATES
 		);
 	}
 
 	/**
 	* @depends testCanSetTagTemplate
-	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	* @expectedException RuntimeException ALLOW_UNSAFE_TEMPLATES
 	*/
 	public function testCannotSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOn()
 	{
@@ -757,7 +757,7 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @depends testCanSetTagTemplate
-	* @expectedException RuntimeException ALLOW_INSECURE_TEMPLATES
+	* @expectedException RuntimeException ALLOW_UNSAFE_TEMPLATES
 	*/
 	public function testCannotSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOnRegardlessOfTheCase()
 	{
@@ -771,17 +771,17 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCannotSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOn
 	*/
-	public function testCanSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOnWithInsecureFlag()
+	public function testCanSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOnWithUnsafeFlag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagTemplate(
 			'a',
 			'<a onmouseover="{@lol}"/>',
-			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+			ConfigBuilder::ALLOW_UNSAFE_TEMPLATES
 		);
 	}
 
-	public function testCanSetTagTemplateWithEscapedCurlyBracketsInAnAttributeWhoseNameStartsWithOnWithoutInsecureFlag()
+	public function testCanSetTagTemplateWithEscapedCurlyBracketsInAnAttributeWhoseNameStartsWithOnWithoutUnsafeFlag()
 	{
 		$this->cb->addTag('a');
 		$this->cb->setTagTemplate(

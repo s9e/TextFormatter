@@ -304,7 +304,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage ALLOW_INSECURE_TEMPLATES
+	* @expectedExceptionMessage ALLOW_UNSAFE_TEMPLATES
 	*/
 	public function addBBCodeFromExample_throws_an_exception_if_a_TEXT_placeholder_is_found_in_an_attribute()
 	{
@@ -314,12 +314,12 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	*/
-	public function addBBCodeFromExample_does_not_throw_an_exception_if_a_TEXT_placeholder_is_found_in_an_attribute_but_ALLOW_INSECURE_TEMPLATES_flag_is_set()
+	public function addBBCodeFromExample_does_not_throw_an_exception_if_a_TEXT_placeholder_is_found_in_an_attribute_but_ALLOW_UNSAFE_TEMPLATES_flag_is_set()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[B={TEXT}][/B]',
 			'<b id="{TEXT}"></b>',
-			ConfigBuilder::ALLOW_INSECURE_TEMPLATES
+			ConfigBuilder::ALLOW_UNSAFE_TEMPLATES
 		);
 	}
 

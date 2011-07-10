@@ -21,7 +21,7 @@ class ConfigBuilder
 	* Allow user-supplied data to be used in sensitive area of a template
 	* @see self::setTagTemplate()
 	*/
-	const ALLOW_INSECURE_TEMPLATES = 1;
+	const ALLOW_UNSAFE_TEMPLATES = 1;
 
 	/**
 	* Whether or not preserve redundant whitespace in a template
@@ -1616,7 +1616,7 @@ class ConfigBuilder
 	* Normalize XSL
 	*
 	* Check for well-formedness, remove whitespace if applicable.
-	* Check for insecure script tags.
+	* Check for unsafe script tags.
 	*
 	* @param  string  $xsl     Must be valid XSL elements. A root node is not required
 	* @param  integer $flags
@@ -1648,11 +1648,11 @@ class ConfigBuilder
 			throw new InvalidArgumentException('Invalid XML - error was: ' . $error->message);
 		}
 
-		if (!($flags & self::ALLOW_INSECURE_TEMPLATES))
+		if (!($flags & self::ALLOW_UNSAFE_TEMPLATES))
 		{
 			$xpath = new DOMXPath($dom);
 
-			$hasInsecureScript = (bool) $xpath->evaluate(
+			$hasUnsafeScript = (bool) $xpath->evaluate(
 				'count(
 					//*[translate(name(), "SCRIPT", "script") = "script"]
 					   [
@@ -1663,14 +1663,14 @@ class ConfigBuilder
 				)'
 			);
 
-			if ($hasInsecureScript)
+			if ($hasUnsafeScript)
 			{
-				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be insecure and are disabled by default. Please use the ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES flag to enable it');
+				throw new RuntimeException('It seems that your template contains a <script> tag that uses user-supplied information. Those can be unsafe and are disabled by default. Please use the ' . __CLASS__ . '::ALLOW_UNSAFE_TEMPLATES flag to enable it');
 			}
 
 			if ($xpath->evaluate('count(//@disable-output-escaping)'))
 			{
-				throw new RuntimeException("It seems that your template contains a 'disable-output-escaping' attribute. Those can be insecure and are disabled by default. Please use the " . __CLASS__ . "::ALLOW_INSECURE_TEMPLATES flag to enable it");
+				throw new RuntimeException("It seems that your template contains a 'disable-output-escaping' attribute. Those can be unsafe and are disabled by default. Please use the " . __CLASS__ . "::ALLOW_UNSAFE_TEMPLATES flag to enable it");
 			}
 
 			$attrs = $xpath->query(
@@ -1686,7 +1686,7 @@ class ConfigBuilder
 				{
 					if ($m !== '{{')
 					{
-						throw new RuntimeException("It seems that your template contains at least one attribute named '" . $attr->name . "' using user-supplied content. Those can be insecure and are disabled by default. Please use the " . __CLASS__ . "::ALLOW_INSECURE_TEMPLATES flag to enable it");
+						throw new RuntimeException("It seems that your template contains at least one attribute named '" . $attr->name . "' using user-supplied content. Those can be unsafe and are disabled by default. Please use the " . __CLASS__ . "::ALLOW_UNSAFE_TEMPLATES flag to enable it");
 					}
 				}
 			}

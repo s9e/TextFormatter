@@ -336,10 +336,10 @@ class BBCodesConfig extends PluginConfig
 						throw new InvalidArgumentException('Undefined placeholder {' . $identifier . '} found in template');
 					}
 
-					if (!($flags & ConfigBuilder::ALLOW_INSECURE_TEMPLATES)
+					if (!($flags & ConfigBuilder::ALLOW_UNSAFE_TEMPLATES)
 					 && preg_match('#^TEXT[0-9]*$#D', $identifier))
 					{
-						throw new RuntimeException('Using {TEXT} inside HTML attributes is inherently insecure and has been disabled. Please pass ' . __CLASS__ . '::ALLOW_INSECURE_TEMPLATES as a third parameter to addBBCodeFromExample() to enable it');
+						throw new RuntimeException('Using {TEXT} inside HTML attributes is inherently unsafe and has been disabled. Please pass ' . __CLASS__ . '::ALLOW_UNSAFE_TEMPLATES as a third parameter to addBBCodeFromExample() to enable it');
 					}
 
 					return '{' . $placeholders[$identifier] . '}';
