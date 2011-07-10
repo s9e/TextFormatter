@@ -11,6 +11,7 @@ use Exception,
     InvalidArgumentException,
 	RuntimeException,
     s9e\Toolkit\TextFormatter\ConfigBuilder,
+    s9e\Toolkit\TextFormatter\JSParserGenerator,
     s9e\Toolkit\TextFormatter\PluginConfig;
 
 /**
@@ -122,6 +123,32 @@ class GenericConfig extends PluginConfig
 	//==========================================================================
 	// JS Parser stuff
 	//==========================================================================
+
+	public function getJSConfig()
+	{
+		$config = $this->getConfig();
+
+		if ($config)
+		{
+			foreach ($config['regexp'] as $tagName => $regexp)
+			{
+				JSParserGenerator::convertRegexp($regexp, $config['regexpMap'][$tagName]);
+			}
+		}
+
+		return $config;
+	}
+
+	public function getJSConfigMeta()
+	{
+		return array(
+			'preserveKeys' => array(
+				array('regexp', true),
+				array('regexpMap', true),
+				array('regexpMap', true, true)
+			)
+		);
+	}
 
 	public function getJSParser()
 	{

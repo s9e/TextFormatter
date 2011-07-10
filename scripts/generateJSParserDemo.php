@@ -18,7 +18,7 @@ $cb->BBCodes->addPredefinedBBCode('YOUTUBE');
 $cb->BBCodes->addPredefinedBBCode('FLOAT');
 
 $cb->BBCodes->addBBCode('CODE', array(
-	'template' => '<code><xsl:apply-templates/></code>',
+	'template' => '<code style="display:inline"><xsl:apply-templates/></code>',
 	'defaultDescendantRule' => 'deny'
 ));
 
@@ -28,6 +28,11 @@ $cb->setTagAttributeOption('YOUTUBE', 'content', 'replaceWith', '$1&amp;autoplay
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
 $cb->Censor->addWord('apple', 'banana');
+
+$cb->Generic->addReplacement(
+	'#\\$(?<amount>[0-9]+(?:\\.[0-9]+)?)#',
+	'<a href="http://www.google.com/search?q={@amount}+USD+in+EUR"><xsl:apply-templates/></a>'
+);
 
 $cb->loadPlugin('Autolink');
 $cb->loadPlugin('HTMLEntities')->disableEntity('&lt;');
@@ -79,7 +84,6 @@ ob_start();
 
 		code
 		{
-			display: inline;
 			padding: 3px;
 			background-color: #fff;
 			border-radius: 3px;
@@ -107,6 +111,7 @@ The following plugins have been enabled:
 
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
   [*][b]Emoticons[/b] --- one emoticon :) has been added
+  [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]#\$(?<amount>[0-9]+(?:\.[0-9]+)?)#[/CODE] is replaced with the template [CODE]<a href="http://www.google.com/search?q={@amount}+USD+in+EUR"><xsl:apply-templates/></a>[/CODE] -- For example: $2, $4.50
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
   [*][b]Linebreaker[/b] --- Linefeeds are converted to &lt;br&gt;
   [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"

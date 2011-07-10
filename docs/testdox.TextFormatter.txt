@@ -634,6 +634,7 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\GenericConfig
  [x] addReplacement() throws an exception if the regexp is invalid
  [x] addReplacement() throws a RuntimeException on duplicate named subpatterns
  [x] addReplacement() creates a regexp for every attribute
+ [x] getJSParser() returns the source of its Javascript parser
 
 s9e\Toolkit\Tests\TextFormatter\Plugins\GenericParser
  [x] Handles attributes

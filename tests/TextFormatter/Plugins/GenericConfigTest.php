@@ -114,4 +114,15 @@ class GenericConfigTest extends Test
 			$this->cb->getTagAttributeOption($tagName, 'zz', 'regexp')
 		);
 	}
+
+	/**
+	* @testdox getJSParser() returns the source of its Javascript parser
+	*/
+	public function test_getJSParser_returns_the_source_of_its_Javascript_parser()
+	{
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../../src/TextFormatter/Plugins/GenericParser.js',
+			$this->cb->Generic->getJSParser()
+		);
+	}
 }
