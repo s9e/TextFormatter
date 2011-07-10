@@ -769,6 +769,19 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanSetTagTemplate
+	* @expectedException RuntimeException ALLOW_UNSAFE_TEMPLATES
+	*/
+	public function testCannotSetTagTemplateWithAnAttributeWhoseNameStartsWithOnCreatedViaXsl()
+	{
+		$this->cb->addTag('a');
+		$this->cb->setTagTemplate(
+			'a',
+			'<a><xsl:attribute name="onmouseover"><xsl:value-of select="@lol"/></xsl:attribute></a>'
+		);
+	}
+
+	/**
 	* @depends testCannotSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOn
 	*/
 	public function testCanSetTagTemplateWithVariableInAnAttributeWhoseNameStartsWithOnWithUnsafeFlag()

@@ -65,6 +65,7 @@ s9e\Toolkit\Tests\TextFormatter\ConfigBuilder
  [x] Can set tag template with disable output escaping with unsafe flag
  [x] Cannot set tag template with variable in an attribute whose name starts with on
  [x] Cannot set tag template with variable in an attribute whose name starts with on regardless of the case
+ [x] Cannot set tag template with an attribute whose name starts with on created via xsl
  [x] Can set tag template with variable in an attribute whose name starts with on with unsafe flag
  [x] Can set tag template with escaped curly brackets in an attribute whose name starts with on without unsafe flag
  [x] Can set custom filter

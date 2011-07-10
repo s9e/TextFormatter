@@ -1691,8 +1691,18 @@ class ConfigBuilder
 				}
 			}
 
-			// TODO: add another check for attributes that start with "on", created via
-			//       xsl:attribute
+			$attrs = $xpath->query(
+				// any xsl:attribute node that whose @name starts with "on" and has an
+				// xsl:value-of or xsl:templates descendant
+				'//xsl:attribute
+					[starts-with(translate(@name, "ON", "on"), "on")]
+					[//xsl:value-of or //xsl:apply-templates]'
+			);
+
+			foreach ($attrs as $attr)
+			{
+				throw new RuntimeException("It seems that your template contains at least one attribute named '" . $attr->getAttribute('name') . "' that is created dynamically. Those can be unsafe and are disabled by default. Please use the " . __CLASS__ . "::ALLOW_UNSAFE_TEMPLATES flag to enable it");
+			}
 		}
 
 		/**

@@ -493,9 +493,7 @@ class PredefinedTags
 			)
 		));
 
-		$this->cb->setTagTemplate(
-			'EMAIL',
-			<<<'EOT'
+		$tpl = <<<'EOT'
 				<a href="javascript:" style="unicode-bidi:bidi-override;direction:rtl" onfocus="this.onmouseover()">
 					<xsl:attribute name="onmouseover">
 						<xsl:text>this.href='</xsl:text>
@@ -509,8 +507,9 @@ class PredefinedTags
 
 					<xsl:value-of select="@revtext" />
 				</a>
-EOT
-		);
+EOT;
+
+		$this->cb->setTagTemplate('EMAIL', $tpl, ConfigBuilder::ALLOW_UNSAFE_TEMPLATES);
 	}
 
 	public function addCOLOR()
