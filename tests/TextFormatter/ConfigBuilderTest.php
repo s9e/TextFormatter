@@ -1477,7 +1477,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @testdox ConfigBuilder::parseRegexp() throws a RuntimeException if an unmatched left parenthesis is found
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not find matching pattern start for left parenthesis at pos 0
+	* @expectedExceptionMessage Could not find matching pattern end for left parenthesis at pos 0
 	*/
 	public function testInvalidRegexpsException5()
 	{

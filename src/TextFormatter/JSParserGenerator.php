@@ -961,7 +961,7 @@ class JSParserGenerator
 		);
 	}
 
-	static protected function encodeConfig(array $pluginConfig, array $struct)
+	static protected function encodeConfig(array $pluginConfig, array $meta)
 	{
 		unset($pluginConfig['parserClassName']);
 		unset($pluginConfig['parserFilepath']);
@@ -973,17 +973,17 @@ class JSParserGenerator
 			         ? array('regexp', true)
 			         : array('regexp');
 
-			$struct = array_merge_recursive($struct, array(
+			$meta = array_merge_recursive($meta, array(
 				'isGlobalRegexp' => array(
 					$keypath
 				)
 			));
 		}
 
-		return self::encode($pluginConfig, $struct);
+		return self::encode($pluginConfig, $meta);
 	}
 
-	static public function encode(array $arr, array $struct = array())
+	static public function encode(array $arr, array $meta = array())
 	{
 		/**
 		* Replace booleans with 1/0
@@ -996,14 +996,14 @@ class JSParserGenerator
 			}
 		});
 
-		return self::encodeArray($arr, $struct);
+		return self::encodeArray($arr, $meta);
 	}
 
-	static protected function encodeArray(array $arr, array $struct = array())
+	static protected function encodeArray(array $arr, array $meta = array())
 	{
 		$match = array();
 
-		foreach ($struct as $name => $keypaths)
+		foreach ($meta as $name => $keypaths)
 		{
 			foreach ($arr as $k => $v)
 			{
@@ -1015,31 +1015,28 @@ class JSParserGenerator
 
 		foreach ($arr as $k => &$v)
 		{
-			$regexpMap = null;
-
 			if (!empty($match['isRegexp'][$k]))
 			{
-				$v = self::convertRegexp($v, $regexpMap);
+				$v = self::convertRegexp($v);
 			}
 			elseif (!empty($match['isGlobalRegexp'][$k]))
 			{
-				$v = self::convertRegexp($v, $regexpMap) . 'g';
+				$v = self::convertRegexp($v) . 'g';
+			}
+			elseif (!empty($match['isRawJS'][$k]))
+			{
+				// do nothing
 			}
 			elseif (is_array($v))
 			{
 				$v = self::encodeArray(
 					$v,
-					self::filterKeyPaths($struct, $k)
+					self::filterKeyPaths($meta, $k)
 				);
 			}
 			else
 			{
 				$v = json_encode($v);
-			}
-
-			if ($regexpMap)
-			{
-				$arr[$k . 'Map'] = self::encodeArray($regexpMap);
 			}
 		}
 		unset($v);
@@ -1065,10 +1062,10 @@ class JSParserGenerator
 		return '{' . implode(',', $ret) . '}';
 	}
 
-	static protected function filterKeyPaths(array $struct, $key)
+	static protected function filterKeyPaths(array $meta, $key)
 	{
 		$ret = array();
-		foreach ($struct as $name => $keypaths)
+		foreach ($meta as $name => $keypaths)
 		{
 			foreach ($keypaths as $keypath)
 			{

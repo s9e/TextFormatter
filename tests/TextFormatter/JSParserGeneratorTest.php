@@ -402,26 +402,6 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox encodeArray() creates an objects that maps named captures, using the name of the regexp appended with "Map"
-	* @depends testConvertRegexpNamedCapturesMap
-	*/
-	public function test_encodeArray_creates_regexpMap()
-	{
-		$arr = array('myRegexp' => '#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#');
-
-		$struct = array(
-			'isRegexp' => array(
-				array(true)
-			)
-		);
-
-		$this->assertSame(
-			'{myRegexp:/x([0-9]+)([a-z]+)x/,myRegexpMap:{foo:1,bar:2}}',
-			$this->encodeArray($arr, $struct)
-		);
-	}
-
-	/**
 	* @testdox encode() encodes booleans to 0 and 1
 	* @depends test_encodeArray_can_encode_arrays_to_Arrays
 	*/

@@ -181,7 +181,6 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] encodeArray() can encode arrays to Arrays
  [x] encodeArray() can convert regexp strings to RegExp objects
  [x] encodeArray() can convert regexp strings to RegExp objects with g flag
- [x] encodeArray() creates an objects that maps named captures, using the name of the regexp appended with "Map"
  [x] encode() encodes booleans to 0 and 1
  [x] encodeArray() can preserve a key of an array
  [x] encodeArray() can preserve a key of a nested array

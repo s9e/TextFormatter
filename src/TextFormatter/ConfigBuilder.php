@@ -1520,7 +1520,7 @@ class ConfigBuilder
 
 		if (!empty($openSubpatterns))
 		{
-			throw new RuntimeException('Could not find matching pattern start for left parenthesis at pos ' . $ret['tokens'][$openSubpatterns[0]]['pos']);
+			throw new RuntimeException('Could not find matching pattern end for left parenthesis at pos ' . $ret['tokens'][$openSubpatterns[0]]['pos']);
 		}
 
 		return $ret;
