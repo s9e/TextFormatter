@@ -31,7 +31,7 @@ abstract class PluginConfig
 	* @param ConfigBuilder $cb
 	* @param array         $overrideProps Properties of the plugin will be overwritten with those
 	*/
-	public function __construct(ConfigBuilder $cb, array $overrideProps = array())
+	final public function __construct(ConfigBuilder $cb, array $overrideProps = array())
 	{
 		foreach ($overrideProps as $k => $v)
 		{
@@ -52,9 +52,8 @@ abstract class PluginConfig
 	*/
 	abstract public function getConfig();
 
-
 	/**
-	* @return array
+	* @return array This plugin's config, to be used in the Javascript parser
 	*/
 	public function getJSConfig()
 	{
@@ -62,7 +61,7 @@ abstract class PluginConfig
 	}
 
 	/**
-	* @return array
+	* @return array Metadata associated to this plugin's JS config
 	*/
 	public function getJSConfigMeta()
 	{
