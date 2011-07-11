@@ -1,29 +1,19 @@
 #!/bin/sh
 TMP=/dev/shm/phpunit.out
-DONE=
+ROOT=$(dirname $(dirname $(realpath $0)))
 
-ROOT=`pwd`
+if [[ -n `git diff --cached --name-only -b "$ROOT/src" "$ROOT/tests"` ]]
+then
+	cd "$ROOT/tests"
+	phpunit -c "$ROOT/tests/phpunit.xml" | tee $TMP
 
-for FILEPATH in $(git diff --cached --name-only)
-do
-	if [[ $FILEPATH != src/* ]] && [[ $FILEPATH != tests/* ]];
+	if [[ `tail -n3 $TMP` != *OK* ]]
 	then
-		continue;
+		exit 1;
 	fi
 
-	if [[ -n `git diff --cached -b "$ROOT/src" "$ROOT/tests"` ]]
-	then
-		cd "$ROOT/tests"
-		phpunit -c "$ROOT/tests/phpunit.xml" | tee $TMP
-
-		if [[ `tail -n3 $TMP` != *OK* ]]
-		then
-			exit 1;
-		fi
-
-		cd "$ROOT"
-		git update-index --add "docs/testdox.txt"
-	fi
-done
+	cd "$ROOT"
+	git update-index --add "docs/testdox.txt"
+fi
 
 exit 0
