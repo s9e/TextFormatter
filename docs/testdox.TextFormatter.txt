@@ -688,12 +688,12 @@ s9e\Toolkit\Tests\TextFormatter\Plugins\WittyPantsParser
  [x] Three consecutive dots are converted to an ellipsis
  [x] Two consecutive hypens are converted to an en dash
  [x] Three consecutive hypens are converted to an em dash
- [x] Parentheses around the letters tm in lowercase are replaced with the trademark symbol
- [x] Parentheses around the letters tm in uppercase are replaced with the trademark symbol
- [x] Parentheses around the letter c in lowercase are replaced with the copyright symbol
- [x] Parentheses around the letter c in uppercase are replaced with the copyright symbol
- [x] Parentheses around the letter r in lowercase are replaced with the registered symbol
- [x] Parentheses around the letter r in uppercase are replaced with the registered symbol
+ [x] (tm) is replaced by the trademark symbol
+ [x] (TM) is replaced by the trademark symbol
+ [x] (c) is replaced by the copyright symbol
+ [x] (C) is replaced by the copyright symbol
+ [x] (r) is replaced by the registered symbol
+ [x] (R) is replaced by the registered symbol
  [x] A single quote before a letter at the start of a line is replaced with an apostrophe
  [x] A single quote before a letter after whitespace is replaced with an apostrophe
  [x] A single quote between two letters is replaced with an apostrophe

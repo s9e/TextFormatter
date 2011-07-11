@@ -84,6 +84,9 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox (tm) is replaced by the trademark symbol
+	*/
 	public function testParenthesesAroundTheLettersTmInLowercaseAreReplacedWithTheTrademarkSymbol()
 	{
 		$this->cb->loadPlugin('WittyPants');
@@ -93,6 +96,9 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox (TM) is replaced by the trademark symbol
+	*/
 	public function testParenthesesAroundTheLettersTmInUppercaseAreReplacedWithTheTrademarkSymbol()
 	{
 		$this->cb->loadPlugin('WittyPants');
@@ -102,6 +108,9 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox (c) is replaced by the copyright symbol
+	*/
 	public function testParenthesesAroundTheLetterCInLowercaseAreReplacedWithTheCopyrightSymbol()
 	{
 		$this->cb->loadPlugin('WittyPants');
@@ -111,6 +120,9 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox (C) is replaced by the copyright symbol
+	*/
 	public function testParenthesesAroundTheLetterCInUppercaseAreReplacedWithTheCopyrightSymbol()
 	{
 		$this->cb->loadPlugin('WittyPants');
@@ -120,6 +132,9 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox (r) is replaced by the registered symbol
+	*/
 	public function testParenthesesAroundTheLetterRInLowercaseAreReplacedWithTheRegisteredSymbol()
 	{
 		$this->cb->loadPlugin('WittyPants');
@@ -129,6 +144,9 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox (R) is replaced by the registered symbol
+	*/
 	public function testParenthesesAroundTheLetterRInUppercaseAreReplacedWithTheRegisteredSymbol()
 	{
 		$this->cb->loadPlugin('WittyPants');
