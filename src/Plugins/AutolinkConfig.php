@@ -41,7 +41,7 @@ class AutolinkConfig extends PluginConfig
 		$config = $this->getConfig();
 
 		// Javascript regexps don't support PCRE's possessive quantifier
-		$config['regexp'] = str_replace('++', '+', $config['regexp']);
+		$config['regexp'] = str_replace(')++', ')+', $config['regexp']);
 
 		return $config;
 	}
