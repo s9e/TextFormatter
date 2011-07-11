@@ -1,7 +1,7 @@
 <?php
 
 /**
-* @package   s9e
+* @package   s9e\TextFormatter
 * @copyright Copyright (c) 2010-2011 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
