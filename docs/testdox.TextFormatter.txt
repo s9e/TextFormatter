@@ -204,6 +204,7 @@ s9e\Toolkit\Tests\TextFormatter\JSParserGenerator
  [x] Optimization hint HINT_REGEXP_REPLACEWITH is false by default
  [x] Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has a "replaceWith" option set
  [x] The source is minified with Google Closure Compiler if "compilation" is not set to "none"
+ [x] Log types can be selectively disabled
 
 s9e\Toolkit\Tests\TextFormatter\Parser
  [x] Ouput is UTF8

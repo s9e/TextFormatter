@@ -874,4 +874,26 @@ class JSParserGeneratorTest extends Test
 			$this->jspg->get(array('compilation' => 'ADVANCED_OPTIMIZATIONS'))
 		);
 	}
+
+	/**
+	* @testdox Log types can be selectively disabled
+	*/
+	public function testDisableLog()
+	{
+		$js = $this->cb->getJSParser(array(
+			'disableLogTypes' => array('debug')
+		));
+
+		$this->assertNotRegexp(
+			'#(?<!0&&)log\\(.debug#',
+			$js,
+			'Not all "debug" messages have been disabled'
+		);
+
+		$this->assertNotRegexp(
+			'#0&&log\\(.(?!debug)#',
+			$js,
+			'Some non-"debug" messages have been disabled'
+		);
+	}
 }
