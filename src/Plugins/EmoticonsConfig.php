@@ -7,7 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\ConfigBuilder,
+use DOMDocument,
+    s9e\TextFormatter\ConfigBuilder,
     s9e\TextFormatter\PluginConfig;
 
 class EmoticonsConfig extends PluginConfig
@@ -81,16 +82,79 @@ class EmoticonsConfig extends PluginConfig
 			$tpls[$tpl][] = $code;
 		}
 
-		$xsl = '<xsl:choose>';
+		/**
+		* Create a temporary stylesheet
+		*/
+		$dom = new DOMDocument;
+		$dom->loadXML('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" />');
+
+		$template = $dom->documentElement->appendChild(
+			$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:template')
+		);
+		$template->setAttribute('match', $this->tagName);
+
+		/**
+		* Iterate over codes, replace codes with their representation as a string (with quotes)
+		* and create variables as needed
+		*/
+		foreach ($tpls as $tpl => &$codes)
+		{
+			foreach ($codes as &$code)
+			{
+				if (strpos($code, "'") === false)
+				{
+					$code = "'" . $code . "'";
+				}
+				elseif (strpos($code, '"') === false)
+				{
+					$code = '"' . $code . '"';
+				}
+				else
+				{
+					// this code contains both ' and " so we store its content in a variable
+					$id = uniqid();
+
+					$template->appendChild(
+						$dom->createElementNS(
+							'http://www.w3.org/1999/XSL/Transform',
+							'xsl:variable',
+							$code
+						)
+					)->setAttribute('name', 'e' . $id);
+
+					$code = '$e' . $id;
+				}
+			}
+			unset($code);
+		}
+		unset($codes);
+
+		$choose = $template->appendChild(
+			$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:choose')
+		);
+
 		foreach ($tpls as $tpl => $codes)
 		{
-			$xsl .= '<xsl:when test=".=\'' . implode("' or .='", $codes) . '\'">'
-			      . $tpl
-			      . '</xsl:when>';
-		}
-		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
+			$when = $choose->appendChild(
+				$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:when')
+			);
+			$when->setAttribute('test', '.=' . implode(' or .=', $codes));
 
-		$this->cb->setTagTemplate($this->tagName, $xsl);
+			$frag = $dom->createDocumentFragment();
+			$frag->appendXML($tpl);
+			$when->appendChild($frag);
+		}
+
+		$choose
+			->appendChild(
+				$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:otherwise')
+			)
+			->appendChild(
+				$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:value-of')
+			)
+			->setAttribute('select', '.');
+
+		$this->cb->setTagXSL($this->tagName, $dom->saveXML($template));
 	}
 
 	/**

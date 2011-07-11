@@ -90,4 +90,46 @@ class EmoticonsConfigTest extends Test
 			$this->cb->Emoticons->getJSParser()
 		);
 	}
+
+	/**
+	* @testdox Emoticons code can contain single quotes
+	*/
+	public function testSingleQuotes()
+	{
+		$this->cb->Emoticons->addEmoticon(":')", '<img src="smiley.png" />');
+
+		$this->assertTransformation(
+			"hey :')",
+			"<rt>hey <E>:')</E></rt>",
+			'hey <img src="smiley.png">'
+		);
+	}
+
+	/**
+	* @testdox Emoticons code can contain double quotes
+	*/
+	public function testDoubleQuotes()
+	{
+		$this->cb->Emoticons->addEmoticon(':")', '<img src="smiley.png" />');
+
+		$this->assertTransformation(
+			'hey :")',
+			'<rt>hey <E>:")</E></rt>',
+			'hey <img src="smiley.png">'
+		);
+	}
+
+	/**
+	* @testdox Emoticons code can contain single and double quotes at the same time
+	*/
+	public function testBothQuotes()
+	{
+		$this->cb->Emoticons->addEmoticon(':\'")', '<img src="smiley.png" />');
+
+		$this->assertTransformation(
+			'hey :\'")',
+			'<rt>hey <E>:\'")</E></rt>',
+			'hey <img src="smiley.png">'
+		);
+	}
 }

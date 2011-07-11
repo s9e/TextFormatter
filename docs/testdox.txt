@@ -574,6 +574,9 @@ s9e\TextFormatter\Tests\Plugins\EmoticonsConfig
  [x] Template auto-update can be re-enabled by calling enableAutoUpdate()
  [x] Template update can be manually triggered by calling updateXSL()
  [x] getJSParser returns the source of its Javascript parser
+ [x] Emoticons code can contain single quotes
+ [x] Emoticons code can contain double quotes
+ [x] Emoticons code can contain single and double quotes at the same time
 
 s9e\TextFormatter\Tests\Plugins\EmoticonsParser
  [x] An emoticon can be replaced by an img tag
