@@ -88,6 +88,11 @@ ob_start();
 			background-color: #fff;
 			border-radius: 3px;
 		}
+
+		pre
+		{
+			margin: 0;
+		}
 	</style>
 </head>
 <body>
@@ -196,14 +201,15 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			else
 			{
 				var xml = s9e.TextFormatter.parse(text);
+				preview.innerHTML = '<pre></pre>';
 
-				if ('innerText' in preview)
+				if ('XMLSerializer' in window)
 				{
-					preview.innerText = xml.xml;
+					preview.firstChild.textContent = new XMLSerializer().serializeToString(xml);
 				}
 				else
 				{
-					preview.textContent = new XMLSerializer().serializeToString(xml);
+					preview.firstChild.innerText = xml.xml
 				}
 			}
 		}
