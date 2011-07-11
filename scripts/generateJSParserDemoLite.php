@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
+include __DIR__ . '/../src/ConfigBuilder.php';
 
-$cb = new \s9e\Toolkit\TextFormatter\ConfigBuilder;
+$cb = new \s9e\TextFormatter\ConfigBuilder;
 
 $cb->BBCodes->addPredefinedBBCode('B');
 $cb->BBCodes->addPredefinedBBCode('I');
@@ -37,7 +37,7 @@ ob_start();
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title>s9e\Toolkit\TextFormatter &bull; Demo Lite</title>
+	<title>s9e\TextFormatter &bull; Demo Lite</title>
 	<style type="text/css">
 		#preview
 		{
@@ -62,7 +62,7 @@ ob_start();
 	<div style="width:80%;max-width:800px">
 		<form>
 			<textarea style="width:99%" rows="15">This is a light version of the TextFormatter parser/renderer, optimized for size.
-			
+
 Logging has been disabled and only some of the plugins have been enabled. The source has been minified to <?php echo round(strlen($jsParser) / 1024, 1); ?>KB (<?php echo round(strlen(gzencode($jsParser, 9)) / 1024, 1); ?>KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].
 
 The included plugins are:

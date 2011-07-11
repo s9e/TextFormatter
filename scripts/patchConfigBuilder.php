@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
 
-use s9e\Toolkit\SimpleDOM\SimpleDOM;
+use s9e\SimpleDOM\SimpleDOM;
 
-include __DIR__ . '/../src/SimpleDOM/SimpleDOM.php';
+include __DIR__ . '/../SimpleDOM/src/SimpleDOM.php';
 
 $filepath = '/tmp/Overview.html';
 //$filepath = '/tmp/grouping-content.html';
@@ -469,7 +469,7 @@ foreach ($arr as $elName => $values)
 
 $php = substr($php, 0, -1);
 
-$filepath = __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
+$filepath = __DIR__ . '/../src/ConfigBuilder.php';
 $file = file_get_contents($filepath);
 
 if (!preg_match('#(?<=protected \\$htmlElements = array\\()(.*?)(?=\\n\\t\\);)#s', $file, $m, PREG_OFFSET_CAPTURE))

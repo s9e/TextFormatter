@@ -6,32 +6,23 @@ ROOT=`pwd`
 
 for FILEPATH in $(git diff --cached --name-only)
 do
-	if [[ $FILEPATH != src/* ]] && [[ $FILEPATH != tests/*/* ]];
+	if [[ $FILEPATH != src/* ]] && [[ $FILEPATH != tests/* ]];
 	then
 		continue;
 	fi
 
-	MODULE=${FILEPATH#*/}
-	MODULE=${MODULE%%/*}
-
-	if [[ `expr match "$DONE" ".* $MODULE"` == 0 ]]
+	if [[ -n `git diff --cached -b "$ROOT/src" "$ROOT/tests"` ]]
 	then
-		if [[ -n `git diff --cached -b "$ROOT/src/$MODULE" "$ROOT/tests/$MODULE"` ]]
+		cd "$ROOT/tests"
+		phpunit -c "$ROOT/tests/phpunit.xml" | tee $TMP
+
+		if [[ `tail -n3 $TMP` != *OK* ]]
 		then
-			DONE="$DONE $MODULE"
-
-			cd "$ROOT/tests/$MODULE"
-			echo "Running PHPUnit on $MODULE"
-			phpunit -c "$ROOT/tests/$MODULE/phpunit.xml" | tee $TMP
-
-			if [[ `tail -n3 $TMP` != *OK* ]]
-			then
-				exit 1;
-			fi
-
-			cd "$ROOT"
-			git update-index --add "docs/testdox.$MODULE.txt"
+			exit 1;
 		fi
+
+		cd "$ROOT"
+		git update-index --add "docs/testdox.txt"
 	fi
 done
 

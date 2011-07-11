@@ -150,7 +150,7 @@ $php = str_replace('  ', "\t\t", $php);
 
 $php = " = array(\n\t\t" . $php . "\n\t)";
 
-$file = file_get_contents(__DIR__ . '/../src/TextFormatter/JSParserGenerator.php');
+$file = file_get_contents(__DIR__ . '/../src/JSParserGenerator.php');
 $file = preg_replace(
 	'#(static protected \\$unicodeProps)(.*?)\\n\\t\\);#s',
 	'$1;',
@@ -163,6 +163,6 @@ $file = str_replace(
 	$file
 );
 
-file_put_contents(__DIR__ . '/../src/TextFormatter/JSParserGenerator.php', $file);
+file_put_contents(__DIR__ . '/../src/JSParserGenerator.php', $file);
 
 echo "Done.\n";

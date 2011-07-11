@@ -1,15 +1,15 @@
 <?php
 
-namespace s9e\Toolkit\Tests;
+namespace s9e\TextFormatter\Tests;
 
 use ReflectionClass,
     ReflectionMethod,
     RuntimeException,
     stdClass,
-    s9e\Toolkit\TextFormatter\ConfigBuilder,
-    s9e\Toolkit\TextFormatter\JSParserGenerator;
+    s9e\TextFormatter\ConfigBuilder,
+    s9e\TextFormatter\JSParserGenerator;
 
-include_once __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
+include_once __DIR__ . '/../src/ConfigBuilder.php';
 
 abstract class Test extends \PHPUnit_Framework_TestCase
 {

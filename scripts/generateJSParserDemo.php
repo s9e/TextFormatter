@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/TextFormatter/ConfigBuilder.php';
+include __DIR__ . '/../src/ConfigBuilder.php';
 
-$cb = new \s9e\Toolkit\TextFormatter\ConfigBuilder;
+$cb = new \s9e\TextFormatter\ConfigBuilder;
 
 $cb->disallowHost('*.example.com');
 
@@ -54,7 +54,7 @@ ob_start();
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title>s9e\Toolkit\TextFormatter &bull; Demo</title>
+	<title>s9e\TextFormatter &bull; Demo</title>
 	<style type="text/css">
 		div
 		{
@@ -100,7 +100,7 @@ ob_start();
 		<form>
 			<textarea style="width:99%" rows="15">[float=right][youtube width=240 height=180]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
 
-This is a demo of the Javascript port of [url=https://github.com/s9e/Toolkit/tree/master/src/TextFormatter title="s9e\Toolkit\TextFormatter at GitHub.com"]s9e\Toolkit\TextFormatter[/url].
+This is a demo of the Javascript port of [url=https://github.com/s9e/TextFormatter/tree/master/src/ title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url].
 
 The following plugins have been enabled:
 
@@ -132,7 +132,7 @@ Additionally, in order to demonstrate some other features:
 
 You can take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
-The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/Toolkit/blob/master/scripts/generateJSParserDemo.php]this script[/url].<?php echo $closureCompilerNote; ?> The raw sources can be found [url=https://github.com/s9e/Toolkit/blob/master/src/TextFormatter/TextFormatter.js]at GitHub[/url].</textarea>
+The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/TextFormatter/blob/master/scripts/generateJSParserDemo.php]this script[/url].<?php echo $closureCompilerNote; ?> The raw sources can be found [url=https://github.com/s9e/TextFormatter/blob/master/src/TextFormatter.js]at GitHub[/url].</textarea>
 			<br>
 			<input type="checkbox" id="rendercheck" checked="checked"><label for="rendercheck"> Render</label>
 			<input type="checkbox" id="logcheck"><label for="logcheck"> Show log</label>

@@ -10,42 +10,38 @@
          stopOnFailure="true"
          verbose="true"
 >
+	<logging>
+		<log type="testdox-text" target="../docs/testdox.txt" />
+	</logging>
+
 	<testsuites>
-		<testsuite name="Acl">
-			<directory>./Acl</directory>
-		</testsuite>
-
-		<testsuite name="SimpleDOM">
-			<directory>./SimpleDOM</directory>
-		</testsuite>
-
 		<testsuite name="TextFormatter">
-			<file>./TextFormatter/AutoloadersTest.php</file>
-			<file>./TextFormatter/ConfigBuilderTest.php</file>
-			<file>./TextFormatter/JSParserGeneratorTest.php</file>
-			<file>./TextFormatter/ParserTest.php</file>
-			<file>./TextFormatter/PluginConfigTest.php</file>
-			<file>./TextFormatter/PluginParserTest.php</file>
-			<file>./TextFormatter/PredefinedBBCodesTest.php</file>
-			<file>./TextFormatter/RendererTest.php</file>
-			<file>./TextFormatter/Plugins/AutolinkConfigTest.php</file>
-			<file>./TextFormatter/Plugins/AutolinkParserTest.php</file>
-			<file>./TextFormatter/Plugins/BBCodesConfigTest.php</file>
-			<file>./TextFormatter/Plugins/BBCodesParserTest.php</file>
-			<file>./TextFormatter/Plugins/CensorConfigTest.php</file>
-			<file>./TextFormatter/Plugins/CensorParserTest.php</file>
-			<file>./TextFormatter/Plugins/EmoticonsConfigTest.php</file>
-			<file>./TextFormatter/Plugins/EmoticonsParserTest.php</file>
-			<file>./TextFormatter/Plugins/FabricConfigTest.php</file>
-			<file>./TextFormatter/Plugins/FabricParserTest.php</file>
-			<file>./TextFormatter/Plugins/GenericConfigTest.php</file>
-			<file>./TextFormatter/Plugins/GenericParserTest.php</file>
-			<file>./TextFormatter/Plugins/HTMLEntitiesConfigTest.php</file>
-			<file>./TextFormatter/Plugins/HTMLEntitiesParserTest.php</file>
-			<file>./TextFormatter/Plugins/LinebreakerConfigTest.php</file>
-			<file>./TextFormatter/Plugins/LinebreakerParserTest.php</file>
-			<file>./TextFormatter/Plugins/WittyPantsConfigTest.php</file>
-			<file>./TextFormatter/Plugins/WittyPantsParserTest.php</file>
+			<file>AutoloadersTest.php</file>
+			<file>ConfigBuilderTest.php</file>
+			<file>JSParserGeneratorTest.php</file>
+			<file>ParserTest.php</file>
+			<file>PluginConfigTest.php</file>
+			<file>PluginParserTest.php</file>
+			<file>PredefinedBBCodesTest.php</file>
+			<file>RendererTest.php</file>
+			<file>Plugins/AutolinkConfigTest.php</file>
+			<file>Plugins/AutolinkParserTest.php</file>
+			<file>Plugins/BBCodesConfigTest.php</file>
+			<file>Plugins/BBCodesParserTest.php</file>
+			<file>Plugins/CensorConfigTest.php</file>
+			<file>Plugins/CensorParserTest.php</file>
+			<file>Plugins/EmoticonsConfigTest.php</file>
+			<file>Plugins/EmoticonsParserTest.php</file>
+			<file>Plugins/FabricConfigTest.php</file>
+			<file>Plugins/FabricParserTest.php</file>
+			<file>Plugins/GenericConfigTest.php</file>
+			<file>Plugins/GenericParserTest.php</file>
+			<file>Plugins/HTMLEntitiesConfigTest.php</file>
+			<file>Plugins/HTMLEntitiesParserTest.php</file>
+			<file>Plugins/LinebreakerConfigTest.php</file>
+			<file>Plugins/LinebreakerParserTest.php</file>
+			<file>Plugins/WittyPantsConfigTest.php</file>
+			<file>Plugins/WittyPantsParserTest.php</file>
 		</testsuite>
 	</testsuites>
 
