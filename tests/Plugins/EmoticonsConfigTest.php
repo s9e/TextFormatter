@@ -26,14 +26,14 @@ class EmoticonsConfigTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox getConfig() returns false if no emoticons were added
 	*/
-	public function getConfig_returns_false_if_no_emoticons_were_added()
+	public function test_getConfig_returns_false_if_no_emoticons_were_added()
 	{
 		$this->assertFalse($this->cb->Emoticons->getConfig());
 	}
 
-	public function testEmoticonsXslIsAutomaticallyUpdatedWhenEmoticonsAreAdded()
+	public function testEmoticonsTemplateIsAutomaticallyUpdatedWhenEmoticonsAreAdded()
 	{
 		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
 		$this->assertContains(':)', $this->cb->getXSL());
@@ -44,10 +44,10 @@ class EmoticonsConfigTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends testEmoticonsXslIsAutomaticallyUpdatedWhenEmoticonsAreAdded
+	* @testdox Template auto-update can be disabled by calling disableAutoUpdate()
+	* @depends testEmoticonsTemplateIsAutomaticallyUpdatedWhenEmoticonsAreAdded
 	*/
-	public function Xsl_auto_update_can_be_disabled_by_calling_disableAutoUpdate()
+	public function test_Template_auto_update_can_be_disabled_by_calling_disableAutoUpdate()
 	{
 		$this->cb->Emoticons->disableAutoUpdate();
 
@@ -56,10 +56,10 @@ class EmoticonsConfigTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends Xsl_auto_update_can_be_disabled_by_calling_disableAutoUpdate
+	* @testdox Template auto-update can be re-enabled by calling enableAutoUpdate()
+	* @depends test_Template_auto_update_can_be_disabled_by_calling_disableAutoUpdate
 	*/
-	public function Xsl_auto_update_can_be_reenabled_by_calling_enableAutoUpdate()
+	public function test_Template_auto_update_can_be_reenabled_by_calling_enableAutoUpdate()
 	{
 		$this->cb->Emoticons->disableAutoUpdate();
 		$this->cb->Emoticons->enableAutoUpdate();
@@ -69,10 +69,10 @@ class EmoticonsConfigTest extends Test
 	}
 
 	/**
-	* @test
-	* @depends Xsl_auto_update_can_be_disabled_by_calling_disableAutoUpdate
+	* @testdox Template update can be manually triggered by calling updateXSL()
+	* @depends test_Template_auto_update_can_be_disabled_by_calling_disableAutoUpdate
 	*/
-	public function Xsl_update_can_be_manually_triggered_by_calling_updateXSL()
+	public function test_Template_update_can_be_manually_triggered_by_calling_updateXSL()
 	{
 		$this->cb->Emoticons->disableAutoUpdate();
 		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');

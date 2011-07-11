@@ -568,11 +568,11 @@ s9e\TextFormatter\Tests\Plugins\CensorParser
 
 s9e\TextFormatter\Tests\Plugins\EmoticonsConfig
  [x] tagName can be customized at loading time
- [x] getConfig returns false if no emoticons were added
- [x] Emoticons xsl is automatically updated when emoticons are added
- [x] Xsl auto update can be disabled by calling disableAutoUpdate
- [x] Xsl auto update can be reenabled by calling enableAutoUpdate
- [x] Xsl update can be manually triggered by calling updateXSL
+ [x] getConfig() returns false if no emoticons were added
+ [x] Emoticons template is automatically updated when emoticons are added
+ [x] Template auto-update can be disabled by calling disableAutoUpdate()
+ [x] Template auto-update can be re-enabled by calling enableAutoUpdate()
+ [x] Template update can be manually triggered by calling updateXSL()
  [x] getJSParser returns the source of its Javascript parser
 
 s9e\TextFormatter\Tests\Plugins\EmoticonsParser
