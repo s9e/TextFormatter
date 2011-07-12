@@ -32,7 +32,7 @@ class EmoticonsConfig extends PluginConfig
 	{
 		$this->cb->addTag($this->tagName, array(
 			'defaultChildRule' => 'deny',
-			'defaultAncestorRule' => 'deny'
+			'defaultDescendantRule' => 'deny'
 		));
 	}
 

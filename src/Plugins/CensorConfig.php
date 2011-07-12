@@ -48,7 +48,7 @@ class CensorConfig extends PluginConfig
 			$this->tagName,
 			array(
 				'defaultChildRule' => 'deny',
-				'defaultAncestorRule' => 'deny',
+				'defaultDescendantRule' => 'deny',
 
 				'attrs' => array(
 					$this->attrName => array(
