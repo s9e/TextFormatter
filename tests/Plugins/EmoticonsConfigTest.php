@@ -44,46 +44,33 @@ class EmoticonsConfigTest extends Test
 	}
 
 	/**
-	* @testdox Template auto-update can be disabled by calling disableAutoUpdate()
-	* @depends testEmoticonsTemplateIsAutomaticallyUpdatedWhenEmoticonsAreAdded
+	* @testdox A single emoticon can be created with addEmoticon()
 	*/
-	public function test_Template_auto_update_can_be_disabled_by_calling_disableAutoUpdate()
+	public function testSingle()
 	{
-		$this->cb->Emoticons->disableAutoUpdate();
+		$this->cb->Emoticons->addEmoticon(':e1:', '<img src="e1.png" />');
 
-		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
-		$this->assertNotContains(':)', $this->cb->getXSL());
+		$this->assertContains(':e1:', $this->cb->getXSL());
 	}
 
 	/**
-	* @testdox Template auto-update can be re-enabled by calling enableAutoUpdate()
-	* @depends test_Template_auto_update_can_be_disabled_by_calling_disableAutoUpdate
+	* @testdox Multiple emoticons can be created at once with addEmoticons()
 	*/
-	public function test_Template_auto_update_can_be_reenabled_by_calling_enableAutoUpdate()
+	public function testMultiple()
 	{
-		$this->cb->Emoticons->disableAutoUpdate();
-		$this->cb->Emoticons->enableAutoUpdate();
+		$this->cb->Emoticons->addEmoticons(array(
+			':e1:' => '<img src="e1.png" />',
+			':e2:' => '<img src="e2.png" />'
+		));
 
-		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
-		$this->assertContains(':)', $this->cb->getXSL());
+		$this->assertContains(':e1:', $this->cb->getXSL());
+		$this->assertContains(':e2:', $this->cb->getXSL());
 	}
 
 	/**
-	* @testdox Template update can be manually triggered by calling updateXSL()
-	* @depends test_Template_auto_update_can_be_disabled_by_calling_disableAutoUpdate
+	* @testdox getJSParser() returns the source of its Javascript parser
 	*/
-	public function test_Template_update_can_be_manually_triggered_by_calling_updateXSL()
-	{
-		$this->cb->Emoticons->disableAutoUpdate();
-		$this->cb->Emoticons->addEmoticon(':)', '<img src="smiley.png" />');
-		$this->cb->Emoticons->updateXSL();
-		$this->assertContains(':)', $this->cb->getXSL());
-	}
-
-	/**
-	* @test
-	*/
-	public function getJSParser_returns_the_source_of_its_Javascript_parser()
+	public function test_getJSParser_returns_the_source_of_its_Javascript_parser()
 	{
 		$this->assertStringEqualsFile(
 			__DIR__ . '/../../src/Plugins/EmoticonsParser.js',

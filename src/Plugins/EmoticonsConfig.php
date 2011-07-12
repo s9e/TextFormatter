@@ -19,11 +19,6 @@ class EmoticonsConfig extends PluginConfig
 	protected $tagName = 'E';
 
 	/**
-	* @var bool   Whether to update this plugin's XSL after each new addition
-	*/
-	protected $autoUpdate = true;
-
-	/**
 	* @var array
 	*/
 	protected $emoticons = array();
@@ -44,12 +39,24 @@ class EmoticonsConfig extends PluginConfig
 	*/
 	public function addEmoticon($code, $tpl)
 	{
-		$this->emoticons[$code] = $tpl;
+		$this->addEmoticons(array($code => $tpl));
+	}
 
-		if ($this->autoUpdate)
+	/**
+	* Add several emoticons at once
+	*
+	* Recommended for performance if you want to create several emoticons
+	*
+	* @param array $emoticons Emoticon's code as key and the corresponding template as value
+	*/
+	public function addEmoticons(array $emoticons)
+	{
+		foreach ($emoticons as $code => $tpl)
 		{
-			$this->updateXSL();
+			$this->emoticons[$code] = $tpl;
 		}
+
+		$this->updateXSL();
 	}
 
 	/**
@@ -74,7 +81,7 @@ class EmoticonsConfig extends PluginConfig
 	/**
 	* Commit to ConfigBuilder the XSL needed to render emoticons
 	*/
-	public function updateXSL()
+	protected function updateXSL()
 	{
 		$tpls = array();
 		foreach ($this->emoticons as $code => $tpl)
@@ -155,22 +162,6 @@ class EmoticonsConfig extends PluginConfig
 			->setAttribute('select', '.');
 
 		$this->cb->setTagXSL($this->tagName, $dom->saveXML($template));
-	}
-
-	/**
-	* Disable the automatic update of this plugin's XSL after each addition
-	*/
-	public function disableAutoUpdate()
-	{
-		$this->autoUpdate = false;
-	}
-
-	/**
-	* Enable the automatic update of this plugin's XSL after each addition
-	*/
-	public function enableAutoUpdate()
-	{
-		$this->autoUpdate = true;
 	}
 
 	//==========================================================================

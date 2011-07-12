@@ -570,10 +570,9 @@ s9e\TextFormatter\Tests\Plugins\EmoticonsConfig
  [x] tagName can be customized at loading time
  [x] getConfig() returns false if no emoticons were added
  [x] Emoticons template is automatically updated when emoticons are added
- [x] Template auto-update can be disabled by calling disableAutoUpdate()
- [x] Template auto-update can be re-enabled by calling enableAutoUpdate()
- [x] Template update can be manually triggered by calling updateXSL()
- [x] getJSParser returns the source of its Javascript parser
+ [x] A single emoticon can be created with addEmoticon()
+ [x] Multiple emoticons can be created at once with addEmoticons()
+ [x] getJSParser() returns the source of its Javascript parser
  [x] Emoticons code can contain single quotes
  [x] Emoticons code can contain double quotes
  [x] Emoticons code can contain single and double quotes at the same time
