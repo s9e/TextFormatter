@@ -338,7 +338,13 @@ s9e\TextFormatter\Tests\Parser
  [x] Plain text is returned within pt tags
  [x] Undefined attributes do not appear in XML
  [x] Overlapping tags are removed
- [x] Tags are sorted correctly
+ [x] Tag sorting: tags are sorted by pos, descending
+ [x] Tag sorting: zero-width tags are ordered after wider tags
+ [x] Tag sorting: zero-width end tags are ordered after zero-width start tags sharing the same position
+ [x] Tag sorting: zero-width end tags are ordered after zero-width self-closing tags sharing the same position
+ [x] Tag sorting: zero-width self-closing tags are ordered after zero-width start tags sharing the same position
+ [x] Tag sorting: tags sharing the same position and with a length greater than 0 are sorted by length ascending
+ [x] Tag sorting: if all else fails, tags are sorted by id descending
  [x] The number of regexp matches can be limited with extra matches ignored
  [x] The number of regexp matches can be limited with extra matches ignored and a warning
  [x] The number of regexp matches can be limited across multiple regexps with extra matches ignored

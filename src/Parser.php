@@ -1007,6 +1007,12 @@ class Parser
 			}
 
 			/**
+			* Cast 'pos' and 'len' to int
+			*/
+			$tag['pos'] = (int) $tag['pos'];
+			$tag['len'] = (int) $tag['len'];
+
+			/**
 			* Some methods expect those keys to always be set
 			*/
 			$tag += array(
@@ -1445,53 +1451,61 @@ class Parser
 	*/
 	protected function sortTags()
 	{
-		usort($this->unprocessedTags, array(__CLASS__, 'compareTags'));
+		usort($this->unprocessedTags, array(get_class($this), 'compareTags'));
 	}
 
 	/**
 	* sortTags() callback
 	*
+	* Unprocessed tags are stored as a stack, so their order is LIFO. We sort tags by position
+	* _descending_ so that they are processed in the order they appear in the text.
+	*
 	* @param  array   First tag to compare
 	* @param  array   Second tag to compare
 	* @return integer
 	*/
-	static public function compareTags(array $a, array $b)
+	static protected function compareTags(array $a, array $b)
 	{
+		// First we order by pos descending
 		if ($a['pos'] !== $b['pos'])
 		{
 			return $b['pos'] - $a['pos'];
 		}
 
-		// This block orders zero-width tags
+		if (!$a['len'] || !$b['len'])
+		{
+			// Zero-width end tags are ordered after zero-width start tags so that a pair that ends
+			// with a zero-width tag has the opportunity to be closed before another pair starts
+			// with a zero-width tag. For example, the pairs that would enclose the letters X and Y
+			// in the string "XY". Self-closing tags are ordered between end tags and start tags in
+			// an attempt to keep them out of tag pairs
+			if (!$a['len'] && !$b['len'])
+			{
+				$order = array(
+					self::END_TAG => 2,
+					self::SELF_CLOSING_TAG => 1,
+					self::START_TAG => 0
+				);
+				return $order[$a['type']] - $order[$b['type']];
+			}
+
+			// Here, we know that only one of $a or $b is a zero-width tags. Zero-width tags are
+			// ordered after wider tags so that they have a chance to be processed before the next
+			// character is consumed, which would force them to be skipped
+			return (!$a['len']) ? 1 : -1;
+		}
+
+		// Here we know that both tags start at the same position and have a length greater than 0.
+		// We sort tags by length ascending, so that the longest matches are processed first
 		if ($a['len'] !== $b['len'])
 		{
-			if (!$b['len'])
-			{
-				return -1;
-			}
-
-			if (!$a['len'])
-			{
-				return 1;
-			}
-			// @codeCoverageIgnoreStart
-		}
-		// @codeCoverageIgnoreEnd
-
-		if ($a['type'] !== $b['type'])
-		{
-			$order = array(
-				self::END_TAG => 2,
-				self::SELF_CLOSING_TAG => 1,
-				self::START_TAG => 0
-			);
-
-			return $order[$a['type']] - $order[$b['type']];
+			return ($a['len'] - $b['len']);
 		}
 
-		return ($a['type'] === self::END_TAG)
-		     ? ($a['id'] - $b['id'])
-		     : ($b['id'] - $a['id']);
+		// Finally, if the tags start at the same position and are the same length, sort them by id
+		// descending, which is our version of a stable sort (tags that were added first end up
+		// being processed first)
+		return $b['id'] - $a['id'];
 	}
 
 	/**

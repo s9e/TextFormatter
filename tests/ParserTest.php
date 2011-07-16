@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests;
 
 use DOMDocument,
+    ReflectionMethod,
     s9e\TextFormatter\Tests\Test,
     s9e\TextFormatter\Parser,
     s9e\TextFormatter\PluginConfig,
@@ -1759,77 +1760,176 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testTagsAreSortedCorrectly()
+	protected function assertTagsOrder(array $tags, array $expectedOrder)
 	{
-		$tagId = 0;
+		$r = new ReflectionMethod('s9e\\TextFormatter\\Parser', 'compareTags');
+		$r->setAccessible(true);
 
+		uasort($tags, function($a, $b) use ($r)
+		{
+			return $r->invokeArgs(null, array($a, $b));
+		});
+
+		$this->assertSame($expectedOrder, array_keys($tags));
+	}
+
+	/**
+	* @testdox Tag sorting: tags are sorted by pos, descending
+	*/
+	public function testSort1()
+	{
+		$tags = array();
+
+		foreach (array(2, 4, 3, 0) as $pos)
+		{
+			$tags[] = array(
+				'id'   => count($tags),
+				'name' => 'X',
+				'pos'  => $pos,
+				'len'  => 0,
+				'type' => Parser::SELF_CLOSING_TAG
+			);
+		}
+
+		$this->assertTagsOrder($tags, array(1, 2, 0, 3));
+	}
+
+	/**
+	* @testdox Tag sorting: zero-width tags are ordered after wider tags
+	*/
+	public function testSort2()
+	{
+		$tags = array();
+
+		foreach (array(0, 2) as $pos)
+		{
+			foreach (array(0, 1) as $len)
+			{
+				$tags[] = array(
+					'id'   => count($tags),
+					'name' => 'X',
+					'pos'  => $pos,
+					'len'  => $len,
+					'type' => Parser::SELF_CLOSING_TAG
+				);
+			}
+		}
+
+		$this->assertTagsOrder($tags, array(3, 2, 1, 0));
+	}
+
+	/**
+	* @testdox Tag sorting: zero-width end tags are ordered after zero-width start tags sharing the same position
+	*/
+	public function testSort3a()
+	{
 		$tags = array();
 
 		foreach (array(0, 1) as $pos)
 		{
-			// Create zero-width tags around the character
-			foreach (array('B', 'I') as $tagName)
+			foreach (array(Parser::START_TAG, Parser::END_TAG) as $type)
 			{
 				$tags[] = array(
-					'id'   => ++$tagId,
-					'name' => $tagName . $pos,
+					'id'   => count($tags),
+					'name' => 'X',
 					'pos'  => $pos,
 					'len'  => 0,
-					'type' => Parser::START_TAG
-				);
-
-				$tags[] = array(
-					'id'   => ++$tagId,
-					'name' => $tagName . $pos,
-					'pos'  => 1 + $pos,
-					'len'  => 0,
-					'type' => Parser::END_TAG
+					'type' => $type
 				);
 			}
+		}
 
-			// Add a self-closing tag that consumes the character
+		$this->assertTagsOrder($tags, array(2, 3, 0, 1));
+	}
+
+	/**
+	* @testdox Tag sorting: zero-width end tags are ordered after zero-width self-closing tags sharing the same position
+	*/
+	public function testSort3b()
+	{
+		$tags = array();
+
+		foreach (array(0, 1) as $pos)
+		{
+			foreach (array(Parser::SELF_CLOSING_TAG, Parser::END_TAG) as $type)
+			{
+				$tags[] = array(
+					'id'   => count($tags),
+					'name' => 'X',
+					'pos'  => $pos,
+					'len'  => 0,
+					'type' => $type
+				);
+			}
+		}
+
+		$this->assertTagsOrder($tags, array(2, 3, 0, 1));
+	}
+
+	/**
+	* @testdox Tag sorting: zero-width self-closing tags are ordered after zero-width start tags sharing the same position
+	*/
+	public function testSort3c()
+	{
+		$tags = array();
+
+		foreach (array(0, 1) as $pos)
+		{
+			foreach (array(Parser::START_TAG, Parser::SELF_CLOSING_TAG) as $type)
+			{
+				$tags[] = array(
+					'id'   => count($tags),
+					'name' => 'X',
+					'pos'  => $pos,
+					'len'  => 0,
+					'type' => $type
+				);
+			}
+		}
+
+		$this->assertTagsOrder($tags, array(2, 3, 0, 1));
+	}
+
+	/**
+	* @testdox Tag sorting: tags sharing the same position and with a length greater than 0 are sorted by length ascending
+	*/
+	public function testSort4()
+	{
+		$tags = array();
+
+		foreach (array(1, 3, 2) as $len)
+		{
 			$tags[] = array(
-				'id'   => ++$tagId,
-				'name' => 'E' . $pos,
-				'pos'  => $pos,
+				'id'   => count($tags),
+				'name' => 'X',
+				'pos'  => 0,
+				'len'  => $len,
+				'type' => Parser::SELF_CLOSING_TAG
+			);
+		}
+
+		$this->assertTagsOrder($tags, array(0, 2, 1));
+	}
+
+	/**
+	* @testdox Tag sorting: if all else fails, tags are sorted by id descending
+	*/
+	public function testSort5()
+	{
+		$tags = array();
+
+		foreach (array(1, 3, 2) as $id)
+		{
+			$tags[] = array(
+				'id'   => $id,
+				'name' => 'X',
+				'pos'  => 0,
 				'len'  => 1,
 				'type' => Parser::SELF_CLOSING_TAG
 			);
 		}
 
-		foreach (array(0, 1, 2) as $pos)
-		{
-			// Add a zero-width self-closing tag at given position
-			$tags[] = array(
-				'id'   => ++$tagId,
-				'name' => 'Z' . $pos,
-				'pos'  => $pos,
-				'len'  => 0,
-				'type' => Parser::SELF_CLOSING_TAG,
-			);
-		}
-
-		// sort the tags
-		usort($tags, array('s9e\\TextFormatter\\Parser', 'compareTags'));
-
-		// reverse the order to make it more readable (the sort method is designed for a stack,
-		// therefore it sorts tags in reverse order)
-		$tags = array_reverse($tags);
-
-		$result = '';
-		foreach ($tags as $tag)
-		{
-			$result .= '<'
-			         . (($tag['type'] === Parser::END_TAG) ? '/' : '')
-			         . $tag['name']
-			         . (($tag['type'] === Parser::SELF_CLOSING_TAG) ? '/' : '')
-			         . '>';
-		}
-
-		$this->assertSame(
-			'<Z0/><B0><I0><E0/></I0></B0><Z1/><B1><I1><E1/></I1></B1><Z2/>',
-			$result
-		);
+		$this->assertTagsOrder($tags, array(1, 2, 0));
 	}
 
 	public function testTheNumberOfRegexpMatchesCanBeLimitedWithExtraMatchesIgnored()
