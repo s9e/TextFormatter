@@ -750,8 +750,12 @@ class JSParserGenerator
 				unset($attrConf);
 			}
 
-			$tagConfig['allowedChildren'] = array_map('ord', str_split($tagConfig['allowedChildren'], 1));
-			$tagConfig['allowedDescendants'] = array_map('ord', str_split($tagConfig['allowedDescendants'], 1));
+			$tagConfig['allowedChildren'] = array_map(
+				'ord', str_split($tagConfig['allowedChildren'], 1)
+			);
+			$tagConfig['allowedDescendants'] = array_map(
+				'ord', str_split($tagConfig['allowedDescendants'], 1)
+			);
 		}
 		unset($tagConfig);
 
