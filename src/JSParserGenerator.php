@@ -14,9 +14,6 @@ use DOMDocument,
 /**
 * KNOWN LIMITATIONS:
 *
-* - when converting regexps, using the dot . inside of a of character class, e.g. [.] when the "s"
-*   modifier is set will result in an invalid regexp
-* - Unicode properties are not supported in regexps
 * - only a subset of all possible PHP callbacks have a Javascript port
 * - TextFormatter.js does not puny-encode IDNs
 * - TextFormatter.js does not resolve redirects
