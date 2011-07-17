@@ -1202,39 +1202,46 @@ s9e['TextFormatter'] = function(xsl)
 	*/
 	function compareTags(a, b)
 	{
+		// First we order by pos descending
 		if (a.pos !== b.pos)
 		{
 			return b.pos - a.pos;
 		}
 
-		// This block orders zero-width tags
+		if (!a.len || !b.len)
+		{
+			// Zero-width end tags are ordered after zero-width start tags so that a pair that ends
+			// with a zero-width tag has the opportunity to be closed before another pair starts
+			// with a zero-width tag. For example, the pairs that would enclose the letters X and Y
+			// in the string "XY". Self-closing tags are ordered between end tags and start tags in
+			// an attempt to keep them out of tag pairs
+			if (!a.len && !b.len)
+			{
+				var order = {};
+				order[END_TAG] = 2;
+				order[SELF_CLOSING_TAG] = 1;
+				order[START_TAG] = 0;
+
+				return order[a.type] - order[b.type];
+			}
+
+			// Here, we know that only one of a or b is a zero-width tags. Zero-width tags are
+			// ordered after wider tags so that they have a chance to be processed before the next
+			// character is consumed, which would force them to be skipped
+			return (!a.len) ? 1 : -1;
+		}
+
+		// Here we know that both tags start at the same position and have a length greater than 0.
+		// We sort tags by length ascending, so that the longest matches are processed first
 		if (a.len !== b.len)
 		{
-			if (!b.len)
-			{
-				return -1;
-			}
-
-			if (!a.len)
-			{
-				return 1;
-			}
+			return (a.len - b.len);
 		}
 
-		if (a.type !== b.type)
-		{
-			var order = {};
-
-			order[END_TAG] = 2;
-			order[SELF_CLOSING_TAG] = 1;
-			order[START_TAG] = 0;
-
-			return order[a.type] - order[b.type];
-		}
-
-		return (a.type === END_TAG)
-		     ? (a.id - b.id)
-		     : (b.id - a.id);
+		// Finally, if the tags start at the same position and are the same length, sort them by id
+		// descending, which is our version of a stable sort (tags that were added first end up
+		// being processed first)
+		return b.id - a.id;
 	}
 
 	function processCurrentTagAttributes()
