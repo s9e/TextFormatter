@@ -2501,4 +2501,56 @@ class ConfigBuilderTest extends Test
 		$this->assertArrayNotHasKey('B', $tagsConfig);
 		$this->assertArrayHasKey('C', $tagsConfig);
 	}
+
+	/**
+	* @testdox addRulesFromHTML5Specs(array('rootElement' => 'div')) prevents <li> to be used at root
+	*/
+	public function testAddRulesSetsDisallowAsRoot()
+	{
+		$this->cb->addTag('DIV', array('template' => '<div><xsl:apply-templates/></div>'));
+		$this->cb->addTag('LI',  array('template' => '<li><xsl:apply-templates/></li>'));
+
+		$this->cb->addRulesFromHTML5Specs(array('rootElement' => 'div'));
+
+		$this->assertArrayMatches(
+			array(
+				'DIV' => array(
+					'disallowAsRoot' => false
+				),
+				'LI' => array(
+					'disallowAsRoot' => true
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox addRulesFromHTML5Specs(array('rootElement' => 'a')) disables tags that contain a <a>
+	*/
+	public function testAddRulesDisablesDeniedDescendants()
+	{
+		$this->cb->addTag('A', array('template' => '<a><xsl:apply-templates/></a>'));
+
+		$this->cb->addRulesFromHTML5Specs(array('rootElement' => 'a'));
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'disable' => true
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox generateRulesFromHTML5Specs(array('rootElement' => 'xxx')) throws an exception
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Unknown HTML element 'xxx'
+	*/
+	public function testGenerateHTML5RulesThrowsAnExceptionOnUnknownRootElement()
+	{
+		$this->cb->generateRulesFromHTML5Specs(array('rootElement' => 'xxx'));
+	}
 }

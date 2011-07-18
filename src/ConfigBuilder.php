@@ -1917,10 +1917,12 @@ class ConfigBuilder
 
 	/**
 	* Add rules generated from the HTML5 specs
+	*
+	* @param array $options Array of option settings, see generateRulesFromHTML5Specs()
 	*/
-	public function addRulesFromHTML5Specs()
+	public function addRulesFromHTML5Specs(array $options = array())
 	{
-		foreach ($this->generateRulesFromHTML5Specs() as $tagName => $tagOptions)
+		foreach ($this->generateRulesFromHTML5Specs($options) as $tagName => $tagOptions)
 		{
 			$this->setTagOptions($tagName, $tagOptions);
 		}
@@ -1940,22 +1942,49 @@ class ConfigBuilder
 	*
 	* @link http://dev.w3.org/html5/spec/content-models.html#content-models
 	* @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
-	* @see  ../../scripts/patchConfigBuilder.php
+	* @see  ../scripts/patchConfigBuilder.php
 	*
+	* Possible options:
+	*
+	*  rootElement: name of the HTML element used as the root of the rendered text
+	*
+	* @param array $options Array of option settings
 	* @return array
 	*/
-	public function generateRulesFromHTML5Specs()
+	public function generateRulesFromHTML5Specs(array $options = array())
 	{
-		$tagsInfo = array();
+		$tagsConfig = $this->tags;
 
-		foreach ($this->tags as $tagName => $tag)
+		if (isset($options['rootElement']))
+		{
+			if (!isset($this->htmlElements[$options['rootElement']]))
+			{
+				throw new InvalidArgumentException("Unknown HTML element '" . $options['rootElement'] . "'");
+			}
+
+			/**
+			* Create a fake tag for our root element. "fake-root" is not a valid tag name so it
+			* shouldn't conflict with any existing tag
+			*/
+			$rootTag = 'fake-root';
+
+			$tagsConfig[$rootTag]['xsl'] =
+				'<xsl:template match="' . $rootTag . '">
+					<' . $options['rootElement'] . '>
+						<xsl:apply-templates />
+					</' . $options['rootElement'] . '>
+				</xsl:template>';
+		}
+
+		$tagsInfo = array();
+		foreach ($tagsConfig as $tagName => $tagConfig)
 		{
 			$tagInfo = array(
 				'lastChildren' => array()
 			);
 
 			$tagInfo['root'] = simplexml_load_string(
-				'<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $tag['xsl'] . '</xsl:stylesheet>'
+				'<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $tagConfig['xsl'] . '</xsl:stylesheet>'
 			);
 
 			/**
@@ -2126,6 +2155,57 @@ class ConfigBuilder
 		}
 
 		/**
+		* Sets the options related to the root element
+		*/
+		if (isset($options['rootElement']))
+		{
+			/**
+			* Tags that cannot be a child of our root tag gets the disallowAsRoot option
+			*/
+			if (isset($tagsOptions[$rootTag]['rules']['denyChild']))
+			{
+				foreach ($tagsOptions[$rootTag]['rules']['denyChild'] as $tagName)
+				{
+					$tagsOptions[$tagName]['disallowAsRoot'] = true;
+				}
+			}
+
+			/**
+			* Tags that cannot be a descendant of our root tag gets the disable option
+			*/
+			if (isset($tagsOptions[$rootTag]['rules']['denyDescendant']))
+			{
+				foreach ($tagsOptions[$rootTag]['rules']['denyDescendant'] as $tagName)
+				{
+					$tagsOptions[$tagName]['disable'] = true;
+				}
+			}
+
+			/**
+			* Now remove any mention of our root tag from the return array
+			*/
+			unset($tagsOptions[$rootTag]);
+
+			foreach ($tagsOptions as &$tagOptions)
+			{
+				if (isset($tagOptions['rules']))
+				{
+					foreach ($tagOptions['rules'] as $rule => $targets)
+					{
+						/**
+						* First we flip the target so we can unset the fake tag by key, then we
+						* flip them back, which rearranges their keys as a side-effect
+						*/
+						$targets = array_flip($targets);
+						unset($targets[$rootTag]);
+						$tagOptions['rules'][$rule] = array_flip($targets);
+					}
+				}
+			}
+			unset($tagOptions);
+		}
+
+		/**
 		* Deduplicate rules and resolve conflicting rules
 		*/
 		$precedence = array(
@@ -2136,12 +2216,6 @@ class ConfigBuilder
 
 		foreach ($tagsOptions as $tagName => &$tagOptions)
 		{
-			if (empty($tagOptions['rules']))
-			{
-				unset($tagOptions['rules']);
-				continue;
-			}
-
 			// flip the rules targets
 			$tagOptions['rules'] = array_map('array_flip', $tagOptions['rules']);
 

@@ -150,6 +150,9 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] addRulesFromHTML5Specs() creates rules based on HTML5 specs
  [x] addRulesFromHTML5Specs() sets options based on HTML5 specs
  [x] Tags with option 'disable' are not returned by getTagsConfig(true)
+ [x] addRulesFromHTML5Specs(array('rootElement' => 'div')) prevents <li> to be used at root
+ [x] addRulesFromHTML5Specs(array('rootElement' => 'a')) disables tags that contain a <a>
+ [x] generateRulesFromHTML5Specs(array('rootElement' => 'xxx')) throws an exception
 
 s9e\TextFormatter\Tests\JSParserGenerator
  [x] convertRegexp() can convert plain regexps
