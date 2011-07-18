@@ -53,6 +53,8 @@ class ConfigBuilder
 	* @var array  Default options applied to tags, can be overriden by options passed by plugins
 	*/
 	public $defaultTagOptions = array(
+		'disable'        => false,
+		'disallowAsRoot' => false,
 		'tagLimit'     => 100,
 		'nestingLimit' => 10,
 		'defaultChildRule'      => 'allow',
@@ -1078,33 +1080,40 @@ class ConfigBuilder
 
 		$n = -1;
 
-		foreach ($tagsConfig as $tagName => &$tag)
+		foreach ($tagsConfig as $tagName => &$tagConfig)
 		{
-			$tag['n'] = ++$n;
-
 			if ($reduce)
 			{
+				if ($tagConfig['disable'])
+				{
+					// This tag is disabled, remove it
+					unset($tagsConfig[$tagName]);
+					continue;
+				}
+
+				$tagConfig['n'] = ++$n;
+
 				/**
 				* Build the list of allowed children and descendants.
 				* Note: $tagsConfig is already sorted, so we don't have to sort the list
 				*/
-				$tag['allowedChildren'] = array_fill_keys(
+				$tagConfig['allowedChildren'] = array_fill_keys(
 					array_keys($tagsConfig),
-					($tag['defaultChildRule'] === 'allow') ? '1' : '0'
+					($tagConfig['defaultChildRule'] === 'allow') ? '1' : '0'
 				);
-				$tag['allowedDescendants'] = array_fill_keys(
+				$tagConfig['allowedDescendants'] = array_fill_keys(
 					array_keys($tagsConfig),
-					($tag['defaultDescendantRule'] === 'allow') ? '1' : '0'
+					($tagConfig['defaultDescendantRule'] === 'allow') ? '1' : '0'
 				);
 
-				if (isset($tag['rules']))
+				if (isset($tagConfig['rules']))
 				{
 					/**
 					* Sort the rules so that "deny" overwrites "allow"
 					*/
-					ksort($tag['rules']);
+					ksort($tagConfig['rules']);
 
-					foreach ($tag['rules'] as $action => &$targets)
+					foreach ($tagConfig['rules'] as $action => &$targets)
 					{
 						switch ($action)
 						{
@@ -1121,14 +1130,14 @@ class ConfigBuilder
 								foreach ($targets as $target)
 								{
 									// make sure the target really exists
-									if (isset($tag[$k][$target]))
+									if (isset($tagConfig[$k][$target]))
 									{
-										$tag[$k][$target] = $v;
+										$tagConfig[$k][$target] = $v;
 									}
 								}
 
 								// We don't need those anymore
-								unset($tag['rules'][$action]);
+								unset($tagConfig['rules'][$action]);
 								break;
 
 							case 'requireParent':
@@ -1150,27 +1159,36 @@ class ConfigBuilder
 					/**
 					* Remove rules with no targets
 					*/
-					$tag['rules'] = array_filter($tag['rules']);
+					$tagConfig['rules'] = array_filter($tagConfig['rules']);
 
-					if (empty($tag['rules']))
+					if (empty($tagConfig['rules']))
 					{
-						unset($tag['rules']);
+						unset($tagConfig['rules']);
 					}
 				}
 
-				unset($tag['defaultChildRule']);
-				unset($tag['defaultDescendantRule']);
+				unset($tagConfig['defaultChildRule']);
+				unset($tagConfig['defaultDescendantRule']);
+				unset($tagConfig['disable']);
+
+				/**
+				* We only need to store this option is it's true
+				*/
+				if (!$tagConfig['disallowAsRoot'])
+				{
+					unset($tagConfig['disallowAsRoot']);
+				}
 
 				/**
 				* We don't need the tag's template
 				*/
-				unset($tag['xsl']);
+				unset($tagConfig['xsl']);
 
 				/**
 				* Generate a proper (binary) bitfield
 				*/
-				$tag['allowedChildren'] = self::bin2raw($tag['allowedChildren']);
-				$tag['allowedDescendants'] = self::bin2raw($tag['allowedDescendants']);
+				$tagConfig['allowedChildren'] = self::bin2raw($tagConfig['allowedChildren']);
+				$tagConfig['allowedDescendants'] = self::bin2raw($tagConfig['allowedDescendants']);
 
 				/**
 				* Children are descendants of current node, so we apply denyDescendant rules to them
@@ -1179,11 +1197,12 @@ class ConfigBuilder
 				* @todo This largely overlaps with the replication of *Descendant rules into *Child
 				*       rules in addTagRule() and should be looked into at some point
 				*/
-				$tag['allowedChildren'] &= $tag['allowedDescendants'];
+				$tagConfig['allowedChildren'] &= $tagConfig['allowedDescendants'];
 			}
 
-			ksort($tag);
+			ksort($tagConfig);
 		}
+		unset($tagConfig);
 
 		return $tagsConfig;
 	}
@@ -2117,11 +2136,10 @@ class ConfigBuilder
 
 		foreach ($tagsOptions as $tagName => &$tagOptions)
 		{
-			if (!isset($tagOptions['rules']))
+			if (empty($tagOptions['rules']))
 			{
-				// @codeCoverageIgnoreStart
+				unset($tagOptions['rules']);
 				continue;
-				// @codeCoverageIgnoreEnd
 			}
 
 			// flip the rules targets

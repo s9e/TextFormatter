@@ -2485,4 +2485,20 @@ class ConfigBuilderTest extends Test
 			$this->cb->getTagsConfig()
 		);
 	}
+
+	/**
+	* @testdox Tags with option 'disable' are not returned by getTagsConfig(true)
+	*/
+	public function testDisabledTagsDoNotAppearInConfig()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addTag('B', array('disable' => true));
+		$this->cb->addTag('C');
+
+		$tagsConfig = $this->cb->getTagsConfig(true);
+
+		$this->assertArrayHasKey('A', $tagsConfig);
+		$this->assertArrayNotHasKey('B', $tagsConfig);
+		$this->assertArrayHasKey('C', $tagsConfig);
+	}
 }

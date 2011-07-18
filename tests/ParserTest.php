@@ -2374,7 +2374,7 @@ class ParserTest extends Test
 	}
 
 	//==========================================================================
-	// Rules
+	// Rules / content models
 	//==========================================================================
 
 	/**
@@ -2885,6 +2885,42 @@ class ParserTest extends Test
 					)
 				)
 			)
+		);
+	}
+
+	/**
+	* @testdox Tags with option 'disallowAsRoot' are ignored if they don't have a parent
+	*/
+	public function testDisallowedAsRoot()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b', array('disallowAsRoot' => true));
+
+		$this->assertParsing(
+			'[b]stuff[/b]',
+			'<pt>[b]stuff[/b]</pt>',
+			array(
+				'debug' => array(
+					array(
+						'msg'     => 'Tag %s is not allowed in this context',
+						'params'  => array('B')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @testdox Tags with option 'disallowAsRoot' are processed if they do have a parent
+	*/
+	public function testAllowedAsRoot()
+	{
+		$this->cb->BBCodes->addBBCode('a');
+		$this->cb->BBCodes->addBBCode('b', array('disallowAsRoot' => true));
+
+		$this->assertParsing(
+			'[a][b]stuff[/b][/a]',
+			'<rt><A><st>[a]</st><B><st>[b]</st>stuff<et>[/b]</et></B><et>[/a]</et></A></rt>'
 		);
 	}
 

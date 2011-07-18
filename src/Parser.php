@@ -1051,6 +1051,17 @@ class Parser
 			'allowedDescendants' => str_repeat("\xff", ceil(count($this->tagsConfig) / 8))
 		);
 
+		foreach ($this->tagsConfig as $tagConfig)
+		{
+			if (!empty($tagConfig['disallowAsRoot']))
+			{
+				$n = $tagConfig['n'];
+
+				$this->context['allowedChildren'][$n >> 3]
+					= $this->context['allowedChildren'][$n >> 3] ^ chr(1 << ($n & 7));
+			}
+		}
+
 		/**
 		* Seed the tag counters with 0 for each tag
 		*/
