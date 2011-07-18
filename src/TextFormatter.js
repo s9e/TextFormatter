@@ -379,13 +379,19 @@ s9e['TextFormatter'] = function(xsl)
 				{
 					/**
 					* Two consecutive backslashes[1] are replaced with a single backslash.
-					* A dollar sign followed by digits and preceded by a backslash[2] is preserved.
+					* A dollar sign preceded by a backslash[2] and followed an optional curly
+					* bracket followed by digits is preserved.
 					* Otherwise, the corresponding match[3] is used.
 					*/
 					return attrConf.replaceWith.replace(
-						/(\\\\)|(\\)?\$([0-9]+)/g,
+						/(\\\\)|(\\)?\$([0-9]+|\{[0-9]+\})/g,
 						function (str, p1, p2, p3)
 						{
+							if (p3)
+							{
+								p3 = p3.replace(/[\{\}]/g, '');
+							}
+
 							return (p1) ? '\\' : ((p2) ? '$' + p3 : match[p3]);
 						}
 					);

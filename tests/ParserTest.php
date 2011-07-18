@@ -1305,6 +1305,18 @@ class ParserTest extends Test
 		);
 	}
 
+	/**
+	* @testdox Regexp filter's replaceWith option can use the ${1} syntax
+	*/
+	public function testRegexpFilterReplaceWithCurlyBrackets()
+	{
+		$this->assertAttributeIsValid(
+			array('type' => 'regexp', 'regexp' => '#^(L)(R)$#D', 'replaceWith' => '${2}${1}'),
+			'LR',
+			'RL'
+		);
+	}
+
 	public function testEmailFilterAcceptsValidEmails()
 	{
 		$this->assertAttributeIsValid('email', 'example@example.com');
