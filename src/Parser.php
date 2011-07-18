@@ -431,12 +431,12 @@ class Parser
 			case 'identifier':
 			case 'id':
 				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
-					'options' => array('regexp' => '#^[a-zA-Z0-9-_]+$#D')
+					'options' => array('regexp' => '#^[A-Za-z0-9\\-_]+$#D')
 				));
 
 			case 'simpletext':
 				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
-					'options' => array('regexp' => '#^[a-zA-Z0-9\\-+.,_ ]+$#D')
+					'options' => array('regexp' => '#^[A-Za-z0-9\\-+.,_ ]+$#D')
 				));
 
 			case 'text':
