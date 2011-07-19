@@ -164,9 +164,11 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] convertRegexp() can convert regexps with capturing subpatterns
  [x] convertRegexp() can convert regexps with non-capturing subpatterns
  [x] convertRegexp() can convert regexps with non-capturing subpatterns with a quantifier
+ [x] convertRegexp() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
  [x] convertRegexp() throws a RuntimeException on options (?i)
  [x] convertRegexp() throws a RuntimeException on subpattern options (?i:)
  [x] convertRegexp() can convert regexps with character classes with a quantifier
+ [x] convertRegexp() converts greedy quantifiers to normal quantifiers in character classes
  [x] convertRegexp() replaces \pL with the full character range in character classes
  [x] convertRegexp() replaces \p{L} with the full character range in character classes
  [x] convertRegexp() replaces \pL outside of character classes with a character class containing the full character range

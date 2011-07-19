@@ -35,14 +35,4 @@ class AutolinkConfig extends PluginConfig
 	{
 		return file_get_contents(__DIR__ . '/AutolinkParser.js');
 	}
-
-	public function getJSConfig()
-	{
-		$config = $this->getConfig();
-
-		// Javascript regexps don't support PCRE's possessive quantifier
-		$config['regexp'] = str_replace(')++', ')+', $config['regexp']);
-
-		return $config;
-	}
 }

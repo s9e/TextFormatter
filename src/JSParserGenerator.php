@@ -804,7 +804,7 @@ class JSParserGenerator
 
 				case 'capturingSubpatternEnd':
 				case 'nonCapturingSubpatternEnd':
-					$regexp .= ')' . $tok['quantifiers'];
+					$regexp .= ')' . substr($tok['quantifiers'], 0, 1);
 					break;
 
 				case 'characterClass':
@@ -813,7 +813,7 @@ class JSParserGenerator
 						$tok['content'],
 						true
 					);
-					$regexp .= ']' . $tok['quantifiers'];
+					$regexp .= ']' . substr($tok['quantifiers'], 0, 1);
 					break;
 
 				case 'lookaheadAssertionStart':

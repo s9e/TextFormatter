@@ -117,6 +117,17 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox convertRegexp() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
+	*/
+	public function testConvertRegexp5b()
+	{
+		$this->assertEquals(
+			'/f(?:o)+(?:o)*/',
+			JSParserGenerator::convertRegexp('#f(?:o)++(?:o)*+#')
+		);
+	}
+
+	/**
 	* @testdox convertRegexp() throws a RuntimeException on options (?i)
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Regexp options are not supported
@@ -144,6 +155,17 @@ class JSParserGeneratorTest extends Test
 		$this->assertEquals(
 			'/[a-z]+/',
 			JSParserGenerator::convertRegexp('#[a-z]+#')
+		);
+	}
+
+	/**
+	* @testdox convertRegexp() converts greedy quantifiers to normal quantifiers in character classes
+	*/
+	public function testConvertRegexp6b()
+	{
+		$this->assertEquals(
+			'/[a-z]+[a-z]*/',
+			JSParserGenerator::convertRegexp('/[a-z]++[a-z]*+/')
 		);
 	}
 
