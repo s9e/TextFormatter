@@ -1250,6 +1250,38 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox ConfigBuilder::parseRegexp() parses non-capturing subpatterns with atomic grouping
+	*/
+	public function testCanParseRegexps8b()
+	{
+		$this->assertEquals(
+			array(
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?>x+)',
+				'tokens'    => array(
+					array(
+						'pos' => 0,
+						'len' => 3,
+						'type' => 'nonCapturingSubpatternStart',
+						'subtype' => 'atomic',
+						'endToken' => 1
+					),
+					array(
+						'pos' => 5,
+						'len' => 1,
+						'type' => 'nonCapturingSubpatternEnd',
+						'quantifiers' => ''
+					)
+				)
+			),
+			ConfigBuilder::parseRegexp(
+				'#(?>x+)#'
+			)
+		);
+	}
+
+	/**
 	* @testdox ConfigBuilder::parseRegexp() parses non-capturing subpatterns with quantifiers
 	*/
 	public function testCanParseRegexps9()

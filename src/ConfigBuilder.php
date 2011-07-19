@@ -1464,6 +1464,20 @@ class ConfigBuilder
 
 						$pos += strlen($m[0]);
 					}
+					elseif (preg_match('#\\(\\?>#iA', $regexp, $m, 0, $pos))
+					{
+						/**
+						* This is a non-capturing subpattern with atomic grouping (?>x+)
+						*/
+						$tok = array(
+							'pos'     => $pos,
+							'len'     => strlen($m[0]),
+							'type'    => 'nonCapturingSubpatternStart',
+							'subtype' => 'atomic'
+						);
+
+						$pos += strlen($m[0]);
+					}
 					elseif (preg_match('#\\(\\?(<?[!=])#A', $regexp, $m, 0, $pos))
 					{
 						/**

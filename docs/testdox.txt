@@ -96,6 +96,7 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] ConfigBuilder::parseRegexp() correctly parses escaped brackets
  [x] ConfigBuilder::parseRegexp() correctly parses escaped parentheses
  [x] ConfigBuilder::parseRegexp() parses non-capturing subpatterns
+ [x] ConfigBuilder::parseRegexp() parses non-capturing subpatterns with atomic grouping
  [x] ConfigBuilder::parseRegexp() parses non-capturing subpatterns with quantifiers
  [x] ConfigBuilder::parseRegexp() parses non-capturing subpatterns with options
  [x] ConfigBuilder::parseRegexp() parses option settings
