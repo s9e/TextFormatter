@@ -67,7 +67,7 @@ class BBCodesConfig extends PluginConfig
 
 		return array(
 			'bbcodesConfig' => $this->bbcodesConfig,
-			'regexp'        => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#i'
+			'regexp'        => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		);
 	}
 
