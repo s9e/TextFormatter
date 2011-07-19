@@ -32,11 +32,9 @@ s9e['TextFormatter'] = function(xsl)
 		SELF_CLOSING_TAG = 3,
 
 		/** @const */
-		TRIM_CHARLIST = " \n\r\t\0\x0B",
+		rtrimRegExp = /[ \n\r\t\0\x0B]*$/,
 		/** @const */
-		rtrimRegExp = new RegExp('[' + TRIM_CHARLIST + ']*$'),
-		/** @const */
-		ltrimRegExp = new RegExp('^[' + TRIM_CHARLIST + ']*'),
+		ltrimRegExp = /^[ \n\r\t\0\x0B]*/,
 
 		/** @type {!Object} */
 		_log,
@@ -635,10 +633,8 @@ s9e['TextFormatter'] = function(xsl)
 		}
 	}
 
-	function executePluginRegexp(pluginName)
+	function executePluginRegexp(pluginName, pluginConfig)
 	{
-		var pluginConfig = pluginsConfig[pluginName];
-
 		/**
 		* Some plugins have several regexps in an array, others have a single regexp as a
 		* string. We convert the latter to an array so that we can iterate over it.
@@ -730,7 +726,7 @@ s9e['TextFormatter'] = function(xsl)
 
 			if (pluginConfig.regexp)
 			{
-				matches = executePluginRegexp(pluginName);
+				matches = executePluginRegexp(pluginName, pluginConfig);
 
 				if (matches === false)
 				{
