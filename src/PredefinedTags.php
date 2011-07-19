@@ -579,9 +579,6 @@ EOT;
 		);
 	}
 
-	/**
-	* @todo allow/deny the appropriate tags
-	*/
 	public function addCITE()
 	{
 		$this->cb->addTag('CITE');
@@ -595,9 +592,6 @@ EOT;
 		$this->cb->setTagTemplate('ACRONYM', '<acronym title="{@title}"><xsl:apply-templates /></acronym>');
 	}
 
-	/**
-	* @todo allow/deny the appropriate tags
-	*/
 	public function addH1()
 	{
 		$this->cb->addTag('H1');
