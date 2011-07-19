@@ -45,8 +45,6 @@ s9e['TextFormatter'] = function(xsl)
 		filtersConfig = {/* DO NOT EDIT*/},
 		/** @const @type {!Object} */
 		pluginsConfig = {/* DO NOT EDIT*/},
-		/** @const @type {!Object.<string, function(!string, !Object):Array>} */
-		pluginParsers = {/* DO NOT EDIT*/},
 		/** @const @type {!Object.<string, function>} */
 		callbacks = {/* DO NOT EDIT*/},
 
@@ -734,7 +732,7 @@ s9e['TextFormatter'] = function(xsl)
 				}
 			}
 
-			var tags = pluginParsers[pluginName](text, matches);
+			var tags = pluginConfig.__parser(text, matches);
 
 			tags.forEach(
 				/**

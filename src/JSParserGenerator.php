@@ -559,16 +559,13 @@ class JSParserGenerator
 
 		foreach ($this->cb->getJSPlugins() as $pluginName => $plugin)
 		{
-			$config = self::encodeConfig(
+			$plugin['config']['__parser'] = 'function(text,matches){/** @const */var config=pluginsConfig["' . $pluginName . '"];' . $plugin['parser'] . '}';
+
+			$plugin['meta']['isRawJS'][] = array('__parser');
+
+			$plugins[$pluginName] = self::encodeConfig(
 				$plugin['config'],
 				$plugin['meta']
-			);
-
-			$parser = 'function(text,matches){/** @const */var config=pluginsConfig["' . $pluginName . '"];' . $plugin['parser'] . '}';
-
-			$plugins[$pluginName] = array(
-				'config' => $config,
-				'parser' => $parser
 			);
 		}
 
@@ -577,24 +574,16 @@ class JSParserGenerator
 
 	protected function injectPlugins()
 	{
-		$pluginParsers = array();
-		$pluginsConfig = array();
+		$plugins = array();
 
-		foreach ($this->getPlugins() as $pluginName => $plugin)
+		foreach ($this->getPlugins() as $pluginName => $pluginJS)
 		{
-			$pluginsConfig[] = json_encode($pluginName) . ':' . $plugin['config'];
-			$pluginParsers[] = json_encode($pluginName) . ':' . $plugin['parser'];
+			$plugins[] = json_encode($pluginName) . ':' . $pluginJS;
 		}
 
 		$this->src = str_replace(
 			'pluginsConfig = {/* DO NOT EDIT*/}',
-			'pluginsConfig = {' . implode(',', $pluginsConfig) . '}',
-			$this->src
-		);
-
-		$this->src = str_replace(
-			'pluginParsers = {/* DO NOT EDIT*/}',
-			'pluginParsers = {' . implode(',', $pluginParsers) . '}',
+			'pluginsConfig = {' . implode(',', $plugins) . '}',
 			$this->src
 		);
 	}
