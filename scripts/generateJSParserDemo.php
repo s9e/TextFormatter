@@ -22,9 +22,6 @@ $cb->BBCodes->addBBCode('CODE', array(
 	'defaultDescendantRule' => 'deny'
 ));
 
-// Force YouTube vids to autoplay
-$cb->setTagAttributeOption('YOUTUBE', 'content', 'replaceWith', '$1&amp;autoplay=1');
-
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
 $cb->Censor->addWord('apple', 'banana');
