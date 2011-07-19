@@ -42,7 +42,7 @@ class WittyPantsParser extends PluginParser
 				'name'  => $tagName,
 				'len'   => 1,
 				'attrs' => array(
-					$attrName => $replacements['quotation'][$m[1][0]][0]
+					$attrName => $replacements['quotation'][$m[0][0][0]][0]
 				)
 			);
 
@@ -53,7 +53,7 @@ class WittyPantsParser extends PluginParser
 				'name'  => $tagName,
 				'len'   => 1,
 				'attrs' => array(
-					$attrName => $replacements['quotation'][$m[1][0]][1]
+					$attrName => $replacements['quotation'][$m[0][0][0]][1]
 				),
 				'requires' => array(count($tags) - 1)
 			);

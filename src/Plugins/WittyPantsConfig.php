@@ -46,7 +46,7 @@ class WittyPantsConfig extends PluginConfig
 
 			'regexp' => array(
 				'singletons' => '#(?:---?|\\.\\.\\.)#S',
-				'quotation'  => '#(?<![0-9\\pL])(["\'])(?:.+?)\\1(?![0-9\\pL])#Su',
+				'quotation'  => '#(?<![0-9\\pL])(?:"[^"]+"|\'[^\']+\')(?![0-9\\pL])#Su',
 				'symbols'    => '#\\((?:tm|r|c)\\)#i',
 				/**
 				* Here, we use a non-capturing subpattern rather than a lookbehind assertion because
