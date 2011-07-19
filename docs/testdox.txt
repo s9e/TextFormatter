@@ -700,7 +700,9 @@ s9e\TextFormatter\Tests\Plugins\WittyPantsParser
  [x] Can use a custom tagName
  [x] Can use a custom attrName
  [x] Single quotes enclosing text with no line break are converted to quotation marks
+ [x] A pair of double quotes in a pair of single quotes are converted to quotation marks
  [x] Double quotes enclosing text with no line break are converted to quotation marks
+ [x] A pair of single quotes in a pair of double quotes are converted to quotation marks
  [x] Three consecutive dots are converted to an ellipsis
  [x] Two consecutive hypens are converted to an en dash
  [x] Three consecutive hypens are converted to an em dash

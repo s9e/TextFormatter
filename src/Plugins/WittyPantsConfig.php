@@ -46,7 +46,8 @@ class WittyPantsConfig extends PluginConfig
 
 			'regexp' => array(
 				'singletons' => '#(?:---?|\\.\\.\\.)#S',
-				'quotation'  => '#(?<![0-9\\pL])(?:"[^"]+"|\'[^\']+\')(?![0-9\\pL])#Su',
+				'quotationSingle' => "#(?<![0-9\\pL])'[^']+'(?![0-9\\pL])#u",
+				'quotationDouble' => '#(?<![0-9\\pL])"[^"]+"(?![0-9\\pL])#u',
 				'symbols'    => '#\\((?:tm|r|c)\\)#i',
 				/**
 				* Here, we use a non-capturing subpattern rather than a lookbehind assertion because
@@ -90,12 +91,6 @@ class WittyPantsConfig extends PluginConfig
 	{
 		$config = $this->getConfig();
 
-		unset($config['regexp']['quotation']);
-
-		/**
-		* Need to make one regexp for each otherwise "'xxx'" wouldn't match because the first
-		* character would need to be consumed twice
-		*/
 		$config['regexp']['quotationSingle']
 			= "#(?:^|\\W)'(?:.+?)'(?!\\w)#";
 

@@ -33,7 +33,7 @@ class WittyPantsParser extends PluginParser
 			);
 		}
 
-		foreach ($matches['quotation'] as $m)
+		foreach (array_merge($matches['quotationSingle'], $matches['quotationDouble']) as $m)
 		{
 			// left character
 			$tags[] = array(

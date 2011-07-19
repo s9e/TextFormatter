@@ -48,12 +48,30 @@ class WittyPantsParserTest extends Test
 		);
 	}
 
+	public function testAPairOfDoubleQuotesInAPairOfSingleQuotesAreConvertedToQuotationMarks()
+	{
+		$this->cb->loadPlugin('WittyPants');
+		$this->assertRendering(
+			"\"'Good morning, Frank,' greeted HAL.\" is how the book starts.",
+			"“‘Good morning, Frank,’ greeted HAL.” is how the book starts."
+		);
+	}
+
 	public function testDoubleQuotesEnclosingTextWithNoLineBreakAreConvertedToQuotationMarks()
 	{
 		$this->cb->loadPlugin('WittyPants');
 		$this->assertRendering(
 			'"Good morning, Frank," greeted HAL.',
 			'“Good morning, Frank,” greeted HAL.'
+		);
+	}
+
+	public function testAPairOfSingleQuotesInAPairOfDoubleQuotesAreConvertedToQuotationMarks()
+	{
+		$this->cb->loadPlugin('WittyPants');
+		$this->assertRendering(
+			'\'"Good morning, Frank," greeted HAL.\' is how the book starts.',
+			'‘“Good morning, Frank,” greeted HAL.’ is how the book starts.'
 		);
 	}
 
