@@ -788,7 +788,7 @@ class JSParserGeneratorTest extends Test
 		$jsParser = $this->jspg->get();
 
 		$this->assertContains(
-			'__parser:function(',
+			'parser:function(',
 			$jsParser
 		);
 	}

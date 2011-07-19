@@ -727,7 +727,7 @@ s9e['TextFormatter'] = function(xsl)
 				}
 			}
 
-			var tags = pluginConfig.__parser(text, matches);
+			var tags = pluginConfig.parser(text, matches);
 
 			tags.forEach(
 				/**

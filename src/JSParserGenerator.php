@@ -536,14 +536,23 @@ class JSParserGenerator
 	{
 		$plugins = array();
 
+		$globalKeys = array(
+			'regexp' => 1,
+			'regexpLimit' => 1,
+			'regexpLimitAction' => 1
+		);
+
 		foreach ($this->cb->getJSPlugins() as $pluginName => $plugin)
 		{
-			$plugin['config']['__parser'] = 'function(text,matches){/** @const */var config=pluginsConfig["' . $pluginName . '"];' . $plugin['parser'] . '}';
+			$localConfig  = array_diff_key($plugin['config'], $globalKeys);
+			$globalConfig = array_intersect_key($plugin['config'], $globalKeys);
 
-			$plugin['meta']['isRawJS'][] = array('__parser');
+			$globalConfig['parser'] = 'function(text,matches){/** @const */var config=' . self::encodeConfig($localConfig, $plugin['meta']) . ';' . $plugin['parser'] . '}';
+
+			$plugin['meta']['isRawJS'][] = array('parser');
 
 			$plugins[$pluginName] = self::encodeConfig(
-				$plugin['config'],
+				$globalConfig,
 				$plugin['meta']
 			);
 		}

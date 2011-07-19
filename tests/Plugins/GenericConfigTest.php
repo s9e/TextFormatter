@@ -159,9 +159,18 @@ class GenericConfigTest extends Test
 		$this->cb->Generic->addReplacement('#(?<foo>x)#', '<b/>');
 		$this->cb->Generic->addReplacement('#(?<bar>x)#', '<b/>');
 
-		$this->assertContains(
-			'"Generic":{regexp:{"GAD082E00":/(x)/g,"GFB3D3850":/(x)/g},regexpMap:{"GAD082E00":{"foo":1},"GFB3D3850":{"bar":1}}',
-			$this->cb->getJSParser()
+		$preserve = array(
+			'"GAD082E00":/(x)/g' => 'Could not find "foo" regexp',
+			'"GFB3D3850":/(x)/g' => 'Could not find "bar" regexp',
+			'"GAD082E00":{"foo":1}' => 'Could not find "foo" regexpMap',
+			'"GFB3D3850":{"bar":1}' => 'Could not find "bar" regexpMap'
 		);
+
+		$js = $this->cb->getJSParser();
+
+		foreach ($preserve as $expected => $error)
+		{
+			$this->assertContains($expected, $js, $error);
+		}
 	}
 }
