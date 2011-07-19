@@ -31,11 +31,6 @@ s9e['TextFormatter'] = function(xsl)
 		/** @const */
 		SELF_CLOSING_TAG = 3,
 
-		/** @const */
-		rtrimRegExp = /[ \n\r\t\0\x0B]*$/,
-		/** @const */
-		ltrimRegExp = /^[ \n\r\t\0\x0B]*/,
-
 		/** @type {!Object} */
 		_log,
 
@@ -614,7 +609,7 @@ s9e['TextFormatter'] = function(xsl)
 		if ((tag.type  &  START_TAG && tagConfig.trimBefore)
 		 || (tag.type === END_TAG   && tagConfig.rtrimContent))
 		{
-			tag.trimBefore  = rtrimRegExp.exec(text.substr(0, tag.pos))[0].length;
+			tag.trimBefore  = /[ \n\r\t\0\x0B]*$/.exec(text.substr(0, tag.pos))[0].length;
 			tag.len        += tag.trimBefore;
 			tag.pos        -= tag.trimBefore;
 		}
@@ -626,7 +621,7 @@ s9e['TextFormatter'] = function(xsl)
 		if ((tag.type === START_TAG && tagConfig.ltrimContent)
 		 || (tag.type  &  END_TAG   && tagConfig.trimAfter))
 		{
-			tag.trimAfter  = ltrimRegExp.exec(text.substr(tag.pos + tag.len))[0].length;
+			tag.trimAfter  = /^[ \n\r\t\0\x0B]*/.exec(text.substr(tag.pos + tag.len))[0].length;
 			tag.len       += tag.trimAfter;
 		}
 	}
