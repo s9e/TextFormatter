@@ -896,4 +896,30 @@ class JSParserGeneratorTest extends Test
 			'Some non-"debug" messages have been disabled'
 		);
 	}
+
+	/**
+	* @testdox The "unsafeMinification" option indiscriminately renames all occurences of properties that share their name with DOM properties, except if their variable's names ends with "Node" or "Attr"
+	*/
+	public function testUnsafeMinification()
+	{
+		$js = $this->cb->getJSParser(array(
+			'unsafeMinification' => true
+		));
+
+		$names= implode('|', array(
+			'id',
+			'name',
+			'type',
+			'rules',
+			'defaultValue',
+			'tagName',
+			'attrName'
+		));
+
+		$this->assertNotRegexp(
+			'#(?<!Node|Attr)\\.(?:' . $names . ')#',
+			$js,
+			'A reserved name is used by a property of a variable whose name does not end with "Node" or "Attr"'
+		);
+	}
 }

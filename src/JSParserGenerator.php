@@ -188,28 +188,7 @@ class JSParserGenerator
 		*/
 		if ($options['unsafeMinification'])
 		{
-			$rename = array(
-				'name',
-				'type',
-				'rules',
-				'defaultValue',
-				'tagName',
-				'attrName'
-			);
-
-			// tag.name
-			$this->src = preg_replace(
-				'#(?<=\\.)(?=' . implode('|', $rename) . ')#',
-				'_',
-				$this->src
-			);
-
-			// name:
-			$this->src = preg_replace(
-				'#(?<=\\W)(?=(?:' . implode('|', $rename) . ')(?=\\s*:))#',
-				'_',
-				$this->src
-			);
+			$this->renameReservedProperties();
 		}
 
 		/**
@@ -1093,5 +1072,45 @@ class JSParserGenerator
 		{
 			throw new RuntimeException('Tried to replace constant ' . $name . ', ' . $cnt . ' occurences found');
 		}
+	}
+
+	protected function renameReservedProperties()
+	{
+		$rename = array(
+			'id',
+			'name',
+			'type',
+			'rules',
+			'defaultValue',
+			'tagName',
+			'attrName'
+		);
+
+		// Split the source into chunks around the preview method so that its content doesn't get
+		// rewritten
+		preg_match("#(.+?)(\\t\\t'preview'.*?\\n\\t\\t\\})(.+)#s", $this->src, $parts);
+
+		$process = array(&$parts[1], &$parts[3]);
+		foreach ($process as &$src)
+		{
+			// tag.name
+			$src = preg_replace(
+				'#(?<=\\.)(?=' . implode('|', $rename) . ')#',
+				'_',
+				$src
+			);
+
+			// name:
+			$src = preg_replace(
+				'#(?<=\\W)(?=(?:' . implode('|', $rename) . ')(?=\\s*:))#',
+				'_',
+				$src
+			);
+		}
+		unset($src);
+
+		// Join parts 1 to 3
+		unset($parts[0]);
+		$this->src = implode('', $parts);
 	}
 }
