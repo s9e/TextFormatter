@@ -22,7 +22,6 @@
 			<file>ParserTest.php</file>
 			<file>PluginConfigTest.php</file>
 			<file>PluginParserTest.php</file>
-			<file>PredefinedBBCodesTest.php</file>
 			<file>RendererTest.php</file>
 			<file>Plugins/AutolinkConfigTest.php</file>
 			<file>Plugins/AutolinkParserTest.php</file>
@@ -42,6 +41,7 @@
 			<file>Plugins/LinebreakerParserTest.php</file>
 			<file>Plugins/WittyPantsConfigTest.php</file>
 			<file>Plugins/WittyPantsParserTest.php</file>
+			<file>PredefinedBBCodesTest.php</file>
 		</testsuite>
 	</testsuites>
 

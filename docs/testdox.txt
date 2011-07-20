@@ -410,11 +410,6 @@ s9e\TextFormatter\Tests\PluginConfig
 s9e\TextFormatter\Tests\PluginParser
  [x] setUp is called once after initialization
 
-s9e\TextFormatter\Tests\PredefinedBBCodes
- [x] Throws an exception if the BBCode does not exist
- [x] getUsedCodeStx returns all values of stx in CODE tags
- [x] Predefined BBCodes
-
 s9e\TextFormatter\Tests\Renderer
  [x] renderMulti can render multiple messages at once
 
@@ -731,4 +726,9 @@ s9e\TextFormatter\Tests\Plugins\WittyPantsParser
  [x] The letter x preceded by a number and whitespace and followed by whitespace and a number is replaced with a multiplication sign
  [x] The letter x between numbers with primes is replaced with a multiplication sign
  [x] A single quote between two letters is converted to an apostrophe
+
+s9e\TextFormatter\Tests\PredefinedBBCodes
+ [x] Throws an exception if the BBCode does not exist
+ [x] getUsedCodeStx returns all values of stx in CODE tags
+ [x] Predefined BBCodes
 
