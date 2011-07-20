@@ -631,7 +631,7 @@ class BBCodesConfig extends PluginConfig
 		return array(
 			'bbcodeName'   => $bbcodeName,
 			'options'      => $options,
-			'attrs'       => $attrs,
+			'attrs'        => $attrs,
 			'placeholders' => $placeholders
 		);
 	}
