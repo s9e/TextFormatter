@@ -35,13 +35,13 @@ s9e['TextFormatter'] = function(xsl)
 		_log,
 
 		/** @const @type {!Object} */
-		tagsConfig = {/* DO NOT EDIT*/},
+		tagsConfig = {/* DO NOT EDIT */},
 		/** @const @type {!Object} */
-		filtersConfig = {/* DO NOT EDIT*/},
+		filtersConfig = {/* DO NOT EDIT */},
 		/** @const @type {!Object} */
-		pluginsConfig = {/* DO NOT EDIT*/},
+		pluginsConfig = {/* DO NOT EDIT */},
 		/** @const @type {!Object.<string, function>} */
-		callbacks = {/* DO NOT EDIT*/},
+		callbacks = {/* DO NOT EDIT */},
 
 		/** @type {!string} */
 		text,

@@ -526,7 +526,7 @@ class JSParserGenerator
 	protected function injectTagsConfig()
 	{
 		$this->src = str_replace(
-			'tagsConfig = {/* DO NOT EDIT*/}',
+			'tagsConfig = {/* DO NOT EDIT */}',
 			'tagsConfig = ' . $this->generateTagsConfig(),
 			$this->src
 		);
@@ -570,7 +570,7 @@ class JSParserGenerator
 		}
 
 		$this->src = str_replace(
-			'pluginsConfig = {/* DO NOT EDIT*/}',
+			'pluginsConfig = {/* DO NOT EDIT */}',
 			'pluginsConfig = {' . implode(',', $plugins) . '}',
 			$this->src
 		);
@@ -579,7 +579,7 @@ class JSParserGenerator
 	protected function injectFiltersConfig()
 	{
 		$this->src = str_replace(
-			'filtersConfig = {/* DO NOT EDIT*/}',
+			'filtersConfig = {/* DO NOT EDIT */}',
 			'filtersConfig = ' . $this->generateFiltersConfig(),
 			$this->src
 		);
@@ -588,7 +588,7 @@ class JSParserGenerator
 	protected function injectCallbacks()
 	{
 		$this->src = str_replace(
-			'callbacks = {/* DO NOT EDIT*/}',
+			'callbacks = {/* DO NOT EDIT */}',
 			'callbacks = ' . $this->generateCallbacks(),
 			$this->src
 		);
