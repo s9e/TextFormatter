@@ -104,6 +104,6 @@ The included plugins are:
 </body>
 </html><?php
 
-file_put_contents(__DIR__ . '/../docs/JSParserDemoLite.html', ob_get_clean());
+file_put_contents(__DIR__ . '/../../s9e.github.com/TextFormatter/demoLite.html', ob_get_clean());
 
 echo "Done.\n";
