@@ -396,7 +396,7 @@ class BBCodesConfig extends PluginConfig
 				'choice'   => 'CHOICE[0-9]*=(?P<choices>.+?)',
 				'other'    => '[A-Z_]+[0-9]*'
 			),
-			'attrOptions' => '[A-Z_a-z]+=[^;]+?'
+			'attrOptions' => '[A-Z_a-z]+(?:=[^;]+?)?'
 		);
 		$r['placeholder'] =
 			  '\\{'
@@ -516,8 +516,17 @@ class BBCodesConfig extends PluginConfig
 				{
 					$pos = strpos($pair, '=');
 
-					$optionName  = substr($pair, 0, $pos);
-					$optionValue = substr($pair, 1 + $pos);
+					if ($pos)
+					{
+						$optionName  = substr($pair, 0, $pos);
+						$optionValue = substr($pair, 1 + $pos);
+					}
+					else
+					{
+						// Just the option name, we assume the value is true, e.g. {URL;isRequired}
+						$optionName  = $pair;
+						$optionValue = true;
+					}
 
 					switch ($optionName)
 					{

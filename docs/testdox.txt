@@ -473,6 +473,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] The name of the default attribute can be set using the attrName option
  [x] addBBCodeFromExample handles single preFilter callback in attribute
  [x] addBBCodeFromExample handles multiple preFilter callbacks in attribute
+ [x] addBBCodeFromExample() attribute options with no values are set to true
  [x] addBBCodeFromExample rejects unauthorized preFilter callbacks in attribute
  [x] addBBCodeFromExample handles single postFilter callback in attribute
  [x] addBBCodeFromExample handles multiple postFilter callbacks in attribute

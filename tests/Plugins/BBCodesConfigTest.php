@@ -421,6 +421,19 @@ class BBCodesConfigTest extends Test
 	}
 
 	/**
+	* @testdox addBBCodeFromExample() attribute options with no values are set to true
+	*/
+	public function testBBCodeExampleAttributeOptionsShortForm()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B b={ID;useContent}]{TEXT}[/B]',
+			'<b/>'
+		);
+
+		$this->assertTrue($this->cb->getTagAttributeOption('B', 'b', 'useContent'));
+	}
+
+	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attribute
 	* @expectedException RuntimeException
