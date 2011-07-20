@@ -367,6 +367,21 @@ class BBCodesConfigTest extends Test
 	}
 
 	/**
+	* @testdox The name of the default attribute can be set using the attrName option
+	*/
+	public function testDefaultAttrName()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[A={URL;attrName=href}]{TEXT}[/A]',
+			'<a href="{URL}">{TEXT}</a>'
+		);
+
+		$this->assertTrue($this->cb->BBCodes->BBCodeExists('A'));
+		$this->assertSame('href', $this->cb->BBCodes->getBBCodeOption('A', 'defaultAttr'));
+		$this->assertTrue($this->cb->attributeExists('A', 'href'));
+	}
+
+	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
 	*/
@@ -548,6 +563,21 @@ class BBCodesConfigTest extends Test
 
 		$this->assertTrue($this->cb->BBCodes->BBCodeExists('EMAIL'));
 		$this->assertSame('content', $this->cb->BBCodes->getBBCodeOption('EMAIL', 'contentAttr'));
+	}
+
+	/**
+	* @testdox The name of the content attribute can be set using the attrName option
+	*/
+	public function testContentAttrName()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[EMAIL]{EMAIL;attrName=foo}[/EMAIL]',
+			'<b>{EMAIL}</b>'
+		);
+
+		$this->assertTrue($this->cb->BBCodes->BBCodeExists('EMAIL'));
+		$this->assertSame('foo', $this->cb->BBCodes->getBBCodeOption('EMAIL', 'contentAttr'));
+		$this->assertTrue($this->cb->attributeExists('EMAIL', 'foo'));
 	}
 
 	/**

@@ -500,7 +500,7 @@ class BBCodesConfig extends PluginConfig
 
 		foreach ($matches as $m)
 		{
-			$attrName  = strtolower($m[1]);
+			$attrName   = strtolower($m[1]);
 			$identifier = $m['type'];
 
 			if (isset($attrs[$attrName]))
@@ -542,6 +542,22 @@ class BBCodesConfig extends PluginConfig
 									'callback' => $callback
 								);
 							}
+							break;
+
+						case 'attrName':
+							if (isset($options['defaultAttr'])
+							 && $options['defaultAttr'] === $attrName)
+							{
+								$options['defaultAttr'] = $optionValue;
+							}
+
+							if (isset($options['contentAttr'])
+							 && $options['contentAttr'] === $attrName)
+							{
+								$options['contentAttr'] = $optionValue;
+							}
+
+							$attrName = $optionValue;
 							break;
 
 						default:
