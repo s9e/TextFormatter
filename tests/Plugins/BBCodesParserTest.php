@@ -631,9 +631,9 @@ class BBCodesParserTest extends Test
 	/**
 	* @test
 	*/
-	public function If_contentAttr_is_set_and_the_corresponding_attribute_is_not_specified_in_tag_everything_from_the_end_of_the_start_tag_and_what_could_be_the_end_tag_is_used_as_value()
+	public function Attributes_listed_in_contentAttrs_use_everything_from_the_end_of_the_start_tag_and_what_could_be_the_end_tag_as_value_if_a_value_was_not_given()
 	{
-		$this->cb->BBCodes->addBBCode('X', array('contentAttr' => 'b'));
+		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('b')));
 		$this->cb->addTagAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
@@ -645,9 +645,9 @@ class BBCodesParserTest extends Test
 	/**
 	* @test
 	*/
-	public function If_contentAttr_is_set_but_the_corresponding_attribute_is_specified_in_tag_the_content_is_not_used_as_value()
+	public function Attributes_listed_in_contentAttrs_are_not_overwritten_if_a_value_is_given()
 	{
-		$this->cb->BBCodes->addBBCode('X', array('contentAttr' => 'b'));
+		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('b')));
 		$this->cb->addTagAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
@@ -658,11 +658,10 @@ class BBCodesParserTest extends Test
 
 	/**
 	* @test
-	* @depends If_contentAttr_is_set_and_the_corresponding_attribute_is_not_specified_in_tag_everything_from_the_end_of_the_start_tag_and_what_could_be_the_end_tag_is_used_as_value
 	*/
-	public function When_looking_for_the_end_tag_while_capturing_content_for_contentAttr_the_search_is_case_insensitive()
+	public function When_looking_for_the_end_tag_while_capturing_content_for_contentAttrs_the_search_is_case_insensitive()
 	{
-		$this->cb->BBCodes->addBBCode('X', array('contentAttr' => 'b'));
+		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('b')));
 		$this->cb->addTagAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
@@ -674,16 +673,30 @@ class BBCodesParserTest extends Test
 	/**
 	* @test
 	* @depends BBCode_tags_can_use_a_colon_followed_by_digits_as_a_suffix_to_control_how_start_tags_and_end_tags_are_paired
-	* @depends If_contentAttr_is_set_and_the_corresponding_attribute_is_not_specified_in_tag_everything_from_the_end_of_the_start_tag_and_what_could_be_the_end_tag_is_used_as_value
 	*/
-	public function When_looking_for_the_end_tag_while_capturing_content_for_contentAttr_the_suffix_is_taken_into_account()
+	public function When_looking_for_the_end_tag_while_capturing_content_for_contentAttrs_the_suffix_is_taken_into_account()
 	{
-		$this->cb->BBCodes->addBBCode('X', array('contentAttr' => 'b'));
+		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('b')));
 		$this->cb->addTagAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
 			'[X:1]xxx[/X][/X:1]',
 			'<rt><X b="xxx[/X]"><st>[X:1]</st>xxx[/X]<et>[/X:1]</et></X></rt>'
+		);
+	}
+
+	/**
+	* @testdox Multiple attributes can use the BBCode's content
+	*/
+	public function testMultipleContentAttrs()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('a', 'b')));
+		$this->cb->addTagAttribute('X', 'a', 'text');
+		$this->cb->addTagAttribute('X', 'b', 'text');
+
+		$this->assertParsing(
+			'[X]xxx[/X]',
+			'<rt><X a="xxx" b="xxx"><st>[X]</st>xxx<et>[/X]</et></X></rt>'
 		);
 	}
 }

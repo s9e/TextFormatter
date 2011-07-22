@@ -291,8 +291,7 @@ class BBCodesParser extends PluginParser
 				$usesContent = false;
 
 				if ($type === Parser::START_TAG
-				 && isset($bbcodeConfig['contentAttr'])
-				 && !isset($attrs[$bbcodeConfig['contentAttr']]))
+				 && isset($bbcodeConfig['contentAttrs']))
 				{
 					/**
 					* Capture the content of that tag and use it as attribute value
@@ -303,14 +302,19 @@ class BBCodesParser extends PluginParser
 					*
 					* @todo perhaps disable all BBCodes when the content is used as param? how?
 					*/
-					$pos = stripos($text, '[/' . $bbcodeName . $suffix . ']', $rpos);
-
-					if ($pos)
+					foreach ($bbcodeConfig['contentAttrs'] as $attrName)
 					{
-						$attrs[$bbcodeConfig['contentAttr']]
-							= substr($text, 1 + $rpos, $pos - (1 + $rpos));
+						if (!isset($attrs[$attrName]))
+						{
+							$pos = stripos($text, '[/' . $bbcodeName . $suffix . ']', $rpos);
 
-						$usesContent = true;
+							if ($pos)
+							{
+								$attrs[$attrName] = substr($text, 1 + $rpos, $pos - (1 + $rpos));
+
+								$usesContent = true;
+							}
+						}
 					}
 				}
 			}

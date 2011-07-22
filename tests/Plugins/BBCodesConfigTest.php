@@ -245,10 +245,10 @@ class BBCodesConfigTest extends Test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid attribute name '**'
 	*/
-	public function setBBCodeOption_cannot_set_a_contentAttr_with_an_invalid_name()
+	public function setBBCodeOption_cannot_set_contentAttrs_with_an_invalid_name()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttr', '**');
+		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttrs', array('**'));
 	}
 
 	/**
@@ -426,11 +426,11 @@ class BBCodesConfigTest extends Test
 	public function testBBCodeExampleAttributeOptionsShortForm()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B b={ID;useContent}]{TEXT}[/B]',
+			'[B b={ID;foo}]{TEXT}[/B]',
 			'<b/>'
 		);
 
-		$this->assertTrue($this->cb->getTagAttributeOption('B', 'b', 'useContent'));
+		$this->assertTrue($this->cb->getTagAttributeOption('B', 'b', 'foo'));
 	}
 
 	/**
@@ -559,7 +559,7 @@ class BBCodesConfigTest extends Test
 		);
 
 		$this->assertTrue($this->cb->BBCodes->BBCodeExists('A'));
-		$this->assertArrayNotHasKey('contentAttr', $this->cb->BBCodes->getBBCodeOptions('A'));
+		$this->assertArrayNotHasKey('contentAttrs', $this->cb->BBCodes->getBBCodeOptions('A'));
 	}
 
 	/**
@@ -575,7 +575,7 @@ class BBCodesConfigTest extends Test
 		);
 
 		$this->assertTrue($this->cb->BBCodes->BBCodeExists('EMAIL'));
-		$this->assertSame('content', $this->cb->BBCodes->getBBCodeOption('EMAIL', 'contentAttr'));
+		$this->assertSame(array('content'), $this->cb->BBCodes->getBBCodeOption('EMAIL', 'contentAttrs'));
 	}
 
 	/**
@@ -589,7 +589,7 @@ class BBCodesConfigTest extends Test
 		);
 
 		$this->assertTrue($this->cb->BBCodes->BBCodeExists('EMAIL'));
-		$this->assertSame('foo', $this->cb->BBCodes->getBBCodeOption('EMAIL', 'contentAttr'));
+		$this->assertSame(array('foo'), $this->cb->BBCodes->getBBCodeOption('EMAIL', 'contentAttrs'));
 		$this->assertTrue($this->cb->attributeExists('EMAIL', 'foo'));
 	}
 

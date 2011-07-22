@@ -96,7 +96,7 @@ class BBCodesConfig extends PluginConfig
 		*/
 		$bbcodeSpecificConfig = array(
 			'autoClose'   => 1,
-			'contentAttr' => 1,
+			'contentAttrs' => 1,
 			'defaultAttr' => 1,
 			'tagName'     => 1
 		);
@@ -215,8 +215,15 @@ class BBCodesConfig extends PluginConfig
 				break;
 
 			case 'defaultAttr':
-			case 'contentAttr':
 				$optionValue = $this->cb->normalizeAttributeName($optionValue);
+				break;
+
+			case 'contentAttrs':
+				foreach ($optionValue as &$attrName)
+				{
+					$attrName = $this->cb->normalizeAttributeName($attrName);
+				}
+				unset($attrName);
 				break;
 		}
 
@@ -475,19 +482,15 @@ class BBCodesConfig extends PluginConfig
 				/**
 				* We need to validate the content, means we should probably disable BBCodes,
 				* e.g. [email]{EMAIL}[/email]
-				*
-				* We use "content" as the name of the attribute
 				*/
-				$attrName = 'content';
-
 				$options['defaultChildRule'] = 'deny';
 				$options['defaultDescendantRule'] = 'deny';
-				$options['contentAttr'] = $attrName;
 
 				/**
-				* We append the placeholder to the attributes, using the BBCode's name as param name
+				* We append the placeholder to the attributes, using "content" as param name, which
+				* can be overriden with an attrName option, and setting the "useContent" option
 				*/
-				$attrsDef .= ' ' . $attrName . '=' . $content;
+				$attrsDef .= ' content=' . substr($content, 0, -1) . ';useContent}';
 			}
 		}
 
@@ -502,11 +505,6 @@ class BBCodesConfig extends PluginConfig
 		{
 			$attrName   = strtolower($m[1]);
 			$identifier = $m['type'];
-
-			if (isset($attrs[$attrName]))
-			{
-				throw new InvalidArgumentException("Attribute '" . $attrName . "' is defined twice");
-			}
 
 			$attrConf = array();
 
@@ -560,19 +558,18 @@ class BBCodesConfig extends PluginConfig
 								$options['defaultAttr'] = $optionValue;
 							}
 
-							if (isset($options['contentAttr'])
-							 && $options['contentAttr'] === $attrName)
-							{
-								$options['contentAttr'] = $optionValue;
-							}
-
-							$attrName = $optionValue;
+							$attrName = strtolower($optionValue);
 							break;
 
 						default:
 							$attrConf[$optionName] = $optionValue;
 					}
 				}
+			}
+
+			if (isset($attrs[$attrName]))
+			{
+				throw new InvalidArgumentException("Attribute '" . $attrName . "' is defined twice");
 			}
 
 			/**
@@ -652,6 +649,19 @@ class BBCodesConfig extends PluginConfig
 			*/
 			$attrs[$attrName] = $attrConf;
 		}
+
+		/**
+		* Remove the "useContent" option from attributes and set "contentAttrs"
+		*/
+		foreach ($attrs as $attrName => &$attrConf)
+		{
+			if (!empty($attrConf['useContent']))
+			{
+				$options['contentAttrs'][] = $attrName;
+			}
+			unset($attrConf['useContent']);
+		}
+		unset($attrConf);
 
 		return array(
 			'bbcodeName'   => $bbcodeName,

@@ -68,8 +68,8 @@ class PredefinedBBCodes
 	public function addURL()
 	{
 		$this->forwardCall('URL', array(
-			'defaultAttr' => 'url',
-			'contentAttr' => 'url'
+			'defaultAttr'  => 'url',
+			'contentAttrs' => array('url')
 		));
 	}
 
@@ -83,9 +83,9 @@ class PredefinedBBCodes
 	public function addIMG()
 	{
 		$this->forwardCall('IMG', array(
-			'defaultAttr' => 'src',
-			'contentAttr' => 'src',
-			'autoClose'   => true
+			'defaultAttr'  => 'src',
+			'contentAttrs' => array('src'),
+			'autoClose'    => true
 		));
 	}
 
@@ -260,8 +260,8 @@ class PredefinedBBCodes
 	public function addEMAIL()
 	{
 		$this->forwardCall('EMAIL', array(
-			'defaultAttr' => 'email',
-			'contentAttr' => 'content'
+			'defaultAttr'  => 'email',
+			'contentAttrs' => array('content')
 		));
 	}
 
@@ -430,8 +430,8 @@ class PredefinedBBCodes
 		$this->cb->BBCodes->addBBCode(
 			'FLASH',
 			array(
-				'defaultAttr' => 'dimensions',
-				'contentAttr' => 'url',
+				'defaultAttr'  => 'dimensions',
+				'contentAttrs' => array('url'),
 				'attrs' => array(
 					'width'  => array('type' => 'number'),
 					'height' => array('type' => 'number'),

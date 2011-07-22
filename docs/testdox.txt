@@ -459,7 +459,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] getBBCodeOption throws an exception if the BBCode does not exist
  [x] getBBCodeOption throws an exception if the option does not exist
  [x] setBBCodeOption cannot set a defaultAttr with an invalid name
- [x] setBBCodeOption cannot set a contentAttr with an invalid name
+ [x] setBBCodeOption cannot set contentAttrs with an invalid name
  [x] addBBCodeFromExample works on simple BBCodes
  [x] addBBCodeFromExample throws an exception if the definition is malformed
  [x] addBBCodeFromExample throws an exception if the template is not wellformed XML
@@ -539,10 +539,11 @@ s9e\TextFormatter\Tests\Plugins\BBCodesParser
  [x] Malformed BBCodes are ignored
  [x] A BBCode with autoClose enabled is automatically closed after the start tag
  [x] A BBCode with autoClose enabled is not automatically closed after the start tag if it is immediately followed by its end tag
- [x] If contentAttr is set and the corresponding attribute is not specified in tag everything from the end of the start tag and what could be the end tag is used as value
- [x] If contentAttr is set but the corresponding attribute is specified in tag the content is not used as value
- [x] When looking for the end tag while capturing content for contentAttr the search is case insensitive
- [x] When looking for the end tag while capturing content for contentAttr the suffix is taken into account
+ [x] Attributes listed in contentAttrs use everything from the end of the start tag and what could be the end tag as value if a value was not given
+ [x] Attributes listed in contentAttrs are not overwritten if a value is given
+ [x] When looking for the end tag while capturing content for contentAttrs the search is case insensitive
+ [x] When looking for the end tag while capturing content for contentAttrs the suffix is taken into account
+ [x] Multiple attributes can use the BBCode's content
 
 s9e\TextFormatter\Tests\Plugins\CensorConfig
  [x] tagName can be customized at loading time
