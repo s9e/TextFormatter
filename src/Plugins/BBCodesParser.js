@@ -259,21 +259,25 @@ matches.forEach(function(m)
 		var usesContent = false;
 
 		if (type === START_TAG
-		 && bbcodeConfig.contentAttr
-		 && attrs[bbcodeConfig.contentAttr] === undefined)
+		 && bbcodeConfig.contentAttrs)
 		{
 			/**
 			* Capture the content of that tag and use it as attribute value
 			*/
-			var pos = text.toUpperCase().indexOf('[/' + bbcodeName + suffix + ']', rpos);
-
-			if (pos > -1)
+			bbcodeConfig.contentAttrs.forEach(function(attrName)
 			{
-				attrs[bbcodeConfig.contentAttr]
-					= text.substr(1 + rpos, pos - (1 + rpos));
+				if (!(attrName in attrs))
+				{
+					var pos = text.toUpperCase().indexOf('[/' + bbcodeName + suffix + ']', rpos);
 
-				usesContent = true;
-			}
+					if (pos > -1)
+					{
+						attrs[attrName] = text.substr(1 + rpos, pos - (1 + rpos));
+
+						usesContent = true;
+					}
+				}
+			});
 		}
 	}
 
