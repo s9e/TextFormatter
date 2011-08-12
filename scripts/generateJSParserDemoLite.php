@@ -56,6 +56,15 @@ ob_start();
 			background-color: #fff;
 			border-radius: 3px;
 		}
+
+		object
+		{
+			transition: width .5s, height .5s;
+			-transition: width .5s, height .5s;
+			-o-transition: width .5s, height .5s;
+			-moz-transition: width .5s, height .5s;
+			-webkit-transition: width .5s, height .5s;
+		}
 	</style>
 </head>
 <body>
