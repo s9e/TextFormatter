@@ -8,5 +8,6 @@ cd $(dirname $0)
 
 cd ../../s9e.github.com/TextFormatter
 
+git add *
 git commit -a -m "Synced"
 git push
