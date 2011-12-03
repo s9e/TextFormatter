@@ -77,6 +77,11 @@ class Parser
 	protected $text;
 
 	/**
+	* @var integer Length of the text being parsed
+	*/
+	protected $textLen;
+
+	/**
 	* @var array   Unprocessed tags, in reverse order
 	*/
 	protected $unprocessedTags;
@@ -178,7 +183,8 @@ class Parser
 	*/
 	public function reset($text)
 	{
-		$this->text = $text;
+		$this->text    = $text;
+		$this->textLen = strlen($text);
 
 		$this->log = array();
 		$this->unprocessedTags = array();
@@ -651,7 +657,7 @@ class Parser
 			/**
 			* Append the rest of the text, past the last tag
 			*/
-			if ($pos < strlen($this->text))
+			if ($pos < $this->textLen)
 			{
 				$xml->text(substr($this->text, $pos));
 			}
@@ -1094,7 +1100,7 @@ class Parser
 		{
 			$this->currentTag = $this->createEndTag(
 				end($this->openTags),
-				strlen($this->text)
+				$this->textLen
 			);
 			$this->processCurrentTag();
 		}

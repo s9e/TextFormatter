@@ -45,6 +45,8 @@ s9e['TextFormatter'] = function(xsl)
 
 		/** @type {!string} */
 		text,
+		/** @type {!number} */
+		textLen,
 		/** @type {!Array.<Tag>} */
 		unprocessedTags,
 		/** @type {!Array.<Tag>} */
@@ -197,6 +199,7 @@ s9e['TextFormatter'] = function(xsl)
 	function reset(_text)
 	{
 		text = _text;
+		textLen = _textLen;
 
 		_log = {
 			'debug': [],
@@ -530,7 +533,7 @@ s9e['TextFormatter'] = function(xsl)
 		/**
 		* Append the rest of the text, past the last tag
 		*/
-		if (pos < text.length)
+		if (pos < textLen)
 		{
 			appendText(text.substr(pos));
 		}
@@ -850,7 +853,7 @@ s9e['TextFormatter'] = function(xsl)
 		{
 			currentTag = createEndTag(
 				openTags[openTags.length - 1],
-				text.length
+				textLen
 			);
 			processCurrentTag();
 		}
