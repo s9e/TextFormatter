@@ -1,5 +1,4 @@
-var tags = [],
-	textLen = text.length;
+var tags = [];
 
 matches.forEach(function(m)
 {
