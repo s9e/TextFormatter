@@ -1121,6 +1121,10 @@ class ConfigBuilder
 							case 'allowDescendant':
 							case 'denyChild':
 							case 'denyDescendant':
+								/**
+								* Those rules are converted into the allowedChildren and
+								* allowedDescendants bitmaps
+								*/
 								$k = (substr($action, -5) === 'Child')
 								   ? 'allowedChildren'
 								   : 'allowedDescendants';
@@ -1148,8 +1152,7 @@ class ConfigBuilder
 								*/
 								break;
 
-							case 'closeAncestor':
-							case 'closeParent':
+							default:
 								// keep only the rules that target existing tags
 								$targets = array_intersect_key($targets, $tagsConfig);
 						}
