@@ -1252,7 +1252,7 @@ class Parser
 		* Iterate through open tags, for each start tag we find that is not the tagMate of current
 		* end tag, we create a corresponding end tag
 		*/
-		do
+		processLastOpenTag:
 		{
 			$cur = array_pop($this->openTags);
 			$this->context = $cur['context'];
@@ -1260,11 +1260,10 @@ class Parser
 			if ($cur['tagMate'] !== $this->currentTag['tagMate'])
 			{
 				$this->appendTag($this->createEndTag($cur, $this->currentTag['pos']));
-				continue;
+
+				goto processLastOpenTag;
 			}
-			break;
 		}
-		while (1);
 
 		$this->appendTag($this->currentTag);
 	}
