@@ -1248,6 +1248,10 @@ class Parser
 			return;
 		}
 
+		/**
+		* Iterate through open tags, for each start tag we find that is not the tagMate of current
+		* end tag, we create a corresponding end tag
+		*/
 		do
 		{
 			$cur = array_pop($this->openTags);
