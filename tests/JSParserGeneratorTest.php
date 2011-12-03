@@ -860,6 +860,31 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
+	* @test
+	*/
+	public function Optimization_hint_HINT_REOPEN_RULES_is_false_by_default()
+	{
+		$this->assertRegexp(
+			'#HINT_REOPEN_RULES\\s*=\\s*false#',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function Optimization_hint_HINT_REOPEN_RULES_is_true_if_any_reopenChild_rule_exists()
+	{
+		$this->cb->addTag('X');
+		$this->cb->addTagRule('X', 'reopenChild', 'X');
+
+		$this->assertRegexp(
+			'#HINT_REOPEN_RULES\\s*=\\s*true#',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
 	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is false by default
 	*/
 	public function test_Optimization_hint_REGEXP_REPLACEWITH_false_by_default()

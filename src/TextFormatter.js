@@ -79,9 +79,11 @@ s9e['TextFormatter'] = function(xsl)
 		ENABLE_LIVE_PREVIEW = true,
 
 		/** @const */
+		HINT_DISALLOWED_HOSTS = true,
+		/** @const */
 		HINT_REGEXP_REPLACEWITH = true,
 		/** @const */
-		HINT_DISALLOWED_HOSTS = true
+		HINT_REOPEN_RULES = true
 	;
 
 	if (MSXML)
@@ -198,8 +200,8 @@ s9e['TextFormatter'] = function(xsl)
 	/** @param {!string} _text */
 	function reset(_text)
 	{
-		text = _text;
-		textLen = _textLen;
+		text    = _text;
+		textLen = _text.length;
 
 		_log = {
 			'debug': [],
@@ -265,7 +267,6 @@ s9e['TextFormatter'] = function(xsl)
 					});
 					return false;
 				}
-
 
 				if (HINT_DISALLOWED_HOSTS
 				 && filterConf.disallowedHosts)
@@ -967,14 +968,47 @@ s9e['TextFormatter'] = function(xsl)
 			return;
 		}
 
+		var reopenChildren = true,
+			reopenTags     = [];
+
 		do
 		{
-			var cur = openTags.pop();
-			context = cur.context;
+			var lastOpenTag = openTags.pop();
+			context = lastOpenTag.context;
 
-			if (cur.tagMate !== currentTag.tagMate)
+			if (lastOpenTag.tagMate !== currentTag.tagMate)
 			{
-				appendTag(createEndTag(cur, currentTag.pos));
+				appendTag(createEndTag(lastOpenTag, currentTag.pos));
+
+				// Do we check for reopenChild rules?
+				if (HINT_REOPEN_RULES && reopenChildren)
+				{
+					var tagConfig = tagsConfig[currentTag.name];
+
+					if (tagConfig.rules
+					 && tagConfig.rules.reopenChild
+					 && tagConfig.rules.reopenChild.some(function(tagName)
+						{
+							return (tagName === lastOpenTag.name);
+						})
+					)
+					{
+						// Position the reopened tag after current tag
+						var _pos = currentTag.pos + currentTag.len;
+
+						// Test whether the tag would be out of bounds
+						if (_pos < textLen)
+						{
+							reopenTags.push(createStartTag(lastOpenTag, _pos));
+						}
+					}
+					else
+					{
+						// This tag is not meant to be reopened. Consequently, we won't reopen any
+						reopenChildren = false;
+					}
+				}
+
 				continue;
 			}
 			break;
@@ -982,28 +1016,57 @@ s9e['TextFormatter'] = function(xsl)
 		while (1);
 
 		appendTag(currentTag);
+
+		if (reopenChildren)
+		{
+			reopenTags.forEach(function(tag)
+			{
+				unprocessedTags.push(tag);
+			});
+		}
 	}
 
 	/**
-	* @param  {!StubTag} startTag
+	* @param  {!StubTag} tag
 	* @param  {!number}  _pos
 	* @return {Tag}
 	*/
-	function createEndTag(startTag, _pos)
+	function createStartTag(tag, _pos)
 	{
-		var endTag = {
+		return createMatchingTag(tag, _pos, START_TAG);
+	}
+
+	/**
+	* @param  {!StubTag} tag
+	* @param  {!number}  _pos
+	* @return {Tag}
+	*/
+	function createEndTag(tag, _pos)
+	{
+		return createMatchingTag(tag, _pos, END_TAG);
+	}
+
+	/**
+	* @param  {!StubTag} tag
+	* @param  {!number}  _pos
+	* @param  {!number}  _type
+	* @return {Tag}
+	*/
+	function createMatchingTag(tag, _pos, _type)
+	{
+		var newTag = {
 			id     : -1,
-			name   : startTag.name,
+			name   : tag.name,
 			pos    : _pos,
 			len    : 0,
-			type   : END_TAG,
-			tagMate    : startTag.tagMate,
-			pluginName : startTag.pluginName
+			type   : _type,
+			tagMate    : tag.tagMate,
+			pluginName : tag.pluginName
 		};
 
-		addTrimmingInfoToTag(endTag);
+		addTrimmingInfoToTag(newTag);
 
-		return endTag;
+		return newTag;
 	}
 
 	function closeParent()

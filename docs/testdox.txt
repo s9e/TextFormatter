@@ -208,6 +208,8 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] Injects plugins configs into source
  [x] replaceConstant() throws an exception if no replacement occurs
  [x] A regexp map is created for compound attributes
+ [x] Optimization hint HINT REOPEN RULES is false by default
+ [x] Optimization hint HINT REOPEN RULES is true if any reopenChild rule exists
  [x] Optimization hint HINT_REGEXP_REPLACEWITH is false by default
  [x] Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has a "replaceWith" option set
  [x] The source is minified with Google Closure Compiler if "compilation" is not set to "none"
@@ -396,6 +398,11 @@ s9e\TextFormatter\Tests\Parser
  [x] requireAncestor rule is fulfilled by ancestor with suffix
  [x] requireAncestor rule with multiple targets is fulfilled if any of the targets is an ancestor
  [x] Unfulfilled requireAncestor rule blocks tag
+ [x] reopenChild rule reopens child tag if it was closed by current end tag
+ [x] reopenChild rule does not reopen child tag if it would be at the end of the text
+ [x] reopenChild rule reopens all descendants
+ [x] reopenChild rule does not reopen any descendant if not all descendants are covered by a reopenChild rule
+ [x] Tags created by reopenChild rule respect their new context
  [x] Tags with option 'disallowAsRoot' are ignored if they don't have a parent
  [x] Tags with option 'disallowAsRoot' are processed if they do have a parent
  [x] Whitespace trimming works

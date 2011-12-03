@@ -658,6 +658,7 @@ class ConfigBuilder
 			'closeAncestor',
 			'denyChild',
 			'denyDescendant',
+			'reopenChild',
 			'requireParent',
 			'requireAncestor'
 		), true))

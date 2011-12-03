@@ -271,8 +271,9 @@ class JSParserGenerator
 	protected function setOptimizationHints()
 	{
 		$hints = array(
-			'REGEXP_REPLACEWITH' => false,
-			'DISALLOWED_HOSTS'   => isset($this->filtersConfig['url']['disallowedHosts'])
+			'DISALLOWED_HOSTS'   => isset($this->filtersConfig['url']['disallowedHosts']),
+			'REOPEN_RULES'       => false,
+			'REGEXP_REPLACEWITH' => false
 		);
 
 		foreach ($this->tagsConfig as $tagConfig)
@@ -287,6 +288,15 @@ class JSParserGenerator
 						break 2;
 					}
 				}
+			}
+		}
+
+		foreach ($this->tagsConfig as $tagConfig)
+		{
+			if (!empty($tagConfig['rules']['reopenChild']))
+			{
+				$hints['REOPEN_RULES'] = true;
+				break;
 			}
 		}
 

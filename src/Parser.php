@@ -1255,47 +1255,113 @@ class Parser
 		}
 
 		/**
+		* @var bool  If true, check for reopenChild rules
+		*/
+		$reopenChildren = true;
+
+		/**
+		* @var array List of tags to be reopened due to reopenChild rules
+		*/
+		$reopenTags = array();
+
+		/**
 		* Iterate through open tags, for each start tag we find that is not the tagMate of current
 		* end tag, we create a corresponding end tag
 		*/
 		processLastOpenTag:
 		{
-			$cur = array_pop($this->openTags);
-			$this->context = $cur['context'];
+			$lastOpenTag = array_pop($this->openTags);
+			$this->context = $lastOpenTag['context'];
 
-			if ($cur['tagMate'] !== $this->currentTag['tagMate'])
+			if ($lastOpenTag['tagMate'] !== $this->currentTag['tagMate'])
 			{
-				$this->appendTag($this->createEndTag($cur, $this->currentTag['pos']));
+				$this->appendTag($this->createEndTag($lastOpenTag, $this->currentTag['pos']));
+
+				// Do we check for reopenChild rules?
+				if ($reopenChildren)
+				{
+					$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+					if (isset($tagConfig['rules']['reopenChild'][$lastOpenTag['name']]))
+					{
+						// Position the reopened tag after current tag
+						$pos = $this->currentTag['pos'] + $this->currentTag['len'];
+
+						// Test whether the tag would be out of bounds
+						if ($pos < $this->textLen)
+						{
+							$reopenTags[] = $this->createStartTag($lastOpenTag, $pos);
+						}
+					}
+					else
+					{
+						// This tag is not meant to be reopened. Consequently, we won't reopen any
+						$reopenChildren = false;
+					}
+				}
 
 				goto processLastOpenTag;
 			}
 		}
 
 		$this->appendTag($this->currentTag);
+
+		if ($reopenChildren)
+		{
+			foreach ($reopenTags as $tag)
+			{
+				$this->unprocessedTags[] = $tag;
+			}
+		}
+	}
+
+	/**
+	* Create a START_TAG at given position matching given tag
+	*
+	* @param  array   $tag  Reference tag
+	* @param  integer $pos  Created tag's position
+	* @return array         Created tag
+	*/
+	protected function createStartTag(array $tag, $pos)
+	{
+		return $this->createMatchingTag($tag, $pos, self::START_TAG);
 	}
 
 	/**
 	* Create an END_TAG at given position, for given START_TAG
 	*
-	* @param  array   $startTag
-	* @param  integer $pos
-	* @return array
+	* @param  array   $tag  Reference tag
+	* @param  integer $pos  Created tag's position
+	* @return array         Created tag
 	*/
-	protected function createEndTag(array $startTag, $pos)
+	protected function createEndTag(array $tag, $pos)
 	{
-		$endTag = array(
+		return $this->createMatchingTag($tag, $pos, self::END_TAG);
+	}
+
+	/**
+	* Create a tag at given position matching given tag
+	*
+	* @param  array   $tag  Reference tag
+	* @param  integer $pos  Created tag's position
+	* @param  integer $type Created tag's type
+	* @return array         Created tag
+	*/
+	protected function createMatchingTag(array $tag, $pos, $type)
+	{
+		$newTag = array(
 			'id'     => -1,
-			'name'   => $startTag['name'],
+			'name'   => $tag['name'],
 			'pos'    => $pos,
 			'len'    => 0,
-			'type'   => self::END_TAG,
-			'tagMate'    => $startTag['tagMate'],
-			'pluginName' => $startTag['pluginName']
+			'type'   => $type,
+			'tagMate'    => $tag['tagMate'],
+			'pluginName' => $tag['pluginName']
 		);
 
-		$this->addTrimmingInfoToTag($endTag);
+		$this->addTrimmingInfoToTag($newTag);
 
-		return $endTag;
+		return $newTag;
 	}
 
 	/**

@@ -2901,6 +2901,89 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @test
+	*/
+	public function reopenChild_rule_reopens_child_tag_if_it_was_closed_by_current_end_tag()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('i');
+		$this->cb->addTagRule('b', 'reopenChild', 'i');
+
+		$this->assertParsing(
+			'[b][i]foo[/b] bar[/i]',
+			'<rt><B><st>[b]</st><I><st>[i]</st>foo</I><et>[/b]</et></B><I> bar<et>[/i]</et></I></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends reopenChild_rule_reopens_child_tag_if_it_was_closed_by_current_end_tag
+	*/
+	public function reopenChild_rule_does_not_reopen_child_tag_if_it_would_be_at_the_end_of_the_text()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('i');
+		$this->cb->addTagRule('b', 'reopenChild', 'i');
+
+		$this->assertParsing(
+			'[b][i]foo[/b]',
+			'<rt><B><st>[b]</st><I><st>[i]</st>foo</I><et>[/b]</et></B></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function reopenChild_rule_reopens_all_descendants()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('i');
+		$this->cb->BBCodes->addBBCode('u');
+		$this->cb->addTagRule('b', 'reopenChild', 'i');
+		$this->cb->addTagRule('b', 'reopenChild', 'u');
+
+		$this->assertParsing(
+			'[b][i][u]foo[/b] bar[/u] baz[/i]',
+			'<rt><B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>foo</U></I><et>[/b]</et></B><I><U> bar<et>[/u]</et></U> baz<et>[/i]</et></I></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
+	public function reopenChild_rule_does_not_reopen_any_descendant_if_not_all_descendants_are_covered_by_a_reopenChild_rule()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('i');
+		$this->cb->BBCodes->addBBCode('u');
+		$this->cb->addTagRule('b', 'reopenChild', 'i');
+
+		$this->assertParsing(
+			'[b][i][u]foo[/b] bar[/u] baz[/i]',
+			'<rt><B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>foo</U></I><et>[/b]</et></B> bar[/u] baz[/i]</rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @depends reopenChild_rule_reopens_child_tag_if_it_was_closed_by_current_end_tag
+	* @depends denyChild_rule_blocks_child_tag
+	*/
+	public function Tags_created_by_reopenChild_rule_respect_their_new_context()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('i');
+		$this->cb->BBCodes->addBBCode('u');
+		$this->cb->addTagRule('b', 'reopenChild', 'i');
+		$this->cb->addTagRule('u', 'denyChild', 'i');
+
+		$this->assertParsing(
+			'[u][b][i]foo[/b] bar[/i][/u]',
+			'<rt><U><st>[u]</st><B><st>[b]</st><I><st>[i]</st>foo</I><et>[/b]</et></B> bar[/i]<et>[/u]</et></U></rt>'
+		);
+	}
+
+	/**
 	* @testdox Tags with option 'disallowAsRoot' are ignored if they don't have a parent
 	*/
 	public function testDisallowedAsRoot()
