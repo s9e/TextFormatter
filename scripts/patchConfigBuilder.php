@@ -3,7 +3,7 @@
 
 use s9e\SimpleDOM\SimpleDOM;
 
-include __DIR__ . '/../SimpleDOM/src/SimpleDOM.php';
+include 's9e/SimpleDOM/src/SimpleDOM.php';
 
 $filepath = '/tmp/Overview.html';
 //$filepath = '/tmp/grouping-content.html';
@@ -95,7 +95,11 @@ foreach ($page->body->h4 as $h4)
 				continue;
 			}
 
+			// Normalize whitespace and terminating punctuation
 			$value = rtrim(preg_replace('#\\s+#', ' ', strtolower($el->textContent())), '.');
+
+			// Remove <a> tags
+			$value = preg_replace('#<a[^>]+>|</a>#', '', $value);
 
 			switch (rtrim($dt, ':'))
 			{
@@ -107,7 +111,7 @@ foreach ($page->body->h4 as $h4)
 
 					$xpath = '';
 
-					if (preg_match('#^((?:flow|phrasing|metadata|sectioning|heading|interactive|embedded) content|sectioning root|transparent|labelable element)$#', $value, $m))
+					if (preg_match('#^((?:palpable|flow|phrasing|metadata|sectioning|heading|interactive|embedded) content|sectioning root|transparent|labelable element)$#', $value, $m))
 					{
 						$category = $m[1];
 					}
@@ -121,10 +125,27 @@ foreach ($page->body->h4 as $h4)
 					{
 						$category = 'phrasing content';
 					}
-					elseif (preg_match('#^if the (?:element\'s )?([a-z]+) attribute is (not )?in the ([a-z]+) state: +(interactive content)$#', $value, $m))
+					elseif (preg_match('#^if the (?:element\'s )?([a-z]+) attribute is (not )?in the ([a-z]+) state: +(interactive content|palpable content)$#', $value, $m))
 					{
 						$category = $m[4];
 						$xpath = '@' . $m[1] . (($m[2]) ? '!=' : '=') . '"' . $m[3] . '"';
+					}
+					elseif (preg_match('#^if the (?:element\'s )?([a-z]+) attribute is (not )?in the ([a-z]+) state or the ([a-z]+) state: +(interactive content|palpable content)$#', $value, $m))
+					{
+						$category = $m[5];
+
+						if ($m[2])
+						{
+							$xpath = '@' . $m[1] . '!="' . $m[3] . '" and @' . $m[1] . '!="' . $m[4] . '"';
+						}
+						else
+						{
+							$xpath = '@' . $m[1] . '="' . $m[3] . '" or @' . $m[1] . '="' . $m[4] . '"';
+						}
+					}
+					elseif (preg_match('#if the element\'s children include at least one (?:[a-z_\\- ]+): palpable content$#', $value))
+					{
+						$category = 'palpable content';
 					}
 					elseif (preg_match('#formatblock candidate|form-associated#', $value))
 					{
@@ -132,8 +153,8 @@ foreach ($page->body->h4 as $h4)
 					}
 					else
 					{
-						echo $el->asXML();
-						die ("Could not interpret '$value' as $elName's category\n");
+						echo $el->asXML(), "\n";
+						die("Could not interpret '$value' as $elName's category\n");
 					}
 
 					$elements[$elName]['categories'][$category][$xpath] = 0;
@@ -185,6 +206,14 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['allowChildCategory']['flow content'][''] = 0;
 						$elements[$elName]['denyDescendantElement']['header'][''] = 0;
 						$elements[$elName]['denyDescendantElement']['footer'][''] = 0;
+					}
+					elseif (preg_match('#^flow content, but with no header, footer, sectioning content, or heading content descendants$#', $value))
+					{
+						$elements[$elName]['allowChildCategory']['flow content'][''] = 0;
+						$elements[$elName]['denyDescendantElement']['header'][''] = 0;
+						$elements[$elName]['denyDescendantElement']['footer'][''] = 0;
+						$elements[$elName]['denyDescendantCategory']['sectioning content'][''] = 0;
+						$elements[$elName]['denyDescendantCategory']['heading content'][''] = 0;
 					}
 					elseif (preg_match('#^flow content, but with no heading content descendants, no sectioning content descendants, and no header, footer, or address element descendants$#', $value))
 					{
