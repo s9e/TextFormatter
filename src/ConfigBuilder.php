@@ -81,7 +81,7 @@ class ConfigBuilder
 		}
 
 		/**
-		* Create the tag with the default options
+		* Create the tag using the default options
 		*/
 		$this->tags[$tagName] = $this->defaultTagOptions;
 
