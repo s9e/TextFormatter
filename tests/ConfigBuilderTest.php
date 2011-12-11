@@ -515,6 +515,220 @@ class ConfigBuilderTest extends Test
 		$this->assertNull($this->cb->getTagOption('a', 'bar'));
 	}
 
+	public function testCanRegisterNamespaceWithValidPrefix()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+
+		$this->assertSame(
+			array('foo' => 'urn:foo'),
+			$this->cb->getNamespaces()
+		);
+	}
+
+	/**
+	* @testdox Throws an exception if an attempt is made to register a namespace with the prefix 'xsl'
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage reserved
+	*/
+	public function testThrowsAnExceptionIfAnAttemptIsMadeToRegisterXSLPrefix()
+	{
+		$this->cb->registerNamespace('xsl', 'urn:foo');
+	}
+
+	/**
+	* @testdox Throws an exception if an attempt is made to register a namespace with the URI 'http://www.w3.org/1999/XSL/Transform'
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage reserved
+	*/
+	public function testThrowsAnExceptionIfAnAttemptIsMadeToRegisterXSLURI()
+	{
+		$this->cb->registerNamespace('foo', 'http://www.w3.org/1999/XSL/Transform');
+	}
+
+	/**
+	* @testdox Throws an exception if getXSL() is called with a prefix already in use
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Prefix 'foo' is already registered to namespace 'urn:foo'
+	*/
+	public function test_getXSL_with_prefix_already_in_use()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->getXSL('foo');
+	}
+
+	/**
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid prefix name 'foo>'
+	*/
+	public function testThrowsAnExceptionIfAnAttemptIsMadeToRegisterANamespaceWithAnInvalidPrefix()
+	{
+		$this->cb->registerNamespace('foo>', 'urn:foo');
+	}
+
+	/**
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Prefix 'foo' is already registered to namespace 'urn:foo'
+	*/
+	public function testThrowsAnExceptionIfAnAttemptIsMadeToOverwriteARegisteredNamespace()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->registerNamespace('foo', 'urn:bar');
+	}
+
+	/**
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	*/
+	public function testDoesNotThrowAnExceptionIfANamespaceIsRegisteredIdenticallyMultipleTimes()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->registerNamespace('foo', 'urn:foo');
+	}
+
+	/**
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	*/
+	public function testCanTellWhetherANamespaceHasBeenRegisteredToGivenPrefix()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+
+		$this->assertTrue($this->cb->namespaceExists('foo'));
+		$this->assertFalse($this->cb->namespaceExists('bar'));
+	}
+
+	/**
+	* @depends testCanTellWhetherANamespaceHasBeenRegisteredToGivenPrefix
+	*/
+	public function testCanUnregisterANamespaceByItsPrefix()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->unregisterNamespace('foo');
+
+		$this->assertFalse($this->cb->namespaceExists('foo'));
+	}
+
+	/**
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	*/
+	public function testCanReturnAListOfAllRegisteredNamespaces()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->registerNamespace('bar', 'urn:bar');
+
+		$this->assertEquals(
+			array('foo' => 'urn:foo', 'bar' => 'urn:bar'),
+			$this->cb->getNamespaces()
+		);
+	}
+
+	/**
+	* @test
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	*/
+	public function Can_return_the_URI_associated_with_a_namespace_prefix()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+
+		$this->assertSame('urn:foo', $this->cb->getNamespaceURI('foo'));
+	}
+
+	/**
+	* @test
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	*/
+	public function Can_return_the_first_prefix_associated_with_a_namespace_URI()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+
+		$this->assertSame('foo', $this->cb->getNamespacePrefix('urn:foo'));
+	}
+
+	/**
+	* @test
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	*/
+	public function Can_return_all_the_prefixes_associated_with_a_namespace_URI()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->registerNamespace('foo2', 'urn:foo');
+
+		$this->assertEquals(
+			array('foo', 'foo2'),
+			$this->cb->getNamespacePrefixes('urn:foo')
+		);
+	}
+
+	/**
+	* @depends testCanCreateTag
+	* @depends testCanRegisterNamespaceWithValidPrefix
+	*/
+	public function testCanCreateTagInRegisteredNamespace()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:bar');
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Namespace 'foo' is not registered
+	*/
+	public function testThrowsAnExceptionWhenCreatingATagWithAnUnregisteredNamespacePrefix()
+	{
+		$this->cb->addTag('foo:bar');
+	}
+
+	/**
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid tag name '*foo:bar'
+	*/
+	public function testThrowsAnExceptionWhenCreatingATagWithAnInvalidNamespacePrefix()
+	{
+		$this->cb->addTag('*foo:bar');
+	}
+
+	/**
+	* @depends testCanCreateTagInRegisteredNamespace
+	*/
+	public function testCanTellIfNamespacedTagExists()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:bar');
+
+		$this->assertTrue($this->cb->tagExists('foo:bar'));
+	}
+
+	/**
+	* @testdox Namespaced tag names are case-sensitive
+	* @depends testCanTellIfNamespacedTagExists
+	*/
+	public function testNamespacedTagNamesAreCaseSensitive()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:bar');
+
+		$this->assertFalse($this->cb->tagExists('foo:BAR'));
+	}
+
+	/**
+	* @depends testCanCreateTagInRegisteredNamespace
+	*/
+	public function testRegisteredNamespacesAppearInTheParserConfig()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->assertArrayMatches(
+			array(
+				'namespaces' => array(
+					'foo' => 'urn:foo'
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
+
 	/**
 	* @depends testCanCreateTag
 	*/

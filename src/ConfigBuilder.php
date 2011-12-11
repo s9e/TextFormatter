@@ -36,6 +36,11 @@ class ConfigBuilder
 	protected $tags = array();
 
 	/**
+	* @var array Registered namespaces
+	*/
+	protected $namespaces = array();
+
+	/**
 	* @var array Holds filters' configuration
 	*/
 	protected $filters = array(
@@ -62,6 +67,113 @@ class ConfigBuilder
 	);
 
 	//==========================================================================
+	// Namespaces-related methods
+	//==========================================================================
+
+	/**
+	* Register a new namespace
+	*
+	* @param  string $prefix Namespace prefix
+	* @param  string $uri    Namespace URI
+	*/
+	public function registerNamespace($prefix, $uri)
+	{
+		if ($prefix === 'xsl'
+		 || $uri === 'http://www.w3.org/1999/XSL/Transform')
+		{
+			 throw new InvalidArgumentException("Namespace prefix 'xsl' and namespace URI 'http://www.w3.org/1999/XSL/Transform' are reserved for internal use");
+		}
+
+		if (!$this->isValidNamespacePrefix($prefix))
+		{
+			throw new InvalidArgumentException("Invalid prefix name '" . $prefix . "'");
+		}
+
+		if (isset($this->namespaces[$prefix])
+		 && $this->namespaces[$prefix] !== $uri)
+		{
+			throw new InvalidArgumentException("Prefix '" . $prefix . "' is already registered to namespace '" . $this->namespaces[$prefix] . "'");
+		}
+
+		$this->namespaces[$prefix] = $uri;
+	}
+
+	/**
+	* Unregister a namespace if it exists
+	*
+	* @param  string $prefix Namespace prefix
+	*/
+	public function unregisterNamespace($prefix)
+	{
+		unset($this->namespaces[$prefix]);
+	}
+
+	/**
+	* Return whether a namespace exists
+	*
+	* @param  string $prefix Namespace prefix
+	* @return bool
+	*/
+	public function namespaceExists($prefix)
+	{
+		return isset($this->namespaces[$prefix]);
+	}
+
+	/**
+	* Return whether a string is a valid namespace prefix
+	*
+	* @param  string $prefix Namespace prefix
+	* @return bool
+	*/
+	public function isValidNamespacePrefix($prefix)
+	{
+		return preg_match('#^[a-z_][a-z_0-9]*$#Di', $prefix);
+	}
+
+	/**
+	* Return the list of registered namespaces
+	*
+	* @return array
+	*/
+	public function getNamespaces()
+	{
+		return $this->namespaces;
+	}
+
+	/**
+	* Return the URI associated with given namespace prefix
+	*
+	* @param  string $prefix Namespace prefix
+	* @return mixed          Namespace URI, or FALSE if the namespace is not registered
+	*/
+	public function getNamespaceURI($prefix)
+	{
+		return (isset($this->namespaces[$prefix])) ? $this->namespaces[$prefix] : false;
+	}
+
+	/**
+	* Return the first prefix associated with given namespace URI
+	*
+	* @param  string $uri Namespace URI
+	* @return mixed       Namespace prefix, or FALSE if the namespace is not registered
+	*/
+	public function getNamespacePrefix($uri)
+	{
+		return array_search($uri, $this->namespaces, true);
+	}
+
+	/**
+	* Return all the prefixes associated with given namespace URI
+	*
+	* @param  string $uri Namespace URI
+	* @return array       List of namespace prefixes
+	*/
+	public function getNamespacePrefixes($uri)
+	{
+		return array_keys($this->namespaces, $uri, true);
+	}
+
+	//==========================================================================
 	// Tag-related methods
 	//==========================================================================
 
@@ -78,6 +190,20 @@ class ConfigBuilder
 		if (isset($this->tags[$tagName]))
 		{
 			throw new InvalidArgumentException("Tag '" . $tagName . "' already exists");
+		}
+
+		/**
+		* Test for namespace prefix/existence
+		*/
+		$pos = strpos($tagName, ':');
+		if ($pos !== false)
+		{
+			$prefix = substr($tagName, 0, $pos);
+
+			if (!$this->namespaceExists($prefix))
+			{
+				throw new InvalidArgumentException("Namespace '" . $prefix . "' is not registered");
+			}
 		}
 
 		/**
@@ -120,6 +246,22 @@ class ConfigBuilder
 	*/
 	public function isValidTagName($tagName)
 	{
+		/**
+		* If the tag's name is prefixed, test the prefix then remove it along with the colon from
+		* the tag's name
+		*/
+		$pos = strpos($tagName, ':');
+
+		if ($pos !== false)
+		{
+			if (!$this->isValidNamespacePrefix(substr($tagName, 0, $pos)))
+			{
+				return false;
+			}
+
+			$tagName = substr($tagName, $pos + 1);
+		}
+
 		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $tagName);
 	}
 
@@ -137,7 +279,10 @@ class ConfigBuilder
 			throw new InvalidArgumentException ("Invalid tag name '" . $tagName . "'");
 		}
 
-		$tagName = strtoupper($tagName);
+		if (strpos($tagName, ':') === false)
+		{
+			$tagName = strtoupper($tagName);
+		}
 
 		if ($mustExist && !isset($this->tags[$tagName]))
 		{
@@ -989,11 +1134,18 @@ class ConfigBuilder
 	*/
 	public function getParserConfig()
 	{
-		return array(
+		$config = array(
 			'filters' => $this->getFiltersConfig(),
 			'plugins' => $this->getPluginsConfig(),
 			'tags'    => $this->getTagsConfig(true)
 		);
+
+		if (!empty($this->namespaces))
+		{
+			$config['namespaces'] = $this->namespaces;
+		}
+
+		return $config;
 	}
 
 	/**
@@ -1575,9 +1727,14 @@ class ConfigBuilder
 	*/
 	public function getXSL($prefix = 'xsl')
 	{
+		if (isset($this->namespaces[$prefix]))
+		{
+			throw new InvalidArgumentException("Prefix '" . $prefix . "' is already registered to namespace '" . $this->namespaces[$prefix] . "'");
+		}
+
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
 		     . "\n"
-			 . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+			 . '<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . '>'
 			 . '<xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" indent="no"/>'
 			 . '<xsl:template match="/m">'
 			 . '<xsl:for-each select="*">'
@@ -1603,7 +1760,7 @@ class ConfigBuilder
 			$trans = new DOMDocument;
 			$trans->loadXML(
 				'<?xml version="1.0" encoding="utf-8"?>
-				<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:' . $prefix . '="http://www.w3.org/1999/XSL/Transform">
+				<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . ' xmlns:' . $prefix . '="http://www.w3.org/1999/XSL/Transform">
 
 					<xsl:output method="xml" encoding="utf-8" />
 
@@ -1650,6 +1807,23 @@ class ConfigBuilder
 	}
 
 	/**
+	* Generate the namespace declarations of all registered namespaces plus the XSL namespace
+	*
+	* @return string
+	*/
+	protected function generateNamespaceDeclarations()
+	{
+		$str = ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
+
+		foreach ($this->namespaces as $prefix => $uri)
+		{
+			$str .= ' xmlns:' . $prefix . '="' . htmlspecialchars($uri) . '"';
+		}
+
+		return $str;
+	}
+
+	/**
 	* Normalize XSL
 	*
 	* Check for well-formedness, remove whitespace if applicable.
@@ -1664,7 +1838,7 @@ class ConfigBuilder
 		/**
 		* Prepare a temporary stylesheet so that we can load the template and make sure it's valid
 		*/
-		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		$xsl = '<xsl:stylesheet' . $this->generateNamespaceDeclarations() . '>'
 		     . $xsl
 		     . '</xsl:stylesheet>';
 
@@ -2002,7 +2176,7 @@ class ConfigBuilder
 			);
 
 			$tagInfo['root'] = simplexml_load_string(
-				'<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $tagConfig['xsl'] . '</xsl:stylesheet>'
+				'<xsl:stylesheet' . $this->generateNamespaceDeclarations() . '>' . $tagConfig['xsl'] . '</xsl:stylesheet>'
 			);
 
 			/**

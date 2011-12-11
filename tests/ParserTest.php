@@ -2737,7 +2737,6 @@ class ParserTest extends Test
 		);
 	}
 
-
 	/**
 	* @test
 	*/
@@ -3171,6 +3170,93 @@ class ParserTest extends Test
 				'[b] [mark]tag[/mark]| [mark]tag[/mark][/b]',
 				'<rt><B><st>[b]</st> <MARK>tag</MARK><i> </i>| <MARK>tag</MARK><i> </i><et>[/b]</et></B></rt>'
 			)
+		);
+	}
+
+	public function testAcceptsNamespacedTags()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:BAR');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'foo:BAR',
+			'type'  => Parser::SELF_CLOSING_TAG
+		);
+
+		$this->assertContains(
+			'<foo:BAR>',
+			$this->parser->parse('X')
+		);
+	}
+
+	public function testOutputsNamespaceDeclarationsAtTheRoot()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:BAR');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'foo:BAR',
+			'type'  => Parser::SELF_CLOSING_TAG
+		);
+
+		$this->assertParsing(
+			'X',
+			'<rt xmlns:foo="urn:foo"><foo:BAR>X</foo:BAR></rt>'
+		);
+	}
+
+	/**
+	* @testdox Namespaced tags are case-sensitive
+	*/
+	public function testNamespacedTagsAreCaseSensitive()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:bar');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'foo:BAR',
+			'type'  => Parser::SELF_CLOSING_TAG
+		);
+
+		$this->assertParsing(
+			'X',
+			'<pt>X</pt>'
+		);
+	}
+
+	public function testTheCaseOfNamespacedTagsIsPreserved()
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:bar');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'foo:bar',
+			'type'  => Parser::SELF_CLOSING_TAG
+		);
+
+		$this->assertParsing(
+			'X',
+			'<rt xmlns:foo="urn:foo"><foo:bar>X</foo:bar></rt>'
 		);
 	}
 }

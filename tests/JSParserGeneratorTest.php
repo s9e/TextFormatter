@@ -860,9 +860,34 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox Optimization hint HINT_NAMESPACES is false by default
 	*/
-	public function Optimization_hint_HINT_REOPEN_RULES_is_false_by_default()
+	public function test_Optimization_hint_HINT_NAMESPACES_is_false_by_default()
+	{
+		$this->assertRegexp(
+			'#HINT_NAMESPACES\\s*=\\s*false#',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
+	* @testdox Optimization hint HINT_NAMESPACES is true if any namespaced tag exists
+	*/
+	public function test_Optimization_hint_HINT_NAMESPACES_is_true_if_any_namespaced_tag_exists()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:bar');
+
+		$this->assertRegexp(
+			'#HINT_NAMESPACES\\s*=\\s*true#',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
+	* @testdox Optimization hint HINT_REOPEN_RULES is false by default
+	*/
+	public function test_Optimization_hint_HINT_REOPEN_RULES_is_false_by_default()
 	{
 		$this->assertRegexp(
 			'#HINT_REOPEN_RULES\\s*=\\s*false#',
@@ -871,9 +896,9 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
+	* @testdox Optimization hint HINT_REOPEN_RULES is true if any reopenChild rule exists
 	*/
-	public function Optimization_hint_HINT_REOPEN_RULES_is_true_if_any_reopenChild_rule_exists()
+	public function test_Optimization_hint_HINT_REOPEN_RULES_is_true_if_any_reopenChild_rule_exists()
 	{
 		$this->cb->addTag('X');
 		$this->cb->addTagRule('X', 'reopenChild', 'X');

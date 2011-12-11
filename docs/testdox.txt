@@ -47,6 +47,25 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] getTagOption fails on unknown tags
  [x] getTagOption fails on unset options
  [x] getTagOption can return a null option
+ [x] Can register namespace with valid prefix
+ [x] Throws an exception if an attempt is made to register a namespace with the prefix 'xsl'
+ [x] Throws an exception if an attempt is made to register a namespace with the URI 'http://www.w3.org/1999/XSL/Transform'
+ [x] Throws an exception if getXSL() is called with a prefix already in use
+ [x] Throws an exception if an attempt is made to register a namespace with an invalid prefix
+ [x] Throws an exception if an attempt is made to overwrite a registered namespace
+ [x] Does not throw an exception if a namespace is registered identically multiple times
+ [x] Can tell whether a namespace has been registered to given prefix
+ [x] Can unregister a namespace by its prefix
+ [x] Can return a list of all registered namespaces
+ [x] Can return the URI associated with a namespace prefix
+ [x] Can return the first prefix associated with a namespace URI
+ [x] Can return all the prefixes associated with a namespace URI
+ [x] Can create tag in registered namespace
+ [x] Throws an exception when creating a tag with an unregistered namespace prefix
+ [x] Throws an exception when creating a tag with an invalid namespace prefix
+ [x] Can tell if namespaced tag exists
+ [x] Namespaced tag names are case-sensitive
+ [x] Registered namespaces appear in the parser config
  [x] Can set tag template
  [x] Can set tag XSL
  [x] Cannot set tag template on unknown tag
@@ -208,8 +227,10 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] Injects plugins configs into source
  [x] replaceConstant() throws an exception if no replacement occurs
  [x] A regexp map is created for compound attributes
- [x] Optimization hint HINT REOPEN RULES is false by default
- [x] Optimization hint HINT REOPEN RULES is true if any reopenChild rule exists
+ [x] Optimization hint HINT_NAMESPACES is false by default
+ [x] Optimization hint HINT_NAMESPACES is true if any namespaced tag exists
+ [x] Optimization hint HINT_REOPEN_RULES is false by default
+ [x] Optimization hint HINT_REOPEN_RULES is true if any reopenChild rule exists
  [x] Optimization hint HINT_REGEXP_REPLACEWITH is false by default
  [x] Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has a "replaceWith" option set
  [x] The source is minified with Google Closure Compiler if "compilation" is not set to "none"
@@ -407,6 +428,10 @@ s9e\TextFormatter\Tests\Parser
  [x] Tags with option 'disallowAsRoot' are processed if they do have a parent
  [x] Whitespace trimming works
  [x] Whitespace trimming does not cause tags to overlap
+ [x] Accepts namespaced tags
+ [x] Outputs namespace declarations at the root
+ [x] Namespaced tags are case-sensitive
+ [x] The case of namespaced tags is preserved
 
 s9e\TextFormatter\Tests\PluginConfig
  [x] Overrides properties with values passed in second parameter

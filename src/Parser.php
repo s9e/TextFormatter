@@ -63,6 +63,11 @@ class Parser
 	protected $filtersConfig;
 
 	/**
+	* @var array Registered namespaces: [prefix => uri]
+	*/
+	protected $registeredNamespaces = array();
+
+	/**
 	* @var array Array of PluginParser instances
 	*/
 	protected $pluginParsers = array();
@@ -136,6 +141,12 @@ class Parser
 	*/
 	protected $pos;
 
+	/**
+	* @var bool    Whether we have seen any namespaced tags. Does not guarantee that any namespaced
+	*              tags will appear in the result
+	*/
+	protected $hasNamespacedTags;
+
 	//==============================================================================================
 	// Public stuff
 	//==============================================================================================
@@ -151,6 +162,11 @@ class Parser
 		$this->filtersConfig = $config['filters'];
 		$this->pluginsConfig = $config['plugins'];
 		$this->tagsConfig    = $config['tags'];
+
+		if (isset($config['namespaces']))
+		{
+			$this->registeredNamespaces = $config['namespaces'];
+		}
 	}
 
 	/**
@@ -194,6 +210,8 @@ class Parser
 		$this->openStartTags   = array();
 		$this->cntOpen         = array();
 		$this->cntTotal        = array();
+
+		$this->hasNamespacedTags = false;
 
 		unset($this->currentTag, $this->currentAttribute);
 	}
@@ -583,7 +601,38 @@ class Parser
 		else
 		{
 			$xml->startElement('rt');
+
+			/**
+			* Declare all namespaces in the root node
+			*/
+			if ($this->hasNamespacedTags)
+			{
+				$declared = array();
+				foreach ($this->processedTags as $tag)
+				{
+					$pos = strpos($tag['name'], ':');
+					if ($pos !== false)
+					{
+						$prefix = substr($tag['name'], 0, $pos);
+
+						if (!isset($declared[$prefix]))
+						{
+							$declared[$prefix] = 1;
+
+							$xml->writeAttribute(
+								'xmlns:' . $prefix,
+								$this->registeredNamespaces[$prefix]
+							);
+						}
+					}
+				}
+			}
+
+			/**
+			* @var integer Position that tracks how much of the text has been consumed so far
+			*/
 			$pos = 0;
+
 			foreach ($this->processedTags as $tag)
 			{
 				/**
@@ -1001,9 +1050,19 @@ class Parser
 		foreach ($this->unprocessedTags as $k => &$tag)
 		{
 			/**
-			* Normalize the tag name
+			* If the tag's name isn't prefixed, we change it to uppercase.
+			*
+			* NOTE: we don't bother checking if the tag name would be valid since we check for the
+			*       tag's existence in $this->tagsConfig and only valid tags should be found there
 			*/
-			$tag['name'] = strtoupper($tag['name']);
+			if (strpos($tag['name'], ':') === false)
+			{
+				$tag['name'] = strtoupper($tag['name']);
+			}
+			else
+			{
+				$this->hasNamespacedTags = true;
+			}
 
 			if (!isset($this->tagsConfig[$tag['name']]))
 			{

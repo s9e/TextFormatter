@@ -40,6 +40,8 @@ s9e['TextFormatter'] = function(xsl)
 		filtersConfig = {/* DO NOT EDIT */},
 		/** @const @type {!Object} */
 		pluginsConfig = {/* DO NOT EDIT */},
+		/** @const @type {!Object} */
+		registeredNamespaces = {/* DO NOT EDIT */},
 		/** @const @type {!Object.<string, function>} */
 		callbacks = {/* DO NOT EDIT */},
 
@@ -69,6 +71,8 @@ s9e['TextFormatter'] = function(xsl)
 		context,
 		/** @type {!number} */
 		pos,
+		/** @type {!bool} */
+		hasNamespacedTags,
 
 		/** @const */
 		ENABLE_IE_WORKAROUNDS = 7,
@@ -80,6 +84,8 @@ s9e['TextFormatter'] = function(xsl)
 
 		/** @const */
 		HINT_DISALLOWED_HOSTS = true,
+		/** @const */
+		HINT_NAMESPACES = true,
 		/** @const */
 		HINT_REGEXP_REPLACEWITH = true,
 		/** @const */
@@ -216,6 +222,8 @@ s9e['TextFormatter'] = function(xsl)
 		openStartTags   = {};
 		cntOpen         = {};
 		cntTotal        = {};
+
+		hasNamespacedTags = false;
 
 		delete currentTag;
 		delete currentAttribute;
@@ -431,6 +439,35 @@ s9e['TextFormatter'] = function(xsl)
 			cnt   = processedTags.length,
 			DOM   = createDOM((cnt) ? 'rt' : 'pt'),
 			el    = DOM.documentElement;
+
+		if (HINT_NAMESPACES)
+		{
+			/**
+			* Declare all namespaces in the root node
+			*/
+			if (hasNamespacedTags)
+			{
+				var declared = {};
+				processedTags.forEach(function(tag)
+				{
+					var pos = tag.name.indexOf(':');
+					if (pos > -1)
+					{
+						var prefix = tag.name.substr(0, pos);
+
+						if (!(prefix in declared))
+						{
+							declared[prefix] = 1;
+
+							el.setAttribute(
+								'xmlns:' + prefix,
+								registeredNamespaces[prefix]
+							);
+						}
+					}
+				}
+			}
+		}
 
 		function writeElement(tagName, content)
 		{
@@ -774,7 +811,14 @@ s9e['TextFormatter'] = function(xsl)
 			*/
 			function(tag)
 			{
-				tag.name = tag.name.toUpperCase();
+				if (tag.name.indexOf(':') === -1)
+				{
+					tag.name = tag.name.toUpperCase();
+				}
+				else
+				{
+					hasNamespacedTags = true;
+				}
 
 				if (!tagsConfig[tag.name])
 				{

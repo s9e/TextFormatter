@@ -52,6 +52,11 @@ class JSParserGenerator
 	protected $filtersConfig;
 
 	/**
+	* @var array Registered namespaces
+	*/
+	protected $registeredNamespaces;
+
+	/**
 	* List of Javascript reserved words
 	*
 	* @link https://developer.mozilla.org/en/JavaScript/Reference/Reserved_Words
@@ -131,6 +136,7 @@ class JSParserGenerator
 	{
 		$this->tagsConfig    = $this->cb->getTagsConfig(true);
 		$this->filtersConfig = $this->cb->getFiltersConfig();
+		$this->registeredNamespaces = $this->cb->getNamespaces();
 		$this->src = $this->tpl;
 	}
 
@@ -178,6 +184,7 @@ class JSParserGenerator
 		$this->injectTagsConfig();
 		$this->injectPlugins();
 		$this->injectFiltersConfig();
+		$this->injectRegisteredNamespaces();
 		$this->injectCallbacks();
 
 		/**
@@ -272,6 +279,7 @@ class JSParserGenerator
 	{
 		$hints = array(
 			'DISALLOWED_HOSTS'   => isset($this->filtersConfig['url']['disallowedHosts']),
+			'NAMESPACES'         => false,
 			'REOPEN_RULES'       => false,
 			'REGEXP_REPLACEWITH' => false
 		);
@@ -291,12 +299,16 @@ class JSParserGenerator
 			}
 		}
 
-		foreach ($this->tagsConfig as $tagConfig)
+		foreach ($this->tagsConfig as $tagName => $tagConfig)
 		{
 			if (!empty($tagConfig['rules']['reopenChild']))
 			{
 				$hints['REOPEN_RULES'] = true;
-				break;
+			}
+
+			if (strpos($tagName, ':') !== false)
+			{
+				$hints['NAMESPACES'] = true;
 			}
 		}
 
@@ -591,6 +603,15 @@ class JSParserGenerator
 		$this->src = str_replace(
 			'filtersConfig = {/* DO NOT EDIT */}',
 			'filtersConfig = ' . $this->generateFiltersConfig(),
+			$this->src
+		);
+	}
+
+	protected function injectRegisteredNamespaces()
+	{
+		$this->src = str_replace(
+			'registeredNamespaces = {/* DO NOT EDIT */}',
+			'registeredNamespaces = ' . json_encode($this->registeredNamespaces, JSON_FORCE_OBJECT),
 			$this->src
 		);
 	}
