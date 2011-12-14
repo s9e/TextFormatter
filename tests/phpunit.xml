@@ -47,7 +47,32 @@
 
 	<filter>
 		<whitelist>
-			<directory>../src</directory>
+			<file>../src/ConfigBuilder.php</file>
+			<file>../src/JSParserGenerator.php</file>
+			<file>../src/Parser.php</file>
+			<file>../src/PluginConfig.php</file>
+			<file>../src/PluginParser.php</file>
+			<file>../src/PredefinedBBCodes.php</file>
+			<file>../src/PredefinedTags.php</file>
+			<file>../src/Renderer.php</file>
+			<file>../src/Plugins/AutolinkConfig.php</file>
+			<file>../src/Plugins/AutolinkParser.php</file>
+			<file>../src/Plugins/BBCodesConfig.php</file>
+			<file>../src/Plugins/BBCodesParser.php</file>
+			<file>../src/Plugins/CensorConfig.php</file>
+			<file>../src/Plugins/CensorParser.php</file>
+			<file>../src/Plugins/EmoticonsConfig.php</file>
+			<file>../src/Plugins/EmoticonsParser.php</file>
+			<file>../src/Plugins/FabricConfig.php</file>
+			<file>../src/Plugins/FabricParser.php</file>
+			<file>../src/Plugins/GenericConfig.php</file>
+			<file>../src/Plugins/GenericParser.php</file>
+			<file>../src/Plugins/HTMLEntitiesConfig.php</file>
+			<file>../src/Plugins/HTMLEntitiesParser.php</file>
+			<file>../src/Plugins/LinebreakerConfig.php</file>
+			<file>../src/Plugins/LinebreakerParser.php</file>
+			<file>../src/Plugins/WittyPantsConfig.php</file>
+			<file>../src/Plugins/WittyPantsParser.php</file>
 		</whitelist>
 	</filter>
 </phpunit>
