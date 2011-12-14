@@ -654,7 +654,7 @@ class ConfigBuilder
 	*/
 	static public function isValidAttributeName($attrName)
 	{
-		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $attrName);
+		return (bool) preg_match('#^[a-z_][a-z_0-9\\-]*$#Di', $attrName);
 	}
 
 	/**

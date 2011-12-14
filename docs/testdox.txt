@@ -29,6 +29,8 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Can set tag attribute option
  [x] Invalid tag names are rejected
  [x] Invalid attribute names are rejected
+ [x] Attribute names can contain hyphens
+ [x] Attribute names must start with a letter or an underscore
  [x] Duplicate tag names are rejected
  [x] Duplicate attribute names are rejected
  [x] Different tags can have attributes of the same name
@@ -550,6 +552,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodesParser
  [x] An unterminated self closing BBCode at the end of the text is ignored
  [x] An unterminated start tag with a default attribute at the end of the text is ignored
  [x] An unterminated BBCode with an attribute name that extends till the end of the text is ignored
+ [x] Attribute names can contain hyphens
  [x] Junk characters at the start of an attribute name are detected
  [x] Junk characters in an attribute name are detected
  [x] Attribute values can be enclosed within single quotes

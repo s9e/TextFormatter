@@ -121,7 +121,7 @@ matches.forEach(function(m)
 			/**
 			* Capture the attribute name
 			*/
-			var attrName = /^[a-z_0-9]*/i.exec(text.substr(rpos))[0].toLowerCase();
+			var attrName = /^[a-z_0-9\-]*/i.exec(text.substr(rpos))[0].toLowerCase();
 
 			if (attrName)
 			{

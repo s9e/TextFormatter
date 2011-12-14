@@ -247,6 +247,27 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testCanTellIfAttributeExists
+	*/
+	public function testAttributeNamesCanContainHyphens()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', 'data--foo', 'text');
+		$this->cb->attributeExists('a', 'data--foo');
+	}
+
+	/**
+	* @depends testAttributeNamesCanContainHyphens
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid attribute name '-data--foo'
+	*/
+	public function testAttributeNamesMustStartWithALetterOrAnUnderscore()
+	{
+		$this->cb->addTag('a');
+		$this->cb->addTagAttribute('a', '-data--foo', 'text');
+	}
+
+	/**
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Tag 'TAG' already exists
 	*/

@@ -146,7 +146,7 @@ class BBCodesParser extends PluginParser
 					/**
 					* Capture the attribute name
 					*/
-					$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', $rpos);
+					$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-', $rpos);
 
 					if ($spn)
 					{

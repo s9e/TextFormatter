@@ -315,6 +315,20 @@ class BBCodesParserTest extends Test
 	/**
 	* @test
 	*/
+	public function Attribute_names_can_contain_hyphens()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addTagAttribute('X', 'data-foo', 'text');
+
+		$this->assertParsing(
+			'[X data-foo=1 /]',
+			'<rt><X data-foo="1">[X data-foo=1 /]</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	*/
 	public function Junk_characters_at_the_start_of_an_attribute_name_are_detected()
 	{
 		$this->cb->BBCodes->addBBCode('X');
