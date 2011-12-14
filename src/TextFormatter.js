@@ -465,7 +465,7 @@ s9e['TextFormatter'] = function(xsl)
 							);
 						}
 					}
-				}
+				});
 			}
 		}
 
