@@ -195,6 +195,7 @@ class Parser
 	* Used internally at the beginning of a new parsing. I suppose some memory-obsessive users will
 	* appreciate to be able to do it whenever they feel like it
 	*
+	* @param  string New text to be parsed
 	* @return void
 	*/
 	public function reset($text)

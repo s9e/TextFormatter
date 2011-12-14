@@ -121,9 +121,7 @@ class JSParserGenerator
 	);
 
 	/**
-	* 
-	*
-	* @return void
+	* @param ConfigBuilder $cb
 	*/
 	public function __construct(ConfigBuilder $cb)
 	{
@@ -141,8 +139,9 @@ class JSParserGenerator
 	}
 
 	/**
-	* 
+	* Generate and return the JS parser
 	*
+	* @param  array  $options Generator options
 	* @return string
 	*/
 	public function get(array $options = array())

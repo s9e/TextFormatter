@@ -500,7 +500,7 @@ class ConfigBuilder
 	* @param string $tagName
 	* @param string $attrName
 	* @param string $attrType
-	* @param array  $conf
+	* @param array  $attrConf
 	*/
 	public function addTagAttribute($tagName, $attrName, $attrType, array $attrConf = array())
 	{
@@ -1098,6 +1098,7 @@ class ConfigBuilder
 	}
 
 	/**
+	* @param string $type Either "disallowedHosts" or "resolveRedirectsHosts"
 	* @param string $host Hostname or hostmask
 	*/
 	protected function addHostmask($type, $host)
@@ -1935,6 +1936,7 @@ class ConfigBuilder
 	/**
 	* Return the Javascript parser that corresponds to this configuration
 	*
+	* @param  array  $options Options to be passed to the JSParser generator
 	* @return string
 	*/
 	public function getJSParser(array $options = array())
