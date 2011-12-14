@@ -847,7 +847,7 @@ s9e['TextFormatter'] = function(xsl)
 
 				tag.tagMate = tag.pluginName
 				            + '-' + tag.name
-				            + ((tag.tagMate > '') ? ':' + tag.tagMate : '');
+				            + '#' + tag.tagMate;
 
 				/**
 				* Add trimming info
