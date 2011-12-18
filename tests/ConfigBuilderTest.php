@@ -1147,6 +1147,34 @@ class ConfigBuilderTest extends Test
 		$this->cb->allowScheme('foo:bar');
 	}
 
+	/**
+	* @testdox There is no default scheme for schemeless URLs by default
+	*/
+	public function testThereIsNoDefaultSchemeForSchemelessURLsByDefault()
+	{
+		$filtersConfig = $this->cb->getFiltersConfig();
+
+		$this->assertArrayNotHasKey('defaultScheme', $filtersConfig['url']);
+	}
+
+	/**
+	* @testdox A default scheme to be used for URLs with no scheme can be set with setDefaultScheme()
+	*/
+	public function testADefaultSchemeCanBeSetForSchemelessURLs()
+	{
+		$this->cb->setDefaultScheme('http');
+		$filtersConfig = $this->cb->getFiltersConfig();
+
+		$this->assertArrayMatches(
+			array(
+				'url' => array(
+					'defaultScheme' => 'http'
+				)
+			),
+			$filtersConfig
+		);
+	}
+
 	public function testUrlFilterCanBeConfiguredToDisallowHosts()
 	{
 		$this->cb->disallowHost('example.org');

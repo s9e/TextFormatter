@@ -307,6 +307,18 @@ class Parser
 				$attrVal = trim($attrVal);
 
 				/**
+				* @var bool Whether to remove the scheme part of the URL
+				*/
+				$removeScheme = false;
+
+				if (substr($attrVal, 0, 2) === '//'
+				 && isset($filterConf['defaultScheme']))
+				{
+					 $attrVal = $filterConf['defaultScheme'] . ':' . $attrVal;
+					 $removeScheme = true;
+				}
+
+				/**
 				* Test whether the URL contains non-ASCII characters
 				*/
 				if (preg_match('#[\\x80-\\xff]#', $attrVal))
@@ -383,6 +395,11 @@ class Parser
 						'msg'    => 'No Location: received from %s',
 						'params' => array($attrVal)
 					));
+				}
+
+				if ($removeScheme)
+				{
+					$attrVal = substr($attrVal, 1 + strpos($attrVal, ':'));
 				}
 
 				/**
@@ -2014,14 +2031,14 @@ class Parser
 	* Encode an UTF-8 URL to ASCII
 	*
 	* Requires idn_to_ascii() in order to deal with IDNs. If idn_to_ascii() is not available, the
-	* host part will be URL-encoded with the rest of the URL. Supports URLs with no scheme.
+	* host part will be URL-encoded with the rest of the URL.
 	*
 	* @param  string $url Original URL
 	* @return Mixed       Encoded URL
 	*/
 	static protected function encodeUrlToAscii($url)
 	{
-		if (preg_match('#^((?:https?:)?//(?:[^/]+@)?)([^/]+)#i', $url, $m)
+		if (preg_match('#^(https?://(?:[^/]+@)?)([^/]+)#i', $url, $m)
 		 && function_exists('idn_to_ascii'))
 		{
 			$url = $m[1] . idn_to_ascii($m[2]) . substr($url, strlen($m[0]));

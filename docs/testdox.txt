@@ -97,6 +97,8 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Url filter allows default schemes
  [x] Url filter can be configured to allow additional schemes
  [x] allowScheme() throws an exception on invalid scheme names
+ [x] There is no default scheme for schemeless URLs by default
+ [x] A default scheme to be used for URLs with no scheme can be set with setDefaultScheme()
  [x] Url filter can be configured to disallow hosts
  [x] Url filter can be configured to resolve redirects from a given host
  [x] Disallowed IDNs are punycoded
@@ -314,6 +316,9 @@ s9e\TextFormatter\Tests\Parser
  [x] Invalid URLs are rejected
  [x] URLs with no host are rejected
  [x] URLs with no path are accepted
+ [x] URLs with no scheme are rejected by default
+ [x] URLs with no scheme are validated using the default scheme set with ConfigBuilder::setDefaultScheme()
+ [x] The default scheme used for validation does not appear in the filtered URL
  [x] Whitespace around URLs is removed
  [x] Url filter rejects not allowed schemes
  [x] Url filter can accept non http schemes

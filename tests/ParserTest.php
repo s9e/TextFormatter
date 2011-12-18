@@ -802,6 +802,33 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox URLs with no scheme are rejected by default
+	*/
+	public function testUrlsWithNoSchemeAreRejectedByDefault()
+	{
+		$this->assertAttributeIsInvalid('url', '//www.example.com');
+	}
+
+	/**
+	* @testdox URLs with no scheme are validated using the default scheme set with ConfigBuilder::setDefaultScheme()
+	*/
+	public function testUrlsWithNoSchemeAreAcceptedIfConfigured()
+	{
+		$this->cb->setDefaultScheme('http');
+		$this->assertAttributeIsValid('url', '//www.example.com');
+	}
+
+
+	/**
+	* @testdox The default scheme used for validation does not appear in the filtered URL
+	*/
+	public function testDefaultSchemeDoesNotAppearInFilteredURL()
+	{
+		$this->cb->setDefaultScheme('http');
+		$this->assertAttributeIsValid('url', '//www.example.com', '//www.example.com');
+	}
+
+	/**
 	* @testdox Whitespace around URLs is removed
 	* @depends testUrlsWithNoPathAreAccepted
 	*/

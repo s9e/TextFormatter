@@ -1064,15 +1064,34 @@ class ConfigBuilder
 	*/
 	public function allowScheme($scheme)
 	{
-		/**
-		* @link http://tools.ietf.org/html/rfc3986#section-3.1
-		*/
+		$this->validateScheme($scheme);
+
+		$this->filters['url']['allowedSchemes'][] = $scheme;
+	}
+
+	/**
+	* Set a default scheme to be used for validation of scheme-less URLs
+	*
+	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
+	*/
+	public function setDefaultScheme($scheme)
+	{
+		$this->filters['url']['defaultScheme'] = $scheme;
+	}
+
+	/**
+	* Validate a scheme name and throw an exception if invalid
+	*
+	* @link http://tools.ietf.org/html/rfc3986#section-3.1
+	*
+	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
+	*/
+	protected function validateScheme($scheme)
+	{
 		if (!preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))
 		{
 			throw new InvalidArgumentException("Invalid scheme name '" . $scheme . "'");
 		}
-
-		$this->filters['url']['allowedSchemes'][] = $scheme;
 	}
 
 	/**
