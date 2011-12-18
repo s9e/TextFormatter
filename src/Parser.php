@@ -311,69 +311,7 @@ class Parser
 				*/
 				if (preg_match('#[\\x80-\\xff]#', $attrVal))
 				{
-					$p = parse_url($attrVal);
-
-					if ($p)
-					{
-						/**
-						* Encode IDNs
-						*/
-						if (function_exists('idn_to_ascii'))
-						{
-							$p['host'] = idn_to_ascii($p['host']);
-						}
-
-						/**
-						* Rebuild the URL
-						*/
-						$url = $p['scheme'] . '://';
-
-						if (isset($p['user']))
-						{
-							$url .= $p['user'];
-
-							if (isset($p['pass']))
-							{
-								$url .= ':' . $p['pass'];
-							}
-
-							$url .= '@';
-						}
-
-						$url .= $p['host'];
-
-						if (isset($p['port']))
-						{
-							$url .= ':' . $p['port'];
-						}
-
-						if (isset($p['path']))
-						{
-							$url .= $p['path'];
-						}
-
-						if (isset($p['query']))
-						{
-							$url .= '?' . $p['query'];
-						}
-
-						if (isset($p['fragment']))
-						{
-							$url .= '#' . $p['fragment'];
-						}
-
-						/**
-						* URL-encode non-ASCII stuff and use the result as new value for attribute
-						*/
-						$attrVal = preg_replace_callback(
-							'#[^\\x00-\\x7f]#u',
-							function ($m)
-							{
-								return urlencode($m[0]);
-							},
-							$url
-						);
-					}
+					$attrVal = static::encodeUrlToAscii($attrVal);
 				}
 
 				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_URL);
@@ -2070,5 +2008,35 @@ class Parser
 		}
 
 		return null;
+	}
+
+	/**
+	* Encode an UTF-8 URL to ASCII
+	*
+	* Requires idn_to_ascii() in order to deal with IDNs. If idn_to_ascii() is not available, the
+	* host part will be URL-encoded with the rest of the URL. Supports URLs with no scheme.
+	*
+	* @param  string $url Original URL
+	* @return Mixed       Encoded URL
+	*/
+	static protected function encodeUrlToAscii($url)
+	{
+		if (preg_match('#^((?:https?:)?//(?:[^/]+@)?)([^/]+)#i', $url, $m)
+		 && function_exists('idn_to_ascii'))
+		{
+			$url = $m[1] . idn_to_ascii($m[2]) . substr($url, strlen($m[0]));
+		}
+
+		/**
+		* URL-encode non-ASCII stuff
+		*/
+		return preg_replace_callback(
+			'#[^\\x00-\\x7f]+#u',
+			function ($m)
+			{
+				return urlencode($m[0]);
+			},
+			$url
+		);
 	}
 }
