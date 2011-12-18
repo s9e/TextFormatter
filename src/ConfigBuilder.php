@@ -1064,6 +1064,14 @@ class ConfigBuilder
 	*/
 	public function allowScheme($scheme)
 	{
+		/**
+		* @link http://tools.ietf.org/html/rfc3986#section-3.1
+		*/
+		if (!preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))
+		{
+			throw new InvalidArgumentException("Invalid scheme name '" . $scheme . "'");
+		}
+
 		$this->filters['url']['allowedSchemes'][] = $scheme;
 	}
 

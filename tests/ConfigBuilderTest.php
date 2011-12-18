@@ -1137,6 +1137,16 @@ class ConfigBuilderTest extends Test
 		$this->assertRegexp($filtersConfig['url']['allowedSchemes'], 'foo');
 	}
 
+	/**
+	* @testdox allowScheme() throws an exception on invalid scheme names
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid scheme name 'foo:bar'
+	*/
+	public function testInvalidSchemeNames()
+	{
+		$this->cb->allowScheme('foo:bar');
+	}
+
 	public function testUrlFilterCanBeConfiguredToDisallowHosts()
 	{
 		$this->cb->disallowHost('example.org');
