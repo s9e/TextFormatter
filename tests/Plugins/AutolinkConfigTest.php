@@ -30,6 +30,7 @@ class AutolinkConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSParser() returns the source of its Javascript parser
 	*/
 	public function getJSParser_returns_the_source_of_its_Javascript_parser()
 	{
@@ -41,6 +42,7 @@ class AutolinkConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSConfig() removes the possessive quantifier from the regexp
 	*/
 	public function getJSConfig_removes_the_possessive_quantifier_from_the_regexp()
 	{

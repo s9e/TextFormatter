@@ -160,8 +160,8 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] addTagAttributePostFilterCallback throws an exception if callback is not callable
  [x] Can set postFilter callbacks via setTagAttributeOption
  [x] Can clear all postFilter callbacks from a tag attribute
- [x] getJSPlugins returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
- [x] getJSPlugins ignores plugins with no Javascript parser
+ [x] getJSPlugins() returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
+ [x] getJSPlugins() ignores plugins with no Javascript parser
  [x] HTML specs: <span> does not allow <div> as a child
  [x] HTML specs: <span> does not allow <div> as a child even with a <span> sibling
  [x] HTML specs: <span> with a <div> sibling does not allow <div> as a child
@@ -375,7 +375,7 @@ s9e\TextFormatter\Tests\Parser
  [x] Attribute value is replaced by the return value of the attribute preFilter callbacks
  [x] Attribute value is replaced by the return value of the attribute postFilter callbacks even if it makes it invalid
  [x] getTagsConfig returns the tags config
- [x] Plain text is returned within pt tags
+ [x] Plain text is returned within <pt> tags
  [x] Undefined attributes do not appear in XML
  [x] Overlapping tags are removed
  [x] Tag sorting: tags are sorted by pos, descending
@@ -443,9 +443,9 @@ s9e\TextFormatter\Tests\Parser
 
 s9e\TextFormatter\Tests\PluginConfig
  [x] Overrides properties with values passed in second parameter
- [x] getJSConfig forwards the result of getConfig by default
- [x] getJSConfigMeta returns an empty array by default
- [x] getJSParser returns false by default
+ [x] getJSConfig() forwards the result of getConfig() by default
+ [x] getJSConfigMeta() returns an empty array by default
+ [x] getJSParser() returns false by default
 
 s9e\TextFormatter\Tests\PluginParser
  [x] setUp is called once after initialization
@@ -456,8 +456,8 @@ s9e\TextFormatter\Tests\Renderer
 s9e\TextFormatter\Tests\Plugins\AutolinkConfig
  [x] Automatically creates an URL tag
  [x] Generates a regexp
- [x] getJSParser returns the source of its Javascript parser
- [x] getJSConfig removes the possessive quantifier from the regexp
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfig() removes the possessive quantifier from the regexp
 
 s9e\TextFormatter\Tests\Plugins\AutolinkParser
  [x] HTTP urls are linkified by default
@@ -478,7 +478,7 @@ s9e\TextFormatter\Tests\Plugins\AutolinkParser
  [x] Ignores the right square bracket of a BBCode tag
 
 s9e\TextFormatter\Tests\Plugins\BBCodesConfig
- [x] getConfig returns false if no BBCodes were added
+ [x] getConfig() returns false if no BBCodes were added
  [x] A single asterisk is accepted as a BBCode name
  [x] An asterisk followed by anything is rejected as a BBCode name
  [x] BBCode names can start with a letter
@@ -535,7 +535,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] addBBCodeFromExample handles RANGE placeholders
  [x] addBBCodeFromExample handles CHOICE placeholders and turns them into regexps
  [x] addBBCodeFromExample handles CHOICE placeholders with Unicode values
- [x] getJSParser returns the source of its Javascript parser
+ [x] getJSParser() returns the source of its Javascript parser
  [x] BBCode names are preserved in Javascript config
 
 s9e\TextFormatter\Tests\Plugins\BBCodesParser
@@ -591,11 +591,11 @@ s9e\TextFormatter\Tests\Plugins\CensorConfig
  [x] attrName can be customized at loading time
  [x] defaultReplacement can be customized at loading time
  [x] Does not attempt to create its tag if it already exists
- [x] getConfig returns false if no words were added
+ [x] getConfig() returns false if no words were added
  [x] Generates a regexp
  [x] Accept custom replacement for specific words
- [x] getJSParser returns the source of its Javascript parser
- [x] getJSConfig returns the replacements as pairs in a numerically indexed array
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfig() returns the replacements as pairs in a numerically indexed array
  [x] Replacements regexps are converted to RegExp objects in Javascript config
 
 s9e\TextFormatter\Tests\Plugins\CensorParser
@@ -712,7 +712,7 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntitiesConfig
  [x] Does not attempt to create its tag if it already exists
  [x] Individual HTML entities can be disabled via disableEntity
  [x] disableEntity throws an exception on invalid entities
- [x] getJSParser returns the source of its Javascript parser
+ [x] getJSParser() returns the source of its Javascript parser
  [x] Disabled entities are preserved in Javascript config
 
 s9e\TextFormatter\Tests\Plugins\HTMLEntitiesParser
@@ -726,7 +726,7 @@ s9e\TextFormatter\Tests\Plugins\LinebreakerConfig
  [x] Automatically creates a BR tag
  [x] Does not attempt to create its tag if it already exists
  [x] Generates a regexp
- [x] getJSParser returns the source of its Javascript parser
+ [x] getJSParser() returns the source of its Javascript parser
 
 s9e\TextFormatter\Tests\Plugins\LinebreakerParser
  [x] LF characters are replaced with a BR tag
@@ -736,8 +736,8 @@ s9e\TextFormatter\Tests\Plugins\WittyPantsConfig
  [x] tagName can be customized at loading time
  [x] attrName can be customized at loading time
  [x] Does not attempt to create its tag if it already exists
- [x] getJSParser returns the source of its Javascript parser
- [x] getJSConfig returns no regexp with lookbehind assertions
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfig() returns no regexp with lookbehind assertions
 
 s9e\TextFormatter\Tests\Plugins\WittyPantsParser
  [x] Can use a custom tagName
@@ -774,6 +774,6 @@ s9e\TextFormatter\Tests\Plugins\WittyPantsParser
 
 s9e\TextFormatter\Tests\PredefinedBBCodes
  [x] Throws an exception if the BBCode does not exist
- [x] getUsedCodeStx returns all values of stx in CODE tags
+ [x] getUsedCodeStx() returns all values of stx in CODE tags
  [x] Predefined BBCodes
 

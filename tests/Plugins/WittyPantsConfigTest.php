@@ -46,6 +46,7 @@ class WittyPantsConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSParser() returns the source of its Javascript parser
 	*/
 	public function getJSParser_returns_the_source_of_its_Javascript_parser()
 	{
@@ -57,6 +58,7 @@ class WittyPantsConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSConfig() returns no regexp with lookbehind assertions
 	*/
 	public function getJSConfig_returns_no_regexp_with_lookbehind_assertions()
 	{

@@ -2435,6 +2435,7 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSPlugins() returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
 	*/
 	public function getJSPlugins_returns_an_array_of_all_plugins_with_a_Javascript_parser_as_well_as_their_config_and_the_associated_metadata()
 	{
@@ -2456,6 +2457,7 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSPlugins() ignores plugins with no Javascript parser
 	*/
 	public function getJSPlugins_ignores_plugins_with_no_Javascript_parser()
 	{

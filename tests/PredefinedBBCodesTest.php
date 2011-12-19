@@ -29,6 +29,7 @@ class PredefinedBBCodesTest extends Test
 
 	/**
 	* @test
+	* @testdox getUsedCodeStx() returns all values of stx in CODE tags
 	*/
 	public function getUsedCodeStx_returns_all_values_of_stx_in_CODE_tags()
 	{

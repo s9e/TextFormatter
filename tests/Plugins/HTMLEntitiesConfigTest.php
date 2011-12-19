@@ -70,6 +70,7 @@ class HTMLEntitiesConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSParser() returns the source of its Javascript parser
 	*/
 	public function getJSParser_returns_the_source_of_its_Javascript_parser()
 	{

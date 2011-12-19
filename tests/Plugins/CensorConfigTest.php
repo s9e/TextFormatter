@@ -61,6 +61,7 @@ class CensorConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getConfig() returns false if no words were added
 	*/
 	public function getConfig_returns_false_if_no_words_were_added()
 	{
@@ -91,6 +92,7 @@ class CensorConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSParser() returns the source of its Javascript parser
 	*/
 	public function getJSParser_returns_the_source_of_its_Javascript_parser()
 	{
@@ -102,6 +104,7 @@ class CensorConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSConfig() returns the replacements as pairs in a numerically indexed array
 	*/
 	public function getJSConfig_returns_the_replacements_as_pairs_in_a_numerically_indexed_array()
 	{

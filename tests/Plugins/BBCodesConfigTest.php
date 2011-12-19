@@ -14,6 +14,7 @@ class BBCodesConfigTest extends Test
 {
 	/**
 	* @test
+	* @testdox getConfig() returns false if no BBCodes were added
 	*/
 	public function getConfig_returns_false_if_no_BBCodes_were_added()
 	{
@@ -763,6 +764,7 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox getJSParser() returns the source of its Javascript parser
 	*/
 	public function getJSParser_returns_the_source_of_its_Javascript_parser()
 	{
