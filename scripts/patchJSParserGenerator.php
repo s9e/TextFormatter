@@ -27,6 +27,19 @@ function pcreChr($cp)
 	return '\\u' . sprintf('%04X', $cp);
 }
 
+function wget($url)
+{
+	return file_get_contents(
+		'compress.zlib://' . $url,
+		false,
+		stream_context_create(array(
+			'http' => array(
+				'header' => 'Accept-Encoding: gzip,deflate'
+			)
+		))
+	);
+}
+
 if (!file_exists('/tmp/props.txt'))
 {
 	file_put_contents(

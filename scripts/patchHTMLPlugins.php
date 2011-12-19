@@ -5,9 +5,14 @@ die("Not currently used.\n");
 
 if (!file_exists('/tmp/entities-unicode.inc'))
 {
-	file_put_contents(
+	copy(
+		'compress.zlib://http://svn.whatwg.org/webapps/entities-unicode.inc',
 		'/tmp/entities-unicode.inc',
-		file_get_contents('http://svn.whatwg.org/webapps/entities-unicode.inc')
+		stream_context_create(array(
+			'http' => array(
+				'header' => "Accept-Encoding: gzip,deflate"
+			)
+		))
 	);
 }
 

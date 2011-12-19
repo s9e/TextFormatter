@@ -10,7 +10,15 @@ $filepath = '/tmp/Overview.html';
 
 if (!file_exists($filepath))
 {
-	file_put_contents($filepath, file_get_contents('http://dev.w3.org/html5/spec/Overview.html'));
+	copy(
+		'compress.zlib://http://dev.w3.org/html5/spec/Overview.html',
+		$filepath,
+		stream_context_create(array(
+			'http' => array(
+				'header' => "Accept-Encoding: gzip,deflate"
+			)
+		))
+	);
 }
 
 $page = SimpleDOM::loadHTMLFile($filepath);
