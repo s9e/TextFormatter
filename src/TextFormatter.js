@@ -158,7 +158,7 @@ s9e['TextFormatter'] = function(xsl)
 	function getMatches(regexp, container)
 	{
 		// reset the regexp
-		regexp.lastIndex = 0;
+		regexp.lastIndex = null;
 
 		var cnt = 0,
 			matches;
@@ -169,10 +169,19 @@ s9e['TextFormatter'] = function(xsl)
 				match = [[matches.shift(), pos]],
 				str;
 
-			while (str = matches.shift())
+			while (matches.length)
 			{
-				match.push([str, text.indexOf(str, pos)]);
-				pos += str.length;
+				str = matches.shift();
+
+				if (typeof str === 'undefined')
+				{
+					match.push(['', -1]);
+				}
+				else
+				{
+					match.push([str, text.indexOf(str, pos)]);
+					pos += str.length;
+				}
 			}
 
 			container.push(match);
@@ -459,7 +468,8 @@ s9e['TextFormatter'] = function(xsl)
 						{
 							declared[prefix] = 1;
 
-							el.setAttribute(
+							el.setAttributeNS(
+								'http://www.w3.org/2000/xmlns/',
 								'xmlns:' + prefix,
 								registeredNamespaces[prefix]
 							);
@@ -469,10 +479,29 @@ s9e['TextFormatter'] = function(xsl)
 			}
 		}
 
+		function createElement(tagName)
+		{
+			if (HINT_NAMESPACES)
+			{
+				var pos = tagName.indexOf(':');
+				if (pos > -1)
+				{
+					var prefix = tagName.substr(0, pos);
+
+					return DOM.createElementNS(
+						registeredNamespaces[prefix],
+						tagName
+					);
+				}
+			}
+
+			return DOM.createElement(tagName);
+		}
+
 		function writeElement(tagName, content)
 		{
 			setTextContent(
-				el.appendChild(DOM.createElement(tagName)),
+				el.appendChild(createElement(tagName)),
 				content
 			);
 		}
@@ -536,7 +565,7 @@ s9e['TextFormatter'] = function(xsl)
 			if (tag.type & START_TAG)
 			{
 				stack.push(el);
-				el = el.appendChild(DOM.createElement(tag.name));
+				el = el.appendChild(createElement(tag.name));
 
 				for (var attrName in tag.attrs)
 				{
