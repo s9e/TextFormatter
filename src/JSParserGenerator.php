@@ -242,6 +242,9 @@ class JSParserGenerator
 			'js_code'           => $this->src
 		));
 
+		// Got to add dupe variables by hand
+		$content .= '&output_info=errors';
+
 		$response = json_decode(file_get_contents(
 			$this->closureCompilerURL,
 			false,
