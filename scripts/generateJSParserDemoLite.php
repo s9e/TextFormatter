@@ -10,8 +10,26 @@ $cb->BBCodes->addPredefinedBBCode('I');
 $cb->BBCodes->addPredefinedBBCode('U');
 $cb->BBCodes->addPredefinedBBCode('S');
 $cb->BBCodes->addPredefinedBBCode('URL');
-$cb->BBCodes->addPredefinedBBCode('LIST');
 $cb->BBCodes->addPredefinedBBCode('COLOR');
+
+$cb->BBCodes->addBBCode('LIST', array(
+	'trimBefore'   => true,
+	'trimAfter'    => true,
+	'ltrimContent' => true,
+	'rtrimContent' => true,
+
+	'xsl' => '<xsl:template match="LIST[LI]"><ul><xsl:apply-templates/></ul></xsl:template>'
+));
+
+$cb->BBCodes->addBBCode('*', array(
+	'trimBefore'   => true,
+	'trimAfter'    => true,
+	'ltrimContent' => true,
+	'rtrimContent' => true,
+
+	'tagName'  => 'LI',
+	'template' => '<li><xsl:apply-templates/></li>'
+));
 
 $cb->BBCodes->addBBCode('CODE', array(
 	'template' => '<code><xsl:apply-templates/></code>',
@@ -21,15 +39,15 @@ $cb->BBCodes->addBBCode('CODE', array(
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
 $cb->loadPlugin('Autolink');
-$cb->loadPlugin('Linebreaker');
 
 $cb->addRulesFromHTML5Specs();
 
 $jsParser = $cb->getJSParser(array(
 	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
 	'disableLogTypes' => array('debug', 'warning', 'error'),
-	'unsafeMinification' => true,
-	'xslNamespacePrefix' => 'x'
+	'unsafeMinification'  => true,
+	'xslNamespacePrefix'  => 'x',
+	'enableIEWorkarounds' => false
 ));
 
 ob_start();
@@ -47,6 +65,7 @@ ob_start();
 			background-color: #eee;
 			border: dashed 1px #8af;
 			border-radius: 5px;
+			white-space: pre-line;
 		}
 
 		code
@@ -61,9 +80,9 @@ ob_start();
 <body>
 	<div style="width:80%;max-width:800px">
 		<form>
-			<textarea style="width:99%" rows="15">This is a light version of the TextFormatter parser/renderer, optimized for size.
+			<textarea style="width:99%" rows="15">This is a light version of [url=https://github.com/s9e/TextFormatter/tree/master/src/ title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url]'s Live Preview feature, optimized purely for size. Only some of the plugins have been enabled and logging has been disabled, as well as support for Internet Explorer.
 
-Logging has been disabled and only some of the plugins have been enabled. The source has been minified to <?php echo round(strlen($jsParser) / 1024, 1); ?>KB (<?php echo round(strlen(gzencode($jsParser, 9)) / 1024, 1); ?>KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].
+The source has been minified to <?php echo round(strlen($jsParser) / 1024, 1); ?>KB (<?php echo round(strlen(gzencode($jsParser, 9)) / 1024, 1); ?>KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].
 
 The included plugins are:
 
@@ -77,7 +96,6 @@ The included plugins are:
     [*][code][URL][/code], [code:123][CODE][/code:123] and [code][LIST][/code]
   [/list][/*]
   [*][b]Emoticons[/b] — one emoticon :) has been added
-  [*][b]Linebreaker[/b] — Linefeeds are converted to &lt;br&gt;
 [/list]</textarea>
 		</form>
 	</div>
