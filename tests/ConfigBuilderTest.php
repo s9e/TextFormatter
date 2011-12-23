@@ -2860,4 +2860,36 @@ class ConfigBuilderTest extends Test
 	{
 		$this->cb->generateRulesFromHTML5Specs(array('rootElement' => 'xxx'));
 	}
+
+	/**
+	* @testdox generateRulesFromHTML5Specs() uses the Renderer to generate a template for tags that have no template set
+	* @depends testHTMLRules1
+	*/
+	public function testTheRendererIsUsedToGenerateATemplateForTagsThatHaveNoTemplateSet()
+	{
+		$this->cb->addTag('DIV');
+		$this->cb->addTag('SPAN');
+
+		$this->cb->addXSL(
+			'<xsl:template match="DIV"><div><xsl:apply-templates/></div></xsl:template>
+			<xsl:template match="SPAN"><span><xsl:apply-templates/></span></xsl:template>'
+		);
+
+		$this->assertEquals(
+			array(
+				'DIV' => array(
+					'rules' => array(
+						'allowChild' => array('DIV', 'SPAN')
+					)
+				),
+				'SPAN' => array(
+					'rules' => array(
+						'allowChild' => array('SPAN'),
+						'denyChild'  => array('DIV')
+					)
+				)
+			),
+			$this->cb->generateRulesFromHTML5Specs()
+		);
+	}
 }

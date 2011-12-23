@@ -1555,7 +1555,7 @@ class ConfigBuilder
 	*/
 	static public function parseRegexp($regexp)
 	{
-		if (!preg_match('#(.)(.*?)\\1([a-zA-Z]*)$#D', $regexp, $m))
+		if (!preg_match('#^(.)(.*?)\\1([a-zA-Z]*)$#D', $regexp, $m))
 		{
 			throw new RuntimeException('Could not parse regexp delimiters');
 		}
@@ -2200,6 +2200,27 @@ class ConfigBuilder
 		$tagsInfo = array();
 		foreach ($tagsConfig as $tagName => $tagConfig)
 		{
+			/**
+			* If a tag has no template set, we try to render it alone and use the result as its
+			* pseudo-template
+			*/
+			if (!isset($tagConfig['xsl']))
+			{
+				if (!isset($renderer))
+				{
+					$renderer = $this->getRenderer();
+				}
+
+				$uid = uniqid('', true);
+				$xml = '<rt' . $this->generateNamespaceDeclarations() . '>'
+				     . '<' . $tagName . '>' . $uid . '</' . $tagName . '>'
+				     . '</rt>';
+
+				$tagConfig['xsl'] = '<xsl:template match="' . $tagName . '">'
+				                  . str_replace($uid, '<xsl:apply-templates/>', $renderer->render($xml))
+				                  . '</xsl:template>';
+			}
+
 			$tagInfo = array(
 				'lastChildren' => array()
 			);
