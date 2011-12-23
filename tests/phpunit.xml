@@ -14,6 +14,13 @@
 		<log type="testdox-text" target="../docs/testdox.txt" />
 	</logging>
 
+	<groups>
+		<include>
+			<!-- Do not run special tests by default -->
+			<group>__nogroup__</group>
+		</include>
+	</groups>
+
 	<testsuites>
 		<testsuite name="TextFormatter">
 			<file>AutoloadersTest.php</file>
