@@ -2,13 +2,11 @@
 cd $(dirname $0)
 
 git push &
-./generateCodeCoverage.sh &
 ./generateJSParserDemoLite.php &
-./generateJSParserDemo.php 1
-./generateDocBlox.sh
+./generateJSParserDemo.php 1 &
+./generateDocBlox.sh &
 
-# wait for everyone to be done
-wait
+./generateCodeCoverage.sh
 
 cd ../../s9e.github.com/TextFormatter
 
