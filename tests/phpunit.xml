@@ -39,6 +39,8 @@
 			<file>Plugins/HTMLEntitiesParserTest.php</file>
 			<file>Plugins/LinebreakerConfigTest.php</file>
 			<file>Plugins/LinebreakerParserTest.php</file>
+			<file>Plugins/RawHTMLConfigTest.php</file>
+			<file>Plugins/RawHTMLParserTest.php</file>
 			<file>Plugins/WittyPantsConfigTest.php</file>
 			<file>Plugins/WittyPantsParserTest.php</file>
 			<file>PredefinedBBCodesTest.php</file>
@@ -71,6 +73,8 @@
 			<file>../src/Plugins/HTMLEntitiesParser.php</file>
 			<file>../src/Plugins/LinebreakerConfig.php</file>
 			<file>../src/Plugins/LinebreakerParser.php</file>
+			<file>../src/Plugins/RawHTMLConfig.php</file>
+			<file>../src/Plugins/RawHTMLParser.php</file>
 			<file>../src/Plugins/WittyPantsConfig.php</file>
 			<file>../src/Plugins/WittyPantsParser.php</file>
 		</whitelist>

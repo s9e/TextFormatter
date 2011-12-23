@@ -733,6 +733,48 @@ s9e\TextFormatter\Tests\Plugins\LinebreakerParser
  [x] LF characters are replaced with a BR tag
  [x] CRLF character pairs are replaced with a BR tag
 
+s9e\TextFormatter\Tests\Plugins\RawHTMLConfig
+ [x] getConfig() returns false if no elements are allowed
+ [x] Generates a regexp
+ [x] Registers a namespace using the prefix "html" by default
+ [x] The namespace prefix can be customized at loading time
+ [x] Registers a namespace using the URI "http://www.w3.org/1999/xhtml" by default
+ [x] The namespace URI can be customized at loading time
+ [x] Adds some catch-all XSL to render tags from its namespace by default
+ [x] The default XSL handles custom namespace prefix and URI
+ [x] The catch-all XSL can be customized at loading time
+ [x] Creates a namespaced tag for each allowed element
+ [x] Does not attempt to creates the tag if it already exists
+ [x] Creates tags in the correct namespace if it was customized
+ [x] Tag names of allowed elements are lowercased
+ [x] allowElement() rejects invalid element names
+ [x] Creates an attribute to the namespaced tag for each allowed attribute of a given element
+ [x] Attributes are lowercased
+ [x] allowAttribute() throws an exception if the tag does not exist
+ [x] allowAttribute() rejects invalid attribute names
+ [x] Attributes are created with option "isRequired" set to false
+ [x] Attributes known to expect an URL as value are created with type "url"
+ [x] Other attributes are created with type "text"
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfigMeta() marks the attribute regexp as a global regexp
+
+s9e\TextFormatter\Tests\Plugins\RawHTMLParser
+ [x] Can parse a pair of tags with no attributes
+ [x] Can parse self-closing tags with no attributes
+ [x] Can parse tags with single quoted attributes
+ [x] Can parse tags with double quoted attributes
+ [x] Can parse tags with unquoted attributes
+ [x] Can parse tags with boolean attributes and gives them the attribute name as value
+ [x] Can parse self-closing tags with boolean attributes and no whitespace before the closing slash
+ [x] Can parse whitespace around quoted attributes
+ [x] Can parse whitespace within tags
+ [x] HTML entities in attribute values are decoded
+ [x] Makes use of custom namespace prefix
+ [x] Element names are lowercased
+ [x] Attributes are lowercased
+ [x] Boolean attributes are lowercased
+ [x] Whole element names are parsed
+
 s9e\TextFormatter\Tests\Plugins\WittyPantsConfig
  [x] tagName can be customized at loading time
  [x] attrName can be customized at loading time

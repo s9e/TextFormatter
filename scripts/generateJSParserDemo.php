@@ -31,6 +31,11 @@ $cb->Generic->addReplacement(
 	'<a href="http://www.google.com/search?q={@amount}+USD+in+EUR"><xsl:apply-templates/></a>'
 );
 
+$cb->RawHTML->allowElement('a');
+$cb->RawHTML->allowElement('b');
+$cb->RawHTML->allowAttribute('a', 'href');
+$cb->RawHTML->allowAttribute('a', 'title');
+
 $cb->loadPlugin('Autolink');
 $cb->loadPlugin('HTMLEntities')->disableEntity('&lt;');
 $cb->loadPlugin('Linebreaker');
@@ -125,14 +130,15 @@ The following plugins have been enabled:
   [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]#\$(?<amount>[0-9]+(?:\.[0-9]+)?)#[/CODE] is replaced with the template [CODE]<a href="http://www.google.com/search?q={@amount}+USD+in+EUR"><xsl:apply-templates/></a>[/CODE] -- For example: $2, $4.50
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
   [*][b]Linebreaker[/b] --- Linefeeds are converted to &lt;br&gt;
+  [*][b]RawHTML[/b] --- [CODE]<a>[/CODE] tags are allowed, with two whitelisted attributes: [CODE]href[/CODE] and [CODE]title[/CODE]. Example: <a href="https://github.com" title="GitHub - Social Coding">GitHub</a>
   [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
 Additionally, in order to demonstrate some other features:
 
 [list]
-  [*]ConfigBuilder::disallowHost() --- links to [url=http://example.com]example.com[/url] are disabled
-  [*]HTMLEntitiesConfig::disableEntity() --- the HTML entity &amp;lt; is arbitrarily disabled
+  [*][b]ConfigBuilder::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]RawHTML[/b] as well: <a href="http://example.com">example.com</a>
+  [*][b]HTMLEntitiesConfig::disableEntity()[/b] --- the HTML entity &amp;lt; is arbitrarily disabled
   [*]a YouTube video, at the right, keeps playing as you're editing the text [i](including its own tag!)[/i] to demonstrate the partial-update algorithm used to refresh the preview
 [/list]
 
