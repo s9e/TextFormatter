@@ -80,7 +80,9 @@ ob_start();
 <body>
 	<div style="width:80%;max-width:800px">
 		<form>
-			<textarea style="width:99%" rows="15">This is a light version of [url=https://github.com/s9e/TextFormatter/tree/master/src/ title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url]'s Live Preview feature, optimized purely for size. Only some of the plugins have been enabled and logging has been disabled, as well as support for Internet Explorer.
+			<textarea style="width:99%" rows="15">This is a special version of [url=https://github.com/s9e/TextFormatter/tree/master/src/ title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url]'s Live Preview feature, optimized purely for size.
+
+Only some of the plugins have been enabled and aggressive optimizations have been turned on. Logging has been disabled, as well as compatibility with Internet Explorer.
 
 The source has been minified to <?php echo round(strlen($jsParser) / 1024, 1); ?>KB (<?php echo round(strlen(gzencode($jsParser, 9)) / 1024, 1); ?>KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].
 
