@@ -1,6 +1,7 @@
 #!/bin/bash
 cd $(dirname $0)
 
+git push &
 ./generateDocBlox.sh &
 ./generateJSParserDemoLite.php &
 ./generateJSParserDemo.php 1 &
