@@ -236,13 +236,13 @@ class JSParserGenerator
 	protected function compile($level)
 	{
 		$content = http_build_query(array(
-			'output_format' => 'text',
-			'output_info' => 'compiled_code',
+			'output_format'     => 'json',
+			'output_info'       => 'compiled_code',
 			'compilation_level' => $level,
-			'js_code' => $this->src
+			'js_code'           => $this->src
 		));
 
-		$this->src = file_get_contents(
+		$response = json_decode(file_get_contents(
 			$this->closureCompilerURL,
 			false,
 			stream_context_create(array(
@@ -254,7 +254,19 @@ class JSParserGenerator
 					'content' => $content
 				)
 			))
-		);
+		), true);
+
+		if (!$response || !isset($response['compiledCode']))
+		{
+			throw new RuntimeException('An error occured while contacting Google Closure Compiler');
+		}
+
+		if (isset($response['errors']))
+		{
+			throw new RuntimeException("An error has been returned Google Closure Compiler: '" . $response['errors'][0]['error'] . "'");
+		}
+
+		$this->src = $response['compiledCode'];
 	}
 
 	/**

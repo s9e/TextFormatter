@@ -2,7 +2,8 @@
 
 namespace s9e\TextFormatter\Tests;
 
-use s9e\TextFormatter\Tests\Test,
+use ReflectionClass,
+    s9e\TextFormatter\Tests\Test,
     s9e\TextFormatter\JSParserGenerator;
 
 include_once __DIR__ . '/Test.php';
@@ -935,16 +936,38 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox The source is minified with Google Closure Compiler if "compilation" is not set to "none"
+	* @testdox The source is sent to Google Closure Compiler if "compilation" is not set to "none"
 	*/
 	public function test_Closure_Compiler()
 	{
-		$this->jspg->closureCompilerURL = 'data:text/plain,SUCCESS';
+		$this->jspg->closureCompilerURL = 'data:text/plain,{"compiledCode":"alert(\"Hello world\");","statistics":{"originalSize":86,"originalGzipSize":96,"compressedSize":21,"compressedGzipSize":41,"compileTime":1}}';
 
 		$this->assertSame(
-			'SUCCESS',
+			'alert("Hello world");',
 			$this->jspg->get(array('compilation' => 'ADVANCED_OPTIMIZATIONS'))
 		);
+	}
+
+	/**
+	* @testdox JSParserGenerator throws an exception if an error occurs while contacting to Google Closure Compiler
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage An error occured while contacting Google Closure Compiler
+	*/
+	public function testThrowsAnExceptionIfAnErrorOccursWhileContactingGoogleClosureCompiler()
+	{
+		$this->jspg->closureCompilerURL = 'data:text/plain,FAILURE';
+		$this->jspg->get(array('compilation' => 'ADVANCED_OPTIMIZATIONS'));
+	}
+
+	/**
+	* @testdox JSParserGenerator throws an exception if Google Closure Compiler returns an error
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage An error has been returned Google Closure Compiler: 'Parse error. missing ; before statement'
+	*/
+	public function testThrowsAnExceptionIfGoogleClosureCompilerReturnsAnError()
+	{
+		$this->jspg->closureCompilerURL = 'data:text/plain,{"compiledCode":"","errors":[{"type":"JSC_PARSE_ERROR","file":"Input_0","lineno":1,"charno":7,"error":"Parse error. missing ; before statement","line":"foo bar"}],"statistics":{"originalSize":7,"originalGzipSize":27,"compressedSize":0,"compressedGzipSize":20,"compileTime":0}}';
+		$this->jspg->get(array('compilation' => 'ADVANCED_OPTIMIZATIONS'));
 	}
 
 	/**

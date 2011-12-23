@@ -241,6 +241,7 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has a "replaceWith" option set
  [x] The source is sent to Google Closure Compiler if "compilation" is not set to "none"
  [x] JSParserGenerator throws an exception if an error occurs while contacting to Google Closure Compiler
+ [x] JSParserGenerator throws an exception if Google Closure Compiler returns an error
  [x] Log types can be selectively disabled
  [x] The "unsafeMinification" option indiscriminately renames all occurences of properties that share their name with DOM properties, except if their variable's names ends with "Node" or "Attr"
 
