@@ -3,9 +3,9 @@ cd $(dirname $0)
 
 git push &
 ./generateCodeCoverage.sh &
-./generateDocBlox.sh &
 ./generateJSParserDemoLite.php &
-./generateJSParserDemo.php 1 &
+./generateJSParserDemo.php 1
+./generateDocBlox.sh
 
 # wait for everyone to be done
 wait
