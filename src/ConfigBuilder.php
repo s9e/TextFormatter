@@ -2184,10 +2184,10 @@ class ConfigBuilder
 			}
 
 			/**
-			* Create a fake tag for our root element. "fake-root" is not a valid tag name so it
+			* Create a fake tag for our root element. "*fake-root*" is not a valid tag name so it
 			* shouldn't conflict with any existing tag
 			*/
-			$rootTag = 'fake-root';
+			$rootTag = '*fake-root*';
 
 			$tagsConfig[$rootTag]['xsl'] =
 				'<xsl:template match="' . $rootTag . '">
