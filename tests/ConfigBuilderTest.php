@@ -1306,7 +1306,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testOptimizesRegexpByUsingLookaheadAssertion
 	*/
-	public function testDoesNotOptimizeRegexpByUsingLookaheadAssertionWithSpecialSequences()
+	public function testDoesNotOptimizeRegexpByUsingLookaheadAssertionIfAnyWordStartsWithASpecialSequence()
 	{
 		$this->assertSame(
 			'(?:.|bar)',
@@ -1317,6 +1317,18 @@ class ConfigBuilderTest extends Test
 				array('?', 'bar'),
 				array('?' => '.')
 			)
+		);
+	}
+
+	/**
+	* @depends testOptimizesRegexpByUsingCharacterClasses
+	* @depends testOptimizesRegexpByUsingLookaheadAssertion
+	*/
+	public function testDoesNotOptimizeRegexpByUsingLookaheadAssertionIfAllWordsHaveOnly1Character()
+	{
+		$this->assertSame(
+			'[ab]',
+			ConfigBuilder::buildRegexpFromList(array('a', 'b'))
 		);
 	}
 

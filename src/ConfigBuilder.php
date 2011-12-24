@@ -1414,6 +1414,13 @@ class ConfigBuilder
 		// Sort the words to produce the same regexp regardless of the words' order
 		sort($words);
 
+		/**
+		* Whether to use a lookahead assertion such as (?=[fb])(?:foo|bar) or not.
+		* Gets enabled if any word has more than one character and none starts with a
+		* special character
+		*/
+		$useLookahead = false;
+
 		$initials = array();
 
 		$arr = array();
@@ -1421,11 +1428,14 @@ class ConfigBuilder
 		{
 			if (preg_match_all('#.#us', $word, $matches))
 			{
-				/**
-				* Store the initial for later
-				*/
+				// Store the initial for later
 				$initials[$matches[0][0]] = true;
 
+				// Enable lookahead as necessary
+				$useLookahead |= isset($matches[0][1]);
+
+				// Each character becomes the key associated to an array containing all possible
+				// characters following it. An empty key indicates the end of a word
 				$cur =& $arr;
 				foreach ($matches[0] as $c)
 				{
@@ -1448,7 +1458,6 @@ class ConfigBuilder
 		*/
 		if (count($initials) > 1)
 		{
-			$useLookahead = true;
 			foreach ($initials as $initial => $void)
 			{
 				if ($esc[$initial] !== preg_quote($initial, '#'))

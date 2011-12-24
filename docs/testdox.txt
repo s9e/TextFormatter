@@ -109,7 +109,8 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Optimizes regexp that uses parentheses
  [x] Optimizes regexp by using lookahead assertion
  [x] Optimizes regexp by using lookahead assertion with escaped characters
- [x] Does not optimize regexp by using lookahead assertion with special sequences
+ [x] Does not optimize regexp by using lookahead assertion if any word starts with a special sequence
+ [x] Does not optimize regexp by using lookahead assertion if all words have only 1 character
  [x] ConfigBuilder::parseRegexp() can parse plain regexps
  [x] ConfigBuilder::parseRegexp() throws a RuntimeException if delimiters can't be parsed
  [x] ConfigBuilder::parseRegexp() parses pattern modifiers

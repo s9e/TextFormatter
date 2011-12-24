@@ -6,5 +6,5 @@ TODO
 - finish the Fabric plugin
 - create a plugin for the Markdown syntax (or possibly Upskirt/Redcarpet) and name it Downmark to feel witty and have a plugin for each letter from A to H
 - write documentation, el oh el
-- ConfigBuilder::buildRegexpFromList() -- find in which cases using lookahead assertion is beneficial and in which case it is not. Currently it can generate stuff like (?=[ab])[ab]
+- ConfigBuilder::buildRegexpFromList() -- investigate in which cases using lookahead assertion is beneficial and in which case it is not.
 - Replace source manipulation in JSParserGenerator::removeDeadCode() with more hints
