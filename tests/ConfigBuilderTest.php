@@ -1333,6 +1333,19 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @depends testOptimizesRegexpByUsingCharacterClasses
+	* @depends testOptimizesRegexpByUsingLookaheadAssertion
+	* @testdox Does not optimize regexp by using lookahead assertion if all words have only 1 Unicode character
+	*/
+	public function testDoesNotOptimizeRegexpByUsingLookaheadAssertionIfAllWordsHaveOnly1UnicodeCharacter()
+	{
+		$this->assertSame(
+			'[♠♣♥♦]',
+			ConfigBuilder::buildRegexpFromList(array('♠', '♣', '♥', '♦'))
+		);
+	}
+
+	/**
 	* @testdox ConfigBuilder::parseRegexp() can parse plain regexps
 	*/
 	public function testCanParseRegexps1()
