@@ -737,9 +737,11 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanCreateTagInRegisteredNamespace
 	*/
-	public function testRegisteredNamespacesAppearInTheParserConfig()
+	public function testRegisteredNamespacesWithExistingTagsAppearInTheParserConfig()
 	{
 		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:bar');
+
 		$this->assertArrayMatches(
 			array(
 				'namespaces' => array(
@@ -747,6 +749,27 @@ class ConfigBuilderTest extends Test
 				)
 			),
 			$this->cb->getParserConfig()
+		);
+	}
+
+	/**
+	* @depends testRegisteredNamespacesWithExistingTagsAppearInTheParserConfig
+	*/
+	public function testRegisteredNamespacesWithNoTagsDoNotAppearInTheParserConfig()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->assertArrayNotHasKey('namespaces', $this->cb->getParserConfig());
+	}
+
+	/**
+	* @testdox Registered namespaces appear in the XSL
+	*/
+	public function testRegisteredNamespacesAppearInTheXSL()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->assertContains(
+			'xmlns:foo="urn:foo"',
+			$this->cb->getXSL()
 		);
 	}
 

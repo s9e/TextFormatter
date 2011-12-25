@@ -1170,7 +1170,16 @@ class ConfigBuilder
 
 		if (!empty($this->namespaces))
 		{
-			$config['namespaces'] = $this->namespaces;
+			foreach ($this->tags as $tagName => $tagConfig)
+			{
+				$pos = strpos($tagName, ':');
+
+				if ($pos)
+				{
+					$prefix = substr($tagName, 0, $pos);
+					$config['namespaces'][$prefix] = $this->namespaces[$prefix];
+				}
+			}
 		}
 
 		return $config;
