@@ -861,9 +861,9 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Optimization hint HINT_NAMESPACES is false by default
+	* @testdox Optimization hint HINT_NAMESPACES is false if no namespaced tag exists
 	*/
-	public function test_Optimization_hint_HINT_NAMESPACES_is_false_by_default()
+	public function test_Optimization_hint_HINT_NAMESPACES_is_false_if_no_namespaced_tag_exists()
 	{
 		$this->assertRegexp(
 			'#HINT_NAMESPACES\\s*=\\s*false#',
@@ -886,7 +886,32 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Optimization hint HINT_REOPEN_RULES is false by default
+	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is false if there's no "regexp" attribute with the "replaceWith" option set
+	*/
+	public function test_Optimization_hint_REGEXP_REPLACEWITH_false_by_default()
+	{
+		$this->assertRegexp(
+			'#HINT_REGEXP_REPLACEWITH\\s*=\\s*false#',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
+	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has the "replaceWith" option set
+	*/
+	public function test_Optimization_hint_REGEXP_REPLACEWITH()
+	{
+		$this->cb->addTag('X');
+		$this->cb->addTagAttribute('X', 'x', 'regexp', array('replaceWith' => 'xx'));
+
+		$this->assertRegexp(
+			'#HINT_REGEXP_REPLACEWITH\\s*=\\s*true#',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
+	* @testdox Optimization hint HINT_REOPEN_RULES is false if no reopenChild rule exists
 	*/
 	public function test_Optimization_hint_HINT_REOPEN_RULES_is_false_by_default()
 	{
@@ -911,26 +936,25 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is false by default
+	* @testdox Optimization hint HINT_RLA_ABORT is false if no plugins has the regexpLimitAction option set to "abort"
 	*/
-	public function test_Optimization_hint_REGEXP_REPLACEWITH_false_by_default()
+	public function test_Optimization_hint_HINT_RLA_ABORT_false()
 	{
 		$this->assertRegexp(
-			'#HINT_REGEXP_REPLACEWITH\\s*=\\s*false#',
+			'#HINT_RLA_ABORT\\s*=\\s*false#',
 			$this->cb->getJSParser()
 		);
 	}
 
 	/**
-	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has a "replaceWith" option set
+	* @testdox Optimization hint HINT_RLA_ABORT is truee if any plugin has the regexpLimitAction option set to "abort"
 	*/
-	public function test_Optimization_hint_REGEXP_REPLACEWITH()
+	public function test_Optimization_hint_HINT_RLA_ABORT_true()
 	{
-		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'regexp', array('replaceWith' => 'xx'));
+		$this->cb->loadPlugin('Linebreaker', null, array('regexpLimitAction' => 'abort'));
 
 		$this->assertRegexp(
-			'#HINT_REGEXP_REPLACEWITH\\s*=\\s*true#',
+			'#HINT_RLA_ABORT\\s*=\\s*true#',
 			$this->cb->getJSParser()
 		);
 	}

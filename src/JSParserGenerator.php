@@ -132,8 +132,11 @@ class JSParserGenerator
 
 	protected function init()
 	{
-		$this->tagsConfig    = $this->cb->getTagsConfig(true);
-		$this->filtersConfig = $this->cb->getFiltersConfig();
+		$config = $this->cb->getParserConfig();
+
+		$this->tagsConfig    = $config['tags'];
+		$this->filtersConfig = $config['filters'];
+		$this->pluginsConfig = $config['plugins'];
 		$this->registeredNamespaces = $this->cb->getNamespaces();
 		$this->src = $this->tpl;
 	}
@@ -295,7 +298,8 @@ class JSParserGenerator
 			'DISALLOWED_HOSTS'   => isset($this->filtersConfig['url']['disallowedHosts']),
 			'NAMESPACES'         => false,
 			'REOPEN_RULES'       => false,
-			'REGEXP_REPLACEWITH' => false
+			'REGEXP_REPLACEWITH' => false,
+			'RLA_ABORT'          => false
 		);
 
 		foreach ($this->tagsConfig as $tagConfig)
@@ -323,6 +327,15 @@ class JSParserGenerator
 			if (strpos($tagName, ':') !== false)
 			{
 				$hints['NAMESPACES'] = true;
+			}
+		}
+
+		foreach ($this->pluginsConfig as $pluginConfig)
+		{
+			if ($pluginConfig['regexpLimitAction'] === 'abort')
+			{
+				$hints['RLA_ABORT'] = true;
+				break;
 			}
 		}
 

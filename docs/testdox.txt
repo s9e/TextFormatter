@@ -235,12 +235,14 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] Injects plugins configs into source
  [x] replaceConstant() throws an exception if no replacement occurs
  [x] A regexp map is created for compound attributes
- [x] Optimization hint HINT_NAMESPACES is false by default
+ [x] Optimization hint HINT_NAMESPACES is false if no namespaced tag exists
  [x] Optimization hint HINT_NAMESPACES is true if any namespaced tag exists
- [x] Optimization hint HINT_REOPEN_RULES is false by default
+ [x] Optimization hint HINT_REGEXP_REPLACEWITH is false if there's no "regexp" attribute with the "replaceWith" option set
+ [x] Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has the "replaceWith" option set
+ [x] Optimization hint HINT_REOPEN_RULES is false if no reopenChild rule exists
  [x] Optimization hint HINT_REOPEN_RULES is true if any reopenChild rule exists
- [x] Optimization hint HINT_REGEXP_REPLACEWITH is false by default
- [x] Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has a "replaceWith" option set
+ [x] Optimization hint HINT_RLA_ABORT is false if no plugins has the regexpLimitAction option set to "abort"
+ [x] Optimization hint HINT_RLA_ABORT is truee if any plugin has the regexpLimitAction option set to "abort"
  [x] The source is sent to Google Closure Compiler if "compilation" is not set to "none"
  [x] JSParserGenerator throws an exception if an error occurs while contacting to Google Closure Compiler
  [x] JSParserGenerator throws an exception if Google Closure Compiler returns an error

@@ -6,5 +6,7 @@ TODO
 - finish the Fabric plugin
 - create a plugin for the Markdown syntax (or possibly Upskirt/Redcarpet) and name it Downmark to feel witty and have a plugin for each letter from A to H
 - write documentation, el oh el
-- ConfigBuilder::buildRegexpFromList() -- investigate in which cases using lookahead assertion is beneficial and in which case it is not.
+- ConfigBuilder::buildRegexpFromList() -- investigate in which cases using lookahead assertion is beneficial and in which case it is not. Add flags to enable/disable lookahead assertions (they're not beneficial when the S flag is used in the regexp)
 - Replace source manipulation in JSParserGenerator::removeDeadCode() with more hints
+- Add a rule to automatically create a parent to a tag, e.g. create <LIST> when <LI> is used. After creating <LIST>, add its id to the "require" field so that we don't get in an infinite loop
+- Automatically merge duplicate templates, e.g. '<xsl:template match="B|STRONG"

@@ -89,7 +89,9 @@ s9e['TextFormatter'] = function(xsl)
 		/** @const */
 		HINT_REGEXP_REPLACEWITH = true,
 		/** @const */
-		HINT_REOPEN_RULES = true
+		HINT_REOPEN_RULES = true,
+		/** @const */
+		HINT_RLA_ABORT = true
 	;
 
 	if (MSXML)
@@ -733,7 +735,7 @@ s9e['TextFormatter'] = function(xsl)
 
 			if (cnt > pluginConfig.regexpLimit)
 			{
-				if (pluginConfig.regexpLimitAction === 'abort')
+				if (HINT_RLA_ABORT && pluginConfig.regexpLimitAction === 'abort')
 				{
 					throw pluginName + ' limit exceeded';
 				}
