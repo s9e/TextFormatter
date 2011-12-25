@@ -10,3 +10,5 @@ TODO
 - Replace source manipulation in JSParserGenerator::removeDeadCode() with more hints
 - Add a rule to automatically create a parent to a tag, e.g. create <LIST> when <LI> is used. After creating <LIST>, add its id to the "require" field so that we don't get in an infinite loop
 - Automatically merge duplicate templates, e.g. '<xsl:template match="B|STRONG"
+- Support tags that must remain empty, such as <br/> -- grep for isEmpty
+- Support forcing text to be wrapped inside tags. e.g. "<LIST>foo" becomes "<LIST><LI>foo</LI>"
