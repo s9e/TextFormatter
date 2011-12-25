@@ -812,15 +812,6 @@ class ConfigBuilder
 		}
 
 		$this->tags[$tagName]['rules'][$action][$target] = $target;
-
-		/**
-		* Replicate *Descendant rules to *Child
-		*/
-		if ($action === 'denyDescendant'
-		 || $action === 'allowDescendant')
-		{
-			 $this->addTagRule($tagName, substr($action, 0, -10) . 'Child', $target);
-		}
 	}
 
 	/**
@@ -1386,9 +1377,6 @@ class ConfigBuilder
 				/**
 				* Children are descendants of current node, so we apply denyDescendant rules to them
 				* as well.
-				*
-				* @todo This largely overlaps with the replication of *Descendant rules into *Child
-				*       rules in addTagRule() and should be looked into at some point
 				*/
 				$tagConfig['allowedChildren'] &= $tagConfig['allowedDescendants'];
 			}
