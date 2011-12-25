@@ -67,7 +67,9 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Throws an exception when creating a tag with an invalid namespace prefix
  [x] Can tell if namespaced tag exists
  [x] Namespaced tag names are case-sensitive
- [x] Registered namespaces appear in the parser config
+ [x] Registered namespaces with existing tags appear in the parser config
+ [x] Registered namespaces with no tags do not appear in the parser config
+ [x] Registered namespaces appear in the XSL
  [x] Can set tag template
  [x] Can set tag XSL
  [x] Cannot set tag template on unknown tag

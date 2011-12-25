@@ -9,6 +9,9 @@ use ReflectionClass,
 include_once __DIR__ . '/Test.php';
 include_once __DIR__ . '/../src/JSParserGenerator.php';
 
+/**
+* @covers s9e\TextFormatter\JSParserGenerator
+*/
 class JSParserGeneratorTest extends Test
 {
 	protected function encodeArray(array $arr)
