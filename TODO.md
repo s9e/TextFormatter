@@ -12,3 +12,4 @@ TODO
 - Automatically merge duplicate templates, e.g. '<xsl:template match="B|STRONG"
 - Support tags that must remain empty, such as <br/> -- grep for isEmpty
 - Support forcing text to be wrapped inside tags. e.g. "<LIST>foo" becomes "<LIST><LI>foo</LI>"
+- There's potential for a bug in createMatchingTag when creating a tag based on a tag that with trimBefore enabled. The position of the new tag should probably be the actual position of the tag, not of the whitespace
