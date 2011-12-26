@@ -1382,7 +1382,7 @@ class Parser
 	/**
 	* Apply closeParent rules from current tag
 	*
-	* @return boolean Whether a new tag has been added
+	* @return bool Whether a new tag has been added
 	*/
 	protected function closeParent()
 	{
@@ -1421,7 +1421,7 @@ class Parser
 	/**
 	* Apply closeAncestor rules from current tag
 	*
-	* @return boolean Whether a new tag has been added
+	* @return bool Whether a new tag has been added
 	*/
 	protected function closeAncestor()
 	{
@@ -1464,7 +1464,7 @@ class Parser
 	/**
 	* Apply requireParent rules from current tag
 	*
-	* @return boolean Whether current tag is invalid
+	* @return bool Whether current tag is invalid
 	*/
 	protected function requireParent()
 	{
@@ -1499,7 +1499,7 @@ class Parser
 	/**
 	* Apply requireAncestor rules from current tag
 	*
-	* @return boolean Whether current tag is invalid
+	* @return bool Whether current tag is invalid
 	*/
 	protected function requireAncestor()
 	{
@@ -1536,7 +1536,7 @@ class Parser
 	/**
 	* Test whether the current tag requires another tag and that tag is missing
 	*
-	* @return boolean TRUE if the tag's requirements were NOT fulfilled, FALSE otherwise
+	* @return bool TRUE if the tag's requirements were NOT fulfilled, FALSE otherwise
 	*/
 	protected function currentTagRequiresMissingTag()
 	{
@@ -1620,7 +1620,7 @@ class Parser
 	*
 	* Will add default values, execute phase callbacks and remove undefined attributes.
 	*
-	* @return boolean Whether the set of attributes is invalid
+	* @return bool Whether the set of attributes is invalid
 	*/
 	protected function processCurrentTagAttributes()
 	{
@@ -1669,7 +1669,7 @@ class Parser
 	/**
 	* Test whether current tag is missing any required attributes
 	*
-	* @return boolean
+	* @return bool
 	*/
 	protected function currentTagRequiresMissingAttribute()
 	{
