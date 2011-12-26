@@ -180,11 +180,12 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] HTML specs: <span><a> denies <div>
  [x] addRulesFromHTML5Specs() creates rules based on HTML5 specs
  [x] addRulesFromHTML5Specs() sets options based on HTML5 specs
- [x] Tags with option 'disable' are not returned by getTagsConfig(true)
  [x] addRulesFromHTML5Specs(array('rootElement' => 'div')) prevents <li> to be used at root
  [x] addRulesFromHTML5Specs(array('rootElement' => 'a')) disables tags that contain a <a>
  [x] generateRulesFromHTML5Specs(array('rootElement' => 'xxx')) throws an exception
  [x] generateRulesFromHTML5Specs() uses the Renderer to generate a template for tags that have no template set
+ [x] Tags with option 'disable' are not returned by getTagsConfig(true)
+ [x] getTagsConfig(true) removes options related to allowing tags and reduces them to two bitfields "allowedChildren" and "allowedDescendants"
 
 s9e\TextFormatter\Tests\JSParserGenerator
  [x] convertRegexp() can convert plain regexps

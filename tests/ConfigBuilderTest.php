@@ -2482,6 +2482,28 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox getJSParser() returns the Javascript source of the parser
+	*/
+	public function test_getJSParser()
+	{
+		$this->assertContains(
+			's9e',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
+	* @testdox The array of option passed to getJSParser() is passed to the JS parser generator
+	*/
+	public function test_getJSParser_options()
+	{
+		$this->assertContains(
+			's9e',
+			$this->cb->getJSParser()
+		);
+	}
+
+	/**
 	* @test
 	* @testdox getJSPlugins() returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
 	*/
@@ -2842,22 +2864,6 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @testdox Tags with option 'disable' are not returned by getTagsConfig(true)
-	*/
-	public function testDisabledTagsDoNotAppearInConfig()
-	{
-		$this->cb->addTag('A');
-		$this->cb->addTag('B', array('disable' => true));
-		$this->cb->addTag('C');
-
-		$tagsConfig = $this->cb->getTagsConfig(true);
-
-		$this->assertArrayHasKey('A', $tagsConfig);
-		$this->assertArrayNotHasKey('B', $tagsConfig);
-		$this->assertArrayHasKey('C', $tagsConfig);
-	}
-
-	/**
 	* @testdox addRulesFromHTML5Specs(array('rootElement' => 'div')) prevents <li> to be used at root
 	*/
 	public function testAddRulesSetsDisallowAsRoot()
@@ -2939,5 +2945,44 @@ class ConfigBuilderTest extends Test
 			),
 			$this->cb->generateRulesFromHTML5Specs()
 		);
+	}
+
+	/**
+	* @testdox Tags with option 'disable' are not returned by getTagsConfig(true)
+	*/
+	public function testDisabledTagsDoNotAppearInConfig()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addTag('B', array('disable' => true));
+		$this->cb->addTag('C');
+
+		$tagsConfig = $this->cb->getTagsConfig(true);
+
+		$this->assertArrayHasKey('A', $tagsConfig);
+		$this->assertArrayNotHasKey('B', $tagsConfig);
+		$this->assertArrayHasKey('C', $tagsConfig);
+	}
+
+	/**
+	* @testdox getTagsConfig(true) removes options related to allowing tags and reduces them to two bitfields "allowedChildren" and "allowedDescendants"
+	*/
+	public function testAllowRulesAreReduced()
+	{
+		$this->cb->addTag('A', array(
+			'defaultChildRule' => 'allow',
+			'defaultDescendantRule' => 'allow'
+		));
+
+		$this->cb->addTagRule('A', 'denyChild', 'A');
+		$this->cb->addTagRule('A', 'allowDescendant', 'A');
+
+		$tagsConfig = $this->cb->getTagsConfig(true);
+
+		$this->assertArrayNotHasKey('defaultChildRule', $tagsConfig['A']);
+		$this->assertArrayNotHasKey('defaultDescendantRule', $tagsConfig['A']);
+		$this->assertArrayHasKey('allowedChildren', $tagsConfig['A']);
+		$this->assertArrayHasKey('allowedDescendants', $tagsConfig['A']);
+		$this->assertSame("\x00", $tagsConfig['A']['allowedChildren']);
+		$this->assertSame("\x01", $tagsConfig['A']['allowedDescendants']);
 	}
 }
