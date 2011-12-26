@@ -955,11 +955,18 @@ s9e['TextFormatter'] = function(xsl)
 			}
 		}
 
-		if (pos > currentTag.pos
-		 || currentTagRequiresMissingTag())
+		if (pos > currentTag.pos)
 		{
 			log('debug', {
 				'msg': 'Tag skipped'
+			});
+			return;
+		}
+
+		if (currentTagRequiresMissingTag())
+		{
+			log('debug', {
+				'msg': 'Tag skipped due to missing dependency'
 			});
 			return;
 		}

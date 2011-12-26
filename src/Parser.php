@@ -1173,7 +1173,7 @@ class Parser
 		if ($this->currentTagRequiresMissingTag())
 		{
 			$this->log('debug', array(
-				'msg' => 'Tag skipped due to dependence'
+				'msg' => 'Tag skipped due to missing dependency'
 			));
 			return;
 		}
