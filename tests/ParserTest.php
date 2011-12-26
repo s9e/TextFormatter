@@ -112,6 +112,45 @@ class ParserTest extends Test
 		}
 	}
 
+	/**
+	* Loads the Canned plugin, creates a <X> tag and cans as many tags as specified in the map
+	*/
+	protected function canTags($map = '', $tagOptions = array())
+	{
+		include_once __DIR__ . '/includes/CannedConfig.php';
+		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+
+		$this->cb->addTag('X', $tagOptions);
+
+		if ($map === '')
+		{
+			return;
+		}
+
+		foreach (str_split($map, 1) as $pos => $c)
+		{
+			if ($c === 'S')
+			{
+				$type = Parser::START_TAG;
+			}
+			elseif ($c === 'E')
+			{
+				$type = Parser::END_TAG;
+			}
+			else
+			{
+				$type = Parser::SELF_CLOSING_TAG;
+			}
+
+			$this->cb->Canned->tags[] = array(
+				'pos'   => $pos,
+				'len'   => 1,
+				'name'  => 'X',
+				'type'  => $type
+			);
+		}
+	}
+
 	//==========================================================================
 	// General stuff
 	//==========================================================================
@@ -2052,17 +2091,9 @@ class ParserTest extends Test
 
 	public function testUnknownTagsAreIgnored()
 	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
+		$this->canTags('S');
 
-		$this->cb->Canned->tags = array(
-			array(
-				'pos'  => 0,
-				'len'  => 1,
-				'name' => 'X',
-				'type' => Parser::START_TAG
-			)
-		);
+		$this->cb->removeTag('X');
 
 		$this->assertParsing(
 			'00 00',
@@ -2082,22 +2113,8 @@ class ParserTest extends Test
 	*/
 	public function Tags_nestingLimit_is_enforced()
 	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
-
-		$this->cb->addTag('X', array('nestingLimit' => 2));
-
 		$text = 'SSSEEE';
-
-		foreach (str_split($text, 1) as $pos => $c)
-		{
-			$this->cb->Canned->tags[] = array(
-				'pos'   => $pos,
-				'len'   => 1,
-				'name'  => 'X',
-				'type'  => ($c === 'S') ? Parser::START_TAG : Parser::END_TAG
-			);
-		}
+		$this->canTags($text, array('nestingLimit' => 2));
 
 		$this->assertParsing(
 			$text,
@@ -2125,22 +2142,8 @@ class ParserTest extends Test
 	*/
 	public function Tags_nestingLimit_does_not_incorrectly_count_siblings()
 	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
-
-		$this->cb->addTag('X', array('nestingLimit' => 2));
-
 		$text = 'SSESESEE';
-
-		foreach (str_split($text, 1) as $pos => $c)
-		{
-			$this->cb->Canned->tags[] = array(
-				'pos'   => $pos,
-				'len'   => 1,
-				'name'  => 'X',
-				'type'  => ($c === 'S') ? Parser::START_TAG : Parser::END_TAG
-			);
-		}
+		$this->canTags($text, array('nestingLimit' => 2));
 
 		$this->assertParsing(
 			$text,
@@ -2171,33 +2174,18 @@ class ParserTest extends Test
 	*/
 	public function Tags_tagLimit_is_enforced()
 	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
-
-		$this->cb->addTag('X', array('tagLimit' => 2));
-
-		foreach (array(0, 1, 2) as $pos)
-		{
-			$this->cb->Canned->tags[] = array(
-				'pos'   => $pos,
-				'len'   => 1,
-				'name'  => 'X',
-				'type'  => Parser::SELF_CLOSING_TAG
-			);
-		}
+		$text = '012';
+		$this->canTags($text, array('tagLimit' => 2));
 
 		$this->assertParsing(
-			'012',
+			$text,
 			'<rt><X>0</X><X>1</X>2</rt>'
 		);
 	}
 
 	public function testZeroWidthTagsAreCorrectlyOuput()
 	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
-
-		$this->cb->addTag('X', array('tagLimit' => 2));
+		$this->canTags('', array('tagLimit' => 2));
 
 		foreach (array(0, 1, 2) as $pos)
 		{
@@ -2211,7 +2199,7 @@ class ParserTest extends Test
 
 		$this->assertParsing(
 			'012',
-			'<rt><X />0<X />12</rt>'
+			'<rt><X/>0<X/>12</rt>'
 		);
 	}
 
