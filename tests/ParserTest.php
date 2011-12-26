@@ -2078,6 +2078,7 @@ class ParserTest extends Test
 
 	/**
 	* @test
+	* @testdox Tags' nestingLimit option is enforced
 	*/
 	public function Tags_nestingLimit_is_enforced()
 	{
@@ -2117,6 +2118,7 @@ class ParserTest extends Test
 
 	/**
 	* @test
+	* @testdox Tags' nestingLimit does not incorrectly count siblings
 	*
 	* This test exists to ensure that the parser correctly decrements the nesting counter when
 	* tags are closed
@@ -2165,6 +2167,7 @@ class ParserTest extends Test
 
 	/**
 	* @test
+	* @testdox Tags' tagLimit option is enforced
 	*/
 	public function Tags_tagLimit_is_enforced()
 	{
