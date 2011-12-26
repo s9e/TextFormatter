@@ -403,8 +403,12 @@ s9e\TextFormatter\Tests\Parser
  [x] The number of regexp matches can be limited and parsing aborted if limit exceeded
  [x] Unknown tags are ignored
  [x] Tags' nestingLimit option is enforced
+ [x] Tags' nestingLimit option is enforced after closeParent rules have been applied
+ [x] Tags' nestingLimit option is enforced after closeAncestor rules have been applied
  [x] Tags' nestingLimit does not incorrectly count siblings
  [x] Tags' tagLimit option is enforced
+ [x] Tags' tagLimit option is enforced before closeParent rules have been applied
+ [x] Tags' tagLimit option is enforced before closeAncestor rules have been applied
  [x] Zero width tags are correctly ouput
  [x] Tags left open get closed when their ancestor gets closed
  [x] Tags can specify a list of tags that are required

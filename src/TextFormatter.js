@@ -983,29 +983,36 @@ s9e['TextFormatter'] = function(xsl)
 
 	function processCurrentStartTag()
 	{
-		//==============================================================
-		// Apply closeParent and closeAncestor rules
-		//==============================================================
-
-		if (closeParent()
-		 || closeAncestor())
-		{
-			return;
-		}
-
 		var tagName   = currentTag.name,
 			tagConfig = tagsConfig[tagName];
 
-		if (cntOpen[tagName]  >= tagConfig.nestingLimit
-		 || cntTotal[tagName] >= tagConfig.tagLimit)
+		/**
+		* 1. Check that this tag has not reached its global limit tagLimit
+		* 2. Filter this tag's attributes
+		* 3. Apply closeParent and closeAncestor rules
+		* 4. Check for nestingLimit
+		* 5. Apply requireParent and requireAncestor rules
+		*
+		* This order ensures that the tag is valid and within the set limits before we attempt to
+		* close parents or ancestors. We need to close ancestors before we can check for nesting
+		* limits, whether this tag is allowed within current context (the context may change
+		* as ancestors are closed) or whether the required ancestors are still there (they might
+		* have been closed by a rule.)
+		*/
+		if (cntTotal[tagName] >= tagConfig.tagLimit
+		 || processCurrentTagAttributes()
+		 || closeParent()
+		 || closeAncestor()
+		 || cntOpen[tagName]  >= tagConfig.nestingLimit
+		 || requireParent()
+		 || requireAncestor())
 		{
 			return;
 		}
 
-		//==============================================================
-		// Check that this tag is allowed here
-		//==============================================================
-
+		/**
+		* Ensure that this tag is allowed here
+		*/
 		if (!tagIsAllowed(tagName))
 		{
 			log('debug', {
@@ -1015,17 +1022,9 @@ s9e['TextFormatter'] = function(xsl)
 			return;
 		}
 
-		if (requireParent()
-		 || requireAncestor()
-		 || processCurrentTagAttributes())
-		{
-			return;
-		}
-
-		//==============================================================
-		// We have a valid tag, append it to the list of processed tags
-		//==============================================================
-
+		/**
+		* We have a valid tag, let's append it to the list of processed tags
+		*/
 		appendTag(currentTag);
 	}
 

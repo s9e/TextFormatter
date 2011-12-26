@@ -2135,6 +2135,40 @@ class ParserTest extends Test
 
 	/**
 	* @test
+	* @testdox Tags' nestingLimit option is enforced after closeParent rules have been applied
+	*/
+	public function Tags_nestingLimit_is_enforced_after_closeParent()
+	{
+		$text = 'SSE';
+		$this->canTags($text, array('nestingLimit' => 1));
+
+		$this->cb->addTagRule('X', 'closeParent', 'X');
+
+		$this->assertParsing(
+			$text,
+			'<rt><X><st>S</st></X><X><st>S</st><et>E</et></X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @testdox Tags' nestingLimit option is enforced after closeAncestor rules have been applied
+	*/
+	public function Tags_nestingLimit_is_enforced_after_closeAncestor()
+	{
+		$text = 'SSE';
+		$this->canTags($text, array('nestingLimit' => 1));
+
+		$this->cb->addTagRule('X', 'closeAncestor', 'X');
+
+		$this->assertParsing(
+			$text,
+			'<rt><X><st>S</st></X><X><st>S</st><et>E</et></X></rt>'
+		);
+	}
+
+	/**
+	* @test
 	* @testdox Tags' nestingLimit does not incorrectly count siblings
 	*
 	* This test exists to ensure that the parser correctly decrements the nesting counter when
@@ -2180,6 +2214,40 @@ class ParserTest extends Test
 		$this->assertParsing(
 			$text,
 			'<rt><X>0</X><X>1</X>2</rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @testdox Tags' tagLimit option is enforced before closeParent rules have been applied
+	*/
+	public function Tags_tagLimit_is_enforced_before_closeParent()
+	{
+		$text = 'SSS';
+		$this->canTags($text, array('tagLimit' => 2));
+
+		$this->cb->addTagRule('X', 'closeParent', 'X');
+
+		$this->assertParsing(
+			$text,
+			'<rt><X><st>S</st></X><X><st>S</st>S</X></rt>'
+		);
+	}
+
+	/**
+	* @test
+	* @testdox Tags' tagLimit option is enforced before closeAncestor rules have been applied
+	*/
+	public function Tags_tagLimit_is_enforced_before_closeAncestor()
+	{
+		$text = 'SSS';
+		$this->canTags($text, array('tagLimit' => 2));
+
+		$this->cb->addTagRule('X', 'closeAncestor', 'X');
+
+		$this->assertParsing(
+			$text,
+			'<rt><X><st>S</st></X><X><st>S</st>S</X></rt>'
 		);
 	}
 
