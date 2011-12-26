@@ -22,11 +22,6 @@ use DOMDocument,
 class JSParserGenerator
 {
 	/**
-	* @var string URL to the Closure Compiler service
-	*/
-	public $closureCompilerURL = 'http://closure-compiler.appspot.com/compile';
-
-	/**
 	* @var ConfigBuilder
 	*/
 	protected $cb;
@@ -152,6 +147,7 @@ class JSParserGenerator
 		$this->init();
 
 		$options += array(
+			'closureCompilerURL'  => 'http://closure-compiler.appspot.com/compile',
 			'compilation'         => 'none',
 			'disableLogTypes'     => array(),
 			'removeDeadCode'      => true,
@@ -216,7 +212,7 @@ class JSParserGenerator
 
 		if ($options['compilation'] !== 'none')
 		{
-			$this->compile($options['compilation']);
+			$this->compile($options['closureCompilerURL'], $options['compilation']);
 		}
 
 		/**
@@ -234,9 +230,10 @@ class JSParserGenerator
 	/**
 	* Compile/minimize the JS source
 	*
-	* @param string $level Level to be passed to the Google Closure Compiler service
+	* @param string $url   URL of the Closure Compiler service
+	* @param string $level Level to be passed to the Closure Compiler service
 	*/
-	protected function compile($level)
+	protected function compile($url, $level)
 	{
 		$content = http_build_query(array(
 			'output_format'     => 'json',
@@ -249,7 +246,7 @@ class JSParserGenerator
 		$content .= '&output_info=errors';
 
 		$response = json_decode(file_get_contents(
-			$this->closureCompilerURL,
+			$url,
 			false,
 			stream_context_create(array(
 				'http' => array(

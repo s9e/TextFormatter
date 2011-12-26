@@ -164,6 +164,8 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] addTagAttributePostFilterCallback throws an exception if callback is not callable
  [x] Can set postFilter callbacks via setTagAttributeOption
  [x] Can clear all postFilter callbacks from a tag attribute
+ [x] getJSParser() returns the Javascript source of the parser
+ [x] The array of option passed to getJSParser() is passed to the JS parser generator
  [x] getJSPlugins() returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
  [x] getJSPlugins() ignores plugins with no Javascript parser
  [x] HTML specs: <span> does not allow <div> as a child

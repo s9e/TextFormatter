@@ -967,11 +967,12 @@ class JSParserGeneratorTest extends Test
 	*/
 	public function test_Closure_Compiler()
 	{
-		$this->jspg->closureCompilerURL = 'data:text/plain,{"compiledCode":"alert(\"Hello world\");","statistics":{"originalSize":86,"originalGzipSize":96,"compressedSize":21,"compressedGzipSize":41,"compileTime":1}}';
-
 		$this->assertSame(
 			'alert("Hello world");',
-			$this->jspg->get(array('compilation' => 'ADVANCED_OPTIMIZATIONS'))
+			$this->jspg->get(array(
+				'compilation' => 'ADVANCED_OPTIMIZATIONS',
+				'closureCompilerURL' => 'data:text/plain,{"compiledCode":"alert(\"Hello world\");","statistics":{"originalSize":86,"originalGzipSize":96,"compressedSize":21,"compressedGzipSize":41,"compileTime":1}}'
+			))
 		);
 	}
 
@@ -982,8 +983,10 @@ class JSParserGeneratorTest extends Test
 	*/
 	public function testThrowsAnExceptionIfAnErrorOccursWhileContactingGoogleClosureCompiler()
 	{
-		$this->jspg->closureCompilerURL = 'data:text/plain,FAILURE';
-		$this->jspg->get(array('compilation' => 'ADVANCED_OPTIMIZATIONS'));
+		$this->jspg->get(array(
+			'compilation' => 'ADVANCED_OPTIMIZATIONS',
+			'closureCompilerURL' => 'data:text/plain,FAILURE'
+		));
 	}
 
 	/**
@@ -993,8 +996,10 @@ class JSParserGeneratorTest extends Test
 	*/
 	public function testThrowsAnExceptionIfGoogleClosureCompilerReturnsAnError()
 	{
-		$this->jspg->closureCompilerURL = 'data:text/plain,{"compiledCode":"","errors":[{"type":"JSC_PARSE_ERROR","file":"Input_0","lineno":1,"charno":7,"error":"Parse error. missing ; before statement","line":"foo bar"}],"statistics":{"originalSize":7,"originalGzipSize":27,"compressedSize":0,"compressedGzipSize":20,"compileTime":0}}';
-		$this->jspg->get(array('compilation' => 'ADVANCED_OPTIMIZATIONS'));
+		$this->jspg->get(array(
+			'compilation' => 'ADVANCED_OPTIMIZATIONS',
+			'closureCompilerURL' => 'data:text/plain,{"compiledCode":"","errors":[{"type":"JSC_PARSE_ERROR","file":"Input_0","lineno":1,"charno":7,"error":"Parse error. missing ; before statement","line":"foo bar"}],"statistics":{"originalSize":7,"originalGzipSize":27,"compressedSize":0,"compressedGzipSize":20,"compileTime":0}}'
+		));
 	}
 
 	/**
