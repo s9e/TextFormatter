@@ -1011,13 +1011,13 @@ class Parser
 			* NOTE: we don't bother checking if the tag name would be valid since we check for the
 			*       tag's existence in $this->tagsConfig and only valid tags should be found there
 			*/
-			if (strpos($tag['name'], ':') !== false)
+			if (strpos($tag['name'], ':') === false)
 			{
-				$this->hasNamespacedTags = true;
+				$tag['name'] = strtoupper($tag['name']);
 			}
 			else
 			{
-				$tag['name'] = strtoupper($tag['name']);
+				$this->hasNamespacedTags = true;
 			}
 
 			if (!isset($this->tagsConfig[$tag['name']]))

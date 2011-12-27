@@ -842,13 +842,13 @@ s9e['TextFormatter'] = function(xsl)
 			*/
 			function(tag)
 			{
-				if (HINT_NAMESPACES && tag.name.indexOf(':') > -1)
+				if (HINT_NAMESPACES && tag.name.indexOf(':') < 0)
 				{
-					hasNamespacedTags = true;
+					tag.name = tag.name.toUpperCase();
 				}
 				else
 				{
-					tag.name = tag.name.toUpperCase();
+					hasNamespacedTags = true;
 				}
 
 				if (!tagsConfig[tag.name])
