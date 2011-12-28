@@ -1,7 +1,6 @@
 var tags = [],
 	tagName  = config.tagName,
 	attrName = config.attrName,
-	b = document.createElement('b'),
 	disabled = config.disabled || {};
 
 matches.forEach(function(m)
@@ -11,11 +10,7 @@ matches.forEach(function(m)
 		return;
 	}
 
-	b.innerHTML = m[0][0];
-
-	var chr = (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
-	        ? b.innerText || b.textContent
-	        : b.textContent;
+	var chr = html_entity_decode(m[0][0]);
 
 	if (chr === m[0][0])
 	{

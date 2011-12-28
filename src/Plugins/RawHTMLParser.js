@@ -1,14 +1,4 @@
-var tags = [],
-	b = document.createElement('b');
-
-function html_entity_decode(str)
-{
-	b.innerHTML = str;
-
-	return (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
-			? b.innerText || b.textContent
-			: b.textContent;
-}
+var tags = [];
 
 matches.forEach(function(m)
 {
