@@ -1238,7 +1238,7 @@ class ConfigBuilder
 					= '#(?<![^\\.])'
 					. self::buildRegexpFromList(
 						$filters['url'][$k],
-						array('*' => '.*')
+						array('specialChars' => array('*' => '.*'))
 					  )
 					. '$#DiS';
 			}
@@ -1406,8 +1406,15 @@ class ConfigBuilder
 	* @param  array  $esc   Array that caches how each individual characters should be escaped
 	* @return string
 	*/
-	static public function buildRegexpFromList($words, array $esc = array())
+	static public function buildRegexpFromList($words, array $options = array())
 	{
+		$options += array(
+			'specialChars'     => array(),
+			'disableLookahead' => false
+		);
+
+		$esc = $options['specialChars'];
+
 		// Sort the words to produce the same regexp regardless of the words' order
 		sort($words);
 
@@ -1428,7 +1435,7 @@ class ConfigBuilder
 				// Store the initial for later
 				$initials[$matches[0][0]] = true;
 
-				// Enable lookahead as necessary
+				// Enable lookahead if there's more than one character
 				$useLookahead |= isset($matches[0][1]);
 
 				// Each character becomes the key associated to an array containing all possible
@@ -1464,7 +1471,8 @@ class ConfigBuilder
 				}
 			}
 
-			if ($useLookahead)
+			if ($useLookahead
+			 && !$options['disableLookahead'])
 			{
 				$regexp .= '(?=[' . implode('', array_intersect_key($esc, $initials)) . '])';
 			}

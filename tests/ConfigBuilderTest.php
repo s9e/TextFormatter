@@ -1291,7 +1291,7 @@ class ConfigBuilderTest extends Test
 			'apple.*?',
 			ConfigBuilder::buildRegexpFromList(
 				array('apple*', 'applepie'),
-				array('*' => '.*?')
+				array('specialChars' => array('*' => '.*?'))
 			)
 		);
 	}
@@ -1318,7 +1318,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testOptimizesRegexpByUsingLookaheadAssertion
 	*/
-	public function testOptimizesRegexpByUsingLookaheadAssertionWithEscapedCharacters()
+	public function testOptimizesRegexpByUsingLookaheadAssertionEvenWithEscapedCharacters()
 	{
 		$this->assertSame(
 			'(?=[\\*\\\\])(?:\\*foo|\\\\bar)',
@@ -1338,7 +1338,7 @@ class ConfigBuilderTest extends Test
 			// The joker ? is replaced by the special character .
 			ConfigBuilder::buildRegexpFromList(
 				array('?', 'bar'),
-				array('?' => '.')
+				array('specialChars' => array('?' => '.'))
 			)
 		);
 	}
@@ -1365,6 +1365,20 @@ class ConfigBuilderTest extends Test
 		$this->assertSame(
 			'[♠♣♥♦]',
 			ConfigBuilder::buildRegexpFromList(array('♠', '♣', '♥', '♦'))
+		);
+	}
+
+	/**
+	* @testdox The lookahead assertion optimization can be disabled with the disableLookahead option
+	*/
+	public function testDisableLookaheadAssertion()
+	{
+		$this->assertSame(
+			'(?:bar|foo)',
+			ConfigBuilder::buildRegexpFromList(
+				array('foo', 'bar'),
+				array('disableLookahead' => true)
+			)
 		);
 	}
 
