@@ -326,7 +326,7 @@ class Parser
 					$attrVal = static::encodeUrlToAscii($attrVal);
 				}
 
-				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_URL);
+				$attrVal = filter_var($attrVal, FILTER_VALIDATE_URL);
 
 				if (!$attrVal)
 				{
@@ -410,12 +410,12 @@ class Parser
 
 			case 'identifier':
 			case 'id':
-				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($attrVal, FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '#^[A-Za-z0-9\\-_]+$#D')
 				));
 
 			case 'simpletext':
-				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($attrVal, FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '#^[A-Za-z0-9\\-+.,_ ]+$#D')
 				));
 
@@ -423,7 +423,7 @@ class Parser
 				return (string) $attrVal;
 
 			case 'email':
-				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_EMAIL);
+				$attrVal = filter_var($attrVal, FILTER_VALIDATE_EMAIL);
 
 				if (!$attrVal)
 				{
@@ -439,10 +439,10 @@ class Parser
 
 			case 'int':
 			case 'integer':
-				return filter_var($attrVal, \FILTER_VALIDATE_INT);
+				return filter_var($attrVal, FILTER_VALIDATE_INT);
 
 			case 'float':
-				return filter_var($attrVal, \FILTER_VALIDATE_FLOAT);
+				return filter_var($attrVal, FILTER_VALIDATE_FLOAT);
 
 			case 'number':
 				return (preg_match('#^[0-9]+$#D', $attrVal))
@@ -450,12 +450,12 @@ class Parser
 				      : false;
 
 			case 'uint':
-				return filter_var($attrVal, \FILTER_VALIDATE_INT, array(
+				return filter_var($attrVal, FILTER_VALIDATE_INT, array(
 					'options' => array('min_range' => 0)
 				));
 
 			case 'range':
-				$attrVal = filter_var($attrVal, \FILTER_VALIDATE_INT);
+				$attrVal = filter_var($attrVal, FILTER_VALIDATE_INT);
 
 				if ($attrVal === false)
 				{
@@ -483,7 +483,7 @@ class Parser
 				return $attrVal;
 
 			case 'color':
-				return filter_var($attrVal, \FILTER_VALIDATE_REGEXP, array(
+				return filter_var($attrVal, FILTER_VALIDATE_REGEXP, array(
 					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
 				));
 
