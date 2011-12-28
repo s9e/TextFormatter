@@ -876,6 +876,16 @@ class ParserTest extends Test
 		$this->assertAttributeIsValid('url', '  http://example.com  ', 'http://example.com');
 	}
 
+	public function testUrlFilterUrlencodesSingleQuotes()
+	{
+		$this->assertAttributeIsValid('url', "http://example.com/''", "http://example.com/%27%27");
+	}
+
+	public function testUrlFilterUrlencodesDoubleQuotes()
+	{
+		$this->assertAttributeIsValid('url', 'http://example.com/""', 'http://example.com/%22%22');
+	}
+
 	public function testUrlFilterRejectsNotAllowedSchemes()
 	{
 		$this->assertAttributeIsInvalid(

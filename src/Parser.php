@@ -406,7 +406,7 @@ class Parser
 				* We URL-encode quotes just in case someone would want to use the URL in some
 				* Javascript thingy
 				*/
-				return str_replace(array("'", '"'), array('%27', '%22'), $attrVal);
+				return strtr($attrVal, array("'" => '%27', '"' => '%22'));
 
 			case 'identifier':
 			case 'id':
