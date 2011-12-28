@@ -159,7 +159,7 @@ s9e['TextFormatter'] = function(xsl)
 
 		// We escape left brackets so that we don't inadvertently evaluate some nasty HTML such as
 		// <img src=... onload=evil() />
-		b.innerHTML = m[0][0].replace(/</g, '&lt;');
+		b.innerHTML = str.replace(/</g, '&lt;');
 
 		return (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
 			 ? b.innerText || b.textContent
