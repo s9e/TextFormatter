@@ -71,7 +71,7 @@ s9e['TextFormatter'] = function(xsl)
 		context,
 		/** @type {!number} */
 		pos,
-		/** @type {!bool} */
+		/** @type {!boolean} */
 		hasNamespacedTags,
 
 		/** @const */
