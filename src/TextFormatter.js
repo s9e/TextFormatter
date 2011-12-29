@@ -94,12 +94,62 @@ s9e['TextFormatter'] = function(xsl)
 		HINT_RLA_ABORT = true
 	;
 
+	//==========================================================================
+	// IE compat stuff :(
+	//==========================================================================
+
+	var NO_NS_DOM = (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('createElementNS' in document));
+
+	function createElementNS(document, namespaceURI, QName)
+	{
+		return (NO_NS_DOM)
+			 ? document.createElement(QName)
+			 : document.createElementNS(namespaceURI, QName);
+	}
+
+	function hasAttributeNS(el, namespaceURI, QName)
+	{
+		return (NO_NS_DOM)
+			 ? (QName in el)
+			 : el.hasAttributeNS(namespaceURI, QName);
+	}
+
+	function getAttributeNS(el, namespaceURI, QName)
+	{
+		return (NO_NS_DOM)
+			 ? el.getAttribute(QName)
+			 : el.getAttributeNS(namespaceURI, QName);
+	}
+
+	function setAttributeNS(el, namespaceURI, QName, value)
+	{
+		return (NO_NS_DOM)
+			 ? el.setAttribute(QName, value)
+			 : el.setAttributeNS(namespaceURI, QName, value);
+	}
+
+	function removeAttributeNS(el, namespaceURI, QName)
+	{
+		return (NO_NS_DOM)
+			 ? el.removeAttribute(QName)
+			 : el.removeAttributeNS(namespaceURI, QName);
+	}
+
+	//==========================================================================
+
+	function loadXML(xml)
+	{
+		var obj = new ActiveXObject('MSXML2.DOMDocument.3.0');
+		obj.async = false;
+		obj.validateOnParse = false;
+		obj.loadXML(xml);
+
+		return obj;
+	}
+
 	if (MSXML)
 	{
-		var xslt = new ActiveXObject('MSXML2.DOMDocument.3.0');
-		xslt.async = false;
-		xslt.validateOnParse = false;
-		xslt.loadXML(xsl);
+		var xslt = loadXML(xsl);
 	}
 	else
 	{
@@ -444,17 +494,9 @@ s9e['TextFormatter'] = function(xsl)
 	{
 		function createDOM(elName)
 		{
-			if (MSXML)
-			{
-				var DOM = new ActiveXObject('MSXML2.DOMDocument.3.0');
-				DOM.async = false;
-				DOM.validateOnParse = false;
-				DOM.loadXML('<' + elName + '/>');
-
-				return DOM;
-			}
-
-			return document.implementation.createDocument('', elName, null);
+			return (MSXML)
+			     ? loadXML('<' + elName + '/>')
+			     : document.implementation.createDocument('', elName, null);
 		}
 
 		var stack = [],
@@ -483,7 +525,8 @@ s9e['TextFormatter'] = function(xsl)
 						{
 							declared[prefix] = 1;
 
-							el.setAttributeNS(
+							setAttributeNS(
+								el,
 								'http://www.w3.org/2000/xmlns/',
 								'xmlns:' + prefix,
 								registeredNamespaces[prefix]
@@ -503,7 +546,8 @@ s9e['TextFormatter'] = function(xsl)
 				{
 					var prefix = tagName.substr(0, pos);
 
-					return DOM.createElementNS(
+					return createElementNS(
+						DOM,
 						registeredNamespaces[prefix],
 						tagName
 					);
@@ -1751,11 +1795,17 @@ s9e['TextFormatter'] = function(xsl)
 
 			if (MSXML)
 			{
-				frag = document.createDocumentFragment();
+				// If we don't have namespace support in DOM, we need to dump and reload the
+				// intermediate representation
+				if (NO_NS_DOM && hasNamespacedTags)
+				{
+					DOM = loadXML(DOM.xml);
+				}
 
 				var div  = document.createElement('div');
 				div.innerHTML = DOM.transformNode(xslt);
 
+				frag = document.createDocumentFragment();
 				while (div.firstChild)
 				{
 					frag.appendChild(div.removeChild(div.firstChild));
@@ -1899,16 +1949,9 @@ s9e['TextFormatter'] = function(xsl)
 				{
 					var oldAttr = oldEl.attributes[i];
 
-					if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('hasAttributeNS' in newEl))
+					if (!hasAttributeNS(newEl, oldAttr.namespaceURI, oldAttr.name))
 					{
-						if (!(oldAttr.name in oldEl))
-						{
-							oldEl.removeAttribute(oldAttr.name);
-						}
-					}
-					else if (!newEl.hasAttributeNS(oldAttr.namespaceURI, oldAttr.name))
-					{
-						oldEl.removeAttributeNS(oldAttr.namespaceURI, oldAttr.name);
+						removeAttributeNS(oldEl, oldAttr.namespaceURI, oldAttr.name);
 					}
 				}
 
@@ -1917,16 +1960,9 @@ s9e['TextFormatter'] = function(xsl)
 				{
 					var newAttr = newEl.attributes[i];
 
-					if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('getAttributeNS' in newEl))
+					if (newAttr.value !== getAttributeNS(oldEl, newAttr.namespaceURI, newAttr.name))
 					{
-						if (newAttr.value !== oldEl.getAttribute(newAttr.name))
-						{
-							oldEl.setAttribute(newAttr.name, newAttr.value);
-						}
-					}
-					else if (newAttr.value !== oldEl.getAttributeNS(newAttr.namespaceURI, newAttr.name))
-					{
-						oldEl.setAttributeNS(newAttr.namespaceURI, newAttr.name, newAttr.value);
+						setAttributeNS(oldEl, newAttr.namespaceURI, newAttr.name, newAttr.value);
 					}
 				}
 			}

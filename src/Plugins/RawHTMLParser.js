@@ -2,7 +2,7 @@ var tags = [];
 
 matches.forEach(function(m)
 {
-	var tagType = (text[m[0][1] + 1] === '/')
+	var tagType = (text.substr(1 + m[0][1], 1) === '/')
 				? END_TAG
 				: START_TAG;
 
