@@ -43,11 +43,17 @@ $cb->loadPlugin('Autolink');
 $cb->addRulesFromHTML5Specs();
 
 $jsParser = $cb->getJSParser(array(
-	'compilation'     => 'ADVANCED_OPTIMIZATIONS',
-	'disableLogTypes' => array('debug', 'warning', 'error'),
+	'compilation'         => 'ADVANCED_OPTIMIZATIONS',
 	'unsafeMinification'  => true,
 	'xslNamespacePrefix'  => 'x',
-	'enableIEWorkarounds' => false
+	'enableIEWorkarounds' => false,
+	'disableAPI' => array(
+		'parse',
+		'render',
+		'getLog',
+		'enablePlugin',
+		'disablePlugin'
+	)
 ));
 
 ob_start();

@@ -52,6 +52,16 @@ class JSParserGenerator
 	protected $registeredNamespaces;
 
 	/**
+	* @var string XSL used with rendering
+	*/
+	protected $xsl;
+
+	/**
+	* @var array Plugins source
+	*/
+	protected $plugins;
+
+	/**
 	* List of Javascript reserved words
 	*
 	* @link https://developer.mozilla.org/en/JavaScript/Reference/Reserved_Words
@@ -133,7 +143,10 @@ class JSParserGenerator
 		$this->filtersConfig = $config['filters'];
 		$this->pluginsConfig = $config['plugins'];
 		$this->registeredNamespaces = $this->cb->getNamespaces();
+
 		$this->src = $this->tpl;
+
+		$this->plugins = $this->getPlugins();
 	}
 
 	/**
@@ -149,14 +162,16 @@ class JSParserGenerator
 		$options += array(
 			'closureCompilerURL'  => 'http://closure-compiler.appspot.com/compile',
 			'compilation'         => 'none',
+			'disableAPI'          => array(),
 			'disableLogTypes'     => array(),
-			'removeDeadCode'      => true,
-			'escapeScriptEndTag'  => true,
 			'enableIEWorkarounds' => true,
-			'enableLivePreview'   => true,
+			'escapeScriptEndTag'  => true,
+			'removeDeadCode'      => true,
 			'unsafeMinification'  => false,
 			'xslNamespacePrefix'  => 'xsl'
 		);
+
+		$this->xsl = $this->cb->getXSL($options['xslNamespacePrefix']);
 
 		if ($options['removeDeadCode'])
 		{
@@ -172,12 +187,22 @@ class JSParserGenerator
 		);
 
 		/**
-		* Enable/disable live preview
+		* Disable parts of the API
 		*/
-		$this->replaceConstant(
-			'ENABLE_LIVE_PREVIEW',
-			(bool) $options['enableLivePreview']
-		);
+		foreach ($options['disableAPI'] as $methodName)
+		{
+			$methodName = strtoupper($methodName);
+
+			if ($methodName === 'GETLOG')
+			{
+				$options['disableLogTypes'] = array("[^']+?");
+			}
+
+			$this->replaceConstant(
+				'DISABLE_API_' . $methodName,
+				true
+			);
+		}
 
 		$this->injectTagsConfig();
 		$this->injectPlugins();
@@ -292,11 +317,13 @@ class JSParserGenerator
 	protected function setOptimizationHints()
 	{
 		$hints = array(
-			'DISALLOWED_HOSTS'   => isset($this->filtersConfig['url']['disallowedHosts']),
-			'NAMESPACES'         => false,
-			'REOPEN_RULES'       => false,
-			'REGEXP_REPLACEWITH' => false,
-			'RLA_ABORT'          => false
+			'DISALLOWED_HOSTS'    => isset($this->filtersConfig['url']['disallowedHosts']),
+			'NAMESPACES'          => false,
+			'NAMESPACES_TEMPLATE' => false,
+			'REOPEN_RULES'        => false,
+			'REGEXP_REPLACEWITH'  => false,
+			'RLA_ABORT'           => false,
+			'TAG_REQUIRES'        => false
 		);
 
 		foreach ($this->tagsConfig as $tagConfig)
@@ -335,6 +362,21 @@ class JSParserGenerator
 				break;
 			}
 		}
+
+		foreach ($this->plugins as $js)
+		{
+			if (strpos($js, 'requires') !== false)
+			{
+				$hints['TAG_REQUIRES'] = true;
+				break;
+			}
+		}
+
+		$xsl = new DOMDocument;
+		$xsl->loadXML($this->xsl);
+
+		$xpath = new DOMXPath($xsl);
+		$hints['NAMESPACES_TEMPLATE'] = $xpath->evaluate('boolean(//*[namespace-uri() != "" and namespace-uri() != "http://www.w3.org/1999/XSL/Transform"] | //@*[namespace-uri() != "" and namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])');
 
 		foreach ($hints as $name => $value)
 		{
@@ -610,7 +652,7 @@ class JSParserGenerator
 	{
 		$plugins = array();
 
-		foreach ($this->getPlugins() as $pluginName => $pluginJS)
+		foreach ($this->plugins as $pluginName => $pluginJS)
 		{
 			$plugins[] = json_encode($pluginName) . ':' . $pluginJS;
 		}
@@ -983,7 +1025,7 @@ class JSParserGenerator
 	protected function injectXSL($prefix)
 	{
 		$xsl = new DOMDocument;
-		$xsl->loadXML($this->cb->getXSL($prefix));
+		$xsl->loadXML($this->xsl);
 
 		/**
 		* Remove the "/m" template, which is only used when rendering multiple texts
@@ -1152,10 +1194,15 @@ class JSParserGenerator
 
 		// Split the source into chunks around the preview method so that its content doesn't get
 		// rewritten
-		preg_match("#(.+?)(\\t\\t'preview'.*?\\n\\t\\t\\})(.+)#s", $this->src, $parts);
+		$lpos = strpos($this->src, "\n\tif (!DISABLE_API_PREVIEW)");
+		$rpos = strpos($this->src, "\n\t}", $lpos);
 
-		$process = array(&$parts[1], &$parts[3]);
-		foreach ($process as &$src)
+		$parts = array(
+			substr($this->src, 0, $lpos),
+			substr($this->src, $rpos)
+		);
+
+		foreach ($parts as &$src)
 		{
 			// tag.name
 			$src = preg_replace(
@@ -1173,8 +1220,6 @@ class JSParserGenerator
 		}
 		unset($src);
 
-		// Join parts 1 to 3
-		unset($parts[0]);
-		$this->src = implode('', $parts);
+		$this->src = $parts[0] . substr($this->src, $lpos, $rpos - $lpos) . $parts[1];
 	}
 }

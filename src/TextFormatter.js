@@ -21,7 +21,9 @@ var Tag;
 */
 var StubTag;
 
-s9e['TextFormatter'] = function(xsl)
+s9e['TextFormatter'] = {};
+
+(function(xsl)
 {
 	var
 		/** @const */
@@ -87,17 +89,22 @@ s9e['TextFormatter'] = function(xsl)
 		/** @const */
 		HINT_NAMESPACES = true,
 		/** @const */
+		HINT_NAMESPACES_TEMPLATE = true,
+		/** @const */
 		HINT_REGEXP_REPLACEWITH = true,
 		/** @const */
 		HINT_REOPEN_RULES = true,
 		/** @const */
-		HINT_RLA_ABORT = true
+		HINT_RLA_ABORT = true,
+		/** @const */
+		HINT_TAG_REQUIRES = true
 	;
 
 	//==========================================================================
 	// IE compat stuff :(
 	//==========================================================================
 
+	/** @const */
 	var NO_NS_DOM = (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('createElementNS' in document));
 
 	function createElementNS(document, namespaceURI, QName)
@@ -109,28 +116,28 @@ s9e['TextFormatter'] = function(xsl)
 
 	function hasAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM)
+		return (NO_NS_DOM || !HINT_NAMESPACES_TEMPLATE)
 			 ? (QName in el)
 			 : el.hasAttributeNS(namespaceURI, QName);
 	}
 
 	function getAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM)
+		return (NO_NS_DOM || !HINT_NAMESPACES_TEMPLATE)
 			 ? el.getAttribute(QName)
 			 : el.getAttributeNS(namespaceURI, QName);
 	}
 
 	function setAttributeNS(el, namespaceURI, QName, value)
 	{
-		return (NO_NS_DOM)
+		return (NO_NS_DOM || !HINT_NAMESPACES_TEMPLATE)
 			 ? el.setAttribute(QName, value)
 			 : el.setAttributeNS(namespaceURI, QName, value);
 	}
 
 	function removeAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM)
+		return (NO_NS_DOM || !HINT_NAMESPACES_TEMPLATE)
 			 ? el.removeAttribute(QName)
 			 : el.removeAttributeNS(namespaceURI, QName);
 	}
@@ -875,7 +882,7 @@ s9e['TextFormatter'] = function(xsl)
 				*/
 				function(tag)
 				{
-					if (tag.requires)
+					if (HINT_TAG_REQUIRES && tag.requires)
 					{
 						tag.requires.forEach(function(k, i)
 						{
@@ -1733,27 +1740,47 @@ s9e['TextFormatter'] = function(xsl)
 		});
 	}
 
-	return {
+	function parse(_text)
+	{
+		reset(_text);
+		executePluginParsers();
+		normalizeUnprocessedTags();
+		sortTags();
+		processTags();
+
+		return output();
+	}
+
+	var
+		/** @const */
+		DISABLE_API_PARSE = false,
+		/** @const */
+		DISABLE_API_RENDER = false,
+		/** @const */
+		DISABLE_API_GETLOG = false,
+		/** @const */
+		DISABLE_API_DISABLEPLUGIN = false,
+		/** @const */
+		DISABLE_API_ENABLEPLUGIN = false,
+		/** @const */
+		DISABLE_API_PREVIEW = false;
+
+	if (!DISABLE_API_PARSE)
+	{
 		/**
 		* @param {!string} _text
 		* @return {Document}
 		*/
-		'parse': function(_text)
-		{
-			reset(_text);
-			executePluginParsers();
-			normalizeUnprocessedTags();
-			sortTags();
-			processTags();
+		s9e['TextFormatter']['parse'] = parse;
+	}
 
-			return output();
-		},
-
+	if (!DISABLE_API_RENDER)
+	{
 		/**
 		* @param {!Document} DOM Intermediate representation
 		* @return string
 		*/
-		'render': function (DOM)
+		s9e['TextFormatter']['render'] = function(DOM)
 		{
 			if (MSXML)
 			{
@@ -1761,35 +1788,42 @@ s9e['TextFormatter'] = function(xsl)
 			}
 
 			return xslt['transformToXML'](DOM);
-		},
+		}
+	}
 
-		'getLog': function()
+	if (!DISABLE_API_GETLOG)
+	{
+		s9e['TextFormatter']['getLog'] = function()
 		{
 			return _log;
-		},
+		}
+	}
 
-		'disablePlugin': function(pluginName)
+	if (!DISABLE_API_DISABLEPLUGIN)
+	{
+		s9e['TextFormatter']['disablePlugin'] = function(pluginName)
 		{
 			pluginsConfig[pluginName].__disabled = 1;
-		},
+		}
+	}
 
-		'enablePlugin': function(pluginName)
+	if (!DISABLE_API_ENABLEPLUGIN)
+	{
+		s9e['TextFormatter']['enablePlugin'] = function(pluginName)
 		{
 			pluginsConfig[pluginName].__disabled = 0;
-		},
+		}
+	}
 
+	if (!DISABLE_API_PREVIEW)
+	{
 		/**
 		* @param {!string} text Text to parse
 		* @param {!HTMLElement} target Target element
 		*/
-		'preview': function(text, target)
+		s9e['TextFormatter']['preview'] = function(text, target)
 		{
-			if (!ENABLE_LIVE_PREVIEW)
-			{
-				throw 'Live preview is disabled';
-			}
-
-			var DOM = this.parse(text),
+			var DOM = parse(text),
 				document = target.ownerDocument,
 				frag;
 
@@ -1970,4 +2004,4 @@ s9e['TextFormatter'] = function(xsl)
 			refreshElementContent(target, frag);
 		}
 	}
-}(/** XSL goes here **/);
+}(/** XSL goes here **/));
