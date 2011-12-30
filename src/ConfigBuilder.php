@@ -1356,7 +1356,7 @@ class ConfigBuilder
 				unset($tagConfig['disable']);
 
 				/**
-				* We only need to store this option is it's true
+				* We only need to store this option if it's true
 				*/
 				if (!$tagConfig['disallowAsRoot'])
 				{
