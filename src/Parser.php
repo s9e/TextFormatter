@@ -844,7 +844,7 @@ class Parser
 				$regexp,
 				$this->text,
 				$matches[$k],
-				\PREG_SET_ORDER | \PREG_OFFSET_CAPTURE
+				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
 			);
 
 			if (!$_cnt)
