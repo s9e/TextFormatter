@@ -1173,6 +1173,33 @@ class ConfigBuilder
 			}
 		}
 
+		/**
+		* Generate the root context to be used by the Parser
+		*/
+		$config['rootContext'] = array(
+			'allowedChildren'    => str_repeat("\x00", ceil(count($config['tags']) / 8)),
+			'allowedDescendants' => str_repeat("\x00", ceil(count($config['tags']) / 8))
+		);
+
+		foreach ($config['tags'] as &$tagConfig)
+		{
+			$n = $tagConfig['n'];
+
+			// We set the bit only if the tag is allowed at the root of document
+			if (empty($tagConfig['disallowAsRoot']))
+			{
+				$config['rootContext']['allowedChildren'][$n >> 3]
+					= $config['rootContext']['allowedChildren'][$n >> 3] | chr(1 << ($n & 7));
+			}
+
+			$config['rootContext']['allowedDescendants'][$n >> 3]
+				= $config['rootContext']['allowedDescendants'][$n >> 3] | chr(1 << ($n & 7));
+
+			// We don't need this anymore
+			unset($tagConfig['disallowAsRoot']);
+		}
+		unset($tagConfig);
+
 		return $config;
 	}
 

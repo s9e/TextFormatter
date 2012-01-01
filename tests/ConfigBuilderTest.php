@@ -2078,6 +2078,44 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @test
+	* @testdox getParserConfig() creates a "rootContext" entry with a hash for "allowedChildren" and "allowedDescendants"
+	*/
+	public function test_getParserConfig_rootContext()
+	{
+		$this->cb->addTag('a');
+
+		$this->assertArrayMatches(
+			array(
+				'rootContext' => array(
+					'allowedChildren'    => "\x01",
+					'allowedDescendants' => "\x01"
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
+
+	/**
+	* @test
+	* @testdox getParserConfig() handles the "disallowAsRoot" option in the root context
+	*/
+	public function test_getParserConfig_rootContext_with_disallowAsRoot()
+	{
+		$this->cb->addTag('a', array('disallowAsRoot' => true));
+
+		$this->assertArrayMatches(
+			array(
+				'rootContext' => array(
+					'allowedChildren'    => "\x00",
+					'allowedDescendants' => "\x01"
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
+
+	/**
+	* @test
 	* @depends testLoadsPluginOnMagicGet
 	* @testdox getPluginsConfig() adds default config if missing
 	*/

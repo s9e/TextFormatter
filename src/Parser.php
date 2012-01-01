@@ -68,6 +68,11 @@ class Parser
 	protected $registeredNamespaces = array();
 
 	/**
+	* @var array Context to be used for tags at the root of the document
+	*/
+	protected $rootContext;
+
+	/**
 	* @var array Array of PluginParser instances
 	*/
 	protected $pluginParsers = array();
@@ -162,6 +167,7 @@ class Parser
 		$this->filtersConfig = $config['filters'];
 		$this->pluginsConfig = $config['plugins'];
 		$this->tagsConfig    = $config['tags'];
+		$this->rootContext   = $config['rootContext'];
 
 		if (isset($config['namespaces']))
 		{
@@ -1073,21 +1079,10 @@ class Parser
 			return;
 		}
 
-		$this->context = array(
-			'allowedChildren'    => str_repeat("\xff", ceil(count($this->tagsConfig) / 8)),
-			'allowedDescendants' => str_repeat("\xff", ceil(count($this->tagsConfig) / 8))
-		);
-
-		foreach ($this->tagsConfig as $tagConfig)
-		{
-			if (!empty($tagConfig['disallowAsRoot']))
-			{
-				$n = $tagConfig['n'];
-
-				$this->context['allowedChildren'][$n >> 3]
-					= $this->context['allowedChildren'][$n >> 3] ^ chr(1 << ($n & 7));
-			}
-		}
+		/**
+		* Set up the root context
+		*/
+		$this->context = $this->rootContext;
 
 		/**
 		* Seed the tag counters with 0 for each tag

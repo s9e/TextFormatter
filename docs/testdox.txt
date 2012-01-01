@@ -143,6 +143,8 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] getParserConfig() removes rules that target non existing tags
  [x] getParserConfig() preserves requireParent rules that target non existing tags
  [x] getParserConfig() preserves requireAncestor rules that target non existing tags
+ [x] getParserConfig() creates a "rootContext" entry with a hash for "allowedChildren" and "allowedDescendants"
+ [x] getParserConfig() handles the "disallowAsRoot" option in the root context
  [x] getPluginsConfig() adds default config if missing
  [x] Plugins can be disabled by returning false instead of config
  [x] Can add generic XSL
