@@ -2001,6 +2001,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	* @depends testCanCreateRuleThatTargetsANonExistentTag
+	* @testdox getParserConfig() removes rules that target non existing tags
 	*/
 	public function getParserConfig_removes_rules_that_target_non_existing_tags()
 	{
@@ -2024,6 +2025,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	* @depends testCanCreateRuleThatTargetsANonExistentTag
+	* @testdox getParserConfig() preserves requireParent rules that target non existing tags
 	*/
 	public function getParserConfig_preserves_requireParent_rules_that_target_non_existing_tags()
 	{
@@ -2050,6 +2052,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	* @depends testCanCreateRuleThatTargetsANonExistentTag
+	* @testdox getParserConfig() preserves requireAncestor rules that target non existing tags
 	*/
 	public function getParserConfig_preserves_requireAncestor_rules_that_target_non_existing_tags()
 	{
@@ -2076,6 +2079,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	* @depends testLoadsPluginOnMagicGet
+	* @testdox getPluginsConfig() adds default config if missing
 	*/
 	public function getPluginsConfig_adds_default_config_if_missing()
 	{

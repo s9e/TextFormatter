@@ -140,10 +140,10 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] ConfigBuilder::parseRegexp() parses negative lookahead assertions
  [x] ConfigBuilder::parseRegexp() parses lookbehind assertions
  [x] ConfigBuilder::parseRegexp() parses negative lookbehind assertions
- [x] getParserConfig removes rules that target non existing tags
- [x] getParserConfig preserves requireParent rules that target non existing tags
- [x] getParserConfig preserves requireAncestor rules that target non existing tags
- [x] getPluginsConfig adds default config if missing
+ [x] getParserConfig() removes rules that target non existing tags
+ [x] getParserConfig() preserves requireParent rules that target non existing tags
+ [x] getParserConfig() preserves requireAncestor rules that target non existing tags
+ [x] getPluginsConfig() adds default config if missing
  [x] Plugins can be disabled by returning false instead of config
  [x] Can add generic XSL
  [x] Cannot add invalid XSL
