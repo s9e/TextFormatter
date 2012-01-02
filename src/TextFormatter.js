@@ -21,69 +21,16 @@ var StubTag;
 
 (function(xsl)
 {
+	//==========================================================================
+	// Javascript-specific stuff
+	//==========================================================================
+
 	var
 		/** @const */
-		START_TAG        = 1,
+		MSXML = HINT$enableIE && !('XSLTProcessor' in window && 'DOMParser' in window),
 		/** @const */
-		END_TAG          = 2,
-		/** @const */
-		SELF_CLOSING_TAG = 3,
-
-		/** @type {!Object} */
-		log,
-
-		/** @const @type {!Object} */
-		tagsConfig = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
-		filtersConfig = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
-		pluginsConfig = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
-		registeredNamespaces = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
-		rootContext = {/* DO NOT EDIT */},
-		/** @const @type {!Object.<string, function>} */
-		callbacks = {/* DO NOT EDIT */},
-
-		/** @type {!string} */
-		text,
-		/** @type {!number} */
-		textLen,
-		/** @type {!Array.<Tag>} */
-		unprocessedTags,
-		/** @type {!Array.<Tag>} */
-		processedTags,
-		/** @type {!Object.<number,number>} */
-		processedTagIds,
-		/** @type {!Array.<StubTag>} */
-		openTags,
-		/** @type {!Object} */
-		openStartTags,
-		/** @type {!Object} */
-		cntOpen,
-		/** @type {!Object} */
-		cntTotal,
-		/** @type {!Tag} */
-		currentTag,
-		/** @type {!string} */
-		currentAttribute,
-		/** @type {!Object} */
-		context,
-		/** @type {!number} */
-		pos,
-		/** @type {!boolean} */
-		hasNamespacedTags,
-
-		/** @const */
-		MSXML = HINT$enableIE && !('XSLTProcessor' in window && 'DOMParser' in window)
+		NO_NS_DOM = (HINT$enableIE7 && !('createElementNS' in document))
 	;
-
-	//==========================================================================
-	// IE compat stuff :(
-	//==========================================================================
-
-	/** @const */
-	var NO_NS_DOM = (HINT$enableIE7 && !('createElementNS' in document));
 
 	function createElementNS(document, namespaceURI, QName)
 	{
@@ -154,8 +101,6 @@ var StubTag;
 		}
 	}
 
-	//==========================================================================
-
 	function loadXML(xml)
 	{
 		var obj = new ActiveXObject('MSXML2.DOMDocument.3.0');
@@ -223,7 +168,8 @@ var StubTag;
 			{
 				str = matches.shift();
 
-				if (typeof str === 'undefined')
+				// Sub-expressions that were not evaluated return undefined
+				if (str === undefined)
 				{
 					match.push(['', -1]);
 				}
@@ -236,11 +182,6 @@ var StubTag;
 
 			container.push(match);
 			++cnt;
-
-			if (regexp.lastIndex === 0)
-			{
-				regexp.lastIndex = 1;
-			}
 		}
 
 		return cnt;
@@ -261,6 +202,64 @@ var StubTag;
 
 		return ret;
 	}
+
+	//==========================================================================
+	// Port of PHP code
+	//==========================================================================
+
+	var
+		/** @const */
+		START_TAG        = 1,
+		/** @const */
+		END_TAG          = 2,
+		/** @const */
+		SELF_CLOSING_TAG = 3,
+
+		/** @type {!Object} */
+		log,
+
+		/** @const @type {!Object} */
+		tagsConfig = {/* DO NOT EDIT */},
+		/** @const @type {!Object} */
+		filtersConfig = {/* DO NOT EDIT */},
+		/** @const @type {!Object} */
+		pluginsConfig = {/* DO NOT EDIT */},
+		/** @const @type {!Object} */
+		registeredNamespaces = {/* DO NOT EDIT */},
+		/** @const @type {!Object} */
+		rootContext = {/* DO NOT EDIT */},
+		/** @const @type {!Object.<string, function>} */
+		callbacks = {/* DO NOT EDIT */},
+
+		/** @type {!string} */
+		text,
+		/** @type {!number} */
+		textLen,
+		/** @type {!Array.<Tag>} */
+		unprocessedTags,
+		/** @type {!Array.<Tag>} */
+		processedTags,
+		/** @type {!Object.<number,number>} */
+		processedTagIds,
+		/** @type {!Array.<StubTag>} */
+		openTags,
+		/** @type {!Object} */
+		openStartTags,
+		/** @type {!Object} */
+		cntOpen,
+		/** @type {!Object} */
+		cntTotal,
+		/** @type {!Tag} */
+		currentTag,
+		/** @type {!string} */
+		currentAttribute,
+		/** @type {!Object} */
+		context,
+		/** @type {!number} */
+		pos,
+		/** @type {!boolean} */
+		hasNamespacedTags
+	;
 
 	/** @param {!string} _text */
 	function reset(_text)
@@ -1837,6 +1836,10 @@ var StubTag;
 
 		return output();
 	}
+
+	//==========================================================================
+	// Public API
+	//==========================================================================
 
 	var API = {};
 
