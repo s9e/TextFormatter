@@ -1426,168 +1426,33 @@ class ConfigBuilder
 	// Misc tools
 	//==========================================================================
 
+	static protected function getRM()
+	{
+		static $rm;
+
+		if (!isset($rm))
+		{
+			if (!class_exists(__NAMESPACE__ . '\\RegexpMaster'))
+			{
+				include __DIR__ . '/RegexpMaster.php';
+			}
+
+			$rm = new RegexpMaster;
+		}
+
+		return $rm;
+	}
+
 	/**
 	* Create a regexp pattern that matches a list of words
 	*
-	* @param  array  $words Words to sort (UTF-8 expected)
-	* @param  array  $esc   Array that caches how each individual characters should be escaped
+	* @param  array  $words   Words to sort (UTF-8 expected)
+	* @param  array  $options
 	* @return string
 	*/
 	static public function buildRegexpFromList($words, array $options = array())
 	{
-		$options += array(
-			'specialChars'     => array(),
-			'disableLookahead' => false
-		);
-
-		$esc = $options['specialChars'];
-
-		// Sort the words to produce the same regexp regardless of the words' order
-		sort($words);
-
-		/**
-		* Whether to use a lookahead assertion such as (?=[fb])(?:foo|bar) or not.
-		* Gets enabled if any word has more than one character and none starts with a
-		* special character
-		*/
-		$useLookahead = false;
-
-		$initials = array();
-
-		$arr = array();
-		foreach ($words as $word)
-		{
-			if (preg_match_all('#.#us', $word, $matches))
-			{
-				// Store the initial for later
-				$initials[$matches[0][0]] = true;
-
-				// Enable lookahead if there's more than one character
-				$useLookahead |= isset($matches[0][1]);
-
-				// Each character becomes the key associated to an array containing all possible
-				// characters following it. An empty key indicates the end of a word
-				$cur =& $arr;
-				foreach ($matches[0] as $c)
-				{
-					if (!isset($esc[$c]))
-					{
-						$esc[$c] = preg_quote($c, '#');
-					}
-
-					$cur =& $cur[$esc[$c]];
-				}
-				$cur[''] = false;
-			}
-		}
-		unset($cur);
-
-		$regexp = '';
-
-		/**
-		* Test whether none of the initials has a special meaning
-		*/
-		if (count($initials) > 1)
-		{
-			foreach ($initials as $initial => $void)
-			{
-				if ($esc[$initial] !== preg_quote($initial, '#'))
-				{
-					$useLookahead = false;
-					break;
-				}
-			}
-
-			if ($useLookahead
-			 && !$options['disableLookahead'])
-			{
-				$regexp .= '(?=[' . implode('', array_intersect_key($esc, $initials)) . '])';
-			}
-		}
-
-		$regexp .= self::buildRegexpFromTrie($arr);
-
-		return $regexp;
-	}
-
-	static protected function buildRegexpFromTrie($arr)
-	{
-		foreach (array('.*', '.*?') as $expr)
-		{
-			if (isset($arr[$expr])
-			 && $arr[$expr] === array('' => false))
-			{
-				return $expr;
-			}
-		}
-
-		$regexp = '';
-		$suffix = '';
-		$cnt    = count($arr);
-
-		if (isset($arr['']))
-		{
-			unset($arr['']);
-
-			if (empty($arr))
-			{
-				return '';
-			}
-
-			$suffix = '?';
-		}
-
-		/**
-		* See if we can use a character class to produce [xy] instead of (?:x|y)
-		*/
-		$useCharacterClass = (bool) ($cnt > 1);
-		foreach ($arr as $c => $sub)
-		{
-			/**
-			* If this is not the last character, we can't use a character class
-			*/
-			if ($sub !== array('' => false))
-			{
-				$useCharacterClass = false;
-				break;
-			}
-
-			/**
-			* If this is a special character, we can't use a character class
-			*/
-			if ($c !== preg_quote(stripslashes($c), '#'))
-			{
-				$useCharacterClass = false;
-				break;
-			}
-		}
-
-		if ($useCharacterClass)
-		{
-			if ($cnt === 2 && $suffix)
-			{
-				/**
-				* Produce x? instead of [x]?
-				*/
-				return implode('', array_keys($arr)) . $suffix;
-			}
-
-			return '[' . implode('', array_keys($arr)) . ']' . $suffix;
-		}
-
-		$sep = '';
-		foreach ($arr as $c => $sub)
-		{
-			$regexp .= $sep . $c . self::buildRegexpFromTrie($sub);
-			$sep = '|';
-		}
-
-		if ($cnt > 1)
-		{
-			return '(?:' . $regexp . ')' . $suffix;
-		}
-
-		return $regexp . $suffix;
+		return self::getRM()->buildRegexpFromList($words, $options);
 	}
 
 	/**
@@ -1596,192 +1461,7 @@ class ConfigBuilder
 	*/
 	static public function parseRegexp($regexp)
 	{
-		if (!preg_match('#^(.)(.*?)\\1([a-zA-Z]*)$#D', $regexp, $m))
-		{
-			throw new RuntimeException('Could not parse regexp delimiters');
-		}
-
-		$ret = array(
-			'delimiter' => $m[1],
-			'modifiers' => $m[3],
-			'regexp' => $m[2],
-			'tokens' => array()
-		);
-
-		$regexp = $m[2];
-
-		$openSubpatterns = array();
-
-		$pos = 0;
-		$regexpLen = strlen($regexp);
-
-		while ($pos < $regexpLen)
-		{
-			switch ($regexp[$pos])
-			{
-				case '\\':
-					// skip next character
-					$pos += 2;
-					break;
-
-				case '[':
-					if (!preg_match('#\\[(.*?(?<!\\\\)(?:\\\\\\\\)*)\\]((?:[\\+\\*]\\+?)?)#', $regexp, $m, 0, $pos))
-					{
-						throw new RuntimeException('Could not find matching bracket from pos ' . $pos);
-					}
-
-					$ret['tokens'][] = array(
-						'pos'         => $pos,
-						'len'         => strlen($m[0]),
-						'type'        => 'characterClass',
-						'content'     => $m[1],
-						'quantifiers' => $m[2]
-					);
-
-					$pos += strlen($m[0]);
-					break;
-
-				case '(';
-					if (preg_match('#\\(\\?([a-z]*)\\)#i', $regexp, $m, 0, $pos))
-					{
-						/**
-						* This is an option (?i) so we skip past the right parenthesis
-						*/
-						$ret['tokens'][] = array(
-							'pos'     => $pos,
-							'len'     => strlen($m[0]),
-							'type'    => 'option',
-							'options' => $m[1]
-						);
-
-						$pos += strlen($m[0]);
-						break;
-					}
-
-					/**
-					* This should be a subpattern, we just have to sniff which kind
-					*/
-					if (preg_match("#(?J)\\(\\?(?:P?<(?<name>[a-z]+)>|'(?<name>[a-z]+)')#", $regexp, $m, \PREG_OFFSET_CAPTURE, $pos))
-					{
-						/**
-						* This is a named capture
-						*/
-						$tok = array(
-							'pos'  => $pos,
-							'len'  => strlen($m[0][0]),
-							'type' => 'capturingSubpatternStart',
-							'name' => $m['name'][0]
-						);
-
-						$pos += strlen($m[0][0]);
-					}
-					elseif (preg_match('#\\(\\?([a-z]*):#iA', $regexp, $m, 0, $pos))
-					{
-						/**
-						* This is a non-capturing subpattern (?:xxx)
-						*/
-						$tok = array(
-							'pos'     => $pos,
-							'len'     => strlen($m[0]),
-							'type'    => 'nonCapturingSubpatternStart',
-							'options' => $m[1]
-						);
-
-						$pos += strlen($m[0]);
-					}
-					elseif (preg_match('#\\(\\?>#iA', $regexp, $m, 0, $pos))
-					{
-						/**
-						* This is a non-capturing subpattern with atomic grouping (?>x+)
-						*/
-						$tok = array(
-							'pos'     => $pos,
-							'len'     => strlen($m[0]),
-							'type'    => 'nonCapturingSubpatternStart',
-							'subtype' => 'atomic'
-						);
-
-						$pos += strlen($m[0]);
-					}
-					elseif (preg_match('#\\(\\?(<?[!=])#A', $regexp, $m, 0, $pos))
-					{
-						/**
-						* This is an assertion
-						*/
-						$assertions = array(
-							'='  => 'lookahead',
-							'<=' => 'lookbehind',
-							'!'  => 'negativeLookahead',
-							'<!' => 'negativeLookbehind'
-						);
-
-						$tok = array(
-							'pos'     => $pos,
-							'len'     => strlen($m[0]),
-							'type'    => $assertions[$m[1]] . 'AssertionStart'
-						);
-
-						$pos += strlen($m[0]);
-					}
-					elseif (preg_match('#\\(\\?#A', $regexp, $m, 0, $pos))
-					{
-						throw new RuntimeException('Unsupported subpattern type at pos ' . $pos);
-					}
-					else
-					{
-						/**
-						* This should be a normal capture
-						*/
-						$tok = array(
-							'pos'  => $pos,
-							'len'  => 1,
-							'type' => 'capturingSubpatternStart'
-						);
-
-						++$pos;
-					}
-
-					$openSubpatterns[] = count($ret['tokens']);
-					$ret['tokens'][] = $tok;
-					break;
-
-				case ')':
-					if (empty($openSubpatterns))
-					{
-						throw new RuntimeException('Could not find matching pattern start for right parenthesis at pos ' . $pos);
-					}
-
-					$k = array_pop($openSubpatterns);
-					$ret['tokens'][$k]['endToken'] = count($ret['tokens']);
-
-
-					/**
-					* Look for quantifiers after the subpattern, e.g. (?:ab)++
-					*/
-					$spn = strspn($regexp, '+*', 1 + $pos);
-					$quantifiers = substr($regexp, 1 + $pos, $spn);
-
-					$ret['tokens'][] = array(
-						'pos'  => $pos,
-						'len'  => 1 + $spn,
-						'type' => substr($ret['tokens'][$k]['type'], 0, -5) . 'End',
-						'quantifiers' => $quantifiers
-					);
-
-					$pos += 1 + $spn;
-					break;
-
-				default:
-					++$pos;
-			}
-		}
-
-		if (!empty($openSubpatterns))
-		{
-			throw new RuntimeException('Could not find matching pattern end for left parenthesis at pos ' . $ret['tokens'][$openSubpatterns[0]]['pos']);
-		}
-
-		return $ret;
+		return self::getRM()->parseRegexp($regexp);
 	}
 
 	//==========================================================================
