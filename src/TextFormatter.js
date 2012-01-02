@@ -1,6 +1,6 @@
 /**
 * @typedef {{
-*   id:  !number,
+*	id:  !number,
 *	pos: !number,
 *	len: !number,
 *	name: !string,
@@ -19,6 +19,84 @@ var Tag;
 */
 var StubTag;
 
+// START OF STOCK HINTS - DO NOT EDIT
+var HINT = {
+	attrConfig: {
+		defaultValue: true,
+		isRequired: true,
+		postFilter: true,
+		preFilter: true
+	},
+	disabledAPI: {
+		parse: false,
+		render: false,
+		getLog: false,
+		enablePlugin: false,
+		disablePlugin: false,
+		preview: false
+	},
+	disabledLogTypes: {
+		debug: false,
+		warning: false,
+		error: false
+	},
+	enableIE: true,
+	enableIE7: true,
+	enableIE9: true,
+	filterConfig: {
+		email: {
+			forceUrlencode: true
+		},
+		regexp: {
+			replaceWith: true
+		},
+		url: {
+			disallowedHosts: true
+		}
+	},
+	hasCompoundAttributes: true,
+	hasNamespacedHTML: true,
+	hasNamespacedTags: true,
+	hasRegexpLimitAction: {
+		abort: true,
+		ignore: true,
+		warn: true
+	},
+	mightUseTagRequires: true,
+	tagConfig: {
+		attrs: true,
+		isTransparent: true,
+		ltrimContent: true,
+		postFilter: true,
+		preFilter: true,
+		rtrimContent: true,
+		rules: {
+			closeAncestor: true,
+			closeParent: true,
+			reopenChild: true,
+			requireAncestor: true,
+			requireParent: true
+		},
+		trimAfter: true,
+		trimBefore: true
+	},
+	hasColorAttribute: true,
+	hasEmailAttribute: true,
+	hasFloatAttribute: true,
+	hasIdAttribute: true,
+	hasIdentifierAttribute: true,
+	hasIntAttribute: true,
+	hasIntegerAttribute: true,
+	hasNumberAttribute: true,
+	hasRangeAttribute: true,
+	hasRegexpAttribute: true,
+	hasSimpletextAttribute: true,
+	hasUintAttribute: true,
+	hasUrlAttribute: true,
+	hasTextAttribute: true
+};
+// END OF STOCK HINTS - DO NOT EDIT
+
 (function(xsl)
 {
 	//==========================================================================
@@ -27,9 +105,9 @@ var StubTag;
 
 	var
 		/** @const */
-		MSXML = HINT$enableIE && !('XSLTProcessor' in window && 'DOMParser' in window),
+		MSXML = HINT.enableIE && !('XSLTProcessor' in window && 'DOMParser' in window),
 		/** @const */
-		NO_NS_DOM = (HINT$enableIE7 && !('createElementNS' in document))
+		NO_NS_DOM = (HINT.enableIE7 && !('createElementNS' in document))
 	;
 
 	function createElementNS(document, namespaceURI, QName)
@@ -41,33 +119,33 @@ var StubTag;
 
 	function hasAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM || !HINT$hasNamespacedHTML)
+		return (NO_NS_DOM || !HINT.hasNamespacedHTML)
 			 ? (QName in el)
 			 : el.hasAttributeNS(namespaceURI, QName);
 	}
 
 	function getAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM || !HINT$hasNamespacedHTML)
+		return (NO_NS_DOM || !HINT.hasNamespacedHTML)
 			 ? el.getAttribute(QName)
 			 : el.getAttributeNS(namespaceURI, QName);
 	}
 
 	function setAttributeNS(el, namespaceURI, QName, value)
 	{
-		return (NO_NS_DOM || !HINT$hasNamespacedHTML)
+		return (NO_NS_DOM || !HINT.hasNamespacedHTML)
 			 ? el.setAttribute(QName, value)
 			 : el.setAttributeNS(namespaceURI, QName, value);
 	}
 
 	function removeAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM || !HINT$hasNamespacedHTML)
+		return (NO_NS_DOM || !HINT.hasNamespacedHTML)
 			 ? el.removeAttribute(QName)
 			 : el.removeAttributeNS(namespaceURI, QName);
 	}
 
-	if (HINT$enableIE7)
+	if (HINT.enableIE7)
 	{
 		if (!Array.prototype.forEach)
 		{
@@ -141,7 +219,7 @@ var StubTag;
 		// <img src=... onload=evil() />
 		b.innerHTML = str.replace(/</g, '&lt;');
 
-		return (HINT$enableIE7)
+		return (HINT.enableIE7)
 			 ? b.innerText || b.textContent
 			 : b.textContent;
 	}
@@ -289,17 +367,17 @@ var StubTag;
 
 	function logDebug(entry)
 	{
-		HINT$disabledLogTypes$debug || _log('debug', entry);
+		HINT.disabledLogTypes.debug || _log('debug', entry);
 	}
 
 	function logWarning(entry)
 	{
-		HINT$disabledLogTypes$warning || _log('warning', entry);
+		HINT.disabledLogTypes.warning || _log('warning', entry);
 	}
 
 	function logError(entry)
 	{
-		HINT$disabledLogTypes$error || _log('error', entry);
+		HINT.disabledLogTypes.error || _log('error', entry);
 	}
 
 	function _log(type, entry)
@@ -329,7 +407,7 @@ var StubTag;
 		switch (attrConf.type)
 		{
 			case 'url':
-				if (!HINT$hasFilter$url)
+				if (!HINT.hasUrlAttribute)
 				{
 					break;
 				}
@@ -350,7 +428,7 @@ var StubTag;
 					return false;
 				}
 
-				if (HINT$filterConfig$url$disallowedHosts
+				if (HINT.filterConfig.url.disallowedHosts
 				 && filterConf.disallowedHosts)
 				{
 					var a = document.createElement('a');
@@ -370,14 +448,14 @@ var StubTag;
 
 			case 'identifier':
 			case 'id':
-				if (!HINT$hasFilter$id && !HINT$hasFilter$identifier)
+				if (!HINT.hasIdAttribute && !HINT.hasIdentifierAttribute)
 				{
 					break;
 				}
 				return /^[a-zA-Z0-9-_]+$/.test(attrVal) ? attrVal : false;
 
 			case 'simpletext':
-				if (!HINT$hasFilter$simpletext)
+				if (!HINT.hasSimpletextAttribute)
 				{
 					break;
 				}
@@ -387,7 +465,7 @@ var StubTag;
 				return attrVal;
 
 			case 'email':
-				if (!HINT$hasFilter$email)
+				if (!HINT.hasEmailAttribute)
 				{
 					break;
 				}
@@ -402,7 +480,7 @@ var StubTag;
 					return false;
 				}
 
-				if (HINT$filterConfig$email$forceUrlencode && attrConf.forceUrlencode)
+				if (HINT.filterConfig.email.forceUrlencode && attrConf.forceUrlencode)
 				{
 					return attrVal
 						.split('')
@@ -417,35 +495,35 @@ var StubTag;
 
 			case 'int':
 			case 'integer':
-				if (!HINT$hasFilter$int && !HINT$hasFilter$integer)
+				if (!HINT.hasIntAttribute && !HINT.hasIntegerAttribute)
 				{
 					break;
 				}
 				return /^-?[1-9][0-9]*$/.test(attrVal) ? attrVal : false;
 
 			case 'float':
-				if (!HINT$hasFilter$float)
+				if (!HINT.hasFloatAttribute)
 				{
 					break;
 				}
 				return /^-?[0-9]+(?:\.[0-9]+)?(?:e[1-9][0-9]*)?$/i.test(attrVal) ? attrVal : false;
 
 			case 'number':
-				if (!HINT$hasFilter$number)
+				if (!HINT.hasNumberAttribute)
 				{
 					break;
 				}
 				return /^[0-9]+$/.test(attrVal) ? attrVal : false;
 
 			case 'uint':
-				if (!HINT$hasFilter$uint)
+				if (!HINT.hasUintAttribute)
 				{
 					break;
 				}
 				return /^(?:0|[1-9][0-9]*)$/.test(attrVal) ? attrVal : false;
 
 			case 'range':
-				if (!HINT$hasFilter$range)
+				if (!HINT.hasRangeAttribute)
 				{
 					break;
 				}
@@ -476,14 +554,14 @@ var StubTag;
 				return attrVal;
 
 			case 'color':
-				if (!HINT$hasFilter$color)
+				if (!HINT.hasColorAttribute)
 				{
 					break;
 				}
 				return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrVal) ? attrVal : false;
 
 			case 'regexp':
-				if (!HINT$hasFilter$regexp)
+				if (!HINT.hasRegexpAttribute)
 				{
 					break;
 				}
@@ -495,7 +573,7 @@ var StubTag;
 					return false;
 				}
 
-				if (HINT$filterConfig$regexp$replaceWith && attrConf.replaceWith)
+				if (HINT.filterConfig.regexp.replaceWith && attrConf.replaceWith)
 				{
 					/**
 					* Two consecutive backslashes[1] are replaced with a single backslash.
@@ -552,7 +630,7 @@ var StubTag;
 		/**
 		* Declare all namespaces in the root node
 		*/
-		if (HINT$hasNamespacedTags && hasNamespacedTags)
+		if (HINT.hasNamespacedTags && hasNamespacedTags)
 		{
 			var declared = {};
 			processedTags.forEach(function(tag)
@@ -579,7 +657,7 @@ var StubTag;
 
 		function createElement(tagName)
 		{
-			if (HINT$hasNamespacedTags)
+			if (HINT.hasNamespacedTags)
 			{
 				var pos = tagName.indexOf(':');
 				if (pos > -1)
@@ -612,7 +690,7 @@ var StubTag;
 
 		function setTextContent(el, content)
 		{
-			if (HINT$enableIE7 && !('textContent' in el))
+			if (HINT.enableIE7 && !('textContent' in el))
 			{
 				el.appendChild(DOM.createTextNode(content));
 			}
@@ -644,7 +722,7 @@ var StubTag;
 			var wsBefore = '',
 				wsAfter  = '';
 
-			if (HINT$tagConfig$trimBefore || HINT$tagConfig$rtrimContent)
+			if (HINT.tagConfig.trimBefore || HINT.tagConfig.rtrimContent)
 			{
 				if (tag.trimBefore)
 				{
@@ -653,7 +731,7 @@ var StubTag;
 				}
 			}
 
-			if (HINT$tagConfig$trimAfter || HINT$tagConfig$ltrimContent)
+			if (HINT.tagConfig.trimAfter || HINT.tagConfig.ltrimContent)
 			{
 				if (tag.trimAfter)
 				{
@@ -781,8 +859,8 @@ var StubTag;
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "XX[b]  -text-XX[/b]  "
 		*/
-		if ((tag.type  &  START_TAG && tagConfig.trimBefore   && HINT$tagConfig$trimBefore)
-		 || (tag.type === END_TAG   && tagConfig.rtrimContent && HINT$tagConfig$rtrimContent))
+		if ((tag.type  &  START_TAG && tagConfig.trimBefore   && HINT.tagConfig.trimBefore)
+		 || (tag.type === END_TAG   && tagConfig.rtrimContent && HINT.tagConfig.rtrimContent))
 		{
 			tag.trimBefore  = /[ \n\r\t\0\x0B]*$/.exec(text.substr(0, tag.pos))[0].length;
 			tag.len        += tag.trimBefore;
@@ -793,8 +871,8 @@ var StubTag;
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "  [b]XX-text-  [/b]XX"
 		*/
-		if ((tag.type === START_TAG && tagConfig.ltrimContent && HINT$tagConfig$ltrimContent)
-		 || (tag.type  &  END_TAG   && tagConfig.trimAfter    && HINT$tagConfig$trimAfter))
+		if ((tag.type === START_TAG && tagConfig.ltrimContent && HINT.tagConfig.ltrimContent)
+		 || (tag.type  &  END_TAG   && tagConfig.trimAfter    && HINT.tagConfig.trimAfter))
 		{
 			tag.trimAfter  = /^[ \n\r\t\0\x0B]*/.exec(text.substr(tag.pos + tag.len))[0].length;
 			tag.len       += tag.trimAfter;
@@ -838,7 +916,7 @@ var StubTag;
 
 			if (cnt > pluginConfig.regexpLimit)
 			{
-				if (HINT$hasRegexpLimitAction$abort && pluginConfig.regexpLimitAction === 'abort')
+				if (HINT.hasRegexpLimitAction.abort && pluginConfig.regexpLimitAction === 'abort')
 				{
 					throw pluginName + ' limit exceeded';
 				}
@@ -852,7 +930,7 @@ var StubTag;
 
 					matches[k] = matches[k].slice(0, limit);
 
-					if (HINT$hasRegexpLimitAction$warn && pluginConfig.regexpLimitAction === 'warn')
+					if (HINT.hasRegexpLimitAction.warn && pluginConfig.regexpLimitAction === 'warn')
 					{
 						logWarning(msg);
 					}
@@ -921,7 +999,7 @@ var StubTag;
 				*/
 				function(tag)
 				{
-					if (HINT$mightUseTagRequires && tag.requires)
+					if (HINT.mightUseTagRequires && tag.requires)
 					{
 						tag.requires.forEach(function(k, i)
 						{
@@ -945,7 +1023,7 @@ var StubTag;
 			*/
 			function(tag)
 			{
-				if (HINT$hasNamespacedTags && tag.name.indexOf(':') < 0)
+				if (HINT.hasNamespacedTags && tag.name.indexOf(':') < 0)
 				{
 					tag.name = tag.name.toUpperCase();
 				}
@@ -1139,7 +1217,7 @@ var StubTag;
 			return;
 		}
 
-		var reopenChildren = HINT$tagConfig$rules$reopenChild,
+		var reopenChildren = HINT.tagConfig.rules.reopenChild,
 			reopenTags     = [];
 
 		do
@@ -1152,7 +1230,7 @@ var StubTag;
 				appendTag(createEndTag(lastOpenTag, currentTag.pos));
 
 				// Do we check for reopenChild rules?
-				if (HINT$tagConfig$rules$reopenChild && reopenChildren)
+				if (HINT.tagConfig.rules.reopenChild && reopenChildren)
 				{
 					var tagConfig = tagsConfig[currentTag.name];
 
@@ -1242,7 +1320,7 @@ var StubTag;
 
 	function closeParent()
 	{
-		if (!HINT$tagConfig$rules$closeParent)
+		if (!HINT.tagConfig.rules.closeParent)
 		{
 			return;
 		}
@@ -1288,7 +1366,7 @@ var StubTag;
 
 	function closeAncestor()
 	{
-		if (!HINT$tagConfig$rules$closeAncestor)
+		if (!HINT.tagConfig.rules.closeAncestor)
 		{
 			return;
 		}
@@ -1338,7 +1416,7 @@ var StubTag;
 
 	function requireParent()
 	{
-		if (!HINT$tagConfig$rules$requireParent)
+		if (!HINT.tagConfig.rules.requireParent)
 		{
 			return;
 		}
@@ -1385,7 +1463,7 @@ var StubTag;
 
 	function requireAncestor()
 	{
-		if (!HINT$tagConfig$rules$requireAncestor)
+		if (!HINT.tagConfig.rules.requireAncestor)
 		{
 			return;
 		}
@@ -1427,7 +1505,7 @@ var StubTag;
 
 	function currentTagRequiresMissingTag()
 	{
-		if (!HINT$mightUseTagRequires)
+		if (!HINT.mightUseTagRequires)
 		{
 			return false;
 		}
@@ -1541,7 +1619,7 @@ var StubTag;
 
 	function currentTagRequiresMissingAttribute()
 	{
-		if (!HINT$attrConfig$isRequired)
+		if (!HINT.attrConfig.isRequired)
 		{
 			return false;
 		}
@@ -1567,7 +1645,7 @@ var StubTag;
 
 	function addDefaultAttributeValuesToCurrentTag()
 	{
-		if (!HINT$attrConfig$defaultValue)
+		if (!HINT.attrConfig.defaultValue)
 		{
 			return;
 		}
@@ -1676,7 +1754,7 @@ var StubTag;
 
 	function applyTagPreFilterCallbacks()
 	{
-		if (!HINT$tagConfig$preFilter)
+		if (!HINT.tagConfig.preFilter)
 		{
 			return;
 		}
@@ -1695,7 +1773,7 @@ var StubTag;
 
 	function applyTagPostFilterCallbacks()
 	{
-		if (!HINT$tagConfig$postFilter)
+		if (!HINT.tagConfig.postFilter)
 		{
 			return;
 		}
@@ -1714,7 +1792,7 @@ var StubTag;
 
 	function applyAttributePreFilterCallbacks()
 	{
-		if (!HINT$attrConfig$preFilter)
+		if (!HINT.attrConfig.preFilter)
 		{
 			return;
 		}
@@ -1735,7 +1813,7 @@ var StubTag;
 
 	function applyAttributePostFilterCallbacks()
 	{
-		if (!HINT$attrConfig$postFilter)
+		if (!HINT.attrConfig.postFilter)
 		{
 			return;
 		}
@@ -1791,7 +1869,7 @@ var StubTag;
 	*/
 	function splitCompoundAttributes()
 	{
-		if (!HINT$hasCompoundAttributes)
+		if (!HINT.hasCompoundAttributes)
 		{
 			return;
 		}
@@ -1843,7 +1921,7 @@ var StubTag;
 
 	var API = {};
 
-	if (!HINT$disabledAPI$parse)
+	if (!HINT.disabledAPI.parse)
 	{
 		/**
 		* @param {!string} _text
@@ -1852,7 +1930,7 @@ var StubTag;
 		API['parse'] = parse;
 	}
 
-	if (!HINT$disabledAPI$render)
+	if (!HINT.disabledAPI.render)
 	{
 		/**
 		* @param {!Document} DOM Intermediate representation
@@ -1869,7 +1947,7 @@ var StubTag;
 		}
 	}
 
-	if (!HINT$disabledAPI$getLog)
+	if (!HINT.disabledAPI.getLog)
 	{
 		API['getLog'] = function()
 		{
@@ -1877,7 +1955,7 @@ var StubTag;
 		}
 	}
 
-	if (!HINT$disabledAPI$disablePlugin)
+	if (!HINT.disabledAPI.disablePlugin)
 	{
 		API['disablePlugin'] = function(pluginName)
 		{
@@ -1885,7 +1963,7 @@ var StubTag;
 		}
 	}
 
-	if (!HINT$disabledAPI$enablePlugin)
+	if (!HINT.disabledAPI.enablePlugin)
 	{
 		API['enablePlugin'] = function(pluginName)
 		{
@@ -1893,7 +1971,7 @@ var StubTag;
 		}
 	}
 
-	if (!HINT$disabledAPI$preview)
+	if (!HINT.disabledAPI.preview)
 	{
 		/**
 		* @param {!string} text Text to parse
@@ -2034,7 +2112,7 @@ var StubTag;
 				}
 
 				if ((oldNode.isEqualNode && oldNode.isEqualNode(newNode))
-				 || (HINT$enableIE7 && oldNode.outerHTML && oldNode.outerHTML === newNode.outerHTML))
+				 || (HINT.enableIE7 && oldNode.outerHTML && oldNode.outerHTML === newNode.outerHTML))
 				{
 					return true;
 				}

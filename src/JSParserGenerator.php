@@ -211,7 +211,6 @@ class JSParserGenerator
 			'enableIE9'             => $this->options['enableIE'] && $this->options['enableIE9'],
 			'filterConfig'          => $this->getFiltersConfigHints(),
 			'hasCompoundAttributes' => $this->hasCompoundAttributes(),
-			'hasFilter'             => $this->getFiltersHints(),
 			'hasNamespacedHTML'     => $this->hasNamespacedHTML(),
 			'hasNamespacedTags'     => $this->hasNamespacedTags(),
 			'hasRegexpLimitAction'  => $this->getRegexpLimitActionHints(),
@@ -219,29 +218,38 @@ class JSParserGenerator
 			'tagConfig'             => $this->getTagConfigHints()
 		);
 
-		$this->src = $this->flattenHints($hints, 'HINT') . $this->src;
-		return;
+		// Add attribute types hints
+		$hints += $this->getFiltersHints();
 
-		$this->src = str_replace(
-			'/* GENERATED HINTS WILL BE INSERTED HERE */',
-			self::encode($hints) . '||',
+		// Inject the hints into the source
+		$this->src = preg_replace(
+			'#// START OF STOCK HINTS - DO NOT EDIT.*?// END OF STOCK HINTS - DO NOT EDIT#s',
+			"/**@const*/var HINT={};\n" . $this->flattenHints($hints, 'HINT'),
 			$this->src
 		);
 	}
 
-	protected function flattenHints($hints, $prefix)
+	/**
+	* Flattens the hint array into a bunch of properties assignments
+	*
+	* @param  array  $hints
+	* @param  string $prefix
+	* @return string
+	*/
+	protected function flattenHints(array $hints, $prefix)
 	{
 		$str = '';
 		foreach ($hints as $k => $v)
 		{
 			if (is_array($v))
 			{
-				$str .= $this->flattenHints($v, $prefix . '$' . $k);
+				$str .= '/**@const*/' . $prefix . '.' . $k . "={};\n";
+				$str .= $this->flattenHints($v, $prefix . '.' . $k);
 				$v = count(array_filter($v));
 			}
 			else
 			{
-				$str .= '/**@const*/var ' . $prefix . '$' . $k . '=' . ((int) (bool) $v) . ";\n";
+				$str .= '/**@const*/' . $prefix . '.' . $k . '=' . ((int) (bool) $v) . ";\n";
 			}
 		}
 
@@ -479,7 +487,7 @@ class JSParserGenerator
 	*/
 	protected function getFiltersHints()
 	{
-		$hints = array(
+		$types = array(
 			'color'      => false,
 			'email'      => false,
 			'float'      => false,
@@ -501,9 +509,16 @@ class JSParserGenerator
 			{
 				foreach ($tagConfig['attrs'] as $attrConf)
 				{
-					$hints[$attrConf['type']] = true;
+					$types[$attrConf['type']] = true;
 				}
 			}
+		}
+
+		$hints = array();
+
+		foreach ($types as $type => $bool)
+		{
+			$hints['has' . ucfirst($type) . 'Attribute'] = $bool;
 		}
 
 		return $hints;
