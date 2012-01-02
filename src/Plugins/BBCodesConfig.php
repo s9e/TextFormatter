@@ -95,10 +95,10 @@ class BBCodesConfig extends PluginConfig
 		* "defaultAttr"
 		*/
 		$bbcodeSpecificConfig = array(
-			'autoClose'   => 1,
+			'autoClose'    => 1,
 			'contentAttrs' => 1,
-			'defaultAttr' => 1,
-			'tagName'     => 1
+			'defaultAttr'  => 1,
+			'tagName'      => 1
 		);
 
 		$bbcodeConfig = array_intersect_key($config, $bbcodeSpecificConfig);
@@ -719,6 +719,35 @@ class BBCodesConfig extends PluginConfig
 	//==========================================================================
 	// JS Parser stuff
 	//==========================================================================
+
+	public function getJSConfig()
+	{
+		$config = $this->getConfig();
+
+		$config['hasAutoCloseHint']    = false;
+		$config['hasContentAttrsHint'] = false;
+		$config['hasDefaultAttrHint']  = false;
+
+		foreach ($this->bbcodesConfig as $bbcodeConfig)
+		{
+			if (!empty($bbcodeConfig['autoClose']))
+			{
+				$config['hasAutoCloseHint'] = true;
+			}
+
+			if (!empty($bbcodeConfig['contentAttrs']))
+			{
+				$config['hasContentAttrsHint'] = true;
+			}
+
+			if (!empty($bbcodeConfig['defaultAttr']))
+			{
+				$config['hasDefaultAttrHint'] = true;
+			}
+		}
+
+		return $config;
+	}
 
 	public function getJSConfigMeta()
 	{

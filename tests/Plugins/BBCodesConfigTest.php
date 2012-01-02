@@ -794,4 +794,82 @@ class BBCodesConfigTest extends Test
 			)
 		);
 	}
+
+	/**
+	* @testdox getJSConfig() generates an optimization hint "hasAutoCloseHint" that is false by default
+	*/
+	public function testAutoCloseHintFalse()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$config = $this->cb->BBCodes->getJSConfig();
+
+		$this->assertArrayHasKey('hasAutoCloseHint', $config);
+		$this->assertFalse($config['hasAutoCloseHint']);
+	}
+
+	/**
+	* @testdox getJSConfig() generates an optimization hint "hasAutoCloseHint" that is true if any tag has the "autoClose" option set
+	*/
+	public function testAutoCloseHintTrue()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('autoClose' => true));
+
+		$config = $this->cb->BBCodes->getJSConfig();
+
+		$this->assertArrayHasKey('hasAutoCloseHint', $config);
+		$this->assertTrue($config['hasAutoCloseHint']);
+	}
+
+	/**
+	* @testdox getJSConfig() generates an optimization hint "hasContentAttrsHint" that is false by default
+	*/
+	public function testContentAttrsHintFalse()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$config = $this->cb->BBCodes->getJSConfig();
+
+		$this->assertArrayHasKey('hasContentAttrsHint', $config);
+		$this->assertFalse($config['hasContentAttrsHint']);
+	}
+
+	/**
+	* @testdox getJSConfig() generates an optimization hint "hasContentAttrsHint" that is true if any tag has any contentAttrs set
+	*/
+	public function testContentAttrsHintTrue()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('X')));
+
+		$config = $this->cb->BBCodes->getJSConfig();
+
+		$this->assertArrayHasKey('hasContentAttrsHint', $config);
+		$this->assertTrue($config['hasContentAttrsHint']);
+	}
+
+	/**
+	* @testdox getJSConfig() generates an optimization hint "hasDefaultAttrHint" that is false by default
+	*/
+	public function testDefaultAttrHintFalse()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+
+		$config = $this->cb->BBCodes->getJSConfig();
+
+		$this->assertArrayHasKey('hasDefaultAttrHint', $config);
+		$this->assertFalse($config['hasDefaultAttrHint']);
+	}
+
+	/**
+	* @testdox getJSConfig() generates an optimization hint "hasDefaultAttrHint" that is true if any tag has a default attribute set
+	*/
+	public function testDefaultAttrHintTrue()
+	{
+		$this->cb->BBCodes->addBBCode('X', array('defaultAttr' => 'X'));
+
+		$config = $this->cb->BBCodes->getJSConfig();
+
+		$this->assertArrayHasKey('hasDefaultAttrHint', $config);
+		$this->assertTrue($config['hasDefaultAttrHint']);
+	}
 }

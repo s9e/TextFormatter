@@ -148,7 +148,7 @@ matches.forEach(function(m)
 					* This is the default param. If there's no default param, we issue a
 					* warning and reuse the BBCode's name instead.
 					*/
-					if (bbcodeConfig.defaultAttr)
+					if (config.hasDefaultAttrHint && bbcodeConfig.defaultAttr)
 					{
 						attrName = bbcodeConfig.defaultAttr;
 					}
@@ -257,7 +257,8 @@ matches.forEach(function(m)
 
 		var usesContent = false;
 
-		if (type === START_TAG
+		if (config.hasContentAttrsHint
+		 && type === START_TAG
 		 && bbcodeConfig.contentAttrs)
 		{
 			/**
@@ -280,7 +281,8 @@ matches.forEach(function(m)
 		}
 	}
 
-	if (type === START_TAG
+	if (config.hasAutoCloseHint
+	 && type === START_TAG
 	 && !usesContent
 	 && bbcodeConfig.autoClose)
 	{

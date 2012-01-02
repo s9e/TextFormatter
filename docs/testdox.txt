@@ -547,6 +547,12 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] addBBCodeFromExample handles CHOICE placeholders with Unicode values
  [x] getJSParser() returns the source of its Javascript parser
  [x] BBCode names are preserved in Javascript config
+ [x] getJSConfig() generates an optimization hint "hasAutoCloseHint" that is false by default
+ [x] getJSConfig() generates an optimization hint "hasAutoCloseHint" that is true if any tag has the "autoClose" option set
+ [x] getJSConfig() generates an optimization hint "hasContentAttrsHint" that is false by default
+ [x] getJSConfig() generates an optimization hint "hasContentAttrsHint" that is true if any tag has any contentAttrs set
+ [x] getJSConfig() generates an optimization hint "hasDefaultAttrHint" that is false by default
+ [x] getJSConfig() generates an optimization hint "hasDefaultAttrHint" that is true if any tag has a default attribute set
 
 s9e\TextFormatter\Tests\Plugins\BBCodesParser
  [x] Simple BBcodes are parsed
