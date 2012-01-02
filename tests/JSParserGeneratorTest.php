@@ -14,6 +14,11 @@ include_once __DIR__ . '/../src/JSParserGenerator.php';
 */
 class JSParserGeneratorTest extends Test
 {
+	protected function initJSPG()
+	{
+		$this->call($this->jspg, 'init', array(array()));
+	}
+
 	protected function encodeArray(array $arr)
 	{
 		return $this->call(
@@ -23,11 +28,11 @@ class JSParserGeneratorTest extends Test
 		);
 	}
 
-	protected function encodeConfig(array $config)
+	protected function encodePluginConfig(array $config)
 	{
 		return $this->call(
 			's9e\\TextFormatter\\JSParserGenerator',
-			'encodeConfig',
+			'encodePluginConfig',
 			func_get_args()
 		);
 	}
@@ -435,7 +440,11 @@ class JSParserGeneratorTest extends Test
 	{
 		$this->assertSame(
 			'[1,0,1]',
-			JSParserGenerator::encode(array(true, false, true))
+			$this->call(
+				's9e\\TextFormatter\\JSParserGenerator',
+				'encode',
+				array(array(true, false, true))
+			)
 		);
 	}
 
@@ -570,131 +579,11 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @test
-	* @dataProvider deadCodeProvider
-	*/
-	public function Useless_code_is_removed_from_the_source($funcNames, $keepConfig, $removeConfig = array())
-	{
-		$regexps = array();
-
-		foreach ((array) $funcNames as $funcName)
-		{
-			$regexps[$funcName] = '#function ' . $funcName . '\\([^\\)]*\\)\\s*\\{\\s*\\}#';
-		}
-
-		$this->cb->addTag('B');
-		$this->cb->addTag('A', $removeConfig);
-
-		// First we test that the code is removed by default
-		foreach ($regexps as $funcName => $regexp)
-		{
-			$this->assertRegExp(
-				$regexp,
-				$this->cb->getJSParser(array('compilation' => 'none')),
-				$funcName . ' did not get removed'
-			);
-		}
-
-		$this->cb->removeTag('A');
-		$this->cb->addTag('A', $keepConfig);
-
-		// Then we make sure it's not applicable
-		foreach ($regexps as $funcName => $regexp)
-		{
-			$this->assertNotRegExp(
-				$regexp,
-				$this->cb->getJSParser(array('compilation' => 'none')),
-				$funcName . ' incorrectly got removed'
-			);
-		}
-	}
-
-	public function deadCodeProvider()
-	{
-		return array(
-			// rules
-			array('closeParent',      array('rules' => array('closeParent' => array('B')))),
-			array('closeAncestor',   array('rules' => array('closeAncestor' => array('B')))),
-			array('requireParent',    array('rules' => array('requireParent' => array('B')))),
-			array('requireAncestor', array('rules' => array('requireAncestor' => array('B')))),
-
-			// attributes
-			array(
-				'currentTagRequiresMissingAttribute',
-				array('attrs' => array('foo' => array('type' => 'int', 'isRequired' => true))),
-				array('attrs' => array('foo' => array('type' => 'int', 'isRequired' => false)))
-			),
-			array(
-				array('filterAttributes', 'filter'),
-				array('attrs' => array('foo' => array('type' => 'int')))
-			),
-			array(
-				'splitCompoundAttributes',
-				array('attrs' => array('foo' => array('type' => 'compound', 'regexp' => '##')))
-			),
-			array(
-				'addDefaultAttributeValuesToCurrentTag',
-				array('attrs' => array('foo' => array('type' => 'int', 'defaultValue' => 42)))
-			),
-
-			// callbacks
-			array(
-				array('applyCallback', 'applyTagPreFilterCallbacks'),
-				array('preFilter' => array(array('callback' => 'array_unique')))
-			),
-			array(
-				array('applyCallback', 'applyTagPostFilterCallbacks'),
-				array('postFilter' => array(array('callback' => 'array_unique')))
-			),
-			array(
-				array('applyCallback', 'applyAttributePreFilterCallbacks'),
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'int',
-							'preFilter' => array(array('callback' => 'trim'))
-						)
-					)
-				)
-			),
-			array(
-				array('applyCallback', 'applyAttributePostFilterCallbacks'),
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'int',
-							'postFilter' => array(array('callback' => 'trim'))
-						)
-					)
-				)
-			),
-
-			// whitespace trimming
-			array(
-				'addTrimmingInfoToTag',
-				array('trimBefore' => true)
-			),
-			array(
-				'addTrimmingInfoToTag',
-				array('trimAfter' => true)
-			),
-			array(
-				'addTrimmingInfoToTag',
-				array('ltrimContent' => true)
-			),
-			array(
-				'addTrimmingInfoToTag',
-				array('rtrimContent' => true)
-			),
-		);
-	}
-
-	/**
 	* @testdox generateFiltersConfig() returns allowedSchemes regexp as an object
 	*/
 	public function test_generateFiltersConfig_returns_allowedSchemes_regexp_as_an_object()
 	{
-		$this->call($this->jspg, 'init');
+		$this->initJSPG();
 
 		$this->assertContains(
 			'allowedSchemes:/^https?$/i',
@@ -708,7 +597,7 @@ class JSParserGeneratorTest extends Test
 	public function test_generateFiltersConfig_returns_disallowedHosts_regexp_as_an_object()
 	{
 		$this->cb->disallowHost('example.com');
-		$this->call($this->jspg, 'init');
+		$this->initJSPG();
 
 		$this->assertContains(
 			'disallowedHosts:/',
@@ -723,7 +612,7 @@ class JSParserGeneratorTest extends Test
 	public function test_generateFiltersConfig_converts_unsupported_lookbehind_assertions_from_disallowedHosts_regexp()
 	{
 		$this->cb->disallowHost('example.com');
-		$this->call($this->jspg, 'init');
+		$this->initJSPG();
 
 		$this->assertContains(
 			'/(?:^|\\.)example\\.com$/i',
@@ -732,14 +621,14 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox encodeConfig() removes parserClassName from config
+	* @testdox encodePluginConfig() removes parserClassName from config
 	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function test_encodeConfig_removes_parserClassName_from_config()
+	public function test_encodePluginConfig_removes_parserClassName_from_config()
 	{
 		$this->assertSame(
 			'{foo:1}',
-			$this->encodeConfig(
+			$this->encodePluginConfig(
 				array(
 					'parserClassName' => 'foo',
 					'foo' => 1
@@ -750,14 +639,14 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox encodeConfig() removes parserFilepath from config
+	* @testdox encodePluginConfig() removes parserFilepath from config
 	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function test_encodeConfig_removes_parserFilepath_from_config()
+	public function test_encodePluginConfig_removes_parserFilepath_from_config()
 	{
 		$this->assertSame(
 			'{foo:1}',
-			$this->encodeConfig(
+			$this->encodePluginConfig(
 				array(
 					'parserFilepath' => 'foo',
 					'foo' => 1
@@ -768,14 +657,14 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox encodeConfig() convert scalar regexp to a RegExp object with g flag
+	* @testdox encodePluginConfig() convert scalar regexp to a RegExp object with g flag
 	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function test_encodeConfig_convert_scalar_regexp_to_a_RegExp_object_with_g_flag()
+	public function test_encodePluginConfig_convert_scalar_regexp_to_a_RegExp_object_with_g_flag()
 	{
 		$this->assertSame(
 			'{regexp:/foo/g}',
-			$this->encodeConfig(
+			$this->encodePluginConfig(
 				array(
 					'regexp' => '#foo#'
 				),
@@ -785,14 +674,14 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox encodeConfig() convert array regexp to an object with RegExp objects with g flag as properties
+	* @testdox encodePluginConfig() convert array regexp to an object with RegExp objects with g flag as properties
 	* @depends test_encodeArray_can_encode_arrays_to_objects
 	*/
-	public function test_encodeConfig_convert_array_regexp_to_an_object_with_RegExp_objects_with_g_flag_as_properties()
+	public function test_encodePluginConfig_convert_array_regexp_to_an_object_with_RegExp_objects_with_g_flag_as_properties()
 	{
 		$this->assertSame(
 			'{regexp:{bar:/bar/g,baz:/baz/g}}',
-			$this->encodeConfig(
+			$this->encodePluginConfig(
 				array(
 					'regexp' => array(
 						'bar' => '#bar#',
@@ -829,20 +718,9 @@ class JSParserGeneratorTest extends Test
 		$jsParser = $this->jspg->get();
 
 		$this->assertContains(
-			'pluginsConfig = {"Autolink":{',
+			'pluginsConfig={"Autolink":{',
 			$jsParser
 		);
-	}
-
-	/**
-	* @testdox replaceConstant() throws an exception if no replacement occurs
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Tried to replace constant UNKNOWN, 0 occurences found
-	*/
-	public function testReplaceConstantFailZeroMatch()
-	{
-		$this->call($this->jspg, 'init');
-		$this->call($this->jspg, 'replaceConstant', array('UNKNOWN', 2));
 	}
 
 	/**
@@ -855,110 +733,11 @@ class JSParserGeneratorTest extends Test
 			'regexp' => '#^(?<width>[0-9]+),(?<height>[0-9]+)$#'
 		));
 
-		$this->call($this->jspg, 'init');
+		$this->initJSPG();
 
 		$this->assertContains(
 			'attrs:{"x":{isRequired:0,regexp:/^([0-9]+),([0-9]+)$/,type:"compound",regexpMap:{width:1,height:2}}}',
 			$this->call($this->jspg, 'generateTagsConfig')
-		);
-	}
-
-	/**
-	* @testdox Optimization hint HINT_NAMESPACES is false if no namespaced tag exists
-	*/
-	public function test_Optimization_hint_HINT_NAMESPACES_is_false_if_no_namespaced_tag_exists()
-	{
-		$this->assertRegexp(
-			'#HINT_NAMESPACES\\s*=\\s*false#',
-			$this->cb->getJSParser()
-		);
-	}
-
-	/**
-	* @testdox Optimization hint HINT_NAMESPACES is true if any namespaced tag exists
-	*/
-	public function test_Optimization_hint_HINT_NAMESPACES_is_true_if_any_namespaced_tag_exists()
-	{
-		$this->cb->registerNamespace('foo', 'urn:foo');
-		$this->cb->addTag('foo:bar');
-
-		$this->assertRegexp(
-			'#HINT_NAMESPACES\\s*=\\s*true#',
-			$this->cb->getJSParser()
-		);
-	}
-
-	/**
-	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is false if there's no "regexp" attribute with the "replaceWith" option set
-	*/
-	public function test_Optimization_hint_REGEXP_REPLACEWITH_false_by_default()
-	{
-		$this->assertRegexp(
-			'#HINT_REGEXP_REPLACEWITH\\s*=\\s*false#',
-			$this->cb->getJSParser()
-		);
-	}
-
-	/**
-	* @testdox Optimization hint HINT_REGEXP_REPLACEWITH is true if any "regexp" attribute has the "replaceWith" option set
-	*/
-	public function test_Optimization_hint_REGEXP_REPLACEWITH()
-	{
-		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'regexp', array('replaceWith' => 'xx'));
-
-		$this->assertRegexp(
-			'#HINT_REGEXP_REPLACEWITH\\s*=\\s*true#',
-			$this->cb->getJSParser()
-		);
-	}
-
-	/**
-	* @testdox Optimization hint HINT_REOPEN_RULES is false if no reopenChild rule exists
-	*/
-	public function test_Optimization_hint_HINT_REOPEN_RULES_is_false_by_default()
-	{
-		$this->assertRegexp(
-			'#HINT_REOPEN_RULES\\s*=\\s*false#',
-			$this->cb->getJSParser()
-		);
-	}
-
-	/**
-	* @testdox Optimization hint HINT_REOPEN_RULES is true if any reopenChild rule exists
-	*/
-	public function test_Optimization_hint_HINT_REOPEN_RULES_is_true_if_any_reopenChild_rule_exists()
-	{
-		$this->cb->addTag('X');
-		$this->cb->addTagRule('X', 'reopenChild', 'X');
-
-		$this->assertRegexp(
-			'#HINT_REOPEN_RULES\\s*=\\s*true#',
-			$this->cb->getJSParser()
-		);
-	}
-
-	/**
-	* @testdox Optimization hint HINT_RLA_ABORT is false if no plugins has the regexpLimitAction option set to "abort"
-	*/
-	public function test_Optimization_hint_HINT_RLA_ABORT_false()
-	{
-		$this->assertRegexp(
-			'#HINT_RLA_ABORT\\s*=\\s*false#',
-			$this->cb->getJSParser()
-		);
-	}
-
-	/**
-	* @testdox Optimization hint HINT_RLA_ABORT is truee if any plugin has the regexpLimitAction option set to "abort"
-	*/
-	public function test_Optimization_hint_HINT_RLA_ABORT_true()
-	{
-		$this->cb->loadPlugin('Linebreaker', null, array('regexpLimitAction' => 'abort'));
-
-		$this->assertRegexp(
-			'#HINT_RLA_ABORT\\s*=\\s*true#',
-			$this->cb->getJSParser()
 		);
 	}
 
@@ -970,7 +749,7 @@ class JSParserGeneratorTest extends Test
 		$this->assertSame(
 			'alert("Hello world");',
 			$this->jspg->get(array(
-				'compilation' => 'ADVANCED_OPTIMIZATIONS',
+				'compilationLevel' => 'ADVANCED_OPTIMIZATIONS',
 				'closureCompilerURL' => 'data:text/plain,{"compiledCode":"alert(\"Hello world\");","statistics":{"originalSize":86,"originalGzipSize":96,"compressedSize":21,"compressedGzipSize":41,"compileTime":1}}'
 			))
 		);
@@ -984,7 +763,7 @@ class JSParserGeneratorTest extends Test
 	public function testThrowsAnExceptionIfAnErrorOccursWhileContactingGoogleClosureCompiler()
 	{
 		$this->jspg->get(array(
-			'compilation' => 'ADVANCED_OPTIMIZATIONS',
+			'compilationLevel' => 'ADVANCED_OPTIMIZATIONS',
 			'closureCompilerURL' => 'data:text/plain,FAILURE'
 		));
 	}
@@ -997,31 +776,9 @@ class JSParserGeneratorTest extends Test
 	public function testThrowsAnExceptionIfGoogleClosureCompilerReturnsAnError()
 	{
 		$this->jspg->get(array(
-			'compilation' => 'ADVANCED_OPTIMIZATIONS',
+			'compilationLevel' => 'ADVANCED_OPTIMIZATIONS',
 			'closureCompilerURL' => 'data:text/plain,{"compiledCode":"","errors":[{"type":"JSC_PARSE_ERROR","file":"Input_0","lineno":1,"charno":7,"error":"Parse error. missing ; before statement","line":"foo bar"}],"statistics":{"originalSize":7,"originalGzipSize":27,"compressedSize":0,"compressedGzipSize":20,"compileTime":0}}'
 		));
-	}
-
-	/**
-	* @testdox Log types can be selectively disabled
-	*/
-	public function testDisableLog()
-	{
-		$js = $this->cb->getJSParser(array(
-			'disableLogTypes' => array('debug')
-		));
-
-		$this->assertNotRegexp(
-			'#(?<!0&&)log\\(.debug#',
-			$js,
-			'Not all "debug" messages have been disabled'
-		);
-
-		$this->assertNotRegexp(
-			'#0&&log\\(.(?!debug)#',
-			$js,
-			'Some non-"debug" messages have been disabled'
-		);
 	}
 
 	/**

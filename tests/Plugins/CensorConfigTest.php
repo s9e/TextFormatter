@@ -132,7 +132,7 @@ class CensorConfigTest extends Test
 			'/^foo$/i',
 			$this->call(
 				's9e\\TextFormatter\\JSParserGenerator',
-				'encodeConfig',
+				'encodePluginConfig',
 				array(
 					$this->cb->Censor->getJSConfig(),
 					$this->cb->Censor->getJSConfigMeta()

@@ -1,5 +1,3 @@
-s9e = {};
-
 /**
 * @typedef {{
 *   id:  !number,
@@ -21,8 +19,6 @@ var Tag;
 */
 var StubTag;
 
-s9e['TextFormatter'] = {};
-
 (function(xsl)
 {
 	var
@@ -34,7 +30,7 @@ s9e['TextFormatter'] = {};
 		SELF_CLOSING_TAG = 3,
 
 		/** @type {!Object} */
-		_log,
+		log,
 
 		/** @const @type {!Object} */
 		tagsConfig = {/* DO NOT EDIT */},
@@ -44,6 +40,8 @@ s9e['TextFormatter'] = {};
 		pluginsConfig = {/* DO NOT EDIT */},
 		/** @const @type {!Object} */
 		registeredNamespaces = {/* DO NOT EDIT */},
+		/** @const @type {!Object} */
+		rootContext = {/* DO NOT EDIT */},
 		/** @const @type {!Object.<string, function>} */
 		callbacks = {/* DO NOT EDIT */},
 
@@ -77,27 +75,7 @@ s9e['TextFormatter'] = {};
 		hasNamespacedTags,
 
 		/** @const */
-		ENABLE_IE_WORKAROUNDS = 7,
-		/** @const */
-		MSXML = ENABLE_IE_WORKAROUNDS && !('XSLTProcessor' in window && 'DOMParser' in window),
-
-		/** @const */
-		ENABLE_LIVE_PREVIEW = true,
-
-		/** @const */
-		HINT_DISALLOWED_HOSTS = true,
-		/** @const */
-		HINT_NAMESPACES = true,
-		/** @const */
-		HINT_NAMESPACES_TEMPLATE = true,
-		/** @const */
-		HINT_REGEXP_REPLACEWITH = true,
-		/** @const */
-		HINT_REOPEN_RULES = true,
-		/** @const */
-		HINT_RLA_ABORT = true,
-		/** @const */
-		HINT_TAG_REQUIRES = true
+		MSXML = HINT$enableIE && !('XSLTProcessor' in window && 'DOMParser' in window)
 	;
 
 	//==========================================================================
@@ -105,7 +83,7 @@ s9e['TextFormatter'] = {};
 	//==========================================================================
 
 	/** @const */
-	var NO_NS_DOM = (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('createElementNS' in document));
+	var NO_NS_DOM = (HINT$enableIE7 && !('createElementNS' in document));
 
 	function createElementNS(document, namespaceURI, QName)
 	{
@@ -116,55 +94,33 @@ s9e['TextFormatter'] = {};
 
 	function hasAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM || !HINT_NAMESPACES_TEMPLATE)
+		return (NO_NS_DOM || !HINT$hasNamespacedHTML)
 			 ? (QName in el)
 			 : el.hasAttributeNS(namespaceURI, QName);
 	}
 
 	function getAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM || !HINT_NAMESPACES_TEMPLATE)
+		return (NO_NS_DOM || !HINT$hasNamespacedHTML)
 			 ? el.getAttribute(QName)
 			 : el.getAttributeNS(namespaceURI, QName);
 	}
 
 	function setAttributeNS(el, namespaceURI, QName, value)
 	{
-		return (NO_NS_DOM || !HINT_NAMESPACES_TEMPLATE)
+		return (NO_NS_DOM || !HINT$hasNamespacedHTML)
 			 ? el.setAttribute(QName, value)
 			 : el.setAttributeNS(namespaceURI, QName, value);
 	}
 
 	function removeAttributeNS(el, namespaceURI, QName)
 	{
-		return (NO_NS_DOM || !HINT_NAMESPACES_TEMPLATE)
+		return (NO_NS_DOM || !HINT$hasNamespacedHTML)
 			 ? el.removeAttribute(QName)
 			 : el.removeAttributeNS(namespaceURI, QName);
 	}
 
-	//==========================================================================
-
-	function loadXML(xml)
-	{
-		var obj = new ActiveXObject('MSXML2.DOMDocument.3.0');
-		obj.async = false;
-		obj.validateOnParse = false;
-		obj.loadXML(xml);
-
-		return obj;
-	}
-
-	if (MSXML)
-	{
-		var xslt = loadXML(xsl);
-	}
-	else
-	{
-		var xslt = new XSLTProcessor();
-		xslt['importStylesheet'](new DOMParser().parseFromString(xsl, 'text/xml'));
-	}
-
-	if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
+	if (HINT$enableIE7)
 	{
 		if (!Array.prototype.forEach)
 		{
@@ -198,6 +154,28 @@ s9e['TextFormatter'] = {};
 		}
 	}
 
+	//==========================================================================
+
+	function loadXML(xml)
+	{
+		var obj = new ActiveXObject('MSXML2.DOMDocument.3.0');
+		obj.async = false;
+		obj.validateOnParse = false;
+		obj.loadXML(xml);
+
+		return obj;
+	}
+
+	if (MSXML)
+	{
+		var xslt = loadXML(xsl);
+	}
+	else
+	{
+		var xslt = new XSLTProcessor();
+		xslt['importStylesheet'](new DOMParser().parseFromString(xsl, 'text/xml'));
+	}
+
 	/**
 	* @param {!Object}   obj
 	* @param {!Function} callback
@@ -218,7 +196,7 @@ s9e['TextFormatter'] = {};
 		// <img src=... onload=evil() />
 		b.innerHTML = str.replace(/</g, '&lt;');
 
-		return (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9)
+		return (HINT$enableIE7)
 			 ? b.innerText || b.textContent
 			 : b.textContent;
 	}
@@ -230,7 +208,7 @@ s9e['TextFormatter'] = {};
 	function getMatches(regexp, container)
 	{
 		// reset the regexp
-		regexp.lastIndex = null;
+		regexp.lastIndex = 0;
 
 		var cnt = 0,
 			matches;
@@ -290,7 +268,7 @@ s9e['TextFormatter'] = {};
 		text    = _text;
 		textLen = _text.length;
 
-		_log = {
+		log = {
 			'debug': [],
 			'warning': [],
 			'error': []
@@ -310,11 +288,22 @@ s9e['TextFormatter'] = {};
 		delete currentAttribute;
 	}
 
-	/**
-	* @param {!string} type
-	* @param {!Object} entry
-	*/
-	function log(type, entry)
+	function logDebug(entry)
+	{
+		HINT$disabledLogTypes$debug || _log('debug', entry);
+	}
+
+	function logWarning(entry)
+	{
+		HINT$disabledLogTypes$warning || _log('warning', entry);
+	}
+
+	function logError(entry)
+	{
+		HINT$disabledLogTypes$error || _log('error', entry);
+	}
+
+	function _log(type, entry)
 	{
 		if (currentTag)
 		{
@@ -333,7 +322,7 @@ s9e['TextFormatter'] = {};
 			}
 		}
 
-		_log[type].push(entry);
+		log[type].push(entry);
 	}
 
 	function filter(attrVal, attrConf, filterConf)
@@ -341,6 +330,11 @@ s9e['TextFormatter'] = {};
 		switch (attrConf.type)
 		{
 			case 'url':
+				if (!HINT$hasFilter$url)
+				{
+					break;
+				}
+
 				var m =/^([a-z0-9]+):\/\/\S+(?:\/.*)?$/.exec(attrVal);
 
 				if (!m)
@@ -350,14 +344,14 @@ s9e['TextFormatter'] = {};
 
 				if (!filterConf.allowedSchemes.test(m[1]))
 				{
-					log('error', {
+					logError({
 						'msg'    : "URL scheme '%s' is not allowed",
 						'params' : [m[1]]
 					});
 					return false;
 				}
 
-				if (HINT_DISALLOWED_HOSTS
+				if (HINT$filterConfig$url$disallowedHosts
 				 && filterConf.disallowedHosts)
 				{
 					var a = document.createElement('a');
@@ -365,7 +359,7 @@ s9e['TextFormatter'] = {};
 
 					if (filterConf.disallowedHosts.test(a.hostname))
 					{
-						log('error', {
+						logError({
 							'msg'    : "URL host '%s' is not allowed",
 							'params' : [a.hostname]
 						});
@@ -377,15 +371,28 @@ s9e['TextFormatter'] = {};
 
 			case 'identifier':
 			case 'id':
+				if (!HINT$hasFilter$id && !HINT$hasFilter$identifier)
+				{
+					break;
+				}
 				return /^[a-zA-Z0-9-_]+$/.test(attrVal) ? attrVal : false;
 
 			case 'simpletext':
+				if (!HINT$hasFilter$simpletext)
+				{
+					break;
+				}
 				return /^[a-zA-Z0-9\-+.,_ ]+$/.test(attrVal) ? attrVal : false;
 
 			case 'text':
 				return attrVal;
 
 			case 'email':
+				if (!HINT$hasFilter$email)
+				{
+					break;
+				}
+
 				/**
 				* NOTE: obviously, this is not meant to match precisely the whole set of theorically
 				*       valid addresses. It's only there to catch honest mistakes. The actual
@@ -396,7 +403,7 @@ s9e['TextFormatter'] = {};
 					return false;
 				}
 
-				if (attrConf.forceUrlencode)
+				if (HINT$filterConfig$email$forceUrlencode && attrConf.forceUrlencode)
 				{
 					return attrVal
 						.split('')
@@ -411,18 +418,39 @@ s9e['TextFormatter'] = {};
 
 			case 'int':
 			case 'integer':
+				if (!HINT$hasFilter$int && !HINT$hasFilter$integer)
+				{
+					break;
+				}
 				return /^-?[1-9][0-9]*$/.test(attrVal) ? attrVal : false;
 
 			case 'float':
+				if (!HINT$hasFilter$float)
+				{
+					break;
+				}
 				return /^-?[0-9]+(?:\.[0-9]+)?(?:e[1-9][0-9]*)?$/i.test(attrVal) ? attrVal : false;
 
 			case 'number':
+				if (!HINT$hasFilter$number)
+				{
+					break;
+				}
 				return /^[0-9]+$/.test(attrVal) ? attrVal : false;
 
 			case 'uint':
+				if (!HINT$hasFilter$uint)
+				{
+					break;
+				}
 				return /^(?:0|[1-9][0-9]*)$/.test(attrVal) ? attrVal : false;
 
 			case 'range':
+				if (!HINT$hasFilter$range)
+				{
+					break;
+				}
+
 				if (!/^(?:0|-?[1-9][0-9]*)$/.test(attrVal))
 				{
 					return false;
@@ -430,7 +458,7 @@ s9e['TextFormatter'] = {};
 
 				if (attrVal < attrConf.min)
 				{
-					log('warning', {
+					logWarning({
 						'msg'    : 'Value outside of range, adjusted up to %d',
 						'params' : [attrConf.min]
 					});
@@ -439,7 +467,7 @@ s9e['TextFormatter'] = {};
 
 				if (attrVal > attrConf.max)
 				{
-					log('warning', {
+					logWarning({
 						'msg'    : 'Value outside of range, adjusted down to %d',
 						'params' : [attrConf.max]
 					});
@@ -449,9 +477,18 @@ s9e['TextFormatter'] = {};
 				return attrVal;
 
 			case 'color':
+				if (!HINT$hasFilter$color)
+				{
+					break;
+				}
 				return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrVal) ? attrVal : false;
 
 			case 'regexp':
+				if (!HINT$hasFilter$regexp)
+				{
+					break;
+				}
+
 				var match = attrConf.regexp.exec(attrVal);
 
 				if (!match)
@@ -459,7 +496,7 @@ s9e['TextFormatter'] = {};
 					return false;
 				}
 
-				if (HINT_REGEXP_REPLACEWITH && attrConf.replaceWith)
+				if (HINT$filterConfig$regexp$replaceWith && attrConf.replaceWith)
 				{
 					/**
 					* Two consecutive backslashes[1] are replaced with a single backslash.
@@ -484,7 +521,7 @@ s9e['TextFormatter'] = {};
 				return attrVal;
 		}
 
-		log('debug', {
+		logDebug({
 			'msg'    : "Unknown filter '%s'",
 			'params' : [attrConf.type]
 		});
@@ -513,40 +550,37 @@ s9e['TextFormatter'] = {};
 			DOM   = createDOM((cnt) ? 'rt' : 'pt'),
 			el    = DOM.documentElement;
 
-		if (HINT_NAMESPACES)
+		/**
+		* Declare all namespaces in the root node
+		*/
+		if (HINT$hasNamespacedTags && hasNamespacedTags)
 		{
-			/**
-			* Declare all namespaces in the root node
-			*/
-			if (hasNamespacedTags)
+			var declared = {};
+			processedTags.forEach(function(tag)
 			{
-				var declared = {};
-				processedTags.forEach(function(tag)
+				var pos = tag.name.indexOf(':');
+				if (pos > -1)
 				{
-					var pos = tag.name.indexOf(':');
-					if (pos > -1)
+					var prefix = tag.name.substr(0, pos);
+
+					if (!(prefix in declared))
 					{
-						var prefix = tag.name.substr(0, pos);
+						declared[prefix] = 1;
 
-						if (!(prefix in declared))
-						{
-							declared[prefix] = 1;
-
-							setAttributeNS(
-								el,
-								'http://www.w3.org/2000/xmlns/',
-								'xmlns:' + prefix,
-								registeredNamespaces[prefix]
-							);
-						}
+						setAttributeNS(
+							el,
+							'http://www.w3.org/2000/xmlns/',
+							'xmlns:' + prefix,
+							registeredNamespaces[prefix]
+						);
 					}
-				});
-			}
+				}
+			});
 		}
 
 		function createElement(tagName)
 		{
-			if (HINT_NAMESPACES)
+			if (HINT$hasNamespacedTags)
 			{
 				var pos = tagName.indexOf(':');
 				if (pos > -1)
@@ -579,7 +613,7 @@ s9e['TextFormatter'] = {};
 
 		function setTextContent(el, content)
 		{
-			if (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && !('textContent' in el))
+			if (HINT$enableIE7 && !('textContent' in el))
 			{
 				el.appendChild(DOM.createTextNode(content));
 			}
@@ -611,16 +645,22 @@ s9e['TextFormatter'] = {};
 			var wsBefore = '',
 				wsAfter  = '';
 
-			if (tag.trimBefore)
+			if (HINT$tagConfig$trimBefore || HINT$tagConfig$rtrimContent)
 			{
-				wsBefore = tagText.substr(0, tag.trimBefore);
-				tagText  = tagText.substr(tag.trimBefore);
+				if (tag.trimBefore)
+				{
+					wsBefore = tagText.substr(0, tag.trimBefore);
+					tagText  = tagText.substr(tag.trimBefore);
+				}
 			}
 
-			if (tag.trimAfter)
+			if (HINT$tagConfig$trimAfter || HINT$tagConfig$ltrimContent)
 			{
-				wsAfter = tagText.substr(tagText.length - tag.trimAfter);
-				tagText = tagText.substr(0, tagText.length - tag.trimAfter);
+				if (tag.trimAfter)
+				{
+					wsAfter = tagText.substr(tagText.length - tag.trimAfter);
+					tagText = tagText.substr(0, tagText.length - tag.trimAfter);
+				}
 			}
 
 			if (wsBefore !== '')
@@ -742,8 +782,8 @@ s9e['TextFormatter'] = {};
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "XX[b]  -text-XX[/b]  "
 		*/
-		if ((tag.type  &  START_TAG && tagConfig.trimBefore)
-		 || (tag.type === END_TAG   && tagConfig.rtrimContent))
+		if ((tag.type  &  START_TAG && tagConfig.trimBefore   && HINT$tagConfig$trimBefore)
+		 || (tag.type === END_TAG   && tagConfig.rtrimContent && HINT$tagConfig$rtrimContent))
 		{
 			tag.trimBefore  = /[ \n\r\t\0\x0B]*$/.exec(text.substr(0, tag.pos))[0].length;
 			tag.len        += tag.trimBefore;
@@ -754,8 +794,8 @@ s9e['TextFormatter'] = {};
 		* Original: "  [b]  -text-  [/b]  "
 		* Matches:  "  [b]XX-text-  [/b]XX"
 		*/
-		if ((tag.type === START_TAG && tagConfig.ltrimContent)
-		 || (tag.type  &  END_TAG   && tagConfig.trimAfter))
+		if ((tag.type === START_TAG && tagConfig.ltrimContent && HINT$tagConfig$ltrimContent)
+		 || (tag.type  &  END_TAG   && tagConfig.trimAfter    && HINT$tagConfig$trimAfter))
 		{
 			tag.trimAfter  = /^[ \n\r\t\0\x0B]*/.exec(text.substr(tag.pos + tag.len))[0].length;
 			tag.len       += tag.trimAfter;
@@ -799,7 +839,7 @@ s9e['TextFormatter'] = {};
 
 			if (cnt > pluginConfig.regexpLimit)
 			{
-				if (HINT_RLA_ABORT && pluginConfig.regexpLimitAction === 'abort')
+				if (HINT$hasRegexpLimitAction$abort && pluginConfig.regexpLimitAction === 'abort')
 				{
 					throw pluginName + ' limit exceeded';
 				}
@@ -813,13 +853,13 @@ s9e['TextFormatter'] = {};
 
 					matches[k] = matches[k].slice(0, limit);
 
-					if (pluginConfig.regexpLimitAction === 'ignore')
+					if (HINT$hasRegexpLimitAction$warn && pluginConfig.regexpLimitAction === 'warn')
 					{
-						log('debug', msg);
+						logWarning(msg);
 					}
 					else
 					{
-						log('warning', msg);
+						logDebug(msg);
 					}
 
 					skip = true;
@@ -882,7 +922,7 @@ s9e['TextFormatter'] = {};
 				*/
 				function(tag)
 				{
-					if (HINT_TAG_REQUIRES && tag.requires)
+					if (HINT$mightUseTagRequires && tag.requires)
 					{
 						tag.requires.forEach(function(k, i)
 						{
@@ -906,7 +946,7 @@ s9e['TextFormatter'] = {};
 			*/
 			function(tag)
 			{
-				if (HINT_NAMESPACES && tag.name.indexOf(':') < 0)
+				if (HINT$hasNamespacedTags && tag.name.indexOf(':') < 0)
 				{
 					tag.name = tag.name.toUpperCase();
 				}
@@ -917,7 +957,7 @@ s9e['TextFormatter'] = {};
 
 				if (!tagsConfig[tag.name])
 				{
-					log('debug', {
+					logDebug({
 						'pos'    : tag.pos,
 						'len'    : tag.len,
 						'msg'    : 'Removed unknown tag %1$s from plugin %2$s',
@@ -960,24 +1000,11 @@ s9e['TextFormatter'] = {};
 		}
 
 		context = {
-			allowedChildren: [],
-			allowedDescendants: []
+			allowedChildren:    rootContext.allowedChildren,
+			allowedDescendants: rootContext.allowedDescendants
 		};
 		cntTotal = {}
 		cntOpen = {}
-
-		var i = -1;
-		for (var tagName in tagsConfig)
-		{
-			if (!(++i & 7))
-			{
-				context.allowedChildren.push(255);
-				context.allowedDescendants.push(255);
-			}
-
-			cntTotal[tagName] = 0;
-			cntOpen[tagName] = 0;
-		}
 
 		pos = 0;
 
@@ -1021,7 +1048,7 @@ s9e['TextFormatter'] = {};
 
 		if (pos > currentTag.pos)
 		{
-			log('debug', {
+			logDebug({
 				'msg': 'Tag skipped'
 			});
 			return;
@@ -1029,7 +1056,7 @@ s9e['TextFormatter'] = {};
 
 		if (currentTagRequiresMissingTag())
 		{
-			log('debug', {
+			logDebug({
 				'msg': 'Tag skipped due to missing dependency'
 			});
 			return;
@@ -1079,7 +1106,7 @@ s9e['TextFormatter'] = {};
 		*/
 		if (!tagIsAllowed(tagName))
 		{
-			log('debug', {
+			logDebug({
 				'msg'    : 'Tag %s is not allowed in this context',
 				'params' : [tagName]
 			});
@@ -1096,7 +1123,7 @@ s9e['TextFormatter'] = {};
 	{
 		var n = tagsConfig[tagName].n;
 
-		return !!(context.allowedChildren[n >> 3] & (1 << (n & 7)));
+		return !!(context.allowedChildren[n >> 5] & (1 << (n & 31)));
 	}
 
 	function processCurrentEndTag()
@@ -1106,14 +1133,14 @@ s9e['TextFormatter'] = {};
 			/**
 			* This is an end tag but there's no matching start tag
 			*/
-			log('debug', {
+			logDebug({
 				'msg'    : 'Could not find a matching start tag for %s',
 				'params' : [currentTag.tagMate]
 			});
 			return;
 		}
 
-		var reopenChildren = true,
+		var reopenChildren = HINT$tagConfig$rules$reopenChild,
 			reopenTags     = [];
 
 		do
@@ -1126,7 +1153,7 @@ s9e['TextFormatter'] = {};
 				appendTag(createEndTag(lastOpenTag, currentTag.pos));
 
 				// Do we check for reopenChild rules?
-				if (HINT_REOPEN_RULES && reopenChildren)
+				if (HINT$tagConfig$rules$reopenChild && reopenChildren)
 				{
 					var tagConfig = tagsConfig[currentTag.name];
 
@@ -1216,6 +1243,11 @@ s9e['TextFormatter'] = {};
 
 	function closeParent()
 	{
+		if (!HINT$tagConfig$rules$closeParent)
+		{
+			return;
+		}
+
 		var tagConfig = tagsConfig[currentTag.name];
 
 		if (openTags.length
@@ -1257,6 +1289,11 @@ s9e['TextFormatter'] = {};
 
 	function closeAncestor()
 	{
+		if (!HINT$tagConfig$rules$closeAncestor)
+		{
+			return;
+		}
+
 		var tagConfig = tagsConfig[currentTag.name];
 
 		if (tagConfig.rules
@@ -1302,6 +1339,11 @@ s9e['TextFormatter'] = {};
 
 	function requireParent()
 	{
+		if (!HINT$tagConfig$rules$requireParent)
+		{
+			return;
+		}
+
 		var tagConfig = tagsConfig[currentTag.name];
 
 		if (tagConfig.rules
@@ -1327,7 +1369,7 @@ s9e['TextFormatter'] = {};
 				        ? 'Tag %1$s requires %2$s as parent'
 				        : 'Tag %1$s requires as parent any of: %2$s';
 
-				log('error', {
+				logError({
 					'msg'    : msg,
 					'params' : [
 						currentTag.name,
@@ -1344,6 +1386,11 @@ s9e['TextFormatter'] = {};
 
 	function requireAncestor()
 	{
+		if (!HINT$tagConfig$rules$requireAncestor)
+		{
+			return;
+		}
+
 		var tagConfig = tagsConfig[currentTag.name];
 
 		if (tagConfig.rules
@@ -1365,7 +1412,7 @@ s9e['TextFormatter'] = {};
 			        ? 'Tag %1$s requires %2$s as ancestor'
 			        : 'Tag %1$s requires as ancestor any of: %2$s';
 
-			log('error', {
+			logError({
 				'msg'    : msg,
 				'params' : [
 					currentTag.name,
@@ -1381,6 +1428,11 @@ s9e['TextFormatter'] = {};
 
 	function currentTagRequiresMissingTag()
 	{
+		if (!HINT$mightUseTagRequires)
+		{
+			return false;
+		}
+
 		if (currentTag.requires)
 		{
 			var i = currentTag.requires.length;
@@ -1490,6 +1542,11 @@ s9e['TextFormatter'] = {};
 
 	function currentTagRequiresMissingAttribute()
 	{
+		if (!HINT$attrConfig$isRequired)
+		{
+			return false;
+		}
+
 		var tagConfig = tagsConfig[currentTag.name];
 
 		for (var attrName in tagConfig.attrs)
@@ -1497,7 +1554,7 @@ s9e['TextFormatter'] = {};
 			if (tagConfig.attrs[attrName].isRequired
 			 && currentTag.attrs[attrName] === undefined)
 			{
-				log('error', {
+				logError({
 					'msg'    : "Missing attribute '%s'",
 					'params' : [attrName]
 				});
@@ -1511,6 +1568,11 @@ s9e['TextFormatter'] = {};
 
 	function addDefaultAttributeValuesToCurrentTag()
 	{
+		if (!HINT$attrConfig$defaultValue)
+		{
+			return;
+		}
+
 		var tagConfig = tagsConfig[currentTag.name];
 
 		for (var attrName in tagConfig.attrs)
@@ -1554,7 +1616,7 @@ s9e['TextFormatter'] = {};
 			// next attribute
 			if (currentTag.attrs[attrName] === false)
 			{
-				log('error', {
+				logError({
 					'msg'    : "Invalid attribute '%s'",
 					'params' : [attrName]
 				});
@@ -1569,7 +1631,7 @@ s9e['TextFormatter'] = {};
 
 			if (originalVal !== currentTag.attrs[attrName])
 			{
-				log('debug', {
+				logDebug({
 					'msg'    : 'Attribute value was altered by the filter '
 					         + '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
 					'params' : [
@@ -1615,6 +1677,11 @@ s9e['TextFormatter'] = {};
 
 	function applyTagPreFilterCallbacks()
 	{
+		if (!HINT$tagConfig$preFilter)
+		{
+			return;
+		}
+
 		if (tagsConfig[currentTag.name].preFilter)
 		{
 			tagsConfig[currentTag.name].preFilter.forEach(function(callbackConf)
@@ -1629,6 +1696,11 @@ s9e['TextFormatter'] = {};
 
 	function applyTagPostFilterCallbacks()
 	{
+		if (!HINT$tagConfig$postFilter)
+		{
+			return;
+		}
+
 		if (tagsConfig[currentTag.name].postFilter)
 		{
 			tagsConfig[currentTag.name].postFilter.forEach(function(callbackConf)
@@ -1643,6 +1715,11 @@ s9e['TextFormatter'] = {};
 
 	function applyAttributePreFilterCallbacks()
 	{
+		if (!HINT$attrConfig$preFilter)
+		{
+			return;
+		}
+
 		var attrConf = tagsConfig[currentTag.name].attrs[currentAttribute];
 
 		if (attrConf.preFilter)
@@ -1659,6 +1736,11 @@ s9e['TextFormatter'] = {};
 
 	function applyAttributePostFilterCallbacks()
 	{
+		if (!HINT$attrConfig$postFilter)
+		{
+			return;
+		}
+
 		var attrConf = tagsConfig[currentTag.name].attrs[currentAttribute];
 
 		if (attrConf.postFilter)
@@ -1710,6 +1792,11 @@ s9e['TextFormatter'] = {};
 	*/
 	function splitCompoundAttributes()
 	{
+		if (!HINT$hasCompoundAttributes)
+		{
+			return;
+		}
+
 		var tagConfig = tagsConfig[currentTag.name];
 
 		foreach(tagsConfig[currentTag.name].attrs, function(attrConfig, attrName)
@@ -1751,36 +1838,24 @@ s9e['TextFormatter'] = {};
 		return output();
 	}
 
-	var
-		/** @const */
-		DISABLE_API_PARSE = false,
-		/** @const */
-		DISABLE_API_RENDER = false,
-		/** @const */
-		DISABLE_API_GETLOG = false,
-		/** @const */
-		DISABLE_API_DISABLEPLUGIN = false,
-		/** @const */
-		DISABLE_API_ENABLEPLUGIN = false,
-		/** @const */
-		DISABLE_API_PREVIEW = false;
+	var API = {};
 
-	if (!DISABLE_API_PARSE)
+	if (!HINT$disabledAPI$parse)
 	{
 		/**
 		* @param {!string} _text
 		* @return {Document}
 		*/
-		s9e['TextFormatter']['parse'] = parse;
+		API['parse'] = parse;
 	}
 
-	if (!DISABLE_API_RENDER)
+	if (!HINT$disabledAPI$render)
 	{
 		/**
 		* @param {!Document} DOM Intermediate representation
 		* @return string
 		*/
-		s9e['TextFormatter']['render'] = function(DOM)
+		API['render'] = function(DOM)
 		{
 			if (MSXML)
 			{
@@ -1791,37 +1866,37 @@ s9e['TextFormatter'] = {};
 		}
 	}
 
-	if (!DISABLE_API_GETLOG)
+	if (!HINT$disabledAPI$getLog)
 	{
-		s9e['TextFormatter']['getLog'] = function()
+		API['getLog'] = function()
 		{
-			return _log;
+			return log;
 		}
 	}
 
-	if (!DISABLE_API_DISABLEPLUGIN)
+	if (!HINT$disabledAPI$disablePlugin)
 	{
-		s9e['TextFormatter']['disablePlugin'] = function(pluginName)
+		API['disablePlugin'] = function(pluginName)
 		{
 			pluginsConfig[pluginName].__disabled = 1;
 		}
 	}
 
-	if (!DISABLE_API_ENABLEPLUGIN)
+	if (!HINT$disabledAPI$enablePlugin)
 	{
-		s9e['TextFormatter']['enablePlugin'] = function(pluginName)
+		API['enablePlugin'] = function(pluginName)
 		{
 			pluginsConfig[pluginName].__disabled = 0;
 		}
 	}
 
-	if (!DISABLE_API_PREVIEW)
+	if (!HINT$disabledAPI$preview)
 	{
 		/**
 		* @param {!string} text Text to parse
 		* @param {!HTMLElement} target Target element
 		*/
-		s9e['TextFormatter']['preview'] = function(text, target)
+		API['preview'] = function(text, target)
 		{
 			var DOM = parse(text),
 				document = target.ownerDocument,
@@ -1948,7 +2023,7 @@ s9e['TextFormatter'] = {};
 					return false;
 				}
 
-				// IE 7.0 doesn't seem to have Node.TEXT_NODE
+				// IE 7.0 doesn't seem to have Node.TEXT_NODE so we use its value, 3, instead
 				if (oldNode.nodeType === 3)
 				{
 					oldNode.nodeValue = newNode.nodeValue;
@@ -1956,7 +2031,7 @@ s9e['TextFormatter'] = {};
 				}
 
 				if ((oldNode.isEqualNode && oldNode.isEqualNode(newNode))
-				 || (ENABLE_IE_WORKAROUNDS && ENABLE_IE_WORKAROUNDS < 9 && oldNode.outerHTML && oldNode.outerHTML === newNode.outerHTML))
+				 || (HINT$enableIE7 && oldNode.outerHTML && oldNode.outerHTML === newNode.outerHTML))
 				{
 					return true;
 				}
@@ -1983,9 +2058,9 @@ s9e['TextFormatter'] = {};
 				{
 					var oldAttr = oldEl.attributes[i];
 
-					if (!hasAttributeNS(newEl, oldAttr.namespaceURI, oldAttr.name))
+					if (!hasAttributeNS(newEl, oldAttr.namespaceURI, oldAttr['name']))
 					{
-						removeAttributeNS(oldEl, oldAttr.namespaceURI, oldAttr.name);
+						removeAttributeNS(oldEl, oldAttr.namespaceURI, oldAttr['name']);
 					}
 				}
 
@@ -1994,9 +2069,9 @@ s9e['TextFormatter'] = {};
 				{
 					var newAttr = newEl.attributes[i];
 
-					if (newAttr.value !== getAttributeNS(oldEl, newAttr.namespaceURI, newAttr.name))
+					if (newAttr.value !== getAttributeNS(oldEl, newAttr.namespaceURI, newAttr['name']))
 					{
-						setAttributeNS(oldEl, newAttr.namespaceURI, newAttr.name, newAttr.value);
+						setAttributeNS(oldEl, newAttr.namespaceURI, newAttr['name'], newAttr.value);
 					}
 				}
 			}
@@ -2004,4 +2079,6 @@ s9e['TextFormatter'] = {};
 			refreshElementContent(target, frag);
 		}
 	}
-}(/** XSL goes here **/));
+
+	s9e = { 'TextFormatter': API };
+}(/* XSL WILL BE INSERTED HERE */));

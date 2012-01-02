@@ -3,7 +3,7 @@ cd $(dirname $0)
 
 git push &
 ./generateJSParserDemoLite.php &
-./generateJSParserDemo.php 1 &
+./generateJSParserDemo.php &
 ./generateDocBlox.sh &
 
 ./generateCodeCoverage.sh

@@ -786,7 +786,7 @@ class BBCodesConfigTest extends Test
 			'{bbcodesConfig:{"FOOBAR"',
 			$this->call(
 				's9e\\TextFormatter\\JSParserGenerator',
-				'encodeConfig',
+				'encodePluginConfig',
 				array(
 					$this->cb->BBCodes->getJSConfig(),
 					$this->cb->BBCodes->getJSConfigMeta()

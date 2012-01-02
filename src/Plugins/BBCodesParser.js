@@ -54,7 +54,7 @@ matches.forEach(function(m)
 	{
 		if (text.charAt(rpos) !== ']')
 		{
-			log('warning', {
+			logWarning({
 				'pos'    : rpos,
 				'len'    : 1,
 				'msg'    : 'Unexpected character: expected %1$s found %2$s',
@@ -98,7 +98,7 @@ matches.forEach(function(m)
 					c = text.charAt(rpos);
 					if (c !== ']')
 					{
-						log('warning', {
+						logWarning({
 							'pos'    : rpos,
 							'len'    : 1,
 							'msg'    : 'Unexpected character: expected %1$s found %2$s',
@@ -127,7 +127,7 @@ matches.forEach(function(m)
 			{
 				if (rpos + attrName.length >= textLen)
 				{
-					log('debug', {
+					logDebug({
 						'pos' : rpos,
 						'len' : attrName.length,
 						'msg' : 'Attribute name seems to extend till the end of text'
@@ -156,7 +156,7 @@ matches.forEach(function(m)
 					{
 						attrName = bbcodeName.toLowerCase();
 
-						log('debug', {
+						logDebug({
 							'pos'    : rpos,
 							'len'    : 1,
 							'msg'    : 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
@@ -166,7 +166,7 @@ matches.forEach(function(m)
 				}
 				else
 				{
-					log('warning', {
+					logWarning({
 						'pos'    : rpos,
 						'len'    : 1,
 						'msg'    : 'Unexpected character %s',
@@ -190,7 +190,7 @@ matches.forEach(function(m)
 			*/
 			if (++rpos >= textLen)
 			{
-				log('debug', {
+				logDebug({
 					'msg' : 'Attribute definition seems to extend till the end of text'
 				});
 				return;
@@ -210,7 +210,7 @@ matches.forEach(function(m)
 						/**
 						* No matching quote, apparently that string never ends...
 						*/
-						log('warning', {
+						logWarning({
 							'pos' : valuePos - 1,
 							'len' : 1,
 							'msg' : 'Could not find matching quote'
