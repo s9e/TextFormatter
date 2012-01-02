@@ -610,7 +610,8 @@ class JSParserGenerator
 	{
 		foreach ($this->plugins as $plugin)
 		{
-			if (strpos($plugin['parser'], 'requires') !== false)
+			// Covers tag.requires and tag['requires'] plus a few theorical false-positive
+			if (preg_match('#[.\'"]\\s*requires\\b#', $plugin['parser']))
 			{
 				return true;
 			}
