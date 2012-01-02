@@ -80,13 +80,18 @@ class RegexpMaster
 		$regexp = '';
 
 		/**
-		* Test whether none of the initials has a special meaning
+		* Test whether none of the initials have a special meaning
 		*/
 		if (count($initials) > 1)
 		{
 			foreach ($initials as $initial => $void)
 			{
-				if ($esc[$initial] !== preg_quote($initial, '#'))
+				/**
+				* Test for sequences of more than 1 character optionally preceded by a backslash, or
+				* the use of any non-escaped special character
+				*/
+				if (!preg_match('#^\\\\?.$#Dus',  $esc[$initial])
+				 || preg_match('/(?<!\\\\)[#$()*+.?[\\]^{|}]/', $esc[$initial]))
 				{
 					$useLookahead = false;
 					break;
@@ -444,7 +449,8 @@ class RegexpMaster
 					$regexp .= '[';
 					$regexp .= $this->unfoldUnicodeProperties(
 						$tok['content'],
-						true
+						true,
+						false
 					);
 					$regexp .= ']' . substr($tok['quantifiers'], 0, 1);
 					break;
@@ -494,7 +500,7 @@ class RegexpMaster
 		return $regexp;
 	}
 
-	protected function unfoldUnicodeProperties($str, $inCharacterClass, $dotAll = false)
+	protected function unfoldUnicodeProperties($str, $inCharacterClass, $dotAll)
 	{
 		$unicodeProps = self::$unicodeProps;
 
