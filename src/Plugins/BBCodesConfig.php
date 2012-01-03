@@ -64,7 +64,8 @@ class BBCodesConfig extends PluginConfig
 		* Build the regexp that matches all the BBCode names
 		*/
 		$regexp = $this->cb->getRegexpMaster()->buildRegexpFromList(
-			array_keys($this->bbcodesConfig)
+			array_keys($this->bbcodesConfig),
+			array('disableLookahead' => true)
 		);
 
 		return array(
