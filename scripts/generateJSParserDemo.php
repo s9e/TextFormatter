@@ -76,6 +76,11 @@ ob_start();
 			border-radius: 5px;
 		}
 
+		#preview > pre
+		{
+			white-space: pre-line;
+		}
+
 		label
 		{
 			cursor: pointer;
@@ -102,6 +107,17 @@ ob_start();
 			-webkit-transition: width .5s, height .5s;
 		}
 	</style>
+
+	<!--[if lt IE 8]>
+	<style type="text/css">
+	#preview > pre
+	{
+		white-space: pre;
+		word-wrap:   break-word;
+	}
+	</style>
+	<![endif]-->
+
 </head>
 <body>
 	<div style="float:left;width:80%;max-width:800px">
@@ -178,6 +194,7 @@ The parser/renderer used on this page page has been generated via [url=https://g
 
 			textarea = document.getElementsByTagName('textarea')[0],
 			preview = document.getElementById('preview'),
+			pre = false,
 
 			outputSelect = document.getElementById('output'),
 
@@ -185,7 +202,15 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			logdiv = document.getElementById('logdiv'),
 			disableHighlight = false;
 
-		outputSelect.onchange = refreshOutput;
+		outputSelect.onchange = function()
+		{
+			if (outputSelect.value === 'preview')
+			{
+				pre = false;
+			}
+
+			refreshOutput();
+		}
 
 		textarea.onmouseout = function()
 		{
@@ -213,15 +238,22 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			}
 			else
 			{
-				var xml = s9e.TextFormatter.parse(text);
+				var xml = s9e.TextFormatter.parse(text),
+					content = (outputSelect.value === 'html') ? s9e.TextFormatter.render(xml) : xml;
 
-				if (outputSelect.value === 'xml')
+				if (!pre)
 				{
-					preview.textContent = preview.innerText = xml;
+					preview.innerHTML = '<pre></pre>';
+					pre = preview.firstChild;
+				}
+
+				if ('textContent' in pre)
+				{
+					pre.textContent = content;
 				}
 				else
 				{
-					preview.textContent = preview.innerText = s9e.TextFormatter.render(xml);
+					pre.innerText = content;
 				}
 			}
 		}
