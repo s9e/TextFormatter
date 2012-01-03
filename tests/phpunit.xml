@@ -29,6 +29,7 @@
 			<file>ParserTest.php</file>
 			<file>PluginConfigTest.php</file>
 			<file>PluginParserTest.php</file>
+			<file>RegexpMasterTest.php</file>
 			<file>RendererTest.php</file>
 			<file>Plugins/AutolinkConfigTest.php</file>
 			<file>Plugins/AutolinkParserTest.php</file>
@@ -63,6 +64,7 @@
 			<file>../src/PluginParser.php</file>
 			<file>../src/PredefinedBBCodes.php</file>
 			<file>../src/PredefinedTags.php</file>
+			<file>../src/RegexpMaster.php</file>
 			<file>../src/Renderer.php</file>
 			<file>../src/Plugins/AutolinkConfig.php</file>
 			<file>../src/Plugins/AutolinkParser.php</file>

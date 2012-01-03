@@ -79,10 +79,9 @@ class RegexpMaster
 
 		$regexp = '';
 
-		/**
-		* Test whether none of the initials have a special meaning
-		*/
-		if (count($initials) > 1)
+		if ($useLookahead
+		 && !$options['disableLookahead']
+		 && count($initials) > 1)
 		{
 			foreach ($initials as $initial => $void)
 			{
@@ -98,8 +97,7 @@ class RegexpMaster
 				}
 			}
 
-			if ($useLookahead
-			 && !$options['disableLookahead'])
+			if ($useLookahead)
 			{
 				$regexp .= '(?=[' . implode('', array_intersect_key($esc, $initials)) . '])';
 			}
