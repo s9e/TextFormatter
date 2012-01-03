@@ -747,7 +747,7 @@ class JSParserGenerator
 			);
 		}
 
-		return self::encode(
+		return $this->encode(
 			$filtersConfig,
 			array(
 				'preserveKeys' => array(
@@ -812,13 +812,13 @@ class JSParserGenerator
 				= 'function(text,matches)'
 				. '{'
 				. '/** @const */'
-				. 'var config=' . self::encodePluginConfig($localConfig, $plugin['meta']) . ';'
+				. 'var config=' . $this->encodePluginConfig($localConfig, $plugin['meta']) . ';'
 				. $plugin['parser']
 				. '}';
 
 			$plugin['meta']['isRawJS'][] = array('parser');
 
-			$plugins[] = json_encode($pluginName) . ':' . self::encodePluginConfig(
+			$plugins[] = json_encode($pluginName) . ':' . $this->encodePluginConfig(
 				$globalConfig,
 				$plugin['meta']
 			);
@@ -835,6 +835,8 @@ class JSParserGenerator
 	protected function generateTagsConfig()
 	{
 		$tagsConfig = $this->tagsConfig;
+
+		$rm = $this->cb->getRegexpMaster();
 
 		foreach ($tagsConfig as $tagName => &$tagConfig)
 		{
@@ -859,7 +861,7 @@ class JSParserGenerator
 				{
 					if ($attrConf['type'] === 'compound')
 					{
-						self::convertRegexp($attrConf['regexp'], $attrConf['regexpMap']);
+						$rm->pcreToJs($attrConf['regexp'], $attrConf['regexpMap']);
 					}
 				}
 				unset($attrConf);
@@ -875,7 +877,7 @@ class JSParserGenerator
 		}
 		unset($tagConfig);
 
-		return self::encode(
+		return $this->encode(
 			$tagsConfig,
 			array(
 				'preserveKeys' => array(
@@ -1035,7 +1037,7 @@ class JSParserGenerator
 	* @param  array  $meta         Metadata associated with the config
 	* @return string               Javascript representation of config
 	*/
-	static protected function encodePluginConfig(array $pluginConfig, array $meta)
+	protected function encodePluginConfig(array $pluginConfig, array $meta)
 	{
 		// We don't need those in the JS parser
 		unset($pluginConfig['parserClassName']);
@@ -1055,7 +1057,7 @@ class JSParserGenerator
 			));
 		}
 
-		return self::encode($pluginConfig, $meta);
+		return $this->encode($pluginConfig, $meta);
 	}
 
 	/**
@@ -1067,7 +1069,7 @@ class JSParserGenerator
 	* @param  array  $meta Metadata associated with the array
 	* @return string               Javascript representation of config
 	*/
-	static protected function encode(array $arr, array $meta = array())
+	protected function encode(array $arr, array $meta = array())
 	{
 		/**
 		* Replace booleans with 1/0
@@ -1080,7 +1082,7 @@ class JSParserGenerator
 			}
 		});
 
-		return self::encodeArray($arr, $meta);
+		return $this->encodeArray($arr, $meta);
 	}
 
 	/**
@@ -1090,8 +1092,10 @@ class JSParserGenerator
 	* @param  array  $meta Metadata associated with the array
 	* @return string               Javascript representation of config
 	*/
-	static protected function encodeArray(array $arr, array $meta = array())
+	protected function encodeArray(array $arr, array $meta = array())
 	{
+		$rm = $this->cb->getRegexpMaster();
+
 		$match = array();
 
 		foreach ($meta as $name => $keypaths)
@@ -1106,11 +1110,11 @@ class JSParserGenerator
 		{
 			if (!empty($match['isRegexp'][$k]))
 			{
-				$v = self::convertRegexp($v);
+				$v = $rm->pcreToJs($v);
 			}
 			elseif (!empty($match['isGlobalRegexp'][$k]))
 			{
-				$v = self::convertRegexp($v) . 'g';
+				$v = $rm->pcreToJs($v) . 'g';
 			}
 			elseif (!empty($match['isRawJS'][$k]))
 			{
@@ -1118,7 +1122,7 @@ class JSParserGenerator
 			}
 			elseif (is_array($v))
 			{
-				$v = self::encodeArray(
+				$v = $this->encodeArray(
 					$v,
 					self::filterKeyPaths($meta, $k)
 				);
@@ -1159,7 +1163,7 @@ class JSParserGenerator
 	* @param  string $key  Current key
 	* @return array        Filtered metadata
 	*/
-	static protected function filterKeyPaths(array $meta, $key)
+	protected function filterKeyPaths(array $meta, $key)
 	{
 		$ret = array();
 		foreach ($meta as $name => $keypaths)
@@ -1175,33 +1179,5 @@ class JSParserGenerator
 		}
 
 		return array_map('array_filter', $ret);
-	}
-
-	//==========================================================================
-	// Regexp utilities
-	//==========================================================================
-
-	/*
-	* Convert a PCRE regexp to a Javascript regexp
-	*
-	* @param  string  $regexp    PCRE regexp
-	* @param  array  &$regexpMap Will be replaced with an array mapping named capture to their index
-	* @return string
-	*/
-	static public function convertRegexp($regexp, &$regexpMap = null)
-	{
-		static $rm;
-
-		if (!isset($rm))
-		{
-			if (!class_exists(__NAMESPACE__ . '\\RegexpMaster'))
-			{
-				include __DIR__ . '/RegexpMaster.php';
-			}
-
-			$rm = new RegexpMaster;
-		}
-
-		return $rm->pcreToJs($regexp, $regexpMap);
 	}
 }

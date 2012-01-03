@@ -6,7 +6,6 @@ use s9e\TextFormatter\Tests\Test,
     s9e\TextFormatter\RegexpMaster;
 
 include_once __DIR__ . '/Test.php';
-include_once __DIR__ . '/../src/RegexpMaster.php';
 
 /**
 * @covers s9e\TextFormatter\RegexpMaster
@@ -17,7 +16,7 @@ class RegexpMasterTest extends Test
 
 	public function setUp()
 	{
-		$this->rm = new RegexpMaster;
+		$this->rm = $this->cb->getRegexpMaster();
 	}
 
 	/**

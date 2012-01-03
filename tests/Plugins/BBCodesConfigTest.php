@@ -785,7 +785,7 @@ class BBCodesConfigTest extends Test
 		$this->assertStringStartsWith(
 			'{bbcodesConfig:{"FOOBAR"',
 			$this->call(
-				's9e\\TextFormatter\\JSParserGenerator',
+				$this->jspg,
 				'encodePluginConfig',
 				array(
 					$this->cb->BBCodes->getJSConfig(),

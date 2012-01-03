@@ -22,8 +22,11 @@ class AutolinkConfig extends PluginConfig
 
 	public function getConfig()
 	{
+		$schemeRegexp
+			= $this->cb->getRegexpMaster()->buildRegexpFromList($this->cb->getAllowedSchemes());
+
 		return array(
-			'regexp' => '#' . ConfigBuilder::buildRegexpFromList($this->cb->getAllowedSchemes()) . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS'
+			'regexp' => '#' . $schemeRegexp . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS'
 		);
 	}
 

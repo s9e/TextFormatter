@@ -22,7 +22,7 @@ class JSParserGeneratorTest extends Test
 	protected function encodeArray(array $arr)
 	{
 		return $this->call(
-			's9e\\TextFormatter\\JSParserGenerator',
+			$this->jspg,
 			'encodeArray',
 			func_get_args()
 		);
@@ -31,7 +31,7 @@ class JSParserGeneratorTest extends Test
 	protected function encodePluginConfig(array $config)
 	{
 		return $this->call(
-			's9e\\TextFormatter\\JSParserGenerator',
+			$this->jspg,
 			'encodePluginConfig',
 			func_get_args()
 		);
@@ -113,7 +113,7 @@ class JSParserGeneratorTest extends Test
 		$this->assertSame(
 			'[1,0,1]',
 			$this->call(
-				's9e\\TextFormatter\\JSParserGenerator',
+				$this->jspg,
 				'encode',
 				array(array(true, false, true))
 			)

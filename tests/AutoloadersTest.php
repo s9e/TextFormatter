@@ -53,6 +53,35 @@ class AutoloadersTest extends Test
 	* @test
 	* @runInSeparateProcess
 	*/
+	public function ConfigBuilder_can_autoload_RegexpMaster()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\RegexpMaster',
+			$this->cb->getRegexpMaster()
+		);
+	}
+
+	/**
+	* @test
+	* @runInSeparateProcess
+	* @depends ConfigBuilder_can_autoload_RegexpMaster
+	*/
+	public function ConfigBuilder_does_not_include_RegexpMaster_twice()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\RegexpMaster',
+			$this->cb->getRegexpMaster()
+		);
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\RegexpMaster',
+			$this->cb->getRegexpMaster()
+		);
+	}
+
+	/**
+	* @test
+	* @runInSeparateProcess
+	*/
 	public function ConfigBuilder_can_autoload_Renderer()
 	{
 		$this->assertInstanceOf(

@@ -69,8 +69,10 @@ class EmoticonsConfig extends PluginConfig
 			return false;
 		}
 
+		$rm = $this->cb->getRegexpMaster();
+
 		// Non-anchored pattern, will benefit from the S modifier
-		$regexp = '#' . ConfigBuilder::buildRegexpFromList(array_keys($this->emoticons)) . '#S';
+		$regexp = '#' . $rm->buildRegexpFromList(array_keys($this->emoticons)) . '#S';
 
 		return array(
 			'tagName' => $this->tagName,

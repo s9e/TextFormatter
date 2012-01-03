@@ -63,7 +63,9 @@ class BBCodesConfig extends PluginConfig
 		/**
 		* Build the regexp that matches all the BBCode names
 		*/
-		$regexp = ConfigBuilder::buildRegexpFromList(array_keys($this->bbcodesConfig));
+		$regexp = $this->cb->getRegexpMaster()->buildRegexpFromList(
+			array_keys($this->bbcodesConfig)
+		);
 
 		return array(
 			'bbcodesConfig' => $this->bbcodesConfig,
@@ -599,7 +601,8 @@ class BBCodesConfig extends PluginConfig
 
 					case 'choice':
 						$choices = explode(',', $m['choices']);
-						$regexp  = '#^' . ConfigBuilder::buildRegexpFromList($choices) . '$#iD';
+						$regexp  =
+							'#^' . $this->cb->getRegexpMaster()->buildRegexpFromList($choices) . '$#iD';
 
 						if (preg_match('#[\\x80-\\xff]#', $regexp))
 						{

@@ -193,7 +193,7 @@ class RawHTMLConfig extends PluginConfig
 		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
 		*/
 		$attrRegexp = '[a-z][a-z\\-]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
-		$tagRegexp  = ConfigBuilder::buildRegexpFromList(array_keys($this->tags));
+		$tagRegexp  = $this->cb->getRegexpMaster()->buildRegexpFromList(array_keys($this->tags));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
 		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*)/?';

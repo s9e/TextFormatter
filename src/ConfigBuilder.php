@@ -1023,6 +1023,28 @@ class ConfigBuilder
 		return new Renderer($this->getXSL());
 	}
 
+	/**
+	* Return a (cached) instance of RegexpMaster
+	*
+	* @return RegexpMaster
+	*/
+	public function getRegexpMaster()
+	{
+		static $rm;
+
+		if (!isset($rm))
+		{
+			if (!class_exists(__NAMESPACE__ . '\\RegexpMaster'))
+			{
+				include __DIR__ . '/RegexpMaster.php';
+			}
+
+			$rm = new RegexpMaster;
+		}
+
+		return $rm;
+	}
+
 	//==========================================================================
 	// Filters
 	//==========================================================================
@@ -1254,8 +1276,10 @@ class ConfigBuilder
 	{
 		$filters = $this->filters;
 
+		$rm = $this->getRegexpMaster();
+
 		$filters['url']['allowedSchemes']
-			= '#^' . self::buildRegexpFromList($filters['url']['allowedSchemes']) . '$#Di';
+			= '#^' . $rm->buildRegexpFromList($filters['url']['allowedSchemes']) . '$#Di';
 
 		foreach (array('disallowedHosts', 'resolveRedirectsHosts') as $k)
 		{
@@ -1263,7 +1287,7 @@ class ConfigBuilder
 			{
 				$filters['url'][$k]
 					= '#(?<![^\\.])'
-					. self::buildRegexpFromList(
+					. $rm->buildRegexpFromList(
 						$filters['url'][$k],
 						array('specialChars' => array('*' => '.*'))
 					  )
@@ -1420,48 +1444,6 @@ class ConfigBuilder
 		$bin = implode('', $values) . str_repeat('0', (((count($values) + 7) & 7) ^ 7));
 
 		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bin, 8)))));
-	}
-
-	//==========================================================================
-	// Misc tools
-	//==========================================================================
-
-	static protected function getRM()
-	{
-		static $rm;
-
-		if (!isset($rm))
-		{
-			if (!class_exists(__NAMESPACE__ . '\\RegexpMaster'))
-			{
-				include __DIR__ . '/RegexpMaster.php';
-			}
-
-			$rm = new RegexpMaster;
-		}
-
-		return $rm;
-	}
-
-	/**
-	* Create a regexp pattern that matches a list of words
-	*
-	* @param  array  $words   Words to sort (UTF-8 expected)
-	* @param  array  $options
-	* @return string
-	*/
-	static public function buildRegexpFromList($words, array $options = array())
-	{
-		return self::getRM()->buildRegexpFromList($words, $options);
-	}
-
-	/**
-	* @param  string $regexp
-	* @return array
-	*/
-	static public function parseRegexp($regexp)
-	{
-		return self::getRM()->parseRegexp($regexp);
 	}
 
 	//==========================================================================

@@ -103,7 +103,7 @@ class CensorConfig extends PluginConfig
 			return false;
 		}
 
-		$regexp = ConfigBuilder::buildRegexpFromList(
+		$regexp = $this->cb->getRegexpMaster()->buildRegexpFromList(
 			$this->words,
 			array('specialChars' => array('*' => '\\pL*', '?' => '.?'))
 		);

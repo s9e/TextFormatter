@@ -2,6 +2,8 @@ s9e\TextFormatter\Tests\Autoloaders
  [x] ConfigBuilder loads core plugins files
  [x] ConfigBuilder can autoload Parser
  [x] ConfigBuilder does not include Parser twice
+ [x] ConfigBuilder can autoload RegexpMaster
+ [x] ConfigBuilder does not include RegexpMaster twice
  [x] ConfigBuilder can autoload Renderer
  [x] ConfigBuilder does not include Renderer twice
  [x] BBCodesConfig addPredefinedBBCode autoloads PredefinedBBCodes
@@ -104,13 +106,6 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Url filter can be configured to disallow hosts
  [x] Url filter can be configured to resolve redirects from a given host
  [x] Disallowed IDNs are punycoded
- [x] Optimizes regexp by merging heads
- [x] Optimizes regexp by using character classes
- [x] Optimizes regexp by using quantifier
- [x] Optimizes regexp that uses wildcards
- [x] Optimizes regexp that uses parentheses
- [x] Optimizes regexp by using lookahead assertion
- [x] Optimizes regexp by using lookahead assertion even with escaped characters
  [x] getParserConfig() removes rules that target non existing tags
  [x] getParserConfig() preserves requireParent rules that target non existing tags
  [x] getParserConfig() preserves requireAncestor rules that target non existing tags

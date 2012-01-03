@@ -131,7 +131,7 @@ class CensorConfigTest extends Test
 		$this->assertContains(
 			'/^foo$/i',
 			$this->call(
-				's9e\\TextFormatter\\JSParserGenerator',
+				$this->jspg,
 				'encodePluginConfig',
 				array(
 					$this->cb->Censor->getJSConfig(),
