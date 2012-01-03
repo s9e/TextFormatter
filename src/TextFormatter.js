@@ -181,12 +181,17 @@ var HINT = {
 
 	function loadXML(xml)
 	{
-		var obj = new ActiveXObject('MSXML2.DOMDocument.3.0');
-		obj.async = false;
-		obj.validateOnParse = false;
-		obj.loadXML(xml);
+		if (MSXML)
+		{
+			var obj = new ActiveXObject('MSXML2.DOMDocument.3.0');
+			obj.async = false;
+			obj.validateOnParse = false;
+			obj.loadXML(xml);
 
-		return obj;
+			return obj;
+		}
+
+		return new DOMParser().parseFromString(xml, 'text/xml')
 	}
 
 	if (MSXML)
@@ -196,7 +201,7 @@ var HINT = {
 	else
 	{
 		var xslt = new XSLTProcessor();
-		xslt['importStylesheet'](new DOMParser().parseFromString(xsl, 'text/xml'));
+		xslt['importStylesheet'](loadXML(xsl));
 	}
 
 	/**
@@ -1925,25 +1930,37 @@ var HINT = {
 	{
 		/**
 		* @param {!string} _text
-		* @return {Document}
+		* @return string
 		*/
-		API['parse'] = parse;
+		API['parse'] = function(_text)
+		{
+			var DOM = parse(_text);
+
+			if (MSXML)
+			{
+				return DOM.xml;
+			}
+
+			return new XMLSerializer().serializeToString(DOM);
+		}
 	}
 
 	if (!HINT.disabledAPI.render)
 	{
 		/**
-		* @param {!Document} DOM Intermediate representation
+		* @param {!string} xml
 		* @return string
 		*/
-		API['render'] = function(DOM)
+		API['render'] = function(xml)
 		{
+			var DOM = loadXML(xml);
+
 			if (MSXML)
 			{
 				return DOM.transformNode(xslt);
 			}
 
-			return xslt['transformToXML'](DOM);
+			return new XMLSerializer().serializeToString(xslt['transformToFragment'](DOM, document));
 		}
 	}
 

@@ -143,7 +143,11 @@ You can take a look at the log, hover the messages with the mouse and click them
 
 The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/TextFormatter/blob/master/scripts/generateJSParserDemo.php]this script[/url]. It has been minified to <?php echo round(strlen($jsParser) / 1024, 1) . 'KB (' . round(strlen(gzencode($jsParser, 9)) / 1024, 1) . 'KB gzipped)'; ?> with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].' The raw sources can be found [url=https://github.com/s9e/TextFormatter/blob/master/src/TextFormatter.js]at GitHub[/url].</textarea>
 			<br>
-			<input type="checkbox" id="rendercheck" checked="checked"><label for="rendercheck"> Render</label>
+			<select id="output">
+				<option value="preview" selected>Live Preview</option>
+				<option value="html">Show HTML</option>
+				<option value="xml">Show XML</option>
+			</select>
 			<input type="checkbox" id="logcheck"><label for="logcheck"> Show log</label>
 		</form>
 	</div>
@@ -175,13 +179,13 @@ The parser/renderer used on this page page has been generated via [url=https://g
 			textarea = document.getElementsByTagName('textarea')[0],
 			preview = document.getElementById('preview'),
 
-			rendercheck = document.getElementById('rendercheck'),
+			outputSelect = document.getElementById('output'),
 
 			logcheck = document.getElementById('logcheck'),
 			logdiv = document.getElementById('logdiv'),
 			disableHighlight = false;
 
-		rendercheck.onchange = refreshOutput;
+		outputSelect.onchange = refreshOutput;
 
 		textarea.onmouseout = function()
 		{
@@ -203,22 +207,21 @@ The parser/renderer used on this page page has been generated via [url=https://g
 
 		function refreshOutput()
 		{
-			if (rendercheck.checked)
+			if (outputSelect.value === 'preview')
 			{
 				s9e.TextFormatter.preview(text, preview);
 			}
 			else
 			{
 				var xml = s9e.TextFormatter.parse(text);
-				preview.innerHTML = '<pre></pre>';
 
-				if ('XMLSerializer' in window)
+				if (outputSelect.value === 'xml')
 				{
-					preview.firstChild.textContent = new XMLSerializer().serializeToString(xml);
+					preview.textContent = preview.innerText = xml;
 				}
 				else
 				{
-					preview.firstChild.innerText = xml.xml
+					preview.textContent = preview.innerText = s9e.TextFormatter.render(xml);
 				}
 			}
 		}
