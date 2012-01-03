@@ -552,11 +552,13 @@ class JSParserGenerator
 			{
 				foreach ($tagConfig['attrs'] as $attrConf)
 				{
-					if (!isset($hints[$attrConf['type']]))
+					foreach ($attrConf as $k => $v)
 					{
-						$hints[$attrConf['type']] = array();
+						if (empty($hints[$attrConf['type']][$k]))
+						{
+							$hints[$attrConf['type']][$k] = $v;
+						}
 					}
-					$hints[$attrConf['type']] += $attrConf;
 				}
 			}
 		}
