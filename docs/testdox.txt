@@ -194,6 +194,7 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] JSParserGenerator throws an exception if an error occurs while contacting to Google Closure Compiler
  [x] JSParserGenerator throws an exception if Google Closure Compiler returns an error
  [x] The "unsafeMinification" option indiscriminately renames all occurences of properties that share their name with DOM properties, except if their variable's names ends with "Node" or "Attr"
+ [x] Hints
 
 s9e\TextFormatter\Tests\Parser
  [x] Ouput is UTF8

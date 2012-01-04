@@ -37,8 +37,8 @@ var HINT = {
 	},
 	disabledLogTypes: {
 		debug: false,
-		warning: false,
-		error: false
+		error: false,
+		warning: false
 	},
 	enableIE: true,
 	enableIE7: true,

@@ -478,4 +478,270 @@ class JSParserGeneratorTest extends Test
 			'A reserved name is used by a property of a variable whose name does not end with "Node" or "Attr"'
 		);
 	}
+
+	/**
+	* @dataProvider getHintsData
+	*/
+	public function testHints($desc, array $tagOptions = array(), array $compilerOptions = array(), $callback = null)
+	{
+		if (!preg_match('#^([A-Za-z.0-9]+) is (false|true)#', $desc, $m))
+		{
+			$this->fail("Wrong test description '" . $desc . "'");
+		}
+
+		$hintName      = $m[1];
+		$expectedValue = (int) ($m[2] === 'true');
+
+		$this->cb->addTag('X', $tagOptions);
+
+		if (isset($callback))
+		{
+			$callback($this->cb);
+		}
+
+		$this->assertContains(
+			$hintName . '=' . $expectedValue,
+			$this->jspg->get($compilerOptions + array(
+				'setOptimizationHints' => true
+			)),
+			'Cannot assert that ' . $desc
+		);
+	}
+
+	public function getHintsData()
+	{
+		return array(
+/**
+			array(
+				'HINT.attrConfig.defaultValue is false by default'
+			),
+			array(
+				'HINT.attrConfig.defaultValue is true is any attribute has a default value set',
+				array(
+					'attrs' => array(
+						'foo' => array('type' => 'int', 'defaultValue' => 1)
+					)
+				)
+			),
+			array(
+				'HINT.attrConfig.defaultValue is true even if the default value is 0',
+				array(
+					'attrs' => array(
+						'foo' => array('type' => 'int', 'defaultValue' => 0)
+					)
+				)
+			),
+			array(
+				'HINT.attrConfig.isRequired is false by default'
+			),
+			array(
+				'HINT.attrConfig.isRequired is true is any attribute has the "isRequired" option enabled',
+				array(
+					'attrs' => array(
+						'foo' => array('type' => 'int', 'isRequired' => true)
+					)
+				)
+			),
+			array(
+				'HINT.attrConfig.preFilter is false by default'
+			),
+			array(
+				'HINT.attrConfig.preFilter is true if any attribute has a preFilter callback set',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'int',
+							'preFilter' => array('strtolower')
+						)
+					)
+				)
+			),
+			array(
+				'HINT.attrConfig.postFilter is false by default'
+			),
+			array(
+				'HINT.attrConfig.postFilter is true if any attribute has a postFilter callback set',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'int',
+							'postFilter' => array('strtolower')
+						)
+					)
+				)
+			),
+			array(
+				'HINT.disabledAPI.parse is false by default'
+			),
+			array(
+				'HINT.disabledAPI.parse is true if the "disableAPI" config array contains "parse"',
+				array(),
+				array('disableAPI' => array('parse'))
+			),
+			array(
+				'HINT.disabledAPI.render is false by default'
+			),
+			array(
+				'HINT.disabledAPI.render is true if the "disableAPI" config array contains "render"',
+				array(),
+				array('disableAPI' => array('render'))
+			),
+			array(
+				'HINT.disabledAPI.getLog is false by default'
+			),
+			array(
+				'HINT.disabledAPI.getLog is true if the "disableAPI" config array contains "getLog"',
+				array(),
+				array('disableAPI' => array('getLog'))
+			),
+			array(
+				'HINT.disabledAPI.enablePlugin is false by default'
+			),
+			array(
+				'HINT.disabledAPI.enablePlugin is true if the "disableAPI" config array contains "enablePlugin"',
+				array(),
+				array('disableAPI' => array('enablePlugin'))
+			),
+			array(
+				'HINT.disabledAPI.disablePlugin is false by default'
+			),
+			array(
+				'HINT.disabledAPI.disablePlugin is true if the "disableAPI" config array contains "disablePlugin"',
+				array(),
+				array('disableAPI' => array('disablePlugin'))
+			),
+			array(
+				'HINT.disabledAPI.preview is false by default'
+			),
+			array(
+				'HINT.disabledAPI.preview is true if the "disableAPI" config array contains "preview"',
+				array(),
+				array('disableAPI' => array('preview'))
+			),
+			array(
+				'HINT.disabledLogTypes.debug is false by default'
+			),
+			array(
+				'HINT.disabledLogTypes.debug is true if the "disableLogTypes" config array contains "debug"',
+				array(),
+				array('disableLogTypes' => array('debug'))
+			),
+			array(
+				'HINT.disabledLogTypes.error is false by default'
+			),
+			array(
+				'HINT.disabledLogTypes.error is true if the "disableLogTypes" config array contains "error"',
+				array(),
+				array('disableLogTypes' => array('error'))
+			),
+			array(
+				'HINT.disabledLogTypes.warning is false by default'
+			),
+			array(
+				'HINT.disabledLogTypes.warning is true if the "disableLogTypes" config array contains "warning"',
+				array(),
+				array('disableLogTypes' => array('warning'))
+			),
+			array(
+				'HINT.enableIE is true by default'
+			),
+			array(
+				'HINT.enableIE is false if the option "enableIE" is false',
+				array(),
+				array('enableIE' => false)
+			),
+			array(
+				'HINT.enableIE7 is true by default'
+			),
+			array(
+				'HINT.enableIE7 is false if the option "enableIE7" is false',
+				array(),
+				array('enableIE7' => false)
+			),
+			array(
+				'HINT.enableIE7 is false if the option "enableIE" is false',
+				array(),
+				array('enableIE' => false)
+			),
+			array(
+				'HINT.enableIE9 is true by default'
+			),
+			array(
+				'HINT.enableIE9 is false if the option "enableIE9" is false',
+				array(),
+				array('enableIE9' => false)
+			),
+			array(
+				'HINT.enableIE9 is false if the option "enableIE" is false',
+				array(),
+				array('enableIE' => false)
+			),
+			array(
+				'HINT.filterConfig.email.forceUrlencode is false by default'
+			),
+			array(
+				'HINT.filterConfig.email.forceUrlencode is true if any attribute of type "email" has the "forceUrlencode" option enabled',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'email',
+							'forceUrlencode' => true
+						)
+					)
+				)
+			),
+			array(
+				'HINT.filterConfig.email.forceUrlencode is false by default'
+			),
+			array(
+				'HINT.filterConfig.email.forceUrlencode is true if any attribute of type "email" has the "forceUrlencode" option enabled',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'email',
+							'forceUrlencode' => true
+						)
+					)
+				)
+			),
+			array(
+				'HINT.filterConfig.regexp.replaceWith is false by default'
+			),
+			array(
+				'HINT.filterConfig.regexp.replaceWith is true if any attribute of type "regexp" has the "replaceWith" option set',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'regexp',
+							'replaceWith' => 'foo'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.filterConfig.regexp.replaceWith is true if any attribute of type "regexp" has the "replaceWith" option set to "0"',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'regexp',
+							'replaceWith' => '0'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.filterConfig.url.disallowedHosts is false by default'
+			),
+/**/
+			array(
+				'HINT.filterConfig.url.disallowedHosts is true if any hostmask has been disallowed',
+				array(),
+				array(),
+				function($cb)
+				{
+					$cb->disallowHost('example.com');
+				}
+			),
+		);
+	}
 }

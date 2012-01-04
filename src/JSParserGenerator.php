@@ -249,7 +249,7 @@ class JSParserGenerator
 			}
 			else
 			{
-				$str .= '/**@const*/' . $prefix . '.' . $k . '=' . ((int) (bool) $v) . ";\n";
+				$str .= '/**@const*/' . $prefix . '.' . $k . '=' . ((int) ($v !== false)) . ";\n";
 			}
 		}
 
@@ -543,9 +543,6 @@ class JSParserGenerator
 			)
 		);
 
-		/**
-		* First, we stuff $needsFilter with the aggregate options of every attribute of each type
-		*/
 		foreach ($this->tagsConfig as $tagConfig)
 		{
 			if (!empty($tagConfig['attrs']))
@@ -554,7 +551,8 @@ class JSParserGenerator
 				{
 					foreach ($attrConf as $k => $v)
 					{
-						if (empty($hints[$attrConf['type']][$k]))
+						if (!isset($hints[$attrConf['type']][$k])
+						 || $hints[$attrConf['type']][$k] === false)
 						{
 							$hints[$attrConf['type']][$k] = $v;
 						}
@@ -563,13 +561,18 @@ class JSParserGenerator
 			}
 		}
 
-		/**
-		* Now, if an array is empty, it means the filter type is not in use and therefore we set the
-		* hint to FALSE. If the array contains nothing more than "type", "isRequired" and
-		* "defaultValue", we set the hint to TRUE. If the array has other options set, the hint will
-		* be a copy of the array minus the "type" and "isRequired" elements, with all values cast to
-		* boolean
-		*/
+		foreach ($this->filtersConfig as $attrType => $filterConfig)
+		{
+			foreach ($filterConfig as $k => $v)
+			{
+				if (!isset($hints[$attrType][$k])
+				 || $hints[$attrType][$k] === false)
+				{
+					$hints[$attrType][$k] = $v;
+				}
+			}
+		}
+
 		foreach ($hints as $attrType => &$attrConf)
 		{
 			if (empty($attrConf))
@@ -592,7 +595,8 @@ class JSParserGenerator
 				{
 					foreach ($attrConf as &$value)
 					{
-						$value = (bool) $value;
+						// false stays false, anything else (e.g. 0 or "") becomes true
+						$value = (bool) ($value !== false);
 					}
 					unset($value);
 				}
