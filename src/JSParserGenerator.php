@@ -462,6 +462,11 @@ class JSParserGenerator
 
 		foreach ($this->plugins as $plugin)
 		{
+			if (!isset($plugin['config']['regexp'], $plugin['config']['regexpLimitAction']))
+			{
+				continue;
+			}
+
 			switch ($plugin['config']['regexpLimitAction'])
 			{
 				case 'abort':

@@ -481,6 +481,7 @@ class JSParserGeneratorTest extends Test
 
 	/**
 	* @dataProvider getHintsData
+	* @testdox setOptimizationHints() works and you'll have to look into tests/JSParserGeneratorTest.php to have more details about it, until PHPUnit provides a way to generate a better testdox with data providers
 	*/
 	public function testHints($desc, array $tagOptions = array(), array $compilerOptions = array(), $callback = null)
 	{
@@ -511,7 +512,6 @@ class JSParserGeneratorTest extends Test
 	public function getHintsData()
 	{
 		return array(
-/**
 			array(
 				'HINT.attrConfig.defaultValue is false by default'
 			),
@@ -732,7 +732,6 @@ class JSParserGeneratorTest extends Test
 			array(
 				'HINT.filterConfig.url.disallowedHosts is false by default'
 			),
-/**/
 			array(
 				'HINT.filterConfig.url.disallowedHosts is true if any hostmask has been disallowed',
 				array(),
@@ -740,6 +739,132 @@ class JSParserGeneratorTest extends Test
 				function($cb)
 				{
 					$cb->disallowHost('example.com');
+				}
+			),
+			array(
+				'HINT.hasCompoundAttributes is false by default'
+			),
+			array(
+				'HINT.hasCompoundAttributes is true if there is any attribute of type "compound"',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'compound',
+							'regexp' => '/(?<foo>foo)/'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasNamespacedHTML is false by default'
+			),
+			array(
+				'HINT.hasNamespacedHTML is true if there are any namespaced elements in the XSL',
+				array(),
+				array(),
+				function($cb)
+				{
+					$cb->addXSL('<xsl:template match="foo"><X xmlns="urn:foo" /></xsl:template>');
+				}
+			),
+			array(
+				'HINT.hasNamespacedTags is false by default'
+			),
+			array(
+				'HINT.hasNamespacedTags is true if any namespaced tags have been added',
+				array(),
+				array(),
+				function($cb)
+				{
+					$cb->registerNamespace('foo', 'urn:foo');
+					$cb->addTag('foo:bar');
+				}
+			),
+			array(
+				'HINT.hasNamespacedTags is false if a namespace has been registered but no namespaced tag has been added',
+				array(),
+				array(),
+				function($cb)
+				{
+					$cb->registerNamespace('foo', 'urn:foo');
+				}
+			),
+			array(
+				'HINT.hasRegexpLimitAction.abort is false by default'
+			),
+			array(
+				'HINT.hasRegexpLimitAction.abort is false is no plugin has any regexp set',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+				}
+			),
+			array(
+				'HINT.hasRegexpLimitAction.abort is true if any loaded plugin has its "regexpLimitAction" set to "abort"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->regexp = '#foo#';
+					$cb->AnotherJsPlugin->regexpLimitAction = 'abort';
+				}
+			),
+			array(
+				'HINT.hasRegexpLimitAction.ignore is false by default'
+			),
+			array(
+				'HINT.hasRegexpLimitAction.ignore is false is no plugin has any regexp set',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+				}
+			),
+			array(
+				'HINT.hasRegexpLimitAction.ignore is true if any loaded plugin has its "regexpLimitAction" set to "ignore"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->regexp = '#foo#';
+					$cb->AnotherJsPlugin->regexpLimitAction = 'ignore';
+				}
+			),
+			array(
+				'HINT.hasRegexpLimitAction.warn is false by default'
+			),
+			array(
+				'HINT.hasRegexpLimitAction.warn is false is no plugin has any regexp set',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+				}
+			),
+			array(
+				'HINT.hasRegexpLimitAction.warn is true if any loaded plugin has its "regexpLimitAction" set to "warn"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->regexp = '#foo#';
+					$cb->AnotherJsPlugin->regexpLimitAction = 'warn';
 				}
 			),
 		);
