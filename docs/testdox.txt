@@ -125,6 +125,12 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] addTagPostFilterCallback throws an exception if callback is not callable
  [x] Can set postFilter callbacks via setTagOption
  [x] Can clear all postFilter callbacks from a tag
+ [x] setTagOption() accepts preFilter callbacks as an array of strings
+ [x] setTagOption() accepts a string for the "preFilter" option
+ [x] setTagOption() accepts postFilter callbacks as an array of strings
+ [x] setTagOption() accepts a string for the "postFilter" option
+ [x] setTagOption() sets preFilter callbacks to receive the attributes array as sole parameter if params are not defined
+ [x] setTagOption() sets postFilter callbacks to receive the attributes array as sole parameter if params are not defined
  [x] Can add a preFilter callback to a tag attribute
  [x] addTagAttributePreFilterCallback throws an exception if callback is not callable
  [x] Can set preFilter callbacks via setTagAttributeOption
@@ -133,6 +139,12 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] addTagAttributePostFilterCallback throws an exception if callback is not callable
  [x] Can set postFilter callbacks via setTagAttributeOption
  [x] Can clear all postFilter callbacks from a tag attribute
+ [x] setTagAttributeOption() accepts preFilter callbacks as an array of strings
+ [x] setTagAttributeOption() accepts a string for the "preFilter" option
+ [x] setTagAttributeOption() accepts postFilter callbacks as an array of strings
+ [x] setTagAttributeOption() accepts a string for the "postFilter" option
+ [x] setTagAttributeOption() sets preFilter callbacks to receive the attribute's value as sole parameter if params are not defined
+ [x] setTagAttributeOption() sets postFilter callbacks to receive the attribute's value as sole parameter if params are not defined
  [x] getJSParser() returns the Javascript source of the parser
  [x] The array of option passed to getJSParser() is passed to the JS parser generator
  [x] getJSPlugins() returns an array of all plugins with a Javascript parser as well as their config and the associated metadata

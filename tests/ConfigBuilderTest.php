@@ -1113,7 +1113,8 @@ class ConfigBuilderTest extends Test
 
 	/**
 	* @test
-	* @expectedException InvalidArgumentException callback
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Callback 'bar' is not callable
 	*/
 	public function setFilter_throws_an_exception_on_invalid_callback()
 	{
@@ -1476,7 +1477,7 @@ class ConfigBuilderTest extends Test
 	* @test
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Not a callback
+	* @expectedExceptionMessage Callback 'uncallable' is not callable
 	*/
 	public function addTagPreFilterCallback_throws_an_exception_if_callback_is_not_callable()
 	{
@@ -1553,7 +1554,7 @@ class ConfigBuilderTest extends Test
 	* @test
 	* @depends testCanCreateTag
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Not a callback
+	* @expectedExceptionMessage Callback 'uncallable' is not callable
 	*/
 	public function addTagPostFilterCallback_throws_an_exception_if_callback_is_not_callable()
 	{
@@ -1606,6 +1607,120 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox setTagOption() accepts preFilter callbacks as an array of strings
+	*/
+	public function testTagPreFilterAsArrayOfStrings()
+	{
+		$this->cb->addTag('X', array('preFilter' => array('array_filter')));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'preFilter' => array(
+						array('callback' => 'array_filter')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagOption() accepts a string for the "preFilter" option
+	*/
+	public function testTagPreFilterAsAString()
+	{
+		$this->cb->addTag('X', array('preFilter' => 'array_filter'));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'preFilter' => array(
+						array('callback' => 'array_filter')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagOption() accepts postFilter callbacks as an array of strings
+	*/
+	public function testTagPostFilterAsArrayOfStrings()
+	{
+		$this->cb->addTag('X', array('postFilter' => array('array_filter')));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'postFilter' => array(
+						array('callback' => 'array_filter')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagOption() accepts a string for the "postFilter" option
+	*/
+	public function testTagPostFilterAsAString()
+	{
+		$this->cb->addTag('X', array('postFilter' => 'array_filter'));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'postFilter' => array(
+						array('callback' => 'array_filter')
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testTagPreFilterAsAString
+	* @testdox setTagOption() sets preFilter callbacks to receive the attributes array as sole parameter if params are not defined
+	*/
+	public function testTagPreFilterDefaultParams()
+	{
+		$this->cb->addTag('X', array('preFilter' => 'array_filter'));
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 'array_filter',
+					'params'   => array('attrs' => null)
+				)
+			),
+			$this->cb->getTagOption('X', 'preFilter')
+		);
+	}
+
+	/**
+	* @depends testTagPostFilterAsAString
+	* @testdox setTagOption() sets postFilter callbacks to receive the attributes array as sole parameter if params are not defined
+	*/
+	public function testTagPostFilterDefaultParams()
+	{
+		$this->cb->addTag('X', array('postFilter' => 'array_filter'));
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 'array_filter',
+					'params'   => array('attrs' => null)
+				)
+			),
+			$this->cb->getTagOption('X', 'postFilter')
+		);
+	}
+
+	/**
 	* @test
 	* @depends testCanCreateAttribute
 	*/
@@ -1635,7 +1750,7 @@ class ConfigBuilderTest extends Test
 	* @test
 	* @depends testCanCreateAttribute
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Not a callback
+	* @expectedExceptionMessage Callback 'uncallable' is not callable
 	*/
 	public function addTagAttributePreFilterCallback_throws_an_exception_if_callback_is_not_callable()
 	{
@@ -1728,7 +1843,7 @@ class ConfigBuilderTest extends Test
 	* @test
 	* @depends testCanCreateAttribute
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Not a callback
+	* @expectedExceptionMessage Callback 'uncallable' is not callable
 	*/
 	public function addTagAttributePostFilterCallback_throws_an_exception_if_callback_is_not_callable()
 	{
@@ -1788,6 +1903,163 @@ class ConfigBuilderTest extends Test
 				)
 			),
 			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagAttributeOption() accepts preFilter callbacks as an array of strings
+	*/
+	public function testTagAttributePreFilterAsArrayOfStrings()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'preFilter' => array('strtolower', 'ucwords'))
+			)
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'attrs' => array(
+						'foo' => array(
+							'preFilter' => array(
+								array('callback' => 'strtolower'),
+								array('callback' => 'ucwords')
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagAttributeOption() accepts a string for the "preFilter" option
+	*/
+	public function testTagAttributePreFilterAsAString()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'preFilter' => 'strtolower')
+			)
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'attrs' => array(
+						'foo' => array(
+							'preFilter' => array(
+								array('callback' => 'strtolower')
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+
+	/**
+	* @testdox setTagAttributeOption() accepts postFilter callbacks as an array of strings
+	*/
+	public function testTagAttributePostFilterAsArrayOfStrings()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'postFilter' => array('strtolower', 'ucwords'))
+			)
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'attrs' => array(
+						'foo' => array(
+							'postFilter' => array(
+								array('callback' => 'strtolower'),
+								array('callback' => 'ucwords')
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagAttributeOption() accepts a string for the "postFilter" option
+	*/
+	public function testTagAttributePostFilterAsAString()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'postFilter' => 'strtolower')
+			)
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'attrs' => array(
+						'foo' => array(
+							'postFilter' => array(
+								array('callback' => 'strtolower')
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @depends testTagAttributePreFilterAsAString
+	* @testdox setTagAttributeOption() sets preFilter callbacks to receive the attribute's value as sole parameter if params are not defined
+	*/
+	public function testTagAttributePreFilterDefaultParams()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'preFilter' => 'strtolower')
+			)
+		));
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 'strtolower',
+					'params'   => array('attrVal' => null)
+				)
+			),
+			$this->cb->getTagAttributeOption('X', 'foo', 'preFilter')
+		);
+	}
+
+	/**
+	* @depends testTagAttributePostFilterAsAString
+	* @testdox setTagAttributeOption() sets postFilter callbacks to receive the attribute's value as sole parameter if params are not defined
+	*/
+	public function testTagAttributePostFilterDefaultParams()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'postFilter' => 'strtolower')
+			)
+		));
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 'strtolower',
+					'params'   => array('attrVal' => null)
+				)
+			),
+			$this->cb->getTagAttributeOption('X', 'foo', 'postFilter')
 		);
 	}
 

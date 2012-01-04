@@ -382,12 +382,12 @@ class ConfigBuilder
 
 			case 'preFilter':
 			case 'postFilter':
-				$this->clearTagCallbacks($optionName, $tagName);
-				foreach ($optionValue as $callbackConf)
-				{
-					// add the default params config if it's not set
-					$callbackConf += array('params' => array('attrs' => null));
+				$callbacks = $this->normalizeCallbacks($optionValue, array('attrs' => null));
 
+				$this->clearTagCallbacks($optionName, $tagName);
+
+				foreach ($callbacks as $callbackConf)
+				{
 					$this->addTagCallback(
 						$optionName,
 						$tagName,
@@ -481,13 +481,75 @@ class ConfigBuilder
 
 		if (!is_callable($callback))
 		{
-			throw new InvalidArgumentException('Not a callback');
+			throw new InvalidArgumentException('Callback ' . var_export($callback, true) . ' is not callable');
 		}
 
 		$this->tags[$tagName][$phase][] = array(
 			'callback' => $callback,
 			'params'   => $params
 		);
+	}
+
+	/**
+	* Normalize the definition of a callback
+	*
+	* The formal definition of callbacks is a bit verbose because it needs to be extensible enough
+	* to allow multiple successive (and sometimes identical) callbacks and specify different
+	* parameters for each call. This method allows declaring them in a more flexible way.
+	*
+	* Formal definition:
+	* <code>
+	*	array(
+	*		array('callback' => 'strtolower'),
+	*		array('callback' => 'ucwords')
+	*	)
+	* </code>
+	*
+	* Can be shortened as:
+	* <code>
+	*	array('strtolower', 'ucwords')
+	* </code>
+	*
+	*
+	* Formal definition:
+	* <code>
+	*	array(
+	*		array('callback' => 'strtolower')
+	*	)
+	* </code>
+	*
+	* Can be shortened as:
+	* <code>
+	*	array('strtolower')
+	* </code>
+	*
+	* Can be further shortened as:
+	* <code>
+	*	'strtolower'
+	* </code>
+	*
+	* @param  string|array $callbacks
+	* @param  array        $defaultParams
+	* @return array
+	*/
+	protected function normalizeCallbacks($callbacks, array $defaultParams)
+	{
+		// This will turn strings into an indexed array
+		$callbacks = (array) $callbacks;
+
+		foreach ($callbacks as &$callbackConf)
+		{
+			// If $callbackConf is a string, turn it into an array
+			if (is_string($callbackConf))
+			{
+				$callbackConf = array('callback' => $callbackConf);
+			}
+
+			// add the default params config if it's not set
+			$callbackConf += array('params' => $defaultParams);
+		}
+
+		return $callbacks;
 	}
 
 	//==========================================================================
@@ -565,13 +627,12 @@ class ConfigBuilder
 		{
 			case 'preFilter':
 			case 'postFilter':
+				$callbacks = $this->normalizeCallbacks($optionValue, array('attrVal' => null));
+
 				$this->clearTagAttributeCallbacks($optionName, $tagName, $attrName);
 
-				foreach ($optionValue as $callbackConf)
+				foreach ($callbacks as $callbackConf)
 				{
-					// add the default params config if it's not set
-					$callbackConf += array('params' => array('attrVal' => null));
-
 					$this->addTagAttributeCallback(
 						$optionName,
 						$tagName,
@@ -766,7 +827,7 @@ class ConfigBuilder
 
 		if (!is_callable($callback))
 		{
-			throw new InvalidArgumentException('Not a callback');
+			throw new InvalidArgumentException('Callback ' . var_export($callback, true) . ' is not callable');
 		}
 
 		$this->tags[$tagName]['attrs'][$attrName][$phase][] = array(
@@ -1064,7 +1125,7 @@ class ConfigBuilder
 
 		if (!is_callable($filterConf['callback']))
 		{
-			throw new InvalidArgumentException('Not a callback');
+			throw new InvalidArgumentException('Callback ' . var_export($filterConf['callback'], true) . ' is not callable');
 		}
 
 		$this->filters[$filterType] = $filterConf;
