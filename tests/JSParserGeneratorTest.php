@@ -543,20 +543,6 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.attrConfig.preFilter is false by default'
-			),
-			array(
-				'HINT.attrConfig.preFilter is true if any attribute has a preFilter callback set',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'int',
-							'preFilter' => array('strtolower')
-						)
-					)
-				)
-			),
-			array(
 				'HINT.attrConfig.postFilter is false by default'
 			),
 			array(
@@ -566,6 +552,20 @@ class JSParserGeneratorTest extends Test
 						'foo' => array(
 							'type' => 'int',
 							'postFilter' => array('strtolower')
+						)
+					)
+				)
+			),
+			array(
+				'HINT.attrConfig.preFilter is false by default'
+			),
+			array(
+				'HINT.attrConfig.preFilter is true if any attribute has a preFilter callback set',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'int',
+							'preFilter' => array('strtolower')
 						)
 					)
 				)
@@ -845,7 +845,7 @@ class JSParserGeneratorTest extends Test
 				'HINT.hasRegexpLimitAction.warn is false by default'
 			),
 			array(
-				'HINT.hasRegexpLimitAction.warn is false is no plugin has any regexp set',
+				'HINT.hasRegexpLimitAction.warn is false if no plugin has any regexp set',
 				array(),
 				array(),
 				function($cb)
@@ -867,6 +867,431 @@ class JSParserGeneratorTest extends Test
 					$cb->AnotherJsPlugin->regexpLimitAction = 'warn';
 				}
 			),
+			array(
+				'HINT.mightUseTagRequires is false by default'
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains ".requires" as in "tag.requires = [1];"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = 'tag.requires = [1];';
+				}
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains ". requires" as in "tag . requires = [1];"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = 'tag . requires = [1];';
+				}
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains "[\'requires\']" as in "tag[\'requires\'] = [1];"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = "tag['requires'] = [1];";
+				}
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains \'["requires"]\' as in \'["requires"] = [1];\'',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = 'tag["requires"]';
+				}
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains "[ \'requires\' ]" as in "tag[ \'requires\' ] = [1];"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = "tag[ 'requires' ] = [1];";
+				}
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains \'[ "requires" ]\' as in \'[ "requires" ] = [1];\'',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = 'tag[ "requires" ]';
+				}
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains "requires:" as in "tag = { requires: [1] }"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = 'tag = { requires: [1] }';
+				}
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains "\'requires\':" as in "tag = { \'requires\': [1] }"',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = "tag = { 'requires': [1] }";
+				}
+			),
+			array(
+				'HINT.mightUseTagRequires is true if any plugin parser contains \'"requires":\' as in \'tag = { "requires": [1] }\'',
+				array(),
+				array(),
+				function($cb)
+				{
+					include_once __DIR__ . '/includes/AnotherJsPluginConfig.php';
+					$cb->loadPlugin('AnotherJsPlugin', __NAMESPACE__ . '\\AnotherJsPluginConfig');
+
+					$cb->AnotherJsPlugin->js = 'tag = { "requires": [1] }';
+				}
+			),
+			array(
+				'HINT.tagConfig.attrs is false by default'
+			),
+			array(
+				'HINT.tagConfig.attrs is true if a tag has an attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'text'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.tagConfig.isTransparent is false by default'
+			),
+			array(
+				'HINT.tagConfig.isTransparent is true if any tag has the "isTransparent" option enabled',
+				array('isTransparent' => true)
+			),
+			array(
+				'HINT.tagConfig.ltrimContent is false by default'
+			),
+			array(
+				'HINT.tagConfig.ltrimContent is true if any tag has the "ltrimContent" option enabled',
+				array('ltrimContent' => true)
+			),
+			array(
+				'HINT.tagConfig.postFilter is false by default'
+			),
+			array(
+				'HINT.tagConfig.postFilter is true if any tag has any postFilter callbacks set',
+				array('postFilter' => 'array_filter')
+			),
+			array(
+				'HINT.tagConfig.preFilter is false by default'
+			),
+			array(
+				'HINT.tagConfig.preFilter is true if any tag has any preFilter callbacks set',
+				array('preFilter' => 'array_filter')
+			),
+			array(
+				'HINT.tagConfig.rtrimContent is false by default'
+			),
+			array(
+				'HINT.tagConfig.rtrimContent is true if any tag has the "rtrimContent" option enabled',
+				array('rtrimContent' => true)
+			),
+			array(
+				'HINT.tagConfig.rules.closeAncestor is false by default'
+			),
+			array(
+				'HINT.tagConfig.rules.closeAncestor is true if any tag has any "closeAncestor" rule set',
+				array(
+					'rules' => array(
+						'closeAncestor' => array('X')
+					)
+				)
+			),
+			array(
+				'HINT.tagConfig.rules.closeParent is false by default'
+			),
+			array(
+				'HINT.tagConfig.rules.closeParent is true if any tag has any "closeParent" rule set',
+				array(
+					'rules' => array(
+						'closeParent' => array('X')
+					)
+				)
+			),
+			array(
+				'HINT.tagConfig.rules.reopenChild is false by default'
+			),
+			array(
+				'HINT.tagConfig.rules.reopenChild is true if any tag has any "reopenChild" rule set',
+				array(
+					'rules' => array(
+						'reopenChild' => array('Y')
+					)
+				),
+				array(),
+				function($cb)
+				{
+					$cb->addTag('Y');
+				}
+			),
+			array(
+				'HINT.tagConfig.rules.requireAncestor is false by default'
+			),
+			array(
+				'HINT.tagConfig.rules.requireAncestor is true if any tag has any "requireAncestor" rule set',
+				array(
+					'rules' => array(
+						'requireAncestor' => array('Y')
+					)
+				),
+				array(),
+				function($cb)
+				{
+					$cb->addTag('Y');
+				}
+			),
+			array(
+				'HINT.tagConfig.rules.requireParent is false by default'
+			),
+			array(
+				'HINT.tagConfig.rules.requireParent is true if any tag has any "requireParent" rule set',
+				array(
+					'rules' => array(
+						'requireParent' => array('Y')
+					)
+				),
+				array(),
+				function($cb)
+				{
+					$cb->addTag('Y');
+				}
+			),
+			array(
+				'HINT.tagConfig.trimAfter is false by default'
+			),
+			array(
+				'HINT.tagConfig.trimAfter is true if any tag has the "trimAfter" option enabled',
+				array('trimAfter' => true)
+			),
+			array(
+				'HINT.tagConfig.trimBefore is false by default'
+			),
+			array(
+				'HINT.tagConfig.trimBefore is true if any tag has the "trimBefore" option enabled',
+				array('trimBefore' => true)
+			),
+			array(
+				'HINT.hasColorAttribute is false by default'
+			),
+			array(
+				'HINT.hasColorAttribute is true if any tag has a "color" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'color'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasEmailAttribute is false by default'
+			),
+			array(
+				'HINT.hasEmailAttribute is true if any tag has a "email" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'email'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasFloatAttribute is false by default'
+			),
+			array(
+				'HINT.hasFloatAttribute is true if any tag has a "float" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'float'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasIdAttribute is false by default'
+			),
+			array(
+				'HINT.hasIdAttribute is true if any tag has a "id" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'id'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasIdentifierAttribute is false by default'
+			),
+			array(
+				'HINT.hasIdentifierAttribute is true if any tag has a "identifier" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'identifier'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasIntAttribute is false by default'
+			),
+			array(
+				'HINT.hasIntAttribute is true if any tag has a "int" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'int'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasIntegerAttribute is false by default'
+			),
+			array(
+				'HINT.hasIntegerAttribute is true if any tag has a "integer" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'integer'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasNumberAttribute is false by default'
+			),
+			array(
+				'HINT.hasNumberAttribute is true if any tag has a "number" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'number'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasRangeAttribute is false by default'
+			),
+			array(
+				'HINT.hasRangeAttribute is true if any tag has a "range" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'range'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasRegexpAttribute is false by default'
+			),
+			array(
+				'HINT.hasRegexpAttribute is true if any tag has a "regexp" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'regexp'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasSimpletextAttribute is false by default'
+			),
+			array(
+				'HINT.hasSimpletextAttribute is true if any tag has a "simpletext" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'simpletext'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasUintAttribute is false by default'
+			),
+			array(
+				'HINT.hasUintAttribute is true if any tag has a "uint" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'uint'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasUrlAttribute is false by default'
+			),
+			array(
+				'HINT.hasUrlAttribute is true if any tag has a "url" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'url'
+						)
+					)
+				)
+			),
+			array(
+				'HINT.hasTextAttribute is false by default'
+			),
+			array(
+				'HINT.hasTextAttribute is true if any tag has a "text" attribute',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'type' => 'text'
+						)
+					)
+				)
+			)
 		);
 	}
 }

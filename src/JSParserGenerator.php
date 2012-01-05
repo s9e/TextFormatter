@@ -504,6 +504,7 @@ class JSParserGenerator
 			'range'      => false,
 			'regexp'     => false,
 			'simpletext' => false,
+			'text'       => false,
 			'uint'       => false,
 			'url'        => false
 		);
@@ -580,31 +581,22 @@ class JSParserGenerator
 
 		foreach ($hints as $attrType => &$attrConf)
 		{
+			unset($attrConf['defaultValue']);
+			unset($attrConf['isRequired']);
+			unset($attrConf['type']);
+
 			if (empty($attrConf))
 			{
-				$attrConf = false;
+				$attrConf = true;
 			}
 			else
 			{
-				unset(
-					$attrConf['defaultValue'],
-					$attrConf['isRequired'],
-					$attrConf['type']
-				);
-
-				if (empty($attrConf))
+				foreach ($attrConf as &$value)
 				{
-					$attrConf = true;
+					// false stays false, anything else (e.g. 0 or "") becomes true
+					$value = (bool) ($value !== false);
 				}
-				else
-				{
-					foreach ($attrConf as &$value)
-					{
-						// false stays false, anything else (e.g. 0 or "") becomes true
-						$value = (bool) ($value !== false);
-					}
-					unset($value);
-				}
+				unset($value);
 			}
 		}
 		unset($attrConf);
@@ -621,8 +613,20 @@ class JSParserGenerator
 	{
 		foreach ($this->plugins as $plugin)
 		{
-			// Covers tag.requires and tag['requires'] plus a few theorical false-positive
-			if (preg_match('#[.\'"]\\s*requires\\b#', $plugin['parser']))
+			// Covers tag.requires
+			if (preg_match('#\\.\\s*requires#', $plugin['parser']))
+			{
+				return true;
+			}
+
+			// Covers tag['requires'], tag[ "requires" ] plus a few theorical false-positives
+			if (preg_match('#\\[\\s*([\'"])requires\\1\\s*\\]#', $plugin['parser']))
+			{
+				return true;
+			}
+
+			// Covers tag = { requires: ... }
+			if (preg_match('#\\W([\'"]?)requires\\1\\s*:#', $plugin['parser']))
 			{
 				return true;
 			}

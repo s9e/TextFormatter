@@ -467,6 +467,10 @@ var HINT = {
 				return /^[a-zA-Z0-9\-+.,_ ]+$/.test(attrVal) ? attrVal : false;
 
 			case 'text':
+				if (!HINT.hasTextAttribute)
+				{
+					break;
+				}
 				return attrVal;
 
 			case 'email':
