@@ -196,6 +196,7 @@ matches.forEach(function(m)
 				return;
 			}
 
+			var value;
 			c = text.charAt(rpos);
 			if (c === '"' || c === "'")
 			{
