@@ -1012,6 +1012,13 @@ class JSParserGeneratorTest extends Test
 				array('isTransparent' => true)
 			),
 			array(
+				'HINT.tagConfig.isEmpty is false by default'
+			),
+			array(
+				'HINT.tagConfig.isEmpty is true if any tag has the "isEmpty" option enabled',
+				array('isEmpty' => true)
+			),
+			array(
 				'HINT.tagConfig.ltrimContent is false by default'
 			),
 			array(

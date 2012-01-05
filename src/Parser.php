@@ -1251,7 +1251,7 @@ class Parser
 		* If this tag must remain empty and it's not a self-closing tag, we peek at the next
 		* tag before turning our start tag into a self-closing tag
 		*/
-		if (!empty($this->tagsConfig[$tagName]['isEmpty'])
+		if (!empty($tagConfig['isEmpty'])
 		 && $this->currentTag['type'] === self::START_TAG)
 		{
 			$nextTag = $this->peekNextTag();

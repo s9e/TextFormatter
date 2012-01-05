@@ -66,6 +66,7 @@ var HINT = {
 	tagConfig: {
 		attrs: true,
 		isTransparent: true,
+		isEmpty: true,
 		ltrimContent: true,
 		postFilter: true,
 		preFilter: true,
@@ -1118,6 +1119,16 @@ var HINT = {
 		return currentTag = unprocessedTags.pop();
 	}
 
+	function peekNextTag()
+	{
+		return (unprocessedTags.length) ? unprocessedTags[unprocessedTags.length - 1] : false;
+	}
+
+	function popNextTag()
+	{
+		return unprocessedTags.pop();
+	}
+
 	function processCurrentTag()
 	{
 		if (currentTag.trimBefore
@@ -1198,6 +1209,32 @@ var HINT = {
 				'params' : [tagName]
 			});
 			return;
+		}
+
+		/**
+		* If this tag must remain empty and it's not a self-closing tag, we peek at the next
+		* tag before turning our start tag into a self-closing tag
+		*/
+		if (HINT.tagConfig.isEmpty
+		 && tagConfig.isEmpty
+		 && currentTag.type === START_TAG)
+		{
+			var nextTag = peekNextTag();
+
+			if (nextTag
+			 && nextTag.type === END_TAG
+			 && nextTag.tagMate === currentTag.tagMate
+			 && nextTag.pos === currentTag.pos + currentTag.len)
+			{
+				/**
+				* Next tag is a match to current tag, pop it out of the unprocessedTags stack and
+				* consume its text
+				*/
+				popNextTag();
+				currentTag.len += nextTag.len;
+			}
+
+			currentTag.type = SELF_CLOSING_TAG;
 		}
 
 		/**

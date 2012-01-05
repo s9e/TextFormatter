@@ -334,6 +334,7 @@ class JSParserGenerator
 	{
 		return $this->getDataStructureHints($this->tagsConfig, array(
 			'attrs'         => false,
+			'isEmpty'       => false,
 			'isTransparent' => false,
 			'ltrimContent'  => false,
 			'postFilter'    => false,
