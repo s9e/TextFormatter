@@ -509,9 +509,22 @@ class JSParserGeneratorTest extends Test
 		);
 	}
 
+	/**
+	* @testdox Custom Javascript filters appear in the Javascript parser
+	*/
+	public function testCustomFilter()
+	{
+		$this->cb->setJSFilter('text', 'return "CUSTOM FILTER";');
+
+		$this->assertContains(
+			'return "CUSTOM FILTER";',
+			$this->jspg->get()
+		);
+	}
+
 	public function getHintsData()
 	{
-		return array(
+		$tests = array(
 			array(
 				'HINT.attrConfig.defaultValue is false by default'
 			),
@@ -1109,189 +1122,65 @@ class JSParserGeneratorTest extends Test
 			array(
 				'HINT.tagConfig.trimBefore is true if any tag has the "trimBefore" option enabled',
 				array('trimBefore' => true)
-			),
-			array(
-				'HINT.keepColorFilter is false by default'
-			),
-			array(
-				'HINT.keepColorFilter is true if any tag has a "color" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'color'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepEmailFilter is false by default'
-			),
-			array(
-				'HINT.keepEmailFilter is true if any tag has a "email" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'email'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepFloatFilter is false by default'
-			),
-			array(
-				'HINT.keepFloatFilter is true if any tag has a "float" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'float'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepIdFilter is false by default'
-			),
-			array(
-				'HINT.keepIdFilter is true if any tag has a "id" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'id'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepIdentifierFilter is false by default'
-			),
-			array(
-				'HINT.keepIdentifierFilter is true if any tag has a "identifier" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'identifier'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepIntFilter is false by default'
-			),
-			array(
-				'HINT.keepIntFilter is true if any tag has a "int" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'int'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepIntegerFilter is false by default'
-			),
-			array(
-				'HINT.keepIntegerFilter is true if any tag has a "integer" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'integer'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepNumberFilter is false by default'
-			),
-			array(
-				'HINT.keepNumberFilter is true if any tag has a "number" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'number'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepRangeFilter is false by default'
-			),
-			array(
-				'HINT.keepRangeFilter is true if any tag has a "range" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'range'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepRegexpFilter is false by default'
-			),
-			array(
-				'HINT.keepRegexpFilter is true if any tag has a "regexp" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'regexp'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepSimpletextFilter is false by default'
-			),
-			array(
-				'HINT.keepSimpletextFilter is true if any tag has a "simpletext" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'simpletext'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepUintFilter is false by default'
-			),
-			array(
-				'HINT.keepUintFilter is true if any tag has a "uint" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'uint'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepUrlFilter is false by default'
-			),
-			array(
-				'HINT.keepUrlFilter is true if any tag has a "url" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'url'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.keepTextFilter is false by default'
-			),
-			array(
-				'HINT.keepTextFilter is true if any tag has a "text" attribute',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'text'
-						)
-					)
-				)
 			)
 		);
+
+		$attrTypes = array(
+			'color',
+			'email',
+			'float',
+			'id',
+			'identifier',
+			'int',
+			'integer',
+			'number',
+			'range',
+			'regexp',
+			'simpletext',
+			'text',
+			'uint',
+			'url'
+		);
+
+		foreach ($attrTypes as $name)
+		{
+			$Name = ucfirst($name);
+
+			$tests[] = 
+				array(
+					'HINT.keep' . $Name . 'Filter is false by default'
+				);
+
+			$tests[] = 
+				array(
+					'HINT.keep' . $Name . 'Filter is true if any tag has a "' . $name . '" attribute',
+					array(
+						'attrs' => array(
+							'foo' => array(
+								'type' => $name
+							)
+						)
+					)
+				);
+
+			$tests[] =
+				array(
+					'HINT.keep' . $Name . 'Filter is false if a custom JS filter is set for the "' . $name . '" type, even if a tag has a "' . $name . '" attribute',
+					array(
+						'attrs' => array(
+							'foo' => array(
+								'type' => $name
+							)
+						)
+					),
+					array(),
+					function($cb) use ($name)
+					{
+						$cb->setJSFilter($name, 'return attrVal;');
+					}
+				);
+		}
+
+		return $tests;
 	}
 }

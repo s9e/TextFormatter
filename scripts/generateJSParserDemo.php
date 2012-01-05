@@ -3,7 +3,7 @@
 
 include __DIR__ . '/../src/ConfigBuilder.php';
 
-$cb = new \s9e\TextFormatter\ConfigBuilder;
+$cb = new s9e\TextFormatter\ConfigBuilder;
 
 $cb->disallowHost('*.example.com');
 

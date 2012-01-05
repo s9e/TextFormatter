@@ -1078,6 +1078,36 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
+	public function testCanSetCustomJavascriptFilter()
+	{
+		$this->cb->setJSFilter('foo', 'return "foo";');
+
+		$this->assertArrayMatches(
+			array(
+				'foo' => array(
+					'js' => 'return "foo";'
+				)
+			),
+			$this->cb->getFiltersConfig(true)
+		);
+	}
+
+	public function testCustomJavascriptFiltersDoNotAppearInTheParserConfig()
+	{
+		$this->cb->setJSFilter('url', 'return "foo";');
+
+		$this->assertArrayMatches(
+			array(
+				'filters' => array(
+					'url' => array(
+						'js' => null
+					)
+				)
+			),
+			$this->cb->getParserConfig()
+		);
+	}
+
 	/**
 	* @depends testCanSetCustomFilter
 	*/

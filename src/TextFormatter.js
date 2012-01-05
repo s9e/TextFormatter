@@ -91,9 +91,9 @@ var HINT = {
 	keepRangeFilter: true,
 	keepRegexpFilter: true,
 	keepSimpletextFilter: true,
+	keepTextFilter: true,
 	keepUintFilter: true,
-	keepUrlFilter: true,
-	keepTextFilter: true
+	keepUrlFilter: true
 };
 // END OF STOCK HINTS - DO NOT EDIT
 
@@ -411,6 +411,7 @@ var HINT = {
 	{
 		switch (attrConf.type)
 		{
+			/* CUSTOM FILTERS WILL BE INSERTED HERE - DO NOT EDIT */
 			case 'url':
 				if (!HINT.keepUrlFilter)
 				{

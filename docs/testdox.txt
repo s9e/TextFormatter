@@ -94,6 +94,8 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Can set tag template with variable in an attribute whose name starts with on with unsafe flag
  [x] Can set tag template with escaped curly brackets in an attribute whose name starts with on without unsafe flag
  [x] Can set custom filter
+ [x] Can set custom javascript filter
+ [x] Custom javascript filters do not appear in the parser config
  [x] Custom filters are passed the attribute value if no params array was specified
  [x] Can set custom filter with parameters
  [x] setFilter() throws an exception on invalid callback
@@ -201,6 +203,7 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] JSParserGenerator throws an exception if Google Closure Compiler returns an error
  [x] The "unsafeMinification" option indiscriminately renames all occurences of properties that share their name with DOM properties, except if their variable's names ends with "Node" or "Attr"
  [x] setOptimizationHints() works and you'll have to look into tests/JSParserGeneratorTest.php to have more details about it, until PHPUnit provides a way to generate a better testdox with data providers
+ [x] Custom Javascript filters appear in the Javascript parser
 
 s9e\TextFormatter\Tests\Parser
  [x] Ouput is UTF8

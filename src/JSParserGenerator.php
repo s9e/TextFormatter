@@ -123,7 +123,7 @@ class JSParserGenerator
 		$this->xsl     = $this->cb->getXSL($this->options['xslNamespacePrefix']);
 		$this->plugins = $this->cb->getJSPlugins();
 
-		$config = $this->cb->getParserConfig();
+		$config = $this->cb->getParserConfig(true);
 
 		$this->tagsConfig    = $config['tags'];
 		$this->filtersConfig = $config['filters'];
@@ -145,6 +145,11 @@ class JSParserGenerator
 		{
 			$this->setOptimizationHints();
 		}
+
+		/**
+		* Inject the custom filters
+		*/
+		$this->injectCustomFilters();
 
 		/**
 		* Inject the config objects, as well as plugins
@@ -524,7 +529,11 @@ class JSParserGenerator
 
 		foreach ($types as $type => $bool)
 		{
-			$hints['keep' . ucfirst($type) . 'Filter'] = $bool;
+			// If this type is handled by a custom filter we don't need to keep it
+			$hints['keep' . ucfirst($type) . 'Filter']
+				= (isset($this->filtersConfig[$type]['js']))
+				? false
+				: $bool;
 		}
 
 		return $hints;
@@ -638,6 +647,31 @@ class JSParserGenerator
 	//==========================================================================
 	// Source generation/manipulation
 	//==========================================================================
+
+	/**
+	* Generate and inject custom filters into the parser's source
+	*/
+	protected function injectCustomFilters()
+	{
+		$js = '';
+		foreach ($this->filtersConfig as $name => $filterConf)
+		{
+			if (!isset($filterConf['js']))
+			{
+				continue;
+			}
+
+			$js .= "\ncase " . json_encode($name) . ':' . $filterConf['js'] . ";\n";
+		}
+
+		if ($js)
+		{
+			$tag = '/* CUSTOM FILTERS WILL BE INSERTED HERE - DO NOT EDIT */';
+			$pos = strpos($this->src, $tag) + strlen($tag);
+
+			$this->src = substr($this->src, 0, $pos) . $js . substr($this->src, $pos);
+		}
+	}
 
 	/**
 	* Generate all the required config objects and inject their source into the parser's source

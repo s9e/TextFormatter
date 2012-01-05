@@ -1069,6 +1069,17 @@ class ConfigBuilder
 	}
 
 	/**
+	* Set the filter used to validate an attribute type in the Javascript parser
+	*
+	* @param string $tagName
+	* @param string $js
+	*/
+	public function setJSFilter($filterType, $js)
+	{
+		$this->filters[$filterType]['js'] = $js;
+	}
+
+	/**
 	* Allow a URL scheme
 	*
 	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
@@ -1261,12 +1272,13 @@ class ConfigBuilder
 	/**
 	* Return the config needed by the global parser
 	*
+	* @param  bool  $keepJs Whether to keep the Javascript filters in the array
 	* @return array
 	*/
-	public function getParserConfig()
+	public function getParserConfig($keepJs = false)
 	{
 		$config = array(
-			'filters' => $this->getFiltersConfig(),
+			'filters' => $this->getFiltersConfig($keepJs),
 			'plugins' => $this->getPluginsConfig(),
 			'tags'    => $this->getTagsConfig(true)
 		);
@@ -1360,9 +1372,10 @@ class ConfigBuilder
 	/**
 	* Return the list of filters and their config
 	*
+	* @param  bool  $keepJs Whether to keep the Javascript filters in the array
 	* @return array
 	*/
-	public function getFiltersConfig()
+	public function getFiltersConfig($keepJs = false)
 	{
 		$filters = $this->filters;
 
@@ -1385,7 +1398,15 @@ class ConfigBuilder
 			}
 		}
 
-		return $filters;
+		if (!$keepJs)
+		{
+			foreach (array_keys($filters) as $k)
+			{
+				unset($filters[$k]['js']);
+			}
+		}
+
+		return array_filter($filters);
 	}
 
 	/**
