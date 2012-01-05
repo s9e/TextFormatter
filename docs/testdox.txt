@@ -367,6 +367,11 @@ s9e\TextFormatter\Tests\Parser
  [x] Tags can specify a list of tags that are required
  [x] Start tags only get closed by the right tagMate (same pluginName, same tagName, same differentiator if applicable)
  [x] Tags can specify a list of tags that are required and be skipped if any required tag is absent
+ [x] Start tags from tags with the "isEmpty" option enabled are immediately closed
+ [x] Start tag from tag with the "isEmpty" option enabled consumes the next tag if it is its matching end tag and there is no text in between
+ [x] Start tag from tag with the "isEmpty" option enabled does not consume the next tag if there is any text in between
+ [x] Start tag from tag with the "isEmpty" option enabled does not consume the next tag if it's not an end tag
+ [x] Start tag from tag with the "isEmpty" option enabled does not consume the next tag if it's not its matching end tag
  [x] HTML specs: <div><a> allows <div>
  [x] HTML specs: <span><a> denies <div>
  [x] Fulfilled requireParent rule allows tag

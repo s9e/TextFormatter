@@ -1127,6 +1127,26 @@ class Parser
 	}
 
 	/**
+	* Peek at the top unprocessed tag without touching current tag
+	*
+	* @return array|bool Next tag to be processed, or FALSE if there's none left
+	*/
+	protected function peekNextTag()
+	{
+		return end($this->unprocessedTags);
+	}
+
+	/**
+	* Pop at the top unprocessed tag without touching current tag
+	*
+	* @return array|bool Popped tag, or FALSE if there's none left
+	*/
+	protected function popNextTag()
+	{
+		return array_pop($this->unprocessedTags);
+	}
+
+	/**
 	* Process currentTag
 	*/
 	protected function processCurrentTag()
@@ -1225,6 +1245,31 @@ class Parser
 				'params' => array($tagName)
 			));
 			return;
+		}
+
+		/**
+		* If this tag must remain empty and it's not a self-closing tag, we peek at the next
+		* tag before turning our start tag into a self-closing tag
+		*/
+		if (!empty($this->tagsConfig[$tagName]['isEmpty'])
+		 && $this->currentTag['type'] === self::START_TAG)
+		{
+			$nextTag = $this->peekNextTag();
+
+			if ($nextTag
+			 && $nextTag['type'] === self::END_TAG
+			 && $nextTag['tagMate'] === $this->currentTag['tagMate']
+			 && $nextTag['pos'] === $this->currentTag['pos'] + $this->currentTag['len'])
+			{
+				/**
+				* Next tag is a match to current tag, pop it out of the unprocessedTags stack and
+				* consume its text
+				*/
+				$this->popNextTag();
+				$this->currentTag['len'] += $nextTag['len'];
+			}
+
+			$this->currentTag['type'] = self::SELF_CLOSING_TAG;
 		}
 
 		/**

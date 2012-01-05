@@ -2423,6 +2423,71 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox Start tags from tags with the "isEmpty" option enabled are immediately closed
+	*/
+	public function testIsEmpty()
+	{
+		$this->cb->BBCodes->addBBCode('BR', array('isEmpty' => true));
+
+		$this->assertParsing(
+			'x [BR]y z',
+			'<rt>x <BR>[BR]</BR>y z</rt>'
+		);
+	}
+
+	/**
+	* @testdox Start tag from tag with the "isEmpty" option enabled consumes the next tag if it is its matching end tag and there is no text in between
+	*/
+	public function testIsEmpty2()
+	{
+		$this->cb->BBCodes->addBBCode('BR', array('isEmpty' => true));
+
+		$this->assertParsing(
+			'x [BR][/BR] z',
+			'<rt>x <BR>[BR][/BR]</BR> z</rt>'
+		);
+	}
+
+	/**
+	* @testdox Start tag from tag with the "isEmpty" option enabled does not consume the next tag if there is any text in between
+	*/
+	public function testIsEmpty3()
+	{
+		$this->cb->BBCodes->addBBCode('BR', array('isEmpty' => true));
+
+		$this->assertParsing(
+			'x [BR]y[/BR] z',
+			'<rt>x <BR>[BR]</BR>y[/BR] z</rt>'
+		);
+	}
+
+	/**
+	* @testdox Start tag from tag with the "isEmpty" option enabled does not consume the next tag if it's not an end tag
+	*/
+	public function testIsEmpty4()
+	{
+		$this->cb->BBCodes->addBBCode('BR', array('isEmpty' => true));
+
+		$this->assertParsing(
+			'x [BR][BR] z',
+			'<rt>x <BR>[BR]</BR><BR>[BR]</BR> z</rt>'
+		);
+	}
+
+	/**
+	* @testdox Start tag from tag with the "isEmpty" option enabled does not consume the next tag if it's not its matching end tag
+	*/
+	public function testIsEmpty5()
+	{
+		$this->cb->BBCodes->addBBCode('BR', array('isEmpty' => true));
+
+		$this->assertParsing(
+			'x [BR:1][/BR:2] z',
+			'<rt>x <BR>[BR:1]</BR>[/BR:2] z</rt>'
+		);
+	}
+
+	/**
 	* @testdox HTML specs: <div><a> allows <div>
 	*/
 	public function testHTMLRules7a()
@@ -3269,6 +3334,10 @@ class ParserTest extends Test
 			)
 		);
 	}
+
+	//==========================================================================
+	// Namespaces
+	//==========================================================================
 
 	public function testAcceptsNamespacedTags()
 	{
