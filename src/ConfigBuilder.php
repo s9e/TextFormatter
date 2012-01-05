@@ -174,7 +174,7 @@ class ConfigBuilder
 	}
 
 	//==========================================================================
-	// Tag-related methods
+	// Tags-related methods
 	//==========================================================================
 
 	/**
@@ -490,70 +490,8 @@ class ConfigBuilder
 		);
 	}
 
-	/**
-	* Normalize the definition of a callback
-	*
-	* The formal definition of callbacks is a bit verbose because it needs to be extensible enough
-	* to allow multiple successive (and sometimes identical) callbacks and specify different
-	* parameters for each call. This method allows declaring them in a more flexible way.
-	*
-	* Formal definition:
-	* <code>
-	*	array(
-	*		array('callback' => 'strtolower'),
-	*		array('callback' => 'ucwords')
-	*	)
-	* </code>
-	*
-	* Can be shortened as:
-	* <code>
-	*	array('strtolower', 'ucwords')
-	* </code>
-	*
-	*
-	* Formal definition:
-	* <code>
-	*	array(
-	*		array('callback' => 'strtolower')
-	*	)
-	* </code>
-	*
-	* Can be shortened as:
-	* <code>
-	*	array('strtolower')
-	* </code>
-	*
-	* Can be further shortened as:
-	* <code>
-	*	'strtolower'
-	* </code>
-	*
-	* @param  string|array $callbacks
-	* @param  array        $defaultParams
-	* @return array
-	*/
-	protected function normalizeCallbacks($callbacks, array $defaultParams)
-	{
-		// This will turn strings into an indexed array
-		$callbacks = (array) $callbacks;
-
-		foreach ($callbacks as &$callbackConf)
-		{
-			// If $callbackConf is a string, turn it into an array
-			if (is_string($callbackConf))
-			{
-				$callbackConf = array('callback' => $callbackConf);
-			}
-
-			// add the default params config if it's not set
-			$callbackConf += array('params' => $defaultParams);
-		}
-
-		return $callbacks;
-	}
-
 	//==========================================================================
-	// Attribute-related methods
+	// Attributes-related methods
 	//==========================================================================
 
 	/**
@@ -837,7 +775,7 @@ class ConfigBuilder
 	}
 
 	//==========================================================================
-	// Rule-related methods
+	// Rules-related methods
 	//==========================================================================
 
 	/**
@@ -891,7 +829,7 @@ class ConfigBuilder
 	}
 
 	//==========================================================================
-	// Tag template-related methods
+	// Tag templates-related methods
 	//==========================================================================
 
 	/**
@@ -1113,22 +1051,21 @@ class ConfigBuilder
 	/**
 	* Set the filter used to validate an attribute type
 	*
-	* @param string $filterType Attribute type this filter is in charge of
-	* @param array  $filterConf Callback
+	* @param string   $tagName
+	* @param callback $callback
+	* @param array    $params
 	*/
-	public function setFilter($filterType, array $filterConf)
+	public function setFilter($filterType, $callback, array $params = array('attrVal' => null))
 	{
-		if (!isset($filterConf['params']))
+		if (!is_callable($callback))
 		{
-			$filterConf['params'] = array('attrVal' => null);
+			throw new InvalidArgumentException('Callback ' . var_export($callback, true) . ' is not callable');
 		}
 
-		if (!is_callable($filterConf['callback']))
-		{
-			throw new InvalidArgumentException('Callback ' . var_export($filterConf['callback'], true) . ' is not callable');
-		}
-
-		$this->filters[$filterType] = $filterConf;
+		$this->filters[$filterType] = array(
+			'callback' => $callback,
+			'params'   => $params
+		);
 	}
 
 	/**
@@ -1223,6 +1160,98 @@ class ConfigBuilder
 		* but that's usually what people were trying to achieve.
 		*/
 		$this->filters['url'][$type][] = ltrim($host, '*.');
+	}
+
+	//==========================================================================
+	// Callbacks-related methods
+	//==========================================================================
+
+	/**
+	* Normalize the definition of a series of callbacks
+	*
+	* The formal definition of callbacks is a bit verbose because it needs to be extensible enough
+	* to allow multiple successive (and sometimes identical) callbacks and specify different
+	* parameters for each call. This method allows declaring them in a more flexible way.
+	*
+	* Formal definition:
+	* <code>
+	*	array(
+	*		array('callback' => 'strtolower'),
+	*		array('callback' => 'ucwords')
+	*	)
+	* </code>
+	*
+	* Can be shortened as:
+	* <code>
+	*	array('strtolower', 'ucwords')
+	* </code>
+	*
+	*
+	* Formal definition:
+	* <code>
+	*	array(
+	*		array('callback' => 'strtolower')
+	*	)
+	* </code>
+	*
+	* Can be shortened as:
+	* <code>
+	*	array('strtolower')
+	* </code>
+	*
+	* Can be further shortened as:
+	* <code>
+	*	'strtolower'
+	* </code>
+	*
+	* @param  string|array $callbacks
+	* @param  array        $defaultParams
+	* @return array
+	*/
+	protected function normalizeCallbacks($callbacks, array $defaultParams)
+	{
+		if (!is_array($callbacks)
+		 || is_callable($callbacks))
+		{
+			$callbacks = array($callbacks);
+		}
+
+		foreach ($callbacks as &$callbackConf)
+		{
+			$callbackConf = $this->normalizeCallback($callbackConf, $defaultParams);
+		}
+		unset($callbackConf);
+
+		return $callbacks;
+	}
+
+	/**
+	* @param  array|callback $callbackConf
+	* @param  array          $defaultParams
+	* @return array
+	*/
+	protected function normalizeCallback($callbackConf, array $defaultParams)
+	{
+		// If $callbackConf is a string or a callback, turn it into an array
+		if (is_string($callbackConf)
+		 || is_callable($callbackConf))
+		{
+			$callbackConf = array('callback' => $callbackConf);
+		}
+		elseif (!isset($callbackConf['callback']))
+		{
+			throw new InvalidArgumentException("Callback config is missing the 'callback' key");
+		}
+
+		if (!is_callable($callbackConf['callback']))
+		{
+			throw new InvalidArgumentException('Callback ' . var_export($callbackConf['callback'], true) . ' is not callable');
+		}
+
+		// add the default params config if it's not set
+		$callbackConf += array('params' => $defaultParams);
+
+		return $callbackConf;
 	}
 
 	//==========================================================================

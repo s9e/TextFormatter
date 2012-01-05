@@ -1451,15 +1451,12 @@ class ParserTest extends Test
 
 		$this->cb->setFilter(
 			'mytype',
-			array(
-				'params' => array('parser' => null),
-				'callback' =>
-					function($parser)
-					{
-						$parser->log('error', array('msg' => 'mytype error'));
-						return false;
-					}
-			)
+			function($parser)
+			{
+				$parser->log('error', array('msg' => 'mytype error'));
+				return false;
+			},
+			array('parser' => null)
 		);
 
 		$this->cb->Canned->tags[] = array(

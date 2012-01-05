@@ -13,6 +13,9 @@ include_once __DIR__ . '/Test.php';
 */
 class ConfigBuilderTest extends Test
 {
+	// Used by some tests as a callback
+	static public function filter()	{}
+
 	public function testCanLoadPlugins()
 	{
 		$this->assertInstanceOf(
@@ -1063,7 +1066,7 @@ class ConfigBuilderTest extends Test
 
 	public function testCanSetCustomFilter()
 	{
-		$this->cb->setFilter('foo', array('callback' => 'trim'));
+		$this->cb->setFilter('foo', 'trim');
 
 		$this->assertArrayMatches(
 			array(
@@ -1080,7 +1083,7 @@ class ConfigBuilderTest extends Test
 	*/
 	public function testCustomFiltersArePassedTheAttributeValueIfNoParamsArrayWasSpecified()
 	{
-		$this->cb->setFilter('foo', array('callback' => 'trim'));
+		$this->cb->setFilter('foo', 'trim');
 
 		$filtersConfig = $this->cb->getFiltersConfig();
 
@@ -1096,14 +1099,14 @@ class ConfigBuilderTest extends Test
 	/**
 	* @depends testCanSetCustomFilter
 	*/
-	public function testCanSetCustomFilterWithExtraConfig()
+	public function testCanSetCustomFilterWithParameters()
 	{
 		$filterConf = array(
 			'callback' => function($value, $min, $max) {},
 			'params'   => array('attrVal'  => false, 2, 5)
 		);
 
-		$this->cb->setFilter('range', $filterConf);
+		$this->cb->setFilter('range', $filterConf['callback'], $filterConf['params']);
 
 		$this->assertArrayMatches(
 			array('range' => $filterConf),
@@ -1114,11 +1117,12 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback 'bar' is not callable
+	* @expectedExceptionMessage Callback 'does_not_exist' is not callable
+	* @testdox setFilter() throws an exception on invalid callback
 	*/
 	public function setFilter_throws_an_exception_on_invalid_callback()
 	{
-		$this->cb->setFilter('foo', array('callback' => 'bar'));
+		$this->cb->setFilter('foo', 'does_not_exist');
 	}
 
 	/**
@@ -1961,7 +1965,6 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
-
 	/**
 	* @testdox setTagAttributeOption() accepts postFilter callbacks as an array of strings
 	*/
@@ -2018,6 +2021,128 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox setTagAttributeOption() accepts preFilter callbacks as an array of callbacks
+	*/
+	public function testTagAttributePreFilterAsArrayOfCallbacks()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array(
+					'type' => 'text',
+					'preFilter' => array(
+						array(__CLASS__, 'filter'),
+						array(__CLASS__, 'filter')
+					)
+				)
+			)
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'attrs' => array(
+						'foo' => array(
+							'preFilter' => array(
+								array('callback' => array(__CLASS__, 'filter')),
+								array('callback' => array(__CLASS__, 'filter'))
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagAttributeOption() accepts postFilter callbacks as an array of callbacks
+	*/
+	public function testTagAttributePostFilterAsArrayOfCallbacks()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array(
+					'type' => 'text',
+					'postFilter' => array(
+						array(__CLASS__, 'filter'),
+						array(__CLASS__, 'filter')
+					)
+				)
+			)
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'attrs' => array(
+						'foo' => array(
+							'postFilter' => array(
+								array('callback' => array(__CLASS__, 'filter')),
+								array('callback' => array(__CLASS__, 'filter'))
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagAttributeOption() accepts a single callback for the "preFilter" option
+	*/
+	public function testTagAttributePreFilterAsACallback()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'preFilter' => array(__CLASS__, 'filter'))
+			)
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'attrs' => array(
+						'foo' => array(
+							'preFilter' => array(
+								array('callback' => array(__CLASS__, 'filter'))
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox setTagAttributeOption() accepts a single callback for the "postFilter" option
+	*/
+	public function testTagAttributePostFilterAsACallback()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'postFilter' => array(__CLASS__, 'filter'))
+			)
+		));
+
+		$this->assertArrayMatches(
+			array(
+				'X' => array(
+					'attrs' => array(
+						'foo' => array(
+							'postFilter' => array(
+								array('callback' => array(__CLASS__, 'filter'))
+							)
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
 	* @depends testTagAttributePreFilterAsAString
 	* @testdox setTagAttributeOption() sets preFilter callbacks to receive the attribute's value as sole parameter if params are not defined
 	*/
@@ -2061,6 +2186,62 @@ class ConfigBuilderTest extends Test
 			),
 			$this->cb->getTagAttributeOption('X', 'foo', 'postFilter')
 		);
+	}
+
+	/**
+	* @testdox setTagAttributeOption() throws an exception if a preFilter callback is not callable
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Callback 'foobar' is not callable
+	*/
+	public function testTagAttributePreFilterNotCallable()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'preFilter' => array('foobar'))
+			)
+		));
+	}
+
+	/**
+	* @testdox setTagAttributeOption() throws an exception if a postFilter callback is not callable
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Callback 'foobar' is not callable
+	*/
+	public function testTagAttributePostFilterNotCallable()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'postFilter' => array('foobar'))
+			)
+		));
+	}
+
+	/**
+	* @testdox setTagAttributeOption() throws an exception if a preFilter callback is not callable
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Callback config is missing the 'callback' key
+	*/
+	public function testTagAttributePreFilterMissingKey()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'preFilter' => array(array()))
+			)
+		));
+	}
+
+	/**
+	* @testdox setTagAttributeOption() throws an exception if a postFilter callback is not callable
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Callback config is missing the 'callback' key
+	*/
+	public function testTagAttributePostFilterMissingKey()
+	{
+		$this->cb->addTag('X', array(
+			'attrs' => array(
+				'foo' => array('type' => 'text', 'postFilter' => array(array()))
+			)
+		));
 	}
 
 	/**
