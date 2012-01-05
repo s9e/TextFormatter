@@ -1476,13 +1476,41 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
-	* @testdox Can use a custom prefix for XSL namespace
+	* @testdox Can use a custom prefix for the XSL namespace
 	*/
 	public function testXSLPrefix()
 	{
 		$this->assertContains(
 			'<xxx:stylesheet',
 			$this->cb->getXSL('xxx')
+		);
+	}
+
+	/**
+	* @testdox Identical templates are merged
+	*/
+	public function testXSLDupes()
+	{
+		$this->cb->addTag('B',      array('template' => '<strong><xsl:apply-templates/></strong>'));
+		$this->cb->addTag('BOLD',   array('template' => '<strong><xsl:apply-templates/></strong>'));
+		$this->cb->addTag('STRONG', array('template' => '<strong><xsl:apply-templates/></strong>'));
+
+		$this->assertXmlStringEqualsXmlString(
+			'<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" indent="no"/><xsl:template match="/m"><xsl:for-each select="*"><xsl:apply-templates/><xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if></xsl:for-each></xsl:template><xsl:template match="B|BOLD|STRONG"><strong><xsl:apply-templates/></strong></xsl:template><xsl:template match="st|et|i"/></xsl:stylesheet>',
+			$this->cb->getXSL()
+		);
+	}
+
+	/**
+	* @testdox Empty templates are merged with the default empty template
+	*/
+	public function testXSLEmptyDupes()
+	{
+		$this->cb->addTag('B',      array('template' => ''));
+
+		$this->assertXmlStringEqualsXmlString(
+			'<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" indent="no"/><xsl:template match="/m"><xsl:for-each select="*"><xsl:apply-templates/><xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if></xsl:for-each></xsl:template><xsl:template match="B|st|et|i"/></xsl:stylesheet>',
+			$this->cb->getXSL()
 		);
 	}
 

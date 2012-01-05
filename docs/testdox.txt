@@ -118,7 +118,9 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Can add generic XSL
  [x] Cannot add invalid XSL
  [x] XSL from tags appear in output
- [x] Can use a custom prefix for XSL namespace
+ [x] Can use a custom prefix for the XSL namespace
+ [x] Identical templates are merged
+ [x] Empty templates are merged with the default empty template
  [x] Can add a preFilter callback to a tag
  [x] addTagPreFilterCallback throws an exception if callback is not callable
  [x] Can set preFilter callbacks via setTagOption

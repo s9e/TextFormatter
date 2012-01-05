@@ -1574,6 +1574,9 @@ class ConfigBuilder
 			throw new InvalidArgumentException("Prefix '" . $prefix . "' is already registered to namespace '" . $this->namespaces[$prefix] . "'");
 		}
 
+		/**
+		* Build the stylesheet
+		*/
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
 		     . "\n"
 		     . '<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . '>'
@@ -1597,42 +1600,81 @@ class ConfigBuilder
 		      . '<xsl:template match="st|et|i"/>'
 		      . '</xsl:stylesheet>';
 
-		if ($prefix !== 'xsl')
+		/**
+		* Dedupes the templates
+		*/
+		$dom = new DOMDocument;
+		$dom->loadXML($xsl);
+
+		$xpath = new DOMXPath($dom);
+		$dupes = array();
+
+		foreach ($xpath->query('/xsl:stylesheet/xsl:template[@match]') as $node)
 		{
-			$trans = new DOMDocument;
-			$trans->loadXML(
-				'<?xml version="1.0" encoding="utf-8"?>
-				<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . ' xmlns:' . $prefix . '="http://www.w3.org/1999/XSL/Transform">
+			// Make a copy of the template node so that we can remove its @match
+			$tmp = $node->cloneNode(true);
+			$tmp->removeAttribute('match');
 
-					<xsl:output method="xml" encoding="utf-8" />
+			$xml = $dom->saveXML($tmp);
 
-					<xsl:template match="xsl:*">
-						<xsl:element name="' . $prefix . ':{local-name()}" namespace="http://www.w3.org/1999/XSL/Transform">
-							<xsl:copy-of select="@*" />
-							<xsl:apply-templates />
-						</xsl:element>
-					</xsl:template>
+			if (isset($dupes[$xml]))
+			{
+				// It's a dupe, append its @match to the original template's @match
+				$dupes[$xml]->setAttribute(
+					'match',
+					$dupes[$xml]->getAttribute('match') . '|' . $node->getAttribute('match')
+				);
 
-					<xsl:template match="node()">
-						<xsl:copy>
-							<xsl:copy-of select="@*" />
-							<xsl:apply-templates />
-						</xsl:copy>
-					</xsl:template>
+				// ...then remove the dupe from the template
+				$node->parentNode->removeChild($node);
+			}
+			else
+			{
+				// Not a dupe, save the node for later
+				$dupes[$xml] = $node;
+			}
+		}
+		unset($dupes);
 
-				</xsl:stylesheet>'
-			);
-
-			$xslt = new XSLTProcessor;
-			$xslt->importStylesheet($trans);
-
-			$_xsl = new DOMDocument;
-			$_xsl->loadXML($xsl);
-
-			$xsl = rtrim($xslt->transformToXml($_xsl));
+		/**
+		* If we're using the default prefix then we're done
+		*/
+		if ($prefix === 'xsl')
+		{
+			return rtrim($dom->saveXML());
 		}
 
-		return $xsl;
+		/**
+		* Fix the XSL prefix
+		*/
+		$trans = new DOMDocument;
+		$trans->loadXML(
+			'<?xml version="1.0" encoding="utf-8"?>
+			<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . ' xmlns:' . $prefix . '="http://www.w3.org/1999/XSL/Transform">
+
+				<xsl:output method="xml" encoding="utf-8" />
+
+				<xsl:template match="xsl:*">
+					<xsl:element name="' . $prefix . ':{local-name()}" namespace="http://www.w3.org/1999/XSL/Transform">
+						<xsl:copy-of select="@*" />
+						<xsl:apply-templates />
+					</xsl:element>
+				</xsl:template>
+
+				<xsl:template match="node()">
+					<xsl:copy>
+						<xsl:copy-of select="@*" />
+						<xsl:apply-templates />
+					</xsl:copy>
+				</xsl:template>
+
+			</xsl:stylesheet>'
+		);
+
+		$xslt = new XSLTProcessor;
+		$xslt->importStylesheet($trans);
+
+		return rtrim($xslt->transformToXml($dom));
 	}
 
 	/**
