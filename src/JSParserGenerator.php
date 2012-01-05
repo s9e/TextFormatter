@@ -219,7 +219,7 @@ class JSParserGenerator
 		);
 
 		// Add attribute types hints
-		$hints += $this->getFiltersHints();
+		$hints += $this->getDefaultFiltersHints();
 
 		// Inject the hints into the source
 		$this->src = preg_replace(
@@ -490,7 +490,7 @@ class JSParserGenerator
 	*
 	* @return array
 	*/
-	protected function getFiltersHints()
+	protected function getDefaultFiltersHints()
 	{
 		$types = array(
 			'color'      => false,
@@ -524,7 +524,7 @@ class JSParserGenerator
 
 		foreach ($types as $type => $bool)
 		{
-			$hints['has' . ucfirst($type) . 'Attribute'] = $bool;
+			$hints['keep' . ucfirst($type) . 'Filter'] = $bool;
 		}
 
 		return $hints;

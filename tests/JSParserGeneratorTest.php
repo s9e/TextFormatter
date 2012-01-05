@@ -1111,10 +1111,10 @@ class JSParserGeneratorTest extends Test
 				array('trimBefore' => true)
 			),
 			array(
-				'HINT.hasColorAttribute is false by default'
+				'HINT.keepColorFilter is false by default'
 			),
 			array(
-				'HINT.hasColorAttribute is true if any tag has a "color" attribute',
+				'HINT.keepColorFilter is true if any tag has a "color" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1124,10 +1124,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasEmailAttribute is false by default'
+				'HINT.keepEmailFilter is false by default'
 			),
 			array(
-				'HINT.hasEmailAttribute is true if any tag has a "email" attribute',
+				'HINT.keepEmailFilter is true if any tag has a "email" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1137,10 +1137,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasFloatAttribute is false by default'
+				'HINT.keepFloatFilter is false by default'
 			),
 			array(
-				'HINT.hasFloatAttribute is true if any tag has a "float" attribute',
+				'HINT.keepFloatFilter is true if any tag has a "float" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1150,10 +1150,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasIdAttribute is false by default'
+				'HINT.keepIdFilter is false by default'
 			),
 			array(
-				'HINT.hasIdAttribute is true if any tag has a "id" attribute',
+				'HINT.keepIdFilter is true if any tag has a "id" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1163,10 +1163,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasIdentifierAttribute is false by default'
+				'HINT.keepIdentifierFilter is false by default'
 			),
 			array(
-				'HINT.hasIdentifierAttribute is true if any tag has a "identifier" attribute',
+				'HINT.keepIdentifierFilter is true if any tag has a "identifier" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1176,10 +1176,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasIntAttribute is false by default'
+				'HINT.keepIntFilter is false by default'
 			),
 			array(
-				'HINT.hasIntAttribute is true if any tag has a "int" attribute',
+				'HINT.keepIntFilter is true if any tag has a "int" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1189,10 +1189,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasIntegerAttribute is false by default'
+				'HINT.keepIntegerFilter is false by default'
 			),
 			array(
-				'HINT.hasIntegerAttribute is true if any tag has a "integer" attribute',
+				'HINT.keepIntegerFilter is true if any tag has a "integer" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1202,10 +1202,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasNumberAttribute is false by default'
+				'HINT.keepNumberFilter is false by default'
 			),
 			array(
-				'HINT.hasNumberAttribute is true if any tag has a "number" attribute',
+				'HINT.keepNumberFilter is true if any tag has a "number" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1215,10 +1215,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasRangeAttribute is false by default'
+				'HINT.keepRangeFilter is false by default'
 			),
 			array(
-				'HINT.hasRangeAttribute is true if any tag has a "range" attribute',
+				'HINT.keepRangeFilter is true if any tag has a "range" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1228,10 +1228,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasRegexpAttribute is false by default'
+				'HINT.keepRegexpFilter is false by default'
 			),
 			array(
-				'HINT.hasRegexpAttribute is true if any tag has a "regexp" attribute',
+				'HINT.keepRegexpFilter is true if any tag has a "regexp" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1241,10 +1241,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasSimpletextAttribute is false by default'
+				'HINT.keepSimpletextFilter is false by default'
 			),
 			array(
-				'HINT.hasSimpletextAttribute is true if any tag has a "simpletext" attribute',
+				'HINT.keepSimpletextFilter is true if any tag has a "simpletext" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1254,10 +1254,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasUintAttribute is false by default'
+				'HINT.keepUintFilter is false by default'
 			),
 			array(
-				'HINT.hasUintAttribute is true if any tag has a "uint" attribute',
+				'HINT.keepUintFilter is true if any tag has a "uint" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1267,10 +1267,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasUrlAttribute is false by default'
+				'HINT.keepUrlFilter is false by default'
 			),
 			array(
-				'HINT.hasUrlAttribute is true if any tag has a "url" attribute',
+				'HINT.keepUrlFilter is true if any tag has a "url" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(
@@ -1280,10 +1280,10 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.hasTextAttribute is false by default'
+				'HINT.keepTextFilter is false by default'
 			),
 			array(
-				'HINT.hasTextAttribute is true if any tag has a "text" attribute',
+				'HINT.keepTextFilter is true if any tag has a "text" attribute',
 				array(
 					'attrs' => array(
 						'foo' => array(

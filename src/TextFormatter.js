@@ -80,20 +80,20 @@ var HINT = {
 		trimAfter: true,
 		trimBefore: true
 	},
-	hasColorAttribute: true,
-	hasEmailAttribute: true,
-	hasFloatAttribute: true,
-	hasIdAttribute: true,
-	hasIdentifierAttribute: true,
-	hasIntAttribute: true,
-	hasIntegerAttribute: true,
-	hasNumberAttribute: true,
-	hasRangeAttribute: true,
-	hasRegexpAttribute: true,
-	hasSimpletextAttribute: true,
-	hasUintAttribute: true,
-	hasUrlAttribute: true,
-	hasTextAttribute: true
+	keepColorFilter: true,
+	keepEmailFilter: true,
+	keepFloatFilter: true,
+	keepIdFilter: true,
+	keepIdentifierFilter: true,
+	keepIntFilter: true,
+	keepIntegerFilter: true,
+	keepNumberFilter: true,
+	keepRangeFilter: true,
+	keepRegexpFilter: true,
+	keepSimpletextFilter: true,
+	keepUintFilter: true,
+	keepUrlFilter: true,
+	keepTextFilter: true
 };
 // END OF STOCK HINTS - DO NOT EDIT
 
@@ -412,7 +412,7 @@ var HINT = {
 		switch (attrConf.type)
 		{
 			case 'url':
-				if (!HINT.hasUrlAttribute)
+				if (!HINT.keepUrlFilter)
 				{
 					break;
 				}
@@ -453,28 +453,28 @@ var HINT = {
 
 			case 'identifier':
 			case 'id':
-				if (!HINT.hasIdAttribute && !HINT.hasIdentifierAttribute)
+				if (!HINT.keepIdFilter && !HINT.keepIdentifierFilter)
 				{
 					break;
 				}
 				return /^[a-zA-Z0-9-_]+$/.test(attrVal) ? attrVal : false;
 
 			case 'simpletext':
-				if (!HINT.hasSimpletextAttribute)
+				if (!HINT.keepSimpletextFilter)
 				{
 					break;
 				}
 				return /^[a-zA-Z0-9\-+.,_ ]+$/.test(attrVal) ? attrVal : false;
 
 			case 'text':
-				if (!HINT.hasTextAttribute)
+				if (!HINT.keepTextFilter)
 				{
 					break;
 				}
 				return attrVal;
 
 			case 'email':
-				if (!HINT.hasEmailAttribute)
+				if (!HINT.keepEmailFilter)
 				{
 					break;
 				}
@@ -504,35 +504,35 @@ var HINT = {
 
 			case 'int':
 			case 'integer':
-				if (!HINT.hasIntAttribute && !HINT.hasIntegerAttribute)
+				if (!HINT.keepIntFilter && !HINT.keepIntegerFilter)
 				{
 					break;
 				}
 				return /^-?[1-9][0-9]*$/.test(attrVal) ? attrVal : false;
 
 			case 'float':
-				if (!HINT.hasFloatAttribute)
+				if (!HINT.keepFloatFilter)
 				{
 					break;
 				}
 				return /^-?[0-9]+(?:\.[0-9]+)?(?:e[1-9][0-9]*)?$/i.test(attrVal) ? attrVal : false;
 
 			case 'number':
-				if (!HINT.hasNumberAttribute)
+				if (!HINT.keepNumberFilter)
 				{
 					break;
 				}
 				return /^[0-9]+$/.test(attrVal) ? attrVal : false;
 
 			case 'uint':
-				if (!HINT.hasUintAttribute)
+				if (!HINT.keepUintFilter)
 				{
 					break;
 				}
 				return /^(?:0|[1-9][0-9]*)$/.test(attrVal) ? attrVal : false;
 
 			case 'range':
-				if (!HINT.hasRangeAttribute)
+				if (!HINT.keepRangeFilter)
 				{
 					break;
 				}
@@ -563,14 +563,14 @@ var HINT = {
 				return attrVal;
 
 			case 'color':
-				if (!HINT.hasColorAttribute)
+				if (!HINT.keepColorFilter)
 				{
 					break;
 				}
 				return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrVal) ? attrVal : false;
 
 			case 'regexp':
-				if (!HINT.hasRegexpAttribute)
+				if (!HINT.keepRegexpFilter)
 				{
 					break;
 				}
@@ -1878,7 +1878,7 @@ var HINT = {
 	*/
 	function splitCompoundAttributes()
 	{
-		if (!HINT.hasCompoundAttributes)
+		if (!HINT.keepCompoundFilters)
 		{
 			return;
 		}
