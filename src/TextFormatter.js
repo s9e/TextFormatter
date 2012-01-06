@@ -619,24 +619,29 @@ var HINT = {
 
 	function output()
 	{
-		return asDOM();
+		return asXML();
 	}
 
-	function asDOM()
+	function asXML()
 	{
-		function createDOM(elName)
+		function htmlspecialchars(str)
 		{
-			return (MSXML)
-			     ? loadXML('<' + elName + '/>')
-			     : document.implementation.createDocument('', elName, null);
+			var t = {
+				'<' : '&lt;',
+				'>' : '&gt;',
+				'&' : '&amp;',
+				'"' : '&quot;'
+			}
+			return str.replace(/[<>&"]/g, function(c) { return t[c]; });
 		}
 
-		var stack = [],
-			pos   = 0,
-			i     = -1,
-			cnt   = processedTags.length,
-			DOM   = createDOM((cnt) ? 'rt' : 'pt'),
-			el    = DOM.documentElement;
+		if (!processedTags.length)
+		{
+			return '<pt>' + htmlspecialchars(text) + '</pt>';
+		}
+
+		var pos = 0,
+			xml = '<rt';
 
 		/**
 		* Declare all namespaces in the root node
@@ -655,79 +660,29 @@ var HINT = {
 					{
 						declared[prefix] = 1;
 
-						setAttributeNS(
-							el,
-							'http://www.w3.org/2000/xmlns/',
-							'xmlns:' + prefix,
-							registeredNamespaces[prefix]
-						);
+						xml += ' xmlns:' + prefix + '="' + htmlspecialchars(registeredNamespaces[prefix]) + '"';
 					}
 				}
 			});
 		}
 
-		function createElement(tagName)
+		xml += '>';
+
+		processedTags.forEach(function(tag)
 		{
-			if (HINT.hasNamespacedTags)
-			{
-				var pos = tagName.indexOf(':');
-				if (pos > -1)
-				{
-					var prefix = tagName.substr(0, pos);
-
-					return createElementNS(
-						DOM,
-						registeredNamespaces[prefix],
-						tagName
-					);
-				}
-			}
-
-			return DOM.createElement(tagName);
-		}
-
-		function writeElement(tagName, content)
-		{
-			setTextContent(
-				el.appendChild(createElement(tagName)),
-				content
-			);
-		}
-
-		function appendText(content)
-		{
-			el.appendChild(DOM.createTextNode(content));
-		}
-
-		function setTextContent(el, content)
-		{
-			if (HINT.enableIE7 && !('textContent' in el))
-			{
-				el.appendChild(DOM.createTextNode(content));
-			}
-			else
-			{
-				el.textContent = content;
-			}
-		}
-
-		while (++i < cnt)
-		{
-			var tag = processedTags[i];
-
 			/**
 			* Append the text that's between last tag and this one
 			*/
 			if (tag.pos > pos)
 			{
-				appendText(text.substr(pos, tag.pos - pos));
+				xml += htmlspecialchars(text.substr(pos, tag.pos - pos));
 			}
 
 			/**
 			* Capture the part of the text that belongs to this tag then move the cursor past
 			* current tag
 			*/
-			var tagText = text.substr(tag.pos, tag.len);
+			var tagText = htmlspecialchars(text.substr(tag.pos, tag.len));
 			pos = tag.pos + tag.len;
 
 			var wsBefore = '',
@@ -753,53 +708,55 @@ var HINT = {
 
 			if (wsBefore !== '')
 			{
-				writeElement('i', wsBefore);
+				xml += '<i>' + wsBefore + '</i>';
 			}
 
 			if (tag.type & START_TAG)
 			{
-				stack.push(el);
-				el = el.appendChild(createElement(tag.name));
+				xml += '<' + tag.name;
 
 				for (var attrName in tag.attrs)
 				{
-					el.setAttribute(attrName, tag.attrs[attrName]);
+					xml += ' ' + attrName + '="' + htmlspecialchars(tag.attrs[attrName]) + '"';
 				}
+
+				xml += '>';
 
 				if (tag.type & END_TAG)
 				{
-					setTextContent(el, tagText);
-					el = stack.pop();
+					xml += tagText + '</' + tag.name + '>';
 				}
 				else if (tagText > '')
 				{
-					writeElement('st', tagText);
+					xml += '<st>' + tagText + '</st>';
 				}
 			}
 			else
 			{
 				if (tagText > '')
 				{
-					writeElement('et', tagText);
+					xml += '<et>' + tagText + '</et>';
 				}
-				el = stack.pop();
+				xml += '</' + tag.name + '>';
 			}
 
 			if (wsAfter !== '')
 			{
-				writeElement('i', wsAfter);
+				xml += '<i>' + wsAfter + '</i>';
 			}
-		}
+		});
 
 		/**
 		* Append the rest of the text, past the last tag
 		*/
 		if (pos < textLen)
 		{
-			appendText(text.substr(pos));
+			xml += htmlspecialchars(text.substr(pos));
 		}
 
-		return DOM;
+		xml += '</rt>';
+
+		return xml;
 	}
 
 	/** @param {!Tag} tag */
@@ -1974,17 +1931,7 @@ var HINT = {
 		* @param {!string} _text
 		* @return string
 		*/
-		API['parse'] = function(_text)
-		{
-			var DOM = parse(_text);
-
-			if (MSXML)
-			{
-				return DOM.xml;
-			}
-
-			return new XMLSerializer().serializeToString(DOM);
-		}
+		API['parse'] = parse;
 	}
 
 	if (!HINT.disabledAPI.render)
@@ -2038,7 +1985,7 @@ var HINT = {
 		*/
 		API['preview'] = function(text, target)
 		{
-			var DOM = parse(text),
+			var DOM = loadXML(parse(text)),
 				document = target.ownerDocument,
 				frag;
 
