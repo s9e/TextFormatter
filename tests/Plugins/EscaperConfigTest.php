@@ -33,4 +33,24 @@ class EscaperConfigTest extends Test
 			$this->cb->Escaper->getConfig()
 		);
 	}
+
+	/**
+	* @test
+	*/
+	public function Generates_a_regexp()
+	{
+		$this->assertArrayHasKey('regexp', $this->cb->Escaper->getConfig());
+	}
+
+	/**
+	* @test
+	* @testdox getJSParser() returns the source of its Javascript parser
+	*/
+	public function getJSParser_returns_the_source_of_its_Javascript_parser()
+	{
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../src/Plugins/EscaperParser.js',
+			$this->cb->Escaper->getJSParser()
+		);
+	}
 }

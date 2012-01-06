@@ -693,6 +693,8 @@ s9e\TextFormatter\Tests\Plugins\EmoticonsParser
 s9e\TextFormatter\Tests\Plugins\EscaperConfig
  [x] Creates an ESC tag by default
  [x] tagName can be customized at loading time
+ [x] Generates a regexp
+ [x] getJSParser() returns the source of its Javascript parser
 
 s9e\TextFormatter\Tests\Plugins\EscaperParser
  [x] Can escape an ASCII character
