@@ -8,3 +8,4 @@ TODO
 - Add a rule to automatically create a parent to a tag, e.g. create <LIST> when <LI> is used. After creating <LIST>, add its id to the "require" field so that we don't get in an infinite loop
 - Support forcing text to be wrapped inside tags. e.g. "<LIST>foo" becomes "<LIST><LI>foo</LI>"
 - There's potential for a bug in createMatchingTag when creating a tag based on a tag that with trimBefore enabled. The position of the new tag should probably be the actual position of the tag, not of the whitespace
+- Investigate the possibility of replacing autoClose with isEmpty

@@ -19,7 +19,7 @@ abstract class PluginParser
 	*/
 	protected $config;
 
-	public function __construct(Parser $parser, array $config)
+	final public function __construct(Parser $parser, array $config)
 	{
 		$this->parser = $parser;
 		$this->config = $config;
