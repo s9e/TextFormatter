@@ -37,6 +37,7 @@ $cb->RawHTML->allowAttribute('a', 'href');
 $cb->RawHTML->allowAttribute('a', 'title');
 
 $cb->loadPlugin('Autolink');
+$cb->loadPlugin('Escaper');
 $cb->loadPlugin('HTMLEntities')->disableEntity('&lt;');
 $cb->loadPlugin('Linebreaker');
 $cb->loadPlugin('WittyPants');
@@ -140,6 +141,7 @@ The following plugins have been enabled:
 
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
   [*][b]Emoticons[/b] --- one emoticon :) has been added
+  [*][b]Escaper[/b] --- a backslash can be used to escape one character, e.g. \:)
   [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]#\$(?<amount>[0-9]+(?:\.[0-9]+)?)#[/CODE] is replaced with the template [CODE]<a href="http://www.google.com/search?q={@amount}+USD+in+EUR"><xsl:apply-templates/></a>[/CODE] -- For example: $2, $4.50
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
   [*][b]Linebreaker[/b] --- Linefeeds are converted to &lt;br&gt;

@@ -690,6 +690,17 @@ s9e\TextFormatter\Tests\Plugins\EmoticonsParser
  [x] Emoticons are replaced everywhere in the text
  [x] Can use a custom tagName
 
+s9e\TextFormatter\Tests\Plugins\EscaperConfig
+ [x] Creates an ESC tag by default
+ [x] tagName can be customized at loading time
+
+s9e\TextFormatter\Tests\Plugins\EscaperParser
+ [x] Can escape an ASCII character
+ [x] Can escape a LF
+ [x] Can escape a Unicode character
+ [x] A backslash at the end of the text does is treated like normal text
+ [x] Can use a custom tagName
+
 s9e\TextFormatter\Tests\Plugins\FabricConfig
  [x] Creates an URL tag by default
  [x] Creates an IMG tag by default

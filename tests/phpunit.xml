@@ -39,6 +39,8 @@
 			<file>Plugins/CensorParserTest.php</file>
 			<file>Plugins/EmoticonsConfigTest.php</file>
 			<file>Plugins/EmoticonsParserTest.php</file>
+			<file>Plugins/EscaperConfigTest.php</file>
+			<file>Plugins/EscaperParserTest.php</file>
 			<file>Plugins/FabricConfigTest.php</file>
 			<file>Plugins/FabricParserTest.php</file>
 			<file>Plugins/GenericConfigTest.php</file>
@@ -74,6 +76,8 @@
 			<file>../src/Plugins/CensorParser.php</file>
 			<file>../src/Plugins/EmoticonsConfig.php</file>
 			<file>../src/Plugins/EmoticonsParser.php</file>
+			<file>../src/Plugins/EscaperConfig.php</file>
+			<file>../src/Plugins/EscaperParser.php</file>
 			<file>../src/Plugins/FabricConfig.php</file>
 			<file>../src/Plugins/FabricParser.php</file>
 			<file>../src/Plugins/GenericConfig.php</file>
