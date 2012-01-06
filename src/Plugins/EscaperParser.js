@@ -1,5 +1,4 @@
-var tags = [],
-	tagName = config.tagName;
+var tags = [];
 
 matches.forEach(function(m)
 {
@@ -7,7 +6,7 @@ matches.forEach(function(m)
 		pos  : m[0][1],
 		type : SELF_CLOSING_TAG,
 		name : config.tagName,
-		len  : $m[0][0].length
+		len  : m[0][0].length
 	});
 });
 

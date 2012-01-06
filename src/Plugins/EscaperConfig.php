@@ -37,4 +37,9 @@ class EscaperConfig extends PluginConfig
 			'regexp'  => '#\\\\.#us'
 		);
 	}
+
+	public function getJSParser()
+	{
+		return file_get_contents(__DIR__ . '/EscaperParser.js');
+	}
 }

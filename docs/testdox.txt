@@ -698,6 +698,7 @@ s9e\TextFormatter\Tests\Plugins\EscaperParser
  [x] Can escape an ASCII character
  [x] Can escape a LF
  [x] Can escape a Unicode character
+ [x] Can escape a backslash
  [x] A backslash at the end of the text does is treated like normal text
  [x] Can use a custom tagName
 

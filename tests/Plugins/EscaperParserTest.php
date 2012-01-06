@@ -56,6 +56,20 @@ class EscaperParserTest extends Test
 	/**
 	* @test
 	*/
+	public function Can_escape_a_backslash()
+	{
+		$this->cb->loadPlugin('Escaper');
+
+		$this->assertTransformation(
+			'x\\\\z',
+			'<rt>x<ESC>\\\\</ESC>z</rt>',
+			'x\\z'
+		);
+	}
+
+	/**
+	* @test
+	*/
 	public function A_backslash_at_the_end_of_the_text_does_is_treated_like_normal_text()
 	{
 		$this->cb->loadPlugin('Escaper');
