@@ -451,7 +451,7 @@ var HINT = {
 					}
 				}
 
-				return attrVal.replace(/'/, '%27').replace(/"/, '%22');
+				return attrVal.replace(/['"]/g, escape);
 
 			case 'identifier':
 			case 'id':
