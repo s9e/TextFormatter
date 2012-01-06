@@ -1582,7 +1582,7 @@ var HINT = {
 			// Here, we know that only one of a or b is a zero-width tags. Zero-width tags are
 			// ordered after wider tags so that they have a chance to be processed before the next
 			// character is consumed, which would force them to be skipped
-			return (!a.len) ? 1 : -1;
+			return (a.len) ? -1 : 1;
 		}
 
 		// Here we know that both tags start at the same position and have a length greater than 0.
