@@ -3,7 +3,7 @@
 
 include __DIR__ . '/../src/ConfigBuilder.php';
 
-$cb = new \s9e\TextFormatter\ConfigBuilder;
+$cb = new s9e\TextFormatter\ConfigBuilder;
 
 $cb->BBCodes->addPredefinedBBCode('B');
 $cb->BBCodes->addPredefinedBBCode('I');
@@ -82,10 +82,10 @@ ob_start();
 
 		code
 		{
-			display: inline;
-			padding: 3px;
+			padding: 2px;
 			background-color: #fff;
 			border-radius: 3px;
+			border: solid 1px #ddd;
 		}
 	</style>
 </head>

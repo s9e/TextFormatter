@@ -89,9 +89,10 @@ ob_start();
 
 		code
 		{
-			padding: 3px;
+			padding: 2px;
 			background-color: #fff;
 			border-radius: 3px;
+			border: solid 1px #ddd;
 		}
 
 		pre
@@ -159,7 +160,7 @@ Additionally, in order to demonstrate some other features:
 
 You can take a look at the log, hover the messages with the mouse and click them to get to the part of the text that generated them.
 
-The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/TextFormatter/blob/master/scripts/generateJSParserDemo.php]this script[/url]. It has been minified to <?php echo round(strlen($jsParser) / 1024, 1) . 'KB (' . round(strlen(gzencode($jsParser, 9)) / 1024, 1) . 'KB gzipped)'; ?> with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].' The raw sources can be found [url=https://github.com/s9e/TextFormatter/blob/master/src/TextFormatter.js]at GitHub[/url].</textarea>
+The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/TextFormatter/blob/master/scripts/generateJSParserDemo.php]this script[/url]. It has been minified to <?php echo round(strlen($jsParser) / 1024, 1) . 'KB (' . round(strlen(gzencode($jsParser, 9)) / 1024, 1) . 'KB gzipped)'; ?> with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url]. The raw sources can be found [url=https://github.com/s9e/TextFormatter/blob/master/src/TextFormatter.js]at GitHub[/url].</textarea>
 			<br>
 			<select id="output">
 				<option value="preview" selected>Live Preview</option>
