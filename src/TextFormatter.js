@@ -821,7 +821,8 @@ var HINT = {
 	/** @param {!Tag} tag */
 	function addTrimmingInfoToTag(tag)
 	{
-		var tagConfig = tagsConfig[tag.name];
+		var tagConfig = tagsConfig[tag.name],
+			wsPos;
 
 		/**
 		* Original: "  [b]  -text-  [/b]  "
@@ -830,9 +831,16 @@ var HINT = {
 		if ((tag.type  &  START_TAG && tagConfig.trimBefore   && HINT.tagConfig.trimBefore)
 		 || (tag.type === END_TAG   && tagConfig.rtrimContent && HINT.tagConfig.rtrimContent))
 		{
-			tag.trimBefore  = /[ \n\r\t\0\x0B]*$/.exec(text.substr(0, tag.pos))[0].length;
-			tag.len        += tag.trimBefore;
-			tag.pos        -= tag.trimBefore;
+			tag.trimBefore = 0;
+
+			wsPos = tag.pos;
+			while (--wsPos >= 0 && " \n\r\t\0\x0B".indexOf(text.charAt(wsPos)) > -1)
+			{
+				++tag.trimBefore;
+			}
+
+			tag.len += tag.trimBefore;
+			tag.pos -= tag.trimBefore;
 		}
 
 		/**
@@ -842,8 +850,15 @@ var HINT = {
 		if ((tag.type === START_TAG && tagConfig.ltrimContent && HINT.tagConfig.ltrimContent)
 		 || (tag.type  &  END_TAG   && tagConfig.trimAfter    && HINT.tagConfig.trimAfter))
 		{
-			tag.trimAfter  = /^[ \n\r\t\0\x0B]*/.exec(text.substr(tag.pos + tag.len))[0].length;
-			tag.len       += tag.trimAfter;
+			tag.trimAfter = 0;
+
+			wsPos = tag.pos + tag.len - 1;
+			while (++wsPos < textLen && " \n\r\t\0\x0B".indexOf(text.charAt(wsPos)) > -1)
+			{
+				++tag.trimAfter;
+			}
+
+			tag.len += tag.trimAfter;
 		}
 	}
 
