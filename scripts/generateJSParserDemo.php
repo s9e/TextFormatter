@@ -18,7 +18,7 @@ $cb->BBCodes->addPredefinedBBCode('YOUTUBE');
 $cb->BBCodes->addPredefinedBBCode('FLOAT');
 
 $cb->BBCodes->addBBCode('CODE', array(
-	'template' => '<code style="display:inline"><xsl:apply-templates/></code>',
+	'template' => '<code><xsl:apply-templates/></code>',
 	'defaultDescendantRule' => 'deny'
 ));
 
