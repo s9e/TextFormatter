@@ -1916,7 +1916,7 @@ var HINT = {
 	*/
 	function splitCompoundAttributes()
 	{
-		if (!HINT.keepCompoundFilters)
+		if (!HINT.hasCompoundAttributes)
 		{
 			return;
 		}
