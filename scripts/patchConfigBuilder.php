@@ -483,7 +483,7 @@ foreach ($arr as $elName => $values)
 	{
 		$php .= $sep . "'$k'=>";
 
-		if (is_int($v) && $v > 0x7fffffff)
+		if ($v & 0x80000000)
 		{
 			$php .= '0x' . dechex($v);
 		}
