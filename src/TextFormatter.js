@@ -1791,7 +1791,7 @@ var HINT = {
 		var tagConfig  = tagsConfig[currentTag.name],
 			attrConfig = tagConfig.attrs[currentAttribute];
 
-		// no custom filters, we can hardcode the call to filter()
+		// Custom filters are injected into filter() so we can just hardcode the call
 		currentTag.attrs[currentAttribute] = filter(
 			currentTag.attrs[currentAttribute],
 			attrConfig,
