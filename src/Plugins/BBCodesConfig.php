@@ -99,6 +99,7 @@ class BBCodesConfig extends PluginConfig
 		*/
 		$bbcodeSpecificConfig = array(
 			'autoClose'    => 1,
+			'contentAttr'  => 1,
 			'contentAttrs' => 1,
 			'defaultAttr'  => 1,
 			'tagName'      => 1
@@ -194,6 +195,12 @@ class BBCodesConfig extends PluginConfig
 	*/
 	public function setBBCodeOptions($bbcodeName, array $bbcodeOptions)
 	{
+		if (isset($bbcodeOptions['contentAttr']))
+		{
+			$bbcodeOptions['contentAttrs'][] = $bbcodeOptions['contentAttr'];
+			unset($bbcodeOptions['contentAttr']);
+		}
+
 		foreach ($bbcodeOptions as $optionName => $optionValue)
 		{
 			$this->setBBCodeOption($bbcodeName, $optionName, $optionValue);
@@ -201,7 +208,7 @@ class BBCodesConfig extends PluginConfig
 	}
 
 	/**
-	* Set several options of a BBCode
+	* Set an option of a BBCode
 	*
 	* @param string $bbcodeName
 	* @param string $optionName
@@ -220,6 +227,11 @@ class BBCodesConfig extends PluginConfig
 			case 'defaultAttr':
 				$optionValue = $this->cb->normalizeAttributeName($optionValue);
 				break;
+
+			case 'contentAttr':
+				$optionName  = 'contentAttrs';
+				$optionValue = (array) $optionValue;
+				// no break; here
 
 			case 'contentAttrs':
 				foreach ($optionValue as &$attrName)

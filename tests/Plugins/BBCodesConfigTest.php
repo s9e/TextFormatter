@@ -240,6 +240,28 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox setBBCodeOption() can set a single defaultAttr
+	*/
+	public function setBBCodeOption_can_set_a_single_defaultAttr()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->addTagAttribute('A', 'href', 'url');
+		$this->cb->BBCodes->setBBCodeOption('A', 'defaultAttr', 'href');
+
+		$this->assertArrayMatches(
+			array(
+				'bbcodes' => array(
+					'A' => array(
+						'defaultAttr' => 'href'
+					)
+				)
+			),
+			$this->cb->BBCodes->getConfig()
+		);
+	}
+
+	/**
+	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid attribute name '**'
 	* @testdox setBBCodeOption() cannot set a defaultAttr with an invalid name
@@ -252,6 +274,80 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox setBBCodeOption() can set multiple contentAttrs as an array of attribute names
+	*/
+	public function setBBCodeOption_multiple_contentAttrs()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->addTagAttribute('A', 'href', 'url');
+		$this->cb->addTagAttribute('A', 'foo', 'text');
+		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttrs', array('href', 'foo'));
+
+		$this->assertArrayMatches(
+			array(
+				'bbcodes' => array(
+					'A' => array(
+						'contentAttrs' => array('href', 'foo')
+					)
+				)
+			),
+			$this->cb->BBCodes->getConfig()
+		);
+	}
+
+	/**
+	* @test
+	* @testdox setBBCodeOption() can set a single content attribute with contentAttr
+	*/
+	public function setBBCodeOption_single_contentAttr()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->addTagAttribute('A', 'href', 'url');
+		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttr', 'href');
+
+		$this->assertArrayMatches(
+			array(
+				'bbcodes' => array(
+					'A' => array(
+						'contentAttrs' => array('href')
+					)
+				)
+			),
+			$this->cb->BBCodes->getConfig()
+		);
+	}
+
+	/**
+	* @test
+	* @testdox If setBBCodeOptions() is called with both contentAttr and contentAttrs, the  contentAttr value is added to the contentAttrs array
+	*/
+	public function setBBCodeOptions_with_both_contentAttr_and_contentAttrs()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->addTagAttribute('A', 'href', 'url');
+		$this->cb->addTagAttribute('A', 'foo', 'text');
+		$this->cb->BBCodes->setBBCodeOptions(
+			'A',
+			array(
+				'contentAttr'  => 'href',
+				'contentAttrs' => array('foo'),
+			)
+		);
+
+		$this->assertArrayMatches(
+			array(
+				'bbcodes' => array(
+					'A' => array(
+						'contentAttrs' => array('foo', 'href')
+					)
+				)
+			),
+			$this->cb->BBCodes->getConfig()
+		);
+	}
+
+	/**
+	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid attribute name '**'
 	* @testdox setBBCodeOption() cannot set contentAttrs with an invalid name
@@ -260,6 +356,18 @@ class BBCodesConfigTest extends Test
 	{
 		$this->cb->BBCodes->addBBCode('A');
 		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttrs', array('**'));
+	}
+
+	/**
+	* @test
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid attribute name '**'
+	* @testdox setBBCodeOption() cannot set contentAttr with an invalid name
+	*/
+	public function setBBCodeOption_cannot_set_contentAttr_with_an_invalid_name()
+	{
+		$this->cb->BBCodes->addBBCode('A');
+		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttr', array('**'));
 	}
 
 	/**

@@ -542,8 +542,13 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] getBBCodeOptions() throws an exception if the BBCode does not exist
  [x] getBBCodeOption throws an exception if the BBCode does not exist
  [x] getBBCodeOption() throws an exception if the option does not exist
+ [x] setBBCodeOption() can set a single defaultAttr
  [x] setBBCodeOption() cannot set a defaultAttr with an invalid name
+ [x] setBBCodeOption() can set multiple contentAttrs as an array of attribute names
+ [x] setBBCodeOption() can set a single content attribute with contentAttr
+ [x] If setBBCodeOptions() is called with both contentAttr and contentAttrs, the  contentAttr value is added to the contentAttrs array
  [x] setBBCodeOption() cannot set contentAttrs with an invalid name
+ [x] setBBCodeOption() cannot set contentAttr with an invalid name
  [x] addBBCodeFromExample() works on simple BBCodes
  [x] addBBCodeFromExample() throws an exception if the definition is malformed
  [x] addBBCodeFromExample() throws an exception if the template is not wellformed XML
