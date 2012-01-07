@@ -298,7 +298,7 @@ class BBCodesConfig extends PluginConfig
 
 		foreach ($def['attrs'] as $attrName => $attrConf)
 		{
-			$this->cb->addTagAttribute(
+			$this->cb->addAttribute(
 				$def['bbcodeName'],
 				$attrName,
 				$attrConf['type'],

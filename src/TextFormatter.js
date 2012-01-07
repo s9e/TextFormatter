@@ -1154,7 +1154,7 @@ var HINT = {
 		* have been closed by a rule.)
 		*/
 		if (cntTotal[tagName] >= tagConfig.tagLimit
-		 || processCurrentTagAttributes()
+		 || processCurrentAttributes()
 		 || closeParent()
 		 || closeAncestor()
 		 || cntOpen[tagName]  >= tagConfig.nestingLimit
@@ -1591,7 +1591,7 @@ var HINT = {
 		return b.id - a.id;
 	}
 
-	function processCurrentTagAttributes()
+	function processCurrentAttributes()
 	{
 		if (!tagsConfig[currentTag.name].attrs)
 		{

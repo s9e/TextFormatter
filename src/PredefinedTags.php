@@ -56,8 +56,8 @@ class PredefinedTags
 		$this->cb->addTagRule('URL', 'denyChild', 'URL');
 		$this->cb->addTagRule('URL', 'denyDescendant', 'URL');
 
-		$this->cb->addTagAttribute('URL', 'url', 'url');
-		$this->cb->addTagAttribute('URL', 'title', 'text', array('isRequired' => false));
+		$this->cb->addAttribute('URL', 'url', 'url');
+		$this->cb->addAttribute('URL', 'title', 'text', array('isRequired' => false));
 
 		$this->cb->setTagTemplate(
 			'URL',
@@ -84,9 +84,9 @@ class PredefinedTags
 			'defaultDescendantRule' => 'deny'
 		));
 
-		$this->cb->addTagAttribute('IMG', 'src', 'url');
-		$this->cb->addTagAttribute('IMG', 'alt', 'text', array('isRequired' => false));
-		$this->cb->addTagAttribute('IMG', 'title', 'text', array('isRequired' => false));
+		$this->cb->addAttribute('IMG', 'src', 'url');
+		$this->cb->addAttribute('IMG', 'alt', 'text', array('isRequired' => false));
+		$this->cb->addAttribute('IMG', 'title', 'text', array('isRequired' => false));
 
 		$this->cb->setTagTemplate(
 			'IMG',
@@ -118,9 +118,9 @@ class PredefinedTags
 			'rtrimContent' => true
 		));
 
-		$this->cb->addTagAttribute('LIST', 'start', 'uint', array('isRequired' => false));
+		$this->cb->addAttribute('LIST', 'start', 'uint', array('isRequired' => false));
 
-		$this->cb->addTagAttribute('LIST', 'style', 'regexp', array(
+		$this->cb->addAttribute('LIST', 'style', 'regexp', array(
 			'defaultValue' => 'disc',
 			'isRequired'   => false,
 			'regexp'       => '/^(?:[a-z\\-]+|[0-9]+)$/iD'
@@ -179,7 +179,7 @@ class PredefinedTags
 	public function addALIGN()
 	{
 		$this->cb->addTag('ALIGN');
-		$this->cb->addTagAttribute(
+		$this->cb->addAttribute(
 			'ALIGN', 'align', 'regexp', array('regexp' => '#^(?:left|right|center|justify)$#Di')
 		);
 		$this->cb->setTagTemplate(
@@ -255,7 +255,7 @@ class PredefinedTags
 			'defaultDescendantRule' => 'deny'
 		));
 		$this->cb->addTagRule('COL', 'requireParent', 'TABLE');
-		$this->cb->addTagAttribute('COL', 'align', 'regexp', array(
+		$this->cb->addAttribute('COL', 'align', 'regexp', array(
 			'isRequired' => false,
 			'regexp'     => '/^(?:left|right|center|align)$/iD'
 		));
@@ -279,8 +279,8 @@ class PredefinedTags
 
 		$this->cb->addTag('TH');
 		$this->cb->addTagRule('TH', 'requireParent', 'TR');
-		$this->cb->addTagAttribute('TH', 'colspan', 'uint', array('isRequired' => false));
-		$this->cb->addTagAttribute('TH', 'rowspan', 'uint', array('isRequired' => false));
+		$this->cb->addAttribute('TH', 'colspan', 'uint', array('isRequired' => false));
+		$this->cb->addAttribute('TH', 'rowspan', 'uint', array('isRequired' => false));
 		$this->cb->setTagTemplate(
 			'TH',
 			'<th>
@@ -302,8 +302,8 @@ class PredefinedTags
 
 		$this->cb->addTag('TD');
 		$this->cb->addTagRule('TD', 'requireParent', 'TR');
-		$this->cb->addTagAttribute('TD', 'colspan', 'uint', array('isRequired' => false));
-		$this->cb->addTagAttribute('TD', 'rowspan', 'uint', array('isRequired' => false));
+		$this->cb->addAttribute('TD', 'colspan', 'uint', array('isRequired' => false));
+		$this->cb->addAttribute('TD', 'rowspan', 'uint', array('isRequired' => false));
 		$this->cb->setTagTemplate(
 			'TD',
 			'<td>
@@ -341,7 +341,7 @@ class PredefinedTags
 			'defaultDescendantRule' => 'deny'
 		));
 
-		$this->cb->addTagAttribute('CODE', 'stx', 'identifier', array(
+		$this->cb->addAttribute('CODE', 'stx', 'identifier', array(
 			'defaultValue' => 'plain',
 			'preFilter'    => array(
 				array('callback' => 'strtolower')
@@ -404,7 +404,7 @@ class PredefinedTags
 			htmlspecialchars($authorStr)
 		);
 
-		$this->cb->addTagAttribute('QUOTE', 'author', 'text', array('isRequired' => false));
+		$this->cb->addAttribute('QUOTE', 'author', 'text', array('isRequired' => false));
 		$this->cb->setTagTemplate(
 			'QUOTE',
 			'<xsl:choose>
@@ -515,7 +515,7 @@ EOT;
 	public function addCOLOR()
 	{
 		$this->cb->addTag('COLOR');
-		$this->cb->addTagAttribute('COLOR', 'color', 'color');
+		$this->cb->addAttribute('COLOR', 'color', 'color');
 		$this->cb->setTagTemplate(
 			'COLOR', '<span style="color:{@color}"><xsl:apply-templates /></span>'
 		);
@@ -549,7 +549,7 @@ EOT;
 	{
 		$this->cb->addTag('SPAN');
 
-		$this->cb->addTagAttribute('SPAN', 'class', 'regexp', array(
+		$this->cb->addAttribute('SPAN', 'class', 'regexp', array(
 			'isRequired' => false,
 			'regexp' => '/^[a-z_0-9 ]+$/Di'
 		));
@@ -588,7 +588,7 @@ EOT;
 	public function addACRONYM()
 	{
 		$this->cb->addTag('ACRONYM');
-		$this->cb->addTagAttribute('ACRONYM', 'title', 'text');
+		$this->cb->addAttribute('ACRONYM', 'title', 'text');
 		$this->cb->setTagTemplate('ACRONYM', '<acronym title="{@title}"><xsl:apply-templates /></acronym>');
 	}
 
@@ -662,7 +662,7 @@ EOT;
 		$this->cb->addTag('FLOAT', array(
 			'trimAfter'  => true
 		));
-		$this->cb->addTagAttribute(
+		$this->cb->addAttribute(
 			'FLOAT', 'float', 'regexp', array('regexp' => '#^(?:left|right|none)$#Di')
 		);
 		$this->cb->setTagTemplate(
@@ -673,7 +673,7 @@ EOT;
 	public function addCLEAR()
 	{
 		$this->cb->addTag('CLEAR');
-		$this->cb->addTagAttribute(
+		$this->cb->addAttribute(
 			'CLEAR', 'clear', 'regexp', array(
 				'regexp' => '#^(?:left|right|both)$#Di',
 				'defaultValue' => 'both'

@@ -106,12 +106,12 @@ class GenericConfigTest extends Test
 
 		$this->assertSame(
 			'#^(?<xy>(?<zz>a))$#D',
-			$this->cb->getTagAttributeOption($tagName, 'xy', 'regexp')
+			$this->cb->getAttributeOption($tagName, 'xy', 'regexp')
 		);
 
 		$this->assertSame(
 			'#^(?<zz>a)$#D',
-			$this->cb->getTagAttributeOption($tagName, 'zz', 'regexp')
+			$this->cb->getAttributeOption($tagName, 'zz', 'regexp')
 		);
 	}
 

@@ -401,7 +401,7 @@ class JSParserGeneratorTest extends Test
 	public function testCompoundAttributesHaveARegexpMap()
 	{
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'compound', array(
+		$this->cb->addAttribute('X', 'x', 'compound', array(
 			'regexp' => '#^(?<width>[0-9]+),(?<height>[0-9]+)$#'
 		));
 

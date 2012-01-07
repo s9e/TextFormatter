@@ -183,7 +183,7 @@ class BBCodesParserTest extends Test
 			'defaultAttr' => 'z'
 		));
 
-		$this->cb->addTagAttribute('X', 'z', 'text', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'z', 'text', array('isRequired' => false));
 
 		$this->assertParsing(
 			'[X="123"][/X]',
@@ -200,7 +200,7 @@ class BBCodesParserTest extends Test
 	{
 		$this->cb->BBCodes->addBBCode('X', array('tagName' => 'Z'));
 
-		$this->cb->addTagAttribute('Z', 'x', 'text', array('isRequired' => false));
+		$this->cb->addAttribute('Z', 'x', 'text', array('isRequired' => false));
 
 		$this->assertParsing(
 			'[X="123"][/X]',
@@ -214,7 +214,7 @@ class BBCodesParserTest extends Test
 	public function An_attribute_at_the_end_of_a_tag_with_no_specified_value_is_considered_an_empty_string()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X x=][/X]',
@@ -228,7 +228,7 @@ class BBCodesParserTest extends Test
 	public function An_attribute_in_the_middle_of_a_tag_with_no_specified_value_is_considered_an_empty_string()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X x= y=2][/X]',
@@ -242,7 +242,7 @@ class BBCodesParserTest extends Test
 	public function A_default_attribute_with_no_specified_value_is_considered_an_empty_string()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X= ][/X]',
@@ -256,7 +256,7 @@ class BBCodesParserTest extends Test
 	public function An_attribute_not_followed_by_an_equal_sign_is_ignored()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'x', 'text', array('isRequired' => false));
 
 		$this->assertParsing(
 			'[X x][/X]',
@@ -318,7 +318,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_names_can_contain_hyphens()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'data-foo', 'text');
+		$this->cb->addAttribute('X', 'data-foo', 'text');
 
 		$this->assertParsing(
 			'[X data-foo=1 /]',
@@ -376,7 +376,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_can_be_enclosed_within_single_quotes()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x='abc' /]",
@@ -390,7 +390,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_can_be_enclosed_within_double_quotes()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X x="abc" /]',
@@ -404,7 +404,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_single_quotes_can_contain_spaces()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x=' a b c ' /]",
@@ -418,7 +418,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_double_quotes_can_contain_spaces()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X x=" a b c " /]',
@@ -432,7 +432,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_single_quotes_can_contain_single_quotes_each_escaped_with_a_backslash()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x='\\'a\\'b\\'c\\'' /]",
@@ -446,7 +446,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_double_quotes_can_contain_double_quotes_each_escaped_with_a_backslash()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X x="\\"a\\"b\\"c\\"" /]',
@@ -460,7 +460,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_single_quotes_can_contain_unescaped_double_quotes()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X x=\'"a"b"c"\' /]',
@@ -474,7 +474,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_double_quotes_can_contain_unescaped_single_quotes()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x=\"'a'b'c'\" /]",
@@ -488,7 +488,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_single_quotes_can_contain_backslashes_each_escaped_with_another_backslash()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x='\\\\a\\\\b\\\\c\\\\' /]",
@@ -502,7 +502,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_double_quotes_can_contain_backslashes_each_escaped_with_another_backslash()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X x="\\\\a\\\\b\\\\c\\\\" /]',
@@ -516,7 +516,7 @@ class BBCodesParserTest extends Test
 	public function A_backslash_before_a_regular_character_is_preserved()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			'[X x="a\\b\\c" /]',
@@ -530,7 +530,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_single_quotes_can_contain_newlines()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x='\na\nb\nc\n' /]",
@@ -544,7 +544,7 @@ class BBCodesParserTest extends Test
 	public function Attribute_values_within_double_quotes_can_contain_newlines()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x=\"\na\nb\nc\n\" /]",
@@ -559,7 +559,7 @@ class BBCodesParserTest extends Test
 	public function An_attribute_value_not_within_quotes_cannot_contain_spaces()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x=a b /]",
@@ -573,7 +573,7 @@ class BBCodesParserTest extends Test
 	public function An_attribute_value_not_within_quotes_cannot_contain_newlines()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x=a\nb /]",
@@ -587,7 +587,7 @@ class BBCodesParserTest extends Test
 	public function An_unterminated_attribute_that_start_with_a_quote_generates_a_warning()
 	{
 		$this->cb->BBCodes->addBBCode('X');
-		$this->cb->addTagAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
 
 		$this->assertParsing(
 			"[X x='a /]",
@@ -648,7 +648,7 @@ class BBCodesParserTest extends Test
 	public function Attributes_listed_in_contentAttrs_use_everything_from_the_end_of_the_start_tag_and_what_could_be_the_end_tag_as_value_if_a_value_was_not_given()
 	{
 		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('b')));
-		$this->cb->addTagAttribute('X', 'b', 'text');
+		$this->cb->addAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
 			'[X]xxx[/X]',
@@ -662,7 +662,7 @@ class BBCodesParserTest extends Test
 	public function Attributes_listed_in_contentAttrs_are_not_overwritten_if_a_value_is_given()
 	{
 		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('b')));
-		$this->cb->addTagAttribute('X', 'b', 'text');
+		$this->cb->addAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
 			'[X b="yyy"]xxx[/X]',
@@ -676,7 +676,7 @@ class BBCodesParserTest extends Test
 	public function When_looking_for_the_end_tag_while_capturing_content_for_contentAttrs_the_search_is_case_insensitive()
 	{
 		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('b')));
-		$this->cb->addTagAttribute('X', 'b', 'text');
+		$this->cb->addAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
 			'[X]xxx[/x]',
@@ -691,7 +691,7 @@ class BBCodesParserTest extends Test
 	public function When_looking_for_the_end_tag_while_capturing_content_for_contentAttrs_the_suffix_is_taken_into_account()
 	{
 		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('b')));
-		$this->cb->addTagAttribute('X', 'b', 'text');
+		$this->cb->addAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
 			'[X:1]xxx[/X][/X:1]',
@@ -705,8 +705,8 @@ class BBCodesParserTest extends Test
 	public function testMultipleContentAttrs()
 	{
 		$this->cb->BBCodes->addBBCode('X', array('contentAttrs' => array('a', 'b')));
-		$this->cb->addTagAttribute('X', 'a', 'text');
-		$this->cb->addTagAttribute('X', 'b', 'text');
+		$this->cb->addAttribute('X', 'a', 'text');
+		$this->cb->addAttribute('X', 'b', 'text');
 
 		$this->assertParsing(
 			'[X]xxx[/X]',

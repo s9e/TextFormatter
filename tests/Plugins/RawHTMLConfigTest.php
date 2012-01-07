@@ -185,7 +185,7 @@ class RawHTMLConfigTest extends Test
 		$this->cb->RawHTML->allowElement('b');
 		$this->cb->RawHTML->allowAttribute('b', 'title');
 
-		$this->assertFalse($this->cb->getTagAttributeOption('html:b', 'title', 'isRequired'));
+		$this->assertFalse($this->cb->getAttributeOption('html:b', 'title', 'isRequired'));
 	}
 
 	/**
@@ -196,7 +196,7 @@ class RawHTMLConfigTest extends Test
 		$this->cb->RawHTML->allowElement('a');
 		$this->cb->RawHTML->allowAttribute('a', 'href');
 
-		$this->assertSame('url', $this->cb->getTagAttributeOption('html:a', 'href', 'type'));
+		$this->assertSame('url', $this->cb->getAttributeOption('html:a', 'href', 'type'));
 	}
 
 	/**
@@ -207,7 +207,7 @@ class RawHTMLConfigTest extends Test
 		$this->cb->RawHTML->allowElement('a');
 		$this->cb->RawHTML->allowAttribute('a', 'title');
 
-		$this->assertSame('text', $this->cb->getTagAttributeOption('html:a', 'title', 'type'));
+		$this->assertSame('text', $this->cb->getAttributeOption('html:a', 'title', 'type'));
 	}
 
 	/**

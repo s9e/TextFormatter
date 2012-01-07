@@ -245,7 +245,7 @@ class BBCodesConfigTest extends Test
 	public function setBBCodeOption_can_set_a_single_defaultAttr()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->addTagAttribute('A', 'href', 'url');
+		$this->cb->addAttribute('A', 'href', 'url');
 		$this->cb->BBCodes->setBBCodeOption('A', 'defaultAttr', 'href');
 
 		$this->assertArrayMatches(
@@ -279,8 +279,8 @@ class BBCodesConfigTest extends Test
 	public function setBBCodeOption_multiple_contentAttrs()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->addTagAttribute('A', 'href', 'url');
-		$this->cb->addTagAttribute('A', 'foo', 'text');
+		$this->cb->addAttribute('A', 'href', 'url');
+		$this->cb->addAttribute('A', 'foo', 'text');
 		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttrs', array('href', 'foo'));
 
 		$this->assertArrayMatches(
@@ -302,7 +302,7 @@ class BBCodesConfigTest extends Test
 	public function setBBCodeOption_single_contentAttr()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->addTagAttribute('A', 'href', 'url');
+		$this->cb->addAttribute('A', 'href', 'url');
 		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttr', 'href');
 
 		$this->assertArrayMatches(
@@ -324,8 +324,8 @@ class BBCodesConfigTest extends Test
 	public function setBBCodeOptions_with_both_contentAttr_and_contentAttrs()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->addTagAttribute('A', 'href', 'url');
-		$this->cb->addTagAttribute('A', 'foo', 'text');
+		$this->cb->addAttribute('A', 'href', 'url');
+		$this->cb->addAttribute('A', 'foo', 'text');
 		$this->cb->BBCodes->setBBCodeOptions(
 			'A',
 			array(
@@ -492,7 +492,7 @@ class BBCodesConfigTest extends Test
 		$this->assertSame('a', $this->cb->BBCodes->getBBCodeOption('A', 'defaultAttr'));
 
 		$this->assertTrue($this->cb->attributeExists('A', 'a'));
-		$this->assertSame('url', $this->cb->getTagAttributeOption('A', 'a', 'type'));
+		$this->assertSame('url', $this->cb->getAttributeOption('A', 'a', 'type'));
 	}
 
 	/**
@@ -526,7 +526,7 @@ class BBCodesConfigTest extends Test
 			array(
 				array('callback' => 'strtolower')
 			),
-			$this->cb->getTagAttributeOption('B', 'b', 'preFilter')
+			$this->cb->getAttributeOption('B', 'b', 'preFilter')
 		);
 	}
 
@@ -547,7 +547,7 @@ class BBCodesConfigTest extends Test
 				array('callback' => 'strtolower'),
 				array('callback' => 'ucfirst')
 			),
-			$this->cb->getTagAttributeOption('B', 'b', 'preFilter')
+			$this->cb->getAttributeOption('B', 'b', 'preFilter')
 		);
 	}
 
@@ -561,7 +561,7 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertTrue($this->cb->getTagAttributeOption('B', 'b', 'foo'));
+		$this->assertTrue($this->cb->getAttributeOption('B', 'b', 'foo'));
 	}
 
 	/**
@@ -595,7 +595,7 @@ class BBCodesConfigTest extends Test
 			array(
 				array('callback' => 'strtolower')
 			),
-			$this->cb->getTagAttributeOption('B', 'b', 'postFilter')
+			$this->cb->getAttributeOption('B', 'b', 'postFilter')
 		);
 	}
 
@@ -616,7 +616,7 @@ class BBCodesConfigTest extends Test
 				array('callback' => 'strtolower'),
 				array('callback' => 'ucfirst')
 			),
-			$this->cb->getTagAttributeOption('B', 'b', 'postFilter')
+			$this->cb->getAttributeOption('B', 'b', 'postFilter')
 		);
 	}
 
@@ -653,7 +653,7 @@ class BBCodesConfigTest extends Test
 			array(
 				array('callback' => 'system')
 			),
-			$this->cb->getTagAttributeOption('B', 'b', 'preFilter')
+			$this->cb->getAttributeOption('B', 'b', 'preFilter')
 		);
 	}
 
@@ -680,7 +680,7 @@ class BBCodesConfigTest extends Test
 			array(
 				array('callback' => array(__CLASS__, 'foo'))
 			),
-			$this->cb->getTagAttributeOption('B', 'b', 'preFilter')
+			$this->cb->getAttributeOption('B', 'b', 'preFilter')
 		);
 	}
 
@@ -827,8 +827,8 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('bar', $this->cb->getTagAttributeOption('B', 'b', 'foo'));
-		$this->assertSame('quux', $this->cb->getTagAttributeOption('B', 'b', 'baz'));
+		$this->assertSame('bar', $this->cb->getAttributeOption('B', 'b', 'foo'));
+		$this->assertSame('quux', $this->cb->getAttributeOption('B', 'b', 'baz'));
 	}
 
 	/**
@@ -843,8 +843,8 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('regexp', $this->cb->getTagAttributeOption('B', 'b', 'type'));
-		$this->assertSame('/^foo$/', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
+		$this->assertSame('regexp', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame('/^foo$/', $this->cb->getAttributeOption('B', 'b', 'regexp'));
 	}
 
 	/**
@@ -859,8 +859,8 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('compound', $this->cb->getTagAttributeOption('B', 'b', 'type'));
-		$this->assertSame('/^(?P<foo>foo)$/', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
+		$this->assertSame('compound', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame('/^(?P<foo>foo)$/', $this->cb->getAttributeOption('B', 'b', 'regexp'));
 	}
 
 	/**
@@ -875,9 +875,9 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('range', $this->cb->getTagAttributeOption('B', 'b', 'type'));
-		$this->assertSame(-10, $this->cb->getTagAttributeOption('B', 'b', 'min'));
-		$this->assertSame(20, $this->cb->getTagAttributeOption('B', 'b', 'max'));
+		$this->assertSame('range', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame(-10, $this->cb->getAttributeOption('B', 'b', 'min'));
+		$this->assertSame(20, $this->cb->getAttributeOption('B', 'b', 'max'));
 	}
 
 	/**
@@ -892,8 +892,8 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('regexp', $this->cb->getTagAttributeOption('B', 'b', 'type'));
-		$this->assertSame('#^(?=[bfq])(?:bar|foo|quux)$#iD', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
+		$this->assertSame('regexp', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame('#^(?=[bfq])(?:bar|foo|quux)$#iD', $this->cb->getAttributeOption('B', 'b', 'regexp'));
 	}
 
 	/**
@@ -908,8 +908,8 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('regexp', $this->cb->getTagAttributeOption('B', 'b', 'type'));
-		$this->assertSame('#^(?=[オ桜])(?:オレンジ|桜)$#iDu', $this->cb->getTagAttributeOption('B', 'b', 'regexp'));
+		$this->assertSame('regexp', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame('#^(?=[オ桜])(?:オレンジ|桜)$#iDu', $this->cb->getAttributeOption('B', 'b', 'regexp'));
 	}
 
 	/**

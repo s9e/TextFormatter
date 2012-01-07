@@ -1225,7 +1225,7 @@ class Parser
 		* have been closed by a rule.)
 		*/
 		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit']
-		 || $this->processCurrentTagAttributes()
+		 || $this->processCurrentAttributes()
 		 || $this->closeParent()
 		 || $this->closeAncestor()
 		 || $this->cntOpen[$tagName]  >= $tagConfig['nestingLimit']
@@ -1661,7 +1661,7 @@ class Parser
 	*
 	* @return bool Whether the set of attributes is invalid
 	*/
-	protected function processCurrentTagAttributes()
+	protected function processCurrentAttributes()
 	{
 		if (empty($this->tagsConfig[$this->currentTag['name']]['attrs']))
 		{

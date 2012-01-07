@@ -102,7 +102,7 @@ class RawHTMLConfig extends PluginConfig
 
 		if (!$this->cb->attributeExists($tagName, $attrName))
 		{
-			$this->cb->addTagAttribute(
+			$this->cb->addAttribute(
 				$tagName,
 				$attrName,
 				$attrType,

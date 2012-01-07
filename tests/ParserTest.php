@@ -1447,7 +1447,7 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'y', 'mytype');
+		$this->cb->addAttribute('X', 'y', 'mytype');
 
 		$this->cb->setFilter(
 			'mytype',
@@ -1505,9 +1505,9 @@ class ParserTest extends Test
 				)
 			)
 		));
-		$this->cb->addTagAttribute('X', 'x', 'text');
-		$this->cb->addTagAttribute('X', 'y', 'text');
-		$this->cb->addTagAttribute('X', 'z', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'y', 'text');
+		$this->cb->addAttribute('X', 'z', 'text');
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1548,9 +1548,9 @@ class ParserTest extends Test
 				)
 			)
 		));
-		$this->cb->addTagAttribute('X', 'x', 'text');
-		$this->cb->addTagAttribute('X', 'y', 'text');
-		$this->cb->addTagAttribute('X', 'z', 'text');
+		$this->cb->addAttribute('X', 'x', 'text');
+		$this->cb->addAttribute('X', 'y', 'text');
+		$this->cb->addAttribute('X', 'z', 'text');
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1575,9 +1575,9 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false));
-		$this->cb->addTagAttribute('X', 'y', 'int', array('isRequired' => false));
-		$this->cb->addTagAttribute('X', 'xy', 'compound', array(
+		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'xy', 'compound', array(
 			'regexp' => '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D'
 		));
 
@@ -1604,9 +1604,9 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false));
-		$this->cb->addTagAttribute('X', 'y', 'int', array('isRequired' => false));
-		$this->cb->addTagAttribute('X', 'xy', 'compound', array(
+		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'xy', 'compound', array(
 			'regexp' => '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D'
 		));
 
@@ -1630,9 +1630,9 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false));
-		$this->cb->addTagAttribute('X', 'y', 'int', array('isRequired' => false));
-		$this->cb->addTagAttribute('X', 'xy', 'compound', array(
+		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'xy', 'compound', array(
 			'regexp' => '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D',
 			'isRequired' => false
 		));
@@ -1660,9 +1660,9 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false));
-		$this->cb->addTagAttribute('X', 'y', 'int', array('isRequired' => false));
-		$this->cb->addTagAttribute('X', 'xy', 'compound', array(
+		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'xy', 'compound', array(
 			'regexp' => '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D'
 		));
 
@@ -1686,7 +1686,7 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
+		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1716,7 +1716,7 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
+		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1740,7 +1740,7 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('preFilter' => array(
+		$this->cb->addAttribute('X', 'x', 'int', array('preFilter' => array(
 			array('callback' => function($attrVal) { return 42; })
 		)));
 
@@ -1767,7 +1767,7 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addTagAttribute('X', 'x', 'int', array('postFilter' => array(
+		$this->cb->addAttribute('X', 'x', 'int', array('postFilter' => array(
 			array('callback' => function($attrVal) { return 'invalid'; })
 		)));
 

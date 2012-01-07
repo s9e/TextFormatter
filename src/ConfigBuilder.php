@@ -358,7 +358,7 @@ class ConfigBuilder
 			case 'attrs':
 				foreach ($optionValue as $attrName => $attrConf)
 				{
-					$this->addTagAttribute($tagName, $attrName, $attrConf['type'], $attrConf);
+					$this->addAttribute($tagName, $attrName, $attrConf['type'], $attrConf);
 				}
 				break;
 
@@ -502,7 +502,7 @@ class ConfigBuilder
 	* @param string $attrType
 	* @param array  $attrConf
 	*/
-	public function addTagAttribute($tagName, $attrName, $attrType, array $attrConf = array())
+	public function addAttribute($tagName, $attrName, $attrType, array $attrConf = array())
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
@@ -528,7 +528,7 @@ class ConfigBuilder
 			'isRequired' => (bool) ($attrType !== 'compound')
 		);
 
-		$this->setTagAttributeOptions($tagName, $attrName, $attrConf);
+		$this->setAttributeOptions($tagName, $attrName, $attrConf);
 	}
 
 	/**
@@ -538,11 +538,11 @@ class ConfigBuilder
 	* @param string $attrName
 	* @param array  $options
 	*/
-	public function setTagAttributeOptions($tagName, $attrName, $options)
+	public function setAttributeOptions($tagName, $attrName, $options)
 	{
 		foreach ($options as $optionName => $optionValue)
 		{
-			$this->setTagAttributeOption($tagName, $attrName, $optionName, $optionValue);
+			$this->setAttributeOption($tagName, $attrName, $optionName, $optionValue);
 		}
 	}
 
@@ -554,7 +554,7 @@ class ConfigBuilder
 	* @param string $optionName
 	* @param mixed  $optionValue
 	*/
-	public function setTagAttributeOption($tagName, $attrName, $optionName, $optionValue)
+	public function setAttributeOption($tagName, $attrName, $optionName, $optionValue)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName, $tagName);
@@ -567,11 +567,11 @@ class ConfigBuilder
 			case 'postFilter':
 				$callbacks = $this->normalizeCallbacks($optionValue, array('attrVal' => null));
 
-				$this->clearTagAttributeCallbacks($optionName, $tagName, $attrName);
+				$this->clearAttributeCallbacks($optionName, $tagName, $attrName);
 
 				foreach ($callbacks as $callbackConf)
 				{
-					$this->addTagAttributeCallback(
+					$this->addAttributeCallback(
 						$optionName,
 						$tagName,
 						$attrName,
@@ -593,7 +593,7 @@ class ConfigBuilder
 	* @param  string $attrName
 	* @return array
 	*/
-	public function getTagAttributeOptions($tagName, $attrName)
+	public function getAttributeOptions($tagName, $attrName)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName, $tagName);
@@ -609,7 +609,7 @@ class ConfigBuilder
 	* @param  string $optionName
 	* @return mixed
 	*/
-	public function getTagAttributeOption($tagName, $attrName, $optionName)
+	public function getAttributeOption($tagName, $attrName, $optionName)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName, $tagName);
@@ -692,9 +692,9 @@ class ConfigBuilder
 	* @param string $tagName
 	* @param string $attrName
 	*/
-	public function clearTagAttributePreFilterCallbacks($tagName, $attrName)
+	public function clearAttributePreFilterCallbacks($tagName, $attrName)
 	{
-		$this->clearTagAttributeCallbacks('preFilter', $tagName, $attrName);
+		$this->clearAttributeCallbacks('preFilter', $tagName, $attrName);
 	}
 
 	/**
@@ -703,9 +703,9 @@ class ConfigBuilder
 	* @param string $tagName
 	* @param string $attrName
 	*/
-	public function clearTagAttributePostFilterCallbacks($tagName, $attrName)
+	public function clearAttributePostFilterCallbacks($tagName, $attrName)
 	{
-		$this->clearTagAttributeCallbacks('postFilter', $tagName, $attrName);
+		$this->clearAttributeCallbacks('postFilter', $tagName, $attrName);
 	}
 
 	/**
@@ -715,7 +715,7 @@ class ConfigBuilder
 	* @param string $tagName
 	* @param string $attrName
 	*/
-	protected function clearTagAttributeCallbacks($phase, $tagName, $attrName)
+	protected function clearAttributeCallbacks($phase, $tagName, $attrName)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
@@ -731,9 +731,9 @@ class ConfigBuilder
 	* @param callback $callback
 	* @param array    $params
 	*/
-	public function addTagAttributePreFilterCallback($tagName, $attrName, $callback, array $params = array('attrVal' => null))
+	public function addAttributePreFilterCallback($tagName, $attrName, $callback, array $params = array('attrVal' => null))
 	{
-		$this->addTagAttributeCallback('preFilter', $tagName, $attrName, $callback, $params);
+		$this->addAttributeCallback('preFilter', $tagName, $attrName, $callback, $params);
 	}
 
 	/**
@@ -744,9 +744,9 @@ class ConfigBuilder
 	* @param callback $callback
 	* @param array    $params
 	*/
-	public function addTagAttributePostFilterCallback($tagName, $attrName, $callback, array $params = array('attrVal' => null))
+	public function addAttributePostFilterCallback($tagName, $attrName, $callback, array $params = array('attrVal' => null))
 	{
-		$this->addTagAttributeCallback('postFilter', $tagName, $attrName, $callback, $params);
+		$this->addAttributeCallback('postFilter', $tagName, $attrName, $callback, $params);
 	}
 
 	/**
@@ -758,7 +758,7 @@ class ConfigBuilder
 	* @param callback $callback
 	* @param array    $params
 	*/
-	protected function addTagAttributeCallback($phase, $tagName, $attrName, $callback, array $params)
+	protected function addAttributeCallback($phase, $tagName, $attrName, $callback, array $params)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
