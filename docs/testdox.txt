@@ -528,57 +528,57 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] BBCode names can start with a letter
  [x] BBCode names cannot start with anything else
  [x] BBCode names can only contain letters numbers and underscores
- [x] addBBCode rejects invalid BBCode names
+ [x] addBBCode() rejects invalid BBCode names
  [x] BBCodes are mapped to a tag of the same name by default
- [x] addBBCode throws an exception if the BBCode name is already in use
+ [x] addBBCode() throws an exception if the BBCode name is already in use
  [x] A BBCode can map to a tag of a different name
- [x] addBBCodeAlias throws an exception if the tag does not exist
- [x] addBBCodeAlias throws an exception if the BBCode already exists
- [x] addBBCodeAlias cannot create an alias to an invalid tag name
+ [x] addBBCodeAlias() throws an exception if the tag does not exist
+ [x] addBBCodeAlias() throws an exception if the BBCode already exists
+ [x] addBBCodeAlias() cannot create an alias to an invalid tag name
  [x] Can tell whether a BBCode exists
  [x] Can return all options of a BBCode
  [x] Can return the value of an option of a BBCode
  [x] Can return the value of an option of a BBCode even if it is null
- [x] getBBCodeOptions throws an exception if the BBCode does not exist
+ [x] getBBCodeOptions() throws an exception if the BBCode does not exist
  [x] getBBCodeOption throws an exception if the BBCode does not exist
- [x] getBBCodeOption throws an exception if the option does not exist
- [x] setBBCodeOption cannot set a defaultAttr with an invalid name
- [x] setBBCodeOption cannot set contentAttrs with an invalid name
- [x] addBBCodeFromExample works on simple BBCodes
- [x] addBBCodeFromExample throws an exception if the definition is malformed
- [x] addBBCodeFromExample throws an exception if the template is not wellformed XML
- [x] addBBCodeFromExample throws an exception if an undefined placeholder is found in an attribute
- [x] addBBCodeFromExample throws an exception if an undefined placeholder is found anywhere
- [x] addBBCodeFromExample throws an exception if a TEXT placeholder is found in an attribute
- [x] addBBCodeFromExample does not throw an exception if a TEXT placeholder is found in an attribute but ALLOW UNSAFE TEMPLATES flag is set
- [x] addBBCodeFromExample allows a single start tag with no end tag and enables autoClose
- [x] addBBCodeFromExample allows a self closed tag and enables autoClose
- [x] addBBCodeFromExample handles default attribute and gives it the same name as the tag
+ [x] getBBCodeOption() throws an exception if the option does not exist
+ [x] setBBCodeOption() cannot set a defaultAttr with an invalid name
+ [x] setBBCodeOption() cannot set contentAttrs with an invalid name
+ [x] addBBCodeFromExample() works on simple BBCodes
+ [x] addBBCodeFromExample() throws an exception if the definition is malformed
+ [x] addBBCodeFromExample() throws an exception if the template is not wellformed XML
+ [x] addBBCodeFromExample() throws an exception if an undefined placeholder is found in an attribute
+ [x] addBBCodeFromExample() throws an exception if an undefined placeholder is found anywhere
+ [x] addBBCodeFromExample() throws an exception if a TEXT placeholder is found in an attribute
+ [x] addBBCodeFromExample() does not throw an exception if a TEXT placeholder is found in an attribute but ALLOW_UNSAFE_TEMPLATES flag is set
+ [x] addBBCodeFromExample() allows a single start tag with no end tag and enables autoClose
+ [x] addBBCodeFromExample() allows a self closed tag and enables autoClose
+ [x] addBBCodeFromExample() handles default attribute and gives it the same name as the tag
  [x] The name of the default attribute can be set using the attrName option
- [x] addBBCodeFromExample handles single preFilter callback in attribute
- [x] addBBCodeFromExample handles multiple preFilter callbacks in attribute
+ [x] addBBCodeFromExample() handles single preFilter callback in attribute
+ [x] addBBCodeFromExample() handles multiple preFilter callbacks in attribute
  [x] addBBCodeFromExample() attribute options with no values are set to true
- [x] addBBCodeFromExample rejects unauthorized preFilter callbacks in attribute
- [x] addBBCodeFromExample handles single postFilter callback in attribute
- [x] addBBCodeFromExample handles multiple postFilter callbacks in attribute
- [x] addBBCodeFromExample rejects unauthorized postFilter callbacks in attribute
- [x] Custom callbacks can be added via BBCodesConfig allowPhaseFiltersCallback
- [x] Static method callbacks can be added via BBCodesConfig allowPhaseFiltersCallback
- [x] addBBCodeFromExample does not create an attribute for the tag content if it is TEXT with no other options set
- [x] addBBCodeFromExample creates an attribute named content for the tag content
+ [x] addBBCodeFromExample() rejects unauthorized preFilter callbacks in attribute
+ [x] addBBCodeFromExample() handles single postFilter callback in attribute
+ [x] addBBCodeFromExample() handles multiple postFilter callbacks in attribute
+ [x] addBBCodeFromExample() rejects unauthorized postFilter callbacks in attribute
+ [x] Custom callbacks can be added via BBCodesConfig::allowPhaseFiltersCallback()
+ [x] Static method callbacks can be added via BBCodesConfig::allowPhaseFiltersCallback()
+ [x] addBBCodeFromExample() does not create an attribute for the tag content if it is TEXT with no other options set
+ [x] addBBCodeFromExample() creates an attribute named content for the tag content
  [x] The name of the content attribute can be set using the attrName option
- [x] addBBCodeFromExample replaces placeholders in attributes
- [x] addBBCodeFromExample replaces placeholders in content
- [x] addBBCodeFromExample throws an exception on duplicate attributes
- [x] addBBCodeFromExample throws an exception on duplicate placeholders
- [x] addBBCodeFromExample throws an exception on undefined placeholders used in attributes
- [x] addBBCodeFromExample throws an exception on undefined placeholders used in content
- [x] addBBCodeFromExample allows arbitrary options in attribute
- [x] addBBCodeFromExample handles REGEXP placeholders
- [x] addBBCodeFromExample handles COMPOUND placeholders
- [x] addBBCodeFromExample handles RANGE placeholders
- [x] addBBCodeFromExample handles CHOICE placeholders and turns them into regexps
- [x] addBBCodeFromExample handles CHOICE placeholders with Unicode values
+ [x] addBBCodeFromExample() replaces placeholders in attributes
+ [x] addBBCodeFromExample() replaces placeholders in content
+ [x] addBBCodeFromExample() throws an exception on duplicate attributes
+ [x] addBBCodeFromExample() throws an exception on duplicate placeholders
+ [x] addBBCodeFromExample() throws an exception on undefined placeholders used in attributes
+ [x] addBBCodeFromExample() throws an exception on undefined placeholders used in content
+ [x] addBBCodeFromExample() allows arbitrary options in attribute
+ [x] addBBCodeFromExample() handles REGEXP placeholders
+ [x] addBBCodeFromExample() handles COMPOUND placeholders
+ [x] addBBCodeFromExample() handles RANGE placeholders
+ [x] addBBCodeFromExample() handles CHOICE placeholders and turns them into regexps
+ [x] addBBCodeFromExample() handles CHOICE placeholders with Unicode values
  [x] getJSParser() returns the source of its Javascript parser
  [x] BBCode names are preserved in Javascript config
  [x] getJSConfig() generates an optimization hint "hasAutoCloseHint" that is false by default

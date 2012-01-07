@@ -78,6 +78,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid BBCode name ']'
+	* @testdox addBBCode() rejects invalid BBCode names
 	*/
 	public function addBBCode_rejects_invalid_BBCode_names()
 	{
@@ -103,6 +104,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage BBCode 'A' already exists
+	* @testdox addBBCode() throws an exception if the BBCode name is already in use
 	*/
 	public function addBBCode_throws_an_exception_if_the_BBCode_name_is_already_in_use()
 	{
@@ -123,6 +125,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Tag 'A' does not exist
+	* @testdox addBBCodeAlias() throws an exception if the tag does not exist
 	*/
 	public function addBBCodeAlias_throws_an_exception_if_the_tag_does_not_exist()
 	{
@@ -134,6 +137,7 @@ class BBCodesConfigTest extends Test
 	* @depend BBCodes_are_mapped_to_a_tag_of_the_same_name_by_default
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage BBCode 'A' already exists
+	* @testdox addBBCodeAlias() throws an exception if the BBCode already exists
 	*/
 	public function addBBCodeAlias_throws_an_exception_if_the_BBCode_already_exists()
 	{
@@ -146,6 +150,7 @@ class BBCodesConfigTest extends Test
 	* @depend BBCodes_are_mapped_to_a_tag_of_the_same_name_by_default
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name '*'
+	* @testdox addBBCodeAlias() cannot create an alias to an invalid tag name
 	*/
 	public function addBBCodeAlias_cannot_create_an_alias_to_an_invalid_tag_name()
 	{
@@ -201,6 +206,7 @@ class BBCodesConfigTest extends Test
 	* @depends Can_return_all_options_of_a_BBCode
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage BBCode 'A' does not exist
+	* @testdox getBBCodeOptions() throws an exception if the BBCode does not exist
 	*/
 	public function getBBCodeOptions_throws_an_exception_if_the_BBCode_does_not_exist()
 	{
@@ -212,6 +218,7 @@ class BBCodesConfigTest extends Test
 	* @depends Can_return_the_value_of_an_option_of_a_BBCode
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage BBCode 'A' does not exist
+	* @testodx getBBCodeOption() throws an exception if the BBCode does not exist
 	*/
 	public function getBBCodeOption_throws_an_exception_if_the_BBCode_does_not_exist()
 	{
@@ -223,6 +230,7 @@ class BBCodesConfigTest extends Test
 	* @depends Can_return_the_value_of_an_option_of_a_BBCode
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Unknown option 'XYZ' from BBCode 'A'
+	* @testdox getBBCodeOption() throws an exception if the option does not exist
 	*/
 	public function getBBCodeOption_throws_an_exception_if_the_option_does_not_exist()
 	{
@@ -234,6 +242,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid attribute name '**'
+	* @testdox setBBCodeOption() cannot set a defaultAttr with an invalid name
 	*/
 	public function setBBCodeOption_cannot_set_a_defaultAttr_with_an_invalid_name()
 	{
@@ -245,6 +254,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid attribute name '**'
+	* @testdox setBBCodeOption() cannot set contentAttrs with an invalid name
 	*/
 	public function setBBCodeOption_cannot_set_contentAttrs_with_an_invalid_name()
 	{
@@ -255,6 +265,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends Can_tell_whether_a_BBCode_exists
+	* @testdox addBBCodeFromExample() works on simple BBCodes
 	*/
 	public function addBBCodeFromExample_works_on_simple_BBCodes()
 	{
@@ -266,6 +277,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Cannot interpret the BBCode definition
+	* @testdox addBBCodeFromExample() throws an exception if the definition is malformed
 	*/
 	public function addBBCodeFromExample_throws_an_exception_if_the_definition_is_malformed()
 	{
@@ -276,6 +288,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid XML in template - error was: Premature end of data
+	* @testdox addBBCodeFromExample() throws an exception if the template is not wellformed XML
 	*/
 	public function addBBCodeFromExample_throws_an_exception_if_the_template_is_not_wellformed_XML()
 	{
@@ -286,6 +299,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Undefined placeholder {ID} found in template
+	* @testdox addBBCodeFromExample() throws an exception if an undefined placeholder is found in an attribute
 	*/
 	public function addBBCodeFromExample_throws_an_exception_if_an_undefined_placeholder_is_found_in_an_attribute()
 	{
@@ -296,6 +310,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Undefined placeholder {TEXT} found in template
+	* @testdox addBBCodeFromExample() throws an exception if an undefined placeholder is found anywhere
 	*/
 	public function addBBCodeFromExample_throws_an_exception_if_an_undefined_placeholder_is_found_anywhere()
 	{
@@ -306,6 +321,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage ALLOW_UNSAFE_TEMPLATES
+	* @testdox addBBCodeFromExample() throws an exception if a TEXT placeholder is found in an attribute
 	*/
 	public function addBBCodeFromExample_throws_an_exception_if_a_TEXT_placeholder_is_found_in_an_attribute()
 	{
@@ -314,6 +330,7 @@ class BBCodesConfigTest extends Test
 
 	/**
 	* @test
+	* @testdox addBBCodeFromExample() does not throw an exception if a TEXT placeholder is found in an attribute but ALLOW_UNSAFE_TEMPLATES flag is set
 	*/
 	public function addBBCodeFromExample_does_not_throw_an_exception_if_a_TEXT_placeholder_is_found_in_an_attribute_but_ALLOW_UNSAFE_TEMPLATES_flag_is_set()
 	{
@@ -328,6 +345,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @depends addBBCodeFromExample_works_on_simple_BBCodes
 	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	* @testdox addBBCodeFromExample() allows a single start tag with no end tag and enables autoClose
 	*/
 	public function addBBCodeFromExample_allows_a_single_start_tag_with_no_end_tag_and_enables_autoClose()
 	{
@@ -340,6 +358,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @depends addBBCodeFromExample_works_on_simple_BBCodes
 	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	* @testdox addBBCodeFromExample() allows a self closed tag and enables autoClose
 	*/
 	public function addBBCodeFromExample_allows_a_self_closed_tag_and_enables_autoClose()
 	{
@@ -352,6 +371,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @depends addBBCodeFromExample_works_on_simple_BBCodes
 	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	* @testdox addBBCodeFromExample() handles default attribute and gives it the same name as the tag
 	*/
 	public function addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag()
 	{
@@ -385,6 +405,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	* @testdox addBBCodeFromExample() handles single preFilter callback in attribute
 	*/
 	public function addBBCodeFromExample_handles_single_preFilter_callback_in_attribute()
 	{
@@ -404,6 +425,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attribute
+	* @testdox addBBCodeFromExample() handles multiple preFilter callbacks in attribute
 	*/
 	public function addBBCodeFromExample_handles_multiple_preFilter_callbacks_in_attribute()
 	{
@@ -439,6 +461,7 @@ class BBCodesConfigTest extends Test
 	* @depends addBBCodeFromExample_handles_single_preFilter_callback_in_attribute
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Callback 'system' is not allowed
+	* @testdox addBBCodeFromExample() rejects unauthorized preFilter callbacks in attribute
 	*/
 	public function addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attribute()
 	{
@@ -451,6 +474,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	* @testdox addBBCodeFromExample() handles single postFilter callback in attribute
 	*/
 	public function addBBCodeFromExample_handles_single_postFilter_callback_in_attribute()
 	{
@@ -470,6 +494,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attribute
+	* @testdox addBBCodeFromExample() handles multiple postFilter callbacks in attribute
 	*/
 	public function addBBCodeFromExample_handles_multiple_postFilter_callbacks_in_attribute()
 	{
@@ -492,6 +517,7 @@ class BBCodesConfigTest extends Test
 	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attribute
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Callback 'system' is not allowed
+	* @testdox addBBCodeFromExample() rejects unauthorized postFilter callbacks in attribute
 	*/
 	public function addBBCodeFromExample_rejects_unauthorized_postFilter_callbacks_in_attribute()
 	{
@@ -504,6 +530,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attribute
+	* @testdox Custom callbacks can be added via BBCodesConfig::allowPhaseFiltersCallback()
 	*/
 	public function Custom_callbacks_can_be_added_via_BBCodesConfig_allowPhaseFiltersCallback()
 	{
@@ -530,6 +557,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attribute
+	* @testdox Static method callbacks can be added via BBCodesConfig::allowPhaseFiltersCallback()
 	*/
 	public function Static_method_callbacks_can_be_added_via_BBCodesConfig_allowPhaseFiltersCallback()
 	{
@@ -551,6 +579,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_works_on_simple_BBCodes
+	* @testdox addBBCodeFromExample() does not create an attribute for the tag content if it is TEXT with no other options set
 	*/
 	public function addBBCodeFromExample_does_not_create_an_attribute_for_the_tag_content_if_it_is_TEXT_with_no_other_options_set()
 	{
@@ -567,6 +596,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @depends addBBCodeFromExample_works_on_simple_BBCodes
 	* @depends Can_return_the_value_of_an_option_of_a_BBCode
+	* @testdox addBBCodeFromExample() creates an attribute named content for the tag content
 	*/
 	public function addBBCodeFromExample_creates_an_attribute_named_content_for_the_tag_content()
 	{
@@ -597,6 +627,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_creates_an_attribute_named_content_for_the_tag_content
+	* @testdox addBBCodeFromExample() replaces placeholders in attributes
 	*/
 	public function addBBCodeFromExample_replaces_placeholders_in_attributes()
 	{
@@ -614,6 +645,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_creates_an_attribute_named_content_for_the_tag_content
+	* @testdox addBBCodeFromExample() replaces placeholders in content
 	*/
 	public function addBBCodeFromExample_replaces_placeholders_in_content()
 	{
@@ -632,6 +664,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Attribute 'foo' is defined twice
+	* @testdox addBBCodeFromExample() throws an exception on duplicate attributes
 	*/
 	public function addBBCodeFromExample_throws_an_exception_on_duplicate_attributes()
 	{
@@ -642,6 +675,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Placeholder {URL} is used twice
+	* @testdox addBBCodeFromExample() throws an exception on duplicate placeholders
 	*/
 	public function addBBCodeFromExample_throws_an_exception_on_duplicate_placeholders()
 	{
@@ -652,6 +686,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Undefined placeholder {COLOR}
+	* @testdox addBBCodeFromExample() throws an exception on undefined placeholders used in attributes
 	*/
 	public function addBBCodeFromExample_throws_an_exception_on_undefined_placeholders_used_in_attributes()
 	{
@@ -665,6 +700,7 @@ class BBCodesConfigTest extends Test
 	* @test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Undefined placeholder {TEXT2}
+	* @testdox addBBCodeFromExample() throws an exception on undefined placeholders used in content
 	*/
 	public function addBBCodeFromExample_throws_an_exception_on_undefined_placeholders_used_in_content()
 	{
@@ -674,6 +710,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	* @testdox addBBCodeFromExample() allows arbitrary options in attribute
 	*/
 	public function addBBCodeFromExample_allows_arbitrary_options_in_attribute()
 	{
@@ -689,6 +726,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	* @testdox addBBCodeFromExample() handles REGEXP placeholders
 	*/
 	public function addBBCodeFromExample_handles_REGEXP_placeholders()
 	{
@@ -704,6 +742,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	* @testdox addBBCodeFromExample() handles COMPOUND placeholders
 	*/
 	public function addBBCodeFromExample_handles_COMPOUND_placeholders()
 	{
@@ -719,6 +758,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	* @testdox addBBCodeFromExample() handles RANGE placeholders
 	*/
 	public function addBBCodeFromExample_handles_RANGE_placeholders()
 	{
@@ -735,6 +775,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	* @testdox addBBCodeFromExample() handles CHOICE placeholders and turns them into regexps
 	*/
 	public function addBBCodeFromExample_handles_CHOICE_placeholders_and_turns_them_into_regexps()
 	{
@@ -750,6 +791,7 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_CHOICE_placeholders_and_turns_them_into_regexps
+	* @testdox addBBCodeFromExample() handles CHOICE placeholders with Unicode values
 	*/
 	public function addBBCodeFromExample_handles_CHOICE_placeholders_with_Unicode_values()
 	{
