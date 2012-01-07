@@ -108,15 +108,8 @@ var HINT = {
 		/** @const */
 		MSXML = HINT.enableIE && !('XSLTProcessor' in window && 'DOMParser' in window),
 		/** @const */
-		NO_NS_DOM = (HINT.enableIE7 && !('createElementNS' in document))
+		NO_NS_DOM = (HINT.enableIE7 && !('hasAttributeNS' in document))
 	;
-
-	function createElementNS(document, namespaceURI, QName)
-	{
-		return (NO_NS_DOM)
-			 ? document.createElement(QName)
-			 : document.createElementNS(namespaceURI, QName);
-	}
 
 	function hasAttributeNS(el, namespaceURI, QName)
 	{
@@ -2006,13 +1999,6 @@ var HINT = {
 
 			if (MSXML)
 			{
-				// If we don't have namespace support in DOM, we need to dump and reload the
-				// intermediate representation
-				if (NO_NS_DOM && hasNamespacedTags)
-				{
-					DOM = loadXML(DOM.xml);
-				}
-
 				var div  = document.createElement('div');
 				div.innerHTML = DOM.transformNode(xslt);
 
