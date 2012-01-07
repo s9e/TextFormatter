@@ -48,7 +48,7 @@ class BBCodesParserTest extends Test
 		$this->cb->BBCodes->addBBCode('B');
 
 		$parserConfig = $this->cb->getParserConfig();
-		unset($parserConfig['plugins']['BBCodes']['bbcodesConfig']['B']);
+		unset($parserConfig['plugins']['BBCodes']['bbcodes']['B']);
 
 		$this->parser = new Parser($parserConfig);
 

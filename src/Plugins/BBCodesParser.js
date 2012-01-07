@@ -4,13 +4,13 @@ matches.forEach(function(m)
 {
 	var bbcodeName = m[1][0].toUpperCase();
 
-	if (!config.bbcodesConfig[bbcodeName])
+	if (!config.bbcodes[bbcodeName])
 	{
 		// Not a known BBCode
 		return;
 	}
 
-	var bbcodeConfig = config.bbcodesConfig[bbcodeName],
+	var bbcodeConfig = config.bbcodes[bbcodeName],
 	    tagName      = bbcodeConfig.tagName;
 
 	/**

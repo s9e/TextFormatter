@@ -51,11 +51,11 @@ class BBCodesConfig extends PluginConfig
 	/**
 	* @var array Per-BBCode configuration
 	*/
-	protected $bbcodesConfig = array();
+	protected $bbcodes = array();
 
 	public function getConfig()
 	{
-		if (empty($this->bbcodesConfig))
+		if (empty($this->bbcodes))
 		{
 			return false;
 		}
@@ -64,13 +64,13 @@ class BBCodesConfig extends PluginConfig
 		* Build the regexp that matches all the BBCode names
 		*/
 		$regexp = $this->cb->getRegexpMaster()->buildRegexpFromList(
-			array_keys($this->bbcodesConfig),
+			array_keys($this->bbcodes),
 			array('disableLookahead' => true)
 		);
 
 		return array(
-			'bbcodesConfig' => $this->bbcodesConfig,
-			'regexp'        => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
+			'bbcodes' => $this->bbcodes,
+			'regexp'  => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		);
 	}
 
@@ -88,7 +88,7 @@ class BBCodesConfig extends PluginConfig
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
 
-		if (isset($this->bbcodesConfig[$bbcodeName]))
+		if (isset($this->bbcodes[$bbcodeName]))
 		{
 			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' already exists");
 		}
@@ -123,7 +123,7 @@ class BBCodesConfig extends PluginConfig
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
 
-		if (isset($this->bbcodesConfig[$bbcodeName]))
+		if (isset($this->bbcodes[$bbcodeName]))
 		{
 			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' already exists");
 		}
@@ -137,7 +137,7 @@ class BBCodesConfig extends PluginConfig
 		*/
 		$bbcodeConfig = array('tagName' => $tagName) + $bbcodeConfig;
 
-		$this->bbcodesConfig[$bbcodeName] = array();
+		$this->bbcodes[$bbcodeName] = array();
 		$this->setBBCodeOptions($bbcodeName, $bbcodeConfig);
 	}
 
@@ -151,7 +151,7 @@ class BBCodesConfig extends PluginConfig
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
 
-		return isset($this->bbcodesConfig[$bbcodeName]);
+		return isset($this->bbcodes[$bbcodeName]);
 	}
 
 	/**
@@ -164,7 +164,7 @@ class BBCodesConfig extends PluginConfig
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
 
-		return $this->bbcodesConfig[$bbcodeName];
+		return $this->bbcodes[$bbcodeName];
 	}
 
 	/**
@@ -178,12 +178,12 @@ class BBCodesConfig extends PluginConfig
 	{
 		$bbcodeName = $this->normalizeBBCodeName($bbcodeName);
 
-		if (!array_key_exists($optionName, $this->bbcodesConfig[$bbcodeName]))
+		if (!array_key_exists($optionName, $this->bbcodes[$bbcodeName]))
 		{
 			throw new InvalidArgumentException("Unknown option '" . $optionName . "' from BBCode '" . $bbcodeName . "'");
 		}
 
-		return $this->bbcodesConfig[$bbcodeName][$optionName];
+		return $this->bbcodes[$bbcodeName][$optionName];
 	}
 
 	/**
@@ -230,7 +230,7 @@ class BBCodesConfig extends PluginConfig
 				break;
 		}
 
-		$this->bbcodesConfig[$bbcodeName][$optionName] = $optionValue;
+		$this->bbcodes[$bbcodeName][$optionName] = $optionValue;
 	}
 
 	/**
@@ -691,7 +691,7 @@ class BBCodesConfig extends PluginConfig
 
 		$bbcodeName = strtoupper($bbcodeName);
 
-		if ($mustExist && !isset($this->bbcodesConfig[$bbcodeName]))
+		if ($mustExist && !isset($this->bbcodes[$bbcodeName]))
 		{
 			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' does not exist");
 		}
@@ -732,7 +732,7 @@ class BBCodesConfig extends PluginConfig
 		$config['hasContentAttrsHint'] = false;
 		$config['hasDefaultAttrHint']  = false;
 
-		foreach ($this->bbcodesConfig as $bbcodeConfig)
+		foreach ($this->bbcodes as $bbcodeConfig)
 		{
 			if (!empty($bbcodeConfig['autoClose']))
 			{
@@ -757,7 +757,7 @@ class BBCodesConfig extends PluginConfig
 	{
 		return array(
 			'preserveKeys' => array(
-				array('bbcodesConfig', true)
+				array('bbcodes', true)
 			)
 		);
 	}

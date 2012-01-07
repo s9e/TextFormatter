@@ -96,7 +96,7 @@ class BBCodesConfigTest extends Test
 
 		$this->assertArrayHasKey('B', $parserConfig['tags']);
 		$this->assertSame(
-			'B', $parserConfig['plugins']['BBCodes']['bbcodesConfig']['B']['tagName']
+			'B', $parserConfig['plugins']['BBCodes']['bbcodes']['B']['tagName']
 		);
 	}
 
@@ -825,7 +825,7 @@ class BBCodesConfigTest extends Test
 		$this->cb->BBCodes->addBBCode('FOOBAR');
 
 		$this->assertStringStartsWith(
-			'{bbcodesConfig:{"FOOBAR"',
+			'{bbcodes:{"FOOBAR"',
 			$this->call(
 				$this->jspg,
 				'encodePluginConfig',

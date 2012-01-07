@@ -12,11 +12,14 @@ use s9e\TextFormatter\Parser,
 
 class BBCodesParser extends PluginParser
 {
-	protected $bbcodesConfig;
+	/**
+	* @var array List of available BBCodes
+	*/
+	protected $bbcodes;
 
 	public function setUp()
 	{
-		$this->bbcodesConfig = $this->config['bbcodesConfig'];
+		$this->bbcodes = $this->config['bbcodes'];
 	}
 
 	public function getTags($text, array $matches)
@@ -29,13 +32,13 @@ class BBCodesParser extends PluginParser
 		{
 			$bbcodeName = strtoupper($m[1][0]);
 
-			if (!isset($this->bbcodesConfig[$bbcodeName]))
+			if (!isset($this->bbcodes[$bbcodeName]))
 			{
 				// Not a known BBCode
 				continue;
 			}
 
-			$bbcodeConfig = $this->bbcodesConfig[$bbcodeName];
+			$bbcodeConfig = $this->bbcodes[$bbcodeName];
 			$tagName      = $bbcodeConfig['tagName'];
 
 			/**
