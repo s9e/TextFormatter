@@ -9,3 +9,5 @@ TODO
 - Support forcing text to be wrapped inside tags. e.g. "<LIST>foo" becomes "<LIST><LI>foo</LI>"
 - There's potential for a bug in createMatchingTag when creating a tag based on a tag that with trimBefore enabled. The position of the new tag should probably be the actual position of the tag, not of the whitespace
 - Investigate the possibility of replacing autoClose with isEmpty
+- JSParserGenerator: if all the plugins' RLA is the same, remove them from the config and use hints to bypass the if test
+- Investigate the possibility of using an external CSS checker in order to enable a default "css" filter
