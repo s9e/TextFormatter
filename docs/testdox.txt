@@ -823,6 +823,12 @@ s9e\TextFormatter\Tests\Plugins\RawHTMLConfig
  [x] Attributes are created with option "isRequired" set to false
  [x] Attributes known to expect an URL as value are created with type "url"
  [x] Other attributes are created with type "text"
+ [x] allowElement() throws an exception if the element name is "script"
+ [x] allowElement() allows "script" elements if the ALLOW_UNSAFE_ELEMENTS flag is passed
+ [x] allowAttribute() throws an exception if the attribute's name is "onmouseover"
+ [x] allowAttribute() allows "onmouseover" attributes if the ALLOW_UNSAFE_ATTRIBUTES flag is passed
+ [x] allowAttribute() throws an exception if the attribute's name is "style"
+ [x] allowAttribute() allows "style" attributes if the ALLOW_UNSAFE_ATTRIBUTES flag is passed
  [x] getJSParser() returns the source of its Javascript parser
  [x] getJSConfigMeta() marks the attribute regexp as a global regexp
 

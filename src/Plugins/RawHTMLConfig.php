@@ -8,11 +8,22 @@
 namespace s9e\TextFormatter\Plugins;
 
 use InvalidArgumentException,
+    RuntimeException,
     s9e\TextFormatter\ConfigBuilder,
     s9e\TextFormatter\PluginConfig;
 
 class RawHTMLConfig extends PluginConfig
 {
+	/**
+	* Flag used to allow unsafe elements such as <script> in allowElement()
+	*/
+	const ALLOW_UNSAFE_ELEMENTS = 1;
+
+	/**
+	* Flag used to allow unsafe attributes such as "onmouseover" in allowAttribute()
+	*/
+	const ALLOW_UNSAFE_ATTRIBUTES = 2;
+
 	/**
 	* @var string Namespace prefix of the tags produced by this plugin's parser
 	*/
@@ -48,6 +59,28 @@ class RawHTMLConfig extends PluginConfig
 	);
 
 	/**
+	* @var array  Blacklist of elements that are considered unsafe
+	*/
+	protected $unsafeElements = array(
+		'base',
+		'embed',
+		'frame',
+		'iframe',
+		'meta',
+		'object',
+		'script'
+	);
+
+	/**
+	* @var array  Blacklist of attributes that are considered unsafe, in addition of any attribute
+	*             whose name starts with "on" such as "onmouseover"
+	*/
+	protected $unsafeAttributes = array(
+		'style',
+		'target'
+	);
+
+	/**
 	* @var array  Hash of allowed HTML elements. Element names are lowercased and used as keys for
 	*             this array
 	*/
@@ -70,12 +103,19 @@ class RawHTMLConfig extends PluginConfig
 	/**
 	* Allow an HTML element to be used
 	*
-	* @param string $elName
+	* @param string  $elName
+	* @param integer $flags
 	*/
-	public function allowElement($elName)
+	public function allowElement($elName, $flags = 0)
 	{
 		$elName  = $this->normalizeElementName($elName, false);
 		$tagName = $this->namespacePrefix . ':' . $elName;
+
+		if (!($flags & self::ALLOW_UNSAFE_ELEMENTS)
+		 && in_array($elName, $this->unsafeElements))
+		{
+			throw new RuntimeException('<' . $elName . '> elements are unsafe and are disabled by default. Please use the ' . __CLASS__ . '::ALLOW_UNSAFE_ELEMENTS flag to bypass this security measure');
+		}
 
 		if (!$this->cb->tagExists($tagName))
 		{
@@ -88,10 +128,11 @@ class RawHTMLConfig extends PluginConfig
 	/**
 	* Allow an attribute to be used in an HTML element
 	*
-	* @param string $elName
-	* @param string $attrName
+	* @param string  $elName
+	* @param string  $attrName
+	* @param integer $flags
 	*/
-	public function allowAttribute($elName, $attrName)
+	public function allowAttribute($elName, $attrName, $flags = 0)
 	{
 		$elName   = $this->normalizeElementName($elName, true);
 		$attrName = $this->normalizeAttributeName($attrName, true);
@@ -99,6 +140,15 @@ class RawHTMLConfig extends PluginConfig
 		$attrType = (isset($this->attrTypes[$attrName]))
 		          ? $this->attrTypes[$attrName]
 		          : 'text';
+
+		if (!($flags & self::ALLOW_UNSAFE_ATTRIBUTES))
+		{
+			if (substr($attrName, 0, 2) === 'on'
+			 || in_array($attrName, $this->unsafeAttributes))
+			{
+				throw new RuntimeException("'" . $attrName . "' attributes are considered unsafe and are disabled by default. Please use the " . __CLASS__ . '::ALLOW_UNSAFE_ATTRIBUTES flag to bypass this security measure');
+			}
+		}
 
 		if (!$this->cb->attributeExists($tagName, $attrName))
 		{
@@ -169,7 +219,7 @@ class RawHTMLConfig extends PluginConfig
 	* @param  string $attrName Original attribute name
 	* @return string           Normalized attribute name, in lowercase
 	*/
-	protected function normalizeAttributeName($attrName, $tagName = null)
+	protected function normalizeAttributeName($attrName)
 	{
 		if (!$this->isValidAttributeName($attrName))
 		{

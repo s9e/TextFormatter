@@ -2,7 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Plugins;
 
-use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Plugins\RawHTMLConfig,
+    s9e\TextFormatter\Tests\Test;
 
 include_once __DIR__ . '/../Test.php';
 
@@ -208,6 +209,61 @@ class RawHTMLConfigTest extends Test
 		$this->cb->RawHTML->allowAttribute('a', 'title');
 
 		$this->assertSame('text', $this->cb->getAttributeOption('html:a', 'title', 'type'));
+	}
+
+	/**
+	* @testdox allowElement() throws an exception if the element name is "script"
+	* @expectedException RuntimeException ALLOW_UNSAFE_ELEMENTS
+	*/
+	public function testScriptDisabled()
+	{
+		$this->cb->RawHTML->allowElement('script');
+	}
+
+	/**
+	* @testdox allowElement() allows "script" elements if the ALLOW_UNSAFE_ELEMENTS flag is passed
+	*/
+	public function testScriptEnabled()
+	{
+		$this->cb->RawHTML->allowElement('script', RawHTMLConfig::ALLOW_UNSAFE_ELEMENTS);
+	}
+
+	/**
+	* @testdox allowAttribute() throws an exception if the attribute's name is "onmouseover"
+	* @expectedException RuntimeException ALLOW_UNSAFE_ATTRIBUTES
+	*/
+	public function testOnmouseoverDisabled()
+	{
+		$this->cb->RawHTML->allowElement('b');
+		$this->cb->RawHTML->allowAttribute('b', 'onmouseover');
+	}
+
+	/**
+	* @testdox allowAttribute() allows "onmouseover" attributes if the ALLOW_UNSAFE_ATTRIBUTES flag is passed
+	*/
+	public function testOnmouseoverEnabled()
+	{
+		$this->cb->RawHTML->allowElement('b');
+		$this->cb->RawHTML->allowAttribute('b', 'onmouseover', RawHTMLConfig::ALLOW_UNSAFE_ATTRIBUTES);
+	}
+
+	/**
+	* @testdox allowAttribute() throws an exception if the attribute's name is "style"
+	* @expectedException RuntimeException ALLOW_UNSAFE_ATTRIBUTES
+	*/
+	public function testStyleDisabled()
+	{
+		$this->cb->RawHTML->allowElement('b');
+		$this->cb->RawHTML->allowAttribute('b', 'style');
+	}
+
+	/**
+	* @testdox allowAttribute() allows "style" attributes if the ALLOW_UNSAFE_ATTRIBUTES flag is passed
+	*/
+	public function testStyleEnabled()
+	{
+		$this->cb->RawHTML->allowElement('b');
+		$this->cb->RawHTML->allowAttribute('b', 'style', RawHTMLConfig::ALLOW_UNSAFE_ATTRIBUTES);
 	}
 
 	/**
