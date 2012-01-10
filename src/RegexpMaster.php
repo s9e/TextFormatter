@@ -123,19 +123,25 @@ class RegexpMaster
 			}
 		}
 
-		$regexp = '';
-		$suffix = '';
+		// Test whether this is the end of a word then discard the superfluous data
+		$isTail = isset($trie['']);
+		unset($trie['']);
+
+		// Number of remaining branches
 		$cnt    = count($trie);
 
-		if (isset($trie['']))
-		{
-			unset($trie['']);
+		$regexp = '';
+		$suffix = '';
 
+		if ($isTail)
+		{
+			// This is the end of a word, but is there any other substring to match?
 			if (empty($trie))
 			{
 				return '';
 			}
 
+			// There's more text to be optionally matched, e.g. foo(?:bar)?
 			$suffix = '?';
 		}
 
@@ -166,14 +172,6 @@ class RegexpMaster
 
 		if ($useCharacterClass)
 		{
-			if ($cnt === 2 && $suffix)
-			{
-				/**
-				* Produce x? instead of [x]?
-				*/
-				return implode('', array_keys($trie)) . $suffix;
-			}
-
 			return '[' . implode('', array_keys($trie)) . ']' . $suffix;
 		}
 
