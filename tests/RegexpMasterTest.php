@@ -103,7 +103,7 @@ class RegexpMasterTest extends Test
 	public function test_buildRegexpFromList_7()
 	{
 		$this->assertSame(
-			'(?=[\\*\\\\])(?:\\*foo|\\\\bar)',
+			'(?=[*\\\\])(?:\\*foo|\\\\bar)',
 			$this->rm->buildRegexpFromList(array('*foo', '\\bar'))
 		);
 	}

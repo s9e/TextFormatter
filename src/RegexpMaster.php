@@ -90,7 +90,7 @@ class RegexpMaster
 
 			if ($useLookahead)
 			{
-				$regexp = '(?=[' . implode('', array_keys($initials)) . '])' . $regexp;
+				$regexp = '(?=' . $this->buildCharacterClass(array_keys($initials)) . ')' . $regexp;
 			}
 		}
 
@@ -153,18 +153,10 @@ class RegexpMaster
 		// Start with characters that can be grouped in a character class
 		if (!empty($characterClass))
 		{
-			$regexp = implode('', $characterClass);
-
 			// Use a character class if there are more than 1 characters in it
-			if (isset($characterClass[1]))
-			{
-				// Those characters don't need to be escaped inside of a character class
-				$regexp = preg_replace('#\\\\([$()*+.?[^{|}])#', '$1', $regexp);
-
-				$regexp = '[' . $regexp . ']';
-			}
-
-			$regexps[] = $regexp;
+			$regexps[] = (isset($characterClass[1]))
+			           ? $this->buildCharacterClass($characterClass)
+			           : $characterClass[0];
 		}
 
 		foreach ($branches as $head => $tails)
@@ -192,6 +184,16 @@ class RegexpMaster
 		$regexp = $prefix . $regexp . $suffix;
 
 		return $regexp;
+	}
+
+	protected function buildCharacterClass(array $chars)
+	{
+		$regexp = implode('', $chars);
+
+		// Those characters don't need to be escaped inside of a character class
+		$regexp = preg_replace('#\\\\([$()*+.?[^{|}])#', '$1', $regexp);
+
+		return '[' . $regexp . ']';
 	}
 
 	protected function removeLongestCommonPrefix(array &$words)
