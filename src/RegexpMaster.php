@@ -188,7 +188,7 @@ class RegexpMaster
 
 	protected function buildCharacterClass(array $chars)
 	{
-		$regexp = implode('', $chars);
+		$regexp = implode('', array_unique($chars));
 
 		/**
 		* Only those characters need to be escaped inside of a character class.
