@@ -427,18 +427,17 @@ s9e\TextFormatter\Tests\PluginParser
  [x] setUp is called once after initialization
 
 s9e\TextFormatter\Tests\RegexpMaster
+ [x] buildRegexpFromList(['apple', 'april']) produces 'ap(?:ple|ril)'
+ [x] buildRegexpFromList(['bar', 'baz']) produces 'ba[rz]'
+ [x] buildRegexpFromList(['foo', 'fool']) produces 'fool?'
+ [x] buildRegexpFromList(['ax', 'axed']) produces 'ax(?:ed)?'
+ [x] buildRegexpFromList([':)', ':(']) produces '\\:[\\(\\)]'
+ [x] buildRegexpFromList(['foo', 'bar']) produces '(?=[bf])(?:bar|foo)'
+ [x] buildRegexpFromList(['*foo', '\\bar']) produces '(?=[\\*\\\\])(?:\\*foo|\\\\bar)'
+ [x] buildRegexpFromList(['a', 'b']) produces '[ab]'
+ [x] buildRegexpFromList(['♠', '♣', '♥', '♦']) produces '[♠♣♥♦]'
+ [x] buildRegexpFromList(['foo', 'bar'], ['disableLookahead' => true]) produces '(?:bar|foo)'
  [x] buildRegexpFromList() throws a RuntimeException if any word is not legal UTF-8
- [x] buildRegexpFromList() merges heads
- [x] buildRegexpFromList() merges tails in a character class
- [x] buildRegexpFromList() uses a ? quantifier at the end of an expression if applicable
- [x] buildRegexpFromList() optimizes the tail of an expression if a subpattern ends with .*?
- [x] buildRegexpFromList() correctly escapes parentheses in words
- [x] buildRegexpFromList() generates a lookahead assertion at the start of the regexp
- [x] buildRegexpFromList() correctly escapes special characters in the lookahead assertion
- [x] buildRegexpFromList() does not use a lookahead assertion if any word starts with a special sequence
- [x] buildRegexpFromList() does not use a lookahead assertion if no word is longer than one character
- [x] buildRegexpFromList() does not use a lookahead assertion if no word is longer than one Unicode character
- [x] The lookahead assertion optimization can be disabled with the disableLookahead option
  [x] parseRegexp() can parse plain regexps
  [x] parseRegexp() throws a RuntimeException if delimiters can't be parsed
  [x] parseRegexp() parses pattern modifiers
