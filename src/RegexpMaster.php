@@ -185,7 +185,6 @@ class RegexpMaster
 			$regexp = $regexps[0];
 		}
 
-
 		// If we've reached the end of a word, it means that the branches are optional
 		if ($endOfWord)
 		{
