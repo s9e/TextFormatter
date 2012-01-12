@@ -438,7 +438,7 @@ s9e\TextFormatter\Tests\RegexpMaster
  [x] buildRegexpFromList(['a', 'b']) produces '[ab]'
  [x] buildRegexpFromList(['♠', '♣', '♥', '♦']) produces '[♠♣♥♦]'
  [x] buildRegexpFromList(['foo', 'bar'], ['disableLookahead' => true]) produces '(?:bar|foo)'
- [x] buildRegexpFromList(['lock', 'sock']) produces '(?=[ls])[ls]ock'
+ [x] buildRegexpFromList(['lock', 'sock']) produces '[ls]ock'
  [x] buildRegexpFromList(['boast', 'boost']) produces 'bo[ao]st'
  [x] buildRegexpFromList(['pest', 'pst']) produces 'pe?st'
  [x] buildRegexpFromList(['boast', 'boost', 'bost']) produces 'bo[ao]?st'

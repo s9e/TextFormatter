@@ -29,13 +29,6 @@ class RegexpMaster
 		sort($words);
 
 		/**
-		* Whether to use a lookahead assertion such as (?=[fb])(?:foo|bar) or not.
-		* Gets enabled if any word has more than one character and none starts with a
-		* special character
-		*/
-		$useLookahead = false;
-
-		/**
 		* Used to store the first character of each word so that we can generate the lookahead
 		* assertion
 		*/
@@ -59,9 +52,6 @@ class RegexpMaster
 				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
 			}
 
-			// Enable lookahead if there's more than one character
-			$useLookahead |= isset($matches[0][1]);
-
 			$splitWord = array();
 			foreach ($matches[0] as $pos => $c)
 			{
@@ -82,12 +72,13 @@ class RegexpMaster
 			$splitWords[] = $splitWord;
 		}
 
-		$regexp = '';
+		$regexp = $this->buildRegexpFromWords($splitWords);
 
-		if ($useLookahead
-		 && !$options['disableLookahead']
-		 && count($initials) > 1)
+		if (!$options['disableLookahead']
+		 && $regexp[0] === '(')
 		{
+			$useLookahead = true;
+
 			foreach ($initials as $initial => $void)
 			{
 				if (!$this->canBeUsedInCharacterClass($initial))
@@ -99,11 +90,9 @@ class RegexpMaster
 
 			if ($useLookahead)
 			{
-				$regexp .= '(?=[' . implode('', array_keys($initials)) . '])';
+				$regexp = '(?=[' . implode('', array_keys($initials)) . '])' . $regexp;
 			}
 		}
-
-		$regexp .= $this->buildRegexpFromWords($splitWords);
 
 		return $regexp;
 	}

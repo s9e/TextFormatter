@@ -145,12 +145,12 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList(['lock', 'sock']) produces '(?=[ls])[ls]ock'
+	* @testdox buildRegexpFromList(['lock', 'sock']) produces '[ls]ock'
 	*/
 	public function test_buildRegexpFromList_11()
 	{
 		$this->assertSame(
-			'(?=[ls])[ls]ock',
+			'[ls]ock',
 			$this->rm->buildRegexpFromList(array('lock', 'sock'))
 		);
 	}
@@ -1242,7 +1242,7 @@ class RegexpMasterTest extends Test
 				array('disableLookahead' => true)
 			),
 			array(
-				'(?=[ls])[ls]ock',
+				'[ls]ock',
 				array('lock', 'sock')
 			),
 			array(
