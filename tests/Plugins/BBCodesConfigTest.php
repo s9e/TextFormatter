@@ -909,7 +909,7 @@ class BBCodesConfigTest extends Test
 		);
 
 		$this->assertSame('regexp', $this->cb->getAttributeOption('B', 'b', 'type'));
-		$this->assertSame('#^(?=[オ桜])(?:オレンジ|桜)$#iDu', $this->cb->getAttributeOption('B', 'b', 'regexp'));
+		$this->assertSame('#^(?=[オ桜])(?:桜|オレンジ)$#iDu', $this->cb->getAttributeOption('B', 'b', 'regexp'));
 	}
 
 	/**

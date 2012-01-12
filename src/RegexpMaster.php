@@ -122,12 +122,12 @@ class RegexpMaster
 		}
 
 		/**
-		* Sort words by their first atom
+		* Group words by their first atom
 		*
 		* First atom is the head, everything else constitues a branch.
 		*/
 		$branches = array();
-		$useCharacterClass = true;
+		$characterClass = array();
 
 		$endOfWord = false;
 
@@ -141,52 +141,53 @@ class RegexpMaster
 
 			$head = $word[0];
 
-			if ($useCharacterClass)
+			if (!isset($word[1])
+			 && $this->canBeUsedInCharacterClass($head))
 			{
-				if (isset($word[1])
-				 || !$this->canBeUsedInCharacterClass($head))
-				{
-					$useCharacterClass = false;
-				}
+				$characterClass[] = $head;
 			}
-
-			$branches[$head][] = array_slice($word, 1);
+			else
+			{
+				$branches[$head][] = array_slice($word, 1);
+			}
 		}
 
-		if (empty($branches))
+		if (empty($branches) && empty($characterClass))
 		{
-			$regexp = '';
+			// All of the words(?) were consumed by prefix/suffix, or were empty
+			return $prefix . $suffix;
 		}
-		elseif ($useCharacterClass)
-		{
-			$regexp = '[' . implode('', array_keys($branches)) . ']';
 
-			// If there's only one character in this class, we can remove the brackets
-			if (count($branches) === 1)
-			{
-				$regexp = substr($regexp, 1, -1);
-			}
+		// Prepare the regexps for all the branches
+		$regexps = array();
+
+		if (!empty($characterClass))
+		{
+			// Use a character class if there are more than 1 characters in it
+			$regexps[] = (isset($characterClass[1]))
+					   ? '[' . implode('', $characterClass) . ']'
+					   : $characterClass[0];
+		}
+
+		foreach ($branches as $head => $tails)
+		{
+			$regexps[] = $head . $this->buildRegexpFromWords($tails);
+		}
+
+		if (isset($regexps[1])
+		 || empty($characterClass))
+		{
+			// There are several branches, or there's only one branch and it's not a character class
+			$regexp = '(?:' . implode('|', $regexps) . ')';
 		}
 		else
 		{
-			$regexps = array();
-			foreach ($branches as $head => $tails)
-			{
-				$regexps[] = $head . $this->buildRegexpFromWords($tails);
-			}
-
-			$regexp = '(?:' . implode('|', $regexps) . ')';
-
-			// TEMP HACK
-			if (count($regexps) === 1 && !$endOfWord)
-			{
-				$regexp = substr($regexp, 3, -1);
-			}
+			$regexp = $regexps[0];
 		}
 
-		// If we've reached the end of a word but the regexp is not empty, it means that it is optional
-		if ($endOfWord
-		 && $regexp !== '')
+
+		// If we've reached the end of a word, it means that the branches are optional
+		if ($endOfWord)
 		{
 			$regexp .= '?';
 		}
