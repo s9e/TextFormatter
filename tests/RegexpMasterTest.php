@@ -23,7 +23,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['foo']) produces 'foo'
 	*/
-	public function test_buildRegexpFromList_0()
+	public function test_buildRegexpFromList_2e6b327f()
 	{
 		$this->assertSame(
 			'foo',
@@ -34,7 +34,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['apple', 'april']) produces 'ap(?:ple|ril)'
 	*/
-	public function test_buildRegexpFromList_1()
+	public function test_buildRegexpFromList_8b59a499()
 	{
 		$this->assertSame(
 			'ap(?:ple|ril)',
@@ -45,7 +45,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['bar', 'baz']) produces 'ba[rz]'
 	*/
-	public function test_buildRegexpFromList_2()
+	public function test_buildRegexpFromList_e7ffb86f()
 	{
 		$this->assertSame(
 			'ba[rz]',
@@ -56,7 +56,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['foo', 'fool']) produces 'fool?'
 	*/
-	public function test_buildRegexpFromList_3()
+	public function test_buildRegexpFromList_1dff1ab5()
 	{
 		$this->assertSame(
 			'fool?',
@@ -67,7 +67,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['ax', 'axed']) produces 'ax(?:ed)?'
 	*/
-	public function test_buildRegexpFromList_4()
+	public function test_buildRegexpFromList_b4f156be()
 	{
 		$this->assertSame(
 			'ax(?:ed)?',
@@ -78,7 +78,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList([':)', ':(']) produces '\\:[()]'
 	*/
-	public function test_buildRegexpFromList_5()
+	public function test_buildRegexpFromList_a91c1d65()
 	{
 		$this->assertSame(
 			'\\:[()]',
@@ -89,7 +89,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList([':]', ':[']) produces '\\:[[\\]]'
 	*/
-	public function test_buildRegexpFromList_6()
+	public function test_buildRegexpFromList_179f12a7()
 	{
 		$this->assertSame(
 			'\\:[[\\]]',
@@ -100,7 +100,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['foo', 'bar']) produces '(?=[bf])(?:bar|foo)'
 	*/
-	public function test_buildRegexpFromList_7()
+	public function test_buildRegexpFromList_247eefce()
 	{
 		$this->assertSame(
 			'(?=[bf])(?:bar|foo)',
@@ -111,7 +111,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['*foo', '\\bar']) produces '(?=[*\\\\])(?:\\*foo|\\\\bar)'
 	*/
-	public function test_buildRegexpFromList_8()
+	public function test_buildRegexpFromList_69483dd6()
 	{
 		$this->assertSame(
 			'(?=[*\\\\])(?:\\*foo|\\\\bar)',
@@ -122,7 +122,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['a', 'b']) produces '[ab]'
 	*/
-	public function test_buildRegexpFromList_9()
+	public function test_buildRegexpFromList_c90b2457()
 	{
 		$this->assertSame(
 			'[ab]',
@@ -133,7 +133,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['♠', '♣', '♥', '♦']) produces '[♠♣♥♦]'
 	*/
-	public function test_buildRegexpFromList_10()
+	public function test_buildRegexpFromList_6335367b()
 	{
 		$this->assertSame(
 			'[♠♣♥♦]',
@@ -144,7 +144,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['foo', 'bar'], ['disableLookahead' => true]) produces '(?:bar|foo)'
 	*/
-	public function test_buildRegexpFromList_11()
+	public function test_buildRegexpFromList_17d99f17()
 	{
 		$this->assertSame(
 			'(?:bar|foo)',
@@ -158,7 +158,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['lock', 'sock']) produces '[ls]ock'
 	*/
-	public function test_buildRegexpFromList_12()
+	public function test_buildRegexpFromList_a3cf0b4d()
 	{
 		$this->assertSame(
 			'[ls]ock',
@@ -167,9 +167,20 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
+	* @testdox buildRegexpFromList(['foo', 'afoo']) produces 'a?foo'
+	*/
+	public function test_buildRegexpFromList_17439992()
+	{
+		$this->assertSame(
+			'a?foo',
+			$this->rm->buildRegexpFromList(array('foo', 'afoo'))
+		);
+	}
+
+	/**
 	* @testdox buildRegexpFromList(['boast', 'boost']) produces 'bo[ao]st'
 	*/
-	public function test_buildRegexpFromList_13()
+	public function test_buildRegexpFromList_4bbad47d()
 	{
 		$this->assertSame(
 			'bo[ao]st',
@@ -180,7 +191,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['pest', 'pst']) produces 'pe?st'
 	*/
-	public function test_buildRegexpFromList_14()
+	public function test_buildRegexpFromList_596d7420()
 	{
 		$this->assertSame(
 			'pe?st',
@@ -191,7 +202,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['boast', 'boost', 'bost']) produces 'bo[ao]?st'
 	*/
-	public function test_buildRegexpFromList_15()
+	public function test_buildRegexpFromList_e644dceb()
 	{
 		$this->assertSame(
 			'bo[ao]?st',
@@ -202,7 +213,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['boost', 'best']) produces 'b(?:e|oo)st'
 	*/
-	public function test_buildRegexpFromList_16()
+	public function test_buildRegexpFromList_aeb9f217()
 	{
 		$this->assertSame(
 			'b(?:e|oo)st',
@@ -213,7 +224,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['boost', 'bst']) produces 'b(?:oo)?st'
 	*/
-	public function test_buildRegexpFromList_17()
+	public function test_buildRegexpFromList_be3ccba2()
 	{
 		$this->assertSame(
 			'b(?:oo)?st',
@@ -224,7 +235,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['best', 'boost', 'bust']) produces 'b(?:[eu]|oo)st'
 	*/
-	public function test_buildRegexpFromList_18()
+	public function test_buildRegexpFromList_9753e32d()
 	{
 		$this->assertSame(
 			'b(?:[eu]|oo)st',
@@ -1260,6 +1271,12 @@ class RegexpMasterTest extends Test
 				'[ls]ock',
 				array('lock', 'sock')
 			),
+/*
+			array(
+				'(?=[af])a?foo',
+				array('foo', 'afoo')
+			),
+*/
 			array(
 				'bo[ao]st',
 				array('boast', 'boost')

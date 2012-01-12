@@ -34,7 +34,7 @@ include __DIR__ . '/../tests/RegexpMasterTest.php';
 $test = new s9e\TextFormatter\Tests\RegexpMasterTest;
 
 $php = '';
-foreach ($test->getWordsLists() as $i => $case)
+foreach ($test->getWordsLists() as $case)
 {
 	$regexp   = var_export($case[0], true);
 	$wordlist = _array($case[1]);
@@ -47,7 +47,7 @@ foreach ($test->getWordsLists() as $i => $case)
 		$php .= ', [' . substr($options, 6, -1) . ']';
 	}
 
-	$php .= ") produces " . $regexp . "\n\t*/\n\tpublic function test_buildRegexpFromList_" . $i . "()\n\t{\n\t\t\$this->assertSame(\n\t\t\t" . $regexp . ",\n\t\t\t\$this->rm->buildRegexpFromList(";
+	$php .= ") produces " . $regexp . "\n\t*/\n\tpublic function test_buildRegexpFromList_" . dechex(crc32(serialize($case))) . "()\n\t{\n\t\t\$this->assertSame(\n\t\t\t" . $regexp . ",\n\t\t\t\$this->rm->buildRegexpFromList(";
 
 	if ($options)
 	{
