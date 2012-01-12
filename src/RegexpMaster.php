@@ -190,8 +190,15 @@ class RegexpMaster
 	{
 		$regexp = implode('', $chars);
 
-		// Those characters don't need to be escaped inside of a character class
-		$regexp = preg_replace('#\\\\([$()*+.?[^{|}])#', '$1', $regexp);
+		/**
+		* Only those characters need to be escaped inside of a character class.
+		*
+		* Technically, ^ does not have to be escaped if it's not first, but it's not worth making
+		*  it a special case. Also, : could be misinterpreted as a character class name but it would
+		* require a second : so we're safe. Lastly, escape sequences would need to be preserved but
+		* we don't support those anyway.
+		*/
+		$regexp = preg_replace('#\\\\([^\\#\\]\\^\\\\])#', '$1', $regexp);
 
 		return '[' . $regexp . ']';
 	}
