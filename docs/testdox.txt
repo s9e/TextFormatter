@@ -437,6 +437,12 @@ s9e\TextFormatter\Tests\RegexpMaster
  [x] buildRegexpFromList(['a', 'b']) produces '[ab]'
  [x] buildRegexpFromList(['♠', '♣', '♥', '♦']) produces '[♠♣♥♦]'
  [x] buildRegexpFromList(['foo', 'bar'], ['disableLookahead' => true]) produces '(?:bar|foo)'
+ [x] buildRegexpFromList(['lock', 'sock']) produces '(?=[ls])[ls]ock'
+ [x] buildRegexpFromList(['boast', 'boost']) produces 'bo[ao]st'
+ [x] buildRegexpFromList(['pest', 'pst']) produces 'pe?st'
+ [x] buildRegexpFromList(['boast', 'boost', 'bost']) produces 'bo[ao]?st'
+ [x] buildRegexpFromList(['boost', 'best']) produces 'b(?:e|oo)st'
+ [x] buildRegexpFromList(['boost', 'bst']) produces 'b(?:oo)?st'
  [x] buildRegexpFromList() throws a RuntimeException if any word is not legal UTF-8
  [x] parseRegexp() can parse plain regexps
  [x] parseRegexp() throws a RuntimeException if delimiters can't be parsed
