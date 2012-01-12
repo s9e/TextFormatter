@@ -65,20 +65,31 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList([':)', ':(']) produces '\\:[\\(\\)]'
+	* @testdox buildRegexpFromList([':)', ':(']) produces '\\:[()]'
 	*/
 	public function test_buildRegexpFromList_4()
 	{
 		$this->assertSame(
-			'\\:[\\(\\)]',
+			'\\:[()]',
 			$this->rm->buildRegexpFromList(array(':)', ':('))
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList([':]', ':[']) produces '\\:[[\\]]'
+	*/
+	public function test_buildRegexpFromList_5()
+	{
+		$this->assertSame(
+			'\\:[[\\]]',
+			$this->rm->buildRegexpFromList(array(':]', ':['))
 		);
 	}
 
 	/**
 	* @testdox buildRegexpFromList(['foo', 'bar']) produces '(?=[bf])(?:bar|foo)'
 	*/
-	public function test_buildRegexpFromList_5()
+	public function test_buildRegexpFromList_6()
 	{
 		$this->assertSame(
 			'(?=[bf])(?:bar|foo)',
@@ -89,7 +100,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['*foo', '\\bar']) produces '(?=[\\*\\\\])(?:\\*foo|\\\\bar)'
 	*/
-	public function test_buildRegexpFromList_6()
+	public function test_buildRegexpFromList_7()
 	{
 		$this->assertSame(
 			'(?=[\\*\\\\])(?:\\*foo|\\\\bar)',
@@ -100,7 +111,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['a', 'b']) produces '[ab]'
 	*/
-	public function test_buildRegexpFromList_7()
+	public function test_buildRegexpFromList_8()
 	{
 		$this->assertSame(
 			'[ab]',
@@ -111,7 +122,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['♠', '♣', '♥', '♦']) produces '[♠♣♥♦]'
 	*/
-	public function test_buildRegexpFromList_8()
+	public function test_buildRegexpFromList_9()
 	{
 		$this->assertSame(
 			'[♠♣♥♦]',
@@ -122,7 +133,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['foo', 'bar'], ['disableLookahead' => true]) produces '(?:bar|foo)'
 	*/
-	public function test_buildRegexpFromList_9()
+	public function test_buildRegexpFromList_10()
 	{
 		$this->assertSame(
 			'(?:bar|foo)',
@@ -136,7 +147,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['lock', 'sock']) produces '(?=[ls])[ls]ock'
 	*/
-	public function test_buildRegexpFromList_10()
+	public function test_buildRegexpFromList_11()
 	{
 		$this->assertSame(
 			'(?=[ls])[ls]ock',
@@ -147,7 +158,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['boast', 'boost']) produces 'bo[ao]st'
 	*/
-	public function test_buildRegexpFromList_11()
+	public function test_buildRegexpFromList_12()
 	{
 		$this->assertSame(
 			'bo[ao]st',
@@ -158,7 +169,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['pest', 'pst']) produces 'pe?st'
 	*/
-	public function test_buildRegexpFromList_12()
+	public function test_buildRegexpFromList_13()
 	{
 		$this->assertSame(
 			'pe?st',
@@ -169,7 +180,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['boast', 'boost', 'bost']) produces 'bo[ao]?st'
 	*/
-	public function test_buildRegexpFromList_13()
+	public function test_buildRegexpFromList_14()
 	{
 		$this->assertSame(
 			'bo[ao]?st',
@@ -180,7 +191,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['boost', 'best']) produces 'b(?:e|oo)st'
 	*/
-	public function test_buildRegexpFromList_14()
+	public function test_buildRegexpFromList_15()
 	{
 		$this->assertSame(
 			'b(?:e|oo)st',
@@ -191,7 +202,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['boost', 'bst']) produces 'b(?:oo)?st'
 	*/
-	public function test_buildRegexpFromList_15()
+	public function test_buildRegexpFromList_16()
 	{
 		$this->assertSame(
 			'b(?:oo)?st',
@@ -202,7 +213,7 @@ class RegexpMasterTest extends Test
 	/**
 	* @testdox buildRegexpFromList(['best', 'boost', 'bust']) produces 'b(?:[eu]|oo)st'
 	*/
-	public function test_buildRegexpFromList_16()
+	public function test_buildRegexpFromList_17()
 	{
 		$this->assertSame(
 			'b(?:[eu]|oo)st',
@@ -1193,8 +1204,12 @@ class RegexpMasterTest extends Test
 			),
 */
 			array(
-				'\\:[\\(\\)]',
+				'\\:[()]',
 				array(':)', ':(')
+			),
+			array(
+				'\\:[[\\]]',
+				array(':]', ':[')
 			),
 			array(
 				'(?=[bf])(?:bar|foo)',

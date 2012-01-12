@@ -161,12 +161,21 @@ class RegexpMaster
 		// Prepare the regexps for all the branches
 		$regexps = array();
 
+		// Start with characters that can be grouped in a character class
 		if (!empty($characterClass))
 		{
+			$regexp = implode('', $characterClass);
+
 			// Use a character class if there are more than 1 characters in it
-			$regexps[] = (isset($characterClass[1]))
-					   ? '[' . implode('', $characterClass) . ']'
-					   : $characterClass[0];
+			if (isset($characterClass[1]))
+			{
+				// Those characters don't need to be escaped inside of a character class
+				$regexp = preg_replace('#\\\\([$()*+.?[^{|}])#', '$1', $regexp);
+
+				$regexp = '[' . $regexp . ']';
+			}
+
+			$regexps[] = $regexp;
 		}
 
 		foreach ($branches as $head => $tails)
