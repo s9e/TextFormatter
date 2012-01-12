@@ -98,7 +98,7 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList(['*foo', '\\bar']) produces '(?=[\\*\\\\])(?:\\*foo|\\\\bar)'
+	* @testdox buildRegexpFromList(['*foo', '\\bar']) produces '(?=[*\\\\])(?:\\*foo|\\\\bar)'
 	*/
 	public function test_buildRegexpFromList_7()
 	{
@@ -1216,7 +1216,7 @@ class RegexpMasterTest extends Test
 				array('foo', 'bar')
 			),
 			array(
-				'(?=[\\*\\\\])(?:\\*foo|\\\\bar)',
+				'(?=[*\\\\])(?:\\*foo|\\\\bar)',
 				array('*foo', '\\bar')
 			),
 /*

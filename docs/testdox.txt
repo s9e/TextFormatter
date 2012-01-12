@@ -434,7 +434,7 @@ s9e\TextFormatter\Tests\RegexpMaster
  [x] buildRegexpFromList([':)', ':(']) produces '\\:[()]'
  [x] buildRegexpFromList([':]', ':[']) produces '\\:[[\\]]'
  [x] buildRegexpFromList(['foo', 'bar']) produces '(?=[bf])(?:bar|foo)'
- [x] buildRegexpFromList(['*foo', '\\bar']) produces '(?=[\\*\\\\])(?:\\*foo|\\\\bar)'
+ [x] buildRegexpFromList(['*foo', '\\bar']) produces '(?=[*\\\\])(?:\\*foo|\\\\bar)'
  [x] buildRegexpFromList(['a', 'b']) produces '[ab]'
  [x] buildRegexpFromList(['♠', '♣', '♥', '♦']) produces '[♠♣♥♦]'
  [x] buildRegexpFromList(['foo', 'bar'], ['disableLookahead' => true]) produces '(?:bar|foo)'
