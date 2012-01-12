@@ -18,7 +18,7 @@ class RegexpMaster
 	* @param  array  $options
 	* @return string
 	*/
-	public function buildRegexpFromList($words, array $options = array())
+	public function buildRegexpFromList(array $words, array $options = array())
 	{
 		$options += array(
 			'specialChars'     => array(),
@@ -47,7 +47,11 @@ class RegexpMaster
 		*/
 		$esc = $options['specialChars'];
 
-		$trie = array();
+		/**
+		* List of words, split by character
+		*/
+		$splitWords = array();
+
 		foreach ($words as $word)
 		{
 			if (preg_match_all('#.#us', $word, $matches) === false)
@@ -55,27 +59,28 @@ class RegexpMaster
 				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
 			}
 
-			// Store the initial for later
-			$initials[$matches[0][0]] = true;
-
 			// Enable lookahead if there's more than one character
 			$useLookahead |= isset($matches[0][1]);
 
-			// Each character becomes the key associated to an array containing all possible
-			// characters following it. An empty key indicates the end of a word
-			$cur =& $trie;
-			foreach ($matches[0] as $c)
+			$splitWord = array();
+			foreach ($matches[0] as $pos => $c)
 			{
 				if (!isset($esc[$c]))
 				{
 					$esc[$c] = preg_quote($c, '#');
 				}
 
-				$cur =& $cur[$esc[$c]];
+				if ($pos === 0)
+				{
+					// Store the initial for later
+					$initials[$esc[$c]] = true;
+				}
+
+				$splitWord[] = $esc[$c];
 			}
-			$cur[''] = false;
+
+			$splitWords[] = $splitWord;
 		}
-		unset($cur);
 
 		$regexp = '';
 
@@ -85,12 +90,7 @@ class RegexpMaster
 		{
 			foreach ($initials as $initial => $void)
 			{
-				/**
-				* Test for sequences of more than 1 character optionally preceded by a backslash, or
-				* the use of any non-escaped special character
-				*/
-				if (!preg_match('#^\\\\?.$#Dus',  $esc[$initial])
-				 || preg_match('/(?<!\\\\)[#$()*+.?[\\]^{|}]/', $esc[$initial]))
+				if (!$this->canBeUsedInCharacterClass($initial))
 				{
 					$useLookahead = false;
 					break;
@@ -99,95 +99,227 @@ class RegexpMaster
 
 			if ($useLookahead)
 			{
-				$regexp .= '(?=[' . implode('', array_intersect_key($esc, $initials)) . '])';
+				$regexp .= '(?=[' . implode('', array_keys($initials)) . '])';
 			}
 		}
 
-		$regexp .= $this->buildRegexpFromTrie($trie);
+		$regexp .= $this->buildRegexpFromWords($splitWords);
 
 		return $regexp;
 	}
 
-	/**
-	* @param  array  $trie
-	* @return string
-	*/
-	protected function buildRegexpFromTrie($trie)
+	protected function buildRegexpFromWords(array $words)
 	{
-		foreach (array('.*', '.*?') as $expr)
+		// First we remove the longest common prefix and suffix
+		$prefix = $this->removeLongestCommonPrefix($words);
+		$suffix = $this->removeLongestCommonSuffix($words);
+
+		// TEMP HACK
+		if (isset($words[0][0])
+		 && ($words[0][0] === '.*' || $words[0][0] === '.*?'))
 		{
-			if (isset($trie[$expr])
-			 && $trie[$expr] === array('' => false))
-			{
-				return $expr;
-			}
-		}
-
-		// Test whether this is the end of a word then discard the superfluous data
-		$isTail = isset($trie['']);
-		unset($trie['']);
-
-		// Number of remaining branches
-		$cnt    = count($trie);
-
-		$regexp = '';
-		$suffix = '';
-
-		if ($isTail)
-		{
-			// This is the end of a word, but is there any other substring to match?
-			if (empty($trie))
-			{
-				return '';
-			}
-
-			// There's more text to be optionally matched, e.g. foo(?:bar)?
-			$suffix = '?';
+			$words = array($words[0]);
 		}
 
 		/**
-		* See if we can use a character class to produce [xy] instead of (?:x|y)
+		* Sort words by their first atom
+		*
+		* First atom is the head, everything else constitues a branch.
 		*/
-		$useCharacterClass = (bool) ($cnt > 1);
-		foreach ($trie as $c => $sub)
+		$branches = array();
+		$useCharacterClass = true;
+
+		$endOfWord = false;
+
+		foreach ($words as $word)
 		{
-			/**
-			* If this is not the last character, we can't use a character class
-			*/
-			if ($sub !== array('' => false))
+			if (empty($word))
 			{
-				$useCharacterClass = false;
-				break;
+				$endOfWord = true;
+				continue;
 			}
 
-			/**
-			* If this is a special character, we can't use a character class
-			*/
-			if ($c !== preg_quote(stripslashes($c), '#'))
+			$head = $word[0];
+
+			if ($useCharacterClass)
 			{
-				$useCharacterClass = false;
-				break;
+				if (isset($word[1])
+				 || !$this->canBeUsedInCharacterClass($head))
+				{
+					$useCharacterClass = false;
+				}
+			}
+
+			$branches[$head][] = array_slice($word, 1);
+		}
+
+		if (empty($branches))
+		{
+			$regexp = '';
+		}
+		elseif ($useCharacterClass)
+		{
+			$regexp = '[' . implode('', array_keys($branches)) . ']';
+
+			// If there's only one character in this class, we can remove the brackets
+			if (count($branches) === 1)
+			{
+				$regexp = substr($regexp, 1, -1);
+			}
+		}
+		else
+		{
+			$regexps = array();
+			foreach ($branches as $head => $tails)
+			{
+				$regexps[] = $head . $this->buildRegexpFromWords($tails);
+			}
+
+			$regexp = '(?:' . implode('|', $regexps) . ')';
+
+			// TEMP HACK
+			if (count($regexps) === 1 && !$endOfWord)
+			{
+				$regexp = substr($regexp, 3, -1);
 			}
 		}
 
-		if ($useCharacterClass)
+		// If we've reached the end of a word but the regexp is not empty, it means that it is optional
+		if ($endOfWord
+		 && $regexp !== '')
 		{
-			return '[' . implode('', array_keys($trie)) . ']' . $suffix;
+			$regexp .= '?';
 		}
 
-		$sep = '';
-		foreach ($trie as $c => $sub)
+		$regexp = $prefix . $regexp . $suffix;
+
+		return $regexp;
+	}
+
+	protected function removeLongestCommonPrefix(array &$words)
+	{
+		// Length of longest common prefix
+		$pLen = 0;
+
+		while (1)
 		{
-			$regexp .= $sep . $c . $this->buildRegexpFromTrie($sub);
-			$sep = '|';
+			// $c will be used to store the character we're matching against
+			unset($c);
+
+			foreach ($words as $word)
+			{
+				if (!isset($word[$pLen]))
+				{
+					// Reached the end of a word
+					break 2;
+				}
+
+				if (!isset($c))
+				{
+					$c = $word[$pLen];
+					continue;
+				}
+
+				if ($word[$pLen] !== $c)
+				{
+					// Does not match -- don't increment sLen and break out of the loop
+					break 2;
+				}
+			}
+
+			// We have confirmed that all the words share a same prefix of at least ($pLen + 1)
+			++$pLen;
 		}
 
-		if ($cnt > 1)
+		if (!$pLen)
 		{
-			return '(?:' . $regexp . ')' . $suffix;
+			return '';
 		}
 
-		return $regexp . $suffix;
+		// Store prefix
+		$prefix = implode('', array_slice($words[0], 0, $pLen));
+
+		// Remove prefix from each word
+		foreach ($words as &$word)
+		{
+			$word = array_slice($word, $pLen);
+		}
+		unset($word);
+
+		return $prefix;
+	}
+
+	protected function removeLongestCommonSuffix(array &$words)
+	{
+		// Cache the length of every word
+		$wordsLen = array_map('count', $words);
+
+		// Length of the longest possible suffix
+		$maxLen   = min($wordsLen);
+
+		// Length of longest common suffix
+		$sLen     = 0;
+
+		// Try to find the longest common suffix
+		while ($sLen < $maxLen)
+		{
+			// $c will be used to store the character we're matching against
+			unset($c);
+
+			foreach ($words as $k => $word)
+			{
+				$pos = $wordsLen[$k] - ($sLen + 1);
+
+				if (!isset($c))
+				{
+					$c = $word[$pos];
+					continue;
+				}
+
+				if ($word[$pos] !== $c)
+				{
+					// Does not match -- don't increment sLen and break out of the loop
+					break 2;
+				}
+			}
+
+			// We have confirmed that all the words share a same suffix of at least ($sLen + 1)
+			++$sLen;
+		}
+
+		if (!$sLen)
+		{
+			return '';
+		}
+
+		// Store suffix
+		$suffix = implode('', array_slice($words[0], -$sLen));
+
+		// Remove suffix from each word
+		foreach ($words as &$word)
+		{
+			$word = array_slice($word, 0, -$sLen);
+		}
+		unset($word);
+
+		return $suffix;
+	}
+
+	protected function canBeUsedInCharacterClass($char)
+	{
+		// More than 1 character => cannnot be used in a character class
+		if (!preg_match('#^\\\\?.$#Dus',  $char))
+		{
+			return false;
+		}
+
+		// Contains a special character that is not escaped => cannot be used in a character class
+		if (preg_match('/(?<!\\\\)[#$()*+.?[\\]^{|}]/', $char))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

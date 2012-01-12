@@ -66,6 +66,18 @@ class RegexpMasterTest extends Test
 
 	/**
 	* @depends testOptimizesRegexpByMergingHeads
+	* @testdox buildRegexpFromList() uses a ? quantifier at the end of an expression if applicable
+	*/
+	public function testOptimizesRegexpByUsingQuantifier2()
+	{
+		$this->assertSame(
+			'ax(?:ed)?',
+			$this->rm->buildRegexpFromList(array('ax', 'axed'))
+		);
+	}
+
+	/**
+	* @depends testOptimizesRegexpByMergingHeads
 	* @testdox buildRegexpFromList() optimizes the tail of an expression if a subpattern ends with .*?
 	*/
 	public function testOptimizesRegexpThatUsesWildcards()
