@@ -427,6 +427,7 @@ s9e\TextFormatter\Tests\PluginParser
  [x] setUp is called once after initialization
 
 s9e\TextFormatter\Tests\RegexpMaster
+ [x] buildRegexpFromList(['foo']) produces 'foo'
  [x] buildRegexpFromList(['apple', 'april']) produces 'ap(?:ple|ril)'
  [x] buildRegexpFromList(['bar', 'baz']) produces 'ba[rz]'
  [x] buildRegexpFromList(['foo', 'fool']) produces 'fool?'
