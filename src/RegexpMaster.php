@@ -110,6 +110,20 @@ class RegexpMaster
 			$words = array($words[0]);
 		}
 
+
+		$regexp = $prefix . $this->buildRegexpFromFilteredWords($words) . $suffix;
+
+		return $regexp;
+	}
+
+	/**
+	* Build an expression based on a list of words that do not share any common prefix or suffix
+	*
+	* @param  array  $words
+	* @return string
+	*/
+	protected function buildRegexpFromFilteredWords(array $words)
+	{
 		/**
 		* Group words by their first atom
 		*
@@ -143,8 +157,8 @@ class RegexpMaster
 
 		if (empty($branches) && empty($characterClass))
 		{
-			// All of the words(?) were consumed by prefix/suffix, or were empty
-			return $prefix . $suffix;
+			// All of the words were empty
+			return '';
 		}
 
 		// Prepare the regexps for all the branches
@@ -153,6 +167,9 @@ class RegexpMaster
 		// Start with characters that can be grouped in a character class
 		if (!empty($characterClass))
 		{
+			// Remove duplicate characters
+			$characterClass = array_values(array_unique($characterClass));
+
 			// Use a character class if there are more than 1 characters in it
 			$regexps[] = (isset($characterClass[1]))
 			           ? $this->buildCharacterClass($characterClass)
@@ -164,10 +181,9 @@ class RegexpMaster
 			$regexps[] = $head . $this->buildRegexpFromWords($tails);
 		}
 
-		if (isset($regexps[1])
-		 || empty($characterClass))
+		if (isset($regexps[1]))
 		{
-			// There are several branches, or there's only one branch and it's not a character class
+			// There are several branches
 			$regexp = '(?:' . implode('|', $regexps) . ')';
 		}
 		else
@@ -178,17 +194,20 @@ class RegexpMaster
 		// If we've reached the end of a word, it means that the branches are optional
 		if ($endOfWord)
 		{
+			if (!isset($regexps[1]) && empty($characterClass))
+			{
+				 $regexp = '(?:' . $regexp . ')';
+			}
+
 			$regexp .= '?';
 		}
-
-		$regexp = $prefix . $regexp . $suffix;
 
 		return $regexp;
 	}
 
 	protected function buildCharacterClass(array $chars)
 	{
-		$regexp = implode('', array_unique($chars));
+		$regexp = implode('', $chars);
 
 		/**
 		* Only those characters need to be escaped inside of a character class.
@@ -264,34 +283,44 @@ class RegexpMaster
 		// Length of the longest possible suffix
 		$maxLen   = min($wordsLen);
 
+		// If all the words are the same length, the longest suffix is 1 less than the length of the
+		// words because we've already extracted the longest prefix
+		if (max($wordsLen) === $maxLen)
+		{
+			--$maxLen;
+		}
+
 		// Length of longest common suffix
-		$sLen     = 0;
+		$sLen = 0;
+
+		// Length of the attempted suffix
+		$len = $maxLen;
 
 		// Try to find the longest common suffix
-		while ($sLen < $maxLen)
+		while ($len > 0)
 		{
-			// $c will be used to store the character we're matching against
-			unset($c);
-
+			$tails = array();
 			foreach ($words as $k => $word)
 			{
-				$pos = $wordsLen[$k] - ($sLen + 1);
+				$head = implode('', array_slice($word, 0, -$len));
+				$tails[$head][] = array_slice($word, -$len);
+			}
 
-				if (!isset($c))
-				{
-					$c = $word[$pos];
-					continue;
-				}
+			$cmp = array_pop($tails);
 
-				if ($word[$pos] !== $c)
+			foreach ($tails as $tail)
+			{
+				if ($tail !== $cmp)
 				{
-					// Does not match -- don't increment sLen and break out of the loop
-					break 2;
+					// Does not match. Try again with a shorter suffix
+					--$len;
+					continue 2;
 				}
 			}
 
-			// We have confirmed that all the words share a same suffix of at least ($sLen + 1)
-			++$sLen;
+			// We have confirmed that all the words share the same suffix
+			$sLen = $len;
+			break;
 		}
 
 		if (!$sLen)
@@ -299,17 +328,17 @@ class RegexpMaster
 			return '';
 		}
 
-		// Store suffix
-		$suffix = implode('', array_slice($words[0], -$sLen));
-
-		// Remove suffix from each word
+		$tails = array();
 		foreach ($words as &$word)
 		{
+			$tail = array_slice($word, - $sLen);
+			$tails[serialize($tail)] = $tail;
+
 			$word = array_slice($word, 0, -$sLen);
 		}
 		unset($word);
 
-		return $suffix;
+		return $this->buildRegexpFromFilteredWords(array_values($tails));
 	}
 
 	protected function canBeUsedInCharacterClass($char)
