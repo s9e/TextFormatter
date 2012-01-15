@@ -21,8 +21,8 @@ class RegexpMaster
 	public function buildRegexpFromList(array $words, array $options = array())
 	{
 		$options += array(
-			'specialChars'     => array(),
-			'disableLookahead' => false
+			'specialChars' => array(),
+			'useLookahead' => false
 		);
 
 		// Sort the words in order to produce the same regexp regardless of the words' order
@@ -72,10 +72,11 @@ class RegexpMaster
 			$splitWords[] = $splitWord;
 		}
 
-		$regexp = $this->buildRegexpFromWords($splitWords);
+		$regexp = $this->assemble(array($this->mergeChains($splitWords)));
 
-		if (!$options['disableLookahead']
-		 && $regexp[0] === '(')
+		if ($options['useLookahead']
+		 && count($initials) > 1
+		 && $regexp[0] !== '[')
 		{
 			$useLookahead = true;
 
@@ -90,139 +91,171 @@ class RegexpMaster
 
 			if ($useLookahead)
 			{
-				$regexp = '(?=' . $this->buildCharacterClass(array_keys($initials)) . ')' . $regexp;
+				$regexp = '(?=' . $this->generateCharacterClass(array_keys($initials)) . ')' . $regexp;
 			}
 		}
-
-		return $regexp;
-	}
-
-	protected function buildRegexpFromWords(array $words)
-	{
-		// First we remove the longest common prefix and suffix
-		$prefix = $this->removeLongestCommonPrefix($words);
-		$suffix = $this->removeLongestCommonSuffix($words);
-
-		// TEMP HACK
-		if (isset($words[0][0])
-		 && ($words[0][0] === '.*' || $words[0][0] === '.*?'))
-		{
-			$words = array($words[0]);
-		}
-
-
-		$regexp = $prefix . $this->buildRegexpFromFilteredWords($words) . $suffix;
 
 		return $regexp;
 	}
 
 	/**
-	* Build an expression based on a list of words that do not share any common prefix or suffix
+	* Merge a 2D array of split words into a 1D array of expressions
 	*
-	* @param  array  $words
-	* @return string
+	* Each element in the passed array is called a "chain". It starts as an array where each element
+	* is a character (a sort of UTF-8 aware str_split()) but successive iterations replace
+	* individual characters with an equivalent expression.
+	*
+	* How it works:
+	*
+	* 1. Remove the longest prefix shared by all the chains
+	* 2. Remove the longest suffix shared by all the chains
+	* 3. Group each chain by their first element, e.g. all the chains that start with "a" (or in 	*    some cases, "[xy]") are grouped together
+	* 4. If no group has more than 1 chain, we assemble them in a regexp, such as (aa|bb). If any
+	*    group has more than 1 chain, for each group we merge the chains from that group together so
+	*    that no group has more than 1 chain. When we're done, we remerge all the chains together.
+	*
+	* @param  array $chains
+	* @return array
 	*/
-	protected function buildRegexpFromFilteredWords(array $words)
+	protected function mergeChains(array $chains)
 	{
-		/**
-		* Group words by their first atom
-		*
-		* First atom is the head, everything else constitues a branch.
-		*/
-		$branches = array();
-		$characterClass = array();
-
-		$endOfWord = false;
-
-		foreach ($words as $word)
+		// If there's only one chain, there's nothing to merge
+		if (!isset($chains[1]))
 		{
-			if (empty($word))
+			return $chains[0];
+		}
+
+		// The merged chain starts with the chains' common prefix
+		$mergedChain = $this->removeLongestCommonPrefix($chains);
+
+		if (!isset($chains[0][0])
+		 && !array_filter($chains))
+		{
+			// The chains are empty, either they were already empty or they were identical and their
+			// content was removed as their prefix. Nothing left to merge
+			return $mergedChain;
+		}
+
+		// Remove the longest common suffix and save it for later
+		$suffix = $this->removeLongestCommonSuffix($chains);
+
+		// Whether these chains need to be remerged
+		$remerge = false;
+
+		// Here we group chains by their first atom (head of chain)
+		$groups = array();
+		foreach ($chains as $chain)
+		{
+			if (!isset($chain[0]))
 			{
-				$endOfWord = true;
 				continue;
 			}
 
-			$head = $word[0];
+			$head = $chain[0];
 
-			if (!isset($word[1])
+			if (isset($groups[$head]))
+			{
+				// More than one chain in a group means that we need to remerge
+				$remerge = true;
+			}
+
+			$groups[$head][] = $chain;
+		}
+
+		// See if we can replace single characters with a character class
+		$characterClass = array();
+		foreach ($groups as $head => $groupChains)
+		{
+			if ($groupChains === array(array($head))
 			 && $this->canBeUsedInCharacterClass($head))
 			{
-				$characterClass[] = $head;
+				$characterClass[$head] = $head;
 			}
-			else
+		}
+
+		// Sort the characters and reset their keys
+		sort($characterClass);
+
+		if (isset($characterClass[1]))
+		{
+			foreach ($characterClass as $char)
 			{
-				$branches[$head][] = array_slice($word, 1);
+				unset($groups[$char]);
 			}
+
+			$head = $this->generateCharacterClass($characterClass);
+			$groups[$head][] = array($head);
 		}
 
-		if (empty($branches) && empty($characterClass))
+		if ($remerge)
 		{
-			// All of the words were empty
-			return '';
-		}
+			// Merge all chains sharing the same head together
+			$mergedChains = array();
+			foreach ($groups as $head => $groupChains)
+			{
+				$mergedChains[] = $this->mergeChains($groupChains);
+			}
 
-		// Prepare the regexps for all the branches
-		$regexps = array();
+			// Merge the tails of all chains if applicable. Helps with [ab][xy] (two chains with
+			// identical tails)
+			$this->mergeTails($mergedChains);
 
-		// Start with characters that can be grouped in a character class
-		if (!empty($characterClass))
-		{
-			// Remove duplicate characters
-			$characterClass = array_values(array_unique($characterClass));
-
-			// Use a character class if there are more than 1 characters in it
-			$regexps[] = (isset($characterClass[1]))
-			           ? $this->buildCharacterClass($characterClass)
-			           : $characterClass[0];
-		}
-
-		foreach ($branches as $head => $tails)
-		{
-			$regexps[] = $head . $this->buildRegexpFromWords($tails);
-		}
-
-		if (isset($regexps[1]))
-		{
-			// There are several branches
-			$regexp = '(?:' . implode('|', $regexps) . ')';
+			// Now merge all chains together and happen it to our merged chain
+			foreach ($this->mergeChains($mergedChains) as $atom)
+			{
+				$mergedChain[] = $atom;
+			}
 		}
 		else
 		{
-			$regexp = $regexps[0];
+			$mergedChain[] = $this->assemble($chains);
 		}
 
-		// If we've reached the end of a word, it means that the branches are optional
-		if ($endOfWord)
+		// Add the common suffix
+		foreach ($suffix as $atom)
 		{
-			if (!isset($regexps[1]) && empty($characterClass))
-			{
-				 $regexp = '(?:' . $regexp . ')';
-			}
-
-			$regexp .= '?';
+			$mergedChain[] = $atom;
 		}
 
-		return $regexp;
+		return $mergedChain;
 	}
 
-	protected function buildCharacterClass(array $chars)
+	/**
+	* Merge the tails of an array of chains wherever applicable
+	*
+	* This method optimizes (a[xy]|b[xy]|c) into ([ab][xy]|c). The expression [xy] is not a suffix
+	* to every branch of the alternation (common suffix), so it is not automatically remove. What we
+	* do here is group chains by their last element (their tail) and then try to merge them together
+	* group by group. This method should only be called AFTER chains have been group-merged by head.
+	*
+	* @param array &$chains
+	*/
+	protected function mergeTails(array &$chains)
 	{
-		$regexp = implode('', $chars);
+		$groups = array();
 
-		/**
-		* Only those characters need to be escaped inside of a character class.
-		*
-		* Technically, ^ does not have to be escaped if it's not first, but it's not worth making
-		*  it a special case. Also, : could be misinterpreted as a character class name but it would
-		* require a second : so we're safe. Lastly, escape sequences would need to be preserved but
-		* we don't support those anyway.
-		*/
-		$regexp = preg_replace('#\\\\([^\\#\\]\\^\\\\])#', '$1', $regexp);
+		foreach ($chains as $k => $chain)
+		{
+			$groups[end($chain)][] = $chain;
+		}
 
-		return '[' . $regexp . ']';
+		$newChains = array();
+
+		foreach ($groups as $tail => $groupChains)
+		{
+			$newChains[] = $this->mergeChains($groupChains);
+		}
+
+		$chains = $newChains;
 	}
 
-	protected function removeLongestCommonPrefix(array &$words)
+	/**
+	* Remove the longest common prefix from an array of chains
+	*
+	* @param  array &$chains
+	* @return array          Removed elements
+	*/
+	protected function removeLongestCommonPrefix(array &$chains)
 	{
 		// Length of longest common prefix
 		$pLen = 0;
@@ -232,9 +265,9 @@ class RegexpMaster
 			// $c will be used to store the character we're matching against
 			unset($c);
 
-			foreach ($words as $word)
+			foreach ($chains as $chain)
 			{
-				if (!isset($word[$pLen]))
+				if (!isset($chain[$pLen]))
 				{
 					// Reached the end of a word
 					break 2;
@@ -242,11 +275,11 @@ class RegexpMaster
 
 				if (!isset($c))
 				{
-					$c = $word[$pLen];
+					$c = $chain[$pLen];
 					continue;
 				}
 
-				if ($word[$pLen] !== $c)
+				if ($chain[$pLen] !== $c)
 				{
 					// Does not match -- don't increment sLen and break out of the loop
 					break 2;
@@ -259,33 +292,42 @@ class RegexpMaster
 
 		if (!$pLen)
 		{
-			return '';
+			return array();
 		}
 
 		// Store prefix
-		$prefix = implode('', array_slice($words[0], 0, $pLen));
+		$prefix = array_slice($chains[0], 0, $pLen);
 
 		// Remove prefix from each word
-		foreach ($words as &$word)
+		foreach ($chains as &$chain)
 		{
-			$word = array_slice($word, $pLen);
+			$chain = array_slice($chain, $pLen);
 		}
-		unset($word);
+		unset($chain);
 
 		return $prefix;
 	}
 
-	protected function removeLongestCommonSuffix(array &$words)
+	/**
+	* Remove the longest common suffix from an array of chains
+	*
+	* NOTE: this method is meant to be called after removeLongestCommonPrefix(). If it's not, then
+	*       the longest match return may be off by 1.
+	*
+	* @param  array &$chains
+	* @return array          Removed elements
+	*/
+	protected function removeLongestCommonSuffix(array &$chains)
 	{
 		// Cache the length of every word
-		$wordsLen = array_map('count', $words);
+		$chainsLen = array_map('count', $chains);
 
 		// Length of the longest possible suffix
-		$maxLen   = min($wordsLen);
+		$maxLen = min($chainsLen);
 
 		// If all the words are the same length, the longest suffix is 1 less than the length of the
 		// words because we've already extracted the longest prefix
-		if (max($wordsLen) === $maxLen)
+		if (max($chainsLen) === $maxLen)
 		{
 			--$maxLen;
 		}
@@ -293,58 +335,160 @@ class RegexpMaster
 		// Length of longest common suffix
 		$sLen = 0;
 
-		// Length of the attempted suffix
-		$len = $maxLen;
-
 		// Try to find the longest common suffix
-		while ($len > 0)
+		while ($sLen < $maxLen)
 		{
-			$tails = array();
-			foreach ($words as $k => $word)
-			{
-				$head = implode('', array_slice($word, 0, -$len));
-				$tails[$head][] = array_slice($word, -$len);
-			}
+			// $c will be used to store the character we're matching against
+			unset($c);
 
-			$cmp = array_pop($tails);
-
-			foreach ($tails as $tail)
+			foreach ($chains as $k => $chain)
 			{
-				if ($tail !== $cmp)
+				$pos = $chainsLen[$k] - ($sLen + 1);
+
+				if (!isset($c))
 				{
-					// Does not match. Try again with a shorter suffix
-					--$len;
-					continue 2;
+					$c = $chain[$pos];
+					continue;
+				}
+
+				if ($chain[$pos] !== $c)
+				{
+					// Does not match -- don't increment sLen and break out of the loop
+					break 2;
 				}
 			}
 
-			// We have confirmed that all the words share the same suffix
-			$sLen = $len;
-			break;
+			// We have confirmed that all the words share a same suffix of at least ($sLen + 1)
+			++$sLen;
 		}
 
 		if (!$sLen)
 		{
+			return array();
+		}
+
+		// Store suffix
+		$suffix = array_slice($chains[0], -$sLen);
+
+		// Remove suffix from each word
+		foreach ($chains as &$chain)
+		{
+			$chain = array_slice($chain, 0, -$sLen);
+		}
+		unset($chain);
+
+		return $suffix;
+	}
+
+	/**
+	* Assemble an array of chains into one expression
+	*
+	* @param  array  $chain
+	* @return string
+	*/
+	protected function assemble(array $chains)
+	{
+		$endOfChain = false;
+
+		$regexps        = array();
+		$characterClass = array();
+
+		foreach ($chains as $chain)
+		{
+			if (empty($chain))
+			{
+				$endOfChain = true;
+				continue;
+			}
+
+			if (!isset($chain[1])
+			 && $this->canBeUsedInCharacterClass($chain[0]))
+			{
+				$characterClass[$chain[0]] = $chain[0];
+			}
+			else
+			{
+				$regexps[] = implode('', $chain);
+			}
+		}
+
+		if (!empty($characterClass))
+		{
+			// Sort the characters and reset their keys
+			sort($characterClass);
+
+			// Use a character class if there are more than 1 characters in it
+			$regexp = (isset($characterClass[1]))
+					? $this->generateCharacterClass($characterClass)
+					: $characterClass[0];
+
+			// Prepend the character class to the list of regexps
+			array_unshift($regexps, $regexp);
+		}
+
+		if (empty($regexps))
+		{
 			return '';
 		}
 
-		$tails = array();
-		foreach ($words as &$word)
+		if (isset($regexps[1]))
 		{
-			$tail = array_slice($word, - $sLen);
-			$tails[serialize($tail)] = $tail;
-
-			$word = array_slice($word, 0, -$sLen);
+			// There are several branches
+			$regexp = '(?:' . implode('|', $regexps) . ')';
 		}
-		unset($word);
+		else
+		{
+			$regexp = $regexps[0];
+		}
 
-		return $this->buildRegexpFromFilteredWords(array_values($tails));
+		// If we've reached the end of a chain, it means that the branches are optional
+		if ($endOfChain)
+		{
+			// TODO: might need to reparse the regexp to check if we need to put in in parentheses
+			//       if there's any way to get something like (aa|bb)(cc|dd) here
+			if (!preg_match('#^(?:[\\[\\(]|\\\\?.$)#Dus', $regexp))
+			{
+				$regexp = '(?:' . $regexp . ')';
+			}
+
+			$regexp .= '?';
+		}
+
+		return $regexp;
 	}
 
+	/**
+	* Generate a character class from an array of characters
+	*
+	* @param  array  $chars
+	* @return string
+	*/
+	protected function generateCharacterClass(array $chars)
+	{
+		$regexp = implode('', $chars);
+
+		/**
+		* Only those characters need to be escaped inside of a character class.
+		*
+		* Technically, ^ and - do not have to be escaped depending on their position on the class,
+		* it a special case. Also, : could be misinterpreted as a character class name but it would
+		* require a second : so we're safe.
+		*/
+		$regexp = preg_replace('#\\\\([^a-z\\x00\\#\\]\\^\\-\\\\])#', '$1', $regexp);
+
+		return '[' . $regexp . ']';
+	}
+
+	/**
+	* Test whether a given expression (usually one character) can be used in a character class
+	*
+	* @param  string $char
+	* @return bool
+	*/
 	protected function canBeUsedInCharacterClass($char)
 	{
 		// More than 1 character => cannnot be used in a character class
-		if (!preg_match('#^\\\\?.$#Dus',  $char))
+		if (!preg_match('#^\\\\?.$#Dus', $char))
 		{
 			return false;
 		}

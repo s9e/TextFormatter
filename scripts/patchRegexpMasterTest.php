@@ -38,20 +38,26 @@ foreach ($test->getWordsLists() as $case)
 {
 	$regexp   = var_export($case[0], true);
 	$wordlist = _array($case[1]);
-	$options  = (isset($case[2])) ? _array($case[2]) : '';
 
 	$php .= "\n\t/**\n\t* @testdox buildRegexpFromList([" . substr($wordlist, 6, -1) . "]";
 
-	if ($options)
+	if (isset($case[2]))
 	{
-		$php .= ', [' . substr($options, 6, -1) . ']';
+		$options = strtr(json_encode($case[2]), array(
+			'{' => '[',
+			'}' => ']',
+			',' => ', ',
+			':' => ' => '
+		));
+
+		$php .= ', ' . $options . '';
 	}
 
-	$php .= ") produces " . $regexp . "\n\t*/\n\tpublic function test_buildRegexpFromList_" . dechex(crc32(serialize($case))) . "()\n\t{\n\t\t\$this->assertSame(\n\t\t\t" . $regexp . ",\n\t\t\t\$this->rm->buildRegexpFromList(";
+	$php .= ") returns " . $regexp . "\n\t*/\n\tpublic function test_buildRegexpFromList_" . dechex(crc32(serialize($case))) . "()\n\t{\n\t\t\$this->assertSame(\n\t\t\t" . $regexp . ",\n\t\t\t\$this->rm->buildRegexpFromList(";
 
-	if ($options)
+	if (isset($case[2]))
 	{
-		$php .= "\n\t\t\t\t" . $wordlist . ",\n\t\t\t\t" . $options . "\n\t\t\t";
+		$php .= "\n\t\t\t\t" . $wordlist . ",\n\t\t\t\t" . _array($case[2]) . "\n\t\t\t";
 	}
 	else
 	{
