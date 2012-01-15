@@ -1,12 +1,13 @@
 #!/bin/bash
 cd $(dirname $0)
 
+./generateCodeCoverage.sh &
 git push &
-./generateJSParserDemoLite.php &
-./generateJSParserDemo.php &
-./generateDocBlox.sh &
+./generateJSParserDemoLite.php
+./generateJSParserDemo.php
+./generateDocBlox.sh
 
-./generateCodeCoverage.sh
+fg
 
 cd ../../s9e.github.com/TextFormatter
 
