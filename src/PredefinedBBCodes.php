@@ -247,13 +247,13 @@ class PredefinedBBCodes
 	* [EMAIL]user@example.org[/EMAIL]
 	* [EMAIL=user@example.org]email me![/EMAIL]
 	*
-	* This tag uses tricks and hacks all over the place. A "compound" attribute named "content" is
-	* used to copy the tag's content into two other attributes so that it can be used in two
-	* different ways (see below.) The link starts as a single hash "#" and some Javascript is used
-	* to change it to the relevant "mailto:" URL. The content of the tag is reversed twice, once in
-	* PHP with strrev() then in CSS, so that the email doesn't appear in clear in the HTML source.
-	* The idea comes from a 2008 article from tillate.com (link below.) Weirdly enough, the HTML
-	* generated successfully validates as HTML 4.01 Strict, XHTML 1.0 Strict and HTML5.
+	* This tag uses tricks and hacks all over the place. The link starts as a single hash "#" and
+	* some Javascript is used to change it to the appropriate "mailto:" URI. The content of the tag
+	* is reversed twice, once in PHP with strrev() then in CSS, so that the email doesn't appear in
+	* clear in the HTML source. The idea comes from a 2008 article from tillate.com (link below.)
+	*
+	* Weirdly enough, the HTML generated successfully validates as HTML 4.01 Strict, XHTML 1.0
+	* Strict and HTML5.
 	*
 	* @link http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compar
 	*/
@@ -261,7 +261,7 @@ class PredefinedBBCodes
 	{
 		$this->forwardCall('EMAIL', array(
 			'defaultAttr'  => 'email',
-			'contentAttrs' => array('content')
+			'contentAttrs' => array('email', 'revtext')
 		));
 	}
 

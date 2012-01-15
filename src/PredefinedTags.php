@@ -473,17 +473,6 @@ class PredefinedTags
 						array('callback' => 'strrev')
 					)
 				),
-				/**
-				* We set the "content" attribute as a compound attribute with a regexp that will
-				* match virtually anything. Its value will be used for the "email" attribute if
-				* the latter was not provided. The idea is to have a "content" attribute that is
-				* filled with the tag's content and copy its value to "email" and "revtext" so that
-				* they receive a different treatment via validation/postFilter
-				*/
-				'content' => array(
-					'type'   => 'compound',
-					'regexp' => '/(?P<revtext>(?P<email>.*))/s'
-				),
 				'revtext' => array(
 					'type' => 'text',
 					'postFilter' => array(
