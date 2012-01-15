@@ -7,7 +7,7 @@ git push &
 ./generateJSParserDemo.php
 ./generateDocBlox.sh
 
-fg
+wait
 
 cd ../../s9e.github.com/TextFormatter
 
