@@ -2,7 +2,7 @@
 cd $(dirname $0)
 
 ./generateCodeCoverage.sh &
-git push &
+git push
 ./generateJSParserDemoLite.php
 ./generateJSParserDemo.php
 ./generateDocBlox.sh
