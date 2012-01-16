@@ -41,6 +41,21 @@ class RegexpMaster
 		$esc = $options['specialChars'];
 
 		/**
+		* preg_quote() errs on the safe side when escaping characters that could have a special
+		* meaning in some situations. Since we're building the regexp in a controlled environment,
+		* we don't have to escape those characters.
+		*/
+		$esc += array(
+			'!' => '!',
+			'-' => '-',
+			':' => ':',
+			'<' => '<',
+			'=' => '=',
+			'>' => '>',
+			'}' => '}'
+		);
+
+		/**
 		* List of words, split by character
 		*/
 		$splitWords = array();
@@ -490,18 +505,28 @@ class RegexpMaster
 	*/
 	protected function generateCharacterClass(array $chars)
 	{
-		$regexp = implode('', $chars);
+		$chars = array_flip($chars);
 
-		/**
-		* Only those characters need to be escaped inside of a character class.
-		*
-		* Technically, ^ and - do not have to be escaped depending on their position on the class,
-		* it a special case. Also, : could be misinterpreted as a character class name but it would
-		* require a second : so we're safe.
-		*/
-		$regexp = preg_replace('#\\\\([^a-z\\x00\\#\\]\\^\\-\\\\])#', '$1', $regexp);
+		// "-" should be the first character of the class to avoid ambiguity
+		if (isset($chars['-']))
+		{
+			$chars = array('-' => 1) + $chars;
+		}
 
-		return '[' . $regexp . ']';
+		// Those characters do not need to be escaped inside of a character class.
+		// Also, we ensure that ^ is at the end of the class to prevent it from negating the class
+		$unescape = str_split('$()*+.?[{|^', 1);
+
+		foreach ($unescape as $c)
+		{
+			if (isset($chars['\\' . $c]))
+			{
+				unset($chars['\\' . $c]);
+				$chars[$c] = 1;
+			}
+		}
+
+		return '[' . implode('', array_keys($chars)) . ']';
 	}
 
 	/**
@@ -518,8 +543,8 @@ class RegexpMaster
 			return false;
 		}
 
-		// Contains a special character that is not escaped => cannot be used in a character class
-		if (preg_match('/(?<!\\\\)[#$()*+.?[\\]^{|}]/', $char))
+		// Unescaped dots shouldn't be used in a character class
+		if (preg_match('/(?<!\\\\)\\./', $char))
 		{
 			return false;
 		}

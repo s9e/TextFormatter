@@ -1282,7 +1282,7 @@ class ConfigBuilderTest extends Test
 		);
 
 		$this->assertContains(
-			'xn\\-\\-pypal\\-4ve\\.com',
+			'xn--pypal-4ve\\.com',
 			$filtersConfig['url']['disallowedHosts']
 		);
 	}

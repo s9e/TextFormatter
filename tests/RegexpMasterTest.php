@@ -109,24 +109,29 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList([':)', ':(']) returns '\\:[()]'
+	* @testdox buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
 	*/
-	public function test_buildRegexpFromList_a91c1d65()
+	public function test_buildRegexpFromList_8cb33695()
 	{
 		$this->assertSame(
-			'\\:[()]',
-			$this->rm->buildRegexpFromList(array(':)', ':('))
+			'[-!:<=>\\#\\\\\\]}$()*+.?[{|^]',
+			$this->rm->buildRegexpFromList(array('!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}'))
 		);
 	}
 
 	/**
-	* @testdox buildRegexpFromList([':]', ':[']) returns '\\:[[\\]]'
+	* @testdox buildRegexpFromList(['a', '.'], ["specialChars" => ["." => "."]]) returns '(?:a|.)'
 	*/
-	public function test_buildRegexpFromList_179f12a7()
+	public function test_buildRegexpFromList_8540e325()
 	{
 		$this->assertSame(
-			'\\:[[\\]]',
-			$this->rm->buildRegexpFromList(array(':]', ':['))
+			'(?:a|.)',
+			$this->rm->buildRegexpFromList(
+				array('a', '.'),
+				array('specialChars' => array (
+  '.' => '.',
+))
+			)
 		);
 	}
 
@@ -142,12 +147,12 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[*\\\\])(?:\\*foo|\\\\bar)'
+	* @testdox buildRegexpFromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[\\\\*])(?:\\*foo|\\\\bar)'
 	*/
-	public function test_buildRegexpFromList_3ccc7313()
+	public function test_buildRegexpFromList_8b9e42a9()
 	{
 		$this->assertSame(
-			'(?=[*\\\\])(?:\\*foo|\\\\bar)',
+			'(?=[\\\\*])(?:\\*foo|\\\\bar)',
 			$this->rm->buildRegexpFromList(
 				array('*foo', '\\bar'),
 				array('useLookahead' => true)
@@ -1535,19 +1540,21 @@ class RegexpMasterTest extends Test
 			),
 */
 			array(
-				'\\:[()]',
-				array(':)', ':(')
+				'[-!:<=>\\#\\\\\\]}$()*+.?[{|^]',
+				str_split('!#$()*+-.:<=>?[\\]^{|}', 1)
 			),
 			array(
-				'\\:[[\\]]',
-				array(':]', ':[')
+				// should become '.' once jokers optimization is implemented
+				'(?:a|.)',
+				array('a', '.'),
+				array('specialChars' => array('.' => '.'))
 			),
 			array(
 				'(?:bar|foo)',
 				array('foo', 'bar')
 			),
 			array(
-				'(?=[*\\\\])(?:\\*foo|\\\\bar)',
+				'(?=[\\\\*])(?:\\*foo|\\\\bar)',
 				array('*foo', '\\bar'),
 				array('useLookahead' => true)
 			),
