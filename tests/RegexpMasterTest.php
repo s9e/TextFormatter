@@ -351,6 +351,17 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
+	* @testdox buildRegexpFromList(['abx', 'aby', 'cdx', 'cdy']) returns '(?:ab|cd)[xy]'
+	*/
+	public function test_buildRegexpFromList_62e02b3a()
+	{
+		$this->assertSame(
+			'(?:ab|cd)[xy]',
+			$this->rm->buildRegexpFromList(array('abx', 'aby', 'cdx', 'cdy'))
+		);
+	}
+
+	/**
 	* @testdox buildRegexpFromList(['afoo', 'abar', 'bbfoo', 'bbbar']) returns '(?:a|bb)(?:bar|foo)'
 	*/
 	public function test_buildRegexpFromList_386f86fb()
@@ -424,6 +435,28 @@ class RegexpMasterTest extends Test
 		$this->assertSame(
 			'[ab]?[xy]',
 			$this->rm->buildRegexpFromList(array('ax', 'ay', 'bx', 'by', 'x', 'y'))
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['ax', 'ay', 'bbx', 'bby', 'c']) returns '(?:c|a[xy]|bb[xy])'
+	*/
+	public function test_buildRegexpFromList_58a1b850()
+	{
+		$this->assertSame(
+			'(?:c|a[xy]|bb[xy])',
+			$this->rm->buildRegexpFromList(array('ax', 'ay', 'bbx', 'bby', 'c'))
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']) returns '(?:c|dd[xy]|[ab][xy])'
+	*/
+	public function test_buildRegexpFromList_23c1bd26()
+	{
+		$this->assertSame(
+			'(?:c|dd[xy]|[ab][xy])',
+			$this->rm->buildRegexpFromList(array('ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy'))
 		);
 	}
 
@@ -1591,6 +1624,10 @@ class RegexpMasterTest extends Test
 				array('aaax', 'aaay', 'aax', 'aay')
 			),
 			array(
+				'(?:ab|cd)[xy]',
+				array('abx', 'aby', 'cdx', 'cdy')
+			),
+			array(
 				'(?:a|bb)(?:bar|foo)',
 				array('afoo', 'abar', 'bbfoo', 'bbbar')
 			),
@@ -1617,6 +1654,15 @@ class RegexpMasterTest extends Test
 			array(
 				'[ab]?[xy]',
 				array('ax', 'ay', 'bx', 'by', 'x', 'y')
+			),
+			// Ensure that merging tails does not create subpatterns
+			array(
+				'(?:c|a[xy]|bb[xy])',
+				array('ax', 'ay', 'bbx', 'bby', 'c')
+			),
+			array(
+				'(?:c|dd[xy]|[ab][xy])',
+				array('ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy')
 			),
 			// Those two only exist to make sure nothing bad happens (e.g. no infinite loop)
 			array(

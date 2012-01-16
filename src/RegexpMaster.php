@@ -235,25 +235,43 @@ class RegexpMaster
 	* do here is group chains by their last element (their tail) and then try to merge them together
 	* group by group. This method should only be called AFTER chains have been group-merged by head.
 	*
+	* NOTE: will only merge tails if their heads can become a character class, in order to avoid
+	*       creating a non-capturing subpattern, e.g. (?:c|a[xy]|bb[xy]) does not become
+	*       (?:c|(?:a|bb)[xy]) but (?:c|a[xy]|bb[xy]|d[xy]) does become (?:c|bb[xy]|[ad][xy])
+	*
 	* @param array &$chains
 	*/
 	protected function mergeTails(array &$chains)
 	{
-		$groups = array();
+		$candidateChains = array();
 
 		foreach ($chains as $k => $chain)
 		{
-			$groups[end($chain)][] = $chain;
+			if (isset($chain[1])
+			 && !isset($chain[2])
+			 && $this->canBeUsedInCharacterClass($chain[0]))
+			{
+				$candidateChains[$chain[1]][$k] = $chain;
+			}
 		}
 
-		$newChains = array();
-
-		foreach ($groups as $tail => $groupChains)
+		foreach ($candidateChains as $tail => $groupChains)
 		{
-			$newChains[] = $this->mergeChains($groupChains);
+			if (count($groupChains) < 2)
+			{
+				// Only 1 element, skip this group
+				continue;
+			}
+
+			// Remove this group's chains from the original list
+			$chains = array_diff_key($chains, $groupChains);
+
+			// Merge this group's chains and add the result to the list
+			$chains[] = $this->mergeChains(array_values($groupChains));
 		}
 
-		$chains = $newChains;
+		// Don't forget to reset the keys
+		$chains = array_values($chains);
 	}
 
 	/**
