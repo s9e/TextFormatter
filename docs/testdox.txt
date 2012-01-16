@@ -467,6 +467,8 @@ s9e\TextFormatter\Tests\RegexpMaster
  [x] buildRegexpFromList(['', '']) returns ''
  [x] buildRegexpFromList(['ad', 'bd'], ["specialChars" => ["d" => "\\d"]]) returns '[ab]\\d'
  [x] buildRegexpFromList(['a', 'ax', 'ad', 'd', 'dx', 'dd'], ["specialChars" => ["d" => "\\d"]]) returns '[\\da][\\dx]?'
+ [x] buildRegexpFromList(['foo', 'bar', 'y', 'z']) returns '(?:[yz]|bar|foo)'
+ [x] buildRegexpFromList(['foo', 'bar', 'baz', 'y', 'z']) returns '(?:[yz]|ba[rz]|foo)'
  [x] buildRegexpFromList() throws a RuntimeException if any word is not legal UTF-8
  [x] parseRegexp() can parse plain regexps
  [x] parseRegexp() throws a RuntimeException if delimiters can't be parsed
