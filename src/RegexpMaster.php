@@ -154,6 +154,10 @@ class RegexpMaster
 		// Remove the longest common suffix and save it for later
 		$suffix = $this->removeLongestCommonSuffix($chains);
 
+		// Whether one of the chain has been completely optimized away by prefix/suffix removal.
+		// Signals that the middle part of the regexp is optional, e.g. (prefix)(foo)?(suffix)
+		$endOfChain = false;
+
 		// Whether these chains need to be remerged
 		$remerge = false;
 
@@ -163,6 +167,7 @@ class RegexpMaster
 		{
 			if (!isset($chain[0]))
 			{
+				$endOfChain = true;
 				continue;
 			}
 
@@ -222,11 +227,16 @@ class RegexpMaster
 			// identical tails)
 			$this->mergeTails($mergedChains);
 
-			// Now merge all chains together and happen it to our merged chain
-			foreach ($this->mergeChains($mergedChains) as $atom)
+			// Now merge all chains together and append it to our merged chain
+			$regexp = implode('', $this->mergeChains($mergedChains));
+
+			if ($endOfChain)
 			{
-				$mergedChain[] = $atom;
+				$regexp = $this->makeRegexpOptional($regexp);
 			}
+
+			$mergedChain[] = $regexp;
+
 		}
 		else
 		{
@@ -484,15 +494,71 @@ class RegexpMaster
 		// If we've reached the end of a chain, it means that the branches are optional
 		if ($endOfChain)
 		{
-			// TODO: might need to reparse the regexp to check if we need to put in in parentheses
-			//       if there's any way to get something like (aa|bb)(cc|dd) here
-			if (!preg_match('#^(?:[\\[\\(]|\\\\?.$)#Dus', $regexp))
-			{
-				$regexp = '(?:' . $regexp . ')';
-			}
-
-			$regexp .= '?';
+			$regexp = $this->makeRegexpOptional($regexp);
 		}
+
+		return $regexp;
+	}
+
+	/**
+	* Make an entire regexp optional through the use of the ? quantifier
+	*
+	* @param  string $regexp
+	* @return string
+	*/
+	protected function makeRegexpOptional($regexp)
+	{
+		// One single character, optionally escaped
+		if (preg_match('#^\\\\?.$#Dus', $regexp))
+		{
+			$isAtomic = true;
+		}
+		// At least two characters, but it's not a subpattern or a character class
+		elseif (preg_match('#^[^[(].#s', $regexp))
+		{
+			$isAtomic = false;
+		}
+		else
+		{
+			$def    = $this->parseRegexp('#' . $regexp . '#');
+			$tokens = $def['tokens'];
+
+			switch (count($tokens))
+			{
+				// One character class
+				case 1:
+					$startPos = $tokens[0]['pos'];
+					$len      = $tokens[0]['len'];
+
+					$isAtomic = (bool) ($startPos === 0 && $len === strlen($regexp));
+					break;
+
+				// One subpattern covering the entire regexp
+				case 2:
+					if ($tokens[0]['type'] === 'nonCapturingSubpatternStart'
+					 && $tokens[1]['type'] === 'nonCapturingSubpatternEnd')
+					{
+						$startPos = $tokens[0]['pos'];
+						$len      = $tokens[1]['pos'] + $tokens[1]['len'];
+
+						$isAtomic = (bool) ($startPos === 0 && $len === strlen($regexp));
+
+						// If the tokens are not a non-capturing subpattern, we let it fall through
+						break;
+					}
+					// no break; here
+
+				default:
+					$isAtomic = false;
+			}
+		}
+
+		if (!$isAtomic)
+		{
+			$regexp = '(?:' . $regexp . ')';
+		}
+
+		$regexp .= '?';
 
 		return $regexp;
 	}
