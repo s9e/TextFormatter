@@ -27,8 +27,8 @@ $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/
 $cb->Censor->addWord('apple', 'banana');
 
 $cb->Generic->addReplacement(
-	'#\\$(?<amount>[0-9]+(?:\\.[0-9]+)?)#',
-	'<a href="http://www.google.com/search?q={@amount}+USD+in+EUR"><xsl:apply-templates/></a>'
+	'/#(?<tag>[a-z0-9]+)/i',
+	'<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>'
 );
 
 $cb->RawHTML->allowElement('a');
@@ -143,7 +143,7 @@ The following plugins have been enabled:
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
   [*][b]Emoticons[/b] --- one emoticon :) has been added
   [*][b]Escaper[/b] --- a backslash can be used to escape one character, e.g. \:)
-  [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]#\$(?<amount>[0-9]+(?:\.[0-9]+)?)#[/CODE] is replaced with the template [CODE]<a href="http://www.google.com/search?q={@amount}+USD+in+EUR"><xsl:apply-templates/></a>[/CODE] -- For example: $2, $4.50
+  [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]/#(?<tag>[a-z0-9]+)/i[/CODE] is replaced with the template [CODE]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/CODE] -- For example: #PHP, #fml
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
   [*][b]Linebreaker[/b] --- Linefeeds are converted to &lt;br&gt;
   [*][b]RawHTML[/b] --- [CODE]<a>[/CODE] tags are allowed, with two whitelisted attributes: [CODE]href[/CODE] and [CODE]title[/CODE]. Example: <a href="https://github.com" title="GitHub - Social Coding">GitHub</a>
