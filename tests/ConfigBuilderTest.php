@@ -1549,6 +1549,73 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Simple templates in the form <b><xsl:apply-templates/></b> are merged together
+	*/
+	public function testSimpleTemplatesAreMerged()
+	{
+		$this->cb->addTag('B', array('template' => '<b><xsl:apply-templates/></b>'));
+		$this->cb->addTag('I', array('template' => '<i><xsl:apply-templates/></i>'));
+		$this->cb->addTag('U', array('template' => '<u><xsl:apply-templates/></u>'));
+
+		$xsl = $this->cb->getXSL();
+
+		$this->assertContains(
+			'<xsl:template match="B|I|U"><xsl:element name="{translate(name(),\'BIU\',\'biu\')}"><xsl:apply-templates/></xsl:element></xsl:template>',
+			$xsl
+		);
+
+		$this->assertNotContains(
+			'<xsl:template match="B"><b><xsl:apply-templates/></b></xsl:template>',
+			$xsl
+		);
+	}
+
+	/**
+	* @testdox Simple templates using an <xsl:apply-templates/> mode are not merged
+	*/
+	public function testNoApplyTemplatesModeInSimpleTemplates()
+	{
+		$this->cb->addTag('B', array('template' => '<b><xsl:apply-templates/></b>'));
+		$this->cb->addTag('I', array('template' => '<i><xsl:apply-templates/></i>'));
+		$this->cb->addTag('U', array('template' => '<u><xsl:apply-templates/></u>'));
+		$this->cb->addTag('X', array('template' => '<x><xsl:apply-templates mode="foo" /></x>'));
+
+		$this->assertContains(
+			'<xsl:template match="B|I|U"><xsl:element name="{translate(name(),\'BIU\',\'biu\')}"><xsl:apply-templates/></xsl:element></xsl:template>',
+			$this->cb->getXSL()
+		);
+	}
+
+	/**
+	* @testdox Simple templates with attributes are not merged
+	*/
+	public function testNoAttributesInSimpleTemplates()
+	{
+		$this->cb->addTag('B', array('template' => '<b class="foo"><xsl:apply-templates/></b>'));
+		$this->cb->addTag('I', array('template' => '<i><xsl:apply-templates/></i>'));
+		$this->cb->addTag('U', array('template' => '<u><xsl:apply-templates/></u>'));
+
+		$this->assertContains(
+			'<xsl:template match="B"><b class="foo"><xsl:apply-templates/></b></xsl:template>',
+			$this->cb->getXSL()
+		);
+	}
+
+	/**
+	* @testdox Simple templates are not merged if there are less than 3 of them
+	*/
+	public function testNeedsThreeSimpleTemplates()
+	{
+		$this->cb->addTag('B', array('template' => '<b><xsl:apply-templates/></b>'));
+		$this->cb->addTag('I', array('template' => '<i><xsl:apply-templates/></i>'));
+
+		$this->assertContains(
+			'<xsl:template match="B"><b><xsl:apply-templates/></b></xsl:template>',
+			$this->cb->getXSL()
+		);
+	}
+
+	/**
 	* @test
 	* @depends testCanCreateTag
 	*/

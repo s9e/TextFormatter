@@ -123,6 +123,10 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Empty templates are merged with the default empty template
  [x] HTML attributes in templates are inlined
  [x] Conditional attributes are optimized through <xsl:copy-of/>
+ [x] Simple templates in the form <b><xsl:apply-templates/></b> are merged together
+ [x] Simple templates using an <xsl:apply-templates/> mode are not merged
+ [x] Simple templates with attributes are not merged
+ [x] Simple templates are not merged if there are less than 3 of them
  [x] Can add a preFilter callback to a tag
  [x] addTagPreFilterCallback throws an exception if callback is not callable
  [x] Can set preFilter callbacks via setTagOption

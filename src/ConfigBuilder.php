@@ -1885,6 +1885,56 @@ class ConfigBuilder
 
 			$if->parentNode->replaceChild($copyOf, $if);
 		}
+
+		// Find simple templates
+		$query = 'xsl:template[@match][not(@mode)]'
+		       . '[count(descendant::node()) = 2]'
+		       . '[*[not(@*)][name() = translate(../@match, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")][xsl:apply-templates[not(@*)]]]';
+
+		$templates = array();
+		foreach ($xpath->query($query) as $template)
+		{
+			$templates[] = $template;
+		}
+
+		// We just need to replace two templates to save at least 3 bytes but we'll only apply this
+		// optimization if can replace at least three templates
+		if (isset($templates[2]))
+		{
+			$names = array();
+
+			foreach ($templates as $template)
+			{
+				$names[] = $template->getAttribute('match');
+
+				$template->parentNode->removeChild($template);
+			}
+
+			$chars = preg_replace('#[^A-Z]+#', '', count_chars(implode('', $names), 3));
+
+			$template = $dom->createElementNS(
+				'http://www.w3.org/1999/XSL/Transform',
+				'xsl:template'
+			);
+			$template->setAttribute('match', implode('|', $names));
+
+			$element = $dom->createElementNS(
+				'http://www.w3.org/1999/XSL/Transform',
+				'xsl:element'
+			);
+			$element->setAttribute(
+				'name',
+				"{translate(name(),'" . $chars . "','" . strtolower($chars) . "')}"
+			);
+
+			$dom->documentElement
+			    ->appendChild($template)
+			    ->appendChild($element)
+			    ->appendChild($dom->createElementNS(
+					'http://www.w3.org/1999/XSL/Transform',
+					'xsl:apply-templates'
+			    ));
+		}
 	}
 
 	//==========================================================================
