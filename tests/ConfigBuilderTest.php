@@ -1515,6 +1515,40 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox HTML attributes in templates are inlined
+	*/
+	public function testAttributesInTemplatesAreInlined()
+	{
+		$this->cb->addTag('B');
+		$this->cb->setTagTemplate(
+			'B',
+			'<b><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></b>'
+		);
+
+		$this->assertContains(
+			'<xsl:template match="B"><b title="{@foo}"/></xsl:template>',
+			$this->cb->getXSL()
+		);
+	}
+
+	/**
+	* @testdox Conditional attributes are optimized through <xsl:copy-of/>
+	*/
+	public function testConditionalAttributesAreOptimizedThroughCopy()
+	{
+		$this->cb->addTag('B');
+		$this->cb->setTagTemplate(
+			'B',
+			'<b><xsl:if test="@foo"><xsl:attribute name="foo"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>'
+		);
+
+		$this->assertContains(
+			'<xsl:template match="B"><b><xsl:copy-of select="@foo"/></b></xsl:template>',
+			$this->cb->getXSL()
+		);
+	}
+
+	/**
 	* @test
 	* @depends testCanCreateTag
 	*/

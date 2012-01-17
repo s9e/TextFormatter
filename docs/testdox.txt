@@ -121,6 +121,8 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Can use a custom prefix for the XSL namespace
  [x] Identical templates are merged
  [x] Empty templates are merged with the default empty template
+ [x] HTML attributes in templates are inlined
+ [x] Conditional attributes are optimized through <xsl:copy-of/>
  [x] Can add a preFilter callback to a tag
  [x] addTagPreFilterCallback throws an exception if callback is not callable
  [x] Can set preFilter callbacks via setTagOption

@@ -1601,40 +1601,20 @@ class ConfigBuilder
 		      . '</xsl:stylesheet>';
 
 		/**
-		* Dedupes the templates
+		* Build the DOM and prepare for some optimizations
 		*/
 		$dom = new DOMDocument;
 		$dom->loadXML($xsl);
 
-		$xpath = new DOMXPath($dom);
-		$dupes = array();
+		/**
+		* Dedupes the templates
+		*/
+		$this->dedupeTemplates($dom);
 
-		foreach ($xpath->query('/xsl:stylesheet/xsl:template[@match]') as $node)
-		{
-			// Make a copy of the template node so that we can remove its @match
-			$tmp = $node->cloneNode(true);
-			$tmp->removeAttribute('match');
-
-			$xml = $dom->saveXML($tmp);
-
-			if (isset($dupes[$xml]))
-			{
-				// It's a dupe, append its @match to the original template's @match
-				$dupes[$xml]->setAttribute(
-					'match',
-					$dupes[$xml]->getAttribute('match') . '|' . $node->getAttribute('match')
-				);
-
-				// ...then remove the dupe from the template
-				$node->parentNode->removeChild($node);
-			}
-			else
-			{
-				// Not a dupe, save the node for later
-				$dupes[$xml] = $node;
-			}
-		}
-		unset($dupes);
+		/**
+		* Optimize templates attributes
+		*/
+		$this->optimizeXSLAttributes($dom);
 
 		/**
 		* If we're using the default prefix then we're done
@@ -1810,6 +1790,101 @@ class ConfigBuilder
 		}
 
 		return $xsl;
+	}
+
+	/**
+	* Merge identical templates together
+	*
+	* Works by grouping templates by their content (using a simple text comparison) then it
+	* generates a new template with a merged @match clause and it removes the old templates.
+	*
+	* @param DOMDocument $dom
+	*/
+	protected function dedupeTemplates(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+		$dupes = array();
+
+		foreach ($xpath->query('/xsl:stylesheet/xsl:template[@match]') as $node)
+		{
+			// Make a copy of the template node so that we can remove its @match
+			$tmp = $node->cloneNode(true);
+			$tmp->removeAttribute('match');
+
+			$xml = $dom->saveXML($tmp);
+
+			if (isset($dupes[$xml]))
+			{
+				// It's a dupe, append its @match to the original template's @match
+				$dupes[$xml]->setAttribute(
+					'match',
+					$dupes[$xml]->getAttribute('match') . '|' . $node->getAttribute('match')
+				);
+
+				// ...then remove the dupe from the template
+				$node->parentNode->removeChild($node);
+			}
+			else
+			{
+				// Not a dupe, save the node for later
+				$dupes[$xml] = $node;
+			}
+		}
+		unset($dupes);
+	}
+
+
+	/**
+	* Optimize attribute setting
+	*
+	* Will replace <xsl:attribute/> nodes with inline attributes wherever applicable.
+	* Also will replace conditional attributes with a <xsl:copy-of/>, e.g.
+	*	<xsl:if test="@foo">
+	*		<xsl:attribute name="foo">
+	*			<xsl:value-of select="@foo" />
+	*		</xsl:attribute>
+	*	</xsl:if>
+	* into
+	*	<xsl:copy-of select="@foo"/>
+	*
+	* @param DOMDocument $dom
+	*/
+	protected function optimizeXSLAttributes(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+
+		// Inline attributes
+		$query = 'xsl:template[@match]'
+		       . '//*[namespace-uri() = ""]'
+		       . '/xsl:attribute[count(descendant::node()) = 1]'
+		       . '/xsl:value-of[@select]';
+
+		foreach ($xpath->query($query) as $valueOf)
+		{
+			$attribute = $valueOf->parentNode;
+
+			$attribute->parentNode->setAttribute(
+				$attribute->getAttribute('name'),
+				'{' . $valueOf->getAttribute('select') . '}'
+			);
+
+			$attribute->parentNode->removeChild($attribute);
+		}
+
+		// Replace conditional attributes with <xsl:copy-of/>
+		$query = 'xsl:template[@match]'
+		       . '//xsl:if'
+		       . "[starts-with(@test, '@')]"
+		       . '[count(descendant::node()) = 2]'
+		       . '[xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]';
+
+		foreach ($xpath->query($query) as $if)
+		{
+			$copyOf = $dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:copy-of');
+			$copyOf->setAttribute('select', $if->getAttribute('test'));
+
+			$if->parentNode->replaceChild($copyOf, $if);
+		}
 	}
 
 	//==========================================================================
