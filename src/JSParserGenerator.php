@@ -106,17 +106,18 @@ class JSParserGenerator
 	protected function init(array $options)
 	{
 		$this->options = $options + array(
-			'closureCompilerURL'   => 'http://closure-compiler.appspot.com/compile',
-			'compilationLevel'     => 'none',
-			'disableAPI'           => array(),
-			'disableLogTypes'      => array(),
-			'enableIE'             => true,
-			'enableIE7'            => true,
-			'enableIE9'            => true,
-			'escapeScriptEndTag'   => true,
-			'setOptimizationHints' => false,
-			'unsafeMinification'   => false,
-			'xslNamespacePrefix'   => 'xsl'
+			'closureCompilerURL'        => 'http://closure-compiler.appspot.com/compile',
+			'compilationLevel'          => 'none',
+			'disableAPI'                => array(),
+			'disableLogTypes'           => array(),
+			'enableIE'                  => true,
+			'enableIE7'                 => true,
+			'enableIE9'                 => true,
+			'enableLivePreviewFastPath' => false,
+			'escapeScriptEndTag'        => true,
+			'setOptimizationHints'      => false,
+			'unsafeMinification'        => false,
+			'xslNamespacePrefix'        => 'xsl'
 		);
 
 		$this->src     = $this->tpl;
@@ -214,6 +215,7 @@ class JSParserGenerator
 			'enableIE'              => (bool) $this->options['enableIE'],
 			'enableIE7'             => $this->options['enableIE'] && $this->options['enableIE7'],
 			'enableIE9'             => $this->options['enableIE'] && $this->options['enableIE9'],
+			'enableLivePreviewFastPath' => (bool) $this->options['enableLivePreviewFastPath'],
 			'filterConfig'          => $this->getFiltersConfigHints(),
 			'hasCompoundAttributes' => $this->hasCompoundAttributes(),
 			'hasNamespacedHTML'     => $this->hasNamespacedHTML(),

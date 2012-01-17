@@ -1916,10 +1916,25 @@ var HINT = {
 		});
 	}
 
+	var serializedTags = '';
 	function parse(_text)
 	{
 		reset(_text);
 		executePluginParsers();
+
+		if (HINT.enableLivePreviewFastPath)
+		{
+			if (!HINT.enableIE7 || window.JSON)
+			{
+				var tmp = JSON.stringify(unprocessedTags);
+				if (tmp === serializedTags)
+				{
+					return;
+				}
+				serializedTags = tmp;
+			}
+		}
+
 		normalizeUnprocessedTags();
 		sortTags();
 		processTags();
@@ -1991,9 +2006,38 @@ var HINT = {
 		* @param {!string} text Text to parse
 		* @param {!HTMLElement} target Target element
 		*/
+		var lastText = '';
 		API['preview'] = function(text, target)
 		{
-			var DOM = loadXML(parse(text)),
+			if (HINT.enableLivePreviewFastPath)
+			{
+				var lastLen = lastText.length;
+
+				if (text.length > lastLen
+				 && text.substr(0, lastLen) === lastText
+				 && target.lastChild
+				 && target.lastChild.nodeType === 3)
+				{
+				}
+				else
+				{
+					serializedTags = '';
+				}
+				lastText = text;
+			}
+
+			var xml = parse(text);
+
+			if (HINT.enableLivePreviewFastPath)
+			{
+				if (!xml)
+				{
+					target.lastChild.appendData(text.substr(lastLen));
+					return;
+				}
+			}
+
+			var DOM = loadXML(xml),
 				document = target.ownerDocument,
 				frag;
 

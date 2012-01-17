@@ -45,8 +45,9 @@ $cb->loadPlugin('WittyPants');
 $cb->addRulesFromHTML5Specs();
 
 $jsParser = $cb->getJSParser(array(
-	'compilationLevel'     => 'ADVANCED_OPTIMIZATIONS',
-	'setOptimizationHints' => true
+	'compilationLevel'          => 'ADVANCED_OPTIMIZATIONS',
+	'enableLivePreviewFastPath' => true,
+	'setOptimizationHints'      => true
 ));
 
 ob_start();

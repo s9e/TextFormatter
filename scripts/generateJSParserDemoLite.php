@@ -59,7 +59,8 @@ $jsParser = $cb->getJSParser(array(
 		'getLog',
 		'enablePlugin',
 		'disablePlugin'
-	)
+	),
+	'enableLivePreviewFastPath' => false
 ));
 file_put_contents('/tmp/z.js', $jsParser);
 ob_start();
