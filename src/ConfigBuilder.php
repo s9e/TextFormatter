@@ -1580,7 +1580,7 @@ class ConfigBuilder
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
 		     . "\n"
 		     . '<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . '>'
-		     . '<xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" indent="no"/>'
+		     . '<xsl:output method="html" encoding="utf-8" indent="no"/>'
 		     . '<xsl:template match="/m">'
 		     . '<xsl:for-each select="*">'
 		     . '<xsl:apply-templates/>'

@@ -1496,7 +1496,7 @@ class ConfigBuilderTest extends Test
 		$this->cb->addTag('STRONG', array('template' => '<strong><xsl:apply-templates/></strong>'));
 
 		$this->assertXmlStringEqualsXmlString(
-			'<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" indent="no"/><xsl:template match="/m"><xsl:for-each select="*"><xsl:apply-templates/><xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if></xsl:for-each></xsl:template><xsl:template match="B|BOLD|STRONG"><strong><xsl:apply-templates/></strong></xsl:template><xsl:template match="st|et|i"/></xsl:stylesheet>',
+			'<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:output method="html" encoding="utf-8" indent="no"/><xsl:template match="/m"><xsl:for-each select="*"><xsl:apply-templates/><xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if></xsl:for-each></xsl:template><xsl:template match="B|BOLD|STRONG"><strong><xsl:apply-templates/></strong></xsl:template><xsl:template match="st|et|i"/></xsl:stylesheet>',
 			$this->cb->getXSL()
 		);
 	}
@@ -1509,7 +1509,7 @@ class ConfigBuilderTest extends Test
 		$this->cb->addTag('B',      array('template' => ''));
 
 		$this->assertXmlStringEqualsXmlString(
-			'<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" indent="no"/><xsl:template match="/m"><xsl:for-each select="*"><xsl:apply-templates/><xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if></xsl:for-each></xsl:template><xsl:template match="B|st|et|i"/></xsl:stylesheet>',
+			'<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:output method="html" encoding="utf-8" indent="no"/><xsl:template match="/m"><xsl:for-each select="*"><xsl:apply-templates/><xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if></xsl:for-each></xsl:template><xsl:template match="B|st|et|i"/></xsl:stylesheet>',
 			$this->cb->getXSL()
 		);
 	}
