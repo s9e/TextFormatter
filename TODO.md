@@ -11,3 +11,5 @@ TODO
 - Investigate the possibility of replacing autoClose with isEmpty
 - JSParserGenerator: if all the plugins' RLA is the same, remove them from the config and use hints to bypass the if test
 - Investigate the possibility of using an external CSS checker in order to enable a default "css" filter
+- Consider a Twitter BBCode (https://dev.twitter.com/docs/embedded-tweets)
+- Create a way for special XSL to be evaluated at the start/end of a rendering in order to embed resources such as external scripts
