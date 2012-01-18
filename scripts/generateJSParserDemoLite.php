@@ -18,7 +18,8 @@ $cb->BBCodes->addBBCode('LIST', array(
 	'ltrimContent' => true,
 	'rtrimContent' => true,
 
-	'xsl' => '<xsl:template match="LIST[LI]"><ul><xsl:apply-templates/></ul></xsl:template>'
+	'tagName'  => 'UL',
+	'template' => '<ul><xsl:apply-templates/></ul>'
 ));
 
 $cb->BBCodes->addBBCode('*', array(
@@ -97,7 +98,7 @@ ob_start();
 
 Only some of the plugins have been enabled and aggressive optimizations have been turned on. Logging has been disabled, as well as compatibility with Internet Explorer.
 
-The source has been minified to <?php echo round(strlen($jsParser) / 1024, 1); ?>KB (<?php echo round(strlen(gzencode($jsParser, 9)) / 1024, 1); ?>KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].
+The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/TextFormatter/blob/master/scripts/generateJSParserDemoLite.php]this script[/url]. The source has been minified to <?php echo round(strlen($jsParser) / 1024, 1); ?>KB (<?php echo round(strlen(gzencode($jsParser, 9)) / 1024, 1); ?>KB gzipped) with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].
 
 The included plugins are:
 
