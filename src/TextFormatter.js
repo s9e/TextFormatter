@@ -1917,23 +1917,23 @@ var HINT = {
 		});
 	}
 
-	var serializedTags = '';
+	var serializedTags = '',
+		canLivePreviewFastPath = HINT.enableLivePreviewFastPath && (!HINT.enableIE7 || 'JSON' in window),
+		enableLivePreviewFastPath = HINT.enableLivePreviewFastPath;
+
 	function parse(_text)
 	{
 		reset(_text);
 		executePluginParsers();
 
-		if (HINT.enableLivePreviewFastPath)
+		if (HINT.enableLivePreviewFastPath && enableLivePreviewFastPath)
 		{
-			if (!HINT.enableIE7 || window.JSON)
+			var tmp = JSON.stringify(unprocessedTags);
+			if (tmp === serializedTags)
 			{
-				var tmp = JSON.stringify(unprocessedTags);
-				if (tmp === serializedTags)
-				{
-					return;
-				}
-				serializedTags = tmp;
+				return;
 			}
+			serializedTags = tmp;
 		}
 
 		normalizeUnprocessedTags();
@@ -2010,26 +2010,31 @@ var HINT = {
 		var lastText = '';
 		API['preview'] = function(text, target)
 		{
-			if (HINT.enableLivePreviewFastPath)
+			if (canLivePreviewFastPath)
 			{
 				var lastLen = lastText.length;
 
+				// We only enable the fast path if the changes happen at the end of the text.
+				// It also means that it needs 2 consecutive changes to actually take the fast path.
 				if (text.length > lastLen
 				 && text.substr(0, lastLen) === lastText
 				 && target.lastChild
 				 && target.lastChild.nodeType === 3)
 				{
+					enableLivePreviewFastPath = true;
 				}
 				else
 				{
+					enableLivePreviewFastPath = false;
 					serializedTags = '';
 				}
+
 				lastText = text;
 			}
 
 			var xml = parse(text);
 
-			if (HINT.enableLivePreviewFastPath)
+			if (enableLivePreviewFastPath)
 			{
 				if (!xml)
 				{
