@@ -43,6 +43,7 @@ var HINT = {
 	enableIE: true,
 	enableIE7: true,
 	enableIE9: true,
+	enableLivePreviewFastPath: false,
 	filterConfig: {
 		email: {
 			forceUrlencode: true
@@ -185,7 +186,7 @@ var HINT = {
 			return obj;
 		}
 
-		return new DOMParser().parseFromString(xml, 'text/xml')
+		return new DOMParser().parseFromString(xml, 'text/xml');
 	}
 
 	if (MSXML)

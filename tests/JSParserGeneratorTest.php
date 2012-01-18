@@ -690,6 +690,14 @@ class JSParserGeneratorTest extends Test
 				array('enableIE' => false)
 			),
 			array(
+				'HINT.enableLivePreviewFastPath is false by default'
+			),
+			array(
+				'HINT.enableLivePreviewFastPath is true if the option "enableLivePreviewFastPath" is true',
+				array(),
+				array('enableLivePreviewFastPath' => true)
+			),
+			array(
 				'HINT.filterConfig.email.forceUrlencode is false by default'
 			),
 			array(
