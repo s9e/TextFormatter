@@ -1919,7 +1919,7 @@ var HINT = {
 
 	var serializedTags = '',
 		canLivePreviewFastPath = HINT.enableLivePreviewFastPath && (!HINT.enableIE7 || 'JSON' in window),
-		enableLivePreviewFastPath = HINT.enableLivePreviewFastPath;
+		enableLivePreviewFastPath = canLivePreviewFastPath;
 
 	function parse(_text)
 	{
@@ -2003,14 +2003,15 @@ var HINT = {
 
 	if (!HINT.disabledAPI.preview)
 	{
+		var lastText = '';
+
 		/**
 		* @param {!string} text Text to parse
 		* @param {!HTMLElement} target Target element
 		*/
-		var lastText = '';
 		API['preview'] = function(text, target)
 		{
-			if (canLivePreviewFastPath)
+			if (HINT.enableLivePreviewFastPath && canLivePreviewFastPath)
 			{
 				var lastLen = lastText.length;
 
