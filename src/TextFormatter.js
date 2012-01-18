@@ -940,7 +940,7 @@ var HINT = {
 
 		foreach(pluginsConfig, function(pluginConfig, pluginName)
 		{
-			if (pluginConfig.__disabled)
+			if (!HINT.disabledAPI.disablePlugin && pluginConfig.__disabled)
 			{
 				return;
 			}
