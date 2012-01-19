@@ -15,3 +15,4 @@ TODO
 - Create a way for special XSL to be evaluated at the start/end of a rendering in order to embed resources such as external scripts
 - Add a [TWITCH] BBCode. Add support for embeding TwitchTV/JustinTV videos AND live channels
 - Add support for HD/other options in [YOUTUBE] ?
+- BBCodesConfig::addBBCodeFromExample() -- when passing [FOO={COMPOUND=/(?<bar>[0-9]+)/}] create @bar if it's not defined, make it a regexp based on the subpattern and possible sniff its type, e.g. [0-9] => NUMBER
