@@ -183,6 +183,13 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] generateRulesFromHTML5Specs() uses the Renderer to generate a template for tags that have no template set
  [x] Tags with option 'disable' are not returned by getTagsConfig(true)
  [x] getTagsConfig(true) removes options related to allowing tags and reduces them to two bitfields "allowedChildren" and "allowedDescendants"
+ [x] An attribute parser can be created using a name that is not used by any attribute
+ [x] An attribute parser does not create an attribute of the same name
+ [x] An attribute parser can be created using the name of an existing attribute
+ [x] Multiple attribute parsers can be created using the same name
+ [x] All the attribute parsers of a given name can be removed with clearAttributeParsers($tagName, $attrName)
+ [x] The existence of any attribute parser can be tested with attributeParserExists($tagName, $attrName)
+ [x] The presence of an specific regexp used as an attribute parser can be tested with attributeParserExists($tagName, $attrName, $regexp)
 
 s9e\TextFormatter\Tests\JSParserGenerator
  [x] encodeArray() can encode arrays to objects
@@ -339,7 +346,10 @@ s9e\TextFormatter\Tests\Parser
  [x] Attribute parsers remove the original attribute if their regexp matches
  [x] Attributes from attribute parsers do not overwrite existing values
  [x] Invalid attributes use their default value if set
+ [x] Nothing bad happens if an attribute parser exists but it is never used
  [x] Missing attributes use their default value if set
+ [x] A missing attribute with no default value causes its tag to be skipped and an error to be logged if it has the option "isRequired" true
+ [x] A missing attribute with no default value does not causes its tag to be skipped if it has the option "isRequired" false
  [x] Attribute value is replaced by the return value of the attribute preFilter callbacks
  [x] Attribute value is replaced by the return value of the attribute postFilter callbacks even if it makes it invalid
  [x] getTagsConfig returns the tags config

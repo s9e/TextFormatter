@@ -771,6 +771,8 @@ class ConfigBuilder
 	}
 
 	/**
+	* Add an attribute parser
+	*
 	* @param string $tagName
 	* @param string $attrName
 	* @param string $regexp
@@ -784,6 +786,34 @@ class ConfigBuilder
 	}
 
 	/**
+	* Test whether any attribute parsers or a specific attribute parser exist
+	*
+	* @param  string $tagName
+	* @param  string $attrName
+	* @param  string $regexp   If set, return TRUE only if this regexp is an attribute parser
+	* @return bool
+	*/
+	public function attributeParserExists($tagName, $attrName, $regexp = null)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		if (isset($this->tags[$tagName]['attributeParsers'][$attrName]))
+		{
+			if (isset($regexp))
+			{
+				return in_array($regexp, $this->tags[$tagName]['attributeParsers'][$attrName]);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	* Remove all attribute parsers of a given name
+	*
 	* @param string $tagName
 	* @param string $attrName
 	*/
@@ -793,6 +823,11 @@ class ConfigBuilder
 		$attrName = $this->normalizeAttributeName($attrName);
 
 		unset($this->tags[$tagName]['attributeParsers'][$attrName]);
+
+		if (empty($this->tags[$tagName]['attributeParsers']))
+		{
+			unset($this->tags[$tagName]['attributeParsers']);
+		}
 	}
 
 	//==========================================================================

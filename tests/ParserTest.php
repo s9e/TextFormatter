@@ -1603,12 +1603,33 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testMissingAttributesUseTheirDefaultValueIfSet()
+	public function testNothingBadHappensIfAnAttributeParserExistsButItIsNeverUsed()
 	{
 		include_once __DIR__ . '/includes/CannedConfig.php';
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
+		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addAttributeParser('X', 'xy', '#^(?<x>[0-9]+),(?<y>[0-9]+)$#D');
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array()
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X>.</X></rt>'
+		);
+	}
+
+	public function testMissingAttributesUseTheirDefaultValueIfSet()
+	{
+		$this->canTags();
 		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
 
 		$this->cb->Canned->tags[] = array(
@@ -1621,6 +1642,58 @@ class ParserTest extends Test
 		$this->assertParsing(
 			'.',
 			'<rt><X x="42">.</X></rt>'
+		);
+	}
+
+	/**
+	* @testdox A missing attribute with no default value causes its tag to be skipped and an error to be logged if it has the option "isRequired" true
+	*/
+	public function testMissingRequiredAttribute()
+	{
+		$this->canTags();
+		$this->cb->addAttribute('X', 'y', 'text', array('isRequired' => true));
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array()
+		);
+
+		$this->assertParsing(
+			'.',
+			'<pt>.</pt>',
+			array(
+				'error' => array(
+					array(
+						'msg'    => "Missing attribute '%s'",
+						'params' => array('y')
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @testdox A missing attribute with no default value does not causes its tag to be skipped if it has the option "isRequired" false
+	*/
+	public function testMissingNotRequiredAttribute()
+	{
+		$this->canTags();
+		$this->cb->addAttribute('X', 'y', 'text', array('isRequired' => false));
+
+		$this->cb->Canned->tags[] = array(
+			'pos'   => 0,
+			'len'   => 1,
+			'name'  => 'X',
+			'type'  => Parser::SELF_CLOSING_TAG,
+			'attrs' => array()
+		);
+
+		$this->assertParsing(
+			'.',
+			'<rt><X>.</X></rt>'
 		);
 	}
 

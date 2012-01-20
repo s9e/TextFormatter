@@ -2907,4 +2907,116 @@ class ConfigBuilderTest extends Test
 		$this->assertSame("\x00", $tagsConfig['A']['allowedChildren']);
 		$this->assertSame("\x01", $tagsConfig['A']['allowedDescendants']);
 	}
+
+	public function testAnAttributeParserCanBeCreatedUsingANameThatIsNotUsedByAnyAttribute()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addAttributeParser('A', 'x', '#(?<y>foo)#');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attributeParsers' => array(
+						'x' => array(
+							'#(?<y>foo)#'
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	public function testAnAttributeParserDoesNotCreateAnAttributeOfTheSameName()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addAttributeParser('A', 'x', '#(?<y>foo)#');
+
+		$this->assertFalse($this->cb->attributeExists('A', 'x'));
+	}
+
+	public function testAnAttributeParserCanBeCreatedUsingTheNameOfAnExistingAttribute()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addAttribute('A', 'x', 'text');
+		$this->cb->addAttributeParser('A', 'x', '#(?<y>foo)#');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attributeParsers' => array(
+						'x' => array(
+							'#(?<y>foo)#'
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	public function testMultipleAttributeParsersCanBeCreatedUsingTheSameName()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addAttributeParser('A', 'x', '#(?<y>foo)#');
+		$this->cb->addAttributeParser('A', 'x', '#(?<z>bar)#');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attributeParsers' => array(
+						'x' => array(
+							'#(?<y>foo)#',
+							'#(?<z>bar)#'
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox All the attribute parsers of a given name can be removed with clearAttributeParsers($tagName, $attrName)
+	*/
+	public function testClearAttributeParsers()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addAttributeParser('A', 'x', '#(?<y>foo)#');
+		$this->cb->addAttributeParser('A', 'x', '#(?<z>bar)#');
+		$this->cb->clearAttributeParsers('A', 'x');
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'attributeParsers' => null
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox The existence of any attribute parser can be tested with attributeParserExists($tagName, $attrName)
+	*/
+	public function testAttributeParserExists()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addAttributeParser('A', 'x', '#(?<y>foo)#');
+
+		$this->assertTrue($this->cb->attributeParserExists('A', 'x'));
+		$this->assertFalse($this->cb->attributeParserExists('A', 'y'));
+	}
+
+	/**
+	* @testdox The presence of an specific regexp used as an attribute parser can be tested with attributeParserExists($tagName, $attrName, $regexp)
+	*/
+	public function testAttributeParserRegexpExists()
+	{
+		$this->cb->addTag('A');
+		$this->cb->addAttributeParser('A', 'x', '#(?<y>foo)#');
+
+		$this->assertTrue($this->cb->attributeParserExists('A', 'x', '#(?<y>foo)#'));
+		$this->assertFalse($this->cb->attributeParserExists('A', 'y', '#(?<z>bar)#'));
+	}
 }
