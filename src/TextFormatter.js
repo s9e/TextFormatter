@@ -2053,8 +2053,11 @@ var HINT = {
 
 			var xml = parse(text);
 
-			if (enableLivePreviewFastPath)
+			if (HINT.enableLivePreviewFastPath && enableLivePreviewFastPath)
 			{
+				// Turn it off outside of preview
+				enableLivePreviewFastPath = false;
+
 				if (!xml)
 				{
 					target.lastChild.appendData(text.substr(lastLen));
