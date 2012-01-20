@@ -17,3 +17,4 @@ TODO
 - Add support for HD/other options in [YOUTUBE] ?
 - BBCodesConfig::addBBCodeFromExample() -- when passing [FOO={COMPOUND=/(?<bar>[0-9]+)/}] create @bar if it's not defined, make it a regexp based on the subpattern and possible sniff its type, e.g. [0-9] => NUMBER
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
+- Fix [EMAIL]
