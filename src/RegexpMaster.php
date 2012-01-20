@@ -779,8 +779,18 @@ class RegexpMaster
 						throw new RuntimeException('Could not find matching pattern start for right parenthesis at pos ' . $pos);
 					}
 
+					/**
+					* Add the key to this token to its matching token and capture this subpattern's
+					* content
+					*/
 					$k = array_pop($openSubpatterns);
-					$ret['tokens'][$k]['endToken'] = count($ret['tokens']);
+					$startToken =& $ret['tokens'][$k];
+					$startToken['endToken'] = count($ret['tokens']);
+					$startToken['content']  = substr(
+						$regexp,
+						$startToken['pos'] + $startToken['len'],
+						$pos - ($startToken['pos'] + $startToken['len'])
+					);
 
 
 					/**
@@ -792,9 +802,11 @@ class RegexpMaster
 					$ret['tokens'][] = array(
 						'pos'  => $pos,
 						'len'  => 1 + $spn,
-						'type' => substr($ret['tokens'][$k]['type'], 0, -5) . 'End',
+						'type' => substr($startToken['type'], 0, -5) . 'End',
 						'quantifiers' => $quantifiers
 					);
+
+					unset($startToken);
 
 					$pos += 1 + $spn;
 					break;

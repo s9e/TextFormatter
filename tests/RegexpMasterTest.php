@@ -771,6 +771,7 @@ class RegexpMasterTest extends Test
 						'len' => 3,
 						'type' => 'nonCapturingSubpatternStart',
 						'options' => '',
+						'content' => 'x+',
 						'endToken' => 1
 					),
 					array(
@@ -803,6 +804,7 @@ class RegexpMasterTest extends Test
 						'len' => 3,
 						'type' => 'nonCapturingSubpatternStart',
 						'subtype' => 'atomic',
+						'content' => 'x+',
 						'endToken' => 1
 					),
 					array(
@@ -835,6 +837,7 @@ class RegexpMasterTest extends Test
 						'len' => 3,
 						'type' => 'nonCapturingSubpatternStart',
 						'options' => '',
+						'content' => 'x+',
 						'endToken' => 1
 					),
 					array(
@@ -867,6 +870,7 @@ class RegexpMasterTest extends Test
 						'len' => 4,
 						'type' => 'nonCapturingSubpatternStart',
 						'options' => 'i',
+						'content' => 'x+',
 						'endToken' => 1
 					),
 					array(
@@ -924,6 +928,7 @@ class RegexpMasterTest extends Test
 						'len' => 7,
 						'type' => 'capturingSubpatternStart',
 						'name' => 'foo',
+						'content' => 'x+',
 						'endToken' => 1
 					),
 					array(
@@ -956,6 +961,7 @@ class RegexpMasterTest extends Test
 						'len' => 8,
 						'type' => 'capturingSubpatternStart',
 						'name' => 'foo',
+						'content' => 'x+',
 						'endToken' => 1
 					),
 					array(
@@ -988,6 +994,7 @@ class RegexpMasterTest extends Test
 						'len' => 7,
 						'type' => 'capturingSubpatternStart',
 						'name' => 'foo',
+						'content' => 'x+',
 						'endToken' => 1
 					),
 					array(
@@ -1019,6 +1026,7 @@ class RegexpMasterTest extends Test
 						'pos' => 0,
 						'len' => 1,
 						'type' => 'capturingSubpatternStart',
+						'content' => 'x+',
 						'endToken' => 1
 					),
 					array(
@@ -1031,6 +1039,7 @@ class RegexpMasterTest extends Test
 						'pos' => 4,
 						'len' => 1,
 						'type' => 'capturingSubpatternStart',
+						'content' => 'abc\\d+',
 						'endToken' => 3
 					),
 					array(
@@ -1092,6 +1101,7 @@ class RegexpMasterTest extends Test
 						'pos' => 0,
 						'len' => 3,
 						'type' => 'lookaheadAssertionStart',
+						'content' => 'foo',
 						'endToken' => 1
 					),
 					array(
@@ -1123,6 +1133,7 @@ class RegexpMasterTest extends Test
 						'pos' => 0,
 						'len' => 3,
 						'type' => 'negativeLookaheadAssertionStart',
+						'content' => 'foo',
 						'endToken' => 1
 					),
 					array(
@@ -1154,6 +1165,7 @@ class RegexpMasterTest extends Test
 						'pos' => 0,
 						'len' => 4,
 						'type' => 'lookbehindAssertionStart',
+						'content' => 'foo',
 						'endToken' => 1
 					),
 					array(
@@ -1185,6 +1197,7 @@ class RegexpMasterTest extends Test
 						'pos' => 0,
 						'len' => 4,
 						'type' => 'negativeLookbehindAssertionStart',
+						'content' => 'foo',
 						'endToken' => 1
 					),
 					array(
