@@ -205,7 +205,8 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] encodePluginConfig() convert array regexp to an object with RegExp objects with g flag as properties
  [x] Injects plugins parsers into source
  [x] Injects plugins configs into source
- [x] A regexp map is created for compound attributes
+ [x] Attribute parsers are converted to a Javascript RegExp
+ [x] A regexp map is created for attribute parsers
  [x] The source is sent to Google Closure Compiler if "compilation" is not set to "none"
  [x] JSParserGenerator throws an exception if an error occurs while contacting to Google Closure Compiler
  [x] JSParserGenerator throws an exception if Google Closure Compiler returns an error
@@ -339,10 +340,8 @@ s9e\TextFormatter\Tests\Parser
  [x] Attribute name is added to log entries when available
  [x] Tag level preFilter callback receives an associative array of attributes which gets replaced by its return value
  [x] Tag level postFilter callback receives an associative array of attributes which gets replaced by its return value
- [x] Compound attributes are split if valid then removed
- [x] Compound attributes do not overwrite existing values
- [x] Compound attributes are removed if invalid
- [x] Compound attributes are optional by default
+ [x] Attribute parsers remove the original attribute if their regexp matches
+ [x] Attributes from attribute parsers do not overwrite existing values
  [x] Invalid attributes use their default value if set
  [x] Missing attributes use their default value if set
  [x] Attribute value is replaced by the return value of the attribute preFilter callbacks
@@ -624,7 +623,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] addBBCodeFromExample() throws an exception on undefined placeholders used in content
  [x] addBBCodeFromExample() allows arbitrary options in attribute
  [x] addBBCodeFromExample() handles REGEXP placeholders
- [x] addBBCodeFromExample() handles COMPOUND placeholders
+ [x] addBBCodeFromExample() handles PARSE placeholders
+ [x] addBBCodeFromExample() handles PARSE placeholders in content attributes
  [x] addBBCodeFromExample() handles RANGE placeholders
  [x] addBBCodeFromExample() handles CHOICE placeholders and turns them into regexps
  [x] addBBCodeFromExample() handles CHOICE placeholders with Unicode values

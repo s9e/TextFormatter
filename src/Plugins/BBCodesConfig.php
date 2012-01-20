@@ -414,11 +414,11 @@ class BBCodesConfig extends PluginConfig
 			'bbcodeName' => '[a-zA-Z_][a-zA-Z_0-9]*',
 			'attrName'   => '[a-zA-Z_][a-zA-Z_0-9]*',
 			'type' => array(
-				'regexp'   => 'REGEXP[0-9]*=(?P<regexp>/.*?/i?)',
-				'compound' => 'COMPOUND[0-9]*=(?P<compoundRegexp>/.*?/i?)',
-				'range'    => 'RANGE[0-9]*=(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
-				'choice'   => 'CHOICE[0-9]*=(?P<choices>.+?)',
-				'other'    => '[A-Z_]+[0-9]*'
+				'regexp' => 'REGEXP[0-9]*=(?P<regexp>/.*?/i?)',
+				'parse'  => 'PARSE=(?P<parser>/.*?/i?)',
+				'range'  => 'RANGE[0-9]*=(?P<min>-?[0-9]+),(?P<max>-?[0-9]+)',
+				'choice' => 'CHOICE[0-9]*=(?P<choices>.+?)',
+				'other'  => '[A-Z_]+[0-9]*'
 			),
 			'attrOptions' => '[A-Z_a-z]+(?:=[^;]+?)?'
 		);
@@ -515,7 +515,7 @@ class BBCodesConfig extends PluginConfig
 			'#(' . $r['attrName'] . ')=' . $r['placeholder'] . '#',
 			$attrsDef,
 			$matches,
-			\PREG_SET_ORDER
+			PREG_SET_ORDER
 		);
 
 		foreach ($matches as $m)
@@ -524,7 +524,6 @@ class BBCodesConfig extends PluginConfig
 			$identifier = $m['type'];
 
 			$attrConf = array();
-
 			if (!empty($m['attrOptions']))
 			{
 				foreach (explode(';', trim($m['attrOptions'], ';')) as $pair)
@@ -584,6 +583,19 @@ class BBCodesConfig extends PluginConfig
 				}
 			}
 
+			// Not an attribute per-se, just an attribute parser
+			if (substr($identifier, 0, 5) === 'PARSE')
+			{
+				$options['attributeParsers'][$attrName][] = $m['parser'];
+
+				if (!empty($attrConf['useContent']))
+				{
+					$options['contentAttrs'][] = $attrName;
+				}
+
+				continue;
+			}
+
 			if (isset($attrs[$attrName]))
 			{
 				throw new InvalidArgumentException("Attribute '" . $attrName . "' is defined twice");
@@ -609,15 +621,11 @@ class BBCodesConfig extends PluginConfig
 						$attrConf['regexp'] = $m['regexp'];
 						break;
 
-					case 'compound':
-						$attrConf['type']   = 'compound';
-						$attrConf['regexp'] = $m['compoundRegexp'];
-						break;
-
 					case 'choice':
 						$choices = explode(',', $m['choices']);
-						$regexp  =
-							'#^' . $this->cb->getRegexpMaster()->buildRegexpFromList($choices) . '$#iD';
+						$regexp  = '#^'
+						         . $this->cb->getRegexpMaster()->buildRegexpFromList($choices)
+						         . '$#iD';
 
 						if (preg_match('#[\\x80-\\xff]#', $regexp))
 						{

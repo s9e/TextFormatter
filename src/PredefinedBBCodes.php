@@ -108,12 +108,12 @@ class PredefinedBBCodes
 	public function addGOOGLEVIDEO()
 	{
 		$regexp =
-			'/^(?:' . preg_quote('http://video.google.com/videoplay?docid=', '/') . ')?(-?\\d+)/';
+			'/^(?:' . preg_quote('http://video.google.com/videoplay?docid=', '/') . ')?(?<id>-?\\d+)/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[googlevideo]{REGEXP=' . $regexp . ';replaceWith=$1}[/googlevideo]',
-			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={REGEXP}" width="400" height="326">
-				<param name="movie" value="http://video.google.com/googleplayer.swf?docId={REGEXP}"/>
+			'[googlevideo id={ID}]{PARSE=' . $regexp . '}[/googlevideo]',
+			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={@id}" width="400" height="326">
+				<param name="movie" value="http://video.google.com/googleplayer.swf?docId={@id}"/>
 				<param name="allowScriptAcess" value="sameDomain"/>
 				<param name="quality" value="best"/>
 				<param name="scale" value="noScale"/>
@@ -132,12 +132,12 @@ class PredefinedBBCodes
 	public function addYOUTUBE()
 	{
 		$regexp = '/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?'
-		        . '([A-Za-z_0-9\\-]+)(?!\\:)/';
+		        . '(?<id>[A-Za-z_0-9\\-]+)(?!\\:)/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[youtube width={RANGE1=80,800;defaultValue=425} height={RANGE2=60,600;defaultValue=350}]{REGEXP=' . $regexp . ';replaceWith=$1}[/youtube]',
-			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{REGEXP}" width="{@width}" height="{@height}">
-				<param name="movie" value="http://www.youtube.com/v/{REGEXP}" />
+			'[youtube width={RANGE1=80,800;defaultValue=425} height={RANGE2=60,600;defaultValue=350} id={ID}]{PARSE=' . $regexp . '}[/youtube]',
+			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{@id}" width="{@width}" height="{@height}">
+				<param name="movie" value="http://www.youtube.com/v/{@id}" />
 				<param name="wmode" value="transparent" />
 			</object>'
 		);
@@ -273,16 +273,16 @@ class PredefinedBBCodes
 	*/
 	public function addJUSTIN()
 	{
-		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?([A-Za-z_0-9]+)/';
+		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?(?<id>[A-Za-z_0-9]+)/';
 
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[JUSTIN]{REGEXP=' . $regexp . ';replaceWith=$1}[/JUSTIN]',
-			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={REGEXP}" bgcolor="#000000">
+			'[JUSTIN id={ID}]{PARSE=' . $regexp . '}[/JUSTIN]',
+			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={@id}" bgcolor="#000000">
 				<param name="allowFullScreen" value="true" />
 				<param name="allowScriptAccess" value="always" />
 				<param name="allowNetworking" value="all" />
 				<param name="movie" value="http://www.justin.tv/widgets/live_embed_player.swf" />
-				<param name="flashvars" value="channel={REGEXP}&amp;auto_play=false" />
+				<param name="flashvars" value="channel={@id}&amp;auto_play=false" />
 			</object>'
 		);
 	}
@@ -374,39 +374,40 @@ class PredefinedBBCodes
 
 	public function addBLIP()
 	{
-		$regexp = '/^(?:' . preg_quote('http://blip.tv/file/', '/') . ')?([0-9]+)/';
+		$regexp = '/^(?:' . preg_quote('http://blip.tv/file/', '/') . ')?(?<id>[0-9]+)/';
 
 		// HTML taken straight from Blip's player "Copy embed code" feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[BLIP]{REGEXP=' . $regexp . ';replaceWith=$1}[/BLIP]',
-			'<embed src="http://blip.tv/play/{REGEXP}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
+			'[BLIP id={ID}]{PARSE=' . $regexp . '}[/BLIP]',
+			'<embed src="http://blip.tv/play/{@id}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
 		);
 	}
 
 	public function addVIMEO()
 	{
-		$regexp = '/^(?:' . preg_quote('http://vimeo.com/', '/') . ')?([0-9]+)/';
+		$regexp = '/^(?:' . preg_quote('http://vimeo.com/', '/') . ')?(?<id>[0-9]+)/';
 
 		// HTML taken straight from Vimeo's player "EMBED" feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[VIMEO]{REGEXP=' . $regexp . ';replaceWith=$1}[/VIMEO]',
-			'<iframe src="http://player.vimeo.com/video/{REGEXP}" width="400" height="225" frameborder="0"></iframe>'
+			'[VIMEO id={ID}]{PARSE=' . $regexp . '}[/VIMEO]',
+			'<iframe src="http://player.vimeo.com/video/{@id}" width="400" height="225" frameborder="0"></iframe>'
 		);
 	}
 
 	public function addDAILYMOTION()
 	{
-		$regexp = '/^(?:' . preg_quote('http://www.dailymotion.com/video/', '/') . ')?([0-9a-z]+)/';
+		$regexp =
+			'/^(?:' . preg_quote('http://www.dailymotion.com/video/', '/') . ')?(?<id>[0-9a-z]+)/';
 
 		// HTML taken straight from Dailymotion's Export->embed feature
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[DAILYMOTION]{REGEXP=' . $regexp . ';replaceWith=$1}[/DAILYMOTION]',
+			'[DAILYMOTION id={ID}]{PARSE=' . $regexp . '}[/DAILYMOTION]',
 			'<object width="480" height="270">
-				<param name="movie" value="http://www.dailymotion.com/swf/video/{REGEXP}"></param>
+				<param name="movie" value="http://www.dailymotion.com/swf/video/{@id}"></param>
 				<param name="allowFullScreen" value="true"></param>
 				<param name="allowScriptAccess" value="always"></param>
 				
-				<embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/{REGEXP}" width="480" height="270" allowfullscreen="true" allowscriptaccess="always"></embed>
+				<embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/{@id}" width="480" height="270" allowfullscreen="true" allowscriptaccess="always"></embed>
 			</object>'
 		);
 	}
@@ -435,12 +436,10 @@ class PredefinedBBCodes
 				'attrs' => array(
 					'width'  => array('type' => 'number'),
 					'height' => array('type' => 'number'),
-					'url'    => array('type' => 'url'),
-					'dimensions' => array(
-						'type'       => 'compound',
-						'regexp'     => '/(?P<width>[0-9]+),(?P<height>[0-9]+)/',
-						'isRequired' => false
-					)
+					'url'    => array('type' => 'url')
+				),
+				'attributeParsers' => array(
+					'dimensions' => array('/(?<width>[0-9]+),(?<height>[0-9]+)/')
 				),
 				'template' =>
 					'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="{@width}" height="{@height}">

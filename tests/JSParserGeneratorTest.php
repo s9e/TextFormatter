@@ -396,19 +396,33 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox A regexp map is created for compound attributes
+	* @testdox Attribute parsers are converted to a Javascript RegExp
 	*/
-	public function testCompoundAttributesHaveARegexpMap()
+	public function testAttributeParsersAreRegExp()
 	{
 		$this->cb->addTag('X');
-		$this->cb->addAttribute('X', 'x', 'compound', array(
-			'regexp' => '#^(?<width>[0-9]+),(?<height>[0-9]+)$#'
-		));
+		$this->cb->addAttributeParser('X', 'x', '#^(?<width>[0-9]+),(?<height>[0-9]+)$#');
 
 		$this->initJSPG();
 
 		$this->assertContains(
-			'attrs:{"x":{isRequired:0,regexp:/^([0-9]+),([0-9]+)$/,type:"compound",regexpMap:{width:1,height:2}}}',
+			'/^([0-9]+),([0-9]+)$/',
+			$this->call($this->jspg, 'generateTagsConfig')
+		);
+	}
+
+	/**
+	* @testdox A regexp map is created for attribute parsers
+	*/
+	public function testAttributeParsersHaveARegexpMap()
+	{
+		$this->cb->addTag('X');
+		$this->cb->addAttributeParser('X', 'x', '#^(?<width>[0-9]+),(?<height>[0-9]+)$#');
+
+		$this->initJSPG();
+
+		$this->assertContains(
+			'attributeParsers:{"x":[[/^([0-9]+),([0-9]+)$/,{"width":1,"height":2}]]}',
 			$this->call($this->jspg, 'generateTagsConfig')
 		);
 	}
@@ -763,20 +777,6 @@ class JSParserGeneratorTest extends Test
 				}
 			),
 			array(
-				'HINT.hasCompoundAttributes is false by default'
-			),
-			array(
-				'HINT.hasCompoundAttributes is true if there is any attribute of type "compound"',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'compound',
-							'regexp' => '/(?<foo>foo)/'
-						)
-					)
-				)
-			),
-			array(
 				'HINT.hasNamespacedHTML is false by default'
 			),
 			array(
@@ -1011,6 +1011,18 @@ class JSParserGeneratorTest extends Test
 						)
 					)
 				)
+			),
+			array(
+				'HINT.tagConfig.attributeParsers is false by default'
+			),
+			array(
+				'HINT.tagConfig.attributeParsers is true if an attribute parser has been set',
+				array(),
+				array(),
+				function($cb)
+				{
+					$cb->addAttributeParser('x', 'x', '#(?<foo>bar)#');
+				}
 			),
 			array(
 				'HINT.tagConfig.isTransparent is false by default'

@@ -55,7 +55,6 @@ var HINT = {
 			disallowedHosts: true
 		}
 	},
-	hasCompoundAttributes: true,
 	hasNamespacedHTML: true,
 	hasNamespacedTags: true,
 	hasRegexpLimitAction: {
@@ -66,6 +65,7 @@ var HINT = {
 	mightUseTagRequires: true,
 	tagConfig: {
 		attrs: true,
+		attributeParsers: true,
 		isTransparent: true,
 		isEmpty: true,
 		ltrimContent: true,
@@ -1604,9 +1604,9 @@ var HINT = {
 		else
 		{
 			/**
-			* Handle compound attributes
+			* Handle parsable attributes
 			*/
-			splitCompoundAttributes();
+			parseAttributes();
 
 			/**
 			* Filter attributes
@@ -1877,43 +1877,61 @@ var HINT = {
 	}
 
 	/*
-	* As with its PHP counterpart, the behaviour of multiple compound attributes trying to set the same
+	* As with its PHP counterpart, the behaviour of multiple parsable attributes trying to set the same
 	* attributes is undefined
 	*/
-	function splitCompoundAttributes()
+	function parseAttributes()
 	{
-		if (!HINT.hasCompoundAttributes)
+		if (!HINT.tagConfig.attributeParsers)
 		{
 			return;
 		}
 
 		var tagConfig = tagsConfig[currentTag.name];
 
-		foreach(tagsConfig[currentTag.name].attrs, function(attrConfig, attrName)
+		if (!tagConfig.attributeParsers)
 		{
-			if (attrConfig.type !== 'compound')
+			return;
+		}
+
+		foreach(tagConfig.attributeParsers, function(regexps, attrName)
+		{
+			if (!(attrName in currentTag.attrs))
 			{
 				return;
 			}
 
-			if (attrConfig.regexpMap)
-			{
-				var m = attrConfig.regexp.exec(currentTag.attrs[attrName]);
+			var skip = false;
 
-				foreach(attrConfig.regexpMap, function(v, k)
+			// The first element of regexpPair is the regexp, the second is the map
+			regexps.forEach(function(regexpPair)
+			{
+				if (skip)
 				{
-					if (!(k in currentTag.attrs)
-					 && m[v] !== undefined)
+					return;
+				}
+
+				var m = regexpPair[0].exec(currentTag.attrs[attrName]);
+
+				if (!m)
+				{
+					return;
+				}
+
+				foreach(regexpPair[1], function(v, k)
+				{
+					if (!(k in currentTag.attrs))
 					{
 						currentTag.attrs[k] = m[v];
 					}
 				});
-			}
 
-			/**
-			* Compound attributes are removed
-			*/
-			delete currentTag.attrs[attrName];
+				// The attribute is removed from the current list
+				delete currentTag.attrs[attrName];
+
+				// We're done with this attribute
+				skip = true;
+			});
 		});
 	}
 

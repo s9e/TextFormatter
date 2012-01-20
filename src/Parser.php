@@ -1673,9 +1673,9 @@ class Parser
 		else
 		{
 			/**
-			* Handle compound attributes
+			* Handle reparsable attributes
 			*/
-			$this->splitCompoundAttributes();
+			$this->parseAttributes();
 
 			/**
 			* Filter attributes
@@ -1984,37 +1984,45 @@ class Parser
 	}
 
 	/**
-	* Split compound attributes and append them to the existing attributes
+	* Split parsable attributes and append them to the existing attributes
 	*/
-	protected function splitCompoundAttributes()
+	protected function parseAttributes()
 	{
-		$tagConfig   = $this->tagsConfig[$this->currentTag['name']];
-		$attrsConfig = array_intersect_key($tagConfig['attrs'], $this->currentTag['attrs']);
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (empty($tagConfig['attributeParsers']))
+		{
+			return;
+		}
 
 		$attrs = array();
 
-		foreach ($attrsConfig as $attrName => $attrConfig)
+		foreach ($tagConfig['attributeParsers'] as $attrName => $regexps)
 		{
-			if ($attrConfig['type'] !== 'compound')
+			if (!isset($this->currentTag['attrs'][$attrName]))
 			{
 				continue;
 			}
 
-			if (preg_match($attrConfig['regexp'], $this->currentTag['attrs'][$attrName], $m))
+			foreach ($regexps as $regexp)
 			{
-				foreach ($m as $k => $v)
+				if (preg_match($regexp, $this->currentTag['attrs'][$attrName], $m))
 				{
-					if (!is_numeric($k))
+					foreach ($m as $k => $v)
 					{
-						$attrs[$k] = $v;
+						if (!is_numeric($k))
+						{
+							$attrs[$k] = $v;
+						}
 					}
+
+					// The attribute is removed from the current list
+					unset($this->currentTag['attrs'][$attrName]);
+
+					// We're done with this attribute
+					break;
 				}
 			}
-
-			/**
-			* Compound attributes are removed from the aray
-			*/
-			unset($this->currentTag['attrs'][$attrName]);
 		}
 
 		/**
@@ -2025,7 +2033,7 @@ class Parser
 	}
 
 	/**
-	* Get the Location: value return by a HTTP(S) query
+	* Get the "Location:" value returned by an HTTP(S) query
 	*
 	* @param  string $url Request URL
 	* @return mixed       Location URL if applicable, FALSE in case of error, NULL if no Location

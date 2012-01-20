@@ -205,24 +205,23 @@ class JSParserGenerator
 	protected function setOptimizationHints()
 	{
 		$hints = array(
-			'attrConfig'            => $this->getAttributesConfigHints(),
-			'disabledAPI'           => $this->getDisabledAPIHints(),
-			'disabledLogTypes'      => array(
+			'attrConfig'           => $this->getAttributesConfigHints(),
+			'disabledAPI'          => $this->getDisabledAPIHints(),
+			'disabledLogTypes'     => array(
 				'debug'   => in_array('debug',   $this->options['disableLogTypes'], true),
 				'warning' => in_array('warning', $this->options['disableLogTypes'], true),
 				'error'   => in_array('error',   $this->options['disableLogTypes'], true)
 			),
-			'enableIE'              => (bool) $this->options['enableIE'],
-			'enableIE7'             => $this->options['enableIE'] && $this->options['enableIE7'],
-			'enableIE9'             => $this->options['enableIE'] && $this->options['enableIE9'],
+			'enableIE'             => (bool) $this->options['enableIE'],
+			'enableIE7'            => $this->options['enableIE'] && $this->options['enableIE7'],
+			'enableIE9'            => $this->options['enableIE'] && $this->options['enableIE9'],
 			'enableLivePreviewFastPath' => (bool) $this->options['enableLivePreviewFastPath'],
-			'filterConfig'          => $this->getFiltersConfigHints(),
-			'hasCompoundAttributes' => $this->hasCompoundAttributes(),
-			'hasNamespacedHTML'     => $this->hasNamespacedHTML(),
-			'hasNamespacedTags'     => $this->hasNamespacedTags(),
-			'hasRegexpLimitAction'  => $this->getRegexpLimitActionHints(),
-			'mightUseTagRequires'   => $this->mightUseTagRequires(),
-			'tagConfig'             => $this->getTagConfigHints()
+			'filterConfig'         => $this->getFiltersConfigHints(),
+			'hasNamespacedHTML'    => $this->hasNamespacedHTML(),
+			'hasNamespacedTags'    => $this->hasNamespacedTags(),
+			'hasRegexpLimitAction' => $this->getRegexpLimitActionHints(),
+			'mightUseTagRequires'  => $this->mightUseTagRequires(),
+			'tagConfig'            => $this->getTagConfigHints()
 		);
 
 		// Add attribute types hints
@@ -335,22 +334,23 @@ class JSParserGenerator
 	protected function getTagConfigHints()
 	{
 		return $this->getDataStructureHints($this->tagsConfig, array(
-			'attrs'         => false,
-			'isEmpty'       => false,
-			'isTransparent' => false,
-			'ltrimContent'  => false,
-			'postFilter'    => false,
-			'preFilter'     => false,
-			'rtrimContent'  => false,
-			'rules'         => array(
+			'attrs'            => false,
+			'attributeParsers' => false,
+			'isEmpty'          => false,
+			'isTransparent'    => false,
+			'ltrimContent'     => false,
+			'postFilter'       => false,
+			'preFilter'        => false,
+			'rtrimContent'     => false,
+			'rules'            => array(
 				'closeAncestor'   => false,
 				'closeParent'     => false,
 				'reopenChild'     => false,
 				'requireAncestor' => false,
 				'requireParent'   => false
 			),
-			'trimAfter'     => false,
-			'trimBefore'    => false,
+			'trimAfter'        => false,
+			'trimBefore'       => false,
 		));
 	}
 
@@ -396,30 +396,6 @@ class JSParserGenerator
 		unset($hintValue);
 
 		return $hints;
-	}
-
-	/**
-	* Return whether any compound attributes exist
-	*
-	* @return bool
-	*/
-	protected function hasCompoundAttributes()
-	{
-		foreach ($this->tagsConfig as $tagConfig)
-		{
-			if (!empty($tagConfig['attrs']))
-			{
-				foreach ($tagConfig['attrs'] as $attrConf)
-				{
-					if ($attrConf['type'] === 'compound')
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
 	}
 
 	/**
@@ -902,17 +878,22 @@ class JSParserGenerator
 				unset($tagNames);
 			}
 
-			if (!empty($tagConfig['attrs']))
+			if (!empty($tagConfig['attributeParsers']))
 			{
 				/**
-				* Prepare a regexpMap for compound attributes
+				* Prepare a regexpMap for attribute parsers
 				*/
-				foreach ($tagConfig['attrs'] as $attrName => &$attrConf)
+				foreach ($tagConfig['attributeParsers'] as $attrName => $regexps)
 				{
-					if ($attrConf['type'] === 'compound')
+					$regexpPairs = array();
+
+					foreach ($regexps as $regexp)
 					{
-						$rm->pcreToJs($attrConf['regexp'], $attrConf['regexpMap']);
+						$regexp        = $rm->pcreToJs($regexp, $regexpMap);
+						$regexpPairs[] = array($regexp, $regexpMap);
 					}
+
+					$tagConfig['attributeParsers'][$attrName] = $regexpPairs;
 				}
 				unset($attrConf);
 			}
@@ -934,13 +915,17 @@ class JSParserGenerator
 					// preserve tag names
 					array(true),
 					// preserve attribute names
-					array(true, 'attrs', true)
+					array(true, 'attrs', true),
+					// preserve attribute names in attribute parsers and their regexp map
+					array(true, 'attributeParsers', true),
+					array(true, 'attributeParsers', true, true, 1, true)
 				),
 				'isRawJS'  => array(
 					array(true, 'allowedChildren'),
 					array(true, 'allowedDescendants')
 				),
 				'isRegexp' => array(
+					array(true, 'attributeParsers', true, true, 0),
 					// some attribute types use a regexp
 					array(true, 'attrs', true, 'regexp')
 				)

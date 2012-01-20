@@ -850,17 +850,51 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
-	* @testdox addBBCodeFromExample() handles COMPOUND placeholders
+	* @testdox addBBCodeFromExample() handles PARSE placeholders
 	*/
-	public function addBBCodeFromExample_handles_COMPOUND_placeholders()
+	public function addBBCodeFromExample_handles_PARSE_placeholders()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B={COMPOUND=/^(?P<foo>foo)$/}]{TEXT}[/B]',
+			'[B={PARSE=/^(?P<foo>foo)$/}]{TEXT}[/B]',
 			'<b/>'
 		);
 
-		$this->assertSame('compound', $this->cb->getAttributeOption('B', 'b', 'type'));
-		$this->assertSame('/^(?P<foo>foo)$/', $this->cb->getAttributeOption('B', 'b', 'regexp'));
+		$this->assertArrayMatches(
+			array(
+				'B' => array(
+					'attributeParsers' => array(
+						'b' => array(
+							'/^(?P<foo>foo)$/'
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
+	}
+
+	/**
+	* @testdox addBBCodeFromExample() handles PARSE placeholders in content attributes
+	*/
+	public function addBBCodeFromExample_handles_PARSE_placeholders_in_content_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B]{PARSE=/^(?P<foo>foo)$/}[/B]',
+			'<b/>'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				'B' => array(
+					'attributeParsers' => array(
+						'content' => array(
+							'/^(?P<foo>foo)$/'
+						)
+					)
+				)
+			),
+			$this->cb->getTagsConfig()
+		);
 	}
 
 	/**

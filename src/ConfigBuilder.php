@@ -518,14 +518,10 @@ class ConfigBuilder
 		$attrConf['type'] = $attrType;
 
 		/**
-		* Add the attribute with default config values;
+		* Add the attribute with default config values
 		*/
 		$this->tags[$tagName]['attrs'][$attrName] = array(
-			/**
-			* Compound attributes are not required by default. The attributes they split into
-			* should be already. Plus, we remove compound attributes during parsing.
-			*/
-			'isRequired' => (bool) ($attrType !== 'compound')
+			'isRequired' => true
 		);
 
 		$this->setAttributeOptions($tagName, $attrName, $attrConf);
@@ -772,6 +768,31 @@ class ConfigBuilder
 			'callback' => $callback,
 			'params'   => $params
 		);
+	}
+
+	/**
+	* @param string $tagName
+	* @param string $attrName
+	* @param string $regexp
+	*/
+	public function addAttributeParser($tagName, $attrName, $regexp)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		$this->tags[$tagName]['attributeParsers'][$attrName][] = $regexp;
+	}
+
+	/**
+	* @param string $tagName
+	* @param string $attrName
+	*/
+	public function clearAttributeParsers($tagName, $attrName)
+	{
+		$tagName  = $this->normalizeTagName($tagName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		unset($this->tags[$tagName]['attributeParsers'][$attrName]);
 	}
 
 	//==========================================================================
