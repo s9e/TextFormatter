@@ -536,6 +536,7 @@ s9e\TextFormatter\Tests\RegexpMaster
  [x] pcreToJs() does not convert . inside of character classes
  [x] pcreToJs() converts named captures into normal captures
  [x] pcreToJs() replaces its second parameter with an array that maps named captures to their index
+ [x] pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 
 s9e\TextFormatter\Tests\Renderer
  [x] renderMulti can render multiple messages at once

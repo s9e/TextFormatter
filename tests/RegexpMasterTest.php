@@ -1530,6 +1530,20 @@ class RegexpMasterTest extends Test
 		);
 	}
 
+	/**
+	* NOTE: this is a regression test
+	* @testdox pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
+	*/
+	public function testConvertNamedSubatternAfterNormalSubpattern()
+	{
+		$map = null;
+
+		$this->assertSame(
+			'/(?:foo)(bar)/',
+			$this->rm->pcreToJs('/(?:foo)(?<z>bar)/', $map)
+		);
+	}
+
 	public function getWordsLists()
 	{
 		return array(
