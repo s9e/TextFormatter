@@ -328,10 +328,6 @@ s9e\TextFormatter\Tests\Parser
  [x] Simpletext filter rejects everything else
  [x] Regexp filter accepts content that matches
  [x] Regexp filter rejects content that does not match
- [x] Regexp filter replaces content with the pattern found in replace if valid
- [x] Regexp filter does not replace content with the pattern found in replace if invalid
- [x] Regexp filter correctly handles backslashes in replace pattern
- [x] Regexp filter's replaceWith option can use the ${1} syntax
  [x] Email filter accepts valid emails
  [x] Email filter rejects invalid emails
  [x] Email filter can urlencode every character of a valid email if force urlencode is on

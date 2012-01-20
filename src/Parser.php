@@ -494,35 +494,7 @@ class Parser
 				));
 
 			case 'regexp':
-				if (!preg_match($attrConf['regexp'], $attrVal, $match))
-				{
-					return false;
-				}
-
-				if (isset($attrConf['replaceWith']))
-				{
-					/**
-					* Two consecutive backslashes[1] are replaced with a single backslash.
-					* A dollar sign preceded by a backslash[2] and followed an optional curly
-					* bracket followed by digits is preserved.
-					* Otherwise, the corresponding match[3] is used.
-					*/
-					return preg_replace_callback(
-						'#(\\\\\\\\)|(\\\\)?\\$([0-9]+|\\{[0-9]+\\})#',
-						function ($m) use ($match)
-						{
-							if (isset($m[3]))
-							{
-								$m[3] = trim($m[3], '{}');
-							}
-
-							return ($m[1]) ? '\\' : (($m[2]) ? '$' . $m[3] : $match[$m[3]]);
-						},
-						$attrConf['replaceWith']
-					);
-				}
-
-				return $attrVal;
+				return (preg_match($attrConf['regexp'], $attrVal, $match)) ? $attrVal : false;
 		}
 
 		$parser->log('debug', array(

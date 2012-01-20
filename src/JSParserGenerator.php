@@ -529,9 +529,6 @@ class JSParserGenerator
 			'email'  => array(
 				'forceUrlencode'  => false
 			),
-			'regexp' => array(
-				'replaceWith'     => false
-			),
 			'url'    => array(
 				'disallowedHosts' => false
 			)

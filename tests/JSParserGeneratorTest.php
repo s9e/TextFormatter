@@ -740,31 +740,6 @@ class JSParserGeneratorTest extends Test
 				)
 			),
 			array(
-				'HINT.filterConfig.regexp.replaceWith is false by default'
-			),
-			array(
-				'HINT.filterConfig.regexp.replaceWith is true if any attribute of type "regexp" has the "replaceWith" option set',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'regexp',
-							'replaceWith' => 'foo'
-						)
-					)
-				)
-			),
-			array(
-				'HINT.filterConfig.regexp.replaceWith is true if any attribute of type "regexp" has the "replaceWith" option set to "0"',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'regexp',
-							'replaceWith' => '0'
-						)
-					)
-				)
-			),
-			array(
 				'HINT.filterConfig.url.disallowedHosts is false by default'
 			),
 			array(

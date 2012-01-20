@@ -1346,53 +1346,6 @@ class ParserTest extends Test
 		);
 	}
 
-	public function testRegexpFilterReplacesContentWithThePatternFoundInReplaceIfValid()
-	{
-		$this->assertAttributeIsValid(
-			array('type' => 'regexp', 'regexp' => '#^([A-Z])$#D', 'replaceWith' => 'x$1x'),
-			'J',
-			'xJx'
-		);
-	}
-
-	public function testRegexpFilterDoesNotReplaceContentWithThePatternFoundInReplaceIfInvalid()
-	{
-		$this->assertAttributeIsInvalid(
-			array('type' => 'regexp', 'regexp' => '#^([A-Z])$#D', 'replaceWith' => 'x$1x'),
-			'8'
-		);
-	}
-
-	public function testRegexpFilterCorrectlyHandlesBackslashesInReplacePattern()
-	{
-		/**
-		* Here we have the $2 token, followed by the literal "$2" followed by the $1 token
-		* followed by the literal "\" (one backslash) followed by the $1 token followed by
-		* the literal "\$1" (one backslash then dollar sign then 1) followed by the literal
-		* "\\" (two backslashes)
-		*
-		* The result should be R$2L\L\$1\\
-		*/
-		$replace = '$2\\$2$1\\\\$1\\\\\\$1\\\\\\\\';
-		$this->assertAttributeIsValid(
-			array('type' => 'regexp', 'regexp' => '#^(L)(R)$#D', 'replaceWith' => $replace),
-			'LR',
-			'R$2L\\L\\$1\\\\'
-		);
-	}
-
-	/**
-	* @testdox Regexp filter's replaceWith option can use the ${1} syntax
-	*/
-	public function testRegexpFilterReplaceWithCurlyBrackets()
-	{
-		$this->assertAttributeIsValid(
-			array('type' => 'regexp', 'regexp' => '#^(L)(R)$#D', 'replaceWith' => '${2}${1}'),
-			'LR',
-			'RL'
-		);
-	}
-
 	public function testEmailFilterAcceptsValidEmails()
 	{
 		$this->assertAttributeIsValid('email', 'example@example.com');

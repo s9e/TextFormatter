@@ -48,9 +48,6 @@ var HINT = {
 		email: {
 			forceUrlencode: true
 		},
-		regexp: {
-			replaceWith: true
-		},
 		url: {
 			disallowedHosts: true
 		}
@@ -571,36 +568,7 @@ var HINT = {
 					break;
 				}
 
-				var match = attrConf.regexp.exec(attrVal);
-
-				if (!match)
-				{
-					return false;
-				}
-
-				if (HINT.filterConfig.regexp.replaceWith && attrConf.replaceWith)
-				{
-					/**
-					* Two consecutive backslashes[1] are replaced with a single backslash.
-					* A dollar sign preceded by a backslash[2] and followed an optional curly
-					* bracket followed by digits is preserved.
-					* Otherwise, the corresponding match[3] is used.
-					*/
-					return attrConf.replaceWith.replace(
-						/(\\\\)|(\\)?\$([0-9]+|\{[0-9]+\})/g,
-						function (str, p1, p2, p3)
-						{
-							if (p3)
-							{
-								p3 = p3.replace(/[\{\}]/g, '');
-							}
-
-							return (p1) ? '\\' : ((p2) ? '$' + p3 : match[p3]);
-						}
-					);
-				}
-
-				return attrVal;
+				return (attrConf.regexp.test(attrVal)) ? attrVal : false;
 		}
 
 		logDebug({
