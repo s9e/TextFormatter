@@ -631,6 +631,9 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] addBBCodeFromExample() handles REGEXP placeholders
  [x] addBBCodeFromExample() handles PARSE placeholders
  [x] addBBCodeFromExample() handles PARSE placeholders in content attributes
+ [x] addBBCodeFromExample() automatically adds attributes created by attribute parsers
+ [x] addBBCodeFromExample() does not overwrite existing attributes with attributes created by attribute parsers if they already exist
+ [x] addBBCodeFromExample() sets attributes auto-created by attribute parsers to be validated using the same regexp they were created from
  [x] addBBCodeFromExample() handles RANGE placeholders
  [x] addBBCodeFromExample() handles CHOICE placeholders and turns them into regexps
  [x] addBBCodeFromExample() handles CHOICE placeholders with Unicode values

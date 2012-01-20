@@ -689,6 +689,52 @@ class BBCodesConfig extends PluginConfig
 		}
 		unset($attrConf);
 
+		/**
+		* Create the attributes created by attribute parsers if they haven't been defined elsewhere
+		*/
+		if (isset($options['attributeParsers']))
+		{
+			$rm = $this->cb->getRegexpMaster();
+
+			foreach ($options['attributeParsers'] as $attrName => $regexps)
+			{
+				foreach ($regexps as $regexp)
+				{
+					$regexpInfo = $rm->parseRegexp($regexp);
+
+					// Ensure that we use the D modifier
+					if (strpos($regexpInfo['modifiers'], 'D') === false)
+					{
+						$regexpInfo['modifiers'] .= 'D';
+					}
+
+					foreach ($regexpInfo['tokens'] as $token)
+					{
+						if ($token['type'] !== 'capturingSubpatternStart'
+						 || !isset($token['name']))
+						{
+							 continue;
+						}
+
+						$attrName = $token['name'];
+
+						if (!isset($attrs[$attrName]))
+						{
+							$regexp = $regexpInfo['delimiter']
+							        . '^(?:' . $token['content'] . ')$'
+							        . $regexpInfo['delimiter']
+							        . $regexpInfo['modifiers'];
+
+							$attrs[$attrName] = array(
+								'type'   => 'regexp',
+								'regexp' => $regexp
+							);
+						}
+					}
+				}
+			}
+		}
+
 		return array(
 			'bbcodeName'   => $bbcodeName,
 			'options'      => $options,

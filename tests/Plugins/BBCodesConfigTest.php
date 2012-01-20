@@ -898,6 +898,49 @@ class BBCodesConfigTest extends Test
 	}
 
 	/**
+	* @testdox addBBCodeFromExample() automatically adds attributes created by attribute parsers
+	*/
+	public function addBBCodeFromExample_creates_PARSE_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B]{PARSE=/^(?<x>[0-9]+),(?<y>[0-9]+)$/}[/B]',
+			'<b/>'
+		);
+
+		$this->assertTrue($this->cb->attributeExists('B', 'x'));
+		$this->assertTrue($this->cb->attributeExists('B', 'y'));
+	}
+
+	/**
+	* @testdox addBBCodeFromExample() does not overwrite existing attributes with attributes created by attribute parsers if they already exist
+	*/
+	public function addBBCodeFromExample_does_not_overwrite_attributes_PARSE_attributes()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B x={INT;isRequired=0}]{PARSE=/^(?<x>[0-9]+),(?<y>[0-9]+)$/}[/B]',
+			'<b/>'
+		);
+
+		$this->assertEquals(0, $this->cb->getAttributeOption('B', 'x', 'isRequired'));
+	}
+
+	/**
+	* @testdox addBBCodeFromExample() sets attributes auto-created by attribute parsers to be validated using the same regexp they were created from
+	*/
+	public function addBBCodeFromExample_creates_PARSE_attributes_with_same_regexp()
+	{
+		$this->cb->BBCodes->addBBCodeFromExample(
+			'[B]{PARSE=/^(?<x>[a-z]+)$/i}[/B]',
+			'<b/>'
+		);
+
+		$this->assertSame(
+			'/^(?:[a-z]+)$/iD',
+			$this->cb->getAttributeOption('B', 'x', 'regexp')
+		);
+	}
+
+	/**
 	* @test
 	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
 	* @testdox addBBCodeFromExample() handles RANGE placeholders
