@@ -24,6 +24,8 @@ $cb->BBCodes->addBBCode('CODE', array(
 ));
 
 $cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
+// Limit the number of emoticons to 7
+$cb->setTagOption('E', 'tagLimit', 7);
 
 $cb->Censor->addWord('apple', 'banana');
 
@@ -143,7 +145,7 @@ The following plugins have been enabled:
   [/list][/*]
 
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
-  [*][b]Emoticons[/b] --- one emoticon :) has been added
+  [*][b]Emoticons[/b] --- one emoticon :) has been added. The maximum number of emoticons has been arbitrarily set to 7
   [*][b]Escaper[/b] --- a backslash can be used to escape one character, e.g. \:)
   [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]/#(?<tag>[a-z0-9]+)/i[/CODE] is replaced with the template [CODE]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/CODE] -- For example: #PHP, #fml
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded

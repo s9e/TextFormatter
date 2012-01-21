@@ -1057,6 +1057,14 @@ var HINT = {
 		cntTotal = {}
 		cntOpen = {}
 
+		/**
+		* Seed the tag counters with 0 for each tag
+		*/
+		for (var tagName in tagsConfig)
+		{
+			cntTotal[tagName] = cntOpen[tagName] = 0;
+		}
+
 		pos = 0;
 
 		while (nextTag())
