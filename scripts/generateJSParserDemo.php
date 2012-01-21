@@ -156,7 +156,7 @@ The following plugins have been enabled:
 
 Additionally, in order to demonstrate some other features:
 
-[list]
+[list=square]
   [*][b]ConfigBuilder::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]RawHTML[/b] as well: <a href="http://example.com">example.com</a>
   [*][b]ConfigBuilder::setDefaultScheme('https')[/b] --- schemeless URLs are allowed and they are treated as if their scheme was 'https'
   [*][b]HTMLEntitiesConfig::disableEntity()[/b] --- the HTML entity &amp;lt; is arbitrarily disabled
