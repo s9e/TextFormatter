@@ -752,6 +752,18 @@ class JSParserGeneratorTest extends Test
 				}
 			),
 			array(
+				'HINT.filterConfig.url.defaultScheme is false by default'
+			),
+			array(
+				'HINT.filterConfig.url.defaultScheme is true if a default scheme is set',
+				array(),
+				array(),
+				function($cb)
+				{
+					$cb->setDefaultScheme('http');
+				}
+			),
+			array(
 				'HINT.hasNamespacedHTML is false by default'
 			),
 			array(

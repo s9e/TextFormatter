@@ -49,7 +49,8 @@ var HINT = {
 			forceUrlencode: true
 		},
 		url: {
-			disallowedHosts: true
+			disallowedHosts: true,
+			defaultScheme: true
 		}
 	},
 	hasNamespacedHTML: true,
@@ -412,7 +413,8 @@ var HINT = {
 
 				var removeScheme = false;
 
-				if (attrVal.substr(0, 2) === '//'
+				if (HINT.filterConfig.url.defaultScheme
+				 && attrVal.substr(0, 2) === '//'
 				 && filterConf.defaultScheme)
 				{
 					 attrVal = filterConf.defaultScheme + ':' + attrVal;

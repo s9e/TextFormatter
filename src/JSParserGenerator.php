@@ -530,6 +530,7 @@ class JSParserGenerator
 				'forceUrlencode'  => false
 			),
 			'url'    => array(
+				'defaultScheme'   => false,
 				'disallowedHosts' => false
 			)
 		);
