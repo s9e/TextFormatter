@@ -868,6 +868,14 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox URL schemes are case-insensitive and lowercased as per RFC 3986 section-3.1 recommendation
+	*/
+	public function testUrlSchemesAreLowercased()
+	{
+		$this->assertAttributeIsValid('url', 'HTTP://WWW.EXAMPLE.COM', 'http://WWW.EXAMPLE.COM');
+	}
+
+	/**
 	* @testdox Whitespace around URLs is removed
 	* @depends testUrlsWithNoPathAreAccepted
 	*/

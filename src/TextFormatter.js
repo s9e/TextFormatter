@@ -410,7 +410,16 @@ var HINT = {
 					break;
 				}
 
-				var m =/^([a-z0-9]+):\/\/\S+(?:\/.*)?$/.exec(attrVal);
+				var removeScheme = false;
+
+				if (attrVal.substr(0, 2) === '//'
+				 && filterConf.defaultScheme)
+				{
+					 attrVal = filterConf.defaultScheme + ':' + attrVal;
+					 removeScheme = true;
+				}
+
+				var m =/^([a-z0-9]+):\/\/\S+(?:\/.*)?$/i.exec(attrVal);
 
 				if (!m)
 				{
@@ -440,6 +449,24 @@ var HINT = {
 						});
 						return false;
 					}
+				}
+
+				var pos = attrVal.indexOf(':');
+
+				if (removeScheme)
+				{
+					attrVal = attrVal.substr(pos + 1);
+				}
+				else
+				{
+					/**
+					* @link http://tools.ietf.org/html/rfc3986#section-3.1
+					*
+					* 'An implementation should accept uppercase letters as equivalent to lowercase
+					* in scheme names (e.g., allow "HTTP" as well as "http") for the sake of
+					* robustness but should only produce lowercase scheme names for consistency.'
+					*/
+					attrVal = attrVal.substr(0, pos).toLowerCase() + attrVal.substr(pos);
 				}
 
 				return attrVal.replace(/['"]/g, escape);

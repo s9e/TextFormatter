@@ -403,9 +403,22 @@ class Parser
 					));
 				}
 
+				$pos = strpos($attrVal, ':');
+
 				if ($removeScheme)
 				{
-					$attrVal = substr($attrVal, 1 + strpos($attrVal, ':'));
+					$attrVal = substr($attrVal, $pos + 1);
+				}
+				else
+				{
+					/**
+					* @link http://tools.ietf.org/html/rfc3986#section-3.1
+					*
+					* 'An implementation should accept uppercase letters as equivalent to lowercase
+					* in scheme names (e.g., allow "HTTP" as well as "http") for the sake of
+					* robustness but should only produce lowercase scheme names for consistency.'
+					*/
+					$attrVal = strtolower(substr($attrVal, 0, $pos)) . substr($attrVal, $pos);
 				}
 
 				/**
