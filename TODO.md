@@ -19,3 +19,4 @@ TODO
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
 - Fix [EMAIL]
 - Add a tag option that disallows plain text, e.g. any text node that is a child of given tag is put inside a <i> element.
+- Consider adding a "map" attribute filter that maps values, one to another. e.g. ["cpp"=>"C++"]
