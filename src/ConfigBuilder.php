@@ -12,8 +12,8 @@ use DOMDocument,
     InvalidArgumentException,
     RuntimeException,
     SimpleXMLElement,
-    XSLTProcessor,
-    UnexpectedValueException;
+    UnexpectedValueException,
+    XSLTProcessor;
 
 class ConfigBuilder
 {
@@ -41,13 +41,29 @@ class ConfigBuilder
 	protected $namespaces = array();
 
 	/**
-	* @var array Holds filters' configuration
+	* @var array Custom filters (array of Callback objects)
 	*/
-	protected $filters = array(
-		'url' => array(
-			'allowedSchemes' => array('http', 'https')
-		)
-	);
+	protected $filters = array();
+
+	/**
+	* @var array List of allowed schemes (used in URL filter)
+	*/
+	protected $allowedSchemes = array('http', 'https');
+
+	/**
+	* @var array List of disallowed hosts (used in URL filter)
+	*/
+	protected $disallowedHosts = array();
+
+	/**
+	* @var array List of hosts whose URL we check for redirects (used in URL filter)
+	*/
+	protected $resolveRedirectsHosts = array();
+
+	/**
+	* @var string Default scheme to be used when validating schemeless URLs
+	*/
+	protected $defaultScheme;
 
 	/**
 	* @var string Extra XSL to append to the stylesheet
@@ -55,15 +71,23 @@ class ConfigBuilder
 	protected $xsl = '';
 
 	/**
-	* @var array  Default options applied to tags, can be overriden by options passed by plugins
+	* @var array  Default options applied to tags
 	*/
 	public $defaultTagOptions = array(
 		'disable'        => false,
 		'disallowAsRoot' => false,
-		'tagLimit'     => 100,
-		'nestingLimit' => 10,
+		'tagLimit'       => 100,
+		'nestingLimit'   => 10,
 		'defaultChildRule'      => 'allow',
 		'defaultDescendantRule' => 'allow'
+	);
+
+	/**
+	* @var array  Default options applied to attributes
+	*/
+	public $defaultAttributeOptions = array(
+		'filterChain' => array(),
+		'required'    => true
 	);
 
 	//==========================================================================
@@ -358,7 +382,7 @@ class ConfigBuilder
 			case 'attrs':
 				foreach ($optionValue as $attrName => $attrConf)
 				{
-					$this->addAttribute($tagName, $attrName, $attrConf['type'], $attrConf);
+					$this->addAttribute($tagName, $attrName, $attrConf);
 				}
 				break;
 
@@ -380,23 +404,6 @@ class ConfigBuilder
 				$this->setTagXSL($tagName, $optionValue);
 				break;
 
-			case 'preFilter':
-			case 'postFilter':
-				$callbacks = $this->normalizeCallbacks($optionValue, array('attrs' => null));
-
-				$this->clearTagCallbacks($optionName, $tagName);
-
-				foreach ($callbacks as $callbackConf)
-				{
-					$this->addTagCallback(
-						$optionName,
-						$tagName,
-						$callbackConf['callback'],
-						$callbackConf['params']
-					);
-				}
-				break;
-
 			default:
 				if (isset($this->defaultTagOptions[$optionName]))
 				{
@@ -410,86 +417,6 @@ class ConfigBuilder
 		}
 	}
 
-	/**
-	* Remove all preFilter callbacks associated with a tag
-	*
-	* @param string $tagName
-	*/
-	public function clearTagPreFilterCallbacks($tagName)
-	{
-		$this->clearTagCallbacks('preFilter', $tagName);
-	}
-
-	/**
-	* Remove all postFilter callbacks associated with a tag
-	*
-	* @param string $tagName
-	*/
-	public function clearTagPostFilterCallbacks($tagName)
-	{
-		$this->clearTagCallbacks('postFilter', $tagName);
-	}
-
-	/**
-	* Remove all phase callbacks associated with a tag
-	*
-	* @param string $phase    Either 'preFilter' or 'postFilter'
-	* @param string $tagName
-	*/
-	protected function clearTagCallbacks($phase, $tagName)
-	{
-		$tagName = $this->normalizeTagName($tagName);
-
-		unset($this->tags[$tagName][$phase]);
-	}
-
-	/**
-	* Add a preFilter callback to a tag
-	*
-	* @param string   $tagName
-	* @param callback $callback
-	* @param array    $params
-	*/
-	public function addTagPreFilterCallback($tagName, $callback, array $params = array('attrs' => null))
-	{
-		$this->addTagCallback('preFilter', $tagName, $callback, $params);
-	}
-
-	/**
-	* Add a postFilter callback to a tag's attribute
-	*
-	* @param string   $tagName
-	* @param callback $callback
-	* @param array    $params
-	*/
-	public function addTagPostFilterCallback($tagName, $callback, array $params = array('attrs' => null))
-	{
-		$this->addTagCallback('postFilter', $tagName, $callback, $params);
-	}
-
-	/**
-	* Add a phase callback to a tag
-	*
-	* @param string   $phase    Either 'preFilter' or 'postFilter'
-	* @param string   $tagName
-	* @param callback $callback
-	* @param array    $params
-	*/
-	protected function addTagCallback($phase, $tagName, $callback, array $params)
-	{
-		$tagName = $this->normalizeTagName($tagName);
-
-		if (!is_callable($callback))
-		{
-			throw new InvalidArgumentException('Callback ' . var_export($callback, true) . ' is not callable');
-		}
-
-		$this->tags[$tagName][$phase][] = array(
-			'callback' => $callback,
-			'params'   => $params
-		);
-	}
-
 	//==========================================================================
 	// Attributes-related methods
 	//==========================================================================
@@ -497,12 +424,12 @@ class ConfigBuilder
 	/**
 	* Define an attribute for a tag
 	*
-	* @param string $tagName
-	* @param string $attrName
-	* @param string $attrType
-	* @param array  $attrConf
+	* @param string       $tagName  Name of the tag
+	* @param string       $attrName Name of the attribute
+	* @param array|string $attrConf If array: attribute options, if string: name of the filter used
+	*                               for the attribute's filterChain
 	*/
-	public function addAttribute($tagName, $attrName, $attrType, array $attrConf = array())
+	public function addAttribute($tagName, $attrName, $attrConf = array())
 	{
 		$tagName  = $this->normalizeTagName($tagName);
 		$attrName = $this->normalizeAttributeName($attrName);
@@ -512,18 +439,16 @@ class ConfigBuilder
 			throw new InvalidArgumentException("Attribute '" . $attrName . "' already exists");
 		}
 
-		/**
-		* Set attribute type
-		*/
-		$attrConf['type'] = $attrType;
+		// Create the attribute with default config values
+		$this->tags[$tagName]['attrs'][$attrName] = $this->defaultAttributeOptions;
 
-		/**
-		* Add the attribute with default config values
-		*/
-		$this->tags[$tagName]['attrs'][$attrName] = array(
-			'isRequired' => true
-		);
+		// If $attrConf is a string, we use the built-in filter of the same name as its filter
+		if (is_string($attrConf))
+		{
+			$attrConf = array('filter' => $attrConf);
+		}
 
+		// Now set the user-defined options
 		$this->setAttributeOptions($tagName, $attrName, $attrConf);
 	}
 
@@ -559,25 +484,28 @@ class ConfigBuilder
 
 		switch ($optionName)
 		{
-			case 'preFilter':
-			case 'postFilter':
-				$callbacks = $this->normalizeCallbacks($optionValue, array('attrVal' => null));
+			case 'filter':
+				$optionValue = array($optionValue);
+				// no break; here
 
-				$this->clearAttributeCallbacks($optionName, $tagName, $attrName);
+			case 'filterChain':
+				$this->clearAttributeFilterChain($tagName, $attrName);
 
-				foreach ($callbacks as $callbackConf)
+				foreach ($optionValue as $callback)
 				{
-					$this->addAttributeCallback(
-						$optionName,
-						$tagName,
-						$attrName,
-						$callbackConf['callback'],
-						$callbackConf['params']
-					);
+					$this->appendAttributeFilter($tagName, $attrName, $callback);
 				}
 				break;
 
 			default:
+				if (isset($this->defaultAttributeOptions[$optionName]))
+				{
+					/**
+					* Preserve the PHP type of that option, if applicable
+					*/
+					settype($optionValue, gettype($this->defaultAttributeOptions[$optionName]));
+				}
+
 				$attrConf[$optionName] = $optionValue;
 		}
 	}
@@ -683,91 +611,57 @@ class ConfigBuilder
 	}
 
 	/**
-	* Remove all preFilter callbacks associated with an attribute
+	* Remove all filters from an attribute's filter chain
 	*
 	* @param string $tagName
 	* @param string $attrName
 	*/
-	public function clearAttributePreFilterCallbacks($tagName, $attrName)
-	{
-		$this->clearAttributeCallbacks('preFilter', $tagName, $attrName);
-	}
-
-	/**
-	* Remove all postFilter callbacks associated with an attribute
-	*
-	* @param string $tagName
-	* @param string $attrName
-	*/
-	public function clearAttributePostFilterCallbacks($tagName, $attrName)
-	{
-		$this->clearAttributeCallbacks('postFilter', $tagName, $attrName);
-	}
-
-	/**
-	* Remove all phase callbacks associated with an attribute
-	*
-	* @param string $phase    Either 'preFilter' or 'postFilter'
-	* @param string $tagName
-	* @param string $attrName
-	*/
-	protected function clearAttributeCallbacks($phase, $tagName, $attrName)
+	public function clearAttributeFilterChain($tagName, $attrName)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName);
+		$attrName = $this->normalizeAttributeName($attrName, $tagName);
 
-		unset($this->tags[$tagName]['attrs'][$attrName][$phase]);
+		$this->tags[$tagName]['attrs'][$attrName]['filterChain'] = array();
 	}
 
 	/**
-	* Add a preFilter callback to a tag's attribute
+	* Append a filter to an attribute's filter chain
 	*
-	* @param string   $tagName
-	* @param string   $attrName
-	* @param callback $callback
-	* @param array    $params
+	* @param string          $tagName
+	* @param string          $attrName
+	* @param string|Callback $callback
 	*/
-	public function addAttributePreFilterCallback($tagName, $attrName, $callback, array $params = array('attrVal' => null))
+	public function appendAttributeFilter($tagName, $attrName, $callback)
 	{
-		$this->addAttributeCallback('preFilter', $tagName, $attrName, $callback, $params);
+		$this->addAttributeFilter('array_push', $tagName, $attrName, $callback);
 	}
 
 	/**
-	* Add a postFilter callback to a tag's attribute
+	* prepend a filter to an attribute's filter chain
 	*
-	* @param string   $tagName
-	* @param string   $attrName
-	* @param callback $callback
-	* @param array    $params
+	* @param string          $tagName
+	* @param string          $attrName
+	* @param string|Callback $callback
 	*/
-	public function addAttributePostFilterCallback($tagName, $attrName, $callback, array $params = array('attrVal' => null))
+	public function prependAttributeFilter($tagName, $attrName, $callback)
 	{
-		$this->addAttributeCallback('postFilter', $tagName, $attrName, $callback, $params);
+		$this->addAttributeFilter('array_unshift', $tagName, $attrName, $callback);
 	}
 
 	/**
-	* Add a phase callback to a tag's attribute
+	* Append a filter to an attribute's filter chain
 	*
-	* @param string   $phase    Either 'preFilter' or 'postFilter'
-	* @param string   $tagName
-	* @param string   $attrName
-	* @param callback $callback
-	* @param array    $params
+	* @param string          $func     Either "array_push" or "array_unshift"
+	* @param string          $tagName
+	* @param string|Callback $callback
 	*/
-	protected function addAttributeCallback($phase, $tagName, $attrName, $callback, array $params)
+	protected function addAttributeFilter($func, $tagName, $attrName, $callback)
 	{
 		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName);
+		$attrName = $this->normalizeAttributeName($attrName, $tagName);
+		$callback = $this->normalizeCallback($callback);
 
-		if (!is_callable($callback))
-		{
-			throw new InvalidArgumentException('Callback ' . var_export($callback, true) . ' is not callable');
-		}
-
-		$this->tags[$tagName]['attrs'][$attrName][$phase][] = array(
-			'callback' => $callback,
-			'params'   => $params
-		);
+		$func($this->tags[$tagName]['attrs'][$attrName]['filterChain'], $callback);
 	}
 
 	/**
@@ -1105,35 +999,63 @@ class ConfigBuilder
 	//==========================================================================
 
 	/**
-	* Set the filter used to validate an attribute type
+	* Set a custom filter to be used to validate an attribute type
 	*
-	* @param string   $tagName
-	* @param callback $callback
-	* @param array    $params
+	* Can be used to override the built-in filters, or support custom attribute types
+	*
+	* @param string   $filterName
+	* @param Callback $callback
 	*/
-	public function setFilter($filterType, $callback, array $params = array('attrVal' => null))
+	public function setCustomFilter($filterName, Callback $callback)
 	{
-		if (!is_callable($callback))
-		{
-			throw new InvalidArgumentException('Callback ' . var_export($callback, true) . ' is not callable');
-		}
-
-		$this->filters[$filterType] = array(
-			'callback' => $callback,
-			'params'   => $params
-		);
+		// A hash sign # is prepended, because that's how built-in filters are detected
+		$this->filters['#' . $filterName] = $callback;
 	}
 
 	/**
-	* Set the filter used to validate an attribute type in the Javascript parser
+	* Return a custom filter's Callback object
 	*
-	* @param string $tagName
-	* @param string $js
+	* @param  string   $filterName
+	* @return Callback
 	*/
-	public function setJSFilter($filterType, $js)
+	public function getCustomFilter($filterName)
 	{
-		$this->filters[$filterType]['js'] = $js;
+		return $this->filters['#' . $filterName];
 	}
+
+	/**
+	* Return all custom filters
+	*
+	* @return array
+	*/
+	public function getCustomFilters()
+	{
+		return $this->filters;
+	}
+
+	/**
+	* Return whether a custom filter is set
+	*
+	* @return bool
+	*/
+	public function hasCustomFilter($filterName)
+	{
+		return isset($this->filters['#' . $filterName]);
+	}
+
+	/**
+	* Unset custom filter
+	*
+	* @param string $filterName
+	*/
+	public function unsetCustomFilter($filterName)
+	{
+		unset($this->filters['#' . $filterName]);
+	}
+
+	//==========================================================================
+	// URL config options
+	//==========================================================================
 
 	/**
 	* Allow a URL scheme
@@ -1142,34 +1064,37 @@ class ConfigBuilder
 	*/
 	public function allowScheme($scheme)
 	{
-		$this->validateScheme($scheme);
+		$scheme = $this->normalizeScheme($scheme);
 
-		$this->filters['url']['allowedSchemes'][] = $scheme;
+		$this->allowedSchemes[] = $scheme;
 	}
 
 	/**
 	* Set a default scheme to be used for validation of scheme-less URLs
 	*
-	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
+	* @param string $scheme URL scheme, e.g. "http" or "https"
 	*/
 	public function setDefaultScheme($scheme)
 	{
-		$this->filters['url']['defaultScheme'] = $scheme;
+		$this->defaultScheme = $scheme;
 	}
 
 	/**
-	* Validate a scheme name and throw an exception if invalid
+	* Validate and normalize a scheme name to lowercase, or throw an exception if invalid
 	*
 	* @link http://tools.ietf.org/html/rfc3986#section-3.1
 	*
-	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
+	* @param  string $scheme URL scheme, e.g. "file" or "ed2k"
+	* @return string
 	*/
-	protected function validateScheme($scheme)
+	protected function normalizeScheme($scheme)
 	{
 		if (!preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))
 		{
 			throw new InvalidArgumentException("Invalid scheme name '" . $scheme . "'");
 		}
+
+		return strtolower($scheme);
 	}
 
 	/**
@@ -1179,7 +1104,7 @@ class ConfigBuilder
 	*/
 	public function getAllowedSchemes()
 	{
-		return $this->filters['url']['allowedSchemes'];
+		return $this->allowedSchemes;
 	}
 
 	/**
@@ -1189,7 +1114,7 @@ class ConfigBuilder
 	*/
 	public function disallowHost($host)
 	{
-		$this->addHostmask('disallowedHosts', $host);
+		$this->disallowedHosts[] = $this->normalizeHostmask($host);
 	}
 
 	/**
@@ -1199,14 +1124,14 @@ class ConfigBuilder
 	*/
 	public function resolveRedirectsFrom($host)
 	{
-		$this->addHostmask('resolveRedirectsHosts', $host);
+		$this->resolveRedirectsHosts[] = $this->normalizeHostmask($host);
 	}
 
 	/**
-	* @param string $type Either "disallowedHosts" or "resolveRedirectsHosts"
-	* @param string $host Hostname or hostmask
+	* @param  string $host Hostname or hostmask
+	* @return string
 	*/
-	protected function addHostmask($type, $host)
+	protected function normalizeHostmask($host)
 	{
 		if (preg_match('#[\\x80-\xff]#', $host))
 		{
@@ -1226,7 +1151,9 @@ class ConfigBuilder
 		* As a side-effect, when someone bans *.example.com it also bans example.com (no subdomain)
 		* but that's usually what people were trying to achieve.
 		*/
-		$this->filters['url'][$type][] = ltrim($host, '*.');
+		$host = ltrim($host, '*.');
+
+		return $host;
 	}
 
 	//==========================================================================
@@ -1234,91 +1161,43 @@ class ConfigBuilder
 	//==========================================================================
 
 	/**
-	* Normalize the definition of a series of callbacks
+	* Normalize the representation of a callback
 	*
-	* The formal definition of callbacks is a bit verbose because it needs to be extensible enough
-	* to allow multiple successive (and sometimes identical) callbacks and specify different
-	* parameters for each call. This method allows declaring them in a more flexible way.
+	* This method will return an array with 1 to 3 components:
+	*  - callback: the actual callback (required)
+	*  - params:   the list of params that must be passed to the callback (optional)
+	*  - js:       the Javascript source representing this callback
 	*
-	* Formal definition:
-	* <code>
-	*	array(
-	*		array('callback' => 'strtolower'),
-	*		array('callback' => 'ucwords')
-	*	)
-	* </code>
+	* There is, however, one exception; Validators, such as "#int" or "#url" are returned as
+	* strings. If the passed callback isn't callable and isn't a validator, an exception is thrown.
 	*
-	* Can be shortened as:
-	* <code>
-	*	array('strtolower', 'ucwords')
-	* </code>
-	*
-	*
-	* Formal definition:
-	* <code>
-	*	array(
-	*		array('callback' => 'strtolower')
-	*	)
-	* </code>
-	*
-	* Can be shortened as:
-	* <code>
-	*	array('strtolower')
-	* </code>
-	*
-	* Can be further shortened as:
-	* <code>
-	*	'strtolower'
-	* </code>
-	*
-	* @param  string|array $callbacks
-	* @param  array        $defaultParams
-	* @return array
+	* @param  mixed        $callback
+	* @return string|array
 	*/
-	protected function normalizeCallbacks($callbacks, array $defaultParams)
+	protected function normalizeCallback($callback)
 	{
-		if (!is_array($callbacks)
-		 || is_callable($callbacks))
+		if ($callback instanceof Callback)
 		{
-			$callbacks = array($callbacks);
+			return $callback->toArray();
 		}
 
-		foreach ($callbacks as &$callbackConf)
+		if (is_string($callback) && $callback[0] === '#')
 		{
-			$callbackConf = $this->normalizeCallback($callbackConf, $defaultParams);
-		}
-		unset($callbackConf);
-
-		return $callbacks;
-	}
-
-	/**
-	* @param  array|callback $callbackConf
-	* @param  array          $defaultParams
-	* @return array
-	*/
-	protected function normalizeCallback($callbackConf, array $defaultParams)
-	{
-		// If $callbackConf is a string or a callback, turn it into an array
-		if (is_string($callbackConf)
-		 || is_callable($callbackConf))
-		{
-			$callbackConf = array('callback' => $callbackConf);
-		}
-		elseif (!isset($callbackConf['callback']))
-		{
-			throw new InvalidArgumentException("Callback config is missing the 'callback' key");
+			// It's a built-in filter, return as-is
+			return $callback;
 		}
 
-		if (!is_callable($callbackConf['callback']))
+		if (is_callable($callback))
 		{
-			throw new InvalidArgumentException('Callback ' . var_export($callbackConf['callback'], true) . ' is not callable');
+			// It's a callback with no signature, we'll assume it just requires the attribute's
+			// value. Otherwise, a Callback object should be used instead
+			return array(
+				'callback' => $callback,
+				'params'   => array('attrVal' => null)
+			);
 		}
 
-		// add the default params config if it's not set
-		$callbackConf += array('params' => $defaultParams);
-
-		return $callbackConf;
+		throw new InvalidArgumentException("Callback '" . var_export($callback, true) . "' is not callable");
 	}
 
 	//==========================================================================
@@ -1334,10 +1213,22 @@ class ConfigBuilder
 	public function getParserConfig($keepJs = false)
 	{
 		$config = array(
-			'filters' => $this->getFiltersConfig($keepJs),
-			'plugins' => $this->getPluginsConfig(),
-			'tags'    => $this->getTagsConfig(true)
+			'urlConfig' => $this->getUrlConfig(),
+			'plugins'   => $this->getPluginsConfig(),
+			'tags'      => $this->getTagsConfig(true)
 		);
+
+		foreach ($this->filters as $filterName => $filter)
+		{
+			$filterConf = $filter->toArray();
+
+			if (!$keepJs)
+			{
+				unset($filterConf['js']);
+			}
+
+			$config['filters'][$filterName] = $filterConf;
+		}
 
 		if (!empty($this->namespaces))
 		{
@@ -1426,43 +1317,40 @@ class ConfigBuilder
 	}
 
 	/**
-	* Return the list of filters and their config
+	* Return the URL-specific configuration options
 	*
-	* @param  bool  $keepJs Whether to keep the Javascript filters in the array
 	* @return array
 	*/
-	public function getFiltersConfig($keepJs = false)
+	public function getUrlConfig()
 	{
-		$filters = $this->filters;
-
 		$rm = $this->getRegexpMaster();
 
-		$filters['url']['allowedSchemes']
-			= '#^' . $rm->buildRegexpFromList($filters['url']['allowedSchemes']) . '$#Di';
+		$urlConfig = array(
+			'allowedSchemes' => '#^' . $rm->buildRegexpFromList($this->allowedSchemes) . '$#Di'
+		);
+
+		if (isset($this->defaultScheme))
+		{
+			$urlConfig['defaultScheme'] = $this->defaultScheme;
+		}
 
 		foreach (array('disallowedHosts', 'resolveRedirectsHosts') as $k)
 		{
-			if (isset($filters['url'][$k]))
+			if (empty($this->$k))
 			{
-				$filters['url'][$k]
-					= '#(?<![^\\.])'
-					. $rm->buildRegexpFromList(
-						$filters['url'][$k],
-						array('specialChars' => array('*' => '.*'))
-					  )
-					. '$#DiS';
+				continue;
 			}
+
+			$regexp = $rm->buildRegexpFromList(
+				$this->$k,
+				// Asterisks * are turned into a catch-all expression
+				array('specialChars' => array('*' => '.*'))
+			);
+
+			$urlConfig[$k] = '#(?<![^\\.])' . $regexp . '$#DiS';
 		}
 
-		if (!$keepJs)
-		{
-			foreach (array_keys($filters) as $k)
-			{
-				unset($filters[$k]['js']);
-			}
-		}
-
-		return array_filter($filters);
+		return $urlConfig;
 	}
 
 	/**
@@ -1566,6 +1454,21 @@ class ConfigBuilder
 					if (empty($tagConfig['rules']))
 					{
 						unset($tagConfig['rules']);
+					}
+
+					if (!empty($tagConfig['attrs']))
+					{
+						foreach ($tagConfig['attrs'] as &$attrConf)
+						{
+							/**
+							* Remove the filterChain if it's empty
+							*/
+							if (empty($attrConf['filterChain']))
+							{
+								unset($attrConf['filterChain']);
+							}
+						}
+						unset($attrConf);
 					}
 				}
 
@@ -2450,7 +2353,7 @@ class ConfigBuilder
 			}
 
 			/**
-			* Tags that cannot be a descendant of our root tag gets the disable option
+			* Tags that cannot be a descendant of our root tag get the disable option
 			*/
 			if (isset($tagsOptions[$rootTag]['rules']['denyDescendant']))
 			{

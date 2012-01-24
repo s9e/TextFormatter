@@ -331,7 +331,7 @@ class PredefinedBBCodes
 	public function addSPOILER($spoilerStr = 'Spoiler:', $showStr = 'Show', $hideStr = 'Hide')
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[SPOILER={TEXT1;isRequired=0}]{TEXT2}[/SPOILER]',
+			'[SPOILER={TEXT1;required=0}]{TEXT2}[/SPOILER]',
 			'<div class="spoiler">
 				<div class="spoiler-header">
 					<input type="button" value="' . $showStr . '" onclick="'
@@ -434,9 +434,9 @@ class PredefinedBBCodes
 				'defaultAttr'  => 'dimensions',
 				'contentAttrs' => array('url'),
 				'attrs' => array(
-					'width'  => array('type' => 'number'),
-					'height' => array('type' => 'number'),
-					'url'    => array('type' => 'url')
+					'width'  => array('filter' => '#number'),
+					'height' => array('filter' => '#number'),
+					'url'    => array('filter' => '#url')
 				),
 				'attributeParsers' => array(
 					'dimensions' => array('/(?<width>[0-9]+),(?<height>[0-9]+)/')

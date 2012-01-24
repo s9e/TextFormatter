@@ -85,9 +85,9 @@ class GenericConfig extends PluginConfig
 				            . 'D';
 
 				$tagOptions['attrs'][$attrName] = array(
-					'type'       => 'regexp',
-					'regexp'     => $attrRegexp,
-					'isRequired' => true
+					'filter'   => '#regexp',
+					'regexp'   => $attrRegexp,
+					'required' => true
 				);
 			}
 		}

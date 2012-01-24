@@ -6,6 +6,7 @@ use ReflectionClass,
     ReflectionMethod,
     RuntimeException,
     stdClass,
+    s9e\TextFormatter\Callback,
     s9e\TextFormatter\ConfigBuilder,
     s9e\TextFormatter\JSParserGenerator;
 
@@ -170,5 +171,12 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$r->setAccessible(true);
 
 		return $r->invokeArgs((is_object($class) ? $class : null), $args);
+	}
+
+	protected function newCallback($callback)
+	{
+		include_once __DIR__ . '/../src/Callback.php';
+
+		return new Callback($callback);
 	}
 }

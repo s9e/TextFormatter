@@ -46,16 +46,16 @@ class RawHTMLConfig extends PluginConfig
 	* not the purpose of this plugin. It does make sense however to declare URL attributes as such,
 	* so that they are subject to our constraints (disallowed hosts, etc...)
 	*/
-	protected $attrTypes = array(
-		'action'     => 'url',
-		'cite'       => 'url',
-		'data'       => 'url',
-		'formaction' => 'url',
-		'href'       => 'url',
-		'icon'       => 'url',
-		'manifest'   => 'url',
-		'poster'     => 'url',
-		'src'        => 'url'
+	protected $attrFilter = array(
+		'action'     => '#url',
+		'cite'       => '#url',
+		'data'       => '#url',
+		'formaction' => '#url',
+		'href'       => '#url',
+		'icon'       => '#url',
+		'manifest'   => '#url',
+		'poster'     => '#url',
+		'src'        => '#url'
 	);
 
 	/**
@@ -137,9 +137,6 @@ class RawHTMLConfig extends PluginConfig
 		$elName   = $this->normalizeElementName($elName, true);
 		$attrName = $this->normalizeAttributeName($attrName, true);
 		$tagName  = $this->namespacePrefix . ':' . $elName;
-		$attrType = (isset($this->attrTypes[$attrName]))
-		          ? $this->attrTypes[$attrName]
-		          : 'text';
 
 		if (!($flags & self::ALLOW_UNSAFE_ATTRIBUTES))
 		{
@@ -152,11 +149,17 @@ class RawHTMLConfig extends PluginConfig
 
 		if (!$this->cb->attributeExists($tagName, $attrName))
 		{
+			$attrConf = array('required' => false);
+
+			if (isset($this->attrFilter[$attrName]))
+			{
+				$attrConf['filter'] = $this->attrFilter[$attrName];
+			}
+
 			$this->cb->addAttribute(
 				$tagName,
 				$attrName,
-				$attrType,
-				array('isRequired' => false)
+				$attrConf
 			);
 		}
 	}

@@ -51,10 +51,7 @@ class CensorConfig extends PluginConfig
 				'defaultDescendantRule' => 'deny',
 
 				'attrs' => array(
-					$this->attrName => array(
-						'type'       => 'text',
-						'isRequired' => false
-					)
+					$this->attrName => array('required' => false)
 				),
 
 				'template' =>

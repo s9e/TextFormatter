@@ -20,3 +20,4 @@ TODO
 - Fix [EMAIL]
 - Add a tag option that disallows plain text, e.g. any text node that is a child of given tag is put inside a <i> element.
 - Consider adding a "map" attribute filter that maps values, one to another. e.g. ["cpp"=>"C++"]
+- Move the "reduce" part of ConfigBuilder::getTagsConfig() to its own method

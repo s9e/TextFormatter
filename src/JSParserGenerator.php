@@ -51,9 +51,14 @@ class JSParserGenerator
 	protected $tagsConfig;
 
 	/**
-	* @var array Filters' config
+	* @var array Custom filters
 	*/
-	protected $filtersConfig;
+	protected $filters;
+
+	/**
+	* @var array URLs-specific config
+	*/
+	protected $urlConfig;
 
 	/**
 	* @var array Namespaces used by tags (namespaces with no tags do not appear here)
@@ -127,7 +132,8 @@ class JSParserGenerator
 		$config = $this->cb->getParserConfig(true);
 
 		$this->tagsConfig    = $config['tags'];
-		$this->filtersConfig = $config['filters'];
+		$this->filters       = (isset($config['filters'])) ? $config['filters'] : array();
+		$this->urlConfig     = $config['urlConfig'];
 		$this->namespaces    = (isset($config['namespaces'])) ? $config['namespaces'] : array();
 		$this->rootContext   = $config['rootContext'];
 	}
@@ -148,17 +154,18 @@ class JSParserGenerator
 		}
 
 		/**
-		* Inject the custom filters
+		* Do the attribute filters (this will modify $this->tagsConfig as well as $this->src)
 		*/
-		$this->injectCustomFilters();
+		$this->hardcodeAttributeFilters();
 
 		/**
-		* Inject the config objects, as well as plugins
+		* Inject the config objects (includes plugins)
 		*/
 		$this->injectConfig();
 
 		/**
 		* Rename properties whose name is preserved by Google Closure Compiler by default.
+		*
 		* For instance, "tag.name" will be renamed "tag._name" so that Google Closure Compiler will
 		* rename it to a shorter form. This operation is **UNSAFE** as its name implies, because it
 		* doesn't have any context.
@@ -216,16 +223,13 @@ class JSParserGenerator
 			'enableIE7'            => $this->options['enableIE'] && $this->options['enableIE7'],
 			'enableIE9'            => $this->options['enableIE'] && $this->options['enableIE9'],
 			'enableLivePreviewFastPath' => (bool) $this->options['enableLivePreviewFastPath'],
-			'filterConfig'         => $this->getFiltersConfigHints(),
 			'hasNamespacedHTML'    => $this->hasNamespacedHTML(),
 			'hasNamespacedTags'    => $this->hasNamespacedTags(),
 			'hasRegexpLimitAction' => $this->getRegexpLimitActionHints(),
 			'mightUseTagRequires'  => $this->mightUseTagRequires(),
-			'tagConfig'            => $this->getTagConfigHints()
+			'tagConfig'            => $this->getTagConfigHints(),
+			'urlConfig'            => $this->getUrlConfigHints()
 		);
-
-		// Add attribute types hints
-		$hints += $this->getDefaultFiltersHints();
 
 		// Inject the hints into the source
 		$this->src = preg_replace(
@@ -280,7 +284,7 @@ class JSParserGenerator
 				continue;
 			}
 
-			foreach ($tagConfig['attrs'] as $attrName => &$attrConf)
+			foreach ($tagConfig['attrs'] as $attrName => $attrConf)
 			{
 				// Replace defaultValue=>0 with defaultValue=>1 so that it passes an empty() test
 				if (isset($attrConf['defaultValue'])
@@ -291,14 +295,13 @@ class JSParserGenerator
 
 				$attrsConfig[] = $attrConf;
 			}
-			unset($attrConf);
 		}
 
 		return $this->getDataStructureHints($attrsConfig, array(
-			'defaultValue' => false,
-			'isRequired'   => false,
-			'postFilter'   => false,
-			'preFilter'    => false
+			'defaultValue'   => false,
+			'filterChain'    => false,
+			'forceUrlencode' => false,
+			'required'       => false
 		));
 	}
 
@@ -336,11 +339,10 @@ class JSParserGenerator
 		return $this->getDataStructureHints($this->tagsConfig, array(
 			'attrs'            => false,
 			'attributeParsers' => false,
+			'filterChain'      => false,
 			'isEmpty'          => false,
 			'isTransparent'    => false,
 			'ltrimContent'     => false,
-			'postFilter'       => false,
-			'preFilter'        => false,
 			'rtrimContent'     => false,
 			'rules'            => array(
 				'closeAncestor'   => false,
@@ -382,11 +384,9 @@ class JSParserGenerator
 			{
 				foreach ($hintValue as $k => &$v)
 				{
-					if (!empty($struct[$hintName][$k]))
-					{
-						$v = true;
-					}
+					$v = (bool) (!empty($struct[$hintName][$k]));
 				}
+				unset($v);
 			}
 			else
 			{
@@ -457,62 +457,14 @@ class JSParserGenerator
 					$hints['abort'] = true;
 					break;
 
-				case 'ignore':
-					$hints['ignore'] = true;
+				case 'warn':
+					$hints['warn'] = true;
 					break;
 
+				case 'ignore':
 				default:
-					$hints['warn'] = true;
+					$hints['ignore'] = true;
 			}
-		}
-
-		return $hints;
-	}
-
-	/**
-	* Return a list of filters in use
-	*
-	* @return array
-	*/
-	protected function getDefaultFiltersHints()
-	{
-		$types = array(
-			'color'      => false,
-			'email'      => false,
-			'float'      => false,
-			'id'         => false,
-			'identifier' => false,
-			'int'        => false,
-			'integer'    => false,
-			'number'     => false,
-			'range'      => false,
-			'regexp'     => false,
-			'simpletext' => false,
-			'text'       => false,
-			'uint'       => false,
-			'url'        => false
-		);
-
-		foreach ($this->tagsConfig as $tagConfig)
-		{
-			if (!empty($tagConfig['attrs']))
-			{
-				foreach ($tagConfig['attrs'] as $attrConf)
-				{
-					$types[$attrConf['type']] = true;
-				}
-			}
-		}
-
-		$hints = array();
-
-		foreach ($types as $type => $bool)
-		{
-			// If this type is handled by a custom filter we don't need to keep it
-			$hints['keep' . ucfirst($type) . 'Filter']
-				= (isset($this->filtersConfig[$type]['js']))
-				? false
-				: $bool;
 		}
 
 		return $hints;
@@ -523,71 +475,12 @@ class JSParserGenerator
 	*
 	* @return array
 	*/
-	protected function getFiltersConfigHints()
+	protected function getUrlConfigHints()
 	{
-		$hints = array(
-			'email'  => array(
-				'forceUrlencode'  => false
-			),
-			'url'    => array(
-				'defaultScheme'   => false,
-				'disallowedHosts' => false
-			)
+		return array(
+			'defaultScheme'   => isset($this->urlConfig['defaultScheme']),
+			'disallowedHosts' => isset($this->urlConfig['disallowedHosts'])
 		);
-
-		foreach ($this->tagsConfig as $tagConfig)
-		{
-			if (!empty($tagConfig['attrs']))
-			{
-				foreach ($tagConfig['attrs'] as $attrConf)
-				{
-					foreach ($attrConf as $k => $v)
-					{
-						if (!isset($hints[$attrConf['type']][$k])
-						 || $hints[$attrConf['type']][$k] === false)
-						{
-							$hints[$attrConf['type']][$k] = $v;
-						}
-					}
-				}
-			}
-		}
-
-		foreach ($this->filtersConfig as $attrType => $filterConfig)
-		{
-			foreach ($filterConfig as $k => $v)
-			{
-				if (!isset($hints[$attrType][$k])
-				 || $hints[$attrType][$k] === false)
-				{
-					$hints[$attrType][$k] = $v;
-				}
-			}
-		}
-
-		foreach ($hints as $attrType => &$attrConf)
-		{
-			unset($attrConf['defaultValue']);
-			unset($attrConf['isRequired']);
-			unset($attrConf['type']);
-
-			if (empty($attrConf))
-			{
-				$attrConf = true;
-			}
-			else
-			{
-				foreach ($attrConf as &$value)
-				{
-					// false stays false, anything else (e.g. 0 or "") becomes true
-					$value = (bool) ($value !== false);
-				}
-				unset($value);
-			}
-		}
-		unset($attrConf);
-
-		return array_filter($hints, 'is_array');
 	}
 
 	/**
@@ -626,42 +519,16 @@ class JSParserGenerator
 	//==========================================================================
 
 	/**
-	* Generate and inject custom filters into the parser's source
-	*/
-	protected function injectCustomFilters()
-	{
-		$js = '';
-		foreach ($this->filtersConfig as $name => $filterConf)
-		{
-			if (!isset($filterConf['js']))
-			{
-				continue;
-			}
-
-			$js .= "\ncase " . json_encode($name) . ':' . $filterConf['js'] . ";\n";
-		}
-
-		if ($js)
-		{
-			$tag = '/* CUSTOM FILTERS WILL BE INSERTED HERE - DO NOT EDIT */';
-			$pos = strpos($this->src, $tag) + strlen($tag);
-
-			$this->src = substr($this->src, 0, $pos) . $js . substr($this->src, $pos);
-		}
-	}
-
-	/**
 	* Generate all the required config objects and inject their source into the parser's source
 	*/
 	protected function injectConfig()
 	{
 		$configs = array(
-			'callbacks'            => $this->generateCallbacks(),
-			'filtersConfig'        => $this->generateFiltersConfig(),
 			'pluginsConfig'        => $this->generatePluginsConfig(),
 			'registeredNamespaces' => $this->generateNamespaces(),
 			'rootContext'          => $this->generateRootContext(),
-			'tagsConfig'           => $this->generateTagsConfig()
+			'tagsConfig'           => $this->generateTagsConfig(),
+			'urlConfig'            => $this->generateUrlConfig()
 		);
 
 		foreach ($configs as $k => $v)
@@ -675,111 +542,153 @@ class JSParserGenerator
 	}
 
 	/**
-	* Load and generate the array of functions required by preFilter and postFilter callbacks
-	*
-	* @return string Javascript representation of an object
+	* Collect the Javascript required by attribute filters and replace attribute filters with the
+	* name of their freshly-generated Javascript function
 	*/
-	protected function generateCallbacks()
+	protected function hardcodeAttributeFilters()
 	{
-		$usedCallbacks = array();
+		$jsFilters = array();
 
-		foreach ($this->tagsConfig as $tagConfig)
+		foreach ($this->tagsConfig as $tagName => &$tagConfig)
 		{
-			if (!empty($tagConfig['preFilter']))
+			if (empty($tagConfig['attrs']))
 			{
-				foreach ($tagConfig['preFilter'] as $callbackConf)
-				{
-					$usedCallbacks[] = $callbackConf['callback'];
-				}
+				continue;
 			}
 
-			if (!empty($tagConfig['postFilter']))
+			foreach ($tagConfig['attrs'] as $attrName => &$attrConf)
 			{
-				foreach ($tagConfig['postFilter'] as $callbackConf)
+				if (empty($attrConf['filterChain']))
 				{
-					$usedCallbacks[] = $callbackConf['callback'];
+					continue;
 				}
-			}
 
-			if (!empty($tagConfig['attrs']))
-			{
-				foreach ($tagConfig['attrs'] as $attrName => $attrConf)
+				foreach ($attrConf['filterChain'] as $k => &$filter)
 				{
-					if (!empty($attrConf['preFilter']))
+					if (is_string($filter) && $filter[0] === '#')
 					{
-						foreach ($attrConf['preFilter'] as $callbackConf)
+						// This is the name of a custom or built-in filter
+						if (isset($this->filters[$filter]))
 						{
-							$usedCallbacks[] = $callbackConf['callback'];
+							// Custom filter
+							$filter = $this->filters[$filter];
+						}
+						else
+						{
+							// Built-in filter, we can just pass it the corresponding function
+							// directly
+							$filter = 'validate' . ucfirst(substr($filter, 1));
+							continue;
 						}
 					}
 
-					if (!empty($attrConf['postFilter']))
+					if (!isset($filter['js']))
 					{
-						foreach ($attrConf['postFilter'] as $callbackConf)
+						// Last-ditch effort: if the callback is a PHP function, look for it
+						// in the jsFilters dir
+						if (isset($filter['callback'])
+						 && is_string($filter['callback'])
+						 && preg_match('#^[a-z_0-9]+$#D', $filter['callback'])
+						 && file_exists(__DIR__ . '/jsFilters/' . $filter['callback'] . '.js'))
 						{
-							$usedCallbacks[] = $callbackConf['callback'];
+							$filter = array(
+								'js' => file_get_contents(__DIR__ . '/jsFilters/' . $filter['callback'] . '.js')
+							);
+						}
+						else
+						{
+							throw new RuntimeException('No Javascript source available for filter ' . $k . " of attribute '" . $attrName . "' from tag '" . $tagName . "'");
 						}
 					}
+
+					// Prepare this filter's signature
+					$signature = (isset($filter['params']))
+					           ? $filter['params']
+					           : array('attrVal' => null, 'attrConf' => null);
+
+					// Hardcode the arguments
+					$args = array();
+					foreach ($signature as $k => $v)
+					{
+						if (is_numeric($k))
+						{
+							// Static value
+							$args[] = json_encode($v);
+						}
+						elseif ($k === 'attrVal' || $k === 'attrConf')
+						{
+							// Variable name, reuse as-is
+							$args[] .= $k;
+						}
+						elseif ($k === 'parser')
+						{
+							// We ignore this argument completely
+						}
+						else
+						{
+							throw new RuntimeException("Unknown callback parameter '" . $k . "'");
+						}
+					}
+
+					// Now build the Javascript that calls this filter's function
+					$js = '(' . $filter['js'] . ')(' . implode(',', $args) . ')';
+
+					// We generate a function name based on the content of the JS filter
+					// so that duplicate filters with identical content get the same
+					// name while ensuring that the function name is Javascript-legal
+					$funcName = sprintf('filter%08X', crc32($js));
+
+					// Replace the filter with the name of its Javascript function
+					$filter = $funcName;
+
+					// Store it for now, we'll inject the generated functions outside of the loop
+					$jsFilters[$funcName] = $js;
 				}
+				unset($filter);
 			}
+			unset($attrConf);
 		}
+		unset($tagConfig);
 
-		$jsCallbacks = array();
-
-		foreach (array_unique($usedCallbacks) as $funcName)
+		// Now generate all of the filters
+		$js = '';
+		foreach ($jsFilters as $funcName => $jsFilter)
 		{
-			if (!preg_match('#^[a-z_0-9]+$#Di', $funcName))
-			{
-				/**
-				* This cannot actually happen because callbacks are validated in ConfigBuilder.
-				* HOWEVER, if there was a way to get around this validation, this method could be
-				* used to get the content of any file in the filesystem, so we're still validating
-				* the callback name here as a failsafe.
-				*/
-				// @codeCoverageIgnoreStart
-				throw new RuntimeException("Invalid callback name '" . $funcName . "'");
-				// @codeCoverageIgnoreEnd
-			}
-
-			$filepath = __DIR__ . '/jsFunctions/' . $funcName . '.js';
-
-			if (file_exists($filepath))
-			{
-				$jsCallbacks[] = json_encode($funcName) . ':' . file_get_contents($filepath);
-			}
+			$js .= "\nfunction " . $funcName . '(attrVal,attrConf){return' . $jsFilter . ';}';
 		}
 
-		return '{' . implode(',', $jsCallbacks) . '}';
+		$this->src = str_replace(
+			'/* CUSTOM FILTERS WILL BE INSERTED HERE - DO NOT EDIT */',
+			$js,
+			$this->src
+		);
 	}
 
 	/**
-	* Generate the filters config
+	* Generate the URL config
 	*
 	* @return string Javascript representation of an object
 	*/
-	protected function generateFiltersConfig()
+	protected function generateUrlConfig()
 	{
-		$filtersConfig = $this->filtersConfig;
+		$urlConfig = $this->urlConfig;
 
-		if (isset($filtersConfig['url']['disallowedHosts']))
+		if (isset($urlConfig['disallowedHosts']))
 		{
 			// replace the unsupported lookbehind assertion with a non-capturing subpattern
-			$filtersConfig['url']['disallowedHosts'] = str_replace(
+			$urlConfig['disallowedHosts'] = str_replace(
 				'(?<![^\\.])',
 				'(?:^|\\.)',
-				$filtersConfig['url']['disallowedHosts']
+				$urlConfig['disallowedHosts']
 			);
 		}
 
 		return $this->encode(
-			$filtersConfig,
+			$urlConfig,
 			array(
-				'preserveKeys' => array(
-					array(true)
-				),
 				'isRegexp' => array(
-					array('url', 'allowedSchemes'),
-					array('url', 'disallowedHosts')
+					array('allowedSchemes'),
+					array('disallowedHosts')
 				)
 			)
 		);
@@ -802,8 +711,10 @@ class JSParserGenerator
 	*/
 	protected function generateRootContext()
 	{
-		return '{'
-		 . 'allowedChildren:' . self::convertBitfield($this->rootContext['allowedChildren']) . ','
+		return
+		   '{'
+		 . 'allowedChildren:' . self::convertBitfield($this->rootContext['allowedChildren'])
+		 . ','
 		 . 'allowedDescendants:' . self::convertBitfield($this->rootContext['allowedDescendants'])
 		 . '}';
 	}
@@ -920,7 +831,8 @@ class JSParserGenerator
 				),
 				'isRawJS'  => array(
 					array(true, 'allowedChildren'),
-					array(true, 'allowedDescendants')
+					array(true, 'allowedDescendants'),
+					array(true, 'attrs', true, 'filterChain', true)
 				),
 				'isRegexp' => array(
 					array(true, 'attributeParsers', true, true, 0),
@@ -1042,8 +954,11 @@ class JSParserGenerator
 	/**
 	* Convert a bitfield to the Javascript representationg of an array of number
 	*
-	* Context bitfields are stored as binary strings, but Javascript doesn't bitfieldto the Javascript representation of an array of numbers
-	* expressed in hexadecimal to work around some potential bugs with 32bit PHP
+	* Context bitfields are stored as binary strings, but Javascript doesn't really have binary
+	* strings so instead we split up that string in 4-bytes chunk, which we represent in hex
+	* notation to avoid the number overflowing to a float in 32bit PHP
+	*
+	* @todo Test this method
 	*/
 	static protected function convertBitfield($bitfield)
 	{
@@ -1051,13 +966,13 @@ class JSParserGenerator
 
 		foreach (str_split($bitfield, 4) as $quad)
 		{
-			$v = 0;
+			$v = '';
 			foreach (str_split($quad, 1) as $n => $c)
 			{
-				$v += ord($c) << ($n * 8);
+				$v = sprintf('%02X', ord($c)) . $v;
 			}
 
-			$hex[] = '0x' . dechex($v);
+			$hex[] = '0x' . $v;
 		}
 
 		return '[' . implode(',', $hex) . ']';

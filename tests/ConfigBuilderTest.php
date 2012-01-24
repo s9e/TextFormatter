@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests;
 
 use s9e\TextFormatter\Tests\Test,
+    s9e\TextFormatter\Callback,
     s9e\TextFormatter\ConfigBuilder,
     s9e\TextFormatter\PluginConfig;
 
@@ -140,7 +141,7 @@ class ConfigBuilderTest extends Test
 	public function testCanCreateAttribute()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'href', 'url');
+		$this->cb->addAttribute('a', 'href', '#url');
 
 		$tagsConfig = $this->cb->getTagsConfig();
 		$this->assertArrayHasKey('attrs', $tagsConfig['A']);
@@ -153,7 +154,7 @@ class ConfigBuilderTest extends Test
 	public function testCanTellIfAttributeExists()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'href', 'url');
+		$this->cb->addAttribute('a', 'href', '#url');
 		$this->assertTrue($this->cb->attributeExists('a', 'href'));
 	}
 
@@ -163,7 +164,7 @@ class ConfigBuilderTest extends Test
 	public function testCanRemoveAttributeIfItExists()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'href', 'url');
+		$this->cb->addAttribute('a', 'href', '#url');
 		$this->cb->removeAttribute('a', 'href');
 		$this->assertFalse($this->cb->attributeExists('a', 'href'));
 	}
@@ -188,7 +189,7 @@ class ConfigBuilderTest extends Test
 	public function testCannotCreateAttributeOnNonExistingTag()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('foo', 'href', 'url');
+		$this->cb->addAttribute('foo', 'href', '#url');
 	}
 
 	/**
@@ -197,10 +198,13 @@ class ConfigBuilderTest extends Test
 	public function testCanGetAttributeOptions()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'href', 'url', array('isRequired' => true));
+		$this->cb->addAttribute('a', 'href', array(
+			'filter' => '#url',
+			'required' => true
+		));
 
 		$this->assertArrayMatches(
-			array('isRequired' => true),
+			array('required' => true),
 			$this->cb->getAttributeOptions('a', 'href')
 		);
 	}
@@ -211,9 +215,12 @@ class ConfigBuilderTest extends Test
 	public function testCanGetAttributeOption()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'href', 'url', array('isRequired' => true));
+		$this->cb->addAttribute('a', 'href', array(
+			'filter' => '#url',
+			'required' => true
+		));
 
-		$this->assertTrue($this->cb->getAttributeOption('a', 'href', 'isRequired'));
+		$this->assertTrue($this->cb->getAttributeOption('a', 'href', 'required'));
 	}
 
 	/**
@@ -222,11 +229,14 @@ class ConfigBuilderTest extends Test
 	public function testCanSetAttributeOption()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'href', 'url', array('isRequired' => true));
+		$this->cb->addAttribute('a', 'href', array(
+			'filter' => '#url',
+			'required' => true
+		));
 
-		$this->cb->setAttributeOption('a', 'href', 'isRequired', false);
+		$this->cb->setAttributeOption('a', 'href', 'required', false);
 
-		$this->assertFalse($this->cb->getAttributeOption('a', 'href', 'isRequired'));
+		$this->assertFalse($this->cb->getAttributeOption('a', 'href', 'required'));
 	}
 
 	/**
@@ -246,7 +256,7 @@ class ConfigBuilderTest extends Test
 	public function testInvalidAttributeNamesAreRejected()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'ns:href', 'url');
+		$this->cb->addAttribute('a', 'ns:href');
 	}
 
 	/**
@@ -255,7 +265,7 @@ class ConfigBuilderTest extends Test
 	public function testAttributeNamesCanContainHyphens()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'data--foo', 'text');
+		$this->cb->addAttribute('a', 'data--foo');
 		$this->cb->attributeExists('a', 'data--foo');
 	}
 
@@ -267,7 +277,7 @@ class ConfigBuilderTest extends Test
 	public function testAttributeNamesMustStartWithALetterOrAnUnderscore()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', '-data--foo', 'text');
+		$this->cb->addAttribute('a', '-data--foo');
 	}
 
 	/**
@@ -287,8 +297,8 @@ class ConfigBuilderTest extends Test
 	public function testDuplicateAttributeNamesAreRejected()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'href', 'url');
-		$this->cb->addAttribute('a', 'href', 'text');
+		$this->cb->addAttribute('a', 'href', '#url');
+		$this->cb->addAttribute('a', 'href');
 	}
 
 	/**
@@ -297,10 +307,10 @@ class ConfigBuilderTest extends Test
 	public function testDifferentTagsCanHaveAttributesOfTheSameName()
 	{
 		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'href', 'url');
+		$this->cb->addAttribute('a', 'href', '#url');
 
 		$this->cb->addTag('link');
-		$this->cb->addAttribute('link', 'href', 'url');
+		$this->cb->addAttribute('link', 'href', '#url');
 	}
 
 	/**
@@ -313,21 +323,13 @@ class ConfigBuilderTest extends Test
 			'attrs' => array(
 				// the attribute names are uppercased to make sure they actually go through
 				// addAttribute where they are normalized
-				'HREF'  => array('type' => 'url'),
-				'TITLE' => array('type' => 'text')
+				'HREF'  => '#url',
+				'TITLE' => array()
 			)
 		));
 
-		$expected = array(
-			'A' => array(
-				'attrs' => array(
-					'href'  => array('type' => 'url'),
-					'title' => array('type' => 'text')
-				)
-			)
-		);
-
-		$this->assertArrayMatches($expected, $this->cb->getTagsConfig());
+		$this->cb->attributeExists('a', 'href');
+		$this->cb->attributeExists('a', 'title');
 	}
 
 	/**
@@ -1066,41 +1068,25 @@ class ConfigBuilderTest extends Test
 
 	public function testCanSetCustomFilter()
 	{
-		$this->cb->setFilter('foo', 'trim');
+		$callback = $this->newCallback('trim');
 
-		$this->assertArrayMatches(
-			array(
-				'foo' => array(
-					'callback' => 'trim'
-				)
-			),
-			$this->cb->getFiltersConfig()
-		);
+		$this->cb->setCustomFilter('foo', $callback);
+
+		$this->assertTrue($this->cb->hasCustomFilter('foo'));
 	}
 
-	public function testCanSetCustomJavascriptFilter()
+	public function testCustomFiltersAreStoredAsArraysInParserConfig()
 	{
-		$this->cb->setJSFilter('foo', 'return "foo";');
+		$callback = $this->newCallback('trim');
 
-		$this->assertArrayMatches(
-			array(
-				'foo' => array(
-					'js' => 'return "foo";'
-				)
-			),
-			$this->cb->getFiltersConfig(true)
-		);
-	}
-
-	public function testCustomJavascriptFiltersDoNotAppearInTheParserConfig()
-	{
-		$this->cb->setJSFilter('url', 'return "foo";');
+		$this->cb->setCustomFilter('foo', $callback);
 
 		$this->assertArrayMatches(
 			array(
 				'filters' => array(
-					'url' => array(
-						'js' => null
+					'#foo' => array(
+						'callback' => 'trim',
+						'params'   => array()
 					)
 				)
 			),
@@ -1108,51 +1094,23 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
-	/**
-	* @depends testCanSetCustomFilter
-	*/
-	public function testCustomFiltersArePassedTheAttributeValueIfNoParamsArrayWasSpecified()
+	public function testCustomJavascriptFiltersDoNotAppearInTheParserConfig()
 	{
-		$this->cb->setFilter('foo', 'trim');
+		$callback = $this->newCallback('trim');
+		$callback->setJavascript('return false');
 
-		$filtersConfig = $this->cb->getFiltersConfig();
-
-		$this->assertEquals(
-			array(
-				'callback' => 'trim',
-				'params'   => array('attrVal' => null)
-			),
-			$filtersConfig['foo']			
-		);
-	}
-
-	/**
-	* @depends testCanSetCustomFilter
-	*/
-	public function testCanSetCustomFilterWithParameters()
-	{
-		$filterConf = array(
-			'callback' => function($value, $min, $max) {},
-			'params'   => array('attrVal'  => false, 2, 5)
-		);
-
-		$this->cb->setFilter('range', $filterConf['callback'], $filterConf['params']);
+		$this->cb->setCustomFilter('foo', $callback);
 
 		$this->assertArrayMatches(
-			array('range' => $filterConf),
-			$this->cb->getFiltersConfig()
+			array(
+				'filters' => array(
+					'#foo' => array(
+						'js' => null
+					)
+				)
+			),
+			$this->cb->getParserConfig()
 		);
-	}
-
-	/**
-	* @test
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback 'does_not_exist' is not callable
-	* @testdox setFilter() throws an exception on invalid callback
-	*/
-	public function setFilter_throws_an_exception_on_invalid_callback()
-	{
-		$this->cb->setFilter('foo', 'does_not_exist');
 	}
 
 	/**
@@ -1166,33 +1124,16 @@ class ConfigBuilderTest extends Test
 		);
 	}
 
-	public function testUrlFilterAllowsDefaultSchemes()
-	{
-		$filtersConfig = $this->cb->getFiltersConfig();
-
-		$this->assertArrayHasNestedKeys(
-			$filtersConfig,
-			'url',
-			'allowedSchemes'
-		);
-
-		$this->assertRegexp($filtersConfig['url']['allowedSchemes'], 'http');
-		$this->assertRegexp($filtersConfig['url']['allowedSchemes'], 'https');
-	}
-
-	/**
-	* @depends testUrlFilterAllowsDefaultSchemes
-	*/
-	public function testUrlFilterCanBeConfiguredToAllowAdditionalSchemes()
+	public function testCanAllowAdditionalSchemes()
 	{
 		// first we check that the regexp isn't borked and doesn't allow just about anything
-		$filtersConfig = $this->cb->getFiltersConfig();
-		$this->assertNotRegexp($filtersConfig['url']['allowedSchemes'], 'foo');
+		$urlConfig = $this->cb->getUrlConfig();
+		$this->assertNotRegexp($urlConfig['allowedSchemes'], 'foo');
 
 		$this->cb->allowScheme('foo');
 
-		$filtersConfig = $this->cb->getFiltersConfig();
-		$this->assertRegexp($filtersConfig['url']['allowedSchemes'], 'foo');
+		$urlConfig = $this->cb->getUrlConfig();
+		$this->assertRegexp($urlConfig['allowedSchemes'], 'foo');
 	}
 
 	/**
@@ -1210,9 +1151,9 @@ class ConfigBuilderTest extends Test
 	*/
 	public function testThereIsNoDefaultSchemeForSchemelessURLsByDefault()
 	{
-		$filtersConfig = $this->cb->getFiltersConfig();
+		$urlConfig = $this->cb->getUrlConfig();
 
-		$this->assertArrayNotHasKey('defaultScheme', $filtersConfig['url']);
+		$this->assertArrayNotHasKey('defaultScheme', $urlConfig);
 	}
 
 	/**
@@ -1221,31 +1162,23 @@ class ConfigBuilderTest extends Test
 	public function testADefaultSchemeCanBeSetForSchemelessURLs()
 	{
 		$this->cb->setDefaultScheme('http');
-		$filtersConfig = $this->cb->getFiltersConfig();
+		$urlConfig = $this->cb->getUrlConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'url' => array(
-					'defaultScheme' => 'http'
-				)
-			),
-			$filtersConfig
+			array('defaultScheme' => 'http'),
+			$urlConfig
 		);
 	}
 
-	public function testUrlFilterCanBeConfiguredToDisallowHosts()
+	public function testCanDisallowHosts()
 	{
 		$this->cb->disallowHost('example.org');
 
-		$filtersConfig = $this->cb->getFiltersConfig();
+		$urlConfig = $this->cb->getUrlConfig();
 
-		$this->assertArrayHasNestedKeys(
-			$filtersConfig,
-			'url',
-			'disallowedHosts'
-		);
+		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
 
-		$this->assertRegexp($filtersConfig['url']['disallowedHosts'], 'example.org');
+		$this->assertRegexp($urlConfig['disallowedHosts'], 'example.org');
 	}
 
 	/**
@@ -1255,15 +1188,11 @@ class ConfigBuilderTest extends Test
 	{
 		$this->cb->resolveRedirectsFrom('bit.ly');
 
-		$filtersConfig = $this->cb->getFiltersConfig();
+		$urlConfig = $this->cb->getUrlConfig();
 
-		$this->assertArrayHasNestedKeys(
-			$filtersConfig,
-			'url',
-			'resolveRedirectsHosts'
-		);
+		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
 
-		$this->assertRegexp($filtersConfig['url']['resolveRedirectsHosts'], 'bit.ly');
+		$this->assertRegexp($urlConfig['resolveRedirectsHosts'], 'bit.ly');
 	}
 
 	/**
@@ -1273,17 +1202,13 @@ class ConfigBuilderTest extends Test
 	{
 		$this->cb->disallowHost('pаypal.com');
 
-		$filtersConfig = $this->cb->getFiltersConfig();
+		$urlConfig = $this->cb->getUrlConfig();
 
-		$this->assertArrayHasNestedKeys(
-			$filtersConfig,
-			'url',
-			'disallowedHosts'
-		);
+		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
 
 		$this->assertContains(
 			'xn--pypal-4ve\\.com',
-			$filtersConfig['url']['disallowedHosts']
+			$urlConfig['disallowedHosts']
 		);
 	}
 
@@ -1613,794 +1538,6 @@ class ConfigBuilderTest extends Test
 			'<xsl:template match="B"><b><xsl:apply-templates/></b></xsl:template>',
 			$this->cb->getXSL()
 		);
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateTag
-	*/
-	public function Can_add_a_preFilter_callback_to_a_tag()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addTagPreFilterCallback('a', 'trim');
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'preFilter' => array(
-						array('callback' => 'trim')
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateTag
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback 'uncallable' is not callable
-	*/
-	public function addTagPreFilterCallback_throws_an_exception_if_callback_is_not_callable()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addTagPreFilterCallback('a', 'uncallable');
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateTag
-	*/
-	public function Can_set_preFilter_callbacks_via_setTagOption()
-	{
-		$this->cb->addTag('a');
-		$this->cb->setTagOption('a', 'preFilter', array(
-			array('callback' => 'trim')
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'preFilter' => array(
-						array('callback' => 'trim')
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends Can_add_a_preFilter_callback_to_a_tag
-	*/
-	public function Can_clear_all_preFilter_callbacks_from_a_tag()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addTagPreFilterCallback('a', 'trim');
-
-		$this->cb->clearTagPreFilterCallbacks('a');
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'preFilter' => null
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateTag
-	*/
-	public function Can_add_a_postFilter_callback_to_a_tag()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addTagPostFilterCallback('a', 'trim');
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'postFilter' => array(
-						array('callback' => 'trim')
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateTag
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback 'uncallable' is not callable
-	*/
-	public function addTagPostFilterCallback_throws_an_exception_if_callback_is_not_callable()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addTagPostFilterCallback('a', 'uncallable');
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateTag
-	*/
-	public function Can_set_postFilter_callbacks_via_setTagOption()
-	{
-		$this->cb->addTag('a');
-		$this->cb->setTagOption('a', 'postFilter', array(
-			array('callback' => 'trim')
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'postFilter' => array(
-						array('callback' => 'trim')
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends Can_add_a_postFilter_callback_to_a_tag
-	*/
-	public function Can_clear_all_postFilter_callbacks_from_a_tag()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addTagPostFilterCallback('a', 'trim');
-
-		$this->cb->clearTagPostFilterCallbacks('a');
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'postFilter' => null
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setTagOption() accepts preFilter callbacks as an array of strings
-	*/
-	public function testTagPreFilterAsArrayOfStrings()
-	{
-		$this->cb->addTag('X', array('preFilter' => array('array_filter')));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'preFilter' => array(
-						array('callback' => 'array_filter')
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setTagOption() accepts a string for the "preFilter" option
-	*/
-	public function testTagPreFilterAsAString()
-	{
-		$this->cb->addTag('X', array('preFilter' => 'array_filter'));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'preFilter' => array(
-						array('callback' => 'array_filter')
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setTagOption() accepts postFilter callbacks as an array of strings
-	*/
-	public function testTagPostFilterAsArrayOfStrings()
-	{
-		$this->cb->addTag('X', array('postFilter' => array('array_filter')));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'postFilter' => array(
-						array('callback' => 'array_filter')
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setTagOption() accepts a string for the "postFilter" option
-	*/
-	public function testTagPostFilterAsAString()
-	{
-		$this->cb->addTag('X', array('postFilter' => 'array_filter'));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'postFilter' => array(
-						array('callback' => 'array_filter')
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @depends testTagPreFilterAsAString
-	* @testdox setTagOption() sets preFilter callbacks to receive the attributes array as sole parameter if params are not defined
-	*/
-	public function testTagPreFilterDefaultParams()
-	{
-		$this->cb->addTag('X', array('preFilter' => 'array_filter'));
-
-		$this->assertEquals(
-			array(
-				array(
-					'callback' => 'array_filter',
-					'params'   => array('attrs' => null)
-				)
-			),
-			$this->cb->getTagOption('X', 'preFilter')
-		);
-	}
-
-	/**
-	* @depends testTagPostFilterAsAString
-	* @testdox setTagOption() sets postFilter callbacks to receive the attributes array as sole parameter if params are not defined
-	*/
-	public function testTagPostFilterDefaultParams()
-	{
-		$this->cb->addTag('X', array('postFilter' => 'array_filter'));
-
-		$this->assertEquals(
-			array(
-				array(
-					'callback' => 'array_filter',
-					'params'   => array('attrs' => null)
-				)
-			),
-			$this->cb->getTagOption('X', 'postFilter')
-		);
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateAttribute
-	*/
-	public function Can_add_a_preFilter_callback_to_a_tag_attribute()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'title', 'text');
-		$this->cb->addAttributePreFilterCallback('a', 'title', 'trim');
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'attrs' => array(
-						'title' => array(
-							'preFilter' => array(
-								array('callback' => 'trim')
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateAttribute
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback 'uncallable' is not callable
-	*/
-	public function addAttributePreFilterCallback_throws_an_exception_if_callback_is_not_callable()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'title', 'text');
-		$this->cb->addAttributePreFilterCallback('a', 'title', 'uncallable');
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateAttribute
-	*/
-	public function Can_set_preFilter_callbacks_via_setAttributeOption()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'title', 'text');
-		$this->cb->setAttributeOption('a', 'title', 'preFilter', array(
-			array('callback' => 'trim')
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'attrs' => array(
-						'title' => array(
-							'preFilter' => array(
-								array('callback' => 'trim')
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends Can_add_a_preFilter_callback_to_a_tag_attribute
-	*/
-	public function Can_clear_all_preFilter_callbacks_from_a_tag_attribute()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'title', 'text');
-		$this->cb->addAttributePreFilterCallback('a', 'title', 'trim');
-
-		$this->cb->clearAttributePreFilterCallbacks('a', 'title');
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'attrs' => array(
-						'title' => array(
-							'preFilter' => null
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateAttribute
-	*/
-	public function Can_add_a_postFilter_callback_to_a_tag_attribute()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'title', 'text');
-		$this->cb->addAttributePostFilterCallback('a', 'title', 'trim');
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'attrs' => array(
-						'title' => array(
-							'postFilter' => array(
-								array('callback' => 'trim')
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateAttribute
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback 'uncallable' is not callable
-	*/
-	public function addAttributePostFilterCallback_throws_an_exception_if_callback_is_not_callable()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'title', 'text');
-		$this->cb->addAttributePostFilterCallback('a', 'title', 'uncallable');
-	}
-
-	/**
-	* @test
-	* @depends testCanCreateAttribute
-	*/
-	public function Can_set_postFilter_callbacks_via_setAttributeOption()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'title', 'text');
-		$this->cb->setAttributeOption('a', 'title', 'postFilter', array(
-			array('callback' => 'trim')
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'attrs' => array(
-						'title' => array(
-							'postFilter' => array(
-								array('callback' => 'trim')
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @test
-	* @depends Can_add_a_postFilter_callback_to_a_tag_attribute
-	*/
-	public function Can_clear_all_postFilter_callbacks_from_a_tag_attribute()
-	{
-		$this->cb->addTag('a');
-		$this->cb->addAttribute('a', 'title', 'text');
-		$this->cb->addAttributePostFilterCallback('a', 'title', 'trim');
-
-		$this->cb->clearAttributePostFilterCallbacks('a', 'title');
-
-		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'attrs' => array(
-						'title' => array(
-							'postFilter' => null
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() accepts preFilter callbacks as an array of strings
-	*/
-	public function testAttributePreFilterAsArrayOfStrings()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'preFilter' => array('strtolower', 'ucwords'))
-			)
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'attrs' => array(
-						'foo' => array(
-							'preFilter' => array(
-								array('callback' => 'strtolower'),
-								array('callback' => 'ucwords')
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() accepts a string for the "preFilter" option
-	*/
-	public function testAttributePreFilterAsAString()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'preFilter' => 'strtolower')
-			)
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'attrs' => array(
-						'foo' => array(
-							'preFilter' => array(
-								array('callback' => 'strtolower')
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() accepts postFilter callbacks as an array of strings
-	*/
-	public function testAttributePostFilterAsArrayOfStrings()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'postFilter' => array('strtolower', 'ucwords'))
-			)
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'attrs' => array(
-						'foo' => array(
-							'postFilter' => array(
-								array('callback' => 'strtolower'),
-								array('callback' => 'ucwords')
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() accepts a string for the "postFilter" option
-	*/
-	public function testAttributePostFilterAsAString()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'postFilter' => 'strtolower')
-			)
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'attrs' => array(
-						'foo' => array(
-							'postFilter' => array(
-								array('callback' => 'strtolower')
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() accepts preFilter callbacks as an array of callbacks
-	*/
-	public function testAttributePreFilterAsArrayOfCallbacks()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array(
-					'type' => 'text',
-					'preFilter' => array(
-						array(__CLASS__, 'filter'),
-						array(__CLASS__, 'filter')
-					)
-				)
-			)
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'attrs' => array(
-						'foo' => array(
-							'preFilter' => array(
-								array('callback' => array(__CLASS__, 'filter')),
-								array('callback' => array(__CLASS__, 'filter'))
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() accepts postFilter callbacks as an array of callbacks
-	*/
-	public function testAttributePostFilterAsArrayOfCallbacks()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array(
-					'type' => 'text',
-					'postFilter' => array(
-						array(__CLASS__, 'filter'),
-						array(__CLASS__, 'filter')
-					)
-				)
-			)
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'attrs' => array(
-						'foo' => array(
-							'postFilter' => array(
-								array('callback' => array(__CLASS__, 'filter')),
-								array('callback' => array(__CLASS__, 'filter'))
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() accepts a single callback for the "preFilter" option
-	*/
-	public function testAttributePreFilterAsACallback()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'preFilter' => array(__CLASS__, 'filter'))
-			)
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'attrs' => array(
-						'foo' => array(
-							'preFilter' => array(
-								array('callback' => array(__CLASS__, 'filter'))
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() accepts a single callback for the "postFilter" option
-	*/
-	public function testAttributePostFilterAsACallback()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'postFilter' => array(__CLASS__, 'filter'))
-			)
-		));
-
-		$this->assertArrayMatches(
-			array(
-				'X' => array(
-					'attrs' => array(
-						'foo' => array(
-							'postFilter' => array(
-								array('callback' => array(__CLASS__, 'filter'))
-							)
-						)
-					)
-				)
-			),
-			$this->cb->getTagsConfig()
-		);
-	}
-
-	/**
-	* @depends testAttributePreFilterAsAString
-	* @testdox setAttributeOption() sets preFilter callbacks to receive the attribute's value as sole parameter if params are not defined
-	*/
-	public function testAttributePreFilterDefaultParams()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'preFilter' => 'strtolower')
-			)
-		));
-
-		$this->assertEquals(
-			array(
-				array(
-					'callback' => 'strtolower',
-					'params'   => array('attrVal' => null)
-				)
-			),
-			$this->cb->getAttributeOption('X', 'foo', 'preFilter')
-		);
-	}
-
-	/**
-	* @depends testAttributePostFilterAsAString
-	* @testdox setAttributeOption() sets postFilter callbacks to receive the attribute's value as sole parameter if params are not defined
-	*/
-	public function testAttributePostFilterDefaultParams()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'postFilter' => 'strtolower')
-			)
-		));
-
-		$this->assertEquals(
-			array(
-				array(
-					'callback' => 'strtolower',
-					'params'   => array('attrVal' => null)
-				)
-			),
-			$this->cb->getAttributeOption('X', 'foo', 'postFilter')
-		);
-	}
-
-	/**
-	* @testdox setAttributeOption() throws an exception if a preFilter callback is not callable
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback 'foobar' is not callable
-	*/
-	public function testAttributePreFilterNotCallable()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'preFilter' => array('foobar'))
-			)
-		));
-	}
-
-	/**
-	* @testdox setAttributeOption() throws an exception if a postFilter callback is not callable
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback 'foobar' is not callable
-	*/
-	public function testAttributePostFilterNotCallable()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'postFilter' => array('foobar'))
-			)
-		));
-	}
-
-	/**
-	* @testdox setAttributeOption() throws an exception if a preFilter callback is not callable
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback config is missing the 'callback' key
-	*/
-	public function testAttributePreFilterMissingKey()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'preFilter' => array(array()))
-			)
-		));
-	}
-
-	/**
-	* @testdox setAttributeOption() throws an exception if a postFilter callback is not callable
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback config is missing the 'callback' key
-	*/
-	public function testAttributePostFilterMissingKey()
-	{
-		$this->cb->addTag('X', array(
-			'attrs' => array(
-				'foo' => array('type' => 'text', 'postFilter' => array(array()))
-			)
-		));
 	}
 
 	/**
@@ -2938,7 +2075,7 @@ class ConfigBuilderTest extends Test
 	public function testAnAttributeParserCanBeCreatedUsingTheNameOfAnExistingAttribute()
 	{
 		$this->cb->addTag('A');
-		$this->cb->addAttribute('A', 'x', 'text');
+		$this->cb->addAttribute('A', 'x');
 		$this->cb->addAttributeParser('A', 'x', '#(?<y>foo)#');
 
 		$this->assertArrayMatches(

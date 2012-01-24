@@ -251,44 +251,44 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox generateFiltersConfig() returns allowedSchemes regexp as an object
+	* @testdox generateUrlConfig() returns allowedSchemes regexp as an object
 	*/
-	public function test_generateFiltersConfig_returns_allowedSchemes_regexp_as_an_object()
+	public function test_generateUrlConfig_returns_allowedSchemes_regexp_as_an_object()
 	{
 		$this->initJSPG();
 
 		$this->assertContains(
 			'allowedSchemes:/^https?$/i',
-			$this->call($this->jspg, 'generateFiltersConfig')
+			$this->call($this->jspg, 'generateUrlConfig')
 		);
 	}
 
 	/**
-	* @testdox generateFiltersConfig() returns disallowedHosts regexp as an object
+	* @testdox generateUrlConfig() returns disallowedHosts regexp as an object
 	*/
-	public function test_generateFiltersConfig_returns_disallowedHosts_regexp_as_an_object()
+	public function test_generateUrlConfig_returns_disallowedHosts_regexp_as_an_object()
 	{
 		$this->cb->disallowHost('example.com');
 		$this->initJSPG();
 
 		$this->assertContains(
 			'disallowedHosts:/',
-			$this->call($this->jspg, 'generateFiltersConfig')
+			$this->call($this->jspg, 'generateUrlConfig')
 		);
 	}
 
 	/**
-	* @testdox generateFiltersConfig() converts unsupported lookbehind assertions from disallowedHosts regexp
-	* @depends test_generateFiltersConfig_returns_disallowedHosts_regexp_as_an_object
+	* @testdox generateUrlConfig() converts unsupported lookbehind assertions from disallowedHosts regexp
+	* @depends test_generateUrlConfig_returns_disallowedHosts_regexp_as_an_object
 	*/
-	public function test_generateFiltersConfig_converts_unsupported_lookbehind_assertions_from_disallowedHosts_regexp()
+	public function test_generateUrlConfig_converts_unsupported_lookbehind_assertions_from_disallowedHosts_regexp()
 	{
 		$this->cb->disallowHost('example.com');
 		$this->initJSPG();
 
 		$this->assertContains(
 			'/(?:^|\\.)example\\.com$/i',
-			$this->call($this->jspg, 'generateFiltersConfig')
+			$this->call($this->jspg, 'generateUrlConfig')
 		);
 	}
 
@@ -523,19 +523,6 @@ class JSParserGeneratorTest extends Test
 		);
 	}
 
-	/**
-	* @testdox Custom Javascript filters appear in the Javascript parser
-	*/
-	public function testCustomFilter()
-	{
-		$this->cb->setJSFilter('text', 'return "CUSTOM FILTER";');
-
-		$this->assertContains(
-			'return "CUSTOM FILTER";',
-			$this->jspg->get()
-		);
-	}
-
 	public function getHintsData()
 	{
 		$tests = array(
@@ -546,7 +533,9 @@ class JSParserGeneratorTest extends Test
 				'HINT.attrConfig.defaultValue is true is any attribute has a default value set',
 				array(
 					'attrs' => array(
-						'foo' => array('type' => 'int', 'defaultValue' => 1)
+						'foo' => array(
+							'defaultValue' => 1
+						)
 					)
 				)
 			),
@@ -554,45 +543,48 @@ class JSParserGeneratorTest extends Test
 				'HINT.attrConfig.defaultValue is true even if the default value is 0',
 				array(
 					'attrs' => array(
-						'foo' => array('type' => 'int', 'defaultValue' => 0)
-					)
-				)
-			),
-			array(
-				'HINT.attrConfig.isRequired is false by default'
-			),
-			array(
-				'HINT.attrConfig.isRequired is true is any attribute has the "isRequired" option enabled',
-				array(
-					'attrs' => array(
-						'foo' => array('type' => 'int', 'isRequired' => true)
-					)
-				)
-			),
-			array(
-				'HINT.attrConfig.postFilter is false by default'
-			),
-			array(
-				'HINT.attrConfig.postFilter is true if any attribute has a postFilter callback set',
-				array(
-					'attrs' => array(
 						'foo' => array(
-							'type' => 'int',
-							'postFilter' => array('strtolower')
+							'defaultValue' => 0
 						)
 					)
 				)
 			),
 			array(
-				'HINT.attrConfig.preFilter is false by default'
+				'HINT.attrConfig.forceUrlencode is false by default'
 			),
 			array(
-				'HINT.attrConfig.preFilter is true if any attribute has a preFilter callback set',
+				'HINT.attrConfig.forceUrlencode is true if any attribute of type "email" has the "forceUrlencode" option enabled',
 				array(
 					'attrs' => array(
 						'foo' => array(
-							'type' => 'int',
-							'preFilter' => array('strtolower')
+							'filter' => '#email',
+							'forceUrlencode' => true
+						)
+					)
+				)
+			),
+			array(
+				'HINT.attrConfig.required is false by default'
+			),
+			array(
+				'HINT.attrConfig.required is true is any attribute has the "required" option enabled',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'required' => true
+						)
+					)
+				)
+			),
+			array(
+				'HINT.attrConfig.filterChain is false by default'
+			),
+			array(
+				'HINT.attrConfig.filterChain is true if any attribute has a filter set',
+				array(
+					'attrs' => array(
+						'foo' => array(
+							'filter' => '#int'
 						)
 					)
 				)
@@ -712,38 +704,10 @@ class JSParserGeneratorTest extends Test
 				array('enableLivePreviewFastPath' => true)
 			),
 			array(
-				'HINT.filterConfig.email.forceUrlencode is false by default'
+				'HINT.urlConfig.disallowedHosts is false by default'
 			),
 			array(
-				'HINT.filterConfig.email.forceUrlencode is true if any attribute of type "email" has the "forceUrlencode" option enabled',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'email',
-							'forceUrlencode' => true
-						)
-					)
-				)
-			),
-			array(
-				'HINT.filterConfig.email.forceUrlencode is false by default'
-			),
-			array(
-				'HINT.filterConfig.email.forceUrlencode is true if any attribute of type "email" has the "forceUrlencode" option enabled',
-				array(
-					'attrs' => array(
-						'foo' => array(
-							'type' => 'email',
-							'forceUrlencode' => true
-						)
-					)
-				)
-			),
-			array(
-				'HINT.filterConfig.url.disallowedHosts is false by default'
-			),
-			array(
-				'HINT.filterConfig.url.disallowedHosts is true if any hostmask has been disallowed',
+				'HINT.urlConfig.disallowedHosts is true if any hostmask has been disallowed',
 				array(),
 				array(),
 				function($cb)
@@ -752,10 +716,10 @@ class JSParserGeneratorTest extends Test
 				}
 			),
 			array(
-				'HINT.filterConfig.url.defaultScheme is false by default'
+				'HINT.urlConfig.defaultScheme is false by default'
 			),
 			array(
-				'HINT.filterConfig.url.defaultScheme is true if a default scheme is set',
+				'HINT.urlConfig.defaultScheme is true if a default scheme is set',
 				array(),
 				array(),
 				function($cb)
@@ -993,9 +957,7 @@ class JSParserGeneratorTest extends Test
 				'HINT.tagConfig.attrs is true if a tag has an attribute',
 				array(
 					'attrs' => array(
-						'foo' => array(
-							'type' => 'text'
-						)
+						'foo' => array()
 					)
 				)
 			),
@@ -1031,20 +993,6 @@ class JSParserGeneratorTest extends Test
 			array(
 				'HINT.tagConfig.ltrimContent is true if any tag has the "ltrimContent" option enabled',
 				array('ltrimContent' => true)
-			),
-			array(
-				'HINT.tagConfig.postFilter is false by default'
-			),
-			array(
-				'HINT.tagConfig.postFilter is true if any tag has any postFilter callbacks set',
-				array('postFilter' => 'array_filter')
-			),
-			array(
-				'HINT.tagConfig.preFilter is false by default'
-			),
-			array(
-				'HINT.tagConfig.preFilter is true if any tag has any preFilter callbacks set',
-				array('preFilter' => 'array_filter')
 			),
 			array(
 				'HINT.tagConfig.rtrimContent is false by default'
@@ -1138,62 +1086,6 @@ class JSParserGeneratorTest extends Test
 				array('trimBefore' => true)
 			)
 		);
-
-		$attrTypes = array(
-			'color',
-			'email',
-			'float',
-			'id',
-			'identifier',
-			'int',
-			'integer',
-			'number',
-			'range',
-			'regexp',
-			'simpletext',
-			'text',
-			'uint',
-			'url'
-		);
-
-		foreach ($attrTypes as $name)
-		{
-			$Name = ucfirst($name);
-
-			$tests[] = 
-				array(
-					'HINT.keep' . $Name . 'Filter is false by default'
-				);
-
-			$tests[] = 
-				array(
-					'HINT.keep' . $Name . 'Filter is true if any tag has a "' . $name . '" attribute',
-					array(
-						'attrs' => array(
-							'foo' => array(
-								'type' => $name
-							)
-						)
-					)
-				);
-
-			$tests[] =
-				array(
-					'HINT.keep' . $Name . 'Filter is false if a custom JS filter is set for the "' . $name . '" type, even if a tag has a "' . $name . '" attribute',
-					array(
-						'attrs' => array(
-							'foo' => array(
-								'type' => $name
-							)
-						)
-					),
-					array(),
-					function($cb) use ($name)
-					{
-						$cb->setJSFilter($name, 'return attrVal;');
-					}
-				);
-		}
 
 		return $tests;
 	}

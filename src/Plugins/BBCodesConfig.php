@@ -23,7 +23,7 @@ class BBCodesConfig extends PluginConfig
 	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
 	*            system, etc...
 	*/
-	protected $allowedPhaseFiltersCallbacks = array(
+	protected $allowedFilterCallbacks = array(
 		'addslashes',
 		'intval',
 		'ltrim',
@@ -303,7 +303,6 @@ class BBCodesConfig extends PluginConfig
 			$this->cb->addAttribute(
 				$def['bbcodeName'],
 				$attrName,
-				$attrConf['type'],
 				$attrConf
 			);
 		}
@@ -537,7 +536,7 @@ class BBCodesConfig extends PluginConfig
 					}
 					else
 					{
-						// Just the option name, we assume the value is true, e.g. {URL;isRequired}
+						// Just the option name, we assume the value is true, e.g. {URL;required}
 						$optionName  = $pair;
 						$optionValue = true;
 					}
@@ -556,14 +555,12 @@ class BBCodesConfig extends PluginConfig
 									$callback = explode('::', $callback);
 								}
 
-								if (!in_array($callback, $this->allowedPhaseFiltersCallbacks, true))
+								if (!in_array($callback, $this->allowedFilterCallbacks, true))
 								{
 									throw new RuntimeException("Callback '" . $callback . "' is not allowed");
 								}
 
-								$attrConf[$optionName][] = array(
-									'callback' => $callback
-								);
+								$attrConf[$optionName][] = $callback;
 							}
 							break;
 
@@ -669,6 +666,34 @@ class BBCodesConfig extends PluginConfig
 			}
 
 			$placeholders[$identifier] = '@' . $attrName;
+
+			/**
+			* Merge the type/preFilter/postFiler values into this attribute's filterChain
+			*/
+			$attrConf['filterChain'] = array();
+
+			if (isset($attrConf['preFilter']))
+			{
+				foreach ($attrConf['preFilter'] as $callback)
+				{
+					$attrConf['filterChain'][] = $callback;
+				}
+			}
+
+			if ($attrConf['type'] !== 'text')
+			{
+				$attrConf['filterChain'][] = '#' . $attrConf['type'];
+			}
+
+			if (isset($attrConf['postFilter']))
+			{
+				foreach ($attrConf['postFilter'] as $callback)
+				{
+					$attrConf['filterChain'][] = $callback;
+				}
+			}
+
+			unset($attrConf['preFilter'], $attrConf['type'], $attrConf['postFilter']);
 
 			/**
 			* Add the attribute to the list
@@ -783,9 +808,9 @@ class BBCodesConfig extends PluginConfig
 	*
 	* @param callback $callback
 	*/
-	public function allowPhaseFiltersCallback($callback)
+	public function allowFilterCallback($callback)
 	{
-		$this->allowedPhaseFiltersCallbacks[] = $callback;
+		$this->allowedFilterCallbacks[] = $callback;
 	}
 
 	//==========================================================================

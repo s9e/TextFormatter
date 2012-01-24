@@ -43,11 +43,6 @@ class Parser
 	//==============================================================================================
 
 	/**
-	* @var array Logged messages, reinitialized whenever a text is parsed
-	*/
-	protected $log = array();
-
-	/**
 	* @var array Tags config
 	*/
 	protected $tagsConfig;
@@ -58,9 +53,9 @@ class Parser
 	protected $pluginsConfig;
 
 	/**
-	* @var array Filters config
+	* @var array Custom filters
 	*/
-	protected $filtersConfig;
+	protected $filters = array();
 
 	/**
 	* @var array Registered namespaces: [prefix => uri]
@@ -77,9 +72,19 @@ class Parser
 	*/
 	protected $pluginParsers = array();
 
+	/**
+	* @var array URL-specific config (disallowed hosts, allowed schemes, etc...)
+	*/
+	protected $urlConfig;
+
 	//==============================================================================================
 	// Per-formatting vars
 	//==============================================================================================
+
+	/**
+	* @var array Logged messages, reinitialized whenever a text is parsed
+	*/
+	protected $log = array();
 
 	/**
 	* @var string  Text being parsed
@@ -164,14 +169,19 @@ class Parser
 	*/
 	public function __construct(array $config)
 	{
-		$this->filtersConfig = $config['filters'];
 		$this->pluginsConfig = $config['plugins'];
 		$this->tagsConfig    = $config['tags'];
+		$this->urlConfig     = $config['urlConfig'];
 		$this->rootContext   = $config['rootContext'];
 
 		if (isset($config['namespaces']))
 		{
 			$this->registeredNamespaces = $config['namespaces'];
+		}
+
+		if (isset($config['filters']))
+		{
+			$this->filters = $config['filters'];
 		}
 	}
 
@@ -283,238 +293,6 @@ class Parser
 		}
 
 		$this->log[$type][] = $entry;
-	}
-
-	/**
-	* Filter a var according to the configuration's filters
-	*
-	* Used internally but made public so that developers can test in advance whether a var would be
-	* invalid. It mostly relies on PHP's own ext/filter extension but individual filters can be
-	* overwritten by the config
-	*
-	* @param  mixed  $attrVal    Attribute value to be filtered/sanitized
-	* @param  array  $attrConf   Attribute configuration
-	* @param  array  $filterConf Filter configuration
-	* @param  Parser $parser     The Parser instance that has called this filter
-	* @return mixed              The sanitized value of this attribute, or false if it was invalid
-	*/
-	static public function filter($attrVal, array $attrConf, array $filterConf, Parser $parser)
-	{
-		switch ($attrConf['type'])
-		{
-			case 'url':
-				$followedUrls = array();
-				checkUrl:
-
-				/**
-				* Trim the URL to conform with HTML5
-				* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
-				*/
-				$attrVal = trim($attrVal);
-
-				/**
-				* @var bool Whether to remove the scheme part of the URL
-				*/
-				$removeScheme = false;
-
-				if (substr($attrVal, 0, 2) === '//'
-				 && isset($filterConf['defaultScheme']))
-				{
-					 $attrVal = $filterConf['defaultScheme'] . ':' . $attrVal;
-					 $removeScheme = true;
-				}
-
-				/**
-				* Test whether the URL contains non-ASCII characters
-				*/
-				if (preg_match('#[\\x80-\\xff]#', $attrVal))
-				{
-					$attrVal = static::encodeUrlToAscii($attrVal);
-				}
-
-				$attrVal = filter_var($attrVal, FILTER_VALIDATE_URL);
-
-				if (!$attrVal)
-				{
-					return false;
-				}
-
-				$p = parse_url($attrVal);
-
-				if (!preg_match($filterConf['allowedSchemes'], $p['scheme']))
-				{
-					$parser->log('error', array(
-						'msg'    => "URL scheme '%s' is not allowed",
-						'params' => array($p['scheme'])
-					));
-					return false;
-				}
-
-				if (isset($filterConf['disallowedHosts'])
-				 && preg_match($filterConf['disallowedHosts'], $p['host']))
-				{
-					$parser->log('error', array(
-						'msg'    => "URL host '%s' is not allowed",
-						'params' => array($p['host'])
-					));
-					return false;
-				}
-
-				if (isset($filterConf['resolveRedirectsHosts'])
-				 && preg_match($filterConf['resolveRedirectsHosts'], $p['host'])
-				 && preg_match('#^https?#i', $p['scheme']))
-				{
-					if (isset($followedUrls[$attrVal]))
-					{
-						$parser->log('error', array(
-							'msg'    => 'Infinite recursion detected while following %s',
-							'params' => array($attrVal)
-						));
-						return false;
-					}
-
-					$url = self::getRedirectLocation($attrVal);
-
-					if ($url === false)
-					{
-						$parser->log('error', array(
-							'msg'    => 'Could not resolve %s',
-							'params' => array($attrVal)
-						));
-						return false;
-					}
-
-					if (isset($url))
-					{
-						$parser->log('debug', array(
-							'msg'    => 'Followed redirect from %1$s to %2$s',
-							'params' => array($attrVal, $url)
-						));
-
-						$followedUrls[$attrVal] = 1;
-						$attrVal = $url;
-
-						goto checkUrl;
-					}
-
-					$parser->log('debug', array(
-						'msg'    => 'No Location: received from %s',
-						'params' => array($attrVal)
-					));
-				}
-
-				$pos = strpos($attrVal, ':');
-
-				if ($removeScheme)
-				{
-					$attrVal = substr($attrVal, $pos + 1);
-				}
-				else
-				{
-					/**
-					* @link http://tools.ietf.org/html/rfc3986#section-3.1
-					*
-					* 'An implementation should accept uppercase letters as equivalent to lowercase
-					* in scheme names (e.g., allow "HTTP" as well as "http") for the sake of
-					* robustness but should only produce lowercase scheme names for consistency.'
-					*/
-					$attrVal = strtolower(substr($attrVal, 0, $pos)) . substr($attrVal, $pos);
-				}
-
-				/**
-				* We URL-encode quotes just in case someone would want to use the URL in some
-				* Javascript thingy
-				*/
-				return strtr($attrVal, array("'" => '%27', '"' => '%22'));
-
-			case 'identifier':
-			case 'id':
-				return filter_var($attrVal, FILTER_VALIDATE_REGEXP, array(
-					'options' => array('regexp' => '#^[A-Za-z0-9\\-_]+$#D')
-				));
-
-			case 'simpletext':
-				return filter_var($attrVal, FILTER_VALIDATE_REGEXP, array(
-					'options' => array('regexp' => '#^[A-Za-z0-9\\-+.,_ ]+$#D')
-				));
-
-			case 'text':
-				return (string) $attrVal;
-
-			case 'email':
-				$attrVal = filter_var($attrVal, FILTER_VALIDATE_EMAIL);
-
-				if (!$attrVal)
-				{
-					return false;
-				}
-
-				if (!empty($attrConf['forceUrlencode']))
-				{
-					$attrVal = '%' . implode('%', str_split(bin2hex($attrVal), 2));
-				}
-
-				return $attrVal;
-
-			case 'int':
-			case 'integer':
-				return filter_var($attrVal, FILTER_VALIDATE_INT);
-
-			case 'float':
-				return filter_var($attrVal, FILTER_VALIDATE_FLOAT);
-
-			case 'number':
-				return (preg_match('#^[0-9]+$#D', $attrVal))
-				      ? $attrVal
-				      : false;
-
-			case 'uint':
-				return filter_var($attrVal, FILTER_VALIDATE_INT, array(
-					'options' => array('min_range' => 0)
-				));
-
-			case 'range':
-				$attrVal = filter_var($attrVal, FILTER_VALIDATE_INT);
-
-				if ($attrVal === false)
-				{
-					return false;
-				}
-
-				if ($attrVal < $attrConf['min'])
-				{
-					$parser->log('warning', array(
-						'msg'    => 'Value outside of range, adjusted up to %d',
-						'params' => array($attrConf['min'])
-					));
-					return $attrConf['min'];
-				}
-
-				if ($attrVal > $attrConf['max'])
-				{
-					$parser->log('warning', array(
-						'msg'    => 'Value outside of range, adjusted down to %d',
-						'params' => array($attrConf['max'])
-					));
-					return $attrConf['max'];
-				}
-
-				return $attrVal;
-
-			case 'color':
-				return filter_var($attrVal, FILTER_VALIDATE_REGEXP, array(
-					'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
-				));
-
-			case 'regexp':
-				return (preg_match($attrConf['regexp'], $attrVal, $match)) ? $attrVal : false;
-		}
-
-		$parser->log('debug', array(
-			'msg'    => "Unknown filter '%s'",
-			'params' => array($attrConf['type'])
-		));
-		return false;
 	}
 
 	/**
@@ -1132,7 +910,7 @@ class Parser
 	}
 
 	/**
-	* Process currentTag
+	* Process current tag
 	*/
 	protected function processCurrentTag()
 	{
@@ -1198,7 +976,7 @@ class Parser
 
 		/**
 		* 1. Check that this tag has not reached its global limit tagLimit
-		* 2. Filter this tag's attributes
+		* 2. Filter this tag's attributes and check for missing attributes
 		* 3. Apply closeParent and closeAncestor rules
 		* 4. Check for nestingLimit
 		* 5. Apply requireParent and requireAncestor rules
@@ -1210,25 +988,14 @@ class Parser
 		* have been closed by a rule.)
 		*/
 		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit']
-		 || $this->processCurrentAttributes()
+		 || !$this->filterAttributes()
 		 || $this->closeParent()
 		 || $this->closeAncestor()
 		 || $this->cntOpen[$tagName]  >= $tagConfig['nestingLimit']
 		 || $this->requireParent()
-		 || $this->requireAncestor())
+		 || $this->requireAncestor()
+		 || !$this->tagIsAllowed($tagName))
 		{
-			return;
-		}
-
-		/**
-		* Ensure that this tag is allowed here
-		*/
-		if (!$this->tagIsAllowed($tagName))
-		{
-			$this->log('debug', array(
-				'msg'    => 'Tag %s is not allowed in this context',
-				'params' => array($tagName)
-			));
 			return;
 		}
 
@@ -1640,332 +1407,125 @@ class Parser
 	}
 
 	/**
-	* Process attributes from current tag
-	*
-	* Will add default values, execute phase callbacks and remove undefined attributes.
-	*
-	* @return bool Whether the set of attributes is invalid
-	*/
-	protected function processCurrentAttributes()
-	{
-		if (empty($this->tagsConfig[$this->currentTag['name']]['attrs']))
-		{
-			/**
-			* Remove all attributes if none are defined for this tag
-			*/
-			$this->currentTag['attrs'] = array();
-		}
-		else
-		{
-			/**
-			* Handle reparsable attributes
-			*/
-			$this->parseAttributes();
-
-			/**
-			* Filter attributes
-			*/
-			$this->filterAttributes();
-
-			/**
-			* Add default values
-			*/
-			$this->addDefaultAttributeValuesToCurrentTag();
-
-			/**
-			* Check for missing required attributes
-			*/
-			if ($this->currentTagRequiresMissingAttribute())
-			{
-				return true;
-			}
-
-			/**
-			* Sort attributes alphabetically. Can be useful if someone wants to process the
-			* output using regexps
-			*/
-			ksort($this->currentTag['attrs']);
-		}
-
-		return false;
-	}
-
-	/**
-	* Test whether current tag is missing any required attributes
-	*
-	* @return bool
-	*/
-	protected function currentTagRequiresMissingAttribute()
-	{
-		$missingAttrs = array_diff_key(
-			$this->tagsConfig[$this->currentTag['name']]['attrs'],
-			$this->currentTag['attrs']
-		);
-
-		foreach ($missingAttrs as $attrName => $attrConf)
-		{
-			if (empty($attrConf['isRequired']))
-			{
-				continue;
-			}
-
-			$this->log('error', array(
-				'msg'    => "Missing attribute '%s'",
-				'params' => array($attrName)
-			));
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	* Add default values to current tag's attributes
-	*/
-	protected function addDefaultAttributeValuesToCurrentTag()
-	{
-		$missingAttrs = array_diff_key(
-			$this->tagsConfig[$this->currentTag['name']]['attrs'],
-			$this->currentTag['attrs']
-		);
-
-		foreach ($missingAttrs as $attrName => $attrConf)
-		{
-			if (isset($attrConf['defaultValue']))
-			{
-				$this->currentTag['attrs'][$attrName] = $attrConf['defaultValue'];
-			}
-		}
-	}
-
-	/**
 	* Filter attributes from current tag
+	*
+	* Will execute attribute parsers if applicable, then it will filter the attributes, replacing
+	* invalid attributes with their default value or returning FALSE if a required attribute is
+	* missing or invalid (and with no default value.)
+	*
+	* @return bool Whether the set of attributes is valid
 	*/
 	protected function filterAttributes()
 	{
 		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
 
-		/**
-		* Tag-level preFilter callbacks
-		*/
-		$this->applyTagPreFilterCallbacks();
+		if (empty($tagConfig['attrs']))
+		{
+			// No attributes defined
+			$this->currentTag['attrs'] = array();
 
-		/**
-		* Remove undefined attributes
-		*/
-		$this->removeUndefinedAttributesFromCurrentTag();
+			return true;
+		}
 
-		/**
-		* Filter each attribute
-		*/
-		foreach ($this->currentTag['attrs'] as $attrName => $originalVal)
+		// Handle parsable attributes
+		$this->parseAttributes();
+
+		// Save the current attribute values then reset current tag's attributes
+		$attrVals = $this->currentTag['attrs'];
+		$this->currentTag['attrs'] = array();
+
+		foreach ($tagConfig['attrs'] as $attrName => $attrConf)
 		{
 			$this->currentAttribute = $attrName;
 
-			// execute preFilter callbacks
-			$this->applyAttributePreFilterCallbacks();
+			// The initialize with an invalid value. If the attribute is missing, we treat it as if
+			// it was invalid
+			$attrVal = false;
 
-			// do filter/validate current attribute
-			$this->filterCurrentAttribute();
-
-			// if the value is invalid, log the occurence, remove the attribute then skip to the
-			// next attribute
-			if ($this->currentTag['attrs'][$attrName] === false)
+			// If the attribute exists, filter it
+			if (isset($attrVals[$attrName]))
 			{
-				$this->log('error', array(
-					'msg'    => "Invalid attribute '%s'",
-					'params' => array($attrName)
-				));
+				$attrVal = $this->filterAttribute($attrVals[$attrName], $attrConf);
 
-				unset($this->currentTag['attrs'][$attrName]);
-
-				continue;
-			}
-
-			// execute postFilter callbacks
-			$this->applyAttributePostFilterCallbacks();
-
-			if ($originalVal !== $this->currentTag['attrs'][$attrName])
-			{
-				$this->log('debug', array(
-					'msg'    => 'Attribute value was altered by the filter '
-					          . '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
-					'params' => array(
-						$attrName,
-						var_export($originalVal, true),
-						var_export($this->currentTag['attrs'][$attrName], true)
-					)
-				));
-			}
-		}
-		unset($this->currentAttribute);
-
-		/**
-		* Tag-level postFilter callbacks
-		*/
-		$this->applyTagPostFilterCallbacks();
-	}
-
-	/**
-	* Removed undefined attributes from current tag
-	*/
-	protected function removeUndefinedAttributesFromCurrentTag()
-	{
-		$this->currentTag['attrs'] = array_intersect_key(
-			$this->currentTag['attrs'],
-			$this->tagsConfig[$this->currentTag['name']]['attrs']
-		);
-	}
-
-	/**
-	* Filter current attribute
-	*/
-	protected function filterCurrentAttribute()
-	{
-		$tagConfig   = $this->tagsConfig[$this->currentTag['name']];
-		$attrConf    = $tagConfig['attrs'][$this->currentAttribute];
-		$filterConf  = (isset($this->filtersConfig[$attrConf['type']]))
-		             ? $this->filtersConfig[$attrConf['type']]
-		             : array();
-
-		// if a filter isn't set for that type, use the built-in method
-		if (!isset($filterConf['callback']))
-		{
-			$filterConf['callback'] = array(__CLASS__, 'filter');
-			$filterConf['params']   = array(
-				'attrVal'    => null,
-				'attrConf'   => null,
-				'filterConf' => $filterConf,
-				'parser'     => null
-			);
-		}
-
-		// filter the value
-		$this->currentTag['attrs'][$this->currentAttribute] = $this->applyCallback(
-			$filterConf,
-			array(
-				'attrVal'  => $this->currentTag['attrs'][$this->currentAttribute],
-				'attrConf' => $attrConf
-			)
-		);
-	}
-
-	/**
-	* Execute/apply the preFilter callbacks from current tag
-	*/
-	protected function applyTagPreFilterCallbacks()
-	{
-		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
-
-		if (isset($tagConfig['preFilter']))
-		{
-			foreach ($tagConfig['preFilter'] as $callbackConf)
-			{
-				$this->currentTag['attrs'] = $this->applyCallback(
-					$callbackConf,
-					array('attrs' => $this->currentTag['attrs'])
-				);
-			}
-		}
-	}
-
-	/**
-	* Execute/apply the postFilter callbacks from current tag
-	*/
-	protected function applyTagPostFilterCallbacks()
-	{
-		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
-
-		if (isset($tagConfig['postFilter']))
-		{
-			foreach ($tagConfig['postFilter'] as $callbackConf)
-			{
-				$this->currentTag['attrs'] = $this->applyCallback(
-					$callbackConf,
-					array('attrs' => $this->currentTag['attrs'])
-				);
-			}
-		}
-	}
-
-	/**
-	* Execute/apply preFilter callbacks to current attribute
-	*/
-	protected function applyAttributePreFilterCallbacks()
-	{
-		$attrConf = $this->tagsConfig[$this->currentTag['name']]['attrs'][$this->currentAttribute];
-
-		if (!empty($attrConf['preFilter']))
-		{
-			foreach ($attrConf['preFilter'] as $callbackConf)
-			{
-				$this->currentTag['attrs'][$this->currentAttribute] = $this->applyCallback(
-					$callbackConf,
-					array('attrVal' => $this->currentTag['attrs'][$this->currentAttribute])
-				);
-			}
-		}
-	}
-
-	/**
-	* Execute/apply postFilter callbacks to current attribute
-	*/
-	protected function applyAttributePostFilterCallbacks()
-	{
-		$attrConf = $this->tagsConfig[$this->currentTag['name']]['attrs'][$this->currentAttribute];
-
-		if (!empty($attrConf['postFilter']))
-		{
-			foreach ($attrConf['postFilter'] as $callbackConf)
-			{
-				$this->currentTag['attrs'][$this->currentAttribute] = $this->applyCallback(
-					$callbackConf,
-					array('attrVal' => $this->currentTag['attrs'][$this->currentAttribute])
-				);
-			}
-		}
-	}
-
-	/**
-	* Apply a callback and return the result
-	*
-	* @param  array $conf   Callback configuration. Must have a "callback" element and can have an
-	*                       optional "params" element. If there's no "params" element, $value is
-	*                       passed as the only argument to the callback
-	* @param  array $values Values used to replace values found in the "params" element
-	* @return mixed
-	*/
-	protected function applyCallback(array $conf, array $values = array())
-	{
-		$params = array();
-
-		if (isset($conf['params']))
-		{
-			/**
-			* Replace the dynamic parameters with their current value
-			*/
-			$values += array(
-				'parser'        => $this,
-				'tagsConfig'    => $this->tagsConfig,
-				'filtersConfig' => $this->filtersConfig
-			);
-
-			foreach (array('currentTag', 'currentAttribute') as $k)
-			{
-				if (isset($this->$k) && !isset($values[$k]))
+				if ($attrVal === false)
 				{
-					$values[$k] = $this->$k;
+					// The attribute is invalid
+					$this->log('error', array(
+						'msg'    => "Invalid attribute '%s'",
+						'params' => array($attrName)
+					));
 				}
 			}
 
-			$params = array_replace(
-				$conf['params'],
-				array_intersect_key($values, $conf['params'])
-			);
+			// If the attribute is missing or invalid...
+			if ($attrVal === false)
+			{
+				if (isset($attrConf['defaultValue']))
+				{
+					// Use its default value
+					$attrVal = $attrConf['defaultValue'];
+				}
+				elseif (!empty($attrConf['required']))
+				{
+					// No default value and the attribute is required... log it and bail
+					$this->log('error', array(
+						'msg'    => "Missing attribute '%s'",
+						'params' => array($attrName)
+					));
+
+					return false;
+				}
+				else
+				{
+					// The attribute is invalid but it's not required so we move on to the next one
+					continue;
+				}
+			}
+
+			// We have a value for this attribute, we can add it back to the tag
+			$this->currentTag['attrs'][$attrName] = $attrVal;
 		}
 
-		return call_user_func_array($conf['callback'], $params);
+		return true;
+	}
+
+	/**
+	* Filter an attribute value according to given config
+	*
+	* @param  mixed $attrVal  Attribute value
+	* @param  array $attrConf Attribute vconfig
+	* @return mixed           Filtered value, or FALSE if invalid
+	*/
+	protected function filterAttribute($attrVal, array $attrConf)
+	{
+		if (!empty($attrConf['filterChain']))
+		{
+			// Execute each filter of the chain, in order
+			foreach ($attrConf['filterChain'] as $filter)
+			{
+				// Call the filter
+				$attrVal = $this->callFilter(
+					$filter,
+					array(
+						'attrVal'  => $attrVal,
+						'attrConf' => $attrConf,
+						'parser'   => $this
+					),
+					array(
+						'attrVal'  => null,
+						'attrConf' => null,
+					)
+				);
+
+				// If the attribute is invalid, we break the chain and return FALSE
+				if ($attrVal === false)
+				{
+					return false;
+				}
+			}
+		}
+
+		return $attrVal;
 	}
 
 	/**
@@ -2017,13 +1577,221 @@ class Parser
 		$this->currentTag['attrs'] += $attrs;
 	}
 
+	//==========================================================================
+	// Filters and callbacks handling
+	//==========================================================================
+
+	/**
+	* Call a filter
+	*
+	* @param  mixed $filter     Either a string that represent a callback, or an array with at least
+	*                           a "callback" key containing a valid callback
+	* @params array $values     Values to be used as parameters for the callback
+	* @params array $defaultSig Default signature for the callback
+	* @return mixed             Callback's return value, or FALSE in case of error
+	*/
+	protected function callFilter($filter, array $values, array $defaultSig)
+	{
+		// Test whether the filter is a built-in (possible custom) filter
+		if (is_string($filter) && $filter[0] === '#')
+		{
+			if (isset($this->filters[$filter]))
+			{
+				// This is a custom filter, replace the string with the definition
+				$filter = $this->filters[$filter];
+			}
+			else
+			{
+				// Use the built-in filter
+				$methodName = 'validate' . ucfirst(substr($filter, 1));
+
+				if (!method_exists($this, $methodName))
+				{
+					$this->log('debug', array(
+						'msg'    => "Unknown filter '%s'",
+						'params' => array($filter)
+					));
+
+					return false;
+				}
+
+				$filter = array(
+					'callback' => array($this, $methodName)
+				);
+			}
+		}
+
+		// Prepare the actual callback and its signature if applicable
+		$callback  = $filter['callback'];
+		$signature = (isset($filter['params']))
+		           ? $filter['params']
+		           : $defaultSig;
+
+		// Parameters to be passed to the callback
+		$params = array();
+
+		foreach ($signature as $k => $v)
+		{
+			if (is_numeric($k))
+			{
+				$params[] = $v;
+			}
+			elseif (isset($values[$k]))
+			{
+				$params[] = $values[$k];
+			}
+			else
+			{
+				$this->log('error', array(
+					'msg'    => "Unknown callback parameter '%s'",
+					'params' => array($k)
+				));
+
+				return false;
+			}
+		}
+
+		return call_user_func_array($callback, $params);
+	}
+
+	//==========================================================================
+	// Built-in filters
+	//==========================================================================
+
+	protected function validateUrl($url)
+	{
+		$followedUrls = array();
+		checkUrl:
+
+		/**
+		* Trim the URL to conform with HTML5
+		* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
+		*/
+		$url = trim($url);
+
+		/**
+		* @var bool Whether to remove the scheme part of the URL
+		*/
+		$removeScheme = false;
+
+		if (substr($url, 0, 2) === '//'
+		 && isset($this->urlConfig['defaultScheme']))
+		{
+			 $url = $this->urlConfig['defaultScheme'] . ':' . $url;
+			 $removeScheme = true;
+		}
+
+		/**
+		* Test whether the URL contains non-ASCII characters
+		*/
+		if (preg_match('#[\\x80-\\xff]#', $url))
+		{
+			$url = self::encodeUrlToAscii($url);
+		}
+
+		$url = filter_var($url, FILTER_VALIDATE_URL);
+
+		if (!$url)
+		{
+			return false;
+		}
+
+		$p = parse_url($url);
+
+		if (!preg_match($this->urlConfig['allowedSchemes'], $p['scheme']))
+		{
+			$this->log('error', array(
+				'msg'    => "URL scheme '%s' is not allowed",
+				'params' => array($p['scheme'])
+			));
+			return false;
+		}
+
+		if (isset($this->urlConfig['disallowedHosts'])
+		 && preg_match($this->urlConfig['disallowedHosts'], $p['host']))
+		{
+			$this->log('error', array(
+				'msg'    => "URL host '%s' is not allowed",
+				'params' => array($p['host'])
+			));
+			return false;
+		}
+
+		if (isset($this->urlConfig['resolveRedirectsHosts'])
+		 && preg_match($this->urlConfig['resolveRedirectsHosts'], $p['host'])
+		 && preg_match('#^https?#i', $p['scheme']))
+		{
+			if (isset($followedUrls[$url]))
+			{
+				$this->log('error', array(
+					'msg'    => 'Infinite recursion detected while following %s',
+					'params' => array($url)
+				));
+				return false;
+			}
+
+			$redirect = $this->getRedirectLocation($url);
+
+			if ($redirect === false)
+			{
+				$this->log('error', array(
+					'msg'    => 'Could not resolve %s',
+					'params' => array($url)
+				));
+				return false;
+			}
+
+			if (isset($redirect))
+			{
+				$this->log('debug', array(
+					'msg'    => 'Followed redirect from %1$s to %2$s',
+					'params' => array($url, $redirect)
+				));
+
+				$followedUrls[$url] = 1;
+				$url = $redirect;
+
+				goto checkUrl;
+			}
+
+			$this->log('debug', array(
+				'msg'    => 'No Location: received from %s',
+				'params' => array($url)
+			));
+		}
+
+		$pos = strpos($url, ':');
+
+		if ($removeScheme)
+		{
+			$url = substr($url, $pos + 1);
+		}
+		else
+		{
+			/**
+			* @link http://tools.ietf.org/html/rfc3986#section-3.1
+			*
+			* 'An implementation should accept uppercase letters as equivalent to lowercase in
+			* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
+			* should only produce lowercase scheme names for consistency.'
+			*/
+			$url = strtolower(substr($url, 0, $pos)) . substr($url, $pos);
+		}
+
+		/**
+		* We URL-encode quotes just in case someone would want to use the URL in some
+		* Javascript thingy
+		*/
+		return strtr($url, array("'" => '%27', '"' => '%22'));
+	}
+
 	/**
 	* Get the "Location:" value returned by an HTTP(S) query
 	*
 	* @param  string $url Request URL
 	* @return mixed       Location URL if applicable, FALSE in case of error, NULL if no Location
 	*/
-	static protected function getRedirectLocation($url)
+	protected function getRedirectLocation($url)
 	{
 		$fp = @fopen(
 			$url,
@@ -2032,7 +1800,7 @@ class Parser
 			stream_context_create(array(
 				'http' => array(
 					// Bit.ly doesn't like HEAD =\
-//					'method' => 'HEAD',
+					//'method' => 'HEAD',
 					'header' => "Connection: close\r\n",
 					'follow_location' => false
 				)
@@ -2087,5 +1855,104 @@ class Parser
 			},
 			$url
 		);
+	}
+
+	protected function validateId($id)
+	{
+		return filter_var($id, FILTER_VALIDATE_REGEXP, array(
+			'options' => array('regexp' => '#^[A-Za-z0-9\\-_]+$#D')
+		));
+	}
+
+	protected function validateSimpletext($text)
+	{
+		return filter_var($text, FILTER_VALIDATE_REGEXP, array(
+			'options' => array('regexp' => '#^[A-Za-z0-9\\-+.,_ ]+$#D')
+		));
+	}
+
+	protected function validateEmail($email, array $attrConf)
+	{
+		$email = filter_var($email, FILTER_VALIDATE_EMAIL);
+
+		if (!$email)
+		{
+			return false;
+		}
+
+		if (!empty($attrConf['forceUrlencode']))
+		{
+			$email = '%' . implode('%', str_split(bin2hex($email), 2));
+		}
+
+		return $email;
+	}
+
+	protected function validateInt($int)
+	{
+		return filter_var($int, FILTER_VALIDATE_INT);
+	}
+
+	protected function validateFloat($float)
+	{
+		return filter_var($float, FILTER_VALIDATE_FLOAT);
+	}
+
+	protected function validateNumber($number)
+	{
+		return (preg_match('#^[0-9]+$#D', $number))
+			  ? $number
+			  : false;
+	}
+
+	protected function validateUint($uint)
+	{
+		return filter_var($uint, FILTER_VALIDATE_INT, array(
+			'options' => array('min_range' => 0)
+		));
+	}
+
+	protected function validateRange($number, array $attrConf)
+	{
+		$number = filter_var($number, FILTER_VALIDATE_INT);
+
+		if ($number === false)
+		{
+			return false;
+		}
+
+		if ($number < $attrConf['min'])
+		{
+			$this->log('warning', array(
+				'msg'    => 'Value outside of range, adjusted up to %d',
+				'params' => array($attrConf['min'])
+			));
+			return $attrConf['min'];
+		}
+
+		if ($number > $attrConf['max'])
+		{
+			$this->log('warning', array(
+				'msg'    => 'Value outside of range, adjusted down to %d',
+				'params' => array($attrConf['max'])
+			));
+			return $attrConf['max'];
+		}
+
+		return $number;
+	}
+
+	protected function validateColor($color)
+	{
+		return filter_var($color, FILTER_VALIDATE_REGEXP, array(
+			'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
+		));
+	}
+
+	protected function validateRegexp($attrVal, array $attrConf)
+	{
+		return (preg_match($attrConf['regexp'], $attrVal, $match))
+		     ? $attrVal
+		     : false;
 	}
 }

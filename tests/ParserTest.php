@@ -45,21 +45,13 @@ class ParserTest extends Test
 	{
 		if (!is_array($attrConf))
 		{
-			$attrConf = array('type' => $attrConf);
+			$attrConf = array('filterChain' => array('#' . $attrConf));
 		}
 
-		$filtersConfig = $this->cb->getFiltersConfig();
-
-		if (!isset($filtersConfig[$attrConf['type']]))
-		{
-			$filtersConfig[$attrConf['type']] = array();
-		}
-
-		$actualVal = Parser::filter(
-			$attrVal,
-			$attrConf,
-			$filtersConfig[$attrConf['type']],
-			$this->parser
+		$actualVal = $this->call(
+			$this->parser,
+			'filterAttribute',
+			array($attrVal, $attrConf)
 		);
 
 		$this->assertArrayMatches($expectedLog, $this->parser->getLog());
@@ -286,123 +278,6 @@ class ParserTest extends Test
 	public function Filter_int_rejects_numbers_in_hex_notation()
 	{
 		$this->assertAttributeIsInvalid('int', '0x123');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" accepts strings made entirely of digits
-	*/
-	public function Filter_integer_accepts_strings_made_entirely_of_digits()
-	{
-		$this->assertAttributeIsValid('integer', '123');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects strings that starts with digits
-	*/
-	public function Filter_integer_rejects_strings_that_starts_with_digits()
-	{
-		$this->assertAttributeIsInvalid('integer', '123abc');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" accepts integers
-	*/
-	public function Filter_integer_accepts_integers()
-	{
-		$this->assertAttributeIsValid('integer', 123);
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects numbers that start with a zero
-	*/
-	public function Filter_integer_rejects_numbers_that_start_with_a_zero()
-	{
-		$this->assertAttributeIsInvalid('integer', '0123');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" accepts negative numbers
-	*/
-	public function Filter_integer_accepts_negative_numbers()
-	{
-		$this->assertAttributeIsValid('integer', '-123');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects decimal numbers
-	*/
-	public function Filter_integer_rejects_decimal_numbers()
-	{
-		$this->assertAttributeIsInvalid('integer', '12.3');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects floats
-	*/
-	public function Filter_integer_rejects_floats()
-	{
-		$this->assertAttributeIsInvalid('integer', 12.3);
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects numbers too big for the PHP integer type
-	*/
-	public function Filter_integer_rejects_numbers_too_big_for_the_PHP_integer_type()
-	{
-		$this->assertAttributeIsInvalid('integer', '9999999999999999999');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects positive numbers in E notation
-	*/
-	public function Filter_integer_rejects_positive_numbers_in_E_notation()
-	{
-		$this->assertAttributeIsInvalid('integer', '12e3');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects negative numbers in E notation
-	*/
-	public function Filter_integer_rejects_negative_numbers_in_E_notation()
-	{
-		$this->assertAttributeIsInvalid('integer', '-12e3');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects positive numbers in E notation with a negative exponent
-	*/
-	public function Filter_integer_rejects_positive_numbers_in_E_notation_with_a_negative_exponent()
-	{
-		$this->assertAttributeIsInvalid('integer', '12e-3');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects negative numbers in E notation with a negative exponent
-	*/
-	public function Filter_integer_rejects_negative_numbers_in_E_notation_with_a_negative_exponent()
-	{
-		$this->assertAttributeIsInvalid('integer', '-12e-3');
-	}
-
-	/**
-	* @test
-	* @testdox Filter "integer" rejects numbers in hex notation
-	*/
-	public function Filter_integer_rejects_numbers_in_hex_notation()
-	{
-		$this->assertAttributeIsInvalid('integer', '0x123');
 	}
 
 	/**
@@ -857,7 +732,6 @@ class ParserTest extends Test
 		$this->assertAttributeIsValid('url', '//www.example.com');
 	}
 
-
 	/**
 	* @testdox The default scheme used for validation does not appear in the filtered URL
 	*/
@@ -1241,9 +1115,9 @@ class ParserTest extends Test
 	{
 		$this->assertAttributeIsValid(
 			array(
-				'type' => 'range',
-				'min'  => 5,
-				'max'  => 10
+				'filterChain' => array('#range'),
+				'min' => 5,
+				'max' => 10
 			),
 			8
 		);
@@ -1253,9 +1127,9 @@ class ParserTest extends Test
 	{
 		$this->assertAttributeIsValid(
 			array(
-				'type' => 'range',
-				'min'  => -5,
-				'max'  => 10
+				'filterChain' => array('#range'),
+				'min' => -5,
+				'max' => 10
 			),
 			8
 		);
@@ -1265,9 +1139,9 @@ class ParserTest extends Test
 	{
 		$this->assertAttributeIsInvalid(
 			array(
-				'type' => 'range',
-				'min'  => 5,
-				'max'  => 10
+				'filterChain' => array('#range'),
+				'min' => 5,
+				'max' => 10
 			),
 			8.4
 		);
@@ -1277,9 +1151,9 @@ class ParserTest extends Test
 	{
 		$this->assertAttributeIsValid(
 			array(
-				'type' => 'range',
-				'min'  => 5,
-				'max'  => 10
+				'filterChain' => array('#range'),
+				'min' => 5,
+				'max' => 10
 			),
 			3,
 			5,
@@ -1298,9 +1172,9 @@ class ParserTest extends Test
 	{
 		$this->assertAttributeIsValid(
 			array(
-				'type' => 'range',
-				'min'  => 5,
-				'max'  => 10
+				'filterChain' => array('#range'),
+				'min' => 5,
+				'max' => 10
 			),
 			30,
 			10,
@@ -1341,7 +1215,10 @@ class ParserTest extends Test
 	public function testRegexpFilterAcceptsContentThatMatches()
 	{
 		$this->assertAttributeIsValid(
-			array('type' => 'regexp', 'regexp' => '#^[A-Z]$#D'),
+			array(
+				'filterChain' => array('#regexp'),
+				'regexp'      => '#^[A-Z]$#D'
+			),
 			'J'
 		);
 	}
@@ -1349,7 +1226,10 @@ class ParserTest extends Test
 	public function testRegexpFilterRejectsContentThatDoesNotMatch()
 	{
 		$this->assertAttributeIsInvalid(
-			array('type' => 'regexp', 'regexp' => '#^[A-Z]$#D'),
+			array(
+				'filterChain' => array('#regexp'),
+				'regexp'      => '#^[A-Z]$#D'
+			),
 			'8'
 		);
 	}
@@ -1367,7 +1247,10 @@ class ParserTest extends Test
 	public function testEmailFilterCanUrlencodeEveryCharacterOfAValidEmailIfForceUrlencodeIsOn()
 	{
 		$this->assertAttributeIsValid(
-			array('type' => 'email', 'forceUrlencode' => true),
+			array(
+				'filterChain'    => array('#email'),
+				'forceUrlencode' => true
+			),
 			'example@example.com',
 			'%65%78%61%6d%70%6c%65%40%65%78%61%6d%70%6c%65%2e%63%6f%6d'
 		);
@@ -1376,7 +1259,10 @@ class ParserTest extends Test
 	public function testEmailFilterWillNotUrlencodeAnInvalidEmailEvenIfForceUrlencodeIsOn()
 	{
 		$this->assertAttributeIsInvalid(
-			array('type' => 'email', 'forceUrlencode' => true),
+			array(
+				'filterChain'    => array('#email'),
+				'forceUrlencode' => true
+			),
 			'example@invalid?'
 		);
 	}
@@ -1391,7 +1277,7 @@ class ParserTest extends Test
 				'debug' => array(
 					array(
 						'msg'    => "Unknown filter '%s'",
-						'params' => array('whoknows')
+						'params' => array('#whoknows')
 					)
 				)
 			)
@@ -1408,17 +1294,18 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addAttribute('X', 'y', 'mytype');
+		$this->cb->addAttribute('X', 'y', '#mytype');
 
-		$this->cb->setFilter(
-			'mytype',
+		$filter = $this->newCallback(
 			function($parser)
 			{
 				$parser->log('error', array('msg' => 'mytype error'));
 				return false;
-			},
-			array('parser' => null)
+			}
 		);
+		$filter->addParameterByName('parser');
+
+		$this->cb->setCustomFilter('mytype', $filter);
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 1,
@@ -1445,92 +1332,6 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @test
-	*/
-	public function Tag_level_preFilter_callback_receives_an_associative_array_of_attributes_which_gets_replaced_by_its_return_value()
-	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
-
-		$this->cb->addTag('X', array(
-			'preFilter' => array(
-				array(
-					'callback' =>
-						function($attrs)
-						{
-							// add an attribute
-							$attrs['z'] = 'zval';
-
-							return array_map('strtoupper', $attrs);
-						}
-				)
-			)
-		));
-		$this->cb->addAttribute('X', 'x', 'text');
-		$this->cb->addAttribute('X', 'y', 'text');
-		$this->cb->addAttribute('X', 'z', 'text');
-
-		$this->cb->Canned->tags[] = array(
-			'pos'   => 0,
-			'len'   => 1,
-			'name'  => 'X',
-			'type'  => Parser::SELF_CLOSING_TAG,
-			'attrs' => array(
-				'x' => 'xval',
-				'y' => 'yval'
-			)
-		);
-
-		$this->assertParsing(
-			'.',
-			'<rt><X x="XVAL" y="YVAL" z="ZVAL">.</X></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function Tag_level_postFilter_callback_receives_an_associative_array_of_attributes_which_gets_replaced_by_its_return_value()
-	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
-
-		$this->cb->addTag('X', array(
-			'postFilter' => array(
-				array(
-					'callback' =>
-						function($attrs)
-						{
-							// add an attribute
-							$attrs['z'] = 'zval';
-
-							return array_map('strtoupper', $attrs);
-						}
-				)
-			)
-		));
-		$this->cb->addAttribute('X', 'x', 'text');
-		$this->cb->addAttribute('X', 'y', 'text');
-		$this->cb->addAttribute('X', 'z', 'text');
-
-		$this->cb->Canned->tags[] = array(
-			'pos'   => 0,
-			'len'   => 1,
-			'name'  => 'X',
-			'type'  => Parser::SELF_CLOSING_TAG,
-			'attrs' => array(
-				'x' => 'xval',
-				'y' => 'yval'
-			)
-		);
-
-		$this->assertParsing(
-			'.',
-			'<rt><X x="XVAL" y="YVAL" z="ZVAL">.</X></rt>'
-		);
-	}
-
-	/**
 	* @testdox Attribute parsers remove the original attribute if their regexp matches
 	*/
 	public function testAttributesAreSplitIfValidThenRemoved()
@@ -1539,8 +1340,8 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false));
-		$this->cb->addAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'x', array('filter' => '#int', 'required' => false));
+		$this->cb->addAttribute('X', 'y', array('filter' => '#int', 'required' => false));
 		$this->cb->addAttributeParser('X', 'xy', '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D');
 
 		$this->cb->Canned->tags[] = array(
@@ -1563,8 +1364,8 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false));
-		$this->cb->addAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'x', array('filter' => '#int', 'required' => false));
+		$this->cb->addAttribute('X', 'y', array('filter' => '#int', 'required' => false));
 		$this->cb->addAttributeParser('X', 'xy', '#^(?P<x>[0-9]+),(?P<y>[0-9]+)$#D');
 
 		$this->cb->Canned->tags[] = array(
@@ -1587,7 +1388,11 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
+		$this->cb->addAttribute('X', 'x', array(
+			'filter'   => '#int',
+			'required' => false,
+			'defaultValue' => 42
+		));
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1617,8 +1422,8 @@ class ParserTest extends Test
 		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
 
 		$this->cb->addTag('X');
-		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false));
-		$this->cb->addAttribute('X', 'y', 'int', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'x', array('filter' => '#int', 'required' => false));
+		$this->cb->addAttribute('X', 'y', array('filter' => '#int', 'required' => false));
 		$this->cb->addAttributeParser('X', 'xy', '#^(?<x>[0-9]+),(?<y>[0-9]+)$#D');
 
 		$this->cb->Canned->tags[] = array(
@@ -1638,7 +1443,7 @@ class ParserTest extends Test
 	public function testMissingAttributesUseTheirDefaultValueIfSet()
 	{
 		$this->canTags();
-		$this->cb->addAttribute('X', 'x', 'int', array('isRequired' => false, 'defaultValue' => 42));
+		$this->cb->addAttribute('X', 'x', array('filter' => '#int', 'required' => false, 'defaultValue' => 42));
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1654,12 +1459,12 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @testdox A missing attribute with no default value causes its tag to be skipped and an error to be logged if it has the option "isRequired" true
+	* @testdox A missing attribute with no default value causes its tag to be skipped and an error to be logged if it has the option "required" true
 	*/
 	public function testMissingRequiredAttribute()
 	{
 		$this->canTags();
-		$this->cb->addAttribute('X', 'y', 'text', array('isRequired' => true));
+		$this->cb->addAttribute('X', 'y', array('required' => true));
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1684,12 +1489,12 @@ class ParserTest extends Test
 	}
 
 	/**
-	* @testdox A missing attribute with no default value does not causes its tag to be skipped if it has the option "isRequired" false
+	* @testdox A missing attribute with no default value does not causes its tag to be skipped if it has the option "required" false
 	*/
 	public function testMissingNotRequiredAttribute()
 	{
 		$this->canTags();
-		$this->cb->addAttribute('X', 'y', 'text', array('isRequired' => false));
+		$this->cb->addAttribute('X', 'y', array('required' => false));
 
 		$this->cb->Canned->tags[] = array(
 			'pos'   => 0,
@@ -1702,60 +1507,6 @@ class ParserTest extends Test
 		$this->assertParsing(
 			'.',
 			'<rt><X>.</X></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function Attribute_value_is_replaced_by_the_return_value_of_the_attribute_preFilter_callbacks()
-	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
-
-		$this->cb->addTag('X');
-		$this->cb->addAttribute('X', 'x', 'int', array('preFilter' => array(
-			array('callback' => function($attrVal) { return 42; })
-		)));
-
-		$this->cb->Canned->tags[] = array(
-			'pos'   => 0,
-			'len'   => 1,
-			'name'  => 'X',
-			'type'  => Parser::SELF_CLOSING_TAG,
-			'attrs' => array('x' => 'invalid')
-		);
-
-		$this->assertParsing(
-			'.',
-			'<rt><X x="42">.</X></rt>'
-		);
-	}
-
-	/**
-	* @test
-	*/
-	public function Attribute_value_is_replaced_by_the_return_value_of_the_attribute_postFilter_callbacks_even_if_it_makes_it_invalid()
-	{
-		include_once __DIR__ . '/includes/CannedConfig.php';
-		$this->cb->loadPlugin('Canned', __NAMESPACE__ . '\\CannedConfig');
-
-		$this->cb->addTag('X');
-		$this->cb->addAttribute('X', 'x', 'int', array('postFilter' => array(
-			array('callback' => function($attrVal) { return 'invalid'; })
-		)));
-
-		$this->cb->Canned->tags[] = array(
-			'pos'   => 0,
-			'len'   => 1,
-			'name'  => 'X',
-			'type'  => Parser::SELF_CLOSING_TAG,
-			'attrs' => array('x' => 42)
-		);
-
-		$this->assertParsing(
-			'.',
-			'<rt><X x="invalid">.</X></rt>'
 		);
 	}
 
@@ -3128,15 +2879,7 @@ class ParserTest extends Test
 
 		$this->assertParsing(
 			'[b]stuff[/b]',
-			'<pt>[b]stuff[/b]</pt>',
-			array(
-				'debug' => array(
-					array(
-						'msg'     => 'Tag %s is not allowed in this context',
-						'params'  => array('B')
-					)
-				)
-			)
+			'<pt>[b]stuff[/b]</pt>'
 		);
 	}
 

@@ -245,7 +245,7 @@ class BBCodesConfigTest extends Test
 	public function setBBCodeOption_can_set_a_single_defaultAttr()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->addAttribute('A', 'href', 'url');
+		$this->cb->addAttribute('A', 'href', '#url');
 		$this->cb->BBCodes->setBBCodeOption('A', 'defaultAttr', 'href');
 
 		$this->assertArrayMatches(
@@ -279,8 +279,8 @@ class BBCodesConfigTest extends Test
 	public function setBBCodeOption_multiple_contentAttrs()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->addAttribute('A', 'href', 'url');
-		$this->cb->addAttribute('A', 'foo', 'text');
+		$this->cb->addAttribute('A', 'href', '#url');
+		$this->cb->addAttribute('A', 'foo');
 		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttrs', array('href', 'foo'));
 
 		$this->assertArrayMatches(
@@ -302,7 +302,7 @@ class BBCodesConfigTest extends Test
 	public function setBBCodeOption_single_contentAttr()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->addAttribute('A', 'href', 'url');
+		$this->cb->addAttribute('A', 'href', '#url');
 		$this->cb->BBCodes->setBBCodeOption('A', 'contentAttr', 'href');
 
 		$this->assertArrayMatches(
@@ -324,8 +324,8 @@ class BBCodesConfigTest extends Test
 	public function setBBCodeOptions_with_both_contentAttr_and_contentAttrs()
 	{
 		$this->cb->BBCodes->addBBCode('A');
-		$this->cb->addAttribute('A', 'href', 'url');
-		$this->cb->addAttribute('A', 'foo', 'text');
+		$this->cb->addAttribute('A', 'href', '#url');
+		$this->cb->addAttribute('A', 'foo');
 		$this->cb->BBCodes->setBBCodeOptions(
 			'A',
 			array(
@@ -492,7 +492,7 @@ class BBCodesConfigTest extends Test
 		$this->assertSame('a', $this->cb->BBCodes->getBBCodeOption('A', 'defaultAttr'));
 
 		$this->assertTrue($this->cb->attributeExists('A', 'a'));
-		$this->assertSame('url', $this->cb->getAttributeOption('A', 'a', 'type'));
+		$this->assertSame(array('#url'), $this->cb->getAttributeOption('A', 'a', 'filterChain'));
 	}
 
 	/**
@@ -517,16 +517,17 @@ class BBCodesConfigTest extends Test
 	*/
 	public function addBBCodeFromExample_handles_single_preFilter_callback_in_attribute()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B={ID;preFilter=strtolower}]{TEXT}[/B]',
-			'<b/>'
+		$def = $this->cb->BBCodes->parseBBCodeDefinition(
+			'[B={ID;preFilter=strtolower}]{TEXT}[/B]'
 		);
 
 		$this->assertArrayMatches(
 			array(
-				array('callback' => 'strtolower')
+				'attrs' => array(
+					'b' => array('filterChain' => array('strtolower', '#id'))
+				)
 			),
-			$this->cb->getAttributeOption('B', 'b', 'preFilter')
+			$def
 		);
 	}
 
@@ -537,17 +538,60 @@ class BBCodesConfigTest extends Test
 	*/
 	public function addBBCodeFromExample_handles_multiple_preFilter_callbacks_in_attribute()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B={ID;preFilter=strtolower,ucfirst}]{TEXT}[/B]',
-			'<b/>'
+		$def = $this->cb->BBCodes->parseBBCodeDefinition(
+			'[B={ID;preFilter=strtolower,ucfirst}]{TEXT}[/B]'
 		);
 
 		$this->assertArrayMatches(
 			array(
-				array('callback' => 'strtolower'),
-				array('callback' => 'ucfirst')
+				'attrs' => array(
+					'b' => array('filterChain' => array('strtolower', 'ucfirst', '#id'))
+				)
 			),
-			$this->cb->getAttributeOption('B', 'b', 'preFilter')
+			$def
+		);
+	}
+
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
+	* @testdox addBBCodeFromExample() handles single postFilter callback in attribute
+	*/
+	public function addBBCodeFromExample_handles_single_postFilter_callback_in_attribute()
+	{
+		$def = $this->cb->BBCodes->parseBBCodeDefinition(
+			'[B={ID;postFilter=strtolower}]{TEXT}[/B]'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				'attrs' => array(
+					'b' => array('filterChain' => array('#id', 'strtolower'))
+				)
+			),
+			$def
+		);
+	}
+
+	/**
+	* @test
+	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attribute
+	* @testdox addBBCodeFromExample() handles multiple postFilter callbacks in attribute
+	*/
+	public function addBBCodeFromExample_handles_multiple_postFilter_callbacks_in_attribute()
+	{
+		$def = $this->cb->BBCodes->parseBBCodeDefinition(
+			'[B={ID;postFilter=strtolower,ucfirst}]{TEXT}[/B]'
+		);
+
+		$this->assertArrayMatches(
+			array(
+				'attrs' => array(
+					'b' => array('filterChain' => array('#id', 'strtolower', 'ucfirst'))
+				)
+			),
+			$def
 		);
 	}
 
@@ -556,12 +600,18 @@ class BBCodesConfigTest extends Test
 	*/
 	public function testBBCodeExampleAttributeOptionsShortForm()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B b={ID;foo}]{TEXT}[/B]',
-			'<b/>'
+		$def = $this->cb->BBCodes->parseBBCodeDefinition(
+			'[B b={ID;foo}]{TEXT}[/B]'
 		);
 
-		$this->assertTrue($this->cb->getAttributeOption('B', 'b', 'foo'));
+		$this->assertArrayMatches(
+			array(
+				'attrs' => array(
+					'b' => array('foo' => true)
+				)
+			),
+			$def
+		);
 	}
 
 	/**
@@ -576,47 +626,6 @@ class BBCodesConfigTest extends Test
 		$this->cb->BBCodes->addBBCodeFromExample(
 			'[B={ID;preFilter=system}]{TEXT}[/B]',
 			'<b/>'
-		);
-	}
-
-	/**
-	* @test
-	* @depends addBBCodeFromExample_handles_default_attribute_and_gives_it_the_same_name_as_the_tag
-	* @testdox addBBCodeFromExample() handles single postFilter callback in attribute
-	*/
-	public function addBBCodeFromExample_handles_single_postFilter_callback_in_attribute()
-	{
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B={ID;postFilter=strtolower}]{TEXT}[/B]',
-			'<b/>'
-		);
-
-		$this->assertArrayMatches(
-			array(
-				array('callback' => 'strtolower')
-			),
-			$this->cb->getAttributeOption('B', 'b', 'postFilter')
-		);
-	}
-
-	/**
-	* @test
-	* @depends addBBCodeFromExample_handles_single_postFilter_callback_in_attribute
-	* @testdox addBBCodeFromExample() handles multiple postFilter callbacks in attribute
-	*/
-	public function addBBCodeFromExample_handles_multiple_postFilter_callbacks_in_attribute()
-	{
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B={ID;postFilter=strtolower,ucfirst}]{TEXT}[/B]',
-			'<b/>'
-		);
-
-		$this->assertArrayMatches(
-			array(
-				array('callback' => 'strtolower'),
-				array('callback' => 'ucfirst')
-			),
-			$this->cb->getAttributeOption('B', 'b', 'postFilter')
 		);
 	}
 
@@ -638,22 +647,23 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attribute
-	* @testdox Custom callbacks can be added via BBCodesConfig::allowPhaseFiltersCallback()
+	* @testdox Custom callbacks can be added via BBCodesConfig::allowFilterCallback()
 	*/
-	public function Custom_callbacks_can_be_added_via_BBCodesConfig_allowPhaseFiltersCallback()
+	public function Custom_callbacks_can_be_added_via_BBCodesConfig_allowFilterCallback()
 	{
-		$this->cb->BBCodes->allowPhaseFiltersCallback('system');
+		$this->cb->BBCodes->allowFilterCallback('system');
 
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B={ID;preFilter=system}]{TEXT}[/B]',
-			'<b/>'
+		$def = $this->cb->BBCodes->parseBBCodeDefinition(
+			'[B={ID;preFilter=system}]{TEXT}[/B]'
 		);
 
 		$this->assertArrayMatches(
 			array(
-				array('callback' => 'system')
+				'attrs' => array(
+					'b' => array('filterChain' => array('system', '#id'))
+				)
 			),
-			$this->cb->getAttributeOption('B', 'b', 'preFilter')
+			$def
 		);
 	}
 
@@ -665,22 +675,23 @@ class BBCodesConfigTest extends Test
 	/**
 	* @test
 	* @depends addBBCodeFromExample_rejects_unauthorized_preFilter_callbacks_in_attribute
-	* @testdox Static method callbacks can be added via BBCodesConfig::allowPhaseFiltersCallback()
+	* @testdox Static method callbacks can be added via BBCodesConfig::allowFilterCallback()
 	*/
-	public function Static_method_callbacks_can_be_added_via_BBCodesConfig_allowPhaseFiltersCallback()
+	public function Static_method_callbacks_can_be_added_via_BBCodesConfig_allowFilterCallback()
 	{
-		$this->cb->BBCodes->allowPhaseFiltersCallback(array(__CLASS__, 'foo'));
+		$this->cb->BBCodes->allowFilterCallback(array(__CLASS__, 'foo'));
 
-		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B={ID;preFilter=' . __CLASS__ . '::foo}]{TEXT}[/B]',
-			'<b/>'
+		$def = $this->cb->BBCodes->parseBBCodeDefinition(
+			'[B={ID;preFilter=' . __CLASS__ . '::foo}]{TEXT}[/B]'
 		);
 
 		$this->assertArrayMatches(
 			array(
-				array('callback' => array(__CLASS__, 'foo'))
+				'attrs' => array(
+					'b' => array('filterChain' => array(array(__CLASS__, 'foo'), '#id'))
+				)
 			),
-			$this->cb->getAttributeOption('B', 'b', 'preFilter')
+			$def
 		);
 	}
 
@@ -843,7 +854,7 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('regexp', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame(array('#regexp'), $this->cb->getAttributeOption('B', 'b', 'filterChain'));
 		$this->assertSame('/^foo$/', $this->cb->getAttributeOption('B', 'b', 'regexp'));
 	}
 
@@ -917,11 +928,11 @@ class BBCodesConfigTest extends Test
 	public function addBBCodeFromExample_does_not_overwrite_attributes_PARSE_attributes()
 	{
 		$this->cb->BBCodes->addBBCodeFromExample(
-			'[B x={INT;isRequired=0}]{PARSE=/^(?<x>[0-9]+),(?<y>[0-9]+)$/}[/B]',
+			'[B x={INT;required=0}]{PARSE=/^(?<x>[0-9]+),(?<y>[0-9]+)$/}[/B]',
 			'<b/>'
 		);
 
-		$this->assertEquals(0, $this->cb->getAttributeOption('B', 'x', 'isRequired'));
+		$this->assertEquals(0, $this->cb->getAttributeOption('B', 'x', 'required'));
 	}
 
 	/**
@@ -952,7 +963,7 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('range', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame(array('#range'), $this->cb->getAttributeOption('B', 'b', 'filterChain'));
 		$this->assertSame(-10, $this->cb->getAttributeOption('B', 'b', 'min'));
 		$this->assertSame(20, $this->cb->getAttributeOption('B', 'b', 'max'));
 	}
@@ -969,7 +980,7 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('regexp', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame(array('#regexp'), $this->cb->getAttributeOption('B', 'b', 'filterChain'));
 		$this->assertSame('#^(?:bar|foo|quux)$#iD', $this->cb->getAttributeOption('B', 'b', 'regexp'));
 	}
 
@@ -985,7 +996,7 @@ class BBCodesConfigTest extends Test
 			'<b/>'
 		);
 
-		$this->assertSame('regexp', $this->cb->getAttributeOption('B', 'b', 'type'));
+		$this->assertSame(array('#regexp'), $this->cb->getAttributeOption('B', 'b', 'filterChain'));
 		$this->assertSame('#^(?:桜|オレンジ)$#iDu', $this->cb->getAttributeOption('B', 'b', 'regexp'));
 	}
 

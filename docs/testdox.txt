@@ -94,18 +94,14 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Can set tag template with variable in an attribute whose name starts with on with unsafe flag
  [x] Can set tag template with escaped curly brackets in an attribute whose name starts with on without unsafe flag
  [x] Can set custom filter
- [x] Can set custom javascript filter
+ [x] Custom filters are stored as arrays in parser config
  [x] Custom javascript filters do not appear in the parser config
- [x] Custom filters are passed the attribute value if no params array was specified
- [x] Can set custom filter with parameters
- [x] setFilter() throws an exception on invalid callback
  [x] HTTP and HTTPS schemes are allowed by default
- [x] Url filter allows default schemes
- [x] Url filter can be configured to allow additional schemes
+ [x] Can allow additional schemes
  [x] allowScheme() throws an exception on invalid scheme names
  [x] There is no default scheme for schemeless URLs by default
  [x] A default scheme to be used for URLs with no scheme can be set with setDefaultScheme()
- [x] Url filter can be configured to disallow hosts
+ [x] Can disallow hosts
  [x] Url filter can be configured to resolve redirects from a given host
  [x] Disallowed IDNs are punycoded
  [x] getParserConfig() removes rules that target non existing tags
@@ -127,40 +123,6 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Simple templates using an <xsl:apply-templates/> mode are not merged
  [x] Simple templates with attributes are not merged
  [x] Simple templates are not merged if there are less than 3 of them
- [x] Can add a preFilter callback to a tag
- [x] addTagPreFilterCallback throws an exception if callback is not callable
- [x] Can set preFilter callbacks via setTagOption
- [x] Can clear all preFilter callbacks from a tag
- [x] Can add a postFilter callback to a tag
- [x] addTagPostFilterCallback throws an exception if callback is not callable
- [x] Can set postFilter callbacks via setTagOption
- [x] Can clear all postFilter callbacks from a tag
- [x] setTagOption() accepts preFilter callbacks as an array of strings
- [x] setTagOption() accepts a string for the "preFilter" option
- [x] setTagOption() accepts postFilter callbacks as an array of strings
- [x] setTagOption() accepts a string for the "postFilter" option
- [x] setTagOption() sets preFilter callbacks to receive the attributes array as sole parameter if params are not defined
- [x] setTagOption() sets postFilter callbacks to receive the attributes array as sole parameter if params are not defined
- [x] Can add a preFilter callback to a tag attribute
- [x] addAttributePreFilterCallback throws an exception if callback is not callable
- [x] Can set preFilter callbacks via setAttributeOption
- [x] Can clear all preFilter callbacks from a tag attribute
- [x] Can add a postFilter callback to a tag attribute
- [x] addAttributePostFilterCallback throws an exception if callback is not callable
- [x] Can set postFilter callbacks via setAttributeOption
- [x] Can clear all postFilter callbacks from a tag attribute
- [x] setAttributeOption() accepts preFilter callbacks as an array of strings
- [x] setAttributeOption() accepts a string for the "preFilter" option
- [x] setAttributeOption() accepts postFilter callbacks as an array of strings
- [x] setAttributeOption() accepts a string for the "postFilter" option
- [x] setAttributeOption() accepts preFilter callbacks as an array of callbacks
- [x] setAttributeOption() accepts postFilter callbacks as an array of callbacks
- [x] setAttributeOption() accepts a single callback for the "preFilter" option
- [x] setAttributeOption() accepts a single callback for the "postFilter" option
- [x] setAttributeOption() sets preFilter callbacks to receive the attribute's value as sole parameter if params are not defined
- [x] setAttributeOption() sets postFilter callbacks to receive the attribute's value as sole parameter if params are not defined
- [x] setAttributeOption() throws an exception if a preFilter callback is not callable
- [x] setAttributeOption() throws an exception if a postFilter callback is not callable
  [x] getJSParser() returns the Javascript source of the parser
  [x] The array of option passed to getJSParser() is passed to the JS parser generator
  [x] getJSPlugins() returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
@@ -203,9 +165,9 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] encodeArray() can use TRUE as a wildcard
  [x] encodeArray() preserves reserved words
  [x] encodeArray() can preserve raw JS
- [x] generateFiltersConfig() returns allowedSchemes regexp as an object
- [x] generateFiltersConfig() returns disallowedHosts regexp as an object
- [x] generateFiltersConfig() converts unsupported lookbehind assertions from disallowedHosts regexp
+ [x] generateUrlConfig() returns allowedSchemes regexp as an object
+ [x] generateUrlConfig() returns disallowedHosts regexp as an object
+ [x] generateUrlConfig() converts unsupported lookbehind assertions from disallowedHosts regexp
  [x] encodePluginConfig() removes parserClassName from config
  [x] encodePluginConfig() removes parserFilepath from config
  [x] encodePluginConfig() convert scalar regexp to a RegExp object with g flag
@@ -219,7 +181,6 @@ s9e\TextFormatter\Tests\JSParserGenerator
  [x] JSParserGenerator throws an exception if Google Closure Compiler returns an error
  [x] The "unsafeMinification" option indiscriminately renames all occurences of properties that share their name with DOM properties, except if their variable's names ends with "Node" or "Attr"
  [x] setOptimizationHints() works and you'll have to look into tests/JSParserGeneratorTest.php to have more details about it, until PHPUnit provides a way to generate a better testdox with data providers
- [x] Custom Javascript filters appear in the Javascript parser
 
 s9e\TextFormatter\Tests\Parser
  [x] Ouput is UTF8
@@ -236,19 +197,6 @@ s9e\TextFormatter\Tests\Parser
  [x] Filter "int" rejects positive numbers in E notation with a negative exponent
  [x] Filter "int" rejects negative numbers in E notation with a negative exponent
  [x] Filter "int" rejects numbers in hex notation
- [x] Filter "integer" accepts strings made entirely of digits
- [x] Filter "integer" rejects strings that starts with digits
- [x] Filter "integer" accepts integers
- [x] Filter "integer" rejects numbers that start with a zero
- [x] Filter "integer" accepts negative numbers
- [x] Filter "integer" rejects decimal numbers
- [x] Filter "integer" rejects floats
- [x] Filter "integer" rejects numbers too big for the PHP integer type
- [x] Filter "integer" rejects positive numbers in E notation
- [x] Filter "integer" rejects negative numbers in E notation
- [x] Filter "integer" rejects positive numbers in E notation with a negative exponent
- [x] Filter "integer" rejects negative numbers in E notation with a negative exponent
- [x] Filter "integer" rejects numbers in hex notation
  [x] Filter "uint" accepts strings made entirely of digits
  [x] Filter "uint" rejects strings that starts with digits
  [x] Filter "uint" accepts integers
@@ -342,17 +290,13 @@ s9e\TextFormatter\Tests\Parser
  [x] Email filter will not urlencode an invalid email even if force urlencode is on
  [x] Undefined filter rejects everything
  [x] Attribute name is added to log entries when available
- [x] Tag level preFilter callback receives an associative array of attributes which gets replaced by its return value
- [x] Tag level postFilter callback receives an associative array of attributes which gets replaced by its return value
  [x] Attribute parsers remove the original attribute if their regexp matches
  [x] Attributes from attribute parsers do not overwrite existing values
  [x] Invalid attributes use their default value if set
  [x] Nothing bad happens if an attribute parser exists but it is never used
  [x] Missing attributes use their default value if set
- [x] A missing attribute with no default value causes its tag to be skipped and an error to be logged if it has the option "isRequired" true
- [x] A missing attribute with no default value does not causes its tag to be skipped if it has the option "isRequired" false
- [x] Attribute value is replaced by the return value of the attribute preFilter callbacks
- [x] Attribute value is replaced by the return value of the attribute postFilter callbacks even if it makes it invalid
+ [x] A missing attribute with no default value causes its tag to be skipped and an error to be logged if it has the option "required" true
+ [x] A missing attribute with no default value does not causes its tag to be skipped if it has the option "required" false
  [x] getTagsConfig returns the tags config
  [x] Plain text is returned within <pt> tags
  [x] Undefined attributes do not appear in XML
@@ -612,13 +556,13 @@ s9e\TextFormatter\Tests\Plugins\BBCodesConfig
  [x] The name of the default attribute can be set using the attrName option
  [x] addBBCodeFromExample() handles single preFilter callback in attribute
  [x] addBBCodeFromExample() handles multiple preFilter callbacks in attribute
- [x] addBBCodeFromExample() attribute options with no values are set to true
- [x] addBBCodeFromExample() rejects unauthorized preFilter callbacks in attribute
  [x] addBBCodeFromExample() handles single postFilter callback in attribute
  [x] addBBCodeFromExample() handles multiple postFilter callbacks in attribute
+ [x] addBBCodeFromExample() attribute options with no values are set to true
+ [x] addBBCodeFromExample() rejects unauthorized preFilter callbacks in attribute
  [x] addBBCodeFromExample() rejects unauthorized postFilter callbacks in attribute
- [x] Custom callbacks can be added via BBCodesConfig::allowPhaseFiltersCallback()
- [x] Static method callbacks can be added via BBCodesConfig::allowPhaseFiltersCallback()
+ [x] Custom callbacks can be added via BBCodesConfig::allowFilterCallback()
+ [x] Static method callbacks can be added via BBCodesConfig::allowFilterCallback()
  [x] addBBCodeFromExample() does not create an attribute for the tag content if it is TEXT with no other options set
  [x] addBBCodeFromExample() creates an attribute named content for the tag content
  [x] The name of the content attribute can be set using the attrName option
@@ -874,9 +818,9 @@ s9e\TextFormatter\Tests\Plugins\RawHTMLConfig
  [x] Attributes are lowercased
  [x] allowAttribute() throws an exception if the tag does not exist
  [x] allowAttribute() rejects invalid attribute names
- [x] Attributes are created with option "isRequired" set to false
- [x] Attributes known to expect an URL as value are created with type "url"
- [x] Other attributes are created with type "text"
+ [x] Attributes are created with option "required" set to false
+ [x] Attributes known to expect an URL as value are created with filter "#url"
+ [x] Other attributes are created with no filter
  [x] allowElement() throws an exception if the element name is "script"
  [x] allowElement() allows "script" elements if the ALLOW_UNSAFE_ELEMENTS flag is passed
  [x] allowAttribute() throws an exception if the attribute's name is "onmouseover"

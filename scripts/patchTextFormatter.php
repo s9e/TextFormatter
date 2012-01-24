@@ -51,6 +51,8 @@ function format(array $arr, $indent)
 {
 	$str = $sep = '';
 
+	ksort($arr);
+
 	foreach ($arr as $k => $v)
 	{
 		$str .= $sep . $indent . $k . ': ';

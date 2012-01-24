@@ -23,17 +23,17 @@ var StubTag;
 var HINT = {
 	attrConfig: {
 		defaultValue: true,
-		isRequired: true,
-		postFilter: true,
-		preFilter: true
+		filterChain: true,
+		forceUrlencode: true,
+		required: true
 	},
 	disabledAPI: {
-		parse: false,
-		render: false,
-		getLog: false,
-		enablePlugin: false,
 		disablePlugin: false,
-		preview: false
+		enablePlugin: false,
+		getLog: false,
+		parse: false,
+		preview: false,
+		render: false
 	},
 	disabledLogTypes: {
 		debug: false,
@@ -44,15 +44,6 @@ var HINT = {
 	enableIE7: true,
 	enableIE9: true,
 	enableLivePreviewFastPath: false,
-	filterConfig: {
-		email: {
-			forceUrlencode: true
-		},
-		url: {
-			disallowedHosts: true,
-			defaultScheme: true
-		}
-	},
 	hasNamespacedHTML: true,
 	hasNamespacedTags: true,
 	hasRegexpLimitAction: {
@@ -62,13 +53,11 @@ var HINT = {
 	},
 	mightUseTagRequires: true,
 	tagConfig: {
-		attrs: true,
 		attributeParsers: true,
-		isTransparent: true,
+		attrs: true,
 		isEmpty: true,
+		isTransparent: true,
 		ltrimContent: true,
-		postFilter: true,
-		preFilter: true,
 		rtrimContent: true,
 		rules: {
 			closeAncestor: true,
@@ -80,20 +69,10 @@ var HINT = {
 		trimAfter: true,
 		trimBefore: true
 	},
-	keepColorFilter: true,
-	keepEmailFilter: true,
-	keepFloatFilter: true,
-	keepIdFilter: true,
-	keepIdentifierFilter: true,
-	keepIntFilter: true,
-	keepIntegerFilter: true,
-	keepNumberFilter: true,
-	keepRangeFilter: true,
-	keepRegexpFilter: true,
-	keepSimpletextFilter: true,
-	keepTextFilter: true,
-	keepUintFilter: true,
-	keepUrlFilter: true
+	urlConfig: {
+		defaultScheme: true,
+		disallowedHosts: true
+	}
 };
 // END OF STOCK HINTS - DO NOT EDIT
 
@@ -279,6 +258,8 @@ var HINT = {
 		return ret;
 	}
 
+	/* CUSTOM FILTERS WILL BE INSERTED HERE - DO NOT EDIT */
+
 	//==========================================================================
 	// Port of PHP code
 	//==========================================================================
@@ -297,15 +278,13 @@ var HINT = {
 		/** @const @type {!Object} */
 		tagsConfig = {/* DO NOT EDIT */},
 		/** @const @type {!Object} */
-		filtersConfig = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
 		pluginsConfig = {/* DO NOT EDIT */},
 		/** @const @type {!Object} */
 		registeredNamespaces = {/* DO NOT EDIT */},
 		/** @const @type {!Object} */
 		rootContext = {/* DO NOT EDIT */},
-		/** @const @type {!Object.<string, function>} */
-		callbacks = {/* DO NOT EDIT */},
+		/** @const @type {!Object} */
+		urlConfig = {/* DO NOT EDIT */},
 
 		/** @type {!string} */
 		text,
@@ -398,214 +377,6 @@ var HINT = {
 		}
 
 		log[type].push(entry);
-	}
-
-	function filter(attrVal, attrConf, filterConf)
-	{
-		switch (attrConf.type)
-		{
-			/* CUSTOM FILTERS WILL BE INSERTED HERE - DO NOT EDIT */
-			case 'url':
-				if (!HINT.keepUrlFilter)
-				{
-					break;
-				}
-
-				var removeScheme = false;
-
-				if (HINT.filterConfig.url.defaultScheme
-				 && attrVal.substr(0, 2) === '//'
-				 && filterConf.defaultScheme)
-				{
-					 attrVal = filterConf.defaultScheme + ':' + attrVal;
-					 removeScheme = true;
-				}
-
-				var m =/^([a-z0-9]+):\/\/\S+(?:\/.*)?$/i.exec(attrVal);
-
-				if (!m)
-				{
-					return false;
-				}
-
-				if (!filterConf.allowedSchemes.test(m[1]))
-				{
-					logError({
-						'msg'    : "URL scheme '%s' is not allowed",
-						'params' : [m[1]]
-					});
-					return false;
-				}
-
-				if (HINT.filterConfig.url.disallowedHosts
-				 && filterConf.disallowedHosts)
-				{
-					var a = document.createElement('a');
-					a.href = attrVal;
-
-					if (filterConf.disallowedHosts.test(a.hostname))
-					{
-						logError({
-							'msg'    : "URL host '%s' is not allowed",
-							'params' : [a.hostname]
-						});
-						return false;
-					}
-				}
-
-				var pos = attrVal.indexOf(':');
-
-				if (removeScheme)
-				{
-					attrVal = attrVal.substr(pos + 1);
-				}
-				else
-				{
-					/**
-					* @link http://tools.ietf.org/html/rfc3986#section-3.1
-					*
-					* 'An implementation should accept uppercase letters as equivalent to lowercase
-					* in scheme names (e.g., allow "HTTP" as well as "http") for the sake of
-					* robustness but should only produce lowercase scheme names for consistency.'
-					*/
-					attrVal = attrVal.substr(0, pos).toLowerCase() + attrVal.substr(pos);
-				}
-
-				return attrVal.replace(/['"]/g, escape);
-
-			case 'identifier':
-			case 'id':
-				if (!HINT.keepIdFilter && !HINT.keepIdentifierFilter)
-				{
-					break;
-				}
-				return /^[a-zA-Z0-9-_]+$/.test(attrVal) ? attrVal : false;
-
-			case 'simpletext':
-				if (!HINT.keepSimpletextFilter)
-				{
-					break;
-				}
-				return /^[a-zA-Z0-9\-+.,_ ]+$/.test(attrVal) ? attrVal : false;
-
-			case 'text':
-				if (!HINT.keepTextFilter)
-				{
-					break;
-				}
-				return attrVal;
-
-			case 'email':
-				if (!HINT.keepEmailFilter)
-				{
-					break;
-				}
-
-				/**
-				* NOTE: obviously, this is not meant to match precisely the whole set of theorically
-				*       valid addresses. It's only there to catch honest mistakes. The actual
-				*       validation should be performed by PHP's ext/filter.
-				*/
-				if (!/^[\w\.\-_]+@[\w\.\-_]+$/.test(attrVal))
-				{
-					return false;
-				}
-
-				if (HINT.filterConfig.email.forceUrlencode && attrConf.forceUrlencode)
-				{
-					return attrVal
-						.split('')
-						.map(function(c)
-						{
-							return '%' + c.charCodeAt(0).toString(16);
-						})
-						.join('');
-				}
-
-				return attrVal;
-
-			case 'int':
-			case 'integer':
-				if (!HINT.keepIntFilter && !HINT.keepIntegerFilter)
-				{
-					break;
-				}
-				return /^-?[1-9][0-9]*$/.test(attrVal) ? attrVal : false;
-
-			case 'float':
-				if (!HINT.keepFloatFilter)
-				{
-					break;
-				}
-				return /^-?[0-9]+(?:\.[0-9]+)?(?:e[1-9][0-9]*)?$/i.test(attrVal) ? attrVal : false;
-
-			case 'number':
-				if (!HINT.keepNumberFilter)
-				{
-					break;
-				}
-				return /^[0-9]+$/.test(attrVal) ? attrVal : false;
-
-			case 'uint':
-				if (!HINT.keepUintFilter)
-				{
-					break;
-				}
-				return /^(?:0|[1-9][0-9]*)$/.test(attrVal) ? attrVal : false;
-
-			case 'range':
-				if (!HINT.keepRangeFilter)
-				{
-					break;
-				}
-
-				if (!/^(?:0|-?[1-9][0-9]*)$/.test(attrVal))
-				{
-					return false;
-				}
-
-				if (attrVal < attrConf.min)
-				{
-					logWarning({
-						'msg'    : 'Value outside of range, adjusted up to %d',
-						'params' : [attrConf.min]
-					});
-					return attrConf.min;
-				}
-
-				if (attrVal > attrConf.max)
-				{
-					logWarning({
-						'msg'    : 'Value outside of range, adjusted down to %d',
-						'params' : [attrConf.max]
-					});
-					return attrConf.max;
-				}
-
-				return attrVal;
-
-			case 'color':
-				if (!HINT.keepColorFilter)
-				{
-					break;
-				}
-				return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrVal) ? attrVal : false;
-
-			case 'regexp':
-				if (!HINT.keepRegexpFilter)
-				{
-					break;
-				}
-
-				return (attrConf.regexp.test(attrVal)) ? attrVal : false;
-		}
-
-		logDebug({
-			'msg'    : "Unknown filter '%s'",
-			'params' : [attrConf.type]
-		});
-
-		return false;
 	}
 
 	function output()
@@ -1148,7 +919,7 @@ var HINT = {
 
 		/**
 		* 1. Check that this tag has not reached its global limit tagLimit
-		* 2. Filter this tag's attributes
+		* 2. Filter this tag's attributes and check for missing attributes
 		* 3. Apply closeParent and closeAncestor rules
 		* 4. Check for nestingLimit
 		* 5. Apply requireParent and requireAncestor rules
@@ -1160,25 +931,14 @@ var HINT = {
 		* have been closed by a rule.)
 		*/
 		if (cntTotal[tagName] >= tagConfig.tagLimit
-		 || processCurrentAttributes()
+		 || !filterAttributes()
 		 || closeParent()
 		 || closeAncestor()
 		 || cntOpen[tagName]  >= tagConfig.nestingLimit
 		 || requireParent()
-		 || requireAncestor())
+		 || requireAncestor()
+		 || !tagIsAllowed(tagName))
 		{
-			return;
-		}
-
-		/**
-		* Ensure that this tag is allowed here
-		*/
-		if (!tagIsAllowed(tagName))
-		{
-			logDebug({
-				'msg'    : 'Tag %s is not allowed in this context',
-				'params' : [tagName]
-			});
 			return;
 		}
 
@@ -1597,288 +1357,96 @@ var HINT = {
 		return b.id - a.id;
 	}
 
-	function processCurrentAttributes()
-	{
-		if (!tagsConfig[currentTag.name].attrs)
-		{
-			/**
-			* Remove all attributes if none are defined for this tag
-			*/
-			currentTag.attrs = {};
-		}
-		else
-		{
-			/**
-			* Handle parsable attributes
-			*/
-			parseAttributes();
-
-			/**
-			* Filter attributes
-			*/
-			filterAttributes();
-
-			/**
-			* Add default values
-			*/
-			addDefaultAttributeValuesToCurrentTag();
-
-			/**
-			* Check for missing required attributes
-			*/
-			if (currentTagRequiresMissingAttribute())
-			{
-				return true;
-			}
-		}
-
-		return false
-	}
-
-	function currentTagRequiresMissingAttribute()
-	{
-		if (!HINT.attrConfig.isRequired)
-		{
-			return false;
-		}
-
-		var tagConfig = tagsConfig[currentTag.name];
-
-		for (var attrName in tagConfig.attrs)
-		{
-			if (tagConfig.attrs[attrName].isRequired
-			 && currentTag.attrs[attrName] === undefined)
-			{
-				logError({
-					'msg'    : "Missing attribute '%s'",
-					'params' : [attrName]
-				});
-
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	function addDefaultAttributeValuesToCurrentTag()
-	{
-		if (!HINT.attrConfig.defaultValue)
-		{
-			return;
-		}
-
-		var tagConfig = tagsConfig[currentTag.name];
-
-		for (var attrName in tagConfig.attrs)
-		{
-			if (currentTag.attrs[attrName] === undefined
-			 && tagConfig.attrs[attrName].defaultValue !== undefined)
-			{
-				currentTag.attrs[attrName] = tagConfig.attrs[attrName].defaultValue;
-			}
-		}
-	}
-
 	function filterAttributes()
 	{
 		var tagConfig = tagsConfig[currentTag.name];
 
-		/**
-		* Tag-level preFilter callbacks
-		*/
-		applyTagPreFilterCallbacks();
-
-		/**
-		* Remove undefined attributes
-		*/
-		removeUndefinedAttributesFromCurrentTag();
-
-		/**
-		* Filter each attribute
-		*/
-		foreach(currentTag.attrs, function(originalVal, attrName)
+		if (!HINT.tagConfig.attrs || !tagConfig.attrs)
 		{
+			// No attributes defined
+			currentTag['attrs'] = {};
+
+			return true;
+		}
+
+		// Handle parsable attributes
+		parseAttributes();
+
+		// Save the current attribute values then reset current tag's attributes
+		var attrVals = currentTag.attrs;
+		currentTag.attrs = {};
+
+		for (var attrName in tagConfig.attrs)
+		{
+			var attrConf = tagConfig.attrs[attrName];
+
 			currentAttribute = attrName;
 
-			// execute preFilter callbacks
-			applyAttributePreFilterCallbacks();
+			// The initialize with an invalid value. If the attribute is missing, we treat it as if
+			// it was invalid
+			var attrVal = false;
 
-			// do filter/validate current attribute
-			filterCurrentAttribute();
-
-			// if the value is invalid, log the occurence, remove the attribute then skip to the
-			// next attribute
-			if (currentTag.attrs[attrName] === false)
+			// If the attribute exists, filter it
+			if (attrName in attrVals)
 			{
-				logError({
-					'msg'    : "Invalid attribute '%s'",
-					'params' : [attrName]
-				});
+				attrVal = filterAttribute(attrVals[attrName], attrConf);
 
-				delete currentTag.attrs[attrName];
-
-				return;
-			}
-
-			// execute postFilter callbacks
-			applyAttributePostFilterCallbacks();
-
-			if (originalVal !== currentTag.attrs[attrName])
-			{
-				logDebug({
-					'msg'    : 'Attribute value was altered by the filter '
-					         + '(attrName: %1$s, originalVal: %2$s, attrVal: %3$s)',
-					'params' : [
-						attrName,
-						originalVal,
-						currentTag.attrs[attrName]
-					]
-				});
-			}
-		});
-		delete currentAttribute;
-
-		/**
-		* Tag-level postFilter callbacks
-		*/
-		applyTagPostFilterCallbacks();
-	}
-
-	function removeUndefinedAttributesFromCurrentTag()
-	{
-		for (var attrName in currentTag.attrs)
-		{
-			if (!tagsConfig[currentTag.name].attrs
-			 || !tagsConfig[currentTag.name].attrs[attrName])
-			{
-				delete currentTag.attrs[attrName];
-			}
-		}
-	}
-
-	function filterCurrentAttribute()
-	{
-		var tagConfig  = tagsConfig[currentTag.name],
-			attrConfig = tagConfig.attrs[currentAttribute];
-
-		// Custom filters are injected into filter() so we can just hardcode the call
-		currentTag.attrs[currentAttribute] = filter(
-			currentTag.attrs[currentAttribute],
-			attrConfig,
-			filtersConfig[attrConfig.type]
-		);
-	}
-
-	function applyTagPreFilterCallbacks()
-	{
-		if (!HINT.tagConfig.preFilter)
-		{
-			return;
-		}
-
-		if (tagsConfig[currentTag.name].preFilter)
-		{
-			tagsConfig[currentTag.name].preFilter.forEach(function(callbackConf)
-			{
-				currentTag.attrs = applyCallback(
-					callbackConf,
-					{ attrs: currentTag.attrs }
-				);
-			});
-		}
-	}
-
-	function applyTagPostFilterCallbacks()
-	{
-		if (!HINT.tagConfig.postFilter)
-		{
-			return;
-		}
-
-		if (tagsConfig[currentTag.name].postFilter)
-		{
-			tagsConfig[currentTag.name].postFilter.forEach(function(callbackConf)
-			{
-				currentTag.attrs = applyCallback(
-					callbackConf,
-					{ attrs: currentTag.attrs }
-				);
-			});
-		}
-	}
-
-	function applyAttributePreFilterCallbacks()
-	{
-		if (!HINT.attrConfig.preFilter)
-		{
-			return;
-		}
-
-		var attrConf = tagsConfig[currentTag.name].attrs[currentAttribute];
-
-		if (attrConf.preFilter)
-		{
-			attrConf.preFilter.forEach(function(callbackConf)
-			{
-				currentTag.attrs[currentAttribute] = applyCallback(
-					callbackConf,
-					{ attrVal: currentTag.attrs[currentAttribute] }
-				);
-			});
-		}
-	}
-
-	function applyAttributePostFilterCallbacks()
-	{
-		if (!HINT.attrConfig.postFilter)
-		{
-			return;
-		}
-
-		var attrConf = tagsConfig[currentTag.name].attrs[currentAttribute];
-
-		if (attrConf.postFilter)
-		{
-			attrConf.postFilter.forEach(function(callbackConf)
-			{
-				currentTag.attrs[currentAttribute] = applyCallback(
-					callbackConf,
-					{ attrVal: currentTag.attrs[currentAttribute] }
-				);
-			});
-		}
-	}
-
-	function applyCallback(conf, values)
-	{
-		var params = [];
-
-		if (conf.params)
-		{
-			/**
-			* Replace the dynamic parameters with their current value
-			*/
-			values['tagsConfig'] = tagsConfig;
-			values['filtersConfig'] = filtersConfig;
-
-			if (currentTag)
-			{
-				values['currentTag'] = currentTag;
-
-				if (currentAttribute)
+				if (attrVal === false)
 				{
-					values['currentAttribute'] = currentAttribute;
+					// The attribute is invalid
+					logError({
+						'msg'    : "Invalid attribute '%s'",
+						'params' : [attrName]
+					});
 				}
 			}
 
-			for (var k in conf.params)
+			// If the attribute is missing or invalid...
+			if (attrVal === false)
 			{
-				params.push(values[k] || conf.params[k]);
+				if (HINT.attrConfig.defaultValue && attrConf.defaultValue !== undefined)
+				{
+					// Use its default value
+					attrVal = attrConf.defaultValue;
+				}
+				else if (HINT.attrConfig.required && attrConf.required)
+				{
+					// No default value and the attribute is required... log it and bail
+					logError({
+						'msg'    : "Missing attribute '%s'",
+						'params' : [attrName]
+					});
+
+					return false;
+				}
+				else
+				{
+					// The attribute is invalid but it's not required so we move on to the next one
+					continue;
+				}
 			}
+
+			// We have a value for this attribute, we can add it back to the tag
+			currentTag.attrs[attrName] = attrVal;
 		}
 
-		return callbacks[conf.callback].apply(this, params);
+		return true;
+	}
+
+	function filterAttribute(attrVal, attrConf)
+	{
+		if (attrConf.filterChain)
+		{
+			attrConf.filterChain.forEach(function(filter)
+			{
+				if (attrVal !== false)
+				{
+					attrVal = filter(attrVal, attrConf);
+				}
+			});
+		}
+
+		return attrVal;
 	}
 
 	/*
@@ -1964,6 +1532,167 @@ var HINT = {
 		processTags();
 
 		return output();
+	}
+
+	//==========================================================================
+	// Built-in filters
+	//==========================================================================
+
+	function validateUrl(url)
+	{
+		var removeScheme = false;
+
+		if (HINT.urlConfig.defaultScheme
+		 && url.substr(0, 2) === '//')
+		{
+			 url = urlConfig.defaultScheme + ':' + url;
+			 removeScheme = true;
+		}
+
+		var m =/^([a-z0-9]+):\/\/\S+(?:\/.*)?$/i.exec(url);
+
+		if (!m)
+		{
+			return false;
+		}
+
+		if (!urlConfig.allowedSchemes.test(m[1]))
+		{
+			logError({
+				'msg'    : "URL scheme '%s' is not allowed",
+				'params' : [m[1]]
+			});
+			return false;
+		}
+
+		if (HINT.urlConfig.disallowedHosts)
+		{
+			var a = document.createElement('a');
+			a.href = url;
+
+			if (urlConfig.disallowedHosts.test(a.hostname))
+			{
+				logError({
+					'msg'    : "URL host '%s' is not allowed",
+					'params' : [a.hostname]
+				});
+				return false;
+			}
+		}
+
+		var pos = url.indexOf(':');
+
+		if (removeScheme)
+		{
+			url = url.substr(pos + 1);
+		}
+		else
+		{
+			/**
+			* @link http://tools.ietf.org/html/rfc3986#section-3.1
+			*
+			* 'An implementation should accept uppercase letters as equivalent to lowercase
+			* in scheme names (e.g., allow "HTTP" as well as "http") for the sake of
+			* robustness but should only produce lowercase scheme names for consistency.'
+			*/
+			url = url.substr(0, pos).toLowerCase() + url.substr(pos);
+		}
+
+		return url.replace(/['"]/g, escape);
+	}
+
+	function validateId(id)
+	{
+		return /^[a-zA-Z0-9-_]+$/.test(id) ? id : false;
+	}
+
+	function validateSimpletext(text)
+	{
+		return /^[a-zA-Z0-9\-+.,_ ]+$/.test(text) ? text : false;
+	}
+
+	function validateEmail(email, attrConf)
+	{
+		/**
+		* NOTE: obviously, this is not meant to match precisely the whole set of theorically
+		*       valid addresses. It's only there to catch honest mistakes. The actual
+		*       validation should be performed by PHP's ext/filter.
+		*/
+		if (!/^[\w\.\-_]+@[\w\.\-_]+$/.test(email))
+		{
+			return false;
+		}
+
+		if (HINT.attrConfig.forceUrlencode && attrConf.forceUrlencode)
+		{
+			return email
+				.split('')
+				.map(function(c)
+				{
+					return '%' + c.charCodeAt(0).toString(16);
+				})
+				.join('');
+		}
+
+		return email;
+	}
+
+	function validateInt(_int)
+	{
+		return /^(?:0|-?[1-9][0-9]*)$/.test(_int) ? _int : false;
+	}
+
+	function validateFloat(_float)
+	{
+		return /^(?:0|-?[1-9][0-9]*)(?:\.[0-9]+)?(?:e[1-9][0-9]*)?$/i.test(_float) ? _float : false;
+	}
+
+	function validateNumber(number)
+	{
+		return /^[0-9]+$/.test(number) ? number : false;
+	}
+
+	function validateUint(uint)
+	{
+		return /^(?:0|[1-9][0-9]*)$/.test(uint) ? uint : false;
+	}
+
+	function validateRange(number, attrConf)
+	{
+		if (!/^(?:0|-?[1-9][0-9]*)$/.test(number))
+		{
+			return false;
+		}
+
+		if (number < attrConf.min)
+		{
+			logWarning({
+				'msg'    : 'Value outside of range, adjusted up to %d',
+				'params' : [attrConf.min]
+			});
+			return attrConf.min;
+		}
+
+		if (number > attrConf.max)
+		{
+			logWarning({
+				'msg'    : 'Value outside of range, adjusted down to %d',
+				'params' : [attrConf.max]
+			});
+			return attrConf.max;
+		}
+
+		return number;
+	}
+
+	function validateColor(color)
+	{
+		return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(color) ? color : false;
+	}
+
+	function validateRegexp(attrVal, attrConf)
+	{
+		return (attrConf.regexp.test(attrVal)) ? attrVal : false;
 	}
 
 	//==========================================================================

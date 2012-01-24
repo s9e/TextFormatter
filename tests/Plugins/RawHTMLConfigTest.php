@@ -179,36 +179,39 @@ class RawHTMLConfigTest extends Test
 	}
 
 	/**
-	* @testdox Attributes are created with option "isRequired" set to false
+	* @testdox Attributes are created with option "required" set to false
 	*/
 	public function testAttributesAreNotRequired()
 	{
 		$this->cb->RawHTML->allowElement('b');
 		$this->cb->RawHTML->allowAttribute('b', 'title');
 
-		$this->assertFalse($this->cb->getAttributeOption('html:b', 'title', 'isRequired'));
+		$this->assertFalse($this->cb->getAttributeOption('html:b', 'title', 'required'));
 	}
 
 	/**
-	* @testdox Attributes known to expect an URL as value are created with type "url"
+	* @testdox Attributes known to expect an URL as value are created with filter "#url"
 	*/
 	public function testKnownURLAttributes()
 	{
 		$this->cb->RawHTML->allowElement('a');
 		$this->cb->RawHTML->allowAttribute('a', 'href');
 
-		$this->assertSame('url', $this->cb->getAttributeOption('html:a', 'href', 'type'));
+		$this->assertSame(
+			array('#url'),
+			$this->cb->getAttributeOption('html:a', 'href', 'filterChain')
+		);
 	}
 
 	/**
-	* @testdox Other attributes are created with type "text"
+	* @testdox Other attributes are created with no filter
 	*/
 	public function testOtherAttributes()
 	{
 		$this->cb->RawHTML->allowElement('a');
 		$this->cb->RawHTML->allowAttribute('a', 'title');
 
-		$this->assertSame('text', $this->cb->getAttributeOption('html:a', 'title', 'type'));
+		$this->assertSame(array(), $this->cb->getAttributeOption('html:a', 'title', 'filterChain'));
 	}
 
 	/**
