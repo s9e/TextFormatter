@@ -9,7 +9,7 @@ use DOMDocument,
     s9e\TextFormatter\PluginConfig,
     s9e\TextFormatter\PluginParser;
 
-include_once __DIR__ . '/Test.php';
+include_once __DIR__ . '/../src/autoloader.php';
 
 /**
 * @covers s9e\TextFormatter\Parser

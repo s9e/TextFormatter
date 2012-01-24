@@ -10,8 +10,6 @@ use ReflectionClass,
     s9e\TextFormatter\ConfigBuilder,
     s9e\TextFormatter\JSParserGenerator;
 
-include_once __DIR__ . '/../src/ConfigBuilder.php';
-
 abstract class Test extends \PHPUnit_Framework_TestCase
 {
 	public function __get($k)
@@ -175,8 +173,6 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 	protected function newCallback($callback)
 	{
-		include_once __DIR__ . '/../src/Callback.php';
-
 		return new Callback($callback);
 	}
 }

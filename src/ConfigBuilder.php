@@ -866,11 +866,6 @@ class ConfigBuilder
 	{
 		if ($k === 'predefinedTags')
 		{
-			if (!class_exists(__NAMESPACE__ . '\\PredefinedTags'))
-			{
-				include __DIR__ . '/PredefinedTags.php';
-			}
-
 			return $this->predefinedTags = new PredefinedTags($this);
 		}
 
@@ -885,8 +880,7 @@ class ConfigBuilder
 	/**
 	* Load a plugin
 	*
-	* If a plugin of the same name exists, it will be overwritten. This method knows how to load
-	* core plugins. Otherwise, you have to include the appropriate files beforehand.
+	* If a plugin of the same name exists, it will be overwritten.
 	*
 	* @param  string $pluginName    Name of the plugin
 	* @param  string $className     Name of the plugin's config class (required for custom plugins)
@@ -900,39 +894,22 @@ class ConfigBuilder
 			throw new InvalidArgumentException('Invalid plugin name "' . $pluginName . '"');
 		}
 
-		$classFilepath = null;
-
 		if (!isset($className))
 		{
 			$className = __NAMESPACE__ . '\\Plugins\\' . $pluginName . 'Config';
-			$classFilepath = __DIR__ . '/Plugins/' . $pluginName . 'Config.php';
 		}
 
-		$useAutoload = !isset($classFilepath);
-
-		/**
-		* We test whether the class exists. If a filepath was provided, we disable autoload
-		*/
-		if (!class_exists($className, $useAutoload)
-		 && isset($classFilepath))
+		// If a filepath was provided, load the plugin's file if its class does not exist
+		if (isset($classFilepath)
+		 && !class_exists($className, false)
+		 && file_exists($classFilepath))
 		{
-			/**
-			* Load the PluginConfig abstract class if necessary
-			*/
-			if (!class_exists(__NAMESPACE__ . '\\PluginConfig', $useAutoload))
-			{
-				include __DIR__ . '/PluginConfig.php';
-			}
-
-			if (file_exists($classFilepath))
-			{
-				include $classFilepath;
-			}
+			include $classFilepath;
 		}
 
 		if (!class_exists($className))
 		{
-			throw new RuntimeException("Class '" . $className . "' not found");
+			throw new RuntimeException("Class '" . $className . "' does not exist");
 		}
 
 		return $this->$pluginName = new $className($this, $overrideProps);
@@ -949,11 +926,6 @@ class ConfigBuilder
 	*/
 	public function getParser()
 	{
-		if (!class_exists(__NAMESPACE__ . '\\Parser'))
-		{
-			include __DIR__ . '/Parser.php';
-		}
-
 		return new Parser($this->getParserConfig());
 	}
 
@@ -964,11 +936,6 @@ class ConfigBuilder
 	*/
 	public function getRenderer()
 	{
-		if (!class_exists(__NAMESPACE__ . '\\Renderer'))
-		{
-			include __DIR__ . '/Renderer.php';
-		}
-
 		return new Renderer($this->getXSL());
 	}
 
@@ -983,11 +950,6 @@ class ConfigBuilder
 
 		if (!isset($rm))
 		{
-			if (!class_exists(__NAMESPACE__ . '\\RegexpMaster'))
-			{
-				include __DIR__ . '/RegexpMaster.php';
-			}
-
 			$rm = new RegexpMaster;
 		}
 
@@ -1908,8 +1870,6 @@ class ConfigBuilder
 	*/
 	public function getJSParser(array $options = array())
 	{
-		include_once __DIR__ . '/JSParserGenerator.php';
-
 		$jspg = new JSParserGenerator($this);
 
 		return $jspg->get($options);

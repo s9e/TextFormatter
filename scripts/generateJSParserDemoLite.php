@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-include __DIR__ . '/../src/ConfigBuilder.php';
+include __DIR__ . '/../src/autoloader.php';
 
 $cb = new s9e\TextFormatter\ConfigBuilder;
 

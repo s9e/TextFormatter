@@ -1,13 +1,3 @@
-s9e\TextFormatter\Tests\Autoloaders
- [x] ConfigBuilder loads core plugins files
- [x] ConfigBuilder can autoload Parser
- [x] ConfigBuilder does not include Parser twice
- [x] ConfigBuilder can autoload RegexpMaster
- [x] ConfigBuilder does not include RegexpMaster twice
- [x] ConfigBuilder can autoload Renderer
- [x] ConfigBuilder does not include Renderer twice
- [x] BBCodesConfig addPredefinedBBCode autoloads PredefinedBBCodes
-
 s9e\TextFormatter\Tests\ConfigBuilder
  [x] Can load plugins
  [x] Loaded plugins are available as a public property

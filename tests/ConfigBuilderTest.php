@@ -7,7 +7,7 @@ use s9e\TextFormatter\Tests\Test,
     s9e\TextFormatter\ConfigBuilder,
     s9e\TextFormatter\PluginConfig;
 
-include_once __DIR__ . '/Test.php';
+include_once __DIR__ . '/../src/autoloader.php';
 
 /**
 * @covers s9e\TextFormatter\ConfigBuilder
@@ -91,7 +91,7 @@ class ConfigBuilderTest extends Test
 	/**
 	* @test
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Class 's9e\TextFormatter\Plugins\FoobarConfig' not found
+	* @expectedExceptionMessage Class 's9e\TextFormatter\Plugins\FoobarConfig' does not exist
 	*/
 	public function loadPlugin_throws_an_exception_on_unknown_plugin()
 	{

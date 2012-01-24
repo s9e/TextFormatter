@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests;
 use s9e\TextFormatter\Tests\Test,
     s9e\TextFormatter\PluginConfig;
 
-include_once __DIR__ . '/Test.php';
+include_once __DIR__ . '/../src/autoloader.php';
 
 /**
 * @covers s9e\TextFormatter\PluginConfig

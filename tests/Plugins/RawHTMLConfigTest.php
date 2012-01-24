@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Plugins;
 use s9e\TextFormatter\Plugins\RawHTMLConfig,
     s9e\TextFormatter\Tests\Test;
 
-include_once __DIR__ . '/../Test.php';
+include_once __DIR__ . '/../../src/autoloader.php';
 
 /**
 * @covers s9e\TextFormatter\Plugins\RawHTMLConfig

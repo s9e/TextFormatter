@@ -258,13 +258,6 @@ class BBCodesConfig extends PluginConfig
 
 		if (!isset($this->predefinedBBCodes))
 		{
-			$className = 's9e\\TextFormatter\\PredefinedBBCodes';
-
-			if (!class_exists($className))
-			{
-				include __DIR__ . '/../PredefinedBBCodes.php';
-			}
-
 			$this->predefinedBBCodes = new PredefinedBBCodes($this->cb);
 		}
 
