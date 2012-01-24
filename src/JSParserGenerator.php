@@ -927,6 +927,7 @@ class JSParserGenerator
 			'defaultValue',
 			'id',
 			'name',
+			'required',
 			'rules',
 			'tagName',
 			'type'
