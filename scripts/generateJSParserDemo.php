@@ -150,7 +150,7 @@ The following plugins have been enabled:
   [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]/#(?<tag>[a-z0-9]+)/i[/CODE] is replaced with the template [CODE]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/CODE] -- For example: #PHP, #fml
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
   [*][b]Linebreaker[/b] --- Linefeeds are converted to &lt;br&gt;
-  [*][b]RawHTML[/b] --- [CODE]<a>[/CODE] tags are allowed, with two whitelisted attributes: [CODE]href[/CODE] and [CODE]title[/CODE]. Example: <a href="https://github.com" title="GitHub - Social Coding">GitHub</a>
+  [*][b]RawHTML[/b] --- [CODE]<a>[/CODE] and [CODE]<b>[/CODE] tags are allowed, with two whitelisted attributes for [CODE]<a>[/CODE]: [CODE]href[/CODE] and [CODE]title[/CODE]. Example: <a href="https://github.com" title="GitHub - Social Coding"><b>GitHub</b></a>
   [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
