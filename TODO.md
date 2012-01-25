@@ -21,3 +21,4 @@ TODO
 - Add a tag option that disallows plain text, e.g. any text node that is a child of given tag is put inside a <i> element.
 - Consider adding a "map" attribute filter that maps values, one to another. e.g. ["cpp"=>"C++"]
 - Move the "reduce" part of ConfigBuilder::getTagsConfig() to its own method
+- Add an "alnum" or "alphanum" built-in filter that matches /^[a-z0-9]+$/iD and possibly an "hex" filter for /^[0-9a-f]+$/iD
