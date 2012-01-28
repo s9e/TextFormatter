@@ -25,7 +25,7 @@ class EmoticonsConfig extends PluginConfig
 
 	public function setUp()
 	{
-		$this->cb->addTag($this->tagName, array(
+		$this->cb->addTag($this->tagName)->setOptions(array(
 			'defaultChildRule' => 'deny',
 			'defaultDescendantRule' => 'deny'
 		));

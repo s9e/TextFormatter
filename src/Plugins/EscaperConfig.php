@@ -20,7 +20,7 @@ class EscaperConfig extends PluginConfig
 
 	public function setUp()
 	{
-		$this->cb->addTag($this->tagName, array(
+		$this->cb->addTag($this->tagName)->setOptions(array(
 			'defaultChildRule' => 'deny',
 			'defaultDescendantRule' => 'deny',
 			'template' => '<xsl:value-of select="substring(.,2)"/>'

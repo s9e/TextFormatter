@@ -16,13 +16,10 @@ class LinebreakerConfig extends PluginConfig
 	{
 		if (!$this->cb->tagExists('BR'))
 		{
-			$this->cb->addTag(
-				'BR',
-				array(
-					'defaultDescendantRule' => 'deny',
-					'template' => '<br/>'
-				)
-			);
+			$this->cb->addTag('BR')->setOptions(array(
+				'defaultDescendantRule' => 'deny',
+				'template' => '<br/>'
+			));
 		}
 	}
 

@@ -17,6 +17,42 @@ abstract class ConfigObject
 		$this->setOptions($options);
 	}
 
+	public function __get($k)
+	{
+		return $this->getOption($k;
+	}
+
+	public function __set($k, $v)
+	{
+		$this->setOption($k, $v);
+	}
+
+	/**
+	* Return the value of an option
+	*
+	* @param  string $optionName
+	* @return mixed
+	*/
+	public function getOption($optionName)
+	{
+		if (!property_exists($this, $optionName))
+		{
+			throw new InvalidArgumentException("Option '" . $optionName . "' does not exist");
+		}
+
+		return $this->$optionName;
+	}
+
+	/**
+	* Get all of this object's options
+	*
+	* @return array
+	*/
+	public function getOptions()
+	{
+		return get_object_vars($this);
+	}
+
 	/**
 	* Set a single option for this object
 	*
@@ -53,15 +89,5 @@ abstract class ConfigObject
 		{
 			$this->setOption($optionName, $optionValue);
 		}
-	}
-
-	/**
-	* Get all of this object's options
-	*
-	* @return array
-	*/
-	public function getOptions()
-	{
-		return get_object_vars($this);
 	}
 }

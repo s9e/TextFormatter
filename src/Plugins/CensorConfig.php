@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Plugins;
 
 use s9e\TextFormatter\ConfigBuilder,
+    s9e\TextFormatter\ConfigBuilder\Tag,
     s9e\TextFormatter\PluginConfig;
 
 class CensorConfig extends PluginConfig
@@ -44,26 +45,23 @@ class CensorConfig extends PluginConfig
 			return;
 		}
 
-		$this->cb->addTag(
-			$this->tagName,
-			array(
-				'defaultChildRule' => 'deny',
-				'defaultDescendantRule' => 'deny',
+		$tag = new Tag(array(
+			'defaultChildRule' => 'deny',
+			'defaultDescendantRule' => 'deny'
+		));
+		$this->cb->addTag($this->tagName, $tag);
 
-				'attrs' => array(
-					$this->attrName => array('required' => false)
-				),
+		$tag->addAttribute($this->attrName)->required = false;
 
-				'template' =>
-					'<xsl:choose>' .
-						'<xsl:when test="@' . htmlspecialchars($this->attrName) . '">' .
-							'<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>' .
-						'</xsl:when>' .
-						'<xsl:otherwise>' .
-							htmlspecialchars($this->defaultReplacement) .
-						'</xsl:otherwise>' .
-					'</xsl:choose>'
-			)
+		$tag->setTemplate(
+			'<xsl:choose>' .
+				'<xsl:when test="@' . htmlspecialchars($this->attrName) . '">' .
+					'<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>' .
+				'</xsl:when>' .
+				'<xsl:otherwise>' .
+					htmlspecialchars($this->defaultReplacement) .
+				'</xsl:otherwise>' .
+			'</xsl:choose>'
 		);
 	}
 

@@ -71,7 +71,7 @@ class Tag extends ConfigObject
 	* @param  string $name
 	* @return bool
 	*/
-	public function isValidName($name)
+	static public function isValidName($name)
 	{
 		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $tagName);
 	}
@@ -84,7 +84,7 @@ class Tag extends ConfigObject
 	* @param  string $name Original tag name
 	* @return string       Normalized tag name
 	*/
-	public function normalizeName($name)
+	static public function normalizeName($name)
 	{
 		if (!self::isValidTagName($name))
 		{
@@ -146,7 +146,9 @@ class Tag extends ConfigObject
 			throw new InvalidArgumentException("Attribute '" . $attrName . "' already exists");
 		}
 
-		return $this->attributes[$attrName] = $attribute;
+		$this->attributes[$attrName] = $attribute;
+
+		return $attribute;
 	}
 
 	/**
@@ -400,13 +402,48 @@ class Tag extends ConfigObject
 	}
 
 	/**
-	* Set a templates for this tag
+	* Set a template for this tag
 	*
 	* @param string $template  XSL template
 	* @param string $predicate Predicate under which this template applies
 	*/
-	public function setTemplates($template, $predicate = null)
+	public function setTemplate($template, $predicate = null)
 	{
-		$this->templates[$predicate] = $template;
+		$this->templates[$predicate] = $this->normalizeTemplate($template, true);
+	}
+
+	/**
+	* Set a potentially unsafe template for this tag
+	*
+	* @param string $template  XSL template
+	* @param string $predicate Predicate under which this template applies
+	*/
+	public function setUnsafeTemplate($template, $predicate = null)
+	{
+		$this->templates[$predicate] = $this->normalizeTemplate($template, false);
+	}
+
+	/**
+	* Normalize the content of a template
+	*
+	* Will optimize the template's content and optionally check for unsafe markup.
+	*
+	* @param  string $template    Original template
+	* @param  bool   $checkUnsafe Whether to check the template for unsafe markup
+	* @return string              Normalized template
+	*/
+	protected function normalizeTemplate($template, $checkUnsafe)
+	{
+		$template = TemplateHelper::optimizeTemplate($template);
+
+		if ($checkUnsafe)
+		{
+			$isUnsafe = TemplateHelper::checkUnsafe($template, $this);
+
+			if ($isUnsafe)
+			{
+				throw new RuntimeException($isUnsafe);
+			}
+		}
 	}
 }

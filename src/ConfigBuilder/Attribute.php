@@ -46,47 +46,9 @@ class Attribute
 		return strtolower($name);
 	}
 
-	/**
-	* Set several options
-	*
-	* @param array  $options
-	*/
-	public function setOptions(array $options)
-	{
-		foreach ($options as $optionName => $optionValue)
-		{
-			$this->setOption($optionName, $optionValue);
-		}
-	}
-
-	/**
-	* Set a single option
-	*
-	* @param string $optionName
-	* @param mixed  $optionValue
-	*/
-	public function setOption($optionName, $optionValue)
-	{
-		$attrConf =& $this->tags[$tagName]['attrs'][$attrName];
-
-		switch ($optionName)
-		{
-			case 'filterChain':
-				$this->setFilterChain($optionValue);
-				return;
-
-			default:
-				if (isset($this->defaultAttributeOptions[$optionName]))
-				{
-					/**
-					* Preserve the PHP type of that option, if applicable
-					*/
-					settype($optionValue, gettype($this->defaultAttributeOptions[$optionName]));
-				}
-
-				$attrConf[$optionName] = $optionValue;
-		}
-	}
+	//==========================================================================
+	// Filters stuff
+	//==========================================================================
 
 	/**
 	* @param array $filterChain
@@ -101,138 +63,76 @@ class Attribute
 		}
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/**
-	* Return all the options of a tag's attribute
-	*
-	* @param  string $tagName
-	* @param  string $attrName
-	* @return array
+	* Remove all filters from this attribute's filter chain
 	*/
-	public function getAttributeOptions($tagName, $attrName)
+	public function clearFilterChain()
 	{
-		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName, $tagName);
-
-		return $this->tags[$tagName]['attrs'][$attrName];
+		$this->filterChain = array();
 	}
 
 	/**
-	* Return the value of an option in a tag's attribute config
+	* Append a filter to this attribute's filter chain
 	*
-	* @param  string $tagName
-	* @param  string $attrName
-	* @param  string $optionName
-	* @return mixed
+	* @param  string|callback|Filter $filter
 	*/
-	public function getAttributeOption($tagName, $attrName, $optionName)
+	public function appendFilter($filter)
 	{
-		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName, $tagName);
-
-		return $this->tags[$tagName]['attrs'][$attrName][$optionName];
+		$this->filterChain[] = $this->normalizeFilter($filter);
 	}
 
 	/**
-	* Remove an attribute from a tag
+	* Prepend a filter to this attribute's filter chain
 	*
-	* @param string $tagName
-	* @param string $attrName
+	* @param  string|callback|Filter $filter
 	*/
-	public function removeAttribute($tagName, $attrName)
+	public function prependFilter($filter)
 	{
-		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName, $tagName);
-		unset($this->tags[$tagName]['attrs'][$attrName]);
+		array_unshift($this->filterChain, $this->normalizeFilter($filter));
 	}
 
 	/**
-	* Return whether a tag's attribute exists
+	* Normalize a filter definition
 	*
-	* @param  string $tagName
-	* @param  string $attrName
+	* @param  string|callback|Filter $filter Name of a built-in filter, callback or Filter instance
+	* @return string|Filter                  Either a string pointing to a built-in filter, or a
+	*                                        Filter object
+	*/
+	protected function normalizeFilter($filter)
+	{
+		if ($filter instanceof Filter)
+		{
+			// Already a Filter object, nothing to do
+			return $filter;
+		}
+
+		if (is_string($filter) && $filter[0] === '#')
+		{
+			// It's a built-in filter, return as-is
+			return $filter;
+		}
+
+		if (is_callable($filter))
+		{
+			// It's a callback with no signature, we'll assume it just requires the attribute's
+			// value
+			$filter = new Filter;
+			$filter->addParameterByName('attrVal');
+
+			return $filter;
+		}
+
+		throw new InvalidArgumentException("Callback '" . var_export($filter, true) . "' is not callable");
+	}
+
+	/**
+	* Test whether a given filter is present in this attribute's filterChain
+	*
+	* @param  string|callback|Filter $filter
 	* @return bool
 	*/
-	public function attributeExists($tagName, $attrName)
+	public function hasFilter($filter)
 	{
-		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName);
-
-		return isset($this->tags[$tagName]['attrs'][$attrName]);
-	}
-
-	/**
-	* Remove all filters from an attribute's filter chain
-	*
-	* @param string $tagName
-	* @param string $attrName
-	*/
-	public function clearAttributeFilterChain($tagName, $attrName)
-	{
-		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName, $tagName);
-
-		$this->tags[$tagName]['attrs'][$attrName]['filterChain'] = array();
-	}
-
-	/**
-	* Append a filter to an attribute's filter chain
-	*
-	* @param string          $tagName
-	* @param string          $attrName
-	* @param string|Callback $callback
-	*/
-	public function appendAttributeFilter($tagName, $attrName, $callback)
-	{
-		$this->addAttributeFilter('array_push', $tagName, $attrName, $callback);
-	}
-
-	/**
-	* prepend a filter to an attribute's filter chain
-	*
-	* @param string          $tagName
-	* @param string          $attrName
-	* @param string|Callback $callback
-	*/
-	public function prependAttributeFilter($tagName, $attrName, $callback)
-	{
-		$this->addAttributeFilter('array_unshift', $tagName, $attrName, $callback);
-	}
-
-	/**
-	* Append a filter to an attribute's filter chain
-	*
-	* @param string          $func     Either "array_push" or "array_unshift"
-	* @param string          $tagName
-	* @param string|Callback $callback
-	*/
-	protected function addAttributeFilter($func, $tagName, $attrName, $callback)
-	{
-		$tagName  = $this->normalizeTagName($tagName);
-		$attrName = $this->normalizeAttributeName($attrName, $tagName);
-		$callback = $this->normalizeCallback($callback);
-
-		$func($this->tags[$tagName]['attrs'][$attrName]['filterChain'], $callback);
+		return in_array($this->normalizeFilter($filter), $this->filterChain);
 	}
 }

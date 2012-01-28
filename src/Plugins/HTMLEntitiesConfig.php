@@ -32,9 +32,9 @@ class HTMLEntitiesConfig extends PluginConfig
 	{
 		if (!$this->cb->tagExists($this->tagName))
 		{
-			$this->cb->addTag($this->tagName);
-			$this->cb->addAttribute($this->tagName, $this->attrName);
-			$this->cb->setTagTemplate($this->tagName, '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
+			$tag = $this->cb->addTag($this->tagName);
+			$tag->addAttribute($this->attrName);
+			$tag->setTemplate('<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
 		}
 	}
 
