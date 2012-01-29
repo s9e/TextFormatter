@@ -19,7 +19,7 @@ abstract class ConfigObject
 
 	public function __get($k)
 	{
-		return $this->getOption($k;
+		return $this->getOption($k);
 	}
 
 	public function __set($k, $v)

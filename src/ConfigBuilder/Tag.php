@@ -86,7 +86,7 @@ class Tag extends ConfigObject
 	*/
 	static public function normalizeName($name)
 	{
-		if (!self::isValidTagName($name))
+		if (!self::isValidName($name))
 		{
 			throw new InvalidArgumentException ("Invalid tag name '" . $name . "'");
 		}
@@ -116,11 +116,6 @@ class Tag extends ConfigObject
 
 		foreach ($attributes as $attrName => $attribute)
 		{
-			if (!($attribute instanceof Attribute))
-			{
-				$attribute = new Attribute($attribute);
-			}
-
 			$this->addAttribute($attrName, $attribute);
 		}
 	}
@@ -128,15 +123,15 @@ class Tag extends ConfigObject
 	/**
 	* Add an attribute to this tag
 	*
-	* @param  string    $attrName  Name of the attribute
-	* @param  Attribute $attribute Attribute to add (if not set, a new instance will be created)
-	* @return Attribute            Added attribute
+	* @param  string          $attrName  Name of the attribute
+	* @param  Attribute|array $attribute Attribute to add or array of attribute options
+	* @return Attribute                  Added attribute
 	*/
-	public function addAttribute($attrName, Attribute $attribute = null)
+	public function addAttribute($attrName, $attribute = array())
 	{
-		if (!isset($attribute))
+		if (!($attribute instanceof Attribute))
 		{
-			$attribute = new Attribute;
+			$attribute = new Attribute($attribute);
 		}
 
 		$attrName = $attribute::normalizeName($attrName);
@@ -229,11 +224,6 @@ class Tag extends ConfigObject
 
 		foreach ($attributeParsers as $attrName => $attributeParser)
 		{
-			if (!($attributeParser instanceof AttributeParser))
-			{
-				$attributeParser = new Attribute($attributeParser);
-			}
-
 			$this->addAttributeParser($attrName, $attributeParser);
 		}
 	}
