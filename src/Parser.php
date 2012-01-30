@@ -174,6 +174,20 @@ class Parser
 		$this->urlConfig     = $config['urlConfig'];
 		$this->rootContext   = $config['rootContext'];
 
+		/**
+		* @todo remove me
+		*/
+		foreach (array_keys($config['tags']) as $tagName)
+		{
+			$pos = strpos($tagName);
+
+			if ($pos !== false)
+			{
+				$prefix = substr($tagName, 0, $pos);
+				$config['namespaces'][$prefix] = 'urn:s9e:TextFormatter:' . $prefix;
+			}
+		}
+
 		if (isset($config['namespaces']))
 		{
 			$this->registeredNamespaces = $config['namespaces'];

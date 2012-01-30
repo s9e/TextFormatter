@@ -21,3 +21,5 @@ TODO
 - Add a tag option that disallows plain text, e.g. any text node that is a child of given tag is put inside a <i> element.
 - Consider adding a "map" attribute filter that maps values, one to another. e.g. ["cpp"=>"C++"]
 - Move the "reduce" part of ConfigBuilder::getTagsConfig() to its own method
+- Tags with a require* rule should not be enabled in the root context
+- Investigate whether requireParent rules can be optimized away by replacing them with allowChild/denyChild rules

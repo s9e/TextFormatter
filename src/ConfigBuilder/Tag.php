@@ -13,14 +13,19 @@ use InvalidArgumentException,
 class Tag extends ConfigObject
 {
 	/**
-	* @var bool Whether this tag must be disabled
+	* @var Collection This tag's attributes
 	*/
-	protected $disable = false;
+	protected $attributes;
 
 	/**
-	* @var bool Whether this tag is forbidden from being used without parents
+	* @var Collection This tag's attribute parsers
 	*/
-	protected $disallowAsRoot = false;
+	protected $attributeParsers;
+
+	/**
+	* @var Ruleset Rules associated with this tag
+	*/
+	protected $rules;
 
 	/**
 	* @var integer Maximum number of this tag per message
@@ -43,16 +48,6 @@ class Tag extends ConfigObject
 	protected $defaultDescendantRule = 'allow';
 
 	/**
-	* @var array Rules associated with this tag
-	*/
-	protected $rules = array();
-
-	/**
-	* @var array Array of Attribute objects
-	*/
-	protected $attributes = array();
-
-	/**
 	* @var array Templates associated with this tag (predicate => template)
 	*/
 	protected $templates = array();
@@ -62,6 +57,10 @@ class Tag extends ConfigObject
 	*/
 	public function __construct(array $options = array())
 	{
+		$this->attributes       = new Collection(__NAMESPACE__ . '\\Attribute');
+		$this->attributeParsers = new Collection(__NAMESPACE__ . '\\AttributeParser');
+		$this->rules            = new Ruleset;
+
 		$this->setOptions($options);
 	}
 
@@ -73,7 +72,7 @@ class Tag extends ConfigObject
 	*/
 	static public function isValidName($name)
 	{
-		return (bool) preg_match('#^[a-z_][a-z_0-9]*$#Di', $tagName);
+		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*:)?[a-z_][a-z_0-9]*$#Di', $tagName);
 	}
 
 	/**
@@ -99,267 +98,72 @@ class Tag extends ConfigObject
 		return $name;
 	}
 
-	//==========================================================================
-	// Attributes
-	//==========================================================================
-
 	/**
-	* Set all the attributes for this tag
+	* Set the default child rule
 	*
-	* NOTE: will remove all other attributes
-	*
-	* @param array $attributes Associative array of attributes, using their name as key
+	* @param string $rule Either "allow" or "deny"
 	*/
-	public function setAttributes(array $attributes)
+	public function setDefaultChildRule($rule)
 	{
-		$this->clearAttributes();
-
-		foreach ($attributes as $attrName => $attribute)
+		if ($rule !== 'allow' && $rule !== 'deny')
 		{
-			$this->addAttribute($attrName, $attribute);
-		}
-	}
-
-	/**
-	* Add an attribute to this tag
-	*
-	* @param  string          $attrName  Name of the attribute
-	* @param  Attribute|array $attribute Attribute to add or array of attribute options
-	* @return Attribute                  Added attribute
-	*/
-	public function addAttribute($attrName, $attribute = array())
-	{
-		if (!($attribute instanceof Attribute))
-		{
-			$attribute = new Attribute($attribute);
+			throw new InvalidArgumentException("defaultChildRule must be either 'allow' or 'deny'");
 		}
 
-		$attrName = $attribute::normalizeName($attrName);
+		$this->defaultChildRule = $rule;
+	}
 
-		if (isset($this->attributes[$attrName]))
+	/**
+	* Set the default descendant rule
+	*
+	* @param string $rule Either "allow" or "deny"
+	*/
+	public function setDefaultDescendantRule($rule)
+	{
+		if ($rule !== 'allow' && $rule !== 'deny')
 		{
-			throw new InvalidArgumentException("Attribute '" . $attrName . "' already exists");
+			throw new InvalidArgumentException("defaultDescendantRule must be either 'allow' or 'deny'");
 		}
 
-		$this->attributes[$attrName] = $attribute;
-
-		return $attribute;
+		$this->defaultDescendantRule = $rule;
 	}
 
 	/**
-	* Return whether an attribute exists
+	* Set this tag's nestingLimit
 	*
-	* @param  string    $attrName Attribute's name
-	* @return bool
+	* @param integer $limit
 	*/
-	public function hasAttribute($attrName)
+	public function setNestingLimit($limit)
 	{
-		$attrName = Attribute::normalizeName($attrName);
+		$limit = filter_var($limit, FILTER_VALIDATE_INT, array(
+			'options' => array('min_range' => 0)
+		));
 
-		return isset($this->attributes[$attrName]);
-	}
-
-	/**
-	* Return an attribute
-	*
-	* @param  string    $attrName Attribute's name
-	* @return Attribute
-	*/
-	public function getAttribute($attrName)
-	{
-		$attrName = Attribute::normalizeName($attrName);
-
-		if (!isset($this->attributes[$attrName]))
+		if (!$limit)
 		{
-			throw new InvalidArgumentException("Attribute '" . $attrName . "' does not exist");
+			throw new InvalidArgumentException('nestingLimit must be a number greater than 0');
 		}
 
-		return $this->attributes[$attrName];
+		$this->nestingLimit = $limit;
 	}
 
 	/**
-	* Return all attributes
+	* Set this tag's tagLimit
 	*
-	* @return array
+	* @param integer $limit
 	*/
-	public function getAttributes()
+	public function setTagLimit($limit)
 	{
-		return $this->attributes;
-	}
+		$limit = filter_var($limit, FILTER_VALIDATE_INT, array(
+			'options' => array('min_range' => 0)
+		));
 
-	/**
-	* Remove an attribute
-	*
-	* @param  string $attrName Attribute's name
-	*/
-	public function removeAttribute($attrName)
-	{
-		$attrName = Attribute::normalizeName($attrName);
-
-		unset($this->attributes[$attrName]);
-	}
-
-	/**
-	* Remove all attributes from this tag
-	*/
-	public function clearAttributes()
-	{
-		$this->attributes = array();
-	}
-
-	//==========================================================================
-	// Attribute parsers
-	//==========================================================================
-
-	/**
-	* Set all the attribute parsers for this tag
-	*
-	* NOTE: will remove all other attribute parsers
-	*
-	* @param array $attributeParsers Associative array of attribute parsers, using their name as key
-	*/
-	public function setAttributeParsers(array $attributeParsers)
-	{
-		$this->clearAttributeParsers();
-
-		foreach ($attributeParsers as $attrName => $attributeParser)
+		if (!$limit)
 		{
-			$this->addAttributeParser($attrName, $attributeParser);
-		}
-	}
-
-	/**
-	* Add an attribute parser to this tag
-	*
-	* @param  string          $attrName        Name of the attribute parser
-	* @param  AttributeParser $attributeParser AttributeParser to add (if not set, a new instance
-	*                                          will be created)
-	* @return AttributeParser                  Added attribute parser
-	*/
-	public function addAttributeParser($attrName, AttributeParser $attributeParser = null)
-	{
-		if (!isset($attributeParser))
-		{
-			$attributeParser = new AttributeParser;
+			throw new InvalidArgumentException('tagLimit must be a number greater than 0');
 		}
 
-		$attributeParser = $attributeParser::normalizeName($attrName);
-
-		if (isset($this->attributeParsers[$attrName]))
-		{
-			throw new InvalidArgumentException("Attribute parser '" . $attrName . "' already exists");
-		}
-
-		return $this->attributeParsers[$attrName] = $attributeParser;
-	}
-
-	/**
-	* Return whether an attribute parser exists
-	*
-	* @param  string    $attrName Attribute parser's name
-	* @return bool
-	*/
-	public function hasAttributeParser($attrName)
-	{
-		$attrName = AttributeParser::normalizeName($attrName);
-
-		return isset($this->attributeParsers[$attrName]);
-	}
-
-	/**
-	* Return an attribute parser
-	*
-	* @param  string          $attrName Attribute parser's name
-	* @return AttributeParser
-	*/
-	public function getAttributeParser($attrName)
-	{
-		$attrName = AttributeParser::normalizeName($attrName);
-
-		if (!isset($this->attributeParsers[$attrName]))
-		{
-			throw new InvalidArgumentException("Attribute parser '" . $attrName . "' does not exist");
-		}
-
-		return $this->attributeParsers[$attrName];
-	}
-
-	/**
-	* Return all attribute parsers
-	*
-	* @return array
-	*/
-	public function getAttributeParsers()
-	{
-		return $this->attributeParsers;
-	}
-
-	/**
-	* Remove an attribute parser
-	*
-	* @param  string $attrName Attribute parser's name
-	*/
-	public function removeAttributeParser($attrName)
-	{
-		$attrName = AttributeParser::normalizeName($attrName);
-
-		unset($this->attributeParsers[$attrName]);
-	}
-
-	//==========================================================================
-	// Rules-related methods
-	//==========================================================================
-
-	/**
-	* Define a rule
-	*
-	* The target tag doesn't have to exist at the time of creation.
-	*
-	* @param string $action Rule action
-	* @param string $target Name of the target tag
-	*/
-	public function addRule($action, $target)
-	{
-		if (!in_array($action, array(
-			'allowChild',
-			'allowDescendant',
-			'closeParent',
-			'closeAncestor',
-			'denyChild',
-			'denyDescendant',
-			'reopenChild',
-			'requireParent',
-			'requireAncestor'
-		), true))
-		{
-			throw new UnexpectedValueException("Unknown rule action '" . $action . "'");
-		}
-
-		$target = self::normalizeName($target);
-		$this->rules[$action][$target] = $target;
-	}
-
-	/**
-	* Return all the Rules
-	*
-	* @return array
-	*/
-	public function getRules()
-	{
-		return $this->rules;
-	}
-
-	/**
-	* Remove a rule
-	*
-	* @param string $action
-	* @param string $target
-	*/
-	public function removeRule($tagName, $action, $target)
-	{
-		$target = self::normalizeName($target);
-
-		unset($this->rules[$action][$target]);
+		$this->tagLimit = $limit;
 	}
 
 	//==========================================================================
@@ -428,11 +232,11 @@ class Tag extends ConfigObject
 
 		if ($checkUnsafe)
 		{
-			$isUnsafe = TemplateHelper::checkUnsafe($template, $this);
+			$unsafeMsg = TemplateHelper::checkUnsafe($template, $this);
 
-			if ($isUnsafe)
+			if ($unsafeMsg)
 			{
-				throw new RuntimeException($isUnsafe);
+				throw new RuntimeException($unsafeMsg);
 			}
 		}
 	}

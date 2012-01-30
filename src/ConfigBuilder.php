@@ -7,219 +7,30 @@
 */
 namespace s9e\TextFormatter;
 
-use InvalidArgumentException,
-    RuntimeException,
-    s9e\TextFormatter\ConfigBuilder\HTML5Helper,
-    s9e\TextFormatter\ConfigBuilder\PredefinedTags,
-    s9e\TextFormatter\ConfigBuilder\RegexpMaster,
-    s9e\TextFormatter\ConfigBuilder\Tag,
-    s9e\TextFormatter\ConfigBuilder\TemplateHelper;
+use s9e\TextFormatter\ConfigBuilder\Collection;
 
 class ConfigBuilder
 {
 	/**
-	* @var array Tags repository (associative array of Tag objects)
+	* @var Collection Custom filters
 	*/
-	protected $tags = array();
+	public $customFilters;
 
 	/**
-	* @var array Registered namespaces
+	* @var Collection Tags repository
 	*/
-	protected $namespaces = array();
+	public $tags;
 
 	/**
-	* @var array Custom filters (array of Callback objects)
+	* @var UrlConfig Config options related to URL validation
 	*/
-	protected $filters = array();
+	public $urlConfig;
 
-	//==========================================================================
-	// Namespaces-related methods
-	//==========================================================================
-
-	/**
-	* Register a new namespace
-	*
-	* @param  string $prefix Namespace prefix
-	* @param  string $uri    Namespace URI
-	*/
-	public function registerNamespace($prefix, $uri)
+	public function __construct()
 	{
-		if ($prefix === 'xsl'
-		 || $uri === 'http://www.w3.org/1999/XSL/Transform')
-		{
-			 throw new InvalidArgumentException("Namespace prefix 'xsl' and namespace URI 'http://www.w3.org/1999/XSL/Transform' are reserved for internal use");
-		}
-
-		if (!$this->isValidNamespacePrefix($prefix))
-		{
-			throw new InvalidArgumentException("Invalid prefix name '" . $prefix . "'");
-		}
-
-		if (isset($this->namespaces[$prefix])
-		 && $this->namespaces[$prefix] !== $uri)
-		{
-			throw new InvalidArgumentException("Prefix '" . $prefix . "' is already registered to namespace '" . $this->namespaces[$prefix] . "'");
-		}
-
-		$this->namespaces[$prefix] = $uri;
-	}
-
-	/**
-	* Unregister a namespace if it exists
-	*
-	* @param  string $prefix Namespace prefix
-	*/
-	public function unregisterNamespace($prefix)
-	{
-		unset($this->namespaces[$prefix]);
-	}
-
-	/**
-	* Return whether a namespace exists
-	*
-	* @param  string $prefix Namespace prefix
-	* @return bool
-	*/
-	public function namespaceExists($prefix)
-	{
-		return isset($this->namespaces[$prefix]);
-	}
-
-	/**
-	* Return whether a string is a valid namespace prefix
-	*
-	* @param  string $prefix Namespace prefix
-	* @return bool
-	*/
-	public function isValidNamespacePrefix($prefix)
-	{
-		return preg_match('#^[a-z_][a-z_0-9]*$#Di', $prefix);
-	}
-
-	/**
-	* Return the list of registered namespaces
-	*
-	* @return array
-	*/
-	public function getNamespaces()
-	{
-		return $this->namespaces;
-	}
-
-	/**
-	* Return the URI associated with given namespace prefix
-	*
-	* @param  string $prefix Namespace prefix
-	* @return mixed          Namespace URI, or FALSE if the namespace is not registered
-	*/
-	public function getNamespaceURI($prefix)
-	{
-		return (isset($this->namespaces[$prefix])) ? $this->namespaces[$prefix] : false;
-	}
-
-	/**
-	* Return the first prefix associated with given namespace URI
-	*
-	* @param  string $uri Namespace URI
-	* @return mixed       Namespace prefix, or FALSE if the namespace is not registered
-	*/
-	public function getNamespacePrefix($uri)
-	{
-		return array_search($uri, $this->namespaces, true);
-	}
-
-	/**
-	* Return all the prefixes associated with given namespace URI
-	*
-	* @param  string $uri Namespace URI
-	* @return array       List of namespace prefixes
-	*/
-	public function getNamespacePrefixes($uri)
-	{
-		return array_keys($this->namespaces, $uri, true);
-	}
-
-	//==========================================================================
-	// Tags-related methods
-	//==========================================================================
-
-	/**
-	* Add a new tag
-	*
-	* @param  string    $tagName Name of the tag
-	* @param  Tag|array $tag     Tag to add, or array of tag options
-	* @return Tag                Added tag
-	*/
-	public function addTag($tagName, $tag = array())
-	{
-		if (!($tag instanceof Tag))
-		{
-			$tag = new Tag($tag);
-		}
-
-		$tagName = Tag::normalizeName($tagName);
-
-		if (isset($this->tag[$tagName]))
-		{
-			throw new InvalidArgumentException("Tag  '" . $tagName . "' already exists");
-		}
-
-		/**
-		* Test for namespace prefix/existence
-		*/
-		$pos = strpos($tagName, ':');
-		if ($pos !== false)
-		{
-			$prefix = substr($tagName, 0, $pos);
-
-			if (!$this->namespaceExists($prefix))
-			{
-				throw new InvalidArgumentException("Namespace '" . $prefix . "' is not registered");
-			}
-		}
-
-		$this->tags[$tagName] = $tag;
-
-		return $tag;
-	}
-
-	/**
-	* Return an existing tag
-	*
-	* @param  string $tagName
-	* @return Tag
-	*/
-	public function getTag($tagName)
-	{
-		$tagName = Tag::normalizeTagName($tagName);
-
-		if (!isset($this->tags[$tagName]))
-		{
-			throw new InvalidArgumentException("Tag '" . $tagName . "' does not exist");
-		}
-
-		return $this->tags[$tagName];
-	}
-
-	/**
-	* Remove a tag from the config
-	*
-	* @param string $tagName
-	*/
-	public function removeTag($tagName)
-	{
-		unset($this->tags[Tag::normalizeTagName($tagName)]);
-	}
-
-	/**
-	* Return whether a tag exists
-	*
-	* @param  string $tagName
-	* @return bool
-	*/
-	public function tagExists($tagName)
-	{
-		return isset($this->tags[Tag::normalizeTagName($tagName)]);
+		$this->tags          = new Collection(__CLASS__ . '\\Tag');
+		$this->customFilters = new Collection(__CLASS__ . '\\Filter');
+		$this->urlConfig     = new UrlConfig;
 	}
 
 	//==========================================================================
@@ -740,17 +551,10 @@ class ConfigBuilder
 	*/
 	public function getXSL($prefix = 'xsl')
 	{
-		if (isset($this->namespaces[$prefix]))
-		{
-			throw new InvalidArgumentException("Prefix '" . $prefix . "' is already registered to namespace '" . $this->namespaces[$prefix] . "'");
-		}
-
-		/**
-		* Build the stylesheet
-		*/
+		// Start the stylesheet with boilerplate stuff and the /m template for rendering multiple
+		// texts at once
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
-		     . "\n"
-		     . '<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . '>'
+		     . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
 		     . '<xsl:output method="html" encoding="utf-8" indent="no"/>'
 		     . '<xsl:template match="/m">'
 		     . '<xsl:for-each select="*">'
@@ -759,17 +563,33 @@ class ConfigBuilder
 		     . '</xsl:for-each>'
 		     . '</xsl:template>';
 
-		foreach ($this->tags as $tag)
+		// Append the tags' templates
+		foreach ($this->tags as $tagName => $tag)
 		{
-			if (isset($tag['xsl']))
+			foreach ($tag->templates as $predicate => $template)
 			{
-				$xsl .= $tag['xsl'];
+				if ($predicate !== '')
+				{
+					$predicate = '[' . htmlspecialchars($predicate) . ']';
+				}
+
+				$xsl .= '<xsl:template match="' . $tagName . $predicate . '">'
+				      . $template
+				      . '</xsl:template>';
 			}
 		}
 
-		$xsl .= $this->xsl
-		      . '<xsl:template match="st|et|i"/>'
-		      . '</xsl:stylesheet>';
+		// Append the plugins' XSL
+		foreach ($this->getPlugins() as $plugin)
+		{
+			$xsl .= $plugin->getXSL();
+		}
+
+		// Append the templates for <st>, <et> and <i> nodes
+		$xsl .= '<xsl:template match="st|et|i"/>';
+
+		// Now close the stylesheet
+		$xsl .= '</xsl:stylesheet>';
 
 		/**
 		* Build the DOM and prepare for some optimizations

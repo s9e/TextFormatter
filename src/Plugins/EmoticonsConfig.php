@@ -7,8 +7,9 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use DOMDocument,
-    s9e\TextFormatter\ConfigBuilder,
+use s9e\TextFormatter\ConfigBuilder,
+    s9e\TextFormatter\ConfigBuilder\RegexpMaster,
+    s9e\TextFormatter\ConfigBuilder\TemplateHelper,
     s9e\TextFormatter\PluginConfig;
 
 class EmoticonsConfig extends PluginConfig
@@ -25,8 +26,8 @@ class EmoticonsConfig extends PluginConfig
 
 	public function setUp()
 	{
-		$this->cb->addTag($this->tagName)->setOptions(array(
-			'defaultChildRule' => 'deny',
+		$this->cb->tags->add($this->tagName, array(
+			'defaultChildRule'      => 'deny',
 			'defaultDescendantRule' => 'deny'
 		));
 	}
@@ -34,29 +35,12 @@ class EmoticonsConfig extends PluginConfig
 	/**
 	* Add an emoticon
 	*
-	* @param string $code Emoticon code
-	* @param string $tpl  Emoticon template, e.g. <img src="emot.png"/> -- must be well-formed XML
+	* @param string $code     Emoticon code
+	* @param string $template Emoticon template, e.g. <img src="emot.png"/>
 	*/
-	public function addEmoticon($code, $tpl)
+	public function addEmoticon($code, $template)
 	{
-		$this->addEmoticons(array($code => $tpl));
-	}
-
-	/**
-	* Add several emoticons at once
-	*
-	* Recommended for performance if you want to create several emoticons
-	*
-	* @param array $emoticons Emoticon's code as key and the corresponding template as value
-	*/
-	public function addEmoticons(array $emoticons)
-	{
-		foreach ($emoticons as $code => $tpl)
-		{
-			$this->emoticons[$code] = $tpl;
-		}
-
-		$this->updateXSL();
+		$this->emoticons[$code] = TemplateHelper::normalizeTemplate($template);
 	}
 
 	/**
@@ -69,7 +53,7 @@ class EmoticonsConfig extends PluginConfig
 			return false;
 		}
 
-		$rm = $this->cb->getRegexpMaster();
+		$rm = new RegexpMaster;
 
 		// Non-anchored pattern, will benefit from the S modifier
 		$regexp = '#' . $rm->buildRegexpFromList(array_keys($this->emoticons)) . '#S';
@@ -81,55 +65,44 @@ class EmoticonsConfig extends PluginConfig
 	}
 
 	/**
-	* Commit to ConfigBuilder the XSL needed to render emoticons
+	* Generate the dynamic template that renders all emoticons
+	*
+	* @return string
 	*/
-	protected function updateXSL()
+	protected function getXSL()
 	{
-		$tpls = array();
-		foreach ($this->emoticons as $code => $tpl)
+		$templates = array();
+		foreach ($this->emoticons as $code => $template)
 		{
-			$tpls[$tpl][] = $code;
+			$templates[$template][] = $code;
 		}
 
-		/**
-		* Create a temporary stylesheet
-		*/
-		$dom = new DOMDocument;
-		$dom->loadXML('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" />');
+		$xsl = '<xsl:template match="' . $this->tagName . '">';
 
-		$template = $dom->documentElement->appendChild(
-			$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:template')
-		);
-		$template->setAttribute('match', $this->tagName);
-
-		/**
-		* Iterate over codes, replace codes with their representation as a string (with quotes)
-		* and create variables as needed
-		*/
-		foreach ($tpls as $tpl => &$codes)
+		// Iterate over codes, replace codes with their representation as a string (with quotes)
+		// and create variables as needed
+		foreach ($templates as $template => &$codes)
 		{
 			foreach ($codes as &$code)
 			{
 				if (strpos($code, "'") === false)
 				{
-					$code = "'" . $code . "'";
+					// :)  => <xsl:when test=".=':)'">
+					$code = "'" . htmlspecialchars($code) . "'";
 				}
 				elseif (strpos($code, '"') === false)
 				{
-					$code = '"' . $code . '"';
+					// :') => <xsl:when test=".=&quot;:')&quot;">
+					$code = '&quot;' . $code . '&quot;';
 				}
 				else
 				{
-					// this code contains both ' and " so we store its content in a variable
+					// This code contains both ' and " so we store its content in a variable
 					$id = uniqid();
 
-					$template->appendChild(
-						$dom->createElementNS(
-							'http://www.w3.org/1999/XSL/Transform',
-							'xsl:variable',
-							$code
-						)
-					)->setAttribute('name', 'e' . $id);
+					$xsl .= '<xsl:variable name="e' . $id . '">'
+					      . htmlspecialchars($code)
+					      . '</xsl:variable>';
 
 					$code = '$e' . $id;
 				}
@@ -138,32 +111,21 @@ class EmoticonsConfig extends PluginConfig
 		}
 		unset($codes);
 
-		$choose = $template->appendChild(
-			$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:choose')
-		);
+		// Now build the <xsl:choose> node
+		$xsl .= '<xsl:choose>';
 
-		foreach ($tpls as $tpl => $codes)
+		// Iterate over codes, create an <xsl:when> for each group of codes
+		foreach ($templates as $template => $codes)
 		{
-			$when = $choose->appendChild(
-				$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:when')
-			);
-			$when->setAttribute('test', '.=' . implode(' or .=', $codes));
-
-			$frag = $dom->createDocumentFragment();
-			$frag->appendXML($tpl);
-			$when->appendChild($frag);
+			$xsl .= '<xsl:when test=".=' . implode(' or .=', $codes) . '">'
+			      . $template
+			      . '</xsl:when>';
 		}
 
-		$choose
-			->appendChild(
-				$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:otherwise')
-			)
-			->appendChild(
-				$dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:value-of')
-			)
-			->setAttribute('select', '.');
+		// Finish it with an <xsl:otherwise> that displays the unknown codes as text
+		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
 
-		$this->cb->setTagXSL($this->tagName, $dom->saveXML($template));
+		return $xsl;
 	}
 
 	//==========================================================================

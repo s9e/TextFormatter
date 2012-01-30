@@ -53,6 +53,14 @@ abstract class PluginConfig
 	abstract public function getConfig();
 
 	/**
+	* @return string Extra XSL used by this plugin
+	*/
+	public function getXSL()
+	{
+		return '';
+	}
+
+	/**
 	* @return array This plugin's config, to be used in the Javascript parser
 	*/
 	public function getJSConfig()

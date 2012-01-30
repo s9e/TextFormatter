@@ -7,17 +7,13 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder;
 
-use s9e\TextFormatter\RegexpMaster;
-
-class AttributeParser
+interface Item
 {
 	/**
-	* @todo parse the regexp, reject multiple subpatterns that use the same name
+	* Validate and normalize this item's name
 	*
-	* @param string $regexp
+	* @param  string $name Original name
+	* @return string       Normalized name
 	*/
-	public function __construct($regexp)
-	{
-		$this->regexp = $regexp;
-	}
+	static public function normalizeName($name);
 }
