@@ -72,7 +72,7 @@ class Tag extends ConfigObject
 	*/
 	static public function isValidName($name)
 	{
-		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*:)?[a-z_][a-z_0-9]*$#Di', $tagName);
+		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*:)?[a-z_][a-z_0-9]*$#Di', $name);
 	}
 
 	/**

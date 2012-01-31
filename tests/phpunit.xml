@@ -61,14 +61,18 @@
 			<file>../src/ConfigBuilder.php</file>
 			<file>../src/ConfigBuilder/Attribute.php</file>
 			<file>../src/ConfigBuilder/AttributeParser.php</file>
+			<file>../src/ConfigBuilder/Collection.php</file>
 			<file>../src/ConfigBuilder/ConfigObject.php</file>
 			<file>../src/ConfigBuilder/Filter.php</file>
 			<file>../src/ConfigBuilder/HTML5Helper.php</file>
+			<file>../src/ConfigBuilder/Item.php</file>
 			<file>../src/ConfigBuilder/PredefinedBBCodes.php</file>
 			<file>../src/ConfigBuilder/PredefinedTags.php</file>
 			<file>../src/ConfigBuilder/RegexpMaster.php</file>
+			<file>../src/ConfigBuilder/Ruleset.php</file>
 			<file>../src/ConfigBuilder/Tag.php</file>
 			<file>../src/ConfigBuilder/TemplateHelper.php</file>
+			<file>../src/ConfigBuilder/UrlConfig.php</file>
 			<file>../src/JSParserGenerator.php</file>
 			<file>../src/Parser.php</file>
 			<file>../src/PluginConfig.php</file>

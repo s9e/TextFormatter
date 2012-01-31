@@ -52,9 +52,9 @@ class Collection implements Iterator
 		      ? $arg
 		      : $this->newItem(array_slice(func_get_args(), 1));
 
-		$this->items[$name] = $arg;
+		$this->items[$name] = $item;
 
-		return $arg;
+		return $item;
 	}
 
 	/**
@@ -70,14 +70,6 @@ class Collection implements Iterator
 	}
 
 	/**
-	* Remove all items from this collection
-	*/
-	public function clear()
-	{
-		$this->items = array();
-	}
-
-	/**
 	* Test whether an item of given name exists
 	*
 	* @param  string $name
@@ -88,6 +80,14 @@ class Collection implements Iterator
 		$name = $this->normalizeName($name);
 
 		return isset($this->items[$name]);
+	}
+
+	/**
+	* Remove all items from this collection
+	*/
+	public function clear()
+	{
+		$this->items = array();
 	}
 
 	/**
