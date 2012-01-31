@@ -7,7 +7,11 @@
 */
 namespace s9e\TextFormatter;
 
-use s9e\TextFormatter\ConfigBuilder\Collection;
+use InvalidArgumentException,
+    RuntimeException,
+    s9e\TextFormatter\ConfigBuilder\Collection,
+    s9e\TextFormatter\ConfigBuilder\PredefinedTags,
+    s9e\TextFormatter\ConfigBuilder\UrlConfig;
 
 class ConfigBuilder
 {
@@ -155,109 +159,6 @@ class ConfigBuilder
 		}
 
 		return $rm;
-	}
-
-	//==========================================================================
-	// Filters
-	//==========================================================================
-
-	/**
-	* Set a custom filter to be used to validate an attribute type
-	*
-	* Can be used to override the built-in filters, or support custom attribute types
-	*
-	* @param string   $filterName
-	* @param Callback $callback
-	*/
-	public function setCustomFilter($filterName, Callback $callback)
-	{
-		// A hash sign # is prepended, because that's how built-in filters are detected
-		$this->filters['#' . $filterName] = $callback;
-	}
-
-	/**
-	* Return a custom filter's Callback object
-	*
-	* @param  string   $filterName
-	* @return Callback
-	*/
-	public function getCustomFilter($filterName)
-	{
-		return $this->filters['#' . $filterName];
-	}
-
-	/**
-	* Return all custom filters
-	*
-	* @return array
-	*/
-	public function getCustomFilters()
-	{
-		return $this->filters;
-	}
-
-	/**
-	* Return whether a custom filter is set
-	*
-	* @return bool
-	*/
-	public function hasCustomFilter($filterName)
-	{
-		return isset($this->filters['#' . $filterName]);
-	}
-
-	/**
-	* Unset custom filter
-	*
-	* @param string $filterName
-	*/
-	public function unsetCustomFilter($filterName)
-	{
-		unset($this->filters['#' . $filterName]);
-	}
-
-	//==========================================================================
-	// Callbacks-related methods
-	//==========================================================================
-
-	/**
-	* Normalize the representation of a callback
-	*
-	* This method will return an array with 1 to 3 components:
-	*  - callback: the actual callback (required)
-	*  - params:   the list of params that must be passed to the callback (optional)
-	*  - js:       the Javascript source representing this callback
-	*
-	* There is, however, one exception; Validators, such as "#int" or "#url" are returned as
-	* strings. If the passed callback isn't callable and isn't a validator, an exception is thrown.
-	*
-	* @param  mixed        $callback
-	* @return string|array
-	*/
-	protected function normalizeCallback($callback)
-	{
-		if ($callback instanceof Callback)
-		{
-			return $callback->toArray();
-		}
-
-		if (is_string($callback) && $callback[0] === '#')
-		{
-			// It's a built-in filter, return as-is
-			return $callback;
-		}
-
-		if (is_callable($callback))
-		{
-			// It's a callback with no signature, we'll assume it just requires the attribute's
-			// value. Otherwise, a Callback object should be used instead
-			return array(
-				'callback' => $callback,
-				'params'   => array('attrVal' => null)
-			);
-		}
-
-		throw new InvalidArgumentException("Callback '" . var_export($callback, true) . "' is not callable");
 	}
 
 	//==========================================================================
@@ -646,36 +547,6 @@ class ConfigBuilder
 		$xslt->importStylesheet($trans);
 
 		return rtrim($xslt->transformToXml($dom));
-	}
-
-	/**
-	* Add generic XSL
-	*
-	* This XSL will be output in the final stylesheet before tag-specific templates.
-	*
-	* @param string  $xsl     Must be valid XSL elements. A root node is not required
-	* @param integer $flags
-	*/
-	public function addXSL($xsl, $flags = 0)
-	{
-		$this->xsl .= $this->normalizeXSL($xsl, $flags);
-	}
-
-	/**
-	* Generate the namespace declarations of all registered namespaces plus the XSL namespace
-	*
-	* @return string
-	*/
-	protected function generateNamespaceDeclarations()
-	{
-		$str = ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
-
-		foreach ($this->namespaces as $prefix => $uri)
-		{
-			$str .= ' xmlns:' . $prefix . '="' . htmlspecialchars($uri) . '"';
-		}
-
-		return $str;
 	}
 
 	//==========================================================================
