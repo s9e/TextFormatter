@@ -7,7 +7,9 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder;
 
-class Ruleset
+use Iterator;
+
+class Ruleset implements Iterator
 {
 	/**
 	* @var array
@@ -57,5 +59,34 @@ class Ruleset
 	public function requireAncestor($tagName)
 	{
 		$this->rules['requireAncestor'][] = Tag::normalizeName($tagName);
+	}
+
+	//==========================================================================
+	// Iterator stuff
+	//==========================================================================
+
+	public function rewind()
+	{
+		reset($this->rules);
+	}
+
+	public function current()
+	{
+		return current($this->rules);
+	}
+
+	function key()
+	{
+		return key($this->rules);
+	}
+
+	function next()
+	{
+		return next($this->rules);
+	}
+
+	function valid()
+	{
+		return (key($this->rules) !== null);
 	}
 }

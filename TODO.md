@@ -23,3 +23,4 @@ TODO
 - Move the "reduce" part of ConfigBuilder::getTagsConfig() to its own method
 - Tags with a require* rule should not be enabled in the root context
 - Investigate whether requireParent rules can be optimized away by replacing them with allowChild/denyChild rules
+- Add exception codes to exceptions

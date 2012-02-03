@@ -70,6 +70,21 @@ class Collection implements Iterator
 	}
 
 	/**
+	* Rename an item in this collection
+	*
+	* @param string $oldName
+	* @param string $newName
+	*/
+	public function rename($oldName, $newName)
+	{
+		$oldName = $this->normalizeName($oldName, true);
+		$newName = $this->normalizeName($newName, false);
+
+		$this->items[$newName] = $this->items[$oldName];
+		unset($this->items[$oldName]);
+	}
+
+	/**
 	* Test whether an item of given name exists
 	*
 	* @param  string $name
@@ -94,7 +109,7 @@ class Collection implements Iterator
 	* Normalize the name of an item
 	*
 	* @param  string $name      Original name
-	* @param  bool   $mustExist Whether the item MUST exist or MUST not exist (can be omitted)
+	* @param  bool   $mustExist Whether the item MUST exist or MUST NOT exist (can be omitted)
 	* @return string            Normalized name
 	*/
 	protected function normalizeName($name, $mustExist = null)
