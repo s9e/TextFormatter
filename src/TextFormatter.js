@@ -1800,15 +1800,15 @@ var HINT = {
 			}
 
 			var DOM = loadXML(xml),
-				document = target.ownerDocument,
+				targetDoc = target.ownerDocument,
 				frag;
 
 			if (MSXML)
 			{
-				var div  = document.createElement('div');
+				var div  = targetDoc.createElement('div');
 				div.innerHTML = DOM.transformNode(xslt);
 
-				frag = document.createDocumentFragment();
+				frag = targetDoc.createDocumentFragment();
 				while (div.firstChild)
 				{
 					frag.appendChild(div.removeChild(div.firstChild));
@@ -1816,7 +1816,7 @@ var HINT = {
 			}
 			else
 			{
-				frag = xslt['transformToFragment'](DOM, document);
+				frag = xslt['transformToFragment'](DOM, targetDoc);
 			}
 
 			/**
@@ -1871,7 +1871,7 @@ var HINT = {
 				/**
 				* Clone the new nodes
 				*/
-				var frag = document.createDocumentFragment(),
+				var frag = targetDoc.createDocumentFragment(),
 					i = left;
 
 				while (i < (newCnt - right))
