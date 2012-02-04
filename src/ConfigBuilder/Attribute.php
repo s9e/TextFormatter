@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 
 use InvalidArgumentException;
 
-class Attribute
+class Attribute extends ConfigurableItem
 {
 	/**
 	* @param array $options This attribute's options

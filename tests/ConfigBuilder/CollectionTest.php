@@ -23,6 +23,49 @@ class CollectionTest extends Test
 	}
 
 	/**
+	* @testdox add() creates and returns a new instance of the Item class if a second argument is not passed
+	*/
+	public function testAddCreatesInstanceOnMissingArgument()
+	{
+		$class = __NAMESPACE__ . '\\CollectionTestItem';
+		$collection = new Collection($class);
+
+		$this->assertInstanceOf(
+			$class,
+			$collection->add('foo')
+		);
+	}
+
+	/**
+	* @testdox add() creates and returns a new instance of the Item class if the second argument is not an instance of the Item class
+	*/
+	public function testAddCreatesInstanceOnNonItemArgument()
+	{
+		$class = __NAMESPACE__ . '\\CollectionTestItem';
+		$collection = new Collection($class);
+
+		$this->assertInstanceOf(
+			$class,
+			$collection->add('foo', 'bar')
+		);
+	}
+
+
+	/**
+	* @testdox add() passes all of its arguments after the first to the Item constructor if its second argument is not an instance of the Item class
+	*/
+	public function testAddCreatesInstanceAndPassesAllArguments()
+	{
+		$class = __NAMESPACE__ . '\\CollectionTestItem';
+		$collection = new Collection($class);
+
+		$item = $collection->add('foo', 'bar', 'baz');
+
+		$this->assertSame('bar', $item->a1, 'The first argument does not match');
+		$this->assertSame('baz', $item->a2, 'The second argument does not match');
+	}
+
+	/**
 	* @testdox add() calls the item's normalizeName() method
 	*/
 	public function testAddCallsNormalizeNameIsCalled()
@@ -278,6 +321,12 @@ class CollectionTest extends Test
 
 class CollectionTestItem implements Item
 {
+	public function __construct($a1 = null, $a2 = null)
+	{
+		$this->a1 = $a1;
+		$this->a2 = $a2;
+	}
+
 	static public function normalizeName($name)
 	{
 		return $name;

@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 use InvalidArgumentException,
     UnexpectedValueException;
 
-class Tag extends ConfigObject
+class Tag extends ConfigurableItem
 {
 	/**
 	* @var Collection This tag's attributes

@@ -62,7 +62,8 @@
 			<file>../src/ConfigBuilder/Attribute.php</file>
 			<file>../src/ConfigBuilder/AttributeParser.php</file>
 			<file>../src/ConfigBuilder/Collection.php</file>
-			<file>../src/ConfigBuilder/ConfigObject.php</file>
+			<file>../src/ConfigBuilder/Configurable.php</file>
+			<file>../src/ConfigBuilder/ConfigurableItem.php</file>
 			<file>../src/ConfigBuilder/Filter.php</file>
 			<file>../src/ConfigBuilder/HTML5Helper.php</file>
 			<file>../src/ConfigBuilder/Item.php</file>

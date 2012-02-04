@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 
 use s9e\TextFormatter\RegexpMaster;
 
-class AttributeParser
+class AttributeParser implements Item
 {
 	/**
 	* @todo parse the regexp, reject multiple subpatterns that use the same name
@@ -19,5 +19,32 @@ class AttributeParser
 	public function __construct($regexp)
 	{
 		$this->regexp = $regexp;
+	}
+
+	/**
+	* Return whether a string is a valid attribute parser name
+	*
+	* @param  string $name
+	* @return bool
+	*/
+	static public function isValidName($name)
+	{
+		return (bool) preg_match('#^[a-z_][a-z_0-9\\-]*$#Di', $name);
+	}
+
+	/**
+	* Validate and normalize an attribute parser name
+	*
+	* @param  string $name Original attribute parser name
+	* @return string       Normalized attribute parser name, in lowercase
+	*/
+	static public function normalizeName($name)
+	{
+		if (!self::isValidName($name))
+		{
+			throw new InvalidArgumentException ("Invalid attribute parser name '" . $name . "'");
+		}
+
+		return strtolower($name);
 	}
 }

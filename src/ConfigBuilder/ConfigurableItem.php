@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder;
 
-abstract class ConfigObject
+abstract class ConfigurableItem implements Configurable, Item
 {
 	/**
 	* @param array $options This object's options
