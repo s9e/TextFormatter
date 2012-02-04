@@ -1161,6 +1161,7 @@ class Parser
 			'pos'    => $pos,
 			'len'    => 0,
 			'type'   => $type,
+			'attrs'  => array(),
 			'tagMate'    => $tag['tagMate'],
 			'pluginName' => $tag['pluginName']
 		);
@@ -1417,22 +1418,20 @@ class Parser
 	*/
 	protected function filterAttributes()
 	{
-		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
-
-		if (empty($tagConfig['attrs']))
-		{
-			// No attributes defined
-			$this->currentTag['attrs'] = array();
-
-			return true;
-		}
-
 		// Handle parsable attributes
 		$this->parseAttributes();
 
 		// Save the current attribute values then reset current tag's attributes
 		$attrVals = $this->currentTag['attrs'];
 		$this->currentTag['attrs'] = array();
+
+		$tagConfig = $this->tagsConfig[$this->currentTag['name']];
+
+		if (empty($tagConfig['attrs']))
+		{
+			// No attributes defined
+			return true;
+		}
 
 		foreach ($tagConfig['attrs'] as $attrName => $attrConf)
 		{

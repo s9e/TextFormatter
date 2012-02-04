@@ -1087,6 +1087,7 @@ var HINT = {
 			pos    : _pos,
 			len    : 0,
 			type   : _type,
+			attrs  : {},
 			tagMate    : tag.tagMate,
 			pluginName : tag.pluginName
 		};
@@ -1359,22 +1360,20 @@ var HINT = {
 
 	function filterAttributes()
 	{
-		var tagConfig = tagsConfig[currentTag.name];
-
-		if (!HINT.tagConfig.attrs || !tagConfig.attrs)
-		{
-			// No attributes defined
-			currentTag.attrs = {};
-
-			return true;
-		}
-
 		// Handle parsable attributes
 		parseAttributes();
 
 		// Save the current attribute values then reset current tag's attributes
 		var attrVals = currentTag.attrs;
 		currentTag.attrs = {};
+
+		var tagConfig = tagsConfig[currentTag.name];
+
+		if (!HINT.tagConfig.attrs || !tagConfig.attrs)
+		{
+			// No attributes defined
+			return true;
+		}
 
 		for (var attrName in tagConfig.attrs)
 		{
