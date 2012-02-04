@@ -1364,7 +1364,7 @@ var HINT = {
 		if (!HINT.tagConfig.attrs || !tagConfig.attrs)
 		{
 			// No attributes defined
-			currentTagattrs = {};
+			currentTag.attrs = {};
 
 			return true;
 		}
