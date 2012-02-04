@@ -1087,6 +1087,7 @@ var HINT = {
 			pos    : _pos,
 			len    : 0,
 			type   : _type,
+			attrs  : {},
 			tagMate    : tag.tagMate,
 			pluginName : tag.pluginName
 		};
@@ -1359,22 +1360,20 @@ var HINT = {
 
 	function filterAttributes()
 	{
-		var tagConfig = tagsConfig[currentTag.name];
-
-		if (!HINT.tagConfig.attrs || !tagConfig.attrs)
-		{
-			// No attributes defined
-			currentTagattrs = {};
-
-			return true;
-		}
-
 		// Handle parsable attributes
 		parseAttributes();
 
 		// Save the current attribute values then reset current tag's attributes
 		var attrVals = currentTag.attrs;
 		currentTag.attrs = {};
+
+		var tagConfig = tagsConfig[currentTag.name];
+
+		if (!HINT.tagConfig.attrs || !tagConfig.attrs)
+		{
+			// No attributes defined
+			return true;
+		}
 
 		for (var attrName in tagConfig.attrs)
 		{
@@ -1800,15 +1799,15 @@ var HINT = {
 			}
 
 			var DOM = loadXML(xml),
-				document = target.ownerDocument,
+				targetDoc = target.ownerDocument,
 				frag;
 
 			if (MSXML)
 			{
-				var div  = document.createElement('div');
+				var div  = targetDoc.createElement('div');
 				div.innerHTML = DOM.transformNode(xslt);
 
-				frag = document.createDocumentFragment();
+				frag = targetDoc.createDocumentFragment();
 				while (div.firstChild)
 				{
 					frag.appendChild(div.removeChild(div.firstChild));
@@ -1816,7 +1815,7 @@ var HINT = {
 			}
 			else
 			{
-				frag = xslt['transformToFragment'](DOM, document);
+				frag = xslt['transformToFragment'](DOM, targetDoc);
 			}
 
 			/**
@@ -1871,7 +1870,7 @@ var HINT = {
 				/**
 				* Clone the new nodes
 				*/
-				var frag = document.createDocumentFragment(),
+				var frag = targetDoc.createDocumentFragment(),
 					i = left;
 
 				while (i < (newCnt - right))
@@ -1944,28 +1943,35 @@ var HINT = {
 			*/
 			function syncElementAttributes(oldEl, newEl)
 			{
-				var oldCnt = oldEl.attributes.length,
-					newCnt = newEl.attributes.length,
+				var oldAttributes = oldEl.attributes,
+					newAttributes = newEl.attributes,
+					oldCnt = oldAttributes.length,
+					newCnt = newAttributes.length,
 					i = oldCnt;
 
 				while (--i >= 0)
 				{
-					var oldAttr = oldEl.attributes[i];
+					var oldAttr      = oldAttributes[i],
+						namespaceURI = oldAttr.namespaceURI,
+						attrName     = oldAttr['name'];
 
-					if (!hasAttributeNS(newEl, oldAttr.namespaceURI, oldAttr['name']))
+					if (!hasAttributeNS(newEl, namespaceURI, attrName))
 					{
-						removeAttributeNS(oldEl, oldAttr.namespaceURI, oldAttr['name']);
+						removeAttributeNS(oldEl, namespaceURI, attrName);
 					}
 				}
 
 				i = newCnt;
 				while (--i >= 0)
 				{
-					var newAttr = newEl.attributes[i];
+					var newAttr      = newAttributes[i],
+						namespaceURI = newAttr.namespaceURI,
+						attrName     = newAttr['name'],
+						attrValue    = newAttr.value;
 
-					if (newAttr.value !== getAttributeNS(oldEl, newAttr.namespaceURI, newAttr['name']))
+					if (attrValue !== getAttributeNS(oldEl, namespaceURI, attrName))
 					{
-						setAttributeNS(oldEl, newAttr.namespaceURI, newAttr['name'], newAttr.value);
+						setAttributeNS(oldEl, namespaceURI, attrName, attrValue);
 					}
 				}
 			}

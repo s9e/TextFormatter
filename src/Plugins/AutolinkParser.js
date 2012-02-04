@@ -10,10 +10,10 @@ matches.forEach(function(m)
 	*/
 	while (1)
 	{
-		url = url.replace(/[^\w\)=\-\/]+$/, '');
+		url = url.replace(/[^-\w)=\/]+$/, '');
 
 		if (url.substr(url.length - 1) === ')'
-		 && url.replace(/[^\(]+/g, '').length < url.replace(/[^\)]+/g, '').length)
+		 && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
 		{
 			url = url.substr(0, url.length - 1);
 			continue;
