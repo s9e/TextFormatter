@@ -383,6 +383,8 @@ s9e\TextFormatter\Tests\RegexpMaster
  [x] buildRegexpFromList(['ax', 'axed']) returns 'ax(?:ed)?'
  [x] buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
  [x] buildRegexpFromList(['a', '.'], ["specialChars" => ["." => "."]]) returns '(?:a|.)'
+ [x] buildRegexpFromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:x|^)y'
+ [x] buildRegexpFromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:y|$)'
  [x] buildRegexpFromList(['foo', 'bar']) returns '(?:bar|foo)'
  [x] buildRegexpFromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[\\\\*])(?:\\*foo|\\\\bar)'
  [x] buildRegexpFromList(['?', 'bar'], ["specialChars" => ["?" => "."], "useLookahead" => true]) returns '(?:.|bar)'

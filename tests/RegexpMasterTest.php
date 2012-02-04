@@ -136,6 +136,38 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
+	* @testdox buildRegexpFromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:x|^)y'
+	*/
+	public function test_buildRegexpFromList_8a71e271()
+	{
+		$this->assertSame(
+			'(?:x|^)y',
+			$this->rm->buildRegexpFromList(
+				array('xy', '^y'),
+				array('specialChars' => array (
+  '^' => '^',
+))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:y|$)'
+	*/
+	public function test_buildRegexpFromList_13ba1bfa()
+	{
+		$this->assertSame(
+			'x(?:y|$)',
+			$this->rm->buildRegexpFromList(
+				array('xy', 'x$'),
+				array('specialChars' => array (
+  '$' => '$',
+))
+			)
+		);
+	}
+
+	/**
 	* @testdox buildRegexpFromList(['foo', 'bar']) returns '(?:bar|foo)'
 	*/
 	public function test_buildRegexpFromList_a3302107()
@@ -1608,6 +1640,16 @@ class RegexpMasterTest extends Test
 				'(?:a|.)',
 				array('a', '.'),
 				array('specialChars' => array('.' => '.'))
+			),
+			array(
+				'(?:x|^)y',
+				array('xy', '^y'),
+				array('specialChars' => array('^' => '^'))
+			),
+			array(
+				'x(?:y|$)',
+				array('xy', 'x$'),
+				array('specialChars' => array('$' => '$'))
 			),
 			array(
 				'(?:bar|foo)',

@@ -609,8 +609,8 @@ class RegexpMaster
 			return false;
 		}
 
-		// Unescaped dots shouldn't be used in a character class
-		if (preg_match('/(?<!\\\\)\\./', $char))
+		// Unescaped meta-characters shouldn't be used in a character class
+		if (preg_match('/(?<!\\\\)[$.^]/', $char))
 		{
 			return false;
 		}
