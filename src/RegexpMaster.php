@@ -206,9 +206,9 @@ class RegexpMaster
 			$head = $this->generateCharacterClass($characterClass);
 			$groups[$head][] = array($head);
 
-			// Ensure that the character class is at first in the alternation. Not only it looks
-			// nice and might be more performant, it's also how assemble() does it, so normalizing
-			// it might help with generating identical regexps (or subpatterns that would then be
+			// Ensure that the character class is first in the alternation. Not only it looks nice
+			// and might be more performant, it's also how assemble() does it, so normalizing it
+			// might help with generating identical regexps (or subpatterns that would then be
 			// optimized away as a prefix/suffix)
 			$groups = array($head => $groups[$head])
 			        + $groups;
@@ -236,7 +236,6 @@ class RegexpMaster
 			}
 
 			$mergedChain[] = $regexp;
-
 		}
 		else
 		{
