@@ -189,6 +189,8 @@ class RegexpMaster
 			if ($groupChains === array(array($head))
 			 && $this->canBeUsedInCharacterClass($head))
 			{
+				// The whole chain is composed of exactly one token, a token that can be used in a
+				// character class
 				$characterClass[$head] = $head;
 			}
 		}
@@ -196,13 +198,16 @@ class RegexpMaster
 		// Sort the characters and reset their keys
 		sort($characterClass);
 
+		// Test whether there is more than 1 character in the character class
 		if (isset($characterClass[1]))
 		{
+			// Remove each of those characters from the groups
 			foreach ($characterClass as $char)
 			{
 				unset($groups[$char]);
 			}
 
+			// Create a new group for this character class
 			$head = $this->generateCharacterClass($characterClass);
 			$groups[$head][] = array($head);
 
