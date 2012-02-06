@@ -44,7 +44,7 @@ matches.forEach(function(m)
 		* [code:1] or [/code:1]
 		* suffix = ':1'
 		*/
-		suffix  = /^:[0-9]*/.exec(text.substr(rpos))[0];
+		suffix  = /^:\d*/.exec(text.substr(rpos))[0];
 		rpos   += suffix.length;
 	}
 
@@ -121,7 +121,7 @@ matches.forEach(function(m)
 			/**
 			* Capture the attribute name
 			*/
-			var attrName = /^[a-z_0-9\-]*/i.exec(text.substr(rpos))[0].toLowerCase();
+			var attrName = /^[-\w]*/i.exec(text.substr(rpos))[0].toLowerCase();
 
 			if (attrName)
 			{

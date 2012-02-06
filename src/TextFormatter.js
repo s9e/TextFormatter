@@ -1548,7 +1548,7 @@ var HINT = {
 			 removeScheme = true;
 		}
 
-		var m =/^([a-z0-9]+):\/\/\S+(?:\/.*)?$/i.exec(url);
+		var m =/^([a-z\d]+):\/\/\S+(?:\/.*)?$/i.exec(url);
 
 		if (!m)
 		{
@@ -1602,12 +1602,12 @@ var HINT = {
 
 	function validateId(id)
 	{
-		return /^[a-zA-Z0-9-_]+$/.test(id) ? id : false;
+		return /^[-\w]+$/i.test(id) ? id : false;
 	}
 
 	function validateSimpletext(text)
 	{
-		return /^[a-zA-Z0-9\-+.,_ ]+$/.test(text) ? text : false;
+		return /^[-\w+., ]+$/i.test(text) ? text : false;
 	}
 
 	function validateEmail(email, attrConf)
@@ -1638,27 +1638,27 @@ var HINT = {
 
 	function validateInt(_int)
 	{
-		return /^(?:0|-?[1-9][0-9]*)$/.test(_int) ? _int : false;
+		return /^(?:0|-?[1-9]\d*)$/.test(_int) ? _int : false;
 	}
 
 	function validateFloat(_float)
 	{
-		return /^(?:0|-?[1-9][0-9]*)(?:\.[0-9]+)?(?:e[1-9][0-9]*)?$/i.test(_float) ? _float : false;
+		return /^(?:0|-?[1-9]\d*)(?:\.\d+)?(?:e[1-9]\d*)?$/i.test(_float) ? _float : false;
 	}
 
 	function validateNumber(number)
 	{
-		return /^[0-9]+$/.test(number) ? number : false;
+		return /^\d+$/.test(number) ? number : false;
 	}
 
 	function validateUint(uint)
 	{
-		return /^(?:0|[1-9][0-9]*)$/.test(uint) ? uint : false;
+		return /^(?:0|[1-9]\d*)$/.test(uint) ? uint : false;
 	}
 
 	function validateRange(number, attrConf)
 	{
-		if (!/^(?:0|-?[1-9][0-9]*)$/.test(number))
+		if (!/^(?:0|-?[1-9]\d*)$/.test(number))
 		{
 			return false;
 		}
@@ -1686,7 +1686,7 @@ var HINT = {
 
 	function validateColor(color)
 	{
-		return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(color) ? color : false;
+		return /^(?:#[a-f\d]{3,6}|[a-z]+)$/i.test(color) ? color : false;
 	}
 
 	function validateRegexp(attrVal, attrConf)
