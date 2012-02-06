@@ -1602,12 +1602,12 @@ var HINT = {
 
 	function validateId(id)
 	{
-		return /^[-\w]+$/i.test(id) ? id : false;
+		return /^[-\w]+$/.test(id) ? id : false;
 	}
 
 	function validateSimpletext(text)
 	{
-		return /^[-\w+., ]+$/i.test(text) ? text : false;
+		return /^[-\w+., ]+$/.test(text) ? text : false;
 	}
 
 	function validateEmail(email, attrConf)
