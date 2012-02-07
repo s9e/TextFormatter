@@ -25,3 +25,4 @@ TODO
 - Investigate whether requireParent rules can be optimized away by replacing them with allowChild/denyChild rules
 - Add exception codes to exceptions?
 - Add an "alnum" or "alphanum" built-in filter that matches /^[a-z0-9]+$/iD and possibly an "hex" filter for /^[0-9a-f]+$/iD
+- BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
