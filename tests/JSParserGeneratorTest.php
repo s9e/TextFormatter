@@ -493,6 +493,22 @@ class JSParserGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox The "unsafeMinification" option tries not to rename variables
+	*/
+	public function testUnsafeMinificationVariable()
+	{
+		$js = $this->cb->getJSParser(array(
+			'unsafeMinification' => true
+		));
+
+		// We rely on TextFormatter.js source for now. This is from validateId()
+		$this->assertContains(
+			'? id : false',
+			$js
+		);
+	}
+
+	/**
 	* @dataProvider getHintsData
 	* @testdox setOptimizationHints() works and you'll have to look into tests/JSParserGeneratorTest.php to have more details about it, until PHPUnit provides a way to generate a better testdox with data providers
 	*/

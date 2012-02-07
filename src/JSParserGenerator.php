@@ -942,8 +942,9 @@ class JSParserGenerator
 
 		// name:
 		$this->src = preg_replace(
-			'#(?<=\\W)(?=(?:' . implode('|', $rename) . ')(?=\\s*:))#',
-			'_',
+			// We check for { or , in order to avoid matching something like (1 ? id : 0)
+			'#([{,]\\s*)(?=(?:' . implode('|', $rename) . ')(?=\\s*:))#',
+			'$1_',
 			$this->src
 		);
 	}
