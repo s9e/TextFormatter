@@ -1412,6 +1412,20 @@ class ConfigBuilderTest extends Test
 	}
 
 	/**
+	* @testdox Tags' namespaces are preserved when using a custom prefix for the XSL namespace
+	*/
+	public function testXSLPrefix2()
+	{
+		$this->cb->registerNamespace('foo', 'urn:foo');
+		$this->cb->addTag('foo:bar');
+
+		$this->assertContains(
+			'xmlns:foo',
+			$this->cb->getXSL('xxx')
+		);
+	}
+
+	/**
 	* @testdox Identical templates are merged
 	*/
 	public function testXSLDupes()

@@ -1537,21 +1537,26 @@ class ConfigBuilder
 		*/
 		$this->optimizeXSLAttributes($dom);
 
-		/**
-		* If we're using the default prefix then we're done
-		*/
-		if ($prefix === 'xsl')
+		if ($prefix !== 'xsl')
 		{
-			return rtrim($dom->saveXML());
+			$dom = $this->changeXSLPrefix($dom, $prefix);
 		}
 
-		/**
-		* Fix the XSL prefix
-		*/
+		return rtrim($dom->saveXML());
+	}
+
+	/**
+	* Change the prefix used for XSL elements
+	*
+	* @param DOMDocument $dom
+	* @param string      $prefix
+	*/
+	protected function changeXSLPrefix(DOMDocument $dom, $prefix)
+	{
 		$trans = new DOMDocument;
 		$trans->loadXML(
 			'<?xml version="1.0" encoding="utf-8"?>
-			<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . ' xmlns:' . $prefix . '="http://www.w3.org/1999/XSL/Transform">
+			<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:' . $prefix . '="http://www.w3.org/1999/XSL/Transform">
 
 				<xsl:output method="xml" encoding="utf-8" />
 
@@ -1575,7 +1580,19 @@ class ConfigBuilder
 		$xslt = new XSLTProcessor;
 		$xslt->importStylesheet($trans);
 
-		return rtrim($xslt->transformToXml($dom));
+		$dom = $xslt->transformToDoc($dom);
+
+		// Restore the tag namespaces that have been lost in the transformation
+		foreach ($this->namespaces as $nsPrefix => $nsURI)
+		{
+			$dom->documentElement->setAttributeNS(
+				'http://www.w3.org/2000/xmlns/',
+				'xmlns:' . $nsPrefix,
+				$nsURI
+			);
+		}
+
+		return $dom;
 	}
 
 	/**

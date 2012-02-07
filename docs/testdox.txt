@@ -105,6 +105,7 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] Cannot add invalid XSL
  [x] XSL from tags appear in output
  [x] Can use a custom prefix for the XSL namespace
+ [x] Tags' namespaces are preserved when using a custom prefix for the XSL namespace
  [x] Identical templates are merged
  [x] Empty templates are merged with the default empty template
  [x] HTML attributes in templates are inlined
