@@ -20,7 +20,7 @@ function _array(array $arr)
 			$php .= var_export($k, true) . ' => ';
 		}
 
-		$php .= var_export($v, true);
+		$php .= (is_array($v)) ? _array($v) : var_export($v, true);
 	}
 
 	$php .= ')';
