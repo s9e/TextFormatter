@@ -128,9 +128,7 @@ class RegexpMasterTest extends Test
 			'(?:a|.)',
 			$this->rm->buildRegexpFromList(
 				array('a', '.'),
-				array('specialChars' => array (
-  '.' => '.',
-))
+				array('specialChars' => array('.' => '.'))
 			)
 		);
 	}
@@ -144,9 +142,7 @@ class RegexpMasterTest extends Test
 			'(?:x|^)y',
 			$this->rm->buildRegexpFromList(
 				array('xy', '^y'),
-				array('specialChars' => array (
-  '^' => '^',
-))
+				array('specialChars' => array('^' => '^'))
 			)
 		);
 	}
@@ -160,9 +156,7 @@ class RegexpMasterTest extends Test
 			'x(?:y|$)',
 			$this->rm->buildRegexpFromList(
 				array('xy', 'x$'),
-				array('specialChars' => array (
-  '$' => '$',
-))
+				array('specialChars' => array('$' => '$'))
 			)
 		);
 	}
@@ -201,9 +195,7 @@ class RegexpMasterTest extends Test
 			'(?:.|bar)',
 			$this->rm->buildRegexpFromList(
 				array('?', 'bar'),
-				array('specialChars' => array (
-  '?' => '.',
-), 'useLookahead' => true)
+				array('specialChars' => array('?' => '.'), 'useLookahead' => true)
 			)
 		);
 	}
@@ -399,13 +391,60 @@ class RegexpMasterTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList(['afoo', 'abar', 'bbfoo', 'bbbar']) returns '(?:a|bb)(?:bar|foo)'
+	* @testdox buildRegexpFromList(['axx', 'ayy', 'bbxx', 'bbyy']) returns '(?:a|bb)(?:xx|yy)'
 	*/
-	public function test_buildRegexpFromList_386f86fb()
+	public function test_buildRegexpFromList_8a86c707()
 	{
 		$this->assertSame(
-			'(?:a|bb)(?:bar|foo)',
-			$this->rm->buildRegexpFromList(array('afoo', 'abar', 'bbfoo', 'bbbar'))
+			'(?:a|bb)(?:xx|yy)',
+			$this->rm->buildRegexpFromList(array('axx', 'ayy', 'bbxx', 'bbyy'))
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['axx', 'ayy', 'bbxx', 'bbyy', 'c']) returns '(?:c|(?:a|bb)(?:xx|yy))'
+	*/
+	public function test_buildRegexpFromList_59fb8e0()
+	{
+		$this->assertSame(
+			'(?:c|(?:a|bb)(?:xx|yy))',
+			$this->rm->buildRegexpFromList(array('axx', 'ayy', 'bbxx', 'bbyy', 'c'))
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c']) returns '(?:c|a(?:xx|yy|zz)|bb(?:xx|yy))'
+	*/
+	public function test_buildRegexpFromList_ea302659()
+	{
+		$this->assertSame(
+			'(?:c|a(?:xx|yy|zz)|bb(?:xx|yy))',
+			$this->rm->buildRegexpFromList(array('axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c'))
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['ac', 'af', 'bbc', 'bbf', 'c']) returns '(?:c|a[cf]|bb[cf])'
+	*/
+	public function test_buildRegexpFromList_1cc75402()
+	{
+		$this->assertSame(
+			'(?:c|a[cf]|bb[cf])',
+			$this->rm->buildRegexpFromList(array('ac', 'af', 'bbc', 'bbf', 'c'))
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['^example.org$', '.example.org$', '^localhost$', '.localhost$'], ["specialChars" => ["^" => "^", "$" => "$"]]) returns '(?:\\.|^)(?:example\\.org|localhost)$'
+	*/
+	public function test_buildRegexpFromList_d463a304()
+	{
+		$this->assertSame(
+			'(?:\\.|^)(?:example\\.org|localhost)$',
+			$this->rm->buildRegexpFromList(
+				array('^example.org$', '.example.org$', '^localhost$', '.localhost$'),
+				array('specialChars' => array('^' => '^', '$' => '$'))
+			)
 		);
 	}
 
@@ -528,9 +567,7 @@ class RegexpMasterTest extends Test
 			'[ab]\\d',
 			$this->rm->buildRegexpFromList(
 				array('ad', 'bd'),
-				array('specialChars' => array (
-  'd' => '\\d',
-))
+				array('specialChars' => array('d' => '\\d'))
 			)
 		);
 	}
@@ -544,9 +581,7 @@ class RegexpMasterTest extends Test
 			'[\\da][\\dx]?',
 			$this->rm->buildRegexpFromList(
 				array('a', 'ax', 'ad', 'd', 'dx', 'dd'),
-				array('specialChars' => array (
-  'd' => '\\d',
-))
+				array('specialChars' => array('d' => '\\d'))
 			)
 		);
 	}
@@ -1737,8 +1772,30 @@ class RegexpMasterTest extends Test
 				array('abx', 'aby', 'cdx', 'cdy')
 			),
 			array(
-				'(?:a|bb)(?:bar|foo)',
-				array('afoo', 'abar', 'bbfoo', 'bbbar')
+				'(?:a|bb)(?:xx|yy)',
+				array('axx', 'ayy', 'bbxx', 'bbyy')
+			),
+			array(
+				'(?:c|(?:a|bb)(?:xx|yy))',
+				array('axx', 'ayy', 'bbxx', 'bbyy', 'c')
+			),
+			array(
+				// Ensure it doesn't become (?:c|(?:a|bb)(?:xx|yy)|azz) even though it would be
+				// shorter, because having fewer alternations at the top level is more important
+				'(?:c|a(?:xx|yy|zz)|bb(?:xx|yy))',
+				array('axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c')
+			),
+			array(
+				// We don't merge "ac", "af", "bbc" and "bbf" tails because the result
+				// (?:c|(?:a|bb)[cf]) is neither more performant nor shorter
+				'(?:c|a[cf]|bb[cf])',
+				array('ac', 'af', 'bbc', 'bbf', 'c')
+			),
+			array(
+				// Typical regexp used in UrlConfig for matching hostnames and subdomains
+				'(?:\.|^)(?:example\.org|localhost)$',
+				array('^example.org$', '.example.org$', '^localhost$', '.localhost$'),
+				array('specialChars' => array('^' => '^', '$' => '$'))
 			),
 			array(
 				'x(?:ixi|oxo)x',
