@@ -228,17 +228,20 @@ class BBCodesParser extends PluginParser
 					$c = $text[$rpos];
 					if ($c === '"' || $c === "'")
 					{
+						// This is where the value starts
 						$valuePos = $rpos + 1;
 
-						while (++$rpos < $textLen)
+						while (1)
 						{
+							// Move past the quote
+							++$rpos;
+
+							// Look for the next quote
 							$rpos = strpos($text, $c, $rpos);
 
 							if ($rpos === false)
 							{
-								/**
-								* No matching quote, apparently that string never ends...
-								*/
+								// No matching quote. Apparently that string never ends...
 								$this->parser->log('warning', array(
 									'pos' => $valuePos - 1,
 									'len' => 1,
@@ -247,22 +250,16 @@ class BBCodesParser extends PluginParser
 								continue 3;
 							}
 
-							if ($text[$rpos - 1] === '\\')
+							// Test for an odd number of backslashes before this character
+							$n = 0;
+							while ($text[$rpos - ++$n] === '\\');
+
+							if ($n % 2)
 							{
-								$n = 1;
-								do
-								{
-									++$n;
-								}
-								while ($text[$rpos - $n] === '\\');
-
-								if ($n % 2 === 0)
-								{
-									continue;
-								}
+								// If $n is odd, it means there's an even number of backslashes so
+								// we can exit this loop
+								break;
 							}
-
-							break;
 						}
 
 						// Unescape special characters ' " and \

@@ -527,6 +527,28 @@ class BBCodesParserTest extends Test
 	/**
 	* @test
 	*/
+	public function Unterminated_string_invalidates_attribute()
+	{
+		$this->cb->BBCodes->addBBCode('X');
+		$this->cb->addAttribute('X', 'x');
+
+		$this->assertParsing(
+			'[X x="',
+			'<pt>[X x="</pt>',
+			array(
+				'warning' => array(
+					array(
+						'pos' => 5,
+						'msg' => 'Could not find matching quote'
+					)
+				)
+			)
+		);
+	}
+
+	/**
+	* @test
+	*/
 	public function Attribute_values_within_single_quotes_can_contain_newlines()
 	{
 		$this->cb->BBCodes->addBBCode('X');

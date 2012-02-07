@@ -200,17 +200,20 @@ matches.forEach(function(m)
 			c = text.charAt(rpos);
 			if (c === '"' || c === "'")
 			{
+				// This is where the value starts
 				var valuePos = rpos + 1;
 
-				while (++rpos < textLen)
+				while (1)
 				{
+					// Move past the quote
+					++rpos;
+
+					// Look for the next quote
 					rpos = text.indexOf(c, rpos);
 
 					if (rpos === -1)
 					{
-						/**
-						* No matching quote, apparently that string never ends...
-						*/
+						// No matching quote. Apparently that string never ends...
 						logWarning({
 							'pos' : valuePos - 1,
 							'len' : 1,
@@ -219,24 +222,19 @@ matches.forEach(function(m)
 						return;
 					}
 
-					if (text.charAt(rpos - 1) === '\\')
+					// Test for an odd number of backslashes before this character
+					var n = 0;
+					while (text.charAt(rpos - ++n) === '\\');
+
+					if (n % 2)
 					{
-						var n = 1;
-						do
-						{
-							++n;
-						}
-						while (text.charAt(rpos - n) === '\\');
-
-						if (n % 2 === 0)
-						{
-							continue;
-						}
+						// If n is odd, it means there's an even number of backslashes so
+						// we can exit this loop
+						break;
 					}
-
-					break;
 				}
 
+				// Unescape special characters ' " and \
 				value = text.substr(valuePos, rpos - valuePos).replace(/\\([\\'"])/g, '$1');
 
 				// Skip past the closing quote
