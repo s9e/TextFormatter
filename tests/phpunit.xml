@@ -24,7 +24,9 @@
 	<testsuites>
 		<testsuite name="TextFormatter">
 			<file>ConfigBuilderTest.php</file>
-			<file>JSParserGeneratorTest.php</file>
+			<file>ConfigBuilder/CollectionTest.php</file>
+			<file>ConfigBuilder/UrlConfigTest.php</file>
+			<!--file>JSParserGeneratorTest.php</file>
 			<file>ParserTest.php</file>
 			<file>PluginConfigTest.php</file>
 			<file>PluginParserTest.php</file>
@@ -52,7 +54,7 @@
 			<file>Plugins/RawHTMLParserTest.php</file>
 			<file>Plugins/WittyPantsConfigTest.php</file>
 			<file>Plugins/WittyPantsParserTest.php</file>
-			<file>PredefinedBBCodesTest.php</file>
+			<file>PredefinedBBCodesTest.php</file-->
 		</testsuite>
 	</testsuites>
 
@@ -74,7 +76,7 @@
 			<file>../src/ConfigBuilder/Tag.php</file>
 			<file>../src/ConfigBuilder/TemplateHelper.php</file>
 			<file>../src/ConfigBuilder/UrlConfig.php</file>
-			<file>../src/JSParserGenerator.php</file>
+			<!--file>../src/JSParserGenerator.php</file>
 			<file>../src/Parser.php</file>
 			<file>../src/PluginConfig.php</file>
 			<file>../src/PluginParser.php</file>
@@ -100,7 +102,7 @@
 			<file>../src/Plugins/RawHTMLConfig.php</file>
 			<file>../src/Plugins/RawHTMLParser.php</file>
 			<file>../src/Plugins/WittyPantsConfig.php</file>
-			<file>../src/Plugins/WittyPantsParser.php</file>
+			<file>../src/Plugins/WittyPantsParser.php</file-->
 		</whitelist>
 	</filter>
 </phpunit>
