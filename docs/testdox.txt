@@ -44,6 +44,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\ConfigurableItem
  [x] setOption() preserves the type of the option it changes
  [x] setOptions($options) calls setOption() for every element in $options
 
+s9e\TextFormatter\Tests\ConfigBuilder\Filter
+ [x] __construct($callback) throws a InvalidArgumentException if $callback is not callable
+
 s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() throws an exception on invalid XML
  [x] checkUnsafe() identifies <xsl:element name="script"><xsl:apply-templates/></xsl:element> as unsafe
