@@ -1,1 +1,11 @@
 s9e\TextFormatter\Tests\ConfigBuilder
+ [x] Can load plugins
+ [x] Loaded plugins are available as a public property
+ [x] Can unload plugins by unsetting them
+ [x] Loads plugins on magic __get()
+ [x] Has a magic property $predefinedTags that creates an instance of PredefinedTags on access
+ [x] Throws a RuntimeException on unsupported magic __get()
+ [x] loadPlugin() throws an exception on invalid plugin name
+ [x] loadPlugin() throws an exception on unknown plugin
+
+s9e\TextFormatter\Tests\JSParserGenerator

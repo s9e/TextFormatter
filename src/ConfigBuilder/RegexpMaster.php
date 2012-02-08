@@ -189,6 +189,8 @@ class RegexpMaster
 			if ($groupChains === array(array($head))
 			 && $this->canBeUsedInCharacterClass($head))
 			{
+				// The whole chain is composed of exactly one token, a token that can be used in a
+				// character class
 				$characterClass[$head] = $head;
 			}
 		}
@@ -196,19 +198,22 @@ class RegexpMaster
 		// Sort the characters and reset their keys
 		sort($characterClass);
 
+		// Test whether there is more than 1 character in the character class
 		if (isset($characterClass[1]))
 		{
+			// Remove each of those characters from the groups
 			foreach ($characterClass as $char)
 			{
 				unset($groups[$char]);
 			}
 
+			// Create a new group for this character class
 			$head = $this->generateCharacterClass($characterClass);
 			$groups[$head][] = array($head);
 
-			// Ensure that the character class is at first in the alternation. Not only it looks
-			// nice and might be more performant, it's also how assemble() does it, so normalizing
-			// it might help with generating identical regexps (or subpatterns that would then be
+			// Ensure that the character class is first in the alternation. Not only it looks nice
+			// and might be more performant, it's also how assemble() does it, so normalizing it
+			// might help with generating identical regexps (or subpatterns that would then be
 			// optimized away as a prefix/suffix)
 			$groups = array($head => $groups[$head])
 			        + $groups;
@@ -236,10 +241,10 @@ class RegexpMaster
 			}
 
 			$mergedChain[] = $regexp;
-
 		}
 		else
 		{
+			$this->mergeTails($chains);
 			$mergedChain[] = $this->assemble($chains);
 		}
 
@@ -256,19 +261,32 @@ class RegexpMaster
 	* Merge the tails of an array of chains wherever applicable
 	*
 	* This method optimizes (a[xy]|b[xy]|c) into ([ab][xy]|c). The expression [xy] is not a suffix
-	* to every branch of the alternation (common suffix), so it is not automatically remove. What we
+	* to every branch of the alternation (common suffix), so it's not automatically removed. What we
 	* do here is group chains by their last element (their tail) and then try to merge them together
 	* group by group. This method should only be called AFTER chains have been group-merged by head.
-	*
-	* NOTE: will only merge tails if their heads can become a character class, in order to avoid
-	*       creating a non-capturing subpattern, e.g. (?:c|a[xy]|bb[xy]) does not become
-	*       (?:c|(?:a|bb)[xy]) but (?:c|a[xy]|bb[xy]|d[xy]) does become (?:c|bb[xy]|[ad][xy])
 	*
 	* @param array &$chains
 	*/
 	protected function mergeTails(array &$chains)
 	{
-		$candidateChains = array();
+		// (a[xy]|b[xy]|c) => ([ab][xy]|c)
+		$this->mergeTailsCC($chains);
+
+		// (axx|ayy|bbxx|bbyy|c) => ((a|bb)(xx|yy)|c)
+		$this->mergeTailsAltern($chains);
+
+		// Don't forget to reset the keys
+		$chains = array_values($chains);
+	}
+
+	/**
+	* Merge the tails of an array of chains if their head can become a character class
+	*
+	* @param array &$chains
+	*/
+	protected function mergeTailsCC(array &$chains)
+	{
+		$groups = array();
 
 		foreach ($chains as $k => $chain)
 		{
@@ -276,11 +294,11 @@ class RegexpMaster
 			 && !isset($chain[2])
 			 && $this->canBeUsedInCharacterClass($chain[0]))
 			{
-				$candidateChains[$chain[1]][$k] = $chain;
+				$groups[$chain[1]][$k] = $chain;
 			}
 		}
 
-		foreach ($candidateChains as $tail => $groupChains)
+		foreach ($groups as $tail => $groupChains)
 		{
 			if (count($groupChains) < 2)
 			{
@@ -294,9 +312,60 @@ class RegexpMaster
 			// Merge this group's chains and add the result to the list
 			$chains[] = $this->mergeChains(array_values($groupChains));
 		}
+	}
 
-		// Don't forget to reset the keys
-		$chains = array_values($chains);
+	/**
+	* Merge the tails of an array of chains if it makes the end result shorter
+	*
+	* This kind of merging used to be specifically avoided due to performance concerns but some
+	* light benchmarking showed that there isn't any measurable difference in performance between
+	*   (?:c|a(?:xx|yy)|bb(?:xx|yy))
+	* and
+	*   (?:c|(?:a|bb)(?:xx|yy))
+	*
+	* @param array &$chains
+	*/
+	protected function mergeTailsAltern(array &$chains)
+	{
+		$groups = array();
+		foreach ($chains as $k => $chain)
+		{
+			if (!empty($chain))
+			{
+				$tail = array_slice($chain, -1);
+				$groups[$tail[0]][$k] = $chain;
+			}
+		}
+
+		foreach ($groups as $tail => $groupChains)
+		{
+			if (count($groupChains) < 2)
+			{
+				// Only 1 element, skip this group
+				continue;
+			}
+
+			// Create a single chain for this group
+			$mergedChain = $this->mergeChains(array_values($groupChains));
+
+			// Test whether the merged chain is shorter than the sum of its components
+			$oldLen = 0;
+			foreach ($groupChains as $groupChain)
+			{
+				$oldLen += array_sum(array_map('strlen', $groupChain));
+			}
+
+			if ($oldLen <= array_sum(array_map('strlen', $mergedChain)))
+			{
+				continue;
+			}
+
+			// Remove this group's chains from the original list
+			$chains = array_diff_key($chains, $groupChains);
+
+			// Merge this group's chains and add the result to the list
+			$chains[] = $mergedChain;
+		}
 	}
 
 	/**
@@ -609,8 +678,8 @@ class RegexpMaster
 			return false;
 		}
 
-		// Unescaped dots shouldn't be used in a character class
-		if (preg_match('/(?<!\\\\)\\./', $char))
+		// Unescaped meta-characters shouldn't be used in a character class
+		if (preg_match('/(?<!\\\\)[$.^]/', $char))
 		{
 			return false;
 		}
