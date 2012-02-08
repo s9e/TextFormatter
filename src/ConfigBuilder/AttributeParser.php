@@ -7,8 +7,6 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder;
 
-use s9e\TextFormatter\RegexpMaster;
-
 class AttributeParser implements Item
 {
 	/**
