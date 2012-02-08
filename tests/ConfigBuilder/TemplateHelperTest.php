@@ -163,7 +163,7 @@ class TemplateHelperTest extends Test
 				'The template uses unfiltered or improperly filtered attributes inside of a <script> tag',
 				'<script><xsl:value-of select="@foo"/></script>'
 			),
-/**
+/**/
 			array(
 				'The template uses unfiltered or improperly filtered attributes inside of a <script> tag',
 				'<script><xsl:value-of select="@foo"/></script>',

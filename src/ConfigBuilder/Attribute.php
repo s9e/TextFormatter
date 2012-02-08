@@ -12,10 +12,22 @@ use InvalidArgumentException;
 class Attribute extends ConfigurableItem
 {
 	/**
+	* @var FilterChain This attribute's filter chain
+	*/
+	protected $filterChain;
+
+	/**
+	* @var bool Whether this attribute is required for the tag to be valid
+	*/
+	protected $required = true;
+
+	/**
 	* @param array $options This attribute's options
 	*/
 	public function __construct(array $options = array())
 	{
+		$this->filterChain = new FilterChain(array('attrVal' => null));
+
 		$this->setOptions($options);
 	}
 
@@ -46,93 +58,16 @@ class Attribute extends ConfigurableItem
 		return strtolower($name);
 	}
 
-	//==========================================================================
-	// Filters stuff
-	//==========================================================================
-
 	/**
 	* @param array $filterChain
 	*/
 	public function setFilterChain(array $filterChain)
 	{
-		$this->clearFilterChain();
+		$this->filterChain->clear();
 
 		foreach ($filterChain as $filter)
 		{
-			$this->appendFilter($filter);
+			$this->filterChain->append($filter);
 		}
-	}
-
-	/**
-	* Remove all filters from this attribute's filter chain
-	*/
-	public function clearFilterChain()
-	{
-		$this->filterChain = array();
-	}
-
-	/**
-	* Append a filter to this attribute's filter chain
-	*
-	* @param  string|callback|Filter $filter
-	*/
-	public function appendFilter($filter)
-	{
-		$this->filterChain[] = $this->normalizeFilter($filter);
-	}
-
-	/**
-	* Prepend a filter to this attribute's filter chain
-	*
-	* @param  string|callback|Filter $filter
-	*/
-	public function prependFilter($filter)
-	{
-		array_unshift($this->filterChain, $this->normalizeFilter($filter));
-	}
-
-	/**
-	* Normalize a filter definition
-	*
-	* @param  string|callback|Filter $filter Name of a built-in filter, callback or Filter instance
-	* @return string|Filter                  Either a string pointing to a built-in filter, or a
-	*                                        Filter object
-	*/
-	protected function normalizeFilter($filter)
-	{
-		if ($filter instanceof Filter)
-		{
-			// Already a Filter object, nothing to do
-			return $filter;
-		}
-
-		if (is_string($filter) && $filter[0] === '#')
-		{
-			// It's a built-in filter, return as-is
-			return $filter;
-		}
-
-		if (is_callable($filter))
-		{
-			// It's a callback with no signature, we'll assume it just requires the attribute's
-			// value
-			$filter = new Filter;
-			$filter->addParameterByName('attrVal');
-
-			return $filter;
-		}
-
-		throw new InvalidArgumentException("Callback '" . var_export($filter, true) . "' is not callable");
-	}
-
-	/**
-	* Test whether a given filter is present in this attribute's filterChain
-	*
-	* @param  string|callback|Filter $filter
-	* @return bool
-	*/
-	public function hasFilter($filter)
-	{
-		return in_array($this->normalizeFilter($filter), $this->filterChain);
 	}
 }

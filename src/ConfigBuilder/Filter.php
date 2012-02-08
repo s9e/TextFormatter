@@ -95,7 +95,7 @@ class Filter implements Item
 
 	/**
 	* @param  array    $arr
-	* @return Callback
+	* @return Filter
 	*/
 	static public function fromArray(array $arr)
 	{

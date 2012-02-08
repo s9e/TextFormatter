@@ -686,7 +686,7 @@ abstract class TemplateHelper
 
 		foreach ($safeFilters as $filter)
 		{
-			if ($attribute->hasFilter($filter))
+			if ($attribute->filterChain->has($filter))
 			{
 				return true;
 			}
@@ -694,7 +694,7 @@ abstract class TemplateHelper
 
 		// Test if that attribute uses a regexp
 		if (isset($attribute->regexp)
-		 && $attribute->hasFilter('#regexp'))
+		 && $attribute->filterChain->has('#regexp'))
 		{
 			// Test this regexp against a few possible vectors
 			$unsafeValues = array(
@@ -755,7 +755,7 @@ abstract class TemplateHelper
 
 		foreach ($safeFilters as $filter)
 		{
-			if ($attribute->hasFilter($filter))
+			if ($attribute->filterChain->has($filter))
 			{
 				return true;
 			}
@@ -785,7 +785,7 @@ abstract class TemplateHelper
 
 		foreach ($safeFilters as $filter)
 		{
-			if ($attribute->hasFilter($filter))
+			if ($attribute->filterChain->has($filter))
 			{
 				return true;
 			}

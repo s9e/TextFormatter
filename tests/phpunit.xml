@@ -27,6 +27,7 @@
 			<file>ConfigBuilder/CollectionTest.php</file>
 			<file>ConfigBuilder/ConfigurableItemTest.php</file>
 			<file>ConfigBuilder/FilterTest.php</file>
+			<file>ConfigBuilder/FilterChainTest.php</file>
 			<file>ConfigBuilder/TemplateHelperTest.php</file>
 			<file>ConfigBuilder/UrlConfigTest.php</file>
 			<!--file>JSParserGeneratorTest.php</file>
@@ -69,6 +70,7 @@
 			<file>../src/ConfigBuilder/Collection.php</file>
 			<file>../src/ConfigBuilder/ConfigurableItem.php</file>
 			<file>../src/ConfigBuilder/Filter.php</file>
+			<file>../src/ConfigBuilder/FilterChain.php</file>
 			<file>../src/ConfigBuilder/HTML5Helper.php</file>
 			<file>../src/ConfigBuilder/PredefinedBBCodes.php</file>
 			<file>../src/ConfigBuilder/PredefinedTags.php</file>
