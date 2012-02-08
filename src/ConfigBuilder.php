@@ -10,7 +10,10 @@ namespace s9e\TextFormatter;
 use InvalidArgumentException,
     RuntimeException,
     s9e\TextFormatter\ConfigBuilder\Collection,
+    s9e\TextFormatter\ConfigBuilder\HTML5Helper,
     s9e\TextFormatter\ConfigBuilder\PredefinedTags,
+    s9e\TextFormatter\ConfigBuilder\RegexpMaster,
+    s9e\TextFormatter\ConfigBuilder\TemplateHelper,
     s9e\TextFormatter\ConfigBuilder\UrlConfig;
 
 class ConfigBuilder
@@ -30,11 +33,30 @@ class ConfigBuilder
 	*/
 	public $urlConfig;
 
+	/**
+	* @var HTML5Helper
+	*/
+	public $html5Helper;
+
+	/**
+	* @var RegexpMaster
+	*/
+	public $regexpHelper;
+
+	/**
+	* Constructor
+	*
+	* Prepares the collections that hold tags and filters, the UrlConfig object as well as the
+	* various helpers required to generate a full config.
+	*/
 	public function __construct()
 	{
 		$this->tags          = new Collection(__CLASS__ . '\\Tag');
 		$this->customFilters = new Collection(__CLASS__ . '\\Filter');
 		$this->urlConfig     = new UrlConfig;
+
+		$this->html5Helper    = new HTML5Helper;
+		$this->regexpHelper   = new RegexpMaster;
 	}
 
 	//==========================================================================
@@ -189,20 +211,6 @@ class ConfigBuilder
 			}
 
 			$config['filters'][$filterName] = $filterConf;
-		}
-
-		if (!empty($this->namespaces))
-		{
-			foreach ($this->tags as $tagName => $tagConfig)
-			{
-				$pos = strpos($tagName, ':');
-
-				if ($pos)
-				{
-					$prefix = substr($tagName, 0, $pos);
-					$config['namespaces'][$prefix] = $this->namespaces[$prefix];
-				}
-			}
 		}
 
 		/**
@@ -452,101 +460,7 @@ class ConfigBuilder
 	*/
 	public function getXSL($prefix = 'xsl')
 	{
-		// Start the stylesheet with boilerplate stuff and the /m template for rendering multiple
-		// texts at once
-		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
-		     . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . '<xsl:output method="html" encoding="utf-8" indent="no"/>'
-		     . '<xsl:template match="/m">'
-		     . '<xsl:for-each select="*">'
-		     . '<xsl:apply-templates/>'
-		     . '<xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if>'
-		     . '</xsl:for-each>'
-		     . '</xsl:template>';
-
-		// Append the tags' templates
-		foreach ($this->tags as $tagName => $tag)
-		{
-			foreach ($tag->templates as $predicate => $template)
-			{
-				if ($predicate !== '')
-				{
-					$predicate = '[' . htmlspecialchars($predicate) . ']';
-				}
-
-				$xsl .= '<xsl:template match="' . $tagName . $predicate . '">'
-				      . $template
-				      . '</xsl:template>';
-			}
-		}
-
-		// Append the plugins' XSL
-		foreach ($this->getPlugins() as $plugin)
-		{
-			$xsl .= $plugin->getXSL();
-		}
-
-		// Append the templates for <st>, <et> and <i> nodes
-		$xsl .= '<xsl:template match="st|et|i"/>';
-
-		// Now close the stylesheet
-		$xsl .= '</xsl:stylesheet>';
-
-		/**
-		* Build the DOM and prepare for some optimizations
-		*/
-		$dom = new DOMDocument;
-		$dom->loadXML($xsl);
-
-		/**
-		* Dedupes the templates
-		*/
-		$this->dedupeTemplates($dom);
-
-		/**
-		* Optimize templates attributes
-		*/
-		$this->optimizeXSLAttributes($dom);
-
-		/**
-		* If we're using the default prefix then we're done
-		*/
-		if ($prefix === 'xsl')
-		{
-			return rtrim($dom->saveXML());
-		}
-
-		/**
-		* Fix the XSL prefix
-		*/
-		$trans = new DOMDocument;
-		$trans->loadXML(
-			'<?xml version="1.0" encoding="utf-8"?>
-			<xsl:stylesheet version="1.0"' . $this->generateNamespaceDeclarations() . ' xmlns:' . $prefix . '="http://www.w3.org/1999/XSL/Transform">
-
-				<xsl:output method="xml" encoding="utf-8" />
-
-				<xsl:template match="xsl:*">
-					<xsl:element name="' . $prefix . ':{local-name()}" namespace="http://www.w3.org/1999/XSL/Transform">
-						<xsl:copy-of select="@*" />
-						<xsl:apply-templates />
-					</xsl:element>
-				</xsl:template>
-
-				<xsl:template match="node()">
-					<xsl:copy>
-						<xsl:copy-of select="@*" />
-						<xsl:apply-templates />
-					</xsl:copy>
-				</xsl:template>
-
-			</xsl:stylesheet>'
-		);
-
-		$xslt = new XSLTProcessor;
-		$xslt->importStylesheet($trans);
-
-		return rtrim($xslt->transformToXml($dom));
+		return TemplateHelper::getXSL($this);
 	}
 
 	//==========================================================================

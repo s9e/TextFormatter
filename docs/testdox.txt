@@ -30,6 +30,11 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collection
  [x] rename() throws a RuntimeException if the new name is already taken
  [x] Collection is iterable with foreach, with item names as keys and items as values
 
+s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
+ [x] checkUnsafe() throws an exception on invalid XML
+ [x] checkUnsafe() identifies <script><xsl:apply-templates/></script> as unsafe
+ [x] checkUnsafe() identifies <script src="{@foo}"/> as unsafe
+
 s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
  [x] HTTP and HTTPS schemes are allowed by default
  [x] allowScheme() can be used to allow additional schemes

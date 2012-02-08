@@ -55,10 +55,8 @@ class Tag extends ConfigurableItem
 	/**
 	* @param array $options This tag's options
 	*/
-	public function __construct($name, array $options = array())
+	public function __construct(array $options = array())
 	{
-		$this->name = $name;
-
 		$this->attributes       = new Collection(__NAMESPACE__ . '\\Attribute');
 		$this->attributeParsers = new Collection(__NAMESPACE__ . '\\AttributeParser');
 		$this->rules            = new Ruleset;

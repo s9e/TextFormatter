@@ -25,6 +25,7 @@
 		<testsuite name="TextFormatter">
 			<file>ConfigBuilderTest.php</file>
 			<file>ConfigBuilder/CollectionTest.php</file>
+			<file>ConfigBuilder/TemplateHelperTest.php</file>
 			<file>ConfigBuilder/UrlConfigTest.php</file>
 			<!--file>JSParserGeneratorTest.php</file>
 			<file>ParserTest.php</file>
@@ -64,11 +65,9 @@
 			<file>../src/ConfigBuilder/Attribute.php</file>
 			<file>../src/ConfigBuilder/AttributeParser.php</file>
 			<file>../src/ConfigBuilder/Collection.php</file>
-			<file>../src/ConfigBuilder/Configurable.php</file>
 			<file>../src/ConfigBuilder/ConfigurableItem.php</file>
 			<file>../src/ConfigBuilder/Filter.php</file>
 			<file>../src/ConfigBuilder/HTML5Helper.php</file>
-			<file>../src/ConfigBuilder/Item.php</file>
 			<file>../src/ConfigBuilder/PredefinedBBCodes.php</file>
 			<file>../src/ConfigBuilder/PredefinedTags.php</file>
 			<file>../src/ConfigBuilder/RegexpMaster.php</file>
