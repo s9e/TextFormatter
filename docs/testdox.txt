@@ -43,7 +43,6 @@ s9e\TextFormatter\Tests\ConfigBuilder\ConfigurableItem
  [x] $item->setOption($k, $v) invokes $item->$k->add() for every iteration of $v
  [x] setOption() preserves the type of the option it changes
  [x] setOptions($options) calls setOption() for every element in $options
- [x] new ConfigurableItem($options) calls setOptions($options)
 
 s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() throws an exception on invalid XML

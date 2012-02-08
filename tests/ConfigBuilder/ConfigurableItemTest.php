@@ -194,27 +194,6 @@ class ConfigurableItemTest extends Test
 			'nullOption' => null
 		));
 	}
-
-	/**
-	* @testdox new ConfigurableItem($options) calls setOptions($options)
-	* @depends testGetOptions
-	* @depends testSetOptions
-	*/
-	public function testConstructor()
-	{
-		$item = new ConfigurableItemTestDummy(array(
-			'intOption' => 5
-		));
-
-		$this->assertEquals(
-			array(
-				'intOption'  => 5,
-				'nullOption' => null,
-				'collection' => null
-			),
-			$item->getOptions()
-		);
-	}
 }
 
 class ConfigurableItemTestDummy extends ConfigurableItem

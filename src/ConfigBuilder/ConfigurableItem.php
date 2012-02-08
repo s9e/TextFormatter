@@ -11,14 +11,6 @@ use InvalidArgumentException;
 
 abstract class ConfigurableItem implements Configurable, Item
 {
-	/**
-	* @param array $options This object's options
-	*/
-	public function __construct(array $options = array())
-	{
-		$this->setOptions($options);
-	}
-
 	public function __get($k)
 	{
 		return $this->getOption($k);
