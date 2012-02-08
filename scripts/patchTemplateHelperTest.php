@@ -10,10 +10,13 @@ $test = new s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelperTest;
 $php = '';
 foreach ($test->getUnsafeTags() as $case)
 {
-	$php .= "\n\t/**\n\t* @testdox checkUnsafe() identifies " . $case[1] . " as unsafe\n\t*/"
+	$php .= "\n\t/**\n\t* @testdox checkUnsafe() identifies " . $case[1] . " as "
+	      . (($case[1] === false) ? 'safe' : 'unsafe')
+	      . ((isset($case[2])) ? ' if tag has ' : '')
+	      . "\n\t*/"
 	      . "\n\tpublic function testCheckUnsafe"
 	      . sprintf('%08X', crc32(serialize(array_slice($case, 1))))
-	      . "()\n\t{\n\t\t\$this->_testUnsafeTags("
+	      . "()\n\t{\n\t\t\$this->testUnsafeTags("
 	      . "\n\t\t\t" . var_export($case[0], true)
 	      . ','
 	      . "\n\t\t\t" . var_export($case[1], true)

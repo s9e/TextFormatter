@@ -32,8 +32,14 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collection
 
 s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() throws an exception on invalid XML
+ [x] checkUnsafe() identifies <xsl:element name="script"><xsl:apply-templates/></xsl:element> as unsafe
  [x] checkUnsafe() identifies <script><xsl:apply-templates/></script> as unsafe
  [x] checkUnsafe() identifies <script src="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <script><xsl:attribute name="src"/></script> as unsafe
+ [x] checkUnsafe() identifies <xsl:element name="script"><xsl:attribute name="src"/></xsl:element> as unsafe
+ [x] checkUnsafe() identifies <script><xsl:if><xsl:attribute name="src"/></xsl:if></script> as unsafe
+ [x] checkUnsafe() identifies <script><xsl:copy-of select="@src"/></script> as unsafe
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as unsafe
 
 s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
  [x] HTTP and HTTPS schemes are allowed by default

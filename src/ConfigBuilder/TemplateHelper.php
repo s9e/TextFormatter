@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\ConfigBuilder;
 
 use DOMDocument,
+    DOMNodeList,
     DOMXPath,
     InvalidArgumentException,
     LibXMLError,
@@ -486,14 +487,14 @@ abstract class TemplateHelper
 
 			foreach ($m[1] as $attrName)
 			{
-				if (!$tag->hasAttribute($attrName))
+				if (!$tag->attributes->exists($attrName))
 				{
 					// The template uses an attribute that is not defined, so we'll consider it
 					// unsafe. It also covers the use of @*[name()="foo"]
 					return true;
 				}
 
-				$attribute = $tag->getAttribute($attrName);
+				$attribute = $tag->attributes->get($attrName);
 
 				// Test the attribute with the configured isSafeIn* method
 				if (!call_user_func(array('self', $methodName), $attribute))
@@ -548,8 +549,10 @@ abstract class TemplateHelper
 		// and <b><xsl:attribute name="onclick"><xsl:apply-templates /></xsl:attribute></b>
 		$attrs = $xpath->query(
 			  '//xsl:attribute[starts-with(translate(@name, "ON", "on"), "on")]'
-			. '//(xsl:value-of | xsl:apply-templates)'
-			. '/@select'
+			. '//xsl:value-of/@select'
+			. '|'
+			. '//xsl:attribute[starts-with(translate(@name, "ON", "on"), "on")]'
+			. '//xsl:apply-templates/@select'
 		);
 
 		if (self::usesUnsafeAttribute($attrs, $tag, 'JS'))
