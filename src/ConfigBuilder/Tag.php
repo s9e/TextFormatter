@@ -148,6 +148,24 @@ class Tag extends ConfigurableItem
 	}
 
 	/**
+	* Set this tags' rules
+	*
+	* @param array $rules 2D array of rule definitions
+	*/
+	public function setRules(array $rules)
+	{
+		$this->rules->clear();
+
+		foreach ($rules as $action => $tagNames)
+		{
+			foreach ($tagNames as $tagName)
+			{
+				$this->rules->$action($tagName);
+			}
+		}
+	}
+
+	/**
 	* Set this tag's tagLimit
 	*
 	* @param integer $limit

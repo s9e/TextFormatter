@@ -16,6 +16,22 @@ class Ruleset implements Iterator
 	*/
 	protected $rules = array();
 
+	/**
+	* Remove all the rules
+	*/
+	public function clear()
+	{
+		$this->rules = array();
+	}
+
+	/**
+	* Return all the rules as a 2D array
+	*/
+	public function get()
+	{
+		return $this->rules;
+	}
+
 	public function allowChild($tagName)
 	{
 		$this->rules['allowChild'][] = Tag::normalizeName($tagName);
