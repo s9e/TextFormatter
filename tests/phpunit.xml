@@ -25,6 +25,7 @@
 		<testsuite name="TextFormatter">
 			<file>ConfigBuilderTest.php</file>
 			<file>ConfigBuilder/CollectionTest.php</file>
+			<file>ConfigBuilder/ConfigurableItemTest.php</file>
 			<file>ConfigBuilder/TemplateHelperTest.php</file>
 			<file>ConfigBuilder/UrlConfigTest.php</file>
 			<!--file>JSParserGeneratorTest.php</file>

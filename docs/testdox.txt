@@ -30,6 +30,10 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collection
  [x] rename() throws a RuntimeException if the new name is already taken
  [x] Collection is iterable with foreach, with item names as keys and items as values
 
+s9e\TextFormatter\Tests\ConfigBuilder\ConfigurableItem
+ [x] setOption() invokes a Collection's clear() method before trying to set its content
+ [x] setOption() invokes a Collection's add() method for each element of the passed value
+
 s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() throws an exception on invalid XML
  [x] checkUnsafe() identifies <xsl:element name="script"><xsl:apply-templates/></xsl:element> as unsafe

@@ -72,6 +72,19 @@ abstract class ConfigurableItem implements Configurable, Item
 		// If the property already exists, preserve its type
 		if (isset($this->$optionName))
 		{
+			// If this is a Collection, we clear its content then add every item in order
+			if ($this->$optionName instanceof Collection)
+			{
+				$this->$optionName->clear();
+
+				foreach ($optionValue as $itemName => $item)
+				{
+					$this->$optionName->add($itemName, $item);
+				}
+
+				return;
+			}
+
 			settype($optionValue, gettype($this->$optionName));
 		}
 

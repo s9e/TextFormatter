@@ -13,7 +13,15 @@ use Iterator,
 
 class Collection implements Iterator
 {
+	/**
+	* @var string Name of the class of items this collection is expected to hold
+	*/
 	protected $itemClass;
+
+	/**
+	* @var array Items that this collection holds
+	*/
+	protected $items = array();
 
 	/**
 	* @param string $itemClass Name of the class of the items this collection will hold
