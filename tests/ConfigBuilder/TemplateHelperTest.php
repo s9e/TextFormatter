@@ -170,7 +170,7 @@ class TemplateHelperTest extends Test
 				array(
 					'attributes' => array(
 						'foo' => array(
-							'filterChain' => '#number'
+							'filterChain' => array('#number')
 						)
 					)
 				)
