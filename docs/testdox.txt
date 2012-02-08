@@ -8,4 +8,38 @@ s9e\TextFormatter\Tests\ConfigBuilder
  [x] loadPlugin() throws an exception on invalid plugin name
  [x] loadPlugin() throws an exception on unknown plugin
 
-s9e\TextFormatter\Tests\JSParserGenerator
+s9e\TextFormatter\Tests\ConfigBuilder\Collection
+ [x] add() creates and returns a new instance of the Item class if a second argument is not passed
+ [x] add() creates and returns a new instance of the Item class if the second argument is not an instance of the Item class
+ [x] add() passes all of its arguments after the first to the Item constructor if its second argument is not an instance of the Item class
+ [x] add() calls the item's normalizeName() method
+ [x] get() throws a RuntimeException if the item already exists
+ [x] exists() returns TRUE if the item exists
+ [x] exists() returns FALSE if the item does not exist
+ [x] exists() calls the item's normalizeName() method
+ [x] get() returns an item by name
+ [x] get() calls the item's normalizeName() method
+ [x] get() throws a RuntimeException if the item does not exist
+ [x] remove() removes an item by name
+ [x] remove() calls the item's normalizeName() method
+ [x] remove() throws a RuntimeException if the item does not exist
+ [x] clear() removes all items from the collection
+ [x] rename() creates an entry for the new name
+ [x] rename() removes the entry for the old name
+ [x] rename() throws a RuntimeException if the item does not exist
+ [x] rename() throws a RuntimeException if the new name is already taken
+ [x] Collection is iterable with foreach, with item names as keys and items as values
+
+s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
+ [x] HTTP and HTTPS schemes are allowed by default
+ [x] allowScheme() can be used to allow additional schemes
+ [x] allowScheme() throws an exception on invalid scheme names
+ [x] There is no default scheme for schemeless URLs by default
+ [x] setDefaultScheme() can set a default scheme to be used for URLs with no scheme
+ [x] disallowHost('example.org') disallows "example.org" but not "www.example.org"
+ [x] disallowHost('example.org') does not disallow "myexample.org"
+ [x] disallowHost('*.example.org') disallows "www.example.org" but not "example.org"
+ [x] disallowHost('*example*') disallows "www.example.org" and "myexample2.org"
+ [x] resolveRedirectsFrom('bit.ly') will indicate to the URL filter to follow redirects from 'bit.ly'
+ [x] Disallowed IDNs are punycoded
+

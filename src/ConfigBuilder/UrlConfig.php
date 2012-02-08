@@ -60,11 +60,17 @@ class UrlConfig
 
 			$regexp = $rm->buildRegexpFromList(
 				$this->$k,
-				// Asterisks * are turned into a catch-all expression
-				array('specialChars' => array('*' => '.*'))
+				// Asterisks * are turned into a catch-all expression, while ^ and $ are preserved
+				array(
+					'specialChars' => array(
+						'*' => '.*',
+						'^' => '^',
+						'$' => '$'
+					)
+				)
 			);
 
-			$urlConfig[$k] = '#(?<![^\\.])' . $regexp . '$#DiS';
+			$urlConfig[$k] = '#' . $regexp . '#DiS';
 		}
 
 		return $urlConfig;
@@ -158,13 +164,27 @@ class UrlConfig
 			$host = idn_to_ascii($host);
 		}
 
-		/**
-		* Transform "*.tld" and ".tld" into the functionally equivalent "tld"
-		*
-		* As a side-effect, when someone bans *.example.com it also bans example.com (no subdomain)
-		* but that's usually what people were trying to achieve.
-		*/
-		$host = ltrim($host, '*.');
+		if (substr($host, 0, 1) === '*')
+		{
+			// *.example.com => #\.example\.com$#
+			$host = ltrim($host, '*');
+		}
+		else
+		{
+			// example.com => #^example\.com$#
+			$host = '^' . $host;
+		}
+
+		if (substr($host, -1) === '*')
+		{
+			// example.* => #^example\.#
+			$host = rtrim($host, '*');
+		}
+		else
+		{
+			// example.com => #^example\.com$#
+			$host .= '$';
+		}
 
 		return $host;
 	}

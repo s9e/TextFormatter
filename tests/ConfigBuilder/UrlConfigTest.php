@@ -81,40 +81,86 @@ class UrlConfigTest extends Test
 		);
 	}
 
-	public function testCanDisallowHosts()
+	/**
+	* @testdox disallowHost('example.org') disallows "example.org" but not "www.example.org"
+	*/
+	public function testDisallowExactHostnameNotSubdomain()
 	{
 		$this->urlConfig->disallowHost('example.org');
-
 		$urlConfig = $this->getUrlConfig();
 
-		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
+		$this->assertRegexp(
+			$urlConfig['disallowedHosts'],
+			'example.org'
+		);
 
-		$this->assertRegexp($urlConfig['disallowedHosts'], 'example.org');
-	}
-
-	public function testCanDisallowHosts2()
-	{
-		$this->urlConfig->disallowHost('*warez*');
-
-		$urlConfig = $this->getUrlConfig();
-
-		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
-
-		$this->assertRegexp($urlConfig['disallowedHosts'], 'www.superwarez.example.org');
+		$this->assertNotRegexp(
+			$urlConfig['disallowedHosts'],
+			'www.example.org',
+			'The regexp should match only "example.org" but it also matches "www.example.org"'
+		);
 	}
 
 	/**
-	* @test
+	* @testdox disallowHost('example.org') does not disallow "myexample.org"
 	*/
-	public function Url_filter_can_be_configured_to_resolve_redirects_from_a_given_host()
+	public function testDisallowExactHostnameNotOtherDomain()
 	{
-		$this->urlConfig->resolveRedirectsFrom('bit.ly');
-
+		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->getUrlConfig();
 
-		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
+		$this->assertNotRegexp(
+			$urlConfig['disallowedHosts'],
+			'myexample.org'
+		);
+	}
 
-		$this->assertRegexp($urlConfig['resolveRedirectsHosts'], 'bit.ly');
+	/**
+	* @testdox disallowHost('*.example.org') disallows "www.example.org" but not "example.org"
+	*/
+	public function testCanDisallowWildcardHostname()
+	{
+		$this->urlConfig->disallowHost('*.example.org');
+		$urlConfig = $this->getUrlConfig();
+
+		$this->assertRegexp(
+			$urlConfig['disallowedHosts'],
+			'www.example.org'
+		);
+	}
+
+	/**
+	* @testdox disallowHost('*example*') disallows "www.example.org" and "myexample2.org"
+	*/
+	public function testCanDisallowWildcardHostnameBothEnds()
+	{
+		$this->urlConfig->disallowHost('*example*');
+		$urlConfig = $this->getUrlConfig();
+
+		$this->assertRegexp(
+			$urlConfig['disallowedHosts'],
+			'www.example.org'
+		);
+
+		$this->assertRegexp(
+			$urlConfig['disallowedHosts'],
+			'myexample2.org'
+		);
+	}
+
+
+	/**
+	* @testdox resolveRedirectsFrom('bit.ly') will indicate to the URL filter to follow redirects from 'bit.ly'
+	*/
+	public function testResolveRedirects()
+	{
+		$this->urlConfig->resolveRedirectsFrom('bit.ly');
+		$urlConfig = $this->getUrlConfig();
+
+		$this->assertRegexp(
+			$urlConfig['resolveRedirectsHosts'],
+			'bit.ly'
+		);
 	}
 
 	/**
@@ -123,14 +169,11 @@ class UrlConfigTest extends Test
 	public function Disallowed_IDNs_are_punycoded()
 	{
 		$this->urlConfig->disallowHost('pаypal.com');
-
 		$urlConfig = $this->getUrlConfig();
 
-		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
-
-		$this->assertContains(
-			'xn--pypal-4ve\\.com',
-			$urlConfig['disallowedHosts']
+		$this->assertRegexp(
+			$urlConfig['disallowedHosts'],
+			'xn--pypal-4ve.com'
 		);
 	}
 }
