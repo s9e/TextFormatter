@@ -31,8 +31,19 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collection
  [x] Collection is iterable with foreach, with item names as keys and items as values
 
 s9e\TextFormatter\Tests\ConfigBuilder\ConfigurableItem
- [x] setOption() invokes a Collection's clear() method before trying to set its content
- [x] setOption() invokes a Collection's add() method for each element of the passed value
+ [x] __get($k) calls getOption($k)
+ [x] __set() calls setOption($k, $v)
+ [x] getOption() throws an InvalidArgumentException if the option does not exist
+ [x] $item->getOption($k) returns $item->$k if it exists
+ [x] $item->getOption($k) returns null if $item->$k is null
+ [x] getOptions() returns all of the item's properties
+ [x] setOption() throws an InvalidArgumentException if the option does not exist
+ [x] $item->setOption('foo', 42) calls $item->setFoo(42) if it exists
+ [x] $item->setOption($k, $v) invokes $item->$k->clear() if $item->$k is a Collection
+ [x] $item->setOption($k, $v) invokes $item->$k->add() for every iteration of $v
+ [x] setOption() preserves the type of the option it changes
+ [x] setOptions($options) calls setOption() for every element in $options
+ [x] new ConfigurableItem($options) calls setOptions($options)
 
 s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() throws an exception on invalid XML
