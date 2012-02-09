@@ -1597,7 +1597,7 @@ var HINT = {
 			url = url.substr(0, pos).toLowerCase() + url.substr(pos);
 		}
 
-		return url.replace(/['"]/g, escape);
+		return url.replace(/['"()]/g, escape);
 	}
 
 	function validateId(id)

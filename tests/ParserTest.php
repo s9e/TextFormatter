@@ -768,6 +768,16 @@ class ParserTest extends Test
 		$this->assertAttributeIsValid('url', 'http://example.com/""', 'http://example.com/%22%22');
 	}
 
+	public function testUrlFilterUrlencodesLeftParentheses()
+	{
+		$this->assertAttributeIsValid('url', "http://example.com/(", "http://example.com/%28");
+	}
+
+	public function testUrlFilterUrlencodesRightParentheses()
+	{
+		$this->assertAttributeIsValid('url', "http://example.com/)", "http://example.com/%29");
+	}
+
 	public function testUrlFilterRejectsNotAllowedSchemes()
 	{
 		$this->assertAttributeIsInvalid(

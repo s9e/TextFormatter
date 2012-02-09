@@ -1792,10 +1792,20 @@ class Parser
 		}
 
 		/**
-		* We URL-encode quotes just in case someone would want to use the URL in some
-		* Javascript thingy
+		* We URL-encode quotes and parentheses just in case someone would want to use the URL in
+		* some Javascript thingy
 		*/
-		return strtr($url, array("'" => '%27', '"' => '%22'));
+		$url = strtr(
+			$url,
+			array(
+				'"' => '%22',
+				"'" => '%27',
+				'(' => '%28',
+				')' => '%29'
+			)
+		);
+
+		return $url;
 	}
 
 	/**
