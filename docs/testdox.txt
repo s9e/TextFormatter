@@ -48,12 +48,27 @@ s9e\TextFormatter\Tests\ConfigBuilder\Filter
  [x] __construct($callback) throws a InvalidArgumentException if $callback is not callable
 
 s9e\TextFormatter\Tests\ConfigBuilder\FilterChain
- [x] append('#int')
- [x] append('strtolower')
+ [x] append() and prepend() accept default filters such as '#int'
+ [x] append() and prepend() accept simple callbacks such as 'strtolower'
+ [x] append() and prepend() accept static class method calls such as array('Class', 'staticMethod')
+ [x] append() and prepend() accept static class method calls such as array('Class::staticMethod')
+ [x] append() and prepend() accept object method calls such as array($this, 'method')
+ [x] append() and prepend() accept Filter objects
+ [x] append() and prepend() accept closures
+ [x] append() throws a InvalidArgumentException if its argument is not callable
+ [x] prepend() throws a InvalidArgumentException if its argument is not callable
+ [x] get() returns all filters in an array
+ [x] get() returns default filters such as '#int' as strings
+ [x] get() returns other filters as Filter objects
+ [x] clear() removes all filters
  [x] has('#int') returns true if '#int' is in the chain
- [x] has('#int') returns false if only '#number' is in the chain
+ [x] has('#int') returns false if '#number' only is in the chain
  [x] has('strtolower') returns true if 'strtolower' is in the chain
- [x] has('strtolower') returns false if 'trim' only is in the chain
+ [x] has('strtolower') returns false if only 'trim' is in the chain
+ [x] has($FilterObject) returns true if $FilterObject is in the chain
+ [x] has($FilterObject) returns true if $FilterObjectClone is in the chain
+ [x] has($FilterObject) returns false if only $SomeOtherFilterObject is in the chain
+ [x] FilterChain is iterable with foreach, with filter position key and filter as value
 
 s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() throws an exception on invalid XML
