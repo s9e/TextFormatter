@@ -431,7 +431,7 @@ abstract class TemplateHelper
 
 		$xpath = new DOMXPath($dom);
 
-		// Test for <a href="{foo}">
+		// Test for <a href="{@foo}">
 		$tests = array();
 		foreach ($urlAttributes as $attrName)
 		{
@@ -745,12 +745,15 @@ abstract class TemplateHelper
 	{
 		// List of filters that make a value safe to be used as/in CSS
 		$safeFilters = array(
+			// URLs should be safe because characters ()'" are urlencoded
+			'#url',
 			'#int',
 			'#uint',
 			'#float',
 			'#color',
 			'#range',
-			'#number'
+			'#number',
+			'#simpletext'
 		);
 
 		foreach ($safeFilters as $filter)
@@ -776,11 +779,14 @@ abstract class TemplateHelper
 	{
 		// List of filters that make a value safe to be used in a script
 		$safeFilters = array(
+			// URLs should be safe because characters ()'" are urlencoded
+			'#url',
 			'#int',
 			'#uint',
 			'#float',
 			'#range',
-			'#number'
+			'#number',
+			'#simpletext'
 		);
 
 		foreach ($safeFilters as $filter)

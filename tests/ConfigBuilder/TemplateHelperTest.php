@@ -36,6 +36,17 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox checkUnsafe() identifies <xsl:element name="SCRIPT"><xsl:apply-templates/></xsl:element> as unsafe
+	*/
+	public function testCheckUnsafeFBB0D636()
+	{
+		$this->testUnsafeTags(
+			'The template contains a <script> tag that lets unfiltered data through',
+			'<xsl:element name="SCRIPT"><xsl:apply-templates/></xsl:element>'
+		);
+	}
+
+	/**
 	* @testdox checkUnsafe() identifies <script><xsl:apply-templates/></script> as unsafe
 	*/
 	public function testCheckUnsafe87044075()
@@ -47,6 +58,17 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox checkUnsafe() identifies <SCRIPT><xsl:apply-templates/></SCRIPT> as unsafe
+	*/
+	public function testCheckUnsafe37A10447()
+	{
+		$this->testUnsafeTags(
+			'The template contains a <script> tag that lets unfiltered data through',
+			'<SCRIPT><xsl:apply-templates/></SCRIPT>'
+		);
+	}
+
+	/**
 	* @testdox checkUnsafe() identifies <script src="{@foo}"/> as unsafe
 	*/
 	public function testCheckUnsafeE2434EF5()
@@ -54,6 +76,17 @@ class TemplateHelperTest extends Test
 		$this->testUnsafeTags(
 			'The template contains a <script> tag with a "src" attribute that uses user-supplied data',
 			'<script src="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <SCRIPT src="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafe3D5F2D13()
+	{
+		$this->testUnsafeTags(
+			'The template contains a <script> tag with a "src" attribute that uses user-supplied data',
+			'<SCRIPT src="{@foo}"/>'
 		);
 	}
 
@@ -111,6 +144,1216 @@ class TemplateHelperTest extends Test
 			'<script><xsl:value-of select="@foo"/></script>'
 		);
 	}
+
+	/**
+	* @testdox checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as unsafe if attribute 'foo' has filter '#raw'
+	*/
+	public function testCheckUnsafe9CFE86DE()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a <script> tag',
+			'<script><xsl:value-of select="@foo"/></script>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#raw',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#url'
+	*/
+	public function testCheckUnsafeCABECE6E()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<script><xsl:value-of select="@foo"/></script>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#url',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#int'
+	*/
+	public function testCheckUnsafe128634F3()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<script><xsl:value-of select="@foo"/></script>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#int',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#uint'
+	*/
+	public function testCheckUnsafeA63B53C1()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<script><xsl:value-of select="@foo"/></script>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#uint',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#float'
+	*/
+	public function testCheckUnsafe82F1AAE8()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<script><xsl:value-of select="@foo"/></script>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#float',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#range'
+	*/
+	public function testCheckUnsafe6AB2126D()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<script><xsl:value-of select="@foo"/></script>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#range',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#number'
+	*/
+	public function testCheckUnsafe687021F5()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<script><xsl:value-of select="@foo"/></script>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#number',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#simpletext'
+	*/
+	public function testCheckUnsafeFF79CBBB()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<script><xsl:value-of select="@foo"/></script>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#simpletext',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <xsl:element name="style"><xsl:apply-templates/></xsl:element> as unsafe
+	*/
+	public function testCheckUnsafe212B5F74()
+	{
+		$this->testUnsafeTags(
+			'The template contains a <style> tag that lets unfiltered data through',
+			'<xsl:element name="style"><xsl:apply-templates/></xsl:element>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:apply-templates/></style> as unsafe
+	*/
+	public function testCheckUnsafe9332F4DA()
+	{
+		$this->testUnsafeTags(
+			'The template contains a <style> tag that lets unfiltered data through',
+			'<style><xsl:apply-templates/></style>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as unsafe
+	*/
+	public function testCheckUnsafeFD7FAE5C()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a <style> tag',
+			'<style><xsl:value-of select="@foo"/></style>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as unsafe if attribute 'foo' has filter '#raw'
+	*/
+	public function testCheckUnsafe52586E38()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a <style> tag',
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#raw',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#url'
+	*/
+	public function testCheckUnsafe04182688()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#url',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#int'
+	*/
+	public function testCheckUnsafeDC20DC15()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#int',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#uint'
+	*/
+	public function testCheckUnsafeEF9CB264()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#uint',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#float'
+	*/
+	public function testCheckUnsafe24045A6E()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#float',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#color'
+	*/
+	public function testCheckUnsafeC0DF2269()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#color',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#range'
+	*/
+	public function testCheckUnsafeCC47E2EB()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#range',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#number'
+	*/
+	public function testCheckUnsafe6C0DF210()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#number',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#simpletext'
+	*/
+	public function testCheckUnsafe13E9AB64()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<style><xsl:value-of select="@foo"/></style>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#simpletext',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafe87431181()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a \'style\' attribute',
+			'<b style="color:{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b STYLE="color:{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafeD4091AA4()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a \'style\' attribute',
+			'<b STYLE="color:{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as unsafe if attribute 'foo' has filter '#raw'
+	*/
+	public function testCheckUnsafe3E0C8AE7()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a \'style\' attribute',
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#raw',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#url'
+	*/
+	public function testCheckUnsafe684CC257()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#url',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#int'
+	*/
+	public function testCheckUnsafeB07438CA()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#int',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#uint'
+	*/
+	public function testCheckUnsafeF99C29C5()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#uint',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#float'
+	*/
+	public function testCheckUnsafe85C3C98B()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#float',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#color'
+	*/
+	public function testCheckUnsafe6118B18C()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#color',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#range'
+	*/
+	public function testCheckUnsafe6D80710E()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#range',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#number'
+	*/
+	public function testCheckUnsafeBCCC2374()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#number',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#simpletext'
+	*/
+	public function testCheckUnsafeF0E69D7D()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b style="color:{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#simpletext',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute></b> as unsafe
+	*/
+	public function testCheckUnsafe0E35E463()
+	{
+		$this->testUnsafeTags(
+			'The template contains a dynamically generated \'style\' attribute that lets unfiltered data through',
+			'<b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute></b>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="STYLE"><xsl:apply-templates/></xsl:attribute></b> as unsafe
+	*/
+	public function testCheckUnsafe1C86003A()
+	{
+		$this->testUnsafeTags(
+			'The template contains a dynamically generated \'style\' attribute that lets unfiltered data through',
+			'<b><xsl:attribute name="STYLE"><xsl:apply-templates/></xsl:attribute></b>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as unsafe
+	*/
+	public function testCheckUnsafeCF5EB0DB()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a dynamically generated \'style\' attribute',
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="STYLE"><xsl:value-of select="@foo"/></xsl:attribute></b> as unsafe
+	*/
+	public function testCheckUnsafe59B1A8FB()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a dynamically generated \'style\' attribute',
+			'<b><xsl:attribute name="STYLE"><xsl:value-of select="@foo"/></xsl:attribute></b>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as unsafe if attribute 'foo' has filter '#raw'
+	*/
+	public function testCheckUnsafe74680B1F()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes inside of a dynamically generated \'style\' attribute',
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#raw',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#url'
+	*/
+	public function testCheckUnsafe222843AF()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#url',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#int'
+	*/
+	public function testCheckUnsafeFA10B932()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#int',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#uint'
+	*/
+	public function testCheckUnsafe4AB0376A()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#uint',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#float'
+	*/
+	public function testCheckUnsafeC3195BEC()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#float',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#color'
+	*/
+	public function testCheckUnsafe27C223EB()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#color',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#range'
+	*/
+	public function testCheckUnsafe2B5AE369()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#range',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#number'
+	*/
+	public function testCheckUnsafe6F5C0D1D()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#number',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#simpletext'
+	*/
+	public function testCheckUnsafe732F7E60()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#simpletext',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafe58613316()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<a href="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a HREF="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafeB47EFC3F()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<a HREF="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <form action="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafeBE93F541()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<form action="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <q cite="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafeBE99A34C()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<q cite="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <object data="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafe3F9FC9C5()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<object data="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <button formaction="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafeE37D3770()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<button formaction="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <html manifest="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafeB40B4FE3()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<html manifest="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <video poster="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafe7B4F1736()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<video poster="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <img src="{@foo}"/> as unsafe
+	*/
+	public function testCheckUnsafeD4AEAB5B()
+	{
+		$this->testUnsafeTags(
+			'The template uses unfiltered or improperly filtered attributes where a valid URL is expected',
+			'<img src="{@foo}"/>'
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#url'
+	*/
+	public function testCheckUnsafe21F70B54()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#url',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter 'urlencode'
+	*/
+	public function testCheckUnsafeFA0FA058()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => 'urlencode',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter 'rawurlencode'
+	*/
+	public function testCheckUnsafe1BE4799B()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => 'rawurlencode',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#id'
+	*/
+	public function testCheckUnsafe2698EE60()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#id',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#int'
+	*/
+	public function testCheckUnsafeF9CFF1C9()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#int',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#uint'
+	*/
+	public function testCheckUnsafe60DCC3B6()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#uint',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#float'
+	*/
+	public function testCheckUnsafe4C56A9E7()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#float',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#range'
+	*/
+	public function testCheckUnsafeA4151162()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#range',
+      ),
+    ),
+  ),
+)
+		);
+	}
+
+	/**
+	* @testdox checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#number'
+	*/
+	public function testCheckUnsafeF8019B67()
+	{
+		$this->testUnsafeTags(
+			false,
+			'<a href="{@foo}"/>',
+			array (
+  'attributes' => 
+  array (
+    'foo' => 
+    array (
+      'filterChain' => 
+      array (
+        0 => '#number',
+      ),
+    ),
+  ),
+)
+		);
+	}
 	// End of content generated by ../scripts/patchTemplateHelperTest.php
 
 	/**
@@ -137,11 +1380,23 @@ class TemplateHelperTest extends Test
 			),
 			array(
 				'The template contains a <script> tag that lets unfiltered data through',
+				'<xsl:element name="SCRIPT"><xsl:apply-templates/></xsl:element>'
+			),
+			array(
+				'The template contains a <script> tag that lets unfiltered data through',
 				'<script><xsl:apply-templates/></script>'
+			),
+			array(
+				'The template contains a <script> tag that lets unfiltered data through',
+				'<SCRIPT><xsl:apply-templates/></SCRIPT>'
 			),
 			array(
 				'The template contains a <script> tag with a "src" attribute that uses user-supplied data',
 				'<script src="{@foo}"/>'
+			),
+			array(
+				'The template contains a <script> tag with a "src" attribute that uses user-supplied data',
+				'<SCRIPT src="{@foo}"/>'
 			),
 			array(
 				'The template contains a <script> tag with a "src" attribute generated dynamically',
@@ -163,9 +1418,74 @@ class TemplateHelperTest extends Test
 				'The template uses unfiltered or improperly filtered attributes inside of a <script> tag',
 				'<script><xsl:value-of select="@foo"/></script>'
 			),
-/**/
 			array(
 				'The template uses unfiltered or improperly filtered attributes inside of a <script> tag',
+				'<script><xsl:value-of select="@foo"/></script>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#raw')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<script><xsl:value-of select="@foo"/></script>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<script><xsl:value-of select="@foo"/></script>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#int')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<script><xsl:value-of select="@foo"/></script>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#uint')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<script><xsl:value-of select="@foo"/></script>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#float')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<script><xsl:value-of select="@foo"/></script>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#range')
+						)
+					)
+				)
+			),
+			array(
+				false,
 				'<script><xsl:value-of select="@foo"/></script>',
 				array(
 					'attributes' => array(
@@ -175,7 +1495,485 @@ class TemplateHelperTest extends Test
 					)
 				)
 			),
-/**/
+			array(
+				false,
+				'<script><xsl:value-of select="@foo"/></script>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#simpletext')
+						)
+					)
+				)
+			),
+			array(
+				'The template contains a <style> tag that lets unfiltered data through',
+				'<xsl:element name="style"><xsl:apply-templates/></xsl:element>'
+			),
+			array(
+				'The template contains a <style> tag that lets unfiltered data through',
+				'<style><xsl:apply-templates/></style>'
+			),
+			array(
+				'The template uses unfiltered or improperly filtered attributes inside of a <style> tag',
+				'<style><xsl:value-of select="@foo"/></style>'
+			),
+			array(
+				'The template uses unfiltered or improperly filtered attributes inside of a <style> tag',
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#raw')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#int')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#uint')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#float')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#color')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#range')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#number')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<style><xsl:value-of select="@foo"/></style>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#simpletext')
+						)
+					)
+				)
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes inside of a 'style' attribute",
+				'<b style="color:{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes inside of a 'style' attribute",
+				'<b STYLE="color:{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes inside of a 'style' attribute",
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#raw')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#int')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#uint')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#float')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#color')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#range')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#number')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b style="color:{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#simpletext')
+						)
+					)
+				)
+			),
+			array(
+				"The template contains a dynamically generated 'style' attribute that lets unfiltered data through",
+				'<b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute></b>'
+			),
+			array(
+				"The template contains a dynamically generated 'style' attribute that lets unfiltered data through",
+				'<b><xsl:attribute name="STYLE"><xsl:apply-templates/></xsl:attribute></b>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes inside of a dynamically generated 'style' attribute",
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes inside of a dynamically generated 'style' attribute",
+				'<b><xsl:attribute name="STYLE"><xsl:value-of select="@foo"/></xsl:attribute></b>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes inside of a dynamically generated 'style' attribute",
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#raw')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#int')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#uint')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#float')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#color')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#range')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#number')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#simpletext')
+						)
+					)
+				)
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<a href="{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<a HREF="{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<form action="{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<q cite="{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<object data="{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<button formaction="{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<html manifest="{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<video poster="{@foo}"/>'
+			),
+			array(
+				"The template uses unfiltered or improperly filtered attributes where a valid URL is expected",
+				'<img src="{@foo}"/>'
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('urlencode')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('rawurlencode')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#id')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#int')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#uint')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#float')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#range')
+						)
+					)
+				)
+			),
+			array(
+				false,
+				'<a href="{@foo}"/>',
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array('#number')
+						)
+					)
+				)
+			),
 		);
 	}
 }

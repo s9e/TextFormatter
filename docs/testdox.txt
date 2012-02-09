@@ -185,13 +185,78 @@ s9e\TextFormatter\Tests\RegexpHelper
 s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() throws an exception on invalid XML
  [x] checkUnsafe() identifies <xsl:element name="script"><xsl:apply-templates/></xsl:element> as unsafe
+ [x] checkUnsafe() identifies <xsl:element name="SCRIPT"><xsl:apply-templates/></xsl:element> as unsafe
  [x] checkUnsafe() identifies <script><xsl:apply-templates/></script> as unsafe
+ [x] checkUnsafe() identifies <SCRIPT><xsl:apply-templates/></SCRIPT> as unsafe
  [x] checkUnsafe() identifies <script src="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <SCRIPT src="{@foo}"/> as unsafe
  [x] checkUnsafe() identifies <script><xsl:attribute name="src"/></script> as unsafe
  [x] checkUnsafe() identifies <xsl:element name="script"><xsl:attribute name="src"/></xsl:element> as unsafe
  [x] checkUnsafe() identifies <script><xsl:if><xsl:attribute name="src"/></xsl:if></script> as unsafe
  [x] checkUnsafe() identifies <script><xsl:copy-of select="@src"/></script> as unsafe
  [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as unsafe
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as unsafe if attribute 'foo' has filter '#raw'
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#url'
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#int'
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#uint'
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#float'
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#range'
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#number'
+ [x] checkUnsafe() identifies <script><xsl:value-of select="@foo"/></script> as safe if attribute 'foo' has filter '#simpletext'
+ [x] checkUnsafe() identifies <xsl:element name="style"><xsl:apply-templates/></xsl:element> as unsafe
+ [x] checkUnsafe() identifies <style><xsl:apply-templates/></style> as unsafe
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as unsafe
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as unsafe if attribute 'foo' has filter '#raw'
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#url'
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#int'
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#uint'
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#float'
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#color'
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#range'
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#number'
+ [x] checkUnsafe() identifies <style><xsl:value-of select="@foo"/></style> as safe if attribute 'foo' has filter '#simpletext'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <b STYLE="color:{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as unsafe if attribute 'foo' has filter '#raw'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#url'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#int'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#uint'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#float'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#color'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#range'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#number'
+ [x] checkUnsafe() identifies <b style="color:{@foo}"/> as safe if attribute 'foo' has filter '#simpletext'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute></b> as unsafe
+ [x] checkUnsafe() identifies <b><xsl:attribute name="STYLE"><xsl:apply-templates/></xsl:attribute></b> as unsafe
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as unsafe
+ [x] checkUnsafe() identifies <b><xsl:attribute name="STYLE"><xsl:value-of select="@foo"/></xsl:attribute></b> as unsafe
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as unsafe if attribute 'foo' has filter '#raw'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#url'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#int'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#uint'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#float'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#color'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#range'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#number'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#simpletext'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <a HREF="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <form action="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <q cite="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <object data="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <button formaction="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <html manifest="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <video poster="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <img src="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#url'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter 'urlencode'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter 'rawurlencode'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#id'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#int'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#uint'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#float'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#range'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#number'
 
 s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
  [x] HTTP and HTTPS schemes are allowed by default
