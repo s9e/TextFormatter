@@ -242,6 +242,8 @@ s9e\TextFormatter\Tests\Parser
  [x] Whitespace around URLs is removed
  [x] Url filter urlencodes single quotes
  [x] Url filter urlencodes double quotes
+ [x] Url filter urlencodes left parentheses
+ [x] Url filter urlencodes right parentheses
  [x] Url filter rejects not allowed schemes
  [x] Url filter can accept non http schemes
  [x] Url filter rejects disallowed host

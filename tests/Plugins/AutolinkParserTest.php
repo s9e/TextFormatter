@@ -126,8 +126,8 @@ class AutolinkParserTest extends Test
 	{
 		$this->assertTransformation(
 			'Mars (http://en.wikipedia.org/wiki/Mars_(planet)) is the fourth planet from the Sun',
-			'<rt>Mars (<URL url="http://en.wikipedia.org/wiki/Mars_(planet)">http://en.wikipedia.org/wiki/Mars_(planet)</URL>) is the fourth planet from the Sun</rt>',
-			'Mars (<a href="http://en.wikipedia.org/wiki/Mars_(planet)">http://en.wikipedia.org/wiki/Mars_(planet)</a>) is the fourth planet from the Sun'
+			'<rt>Mars (<URL url="http://en.wikipedia.org/wiki/Mars_%28planet%29">http://en.wikipedia.org/wiki/Mars_(planet)</URL>) is the fourth planet from the Sun</rt>',
+			'Mars (<a href="http://en.wikipedia.org/wiki/Mars_%28planet%29">http://en.wikipedia.org/wiki/Mars_(planet)</a>) is the fourth planet from the Sun'
 		);
 	}
 
