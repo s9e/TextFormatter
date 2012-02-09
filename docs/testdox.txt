@@ -240,6 +240,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() identifies <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></b> as safe if attribute 'foo' has filter '#simpletext'
  [x] checkUnsafe() identifies <a href="{@foo}"/> as unsafe
  [x] checkUnsafe() identifies <a HREF="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute></a> as unsafe
+ [x] checkUnsafe() identifies <a><xsl:attribute name="HREF"><xsl:value-of select="@foo"/></xsl:attribute></a> as unsafe
  [x] checkUnsafe() identifies <form action="{@foo}"/> as unsafe
  [x] checkUnsafe() identifies <q cite="{@foo}"/> as unsafe
  [x] checkUnsafe() identifies <object data="{@foo}"/> as unsafe
@@ -256,6 +258,12 @@ s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#float'
  [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#range'
  [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#number'
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as unsafe if attribute 'foo' has filter '#regexp' with regexp #[0-9]+#
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as safe if attribute 'foo' has filter '#regexp' with regexp #^[0-9]+$#
+ [x] checkUnsafe() identifies <a href="{@foo}"/> as unsafe if attribute 'foo' has filter '#regexp' with regexp #^[a-z]+:[a-z]+$#
+ [x] checkUnsafe() identifies <a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute></a> as unsafe
+ [x] checkUnsafe() identifies <a><xsl:attribute name="HREF"><xsl:apply-templates/></xsl:attribute></a> as unsafe
+ [x] checkUnsafe() identifies <b onclick="{@foo}"/> as unsafe
 
 s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
  [x] HTTP and HTTPS schemes are allowed by default

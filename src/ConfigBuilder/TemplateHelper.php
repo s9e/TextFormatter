@@ -694,22 +694,23 @@ abstract class TemplateHelper
 
 		// Test if that attribute uses a regexp
 		if (isset($attribute->regexp)
-		 && $attribute->filterChain->has('#regexp'))
+		 && $attribute->filterChain->has('#regexp')
+		 && preg_match('#^(.)\\^.*\\$\\1[a-z]*$#Dis', $attribute->regexp))
 		{
 			// Test this regexp against a few possible vectors
 			$unsafeValues = array(
-				'javascript:',
-				'Javascript:',
-				'javaScript:',
-				' javascript:',
-				' Javascript:',
-				' javaScript:',
-				"\rjavaScript:",
-				"\tjavaScript:",
-				"\x00javaScript:",
-				'data:',
-				' data:',
-				' DATA:'
+				'javascript:stuff',
+				'Javascript:stuff',
+				'javaScript:stuff',
+				' javascript:stuff',
+				' Javascript:stuff',
+				' javaScript:stuff',
+				"\rjavaScript:stuff",
+				"\tjavaScript:stuff",
+				"\x00javaScript:stuff",
+				'data:stuff',
+				' data:stuff',
+				' DATA:stuff'
 			);
 
 			foreach ($unsafeValues as $value)

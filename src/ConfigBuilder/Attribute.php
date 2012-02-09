@@ -58,6 +58,23 @@ class Attribute extends ConfigurableItem
 		return strtolower($name);
 	}
 
+	//==========================================================================
+	// Setters
+	//==========================================================================
+
+	/**
+	* @param string $regexp
+	*/
+	public function setRegexp($regexp)
+	{
+		if (@preg_match($regexp, '') === false)
+		{
+			throw new InvalidArgumentException('Invalid regexp');
+		}
+
+		$this->regexp = $regexp;
+	}
+
 	/**
 	* @param array $filterChain
 	*/

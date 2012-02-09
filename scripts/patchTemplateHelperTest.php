@@ -15,10 +15,16 @@ foreach ($test->getUnsafeTags() as $case)
 	if (isset($case[2]))
 	{
 		$attributes = $case[2]['attributes'];
-		$attrName = key($attributes);
-		$filter   = $attributes[$attrName]['filterChain'][0];
+		$attrName   = key($attributes);
+		$attribute  = $attributes[$attrName];
+		$filter     = $attribute['filterChain'][0];
 
 		$attributeInfo = " if attribute '$attrName' has filter " . var_export($filter, true);
+
+		if (isset($attribute['regexp']))
+		{
+			$attributeInfo .= ' with regexp ' . $attribute['regexp'];
+		}
 	}
 
 	$php .= "\n\t/**\n\t* @testdox checkUnsafe() identifies " . $case[1] . " as "
