@@ -12,7 +12,7 @@ use InvalidArgumentException,
     s9e\TextFormatter\ConfigBuilder\Collection,
     s9e\TextFormatter\ConfigBuilder\HTML5Helper,
     s9e\TextFormatter\ConfigBuilder\PredefinedTags,
-    s9e\TextFormatter\ConfigBuilder\RegexpMaster,
+    s9e\TextFormatter\ConfigBuilder\RegexpHelper,
     s9e\TextFormatter\ConfigBuilder\TemplateHelper,
     s9e\TextFormatter\ConfigBuilder\UrlConfig;
 
@@ -39,7 +39,7 @@ class ConfigBuilder
 	public $html5Helper;
 
 	/**
-	* @var RegexpMaster
+	* @var RegexpHelper
 	*/
 	public $regexpHelper;
 
@@ -56,7 +56,7 @@ class ConfigBuilder
 		$this->urlConfig     = new UrlConfig;
 
 		$this->html5Helper    = new HTML5Helper;
-		$this->regexpHelper   = new RegexpMaster;
+		$this->regexpHelper   = new RegexpHelper;
 	}
 
 	//==========================================================================
@@ -167,17 +167,17 @@ class ConfigBuilder
 	}
 
 	/**
-	* Return a (cached) instance of RegexpMaster
+	* Return a (cached) instance of RegexpHelper
 	*
-	* @return RegexpMaster
+	* @return RegexpHelper
 	*/
-	public function getRegexpMaster()
+	public function getRegexpHelper()
 	{
 		static $rm;
 
 		if (!isset($rm))
 		{
-			$rm = new RegexpMaster;
+			$rm = new RegexpHelper;
 		}
 
 		return $rm;

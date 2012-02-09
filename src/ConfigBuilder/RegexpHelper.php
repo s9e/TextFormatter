@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 
 use RuntimeException;
 
-class RegexpMaster
+class RegexpHelper
 {
 	/**
 	* Create a regexp pattern that matches a list of words

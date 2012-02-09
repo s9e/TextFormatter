@@ -98,7 +98,7 @@ class CensorConfig extends PluginConfig
 			return false;
 		}
 
-		$regexp = $this->cb->getRegexpMaster()->buildRegexpFromList(
+		$regexp = $this->cb->getRegexpHelper()->buildRegexpFromList(
 			$this->words,
 			array('specialChars' => array('*' => '\\pL*', '?' => '.?'))
 		);

@@ -28,13 +28,13 @@
 			<file>ConfigBuilder/ConfigurableItemTest.php</file>
 			<file>ConfigBuilder/FilterTest.php</file>
 			<file>ConfigBuilder/FilterChainTest.php</file>
+			<file>ConfigBuilder/RegexpHelperTest.php</file>
 			<file>ConfigBuilder/TemplateHelperTest.php</file>
 			<file>ConfigBuilder/UrlConfigTest.php</file>
 			<!--file>JSParserGeneratorTest.php</file>
 			<file>ParserTest.php</file>
 			<file>PluginConfigTest.php</file>
 			<file>PluginParserTest.php</file>
-			<file>RegexpMasterTest.php</file>
 			<file>RendererTest.php</file>
 			<file>Plugins/AutolinkConfigTest.php</file>
 			<file>Plugins/AutolinkParserTest.php</file>
@@ -74,7 +74,7 @@
 			<file>../src/ConfigBuilder/HTML5Helper.php</file>
 			<file>../src/ConfigBuilder/PredefinedBBCodes.php</file>
 			<file>../src/ConfigBuilder/PredefinedTags.php</file>
-			<file>../src/ConfigBuilder/RegexpMaster.php</file>
+			<file>../src/ConfigBuilder/RegexpHelper.php</file>
 			<file>../src/ConfigBuilder/Ruleset.php</file>
 			<file>../src/ConfigBuilder/Tag.php</file>
 			<file>../src/ConfigBuilder/TemplateHelper.php</file>

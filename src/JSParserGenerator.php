@@ -771,7 +771,7 @@ class JSParserGenerator
 	{
 		$tagsConfig = $this->tagsConfig;
 
-		$rm = $this->cb->getRegexpMaster();
+		$rm = $this->cb->getRegexpHelper();
 
 		foreach ($tagsConfig as $tagName => &$tagConfig)
 		{
@@ -1044,7 +1044,7 @@ class JSParserGenerator
 	*/
 	protected function encodeArray(array $arr, array $meta = array())
 	{
-		$rm = $this->cb->getRegexpMaster();
+		$rm = $this->cb->getRegexpHelper();
 
 		$match = array();
 

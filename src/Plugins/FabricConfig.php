@@ -58,7 +58,7 @@ class FabricConfig extends PluginConfig
 
 	public function getConfig()
 	{
-		$rm        = $this->cb->getRegexpMaster();
+		$rm        = $this->cb->getRegexpHelper();
 		$urlRegexp = $rm->buildRegexpFromList($this->cb->getAllowedSchemes()) . '://\\S+';
 
 		$blockModifiers = array(

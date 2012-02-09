@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 
 use InvalidArgumentException,
     RuntimeException,
-    s9e\TextFormatter\ConfigBuilder\RegexpMaster;
+    s9e\TextFormatter\ConfigBuilder\RegexpHelper;
 
 class UrlConfig
 {
@@ -40,7 +40,7 @@ class UrlConfig
 	*/
 	public function getConfig()
 	{
-		$rm = new RegexpMaster;
+		$rm = new RegexpHelper;
 
 		$urlConfig = array(
 			'allowedSchemes' => '#^' . $rm->buildRegexpFromList($this->allowedSchemes) . '$#Di'

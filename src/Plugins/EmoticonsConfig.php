@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Plugins;
 
 use s9e\TextFormatter\ConfigBuilder,
-    s9e\TextFormatter\ConfigBuilder\RegexpMaster,
+    s9e\TextFormatter\ConfigBuilder\RegexpHelper,
     s9e\TextFormatter\ConfigBuilder\TemplateHelper,
     s9e\TextFormatter\PluginConfig;
 
@@ -53,7 +53,7 @@ class EmoticonsConfig extends PluginConfig
 			return false;
 		}
 
-		$rm = new RegexpMaster;
+		$rm = new RegexpHelper;
 
 		// Non-anchored pattern, will benefit from the S modifier
 		$regexp = '#' . $rm->buildRegexpFromList(array_keys($this->emoticons)) . '#S';

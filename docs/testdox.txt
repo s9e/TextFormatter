@@ -70,6 +70,118 @@ s9e\TextFormatter\Tests\ConfigBuilder\FilterChain
  [x] has($FilterObject) returns false if only $SomeOtherFilterObject is in the chain
  [x] FilterChain is iterable with foreach, with filter position key and filter as value
 
+s9e\TextFormatter\Tests\RegexpHelper
+ [x] buildRegexpFromList(['foo']) returns 'foo'
+ [x] buildRegexpFromList(['foo', 'foo']) returns 'foo'
+ [x] buildRegexpFromList(['a']) returns 'a'
+ [x] buildRegexpFromList(['a', 'a']) returns 'a'
+ [x] buildRegexpFromList(['apple', 'april']) returns 'ap(?:ple|ril)'
+ [x] buildRegexpFromList(['bar', 'baz']) returns 'ba[rz]'
+ [x] buildRegexpFromList(['foo', 'fool']) returns 'fool?'
+ [x] buildRegexpFromList(['ax', 'axed']) returns 'ax(?:ed)?'
+ [x] buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
+ [x] buildRegexpFromList(['a', '.'], ["specialChars" => ["." => "."]]) returns '(?:a|.)'
+ [x] buildRegexpFromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:x|^)y'
+ [x] buildRegexpFromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:y|$)'
+ [x] buildRegexpFromList(['foo', 'bar']) returns '(?:bar|foo)'
+ [x] buildRegexpFromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[\\\\*])(?:\\*foo|\\\\bar)'
+ [x] buildRegexpFromList(['?', 'bar'], ["specialChars" => ["?" => "."], "useLookahead" => true]) returns '(?:.|bar)'
+ [x] buildRegexpFromList(['a', 'b']) returns '[ab]'
+ [x] buildRegexpFromList(['♠', '♣', '♥', '♦']) returns '[♠♣♥♦]'
+ [x] buildRegexpFromList(['lock', 'sock']) returns '[ls]ock'
+ [x] buildRegexpFromList(['foo', 'afoo'], ["useLookahead" => true]) returns '(?=[af])a?foo'
+ [x] buildRegexpFromList(['boast', 'boost']) returns 'bo[ao]st'
+ [x] buildRegexpFromList(['pest', 'pst']) returns 'pe?st'
+ [x] buildRegexpFromList(['boast', 'boost', 'bost']) returns 'bo[ao]?st'
+ [x] buildRegexpFromList(['boost', 'best']) returns 'b(?:e|oo)st'
+ [x] buildRegexpFromList(['boost', 'bst']) returns 'b(?:oo)?st'
+ [x] buildRegexpFromList(['best', 'boost', 'bust']) returns 'b(?:[eu]|oo)st'
+ [x] buildRegexpFromList(['boost', 'bst', 'cool']) returns '(?:b(?:oo)?st|cool)'
+ [x] buildRegexpFromList(['boost', 'bst', 'cost']) returns '(?:b(?:oo)?|co)st'
+ [x] buildRegexpFromList(['aax', 'aay', 'aax', 'aay']) returns 'aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'baax', 'baay']) returns '[ab]aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'bbaax', 'bbaay']) returns '(?:a|bb)aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'aax', 'aay']) returns 'aaa?[xy]'
+ [x] buildRegexpFromList(['abx', 'aby', 'cdx', 'cdy']) returns '(?:ab|cd)[xy]'
+ [x] buildRegexpFromList(['axx', 'ayy', 'bbxx', 'bbyy']) returns '(?:a|bb)(?:xx|yy)'
+ [x] buildRegexpFromList(['axx', 'ayy', 'bbxx', 'bbyy', 'c']) returns '(?:c|(?:a|bb)(?:xx|yy))'
+ [x] buildRegexpFromList(['axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c']) returns '(?:c|a(?:xx|yy|zz)|bb(?:xx|yy))'
+ [x] buildRegexpFromList(['ac', 'af', 'bbc', 'bbf', 'c']) returns '(?:c|a[cf]|bb[cf])'
+ [x] buildRegexpFromList(['^example.org$', '.example.org$', '^localhost$', '.localhost$'], ["specialChars" => ["^" => "^", "$" => "$"]]) returns '(?:\\.|^)(?:example\\.org|localhost)$'
+ [x] buildRegexpFromList(['xixix', 'xoxox']) returns 'x(?:ixi|oxo)x'
+ [x] buildRegexpFromList(['xixix', 'xixox', 'xoxox', 'xoxix']) returns 'x[io]x[io]x'
+ [x] buildRegexpFromList(['afoo', 'abar', 'bbfoo', 'bbbar', 'a', 'bb']) returns '(?:a|bb)(?:bar|foo)?'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by']) returns '[ab][xy]'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'c']) returns '(?:c|[ab][xy])'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'x', 'y']) returns '[ab]?[xy]'
+ [x] buildRegexpFromList(['ax', 'ay', 'bbx', 'bby', 'c']) returns '(?:c|a[xy]|bb[xy])'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']) returns '(?:c|dd[xy]|[ab][xy])'
+ [x] buildRegexpFromList(['']) returns ''
+ [x] buildRegexpFromList(['', '']) returns ''
+ [x] buildRegexpFromList(['ad', 'bd'], ["specialChars" => ["d" => "\\d"]]) returns '[ab]\\d'
+ [x] buildRegexpFromList(['a', 'ax', 'ad', 'd', 'dx', 'dd'], ["specialChars" => ["d" => "\\d"]]) returns '[\\da][\\dx]?'
+ [x] buildRegexpFromList(['foo', 'bar', 'y', 'z']) returns '(?:[yz]|bar|foo)'
+ [x] buildRegexpFromList(['foo', 'bar', 'baz', 'y', 'z']) returns '(?:[yz]|ba[rz]|foo)'
+ [x] buildRegexpFromList(['a', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:a(?:a(?:cc|dd))?|bb(?:cc|dd))'
+ [x] buildRegexpFromList(['aa', 'bb', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:aa|bb)(?:cc|dd)?'
+ [x] buildRegexpFromList(['aa', 'bb', 'aaccxx', 'aaddxx', 'bbccxx', 'bbddxx', 'aaccyy', 'aaddyy', 'bbccyy', 'bbddyy']) returns '(?:aa|bb)(?:(?:cc|dd)(?:xx|yy))?'
+ [x] buildRegexpFromList() throws a RuntimeException if any word is not legal UTF-8
+ [x] parseRegexp() can parse plain regexps
+ [x] parseRegexp() throws a RuntimeException if delimiters can't be parsed
+ [x] parseRegexp() parses pattern modifiers
+ [x] parseRegexp() parses character classes
+ [x] parseRegexp() parses character classes with quantifiers
+ [x] parseRegexp() parses character classes that end with an escaped ]
+ [x] parseRegexp() throws a RuntimeException if a character class is not properly closed
+ [x] parseRegexp() correctly parses escaped brackets
+ [x] parseRegexp() correctly parses escaped parentheses
+ [x] parseRegexp() parses non-capturing subpatterns
+ [x] parseRegexp() parses non-capturing subpatterns with atomic grouping
+ [x] parseRegexp() parses non-capturing subpatterns with quantifiers
+ [x] parseRegexp() parses non-capturing subpatterns with options
+ [x] parseRegexp() parses option settings
+ [x] parseRegexp() parses named subpatterns using the (?<name>) syntax
+ [x] parseRegexp() parses named subpatterns using the (?P<name>) syntax
+ [x] parseRegexp() parses named subpatterns using the (?'name') syntax
+ [x] parseRegexp() parses capturing subpatterns
+ [x] parseRegexp() throws a RuntimeException if an unmatched right parenthesis is found
+ [x] parseRegexp() throws a RuntimeException if an unmatched left parenthesis is found
+ [x] parseRegexp() throws a RuntimeException on unsupported subpatterns
+ [x] parseRegexp() parses lookahead assertions
+ [x] parseRegexp() parses negative lookahead assertions
+ [x] parseRegexp() parses lookbehind assertions
+ [x] parseRegexp() parses negative lookbehind assertions
+ [x] pcreToJs() can convert plain regexps
+ [x] pcreToJs() escapes forward slashes
+ [x] pcreToJs() does not double-escape forward slashes that are already escaped
+ [x] pcreToJs() does not "eat" backslashes while escaping forward slashes
+ [x] pcreToJs() can convert regexps with the "i" modifier
+ [x] pcreToJs() can convert regexps with capturing subpatterns
+ [x] pcreToJs() can convert regexps with non-capturing subpatterns
+ [x] pcreToJs() can convert regexps with non-capturing subpatterns with a quantifier
+ [x] pcreToJs() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
+ [x] pcreToJs() throws a RuntimeException on options (?i)
+ [x] pcreToJs() throws a RuntimeException on subpattern options (?i:)
+ [x] pcreToJs() can convert regexps with character classes with a quantifier
+ [x] pcreToJs() converts greedy quantifiers to normal quantifiers in character classes
+ [x] pcreToJs() replaces \pL with the full character range in character classes
+ [x] pcreToJs() replaces \p{L} with the full character range in character classes
+ [x] pcreToJs() replaces \pL outside of character classes with a character class containing the full character range
+ [x] pcreToJs() replaces \p{L} outside of character classes with a character class containing the full character range
+ [x] pcreToJs() replaces \p{^L} with a character class containing the full character range
+ [x] pcreToJs() replaces \p{^L} with a character class equivalent to \PL
+ [x] pcreToJs() replaces \P{^L} with a character class equivalent to \pL
+ [x] pcreToJs() can convert regexps with lookahead assertions
+ [x] pcreToJs() can convert regexps with negative lookahead assertions
+ [x] pcreToJs() throws a RuntimeException on lookbehind assertions
+ [x] pcreToJs() throws a RuntimeException on negative lookbehind assertions
+ [x] pcreToJs() converts . to [\s\S] outside of character classes is the "s" modifier is set
+ [x] pcreToJs() does not convert . to [\s\S] if the "s" modifier is not set
+ [x] pcreToJs() does not convert . inside of character classes
+ [x] pcreToJs() converts named captures into normal captures
+ [x] pcreToJs() replaces its second parameter with an array that maps named captures to their index
+ [x] pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
+
 s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() throws an exception on invalid XML
  [x] checkUnsafe() identifies <xsl:element name="script"><xsl:apply-templates/></xsl:element> as unsafe
