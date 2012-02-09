@@ -100,17 +100,6 @@ class ConfigurableItemTest extends Test
 	}
 
 	/**
-	* @testdox setOption() throws an InvalidArgumentException if the option does not exist
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Option 'foo' does not exist
-	*/
-	public function testSetOptionInexistent()
-	{
-		$item = new ConfigurableItemTestDummy;
-		$item->setOption('foo', 4);
-	}
-
-	/**
 	* @testdox $item->setOption('foo', 42) calls $item->setFoo(42) if it exists
 	*/
 	public function testSetOptionSetter()

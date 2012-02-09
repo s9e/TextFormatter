@@ -63,11 +63,6 @@ abstract class ConfigurableItem implements Configurable, Item
 			return $this->$methodName($optionValue);
 		}
 
-		if (!property_exists($this, $optionName))
-		{
-			throw new InvalidArgumentException("Option '" . $optionName . "' does not exist");
-		}
-
 		// If the property already exists, preserve its type
 		if (isset($this->$optionName))
 		{

@@ -37,7 +37,6 @@ s9e\TextFormatter\Tests\ConfigBuilder\ConfigurableItem
  [x] $item->getOption($k) returns $item->$k if it exists
  [x] $item->getOption($k) returns null if $item->$k is null
  [x] getOptions() returns all of the item's properties
- [x] setOption() throws an InvalidArgumentException if the option does not exist
  [x] $item->setOption('foo', 42) calls $item->setFoo(42) if it exists
  [x] $item->setOption($k, $v) invokes $item->$k->clear() if $item->$k is a Collection
  [x] $item->setOption($k, $v) invokes $item->$k->add() for every iteration of $v
