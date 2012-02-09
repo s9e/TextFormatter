@@ -296,7 +296,7 @@ abstract class TemplateHelper
 		$scriptNodes = $xpath->query(
 			  '//*[translate(local-name(), "SCRIPT", "script") = "script"]'
 			. '|'
-			. '//xsl:element[translate(@name, "SCRIPT", "script") = "script"]'
+			. '//xsl:element[translate(normalize-space(@name), "SCRIPT", "script") = "script"]'
 		);
 
 		foreach ($scriptNodes as $scriptNode)
@@ -315,7 +315,7 @@ abstract class TemplateHelper
 
 			// <script><xsl:attribute name="src">
 			// <script><xsl:if><xsl:attribute name="src">
-			if ($xpath->evaluate('count(.//xsl:attribute[translate(@name, "SRC", "src") = "src"])', $scriptNode))
+			if ($xpath->evaluate('count(.//xsl:attribute[translate(normalize-space(@name), "SRC", "src") = "src"])', $scriptNode))
 			{
 				return 'The template contains a <script> tag with a "src" attribute generated dynamically';
 			}
@@ -349,7 +349,7 @@ abstract class TemplateHelper
 		$styleNodes = $xpath->query(
 			  '//*[translate(local-name(), "STYLE", "style") = "style"]'
 			. '|'
-			. '//xsl:element[translate(@name, "STYLE", "style") = "style"]'
+			. '//xsl:element[translate(normalize-space(@name), "STYLE", "style") = "style"]'
 		);
 
 		foreach ($styleNodes as $styleNode)
@@ -387,7 +387,7 @@ abstract class TemplateHelper
 			return "The template uses unfiltered or improperly filtered attributes inside of a 'style' attribute";
 		}
 
-		$attrNodes = $xpath->query('//xsl:attribute[translate(@name, "STYLE", "style") = "style"]');
+		$attrNodes = $xpath->query('//xsl:attribute[translate(normalize-space(@name), "STYLE", "style") = "style"]');
 		foreach ($attrNodes as $attrNode)
 		{
 			// <b><xsl:attribute name="style"><xsl:apply-templates/>
@@ -448,7 +448,7 @@ abstract class TemplateHelper
 		$tests = array();
 		foreach ($urlAttributes as $attrName)
 		{
-			$tests[] = 'translate(@name, "' . strtoupper($attrName) . '", "' . $attrName . '") = "' . $attrName . '"';
+			$tests[] = 'translate(normalize-space(@name), "' . strtoupper($attrName) . '", "' . $attrName . '") = "' . $attrName . '"';
 		}
 
 		$attrNodes = $xpath->query('//xsl:attribute[' . implode(' or ', $tests) . ']');
@@ -537,7 +537,7 @@ abstract class TemplateHelper
 		// Note that it wrongly identifies <b onclick="{{@foo}}"/> as unsafe, but a false-positive
 		// does not hurt
 		$attrs = $xpath->query(
-			'//@*[starts-with(translate(name(), "ON", "on"), "on")][contains(., "{")]'
+			'//@*[starts-with(translate(local-name(), "ON", "on"), "on")][contains(., "{")]'
 		);
 
 		if (self::usesUnsafeAttribute($attrs, $tag, 'JS'))
@@ -545,19 +545,24 @@ abstract class TemplateHelper
 			return 'The template uses unfiltered or improperly filtered attributes inside of an HTML event attribute';
 		}
 
-		// Check for <b><xsl:attribute name="onclick"><xsl:value-of .../></xsl:attribute></b>
-		// and <b><xsl:attribute name="onclick"><xsl:apply-templates /></xsl:attribute></b>
+		// <b><xsl:attribute name="onclick"><xsl:value-of .../></xsl:attribute></b>
 		$attrs = $xpath->query(
-			  '//xsl:attribute[starts-with(translate(@name, "ON", "on"), "on")]'
+			  '//xsl:attribute[starts-with(translate(normalize-space(@name), "ON", "on"), "on")]'
 			. '//xsl:value-of/@select'
-			. '|'
-			. '//xsl:attribute[starts-with(translate(@name, "ON", "on"), "on")]'
-			. '//xsl:apply-templates/@select'
 		);
 
 		if (self::usesUnsafeAttribute($attrs, $tag, 'JS'))
 		{
 			return 'The template uses unfiltered or improperly filtered attributes inside of a dynamically created HTML event attribute';
+		}
+
+		// <b><xsl:attribute name="onclick"><xsl:apply-templates /></xsl:attribute></b>
+		$query = '//xsl:attribute[starts-with(translate(normalize-space(@name), "ON", "on"), "on")]'
+		       . '//xsl:apply-templates';
+
+		if ($xpath->evaluate('count(' . $query . ')'))
+		{
+			return 'The template contains an HTML event attribute that lets unfiltered data through';
 		}
 	}
 

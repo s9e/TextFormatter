@@ -27,3 +27,4 @@ TODO
 - Add exception codes to exceptions?
 - Add an "alnum" or "alphanum" built-in filter that matches /^[a-z0-9]+$/iD and possibly an "hex" filter for /^[0-9a-f]+$/iD
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
+- Check for attributes created through <xsl:copy-of/> in TemplateHelper::checkUnsafe()

@@ -264,6 +264,18 @@ s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
  [x] checkUnsafe() identifies <a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute></a> as unsafe
  [x] checkUnsafe() identifies <a><xsl:attribute name="HREF"><xsl:apply-templates/></xsl:attribute></a> as unsafe
  [x] checkUnsafe() identifies <b onclick="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <b ONCLICK="{@foo}"/> as unsafe
+ [x] checkUnsafe() identifies <b onclick="{@foo}"/> as safe if attribute 'foo' has filter '#url'
+ [x] checkUnsafe() identifies <b onclick="{@foo}"/> as safe if attribute 'foo' has filter '#int'
+ [x] checkUnsafe() identifies <b onclick="{@foo}"/> as safe if attribute 'foo' has filter '#uint'
+ [x] checkUnsafe() identifies <b onclick="{@foo}"/> as safe if attribute 'foo' has filter '#float'
+ [x] checkUnsafe() identifies <b onclick="{@foo}"/> as safe if attribute 'foo' has filter '#range'
+ [x] checkUnsafe() identifies <b onclick="{@foo}"/> as safe if attribute 'foo' has filter '#number'
+ [x] checkUnsafe() identifies <b onclick="{@foo}"/> as safe if attribute 'foo' has filter '#simpletext'
+ [x] checkUnsafe() identifies <b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></b> as unsafe
+ [x] checkUnsafe() identifies <b><xsl:attribute name="ONCLICK"><xsl:value-of select="@foo"/></xsl:attribute></b> as unsafe
+ [x] checkUnsafe() identifies <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b> as unsafe
+ [x] checkUnsafe() identifies <b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b> as unsafe
 
 s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
  [x] HTTP and HTTPS schemes are allowed by default
