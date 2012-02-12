@@ -205,11 +205,11 @@ class Tag extends ConfigurableItem
 	*/
 	public function setTemplates(array $templates)
 	{
-		$this->clearTemplates();
+		$this->templates->clear();
 
 		foreach ($templates as $predicate => $template)
 		{
-			$this->setTemplate($template, $predicate);
+			$this->templates->set($template, $predicate);
 		}
 	}
 

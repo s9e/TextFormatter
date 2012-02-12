@@ -16,4 +16,11 @@ interface Item
 	* @return string       Normalized name
 	*/
 	static public function normalizeName($name);
+
+	/**
+	* Return this item as an array
+	*
+	* @return array
+	*/
+	public function asArray();
 }

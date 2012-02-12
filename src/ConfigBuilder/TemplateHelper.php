@@ -35,6 +35,113 @@ abstract class TemplateHelper
 			throw new InvalidArgumentException('Invalid XML in template: ' . $dom->message);
 		}
 
+		return self::checkUnsafeAttributesInTags($dom, $tag)
+		    ?: self::checkUnsafeAttributesInAttributes($dom, $tag)
+		    ?: self::checkDisableOutputEscaping($dom)
+			// check for <xsl:element name="{concat('scr','ipt')}"/> or similar <xsl:attribute> tags
+		    ?: self::checkSuspiciouslyDynamicElements($dom)
+		    ?: false;
+	}
+
+	/**
+	* Check a improperly filtered attributes used in HTML tags
+	*
+	* @param  DOMDocument $dom xsl:template node
+	* @param  Tag         $tag Tag that this template belongs to
+	* @return bool|string      Error message if unsafe, FALSE otherwise
+	*/
+	static protected function checkUnsafeAttributesInTags(DOMDocument $dom, Tag $tag)
+	{
+		$DOMXPath = new DOMXPath($dom);
+
+		$checkTags = array(
+			'CSS' => array(
+				'style'
+			),
+			'JS' => array(
+				'script'
+			)
+		);
+
+		foreach ($checkTags as $contentType => $tagNames)
+		{
+			$expr = '//*[' . $this->generateStaticNodePredicate($tagNames) . ']'
+			      . '|'
+			      . '//xsl:element[' . $this->generateDynamicNodePredicate($tagNames) . ']';
+
+			foreach ($xpath->query($expr) as $node)
+			{
+				if ($xpath->evaluate('count(.//xsl:apply-templates)', $node))
+				{
+					return 'The template contains a <' . $node->nodeName . '> tag that lets unfiltered data through';
+				}
+			}
+			// Predicates used to match static nodes, e.g. <script>
+			$staticNodesPredicate = ;
+
+			// Predicates used to match dynamic nodes, e.g. <xsl:element name="script">
+			$dynamicNodesPredicates = array();
+
+			foreach ($tagNames as $tagName)
+			{
+				// translate() allows us to match HTML tags in uppercase, e.g. <ScRiPt>
+				// We use local-name() to match tags that would be namespaced to the HTML namespace,
+				// e.g. <x:script xmlns:x="http://www.w3.org/1999/xhtml"> which may or may not work
+				// in some browsers (erring on the safe side)
+				$staticNodesPredicates[] = 'translate(local-name(),"' . strtoupper($tagName) . '","' . $tagName . '") = "' . $tagName . '"';
+
+				// normalize-space() is used as a failsafe in case a faulty XSLT implementation
+				// would allow <xsl:element name=" script ">
+				$staticNodesPredicates[] = 'translate(normalize-space(@name),"' . strtoupper($tagName) . '","' . $tagName . '") = "' . $tagName . '"';
+			}
+
+			$predicate = '[' . implode(' or ', $predicates) . ']'
+
+			$xpath = '*' . $predicate
+		}
+	}
+
+		$checkAttributes = array(
+			'CSS' => array(
+				'style'
+			),
+			'JS' => array(
+				'on*'
+			),
+			'URL' => array(
+				'action',
+				'cite',
+				'data',
+				'formaction',
+				'href',
+				'manifest',
+				'poster',
+				// Covers for "src" as well as non-standard attributes "dynsrc", "lowsrc"
+				'*src'
+			)
+		);
+
+		foreach ($check as $type => $matches)
+		{
+			foreach ($matches as $match)
+			{
+				if (isset($match[1]))
+				{
+					$this->checkUnsafeAttributes($type, $dom, $match
+				}
+			}
+		}
+
+		/*
+		<script src>
+		<a href>
+
+		<xsl:attribute><xsl:value-of select>
+		<xsl:attribute><xsl:apply-template>
+		<xsl:copy-of select>
+
+		
+		*/
 		return self::checkUnsafeScriptTags($dom, $tag)
 		    ?: self::checkUnsafeEventAttributes($dom, $tag)
 		    ?: self::checkUnsafeStyleTags($dom, $tag)
@@ -598,7 +705,6 @@ abstract class TemplateHelper
 	{
 		$xpath = new DOMXPath($dom);
 
-		// Inline attributes
 		$query = '//*[namespace-uri() = ""]'
 		       . '/xsl:attribute[count(descendant::node()) = 1]'
 		       . '/xsl:value-of[@select]';
