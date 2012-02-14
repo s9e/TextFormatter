@@ -35,8 +35,7 @@ abstract class TemplateHelper
 			throw new InvalidArgumentException('Invalid XML in template: ' . $dom->message);
 		}
 
-		return self::checkUnsafeAttributesInTags($dom, $tag)
-		    ?: self::checkUnsafeAttributesInAttributes($dom, $tag)
+		return self::checkUnsafeContent($dom, $tag)
 		    ?: self::checkDisableOutputEscaping($dom)
 			// check for <xsl:element name="{concat('scr','ipt')}"/> or similar <xsl:attribute> tags
 		    ?: self::checkSuspiciouslyDynamicElements($dom)
@@ -44,55 +43,57 @@ abstract class TemplateHelper
 	}
 
 	/**
-	* Check a improperly filtered attributes used in HTML tags
+	* Check a improperly filtered content used in HTML tags
 	*
 	* @param  DOMDocument $dom xsl:template node
 	* @param  Tag         $tag Tag that this template belongs to
 	* @return bool|string      Error message if unsafe, FALSE otherwise
 	*/
-	static protected function checkUnsafeAttributesInTags(DOMDocument $dom, Tag $tag)
+	static protected function checkUnsafeContent(DOMDocument $dom, Tag $tag)
 	{
 		$DOMXPath = new DOMXPath($dom);
 
-		$checkTags = array(
+		$checkNodes = array(
 			'CSS' => array(
-				'style'
+				'style',
+				'@style'
 			),
 			'JS' => array(
-				'script'
+				'script',
+				'@on*'
+			),
+			'URL' => array(
+				'@action',
+				'@cite',
+				'@data',
+				'@formaction',
+				'@href',
+				'@manifest',
+				'@poster',
+				// Covers for "src" as well as non-standard attributes "dynsrc", "lowsrc"
+				'@*src'
 			)
 		);
 
-		foreach ($checkTags as $contentType => $tagNames)
+		foreach ($checkNodes as $contentType => $names)
 		{
-			$expr = '//*[' . $this->generateStaticNodePredicate($tagNames) . ']'
-			      . '|'
-			      . '//xsl:element[' . $this->generateDynamicNodePredicate($tagNames) . ']';
-
-			foreach ($xpath->query($expr) as $node)
-			{
-				if ($xpath->evaluate('count(.//xsl:apply-templates)', $node))
-				{
-					return 'The template contains a <' . $node->nodeName . '> tag that lets unfiltered data through';
-				}
-			}
 			// Predicates used to match static nodes, e.g. <script>
-			$staticNodesPredicate = ;
+			$staticNodesPredicates = array();
 
-			// Predicates used to match dynamic nodes, e.g. <xsl:element name="script">
-			$dynamicNodesPredicates = array();
+			// Predicates used to match generated nodes, e.g. <xsl:element name="script">
+			$generatedNodesPredicates = array();
 
-			foreach ($tagNames as $tagName)
+			foreach ($names as $name)
 			{
 				// translate() allows us to match HTML tags in uppercase, e.g. <ScRiPt>
 				// We use local-name() to match tags that would be namespaced to the HTML namespace,
 				// e.g. <x:script xmlns:x="http://www.w3.org/1999/xhtml"> which may or may not work
 				// in some browsers (erring on the safe side)
-				$staticNodesPredicates[] = 'translate(local-name(),"' . strtoupper($tagName) . '","' . $tagName . '") = "' . $tagName . '"';
+				$staticNodesPredicates[] = 'translate(local-name(),"' . strtoupper($name) . '","' . $name . '") = "' . $name . '"';
 
 				// normalize-space() is used as a failsafe in case a faulty XSLT implementation
 				// would allow <xsl:element name=" script ">
-				$staticNodesPredicates[] = 'translate(normalize-space(@name),"' . strtoupper($tagName) . '","' . $tagName . '") = "' . $tagName . '"';
+				$generatedNodesPredicates[] = 'translate(normalize-space(@name),"' . strtoupper($name) . '","' . $name . '") = "' . $name . '"';
 			}
 
 			$predicate = '[' . implode(' or ', $predicates) . ']'
@@ -101,25 +102,16 @@ abstract class TemplateHelper
 		}
 	}
 
-		$checkAttributes = array(
-			'CSS' => array(
-				'style'
-			),
-			'JS' => array(
-				'on*'
-			),
-			'URL' => array(
-				'action',
-				'cite',
-				'data',
-				'formaction',
-				'href',
-				'manifest',
-				'poster',
-				// Covers for "src" as well as non-standard attributes "dynsrc", "lowsrc"
-				'*src'
-			)
-		);
+	/**
+	* 
+	*
+	* @return string
+	*/
+	public function generateStaticNodePredicate(array $names)
+	{
+		return 
+	}
+
 
 		foreach ($check as $type => $matches)
 		{
@@ -849,6 +841,7 @@ abstract class TemplateHelper
 	*  - Mozilla's -moz-binding
 	*  - complex CSS can be used for phishing
 	*  - javascript: and data: URI in background images
+	*  - CSS expressions can execute Javascript
 	*
 	* @param  Attribute $attribute
 	* @return bool
