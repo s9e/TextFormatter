@@ -275,15 +275,15 @@ var HINT = {
 		/** @type {!Object} */
 		log,
 
-		/** @const @type {!Object} */
+		/** @const */
 		tagsConfig = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
+		/** @const */
 		pluginsConfig = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
+		/** @const */
 		registeredNamespaces = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
+		/** @const */
 		rootContext = {/* DO NOT EDIT */},
-		/** @const @type {!Object} */
+		/** @const */
 		urlConfig = {/* DO NOT EDIT */},
 
 		/** @type {!string} */
