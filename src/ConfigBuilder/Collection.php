@@ -11,24 +11,54 @@ use Iterator,
     ReflectionClass,
     RuntimeException;
 
-class Collection implements Iterator
+abstract class Collection implements ConfigProvider, Iterator
 {
-	/**
-	* @var string Name of the class of items this collection is expected to hold
-	*/
-	protected $itemClass;
-
 	/**
 	* @var array Items that this collection holds
 	*/
 	protected $items = array();
 
+	//==========================================================================
+	// Abstract methods
+	//==========================================================================
+
 	/**
-	* @param string $itemClass Name of the class of the items this collection will hold
+	* Return whether a string would be a valid item name
+	*
+	* @param  string $name
+	* @return bool
 	*/
-	public function __construct($itemClass)
+	abstract public function isValidName($name);
+
+	/**
+	* Validate and normalize an item's name
+	*
+	* @param  string $name Original name
+	* @return string       Normalized name
+	*/
+	abstract public function normalizeName($name);
+
+	/**
+	* Return the class name of this collection's items
+	*
+	* @return string
+	*/
+	abstract protected function getItemClass();
+
+	//==========================================================================
+	// Common methods
+	//==========================================================================
+
+	public function getConfig()
 	{
-		$this->itemClass = $itemClass;
+		$config = array();
+
+		foreach ($this->items as $name => $item)
+		{
+			$config[$name] = $item->getConfig();
+		}
+
+		return $config;
 	}
 
 	/**
@@ -39,7 +69,7 @@ class Collection implements Iterator
 	*/
 	public function get($name)
 	{
-		$name = $this->normalizeName($name, true);
+		$name = $this->validateName($name, true);
 
 		return $this->items[$name];
 	}
@@ -54,11 +84,19 @@ class Collection implements Iterator
 	*/
 	public function add($name, $arg = null)
 	{
-		$name = $this->normalizeName($name, false);
+		$name = $this->validateName($name, false);
 
-		$item = ($arg instanceof Item)
-		      ? $arg
-		      : $this->newItem(array_slice(func_get_args(), 1));
+		$class = $this->getItemClass();
+
+		if ($arg instanceof $class)
+		{
+			$item = $arg;
+		}
+		else
+		{
+			$reflection = new ReflectionClass($class);
+			$item = $reflection->newInstanceArgs(array_slice(func_get_args(), 1));
+		}
 
 		$this->items[$name] = $item;
 
@@ -72,7 +110,7 @@ class Collection implements Iterator
 	*/
 	public function remove($name)
 	{
-		$name = $this->normalizeName($name, true);
+		$name = $this->validateName($name, true);
 
 		unset($this->items[$name]);
 	}
@@ -85,8 +123,8 @@ class Collection implements Iterator
 	*/
 	public function rename($oldName, $newName)
 	{
-		$oldName = $this->normalizeName($oldName, true);
-		$newName = $this->normalizeName($newName, false);
+		$oldName = $this->validateName($oldName, true);
+		$newName = $this->validateName($newName, false);
 
 		$this->items[$newName] = $this->items[$oldName];
 		unset($this->items[$oldName]);
@@ -100,7 +138,7 @@ class Collection implements Iterator
 	*/
 	public function exists($name)
 	{
-		$name = $this->normalizeName($name);
+		$name = $this->validateName($name);
 
 		return isset($this->items[$name]);
 	}
@@ -114,17 +152,20 @@ class Collection implements Iterator
 	}
 
 	/**
-	* Normalize the name of an item
+	* Validate and normalize the name of an item
 	*
 	* @param  string $name      Original name
 	* @param  bool   $mustExist Whether the item MUST exist or MUST NOT exist (can be omitted)
 	* @return string            Normalized name
 	*/
-	protected function normalizeName($name, $mustExist = null)
+	protected function validateName($name, $mustExist = null)
 	{
-		$className = $this->itemClass;
+		if (!$this->isValidName($name))
+		{
+			throw new InvalidArgumentException ("Invalid item name '" . $name . "'");
+		}
 
-		$name = $className::normalizeName($name);
+		$name = $this->normalizeName($name);
 
 		if (isset($mustExist))
 		{
@@ -145,19 +186,6 @@ class Collection implements Iterator
 		}
 
 		return $name;
-	}
-
-	/**
-	* Create a new Item instance
-	*
-	* @param  array $args Arguments to be passed to the item's constructor
-	* @return Item
-	*/
-	protected function newItem(array $args)
-	{
-		$reflection = new ReflectionClass($this->itemClass);
-
-		return $reflection->newInstanceArgs($args);
 	}
 
 	//==========================================================================

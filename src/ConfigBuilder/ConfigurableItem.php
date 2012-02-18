@@ -9,25 +9,9 @@ namespace s9e\TextFormatter\ConfigBuilder;
 
 use InvalidArgumentException;
 
-abstract class ConfigurableItem implements Configurable, Item
+class ConfigurableItem
 {
-	public function __get($k)
-	{
-		return $this->getOption($k);
-	}
-
-	public function __set($k, $v)
-	{
-		$this->setOption($k, $v);
-	}
-
-	/**
-	* Return the value of an option
-	*
-	* @param  string $optionName
-	* @return mixed
-	*/
-	public function getOption($optionName)
+	public function __get($optionName)
 	{
 		if (!property_exists($this, $optionName))
 		{
@@ -37,23 +21,7 @@ abstract class ConfigurableItem implements Configurable, Item
 		return $this->$optionName;
 	}
 
-	/**
-	* Get all of this object's options
-	*
-	* @return array
-	*/
-	public function getOptions()
-	{
-		return get_object_vars($this);
-	}
-
-	/**
-	* Set a single option for this object
-	*
-	* @param string $optionName
-	* @param mixed  $optionValue
-	*/
-	public function setOption($optionName, $optionValue)
+	public function __set($optionName, $optionValue)
 	{
 		$methodName = 'set' . ucfirst($optionName);
 
@@ -83,18 +51,5 @@ abstract class ConfigurableItem implements Configurable, Item
 		}
 
 		$this->$optionName = $optionValue;
-	}
-
-	/**
-	* Set several options for this object
-	*
-	* @param array $options
-	*/
-	public function setOptions(array $options)
-	{
-		foreach ($options as $optionName => $optionValue)
-		{
-			$this->setOption($optionName, $optionValue);
-		}
 	}
 }

@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 
 use InvalidArgumentException;
 
-class Filter implements Item
+class Filter
 {
 	/**
 	* @var callback
@@ -32,33 +32,6 @@ class Filter implements Item
 		}
 
 		$this->callback = $callback;
-	}
-
-	/**
-	* Return whether a string is a valid filter name
-	*
-	* @param  string $name
-	* @return bool
-	*/
-	static public function isValidName($name)
-	{
-		return (bool) preg_match('#^[a-z_]\\w*$#Di', $name);
-	}
-
-	/**
-	* Validate and normalize a filter namename
-	*
-	* @param  string $name Original filter name
-	* @return string       Normalized filter name, in lowercase
-	*/
-	static public function normalizeName($name)
-	{
-		if (!self::isValidName($name))
-		{
-			throw new InvalidArgumentException ("Invalid filter name '" . $name . "'");
-		}
-
-		return strtolower($name);
 	}
 
 	/**

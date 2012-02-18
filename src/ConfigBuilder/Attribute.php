@@ -28,7 +28,10 @@ class Attribute extends ConfigurableItem
 	{
 		$this->filterChain = new FilterChain(array('attrVal' => null));
 
-		$this->setOptions($options);
+		foreach ($options as $optionName => $optionValue)
+		{
+			$this->__set($optionName, $optionValue);
+		}
 	}
 
 	/**

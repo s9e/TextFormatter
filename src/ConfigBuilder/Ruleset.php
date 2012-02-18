@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 
 use Iterator;
 
-class Ruleset implements Iterator
+class Ruleset implements ConfigProvider, Iterator
 {
 	/**
 	* @var array
@@ -24,10 +24,7 @@ class Ruleset implements Iterator
 		$this->rules = array();
 	}
 
-	/**
-	* Return all the rules as a 2D array
-	*/
-	public function get()
+	public function getConfig()
 	{
 		return $this->rules;
 	}

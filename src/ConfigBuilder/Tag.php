@@ -7,11 +7,15 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder;
 
-use InvalidArgumentException,
-    UnexpectedValueException;
+use InvalidArgumentException;
 
 class Tag extends ConfigurableItem
 {
+	/**
+	* @var bool Whether to disable template checking
+	*/
+	protected $allowUnsafeTemplates = false;
+
 	/**
 	* @var Collection This tag's attributes
 	*/
@@ -21,21 +25,6 @@ class Tag extends ConfigurableItem
 	* @var Collection This tag's attribute parsers
 	*/
 	protected $attributeParsers;
-
-	/**
-	* @var Ruleset Rules associated with this tag
-	*/
-	protected $rules;
-
-	/**
-	* @var integer Maximum number of this tag per message
-	*/
-	protected $tagLimit = 100;
-
-	/**
-	* @var integer Maximum nesting level for this tag
-	*/
-	protected $nestingLimit = 10;
 
 	/**
 	* @var string Default rule governing this tag's childen
@@ -48,54 +37,39 @@ class Tag extends ConfigurableItem
 	protected $defaultDescendantRule = 'allow';
 
 	/**
-	* @var array Templates associated with this tag (predicate => template)
+	* @var integer Maximum nesting level for this tag
 	*/
-	protected $templates = array();
+	protected $nestingLimit = 10;
+
+	/**
+	* @var Ruleset Rules associated with this tag
+	*/
+	protected $rules;
+
+	/**
+	* @var integer Maximum number of this tag per message
+	*/
+	protected $tagLimit = 100;
+
+	/**
+	* @var Templateset Templates associated with this tag
+	*/
+	protected $templates;
 
 	/**
 	* @param array $options This tag's options
 	*/
 	public function __construct(array $options = array())
 	{
-		$this->attributes       = new Collection(__NAMESPACE__ . '\\Attribute');
-		$this->attributeParsers = new Collection(__NAMESPACE__ . '\\AttributeParser');
+		$this->attributes       = new AttributeCollection;
+		$this->attributeParsers = new AttributeParserCollection;
 		$this->rules            = new Ruleset;
+		$this->templates        = new Templateset($this);
 
-		$this->setOptions($options);
-	}
-
-	/**
-	* Return whether a string is a valid tag name
-	*
-	* @param  string $name
-	* @return bool
-	*/
-	static public function isValidName($name)
-	{
-		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*:)?[a-z_][a-z_0-9]*$#Di', $name);
-	}
-
-	/**
-	* Validate and normalize a tag name
-	*
-	* Non-namespaced tags are uppercased, namespaced tags' names are left intact
-	*
-	* @param  string $name Original tag name
-	* @return string       Normalized tag name
-	*/
-	static public function normalizeName($name)
-	{
-		if (!self::isValidName($name))
+		foreach ($options as $optionName => $optionValue)
 		{
-			throw new InvalidArgumentException ("Invalid tag name '" . $name . "'");
+			$this->__set($optionName, $optionValue);
 		}
-
-		if (strpos($name, ':') === false)
-		{
-			$name = strtoupper($name);
-		}
-
-		return $name;
 	}
 
 	/**
@@ -184,18 +158,6 @@ class Tag extends ConfigurableItem
 		$this->tagLimit = $limit;
 	}
 
-	//==========================================================================
-	// Templates-related methods
-	//==========================================================================
-
-	/**
-	* Remove all templates associated with this tag
-	*/
-	public function clearTemplates()
-	{
-		$this->templates = array();
-	}
-
 	/**
 	* Set all templates associated with this tag
 	*
@@ -210,52 +172,6 @@ class Tag extends ConfigurableItem
 		foreach ($templates as $predicate => $template)
 		{
 			$this->templates->set($template, $predicate);
-		}
-	}
-
-	/**
-	* Set a template for this tag
-	*
-	* @param string $template  XSL template
-	* @param string $predicate Predicate under which this template applies
-	*/
-	public function setTemplate($template, $predicate = null)
-	{
-		$this->templates[$predicate] = $this->normalizeTemplate($template, true);
-	}
-
-	/**
-	* Set a potentially unsafe template for this tag
-	*
-	* @param string $template  XSL template
-	* @param string $predicate Predicate under which this template applies
-	*/
-	public function setUnsafeTemplate($template, $predicate = null)
-	{
-		$this->templates[$predicate] = $this->normalizeTemplate($template, false);
-	}
-
-	/**
-	* Normalize the content of a template
-	*
-	* Will optimize the template's content and optionally check for unsafe markup.
-	*
-	* @param  string $template    Original template
-	* @param  bool   $checkUnsafe Whether to check the template for unsafe markup
-	* @return string              Normalized template
-	*/
-	protected function normalizeTemplate($template, $checkUnsafe)
-	{
-		$template = TemplateHelper::optimizeTemplate($template);
-
-		if ($checkUnsafe)
-		{
-			$unsafeMsg = TemplateHelper::checkUnsafe($template, $this);
-
-			if ($unsafeMsg)
-			{
-				throw new RuntimeException($unsafeMsg);
-			}
 		}
 	}
 }

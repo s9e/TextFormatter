@@ -23,14 +23,11 @@ TODO
 - Move the "reduce" part of ConfigBuilder::getTagsConfig() to its own method
 - Tags with a require* rule should not be enabled in the root context
 - Investigate whether requireParent rules can be optimized away by replacing them with allowChild/denyChild rules
-<<<<<<< Updated upstream
 - Same with tags that have a nestingLimit of 1, is there any benefit to adding a denyChild rule to it?
 - Add exception codes to exceptions?
 - Add an "alnum" or "alphanum" built-in filter that matches /^[a-z0-9]+$/iD and possibly an "hex" filter for /^[0-9a-f]+$/iD
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
 - Check for attributes created through <xsl:copy-of/> in TemplateHelper::checkUnsafe()
 - Determine how to handle <xsl:value-of select="."/> and other expressions such as "../foo" or "st" in checkUnsafe() -- also, check for numeric entities used to bypass checks for . or /
-=======
-- Add exception codes to exceptions?
-- Add an "alnum" or "alphanum" built-in filter that matches /^[a-z0-9]+$/iD and possibly an "hex" filter for /^[0-9a-f]+$/iD
->>>>>>> Stashed changes
+- Move plugins to ./Plugins/<pluginName>/(Config.php|Parser.(php|js))
+- Replace PluginConfig::getXSL() with PluginConfig::getTemplates() which should return array([match]=>[template]) and each template goes through Templates::setTemplate() (how to evaluate attributes safety though)

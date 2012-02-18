@@ -8,10 +8,9 @@
 namespace s9e\TextFormatter\ConfigBuilder;
 
 use InvalidArgumentException,
-    RuntimeException,
-    s9e\TextFormatter\ConfigBuilder\RegexpHelper;
+    RuntimeException;
 
-class UrlConfig
+class UrlConfig implements ConfigProvider
 {
 	/**
 	* @var array List of allowed schemes
