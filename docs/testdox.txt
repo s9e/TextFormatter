@@ -1,4 +1,900 @@
-s9e\TextFormatter\Tests\ConfigBuilder\TemplateHelper
- [x] checkUnsafe() throws an exception on invalid XML
- [ ] checkUnsafe() identifies <xsl:element name="script"><xsl:apply-templates/></xsl:element> as unsafe
+s9e\TextFormatter\Tests\ConfigBuilder
+ [x] Can load plugins
+ [x] Loaded plugins are available as a public property
+ [x] Can unload plugins by unsetting them
+ [x] Loads plugin on magic get
+ [x] Has a magic property predefinedTags that loads and creates an instance of PredefinedTags
+ [x] Throws an exception on unsupported magic get
+ [x] loadPlugin throws an exception on invalid plugin name
+ [x] loadPlugin throws an exception on unknown plugin
+ [x] Can create tag
+ [x] Can create tag with option
+ [x] Can tell if tag exists
+ [x] Can remove tag
+ [x] Can create attribute
+ [x] Can tell if attribute exists
+ [x] Can remove attribute if it exists
+ [x] Throws an exception if removeAttribute is called for an attribute that does not exist
+ [x] Cannot create attribute on non existing tag
+ [x] Can get attribute options
+ [x] Can get attribute option
+ [x] Can set attribute option
+ [x] Invalid tag names are rejected
+ [x] Invalid attribute names are rejected
+ [x] Attribute names can contain hyphens
+ [x] Attribute names must start with a letter or an underscore
+ [x] Duplicate tag names are rejected
+ [x] Duplicate attribute names are rejected
+ [x] Different tags can have attributes of the same name
+ [x] Can create tag with attributes
+ [x] Can create rule
+ [x] Cannot create rule on non existent tag
+ [x] Cannot create unknown rule
+ [x] Can create multiple requireParent rules on different targets
+ [x] Can create rule that targets a non existent tag
+ [x] Can remove rule
+ [x] Can create tag with rules
+ [x] Can set unknown tag option
+ [x] Default options are set on new tags
+ [x] Tag options php type is preserved
+ [x] getTagOptions fails on unknown tags
+ [x] getTagOption fails on unknown tags
+ [x] getTagOption fails on unset options
+ [x] getTagOption can return a null option
+ [x] Can register namespace with valid prefix
+ [x] Throws an exception if an attempt is made to register a namespace with the prefix 'xsl'
+ [x] Throws an exception if an attempt is made to register a namespace with the URI 'http://www.w3.org/1999/XSL/Transform'
+ [x] Throws an exception if getXSL() is called with a prefix already in use
+ [x] Throws an exception if an attempt is made to register a namespace with an invalid prefix
+ [x] Throws an exception if an attempt is made to overwrite a registered namespace
+ [x] Does not throw an exception if a namespace is registered identically multiple times
+ [x] Can tell whether a namespace has been registered to given prefix
+ [x] Can unregister a namespace by its prefix
+ [x] Can return a list of all registered namespaces
+ [x] Can return the URI associated with a namespace prefix
+ [x] Can return the first prefix associated with a namespace URI
+ [x] Can return all the prefixes associated with a namespace URI
+ [x] Can create tag in registered namespace
+ [x] Throws an exception when creating a tag with an unregistered namespace prefix
+ [x] Throws an exception when creating a tag with an invalid namespace prefix
+ [x] Can tell if namespaced tag exists
+ [x] Namespaced tag names are case-sensitive
+ [x] Registered namespaces with existing tags appear in the parser config
+ [x] Registered namespaces with no tags do not appear in the parser config
+ [x] Registered namespaces appear in the XSL
+ [x] Can set tag template
+ [x] Can set tag XSL
+ [x] Cannot set tag template on unknown tag
+ [x] Cannot set tag template with invalid XSL
+ [x] Cannot get tag XSL on unknown tag
+ [x] Cannot get tag XSL on tag without XSL
+ [x] Can create tag with template
+ [x] Can create tag with XSL
+ [x] Cannot set tag template with variable in script src
+ [x] Cannot set tag template with variable in script src regardless of the case
+ [x] Can set tag template with variable in script src with unsafe flag
+ [x] Cannot set tag template with variable in script content
+ [x] Can set tag template with variable in script content with unsafe flag
+ [x] Cannot set tag template with variable in script content regardless of the case
+ [x] Cannot set tag template with disable output escaping
+ [x] Can set tag template with disable output escaping with unsafe flag
+ [x] Cannot set tag template with variable in an attribute whose name starts with on
+ [x] Cannot set tag template with variable in an attribute whose name starts with on regardless of the case
+ [x] Cannot set tag template with an attribute whose name starts with on created via xsl
+ [x] Can set tag template with variable in an attribute whose name starts with on with unsafe flag
+ [x] Can set tag template with escaped curly brackets in an attribute whose name starts with on without unsafe flag
+ [x] Can set custom filter
+ [x] Custom filters are stored as arrays in parser config
+ [x] Custom javascript filters do not appear in the parser config
+ [x] HTTP and HTTPS schemes are allowed by default
+ [x] Can allow additional schemes
+ [x] allowScheme() throws an exception on invalid scheme names
+ [x] There is no default scheme for schemeless URLs by default
+ [x] A default scheme to be used for URLs with no scheme can be set with setDefaultScheme()
+ [x] Can disallow hosts
+ [x] Url filter can be configured to resolve redirects from a given host
+ [x] Disallowed IDNs are punycoded
+ [x] getParserConfig() removes rules that target non existing tags
+ [x] getParserConfig() preserves requireParent rules that target non existing tags
+ [x] getParserConfig() preserves requireAncestor rules that target non existing tags
+ [x] getParserConfig() creates a "rootContext" entry with a hash for "allowedChildren" and "allowedDescendants"
+ [x] getParserConfig() handles the "disallowAsRoot" option in the root context
+ [x] getPluginsConfig() adds default config if missing
+ [x] Plugins can be disabled by returning false instead of config
+ [x] Can add generic XSL
+ [x] Cannot add invalid XSL
+ [x] XSL from tags appear in output
+ [x] Can use a custom prefix for the XSL namespace
+ [x] Tags' namespaces are preserved when using a custom prefix for the XSL namespace
+ [x] Identical templates are merged
+ [x] Empty templates are merged with the default empty template
+ [x] HTML attributes in templates are inlined
+ [x] Conditional attributes are optimized through <xsl:copy-of/>
+ [x] Simple templates in the form <b><xsl:apply-templates/></b> are merged together
+ [x] Simple templates using an <xsl:apply-templates/> mode are not merged
+ [x] Simple templates with attributes are not merged
+ [x] Simple templates are not merged if there are less than 3 of them
+ [x] getJSParser() returns the Javascript source of the parser
+ [x] The array of option passed to getJSParser() is passed to the JS parser generator
+ [x] getJSPlugins() returns an array of all plugins with a Javascript parser as well as their config and the associated metadata
+ [x] getJSPlugins() ignores plugins with no Javascript parser
+ [x] HTML specs: <span> does not allow <div> as a child
+ [x] HTML specs: <span> does not allow <div> as a child even with a <span> sibling
+ [x] HTML specs: <span> with a <div> sibling does not allow <div> as a child
+ [x] HTML specs: <li> closes parent <li>
+ [x] HTML specs: <div> or <p> closes parent <p>
+ [x] HTML specs: <a> denies <a> as descendant
+ [x] HTML specs: <a> allows <img> with no usemap attribute
+ [x] HTML specs: <a> denies <img> with usemap attribute
+ [x] HTML specs: <div><a> allows <div>
+ [x] HTML specs: <span><a> denies <div>
+ [x] addRulesFromHTML5Specs() creates rules based on HTML5 specs
+ [x] addRulesFromHTML5Specs() sets options based on HTML5 specs
+ [x] addRulesFromHTML5Specs(array('rootElement' => 'div')) prevents <li> to be used at root
+ [x] addRulesFromHTML5Specs(array('rootElement' => 'a')) disables tags that contain a <a>
+ [x] generateRulesFromHTML5Specs(array('rootElement' => 'xxx')) throws an exception
+ [x] generateRulesFromHTML5Specs() uses the Renderer to generate a template for tags that have no template set
+ [x] Tags with option 'disable' are not returned by getTagsConfig(true)
+ [x] getTagsConfig(true) removes options related to allowing tags and reduces them to two bitfields "allowedChildren" and "allowedDescendants"
+ [x] An attribute parser can be created using a name that is not used by any attribute
+ [x] An attribute parser does not create an attribute of the same name
+ [x] An attribute parser can be created using the name of an existing attribute
+ [x] Multiple attribute parsers can be created using the same name
+ [x] All the attribute parsers of a given name can be removed with clearAttributeParsers($tagName, $attrName)
+ [x] The existence of any attribute parser can be tested with attributeParserExists($tagName, $attrName)
+ [x] The presence of an specific regexp used as an attribute parser can be tested with attributeParserExists($tagName, $attrName, $regexp)
+
+s9e\TextFormatter\Tests\JSParserGenerator
+ [x] encodeArray() can encode arrays to objects
+ [x] encodeArray() can encode arrays to Arrays
+ [x] encodeArray() can convert regexp strings to RegExp objects
+ [x] encodeArray() can convert regexp strings to RegExp objects with g flag
+ [x] encode() encodes booleans to 0 and 1
+ [x] encodeArray() can preserve a key of an array
+ [x] encodeArray() can preserve a key of a nested array
+ [x] encodeArray() preserves keys at the correct depth
+ [x] encodeArray() can use TRUE as a wildcard
+ [x] encodeArray() preserves reserved words
+ [x] encodeArray() can preserve raw JS
+ [x] generateUrlConfig() returns allowedSchemes regexp as an object
+ [x] generateUrlConfig() returns disallowedHosts regexp as an object
+ [x] generateUrlConfig() converts unsupported lookbehind assertions from disallowedHosts regexp
+ [x] encodePluginConfig() removes parserClassName from config
+ [x] encodePluginConfig() removes parserFilepath from config
+ [x] encodePluginConfig() convert scalar regexp to a RegExp object with g flag
+ [x] encodePluginConfig() convert array regexp to an object with RegExp objects with g flag as properties
+ [x] Injects plugins parsers into source
+ [x] Injects plugins configs into source
+ [x] Attribute parsers are converted to a Javascript RegExp
+ [x] A regexp map is created for attribute parsers
+ [x] The source is sent to Google Closure Compiler if "compilation" is not set to "none"
+ [x] JSParserGenerator throws an exception if an error occurs while contacting to Google Closure Compiler
+ [x] JSParserGenerator throws an exception if Google Closure Compiler returns an error
+ [x] The "unsafeMinification" option indiscriminately renames all occurences of properties that share their name with DOM properties, except if their variable's names ends with "Node" or "Attr"
+ [x] The "unsafeMinification" option tries not to rename variables
+ [x] setOptimizationHints() works and you'll have to look into tests/JSParserGeneratorTest.php to have more details about it, until PHPUnit provides a way to generate a better testdox with data providers
+
+s9e\TextFormatter\Tests\Parser
+ [x] Ouput is UTF8
+ [x] Filter "int" accepts strings made entirely of digits
+ [x] Filter "int" rejects strings that starts with digits
+ [x] Filter "int" accepts integers
+ [x] Filter "int" rejects numbers that start with a zero
+ [x] Filter "int" accepts negative numbers
+ [x] Filter "int" rejects decimal numbers
+ [x] Filter "int" rejects floats
+ [x] Filter "int" rejects numbers too big for the PHP integer type
+ [x] Filter "int" rejects positive numbers in E notation
+ [x] Filter "int" rejects negative numbers in E notation
+ [x] Filter "int" rejects positive numbers in E notation with a negative exponent
+ [x] Filter "int" rejects negative numbers in E notation with a negative exponent
+ [x] Filter "int" rejects numbers in hex notation
+ [x] Filter "uint" accepts strings made entirely of digits
+ [x] Filter "uint" rejects strings that starts with digits
+ [x] Filter "uint" accepts integers
+ [x] Filter "uint" rejects numbers that start with a zero
+ [x] Filter "uint" rejects negative numbers
+ [x] Filter "uint" rejects decimal numbers
+ [x] Filter "uint" rejects floats
+ [x] Filter "uint" rejects numbers too big for the PHP integer type
+ [x] Filter "uint" rejects positive numbers in E notation
+ [x] Filter "uint" rejects negative numbers in E notation
+ [x] Filter "uint" rejects positive numbers in E notation with a negative exponent
+ [x] Filter "uint" rejects negative numbers in E notation with a negative exponent
+ [x] Filter "uint" rejects numbers in hex notation
+ [x] Filter "number" accepts strings made entirely of digits
+ [x] Filter "number" rejects strings that starts with digits
+ [x] Filter "number" accepts integers
+ [x] Filter "number" accepts numbers that start with a zero
+ [x] Filter "number" rejects negative numbers
+ [x] Filter "number" rejects decimal numbers
+ [x] Filter "number" rejects floats
+ [x] Filter "number" accepts numbers too big for the PHP integer type
+ [x] Filter "number" rejects positive numbers in E notation
+ [x] Filter "number" rejects negative numbers in E notation
+ [x] Filter "number" rejects positive numbers in E notation with a negative exponent
+ [x] Filter "number" rejects negative numbers in E notation with a negative exponent
+ [x] Filter "number" rejects numbers in hex notation
+ [x] Filter "float" accepts strings made entirely of digits
+ [x] Filter "float" rejects strings that starts with digits
+ [x] Filter "float" accepts integers
+ [x] Filter "float" accepts numbers that start with a zero
+ [x] Filter "float" accepts negative numbers
+ [x] Filter "float" accepts decimal numbers
+ [x] Filter "float" accepts floats
+ [x] Filter "float" accepts numbers too big for the PHP integer type
+ [x] Filter "float" accepts positive numbers in E notation
+ [x] Filter "float" accepts negative numbers in E notation
+ [x] Filter "float" accepts positive numbers in E notation with a negative exponent
+ [x] Filter "float" accepts negative numbers in E notation with a negative exponent
+ [x] Filter "float" rejects numbers in hex notation
+ [x] Url filter punyencodes IDNs
+ [x] Url filter urlencodes non ASCII chars
+ [x] Url filter does lose parts of an URL that contains non ASCII chars
+ [x] Url filter does not punyencode credentials that match an IDN
+ [x] Invalid URLs are rejected
+ [x] URLs with no host are rejected
+ [x] URLs with no path are accepted
+ [x] URLs with no scheme are rejected by default
+ [x] URLs with no scheme are validated using the default scheme set with ConfigBuilder::setDefaultScheme()
+ [x] The default scheme used for validation does not appear in the filtered URL
+ [x] URL schemes are case-insensitive and lowercased as per RFC 3986 section-3.1 recommendation
+ [x] Whitespace around URLs is removed
+ [x] Url filter urlencodes single quotes
+ [x] Url filter urlencodes double quotes
+ [x] Url filter urlencodes left parentheses
+ [x] Url filter urlencodes right parentheses
+ [x] Url filter rejects not allowed schemes
+ [x] Url filter can accept non http schemes
+ [x] Url filter rejects disallowed host
+ [x] Url filter rejects disallowed IDNs
+ [x] Url filter rejects disallowed host mask
+ [x] Url filter rejects subdomains of disallowed hosts
+ [x] Url filter rejects disallowed tld
+ [x] Url filter does not reject host on partial match of a disallowed host
+ [x] Url filter rejects pseudo schemes
+ [x] Url filter can resolve redirects from specified hosts
+ [x] Url filter can resolve chained redirects from specified hosts
+ [x] Url filter rejects redirects that it cannot retrieve
+ [x] Url filter rejects redirect that redirects to itself
+ [x] Url filter rejects redirects that form an infinite loop
+ [x] Url filter rejects disallowed hosts behind a redirect
+ [x] Id filter accepts numbers
+ [x] Id filter accepts lowercase letters
+ [x] Id filter accepts uppercase letters
+ [x] Id filter accepts dashes
+ [x] Id filter accepts underscores
+ [x] Id filter rejects spaces
+ [x] Identifier filter is an alias for the id filter
+ [x] Color filter accepts rgb hex values
+ [x] Color filter rejects invalid rgb hex values
+ [x] Color filter accepts values made entirely of letters
+ [x] Range filter allows integers within range
+ [x] Range filter allows negative integers within range
+ [x] Range filter rejects decimal numbers
+ [x] Range filter adjusts values below range
+ [x] Range filter adjusts values above range
+ [x] Simpletext filter accepts letters numbers minus and plus signs dots commas underscores and spaces
+ [x] Simpletext filter rejects everything else
+ [x] Regexp filter accepts content that matches
+ [x] Regexp filter rejects content that does not match
+ [x] Email filter accepts valid emails
+ [x] Email filter rejects invalid emails
+ [x] Email filter can urlencode every character of a valid email if force urlencode is on
+ [x] Email filter will not urlencode an invalid email even if force urlencode is on
+ [x] Undefined filter rejects everything
+ [x] Attribute name is added to log entries when available
+ [x] Attribute parsers remove the original attribute if their regexp matches
+ [x] Attributes from attribute parsers do not overwrite existing values
+ [x] Invalid attributes use their default value if set
+ [x] Nothing bad happens if an attribute parser exists but it is never used
+ [x] Missing attributes use their default value if set
+ [x] A missing attribute with no default value causes its tag to be skipped and an error to be logged if it has the option "required" true
+ [x] A missing attribute with no default value does not causes its tag to be skipped if it has the option "required" false
+ [x] getTagsConfig returns the tags config
+ [x] Plain text is returned within <pt> tags
+ [x] Undefined attributes do not appear in XML
+ [x] Overlapping tags are removed
+ [x] Tag sorting: tags are sorted by pos, descending
+ [x] Tag sorting: zero-width tags are ordered after wider tags
+ [x] Tag sorting: zero-width end tags are ordered after zero-width start tags sharing the same position
+ [x] Tag sorting: zero-width end tags are ordered after zero-width self-closing tags sharing the same position
+ [x] Tag sorting: zero-width self-closing tags are ordered after zero-width start tags sharing the same position
+ [x] Tag sorting: tags sharing the same position and with a length greater than 0 are sorted by length ascending
+ [x] Tag sorting: if all else fails, tags are sorted by id descending
+ [x] The number of regexp matches can be limited with extra matches ignored
+ [x] The number of regexp matches can be limited with extra matches ignored and a warning
+ [x] The number of regexp matches can be limited across multiple regexps with extra matches ignored
+ [x] The number of regexp matches can be limited and parsing aborted if limit exceeded
+ [x] Unknown tags are ignored
+ [x] Tags' nestingLimit option is enforced
+ [x] Tags' nestingLimit option is enforced after closeParent rules have been applied
+ [x] Tags' nestingLimit option is enforced after closeAncestor rules have been applied
+ [x] Tags' nestingLimit does not incorrectly count siblings
+ [x] Tags' tagLimit option is enforced
+ [x] Tags' tagLimit option is enforced before closeParent rules have been applied
+ [x] Tags' tagLimit option is enforced before closeAncestor rules have been applied
+ [x] Zero width tags are correctly ouput
+ [x] Tags left open get closed when their ancestor gets closed
+ [x] Tags can specify a list of tags that are required
+ [x] Start tags only get closed by the right tagMate (same pluginName, same tagName, same differentiator if applicable)
+ [x] Tags can specify a list of tags that are required and be skipped if any required tag is absent
+ [x] Start tags from tags with the "isEmpty" option enabled are immediately closed
+ [x] Start tag from tag with the "isEmpty" option enabled consumes the next tag if it is its matching end tag and there is no text in between
+ [x] Start tag from tag with the "isEmpty" option enabled does not consume the next tag if there is any text in between
+ [x] Start tag from tag with the "isEmpty" option enabled does not consume the next tag if it's not an end tag
+ [x] Start tag from tag with the "isEmpty" option enabled does not consume the next tag if it's not its matching end tag
+ [x] HTML specs: <div><a> allows <div>
+ [x] HTML specs: <span><a> denies <div>
+ [x] Fulfilled requireParent rule allows tag
+ [x] requireParent rule with multiple targets is fulfilled if any of the targets is the parent
+ [x] Fulfilled requireParent rule allows tag despite BBCode suffix
+ [x] Unfulfilled requireParent rule blocks tag
+ [x] Unfulfilled requireParent rule blocks tag despite ancestor
+ [x] closeParent rule is applied to matching parent tag
+ [x] closeParent rule is not applied to non matching parent tag
+ [x] closeParent rule is not applied to ancestor tag
+ [x] closeParent rule is applied to matching parent tag with identical suffix
+ [x] closeParent rule is applied to matching parent tag with different suffix
+ [x] closeParent rule is applied before nestingLimit is checked
+ [x] closeAncestor rule is applied to parent tag
+ [x] closeAncestor rule is applied to ancestor tag
+ [x] closeAncestor rule is applied to tag with identical suffix
+ [x] closeAncestor rule is applied to tag with different suffix
+ [x] closeAncestor rule is applied before nestingLimit is checked
+ [x] denyChild rule blocks child tag
+ [x] denyChild rule does not block descendant tag
+ [x] denyDescendant rule blocks child tag
+ [x] denyDescendant rule blocks descendant tag
+ [x] allowChild rule allows child tag despite defaultChildRule being deny
+ [x] requireAncestor rule is fulfilled by parent
+ [x] requireAncestor rule is fulfilled by parent with suffix
+ [x] requireAncestor rule is fulfilled by ancestor
+ [x] requireAncestor rule is fulfilled by ancestor with suffix
+ [x] requireAncestor rule with multiple targets is fulfilled if any of the targets is an ancestor
+ [x] Unfulfilled requireAncestor rule blocks tag
+ [x] reopenChild rule reopens child tag if it was closed by current end tag
+ [x] reopenChild rule does not reopen child tag if it would be at the end of the text
+ [x] reopenChild rule reopens all descendants
+ [x] reopenChild rule does not reopen any descendant if not all descendants are covered by a reopenChild rule
+ [x] Tags created by reopenChild rule respect their new context
+ [x] Tags with option 'disallowAsRoot' are ignored if they don't have a parent
+ [x] Tags with option 'disallowAsRoot' are processed if they do have a parent
+ [x] Whitespace trimming works
+ [x] Whitespace trimming does not cause tags to overlap
+ [x] Accepts namespaced tags
+ [x] Outputs namespace declarations at the root
+ [x] Namespaced tags are case-sensitive
+ [x] The case of namespaced tags is preserved
+
+s9e\TextFormatter\Tests\PluginConfig
+ [x] Overrides properties with values passed in second parameter
+ [x] getJSConfig() forwards the result of getConfig() by default
+ [x] getJSConfigMeta() returns an empty array by default
+ [x] getJSParser() returns false by default
+
+s9e\TextFormatter\Tests\PluginParser
+ [x] setUp is called once after initialization
+
+s9e\TextFormatter\Tests\RegexpMaster
+ [x] buildRegexpFromList(['foo']) returns 'foo'
+ [x] buildRegexpFromList(['foo', 'foo']) returns 'foo'
+ [x] buildRegexpFromList(['a']) returns 'a'
+ [x] buildRegexpFromList(['a', 'a']) returns 'a'
+ [x] buildRegexpFromList(['apple', 'april']) returns 'ap(?:ple|ril)'
+ [x] buildRegexpFromList(['bar', 'baz']) returns 'ba[rz]'
+ [x] buildRegexpFromList(['foo', 'fool']) returns 'fool?'
+ [x] buildRegexpFromList(['ax', 'axed']) returns 'ax(?:ed)?'
+ [x] buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
+ [x] buildRegexpFromList(['a', '.'], ["specialChars" => ["." => "."]]) returns '(?:a|.)'
+ [x] buildRegexpFromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:x|^)y'
+ [x] buildRegexpFromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:y|$)'
+ [x] buildRegexpFromList(['foo', 'bar']) returns '(?:bar|foo)'
+ [x] buildRegexpFromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[\\\\*])(?:\\*foo|\\\\bar)'
+ [x] buildRegexpFromList(['?', 'bar'], ["specialChars" => ["?" => "."], "useLookahead" => true]) returns '(?:.|bar)'
+ [x] buildRegexpFromList(['a', 'b']) returns '[ab]'
+ [x] buildRegexpFromList(['♠', '♣', '♥', '♦']) returns '[♠♣♥♦]'
+ [x] buildRegexpFromList(['lock', 'sock']) returns '[ls]ock'
+ [x] buildRegexpFromList(['foo', 'afoo'], ["useLookahead" => true]) returns '(?=[af])a?foo'
+ [x] buildRegexpFromList(['boast', 'boost']) returns 'bo[ao]st'
+ [x] buildRegexpFromList(['pest', 'pst']) returns 'pe?st'
+ [x] buildRegexpFromList(['boast', 'boost', 'bost']) returns 'bo[ao]?st'
+ [x] buildRegexpFromList(['boost', 'best']) returns 'b(?:e|oo)st'
+ [x] buildRegexpFromList(['boost', 'bst']) returns 'b(?:oo)?st'
+ [x] buildRegexpFromList(['best', 'boost', 'bust']) returns 'b(?:[eu]|oo)st'
+ [x] buildRegexpFromList(['boost', 'bst', 'cool']) returns '(?:b(?:oo)?st|cool)'
+ [x] buildRegexpFromList(['boost', 'bst', 'cost']) returns '(?:b(?:oo)?|co)st'
+ [x] buildRegexpFromList(['aax', 'aay', 'aax', 'aay']) returns 'aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'baax', 'baay']) returns '[ab]aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'bbaax', 'bbaay']) returns '(?:a|bb)aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'aax', 'aay']) returns 'aaa?[xy]'
+ [x] buildRegexpFromList(['abx', 'aby', 'cdx', 'cdy']) returns '(?:ab|cd)[xy]'
+ [x] buildRegexpFromList(['axx', 'ayy', 'bbxx', 'bbyy']) returns '(?:a|bb)(?:xx|yy)'
+ [x] buildRegexpFromList(['axx', 'ayy', 'bbxx', 'bbyy', 'c']) returns '(?:c|(?:a|bb)(?:xx|yy))'
+ [x] buildRegexpFromList(['axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c']) returns '(?:c|a(?:xx|yy|zz)|bb(?:xx|yy))'
+ [x] buildRegexpFromList(['ac', 'af', 'bbc', 'bbf', 'c']) returns '(?:c|a[cf]|bb[cf])'
+ [x] buildRegexpFromList(['^example.org$', '.example.org$', '^localhost$', '.localhost$'], ["specialChars" => ["^" => "^", "$" => "$"]]) returns '(?:\\.|^)(?:example\\.org|localhost)$'
+ [x] buildRegexpFromList(['xixix', 'xoxox']) returns 'x(?:ixi|oxo)x'
+ [x] buildRegexpFromList(['xixix', 'xixox', 'xoxox', 'xoxix']) returns 'x[io]x[io]x'
+ [x] buildRegexpFromList(['afoo', 'abar', 'bbfoo', 'bbbar', 'a', 'bb']) returns '(?:a|bb)(?:bar|foo)?'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by']) returns '[ab][xy]'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'c']) returns '(?:c|[ab][xy])'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'x', 'y']) returns '[ab]?[xy]'
+ [x] buildRegexpFromList(['ax', 'ay', 'bbx', 'bby', 'c']) returns '(?:c|a[xy]|bb[xy])'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']) returns '(?:c|dd[xy]|[ab][xy])'
+ [x] buildRegexpFromList(['']) returns ''
+ [x] buildRegexpFromList(['', '']) returns ''
+ [x] buildRegexpFromList(['ad', 'bd'], ["specialChars" => ["d" => "\\d"]]) returns '[ab]\\d'
+ [x] buildRegexpFromList(['a', 'ax', 'ad', 'd', 'dx', 'dd'], ["specialChars" => ["d" => "\\d"]]) returns '[\\da][\\dx]?'
+ [x] buildRegexpFromList(['foo', 'bar', 'y', 'z']) returns '(?:[yz]|bar|foo)'
+ [x] buildRegexpFromList(['foo', 'bar', 'baz', 'y', 'z']) returns '(?:[yz]|ba[rz]|foo)'
+ [x] buildRegexpFromList(['a', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:a(?:a(?:cc|dd))?|bb(?:cc|dd))'
+ [x] buildRegexpFromList(['aa', 'bb', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:aa|bb)(?:cc|dd)?'
+ [x] buildRegexpFromList(['aa', 'bb', 'aaccxx', 'aaddxx', 'bbccxx', 'bbddxx', 'aaccyy', 'aaddyy', 'bbccyy', 'bbddyy']) returns '(?:aa|bb)(?:(?:cc|dd)(?:xx|yy))?'
+ [x] buildRegexpFromList() throws a RuntimeException if any word is not legal UTF-8
+ [x] parseRegexp() can parse plain regexps
+ [x] parseRegexp() throws a RuntimeException if delimiters can't be parsed
+ [x] parseRegexp() parses pattern modifiers
+ [x] parseRegexp() parses character classes
+ [x] parseRegexp() parses character classes with quantifiers
+ [x] parseRegexp() parses character classes that end with an escaped ]
+ [x] parseRegexp() throws a RuntimeException if a character class is not properly closed
+ [x] parseRegexp() correctly parses escaped brackets
+ [x] parseRegexp() correctly parses escaped parentheses
+ [x] parseRegexp() parses non-capturing subpatterns
+ [x] parseRegexp() parses non-capturing subpatterns with atomic grouping
+ [x] parseRegexp() parses non-capturing subpatterns with quantifiers
+ [x] parseRegexp() parses non-capturing subpatterns with options
+ [x] parseRegexp() parses option settings
+ [x] parseRegexp() parses named subpatterns using the (?<name>) syntax
+ [x] parseRegexp() parses named subpatterns using the (?P<name>) syntax
+ [x] parseRegexp() parses named subpatterns using the (?'name') syntax
+ [x] parseRegexp() parses capturing subpatterns
+ [x] parseRegexp() throws a RuntimeException if an unmatched right parenthesis is found
+ [x] parseRegexp() throws a RuntimeException if an unmatched left parenthesis is found
+ [x] parseRegexp() throws a RuntimeException on unsupported subpatterns
+ [x] parseRegexp() parses lookahead assertions
+ [x] parseRegexp() parses negative lookahead assertions
+ [x] parseRegexp() parses lookbehind assertions
+ [x] parseRegexp() parses negative lookbehind assertions
+ [x] pcreToJs() can convert plain regexps
+ [x] pcreToJs() escapes forward slashes
+ [x] pcreToJs() does not double-escape forward slashes that are already escaped
+ [x] pcreToJs() does not "eat" backslashes while escaping forward slashes
+ [x] pcreToJs() can convert regexps with the "i" modifier
+ [x] pcreToJs() can convert regexps with capturing subpatterns
+ [x] pcreToJs() can convert regexps with non-capturing subpatterns
+ [x] pcreToJs() can convert regexps with non-capturing subpatterns with a quantifier
+ [x] pcreToJs() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
+ [x] pcreToJs() throws a RuntimeException on options (?i)
+ [x] pcreToJs() throws a RuntimeException on subpattern options (?i:)
+ [x] pcreToJs() can convert regexps with character classes with a quantifier
+ [x] pcreToJs() converts greedy quantifiers to normal quantifiers in character classes
+ [x] pcreToJs() replaces \pL with the full character range in character classes
+ [x] pcreToJs() replaces \p{L} with the full character range in character classes
+ [x] pcreToJs() replaces \pL outside of character classes with a character class containing the full character range
+ [x] pcreToJs() replaces \p{L} outside of character classes with a character class containing the full character range
+ [x] pcreToJs() replaces \p{^L} with a character class containing the full character range
+ [x] pcreToJs() replaces \p{^L} with a character class equivalent to \PL
+ [x] pcreToJs() replaces \P{^L} with a character class equivalent to \pL
+ [x] pcreToJs() can convert regexps with lookahead assertions
+ [x] pcreToJs() can convert regexps with negative lookahead assertions
+ [x] pcreToJs() throws a RuntimeException on lookbehind assertions
+ [x] pcreToJs() throws a RuntimeException on negative lookbehind assertions
+ [x] pcreToJs() converts . to [\s\S] outside of character classes is the "s" modifier is set
+ [x] pcreToJs() does not convert . to [\s\S] if the "s" modifier is not set
+ [x] pcreToJs() does not convert . inside of character classes
+ [x] pcreToJs() converts named captures into normal captures
+ [x] pcreToJs() replaces its second parameter with an array that maps named captures to their index
+ [x] pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
+
+s9e\TextFormatter\Tests\Renderer
+ [x] renderMulti can render multiple messages at once
+
+s9e\TextFormatter\Tests\Unparser
+ [x] Can unparse plain text
+ [x] Can unparse plain text with special chars
+ [x] Can unparse rich text
+
+s9e\TextFormatter\Tests\Plugins\AutolinkConfig
+ [x] Automatically creates an URL tag
+ [x] Generates a regexp
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfig() removes the possessive quantifier from the regexp
+
+s9e\TextFormatter\Tests\Plugins\AutolinkParser
+ [x] HTTP urls are linkified by default
+ [x] HTTPS urls are linkified by default
+ [x] FTP urls are not linkified by default
+ [x] FTP urls are linkified if the scheme has been allowed in configBuilder
+ [x] Trailing dots are not linkified
+ [x] Trailing punctuation is not linkified
+ [x] Trailing slash is linkified
+ [x] Trailing equal sign is linkified
+ [x] Balanced right parentheses are linkified
+ [x] Non balanced right parentheses are not linkified
+ [x] IDNs are linkified
+ [x] URLs with non ASCII chars are linkified
+ [x] URLs that end with a non ASCII char are linkified
+ [x] URLs that contain an empty pair of square brackets are linkified
+ [x] URLs that contain pair of square brackets that contain ASCII letters and digits are linkified
+ [x] Ignores the right square bracket of a BBCode tag
+
+s9e\TextFormatter\Tests\Plugins\BBCodesConfig
+ [x] getConfig() returns false if no BBCodes were added
+ [x] A single asterisk is accepted as a BBCode name
+ [x] An asterisk followed by anything is rejected as a BBCode name
+ [x] BBCode names can start with a letter
+ [x] BBCode names cannot start with anything else
+ [x] BBCode names can only contain letters numbers and underscores
+ [x] addBBCode() rejects invalid BBCode names
+ [x] BBCodes are mapped to a tag of the same name by default
+ [x] addBBCode() throws an exception if the BBCode name is already in use
+ [x] A BBCode can map to a tag of a different name
+ [x] addBBCodeAlias() throws an exception if the tag does not exist
+ [x] addBBCodeAlias() throws an exception if the BBCode already exists
+ [x] addBBCodeAlias() cannot create an alias to an invalid tag name
+ [x] Can tell whether a BBCode exists
+ [x] Can return all options of a BBCode
+ [x] Can return the value of an option of a BBCode
+ [x] Can return the value of an option of a BBCode even if it is null
+ [x] getBBCodeOptions() throws an exception if the BBCode does not exist
+ [x] getBBCodeOption throws an exception if the BBCode does not exist
+ [x] getBBCodeOption() throws an exception if the option does not exist
+ [x] setBBCodeOption() can set a single defaultAttr
+ [x] setBBCodeOption() cannot set a defaultAttr with an invalid name
+ [x] setBBCodeOption() can set multiple contentAttrs as an array of attribute names
+ [x] setBBCodeOption() can set a single content attribute with contentAttr
+ [x] If setBBCodeOptions() is called with both contentAttr and contentAttrs, the  contentAttr value is added to the contentAttrs array
+ [x] setBBCodeOption() cannot set contentAttrs with an invalid name
+ [x] setBBCodeOption() cannot set contentAttr with an invalid name
+ [x] addBBCodeFromExample() works on simple BBCodes
+ [x] addBBCodeFromExample() throws an exception if the definition is malformed
+ [x] addBBCodeFromExample() throws an exception if the template is not wellformed XML
+ [x] addBBCodeFromExample() throws an exception if an undefined placeholder is found in an attribute
+ [x] addBBCodeFromExample() throws an exception if an undefined placeholder is found anywhere
+ [x] addBBCodeFromExample() throws an exception if a TEXT placeholder is found in an attribute
+ [x] addBBCodeFromExample() does not throw an exception if a TEXT placeholder is found in an attribute but ALLOW_UNSAFE_TEMPLATES flag is set
+ [x] addBBCodeFromExample() allows a single start tag with no end tag and enables autoClose
+ [x] addBBCodeFromExample() allows a self closed tag and enables autoClose
+ [x] addBBCodeFromExample() handles default attribute and gives it the same name as the tag
+ [x] The name of the default attribute can be set using the attrName option
+ [x] addBBCodeFromExample() handles single preFilter callback in attribute
+ [x] addBBCodeFromExample() handles multiple preFilter callbacks in attribute
+ [x] addBBCodeFromExample() handles single postFilter callback in attribute
+ [x] addBBCodeFromExample() handles multiple postFilter callbacks in attribute
+ [x] addBBCodeFromExample() attribute options with no values are set to true
+ [x] addBBCodeFromExample() rejects unauthorized preFilter callbacks in attribute
+ [x] addBBCodeFromExample() rejects unauthorized postFilter callbacks in attribute
+ [x] Custom callbacks can be added via BBCodesConfig::allowFilterCallback()
+ [x] Static method callbacks can be added via BBCodesConfig::allowFilterCallback()
+ [x] addBBCodeFromExample() does not create an attribute for the tag content if it is TEXT with no other options set
+ [x] addBBCodeFromExample() creates an attribute named content for the tag content
+ [x] The name of the content attribute can be set using the attrName option
+ [x] addBBCodeFromExample() replaces placeholders in attributes
+ [x] addBBCodeFromExample() replaces placeholders in content
+ [x] addBBCodeFromExample() throws an exception on duplicate attributes
+ [x] addBBCodeFromExample() throws an exception on duplicate placeholders
+ [x] addBBCodeFromExample() throws an exception on undefined placeholders used in attributes
+ [x] addBBCodeFromExample() throws an exception on undefined placeholders used in content
+ [x] addBBCodeFromExample() allows arbitrary options in attribute
+ [x] addBBCodeFromExample() handles REGEXP placeholders
+ [x] addBBCodeFromExample() handles PARSE placeholders
+ [x] addBBCodeFromExample() handles PARSE placeholders in content attributes
+ [x] addBBCodeFromExample() automatically adds attributes created by attribute parsers
+ [x] addBBCodeFromExample() does not overwrite existing attributes with attributes created by attribute parsers if they already exist
+ [x] addBBCodeFromExample() sets attributes auto-created by attribute parsers to be validated using the same regexp they were created from
+ [x] addBBCodeFromExample() handles RANGE placeholders
+ [x] addBBCodeFromExample() handles CHOICE placeholders and turns them into regexps
+ [x] addBBCodeFromExample() handles CHOICE placeholders with Unicode values
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] BBCode names are preserved in Javascript config
+ [x] getJSConfig() generates an optimization hint "hasAutoCloseHint" that is false by default
+ [x] getJSConfig() generates an optimization hint "hasAutoCloseHint" that is true if any tag has the "autoClose" option set
+ [x] getJSConfig() generates an optimization hint "hasContentAttrsHint" that is false by default
+ [x] getJSConfig() generates an optimization hint "hasContentAttrsHint" that is true if any tag has any contentAttrs set
+ [x] getJSConfig() generates an optimization hint "hasDefaultAttrHint" that is false by default
+ [x] getJSConfig() generates an optimization hint "hasDefaultAttrHint" that is true if any tag has a default attribute set
+
+s9e\TextFormatter\Tests\Plugins\BBCodesParser
+ [x] Simple BBcodes are parsed
+ [x] BBCode names are case insensitive
+ [x] BBCodes removed from the config are ignored
+ [x] Overlapping tags are sorted out
+ [x] BBCode tags can use a colon followed by digits as a suffix to control how start tags and end tags are paired
+ [x] BBCode tags can be used as singletons like self closing XML tags
+ [x] Whitespace inside BBCodes is ignored
+ [x] Junk after the slash of a self closing BBCode tag generates a warning
+ [x] Junk after the name of a closing bbcode tag generates a warning
+ [x] A BBCode can map to a tag of a different name
+ [x] An equal sign following the tag name defines the value of the default attribute
+ [x] If no default attribute is specified the name of the BBCode is used as the name of the default attribute
+ [x] An attribute at the end of a tag with no specified value is considered an empty string
+ [x] An attribute in the middle of a tag with no specified value is considered an empty string
+ [x] A default attribute with no specified value is considered an empty string
+ [x] An attribute not followed by an equal sign is ignored
+ [x] An unterminated self closing BBCode at the end of the text is ignored
+ [x] An unterminated start tag with a default attribute at the end of the text is ignored
+ [x] An unterminated BBCode with an attribute name that extends till the end of the text is ignored
+ [x] Attribute names can contain hyphens
+ [x] Junk characters at the start of an attribute name are detected
+ [x] Junk characters in an attribute name are detected
+ [x] Attribute values can be enclosed within single quotes
+ [x] Attribute values can be enclosed within double quotes
+ [x] Attribute values within single quotes can contain spaces
+ [x] Attribute values within double quotes can contain spaces
+ [x] Attribute values within single quotes can contain single quotes each escaped with a backslash
+ [x] Attribute values within double quotes can contain double quotes each escaped with a backslash
+ [x] Attribute values within single quotes can contain unescaped double quotes
+ [x] Attribute values within double quotes can contain unescaped single quotes
+ [x] Attribute values within single quotes can contain backslashes each escaped with another backslash
+ [x] Attribute values within double quotes can contain backslashes each escaped with another backslash
+ [x] A backslash before a regular character is preserved
+ [x] Unterminated string invalidates attribute
+ [x] Attribute values within single quotes can contain newlines
+ [x] Attribute values within double quotes can contain newlines
+ [x] An attribute value not within quotes cannot contain spaces
+ [x] An attribute value not within quotes cannot contain newlines
+ [x] An unterminated attribute that start with a quote generates a warning
+ [x] Malformed BBCodes are ignored
+ [x] A BBCode with autoClose enabled is automatically closed after the start tag
+ [x] A BBCode with autoClose enabled is not automatically closed after the start tag if it is immediately followed by its end tag
+ [x] Attributes listed in contentAttrs use everything from the end of the start tag and what could be the end tag as value if a value was not given
+ [x] Attributes listed in contentAttrs are not overwritten if a value is given
+ [x] When looking for the end tag while capturing content for contentAttrs the search is case insensitive
+ [x] When looking for the end tag while capturing content for contentAttrs the suffix is taken into account
+ [x] Multiple attributes can use the BBCode's content
+
+s9e\TextFormatter\Tests\Plugins\CensorConfig
+ [x] tagName can be customized at loading time
+ [x] attrName can be customized at loading time
+ [x] defaultReplacement can be customized at loading time
+ [x] Does not attempt to create its tag if it already exists
+ [x] getConfig() returns false if no words were added
+ [x] Generates a regexp
+ [x] Accept custom replacement for specific words
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfig() returns the replacements as pairs in a numerically indexed array
+ [x] Replacements regexps are converted to RegExp objects in Javascript config
+
+s9e\TextFormatter\Tests\Plugins\CensorParser
+ [x] Replaces censored words with default replacement
+ [x] Can censor unicode words
+ [x] Replaces censored words with custom replacement
+ [x] Censored words can use an asterisk at the start as a joker
+ [x] Censored words can use an asterisk in the middle as a joker
+ [x] Censored words can use an asterisk at the end as a joker
+ [x] The asterisk can match multiple letters
+ [x] The asterisk can match zero letters
+ [x] The asterisk can match unicode letters
+ [x] Censored words can use a question mark as a joker for one character
+ [x] Censored words can use a question mark as a joker for zero character
+ [x] The question mark does not match multiple characters
+ [x] The question mark can match a digit
+ [x] The question mark can match a symbol
+ [x] The question mark can match an unicode letter
+ [x] Can replace censored unicode words with custom replacement
+ [x] Censored words are case insensitive
+ [x] Can use a custom tagName
+ [x] Can use a custom attrName
+ [x] Can use a custom defaultReplacement
+ [x] Does not attempt to create its tag if it already exists
+ [x] The dollar symbol has no special meaning in replacement
+ [x] The backslash has no special meaning in replacement
+
+s9e\TextFormatter\Tests\Plugins\EmoticonsConfig
+ [x] tagName can be customized at loading time
+ [x] getConfig() returns false if no emoticons were added
+ [x] Emoticons template is automatically updated when emoticons are added
+ [x] A single emoticon can be created with addEmoticon()
+ [x] Multiple emoticons can be created at once with addEmoticons()
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] Emoticons code can contain single quotes
+ [x] Emoticons code can contain double quotes
+ [x] Emoticons code can contain single and double quotes at the same time
+
+s9e\TextFormatter\Tests\Plugins\EmoticonsParser
+ [x] An emoticon can be replaced by an img tag
+ [x] An emoticon can be replaced by any html
+ [x] Emoticons are replaced everywhere in the text
+ [x] Can use a custom tagName
+
+s9e\TextFormatter\Tests\Plugins\EscaperConfig
+ [x] Creates an ESC tag by default
+ [x] tagName can be customized at loading time
+ [x] Generates a regexp
+ [x] getJSParser() returns the source of its Javascript parser
+
+s9e\TextFormatter\Tests\Plugins\EscaperParser
+ [x] Can escape an ASCII character
+ [x] Can escape a LF
+ [x] Can escape a Unicode character
+ [x] Can escape a backslash
+ [x] A backslash at the end of the text does is treated like normal text
+ [x] Can use a custom tagName
+
+s9e\TextFormatter\Tests\Plugins\FabricConfig
+ [x] Creates an URL tag by default
+ [x] Creates an IMG tag by default
+ [x] Creates a DL tag by default
+ [x] Creates a DT tag by default
+ [x] Creates a DD tag by default
+ [x] Creates an EM tag by default
+ [x] Creates an I tag by default
+ [x] Creates a STRONG tag by default
+ [x] Creates a B tag by default
+ [x] Creates a CITE tag by default
+ [x] Creates a DEL tag by default
+ [x] Creates an INS tag by default
+ [x] Creates a SUPER tag by default
+ [x] Creates a SUB tag by default
+ [x] Creates a CODE tag by default
+ [x] Creates a SPAN tag by default
+ [x] Creates a NOPARSE tag by default
+ [x] Creates an ACRONYM tag by default
+ [x] Generates a regexp for images and links
+ [x] Generates a regexp for block modifiers
+ [x] Generates a regexp for phrase modifiers
+ [x] Generates a regexp for acronyms
+ [x] Generates a regexp for table row
+
+s9e\TextFormatter\Tests\Plugins\FabricParser
+ [x] Supports link
+ [x] Supports link with title
+ [x] Supports link with no url
+ [x] Supports image
+ [x] Supports image with alt text
+ [x] Supports image with link
+ [x] Supports image with alt text and link
+ [x] Supports phrase modifier emphasis
+ [x] Supports phrase modifier strong
+ [x] Supports phrase modifier italic
+ [x] Supports phrase modifier bold
+ [x] Supports phrase modifier citation
+ [x] Supports phrase modifier deleted text
+ [x] Supports phrase modifier inserted text
+ [x] Supports phrase modifier superscript
+ [x] Supports phrase modifier subscript
+ [x] Supports phrase modifier span
+ [x] Supports phrase modifier span with class
+ [x] Supports phrase modifier span with multiple classes
+ [x] Supports phrase modifier code
+ [x] Supports phrase modifier code with stx
+ [x] Supports acronyms
+
+s9e\TextFormatter\Tests\Plugins\GenericConfig
+ [x] getConfig() returns false if no replacements were added
+ [x] getConfig() creates a regexp for each replacement
+ [x] addReplacement() returns the name of the tag created
+ [x] addReplacement() accepts subpatterns using the (?P<name>) syntax
+ [x] addReplacement() accepts subpatterns using the (?<name>) syntax
+ [x] addReplacement() accepts subpatterns using the (?'name') syntax
+ [x] addReplacement() throws an exception if the regexp is invalid
+ [x] addReplacement() throws a RuntimeException on duplicate named subpatterns
+ [x] addReplacement() creates a regexp for every attribute
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfig() creates a regexp map for every regexp
+ [x] Tag names and attribute names are preserved in the JS config
+
+s9e\TextFormatter\Tests\Plugins\GenericParser
+ [x] Handles attributes
+
+s9e\TextFormatter\Tests\Plugins\HTMLEntitiesConfig
+ [x] tagName can be customized at loading time
+ [x] attrName can be customized at loading time
+ [x] Does not attempt to create its tag if it already exists
+ [x] Individual HTML entities can be disabled via disableEntity
+ [x] disableEntity throws an exception on invalid entities
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] Disabled entities are preserved in Javascript config
+
+s9e\TextFormatter\Tests\Plugins\HTMLEntitiesParser
+ [x] Basic entities are replaced
+ [x] Disabled entities are ignored
+ [x] Entities are replaced by their UTF8 representation
+ [x] Entities are case sensitive
+ [x] Unknown entities are ignored
+
+s9e\TextFormatter\Tests\Plugins\LinebreakerConfig
+ [x] Automatically creates a BR tag
+ [x] Does not attempt to create its tag if it already exists
+ [x] Generates a regexp
+ [x] getJSParser() returns the source of its Javascript parser
+
+s9e\TextFormatter\Tests\Plugins\LinebreakerParser
+ [x] LF characters are replaced with a BR tag
+ [x] CRLF character pairs are replaced with a BR tag
+
+s9e\TextFormatter\Tests\Plugins\RawHTMLConfig
+ [x] getConfig() returns false if no elements are allowed
+ [x] Generates a regexp
+ [x] Registers a namespace using the prefix "html" by default
+ [x] The namespace prefix can be customized at loading time
+ [x] Registers a namespace using the URI "http://www.w3.org/1999/xhtml" by default
+ [x] The namespace URI can be customized at loading time
+ [x] Adds some catch-all XSL to render tags from its namespace by default
+ [x] The default XSL handles custom namespace prefix and URI
+ [x] The catch-all XSL can be customized at loading time
+ [x] Creates a namespaced tag for each allowed element
+ [x] Does not attempt to creates the tag if it already exists
+ [x] Creates tags in the correct namespace if it was customized
+ [x] Tag names of allowed elements are lowercased
+ [x] allowElement() rejects invalid element names
+ [x] Creates an attribute to the namespaced tag for each allowed attribute of a given element
+ [x] Attributes are lowercased
+ [x] allowAttribute() throws an exception if the tag does not exist
+ [x] allowAttribute() rejects invalid attribute names
+ [x] Attributes are created with option "required" set to false
+ [x] Attributes known to expect an URL as value are created with filter "#url"
+ [x] Other attributes are created with no filter
+ [x] allowElement() throws an exception if the element name is "script"
+ [x] allowElement() allows "script" elements if the ALLOW_UNSAFE_ELEMENTS flag is passed
+ [x] allowAttribute() throws an exception if the attribute's name is "onmouseover"
+ [x] allowAttribute() allows "onmouseover" attributes if the ALLOW_UNSAFE_ATTRIBUTES flag is passed
+ [x] allowAttribute() throws an exception if the attribute's name is "style"
+ [x] allowAttribute() allows "style" attributes if the ALLOW_UNSAFE_ATTRIBUTES flag is passed
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfigMeta() marks the attribute regexp as a global regexp
+
+s9e\TextFormatter\Tests\Plugins\RawHTMLParser
+ [x] Can parse a pair of tags with no attributes
+ [x] Can parse self-closing tags with no attributes
+ [x] Can parse tags with single quoted attributes
+ [x] Can parse tags with double quoted attributes
+ [x] Can parse tags with unquoted attributes
+ [x] Can parse tags with boolean attributes and gives them the attribute name as value
+ [x] Can parse self-closing tags with boolean attributes and no whitespace before the closing slash
+ [x] Can parse whitespace around quoted attributes
+ [x] Can parse whitespace within tags
+ [x] HTML entities in attribute values are decoded
+ [x] Makes use of custom namespace prefix
+ [x] Element names are lowercased
+ [x] Attributes are lowercased
+ [x] Boolean attributes are lowercased
+ [x] Whole element names are parsed
+
+s9e\TextFormatter\Tests\Plugins\WittyPantsConfig
+ [x] tagName can be customized at loading time
+ [x] attrName can be customized at loading time
+ [x] Does not attempt to create its tag if it already exists
+ [x] getJSParser() returns the source of its Javascript parser
+ [x] getJSConfig() returns no regexp with lookbehind assertions
+
+s9e\TextFormatter\Tests\Plugins\WittyPantsParser
+ [x] Can use a custom tagName
+ [x] Can use a custom attrName
+ [x] Single quotes enclosing text with no line break are converted to quotation marks
+ [x] A pair of double quotes in a pair of single quotes are converted to quotation marks
+ [x] Double quotes enclosing text with no line break are converted to quotation marks
+ [x] A pair of single quotes in a pair of double quotes are converted to quotation marks
+ [x] Three consecutive dots are converted to an ellipsis
+ [x] Two consecutive hypens are converted to an en dash
+ [x] Three consecutive hypens are converted to an em dash
+ [x] (tm) is replaced by the trademark symbol
+ [x] (TM) is replaced by the trademark symbol
+ [x] (c) is replaced by the copyright symbol
+ [x] (C) is replaced by the copyright symbol
+ [x] (r) is replaced by the registered symbol
+ [x] (R) is replaced by the registered symbol
+ [x] A single quote before a letter at the start of a line is replaced with an apostrophe
+ [x] A single quote before a letter after whitespace is replaced with an apostrophe
+ [x] A single quote between two letters is replaced with an apostrophe
+ [x] A single quote between a letters and whitespace is replaced with an apostrophe
+ [x] A single quote after a letters at the end of the text is replaced with an apostrophe
+ [x] A single quote between a letters and punctuation is replaced with an apostrophe
+ [x] A single quote before two digits at the start of a line is replaced with an apostrophe
+ [x] A single quote before two digits after some whistespace is replaced with an apostrophe
+ [x] A single quote that is part of a pair of quotation marks is not replaced with an apostrophe
+ [x] A single quote after a digit and before the letter s is replaced with an apostrophe
+ [x] A single quote after a digit is replaced with a prime
+ [x] A double quote after a digit is replaced with a double prime
+ [x] The letter x preceded by a number and followed by a number is replaced with a multiplication sign
+ [x] The letter x preceded by a number and whitespace and followed by whitespace and a number is replaced with a multiplication sign
+ [x] The letter x between numbers with primes is replaced with a multiplication sign
+ [x] A single quote between two letters is converted to an apostrophe
+
+s9e\TextFormatter\Tests\PredefinedBBCodes
+ [x] Throws an exception if the BBCode does not exist
+ [x] getUsedCodeStx() returns all values of stx in CODE tags
+ [x] Predefined BBCodes
 

@@ -31,7 +31,7 @@ class Renderer
 		$dom  = new DOMDocument;
 		$dom->loadXML($xml);
 
-		return rtrim($this->proc->transformToXML($dom));
+		return rtrim($this->proc->transformToXml($dom));
 	}
 
 	public function renderMulti(array $arr)
