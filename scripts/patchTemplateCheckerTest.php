@@ -5,16 +5,62 @@ class PHPUnit_Framework_TestCase {}
 
 include __DIR__ . '/../src/autoloader.php';
 
+function format($var)
+{
+	if (is_string($var))
+	{
+		return (preg_match('#[\'\\n\\r\\t]#', $var))
+		     ? '"' . addcslashes($var, "\\\"\r\n\t") . '"'
+		     : var_export($var, true);
+	}
+
+	if (is_array($var))
+	{
+		return _array($var);
+	}
+
+	return var_export($var, true);
+}
+
+function _array(array $arr)
+{
+	$i = -1;
+
+	$php = 'array(';
+	foreach ($arr as $k => $v)
+	{
+		if (++$i)
+		{
+			$php .= ', ';
+		}
+
+		if (!is_numeric($k))
+		{
+			$php .= var_export($k, true) . ' => ';
+		}
+
+		$php .= (is_array($v)) ? _array($v) : var_export($v, true);
+	}
+
+	$php .= ')';
+
+	return $php;
+}
+
 $test = new s9e\TextFormatter\Tests\ConfigBuilder\TemplateCheckerTest;
 
 $php = '';
 foreach ($test->getUnsafeTags() as $case)
 {
+	$template     = $case[0];
+	$exceptionMsg = (isset($case[1])) ? $case[1] : null;
+	$tagOptions   = (isset($case[2])) ? $case[2] : array();
+
 	$attributeInfo = '';
 
-	if (isset($case[2]))
+	if ($tagOptions)
 	{
-		$attributes = $case[2]['attributes'];
+		$attributes = $tagOptions['attributes'];
 		$attrName   = key($attributes);
 		$attribute  = $attributes[$attrName];
 		$filter     = $attribute['filterChain'][0];
@@ -27,18 +73,26 @@ foreach ($test->getUnsafeTags() as $case)
 		}
 	}
 
-	$php .= "\n\t/**\n\t* @testdox checkUnsafe() identifies " . $case[1] . " as "
-	      . (($case[0] === false) ? 'safe' : 'unsafe')
+	$php .= "\n\t/**\n\t* @testdox checkUnsafe() identifies " . $template . " as "
+	      . ((isset($exceptionMsg)) ? 'unsafe' : 'safe')
 	      . $attributeInfo
 	      . "\n\t*/"
 	      . "\n\tpublic function testCheckUnsafe"
-	      . sprintf('%08X', crc32(serialize(array_slice($case, 1))))
+	      . sprintf('%08X', crc32(serialize($case)))
 	      . "()\n\t{\n\t\t\$this->testUnsafeTags("
-	      . "\n\t\t\t" . var_export($case[0], true)
-	      . ','
-	      . "\n\t\t\t" . var_export($case[1], true)
-	      . ((isset($case[2])) ? ",\n\t\t\t" . var_export($case[2], true) : '')
-	      . "\n\t\t);\n\t}\n";
+	      . "\n\t\t\t" . format($case[0]);
+
+	if (isset($case[1]) || isset($case[2]))
+	{
+		$php .= ",\n\t\t\t" . format($case[1]);
+
+		if (isset($case[2]))
+		{
+			$php .= ",\n\t\t\t" . format($case[2]);
+		}
+	}
+
+	$php .= "\n\t\t);\n\t}\n";
 }
 
 $filepath = __DIR__ . '/../tests/ConfigBuilder/TemplateCheckerTest.php';

@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 use DOMAttr,
     DOMDocument,
     DOMElement,
+    DOMNode,
     DOMNodeList,
     DOMXPath,
     InvalidArgumentException,
@@ -30,19 +31,79 @@ abstract class TemplateChecker
 	*/
 	static public function checkUnsafe($template, Tag $tag)
 	{
-		$dom = self::loadTemplate($template);
+		$DOMXPath = new DOMXPath(self::loadTemplate($template));
 
-		if ($dom instanceof LibXMLError)
+		self::checkFixedSrcElements($DOMXPath);
+		self::checkUnsafeContent($DOMXPath, $tag);
+		self::checkDisableOutputEscaping($DOMXPath);
+		self::checkCopyElements($DOMXPath);
+	}
+
+	/**
+	* Check elements whose src attribute should never be completely dynamic, such as <script>
+	*
+	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	*/
+	static protected function checkFixedSrcElements(DOMXPath $DOMXPath)
+	{
+		$regexp = '#^\\s*(?:embed|iframe|object|script)\\s*$#i';
+
+		foreach ($DOMXPath->query('//*') as $node)
 		{
-			throw new InvalidArgumentException('Invalid XML in template: ' . $dom->message);
-		}
+			if ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
+			 && $node->localName    === 'element')
+			{
+				// We have a <xsl:element>
+				$elName = $node->getAttribute('name');
+			}
+			else
+			{
+				// This is a static element, e.g. <script>, <iframe>, etc...
+				$elName = $node->localName;
+			}
 
-		return self::checkUnsafeContent($dom, $tag)
-		    ?: self::checkDisableOutputEscaping($dom)
-		    ?: self::checkCopyElements($dom)
-			// check for <xsl:element name="{concat('scr','ipt')}"/> or similar <xsl:attribute> tags
-		    ?: self::checkSuspiciousDynamicElements($dom)
-		    ?: false;
+			if (!preg_match($regexp, $elName))
+			{
+				// Not one of the elements we're looking for
+				continue;
+			}
+
+			if ($node->localName !== 'element')
+			{
+				// This is a static element, check for static attributes
+				foreach ($node->attributes as $attribute)
+				{
+					if (strtolower($attribute->localName) === 'src'
+					 && preg_match('#^\\s*\\{#', $attribute->nodeValue))
+					{
+						throw new UnsafeTemplateException("The template contains a '" . $elName . "' element with a non-fixed URL", $node);
+					}
+				}
+			}
+
+			// Search for a generated 'src' attribute that uses dynamic content
+			$xpath = './/xsl:attribute[.//xsl:value-of or .//xsl:apply-templates]';
+			foreach ($DOMXPath->query($xpath, $node) as $attributeElement)
+			{
+				$name = $attributeElement->getAttribute('name');
+
+				if (trim(strtolower($name)) !== 'src')
+				{
+					continue;
+				}
+
+				// Reject any src attribute that doesn't start with '/' or 'protocol://'
+				if ($attributeElement->firstChild->nodeType !== XML_TEXT_NODE
+				 || !preg_match('#^(?:[a-z]+:/)?/#', $attribute->firstChild->textContent))
+				{
+					$dynamic = ($node->localName === 'element')
+					         ? "dynamically generated "
+					         : '';
+
+					throw new UnsafeTemplateException('The template contains a ' . $dynamic . "'" . $elName . "' element with a dynamically generated '" . $name . "' attribute that does not use a fixed URL", $node);
+				}
+			}
+		}
 	}
 
 	/**
@@ -51,7 +112,7 @@ abstract class TemplateChecker
 	* Returns a DOMDocument on success, or a LibXMLError otherwise
 	*
 	* @param  string $template Content of the template. A root node is not required
-	* @return DOMDocument|LibXMLError
+	* @return DOMDocument
 	*/
 	static protected function loadTemplate($template)
 	{
@@ -64,342 +125,258 @@ abstract class TemplateChecker
 		// Enable libxml's internal errors while we load the template
 		$useInternalErrors = libxml_use_internal_errors(true);
 
-		$dom = new DOMDocument;
+		$dom   = new DOMDocument;
 		$error = !$dom->loadXML($xsl);
 
 		// Restore the previous error mechanism
 		libxml_use_internal_errors($useInternalErrors);
 
-		return ($error) ? libxml_get_last_error() : $dom;
-	}
-
-	/**
-	* Check a suspiciously dynamic elements such as <xsl:element name="{@foo}"/>
-	*
-	* @param  DOMDocument $dom xsl:template node
-	* @return bool|string      Error message if unsafe, FALSE otherwise
-	*/
-	static protected function checkSuspiciousDynamicElements(DOMDocument $dom)
-	{
-		$DOMXPath = new DOMXPath($dom);
-
-		$xpath = '//xsl:element[contains(@name, "{")]'
-		       . '|'
-		       . '//xsl:attribute[contains(@name, "{")]';
-
-		foreach ($DOMXPath->query($xpath) as $node)
+		if ($error)
 		{
-			return "The template contains an '" . $node->nodeName . "' element with a dynamic @name";
+			throw new InvalidArgumentException('Invalid XML in template: ' . libxml_get_last_error()->message);
 		}
+
+		return $dom;
 	}
 
 	/**
 	* Check for <xsl:copy/> elements
 	*
-	* @param  DOMDocument $dom xsl:template node
-	* @return bool|string      Error message if unsafe, FALSE otherwise
+	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	*/
-	static protected function checkCopyElements(DOMDocument $dom)
+	static protected function checkCopyElements(DOMXPath $DOMXPath)
 	{
-		$DOMXPath = new DOMXPath($dom);
+		$node = $DOMXPath->query('//xsl:copy')->item(0);
 
-		// Reject any <xsl:copy/> node
-		if ($DOMXPath->query('//xsl:copy')->length)
+		if ($node)
 		{
-			return "The template contains an 'xsl:copy' element";
+			throw new UnsafeTemplateException("Cannot assess the safety of an 'xsl:copy' element", $node);
 		}
-
-		return false;
 	}
 
 	/**
 	* Check a template for any tag using @disable-output-escaping
 	*
-	* @param  DOMDocument $dom xsl:template node
-	* @return bool|string      Error message if unsafe, FALSE otherwise
+	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	*/
-	static protected function checkDisableOutputEscaping(DOMDocument $dom)
+	static protected function checkDisableOutputEscaping(DOMXPath $DOMXPath)
 	{
-		$xpath = new DOMXPath($dom);
+		$node = $DOMXPath->query('//@disable-output-escaping')->item(0);
 
-		if ($xpath->evaluate('count(//@disable-output-escaping)'))
+		if ($node)
 		{
-			return "The template contains a 'disable-output-escaping' attribute";
+			throw new UnsafeTemplateException("The template contains a 'disable-output-escaping' attribute", $node);
 		}
 	}
 
 	/**
 	* Check a improperly filtered content used in HTML tags
 	*
-	* @param  DOMDocument $dom xsl:template node
-	* @param  Tag         $tag Tag that this template belongs to
-	* @return bool|string      Error message if unsafe, FALSE otherwise
+	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	* @param Tag      $tag      Tag that this template belongs to
 	*/
-	static protected function checkUnsafeContent(DOMDocument $dom, Tag $tag)
+	static protected function checkUnsafeContent(DOMXPath $DOMXPath, Tag $tag)
 	{
-		$DOMXPath = new DOMXPath($dom);
-
-		// What we check, sorted by content type
-		$checkNodes = array(
-			'CSS' => array(
-				'style',
-				'@style'
-			),
-			'JS' => array(
-				'script',
-				'@on*'
-			),
-			'URL' => array(
-				'@action',
-				'@cite',
-				'@data',
-				'@formaction',
-				'@href',
-				'@manifest',
-				'@poster',
-				// Covers "src" as well as non-standard attributes "dynsrc", "lowsrc"
-				'@*src'
-			)
+		$checkElements = array(
+			'/^style$/i'  => 'CSS',
+			'/^script$/i' => 'JS'
 		);
 
-		foreach ($checkNodes as $contentType => $names)
+		$checkAttributes = array(
+			'/^style$/i'      => 'CSS',
+			// onclick, onmouseover, etc...
+			'/^on/i'          => 'JS',
+			'/^action$/i'     => 'URL',
+			'/^cite$/i'       => 'URL',
+			'/^data$/i'       => 'URL',
+			'/^formaction$/i' => 'URL',
+			'/^href$/i'       => 'URL',
+			'/^manifest$/i'   => 'URL',
+			'/^poster$/i'     => 'URL',
+			// Covers "src" as well as non-standard attributes "dynsrc", "lowsrc"
+			'/src$/i'         => 'URL'
+		);
+
+		// NOTE: this XPath query will return attributes from XSL nodes, but there should be no
+		//       false-positives from them, so we don't have to filter them out
+		foreach ($DOMXPath->query('//* | //@*') as $node)
 		{
-			$predicates = array();
+			/**
+			* @var array XPath expressions to be checked
+			*/
+			$checkExpr = array();
 
-			foreach ($names as $name)
+			if ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
 			{
-				if ($name[0] === '@')
+				if ($node->localName === 'attribute'
+				 || $node->localName === 'element')
 				{
-					$name = substr($name, 1);
+					// <xsl:attribute/> or <xsl:element/>
+					$matchName = trim($node->getAttribute('name'));
+					$matchList = ($node->localName === 'attribute')
+					           ? $checkAttributes
+					           : $checkElements;
 
-					// Target dynamic attributes, e.g. <a href="{@url}">
-					$staticTarget  = '@*[contains(., "{")]';
-					$dynamicTarget = 'xsl:attribute';
+					// Ensure no shenanigans such as dynamic names, e.g. <xsl:element name="{foo}"/>
+					if (!preg_match('#^([a-z_0-9\\-]+)$#Di', $matchName))
+					{
+						throw new UnsafeTemplateException("Cannot assess 'xsl:" . $node->localName . "' name '" . $matchName . "'", $node);
+					}
+				}
+				elseif ($node->localName === 'copy-of')
+				{
+					$expr = trim($node->getAttribute('select'));
+
+					// Replace <xsl:copy-of select="@ foo"/> with <xsl:copy-of select="@foo"/>
+					$expr = preg_replace('#^@\\s+#', '@', $expr);
+
+					if (!preg_match('#^@([a-z_0-9\\-]+)$#Di', $expr, $m))
+					{
+						// Reject anything that is not a copy of an attribute
+						throw new UnsafeTemplateException("Cannot assess 'xsl:copy-of' select expression '" . $expr . "' to be safe", $node);
+					}
+
+					$matchName = $m[1];
+					$matchList = $checkAttributes;
+
+					$checkExpr[] = $expr;
 				}
 				else
 				{
-					$staticTarget  = '*';
-					$dynamicTarget = 'xsl:element';
-				}
-
-				if ($name[0] === '*')
-				{
-					$name   = substr($name, 1);
-					$format = 'substring(%1$s, string-length(%1$s) - string-length(%2$s)) = %2$s';
-				}
-				elseif (substr($name, -1) === '*')
-				{
-					$name   = substr($name, 0, -1);
-					$format = 'starts-with(%1$s, %2$s)';
-				}
-				else
-				{
-					$format = '%1$s = %2$s';
-				}
-
-				// translate() allows us to match HTML tags in uppercase, e.g. <ScRiPt>
-				// We use local-name() to match tags that would be namespaced to the HTML namespace,
-				// e.g. <x:script xmlns:x="http://www.w3.org/1999/xhtml"> which may or may not work
-				// in some browsers (erring on the safe side)
-				$predicates[$staticTarget][] = sprintf(
-					$format,
-					'translate(local-name(),"' . strtoupper($name) . '","' . $name . '")',
-					'"' . $name . '"'
-				);
-
-				// normalize-space() is used as a failsafe in case a faulty XSLT implementation
-				// would allow <xsl:element name=" script ">
-				$predicates[$dynamicTarget][] = sprintf(
-					$format,
-					'translate(normalize-space(@name),"' . strtoupper($name) . '","' . $name . '")',
-					'"' . $name . '"'
-				);
-
-				if ($dynamicTarget === 'xsl:attribute')
-				{
-					// Look for copies of attributes via <xsl:copy-of/>
-					$predicates['xsl:copy-of'][] = sprintf(
-						$format,
-						'normalize-space(@select)',
-						'"@' . $name . '"'
-					);
+					// <xsl:*/> and theorically even the attribute in <b xsl:foo=""/>
+					continue;
 				}
 			}
-
-			// Build the XPath expression for each target type
-			$exprs = array();
-			foreach ($predicates as $target => $targetPredicates)
+			elseif ($node instanceof DOMAttr)
 			{
-				$exprs[$target] = '//' . $target . '[' . implode(' or ', $targetPredicates) . ']';
-			}
-print_r($exprs);
-			// Test for <xsl:copy-of/> nodes
-			foreach ($DOMXPath->query($exprs['xsl:copy-of']) as $node)
-			{
-				$unsafeMsg = self::checkUnsafeSelect($node, $tag, $contentType);
+				$matchName = $node->localName;
+				$matchList = $checkAttributes;
 
-				if ($unsafeMsg)
+				preg_match_all('#(\\{+)([^}]+)\\}#', $node->nodeValue, $matches, PREG_SET_ORDER);
+
+				foreach ($matches as $m)
 				{
-					return "The template contains a copy of the '" . trim($node->getAttribute('name'), ' @') . "' attribute that " . $unsafeMsg;
+					// If the number of { is odd, it means the expression will be evaluated
+					if (strlen($m[1]) % 2)
+					{
+						$checkExpr[] = $m[2];
+					}
 				}
 			}
-			unset($exprs['xsl:copy-of']);
-
-			// Test for all other nodes
-			$xpath = implode(' | ', $exprs);
-			foreach ($DOMXPath->query($xpath) as $node)
+			else
 			{
-				$unsafeMsg = ($node instanceof DOMAttr)
-				           ? self::checkUnsafeAttribute($node, $tag, $contentType)
-				           : self::checkUnsafeElement($node, $tag, $contentType);
+				$matchName = $node->localName;
+				$matchList = $checkElements;
+			}
 
-				if ($unsafeMsg)
+			// Test whether our node matches any entry on our matchlist
+			foreach ($matchList as $regexp => $contentType)
+			{
+				if (!preg_match($regexp, $matchName))
 				{
-					if ($node instanceof DOMAttr)
-					{
-						// "'src' attribute"
-						$targetDesc = "'" . $node->nodeName . "' attribute";
-					}
-					elseif ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
-					{
-						// "dynamically generated 'src' attribute" (or element)
-						$targetDesc = "dynamically generated '" . $node->getAttribute('name') . "' " . $node->localName;
-					}
-					else
-					{
-						// "'script' element"
-						$targetDesc = "'" . $node->nodeName . "' element";
-					}
+					// Nope, move on to the next entry
+					continue;
+				}
 
-					return 'The template contains a ' . $targetDesc . ' that ' . $unsafeMsg;
+				// Check for ancestor::xsl:for-each because it would prevent us from correctly
+				// evaluating the context. IOW, we don't know what tag "@foo" belongs to
+				if ($DOMXPath->query('ancestor::xsl:for-each', $node)->length)
+				{
+					throw new UnsafeTemplateException("Cannot assess context node due to 'xsl:for-each'", $node);
+				}
+
+				// Check expressions from <xsl:copy-of select="{@onclick}"/> and
+				// <b onmouseover="this.title='{@title}';this.style.backgroundColor={@color}"/>
+				foreach ($checkExpr as $expr)
+				{
+					self::checkUnsafeExpression($node, $expr, $contentType, $tag);
+				}
+
+				// Check for unsafe descendants if our node is an element (not an attribute)
+				if ($node instanceof DOMElement)
+				{
+					self::checkUnsafeDescendants($node, $tag, $contentType);
 				}
 			}
 		}
 	}
 
 	/**
-	* 
+	* Check the descendants of given node
 	*
-	* @param  DOMElement  $element
-	* @param  Tag         $tag
-	* @param  string      $contentType
-	* @return string|bool
+	* @param  DOMElement $element
+	* @param  Tag        $tag
+	* @param  string     $contentType
 	*/
-	static protected function checkUnsafeAttribute(DOMAttr $attr, Tag $tag, $contentType)
-	{
-	}
-
-	/**
-	* 
-	*
-	* @param  DOMElement  $element
-	* @param  Tag         $tag
-	* @param  string      $contentType
-	* @return string|bool
-	*/
-	static protected function checkUnsafeElement(DOMElement $element, Tag $tag, $contentType)
+	static protected function checkUnsafeDescendants(DOMElement $element, Tag $tag, $contentType)
 	{
 		$DOMXPath = new DOMXPath($element->ownerDocument);
 
 		// <script><xsl:value-of/></script>
-		foreach ($DOMXPath->query('.//xsl:value-of[@select]', $element) as $node)
+		foreach ($DOMXPath->query('.//xsl:value-of[@select]', $element) as $valueOf)
 		{
-			$unsafeMsg = self::checkUnsafeSelect($node, $tag, $contentType);
-
-			if ($unsafeMsg)
-			{
-				return $unsafeMsg;
-			}
-
-			if ($DOMXPath->query('.//xsl:apply-templates', $node)->length)
-			{
-				return "contains an 'xsl:apply-templates' node that may let unfiltered data through";
-			}
+			self::checkUnsafeExpression(
+				$valueOf,
+				$valueOf->getAttribute('select'),
+				$contentType,
+				$tag
+			);
 		}
 
-		return false;
+		// <script><xsl:apply-templates/></script>
+		// <script><xsl:apply-templates select="foo"/></script>
+		$applyTemplates = $DOMXPath->query('.//xsl:apply-templates', $element)->item(0);
+
+		if ($applyTemplates)
+		{
+			if ($applyTemplates->hasAttribute('select'))
+			{
+				$msg = "Cannot assess the safety 'xsl:apply-templates' select expression '" . $applyTemplates->getAttribute('select') . "'";
+			}
+			elseif ($element->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
+			{
+				$msg = "A dynamically generated '" . $element->getAttribute('name') . "' " . $element->localName . ' lets unfiltered data through';
+			}
+			else
+			{
+				$msg = "A '" . $element->localName . "' element lets unfiltered data through";
+			}
+
+			throw new UnsafeTemplateException($msg, $applyTemplates);
+		}
 	}
 
 	/**
-	* 
+	* Check the safety of an XPath expression
 	*
-	* @param  DOMElement  $element
-	* @param  Tag         $tag
-	* @param  string      $contentType
-	* @return string|bool
+	* @param DOMNode $node        Context node
+	* @param string  $expr        Expression to be checked
+	* @param string  $contentType Content type
+	* @param Tag     $tag         Tag that this template belongs to
 	*/
-	static protected function checkUnsafeSelect(DOMElement $element, Tag $tag, $contentType)
+	static protected function checkUnsafeExpression(DOMNode $node, $expr, $contentType, Tag $tag)
 	{
-		$expr = trim($element->getAttribute('select'));
-
 		// We don't even try to assess its safety if it's not a single attribute value
 		if (!preg_match('#^@\\s*([a-z_0-9\\-]+)$#Di', $expr, $m))
 		{
-			return "contains a '" . $element->nodeName . "' element whose select expression '" . $expr . "' cannot be assessed to be safe";
+			throw new UnsafeTemplateException("Cannot assess XPath expression '" . $expr . "'", $node);
 		}
 
 		$attrName = $m[1];
 
 		if (!$tag->attributes->exists($attrName))
 		{
-			// The template uses an attribute that is not defined, so we'll consider it
-			// unsafe. It also covers the use of @*[name()="foo"]
-			return "uses an undefined '" . $attrName . "' attribute";
+			// The template uses an attribute that is not defined, so we'll consider it unsafe
+			throw new UnsafeTemplateException("Undefined attribute '" . $attrName . "'", $node);
 		}
 
 		$attribute = $tag->attributes->get($attrName);
 
 		// Test the attribute with the configured isSafeIn* method
-		if (!call_user_func(array('self', $methodName), $attribute))
+		if (!call_user_func(array('self', 'isSafeIn' . $contentType), $attribute))
 		{
 			// Not safe
-			return "uses the value of the '" . $attrName . "' attribute, which isn't properly filtered";
-		}
-
-		return false;
-	}
-
-	/**
-	* Check a template for any tag with a javascript event attribute using dynamic data
-	*
-	* @param  DOMDocument $dom xsl:template node
-	* @param  Tag         $tag Tag that this template belongs to
-	* @return bool|string      Error message if unsafe, FALSE otherwise
-	*/
-	static protected function checkUnsafeEventAttributes(DOMDocument $dom, Tag $tag)
-	{
-		$xpath = new DOMXPath($dom);
-
-		// Check for <b onclick="{@foo}"/>
-		// Note that it wrongly identifies <b onclick="{{@foo}}"/> as unsafe, but a false-positive
-		// does not hurt
-		$attrs = $xpath->query(
-			'//@*[starts-with(translate(local-name(), "ON", "on"), "on")][contains(., "{")]'
-		);
-
-		if (self::usesUnsafeAttribute($attrs, $tag, 'JS'))
-		{
-			return 'The template uses unfiltered or improperly filtered attributes inside of an HTML event attribute';
-		}
-
-		// <b><xsl:attribute name="onclick"><xsl:value-of .../></xsl:attribute></b>
-		$attrs = $xpath->query(
-			  '//xsl:attribute[starts-with(translate(normalize-space(@name), "ON", "on"), "on")]'
-			. '//xsl:value-of/@select'
-		);
-
-		if (self::usesUnsafeAttribute($attrs, $tag, 'JS'))
-		{
-			return 'The template uses unfiltered or improperly filtered attributes inside of a dynamically created HTML event attribute';
-		}
-
-		// <b><xsl:attribute name="onclick"><xsl:apply-templates /></xsl:attribute></b>
-		$query = '//xsl:attribute[starts-with(translate(normalize-space(@name), "ON", "on"), "on")]'
-		       . '//xsl:apply-templates';
-
-		if ($xpath->evaluate('count(' . $query . ')'))
-		{
-			return 'The template contains an HTML event attribute that lets unfiltered data through';
+			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly filtered to be used in " . $contentType, $node);
 		}
 	}
 
@@ -436,6 +413,7 @@ print_r($exprs);
 			}
 		}
 
+		/* disabled until proven useful
 		// Test if that attribute uses a regexp
 		if (isset($attribute->regexp)
 		 && $attribute->filterChain->has('#regexp')
@@ -469,6 +447,7 @@ print_r($exprs);
 			// It left none of our bad values through, so we'll assume it is safe
 			return true;
 		}
+		*/
 
 		return false;
 	}
