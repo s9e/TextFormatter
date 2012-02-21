@@ -27,7 +27,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <embed src="{@url}"/>
 	*/
-	public function testCheckUnsafe84611A0E()
+	public function testCheckUnsafeFFEA6CBF()
 	{
 		$this->testCheckUnsafe(
 			'<embed src="{@url}"/>',
@@ -38,7 +38,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <iframe src="{@url}"/>
 	*/
-	public function testCheckUnsafeCC6F8591()
+	public function testCheckUnsafeA56D0DBC()
 	{
 		$this->testCheckUnsafe(
 			'<iframe src="{@url}"/>',
@@ -49,7 +49,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <object src="{@url}"/>
 	*/
-	public function testCheckUnsafe4EC09145()
+	public function testCheckUnsafeCA1966B0()
 	{
 		$this->testCheckUnsafe(
 			'<object src="{@url}"/>',
@@ -60,7 +60,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <script src="{@url}"/>
 	*/
-	public function testCheckUnsafeA269924E()
+	public function testCheckUnsafeFDDAD6DB()
 	{
 		$this->testCheckUnsafe(
 			'<script src="{@url}"/>',
@@ -69,9 +69,21 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
+	* @testdox Not safe if attribute 'id' has filter '#url': <script src="{@url}"/>
+	*/
+	public function testCheckUnsafeD10CCD19()
+	{
+		$this->testCheckUnsafe(
+			'<script src="{@url}"/>',
+			"The template contains a 'script' element with a non-fixed URL",
+			array('attributes' => array('id' => array('filterChain' => array('#url'))))
+		);
+	}
+
+	/**
 	* @testdox Safe if attribute 'id' has filter '#number': <script src="https://gist.github.com/{@id}.js"/>
 	*/
-	public function testCheckUnsafe8641718F()
+	public function testCheckUnsafe6C30CE54()
 	{
 		$this->testCheckUnsafe(
 			'<script src="https://gist.github.com/{@id}.js"/>',
@@ -83,7 +95,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <SCRIPT src="{@url}"/>
 	*/
-	public function testCheckUnsafeECFD591A()
+	public function testCheckUnsafe22C6B53D()
 	{
 		$this->testCheckUnsafe(
 			'<SCRIPT src="{@url}"/>',
@@ -94,7 +106,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <script SRC="{@url}"/>
 	*/
-	public function testCheckUnsafe677FB29A()
+	public function testCheckUnsafe4C83A1C2()
 	{
 		$this->testCheckUnsafe(
 			'<script SRC="{@url}"/>',
@@ -105,7 +117,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <script><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></script>
 	*/
-	public function testCheckUnsafeAFAF8AE6()
+	public function testCheckUnsafe0852D347()
 	{
 		$this->testCheckUnsafe(
 			'<script><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></script>',
@@ -116,7 +128,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <script><xsl:attribute name="SRC"><xsl:value-of select="@url"/></xsl:attribute></script>
 	*/
-	public function testCheckUnsafe2B68C5D8()
+	public function testCheckUnsafe28F6AB47()
 	{
 		$this->testCheckUnsafe(
 			'<script><xsl:attribute name="SRC"><xsl:value-of select="@url"/></xsl:attribute></script>',
@@ -127,7 +139,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/></xsl:attribute></script>
 	*/
-	public function testCheckUnsafe19C77C71()
+	public function testCheckUnsafe2B0FC129()
 	{
 		$this->testCheckUnsafe(
 			'<script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/></xsl:attribute></script>',
@@ -138,7 +150,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>
 	*/
-	public function testCheckUnsafeE3DAC5EC()
+	public function testCheckUnsafe8127EF08()
 	{
 		$this->testCheckUnsafe(
 			'<xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>',
@@ -149,7 +161,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>
 	*/
-	public function testCheckUnsafeD895E8DF()
+	public function testCheckUnsafeC08FCE07()
 	{
 		$this->testCheckUnsafe(
 			'<xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>',
@@ -160,7 +172,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <b disable-output-escaping="1"/>
 	*/
-	public function testCheckUnsafeAD7B4CE5()
+	public function testCheckUnsafeCCAC3746()
 	{
 		$this->testCheckUnsafe(
 			'<b disable-output-escaping="1"/>',
@@ -171,7 +183,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <xsl:copy/>
 	*/
-	public function testCheckUnsafeC1F83B08()
+	public function testCheckUnsafe60753852()
 	{
 		$this->testCheckUnsafe(
 			'<xsl:copy/>',
@@ -182,7 +194,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <b><xsl:copy-of select="@onclick"/></b>
 	*/
-	public function testCheckUnsafe88ADF3EE()
+	public function testCheckUnsafeC19FCB6D()
 	{
 		$this->testCheckUnsafe(
 			'<b><xsl:copy-of select="@onclick"/></b>',
@@ -193,7 +205,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <b><xsl:copy-of select=" @ onclick "/></b>
 	*/
-	public function testCheckUnsafe1910BA7D()
+	public function testCheckUnsafeE26527B5()
 	{
 		$this->testCheckUnsafe(
 			'<b><xsl:copy-of select=" @ onclick "/></b>',
@@ -224,7 +236,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <a><xsl:copy-of select="@href"/></a>
 	*/
-	public function testCheckUnsafeDA83422D()
+	public function testCheckUnsafeE6B9D02C()
 	{
 		$this->testCheckUnsafe(
 			'<a><xsl:copy-of select="@href"/></a>',
@@ -236,7 +248,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'href' has filter '#url': <a><xsl:copy-of select="@href"/></a>
 	*/
-	public function testCheckUnsafe1C5EC7F5()
+	public function testCheckUnsafeFE9871D1()
 	{
 		$this->testCheckUnsafe(
 			'<a><xsl:copy-of select="@href"/></a>',
@@ -248,7 +260,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <xsl:copy-of select="script"/>
 	*/
-	public function testCheckUnsafeEFC1AC5D()
+	public function testCheckUnsafeC8E8CC43()
 	{
 		$this->testCheckUnsafe(
 			'<xsl:copy-of select="script"/>',
@@ -259,7 +271,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <xsl:copy-of select=" script "/>
 	*/
-	public function testCheckUnsafeD2943232()
+	public function testCheckUnsafe10D2139E()
 	{
 		$this->testCheckUnsafe(
 			'<xsl:copy-of select=" script "/>',
@@ -270,7 +282,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Not safe: <xsl:copy-of select="parent::*"/>
 	*/
-	public function testCheckUnsafe14D8856E()
+	public function testCheckUnsafe1BDDD975()
 	{
 		$this->testCheckUnsafe(
 			'<xsl:copy-of select="parent::*"/>',
@@ -327,6 +339,18 @@ class TemplateCheckerTest extends Test
 			array(
 				'<script src="{@url}"/>',
 				"The template contains a 'script' element with a non-fixed URL"
+			),
+			// Redundant but produces a nicer entry in testdox
+			array(
+				'<script src="{@url}"/>',
+				"The template contains a 'script' element with a non-fixed URL",
+				array(
+					'attributes' => array(
+						'id' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
 			),
 			array(
 				'<script src="https://gist.github.com/{@id}.js"/>',

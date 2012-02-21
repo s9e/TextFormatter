@@ -4,6 +4,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\TemplateChecker
  [x] Not safe: <iframe src="{@url}"/>
  [x] Not safe: <object src="{@url}"/>
  [x] Not safe: <script src="{@url}"/>
+ [x] Not safe if attribute 'id' has filter '#url': <script src="{@url}"/>
  [x] Safe if attribute 'id' has filter '#number': <script src="https://gist.github.com/{@id}.js"/>
  [x] Not safe: <SCRIPT src="{@url}"/>
  [x] Not safe: <script SRC="{@url}"/>

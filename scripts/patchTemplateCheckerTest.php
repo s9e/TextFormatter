@@ -78,7 +78,12 @@ foreach ($test->getUnsafeTemplatesTests() as $case)
 		}
 	}
 
-	$hash = sprintf('%08X', crc32(serialize($case)));
+	// Do not keep the exception message in the hash so that a change in those won't rename every
+	// case
+	$tmp = $case;
+	unset($tmp[1]);
+
+	$hash = sprintf('%08X', crc32(serialize($tmp)));
 	if (isset($done[$hash]))
 	{
 		print_r($case);
