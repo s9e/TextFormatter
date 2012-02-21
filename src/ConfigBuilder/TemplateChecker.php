@@ -46,7 +46,12 @@ abstract class TemplateChecker
 	*/
 	static protected function checkFixedSrcElements(DOMXPath $DOMXPath)
 	{
-		$regexp = '#^\\s*(?:embed|iframe|object|script)\\s*$#i';
+		$elements = array(
+			'embed'  => 'src',
+			'iframe' => 'src',
+			'object' => 'data',
+			'script' => 'src'
+		);
 
 		foreach ($DOMXPath->query('//*') as $node)
 		{
@@ -62,18 +67,23 @@ abstract class TemplateChecker
 				$elName = $node->localName;
 			}
 
-			if (!preg_match($regexp, $elName))
+			// Normalize the element name
+			$elName = strtolower(trim($elName));
+
+			if (!isset($elements[$elName]))
 			{
 				// Not one of the elements we're looking for
 				continue;
 			}
+
+			$attrName = $elements[$elName];
 
 			if ($node->localName !== 'element')
 			{
 				// This is a static element, check for static attributes
 				foreach ($node->attributes as $attribute)
 				{
-					if (strtolower($attribute->localName) === 'src'
+					if (strtolower($attribute->localName) === $attrName
 					 && preg_match('#^\\s*\\{#', $attribute->nodeValue))
 					{
 						throw new UnsafeTemplateException("The template contains a '" . $elName . "' element with a non-fixed URL", $node);
@@ -81,13 +91,13 @@ abstract class TemplateChecker
 				}
 			}
 
-			// Search for a generated 'src' attribute that uses dynamic content
+			// Search for a generated attribute that uses dynamic content
 			$xpath = './/xsl:attribute[.//xsl:value-of or .//xsl:apply-templates]';
 			foreach ($DOMXPath->query($xpath, $node) as $attributeElement)
 			{
 				$name = $attributeElement->getAttribute('name');
 
-				if (trim(strtolower($name)) !== 'src')
+				if (trim(strtolower($name)) !== $attrName)
 				{
 					continue;
 				}
@@ -347,7 +357,7 @@ abstract class TemplateChecker
 	*/
 	static protected function checkUnsafeContext(DOMXPath $DOMXPath, DOMNode $node)
 	{
-		if ($DOMXPath->query('//xsl:for-each', $node)->length)
+		if ($DOMXPath->query('ancestor::xsl:for-each', $node)->length)
 		{
 			throw new UnsafeTemplateException("Cannot evaluate context node due to 'xsl:for-each'", $node);
 		}
