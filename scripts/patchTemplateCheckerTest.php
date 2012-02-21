@@ -52,7 +52,7 @@ $test = new s9e\TextFormatter\Tests\ConfigBuilder\TemplateCheckerTest;
 $done = array();
 
 $php = '';
-foreach ($test->getUnsafeTemplates() as $case)
+foreach ($test->getUnsafeTemplatesTests() as $case)
 {
 	$template     = $case[0];
 	$exceptionMsg = (isset($case[1])) ? $case[1] : null;
@@ -65,13 +65,16 @@ foreach ($test->getUnsafeTemplates() as $case)
 		$attributes = $tagOptions['attributes'];
 		$attrName   = key($attributes);
 		$attribute  = $attributes[$attrName];
-		$filter     = $attribute['filterChain'][0];
 
-		$attributeInfo = " if attribute '$attrName' has filter " . var_export($filter, true);
-
-		if (isset($attribute['regexp']))
+		if (!empty($attribute['filterChain']))
 		{
-			$attributeInfo .= ' with regexp ' . $attribute['regexp'];
+			$filter = $attribute['filterChain'][0];
+			$attributeInfo = " if attribute '$attrName' has filter " . var_export($filter, true);
+
+			if (isset($attribute['regexp']))
+			{
+				$attributeInfo .= ' with regexp ' . $attribute['regexp'];
+			}
 		}
 	}
 
@@ -84,12 +87,12 @@ foreach ($test->getUnsafeTemplates() as $case)
 	}
 	$done[$hash] = 1;
 
-	$php .= "\n\t/**\n\t* @testdox checkUnsafe() identifies " . $template . " as "
-	      . ((isset($exceptionMsg)) ? 'unsafe' : 'safe')
+	$php .= "\n\t/**\n\t* @testdox "
+	      . ((isset($exceptionMsg)) ? 'Not safe' : 'Safe')
 	      . $attributeInfo
-	      . "\n\t*/"
+	      . ': ' . $template . "\n\t*/"
 	      . "\n\tpublic function testCheckUnsafe" . $hash . "()"
-	      . "\n\t{\n\t\t\$this->testUnsafeTags("
+	      . "\n\t{\n\t\t\$this->testCheckUnsafe("
 	      . "\n\t\t\t" . format($case[0]);
 
 	if (isset($case[1]) || isset($case[2]))
