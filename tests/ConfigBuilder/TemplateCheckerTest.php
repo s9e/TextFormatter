@@ -383,17 +383,6 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe: <script><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></script>
-	*/
-	public function testCheckUnsafe7B26C45D()
-	{
-		$this->testCheckUnsafe(
-			'<script><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></script>',
-			"Cannot evaluate context node due to 'xsl:for-each'"
-		);
-	}
-
-	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <script><xsl:value-of select="@foo"/></script>
 	*/
 	public function testCheckUnsafe3E82294D()
@@ -590,17 +579,6 @@ class TemplateCheckerTest extends Test
 			'<style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>',
 			"Cannot evaluate context node due to 'xsl:for-each'",
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Not safe: <style><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></style>
-	*/
-	public function testCheckUnsafeB1E49022()
-	{
-		$this->testCheckUnsafe(
-			'<style><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></style>',
-			"Cannot evaluate context node due to 'xsl:for-each'"
 		);
 	}
 
@@ -994,11 +972,6 @@ class TemplateCheckerTest extends Test
 						)
 					)
 				)
-			);
-
-			$tests[] = array(
-				'<' . $element . '><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></' . $element . '>',
-				"Cannot evaluate context node due to 'xsl:for-each'"
 			);
 
 			// Test safe filters

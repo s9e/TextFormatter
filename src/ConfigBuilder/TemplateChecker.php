@@ -282,13 +282,13 @@ abstract class TemplateChecker
 				// <b onmouseover="this.title='{@title}';this.style.backgroundColor={@color}"/>
 				foreach ($checkExpr as $expr)
 				{
-					self::checkUnsafeExpression($node, $expr, $contentType, $tag);
+					self::checkUnsafeExpression($DOMXPath, $node, $expr, $contentType, $tag);
 				}
 
 				// Check for unsafe descendants if our node is an element (not an attribute)
 				if ($node instanceof DOMElement)
 				{
-					self::checkUnsafeDescendants($DOMXPath,		$node, $tag, $contentType);
+					self::checkUnsafeDescendants($DOMXPath, $node, $tag, $contentType);
 				}
 			}
 		}
@@ -307,9 +307,8 @@ abstract class TemplateChecker
 		// <script><xsl:value-of/></script>
 		foreach ($DOMXPath->query('.//xsl:value-of[@select]', $element) as $valueOf)
 		{
-			self::checkUnsafeContext($DOMXPath, $valueOf);
-
 			self::checkUnsafeExpression(
+				$DOMXPath,
 				$valueOf,
 				$valueOf->getAttribute('select'),
 				$contentType,
@@ -323,8 +322,6 @@ abstract class TemplateChecker
 
 		if ($applyTemplates)
 		{
-			self::checkUnsafeContext($DOMXPath, $applyTemplates);
-
 			if ($applyTemplates->hasAttribute('select'))
 			{
 				$msg = "Cannot assess the safety of 'xsl:apply-templates' select expression '" . $applyTemplates->getAttribute('select') . "'";
@@ -345,32 +342,35 @@ abstract class TemplateChecker
 	/**
 	* Test whether the context of an element can be evaluated
 	*
-	* @param DOMXPath   $DOMXPath DOMXPath associated with the template being checked
-	* @param DOMElement $element  Element being checked
+	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	* @param DOMNode  $node     Node being checked
 	*/
-	static protected function checkUnsafeContext(DOMXPath $DOMXPath, DOMElement $element)
+	static protected function checkUnsafeContext(DOMXPath $DOMXPath, DOMNode $node)
 	{
-		if ($DOMXPath->query('//xsl:for-each', $element)->length)
+		if ($DOMXPath->query('//xsl:for-each', $node)->length)
 		{
-			throw new UnsafeTemplateException("Cannot evaluate context node due to 'xsl:for-each'", $element);
+			throw new UnsafeTemplateException("Cannot evaluate context node due to 'xsl:for-each'", $node);
 		}
 	}
 
 	/**
 	* Check the safety of an XPath expression
 	*
-	* @param DOMNode $node        Context node
-	* @param string  $expr        Expression to be checked
-	* @param string  $contentType Content type
-	* @param Tag     $tag         Tag that this template belongs to
+	* @param DOMXPath $DOMXPath    DOMXPath associated with the template being checked
+	* @param DOMNode  $node        Context node
+	* @param string   $expr        Expression to be checked
+	* @param string   $contentType Content type
+	* @param Tag      $tag         Tag that this template belongs to
 	*/
-	static protected function checkUnsafeExpression(DOMNode $node, $expr, $contentType, Tag $tag)
+	static protected function checkUnsafeExpression(DOMXPath $DOMXPath, DOMNode $node, $expr, $contentType, Tag $tag)
 	{
 		// We don't even try to assess its safety if it's not a single attribute value
 		if (!preg_match('#^@\\s*([a-z_0-9\\-]+)$#Di', $expr, $m))
 		{
 			throw new UnsafeTemplateException("Cannot assess the safety of XPath expression '" . $expr . "'", $node);
 		}
+
+		self::checkUnsafeContext($DOMXPath, $node);
 
 		$attrName = $m[1];
 
