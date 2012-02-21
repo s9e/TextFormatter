@@ -725,78 +725,78 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe: <b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute></b>
+	* @testdox Not safe: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
 	*/
-	public function testCheckUnsafe0E35E463()
+	public function testCheckUnsafeCC20E4F6()
 	{
 		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'style' attribute lets unfiltered data through"
+			'<b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
+			"A dynamically generated 'onclick' attribute lets unfiltered data through"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <b><xsl:attribute name="STYLE"><xsl:apply-templates/></xsl:attribute></b>
+	* @testdox Not safe: <b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>
 	*/
-	public function testCheckUnsafe1C86003A()
+	public function testCheckUnsafe31C90A06()
 	{
 		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="STYLE"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'STYLE' attribute lets unfiltered data through"
+			'<b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>',
+			"A dynamically generated 'ONCLICK' attribute lets unfiltered data through"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <b style=""><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute></b>
+	* @testdox Not safe: <b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
 	*/
-	public function testCheckUnsafe7A417F68()
+	public function testCheckUnsafe6519C7B2()
 	{
 		$this->testCheckUnsafe(
-			'<b style=""><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'style' attribute lets unfiltered data through"
+			'<b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
+			"A dynamically generated 'onclick' attribute lets unfiltered data through"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <b><xsl:if test="1"><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>
+	* @testdox Not safe: <b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>
 	*/
-	public function testCheckUnsafeF8C8277B()
+	public function testCheckUnsafeF4D2CDD1()
 	{
 		$this->testCheckUnsafe(
-			'<b><xsl:if test="1"><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>',
+			'<b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>',
 			"Undefined attribute 'foo'"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <b><xsl:attribute name="style"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>
+	* @testdox Not safe: <b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>
 	*/
-	public function testCheckUnsafe5A8FC5E0()
+	public function testCheckUnsafeCF6CEF14()
 	{
 		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="style"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>',
+			'<b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>',
 			"Undefined attribute 'foo'"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <b style="{@foo}"/>
+	* @testdox Not safe: <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafeBA34887D()
+	public function testCheckUnsafe7A1C2C9E()
 	{
 		$this->testCheckUnsafe(
-			'<b style="{@foo}"/>',
+			'<b onclick="{@foo}"/>',
 			"Undefined attribute 'foo'"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <b STYLE="{@foo}"/>
+	* @testdox Not safe: <b ONCLICK="{@foo}"/>
 	*/
-	public function testCheckUnsafe70AF3140()
+	public function testCheckUnsafe3DB3E070()
 	{
 		$this->testCheckUnsafe(
-			'<b STYLE="{@foo}"/>',
+			'<b ONCLICK="{@foo}"/>',
 			"Undefined attribute 'foo'"
 		);
 	}
@@ -906,83 +906,6 @@ class TemplateCheckerTest extends Test
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
-	*/
-	public function testCheckUnsafeCC20E4F6()
-	{
-		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'onclick' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>
-	*/
-	public function testCheckUnsafe31C90A06()
-	{
-		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'ONCLICK' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
-	*/
-	public function testCheckUnsafe6519C7B2()
-	{
-		$this->testCheckUnsafe(
-			'<b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'onclick' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>
-	*/
-	public function testCheckUnsafeF4D2CDD1()
-	{
-		$this->testCheckUnsafe(
-			'<b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>
-	*/
-	public function testCheckUnsafeCF6CEF14()
-	{
-		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b onclick="{@foo}"/>
-	*/
-	public function testCheckUnsafe7A1C2C9E()
-	{
-		$this->testCheckUnsafe(
-			'<b onclick="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b ONCLICK="{@foo}"/>
-	*/
-	public function testCheckUnsafe3DB3E070()
-	{
-		$this->testCheckUnsafe(
-			'<b ONCLICK="{@foo}"/>',
-			"Undefined attribute 'foo'"
 		);
 	}
 
@@ -1107,83 +1030,6 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe: <b><xsl:attribute name="onanything"><xsl:apply-templates/></xsl:attribute></b>
-	*/
-	public function testCheckUnsafeD54422DB()
-	{
-		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="onanything"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'onanything' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b><xsl:attribute name="ONANYTHING"><xsl:apply-templates/></xsl:attribute></b>
-	*/
-	public function testCheckUnsafe14058DCD()
-	{
-		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="ONANYTHING"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'ONANYTHING' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b onanything=""><xsl:attribute name="onanything"><xsl:apply-templates/></xsl:attribute></b>
-	*/
-	public function testCheckUnsafeD4D24E96()
-	{
-		$this->testCheckUnsafe(
-			'<b onanything=""><xsl:attribute name="onanything"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'onanything' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b><xsl:if test="1"><xsl:attribute name="onanything"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>
-	*/
-	public function testCheckUnsafe0E648EF1()
-	{
-		$this->testCheckUnsafe(
-			'<b><xsl:if test="1"><xsl:attribute name="onanything"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b><xsl:attribute name="onanything"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>
-	*/
-	public function testCheckUnsafe80902E42()
-	{
-		$this->testCheckUnsafe(
-			'<b><xsl:attribute name="onanything"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b onanything="{@foo}"/>
-	*/
-	public function testCheckUnsafe635BC22E()
-	{
-		$this->testCheckUnsafe(
-			'<b onanything="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <b ONANYTHING="{@foo}"/>
-	*/
-	public function testCheckUnsafe50586EE1()
-	{
-		$this->testCheckUnsafe(
-			'<b ONANYTHING="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
 	* @testdox Not safe if attribute 'foo' has no filter: <b onanything="{@foo}"/>
 	*/
 	public function testCheckUnsafe55C38875()
@@ -1300,83 +1146,6 @@ class TemplateCheckerTest extends Test
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
-		);
-	}
-
-	/**
-	* @testdox Not safe: <form><xsl:attribute name="action"><xsl:apply-templates/></xsl:attribute></form>
-	*/
-	public function testCheckUnsafeE25A9327()
-	{
-		$this->testCheckUnsafe(
-			'<form><xsl:attribute name="action"><xsl:apply-templates/></xsl:attribute></form>',
-			"A dynamically generated 'action' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <form><xsl:attribute name="ACTION"><xsl:apply-templates/></xsl:attribute></form>
-	*/
-	public function testCheckUnsafeED0D24B6()
-	{
-		$this->testCheckUnsafe(
-			'<form><xsl:attribute name="ACTION"><xsl:apply-templates/></xsl:attribute></form>',
-			"A dynamically generated 'ACTION' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <form action=""><xsl:attribute name="action"><xsl:apply-templates/></xsl:attribute></form>
-	*/
-	public function testCheckUnsafe216C4853()
-	{
-		$this->testCheckUnsafe(
-			'<form action=""><xsl:attribute name="action"><xsl:apply-templates/></xsl:attribute></form>',
-			"A dynamically generated 'action' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <form><xsl:if test="1"><xsl:attribute name="action"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></form>
-	*/
-	public function testCheckUnsafe58F9D0F6()
-	{
-		$this->testCheckUnsafe(
-			'<form><xsl:if test="1"><xsl:attribute name="action"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></form>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <form><xsl:attribute name="action"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></form>
-	*/
-	public function testCheckUnsafe98F2DD8A()
-	{
-		$this->testCheckUnsafe(
-			'<form><xsl:attribute name="action"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></form>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <form action="{@foo}"/>
-	*/
-	public function testCheckUnsafeBE93F541()
-	{
-		$this->testCheckUnsafe(
-			'<form action="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <form ACTION="{@foo}"/>
-	*/
-	public function testCheckUnsafe6EF41C77()
-	{
-		$this->testCheckUnsafe(
-			'<form ACTION="{@foo}"/>',
-			"Undefined attribute 'foo'"
 		);
 	}
 
@@ -1501,83 +1270,6 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe: <q><xsl:attribute name="cite"><xsl:apply-templates/></xsl:attribute></q>
-	*/
-	public function testCheckUnsafe01CD9546()
-	{
-		$this->testCheckUnsafe(
-			'<q><xsl:attribute name="cite"><xsl:apply-templates/></xsl:attribute></q>',
-			"A dynamically generated 'cite' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <q><xsl:attribute name="CITE"><xsl:apply-templates/></xsl:attribute></q>
-	*/
-	public function testCheckUnsafe478BCE35()
-	{
-		$this->testCheckUnsafe(
-			'<q><xsl:attribute name="CITE"><xsl:apply-templates/></xsl:attribute></q>',
-			"A dynamically generated 'CITE' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <q cite=""><xsl:attribute name="cite"><xsl:apply-templates/></xsl:attribute></q>
-	*/
-	public function testCheckUnsafe8C88A54C()
-	{
-		$this->testCheckUnsafe(
-			'<q cite=""><xsl:attribute name="cite"><xsl:apply-templates/></xsl:attribute></q>',
-			"A dynamically generated 'cite' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <q><xsl:if test="1"><xsl:attribute name="cite"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></q>
-	*/
-	public function testCheckUnsafe16C0C878()
-	{
-		$this->testCheckUnsafe(
-			'<q><xsl:if test="1"><xsl:attribute name="cite"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></q>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <q><xsl:attribute name="cite"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></q>
-	*/
-	public function testCheckUnsafe0DB89FFB()
-	{
-		$this->testCheckUnsafe(
-			'<q><xsl:attribute name="cite"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></q>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <q cite="{@foo}"/>
-	*/
-	public function testCheckUnsafeBE99A34C()
-	{
-		$this->testCheckUnsafe(
-			'<q cite="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <q CITE="{@foo}"/>
-	*/
-	public function testCheckUnsafe52866C65()
-	{
-		$this->testCheckUnsafe(
-			'<q CITE="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
 	* @testdox Not safe if attribute 'foo' has no filter: <q cite="{@foo}"/>
 	*/
 	public function testCheckUnsafe4BB1ACC7()
@@ -1694,83 +1386,6 @@ class TemplateCheckerTest extends Test
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
-	}
-
-	/**
-	* @testdox Not safe: <xbject><xsl:attribute name="data"><xsl:apply-templates/></xsl:attribute></xbject>
-	*/
-	public function testCheckUnsafe6E5C9475()
-	{
-		$this->testCheckUnsafe(
-			'<xbject><xsl:attribute name="data"><xsl:apply-templates/></xsl:attribute></xbject>',
-			"A dynamically generated 'data' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <xbject><xsl:attribute name="DATA"><xsl:apply-templates/></xsl:attribute></xbject>
-	*/
-	public function testCheckUnsafe1E169F38()
-	{
-		$this->testCheckUnsafe(
-			'<xbject><xsl:attribute name="DATA"><xsl:apply-templates/></xsl:attribute></xbject>',
-			"A dynamically generated 'DATA' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <xbject data=""><xsl:attribute name="data"><xsl:apply-templates/></xsl:attribute></xbject>
-	*/
-	public function testCheckUnsafeAFAEB9DF()
-	{
-		$this->testCheckUnsafe(
-			'<xbject data=""><xsl:attribute name="data"><xsl:apply-templates/></xsl:attribute></xbject>',
-			"A dynamically generated 'data' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <xbject><xsl:if test="1"><xsl:attribute name="data"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></xbject>
-	*/
-	public function testCheckUnsafe4A1E37D1()
-	{
-		$this->testCheckUnsafe(
-			'<xbject><xsl:if test="1"><xsl:attribute name="data"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></xbject>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <xbject><xsl:attribute name="data"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></xbject>
-	*/
-	public function testCheckUnsafe5336147A()
-	{
-		$this->testCheckUnsafe(
-			'<xbject><xsl:attribute name="data"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></xbject>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <xbject data="{@foo}"/>
-	*/
-	public function testCheckUnsafeA9D81203()
-	{
-		$this->testCheckUnsafe(
-			'<xbject data="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <xbject DATA="{@foo}"/>
-	*/
-	public function testCheckUnsafe45C7DD2A()
-	{
-		$this->testCheckUnsafe(
-			'<xbject DATA="{@foo}"/>',
-			"Undefined attribute 'foo'"
 		);
 	}
 
@@ -1895,83 +1510,6 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe: <input><xsl:attribute name="formaction"><xsl:apply-templates/></xsl:attribute></input>
-	*/
-	public function testCheckUnsafeE407CDF0()
-	{
-		$this->testCheckUnsafe(
-			'<input><xsl:attribute name="formaction"><xsl:apply-templates/></xsl:attribute></input>',
-			"A dynamically generated 'formaction' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <input><xsl:attribute name="FORMACTION"><xsl:apply-templates/></xsl:attribute></input>
-	*/
-	public function testCheckUnsafe4650538C()
-	{
-		$this->testCheckUnsafe(
-			'<input><xsl:attribute name="FORMACTION"><xsl:apply-templates/></xsl:attribute></input>',
-			"A dynamically generated 'FORMACTION' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <input formaction=""><xsl:attribute name="formaction"><xsl:apply-templates/></xsl:attribute></input>
-	*/
-	public function testCheckUnsafeD8F53797()
-	{
-		$this->testCheckUnsafe(
-			'<input formaction=""><xsl:attribute name="formaction"><xsl:apply-templates/></xsl:attribute></input>',
-			"A dynamically generated 'formaction' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <input><xsl:if test="1"><xsl:attribute name="formaction"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></input>
-	*/
-	public function testCheckUnsafeD74E648D()
-	{
-		$this->testCheckUnsafe(
-			'<input><xsl:if test="1"><xsl:attribute name="formaction"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></input>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <input><xsl:attribute name="formaction"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></input>
-	*/
-	public function testCheckUnsafe377FC027()
-	{
-		$this->testCheckUnsafe(
-			'<input><xsl:attribute name="formaction"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></input>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <input formaction="{@foo}"/>
-	*/
-	public function testCheckUnsafe0BB38900()
-	{
-		$this->testCheckUnsafe(
-			'<input formaction="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <input FORMACTION="{@foo}"/>
-	*/
-	public function testCheckUnsafe38B025CF()
-	{
-		$this->testCheckUnsafe(
-			'<input FORMACTION="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
 	* @testdox Not safe if attribute 'foo' has no filter: <input formaction="{@foo}"/>
 	*/
 	public function testCheckUnsafe8822BDBC()
@@ -2088,83 +1626,6 @@ class TemplateCheckerTest extends Test
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
-	}
-
-	/**
-	* @testdox Not safe: <a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute></a>
-	*/
-	public function testCheckUnsafe7EBE365E()
-	{
-		$this->testCheckUnsafe(
-			'<a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute></a>',
-			"A dynamically generated 'href' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <a><xsl:attribute name="HREF"><xsl:apply-templates/></xsl:attribute></a>
-	*/
-	public function testCheckUnsafe38F86D2D()
-	{
-		$this->testCheckUnsafe(
-			'<a><xsl:attribute name="HREF"><xsl:apply-templates/></xsl:attribute></a>',
-			"A dynamically generated 'HREF' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <a href=""><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute></a>
-	*/
-	public function testCheckUnsafe8D158B9D()
-	{
-		$this->testCheckUnsafe(
-			'<a href=""><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute></a>',
-			"A dynamically generated 'href' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <a><xsl:if test="1"><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></a>
-	*/
-	public function testCheckUnsafe2508846A()
-	{
-		$this->testCheckUnsafe(
-			'<a><xsl:if test="1"><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></a>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <a><xsl:attribute name="href"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></a>
-	*/
-	public function testCheckUnsafe85C14EEC()
-	{
-		$this->testCheckUnsafe(
-			'<a><xsl:attribute name="href"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></a>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <a href="{@foo}"/>
-	*/
-	public function testCheckUnsafe58613316()
-	{
-		$this->testCheckUnsafe(
-			'<a href="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <a HREF="{@foo}"/>
-	*/
-	public function testCheckUnsafeB47EFC3F()
-	{
-		$this->testCheckUnsafe(
-			'<a HREF="{@foo}"/>',
-			"Undefined attribute 'foo'"
 		);
 	}
 
@@ -2289,83 +1750,6 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe: <html><xsl:attribute name="manifest"><xsl:apply-templates/></xsl:attribute></html>
-	*/
-	public function testCheckUnsafe980CD4C2()
-	{
-		$this->testCheckUnsafe(
-			'<html><xsl:attribute name="manifest"><xsl:apply-templates/></xsl:attribute></html>',
-			"A dynamically generated 'manifest' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <html><xsl:attribute name="MANIFEST"><xsl:apply-templates/></xsl:attribute></html>
-	*/
-	public function testCheckUnsafeDA4EFA3D()
-	{
-		$this->testCheckUnsafe(
-			'<html><xsl:attribute name="MANIFEST"><xsl:apply-templates/></xsl:attribute></html>',
-			"A dynamically generated 'MANIFEST' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <html manifest=""><xsl:attribute name="manifest"><xsl:apply-templates/></xsl:attribute></html>
-	*/
-	public function testCheckUnsafeA91F0FBF()
-	{
-		$this->testCheckUnsafe(
-			'<html manifest=""><xsl:attribute name="manifest"><xsl:apply-templates/></xsl:attribute></html>',
-			"A dynamically generated 'manifest' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <html><xsl:if test="1"><xsl:attribute name="manifest"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></html>
-	*/
-	public function testCheckUnsafeA8C5E98F()
-	{
-		$this->testCheckUnsafe(
-			'<html><xsl:if test="1"><xsl:attribute name="manifest"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></html>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <html><xsl:attribute name="manifest"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></html>
-	*/
-	public function testCheckUnsafe819709B2()
-	{
-		$this->testCheckUnsafe(
-			'<html><xsl:attribute name="manifest"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></html>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <html manifest="{@foo}"/>
-	*/
-	public function testCheckUnsafeB40B4FE3()
-	{
-		$this->testCheckUnsafe(
-			'<html manifest="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <html MANIFEST="{@foo}"/>
-	*/
-	public function testCheckUnsafe7B3B11CE()
-	{
-		$this->testCheckUnsafe(
-			'<html MANIFEST="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
 	* @testdox Not safe if attribute 'foo' has no filter: <html manifest="{@foo}"/>
 	*/
 	public function testCheckUnsafeF2542B4A()
@@ -2482,83 +1866,6 @@ class TemplateCheckerTest extends Test
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
-	}
-
-	/**
-	* @testdox Not safe: <video><xsl:attribute name="poster"><xsl:apply-templates/></xsl:attribute></video>
-	*/
-	public function testCheckUnsafeB6E9C51E()
-	{
-		$this->testCheckUnsafe(
-			'<video><xsl:attribute name="poster"><xsl:apply-templates/></xsl:attribute></video>',
-			"A dynamically generated 'poster' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <video><xsl:attribute name="POSTER"><xsl:apply-templates/></xsl:attribute></video>
-	*/
-	public function testCheckUnsafe31EE317B()
-	{
-		$this->testCheckUnsafe(
-			'<video><xsl:attribute name="POSTER"><xsl:apply-templates/></xsl:attribute></video>',
-			"A dynamically generated 'POSTER' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <video poster=""><xsl:attribute name="poster"><xsl:apply-templates/></xsl:attribute></video>
-	*/
-	public function testCheckUnsafe66631145()
-	{
-		$this->testCheckUnsafe(
-			'<video poster=""><xsl:attribute name="poster"><xsl:apply-templates/></xsl:attribute></video>',
-			"A dynamically generated 'poster' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <video><xsl:if test="1"><xsl:attribute name="poster"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></video>
-	*/
-	public function testCheckUnsafe8B643180()
-	{
-		$this->testCheckUnsafe(
-			'<video><xsl:if test="1"><xsl:attribute name="poster"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></video>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <video><xsl:attribute name="poster"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></video>
-	*/
-	public function testCheckUnsafe5FF6F061()
-	{
-		$this->testCheckUnsafe(
-			'<video><xsl:attribute name="poster"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></video>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <video poster="{@foo}"/>
-	*/
-	public function testCheckUnsafe7B4F1736()
-	{
-		$this->testCheckUnsafe(
-			'<video poster="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <video POSTER="{@foo}"/>
-	*/
-	public function testCheckUnsafeAB28FE00()
-	{
-		$this->testCheckUnsafe(
-			'<video POSTER="{@foo}"/>',
-			"Undefined attribute 'foo'"
 		);
 	}
 
@@ -2683,83 +1990,6 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe: <img><xsl:attribute name="src"><xsl:apply-templates/></xsl:attribute></img>
-	*/
-	public function testCheckUnsafeAB71B0F6()
-	{
-		$this->testCheckUnsafe(
-			'<img><xsl:attribute name="src"><xsl:apply-templates/></xsl:attribute></img>',
-			"A dynamically generated 'src' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img><xsl:attribute name="SRC"><xsl:apply-templates/></xsl:attribute></img>
-	*/
-	public function testCheckUnsafe88356890()
-	{
-		$this->testCheckUnsafe(
-			'<img><xsl:attribute name="SRC"><xsl:apply-templates/></xsl:attribute></img>',
-			"A dynamically generated 'SRC' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img src=""><xsl:attribute name="src"><xsl:apply-templates/></xsl:attribute></img>
-	*/
-	public function testCheckUnsafeFC870F53()
-	{
-		$this->testCheckUnsafe(
-			'<img src=""><xsl:attribute name="src"><xsl:apply-templates/></xsl:attribute></img>',
-			"A dynamically generated 'src' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img><xsl:if test="1"><xsl:attribute name="src"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></img>
-	*/
-	public function testCheckUnsafeF4BD3A34()
-	{
-		$this->testCheckUnsafe(
-			'<img><xsl:if test="1"><xsl:attribute name="src"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></img>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img><xsl:attribute name="src"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></img>
-	*/
-	public function testCheckUnsafe20F2BE73()
-	{
-		$this->testCheckUnsafe(
-			'<img><xsl:attribute name="src"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></img>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img src="{@foo}"/>
-	*/
-	public function testCheckUnsafeD4AEAB5B()
-	{
-		$this->testCheckUnsafe(
-			'<img src="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img SRC="{@foo}"/>
-	*/
-	public function testCheckUnsafe65F7DC42()
-	{
-		$this->testCheckUnsafe(
-			'<img SRC="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
 	* @testdox Not safe if attribute 'foo' has no filter: <img src="{@foo}"/>
 	*/
 	public function testCheckUnsafeF39CC4CF()
@@ -2876,83 +2106,6 @@ class TemplateCheckerTest extends Test
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img><xsl:attribute name="lowsrc"><xsl:apply-templates/></xsl:attribute></img>
-	*/
-	public function testCheckUnsafeC195FDA0()
-	{
-		$this->testCheckUnsafe(
-			'<img><xsl:attribute name="lowsrc"><xsl:apply-templates/></xsl:attribute></img>',
-			"A dynamically generated 'lowsrc' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img><xsl:attribute name="LOWSRC"><xsl:apply-templates/></xsl:attribute></img>
-	*/
-	public function testCheckUnsafe96DB58E9()
-	{
-		$this->testCheckUnsafe(
-			'<img><xsl:attribute name="LOWSRC"><xsl:apply-templates/></xsl:attribute></img>',
-			"A dynamically generated 'LOWSRC' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img lowsrc=""><xsl:attribute name="lowsrc"><xsl:apply-templates/></xsl:attribute></img>
-	*/
-	public function testCheckUnsafeCA4F5DA1()
-	{
-		$this->testCheckUnsafe(
-			'<img lowsrc=""><xsl:attribute name="lowsrc"><xsl:apply-templates/></xsl:attribute></img>',
-			"A dynamically generated 'lowsrc' attribute lets unfiltered data through"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img><xsl:if test="1"><xsl:attribute name="lowsrc"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></img>
-	*/
-	public function testCheckUnsafe55121FF3()
-	{
-		$this->testCheckUnsafe(
-			'<img><xsl:if test="1"><xsl:attribute name="lowsrc"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></img>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img><xsl:attribute name="lowsrc"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></img>
-	*/
-	public function testCheckUnsafe2BBAE244()
-	{
-		$this->testCheckUnsafe(
-			'<img><xsl:attribute name="lowsrc"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></img>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img lowsrc="{@foo}"/>
-	*/
-	public function testCheckUnsafe289F9A49()
-	{
-		$this->testCheckUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
-	}
-
-	/**
-	* @testdox Not safe: <img LOWSRC="{@foo}"/>
-	*/
-	public function testCheckUnsafeF8F8737F()
-	{
-		$this->testCheckUnsafe(
-			'<img LOWSRC="{@foo}"/>',
-			"Undefined attribute 'foo'"
 		);
 	}
 
@@ -3425,56 +2578,55 @@ class TemplateCheckerTest extends Test
 
 		$tests = array();
 
+		// Those tests don't really need to be repeated for every attribute
+		$tests[] = array(
+			'<b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
+			"A dynamically generated 'onclick' attribute lets unfiltered data through"
+		);
+
+		$tests[] = array(
+			'<b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>',
+			"A dynamically generated 'ONCLICK' attribute lets unfiltered data through"
+		);
+
+		$tests[] = array(
+			'<b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
+			"A dynamically generated 'onclick' attribute lets unfiltered data through"
+		);
+
+		$tests[] = array(
+			'<b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>',
+			"Undefined attribute 'foo'"
+		);
+
+		$tests[] = array(
+			'<b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>',
+			"Undefined attribute 'foo'"
+		);
+
+		$tests[] = array(
+			'<b onclick="{@foo}"/>',
+			"Undefined attribute 'foo'"
+		);
+
+		$tests[] = array(
+			'<b ONCLICK="{@foo}"/>',
+			"Undefined attribute 'foo'"
+		);
+
 		foreach ($attributes as $attribute => $type)
 		{
 			list($elName, $attrName) = explode(':', $attribute);
 			$filters = $this->getSafeFilters($type);
 
 			$tests[] = array(
-				'<' . $elName . '><xsl:attribute name="' . $attrName . '"><xsl:apply-templates/></xsl:attribute></' . $elName . '>',
-				"A dynamically generated '" . $attrName . "' attribute lets unfiltered data through"
-			);
-
-			$tests[] = array(
-				'<' . $elName . '><xsl:attribute name="' . strtoupper($attrName) . '"><xsl:apply-templates/></xsl:attribute></' . $elName . '>',
-				"A dynamically generated '" . strtoupper($attrName) . "' attribute lets unfiltered data through"
-			);
-
-			$tests[] = array(
-				'<' . $elName . ' ' . $attrName . '=""><xsl:attribute name="' . $attrName . '"><xsl:apply-templates/></xsl:attribute></' . $elName . '>',
-				"A dynamically generated '" . $attrName . "' attribute lets unfiltered data through"
-			);
-
-			$tests[] = array(
-				'<' . $elName . '><xsl:if test="1"><xsl:attribute name="' . $attrName . '"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></' . $elName . '>',
-				"Undefined attribute 'foo'"
-			);
-
-			$tests[] = array(
-				'<' . $elName . '><xsl:attribute name="' . $attrName . '"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></' . $elName . '>',
-				"Undefined attribute 'foo'"
-			);
-
-			$tests[] = array(
-				'<' . $elName . ' ' . $attrName . '="{@foo}"/>',
-				"Undefined attribute 'foo'"
-			);
-
-			$tests[] = array(
-				'<' . $elName . ' ' . strtoupper($attrName) . '="{@foo}"/>',
-				"Undefined attribute 'foo'"
-			);
-
-			$tagOptions = array(
-				'attributes' => array(
-					'foo' => array()
-				)
-			);
-
-			$tests[] = array(
 				'<' . $elName . ' ' . $attrName . '="{@foo}"/>',
 				"Attribute 'foo' is not properly filtered to be used in " . $type,
-				$tagOptions
+				array(
+					'attributes' => array(
+						'foo' => array()
+					)
+				)
 			);
 
 			// Test safe filters
