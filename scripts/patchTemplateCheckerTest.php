@@ -49,8 +49,10 @@ function _array(array $arr)
 
 $test = new s9e\TextFormatter\Tests\ConfigBuilder\TemplateCheckerTest;
 
+$done = array();
+
 $php = '';
-foreach ($test->getUnsafeTags() as $case)
+foreach ($test->getUnsafeTemplates() as $case)
 {
 	$template     = $case[0];
 	$exceptionMsg = (isset($case[1])) ? $case[1] : null;
@@ -73,13 +75,21 @@ foreach ($test->getUnsafeTags() as $case)
 		}
 	}
 
+	$hash = sprintf('%08X', crc32(serialize($case)));
+	if (isset($done[$hash]))
+	{
+		print_r($case);
+		echo "Duplicate $hash. Aborting\n";
+		exit;
+	}
+	$done[$hash] = 1;
+
 	$php .= "\n\t/**\n\t* @testdox checkUnsafe() identifies " . $template . " as "
 	      . ((isset($exceptionMsg)) ? 'unsafe' : 'safe')
 	      . $attributeInfo
 	      . "\n\t*/"
-	      . "\n\tpublic function testCheckUnsafe"
-	      . sprintf('%08X', crc32(serialize($case)))
-	      . "()\n\t{\n\t\t\$this->testUnsafeTags("
+	      . "\n\tpublic function testCheckUnsafe" . $hash . "()"
+	      . "\n\t{\n\t\t\$this->testUnsafeTags("
 	      . "\n\t\t\t" . format($case[0]);
 
 	if (isset($case[1]) || isset($case[2]))

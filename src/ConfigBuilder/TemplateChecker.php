@@ -34,9 +34,9 @@ abstract class TemplateChecker
 		$DOMXPath = new DOMXPath(self::loadTemplate($template));
 
 		self::checkFixedSrcElements($DOMXPath);
-		self::checkUnsafeContent($DOMXPath, $tag);
 		self::checkDisableOutputEscaping($DOMXPath);
 		self::checkCopyElements($DOMXPath);
+		self::checkUnsafeContent($DOMXPath, $tag);
 	}
 
 	/**
@@ -92,9 +92,9 @@ abstract class TemplateChecker
 					continue;
 				}
 
-				// Reject any src attribute that doesn't start with '/' or 'protocol://'
+				// Reject any src attribute that doesn't start with a non-whitespace text node
 				if ($attributeElement->firstChild->nodeType !== XML_TEXT_NODE
-				 || !preg_match('#^(?:[a-z]+:/)?/#', $attribute->firstChild->textContent))
+				 || !preg_match('#\\S#', $attribute->firstChild->textContent))
 				{
 					$dynamic = ($node->localName === 'element')
 					         ? "dynamically generated "

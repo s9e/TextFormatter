@@ -31,3 +31,4 @@ TODO
 - Determine how to handle <xsl:value-of select="."/> and other expressions such as "../foo" or "st" in checkUnsafe() -- also, check for numeric entities used to bypass checks for . or /
 - Move plugins to ./Plugins/<pluginName>/(Config.php|Parser.(php|js))
 - Replace PluginConfig::getXSL() with PluginConfig::getTemplates() which should return array([match]=>[template]) and each template goes through Templates::setTemplate() (how to evaluate attributes safety though)
+- Look into properly implementing urlencode() and rawurlencode() in JS
