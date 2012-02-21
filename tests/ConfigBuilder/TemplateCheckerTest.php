@@ -234,7 +234,7 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe: <a><xsl:copy-of select="@href"/></a>
+	* @testdox Not safe if attribute 'href' has no filter: <a><xsl:copy-of select="@href"/></a>
 	*/
 	public function testCheckUnsafeE6B9D02C()
 	{
@@ -287,6 +287,416 @@ class TemplateCheckerTest extends Test
 		$this->testCheckUnsafe(
 			'<xsl:copy-of select="parent::*"/>',
 			"Cannot assess 'xsl:copy-of' select expression 'parent::*' to be safe"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <script><xsl:apply-templates/></script>
+	*/
+	public function testCheckUnsafe87044075()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:apply-templates/></script>',
+			"A 'script' element lets unfiltered data through"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <script><xsl:apply-templates select="st"/></script>
+	*/
+	public function testCheckUnsafeC968EED0()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:apply-templates select="st"/></script>',
+			"Cannot assess the safety of 'xsl:apply-templates' select expression 'st'"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <script><xsl:value-of select="st"/></script>
+	*/
+	public function testCheckUnsafe5D562F28()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="st"/></script>',
+			"Cannot assess the safety of XPath expression 'st'"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafeAA242A38()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			"Undefined attribute 'foo'"
+		);
+	}
+
+	/**
+	* @testdox Not safe if attribute 'foo' has no filter: <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafeBD7323B9()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			"Attribute 'foo' is not properly filtered to be used in JS",
+			array('attributes' => array('foo' => array()))
+		);
+	}
+
+	/**
+	* @testdox Not safe if attribute 'foo' has no filter: <xsl:element name="script"><xsl:value-of select="@foo"/></xsl:element>
+	*/
+	public function testCheckUnsafeD7E78277()
+	{
+		$this->testCheckUnsafe(
+			'<xsl:element name="script"><xsl:value-of select="@foo"/></xsl:element>',
+			"Attribute 'foo' is not properly filtered to be used in JS",
+			array('attributes' => array('foo' => array()))
+		);
+	}
+
+	/**
+	* @testdox Not safe if attribute 'foo' has no filter: <xsl:element name="SCRIPT"><xsl:value-of select="@foo"/></xsl:element>
+	*/
+	public function testCheckUnsafeF7D14089()
+	{
+		$this->testCheckUnsafe(
+			'<xsl:element name="SCRIPT"><xsl:value-of select="@foo"/></xsl:element>',
+			"Attribute 'foo' is not properly filtered to be used in JS",
+			array('attributes' => array('foo' => array()))
+		);
+	}
+
+	/**
+	* @testdox Not safe if attribute 'foo' has filter 'urlencode': <script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>
+	*/
+	public function testCheckUnsafeDD1F8AFC()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>',
+			"Cannot evaluate context node due to 'xsl:for-each'",
+			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
+		);
+	}
+
+	/**
+	* @testdox Not safe: <script><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></script>
+	*/
+	public function testCheckUnsafe7B26C45D()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></script>',
+			"Cannot evaluate context node due to 'xsl:for-each'"
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter 'urlencode': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe3E82294D()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe80E31E96()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe66FA78F6()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafeBEC2826B()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe58430C01()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#float': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe196B1007()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafeF128A882()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#number': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe585E44A6()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#simpletext': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe61A72488()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
+		);
+	}
+
+	/**
+	* @testdox Not safe: <style><xsl:apply-templates/></style>
+	*/
+	public function testCheckUnsafe9332F4DA()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:apply-templates/></style>',
+			"A 'style' element lets unfiltered data through"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <style><xsl:apply-templates select="st"/></style>
+	*/
+	public function testCheckUnsafeE7A11344()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:apply-templates select="st"/></style>',
+			"Cannot assess the safety of 'xsl:apply-templates' select expression 'st'"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <style><xsl:value-of select="st"/></style>
+	*/
+	public function testCheckUnsafeF4114812()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="st"/></style>',
+			"Cannot assess the safety of XPath expression 'st'"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafeFD7FAE5C()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			"Undefined attribute 'foo'"
+		);
+	}
+
+	/**
+	* @testdox Not safe if attribute 'foo' has no filter: <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe2BEA39BA()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			"Attribute 'foo' is not properly filtered to be used in CSS",
+			array('attributes' => array('foo' => array()))
+		);
+	}
+
+	/**
+	* @testdox Not safe if attribute 'foo' has no filter: <xsl:element name="style"><xsl:value-of select="@foo"/></xsl:element>
+	*/
+	public function testCheckUnsafeFC0D6B8F()
+	{
+		$this->testCheckUnsafe(
+			'<xsl:element name="style"><xsl:value-of select="@foo"/></xsl:element>',
+			"Attribute 'foo' is not properly filtered to be used in CSS",
+			array('attributes' => array('foo' => array()))
+		);
+	}
+
+	/**
+	* @testdox Not safe if attribute 'foo' has no filter: <xsl:element name="STYLE"><xsl:value-of select="@foo"/></xsl:element>
+	*/
+	public function testCheckUnsafe9092B290()
+	{
+		$this->testCheckUnsafe(
+			'<xsl:element name="STYLE"><xsl:value-of select="@foo"/></xsl:element>',
+			"Attribute 'foo' is not properly filtered to be used in CSS",
+			array('attributes' => array('foo' => array()))
+		);
+	}
+
+	/**
+	* @testdox Not safe if attribute 'foo' has filter '#url': <style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>
+	*/
+	public function testCheckUnsafeD5AD8427()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>',
+			"Cannot evaluate context node due to 'xsl:for-each'",
+			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
+		);
+	}
+
+	/**
+	* @testdox Not safe: <style><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></style>
+	*/
+	public function testCheckUnsafeB1E49022()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></style>',
+			"Cannot evaluate context node due to 'xsl:for-each'"
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafeA85C9010()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe70646A8D()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe11E4EDA4()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#float': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafeBF9EE081()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#color': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe5B459886()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#color'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe57DD5804()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#number': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe5C239743()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#simpletext': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe8D374457()
+	{
+		$this->testCheckUnsafe(
+			'<style><xsl:value-of select="@foo"/></style>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
 		);
 	}
 	// End of content generated by ../scripts/patchTemplateCheckerTest.php
@@ -419,7 +829,7 @@ class TemplateCheckerTest extends Test
 	{
 		return array_merge(
 			$this->getUnsafeCopyOfNodesTests(),
-			array()
+			$this->getUnsafeElementsTests()
 		);
 	}
 
@@ -474,223 +884,143 @@ class TemplateCheckerTest extends Test
 			),
 		);
 	}
+
+	protected function getSafeFilters($type)
+	{
+		$filters = array(
+			'CSS' => array(
+				'#url',
+				'#int',
+				'#uint',
+				'#float',
+				'#color',
+				'#range',
+				'#number',
+				'#simpletext'
+			),
+			'JS' => array(
+				'urlencode',
+				'rawurlencode',
+				'#url',
+				'#int',
+				'#uint',
+				'#float',
+				'#range',
+				'#number',
+				'#simpletext'
+			),
+			'URL' => array(
+				'urlencode',
+				'rawurlencode',
+				'#url',
+				'#id',
+				'#int',
+				'#uint',
+				'#float',
+				'#range',
+				'#number'
+			)
+		);
+
+		return $filters[$type];
+	}
+
+	public function getUnsafeElementsTests()
+	{
+		$elements = array(
+			'script' => 'JS',
+			'style'  => 'CSS'
+		);
+
+		$tests = array();
+
+		foreach ($elements as $element => $type)
+		{
+			$filters = $this->getSafeFilters($type);
+
+			$tests[] = array(
+				'<' . $element . '><xsl:apply-templates/></' . $element . '>',
+				"A '" . $element . "' element lets unfiltered data through"
+			);
+
+			$tests[] = array(
+				'<' . $element . '><xsl:apply-templates select="st"/></' . $element . '>',
+				"Cannot assess the safety of 'xsl:apply-templates' select expression 'st'"
+			);
+
+			$tests[] = array(
+				'<' . $element . '><xsl:value-of select="st"/></' . $element . '>',
+				"Cannot assess the safety of XPath expression 'st'"
+			);
+
+			$tests[] = array(
+				'<' . $element . '><xsl:value-of select="@foo"/></' . $element . '>',
+				"Undefined attribute 'foo'"
+			);
+
+			// Try some variations to get around basic checks
+			$tagOptions = array(
+				'attributes' => array(
+					'foo' => array()
+				)
+			);
+
+			$tests[] = array(
+				'<' . $element . '><xsl:value-of select="@foo"/></' . $element . '>',
+				"Attribute 'foo' is not properly filtered to be used in " . $type,
+				$tagOptions
+			);
+
+			$tests[] = array(
+				'<xsl:element name="' . $element . '"><xsl:value-of select="@foo"/></xsl:element>',
+				"Attribute 'foo' is not properly filtered to be used in " . $type,
+				$tagOptions
+			);
+
+			$tests[] = array(
+				'<xsl:element name="' . strtoupper($element) . '"><xsl:value-of select="@foo"/></xsl:element>',
+				"Attribute 'foo' is not properly filtered to be used in " . $type,
+				$tagOptions
+			);
+
+			// Using xsl:for-each to subvert the context
+			$tests[] = array(
+				'<' . $element . '><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></' . $element . '>',
+				"Cannot evaluate context node due to 'xsl:for-each'",
+				array(
+					'attributes' => array(
+						'foo' => array(
+							'filterChain' => array($filters[0])
+						)
+					)
+				)
+			);
+
+			$tests[] = array(
+				'<' . $element . '><xsl:for-each select="/*"><xsl:apply-templates/></xsl:for-each></' . $element . '>',
+				"Cannot evaluate context node due to 'xsl:for-each'"
+			);
+
+			// Test safe filters
+			foreach ($filters as $filter)
+			{
+				$tests[] = array(
+					'<' . $element . '><xsl:value-of select="@foo"/></' . $element . '>',
+					null,
+					array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array($filter)
+							)
+						)
+					)
+				);
+			}
+		}
+
+		return $tests;
+	}
 /**
-			array(
-				'<xsl:element name="script"><xsl:apply-templates/></xsl:element>',
-				"A dynamically generated 'script' element lets unfiltered data through"
-			),
-			array(
-				'<xsl:element name="SCRIPT"><xsl:apply-templates/></xsl:element>',
-				"A dynamically generated 'SCRIPT' element lets unfiltered data through"
-			),
-			array(
-				'<script><xsl:apply-templates/></script>',
-				"A 'script' element lets unfiltered data through"
-			),
-			array(
-				'<SCRIPT><xsl:apply-templates/></SCRIPT>',
-				"A 'SCRIPT' element lets unfiltered data through"
-			),
-			array(
-				'<script src="http://localhost/{@foo}"/>',
-				"Undefined attribute 'foo'"
-			),
-			array(
-				'<SCRIPT src="http://localhost/{@foo}"/>',
-				"Undefined attribute 'foo'"
-			),
-			array(
-				'<script><xsl:value-of select="@foo"/></script>',
-				"Undefined attribute 'foo'"
-			),
-			array(
-				'<script><xsl:value-of select="@foo"/></script>',
-				"Attribute 'foo' is not properly filtered to be used in JS",
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#raw')
-						)
-					)
-				)
-			),
-			array(
-				'<script><xsl:value-of select="@foo"/></script>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#url')
-						)
-					)
-				)
-			),
-			array(
-				'<script><xsl:value-of select="@foo"/></script>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#int')
-						)
-					)
-				)
-			),
-			array(
-				'<script><xsl:value-of select="@foo"/></script>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#float')
-						)
-					)
-				)
-			),
-			array(
-				'<script><xsl:value-of select="@foo"/></script>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#range')
-						)
-					)
-				)
-			),
-			array(
-				'<script><xsl:value-of select="@foo"/></script>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#number')
-						)
-					)
-				)
-			),
-			array(
-				'<script><xsl:value-of select="@foo"/></script>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#simpletext')
-						)
-					)
-				)
-			),
-			array(
-				'<xsl:element name="style"><xsl:apply-templates/></xsl:element>',
-				"A dynamically generated 'style' element lets unfiltered data through"
-			),
-			array(
-				'<style><xsl:apply-templates/></style>',
-				"A 'style' element lets unfiltered data through"
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				""
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				"Attribute 'foo' is not properly filtered to be used in CSS",
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#raw')
-						)
-					)
-				)
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#url')
-						)
-					)
-				)
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#int')
-						)
-					)
-				)
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#uint')
-						)
-					)
-				)
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#float')
-						)
-					)
-				)
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#color')
-						)
-					)
-				)
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#range')
-						)
-					)
-				)
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#number')
-						)
-					)
-				)
-			),
-			array(
-				'<style><xsl:value-of select="@foo"/></style>',
-				null,
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array('#simpletext')
-						)
-					)
-				)
-			),
 			array(
 				'<b style="color:{@foo}"/>',
 				"Undefined attribute 'foo'"

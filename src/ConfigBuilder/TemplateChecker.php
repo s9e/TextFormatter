@@ -278,13 +278,6 @@ abstract class TemplateChecker
 					continue;
 				}
 
-				// Check for ancestor::xsl:for-each because it would prevent us from correctly
-				// evaluating the context. IOW, we don't know what tag "@foo" belongs to
-				if ($DOMXPath->query('ancestor::xsl:for-each', $node)->length)
-				{
-					throw new UnsafeTemplateException("Cannot assess context node due to 'xsl:for-each'", $node);
-				}
-
 				// Check expressions from <xsl:copy-of select="{@onclick}"/> and
 				// <b onmouseover="this.title='{@title}';this.style.backgroundColor={@color}"/>
 				foreach ($checkExpr as $expr)
@@ -295,7 +288,7 @@ abstract class TemplateChecker
 				// Check for unsafe descendants if our node is an element (not an attribute)
 				if ($node instanceof DOMElement)
 				{
-					self::checkUnsafeDescendants($node, $tag, $contentType);
+					self::checkUnsafeDescendants($DOMXPath,		$node, $tag, $contentType);
 				}
 			}
 		}
@@ -304,17 +297,18 @@ abstract class TemplateChecker
 	/**
 	* Check the descendants of given node
 	*
-	* @param  DOMElement $element
-	* @param  Tag        $tag
-	* @param  string     $contentType
+	* @param DOMXPath   $DOMXPath DOMXPath associated with the template being checked
+	* @param DOMElement $element
+	* @param Tag        $tag
+	* @param string     $contentType
 	*/
-	static protected function checkUnsafeDescendants(DOMElement $element, Tag $tag, $contentType)
+	static protected function checkUnsafeDescendants(DOMXPath $DOMXPath, DOMElement $element, Tag $tag, $contentType)
 	{
-		$DOMXPath = new DOMXPath($element->ownerDocument);
-
 		// <script><xsl:value-of/></script>
 		foreach ($DOMXPath->query('.//xsl:value-of[@select]', $element) as $valueOf)
 		{
+			self::checkUnsafeContext($DOMXPath, $valueOf);
+
 			self::checkUnsafeExpression(
 				$valueOf,
 				$valueOf->getAttribute('select'),
@@ -329,9 +323,11 @@ abstract class TemplateChecker
 
 		if ($applyTemplates)
 		{
+			self::checkUnsafeContext($DOMXPath, $applyTemplates);
+
 			if ($applyTemplates->hasAttribute('select'))
 			{
-				$msg = "Cannot assess the safety 'xsl:apply-templates' select expression '" . $applyTemplates->getAttribute('select') . "'";
+				$msg = "Cannot assess the safety of 'xsl:apply-templates' select expression '" . $applyTemplates->getAttribute('select') . "'";
 			}
 			elseif ($element->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
 			{
@@ -343,6 +339,20 @@ abstract class TemplateChecker
 			}
 
 			throw new UnsafeTemplateException($msg, $applyTemplates);
+		}
+	}
+
+	/**
+	* Test whether the context of an element can be evaluated
+	*
+	* @param DOMXPath   $DOMXPath DOMXPath associated with the template being checked
+	* @param DOMElement $element  Element being checked
+	*/
+	static protected function checkUnsafeContext(DOMXPath $DOMXPath, DOMElement $element)
+	{
+		if ($DOMXPath->query('//xsl:for-each', $element)->length)
+		{
+			throw new UnsafeTemplateException("Cannot evaluate context node due to 'xsl:for-each'", $element);
 		}
 	}
 
@@ -359,7 +369,7 @@ abstract class TemplateChecker
 		// We don't even try to assess its safety if it's not a single attribute value
 		if (!preg_match('#^@\\s*([a-z_0-9\\-]+)$#Di', $expr, $m))
 		{
-			throw new UnsafeTemplateException("Cannot assess XPath expression '" . $expr . "'", $node);
+			throw new UnsafeTemplateException("Cannot assess the safety of XPath expression '" . $expr . "'", $node);
 		}
 
 		$attrName = $m[1];
@@ -412,42 +422,6 @@ abstract class TemplateChecker
 				return true;
 			}
 		}
-
-		/* disabled until proven useful
-		// Test if that attribute uses a regexp
-		if (isset($attribute->regexp)
-		 && $attribute->filterChain->has('#regexp')
-		 && preg_match('#^(.)\\^.*\\$\\1[a-z]*$#Dis', $attribute->regexp))
-		{
-			// Test this regexp against a few possible vectors
-			$unsafeValues = array(
-				'javascript:stuff',
-				'Javascript:stuff',
-				'javaScript:stuff',
-				' javascript: stuff',
-				' Javascript:stuff',
-				' javaScript:stuff',
-				"\rjavaScript:stuff",
-				"\tjavaScript:stuff",
-				"\x00javaScript:stuff",
-				'data:stuff',
-				' data:stuff',
-				' DATA:stuff'
-			);
-
-			foreach ($unsafeValues as $value)
-			{
-				if (preg_match($attribute->regexp, $value))
-				{
-					// Left an unsafe value through; This attribute is unsafe
-					return false;
-				}
-			}
-
-			// It left none of our bad values through, so we'll assume it is safe
-			return true;
-		}
-		*/
 
 		return false;
 	}
@@ -509,6 +483,9 @@ abstract class TemplateChecker
 	{
 		// List of filters that make a value safe to be used in a script
 		$safeFilters = array(
+			// Those might see some usage
+			'urlencode',
+			'rawurlencode',
 			// URLs should be safe because characters ()'" are urlencoded
 			'#url',
 			'#int',

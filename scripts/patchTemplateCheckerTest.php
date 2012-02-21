@@ -66,7 +66,11 @@ foreach ($test->getUnsafeTemplatesTests() as $case)
 		$attrName   = key($attributes);
 		$attribute  = $attributes[$attrName];
 
-		if (!empty($attribute['filterChain']))
+		if (empty($attribute['filterChain']))
+		{
+			$attributeInfo = " if attribute '$attrName' has no filter";
+		}
+		else
 		{
 			$filter = $attribute['filterChain'][0];
 			$attributeInfo = " if attribute '$attrName' has filter " . var_export($filter, true);
