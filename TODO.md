@@ -27,3 +27,4 @@ TODO
 - Add an "alnum" or "alphanum" built-in filter that matches /^[a-z0-9]+$/iD and possibly an "hex" filter for /^[0-9a-f]+$/iD
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
 - Fix custom XSL namespace prefix + namespaced tags (tags' namespaces declarations are lost in the process)
+- Way to implement syntax highlighting at parsing time: create tags in the "stx" namespace and implement syntax highlighting via... a plugin maybe? At least some stuff would need to be hardcoded, first of which would be the end [/CODE] tag, and probably also its start tag, [CODE]. Make the namespaced tags requireAncestor their CODE tag
