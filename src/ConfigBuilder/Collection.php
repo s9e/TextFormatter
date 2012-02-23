@@ -23,22 +23,6 @@ abstract class Collection implements ConfigProvider, Iterator
 	//==========================================================================
 
 	/**
-	* Return whether a string would be a valid item name
-	*
-	* @param  string $name
-	* @return bool
-	*/
-	abstract public function isValidName($name);
-
-	/**
-	* Validate and normalize an item's name
-	*
-	* @param  string $name Original name
-	* @return string       Normalized name
-	*/
-	abstract public function normalizeName($name);
-
-	/**
 	* Return the class name of this collection's items
 	*
 	* @return string
@@ -48,6 +32,28 @@ abstract class Collection implements ConfigProvider, Iterator
 	//==========================================================================
 	// Common methods
 	//==========================================================================
+
+	/**
+	* Return whether a string would be a valid item name
+	*
+	* @param  string $name
+	* @return bool
+	*/
+	public function isValidName($name)
+	{
+		return true;
+	}
+
+	/**
+	* Validate and normalize an item's name
+	*
+	* @param  string $name Original name
+	* @return string       Normalized name
+	*/
+	public function normalizeName($name)
+	{
+		return $name;
+	}
 
 	public function getConfig()
 	{

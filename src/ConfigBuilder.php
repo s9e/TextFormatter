@@ -19,12 +19,17 @@ use InvalidArgumentException,
 class ConfigBuilder
 {
 	/**
-	* @var Collection Custom filters
+	* @var FilterCollection Custom filters
 	*/
 	public $customFilters;
 
 	/**
-	* @var Collection Tags repository
+	* @var PluginCollection Loaded plugins
+	*/
+	public $tags;
+
+	/**
+	* @var TagCollection Tags repository
 	*/
 	public $tags;
 
@@ -51,37 +56,19 @@ class ConfigBuilder
 	*/
 	public function __construct()
 	{
-		$this->tags          = new Collection(__CLASS__ . '\\Tag');
-		$this->customFilters = new Collection(__CLASS__ . '\\Filter');
+		$this->tags          = new TagCollection;
+		$this->plugins       = new PluginCollection;
+		$this->customFilters = new FilterCollection;
 		$this->urlConfig     = new UrlConfig;
 
-		$this->html5Helper    = new HTML5Helper;
-		$this->regexpHelper   = new RegexpHelper;
+		/** @todo make them abstract */
+		$this->html5Helper   = new HTML5Helper;
+		$this->regexpHelper  = new RegexpHelper;
 	}
 
 	//==========================================================================
 	// Plugins
 	//==========================================================================
-
-	/**
-	* Get all loaded plugins
-	*
-	* @return array
-	*/
-	public function getLoadedPlugins()
-	{
-		$plugins = array();
-
-		foreach (get_object_vars($this) as $k => $v)
-		{
-			if ($v instanceof PluginConfig)
-			{
-				$plugins[$k] = $v;
-			}
-		}
-
-		return $plugins;
-	}
 
 	/**
 	* Magic __get automatically loads plugins, PredefinedTags class
