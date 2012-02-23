@@ -32,3 +32,5 @@ TODO
 - Move plugins to ./Plugins/<pluginName>/(Config.php|Parser.(php|js))
 - Replace PluginConfig::getXSL() with PluginConfig::getTemplates() which should return array([match]=>[template]) and each template goes through Templates::setTemplate() (how to evaluate attributes safety though)
 - Look into properly implementing urlencode() and rawurlencode() in JS
+- Fix custom XSL namespace prefix + namespaced tags (tags' namespaces declarations are lost in the process)
+- Way to implement syntax highlighting at parsing time: create tags in the "stx" namespace and implement syntax highlighting via... a plugin maybe? At least some stuff would need to be hardcoded, first of which would be the end [/CODE] tag, and probably also its start tag, [CODE]. Make the namespaced tags requireAncestor their CODE tag
