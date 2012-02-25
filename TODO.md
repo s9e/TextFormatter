@@ -28,3 +28,4 @@ TODO
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
 - Fix custom XSL namespace prefix + namespaced tags (tags' namespaces declarations are lost in the process)
 - Way to implement syntax highlighting at parsing time: create tags in the "stx" namespace and implement syntax highlighting via... a plugin maybe? At least some stuff would need to be hardcoded, first of which would be the end [/CODE] tag, and probably also its start tag, [CODE]. Make the namespaced tags requireAncestor their CODE tag
+- Let generateRulesFromHTML5Specs() create rules that apply to the root context
