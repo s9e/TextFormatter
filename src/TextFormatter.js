@@ -248,12 +248,16 @@ var HINT = {
 	*/
 	function contextAnd(a1, a2)
 	{
-		var ret = [];
+		// NOTE: declaring ret's size here with "new Array(i)" results in a 5x performance increase
+		//       in Chromium 19 but it makes other browsers at least 10% slower. Not declaring the
+		//       size of the array makes all tested browsers offer about the same performance
+		var ret = [],
+			i   = a1.length;
 
-		a1.forEach(function(v, k)
+		while (i--)
 		{
-			ret.push(v & a2[k]);
-		});
+			ret[i] = a1[i] & a2[i];
+		}
 
 		return ret;
 	}
@@ -630,11 +634,9 @@ var HINT = {
 		* Some plugins have several regexps in an array, others have a single regexp as a
 		* string. We convert the latter to an array so that we can iterate over it.
 		*/
-		var isArray = !(pluginConfig.regexp instanceof RegExp);
-
-		var regexps = (isArray) ? pluginConfig.regexp : { 'r': pluginConfig.regexp };
-
-		var skip = false,
+		var isArray = !(pluginConfig.regexp instanceof RegExp),
+			regexps = (isArray) ? pluginConfig.regexp : { r: pluginConfig.regexp },
+			skip = false,
 			matches = {},
 			cnt = 0;
 
@@ -694,12 +696,9 @@ var HINT = {
 			return false;
 		}
 
-		if (!isArray)
-		{
-			matches = matches['r'];
-		}
-
-		return matches;
+		return (isArray)
+		     ? matches
+		     : matches.r;
 	}
 
 	function executePluginParsers()
