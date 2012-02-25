@@ -653,12 +653,9 @@ class Parser
 			return false;
 		}
 
-		if (!$isArray)
-		{
-			$matches = $matches[0];
-		}
-
-		return $matches;
+		return ($isArray)
+		     ? $matches
+		     : $matches[0];
 	}
 
 	/**

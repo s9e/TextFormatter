@@ -634,11 +634,9 @@ var HINT = {
 		* Some plugins have several regexps in an array, others have a single regexp as a
 		* string. We convert the latter to an array so that we can iterate over it.
 		*/
-		var isArray = !(pluginConfig.regexp instanceof RegExp);
-
-		var regexps = (isArray) ? pluginConfig.regexp : { 'r': pluginConfig.regexp };
-
-		var skip = false,
+		var isArray = !(pluginConfig.regexp instanceof RegExp),
+			regexps = (isArray) ? pluginConfig.regexp : { r: pluginConfig.regexp },
+			skip = false,
 			matches = {},
 			cnt = 0;
 
@@ -698,12 +696,9 @@ var HINT = {
 			return false;
 		}
 
-		if (!isArray)
-		{
-			matches = matches['r'];
-		}
-
-		return matches;
+		return (isArray)
+		     ? matches
+		     : matches.r;
 	}
 
 	function executePluginParsers()
