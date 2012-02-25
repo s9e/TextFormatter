@@ -248,12 +248,16 @@ var HINT = {
 	*/
 	function contextAnd(a1, a2)
 	{
-		var ret = [];
+		// NOTE: declaring ret's size here with "new Array(i)" results in a 5x performance increase
+		//       in Chromium 19 but it makes other browsers at least 10% slower. Not declaring the
+		//       size of the array makes all tested browsers offer about the same performance
+		var ret = [],
+			i   = a1.length;
 
-		a1.forEach(function(v, k)
+		while (i--)
 		{
-			ret.push(v & a2[k]);
-		});
+			ret[i] = a1[i] & a2[i];
+		}
 
 		return ret;
 	}
