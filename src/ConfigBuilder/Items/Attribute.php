@@ -5,9 +5,10 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\ConfigBuilder;
+namespace s9e\TextFormatter\ConfigBuilder\Items;
 
-use InvalidArgumentException;
+use InvalidArgumentException,
+    s9e\TextFormatter\ConfigBuilder\Collections\FilterChain;
 
 class Attribute extends ConfigurableItem
 {
@@ -32,33 +33,6 @@ class Attribute extends ConfigurableItem
 		{
 			$this->__set($optionName, $optionValue);
 		}
-	}
-
-	/**
-	* Return whether a string is a valid attribute name
-	*
-	* @param  string $name
-	* @return bool
-	*/
-	static public function isValidName($name)
-	{
-		return (bool) preg_match('#^[a-z_][a-z_0-9\\-]*$#Di', $name);
-	}
-
-	/**
-	* Validate and normalize an attribute name
-	*
-	* @param  string $name Original attribute name
-	* @return string       Normalized attribute name, in lowercase
-	*/
-	static public function normalizeName($name)
-	{
-		if (!self::isValidName($name))
-		{
-			throw new InvalidArgumentException ("Invalid attribute name '" . $name . "'");
-		}
-
-		return strtolower($name);
 	}
 
 	//==========================================================================

@@ -33,3 +33,9 @@ TODO
 - Fix custom XSL namespace prefix + namespaced tags (tags' namespaces declarations are lost in the process)
 - Way to implement syntax highlighting at parsing time: create tags in the "stx" namespace and implement syntax highlighting via... a plugin maybe? At least some stuff would need to be hardcoded, first of which would be the end [/CODE] tag, and probably also its start tag, [CODE]. Make the namespaced tags requireAncestor their CODE tag
 - Let generateRulesFromHTML5Specs() create rules that apply to the root context
+- Add support for <ol start="2"/>
+- Consider adding an #ip or #ipport filter
+- Add a [FONT face={SIMPLETEXT}] bbcode/tag (could render to <span style="font-family:{SIMPLETEXT}">
+- Remove reopenChild rule, add autoReopen as a tag option. Reopens tag if it gets closed by a closeParent (and closeAncestor?) rule, or if it gets closed by an ancestor's end tag, e.g. <b><i></b>
+- Implement the concept of a plugin "tag formatter": give it a tag from the intermediate form and it returns the string that could have generated it. e.g. BBCodes's tag formatter takes <URL url="..."> and returns [URL url="..."] or [URL="...] -- tag content might be a problem though. Can we format any start/end tag without knowing what's in between?
+

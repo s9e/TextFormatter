@@ -5,9 +5,13 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\ConfigBuilder;
+namespace s9e\TextFormatter\ConfigBuilder\Items;
 
-use InvalidArgumentException;
+use InvalidArgumentException,
+    s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection,
+    s9e\TextFormatter\ConfigBuilder\Collections\AttributeParserCollection,
+    s9e\TextFormatter\ConfigBuilder\Collections\Ruleset,
+    s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 
 class Tag extends ConfigurableItem
 {
@@ -17,12 +21,12 @@ class Tag extends ConfigurableItem
 	protected $allowUnsafeTemplates = false;
 
 	/**
-	* @var Collection This tag's attributes
+	* @var AttributeCollection This tag's attributes
 	*/
 	protected $attributes;
 
 	/**
-	* @var Collection This tag's attribute parsers
+	* @var AttributeParserCollection This tag's attribute parsers
 	*/
 	protected $attributeParsers;
 
@@ -63,7 +67,7 @@ class Tag extends ConfigurableItem
 	{
 		$this->attributes       = new AttributeCollection;
 		$this->attributeParsers = new AttributeParserCollection;
-		$this->rules            = new Ruleset;
+		$this->rules            = new Ruleset($this);
 		$this->templates        = new Templateset($this);
 
 		foreach ($options as $optionName => $optionValue)

@@ -5,7 +5,7 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\ConfigBuilder;
+namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
 use DOMDocument,
     DOMXPath,
@@ -13,9 +13,10 @@ use DOMDocument,
     RuntimeException,
     SimpleXMLElement,
     UnexpectedValueException,
-    XSLTProcessor;
+    XSLTProcessor,
+    s9e\TextFormatter\ConfigBuilder\TagCollection;
 
-class HTML5Helper
+abstract class HTML5Helper
 {
 	/**
 	* What is this? you might ask. This is basically a compressed version of the HTML5 content
@@ -47,7 +48,7 @@ class HTML5Helper
 	* In addition, HTML5 defines "optional end tag" rules, where one element automatically closes
 	* its predecessor. Those are used to generate closeParent rules and are stored in the "cp" key.
 	*/
-	protected $htmlElements = array(
+	static protected $htmlElements = array(
 		'a'=>array('c'=>15,'ac'=>0,'dd'=>8,'t'=>1),
 		'abbr'=>array('c'=>7,'ac'=>4),
 		'address'=>array('c'=>1027,'ac'=>1,'dd'=>1552,'cp'=>array('p')),
@@ -160,22 +161,23 @@ class HTML5Helper
 	*
 	* @link http://dev.w3.org/html5/spec/content-models.html#content-models
 	* @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
-	* @see  ../scripts/patchConfigBuilder.php
+	* @see  /scripts/patchConfigBuilder.php
 	*
 	* Possible options:
 	*
 	*  rootElement: name of the HTML element used as the root of the rendered text
 	*
-	* @param array $options Array of option settings
+	* @param  TagCollection $tags    Tags collection
+	* @param  array         $options Array of option settings
 	* @return array
 	*/
-	public function generateRulesFromHTML5Specs(array $options = array())
+	static public function generateRulesFromHTML5Specs(TagCollection $tags, array $options = array())
 	{
-		$tagsConfig = $this->tags;
+		$tagsConfig = $tags->getConfig();
 
 		if (isset($options['rootElement']))
 		{
-			if (!isset($this->htmlElements[$options['rootElement']]))
+			if (!isset(self::htmlElements[$options['rootElement']]))
 			{
 				throw new InvalidArgumentException("Unknown HTML element '" . $options['rootElement'] . "'");
 			}
@@ -205,11 +207,11 @@ class HTML5Helper
 			{
 				if (!isset($renderer))
 				{
-					$renderer = $this->getRenderer();
+					$renderer = self::getRenderer();
 				}
 
 				$uid = uniqid('', true);
-				$xml = '<rt' . $this->generateNamespaceDeclarations() . '>'
+				$xml = '<rt' . self::generateNamespaceDeclarations() . '>'
 				     . '<' . $tagName . '>' . $uid . '</' . $tagName . '>'
 				     . '</rt>';
 
@@ -223,7 +225,7 @@ class HTML5Helper
 			);
 
 			$tagInfo['root'] = simplexml_load_string(
-				'<xsl:stylesheet' . $this->generateNamespaceDeclarations() . '>' . $tagConfig['xsl'] . '</xsl:stylesheet>'
+				'<xsl:stylesheet' . self::generateNamespaceDeclarations() . '>' . $tagConfig['xsl'] . '</xsl:stylesheet>'
 			);
 
 			/**
@@ -239,7 +241,7 @@ class HTML5Helper
 			foreach ($tagInfo['firstChildren'] as $firstChild)
 			{
 				$tagInfo['firstChildrenCategoryBitfield'][]
-					= $this->filterHTMLRulesBitfield($firstChild->getName(), 'c', $firstChild);
+					= self::filterHTMLRulesBitfield($firstChild->getName(), 'c', $firstChild);
 			}
 
 			/**
@@ -250,7 +252,7 @@ class HTML5Helper
 
 			foreach ($tagInfo['root']->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]') as $node)
 			{
-				$tagInfo['usedCategories'] |= $this->filterHTMLRulesBitfield($node->getName(), 'c', $node);
+				$tagInfo['usedCategories'] |= self::filterHTMLRulesBitfield($node->getName(), 'c', $node);
 			}
 
 			/**
@@ -268,7 +270,7 @@ class HTML5Helper
 				{
 					$elName = $node->getName();
 
-					if (empty($this->htmlElements[$elName]['t']))
+					if (empty(self::htmlElements[$elName]['t']))
 					{
 						/**
 						* If this element does not use the transparent content model, we discard its
@@ -287,12 +289,12 @@ class HTML5Helper
 						* category enabled this tag
 						*/
 						$allowChildBitfield
-							= $this->filterHTMLRulesBitfield($elName, 'c', $node);
+							= self::filterHTMLRulesBitfield($elName, 'c', $node);
 
 						/**
 						* Accumulate the denied descendants
 						*/
-						$tagInfo['denyDescendantBitfield'] |= $this->filterHTMLRulesBitfield($elName, 'dd', $node);
+						$tagInfo['denyDescendantBitfield'] |= self::filterHTMLRulesBitfield($elName, 'dd', $node);
 
 						if (!isset($tagInfo['isTransparent']))
 						{
@@ -301,7 +303,7 @@ class HTML5Helper
 					}
 
 					$allowChildBitfield
-						|= $this->filterHTMLRulesBitfield($elName, 'ac', $node);
+						|= self::filterHTMLRulesBitfield($elName, 'ac', $node);
 				}
 
 				$tagInfo['allowChildBitfields'][] = $allowChildBitfield;
@@ -327,7 +329,7 @@ class HTML5Helper
 			{
 				$elName = $firstChild->getName();
 
-				if (!isset($this->htmlElements[$elName]['cp']))
+				if (!isset(self::htmlElements[$elName]['cp']))
 				{
 					continue;
 				}
@@ -336,7 +338,7 @@ class HTML5Helper
 				{
 					foreach ($targetInfo['lastChildren'] as $lastChild)
 					{
-						if (in_array($lastChild->getName(), $this->htmlElements[$elName]['cp'], true))
+						if (in_array($lastChild->getName(), self::htmlElements[$elName]['cp'], true))
 						{
 							$tagsOptions[$tagName]['rules']['closeParent'][] = $targetName;
 						}
@@ -493,14 +495,14 @@ class HTML5Helper
 	* @param  SimpleXMLElement $node   Context node
 	* @return integer
 	*/
-	protected function filterHTMLRulesBitfield($elName, $k, SimpleXMLElement $node)
+	static protected function filterHTMLRulesBitfield($elName, $k, SimpleXMLElement $node)
 	{
-		if (empty($this->htmlElements[$elName][$k]))
+		if (empty(self::htmlElements[$elName][$k]))
 		{
 			return 0;
 		}
 
-		$bitfield = $this->htmlElements[$elName][$k];
+		$bitfield = self::htmlElements[$elName][$k];
 
 		foreach (str_split(strrev(decbin($bitfield)), 1) as $n => $v)
 		{
@@ -509,8 +511,8 @@ class HTML5Helper
 				continue;
 			}
 
-			if (isset($this->htmlElements[$elName][$k . $n])
-			 && !$node->xpath($this->htmlElements[$elName][$k . $n]))
+			if (isset(self::htmlElements[$elName][$k . $n])
+			 && !$node->xpath(self::htmlElements[$elName][$k . $n]))
 			{
 				$bitfield ^= 1 << $n;
 			}

@@ -5,19 +5,13 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\ConfigBuilder;
+namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
-use Iterator,
-    ReflectionClass,
+use ReflectionClass,
     RuntimeException;
 
-abstract class Collection implements ConfigProvider, Iterator
+abstract class FactoryCollection extends Collection
 {
-	/**
-	* @var array Items that this collection holds
-	*/
-	protected $items = array();
-
 	//==========================================================================
 	// Abstract methods
 	//==========================================================================
@@ -29,20 +23,13 @@ abstract class Collection implements ConfigProvider, Iterator
 	*/
 	abstract protected function getItemClass();
 
-	//==========================================================================
-	// Common methods
-	//==========================================================================
-
 	/**
 	* Return whether a string would be a valid item name
 	*
 	* @param  string $name
 	* @return bool
 	*/
-	public function isValidName($name)
-	{
-		return true;
-	}
+	abstract public function isValidName($name);
 
 	/**
 	* Validate and normalize an item's name
@@ -50,28 +37,17 @@ abstract class Collection implements ConfigProvider, Iterator
 	* @param  string $name Original name
 	* @return string       Normalized name
 	*/
-	public function normalizeName($name)
-	{
-		return $name;
-	}
+	abstract public function normalizeName($name);
 
-	public function getConfig()
-	{
-		$config = array();
-
-		foreach ($this->items as $name => $item)
-		{
-			$config[$name] = $item->getConfig();
-		}
-
-		return $config;
-	}
+	//==========================================================================
+	// Common methods
+	//==========================================================================
 
 	/**
 	* Return a named item from this collection
 	*
 	* @param  string $name
-	* @return Item
+	* @return object
 	*/
 	public function get($name)
 	{
@@ -84,9 +60,8 @@ abstract class Collection implements ConfigProvider, Iterator
 	* Add an item to this collection
 	*
 	* @param  string $name Name for this item
-	* @param  mixed  $arg  An Item instance, or any number of arguments passed to the item's
-	*                      constructor
-	* @return Item         Added item
+	* @param  mixed  $arg  An Item instance, or any number of arguments passed to the item's ctor
+	* @return object       Added item
 	*/
 	public function add($name, $arg = null)
 	{
@@ -150,14 +125,6 @@ abstract class Collection implements ConfigProvider, Iterator
 	}
 
 	/**
-	* Remove all items from this collection
-	*/
-	public function clear()
-	{
-		$this->items = array();
-	}
-
-	/**
 	* Validate and normalize the name of an item
 	*
 	* @param  string $name      Original name
@@ -192,34 +159,5 @@ abstract class Collection implements ConfigProvider, Iterator
 		}
 
 		return $name;
-	}
-
-	//==========================================================================
-	// Iterator stuff
-	//==========================================================================
-
-	public function rewind()
-	{
-		reset($this->items);
-	}
-
-	public function current()
-	{
-		return current($this->items);
-	}
-
-	function key()
-	{
-		return key($this->items);
-	}
-
-	function next()
-	{
-		return next($this->items);
-	}
-
-	function valid()
-	{
-		return (key($this->items) !== null);
 	}
 }

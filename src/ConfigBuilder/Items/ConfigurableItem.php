@@ -5,17 +5,21 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\ConfigBuilder;
+namespace s9e\TextFormatter\ConfigBuilder\Items;
 
-use InvalidArgumentException;
+use RuntimeException,
+    s9e\TextFormatter\ConfigBuilder\Collections\Collection;
 
-class ConfigurableItem
+/**
+* Provides magic __get and __set implementations
+*/
+abstract class ConfigurableItem
 {
 	public function __get($optionName)
 	{
 		if (!property_exists($this, $optionName))
 		{
-			throw new InvalidArgumentException("Option '" . $optionName . "' does not exist");
+			throw new RuntimeException("Option '" . $optionName . "' does not exist");
 		}
 
 		return $this->$optionName;
@@ -34,19 +38,6 @@ class ConfigurableItem
 		// If the property already exists, preserve its type
 		if (isset($this->$optionName))
 		{
-			// If this is a Collection, we clear its content then add every item in order
-			if ($this->$optionName instanceof Collection)
-			{
-				$this->$optionName->clear();
-
-				foreach ($optionValue as $itemName => $item)
-				{
-					$this->$optionName->add($itemName, $item);
-				}
-
-				return;
-			}
-
 			settype($optionValue, gettype($this->$optionName));
 		}
 

@@ -10,9 +10,11 @@ namespace s9e\TextFormatter;
 use InvalidArgumentException,
     RuntimeException,
     s9e\TextFormatter\ConfigBuilder\Collection,
+    s9e\TextFormatter\ConfigBuilder\FilterCollection,
     s9e\TextFormatter\ConfigBuilder\HTML5Helper,
     s9e\TextFormatter\ConfigBuilder\PredefinedTags,
     s9e\TextFormatter\ConfigBuilder\RegexpHelper,
+    s9e\TextFormatter\ConfigBuilder\TagCollection,
     s9e\TextFormatter\ConfigBuilder\TemplateHelper,
     s9e\TextFormatter\ConfigBuilder\UrlConfig;
 
@@ -21,7 +23,7 @@ class ConfigBuilder
 	/**
 	* @var FilterCollection Custom filters
 	*/
-	public $customFilters;
+	public $filters;
 
 	/**
 	* @var PluginCollection Loaded plugins
@@ -39,16 +41,6 @@ class ConfigBuilder
 	public $urlConfig;
 
 	/**
-	* @var HTML5Helper
-	*/
-	public $html5Helper;
-
-	/**
-	* @var RegexpHelper
-	*/
-	public $regexpHelper;
-
-	/**
 	* Constructor
 	*
 	* Prepares the collections that hold tags and filters, the UrlConfig object as well as the
@@ -56,14 +48,10 @@ class ConfigBuilder
 	*/
 	public function __construct()
 	{
-		$this->tags          = new TagCollection;
-		$this->plugins       = new PluginCollection;
-		$this->customFilters = new FilterCollection;
-		$this->urlConfig     = new UrlConfig;
-
-		/** @todo make them abstract */
-		$this->html5Helper   = new HTML5Helper;
-		$this->regexpHelper  = new RegexpHelper;
+		$this->tags      = new TagCollection;
+		$this->plugins   = new PluginCollection;
+		$this->filters   = new FilterCollection;
+		$this->urlConfig = new UrlConfig;
 	}
 
 	//==========================================================================
@@ -78,55 +66,12 @@ class ConfigBuilder
 	*/
 	public function __get($k)
 	{
-		if ($k === 'predefinedTags')
-		{
-			return $this->predefinedTags = new PredefinedTags($this);
-		}
-
 		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 		{
 			return $this->loadPlugin($k);
 		}
 
 		throw new RuntimeException("Undefined property '" . __CLASS__ . '::$' . $k . "'");
-	}
-
-	/**
-	* Load a plugin
-	*
-	* If a plugin of the same name exists, it will be overwritten.
-	*
-	* @param  string $pluginName    Name of the plugin
-	* @param  string $className     Name of the plugin's config class (required for custom plugins)
-	* @param  array  $overrideProps Properties of the plugin will be overwritten with those
-	* @return PluginConfig
-	*/
-	public function loadPlugin($pluginName, $className = null, array $overrideProps = array())
-	{
-		if (!preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $pluginName))
-		{
-			throw new InvalidArgumentException("Invalid plugin name '" . $pluginName . "'");
-		}
-
-		if (!isset($className))
-		{
-			$className = __NAMESPACE__ . '\\Plugins\\' . $pluginName . 'Config';
-		}
-
-		// If a filepath was provided, load the plugin's file if its class does not exist
-		if (isset($classFilepath)
-		 && !class_exists($className, false)
-		 && file_exists($classFilepath))
-		{
-			include $classFilepath;
-		}
-
-		if (!class_exists($className))
-		{
-			throw new RuntimeException("Class '" . $className . "' does not exist");
-		}
-
-		return $this->$pluginName = new $className($this, $overrideProps);
 	}
 
 	//==========================================================================

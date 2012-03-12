@@ -15,7 +15,7 @@ if (!file_exists($filepath))
 		$filepath,
 		stream_context_create(array(
 			'http' => array(
-				'header' => "Accept-Encoding: gzip,deflate"
+				'header' => "Accept-Encoding: gzip"
 			)
 		))
 	);
@@ -505,7 +505,7 @@ foreach ($arr as $elName => $values)
 }
 
 $php = substr($php, 0, -1);
-
+die($php);
 $filepath = __DIR__ . '/../src/ConfigBuilder.php';
 $file = file_get_contents($filepath);
 

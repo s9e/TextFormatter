@@ -5,22 +5,18 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\ConfigBuilder;
+namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
 use InvalidArgumentException,
-    Iterator;
+    Iterator,
+    s9e\TextFormatter\ConfigBuilder\Items\Filter;
 
-class FilterChain implements Iterator
+class FilterChain extends Collection
 {
 	/**
 	* @var array Default signature, used by Filter instances created from a PHP callback
 	*/
 	protected $defaultSignature;
-
-	/**
-	* @var array This chain's filters
-	*/
-	protected $filters = array();
 
 	/**
 	* Constructor
@@ -33,29 +29,13 @@ class FilterChain implements Iterator
 	}
 
 	/**
-	* Remove all the filters
-	*/
-	public function clear()
-	{
-		$this->filters = array();
-	}
-
-	/**
-	* Return all the filters
-	*/
-	public function get()
-	{
-		return $this->filters;
-	}
-
-	/**
 	* Append a filter to this chain
 	*
 	* @param  string|callback|Filter $filter
 	*/
 	public function append($filter)
 	{
-		$this->filters[] = $this->normalizeFilter($filter);
+		$this->items[] = $this->normalizeFilter($filter);
 	}
 
 	/**
@@ -65,7 +45,7 @@ class FilterChain implements Iterator
 	*/
 	public function prepend($filter)
 	{
-		array_unshift($this->filters, $this->normalizeFilter($filter));
+		array_unshift($this->items, $this->normalizeFilter($filter));
 	}
 
 	/**
@@ -109,35 +89,6 @@ class FilterChain implements Iterator
 	*/
 	public function has($filter)
 	{
-		return in_array($this->normalizeFilter($filter), $this->filters);
-	}
-
-	//==========================================================================
-	// Iterator stuff
-	//==========================================================================
-
-	public function rewind()
-	{
-		reset($this->filters);
-	}
-
-	public function current()
-	{
-		return current($this->filters);
-	}
-
-	function key()
-	{
-		return key($this->filters);
-	}
-
-	function next()
-	{
-		return next($this->filters);
-	}
-
-	function valid()
-	{
-		return (key($this->filters) !== null);
+		return in_array($this->normalizeFilter($filter), $this->items);
 	}
 }
