@@ -27,6 +27,6 @@ class TagCollection extends FactoryCollection
 
 	protected function getItemClass()
 	{
-		return __NAMESPACE__ . '\\Tag';
+		return 's9e\\TextFormatter\\ConfigBuilder\\Items\\Tag';
 	}
 }

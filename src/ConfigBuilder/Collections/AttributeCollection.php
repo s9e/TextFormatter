@@ -21,6 +21,6 @@ class AttributeCollection extends FactoryCollection
 
 	protected function getItemClass()
 	{
-		return __NAMESPACE__ . '\\Attribute';
+		return 's9e\\TextFormatter\\ConfigBuilder\\Items\\Attribute';
 	}
 }

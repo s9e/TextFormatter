@@ -1,5 +1,12 @@
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
+ [x] Attribute names must start with a letter or an underscore
  [x] Attribute names are lowercased
+ [x] add() creates instances of s9e\TextFormatter\ConfigBuilder\Items\Attribute
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeParserCollection
+ [x] Attribute parser names must start with a letter or an underscore
+ [x] Attribute parser names are lowercased
+ [x] add() creates instances of s9e\TextFormatter\ConfigBuilder\Items\AttributeParser
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
  [x] Collection is countable

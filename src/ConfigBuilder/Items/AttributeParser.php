@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Items;
 
-class AttributeParser implements Item
+class AttributeParser
 {
 	/**
 	* @todo parse the regexp, reject multiple subpatterns that use the same name
@@ -18,5 +18,4 @@ class AttributeParser implements Item
 	{
 		$this->regexp = $regexp;
 	}
-
 }

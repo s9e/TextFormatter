@@ -24,6 +24,7 @@
 	<testsuites>
 		<testsuite name="TextFormatter">
 			<file>ConfigBuilder/Collections/AttributeCollectionTest.php</file>
+			<file>ConfigBuilder/Collections/AttributeParserCollectionTest.php</file>
 			<file>ConfigBuilder/Collections/CollectionTest.php</file>
 			<file>ConfigBuilder/Collections/FactoryCollectionTest.php</file>
 		</testsuite>
@@ -32,6 +33,7 @@
 	<filter>
 		<whitelist>
 			<file>../src/ConfigBuilder/Collections/AttributeCollection.php</file>
+			<file>../src/ConfigBuilder/Collections/AttributeParserCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/Collection.php</file>
 			<file>../src/ConfigBuilder/Collections/FactoryCollection.php</file>
 		</whitelist>

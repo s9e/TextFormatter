@@ -14,6 +14,6 @@ class AttributeParserCollection extends AttributeCollection
 {
 	protected function getItemClass()
 	{
-		return __NAMESPACE__ . '\\AttributeParser';
+		return 's9e\\TextFormatter\\ConfigBuilder\\Items\\AttributeParser';
 	}
 }
