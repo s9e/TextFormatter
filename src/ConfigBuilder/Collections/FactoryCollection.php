@@ -7,7 +7,8 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
-use ReflectionClass,
+use InvalidArgumentException,
+    ReflectionClass,
     RuntimeException;
 
 abstract class FactoryCollection extends Collection
@@ -94,21 +95,6 @@ abstract class FactoryCollection extends Collection
 		$name = $this->validateName($name, true);
 
 		unset($this->items[$name]);
-	}
-
-	/**
-	* Rename an item in this collection
-	*
-	* @param string $oldName
-	* @param string $newName
-	*/
-	public function rename($oldName, $newName)
-	{
-		$oldName = $this->validateName($oldName, true);
-		$newName = $this->validateName($newName, false);
-
-		$this->items[$newName] = $this->items[$oldName];
-		unset($this->items[$oldName]);
 	}
 
 	/**

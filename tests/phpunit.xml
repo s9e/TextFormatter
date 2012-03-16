@@ -23,91 +23,17 @@
 
 	<testsuites>
 		<testsuite name="TextFormatter">
-			<file>ConfigBuilderTest.php</file>
-			<file>ConfigBuilder/CollectionTest.php</file>
-			<file>ConfigBuilder/ConfigurableItemTest.php</file>
-			<file>ConfigBuilder/FilterTest.php</file>
-			<file>ConfigBuilder/FilterChainTest.php</file>
-			<file>ConfigBuilder/RegexpHelperTest.php</file>
-			<file>ConfigBuilder/TemplateHelperTest.php</file>
-			<file>ConfigBuilder/UrlConfigTest.php</file>
-			<!--file>JSParserGeneratorTest.php</file>
-			<file>ParserTest.php</file>
-			<file>PluginConfigTest.php</file>
-			<file>PluginParserTest.php</file>
-			<file>RendererTest.php</file>
-			<file>UnparserTest.php</file>
-			<file>Plugins/AutolinkConfigTest.php</file>
-			<file>Plugins/AutolinkParserTest.php</file>
-			<file>Plugins/BBCodesConfigTest.php</file>
-			<file>Plugins/BBCodesParserTest.php</file>
-			<file>Plugins/CensorConfigTest.php</file>
-			<file>Plugins/CensorParserTest.php</file>
-			<file>Plugins/EmoticonsConfigTest.php</file>
-			<file>Plugins/EmoticonsParserTest.php</file>
-			<file>Plugins/EscaperConfigTest.php</file>
-			<file>Plugins/EscaperParserTest.php</file>
-			<file>Plugins/FabricConfigTest.php</file>
-			<file>Plugins/FabricParserTest.php</file>
-			<file>Plugins/GenericConfigTest.php</file>
-			<file>Plugins/GenericParserTest.php</file>
-			<file>Plugins/HTMLEntitiesConfigTest.php</file>
-			<file>Plugins/HTMLEntitiesParserTest.php</file>
-			<file>Plugins/LinebreakerConfigTest.php</file>
-			<file>Plugins/LinebreakerParserTest.php</file>
-			<file>Plugins/RawHTMLConfigTest.php</file>
-			<file>Plugins/RawHTMLParserTest.php</file>
-			<file>Plugins/WittyPantsConfigTest.php</file>
-			<file>Plugins/WittyPantsParserTest.php</file>
-			<file>PredefinedBBCodesTest.php</file-->
+			<file>ConfigBuilder/Collections/AttributeCollectionTest.php</file>
+			<file>ConfigBuilder/Collections/CollectionTest.php</file>
+			<file>ConfigBuilder/Collections/FactoryCollectionTest.php</file>
 		</testsuite>
 	</testsuites>
 
 	<filter>
 		<whitelist>
-			<file>../src/ConfigBuilder.php</file>
-			<file>../src/ConfigBuilder/Attribute.php</file>
-			<file>../src/ConfigBuilder/AttributeParser.php</file>
-			<file>../src/ConfigBuilder/Collection.php</file>
-			<file>../src/ConfigBuilder/ConfigurableItem.php</file>
-			<file>../src/ConfigBuilder/Filter.php</file>
-			<file>../src/ConfigBuilder/FilterChain.php</file>
-			<file>../src/ConfigBuilder/HTML5Helper.php</file>
-			<file>../src/ConfigBuilder/PredefinedBBCodes.php</file>
-			<file>../src/ConfigBuilder/PredefinedTags.php</file>
-			<file>../src/ConfigBuilder/RegexpHelper.php</file>
-			<file>../src/ConfigBuilder/Ruleset.php</file>
-			<file>../src/ConfigBuilder/Tag.php</file>
-			<file>../src/ConfigBuilder/TemplateHelper.php</file>
-			<file>../src/ConfigBuilder/UrlConfig.php</file>
-			<!--file>../src/JSParserGenerator.php</file>
-			<file>../src/Parser.php</file>
-			<file>../src/PluginConfig.php</file>
-			<file>../src/PluginParser.php</file>
-			<file>../src/Renderer.php</file>
-			<file>../src/Unparser.php</file>
-			<file>../src/Plugins/AutolinkConfig.php</file>
-			<file>../src/Plugins/AutolinkParser.php</file>
-			<file>../src/Plugins/BBCodesConfig.php</file>
-			<file>../src/Plugins/BBCodesParser.php</file>
-			<file>../src/Plugins/CensorConfig.php</file>
-			<file>../src/Plugins/CensorParser.php</file>
-			<file>../src/Plugins/EmoticonsConfig.php</file>
-			<file>../src/Plugins/EmoticonsParser.php</file>
-			<file>../src/Plugins/EscaperConfig.php</file>
-			<file>../src/Plugins/EscaperParser.php</file>
-			<file>../src/Plugins/FabricConfig.php</file>
-			<file>../src/Plugins/FabricParser.php</file>
-			<file>../src/Plugins/GenericConfig.php</file>
-			<file>../src/Plugins/GenericParser.php</file>
-			<file>../src/Plugins/HTMLEntitiesConfig.php</file>
-			<file>../src/Plugins/HTMLEntitiesParser.php</file>
-			<file>../src/Plugins/LinebreakerConfig.php</file>
-			<file>../src/Plugins/LinebreakerParser.php</file>
-			<file>../src/Plugins/RawHTMLConfig.php</file>
-			<file>../src/Plugins/RawHTMLParser.php</file>
-			<file>../src/Plugins/WittyPantsConfig.php</file>
-			<file>../src/Plugins/WittyPantsParser.php</file-->
+			<file>../src/ConfigBuilder/Collections/AttributeCollection.php</file>
+			<file>../src/ConfigBuilder/Collections/Collection.php</file>
+			<file>../src/ConfigBuilder/Collections/FactoryCollection.php</file>
 		</whitelist>
 	</filter>
 </phpunit>
