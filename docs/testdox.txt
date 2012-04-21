@@ -6,34 +6,5 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeParserCollection
  [x] Attribute parser names must start with a letter or an underscore
  [x] Attribute parser names are lowercased
- [x] add() creates instances of s9e\TextFormatter\ConfigBuilder\Items\AttributeParser
-
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
- [x] Collection is countable
- [x] Collection is iterable with foreach
- [x] clear() empties the collection
-
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\FactoryCollection
- [x] add() creates and returns a new instance of the item class if a second argument is not passed
- [x] add() creates and returns a new instance of the item class if the second argument is not an instance of the item class
- [x] add() passes all of its arguments after the first to the item constructor if its second argument is not an instance of the item class
- [x] add() calls normalizeName() with the item name
- [x] add() uses the value returned by normalizeName() as the item name
- [x] add() throws a RuntimeException if the item name is already is use
- [x] add() throws a InvalidException if the item name is invalid
- [x] exists() returns TRUE if the item exists
- [x] exists() returns FALSE if the item does not exist
- [x] exists() calls normalizeName() with the item name
- [x] exists() uses the value returned by normalizeName() as the item name
- [x] exists() throws a InvalidException if the item name is invalid
- [x] get() returns an item by name
- [x] get() calls normalizeName() with the item name
- [x] get() uses the value returned by normalizeName() as the item name
- [x] get() throws a RuntimeException if the item does not exist
- [x] get() throws a InvalidException if the item name is invalid
- [x] remove() removes an item by name
- [x] remove() calls the item's normalizeName() method with the item name
- [x] remove() uses the value returned by normalizeName() as the item name
- [x] remove() throws a RuntimeException if the item does not exist
- [x] remove() throws a InvalidException if the item name is invalid
+ [ ] add() creates instances of s9e\TextFormatter\ConfigBuilder\Items\AttributeParser
 
