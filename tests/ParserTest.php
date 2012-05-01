@@ -2813,6 +2813,22 @@ class ParserTest extends Test
 
 	/**
 	* @test
+	*/
+	public function reopenChild_rule_reopens_the_tag_with_the_same_attributes()
+	{
+		$this->cb->BBCodes->addBBCode('b');
+		$this->cb->BBCodes->addBBCode('i');
+		$this->cb->addAttribute('i', 'class');
+		$this->cb->addTagRule('b', 'reopenChild', 'i');
+
+		$this->assertParsing(
+			'[b][i class="foo"]foo[/b] bar[/i]',
+			'<rt><B><st>[b]</st><I class="foo"><st>[i class="foo"]</st>foo</I><et>[/b]</et></B><I class="foo"> bar<et>[/i]</et></I></rt>'
+		);
+	}
+
+	/**
+	* @test
 	* @depends reopenChild_rule_reopens_child_tag_if_it_was_closed_by_current_end_tag
 	*/
 	public function reopenChild_rule_does_not_reopen_child_tag_if_it_would_be_at_the_end_of_the_text()

@@ -354,6 +354,7 @@ s9e\TextFormatter\Tests\Parser
  [x] requireAncestor rule with multiple targets is fulfilled if any of the targets is an ancestor
  [x] Unfulfilled requireAncestor rule blocks tag
  [x] reopenChild rule reopens child tag if it was closed by current end tag
+ [x] reopenChild rule reopens the tag with the same attributes
  [x] reopenChild rule does not reopen child tag if it would be at the end of the text
  [x] reopenChild rule reopens all descendants
  [x] reopenChild rule does not reopen any descendant if not all descendants are covered by a reopenChild rule
