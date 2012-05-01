@@ -28,7 +28,7 @@ class ConfigBuilder
 	/**
 	* @var PluginCollection Loaded plugins
 	*/
-	public $tags;
+	public $plugins;
 
 	/**
 	* @var TagCollection Tags repository
