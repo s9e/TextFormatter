@@ -522,6 +522,7 @@ class Parser
 				'name'       => $tag['name'],
 				'pluginName' => $tag['pluginName'],
 				'tagMate'    => $tag['tagMate'],
+				'attrs'      => $tag['attrs'],
 				'context'    => $this->context
 			);
 
@@ -1172,7 +1173,7 @@ class Parser
 			'pos'    => $pos,
 			'len'    => 0,
 			'type'   => $type,
-			'attrs'  => array(),
+			'attrs'  => ($type === self::START_TAG) ? $tag['attrs'] : array(),
 			'tagMate'    => $tag['tagMate'],
 			'pluginName' => $tag['pluginName']
 		);
