@@ -37,7 +37,7 @@ TODO
 - Consider adding an #ip or #ipport filter
 - Add a [FONT face={SIMPLETEXT}] bbcode/tag (could render to <span style="font-family:{SIMPLETEXT}">
 - Remove reopenChild rule, add autoReopen as a tag option. Reopens tag if it gets closed by a closeParent (and closeAncestor?) rule, or if it gets closed by an ancestor's end tag, e.g. <b><i></b>
-- Reuse attributes when reopening a tag, e.g. [b][i class="foo"][/b][/i]
 - Implement the concept of a plugin "tag formatter": give it a tag from the intermediate form and it returns the string that could have generated it. e.g. BBCodes's tag formatter takes <URL url="..."> and returns [URL url="..."] or [URL="...] -- tag content might be a problem though. Can we format any start/end tag without knowing what's in between?
 - Add a Picasa(?) BBCode
 - Read in #phpbb-dev: ""You cannot have 3 quotes within each other" I'm getting pretty annoyed by that one now >.<" "Has some kind of system that automatically removes the innermost quote been suggested? On large posts it's almost impossible to remove it by hand without messing the tags up :<" "Right now I just copy the text and paste it within [quote] because it's easier to see, but that kinda takes away the point with the quote button"
+- Consider a way to generate a random number or ID, at parsing time or perhaps at rendering time. [foo id={RANDOM=0,100;base=36}] -- http://area51.phpbb.com/phpBB/viewtopic.php?f=81&t=42947

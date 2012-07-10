@@ -41,6 +41,12 @@ class Tag extends ConfigurableItem
 	protected $defaultDescendantRule = 'allow';
 
 	/**
+	* @var 
+	* @todo implement that better. (note: needed to cover HTML5 rules with a non-div root, e.g. <a>)
+	*/
+	protected $disallowAsRoot = false;
+
+	/**
 	* @var integer Maximum nesting level for this tag
 	*/
 	protected $nestingLimit = 10;
