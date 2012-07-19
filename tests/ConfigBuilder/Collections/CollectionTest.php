@@ -6,8 +6,6 @@ use Exception,
     s9e\TextFormatter\Tests\Test,
     s9e\TextFormatter\ConfigBuilder\Collections\Collection;
 
-include_once __DIR__ . '/../../../src/autoloader.php';
-
 /**
 * @covers s9e\TextFormatter\ConfigBuilder\Collections\Collection
 */
@@ -42,6 +40,18 @@ class CollectionTest extends Test
 		$dumbCollection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
 		$dumbCollection->clear();
 		$this->assertSame(0, count($dumbCollection));
+	}
+
+	/**
+	* @testdox getConfig() returns the items as an array
+	*/
+	public function testGetConfig()
+	{
+		$dumbCollection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
+		$this->assertEquals(
+			array('a' => 1, 'b' => 2, 'c' => 5),
+			$dumbCollection->getConfig()
+		);
 	}
 }
 

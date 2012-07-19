@@ -12,6 +12,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
  [x] Collection is countable
  [x] Collection is iterable with foreach
  [x] clear() empties the collection
+ [x] getConfig() returns the items as an array
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\FactoryCollection
  [x] add() creates and returns a new instance of the item class if a second argument is not passed

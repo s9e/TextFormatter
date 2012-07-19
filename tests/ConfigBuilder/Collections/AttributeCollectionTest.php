@@ -6,8 +6,6 @@ use Exception,
     s9e\TextFormatter\Tests\Test,
     s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection;
 
-include_once __DIR__ . '/../../../src/autoloader.php';
-
 /**
 * @covers s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection
 */
