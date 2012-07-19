@@ -10,6 +10,11 @@ namespace s9e\TextFormatter\ConfigBuilder\Items;
 class AttributePreprocessor
 {
 	/**
+	* @var string
+	*/
+	protected $regexp;
+
+	/**
 	* @todo parse the regexp, reject multiple subpatterns that use the same name
 	*
 	* @param string $regexp
@@ -20,11 +25,12 @@ class AttributePreprocessor
 	}
 
 	/**
-	* 
+	* Return the regexp this preprocessor is based on
 	*
-	* @return void
+	* @return string
 	*/
-	public function getTargetAttributes()
+	public function getRegexp()
 	{
+		return $this->regexp;
 	}
 }

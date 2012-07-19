@@ -1,0 +1,22 @@
+Collections:
+- TagCollection (map/factory)
+- AttributeCollection (map/factory)
+- AttributeParserCollection (map/factory)
+- FilterChain (list/stack)
+- FilterCollection (map)
+- PluginCollection (map)
+- Ruleset (map/custom?)
+- Templateset (map?)
+
+Items:
+- Tag (configurable)
+- Attribute (configurable)
+- AttributeParser (configurable)
+- Filter
+
+Helpers:
+- HTML5Helper
+- RegexpHelper
+- TemplateChecker
+- TemplateOptimizer
+- PredefinedTags/PredefinedBBCodes?

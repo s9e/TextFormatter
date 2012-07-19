@@ -9,26 +9,21 @@ namespace s9e\TextFormatter\ConfigBuilder\Items;
 
 use InvalidArgumentException,
     s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection,
-    s9e\TextFormatter\ConfigBuilder\Collections\AttributeParserCollection,
+    s9e\TextFormatter\ConfigBuilder\Collections\AttributePreprocessorCollection,
     s9e\TextFormatter\ConfigBuilder\Collections\Ruleset,
     s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 
 class Tag extends ConfigurableItem
 {
 	/**
-	* @var bool Whether to disable template checking
-	*/
-	protected $allowUnsafeTemplates = false;
-
-	/**
 	* @var AttributeCollection This tag's attributes
 	*/
 	protected $attributes;
 
 	/**
-	* @var AttributeParserCollection This tag's attribute parsers
+	* @var AttributePreprocessorCollection This tag's attribute parsers
 	*/
-	protected $attributeParsers;
+	protected $attributePreprocessors;
 
 	/**
 	* @var string Default rule governing this tag's childen
@@ -71,10 +66,14 @@ class Tag extends ConfigurableItem
 	*/
 	public function __construct(array $options = array())
 	{
-		$this->attributes       = new AttributeCollection;
-		$this->attributeParsers = new AttributeParserCollection;
-		$this->rules            = new Ruleset($this);
-		$this->templates        = new Templateset($this);
+		$this->attributes             = new AttributeCollection;
+		$this->attributePreprocessors = new AttributePreprocessorCollection;
+		$this->rules                  = new Ruleset($this);
+		$this->templates              = new Templateset($this);
+
+		// Sort the options by name so that attributes are set before templates, which is necessary
+		// to evaluate whether the templates are safe
+		ksort($options);
 
 		foreach ($options as $optionName => $optionValue)
 		{
@@ -171,7 +170,7 @@ class Tag extends ConfigurableItem
 	/**
 	* Set all templates associated with this tag
 	*
-	* NOTE: will remove all other templates
+	* NOTE: will remove all other templates. Also, does not allow unsafe templates
 	*
 	* @param array $templates
 	*/
@@ -181,7 +180,17 @@ class Tag extends ConfigurableItem
 
 		foreach ($templates as $predicate => $template)
 		{
-			$this->templates->set($template, $predicate);
+			$this->templates->set($predicate, $template);
 		}
+	}
+
+	/**
+	* Set the default template for this tag
+	*
+	* @param string $template
+	*/
+	public function setDefaultTemplate($template)
+	{
+		$this->templates->set('', $template);
 	}
 }

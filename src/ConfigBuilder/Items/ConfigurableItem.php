@@ -7,8 +7,7 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Items;
 
-use RuntimeException,
-    s9e\TextFormatter\ConfigBuilder\Collections\Collection;
+use RuntimeException;
 
 /**
 * Provides magic __get and __set implementations
@@ -32,15 +31,17 @@ abstract class ConfigurableItem
 		// Look for a setter, e.g. setDefaultChildRule()
 		if (method_exists($this, $methodName))
 		{
-			return $this->$methodName($optionValue);
+			$this->$methodName($optionValue);
 		}
-
-		// If the property already exists, preserve its type
-		if (isset($this->$optionName))
+		else
 		{
-			settype($optionValue, gettype($this->$optionName));
-		}
+			// If the property already exists, preserve its type
+			if (isset($this->$optionName))
+			{
+				settype($optionValue, gettype($this->$optionName));
+			}
 
-		$this->$optionName = $optionValue;
+			$this->$optionName = $optionValue;
+		}
 	}
 }

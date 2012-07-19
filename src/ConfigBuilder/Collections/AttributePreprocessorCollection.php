@@ -9,19 +9,8 @@ namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
 use s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor;
 
-class AttributePreprocessorCollection
+class AttributePreprocessorCollection extends Collection
 {
-	/**
-	* Normalize an attribute preprocessor's name
-	*
-	* @param  string $name Original name
-	* @return string       Normalized name
-	*/
-	public function normalizeName($name)
-	{
-		return strtolower($name);
-	}
-
 	/**
 	* Add an attribute preprocessor
 	*
@@ -47,5 +36,16 @@ class AttributePreprocessorCollection
 	public function getConfig()
 	{
 		return array_map('array_keys', $this->items);
+	}
+
+	/**
+	* Normalize the name of the source attribute
+	*
+	* @param  string $name
+	* @return string
+	*/
+	public function normalizeName($name)
+	{
+		return strtolower($name);
 	}
 }

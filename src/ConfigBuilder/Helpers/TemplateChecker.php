@@ -180,7 +180,7 @@ abstract class TemplateChecker
 	}
 
 	/**
-	* Check a improperly filtered content used in HTML tags
+	* Check for improperly filtered content used in HTML tags
 	*
 	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	* @param Tag      $tag      Tag that this template belongs to

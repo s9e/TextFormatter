@@ -29,19 +29,23 @@ class Templateset extends Collection
 	*
 	* @return void
 	*/
-	public function set($template, $predicate = '')
+	public function set($predicate, $template)
 	{
 		$template = TemplateOptimizer::optimize($template);
 
-		if (!$this->allowUnsafeTemplates)
-		{
-			$unsafeMsg = TemplateHelper::checkUnsafe($template, $this->tag);
+		TemplateHelper::checkUnsafe($template, $this->tag);
 
-			if ($unsafeMsg)
-			{
-				throw new RuntimeException($unsafeMsg);
-			}
-		}
+		$this->items[$predicate] = $template;
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function setUnsafe($predicate, $template)
+	{
+		$template = TemplateOptimizer::optimize($template);
 
 		$this->items[$predicate] = $template;
 	}

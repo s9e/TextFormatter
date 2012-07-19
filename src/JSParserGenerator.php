@@ -131,11 +131,11 @@ class JSParserGenerator
 
 		$config = $this->cb->getParserConfig(true);
 
-		$this->tagsConfig    = $config['tags'];
-		$this->filters       = (isset($config['filters'])) ? $config['filters'] : array();
-		$this->urlConfig     = $config['urlConfig'];
-		$this->namespaces    = (isset($config['namespaces'])) ? $config['namespaces'] : array();
-		$this->rootContext   = $config['rootContext'];
+		$this->tagsConfig  = $config['tags'];
+		$this->filters     = (isset($config['filters'])) ? $config['filters'] : array();
+		$this->urlConfig   = $config['urlConfig'];
+		$this->namespaces  = (isset($config['namespaces'])) ? $config['namespaces'] : array();
+		$this->rootContext = $config['rootContext'];
 	}
 
 	/**

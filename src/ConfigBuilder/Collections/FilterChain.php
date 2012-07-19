@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
 use InvalidArgumentException,
-    Iterator,
     s9e\TextFormatter\ConfigBuilder\Items\Filter;
 
 class FilterChain extends Collection
