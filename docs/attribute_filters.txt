@@ -1,0 +1,19 @@
+$attribute->filterChain->append('#int');           // built-in filter
+$attribute->filterChain->append('strtolower');     // PHP callback strtolower()
+$attribute->filterChain->append(['foo', 'bar']);   // PHP callback foo::bar()
+$attribute->filterChain->append(function(){ .. }); // PHP closure
+
+// Custom filter, appended directly to an attribute's filterChain
+$filter = new Filter('preg_replace');
+$filter->addParameterByValue('#[^\\w]+#');
+$filter->addParameterByValue('.');
+$filter->addParameterByName('attrValue');
+$attribute->filterChain->append($filter);
+
+// Register a custom filter
+$cb->registerFilter('cleanstring', $filter);
+$attribute->filterChain->append('#cleanstring');
+
+// Override a built-in filter (either form)
+$cb->registerFilter('#url', $myUrlFilter);
+$cb->customFilters->register('#url', $myUrlFilter);
