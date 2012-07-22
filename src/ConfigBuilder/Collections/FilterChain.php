@@ -77,7 +77,7 @@ class FilterChain extends Collection
 			));
 		}
 
-		throw new InvalidArgumentException("Callback '" . var_export($filter, true) . "' is not callable");
+		throw new InvalidArgumentException("Callback " . var_export($filter, true) . " is not callable");
 	}
 
 	/**

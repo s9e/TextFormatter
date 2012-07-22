@@ -38,3 +38,11 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FactoryCollection
  [x] remove() throws a RuntimeException if the item does not exist
  [x] remove() throws a InvalidException if the item name is invalid
 
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
+ [x] append() throws an InvalidArgumentException on invalid callbacks
+ [x] prepend() throws an InvalidArgumentException on invalid callbacks
+ [x] append() throws an InvalidArgumentException on uncallable callbacks
+ [x] prepend() throws an InvalidArgumentException on uncallable callbacks
+ [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+

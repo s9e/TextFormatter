@@ -28,6 +28,7 @@
 			<file>ConfigBuilder/Collections/AttributePreprocessorCollectionTest.php</file>
 			<file>ConfigBuilder/Collections/CollectionTest.php</file>
 			<file>ConfigBuilder/Collections/FactoryCollectionTest.php</file>
+			<file>ConfigBuilder/Collections/FilterChainTest.php</file>
 		</testsuite>
 	</testsuites>
 
@@ -37,6 +38,7 @@
 			<file>../src/ConfigBuilder/Collections/AttributePreprocessorCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/Collection.php</file>
 			<file>../src/ConfigBuilder/Collections/FactoryCollection.php</file>
+			<file>../src/ConfigBuilder/Collections/FilterChain.php</file>
 		</whitelist>
 	</filter>
 </phpunit>
