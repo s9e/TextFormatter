@@ -7,8 +7,9 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
-use InvalidArgumentException,
-    s9e\TextFormatter\ConfigBuilder\Items\Filter;
+use InvalidArgumentException;
+use s9e\TextFormatter\ConfigBuilder\Items\Filter;
+use s9e\TextFormatter\ConfigBuilder\Items\FilterLink;
 
 class FilterChain extends Collection
 {
@@ -30,64 +31,74 @@ class FilterChain extends Collection
 	/**
 	* Append a filter to this chain
 	*
-	* @param  string|callback|Filter $filter
+	* @param string|callback|Filter|FilterLink
+	* @param array
 	*/
-	public function append($filter)
+	public function append()
 	{
-		$this->items[] = $this->normalizeFilter($filter);
+		$this->items[] = $this->normalizeLink(func_get_args());
 	}
 
 	/**
 	* Prepend a filter to this chain
 	*
-	* @param  string|callback|Filter $filter
+	* @param string|callback|Filter|FilterLink
+	* @param array
 	*/
-	public function prepend($filter)
+	public function prepend()
 	{
-		array_unshift($this->items, $this->normalizeFilter($filter));
+		array_unshift($this->items, $this->normalizeLink(func_get_args()));
 	}
 
 	/**
-	* Normalize a filter definition
+	* Normalize a link in the filterChain
 	*
-	* @param  string|callback|Filter $filter Name of a built-in filter, callback or Filter instance
-	* @return string|Filter                  Either a string pointing to a built-in filter, or a
-	*                                        Filter object
+	* @param  string|callback|Filter|FilterLink $filter
+	* @param  array                             $filterConfig
+	* @return FilterLink
 	*/
-	protected function normalizeFilter($filter)
+	protected function normalizeLink(array $args)
 	{
-		if ($filter instanceof Filter)
+		if ($args[0] instanceof FilterLink)
 		{
-			// Already a Filter object, nothing to do
-			return $filter;
+			return $args[0];
 		}
 
-		if (is_string($filter) && $filter[0] === '#')
+		if ($args[0] instanceof Filter)
 		{
-			// It's a built-in filter, return as-is
-			return $filter;
+			$filter = $args[0];
 		}
-
-		if (is_callable($filter))
+		elseif (is_string($args[0]) && $args[0][0] === '#')
+		{
+			$filter = $args[0];
+		}
+		elseif (is_callable($args[0]))
 		{
 			// It's a callback with no signature, we'll give it the default signature
-			return Filter::fromArray(array(
-				'callback' => $filter,
+			$filter = Filter::fromArray(array(
+				'callback' => $args[0],
 				'params'   => $this->defaultSignature
 			));
 		}
+		else
+		{
+			throw new InvalidArgumentException("Filter " . var_export($args[0], true) . " is not callable");
+		}
 
-		throw new InvalidArgumentException("Callback " . var_export($filter, true) . " is not callable");
+		$filterConfig = (isset($args[1])) ? $args[1] : array();
+
+		return new FilterLink($filter, $filterConfig);
 	}
 
 	/**
 	* Test whether a given filter is present in this chain
 	*
-	* @param  string|callback|Filter $filter
+	* @param  string|callback|Filter|FilterLink
+	* @param  array
 	* @return bool
 	*/
-	public function has($filter)
+	public function has()
 	{
-		return in_array($this->normalizeFilter($filter), $this->items);
+		return in_array($this->normalizeLink(func_get_args()), $this->items);
 	}
 }

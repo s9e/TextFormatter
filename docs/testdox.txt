@@ -45,4 +45,12 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] prepend() throws an InvalidArgumentException on uncallable callbacks
  [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
  [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\FilterLink are added as-is
+ [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
+ [x] Strings that start with # are kept as-is to indicate the use of built-in filters
+ [x] append() adds the filter at the end of the chain
+ [x] prepend() adds the filter at the beginning of the chain
+ [x] has() returns false if the given filter is not present in the chain
+ [x] has() returns true if the given built-in filter is present in the chain
+ [x] has() returns true if the given PHP string callback is present in the chain
 

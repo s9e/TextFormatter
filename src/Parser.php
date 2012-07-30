@@ -1504,7 +1504,7 @@ class Parser
 	* Filter an attribute value according to given config
 	*
 	* @param  mixed $attrVal  Attribute value
-	* @param  array $attrConf Attribute vconfig
+	* @param  array $attrConf Attribute config
 	* @return mixed           Filtered value, or FALSE if invalid
 	*/
 	protected function filterAttribute($attrVal, array $attrConf)

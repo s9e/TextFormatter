@@ -496,6 +496,7 @@ abstract class TemplateChecker
 			// Those might see some usage
 			'urlencode',
 			'rawurlencode',
+			'strtotime',
 			// URLs should be safe because characters ()'" are urlencoded
 			'#url',
 			'#int',
