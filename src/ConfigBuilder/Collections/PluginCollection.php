@@ -7,9 +7,9 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
-use InvalidArgumentException,
-    s9e\TextFormatter\ConfigBuilder,
-    s9e\TextFormatter\ConfigBuilder\Plugins\Config as PluginConfig;
+use InvalidArgumentException;
+use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\ConfigBuilder\Plugins\Config as PluginConfig;
 
 class PluginCollection extends Collection
 {
@@ -59,12 +59,14 @@ class PluginCollection extends Collection
 	*
 	* @param  string $pluginName    Name of the plugin
 	* @param  string $pluginDir     Path to the plugin's directory
-	* @param  string $namespace     Namespace of the plugin
+	* @param  string $className     Name of the plugin's config class (that extends PluginConfig)
 	* @param  array  $overrideProps Properties of the plugin will be overwritten with those
 	* @return PluginConfig
+	*
+	* @todo
 	*/
 	public function loadCustom($pluginName, $pluginDir, $namespace, array $overrideProps = array())
 	{
-		$this->items[$pluginName] = new $className($this, $overrideProps);
+		$this->items[$pluginName] = new $className($this->cb, $overrideProps);
 	}
 }

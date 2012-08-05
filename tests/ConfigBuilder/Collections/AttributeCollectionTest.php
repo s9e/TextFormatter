@@ -12,9 +12,10 @@ use Exception,
 class AttributeCollectionTest extends Test
 {
 	/**
+	* @group functional
 	* @dataProvider getAttributeNamesInitials
 	*/
-	public function testAttributeNamesMustStartWithALetterOrAnUnderscore($attrName, $expectedValue)
+	public function testNamesMustStartWithALetterOrAnUnderscore($attrName, $expectedValue)
 	{
 		$collection = new AttributeCollection;
 
@@ -34,7 +35,10 @@ class AttributeCollectionTest extends Test
 		);
 	}
 
-	public function testAttributeNamesAreLowercased()
+	/**
+	* @group functional
+	*/
+	public function testNamesAreLowercased()
 	{
 		$collection = new AttributeCollection;
 
@@ -45,7 +49,8 @@ class AttributeCollectionTest extends Test
 	}
 
 	/**
-	* @testdox add() creates instances of s9e\TextFormatter\ConfigBuilder\Items\Attribute
+	* @group functional
+	* @testdox add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
 	*/
 	public function testClassName()
 	{

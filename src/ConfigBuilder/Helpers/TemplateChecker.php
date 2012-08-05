@@ -7,16 +7,17 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
-use DOMAttr,
-    DOMDocument,
-    DOMElement,
-    DOMNode,
-    DOMNodeList,
-    DOMXPath,
-    InvalidArgumentException,
-    LibXMLError,
-    RuntimeException,
-    XSLTProcessor;
+use DOMAttr;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use DOMNodeList;
+use DOMXPath;
+use InvalidArgumentException;
+use LibXMLError;
+use RuntimeException;
+use XSLTProcessor;
+use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 
 abstract class TemplateChecker
 {

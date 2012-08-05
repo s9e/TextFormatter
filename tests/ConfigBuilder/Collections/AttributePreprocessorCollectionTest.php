@@ -11,6 +11,10 @@ use Exception,
 */
 class AttributePreprocessorCollectionTest extends Test
 {
+	/**
+	* @group functional
+	* @testdox Names are lowercased
+	*/
 	public function testAttributePreprocessorNamesAreLowercased()
 	{
 		$collection = new AttributePreprocessorCollection;
@@ -22,7 +26,8 @@ class AttributePreprocessorCollectionTest extends Test
 	}
 
 	/**
-	* @testdox add() creates instances of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
+	* @group functional
+	* @testdox add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
 	*/
 	public function testClassName()
 	{
@@ -35,6 +40,7 @@ class AttributePreprocessorCollectionTest extends Test
 	}
 
 	/**
+	* @group functional
 	* @testdox getConfig() returns a list of regexps for each attribute
 	*/
 	public function testGetConfig()

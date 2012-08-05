@@ -7,6 +7,9 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
+use s9e\TextFormatter\ConfigBuilder\Helpers\TemplateHelper;
+use s9e\TextFormatter\ConfigBuilder\Items\Tag;
+
 class Templateset extends Collection
 {
 	/**
@@ -31,11 +34,7 @@ class Templateset extends Collection
 	*/
 	public function set($predicate, $template)
 	{
-		$template = TemplateOptimizer::optimize($template);
-
-		TemplateHelper::checkUnsafe($template, $this->tag);
-
-		$this->items[$predicate] = $template;
+		$this->setTemplate($predicate, $template, true);
 	}
 
 	/**
@@ -45,8 +44,46 @@ class Templateset extends Collection
 	*/
 	public function setUnsafe($predicate, $template)
 	{
-		$template = TemplateOptimizer::optimize($template);
+		$this->setTemplate($predicate, $template, false);
+	}
+
+	/**
+	* 
+	*
+	* @param string $template
+	*/
+	protected function setTemplate($predicate, $template, $checkUnsafe)
+	{
+		// We optimize the template before checking for unsafe elements because the optimizer tends
+		// to simplify the templates, which should make checking for unsafe elements easier
+		$template = $this->optimize($template);
+
+		if ($checkUnsafe)
+		{
+			$this->checkUnsafe($template);
+		}
 
 		$this->items[$predicate] = $template;
+	}
+
+	/**
+	* 
+	*
+	* @param string $template
+	*/
+	public function checkUnsafe($template)
+	{
+		TemplateHelper::checkUnsafe($template, $this->tag);
+	}
+
+	/**
+	* 
+	*
+	* @param  string $template
+	* @return string
+	*/
+	public function optimize($template)
+	{
+		return TemplateOptimizer::optimize($template);
 	}
 }

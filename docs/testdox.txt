@@ -1,19 +1,3 @@
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
- [x] Attribute names must start with a letter or an underscore
- [x] Attribute names are lowercased
- [x] add() creates instances of s9e\TextFormatter\ConfigBuilder\Items\Attribute
-
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
- [x] Attribute preprocessor names are lowercased
- [x] add() creates instances of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
- [x] getConfig() returns a list of regexps for each attribute
-
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
- [x] Collection is countable
- [x] Collection is iterable with foreach
- [x] clear() empties the collection
- [x] getConfig() returns the items as an array
-
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\FactoryCollection
  [x] add() creates and returns a new instance of the item class if a second argument is not passed
  [x] add() creates and returns a new instance of the item class if the second argument is not an instance of the item class
@@ -53,4 +37,20 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] has() returns false if the given filter is not present in the chain
  [x] has() returns true if the given built-in filter is present in the chain
  [x] has() returns true if the given PHP string callback is present in the chain
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
+ [x] Names must start with a letter or an underscore
+ [x] Names are lowercased
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
+ [x] Names are lowercased
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
+ [x] getConfig() returns a list of regexps for each attribute
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
+ [x] Collection is countable
+ [x] Collection is iterable with foreach
+ [x] clear() empties the collection
+ [x] getConfig() returns the items as an array
 

@@ -68,7 +68,7 @@ class Tag extends ConfigurableItem
 	{
 		$this->attributes             = new AttributeCollection;
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
-		$this->rules                  = new Ruleset($this);
+		$this->rules                  = new Ruleset;
 		$this->templates              = new Templateset($this);
 
 		// Sort the options by name so that attributes are set before templates, which is necessary

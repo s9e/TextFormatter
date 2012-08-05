@@ -17,8 +17,9 @@
 
 	<groups>
 		<include>
-			<!-- Do not run special tests by default -->
 			<group>__nogroup__</group>
+			<group>functional</group>
+			<group>internals</group>
 		</include>
 	</groups>
 

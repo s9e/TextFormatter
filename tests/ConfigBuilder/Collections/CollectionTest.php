@@ -11,12 +11,18 @@ use Exception,
 */
 class CollectionTest extends Test
 {
+	/**
+	* @group functional
+	*/
 	public function testCollectionIsCountable()
 	{
 		$dumbCollection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
 		$this->assertSame(3, count($dumbCollection));
 	}
 
+	/**
+	* @group functional
+	*/
 	public function testCollectionIsIterableWithForeach()
 	{
 		$expectedValue  = array('a' => 1, 'b' => 2, 'c' => 5);
@@ -32,6 +38,7 @@ class CollectionTest extends Test
 	}
 
 	/**
+	* @group functional
 	* @testdox clear() empties the collection
 	* @depends testCollectionIsCountable
 	*/
@@ -43,6 +50,7 @@ class CollectionTest extends Test
 	}
 
 	/**
+	* @group functional
 	* @testdox getConfig() returns the items as an array
 	*/
 	public function testGetConfig()
