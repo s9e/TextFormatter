@@ -44,7 +44,6 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
- [x] Names are lowercased
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
  [x] getConfig() returns a list of regexps for each attribute
 

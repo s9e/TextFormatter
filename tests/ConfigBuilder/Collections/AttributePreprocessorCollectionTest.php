@@ -13,20 +13,6 @@ class AttributePreprocessorCollectionTest extends Test
 {
 	/**
 	* @group functional
-	* @testdox Names are lowercased
-	*/
-	public function testAttributePreprocessorNamesAreLowercased()
-	{
-		$collection = new AttributePreprocessorCollection;
-
-		$this->assertSame(
-			'foobar54z',
-			$collection->normalizeName('FOOBAR54Z')
-		);
-	}
-
-	/**
-	* @group functional
 	* @testdox add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
 	*/
 	public function testClassName()

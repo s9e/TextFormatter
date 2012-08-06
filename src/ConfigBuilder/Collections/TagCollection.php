@@ -7,22 +7,18 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
+use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
+
 class TagCollection extends FactoryCollection
 {
 	public function isValidName($name)
 	{
-		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*:)?[a-z_][a-z_0-9]*$#Di', $name);
+		return TagName::isValid($name);
 	}
 
 	public function normalizeName($name)
 	{
-		// Non-namespaced tags are uppercased
-		if (strpos($name, ':') === false)
-		{
-			$name = strtoupper($name);
-		}
-
-		return $name;
+		return TagName::normalize($name);
 	}
 
 	protected function getItemClass()

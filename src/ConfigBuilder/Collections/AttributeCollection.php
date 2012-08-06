@@ -7,16 +7,18 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
+use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
+
 class AttributeCollection extends FactoryCollection
 {
 	public function isValidName($name)
 	{
-		return (bool) preg_match('#^[a-z_][a-z_0-9\\-]*$#Di', $name);
+		return AttributeName::isValid($name);
 	}
 
 	public function normalizeName($name)
 	{
-		return strtolower($name);
+		return AttributeName::normalize($name);
 	}
 
 	protected function getItemClass()

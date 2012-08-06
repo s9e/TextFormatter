@@ -7,8 +7,9 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
-use InvalidArgumentException,
-    Iterator;
+use InvalidArgumentException;
+use Iterator;
+use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
 class Ruleset extends Collection
 {
@@ -23,22 +24,6 @@ class Ruleset extends Collection
 	public function __construct(TagCollection $tagCollection)
 	{
 		$this->tagCollection = $tagCollection;
-	}
-
-	/**
-	* Validate and normalize the name of a tag
-	*
-	* @param  string $name Original name
-	* @return string       Normalized name
-	*/
-	protected function validateName($name)
-	{
-		if (!$this->tagCollection->isValidName($name))
-		{
-			throw new InvalidArgumentException ("Invalid tag name '" . $name . "'");
-		}
-
-		return $this->tagCollection->normalizeName($name);
 	}
 
 	/**
@@ -65,7 +50,7 @@ class Ruleset extends Collection
 	*/
 	public function allowChild($tagName)
 	{
-		$this->items['allowChild'][] = $this->validateName($tagName);
+		$this->items['allowChild'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -75,7 +60,7 @@ class Ruleset extends Collection
 	*/
 	public function allowDescendant($tagName)
 	{
-		$this->items['allowDescendant'][] = $this->validateName($tagName);
+		$this->items['allowDescendant'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -85,7 +70,7 @@ class Ruleset extends Collection
 	*/
 	public function closeAncestor($tagName)
 	{
-		$this->items['closeAncestor'][] = $this->validateName($tagName);
+		$this->items['closeAncestor'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -95,7 +80,7 @@ class Ruleset extends Collection
 	*/
 	public function closeParent($tagName)
 	{
-		$this->items['closeParent'][] = $this->validateName($tagName);
+		$this->items['closeParent'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -105,7 +90,7 @@ class Ruleset extends Collection
 	*/
 	public function denyChild($tagName)
 	{
-		$this->items['denyChild'][] = $this->validateName($tagName);
+		$this->items['denyChild'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -115,7 +100,7 @@ class Ruleset extends Collection
 	*/
 	public function denyDescendant($tagName)
 	{
-		$this->items['denyDescendant'][] = $this->validateName($tagName);
+		$this->items['denyDescendant'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -125,7 +110,7 @@ class Ruleset extends Collection
 	*/
 	public function reopenChild($tagName)
 	{
-		$this->items['reopenChild'][] = $this->validateName($tagName);
+		$this->items['reopenChild'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -135,7 +120,7 @@ class Ruleset extends Collection
 	*/
 	public function requireParent($tagName)
 	{
-		$this->items['requireParent'][] = $this->validateName($tagName);
+		$this->items['requireParent'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -145,6 +130,6 @@ class Ruleset extends Collection
 	*/
 	public function requireAncestor($tagName)
 	{
-		$this->items['requireAncestor'][] = $this->validateName($tagName);
+		$this->items['requireAncestor'][] = TagName::normalize($tagName);
 	}
 }
