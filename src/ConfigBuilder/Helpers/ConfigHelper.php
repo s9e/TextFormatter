@@ -7,9 +7,9 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
-use RuntimeException,
-    Traversable,
-    s9e\TextFormatter\ConfigBuilder\ConfigProvider;
+use RuntimeException;
+use Traversable;
+use s9e\TextFormatter\ConfigBuilder\ConfigProvider;
 
 abstract class ConfigHelper
 {

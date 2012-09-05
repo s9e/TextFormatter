@@ -1,7 +1,7 @@
 Attribute filters exist to validate, sanitize and/or transform an attribute's value.
 
 A filter can be any of the following type:
-- built-in filter. Their name is prefixed with a the character "#", e.g. "#int"
+- built-in filter. Their name is prefixed with the character "#", e.g. "#int"
 - any valid PHP callback (tested with is_callable())
 - an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
 - a registered filter. Identical in form to built-in filters. They can override built-in filters

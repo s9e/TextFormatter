@@ -7,12 +7,12 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
-use Countable,
-    Iterator,
-    s9e\TextFormatter\ConfigBuilder\ConfigProvider,
-    s9e\TextFormatter\ConfigBuilder\Helpers\ConfigHelper;
+use Countable;
+use Iterator;
+use s9e\TextFormatter\ConfigBuilder\ConfigProvider;
+use s9e\TextFormatter\ConfigBuilder\Helpers\ConfigHelper;
 
-abstract class Collection implements ConfigProvider, Countable, Iterator
+class Collection implements ConfigProvider, Countable, Iterator
 {
 	/**
 	* @var array Items that this collection holds

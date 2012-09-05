@@ -9,6 +9,15 @@ namespace s9e\TextFormatter\ConfigBuilder\Validators;
 
 use InvalidArgumentException;
 
+/**
+* Tag name rules:
+*  - must start with a letter or an underscore
+*  - can only contain letters, numbers and underscores
+*  - can be prefixed with one prefix following the same rules, separated with one colon
+*  - the prefixes "xsl" and "s9e" are reserved
+*
+* Unprefixed names are normalized to uppercase. Prefixed names are preserved as-is.
+*/
 abstract class TagName
 {
 	/**
@@ -19,7 +28,7 @@ abstract class TagName
 	*/
 	public static function isValid($name)
 	{
-		return (bool) preg_match('#^(?:[a-z_][a-z_0-9]*:)?[a-z_][a-z_0-9]*$#Di', $name);
+		return (bool) preg_match('#^(?:(?!xsl|s9e)[a-z_][a-z_0-9]*:)?[a-z_][a-z_0-9]*$#Di', $name);
 	}
 
 	/**

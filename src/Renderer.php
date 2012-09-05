@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter;
 
-use DOMDocument,
-    XSLTProcessor;
+use DOMDocument;
+use XSLTProcessor;
 
 class Renderer
 {

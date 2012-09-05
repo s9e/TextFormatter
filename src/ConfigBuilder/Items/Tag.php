@@ -7,14 +7,16 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Items;
 
-use InvalidArgumentException,
-    s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection,
-    s9e\TextFormatter\ConfigBuilder\Collections\AttributePreprocessorCollection,
-    s9e\TextFormatter\ConfigBuilder\Collections\Ruleset,
-    s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
+use InvalidArgumentException;
+use s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection;
+use s9e\TextFormatter\ConfigBuilder\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\ConfigBuilder\Collections\Ruleset;
+use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 
-class Tag extends ConfigurableItem
+class Tag
 {
+	use Configurable;
+
 	/**
 	* @var AttributeCollection This tag's attributes
 	*/

@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Exceptions;
 
-use DOMNode,
-    RuntimeException;
+use DOMNode;
+use RuntimeException;
 
 class UnsafeTemplateException extends RuntimeException
 {

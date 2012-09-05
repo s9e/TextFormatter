@@ -26,7 +26,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox append() throws an InvalidArgumentException on invalid callbacks 
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is not callable
+	* @expectedExceptionMessage Filter '*invalid*' is neither callable or the reference to a built-in filter
 	*/
 	public function testAppendInvalidCallback()
 	{
@@ -36,7 +36,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks 
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is not callable
+	* @expectedExceptionMessage Filter '*invalid*' is neither callable or the reference to a built-in filter
 	*/
 	public function testPrependInvalidCallback()
 	{
@@ -46,7 +46,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox append() throws an InvalidArgumentException on uncallable callbacks 
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is not callable
+	* @expectedExceptionMessage is neither callable or the reference to a built-in filter
 	*/
 	public function testAppendUncallableCallback()
 	{
@@ -56,7 +56,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on uncallable callbacks 
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is not callable
+	* @expectedExceptionMessage is neither callable or the reference to a built-in filter
 	*/
 	public function testPrependUncallableCallback()
 	{
@@ -70,11 +70,9 @@ class FilterChainTest extends Test
 	{
 		$this->filterChain->append(array($this, 'doNothing'));
 
-		$filterLinks = iterator_to_array($this->filterChain);
-
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\ConfigBuilder\\Items\\Filter',
-			$filterLinks[0]->getFilter()
+			$this->filterChain[0]
 		);
 	}
 

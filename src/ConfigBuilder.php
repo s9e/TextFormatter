@@ -7,16 +7,16 @@
 */
 namespace s9e\TextFormatter;
 
-use InvalidArgumentException,
-    RuntimeException,
-    s9e\TextFormatter\ConfigBuilder\Collection,
-    s9e\TextFormatter\ConfigBuilder\FilterCollection,
-    s9e\TextFormatter\ConfigBuilder\HTML5Helper,
-    s9e\TextFormatter\ConfigBuilder\PredefinedTags,
-    s9e\TextFormatter\ConfigBuilder\RegexpHelper,
-    s9e\TextFormatter\ConfigBuilder\TagCollection,
-    s9e\TextFormatter\ConfigBuilder\TemplateHelper,
-    s9e\TextFormatter\ConfigBuilder\UrlConfig;
+use InvalidArgumentException;
+use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder\Collection;
+use s9e\TextFormatter\ConfigBuilder\FilterCollection;
+use s9e\TextFormatter\ConfigBuilder\HTML5Helper;
+use s9e\TextFormatter\ConfigBuilder\PredefinedTags;
+use s9e\TextFormatter\ConfigBuilder\RegexpHelper;
+use s9e\TextFormatter\ConfigBuilder\TagCollection;
+use s9e\TextFormatter\ConfigBuilder\TemplateHelper;
+use s9e\TextFormatter\ConfigBuilder\UrlConfig;
 
 class ConfigBuilder
 {

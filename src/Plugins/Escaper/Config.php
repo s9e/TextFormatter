@@ -7,9 +7,9 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use DOMDocument,
-    s9e\TextFormatter\ConfigBuilder,
-    s9e\TextFormatter\PluginConfig;
+use DOMDocument;
+use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\PluginConfig;
 
 class EscaperConfig extends PluginConfig
 {

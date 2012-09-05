@@ -7,13 +7,13 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use DOMDocument,
-    DOMXPath,
-    InvalidArgumentException,
-    RuntimeException,
-    s9e\TextFormatter\ConfigBuilder,
-    s9e\TextFormatter\PluginConfig,
-    s9e\TextFormatter\PredefinedBBCodes;
+use DOMDocument;
+use DOMXPath;
+use InvalidArgumentException;
+use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\PluginConfig;
+use s9e\TextFormatter\PredefinedBBCodes;
 
 class BBCodesConfig extends PluginConfig
 {

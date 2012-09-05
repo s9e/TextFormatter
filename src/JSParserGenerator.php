@@ -7,9 +7,9 @@
 */
 namespace s9e\TextFormatter;
 
-use DOMDocument,
-    DOMXPath,
-    RuntimeException;
+use DOMDocument;
+use DOMXPath;
+use RuntimeException;
 
 /**
 * KNOWN LIMITATIONS:

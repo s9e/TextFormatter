@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\ConfigBuilder,
-    s9e\TextFormatter\PluginConfig;
+use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\PluginConfig;
 
 /**
 * The Fabric plugin is a partial implementation of the Textile format.

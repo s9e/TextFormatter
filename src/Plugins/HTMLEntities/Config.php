@@ -7,9 +7,9 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use InvalidArgumentException,
-    s9e\TextFormatter\ConfigBuilder,
-    s9e\TextFormatter\PluginConfig;
+use InvalidArgumentException;
+use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\PluginConfig;
 
 class HTMLEntitiesConfig extends PluginConfig
 {

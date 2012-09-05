@@ -9,6 +9,13 @@ namespace s9e\TextFormatter\ConfigBuilder\Validators;
 
 use InvalidArgumentException;
 
+/**
+* Attribute name rules:
+*  - must start with a letter or an underscore
+*  - can only contain letters, numbers, underscores and dashes
+*
+* Unprefixed names are normalized to uppercase. Prefixed names are preserved as-is.
+*/
 abstract class AttributeName
 {
 	/**

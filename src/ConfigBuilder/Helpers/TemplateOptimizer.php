@@ -7,15 +7,15 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
-use DOMAttr,
-    DOMDocument,
-    DOMElement,
-    DOMNodeList,
-    DOMXPath,
-    InvalidArgumentException,
-    LibXMLError,
-    RuntimeException,
-    XSLTProcessor;
+use DOMAttr;
+use DOMDocument;
+use DOMElement;
+use DOMNodeList;
+use DOMXPath;
+use InvalidArgumentException;
+use LibXMLError;
+use RuntimeException;
+use XSLTProcessor;
 
 abstract class TemplateHelper
 {

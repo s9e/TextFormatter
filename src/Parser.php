@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter;
 
-use RuntimeException,
-    XMLWriter;
+use RuntimeException;
+use XMLWriter;
 
 class Parser
 {

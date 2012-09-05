@@ -7,22 +7,20 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
+use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
-class TagCollection extends FactoryCollection
+class TagCollection extends NormalizedCollection
 {
-	public function isValidName($name)
+	public function normalizeKey($key)
 	{
-		return TagName::isValid($name);
+		return TagName::normalize($key);
 	}
 
-	public function normalizeName($name)
+	public function normalizeValue($value)
 	{
-		return TagName::normalize($name);
-	}
-
-	protected function getItemClass()
-	{
-		return 's9e\\TextFormatter\\ConfigBuilder\\Items\\Tag';
+		return ($value instanceof Tag)
+		     ? $value
+		     : new Tag($value);
 	}
 }

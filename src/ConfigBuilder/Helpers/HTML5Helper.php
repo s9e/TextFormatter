@@ -7,14 +7,14 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
-use DOMDocument,
-    DOMXPath,
-    InvalidArgumentException,
-    RuntimeException,
-    SimpleXMLElement,
-    UnexpectedValueException,
-    XSLTProcessor,
-    s9e\TextFormatter\ConfigBuilder\TagCollection;
+use DOMDocument;
+use DOMXPath;
+use InvalidArgumentException;
+use RuntimeException;
+use SimpleXMLElement;
+use UnexpectedValueException;
+use XSLTProcessor;
+use s9e\TextFormatter\ConfigBuilder\TagCollection;
 
 abstract class HTML5Helper
 {

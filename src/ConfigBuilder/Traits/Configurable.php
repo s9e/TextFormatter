@@ -5,14 +5,14 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\ConfigBuilder\Items;
+namespace s9e\TextFormatter\ConfigBuilder\Traits;
 
 use RuntimeException;
 
 /**
 * Provides magic __get and __set implementations
 */
-abstract class ConfigurableItem
+trait Configurable
 {
 	public function __get($optionName)
 	{

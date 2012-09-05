@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder;
 
-use InvalidArgumentException,
-    RuntimeException;
+use InvalidArgumentException;
+use RuntimeException;
 
 class UrlConfig implements ConfigProvider
 {

@@ -2,9 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\ConfigBuilder\Collections;
 
-use Exception,
-    s9e\TextFormatter\Tests\Test,
-    s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection;
+use Exception;
+use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection;
 
 /**
 * @covers s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection

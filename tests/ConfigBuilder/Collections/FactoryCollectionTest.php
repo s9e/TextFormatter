@@ -2,9 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\ConfigBuilder\Collections;
 
-use Exception,
-    s9e\TextFormatter\Tests\Test,
-    s9e\TextFormatter\ConfigBuilder\Collections\FactoryCollection;
+use Exception;
+use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\ConfigBuilder\Collections\FactoryCollection;
 
 /**
 * @covers s9e\TextFormatter\ConfigBuilder\Collections\FactoryCollection
@@ -94,7 +94,7 @@ class FactoryCollectionTest extends Test
 	/**
 	* @testdox add() uses the value returned by normalizeName() as the item name
 	*/
-	public function testAddUsesNormalizedName()
+	public function testAddUsesFactoryName()
 	{
 		$collection = $this->newCollection();
 
@@ -167,7 +167,7 @@ class FactoryCollectionTest extends Test
 	/**
 	* @testdox exists() uses the value returned by normalizeName() as the item name
 	*/
-	public function testExistsUsesNormalizedName()
+	public function testExistsUsesFactoryName()
 	{
 		$collection = $this->newCollection();
 
@@ -227,7 +227,7 @@ class FactoryCollectionTest extends Test
 	/**
 	* @testdox get() uses the value returned by normalizeName() as the item name
 	*/
-	public function testGetUsesNormalizedName()
+	public function testGetUsesFactoryName()
 	{
 		$collection = $this->newCollection();
 		$item = $this->newItem();
@@ -296,7 +296,7 @@ class FactoryCollectionTest extends Test
 	/**
 	* @testdox remove() uses the value returned by normalizeName() as the item name
 	*/
-	public function testRemoveUsesNormalizedName()
+	public function testRemoveUsesFactoryName()
 	{
 		$collection = $this->newCollection();
 		$item = $this->newItem();

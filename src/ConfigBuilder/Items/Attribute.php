@@ -7,11 +7,13 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Items;
 
-use InvalidArgumentException,
-    s9e\TextFormatter\ConfigBuilder\Collections\FilterChain;
+use InvalidArgumentException;
+use s9e\TextFormatter\ConfigBuilder\Collections\FilterChain;
 
-class Attribute extends ConfigurableItem
+class Attribute
 {
+	use Configurable;
+
 	/**
 	* @var FilterChain This attribute's filter chain
 	*/

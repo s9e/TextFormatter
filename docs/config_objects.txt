@@ -5,8 +5,8 @@ Collections:
 - FilterChain (list/stack)
 - FilterCollection (map)
 - PluginCollection (map)
-- Ruleset (map/custom?)
-- Templateset (map?)
+- Ruleset (custom)
+- Templateset (custom)
 
 Items:
 - Tag (configurable)

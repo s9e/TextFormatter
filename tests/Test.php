@@ -2,13 +2,13 @@
 
 namespace s9e\TextFormatter\Tests;
 
-use ReflectionClass,
-    ReflectionMethod,
-    RuntimeException,
-    stdClass,
-    s9e\TextFormatter\Callback,
-    s9e\TextFormatter\ConfigBuilder,
-    s9e\TextFormatter\JSParserGenerator;
+use ReflectionClass;
+use ReflectionMethod;
+use RuntimeException;
+use stdClass;
+use s9e\TextFormatter\Callback;
+use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\JSParserGenerator;
 
 abstract class Test extends \PHPUnit_Framework_TestCase
 {

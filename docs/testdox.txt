@@ -1,55 +1,43 @@
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\FactoryCollection
- [x] add() creates and returns a new instance of the item class if a second argument is not passed
- [x] add() creates and returns a new instance of the item class if the second argument is not an instance of the item class
- [x] add() passes all of its arguments after the first to the item constructor if its second argument is not an instance of the item class
- [x] add() calls normalizeName() with the item name
- [x] add() uses the value returned by normalizeName() as the item name
- [x] add() throws a RuntimeException if the item name is already is use
- [x] add() throws a InvalidException if the item name is invalid
- [x] exists() returns TRUE if the item exists
- [x] exists() returns FALSE if the item does not exist
- [x] exists() calls normalizeName() with the item name
- [x] exists() uses the value returned by normalizeName() as the item name
- [x] exists() throws a InvalidException if the item name is invalid
- [x] get() returns an item by name
- [x] get() calls normalizeName() with the item name
- [x] get() uses the value returned by normalizeName() as the item name
- [x] get() throws a RuntimeException if the item does not exist
- [x] get() throws a InvalidException if the item name is invalid
- [x] remove() removes an item by name
- [x] remove() calls the item's normalizeName() method with the item name
- [x] remove() uses the value returned by normalizeName() as the item name
- [x] remove() throws a RuntimeException if the item does not exist
- [x] remove() throws a InvalidException if the item name is invalid
+s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
+ [x] "url" is valid
+ [x] "url" is normalized to "url"
+ [x] "URL" is valid
+ [x] "URL" is normalized to "url"
+ [x] "_url" is valid
+ [x] "_url" is normalized to "_url"
+ [x] "md5" is valid
+ [x] "md5" is normalized to "md5"
+ [x] "5md" is invalid (names must start with a letter)
+ [x] "data-src" is valid
+ [x] "data-src" is normalized to "data-src"
+ [x] "foo:bar" is invalid (no colons allowed)
+ [x] "foo\n" is invalid (no newlines allowed)
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
- [x] append() throws an InvalidArgumentException on invalid callbacks
- [x] prepend() throws an InvalidArgumentException on invalid callbacks
- [x] append() throws an InvalidArgumentException on uncallable callbacks
- [x] prepend() throws an InvalidArgumentException on uncallable callbacks
- [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
- [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
- [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\FilterLink are added as-is
- [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
- [x] Strings that start with # are kept as-is to indicate the use of built-in filters
- [x] append() adds the filter at the end of the chain
- [x] prepend() adds the filter at the beginning of the chain
- [x] has() returns false if the given filter is not present in the chain
- [x] has() returns true if the given built-in filter is present in the chain
- [x] has() returns true if the given PHP string callback is present in the chain
-
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
- [x] Names must start with a letter or an underscore
- [x] Names are lowercased
- [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
-
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
- [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
- [x] getConfig() returns a list of regexps for each attribute
-
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
- [x] Collection is countable
- [x] Collection is iterable with foreach
- [x] clear() empties the collection
- [x] getConfig() returns the items as an array
+s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
+ [x] "b" is valid
+ [x] "b" is normalized to "B"
+ [x] "B" is valid
+ [x] "B" is normalized to "B"
+ [x] "_b" is valid
+ [x] "_b" is normalized to "_B"
+ [x] "H1" is valid
+ [x] "H1" is normalized to "H1"
+ [x] "1H" is invalid (names must start with a letter)
+ [x] "foo-bar" is invalid (no dashes allowed)
+ [x] "foo:bar" is valid
+ [x] "foo:bar" is normalized to "foo:bar"
+ [x] ":bar" is invalid (empty prefix)
+ [x] "_foo:bar" is valid
+ [x] "_foo:bar" is normalized to "_foo:bar"
+ [x] "Foo:bar" is valid
+ [x] "Foo:bar" is normalized to "Foo:bar"
+ [x] "f00:b4r" is valid
+ [x] "f00:b4r" is normalized to "f00:b4r"
+ [x] "foo_bar:baz" is valid
+ [x] "foo_bar:baz" is normalized to "foo_bar:baz"
+ [x] "7up:foo" is invalid (prefix must start with a letter)
+ [x] "foo:bar:baz" is invalid (only one colon allowed)
+ [x] "xsl:foo" is invalid ('xsl' prefix is reserved)
+ [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
+ [x] "B\n" is invalid (no newlines allowed)
 

@@ -7,9 +7,9 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder;
 
-use BadMethodCallException,
-    RuntimeException,
-    s9e\TextFormatter\ConfigBuilder;
+use BadMethodCallException;
+use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder;
 
 /**
 * This class attempts to hold the definitions of the most commonly requested BBCodes.

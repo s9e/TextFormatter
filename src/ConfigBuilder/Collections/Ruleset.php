@@ -11,20 +11,9 @@ use InvalidArgumentException;
 use Iterator;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
-class Ruleset extends Collection
+class Ruleset
 {
-	/**
-	* @var tagCollection The tagCollection instance used to validate tag names
-	*/
-	protected $tagCollection;
-
-	/**
-	* @param  TagCollection $tagCollection The tagCollection instance used to validate tag names
-	*/
-	public function __construct(TagCollection $tagCollection)
-	{
-		$this->tagCollection = $tagCollection;
-	}
+	use IterableItems;
 
 	/**
 	* Remove a subset of, or all the rules

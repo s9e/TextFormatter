@@ -25,11 +25,15 @@
 
 	<testsuites>
 		<testsuite name="TextFormatter">
+			<!-- Test the base classes first -->
+			<file>ConfigBuilder/Collections/CollectionTest.php</file>
+			<file>ConfigBuilder/Collections/NormalizedCollectionTest.php</file>
+
 			<file>ConfigBuilder/Collections/AttributeCollectionTest.php</file>
 			<file>ConfigBuilder/Collections/AttributePreprocessorCollectionTest.php</file>
-			<file>ConfigBuilder/Collections/CollectionTest.php</file>
-			<file>ConfigBuilder/Collections/FactoryCollectionTest.php</file>
 			<file>ConfigBuilder/Collections/FilterChainTest.php</file>
+			<file>ConfigBuilder/Validators/AttributeNameTest.php</file>
+			<file>ConfigBuilder/Validators/TagNameTest.php</file>
 		</testsuite>
 	</testsuites>
 
@@ -38,8 +42,10 @@
 			<file>../src/ConfigBuilder/Collections/AttributeCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/AttributePreprocessorCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/Collection.php</file>
-			<file>../src/ConfigBuilder/Collections/FactoryCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/FilterChain.php</file>
+			<file>../src/ConfigBuilder/Collections/NormalizedCollection.php</file>
+			<file>../src/ConfigBuilder/Validators/AttributeName.php</file>
+			<file>../src/ConfigBuilder/Validators/TagName.php</file>
 		</whitelist>
 	</filter>
 </phpunit>

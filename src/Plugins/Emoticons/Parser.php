@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\Parser,
-    s9e\TextFormatter\PluginParser;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\PluginParser;
 
 class EmoticonsParser extends PluginParser
 {

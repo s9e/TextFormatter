@@ -7,22 +7,20 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
+use s9e\TextFormatter\ConfigBuilder\Items\Attribute;
 use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
 
-class AttributeCollection extends FactoryCollection
+class AttributeCollection extends NormalizedCollection
 {
-	public function isValidName($name)
+	public function normalizeKey($key)
 	{
-		return AttributeName::isValid($name);
+		return AttributeName::normalize($key);
 	}
 
-	public function normalizeName($name)
+	public function normalizeValue($value)
 	{
-		return AttributeName::normalize($name);
-	}
-
-	protected function getItemClass()
-	{
-		return 's9e\\TextFormatter\\ConfigBuilder\\Items\\Attribute';
+		return ($value instanceof Attribute)
+		     ? $value
+		     : new Attribute($value);
 	}
 }
