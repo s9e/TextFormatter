@@ -7,14 +7,10 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
-use InvalidArgumentException;
-use Iterator;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
-class Ruleset
+class Ruleset extends Collection
 {
-	use IterableItems;
-
 	/**
 	* Remove a subset of, or all the rules
 	*
@@ -24,7 +20,7 @@ class Ruleset
 	{
 		if (isset($type))
 		{
-			$this->items[$type] = array();
+			unset($this->items[$type]);
 		}
 		else
 		{

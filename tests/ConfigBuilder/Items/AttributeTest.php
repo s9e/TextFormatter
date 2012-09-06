@@ -12,6 +12,18 @@ use s9e\TextFormatter\ConfigBuilder\Items\Attribute;
 class AttributeTest extends Test
 {
 	/**
+	* @testdox An array of options can be passed to the constructor
+	*/
+	public function testConstructorOptions()
+	{
+		$attr = new Attribute(array('isRequired' => false));
+		$this->assertFalse($attr->isRequired);
+
+		$attr = new Attribute(array('isRequired' => true));
+		$this->assertTrue($attr->isRequired);
+	}
+
+	/**
 	* @testdox The filterChain property can be assigned an array
 	*/
 	public function testSetFilterChainArray()
@@ -38,5 +50,16 @@ class AttributeTest extends Test
 		$attr->filterChain = $filterChain;
 
 		$this->assertSame($filterChain, $attr->filterChain);
+	}
+
+	/**
+	* @testdox setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage setFilterChain() expects an array or an instance of FilterChain
+	*/
+	public function testSetFilterChainInvalid()
+	{
+		$attr = new Attribute;
+		$attr->filterChain = false;
 	}
 }

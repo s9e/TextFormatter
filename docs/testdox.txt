@@ -1,7 +1,3 @@
-s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
- [x] The filterChain property can be assigned an array
- [x] The filterChain property can be replaced with another instance of FilterChain
-
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
  [x] Collection is countable
  [x] Collection is iterable with foreach
@@ -49,6 +45,28 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] has() returns true if the given built-in filter is present in the chain
  [x] has() returns true if the given PHP string callback is present in the chain
 
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
+ [x] clear() removes all rules
+ [x] clear('allowChild') removes only 'allowChild' rules
+ [x] allowChild() throws an exception on invalid tag name
+ [x] allowChild() normalizes tag name
+ [x] allowDescendant() throws an exception on invalid tag name
+ [x] allowDescendant() normalizes tag name
+ [x] closeAncestor() throws an exception on invalid tag name
+ [x] closeAncestor() normalizes tag name
+ [x] closeParent() throws an exception on invalid tag name
+ [x] closeParent() normalizes tag name
+ [x] denyChild() throws an exception on invalid tag name
+ [x] denyChild() normalizes tag name
+ [x] denyDescendant() throws an exception on invalid tag name
+ [x] denyDescendant() normalizes tag name
+ [x] reopenChild() throws an exception on invalid tag name
+ [x] reopenChild() normalizes tag name
+ [x] requireParent() throws an exception on invalid tag name
+ [x] requireParent() normalizes tag name
+ [x] requireAncestor() throws an exception on invalid tag name
+ [x] requireAncestor() normalizes tag name
+
 s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
  [x] "url" is valid
  [x] "url" is normalized to "url"
@@ -91,4 +109,13 @@ s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
  [x] "xsl:foo" is invalid ('xsl' prefix is reserved)
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
+
+s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
+ [x] An array of options can be passed to the constructor
+ [x] The filterChain property can be assigned an array
+ [x] The filterChain property can be replaced with another instance of FilterChain
+ [x] setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
+
+s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
+ [x] An array of options can be passed to the constructor
 
