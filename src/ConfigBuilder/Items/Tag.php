@@ -12,6 +12,7 @@ use s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection;
 use s9e\TextFormatter\ConfigBuilder\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\ConfigBuilder\Collections\Ruleset;
 use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
+use s9e\TextFormatter\ConfigBuilder\Traits\Configurable;
 
 class Tag
 {

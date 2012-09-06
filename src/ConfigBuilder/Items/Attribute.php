@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder\Items;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\ConfigBuilder\Collections\FilterChain;
+use s9e\TextFormatter\ConfigBuilder\Traits\Configurable;
 
 class Attribute
 {

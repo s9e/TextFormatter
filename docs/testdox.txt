@@ -1,3 +1,6 @@
+s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
+ [x] The filterChain property can assigned an array
+
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
  [x] 
 
@@ -14,6 +17,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
  [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
  [x] append() adds the filter at the end of the chain
+ [x] prepend() adds the filter at the beginning of the chain
 
 s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
  [x] "url" is valid
