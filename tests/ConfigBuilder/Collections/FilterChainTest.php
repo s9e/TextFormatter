@@ -135,7 +135,6 @@ class FilterChainTest extends Test
 
 	/**
 	* @testdox has() returns false if the given filter is not present in the chain
-	* @depends testBuiltIn
 	*/
 	public function testNegativeHas()
 	{
@@ -146,7 +145,6 @@ class FilterChainTest extends Test
 
 	/**
 	* @testdox has() returns true if the given built-in filter is present in the chain
-	* @depends testBuiltIn
 	*/
 	public function testHasBuiltIn()
 	{
@@ -157,7 +155,6 @@ class FilterChainTest extends Test
 
 	/**
 	* @testdox has() returns true if the given PHP string callback is present in the chain
-	* @depends testBuiltIn
 	*/
 	public function testHasStringCallback()
 	{

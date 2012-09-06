@@ -1,8 +1,18 @@
 s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
- [x] The filterChain property can assigned an array
+ [x] The filterChain property can be assigned an array
+ [x] The filterChain property can be replaced with another instance of FilterChain
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
+ [x] Collection is countable
+ [x] Collection is iterable with foreach
+ [x] clear() empties the collection
+ [x] getConfig() returns the items as an array
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
  [x] 
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
@@ -18,6 +28,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
  [x] append() adds the filter at the end of the chain
  [x] prepend() adds the filter at the beginning of the chain
+ [x] has() returns false if the given filter is not present in the chain
+ [x] has() returns true if the given built-in filter is present in the chain
+ [x] has() returns true if the given PHP string callback is present in the chain
 
 s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
  [x] "url" is valid
@@ -62,10 +75,3 @@ s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
- [x] Collection is countable
- [x] Collection is iterable with foreach
- [x] clear() empties the collection
- [x] getConfig() returns the items as an array
-
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
