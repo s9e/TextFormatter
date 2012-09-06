@@ -9,7 +9,24 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
  [x] getConfig() returns the items as an array
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
- [x] 
+ [x] set() calls normalizeKey()
+ [x] set() calls normalizeValue()
+ [x] add() calls normalizeKey()
+ [x] add() calls normalizeValue()
+ [x] add() can be called without a second parameter
+ [x] get() throws a RuntimeException if the item already exists
+ [x] exists() returns TRUE if the item exists
+ [x] exists() returns FALSE if the item does not exist
+ [x] exists() calls normalizeKey()
+ [x] get() returns an item by name
+ [x] get() calls normalizeKey()
+ [x] get() throws a RuntimeException if the item does not exist
+ [x] delete() removes an item by name
+ [x] delete() calls the item's normalizeKey() method
+ [x] isset($collection['foo']) maps to $collection->exists('foo')
+ [x] $collection['foo'] maps to $collection->get('foo')
+ [x] $collection['foo'] = 42 maps to $collection->set('foo', 42)
+ [x] unset($collection['foo']) maps to $collection->delete('foo')
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute

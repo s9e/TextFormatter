@@ -10,50 +10,47 @@ namespace s9e\TextFormatter\ConfigBuilder\Collections;
 use ArrayAccess;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\ConfigBuilder\Traits\CollectionAccessor;
 
 class NormalizedCollection extends Collection implements ArrayAccess
 {
-	use CollectionAccessor;
+	//==========================================================================
+	// Overridable methods
+	//==========================================================================
 
 	/**
-	* Return a value from this collection
+	* Normalize an item's key
 	*
-	* @param  string $key
-	* @return mixed
+	* This method can be overridden to implement keys normalization or implement constraints
+	*
+	* @param  string $key Original key
+	* @return string      Normalized key
 	*/
-	public function get($key)
+	public function normalizeKey($key)
 	{
-		$key = $this->normalizeKey($key);
-
-		if (!array_key_exists($key, $this->items))
-		{
-			throw new RuntimeException("Item '" . $key . "' does not exist");
-		}
-
-		return $this->items[$key];
+		return $key;
 	}
 
 	/**
-	* Set and overwrite a value in this collection
+	* Normalize a value for storage
 	*
-	* @param  string $key
-	* @param  mixed  $value
-	* @return mixed
+	* This method can be overridden to implement value normalization
+	*
+	* @param  mixed $value Original value
+	* @return mixed        Normalized value
 	*/
-	public function set($key, $value)
+	public function normalizeValue($value)
 	{
-		$key = $this->normalizeKey($key);
-
-		$this->items[$key] = $this->normalizeValue($value);
-
-		return $this->items[$key];
+		return $value;
 	}
 
+	//==========================================================================
+	// Items access/manipulation
+	//==========================================================================
+
 	/**
-	* Add a value to this collection
+	* Add an item to this collection
 	*
-	* Note: relies on exists() to validate/normalize the key
+	* Note: relies on exists() to normalize the key
 	*
 	* @param  string $key
 	* @param  mixed  $value
@@ -91,7 +88,41 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	{
 		$key = $this->normalizeKey($key);
 
-		return isset($this->items[$key]);
+		return array_key_exists($key, $this->items);
+	}
+
+	/**
+	* Return a value from this collection
+	*
+	* @param  string $key
+	* @return mixed
+	*/
+	public function get($key)
+	{
+		if (!$this->exists($key))
+		{
+			throw new RuntimeException("Item '" . $key . "' does not exist");
+		}
+
+		$key = $this->normalizeKey($key);
+
+		return $this->items[$key];
+	}
+
+	/**
+	* Set and overwrite a value in this collection
+	*
+	* @param  string $key
+	* @param  mixed  $value
+	* @return mixed
+	*/
+	public function set($key, $value)
+	{
+		$key = $this->normalizeKey($key);
+
+		$this->items[$key] = $this->normalizeValue($value);
+
+		return $this->items[$key];
 	}
 
 	//==========================================================================
@@ -116,35 +147,5 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	public function offsetUnset($offset)
 	{
 		$this->delete($offset);
-	}
-
-	//==========================================================================
-	// Overridable methods
-	//==========================================================================
-
-	/**
-	* Normalize an item's key
-	*
-	* This method can be overridden to implement keys normalization or implement constraints
-	*
-	* @param  string $key Original key
-	* @return string      Normalized key
-	*/
-	public function normalizeKey($key)
-	{
-		return $key;
-	}
-
-	/**
-	* Normalize a value for storage
-	*
-	* This method can be overridden to implement value normalization
-	*
-	* @param  mixed $value Original value
-	* @return mixed        Normalized value
-	*/
-	public function normalizeValue($value)
-	{
-		return $value;
 	}
 }
