@@ -68,7 +68,7 @@ class FilterChainTest extends Test
 	*/
 	public function testStringCallback()
 	{
-		$this->filterChain->append(array($this, 'doNothing'));
+		$this->filterChain->append('strtolower');
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\ConfigBuilder\\Items\\Filter',
@@ -81,30 +81,11 @@ class FilterChainTest extends Test
 	*/
 	public function testArrayCallback()
 	{
-		$this->filterChain->append('strtolower');
-
-		$filterLinks = iterator_to_array($this->filterChain);
+		$this->filterChain->append(array($this, 'doNothing'));
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\ConfigBuilder\\Items\\Filter',
-			$filterLinks[0]->getFilter()
-		);
-	}
-
-	/**
-	* @testdox Instances of s9e\TextFormatter\ConfigBuilder\Items\FilterLink are added as-is
-	*/
-	public function testFilterLinkInstance()
-	{
-		$filter     = new Filter('strtolower');
-		$filterLink = new FilterLink($filter, array());
-		$this->filterChain->append($filterLink);
-
-		$filterLinks = iterator_to_array($this->filterChain);
-
-		$this->assertSame(
-			$filterLink,
-			$filterLinks[0]
+			$this->filterChain[0]
 		);
 	}
 
@@ -113,74 +94,43 @@ class FilterChainTest extends Test
 	*/
 	public function testFilterInstance()
 	{
-		$filter = new Filter('strtolower');
+		$filter = new Filter('#int');
 		$this->filterChain->append($filter);
-
-		$filterLinks = iterator_to_array($this->filterChain);
 
 		$this->assertSame(
 			$filter,
-			$filterLinks[0]->getFilter()
-		);
-	}
-
-	/**
-	* @testdox Strings that start with # are kept as-is to indicate the use of built-in filters
-	*/
-	public function testBuiltIn()
-	{
-		$this->filterChain->append('#int');
-
-		$filterLinks = iterator_to_array($this->filterChain);
-
-		$this->assertSame(
-			'#int',
-			$filterLinks[0]->getFilter()
+			$this->filterChain[0]
 		);
 	}
 
 	/**
 	* @testdox append() adds the filter at the end of the chain
-	* @depends testBuiltIn
 	*/
 	public function testAppend()
 	{
-		$this->filterChain->append('#int');
-		$this->filterChain->append('#url');
+		$int = new Filter('#int');
+		$url = new Filter('#url');
 
-		$filterLinks = iterator_to_array($this->filterChain);
+		$this->filterChain->append($int);
+		$this->filterChain->append($url);
 
-		$this->assertSame(
-			'#int',
-			$filterLinks[0]->getFilter()
-		);
-
-		$this->assertSame(
-			'#url',
-			$filterLinks[1]->getFilter()
-		);
+		$this->assertSame($int, $this->filterChain[0]);
+		$this->assertSame($url, $this->filterChain[1]);
 	}
 
 	/**
 	* @testdox prepend() adds the filter at the beginning of the chain
-	* @depends testBuiltIn
 	*/
 	public function testPrepend()
 	{
-		$this->filterChain->prepend('#int');
-		$this->filterChain->prepend('#url');
+		$int = new Filter('#int');
+		$url = new Filter('#url');
 
-		$filterLinks = iterator_to_array($this->filterChain);
+		$this->filterChain->append($url);
+		$this->filterChain->append($int);
 
-		$this->assertSame(
-			'#url',
-			$filterLinks[0]->getFilter()
-		);
-
-		$this->assertSame(
-			'#int',
-			$filterLinks[1]->getFilter()
-		);
+		$this->assertSame($url, $this->filterChain[0]);
+		$this->assertSame($int, $this->filterChain[1]);
 	}
 
 	/**

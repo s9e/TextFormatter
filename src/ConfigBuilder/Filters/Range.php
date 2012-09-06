@@ -7,67 +7,48 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Filters;
 
-use InvalidArgumentException;
-use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder\Exceptions\InvalidFilterException;
 
-class Range
+abstract class Range
 {
-	/**
-	* @var float
-	*/
-	protected $min;
-
-	/**
-	* @var float
-	*/
-	protected $max;
-
-	/**
-	* @var float
-	*/
-	protected $step;
-
-	public function check()
+	public static function formatConfig(array $vars)
 	{
-		if (!isset($this->min, $this->max))
+		$config = array();
+
+		foreach (array('min', 'max') as $varName)
 		{
-			throw new RuntimeException("Both 'min' and 'max' must be set");
+			if (!isset($vars[$varName]))
+			{
+				throw new InvalidFilterException("Variable '" . $varName . "' is missing");
+			}
+
+			$value = filter_var($vars[$varName], FILTER_VALIDATE_FLOAT);
+
+			if ($value === false)
+			{
+				throw new InvalidFilterException("Variable '" . $varName . "' must be a number");
+			}
+
+			$config[$varName] = $value;
 		}
 
-		if ($this->min > $this->max)
+		if ($vars['min'] > $vars['max'])
 		{
-			throw new RuntimeException("The 'min' value cannot be greater than the 'max' value");
-		}
-	}
-
-	public function setMin($min)
-	{
-		if (filter_var($min, FILTER_VALIDATE_FLOAT) === false)
-		{
-			throw new InvalidArgumentException;
+			throw new InvalidFilterException("The 'max' value must be greater or equal to the 'min' value");
 		}
 
-		$this->min = $min;
-	}
-
-	public function setMax($max)
-	{
-		if (filter_var($max, FILTER_VALIDATE_FLOAT) === false)
+		if (isset($vars['step']))
 		{
-			throw new InvalidArgumentException;
+			$value = filter_var($vars['step'], FILTER_VALIDATE_FLOAT);
+
+			if ($value === false)
+			{
+				throw new InvalidFilterException("Variable 'step' must be a number greater than 0");
+			}
+
+			$config['step'] = $value;
 		}
 
-		$this->max = $max;
-	}
-
-	public function setStep($step)
-	{
-		if (filter_var($step, FILTER_VALIDATE_FLOAT) === false
-		 || $step <= 0)
-		{
-			throw new InvalidArgumentException;
-		}
-
-		$this->step = $step;
+		return $config;
 	}
 }

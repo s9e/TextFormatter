@@ -66,20 +66,23 @@ class Tag
 	/**
 	* @param array $options This tag's options
 	*/
-	public function __construct(array $options = array())
+	public function __construct(array $options = null)
 	{
 		$this->attributes             = new AttributeCollection;
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
 		$this->rules                  = new Ruleset;
 		$this->templates              = new Templateset($this);
 
-		// Sort the options by name so that attributes are set before templates, which is necessary
-		// to evaluate whether the templates are safe
-		ksort($options);
-
-		foreach ($options as $optionName => $optionValue)
+		if (isset($options))
 		{
-			$this->__set($optionName, $optionValue);
+			// Sort the options by name so that attributes are set before templates, which is
+			// necessary to evaluate whether the templates are safe
+			ksort($options);
+
+			foreach ($options as $optionName => $optionValue)
+			{
+				$this->__set($optionName, $optionValue);
+			}
 		}
 	}
 

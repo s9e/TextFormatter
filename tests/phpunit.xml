@@ -25,6 +25,9 @@
 
 	<testsuites>
 		<testsuite name="TextFormatter">
+			<!-- Test items first, they'll be needed to test collections -->
+			<file>ConfigBuilder/Items/AttributeTest.php</file>
+
 			<!-- Test the base classes first -->
 			<file>ConfigBuilder/Collections/CollectionTest.php</file>
 			<file>ConfigBuilder/Collections/NormalizedCollectionTest.php</file>
@@ -44,6 +47,8 @@
 			<file>../src/ConfigBuilder/Collections/Collection.php</file>
 			<file>../src/ConfigBuilder/Collections/FilterChain.php</file>
 			<file>../src/ConfigBuilder/Collections/NormalizedCollection.php</file>
+			<file>../src/ConfigBuilder/Items/Attribute.php</file>
+			<file>../src/ConfigBuilder/Items/Tag.php</file>
 			<file>../src/ConfigBuilder/Validators/AttributeName.php</file>
 			<file>../src/ConfigBuilder/Validators/TagName.php</file>
 		</whitelist>

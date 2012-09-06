@@ -24,7 +24,7 @@ class Filter
 
 	/**
 	* @param string|CallbackTemplate $callback Either the name of a built-in filter, or a
-	*                                CallbackTemplate instance
+	*                                          CallbackTemplate instance
 	* @param array                   $vars     Variables associated with that filter
 	*/
 	public function __construct($callback, array $vars = array())

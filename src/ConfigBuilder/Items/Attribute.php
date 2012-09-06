@@ -27,13 +27,16 @@ class Attribute
 	/**
 	* @param array $options This attribute's options
 	*/
-	public function __construct(array $options = array())
+	public function __construct(array $options = null)
 	{
 		$this->filterChain = new FilterChain(array('attrVal' => null));
 
-		foreach ($options as $optionName => $optionValue)
+		if (isset($options))
 		{
-			$this->__set($optionName, $optionValue);
+			foreach ($options as $optionName => $optionValue)
+			{
+				$this->__set($optionName, $optionValue);
+			}
 		}
 	}
 
@@ -42,28 +45,26 @@ class Attribute
 	//==========================================================================
 
 	/**
-	* @param string $regexp
+	* @param FilterChain|array $filterChain
 	*/
-	public function setRegexp($regexp)
+	public function setFilterChain($filterChain)
 	{
-		if (@preg_match($regexp, '') === false)
+		if ($filterChain instanceof FilterChain)
 		{
-			throw new InvalidArgumentException('Invalid regexp');
+			$this->filterChain = $filterChain;
 		}
-
-		$this->regexp = $regexp;
-	}
-
-	/**
-	* @param array $filterChain
-	*/
-	public function setFilterChain(array $filterChain)
-	{
-		$this->filterChain->clear();
-
-		foreach ($filterChain as $filter)
+		elseif (is_array($filterChain))
 		{
-			$this->filterChain->append($filter);
+			$this->filterChain->clear();
+
+			foreach ($filterChain as $filter)
+			{
+				$this->filterChain->append($filter);
+			}
+		}
+		else
+		{
+			throw new InvalidArgumentException('setFilterChain() expects an array or an instance of FilterChain');
 		}
 	}
 }

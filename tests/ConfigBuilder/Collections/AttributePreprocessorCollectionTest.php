@@ -12,7 +12,6 @@ use s9e\TextFormatter\ConfigBuilder\Collections\AttributePreprocessorCollection;
 class AttributePreprocessorCollectionTest extends Test
 {
 	/**
-	* @group functional
 	* @testdox add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
 	*/
 	public function testClassName()
@@ -26,7 +25,6 @@ class AttributePreprocessorCollectionTest extends Test
 	}
 
 	/**
-	* @group functional
 	* @testdox getConfig() returns a list of regexps for each attribute
 	*/
 	public function testGetConfig()

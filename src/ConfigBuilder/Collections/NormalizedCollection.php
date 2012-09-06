@@ -26,7 +26,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	{
 		$key = $this->normalizeKey($key);
 
-		if (array_key_exists($key, $this->items))
+		if (!array_key_exists($key, $this->items))
 		{
 			throw new RuntimeException("Item '" . $key . "' does not exist");
 		}
@@ -59,7 +59,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	* @param  mixed  $value
 	* @return mixed
 	*/
-	public function add($key, $value)
+	public function add($key, $value = null)
 	{
 		if ($this->exists($key))
 		{
