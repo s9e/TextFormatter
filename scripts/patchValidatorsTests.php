@@ -15,41 +15,33 @@ foreach (array('AttributeName', 'TagName')  as $type)
 	$php = '';
 	foreach ($class::getNames() as $input => $expected)
 	{
+		$quotedInput = json_encode($input);
+
 		if (preg_match('#^Invalid#', $expected))
 		{
-			$status = 'invalid (' . substr($expected, 9) . ')';
-			$method = 'assertFalse';
+			$php .= '
+				/**
+				* @testdox ' . $quotedInput . ' is invalid (' . substr($expected, 9) . ')
+				*/
+				public function testInvalid' . strtoupper(dechex(crc32($input))) . '()
+				{
+					$this->assertFalse(' . $type . '::isValid(' . $quotedInput . '));
+				}
+			';
 		}
 		else
 		{
-			$status = 'valid';
-			$method = 'assertTrue';
+			$php .= '
+				/**
+				* @testdox ' . $quotedInput . ' is normalized to ' . json_encode($expected) . '
+				*/
+				public function testValid' . strtoupper(dechex(crc32($input))) . '()
+				{
+					$this->assertTrue(' . $type . '::isValid(' . $quotedInput . '));
+					$this->assertSame(' . json_encode($expected) . ', ' . $type . '::normalize(' . $quotedInput . '));
+				}
+			';
 		}
-
-		$php .= '
-			/**
-			* @testdox ' . json_encode($input) . ' is ' . $status . '
-			*/
-			public function testValid' . strtoupper(dechex(crc32($input))) . '()
-			{
-				$this->' . $method . '(' . $type . '::isValid(' . json_encode($input) . '));
-			}
-		';
-
-		if ($status !== 'valid')
-		{
-			continue;
-		}
-
-		$php .= '
-			/**
-			* @testdox ' . json_encode($input) . ' is normalized to ' . json_encode($expected) . '
-			*/
-			public function testNormalize' . strtoupper(dechex(crc32($input))) . '()
-			{
-				$this->assertSame(' . json_encode($expected) . ', ' . $type . '::normalize(' . json_encode($input) . '));
-			}
-		';
 	}
 
 	$file = file_get_contents($filepath);

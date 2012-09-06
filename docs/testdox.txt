@@ -68,41 +68,27 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] requireAncestor() normalizes tag name
 
 s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
- [x] "url" is valid
  [x] "url" is normalized to "url"
- [x] "URL" is valid
  [x] "URL" is normalized to "url"
- [x] "_url" is valid
  [x] "_url" is normalized to "_url"
- [x] "md5" is valid
  [x] "md5" is normalized to "md5"
  [x] "5md" is invalid (names must start with a letter)
- [x] "data-src" is valid
  [x] "data-src" is normalized to "data-src"
  [x] "foo:bar" is invalid (no colons allowed)
  [x] "foo\n" is invalid (no newlines allowed)
 
 s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
- [x] "b" is valid
  [x] "b" is normalized to "B"
- [x] "B" is valid
  [x] "B" is normalized to "B"
- [x] "_b" is valid
  [x] "_b" is normalized to "_B"
- [x] "H1" is valid
  [x] "H1" is normalized to "H1"
  [x] "1H" is invalid (names must start with a letter)
  [x] "foo-bar" is invalid (no dashes allowed)
- [x] "foo:bar" is valid
  [x] "foo:bar" is normalized to "foo:bar"
  [x] ":bar" is invalid (empty prefix)
- [x] "_foo:bar" is valid
  [x] "_foo:bar" is normalized to "_foo:bar"
- [x] "Foo:bar" is valid
  [x] "Foo:bar" is normalized to "Foo:bar"
- [x] "f00:b4r" is valid
  [x] "f00:b4r" is normalized to "f00:b4r"
- [x] "foo_bar:baz" is valid
  [x] "foo_bar:baz" is normalized to "foo_bar:baz"
  [x] "7up:foo" is invalid (prefix must start with a letter)
  [x] "foo:bar:baz" is invalid (only one colon allowed)
