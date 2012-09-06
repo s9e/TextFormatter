@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\ConfigBuilder\Collections;
 
-use Exception;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection;
 
