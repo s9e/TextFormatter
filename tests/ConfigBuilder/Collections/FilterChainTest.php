@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\ConfigBuilder\Collections;
 
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\ConfigBuilder\Collections\FilterChain;
+use s9e\TextFormatter\ConfigBuilder\Items\CallbackTemplate;
 use s9e\TextFormatter\ConfigBuilder\Items\Filter;
 use s9e\TextFormatter\ConfigBuilder\Items\FilterLink;
 
@@ -22,6 +23,60 @@ class FilterChainTest extends Test
 	}
 
 	public function doNothing() {}
+
+	/**
+	* @testdox append() adds the filter at the end of the chain
+	*/
+	public function testAppend()
+	{
+		$int = new Filter('#int');
+		$url = new Filter('#url');
+
+		$this->filterChain->append($int);
+		$this->filterChain->append($url);
+
+		$this->assertSame($int, $this->filterChain[0]);
+		$this->assertSame($url, $this->filterChain[1]);
+	}
+
+	/**
+	* @testdox prepend() adds the filter at the beginning of the chain
+	*/
+	public function testPrepend()
+	{
+		$int = new Filter('#int');
+		$url = new Filter('#url');
+
+		$this->filterChain->prepend($url);
+		$this->filterChain->prepend($int);
+
+		$this->assertSame($int, $this->filterChain[0]);
+		$this->assertSame($url, $this->filterChain[1]);
+	}
+
+	/**
+	* @testdox append() correctly records filter vars
+	*/
+	public function testAppendFilterVars()
+	{
+		$vars = array('min' => 0, 'max' => 5);
+
+		$this->filterChain->append('#range', $vars);
+
+		$this->assertSame($vars, $this->filterChain[0]->getVars());
+	}
+
+	/**
+	* @testdox prepend() correctly records filter vars
+	*/
+	public function testPrependFilterVars()
+	{
+		$vars = array('min' => 0, 'max' => 5);
+
+		$this->filterChain->prepend('#range', $vars);
+
+		$this->assertSame($vars, $this->filterChain[0]->getVars());
+	}
 
 	/**
 	* @testdox append() throws an InvalidArgumentException on invalid callbacks 
@@ -64,6 +119,24 @@ class FilterChainTest extends Test
 	}
 
 	/**
+	* @testdox $filterChain[] = 'foo' maps to $filterChain->append('foo')
+	*/
+	public function testArrayAccessAppend()
+	{
+		$mock = $this->getMock(
+			's9e\\TextFormatter\\ConfigBuilder\\Collections\\FilterChain',
+			array('append'),
+			array(array())
+		);
+
+		$mock->expects($this->once())
+		     ->method('append')
+		     ->with($this->equalTo('foo'));
+
+		$mock[] = 'foo';
+	}
+
+	/**
 	* @testdox PHP string callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
 	*/
 	public function testStringCallback()
@@ -90,6 +163,20 @@ class FilterChainTest extends Test
 	}
 
 	/**
+	* @testdox Instances of s9e\TextFormatter\ConfigBuilder\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+	*/
+	public function testArrayCallbackTemplate()
+	{
+		$callback = new CallbackTemplate('strtolower');
+		$this->filterChain->append($callback);
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\ConfigBuilder\\Items\\Filter',
+			$this->filterChain[0]
+		);
+	}
+
+	/**
 	* @testdox Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
 	*/
 	public function testFilterInstance()
@@ -101,36 +188,6 @@ class FilterChainTest extends Test
 			$filter,
 			$this->filterChain[0]
 		);
-	}
-
-	/**
-	* @testdox append() adds the filter at the end of the chain
-	*/
-	public function testAppend()
-	{
-		$int = new Filter('#int');
-		$url = new Filter('#url');
-
-		$this->filterChain->append($int);
-		$this->filterChain->append($url);
-
-		$this->assertSame($int, $this->filterChain[0]);
-		$this->assertSame($url, $this->filterChain[1]);
-	}
-
-	/**
-	* @testdox prepend() adds the filter at the beginning of the chain
-	*/
-	public function testPrepend()
-	{
-		$int = new Filter('#int');
-		$url = new Filter('#url');
-
-		$this->filterChain->append($url);
-		$this->filterChain->append($int);
-
-		$this->assertSame($url, $this->filterChain[0]);
-		$this->assertSame($int, $this->filterChain[1]);
 	}
 
 	/**
@@ -161,5 +218,66 @@ class FilterChainTest extends Test
 		$this->filterChain->append('strtolower');
 
 		$this->assertTrue($this->filterChain->has('strtolower'));
+	}
+
+	/**
+	* @testdox $filterChain[0] = 'foo' replaces the first filter of the chain if it exists
+	*/
+	public function testArrayAccessReplace()
+	{
+		$this->filterChain->append('strtolower');
+		$this->filterChain[0] = 'strtoupper';
+
+		$this->assertSame(1, count($this->filterChain));
+		$this->assertFalse($this->filterChain->has('strtolower'));
+		$this->assertTrue($this->filterChain->has('strtoupper'));
+	}
+
+	/**
+	* @testdox $filterChain[0] = 'foo' appends to the chain if it's empty
+	*/
+	public function testArrayAccessAddNew()
+	{
+		$this->filterChain[0] = 'strtoupper';
+
+		$this->assertSame(1, count($this->filterChain));
+		$this->assertTrue($this->filterChain->has('strtoupper'));
+	}
+
+	/**
+	* @testdox $filterChain[1] = 'foo' throws an InvalidArgumentException if the chain is empty
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid filter chain offset '1'
+	*/
+	public function testArrayAccessInvalidSet()
+	{
+		$this->filterChain[1] = 'strtoupper';
+	}
+
+	/**
+	* @testdox $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid filter chain offset 'foo'
+	*/
+	public function testArrayAccessInvalidKey()
+	{
+		$this->filterChain['foo'] = 'strtolower';
+	}
+
+	/**
+	* @testdox Deleting a filter reorders the chain to remove gaps
+	*/
+	public function testDeleteReordersChain()
+	{
+		$int = new Filter('#int');
+		$url = new Filter('#url');
+
+		$this->filterChain->append($int);
+		$this->filterChain->append($url);
+
+		$this->filterChain->delete(0);
+
+		$this->assertSame(1, count($this->filterChain));
+		$this->assertSame($url, $this->filterChain[0]);
 	}
 }

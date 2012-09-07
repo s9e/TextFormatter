@@ -32,18 +32,27 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollectio
  [x] getConfig() returns a list of regexps for each attribute
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
+ [x] append() adds the filter at the end of the chain
+ [x] prepend() adds the filter at the beginning of the chain
+ [x] append() correctly records filter vars
+ [x] prepend() correctly records filter vars
  [x] append() throws an InvalidArgumentException on invalid callbacks
  [x] prepend() throws an InvalidArgumentException on invalid callbacks
  [x] append() throws an InvalidArgumentException on uncallable callbacks
  [x] prepend() throws an InvalidArgumentException on uncallable callbacks
+ [x] $filterChain[] = 'foo' maps to $filterChain->append('foo')
  [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
  [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
  [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
- [x] append() adds the filter at the end of the chain
- [x] prepend() adds the filter at the beginning of the chain
  [x] has() returns false if the given filter is not present in the chain
  [x] has() returns true if the given built-in filter is present in the chain
  [x] has() returns true if the given PHP string callback is present in the chain
+ [x] $filterChain[0] = 'foo' replaces the first filter of the chain if it exists
+ [x] $filterChain[0] = 'foo' appends to the chain if it's empty
+ [x] $filterChain[1] = 'foo' throws an InvalidArgumentException if the chain is empty
+ [x] $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
+ [x] Deleting a filter reorders the chain to remove gaps
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] clear() removes all rules

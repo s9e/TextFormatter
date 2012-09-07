@@ -36,10 +36,14 @@ class FilterChain extends NormalizedCollection
 	{
 		if ($offset === null)
 		{
-			$offset = count($this->items);
+			// $filterChain[] = 'foo' maps to $filterChain->append('foo')
+			$this->append($value);
 		}
-
-		parent::offsetSet($offset, $value);
+		else
+		{
+			// Use the default implementation
+			parent::offsetSet($offset, $value);
+		}
 	}
 
 	/**
@@ -53,25 +57,6 @@ class FilterChain extends NormalizedCollection
 
 		// Reindex the array to eliminate any gaps
 		$this->items = array_values($this->items);
-	}
-
-	/**
-	* Ensure that the key is a valid offset, ranging from 0 to count($this->items)
-	*/
-	public function isValidKey($key)
-	{
-		$key = filter_var(
-			$key,
-			FILTER_VALIDATE_INT,
-			array(
-				'options' => array(
-					'min_range' => 0,
-					'max_range' => count($this->items)
-				)
-			)
-		);
-
-		return ($key !== false);
 	}
 
 	/**
@@ -107,7 +92,36 @@ class FilterChain extends NormalizedCollection
 	}
 
 	/**
-	* @param  mixed $value
+	* Ensure that the key is a valid offset, ranging from 0 to count($this->items)
+	*
+	* @param  mixed   $key
+	* @return integer
+	*/
+	public function normalizeKey($key)
+	{
+		$normalizedKey = filter_var(
+			$key,
+			FILTER_VALIDATE_INT,
+			array(
+				'options' => array(
+					'min_range' => 0,
+					'max_range' => count($this->items)
+				)
+			)
+		);
+
+		if ($normalizedKey === false)
+		{
+			throw new InvalidArgumentException("Invalid filter chain offset '" . $key . "'");
+		}
+
+		return $normalizedKey;
+	}
+
+	/**
+	* Normalize a value argument into a Filter instance
+	*
+	* @param  mixed  $value
 	* @return Filter
 	*/
 	public function normalizeValue($value)
