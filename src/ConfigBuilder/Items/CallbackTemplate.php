@@ -70,7 +70,7 @@ class CallbackTemplate
 	* @param  array    $arr
 	* @return Filter
 	*/
-	static public function fromArray(array $arr)
+	public static function fromArray(array $arr)
 	{
 		$callback = new static($arr['callback']);
 

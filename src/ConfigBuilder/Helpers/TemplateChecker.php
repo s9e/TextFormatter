@@ -31,7 +31,7 @@ abstract class TemplateChecker
 	* @param  Tag         $tag      Tag that this template belongs to
 	* @return bool|string           FALSE if safe, a string containing an error message otherwise
 	*/
-	static public function checkUnsafe($template, Tag $tag)
+	public static function checkUnsafe($template, Tag $tag)
 	{
 		$DOMXPath = new DOMXPath(self::loadTemplate($template));
 
@@ -46,7 +46,7 @@ abstract class TemplateChecker
 	*
 	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	*/
-	static protected function checkFixedSrcElements(DOMXPath $DOMXPath)
+	protected static function checkFixedSrcElements(DOMXPath $DOMXPath)
 	{
 		$elements = array(
 			'embed'  => 'src',
@@ -126,7 +126,7 @@ abstract class TemplateChecker
 	* @param  string $template Content of the template. A root node is not required
 	* @return DOMDocument
 	*/
-	static protected function loadTemplate($template)
+	protected static function loadTemplate($template)
 	{
 		// Put the template inside of a <xsl:template/> node
 		$xsl = '<?xml version="1.0" encoding="utf-8" ?>'
@@ -156,7 +156,7 @@ abstract class TemplateChecker
 	*
 	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	*/
-	static protected function checkCopyElements(DOMXPath $DOMXPath)
+	protected static function checkCopyElements(DOMXPath $DOMXPath)
 	{
 		$node = $DOMXPath->query('//xsl:copy')->item(0);
 
@@ -171,7 +171,7 @@ abstract class TemplateChecker
 	*
 	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	*/
-	static protected function checkDisableOutputEscaping(DOMXPath $DOMXPath)
+	protected static function checkDisableOutputEscaping(DOMXPath $DOMXPath)
 	{
 		$node = $DOMXPath->query('//@disable-output-escaping')->item(0);
 
@@ -187,7 +187,7 @@ abstract class TemplateChecker
 	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	* @param Tag      $tag      Tag that this template belongs to
 	*/
-	static protected function checkUnsafeContent(DOMXPath $DOMXPath, Tag $tag)
+	protected static function checkUnsafeContent(DOMXPath $DOMXPath, Tag $tag)
 	{
 		$checkElements = array(
 			'/^style$/i'  => 'CSS',
@@ -314,7 +314,7 @@ abstract class TemplateChecker
 	* @param Tag        $tag
 	* @param string     $contentType
 	*/
-	static protected function checkUnsafeDescendants(DOMXPath $DOMXPath, DOMElement $element, Tag $tag, $contentType)
+	protected static function checkUnsafeDescendants(DOMXPath $DOMXPath, DOMElement $element, Tag $tag, $contentType)
 	{
 		// <script><xsl:value-of/></script>
 		foreach ($DOMXPath->query('.//xsl:value-of[@select]', $element) as $valueOf)
@@ -357,7 +357,7 @@ abstract class TemplateChecker
 	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	* @param DOMNode  $node     Node being checked
 	*/
-	static protected function checkUnsafeContext(DOMXPath $DOMXPath, DOMNode $node)
+	protected static function checkUnsafeContext(DOMXPath $DOMXPath, DOMNode $node)
 	{
 		if ($DOMXPath->query('ancestor::xsl:for-each', $node)->length)
 		{
@@ -374,7 +374,7 @@ abstract class TemplateChecker
 	* @param string   $contentType Content type
 	* @param Tag      $tag         Tag that this template belongs to
 	*/
-	static protected function checkUnsafeExpression(DOMXPath $DOMXPath, DOMNode $node, $expr, $contentType, Tag $tag)
+	protected static function checkUnsafeExpression(DOMXPath $DOMXPath, DOMNode $node, $expr, $contentType, Tag $tag)
 	{
 		// We don't even try to assess its safety if it's not a single attribute value
 		if (!preg_match('#^@\\s*([a-z_0-9\\-]+)$#Di', $expr, $m))
@@ -412,7 +412,7 @@ abstract class TemplateChecker
 	* @param  Attribute $attribute
 	* @return bool
 	*/
-	static protected function isSafeInURL(Attribute $attribute)
+	protected static function isSafeInURL(Attribute $attribute)
 	{
 		// List of filters that make a value safe to be used as/in a URL
 		$safeFilters = array(
@@ -454,7 +454,7 @@ abstract class TemplateChecker
 	* @param  Attribute $attribute
 	* @return bool
 	*/
-	static protected function isSafeInCSS(Attribute $attribute)
+	protected static function isSafeInCSS(Attribute $attribute)
 	{
 		// List of filters that make a value safe to be used as/in CSS
 		$safeFilters = array(
@@ -491,7 +491,7 @@ abstract class TemplateChecker
 	* @param  Attribute $attribute
 	* @return bool
 	*/
-	static protected function isSafeInJS(Attribute $attribute)
+	protected static function isSafeInJS(Attribute $attribute)
 	{
 		// List of filters that make a value safe to be used in a script
 		$safeFilters = array(

@@ -372,7 +372,7 @@ class PredefinedTags
 		);
 	}
 
-	static public function getUsedCodeStx($xml)
+	public static function getUsedCodeStx($xml)
 	{
 		// array_values() will reset the keys so that there's no gap in numbering, just in case
 		return array_values(array_unique(

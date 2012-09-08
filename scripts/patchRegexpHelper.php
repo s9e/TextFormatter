@@ -165,14 +165,14 @@ $php = " = array(\n\t\t" . $php . "\n\t)";
 
 $file = file_get_contents(__DIR__ . '/../src/RegexpHelper.php');
 $file = preg_replace(
-	'#(static protected \\$unicodeProps)(.*?)\\n\\t\\);#s',
+	'#(protected static \\$unicodeProps)(.*?)\\n\\t\\);#s',
 	'$1;',
 	$file
 );
 
 $file = str_replace(
-	'static protected $unicodeProps;',
-	'static protected $unicodeProps' . $php . ';',
+	'protected static $unicodeProps;',
+	'protected static $unicodeProps' . $php . ';',
 	$file
 );
 

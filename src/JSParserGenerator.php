@@ -962,7 +962,7 @@ class JSParserGenerator
 	*
 	* @todo Test this method
 	*/
-	static protected function convertBitfield($bitfield)
+	protected static function convertBitfield($bitfield)
 	{
 		$hex = array();
 

@@ -19,7 +19,7 @@ abstract class ConfigHelper
 	* @param  mixed $value
 	* @return array
 	*/
-	static public function toArray($value)
+	public static function toArray($value)
 	{
 		$array = array();
 

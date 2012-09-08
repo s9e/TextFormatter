@@ -48,7 +48,7 @@ abstract class HTML5Helper
 	* In addition, HTML5 defines "optional end tag" rules, where one element automatically closes
 	* its predecessor. Those are used to generate closeParent rules and are stored in the "cp" key.
 	*/
-	static protected $htmlElements = array(
+	protected static $htmlElements = array(
 		'a'=>array('c'=>15,'ac'=>0,'dd'=>8,'t'=>1),
 		'abbr'=>array('c'=>7,'ac'=>4),
 		'address'=>array('c'=>1027,'ac'=>1,'dd'=>1552,'cp'=>array('p')),
@@ -171,7 +171,7 @@ abstract class HTML5Helper
 	* @param  array         $options Array of option settings
 	* @return array
 	*/
-	static public function generateRulesFromHTML5Specs(TagCollection $tags, array $options = array())
+	public static function generateRulesFromHTML5Specs(TagCollection $tags, array $options = array())
 	{
 		$tagsConfig = $tags->getConfig();
 
@@ -495,7 +495,7 @@ abstract class HTML5Helper
 	* @param  SimpleXMLElement $node   Context node
 	* @return integer
 	*/
-	static protected function filterHTMLRulesBitfield($elName, $k, SimpleXMLElement $node)
+	protected static function filterHTMLRulesBitfield($elName, $k, SimpleXMLElement $node)
 	{
 		if (empty(self::htmlElements[$elName][$k]))
 		{

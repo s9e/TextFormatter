@@ -1375,7 +1375,7 @@ class Parser
 	* @param  array   Second tag to compare
 	* @return integer
 	*/
-	static protected function compareTags(array $a, array $b)
+	protected static function compareTags(array $a, array $b)
 	{
 		// First we order by pos descending
 		if ($a['pos'] !== $b['pos'])
@@ -1857,7 +1857,7 @@ class Parser
 	* @param  string $url Original URL
 	* @return Mixed       Encoded URL
 	*/
-	static protected function encodeUrlToAscii($url)
+	protected static function encodeUrlToAscii($url)
 	{
 		if (preg_match('#^(https?://(?:[^/]+@)?)([^/]+)#i', $url, $m)
 		 && function_exists('idn_to_ascii'))

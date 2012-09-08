@@ -25,7 +25,7 @@ abstract class TemplateOptimizer
 	* @param  string $template Content of the template. A root node is not required
 	* @return string           Optimized template
 	*/
-	static public function optimize($template)
+	public static function optimize($template)
 	{
 		$dom = self::loadTemplate($template);
 
@@ -53,7 +53,7 @@ abstract class TemplateOptimizer
 	* @param  string      $xsl Whatever would be legal under <xsl:stylesheet>
 	* @return LibXMLError
 	*/
-	static protected function checkXSL($xsl)
+	protected static function checkXSL($xsl)
 	{
 		$xsl = '<?xml version="1.0" encoding="utf-8" ?>'
 		     . '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
@@ -89,7 +89,7 @@ abstract class TemplateOptimizer
 	* @param  string      $template Content of the template. A root node is not required
 	* @return DOMDocument
 	*/
-	static protected function loadTemplate($template)
+	protected static function loadTemplate($template)
 	{
 		// Put the template inside of a <xsl:template/> node
 		$xsl = '<?xml version="1.0" encoding="utf-8" ?>'
@@ -115,7 +115,7 @@ abstract class TemplateOptimizer
 	* @param  DOMDocument $dom
 	* @return string
 	*/
-	static protected function saveTemplate(DOMDocument $dom)
+	protected static function saveTemplate(DOMDocument $dom)
 	{
 		// Serialize the XML then remove the outer node
 		$xml = $dom->saveXML($dom->documentElement);
@@ -133,7 +133,7 @@ abstract class TemplateOptimizer
 	*
 	* @param DOMDocument $dom xsl:template node
 	*/
-	static protected function preserveSingleSpaces(DOMDocument $dom)
+	protected static function preserveSingleSpaces(DOMDocument $dom)
 	{
 		$xpath = new DOMXPath($dom);
 
@@ -156,7 +156,7 @@ abstract class TemplateOptimizer
 	*
 	* @param DOMDocument $dom xsl:template node
 	*/
-	static protected function inlineAttributes(DOMDocument $dom)
+	protected static function inlineAttributes(DOMDocument $dom)
 	{
 		$xpath = new DOMXPath($dom);
 
@@ -180,7 +180,7 @@ abstract class TemplateOptimizer
 	/**
 	* @param DOMDocument $dom xsl:template node
 	*/
-	static protected function normalizeSpaceInSelectAttributes(DOMDocument $dom)
+	protected static function normalizeSpaceInSelectAttributes(DOMDocument $dom)
 	{
 		$DOMXPath = new DOMXPath($dom);
 
@@ -208,7 +208,7 @@ abstract class TemplateOptimizer
 	*
 	* @param DOMDocument $dom xsl:template node
 	*/
-	static protected function optimizeConditionalAttributes(DOMDocument $dom)
+	protected static function optimizeConditionalAttributes(DOMDocument $dom)
 	{
 		$query = '//xsl:if'
 		       . "[starts-with(@test, '@')]"
@@ -229,7 +229,7 @@ abstract class TemplateOptimizer
 	*
 	* @param DOMDocument $dom xsl:template node
 	*/
-	static protected function inlineTextElements(DOMDocument $dom)
+	protected static function inlineTextElements(DOMDocument $dom)
 	{
 		$xpath = new DOMXPath($dom);
 

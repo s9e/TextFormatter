@@ -9,7 +9,7 @@ namespace s9e\TextFormatter;
 
 abstract class Unparser
 {
-	static public function unparse($xml)
+	public static function unparse($xml)
 	{
 		return html_entity_decode(strip_tags($xml), ENT_QUOTES, 'UTF-8');
 	}

@@ -373,7 +373,7 @@ class ConfigBuilder
 		return $tagsConfig;
 	}
 
-	static protected function bin2raw($values)
+	protected static function bin2raw($values)
 	{
 		$bin = implode('', $values) . str_repeat('0', (((count($values) + 7) & 7) ^ 7));
 
