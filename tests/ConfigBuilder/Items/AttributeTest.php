@@ -24,7 +24,7 @@ class AttributeTest extends Test
 	}
 
 	/**
-	* @testdox The filterChain property can be assigned an array
+	* @testdox $attr->filterChain can be assigned an array
 	*/
 	public function testSetFilterChainArray()
 	{
@@ -40,7 +40,7 @@ class AttributeTest extends Test
 	}
 
 	/**
-	* @testdox The filterChain property can be replaced with another instance of FilterChain
+	* @testdox $attr->filterChain can be replaced with another instance of FilterChain
 	*/
 	public function testSetFilterChainInstance()
 	{

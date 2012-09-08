@@ -137,20 +137,31 @@ class Tag
 	}
 
 	/**
-	* Set this tags' rules
+	* Set this tag's rules
 	*
-	* @param array $rules 2D array of rule definitions
+	* @param array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
 	*/
-	public function setRules(array $rules)
+	public function setRules($rules)
 	{
-		$this->rules->clear();
-
-		foreach ($rules as $action => $tagNames)
+		if ($rules instanceof Ruleset)
 		{
-			foreach ($tagNames as $tagName)
+			$this->rules = $rules;
+		}
+		elseif (is_array($rules))
+		{
+			$this->rules->clear();
+
+			foreach ($rules as $action => $tagNames)
 			{
-				$this->rules->$action($tagName);
+				foreach ($tagNames as $tagName)
+				{
+					$this->rules->$action($tagName);
+				}
 			}
+		}
+		else
+		{
+			throw new InvalidArgumentException('setRules() expects an array or an instance of Ruleset');
 		}
 	}
 
@@ -176,17 +187,26 @@ class Tag
 	/**
 	* Set all templates associated with this tag
 	*
-	* NOTE: will remove all other templates. Also, does not allow unsafe templates
-	*
-	* @param array $templates
+	* @param array|Templateset $templates
 	*/
-	public function setTemplates(array $templates)
+	public function setTemplates($templates)
 	{
-		$this->templates->clear();
-
-		foreach ($templates as $predicate => $template)
+		if ($templates instanceof Templateset)
 		{
-			$this->templates->set($predicate, $template);
+			$this->templates = $templates;
+		}
+		elseif (is_array($templates))
+		{
+			$this->templates->clear();
+
+			foreach ($templates as $predicate => $template)
+			{
+				$this->templates->set($predicate, $template);
+			}
+		}
+		else
+		{
+			throw new InvalidArgumentException('setTemplates() expects an array or an instance of Templateset');
 		}
 	}
 

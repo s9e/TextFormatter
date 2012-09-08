@@ -7,10 +7,14 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
-use s9e\TextFormatter\ConfigBuilder\Helpers\TemplateHelper;
+use s9e\TextFormatter\ConfigBuilder\Helpers\TemplateChecker;
+use s9e\TextFormatter\ConfigBuilder\Helpers\TemplateOptimizer;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 
-class Templateset extends Collection
+/**
+* @todo check the predicate for well-formedness in normalizeKey() - also ensure that entities in predicate are escaped either here or when the final stylesheet is assembled
+*/
+class Templateset extends NormalizedCollection
 {
 	/**
 	* @var Tag
@@ -30,57 +34,52 @@ class Templateset extends Collection
 	/**
 	* 
 	*
-	* @return void
+	* @return string
 	*/
-	public function set($predicate, $template)
-	{
-		$this->setTemplate($predicate, $template, true);
-	}
-
-	/**
-	* 
-	*
-	* @return void
-	*/
-	public function setUnsafe($predicate, $template)
-	{
-		$this->setTemplate($predicate, $template, false);
-	}
-
-	/**
-	* 
-	*
-	* @param string $template
-	*/
-	protected function setTemplate($predicate, $template, $checkUnsafe)
+	public function normalizeValue($template)
 	{
 		// We optimize the template before checking for unsafe elements because the optimizer tends
 		// to simplify the templates, which should make checking for unsafe elements easier
 		$template = $this->optimize($template);
 
-		if ($checkUnsafe)
-		{
-			$this->checkUnsafe($template);
-		}
+		$this->checkUnsafe($template);
+
+		return $template;
+	}
+
+	/**
+	* Set a template without checking it for unsafe markup
+	*
+	* @param  string $predicate Template's predicate
+	* @param  string $template  Template's content
+	* @return void
+	*/
+	public function setUnsafe($predicate, $template)
+	{
+		$predicate = $this->normalizeKey($predicate);
+		$template  = $this->optimize($template);
 
 		$this->items[$predicate] = $template;
 	}
 
 	/**
-	* 
+	* Check a given template for safeness
 	*
-	* @param string $template
+	* @throws s9e\TextFormatter\ConfigBuilder\Exceptions\UnsafeTemplateException
+	*
+	* @param  string $template
+	* @return void
 	*/
 	public function checkUnsafe($template)
 	{
-		TemplateHelper::checkUnsafe($template, $this->tag);
+		TemplateChecker::checkUnsafe($template, $this->tag);
 	}
 
 	/**
-	* 
+	* Optimize a template
 	*
-	* @param  string $template
-	* @return string
+	* @param  string $template Original template
+	* @return string           Optimized template
 	*/
 	public function optimize($template)
 	{

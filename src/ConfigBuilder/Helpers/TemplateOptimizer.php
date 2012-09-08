@@ -17,7 +17,7 @@ use LibXMLError;
 use RuntimeException;
 use XSLTProcessor;
 
-abstract class TemplateHelper
+abstract class TemplateOptimizer
 {
 	/**
 	* Optimize a template
@@ -25,7 +25,7 @@ abstract class TemplateHelper
 	* @param  string $template Content of the template. A root node is not required
 	* @return string           Optimized template
 	*/
-	static public function optimizeTemplate($template)
+	static public function optimize($template)
 	{
 		$dom = self::loadTemplate($template);
 

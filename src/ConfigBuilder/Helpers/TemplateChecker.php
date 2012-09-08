@@ -18,6 +18,7 @@ use LibXMLError;
 use RuntimeException;
 use XSLTProcessor;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
+use s9e\TextFormatter\ConfigBuilder\Exceptions\UnsafeTemplateException;
 
 abstract class TemplateChecker
 {
