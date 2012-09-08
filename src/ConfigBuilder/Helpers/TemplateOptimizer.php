@@ -17,6 +17,9 @@ use LibXMLError;
 use RuntimeException;
 use XSLTProcessor;
 
+/**
+* Optimizes individual templates
+*/
 abstract class TemplateOptimizer
 {
 	/**

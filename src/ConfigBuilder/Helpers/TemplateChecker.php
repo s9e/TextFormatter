@@ -20,6 +20,9 @@ use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 use s9e\TextFormatter\ConfigBuilder\Exceptions\InvalidXslException;
 use s9e\TextFormatter\ConfigBuilder\Exceptions\UnsafeTemplateException;
 
+/**
+* Check individual templates for unsafe markup
+*/
 abstract class TemplateChecker
 {
 	/**
