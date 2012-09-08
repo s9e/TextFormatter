@@ -48,42 +48,6 @@ abstract class TemplateOptimizer
 	}
 
 	/**
-	* Test whether given XSL would be legal in a stylesheet
-	*
-	* @param  string      $xsl Whatever would be legal under <xsl:stylesheet>
-	* @return LibXMLError
-	*/
-	protected static function checkXSL($xsl)
-	{
-		$xsl = '<?xml version="1.0" encoding="utf-8" ?>'
-		     . '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $xsl
-		     . '</xsl:stylesheet>';
-
-		// Enable libxml's internal errors while we load the XSL
-		$useInternalErrors = libxml_use_internal_errors(true);
-
-		$dom = new DOMDocument;
-		$error = true;
-
-		if ($dom->loadXML($xsl))
-		{
-			// The XML is well-formed, now test whether it's legal XSLT
-			$xslt = new XSLTProcessor;
-
-			$error = !$xslt->importStylesheet($dom);
-		}
-
-		// Restore the previous error mechanism
-		libxml_use_internal_errors($useInternalErrors);
-
-		if ($error)
-		{
-			return libxml_get_last_error();
-		}
-	}
-
-	/**
 	* Load a template into a DOMDocument
 	*
 	* @param  string      $template Content of the template. A root node is not required

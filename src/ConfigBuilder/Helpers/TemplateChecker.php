@@ -14,10 +14,10 @@ use DOMNode;
 use DOMNodeList;
 use DOMXPath;
 use InvalidArgumentException;
-use LibXMLError;
 use RuntimeException;
 use XSLTProcessor;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
+use s9e\TextFormatter\ConfigBuilder\Exceptions\InvalidXslException;
 use s9e\TextFormatter\ConfigBuilder\Exceptions\UnsafeTemplateException;
 
 abstract class TemplateChecker
@@ -121,7 +121,7 @@ abstract class TemplateChecker
 	/**
 	* Load a template into a DOMDocument
 	*
-	* Returns a DOMDocument on success, or a LibXMLError otherwise
+	* @throws s9e\TextFormatter\ConfigBuilder\Exceptions\InvalidXslException
 	*
 	* @param  string $template Content of the template. A root node is not required
 	* @return DOMDocument
@@ -145,7 +145,7 @@ abstract class TemplateChecker
 
 		if ($error)
 		{
-			throw new InvalidArgumentException('Invalid XML in template: ' . libxml_get_last_error()->message);
+			throw new InvalidXslException(libxml_get_last_error()->error);
 		}
 
 		return $dom;
