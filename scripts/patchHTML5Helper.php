@@ -309,6 +309,12 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['allowChildCategory']['phrasing content'][''] = 0;
 						$elements[$elName]['denyDescendantElement']['label'][''] = 0;
 					}
+					elseif ($value === 'zero or more param elements, then flow content and/or interactive content')
+					{
+						$elements[$elName]['allowChildElement']['param'][''] = 0;
+						$elements[$elName]['allowChildCategory']['flow content'][''] = 0;
+						$elements[$elName]['allowChildCategory']['interactive content'][''] = 0;
+					}
 					else
 					{
 						die("Could not interpret '$value' as $elName's content model\n");
@@ -505,11 +511,11 @@ foreach ($arr as $elName => $values)
 }
 
 $php = substr($php, 0, -1);
-die($php);
-$filepath = __DIR__ . '/../src/ConfigBuilder.php';
+
+$filepath = __DIR__ . '/../src/ConfigBuilder/Helpers/HTML5Helper.php';
 $file = file_get_contents($filepath);
 
-if (!preg_match('#(?<=protected \\$htmlElements = array\\()(.*?)(?=\\n\\t\\);)#s', $file, $m, PREG_OFFSET_CAPTURE))
+if (!preg_match('#(?<=static \\$htmlElements = array\\()(.*?)(?=\\n\\t\\);)#s', $file, $m, PREG_OFFSET_CAPTURE))
 {
 	die("Could not find the location in the file\n");
 }
