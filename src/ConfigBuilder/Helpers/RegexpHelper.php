@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
 use RuntimeException;
 
-class RegexpHelper
+abstract class RegexpHelper
 {
 	/**
 	* Create a regexp pattern that matches a list of words
@@ -18,7 +18,7 @@ class RegexpHelper
 	* @param  array  $options
 	* @return string
 	*/
-	public function buildRegexpFromList(array $words, array $options = array())
+	public static function buildRegexpFromList(array $words, array $options = array())
 	{
 		$options += array(
 			'specialChars' => array(),
@@ -87,7 +87,7 @@ class RegexpHelper
 			$splitWords[] = $splitWord;
 		}
 
-		$regexp = $this->assemble(array($this->mergeChains($splitWords)));
+		$regexp = self::assemble(array(self::mergeChains($splitWords)));
 
 		if ($options['useLookahead']
 		 && count($initials) > 1
@@ -97,7 +97,7 @@ class RegexpHelper
 
 			foreach ($initials as $initial => $void)
 			{
-				if (!$this->canBeUsedInCharacterClass($initial))
+				if (!self::canBeUsedInCharacterClass($initial))
 				{
 					$useLookahead = false;
 					break;
@@ -106,7 +106,7 @@ class RegexpHelper
 
 			if ($useLookahead)
 			{
-				$regexp = '(?=' . $this->generateCharacterClass(array_keys($initials)) . ')' . $regexp;
+				$regexp = '(?=' . self::generateCharacterClass(array_keys($initials)) . ')' . $regexp;
 			}
 		}
 
@@ -132,7 +132,7 @@ class RegexpHelper
 	* @param  array $chains
 	* @return array
 	*/
-	protected function mergeChains(array $chains)
+	protected static function mergeChains(array $chains)
 	{
 		// If there's only one chain, there's nothing to merge
 		if (!isset($chains[1]))
@@ -141,7 +141,7 @@ class RegexpHelper
 		}
 
 		// The merged chain starts with the chains' common prefix
-		$mergedChain = $this->removeLongestCommonPrefix($chains);
+		$mergedChain = self::removeLongestCommonPrefix($chains);
 
 		if (!isset($chains[0][0])
 		 && !array_filter($chains))
@@ -152,7 +152,7 @@ class RegexpHelper
 		}
 
 		// Remove the longest common suffix and save it for later
-		$suffix = $this->removeLongestCommonSuffix($chains);
+		$suffix = self::removeLongestCommonSuffix($chains);
 
 		// Whether one of the chain has been completely optimized away by prefix/suffix removal.
 		// Signals that the middle part of the regexp is optional, e.g. (prefix)(foo)?(suffix)
@@ -187,7 +187,7 @@ class RegexpHelper
 		foreach ($groups as $head => $groupChains)
 		{
 			if ($groupChains === array(array($head))
-			 && $this->canBeUsedInCharacterClass($head))
+			 && self::canBeUsedInCharacterClass($head))
 			{
 				// The whole chain is composed of exactly one token, a token that can be used in a
 				// character class
@@ -208,7 +208,7 @@ class RegexpHelper
 			}
 
 			// Create a new group for this character class
-			$head = $this->generateCharacterClass($characterClass);
+			$head = self::generateCharacterClass($characterClass);
 			$groups[$head][] = array($head);
 
 			// Ensure that the character class is first in the alternation. Not only it looks nice
@@ -225,27 +225,27 @@ class RegexpHelper
 			$mergedChains = array();
 			foreach ($groups as $head => $groupChains)
 			{
-				$mergedChains[] = $this->mergeChains($groupChains);
+				$mergedChains[] = self::mergeChains($groupChains);
 			}
 
 			// Merge the tails of all chains if applicable. Helps with [ab][xy] (two chains with
 			// identical tails)
-			$this->mergeTails($mergedChains);
+			self::mergeTails($mergedChains);
 
 			// Now merge all chains together and append it to our merged chain
-			$regexp = implode('', $this->mergeChains($mergedChains));
+			$regexp = implode('', self::mergeChains($mergedChains));
 
 			if ($endOfChain)
 			{
-				$regexp = $this->makeRegexpOptional($regexp);
+				$regexp = self::makeRegexpOptional($regexp);
 			}
 
 			$mergedChain[] = $regexp;
 		}
 		else
 		{
-			$this->mergeTails($chains);
-			$mergedChain[] = $this->assemble($chains);
+			self::mergeTails($chains);
+			$mergedChain[] = self::assemble($chains);
 		}
 
 		// Add the common suffix
@@ -267,13 +267,13 @@ class RegexpHelper
 	*
 	* @param array &$chains
 	*/
-	protected function mergeTails(array &$chains)
+	protected static function mergeTails(array &$chains)
 	{
 		// (a[xy]|b[xy]|c) => ([ab][xy]|c)
-		$this->mergeTailsCC($chains);
+		self::mergeTailsCC($chains);
 
 		// (axx|ayy|bbxx|bbyy|c) => ((a|bb)(xx|yy)|c)
-		$this->mergeTailsAltern($chains);
+		self::mergeTailsAltern($chains);
 
 		// Don't forget to reset the keys
 		$chains = array_values($chains);
@@ -284,7 +284,7 @@ class RegexpHelper
 	*
 	* @param array &$chains
 	*/
-	protected function mergeTailsCC(array &$chains)
+	protected static function mergeTailsCC(array &$chains)
 	{
 		$groups = array();
 
@@ -292,7 +292,7 @@ class RegexpHelper
 		{
 			if (isset($chain[1])
 			 && !isset($chain[2])
-			 && $this->canBeUsedInCharacterClass($chain[0]))
+			 && self::canBeUsedInCharacterClass($chain[0]))
 			{
 				$groups[$chain[1]][$k] = $chain;
 			}
@@ -310,7 +310,7 @@ class RegexpHelper
 			$chains = array_diff_key($chains, $groupChains);
 
 			// Merge this group's chains and add the result to the list
-			$chains[] = $this->mergeChains(array_values($groupChains));
+			$chains[] = self::mergeChains(array_values($groupChains));
 		}
 	}
 
@@ -325,7 +325,7 @@ class RegexpHelper
 	*
 	* @param array &$chains
 	*/
-	protected function mergeTailsAltern(array &$chains)
+	protected static function mergeTailsAltern(array &$chains)
 	{
 		$groups = array();
 		foreach ($chains as $k => $chain)
@@ -346,7 +346,7 @@ class RegexpHelper
 			}
 
 			// Create a single chain for this group
-			$mergedChain = $this->mergeChains(array_values($groupChains));
+			$mergedChain = self::mergeChains(array_values($groupChains));
 
 			// Test whether the merged chain is shorter than the sum of its components
 			$oldLen = 0;
@@ -374,7 +374,7 @@ class RegexpHelper
 	* @param  array &$chains
 	* @return array          Removed elements
 	*/
-	protected function removeLongestCommonPrefix(array &$chains)
+	protected static function removeLongestCommonPrefix(array &$chains)
 	{
 		// Length of longest common prefix
 		$pLen = 0;
@@ -436,7 +436,7 @@ class RegexpHelper
 	* @param  array &$chains
 	* @return array          Removed elements
 	*/
-	protected function removeLongestCommonSuffix(array &$chains)
+	protected static function removeLongestCommonSuffix(array &$chains)
 	{
 		// Cache the length of every word
 		$chainsLen = array_map('count', $chains);
@@ -505,7 +505,7 @@ class RegexpHelper
 	* @param  array  $chain
 	* @return string
 	*/
-	protected function assemble(array $chains)
+	protected static function assemble(array $chains)
 	{
 		$endOfChain = false;
 
@@ -521,7 +521,7 @@ class RegexpHelper
 			}
 
 			if (!isset($chain[1])
-			 && $this->canBeUsedInCharacterClass($chain[0]))
+			 && self::canBeUsedInCharacterClass($chain[0]))
 			{
 				$characterClass[$chain[0]] = $chain[0];
 			}
@@ -538,7 +538,7 @@ class RegexpHelper
 
 			// Use a character class if there are more than 1 characters in it
 			$regexp = (isset($characterClass[1]))
-					? $this->generateCharacterClass($characterClass)
+					? self::generateCharacterClass($characterClass)
 					: $characterClass[0];
 
 			// Prepend the character class to the list of regexps
@@ -563,7 +563,7 @@ class RegexpHelper
 		// If we've reached the end of a chain, it means that the branches are optional
 		if ($endOfChain)
 		{
-			$regexp = $this->makeRegexpOptional($regexp);
+			$regexp = self::makeRegexpOptional($regexp);
 		}
 
 		return $regexp;
@@ -575,7 +575,7 @@ class RegexpHelper
 	* @param  string $regexp
 	* @return string
 	*/
-	protected function makeRegexpOptional($regexp)
+	protected static function makeRegexpOptional($regexp)
 	{
 		// One single character, optionally escaped
 		if (preg_match('#^\\\\?.$#Dus', $regexp))
@@ -589,7 +589,7 @@ class RegexpHelper
 		}
 		else
 		{
-			$def    = $this->parseRegexp('#' . $regexp . '#');
+			$def    = self::parse('#' . $regexp . '#');
 			$tokens = $def['tokens'];
 
 			switch (count($tokens))
@@ -638,7 +638,7 @@ class RegexpHelper
 	* @param  array  $chars
 	* @return string
 	*/
-	protected function generateCharacterClass(array $chars)
+	protected static function generateCharacterClass(array $chars)
 	{
 		$chars = array_flip($chars);
 
@@ -670,7 +670,7 @@ class RegexpHelper
 	* @param  string $char
 	* @return bool
 	*/
-	protected function canBeUsedInCharacterClass($char)
+	protected static function canBeUsedInCharacterClass($char)
 	{
 		// More than 1 character => cannnot be used in a character class
 		if (!preg_match('#^\\\\?.$#Dus', $char))
@@ -691,7 +691,7 @@ class RegexpHelper
 	* @param  string $regexp
 	* @return array
 	*/
-	public function parseRegexp($regexp)
+	public static function parse($regexp)
 	{
 		if (!preg_match('#^(.)(.*?)\\1([a-zA-Z]*)$#D', $regexp, $m))
 		{
@@ -900,9 +900,9 @@ class RegexpHelper
 	* @param  array  &$regexpMap Will be replaced with an array mapping named capture to their index
 	* @return string
 	*/
-	public function pcreToJs($regexp, &$regexpMap = null)
+	public static function pcreToJs($regexp, &$regexpMap = null)
 	{
-		$regexpInfo = $this->parseRegexp($regexp);
+		$regexpInfo = self::parse($regexp);
 
 		$dotAll = (strpos($regexpInfo['modifiers'], 's') !== false);
 
@@ -914,7 +914,7 @@ class RegexpHelper
 
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
-			$regexp .= $this->unfoldUnicodeProperties(
+			$regexp .= self::unfoldUnicodeProperties(
 				substr($regexpInfo['regexp'], $pos, $tok['pos'] - $pos),
 				false,
 				$dotAll
@@ -952,7 +952,7 @@ class RegexpHelper
 
 				case 'characterClass':
 					$regexp .= '[';
-					$regexp .= $this->unfoldUnicodeProperties(
+					$regexp .= self::unfoldUnicodeProperties(
 						$tok['content'],
 						true,
 						false
@@ -988,7 +988,7 @@ class RegexpHelper
 			$pos = $tok['pos'] + $tok['len'];
 		}
 
-		$regexp .= $this->unfoldUnicodeProperties(
+		$regexp .= self::unfoldUnicodeProperties(
 			substr($regexpInfo['regexp'], $pos),
 			false,
 			$dotAll
@@ -1005,7 +1005,7 @@ class RegexpHelper
 		return $regexp;
 	}
 
-	protected function unfoldUnicodeProperties($str, $inCharacterClass, $dotAll)
+	protected static function unfoldUnicodeProperties($str, $inCharacterClass, $dotAll)
 	{
 		$unicodeProps = self::$unicodeProps;
 
