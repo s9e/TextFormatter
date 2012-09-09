@@ -893,7 +893,7 @@ abstract class RegexpHelper
 		return $ret;
 	}
 
-	/*
+	/**
 	* Convert a PCRE regexp to a Javascript regexp
 	*
 	* @param  string  $regexp    PCRE regexp
