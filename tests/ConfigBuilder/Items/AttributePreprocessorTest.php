@@ -3,7 +3,6 @@
 namespace s9e\TextFormatter\Tests\ConfigBuilder\Items;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\ConfigBuilder\Collections\FilterChain;
 use s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor;
 
 /**
@@ -19,5 +18,15 @@ class AttributePreprocessorTest extends Test
 	public function testInvalidRegexp()
 	{
 		new AttributePreprocessor('(?)');
+	}
+
+	/**
+	* @testdox getRegexp() returns the regexp associated with this attribute preprocessor
+	*/
+	public function testGetRegexp()
+	{
+		$ap = new AttributePreprocessor('#(?<x>[a-z])#');
+
+		$this->assertSame('#(?<x>[a-z])#', $ap->getRegexp());
 	}
 }

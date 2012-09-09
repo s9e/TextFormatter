@@ -196,6 +196,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
 
 s9e\TextFormatter\Tests\ConfigBuilder\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
+ [x] getRegexp() returns the regexp associated with this attribute preprocessor
 
 s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
  [x] An array of options can be passed to the constructor
