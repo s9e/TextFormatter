@@ -132,6 +132,21 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox $tag->rules can be assigned an instance of Ruleset to copy its content
+	*/
+	public function testRulesInstanceOfRuleset()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->allowChild('B');
+
+		$tag = new Tag;
+		$tag->rules = $ruleset;
+
+		$this->assertEquals($ruleset, $tag->rules);
+		$this->assertNotSame($ruleset, $tag->rules, '$tag->rules should not have been replaced with $ruleset');
+	}
+
+	/**
 	* @testdox Setting $tag->rules clears previous rules
 	* @depends testRulesArray
 	*/
@@ -147,19 +162,6 @@ class TagTest extends Test
 		$tag->rules = $rules;
 
 		$this->assertEquals($rules, iterator_to_array($tag->rules));
-	}
-
-	/**
-	* @testdox $tag->rules can be replaced with an instance of Ruleset
-	*/
-	public function testRulesInstanceOfRuleset()
-	{
-		$ruleset = new Ruleset;
-
-		$tag = new Tag;
-		$tag->rules = $ruleset;
-
-		$this->assertSame($ruleset, $tag->rules);
 	}
 
 	/**
@@ -222,34 +224,37 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox $tag->templates can be assigned an instance of Templateset to copy its content
+	*/
+	public function testTemplatesInstanceOfTemplateset()
+	{
+		$tag = new Tag;
+
+		$templateset = new Templateset($tag);
+		$templateset->setUnsafe('', 'foo');
+
+		$tag->templates = $templateset;
+
+		$this->assertEquals($templateset, $tag->templates);
+		$this->assertNotSame($templateset, $tag->templates, '$tag->templates should not have been replaced with $templateset');
+	}
+
+	/**
 	* @testdox Setting $tag->templates clears previous templates
 	* @depends testTemplatesArray
 	*/
 	public function testTemplatesArrayClears()
 	{
 		$templates = array(
-			'allowChild' => array('B'),
-			'denyChild'  => array('I')
+			''     => 'first',
+			'@foo' => 'second'
 		);
 
 		$tag = new Tag;
-		$tag->templates->allowChild('U');
+		$tag->templates = array('' => 'deleteme');
 		$tag->templates = $templates;
 
 		$this->assertEquals($templates, iterator_to_array($tag->templates));
-	}
-
-	/**
-	* @testdox $tag->templates can be replaced with an instance of Templateset
-	*/
-	public function testTemplatesInstanceOfTemplateset()
-	{
-		$templateset = new Templateset;
-
-		$tag = new Tag;
-		$tag->templates = $templateset;
-
-		$this->assertSame($templateset, $tag->templates);
 	}
 
 	/**
@@ -263,4 +268,14 @@ class TagTest extends Test
 		$tag->templates = false;
 	}
 
+	/**
+	* @testdox $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
+	*/
+	public function testSetDefaultTemplate()
+	{
+		$tag = new Tag;
+		$tag->defaultTemplate = 'foo';
+
+		$this->assertSame('foo', $tag->templates->get(''));
+	}
 }

@@ -143,25 +143,20 @@ class Tag
 	*/
 	public function setRules($rules)
 	{
-		if ($rules instanceof Ruleset)
-		{
-			$this->rules = $rules;
-		}
-		elseif (is_array($rules))
-		{
-			$this->rules->clear();
-
-			foreach ($rules as $action => $tagNames)
-			{
-				foreach ($tagNames as $tagName)
-				{
-					$this->rules->$action($tagName);
-				}
-			}
-		}
-		else
+		if (!is_array($rules)
+		 && !($rules instanceof Ruleset))
 		{
 			throw new InvalidArgumentException('setRules() expects an array or an instance of Ruleset');
+		}
+
+		$this->rules->clear();
+
+		foreach ($rules as $action => $tagNames)
+		{
+			foreach ($tagNames as $tagName)
+			{
+				$this->rules->$action($tagName);
+			}
 		}
 	}
 
@@ -191,22 +186,17 @@ class Tag
 	*/
 	public function setTemplates($templates)
 	{
-		if ($templates instanceof Templateset)
-		{
-			$this->templates = $templates;
-		}
-		elseif (is_array($templates))
-		{
-			$this->templates->clear();
-
-			foreach ($templates as $predicate => $template)
-			{
-				$this->templates->set($predicate, $template);
-			}
-		}
-		else
+		if (!is_array($templates)
+		 && !($templates instanceof Templateset))
 		{
 			throw new InvalidArgumentException('setTemplates() expects an array or an instance of Templateset');
+		}
+
+		$this->templates->clear();
+
+		foreach ($templates as $predicate => $template)
+		{
+			$this->templates->set($predicate, $template);
 		}
 	}
 

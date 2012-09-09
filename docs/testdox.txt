@@ -1,3 +1,81 @@
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
+ [x] Collection is countable
+ [x] Collection is iterable with foreach
+ [x] clear() empties the collection
+ [x] getConfig() returns the items as an array
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
+ [x] set() calls normalizeKey()
+ [x] set() calls normalizeValue()
+ [x] add() calls normalizeKey()
+ [x] add() calls normalizeValue()
+ [x] add() can be called without a second parameter
+ [x] get() throws a RuntimeException if the item already exists
+ [x] exists() returns TRUE if the item exists
+ [x] exists() returns FALSE if the item does not exist
+ [x] exists() calls normalizeKey()
+ [x] get() returns an item by name
+ [x] get() calls normalizeKey()
+ [x] get() throws a RuntimeException if the item does not exist
+ [x] delete() removes an item by name
+ [x] delete() calls the item's normalizeKey() method
+ [x] isset($collection['foo']) maps to $collection->exists('foo')
+ [x] $collection['foo'] maps to $collection->get('foo')
+ [x] $collection['foo'] = 42 maps to $collection->set('foo', 42)
+ [x] unset($collection['foo']) maps to $collection->delete('foo')
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
+ [x] getConfig() returns a list of regexps for each attribute
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
+ [x] append() adds the filter at the end of the chain
+ [x] prepend() adds the filter at the beginning of the chain
+ [x] append() correctly records filter vars
+ [x] prepend() correctly records filter vars
+ [x] append() throws an InvalidArgumentException on invalid callbacks
+ [x] prepend() throws an InvalidArgumentException on invalid callbacks
+ [x] append() throws an InvalidArgumentException on uncallable callbacks
+ [x] prepend() throws an InvalidArgumentException on uncallable callbacks
+ [x] $filterChain[] = 'foo' maps to $filterChain->append('foo')
+ [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
+ [x] has() returns false if the given filter is not present in the chain
+ [x] has() returns true if the given built-in filter is present in the chain
+ [x] has() returns true if the given PHP string callback is present in the chain
+ [x] $filterChain[0] = 'foo' replaces the first filter of the chain if it exists
+ [x] $filterChain[0] = 'foo' appends to the chain if it's empty
+ [x] $filterChain[1] = 'foo' throws an InvalidArgumentException if the chain is empty
+ [x] $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
+ [x] Deleting a filter reorders the chain to remove gaps
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
+ [x] clear() removes all rules
+ [x] clear('allowChild') removes only 'allowChild' rules
+ [x] allowChild() throws an exception on invalid tag name
+ [x] allowChild() normalizes tag name
+ [x] allowDescendant() throws an exception on invalid tag name
+ [x] allowDescendant() normalizes tag name
+ [x] closeAncestor() throws an exception on invalid tag name
+ [x] closeAncestor() normalizes tag name
+ [x] closeParent() throws an exception on invalid tag name
+ [x] closeParent() normalizes tag name
+ [x] denyChild() throws an exception on invalid tag name
+ [x] denyChild() normalizes tag name
+ [x] denyDescendant() throws an exception on invalid tag name
+ [x] denyDescendant() normalizes tag name
+ [x] reopenChild() throws an exception on invalid tag name
+ [x] reopenChild() normalizes tag name
+ [x] requireParent() throws an exception on invalid tag name
+ [x] requireParent() normalizes tag name
+ [x] requireAncestor() throws an exception on invalid tag name
+ [x] requireAncestor() normalizes tag name
+
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] buildRegexpFromList(['foo']) returns 'foo'
  [x] buildRegexpFromList(['foo', 'foo']) returns 'foo'
@@ -109,4 +187,65 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] pcreToJs() converts named captures into normal captures
  [x] pcreToJs() replaces its second parameter with an array that maps named captures to their index
  [x] pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
+
+s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
+ [x] An array of options can be passed to the constructor
+ [x] $attr->filterChain can be assigned an array
+ [x] $attr->filterChain can be replaced with another instance of FilterChain
+ [x] setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
+
+s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
+ [x] An array of options can be passed to the constructor
+ [x] $tag->defaultChildRule accepts 'allow'
+ [x] $tag->defaultChildRule accepts 'deny'
+ [x] $tag->defaultChildRule throws an exception if set to anything else than 'allow' or 'deny'
+ [x] $tag->defaultDescendantRule accepts 'allow'
+ [x] $tag->defaultDescendantRule accepts 'deny'
+ [x] $tag->defaultDescendantRule throws an exception if set to anything else than 'allow' or 'deny'
+ [x] $tag->nestingLimit accepts '10' and casts it as an integer
+ [x] $tag->nestingLimit rejects non-numbers
+ [x] $tag->nestingLimit rejects numbers less than 1
+ [x] $tag->rules can be assigned a 2D array of rules
+ [x] $tag->rules can be assigned an instance of Ruleset to copy its content
+ [x] Setting $tag->rules clears previous rules
+ [x] setRules() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
+ [x] $tag->tagLimit accepts '10' and casts it as an integer
+ [x] $tag->tagLimit rejects non-numbers
+ [x] $tag->tagLimit rejects numbers less than 1
+ [x] $tag->templates can be assigned an array of templates
+ [x] $tag->templates can be assigned an instance of Templateset to copy its content
+ [x] Setting $tag->templates clears previous templates
+ [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
+ [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
+
+s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
+ [x] normalize() throws an InvalidArgumentException if the name is invalid
+ [x] "url" is normalized to "url"
+ [x] "URL" is normalized to "url"
+ [x] "_url" is normalized to "_url"
+ [x] "md5" is normalized to "md5"
+ [x] "5md" is invalid (names must start with a letter)
+ [x] "data-src" is normalized to "data-src"
+ [x] "foo:bar" is invalid (no colons allowed)
+ [x] "foo\n" is invalid (no newlines allowed)
+
+s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
+ [x] normalize() throws an InvalidArgumentException if the name is invalid
+ [x] "b" is normalized to "B"
+ [x] "B" is normalized to "B"
+ [x] "_b" is normalized to "_B"
+ [x] "H1" is normalized to "H1"
+ [x] "1H" is invalid (names must start with a letter)
+ [x] "foo-bar" is invalid (no dashes allowed)
+ [x] "foo:bar" is normalized to "foo:bar"
+ [x] ":bar" is invalid (empty prefix)
+ [x] "_foo:bar" is normalized to "_foo:bar"
+ [x] "Foo:bar" is normalized to "Foo:bar"
+ [x] "f00:b4r" is normalized to "f00:b4r"
+ [x] "foo_bar:baz" is normalized to "foo_bar:baz"
+ [x] "7up:foo" is invalid (prefix must start with a letter)
+ [x] "foo:bar:baz" is invalid (only one colon allowed)
+ [x] "xsl:foo" is invalid ('xsl' prefix is reserved)
+ [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
+ [x] "B\n" is invalid (no newlines allowed)
 

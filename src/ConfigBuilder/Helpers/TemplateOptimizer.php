@@ -182,6 +182,8 @@ abstract class TemplateOptimizer
 		       . '[count(descendant::node()) = 2]'
 		       . '[xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]';
 
+		$xpath = new DOMXPath($dom);
+
 		foreach ($xpath->query($query) as $if)
 		{
 			$copyOf = $dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:copy-of');
