@@ -35,6 +35,7 @@
 			<file>ConfigBuilder/Collections/RulesetTest.php</file>
 			<file>ConfigBuilder/Helpers/RegexpHelperTest.php</file>
 			<file>ConfigBuilder/Items/AttributeTest.php</file>
+			<file>ConfigBuilder/Items/AttributePreprocessorTest.php</file>
 			<file>ConfigBuilder/Items/TagTest.php</file>
 			<file>ConfigBuilder/Validators/AttributeNameTest.php</file>
 			<file>ConfigBuilder/Validators/TagNameTest.php</file>
@@ -51,6 +52,7 @@
 			<file>../src/ConfigBuilder/Collections/Ruleset.php</file>
 			<file>../src/ConfigBuilder/Helpers/RegexpHelper.php</file>
 			<file>../src/ConfigBuilder/Items/Attribute.php</file>
+			<file>../src/ConfigBuilder/Items/AttributePreprocessor.php</file>
 			<file>../src/ConfigBuilder/Items/Tag.php</file>
 			<file>../src/ConfigBuilder/Validators/AttributeName.php</file>
 			<file>../src/ConfigBuilder/Validators/TagName.php</file>

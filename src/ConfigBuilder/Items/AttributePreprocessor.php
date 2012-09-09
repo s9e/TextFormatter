@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Items;
 
+use InvalidArgumentException;
+
 class AttributePreprocessor
 {
 	/**
@@ -15,12 +17,17 @@ class AttributePreprocessor
 	protected $regexp;
 
 	/**
-	* @todo parse the regexp, reject multiple subpatterns that use the same name
+	* @todo parse the regexp, reject multiple subpatterns that use the same name?
 	*
 	* @param string $regexp
 	*/
 	public function __construct($regexp)
 	{
+		if (@preg_match($regexp, '') === false)
+		{
+			throw new InvalidArgumentException('Invalid regular expression');
+		}
+
 		$this->regexp = $regexp;
 	}
 

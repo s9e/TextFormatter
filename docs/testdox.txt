@@ -194,6 +194,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
  [x] $attr->filterChain can be assigned an instance of FilterChain to copy its content
  [x] setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
 
+s9e\TextFormatter\Tests\ConfigBuilder\Items\AttributePreprocessor
+ [x] __construct() throws an InvalidArgumentException if the regexp is not valid
+
 s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
  [x] An array of options can be passed to the constructor
  [x] $tag->defaultChildRule accepts 'allow'

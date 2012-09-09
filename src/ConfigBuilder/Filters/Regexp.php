@@ -20,7 +20,7 @@ abstract class Regexp
 
 		if (@preg_match($vars['regexp'], '') === false)
 		{
-			throw new InvalidFilterException("Invalid regular expression");
+			throw new InvalidFilterException('Invalid regular expression');
 		}
 
 		return array('regexp' => $vars['regexp']);
