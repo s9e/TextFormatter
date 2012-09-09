@@ -162,7 +162,7 @@ abstract class HTML5Helper
 	*
 	* @link http://dev.w3.org/html5/spec/content-models.html#content-models
 	* @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
-	* @see  /scripts/patchConfigBuilder.php
+	* @see  /scripts/patchHTML5Helper.php
 	*
 	* Possible options:
 	*
@@ -172,7 +172,7 @@ abstract class HTML5Helper
 	* @param  array         $options Array of option settings
 	* @return array
 	*/
-	public static function generateRulesFromHTML5Specs(TagCollection $tags, array $options = array())
+	public static function getRules(TagCollection $tags, array $options = array())
 	{
 		$tagsConfig = $tags->getConfig();
 

@@ -33,6 +33,7 @@
 			<file>ConfigBuilder/Collections/AttributePreprocessorCollectionTest.php</file>
 			<file>ConfigBuilder/Collections/FilterChainTest.php</file>
 			<file>ConfigBuilder/Collections/RulesetTest.php</file>
+			<file>ConfigBuilder/Collections/TagCollectionTest.php</file>
 			<file>ConfigBuilder/Helpers/RegexpHelperTest.php</file>
 			<file>ConfigBuilder/Items/AttributeTest.php</file>
 			<file>ConfigBuilder/Items/AttributePreprocessorTest.php</file>
@@ -50,6 +51,7 @@
 			<file>../src/ConfigBuilder/Collections/FilterChain.php</file>
 			<file>../src/ConfigBuilder/Collections/NormalizedCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/Ruleset.php</file>
+			<file>../src/ConfigBuilder/Collections/TagCollection.php</file>
 			<file>../src/ConfigBuilder/Helpers/RegexpHelper.php</file>
 			<file>../src/ConfigBuilder/Items/Attribute.php</file>
 			<file>../src/ConfigBuilder/Items/AttributePreprocessor.php</file>

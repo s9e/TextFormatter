@@ -58,11 +58,19 @@ class TagNameTest extends Test
 	}
 
 	/**
-	* @testdox "1H" is invalid (names must start with a letter)
+	* @testdox "1H" is invalid (name must start with a letter or an underscore)
 	*/
 	public function testInvalidFF83DCEF()
 	{
 		$this->assertFalse(TagName::isValid("1H"));
+	}
+
+	/**
+	* @testdox "" is invalid (name must start with a letter or an underscore)
+	*/
+	public function testInvalid0()
+	{
+		$this->assertFalse(TagName::isValid(""));
 	}
 
 	/**
@@ -174,7 +182,8 @@ class TagNameTest extends Test
 			'B'           => 'B',
 			'_b'          => '_B',
 			'H1'          => 'H1',
-			'1H'          => 'Invalid: names must start with a letter',
+			'1H'          => 'Invalid: name must start with a letter or an underscore',
+			''            => 'Invalid: name must start with a letter or an underscore',
 			'foo-bar'     => 'Invalid: no dashes allowed',
 			'foo:bar'     => 'foo:bar',
 			':bar'        => 'Invalid: empty prefix',

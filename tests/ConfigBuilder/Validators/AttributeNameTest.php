@@ -58,11 +58,19 @@ class AttributeNameTest extends Test
 	}
 
 	/**
-	* @testdox "5md" is invalid (names must start with a letter)
+	* @testdox "5md" is invalid (name must start with a letter or an underscore)
 	*/
 	public function testInvalid476D4EC2()
 	{
 		$this->assertFalse(AttributeName::isValid("5md"));
+	}
+
+	/**
+	* @testdox "" is invalid (name must start with a letter or an underscore)
+	*/
+	public function testInvalid0()
+	{
+		$this->assertFalse(AttributeName::isValid(""));
 	}
 
 	/**
@@ -98,7 +106,8 @@ class AttributeNameTest extends Test
 			'URL'      => 'url',
 			'_url'     => '_url',
 			'md5'      => 'md5',
-			'5md'      => 'Invalid: names must start with a letter',
+			'5md'      => 'Invalid: name must start with a letter or an underscore',
+			''         => 'Invalid: name must start with a letter or an underscore',
 			'data-src' => 'data-src',
 			'foo:bar'  => 'Invalid: no colons allowed',
 			"foo\n"    => 'Invalid: no newlines allowed'

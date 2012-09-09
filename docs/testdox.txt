@@ -26,6 +26,11 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
+ [x] add() normalizes the attribute name
+ [x] delete() normalizes the attribute name
+ [x] exists() normalizes the attribute name
+ [x] get() normalizes the attribute name
+ [x] set() normalizes the attribute name
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
@@ -75,6 +80,14 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] requireParent() normalizes tag name
  [x] requireAncestor() throws an exception on invalid tag name
  [x] requireAncestor() normalizes tag name
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\TagCollection
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Tag
+ [x] add() normalizes the tag name
+ [x] delete() normalizes the tag name
+ [x] exists() normalizes the tag name
+ [x] get() normalizes the tag name
+ [x] set() normalizes the tag name
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] buildRegexpFromList(['foo']) returns 'foo'
@@ -228,7 +241,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
  [x] "URL" is normalized to "url"
  [x] "_url" is normalized to "_url"
  [x] "md5" is normalized to "md5"
- [x] "5md" is invalid (names must start with a letter)
+ [x] "5md" is invalid (name must start with a letter or an underscore)
+ [x] "" is invalid (name must start with a letter or an underscore)
  [x] "data-src" is normalized to "data-src"
  [x] "foo:bar" is invalid (no colons allowed)
  [x] "foo\n" is invalid (no newlines allowed)
@@ -239,7 +253,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
  [x] "B" is normalized to "B"
  [x] "_b" is normalized to "_B"
  [x] "H1" is normalized to "H1"
- [x] "1H" is invalid (names must start with a letter)
+ [x] "1H" is invalid (name must start with a letter or an underscore)
+ [x] "" is invalid (name must start with a letter or an underscore)
  [x] "foo-bar" is invalid (no dashes allowed)
  [x] "foo:bar" is normalized to "foo:bar"
  [x] ":bar" is invalid (empty prefix)
