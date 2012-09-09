@@ -40,16 +40,18 @@ class AttributeTest extends Test
 	}
 
 	/**
-	* @testdox $attr->filterChain can be replaced with another instance of FilterChain
+	* @testdox $attr->filterChain can be assigned an instance of FilterChain to copy its content
 	*/
 	public function testSetFilterChainInstance()
 	{
-		$filterChain = new FilterChain(array());
+		$filterChain = new FilterChain(array('attrVal' => null));
+		$filterChain->append('strtolower');
 
 		$attr = new Attribute;
 		$attr->filterChain = $filterChain;
 
-		$this->assertSame($filterChain, $attr->filterChain);
+		$this->assertEquals($filterChain, $attr->filterChain);
+		$this->assertNotSame($filterChain, $attr->filterChain, '$attr->filterChain should not have been replaced with $filterChain');
 	}
 
 	/**

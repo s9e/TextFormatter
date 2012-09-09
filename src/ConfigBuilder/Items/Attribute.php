@@ -50,22 +50,17 @@ class Attribute
 	*/
 	public function setFilterChain($filterChain)
 	{
-		if ($filterChain instanceof FilterChain)
-		{
-			$this->filterChain = $filterChain;
-		}
-		elseif (is_array($filterChain))
-		{
-			$this->filterChain->clear();
-
-			foreach ($filterChain as $filter)
-			{
-				$this->filterChain->append($filter);
-			}
-		}
-		else
+		if (!is_array($filterChain)
+		 && !($filterChain instanceof FilterChain))
 		{
 			throw new InvalidArgumentException('setFilterChain() expects an array or an instance of FilterChain');
+		}
+
+		$this->filterChain->clear();
+
+		foreach ($filterChain as $filter)
+		{
+			$this->filterChain->append($filter);
 		}
 	}
 }
