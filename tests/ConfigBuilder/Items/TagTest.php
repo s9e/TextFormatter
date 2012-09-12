@@ -22,68 +22,6 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox $tag->defaultChildRule accepts 'allow'
-	*/
-	public function testDefaultChildRuleAllow()
-	{
-		$tag = new Tag;
-		$tag->defaultChildRule = 'allow';
-		$this->assertSame('allow', $tag->defaultChildRule);
-	}
-
-	/**
-	* @testdox $tag->defaultChildRule accepts 'deny'
-	*/
-	public function testDefaultChildRuleDeny()
-	{
-		$tag = new Tag;
-		$tag->defaultChildRule = 'deny';
-		$this->assertSame('deny', $tag->defaultChildRule);
-	}
-
-	/**
-	* @testdox $tag->defaultChildRule throws an exception if set to anything else than 'allow' or 'deny'
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage defaultChildRule must be either 'allow' or 'deny'
-	*/
-	public function testDefaultChildRuleInvalid()
-	{
-		$tag = new Tag;
-		$tag->defaultChildRule = 'invalid';
-	}
-
-	/**
-	* @testdox $tag->defaultDescendantRule accepts 'allow'
-	*/
-	public function testDefaultDescendantRuleAllow()
-	{
-		$tag = new Tag;
-		$tag->defaultDescendantRule = 'allow';
-		$this->assertSame('allow', $tag->defaultDescendantRule);
-	}
-
-	/**
-	* @testdox $tag->defaultDescendantRule accepts 'deny'
-	*/
-	public function testDefaultDescendantRuleDeny()
-	{
-		$tag = new Tag;
-		$tag->defaultDescendantRule = 'deny';
-		$this->assertSame('deny', $tag->defaultDescendantRule);
-	}
-
-	/**
-	* @testdox $tag->defaultDescendantRule throws an exception if set to anything else than 'allow' or 'deny'
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage defaultDescendantRule must be either 'allow' or 'deny'
-	*/
-	public function testDefaultDescendantRuleInvalid()
-	{
-		$tag = new Tag;
-		$tag->defaultDescendantRule = 'invalid';
-	}
-
-	/**
 	* @testdox $tag->nestingLimit accepts '10' and casts it as an integer
 	*/
 	public function testNestingLimitString()

@@ -70,12 +70,18 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] closeAncestor() normalizes tag name
  [x] closeParent() throws an exception on invalid tag name
  [x] closeParent() normalizes tag name
- [x] disallowAtRoot() accepts a boolean
- [x] disallowAtRoot() throws an exception if its argument is not a boolean
+ [x] defaultChildRule() accepts 'allow'
+ [x] defaultChildRule() accepts 'deny'
+ [x] defaultChildRule() throws an exception if passed anything else than 'allow' or 'deny'
+ [x] defaultDescendantRule() accepts 'allow'
+ [x] defaultDescendantRule() accepts 'deny'
+ [x] defaultDescendantRule() throws an exception if passed anything else than 'allow' or 'deny'
  [x] denyChild() throws an exception on invalid tag name
  [x] denyChild() normalizes tag name
  [x] denyDescendant() throws an exception on invalid tag name
  [x] denyDescendant() normalizes tag name
+ [x] disallowAtRoot() accepts a boolean
+ [x] disallowAtRoot() throws an exception if its argument is not a boolean
  [x] inheritChildRules() accepts a boolean
  [x] inheritChildRules() throws an exception if its argument is not a boolean
  [x] reopenChild() throws an exception on invalid tag name
@@ -86,8 +92,12 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] requireAncestor() normalizes tag name
  [x] merge() accepts a 2D array of rules
  [x] merge() correctly copies the disallowAtRoot setting from an array
+ [x] merge() correctly copies the defaultChildRule setting from an array
+ [x] merge() correctly copies the defaultDescendantRule setting from an array
  [x] merge() correctly copies the inheritChildRules setting from an array
  [x] merge() accepts an instance of Ruleset to copy its content
+ [x] merge() correctly copies the defaultChildRule setting from an instance of Ruleset
+ [x] merge() correctly copies the defaultDescendantRule setting from an instance of Ruleset
  [x] merge() correctly copies the disallowAtRoot setting from an instance of Ruleset
  [x] merge() correctly copies the inheritChildRules setting from an instance of Ruleset
  [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
@@ -224,12 +234,6 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\AttributePreprocessor
 
 s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
  [x] An array of options can be passed to the constructor
- [x] $tag->defaultChildRule accepts 'allow'
- [x] $tag->defaultChildRule accepts 'deny'
- [x] $tag->defaultChildRule throws an exception if set to anything else than 'allow' or 'deny'
- [x] $tag->defaultDescendantRule accepts 'allow'
- [x] $tag->defaultDescendantRule accepts 'deny'
- [x] $tag->defaultDescendantRule throws an exception if set to anything else than 'allow' or 'deny'
  [x] $tag->nestingLimit accepts '10' and casts it as an integer
  [x] $tag->nestingLimit rejects non-numbers
  [x] $tag->nestingLimit rejects numbers less than 1

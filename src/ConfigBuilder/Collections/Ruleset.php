@@ -44,17 +44,16 @@ class Ruleset extends Collection
 
 		foreach ($rules as $action => $value)
 		{
-			if ($action === 'disallowAtRoot'
-			 || $action === 'inheritChildRules')
-			{
-				 $this->$action($value);
-			}
-			else
+			if (is_array($value))
 			{
 				foreach ($value as $tagName)
 				{
 					$this->$action($tagName);
 				}
+			}
+			else
+			{
+				$this->$action($value);
 			}
 		}
 	}
@@ -97,6 +96,37 @@ class Ruleset extends Collection
 	public function closeParent($tagName)
 	{
 		$this->items['closeParent'][] = TagName::normalize($tagName);
+	}
+
+
+	/**
+	* Set the default child rule
+	*
+	* @param string $rule Either "allow" or "deny"
+	*/
+	public function defaultChildRule($rule)
+	{
+		if ($rule !== 'allow' && $rule !== 'deny')
+		{
+			throw new InvalidArgumentException("defaultChildRule() only accepts 'allow' or 'deny'");
+		}
+
+		$this->items['defaultChildRule'] = $rule;
+	}
+
+	/**
+	* Set the default descendant rule
+	*
+	* @param string $rule Either "allow" or "deny"
+	*/
+	public function defaultDescendantRule($rule)
+	{
+		if ($rule !== 'allow' && $rule !== 'deny')
+		{
+			throw new InvalidArgumentException("defaultDescendantRule() only accepts 'allow' or 'deny'");
+		}
+
+		$this->items['defaultDescendantRule'] = $rule;
 	}
 
 	/**

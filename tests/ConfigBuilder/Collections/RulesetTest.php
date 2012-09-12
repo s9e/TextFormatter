@@ -144,23 +144,81 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox disallowAtRoot() accepts a boolean
+	* @testdox defaultChildRule() accepts 'allow'
 	*/
-	public function testDisallowAtRootValid()
+	public function testDefaultChildRuleAllow()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->disallowAtRoot(true);
+		$ruleset->defaultChildRule('allow');
+
+		$this->assertSame(
+			array('defaultChildRule' => 'allow'),
+			iterator_to_array($ruleset)
+		);
 	}
 
 	/**
-	* @testdox disallowAtRoot() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage disallowAtRoot() expects a boolean
+	* @testdox defaultChildRule() accepts 'deny'
 	*/
-	public function testDisallowAtRootInalid()
+	public function testDefaultChildRuleDeny()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->disallowAtRoot('foo');
+		$ruleset->defaultChildRule('deny');
+
+		$this->assertSame(
+			array('defaultChildRule' => 'deny'),
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox defaultChildRule() throws an exception if passed anything else than 'allow' or 'deny'
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage defaultChildRule() only accepts 'allow' or 'deny'
+	*/
+	public function testDefaultChildRuleInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->defaultChildRule('invalid');
+	}
+
+	/**
+	* @testdox defaultDescendantRule() accepts 'allow'
+	*/
+	public function testDefaultDescendantRuleAllow()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->defaultDescendantRule('allow');
+
+		$this->assertSame(
+			array('defaultDescendantRule' => 'allow'),
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox defaultDescendantRule() accepts 'deny'
+	*/
+	public function testDefaultDescendantRuleDeny()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->defaultDescendantRule('deny');
+
+		$this->assertSame(
+			array('defaultDescendantRule' => 'deny'),
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox defaultDescendantRule() throws an exception if passed anything else than 'allow' or 'deny'
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage defaultDescendantRule() only accepts 'allow' or 'deny'
+	*/
+	public function testDefaultDescendantRuleInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->defaultDescendantRule('invalid');
 	}
 
 	/**
@@ -213,6 +271,26 @@ class RulesetTest extends Test
 			array('denyDescendant' => array('B')),
 			iterator_to_array($ruleset)
 		);
+	}
+
+	/**
+	* @testdox disallowAtRoot() accepts a boolean
+	*/
+	public function testDisallowAtRootValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->disallowAtRoot(true);
+	}
+
+	/**
+	* @testdox disallowAtRoot() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage disallowAtRoot() expects a boolean
+	*/
+	public function testDisallowAtRootInalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->disallowAtRoot('foo');
 	}
 
 	/**
@@ -313,12 +391,6 @@ class RulesetTest extends Test
 		);
 	}
 
-
-
-
-
-
-
 	/**
 	* @testdox merge() accepts a 2D array of rules
 	*/
@@ -352,6 +424,38 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox merge() correctly copies the defaultChildRule setting from an array
+	*/
+	public function testMergeArrayDefaultChildRule()
+	{
+		$rules = array(
+			'allowChild'       => array('B'),
+			'defaultChildRule' => 'allow'
+		);
+
+		$ruleset = new Ruleset;
+		$ruleset->merge($rules);
+
+		$this->assertEquals($rules, iterator_to_array($ruleset));
+	}
+
+	/**
+	* @testdox merge() correctly copies the defaultDescendantRule setting from an array
+	*/
+	public function testMergeArrayDefaultDescendantRule()
+	{
+		$rules = array(
+			'allowDescendant'       => array('B'),
+			'defaultDescendantRule' => 'allow'
+		);
+
+		$ruleset = new Ruleset;
+		$ruleset->merge($rules);
+
+		$this->assertEquals($rules, iterator_to_array($ruleset));
+	}
+
+	/**
 	* @testdox merge() correctly copies the inheritChildRules setting from an array
 	*/
 	public function testMergeArrayInheritChildRules()
@@ -374,6 +478,34 @@ class RulesetTest extends Test
 	{
 		$ruleset1 = new Ruleset;
 		$ruleset1->allowChild('B');
+
+		$ruleset2 = new Ruleset;
+		$ruleset2->merge($ruleset1);
+
+		$this->assertEquals($ruleset1, $ruleset2);
+	}
+
+	/**
+	* @testdox merge() correctly copies the defaultChildRule setting from an instance of Ruleset
+	*/
+	public function testMergeInstanceOfRulesetDefaultChildRule()
+	{
+		$ruleset1 = new Ruleset;
+		$ruleset1->defaultChildRule('allow');
+
+		$ruleset2 = new Ruleset;
+		$ruleset2->merge($ruleset1);
+
+		$this->assertEquals($ruleset1, $ruleset2);
+	}
+
+	/**
+	* @testdox merge() correctly copies the defaultDescendantRule setting from an instance of Ruleset
+	*/
+	public function testMergeInstanceOfRulesetDefaultDescendantRule()
+	{
+		$ruleset1 = new Ruleset;
+		$ruleset1->defaultDescendantRule('allow');
 
 		$ruleset2 = new Ruleset;
 		$ruleset2->merge($ruleset1);

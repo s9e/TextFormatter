@@ -39,12 +39,6 @@ class Tag
 	protected $defaultDescendantRule = 'allow';
 
 	/**
-	* @var 
-	* @todo implement that better. (note: needed to cover HTML5 rules with a non-div root, e.g. <a>)
-	*/
-	protected $disallowAsRoot = false;
-
-	/**
 	* @var integer Maximum nesting level for this tag
 	*/
 	protected $nestingLimit = 10;
@@ -85,36 +79,6 @@ class Tag
 				$this->__set($optionName, $optionValue);
 			}
 		}
-	}
-
-	/**
-	* Set the default child rule
-	*
-	* @param string $rule Either "allow" or "deny"
-	*/
-	public function setDefaultChildRule($rule)
-	{
-		if ($rule !== 'allow' && $rule !== 'deny')
-		{
-			throw new InvalidArgumentException("defaultChildRule must be either 'allow' or 'deny'");
-		}
-
-		$this->defaultChildRule = $rule;
-	}
-
-	/**
-	* Set the default descendant rule
-	*
-	* @param string $rule Either "allow" or "deny"
-	*/
-	public function setDefaultDescendantRule($rule)
-	{
-		if ($rule !== 'allow' && $rule !== 'deny')
-		{
-			throw new InvalidArgumentException("defaultDescendantRule must be either 'allow' or 'deny'");
-		}
-
-		$this->defaultDescendantRule = $rule;
 	}
 
 	/**
