@@ -392,13 +392,19 @@ var HINT = {
 	{
 		function htmlspecialchars(str)
 		{
-			var t = {
-				'<' : '&lt;',
-				'>' : '&gt;',
-				'&' : '&amp;',
-				'"' : '&quot;'
-			}
-			return str.replace(/[<>&"]/g, function(c) { return t[c]; });
+			return str.replace(
+				/["&<>]/g,
+				function(c)
+				{
+					/**
+					* NOTE: can store the translation table in a var or inline it. Inlining it makes
+					*       it much faster if there are no replacements, but slighty (Firefox 15) to
+					*       moderately (Chrome 23, which is however still faster than Firefox in
+					*       this case) slower if there are any. 
+					*/
+					return {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}[c];
+				}
+			);
 		}
 
 		if (!processedTags.length)

@@ -166,6 +166,7 @@ abstract class HTML5Helper
 	*
 	* Possible options:
 	*
+	*  renderer:    instance of Renderer, used to render tags that have no individual templates set
 	*  rootElement: name of the HTML element used as the root of the rendered text
 	*
 	* @param  TagCollection $tags    Tags collection
@@ -174,6 +175,12 @@ abstract class HTML5Helper
 	*/
 	public static function getRules(TagCollection $tags, array $options = array())
 	{
+		/**
+		* @todo do away with "disallowAsRoot" -- replace with as many "requireParent" rules as
+		*       necessary. The ConfigBuilder should then optimize all requireParent rules by
+		*       converting them to one allowChild/denyChild rule for each tag *PLUS* the root
+		*       context
+		*/
 		$tagsConfig = $tags->getConfig();
 
 		if (isset($options['rootElement']))

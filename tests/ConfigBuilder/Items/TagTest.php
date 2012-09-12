@@ -165,17 +165,6 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox setRules() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage setRules() expects an array or an instance of Ruleset
-	*/
-	public function testSetRulesInvalid()
-	{
-		$tag = new Tag;
-		$tag->rules = false;
-	}
-
-	/**
 	* @testdox $tag->tagLimit accepts '10' and casts it as an integer
 	*/
 	public function testTagLimitString()

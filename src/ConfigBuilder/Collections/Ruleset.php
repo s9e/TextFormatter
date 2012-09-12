@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
+use InvalidArgumentException;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
 class Ruleset extends Collection
@@ -25,6 +26,36 @@ class Ruleset extends Collection
 		else
 		{
 			$this->items = array();
+		}
+	}
+
+	/**
+	* Merge a set of rules into this collection
+	*
+	* @param array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
+	*/
+	public function merge($rules)
+	{
+		if (!is_array($rules)
+		 && !($rules instanceof self))
+		{
+			throw new InvalidArgumentException('merge() expects an array or an instance of Ruleset');
+		}
+
+		foreach ($rules as $action => $value)
+		{
+			if ($action === 'disallowAtRoot'
+			 || $action === 'inheritChildRules')
+			{
+				 $this->$action($value);
+			}
+			else
+			{
+				foreach ($value as $tagName)
+				{
+					$this->$action($tagName);
+				}
+			}
 		}
 	}
 
@@ -86,6 +117,36 @@ class Ruleset extends Collection
 	public function denyDescendant($tagName)
 	{
 		$this->items['denyDescendant'][] = TagName::normalize($tagName);
+	}
+
+	/**
+	* Add a disallowAtRoot rule
+	*
+	* @param bool $bool Whether to disallow the tag to be used at the root of a message
+	*/
+	public function disallowAtRoot($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('disallowAtRoot() expects a boolean');
+		}
+
+		$this->items['disallowAtRoot'] = $bool;
+	}
+
+	/**
+	* Add a inheritChildRules rule
+	*
+	* @param bool $bool Whether or not the tag should use the "transparent" content model
+	*/
+	public function inheritChildRules($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('inheritChildRules() expects a boolean');
+		}
+
+		$this->items['inheritChildRules'] = $bool;
 	}
 
 	/**

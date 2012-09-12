@@ -70,16 +70,27 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] closeAncestor() normalizes tag name
  [x] closeParent() throws an exception on invalid tag name
  [x] closeParent() normalizes tag name
+ [x] disallowAtRoot() accepts a boolean
+ [x] disallowAtRoot() throws an exception if its argument is not a boolean
  [x] denyChild() throws an exception on invalid tag name
  [x] denyChild() normalizes tag name
  [x] denyDescendant() throws an exception on invalid tag name
  [x] denyDescendant() normalizes tag name
+ [x] inheritChildRules() accepts a boolean
+ [x] inheritChildRules() throws an exception if its argument is not a boolean
  [x] reopenChild() throws an exception on invalid tag name
  [x] reopenChild() normalizes tag name
  [x] requireParent() throws an exception on invalid tag name
  [x] requireParent() normalizes tag name
  [x] requireAncestor() throws an exception on invalid tag name
  [x] requireAncestor() normalizes tag name
+ [x] merge() accepts a 2D array of rules
+ [x] merge() correctly copies the disallowAtRoot setting from an array
+ [x] merge() correctly copies the inheritChildRules setting from an array
+ [x] merge() accepts an instance of Ruleset to copy its content
+ [x] merge() correctly copies the disallowAtRoot setting from an instance of Ruleset
+ [x] merge() correctly copies the inheritChildRules setting from an instance of Ruleset
+ [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Tag
@@ -225,7 +236,6 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
  [x] $tag->rules can be assigned a 2D array of rules
  [x] $tag->rules can be assigned an instance of Ruleset to copy its content
  [x] Setting $tag->rules clears previous rules
- [x] setRules() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
  [x] $tag->tagLimit accepts '10' and casts it as an integer
  [x] $tag->tagLimit rejects non-numbers
  [x] $tag->tagLimit rejects numbers less than 1

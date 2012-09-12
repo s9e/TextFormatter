@@ -143,21 +143,8 @@ class Tag
 	*/
 	public function setRules($rules)
 	{
-		if (!is_array($rules)
-		 && !($rules instanceof Ruleset))
-		{
-			throw new InvalidArgumentException('setRules() expects an array or an instance of Ruleset');
-		}
-
 		$this->rules->clear();
-
-		foreach ($rules as $action => $tagNames)
-		{
-			foreach ($tagNames as $tagName)
-			{
-				$this->rules->$action($tagName);
-			}
-		}
+		$this->rules->merge($rules);
 	}
 
 	/**
