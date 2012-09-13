@@ -230,28 +230,6 @@ abstract class HTML5Helper
 
 
 
-		if (isset($options['rootElement']))
-		{
-			if (!isset(self::htmlElements[$options['rootElement']]))
-			{
-				throw new InvalidArgumentException("Unknown HTML element '" . $options['rootElement'] . "'");
-			}
-
-			/**
-			* Create a fake tag for our root element. "*fake-root*" is not a valid tag name so it
-			* shouldn't conflict with any existing tag
-			*/
-			$rootTag = '*fake-root*';
-
-			$tagsConfig[$rootTag]['xsl'] =
-				'<xsl:template match="' . $rootTag . '">
-					<' . $options['rootElement'] . '>
-						<xsl:apply-templates />
-					</' . $options['rootElement'] . '>
-				</xsl:template>';
-		}
-
-		$tagsInfo = array();
 		foreach ($tags as $tagName => $tag)
 		{
 			/**
@@ -325,7 +303,7 @@ abstract class HTML5Helper
 				{
 					$elName = $node->getName();
 
-					if (empty(self::htmlElements[$elName]['t']))
+					if (empty(self::$htmlElements[$elName]['t']))
 					{
 						/**
 						* If this element does not use the transparent content model, we discard its
@@ -384,7 +362,7 @@ abstract class HTML5Helper
 			{
 				$elName = $rootNode->getName();
 
-				if (!isset(self::htmlElements[$elName]['cp']))
+				if (!isset(self::$htmlElements[$elName]['cp']))
 				{
 					continue;
 				}
@@ -393,7 +371,7 @@ abstract class HTML5Helper
 				{
 					foreach ($targetInfo['leafNode'] as $leafNode)
 					{
-						if (in_array($leafNode->getName(), self::htmlElements[$elName]['cp'], true))
+						if (in_array($leafNode->getName(), self::$htmlElements[$elName]['cp'], true))
 						{
 							$tagsOptions[$tagName]['rules']['closeParent'][] = $targetName;
 						}
@@ -561,12 +539,12 @@ abstract class HTML5Helper
 	*/
 	protected static function getBitfield($elName, $k, SimpleXMLElement $node)
 	{
-		if (empty(self::htmlElements[$elName][$k]))
+		if (empty(self::$htmlElements[$elName][$k]))
 		{
 			return 0;
 		}
 
-		$bitfield = self::htmlElements[$elName][$k];
+		$bitfield = self::$htmlElements[$elName][$k];
 
 		foreach (str_split(strrev(decbin($bitfield)), 1) as $n => $v)
 		{
@@ -577,8 +555,8 @@ abstract class HTML5Helper
 			}
 
 			// Test for an XPath condition for that category
-			if (isset(self::htmlElements[$elName][$k . $n])
-			 && !$node->xpath(self::htmlElements[$elName][$k . $n]))
+			if (isset(self::$htmlElements[$elName][$k . $n])
+			 && !$node->xpath(self::$htmlElements[$elName][$k . $n]))
 			{
 				// The XPath query returned no results, therefore we turn off this bit
 				$bitfield ^= 1 << $n;
@@ -693,7 +671,7 @@ abstract class HTML5Helper
 		}
 
 		// Now we take the bitfield of each branch and reduce them to a single ANDed bitfield
-		if (!empty($branchBitfields)
+		if (!empty($branchBitfields))
 		{
 			$ac = $branchBitfields[0];
 
