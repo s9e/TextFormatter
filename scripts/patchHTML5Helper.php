@@ -329,8 +329,8 @@ foreach ($page->body->h4 as $h4)
 	}
 }
 
-// flatten XPath queries
-foreach ($elements as &$element)
+// Flatten XPath queries for each target
+foreach ($elements as $elName => &$element)
 {
 	$flatten = array(
 		'categories',
@@ -361,11 +361,8 @@ foreach ($elements as &$element)
 			{
 				$xpath = implode(' or ', array_keys($xpath));
 
-				// optimize "@foo or not(@foo)" away
-				if (preg_match('#^(@[a-z]+) or not\\(\\1\\)$#D', $xpath))
-				{
-					$xpath = '';
-				}
+				// Optimize "@foo or not(@foo)" away
+				$xpath = preg_replace('#^(@[a-z]+) or not\\(\\1\\)$#D', '', $xpath);
 			}
 		}
 		unset($xpath);
@@ -387,18 +384,32 @@ foreach ($elements as &$element)
 	{
 		if (isset($element[$k]))
 		{
+			// Sort elements by name so their order remain consistent for serialization
 			ksort($element[$k]);
-			$category = serialize(array_keys($element[$k]));
 
+			// Sort elements by XPath condition
+			$xpathElements = array();
 			foreach ($element[$k] as $elName => $xpath)
 			{
-				$elements[$elName]['categories'][$category] = $xpath;
+				$xpathElements[$xpath][] = $elName;
 			}
 
-			$element[preg_replace('#Element$#D', 'Category', $k)][$category] = $xpath;
+			foreach ($xpathElements as $xpath => $elNames)
+			{
+				$category = serialize(array_unique($elNames));
+
+				foreach ($elNames as $elName)
+				{
+					// Add our pseudo-category to each element of the group
+					$elements[$elName]['categories'][$category] = $xpath;
+				}
+
+				$element[preg_replace('#Element$#D', 'Category', $k)][$category] = $xpath;
+			}
 		}
 	}
 }
+unset($element);
 
 // Count the number of tags per category and remove the "transparent" pseudo-category
 foreach ($elements as $elName => &$element)
@@ -421,23 +432,29 @@ foreach ($elements as $elName => &$element)
 
 	if (isset($element['allowChildCategory']['transparent']))
 	{
+		if ($element['allowChildCategory']['transparent'] !== '')
+		{
+			// There's currently no real-world example of that, this is only future-proofing
+			echo "!!! ATTENTION !!! The $elName element uses a conditionally transparent content model, which isn't currently supported\n";
+		}
+
 		$element['transparent'] = 1;
 		unset($element['allowChildCategory']['transparent']);
 	}
 }
 unset($element);
 
-ksort($elements);
-
+// Concatenate each category's number to its name so we can sort them by frequency then name
 foreach ($categories as $k => &$v)
 {
 	$v = sprintf('%03d', $v) . $k;
 }
 unset($v);
 
+// Sort the categories then flip their keys so their values go in ascending order starting from 0
 arsort($categories);
 $categories = array_flip(array_keys($categories));
-print_r($elements);exit;
+
 $arr = array();
 foreach ($elements as $elName => &$element)
 {
@@ -484,6 +501,9 @@ foreach ($elements as $elName => &$element)
 	$arr[$elName] = $el;
 }
 
+// Sort the elements so that their order remain consistent across revisions
+ksort($arr);
+
 $php = '';
 foreach ($arr as $elName => $values)
 {
@@ -493,7 +513,7 @@ foreach ($arr as $elName => $values)
 	{
 		$php .= $sep . "'$k'=>";
 
-		if ($v & 0x80000000)
+		if ($v >= 0x80000000)
 		{
 			$php .= '0x' . dechex($v);
 		}

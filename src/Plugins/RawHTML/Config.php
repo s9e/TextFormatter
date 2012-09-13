@@ -239,7 +239,6 @@ class RawHTMLConfig extends PluginConfig
 			return false;
 		}
 
-		
 		/**
 		* Regexp used to match an attributes definition (name + value if applicable)
 		*
@@ -249,7 +248,7 @@ class RawHTMLConfig extends PluginConfig
 		$tagRegexp  = $this->cb->getRegexpHelper()->buildRegexpFromList(array_keys($this->tags));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
-		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*)/?';
+		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*+)/?';
 
 		$regexp = '#<(?:' . $endTagRegexp . '|' . $startTagRegexp . ')\\s*>#i';
 
