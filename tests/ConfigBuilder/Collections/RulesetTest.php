@@ -294,23 +294,23 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox inheritChildRules() accepts a boolean
+	* @testdox inheritRules() accepts a boolean
 	*/
-	public function testInheritChildRulesValid()
+	public function testInheritRulesValid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->inheritChildRules(true);
+		$ruleset->inheritRules(true);
 	}
 
 	/**
-	* @testdox inheritChildRules() throws an exception if its argument is not a boolean
+	* @testdox inheritRules() throws an exception if its argument is not a boolean
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage inheritChildRules() expects a boolean
+	* @expectedExceptionMessage inheritRules() expects a boolean
 	*/
-	public function testInheritChildRulesInalid()
+	public function testInheritRulesInalid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->inheritChildRules('foo');
+		$ruleset->inheritRules('foo');
 	}
 
 	/**
@@ -456,13 +456,13 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox merge() correctly copies the inheritChildRules setting from an array
+	* @testdox merge() correctly copies the inheritRules setting from an array
 	*/
-	public function testMergeArrayInheritChildRules()
+	public function testMergeArrayInheritRules()
 	{
 		$rules = array(
 			'allowChild'        => array('B'),
-			'inheritChildRules' => true
+			'inheritRules' => true
 		);
 
 		$ruleset = new Ruleset;
@@ -528,12 +528,12 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox merge() correctly copies the inheritChildRules setting from an instance of Ruleset
+	* @testdox merge() correctly copies the inheritRules setting from an instance of Ruleset
 	*/
-	public function testMergeInstanceOfRulesetInheritChildRules()
+	public function testMergeInstanceOfRulesetInheritRules()
 	{
 		$ruleset1 = new Ruleset;
-		$ruleset1->inheritChildRules(true);
+		$ruleset1->inheritRules(true);
 
 		$ruleset2 = new Ruleset;
 		$ruleset2->merge($ruleset1);

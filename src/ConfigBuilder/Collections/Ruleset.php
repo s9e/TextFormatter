@@ -165,18 +165,18 @@ class Ruleset extends Collection
 	}
 
 	/**
-	* Add a inheritChildRules rule
+	* Add a inheritRules rule
 	*
 	* @param bool $bool Whether or not the tag should use the "transparent" content model
 	*/
-	public function inheritChildRules($bool = true)
+	public function inheritRules($bool = true)
 	{
 		if (!is_bool($bool))
 		{
-			throw new InvalidArgumentException('inheritChildRules() expects a boolean');
+			throw new InvalidArgumentException('inheritRules() expects a boolean');
 		}
 
-		$this->items['inheritChildRules'] = $bool;
+		$this->items['inheritRules'] = $bool;
 	}
 
 	/**
