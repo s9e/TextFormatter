@@ -84,6 +84,7 @@ class TagProxy
 	public function __construct($templates, array $options = array())
 	{
 		$this->loadTemplates($templates, $options);
+
 		$this->analyseRootNodes();
 		$this->analyseBranches();
 		$this->analyseContent();
@@ -256,10 +257,10 @@ class TagProxy
 		*/
 		$branchBitfields = array();
 
-		foreach ($this->node->xpath('//xsl:apply-template') as $at)
+		foreach ($this->node->xpath('//xsl:apply-templates') as $at)
 		{
 			// We retrieve all non-XSL elements that
-			$nodes = $node->xpath('ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]', $at);
+			$nodes = $at->xpath('ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]');
 
 			if (empty($nodes))
 			{

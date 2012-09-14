@@ -1,6 +1,294 @@
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
+ [x] Collection is countable
+ [x] Collection is iterable with foreach
+ [x] clear() empties the collection
+ [x] getConfig() returns the items as an array
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
+ [x] set() calls normalizeKey()
+ [x] set() calls normalizeValue()
+ [x] add() calls normalizeKey()
+ [x] add() calls normalizeValue()
+ [x] add() can be called without a second parameter
+ [x] get() throws a RuntimeException if the item already exists
+ [x] exists() returns TRUE if the item exists
+ [x] exists() returns FALSE if the item does not exist
+ [x] exists() calls normalizeKey()
+ [x] get() returns an item by name
+ [x] get() calls normalizeKey()
+ [x] get() throws a RuntimeException if the item does not exist
+ [x] delete() removes an item by name
+ [x] delete() calls the item's normalizeKey() method
+ [x] isset($collection['foo']) maps to $collection->exists('foo')
+ [x] $collection['foo'] maps to $collection->get('foo')
+ [x] $collection['foo'] = 42 maps to $collection->set('foo', 42)
+ [x] unset($collection['foo']) maps to $collection->delete('foo')
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
+ [x] add() normalizes the attribute name
+ [x] delete() normalizes the attribute name
+ [x] exists() normalizes the attribute name
+ [x] get() normalizes the attribute name
+ [x] set() normalizes the attribute name
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
+ [x] getConfig() returns a list of regexps for each attribute
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
+ [x] append() adds the filter at the end of the chain
+ [x] prepend() adds the filter at the beginning of the chain
+ [x] append() correctly records filter vars
+ [x] prepend() correctly records filter vars
+ [x] append() throws an InvalidArgumentException on invalid callbacks
+ [x] prepend() throws an InvalidArgumentException on invalid callbacks
+ [x] append() throws an InvalidArgumentException on uncallable callbacks
+ [x] prepend() throws an InvalidArgumentException on uncallable callbacks
+ [x] $filterChain[] = 'foo' maps to $filterChain->append('foo')
+ [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+ [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
+ [x] has() returns false if the given filter is not present in the chain
+ [x] has() returns true if the given built-in filter is present in the chain
+ [x] has() returns true if the given PHP string callback is present in the chain
+ [x] $filterChain[0] = 'foo' replaces the first filter of the chain if it exists
+ [x] $filterChain[0] = 'foo' appends to the chain if it's empty
+ [x] $filterChain[1] = 'foo' throws an InvalidArgumentException if the chain is empty
+ [x] $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
+ [x] Deleting a filter reorders the chain to remove gaps
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
+ [x] clear() removes all rules
+ [x] clear('allowChild') removes only 'allowChild' rules
+ [x] allowChild() throws an exception on invalid tag name
+ [x] allowChild() normalizes tag name
+ [x] allowDescendant() throws an exception on invalid tag name
+ [x] allowDescendant() normalizes tag name
+ [x] closeAncestor() throws an exception on invalid tag name
+ [x] closeAncestor() normalizes tag name
+ [x] closeParent() throws an exception on invalid tag name
+ [x] closeParent() normalizes tag name
+ [x] defaultChildRule() accepts 'allow'
+ [x] defaultChildRule() accepts 'deny'
+ [x] defaultChildRule() throws an exception if passed anything else than 'allow' or 'deny'
+ [x] defaultDescendantRule() accepts 'allow'
+ [x] defaultDescendantRule() accepts 'deny'
+ [x] defaultDescendantRule() throws an exception if passed anything else than 'allow' or 'deny'
+ [x] denyChild() throws an exception on invalid tag name
+ [x] denyChild() normalizes tag name
+ [x] denyDescendant() throws an exception on invalid tag name
+ [x] denyDescendant() normalizes tag name
+ [x] disallowAtRoot() accepts a boolean
+ [x] disallowAtRoot() throws an exception if its argument is not a boolean
+ [x] inheritRules() accepts a boolean
+ [x] inheritRules() throws an exception if its argument is not a boolean
+ [x] reopenChild() throws an exception on invalid tag name
+ [x] reopenChild() normalizes tag name
+ [x] requireParent() throws an exception on invalid tag name
+ [x] requireParent() normalizes tag name
+ [x] requireAncestor() throws an exception on invalid tag name
+ [x] requireAncestor() normalizes tag name
+ [x] merge() accepts a 2D array of rules
+ [x] merge() correctly copies the disallowAtRoot setting from an array
+ [x] merge() correctly copies the defaultChildRule setting from an array
+ [x] merge() correctly copies the defaultDescendantRule setting from an array
+ [x] merge() correctly copies the inheritRules setting from an array
+ [x] merge() accepts an instance of Ruleset to copy its content
+ [x] merge() correctly copies the defaultChildRule setting from an instance of Ruleset
+ [x] merge() correctly copies the defaultDescendantRule setting from an instance of Ruleset
+ [x] merge() correctly copies the disallowAtRoot setting from an instance of Ruleset
+ [x] merge() correctly copies the inheritRules setting from an instance of Ruleset
+ [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
+
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\TagCollection
+ [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Tag
+ [x] add() normalizes the tag name
+ [x] delete() normalizes the tag name
+ [x] exists() normalizes the tag name
+ [x] get() normalizes the tag name
+ [x] set() normalizes the tag name
+
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TagProxy
  [x] <span> does not allow <div> as child
  [x] <span> does not allow <div> as child even with a <span> sibling
  [x] <span> and <div> does not allow <span> and <div> as child
- [ ] <li> closes parent <li>
+ [x] <li> closes parent <li>
+ [x] <div> closes parent <p>
+ [x] <p> closes parent <p>
+ [x] <a> denies <a> as descendant
+ [x] <a> allows <img> with no usemap attribute as child
+
+s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
+ [x] buildRegexpFromList(['foo']) returns 'foo'
+ [x] buildRegexpFromList(['foo', 'foo']) returns 'foo'
+ [x] buildRegexpFromList(['a']) returns 'a'
+ [x] buildRegexpFromList(['a', 'a']) returns 'a'
+ [x] buildRegexpFromList(['apple', 'april']) returns 'ap(?:ple|ril)'
+ [x] buildRegexpFromList(['bar', 'baz']) returns 'ba[rz]'
+ [x] buildRegexpFromList(['foo', 'fool']) returns 'fool?'
+ [x] buildRegexpFromList(['ax', 'axed']) returns 'ax(?:ed)?'
+ [x] buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
+ [x] buildRegexpFromList(['a', '.'], ["specialChars" => ["." => "."]]) returns '(?:a|.)'
+ [x] buildRegexpFromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:x|^)y'
+ [x] buildRegexpFromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:y|$)'
+ [x] buildRegexpFromList(['foo', 'bar']) returns '(?:bar|foo)'
+ [x] buildRegexpFromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[\\\\*])(?:\\*foo|\\\\bar)'
+ [x] buildRegexpFromList(['?', 'bar'], ["specialChars" => ["?" => "."], "useLookahead" => true]) returns '(?:.|bar)'
+ [x] buildRegexpFromList(['a', 'b']) returns '[ab]'
+ [x] buildRegexpFromList(['♠', '♣', '♥', '♦']) returns '[♠♣♥♦]'
+ [x] buildRegexpFromList(['lock', 'sock']) returns '[ls]ock'
+ [x] buildRegexpFromList(['foo', 'afoo'], ["useLookahead" => true]) returns '(?=[af])a?foo'
+ [x] buildRegexpFromList(['boast', 'boost']) returns 'bo[ao]st'
+ [x] buildRegexpFromList(['pest', 'pst']) returns 'pe?st'
+ [x] buildRegexpFromList(['boast', 'boost', 'bost']) returns 'bo[ao]?st'
+ [x] buildRegexpFromList(['boost', 'best']) returns 'b(?:e|oo)st'
+ [x] buildRegexpFromList(['boost', 'bst']) returns 'b(?:oo)?st'
+ [x] buildRegexpFromList(['best', 'boost', 'bust']) returns 'b(?:[eu]|oo)st'
+ [x] buildRegexpFromList(['boost', 'bst', 'cool']) returns '(?:b(?:oo)?st|cool)'
+ [x] buildRegexpFromList(['boost', 'bst', 'cost']) returns '(?:b(?:oo)?|co)st'
+ [x] buildRegexpFromList(['aax', 'aay', 'aax', 'aay']) returns 'aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'baax', 'baay']) returns '[ab]aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'bbaax', 'bbaay']) returns '(?:a|bb)aa[xy]'
+ [x] buildRegexpFromList(['aaax', 'aaay', 'aax', 'aay']) returns 'aaa?[xy]'
+ [x] buildRegexpFromList(['abx', 'aby', 'cdx', 'cdy']) returns '(?:ab|cd)[xy]'
+ [x] buildRegexpFromList(['axx', 'ayy', 'bbxx', 'bbyy']) returns '(?:a|bb)(?:xx|yy)'
+ [x] buildRegexpFromList(['axx', 'ayy', 'bbxx', 'bbyy', 'c']) returns '(?:c|(?:a|bb)(?:xx|yy))'
+ [x] buildRegexpFromList(['axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c']) returns '(?:c|a(?:xx|yy|zz)|bb(?:xx|yy))'
+ [x] buildRegexpFromList(['ac', 'af', 'bbc', 'bbf', 'c']) returns '(?:c|a[cf]|bb[cf])'
+ [x] buildRegexpFromList(['^example.org$', '.example.org$', '^localhost$', '.localhost$'], ["specialChars" => ["^" => "^", "$" => "$"]]) returns '(?:\\.|^)(?:example\\.org|localhost)$'
+ [x] buildRegexpFromList(['xixix', 'xoxox']) returns 'x(?:ixi|oxo)x'
+ [x] buildRegexpFromList(['xixix', 'xixox', 'xoxox', 'xoxix']) returns 'x[io]x[io]x'
+ [x] buildRegexpFromList(['afoo', 'abar', 'bbfoo', 'bbbar', 'a', 'bb']) returns '(?:a|bb)(?:bar|foo)?'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by']) returns '[ab][xy]'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'c']) returns '(?:c|[ab][xy])'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'x', 'y']) returns '[ab]?[xy]'
+ [x] buildRegexpFromList(['ax', 'ay', 'bbx', 'bby', 'c']) returns '(?:c|a[xy]|bb[xy])'
+ [x] buildRegexpFromList(['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']) returns '(?:c|dd[xy]|[ab][xy])'
+ [x] buildRegexpFromList(['']) returns ''
+ [x] buildRegexpFromList(['', '']) returns ''
+ [x] buildRegexpFromList(['ad', 'bd'], ["specialChars" => ["d" => "\\d"]]) returns '[ab]\\d'
+ [x] buildRegexpFromList(['a', 'ax', 'ad', 'd', 'dx', 'dd'], ["specialChars" => ["d" => "\\d"]]) returns '[\\da][\\dx]?'
+ [x] buildRegexpFromList(['foo', 'bar', 'y', 'z']) returns '(?:[yz]|bar|foo)'
+ [x] buildRegexpFromList(['foo', 'bar', 'baz', 'y', 'z']) returns '(?:[yz]|ba[rz]|foo)'
+ [x] buildRegexpFromList(['a', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:a(?:a(?:cc|dd))?|bb(?:cc|dd))'
+ [x] buildRegexpFromList(['aa', 'bb', 'aacc', 'aadd', 'bbcc', 'bbdd']) returns '(?:aa|bb)(?:cc|dd)?'
+ [x] buildRegexpFromList(['aa', 'bb', 'aaccxx', 'aaddxx', 'bbccxx', 'bbddxx', 'aaccyy', 'aaddyy', 'bbccyy', 'bbddyy']) returns '(?:aa|bb)(?:(?:cc|dd)(?:xx|yy))?'
+ [x] buildRegexpFromList() throws a RuntimeException if any word is not legal UTF-8
+ [x] parse() can parse plain regexps
+ [x] parse() throws a RuntimeException if delimiters can't be parsed
+ [x] parse() parses pattern modifiers
+ [x] parse() parses character classes
+ [x] parse() parses character classes with quantifiers
+ [x] parse() parses character classes that end with an escaped ]
+ [x] parse() throws a RuntimeException if a character class is not properly closed
+ [x] parse() correctly parses escaped brackets
+ [x] parse() correctly parses escaped parentheses
+ [x] parse() parses non-capturing subpatterns
+ [x] parse() parses non-capturing subpatterns with atomic grouping
+ [x] parse() parses non-capturing subpatterns with quantifiers
+ [x] parse() parses non-capturing subpatterns with options
+ [x] parse() parses option settings
+ [x] parse() parses named subpatterns using the (?<name>) syntax
+ [x] parse() parses named subpatterns using the (?P<name>) syntax
+ [x] parse() parses named subpatterns using the (?'name') syntax
+ [x] parse() parses capturing subpatterns
+ [x] parse() throws a RuntimeException if an unmatched right parenthesis is found
+ [x] parse() throws a RuntimeException if an unmatched left parenthesis is found
+ [x] parse() throws a RuntimeException on unsupported subpatterns
+ [x] parse() parses lookahead assertions
+ [x] parse() parses negative lookahead assertions
+ [x] parse() parses lookbehind assertions
+ [x] parse() parses negative lookbehind assertions
+ [x] pcreToJs() can convert plain regexps
+ [x] pcreToJs() escapes forward slashes
+ [x] pcreToJs() does not double-escape forward slashes that are already escaped
+ [x] pcreToJs() does not "eat" backslashes while escaping forward slashes
+ [x] pcreToJs() can convert regexps with the "i" modifier
+ [x] pcreToJs() can convert regexps with capturing subpatterns
+ [x] pcreToJs() can convert regexps with non-capturing subpatterns
+ [x] pcreToJs() can convert regexps with non-capturing subpatterns with a quantifier
+ [x] pcreToJs() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
+ [x] pcreToJs() throws a RuntimeException on options (?i)
+ [x] pcreToJs() throws a RuntimeException on subpattern options (?i:)
+ [x] pcreToJs() can convert regexps with character classes with a quantifier
+ [x] pcreToJs() converts greedy quantifiers to normal quantifiers in character classes
+ [x] pcreToJs() replaces \pL with the full character range in character classes
+ [x] pcreToJs() replaces \p{L} with the full character range in character classes
+ [x] pcreToJs() replaces \pL outside of character classes with a character class containing the full character range
+ [x] pcreToJs() replaces \p{L} outside of character classes with a character class containing the full character range
+ [x] pcreToJs() replaces \p{^L} with a character class containing the full character range
+ [x] pcreToJs() replaces \p{^L} with a character class equivalent to \PL
+ [x] pcreToJs() replaces \P{^L} with a character class equivalent to \pL
+ [x] pcreToJs() can convert regexps with lookahead assertions
+ [x] pcreToJs() can convert regexps with negative lookahead assertions
+ [x] pcreToJs() throws a RuntimeException on lookbehind assertions
+ [x] pcreToJs() throws a RuntimeException on negative lookbehind assertions
+ [x] pcreToJs() converts . to [\s\S] outside of character classes is the "s" modifier is set
+ [x] pcreToJs() does not convert . to [\s\S] if the "s" modifier is not set
+ [x] pcreToJs() does not convert . inside of character classes
+ [x] pcreToJs() converts named captures into normal captures
+ [x] pcreToJs() replaces its second parameter with an array that maps named captures to their index
+ [x] pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
+
+s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
+ [x] An array of options can be passed to the constructor
+ [x] $attr->filterChain can be assigned an array
+ [x] $attr->filterChain can be assigned an instance of FilterChain to copy its content
+ [x] setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
+
+s9e\TextFormatter\Tests\ConfigBuilder\Items\AttributePreprocessor
+ [x] __construct() throws an InvalidArgumentException if the regexp is not valid
+ [x] getRegexp() returns the regexp associated with this attribute preprocessor
+
+s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
+ [x] An array of options can be passed to the constructor
+ [x] $tag->nestingLimit accepts '10' and casts it as an integer
+ [x] $tag->nestingLimit rejects non-numbers
+ [x] $tag->nestingLimit rejects numbers less than 1
+ [x] $tag->rules can be assigned a 2D array of rules
+ [x] $tag->rules can be assigned an instance of Ruleset to copy its content
+ [x] Setting $tag->rules clears previous rules
+ [x] $tag->tagLimit accepts '10' and casts it as an integer
+ [x] $tag->tagLimit rejects non-numbers
+ [x] $tag->tagLimit rejects numbers less than 1
+ [x] $tag->templates can be assigned an array of templates
+ [x] $tag->templates can be assigned an instance of Templateset to copy its content
+ [x] Setting $tag->templates clears previous templates
+ [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
+ [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
+
+s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
+ [x] normalize() throws an InvalidArgumentException if the name is invalid
+ [x] "url" is normalized to "url"
+ [x] "URL" is normalized to "url"
+ [x] "_url" is normalized to "_url"
+ [x] "md5" is normalized to "md5"
+ [x] "5md" is invalid (name must start with a letter or an underscore)
+ [x] "" is invalid (name must start with a letter or an underscore)
+ [x] "data-src" is normalized to "data-src"
+ [x] "foo:bar" is invalid (no colons allowed)
+ [x] "foo\n" is invalid (no newlines allowed)
+
+s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
+ [x] normalize() throws an InvalidArgumentException if the name is invalid
+ [x] "b" is normalized to "B"
+ [x] "B" is normalized to "B"
+ [x] "_b" is normalized to "_B"
+ [x] "H1" is normalized to "H1"
+ [x] "1H" is invalid (name must start with a letter or an underscore)
+ [x] "" is invalid (name must start with a letter or an underscore)
+ [x] "foo-bar" is invalid (no dashes allowed)
+ [x] "foo:bar" is normalized to "foo:bar"
+ [x] ":bar" is invalid (empty prefix)
+ [x] "_foo:bar" is normalized to "_foo:bar"
+ [x] "Foo:bar" is normalized to "Foo:bar"
+ [x] "f00:b4r" is normalized to "f00:b4r"
+ [x] "foo_bar:baz" is normalized to "foo_bar:baz"
+ [x] "7up:foo" is invalid (prefix must start with a letter)
+ [x] "foo:bar:baz" is invalid (only one colon allowed)
+ [x] "xsl:foo" is invalid ('xsl' prefix is reserved)
+ [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
+ [x] "B\n" is invalid (no newlines allowed)
 
