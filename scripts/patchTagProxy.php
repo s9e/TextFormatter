@@ -401,7 +401,7 @@ foreach ($elements as &$element)
 				foreach ($elNames as $elName)
 				{
 					// Add our pseudo-category to each element of the group
-					$elements[$elName]['categories'][$category] = $xpath;
+					$elements[$elName]['categories'][$category] = '';
 				}
 
 				$element[preg_replace('#Element$#D', 'Category', $k)][$category] = $xpath;
@@ -485,12 +485,6 @@ foreach ($elements as $elName => &$element)
 				$el[$v . $bitNumber] = $xpath;
 			}
 		}
-	}
-
-	// No point allowing a child that we also deny as a descendant
-	if (isset($el['ac'], $el['dd']))
-	{
-		$el['ac'] &=~ $el['dd'];
 	}
 
 	if (!empty($element['transparent']))

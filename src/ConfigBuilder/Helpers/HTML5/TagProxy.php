@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Helpers\HTML5;
 
+use DOMXPath;
 use SimpleXMLElement;
 use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 
@@ -26,7 +27,7 @@ use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 *
 * @link http://dev.w3.org/html5/spec/content-models.html#content-models
 * @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
-* @see  /scripts/patchHTML5Helper.php
+* @see  /scripts/patchTagProxy.php
 */
 class TagProxy
 {
@@ -102,6 +103,13 @@ class TagProxy
 	*/
 	public function allowsChild(self $child)
 	{
+		// Sometimes, a tag can technically be allowed as a child due to the transparent content
+		// model but denied as a descendant
+		if (!$this->allowsDescendant($child))
+		{
+			return false;
+		}
+
 		foreach ($child->rootBitfields as $rootBitfield)
 		{
 			if (!($rootBitfield & $this->allowChildBitfield))
@@ -351,7 +359,7 @@ class TagProxy
 	* its predecessor. Those are used to generate closeParent rules and are stored in the "cp" key.
 	*
 	* @var array
-	* @see /scripts/patchHTML5Helper.php
+	* @see /scripts/patchTagProxy.php
 	*/
 	protected static $htmlElements = array(
 		'a'=>array('c'=>15,'ac'=>0,'dd'=>8,'t'=>1),
@@ -371,7 +379,7 @@ class TagProxy
 		'caption'=>array('c'=>128,'ac'=>1,'dd'=>8388608),
 		'cite'=>array('c'=>7,'ac'=>4),
 		'code'=>array('c'=>7,'ac'=>4),
-		'col'=>array('c'=>536870912,'c29'=>'not(@span)'),
+		'col'=>array('c'=>536870912),
 		'colgroup'=>array('c'=>128,'ac'=>536870912,'ac29'=>'not(@span)'),
 		'datalist'=>array('c'=>5,'ac'=>1048580),
 		'dd'=>array('c'=>65536,'ac'=>1,'cp'=>array('dd','dt')),
@@ -430,7 +438,7 @@ class TagProxy
 		'section'=>array('c'=>515,'ac'=>1,'cp'=>array('p')),
 		'select'=>array('c'=>15,'ac'=>4096),
 		'small'=>array('c'=>7,'ac'=>4),
-		'source'=>array('c'=>524288,'c19'=>'not(@src)'),
+		'source'=>array('c'=>524288),
 		'span'=>array('c'=>7,'ac'=>4),
 		'strong'=>array('c'=>7,'ac'=>4),
 		'sub'=>array('c'=>7,'ac'=>4),
@@ -445,7 +453,7 @@ class TagProxy
 		'thead'=>array('c'=>128,'ac'=>1073741824),
 		'time'=>array('c'=>7,'ac'=>4),
 		'tr'=>array('c'=>1073741952,'ac'=>16384,'cp'=>array('tr')),
-		'track'=>array('c'=>4194304,'c22'=>'@src'),
+		'track'=>array('c'=>4194304),
 		'u'=>array('c'=>7,'ac'=>4),
 		'ul'=>array('c'=>3,'ac'=>0x80000000,'cp'=>array('p')),
 		'var'=>array('c'=>7,'ac'=>4),
@@ -481,11 +489,20 @@ class TagProxy
 			}
 
 			// Test for an XPath condition for that category
-			if (isset(self::$htmlElements[$elName][$k . $n])
-			 && !$node->xpath(self::$htmlElements[$elName][$k . $n]))
+			if (isset(self::$htmlElements[$elName][$k . $n]))
 			{
-				// The XPath query returned no results, therefore we turn off this bit
-				$bitfield ^= 1 << $n;
+				$xpath = self::$htmlElements[$elName][$k . $n];
+
+				// We need DOMXPath to correctly evaluate the absence of an attribute
+				$domNode  = dom_import_simplexml($node);
+				$domXPath = new DOMXPath($domNode->ownerDocument);
+
+				// If the XPath condition is not() fulfilled...
+				if ($domXPath->evaluate('not(' . $xpath . ')', $domNode))
+				{
+					// ...turn off the corresponding bit
+					$bitfield ^= 1 << $n;
+				}
 			}
 		}
 

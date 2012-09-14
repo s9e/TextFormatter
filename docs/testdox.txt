@@ -119,6 +119,11 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TagProxy
  [x] <p> closes parent <p>
  [x] <a> denies <a> as descendant
  [x] <a> allows <img> with no usemap attribute as child
+ [x] <a> denies <img usemap="#foo"> as child
+ [x] <div><a> allows <div>
+ [x] <span><a> denies <div>
+ [x] <audio> with no src attribute allows <source>
+ [x] <audio src="..."> denies <source>
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] buildRegexpFromList(['foo']) returns 'foo'
