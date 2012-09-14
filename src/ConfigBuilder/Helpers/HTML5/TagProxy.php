@@ -47,11 +47,6 @@ class TagProxy
 	protected $denyDescendantBitfield = 0;
 
 	/**
-	* @var bool Whether this tag can be used without a parent
-	*/
-	protected $isDisallowedAtRoot = false;
-
-	/**
 	* @var bool Whether all branches use the transparent content model (or more accurately, whether
 	*           no branch uses a content model other than transparent)
 	*/
@@ -89,11 +84,6 @@ class TagProxy
 		$this->analyseRootNodes();
 		$this->analyseBranches();
 		$this->analyseContent();
-
-		if (isset($options['rootProxy']))
-		{
-			$this->isDisallowedAtRoot = !$this->canBeAChildOf($options['rootProxy']);
-		}
 	}
 
 	/**
@@ -157,16 +147,6 @@ class TagProxy
 		}
 
 		return false;
-	}
-
-	/**
-	* 
-	*
-	* @return bool
-	*/
-	public function isDisallowedAtRoot()
-	{
-		return $this->isDisallowedAtRoot;
 	}
 
 	/**
