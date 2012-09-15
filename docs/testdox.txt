@@ -458,6 +458,18 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter '#number': <img lowsrc="{@foo}"/>
  [x] Not safe: <b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>
 
+s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateOptimizer
+ [x] Superfluous whitespace between elements is removed
+ [x] Single space characters are preserved
+ [x] Superfluous whitespace inside tags is removed
+ [x] Superfluous whitespace around XSL attributes is removed
+ [x] Superfluous whitespace in simple attribute expressions is removed
+ [x] <xsl:element/> is inlined where possible
+ [x] <xsl:attribute/> is inlined where possible
+ [x] Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible
+ [x] Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match
+ [x] <xsl:text/> is inlined
+
 s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
  [x] An array of options can be passed to the constructor
  [x] $attr->filterChain can be assigned an array

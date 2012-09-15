@@ -30,17 +30,20 @@ abstract class TemplateOptimizer
 	*/
 	public static function optimize($template)
 	{
-		$dom = self::loadTemplate($template);
+		$tmp = self::loadTemplate($template);
 
 		// Save single-space nodes then reload the template without whitespace
-		self::preserveSingleSpaces($dom);
+		self::preserveSingleSpaces($tmp);
+
+		$dom = new DOMDocument;
 		$dom->preserveWhiteSpace = false;
-		$dom->normalizeDocument();
+		$dom->formatOutput = false;
 
-		/**
-		* @todo replace select=" @ foo " with select="@foo"
-		*/
+		// Note: for some reason, $tmp->normalizeDocument doesn't work
+		$dom->loadXML($tmp->saveXML());
 
+		self::normalizeSpaceInSelectAttributes($dom);
+		self::inlineElements($dom);
 		self::inlineAttributes($dom);
 		self::optimizeConditionalAttributes($dom);
 
@@ -107,9 +110,46 @@ abstract class TemplateOptimizer
 		foreach ($xpath->query('//text()[. = " "]') as $textNode)
 		{
 			$newNode = $dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:text');
-			$newNode->textContent = ' ';
+			$newNode->nodeValue = ' ';
 
 			$textNode->parentNode->replaceChild($newNode, $textNode);
+		}
+	}
+
+	/**
+	* Inline the elements declarations of a template
+	*
+	* Will replace
+	*     <xsl:element name="div"><xsl:apply-templates/></xsl:element>
+	* with
+	*     <div><xsl:apply-templates/></div>
+	*
+	* @param DOMDocument $dom xsl:template node
+	*/
+	protected static function inlineElements(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+
+		foreach ($xpath->query('//xsl:element') as $element)
+		{
+			$name = $element->getAttribute('name');
+
+			if (preg_match('#^[a-z0-9]+$#', $name))
+			{
+				// Create the new static element
+				$newElement = $dom->createElement($name);
+
+				// Replace the old <xsl:element/> with it. We do it now so that libxml doesn't have
+				// to redeclare the XSL namespace
+				$element->parentNode->replaceChild($newElement, $element);
+
+				// Now one by one and in order, we move the nodes from the old element to the new
+				// one
+				while ($element->firstChild)
+				{
+					$newElement->appendChild($element->removeChild($element->firstChild));
+				}
+			}
 		}
 	}
 
@@ -145,13 +185,15 @@ abstract class TemplateOptimizer
 	}
 
 	/**
+	* Remove extraneous space in simple select expressions
+	*
 	* @param DOMDocument $dom xsl:template node
 	*/
 	protected static function normalizeSpaceInSelectAttributes(DOMDocument $dom)
 	{
 		$DOMXPath = new DOMXPath($dom);
 
-		$xpath = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"]/@select';
+		$xpath = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"][@select]';
 		foreach ($DOMXPath->query($xpath) as $node)
 		{
 			$node->setAttribute(
