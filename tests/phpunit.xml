@@ -35,6 +35,8 @@
 			<file>ConfigBuilder/Collections/RulesetTest.php</file>
 			<file>ConfigBuilder/Collections/TagCollectionTest.php</file>
 			<file>ConfigBuilder/Helpers/HTML5/TemplateForensicsTest.php</file>
+			<!-- RulesGenerator depends on TemplateForensics -->
+			<file>ConfigBuilder/Helpers/HTML5/RulesGeneratorTest.php</file>
 			<file>ConfigBuilder/Helpers/RegexpHelperTest.php</file>
 			<file>ConfigBuilder/Items/AttributeTest.php</file>
 			<file>ConfigBuilder/Items/AttributePreprocessorTest.php</file>
@@ -53,6 +55,7 @@
 			<file>../src/ConfigBuilder/Collections/NormalizedCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/Ruleset.php</file>
 			<file>../src/ConfigBuilder/Collections/TagCollection.php</file>
+			<file>../src/ConfigBuilder/Helpers/HTML5/RulesGenerator.php</file>
 			<file>../src/ConfigBuilder/Helpers/HTML5/TemplateForensics.php</file>
 			<file>../src/ConfigBuilder/Helpers/RegexpHelper.php</file>
 			<file>../src/ConfigBuilder/Items/Attribute.php</file>

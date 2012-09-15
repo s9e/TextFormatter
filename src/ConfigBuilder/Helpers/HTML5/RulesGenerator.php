@@ -7,7 +7,10 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Helpers\HTML5;
 
+use DOMDocument;
+use DOMXPath;
 use s9e\TextFormatter\ConfigBuilder\Collections\TagCollection;
+use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 
 abstract class RulesGenerator
 {
@@ -39,7 +42,9 @@ abstract class RulesGenerator
 		$templateForensics = array();
 		foreach ($tags as $tagName => $tag)
 		{
-			$templateForensics[$tagName] = new TemplateForensics(self::generateTagXSL($tagName, $tag, $options));
+			$xsl = self::generateTagXSL($tagName, $tag, $options);
+
+			$templateForensics[$tagName] = new TemplateForensics($xsl);
 		}
 
 		return self::cleanUpRules(self::generateRules($templateForensics, $rootForensics));
@@ -134,10 +139,15 @@ abstract class RulesGenerator
 		$node->appendChild($dom->createElementNS(
 			'http://www.w3.org/1999/XSL/Transform',
 			'xsl:apply-templates'
-		);
+		));
+
+		// Generate our XSL template
+		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . $dom->saveXML($root)
+		     . '</xsl:template>';
 
 		// Finally create and return a new TemplateForensics instance
-		return new TemplateForensics($dom->saveXML($root));
+		return new TemplateForensics($xsl);
 	}
 
 	/**
@@ -150,22 +160,24 @@ abstract class RulesGenerator
 		$rules = array();
 		foreach ($templateForensics as $srcTagName => $srcTag)
 		{
-			// Test whether this tag can be used with no parent
-			if (!$rootForensics->allowsChild($srcTag))
-			{
-				$rules[$srcTagName]['disallowAtRoot'] = true;
-			}
-
 			// Create an inheritRules rule if the tag is transparent
 			if ($srcTag->isTransparent())
 			{
 				$rules[$srcTagName]['inheritRules'] = true;
 			}
 
+			// Test whether this tag can be used with no parent
+			if (!$rootForensics->allowsChild($srcTag))
+			{
+				$rules[$srcTagName]['disallowAtRoot'] = true;
+			}
+
 			foreach ($templateForensics as $trgTagName => $trgTag)
 			{
-				// Test whether the target tag can be a child of the source tag
-				if ($srcTag->allowsChild($trgTag))
+				// Test whether the target tag can be a child of the source tag and a descendant
+				// of the parent markup
+				if ($srcTag->allowsChild($trgTag)
+				 && $rootForensics->allowsDescendant($trgTag))
 				{
 					$rules[$srcTagName]['allowChild'][] = $trgTagName;
 				}
@@ -182,7 +194,7 @@ abstract class RulesGenerator
 
 				if ($srcTag->closesParent($trgTag))
 				{
-					$rules[$srcTagName]['closeParent'][] $trgTagName;
+					$rules[$srcTagName]['closeParent'][] = $trgTagName;
 				}
 			}
 		}
@@ -195,7 +207,7 @@ abstract class RulesGenerator
 	*
 	* @return array
 	*/
-	protected function cleanUpRules(array $rules)
+	protected static function cleanUpRules(array $rules)
 	{
 		// Prepare to deduplicate rules and resolve conflicting rules
 		$precedence = array(
@@ -204,11 +216,8 @@ abstract class RulesGenerator
 			array('denyChild', 'allowChild')
 		);
 
-		foreach ($rules as $tagName => &$tagrules)
+		foreach ($rules as $tagName => &$tagRules)
 		{
-			// Flip the rules targets so we can use them as keys
-			$tagRules = array_map('array_flip', $tagRules);
-
 			// Apply precedence, e.g. if there's a denyChild rule, remove any allowChild rules
 			foreach ($precedence as $pair)
 			{
@@ -219,18 +228,16 @@ abstract class RulesGenerator
 					continue;
 				}
 
-				$tagRules[$k2] = array_diff_key(
+				$tagRules[$k2] = array_diff(
 					$tagRules[$k2],
 					$tagRules[$k1]
 				);
 			}
 
-			// Flip the rules again
-			$tagRules = array_map('array_keys', $tagRules);
-
 			// Remove empty rules
 			$tagRules = array_filter($tagRules);
 		}
+		unset($tagRules);
 
 		return $rules;
 	}
