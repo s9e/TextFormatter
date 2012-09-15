@@ -12,9 +12,9 @@ use SimpleXMLElement;
 use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 
 /**
-* Not really a tag proxy but naming things is hard. This class helps the RulesGenerator by answering
-* questions such as "can this tag be a child/descendant of that other tag?" and others related to
-* the HTML5 content model.
+* This class helps the RulesGenerator by analyzing a given template in order to answer questions
+* such as "can this tag be a child/descendant of that other tag?" and others related to the HTML5
+* content model.
 *
 * We use the HTML5 specs to determine which children or descendants should be allowed or denied
 * based on HTML5 content models. While it does not exactly match HTML5 content models, it gets
