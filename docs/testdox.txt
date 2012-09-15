@@ -276,6 +276,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] Not safe: <script SRC="{@url}"/>
  [x] Not safe: <script><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></script>
  [x] Not safe: <script><xsl:attribute name="SRC"><xsl:value-of select="@url"/></xsl:attribute></script>
+ [x] Safe: <script><xsl:attribute name="src">http://example.org/legit.js</xsl:attribute></script>
+ [x] Safe: <script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/></xsl:attribute></script>
  [x] Not safe: <script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/></xsl:attribute></script>
  [x] Not safe: <xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>
  [x] Not safe: <xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>
@@ -327,6 +329,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter '#range': <style><xsl:value-of select="@foo"/></style>
  [x] Safe if attribute 'foo' has filter '#number': <style><xsl:value-of select="@foo"/></style>
  [x] Safe if attribute 'foo' has filter '#simpletext': <style><xsl:value-of select="@foo"/></style>
+ [x] Not safe: <xsl:element name="{FOO}"><xsl:apply-templates/></xsl:element>
  [x] Not safe: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
  [x] Not safe: <b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>
  [x] Not safe: <b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
@@ -453,6 +456,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter '#float': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#range': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <img lowsrc="{@foo}"/>
+ [x] Not safe: <b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>
 
 s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
  [x] An array of options can be passed to the constructor

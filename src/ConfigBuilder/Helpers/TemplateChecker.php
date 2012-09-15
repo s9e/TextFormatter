@@ -305,7 +305,16 @@ abstract class TemplateChecker
 				// Check for unsafe descendants if our node is an element (not an attribute)
 				if ($node instanceof DOMElement)
 				{
-					self::checkUnsafeDescendants($DOMXPath, $node, $tag, $contentType);
+					// If current node is not an xsl:attribute element, we exclude descendants
+					// with an xsl:attribute ancestor so that content such as:
+					//   <script><xsl:attribute name="id"><xsl:value-of/></xsl:attribute></script>
+					// would not trigger a false-positive due to the presence of an xsl:value-of
+					// element in a <script>
+					$predicate = ($node->localName === 'attribute')
+					           ? ''
+					           : '[not(ancestor::xsl:attribute)]';
+
+					self::checkUnsafeDescendants($DOMXPath, $node, $tag, $contentType, $predicate);
 				}
 			}
 		}
@@ -314,15 +323,17 @@ abstract class TemplateChecker
 	/**
 	* Check the descendants of given node
 	*
-	* @param DOMXPath   $DOMXPath DOMXPath associated with the template being checked
-	* @param DOMElement $element
-	* @param Tag        $tag
-	* @param string     $contentType
+	* @param DOMXPath   $DOMXPath    DOMXPath associated with the template being checked
+	* @param DOMElement $element     Context node
+	* @param Tag        $tag         Owner tag of this template
+	* @param string     $contentType Content type (CSS, JS, etc...)
+	* @param string     $predicate   Extra predicate
 	*/
-	protected static function checkUnsafeDescendants(DOMXPath $DOMXPath, DOMElement $element, Tag $tag, $contentType)
+	protected static function checkUnsafeDescendants(DOMXPath $DOMXPath, DOMElement $element, Tag $tag, $contentType, $predicate)
 	{
 		// <script><xsl:value-of/></script>
-		foreach ($DOMXPath->query('.//xsl:value-of[@select]', $element) as $valueOf)
+		$xpath = './/xsl:value-of[@select]' . $predicate;
+		foreach ($DOMXPath->query($xpath, $element) as $valueOf)
 		{
 			self::checkUnsafeExpression(
 				$DOMXPath,
@@ -335,7 +346,8 @@ abstract class TemplateChecker
 
 		// <script><xsl:apply-templates/></script>
 		// <script><xsl:apply-templates select="foo"/></script>
-		$applyTemplates = $DOMXPath->query('.//xsl:apply-templates', $element)->item(0);
+		$xpath = './/xsl:apply-templates' . $predicate;
+		$applyTemplates = $DOMXPath->query($xpath, $element)->item(0);
 
 		if ($applyTemplates)
 		{
