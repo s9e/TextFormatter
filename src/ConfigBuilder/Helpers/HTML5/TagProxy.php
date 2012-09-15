@@ -77,9 +77,9 @@ class TagProxy
 	*
 	* @return void
 	*/
-	public function __construct($templates, array $options = array())
+	public function __construct($xsl)
 	{
-		$this->loadTemplates($templates, $options);
+		$this->node = simplexml_load_string($xsl);
 
 		$this->analyseRootNodes();
 		$this->analyseBranches();
@@ -157,31 +157,6 @@ class TagProxy
 	public function isTransparent()
 	{
 		return $this->isTransparent;
-	}
-
-	/**
-	* 
-	*
-	* @return void
-	*/
-	protected function loadTemplates($templates, array $options)
-	{
-		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">';
-
-		foreach ($templates as $template)
-		{
-			$xsl .= $template;
-		}
-
-		if (isset($options['renderer'])
-		 && !count($templates))
-		{
-			// Use the renderer
-		}
-
-		$xsl .= '</xsl:template>';
-
-		$this->node = simplexml_load_string($xsl);;
 	}
 
 	/**
@@ -280,7 +255,7 @@ class TagProxy
 					$branchBitfield = 0;
 
 					// Also, it means that the tag itself isn't transparent
-					$isTransparent = false;
+					$this->isTransparent = false;
 				}
 
 				// allowChild rules are cumulative if transparent, and reset above otherwise

@@ -16,8 +16,9 @@ abstract class RulesGenerator
 	*
 	* Possible options:
 	*
-	*  renderer:   instance of Renderer, used to render tags that have no individual templates set
-	*  parentHTML: 
+	*  parentHTML: HTML leading to the start of the rendered text. Defaults to "<div>"
+	*  renderer:   instance of Renderer, used to render tags that have no individual templates set.
+	*              Must output valid XML, not HTML
 	*
 	* @param  TagCollection $tags    Tags collection
 	* @param  array         $options Array of option settings
@@ -38,10 +39,70 @@ abstract class RulesGenerator
 		$tagProxies = array();
 		foreach ($tags as $tagName => $tag)
 		{
-			$tagProxies[$tagName] = new TagProxy($tag->templates, $options);
+			$tagProxies[$tagName] = new TagProxy(self::generateTagXSL($tagName, $tag, $options));
 		}
 
 		return self::cleanUpRules(self::generateRules($tagProxies, $rootProxy));
+	}
+
+	/**
+	* 
+	*
+	* @return string
+	*/
+	protected static function generateTagXSL($tagName, Tag $tag, array $options)
+	{
+		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">';
+
+		if (count($tag->templates))
+		{
+			foreach ($tag->templates as $template)
+			{
+				$xsl .= $template;
+			}
+		}
+		elseif (isset($options['renderer']))
+		{
+			$xml = '<' . $tagName;
+
+			// Add namespace declaration if the name has a prefix
+			$pos = strpos($tagName, ':');
+			if ($pos !== false)
+			{
+				$prefix = substr($tagName, 0, $pos);
+				$xml .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
+			}
+
+			// Add all attributes with an empty value
+			foreach ($tag->attributes as $attrName => $attribute)
+			{
+				$xml .= ' ' . $attrName . '=""';
+			}
+
+			// Close the start tag
+			$xml .= '>';
+
+			// Add a unique token to identify whether and where the tag's content is displayed
+			$uniqid = uniqid('', true);
+			$xml .= $uniqid;
+
+			// And finally append the end tag
+			$xml .= '</' . $tagName . '>';
+
+			// Add the renderered markup to our XSL
+			/**
+			* @todo ensure the result is valid XML, not HTML
+			*/
+			$xsl .= str_replace(
+				$uniqid,
+				'<xsl:apply-templates/>',
+				$renderer->render($xml)
+			);
+		}
+
+		$xsl .= '</xsl:template>';
+
+		return $xsl;
 	}
 
 	/**
@@ -75,11 +136,8 @@ abstract class RulesGenerator
 			'xsl:apply-templates'
 		);
 
-		// Create a fake templateset
-		$templates = array($dom->saveXML($root));
-
 		// Finally create and return a new TagProxy instance
-		return new TagProxy($templates);
+		return new TagProxy($dom->saveXML($root));
 	}
 
 	/**
@@ -93,7 +151,7 @@ abstract class RulesGenerator
 		foreach ($tagProxies as $srcTagName => $srcTag)
 		{
 			// Test whether this tag can be used with no parent
-			if (!$srcTag->canBeAChildOf($rootProxy))
+			if (!$rootProxy->allowsChild($srcTag))
 			{
 				$rules[$srcTagName]['disallowAtRoot'] = true;
 			}
@@ -107,7 +165,7 @@ abstract class RulesGenerator
 			foreach ($tagProxies as $trgTagName => $trgTag)
 			{
 				// Test whether the target tag can be a child of the source tag
-				if ($trgTag->canBeAChildOf($srcTag))
+				if ($srcTag->allowsChild($trgTag))
 				{
 					$rules[$srcTagName]['allowChild'][] = $trgTagName;
 				}
@@ -117,7 +175,7 @@ abstract class RulesGenerator
 				}
 
 				// Test whether the target tag can be a descendant of the source tag
-				if (!$trgTag->canBeADescendantOf($srcTag))
+				if (!$srcTag->allowsDescendant($trgTag))
 				{
 					$rules[$srcTagName]['denyDescendant'][] = $trgTagName;
 				}

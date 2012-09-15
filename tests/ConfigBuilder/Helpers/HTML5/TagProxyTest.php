@@ -12,15 +12,21 @@ class TagProxyTest extends Test
 {
 	public function runCase($title, $xslSrc, $rule, $xslTrg)
 	{
-		$src = new TagProxy(array($xslSrc));
-		$trg = new TagProxy(array($xslTrg));
+		$st = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">';
+		$et = '</xsl:template>';
+
+		$src = new TagProxy($st . $xslSrc . $et);
+		$trg = new TagProxy($st . $xslTrg . $et);
 
 		$methods = array(
-			'allowChild'      => array('assertTrue', 'allowsChild'),
-			'allowDescendant' => array('assertTrue', 'allowsDescendant'),
+			'allowChild'      => array('assertTrue',  'allowsChild'),
+			'allowDescendant' => array('assertTrue',  'allowsDescendant'),
 			'denyChild'       => array('assertFalse', 'allowsChild'),
 			'denyDescendant'  => array('assertFalse', 'allowsDescendant'),
-			'closeParent'     => array('assertTrue', 'closesParent')
+			'closeParent'     => array('assertTrue',  'closesParent'),
+			'!closeParent'    => array('assertFalse', 'closesParent'),
+			'isTransparent'   => array('assertTrue',  'isTransparent'),
+			'!isTransparent'  => array('assertFalse', 'isTransparent'),
 		);
 
 		list($assert, $method) = $methods[$rule];
@@ -108,6 +114,32 @@ class TagProxyTest extends Test
 	}
 
 	/**
+	* @testdox <div> does not close parent <div>
+	*/
+	public function test80EA2E75()
+	{
+		$this->runCase(
+			'<div> does not close parent <div>',
+			'<div/>',
+			'!closeParent',
+			'<div><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
+	* @testdox <span> does not close parent <span>
+	*/
+	public function test576AB9F1()
+	{
+		$this->runCase(
+			'<span> does not close parent <span>',
+			'<span/>',
+			'!closeParent',
+			'<span><xsl:apply-templates/></span>'
+		);
+	}
+
+	/**
 	* @testdox <a> denies <a> as descendant
 	*/
 	public function test176B9DB6()
@@ -147,12 +179,12 @@ class TagProxyTest extends Test
 	}
 
 	/**
-	* @testdox <div><a> allows <div>
+	* @testdox <div><a> allows <div> as child
 	*/
-	public function test4640F482()
+	public function test0266A932()
 	{
 		$this->runCase(
-			'<div><a> allows <div>',
+			'<div><a> allows <div> as child',
 			'<div><a><xsl:apply-templates/></a></div>',
 			'allowChild',
 			'<div/>'
@@ -160,12 +192,12 @@ class TagProxyTest extends Test
 	}
 
 	/**
-	* @testdox <span><a> denies <div>
+	* @testdox <span><a> denies <div> as child
 	*/
-	public function test6DBAB744()
+	public function test8E52F053()
 	{
 		$this->runCase(
-			'<span><a> denies <div>',
+			'<span><a> denies <div> as child',
 			'<span><a><xsl:apply-templates/></a></span>',
 			'denyChild',
 			'<div/>'
@@ -173,12 +205,12 @@ class TagProxyTest extends Test
 	}
 
 	/**
-	* @testdox <audio> with no src attribute allows <source>
+	* @testdox <audio> with no src attribute allows <source> as child
 	*/
-	public function testF937B5B2()
+	public function test3B294484()
 	{
 		$this->runCase(
-			'<audio> with no src attribute allows <source>',
+			'<audio> with no src attribute allows <source> as child',
 			'<audio><xsl:apply-templates/></audio>',
 			'allowChild',
 			'<source/>'
@@ -186,15 +218,93 @@ class TagProxyTest extends Test
 	}
 
 	/**
-	* @testdox <audio src="..."> denies <source>
+	* @testdox <audio src="..."> denies <source> as child
 	*/
-	public function test0D17022C()
+	public function testE990B9F2()
 	{
 		$this->runCase(
-			'<audio src="..."> denies <source>',
+			'<audio src="..."> denies <source> as child',
 			'<audio src="{@src}"><xsl:apply-templates/></audio>',
 			'denyChild',
 			'<source/>'
+		);
+	}
+
+	/**
+	* @testdox <a> is considered transparent
+	*/
+	public function testA57E3A26()
+	{
+		$this->runCase(
+			'<a> is considered transparent',
+			'<a><xsl:apply-templates/></a>',
+			'isTransparent',
+			NULL
+		);
+	}
+
+	/**
+	* @testdox <a><span> is not considered transparent
+	*/
+	public function test6D41EE34()
+	{
+		$this->runCase(
+			'<a><span> is not considered transparent',
+			'<a><span><xsl:apply-templates/></span></a>',
+			'!isTransparent',
+			NULL
+		);
+	}
+
+	/**
+	* @testdox <span><a> is not considered transparent
+	*/
+	public function testD1D36C1C()
+	{
+		$this->runCase(
+			'<span><a> is not considered transparent',
+			'<span><a><xsl:apply-templates/></a></span>',
+			'!isTransparent',
+			NULL
+		);
+	}
+
+	/**
+	* @testdox A template composed entirely of a single <xsl:apply-templates/> is considered transparent
+	*/
+	public function test91DA5BEA()
+	{
+		$this->runCase(
+			'A template composed entirely of a single <xsl:apply-templates/> is considered transparent',
+			'<xsl:apply-templates/>',
+			'isTransparent',
+			NULL
+		);
+	}
+
+	/**
+	* @testdox <span> allows <unknownElement> as child
+	*/
+	public function test79E09FE9()
+	{
+		$this->runCase(
+			'<span> allows <unknownElement> as child',
+			'<span><xsl:apply-templates/></span>',
+			'allowChild',
+			'<unknownElement/>'
+		);
+	}
+
+	/**
+	* @testdox <unknownElement> allows <span> as child
+	*/
+	public function test4289BD7D()
+	{
+		$this->runCase(
+			'<unknownElement> allows <span> as child',
+			'<unknownElement><xsl:apply-templates/></unknownElement>',
+			'allowChild',
+			'<span/>'
 		);
 	}
 	// End of content generated by ../../../../scripts/patchTagProxyTest.php
@@ -239,6 +349,20 @@ class TagProxyTest extends Test
 				'<p><xsl:apply-templates/></p>'
 			),
 			array(
+				'<div> does not close parent <div>',
+				'<div/>',
+				'!closeParent',
+				'<div><xsl:apply-templates/></div>'
+			),
+			// This test mainly exist to ensure nothing bad happens with HTML tags that don't have
+			// a "cp" value in TagProxy::$htmlElements
+			array(
+				'<span> does not close parent <span>',
+				'<span/>',
+				'!closeParent',
+				'<span><xsl:apply-templates/></span>'
+			),
+			array(
 				'<a> denies <a> as descendant',
 				'<a><xsl:apply-templates/></a>',
 				'denyDescendant',
@@ -257,29 +381,65 @@ class TagProxyTest extends Test
 				'<img usemap="#foo"/>'
 			),
 			array(
-				'<div><a> allows <div>',
+				'<div><a> allows <div> as child',
 				'<div><a><xsl:apply-templates/></a></div>',
 				'allowChild',
 				'<div/>'
 			),
 			array(
-				'<span><a> denies <div>',
+				'<span><a> denies <div> as child',
 				'<span><a><xsl:apply-templates/></a></span>',
 				'denyChild',
 				'<div/>'
 			),
 			array(
-				'<audio> with no src attribute allows <source>',
+				'<audio> with no src attribute allows <source> as child',
 				'<audio><xsl:apply-templates/></audio>',
 				'allowChild',
 				'<source/>'
 			),
 			array(
-				'<audio src="..."> denies <source>',
+				'<audio src="..."> denies <source> as child',
 				'<audio src="{@src}"><xsl:apply-templates/></audio>',
 				'denyChild',
 				'<source/>'
-			)
+			),
+			array(
+				'<a> is considered transparent',
+				'<a><xsl:apply-templates/></a>',
+				'isTransparent',
+				null
+			),
+			array(
+				'<a><span> is not considered transparent',
+				'<a><span><xsl:apply-templates/></span></a>',
+				'!isTransparent',
+				null
+			),
+			array(
+				'<span><a> is not considered transparent',
+				'<span><a><xsl:apply-templates/></a></span>',
+				'!isTransparent',
+				null
+			),
+			array(
+				'A template composed entirely of a single <xsl:apply-templates/> is considered transparent',
+				'<xsl:apply-templates/>',
+				'isTransparent',
+				null
+			),
+			array(
+				'<span> allows <unknownElement> as child',
+				'<span><xsl:apply-templates/></span>',
+				'allowChild',
+				'<unknownElement/>'
+			),
+			array(
+				'<unknownElement> allows <span> as child',
+				'<unknownElement><xsl:apply-templates/></unknownElement>',
+				'allowChild',
+				'<span/>'
+			),
 		);
 	}
 }

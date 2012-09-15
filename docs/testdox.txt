@@ -117,13 +117,21 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TagProxy
  [x] <li> closes parent <li>
  [x] <div> closes parent <p>
  [x] <p> closes parent <p>
+ [x] <div> does not close parent <div>
+ [x] <span> does not close parent <span>
  [x] <a> denies <a> as descendant
  [x] <a> allows <img> with no usemap attribute as child
  [x] <a> denies <img usemap="#foo"> as child
- [x] <div><a> allows <div>
- [x] <span><a> denies <div>
- [x] <audio> with no src attribute allows <source>
- [x] <audio src="..."> denies <source>
+ [x] <div><a> allows <div> as child
+ [x] <span><a> denies <div> as child
+ [x] <audio> with no src attribute allows <source> as child
+ [x] <audio src="..."> denies <source> as child
+ [x] <a> is considered transparent
+ [x] <a><span> is not considered transparent
+ [x] <span><a> is not considered transparent
+ [x] A template composed entirely of a single <xsl:apply-templates/> is considered transparent
+ [x] <span> allows <unknownElement> as child
+ [x] <unknownElement> allows <span> as child
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] buildRegexpFromList(['foo']) returns 'foo'
