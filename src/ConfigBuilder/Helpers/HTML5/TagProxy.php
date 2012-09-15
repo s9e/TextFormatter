@@ -73,8 +73,7 @@ class TagProxy
 	protected $rootNodes = array();
 
 	/**
-	* 
-	*
+	* @param  string $xsl One single <xsl:template/> element
 	* @return void
 	*/
 	public function __construct($xsl)
@@ -87,8 +86,9 @@ class TagProxy
 	}
 
 	/**
-	* 
+	* Whether this tag allows given tag as a child
 	*
+	* @param  self $child
 	* @return bool
 	*/
 	public function allowsChild(self $child)
@@ -112,8 +112,9 @@ class TagProxy
 	}
 
 	/**
-	* 
+	* Whether this tag allows given tag as a descendant
 	*
+	* @param  self $descendant
 	* @return bool
 	*/
 	public function allowsDescendant(self $descendant)
@@ -122,8 +123,9 @@ class TagProxy
 	}
 
 	/**
-	* 
+	* Whether this tag automatically closes given parent tag
 	*
+	* @param  self $parent
 	* @return bool
 	*/
 	public function closesParent(self $parent)
@@ -150,7 +152,7 @@ class TagProxy
 	}
 
 	/**
-	* 
+	* Whether this tag should use the transparent content model
 	*
 	* @return bool
 	*/
@@ -160,9 +162,7 @@ class TagProxy
 	}
 
 	/**
-	* 
-	*
-	* @return integer
+	* Analyses the content of the whole template and set $this->contentBitfield accordingly
 	*/
 	protected function analyseContent()
 	{
@@ -181,9 +181,7 @@ class TagProxy
 	}
 
 	/**
-	* 
-	*
-	* @return array
+	* Records the HTML elements (and their bitfield) at the top of any branch
 	*/
 	protected function analyseRootNodes()
 	{
@@ -209,9 +207,7 @@ class TagProxy
 	}
 
 	/**
-	* 
-	*
-	* @return array
+	* Analyses each branch that leads to an <xsl:apply-templates/> tag
 	*/
 	protected function analyseBranches()
 	{
