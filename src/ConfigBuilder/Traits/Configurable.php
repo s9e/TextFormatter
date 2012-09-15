@@ -8,40 +8,56 @@
 namespace s9e\TextFormatter\ConfigBuilder\Traits;
 
 use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder\Collections\NormalizedCollection;
 
 /**
 * Provides magic __get and __set implementations
 */
 trait Configurable
 {
-	public function __get($optionName)
+	public function __get($propName)
 	{
-		if (!property_exists($this, $optionName))
+		if (!property_exists($this, $propName))
 		{
-			throw new RuntimeException("Option '" . $optionName . "' does not exist");
+			throw new RuntimeException("Property '" . $propName . "' does not exist");
 		}
 
-		return $this->$optionName;
+		return $this->$propName;
 	}
 
-	public function __set($optionName, $optionValue)
+	public function __set($propName, $propValue)
 	{
-		$methodName = 'set' . ucfirst($optionName);
+		$methodName = 'set' . ucfirst($propName);
 
 		// Look for a setter, e.g. setDefaultChildRule()
 		if (method_exists($this, $methodName))
 		{
-			$this->$methodName($optionValue);
+			$this->$methodName($propValue);
 		}
 		else
 		{
 			// If the property already exists, preserve its type
-			if (isset($this->$optionName))
+			if (isset($this->$propName))
 			{
-				settype($optionValue, gettype($this->$optionName));
+				// If we're trying to replace a NormalizedCollection, instead we clear it then
+				// iteratively set new values
+				if ($this->$propName instanceof NormalizedCollection)
+				{
+					$this->$propName->clear();
+
+					foreach ($propValue as $k => $v)
+					{
+						$this->$propName->set($k, $v);
+					}
+
+					return;
+				}
+
+				// Otherwise, we'll just try to match the option's type
+				settype($propValue, gettype($this->$propName));
 			}
 
-			$this->$optionName = $optionValue;
+			$this->$propName = $propValue;
 		}
 	}
 }

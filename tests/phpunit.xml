@@ -25,9 +25,10 @@
 
 	<testsuites>
 		<testsuite name="TextFormatter">
-			<!-- Test the base classes first -->
+			<!-- Test the base classes and traits first -->
 			<file>ConfigBuilder/Collections/CollectionTest.php</file>
 			<file>ConfigBuilder/Collections/NormalizedCollectionTest.php</file>
+			<file>ConfigBuilder/Traits/ConfigurableTest.php</file>
 
 			<file>ConfigBuilder/Collections/AttributeCollectionTest.php</file>
 			<file>ConfigBuilder/Collections/AttributePreprocessorCollectionTest.php</file>
@@ -38,6 +39,7 @@
 			<!-- RulesGenerator depends on TemplateForensics -->
 			<file>ConfigBuilder/Helpers/HTML5/RulesGeneratorTest.php</file>
 			<file>ConfigBuilder/Helpers/RegexpHelperTest.php</file>
+			<file>ConfigBuilder/Helpers/TemplateCheckerTest.php</file>
 			<file>ConfigBuilder/Items/AttributeTest.php</file>
 			<file>ConfigBuilder/Items/AttributePreprocessorTest.php</file>
 			<file>ConfigBuilder/Items/TagTest.php</file>
@@ -58,9 +60,11 @@
 			<file>../src/ConfigBuilder/Helpers/HTML5/RulesGenerator.php</file>
 			<file>../src/ConfigBuilder/Helpers/HTML5/TemplateForensics.php</file>
 			<file>../src/ConfigBuilder/Helpers/RegexpHelper.php</file>
+			<file>../src/ConfigBuilder/Helpers/TemplateChecker.php</file>
 			<file>../src/ConfigBuilder/Items/Attribute.php</file>
 			<file>../src/ConfigBuilder/Items/AttributePreprocessor.php</file>
 			<file>../src/ConfigBuilder/Items/Tag.php</file>
+			<file>../src/ConfigBuilder/Traits/Configurable.php</file>
 			<file>../src/ConfigBuilder/Validators/AttributeName.php</file>
 			<file>../src/ConfigBuilder/Validators/TagName.php</file>
 		</whitelist>

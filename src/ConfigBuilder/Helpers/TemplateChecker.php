@@ -16,6 +16,7 @@ use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
 use XSLTProcessor;
+use s9e\TextFormatter\ConfigBuilder\Items\Attribute;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 use s9e\TextFormatter\ConfigBuilder\Exceptions\InvalidXslException;
 use s9e\TextFormatter\ConfigBuilder\Exceptions\UnsafeTemplateException;
@@ -32,7 +33,7 @@ abstract class TemplateChecker
 	*
 	* @param  string      $template Content of the template. A root node is not required
 	* @param  Tag         $tag      Tag that this template belongs to
-	* @return bool|string           FALSE if safe, a string containing an error message otherwise
+	* @return void
 	*/
 	public static function checkUnsafe($template, Tag $tag)
 	{
@@ -81,6 +82,7 @@ abstract class TemplateChecker
 				continue;
 			}
 
+			// Grab the name of this element's attribute that contains an URL
 			$attrName = $elements[$elName];
 
 			if ($node->localName !== 'element')
@@ -148,7 +150,7 @@ abstract class TemplateChecker
 
 		if ($error)
 		{
-			throw new InvalidXslException(libxml_get_last_error()->error);
+			throw new InvalidXslException(libxml_get_last_error()->message);
 		}
 
 		return $dom;

@@ -7,5 +7,10 @@ spl_autoload_register(
 		{
 			$path = __DIR__ . str_replace('\\', DIRECTORY_SEPARATOR, substr($className, 17)) . '.php';
 		}
+
+		if (file_exists($path))
+		{
+			include $path;
+		}
 	}
 );

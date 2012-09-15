@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Exceptions;
 
+use RuntimeException;
+
 class InvalidXslException extends RuntimeException
 {
 }
