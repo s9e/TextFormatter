@@ -27,9 +27,9 @@ use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 *
 * @link http://dev.w3.org/html5/spec/content-models.html#content-models
 * @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
-* @see  /scripts/patchTagProxy.php
+* @see  /scripts/patchTemplateForensics.php
 */
-class TagProxy
+class TemplateForensics
 {
 	/**
 	* @var integer allowChild bitfield (all branches)
@@ -310,7 +310,7 @@ class TagProxy
 	* its predecessor. Those are used to generate closeParent rules and are stored in the "cp" key.
 	*
 	* @var array
-	* @see /scripts/patchTagProxy.php
+	* @see /scripts/patchTemplateForensics.php
 	*/
 	protected static $htmlElements = array(
 		'a'=>array('c'=>15,'ac'=>0,'dd'=>8,'t'=>1),

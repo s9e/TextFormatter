@@ -110,7 +110,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\TagCollection
  [x] get() normalizes the tag name
  [x] set() normalizes the tag name
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TagProxy
+s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child
  [x] <span> does not allow <div> as child even with a <span> sibling
  [x] <span> and <div> does not allow <span> and <div> as child

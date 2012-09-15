@@ -530,7 +530,7 @@ foreach ($arr as $elName => $values)
 
 $php = substr($php, 0, -1);
 
-$filepath = __DIR__ . '/../src/ConfigBuilder/Helpers/HTML5/TagProxy.php';
+$filepath = __DIR__ . '/../src/ConfigBuilder/Helpers/HTML5/TemplateForensics.php';
 $file = file_get_contents($filepath);
 
 if (!preg_match('#(?<=static \\$htmlElements = array\\()(.*?)(?=\\n\\t\\);)#s', $file, $m, PREG_OFFSET_CAPTURE))

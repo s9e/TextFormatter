@@ -34,15 +34,15 @@ abstract class RulesGenerator
 
 		// Create a proxy for the parent markup so that we can determine which tags are allowed at
 		// the root of the message (IOW, with no parent) or even disabled altogether
-		$rootProxy = self::generateRootProxy($parentHTML);
+		$rootForensics = self::generateRootForensics($parentHTML);
 
-		$tagProxies = array();
+		$templateForensics = array();
 		foreach ($tags as $tagName => $tag)
 		{
-			$tagProxies[$tagName] = new TagProxy(self::generateTagXSL($tagName, $tag, $options));
+			$templateForensics[$tagName] = new TemplateForensics(self::generateTagXSL($tagName, $tag, $options));
 		}
 
-		return self::cleanUpRules(self::generateRules($tagProxies, $rootProxy));
+		return self::cleanUpRules(self::generateRules($templateForensics, $rootForensics));
 	}
 
 	/**
@@ -110,7 +110,7 @@ abstract class RulesGenerator
 	*
 	* @return void
 	*/
-	protected static function generateRootProxy($html)
+	protected static function generateRootForensics($html)
 	{
 		$dom = new DOMDocument;
 		$dom->loadHTML($html);
@@ -136,8 +136,8 @@ abstract class RulesGenerator
 			'xsl:apply-templates'
 		);
 
-		// Finally create and return a new TagProxy instance
-		return new TagProxy($dom->saveXML($root));
+		// Finally create and return a new TemplateForensics instance
+		return new TemplateForensics($dom->saveXML($root));
 	}
 
 	/**
@@ -145,13 +145,13 @@ abstract class RulesGenerator
 	*
 	* @return array
 	*/
-	protected static function generateRules(array $tagProxies, TagProxy $rootProxy)
+	protected static function generateRules(array $templateForensics, TemplateForensics $rootForensics)
 	{
 		$rules = array();
-		foreach ($tagProxies as $srcTagName => $srcTag)
+		foreach ($templateForensics as $srcTagName => $srcTag)
 		{
 			// Test whether this tag can be used with no parent
-			if (!$rootProxy->allowsChild($srcTag))
+			if (!$rootForensics->allowsChild($srcTag))
 			{
 				$rules[$srcTagName]['disallowAtRoot'] = true;
 			}
@@ -162,7 +162,7 @@ abstract class RulesGenerator
 				$rules[$srcTagName]['inheritRules'] = true;
 			}
 
-			foreach ($tagProxies as $trgTagName => $trgTag)
+			foreach ($templateForensics as $trgTagName => $trgTag)
 			{
 				// Test whether the target tag can be a child of the source tag
 				if ($srcTag->allowsChild($trgTag))
