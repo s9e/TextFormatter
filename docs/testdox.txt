@@ -119,6 +119,12 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\TagCollection
  [x] get() normalizes the tag name
  [x] set() normalizes the tag name
 
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\Templateset
+ [x] set() optimizes the template
+ [x] set() checks the template for unsafe content
+ [x] setUnsafe() optimizes the template
+ [x] setUnsafe() does not check the template for unsafe content
+
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child
  [x] <span> does not allow <div> as child even with a <span> sibling

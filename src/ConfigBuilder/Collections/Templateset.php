@@ -17,7 +17,7 @@ use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 class Templateset extends NormalizedCollection
 {
 	/**
-	* @var Tag
+	* @var Tag Tag used by TemplateChecker to assess the safeness of attributes used in templates
 	*/
 	protected $tag;
 
@@ -32,9 +32,15 @@ class Templateset extends NormalizedCollection
 	}
 
 	/**
-	* 
+	* Normalize a template for storage
 	*
-	* @return string
+	* Will optimize the template and check for unsafe content
+	*
+	* @see s9e\ConfigBuilder\Helpers\TemplateChecker
+	* @see s9e\ConfigBuilder\Helpers\TemplateOptimizer
+	*
+	* @param  string $template Original template
+	* @return string           Normalized template
 	*/
 	public function normalizeValue($template)
 	{

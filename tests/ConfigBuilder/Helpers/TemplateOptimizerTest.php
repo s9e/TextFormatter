@@ -3,7 +3,6 @@
 namespace s9e\TextFormatter\Tests\ConfigBuilder\Helpers;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 use s9e\TextFormatter\ConfigBuilder\Helpers\TemplateOptimizer;
 
 /**
