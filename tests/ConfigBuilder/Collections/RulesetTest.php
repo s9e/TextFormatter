@@ -11,6 +11,55 @@ use s9e\TextFormatter\ConfigBuilder\Collections\Ruleset;
 class RulesetTest extends Test
 {
 	/**
+	* @testdox isset($ruleset['allowChild']) tests whether any allowChild rules exist
+	*/
+	public function testOffsetExists()
+	{
+		$ruleset = new Ruleset;
+		$this->assertFalse(isset($ruleset['allowChild']));
+		$ruleset->allowChild('FOO');
+		$this->assertTrue(isset($ruleset['allowChild']));
+	}
+
+	/**
+	* @testdox $ruleset['allowChild'] returns the allowChild rules if they exist
+	*/
+	public function testOffsetGet()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->allowChild('FOO');
+
+		$this->assertSame(
+			array('FOO'),
+			$ruleset['allowChild']
+		);
+	}
+
+	/**
+	* @testdox Trying to set rules via array access throws a RuntimeException
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Not supported
+	*/
+	public function testOffsetSet()
+	{
+		$ruleset = new Ruleset;
+		$ruleset['allowChild'] = 'FOO';
+	}
+
+	/**
+	* @testdox unset($ruleset['allowChild']) clears all allowChild rules
+	*/
+	public function testOffsetUnset()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->allowChild('FOO');
+
+		unset($ruleset['allowChild']);
+
+		$this->assertFalse(isset($ruleset['allowChild']));
+	}
+
+	/**
 	* @testdox clear() removes all rules
 	*/
 	public function testClearAll()

@@ -69,6 +69,10 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] Deleting a filter reorders the chain to remove gaps
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
+ [x] isset($ruleset['allowChild']) tests whether any allowChild rules exist
+ [x] $ruleset['allowChild'] returns the allowChild rules if they exist
+ [x] Trying to set rules via array access throws a RuntimeException
+ [x] unset($ruleset['allowChild']) clears all allowChild rules
  [x] clear() removes all rules
  [x] clear('allowChild') removes only 'allowChild' rules
  [x] allowChild() throws an exception on invalid tag name
@@ -273,9 +277,21 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesHelper
  [x] Works with a single tag
  [x] If no rule is defined, the default is to allow children and descendants
+ [x] Correctly applies denyChild
  [x] defaultChildRule is correctly applied
+ [x] allowChild overrides defaultChildRule('deny')
+ [x] denyChild overrides defaultChildRule('allow')
+ [x] denyChild overrides allowChild
+ [x] denyDescendant overrides allowChild
  [x] defaultDescendantRule is correctly applied
- [x] Two tags
+ [x] allowDescendant overrides defaultDescendantRule('deny')
+ [x] allowDescendant does not override denyChild
+ [x] denyDescendant overrides defaultDescendantRule('allow')
+ [x] denyDescendant overrides allowDescendant
+ [x] Tags with a requireParent rule are not allowed at the root
+ [x] Tags that aren't allowed anywhere are omitted from the return array
+ [x] Rules targeting inexistent tags do not interfere
+ [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML

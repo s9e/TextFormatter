@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
 use s9e\TextFormatter\ConfigBuilder\Collections\TagCollection;
+use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 
 /**
 * @todo Tags with the same bitfields can share the same bit number
@@ -44,8 +45,14 @@ abstract class RulesHelper
 		$groupedTags = array();
 		foreach ($tags as $tagName => $tag)
 		{
-			// We start with whether this tag is allowed at the root
-			$k = (empty($tag->rules['disallowAtRoot'])) ? '1' : '0';
+			if (!isset($allowedChildren[$tagName]))
+			{
+				// This tag has been removed already
+				continue;
+			}
+
+			// We start with whether this tag is allowed at the root.
+			$k = (self::isAllowedAtRoot($tag)) ? '1' : '0';
 
 			// Then we append the bitfield that represents which parents allow this tag
 			foreach ($allowedChildren as $targets)
@@ -79,8 +86,7 @@ abstract class RulesHelper
 			}
 
 			// Fill in the root context's bitfields
-			$ret['rootContext']['allowedChildren']
-				.= (empty($tags[$tagName]->rules['disallowAtRoot'])) ? '1' : '0';
+			$ret['rootContext']['allowedChildren'] .= self::isAllowedAtRoot($tags[$tagName]);
 
 			// Denied descendants are removed from the list, so we know this tag is allowed
 			$ret['rootContext']['allowedDescendants'] .= '1';
@@ -92,7 +98,7 @@ abstract class RulesHelper
 		// Now fill in each tag's bitfields
 		foreach ($ret['tags'] as $tagName => &$config)
 		{
-			foreach ($groupedTags as $bitNumber => $tagNames)
+			foreach ($groupedTags as $tagNames)
 			{
 				$targetName = $tagNames[0];
 
@@ -141,9 +147,6 @@ abstract class RulesHelper
 				$defaultDescendantValue = 1;
 			}
 
-			// defaultDescendantRule "deny" overrides defaultChildRule "allow"
-			$defaultChildValue &= $defaultDescendantValue;
-
 			foreach ($tagNames as $targetName)
 			{
 				$allowedChildren[$tagName][$targetName]    = $defaultChildValue;
@@ -171,7 +174,7 @@ abstract class RulesHelper
 			}
 		}
 
-		// Finally we apply "deny" rules (as well as "requireParent"), overwriting "allow" rules
+		// Then we apply "deny" rules (as well as "requireParent"), overwriting "allow" rules
 		foreach ($tags as $tagName => $tag)
 		{
 			if (isset($tag->rules['denyChild']))
@@ -207,6 +210,18 @@ abstract class RulesHelper
 			}
 		}
 
+		// We still need to ensure that denied descendants override allowed children
+		foreach ($allowedDescendants as $tagName => $targets)
+		{
+			foreach ($targets as $targetName => $isAllowed)
+			{
+				if (!$isAllowed)
+				{
+					$allowedChildren[$tagName][$targetName] = 0;
+				}
+			}
+		}
+
 		return array($allowedChildren, $allowedDescendants);
 	}
 
@@ -227,15 +242,16 @@ abstract class RulesHelper
 		foreach ($tags as $tagName => $tag)
 		{
 			// Test whether this tag is allowed at the root
-			if (empty($tag->rules['disallowAtRoot']))
+			if (self::isAllowedAtRoot($tag))
 			{
 				$keepTags[] = $tagName;
 				continue;
 			}
 
-			foreach ($allowedChildren as $parentName => $targets)
+			foreach ($permissions as $parentName => $targets)
 			{
-				if ($targets[$tagName])
+				// Test whether this tag is allowed by any other tag than itself
+				if ($targets[$tagName] && $parentName !== $tagName)
 				{
 					$keepTags[] = $tagName;
 					continue 2;
@@ -273,5 +289,18 @@ abstract class RulesHelper
 	protected static function bin2raw($bin)
 	{
 		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bin, 8)))));
+	}
+
+	/**
+	* Test whether a tag is allowed at the root of a text
+	*
+	* @param  Tag  $tag
+	* @return bool
+	*/
+	protected static function isAllowedAtRoot(Tag $tag)
+	{
+		return (empty($tag->rules['disallowAtRoot'])
+			 && empty($tag->rules['requireParent'])
+			 && empty($tag->rules['requireAncestor']));
 	}
 }
