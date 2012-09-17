@@ -270,6 +270,13 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] pcreToJs() replaces its second parameter with an array that maps named captures to their index
  [x] pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 
+s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesHelper
+ [x] Works with a single tag
+ [x] If no rule is defined, the default is to allow children and descendants
+ [x] defaultChildRule is correctly applied
+ [x] defaultDescendantRule is correctly applied
+ [x] Two tags
+
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML
  [x] Not safe: <embed src="{@url}"/>

@@ -7,11 +7,53 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Collections;
 
+use ArrayAccess;
 use InvalidArgumentException;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
-class Ruleset extends Collection
+class Ruleset extends Collection implements ArrayAccess
 {
+	/**
+	* Test whether a rule category exists
+	*
+	* @param  string $k Rule name, e.g. "allowChild" or "inheritRules"
+	*/
+	public function OffsetExists($k)
+	{
+		return isset($this->items[$k]);
+	}
+
+	/**
+	* Return the content of a rule category
+	*
+	* @param  string $k Rule name, e.g. "allowChild" or "inheritRules"
+	* @return mixed
+	*/
+	public function OffsetGet($k)
+	{
+		return $this->items[$k];
+	}
+
+	/**
+	* Not supported
+	*/
+	public function OffsetSet($k, $v)
+	{
+		throw new RuntimeException('Not supported');
+	}
+
+	/**
+	* Clear a subset of the rules
+	*
+	* @see clear()
+	*
+	* @param  string $k Rule name, e.g. "allowChild" or "inheritRules"
+	*/
+	public function OffsetUnset($k)
+	{
+		return $this->clear($k);
+	}
+
 	/**
 	* Remove a subset of, or all the rules
 	*

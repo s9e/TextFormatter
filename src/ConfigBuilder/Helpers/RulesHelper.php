@@ -7,262 +7,271 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
-use s9e\TextFormatter\ConfigBuilder\TagCollection;
+use s9e\TextFormatter\ConfigBuilder\Collections\TagCollection;
 
+/**
+* @todo Tags with the same bitfields can share the same bit number
+*/
 abstract class RulesHelper
 {
-	public function getParserConfig($keepJs = false)
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public static function getBitfields(TagCollection $tags)
+	{
+		$ret = array(
+			'rootContext' => array(
+				'allowedChildren'    => '',
+				'allowedDescendants' => ''
+			)
+		);
+
+		// Compute the allowed children/descendants for each tag
+		list($allowedChildren, $allowedDescendants) = self::unrollRules($tags);
+
+		// Remove targets that don't exist and tags that aren't allowed anywhere
+		$allowedChildren    = self::cleanUpPermissions($allowedChildren, $tags);
+		$allowedDescendants = self::cleanUpPermissions($allowedDescendants, $tags);
+
+		// Order the tags by name to keep their order consistent
+		ksort($allowedChildren);
+		ksort($allowedDescendants);
+
+		// Group tags by bitfield, in order to group tags that are allowed in the exact same
+		// contexts together
+		$groupedTags = array();
+		foreach ($tags as $tagName => $tag)
+		{
+			// We start with whether this tag is allowed at the root
+			$k = (empty($tag->rules['disallowAtRoot'])) ? '1' : '0';
+
+			// Then we append the bitfield that represents which parents allow this tag
+			foreach ($allowedChildren as $targets)
+			{
+				$k .= $targets[$tagName];
+			}
+
+			// Then we append the bitfield that represents which ancestors allow this tag
+			foreach ($allowedDescendants as $targets)
+			{
+				$k .= $targets[$tagName];
+			}
+
+			$groupedTags[$k][] = $tagName;
+		}
+
+		// Now replace the bitfield (used as key) with the corresponding bit number
+		$groupedTags = array_values($groupedTags);
+
+		// Assign a bit number for every tag. Tags with the same set of permissions get to share the
+		// same bit number
+		foreach ($groupedTags as $bitNumber => $tagNames)
+		{
+			foreach ($tagNames as $tagName)
+			{
+				$ret['tags'][$tagName] = array(
+					'bitNumber'          => $bitNumber,
+					'allowedChildren'    => '',
+					'allowedDescendants' => ''
+				);
+			}
+
+			// Fill in the root context's bitfields
+			$ret['rootContext']['allowedChildren']
+				.= (empty($tags[$tagName]->rules['disallowAtRoot'])) ? '1' : '0';
+
+			// Denied descendants are removed from the list, so we know this tag is allowed
+			$ret['rootContext']['allowedDescendants'] .= '1';
+		}
+
+		// Finalize the root context's bitfields
+		$ret['rootContext'] = array_map(array('self', 'bin2raw'), $ret['rootContext']);
+
+		// Now fill in each tag's bitfields
+		foreach ($ret['tags'] as $tagName => &$config)
+		{
+			foreach ($groupedTags as $bitNumber => $tagNames)
+			{
+				$targetName = $tagNames[0];
+
+				$config['allowedChildren']    .= $allowedChildren[$tagName][$targetName];
+				$config['allowedDescendants'] .= $allowedDescendants[$tagName][$targetName];
+			}
+
+			$config['allowedChildren']    = self::bin2raw($config['allowedChildren']);
+			$config['allowedDescendants'] = self::bin2raw($config['allowedDescendants']);
+		}
+		unset($config);
+
+		return $ret;
+	}
+
+	/**
+	* @param  TagCollection $tags
+	* @return array
+	*/
+	protected static function unrollRules(TagCollection $tags)
+	{
+		$allowedChildren    = array();
+		$allowedDescendants = array();
+
+		// Save the tag names so we don't have to iterate over TagCollection twice
+		$tagNames = array_keys(iterator_to_array($tags));
+
+		// First we seed the list with default values
+		foreach ($tags as $tagName => $tag)
+		{
+			if (isset($tag->rules['defaultChildRule']))
+			{
+				$defaultChildValue = (int) ($tag->rules['defaultChildRule'] === 'allow');
+			}
+			else
+			{
+				$defaultChildValue = 1;
+			}
+
+			if (isset($tag->rules['defaultDescendantRule']))
+			{
+				$defaultDescendantValue = (int) ($tag->rules['defaultDescendantRule'] === 'allow');
+			}
+			else
+			{
+				$defaultDescendantValue = 1;
+			}
+
+			// defaultDescendantRule "deny" overrides defaultChildRule "allow"
+			$defaultChildValue &= $defaultDescendantValue;
+
+			foreach ($tagNames as $targetName)
+			{
+				$allowedChildren[$tagName][$targetName]    = $defaultChildValue;
+				$allowedDescendants[$tagName][$targetName] = $defaultDescendantValue;
+			}
+		}
+
+		// Then we apply "allow" rules to grant usage, overwriting the default settings
+		foreach ($tags as $tagName => $tag)
+		{
+			if (isset($tag->rules['allowChild']))
+			{
+				foreach ($tag->rules['allowChild'] as $targetName)
+				{
+					$allowedChildren[$tagName][$targetName] = 1;
+				}
+			}
+
+			if (isset($tag->rules['allowDescendant']))
+			{
+				foreach ($tag->rules['allowDescendant'] as $targetName)
+				{
+					$allowedDescendants[$tagName][$targetName] = 1;
+				}
+			}
+		}
+
+		// Finally we apply "deny" rules (as well as "requireParent"), overwriting "allow" rules
+		foreach ($tags as $tagName => $tag)
+		{
+			if (isset($tag->rules['denyChild']))
+			{
+				foreach ($tag->rules['denyChild'] as $targetName)
+				{
+					$allowedChildren[$tagName][$targetName] = 0;
+				}
+			}
+
+			if (isset($tag->rules['denyDescendant']))
+			{
+				foreach ($tag->rules['denyDescendant'] as $targetName)
+				{
+					$allowedDescendants[$tagName][$targetName] = 0;
+
+					// Carry the rule to children as well
+					$allowedChildren[$tagName][$targetName] = 0;
+				}
+			}
+
+			if (isset($tag->rules['requireParent']))
+			{
+				// Every parent that isn't is the "requireParent" list will explicitely deny the
+				// child tag
+				foreach ($tagNames as $parentName)
+				{
+					if (!in_array($parentName, $tag->rules['requireParent'], true))
+					{
+						$allowedChildren[$parentName][$tagName] = 0;
+					}
+				}
+			}
+		}
+
+		return array($allowedChildren, $allowedDescendants);
+	}
+
+	/**
+	* 
+	*
+	* @param  array         $permissions
+	* @param  TagCollection $tags
+	* @return array
+	*/
+	protected static function cleanUpPermissions(array $permissions, TagCollection $tags)
 	{
 		/**
-		* Generate the root context to be used by the Parser
+		* @var array List of tags that are allowed anywhere in a text
 		*/
-		$rootContext = array(
-			'allowedChildren'    => str_repeat("\x00", ceil(count($config['tags']) / 8)),
-			'allowedDescendants' => str_repeat("\x00", ceil(count($config['tags']) / 8))
-		);
+		$keepTags = array();
 
 		foreach ($tags as $tagName => $tag)
 		{
-			$n = $tagConfig['n'];
-
-			// We set the bit only if the tag is allowed at the root of document
-			if (empty($tagConfig['disallowAsRoot']))
+			// Test whether this tag is allowed at the root
+			if (empty($tag->rules['disallowAtRoot']))
 			{
-				$config['rootContext']['allowedChildren'][$n >> 3]
-					= $config['rootContext']['allowedChildren'][$n >> 3] | chr(1 << ($n & 7));
-			}
-
-			$config['rootContext']['allowedDescendants'][$n >> 3]
-				= $config['rootContext']['allowedDescendants'][$n >> 3] | chr(1 << ($n & 7));
-
-			// We don't need this anymore
-			unset($tagConfig['disallowAsRoot']);
-		}
-		unset($tagConfig);
-
-		return $config;
-	}
-
-	/**
-	* Return the tags' config, normalized and sorted, minus the tags' templates
-	*
-	* @param  bool  $reduce If true, remove unnecessary/empty entries and build the list of allowed
-	*                       decendants for each tag
-	* @return array
-	*/
-	public function getTagsConfig($reduce = false)
-	{
-		$tagsConfig = $this->tags;
-		ksort($tagsConfig);
-
-		$n = -1;
-
-		foreach ($tagsConfig as $tagName => &$tagConfig)
-		{
-			if ($reduce)
-			{
-				if ($tagConfig['disable'])
-				{
-					// This tag is disabled, remove it
-					unset($tagsConfig[$tagName]);
-					continue;
-				}
-
-				$tagConfig['n'] = ++$n;
-
-				/**
-				* Build the list of allowed children and descendants.
-				* Note: $tagsConfig is already sorted, so we don't have to sort the list
-				*/
-				$tagConfig['allowedChildren'] = array_fill_keys(
-					array_keys($tagsConfig),
-					($tagConfig['defaultChildRule'] === 'allow') ? '1' : '0'
-				);
-				$tagConfig['allowedDescendants'] = array_fill_keys(
-					array_keys($tagsConfig),
-					($tagConfig['defaultDescendantRule'] === 'allow') ? '1' : '0'
-				);
-
-				if (isset($tagConfig['rules']))
-				{
-					/**
-					* Sort the rules so that "deny" overwrites "allow"
-					*/
-					ksort($tagConfig['rules']);
-
-					foreach ($tagConfig['rules'] as $action => &$targets)
-					{
-						switch ($action)
-						{
-							case 'allowChild':
-							case 'allowDescendant':
-							case 'denyChild':
-							case 'denyDescendant':
-								/**
-								* Those rules are converted into the allowedChildren and
-								* allowedDescendants bitmaps
-								*/
-								$k = (substr($action, -5) === 'Child')
-								   ? 'allowedChildren'
-								   : 'allowedDescendants';
-
-								$v = (substr($action, 0, 4) === 'deny') ? '0' : '1';
-
-								foreach ($targets as $target)
-								{
-									// make sure the target really exists
-									if (isset($tagConfig[$k][$target]))
-									{
-										$tagConfig[$k][$target] = $v;
-									}
-								}
-
-								// We don't need those anymore
-								unset($tagConfig['rules'][$action]);
-								break;
-
-							case 'requireParent':
-							case 'requireAncestor':
-								/**
-								* Nothing to do here. If the target tag does not exist, this tag
-								* will never be valid but we still leave it in the configuration
-								*/
-								break;
-
-							default:
-								// keep only the rules that target existing tags
-								$targets = array_intersect_key($targets, $tagsConfig);
-						}
-					}
-					unset($targets);
-
-					/**
-					* Remove rules with no targets
-					*/
-					$tagConfig['rules'] = array_filter($tagConfig['rules']);
-
-					if (empty($tagConfig['rules']))
-					{
-						unset($tagConfig['rules']);
-					}
-
-					if (!empty($tagConfig['attrs']))
-					{
-						foreach ($tagConfig['attrs'] as &$attrConf)
-						{
-							/**
-							* Remove the filterChain if it's empty
-							*/
-							if (empty($attrConf['filterChain']))
-							{
-								unset($attrConf['filterChain']);
-							}
-						}
-						unset($attrConf);
-					}
-				}
-
-				unset($tagConfig['defaultChildRule']);
-				unset($tagConfig['defaultDescendantRule']);
-				unset($tagConfig['disable']);
-
-				/**
-				* We only need to store this option if it's true
-				*/
-				if (!$tagConfig['disallowAsRoot'])
-				{
-					unset($tagConfig['disallowAsRoot']);
-				}
-
-				/**
-				* We don't need the tag's template
-				*/
-				unset($tagConfig['xsl']);
-
-				/**
-				* Generate a proper (binary) bitfield
-				*/
-				$tagConfig['allowedChildren'] = self::bin2raw($tagConfig['allowedChildren']);
-				$tagConfig['allowedDescendants'] = self::bin2raw($tagConfig['allowedDescendants']);
-
-				/**
-				* Children are descendants of current node, so we apply denyDescendant rules to them
-				* as well.
-				*/
-				$tagConfig['allowedChildren'] &= $tagConfig['allowedDescendants'];
-			}
-
-			ksort($tagConfig);
-		}
-		unset($tagConfig);
-
-		return $tagsConfig;
-	}
-
-	protected static function bin2raw($values)
-	{
-		$bin = implode('', $values) . str_repeat('0', (((count($values) + 7) & 7) ^ 7));
-
-		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bin, 8)))));
-	}
-
-	//==========================================================================
-	// XSL stuff
-	//==========================================================================
-
-	/**
-	* Return the XSL used for rendering
-	*
-	* @param  string $prefix Prefix to use for XSL elements (defaults to "xsl")
-	* @return string
-	*/
-	public function getXSL($prefix = 'xsl')
-	{
-		return TemplateHelper::getXSL($this);
-	}
-
-	//==========================================================================
-	// Javascript parser stuff
-	//==========================================================================
-
-	/**
-	* Return the Javascript parser that corresponds to this configuration
-	*
-	* @param  array  $options Options to be passed to the JSParser generator
-	* @return string
-	*/
-	public function getJSParser(array $options = array())
-	{
-		$jspg = new JSParserGenerator($this);
-
-		return $jspg->get($options);
-	}
-
-	/**
-	* Return JS parsers and their config
-	*
-	* @return array
-	*/
-	public function getJSPlugins()
-	{
-		$plugins = array();
-
-		foreach ($this->getPluginsConfig('getJSConfig') as $pluginName => $pluginConfig)
-		{
-			$js = $this->$pluginName->getJSParser();
-
-			if (!$js)
-			{
+				$keepTags[] = $tagName;
 				continue;
 			}
 
-			$plugins[$pluginName] = array(
-				'parser' => $js,
-				'config' => $pluginConfig,
-				'meta'   => $this->$pluginName->getJSConfigMeta()
-			);
+			foreach ($allowedChildren as $parentName => $targets)
+			{
+				if ($targets[$tagName])
+				{
+					$keepTags[] = $tagName;
+					continue 2;
+				}
+			}
 		}
 
-		return $plugins;
+		// Flip the list of tags for convenience
+		$keepTags = array_flip($keepTags);
+
+		// Discard unused tags from the lists
+		$permissions = array_intersect_key(
+			$permissions,
+			$keepTags
+		);
+
+		foreach ($permissions as &$targets)
+		{
+			$targets = array_intersect_key(
+				$targets,
+				$keepTags
+			);
+		}
+		unset($targets);
+
+		return $permissions;
+	}
+
+	/**
+	* Convert a binary representation such as "101011" to raw bytes
+	*
+	* @param  string $bin "10000010"
+	* @return string      "\x82"
+	*/
+	protected static function bin2raw($bin)
+	{
+		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bin, 8)))));
 	}
 }
