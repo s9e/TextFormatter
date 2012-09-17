@@ -509,6 +509,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] getRegexp() returns the regexp associated with this attribute preprocessor
 
+s9e\TextFormatter\Tests\ConfigBuilder\Items\CallbackTemplate
+ [x] __construct() throws an InvalidArgumentException if its argument is not callable
+
 s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
  [x] An array of options can be passed to the constructor
  [x] $tag->nestingLimit accepts '10' and casts it as an integer

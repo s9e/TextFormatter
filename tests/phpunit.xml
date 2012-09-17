@@ -45,6 +45,7 @@
 			<file>ConfigBuilder/Helpers/TemplateOptimizerTest.php</file>
 			<file>ConfigBuilder/Items/AttributeTest.php</file>
 			<file>ConfigBuilder/Items/AttributePreprocessorTest.php</file>
+			<file>ConfigBuilder/Items/CallbackTemplateTest.php</file>
 			<file>ConfigBuilder/Items/TagTest.php</file>
 			<file>ConfigBuilder/Validators/AttributeNameTest.php</file>
 			<file>ConfigBuilder/Validators/TagNameTest.php</file>
@@ -69,6 +70,7 @@
 			<file>../src/ConfigBuilder/Helpers/TemplateOptimizer.php</file>
 			<file>../src/ConfigBuilder/Items/Attribute.php</file>
 			<file>../src/ConfigBuilder/Items/AttributePreprocessor.php</file>
+			<file>../src/ConfigBuilder/Items/CallbackTemplate.php</file>
 			<file>../src/ConfigBuilder/Items/Tag.php</file>
 			<file>../src/ConfigBuilder/Traits/Configurable.php</file>
 			<file>../src/ConfigBuilder/Validators/AttributeName.php</file>
