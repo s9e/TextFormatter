@@ -251,6 +251,7 @@ var HINT = {
 		// NOTE: declaring ret's size here with "new Array(i)" results in a 5x performance increase
 		//       in Chromium 19 but it makes other browsers at least 10% slower. Not declaring the
 		//       size of the array makes all tested browsers offer about the same performance
+		// NOTE: retest this, fill the array in ascending order
 		var ret = [],
 			i   = a1.length;
 
