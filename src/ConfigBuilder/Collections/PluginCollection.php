@@ -11,7 +11,7 @@ use InvalidArgumentException;
 use s9e\TextFormatter\ConfigBuilder;
 use s9e\TextFormatter\ConfigBuilder\Plugins\Config as PluginConfig;
 
-class PluginCollection extends Collection
+class PluginCollection extends NormalizedCollection
 {
 	/**
 	* @var ConfigBuilder
@@ -29,6 +29,43 @@ class PluginCollection extends Collection
 	}
 
 	/**
+	* Validate a plugin name
+	*
+	* @param  string $pluginName
+	* @return string
+	*/
+	public function normalizeKey($pluginName)
+	{
+		if (!preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $pluginName))
+		{
+			throw new InvalidArgumentException("Invalid plugin name '" . $pluginName . "'");
+		}
+
+		return $pluginName;
+	}
+
+	/**
+	* Create a plugin instance/ensure it implements the correct interface
+	*
+	* @param  mixed Either a class name or an object that implements PluginConfig
+	* @return void
+	*/
+	public function normalizeValue($value)
+	{
+		if (is_string($value) && class_exists($value))
+		{
+			$value = new $value($this->cb);
+		}
+
+		if ($value instanceof PluginConfig)
+		{
+			return $value;
+		}
+
+		throw new InvalidArgumentException('PluginCollection::normalizeValue() expects a class name or an object that implements s9e\\TextFormatter\\ConfigBuilder\\Plugins\\Config');
+	}
+
+	/**
 	* Load a default plugin
 	*
 	* @param  string       $pluginName    Name of the plugin
@@ -37,36 +74,22 @@ class PluginCollection extends Collection
 	*/
 	public function load($pluginName, array $overrideProps = array())
 	{
-		if (!preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $pluginName))
-		{
-			throw new InvalidArgumentException("Invalid plugin name '" . $pluginName . "'");
-		}
-
-		$className = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Config';
+		// Validate the plugin name / class
+		$pluginName = $this->normalizeKey($pluginName);
+		$className  = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Config';
 
 		if (!class_exists($className))
 		{
 			throw new RuntimeException("Class '" . $className . "' does not exist");
 		}
 
-		$this->items[$pluginName] = new $className($this->cb, $overrideProps);
-	}
+		// Create the plugin
+		$plugin = new $className($this->cb, $overrideProps);
 
-	/**
-	* Load a custom plugin
-	*
-	* If a plugin of the same name exists, it will be overwritten.
-	*
-	* @param  string $pluginName    Name of the plugin
-	* @param  string $pluginDir     Path to the plugin's directory
-	* @param  string $className     Name of the plugin's config class (that extends PluginConfig)
-	* @param  array  $overrideProps Properties of the plugin will be overwritten with those
-	* @return PluginConfig
-	*
-	* @todo
-	*/
-	public function loadCustom($pluginName, $pluginDir, $namespace, array $overrideProps = array())
-	{
-		$this->items[$pluginName] = new $className($this->cb, $overrideProps);
+		// Save it
+		$this->set($pluginName, $plugin);
+
+		// Return it
+		return $plugin;
 	}
 }
