@@ -293,6 +293,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesHelper
  [x] Rules targeting inexistent tags do not interfere
  [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 
+s9e\TextFormatter\Tests\ConfigBuilder\Helpers\StylesheetHelper
+ [x] Correctly declares namespaces for prefixed tags
+
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML
  [x] Not safe: <embed src="{@url}"/>

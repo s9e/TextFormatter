@@ -9,23 +9,21 @@ namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 
 use DOMDocument;
 use DOMXPath;
-use RuntimeException;
 use XSLTProcessor;
-use s9e\TextFormatter\ConfigBuilder\ConfigBuilder;
+use s9e\TextFormatter\ConfigBuilder\Collections\PluginCollection;
+use s9e\TextFormatter\ConfigBuilder\Collections\TagCollection;
 use s9e\TextFormatter\ConfigBuilder\Exceptions\InvalidXslException;
 
-/**
-* Generates stylesheets based on a ConfigBuilder instance
-*/
-abstract class StylesheetGenerator
+abstract class StylesheetHelper
 {
 	/**
 	* Return the XSL used for rendering
 	*
-	* @param  string $prefix Prefix to use for XSL elements (defaults to "xsl")
+	* @param  TagCollection    $tags
+	* @param  PluginCollection $plugins
 	* @return string
 	*/
-	public static function get(ConfigBuilder $cb, $xslPrefix = 'xsl')
+	public static function generate(TagCollection $tags, PluginCollection $plugins = null)
 	{
 		// Declare all the namespaces in use at the top
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
@@ -33,7 +31,7 @@ abstract class StylesheetGenerator
 
 		// Collect the unique prefixes used in tag names
 		$prefixes = array();
-		foreach ($cb->tags as $tagName => $tag)
+		foreach ($tags as $tagName => $tag)
 		{
 			$pos = strpos($tagName, ':');
 
@@ -41,12 +39,6 @@ abstract class StylesheetGenerator
 			{
 				$prefixes[substr($tagName, 0, $pos)] = 1;
 			}
-		}
-
-		// Test whether a tag name uses the same prefix as the one we use for XSL elements
-		if (isset($prefixes[$xslPrefix]))
-		{
-			throw new RuntimeException("The prefix '" . $xslPrefix . "' is already used by a tag and cannot be used for XSL elements");
 		}
 
 		foreach (array_keys($prefixes) as $prefix)
@@ -66,18 +58,21 @@ abstract class StylesheetGenerator
 		      . '</xsl:template>';
 
 		// Append the plugins' XSL
-		foreach ($cb->getLoadedPlugins() as $plugin)
+		if (isset($plugins))
 		{
-			$pluginXSL = $plugin->getXSL();
+			foreach ($plugins as $plugin)
+			{
+				$pluginXSL = $plugin->getXSL();
 
-			// Check that the XSL is valid
-			self::checkValid($pluginXSL);
+				// Check that the XSL is valid
+				self::checkValid($pluginXSL);
 
-			$xsl .= $pluginXSL;
+				$xsl .= $pluginXSL;
+			}
 		}
 
 		// Append the tags' templates
-		foreach ($cb->tags as $tagName => $tag)
+		foreach ($tags as $tagName => $tag)
 		{
 			foreach ($tag->templates as $predicate => $template)
 			{
@@ -104,12 +99,6 @@ abstract class StylesheetGenerator
 
 		// Dedupes the templates
 		self::dedupeTemplates($dom);
-
-		// Fix the XSL prefix
-		if ($xslPrefix !== 'xsl')
-		{
-			$dom = self::changeXSLPrefix($dom, $xslPrefix);
-		}
 
 		// Serialize back to XML, trim then return
 		$xsl = rtrim($dom->saveXML());
@@ -158,11 +147,15 @@ abstract class StylesheetGenerator
 	/**
 	* Change the prefix used for XSL elements
 	*
-	* @param DOMDocument $dom    Stylesheet
-	* @param string      $prefix New prefix
+	* @param  string $xsl    Stylesheet
+	* @param  string $prefix New prefix
+	* @return string
 	*/
-	protected static function changeXSLPrefix(DOMDocument $dom, $prefix)
+	public static function changeXSLPrefix($xsl, $prefix)
 	{
+		$dom = new DOMDocument;
+		$dom->loadXML($xsl);
+
 		$trans = new DOMDocument;
 		$trans->loadXML(
 			'<?xml version="1.0" encoding="utf-8"?>

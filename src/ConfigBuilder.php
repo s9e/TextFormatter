@@ -9,9 +9,9 @@ namespace s9e\TextFormatter;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\ConfigBuilder\Collection;
-use s9e\TextFormatter\ConfigBuilder\FilterCollection;
-use s9e\TextFormatter\ConfigBuilder\TagCollection;
+use s9e\TextFormatter\ConfigBuilder\Collections\Collection;
+use s9e\TextFormatter\ConfigBuilder\Collections\FilterCollection;
+use s9e\TextFormatter\ConfigBuilder\Collections\TagCollection;
 use s9e\TextFormatter\ConfigBuilder\UrlConfig;
 
 class ConfigBuilder
