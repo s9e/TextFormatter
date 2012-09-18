@@ -295,6 +295,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesHelper
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\StylesheetHelper
  [x] Correctly declares namespaces for prefixed tags
+ [x] Predicates are preserved
+ [x] Identical templates are merged together
+ [x] Empty templates are merged with the empty templates used for <st>, <et> and <i>
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML
