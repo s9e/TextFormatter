@@ -1540,7 +1540,7 @@ class RegexpHelperTest extends Test
 	}
 
 	/**
-	* @testdox pcreToJs() converts . to [\s\S] outside of character classes is the "s" modifier is set
+	* @testdox pcreToJs() converts . to [\s\S] outside of character classes if the "s" modifier is set
 	*/
 	public function testConvertRegexpDotAll()
 	{

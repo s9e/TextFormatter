@@ -198,7 +198,7 @@ abstract class RulesHelper
 
 			if (isset($tag->rules['requireParent']))
 			{
-				// Every parent that isn't is the "requireParent" list will explicitely deny the
+				// Every parent that isn't in the "requireParent" list will explicitely deny the
 				// child tag
 				foreach ($tagNames as $parentName)
 				{
