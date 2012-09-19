@@ -100,6 +100,118 @@ class RegexpHelperTest extends Test
 	}
 
 	/**
+	* @testdox buildRegexpFromList(['a', '.'], ["specialChars" => ["." => "."]]) returns '.'
+	*/
+	public function test_buildRegexpFromList_c29ced5()
+	{
+		$this->assertSame(
+			'.',
+			RegexpHelper::buildRegexpFromList(
+				array('a', '.'),
+				array('specialChars' => array('.' => '.'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['hip', 'hop', 'h.p'], ["specialChars" => ["." => "."]]) returns 'h.p'
+	*/
+	public function test_buildRegexpFromList_6ab3a485()
+	{
+		$this->assertSame(
+			'h.p',
+			RegexpHelper::buildRegexpFromList(
+				array('hip', 'hop', 'h.p'),
+				array('specialChars' => array('.' => '.'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['hi', 'hop', 'h.p'], ["specialChars" => ["." => "."]]) returns 'h(?:i|.p)'
+	*/
+	public function test_buildRegexpFromList_8fc43cb0()
+	{
+		$this->assertSame(
+			'h(?:i|.p)',
+			RegexpHelper::buildRegexpFromList(
+				array('hi', 'hop', 'h.p'),
+				array('specialChars' => array('.' => '.'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['h', 'h.'], ["specialChars" => ["." => "."]]) returns 'h.?'
+	*/
+	public function test_buildRegexpFromList_9ba9174b()
+	{
+		$this->assertSame(
+			'h.?',
+			RegexpHelper::buildRegexpFromList(
+				array('h', 'h.'),
+				array('specialChars' => array('.' => '.'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['h.', 'hd'], ["specialChars" => ["." => ".", "d" => "\\d\\d"]]) returns 'h(?:.|\\d\\d)'
+	*/
+	public function test_buildRegexpFromList_a1628b44()
+	{
+		$this->assertSame(
+			'h(?:.|\\d\\d)',
+			RegexpHelper::buildRegexpFromList(
+				array('h.', 'hd'),
+				array('specialChars' => array('.' => '.', 'd' => '\\d\\d'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'], ["specialChars" => ["X" => "."]]) returns 'h(?:...........|otel)'
+	*/
+	public function test_buildRegexpFromList_71d6e963()
+	{
+		$this->assertSame(
+			'h(?:...........|otel)',
+			RegexpHelper::buildRegexpFromList(
+				array('hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'),
+				array('specialChars' => array('X' => '.'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['zdDhHsSvVwW', 'z..........', 'zebra'], ["specialChars" => ["\\d" => "\\d", "\\D" => "\\D", "\\h" => "\\h", "\\H" => "\\H", "\\s" => "\\s", "\\S" => "\\S", "\\v" => "\\v", "\\V" => "\\V", "\\w" => "\\w", "\\W" => "\\W", "." => "."]]) returns 'z(?:..........|ebra)'
+	*/
+	public function test_buildRegexpFromList_f23831ca()
+	{
+		$this->assertSame(
+			'z(?:..........|ebra)',
+			RegexpHelper::buildRegexpFromList(
+				array('zdDhHsSvVwW', 'z..........', 'zebra'),
+				array('specialChars' => array('\\d' => '\\d', '\\D' => '\\D', '\\h' => '\\h', '\\H' => '\\H', '\\s' => '\\s', '\\S' => '\\S', '\\v' => '\\v', '\\V' => '\\V', '\\w' => '\\w', '\\W' => '\\W', '.' => '.'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['h$', 'h.'], ["specialChars" => ["." => ".", "$" => "$"]]) returns 'h(?:$|.)'
+	*/
+	public function test_buildRegexpFromList_34005f32()
+	{
+		$this->assertSame(
+			'h(?:$|.)',
+			RegexpHelper::buildRegexpFromList(
+				array('h$', 'h.'),
+				array('specialChars' => array('.' => '.', '$' => '$'))
+			)
+		);
+	}
+
+	/**
 	* @testdox buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
 	*/
 	public function test_buildRegexpFromList_8cb33695()
@@ -107,20 +219,6 @@ class RegexpHelperTest extends Test
 		$this->assertSame(
 			'[-!:<=>\\#\\\\\\]}$()*+.?[{|^]',
 			RegexpHelper::buildRegexpFromList(array('!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}'))
-		);
-	}
-
-	/**
-	* @testdox buildRegexpFromList(['a', '.'], ["specialChars" => ["." => "."]]) returns '(?:a|.)'
-	*/
-	public function test_buildRegexpFromList_8540e325()
-	{
-		$this->assertSame(
-			'(?:a|.)',
-			RegexpHelper::buildRegexpFromList(
-				array('a', '.'),
-				array('specialChars' => array('.' => '.'))
-			)
 		);
 	}
 
@@ -1653,19 +1751,87 @@ class RegexpHelperTest extends Test
 /*
 			array(
 				'apple.*?',
+				array('apple', 'apple*'),
+				array('specialChars' => array('*' => '.*?'))
+			),
+			array(
+				'apple.*?',
 				array('apple*', 'applepie'),
 				array('specialChars' => array('*' => '.*?'))
 			),
+			array(
+				'apple.+?',
+				array('apple*', 'applepie'),
+				array('specialChars' => array('*' => '.+?'))
+			),
+			array(
+				'apple.*?',
+				array('apple*', 'apple'),
+				array('specialChars' => array('*' => '.*?'))
+			),
+			array(
+				'apple.*',
+				array('apple*', 'apple+'),
+				array('specialChars' => array('*' => '.*?', '+' => '.*'))
+			),
+			array(
+				'apple.+',
+				array('apple*', 'apple+'),
+				array('specialChars' => array('*' => '.+?', '+' => '.+'))
+			),
+			array(
+				'apple.*',
+				array('apple*', 'apple+'),
+				array('specialChars' => array('*' => '.*', '+' => '.+'))
+			),
 */
+			array(
+				'.',
+				array('a', '.'),
+				array('specialChars' => array('.' => '.'))
+			),
+			array(
+				'h.p',
+				array('hip', 'hop', 'h.p'),
+				array('specialChars' => array('.' => '.'))
+			),
+			array(
+				'h(?:i|.p)',
+				array('hi', 'hop', 'h.p'),
+				array('specialChars' => array('.' => '.'))
+			),
+			array(
+				'h.?',
+				array('h', 'h.'),
+				array('specialChars' => array('.' => '.'))
+			),
+			array(
+				'h(?:.|\\d\\d)',
+				array('h.', 'hd'),
+				array('specialChars' => array('.' => '.', 'd' => '\\d\\d'))
+			),
+			array(
+				'h(?:...........|otel)',
+				array('hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'),
+				array('specialChars' => array('X' => '.'))
+			),
+			array(
+				'z(?:..........|ebra)',
+				array('zdDhHsSvVwW', 'z..........', 'zebra'),
+				array('specialChars' => array(
+					'\\d'=> '\\d', '\\D'=> '\\D', '\\h'=> '\\h', '\\H'=> '\\H',
+					'\\s'=> '\\s', '\\S'=> '\\S', '\\v'=> '\\v', '\\V'=> '\\V',
+					'\\w'=> '\\w', '\\W'=> '\\W', '.' => '.'
+				))
+			),
+			array(
+				'h(?:$|.)',
+				array('h$', 'h.'),
+				array('specialChars' => array('.' => '.', '$' => '$'))
+			),
 			array(
 				'[-!:<=>\\#\\\\\\]}$()*+.?[{|^]',
 				str_split('!#$()*+-.:<=>?[\\]^{|}', 1)
-			),
-			array(
-				// should become '.' once jokers optimization is implemented
-				'(?:a|.)',
-				array('a', '.'),
-				array('specialChars' => array('.' => '.'))
 			),
 			array(
 				'(?:x|^)y',

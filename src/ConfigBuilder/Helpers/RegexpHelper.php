@@ -140,6 +140,8 @@ abstract class RegexpHelper
 			return $chains[0];
 		}
 
+		// Remove chains 
+
 		// The merged chain starts with the chains' common prefix
 		$mergedChain = self::removeLongestCommonPrefix($chains);
 
@@ -153,6 +155,17 @@ abstract class RegexpHelper
 
 		// Remove the longest common suffix and save it for later
 		$suffix = self::removeLongestCommonSuffix($chains);
+
+		// Optimize the joker thing
+		if (isset($chains[1]))
+		{
+			self::doTheJokerThing($chains);
+		}
+
+
+
+
+
 
 		// Whether one of the chain has been completely optimized away by prefix/suffix removal.
 		// Signals that the middle part of the regexp is optional, e.g. (prefix)(foo)?(suffix)
@@ -180,6 +193,74 @@ abstract class RegexpHelper
 			}
 
 			$groups[$head][] = $chain;
+		}
+
+		// Look for the joker/dot "."
+		if (isset($groups['.']))
+		{
+			$dotTails = array();
+			foreach ($groups['.'] as $dotChain)
+			{
+				$dotTail = implode('', array_slice($dotChain, 1));
+
+				foreach ($groups as $head => $groupChains)
+				{
+					// Skip if it's the dot chain
+					if ($head === '.')
+					{
+						continue;
+					}
+
+					// Skip if the dot is neither a single character nor an escaped character that
+					// does not have meta properties (such as \w)
+					if (!preg_match('#^.$#Du', $head)
+					 && !preg_match('#^\\\\[\\\\$.[\\]()+*?^]$#D', $head))
+					{
+						continue;
+					}
+
+					foreach ($groupChains as $k => $groupChain)
+					{
+						$groupTail = implode('', array_slice($groupChain, 1));
+
+						if ($groupTail === $dotTail)
+						{
+							unset($groups[$head][$k]);
+						}
+					}
+				}
+			}
+
+			$groups = array_map('array_values', array_filter($groups));
+		}
+
+		// Look for catch-all expressions such as .*? or .+
+		// NOTE: cannot handle possessive expressions such as .++ because we don't know whether that
+		//       chain had its tail stashed by an earlier iteration
+		foreach ($groups as $head => $groupChains)
+		{
+break;
+			// Test whether the head is a catch-all expression
+			if (!preg_match('#^\\.[*+]\\??$#D', $head))
+			{
+				continue;
+			}
+
+			// That's what a chain with a single catch-all would look like
+			$chain = array($head);
+
+			// Test whether it's at the end of its chain
+			if (!in_array($chain, $groupChains, true))
+			{
+				continue;
+			}
+
+			$chains  = array($chain);
+			$groups  = array($head => array($chain));
+
+			// There's only one chain in this group, we don't need to remerge
+//			$remerge = false;
+			break;
 		}
 
 		// See if we can replace single characters with a character class
@@ -685,6 +766,73 @@ abstract class RegexpHelper
 		}
 
 		return true;
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected static function doTheJokerThing(array &$chains)
+	{
+		/**
+		* @var array List of valid atoms that should be matched by a dot but happen to be
+		*            represented by more than one character
+		*/
+		$validAtoms = array(
+			// Escape sequences
+			'\\d' => 1, '\\D' => 1, '\\h' => 1, '\\H' => 1,
+			'\\s' => 1, '\\S' => 1, '\\v' => 1, '\\V' => 1,
+			'\\w' => 1, '\\W' => 1,
+
+			// Special chars that need to be escaped in order to be used as literals
+			'\\^' => 1, '\\$' => 1, '\\.' => 1, '\\?' => 1,
+			'\\[' => 1, '\\]' => 1, '\\(' => 1, '\\)' => 1,
+			'\\+' => 1, '\\*' => 1, '\\\\' => 1
+		);
+
+		foreach ($chains as $k1 => $dotChain)
+		{
+			$dotKeys = array_keys($dotChain, '.', true);
+
+			if (empty($dotKeys))
+			{
+				continue;
+			}
+
+			foreach ($chains as $k2 => $tmpChain)
+			{
+				if ($k2 === $k1)
+				{
+					continue;
+				}
+
+				foreach ($dotKeys as $dotKey)
+				{
+					if (!isset($tmpChain[$dotKey]))
+					{
+						// The chain is too short to match, skip this chain
+						continue 2;
+					}
+
+					// Skip if the dot is neither a literal nor a valid atom
+					if (!preg_match('#^.$#Du', preg_quote($tmpChain[$dotKey]))
+					 && !isset($validAtoms[$tmpChain[$dotKey]]))
+					{
+						continue 2;
+					}
+
+					// Replace the atom with a dot
+					$tmpChain[$dotKey] = '.';
+				}
+
+				if ($tmpChain === $dotChain)
+				{
+					// The chain matches our dot chain, which means we can remove it
+					unset($chains[$k2]);
+				}
+			}
+		}
 	}
 
 	/**
