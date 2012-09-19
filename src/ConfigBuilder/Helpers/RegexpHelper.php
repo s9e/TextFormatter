@@ -793,6 +793,22 @@ break;
 
 		foreach ($chains as $k1 => $dotChain)
 		{
+			$dotKeys = array_keys($dotChain, '.?', true);
+
+			if (!empty($dotKeys))
+			{
+				// Replace the .? atom in the original chain with a .
+				$dotChain[$dotKeys[0]] = '.';
+				$chains[$k1] = $dotChain;
+
+				// Create a new chain without the atom
+				array_splice($dotChain, $dotKeys[0], 1);
+				$chains[] = $dotChain;
+			}
+		}
+
+		foreach ($chains as $k1 => $dotChain)
+		{
 			$dotKeys = array_keys($dotChain, '.', true);
 
 			if (empty($dotKeys))

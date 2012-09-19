@@ -179,6 +179,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] buildRegexpFromList(['hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'], ["specialChars" => ["X" => "."]]) returns 'h(?:...........|otel)'
  [x] buildRegexpFromList(['zdDhHsSvVwW', 'z..........', 'zebra'], ["specialChars" => ["\\d" => "\\d", "\\D" => "\\D", "\\h" => "\\h", "\\H" => "\\H", "\\s" => "\\s", "\\S" => "\\S", "\\v" => "\\v", "\\V" => "\\V", "\\w" => "\\w", "\\W" => "\\W", "." => "."]]) returns 'z(?:..........|ebra)'
  [x] buildRegexpFromList(['h$', 'h.'], ["specialChars" => ["." => ".", "$" => "$"]]) returns 'h(?:$|.)'
+ [x] buildRegexpFromList(['h?', 'ha'], ["specialChars" => ["?" => ".?"]]) returns 'h.?'
+ [x] buildRegexpFromList(['h.', 'hi', 'hit'], ["specialChars" => ["." => ".?"]]) returns 'h(?:.|it)?'
  [x] buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
  [x] buildRegexpFromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:x|^)y'
  [x] buildRegexpFromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:y|$)'

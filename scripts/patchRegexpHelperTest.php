@@ -55,7 +55,7 @@ foreach ($test->getWordsLists() as $case)
 		$php .= ', ' . $options . '';
 	}
 
-	$php .= ") returns " . $regexp . "\n\t*/\n\tpublic function test_buildRegexpFromList_" . dechex(crc32(serialize($case))) . "()\n\t{\n\t\t\$this->assertSame(\n\t\t\t" . $regexp . ",\n\t\t\tRegexpHelper::buildRegexpFromList(";
+	$php .= ") returns " . $regexp . "\n\t*/\n\tpublic function test_buildRegexpFromList_" . strtoupper(dechex(crc32(serialize($case)))) . "()\n\t{\n\t\t\$this->assertSame(\n\t\t\t" . $regexp . ",\n\t\t\tRegexpHelper::buildRegexpFromList(";
 
 	if (isset($case[2]))
 	{
