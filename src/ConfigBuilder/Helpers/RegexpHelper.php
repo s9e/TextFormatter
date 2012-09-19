@@ -159,7 +159,7 @@ abstract class RegexpHelper
 		// Optimize the joker thing
 		if (isset($chains[1]))
 		{
-			self::doTheJokerThing($chains);
+			self::optimizeDotChains($chains);
 		}
 
 
@@ -769,11 +769,15 @@ break;
 	}
 
 	/**
-	* 
+	* Remove chains that overlap with dot chains
 	*
+	* Will remove chains that are made redundant by the use of the dot metacharacter, e.g.
+	* ["a","b","c"] and ["a",".","c"] or ["a","b","c"], ["a","c"] and ["a",".?","c"]
+	*
+	* @param  array &$chains
 	* @return void
 	*/
-	protected static function doTheJokerThing(array &$chains)
+	protected static function optimizeDotChains(array &$chains)
 	{
 		/**
 		* @var array List of valid atoms that should be matched by a dot but happen to be
@@ -791,21 +795,32 @@ break;
 			'\\+' => 1, '\\*' => 1, '\\\\' => 1
 		);
 
-		foreach ($chains as $k1 => $dotChain)
+		// First we replace chains such as ["a",".?","b"] with ["a",".","b"] and ["a","b"]
+		do
 		{
-			$dotKeys = array_keys($dotChain, '.?', true);
-
-			if (!empty($dotKeys))
+			$hasMoreDots = false;
+			foreach ($chains as $k1 => $dotChain)
 			{
-				// Replace the .? atom in the original chain with a .
-				$dotChain[$dotKeys[0]] = '.';
-				$chains[$k1] = $dotChain;
+				$dotKeys = array_keys($dotChain, '.?', true);
 
-				// Create a new chain without the atom
-				array_splice($dotChain, $dotKeys[0], 1);
-				$chains[] = $dotChain;
+				if (!empty($dotKeys))
+				{
+					// Replace the .? atom in the original chain with a .
+					$dotChain[$dotKeys[0]] = '.';
+					$chains[$k1] = $dotChain;
+
+					// Create a new chain without the atom
+					array_splice($dotChain, $dotKeys[0], 1);
+					$chains[] = $dotChain;
+
+					if (isset($dotKeys[1]))
+					{
+						$hasMoreDots = true;
+					}
+				}
 			}
 		}
+		while ($hasMoreDots);
 
 		foreach ($chains as $k1 => $dotChain)
 		{

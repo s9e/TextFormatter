@@ -240,6 +240,20 @@ class RegexpHelperTest extends Test
 	}
 
 	/**
+	* @testdox buildRegexpFromList(['a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'], ["specialChars" => ["." => ".?"]]) returns 'a.?c.?e'
+	*/
+	public function test_buildRegexpFromList_8E336686()
+	{
+		$this->assertSame(
+			'a.?c.?e',
+			RegexpHelper::buildRegexpFromList(
+				array('a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'),
+				array('specialChars' => array('.' => '.?'))
+			)
+		);
+	}
+
+	/**
 	* @testdox buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
 	*/
 	public function test_buildRegexpFromList_8CB33695()
@@ -1865,6 +1879,11 @@ class RegexpHelperTest extends Test
 			array(
 				'h(?:.|it)?',
 				array('h.', 'hi', 'hit'),
+				array('specialChars' => array('.' => '.?'))
+			),
+			array(
+				'a.?c.?e',
+				array('a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'),
 				array('specialChars' => array('.' => '.?'))
 			),
 			array(

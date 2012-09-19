@@ -181,6 +181,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] buildRegexpFromList(['h$', 'h.'], ["specialChars" => ["." => ".", "$" => "$"]]) returns 'h(?:$|.)'
  [x] buildRegexpFromList(['h?', 'ha'], ["specialChars" => ["?" => ".?"]]) returns 'h.?'
  [x] buildRegexpFromList(['h.', 'hi', 'hit'], ["specialChars" => ["." => ".?"]]) returns 'h(?:.|it)?'
+ [x] buildRegexpFromList(['a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'], ["specialChars" => ["." => ".?"]]) returns 'a.?c.?e'
  [x] buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
  [x] buildRegexpFromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:x|^)y'
  [x] buildRegexpFromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:y|$)'
