@@ -753,14 +753,32 @@ break;
 	*/
 	protected static function canBeUsedInCharacterClass($char)
 	{
+		/**
+		* Encoded non-printable characters and generic character classes are allowed
+		* @link http://docs.php.net/manual/en/regexp.reference.escape.php
+		*/
+		if (preg_match('#^\\\\[aefnrtdDhHsSvVwW]$#D', $char))
+		{
+			return true;
+		}
+
+		// Escaped literals are allowed
+		if (preg_match('#^\\\\.$#Dus', $char)
+		 && $char === preg_quote(substr($char, 1), '#'))
+		{
+			return true;
+		}
+
 		// More than 1 character => cannnot be used in a character class
-		if (!preg_match('#^\\\\?.$#Dus', $char))
+		if (preg_match('#..#Dus', $char))
 		{
 			return false;
 		}
 
-		// Unescaped meta-characters shouldn't be used in a character class
-		if (preg_match('/(?<!\\\\)[$.^]/', $char))
+		// Special characters such as $ or ^ are rejected, but we need to check for characters that
+		// get escaped by preg_quote() even though it's not necessary, such as ! or =
+		if (preg_quote($char, '#') !== $char
+		 && !preg_match('#^[-!:<=>}]$#D', $char))
 		{
 			return false;
 		}

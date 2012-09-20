@@ -184,15 +184,99 @@ class RegexpHelperTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList(['zdDhHsSvVwW', 'z..........', 'zebra'], ["specialChars" => ["\\d" => "\\d", "\\D" => "\\D", "\\h" => "\\h", "\\H" => "\\H", "\\s" => "\\s", "\\S" => "\\S", "\\v" => "\\v", "\\V" => "\\V", "\\w" => "\\w", "\\W" => "\\W", "." => "."]]) returns 'z(?:..........|ebra)'
+	* @testdox buildRegexpFromList(['zdDhHsSvVwW', 'z..........', 'zebra'], ["specialChars" => ["d" => "\\d", "D" => "D", "h" => "\\h", "H" => "\\H", "s" => "\\s", "S" => "S", "v" => "\\v", "V" => "\\V", "w" => "\\w", "W" => "W", "." => "."]]) returns 'z(?:..........|ebra)'
 	*/
-	public function test_buildRegexpFromList_F23831CA()
+	public function test_buildRegexpFromList_4C2C4778()
 	{
 		$this->assertSame(
 			'z(?:..........|ebra)',
 			RegexpHelper::buildRegexpFromList(
 				array('zdDhHsSvVwW', 'z..........', 'zebra'),
-				array('specialChars' => array('\\d' => '\\d', '\\D' => '\\D', '\\h' => '\\h', '\\H' => '\\H', '\\s' => '\\s', '\\S' => '\\S', '\\v' => '\\v', '\\V' => '\\V', '\\w' => '\\w', '\\W' => '\\W', '.' => '.'))
+				array('specialChars' => array('d' => '\\d', 'D' => 'D', 'h' => '\\h', 'H' => '\\H', 's' => '\\s', 'S' => 'S', 'v' => '\\v', 'V' => '\\V', 'w' => '\\w', 'W' => 'W', '.' => '.'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['m.', 'mb'], ["specialChars" => ["." => ".", "b" => "\\b"]]) returns 'm(?:.|\\b)'
+	*/
+	public function test_buildRegexpFromList_B05A865()
+	{
+		$this->assertSame(
+			'm(?:.|\\b)',
+			RegexpHelper::buildRegexpFromList(
+				array('m.', 'mb'),
+				array('specialChars' => array('.' => '.', 'b' => '\\b'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['m.', 'mB'], ["specialChars" => ["." => ".", "B" => "\\B"]]) returns 'm(?:.|\\B)'
+	*/
+	public function test_buildRegexpFromList_823A9663()
+	{
+		$this->assertSame(
+			'm(?:.|\\B)',
+			RegexpHelper::buildRegexpFromList(
+				array('m.', 'mB'),
+				array('specialChars' => array('.' => '.', 'B' => '\\B'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['m.', 'mA'], ["specialChars" => ["." => ".", "A" => "\\A"]]) returns 'm(?:.|\\A)'
+	*/
+	public function test_buildRegexpFromList_E58BCD87()
+	{
+		$this->assertSame(
+			'm(?:.|\\A)',
+			RegexpHelper::buildRegexpFromList(
+				array('m.', 'mA'),
+				array('specialChars' => array('.' => '.', 'A' => '\\A'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['m.', 'mZ'], ["specialChars" => ["." => ".", "Z" => "\\Z"]]) returns 'm(?:.|\\Z)'
+	*/
+	public function test_buildRegexpFromList_95245C1()
+	{
+		$this->assertSame(
+			'm(?:.|\\Z)',
+			RegexpHelper::buildRegexpFromList(
+				array('m.', 'mZ'),
+				array('specialChars' => array('.' => '.', 'Z' => '\\Z'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['m.', 'mz'], ["specialChars" => ["." => ".", "z" => "\\z"]]) returns 'm(?:.|\\z)'
+	*/
+	public function test_buildRegexpFromList_806D7BC7()
+	{
+		$this->assertSame(
+			'm(?:.|\\z)',
+			RegexpHelper::buildRegexpFromList(
+				array('m.', 'mz'),
+				array('specialChars' => array('.' => '.', 'z' => '\\z'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['m.', 'mG'], ["specialChars" => ["." => ".", "G" => "\\G"]]) returns 'm(?:.|\\G)'
+	*/
+	public function test_buildRegexpFromList_2AE97A4F()
+	{
+		$this->assertSame(
+			'm(?:.|\\G)',
+			RegexpHelper::buildRegexpFromList(
+				array('m.', 'mG'),
+				array('specialChars' => array('.' => '.', 'G' => '\\G'))
 			)
 		);
 	}
@@ -1857,14 +1941,47 @@ class RegexpHelperTest extends Test
 				array('hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'),
 				array('specialChars' => array('X' => '.'))
 			),
+			/**
+			* @link http://docs.php.net/manual/en/regexp.reference.escape.php
+			*/
 			array(
 				'z(?:..........|ebra)',
 				array('zdDhHsSvVwW', 'z..........', 'zebra'),
 				array('specialChars' => array(
-					'\\d'=> '\\d', '\\D'=> '\\D', '\\h'=> '\\h', '\\H'=> '\\H',
-					'\\s'=> '\\s', '\\S'=> '\\S', '\\v'=> '\\v', '\\V'=> '\\V',
-					'\\w'=> '\\w', '\\W'=> '\\W', '.' => '.'
+					'd' => '\\d', 'D' => 'D', 'h' => '\\h', 'H' => '\\H',
+					's' => '\\s', 'S' => 'S', 'v' => '\\v', 'V' => '\\V',
+					'w' => '\\w', 'W' => 'W', '.' => '.'
 				))
+			),
+			array(
+				'm(?:.|\\b)',
+				array('m.', 'mb'),
+				array('specialChars' => array('.' => '.', 'b' => '\\b'))
+			),
+			array(
+				'm(?:.|\\B)',
+				array('m.', 'mB'),
+				array('specialChars' => array('.' => '.', 'B' => '\\B'))
+			),
+			array(
+				'm(?:.|\\A)',
+				array('m.', 'mA'),
+				array('specialChars' => array('.' => '.', 'A' => '\\A'))
+			),
+			array(
+				'm(?:.|\\Z)',
+				array('m.', 'mZ'),
+				array('specialChars' => array('.' => '.', 'Z' => '\\Z'))
+			),
+			array(
+				'm(?:.|\\z)',
+				array('m.', 'mz'),
+				array('specialChars' => array('.' => '.', 'z' => '\\z'))
+			),
+			array(
+				'm(?:.|\\G)',
+				array('m.', 'mG'),
+				array('specialChars' => array('.' => '.', 'G' => '\\G'))
 			),
 			array(
 				'h(?:$|.)',
