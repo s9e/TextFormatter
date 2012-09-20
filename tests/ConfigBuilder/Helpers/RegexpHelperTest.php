@@ -338,6 +338,45 @@ class RegexpHelperTest extends Test
 	}
 
 	/**
+	* @testdox buildRegexpFromList(['h????', 'hello', 'heart'], ["specialChars" => ["?" => ".?"]]) returns 'h.?.?.?.?'
+	*/
+	public function test_buildRegexpFromList_8E765F3B()
+	{
+		$this->assertSame(
+			'h.?.?.?.?',
+			RegexpHelper::buildRegexpFromList(
+				array('h????', 'hello', 'heart'),
+				array('specialChars' => array('?' => '.?'))
+			)
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['x', 'xx', 'xxx']) returns 'xx?x?'
+	*/
+	public function test_buildRegexpFromList_A55EF35C()
+	{
+		$this->assertSame(
+			'xx?x?',
+			RegexpHelper::buildRegexpFromList(array('x', 'xx', 'xxx'))
+		);
+	}
+
+	/**
+	* @testdox buildRegexpFromList(['d', 'dd', 'ddd'], ["specialChars" => ["d" => "\\d"]]) returns '\\d\\d?\\d?'
+	*/
+	public function test_buildRegexpFromList_69AB5342()
+	{
+		$this->assertSame(
+			'\\d\\d?\\d?',
+			RegexpHelper::buildRegexpFromList(
+				array('d', 'dd', 'ddd'),
+				array('specialChars' => array('d' => '\\d'))
+			)
+		);
+	}
+
+	/**
 	* @testdox buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
 	*/
 	public function test_buildRegexpFromList_8CB33695()
@@ -2002,6 +2041,20 @@ class RegexpHelperTest extends Test
 				'a.?c.?e',
 				array('a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'),
 				array('specialChars' => array('.' => '.?'))
+			),
+			array(
+				'h.?.?.?.?',
+				array('h????', 'hello', 'heart'),
+				array('specialChars' => array('?' => '.?'))
+			),
+			array(
+				'xx?x?',
+				array('x', 'xx', 'xxx')
+			),
+			array(
+				'\\d\\d?\\d?',
+				array('d', 'dd', 'ddd'),
+				array('specialChars' => array('d' => '\\d'))
 			),
 			array(
 				'[-!:<=>\\#\\\\\\]}$()*+.?[{|^]',

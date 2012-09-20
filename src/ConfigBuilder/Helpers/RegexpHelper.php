@@ -658,6 +658,13 @@ break;
 	*/
 	protected static function makeRegexpOptional($regexp)
 	{
+		// Special case: xx? becomes x?x?, \w\w? becomes \w?\w?
+		// It covers only the most common case of repetition, it's not a panacea
+		if (preg_match('#^(\\\\?.)((?:\\1\\?)+)$#Du', $regexp, $m))
+		{
+			return $m[1] . '?' . $m[2];
+		}
+
 		// One single character, optionally escaped
 		if (preg_match('#^\\\\?.$#Dus', $regexp))
 		{
@@ -769,7 +776,7 @@ break;
 			return true;
 		}
 
-		// More than 1 character => cannnot be used in a character class
+		// More than 1 character => cannot be used in a character class
 		if (preg_match('#..#Dus', $char))
 		{
 			return false;
