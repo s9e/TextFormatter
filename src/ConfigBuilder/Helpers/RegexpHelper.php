@@ -160,6 +160,7 @@ abstract class RegexpHelper
 		if (isset($chains[1]))
 		{
 			self::optimizeDotChains($chains);
+			self::optimizeCatchallChains($chains);
 		}
 
 
@@ -193,74 +194,6 @@ abstract class RegexpHelper
 			}
 
 			$groups[$head][] = $chain;
-		}
-
-		// Look for the joker/dot "."
-		if (isset($groups['.']))
-		{
-			$dotTails = array();
-			foreach ($groups['.'] as $dotChain)
-			{
-				$dotTail = implode('', array_slice($dotChain, 1));
-
-				foreach ($groups as $head => $groupChains)
-				{
-					// Skip if it's the dot chain
-					if ($head === '.')
-					{
-						continue;
-					}
-
-					// Skip if the dot is neither a single character nor an escaped character that
-					// does not have meta properties (such as \w)
-					if (!preg_match('#^.$#Du', $head)
-					 && !preg_match('#^\\\\[\\\\$.[\\]()+*?^]$#D', $head))
-					{
-						continue;
-					}
-
-					foreach ($groupChains as $k => $groupChain)
-					{
-						$groupTail = implode('', array_slice($groupChain, 1));
-
-						if ($groupTail === $dotTail)
-						{
-							unset($groups[$head][$k]);
-						}
-					}
-				}
-			}
-
-			$groups = array_map('array_values', array_filter($groups));
-		}
-
-		// Look for catch-all expressions such as .*? or .+
-		// NOTE: cannot handle possessive expressions such as .++ because we don't know whether that
-		//       chain had its tail stashed by an earlier iteration
-		foreach ($groups as $head => $groupChains)
-		{
-break;
-			// Test whether the head is a catch-all expression
-			if (!preg_match('#^\\.[*+]\\??$#D', $head))
-			{
-				continue;
-			}
-
-			// That's what a chain with a single catch-all would look like
-			$chain = array($head);
-
-			// Test whether it's at the end of its chain
-			if (!in_array($chain, $groupChains, true))
-			{
-				continue;
-			}
-
-			$chains  = array($chain);
-			$groups  = array($head => array($chain));
-
-			// There's only one chain in this group, we don't need to remerge
-//			$remerge = false;
-			break;
 		}
 
 		// See if we can replace single characters with a character class
@@ -658,11 +591,23 @@ break;
 	*/
 	protected static function makeRegexpOptional($regexp)
 	{
+		// .+ and .+? become .* and .*?
+		if (preg_match('#^\\.\\+\\??$#', $regexp))
+		{
+			return str_replace('+', '*', $regexp);
+		}
+
 		// Special case: xx? becomes x?x?, \w\w? becomes \w?\w?
 		// It covers only the most common case of repetition, it's not a panacea
 		if (preg_match('#^(\\\\?.)((?:\\1\\?)+)$#Du', $regexp, $m))
 		{
 			return $m[1] . '?' . $m[2];
+		}
+
+		// Optional assertions are a no-op
+		if (preg_match('#^(?:[$^]|\\\\[bBAZzGQEK])$#', $regexp))
+		{
+			return '';
 		}
 
 		// One single character, optionally escaped
@@ -889,6 +834,207 @@ break;
 				}
 			}
 		}
+	}
+
+	/**
+	* Remove chains that overlap with chains that contain a catchall expression such as .*
+	*
+	* NOTE: cannot handle possessive expressions such as .++ because we don't know whether that
+	*       chain had its suffix/tail stashed by an earlier iteration
+	*
+	* @param  array &$chains
+	* @return void
+	*/
+	protected static function optimizeCatchallChains(array &$chains)
+	{
+		// This is how catchall expressions will trump each other in our routine. For instance,
+		// instead of (?:.*|.+) we will emit (?:.*). Zero-or-more trumps one-or-more and greedy
+		// trumps non-greedy. In some cases, (?:.+|.*?) might be preferable to (?:.*?) but it does
+		// not seem like a common enough case to warrant the extra logic
+		$precedence = array(
+			'.*'  => 3,
+			'.*?' => 2,
+			'.+'  => 1,
+			'.+?' => 0
+		);
+
+		$tails = array();
+
+		foreach ($chains as $k => $chain)
+		{
+			if (!isset($chain[0]))
+			{
+				continue;
+			}
+
+			$head = $chain[0];
+
+			// Test whether the head is a catchall expression by looking up its precedence
+			if (!isset($precedence[$head]))
+			{
+				continue;
+			}
+
+			$tail = implode('', array_slice($chain, 1));
+			if (!isset($tails[$tail])
+			 || $precedence[$head] > $tails[$tail]['precedence'])
+			{
+				$tails[$tail] = array(
+					'key'        => $k,
+					'precedence' => $precedence[$head]
+				);
+			}
+		}
+
+		$catchallChains = array();
+		foreach ($tails as $tail => $info)
+		{
+			$catchallChains[$info['key']] = $chains[$info['key']];
+		}
+
+		foreach ($catchallChains as $k1 => $catchallChain)
+		{
+			$headExpr = $catchallChain[0];
+			$tailExpr = false;
+			$match    = array_slice($catchallChain, 1);
+
+			// Test whether the catchall chain has another catchall expression at the end
+			if (isset($catchallChain[1])
+			 && isset($precedence[end($catchallChain)]))
+			{
+				// Remove the catchall expression from the end
+				$tailExpr = array_pop($match);
+			}
+
+			$matchCnt = count($match);
+
+			foreach ($chains as $k2 => $chain)
+			{
+				if ($k2 === $k1)
+				{
+					continue;
+				}
+
+				/**
+				* @var integer Offset of the first atom we're trying to match the tail against
+				*/
+				$start = 0;
+
+				/**
+				* @var integer
+				*/
+				$end = count($chain);
+
+				// If the catchall at the start of the chain must match at least one character, we
+				// ensure the chain has at least one character at its beginning
+				if ($headExpr[1] === '+')
+				{
+					$found = false;
+
+					foreach ($chain as $start => $atom)
+					{
+						if (self::matchesAtLeastOneCharacter($atom))
+						{
+							$found = true;
+							break;
+						}
+					}
+
+					if (!$found)
+					{
+						continue;
+					}
+				}
+
+				// Test whether the catchall chain has another catchall expression at the end
+				if ($tailExpr === false)
+				{
+					$end = $start;
+				}
+				else
+				{
+					// If the expression must match at least one character, we ensure that the
+					// chain satisfy the requirement and we adjust $end accordingly so the same atom
+					// isn't used twice (e.g. used by two consecutive .+ expressions)
+					if ($tailExpr[1] === '+')
+					{
+						$found = false;
+
+						while (--$end > $start)
+						{
+							if (self::matchesAtLeastOneCharacter($chain[$end]))
+							{
+								$found = true;
+								break;
+							}
+						}
+
+						if (!$found)
+						{
+							continue;
+						}
+					}
+
+					// Now, $start should point to the first atom we're trying to match the catchall
+					// chain against, and $end should be equal to the index right after the last
+					// atom we can match against. We adjust $end to point to the last position our
+					// match can start at
+					$end -= $matchCnt;
+				}
+
+				while ($start <= $end)
+				{
+					if (array_slice($chain, $start, $matchCnt) === $match)
+					{
+						unset($chains[$k2]);
+						break;
+					}
+
+					++$start;
+				}
+			}
+		}
+	}
+
+	/**
+	* Test whether a given expression can never match an empty space
+	*
+	* Only basic checks are performed and it only returns true if we're certain the expression
+	* will always match/consume at least one character. For instance, it doesn't properly recognize
+	* the expression [ab]+ as matching at least one character.
+	*
+	* @param  string $expr
+	* @return bool
+	*/
+	protected static function matchesAtLeastOneCharacter($expr)
+	{
+		if (preg_match('#^[$*?^]$#', $expr))
+		{
+			return false;
+		}
+
+		// A single character should be fine
+		if (preg_match('#^.$#u', $expr))
+		{
+			return true;
+		}
+
+		// Matches anything that starts with ".+", "a+", etc...
+		if (preg_match('#^.\\+#u', $expr))
+		{
+			return true;
+		}
+
+		// Matches anything that starts with "\d", "\+", "\d+", etc... We avoid matching back
+		// references as we can't be sure they matched at least one character themselves
+		if (preg_match('#^\\\\[^bBAZzGQEK1-9](?!\\*)#', $expr))
+		{
+			return true;
+		}
+
+		// Anything else is either too complicated and too circumstancial to investigate further so
+		// we'll just return false
+		return false;
 	}
 
 	/**
