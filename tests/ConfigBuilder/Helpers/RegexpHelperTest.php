@@ -100,12 +100,12 @@ class RegexpHelperTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!:<=>\\#\\\\\\]}$()*+.?[{|^]'
+	* @testdox buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!$()*+.:<=>?[\\#\\\\\\]{|}^]'
 	*/
-	public function test_buildRegexpFromList_8CB33695()
+	public function test_buildRegexpFromList_79D4C9A3()
 	{
 		$this->assertSame(
-			'[-!:<=>\\#\\\\\\]}$()*+.?[{|^]',
+			'[-!$()*+.:<=>?[\\#\\\\\\]{|}^]',
 			RegexpHelper::buildRegexpFromList(array('!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}'))
 		);
 	}
@@ -150,12 +150,12 @@ class RegexpHelperTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[\\\\*])(?:\\*foo|\\\\bar)'
+	* @testdox buildRegexpFromList(['*foo', '\\bar'], ["useLookahead" => true]) returns '(?=[*\\\\])(?:\\*foo|\\\\bar)'
 	*/
-	public function test_buildRegexpFromList_8B9E42A9()
+	public function test_buildRegexpFromList_3CCC7313()
 	{
 		$this->assertSame(
-			'(?=[\\\\*])(?:\\*foo|\\\\bar)',
+			'(?=[*\\\\])(?:\\*foo|\\\\bar)',
 			RegexpHelper::buildRegexpFromList(
 				array('*foo', '\\bar'),
 				array('useLookahead' => true)
@@ -2264,7 +2264,7 @@ class RegexpHelperTest extends Test
 				array('ax', 'axed')
 			),
 			array(
-				'[-!:<=>\\#\\\\\\]}$()*+.?[{|^]',
+				'[-!$()*+.:<=>?[\\#\\\\\\]{|}^]',
 				str_split('!#$()*+-.:<=>?[\\]^{|}', 1)
 			),
 			array(
@@ -2282,7 +2282,7 @@ class RegexpHelperTest extends Test
 				array('foo', 'bar')
 			),
 			array(
-				'(?=[\\\\*])(?:\\*foo|\\\\bar)',
+				'(?=[*\\\\])(?:\\*foo|\\\\bar)',
 				array('*foo', '\\bar'),
 				array('useLookahead' => true)
 			),

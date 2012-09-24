@@ -673,16 +673,10 @@ abstract class RegexpHelper
 	*/
 	protected static function generateCharacterClass(array $chars)
 	{
+		// Flip for convenience
 		$chars = array_flip($chars);
 
-		// "-" should be the first character of the class to avoid ambiguity
-		if (isset($chars['-']))
-		{
-			$chars = array('-' => 1) + $chars;
-		}
-
 		// Those characters do not need to be escaped inside of a character class.
-		// Also, we ensure that ^ is at the end of the class to prevent it from negating the class
 		$unescape = str_split('$()*+.?[{|^', 1);
 
 		foreach ($unescape as $c)
@@ -692,6 +686,22 @@ abstract class RegexpHelper
 				unset($chars['\\' . $c]);
 				$chars[$c] = 1;
 			}
+		}
+
+		// Sort characters so that class with the same content produce the same representation
+		ksort($chars);
+
+		// "-" should be the first character of the class to avoid ambiguity
+		if (isset($chars['-']))
+		{
+			$chars = array('-' => 1) + $chars;
+		}
+
+		// Ensure that ^ is at the end of the class to prevent it from negating the class
+		if (isset($chars['^']))
+		{
+			unset($chars['^']);
+			$chars['^'] = 1;
 		}
 
 		return '[' . implode('', array_keys($chars)) . ']';
