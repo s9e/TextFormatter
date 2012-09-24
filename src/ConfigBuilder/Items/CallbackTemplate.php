@@ -67,8 +67,8 @@ class CallbackTemplate
 	}
 
 	/**
-	* @param  array    $arr
-	* @return Filter
+	* @param  array  $arr
+	* @return static
 	*/
 	public static function fromArray(array $arr)
 	{

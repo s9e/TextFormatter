@@ -12,7 +12,7 @@ use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\ConfigBuilder;
-use s9e\TextFormatter\PluginConfig;
+use s9e\TextFormatter\Plugins\Config as PluginConfig;
 use s9e\TextFormatter\PredefinedBBCodes;
 
 class BBCodesConfig extends PluginConfig

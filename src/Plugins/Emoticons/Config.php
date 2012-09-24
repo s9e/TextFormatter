@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Plugins;
 use s9e\TextFormatter\ConfigBuilder;
 use s9e\TextFormatter\ConfigBuilder\RegexpHelper;
 use s9e\TextFormatter\ConfigBuilder\TemplateHelper;
-use s9e\TextFormatter\PluginConfig;
+use s9e\TextFormatter\Plugins\Config as PluginConfig;
 
 class EmoticonsConfig extends PluginConfig
 {

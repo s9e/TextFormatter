@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Plugins;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\ConfigBuilder;
-use s9e\TextFormatter\PluginConfig;
+use s9e\TextFormatter\Plugins\Config as PluginConfig;
 
 class RawHTMLConfig extends PluginConfig
 {

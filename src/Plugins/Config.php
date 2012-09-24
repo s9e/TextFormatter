@@ -5,9 +5,13 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter;
+namespace s9e\TextFormatter\Plugins;
 
-abstract class PluginConfig
+use InvalidArgumentException;
+use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder;
+
+abstract class Config
 {
 	/**
 	* @var ConfigBuilder
@@ -18,14 +22,14 @@ abstract class PluginConfig
 	* @var integer Maximum amount of matches to process - used by the parser when running the global
 	*              regexp
 	*/
-	public $regexpLimit = 1000;
+	protected $regexpLimit = 1000;
 
 	/**
 	* @var string  What to do if the number of matches exceeds the limit. Values can be: "ignore"
 	*              (ignore matches past limit), "warn" (same as "ignore" but also log a warning) and
 	*              "abort" (abort parsing)
 	*/
-	public $regexpLimitAction = 'ignore';
+	protected $regexpLimitAction = 'ignore';
 
 	/**
 	* @param ConfigBuilder $cb
@@ -82,5 +86,55 @@ abstract class PluginConfig
 	public function getJSParser()
 	{
 		return false;
+	}
+
+	//==========================================================================
+	// Setters
+	//==========================================================================
+
+	/**
+	* @throws RuntimeException
+	*/
+	public function setCb()
+	{
+		throw new RuntimeException('Cannot rebind the ConfigBuilder instance');
+	}
+
+	/**
+	* Set the maximum number of regexp matches
+	*
+	* @param  integer $limit
+	* @return void
+	*/
+	public function setRegexpLimit($limit)
+	{
+		$limit = filter_var($limit, FILTER_VALIDATE_INT, array(
+			'options' => array('min_range' => 1)
+		));
+
+		if (!$limit)
+		{
+			throw new InvalidArgumentException('regexpLimit must be a number greater than 0');
+		}
+
+		$this->regexpLimit = $limit;
+	}
+
+	/**
+	* Set the action to perform when the regexp limit is broken
+	*
+	* @param  string $action
+	* @return void
+	*/
+	public function setRegexpLimitAction($action)
+	{
+		if ($action !== 'ignore'
+		 && $action !== 'warn'
+		 && $action !== 'abort')
+		{
+			 throw new Exception("regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'");
+		}
+
+		$this->regexpLimitAction = $action;
 	}
 }
