@@ -71,8 +71,7 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox <a> does not have a denyChild rule for <a> (because it is redundant due to the denyDescendant rule)
-	* @depends testDenyDescendant
+	* @testdox <a> has a denyChild rule for <a>
 	*/
 	public function testDenyChildRemovedDueToDenyDescendant()
 	{
@@ -83,7 +82,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'A' => array(
-					'denyChild' => null
+					'denyChild' => array('A')
 				)
 			),
 			RulesGenerator::getRules($tags)

@@ -156,7 +156,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesGenerator
  [x] <div> has an allowChild rule for <div> and <span>
  [x] <span> has a denyChild rule for <div>
  [x] <a> has a denyDescendant rule for <a>
- [x] <a> does not have a denyChild rule for <a> (because it is redundant due to the denyDescendant rule)
+ [x] <a> has a denyChild rule for <a>
  [x] Generates an inheritRules rule for <a>
  [x] <li> has a disallowAtRoot rule if parentHTML is not specified
  [x] <li> does not have a disallowAtRoot rule if parentHTML is <ul>

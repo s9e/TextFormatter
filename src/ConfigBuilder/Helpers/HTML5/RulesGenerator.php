@@ -211,7 +211,6 @@ abstract class RulesGenerator
 	{
 		// Prepare to deduplicate rules and resolve conflicting rules
 		$precedence = array(
-			array('denyDescendant', 'denyChild'),
 			array('denyDescendant', 'allowChild'),
 			array('denyChild', 'allowChild')
 		);
