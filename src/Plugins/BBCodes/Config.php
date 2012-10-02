@@ -7,16 +7,67 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use DOMDocument;
 use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\ConfigBuilder;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
-use s9e\TextFormatter\PredefinedBBCodes;
 
 class BBCodesConfig extends PluginConfig
 {
+	/**
+	* @var RepositoryCollection BBCode repositories
+	*/
+	protected $repositories;
+
+	/**
+	* Plugin setup
+	*
+	* @return void
+	*/
+	protected function setUp()
+	{
+		$this->repositories = new RepositoryCollection;
+		$this->repositories->add('default', __DIR__ . '/repository.xml');
+	}
+
+	/**
+	* Add a BBCode from a repository
+	*
+	* @param  string $bbcodeName Name of the BBCode to add
+	* @param  string $repository Name of the repository to use as source
+	* @param  array  $vars       Variables that will replace default values in the tag definition
+	* @return BBCode             Newly-created BBCode
+	*/
+	public function addFromRepository($bbcodeName, $repository = 'default', array $vars = array())
+	{
+		if (!BBCode::isValid($bbcodeName))
+		{
+			throw new InvalidArgumentException('Invalid BBCode name');
+		}
+
+		if (!$this->repositories->exists($repository))
+		{
+			throw new InvalidArgumentException("Repository '" . $repository . "' does not exist");
+		}
+
+		$dom = $this->repositories->get($repository);
+
+		$xpath = new DOMXPath($dom);
+		$node  = $xpath->query('//bbcode[@name="' . $bbcodeName . '"]')->item(0);
+
+		if (!$node)
+		{
+			throw new RuntimeException("Could not find BBCode '" . $bbcodeName . "' in repository '" . $repository . "'");
+		}
+	}
+
+
+
+
+
+
+
+
+
 	/**
 	* @var array Pre-filter and post-filter callbacks we allow in BBCode definitions.
 	*            We use a whitelist approach because there are so many different risky callbacks

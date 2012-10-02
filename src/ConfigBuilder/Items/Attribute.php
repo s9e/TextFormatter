@@ -21,6 +21,11 @@ class Attribute
 	protected $filterChain;
 
 	/**
+	* @var mixed
+	*/
+	protected $defaultValue;
+
+	/**
 	* @var bool Whether this attribute is required for the tag to be valid
 	*/
 	protected $required = true;

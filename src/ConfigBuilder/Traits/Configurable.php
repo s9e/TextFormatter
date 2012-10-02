@@ -54,6 +54,9 @@ trait Configurable
 				}
 
 				// Otherwise, we'll just try to match the option's type
+				/**
+				* @todo perhaps only do that if the cast is lossless, e.g. "1"=>1 but not "1a"=>1
+				*/
 				settype($propValue, gettype($this->$propName));
 			}
 

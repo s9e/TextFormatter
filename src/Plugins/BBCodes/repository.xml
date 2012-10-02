@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<repository>
+
+	<bbcode name="URL">
+		<usage>[URL={URL;useContent} title={TEXT1;optional}]{TEXT2}[/URL]</usage>
+		<xsl><![CDATA[
+			<a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
+		]]></xsl>
+	</bbcode>
+
+	<bbcode name="QUOTE">
+		<usage>[QUOTE={TEXT1;optional;attrName=author}]{TEXT2}[/URL]</usage>
+		<xsl><![CDATA[
+			<blockquote>
+				<div>]]>
+					<xsl:if test="@author">
+						<![CDATA[<cite>]]>
+						<var name="authorStr"><![CDATA[<xsl:value-of select="@author" /> wrote:]]></var>
+						<![CDATA[</cite>
+					</xsl:if>
+					<xsl:apply-templates />
+				</div>
+			</blockquote>
+		]]></xsl>
+	</bbcode>
+
+</repository>

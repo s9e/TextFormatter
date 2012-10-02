@@ -209,7 +209,7 @@ abstract class RulesGenerator
 	*/
 	protected static function cleanUpRules(array $rules)
 	{
-		// Prepare to deduplicate rules and resolve conflicting rules
+		// Prepare to resolve conflicting rules
 		$precedence = array(
 			array('denyDescendant', 'allowChild'),
 			array('denyChild', 'allowChild')
