@@ -25,7 +25,8 @@ class AttributePreprocessorCollection extends Collection
 
 		$ap = new AttributePreprocessor($regexp);
 
-		$this->items[$attrName][$regexp] = $ap;
+		$k = serialize(array($attrName, $regexp));
+		$this->items[$k] = $ap;
 
 		return $ap;
 	}
@@ -37,6 +38,24 @@ class AttributePreprocessorCollection extends Collection
 	*/
 	public function getConfig()
 	{
-		return array_map('array_keys', $this->items);
+		$config = array();
+
+		foreach ($this->items as $k => $ap)
+		{
+			list($attrName, $regexp) = unserialize($k);
+			$config[$attrName][] = $regexp;
+		}
+
+		return $config;
+	}
+
+	/**
+	* @return string Name of the attribute the attribute processor uses as source
+	*/
+	public function key()
+	{
+		list($attrName, $regexp) = unserialize(key($this->items));
+
+		return $attrName;
 	}
 }

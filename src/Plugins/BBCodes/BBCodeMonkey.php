@@ -12,7 +12,8 @@ use RuntimeException;
 use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpBuilder;
 use s9e\TextFormatter\ConfigBuilder\Items\Attribute;
 use s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor;
-use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
+use s9e\TextFormatter\ConfigBuilder\Items\Tag;
+use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
 abstract class BBCodeMonkey
 {
@@ -64,10 +65,20 @@ abstract class BBCodeMonkey
 			$attributes .= ' content=' . $m['content'];
 		}
 
-		// Parse the attributes' definitions and add it to the config
-		$config += self::parseAttributes($attributes);
+		$tag    = new Tag;
+		$bbcode = new BBCode;
 
-		print_r($config);
+		$tokens = self::addAttributes($attributes, $bbcode, $tag);
+
+		if (isset($config['contentAttributes']))
+		{
+			$bbcode->contentAttributes = $config['contentAttributes'];
+		}
+
+		if (isset($config['defaultAttribute']))
+		{
+			$bbcode->defaultAttribute = $config['defaultAttribute'];
+		}
 	}
 
 	/**
@@ -93,32 +104,22 @@ abstract class BBCodeMonkey
 	* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=2127991
 	* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=579376
 	*
-	* @param  string $str
-	* @return array
+	* @param  string $str    Attributes definitions, e.g. "foo={INT} bar={TEXT}"
+	* @param  BBCode $bbcode Owner BBCode
+	* @param  Tag    $tag    Owner tag
+	* @return array          Array of [token id => attribute name]
 	*/
-	protected static function parseAttributes($str)
+	protected static function addAttributes($str, BBCode $bbcode, Tag $tag)
 	{
-		/**
-		* @var array
-		*/
-		$config = array();
-
-		/**
-		* @var array 
-		*/
-		$attributes = array();
-
-		/**
-		* @var array
-		*/
-		$attributePreprocessors = array();
-
 		/**
 		* @var array Array of [tokenId => attrName]
 		*/
 		$tokens = array();
 
-		foreach (preg_split('#\\s+#', trim($str)) as $pair)
+		/**
+		* @todo determine the defaultAttribute value for [foo={TEXT;attrName=bar}]
+		*/
+		foreach (preg_split('#\\s+#', trim($str)) as $k => $pair)
 		{
 			// The name at the left of the equal sign is the key, the rest is the definition. The
 			// key will eventually become the name of the attribute or attribute preprocessor
@@ -178,10 +179,10 @@ abstract class BBCodeMonkey
 					$i = 0;
 					do
 					{
-						$attrName = AttributeName::normalize($key . $i);
+						$attrName = $key . $i;
 						++$i;
 					}
-					while (isset($attributes[$attrName]));
+					while (isset($tag->attributes[$attrName]));
 				}
 				else
 				{
@@ -190,18 +191,16 @@ abstract class BBCodeMonkey
 					$attrName = $key;
 				}
 
-				// Normalize the attribute name (attribute preprocessors follow the same rules)
-				$attrName = AttributeName::normalize($attrName);
+				// Set "defaultAttribute" if applicable
+				if (!empty($tokenValues['isDefault']))
+				{
+					$bbcode->defaultAttribute = $attrName;
+				}
 
 				// Remove the "useContent" option and add the attribute's name
-				if (isset($tokenValues['useContent']))
+				if (!empty($tokenValues['useContent']))
 				{
-					if (!empty($tokenValues['useContent']))
-					{
-						$config['contentAttributes'][] = $attrName;
-					}
-
-					unset($tokenValues['useContent']);
+					$bbcode->contentAttributes[] = $attrName;
 				}
 
 				// Set the "required" option if "required" or "optional" is set, then remove
@@ -218,18 +217,17 @@ abstract class BBCodeMonkey
 
 				if ($isPreprocessor)
 				{
-					$attributePreprocessors[$attrName][]
-						= new AttributePreprocessor($tokenValues['regexp']);
+					$tag->attributePreprocessors->add($attrName, $tokenValues['regexp']);
 				}
 				else
 				{
-					if (isset($attributes[$attrName]))
+					if (isset($tag->attributes[$attrName]))
 					{
 						throw new RuntimeException("Attribute '" . $attrName . "' is defined twice");
 					}
 
-					// Record the attribute's config
-					$attributes[$attrName] = self::generateAttribute($tokenType, $tokenValues);
+					// Add the attribute
+					$tag->attributes[$attrName] = self::generateAttribute($tokenType, $tokenValues);
 
 					// Record the token's attribute
 					if (isset($tokens[$tokenId]))
@@ -261,7 +259,7 @@ abstract class BBCodeMonkey
 				$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$#D';
 
 				// Add the attribute preprocessor to the config
-				$attributePreprocessors[$key][] = new AttributePreprocessor($regexp);
+				$tag->attributePreprocessors->add($key, $regexp);
 			}
 		}
 
@@ -269,41 +267,34 @@ abstract class BBCodeMonkey
 		// #(?<width>\\d+),(?<height>\\d+)# will generate two attributes named "width" and height
 		// with a regexp filter "#^(?:\\d+)$#D", unless they were explicitly defined otherwise
 		$newAttributes = array();
-		foreach ($attributePreprocessors as $key => $keyProcessors)
+		foreach ($tag->attributePreprocessors as $attributePreprocessor)
 		{
-			foreach ($keyProcessors as $attributePreprocessor)
+			foreach ($attributePreprocessor->getAttributes() as $attrName => $regexp)
 			{
-				foreach ($attributePreprocessor->getAttributes() as $attrName => $regexp)
+				if (isset($tag->attributes[$attrName]))
 				{
-					if (isset($attributes[$attrName]))
-					{
-						// This attribute was already explicitly defined, nothing else to add
-						continue;
-					}
-
-					if (isset($newAttributes[$attrName])
-					 && $newAttributes[$attrName] !== $regexp)
-					{
-						throw new RuntimeException("Ambiguous attribute '" . $attrName . "' created using different regexps needs to be explicitly defined");
-					}
-
-					$newAttributes[$attrName] = $regexp;
+					// This attribute was already explicitly defined, nothing else to add
+					continue;
 				}
-			}
 
-			foreach ($newAttributes as $attrName => $regexp)
-			{
-				// Create the attribute using this regexp as filter
-				$attributes[$attrName] = new Attribute;
-				$attributes[$attrName]->filterChain->append('#regexp', array('regexp' => $regexp));
+				if (isset($newAttributes[$attrName])
+				 && $newAttributes[$attrName] !== $regexp)
+				{
+					throw new RuntimeException("Ambiguous attribute '" . $attrName . "' created using different regexps needs to be explicitly defined");
+				}
+
+				$newAttributes[$attrName] = $regexp;
 			}
 		}
 
-		$config['attributes'] = $attributes;
-		$config['attributePreprocessors'] = $attributePreprocessors;
-		$config['tokens'] = array_filter($tokens);
+		foreach ($newAttributes as $attrName => $regexp)
+		{
+			// Create the attribute using this regexp as filter
+			$tag->attributes[$attrName] = new Attribute;
+			$tag->attributes[$attrName]->filterChain->append('#regexp', array('regexp' => $regexp));
+		}
 
-		return $config;
+		return array_filter($tokens);
 	}
 
 	/**
@@ -352,7 +343,7 @@ abstract class BBCodeMonkey
 		if ($m[0] !== $tokenContent)
 		{
 			// Now capture all key=value pairs that are separated with a semicolon
-			$pairs = explode(';', substr($tokenContent, strlen($m[0])));
+			$pairs = preg_split('#;+#', rtrim(substr($tokenContent, strlen($m[0])), ';'));
 
 			foreach ($pairs as $pair)
 			{
@@ -452,7 +443,7 @@ abstract class BBCodeMonkey
 
 		foreach ($tokenValues as $k => $v)
 		{
-			$attribute->set($k, $v);
+			$attribute->$k = $v;
 		}
 
 		return $attribute;

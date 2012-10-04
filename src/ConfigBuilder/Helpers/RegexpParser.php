@@ -17,7 +17,7 @@ abstract class RegexpParser
 	*/
 	public static function parse($regexp)
 	{
-		if (!preg_match('#^(.)(.*?)\\1([a-zA-Z]*)$#D', $regexp, $m))
+		if (!preg_match('#^(.)(.*?)\\1([a-zA-Z]*)$#Ds', $regexp, $m))
 		{
 			throw new RuntimeException('Could not parse regexp delimiters');
 		}

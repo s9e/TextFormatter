@@ -44,4 +44,45 @@ class AttributePreprocessorCollectionTest extends Test
 			$collection->getConfig()
 		);
 	}
+
+	/**
+	* @testdox Is iterable with foreach
+	*/
+	public function testIterable()
+	{
+		$collection = new AttributePreprocessorCollection;
+		$collection->add('x', '#x1#');
+
+		$fail = true;
+		foreach ($collection as $k => $v)
+		{
+			$fail = false;
+		}
+
+		if ($fail)
+		{
+			$this->fail('Did not iterate');
+		}
+	}
+
+	/**
+	* @testdox Uses the name of the source attribute as key when iterating
+	*/
+	public function testIterableKeys()
+	{
+		$collection = new AttributePreprocessorCollection;
+
+		$collection->add('x', '#x1#');
+		$collection->add('x', '#x2#');
+		$collection->add('y', '#y1#');
+		$collection->add('y', '#y2#');
+
+		$actual = '';
+		foreach ($collection as $k => $v)
+		{
+			$actual .= $k;
+		}
+
+		$this->assertSame('xxyy', $actual);
+	}
 }
