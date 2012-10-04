@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder;
 
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpBuilder;
 
 class UrlConfig implements ConfigProvider
 {
@@ -39,10 +40,8 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function getConfig()
 	{
-		$rm = new RegexpHelper;
-
 		$urlConfig = array(
-			'allowedSchemes' => '#^' . $rm->buildRegexpFromList($this->allowedSchemes) . '$#Di'
+			'allowedSchemes' => '/^' . RegexpBuilder::fromList($this->allowedSchemes) . '$/Di'
 		);
 
 		if (isset($this->defaultScheme))
@@ -57,7 +56,7 @@ class UrlConfig implements ConfigProvider
 				continue;
 			}
 
-			$regexp = $rm->buildRegexpFromList(
+			$regexp = RegexpBuilder::fromList(
 				$this->$k,
 				// Asterisks * are turned into a catch-all expression, while ^ and $ are preserved
 				array(
@@ -69,7 +68,7 @@ class UrlConfig implements ConfigProvider
 				)
 			);
 
-			$urlConfig[$k] = '#' . $regexp . '#DiS';
+			$urlConfig[$k] = '/' . $regexp . '/DiS';
 		}
 
 		return $urlConfig;
@@ -94,7 +93,7 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function setDefaultScheme($scheme)
 	{
-		$this->defaultScheme = $scheme;
+		$this->defaultScheme = $this->normalizeScheme($scheme);
 	}
 
 	/**

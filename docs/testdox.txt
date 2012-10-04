@@ -585,6 +585,29 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
  [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
 
+s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
+ [x] Disallowed IDNs are punycoded
+ [x] disallowHost('example.org') will disallow "example.org"
+ [x] disallowHost('example.org') will disallow "EXAMPLE.ORG"
+ [x] disallowHost('*.example.org') will disallow "www.example.org"
+ [x] disallowHost('*.example.org') will disallow "www.xxx.example.org"
+ [x] disallowHost('*.example.org') will not disallow "example.org"
+ [x] disallowHost('*.example.org') will not disallow "example.org.org"
+ [x] disallowHost('*xxx*') will disallow "xxx.com"
+ [x] disallowHost('*xxx*') will disallow "foo.xxx"
+ [x] disallowHost('*xxx*') will disallow "myxxxsite.com"
+ [x] resolveRedirectsFrom('bit.ly') will match "bit.ly"
+ [x] "http" is an allowed scheme by default
+ [x] "https" is an allowed scheme by default
+ [x] "HTTPS" is an allowed scheme by default
+ [x] "ftp" is an allowed scheme by default
+ [x] getAllowedSchemes() returns an array containing all the allowed schemes
+ [x] allowScheme('ftp') will allow "ftp" as scheme
+ [x] allowScheme('<invalid>') throws an exception
+ [x] There is no default scheme by default
+ [x] setDefaultScheme('http') sets "http" as default scheme
+ [x] setDefaultScheme('<invalid>') throws an exception
+
 s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
  [x] normalize() throws an InvalidArgumentException if the name is invalid
  [x] "url" is normalized to "url"
