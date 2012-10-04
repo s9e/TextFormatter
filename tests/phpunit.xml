@@ -39,7 +39,8 @@
 			<file>ConfigBuilder/Helpers/HTML5/TemplateForensicsTest.php</file>
 			<!-- RulesGenerator depends on TemplateForensics -->
 			<file>ConfigBuilder/Helpers/HTML5/RulesGeneratorTest.php</file>
-			<file>ConfigBuilder/Helpers/RegexpHelperTest.php</file>
+			<file>ConfigBuilder/Helpers/RegexpBuilderTest.php</file>
+			<file>ConfigBuilder/Helpers/RegexpParserTest.php</file>
 			<file>ConfigBuilder/Helpers/RulesHelperTest.php</file>
 			<file>ConfigBuilder/Helpers/StylesheetHelperTest.php</file>
 			<file>ConfigBuilder/Helpers/TemplateCheckerTest.php</file>
@@ -65,7 +66,8 @@
 			<file>../src/ConfigBuilder/Collections/Templateset.php</file>
 			<file>../src/ConfigBuilder/Helpers/HTML5/RulesGenerator.php</file>
 			<file>../src/ConfigBuilder/Helpers/HTML5/TemplateForensics.php</file>
-			<file>../src/ConfigBuilder/Helpers/RegexpHelper.php</file>
+			<file>../src/ConfigBuilder/Helpers/RegexpBuilder.php</file>
+			<file>../src/ConfigBuilder/Helpers/RegexpParser.php</file>
 			<file>../src/ConfigBuilder/Helpers/RulesHelper.php</file>
 			<file>../src/ConfigBuilder/Helpers/StylesheetHelper.php</file>
 			<file>../src/ConfigBuilder/Helpers/TemplateChecker.php</file>

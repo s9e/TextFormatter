@@ -12,7 +12,7 @@ class BBCodeMonkeyTest extends Test
 {
 	public function test()
 	{
-		BBCodeMonkey::parse('[youtube={PARSE=#http://foo?id=(?<id>\\w+)#} /]');
+		BBCodeMonkey::parse('[youtube={PARSE=#http://foo?id=(?<id>\\w+)#} *={INT} /]');
 //		BBCodeMonkey::parse('[youtube]{PARSE=#http://foo?id=(?<id>\\w+)#}[/youtube]');
 //		BBCodeMonkey::parse('[flash={NUMBER1},{NUMBER2} foo={INT}]{URL}[/flash]');
 	}

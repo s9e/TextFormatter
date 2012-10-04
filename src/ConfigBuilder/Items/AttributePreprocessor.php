@@ -32,6 +32,15 @@ class AttributePreprocessor
 	}
 
 	/**
+	* 
+	*
+	* @return void
+	*/
+	public function getNamedSubpatterns()
+	{
+	}
+
+	/**
 	* Return the regexp this preprocessor is based on
 	*
 	* @return string

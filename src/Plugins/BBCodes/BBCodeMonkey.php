@@ -9,8 +9,9 @@ namespace s9e\TextFormatter\Plugins\BBCodes;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpHelper;
+use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpBuilder;
 use s9e\TextFormatter\ConfigBuilder\Items\Attribute;
+use s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor;
 use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
 
 abstract class BBCodeMonkey
@@ -21,7 +22,7 @@ abstract class BBCodeMonkey
 	* @param  string $usage BBCode usage, e.g. [B]{TEXT}[/b]
 	* @return array
 	*/
-	public static function create($usage)
+	public static function parse($usage)
 	{
 		// This is the config we will return
 		$config = array();
@@ -45,7 +46,7 @@ abstract class BBCodeMonkey
 		}
 
 		// Save the BBCode's name
-		$config['bbcodeName'] = $m['bbcodeName'];
+		$config['bbcodeName'] = BBCode::normalizeName($m['bbcodeName']);
 
 		// Prepare the attributes definition, e.g. "foo={BAR}"
 		$attributes = $m['attributes'];
@@ -65,6 +66,8 @@ abstract class BBCodeMonkey
 
 		// Parse the attributes' definitions and add it to the config
 		$config += self::parseAttributes($attributes);
+
+		print_r($config);
 	}
 
 	/**
@@ -175,7 +178,7 @@ abstract class BBCodeMonkey
 					$i = 0;
 					do
 					{
-						$attrName = $key . $i;
+						$attrName = AttributeName::normalize($key . $i);
 						++$i;
 					}
 					while (isset($attributes[$attrName]));
@@ -187,6 +190,10 @@ abstract class BBCodeMonkey
 					$attrName = $key;
 				}
 
+				// Normalize the attribute name (attribute preprocessors follow the same rules)
+				$attrName = AttributeName::normalize($attrName);
+
+				// Remove the "useContent" option and add the attribute's name
 				if (isset($tokenValues['useContent']))
 				{
 					if (!empty($tokenValues['useContent']))
@@ -197,21 +204,22 @@ abstract class BBCodeMonkey
 					unset($tokenValues['useContent']);
 				}
 
+				// Set the "required" option if "required" or "optional" is set, then remove
+				// the "optional" option
 				if (isset($tokenValues['optional']))
 				{
 					$tokenValues['required'] = !$tokenValues['optional'];
+					unset($tokenValues['optional']);
 				}
-				elseif (isset($tokenValues['required'])
+				elseif (isset($tokenValues['required']))
 				{
 					$tokenValues['required'] = (bool) $tokenValues['required'];
 				}
-				unset($tokenValues['optional']);
-				unset($tokenValues['required']);
 
 				if ($isPreprocessor)
 				{
 					$attributePreprocessors[$attrName][]
-						= new AttributePreprocessor($tokenValues['regexp'];
+						= new AttributePreprocessor($tokenValues['regexp']);
 				}
 				else
 				{
@@ -260,6 +268,8 @@ abstract class BBCodeMonkey
 		$config['tokens'] = array_filter($tokens);
 		$config['attributes'] = $attributes;
 		$config['attributePreprocessors'] = $attributePreprocessors;
+
+		// TODO: look into preprocessors and create the corresponding attributes
 
 		return $config;
 	}
@@ -352,7 +362,7 @@ abstract class BBCodeMonkey
 			{
 				$attribute->filterChain->append($filter);
 			}
-			unset($tokenValues['preFilter'])
+			unset($tokenValues['preFilter']);
 		}
 
 		if ($tokenType === 'REGEXP')
@@ -372,7 +382,7 @@ abstract class BBCodeMonkey
 		elseif ($tokenType === 'CHOICE')
 		{
 			// Build a regexp from the list of choices then add a "#regexp" filter
-			$regexp = RegexpHelper::buildRegexpFromList(
+			$regexp = RegexpBuilder::fromList(
 				explode(',', $tokenValues['choices']),
 				array('specialChars' => array('/' => '\\/'))
 			);
@@ -405,7 +415,7 @@ abstract class BBCodeMonkey
 			{
 				$attribute->filterChain->append($filter);
 			}
-			unset($tokenValues['postFilter'])
+			unset($tokenValues['postFilter']);
 		}
 
 		foreach ($tokenValues as $k => $v)

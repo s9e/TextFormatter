@@ -20,4 +20,20 @@ class BBCode
 	* @var string Name of the tag used to represent this BBCode in the intermediate representation
 	*/
 	protected $tagName;
+
+	/**
+	* Normalize the name of a BBCode
+	*
+	* @param  string $bbcodeName Original name
+	* @return string             Normalized name
+	*/
+	public static function normalizeName($bbcodeName)
+	{
+		if (!preg_match('#^(?:[a-z][a-z_0-9]*|\\*)$#Di', $bbcodeName))
+		{
+			throw new InvalidArgumentException ("Invalid BBCode name '" . $bbcodeName . "'");
+		}
+
+		return strtoupper($bbcodeName);
+	}
 }
