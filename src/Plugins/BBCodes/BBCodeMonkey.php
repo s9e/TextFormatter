@@ -261,15 +261,47 @@ abstract class BBCodeMonkey
 				$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$#D';
 
 				// Add the attribute preprocessor to the config
-				$attributePreprocessors[$key][] = $regexp;
+				$attributePreprocessors[$key][] = new AttributePreprocessor($regexp);
 			}
 		}
 
-		$config['tokens'] = array_filter($tokens);
+		// Now create attributes generated from attribute preprocessors. For instance, preprocessor
+		// #(?<width>\\d+),(?<height>\\d+)# will generate two attributes named "width" and height
+		// with a regexp filter "#^(?:\\d+)$#D", unless they were explicitly defined otherwise
+		$newAttributes = array();
+		foreach ($attributePreprocessors as $key => $keyProcessors)
+		{
+			foreach ($keyProcessors as $attributePreprocessor)
+			{
+				foreach ($attributePreprocessor->getAttributes() as $attrName => $regexp)
+				{
+					if (isset($attributes[$attrName]))
+					{
+						// This attribute was already explicitly defined, nothing else to add
+						continue;
+					}
+
+					if (isset($newAttributes[$attrName])
+					 && $newAttributes[$attrName] !== $regexp)
+					{
+						throw new RuntimeException("Ambiguous attribute '" . $attrName . "' created using different regexps needs to be explicitly defined");
+					}
+
+					$newAttributes[$attrName] = $regexp;
+				}
+			}
+
+			foreach ($newAttributes as $attrName => $regexp)
+			{
+				// Create the attribute using this regexp as filter
+				$attributes[$attrName] = new Attribute;
+				$attributes[$attrName]->filterChain->append('#regexp', array('regexp' => $regexp));
+			}
+		}
+
 		$config['attributes'] = $attributes;
 		$config['attributePreprocessors'] = $attributePreprocessors;
-
-		// TODO: look into preprocessors and create the corresponding attributes
+		$config['tokens'] = array_filter($tokens);
 
 		return $config;
 	}

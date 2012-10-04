@@ -82,7 +82,7 @@ abstract class RegexpParser
 					/**
 					* This should be a subpattern, we just have to sniff which kind
 					*/
-					if (preg_match("#(?J)\\(\\?(?:P?<(?<name>[a-z]+)>|'(?<name>[a-z]+)')#A", $regexp, $m, \PREG_OFFSET_CAPTURE, $pos))
+					if (preg_match("#(?J)\\(\\?(?:P?<(?<name>[a-z_0-9]+)>|'(?<name>[a-z_0-9]+)')#A", $regexp, $m, \PREG_OFFSET_CAPTURE, $pos))
 					{
 						/**
 						* This is a named capture
