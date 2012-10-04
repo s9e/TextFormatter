@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\ConfigBuilder\Items;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpParser;
 
 class AttributePreprocessor
 {
@@ -17,8 +18,6 @@ class AttributePreprocessor
 	protected $regexp;
 
 	/**
-	* @todo parse the regexp, reject multiple subpatterns that use the same name?
-	*
 	* @param string $regexp
 	*/
 	public function __construct($regexp)
@@ -32,12 +31,43 @@ class AttributePreprocessor
 	}
 
 	/**
-	* 
+	* Return all the attributes created by the preprocessor along with the regexp that matches them
 	*
-	* @return void
+	* @return array Array of [attribute name => regexp]
 	*/
-	public function getNamedSubpatterns()
+	public function getAttributes()
 	{
+		$attributes = array();
+		$regexpInfo = RegexpParser::parse($this->regexp);
+
+		// Ensure that we use the D modifier
+		if (strpos($regexpInfo['modifiers'], 'D') === false)
+		{
+			$regexpInfo['modifiers'] .= 'D';
+		}
+
+		foreach ($regexpInfo['tokens'] as $token)
+		{
+			if ($token['type'] !== 'capturingSubpatternStart'
+			 || !isset($token['name']))
+			{
+				 continue;
+			}
+
+			$attrName = $token['name'];
+
+			if (!isset($attributes[$attrName]))
+			{
+				$regexp = $regexpInfo['delimiter']
+						. '^(?:' . $token['content'] . ')$'
+						. $regexpInfo['delimiter']
+						. $regexpInfo['modifiers'];
+
+				$attributes[$attrName] = $regexp;
+			}
+		}
+
+		return $attributes;
 	}
 
 	/**

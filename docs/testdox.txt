@@ -559,6 +559,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
 
 s9e\TextFormatter\Tests\ConfigBuilder\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
+ [x] getAttributes() returns an array where keys are the name of the named subpatterns/attributes and values is the regexp that exactly matches them
+ [x] getAttributes() preserves the original's regexp "i", "s" and "u" flags
  [x] getRegexp() returns the regexp associated with this attribute preprocessor
 
 s9e\TextFormatter\Tests\ConfigBuilder\Items\CallbackTemplate
