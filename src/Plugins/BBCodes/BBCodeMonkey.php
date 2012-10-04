@@ -265,8 +265,9 @@ abstract class BBCodeMonkey
 	}
 
 	/**
-	* 
+	* Parse the content of a token and return it as a [key => value] array
 	*
+	* @param  string Token's content, e.g. "INT;optional"
 	* @return array
 	*/
 	protected static function parseToken($tokenContent)
@@ -335,11 +336,13 @@ abstract class BBCodeMonkey
 	}
 
 	/**
-	* 
+	* Generate an attribute based on a token type and options
 	*
-	* @return void
+	* @param  string    $tokenType
+	* @param  array     $tokenValues
+	* @return Attribute
 	*/
-	protected function generateAttribute($tokenType, array $tokenValues)
+	protected static function generateAttribute($tokenType, array $tokenValues)
 	{
 		$attribute = new Attribute;
 
@@ -347,19 +350,19 @@ abstract class BBCodeMonkey
 		{
 			foreach ($tokenValues['preFilter'] as $filter)
 			{
-				$filterChain->append($filter);
+				$attribute->filterChain->append($filter);
 			}
 			unset($tokenValues['preFilter'])
 		}
 
 		if ($tokenType === 'REGEXP')
 		{
-			$filterChain->append('#regexp', array('regexp' => $tokenValues['regexp']));
+			$attribute->filterChain->append('#regexp', array('regexp' => $tokenValues['regexp']));
 			unset($tokenValues['regexp']);
 		}
 		elseif ($tokenType === 'RANGE')
 		{
-			$filterChain->append('#range', array(
+			$attribute->filterChain->append('#range', array(
 				'min' => $tokenValues['min'],
 				'max' => $tokenValues['max']
 			));
@@ -369,7 +372,17 @@ abstract class BBCodeMonkey
 		elseif ($tokenType === 'CHOICE')
 		{
 			// Build a regexp from the list of choices then add a "#regexp" filter
-			$regexp = '/^' . RegexpHelper::buildRegexpFromList(explode(',', $tokenValues['choices'])) . '$/Di';
+			$regexp = RegexpHelper::buildRegexpFromList(
+				explode(',', $tokenValues['choices']),
+				array('specialChars' => array('/' => '\\/'))
+			);
+			$regexp = '/^' . $regexp . '$/D';
+
+			// Add the case-insensitive flag until specified otherwise
+			if (empty($tokenValues['caseSensitive']))
+			{
+				$regexp .= 'i';
+			}
 
 			// Add the Unicode flag if the regexp isn't purely ASCII
 			if (preg_match('#[^\\x00-\\x7f]#', $regexp))
@@ -377,19 +390,20 @@ abstract class BBCodeMonkey
 				$regexp .= 'u';
 			}
 
-			$filterChain->append('#regexp', array('regexp' => $regexp));
+			$attribute->filterChain->append('#regexp', array('regexp' => $regexp));
+			unset($tokenValues['caseSensitive']);
 			unset($tokenValues['choices']);
 		}
 		elseif ($tokenType !== 'TEXT')
 		{
-			$filterChain[] = '#' . strtolower($tokenType);
+			$attribute->filterChain->append('#' . strtolower($tokenType));
 		}
 
 		if (isset($tokenValues['postFilter']))
 		{
 			foreach ($tokenValues['postFilter'] as $filter)
 			{
-				$filterChain->append($filter);
+				$attribute->filterChain->append($filter);
 			}
 			unset($tokenValues['postFilter'])
 		}
@@ -398,5 +412,7 @@ abstract class BBCodeMonkey
 		{
 			$attribute->set($k, $v);
 		}
+
+		return $attribute;
 	}
 }

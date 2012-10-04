@@ -171,7 +171,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpHelper
  [x] buildRegexpFromList(['bar', 'baz']) returns 'ba[rz]'
  [x] buildRegexpFromList(['foo', 'fool']) returns 'fool?'
  [x] buildRegexpFromList(['ax', 'axed']) returns 'ax(?:ed)?'
- [x] buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!$()*+.:<=>?[\\#\\\\\\]{|}^]'
+ [x] buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!#$()*+.:<=>?[\\\\\\]{|}^]'
  [x] buildRegexpFromList(['xy', '^y'], ["specialChars" => ["^" => "^"]]) returns '(?:x|^)y'
  [x] buildRegexpFromList(['xy', 'x$'], ["specialChars" => ["$" => "$"]]) returns 'x(?:y|$)'
  [x] buildRegexpFromList(['foo', 'bar']) returns '(?:bar|foo)'

@@ -100,12 +100,12 @@ class RegexpHelperTest extends Test
 	}
 
 	/**
-	* @testdox buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!$()*+.:<=>?[\\#\\\\\\]{|}^]'
+	* @testdox buildRegexpFromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!#$()*+.:<=>?[\\\\\\]{|}^]'
 	*/
-	public function test_buildRegexpFromList_79D4C9A3()
+	public function test_buildRegexpFromList_C7373394()
 	{
 		$this->assertSame(
-			'[-!$()*+.:<=>?[\\#\\\\\\]{|}^]',
+			'[-!#$()*+.:<=>?[\\\\\\]{|}^]',
 			RegexpHelper::buildRegexpFromList(array('!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}'))
 		);
 	}
@@ -2264,7 +2264,7 @@ class RegexpHelperTest extends Test
 				array('ax', 'axed')
 			),
 			array(
-				'[-!$()*+.:<=>?[\\#\\\\\\]{|}^]',
+				'[-!#$()*+.:<=>?[\\\\\\]{|}^]',
 				str_split('!#$()*+-.:<=>?[\\]^{|}', 1)
 			),
 			array(

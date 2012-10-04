@@ -21,6 +21,7 @@ abstract class RegexpHelper
 	public static function buildRegexpFromList(array $words, array $options = array())
 	{
 		$options += array(
+			'delimiter'    => '/',
 			'specialChars' => array(),
 			'useLookahead' => false
 		);
@@ -38,7 +39,8 @@ abstract class RegexpHelper
 		* Used to store the escaped representation of each character, e.g. "a"=>"a", "."=>"\\."
 		* Also used to give a special meaning to some characters, e.g. "*" => ".*?"
 		*/
-		$esc = $options['specialChars'];
+		$esc  = $options['specialChars'];
+		$esc += array($options['delimiter'] => '\\' . $options['delimiter']);
 
 		/**
 		* preg_quote() errs on the safe side when escaping characters that could have a special
@@ -72,7 +74,7 @@ abstract class RegexpHelper
 			{
 				if (!isset($esc[$c]))
 				{
-					$esc[$c] = preg_quote($c, '#');
+					$esc[$c] = preg_quote($c);
 				}
 
 				if ($pos === 0)
@@ -162,11 +164,6 @@ abstract class RegexpHelper
 			self::optimizeDotChains($chains);
 			self::optimizeCatchallChains($chains);
 		}
-
-
-
-
-
 
 		// Whether one of the chain has been completely optimized away by prefix/suffix removal.
 		// Signals that the middle part of the regexp is optional, e.g. (prefix)(foo)?(suffix)
@@ -726,7 +723,7 @@ abstract class RegexpHelper
 
 		// Escaped literals are allowed
 		if (preg_match('#^\\\\.$#Dus', $char)
-		 && $char === preg_quote(substr($char, 1), '#'))
+		 && $char === preg_quote(substr($char, 1)))
 		{
 			return true;
 		}
@@ -739,7 +736,7 @@ abstract class RegexpHelper
 
 		// Special characters such as $ or ^ are rejected, but we need to check for characters that
 		// get escaped by preg_quote() even though it's not necessary, such as ! or =
-		if (preg_quote($char, '#') !== $char
+		if (preg_quote($char) !== $char
 		 && !preg_match('#^[-!:<=>}]$#D', $char))
 		{
 			return false;
