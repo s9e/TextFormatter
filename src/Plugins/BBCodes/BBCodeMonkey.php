@@ -26,7 +26,10 @@ abstract class BBCodeMonkey
 	public static function parse($usage)
 	{
 		// This is the config we will return
-		$config = array();
+		$config = array(
+			'tag'    => new Tag,
+			'bbcode' => new BBCode
+		);
 
 		$regexp = '#^'
 		        // [BBCODE
@@ -37,8 +40,6 @@ abstract class BBCodeMonkey
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*)'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
 		        . '(?:\\s*/?\\]|\\](?<content>\\S+)?(?<endTag>\\[/\\1]))'
-		        // (option1=val;option2=val)
-		        . '(?:\\s*\\((?<options>(?:[^=]+=[^;]+;?)+)\\))?'
 		        . '$#';
 
 		if (!preg_match($regexp, trim($usage), $m))
@@ -47,37 +48,30 @@ abstract class BBCodeMonkey
 		}
 
 		// Save the BBCode's name
-		$config['bbcodeName'] = BBCode::normalizeName($m['bbcodeName']);
+		$config['name'] = BBCode::normalizeName($m['bbcodeName']);
 
 		// Prepare the attributes definition, e.g. "foo={BAR}"
 		$attributes = $m['attributes'];
 
+		// If there's a default attribute, we prepend it to the list using the BBCode's name as
+		// attribute name
 		if (!empty($m['defaultAttribute']))
 		{
-			// If there's a default attribute, we prepend it to the list using the BBCode's name as
-			// attribute name
 			$attributes = $m['bbcodeName'] . $m['defaultAttribute'] . $attributes;
 		}
 
+		// Append the content token to the attributes list, under the name "content"
 		if (!empty($m['content']))
 		{
-			// Append the content token to the attributes list, under the name "content"
 			$attributes .= ' content=' . $m['content'];
 		}
 
-		$tag    = new Tag;
-		$bbcode = new BBCode;
+		$tokens = self::addAttributes($attributes, $config['bbcode'], $config['tag']);
 
-		$tokens = self::addAttributes($attributes, $bbcode, $tag);
-
-		if (isset($config['contentAttributes']))
+		// Ensure the attribute/attribute processor does use the BBCode's content if applicable
+		if (!empty($m['content']))
 		{
-			$bbcode->contentAttributes = $config['contentAttributes'];
-		}
-
-		if (isset($config['defaultAttribute']))
-		{
-			$bbcode->defaultAttribute = $config['defaultAttribute'];
+			$bbcode->contentAttributes[] = 'content';
 		}
 	}
 
@@ -144,16 +138,22 @@ abstract class BBCodeMonkey
 			// Test whether the definition is a single token and nothing else
 			$isComposite = (bool) ($matches[0][0][0] !== $definition);
 
+			// If this is the first attribute of this BBCode, we tentatively set it as default
+			// attribute
+			if ($isComposite && !isset($bbcode->defaultAttribute))
+			{
+				$bbcode->defaultAttribute = $key;
+			}
+
 			// We create the attribute preprocessor's regexp either way
 			$regexp  = '#^';
 			$lastPos = 0;
 
 			foreach ($matches as $k => $match)
 			{
-				$tokenId      = $match['tokenId'][0];
-				$tokenType    = $match['tokenType'][0];
-				$tokenContent = substr($match[0][0], 1, -1);
-				$tokenValues  = self::parseToken($tokenContent);
+				$tokenId     = $match['tokenId'][0];
+				$tokenType   = $match['tokenType'][0];
+				$tokenValues = self::parseToken(substr($match[0][0], 1, -1));
 
 				$isPreprocessor = (bool) ($tokenType === 'PARSE');
 
@@ -165,13 +165,7 @@ abstract class BBCodeMonkey
 				}
 
 				// Determine the name of this attribute
-				if (isset($tokenValues['attrName']))
-				{
-					// The name was explicitely given
-					$attrName = $tokenValues['attrName'];
-					unset($tokenValues['attrName']);
-				}
-				elseif ($isComposite)
+				if ($isComposite)
 				{
 					// The name of the named subpattern and the corresponding attribute is based on
 					// the attribute preprocessor's name, with an incremented ID that ensures we
@@ -191,8 +185,9 @@ abstract class BBCodeMonkey
 					$attrName = $key;
 				}
 
-				// Set "defaultAttribute" if applicable
-				if (!empty($tokenValues['isDefault']))
+				// If this is the first attribute of this BBCode, we tentatively set it as default
+				// attribute
+				if (!isset($bbcode->defaultAttribute))
 				{
 					$bbcode->defaultAttribute = $attrName;
 				}

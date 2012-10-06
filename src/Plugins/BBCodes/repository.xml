@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <repository>
 
-	<bbcode name="URL">
+	<bbcode name="URL" defaultAttribute="url">
 		<usage>[URL={URL;useContent} title={TEXT1;optional}]{TEXT2}[/URL]</usage>
-		<xsl><![CDATA[
+		<template predicate=""><![CDATA[
 			<a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
-		]]></xsl>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="*" tagName="LI">
+		<usage>[*]{TEXT}[/*]</usage>
+		<template><![CDATA[
+			<li><xsl:apply-templates /></li>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="IMG">
+		<usage>[IMG src={URL;useContent} title={TEXT} alt={TEXT}]</usage>
+		<template><![CDATA[
+			<img src="{@src}" title="{@title}" alt="{@alt}" />
+		]]></template>
 	</bbcode>
 
 	<bbcode name="QUOTE">
-		<usage>[QUOTE={TEXT1;optional;attrName=author}]{TEXT2}[/URL]</usage>
-		<xsl><![CDATA[
+		<usage>[QUOTE author={TEXT1;optional}]{TEXT2}[/URL]</usage>
+		<template><![CDATA[
 			<blockquote>
 				<div>]]>
 					<xsl:if test="@author">
@@ -21,7 +35,7 @@
 					<xsl:apply-templates />
 				</div>
 			</blockquote>
-		]]></xsl>
+		]]></template>
 	</bbcode>
 
 </repository>
