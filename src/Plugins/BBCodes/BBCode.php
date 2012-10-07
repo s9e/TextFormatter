@@ -34,17 +34,20 @@ class BBCode
 	/**
 	* Normalize the name of a BBCode
 	*
+	* Follows the same rules as tag names with one exception: "*" is kept for compatibility with
+	* other BBCode engines
+	*
 	* @param  string $bbcodeName Original name
 	* @return string             Normalized name
 	*/
 	public static function normalizeName($bbcodeName)
 	{
-		if (!preg_match('#^(?:[a-z][a-z_0-9]*|\\*)$#Di', $bbcodeName))
+		if ($bbcodeName === '*')
 		{
-			throw new InvalidArgumentException ("Invalid BBCode name '" . $bbcodeName . "'");
+			return '*';
 		}
 
-		return strtoupper($bbcodeName);
+		return TagName::normalize($bbcodeName);
 	}
 
 	/**
