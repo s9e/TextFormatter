@@ -15,8 +15,8 @@ class BBCodeMonkeyTest extends Test
 	*/
 	public function testAttributesFromAttributePreprocessors()
 	{
-		BBCodeMonkey::parse('[flash={PARSE=/^(?<width>\\d+),(?<height>\\d+)$/}]{URL}[/flash]');
-//		BBCodeMonkey::parse('[flash={NUMBER},{NUMBER}]{URL}[/flash]');
+//		BBCodeMonkey::parse('[flash={PARSE=/^(?<width>\\d+),(?<height>\\d+)$/}]{URL}[/flash]');
+		BBCodeMonkey::parse('[flash={NUMBER1},{NUMBER2} flash={NUMBER2}-{NUMBER1}]{URL}[/flash]');
 //		BBCodeMonkey::parse('[youtube]{PARSE=#http://foo?id=(?<id>\\w+)#}[/youtube]');
 //		BBCodeMonkey::parse('[flash={NUMBER1},{NUMBER2} foo={INT}]{URL}[/flash]');
 	}

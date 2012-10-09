@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <repository>
 
-	<bbcode name="URL" defaultAttribute="url">
-		<usage>[URL={URL;useContent} title={TEXT1;optional}]{TEXT2}[/URL]</usage>
-		<template predicate=""><![CDATA[
+	<bbcode name="URL">
+		<usage>[URL={URL;useContent} title={TEXT;optional}]{TEXT}[/URL]</usage>
+		<template><![CDATA[
 			<a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
 		]]></template>
 	</bbcode>
@@ -15,15 +15,43 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="B">
+		<usage>[B]{TEXT}[/B]</usage>
+		<template><![CDATA[
+			<b><xsl:apply-templates /></b>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="I">
+		<usage>[I]{TEXT}[/I]</usage>
+		<template><![CDATA[
+			<i><xsl:apply-templates /></i>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="U">
+		<usage>[U]{TEXT}[/U]</usage>
+		<template><![CDATA[
+			<u><xsl:apply-templates /></u>
+		]]></template>
+	</UUcode>
+
+	<bbcode name="S">
+		<usage>[S]{TEXT}[/S]</usage>
+		<template><![CDATA[
+			<s><xsl:apply-templates /></s>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="IMG">
-		<usage>[IMG src={URL;useContent} title={TEXT} alt={TEXT}]</usage>
+		<usage>[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional}]</usage>
 		<template><![CDATA[
 			<img src="{@src}" title="{@title}" alt="{@alt}" />
 		]]></template>
 	</bbcode>
 
 	<bbcode name="QUOTE">
-		<usage>[QUOTE author={TEXT1;optional}]{TEXT2}[/URL]</usage>
+		<usage>[QUOTE author={TEXT;optional}]{TEXT}[/URL]</usage>
 		<template><![CDATA[
 			<blockquote>
 				<div>]]>
