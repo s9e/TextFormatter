@@ -18,6 +18,25 @@ use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 abstract class BBCodeMonkey
 {
 	/**
+	* @var array Regexps used in the named subpatterns generated automatically for composite
+	*            attributes. For instance, "foo={NUMBER},{NUMBER}" will be transformed into
+	*            'foo={PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}'
+	*/
+	protected static $tokenRegexp = array(
+		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
+		'EMAIL'      => '[^@]+@.+?',
+		'FLOAT'      => '(?:0|-?[1-9]\\d*)(?:\\.\\d+)?(?:e[1-9]\\d*)?',
+		'ID'         => '[-a-zA-Z0-9_]+',
+		'IDENTIFIER' => '[-a-zA-Z0-9_]+',
+		'INT'        => '0|-?[1-9]\\d*',
+		'INTEGER'    => '0|-?[1-9]\\d*',
+		'NUMBER'     => '\\d+',
+		'RANGE'      => '\\d+',
+		'SIMPLETEXT' => '[-a-zA-Z0-9+.,_ ]+',
+		'UINT'       => '0|[1-9]\\d*'
+	);
+
+	/**
 	* Create a BBCode based on its reference usage
 	*
 	* @param  string $usage BBCode usage, e.g. [B]{TEXT}[/b]
@@ -76,7 +95,7 @@ abstract class BBCodeMonkey
 	}
 
 	/**
-	* Parse a string of attribute definitions
+	* Parse a string of attribute definitions and add the attributes/options to the tag/BBCode
 	*
 	* Attributes come in two forms. Most commonly, in the form of a single token, e.g.
 	*   [a href={URL} title={TEXT}]
@@ -413,7 +432,7 @@ abstract class BBCodeMonkey
 			}
 
 			// Add the Unicode flag if the regexp isn't purely ASCII
-			if (preg_match('#[^\\x00-\\x7f]#', $regexp))
+			if (!preg_match('#^[[:ascii]]++$#D', $regexp))
 			{
 				$regexp .= 'u';
 			}
@@ -442,5 +461,117 @@ abstract class BBCodeMonkey
 		}
 
 		return $attribute;
+	}
+
+
+	/**
+	* Parse a string of key=value pairs, as seen in BBCode usage
+	*
+	* The value will normalized as a single token, e.g.
+	* "foo={NUMBER}" will be returned as [["foo","{NUMBER}"]]
+	* "foo={NUMBER1},{NUMBER2}" will become [["foo",'{PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}']]
+	*/
+	protected static function getPairs($str)
+	{
+
+		/**
+		* @var array List of attribute-definition pairs, e.g. [["foo","{TEXT}"],["size","{NUMBER}"]]
+		*/
+		$pairs = array();
+
+		/**
+		* @var array 2D array storing the names of the named subpatterns for each attribute
+		*/
+		$matchNames = array();
+
+		foreach (preg_split('#\\s+#', trim($str)) as $k => $pair)
+		{
+			// The name at the left of the equal sign is the key, the rest is the definition. The
+			// key will eventually become the name of the attribute or attribute preprocessor
+			$key        = trim(substr($pair, 0, strpos($pair, '=')));
+			$definition = trim(substr($pair, 1 + strpos($pair, '=')));
+
+			// Now capture the content of every token in that attribute's definition. Usually there
+			// will only be one, as in "foo={URL}" but some older BBCodes use a form of composite
+			// attributes such as [FLASH={NUMBER},{NUMBER}]
+			preg_match_all(
+				'#\\{(?<tokenId>(?<tokenType>[A-Z_]+)[0-9]*)(?:=[^}]+)?\\}#',
+				$definition,
+				$matches,
+				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+			);
+
+			if (empty($matches))
+			{
+				throw new RuntimeException("No tokens found in '" . $key . "' definition");
+			}
+
+			// Test whether the definition is a single token and nothing else
+			if ($matches[0][0][0] === $definition)
+			{
+				$pairs[] = array($key, $definition);
+				continue;
+			}
+
+			// We create the attribute preprocessor's regexp either way
+			$regexp  = '#^';
+			$lastPos = 0;
+
+			foreach ($matches as $k => $match)
+			{
+				$tokenId   = $match['tokenId'][0];
+				$tokenType = $match['tokenType'][0];
+
+				if ($tokenType === 'PARSE')
+				{
+					// Disallow {PARSE} tokens because attribute preprocessors cannot feed into
+					// other attribute preprocessors
+					throw new RuntimeException('{PARSE} tokens can only be used as the sole content of an attribute');
+				}
+
+				// Append the literal text between the last position and current position
+				$pos = $match[0][1];
+				$regexp .= preg_quote(substr($definition, $lastPos, $pos - $lastPos), '#');
+
+				// Grab the expression that corresponds to the token type, or use a catch-all
+				// expression otherwise
+				$expr = (isset(self::$tokenRegexp[$tokenType]))
+				      ? self::$tokenRegexp[$tokenType]
+				      : '.+?';
+
+				if ($tokenId === $tokenType)
+				{
+					// The token doesn't have a number, e.g. {NUMBER} not {NUMBER1}
+					// In order to keep the id unique, we append a character that cannot be found
+					// in normal tokens followed by the match's position
+					$tokenId .= ':' . $k;
+				}
+
+				if (!isset($matchNames[$key][$tokenId]))
+				{
+					if (!isset($matchNames[$key]))
+					{
+						$matchNames[$key] = array();
+					}
+
+					// Create a name based on the key and a counter, e.g. "foo0"
+					$matchNames[$key][$tokenId] = $key . count($matchNames[$key]);
+				}
+
+				// Append the named subpattern. Its name is made of the attribute preprocessor's
+				// name and the subpattern's position
+				$regexp .= '(?<' . $matchNames[$key][$tokenId] . '>' . $expr . ')';
+
+				// Update the last position
+				$lastPos = $pos + strlen($match[0][0]);
+			}
+
+			// Append the literal text that follows the last token and finish the regexp
+			$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$#D';
+
+			$pairs[] = array($key, '{PARSE=' . $regexp . '}');
+		}
+
+		return $pairs;
 	}
 }
