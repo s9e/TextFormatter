@@ -56,6 +56,45 @@ class RegexpBuilderTest extends Test
 	}
 
 	/**
+	* @testdox fromList(['/']) returns '\\/'
+	*/
+	public function test_E2479414()
+	{
+		$this->assertSame(
+			'\\/',
+			RegexpBuilder::fromList(array('/'))
+		);
+	}
+
+	/**
+	* @testdox fromList(['/'], ["delimiter" => "#"]) returns '/'
+	*/
+	public function test_B3EEE700()
+	{
+		$this->assertSame(
+			'/',
+			RegexpBuilder::fromList(
+				array('/'),
+				array('delimiter' => '#')
+			)
+		);
+	}
+
+	/**
+	* @testdox fromList(['#'], ["delimiter" => "#"]) returns '\\#'
+	*/
+	public function test_A1D05928()
+	{
+		$this->assertSame(
+			'\\#',
+			RegexpBuilder::fromList(
+				array('#'),
+				array('delimiter' => '#')
+			)
+		);
+	}
+
+	/**
 	* @testdox fromList(['apple', 'april']) returns 'ap(?:ple|ril)'
 	*/
 	public function test_8B59A499()
@@ -1274,6 +1313,20 @@ class RegexpBuilderTest extends Test
 			array(
 				'a',
 				array('a', 'a')
+			),
+			array(
+				'\\/',
+				array('/'),
+			),
+			array(
+				'/',
+				array('/'),
+				array('delimiter' => '#')
+			),
+			array(
+				'\\#',
+				array('#'),
+				array('delimiter' => '#')
 			),
 			array(
 				'ap(?:ple|ril)',
