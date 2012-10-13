@@ -446,7 +446,7 @@ abstract class TemplateChecker
 
 		foreach ($safeFilters as $filter)
 		{
-			if ($attribute->filterChain->has($filter))
+			if ($attribute->filterChain->contains($filter))
 			{
 				return true;
 			}
@@ -488,7 +488,7 @@ abstract class TemplateChecker
 
 		foreach ($safeFilters as $filter)
 		{
-			if ($attribute->filterChain->has($filter))
+			if ($attribute->filterChain->contains($filter))
 			{
 				return true;
 			}
@@ -528,7 +528,7 @@ abstract class TemplateChecker
 
 		foreach ($safeFilters as $filter)
 		{
-			if ($attribute->filterChain->has($filter))
+			if ($attribute->filterChain->contains($filter))
 			{
 				return true;
 			}

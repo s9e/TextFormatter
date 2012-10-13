@@ -4,8 +4,10 @@ namespace s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes;
 
 use Exception;
 use RuntimeException;
-use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\ConfigBuilder\Items\Tag;
+use s9e\TextFormatter\Plugins\BBCodes\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey
@@ -26,6 +28,25 @@ class BBCodeMonkeyTest extends Test
 	}
 
 	/**
+	* @dataProvider getBBCodeTests
+	*/
+/*
+	public function testBBCodes($usage, $expected)
+	{
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
+
+		$actual = BBCodeMonkey::parse($usage);
+
+		if (!($expected instanceof Exception))
+		{
+			$this->assertEquals($expected, $actual);
+		}
+	}
+*/
+	/**
 	* @dataProvider getTemplateTests
 	*/
 	public function testTemplates($template, $tokens, $passthroughToken, $expected)
@@ -41,6 +62,41 @@ class BBCodeMonkeyTest extends Test
 		{
 			$this->assertSame($expected, $actual);
 		}
+	}
+
+	public function getBBCodeTests()
+	{
+		return array(
+			array(
+				'[b]{TEXT}[/B]',
+				array(
+					'name'   => 'B',
+					'bbcode' => new BBCode,
+					'tag'    => new Tag,
+					'tokens' => array(),
+					'passthroughToken' => 'TEXT'
+				)
+			),
+			array(
+				'[url={URL;useContent}]{TEXT}[/url]',
+				array(
+					'name'   => 'URL',
+					'bbcode' => new BBCode(array(
+						'contentAttributes' => array('url'),
+						'defaultAttribute'  => 'url'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'url' => array(
+								'filterChain' => array('#url')
+							)
+						)
+					)),
+					'tokens' => array('URL' => 'url'),
+					'passthroughToken' => 'TEXT'
+				)
+			)
+		);
 	}
 
 	public function getTemplateTests()

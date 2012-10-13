@@ -61,9 +61,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
  [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
  [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
- [x] has() returns false if the given filter is not present in the chain
- [x] has() returns true if the given built-in filter is present in the chain
- [x] has() returns true if the given PHP string callback is present in the chain
+ [x] contains() returns false if the given filter is not present in the chain
+ [x] contains() returns true if the given built-in filter is present in the chain
+ [x] contains() returns true if the given PHP string callback is present in the chain
  [x] $filterChain[0] = 'foo' replaces the first filter of the chain if it exists
  [x] $filterChain[0] = 'foo' appends to the chain if it's empty
  [x] $filterChain[1] = 'foo' throws an InvalidArgumentException if the chain is empty

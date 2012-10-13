@@ -67,7 +67,7 @@ abstract class BBCodeMonkey
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*)'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
 		        . '(?:\\s*/?\\]|\\]\\s*(?<content>\\S+)?\\s*(?<endTag>\\[/\\1]))'
-		        . '$#';
+		        . '$#i';
 
 		if (!preg_match($regexp, trim($usage), $m))
 		{
@@ -214,7 +214,7 @@ abstract class BBCodeMonkey
 
 			// Append the rest of the text
 			$text = substr($node->textContent, $lastPos);
-			if ($text !== '')
+			if ($text > '')
 			{
 				$parentNode->insertBefore($dom->createTextNode($text), $node);
 			}
@@ -340,7 +340,7 @@ abstract class BBCodeMonkey
 		*/
 		$tokenAttribute = array();
 
-		foreach (preg_split('#\\s+#', trim($str)) as $k => $pair)
+		foreach (preg_split('#\\s+#', trim($str), -1, PREG_SPLIT_NO_EMPTY) as $k => $pair)
 		{
 			$pos = strpos($pair, '=');
 

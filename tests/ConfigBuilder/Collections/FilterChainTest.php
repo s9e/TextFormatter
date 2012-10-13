@@ -191,33 +191,33 @@ class FilterChainTest extends Test
 	}
 
 	/**
-	* @testdox has() returns false if the given filter is not present in the chain
+	* @testdox contains() returns false if the given filter is not present in the chain
 	*/
-	public function testNegativeHas()
+	public function testNegativecontains()
 	{
 		$this->filterChain->append('#int');
 
-		$this->assertFalse($this->filterChain->has('#url'));
+		$this->assertFalse($this->filterChain->contains('#url'));
 	}
 
 	/**
-	* @testdox has() returns true if the given built-in filter is present in the chain
+	* @testdox contains() returns true if the given built-in filter is present in the chain
 	*/
-	public function testHasBuiltIn()
+	public function testContainsBuiltIn()
 	{
 		$this->filterChain->append('#int');
 
-		$this->assertTrue($this->filterChain->has('#int'));
+		$this->assertTrue($this->filterChain->contains('#int'));
 	}
 
 	/**
-	* @testdox has() returns true if the given PHP string callback is present in the chain
+	* @testdox contains() returns true if the given PHP string callback is present in the chain
 	*/
-	public function testHasStringCallback()
+	public function testContainsStringCallback()
 	{
 		$this->filterChain->append('strtolower');
 
-		$this->assertTrue($this->filterChain->has('strtolower'));
+		$this->assertTrue($this->filterChain->contains('strtolower'));
 	}
 
 	/**
@@ -229,8 +229,8 @@ class FilterChainTest extends Test
 		$this->filterChain[0] = 'strtoupper';
 
 		$this->assertSame(1, count($this->filterChain));
-		$this->assertFalse($this->filterChain->has('strtolower'));
-		$this->assertTrue($this->filterChain->has('strtoupper'));
+		$this->assertFalse($this->filterChain->contains('strtolower'));
+		$this->assertTrue($this->filterChain->contains('strtoupper'));
 	}
 
 	/**
@@ -241,7 +241,7 @@ class FilterChainTest extends Test
 		$this->filterChain[0] = 'strtoupper';
 
 		$this->assertSame(1, count($this->filterChain));
-		$this->assertTrue($this->filterChain->has('strtoupper'));
+		$this->assertTrue($this->filterChain->contains('strtoupper'));
 	}
 
 	/**

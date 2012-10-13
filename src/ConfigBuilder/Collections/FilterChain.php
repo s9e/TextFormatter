@@ -181,7 +181,7 @@ class FilterChain extends NormalizedCollection
 	* @param  array  $vars
 	* @return bool
 	*/
-	public function has($callback, array $vars = null)
+	public function contains($callback, array $vars = null)
 	{
 		$filter = $this->normalizeFilter($callback, $vars);
 

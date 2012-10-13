@@ -32,6 +32,20 @@ class BBCode
 	protected $tagName;
 
 	/**
+	* @param array $options This BBCode's options
+	*/
+	public function __construct(array $options = null)
+	{
+		if (isset($options))
+		{
+			foreach ($options as $optionName => $optionValue)
+			{
+				$this->__set($optionName, $optionValue);
+			}
+		}
+	}
+
+	/**
 	* Normalize the name of a BBCode
 	*
 	* Follows the same rules as tag names with one exception: "*" is kept for compatibility with
