@@ -24,6 +24,19 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
  [x] $collection['foo'] = 42 maps to $collection->set('foo', 42)
  [x] unset($collection['foo']) maps to $collection->delete('foo')
 
+s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedList
+ [x] append() adds the value at the end of the list
+ [x] prepend() adds the value at the beginning of the list
+ [x] $normalizedList[] = 'foo' maps to $normalizedList->append('foo')
+ [x] contains() returns true if the given value is present in the list
+ [x] contains() returns false if the given value is not present in the list
+ [x] contains() checks for equality, not identity
+ [x] $normalizedList[0] = 'foo' replaces the first value of the list if it exists
+ [x] $normalizedList[0] = 'foo' appends to the list if it's empty
+ [x] $normalizedList[1] = 'foo' throws an InvalidArgumentException if the list is empty
+ [x] $normalizedList['foo'] = 'bar' throws an InvalidArgumentException
+ [x] Deleting a value by key reorders the list to remove gaps
+
 s9e\TextFormatter\Tests\ConfigBuilder\Traits\Configurable
  [x] __get() throws a RuntimeException if the property does not exist
  [x] __get($k) returns the property if it exists
@@ -64,9 +77,6 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] contains() returns false if the given filter is not present in the chain
  [x] contains() returns true if the given built-in filter is present in the chain
  [x] contains() returns true if the given PHP string callback is present in the chain
- [x] $filterChain[0] = 'foo' replaces the first filter of the chain if it exists
- [x] $filterChain[0] = 'foo' appends to the chain if it's empty
- [x] $filterChain[1] = 'foo' throws an InvalidArgumentException if the chain is empty
  [x] $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
  [x] Deleting a filter reorders the chain to remove gaps
 

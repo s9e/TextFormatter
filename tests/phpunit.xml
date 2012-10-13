@@ -28,6 +28,7 @@
 			<!-- Test the base classes and traits first -->
 			<file>ConfigBuilder/Collections/CollectionTest.php</file>
 			<file>ConfigBuilder/Collections/NormalizedCollectionTest.php</file>
+			<file>ConfigBuilder/Collections/NormalizedListTest.php</file>
 			<file>ConfigBuilder/Traits/ConfigurableTest.php</file>
 
 			<file>ConfigBuilder/Collections/AttributeCollectionTest.php</file>
@@ -64,6 +65,7 @@
 			<file>../src/ConfigBuilder/Collections/Collection.php</file>
 			<file>../src/ConfigBuilder/Collections/FilterChain.php</file>
 			<file>../src/ConfigBuilder/Collections/NormalizedCollection.php</file>
+			<file>../src/ConfigBuilder/Collections/NormalizedList.php</file>
 			<file>../src/ConfigBuilder/Collections/Ruleset.php</file>
 			<file>../src/ConfigBuilder/Collections/TagCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/Templateset.php</file>

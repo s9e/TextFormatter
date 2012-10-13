@@ -193,7 +193,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox contains() returns false if the given filter is not present in the chain
 	*/
-	public function testNegativecontains()
+	public function testNegativeContains()
 	{
 		$this->filterChain->append('#int');
 
@@ -221,43 +221,9 @@ class FilterChainTest extends Test
 	}
 
 	/**
-	* @testdox $filterChain[0] = 'foo' replaces the first filter of the chain if it exists
-	*/
-	public function testArrayAccessReplace()
-	{
-		$this->filterChain->append('strtolower');
-		$this->filterChain[0] = 'strtoupper';
-
-		$this->assertSame(1, count($this->filterChain));
-		$this->assertFalse($this->filterChain->contains('strtolower'));
-		$this->assertTrue($this->filterChain->contains('strtoupper'));
-	}
-
-	/**
-	* @testdox $filterChain[0] = 'foo' appends to the chain if it's empty
-	*/
-	public function testArrayAccessAddNew()
-	{
-		$this->filterChain[0] = 'strtoupper';
-
-		$this->assertSame(1, count($this->filterChain));
-		$this->assertTrue($this->filterChain->contains('strtoupper'));
-	}
-
-	/**
-	* @testdox $filterChain[1] = 'foo' throws an InvalidArgumentException if the chain is empty
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid filter chain offset '1'
-	*/
-	public function testArrayAccessInvalidSet()
-	{
-		$this->filterChain[1] = 'strtoupper';
-	}
-
-	/**
 	* @testdox $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid filter chain offset 'foo'
+	* @expectedExceptionMessage Invalid offset 'foo'
 	*/
 	public function testArrayAccessInvalidKey()
 	{

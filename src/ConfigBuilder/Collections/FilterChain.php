@@ -11,7 +11,7 @@ use InvalidArgumentException;
 use s9e\TextFormatter\ConfigBuilder\Items\CallbackTemplate;
 use s9e\TextFormatter\ConfigBuilder\Items\Filter;
 
-class FilterChain extends NormalizedCollection
+class FilterChain extends NormalizedList
 {
 	/**
 	* @var array Default signature, used by Filter instances created from a PHP callback
@@ -29,37 +29,6 @@ class FilterChain extends NormalizedCollection
 	}
 
 	/**
-	* Custom offsetSet() implementation to allow assignment with a null offset to append to the
-	* chain
-	*/
-	public function offsetSet($offset, $value)
-	{
-		if ($offset === null)
-		{
-			// $filterChain[] = 'foo' maps to $filterChain->append('foo')
-			$this->append($value);
-		}
-		else
-		{
-			// Use the default implementation
-			parent::offsetSet($offset, $value);
-		}
-	}
-
-	/**
-	* Delete a filter from the chain
-	*
-	* @param string $key
-	*/
-	public function delete($key)
-	{
-		parent::delete($key);
-
-		// Reindex the array to eliminate any gaps
-		$this->items = array_values($this->items);
-	}
-
-	/**
 	* Append a filter to this chain
 	*
 	* @param  mixed  $callback
@@ -68,11 +37,7 @@ class FilterChain extends NormalizedCollection
 	*/
 	public function append($callback, array $vars = null)
 	{
-		$filter = $this->normalizeFilter($callback, $vars);
-
-		$this->items[] = $filter;
-
-		return $filter;
+		return parent::append($this->normalizeFilter($callback, $vars));
 	}
 
 	/**
@@ -84,38 +49,7 @@ class FilterChain extends NormalizedCollection
 	*/
 	public function prepend($callback, array $vars = null)
 	{
-		$filter = $this->normalizeFilter($callback, $vars);
-
-		array_unshift($this->items, $filter);
-
-		return $filter;
-	}
-
-	/**
-	* Ensure that the key is a valid offset, ranging from 0 to count($this->items)
-	*
-	* @param  mixed   $key
-	* @return integer
-	*/
-	public function normalizeKey($key)
-	{
-		$normalizedKey = filter_var(
-			$key,
-			FILTER_VALIDATE_INT,
-			array(
-				'options' => array(
-					'min_range' => 0,
-					'max_range' => count($this->items)
-				)
-			)
-		);
-
-		if ($normalizedKey === false)
-		{
-			throw new InvalidArgumentException("Invalid filter chain offset '" . $key . "'");
-		}
-
-		return $normalizedKey;
+		return parent::prepend($this->normalizeFilter($callback, $vars));
 	}
 
 	/**
@@ -172,19 +106,5 @@ class FilterChain extends NormalizedCollection
 		}
 
 		return $filter;
-	}
-
-	/**
-	* Test whether a given filter is present in this chain
-	*
-	* @param  mixed  $callback
-	* @param  array  $vars
-	* @return bool
-	*/
-	public function contains($callback, array $vars = null)
-	{
-		$filter = $this->normalizeFilter($callback, $vars);
-
-		return in_array($filter, $this->items);
 	}
 }
