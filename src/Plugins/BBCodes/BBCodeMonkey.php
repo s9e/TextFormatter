@@ -140,7 +140,7 @@ abstract class BBCodeMonkey
 						throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
 					}
 
-					return '{' . $tokens[$tokenId] . '}';
+					return '{@' . $tokens[$tokenId] . '}';
 				},
 				$attr->value
 			));
@@ -161,8 +161,11 @@ abstract class BBCodeMonkey
 				continue;
 			}
 
-			// Rebuild the text node in a fragment
-			$fragment = $dom->createDocumentFragment();
+			// Grab the node's parent so that we can rebuild the text with added variables right
+			// before the node, using DOM's insertBefore(). Technically, it would make more sense
+			// to create a document fragment, append nodes then replace the node with the fragment
+			// but it leads to namespace redeclarations, which looks ugly
+			$parentNode = $node->parentNode;
 
 			$lastPos = 0;
 			foreach ($matches as $m)
@@ -172,32 +175,35 @@ abstract class BBCodeMonkey
 
 				if ($pos > ($lastPos + 1))
 				{
-					$fragment->appendChild(
+					$parentNode->insertBefore(
 						$dom->createTextNode(
 							substr($node->textContent, $lastPos, $pos - $lastPos)
-						)
+						),
+						$node
 					);
 				}
 				$lastPos = $pos + strlen($m[0][0]);
 
 				if (isset($tokens[$tokenId]))
 				{
-					$fragment
-						->appendChild(
+					$parentNode
+						->insertBefore(
 							$dom->createElementNS(
 								'http://www.w3.org/1999/XSL/Transform',
 								'xsl:value-of'
-							)
+							),
+							$node
 						)
 						->setAttribute('select', '@' . $tokens[$tokenId]);
 				}
 				elseif ($tokenId === $passthroughToken)
 				{
-					$fragment->appendChild(
+					$parentNode->insertBefore(
 						$dom->createElementNS(
 							'http://www.w3.org/1999/XSL/Transform',
 							'xsl:apply-templates'
-						)
+						),
+						$node
 					);
 				}
 				else
@@ -210,11 +216,11 @@ abstract class BBCodeMonkey
 			$text = substr($node->textContent, $lastPos);
 			if ($text !== '')
 			{
-				$fragment->appendChild($dom->createTextNode($text));
+				$parentNode->insertBefore($dom->createTextNode($text), $node);
 			}
 
-			// Now replace the old text node with our shiny new fragment
-			$node->parentNode->replaceChild($fragment, $node);
+			// Now remove the old text node
+			$parentNode->removeChild($node);
 		}
 
 		// Now dump our temporary node as XML and remove the root node's markup
@@ -223,7 +229,14 @@ abstract class BBCodeMonkey
 		$lpos = 1 + strpos($xml, '>');
 		$rpos = strrpos($xml, '<');
 
-		return substr($xml, $lpos, $rpos - $lpos);
+		$template = substr($xml, $lpos, $rpos - $lpos);
+
+		if ($template === false)
+		{
+			throw new RuntimeException('Invalid template');
+		}
+
+		return $template;
 	}
 
 	/**
@@ -267,11 +280,13 @@ abstract class BBCodeMonkey
 		$success = $dom->loadHTML($html);
 		libxml_use_internal_errors($useErrors);
 
+		// @codeCoverageIgnoreStart
 		if (!$success)
 		{
 			$error = libxml_get_last_error();
 			throw new InvalidArgumentException('Invalid HTML in template - error was: ' . $error->message);
 		}
+		// @codeCoverageIgnoreEnd
 
 		// Now dump the thing as XML and reload it to ensure we don't have to worry about internal
 		// shenanigans

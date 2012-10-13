@@ -52,6 +52,8 @@
 			<file>ConfigBuilder/UrlConfigTest.php</file>
 			<file>ConfigBuilder/Validators/AttributeNameTest.php</file>
 			<file>ConfigBuilder/Validators/TagNameTest.php</file>
+
+			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
 		</testsuite>
 	</testsuites>
 
@@ -81,6 +83,7 @@
 			<file>../src/ConfigBuilder/UrlConfig.php</file>
 			<file>../src/ConfigBuilder/Validators/AttributeName.php</file>
 			<file>../src/ConfigBuilder/Validators/TagName.php</file>
+			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>
 		</whitelist>
 	</filter>
 </phpunit>

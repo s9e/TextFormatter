@@ -648,3 +648,6 @@ s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
 
+s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCodeMonkey
+ [x] Templates
+
