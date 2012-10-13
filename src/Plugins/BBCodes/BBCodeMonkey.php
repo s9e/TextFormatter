@@ -89,9 +89,9 @@ abstract class BBCodeMonkey
 		// but raw {TEXT}
 		if (!empty($m['content']))
 		{
-			if ($m['content'] === '{TEXT}')
+			if (preg_match('#^\\{TEXT[0-9]*\\}$#D', $m['content']))
 			{
-				$config['passthroughToken'] = 'TEXT';
+				$config['passthroughToken'] = substr($m['content'], 1, -1);
 			}
 			else
 			{
@@ -527,8 +527,7 @@ abstract class BBCodeMonkey
 		$regexpMatcher = '(?<regexp>(?<delim>.).*?(?<!\\\\)(?:\\\\\\\\)*(?P=delim)[ius]*)';
 
 		$tokenTypes = array(
-			'regexp' => 'REGEXP[0-9]*=' . $regexpMatcher,
-			'parse'  => 'PARSE=' . $regexpMatcher,
+			'regexp' => '(?:REGEXP[0-9]*|PARSE)=' . $regexpMatcher,
 			'range'  => 'RANGE[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
 			'other'  => '[A-Z_]+[0-9]*'
@@ -538,14 +537,13 @@ abstract class BBCodeMonkey
 		// only be one, as in "foo={URL}" but some older BBCodes use a form of composite
 		// attributes such as [FLASH={NUMBER},{NUMBER}]
 		preg_match_all(
-			'#(?J)\\{(' . implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
+			'#\\{(' . implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
 			$definition,
 			$matches,
 			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
 		);
 
 		$tokens = array();
-
 		foreach ($matches as $m)
 		{
 			$token = array(
@@ -569,11 +567,12 @@ abstract class BBCodeMonkey
 				$token['id']       = substr($head, 0, $pos);
 				$token['type']     = rtrim($token['id'], '0123456789');
 
+				// Copy the content of named subpatterns into the token's config
 				foreach ($m as $k => $v)
 				{
 					if (!is_numeric($k) && $k !== 'delim' && $k !== 'options')
 					{
-						$token[$k] = $v;
+						$token[$k] = $v[0];
 					}
 				}
 			}
