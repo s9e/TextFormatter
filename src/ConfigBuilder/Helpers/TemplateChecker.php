@@ -513,9 +513,10 @@ abstract class TemplateChecker
 		// List of filters that make a value safe to be used in a script
 		$safeFilters = array(
 			// Those might see some usage
-			'urlencode',
+			'json_encode',
 			'rawurlencode',
 			'strtotime',
+			'urlencode',
 			// URLs should be safe because characters ()'" are urlencoded
 			'#url',
 			'#int',

@@ -412,26 +412,26 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe if attribute 'foo' has filter 'urlencode': <script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>
+	* @testdox Not safe if attribute 'foo' has filter 'json_encode': <script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>
 	*/
-	public function testCheckUnsafeDD1F8AFC()
+	public function testCheckUnsafeA9307816()
 	{
 		$this->testCheckUnsafe(
 			'<script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>',
 			"Cannot evaluate context node due to 'xsl:for-each'",
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
+			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
 		);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter 'urlencode': <script><xsl:value-of select="@foo"/></script>
+	* @testdox Safe if attribute 'foo' has filter 'json_encode': <script><xsl:value-of select="@foo"/></script>
 	*/
-	public function testCheckUnsafe3E82294D()
+	public function testCheckUnsafe6638EC01()
 	{
 		$this->testCheckUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
+			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
 		);
 	}
 
@@ -444,6 +444,30 @@ class TemplateCheckerTest extends Test
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter 'strtotime': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe3684D9D3()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter 'urlencode': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe3E82294D()
+	{
+		$this->testCheckUnsafe(
+			'<script><xsl:value-of select="@foo"/></script>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
 		);
 	}
 
@@ -951,14 +975,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter 'urlencode': <b onclick="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter 'json_encode': <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafeCF26F70E()
+	public function testCheckUnsafeDAE45009()
 	{
 		$this->testCheckUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
+			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
 		);
 	}
 
@@ -971,6 +995,30 @@ class TemplateCheckerTest extends Test
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter 'strtotime': <b onclick="{@foo}"/>
+	*/
+	public function testCheckUnsafeC7200790()
+	{
+		$this->testCheckUnsafe(
+			'<b onclick="{@foo}"/>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter 'urlencode': <b onclick="{@foo}"/>
+	*/
+	public function testCheckUnsafeCF26F70E()
+	{
+		$this->testCheckUnsafe(
+			'<b onclick="{@foo}"/>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
 		);
 	}
 
@@ -1071,14 +1119,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter 'urlencode': <b onanything="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter 'json_encode': <b onanything="{@foo}"/>
 	*/
-	public function testCheckUnsafeC3FBEAF2()
+	public function testCheckUnsafe613418C4()
 	{
 		$this->testCheckUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
+			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
 		);
 	}
 
@@ -1091,6 +1139,30 @@ class TemplateCheckerTest extends Test
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter 'strtotime': <b onanything="{@foo}"/>
+	*/
+	public function testCheckUnsafeCBFD1A6C()
+	{
+		$this->testCheckUnsafe(
+			'<b onanything="{@foo}"/>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter 'urlencode': <b onanything="{@foo}"/>
+	*/
+	public function testCheckUnsafeC3FBEAF2()
+	{
+		$this->testCheckUnsafe(
+			'<b onanything="{@foo}"/>',
+			NULL,
+			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
 		);
 	}
 
@@ -2475,8 +2547,10 @@ class TemplateCheckerTest extends Test
 				'#simpletext'
 			),
 			'JS' => array(
-				'urlencode',
+				'json_encode',
 				'rawurlencode',
+				'strtotime',
+				'urlencode',
 				'#url',
 				'#int',
 				'#uint',
