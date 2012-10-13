@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\ConfigBuilder\Items;
 
 use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\ConfigBuilder\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\ConfigBuilder\Collections\Ruleset;
 use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
@@ -19,6 +20,69 @@ class TagTest extends Test
 	{
 		$tag = new Tag(array('nestingLimit' => 123));
 		$this->assertSame(123, $tag->nestingLimit);
+	}
+
+	/**
+	* @testdox $tag->attributePreprocessors can be assigned a 2D array of regexps
+	*/
+	public function testAttributePreprocessorsArray()
+	{
+		$attributePreprocessors = array(
+			'foo' => array('/a/', '/b/'),
+			'bar' => array('/c/')
+		);
+
+		$tag = new Tag;
+		$tag->attributePreprocessors = $attributePreprocessors;
+
+		$this->assertEquals(
+			$attributePreprocessors,
+			$tag->attributePreprocessors->getConfig()
+		);
+	}
+
+	/**
+	* @testdox $tag->attributePreprocessors can be assigned an instance of AttributePreprocessorCollection to copy its content
+	*/
+	public function testAttributePreprocessorsInstanceOfAttributePreprocessorCollection()
+	{
+		$attributePreprocessorCollection = new AttributePreprocessorCollection;
+		$attributePreprocessorCollection->add('foo', '/bar/');
+
+		$tag = new Tag;
+		$tag->attributePreprocessors = $attributePreprocessorCollection;
+
+		$this->assertEquals(
+			$attributePreprocessorCollection,
+			$tag->attributePreprocessors
+		);
+
+		$this->assertNotSame(
+			$attributePreprocessorCollection,
+			$tag->attributePreprocessors,
+			'$tag->attributePreprocessor should not have been replaced with $attributePreprocessorCollection'
+		);
+	}
+
+	/**
+	* @testdox Setting $tag->attributePreprocessors clears previous attributePreprocessors
+	* @depends testAttributePreprocessorsArray
+	*/
+	public function testAttributePreprocessorsArrayClears()
+	{
+		$attributePreprocessors = array(
+			'foo' => array('/a/', '/b/'),
+			'bar' => array('/c/')
+		);
+
+		$tag = new Tag;
+		$tag->attributePreprocessors->add('baz', '/d/');
+		$tag->attributePreprocessors = $attributePreprocessors;
+
+		$this->assertEquals(
+			$attributePreprocessors,
+			$tag->attributePreprocessors->getConfig()
+		);
 	}
 
 	/**

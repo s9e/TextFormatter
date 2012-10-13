@@ -94,6 +94,28 @@ class ConfigurableTest extends Test
 
 		$this->assertSame($values, iterator_to_array($dummy->collection));
 	}
+
+	/**
+	* @testdox __set() throws an exception if a NormalizedCollection would be overwritten by a non-array, non-Traversable value
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Property 'collection' expects an array or a traversable object to be passed
+	*/
+	public function testMagicSetNonTraversable()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		$dummy->collection = 1;
+	}
+
+	/**
+	* @testdox __isset($k) returns true if the property exists
+	*/
+	public function testMagicIsset()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		$this->assertTrue(isset($dummy->int));
+	}
 }
 
 class ConfigurableTestDummy

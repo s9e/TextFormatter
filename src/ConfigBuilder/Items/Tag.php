@@ -82,6 +82,17 @@ class Tag
 	}
 
 	/**
+	* Set this tag's attribute preprocessors
+	*
+	* @param array|AttributePreprocessorCollection $attributePreprocessors 2D array of [attrName=>[regexp]], or an instance of AttributePreprocessorCollection
+	*/
+	public function setAttributePreprocessors($attributePreprocessors)
+	{
+		$this->attributePreprocessors->clear();
+		$this->attributePreprocessors->merge($attributePreprocessors);
+	}
+
+	/**
 	* Set this tag's nestingLimit
 	*
 	* @param integer $limit

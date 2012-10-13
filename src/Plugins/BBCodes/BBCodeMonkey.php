@@ -409,7 +409,7 @@ abstract class BBCodeMonkey
 		{
 			list($attrName, $definition, $tokens) = $composite;
 
-			$regexp  = '#^';
+			$regexp  = '/^';
 			$lastPos = 0;
 
 			foreach ($tokens as $token)
@@ -438,20 +438,26 @@ abstract class BBCodeMonkey
 				{
 					// The name of the named subpattern and the corresponding attribute is based on
 					// the attribute preprocessor's name, with an incremented ID that ensures we
-					// don't overwrite existing attributes
+					// don't overwrite existing attributes, with a limit set to 100 to avoid any
+					// potential for an unbounded loop
 					$i = 0;
 					do
 					{
 						$matchName = $attrName . $i;
-						++$i;
+
+						if (!isset($tag->attributes[$matchName])
+						 && !in_array($matchName, $tokenAttribute, true))
+						{
+							break;
+						}
 					}
-					while (isset($tag->attributes[$matchName]));
+					while (++$i < 100);
 
 					$tokenAttribute[$tokenId] = $matchName;
 				}
 
 				// Append the literal text between the last position and current position
-				$regexp .= preg_quote(substr($definition, $lastPos, $token['pos'] - $lastPos), '#');
+				$regexp .= preg_quote(substr($definition, $lastPos, $token['pos'] - $lastPos), '/');
 
 				// Grab the expression that corresponds to the token type, or use a catch-all
 				// expression otherwise
@@ -468,7 +474,7 @@ abstract class BBCodeMonkey
 			}
 
 			// Append the literal text that follows the last token and finish the regexp
-			$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$#D';
+			$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$/D';
 
 			// Add the attribute preprocessor to the config
 			$tag->attributePreprocessors->add($attrName, $regexp);

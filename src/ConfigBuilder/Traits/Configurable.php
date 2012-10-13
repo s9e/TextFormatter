@@ -7,11 +7,13 @@
 */
 namespace s9e\TextFormatter\ConfigBuilder\Traits;
 
+use InvalidArgumentException;
 use RuntimeException;
+use Traversable;
 use s9e\TextFormatter\ConfigBuilder\Collections\NormalizedCollection;
 
 /**
-* Provides magic __get and __set implementations
+* Provides magic __get, __set and __isset implementations
 */
 trait Configurable
 {
@@ -43,6 +45,12 @@ trait Configurable
 				// iteratively set new values
 				if ($this->$propName instanceof NormalizedCollection)
 				{
+					if (!is_array($propValue)
+					 && !($propValue instanceof Traversable))
+					{
+						throw new InvalidArgumentException("Property '" . $propName . "' expects an array or a traversable object to be passed");
+					}
+
 					$this->$propName->clear();
 
 					foreach ($propValue as $k => $v)
@@ -56,11 +64,17 @@ trait Configurable
 				// Otherwise, we'll just try to match the option's type
 				/**
 				* @todo perhaps only do that if the cast is lossless, e.g. "1"=>1 but not "1a"=>1
+				* @todo don't overwrite an object with another object that does not extend it
 				*/
 				settype($propValue, gettype($this->$propName));
 			}
 
 			$this->$propName = $propValue;
 		}
+	}
+
+	public function __isset($propName)
+	{
+		return isset($this->$propName);
 	}
 }

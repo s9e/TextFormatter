@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes;
 
 use Exception;
 use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder\Items\Filter;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 use s9e\TextFormatter\Plugins\BBCodes\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey;
@@ -93,8 +94,46 @@ class BBCodeMonkeyTest extends Test
 							)
 						)
 					)),
-					'tokens' => array('URL' => 'url'),
+					'tokens' => array(
+						'URL'     => 'url'
+					),
 					'passthroughToken' => 'TEXT'
+				)
+			),
+			array(
+				'[flash={NUMBER1},{NUMBER2}]{URL}[/flash]',
+				array(
+					'name'   => 'FLASH',
+					'bbcode' => new BBCode(array(
+						'contentAttributes' => array('content'),
+						'defaultAttribute'  => 'flash'
+					)),
+					'tag'    => new Tag(array(
+						'attributePreprocessors' => array(
+							'flash' => '/^(?<flash0>\\d+),(?<flash1>\\d+)$/D'
+						),
+						'attributes' => array(
+							'content' => array(
+								'filterChain' => array('#url')
+							),
+							'flash0' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/^(?:\\d+)$/D'))
+								)
+							),
+							'flash1' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/^(?:\\d+)$/D'))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'NUMBER1' => 'flash0',
+						'NUMBER2' => 'flash1',
+						'URL' => 'content'
+					),
+					'passthroughToken' => null
 				)
 			)
 		);

@@ -24,7 +24,7 @@ class AttributePreprocessor
 	{
 		if (@preg_match($regexp, '') === false)
 		{
-			throw new InvalidArgumentException('Invalid regular expression');
+			throw new InvalidArgumentException('Invalid regular expression ' . var_export($regexp, true));
 		}
 
 		$this->regexp = $regexp;
