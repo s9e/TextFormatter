@@ -110,7 +110,7 @@ class BBCodeMonkeyTest extends Test
 					)),
 					'tag'    => new Tag(array(
 						'attributePreprocessors' => array(
-							'flash' => '/^(?<flash0>\\d+),(?<flash1>\\d+)$/D'
+							'flash' => array('/^(?<flash0>\\d+),(?<flash1>\\d+)$/D')
 						),
 						'attributes' => array(
 							'content' => array(
