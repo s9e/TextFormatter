@@ -32,6 +32,7 @@
 			<file>ConfigBuilder/Traits/ConfigurableTest.php</file>
 
 			<file>ConfigBuilder/Collections/AttributeCollectionTest.php</file>
+			<file>ConfigBuilder/Collections/AttributeListTest.php</file>
 			<file>ConfigBuilder/Collections/AttributePreprocessorCollectionTest.php</file>
 			<file>ConfigBuilder/Collections/FilterChainTest.php</file>
 			<file>ConfigBuilder/Collections/RulesetTest.php</file>
@@ -62,6 +63,7 @@
 	<filter>
 		<whitelist>
 			<file>../src/ConfigBuilder/Collections/AttributeCollection.php</file>
+			<file>../src/ConfigBuilder/Collections/AttributeList.php</file>
 			<file>../src/ConfigBuilder/Collections/AttributePreprocessorCollection.php</file>
 			<file>../src/ConfigBuilder/Collections/Collection.php</file>
 			<file>../src/ConfigBuilder/Collections/FilterChain.php</file>
