@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
+use s9e\TextFormatter\ConfigBuilder\Collections\AttributeList;
 use s9e\TextFormatter\ConfigBuilder\Traits\Configurable;
 use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
@@ -16,10 +17,10 @@ class BBCode
 	use Configurable;
 
 	/**
-	* @var array List of attributes whose value is to be made the content between the BBCode's tags
-	*            if it's not explicitly given
+	* @var AttributeList List of attributes whose value is to be made the content between the
+	*                    BBCode's tags if it's not explicitly given
 	*/
-	public $contentAttributes = array();
+	protected $contentAttributes;
 
 	/**
 	* @var string Name of the default attribute
@@ -36,6 +37,8 @@ class BBCode
 	*/
 	public function __construct(array $options = null)
 	{
+		$this->contentAttributes = new AttributeList;
+
 		if (isset($options))
 		{
 			foreach ($options as $optionName => $optionValue)

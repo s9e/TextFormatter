@@ -16,8 +16,6 @@ use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpBuilder;
 use s9e\TextFormatter\ConfigBuilder\Items\Attribute;
 use s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
-use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
-use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
 abstract class BBCodeMonkey
 {
@@ -351,7 +349,7 @@ abstract class BBCodeMonkey
 
 			// The name at the left of the equal sign is the attribute's or attribute preprocessor's
 			// name, the rest is their definition
-			$attrName   = AttributeName::normalize(trim(substr($pair, 0, $pos)));
+			$attrName   = trim(substr($pair, 0, $pos));
 			$definition = trim(substr($pair, 1 + $pos));
 
 			// The first attribute defined is set as default
@@ -371,9 +369,11 @@ abstract class BBCodeMonkey
 			// Test whether this attribute has one single all-encompassing token
 			if ($tokens[0]['content'] === $definition)
 			{
-				if ($tokens[0]['type'] === 'PARSE')
+				$token = $tokens[0];
+
+				if ($token['type'] === 'PARSE')
 				{
-					$tag->attributePreprocessors->add($attrName, $tokens[0]['regexp']);
+					$tag->attributePreprocessors->add($attrName, $token['regexp']);
 				}
 				elseif (isset($tag->attributes[$attrName]))
 				{
@@ -381,9 +381,19 @@ abstract class BBCodeMonkey
 				}
 				else
 				{
-					self::addAttribute($tokens[0], $bbcode, $tag);
+					// Remove the "useContent" option and add the attribute's name to the list of
+					// attributes to use this BBCode's content
+					if (!empty($token['options']['useContent']))
+					{
+						$bbcode->contentAttributes[] = $attrName;
+					}
+					unset($token['options']['useContent']);
 
-					$tokenId = $tokens[0]['id'];
+					// Add the attribute
+					$tag->attributes[$attrName] = self::generateAttribute($token);
+
+					// Record the token ID if applicable
+					$tokenId = $token['id'];
 					$tokenAttribute[$tokenId] = (isset($tokenAttribute[$tokenId]))
 					                          ? false
 					                          : $attrName;
@@ -522,7 +532,7 @@ abstract class BBCodeMonkey
 		// only be one, as in "foo={URL}" but some older BBCodes use a form of composite
 		// attributes such as [FLASH={NUMBER},{NUMBER}]
 		preg_match_all(
-			'#(?J)\\{(' . implode('|', $tokenTypes) . ')((?:;[^;]*)*)\\}#',
+			'#(?J)\\{(' . implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
 			$definition,
 			$matches,
 			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
@@ -539,7 +549,7 @@ abstract class BBCodeMonkey
 			);
 
 			$head    = $m[1][0];
-			$options = (isset($m[2][0])) ? $m[2][0] : '';
+			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
 
 			$pos = strpos($head, '=');
 
@@ -555,7 +565,7 @@ abstract class BBCodeMonkey
 
 				foreach ($m as $k => $v)
 				{
-					if (!is_numeric($k) && $k !== 'delim')
+					if (!is_numeric($k) && $k !== 'delim' && $k !== 'options')
 					{
 						$token[$k] = $v;
 					}
@@ -592,11 +602,9 @@ abstract class BBCodeMonkey
 	* Generate an attribute based on a token
 	*
 	* @param  array  $token  Token this attribute is based on
-	* @param  BBCode $bbcode Owner BBCode
-	* @param  Tag    $tag    Owner tag
 	* @return void
 	*/
-	protected static function addAttribute(array $token, BBCode $bbcode, Tag $tag)
+	protected static function generateAttribute(array $token)
 	{
 		$attribute = new Attribute;
 
@@ -657,14 +665,6 @@ abstract class BBCodeMonkey
 			unset($token['options']['postFilter']);
 		}
 
-		// Remove the "useContent" option and add the attribute's name to the list of attributes to
-		// use this BBCode's content
-		if (!empty($token['options']['useContent']))
-		{
-			$bbcode->contentAttributes[] = $attrName;
-		}
-		unset($token['options']['useContent']);
-
 		// Set the "required" option if "required" or "optional" is set, then remove
 		// the "optional" option
 		if (isset($token['options']['optional']))
@@ -681,5 +681,7 @@ abstract class BBCodeMonkey
 		{
 			$attribute->$k = $v;
 		}
+
+		return $attribute;
 	}
 }

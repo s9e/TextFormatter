@@ -669,5 +669,6 @@ s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCode
  [x] BBCode::normalizeName('*invalid*') throws an exception
 
 s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCodeMonkey
- [x] Templates
+ [x] parse() works
+ [x] replaceTokens() works
 

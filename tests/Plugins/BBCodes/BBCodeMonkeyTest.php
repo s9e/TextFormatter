@@ -28,9 +28,9 @@ class BBCodeMonkeyTest extends Test
 	}
 
 	/**
+	* @testdox parse() works
 	* @dataProvider getBBCodeTests
 	*/
-/*
 	public function testBBCodes($usage, $expected)
 	{
 		if ($expected instanceof Exception)
@@ -45,8 +45,9 @@ class BBCodeMonkeyTest extends Test
 			$this->assertEquals($expected, $actual);
 		}
 	}
-*/
+
 	/**
+	* @testdox replaceTokens() works
 	* @dataProvider getTemplateTests
 	*/
 	public function testTemplates($template, $tokens, $passthroughToken, $expected)
