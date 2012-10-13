@@ -274,6 +274,13 @@ class BBCodesParser extends PluginParser
 					}
 					else
 					{
+						/**
+						* @todo Some forums (vBulletin, it seems) allow spaces in unquoted
+						*       attributes. Ideally, to remain as compatible as possible we should
+						*       keep reading until we find a closing bracket or the name of an
+						*       attribute following whitespace and followed by an equal sign
+						*       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
+						*/
 						$spn   = strcspn($text, "] \n\r", $rpos);
 						$value = substr($text, $rpos, $spn);
 

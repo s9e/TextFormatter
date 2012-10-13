@@ -668,7 +668,7 @@ class BBCodesConfig extends PluginConfig
 						         . $this->cb->getRegexpBuilder()->fromList($choices)
 						         . '$#iD';
 
-						if (preg_match('#[\\x80-\\xff]#', $regexp))
+						if (!preg_match('#^[[:ascii:]]*$#D', $regexp))
 						{
 							// Unicode mode needed
 							$regexp .= 'u';

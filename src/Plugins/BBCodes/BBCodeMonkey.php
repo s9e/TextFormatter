@@ -7,12 +7,16 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
+use DOMDocument;
+use DOMXPath;
+use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpBuilder;
 use s9e\TextFormatter\ConfigBuilder\Items\Attribute;
 use s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
+use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
 abstract class BBCodeMonkey
@@ -44,10 +48,14 @@ abstract class BBCodeMonkey
 	*/
 	public static function parse($usage)
 	{
+		$tag    = new Tag;
+		$bbcode = new BBCode;
+
 		// This is the config we will return
 		$config = array(
-			'tag'    => new Tag,
-			'bbcode' => new BBCode
+			'tag'              => $tag,
+			'bbcode'           => $bbcode,
+			'passthroughToken' => null
 		);
 
 		$regexp = '#^'
@@ -58,7 +66,7 @@ abstract class BBCodeMonkey
 		        // foo={TOKEN} bar={TOKEN1},{TOKEN2}
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*)'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
-		        . '(?:\\s*/?\\]|\\](?<content>\\S+)?(?<endTag>\\[/\\1]))'
+		        . '(?:\\s*/?\\]|\\]\\s*(?<content>\\S+)?\\s*(?<endTag>\\[/\\1]))'
 		        . '$#';
 
 		if (!preg_match($regexp, trim($usage), $m))
@@ -79,19 +87,200 @@ abstract class BBCodeMonkey
 			$attributes = $m['bbcodeName'] . $m['defaultAttribute'] . $attributes;
 		}
 
-		// Append the content token to the attributes list, under the name "content"
+		// Append the content token to the attributes list under the name "content" if it's anything
+		// but raw {TEXT}
 		if (!empty($m['content']))
 		{
-			$attributes .= ' content=' . $m['content'];
+			if ($m['content'] === '{TEXT}')
+			{
+				$config['passthroughToken'] = 'TEXT';
+			}
+			else
+			{
+				$attributes .= ' content=' . $m['content'];
+				$bbcode->contentAttributes[] = 'content';
+			}
 		}
 
-		$tokens = self::addAttributes($attributes, $config['bbcode'], $config['tag']);
+		$config['tokens'] = self::addAttributes($attributes, $config['bbcode'], $config['tag']);
 
-		// Ensure the attribute/attribute processor does use the BBCode's content if applicable
-		if (!empty($m['content']))
+		return $config;
+	}
+
+	/**
+	* Replace tokens in a template
+	*
+	* @param  string $template         Original template
+	* @param  array  $tokens           Array of [tokenId => attrName]
+	* @param  string $passthroughToken Token ID of the token that represents the BBCode's contents
+	* @return string                   Processed template
+	*/
+	public static function replaceTokens($template, array $tokens, $passthroughToken)
+	{
+		$dom   = self::loadTemplate($template);
+		$xpath = new DOMXPath($dom);
+
+		// Replace tokens in attributes
+		foreach ($xpath->query('//@*') as $attr)
 		{
-			$bbcode->contentAttributes[] = 'content';
+			$attr->value = htmlspecialchars(preg_replace_callback(
+				'#\\{[A-Z]+[0-9]*?\\}#',
+				function ($m) use ($tokens, $passthroughToken)
+				{
+					$tokenId = substr($m[0], 1, -1);
+
+					if (!isset($tokens[$tokenId]))
+					{
+						if ($tokenId === $passthroughToken)
+						{
+							// Use substring() to exclude the <st/> and <et/> children
+							return '{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}';
+						}
+
+						throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
+					}
+
+					return '{' . $tokens[$tokenId] . '}';
+				},
+				$attr->value
+			));
 		}
+
+		// Replace tokens in text nodes
+		foreach ($xpath->query('//text()') as $node)
+		{
+			preg_match_all(
+				'#\\{[A-Z]+[0-9]*?\\}#',
+				$node->textContent,
+				$matches,
+				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+			);
+
+			if (empty($matches))
+			{
+				continue;
+			}
+
+			// Rebuild the text node in a fragment
+			$fragment = $dom->createDocumentFragment();
+
+			$lastPos = 0;
+			foreach ($matches as $m)
+			{
+				$tokenId = substr($m[0][0], 1, -1);
+				$pos     = $m[0][1];
+
+				if ($pos > ($lastPos + 1))
+				{
+					$fragment->appendChild(
+						$dom->createTextNode(
+							substr($node->textContent, $lastPos, $pos - $lastPos)
+						)
+					);
+				}
+				$lastPos = $pos + strlen($m[0][0]);
+
+				if (isset($tokens[$tokenId]))
+				{
+					$fragment
+						->appendChild(
+							$dom->createElementNS(
+								'http://www.w3.org/1999/XSL/Transform',
+								'xsl:value-of'
+							)
+						)
+						->setAttribute('select', '@' . $tokens[$tokenId]);
+				}
+				elseif ($tokenId === $passthroughToken)
+				{
+					$fragment->appendChild(
+						$dom->createElementNS(
+							'http://www.w3.org/1999/XSL/Transform',
+							'xsl:apply-templates'
+						)
+					);
+				}
+				else
+				{
+					throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
+				}
+			}
+
+			// Append the rest of the text
+			$text = substr($node->textContent, $lastPos);
+			if ($text !== '')
+			{
+				$fragment->appendChild($dom->createTextNode($text));
+			}
+
+			// Now replace the old text node with our shiny new fragment
+			$node->parentNode->replaceChild($fragment, $node);
+		}
+
+		// Now dump our temporary node as XML and remove the root node's markup
+		$xml = $dom->saveXML($dom->documentElement);
+
+		$lpos = 1 + strpos($xml, '>');
+		$rpos = strrpos($xml, '<');
+
+		return substr($xml, $lpos, $rpos - $lpos);
+	}
+
+	/**
+	* Attempt to load a template with DOM, first as XML then as HTML as a fallback
+	*
+	* @param  string      $template
+	* @return DOMDocument
+	*/
+	protected static function loadTemplate($template)
+	{
+		$dom = new DOMDocument;
+
+		// Generate a random tag name so that the user cannot inject stuff outside of that template.
+		// For instance, if the tag was <t>, one could input </t><xsl:evil-stuff/><t>
+		$t = 't' . md5(microtime(true) . mt_rand());
+
+		// First try as XML
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><' . $t . ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $template . '</' . $t . '>';
+
+		try
+		{
+			$useErrors = libxml_use_internal_errors(true);
+			$success = $dom->loadXML($xml);
+		}
+		catch (Exception $e)
+		{
+		}
+
+		libxml_use_internal_errors($useErrors);
+
+		if ($success)
+		{
+			// Success!
+			return $dom;
+		}
+
+		// Fall back to loading it inside a div, as HTML
+		$html = '<html><body><div id="' . $t . '">' . $template . '</div></body></html>';
+
+		$useErrors = libxml_use_internal_errors(true);
+		$success = $dom->loadHTML($html);
+		libxml_use_internal_errors($useErrors);
+
+		if (!$success)
+		{
+			$error = libxml_get_last_error();
+			throw new InvalidArgumentException('Invalid HTML in template - error was: ' . $error->message);
+		}
+
+		// Now dump the thing as XML and reload it to ensure we don't have to worry about internal
+		// shenanigans
+		$xml = $dom->saveXML($dom->getElementById($t));
+
+		$dom = new DOMDocument;
+		$dom->loadXML($xml);
+
+		return $dom;
 	}
 
 	/**
@@ -125,66 +314,102 @@ abstract class BBCodeMonkey
 	protected static function addAttributes($str, BBCode $bbcode, Tag $tag)
 	{
 		/**
-		* @var array Array of [tokenId => attrName]
+		* @var array List of composites' tokens. Each element is composed of an attribute name, the
+		*            composite's definition and an array of tokens
 		*/
-		$tokens = array();
+		$composites = array();
 
 		/**
-		* @todo determine the defaultAttribute value for [foo={TEXT;attrName=bar}]
+		* @var array Map of [tokenId => attrName]. If the same token is used in multiple attributes
+		*            it is set to FALSE
 		*/
+		$tokenAttribute = array();
+
 		foreach (preg_split('#\\s+#', trim($str)) as $k => $pair)
 		{
-			// The name at the left of the equal sign is the key, the rest is the definition. The
-			// key will eventually become the name of the attribute or attribute preprocessor
-			$key        = trim(substr($pair, 0, strpos($pair, '=')));
-			$definition = trim(substr($pair, 1 + strpos($pair, '=')));
+			$pos = strpos($pair, '=');
 
-			// Now capture the content of every token in that attribute's definition. Usually there
-			// will only be one, as in "foo={URL}" but some older BBCodes use a form of composite
-			// attributes such as [FLASH={NUMBER},{NUMBER}]
-			preg_match_all(
-				'#\\{(?<tokenId>(?<tokenType>[A-Z_]+)[0-9]*)(?:=[^}]+)?\\}#',
-				$definition,
-				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-			);
-
-			if (empty($matches))
+			if ($pos === false)
 			{
-				throw new RuntimeException("No tokens found in '" . $key . "' definition");
+				throw new RuntimeException("Could not find = in '" . $pair . "'");
 			}
 
-			// Test whether the definition is a single token and nothing else
-			$isComposite = (bool) ($matches[0][0][0] !== $definition);
+			// The name at the left of the equal sign is the attribute's or attribute preprocessor's
+			// name, the rest is their definition
+			$attrName   = AttributeName::normalize(trim(substr($pair, 0, $pos)));
+			$definition = trim(substr($pair, 1 + $pos));
 
-			// If this is the first attribute of this BBCode, we tentatively set it as default
-			// attribute
-			if ($isComposite && !isset($bbcode->defaultAttribute))
+			// The first attribute defined is set as default
+			if (!isset($bbcode->defaultAttribute))
 			{
-				$bbcode->defaultAttribute = $key;
+				$bbcode->defaultAttribute = $attrName;
 			}
 
-			// We create the attribute preprocessor's regexp either way
+			// Parse the tokens in that definition
+			$tokens = self::parseTokens($definition);
+
+			if (empty($tokens))
+			{
+				throw new RuntimeException('No tokens found in ' . $attrName . "'s definition");
+			}
+
+			// Test whether this attribute has one single all-encompassing token
+			if ($tokens[0]['content'] === $definition)
+			{
+				if ($tokens[0]['type'] === 'PARSE')
+				{
+					$tag->attributePreprocessors->add($attrName, $tokens[0]['regexp']);
+				}
+				elseif (isset($tag->attributes[$attrName]))
+				{
+					throw new RuntimeException("Attribute '" . $attrName . "' is declared twice");
+				}
+				else
+				{
+					self::addAttribute($tokens[0], $bbcode, $tag);
+
+					$tokenId = $tokens[0]['id'];
+					$tokenAttribute[$tokenId] = (isset($tokenAttribute[$tokenId]))
+					                          ? false
+					                          : $attrName;
+				}
+			}
+			else
+			{
+				$composites[] = array($attrName, $definition, $tokens);
+			}
+		}
+
+		foreach ($composites as $composite)
+		{
+			list($attrName, $definition, $tokens) = $composite;
+
 			$regexp  = '#^';
 			$lastPos = 0;
 
-			foreach ($matches as $k => $match)
+			foreach ($tokens as $token)
 			{
-				$tokenId     = $match['tokenId'][0];
-				$tokenType   = $match['tokenType'][0];
-				$tokenValues = self::parseToken(substr($match[0][0], 1, -1));
+				$tokenId   = $token['id'];
+				$tokenType = $token['type'];
 
-				$isPreprocessor = (bool) ($tokenType === 'PARSE');
-
-				if ($isComposite && $isPreprocessor)
+				if ($tokenType === 'PARSE')
 				{
 					// Disallow {PARSE} tokens because attribute preprocessors cannot feed into
 					// other attribute preprocessors
 					throw new RuntimeException('{PARSE} tokens can only be used has the sole content of an attribute');
 				}
 
-				// Determine the name of this attribute
-				if ($isComposite)
+				// Find the attribute name associated with this token
+				if (isset($tokenAttribute[$tokenId]))
+				{
+					$matchName = $tokenAttribute[$tokenId];
+
+					if ($matchName === false)
+					{
+						throw new RuntimeException('Token {' . $tokenId . "} used in attribute '" . $attrName . "' is ambiguous");
+					}
+				}
+				else
 				{
 					// The name of the named subpattern and the corresponding attribute is based on
 					// the attribute preprocessor's name, with an incremented ID that ensures we
@@ -192,89 +417,36 @@ abstract class BBCodeMonkey
 					$i = 0;
 					do
 					{
-						$attrName = $key . $i;
+						$matchName = $attrName . $i;
 						++$i;
 					}
-					while (isset($tag->attributes[$attrName]));
-				}
-				else
-				{
-					// One single token and no name given means we use the key, e.g.
-					// "[foo bar={INT}]" will create an attribute named "bar"
-					$attrName = $key;
-				}
+					while (isset($tag->attributes[$matchName]));
 
-				// If this is the first attribute of this BBCode, we tentatively set it as default
-				// attribute
-				if (!isset($bbcode->defaultAttribute))
-				{
-					$bbcode->defaultAttribute = $attrName;
-				}
-
-				// Remove the "useContent" option and add the attribute's name
-				if (!empty($tokenValues['useContent']))
-				{
-					$bbcode->contentAttributes[] = $attrName;
-				}
-
-				// Set the "required" option if "required" or "optional" is set, then remove
-				// the "optional" option
-				if (isset($tokenValues['optional']))
-				{
-					$tokenValues['required'] = !$tokenValues['optional'];
-					unset($tokenValues['optional']);
-				}
-				elseif (isset($tokenValues['required']))
-				{
-					$tokenValues['required'] = (bool) $tokenValues['required'];
-				}
-
-				if ($isPreprocessor)
-				{
-					$tag->attributePreprocessors->add($attrName, $tokenValues['regexp']);
-				}
-				else
-				{
-					if (isset($tag->attributes[$attrName]))
-					{
-						throw new RuntimeException("Attribute '" . $attrName . "' is defined twice");
-					}
-
-					// Add the attribute
-					$tag->attributes[$attrName] = self::generateAttribute($tokenType, $tokenValues);
-
-					// Record the token's attribute
-					if (isset($tokens[$tokenId]))
-					{
-						// Set to false if the name is not unique, so that we can remove ambiguous
-						// tokens later
-						$tokens[$tokenId] = false;
-					}
-					else
-					{
-						$tokens[$tokenId] = $attrName;
-					}
+					$tokenAttribute[$tokenId] = $matchName;
 				}
 
 				// Append the literal text between the last position and current position
-				$pos = $match[0][1];
-				$regexp .= preg_quote(substr($definition, $lastPos, $pos - $lastPos), '#');
+				$regexp .= preg_quote(substr($definition, $lastPos, $token['pos'] - $lastPos), '#');
 
-				// Append the named subpattern
-				$regexp .= '(?<' . $attrName . '>.+?)';
+				// Grab the expression that corresponds to the token type, or use a catch-all
+				// expression otherwise
+				$expr = (isset(self::$tokenRegexp[$tokenType]))
+				      ? self::$tokenRegexp[$tokenType]
+				      : '.+?';
+
+				// Append the named subpattern. Its name is made of the attribute preprocessor's
+				// name and the subpattern's position
+				$regexp .= '(?<' . $matchName . '>' . $expr . ')';
 
 				// Update the last position
-				$lastPos = $pos + strlen($match[0][0]);
+				$lastPos = $token['pos'] + strlen($token['content']);
 			}
 
-			if ($isComposite)
-			{
-				// Append the literal text that follows the last token and finish the regexp
-				$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$#D';
+			// Append the literal text that follows the last token and finish the regexp
+			$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$#D';
 
-				// Add the attribute preprocessor to the config
-				$tag->attributePreprocessors->add($key, $regexp);
-			}
+			// Add the attribute preprocessor to the config
+			$tag->attributePreprocessors->add($attrName, $regexp);
 		}
 
 		// Now create attributes generated from attribute preprocessors. For instance, preprocessor
@@ -308,19 +480,20 @@ abstract class BBCodeMonkey
 			$tag->attributes[$attrName]->filterChain->append('#regexp', array('regexp' => $regexp));
 		}
 
-		return array_filter($tokens);
+		return array_filter($tokenAttribute);
 	}
 
 	/**
-	* Parse the content of a token and return it as a [key => value] array
+	* Parse and return all the tokens contained in a definition
 	*
-	* @param  string Token's content, e.g. "INT;optional"
+	* @param  string $definition
 	* @return array
 	*/
-	protected static function parseToken($tokenContent)
+	protected static function parseTokens($definition)
 	{
-		// This regexp should match a regexp, including its delimiters and optionally the "i" flag
-		$regexpMatcher = '(?<regexp>(?<delim>.).*?(?<!\\\\)(?:\\\\\\\\)*(?P=delim)i?)';
+		// This regexp should match a regexp, including its delimiters and optionally the i, u
+		// and/or i flags
+		$regexpMatcher = '(?<regexp>(?<delim>.).*?(?<!\\\\)(?:\\\\\\\\)*(?P=delim)[ius]*)';
 
 		$tokenTypes = array(
 			'regexp' => 'REGEXP[0-9]*=' . $regexpMatcher,
@@ -330,36 +503,52 @@ abstract class BBCodeMonkey
 			'other'  => '[A-Z_]+[0-9]*'
 		);
 
-		foreach ($tokenTypes as $regexp)
+		// Capture the content of every token in that attribute's definition. Usually there will
+		// only be one, as in "foo={URL}" but some older BBCodes use a form of composite
+		// attributes such as [FLASH={NUMBER},{NUMBER}]
+		preg_match_all(
+			'#(?J)\\{(' . implode('|', $tokenTypes) . ')((?:;[^;]*)*)\\}#',
+			$definition,
+			$matches,
+			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+		);
+
+		$tokens = array();
+
+		foreach ($matches as $m)
 		{
-			// The regexp should match the beginning of the token up till a semicolon or the end of
-			// the token
-			if (preg_match('#^' . $regexp . '(?:;|$)#', $tokenContent, $m))
+			$token = array(
+				'pos'     => $m[0][1],
+				'content' => $m[0][0],
+				'options' => array()
+			);
+
+			$head    = $m[1][0];
+			$options = (isset($m[2][0])) ? $m[2][0] : '';
+
+			$pos = strpos($head, '=');
+
+			if ($pos === false)
 			{
-				break;
+				$token['id']   = $head;
+				$token['type'] = rtrim($token['id'], '0123456789');
 			}
-		}
-
-		if (!$m)
-		{
-			throw new RuntimeException("Cannot parse token '" . $tokenContent . "'");
-		}
-
-		$values = array();
-		foreach ($m as $k => $v)
-		{
-			if (!is_numeric($k) && $k !== 'delim')
+			else
 			{
-				$values[$k] = $v;
+				$token['id']       = substr($head, 0, $pos);
+				$token['type']     = rtrim($token['id'], '0123456789');
+
+				foreach ($m as $k => $v)
+				{
+					if (!is_numeric($k) && $k !== 'delim')
+					{
+						$token[$k] = $v;
+					}
+				}
 			}
-		}
 
-		if ($m[0] !== $tokenContent)
-		{
-			// Now capture all key=value pairs that are separated with a semicolon
-			$pairs = preg_split('#;+#', rtrim(substr($tokenContent, strlen($m[0])), ';'));
-
-			foreach ($pairs as $pair)
+			// Parse the options
+			foreach (preg_split('#;+#', $options, -1, PREG_SPLIT_NO_EMPTY) as $pair)
 			{
 				$pos = strpos($pair, '=');
 
@@ -375,203 +564,107 @@ abstract class BBCodeMonkey
 					$v = substr($pair, 1 + $pos);
 				}
 
-				$values[$k] = $v;
+				$token['options'][$k] = $v;
 			}
+
+			$tokens[] = $token;
 		}
 
-		return $values;
+		return $tokens;
 	}
 
 	/**
-	* Generate an attribute based on a token type and options
+	* Generate an attribute based on a token
 	*
-	* @param  string    $tokenType
-	* @param  array     $tokenValues
-	* @return Attribute
+	* @param  array  $token  Token this attribute is based on
+	* @param  BBCode $bbcode Owner BBCode
+	* @param  Tag    $tag    Owner tag
+	* @return void
 	*/
-	protected static function generateAttribute($tokenType, array $tokenValues)
+	protected static function addAttribute(array $token, BBCode $bbcode, Tag $tag)
 	{
 		$attribute = new Attribute;
 
-		if (isset($tokenValues['preFilter']))
+		if (isset($token['options']['preFilter']))
 		{
-			foreach ($tokenValues['preFilter'] as $filter)
+			foreach ($token['options']['preFilter'] as $filter)
 			{
 				$attribute->filterChain->append($filter);
 			}
-			unset($tokenValues['preFilter']);
 		}
 
-		if ($tokenType === 'REGEXP')
+		if ($token['type'] === 'REGEXP')
 		{
-			$attribute->filterChain->append('#regexp', array('regexp' => $tokenValues['regexp']));
-			unset($tokenValues['regexp']);
+			$attribute->filterChain->append('#regexp', array('regexp' => $token['regexp']));
 		}
-		elseif ($tokenType === 'RANGE')
+		elseif ($token['type'] === 'RANGE')
 		{
 			$attribute->filterChain->append('#range', array(
-				'min' => $tokenValues['min'],
-				'max' => $tokenValues['max']
+				'min' => $token['min'],
+				'max' => $token['max']
 			));
-			unset($tokenValues['min']);
-			unset($tokenValues['max']);
 		}
-		elseif ($tokenType === 'CHOICE')
+		elseif ($token['type'] === 'CHOICE')
 		{
 			// Build a regexp from the list of choices then add a "#regexp" filter
 			$regexp = RegexpBuilder::fromList(
-				explode(',', $tokenValues['choices']),
+				explode(',', $token['choices']),
 				array('specialChars' => array('/' => '\\/'))
 			);
 			$regexp = '/^' . $regexp . '$/D';
 
 			// Add the case-insensitive flag until specified otherwise
-			if (empty($tokenValues['caseSensitive']))
+			if (empty($token['options']['caseSensitive']))
 			{
 				$regexp .= 'i';
 			}
+			unset($token['options']['caseSensitive']);
 
 			// Add the Unicode flag if the regexp isn't purely ASCII
-			if (!preg_match('#^[[:ascii]]++$#D', $regexp))
+			if (!preg_match('#^[[:ascii:]]*$#D', $regexp))
 			{
 				$regexp .= 'u';
 			}
 
 			$attribute->filterChain->append('#regexp', array('regexp' => $regexp));
-			unset($tokenValues['caseSensitive']);
-			unset($tokenValues['choices']);
 		}
-		elseif ($tokenType !== 'TEXT')
+		elseif ($token['type'] !== 'TEXT')
 		{
-			$attribute->filterChain->append('#' . strtolower($tokenType));
+			$attribute->filterChain->append('#' . strtolower($token['type']));
 		}
 
-		if (isset($tokenValues['postFilter']))
+		if (isset($token['options']['postFilter']))
 		{
-			foreach ($tokenValues['postFilter'] as $filter)
+			foreach ($token['options']['postFilter'] as $filter)
 			{
 				$attribute->filterChain->append($filter);
 			}
-			unset($tokenValues['postFilter']);
+			unset($token['options']['postFilter']);
 		}
 
-		foreach ($tokenValues as $k => $v)
+		// Remove the "useContent" option and add the attribute's name to the list of attributes to
+		// use this BBCode's content
+		if (!empty($token['options']['useContent']))
+		{
+			$bbcode->contentAttributes[] = $attrName;
+		}
+		unset($token['options']['useContent']);
+
+		// Set the "required" option if "required" or "optional" is set, then remove
+		// the "optional" option
+		if (isset($token['options']['optional']))
+		{
+			$token['options']['required'] = !$token['options']['optional'];
+			unset($token['options']['optional']);
+		}
+		elseif (isset($token['options']['required']))
+		{
+			$token['options']['required'] = (bool) $token['options']['required'];
+		}
+
+		foreach ($token['options'] as $k => $v)
 		{
 			$attribute->$k = $v;
 		}
-
-		return $attribute;
-	}
-
-
-	/**
-	* Parse a string of key=value pairs, as seen in BBCode usage
-	*
-	* The value will normalized as a single token, e.g.
-	* "foo={NUMBER}" will be returned as [["foo","{NUMBER}"]]
-	* "foo={NUMBER1},{NUMBER2}" will become [["foo",'{PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}']]
-	*/
-	protected static function getPairs($str)
-	{
-
-		/**
-		* @var array List of attribute-definition pairs, e.g. [["foo","{TEXT}"],["size","{NUMBER}"]]
-		*/
-		$pairs = array();
-
-		/**
-		* @var array 2D array storing the names of the named subpatterns for each attribute
-		*/
-		$matchNames = array();
-
-		foreach (preg_split('#\\s+#', trim($str)) as $k => $pair)
-		{
-			// The name at the left of the equal sign is the key, the rest is the definition. The
-			// key will eventually become the name of the attribute or attribute preprocessor
-			$key        = trim(substr($pair, 0, strpos($pair, '=')));
-			$definition = trim(substr($pair, 1 + strpos($pair, '=')));
-
-			// Now capture the content of every token in that attribute's definition. Usually there
-			// will only be one, as in "foo={URL}" but some older BBCodes use a form of composite
-			// attributes such as [FLASH={NUMBER},{NUMBER}]
-			preg_match_all(
-				'#\\{(?<tokenId>(?<tokenType>[A-Z_]+)[0-9]*)(?:=[^}]+)?\\}#',
-				$definition,
-				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-			);
-
-			if (empty($matches))
-			{
-				throw new RuntimeException("No tokens found in '" . $key . "' definition");
-			}
-
-			// Test whether the definition is a single token and nothing else
-			if ($matches[0][0][0] === $definition)
-			{
-				$pairs[] = array($key, $definition);
-				continue;
-			}
-
-			// We create the attribute preprocessor's regexp either way
-			$regexp  = '#^';
-			$lastPos = 0;
-
-			foreach ($matches as $k => $match)
-			{
-				$tokenId   = $match['tokenId'][0];
-				$tokenType = $match['tokenType'][0];
-
-				if ($tokenType === 'PARSE')
-				{
-					// Disallow {PARSE} tokens because attribute preprocessors cannot feed into
-					// other attribute preprocessors
-					throw new RuntimeException('{PARSE} tokens can only be used as the sole content of an attribute');
-				}
-
-				// Append the literal text between the last position and current position
-				$pos = $match[0][1];
-				$regexp .= preg_quote(substr($definition, $lastPos, $pos - $lastPos), '#');
-
-				// Grab the expression that corresponds to the token type, or use a catch-all
-				// expression otherwise
-				$expr = (isset(self::$tokenRegexp[$tokenType]))
-				      ? self::$tokenRegexp[$tokenType]
-				      : '.+?';
-
-				if ($tokenId === $tokenType)
-				{
-					// The token doesn't have a number, e.g. {NUMBER} not {NUMBER1}
-					// In order to keep the id unique, we append a character that cannot be found
-					// in normal tokens followed by the match's position
-					$tokenId .= ':' . $k;
-				}
-
-				if (!isset($matchNames[$key][$tokenId]))
-				{
-					if (!isset($matchNames[$key]))
-					{
-						$matchNames[$key] = array();
-					}
-
-					// Create a name based on the key and a counter, e.g. "foo0"
-					$matchNames[$key][$tokenId] = $key . count($matchNames[$key]);
-				}
-
-				// Append the named subpattern. Its name is made of the attribute preprocessor's
-				// name and the subpattern's position
-				$regexp .= '(?<' . $matchNames[$key][$tokenId] . '>' . $expr . ')';
-
-				// Update the last position
-				$lastPos = $pos + strlen($match[0][0]);
-			}
-
-			// Append the literal text that follows the last token and finish the regexp
-			$regexp .= preg_quote(substr($definition, $lastPos), '#') . '$#D';
-
-			$pairs[] = array($key, '{PARSE=' . $regexp . '}');
-		}
-
-		return $pairs;
 	}
 }

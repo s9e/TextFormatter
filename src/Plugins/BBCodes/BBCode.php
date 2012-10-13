@@ -19,7 +19,7 @@ class BBCode
 	* @var array List of attributes whose value is to be made the content between the BBCode's tags
 	*            if it's not explicitly given
 	*/
-	protected $contentAttributes = array();
+	public $contentAttributes = array();
 
 	/**
 	* @var string Name of the default attribute

@@ -1869,7 +1869,7 @@ class Parser
 		* URL-encode non-ASCII stuff
 		*/
 		return preg_replace_callback(
-			'#[^\\x00-\\x7f]+#u',
+			'#[^[:ascii:]]+#',
 			function ($m)
 			{
 				return urlencode($m[0]);
