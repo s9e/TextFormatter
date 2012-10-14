@@ -103,6 +103,24 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				'[b title={TEXT1;optional;required;optional}]{TEXT2}[/B]',
+				array(
+					'name'   => 'B',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute' => 'title'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'title' => array()
+						)
+					)),
+					'tokens' => array(
+						'TEXT1' => 'title'
+					),
+					'passthroughToken' => 'TEXT2'
+				)
+			),
+			array(
 				'[b title={TEXT1;defaultValue=Title;optional}]{TEXT2}[/B]',
 				array(
 					'name'   => 'B',

@@ -672,15 +672,15 @@ abstract class BBCodeMonkey
 
 		// Set the "required" option if "required" or "optional" is set, then remove
 		// the "optional" option
-		if (isset($token['options']['optional']))
-		{
-			$token['options']['required'] = !$token['options']['optional'];
-			unset($token['options']['optional']);
-		}
-		elseif (isset($token['options']['required']))
+		if (isset($token['options']['required']))
 		{
 			$token['options']['required'] = (bool) $token['options']['required'];
 		}
+		elseif (isset($token['options']['optional']))
+		{
+			$token['options']['required'] = !$token['options']['optional'];
+		}
+		unset($token['options']['optional']);
 
 		foreach ($token['options'] as $k => $v)
 		{
