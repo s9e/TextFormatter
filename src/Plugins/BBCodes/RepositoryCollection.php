@@ -11,7 +11,7 @@ use DOMDocument;
 use InvalidArgumentException;
 use s9e\TextFormatter\ConfigBuilder\Collections\NormalizeCollection;
 
-class RepositoryCollection extends NormalizeCollection
+class RepositoryCollection extends NormalizedCollection
 {
 	/**
 	* Normalize a value for storage

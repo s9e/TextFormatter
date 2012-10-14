@@ -19,6 +19,14 @@ trait Configurable
 {
 	public function __get($propName)
 	{
+		$methodName = 'get' . ucfirst($propName);
+
+		// Look for a getter, e.g. getDefaultTemplate()
+		if (method_exists($this, $methodName))
+		{
+			return $this->$methodName();
+		}
+
 		if (!property_exists($this, $propName))
 		{
 			throw new RuntimeException("Property '" . $propName . "' does not exist");

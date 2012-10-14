@@ -82,6 +82,16 @@ class Tag
 	}
 
 	/**
+	* Return this tag's default template
+	*
+	* @return string
+	*/
+	public function getDefaultTemplate()
+	{
+		return $this->templates->get('');
+	}
+
+	/**
 	* Set this tag's attribute preprocessors
 	*
 	* @param array|AttributePreprocessorCollection $attributePreprocessors 2D array of [attrName=>[regexp]], or an instance of AttributePreprocessorCollection

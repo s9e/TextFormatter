@@ -89,7 +89,7 @@ abstract class BBCodeMonkey
 		        // ={TOKEN}
 		        . '(?<defaultAttribute>=\\S+?)?'
 		        // foo={TOKEN} bar={TOKEN1},{TOKEN2}
-		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*)'
+		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
 		        . '(?:\\s*/?\\]|\\]\\s*(?<content>\\S+)?\\s*(?<endTag>\\[/\\1]))'
 		        . '$#i';

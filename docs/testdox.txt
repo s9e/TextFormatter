@@ -691,3 +691,13 @@ s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
 
+s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\Repository
+ [x] __construct() accepts the path to an XML file as argument
+ [x] __construct() accepts a DOMDocument as argument
+ [x] __construct() throws an exception if passed anything else
+ [x] __construct() throws an exception if passed the path to a file that is not valid XML
+ [x] get() throws an exception if the BBCode is not in repository
+ [x] get() normalizes the BBCode name before retrieval
+ [x] Variables can be replaced
+ [x] Variables that are not replaced are left intact
+

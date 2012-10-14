@@ -34,7 +34,7 @@
 		<template><![CDATA[
 			<u><xsl:apply-templates /></u>
 		]]></template>
-	</UUcode>
+	</bbcode>
 
 	<bbcode name="S">
 		<usage>[S]{TEXT}[/S]</usage>
@@ -51,13 +51,13 @@
 	</bbcode>
 
 	<bbcode name="QUOTE">
-		<usage>[QUOTE author={TEXT;optional}]{TEXT}[/URL]</usage>
+		<usage>[QUOTE author={TEXT;optional}]{TEXT}[/QUOTE]</usage>
 		<template><![CDATA[
 			<blockquote>
-				<div>]]>
+				<div>
 					<xsl:if test="@author">
-						<![CDATA[<cite>]]>
-						<var name="authorStr"><![CDATA[<xsl:value-of select="@author" /> wrote:]]></var>
+						<cite>]]>
+							<var name="authorStr"><![CDATA[<xsl:value-of select="@author" /> wrote:]]></var>
 						<![CDATA[</cite>
 					</xsl:if>
 					<xsl:apply-templates />
