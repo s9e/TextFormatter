@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
+use s9e\TextFormatter\ConfigBuilder\Collections\NormalizedCollection;
+
 class BBCodeCollection extends NormalizedCollection
 {
 	public function normalizeKey($key)

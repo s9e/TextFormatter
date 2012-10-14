@@ -56,6 +56,7 @@
 			<file>ConfigBuilder/Validators/TagNameTest.php</file>
 
 			<file>Plugins/BBCodes/BBCodeTest.php</file>
+			<file>Plugins/BBCodes/BBCodeCollectionTest.php</file>
 			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
 			<file>Plugins/BBCodes/RepositoryTest.php</file>
 		</testsuite>
@@ -91,6 +92,7 @@
 			<file>../src/ConfigBuilder/Validators/TagName.php</file>
 
 			<file>../src/Plugins/BBCodes/BBCode.php</file>
+			<file>../src/Plugins/BBCodes/BBCodeCollection.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>
 			<file>../src/Plugins/BBCodes/Repository.php</file>
 		</whitelist>

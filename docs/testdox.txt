@@ -687,6 +687,15 @@ s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCode
  [x] defaultAttribute accepts an attribute name and normalizes it accordingly
  [x] tagName accepts a tag name and normalizes it accordingly
 
+s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
+ [x] add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\BBCode
+ [x] Instances of s9e\TextFormatter\Plugins\BBCodes\BBCode are added as-is
+ [x] add() normalizes the BBCode's name
+ [x] delete() normalizes the BBCode's name
+ [x] exists() normalizes the BBCode's name
+ [x] get() normalizes the BBCode's name
+ [x] set() normalizes the BBCode's name
+
 s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
