@@ -80,6 +80,11 @@ class Repository
 		$usage  = $node->getElementsByTagName('usage')->item(0)->textContent;
 		$config = BBCodeMonkey::parse($usage);
 
+		if ($node->hasAttribute('tagName'))
+		{
+			$config['bbcode']->tagName = $node->getAttribute('tagName');
+		}
+
 		// Clone the <template> element
 		$templateNode = $node->getElementsByTagName('template')->item(0)->cloneNode(true);
 

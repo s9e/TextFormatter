@@ -709,4 +709,5 @@ s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\Repository
  [x] get() normalizes the BBCode name before retrieval
  [x] Variables can be replaced
  [x] Variables that are not replaced are left intact
+ [x] Custom tagName is correctly set
 

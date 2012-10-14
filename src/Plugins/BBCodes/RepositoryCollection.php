@@ -7,38 +7,20 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
-use DOMDocument;
-use InvalidArgumentException;
-use s9e\TextFormatter\ConfigBuilder\Collections\NormalizeCollection;
+use s9e\TextFormatter\ConfigBuilder\Collections\NormalizedCollection;
 
 class RepositoryCollection extends NormalizedCollection
 {
 	/**
 	* Normalize a value for storage
 	*
-	*
 	* @param  mixed $value Original value
 	* @return mixed        Normalized value
 	*/
 	public function normalizeValue($value)
 	{
-		if (!($value instanceof DOMDocument))
-		{
-			if (!file_exists($value))
-			{
-				throw new InvalidArgumentException('Not a DOMDocument or the path to a repository file');
-			}
-
-			$dom = new DOMDocument;
-
-			if (!$dom->load($value))
-			{
-				throw new InvalidArgumentException('Invalid repository file');
-			}
-
-			$value = $dom;
-		}
-
-		return $value;
+		return ($value instanceof Repository)
+		     ? $value
+		     : new Repository($value);
 	}
 }

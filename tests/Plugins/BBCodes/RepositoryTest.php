@@ -100,4 +100,18 @@ class RepositoryTest extends Test
 			$config['tag']->defaultTemplate
 		);
 	}
+
+	/**
+	* @testdox Custom tagName is correctly set
+	*/
+	public function testCustomTagName()
+	{
+		$repository = new Repository(__DIR__ . '/../../../src/Plugins/BBCodes/repository.xml');
+		$config = $repository->get('*');
+
+		$this->assertSame(
+			'LI',
+			$config['bbcode']->tagName
+		);
+	}
 }
