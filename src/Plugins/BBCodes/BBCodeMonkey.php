@@ -87,7 +87,7 @@ abstract class BBCodeMonkey
 		        // [BBCODE
 		        . '\\[(?<bbcodeName>.+?)'
 		        // ={TOKEN}
-		        . '(?<defaultAttribute>=.+?)?'
+		        . '(?<defaultAttribute>=\\S+?)?'
 		        // foo={TOKEN} bar={TOKEN1},{TOKEN2}
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*)'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
@@ -127,7 +127,18 @@ abstract class BBCodeMonkey
 			}
 		}
 
-		$config['tokens'] = self::addAttributes($attributes, $config['bbcode'], $config['tag']);
+		// Add the attributes and get the token translation table
+		$tokens = self::addAttributes($attributes, $bbcode, $tag);
+
+		// Test whether the passthrough token is used for something else, in which case we need
+		// to unset it
+		if (isset($tokens[$config['passthroughToken']]))
+		{
+			$config['passthroughToken'] = null;
+		}
+
+		// Add the list of known (and only the known) tokens to the config
+		$config['tokens'] = array_filter($tokens);
 
 		return $config;
 	}
@@ -349,7 +360,8 @@ abstract class BBCodeMonkey
 	* @param  string $str    Attributes definitions, e.g. "foo={INT} bar={TEXT}"
 	* @param  BBCode $bbcode Owner BBCode
 	* @param  Tag    $tag    Owner tag
-	* @return array          Array of [token id => attribute name]
+	* @return array          Array of [token id => attribute name] where FALSE in place of the
+	*                        name indicates that the token is ambiguous (e.g. used multiple times)
 	*/
 	protected static function addAttributes($str, BBCode $bbcode, Tag $tag)
 	{
@@ -369,10 +381,14 @@ abstract class BBCodeMonkey
 		{
 			$pos = strpos($pair, '=');
 
+			// @codeCoverageIgnoreStart
 			if ($pos === false)
 			{
+				// NOTE: the regexp used makes this code impossible to reach, it's left there as
+				//       a failsafe
 				throw new RuntimeException("Could not find = in '" . $pair . "'");
 			}
+			// @codeCoverageIgnoreEnd
 
 			// The name at the left of the equal sign is the attribute's or attribute preprocessor's
 			// name, the rest is their definition
@@ -538,7 +554,7 @@ abstract class BBCodeMonkey
 			$tag->attributes[$attrName]->filterChain->append('#regexp', array('regexp' => $regexp));
 		}
 
-		return array_filter($tokenAttribute);
+		return $tokenAttribute;
 	}
 
 	/**

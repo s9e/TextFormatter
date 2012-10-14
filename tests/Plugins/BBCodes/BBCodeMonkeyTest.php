@@ -75,6 +75,31 @@ class BBCodeMonkeyTest extends Test
 				new InvalidArgumentException('Cannot interpret the BBCode definition')
 			),
 			array(
+				'[foo bar=TEXT]{TEXT}[/foo]',
+				new RuntimeException("No tokens found in bar's definition")
+			),
+			array(
+				'[foo bar={TEXT} bar={INT}]{TEXT}[/foo]',
+				new RuntimeException("Attribute 'bar' is declared twice")
+			),
+			array(
+				'[foo bar={TEXT} baz={TEXT}]{TEXT}[/foo]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute' => 'bar'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'bar' => array(),
+							'baz' => array()
+						)
+					)),
+					'tokens' => array(),
+					'passthroughToken' => null
+				)
+			),
+			array(
 				'[b]{TEXT}[/B]',
 				array(
 					'name'   => 'B',
