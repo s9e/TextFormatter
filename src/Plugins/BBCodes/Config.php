@@ -5,13 +5,16 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\BBCodes;
 
+use ArrayAccess;
 use InvalidArgumentException;
+use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpBuilder;
+use s9e\TextFormatter\ConfigBuilder\Traits\CollectionProxy;
 
-class BBCodesConfig extends PluginConfig
+class Config extends PluginConfig implements ArrayAccess
 {
-	use CollectionAccessor;
+	use CollectionProxy;
 
 	/**
 	* @var BBCodeCollection BBCode collection
@@ -30,7 +33,7 @@ class BBCodesConfig extends PluginConfig
 	*/
 	protected function setUp()
 	{
-		$this->items = new BBCodeCollection;
+		$this->collection = new BBCodeCollection;
 
 		$this->repositories = new RepositoryCollection;
 		$this->repositories->add('default', __DIR__ . '/repository.xml');
@@ -74,7 +77,7 @@ class BBCodesConfig extends PluginConfig
 	*/
 	public function getConfig()
 	{
-		if (empty($this->bbcodes))
+		if (empty($this->collection))
 		{
 			return false;
 		}
@@ -82,85 +85,15 @@ class BBCodesConfig extends PluginConfig
 		/**
 		* Build the regexp that matches all the BBCode names
 		*/
-		$regexp = $this->cb->getRegexpBuilder()->fromList(
-			array_keys($this->bbcodes)
-		);
+		$regexp = RegexpBuilder::fromList(array_keys(iterator_to_array($this->collection)));
 
 		// Remove the non-capturing subpattern since we place the regexp inside a capturing pattern
 		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
 
 		return array(
-			'bbcodes' => $this->bbcodes,
+			'bbcodes' => $this->collection->getConfig(),
 			'regexp'  => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		);
-	}
-
-	/**
-	* Create a new BBCode and its corresponding tag
-	*
-	* Will automatically create a tag of the same name, unless a different name is specified in
-	* $config['tagName']. Attributes to be created can be passed via using "attributes" as key. The
-	* same applies for "rules" and "template" or "xsl".
-	*
-	* @param string $bbcodeName
-	* @param array  $config
-	*/
-	public function addBBCode($bbcodeName, array $config = array())
-	{
-		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
-
-		if (isset($this->bbcodes[$bbcodeName]))
-		{
-			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' already exists");
-		}
-
-		/**
-		* Separate tag options such as "trimBefore" from BBCodes-specific options such as
-		* "defaultAttr"
-		*/
-		$bbcodeSpecificConfig = array(
-			'autoClose'    => 1,
-			'contentAttr'  => 1,
-			'contentAttrs' => 1,
-			'defaultAttr'  => 1,
-			'tagName'      => 1
-		);
-
-		$bbcodeConfig = array_intersect_key($config, $bbcodeSpecificConfig);
-		$tagConfig    = array_diff_key($config, $bbcodeSpecificConfig);
-		$tagName      = (isset($bbcodeConfig['tagName'])) ? $bbcodeConfig['tagName'] : $bbcodeName;
-
-		$this->cb->addTag($tagName, $tagConfig);
-		$this->addBBCodeAlias($bbcodeName, $tagName, $bbcodeConfig);
-	}
-
-	/**
-	* Create a new BBCode that maps to an existing tag
-	*
-	* @param string $bbcodeName
-	* @param string $tagName
-	* @param array  $bbcodeConfig
-	*/
-	public function addBBCodeAlias($bbcodeName, $tagName, array $bbcodeConfig = array())
-	{
-		$bbcodeName = $this->normalizeBBCodeName($bbcodeName, false);
-
-		if (isset($this->bbcodes[$bbcodeName]))
-		{
-			throw new InvalidArgumentException("BBCode '" . $bbcodeName . "' already exists");
-		}
-
-		/**
-		* This line of code has two purposes: first, it ensure that the tag name passed as second
-		* parameter is not overwritten by the tagName element that may exist in $bbcodeConfig.
-		*
-		* Additionally, it ensures that tagName appears first in the array, so that it is available
-		* when other options are set.
-		*/
-		$bbcodeConfig = array('tagName' => $tagName) + $bbcodeConfig;
-
-		$this->bbcodes[$bbcodeName] = array();
-		$this->setBBCodeOptions($bbcodeName, $bbcodeConfig);
 	}
 
 	//==========================================================================
@@ -175,21 +108,21 @@ class BBCodesConfig extends PluginConfig
 		$config['hasContentAttrsHint'] = false;
 		$config['hasDefaultAttrHint']  = false;
 
-		foreach ($this->bbcodes as $bbcodeConfig)
+		foreach ($this->collection as $bbcode)
 		{
-			if (!empty($bbcodeConfig['autoClose']))
+			if ($bbcode->autoClose)
 			{
 				$config['hasAutoCloseHint'] = true;
 			}
 
-			if (!empty($bbcodeConfig['contentAttrs']))
+			if (!empty($bbcode->contentAttritubtes))
 			{
-				$config['hasContentAttrsHint'] = true;
+				$config['hasContentAttributesHint'] = true;
 			}
 
-			if (!empty($bbcodeConfig['defaultAttr']))
+			if (!empty($bbcode->defaultAttribute))
 			{
-				$config['hasDefaultAttrHint'] = true;
+				$config['hasDefaultAttributeHint'] = true;
 			}
 		}
 
