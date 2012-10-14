@@ -69,6 +69,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollectio
  [x] merge() accepts a 2D array of regexps
  [x] merge() accepts a 2D array of AttributePreprocessor instances
  [x] merge() accepts an instance of AttributePreprocessorCollection to copy its content
+ [x] merge() throws an exception when passed a non-array, non-AttributProcessorCollection
+ [x] merge() throws an exception when passed a one-dimensional array
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] append() adds the filter at the end of the chain
@@ -678,9 +680,12 @@ s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
  [x] "B\n" is invalid (no newlines allowed)
 
 s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCode
+ [x] An array of options can be passed to the constructor
  [x] BBCode::normalizeName('*') returns '*'
  [x] BBCode::normalizeName('foo') returns 'FOO'
  [x] BBCode::normalizeName('*invalid*') throws an exception
+ [x] defaultAttribute accepts an attribute name and normalizes it accordingly
+ [x] tagName accepts a tag name and normalizes it accordingly
 
 s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCodeMonkey
  [x] parse() works

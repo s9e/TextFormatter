@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes;
 
 use Exception;
+use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\ConfigBuilder\Items\Filter;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
@@ -70,6 +71,10 @@ class BBCodeMonkeyTest extends Test
 	{
 		return array(
 			array(
+				'*invalid*',
+				new InvalidArgumentException('Cannot interpret the BBCode definition')
+			),
+			array(
 				'[b]{TEXT}[/B]',
 				array(
 					'name'   => 'B',
@@ -89,6 +94,27 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'title' => array()
+						)
+					)),
+					'tokens' => array(
+						'TEXT1' => 'title'
+					),
+					'passthroughToken' => 'TEXT2'
+				)
+			),
+			array(
+				'[b title={TEXT1;defaultValue=Title;optional}]{TEXT2}[/B]',
+				array(
+					'name'   => 'B',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute' => 'title'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'title' => array(
+								'defaultValue' => 'Title',
+								'required'     => false
+							)
 						)
 					)),
 					'tokens' => array(
@@ -165,6 +191,160 @@ class BBCodeMonkeyTest extends Test
 						'URL'     => 'url'
 					),
 					'passthroughToken' => 'TEXT'
+				)
+			),
+			array(
+				'[foo={REGEXP=/^foo$/}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/^foo$/'))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'REGEXP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={REGEXP=#^foo$#}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '#^foo$#'))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'REGEXP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={REGEXP=/[a-z]{3}\\//}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/[a-z]{3}\\//'))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'REGEXP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={RANGE=2,5}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Filter('#range', array('min' => 2, 'max' => 5))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'RANGE' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={CHOICE=one,two}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/^(?:one|two)$/Di'))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'CHOICE' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={CHOICE=pokémon,yugioh}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/^(?:pokémon|yugioh)$/Diu'))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'CHOICE' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={CHOICE=Pokémon,YuGiOh;caseSensitive}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/^(?:Pokémon|YuGiOh)$/Du'))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'CHOICE' => 'foo'
+					),
+					'passthroughToken' => null
 				)
 			),
 			array(

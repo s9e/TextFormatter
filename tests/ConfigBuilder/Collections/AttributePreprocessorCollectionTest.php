@@ -154,4 +154,24 @@ class AttributePreprocessorCollectionTest extends Test
 			$collection2
 		);
 	}
+
+	/**
+	* @testdox merge() throws an exception when passed a non-array, non-AttributProcessorCollection
+	* @expectedException InvalidArgumentException
+	*/
+	public function testMergeInvalidArgument()
+	{
+		$collection = new AttributePreprocessorCollection;
+		$collection->merge('/foo/');
+	}
+
+	/**
+	* @testdox merge() throws an exception when passed a one-dimensional array
+	* @expectedException InvalidArgumentException
+	*/
+	public function testMergeInvalidArray()
+	{
+		$collection = new AttributePreprocessorCollection;
+		$collection->merge(array('/foo/'));
+	}
 }

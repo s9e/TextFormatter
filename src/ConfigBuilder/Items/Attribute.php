@@ -16,14 +16,14 @@ class Attribute
 	use Configurable;
 
 	/**
-	* @var FilterChain This attribute's filter chain
-	*/
-	protected $filterChain;
-
-	/**
 	* @var mixed
 	*/
 	protected $defaultValue;
+
+	/**
+	* @var FilterChain This attribute's filter chain
+	*/
+	protected $filterChain;
 
 	/**
 	* @var bool Whether this attribute is required for the tag to be valid
