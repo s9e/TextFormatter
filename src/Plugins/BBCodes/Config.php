@@ -77,6 +77,7 @@ class BBCodesConfig extends PluginConfig
 	protected $allowedFilterCallbacks = array(
 		'addslashes',
 		'intval',
+		'json_encode',
 		'ltrim',
 		'mb_strtolower',
 		'mb_strtoupper',

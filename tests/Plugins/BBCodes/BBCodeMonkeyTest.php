@@ -212,6 +212,54 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				'[foo={INT;preFilter=strtolower,strtotime}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array('strtolower', 'strtotime', '#int')
+							)
+						)
+					)),
+					'tokens' => array(
+						'INT' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={SIMPLETEXT;postFilter=strtolower,ucwords}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array('#simpletext', 'strtolower', 'ucwords')
+							)
+						)
+					)),
+					'tokens' => array(
+						'SIMPLETEXT' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={INT;preFilter=eval}/]',
+				new RuntimeException("Filter 'eval' is not allowed")
+			),
+			array(
+				'[foo={INT;postFilter=eval}/]',
+				new RuntimeException("Filter 'eval' is not allowed")
+			),
+			array(
 				'[foo={REGEXP=/^foo$/}/]',
 				array(
 					'name'   => 'FOO',

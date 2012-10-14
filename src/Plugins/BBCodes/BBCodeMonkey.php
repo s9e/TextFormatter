@@ -20,6 +20,33 @@ use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 abstract class BBCodeMonkey
 {
 	/**
+	* @var array List of pre- and post- filters that are explicitly allowed in BBCode definitions.
+	*            We use a whitelist approach because there are so many different risky callbacks
+	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
+	*            system, etc...
+	*/
+	protected static $allowedFilters = array(
+		'addslashes',
+		'intval',
+		'json_encode',
+		'ltrim',
+		'mb_strtolower',
+		'mb_strtoupper',
+		'rawurlencode',
+		'rtrim',
+		'str_rot13',
+		'stripslashes',
+		'strrev',
+		'strtolower',
+		'strtotime',
+		'strtoupper',
+		'trim',
+		'ucfirst',
+		'ucwords',
+		'urlencode'
+	);
+
+	/**
 	* @var array Regexps used in the named subpatterns generated automatically for composite
 	*            attributes. For instance, "foo={NUMBER},{NUMBER}" will be transformed into
 	*            'foo={PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}'
@@ -615,10 +642,8 @@ abstract class BBCodeMonkey
 
 		if (isset($token['options']['preFilter']))
 		{
-			foreach ($token['options']['preFilter'] as $filter)
-			{
-				$attribute->filterChain->append($filter);
-			}
+			self::appendFilters($attribute, $token['options']['preFilter']);
+			unset($token['options']['preFilter']);
 		}
 
 		if ($token['type'] === 'REGEXP')
@@ -663,10 +688,7 @@ abstract class BBCodeMonkey
 
 		if (isset($token['options']['postFilter']))
 		{
-			foreach ($token['options']['postFilter'] as $filter)
-			{
-				$attribute->filterChain->append($filter);
-			}
+			self::appendFilters($attribute, $token['options']['postFilter']);
 			unset($token['options']['postFilter']);
 		}
 
@@ -688,5 +710,25 @@ abstract class BBCodeMonkey
 		}
 
 		return $attribute;
+	}
+
+	/**
+	* Append a list of filters to an attribute's filterChain
+	*
+	* @param  Attribute $attribute
+	* @param  string    $filters   List of filters, separated with commas
+	* @return void
+	*/
+	protected static function appendFilters(Attribute $attribute, $filters)
+	{
+		foreach (preg_split('#\\s*,\\s*#', $filters) as $filter)
+		{
+			if (!in_array($filter, self::$allowedFilters, true))
+			{
+				throw new RuntimeException("Filter '" . $filter . "' is not allowed");
+			}
+
+			$attribute->filterChain->append($filter);
+		}
 	}
 }
