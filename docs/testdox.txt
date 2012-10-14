@@ -37,6 +37,20 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedList
  [x] $normalizedList['foo'] = 'bar' throws an InvalidArgumentException
  [x] Deleting a value by key reorders the list to remove gaps
 
+s9e\TextFormatter\Tests\ConfigBuilder\Traits\CollectionProxy
+ [x] $proxy->add() gets forwarded to $proxy->collection->add() with all arguments
+ [x] $proxy->add() returns the value returned by $proxy->collection->add()
+ [x] $proxy->exists() gets forwarded to $proxy->collection->exists() with all arguments
+ [x] $proxy->delete() gets forwarded to $proxy->collection->delete() with all arguments
+ [x] $proxy->get() gets forwarded to $proxy->collection->get() with all arguments
+ [x] $proxy->get() returns the value returned by $proxy->collection->get()
+ [x] $proxy->set() gets forwarded to $proxy->collection->set() with all arguments
+ [x] $proxy->set() returns the value returned by $proxy->collection->set()
+ [x] $proxy['foo'] returns $proxy->collection['foo']
+ [x] $proxy['foo'] = 42 sets $proxy->collection['foo'] = 42
+ [x] isset($proxy['foo']) returns isset($proxy->collection['foo'])
+ [x] unset($proxy['foo']) calls unset($proxy->collection['foo'])
+
 s9e\TextFormatter\Tests\ConfigBuilder\Traits\Configurable
  [x] __get('foo') calls getFoo() if it exists
  [x] __get($k) returns the property if it exists

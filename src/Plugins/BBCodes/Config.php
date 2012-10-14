@@ -16,7 +16,7 @@ class BBCodesConfig extends PluginConfig
 	/**
 	* @var BBCodeCollection BBCode collection
 	*/
-	protected $items;
+	protected $collection;
 
 	/**
 	* @var RepositoryCollection BBCode repositories
@@ -53,7 +53,14 @@ class BBCodesConfig extends PluginConfig
 
 		$bbcodeName = BBCode::normalizeName($bbcodeName);
 
-		$dom = $this->repositories->get($repository);
+		$config = $this->repositories->get($repository);
+		$bbcode = $config['bbcode'];
+		$tag    = $config['tag'];
+
+		$this->items->add($bbcodeName, $bbcode);
+		$this->cb->tags->add($bbcode->tagName, $tag);
+
+		return $bbcode;
 	}
 
 

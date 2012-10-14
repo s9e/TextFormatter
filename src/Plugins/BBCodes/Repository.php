@@ -59,11 +59,10 @@ class Repository
 	* Get a BBCode and its associated tag from this repository
 	*
 	* @param  string $bbcodeName BBCode's name
-	* @param  string $variant    Variant (omit for default)
 	* @param  array  $vars       Template variables
 	* @return array              Array with two keys: "bbcode" and"tag"
 	*/
-	public function get($bbcodeName, $variant = null, array $vars = array())
+	public function get($bbcodeName, array $vars = array())
 	{
 		$bbcodeName = BBCode::normalizeName($bbcodeName);
 

@@ -77,7 +77,7 @@ class RepositoryTest extends Test
 	public function testReplacedVars()
 	{
 		$repository = new Repository(__DIR__ . '/../../../src/Plugins/BBCodes/repository.xml');
-		$config = $repository->get('QUOTE', null, array(
+		$config = $repository->get('QUOTE', array(
 			'authorStr' => '<xsl:value-of select="@author" /> escribiste:'
 		));
 

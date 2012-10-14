@@ -29,6 +29,7 @@
 			<file>ConfigBuilder/Collections/CollectionTest.php</file>
 			<file>ConfigBuilder/Collections/NormalizedCollectionTest.php</file>
 			<file>ConfigBuilder/Collections/NormalizedListTest.php</file>
+			<file>ConfigBuilder/Traits/CollectionProxyTest.php</file>
 			<file>ConfigBuilder/Traits/ConfigurableTest.php</file>
 
 			<file>ConfigBuilder/Collections/AttributeCollectionTest.php</file>
@@ -86,6 +87,7 @@
 			<file>../src/ConfigBuilder/Items/AttributePreprocessor.php</file>
 			<file>../src/ConfigBuilder/Items/CallbackTemplate.php</file>
 			<file>../src/ConfigBuilder/Items/Tag.php</file>
+			<file>../src/ConfigBuilder/Traits/CollectionProxy.php</file>
 			<file>../src/ConfigBuilder/Traits/Configurable.php</file>
 			<file>../src/ConfigBuilder/UrlConfig.php</file>
 			<file>../src/ConfigBuilder/Validators/AttributeName.php</file>
