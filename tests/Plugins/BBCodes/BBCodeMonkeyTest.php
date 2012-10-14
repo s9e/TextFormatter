@@ -351,6 +351,38 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				// Ensure that every subpattern creates an attribute with the corresponding regexp
+				'[foo={PARSE=/(?<foo>\\d+)/} foo={PARSE=/(?<bar>\\D+)/}]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributePreprocessors' => array(
+							'foo' => array(
+								'/(?<foo>\\d+)/',
+								'/(?<bar>\\D+)/'
+							)
+						),
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/^(?:\\d+)$/D'))
+								)
+							),
+							'bar' => array(
+								'filterChain' => array(
+									new Filter('#regexp', array('regexp' => '/^(?:\\D+)$/D'))
+								)
+							)
+						)
+					)),
+					'tokens' => array(),
+					'passthroughToken' => null
+				)
+			),
+			array(
 				'[foo={RANGE=2,5}/]',
 				array(
 					'name'   => 'FOO',
@@ -439,6 +471,36 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				'[foo={NUMBER1},{NUMBER2} foo={NUMBER2};{NUMBER1}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributePreprocessors' => array(
+							'foo' => array(
+								'/^(?<foo0>\\d+),(?<foo1>\\d+)$/D',
+								'/^(?<foo1>\\d+);(?<foo0>\\d+)$/D'
+							)
+						),
+						'attributes' => array(
+							'foo0' => array(
+								'filterChain' => array('#number')
+							),
+							'foo1' => array(
+								'filterChain' => array('#number')
+							)
+						)
+					)),
+					'tokens' => array(
+						'NUMBER1' => 'foo0',
+						'NUMBER2' => 'foo1'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
 				/**
 				* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=2127991
 				*/
@@ -458,14 +520,10 @@ class BBCodeMonkeyTest extends Test
 								'filterChain' => array('#url')
 							),
 							'flash0' => array(
-								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/^(?:\\d+)$/D'))
-								)
+								'filterChain' => array('#number')
 							),
 							'flash1' => array(
-								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/^(?:\\d+)$/D'))
-								)
+								'filterChain' => array('#number')
 							)
 						)
 					)),
@@ -473,6 +531,38 @@ class BBCodeMonkeyTest extends Test
 						'NUMBER1' => 'flash0',
 						'NUMBER2' => 'flash1',
 						'URL' => 'content'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[flash={NUMBER1},{NUMBER2} width={NUMBER1} height={NUMBER2} url={URL;useContent}]',
+				array(
+					'name'   => 'FLASH',
+					'bbcode' => new BBCode(array(
+						'contentAttributes' => array('url'),
+						'defaultAttribute'  => 'flash'
+					)),
+					'tag'    => new Tag(array(
+						'attributePreprocessors' => array(
+							'flash' => array('/^(?<width>\\d+),(?<height>\\d+)$/D')
+						),
+						'attributes' => array(
+							'url' => array(
+								'filterChain' => array('#url')
+							),
+							'width' => array(
+								'filterChain' => array('#number')
+							),
+							'height' => array(
+								'filterChain' => array('#number')
+							)
+						)
+					)),
+					'tokens' => array(
+						'NUMBER1' => 'width',
+						'NUMBER2' => 'height',
+						'URL' => 'url'
 					),
 					'passthroughToken' => null
 				)
@@ -507,7 +597,24 @@ class BBCodeMonkeyTest extends Test
 					),
 					'passthroughToken' => 'TEXT2'
 				)
-			)
+			),
+			array(
+				'[foo={PARSE=/bar/},{PARSE=/baz/}/]',
+				new RuntimeException("{PARSE} tokens can only be used has the sole content of an attribute")
+			),
+			array(
+				// Here, we don't know to which attribute the token {INT} in attribute c correponds
+				'[foo a={INT} b={INT} c={INT},{NUMBER} /]',
+				new RuntimeException("Token {INT} used in attribute 'c' is ambiguous")
+			),
+			array(
+				'[foo={NUMBER},{NUMBER} /]',
+				new RuntimeException("Token {NUMBER} used multiple times in attribute foo's definition")
+			),
+			array(
+				'[foo={PARSE=/(?<bar>\\d+)/} foo={PARSE=/(?<bar>\\D+)/}]',
+				new RuntimeException("Ambiguous attribute 'bar' created using different regexps needs to be explicitly defined")
+			),
 		);
 	}
 
@@ -577,9 +684,15 @@ class BBCodeMonkeyTest extends Test
 			array(
 				'</html><inv<alid',
 				array(),
-				'null',
+				null,
 				new RuntimeException('Invalid template')
 			),
+			array(
+				'Hello {TEXT}',
+				array('TEXT' => 'username'),
+				null,
+				'Hello <xsl:value-of select="@username"/>'
+			)
 		);
 	}
 }

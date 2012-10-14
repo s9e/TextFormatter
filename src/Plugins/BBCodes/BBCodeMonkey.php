@@ -455,6 +455,8 @@ abstract class BBCodeMonkey
 			$regexp  = '/^';
 			$lastPos = 0;
 
+			$usedTokens = array();
+
 			foreach ($tokens as $token)
 			{
 				$tokenId   = $token['id'];
@@ -467,7 +469,16 @@ abstract class BBCodeMonkey
 					throw new RuntimeException('{PARSE} tokens can only be used has the sole content of an attribute');
 				}
 
-				// Find the attribute name associated with this token
+				// Ensure that tokens are only used once per definition so we don't have multiple
+				// subpatterns using the same name
+				if (isset($usedTokens[$tokenId]))
+				{
+					throw new RuntimeException('Token {' . $tokenId . '} used multiple times in attribute ' . $attrName . "'s definition");
+				}
+				$usedTokens[$tokenId] = 1;
+
+				// Find the attribute name associated with this token, or create an attribute
+				// otherwise
 				if (isset($tokenAttribute[$tokenId]))
 				{
 					$matchName = $tokenAttribute[$tokenId];
@@ -481,21 +492,20 @@ abstract class BBCodeMonkey
 				{
 					// The name of the named subpattern and the corresponding attribute is based on
 					// the attribute preprocessor's name, with an incremented ID that ensures we
-					// don't overwrite existing attributes, with a limit set to 100 to avoid any
-					// potential for an unbounded loop
+					// don't overwrite existing attributes
 					$i = 0;
 					do
 					{
 						$matchName = $attrName . $i;
-
-						if (!isset($tag->attributes[$matchName])
-						 && !in_array($matchName, $tokenAttribute, true))
-						{
-							break;
-						}
+						++$i;
 					}
-					while (++$i < 100);
+					while (isset($tag->attributes[$matchName]));
 
+					// Create the attribute that corresponds to this subpattern
+					$tag->attributes[$matchName] = new Attribute;
+					$tag->attributes[$matchName]->filterChain->append('#' . strtolower($tokenType));
+
+					// Record the attribute name associated with this token ID
 					$tokenAttribute[$tokenId] = $matchName;
 				}
 
