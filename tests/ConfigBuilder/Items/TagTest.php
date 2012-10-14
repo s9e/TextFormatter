@@ -260,6 +260,17 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox $tag->defaultTemplate maps to $tag->templates->get('')
+	*/
+	public function testGetDefaultTemplate()
+	{
+		$tag = new Tag;
+		$tag->templates->set('', 'foo');
+
+		$this->assertSame('foo', $tag->defaultTemplate);
+	}
+
+	/**
 	* @testdox $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
 	*/
 	public function testSetDefaultTemplate()

@@ -12,14 +12,13 @@ use s9e\TextFormatter\ConfigBuilder\Traits\Configurable;
 class ConfigurableTest extends Test
 {
 	/**
-	* @testdox __get() throws a RuntimeException if the property does not exist
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Property 'foo' does not exist
+	* @testdox __get('foo') calls getFoo() if it exists
 	*/
-	public function testMagicGetInexistent()
+	public function testMagicGetMethod()
 	{
 		$dummy = new ConfigurableTestDummy;
-		$dummy->foo;
+
+		$this->assertSame('foobar', $dummy->foo);
 	}
 
 	/**
@@ -30,6 +29,17 @@ class ConfigurableTest extends Test
 		$dummy = new ConfigurableTestDummy;
 
 		$this->assertSame(42, $dummy->int);
+	}
+
+	/**
+	* @testdox __get() throws a RuntimeException if the property does not exist
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Property 'inexistent' does not exist
+	*/
+	public function testMagicGetInexistent()
+	{
+		$dummy = new ConfigurableTestDummy;
+		$dummy->inexistent;
 	}
 
 	/**
@@ -129,6 +139,11 @@ class ConfigurableTestDummy
 	public function __construct()
 	{
 		$this->collection = new NormalizedCollection;
+	}
+
+	protected function getFoo()
+	{
+		return 'foobar';
 	}
 
 	protected function setFoo($str)

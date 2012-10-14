@@ -38,8 +38,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedList
  [x] Deleting a value by key reorders the list to remove gaps
 
 s9e\TextFormatter\Tests\ConfigBuilder\Traits\Configurable
- [x] __get() throws a RuntimeException if the property does not exist
+ [x] __get('foo') calls getFoo() if it exists
  [x] __get($k) returns the property if it exists
+ [x] __get() throws a RuntimeException if the property does not exist
  [x] __get($k) returns null if the property is null
  [x] __set('foo', 'bar') calls setFoo('bar') if it exists
  [x] __set() can create new properties
@@ -621,6 +622,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
  [x] $tag->templates can be assigned an instance of Templateset to copy its content
  [x] Setting $tag->templates clears previous templates
  [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
+ [x] $tag->defaultTemplate maps to $tag->templates->get('')
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
 
 s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
