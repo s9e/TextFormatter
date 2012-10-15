@@ -12,11 +12,17 @@ use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
 
 class AttributeCollection extends NormalizedCollection
 {
+	/**
+	* {@inheritdoc}
+	*/
 	public function normalizeKey($key)
 	{
 		return AttributeName::normalize($key);
 	}
 
+	/**
+	* {@inheritdoc}
+	*/
 	public function normalizeValue($value)
 	{
 		return ($value instanceof Attribute)

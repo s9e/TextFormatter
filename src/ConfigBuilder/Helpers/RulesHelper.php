@@ -10,15 +10,13 @@ namespace s9e\TextFormatter\ConfigBuilder\Helpers;
 use s9e\TextFormatter\ConfigBuilder\Collections\TagCollection;
 use s9e\TextFormatter\ConfigBuilder\Items\Tag;
 
-/**
-* @todo Tags with the same bitfields can share the same bit number
-*/
 abstract class RulesHelper
 {
 	/**
-	* 
+	* Generate the allowedChildren and allowedDescendants bitfields for every tag and for the root context
 	*
-	* @return void
+	* @param  TagCollection $tags
+	* @return array
 	*/
 	public static function getBitfields(TagCollection $tags)
 	{

@@ -11,6 +11,7 @@ use ArrayAccess;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\ConfigBuilder\ConfigProvider;
+use s9e\TextFormatter\ConfigBuilder\Helpers\ConfigHelper;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
 class Ruleset extends Collection implements ArrayAccess, ConfigProvider
@@ -251,5 +252,38 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function requireAncestor($tagName)
 	{
 		$this->items['requireAncestor'][] = TagName::normalize($tagName);
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function toConfig()
+	{
+		$config = $this->items;
+
+		// Remove rules that are not needed at parsing time. All of those are resolved when building
+		// the allowedChildren and allowedDescendants bitfields
+		unset($config['allowChild']);
+		unset($config['allowDescendant']);
+		unset($config['defaultChildRule']);
+		unset($config['defaultDescendantRule']);
+		unset($config['denyChild']);
+		unset($config['denyDescendant']);
+		unset($config['disallowAtRoot']);
+		unset($config['requireParent']);
+
+		// In order to speed up lookups, we use tag names as keys
+		foreach ($config as $ruleName => $targets)
+		{
+			if (!is_array($targets))
+			{
+				// Don't touch boolean rules such as "inheritRules"
+				continue;
+			}
+
+			$config[$ruleName] = array_fill_keys($targets, 1);
+		}
+
+		return $config;
 	}
 }

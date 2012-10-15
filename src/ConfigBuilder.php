@@ -12,6 +12,8 @@ use RuntimeException;
 use s9e\TextFormatter\ConfigBuilder\Collections\Collection;
 use s9e\TextFormatter\ConfigBuilder\Collections\FilterCollection;
 use s9e\TextFormatter\ConfigBuilder\Collections\TagCollection;
+use s9e\TextFormatter\ConfigBuilder\Helpers\ConfigHelper;
+use s9e\TextFormatter\ConfigBuilder\Helpers\RulesHelper;
 use s9e\TextFormatter\ConfigBuilder\UrlConfig;
 
 class ConfigBuilder
@@ -49,6 +51,50 @@ class ConfigBuilder
 		$this->filters   = new FilterCollection;
 		$this->urlConfig = new UrlConfig;
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function toConfig()
+	{
+		$config    = ConfigHelper::toArray($this);
+		$bitfields = RulesHelper::getBitfield($this->tags);
+
+		// Save the root context
+		$config['rootContext'] = $bitfields['rootContext'];
+
+		// Remove unused tags
+		$config['tags'] = array_intersect_key($config['tags'], $bitfields['tags']);
+
+		// Add the bitfield information to each tag
+		foreach ($bitfields['tags'] as $tagName => $tagBitfields)
+		{
+			$config['tags'][$tagName] += $tagBitfields;
+		}
+
+		// Remove unused plugins
+		$config['plugins'] = array_filter($config['plugins']);
+
+		return $config;
+	}
+
+
+	// NOTE: when building the JS config, keys from Collections should probably automatically be preserved, although not always (e.g. rule names?)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	//==========================================================================
 	// Plugins

@@ -17,19 +17,16 @@ class AttributeList extends NormalizedList
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
-	{
-		return array_unique($this->items);
-	}
-
-	/**
-	* Normalize an attribute name for storage
-	*
-	* @param  string $attrName Original name
-	* @return void             Normalized name
-	*/
 	public function normalizeValue($attrName)
 	{
 		return AttributeName::normalize($attrName);
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function toConfig()
+	{
+		return array_unique($this->items);
 	}
 }
