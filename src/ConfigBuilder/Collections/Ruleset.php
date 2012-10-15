@@ -10,9 +10,10 @@ namespace s9e\TextFormatter\ConfigBuilder\Collections;
 use ArrayAccess;
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\ConfigBuilder\ConfigProvider;
 use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
 
-class Ruleset extends Collection implements ArrayAccess
+class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
 	/**
 	* Test whether a rule category exists

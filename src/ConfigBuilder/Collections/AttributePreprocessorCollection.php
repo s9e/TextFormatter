@@ -33,22 +33,6 @@ class AttributePreprocessorCollection extends Collection
 	}
 
 	/**
-	* {@inheritdoc}
-	*/
-	public function toConfig()
-	{
-		$config = array();
-
-		foreach ($this->items as $k => $ap)
-		{
-			list($attrName, $regexp) = unserialize($k);
-			$config[$attrName][] = $regexp;
-		}
-
-		return $config;
-	}
-
-	/**
 	* @return string Name of the attribute the attribute processor uses as source
 	*/
 	public function key()
@@ -106,5 +90,21 @@ class AttributePreprocessorCollection extends Collection
 		{
 			throw new InvalidArgumentException('merge() expects an instance of AttributePreprocessorCollection or a 2D array where keys are attribute names and values are arrays of regexps and AttributePreprocessor instances');
 		}
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function toConfig()
+	{
+		$config = array();
+
+		foreach ($this->items as $k => $ap)
+		{
+			list($attrName, $regexp) = unserialize($k);
+			$config[$attrName][] = $regexp;
+		}
+
+		return $config;
 	}
 }

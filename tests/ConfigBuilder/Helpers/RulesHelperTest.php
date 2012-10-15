@@ -474,36 +474,6 @@ class RulesHelperTest extends Test
 		);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/**
 	* @testdox Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 	*/
