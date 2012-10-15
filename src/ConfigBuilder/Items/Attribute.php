@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\ConfigBuilder\Items;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\ConfigBuilder\Collections\FilterChain;
+use s9e\TextFormatter\ConfigBuilder\Helpers\ConfigHelper;
 use s9e\TextFormatter\ConfigBuilder\Traits\Configurable;
 
 class Attribute
@@ -46,10 +47,6 @@ class Attribute
 		}
 	}
 
-	//==========================================================================
-	// Setters
-	//==========================================================================
-
 	/**
 	* @param FilterChain|array $filterChain
 	*/
@@ -67,5 +64,19 @@ class Attribute
 		{
 			$this->filterChain->append($filter);
 		}
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function toConfig()
+	{
+		$config = array();
+		foreach ($this as $k => $v)
+		{
+			$config[$k] = $v;
+		}
+
+		return ConfigHelper::toArray($config);
 	}
 }

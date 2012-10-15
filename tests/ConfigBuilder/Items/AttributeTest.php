@@ -64,4 +64,22 @@ class AttributeTest extends Test
 		$attr = new Attribute;
 		$attr->filterChain = false;
 	}
+
+	/**
+	* @testdox toConfig() correctly produces a config array
+	*/
+	public function testToConfig()
+	{
+		$attr = new Attribute;
+		$attr->defaultValue = 'foo';
+
+		$this->assertEquals(
+			array(
+				'defaultValue' => 'foo',
+				'filterChain'  => array(),
+				'required'     => true
+			),
+			$attr->toConfig()
+		);
+	}
 }
