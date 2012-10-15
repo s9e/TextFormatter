@@ -116,3 +116,52 @@ An attribute name is automatically created for {NUMBER1} and {NUMBER2} unless th
 ...is functionally the same as: *(note the matching names in the subpatterns)*
 
     [flash={PARSE=/^(?<width>\d+),(?<height>\d+)$/} width={NUMBER1} height={NUMBER2}]
+
+Templates
+---------
+Templates can consist either as a chunk of XSL (whatever is acceptable within an `<xsl:template/>` tag) or a chunk of HTML (which will be converted to XML, then XSL.) Tokens (from the BBCode usage) that are unique can be used in text nodes or in attribute values. For example, consider the following BBCode usage:
+
+    [url={URL;useContent}]{TEXT}[/url]
+
+Its template could look like:
+
+    <a href="{URL}">{TEXT}</a>
+
+Internally, the {URL} token will be replaced with the XPath expression `{@url}` which represents the value of the attribute "url":
+
+    <a href="{@url}"><xsl:apply-templates/></a>
+
+Here, the {TEXT} token is replaced with the XSL element `<xsl:apply-templates/>` which will render the content of this BBCode, including the descendants' markup. This only applies to {TEXT} tokens (which have no filters set) which are the sole content of a BBCode. Otherwise, any filtered attribute will be output as-is, with no markup. For example, the following BBCode:
+
+    [foo]{SIMPLETEXT}[/foo]
+
+...will be interpreted as:
+
+    [foo content={SIMPLETEXT;useContent}]
+
+Because {SIMPLETEXT} is a filtered type, it is assigned an attribute, arbitrarily named "content". And because this BBCode filters its content, if its template is:
+
+    <div>{SIMPLETEXT}</div>
+
+...it will be rendered as:
+
+    <div><xsl:value-of select="{@content}"/></div>
+
+Token usage in templates
+------------------------
+Note that only unique tokens can be used in templates. For instance, considering the following, valid BBCode usage:
+
+    [box color={COLOR} width={NUMBER} height={NUMBER}]{TEXT}[/box]
+
+It is valid to use the following template: *(note how tokens and XPath expressions are used indiscriminately)*
+
+    <div style="color: {COLOR}; width: {@width}px; height: {@height}px">{TEXT}</div>
+
+However, the following is **invalid** because the token {NUMBER} is ambiguous:
+
+    <div style="width: {NUMBER}px; height: {NUMBER}px">{TEXT}</div>
+
+This can be fixed by assigning different IDs to the tokens:
+
+    [box color={COLOR} width={NUMBER1} height={NUMBER2}]{TEXT}[/box]
+    <div style="color: {COLOR}; width: {NUMBER1}px; height: {NUMBER2}px">{TEXT}</div>
