@@ -17,6 +17,15 @@ use s9e\TextFormatter\ConfigBuilder\Collections\NormalizedCollection;
 */
 trait Configurable
 {
+	/**
+	* Magic getter
+	*
+	* Will return $this->foo if it exists, then $this->getFoo() or will throw an exception if
+	* neither exists
+	*
+	* @param  string $propName
+	* @return mixed
+	*/
 	public function __get($propName)
 	{
 		$methodName = 'get' . ucfirst($propName);
@@ -35,6 +44,19 @@ trait Configurable
 		return $this->$propName;
 	}
 
+	/**
+	* Magic setter
+	*
+	* Will call $this->setFoo($propValue) if it exsits, otherwise it will set $this->foo.
+	* If $this->foo is a NormalizedCollection, we do not replace it, instead we clear() it then
+	* fill it back up. It will not overwrite an object with a different incompatible object (of a
+	* different, non-extending class) and it will throw an exception if the PHP type cannot match
+	* without incurring data loss.
+	*
+	* @param  string $propName
+	* @param  string $propValue
+	* @return void
+	*/
 	public function __set($propName, $propValue)
 	{
 		$methodName = 'set' . ucfirst($propName);
@@ -43,44 +65,79 @@ trait Configurable
 		if (method_exists($this, $methodName))
 		{
 			$this->$methodName($propValue);
+
+			return;
+		}
+
+		// If the property isn't already set, we just create/set it
+		if (!isset($this->$propName))
+		{
+			$this->$propName = $propValue;
+
+			return;
+		}
+
+		// If we're trying to replace a NormalizedCollection, instead we clear it then
+		// iteratively set new values
+		if ($this->$propName instanceof NormalizedCollection)
+		{
+			if (!is_array($propValue)
+			 && !($propValue instanceof Traversable))
+			{
+				throw new InvalidArgumentException("Property '" . $propName . "' expects an array or a traversable object to be passed");
+			}
+
+			$this->$propName->clear();
+
+			foreach ($propValue as $k => $v)
+			{
+				$this->$propName->set($k, $v);
+			}
+
+			return;
+		}
+
+		// If this property is an object, test whether they are compatible. Otherwise, test if PHP
+		// types are compatible
+		if (is_object($this->$propName))
+		{
+			if (!($propValue instanceof $this->$propName))
+			{
+				throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of class '" . get_class($this->$propName) . "' with instance of '" . get_class($propValue) . "'");
+			}
 		}
 		else
 		{
-			// If the property already exists, preserve its type
-			if (isset($this->$propName))
+			// Test whether the PHP types are compatible
+			$oldType = gettype($this->$propName);
+			$newType = gettype($propValue);
+
+			if ($oldType !== $newType)
 			{
-				// If we're trying to replace a NormalizedCollection, instead we clear it then
-				// iteratively set new values
-				if ($this->$propName instanceof NormalizedCollection)
+				// Test whether the PHP type roundtrip is lossless
+				$tmp = $propValue;
+				settype($tmp, $oldType);
+				settype($tmp, $newType);
+
+				if ($tmp !== $propValue)
 				{
-					if (!is_array($propValue)
-					 && !($propValue instanceof Traversable))
-					{
-						throw new InvalidArgumentException("Property '" . $propName . "' expects an array or a traversable object to be passed");
-					}
-
-					$this->$propName->clear();
-
-					foreach ($propValue as $k => $v)
-					{
-						$this->$propName->set($k, $v);
-					}
-
-					return;
+					throw new InvalidArgumentException("Cannot replace property '" . $propName . "' of type " . $oldType . ' with value of type ' . $newType);
 				}
 
-				// Otherwise, we'll just try to match the option's type
-				/**
-				* @todo perhaps only do that if the cast is lossless, e.g. "1"=>1 but not "1a"=>1
-				* @todo don't overwrite an object with another object that does not extend it
-				*/
-				settype($propValue, gettype($this->$propName));
+				// Finally, set the new value to the correct type
+				settype($propValue, $oldType);
 			}
-
-			$this->$propName = $propValue;
 		}
+
+		$this->$propName = $propValue;
 	}
 
+	/**
+	* Test whether a property is set
+	*
+	* @param  string $propName
+	* @return bool
+	*/
 	public function __isset($propName)
 	{
 		return isset($this->$propName);

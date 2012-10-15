@@ -75,14 +75,76 @@ class ConfigurableTest extends Test
 	}
 
 	/**
-	* @testdox __set() preserves the PHP type of existing properties
+	* @testdox __set() can replace an instance of Foo with another instance of Foo
 	*/
-	public function testMagicSetPreservesType()
+	public function testMagicSetSameObject()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		$foo = new Foo;
+		$dummy->fooObject = $foo;
+
+		$this->assertSame($foo, $dummy->fooObject);
+	}
+
+	/**
+	* @testdox __set() can replace an instance of Foo with an instance of FooPlus, which extends Foo
+	*/
+	public function testMagicSetChildObject()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		$foo = new FooPlus;
+		$dummy->fooObject = $foo;
+
+		$this->assertSame($foo, $dummy->fooObject);
+	}
+
+	/**
+	* @testdox __set() throws an exception if an instance of Foo would be replaced by an instance of Bar
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Cannot replace property 'fooObject' of class 's9e\TextFormatter\Tests\ConfigBuilder\Traits\Foo' with instance of 's9e\TextFormatter\Tests\ConfigBuilder\Traits\Bar'
+	*/
+	public function testMagicSetDifferentObject()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		$bar = new Bar;
+		$dummy->fooObject = $bar;
+	}
+
+	/**
+	* @testdox __set() can replace a scalar value with a value of the same type
+	*/
+	public function testMagicSetSameType()
+	{
+		$dummy = new ConfigurableTestDummy;
+		$dummy->int = 55;
+
+		$this->assertSame(55, $dummy->int);
+	}
+
+	/**
+	* @testdox __set() can replace a scalar value with another scalar value if it can be losslessly cast to the same type
+	*/
+	public function testMagicSetCompatibleType()
 	{
 		$dummy = new ConfigurableTestDummy;
 		$dummy->int = '55';
 
 		$this->assertSame(55, $dummy->int);
+	}
+
+	/**
+	* @testdox __set() throws an exception if a scalar value would be overwritten by a scalar value that cannot be losslessly cast to the same type
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Cannot replace property 'int' of type integer with value of type string
+	*/
+	public function testMagicSetIncompatibleType()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		$dummy->int = "55!";
 	}
 
 	/**
@@ -128,6 +190,10 @@ class ConfigurableTest extends Test
 	}
 }
 
+class Foo {}
+class FooPlus extends Foo {}
+class Bar {}
+
 class ConfigurableTestDummy
 {
 	use Configurable;
@@ -135,10 +201,12 @@ class ConfigurableTestDummy
 	protected $int = 42;
 	protected $null = null;
 	protected $collection;
+	protected $fooObject;
 
 	public function __construct()
 	{
 		$this->collection = new NormalizedCollection;
+		$this->fooObject  = new Foo;
 	}
 
 	protected function getFoo()

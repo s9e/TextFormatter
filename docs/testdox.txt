@@ -58,7 +58,12 @@ s9e\TextFormatter\Tests\ConfigBuilder\Traits\Configurable
  [x] __get($k) returns null if the property is null
  [x] __set('foo', 'bar') calls setFoo('bar') if it exists
  [x] __set() can create new properties
- [x] __set() preserves the PHP type of existing properties
+ [x] __set() can replace an instance of Foo with another instance of Foo
+ [x] __set() can replace an instance of Foo with an instance of FooPlus, which extends Foo
+ [x] __set() throws an exception if an instance of Foo would be replaced by an instance of Bar
+ [x] __set() can replace a scalar value with a value of the same type
+ [x] __set() can replace a scalar value with another scalar value if it can be losslessly cast to the same type
+ [x] __set() throws an exception if a scalar value would be overwritten by a scalar value that cannot be losslessly cast to the same type
  [x] __set() will clear and repopulate a NormalizedCollection rather than overwrite it
  [x] __set() throws an exception if a NormalizedCollection would be overwritten by a non-array, non-Traversable value
  [x] __isset($k) returns true if the property exists
@@ -153,6 +158,9 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] merge() correctly copies the disallowAtRoot setting from an instance of Ruleset
  [x] merge() correctly copies the inheritRules setting from an instance of Ruleset
  [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
+ [x] toConfig() does not return rules that are not used during parsing
+ [x] toConfig() flips arrays to use target names as keys
+ [x] toConfig() does not attempt to flip scalar rules such as "inheritRules"
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Tag

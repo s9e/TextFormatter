@@ -510,7 +510,7 @@ class RulesetTest extends Test
 	public function testMergeArrayInheritRules()
 	{
 		$rules = array(
-			'allowChild'        => array('B'),
+			'allowChild'   => array('B'),
 			'inheritRules' => true
 		);
 
@@ -599,5 +599,66 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->merge(false);
+	}
+
+	/**
+	* @testdox toConfig() does not return rules that are not used during parsing
+	*/
+	public function testToConfigOmitsUnneededRules()
+	{
+		$ruleset = new Ruleset;
+		$rules = array(
+			'allowChild'            => 'X',
+			'allowDescendant'       => 'X',
+			'defaultChildRule'      => 'deny',
+			'defaultDescendantRule' => 'allow',
+			'denyChild'             => 'X',
+			'denyDescendant'        => 'X',
+			'disallowAtRoot'        => true,
+			'requireParent'         => 'X'
+		);
+
+		foreach ($rules as $k => $v)
+		{
+			$ruleset->$k($v);
+		}
+
+		$config = $ruleset->toConfig();
+
+		foreach ($rules as $k => $v)
+		{
+			$this->assertArrayNotHasKey($k, $config);
+		}
+	}
+
+	/**
+	* @testdox toConfig() flips arrays to use target names as keys
+	*/
+	public function testToConfigFlipsArrays()
+	{
+		$ruleset = new Ruleset;
+
+		$ruleset->closeParent('X');
+		$ruleset->closeParent('Y');
+
+		$config = $ruleset->toConfig();
+
+		$this->assertArrayHasKey('closeParent', $config);
+		$this->assertArrayHasKey('X', $config['closeParent']);
+		$this->assertArrayHasKey('Y', $config['closeParent']);
+	}
+
+	/**
+	* @testdox toConfig() does not attempt to flip scalar rules such as "inheritRules"
+	*/
+	public function testToConfigDoesNotFlipScalars()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->inheritRules(true);
+
+		$this->assertSame(
+			array('inheritRules' => true),
+			$ruleset->toConfig()
+		);
 	}
 }
