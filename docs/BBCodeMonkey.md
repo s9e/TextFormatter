@@ -62,11 +62,11 @@ Attribute preprocessors
 -----------------------
 Attribute preprocessors are a mechanism to parse the content of attributes before validation to extract the values of other attributes. They take the form of a {PARSE} token containing a regexp. Any [named subpattern](http://docs.php.net/manual/en/regexp.reference.subpatterns.php) will create an attribute of the same name. For example, let's consider a BBCode that displays a user's first and last name:
 
-    [name={PARSE=/(?<first>\\w+) (?<last>\\w+)/}]
+    [name={PARSE=/(?<first>\w+) (?<last>\w+)/}]
 
 Functionally, this is the same as:
 
-    [name={PARSE=/(?<first>\\w+) (?<last>\\w+)/} first={REGEXP=/^\\w+$/} last={REGEXP=/^\\w+$/}]
+    [name={PARSE=/(?<first>\w+) (?<last>\w+)/} first={REGEXP=/^\w+$/} last={REGEXP=/^\w+$/}]
 
 Practically, what will happen during parsing is that
 
@@ -89,7 +89,7 @@ Note that values extracted by attribute preprocessors do not overwrite explicit 
 
 Any number of attribute preprocessors can be defined. They are applied in the same order they are defined, but currently the behaviour of multiple preprocessors trying to set the same attributes is undefined until an actual, practical case where it matters is found. Here's how we can define an improved BBCode that allows the user's name to be given as "John Smith" or "Smith, John"
 
-    [name={PARSE=/(?<first>\\w+) (?<last>\\w+)/} name={PARSE=/(?<last>\\w+), (?<first>\\w+)/}]
+    [name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]
 
 And how it will be interpreted:
 
@@ -107,7 +107,7 @@ Composite attributes are simply an alternative way to declare attribute preproce
 
 This will be interpreted as:
 
-    [flash={PARSE=/^(?<flash0>\\d+),(?<flash1>\\d+)$/}]
+    [flash={PARSE=/^(?<flash0>\d+),(?<flash1>\d+)$/}]
 
 An attribute name is automatically created for {NUMBER1} and {NUMBER2} unless they are explicitly defined. For example:
 
@@ -115,4 +115,4 @@ An attribute name is automatically created for {NUMBER1} and {NUMBER2} unless th
 
 ...is functionally the same as: *(note the matching names in the subpatterns)*
 
-    [flash={PARSE=/^(?<width>\\d+),(?<height>\\d+)$/} width={NUMBER1} height={NUMBER2}]
+    [flash={PARSE=/^(?<width>\d+),(?<height>\d+)$/} width={NUMBER1} height={NUMBER2}]
