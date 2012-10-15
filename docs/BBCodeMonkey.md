@@ -113,6 +113,6 @@ An attribute name is automatically created for {NUMBER1} and {NUMBER2} unless th
 
     [flash={NUMBER1},{NUMBER2} width={NUMBER1} height={NUMBER2}]
 
-...is functionally the same as:
+...is functionally the same as: *(note the matching names in the subpatterns)*
 
     [flash={PARSE=/^(?<width>\\d+),(?<height>\\d+)$/} width={NUMBER1} height={NUMBER2}]
