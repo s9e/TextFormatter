@@ -37,7 +37,7 @@ class TagTest extends Test
 
 		$this->assertEquals(
 			$attributePreprocessors,
-			$tag->attributePreprocessors->getConfig()
+			$tag->attributePreprocessors->toConfig()
 		);
 	}
 
@@ -81,7 +81,7 @@ class TagTest extends Test
 
 		$this->assertEquals(
 			$attributePreprocessors,
-			$tag->attributePreprocessors->getConfig()
+			$tag->attributePreprocessors->toConfig()
 		);
 	}
 

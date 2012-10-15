@@ -2,7 +2,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
  [x] Collection is countable
  [x] Collection is iterable with foreach
  [x] clear() empties the collection
- [x] getConfig() returns the items as an array
+ [x] toConfig() returns the items as an array
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
  [x] set() calls normalizeKey()
@@ -74,11 +74,11 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
 s9e\TextFormatter\Tests\ConfigBuilder\Lists\AttributeList
  [x] Attribute names are normalized for storage
  [x] Attribute names are normalized during retrieval
- [x] getConfig() returns a deduplicated list of attribute names
+ [x] toConfig() returns a deduplicated list of attribute names
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
- [x] getConfig() returns a list of regexps for each attribute
+ [x] toConfig() returns a list of regexps for each attribute
  [x] Is iterable with foreach
  [x] Uses the name of the source attribute as key when iterating
  [x] merge() accepts a 2D array of regexps
@@ -170,7 +170,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Templateset
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\ConfigHelper
  [x] toArray() works with deep arrays
- [x] toArray() calls getConfig() for objects in deep arrays that implement ConfigProvider
+ [x] toArray() calls toConfig() for objects in deep arrays that implement ConfigProvider
  [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TemplateForensics

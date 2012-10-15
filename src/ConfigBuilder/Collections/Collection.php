@@ -28,11 +28,9 @@ class Collection implements ConfigProvider, Countable, Iterator
 	}
 
 	/**
-	* Return the content of this collection as an array
-	*
-	* @return array
+	* {@inheritdoc }
 	*/
-	public function getConfig()
+	public function toConfig()
 	{
 		return ConfigHelper::toArray($this->items);
 	}

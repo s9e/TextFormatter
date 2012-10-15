@@ -33,11 +33,9 @@ class AttributePreprocessorCollection extends Collection
 	}
 
 	/**
-	* Return the regexps associated with each attribute
-	*
-	* @return array
+	* {@inheritdoc}
 	*/
-	public function getConfig()
+	public function toConfig()
 	{
 		$config = array();
 

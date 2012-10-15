@@ -34,19 +34,17 @@ class UrlConfig implements ConfigProvider
 	protected $defaultScheme;
 
 	/**
-	* Return the URL-specific configuration options
-	*
-	* @return array
+	* {@inheritdoc }
 	*/
-	public function getConfig()
+	public function toConfig()
 	{
-		$urlConfig = array(
+		$config = array(
 			'allowedSchemes' => '/^' . RegexpBuilder::fromList($this->allowedSchemes) . '$/Di'
 		);
 
 		if (isset($this->defaultScheme))
 		{
-			$urlConfig['defaultScheme'] = $this->defaultScheme;
+			$config['defaultScheme'] = $this->defaultScheme;
 		}
 
 		foreach (array('disallowedHosts', 'resolveRedirectsHosts') as $k)
@@ -68,10 +66,10 @@ class UrlConfig implements ConfigProvider
 				)
 			);
 
-			$urlConfig[$k] = '/' . $regexp . '/DiS';
+			$config[$k] = '/' . $regexp . '/DiS';
 		}
 
-		return $urlConfig;
+		return $config;
 	}
 
 	/**

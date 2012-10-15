@@ -27,7 +27,7 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox toArray() calls getConfig() for objects in deep arrays that implement ConfigProvider
+	* @testdox toArray() calls toConfig() for objects in deep arrays that implement ConfigProvider
 	*/
 	public function testConfigProviderDeep()
 	{
@@ -58,7 +58,7 @@ class ConfigHelperTest extends Test
 
 class ConfigProviderDummy implements ConfigProvider
 {
-	public function getConfig()
+	public function toConfig()
 	{
 		return array('foo' => 42);
 	}

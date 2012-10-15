@@ -15,11 +15,9 @@ use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
 class AttributeList extends NormalizedList
 {
 	/**
-	* Return this list for config storage
-	*
-	* @return array
+	* {@inheritdoc}
 	*/
-	public function getConfig()
+	public function toConfig()
 	{
 		return array_unique($this->items);
 	}

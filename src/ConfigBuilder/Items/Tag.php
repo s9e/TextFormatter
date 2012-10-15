@@ -8,13 +8,15 @@
 namespace s9e\TextFormatter\ConfigBuilder\Items;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\ConfigBuilder\ConfigProvider;
 use s9e\TextFormatter\ConfigBuilder\Collections\AttributeCollection;
 use s9e\TextFormatter\ConfigBuilder\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\ConfigBuilder\Collections\Ruleset;
 use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
+use s9e\TextFormatter\ConfigBuilder\Helpers\ConfigHelper;
 use s9e\TextFormatter\ConfigBuilder\Traits\Configurable;
 
-class Tag
+class Tag implements ConfigProvider
 {
 	use Configurable;
 
@@ -180,5 +182,23 @@ class Tag
 	public function setDefaultTemplate($template)
 	{
 		$this->templates->set('', $template);
+	}
+
+	/**
+	* {@inheritdoc }
+	*/
+	public function toConfig()
+	{
+		$config = array();
+		foreach ($this as $k => $v)
+		{
+			$config[$k] = $v;
+		}
+
+		// Remove properties that are not needed during parsing
+		unset($config['defaultChildRule']);
+		unset($config['defaultDescendantRule']);
+
+		return ConfigHelper::toArray($config);
 	}
 }

@@ -10,7 +10,9 @@ namespace s9e\TextFormatter\ConfigBuilder;
 interface ConfigProvider
 {
 	/**
+	* Return an array-based representation of this object to be used for parsing
+	*
 	* @return array
 	*/
-	public function getConfig();
+	public function toConfig();
 }

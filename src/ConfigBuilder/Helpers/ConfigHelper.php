@@ -27,7 +27,7 @@ abstract class ConfigHelper
 		{
 			if ($v instanceof ConfigProvider)
 			{
-				$v = $v->getConfig();
+				$v = $v->toConfig();
 			}
 			elseif ($v instanceof Traversable || is_array($v))
 			{

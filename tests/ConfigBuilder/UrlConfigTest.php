@@ -21,7 +21,7 @@ class UrlConfigTest extends Test
 	public function Disallowed_IDNs_are_punycoded()
 	{
 		$this->urlConfig->disallowHost('pаypal.com');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 
 		$this->assertArrayHasKey('disallowedHosts', $urlConfig);
 		$this->assertContains('xn--pypal-4ve\\.com', $urlConfig['disallowedHosts']);
@@ -33,7 +33,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHosts()
 	{
 		$this->urlConfig->disallowHost('example.org');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertRegexp($urlConfig['disallowedHosts'], 'example.org');
 	}
 
@@ -43,7 +43,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHostsCaseInsensitive()
 	{
 		$this->urlConfig->disallowHost('example.org');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertRegexp($urlConfig['disallowedHosts'], 'EXAMPLE.ORG');
 	}
 
@@ -53,7 +53,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHostsWithWildcard()
 	{
 		$this->urlConfig->disallowHost('*.example.org');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertRegexp($urlConfig['disallowedHosts'], 'www.example.org');
 	}
 
@@ -63,7 +63,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHostsWithWildcard2()
 	{
 		$this->urlConfig->disallowHost('*.example.org');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertRegexp($urlConfig['disallowedHosts'], 'www.xxx.example.org');
 	}
 
@@ -73,7 +73,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHostsWithWildcard3()
 	{
 		$this->urlConfig->disallowHost('*.example.org');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertNotRegexp($urlConfig['disallowedHosts'], 'example.org');
 	}
 
@@ -83,7 +83,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHostsWithWildcard4()
 	{
 		$this->urlConfig->disallowHost('*.example.org');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertNotRegexp($urlConfig['disallowedHosts'], 'example.org.org');
 	}
 
@@ -93,7 +93,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHostsWithWildcard5()
 	{
 		$this->urlConfig->disallowHost('*xxx*');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertRegexp($urlConfig['disallowedHosts'], 'xxx.com');
 	}
 
@@ -103,7 +103,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHostsWithWildcard6()
 	{
 		$this->urlConfig->disallowHost('*xxx*');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertRegexp($urlConfig['disallowedHosts'], 'foo.xxx');
 	}
 
@@ -113,7 +113,7 @@ class UrlConfigTest extends Test
 	public function testCanDisallowHostsWithWildcard7()
 	{
 		$this->urlConfig->disallowHost('*xxx*');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertRegexp($urlConfig['disallowedHosts'], 'myxxxsite.com');
 	}
 
@@ -123,7 +123,7 @@ class UrlConfigTest extends Test
 	public function Url_filter_can_be_configured_to_resolve_redirects_from_a_given_host()
 	{
 		$this->urlConfig->resolveRedirectsFrom('bit.ly');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 
 		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
 		$this->assertRegexp($urlConfig['resolveRedirectsHosts'], 'bit.ly');
@@ -134,7 +134,7 @@ class UrlConfigTest extends Test
 	*/
 	public function testAllowSchemeHTTP()
 	{
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
 		$this->assertRegexp($urlConfig['allowedSchemes'], 'http');
@@ -145,7 +145,7 @@ class UrlConfigTest extends Test
 	*/
 	public function testAllowSchemeHTTPS()
 	{
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
 		$this->assertRegexp($urlConfig['allowedSchemes'], 'https');
@@ -156,7 +156,7 @@ class UrlConfigTest extends Test
 	*/
 	public function testAllowSchemeHTTPSCaseInsensitive()
 	{
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
 		$this->assertRegexp($urlConfig['allowedSchemes'], 'HTTPS');
@@ -167,7 +167,7 @@ class UrlConfigTest extends Test
 	*/
 	public function testDisallowedSchemeFTP()
 	{
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
 		$this->assertNotRegexp($urlConfig['allowedSchemes'], 'ftp');
@@ -190,7 +190,7 @@ class UrlConfigTest extends Test
 	public function testAllowSchemeFTP()
 	{
 		$this->urlConfig->allowScheme('ftp');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
 		$this->assertRegexp($urlConfig['allowedSchemes'], 'ftp');
@@ -211,7 +211,7 @@ class UrlConfigTest extends Test
 	*/
 	public function testNoDefaultScheme()
 	{
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertArrayNotHasKey('defaultScheme', $urlConfig);
 	}
 
@@ -221,7 +221,7 @@ class UrlConfigTest extends Test
 	public function testSetDefaultScheme()
 	{
 		$this->urlConfig->setDefaultScheme('http');
-		$urlConfig = $this->urlConfig->getConfig();
+		$urlConfig = $this->urlConfig->toConfig();
 		$this->assertArrayHasKey('defaultScheme', $urlConfig);
 		$this->assertSame('http', $urlConfig['defaultScheme']);
 	}

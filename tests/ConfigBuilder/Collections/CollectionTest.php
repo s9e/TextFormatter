@@ -43,14 +43,14 @@ class CollectionTest extends Test
 	}
 
 	/**
-	* @testdox getConfig() returns the items as an array
+	* @testdox toConfig() returns the items as an array
 	*/
 	public function testGetConfig()
 	{
 		$dumbCollection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
 		$this->assertEquals(
 			array('a' => 1, 'b' => 2, 'c' => 5),
-			$dumbCollection->getConfig()
+			$dumbCollection->toConfig()
 		);
 	}
 }
