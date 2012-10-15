@@ -21,7 +21,7 @@ BBCodes can have any number of (named) attributes. The following example describ
 
     [a href={URL} title={SIMPLETEXT}]{TEXT}[/a]
 
-The first attribute becomes the BBCode's `defaultAttribute`, and if its name is the same as the BBCode, it can be omitted altogether, e.G.
+The first attribute becomes the BBCode's `defaultAttribute`, and if its name is the same as the BBCode, it can be omitted altogether, e.g.
 
     [url={URL}]{TEXT}[/url]
 
@@ -87,7 +87,7 @@ Note that values extracted by attribute preprocessors do not overwrite explicit 
     [name="John Smith" first="Johnny"]
     [name first="Johnny" last="Smith"]
 
-Any number of attribute preprocessors can be defined. They are applied in the same order they are defined, but currently the behaviour of multiple preprocessors trying to set the same attributes is undefined until an actual, practical case where it matters is found. Here's how we can define an improved BBCode that allows the user's name to be given as "John Smith" or "Smith, John"
+Any number of attribute preprocessors can be defined. They are applied in the same order they are defined, but currently the behaviour of multiple preprocessors trying to set the same attributes is undefined until an actual, practical case where it matters is found. Here's how we can define an improved BBCode that allows the user's name to be given as "John Smith" or as "Smith, John"
 
     [name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]
 
