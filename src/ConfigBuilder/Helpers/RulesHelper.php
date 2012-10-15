@@ -20,12 +20,13 @@ abstract class RulesHelper
 	*/
 	public static function getBitfields(TagCollection $tags)
 	{
-		$ret = array(
-			'rootContext' => array(
-				'allowedChildren'    => '',
-				'allowedDescendants' => ''
-			)
-		);
+		/**
+		* @var array Return array
+		*/
+		$ret = array();
+
+		$allowedChildrenAtRoot    = '';
+		$allowedDescendantsAtRoot = '';
 
 		// Compute the allowed children/descendants for each tag
 		list($allowedChildren, $allowedDescendants) = self::unrollRules($tags);
@@ -70,7 +71,7 @@ abstract class RulesHelper
 		// Now replace the bitfield (used as key) with the corresponding bit number
 		$groupedTags = array_values($groupedTags);
 
-		// Assign a bit number for every tag. Tags with the same set of permissions get to share the
+		// Assign a bit number to every tag. Tags with the same set of permissions get to share the
 		// same bit number
 		foreach ($groupedTags as $bitNumber => $tagNames)
 		{
@@ -84,14 +85,17 @@ abstract class RulesHelper
 			}
 
 			// Fill in the root context's bitfields
-			$ret['rootContext']['allowedChildren'] .= self::isAllowedAtRoot($tags[$tagName]);
+			$allowedChildrenAtRoot    .= self::isAllowedAtRoot($tags[$tagName]);
 
 			// Denied descendants are removed from the list, so we know this tag is allowed
-			$ret['rootContext']['allowedDescendants'] .= '1';
+			$allowedDescendantsAtRoot .= '1';
 		}
 
 		// Finalize the root context's bitfields
-		$ret['rootContext'] = array_map(array('self', 'bin2raw'), $ret['rootContext']);
+		$ret['rootContext'] = array(
+			'allowedChildren'    => self::bin2raw($allowedChildrenAtRoot),
+			'allowedDescendants' => self::bin2raw($allowedDescendantsAtRoot)
+		);
 
 		// Now fill in each tag's bitfields
 		foreach ($ret['tags'] as $tagName => &$config)
@@ -224,7 +228,7 @@ abstract class RulesHelper
 	}
 
 	/**
-	* 
+	* Clean up an array of permissions by removing the names of tags that are not allowed anywhere
 	*
 	* @param  array         $permissions
 	* @param  TagCollection $tags
