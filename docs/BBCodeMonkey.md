@@ -1,7 +1,7 @@
 BBCodeMonkey
 ============
 
-s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey is an helper class designed to allow end users to easily express a BBCode definition, both its usage and its template. Its syntax is based and expands on phpBB's own custom BBCode interface and it aims to be compatible with the many custom BBCodes available online while being able to express most BBCode constructs.
+`s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey` is an helper class designed to allow end users to easily express a BBCode definition, both its usage and its template. Its syntax is based and expands on phpBB's own custom BBCode interface and it aims to be compatible with the many custom BBCodes available online while being able to express most BBCode constructs.
 
 BBCode usage
 ------------
@@ -25,10 +25,6 @@ By default, all attributes are `required`. To mark an attribute as optional:
 
     [b title={TEXT1;optional}]{TEXT2}[/b]
 
-Other attribute options are supported, see s9e\TextFormatter\ConfigBuilder\Items\Attribute:
-
-    [font face={SIMPLETEXT;defaultValue=Arial}]
-
 Here we have an optional attribute "title" or type "text". Internally, attribute types are added to the attribute's `filterChain` as a built-in filter, except for the type "text" which has no filter associated. For example, {URL} will add the filter "#url" to its attribute's `filterChain`. Some filters accept some parameters:
 
     [size={RANGE=7,24}]{TEXT}[/size]
@@ -45,3 +41,14 @@ In addition to the token's type, any number of filters can be added to the `filt
     [title={TEXT;postFilter=strtolower,ucwords}]
 
 Only the filters listed in BBCodeMonkey::$allowedFilters can be used, for obvious security reasons. `[foo={TEXT;preFilter=eval}]` will throw an exception.
+
+Other attribute options are supported, see `s9e\TextFormatter\ConfigBuilder\Items\Attribute`:
+
+    [font face={SIMPLETEXT;defaultValue=Arial}]
+
+In addition to normal attribute options, another option "useContent" can be used. An attribute declared with the `useContent` option will use the BBCode's content as its value if it's not explicitly given one. For instance, consider this BBCode:
+
+    [url={URL;useContent}]{TEXT}[/url]
+
+This BBCode can be used as `[url]http://localhost[/url]` and will be interpreted as `[url=http://localhost]http://localhost[/url]`. And of course, it can still be used as `[url=http://localhost]My website![/url]`.
+
