@@ -123,7 +123,7 @@ Templates can consist either as a chunk of XSL (whatever is acceptable within an
 
     [url={URL;useContent}]{TEXT}[/url]
 
-Its template could look like:
+Its template could look like this:
 
     <a href="{URL}">{TEXT}</a>
 
