@@ -34,7 +34,7 @@ class UrlConfig implements ConfigProvider
 	protected $defaultScheme;
 
 	/**
-	* {@inheritdoc }
+	* {@inheritdoc}
 	*/
 	public function toConfig()
 	{

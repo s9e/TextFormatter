@@ -28,7 +28,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	}
 
 	/**
-	* {@inheritdoc }
+	* {@inheritdoc}
 	*/
 	public function toConfig()
 	{

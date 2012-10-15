@@ -280,4 +280,23 @@ class TagTest extends Test
 
 		$this->assertSame('foo', $tag->templates->get(''));
 	}
+
+	/**
+	* @testdox toConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
+	*/
+	public function testToConfig()
+	{
+		$tag = new Tag;
+
+		$this->assertEquals(
+			array(
+				'attributes' => array(),
+				'attributePreprocessors' => array(),
+				'nestingLimit' => 10,
+				'rules' => array(),
+				'tagLimit' => 100
+			),
+			$tag->toConfig()
+		);
+	}
 }

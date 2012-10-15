@@ -185,7 +185,7 @@ class Tag implements ConfigProvider
 	}
 
 	/**
-	* {@inheritdoc }
+	* {@inheritdoc}
 	*/
 	public function toConfig()
 	{
@@ -198,6 +198,7 @@ class Tag implements ConfigProvider
 		// Remove properties that are not needed during parsing
 		unset($config['defaultChildRule']);
 		unset($config['defaultDescendantRule']);
+		unset($config['templates']);
 
 		return ConfigHelper::toArray($config);
 	}
