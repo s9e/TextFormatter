@@ -168,6 +168,11 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Templateset
  [x] setUnsafe() optimizes the template
  [x] setUnsafe() does not check the template for unsafe content
 
+s9e\TextFormatter\Tests\ConfigBuilder\Helpers\ConfigHelper
+ [x] toArray() works with deep arrays
+ [x] toArray() calls getConfig() for objects in deep arrays that implement ConfigProvider
+ [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
+
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child
  [x] <span> does not allow <div> as child even with a <span> sibling
