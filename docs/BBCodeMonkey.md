@@ -149,7 +149,7 @@ Because {SIMPLETEXT} is a filtered type, it is assigned an attribute, arbitraril
 
 Token usage in templates
 ------------------------
-Note that only unique tokens can be used in templates. For instance, considering the following, valid BBCode usage:
+Note that only unique tokens can be used in templates. For instance, consider the following, valid BBCode usage:
 
     [box color={COLOR} width={NUMBER} height={NUMBER}]{TEXT}[/box]
 
@@ -164,4 +164,5 @@ However, the following is **invalid** because the token {NUMBER} is ambiguous:
 This can be fixed by assigning different IDs to the tokens:
 
     [box color={COLOR} width={NUMBER1} height={NUMBER2}]{TEXT}[/box]
+
     <div style="color: {COLOR}; width: {NUMBER1}px; height: {NUMBER2}px">{TEXT}</div>
