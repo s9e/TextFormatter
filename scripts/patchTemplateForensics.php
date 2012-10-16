@@ -185,7 +185,7 @@ foreach ($page->body->h4 as $h4)
 					{
 						$elements[$elName]['allowChildCategory'][$m[1]][''] = 0;
 					}
-					elseif (preg_match('#^A ([a-z]+) element followed by a ([a-z]+) element$#', $value, $m))
+					elseif (preg_match('#^a ([a-z]+) element followed by a ([a-z]+) element$#', $value, $m))
 					{
 						$elements[$elName]['allowChildElement'][$m[1]][''] = 0;
 						$elements[$elName]['allowChildElement'][$m[2]][''] = 0;
@@ -272,7 +272,7 @@ foreach ($page->body->h4 as $h4)
 					}
 					elseif ($value === 'text')
 					{
-						$elements[$elName]['denyAll'] = true;
+						$elements[$elName]['allowText'] = 0;
 					}
 					elseif (preg_match('#^zero or more ([a-z]+) elements, then, (transparent)$#', $value, $m))
 					{
@@ -328,6 +328,20 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['denyDescendantElement']['ruby'][''] = 0;
 						$elements[$elName]['allowChildElement']['rt'][''] = 0;
 						$elements[$elName]['allowChildElement']['rp'][''] = 0;
+					}
+					elseif ($value === 'if the document is an iframe srcdoc document or if title information is available from a higher-level protocol: zero or more elements of metadata content'
+					     || $value === 'otherwise: one or more elements of metadata content, of which exactly one is a title element')
+					{
+						$elements[$elName]['allowChildCategory']['metadata content'][''] = 0;
+					}
+					elseif ($value === 'depends on the value of the type attribute, but must match requirements described in prose below')
+					{
+						// <style>'s content model
+					}
+					elseif ($value === 'if there is no src attribute, depends on the value of the type attribute, but must match script content restrictions'
+					     || $value === 'if there is a src attribute, the element must be either empty or contain only script documentation that also matches script content restrictions')
+					{
+						// <script>'s content model
 					}
 					else
 					{
@@ -466,7 +480,7 @@ arsort($categories);
 $categories = array_flip(array_keys($categories));
 
 $arr = array();
-foreach ($elements as $elName => &$element)
+foreach ($elements as $elName => $element)
 {
 	$el = array();
 
@@ -497,9 +511,29 @@ foreach ($elements as $elName => &$element)
 		}
 	}
 
+	// Test whether this element allows text nodes
+	$noText = true;
+	if (isset($el['ac']))
+	{
+		foreach (array('flow content', 'palpable content', 'phrasing content') as $category)
+		{
+			if ($el['ac'] & (1 << $categories[$category]))
+			{
+				$noText = false;
+				break;
+			}
+		}
+	}
+
+	if ($noText && !isset($element['allowText']))
+	{
+		$el['nt'] = 1;
+	}
+
 	if (!empty($element['transparent']))
 	{
 		$el['t'] = 1;
+		unset($el['nt']);
 	}
 
 	$arr[$elName] = $el;
