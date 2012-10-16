@@ -32,19 +32,19 @@ use s9e\TextFormatter\ConfigBuilder\Collections\Templateset;
 class TemplateForensics
 {
 	/**
-	* @var integer allowChild bitfield (all branches)
+	* @var string allowChild bitfield (all branches)
 	*/
-	protected $allowChildBitfield = 0;
+	protected $allowChildBitfield = "\0";
 
 	/**
-	* @var integer OR-ed bitfield representing all of the categories used by this tag's templates
+	* @var string OR-ed bitfield representing all of the categories used by this tag's templates
 	*/
-	protected $contentBitfield = 0;
+	protected $contentBitfield = "\0";
 
 	/**
-	* @var integer denyDescendant bitfield
+	* @var string denyDescendant bitfield
 	*/
-	protected $denyDescendantBitfield = 0;
+	protected $denyDescendantBitfield = "\0";
 
 	/**
 	* @var bool Whether all branches use the transparent content model (or more accurately, whether
@@ -102,7 +102,7 @@ class TemplateForensics
 
 		foreach ($child->rootBitfields as $rootBitfield)
 		{
-			if (!($rootBitfield & $this->allowChildBitfield))
+			if (!self::match($rootBitfield, $this->allowChildBitfield))
 			{
 				return false;
 			}
@@ -119,7 +119,7 @@ class TemplateForensics
 	*/
 	public function allowsDescendant(self $descendant)
 	{
-		return !($descendant->contentBitfield & $this->denyDescendantBitfield);
+		return !self::match($descendant->contentBitfield, $this->denyDescendantBitfield);
 	}
 
 	/**
@@ -229,9 +229,9 @@ class TemplateForensics
 			}
 
 			/**
-			* @var integer allowChild bitfield for current branch. Starts with the value associated
-			*              with <span> in order to approximate a value if the whole branch uses the
-			*              transparent content model
+			* @var string allowChild bitfield for current branch. Starts with the value associated
+			*             with <span> in order to approximate a value if the whole branch uses the
+			*             transparent content model
 			*/
 			$branchBitfield = self::$htmlElements['span']['ac'];
 
@@ -248,7 +248,7 @@ class TemplateForensics
 				if (empty(self::$htmlElements[$nodeName]['t']))
 				{
 					// If the element isn't transparent, we reset its bitfield
-					$branchBitfield = 0;
+					$branchBitfield = "\0";
 
 					// Also, it means that the tag itself isn't transparent
 					$this->isTransparent = false;
@@ -313,150 +313,165 @@ class TemplateForensics
 	* @see /scripts/patchTemplateForensics.php
 	*/
 	protected static $htmlElements = array(
-		'a'=>array('c'=>15,'ac'=>0,'dd'=>8,'t'=>1),
-		'abbr'=>array('c'=>7,'ac'=>4),
-		'address'=>array('c'=>1027,'ac'=>1,'dd'=>1552,'cp'=>array('p')),
-		'area'=>array('c'=>5),
-		'article'=>array('c'=>515,'ac'=>1,'cp'=>array('p')),
-		'aside'=>array('c'=>515,'ac'=>1,'cp'=>array('p')),
-		'audio'=>array('c'=>79,'c3'=>'@controls','c1'=>'@controls','ac'=>4718592,'ac19'=>'not(@src)','ac22'=>'@src','t'=>1),
-		'b'=>array('c'=>7,'ac'=>4),
-		'bdi'=>array('c'=>7,'ac'=>4),
-		'bdo'=>array('c'=>7,'ac'=>4),
-		'blockquote'=>array('c'=>35,'ac'=>1,'cp'=>array('p')),
-		'br'=>array('c'=>5),
-		'button'=>array('c'=>15,'ac'=>4,'dd'=>8),
-		'canvas'=>array('c'=>71,'ac'=>0,'t'=>1),
-		'caption'=>array('c'=>128,'ac'=>1,'dd'=>8388608),
-		'cite'=>array('c'=>7,'ac'=>4),
-		'code'=>array('c'=>7,'ac'=>4),
-		'col'=>array('c'=>1073741824),
-		'colgroup'=>array('c'=>128,'ac'=>1073741824,'ac30'=>'not(@span)'),
-		'datalist'=>array('c'=>5,'ac'=>1048580),
-		'dd'=>array('c'=>65536,'ac'=>1,'cp'=>array('dd','dt')),
-		'del'=>array('c'=>5,'ac'=>0,'t'=>1),
-		'details'=>array('c'=>43,'ac'=>262145),
-		'dfn'=>array('c'=>536870919,'ac'=>4,'dd'=>536870912),
-		'dialog'=>array('c'=>33,'ac'=>1),
-		'div'=>array('c'=>3,'ac'=>1,'cp'=>array('p')),
-		'dl'=>array('c'=>3,'ac'=>65536,'cp'=>array('p')),
-		'dt'=>array('c'=>65536,'ac'=>1,'dd'=>8720,'cp'=>array('dd','dt')),
-		'em'=>array('c'=>7,'ac'=>4),
-		'embed'=>array('c'=>79),
-		'fieldset'=>array('c'=>35,'ac'=>2097153,'cp'=>array('p')),
-		'figcaption'=>array('c'=>0x200000000,'ac'=>1),
-		'figure'=>array('c'=>35,'ac'=>0x200000001),
-		'footer'=>array('c'=>9219,'ac'=>1,'dd'=>8192,'cp'=>array('p')),
-		'form'=>array('c'=>268435459,'ac'=>1,'dd'=>268435456,'cp'=>array('p')),
-		'h1'=>array('c'=>275,'ac'=>4,'cp'=>array('p')),
-		'h2'=>array('c'=>275,'ac'=>4,'cp'=>array('p')),
-		'h3'=>array('c'=>275,'ac'=>4,'cp'=>array('p')),
-		'h4'=>array('c'=>275,'ac'=>4,'cp'=>array('p')),
-		'h5'=>array('c'=>275,'ac'=>4,'cp'=>array('p')),
-		'h6'=>array('c'=>275,'ac'=>4,'cp'=>array('p')),
-		'header'=>array('c'=>9219,'ac'=>1,'dd'=>8192,'cp'=>array('p')),
-		'hgroup'=>array('c'=>19,'ac'=>256,'cp'=>array('p')),
-		'hr'=>array('c'=>1,'cp'=>array('p')),
-		'i'=>array('c'=>7,'ac'=>4),
-		'img'=>array('c'=>79,'c3'=>'@usemap'),
-		'input'=>array('c'=>15,'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"'),
-		'ins'=>array('c'=>7,'ac'=>0,'t'=>1),
-		'kbd'=>array('c'=>7,'ac'=>4),
-		'keygen'=>array('c'=>15),
-		'label'=>array('c'=>67108879,'ac'=>4,'dd'=>67108864),
-		'legend'=>array('c'=>2097152,'ac'=>4),
-		'li'=>array('c'=>0x100000000,'ac'=>1,'cp'=>array('li')),
-		'map'=>array('c'=>7,'ac'=>0,'t'=>1),
-		'mark'=>array('c'=>7,'ac'=>4),
-		'menu'=>array('c'=>11,'c3'=>'@type="toolbar"','c1'=>'@type="toolbar" or @type="list"','ac'=>0x100000001,'cp'=>array('p')),
-		'meter'=>array('c'=>33556487,'ac'=>4,'dd'=>33554432),
-		'nav'=>array('c'=>515,'ac'=>1,'cp'=>array('p')),
-		'object'=>array('c'=>79,'c3'=>'@usemap','ac'=>16777225),
-		'ol'=>array('c'=>3,'ac'=>0x100000000,'cp'=>array('p')),
-		'optgroup'=>array('c'=>4096,'ac'=>1048576,'cp'=>array('optgroup','option')),
-		'option'=>array('c'=>1052672,'cp'=>array('option')),
-		'output'=>array('c'=>7,'ac'=>4),
-		'p'=>array('c'=>3,'ac'=>4,'cp'=>array('p')),
-		'param'=>array('c'=>16777216),
-		'pre'=>array('c'=>3,'ac'=>4,'cp'=>array('p')),
-		'progress'=>array('c'=>133127,'ac'=>4,'dd'=>131072),
-		'q'=>array('c'=>7,'ac'=>4),
-		'rp'=>array('c'=>32768,'ac'=>4,'cp'=>array('rp','rt')),
-		'rt'=>array('c'=>32768,'ac'=>4,'cp'=>array('rp','rt')),
-		'ruby'=>array('c'=>134217735,'ac'=>32772,'dd'=>134217728),
-		's'=>array('c'=>7,'ac'=>4),
-		'samp'=>array('c'=>7,'ac'=>4),
-		'section'=>array('c'=>515,'ac'=>1,'cp'=>array('p')),
-		'select'=>array('c'=>15,'ac'=>4096),
-		'small'=>array('c'=>7,'ac'=>4),
-		'source'=>array('c'=>524288),
-		'span'=>array('c'=>7,'ac'=>4),
-		'strong'=>array('c'=>7,'ac'=>4),
-		'sub'=>array('c'=>7,'ac'=>4),
-		'summary'=>array('c'=>262144,'ac'=>4),
-		'sup'=>array('c'=>7,'ac'=>4),
-		'table'=>array('c'=>8388611,'ac'=>128,'cp'=>array('p')),
-		'tbody'=>array('c'=>128,'ac'=>0x80000000,'cp'=>array('tbody','tfoot','thead')),
-		'td'=>array('c'=>16416,'ac'=>1,'cp'=>array('td','th')),
-		'textarea'=>array('c'=>15),
-		'tfoot'=>array('c'=>128,'ac'=>0x80000000,'cp'=>array('tbody','thead')),
-		'th'=>array('c'=>16384,'ac'=>1,'dd'=>8720,'cp'=>array('td','th')),
-		'thead'=>array('c'=>128,'ac'=>0x80000000),
-		'time'=>array('c'=>7,'ac'=>4),
-		'tr'=>array('c'=>0x80000080,'ac'=>16384,'cp'=>array('tr')),
-		'track'=>array('c'=>4194304),
-		'u'=>array('c'=>7,'ac'=>4),
-		'ul'=>array('c'=>3,'ac'=>0x100000000,'cp'=>array('p')),
-		'var'=>array('c'=>7,'ac'=>4),
-		'video'=>array('c'=>79,'c3'=>'@controls','ac'=>4718592,'ac19'=>'not(@src)','ac22'=>'@src','t'=>1),
-		'wbr'=>array('c'=>5)
+		'a'=>array('c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1),
+		'abbr'=>array('c'=>"\7",'ac'=>"\4"),
+		'address'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\20\6",'cp'=>array('p')),
+		'area'=>array('c'=>"\5"),
+		'article'=>array('c'=>"\3\2",'ac'=>"\1",'cp'=>array('p')),
+		'aside'=>array('c'=>"\3\2",'ac'=>"\1",'cp'=>array('p')),
+		'audio'=>array('c'=>"\117",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\110",'ac19'=>'not(@src)','ac22'=>'@src','t'=>1),
+		'b'=>array('c'=>"\7",'ac'=>"\4"),
+		'bdi'=>array('c'=>"\7",'ac'=>"\4"),
+		'bdo'=>array('c'=>"\7",'ac'=>"\4"),
+		'blockquote'=>array('c'=>"\43",'ac'=>"\1",'cp'=>array('p')),
+		'br'=>array('c'=>"\5"),
+		'button'=>array('c'=>"\17",'ac'=>"\4",'dd'=>"\10"),
+		'canvas'=>array('c'=>"\107",'ac'=>"\0",'t'=>1),
+		'caption'=>array('c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\200"),
+		'cite'=>array('c'=>"\7",'ac'=>"\4"),
+		'code'=>array('c'=>"\7",'ac'=>"\4"),
+		'col'=>array('c'=>"\0\0\0\100"),
+		'colgroup'=>array('c'=>"\200",'ac'=>"\0\0\0\100",'ac30'=>'not(@span)'),
+		'datalist'=>array('c'=>"\5",'ac'=>"\4\0\20"),
+		'dd'=>array('c'=>"\0\0\1",'ac'=>"\1",'cp'=>array('dd','dt')),
+		'del'=>array('c'=>"\5",'ac'=>"\0",'t'=>1),
+		'details'=>array('c'=>"\53",'ac'=>"\1\0\4"),
+		'dfn'=>array('c'=>"\7\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\40"),
+		'dialog'=>array('c'=>"\41",'ac'=>"\1"),
+		'div'=>array('c'=>"\3",'ac'=>"\1",'cp'=>array('p')),
+		'dl'=>array('c'=>"\3",'ac'=>"\0\0\1",'cp'=>array('p')),
+		'dt'=>array('c'=>"\0\0\1",'ac'=>"\1",'dd'=>"\20\42",'cp'=>array('dd','dt')),
+		'em'=>array('c'=>"\7",'ac'=>"\4"),
+		'embed'=>array('c'=>"\117"),
+		'fieldset'=>array('c'=>"\43",'ac'=>"\1\0\40",'cp'=>array('p')),
+		'figcaption'=>array('c'=>"\0\0\0\0\2",'ac'=>"\1"),
+		'figure'=>array('c'=>"\43",'ac'=>"\1\0\0\0\2"),
+		'footer'=>array('c'=>"\3\44",'ac'=>"\1",'dd'=>"\0\40",'cp'=>array('p')),
+		'form'=>array('c'=>"\3\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\20",'cp'=>array('p')),
+		'h1'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
+		'h2'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
+		'h3'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
+		'h4'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
+		'h5'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
+		'h6'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
+		'header'=>array('c'=>"\3\44",'ac'=>"\1",'dd'=>"\0\40",'cp'=>array('p')),
+		'hgroup'=>array('c'=>"\23",'ac'=>"\0\1",'cp'=>array('p')),
+		'hr'=>array('c'=>"\1",'cp'=>array('p')),
+		'i'=>array('c'=>"\7",'ac'=>"\4"),
+		'img'=>array('c'=>"\117",'c3'=>'@usemap'),
+		'input'=>array('c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"'),
+		'ins'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
+		'kbd'=>array('c'=>"\7",'ac'=>"\4"),
+		'keygen'=>array('c'=>"\17"),
+		'label'=>array('c'=>"\17\0\0\4",'ac'=>"\4",'dd'=>"\0\0\0\4"),
+		'legend'=>array('c'=>"\0\0\40",'ac'=>"\4"),
+		'li'=>array('c'=>"\0\0\0\0\1",'ac'=>"\1",'cp'=>array('li')),
+		'map'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
+		'mark'=>array('c'=>"\7",'ac'=>"\4"),
+		'menu'=>array('c'=>"\13",'c3'=>'@type="toolbar"','c1'=>'@type="toolbar" or @type="list"','ac'=>"\1\0\0\0\1",'cp'=>array('p')),
+		'meter'=>array('c'=>"\7\10\0\2",'ac'=>"\4",'dd'=>"\0\0\0\2"),
+		'nav'=>array('c'=>"\3\2",'ac'=>"\1",'cp'=>array('p')),
+		'object'=>array('c'=>"\117",'c3'=>'@usemap','ac'=>"\11\0\0\1"),
+		'ol'=>array('c'=>"\3",'ac'=>"\0\0\0\0\1",'cp'=>array('p')),
+		'optgroup'=>array('c'=>"\0\20",'ac'=>"\0\0\20",'cp'=>array('optgroup','option')),
+		'option'=>array('c'=>"\0\20\20",'cp'=>array('option')),
+		'output'=>array('c'=>"\7",'ac'=>"\4"),
+		'p'=>array('c'=>"\3",'ac'=>"\4",'cp'=>array('p')),
+		'param'=>array('c'=>"\0\0\0\1"),
+		'pre'=>array('c'=>"\3",'ac'=>"\4",'cp'=>array('p')),
+		'progress'=>array('c'=>"\7\10\2",'ac'=>"\4",'dd'=>"\0\0\2"),
+		'q'=>array('c'=>"\7",'ac'=>"\4"),
+		'rp'=>array('c'=>"\0\200",'ac'=>"\4",'cp'=>array('rp','rt')),
+		'rt'=>array('c'=>"\0\200",'ac'=>"\4",'cp'=>array('rp','rt')),
+		'ruby'=>array('c'=>"\7\0\0\10",'ac'=>"\4\200",'dd'=>"\0\0\0\10"),
+		's'=>array('c'=>"\7",'ac'=>"\4"),
+		'samp'=>array('c'=>"\7",'ac'=>"\4"),
+		'section'=>array('c'=>"\3\2",'ac'=>"\1",'cp'=>array('p')),
+		'select'=>array('c'=>"\17",'ac'=>"\0\20"),
+		'small'=>array('c'=>"\7",'ac'=>"\4"),
+		'source'=>array('c'=>"\0\0\10"),
+		'span'=>array('c'=>"\7",'ac'=>"\4"),
+		'strong'=>array('c'=>"\7",'ac'=>"\4"),
+		'sub'=>array('c'=>"\7",'ac'=>"\4"),
+		'summary'=>array('c'=>"\0\0\4",'ac'=>"\4"),
+		'sup'=>array('c'=>"\7",'ac'=>"\4"),
+		'table'=>array('c'=>"\3\0\200",'ac'=>"\200",'cp'=>array('p')),
+		'tbody'=>array('c'=>"\200",'ac'=>"\0\0\0\200",'cp'=>array('tbody','tfoot','thead')),
+		'td'=>array('c'=>"\40\100",'ac'=>"\1",'cp'=>array('td','th')),
+		'textarea'=>array('c'=>"\17"),
+		'tfoot'=>array('c'=>"\200",'ac'=>"\0\0\0\200",'cp'=>array('tbody','thead')),
+		'th'=>array('c'=>"\0\100",'ac'=>"\1",'dd'=>"\20\42",'cp'=>array('td','th')),
+		'thead'=>array('c'=>"\200",'ac'=>"\0\0\0\200"),
+		'time'=>array('c'=>"\7",'ac'=>"\4"),
+		'tr'=>array('c'=>"\200\0\0\200",'ac'=>"\0\100",'cp'=>array('tr')),
+		'track'=>array('c'=>"\0\0\100"),
+		'u'=>array('c'=>"\7",'ac'=>"\4"),
+		'ul'=>array('c'=>"\3",'ac'=>"\0\0\0\0\1",'cp'=>array('p')),
+		'var'=>array('c'=>"\7",'ac'=>"\4"),
+		'video'=>array('c'=>"\117",'c3'=>'@controls','ac'=>"\0\0\110",'ac19'=>'not(@src)','ac22'=>'@src','t'=>1),
+		'wbr'=>array('c'=>"\5")
 	);
 
 	/**
 	* Get the bitfield value for a given element name in a given context
 	*
-	* NOTE: will fail on 32-bit PHP for categories >= 0x100000000
-	*
 	* @param  string           $elName Name of the HTML element
 	* @param  string           $k      Bitfield name: either 'c', 'ac' or 'dd'
 	* @param  SimpleXMLElement $node   Context node (not necessarily the same as $elName)
-	* @return integer
+	* @return string
 	*/
 	protected static function getBitfield($elName, $k, SimpleXMLElement $node)
 	{
-		if (empty(self::$htmlElements[$elName][$k]))
+		if (!isset(self::$htmlElements[$elName][$k]))
 		{
-			return 0;
+			return "\0";
 		}
 
 		$bitfield = self::$htmlElements[$elName][$k];
 
-		foreach (str_split(strrev(decbin($bitfield)), 1) as $n => $v)
+		foreach (str_split($bitfield, 1) as $byteNumber => $char)
 		{
-			if (!$v)
+			foreach (str_split(strrev(decbin(ord($char))), 1) as $bitNumber => $v)
 			{
-				// The bit is not set
-				continue;
-			}
-
-			// Test for an XPath condition for that category
-			if (isset(self::$htmlElements[$elName][$k . $n]))
-			{
-				$xpath = self::$htmlElements[$elName][$k . $n];
-
-				// We need DOMXPath to correctly evaluate the absence of an attribute
-				$domNode  = dom_import_simplexml($node);
-				$domXPath = new DOMXPath($domNode->ownerDocument);
-
-				// If the XPath condition is not() fulfilled...
-				if ($domXPath->evaluate('not(' . $xpath . ')', $domNode))
+				if (!$v)
 				{
-					// ...turn off the corresponding bit
-					$bitfield ^= 1 << $n;
+					// The bit is not set
+					continue;
+				}
+
+				$n = $byteNumber * 8 + $bitNumber;
+
+				// Test for an XPath condition for that category
+				if (isset(self::$htmlElements[$elName][$k . $n]))
+				{
+					$xpath = self::$htmlElements[$elName][$k . $n];
+
+					// We need DOMXPath to correctly evaluate the absence of an attribute
+					$domNode  = dom_import_simplexml($node);
+					$domXPath = new DOMXPath($domNode->ownerDocument);
+
+					// If the XPath condition is not() fulfilled...
+					if ($domXPath->evaluate('not(' . $xpath . ')', $domNode))
+					{
+						// ...turn off the corresponding bit
+						$bitfield[$byteNumber] = $char ^ chr(1 << $bitNumber);
+					}
 				}
 			}
 		}
 
 		return $bitfield;
+	}
+
+	/**
+	* Test whether two bitfields have any bits in common
+	*
+	* @param  string $bitfield1
+	* @param  string $bitfield2
+	* @return bool
+	*/
+	protected function match($bitfield1, $bitfield2)
+	{
+		return (trim($bitfield1 & $bitfield2, "\0") !== '');
 	}
 }

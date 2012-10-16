@@ -516,10 +516,20 @@ foreach ($arr as $elName => $values)
 	foreach ($values as $k => $v)
 	{
 		$php .= $sep . "'$k'=>";
-
-		if ($v >= 0x80000000)
+		if ($k === 'c' || $k === 'ac' || $k === 'dd')
 		{
-			$php .= '0x' . dechex($v);
+			$php .= '"';
+
+			// Build a bitfield using the octal notation, starting with the least significant byte
+			do
+			{
+				$php .= '\\' . decoct($v & 255);
+
+				$v >>= 8;
+			}
+			while ($v);
+
+			$php .= '"';
 		}
 		else
 		{
