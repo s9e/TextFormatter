@@ -32,6 +32,12 @@ class WittyPantsConfig extends PluginConfig
 	{
 		if (!$this->cb->tagExists($this->tagName))
 		{
+			/**
+			* @todo replace individual "quotation*" tags with a template that renders both quotation
+			*       marks at once, with an <xsl:apply-templates/> in between. Perhaps create two
+			*       tags, e.g. WPS and WPD for singletons and doubles, so that we can remove the
+			*       "requires" option from parsed tags
+			*/
 			$tag = $this->cb->addTag($this->tagName);
 			$tag->addAttribute($this->attrName);
 			$tag->setTemplate('<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
