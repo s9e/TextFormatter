@@ -5,13 +5,13 @@ use s9e\SimpleDOM\SimpleDOM;
 
 include 's9e/SimpleDOM/src/SimpleDOM.php';
 
-$filepath = '/tmp/Overview.html';
+$filepath = '/tmp/single-page.html';
 //$filepath = '/tmp/grouping-content.html';
 
 if (!file_exists($filepath))
 {
 	copy(
-		'compress.zlib://http://dev.w3.org/html5/spec/Overview.html',
+		'compress.zlib://http://dev.w3.org/html5/spec/single-page.html',
 		$filepath,
 		stream_context_create(array(
 			'http' => array(
@@ -309,7 +309,7 @@ foreach ($page->body->h4 as $h4)
 					elseif ($value === "phrasing content, but with no descendant labelable elements unless it is the element's labeled control, and no descendant label elements")
 					{
 						// ignores the part that says "no descendant labelable elements unless it is
-						// the element's labeled control" 
+						// the element's labeled control"
 						$elements[$elName]['allowChildCategory']['phrasing content'][''] = 0;
 						$elements[$elName]['denyDescendantElement']['label'][''] = 0;
 					}
@@ -318,6 +318,16 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['allowChildElement']['param'][''] = 0;
 						$elements[$elName]['allowChildCategory']['flow content'][''] = 0;
 						$elements[$elName]['allowChildCategory']['interactive content'][''] = 0;
+					}
+					elseif ($elName === 'ruby' && $value === 'see prose')
+					{
+						// Ruby's content model is so complicated that the specs have to refer to
+						// the "prose" where its exact content model is discussed. Here, we'll take
+						// a big shortcut and hardcode something that makes sense in our context
+						$elements[$elName]['allowChildCategory']['phrasing content'][''] = 0;
+						$elements[$elName]['denyDescendantElement']['ruby'][''] = 0;
+						$elements[$elName]['allowChildElement']['rt'][''] = 0;
+						$elements[$elName]['allowChildElement']['rp'][''] = 0;
 					}
 					else
 					{
