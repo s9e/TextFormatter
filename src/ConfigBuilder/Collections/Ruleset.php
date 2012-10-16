@@ -210,6 +210,21 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Add an ignoreText rule
+	*
+	* @param bool $bool Whether or not the tag should ignore text nodes
+	*/
+	public function ignoreText($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('ignoreText() expects a boolean');
+		}
+
+		$this->items['ignoreText'] = $bool;
+	}
+
+	/**
 	* Add a inheritRules rule
 	*
 	* @param bool $bool Whether or not the tag should use the "transparent" content model

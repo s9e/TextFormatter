@@ -139,6 +139,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] denyDescendant() normalizes tag name
  [x] disallowAtRoot() accepts a boolean
  [x] disallowAtRoot() throws an exception if its argument is not a boolean
+ [x] ignoreText() accepts a boolean
+ [x] ignoreText() throws an exception if its argument is not a boolean
  [x] inheritRules() accepts a boolean
  [x] inheritRules() throws an exception if its argument is not a boolean
  [x] reopenChild() throws an exception on invalid tag name
@@ -205,6 +207,10 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TemplateForensics
  [x] <unknownElement> allows <span> as child
  [x] <textarea> disallows text nodes
  [x] <table> disallows text nodes
+ [x] <table><tr><td> allows "Hi"
+ [x] <div><table> disallows "Hi"
+ [x] <table> disallows <xsl:value-of/>
+ [x] <table> disallows <xsl:text/>
 
 s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesGenerator
  [x] <div> has an allowChild rule for <div> and <span>

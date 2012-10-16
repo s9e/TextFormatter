@@ -52,6 +52,11 @@ class TemplateForensics
 	protected $denyDescendantBitfield = "\0";
 
 	/**
+	* @var bool Whether this tag renders non-whitespace text nodes at its root
+	*/
+	protected $hasRootText = false;
+
+	/**
 	* @var bool Whether all branches use the transparent content model (or more accurately, whether
 	*           no branch uses a content model other than transparent)
 	*/
@@ -111,6 +116,11 @@ class TemplateForensics
 			{
 				return false;
 			}
+		}
+
+		if (!$this->allowText && $child->hasRootText)
+		{
+			return false;
 		}
 
 		return true;
@@ -196,7 +206,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Records the HTML elements (and their bitfield) at the top of any branch
+	* Records the HTML elements (and their bitfield) rendered at the root of the template
 	*/
 	protected function analyseRootNodes()
 	{
@@ -218,6 +228,24 @@ class TemplateForensics
 			}
 
 			$this->rootBitfields[] = self::getBitfield($nodeName, 'c', $node);
+		}
+
+		// Test for non-whitespace text nodes at the root. For that we need a predicate that filters
+		// out: nodes with a non-XSL ancestor,
+		$predicate = '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
+
+		// nodes with an <xsl:attribute/>, <xsl:comment/> or <xsl:variable/> ancestor
+		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
+
+		$xpath = '//text()' . $predicate
+		       . '|'
+		       . '//xsl:text' . $predicate
+		       . '|'
+		       . '//xsl:value-of' . $predicate;
+
+		if (count($this->node->xpath($xpath)))
+		{
+			$this->hasRootText = true;
 		}
 	}
 
@@ -251,11 +279,6 @@ class TemplateForensics
 			*/
 			$branchBitfield = self::$htmlElements['span']['ac'];
 
-			/**
-			* @var bool Whether this branch allows text nodes
-			*/
-			$allowText = true;
-
 			foreach ($nodes as $node)
 			{
 				$nodeName = $node->getName();
@@ -275,10 +298,8 @@ class TemplateForensics
 					$this->isTransparent = false;
 				}
 
-				if (!empty(self::$htmlElements[$nodeName]['nt']))
-				{
-					$allowText = false;
-				}
+				// Test whether this branch allows text nodes
+				$allowText = empty(self::$htmlElements[$nodeName]['nt']);
 
 				// allowChild rules are cumulative if transparent, and reset above otherwise
 				$branchBitfield |= self::getBitfield($nodeName, 'ac', $node);

@@ -336,10 +336,30 @@ class RulesetTest extends Test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage disallowAtRoot() expects a boolean
 	*/
-	public function testDisallowAtRootInalid()
+	public function testDisallowAtRootInvalid()
 	{
 		$ruleset = new Ruleset;
 		$ruleset->disallowAtRoot('foo');
+	}
+
+	/**
+	* @testdox ignoreText() accepts a boolean
+	*/
+	public function testIgnoreTextValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->ignoreText(true);
+	}
+
+	/**
+	* @testdox ignoreText() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage ignoreText() expects a boolean
+	*/
+	public function testIgnoreTextInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->ignoreText('foo');
 	}
 
 	/**
@@ -356,7 +376,7 @@ class RulesetTest extends Test
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage inheritRules() expects a boolean
 	*/
-	public function testInheritRulesInalid()
+	public function testInheritRulesInvalid()
 	{
 		$ruleset = new Ruleset;
 		$ruleset->inheritRules('foo');
