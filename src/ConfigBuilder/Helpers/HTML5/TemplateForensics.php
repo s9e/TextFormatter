@@ -37,6 +37,11 @@ class TemplateForensics
 	protected $allowChildBitfield = "\0";
 
 	/**
+	* @var string Whether text nodes are allowed as children
+	*/
+	protected $allowText = true;
+
+	/**
 	* @var string OR-ed bitfield representing all of the categories used by this tag's templates
 	*/
 	protected $contentBitfield = "\0";
@@ -120,6 +125,16 @@ class TemplateForensics
 	public function allowsDescendant(self $descendant)
 	{
 		return !self::match($descendant->contentBitfield, $this->denyDescendantBitfield);
+	}
+
+	/**
+	* Whether this tag allows text nodes as children
+	*
+	* @return bool
+	*/
+	public function allowsText()
+	{
+		return $this->allowText;
 	}
 
 	/**
@@ -216,9 +231,10 @@ class TemplateForensics
 		*/
 		$branchBitfields = array();
 
+		// For each <xsl:apply-templates/> element...
 		foreach ($this->node->xpath('//xsl:apply-templates') as $at)
 		{
-			// We retrieve all non-XSL elements that
+			// ...we retrieve all non-XSL ancestors
 			$nodes = $at->xpath('ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]');
 
 			if (empty($nodes))
@@ -234,6 +250,11 @@ class TemplateForensics
 			*             transparent content model
 			*/
 			$branchBitfield = self::$htmlElements['span']['ac'];
+
+			/**
+			* @var bool Whether this branch allows text nodes
+			*/
+			$allowText = true;
 
 			foreach ($nodes as $node)
 			{
@@ -254,6 +275,11 @@ class TemplateForensics
 					$this->isTransparent = false;
 				}
 
+				if (!empty(self::$htmlElements[$nodeName]['nt']))
+				{
+					$allowText = false;
+				}
+
 				// allowChild rules are cumulative if transparent, and reset above otherwise
 				$branchBitfield |= self::getBitfield($nodeName, 'ac', $node);
 
@@ -265,6 +291,12 @@ class TemplateForensics
 
 			// Save the name of the last node processed. Its actual name, not the "span" workaround
 			$this->leafNodes[] = $node->getName();
+
+			// If any branch disallows text, the tag disallows text
+			if (!$allowText)
+			{
+				$this->allowText = false;
+			}
 		}
 
 		// Now we take the bitfield of each branch and reduce them to a single ANDed bitfield
