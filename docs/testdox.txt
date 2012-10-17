@@ -141,8 +141,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] disallowAtRoot() throws an exception if its argument is not a boolean
  [x] ignoreText() accepts a boolean
  [x] ignoreText() throws an exception if its argument is not a boolean
- [x] inheritRules() accepts a boolean
- [x] inheritRules() throws an exception if its argument is not a boolean
+ [x] isTransparent() accepts a boolean
+ [x] isTransparent() throws an exception if its argument is not a boolean
  [x] reopenChild() throws an exception on invalid tag name
  [x] reopenChild() normalizes tag name
  [x] requireParent() throws an exception on invalid tag name
@@ -153,16 +153,16 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] merge() correctly copies the disallowAtRoot setting from an array
  [x] merge() correctly copies the defaultChildRule setting from an array
  [x] merge() correctly copies the defaultDescendantRule setting from an array
- [x] merge() correctly copies the inheritRules setting from an array
+ [x] merge() correctly copies the isTransparent setting from an array
  [x] merge() accepts an instance of Ruleset to copy its content
  [x] merge() correctly copies the defaultChildRule setting from an instance of Ruleset
  [x] merge() correctly copies the defaultDescendantRule setting from an instance of Ruleset
  [x] merge() correctly copies the disallowAtRoot setting from an instance of Ruleset
- [x] merge() correctly copies the inheritRules setting from an instance of Ruleset
+ [x] merge() correctly copies the isTransparent setting from an instance of Ruleset
  [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
  [x] toConfig() does not return rules that are not used during parsing
  [x] toConfig() flips arrays to use target names as keys
- [x] toConfig() does not attempt to flip scalar rules such as "inheritRules"
+ [x] toConfig() does not attempt to flip scalar rules such as "isTransparent"
 
 s9e\TextFormatter\Tests\ConfigBuilder\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Tag
@@ -217,7 +217,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesGenerator
  [x] <span> has a denyChild rule for <div>
  [x] <a> has a denyDescendant rule for <a>
  [x] <a> has a denyChild rule for <a>
- [x] Generates an inheritRules rule for <a>
+ [x] Generates an isTransparent rule for <a>
  [x] <li> has a disallowAtRoot rule if parentHTML is not specified
  [x] <li> does not have a disallowAtRoot rule if parentHTML is <ul>
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>

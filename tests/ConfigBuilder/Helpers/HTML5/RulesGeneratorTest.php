@@ -90,9 +90,9 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates an inheritRules rule for <a>
+	* @testdox Generates an isTransparent rule for <a>
 	*/
-	public function testInheritRules()
+	public function testIsTransparent()
 	{
 		$tags = new TagCollection;
 
@@ -101,7 +101,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'A' => array(
-					'inheritRules' => true
+					'isTransparent' => true
 				)
 			),
 			RulesGenerator::getRules($tags)

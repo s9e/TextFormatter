@@ -363,23 +363,23 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox inheritRules() accepts a boolean
+	* @testdox isTransparent() accepts a boolean
 	*/
-	public function testInheritRulesValid()
+	public function testIsTransparentValid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->inheritRules(true);
+		$ruleset->isTransparent(true);
 	}
 
 	/**
-	* @testdox inheritRules() throws an exception if its argument is not a boolean
+	* @testdox isTransparent() throws an exception if its argument is not a boolean
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage inheritRules() expects a boolean
+	* @expectedExceptionMessage isTransparent() expects a boolean
 	*/
-	public function testInheritRulesInvalid()
+	public function testIsTransparentInvalid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->inheritRules('foo');
+		$ruleset->isTransparent('foo');
 	}
 
 	/**
@@ -525,13 +525,13 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox merge() correctly copies the inheritRules setting from an array
+	* @testdox merge() correctly copies the isTransparent setting from an array
 	*/
-	public function testMergeArrayInheritRules()
+	public function testMergeArrayIsTransparent()
 	{
 		$rules = array(
 			'allowChild'   => array('B'),
-			'inheritRules' => true
+			'isTransparent' => true
 		);
 
 		$ruleset = new Ruleset;
@@ -597,12 +597,12 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox merge() correctly copies the inheritRules setting from an instance of Ruleset
+	* @testdox merge() correctly copies the isTransparent setting from an instance of Ruleset
 	*/
-	public function testMergeInstanceOfRulesetInheritRules()
+	public function testMergeInstanceOfRulesetIsTransparent()
 	{
 		$ruleset1 = new Ruleset;
-		$ruleset1->inheritRules(true);
+		$ruleset1->isTransparent(true);
 
 		$ruleset2 = new Ruleset;
 		$ruleset2->merge($ruleset1);
@@ -669,15 +669,15 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() does not attempt to flip scalar rules such as "inheritRules"
+	* @testdox toConfig() does not attempt to flip scalar rules such as "isTransparent"
 	*/
 	public function testToConfigDoesNotFlipScalars()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->inheritRules(true);
+		$ruleset->isTransparent(true);
 
 		$this->assertSame(
-			array('inheritRules' => true),
+			array('isTransparent' => true),
 			$ruleset->toConfig()
 		);
 	}

@@ -160,10 +160,10 @@ abstract class RulesGenerator
 		$rules = array();
 		foreach ($templateForensics as $srcTagName => $srcTag)
 		{
-			// Create an inheritRules rule if the tag is transparent
+			// Create an isTransparent rule if the tag is transparent
 			if ($srcTag->isTransparent())
 			{
-				$rules[$srcTagName]['inheritRules'] = true;
+				$rules[$srcTagName]['isTransparent'] = true;
 			}
 
 			// Test whether this tag can be used with no parent

@@ -19,7 +19,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	/**
 	* Test whether a rule category exists
 	*
-	* @param  string $k Rule name, e.g. "allowChild" or "inheritRules"
+	* @param  string $k Rule name, e.g. "allowChild" or "isTransparent"
 	*/
 	public function OffsetExists($k)
 	{
@@ -29,7 +29,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	/**
 	* Return the content of a rule category
 	*
-	* @param  string $k Rule name, e.g. "allowChild" or "inheritRules"
+	* @param  string $k Rule name, e.g. "allowChild" or "isTransparent"
 	* @return mixed
 	*/
 	public function OffsetGet($k)
@@ -50,7 +50,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	*
 	* @see clear()
 	*
-	* @param  string $k Rule name, e.g. "allowChild" or "inheritRules"
+	* @param  string $k Rule name, e.g. "allowChild" or "isTransparent"
 	*/
 	public function OffsetUnset($k)
 	{
@@ -225,18 +225,18 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add a inheritRules rule
+	* Add a isTransparent rule
 	*
 	* @param bool $bool Whether or not the tag should use the "transparent" content model
 	*/
-	public function inheritRules($bool = true)
+	public function isTransparent($bool = true)
 	{
 		if (!is_bool($bool))
 		{
-			throw new InvalidArgumentException('inheritRules() expects a boolean');
+			throw new InvalidArgumentException('isTransparent() expects a boolean');
 		}
 
-		$this->items['inheritRules'] = $bool;
+		$this->items['isTransparent'] = $bool;
 	}
 
 	/**
@@ -292,7 +292,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		{
 			if (!is_array($targets))
 			{
-				// Don't touch boolean rules such as "inheritRules"
+				// Don't touch boolean rules such as "isTransparent"
 				continue;
 			}
 
