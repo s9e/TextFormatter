@@ -522,9 +522,13 @@ class TemplateForensics
 
 		foreach (str_split($bitfield, 1) as $byteNumber => $char)
 		{
-			foreach (str_split(strrev(decbin(ord($char))), 1) as $bitNumber => $v)
+			$byteValue = ord($char);
+
+			for ($bitNumber = 0; $bitNumber < 8; ++$bitNumber)
 			{
-				if (!$v)
+				$bitValue = 1 << $bitNumber;
+
+				if (!($byteValue & $bitValue))
 				{
 					// The bit is not set
 					continue;
@@ -545,7 +549,7 @@ class TemplateForensics
 					if ($domXPath->evaluate('not(' . $xpath . ')', $domNode))
 					{
 						// ...turn off the corresponding bit
-						$bitfield[$byteNumber] = $char ^ chr(1 << $bitNumber);
+						$bitfield[$byteNumber] = chr($byteValue ^ $bitValue);
 					}
 				}
 			}
@@ -561,7 +565,7 @@ class TemplateForensics
 	* @param  string $bitfield2
 	* @return bool
 	*/
-	protected function match($bitfield1, $bitfield2)
+	protected static function match($bitfield1, $bitfield2)
 	{
 		return (trim($bitfield1 & $bitfield2, "\0") !== '');
 	}
