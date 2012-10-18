@@ -549,7 +549,10 @@ class TemplateForensics
 					if ($domXPath->evaluate('not(' . $xpath . ')', $domNode))
 					{
 						// ...turn off the corresponding bit
-						$bitfield[$byteNumber] = chr($byteValue ^ $bitValue);
+						$byteValue ^= $bitValue;
+
+						// Update the original bitfield
+						$bitfield[$byteNumber] = chr($byteValue);
 					}
 				}
 			}
