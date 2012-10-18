@@ -337,17 +337,17 @@ class TemplateForensics
 	* models, with some liberties taken.
 	*
 	* For each element, up to three bitfields are defined: "c", "ac" and "dd". Bitfields are stored
-	* as a number for convenience.
+	* as raw bytes, formatted using the octal notation to keep the sources ASCII.
 	*
-	* "c" represents the categories the element belongs to. The categories are comprised of HTML5
-	* content models (such as "phrasing content" or "interactive content") plus a few special
-	* categories created dynamically (parts of the specs refer to "a group of X and Y elements"
-	* rather than a specific content model, in which case a special category is formed for those
-	* elements.)
+	*   "c" represents the categories the element belongs to. The categories are comprised of HTML5
+	*   content models (such as "phrasing content" or "interactive content") plus a few special
+	*   categories created dynamically (parts of the specs refer to "a group of X and Y elements"
+	*   rather than a specific content model, in which case a special category is formed for those
+	*   elements.)
 	*
-	* "ac" represents the categories that are allowed as children of given element.
+	*   "ac" represents the categories that are allowed as children of given element.
 	*
-	* "dd" represents the categories that must not appear as a descendant of given element.
+	*   "dd" represents the categories that must not appear as a descendant of given element.
 	*
 	* Sometimes, HTML5 specifies some restrictions on when an element can accept certain children,
 	* or what categories the element belongs to. For example, an <img> element is only part of the
@@ -356,110 +356,119 @@ class TemplateForensics
 	* plus the bit number of the category. For instance, if "interactive content" got assigned to
 	* bit 2, the definition of the <img> element will contain a key "c2" with value "@usemap".
 	*
-	* There is a special content model defined in HTML5, the "transparent" content model. If an
-	* element uses the "transparent" content model, the key "t" is non-empty (set to 1.)
+	* Additionally, other flags are set:
 	*
-	* In addition, HTML5 defines "optional end tag" rules, where one element automatically closes
-	* its predecessor. Those are used to generate closeParent rules and are stored in the "cp" key.
+	*   "t" indicates that the element uses the transparent content model.
+	*
+	*   "nt" indicates that the element does not accept text nodes.
+	*
+	*   "ar" indicates that the element is on the "adoption agency algorithm" list, which is used
+	*   to automatically reopen tags when they are closed by an end tag of a different name.
+	*
+	*   "b" indicates that the element is not phrasing content, which makes it likely to act like
+	*   a block element.
+	*
+	* Finally, HTML5 defines "optional end tag" rules, where one element automatically closes its
+	* predecessor. Those are used to generate closeParent rules and are stored in the "cp" key.
 	*
 	* @var array
 	* @see /scripts/patchTemplateForensics.php
 	*/
 	protected static $htmlElements = array(
-		'a'=>array('c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1),
+		'a'=>array('c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'ar'=>1),
 		'abbr'=>array('c'=>"\7",'ac'=>"\4"),
-		'address'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\20\6",'cp'=>array('p')),
+		'address'=>array('c'=>"\3\4",'ac'=>"\1",'dd'=>"\20\6",'b'=>1,'cp'=>array('p')),
 		'area'=>array('c'=>"\5",'nt'=>1),
-		'article'=>array('c'=>"\3\2",'ac'=>"\1",'cp'=>array('p')),
-		'aside'=>array('c'=>"\3\2",'ac'=>"\1",'cp'=>array('p')),
+		'article'=>array('c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'aside'=>array('c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'audio'=>array('c'=>"\117",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\110",'ac19'=>'not(@src)','ac22'=>'@src','t'=>1),
-		'b'=>array('c'=>"\7",'ac'=>"\4"),
+		'b'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
 		'bdi'=>array('c'=>"\7",'ac'=>"\4"),
 		'bdo'=>array('c'=>"\7",'ac'=>"\4"),
-		'blockquote'=>array('c'=>"\43",'ac'=>"\1",'cp'=>array('p')),
+		'blockquote'=>array('c'=>"\43",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'br'=>array('c'=>"\5",'nt'=>1),
 		'button'=>array('c'=>"\17",'ac'=>"\4",'dd'=>"\10"),
 		'canvas'=>array('c'=>"\107",'ac'=>"\0",'t'=>1),
-		'caption'=>array('c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\200"),
+		'caption'=>array('c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\200",'b'=>1),
 		'cite'=>array('c'=>"\7",'ac'=>"\4"),
-		'code'=>array('c'=>"\7",'ac'=>"\4"),
-		'col'=>array('c'=>"\0\0\0\100",'nt'=>1),
-		'colgroup'=>array('c'=>"\200",'ac'=>"\0\0\0\100",'ac30'=>'not(@span)','nt'=>1),
+		'code'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
+		'col'=>array('c'=>"\0\0\0\100",'nt'=>1,'b'=>1),
+		'colgroup'=>array('c'=>"\200",'ac'=>"\0\0\0\100",'ac30'=>'not(@span)','nt'=>1,'b'=>1),
 		'datalist'=>array('c'=>"\5",'ac'=>"\4\0\20"),
-		'dd'=>array('c'=>"\0\0\1",'ac'=>"\1",'cp'=>array('dd','dt')),
+		'dd'=>array('c'=>"\0\0\1",'ac'=>"\1",'b'=>1,'cp'=>array('dd','dt')),
 		'del'=>array('c'=>"\5",'ac'=>"\0",'t'=>1),
-		'details'=>array('c'=>"\53",'ac'=>"\1\0\4"),
+		'details'=>array('c'=>"\53",'ac'=>"\1\0\4",'b'=>1),
 		'dfn'=>array('c'=>"\7\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\40"),
-		'dialog'=>array('c'=>"\41",'ac'=>"\1"),
-		'div'=>array('c'=>"\3",'ac'=>"\1",'cp'=>array('p')),
-		'dl'=>array('c'=>"\3",'ac'=>"\0\0\1",'nt'=>1,'cp'=>array('p')),
-		'dt'=>array('c'=>"\0\0\1",'ac'=>"\1",'dd'=>"\20\42",'cp'=>array('dd','dt')),
-		'em'=>array('c'=>"\7",'ac'=>"\4"),
+		'dialog'=>array('c'=>"\41",'ac'=>"\1",'b'=>1),
+		'div'=>array('c'=>"\3",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
+		'dl'=>array('c'=>"\3",'ac'=>"\0\0\1",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'dt'=>array('c'=>"\0\0\1",'ac'=>"\1",'dd'=>"\20\42",'b'=>1,'cp'=>array('dd','dt')),
+		'em'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
 		'embed'=>array('c'=>"\117",'nt'=>1),
-		'fieldset'=>array('c'=>"\43",'ac'=>"\1\0\40",'cp'=>array('p')),
-		'figcaption'=>array('c'=>"\0\0\0\0\2",'ac'=>"\1"),
-		'figure'=>array('c'=>"\43",'ac'=>"\1\0\0\0\2"),
-		'footer'=>array('c'=>"\3\44",'ac'=>"\1",'dd'=>"\0\40",'cp'=>array('p')),
-		'form'=>array('c'=>"\3\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\20",'cp'=>array('p')),
-		'h1'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
-		'h2'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
-		'h3'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
-		'h4'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
-		'h5'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
-		'h6'=>array('c'=>"\23\1",'ac'=>"\4",'cp'=>array('p')),
-		'header'=>array('c'=>"\3\44",'ac'=>"\1",'dd'=>"\0\40",'cp'=>array('p')),
-		'hgroup'=>array('c'=>"\23",'ac'=>"\0\1",'nt'=>1,'cp'=>array('p')),
-		'hr'=>array('c'=>"\1",'nt'=>1,'cp'=>array('p')),
-		'i'=>array('c'=>"\7",'ac'=>"\4"),
+		'fieldset'=>array('c'=>"\43",'ac'=>"\1\0\40",'b'=>1,'cp'=>array('p')),
+		'figcaption'=>array('c'=>"\0\0\0\0\2",'ac'=>"\1",'b'=>1),
+		'figure'=>array('c'=>"\43",'ac'=>"\1\0\0\0\2",'b'=>1),
+		'footer'=>array('c'=>"\3\44",'ac'=>"\1",'dd'=>"\0\40",'b'=>1,'cp'=>array('p')),
+		'form'=>array('c'=>"\3\0\0\20",'ac'=>"\1",'dd'=>"\0\0\0\20",'b'=>1,'cp'=>array('p')),
+		'h1'=>array('c'=>"\23\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h2'=>array('c'=>"\23\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h3'=>array('c'=>"\23\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h4'=>array('c'=>"\23\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h5'=>array('c'=>"\23\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'h6'=>array('c'=>"\23\1",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'header'=>array('c'=>"\3\44",'ac'=>"\1",'dd'=>"\0\40",'b'=>1,'cp'=>array('p')),
+		'hgroup'=>array('c'=>"\23",'ac'=>"\0\1",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'hr'=>array('c'=>"\1",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'i'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
 		'img'=>array('c'=>"\117",'c3'=>'@usemap','nt'=>1),
 		'input'=>array('c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1),
 		'ins'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
 		'kbd'=>array('c'=>"\7",'ac'=>"\4"),
 		'keygen'=>array('c'=>"\17",'nt'=>1),
 		'label'=>array('c'=>"\17\0\0\4",'ac'=>"\4",'dd'=>"\0\0\0\4"),
-		'legend'=>array('c'=>"\0\0\40",'ac'=>"\4"),
-		'li'=>array('c'=>"\0\0\0\0\1",'ac'=>"\1",'cp'=>array('li')),
+		'legend'=>array('c'=>"\0\0\40",'ac'=>"\4",'b'=>1),
+		'li'=>array('c'=>"\0\0\0\0\1",'ac'=>"\1",'b'=>1,'cp'=>array('li')),
 		'map'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
 		'mark'=>array('c'=>"\7",'ac'=>"\4"),
-		'menu'=>array('c'=>"\13",'c3'=>'@type="toolbar"','c1'=>'@type="toolbar" or @type="list"','ac'=>"\1\0\0\0\1",'cp'=>array('p')),
+		'menu'=>array('c'=>"\13",'c3'=>'@type="toolbar"','c1'=>'@type="toolbar" or @type="list"','ac'=>"\1\0\0\0\1",'b'=>1,'cp'=>array('p')),
 		'meter'=>array('c'=>"\7\10\0\2",'ac'=>"\4",'dd'=>"\0\0\0\2"),
-		'nav'=>array('c'=>"\3\2",'ac'=>"\1",'cp'=>array('p')),
+		'nav'=>array('c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'object'=>array('c'=>"\117",'c3'=>'@usemap','ac'=>"\11\0\0\1"),
-		'ol'=>array('c'=>"\3",'ac'=>"\0\0\0\0\1",'nt'=>1,'cp'=>array('p')),
-		'optgroup'=>array('c'=>"\0\20",'ac'=>"\0\0\20",'nt'=>1,'cp'=>array('optgroup','option')),
-		'option'=>array('c'=>"\0\20\20",'cp'=>array('option')),
+		'ol'=>array('c'=>"\3",'ac'=>"\0\0\0\0\1",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'optgroup'=>array('c'=>"\0\20",'ac'=>"\0\0\20",'nt'=>1,'b'=>1,'cp'=>array('optgroup','option')),
+		'option'=>array('c'=>"\0\20\20",'b'=>1,'cp'=>array('option')),
 		'output'=>array('c'=>"\7",'ac'=>"\4"),
-		'p'=>array('c'=>"\3",'ac'=>"\4",'cp'=>array('p')),
-		'param'=>array('c'=>"\0\0\0\1",'nt'=>1),
-		'pre'=>array('c'=>"\3",'ac'=>"\4",'cp'=>array('p')),
+		'p'=>array('c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
+		'param'=>array('c'=>"\0\0\0\1",'nt'=>1,'b'=>1),
+		'pre'=>array('c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
 		'progress'=>array('c'=>"\7\10\2",'ac'=>"\4",'dd'=>"\0\0\2"),
 		'q'=>array('c'=>"\7",'ac'=>"\4"),
-		'rp'=>array('c'=>"\0\200",'ac'=>"\4",'cp'=>array('rp','rt')),
-		'rt'=>array('c'=>"\0\200",'ac'=>"\4",'cp'=>array('rp','rt')),
+		'rp'=>array('c'=>"\0\200",'ac'=>"\4",'b'=>1,'cp'=>array('rp','rt')),
+		'rt'=>array('c'=>"\0\200",'ac'=>"\4",'b'=>1,'cp'=>array('rp','rt')),
 		'ruby'=>array('c'=>"\7\0\0\10",'ac'=>"\4\200",'dd'=>"\0\0\0\10"),
-		's'=>array('c'=>"\7",'ac'=>"\4"),
+		's'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
 		'samp'=>array('c'=>"\7",'ac'=>"\4"),
-		'section'=>array('c'=>"\3\2",'ac'=>"\1",'cp'=>array('p')),
+		'section'=>array('c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'select'=>array('c'=>"\17",'ac'=>"\0\20",'nt'=>1),
-		'small'=>array('c'=>"\7",'ac'=>"\4"),
-		'source'=>array('c'=>"\0\0\10",'nt'=>1),
+		'small'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
+		'source'=>array('c'=>"\0\0\10",'nt'=>1,'b'=>1),
 		'span'=>array('c'=>"\7",'ac'=>"\4"),
-		'strong'=>array('c'=>"\7",'ac'=>"\4"),
+		'strong'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
 		'sub'=>array('c'=>"\7",'ac'=>"\4"),
-		'summary'=>array('c'=>"\0\0\4",'ac'=>"\4"),
+		'summary'=>array('c'=>"\0\0\4",'ac'=>"\4",'b'=>1),
 		'sup'=>array('c'=>"\7",'ac'=>"\4"),
-		'table'=>array('c'=>"\3\0\200",'ac'=>"\200",'nt'=>1,'cp'=>array('p')),
-		'tbody'=>array('c'=>"\200",'ac'=>"\0\0\0\200",'nt'=>1,'cp'=>array('tbody','tfoot','thead')),
-		'td'=>array('c'=>"\40\100",'ac'=>"\1",'cp'=>array('td','th')),
+		'table'=>array('c'=>"\3\0\200",'ac'=>"\200",'nt'=>1,'b'=>1,'cp'=>array('p')),
+		'tbody'=>array('c'=>"\200",'ac'=>"\0\0\0\200",'nt'=>1,'b'=>1,'cp'=>array('tbody','tfoot','thead')),
+		'td'=>array('c'=>"\40\100",'ac'=>"\1",'b'=>1,'cp'=>array('td','th')),
 		'textarea'=>array('c'=>"\17"),
-		'tfoot'=>array('c'=>"\200",'ac'=>"\0\0\0\200",'nt'=>1,'cp'=>array('tbody','thead')),
-		'th'=>array('c'=>"\0\100",'ac'=>"\1",'dd'=>"\20\42",'cp'=>array('td','th')),
-		'thead'=>array('c'=>"\200",'ac'=>"\0\0\0\200",'nt'=>1),
+		'tfoot'=>array('c'=>"\200",'ac'=>"\0\0\0\200",'nt'=>1,'b'=>1,'cp'=>array('tbody','thead')),
+		'th'=>array('c'=>"\0\100",'ac'=>"\1",'dd'=>"\20\42",'b'=>1,'cp'=>array('td','th')),
+		'thead'=>array('c'=>"\200",'ac'=>"\0\0\0\200",'nt'=>1,'b'=>1),
 		'time'=>array('c'=>"\7",'ac'=>"\4"),
-		'tr'=>array('c'=>"\200\0\0\200",'ac'=>"\0\100",'nt'=>1,'cp'=>array('tr')),
-		'track'=>array('c'=>"\0\0\100",'nt'=>1),
-		'u'=>array('c'=>"\7",'ac'=>"\4"),
-		'ul'=>array('c'=>"\3",'ac'=>"\0\0\0\0\1",'nt'=>1,'cp'=>array('p')),
+		'tr'=>array('c'=>"\200\0\0\200",'ac'=>"\0\100",'nt'=>1,'b'=>1,'cp'=>array('tr')),
+		'track'=>array('c'=>"\0\0\100",'nt'=>1,'b'=>1),
+		'u'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
+		'ul'=>array('c'=>"\3",'ac'=>"\0\0\0\0\1",'nt'=>1,'b'=>1,'cp'=>array('p')),
 		'var'=>array('c'=>"\7",'ac'=>"\4"),
 		'video'=>array('c'=>"\117",'c3'=>'@controls','ac'=>"\0\0\110",'ac19'=>'not(@src)','ac22'=>'@src','t'=>1),
 		'wbr'=>array('c'=>"\5",'nt'=>1)

@@ -25,6 +25,25 @@ $page = SimpleDOM::loadHTMLFile($filepath);
 
 
 //==============================================================================
+// Tags on the "adoption agency" list
+//==============================================================================
+
+$nodes = $page->xpath('//*[@id="adoptionAgency"]');
+
+if (!$nodes)
+{
+	die("Could not find the adoption agency list\n");
+}
+
+if (!preg_match_all('#"(\\w+)"#', $nodes[0]->textContent(), $matches))
+{
+	die("Could not parse the adoption agency list\n");
+}
+
+// Use element names as keys
+$autoReopen = array_flip($matches[1]);
+
+//==============================================================================
 // End tags that can be omitted => closeParent rules
 //==============================================================================
 
@@ -536,50 +555,65 @@ foreach ($elements as $elName => $element)
 		unset($el['nt']);
 	}
 
+	// Mark elements that are not phrasing content -- "b" stands for "block"
+	if (!($el['c'] & (1 << $categories['phrasing content'])))
+	{
+		$el['b'] = 1;
+	}
+
+	// Mark elements that are on the "adoption agency" list
+	if (isset($autoReopen[$elName]))
+	{
+		$el['ar'] = 1;
+	}
+
 	$arr[$elName] = $el;
 }
-
+exit;
 // Sort the elements so that their order remain consistent across revisions
 ksort($arr);
 
 $php = '';
-foreach ($arr as $elName => $values)
+foreach ($arr as $elName => $elValues)
 {
-	$sep = "\n\t\t'" . $elName . "'=>array(";
+	$phpValues = array();
 
-	foreach ($values as $k => $v)
+	foreach ($elValues as $k => $v)
 	{
-		$php .= $sep . "'$k'=>";
 		if ($k === 'c' || $k === 'ac' || $k === 'dd')
 		{
-			$php .= '"';
+			$str = '"';
 
 			// Build a bitfield using the octal notation, starting with the least significant byte
 			do
 			{
-				$php .= '\\' . decoct($v & 255);
-
+				$str .= '\\' . decoct($v & 255);
 				$v >>= 8;
 			}
 			while ($v);
 
-			$php .= '"';
+			$str .= '"';
 		}
 		else
 		{
-			$php .= var_export($v, true);
+			$str = var_export($v, true);
 		}
 
-		$sep = ',';
+		$phpValues[$k] = $str;
 	}
 
 	if (isset($closeParent[$elName]))
 	{
 		ksort($closeParent[$elName]);
-		$php .= $sep . "'cp'=>array('" . implode("','", array_keys($closeParent[$elName])) . "')";
+		$phpValues['cp'] = "array('" . implode("','", array_keys($closeParent[$elName])) . "')";
 	}
 
-	$php .= '),';
+	$php .= "\n\t\t'" . $elName . "'=>array(";
+	foreach ($phpValues as $k => $v)
+	{
+		$php .= "'$k'=>$v,";
+	}
+	$php = substr($php, 0, -1) . '),';
 }
 
 $php = substr($php, 0, -1);
