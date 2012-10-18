@@ -882,6 +882,34 @@ class RegexpBuilderTest extends Test
 	}
 
 	/**
+	* @testdox fromList(['foo*', 'foo+'], ["specialChars" => ["*" => "\\w*", "+" => ".+"]]) returns 'foo(?:\\w*|.+)'
+	*/
+	public function test_7A1B32CC()
+	{
+		$this->assertSame(
+			'foo(?:\\w*|.+)',
+			RegexpBuilder::fromList(
+				array('foo*', 'foo+'),
+				array('specialChars' => array('*' => '\\w*', '+' => '.+'))
+			)
+		);
+	}
+
+	/**
+	* @testdox fromList(['foo?', 'foo+'], ["specialChars" => ["?" => "\\w?", "+" => ".+"]]) returns 'foo(?:.+|\\w?)'
+	*/
+	public function test_44A90030()
+	{
+		$this->assertSame(
+			'foo(?:.+|\\w?)',
+			RegexpBuilder::fromList(
+				array('foo?', 'foo+'),
+				array('specialChars' => array('?' => '\\w?', '+' => '.+'))
+			)
+		);
+	}
+
+	/**
 	* @testdox fromList(['fooB', 'foo+'], ["specialChars" => ["B" => "\\B", "+" => ".+"]]) returns 'foo(?:.+|\\B)'
 	*/
 	public function test_16E28B20()
@@ -1625,6 +1653,16 @@ class RegexpBuilderTest extends Test
 				'foo.+',
 				array('food', 'foo+'),
 				array('specialChars' => array('d' => '\\d', '+' => '.+'))
+			),
+			array(
+				'foo(?:\\w*|.+)',
+				array('foo*', 'foo+'),
+				array('specialChars' => array('*' => '\\w*', '+' => '.+'))
+			),
+			array(
+				'foo(?:.+|\\w?)',
+				array('foo?', 'foo+'),
+				array('specialChars' => array('?' => '\\w?', '+' => '.+'))
 			),
 			array(
 				'foo(?:.+|\\B)',

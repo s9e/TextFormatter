@@ -301,6 +301,8 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpBuilder
  [x] fromList(['^foo$', '^foo+'], ["specialChars" => ["^" => "^", "$" => "$", "+" => ".+"]]) returns '^foo(?:$|.+)'
  [x] fromList(['^foo$', '^foo*'], ["specialChars" => ["^" => "^", "$" => "$", "*" => ".*"]]) returns '^foo.*'
  [x] fromList(['food', 'foo+'], ["specialChars" => ["d" => "\\d", "+" => ".+"]]) returns 'foo.+'
+ [x] fromList(['foo*', 'foo+'], ["specialChars" => ["*" => "\\w*", "+" => ".+"]]) returns 'foo(?:\\w*|.+)'
+ [x] fromList(['foo?', 'foo+'], ["specialChars" => ["?" => "\\w?", "+" => ".+"]]) returns 'foo(?:.+|\\w?)'
  [x] fromList(['fooB', 'foo+'], ["specialChars" => ["B" => "\\B", "+" => ".+"]]) returns 'foo(?:.+|\\B)'
  [x] fromList(['+foo+', 'fooB'], ["specialChars" => ["B" => "\\B", "+" => ".+"]]) returns '(?:.+foo.+|foo\\B)'
  [x] fromList(['+foo+', 'foo', 'bar'], ["specialChars" => ["+" => ".+"]]) returns '(?:.+foo.+|bar|foo)'

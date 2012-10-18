@@ -1034,7 +1034,7 @@ abstract class RegexpBuilder
 
 		// Matches anything that starts with "\d", "\+", "\d+", etc... We avoid matching back
 		// references as we can't be sure they matched at least one character themselves
-		if (preg_match('#^\\\\[^bBAZzGQEK1-9](?!\\*)#', $expr))
+		if (preg_match('#^\\\\[^bBAZzGQEK1-9](?![*?])#', $expr))
 		{
 			return true;
 		}
