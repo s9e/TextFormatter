@@ -141,6 +141,26 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox autoReopen() accepts a boolean
+	*/
+	public function testAutoReopenValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->autoReopen(true);
+	}
+
+	/**
+	* @testdox autoReopen() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage autoReopen() expects a boolean
+	*/
+	public function testAutoReopenInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->autoReopen('foo');
+	}
+
+	/**
 	* @testdox closeAncestor() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo-bar'
@@ -380,32 +400,6 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->isTransparent('foo');
-	}
-
-	/**
-	* @testdox reopenChild() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
-	*/
-	public function testReopenChildInvalidTagName()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->reopenChild('foo-bar');
-	}
-
-	/**
-	* @testdox reopenChild() normalizes tag name
-	*/
-	public function testReopenChildNormalizesTagName()
-	{
-		$ruleset = new Ruleset;
-
-		$ruleset->reopenChild('b');
-
-		$this->assertSame(
-			array('reopenChild' => array('B')),
-			iterator_to_array($ruleset)
-		);
 	}
 
 	/**

@@ -124,6 +124,21 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Add a autoReopen rule
+	*
+	* @param bool $bool Whether or not the tag should automatically be reopened if closed by an end tag of a different name
+	*/
+	public function autoReopen($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('autoReopen() expects a boolean');
+		}
+
+		$this->items['autoReopen'] = $bool;
+	}
+
+	/**
 	* Add an closeAncestor rule
 	*
 	* @param string $tagName Name of the target tag
@@ -237,16 +252,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		$this->items['isTransparent'] = $bool;
-	}
-
-	/**
-	* Add an reopenChild rule
-	*
-	* @param string $tagName Name of the target tag
-	*/
-	public function reopenChild($tagName)
-	{
-		$this->items['reopenChild'][] = TagName::normalize($tagName);
 	}
 
 	/**

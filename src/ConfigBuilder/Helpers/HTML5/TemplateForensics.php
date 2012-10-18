@@ -42,6 +42,11 @@ class TemplateForensics
 	protected $allowText = true;
 
 	/**
+	* @var string Whether to automatically reopen this tag
+	*/
+	protected $autoReopen = false;
+
+	/**
 	* @var string OR-ed bitfield representing all of the categories used by this tag's templates
 	*/
 	protected $contentBitfield = "\0";
@@ -145,6 +150,16 @@ class TemplateForensics
 	public function allowsText()
 	{
 		return $this->allowText;
+	}
+
+	/**
+	* Whether to automatically reopen this tag
+	*
+	* @return bool
+	*/
+	public function autoReopen()
+	{
+		return $this->autoReopen;
 	}
 
 	/**
@@ -259,6 +274,11 @@ class TemplateForensics
 		*/
 		$branchBitfields = array();
 
+		/**
+		* @var bool Whether this template should generate an autoReopen rules because all of the branches are entirely composed of elements from the adoption agency list
+		*/
+		$autoReopen = true;
+
 		// For each <xsl:apply-templates/> element...
 		foreach ($this->node->xpath('//xsl:apply-templates') as $at)
 		{
@@ -298,6 +318,12 @@ class TemplateForensics
 					$this->isTransparent = false;
 				}
 
+				// Test whether this element is on the adoption agency list
+				if (empty(self::$htmlElements[$nodeName]['ar']))
+				{
+					$autoReopen = false;
+				}
+
 				// Test whether this branch allows text nodes
 				$allowText = empty(self::$htmlElements[$nodeName]['nt']);
 
@@ -329,6 +355,9 @@ class TemplateForensics
 			{
 				$this->allowChildBitfield &= $branchBitfield;
 			}
+
+			// Set the autoReopen property to our final value, but only if this tag had any branches
+			$this->autoReopen = $autoReopen;
 		}
 	}
 

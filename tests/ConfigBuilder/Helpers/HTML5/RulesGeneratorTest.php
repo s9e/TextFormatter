@@ -90,6 +90,25 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox Generates an autoReopen rule for <b>
+	*/
+	public function testAutoReopen()
+	{
+		$tags = new TagCollection;
+
+		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
+		$this->assertArrayMatches(
+			array(
+				'B' => array(
+					'autoReopen' => true
+				)
+			),
+			RulesGenerator::getRules($tags)
+		);
+	}
+
+	/**
 	* @testdox Generates an isTransparent rule for <a>
 	*/
 	public function testIsTransparent()

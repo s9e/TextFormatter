@@ -160,16 +160,22 @@ abstract class RulesGenerator
 		$rules = array();
 		foreach ($templateForensics as $srcTagName => $srcTag)
 		{
-			// Create an isTransparent rule if the tag is transparent
-			if ($srcTag->isTransparent())
-			{
-				$rules[$srcTagName]['isTransparent'] = true;
-			}
-
 			// Test whether this tag can be used with no parent
 			if (!$rootForensics->allowsChild($srcTag))
 			{
 				$rules[$srcTagName]['disallowAtRoot'] = true;
+			}
+
+			// Test whether this tag should be reopened automatically
+			if ($srcTag->autoReopen())
+			{
+				$rules[$srcTagName]['autoReopen'] = true;
+			}
+
+			// Create an isTransparent rule if the tag is transparent
+			if ($srcTag->isTransparent())
+			{
+				$rules[$srcTagName]['isTransparent'] = true;
 			}
 
 			foreach ($templateForensics as $trgTagName => $trgTag)
