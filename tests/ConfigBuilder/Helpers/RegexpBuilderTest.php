@@ -239,6 +239,20 @@ class RegexpBuilderTest extends Test
 	}
 
 	/**
+	* @testdox fromList(['♠', '♣', '♥', '♦', '.'], ["specialChars" => ["." => "."]]) returns '.'
+	*/
+	public function test_D9B63085()
+	{
+		$this->assertSame(
+			'.',
+			RegexpBuilder::fromList(
+				array('♠', '♣', '♥', '♦', '.'),
+				array('specialChars' => array('.' => '.'))
+			)
+		);
+	}
+
+	/**
 	* @testdox fromList(['lock', 'sock']) returns '[ls]ock'
 	*/
 	public function test_A3CF0B4D()
@@ -1409,6 +1423,11 @@ class RegexpBuilderTest extends Test
 			array(
 				'[♠♣♥♦]',
 				array('♠', '♣', '♥', '♦')
+			),
+			array(
+				'.',
+				array('♠', '♣', '♥', '♦', '.'),
+				array('specialChars' => array('.' => '.'))
 			),
 			array(
 				'[ls]ock',

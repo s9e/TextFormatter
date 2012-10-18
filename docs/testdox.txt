@@ -248,6 +248,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpBuilder
  [x] fromList(['?', 'bar'], ["specialChars" => ["?" => "."], "useLookahead" => true]) returns '(?:.|bar)'
  [x] fromList(['a', 'b']) returns '[ab]'
  [x] fromList(['♠', '♣', '♥', '♦']) returns '[♠♣♥♦]'
+ [x] fromList(['♠', '♣', '♥', '♦', '.'], ["specialChars" => ["." => "."]]) returns '.'
  [x] fromList(['lock', 'sock']) returns '[ls]ock'
  [x] fromList(['foo', 'afoo'], ["useLookahead" => true]) returns '(?=[af])a?foo'
  [x] fromList(['boast', 'boost']) returns 'bo[ao]st'
