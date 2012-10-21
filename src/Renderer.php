@@ -8,14 +8,40 @@
 namespace s9e\TextFormatter;
 
 use DOMDocument;
+use Serializable;
 use XSLTProcessor;
 
-class Renderer
+class Renderer implements Serializable
 {
+	/**
+	* @var string
+	*/
+	protected $stylesheet;
+
 	/**
 	* @var XSLTProcessor
 	*/
 	protected $proc;
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function serialize()
+	{
+		return $this->stylesheet;
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function unserialize($data)
+	{
+		$this->__construct($data);
+	}
 
 	public function __construct($stylesheet)
 	{
@@ -24,6 +50,8 @@ class Renderer
 
 		$this->proc = new XSLTProcessor;
 		$this->proc->importStylesheet($xsl);
+
+		$this->stylesheet = $stylesheet;
 	}
 
 	public function render($xml)
