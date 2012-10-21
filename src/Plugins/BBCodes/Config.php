@@ -9,8 +9,8 @@ namespace s9e\TextFormatter\Plugins\BBCodes;
 
 use ArrayAccess;
 use InvalidArgumentException;
-use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpBuilder;
-use s9e\TextFormatter\ConfigBuilder\Traits\CollectionProxy;
+use s9e\TextFormatter\Generator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Generator\Traits\CollectionProxy;
 
 class Config extends PluginConfig implements ArrayAccess
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\ConfigBuilder\Items;
+namespace s9e\TextFormatter\Tests\Generator\Items;
 
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Plugins\Autolink\Config;

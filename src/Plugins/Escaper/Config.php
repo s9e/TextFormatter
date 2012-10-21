@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Plugins;
 
 use DOMDocument;
-use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\Generator;
 use s9e\TextFormatter\Plugins\Config as PluginConfig;
 
 class EscaperConfig extends PluginConfig

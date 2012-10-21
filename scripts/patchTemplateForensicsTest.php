@@ -5,10 +5,10 @@ namespace s9e\TextFormatter\Tests;
 
 class Test {}
 
-$filepath = __DIR__ . '/../tests/ConfigBuilder/Helpers/HTML5/TemplateForensicsTest.php';
+$filepath = __DIR__ . '/../tests/Generator/Helpers/HTML5/TemplateForensicsTest.php';
 include $filepath;
 
-$test = new ConfigBuilder\Helpers\HTML5\TemplateForensicsTest;
+$test = new Generator\Helpers\HTML5\TemplateForensicsTest;
 
 $php = '';
 foreach ($test->getData() as $case)

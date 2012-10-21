@@ -9,12 +9,12 @@ namespace s9e\TextFormatter\Plugins;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\Generator;
 
 abstract class PluginConfig
 {
 	/**
-	* @var ConfigBuilder
+	* @var Generator
 	*/
 	protected $cb;
 
@@ -32,10 +32,10 @@ abstract class PluginConfig
 	protected $regexpLimitAction = 'ignore';
 
 	/**
-	* @param ConfigBuilder $cb
+	* @param Generator $cb
 	* @param array         $overrideProps Properties of the plugin will be overwritten with those
 	*/
-	final public function __construct(ConfigBuilder $cb, array $overrideProps = array())
+	final public function __construct(Generator $cb, array $overrideProps = array())
 	{
 		foreach ($overrideProps as $k => $v)
 		{
@@ -97,7 +97,7 @@ abstract class PluginConfig
 	*/
 	public function setCb()
 	{
-		throw new RuntimeException('Cannot rebind the ConfigBuilder instance');
+		throw new RuntimeException('Cannot rebind the Generator instance');
 	}
 
 	/**

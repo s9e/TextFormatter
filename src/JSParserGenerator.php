@@ -32,11 +32,11 @@ class JSParserGenerator
 		'#^(?:break|case|catch|continue|debugger|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|this|throw|try|typeof|var|void|while|with|class|enum|export|extends|import|super|implements|interface|let|package|private|protected|public|static|yield|char|float|int)$#D';
 
 	//==========================================================================
-	// Properties taken from ConfigBuilder
+	// Properties taken from Generator
 	//==========================================================================
 
 	/**
-	* @var ConfigBuilder
+	* @var Generator
 	*/
 	protected $cb;
 
@@ -95,9 +95,9 @@ class JSParserGenerator
 	protected $src;
 
 	/**
-	* @param ConfigBuilder $cb
+	* @param Generator $cb
 	*/
-	public function __construct(ConfigBuilder $cb)
+	public function __construct(Generator $cb)
 	{
 		$this->cb  = $cb;
 		$this->tpl = file_get_contents(__DIR__ . '/TextFormatter.js');

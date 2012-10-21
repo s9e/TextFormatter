@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\ConfigBuilder;
-use s9e\TextFormatter\ConfigBuilder\Tag;
+use s9e\TextFormatter\Generator;
+use s9e\TextFormatter\Generator\Tag;
 use s9e\TextFormatter\Plugins\Config as PluginConfig;
 
 class CensorConfig extends PluginConfig

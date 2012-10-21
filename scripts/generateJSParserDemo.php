@@ -3,7 +3,7 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$cb = new s9e\TextFormatter\ConfigBuilder;
+$cb = new s9e\TextFormatter\Generator;
 
 $cb->disallowHost('*.example.com');
 $cb->setDefaultScheme('https');
@@ -157,8 +157,8 @@ The following plugins have been enabled:
 Additionally, in order to demonstrate some other features:
 
 [list=square]
-  [*][b]ConfigBuilder::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]RawHTML[/b] as well: <a href="http://example.com">example.com</a>
-  [*][b]ConfigBuilder::setDefaultScheme('https')[/b] --- schemeless URLs are allowed and they are treated as if their scheme was 'https'
+  [*][b]Generator::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]RawHTML[/b] as well: <a href="http://example.com">example.com</a>
+  [*][b]Generator::setDefaultScheme('https')[/b] --- schemeless URLs are allowed and they are treated as if their scheme was 'https'
   [*][b]HTMLEntitiesConfig::disableEntity()[/b] --- the HTML entity &amp;lt; is arbitrarily disabled
   [*]a YouTube video, at the right, keeps playing as you're editing the text [i](including its own tag!)[/i] to demonstrate the partial-update algorithm used to refresh the live preview
 [/list]

@@ -1,10 +1,10 @@
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\Collection
+s9e\TextFormatter\Tests\Generator\Collections\Collection
  [x] Collection is countable
  [x] Collection is iterable with foreach
  [x] clear() empties the collection
  [x] toConfig() returns the items as an array
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
+s9e\TextFormatter\Tests\Generator\Collections\NormalizedCollection
  [x] set() calls normalizeKey()
  [x] set() calls normalizeValue()
  [x] add() calls normalizeKey()
@@ -24,7 +24,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedCollection
  [x] $collection['foo'] = 42 maps to $collection->set('foo', 42)
  [x] unset($collection['foo']) maps to $collection->delete('foo')
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedList
+s9e\TextFormatter\Tests\Generator\Collections\NormalizedList
  [x] append() adds the value at the end of the list
  [x] prepend() adds the value at the beginning of the list
  [x] $normalizedList[] = 'foo' maps to $normalizedList->append('foo')
@@ -37,7 +37,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\NormalizedList
  [x] $normalizedList['foo'] = 'bar' throws an InvalidArgumentException
  [x] Deleting a value by key reorders the list to remove gaps
 
-s9e\TextFormatter\Tests\ConfigBuilder\Traits\CollectionProxy
+s9e\TextFormatter\Tests\Generator\Traits\CollectionProxy
  [x] $proxy->add() gets forwarded to $proxy->collection->add() with all arguments
  [x] $proxy->add() returns the value returned by $proxy->collection->add()
  [x] $proxy->exists() gets forwarded to $proxy->collection->exists() with all arguments
@@ -51,7 +51,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Traits\CollectionProxy
  [x] isset($proxy['foo']) returns isset($proxy->collection['foo'])
  [x] unset($proxy['foo']) calls unset($proxy->collection['foo'])
 
-s9e\TextFormatter\Tests\ConfigBuilder\Traits\Configurable
+s9e\TextFormatter\Tests\Generator\Traits\Configurable
  [x] __get('foo') calls getFoo() if it exists
  [x] __get($k) returns the property if it exists
  [x] __get() throws a RuntimeException if the property does not exist
@@ -68,21 +68,21 @@ s9e\TextFormatter\Tests\ConfigBuilder\Traits\Configurable
  [x] __set() throws an exception if a NormalizedCollection would be overwritten by a non-array, non-Traversable value
  [x] __isset($k) returns true if the property exists
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributeCollection
- [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Attribute
+s9e\TextFormatter\Tests\Generator\Collections\AttributeCollection
+ [x] add() returns an instance of s9e\TextFormatter\Generator\Items\Attribute
  [x] add() normalizes the attribute name
  [x] delete() normalizes the attribute name
  [x] exists() normalizes the attribute name
  [x] get() normalizes the attribute name
  [x] set() normalizes the attribute name
 
-s9e\TextFormatter\Tests\ConfigBuilder\Lists\AttributeList
+s9e\TextFormatter\Tests\Generator\Lists\AttributeList
  [x] Attribute names are normalized for storage
  [x] Attribute names are normalized during retrieval
  [x] toConfig() returns a deduplicated list of attribute names
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollection
- [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor
+s9e\TextFormatter\Tests\Generator\Collections\AttributePreprocessorCollection
+ [x] add() returns an instance of s9e\TextFormatter\Generator\Items\AttributePreprocessor
  [x] toConfig() returns a list of regexps for each attribute
  [x] Is iterable with foreach
  [x] Uses the name of the source attribute as key when iterating
@@ -92,7 +92,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\AttributePreprocessorCollectio
  [x] merge() throws an exception when passed a non-array, non-AttributProcessorCollection
  [x] merge() throws an exception when passed a one-dimensional array
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
+s9e\TextFormatter\Tests\Generator\Collections\FilterChain
  [x] append() adds the filter at the end of the chain
  [x] prepend() adds the filter at the beginning of the chain
  [x] append() correctly records filter vars
@@ -102,17 +102,17 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\FilterChain
  [x] append() throws an InvalidArgumentException on uncallable callbacks
  [x] prepend() throws an InvalidArgumentException on uncallable callbacks
  [x] $filterChain[] = 'foo' maps to $filterChain->append('foo')
- [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
- [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
- [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
- [x] Instances of s9e\TextFormatter\ConfigBuilder\Items\Filter are added as-is
+ [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\Generator\Items\Filter
+ [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\Generator\Items\Filter
+ [x] Instances of s9e\TextFormatter\Generator\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\Generator\Items\Filter
+ [x] Instances of s9e\TextFormatter\Generator\Items\Filter are added as-is
  [x] contains() returns false if the given filter is not present in the chain
  [x] contains() returns true if the given built-in filter is present in the chain
  [x] contains() returns true if the given PHP string callback is present in the chain
  [x] $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
  [x] Deleting a filter reorders the chain to remove gaps
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
+s9e\TextFormatter\Tests\Generator\Collections\Ruleset
  [x] isset($ruleset['allowChild']) tests whether any allowChild rules exist
  [x] $ruleset['allowChild'] returns the allowChild rules if they exist
  [x] Trying to set rules via array access throws a RuntimeException
@@ -164,26 +164,26 @@ s9e\TextFormatter\Tests\ConfigBuilder\Collections\Ruleset
  [x] toConfig() flips arrays to use target names as keys
  [x] toConfig() does not attempt to flip scalar rules such as "isTransparent"
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\TagCollection
- [x] add() returns an instance of s9e\TextFormatter\ConfigBuilder\Items\Tag
+s9e\TextFormatter\Tests\Generator\Collections\TagCollection
+ [x] add() returns an instance of s9e\TextFormatter\Generator\Items\Tag
  [x] add() normalizes the tag name
  [x] delete() normalizes the tag name
  [x] exists() normalizes the tag name
  [x] get() normalizes the tag name
  [x] set() normalizes the tag name
 
-s9e\TextFormatter\Tests\ConfigBuilder\Collections\Templateset
+s9e\TextFormatter\Tests\Generator\Collections\Templateset
  [x] set() optimizes the template
  [x] set() checks the template for unsafe content
  [x] setUnsafe() optimizes the template
  [x] setUnsafe() does not check the template for unsafe content
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\ConfigHelper
+s9e\TextFormatter\Tests\Generator\Helpers\ConfigHelper
  [x] toArray() works with deep arrays
  [x] toArray() calls toConfig() for objects in deep arrays that implement ConfigProvider
  [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TemplateForensics
+s9e\TextFormatter\Tests\Generator\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child
  [x] <span> does not allow <div> as child even with a <span> sibling
  [x] <span> and <div> does not allow <span> and <div> as child
@@ -217,7 +217,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\HTML5\TemplateForensics
  [x] "Hi" should not be reopened automatically
  [x] A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesGenerator
+s9e\TextFormatter\Tests\Generator\Helpers\RulesGenerator
  [x] <div> has an allowChild rule for <div> and <span>
  [x] <span> has a denyChild rule for <div>
  [x] <a> has a denyDescendant rule for <a>
@@ -228,7 +228,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesGenerator
  [x] <li> does not have a disallowAtRoot rule if parentHTML is <ul>
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpBuilder
+s9e\TextFormatter\Tests\Generator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
  [x] fromList(['foo', 'foo']) returns 'foo'
  [x] fromList(['a']) returns 'a'
@@ -335,7 +335,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpBuilder
  [x] fromList(['d', 'dd', 'ddd'], ["specialChars" => ["d" => "\\d"]]) returns '\\d\\d?\\d?'
  [x] fromList() throws a RuntimeException if any word is not legal UTF-8
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpParser
+s9e\TextFormatter\Tests\Generator\Helpers\RegexpParser
  [x] parse() can parse plain regexps
  [x] parse() throws a RuntimeException if delimiters can't be parsed
  [x] parse() parses pattern modifiers
@@ -392,7 +392,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RegexpParser
  [x] pcreToJs() replaces its second parameter with an array that maps named captures to their index
  [x] pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesHelper
+s9e\TextFormatter\Tests\Generator\Helpers\RulesHelper
  [x] Works with a single tag
  [x] If no rule is defined, the default is to allow children and descendants
  [x] Correctly applies denyChild
@@ -411,13 +411,13 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\RulesHelper
  [x] Rules targeting inexistent tags do not interfere
  [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\StylesheetHelper
+s9e\TextFormatter\Tests\Generator\Helpers\StylesheetHelper
  [x] Correctly declares namespaces for prefixed tags
  [x] Predicates are preserved
  [x] Identical templates are merged together
  [x] Empty templates are merged with the empty templates used for <st>, <et> and <i>
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
+s9e\TextFormatter\Tests\Generator\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML
  [x] Not safe: <embed src="{@url}"/>
  [x] Not safe: <iframe src="{@url}"/>
@@ -617,7 +617,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter '#number': <img lowsrc="{@foo}"/>
  [x] Not safe: <b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>
 
-s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateOptimizer
+s9e\TextFormatter\Tests\Generator\Helpers\TemplateOptimizer
  [x] Superfluous whitespace between elements is removed
  [x] Single space characters are preserved
  [x] Superfluous whitespace inside tags is removed
@@ -629,27 +629,27 @@ s9e\TextFormatter\Tests\ConfigBuilder\Helpers\TemplateOptimizer
  [x] Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match
  [x] <xsl:text/> is inlined
 
-s9e\TextFormatter\Tests\ConfigBuilder\Items\Attribute
+s9e\TextFormatter\Tests\Generator\Items\Attribute
  [x] An array of options can be passed to the constructor
  [x] $attr->filterChain can be assigned an array
  [x] $attr->filterChain can be assigned an instance of FilterChain to copy its content
  [x] setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
  [x] toConfig() correctly produces a config array
 
-s9e\TextFormatter\Tests\ConfigBuilder\Items\AttributePreprocessor
+s9e\TextFormatter\Tests\Generator\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] getAttributes() returns an array where keys are the name of the named subpatterns/attributes and values is the regexp that exactly matches them
  [x] getAttributes() preserves the original's regexp "i", "s" and "u" flags
  [x] getRegexp() returns the regexp associated with this attribute preprocessor
 
-s9e\TextFormatter\Tests\ConfigBuilder\Items\CallbackTemplate
+s9e\TextFormatter\Tests\Generator\Items\CallbackTemplate
  [x] __construct() throws an InvalidArgumentException if its argument is not callable
  [x] toArray() returns the callback template as an array
  [x] CallbackTemplate::fromArray() creates an instance from an array
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
 
-s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
+s9e\TextFormatter\Tests\Generator\Items\Tag
  [x] An array of options can be passed to the constructor
  [x] $tag->attributePreprocessors can be assigned a 2D array of regexps
  [x] $tag->attributePreprocessors can be assigned an instance of AttributePreprocessorCollection to copy its content
@@ -671,7 +671,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Items\Tag
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
  [x] toConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
 
-s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
+s9e\TextFormatter\Tests\Generator\UrlConfig
  [x] Disallowed IDNs are punycoded
  [x] disallowHost('example.org') will disallow "example.org"
  [x] disallowHost('example.org') will disallow "EXAMPLE.ORG"
@@ -694,7 +694,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\UrlConfig
  [x] setDefaultScheme('http') sets "http" as default scheme
  [x] setDefaultScheme('<invalid>') throws an exception
 
-s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
+s9e\TextFormatter\Tests\Generator\Validators\AttributeName
  [x] normalize() throws an InvalidArgumentException if the name is invalid
  [x] "url" is normalized to "url"
  [x] "URL" is normalized to "url"
@@ -706,7 +706,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Validators\AttributeName
  [x] "foo:bar" is invalid (no colons allowed)
  [x] "foo\n" is invalid (no newlines allowed)
 
-s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
+s9e\TextFormatter\Tests\Generator\Validators\TagName
  [x] normalize() throws an InvalidArgumentException if the name is invalid
  [x] "b" is normalized to "B"
  [x] "B" is normalized to "B"
@@ -727,7 +727,7 @@ s9e\TextFormatter\Tests\ConfigBuilder\Validators\TagName
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
 
-s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCode
+s9e\TextFormatter\Tests\Generator\Plugins\BBCodes\BBCode
  [x] An array of options can be passed to the constructor
  [x] BBCode::normalizeName('*') returns '*'
  [x] BBCode::normalizeName('foo') returns 'FOO'
@@ -744,11 +744,11 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
  [x] get() normalizes the BBCode's name
  [x] set() normalizes the BBCode's name
 
-s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\BBCodeMonkey
+s9e\TextFormatter\Tests\Generator\Plugins\BBCodes\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
 
-s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes\Repository
+s9e\TextFormatter\Tests\Generator\Plugins\BBCodes\Repository
  [x] __construct() accepts the path to an XML file as argument
  [x] __construct() accepts a DOMDocument as argument
  [x] __construct() throws an exception if passed anything else

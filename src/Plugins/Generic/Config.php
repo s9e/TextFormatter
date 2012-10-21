@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Plugins;
 use Exception;
 use InvalidArgumentException,
 	RuntimeException;
-use s9e\TextFormatter\ConfigBuilder;
+use s9e\TextFormatter\Generator;
 use s9e\TextFormatter\JSParserGenerator;
 use s9e\TextFormatter\Plugins\Config as PluginConfig;
 

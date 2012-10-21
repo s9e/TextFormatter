@@ -3,7 +3,7 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$cb = new s9e\TextFormatter\ConfigBuilder;
+$cb = new s9e\TextFormatter\Generator;
 
 $cb->BBCodes->addPredefinedBBCode('B');
 $cb->BBCodes->addPredefinedBBCode('I');

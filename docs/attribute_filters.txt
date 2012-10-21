@@ -3,11 +3,11 @@ Attribute filters exist to validate, sanitize and/or transform an attribute's va
 A filter can be any of the following type:
 - built-in filter. Their name is prefixed with the character "#", e.g. "#int"
 - any valid PHP callback (tested with is_callable())
-- an instance of s9e\TextFormatter\ConfigBuilder\Items\Filter
+- an instance of s9e\TextFormatter\Generator\Items\Filter
 - a registered filter. Identical in form to built-in filters. They can override built-in filters
 
 TODO: in order to know which custom filters have been registered, a FilterChain would need to keep
-      a refence to the ConfigBuilder, which in turn means that Attribute and Tag must carry a
+      a refence to the Generator, which in turn means that Attribute and Tag must carry a
       reference to it, which kind of sucks.
 
 IDEA: do not verify built-in/registered filters when the filter is added to the chain. Instead,
