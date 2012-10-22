@@ -31,12 +31,17 @@ abstract class TemplateChecker
 	*
 	* @todo Possible additions: unsafe <object> and <embed>
 	*
-	* @param  string      $template Content of the template. A root node is not required
-	* @param  Tag         $tag      Tag that this template belongs to
+	* @param  string $template Content of the template. A root node is not required
+	* @param  Tag    $tag      Tag that this template belongs to
 	* @return void
 	*/
-	public static function checkUnsafe($template, Tag $tag)
+	public static function checkUnsafe($template, Tag $tag = null)
 	{
+		if (!isset($tag))
+		{
+			$tag = new Tag;
+		}
+
 		$DOMXPath = new DOMXPath(self::loadTemplate($template));
 
 		self::checkFixedSrcElements($DOMXPath);
@@ -193,7 +198,7 @@ abstract class TemplateChecker
 	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	* @param Tag      $tag      Tag that this template belongs to
 	*/
-	protected static function checkUnsafeContent(DOMXPath $DOMXPath, Tag $tag)
+	protected static function checkUnsafeContent(DOMXPath $DOMXPath, Tag $tag = null)
 	{
 		$checkElements = array(
 			'/^style$/i'  => 'CSS',
