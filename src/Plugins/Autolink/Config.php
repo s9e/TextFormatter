@@ -14,16 +14,16 @@ class AutolinkConfig extends PluginConfig
 {
 	public function setUp()
 	{
-		if (!$this->cb->tagExists('URL'))
+		if (!$this->generator->tagExists('URL'))
 		{
-			$this->cb->predefinedTags->addURL();
+			$this->generator->predefinedTags->addURL();
 		}
 	}
 
 	public function getConfig()
 	{
 		$schemeRegexp
-			= $this->cb->getRegexpHelper()->buildRegexpFromList($this->cb->getAllowedSchemes());
+			= $this->generator->getRegexpHelper()->buildRegexpFromList($this->generator->getAllowedSchemes());
 
 		return array(
 			'regexp' => '#' . $schemeRegexp . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS'

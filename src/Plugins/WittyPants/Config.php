@@ -30,7 +30,7 @@ class WittyPantsConfig extends PluginConfig
 
 	public function setUp()
 	{
-		if (!$this->cb->tagExists($this->tagName))
+		if (!$this->generator->tagExists($this->tagName))
 		{
 			/**
 			* @todo replace individual "quotation*" tags with a template that renders both quotation
@@ -38,7 +38,7 @@ class WittyPantsConfig extends PluginConfig
 			*       tags, e.g. WPS and WPD for singletons and doubles, so that we can remove the
 			*       "requires" option from parsed tags
 			*/
-			$tag = $this->cb->addTag($this->tagName);
+			$tag = $this->generator->addTag($this->tagName);
 			$tag->addAttribute($this->attrName);
 			$tag->setTemplate('<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
 		}
@@ -55,10 +55,9 @@ class WittyPantsConfig extends PluginConfig
 				'quotationSingle' => "#(?<![0-9\\pL])'[^']+'(?![0-9\\pL])#u",
 				'quotationDouble' => '#(?<![0-9\\pL])"[^"]+"(?![0-9\\pL])#u',
 				'symbols'    => '#\\((?:tm|r|c)\\)#i',
-				/**
-				* Here, we use a non-capturing subpattern rather than a lookbehind assertion because
-				* [0-9] occurs less frequently in text than ["'] so it's more efficient this way
-				*/
+				// Here, we use a non-capturing subpattern rather than a lookbehind assertion
+				// because [0-9] occurs less frequently in text than ["'] so it's more efficient
+				// this way
 				'primes'     => '#(?:[0-9])[\'"]#S',
 				'multiply'   => '#[0-9]["\']? ?(x)(?= ?[0-9])#S',
 				'apostrophe' => "#(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})|(?<=[0-9])'(?=s)#uS"

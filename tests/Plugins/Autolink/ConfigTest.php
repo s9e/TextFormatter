@@ -15,7 +15,7 @@ class ConfigTest extends Test
 	*/
 	public function Automatically_creates_an_URL_tag()
 	{
-		$this->cb->loadPlugin('Autolink');
-		$this->assertTrue($this->cb->tagExists('URL'));
+		$this->generator->loadPlugin('Autolink');
+		$this->assertTrue($this->generator->tagExists('URL'));
 	}
 }

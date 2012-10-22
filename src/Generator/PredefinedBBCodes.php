@@ -22,11 +22,11 @@ class PredefinedBBCodes
 	/**
 	* @var Generator
 	*/
-	protected $cb;
+	protected $generator;
 
-	public function __construct(Generator $cb)
+	public function __construct(Generator $generator)
 	{
-		$this->cb = $cb;
+		$this->generator = $generator;
 	}
 
 	public function __call($methodName, $args)
@@ -43,20 +43,20 @@ class PredefinedBBCodes
 
 	protected function forwardCall($tagName, array $bbcodeConfig = array(), array $callParams = array())
 	{
-		if (!$this->cb->tagExists($tagName))
+		if (!$this->generator->tagExists($tagName))
 		{
-			if (!method_exists($this->cb->predefinedTags, 'add' . $tagName))
+			if (!method_exists($this->generator->predefinedTags, 'add' . $tagName))
 			{
 				throw new BadMethodCallException("Undefined BBCode '" . $tagName . "'");
 			}
 
 			call_user_func_array(
-				array($this->cb->predefinedTags, 'add' . $tagName),
+				array($this->generator->predefinedTags, 'add' . $tagName),
 				$callParams
 			);
 		}
 
-		$this->cb->BBCodes->addBBCodeAlias($tagName, $tagName, $bbcodeConfig);
+		$this->generator->BBCodes->addBBCodeAlias($tagName, $tagName, $bbcodeConfig);
 	}
 
 	/**
@@ -97,7 +97,7 @@ class PredefinedBBCodes
 		));
 
 		// [*] maps to <LI>
-		$this->cb->BBCodes->addBBCodeAlias('*', 'LI');
+		$this->generator->BBCodes->addBBCodeAlias('*', 'LI');
 	}
 
 	/**
@@ -111,7 +111,7 @@ class PredefinedBBCodes
 		$regexp =
 			'/^(?:' . preg_quote('http://video.google.com/videoplay?docid=', '/') . ')?(?<id>-?\\d+)/';
 
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[googlevideo id={ID}]{PARSE=' . $regexp . '}[/googlevideo]',
 			'<object type="application/x-shockwave-flash" data="http://video.google.com/googleplayer.swf?docId={@id}" width="400" height="326">
 				<param name="movie" value="http://video.google.com/googleplayer.swf?docId={@id}"/>
@@ -135,7 +135,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:http:\\/\\/[a-z]+\\.youtube\\.com\\/watch\\?v=)?'
 		        . '(?<id>[A-Za-z_0-9\\-]+)(?!\\:)/';
 
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[youtube width={RANGE1=80,800;defaultValue=425} height={RANGE2=60,600;defaultValue=350} id={ID}]{PARSE=' . $regexp . '}[/youtube]',
 			'<object type="application/x-shockwave-flash" data="http://www.youtube.com/v/{@id}" width="{@width}" height="{@height}">
 				<param name="movie" value="http://www.youtube.com/v/{@id}" />
@@ -160,7 +160,7 @@ class PredefinedBBCodes
 
 	public function addBACKGROUND()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[background={COLOR}]{TEXT}[/background]',
 			'<span style="background-color:{COLOR}">{TEXT}</span>'
 		);
@@ -168,7 +168,7 @@ class PredefinedBBCodes
 
 	public function addFONT()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[font={SIMPLETEXT}]{TEXT}[/font]',
 			'<span style="font-family:{SIMPLETEXT}">{TEXT}</span>'
 		);
@@ -176,7 +176,7 @@ class PredefinedBBCodes
 
 	public function addBLINK()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[blink]{TEXT}[/blink]',
 			'<span style="text-decoration:blink">{TEXT}</span>'
 		);
@@ -192,10 +192,10 @@ class PredefinedBBCodes
 	public function addTABLE()
 	{
 		$this->forwardCall('TABLE');
-		$this->cb->BBCodes->addBBCodeAlias('COL', 'COL', array('autoClose' => true));
-		$this->cb->BBCodes->addBBCodeAlias('TR', 'TR');
-		$this->cb->BBCodes->addBBCodeAlias('TH', 'TH');
-		$this->cb->BBCodes->addBBCodeAlias('TD', 'TD');
+		$this->generator->BBCodes->addBBCodeAlias('COL', 'COL', array('autoClose' => true));
+		$this->generator->BBCodes->addBBCodeAlias('TR', 'TR');
+		$this->generator->BBCodes->addBBCodeAlias('TH', 'TH');
+		$this->generator->BBCodes->addBBCodeAlias('TD', 'TD');
 	}
 
 	/**
@@ -276,7 +276,7 @@ class PredefinedBBCodes
 	{
 		$regexp = '/^(?:http:\\/\\/www\\.justin\\.tv\\/)?(?<id>[A-Za-z_0-9]+)/';
 
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[JUSTIN id={ID}]{PARSE=' . $regexp . '}[/JUSTIN]',
 			'<object type="application/x-shockwave-flash" height="300" width="400"  data="http://www.justin.tv/widgets/live_embed_player.swf?channel={@id}" bgcolor="#000000">
 				<param name="allowFullScreen" value="true" />
@@ -310,7 +310,7 @@ class PredefinedBBCodes
 	*/
 	public function addLOCALTIME()
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[LOCALTIME]{NUMBER;preFilter=strtotime}[/LOCALTIME]',
 			'<span class="localtime" title="{text()}">
 				<script type="text/javascript">document.write(new Date({NUMBER}000).toLocaleString())</script>
@@ -331,7 +331,7 @@ class PredefinedBBCodes
 	*/
 	public function addSPOILER($spoilerStr = 'Spoiler:', $showStr = 'Show', $hideStr = 'Hide')
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[SPOILER={TEXT1;required=0}]{TEXT2}[/SPOILER]',
 			'<div class="spoiler">
 				<div class="spoiler-header">
@@ -365,7 +365,7 @@ class PredefinedBBCodes
 	*/
 	public function addSIZE($minSize = 50, $maxSize = 200)
 	{
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[SIZE={RANGE=' . $minSize . ',' . $maxSize . '}]{TEXT}[/SIZE]',
 			'<span style="font-size:{RANGE}%">{TEXT}</span>',
 			0,
@@ -378,7 +378,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:' . preg_quote('http://blip.tv/file/', '/') . ')?(?<id>[0-9]+)/';
 
 		// HTML taken straight from Blip's player "Copy embed code" feature
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[BLIP id={ID}]{PARSE=' . $regexp . '}[/BLIP]',
 			'<embed src="http://blip.tv/play/{@id}" type="application/x-shockwave-flash" width="480" height="300" allowscriptaccess="always" allowfullscreen="true"></embed>'
 		);
@@ -389,7 +389,7 @@ class PredefinedBBCodes
 		$regexp = '/^(?:' . preg_quote('http://vimeo.com/', '/') . ')?(?<id>[0-9]+)/';
 
 		// HTML taken straight from Vimeo's player "EMBED" feature
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[VIMEO id={ID}]{PARSE=' . $regexp . '}[/VIMEO]',
 			'<iframe src="http://player.vimeo.com/video/{@id}" width="400" height="225" frameborder="0"></iframe>'
 		);
@@ -401,7 +401,7 @@ class PredefinedBBCodes
 			'/^(?:' . preg_quote('http://www.dailymotion.com/video/', '/') . ')?(?<id>[0-9a-z]+)/';
 
 		// HTML taken straight from Dailymotion's Export->embed feature
-		$this->cb->BBCodes->addBBCodeFromExample(
+		$this->generator->BBCodes->addBBCodeFromExample(
 			'[DAILYMOTION id={ID}]{PARSE=' . $regexp . '}[/DAILYMOTION]',
 			'<object width="480" height="270">
 				<param name="movie" value="http://www.dailymotion.com/swf/video/{@id}"></param>
@@ -429,7 +429,7 @@ class PredefinedBBCodes
 	*/
 	public function addFLASH()
 	{
-		$this->cb->BBCodes->addBBCode(
+		$this->generator->BBCodes->addBBCode(
 			'FLASH',
 			array(
 				'defaultAttr'  => 'dimensions',
@@ -469,7 +469,7 @@ class PredefinedBBCodes
 	public function addDL()
 	{
 		$this->forwardCall('DL');
-		$this->cb->BBCodes->addBBCodeAlias('DT', 'DT');
-		$this->cb->BBCodes->addBBCodeAlias('DD', 'DD');
+		$this->generator->BBCodes->addBBCodeAlias('DT', 'DT');
+		$this->generator->BBCodes->addBBCodeAlias('DD', 'DD');
 	}
 }

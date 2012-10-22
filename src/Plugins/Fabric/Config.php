@@ -49,17 +49,17 @@ class FabricConfig extends PluginConfig
 	{
 		foreach ($this->tagsNeeded as $tagName)
 		{
-			if (!$this->cb->tagExists($tagName))
+			if (!$this->generator->tagExists($tagName))
 			{
-				$this->cb->predefinedTags->{'add' . $tagName}();
+				$this->generator->predefinedTags->{'add' . $tagName}();
 			}
 		}
 	}
 
 	public function getConfig()
 	{
-		$rm        = $this->cb->getRegexpHelper();
-		$urlRegexp = $rm->buildRegexpFromList($this->cb->getAllowedSchemes()) . '://\\S+';
+		$rm        = $this->generator->getRegexpHelper();
+		$urlRegexp = $rm->buildRegexpFromList($this->generator->getAllowedSchemes()) . '://\\S+';
 
 		$blockModifiers = array(
 			'[\\#\\*]+ ',

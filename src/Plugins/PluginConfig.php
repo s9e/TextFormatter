@@ -10,13 +10,15 @@ namespace s9e\TextFormatter\Plugins;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Generator;
+use s9e\TextFormatter\Generator\ConfigProvider;
+use s9e\TextFormatter\Generator\Helpers\ConfigHelper;
 
-abstract class PluginConfig
+abstract class PluginConfig implements ConfigProvider
 {
 	/**
 	* @var Generator
 	*/
-	protected $cb;
+	protected $generator;
 
 	/**
 	* @var integer Maximum amount of matches to process - used by the parser when running the global
@@ -32,17 +34,26 @@ abstract class PluginConfig
 	protected $regexpLimitAction = 'ignore';
 
 	/**
-	* @param Generator $cb
-	* @param array         $overrideProps Properties of the plugin will be overwritten with those
+	* @param Generator $generator
+	* @param array     $overrideProps Properties of the plugin will be overwritten with those
 	*/
-	final public function __construct(Generator $cb, array $overrideProps = array())
+	final public function __construct(Generator $generator, array $overrideProps = array())
 	{
 		foreach ($overrideProps as $k => $v)
 		{
-			$this->$k = $v;
+			$methodName = 'set' . ucfirst($k);
+
+			if (method_exists($this, $methodName)
+			{
+				$this->$methodName($v);
+			}
+			else
+			{
+				$this->$k = $v;
+			}
 		}
 
-		$this->cb = $cb;
+		$this->generator = $generator;
 		$this->setUp();
 	}
 
@@ -54,7 +65,13 @@ abstract class PluginConfig
 	/**
 	* @return array|bool This plugin's config, or FALSE to disable this plugin
 	*/
-	abstract public function getConfig();
+	public function toConfig()
+	{
+		$properties = get_object_vars($this);
+		unset($properties['generator'])
+
+		return ConfigHelper::toArray($properties);
+	}
 
 	/**
 	* @return string Extra XSL used by this plugin
@@ -91,14 +108,6 @@ abstract class PluginConfig
 	//==========================================================================
 	// Setters
 	//==========================================================================
-
-	/**
-	* @throws RuntimeException
-	*/
-	public function setCb()
-	{
-		throw new RuntimeException('Cannot rebind the Generator instance');
-	}
 
 	/**
 	* Set the maximum number of regexp matches

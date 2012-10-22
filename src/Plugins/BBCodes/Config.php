@@ -11,6 +11,7 @@ use ArrayAccess;
 use InvalidArgumentException;
 use s9e\TextFormatter\Generator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Generator\Traits\CollectionProxy;
+use s9e\TextFormatter\Plugins\PluginConfig;
 
 class Config extends PluginConfig implements ArrayAccess
 {
@@ -61,7 +62,7 @@ class Config extends PluginConfig implements ArrayAccess
 		$tag    = $config['tag'];
 
 		$this->items->add($bbcodeName, $bbcode);
-		$this->cb->tags->add($bbcode->tagName, $tag);
+		$this->generator->tags->add($bbcode->tagName, $tag);
 
 		return $bbcode;
 	}

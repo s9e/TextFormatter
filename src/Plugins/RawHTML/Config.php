@@ -96,8 +96,8 @@ class RawHTMLConfig extends PluginConfig
 			$this->xsl = str_replace('="html:', '="' . $this->namespacePrefix . ':', $this->xsl);
 		}
 
-		$this->cb->registerNamespace($this->namespacePrefix, $this->namespaceURI);
-		$this->cb->addXSL($this->xsl);
+		$this->generator->registerNamespace($this->namespacePrefix, $this->namespaceURI);
+		$this->generator->addXSL($this->xsl);
 	}
 
 	/**
@@ -117,9 +117,9 @@ class RawHTMLConfig extends PluginConfig
 			throw new RuntimeException('<' . $elName . '> elements are unsafe and are disabled by default. Please use the ' . __CLASS__ . '::ALLOW_UNSAFE_ELEMENTS flag to bypass this security measure');
 		}
 
-		if (!$this->cb->tagExists($tagName))
+		if (!$this->generator->tagExists($tagName))
 		{
-			$this->cb->addTag($tagName);
+			$this->generator->addTag($tagName);
 		}
 
 		$this->tags[$elName] = 1;
@@ -147,7 +147,7 @@ class RawHTMLConfig extends PluginConfig
 			}
 		}
 
-		if (!$this->cb->attributeExists($tagName, $attrName))
+		if (!$this->generator->attributeExists($tagName, $attrName))
 		{
 			$attrConf = array('required' => false);
 
@@ -156,7 +156,7 @@ class RawHTMLConfig extends PluginConfig
 				$attrConf['filter'] = $this->attrFilter[$attrName];
 			}
 
-			$this->cb->addAttribute(
+			$this->generator->addAttribute(
 				$tagName,
 				$attrName,
 				$attrConf
@@ -245,7 +245,7 @@ class RawHTMLConfig extends PluginConfig
 		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
 		*/
 		$attrRegexp = '[a-z][a-z\\-]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
-		$tagRegexp  = $this->cb->getRegexpHelper()->buildRegexpFromList(array_keys($this->tags));
+		$tagRegexp  = $this->generator->getRegexpHelper()->buildRegexpFromList(array_keys($this->tags));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
 		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*+)/?';

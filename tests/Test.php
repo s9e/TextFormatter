@@ -16,17 +16,17 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	{
 		switch ($k)
 		{
-			case 'cb':
-				return $this->cb = new Generator;
+			case 'generator':
+				return $this->generator = new Generator;
 
 			case 'parser':
-				return $this->parser = $this->cb->getParser();
+				return $this->parser = $this->generator->getParser();
 
 			case 'renderer':
-				return $this->renderer = $this->cb->getRenderer();
+				return $this->renderer = $this->generator->getRenderer();
 
 			case 'jspg':
-				return $this->jspg = new JSParserGenerator($this->cb);
+				return $this->jspg = new JSParserGenerator($this->generator);
 
 			default:
 				throw new RuntimeException("Bad __get('$k')");

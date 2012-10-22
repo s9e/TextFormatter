@@ -3,16 +3,16 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$cb = new s9e\TextFormatter\Generator;
+$generator = new s9e\TextFormatter\Generator;
 
-$cb->BBCodes->addPredefinedBBCode('B');
-$cb->BBCodes->addPredefinedBBCode('I');
-$cb->BBCodes->addPredefinedBBCode('U');
-$cb->BBCodes->addPredefinedBBCode('S');
-$cb->BBCodes->addPredefinedBBCode('URL');
-$cb->BBCodes->addPredefinedBBCode('COLOR');
+$generator->BBCodes->addPredefinedBBCode('B');
+$generator->BBCodes->addPredefinedBBCode('I');
+$generator->BBCodes->addPredefinedBBCode('U');
+$generator->BBCodes->addPredefinedBBCode('S');
+$generator->BBCodes->addPredefinedBBCode('URL');
+$generator->BBCodes->addPredefinedBBCode('COLOR');
 
-$cb->BBCodes->addBBCode('LIST', array(
+$generator->BBCodes->addBBCode('LIST', array(
 	'trimBefore'   => true,
 	'trimAfter'    => true,
 	'ltrimContent' => true,
@@ -22,7 +22,7 @@ $cb->BBCodes->addBBCode('LIST', array(
 	'template' => '<ul><xsl:apply-templates/></ul>'
 ));
 
-$cb->BBCodes->addBBCode('*', array(
+$generator->BBCodes->addBBCode('*', array(
 	'trimBefore'   => true,
 	'trimAfter'    => true,
 	'ltrimContent' => true,
@@ -32,18 +32,18 @@ $cb->BBCodes->addBBCode('*', array(
 	'template' => '<li><xsl:apply-templates/></li>'
 ));
 
-$cb->BBCodes->addBBCode('CODE', array(
+$generator->BBCodes->addBBCode('CODE', array(
 	'template' => '<code><xsl:apply-templates/></code>',
 	'defaultDescendantRule' => 'deny'
 ));
 
-$cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
+$generator->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
-$cb->loadPlugin('Autolink');
+$generator->loadPlugin('Autolink');
 
-$cb->addRulesFromHTML5Specs();
+$generator->addRulesFromHTML5Specs();
 
-$jsParser = $cb->getJSParser(array(
+$jsParser = $generator->getJSParser(array(
 	'compilationLevel'     => 'ADVANCED_OPTIMIZATIONS',
 	'setOptimizationHints' => true,
 	'unsafeMinification'   => true,

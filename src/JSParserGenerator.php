@@ -38,7 +38,7 @@ class JSParserGenerator
 	/**
 	* @var Generator
 	*/
-	protected $cb;
+	protected $generator;
 
 	/**
 	* @var string Template source
@@ -95,11 +95,11 @@ class JSParserGenerator
 	protected $src;
 
 	/**
-	* @param Generator $cb
+	* @param Generator $generator
 	*/
-	public function __construct(Generator $cb)
+	public function __construct(Generator $generator)
 	{
-		$this->cb  = $cb;
+		$this->generator  = $generator;
 		$this->tpl = file_get_contents(__DIR__ . '/TextFormatter.js');
 	}
 
@@ -126,10 +126,10 @@ class JSParserGenerator
 		);
 
 		$this->src     = $this->tpl;
-		$this->xsl     = $this->cb->getXSL($this->options['xslNamespacePrefix']);
-		$this->plugins = $this->cb->getJSPlugins();
+		$this->xsl     = $this->generator->getXSL($this->options['xslNamespacePrefix']);
+		$this->plugins = $this->generator->getJSPlugins();
 
-		$config = $this->cb->getParserConfig(true);
+		$config = $this->generator->getParserConfig(true);
 
 		$this->tagsConfig  = $config['tags'];
 		$this->filters     = (isset($config['filters'])) ? $config['filters'] : array();
@@ -771,7 +771,7 @@ class JSParserGenerator
 	{
 		$tagsConfig = $this->tagsConfig;
 
-		$rm = $this->cb->getRegexpHelper();
+		$rm = $this->generator->getRegexpHelper();
 
 		foreach ($tagsConfig as $tagName => &$tagConfig)
 		{
@@ -1044,7 +1044,7 @@ class JSParserGenerator
 	*/
 	protected function encodeArray(array $arr, array $meta = array())
 	{
-		$rm = $this->cb->getRegexpHelper();
+		$rm = $this->generator->getRegexpHelper();
 
 		$match = array();
 

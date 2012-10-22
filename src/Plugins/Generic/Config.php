@@ -58,7 +58,7 @@ class GenericConfig extends PluginConfig
 		/**
 		* Parse the regexp, and generate an attribute for every named capture
 		*/
-		$regexpInfo = $this->cb->getRegexpHelper()->parseRegexp($regexp);
+		$regexpInfo = $this->generator->getRegexpHelper()->parseRegexp($regexp);
 
 		$attrs = array();
 
@@ -100,7 +100,7 @@ class GenericConfig extends PluginConfig
 		/**
 		* Create the tag
 		*/
-		$this->cb->addTag($tagName, $tagOptions);
+		$this->generator->addTag($tagName, $tagOptions);
 
 		/**
 		* Finally, record the replacement
@@ -132,7 +132,7 @@ class GenericConfig extends PluginConfig
 		{
 			foreach ($config['regexp'] as $tagName => $regexp)
 			{
-				$this->cb->getRegexpHelper()->pcreToJs($regexp, $config['regexpMap'][$tagName]);
+				$this->generator->getRegexpHelper()->pcreToJs($regexp, $config['regexpMap'][$tagName]);
 			}
 		}
 

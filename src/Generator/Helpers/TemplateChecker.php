@@ -43,6 +43,7 @@ abstract class TemplateChecker
 		self::checkDisableOutputEscaping($DOMXPath);
 		self::checkCopyElements($DOMXPath);
 		self::checkUnsafeContent($DOMXPath, $tag);
+		self::checkPHPTags($DOMXPath);
 	}
 
 	/**
@@ -379,6 +380,22 @@ abstract class TemplateChecker
 		if ($DOMXPath->query('ancestor::xsl:for-each', $node)->length)
 		{
 			throw new UnsafeTemplateException("Cannot evaluate context node due to 'xsl:for-each'", $node);
+		}
+	}
+
+	/**
+	* Test whether the template contains a <?php tag
+	*
+	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	*/
+	protected static function checkPHPTags(DOMXPath $DOMXPath)
+	{
+		$xpath = '//processing-instruction()["php" = translate(name(),"HP","hp")]';
+		$nodes = $DOMXPath->query($xpath);
+
+		if ($nodes->length)
+		{
+			throw new UnsafeTemplateException('PHP tags are not allowed', $nodes->item(0));
 		}
 	}
 

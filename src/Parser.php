@@ -7,8 +7,20 @@
 */
 namespace s9e\TextFormatter;
 
+use s9e\TextFormatter\Parser\AttributeProcessing;
+use s9e\TextFormatter\Parser\RulesHandling;
+use s9e\TextFormatter\Parser\TagHandling;
+use s9e\TextFormatter\Parser\TagProcessing;
+use s9e\TextFormatter\Parser\TagStackHandling;
+
 class Parser
 {
+	use AttributeProcessing;
+	use RulesHandling;
+	use TagHandling;
+	use TagProcessing;
+	use TagStackHandling;
+
 	/**
 	* Start tag, e.g. [b]
 	* -- becomes <B><st>[b]</st>
@@ -205,9 +217,6 @@ class Parser
 	/**
 	* Reset this instance's properties
 	*
-	* Used internally at the beginning of a new parsing. I suppose some memory-obsessive users will
-	* appreciate to be able to do it whenever they feel like it
-	*
 	* @param  string New text to be parsed
 	* @return void
 	*/
@@ -219,13 +228,10 @@ class Parser
 
 		$this->log = array();
 		$this->unprocessedTags = array();
-		$this->processedTagIds = array();
 		$this->openTags        = array();
 		$this->openStartTags   = array();
 		$this->cntOpen         = array();
 		$this->cntTotal        = array();
-
-		$this->hasNamespacedTags = false;
 
 		unset($this->currentTag, $this->currentAttribute);
 	}
@@ -244,7 +250,6 @@ class Parser
 		$this->executePluginParsers();
 
 		// Sort them by position and precedence
-		*/
 		$this->sortTags();
 
 		// Process each tag in order, building the output string
@@ -283,153 +288,6 @@ class Parser
 	}
 
 	/**
-	* Generate a XML representation of the text after parsing has completed
-	*
-	* @return string
-	*/
-	protected function asXML()
-	{
-		$xml = new XMLWriter;
-		$xml->openMemory();
-		$xml->startDocument('1.0', 'utf-8');
-
-		if (empty($this->processedTags))
-		{
-			$xml->writeElement('pt', $this->text);
-		}
-		else
-		{
-			$xml->startElement('rt');
-
-			/**
-			* Declare all namespaces in the root node
-			*/
-			if ($this->hasNamespacedTags)
-			{
-				$declared = array();
-				foreach ($this->processedTags as $tag)
-				{
-					$pos = strpos($tag['name'], ':');
-					if ($pos !== false)
-					{
-						$prefix = substr($tag['name'], 0, $pos);
-
-						if (!isset($declared[$prefix]))
-						{
-							$declared[$prefix] = 1;
-
-							$xml->writeAttribute(
-								'xmlns:' . $prefix,
-								$this->registeredNamespaces[$prefix]
-							);
-						}
-					}
-				}
-			}
-
-			/**
-			* @var integer Position that tracks how much of the text has been consumed so far
-			*/
-			$pos = 0;
-
-			foreach ($this->processedTags as $tag)
-			{
-				/**
-				* Append the text that's between last tag and this one
-				*/
-				$xml->text(substr($this->text, $pos, $tag['pos'] - $pos));
-
-				/**
-				* Capture the part of the text that belongs to this tag then move the cursor past
-				* current tag
-				*/
-				$tagText = substr($this->text, $tag['pos'], $tag['len']);
-				$pos     = $tag['pos'] + $tag['len'];
-
-				$wsBefore = $wsAfter = false;
-
-				if (!empty($tag['trimBefore']))
-				{
-					$wsBefore = substr($tagText, 0, $tag['trimBefore']);
-					$tagText  = substr($tagText, $tag['trimBefore']);
-				}
-
-				if (!empty($tag['trimAfter']))
-				{
-					$wsAfter = substr($tagText, -$tag['trimAfter']);
-					$tagText = substr($tagText, 0, -$tag['trimAfter']);
-				}
-
-				if ($wsBefore !== false)
-				{
-					$xml->writeElement('i', $wsBefore);
-				}
-
-				if ($tag['type'] & self::START_TAG)
-				{
-					$xml->startElement($tag['name']);
-
-					if (!empty($tag['attrs']))
-					{
-						foreach ($tag['attrs'] as $k => $v)
-						{
-							$xml->writeAttribute($k, $v);
-						}
-					}
-
-					if ($tag['type'] & self::END_TAG)
-					{
-						$xml->text($tagText);
-						$xml->endElement();
-					}
-					elseif ($tagText > '')
-					{
-						$xml->writeElement('st', $tagText);
-					}
-				}
-				else
-				{
-					if ($tagText > '')
-					{
-						$xml->writeElement('et', $tagText);
-					}
-					$xml->endElement();
-				}
-
-				if ($wsAfter !== false)
-				{
-					$xml->writeElement('i', $wsAfter);
-				}
-			}
-
-			/**
-			* Append the rest of the text, past the last tag
-			*/
-			if ($pos < $this->textLen)
-			{
-				$xml->text(substr($this->text, $pos));
-			}
-		}
-
-		$xml->endDocument();
-
-		/**
-		* Flush the buffer/destroy the writer
-		*/
-		$xml = $xml->outputMemory(true);
-
-		/**
-		* Remove the XML prolog
-		*/
-		if ($xml[1] === '?')
-		{
-			$xml = substr($xml, strpos($xml, '<', 2));
-		}
-
-		return rtrim($xml);
-	}
-
-	/**
 	* Execute a plugin's regexps and return the result
 	*
 	* Takes care of regexpLimit/regexpAction
@@ -442,10 +300,8 @@ class Parser
 	{
 		$pluginConfig = $this->pluginsConfig[$pluginName];
 
-		/**
-		* Some plugins have several regexps in an array, others have a single regexp as a
-		* string. We convert the latter to an array so that we can iterate over it.
-		*/
+		// Some plugins have several regexps in an array, others have a single regexp as a string.
+		// We convert the latter to an array so that we can iterate over it.
 		$isArray = is_array($pluginConfig['regexp']);
 		$regexps = ($isArray) ? $pluginConfig['regexp'] : array($pluginConfig['regexp']);
 
@@ -523,39 +379,14 @@ class Parser
 	*/
 	protected function getPluginParser($pluginName)
 	{
-		/**
-		* Check whether an instance is ready, the class exists or if we have to load it
-		*/
+		// Cache a new instance if there isn't one already
 		if (!isset($this->pluginParsers[$pluginName]))
 		{
 			$pluginConfig = $this->pluginsConfig[$pluginName];
 
-			if (!isset($pluginConfig['parserClassName']))
-			{
-				$pluginConfig['parserClassName'] =
-					__NAMESPACE__ . '\\Plugins\\' . $pluginName . 'Parser';
-
-				$pluginConfig['parserFilepath'] =
-					__DIR__ . '/Plugins/' . $pluginName . 'Parser.php';
-			}
-
-			$useAutoload = !isset($pluginConfig['parserFilepath']);
-
-			if (!class_exists($pluginConfig['parserClassName'], $useAutoload)
-			 && isset($pluginConfig['parserFilepath']))
-			{
-				/**
-				* Check for the PluginParser class
-				*/
-				if (!class_exists(__NAMESPACE__ . '\\PluginParser'))
-				{
-					include __DIR__ . '/PluginParser.php';
-				}
-
-				include $pluginConfig['parserFilepath'];
-			}
-
-			$className = $pluginConfig['parserClassName'];
+			$className = (isset($pluginConfig['className']))
+			           ? $pluginConfig['className']
+			           : __NAMESPACE__ . '\\Plugins\\' . $pluginName . '\\Parser';
 
 			$this->pluginParsers[$pluginName] = new $className($this, $pluginConfig);
 		}
@@ -570,8 +401,6 @@ class Parser
 	*/
 	protected function executePluginParsers()
 	{
-		$tagId = 0;
-
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
 		{
 			$matches = array();
@@ -588,32 +417,8 @@ class Parser
 
 			$tags = $this->getPluginParser($pluginName)->getTags($this->text, $matches);
 
-			/**
-			* First add an ID to every tag
-			*/
-			foreach ($tags as &$tag)
-			{
-				$tag['id'] = ++$tagId;
-				$tag['pluginName'] = $pluginName;
-			}
-			unset($tag);
-
-			/**
-			* Now that all tags have a unique ID, deal with 'requires' then add them
-			*/
 			foreach ($tags as $tag)
 			{
-				if (isset($tag['requires']))
-				{
-					$requires = array();
-					foreach ($tag['requires'] as $k)
-					{
-						$requires[$tags[$k]['id']] = 1;
-					}
-
-					$tag['requires'] = $requires;
-				}
-
 				$this->unprocessedTags[] = $tag;
 			}
 		}

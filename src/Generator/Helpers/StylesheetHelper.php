@@ -87,7 +87,7 @@ abstract class StylesheetHelper
 			}
 		}
 
-		// Append the templates for <st>, <et> and <i> nodes
+		// Append an empty template for <st>, <et> and <i> nodes
 		$xsl .= '<xsl:template match="st|et|i"/>';
 
 		// Now close the stylesheet

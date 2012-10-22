@@ -40,7 +40,7 @@ class CensorConfig extends PluginConfig
 
 	public function setUp()
 	{
-		if ($this->cb->tagExists($this->tagName))
+		if ($this->generator->tagExists($this->tagName))
 		{
 			return;
 		}
@@ -49,7 +49,7 @@ class CensorConfig extends PluginConfig
 			'defaultChildRule' => 'deny',
 			'defaultDescendantRule' => 'deny'
 		));
-		$this->cb->addTag($this->tagName, $tag);
+		$this->generator->addTag($this->tagName, $tag);
 
 		$tag->addAttribute($this->attrName)->required = false;
 
@@ -98,7 +98,7 @@ class CensorConfig extends PluginConfig
 			return false;
 		}
 
-		$regexp = $this->cb->getRegexpHelper()->buildRegexpFromList(
+		$regexp = $this->generator->getRegexpHelper()->buildRegexpFromList(
 			$this->words,
 			array('specialChars' => array('*' => '\\pL*', '?' => '.?'))
 		);

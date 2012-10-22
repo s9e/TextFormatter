@@ -16,16 +16,16 @@ class PluginCollection extends NormalizedCollection
 	/**
 	* @var Generator
 	*/
-	protected $cb;
+	protected $generator;
 
 	/**
 	* Constructor
 	*
-	* @param Generator $cb
+	* @param Generator $generator
 	*/
-	public function __construct(Generator $cb)
+	public function __construct(Generator $generator)
 	{
-		$this->cb = $cb;
+		$this->generator = $generator;
 	}
 
 	/**
@@ -54,7 +54,7 @@ class PluginCollection extends NormalizedCollection
 	{
 		if (is_string($value) && class_exists($value))
 		{
-			$value = new $value($this->cb);
+			$value = new $value($this->generator);
 		}
 
 		if ($value instanceof PluginConfig)
@@ -84,7 +84,7 @@ class PluginCollection extends NormalizedCollection
 		}
 
 		// Create the plugin
-		$plugin = new $className($this->cb, $overrideProps);
+		$plugin = new $className($this->generator, $overrideProps);
 
 		// Save it
 		$this->set($pluginName, $plugin);

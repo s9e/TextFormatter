@@ -3,51 +3,51 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$cb = new s9e\TextFormatter\Generator;
+$generator = new s9e\TextFormatter\Generator;
 
-$cb->disallowHost('*.example.com');
-$cb->setDefaultScheme('https');
+$generator->disallowHost('*.example.com');
+$generator->setDefaultScheme('https');
 
-$cb->BBCodes->addPredefinedBBCode('B');
-$cb->BBCodes->addPredefinedBBCode('I');
-$cb->BBCodes->addPredefinedBBCode('U');
-$cb->BBCodes->addPredefinedBBCode('S');
-$cb->BBCodes->addPredefinedBBCode('URL');
-$cb->BBCodes->addPredefinedBBCode('LIST');
-$cb->BBCodes->addPredefinedBBCode('COLOR');
-$cb->BBCodes->addPredefinedBBCode('YOUTUBE');
-$cb->BBCodes->addPredefinedBBCode('FLOAT');
+$generator->BBCodes->addPredefinedBBCode('B');
+$generator->BBCodes->addPredefinedBBCode('I');
+$generator->BBCodes->addPredefinedBBCode('U');
+$generator->BBCodes->addPredefinedBBCode('S');
+$generator->BBCodes->addPredefinedBBCode('URL');
+$generator->BBCodes->addPredefinedBBCode('LIST');
+$generator->BBCodes->addPredefinedBBCode('COLOR');
+$generator->BBCodes->addPredefinedBBCode('YOUTUBE');
+$generator->BBCodes->addPredefinedBBCode('FLOAT');
 
-$cb->BBCodes->addBBCode('CODE', array(
+$generator->BBCodes->addBBCode('CODE', array(
 	'template' => '<code><xsl:apply-templates/></code>',
 	'defaultDescendantRule' => 'deny'
 ));
 
-$cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
+$generator->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 // Limit the number of emoticons to 7
-$cb->setTagOption('E', 'tagLimit', 7);
+$generator->setTagOption('E', 'tagLimit', 7);
 
-$cb->Censor->addWord('apple', 'banana');
+$generator->Censor->addWord('apple', 'banana');
 
-$cb->Generic->addReplacement(
+$generator->Generic->addReplacement(
 	'/#(?<tag>[a-z0-9]+)/i',
 	'<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>'
 );
 
-$cb->RawHTML->allowElement('a');
-$cb->RawHTML->allowElement('b');
-$cb->RawHTML->allowAttribute('a', 'href');
-$cb->RawHTML->allowAttribute('a', 'title');
+$generator->RawHTML->allowElement('a');
+$generator->RawHTML->allowElement('b');
+$generator->RawHTML->allowAttribute('a', 'href');
+$generator->RawHTML->allowAttribute('a', 'title');
 
-$cb->loadPlugin('Autolink');
-$cb->loadPlugin('Escaper');
-$cb->loadPlugin('HTMLEntities')->disableEntity('&lt;');
-$cb->loadPlugin('Linebreaker');
-$cb->loadPlugin('WittyPants');
+$generator->loadPlugin('Autolink');
+$generator->loadPlugin('Escaper');
+$generator->loadPlugin('HTMLEntities')->disableEntity('&lt;');
+$generator->loadPlugin('Linebreaker');
+$generator->loadPlugin('WittyPants');
 
-$cb->addRulesFromHTML5Specs();
+$generator->addRulesFromHTML5Specs();
 
-$jsParser = $cb->getJSParser(array(
+$jsParser = $generator->getJSParser(array(
 	'compilationLevel'          => 'ADVANCED_OPTIMIZATIONS',
 	'enableLivePreviewFastPath' => true,
 	'setOptimizationHints'      => true
@@ -179,7 +179,7 @@ The parser/renderer used on this page page has been generated via [url=https://g
 	<div style="float:left;">
 		<form><?php
 
-			$plugins = $cb->getLoadedPlugins();
+			$plugins = $generator->getLoadedPlugins();
 			ksort($plugins);
 
 			foreach ($plugins as $pluginName => $plugin)
