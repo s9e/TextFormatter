@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Generator\Exceptions;
 use DOMNode;
 use RuntimeException;
 
-class UnsafeTemplateException extends RuntimeException
+class UnsafeTemplateException extends InvalidTemplateException
 {
 	/**
 	* @var DOMNode The node that is responsible for this exception

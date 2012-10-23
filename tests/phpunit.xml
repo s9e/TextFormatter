@@ -47,6 +47,8 @@
 			<file>Generator/Helpers/RegexpParserTest.php</file>
 			<file>Generator/Helpers/RulesHelperTest.php</file>
 			<file>Generator/Helpers/StylesheetHelperTest.php</file>
+			<!-- Other helpers depend on TemplateHelper -->
+			<file>Generator/Helpers/TemplateHelperTest.php</file>
 			<file>Generator/Helpers/TemplateCheckerTest.php</file>
 			<file>Generator/Helpers/TemplateOptimizerTest.php</file>
 			<file>Generator/Items/AttributeTest.php</file>
@@ -84,6 +86,7 @@
 			<file>../src/Generator/Helpers/RulesHelper.php</file>
 			<file>../src/Generator/Helpers/StylesheetHelper.php</file>
 			<file>../src/Generator/Helpers/TemplateChecker.php</file>
+			<file>../src/Generator/Helpers/TemplateHelper.php</file>
 			<file>../src/Generator/Helpers/TemplateOptimizer.php</file>
 			<file>../src/Generator/Items/Attribute.php</file>
 			<file>../src/Generator/Items/AttributePreprocessor.php</file>

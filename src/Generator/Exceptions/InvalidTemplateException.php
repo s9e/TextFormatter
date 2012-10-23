@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\Generator\Exceptions;
 
-class InvalidXslException extends InvalidTemplateException
+use RuntimeException;
+
+class InvalidTemplateException extends RuntimeException
 {
 }

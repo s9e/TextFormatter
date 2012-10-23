@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Generator\Helpers;
 use DOMDocument;
 use Exception;
 use s9e\TextFormatter\Generator\Exceptions\InvalidTemplateException;
+use s9e\TextFormatter\Generator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Generator\Items\Tag;
 
 abstract class TemplateHelper
@@ -21,11 +22,6 @@ abstract class TemplateHelper
 	*/
 	public function normalize($template, Tag $tag = null)
 	{
-		if (!isset($tag))
-		{
-			$tag = new Tag;
-		}
-
 		$dom = self::loadTemplate($template);
 
 		$template = TemplateOptimizer::optimize($template);
@@ -36,6 +32,10 @@ abstract class TemplateHelper
 
 	/**
 	* Attempt to load a template with DOM, first as XML then as HTML as a fallback
+	*
+	* NOTE: in order to accomodate templates that don't have one single root node, the DOMDocument
+	*       returned by this method has its own root node (with a random name) that acts as a parent
+	*       to this template's content
 	*
 	* @param  string      $template
 	* @return DOMDocument
@@ -51,15 +51,8 @@ abstract class TemplateHelper
 		// First try as XML
 		$xml = '<?xml version="1.0" encoding="utf-8" ?><' . $t . ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $template . '</' . $t . '>';
 
-		try
-		{
-			$useErrors = libxml_use_internal_errors(true);
-			$success = $dom->loadXML($xml);
-		}
-		catch (Exception $e)
-		{
-		}
-
+		$useErrors = libxml_use_internal_errors(true);
+		$success   = $dom->loadXML($xml);
 		libxml_use_internal_errors($useErrors);
 
 		if ($success)
@@ -73,21 +66,21 @@ abstract class TemplateHelper
 		if (strpos($template, '<xsl:') !== false)
 		{
 			$error = libxml_get_last_error();
-			throw new InvalidTemplateException('Invalid template - error was: ' . $error->message);
+			throw new InvalidXslException($error->message);
 		}
 
 		// Fall back to loading it inside a div, as HTML
 		$html = '<html><body><div id="' . $t . '">' . $template . '</div></body></html>';
 
 		$useErrors = libxml_use_internal_errors(true);
-		$success = $dom->loadHTML($html);
+		$success   = $dom->loadHTML($html);
 		libxml_use_internal_errors($useErrors);
 
 		// @codeCoverageIgnoreStart
 		if (!$success)
 		{
 			$error = libxml_get_last_error();
-			throw new InvalidTemplateException('Invalid HTML in template - error was: ' . $error->message);
+			throw new InvalidTemplateException('Invalid HTML template - error was: ' . $error->message);
 		}
 		// @codeCoverageIgnoreEnd
 
@@ -99,5 +92,26 @@ abstract class TemplateHelper
 		$dom->loadXML($xml);
 
 		return $dom;
+	}
+
+	/**
+	* Serialize a loaded template back into a string
+	*
+	* NOTE: removes the root node created by loadTemplate()
+	*
+	* @param  DOMDocument $dom
+	* @return string
+	*/
+	public static function saveTemplate(DOMDocument $dom)
+	{
+		// Serialize the XML then remove the outer node
+		$xml = $dom->saveXML($dom->documentElement);
+
+		$pos = 1 + strpos($xml, '>');
+		$len = strrpos($xml, '<') - $pos;
+
+		$xml = substr($xml, $pos, $len);
+
+		return $xml;
 	}
 }
