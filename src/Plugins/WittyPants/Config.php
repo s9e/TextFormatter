@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Plugins;
 
 use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Plugins\GeneratorBase;
 
 /**
 * This plugin combines some of the functionalities found in SmartyPants and Textile.
@@ -16,7 +16,7 @@ use s9e\TextFormatter\Plugins\Config as PluginConfig;
 * @link http://daringfireball.net/projects/smartypants/
 * @link http://textile.thresholdstate.com/
 */
-class WittyPantsConfig extends PluginConfig
+class WittyPantsConfig extends GeneratorBase
 {
 	/**
 	* @var string Name of the tag used to mark the text to replace

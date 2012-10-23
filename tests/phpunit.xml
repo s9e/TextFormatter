@@ -58,11 +58,14 @@
 			<file>Generator/Validators/AttributeNameTest.php</file>
 			<file>Generator/Validators/TagNameTest.php</file>
 
+			<file>Plugins/GeneratorBaseTest.php</file>
 			<file>Plugins/BBCodes/BBCodeTest.php</file>
 			<file>Plugins/BBCodes/BBCodeCollectionTest.php</file>
 			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
 			<file>Plugins/BBCodes/RepositoryTest.php</file>
 			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
+			<file>Plugins/Emoticons/GeneratorTest.php</file>
+			<file>Plugins/RawHTML/GeneratorTest.php</file>
 		</testsuite>
 	</testsuites>
 
@@ -98,11 +101,14 @@
 			<file>../src/Generator/Validators/AttributeName.php</file>
 			<file>../src/Generator/Validators/TagName.php</file>
 
+			<file>../src/Plugins/GeneratorBase.php</file>
 			<file>../src/Plugins/BBCodes/BBCode.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeCollection.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>
 			<file>../src/Plugins/BBCodes/Repository.php</file>
 			<file>../src/Plugins/Emoticons/EmoticonCollection.php</file>
+			<file>../src/Plugins/Emoticons/Generator.php</file>
+			<file>../src/Plugins/RawHTML/Generator.php</file>
 		</whitelist>
 	</filter>
 </phpunit>

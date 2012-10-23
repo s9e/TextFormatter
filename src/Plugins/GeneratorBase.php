@@ -13,7 +13,7 @@ use s9e\TextFormatter\Generator;
 use s9e\TextFormatter\Generator\ConfigProvider;
 use s9e\TextFormatter\Generator\Helpers\ConfigHelper;
 
-abstract class PluginConfig implements ConfigProvider
+abstract class GeneratorBase implements ConfigProvider
 {
 	/**
 	* @var Generator

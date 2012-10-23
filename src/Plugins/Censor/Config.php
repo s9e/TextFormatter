@@ -9,9 +9,9 @@ namespace s9e\TextFormatter\Plugins;
 
 use s9e\TextFormatter\Generator;
 use s9e\TextFormatter\Generator\Tag;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Plugins\GeneratorBase;
 
-class CensorConfig extends PluginConfig
+class CensorConfig extends GeneratorBase
 {
 	/**
 	* @var string Name of the tag used to mark censored words

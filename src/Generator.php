@@ -13,6 +13,7 @@ use s9e\TextFormatter\Generator\Collections\Collection;
 use s9e\TextFormatter\Generator\Collections\FilterCollection;
 use s9e\TextFormatter\Generator\Collections\PluginCollection;
 use s9e\TextFormatter\Generator\Collections\TagCollection;
+use s9e\TextFormatter\Generator\ConfigProvider;
 use s9e\TextFormatter\Generator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Generator\Helpers\RulesHelper;
 use s9e\TextFormatter\Generator\UrlConfig;
@@ -113,7 +114,7 @@ class Generator implements ConfigProvider
 	{
 		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 		{
-			return $this->loadPlugin($k);
+			return $this->plugins->get($k);
 		}
 
 		throw new RuntimeException("Undefined property '" . __CLASS__ . '::$' . $k . "'");

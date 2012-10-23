@@ -9,9 +9,9 @@ namespace s9e\TextFormatter\Plugins;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Plugins\GeneratorBase;
 
-class HTMLEntitiesConfig extends PluginConfig
+class HTMLEntitiesConfig extends GeneratorBase
 {
 	/**
 	* @var string Name of the tag used by this plugin

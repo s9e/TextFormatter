@@ -10,9 +10,9 @@ namespace s9e\TextFormatter\Plugins\RawHTML;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Plugins\PluginConfig;
+use s9e\TextFormatter\Plugins\GeneratorBase;
 
-class Config extends PluginConfig
+class Config extends GeneratorBase
 {
 	/**
 	* Flag used to allow unsafe elements such as <script> in allowElement()

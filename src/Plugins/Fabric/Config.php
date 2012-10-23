@@ -8,14 +8,14 @@
 namespace s9e\TextFormatter\Plugins;
 
 use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Plugins\GeneratorBase;
 
 /**
 * The Fabric plugin is a partial implementation of the Textile format.
 *
 * @link http://textile.thresholdstate.com/
 */
-class FabricConfig extends PluginConfig
+class FabricConfig extends GeneratorBase
 {
 	protected $tagsNeeded = array(
 		// imagesAndLinks

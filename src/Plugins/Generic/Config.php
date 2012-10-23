@@ -12,12 +12,12 @@ use InvalidArgumentException,
 	RuntimeException;
 use s9e\TextFormatter\Generator;
 use s9e\TextFormatter\JSParserGenerator;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Plugins\GeneratorBase;
 
 /**
 * NOTE: does not support duplicate named captures
 */
-class GenericConfig extends PluginConfig
+class GenericConfig extends GeneratorBase
 {
 	/**
 	* @var array Associative array of regexps. The keys are the corresponding tag names

@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Generator\Collections;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Generator\Plugins\PluginConfig;
+use s9e\TextFormatter\Generator\Plugins\GeneratorBase;
 
 class PluginCollection extends NormalizedCollection
 {
@@ -48,7 +48,7 @@ class PluginCollection extends NormalizedCollection
 	/**
 	* Create a plugin instance/ensure it implements the correct interface
 	*
-	* @param  mixed Either a class name or an object that implements PluginConfig
+	* @param  mixed Either a class name or an object that implements GeneratorBase
 	* @return void
 	*/
 	public function normalizeValue($value)
@@ -58,26 +58,26 @@ class PluginCollection extends NormalizedCollection
 			$value = new $value($this->generator);
 		}
 
-		if ($value instanceof PluginConfig)
+		if ($value instanceof GeneratorBase)
 		{
 			return $value;
 		}
 
-		throw new InvalidArgumentException('PluginCollection::normalizeValue() expects a class name or an object that implements s9e\\TextFormatter\\Generator\\Plugins\\Config');
+		throw new InvalidArgumentException('PluginCollection::normalizeValue() expects a class name or an object that implements s9e\\TextFormatter\\Generator\\Plugins\\GeneratorBase;');
 	}
 
 	/**
 	* Load a default plugin
 	*
-	* @param  string       $pluginName    Name of the plugin
-	* @param  array        $overrideProps Properties of the plugin will be overwritten with those
-	* @return PluginConfig
+	* @param  string $pluginName    Name of the plugin
+	* @param  array  $overrideProps Properties of the plugin will be overwritten with those
+	* @return GeneratorBase
 	*/
 	public function load($pluginName, array $overrideProps = array())
 	{
 		// Validate the plugin name / class
 		$pluginName = $this->normalizeKey($pluginName);
-		$className  = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Config';
+		$className  = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Generator;';
 
 		if (!class_exists($className))
 		{
