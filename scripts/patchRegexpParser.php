@@ -1,6 +1,8 @@
 #!/usr/bin/php
 <?php
 
+$filepath = __DIR__ . '/../src/Configurator/Helpers/RegexpParser.php';
+
 function generateRange($start, $end)
 {
 	$str = pcreChr($start);
@@ -163,7 +165,7 @@ $php = str_replace('  ', "\t\t", $php);
 
 $php = " = array(\n\t\t" . $php . "\n\t)";
 
-$file = file_get_contents(__DIR__ . '/../src/RegexpHelper.php');
+$file = file_get_contents($filepath);
 $file = preg_replace(
 	'#(protected static \\$unicodeProps)(.*?)\\n\\t\\);#s',
 	'$1;',
@@ -176,6 +178,6 @@ $file = str_replace(
 	$file
 );
 
-file_put_contents(__DIR__ . '/../src/RegexpHelper.php', $file);
+file_put_contents($filepath, $file);
 
 echo "Done.\n";
