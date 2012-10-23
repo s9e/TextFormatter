@@ -32,13 +32,13 @@ class JSParserGenerator
 		'#^(?:break|case|catch|continue|debugger|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|this|throw|try|typeof|var|void|while|with|class|enum|export|extends|import|super|implements|interface|let|package|private|protected|public|static|yield|char|float|int)$#D';
 
 	//==========================================================================
-	// Properties taken from ConfigBuilder
+	// Properties taken from Configurator
 	//==========================================================================
 
 	/**
-	* @var ConfigBuilder
+	* @var Configurator
 	*/
-	protected $cb;
+	protected $configurator;
 
 	/**
 	* @var string Template source
@@ -95,18 +95,18 @@ class JSParserGenerator
 	protected $src;
 
 	/**
-	* @param ConfigBuilder $cb
+	* @param Configurator $configurator
 	*/
-	public function __construct(ConfigBuilder $cb)
+	public function __construct(Configurator $configurator)
 	{
-		$this->cb  = $cb;
+		$this->configurator  = $configurator;
 		$this->tpl = file_get_contents(__DIR__ . '/TextFormatter.js');
 	}
 
 	/**
 	* Load and initialize everything that's needed for a compilation
 	*
-	* @param  array  $options Generator options
+	* @param  array  $options Configurator options
 	*/
 	protected function init(array $options)
 	{
@@ -126,10 +126,10 @@ class JSParserGenerator
 		);
 
 		$this->src     = $this->tpl;
-		$this->xsl     = $this->cb->getXSL($this->options['xslNamespacePrefix']);
-		$this->plugins = $this->cb->getJSPlugins();
+		$this->xsl     = $this->configurator->getXSL($this->options['xslNamespacePrefix']);
+		$this->plugins = $this->configurator->getJSPlugins();
 
-		$config = $this->cb->getParserConfig(true);
+		$config = $this->configurator->getParserConfig(true);
 
 		$this->tagsConfig  = $config['tags'];
 		$this->filters     = (isset($config['filters'])) ? $config['filters'] : array();
@@ -141,7 +141,7 @@ class JSParserGenerator
 	/**
 	* Generate and return the JS parser
 	*
-	* @param  array  $options Generator options
+	* @param  array  $options Configurator options
 	* @return string
 	*/
 	public function get(array $options = array())
@@ -771,7 +771,7 @@ class JSParserGenerator
 	{
 		$tagsConfig = $this->tagsConfig;
 
-		$rm = $this->cb->getRegexpHelper();
+		$rm = $this->configurator->getRegexpHelper();
 
 		foreach ($tagsConfig as $tagName => &$tagConfig)
 		{
@@ -1044,7 +1044,7 @@ class JSParserGenerator
 	*/
 	protected function encodeArray(array $arr, array $meta = array())
 	{
-		$rm = $this->cb->getRegexpHelper();
+		$rm = $this->configurator->getRegexpHelper();
 
 		$match = array();
 

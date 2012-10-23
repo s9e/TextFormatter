@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
-use s9e\TextFormatter\ConfigBuilder\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 
 class BBCodeCollection extends NormalizedCollection
 {

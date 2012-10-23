@@ -3,16 +3,16 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$cb = new s9e\TextFormatter\ConfigBuilder;
+$configurator = new s9e\TextFormatter\Configurator;
 
-$cb->BBCodes->addPredefinedBBCode('B');
-$cb->BBCodes->addPredefinedBBCode('I');
-$cb->BBCodes->addPredefinedBBCode('U');
-$cb->BBCodes->addPredefinedBBCode('S');
-$cb->BBCodes->addPredefinedBBCode('URL');
-$cb->BBCodes->addPredefinedBBCode('COLOR');
+$configurator->BBCodes->addPredefinedBBCode('B');
+$configurator->BBCodes->addPredefinedBBCode('I');
+$configurator->BBCodes->addPredefinedBBCode('U');
+$configurator->BBCodes->addPredefinedBBCode('S');
+$configurator->BBCodes->addPredefinedBBCode('URL');
+$configurator->BBCodes->addPredefinedBBCode('COLOR');
 
-$cb->BBCodes->addBBCode('LIST', array(
+$configurator->BBCodes->addBBCode('LIST', array(
 	'trimBefore'   => true,
 	'trimAfter'    => true,
 	'ltrimContent' => true,
@@ -22,7 +22,7 @@ $cb->BBCodes->addBBCode('LIST', array(
 	'template' => '<ul><xsl:apply-templates/></ul>'
 ));
 
-$cb->BBCodes->addBBCode('*', array(
+$configurator->BBCodes->addBBCode('*', array(
 	'trimBefore'   => true,
 	'trimAfter'    => true,
 	'ltrimContent' => true,
@@ -32,18 +32,18 @@ $cb->BBCodes->addBBCode('*', array(
 	'template' => '<li><xsl:apply-templates/></li>'
 ));
 
-$cb->BBCodes->addBBCode('CODE', array(
+$configurator->BBCodes->addBBCode('CODE', array(
 	'template' => '<code><xsl:apply-templates/></code>',
 	'defaultDescendantRule' => 'deny'
 ));
 
-$cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
+$configurator->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
-$cb->loadPlugin('Autolink');
+$configurator->loadPlugin('Autolink');
 
-$cb->addRulesFromHTML5Specs();
+$configurator->addRulesFromHTML5Specs();
 
-$jsParser = $cb->getJSParser(array(
+$jsParser = $configurator->getJSParser(array(
 	'compilationLevel'     => 'ADVANCED_OPTIMIZATIONS',
 	'setOptimizationHints' => true,
 	'unsafeMinification'   => true,

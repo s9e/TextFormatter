@@ -8,10 +8,10 @@
 namespace s9e\TextFormatter\Plugins;
 
 use DOMDocument;
-use s9e\TextFormatter\ConfigBuilder;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class EscaperConfig extends PluginConfig
+class EscaperConfig extends ConfiguratorBase
 {
 	/**
 	* @var string Name of the tag used by this plugin
@@ -20,7 +20,7 @@ class EscaperConfig extends PluginConfig
 
 	public function setUp()
 	{
-		$this->cb->addTag($this->tagName)->setOptions(array(
+		$this->configurator->addTag($this->tagName)->setOptions(array(
 			'defaultChildRule' => 'deny',
 			'defaultDescendantRule' => 'deny',
 			'template' => '<xsl:value-of select="substring(.,2)"/>'

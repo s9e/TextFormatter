@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\ConfigBuilder\Plugins\BBCodes;
+namespace s9e\TextFormatter\Tests\Configurator\Plugins\BBCodes;
 
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\ConfigBuilder\Items\Filter;
-use s9e\TextFormatter\ConfigBuilder\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\Filter;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\BBCodes\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey;
 use s9e\TextFormatter\Tests\Test;

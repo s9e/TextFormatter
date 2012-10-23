@@ -8,10 +8,10 @@
 namespace s9e\TextFormatter\Plugins;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\ConfigBuilder;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class HTMLEntitiesConfig extends PluginConfig
+class HTMLEntitiesConfig extends ConfiguratorBase
 {
 	/**
 	* @var string Name of the tag used by this plugin
@@ -30,9 +30,9 @@ class HTMLEntitiesConfig extends PluginConfig
 
 	public function setUp()
 	{
-		if (!$this->cb->tagExists($this->tagName))
+		if (!$this->configurator->tagExists($this->tagName))
 		{
-			$tag = $this->cb->addTag($this->tagName);
+			$tag = $this->configurator->addTag($this->tagName);
 			$tag->addAttribute($this->attrName);
 			$tag->setTemplate('<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
 		}

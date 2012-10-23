@@ -5,27 +5,31 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\Linebreaker;
 
-use s9e\TextFormatter\ConfigBuilder;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Plugins\PluginConfig;
 
-class LinebreakerConfig extends PluginConfig
+class Config extends PluginConfig
 {
+	/**
+	* @var string Regexp that matches newlines
+	*/
+	protected $regexp = '#\\r?\\n#';
+
+	/**
+	* Plugin's setup
+	*
+	* Will create a <BR/> tag if one does not exist
+	*
+	* @return void
+	*/
 	public function setUp()
 	{
-		if (!$this->cb->tagExists('BR'))
+		if (!isset($this->configurator->tags['BR']))
 		{
-			$this->cb->addTag('BR')->setOptions(array(
-				'defaultDescendantRule' => 'deny',
-				'template' => '<br/>'
-			));
+			$this->configurator->tags->add('BR')->defaultTemplate = '<br/>';
 		}
-	}
-
-	public function getConfig()
-	{
-		return array('regexp' => '#\\r?\\n#');
 	}
 
 	//==========================================================================
@@ -34,6 +38,6 @@ class LinebreakerConfig extends PluginConfig
 
 	public function getJSParser()
 	{
-		return file_get_contents(__DIR__ . '/LinebreakerParser.js');
+		return file_get_contents(__DIR__ . '/Parser.js');
 	}
 }

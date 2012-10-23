@@ -5,62 +5,62 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\Emoticons;
 
-use s9e\TextFormatter\ConfigBuilder;
-use s9e\TextFormatter\ConfigBuilder\RegexpHelper;
-use s9e\TextFormatter\ConfigBuilder\TemplateHelper;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use ArrayAccess;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Plugins\PluginConfig;
 
-class EmoticonsConfig extends PluginConfig
+class EmoticonsConfig extends PluginConfig implements ArrayAccess
 {
+	use CollectionProxy;
+
+	/**
+	* @var EmoticonCollection
+	*/
+	protected $collection;
+
+	/**
+	* @var Tag Tag used by this plugin
+	*/
+	protected $tag;
+
 	/**
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'E';
 
 	/**
-	* @var array
+	* Plugin's setup
+	*
+	* Will create the tag used by this plugin
 	*/
-	protected $emoticons = array();
-
 	public function setUp()
 	{
-		$this->cb->tags->add($this->tagName, array(
-			'defaultChildRule'      => 'deny',
-			'defaultDescendantRule' => 'deny'
-		));
-	}
-
-	/**
-	* Add an emoticon
-	*
-	* @param string $code     Emoticon code
-	* @param string $template Emoticon template, e.g. <img src="emot.png"/>
-	*/
-	public function addEmoticon($code, $template)
-	{
-		$this->emoticons[$code] = TemplateHelper::normalizeTemplate($template);
+		$this->tag = $this->configurator->tags->add($this->tagName);
 	}
 
 	/**
 	* @return array
 	*/
-	public function getConfig()
+	public function toConfig()
 	{
-		if (empty($this->emoticons))
+		if (empty($this->collection))
 		{
 			return false;
 		}
 
-		$rm = new RegexpHelper;
+		// Grab the emoticons from the collection
+		$codes = array_keys(iterator_to_array($this->collection));
 
 		// Non-anchored pattern, will benefit from the S modifier
-		$regexp = '#' . $rm->buildRegexpFromList(array_keys($this->emoticons)) . '#S';
+		$regexp = '/' . RegexpBuilder::fromList($codes) . '/S';
 
 		return array(
-			'tagName' => $this->tagName,
-			'regexp'  => $regexp
+			'regexp'  => $regexp,
+			'tagName' => $this->tagName
 		);
 	}
 
@@ -87,12 +87,12 @@ class EmoticonsConfig extends PluginConfig
 			{
 				if (strpos($code, "'") === false)
 				{
-					// :)  => <xsl:when test=".=':)'">
+					// :)  produces <xsl:when test=".=':)'">
 					$code = "'" . htmlspecialchars($code) . "'";
 				}
 				elseif (strpos($code, '"') === false)
 				{
-					// :') => <xsl:when test=".=&quot;:')&quot;">
+					// :') produces <xsl:when test=".=&quot;:')&quot;">
 					$code = '&quot;' . $code . '&quot;';
 				}
 				else

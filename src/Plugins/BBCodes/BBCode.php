@@ -7,10 +7,10 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
-use s9e\TextFormatter\ConfigBuilder\Collections\AttributeList;
-use s9e\TextFormatter\ConfigBuilder\Traits\Configurable;
-use s9e\TextFormatter\ConfigBuilder\Validators\AttributeName;
-use s9e\TextFormatter\ConfigBuilder\Validators\TagName;
+use s9e\TextFormatter\Configurator\Collections\AttributeList;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class BBCode
 {

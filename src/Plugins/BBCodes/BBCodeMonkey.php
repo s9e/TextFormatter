@@ -12,10 +12,10 @@ use DOMXPath;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\ConfigBuilder\Helpers\RegexpBuilder;
-use s9e\TextFormatter\ConfigBuilder\Items\Attribute;
-use s9e\TextFormatter\ConfigBuilder\Items\AttributePreprocessor;
-use s9e\TextFormatter\ConfigBuilder\Items\Tag;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Tag;
 
 abstract class BBCodeMonkey
 {
