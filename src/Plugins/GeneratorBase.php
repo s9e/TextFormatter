@@ -9,16 +9,16 @@ namespace s9e\TextFormatter\Plugins;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Generator\ConfigProvider;
-use s9e\TextFormatter\Generator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 
-abstract class GeneratorBase implements ConfigProvider
+abstract class ConfiguratorBase implements ConfigProvider
 {
 	/**
-	* @var Generator
+	* @var Configurator
 	*/
-	protected $generator;
+	protected $configurator;
 
 	/**
 	* @var integer Maximum amount of matches to process - used by the parser when running the global
@@ -34,10 +34,10 @@ abstract class GeneratorBase implements ConfigProvider
 	protected $regexpLimitAction = 'ignore';
 
 	/**
-	* @param Generator $generator
+	* @param Configurator $configurator
 	* @param array     $overrideProps Properties of the plugin will be overwritten with those
 	*/
-	final public function __construct(Generator $generator, array $overrideProps = array())
+	final public function __construct(Configurator $configurator, array $overrideProps = array())
 	{
 		foreach ($overrideProps as $k => $v)
 		{
@@ -53,7 +53,7 @@ abstract class GeneratorBase implements ConfigProvider
 			}
 		}
 
-		$this->generator = $generator;
+		$this->configurator = $configurator;
 		$this->setUp();
 	}
 
@@ -68,7 +68,7 @@ abstract class GeneratorBase implements ConfigProvider
 	public function toConfig()
 	{
 		$properties = get_object_vars($this);
-		unset($properties['generator']);
+		unset($properties['configurator']);
 
 		return ConfigHelper::toArray($properties);
 	}

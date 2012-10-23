@@ -3,51 +3,51 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$generator = new s9e\TextFormatter\Generator;
+$configurator = new s9e\TextFormatter\Configurator;
 
-$generator->disallowHost('*.example.com');
-$generator->setDefaultScheme('https');
+$configurator->disallowHost('*.example.com');
+$configurator->setDefaultScheme('https');
 
-$generator->BBCodes->addPredefinedBBCode('B');
-$generator->BBCodes->addPredefinedBBCode('I');
-$generator->BBCodes->addPredefinedBBCode('U');
-$generator->BBCodes->addPredefinedBBCode('S');
-$generator->BBCodes->addPredefinedBBCode('URL');
-$generator->BBCodes->addPredefinedBBCode('LIST');
-$generator->BBCodes->addPredefinedBBCode('COLOR');
-$generator->BBCodes->addPredefinedBBCode('YOUTUBE');
-$generator->BBCodes->addPredefinedBBCode('FLOAT');
+$configurator->BBCodes->addPredefinedBBCode('B');
+$configurator->BBCodes->addPredefinedBBCode('I');
+$configurator->BBCodes->addPredefinedBBCode('U');
+$configurator->BBCodes->addPredefinedBBCode('S');
+$configurator->BBCodes->addPredefinedBBCode('URL');
+$configurator->BBCodes->addPredefinedBBCode('LIST');
+$configurator->BBCodes->addPredefinedBBCode('COLOR');
+$configurator->BBCodes->addPredefinedBBCode('YOUTUBE');
+$configurator->BBCodes->addPredefinedBBCode('FLOAT');
 
-$generator->BBCodes->addBBCode('CODE', array(
+$configurator->BBCodes->addBBCode('CODE', array(
 	'template' => '<code><xsl:apply-templates/></code>',
 	'defaultDescendantRule' => 'deny'
 ));
 
-$generator->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
+$configurator->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 // Limit the number of emoticons to 7
-$generator->setTagOption('E', 'tagLimit', 7);
+$configurator->setTagOption('E', 'tagLimit', 7);
 
-$generator->Censor->addWord('apple', 'banana');
+$configurator->Censor->addWord('apple', 'banana');
 
-$generator->Generic->addReplacement(
+$configurator->Generic->addReplacement(
 	'/#(?<tag>[a-z0-9]+)/i',
 	'<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>'
 );
 
-$generator->RawHTML->allowElement('a');
-$generator->RawHTML->allowElement('b');
-$generator->RawHTML->allowAttribute('a', 'href');
-$generator->RawHTML->allowAttribute('a', 'title');
+$configurator->RawHTML->allowElement('a');
+$configurator->RawHTML->allowElement('b');
+$configurator->RawHTML->allowAttribute('a', 'href');
+$configurator->RawHTML->allowAttribute('a', 'title');
 
-$generator->loadPlugin('Autolink');
-$generator->loadPlugin('Escaper');
-$generator->loadPlugin('HTMLEntities')->disableEntity('&lt;');
-$generator->loadPlugin('Linebreaker');
-$generator->loadPlugin('WittyPants');
+$configurator->loadPlugin('Autolink');
+$configurator->loadPlugin('Escaper');
+$configurator->loadPlugin('HTMLEntities')->disableEntity('&lt;');
+$configurator->loadPlugin('Linebreaker');
+$configurator->loadPlugin('WittyPants');
 
-$generator->addRulesFromHTML5Specs();
+$configurator->addRulesFromHTML5Specs();
 
-$jsParser = $generator->getJSParser(array(
+$jsParser = $configurator->getJSParser(array(
 	'compilationLevel'          => 'ADVANCED_OPTIMIZATIONS',
 	'enableLivePreviewFastPath' => true,
 	'setOptimizationHints'      => true
@@ -157,8 +157,8 @@ The following plugins have been enabled:
 Additionally, in order to demonstrate some other features:
 
 [list=square]
-  [*][b]Generator::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]RawHTML[/b] as well: <a href="http://example.com">example.com</a>
-  [*][b]Generator::setDefaultScheme('https')[/b] --- schemeless URLs are allowed and they are treated as if their scheme was 'https'
+  [*][b]Configurator::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]RawHTML[/b] as well: <a href="http://example.com">example.com</a>
+  [*][b]Configurator::setDefaultScheme('https')[/b] --- schemeless URLs are allowed and they are treated as if their scheme was 'https'
   [*][b]HTMLEntitiesConfig::disableEntity()[/b] --- the HTML entity &amp;lt; is arbitrarily disabled
   [*]a YouTube video, at the right, keeps playing as you're editing the text [i](including its own tag!)[/i] to demonstrate the partial-update algorithm used to refresh the live preview
 [/list]
@@ -179,7 +179,7 @@ The parser/renderer used on this page page has been generated via [url=https://g
 	<div style="float:left;">
 		<form><?php
 
-			$plugins = $generator->getLoadedPlugins();
+			$plugins = $configurator->getLoadedPlugins();
 			ksort($plugins);
 
 			foreach ($plugins as $pluginName => $plugin)

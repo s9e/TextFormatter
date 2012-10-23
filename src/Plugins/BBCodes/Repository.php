@@ -11,7 +11,7 @@ use DOMDocument;
 use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Generator\Collections\NormalizeCollection;
+use s9e\TextFormatter\Configurator\Collections\NormalizeCollection;
 
 class Repository
 {

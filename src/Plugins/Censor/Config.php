@@ -7,11 +7,11 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Generator\Tag;
-use s9e\TextFormatter\Plugins\GeneratorBase;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Tag;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class CensorConfig extends GeneratorBase
+class CensorConfig extends ConfiguratorBase
 {
 	/**
 	* @var string Name of the tag used to mark censored words
@@ -40,7 +40,7 @@ class CensorConfig extends GeneratorBase
 
 	public function setUp()
 	{
-		if ($this->generator->tagExists($this->tagName))
+		if ($this->configurator->tagExists($this->tagName))
 		{
 			return;
 		}
@@ -49,7 +49,7 @@ class CensorConfig extends GeneratorBase
 			'defaultChildRule' => 'deny',
 			'defaultDescendantRule' => 'deny'
 		));
-		$this->generator->addTag($this->tagName, $tag);
+		$this->configurator->addTag($this->tagName, $tag);
 
 		$tag->addAttribute($this->attrName)->required = false;
 
@@ -98,7 +98,7 @@ class CensorConfig extends GeneratorBase
 			return false;
 		}
 
-		$regexp = $this->generator->getRegexpHelper()->buildRegexpFromList(
+		$regexp = $this->configurator->getRegexpHelper()->buildRegexpFromList(
 			$this->words,
 			array('specialChars' => array('*' => '\\pL*', '?' => '.?'))
 		);

@@ -3,16 +3,16 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$generator = new s9e\TextFormatter\Generator;
+$configurator = new s9e\TextFormatter\Configurator;
 
-$generator->BBCodes->addPredefinedBBCode('B');
-$generator->BBCodes->addPredefinedBBCode('I');
-$generator->BBCodes->addPredefinedBBCode('U');
-$generator->BBCodes->addPredefinedBBCode('S');
-$generator->BBCodes->addPredefinedBBCode('URL');
-$generator->BBCodes->addPredefinedBBCode('COLOR');
+$configurator->BBCodes->addPredefinedBBCode('B');
+$configurator->BBCodes->addPredefinedBBCode('I');
+$configurator->BBCodes->addPredefinedBBCode('U');
+$configurator->BBCodes->addPredefinedBBCode('S');
+$configurator->BBCodes->addPredefinedBBCode('URL');
+$configurator->BBCodes->addPredefinedBBCode('COLOR');
 
-$generator->BBCodes->addBBCode('LIST', array(
+$configurator->BBCodes->addBBCode('LIST', array(
 	'trimBefore'   => true,
 	'trimAfter'    => true,
 	'ltrimContent' => true,
@@ -22,7 +22,7 @@ $generator->BBCodes->addBBCode('LIST', array(
 	'template' => '<ul><xsl:apply-templates/></ul>'
 ));
 
-$generator->BBCodes->addBBCode('*', array(
+$configurator->BBCodes->addBBCode('*', array(
 	'trimBefore'   => true,
 	'trimAfter'    => true,
 	'ltrimContent' => true,
@@ -32,18 +32,18 @@ $generator->BBCodes->addBBCode('*', array(
 	'template' => '<li><xsl:apply-templates/></li>'
 ));
 
-$generator->BBCodes->addBBCode('CODE', array(
+$configurator->BBCodes->addBBCode('CODE', array(
 	'template' => '<code><xsl:apply-templates/></code>',
 	'defaultDescendantRule' => 'deny'
 ));
 
-$generator->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
+$configurator->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 
-$generator->loadPlugin('Autolink');
+$configurator->loadPlugin('Autolink');
 
-$generator->addRulesFromHTML5Specs();
+$configurator->addRulesFromHTML5Specs();
 
-$jsParser = $generator->getJSParser(array(
+$jsParser = $configurator->getJSParser(array(
 	'compilationLevel'     => 'ADVANCED_OPTIMIZATIONS',
 	'setOptimizationHints' => true,
 	'unsafeMinification'   => true,

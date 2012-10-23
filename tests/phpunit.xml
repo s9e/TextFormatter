@@ -26,89 +26,89 @@
 	<testsuites>
 		<testsuite name="TextFormatter">
 			<!-- Test the base classes and traits first -->
-			<file>Generator/Collections/CollectionTest.php</file>
-			<file>Generator/Collections/NormalizedCollectionTest.php</file>
-			<file>Generator/Collections/NormalizedListTest.php</file>
-			<file>Generator/Traits/CollectionProxyTest.php</file>
-			<file>Generator/Traits/ConfigurableTest.php</file>
+			<file>Configurator/Collections/CollectionTest.php</file>
+			<file>Configurator/Collections/NormalizedCollectionTest.php</file>
+			<file>Configurator/Collections/NormalizedListTest.php</file>
+			<file>Configurator/Traits/CollectionProxyTest.php</file>
+			<file>Configurator/Traits/ConfigurableTest.php</file>
 
-			<file>Generator/Collections/AttributeCollectionTest.php</file>
-			<file>Generator/Collections/AttributeListTest.php</file>
-			<file>Generator/Collections/AttributePreprocessorCollectionTest.php</file>
-			<file>Generator/Collections/FilterChainTest.php</file>
-			<file>Generator/Collections/RulesetTest.php</file>
-			<file>Generator/Collections/TagCollectionTest.php</file>
-			<file>Generator/Collections/TemplatesetTest.php</file>
-			<file>Generator/Helpers/ConfigHelperTest.php</file>
-			<file>Generator/Helpers/HTML5/TemplateForensicsTest.php</file>
-			<!-- RulesGenerator depends on TemplateForensics -->
-			<file>Generator/Helpers/HTML5/RulesGeneratorTest.php</file>
-			<file>Generator/Helpers/RegexpBuilderTest.php</file>
-			<file>Generator/Helpers/RegexpParserTest.php</file>
-			<file>Generator/Helpers/RulesHelperTest.php</file>
-			<file>Generator/Helpers/StylesheetHelperTest.php</file>
-			<file>Generator/Helpers/TemplateCheckerTest.php</file>
-			<file>Generator/Helpers/TemplateHelperTest.php</file>
-			<file>Generator/Helpers/TemplateOptimizerTest.php</file>
-			<file>Generator/Items/AttributeTest.php</file>
-			<file>Generator/Items/AttributePreprocessorTest.php</file>
-			<file>Generator/Items/CallbackTemplateTest.php</file>
-			<file>Generator/Items/TagTest.php</file>
-			<file>Generator/UrlConfigTest.php</file>
-			<file>Generator/Validators/AttributeNameTest.php</file>
-			<file>Generator/Validators/TagNameTest.php</file>
+			<file>Configurator/Collections/AttributeCollectionTest.php</file>
+			<file>Configurator/Collections/AttributeListTest.php</file>
+			<file>Configurator/Collections/AttributePreprocessorCollectionTest.php</file>
+			<file>Configurator/Collections/FilterChainTest.php</file>
+			<file>Configurator/Collections/RulesetTest.php</file>
+			<file>Configurator/Collections/TagCollectionTest.php</file>
+			<file>Configurator/Collections/TemplatesetTest.php</file>
+			<file>Configurator/Helpers/ConfigHelperTest.php</file>
+			<file>Configurator/Helpers/HTML5/TemplateForensicsTest.php</file>
+			<!-- RulesConfigurator depends on TemplateForensics -->
+			<file>Configurator/Helpers/HTML5/RulesConfiguratorTest.php</file>
+			<file>Configurator/Helpers/RegexpBuilderTest.php</file>
+			<file>Configurator/Helpers/RegexpParserTest.php</file>
+			<file>Configurator/Helpers/RulesHelperTest.php</file>
+			<file>Configurator/Helpers/StylesheetHelperTest.php</file>
+			<file>Configurator/Helpers/TemplateCheckerTest.php</file>
+			<file>Configurator/Helpers/TemplateHelperTest.php</file>
+			<file>Configurator/Helpers/TemplateOptimizerTest.php</file>
+			<file>Configurator/Items/AttributeTest.php</file>
+			<file>Configurator/Items/AttributePreprocessorTest.php</file>
+			<file>Configurator/Items/CallbackTemplateTest.php</file>
+			<file>Configurator/Items/TagTest.php</file>
+			<file>Configurator/UrlConfigTest.php</file>
+			<file>Configurator/Validators/AttributeNameTest.php</file>
+			<file>Configurator/Validators/TagNameTest.php</file>
 
-			<file>Plugins/GeneratorBaseTest.php</file>
+			<file>Plugins/ConfiguratorBaseTest.php</file>
 			<file>Plugins/BBCodes/BBCodeTest.php</file>
 			<file>Plugins/BBCodes/BBCodeCollectionTest.php</file>
 			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
 			<file>Plugins/BBCodes/RepositoryTest.php</file>
 			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
-			<file>Plugins/Emoticons/GeneratorTest.php</file>
-			<file>Plugins/RawHTML/GeneratorTest.php</file>
+			<file>Plugins/Emoticons/ConfiguratorTest.php</file>
+			<file>Plugins/RawHTML/ConfiguratorTest.php</file>
 		</testsuite>
 	</testsuites>
 
 	<filter>
 		<whitelist>
-			<file>../src/Generator/Collections/AttributeCollection.php</file>
-			<file>../src/Generator/Collections/AttributeList.php</file>
-			<file>../src/Generator/Collections/AttributePreprocessorCollection.php</file>
-			<file>../src/Generator/Collections/Collection.php</file>
-			<file>../src/Generator/Collections/FilterChain.php</file>
-			<file>../src/Generator/Collections/NormalizedCollection.php</file>
-			<file>../src/Generator/Collections/NormalizedList.php</file>
-			<file>../src/Generator/Collections/Ruleset.php</file>
-			<file>../src/Generator/Collections/TagCollection.php</file>
-			<file>../src/Generator/Collections/Templateset.php</file>
-			<file>../src/Generator/Helpers/ConfigHelper.php</file>
-			<file>../src/Generator/Helpers/HTML5/RulesGenerator.php</file>
-			<file>../src/Generator/Helpers/HTML5/TemplateForensics.php</file>
-			<file>../src/Generator/Helpers/RegexpBuilder.php</file>
-			<file>../src/Generator/Helpers/RegexpParser.php</file>
-			<file>../src/Generator/Helpers/RulesHelper.php</file>
-			<file>../src/Generator/Helpers/StylesheetHelper.php</file>
-			<file>../src/Generator/Helpers/TemplateChecker.php</file>
-			<file>../src/Generator/Helpers/TemplateHelper.php</file>
-			<file>../src/Generator/Helpers/TemplateOptimizer.php</file>
-			<file>../src/Generator/Items/Attribute.php</file>
-			<file>../src/Generator/Items/AttributePreprocessor.php</file>
-			<file>../src/Generator/Items/CallbackTemplate.php</file>
-			<file>../src/Generator/Items/Tag.php</file>
-			<file>../src/Generator/Traits/CollectionProxy.php</file>
-			<file>../src/Generator/Traits/Configurable.php</file>
-			<file>../src/Generator/UrlConfig.php</file>
-			<file>../src/Generator/Validators/AttributeName.php</file>
-			<file>../src/Generator/Validators/TagName.php</file>
+			<file>../src/Configurator/Collections/AttributeCollection.php</file>
+			<file>../src/Configurator/Collections/AttributeList.php</file>
+			<file>../src/Configurator/Collections/AttributePreprocessorCollection.php</file>
+			<file>../src/Configurator/Collections/Collection.php</file>
+			<file>../src/Configurator/Collections/FilterChain.php</file>
+			<file>../src/Configurator/Collections/NormalizedCollection.php</file>
+			<file>../src/Configurator/Collections/NormalizedList.php</file>
+			<file>../src/Configurator/Collections/Ruleset.php</file>
+			<file>../src/Configurator/Collections/TagCollection.php</file>
+			<file>../src/Configurator/Collections/Templateset.php</file>
+			<file>../src/Configurator/Helpers/ConfigHelper.php</file>
+			<file>../src/Configurator/Helpers/HTML5/RulesConfigurator.php</file>
+			<file>../src/Configurator/Helpers/HTML5/TemplateForensics.php</file>
+			<file>../src/Configurator/Helpers/RegexpBuilder.php</file>
+			<file>../src/Configurator/Helpers/RegexpParser.php</file>
+			<file>../src/Configurator/Helpers/RulesHelper.php</file>
+			<file>../src/Configurator/Helpers/StylesheetHelper.php</file>
+			<file>../src/Configurator/Helpers/TemplateChecker.php</file>
+			<file>../src/Configurator/Helpers/TemplateHelper.php</file>
+			<file>../src/Configurator/Helpers/TemplateOptimizer.php</file>
+			<file>../src/Configurator/Items/Attribute.php</file>
+			<file>../src/Configurator/Items/AttributePreprocessor.php</file>
+			<file>../src/Configurator/Items/CallbackTemplate.php</file>
+			<file>../src/Configurator/Items/Tag.php</file>
+			<file>../src/Configurator/Traits/CollectionProxy.php</file>
+			<file>../src/Configurator/Traits/Configurable.php</file>
+			<file>../src/Configurator/UrlConfig.php</file>
+			<file>../src/Configurator/Validators/AttributeName.php</file>
+			<file>../src/Configurator/Validators/TagName.php</file>
 
-			<file>../src/Plugins/GeneratorBase.php</file>
+			<file>../src/Plugins/ConfiguratorBase.php</file>
 			<file>../src/Plugins/BBCodes/BBCode.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeCollection.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>
 			<file>../src/Plugins/BBCodes/Repository.php</file>
 			<file>../src/Plugins/Emoticons/EmoticonCollection.php</file>
-			<file>../src/Plugins/Emoticons/Generator.php</file>
-			<file>../src/Plugins/RawHTML/Generator.php</file>
+			<file>../src/Plugins/Emoticons/Configurator.php</file>
+			<file>../src/Plugins/RawHTML/Configurator.php</file>
 		</whitelist>
 	</filter>
 </phpunit>

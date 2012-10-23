@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\Linebreaker;
 
-use s9e\TextFormatter\Generator;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\PluginConfig;
 
 class Config extends PluginConfig
@@ -26,9 +26,9 @@ class Config extends PluginConfig
 	*/
 	public function setUp()
 	{
-		if (!isset($this->generator->tags['BR']))
+		if (!isset($this->configurator->tags['BR']))
 		{
-			$this->generator->tags->add('BR')->defaultTemplate = '<br/>';
+			$this->configurator->tags->add('BR')->defaultTemplate = '<br/>';
 		}
 	}
 

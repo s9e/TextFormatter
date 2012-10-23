@@ -10,14 +10,14 @@ namespace s9e\TextFormatter\Plugins;
 use Exception;
 use InvalidArgumentException,
 	RuntimeException;
-use s9e\TextFormatter\Generator;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\JSParserGenerator;
-use s9e\TextFormatter\Plugins\GeneratorBase;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
 * NOTE: does not support duplicate named captures
 */
-class GenericConfig extends GeneratorBase
+class GenericConfig extends ConfiguratorBase
 {
 	/**
 	* @var array Associative array of regexps. The keys are the corresponding tag names
@@ -58,7 +58,7 @@ class GenericConfig extends GeneratorBase
 		/**
 		* Parse the regexp, and generate an attribute for every named capture
 		*/
-		$regexpInfo = $this->generator->getRegexpHelper()->parseRegexp($regexp);
+		$regexpInfo = $this->configurator->getRegexpHelper()->parseRegexp($regexp);
 
 		$attrs = array();
 
@@ -100,7 +100,7 @@ class GenericConfig extends GeneratorBase
 		/**
 		* Create the tag
 		*/
-		$this->generator->addTag($tagName, $tagOptions);
+		$this->configurator->addTag($tagName, $tagOptions);
 
 		/**
 		* Finally, record the replacement
@@ -132,7 +132,7 @@ class GenericConfig extends GeneratorBase
 		{
 			foreach ($config['regexp'] as $tagName => $regexp)
 			{
-				$this->generator->getRegexpHelper()->pcreToJs($regexp, $config['regexpMap'][$tagName]);
+				$this->configurator->getRegexpHelper()->pcreToJs($regexp, $config['regexpMap'][$tagName]);
 			}
 		}
 

@@ -618,7 +618,7 @@ foreach ($arr as $elName => $elValues)
 
 $php = substr($php, 0, -1);
 
-$filepath = __DIR__ . '/../src/Generator/Helpers/HTML5/TemplateForensics.php';
+$filepath = __DIR__ . '/../src/Configurator/Helpers/HTML5/TemplateForensics.php';
 $file = file_get_contents($filepath);
 
 if (!preg_match('#(?<=static \\$htmlElements = array\\()(.*?)(?=\\n\\t\\);)#s', $file, $m, PREG_OFFSET_CAPTURE))

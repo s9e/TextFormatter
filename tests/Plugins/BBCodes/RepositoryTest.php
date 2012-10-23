@@ -1,6 +1,6 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Generator\Plugins\BBCodes;
+namespace s9e\TextFormatter\Tests\Configurator\Plugins\BBCodes;
 
 use DOMDocument;
 use s9e\TextFormatter\Plugins\BBCodes\BBCode;

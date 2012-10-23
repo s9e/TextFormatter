@@ -162,7 +162,7 @@ class Parser
 	/**
 	* Constructor
 	*
-	* @param  array $config The config array returned by Generator->getParserConfig()
+	* @param  array $config The config array returned by Configurator->getParserConfig()
 	* @return void
 	*/
 	public function __construct(array $config)

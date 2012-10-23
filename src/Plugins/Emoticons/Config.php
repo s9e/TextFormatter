@@ -8,9 +8,9 @@
 namespace s9e\TextFormatter\Plugins\Emoticons;
 
 use ArrayAccess;
-use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Generator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Generator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\PluginConfig;
 
 class EmoticonsConfig extends PluginConfig implements ArrayAccess
@@ -39,7 +39,7 @@ class EmoticonsConfig extends PluginConfig implements ArrayAccess
 	*/
 	public function setUp()
 	{
-		$this->tag = $this->generator->tags->add($this->tagName);
+		$this->tag = $this->configurator->tags->add($this->tagName);
 	}
 
 	/**

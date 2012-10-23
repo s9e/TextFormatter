@@ -7,15 +7,15 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Plugins\GeneratorBase;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
 * The Fabric plugin is a partial implementation of the Textile format.
 *
 * @link http://textile.thresholdstate.com/
 */
-class FabricConfig extends GeneratorBase
+class FabricConfig extends ConfiguratorBase
 {
 	protected $tagsNeeded = array(
 		// imagesAndLinks
@@ -49,17 +49,17 @@ class FabricConfig extends GeneratorBase
 	{
 		foreach ($this->tagsNeeded as $tagName)
 		{
-			if (!$this->generator->tagExists($tagName))
+			if (!$this->configurator->tagExists($tagName))
 			{
-				$this->generator->predefinedTags->{'add' . $tagName}();
+				$this->configurator->predefinedTags->{'add' . $tagName}();
 			}
 		}
 	}
 
 	public function getConfig()
 	{
-		$rm        = $this->generator->getRegexpHelper();
-		$urlRegexp = $rm->buildRegexpFromList($this->generator->getAllowedSchemes()) . '://\\S+';
+		$rm        = $this->configurator->getRegexpHelper();
+		$urlRegexp = $rm->buildRegexpFromList($this->configurator->getAllowedSchemes()) . '://\\S+';
 
 		$blockModifiers = array(
 			'[\\#\\*]+ ',

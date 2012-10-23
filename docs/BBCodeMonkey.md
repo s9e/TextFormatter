@@ -48,7 +48,7 @@ In addition to the token's type, any number of filters can be added to the `filt
 
 Only the filters listed in BBCodeMonkey::$allowedFilters can be used, for obvious security reasons. `[foo={TEXT;preFilter=eval}]` will throw an exception.
 
-Other attribute options are supported, see `s9e\TextFormatter\Generator\Items\Attribute`:
+Other attribute options are supported, see `s9e\TextFormatter\Configurator\Items\Attribute`:
 
     [font face={SIMPLETEXT;defaultValue=Arial}]
 

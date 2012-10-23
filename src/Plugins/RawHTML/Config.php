@@ -9,10 +9,10 @@ namespace s9e\TextFormatter\Plugins\RawHTML;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Plugins\GeneratorBase;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class Config extends GeneratorBase
+class Config extends ConfiguratorBase
 {
 	/**
 	* Flag used to allow unsafe elements such as <script> in allowElement()
@@ -109,9 +109,9 @@ class Config extends GeneratorBase
 			throw new RuntimeException('<' . $elName . '> elements are unsafe and are disabled by default. Please use the ' . __CLASS__ . '::ALLOW_UNSAFE_ELEMENTS flag to bypass this security measure');
 		}
 
-		if (!$this->generator->tagExists($tagName))
+		if (!$this->configurator->tagExists($tagName))
 		{
-			$this->generator->addTag($tagName);
+			$this->configurator->addTag($tagName);
 		}
 
 		$this->tags[$elName] = 1;
@@ -139,7 +139,7 @@ class Config extends GeneratorBase
 			}
 		}
 
-		if (!$this->generator->attributeExists($tagName, $attrName))
+		if (!$this->configurator->attributeExists($tagName, $attrName))
 		{
 			$attrConf = array('required' => false);
 
@@ -148,7 +148,7 @@ class Config extends GeneratorBase
 				$attrConf['filter'] = $this->attrFilter[$attrName];
 			}
 
-			$this->generator->addAttribute(
+			$this->configurator->addAttribute(
 				$tagName,
 				$attrName,
 				$attrConf
@@ -237,7 +237,7 @@ class Config extends GeneratorBase
 		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
 		*/
 		$attrRegexp = '[a-z][a-z\\-]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
-		$tagRegexp  = $this->generator->getRegexpHelper()->buildRegexpFromList(array_keys($this->tags));
+		$tagRegexp  = $this->configurator->getRegexpHelper()->buildRegexpFromList(array_keys($this->tags));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
 		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*+)/?';

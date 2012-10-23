@@ -7,7 +7,7 @@ use ReflectionMethod;
 use RuntimeException;
 use stdClass;
 use s9e\TextFormatter\Callback;
-use s9e\TextFormatter\Generator;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\JSParserGenerator;
 
 abstract class Test extends \PHPUnit_Framework_TestCase
@@ -16,17 +16,17 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	{
 		switch ($k)
 		{
-			case 'generator':
-				return $this->generator = new Generator;
+			case 'configurator':
+				return $this->configurator = new Configurator;
 
 			case 'parser':
-				return $this->parser = $this->generator->getParser();
+				return $this->parser = $this->configurator->getParser();
 
 			case 'renderer':
-				return $this->renderer = $this->generator->getRenderer();
+				return $this->renderer = $this->configurator->getRenderer();
 
 			case 'jspg':
-				return $this->jspg = new JSParserGenerator($this->generator);
+				return $this->jspg = new JSParserGenerator($this->configurator);
 
 			default:
 				throw new RuntimeException("Bad __get('$k')");

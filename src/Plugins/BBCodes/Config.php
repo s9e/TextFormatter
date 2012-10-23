@@ -9,8 +9,8 @@ namespace s9e\TextFormatter\Plugins\BBCodes;
 
 use ArrayAccess;
 use InvalidArgumentException;
-use s9e\TextFormatter\Generator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Generator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\PluginConfig;
 
 class Config extends PluginConfig implements ArrayAccess
@@ -62,7 +62,7 @@ class Config extends PluginConfig implements ArrayAccess
 		$tag    = $config['tag'];
 
 		$this->items->add($bbcodeName, $bbcode);
-		$this->generator->tags->add($bbcode->tagName, $tag);
+		$this->configurator->tags->add($bbcode->tagName, $tag);
 
 		return $bbcode;
 	}

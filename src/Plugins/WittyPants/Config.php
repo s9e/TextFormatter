@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Plugins\GeneratorBase;
+use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
 * This plugin combines some of the functionalities found in SmartyPants and Textile.
@@ -16,7 +16,7 @@ use s9e\TextFormatter\Plugins\GeneratorBase;
 * @link http://daringfireball.net/projects/smartypants/
 * @link http://textile.thresholdstate.com/
 */
-class WittyPantsConfig extends GeneratorBase
+class WittyPantsConfig extends ConfiguratorBase
 {
 	/**
 	* @var string Name of the tag used to mark the text to replace
@@ -30,7 +30,7 @@ class WittyPantsConfig extends GeneratorBase
 
 	public function setUp()
 	{
-		if (!$this->generator->tagExists($this->tagName))
+		if (!$this->configurator->tagExists($this->tagName))
 		{
 			/**
 			* @todo replace individual "quotation*" tags with a template that renders both quotation
@@ -38,7 +38,7 @@ class WittyPantsConfig extends GeneratorBase
 			*       tags, e.g. WPS and WPD for singletons and doubles, so that we can remove the
 			*       "requires" option from parsed tags
 			*/
-			$tag = $this->generator->addTag($this->tagName);
+			$tag = $this->configurator->addTag($this->tagName);
 			$tag->addAttribute($this->attrName);
 			$tag->setTemplate('<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
 		}

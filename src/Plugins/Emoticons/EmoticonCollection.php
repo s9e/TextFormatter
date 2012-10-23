@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins\Emoticons;
 
-use s9e\TextFormatter\Generator\Collections\NormalizedCollection;
-use s9e\TextFormatter\Generator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
 class EmoticonCollection extends NormalizedCollection
 {

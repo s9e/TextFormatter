@@ -7,8 +7,8 @@ class Test {}
 
 foreach (array('AttributeName', 'TagName')  as $type)
 {
-	$filepath = __DIR__ . '/../tests/Generator/Validators/' . $type . 'Test.php';
-	$class    = 's9e\\TextFormatter\\Tests\\Generator\\Validators\\' . $type . 'Test';
+	$filepath = __DIR__ . '/../tests/Configurator/Validators/' . $type . 'Test.php';
+	$class    = 's9e\\TextFormatter\\Tests\\Configurator\\Validators\\' . $type . 'Test';
 
 	include $filepath;
 
