@@ -17,7 +17,7 @@ use s9e\TextFormatter\Generator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Generator\Helpers\RulesHelper;
 use s9e\TextFormatter\Generator\UrlConfig;
 
-class Generator
+class Generator implements ConfigProvider
 {
 	/**
 	* @var FilterCollection Custom filters
@@ -54,7 +54,9 @@ class Generator
 	}
 
 	/**
-	* {@inheritdoc}
+	* Generate and return the complete config array
+	*
+	* @return array
 	*/
 	public function toConfig()
 	{
