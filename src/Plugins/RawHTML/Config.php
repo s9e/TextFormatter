@@ -5,14 +5,14 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\RawHTML;
 
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Plugins\PluginConfig;
 
-class RawHTMLConfig extends PluginConfig
+class Config extends PluginConfig
 {
 	/**
 	* Flag used to allow unsafe elements such as <script> in allowElement()
@@ -27,12 +27,7 @@ class RawHTMLConfig extends PluginConfig
 	/**
 	* @var string Namespace prefix of the tags produced by this plugin's parser
 	*/
-	protected $namespacePrefix = 'html';
-
-	/**
-	* @var string Namespace URI of the tags produced by this plugin's parser
-	*/
-	protected $namespaceURI = 'http://www.w3.org/1999/xhtml';
+	protected $prefix = 'html';
 
 	/**
 	* @var string Catch-all XSL, used to render all tags in the html namespace
@@ -88,16 +83,13 @@ class RawHTMLConfig extends PluginConfig
 
 	public function setUp()
 	{
-		if ($this->namespacePrefix !== 'html')
+		if ($this->prefix !== 'html')
 		{
 			/**
 			* Not terribly reliable but should work in all but the most peculiar of cases
 			*/
 			$this->xsl = str_replace('="html:', '="' . $this->namespacePrefix . ':', $this->xsl);
 		}
-
-		$this->generator->registerNamespace($this->namespacePrefix, $this->namespaceURI);
-		$this->generator->addXSL($this->xsl);
 	}
 
 	/**

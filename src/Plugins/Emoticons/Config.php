@@ -18,6 +18,11 @@ class EmoticonsConfig extends PluginConfig implements ArrayAccess
 	use CollectionProxy;
 
 	/**
+	* @var EmoticonCollection
+	*/
+	protected $collection;
+
+	/**
 	* @var Tag Tag used by this plugin
 	*/
 	protected $tag;
@@ -26,11 +31,6 @@ class EmoticonsConfig extends PluginConfig implements ArrayAccess
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'E';
-
-	/**
-	* @var EmoticonCollection
-	*/
-	protected $emoticons;
 
 	/**
 	* Plugin's setup
@@ -59,8 +59,8 @@ class EmoticonsConfig extends PluginConfig implements ArrayAccess
 		$regexp = '/' . RegexpBuilder::fromList($codes) . '/S';
 
 		return array(
-			'tagName' => $this->tagName,
-			'regexp'  => $regexp
+			'regexp'  => $regexp,
+			'tagName' => $this->tagName
 		);
 	}
 

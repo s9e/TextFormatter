@@ -8,8 +8,9 @@
 namespace s9e\TextFormatter\Generator\Collections;
 
 use InvalidArgumentException;
+use RuntimeException;
 use s9e\TextFormatter\Generator;
-use s9e\TextFormatter\Generator\Plugins\Config as PluginConfig;
+use s9e\TextFormatter\Generator\Plugins\PluginConfig;
 
 class PluginCollection extends NormalizedCollection
 {

@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Generator\Collections\Collection;
 use s9e\TextFormatter\Generator\Collections\FilterCollection;
+use s9e\TextFormatter\Generator\Collections\PluginCollection;
 use s9e\TextFormatter\Generator\Collections\TagCollection;
 use s9e\TextFormatter\Generator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Generator\Helpers\RulesHelper;
@@ -47,7 +48,7 @@ class Generator
 	public function __construct()
 	{
 		$this->tags      = new TagCollection;
-		$this->plugins   = new PluginCollection;
+		$this->plugins   = new PluginCollection($this);
 		$this->filters   = new FilterCollection;
 		$this->urlConfig = new UrlConfig;
 	}

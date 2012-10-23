@@ -43,7 +43,7 @@ abstract class PluginConfig implements ConfigProvider
 		{
 			$methodName = 'set' . ucfirst($k);
 
-			if (method_exists($this, $methodName)
+			if (method_exists($this, $methodName))
 			{
 				$this->$methodName($v);
 			}
@@ -68,7 +68,7 @@ abstract class PluginConfig implements ConfigProvider
 	public function toConfig()
 	{
 		$properties = get_object_vars($this);
-		unset($properties['generator'])
+		unset($properties['generator']);
 
 		return ConfigHelper::toArray($properties);
 	}
