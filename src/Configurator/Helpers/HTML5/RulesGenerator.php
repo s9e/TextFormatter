@@ -12,7 +12,7 @@ use DOMXPath;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
-abstract class RulesConfigurator
+abstract class RulesGenerator
 {
 	/**
 	* Generate rules based on HTML5 content models

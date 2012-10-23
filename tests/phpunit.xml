@@ -15,14 +15,6 @@
 		<log type="testdox-text" target="../docs/testdox.txt" />
 	</logging>
 
-	<groups>
-		<include>
-			<group>__nogroup__</group>
-			<group>functional</group>
-			<group>internals</group>
-		</include>
-	</groups>
-
 	<testsuites>
 		<testsuite name="TextFormatter">
 			<!-- Test the base classes and traits first -->
@@ -41,8 +33,8 @@
 			<file>Configurator/Collections/TemplatesetTest.php</file>
 			<file>Configurator/Helpers/ConfigHelperTest.php</file>
 			<file>Configurator/Helpers/HTML5/TemplateForensicsTest.php</file>
-			<!-- RulesConfigurator depends on TemplateForensics -->
-			<file>Configurator/Helpers/HTML5/RulesConfiguratorTest.php</file>
+			<!-- RulesGenerator depends on TemplateForensics -->
+			<file>Configurator/Helpers/HTML5/RulesGeneratorTest.php</file>
 			<file>Configurator/Helpers/RegexpBuilderTest.php</file>
 			<file>Configurator/Helpers/RegexpParserTest.php</file>
 			<file>Configurator/Helpers/RulesHelperTest.php</file>
@@ -82,7 +74,7 @@
 			<file>../src/Configurator/Collections/TagCollection.php</file>
 			<file>../src/Configurator/Collections/Templateset.php</file>
 			<file>../src/Configurator/Helpers/ConfigHelper.php</file>
-			<file>../src/Configurator/Helpers/HTML5/RulesConfigurator.php</file>
+			<file>../src/Configurator/Helpers/HTML5/RulesGenerator.php</file>
 			<file>../src/Configurator/Helpers/HTML5/TemplateForensics.php</file>
 			<file>../src/Configurator/Helpers/RegexpBuilder.php</file>
 			<file>../src/Configurator/Helpers/RegexpParser.php</file>

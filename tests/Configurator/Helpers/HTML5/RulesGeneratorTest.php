@@ -4,12 +4,12 @@ namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
-use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesConfigurator;
+use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Helpers\HTML5\RulesConfigurator
+* @covers s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator
 */
-class RulesConfiguratorTest extends Test
+class RulesGeneratorTest extends Test
 {
 	/**
 	* @testdox <div> has an allowChild rule for <div> and <span>
@@ -27,7 +27,7 @@ class RulesConfiguratorTest extends Test
 					'allowChild' => array('DIV', 'SPAN')
 				)
 			),
-			RulesConfigurator::getRules($tags)
+			RulesGenerator::getRules($tags)
 		);
 	}
 
@@ -47,7 +47,7 @@ class RulesConfiguratorTest extends Test
 					'denyChild' => array('DIV')
 				)
 			),
-			RulesConfigurator::getRules($tags)
+			RulesGenerator::getRules($tags)
 		);
 	}
 
@@ -66,7 +66,7 @@ class RulesConfiguratorTest extends Test
 					'denyDescendant' => array('A')
 				)
 			),
-			RulesConfigurator::getRules($tags)
+			RulesGenerator::getRules($tags)
 		);
 	}
 
@@ -85,7 +85,7 @@ class RulesConfiguratorTest extends Test
 					'denyChild' => array('A')
 				)
 			),
-			RulesConfigurator::getRules($tags)
+			RulesGenerator::getRules($tags)
 		);
 	}
 
@@ -104,7 +104,7 @@ class RulesConfiguratorTest extends Test
 					'autoReopen' => true
 				)
 			),
-			RulesConfigurator::getRules($tags)
+			RulesGenerator::getRules($tags)
 		);
 	}
 
@@ -123,7 +123,7 @@ class RulesConfiguratorTest extends Test
 					'isTransparent' => true
 				)
 			),
-			RulesConfigurator::getRules($tags)
+			RulesGenerator::getRules($tags)
 		);
 	}
 
@@ -142,7 +142,7 @@ class RulesConfiguratorTest extends Test
 					'disallowAtRoot' => true
 				)
 			),
-			RulesConfigurator::getRules($tags)
+			RulesGenerator::getRules($tags)
 		);
 	}
 
@@ -162,7 +162,7 @@ class RulesConfiguratorTest extends Test
 					'disallowAtRoot' => null
 				)
 			),
-			RulesConfigurator::getRules($tags, array('parentHTML' => '<ul>'))
+			RulesGenerator::getRules($tags, array('parentHTML' => '<ul>'))
 		);
 	}
 
@@ -182,7 +182,7 @@ class RulesConfiguratorTest extends Test
 					'allowChild' => array('SPAN')
 				)
 			),
-			RulesConfigurator::getRules($tags, array('parentHTML' => '<a>'))
+			RulesGenerator::getRules($tags, array('parentHTML' => '<a>'))
 		);
 	}
 }

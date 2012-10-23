@@ -12,7 +12,7 @@ use SimpleXMLElement;
 use s9e\TextFormatter\Configurator\Collections\Templateset;
 
 /**
-* This class helps the RulesConfigurator by analyzing a given template in order to answer questions
+* This class helps the RulesGenerator by analyzing a given template in order to answer questions
 * such as "can this tag be a child/descendant of that other tag?" and others related to the HTML5
 * content model.
 *

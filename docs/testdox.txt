@@ -217,6 +217,17 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] "Hi" should not be reopened automatically
  [x] A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically
 
+s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
+ [x] <div> has an allowChild rule for <div> and <span>
+ [x] <span> has a denyChild rule for <div>
+ [x] <a> has a denyDescendant rule for <a>
+ [x] <a> has a denyChild rule for <a>
+ [x] Generates an autoReopen rule for <b>
+ [x] Generates an isTransparent rule for <a>
+ [x] <li> has a disallowAtRoot rule if parentHTML is not specified
+ [x] <li> does not have a disallowAtRoot rule if parentHTML is <ul>
+ [x] <span> has a denyChild rule for <a> if parentHTML is <a>
+
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
  [x] fromList(['foo', 'foo']) returns 'foo'
