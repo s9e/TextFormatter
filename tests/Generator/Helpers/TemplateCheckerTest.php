@@ -14,11 +14,11 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox checkUnsafe() throws an exception on invalid XML
 	* @expectedException s9e\TextFormatter\Generator\Exceptions\InvalidXslException
-	* @expectedExceptionMessage Premature end of data in tag template
+	* @expectedExceptionMessage Premature end of data in tag
 	*/
 	public function testUnsafeInvalidXML()
 	{
-		TemplateChecker::checkUnsafe('<x>');
+		TemplateChecker::checkUnsafe('<xsl:copy>');
 	}
 
 	/**
@@ -47,7 +47,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFFEA6CBF()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<embed src="{@url}"/>',
 			"The template contains a 'embed' element with a non-fixed URL"
 		);
@@ -58,7 +58,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeA56D0DBC()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<iframe src="{@url}"/>',
 			"The template contains a 'iframe' element with a non-fixed URL"
 		);
@@ -69,7 +69,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe200651EB()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<object data="{@url}"/>',
 			"The template contains a 'object' element with a non-fixed URL"
 		);
@@ -80,7 +80,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFDDAD6DB()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script src="{@url}"/>',
 			"The template contains a 'script' element with a non-fixed URL"
 		);
@@ -91,7 +91,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD10CCD19()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script src="{@url}"/>',
 			"The template contains a 'script' element with a non-fixed URL",
 			array('attributes' => array('id' => array('filterChain' => array('#url'))))
@@ -103,7 +103,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6C30CE54()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script src="https://gist.github.com/{@id}.js"/>',
 			NULL,
 			array('attributes' => array('id' => array('filterChain' => array('#number'))))
@@ -115,7 +115,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe22C6B53D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<SCRIPT src="{@url}"/>',
 			"The template contains a 'script' element with a non-fixed URL"
 		);
@@ -126,7 +126,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe4C83A1C2()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script SRC="{@url}"/>',
 			"The template contains a 'script' element with a non-fixed URL"
 		);
@@ -137,7 +137,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe0852D347()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></script>',
 			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
 		);
@@ -148,7 +148,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe28F6AB47()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:attribute name="SRC"><xsl:value-of select="@url"/></xsl:attribute></script>',
 			"The template contains a 'script' element with a dynamically generated 'SRC' attribute that does not use a fixed URL"
 		);
@@ -159,7 +159,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe1DFD8BFD()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:attribute name="src">http://example.org/legit.js</xsl:attribute></script>'
 		);
 	}
@@ -169,7 +169,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe10493F7B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/></xsl:attribute></script>'
 		);
 	}
@@ -179,7 +179,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2B0FC129()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/></xsl:attribute></script>',
 			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
 		);
@@ -190,7 +190,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe8127EF08()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>',
 			"The template contains a dynamically generated 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
 		);
@@ -201,7 +201,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC08FCE07()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>',
 			"The template contains a dynamically generated 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
 		);
@@ -212,7 +212,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCCAC3746()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b disable-output-escaping="1"/>',
 			"The template contains a 'disable-output-escaping' attribute"
 		);
@@ -223,7 +223,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe60753852()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:copy/>',
 			"Cannot assess the safety of an 'xsl:copy' element"
 		);
@@ -234,7 +234,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC19FCB6D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:copy-of select="@onclick"/></b>',
 			"Undefined attribute 'onclick'"
 		);
@@ -245,7 +245,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE26527B5()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:copy-of select=" @ onclick "/></b>',
 			"Undefined attribute 'onclick'"
 		);
@@ -256,7 +256,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe990F4294()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:copy-of select="@title"/></b>'
 		);
 	}
@@ -266,7 +266,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe358E72E5()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:copy-of select=" @ title "/></b>'
 		);
 	}
@@ -276,7 +276,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE6B9D02C()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a><xsl:copy-of select="@href"/></a>',
 			"Attribute 'href' is not properly filtered to be used in URL",
 			array('attributes' => array('href' => array()))
@@ -288,7 +288,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFE9871D1()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a><xsl:copy-of select="@href"/></a>',
 			NULL,
 			array('attributes' => array('href' => array('filterChain' => array('#url'))))
@@ -300,7 +300,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC8E8CC43()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:copy-of select="script"/>',
 			"Cannot assess 'xsl:copy-of' select expression 'script' to be safe"
 		);
@@ -311,7 +311,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe10D2139E()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:copy-of select=" script "/>',
 			"Cannot assess 'xsl:copy-of' select expression 'script' to be safe"
 		);
@@ -322,7 +322,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe1BDDD975()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:copy-of select="parent::*"/>',
 			"Cannot assess 'xsl:copy-of' select expression 'parent::*' to be safe"
 		);
@@ -333,7 +333,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe87044075()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:apply-templates/></script>',
 			"A 'script' element lets unfiltered data through"
 		);
@@ -344,7 +344,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC968EED0()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:apply-templates select="st"/></script>',
 			"Cannot assess the safety of 'xsl:apply-templates' select expression 'st'"
 		);
@@ -355,7 +355,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCC87BEB3()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:if test="1"><xsl:apply-templates/></xsl:if></script>',
 			"A 'script' element lets unfiltered data through"
 		);
@@ -366,7 +366,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5D562F28()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="st"/></script>',
 			"Cannot assess the safety of XPath expression 'st'"
 		);
@@ -377,7 +377,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeAA242A38()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			"Undefined attribute 'foo'"
 		);
@@ -388,7 +388,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeBD7323B9()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			"Attribute 'foo' is not properly filtered to be used in JS",
 			array('attributes' => array('foo' => array()))
@@ -400,7 +400,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe648A7C72()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></script>',
 			"Attribute 'foo' is not properly filtered to be used in JS",
 			array('attributes' => array('foo' => array()))
@@ -412,7 +412,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD7E78277()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:element name="script"><xsl:value-of select="@foo"/></xsl:element>',
 			"Attribute 'foo' is not properly filtered to be used in JS",
 			array('attributes' => array('foo' => array()))
@@ -424,7 +424,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF7D14089()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:element name="SCRIPT"><xsl:value-of select="@foo"/></xsl:element>',
 			"Attribute 'foo' is not properly filtered to be used in JS",
 			array('attributes' => array('foo' => array()))
@@ -436,7 +436,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeA9307816()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>',
 			"Cannot evaluate context node due to 'xsl:for-each'",
 			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
@@ -448,7 +448,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6638EC01()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
@@ -460,7 +460,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe80E31E96()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -472,7 +472,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe3684D9D3()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
@@ -484,7 +484,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe3E82294D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -496,7 +496,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe66FA78F6()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -508,7 +508,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeBEC2826B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -520,7 +520,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe58430C01()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -532,7 +532,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe196B1007()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -544,7 +544,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF128A882()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -556,7 +556,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe585E44A6()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -568,7 +568,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe61A72488()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<script><xsl:value-of select="@foo"/></script>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
@@ -580,7 +580,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9332F4DA()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:apply-templates/></style>',
 			"A 'style' element lets unfiltered data through"
 		);
@@ -591,7 +591,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE7A11344()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:apply-templates select="st"/></style>',
 			"Cannot assess the safety of 'xsl:apply-templates' select expression 'st'"
 		);
@@ -602,7 +602,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe0F7C3E8F()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:if test="1"><xsl:apply-templates/></xsl:if></style>',
 			"A 'style' element lets unfiltered data through"
 		);
@@ -613,7 +613,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF4114812()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="st"/></style>',
 			"Cannot assess the safety of XPath expression 'st'"
 		);
@@ -624,7 +624,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFD7FAE5C()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			"Undefined attribute 'foo'"
 		);
@@ -635,7 +635,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2BEA39BA()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			"Attribute 'foo' is not properly filtered to be used in CSS",
 			array('attributes' => array('foo' => array()))
@@ -647,7 +647,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe489BADA7()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></style>',
 			"Attribute 'foo' is not properly filtered to be used in CSS",
 			array('attributes' => array('foo' => array()))
@@ -659,7 +659,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFC0D6B8F()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:element name="style"><xsl:value-of select="@foo"/></xsl:element>',
 			"Attribute 'foo' is not properly filtered to be used in CSS",
 			array('attributes' => array('foo' => array()))
@@ -671,7 +671,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9092B290()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:element name="STYLE"><xsl:value-of select="@foo"/></xsl:element>',
 			"Attribute 'foo' is not properly filtered to be used in CSS",
 			array('attributes' => array('foo' => array()))
@@ -683,7 +683,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD5AD8427()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>',
 			"Cannot evaluate context node due to 'xsl:for-each'",
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -695,7 +695,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeA85C9010()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -707,7 +707,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe70646A8D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -719,7 +719,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe11E4EDA4()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -731,7 +731,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeBF9EE081()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -743,7 +743,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5B459886()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#color'))))
@@ -755,7 +755,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe57DD5804()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -767,7 +767,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5C239743()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -779,7 +779,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe8D374457()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<style><xsl:value-of select="@foo"/></style>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
@@ -791,7 +791,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe95E78AB4()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xsl:element name="{FOO}"><xsl:apply-templates/></xsl:element>',
 			"Cannot assess 'xsl:element' name '{FOO}'"
 		);
@@ -802,7 +802,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCC20E4F6()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
 			"A dynamically generated 'onclick' attribute lets unfiltered data through"
 		);
@@ -813,7 +813,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe31C90A06()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>',
 			"A dynamically generated 'ONCLICK' attribute lets unfiltered data through"
 		);
@@ -824,7 +824,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6519C7B2()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
 			"A dynamically generated 'onclick' attribute lets unfiltered data through"
 		);
@@ -835,7 +835,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF4D2CDD1()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>',
 			"Undefined attribute 'foo'"
 		);
@@ -846,7 +846,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCF6CEF14()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>',
 			"Undefined attribute 'foo'"
 		);
@@ -857,7 +857,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe7A1C2C9E()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			"Undefined attribute 'foo'"
 		);
@@ -868,7 +868,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe3DB3E070()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b ONCLICK="{@foo}"/>',
 			"Undefined attribute 'foo'"
 		);
@@ -879,7 +879,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCFE3D31C()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in CSS",
 			array('attributes' => array('foo' => array()))
@@ -891,7 +891,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe0A9E5F7B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -903,7 +903,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD2A6A5E6()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -915,7 +915,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCB2697BB()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -927,7 +927,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe324C2F0E()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -939,7 +939,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD6975709()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#color'))))
@@ -951,7 +951,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeDA0F978B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -963,7 +963,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe21A9DB3D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -975,7 +975,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6C246491()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b style="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
@@ -987,7 +987,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF82217B5()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in JS",
 			array('attributes' => array('foo' => array()))
@@ -999,7 +999,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeDAE45009()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
@@ -1011,7 +1011,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe8E844A18()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -1023,7 +1023,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC7200790()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
@@ -1035,7 +1035,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCF26F70E()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -1047,7 +1047,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe47C79FE4()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -1059,7 +1059,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9FFF6579()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -1071,7 +1071,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeABDB40AE()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -1083,7 +1083,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5FF13632()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -1095,7 +1095,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeB7B28EB7()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -1107,7 +1107,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe0EAB1AA3()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -1119,7 +1119,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeDD7B9880()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onclick="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
@@ -1131,7 +1131,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe55C38875()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in JS",
 			array('attributes' => array('foo' => array()))
@@ -1143,7 +1143,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe613418C4()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
@@ -1155,7 +1155,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6BEA245D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -1167,7 +1167,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCBFD1A6C()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
@@ -1179,7 +1179,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC3FBEAF2()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -1191,7 +1191,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCC5BC677()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -1203,7 +1203,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe14633CEA()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -1215,7 +1215,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC2561E09()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -1227,7 +1227,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe172A8D27()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -1239,7 +1239,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFF6935A2()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -1251,7 +1251,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe633E25F3()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -1263,7 +1263,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe66ABD04D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b onanything="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
@@ -1275,7 +1275,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe4545A54D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -1287,7 +1287,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD213C6F9()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -1299,7 +1299,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe71AB45CE()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -1311,7 +1311,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF536BBFC()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -1323,7 +1323,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5C18A403()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -1335,7 +1335,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2D0E4161()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -1347,7 +1347,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeB80529DC()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -1359,7 +1359,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE1E9F84B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -1371,7 +1371,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe09AA40CE()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -1383,7 +1383,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe27CCCBF5()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -1395,7 +1395,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe4BB1ACC7()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -1407,7 +1407,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE946770E()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -1419,7 +1419,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD841BFC2()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -1431,7 +1431,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeB7F930C1()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -1443,7 +1443,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe210BF52A()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -1455,7 +1455,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6FC1CA5C()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -1467,7 +1467,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE02FAA46()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -1479,7 +1479,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF16BA892()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -1491,7 +1491,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe19281017()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -1503,7 +1503,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD8D323D5()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -1515,7 +1515,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe37A16260()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -1527,7 +1527,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe52EEA27B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -1539,7 +1539,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe358F4452()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -1551,7 +1551,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeAA86F794()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -1563,7 +1563,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE9DCC43A()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -1575,7 +1575,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe72BE0D09()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -1587,7 +1587,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFB3370FA()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -1599,7 +1599,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe33A74BEF()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -1611,7 +1611,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeDBE4F36A()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -1623,7 +1623,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF6A5E2B7()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -1635,7 +1635,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe8822BDBC()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -1647,7 +1647,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5CD442A0()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -1659,7 +1659,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeAF295914()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -1671,7 +1671,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC2547D2A()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -1683,7 +1683,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE6E582E8()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -1695,7 +1695,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe1A6C87B7()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -1707,7 +1707,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD7823CFB()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -1719,7 +1719,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe448CCA35()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -1731,7 +1731,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeACCF72B0()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -1743,7 +1743,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe90D4F2FC()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -1755,7 +1755,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFF6EB164()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -1767,7 +1767,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe56410B36()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -1779,7 +1779,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeA4AAC662()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -1791,7 +1791,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe8DB3BDCC()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -1803,7 +1803,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeDED7364B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -1815,7 +1815,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe558B4751()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -1827,7 +1827,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9EA49C76()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -1839,7 +1839,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD7CC1308()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -1851,7 +1851,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe3F8FAB8D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -1863,7 +1863,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC82FFE34()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -1875,7 +1875,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF2542B4A()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -1887,7 +1887,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe264FD1D8()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -1899,7 +1899,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeDC921C3D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -1911,7 +1911,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe211F359B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -1923,7 +1923,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCEA62160()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -1935,7 +1935,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF927CF06()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -1947,7 +1947,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6B07F4A9()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -1959,7 +1959,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC1557F25()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -1971,7 +1971,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2916C7A0()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -1983,7 +1983,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe8DE63B2D()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -1995,7 +1995,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe90D5A413()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -2007,7 +2007,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe3120DE12()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -2019,7 +2019,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeAF88A7CD()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -2031,7 +2031,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6541AB3E()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -2043,7 +2043,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9415F70C()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -2055,7 +2055,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeBD7951A3()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -2067,7 +2067,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCDFFFD50()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -2079,7 +2079,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe0592CD94()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -2091,7 +2091,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeEDD17511()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -2103,7 +2103,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe31447F85()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -2115,7 +2115,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF39CC4CF()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -2127,7 +2127,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe4F706364()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -2139,7 +2139,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe215C34A1()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -2151,7 +2151,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe7149BFB6()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -2163,7 +2163,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9D5D3010()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -2175,7 +2175,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeA971452B()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -2187,7 +2187,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2E88FE56()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -2199,7 +2199,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeEC121FA2()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -2211,7 +2211,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe0451A727()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -2223,7 +2223,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFE176ACE()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -2235,7 +2235,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2A2871AB()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			"Attribute 'foo' is not properly filtered to be used in URL",
 			array('attributes' => array('foo' => array()))
@@ -2247,7 +2247,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe22EF91DE()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
@@ -2259,7 +2259,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2009B6D1()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
@@ -2271,7 +2271,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe72F64F38()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
@@ -2283,7 +2283,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe944FB292()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
@@ -2295,7 +2295,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeAACEB5A5()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
@@ -2307,7 +2307,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe248BEF81()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
@@ -2319,7 +2319,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF4AF5BC4()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
@@ -2331,7 +2331,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe1CECE341()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
@@ -2343,7 +2343,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5ADE13E7()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
 			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
@@ -2355,18 +2355,14 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeA0040D8C()
 	{
-		$this->testCheckUnsafe(
+		$this->checkUnsafe(
 			'<b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>',
 			"Cannot assess 'xsl:attribute' name '{FOO}'"
 		);
 	}
 	// End of content generated by ../../../scripts/patchTemplateCheckerTest.php
 
-	/**
-	* @group dataProvider
-	* @dataProvider getUnsafeTemplatesTests
-	*/
-	public function testCheckUnsafe($template, $exceptionMsg = null, array $tagOptions = array())
+	protected function checkUnsafe($template, $exceptionMsg = null, array $tagOptions = array())
 	{
 		if (isset($exceptionMsg))
 		{

@@ -47,9 +47,8 @@
 			<file>Generator/Helpers/RegexpParserTest.php</file>
 			<file>Generator/Helpers/RulesHelperTest.php</file>
 			<file>Generator/Helpers/StylesheetHelperTest.php</file>
-			<!-- Other helpers depend on TemplateHelper -->
-			<file>Generator/Helpers/TemplateHelperTest.php</file>
 			<file>Generator/Helpers/TemplateCheckerTest.php</file>
+			<file>Generator/Helpers/TemplateHelperTest.php</file>
 			<file>Generator/Helpers/TemplateOptimizerTest.php</file>
 			<file>Generator/Items/AttributeTest.php</file>
 			<file>Generator/Items/AttributePreprocessorTest.php</file>

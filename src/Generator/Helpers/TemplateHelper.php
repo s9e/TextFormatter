@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Generator\Helpers;
 
 use DOMDocument;
+use DOMNode;
 use Exception;
 use s9e\TextFormatter\Generator\Exceptions\InvalidTemplateException;
 use s9e\TextFormatter\Generator\Exceptions\InvalidXslException;
@@ -16,14 +17,16 @@ use s9e\TextFormatter\Generator\Items\Tag;
 abstract class TemplateHelper
 {
 	/**
-	* 
+	* Normalize a template to a chunk of optimized, safe XSL
 	*
+	* @param  string $template
 	* @return void
 	*/
-	public function normalize($template, Tag $tag = null)
+	public static function normalize($template, Tag $tag = null)
 	{
-		$dom = self::loadTemplate($template);
-
+		// NOTE: technically, we should start by normalizing the template by loading it with
+		//       loadTemplate() but this operation is already done in TemplateOptimizer::optimize()
+		//       and there's no practical reason for doing it twice
 		$template = TemplateOptimizer::optimize($template);
 		TemplateChecker::checkUnsafe($template, $tag);
 
@@ -70,7 +73,7 @@ abstract class TemplateHelper
 		}
 
 		// Fall back to loading it inside a div, as HTML
-		$html = '<html><body><div id="' . $t . '">' . $template . '</div></body></html>';
+		$html = '<html><body><' . $t . '>' . $template . '</' . $t . '></body></html>';
 
 		$useErrors = libxml_use_internal_errors(true);
 		$success   = $dom->loadHTML($html);
@@ -84,14 +87,10 @@ abstract class TemplateHelper
 		}
 		// @codeCoverageIgnoreEnd
 
-		// Now dump the thing as XML and reload it to ensure we don't have to worry about internal
-		// shenanigans
-		$xml = $dom->saveXML($dom->getElementById($t));
+		// Now dump the thing as XML and reload it with the proper namespace declaration
+		$xml = self::innerXML($dom->getElementsByTagName($t)->item(0));
 
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		return $dom;
+		return self::loadTemplate($xml);
 	}
 
 	/**
@@ -104,8 +103,19 @@ abstract class TemplateHelper
 	*/
 	public static function saveTemplate(DOMDocument $dom)
 	{
+		return self::innerXML($dom->documentElement);
+	}
+
+	/**
+	* Get the XML content of a node
+	*
+	* @param  DOMNode $node
+	* @return string
+	*/
+	protected static function innerXML(DOMNode $node)
+	{
 		// Serialize the XML then remove the outer node
-		$xml = $dom->saveXML($dom->documentElement);
+		$xml = $node->ownerDocument->saveXML($node);
 
 		$pos = 1 + strpos($xml, '>');
 		$len = strrpos($xml, '<') - $pos;

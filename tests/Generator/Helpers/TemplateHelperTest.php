@@ -72,6 +72,20 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox loadTemplate() can load '<ul><li>one<li>two</ul>'
+	* @depends testLoadHTML
+	*/
+	public function testLoadHTMLInNamespace()
+	{
+		$html = '<ul><li>one<li>two</ul>';
+
+		$this->assertSame(
+			'http://www.w3.org/1999/XSL/Transform',
+			TemplateHelper::loadTemplate($html)->lookupNamespaceURI('xsl')
+		);
+	}
+
+	/**
 	* @testdox saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
 	*/
 	public function testSaveHTML()
@@ -91,5 +105,26 @@ class TemplateHelperTest extends Test
 	{
 		$xsl = '<xsl:value-of select="@foo">';
 		TemplateHelper::loadTemplate($xsl);
+	}
+
+	/**
+	* @testdox normalize() normalizes '<br>' to '<br/>'
+	*/
+	public function testNormalize()
+	{
+		$this->assertSame(
+			'<br/>',
+			TemplateHelper::normalize('<br>')
+		);
+	}
+
+	/**
+	* @testdox normalize() throws an exception on malformed XSL
+	* @expectedException s9e\TextFormatter\Generator\Exceptions\InvalidXslException
+	* @expectedExceptionMessage Premature end of data
+	*/
+	public function testNormalizeInvalid()
+	{
+		TemplateHelper::normalize('<xsl:value-of select="@foo">');
 	}
 }

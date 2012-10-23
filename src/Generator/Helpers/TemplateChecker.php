@@ -42,7 +42,7 @@ abstract class TemplateChecker
 			$tag = new Tag;
 		}
 
-		$DOMXPath = new DOMXPath(self::loadTemplate($template));
+		$DOMXPath = new DOMXPath(TemplateHelper::loadTemplate($template));
 
 		self::checkFixedSrcElements($DOMXPath);
 		self::checkDisableOutputEscaping($DOMXPath);
@@ -127,39 +127,6 @@ abstract class TemplateChecker
 				}
 			}
 		}
-	}
-
-	/**
-	* Load a template into a DOMDocument
-	*
-	* @throws s9e\TextFormatter\Generator\Exceptions\InvalidXslException
-	*
-	* @param  string $template Content of the template. A root node is not required
-	* @return DOMDocument
-	*/
-	protected static function loadTemplate($template)
-	{
-		// Put the template inside of a <xsl:template/> node
-		$xsl = '<?xml version="1.0" encoding="utf-8" ?>'
-		     . '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $template
-		     . '</xsl:template>';
-
-		// Enable libxml's internal errors while we load the template
-		$useInternalErrors = libxml_use_internal_errors(true);
-
-		$dom   = new DOMDocument;
-		$error = !$dom->loadXML($xsl);
-
-		// Restore the previous error mechanism
-		libxml_use_internal_errors($useInternalErrors);
-
-		if ($error)
-		{
-			throw new InvalidXslException(libxml_get_last_error()->message);
-		}
-
-		return $dom;
 	}
 
 	/**
@@ -390,6 +357,10 @@ abstract class TemplateChecker
 
 	/**
 	* Test whether the template contains a <?php tag
+	*
+	* NOTE: PHP tags have no effect in templates, they are removed on the remote chance of being
+	*       used as a vector of intrusion, for example if a template is saved in a publicly
+	*       accessible file that the webserver is somehow configured to process as PHP
 	*
 	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
 	*/

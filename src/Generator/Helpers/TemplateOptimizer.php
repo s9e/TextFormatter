@@ -30,7 +30,7 @@ abstract class TemplateOptimizer
 	*/
 	public static function optimize($template)
 	{
-		$tmp = self::loadTemplate($template);
+		$tmp = TemplateHelper::loadTemplate($template);
 
 		// Save single-space nodes then reload the template without whitespace
 		self::preserveSingleSpaces($tmp);
@@ -39,7 +39,7 @@ abstract class TemplateOptimizer
 		$dom->preserveWhiteSpace = false;
 		$dom->formatOutput = false;
 
-		// Note: for some reason, $tmp->normalizeDocument doesn't work
+		// Note: for some reason, $tmp->normalizeDocument() doesn't work
 		$dom->loadXML($tmp->saveXML());
 
 		self::normalizeSpaceInSelectAttributes($dom);
@@ -50,52 +50,7 @@ abstract class TemplateOptimizer
 		// Replace <xsl:text/> elements, which will restore single spaces to their original form
 		self::inlineTextElements($dom);
 
-		return self::saveTemplate($dom);
-	}
-
-	/**
-	* Load a template into a DOMDocument
-	*
-	* @param  string      $template Content of the template. A root node is not required
-	* @return DOMDocument
-	*/
-	protected static function loadTemplate($template)
-	{
-		// Put the template inside of a <xsl:template/> node
-		$xsl = '<?xml version="1.0" encoding="utf-8" ?>'
-		     . '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $template
-		     . '</xsl:template>';
-
-		// Enable libxml's internal errors while we load the template
-		$useInternalErrors = libxml_use_internal_errors(true);
-
-		$dom = new DOMDocument;
-		$error = !$dom->loadXML($xsl);
-
-		// Restore the previous error mechanism
-		libxml_use_internal_errors($useInternalErrors);
-
-		return ($error) ? libxml_get_last_error() : $dom;
-	}
-
-	/**
-	* Serialize a loaded template back into a string
-	*
-	* @param  DOMDocument $dom
-	* @return string
-	*/
-	protected static function saveTemplate(DOMDocument $dom)
-	{
-		// Serialize the XML then remove the outer node
-		$xml = $dom->saveXML($dom->documentElement);
-
-		$pos = 1 + strpos($xml, '>');
-		$len = strrpos($xml, '<') - $pos;
-
-		$xml = substr($xml, $pos, $len);
-
-		return $xml;
+		return TemplateHelper::saveTemplate($dom);
 	}
 
 	/**

@@ -101,7 +101,7 @@ foreach ($test->getUnsafeTemplatesTests() as $case)
 	      . $attributeInfo
 	      . ': ' . $template . "\n\t*/"
 	      . "\n\tpublic function testCheckUnsafe" . $hash . "()"
-	      . "\n\t{\n\t\t\$this->testCheckUnsafe("
+	      . "\n\t{\n\t\t\$this->checkUnsafe("
 	      . "\n\t\t\t" . format($case[0]);
 
 	if (isset($case[1]) || isset($case[2]))
