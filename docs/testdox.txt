@@ -772,3 +772,8 @@ s9e\TextFormatter\Tests\Generator\Plugins\BBCodes\Repository
  [x] Variables that are not replaced are left intact
  [x] Custom tagName is correctly set
 
+s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
+ [x] Normalizes HTML templates
+ [x] Throws an exception when an invalid template is set
+ [x] Throws an exception when an unsafe template is set
+

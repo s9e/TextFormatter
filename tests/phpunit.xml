@@ -62,6 +62,7 @@
 			<file>Plugins/BBCodes/BBCodeCollectionTest.php</file>
 			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
 			<file>Plugins/BBCodes/RepositoryTest.php</file>
+			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
 		</testsuite>
 	</testsuites>
 
@@ -101,6 +102,7 @@
 			<file>../src/Plugins/BBCodes/BBCodeCollection.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>
 			<file>../src/Plugins/BBCodes/Repository.php</file>
+			<file>../src/Plugins/Emoticons/EmoticonCollection.php</file>
 		</whitelist>
 	</filter>
 </phpunit>
