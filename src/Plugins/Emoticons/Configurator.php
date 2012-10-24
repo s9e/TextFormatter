@@ -11,9 +11,9 @@ use ArrayAccess;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
-use s9e\TextFormatter\Plugins\PluginConfig;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class EmoticonsConfig extends PluginConfig implements ArrayAccess
+class Configurator extends ConfiguratorBase implements ArrayAccess
 {
 	use CollectionProxy;
 

@@ -11,9 +11,9 @@ use ArrayAccess;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
-use s9e\TextFormatter\Plugins\PluginConfig;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class Config extends PluginConfig implements ArrayAccess
+class Configurator extends ConfiguratorBase implements ArrayAccess
 {
 	use CollectionProxy;
 

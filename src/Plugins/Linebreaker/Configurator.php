@@ -8,9 +8,9 @@
 namespace s9e\TextFormatter\Plugins\Linebreaker;
 
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Plugins\PluginConfig;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class Config extends PluginConfig
+class Configurator extends ConfiguratorBase
 {
 	/**
 	* @var string Regexp that matches newlines

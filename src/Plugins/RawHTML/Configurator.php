@@ -12,7 +12,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class Config extends ConfiguratorBase
+class Configurator extends ConfiguratorBase
 {
 	/**
 	* Flag used to allow unsafe elements such as <script> in allowElement()
