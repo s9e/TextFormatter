@@ -9,39 +9,29 @@ namespace s9e\TextFormatter\Plugins\RawHTML;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
-	/**
-	* Flag used to allow unsafe elements such as <script> in allowElement()
-	*/
-	const ALLOW_UNSAFE_ELEMENTS = 1;
-
-	/**
-	* Flag used to allow unsafe attributes such as "onmouseover" in allowAttribute()
-	*/
-	const ALLOW_UNSAFE_ATTRIBUTES = 2;
-
 	/**
 	* @var string Namespace prefix of the tags produced by this plugin's parser
 	*/
 	protected $prefix = 'html';
 
 	/**
-	* @var string Catch-all XSL, used to render all tags in the html namespace
+	* @var string Catch-all XSL, used to render all tags in the "html" namespace
 	*/
 	protected $xsl = '<xsl:template match="html:*"><xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element></xsl:template>';
 
 	/**
-	* @var array  Default attribute types of a few known attributes
+	* @var array  Default filter of a few known attributes
 	*
 	* It doesn't make much sense to try to declare every known HTML attribute here. Validation is
 	* not the purpose of this plugin. It does make sense however to declare URL attributes as such,
 	* so that they are subject to our constraints (disallowed hosts, etc...)
 	*/
-	protected $attrFilter = array(
+	protected $attributeFilters = array(
 		'action'     => '#url',
 		'cite'       => '#url',
 		'data'       => '#url',
@@ -81,6 +71,11 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected $tags = array();
 
+	/**
+	* Plugin's setup
+	*
+	* @return void
+	*/
 	public function setUp()
 	{
 		if ($this->prefix !== 'html')
@@ -88,30 +83,52 @@ class Configurator extends ConfiguratorBase
 			/**
 			* Not terribly reliable but should work in all but the most peculiar of cases
 			*/
-			$this->xsl = str_replace('="html:', '="' . $this->namespacePrefix . ':', $this->xsl);
+			$this->xsl = str_replace('="html:', '="' . $this->prefix . ':', $this->xsl);
 		}
 	}
 
 	/**
 	* Allow an HTML element to be used
 	*
-	* @param string  $elName
-	* @param integer $flags
+	* @param  string $elName
+	* @return void
 	*/
-	public function allowElement($elName, $flags = 0)
+	public function allowElement($elName)
 	{
-		$elName  = $this->normalizeElementName($elName, false);
-		$tagName = $this->namespacePrefix . ':' . $elName;
+		$this->_allowElement($elName, false);
+	}
 
-		if (!($flags & self::ALLOW_UNSAFE_ELEMENTS)
-		 && in_array($elName, $this->unsafeElements))
+	/**
+	* Allow an unsafe HTML element to be used
+	*
+	* @param  string $elName
+	* @return void
+	*/
+	public function allowUnsafeElement($elName)
+	{
+		$this->_allowElement($elName, true);
+	}
+
+	/**
+	* Allow a (potentially unsafe) HTML element to be used
+	*
+	* @param  string $elName
+	* @param  bool   $allowUnsafe
+	* @return void
+	*/
+	protected function _allowElement($elName, $allowUnsafe)
+	{
+		$elName  = $this->normalizeElementName($elName);
+		$tagName = $this->prefix . ':' . $elName;
+
+		if (!$allowUnsafe && in_array($elName, $this->unsafeElements))
 		{
-			throw new RuntimeException('<' . $elName . '> elements are unsafe and are disabled by default. Please use the ' . __CLASS__ . '::ALLOW_UNSAFE_ELEMENTS flag to bypass this security measure');
+			throw new RuntimeException("'" . $elName . "' elements are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeElement() to bypass this security measure');
 		}
 
-		if (!$this->configurator->tagExists($tagName))
+		if (!$this->configurator->tags->exists($tagName))
 		{
-			$this->configurator->addTag($tagName);
+			$this->configurator->tags->add($tagName);
 		}
 
 		$this->tags[$elName] = 1;
@@ -120,103 +137,102 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Allow an attribute to be used in an HTML element
 	*
-	* @param string  $elName
-	* @param string  $attrName
-	* @param integer $flags
+	* @param  string $elName
+	* @param  string $attrName
+	* @return void
 	*/
-	public function allowAttribute($elName, $attrName, $flags = 0)
+	public function allowAttribute($elName, $attrName)
 	{
-		$elName   = $this->normalizeElementName($elName, true);
-		$attrName = $this->normalizeAttributeName($attrName, true);
-		$tagName  = $this->namespacePrefix . ':' . $elName;
+		$this->_allowAttribute($elName, $attrName, false);
+	}
 
-		if (!($flags & self::ALLOW_UNSAFE_ATTRIBUTES))
+	/**
+	* Allow an unsafe attribute to be used in an HTML element
+	*
+	* @param  string $elName
+	* @param  string $attrName
+	* @return void
+	*/
+	public function allowUnsafeAttribute($elName, $attrName)
+	{
+		$this->_allowAttribute($elName, $attrName, true);
+	}
+
+	/**
+	* Allow a (potentially unsafe) attribute to be used in an HTML element
+	*
+	* @param  string $elName
+	* @param  string $attrName
+	* @param  bool   $allowUnsafe
+	* @return void
+	*/
+	protected function _allowAttribute($elName, $attrName, $allowUnsafe)
+	{
+		$elName   = $this->normalizeElementName($elName);
+		$attrName = $this->normalizeAttributeName($attrName);
+		$tagName  = $this->prefix . ':' . $elName;
+
+		if (!isset($this->tags[$elName]))
+		{
+			throw new RuntimeException("Element '" . $elName . "' has not been allowed");
+		}
+
+		if (!$allowUnsafe)
 		{
 			if (substr($attrName, 0, 2) === 'on'
 			 || in_array($attrName, $this->unsafeAttributes))
 			{
-				throw new RuntimeException("'" . $attrName . "' attributes are considered unsafe and are disabled by default. Please use the " . __CLASS__ . '::ALLOW_UNSAFE_ATTRIBUTES flag to bypass this security measure');
+				throw new RuntimeException("'" . $elName . "' elements are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeAttribute() to bypass this security measure');
 			}
 		}
 
-		if (!$this->configurator->attributeExists($tagName, $attrName))
+		$tag = $this->configurator->tags->get($tagName);
+		if (!isset($tag->attributes[$attrName]))
 		{
-			$attrConf = array('required' => false);
+			$attribute = $tag->attributes->add($attrName);
+			$attribute->required = false;
 
-			if (isset($this->attrFilter[$attrName]))
+			if (isset($this->attributeFilters[$attrName]))
 			{
-				$attrConf['filter'] = $this->attrFilter[$attrName];
+				$attribute->filterChain->append($this->attributeFilters[$attrName]);
 			}
-
-			$this->configurator->addAttribute(
-				$tagName,
-				$attrName,
-				$attrConf
-			);
 		}
-	}
-
-	/**
-	* Return whether a name could be a valid HTML5 element name
-	*
-	* Does not tell whether a name is the name of a valid HTML5 element, it only checks its syntax.
-	* Also, it might be slightly off as the HTML5 specs don't seem to require it to start with a
-	* letter but our implementation does.
-	*
-	* @link http://dev.w3.org/html5/spec/syntax.html#syntax-tag-name
-	*
-	* @param  string $elName
-	* @return bool
-	*/
-	protected function isValidElementName($elName)
-	{
-		return (bool) preg_match('#^[a-z][a-z0-9]*$#Di', $elName);
 	}
 
 	/**
 	* Validate and normalize an element name
 	*
+	* Accepts any name that would be valid, regardless of whether this element exists in HTML5.
+	* Might be slightly off as the HTML5 specs don't seem to require it to start with a letter but
+	* our implementation does.
+	*
+	* @link http://dev.w3.org/html5/spec/syntax.html#syntax-tag-name
+	*
 	* @param  string $elName    Original element name
 	* @param  bool   $mustExist If TRUE, throw an exception if the element is not allowed
 	* @return string            Normalized element name, in lowercase
 	*/
-	protected function normalizeElementName($elName, $mustExist = true)
+	protected function normalizeElementName($elName)
 	{
-		if (!$this->isValidElementName($elName))
+		if (!preg_match('#^[a-z][a-z0-9]*$#Di', $elName))
 		{
 			throw new InvalidArgumentException ("Invalid element name '" . $elName . "'");
 		}
 
-		$elName = strtolower($elName);
-
-		if ($mustExist && !isset($this->tags[$elName]))
-		{
-			throw new InvalidArgumentException("Element '" . $elName . "' does not exist");
-		}
-
-		return $elName;
-	}
-
-	/**
-	* Return whether a string is a valid attribute name
-	*
-	* @param  string $attrName
-	* @return bool
-	*/
-	public function isValidAttributeName($attrName)
-	{
-		return (bool) preg_match('#^[a-z][a-z\\-]*$#Di', $attrName);
+		return strtolower($elName);
 	}
 
 	/**
 	* Validate and normalize an attribute name
+	*
+	* More restrictive than the specs but allows all HTML5 attributes and more.
 	*
 	* @param  string $attrName Original attribute name
 	* @return string           Normalized attribute name, in lowercase
 	*/
 	protected function normalizeAttributeName($attrName)
 	{
-		if (!$this->isValidAttributeName($attrName))
+		if (!preg_match('#^[a-z]\\w*$#Di', $attrName))
 		{
 			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
 		}
@@ -224,7 +240,10 @@ class Configurator extends ConfiguratorBase
 		return strtolower($attrName);
 	}
 
-	public function getConfig()
+	/**
+	* Generate this plugin's config
+	*/
+	public function toConfig()
 	{
 		if (empty($this->tags))
 		{
@@ -237,7 +256,7 @@ class Configurator extends ConfiguratorBase
 		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
 		*/
 		$attrRegexp = '[a-z][a-z\\-]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
-		$tagRegexp  = $this->configurator->getRegexpHelper()->buildRegexpFromList(array_keys($this->tags));
+		$tagRegexp  = RegexpBuilder::fromList(array_keys($this->tags));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
 		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*+)/?';
@@ -245,24 +264,9 @@ class Configurator extends ConfiguratorBase
 		$regexp = '#<(?:' . $endTagRegexp . '|' . $startTagRegexp . ')\\s*>#i';
 
 		return array(
-			'regexp'     => $regexp,
 			'attrRegexp' => '#' . $attrRegexp . '#i',
-			'prefix'     => $this->namespacePrefix,
-			'uri'        => $this->namespaceURI
-		);
-	}
-
-	public function getJSParser()
-	{
-		return file_get_contents(__DIR__ . '/RawHTMLParser.js');
-	}
-
-	public function getJSConfigMeta()
-	{
-		return array(
-			'isGlobalRegexp' => array(
-				array('attrRegexp')
-			)
+			'prefix'     => $this->prefix,
+			'regexp'     => $regexp
 		);
 	}
 }

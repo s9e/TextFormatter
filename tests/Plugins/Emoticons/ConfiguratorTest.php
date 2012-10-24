@@ -20,6 +20,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Does not attempt to create a tag if it already exists
+	*/
+	public function testDoesNotCreateTag()
+	{
+		$tag = $this->configurator->tags->add('E');
+		$this->configurator->plugins->load('Emoticons');
+
+		$this->assertSame($tag, $this->configurator->tags->get('E'));
+	}
+
+	/**
 	* @testdox The name of the tag used can be changed through the "tagName" constructor option
 	*/
 	public function testCustomTagName()

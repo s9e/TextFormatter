@@ -26,6 +26,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Does not attempt to create a tag if it already exists
+	*/
+	public function testDoesNotCreateTag()
+	{
+		$tag = $this->configurator->tags->add('URL');
+		$this->configurator->plugins->load('Autolink');
+
+		$this->assertSame($tag, $this->configurator->tags->get('URL'));
+	}
+
+	/**
 	* @testdox The name of the tag used can be changed through the "tagName" constructor option
 	*/
 	public function testCustomTagName()

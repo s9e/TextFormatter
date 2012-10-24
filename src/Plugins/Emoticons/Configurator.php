@@ -39,7 +39,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 	public function setUp()
 	{
 		$this->collection = new EmoticonCollection;
-		$this->tag        = $this->configurator->tags->add($this->tagName);
+
+		$this->tag = (isset($this->configurator->tags[$this->tagName]))
+		           ? $this->configurator->tags->get($this->tagName)
+		           : $this->configurator->tags->add($this->tagName);
 	}
 
 	/**
