@@ -807,7 +807,6 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
  [x] Throws an exception when an unsafe template is set
 
 s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
- [x] toConfig() returns FALSE if no elements were allowed
  [x] allowElement('b') creates a tag named 'html:b'
  [x] allowElement('B') creates a tag named 'html:b'
  [x] The prefix can be customized at loading time through the 'prefix' property
@@ -822,4 +821,6 @@ s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] allowAttribute('span', 'onmouseover') allows the 'onmouseover' attribute on 'span' elements
  [x] allowElement('*invalid*') throws an exception
  [x] allowAttribute('b', '*invalid*') throws an exception
+ [x] toConfig() returns FALSE if no elements were allowed
+ [x] Generates a regexp for its config array
 

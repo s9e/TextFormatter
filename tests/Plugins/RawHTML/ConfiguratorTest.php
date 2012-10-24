@@ -11,15 +11,6 @@ use s9e\TextFormatter\Plugins\RawHTML\Configurator;
 class ConfiguratorTest extends Test
 {
 	/**
-	* @testdox toConfig() returns FALSE if no elements were allowed
-	*/
-	public function testFalseConfig()
-	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
-		$this->assertFalse($plugin->toConfig());
-	}
-
-	/**
 	* @testdox allowElement('b') creates a tag named 'html:b'
 	*/
 	public function testCreatesTags()
@@ -173,5 +164,25 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('RawHTML');
 		$plugin->allowElement('b');
 		$plugin->allowAttribute('b', '*invalid*');
+	}
+
+	/**
+	* @testdox toConfig() returns FALSE if no elements were allowed
+	*/
+	public function testFalseConfig()
+	{
+		$plugin = $this->configurator->plugins->load('RawHTML');
+		$this->assertFalse($plugin->toConfig());
+	}
+
+	/**
+	* @testdox Generates a regexp for its config array
+	*/
+	public function testToConfig()
+	{
+		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin->allowElement('b');
+
+		$this->assertArrayHasKey('regexp', $plugin->toConfig());
 	}
 }
