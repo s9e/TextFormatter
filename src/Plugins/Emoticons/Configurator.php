@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Plugins\Emoticons;
 
 use ArrayAccess;
-use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -39,7 +38,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 	*/
 	public function setUp()
 	{
-		$this->tag = $this->configurator->tags->add($this->tagName);
+		$this->collection = new EmoticonCollection;
+		$this->tag        = $this->configurator->tags->add($this->tagName);
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 	*/
 	public function toConfig()
 	{
-		if (empty($this->collection))
+		if (!count($this->collection))
 		{
 			return false;
 		}
@@ -126,14 +126,5 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
 
 		return $xsl;
-	}
-
-	//==========================================================================
-	// JS Parser stuff
-	//==========================================================================
-
-	public function getJSParser()
-	{
-		return file_get_contents(__DIR__ . '/EmoticonsParser.js');
 	}
 }

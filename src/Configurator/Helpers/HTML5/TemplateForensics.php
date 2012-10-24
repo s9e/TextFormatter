@@ -548,12 +548,6 @@ class TemplateForensics
 					// If the XPath condition is not() fulfilled...
 					if ($domXPath->evaluate('not(' . $xpath . ')', $domNode))
 					{
-						/**
-						* @todo hitting a weird segfault during code coverage if this block starts
-						*       with the $byteValue assignment
-						*/
-						$pleaseDontSegfault = 1;
-
 						// ...turn off the corresponding bit
 						$byteValue ^= $bitValue;
 

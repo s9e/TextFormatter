@@ -793,6 +793,12 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
  [x] Variables that are not replaced are left intact
  [x] Custom tagName is correctly set
 
+s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
+ [x] Automatically creates an "E" tag
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] toConfig() returns FALSE if no emoticons were set
+ [x] Generates a regexp for its config array
+
 s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
  [x] Normalizes HTML templates
  [x] Throws an exception when an invalid template is set
