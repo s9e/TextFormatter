@@ -821,4 +821,5 @@ s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] allowAttribute('span', 'style') throws an exception
  [x] allowAttribute('span', 'onmouseover') allows the 'onmouseover' attribute on 'span' elements
  [x] allowElement('*invalid*') throws an exception
+ [x] allowAttribute('b', '*invalid*') throws an exception
 

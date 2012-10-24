@@ -168,10 +168,10 @@ class ConfiguratorTest extends Test
 	* @testdox allowAttribute('b', '*invalid*') throws an exception
 	* @expectedException InvalidArgumentException invalid
 	*/
-/*	public function testInvalidAttributeName()
+	public function testInvalidAttributeName()
 	{
 		$plugin = $this->configurator->plugins->load('RawHTML');
 		$plugin->allowElement('b');
 		$plugin->allowAttribute('b', '*invalid*');
-	}*/
+	}
 }
