@@ -72,10 +72,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 	*
 	* @return string
 	*/
-	protected function getXSL()
+	public function getXSL()
 	{
 		$templates = array();
-		foreach ($this->emoticons as $code => $template)
+		foreach ($this->collection as $code => $template)
 		{
 			$templates[$template][] = $code;
 		}
@@ -127,6 +127,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 
 		// Finish it with an <xsl:otherwise> that displays the unknown codes as text
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
+		$xsl .= '</xsl:template>';
 
 		return $xsl;
 	}

@@ -798,6 +798,8 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Automatically creates an "E" tag
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] set(':)', '<img src="e.png"/>') creates a :) emoticon that maps to <img src="e.png"/>
+ [x] set(':)', '<img src="e.png">') creates a :) emoticon that maps to <img src="e.png"/>
  [x] toConfig() returns FALSE if no emoticons were set
  [x] Generates a regexp for its config array
 

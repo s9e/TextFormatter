@@ -67,6 +67,14 @@ abstract class ConfiguratorBase implements ConfigProvider
 	protected function setUp() {}
 
 	/**
+	* Return any extra XSL needed by this plugin
+	*/
+	public function getXSL()
+	{
+		return '';
+	}
+
+	/**
 	* @return array|bool This plugin's config, or FALSE to disable this plugin
 	*/
 	public function toConfig()

@@ -40,6 +40,34 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox set(':)', '<img src="e.png"/>') creates a :) emoticon that maps to <img src="e.png"/>
+	*/
+	public function testSetXSL()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->set(':)', '<img src="e.png"/>');
+
+		$xsl = $plugin->getXSL();
+
+		$this->assertContains(':)', $xsl);
+		$this->assertContains('<img src="e.png"/>', $xsl);
+	}
+
+	/**
+	* @testdox set(':)', '<img src="e.png">') creates a :) emoticon that maps to <img src="e.png"/>
+	*/
+	public function testSetHTML()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->set(':)', '<img src="e.png">');
+
+		$xsl = $plugin->getXSL();
+
+		$this->assertContains(':)', $xsl);
+		$this->assertContains('<img src="e.png"/>', $xsl);
+	}
+
+	/**
 	* @testdox toConfig() returns FALSE if no emoticons were set
 	*/
 	public function testFalseConfig()
