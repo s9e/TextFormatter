@@ -740,10 +740,23 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
 
-s9e\TextFormatter\Tests\Configurator\Items\Configurator
- [x] Automatically creates an URL tag
+s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
+ [x] Constructor overwrites properties with values passed as second argument
+ [x] Constructor calls setFoo() if 'foo' is being set
+ [x] An exception is thrown if an unknown property is being set by the constructor
 
-s9e\TextFormatter\Tests\Configurator\Plugins\BBCodes\BBCode
+s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
+ [x] Automatically creates an "URL" tag with an "url" attribute with a "#url" filter
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] Generates a regexp for its config array
+ [x] The regexp matches the URL in 'foo http://www.bar.com baz'
+ [x] The regexp matches the URL in 'FOO HTTP://WWW.BAR.COM BAZ'
+ [x] The regexp matches the URL in 'foo http://www.bar.com/index.php?arr[foo]=1 baz'
+ [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?foo=1] baz'
+ [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?arr[foo]=1] baz'
+
+s9e\TextFormatter\Tests\Plugins\BBCodes\BBCode
  [x] An array of options can be passed to the constructor
  [x] BBCode::normalizeName('*') returns '*'
  [x] BBCode::normalizeName('foo') returns 'FOO'
@@ -760,11 +773,11 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
  [x] get() normalizes the BBCode's name
  [x] set() normalizes the BBCode's name
 
-s9e\TextFormatter\Tests\Configurator\Plugins\BBCodes\BBCodeMonkey
+s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
 
-s9e\TextFormatter\Tests\Configurator\Plugins\BBCodes\Repository
+s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
  [x] __construct() accepts the path to an XML file as argument
  [x] __construct() accepts a DOMDocument as argument
  [x] __construct() throws an exception if passed anything else

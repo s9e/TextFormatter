@@ -35,7 +35,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 
 	/**
 	* @param Configurator $configurator
-	* @param array     $overrideProps Properties of the plugin will be overwritten with those
+	* @param array        $overrideProps Properties of the plugin will be overwritten with those
 	*/
 	final public function __construct(Configurator $configurator, array $overrideProps = array())
 	{
@@ -47,9 +47,13 @@ abstract class ConfiguratorBase implements ConfigProvider
 			{
 				$this->$methodName($v);
 			}
-			else
+			elseif (property_exists($this, $k))
 			{
 				$this->$k = $v;
+			}
+			else
+			{
+				throw new RuntimeException("Unknown property '" . $k . "'");
 			}
 		}
 
@@ -71,38 +75,6 @@ abstract class ConfiguratorBase implements ConfigProvider
 		unset($properties['configurator']);
 
 		return ConfigHelper::toArray($properties);
-	}
-
-	/**
-	* @return string Extra XSL used by this plugin
-	*/
-	public function getXSL()
-	{
-		return '';
-	}
-
-	/**
-	* @return array This plugin's config, to be used in the Javascript parser
-	*/
-	public function getJSConfig()
-	{
-		return $this->getConfig();
-	}
-
-	/**
-	* @return array Metadata associated to this plugin's JS config
-	*/
-	public function getJSConfigMeta()
-	{
-		return array();
-	}
-
-	/**
-	* @return string|boolean JS parser, or false if unsupported
-	*/
-	public function getJSParser()
-	{
-		return false;
 	}
 
 	//==========================================================================
@@ -141,7 +113,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 		 && $action !== 'warn'
 		 && $action !== 'abort')
 		{
-			 throw new Exception("regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'");
+			 throw new InvalidArgumentException("regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'");
 		}
 
 		$this->regexpLimitAction = $action;

@@ -41,7 +41,8 @@ class Configurator extends ConfiguratorBase
 			$tag->attributes->add($this->attrName)->filterChain->append('#url');
 
 			// Set the default template
-			$tag->defaultTemplate = '<a href="{@url}"><xsl:apply-templates/></a>';
+			$tag->defaultTemplate
+				= '<a href="{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
 		}
 	}
 
