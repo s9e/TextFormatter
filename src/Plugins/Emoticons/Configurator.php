@@ -127,7 +127,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 
 		// Finish it with an <xsl:otherwise> that displays the unknown codes as text
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
-		$xsl .= '</xsl:template>';
+
+		// Now close everything and return
+		$xsl .= '</xsl:choose></xsl:template>';
 
 		return $xsl;
 	}

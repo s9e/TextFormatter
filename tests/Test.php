@@ -2,10 +2,13 @@
 
 namespace s9e\TextFormatter\Tests;
 
+use DOMDocument;
 use ReflectionClass;
 use ReflectionMethod;
 use RuntimeException;
 use stdClass;
+use XSLTProcessor;
+
 use s9e\TextFormatter\Callback;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\JSParserGenerator;
@@ -174,5 +177,21 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	protected function newCallback($callback)
 	{
 		return new Callback($callback);
+	}
+
+	protected function renderSnippet($xml, $xsl)
+	{
+		$xsl = '<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:output method="html" encoding="utf-8"	/>' . $xsl . '</xsl:stylesheet>';
+
+		$dom = new DOMDocument;
+		$dom->loadXML($xsl);
+
+		$xslt = new XSLTProcessor;
+		$xslt->importStylesheet($dom);
+
+		$dom = new DOMDocument;
+		$dom->loadXML($xml);
+
+		return substr($xslt->transformToXml($dom), 0, -1);
 	}
 }

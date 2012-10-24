@@ -97,6 +97,16 @@ class ConfiguratorBaseTest extends Test
 			$dummy->toConfig()
 		);
 	}
+
+	/**
+	* @testdox Offers a default getXSL() implementation that returns an empty string
+	*/
+	public function testGetXSL()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+
+		$this->assertSame('', $dummy->getXSL());
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase

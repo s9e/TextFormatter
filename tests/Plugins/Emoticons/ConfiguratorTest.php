@@ -68,6 +68,48 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Emoticons can contain single quotes
+	*/
+	public function testSingleQuotes()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->set(":')", '<img src="e.png">');
+
+		$this->assertSame(
+			'<img src="e.png">',
+			$this->renderSnippet('<E>:&#039;)</E>', $plugin->getXSL())
+		);
+	}
+
+	/**
+	* @testdox Emoticons can contain double quotes
+	*/
+	public function testDoubleQuotes()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->set('"_"', '<img src="e.png">');
+
+		$this->assertSame(
+			'<img src="e.png">',
+			$this->renderSnippet('<E>&quot;_&quot;</E>', $plugin->getXSL())
+		);
+	}
+
+	/**
+	* @testdox Emoticons can contain both quotes at once
+	*/
+	public function testBothQuotes()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->set('\':")', '<img src="e.png">');
+
+		$this->assertSame(
+			'<img src="e.png">',
+			$this->renderSnippet('<E>&#039;:&quot;)</E>', $plugin->getXSL())
+		);
+	}
+
+	/**
 	* @testdox toConfig() returns FALSE if no emoticons were set
 	*/
 	public function testFalseConfig()

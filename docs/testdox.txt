@@ -749,6 +749,7 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimitAction() sets the regexpLimitAction property
  [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default toConfig() implementation that leaves out the configurator instance
+ [x] Offers a default getXSL() implementation that returns an empty string
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] Automatically creates an "URL" tag with an "url" attribute with a "#url" filter
@@ -800,6 +801,9 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] set(':)', '<img src="e.png"/>') creates a :) emoticon that maps to <img src="e.png"/>
  [x] set(':)', '<img src="e.png">') creates a :) emoticon that maps to <img src="e.png"/>
+ [x] Emoticons can contain single quotes
+ [x] Emoticons can contain double quotes
+ [x] Emoticons can contain both quotes at once
  [x] toConfig() returns FALSE if no emoticons were set
  [x] Generates a regexp for its config array
 
