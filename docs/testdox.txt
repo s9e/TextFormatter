@@ -744,6 +744,11 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
  [x] Constructor calls setFoo() if 'foo' is being set
  [x] An exception is thrown if an unknown property is being set by the constructor
+ [x] setRegexpLimit() sets the regexpLimit property
+ [x] setRegexpLimit() throws an exception on invalid values
+ [x] setRegexpLimitAction() sets the regexpLimitAction property
+ [x] setRegexpLimitAction() throws an exception on invalid values
+ [x] Offers a default toConfig() implementation that leaves out the configurator instance
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] Automatically creates an "URL" tag with an "url" attribute with a "#url" filter
