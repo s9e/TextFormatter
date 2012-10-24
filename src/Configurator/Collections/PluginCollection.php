@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class PluginCollection extends NormalizedCollection
 {
@@ -63,7 +63,7 @@ class PluginCollection extends NormalizedCollection
 			return $value;
 		}
 
-		throw new InvalidArgumentException('PluginCollection::normalizeValue() expects a class name or an object that implements s9e\\TextFormatter\\Configurator\\Plugins\\ConfiguratorBase;');
+		throw new InvalidArgumentException('PluginCollection::normalizeValue() expects a class name or an object that implements s9e\\TextFormatter\\Plugins\\ConfiguratorBase');
 	}
 
 	/**
@@ -77,7 +77,7 @@ class PluginCollection extends NormalizedCollection
 	{
 		// Validate the plugin name / class
 		$pluginName = $this->normalizeKey($pluginName);
-		$className  = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Configurator;';
+		$className  = 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Configurator';
 
 		if (!class_exists($className))
 		{

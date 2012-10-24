@@ -51,12 +51,13 @@
 			<file>Configurator/Validators/TagNameTest.php</file>
 
 			<file>Plugins/ConfiguratorBaseTest.php</file>
+			<file>Plugins/Autolink/ConfiguratorTest.php</file>
 			<file>Plugins/BBCodes/BBCodeTest.php</file>
 			<file>Plugins/BBCodes/BBCodeCollectionTest.php</file>
 			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
 			<file>Plugins/BBCodes/RepositoryTest.php</file>
-			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
 			<file>Plugins/Emoticons/ConfiguratorTest.php</file>
+			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
 			<file>Plugins/RawHTML/ConfiguratorTest.php</file>
 		</testsuite>
 	</testsuites>
@@ -94,6 +95,7 @@
 			<file>../src/Configurator/Validators/TagName.php</file>
 
 			<file>../src/Plugins/ConfiguratorBase.php</file>
+			<file>../src/Plugins/Autolink/Configurator.php</file>
 			<file>../src/Plugins/BBCodes/BBCode.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeCollection.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>

@@ -740,6 +740,9 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
 
+s9e\TextFormatter\Tests\Configurator\Items\Configurator
+ [x] Automatically creates an URL tag
+
 s9e\TextFormatter\Tests\Configurator\Plugins\BBCodes\BBCode
  [x] An array of options can be passed to the constructor
  [x] BBCode::normalizeName('*') returns '*'
