@@ -798,6 +798,10 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
  [x] Variables that are not replaced are left intact
  [x] Custom tagName is correctly set
 
+s9e\TextFormatter\Tests\Plugins\BBCodes\RepositoryCollection
+ [x] Instances of Repository are added as-is
+ [x] Anything else gets a new instance of Repository to be created
+
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] Automatically loads its default BBCode repository
  [x] addFromRepository('B') adds BBCode B and its tag from the default repository

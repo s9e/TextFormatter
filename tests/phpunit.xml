@@ -56,6 +56,7 @@
 			<file>Plugins/BBCodes/BBCodeCollectionTest.php</file>
 			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
 			<file>Plugins/BBCodes/RepositoryTest.php</file>
+			<file>Plugins/BBCodes/RepositoryCollectionTest.php</file>
 			<file>Plugins/BBCodes/ConfiguratorTest.php</file>
 			<file>Plugins/Emoticons/ConfiguratorTest.php</file>
 			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
@@ -102,6 +103,7 @@
 			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>
 			<file>../src/Plugins/BBCodes/Configurator.php</file>
 			<file>../src/Plugins/BBCodes/Repository.php</file>
+			<file>../src/Plugins/BBCodes/RepositoryCollection.php</file>
 			<file>../src/Plugins/Emoticons/Configurator.php</file>
 			<file>../src/Plugins/Emoticons/EmoticonCollection.php</file>
 			<file>../src/Plugins/RawHTML/Configurator.php</file>
