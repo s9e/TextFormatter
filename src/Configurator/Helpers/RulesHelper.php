@@ -179,6 +179,12 @@ abstract class RulesHelper
 		// Then we apply "deny" rules (as well as "requireParent"), overwriting "allow" rules
 		foreach ($tags as $tagName => $tag)
 		{
+			if (!empty($tag->rules['denyAll']))
+			{
+				$allowedChildren[$tagName]    = array_fill_keys($tagNames, 0);
+				$allowedDescendants[$tagName] = array_fill_keys($tagNames, 0);
+			}
+
 			if (isset($tag->rules['denyChild']))
 			{
 				foreach ($tag->rules['denyChild'] as $targetName)

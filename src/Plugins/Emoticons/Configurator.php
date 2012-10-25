@@ -8,11 +8,13 @@
 namespace s9e\TextFormatter\Plugins\Emoticons;
 
 use ArrayAccess;
+use Countable;
+use Iterator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class Configurator extends ConfiguratorBase implements ArrayAccess
+class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
 	use CollectionProxy;
 

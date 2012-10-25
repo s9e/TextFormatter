@@ -190,6 +190,21 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Add a denyAll rule
+	*
+	* @param bool $bool Whether to disallow any children to this tag
+	*/
+	public function denyAll($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('denyAll() expects a boolean');
+		}
+
+		$this->items['denyAll'] = $bool;
+	}
+
+	/**
 	* Add an denyChild rule
 	*
 	* @param string $tagName Name of the target tag

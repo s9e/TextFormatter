@@ -291,6 +291,26 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox denyAll() accepts a boolean
+	*/
+	public function testDenyAllValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->denyAll(true);
+	}
+
+	/**
+	* @testdox denyAll() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage denyAll() expects a boolean
+	*/
+	public function testDenyAllInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->denyAll('foo');
+	}
+
+	/**
 	* @testdox denyChild() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo-bar'

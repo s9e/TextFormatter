@@ -385,6 +385,70 @@ class RulesHelperTest extends Test
 	}
 
 	/**
+	* @testdox denyAll (true) overrides everything
+	*/
+	public function testDenyAllPositive()
+	{
+		$tags = new TagCollection;
+
+		$tag = $tags->add('A');
+		$tag->rules->allowChild('A');
+		$tag->rules->allowDescendant('A');
+		$tag->rules->defaultChildRule('allow');
+		$tag->rules->defaultDescendantRule('allow');
+		$tag->rules->denyAll(true);
+
+		$this->assertEquals(
+			array(
+				'rootContext' => array(
+					'allowedChildren'    => "\x01",
+					'allowedDescendants' => "\x01"
+				),
+				'tags' => array(
+					'A' => array(
+						'bitNumber'          => 0,
+						'allowedChildren'    => "\x00",
+						'allowedDescendants' => "\x00"
+					)
+				)
+			),
+			RulesHelper::getBitfields($tags)
+		);
+	}
+
+	/**
+	* @testdox denyAll (false) has no effect
+	*/
+	public function testDenyAllNegative()
+	{
+		$tags = new TagCollection;
+
+		$tag = $tags->add('A');
+		$tag->rules->allowChild('A');
+		$tag->rules->allowDescendant('A');
+		$tag->rules->defaultChildRule('allow');
+		$tag->rules->defaultDescendantRule('allow');
+		$tag->rules->denyAll(false);
+
+		$this->assertEquals(
+			array(
+				'rootContext' => array(
+					'allowedChildren'    => "\x01",
+					'allowedDescendants' => "\x01"
+				),
+				'tags' => array(
+					'A' => array(
+						'bitNumber'          => 0,
+						'allowedChildren'    => "\x01",
+						'allowedDescendants' => "\x01"
+					)
+				)
+			),
+			RulesHelper::getBitfields($tags)
+		);
+	}
+
+	/**
 	* @testdox Tags with a requireParent rule are not allowed at the root
 	*/
 	public function testRequireParentDisallowAtRoot()

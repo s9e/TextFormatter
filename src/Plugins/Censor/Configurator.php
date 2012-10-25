@@ -5,18 +5,21 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\Censor;
 
-use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Tag;
+use ArrayAccess;
+use Countable;
+use Iterator;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class CensorConfig extends ConfiguratorBase
+class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
-	/**
-	* @var string Name of the tag used to mark censored words
-	*/
-	protected $tagName = 'C';
+	use CollectionProxy;
 
 	/**
 	* @var string Name of attribute used for the replacement
@@ -24,36 +27,35 @@ class CensorConfig extends ConfiguratorBase
 	protected $attrName = 'with';
 
 	/**
+	* @var NormalizedCollection List of [word => replacement]
+	*/
+	protected $collection;
+
+	/**
 	* @var string Default string used to replace censored words
 	*/
 	protected $defaultReplacement = '****';
 
 	/**
-	* @var array  2D array of censored words/masks. First dimension is the type of masks
+	* @var string Name of the tag used to mark censored words
 	*/
-	protected $words = array();
-
-	/**
-	* @var array  Hash of replacements
-	*/
-	protected $replacements = array();
+	protected $tagName = 'C';
 
 	public function setUp()
 	{
-		if ($this->configurator->tagExists($this->tagName))
+		$this->collection = new NormalizedCollection;
+
+		if (isset($this->configurator->tags[$this->tagName]))
 		{
 			return;
 		}
 
-		$tag = new Tag(array(
-			'defaultChildRule' => 'deny',
-			'defaultDescendantRule' => 'deny'
-		));
-		$this->configurator->addTag($this->tagName, $tag);
+		$tag = $this->configurator->add($this->tagName);
+		$tag->rules->denyAll();
 
-		$tag->addAttribute($this->attrName)->required = false;
+		$tag->attributes->add($this->attrName);
 
-		$tag->setTemplate(
+		$tag->defaultTemplate = 
 			'<xsl:choose>' .
 				'<xsl:when test="@' . htmlspecialchars($this->attrName) . '">' .
 					'<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>' .
@@ -62,95 +64,72 @@ class CensorConfig extends ConfiguratorBase
 					htmlspecialchars($this->defaultReplacement) .
 				'</xsl:otherwise>' .
 			'</xsl:choose>'
-		);
+		;
 	}
 
 	/**
-	* Add a word to the censor list
+	* 
 	*
-	* @param string $word
-	* @param string $replacement If left null, $this->defaultReplacement will be used
+	* @return void
 	*/
-	public function addWord($word, $replacement = null)
+	public function toConfig()
 	{
-		$this->words[] = $word;
-
-		if (isset($replacement))
-		{
-			$mask = '#^'
-			      . strtr(
-			        	preg_quote($word, '#'),
-			        	array(
-			        		'\\*' => '.*',
-			        		'\\?' => '.?'
-			        	)
-			        )
-			      . '$#iDu';
-
-			$this->replacements[$mask] = $replacement;
-		}
-	}
-
-	public function getConfig()
-	{
-		if (empty($this->words))
+		if (!count($this->collection))
 		{
 			return false;
 		}
 
-		$regexp = $this->configurator->getRegexpHelper()->buildRegexpFromList(
-			$this->words,
-			array('specialChars' => array('*' => '\\pL*', '?' => '.?'))
-		);
-
 		$config = array(
-			'tagName'  => $this->tagName,
 			'attrName' => $this->attrName,
-			'regexp'   => '#\\b' . $regexp . '\\b#iu'
+			'tagName'  => $this->tagName
 		);
 
-		if (!empty($this->replacements))
+		$regexpOptions = array('specialChars' => array('*' => '\\pL*', '?' => '.?'));
+
+		$words = array();
+		$replacementWords = array();
+
+		foreach ($this->collection as $word => $replacement)
 		{
-			$config['replacements'] = $this->replacements;
-		}
+			$words[] = $word;
 
-		return $config;
-	}
-
-	//==========================================================================
-	// JS Parser stuff
-	//==========================================================================
-
-	public function getJSConfig()
-	{
-		$config = $this->getConfig();
-
-		if (isset($config['replacements']))
-		{
-			$replacements = array();
-
-			foreach ($config['replacements'] as $regexp => $replacement)
+			if (isset($replacement))
 			{
-				$replacements[] = array($regexp, $replacement);
+				$replacementWords[$replacement][] = $word;
 			}
+		}
 
-			$config['replacements'] = $replacements;
+		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
+		$config['regexp'] = '/(?<!\\pL)' . $regexp . '(?!\\pL)/iu';
+
+		foreach ($replacementWords as $replacement => $words)
+		{
+			$regexp = '/^' . RegexpBuilder::fromList($words, $regexpOptions) . '$/Diu';
+			$config['replacements'][$regexp] = $replacement;
 		}
 
 		return $config;
 	}
 
-	public function getJSConfigMeta()
+	/**
+	* Set the name of the attribute used by this plugin
+	*
+	* @param  string $attrName
+	* @return void
+	*/
+	protected function setAttrName($attrName)
 	{
-		return array(
-			'isRegexp' => array(
-				array('replacements', true, 0)
-			)
-		);
+		$this->attrName = AttributeName::normalize($attrName);
 	}
 
-	public function getJSParser()
+	/**
+	* Set the name of the tag used by this plugin
+	*
+	* @param  string $tagName
+	* @return void
+	*/
+	protected function setTagName($tagName)
 	{
-		return file_get_contents(__DIR__ . '/CensorParser.js');
+		$this->tagName = TagName::normalize($tagName);
 	}
 }
