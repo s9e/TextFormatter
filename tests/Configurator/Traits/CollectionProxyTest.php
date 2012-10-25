@@ -3,6 +3,8 @@
 namespace s9e\TextFormatter\Tests\Configurator\Traits;
 
 use ArrayAccess;
+use Countable;
+use Iterator;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Tests\Test;
@@ -170,9 +172,44 @@ class CollectionProxyTest extends Test
 
 		unset($this->proxy['foo']);
 	}
+
+	/**
+	* @testdox count($proxy) returns count($proxy->collection)
+	*/
+	public function testCount()
+	{
+		$this->mock->expects($this->once())
+		           ->method('count')
+		           ->will($this->returnValue(42));
+
+		$this->assertSame(42, count($this->proxy));
+	}
+
+	/**
+	* @testdox A collection proxy is iterable with foreach
+	*/
+	public function testIterable()
+	{
+		$collection = new NormalizedCollection;
+		$collection->add('one', 1);
+		$collection->add('two', 2);
+
+		$proxy = new CollectionProxyDummy($collection);
+
+		$actual = array();
+		foreach ($proxy as $k => $v)
+		{
+			$actual[$k] = $v;
+		}
+
+		$this->assertSame(
+			array('one' => 1, 'two' => 2),
+			$actual
+		);
+	}
 }
 
-class CollectionProxyDummy implements ArrayAccess
+class CollectionProxyDummy implements ArrayAccess, Countable, Iterator
 {
 	use CollectionProxy;
 

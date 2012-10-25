@@ -14,6 +14,22 @@ use InvalidArgumentException;
 */
 trait CollectionProxy
 {
+	/**
+	* Forward all unknown method calls to $this->collection
+	*
+	* @param  string $methodName
+	* @param  array  $args
+	* @return mixed
+	*/
+	public function __call($methodName, $args)
+	{
+		return call_user_func_array(array($this->collection, $methodName), $args);
+	}
+
+	//==========================================================================
+	// ArrayAccess
+	//==========================================================================
+
 	public function offsetExists($offset)
 	{
 		return isset($this->collection[$offset]);
@@ -34,43 +50,41 @@ trait CollectionProxy
 		unset($this->collection[$offset]);
 	}
 
-	/**
-	* Forwarding method to $this->collection->add()
-	*/
-	public function add()
+	//==========================================================================
+	// Countable
+	//==========================================================================
+
+	public function count()
 	{
-		return call_user_func_array(array($this->collection, 'add'), func_get_args());
+		return count($this->collection);
 	}
 
-	/**
-	* Forwarding method to $this->collection->delete()
-	*/
-	public function delete()
+	//==========================================================================
+	// Iterator
+	//==========================================================================
+
+	public function current()
 	{
-		return call_user_func_array(array($this->collection, 'delete'), func_get_args());
+		return $this->collection->current();
 	}
 
-	/**
-	* Forwarding method to $this->collection->exists()
-	*/
-	public function exists()
+	public function key()
 	{
-		return call_user_func_array(array($this->collection, 'exists'), func_get_args());
+		return $this->collection->key();
 	}
 
-	/**
-	* Forwarding method to $this->collection->get()
-	*/
-	public function get()
+	public function next()
 	{
-		return call_user_func_array(array($this->collection, 'get'), func_get_args());
+		return $this->collection->next();
 	}
 
-	/**
-	* Forwarding method to $this->collection->set()
-	*/
-	public function set()
+	public function rewind()
 	{
-		return call_user_func_array(array($this->collection, 'set'), func_get_args());
+		$this->collection->rewind();
+	}
+
+	public function valid()
+	{
+		return $this->collection->valid();
 	}
 }

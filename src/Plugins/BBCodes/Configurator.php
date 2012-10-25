@@ -25,7 +25,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 	/**
 	* @var RepositoryCollection BBCode repositories
 	*/
-	protected $repositories;
+	public $repositories;
 
 	/**
 	* Plugin setup
@@ -67,18 +67,12 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 		return $bbcode;
 	}
 
-
-
-
-
-
-
 	/**
 	* 
 	*/
-	public function getConfig()
+	public function toConfig()
 	{
-		if (empty($this->collection))
+		if (!count($this->collection))
 		{
 			return false;
 		}
@@ -92,55 +86,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
 
 		return array(
-			'bbcodes' => $this->collection->getConfig(),
+			'bbcodes' => $this->collection->toConfig(),
 			'regexp'  => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		);
-	}
-
-	//==========================================================================
-	// JS Parser stuff
-	//==========================================================================
-
-	public function getJSConfig()
-	{
-		$config = $this->getConfig();
-
-		$config['hasAutoCloseHint']    = false;
-		$config['hasContentAttrsHint'] = false;
-		$config['hasDefaultAttrHint']  = false;
-
-		foreach ($this->collection as $bbcode)
-		{
-			if ($bbcode->autoClose)
-			{
-				$config['hasAutoCloseHint'] = true;
-			}
-
-			if (!empty($bbcode->contentAttritubtes))
-			{
-				$config['hasContentAttributesHint'] = true;
-			}
-
-			if (!empty($bbcode->defaultAttribute))
-			{
-				$config['hasDefaultAttributeHint'] = true;
-			}
-		}
-
-		return $config;
-	}
-
-	public function getJSConfigMeta()
-	{
-		return array(
-			'preserveKeys' => array(
-				array('bbcodes', true)
-			)
-		);
-	}
-
-	public function getJSParser()
-	{
-		return file_get_contents(__DIR__ . '/Parser.js');
 	}
 }

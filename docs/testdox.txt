@@ -50,6 +50,8 @@ s9e\TextFormatter\Tests\Configurator\Traits\CollectionProxy
  [x] $proxy['foo'] = 42 sets $proxy->collection['foo'] = 42
  [x] isset($proxy['foo']) returns isset($proxy->collection['foo'])
  [x] unset($proxy['foo']) calls unset($proxy->collection['foo'])
+ [x] count($proxy) returns count($proxy->collection)
+ [x] A collection proxy is iterable with foreach
 
 s9e\TextFormatter\Tests\Configurator\Traits\Configurable
  [x] __get('foo') calls getFoo() if it exists
@@ -783,6 +785,10 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
+
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
+ [x] Automatically loads its default BBCode repository
+ [x] toConfig() returns FALSE if no BBCodes were created
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
  [x] __construct() accepts the path to an XML file as argument
