@@ -664,6 +664,13 @@ s9e\TextFormatter\Tests\Configurator\Items\CallbackTemplate
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
 
+s9e\TextFormatter\Tests\Configurator\Items\Filter
+ [x] __construct() accepts an instance of CallbackTemplate as its first argument
+ [x] __construct() accepts the name of a built-in filter such as '#url' as its first argument
+ [x] __construct() throws an exception on invalid filters
+ [x] Filter vars can be passed as __construct()'s second argument
+ [x] Filter vars can be set with setVars()
+
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor
  [x] $tag->attributePreprocessors can be assigned a 2D array of regexps
