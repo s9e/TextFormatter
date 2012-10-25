@@ -57,11 +57,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 
 		$bbcodeName = BBCode::normalizeName($bbcodeName);
 
-		$config = $this->repositories->get($repository);
+		$config = $this->repositories->get($repository)->get($bbcodeName);
 		$bbcode = $config['bbcode'];
 		$tag    = $config['tag'];
 
-		$this->items->add($bbcodeName, $bbcode);
+		// If the BBCode doesn't specify a tag name, it's the same as the BBCode
+		if (!isset($bbcode->tagName))
+		{
+			$bbcode->tagName = $bbcodeName;
+		}
+
+		$this->collection->add($bbcodeName, $bbcode);
 		$this->configurator->tags->add($bbcode->tagName, $tag);
 
 		return $bbcode;

@@ -20,6 +20,18 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addFromRepository('B') adds the BBCode B and its tag from the default repository
+	*/
+	public function testAddFromRepository()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->addFromRepository('B');
+
+		$this->assertTrue(isset($plugin['B']));
+		$this->assertTrue(isset($this->configurator->tags['B']));
+	}
+
+	/**
 	* @testdox toConfig() returns FALSE if no BBCodes were created
 	*/
 	public function testFalseConfig()

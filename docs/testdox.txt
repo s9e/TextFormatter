@@ -788,6 +788,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeMonkey
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] Automatically loads its default BBCode repository
+ [x] addFromRepository('B') adds the BBCode B and its tag from the default repository
  [x] toConfig() returns FALSE if no BBCodes were created
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
