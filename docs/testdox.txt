@@ -786,11 +786,6 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
 
-s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
- [x] Automatically loads its default BBCode repository
- [x] addFromRepository('B') adds the BBCode B and its tag from the default repository
- [x] toConfig() returns FALSE if no BBCodes were created
-
 s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
  [x] __construct() accepts the path to an XML file as argument
  [x] __construct() accepts a DOMDocument as argument
@@ -798,9 +793,19 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
  [x] __construct() throws an exception if passed the path to a file that is not valid XML
  [x] get() throws an exception if the BBCode is not in repository
  [x] get() normalizes the BBCode name before retrieval
- [x] Variables can be replaced
+ [x] Variables in <usage/> are replaced
+ [x] Variables in <template/> are replaced
  [x] Variables that are not replaced are left intact
  [x] Custom tagName is correctly set
+
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
+ [x] Automatically loads its default BBCode repository
+ [x] addFromRepository('B') adds BBCode B and its tag from the default repository
+ [x] addFromRepository('MYBOLD', 'foo') adds BBCode B and its tag from the 'foo' repository
+ [x] addFromRepository('B', 'foo', ['title' => 'bar']) adds BBCode B and its tag from the 'foo' repository with variable 'title' replaced with content 'bar'
+ [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
+ [x] addFromRepository() returns the newly-created BBCode
+ [x] toConfig() returns FALSE if no BBCodes were created
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Automatically creates an "E" tag

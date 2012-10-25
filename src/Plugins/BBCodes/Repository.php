@@ -74,21 +74,11 @@ class Repository
 			throw new RuntimeException("Could not find BBCode '" . $bbcodeName . "' in repository");
 		}
 
-		// Now we can parse the BBCode usage and prepare the template
-		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
-		$usage  = $node->getElementsByTagName('usage')->item(0)->textContent;
-		$config = BBCodeMonkey::parse($usage);
-
-		if ($node->hasAttribute('tagName'))
-		{
-			$config['bbcode']->tagName = $node->getAttribute('tagName');
-		}
-
-		// Clone the <template> element
-		$templateNode = $node->getElementsByTagName('template')->item(0)->cloneNode(true);
+		// Clone the node so we don't end up modifying the node in the repository
+		$node = $node->cloneNode(true);
 
 		// Replace all the <var> descendants if applicable
-		foreach ($templateNode->getElementsByTagName('var') as $varNode)
+		foreach ($node->getElementsByTagName('var') as $varNode)
 		{
 			$varName = $varNode->getAttribute('name');
 
@@ -101,9 +91,19 @@ class Repository
 			}
 		}
 
+		// Now we can parse the BBCode usage and prepare the template
+		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
+		$usage  = $node->getElementsByTagName('usage')->item(0)->textContent;
+		$config = BBCodeMonkey::parse($usage);
+
+		if ($node->hasAttribute('tagName'))
+		{
+			$config['bbcode']->tagName = $node->getAttribute('tagName');
+		}
+
 		// Now process the template
 		$config['tag']->defaultTemplate = BBCodeMonkey::replaceTokens(
-			$templateNode->textContent,
+			$node->getElementsByTagName('template')->item(0)->textContent,
 			$config['tokens'],
 			$config['passthroughToken']
 		);

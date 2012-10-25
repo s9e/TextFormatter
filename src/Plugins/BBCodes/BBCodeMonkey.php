@@ -153,6 +153,11 @@ abstract class BBCodeMonkey
 	*/
 	public static function replaceTokens($template, array $tokens, $passthroughToken)
 	{
+		if ($template === '')
+		{
+			return $template;
+		}
+
 		$dom   = self::loadTemplate($template);
 		$xpath = new DOMXPath($dom);
 

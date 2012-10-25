@@ -72,19 +72,45 @@ class RepositoryTest extends Test
 	}
 
 	/**
-	* @testdox Variables can be replaced
+	* @testdox Variables in <usage/> are replaced
 	*/
-	public function testReplacedVars()
+	public function testReplacedUsageVars()
 	{
-		$repository = new Repository(__DIR__ . '/../../../src/Plugins/BBCodes/repository.xml');
-		$config = $repository->get('QUOTE', array(
-			'authorStr' => '<xsl:value-of select="@author" /> escribiste:'
-		));
-
-		$this->assertSame(
-			'<blockquote><div><xsl:if test="@author"><cite><xsl:value-of select="@author"/> escribiste:</cite></xsl:if><xsl:apply-templates/></div></blockquote>',
-			$config['tag']->defaultTemplate
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO <var name="attrName"/>={TEXT}]</usage>
+					<template/>
+				</bbcode>
+			</repository>'
 		);
+
+		$repository = new Repository($dom);
+		$config = $repository->get('FOO', array('attrName' => 'bar'));
+
+		$this->assertTrue(isset($config['tag']->attributes['bar']));
+	}
+
+	/**
+	* @testdox Variables in <template/> are replaced
+	*/
+	public function testReplacedTemplateVars()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO]</usage>
+					<template><var name="text"/></template>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
+		$config = $repository->get('FOO', array('text' => 'Hello'));
+
+		$this->assertSame('Hello', $config['tag']->defaultTemplate);
 	}
 
 	/**

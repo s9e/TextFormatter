@@ -20,7 +20,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 	/**
 	* @var BBCodeCollection BBCode collection
 	*/
-	protected $collection;
+	public $collection;
 
 	/**
 	* @var RepositoryCollection BBCode repositories
@@ -55,9 +55,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 			throw new InvalidArgumentException("Repository '" . $repository . "' does not exist");
 		}
 
-		$bbcodeName = BBCode::normalizeName($bbcodeName);
-
-		$config = $this->repositories->get($repository)->get($bbcodeName);
+		// Get the repository, then the BBCode/tag config from the repository
+		$config = $this->repositories->get($repository)->get($bbcodeName, $vars);
 		$bbcode = $config['bbcode'];
 		$tag    = $config['tag'];
 
@@ -67,6 +66,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess
 			$bbcode->tagName = $bbcodeName;
 		}
 
+		// Add our BBCode then its tag
 		$this->collection->add($bbcodeName, $bbcode);
 		$this->configurator->tags->add($bbcode->tagName, $tag);
 
