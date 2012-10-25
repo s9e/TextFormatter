@@ -39,8 +39,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	/**
 	* @var string Name of the tag used to mark censored words
 	*/
-	protected $tagName = 'C';
+	protected $tagName = 'CENSOR';
 
+	/**
+	* Plugin's setup
+	*
+	* Will initialize its collection and create the plugin's tag if it does not exist
+	*/
 	public function setUp()
 	{
 		$this->collection = new NormalizedCollection;
@@ -50,11 +55,16 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			return;
 		}
 
-		$tag = $this->configurator->add($this->tagName);
-		$tag->rules->denyAll();
+		// Create tag
+		$tag = $this->configurator->tags->add($this->tagName);
 
+		// Create attribute
 		$tag->attributes->add($this->attrName);
 
+		// Ensure that censored content can't ever be used by other tags
+		$tag->rules->denyAll();
+
+		// Create the default template
 		$tag->defaultTemplate = 
 			'<xsl:choose>' .
 				'<xsl:when test="@' . htmlspecialchars($this->attrName) . '">' .
@@ -68,9 +78,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 
 	/**
-	* 
-	*
-	* @return void
+	* {@inheritdoc}
 	*/
 	public function toConfig()
 	{
@@ -84,7 +92,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			'tagName'  => $this->tagName
 		);
 
-		$regexpOptions = array('specialChars' => array('*' => '\\pL*', '?' => '.?'));
+		$regexpOptions = array('specialChars' => array('*' => '\\pL*', '?' => '.'));
 
 		$words = array();
 		$replacementWords = array();

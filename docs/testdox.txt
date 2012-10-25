@@ -822,6 +822,14 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository() returns the newly-created BBCode
  [x] toConfig() returns FALSE if no BBCodes were created
 
+s9e\TextFormatter\Tests\Plugins\Censor\Configurator
+ [x] Automatically creates a "CENSOR" tag
+ [x] Does not attempt to create a tag if it already exists
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] toConfig() returns FALSE if no words were added
+ [x] Generates a regexp for its config array
+
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Automatically creates an "E" tag
  [x] Does not attempt to create a tag if it already exists
