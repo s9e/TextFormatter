@@ -64,7 +64,9 @@ abstract class ConfiguratorBase implements ConfigProvider
 	/**
 	* Executed by constructor
 	*/
-	protected function setUp() {}
+	protected function setUp()
+	{
+	}
 
 	/**
 	* Return any extra XSL needed by this plugin

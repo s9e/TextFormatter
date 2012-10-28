@@ -29,6 +29,7 @@
 			<file>Configurator/Collections/AttributePreprocessorCollectionTest.php</file>
 			<file>Configurator/Collections/FilterChainTest.php</file>
 			<file>Configurator/Collections/FilterCollectionTest.php</file>
+			<file>Configurator/Collections/PluginCollectionTest.php</file>
 			<file>Configurator/Collections/RulesetTest.php</file>
 			<file>Configurator/Collections/TagCollectionTest.php</file>
 			<file>Configurator/Collections/TemplatesetTest.php</file>
@@ -77,6 +78,7 @@
 			<file>../src/Configurator/Collections/FilterCollection.php</file>
 			<file>../src/Configurator/Collections/NormalizedCollection.php</file>
 			<file>../src/Configurator/Collections/NormalizedList.php</file>
+			<file>../src/Configurator/Collections/PluginCollection.php</file>
 			<file>../src/Configurator/Collections/Ruleset.php</file>
 			<file>../src/Configurator/Collections/TagCollection.php</file>
 			<file>../src/Configurator/Collections/Templateset.php</file>

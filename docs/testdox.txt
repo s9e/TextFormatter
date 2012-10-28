@@ -116,6 +116,17 @@ s9e\TextFormatter\Tests\Configurator\Collections\FilterChain
 
 s9e\TextFormatter\Tests\Configurator\Collections\FilterCollection
  [x] Throws an exception if the value is not an instance of Filter
+ [x] Throws an exception if the filter's callback is a built-in filter
+ [x] Accepts instances of Filter
+
+s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
+ [x] load() can load a stock plugin
+ [x] load() throws an exception if the stock plugin does not exist
+ [x] Accepts an object that implements ConfiguratorBase
+ [x] Accepts a string that is the name of a class that implements ConfiguratorBase
+ [x] Throws an exception if the value is neither an instance of or the name of a class that implements ConfiguratorBase
+ [x] Throws an exception if the plugin name is not entirely composed of letters, numbers and underscores
+ [x] Throws an exception if the plugin name does not start with an uppercase letter
 
 s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] isset($ruleset['allowChild']) tests whether any allowChild rules exist

@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Items\CallbackTemplate;
 use s9e\TextFormatter\Configurator\Items\Filter;
 
 class FilterCollection extends NormalizedCollection
@@ -20,6 +21,11 @@ class FilterCollection extends NormalizedCollection
 		if (!($value instanceof Filter))
 		{
 			throw new InvalidArgumentException('Not an instance of s9e\\TextFormatter\\Configurator\\Items\\Filter');
+		}
+
+		if (!($value->getCallback() instanceof CallbackTemplate))
+		{
+			throw new InvalidArgumentException("Custom filters' callback must be an instance of CallbackTemplate");
 		}
 
 		return $value;
