@@ -114,6 +114,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\FilterChain
  [x] $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
  [x] Deleting a filter reorders the chain to remove gaps
 
+s9e\TextFormatter\Tests\Configurator\Collections\FilterCollection
+ [x] Throws an exception if the value is not an instance of Filter
+
 s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] isset($ruleset['allowChild']) tests whether any allowChild rules exist
  [x] $ruleset['allowChild'] returns the allowChild rules if they exist

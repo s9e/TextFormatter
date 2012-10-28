@@ -48,10 +48,10 @@ class Configurator implements ConfigProvider
 	*/
 	public function __construct()
 	{
-		$this->tags      = new TagCollection;
-		$this->plugins   = new PluginCollection($this);
-		$this->filters   = new FilterCollection;
-		$this->urlConfig = new UrlConfig;
+		$this->customFilters = new FilterCollection;
+		$this->plugins       = new PluginCollection($this);
+		$this->tags          = new TagCollection;
+		$this->urlConfig     = new UrlConfig;
 	}
 
 	/**
@@ -80,6 +80,54 @@ class Configurator implements ConfigProvider
 		$config['plugins'] = array_filter($config['plugins']);
 
 		return $config;
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function doStuff()
+	{
+		foreach ($this->tags as $tagName => $tag)
+		{
+			foreach ($tag->attributes as $attrName => $attribute)
+			{
+				foreach ($attribute->filterChain as $filter)
+				{
+					$callback = $filter->getCallback();
+
+					// Test whether this callback is a built-in/custom filter
+					if (!is_string($callback) || $callback[0] !== '#')
+					{
+						continue;
+					}
+
+					// Remove the # sign from the start of the name
+					$filterName = substr($callback, 1);
+
+					// Test whether we have a custom filter by that name
+					if (isset($this->customFilters[$filterName]))
+					{
+						// All good
+						continue;
+					}
+
+					// Test whether we have a built-in filter by that name
+					$className = 's9e\\TextFormatter\\Parser\\Filters\\' . ucfirst($filterName);
+
+					if (class_exists($className))
+					{
+						// All good
+						continue;
+					}
+
+					// This filter doesn't seem to exist. We'll issue a warning for now and the
+					// parser will systematically invalidate this attribute
+					trigger_error("Filter '" . $callback . "' used in attribute '" . $attrName . "' of tag '" . $tagName . "' does not exist", E_USER_WARNING);
+				}
+			}
+		}
 	}
 
 

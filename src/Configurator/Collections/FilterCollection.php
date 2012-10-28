@@ -7,6 +7,21 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
-class FilterCollection extends Collection
+use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Items\Filter;
+
+class FilterCollection extends NormalizedCollection
 {
+	/**
+	* {@inheritdoc}
+	*/
+	public function normalizeValue($value)
+	{
+		if (!($value instanceof Filter))
+		{
+			throw new InvalidArgumentException('Not an instance of s9e\\TextFormatter\\Configurator\\Items\\Filter');
+		}
+
+		return $value;
+	}
 }

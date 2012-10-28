@@ -116,7 +116,7 @@ trait TagProcessing
 		// 2. Filter this tag's attributes and check for missing attributes
 		// 3. Apply closeParent and closeAncestor rules
 		// 4. Check for nestingLimit
-		// 5. Apply requireParent and requireAncestor rules
+		// 5. Apply requireAncestor rules
 		//
 		// This order ensures that the tag is valid and within the set limits before we attempt to
 		// close parents or ancestors. We need to close ancestors before we can check for nesting
