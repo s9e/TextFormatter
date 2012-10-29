@@ -216,7 +216,6 @@ trait TagProcessing
 		$this->appendTag($this->currentTag);
 	}
 
-
 	/**
 	* Append a tag to the output
 	*

@@ -791,6 +791,8 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
  [x] Generates a regexp for its config array
+ [x] The config array contains the name of the tag
+ [x] The config array contains the name of the attribute
  [x] The regexp matches the URL in 'foo http://www.bar.com baz'
  [x] The regexp matches the URL in 'FOO HTTP://WWW.BAR.COM BAZ'
  [x] The regexp matches the URL in 'foo http://www.bar.com/index.php?arr[foo]=1 baz'
@@ -855,6 +857,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] The name of the attribute used can be changed through the "attrName" constructor option
  [x] asConfig() returns FALSE if no words were added
  [x] Generates a regexp for its config array
+ [x] The config array contains the name of the tag
  [x] Returns the replacements in its config in the form [regexp => replacement]
  [x] Words sharing the same replacement share a common regexp
  [x] Words using the default replacement do not appear in the replacements
@@ -870,11 +873,18 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Emoticons can contain both quotes at once
  [x] asConfig() returns FALSE if no emoticons were set
  [x] Generates a regexp for its config array
+ [x] The config array contains the name of the tag
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
  [x] Normalizes HTML templates
  [x] Throws an exception when an invalid template is set
  [x] Throws an exception when an unsafe template is set
+
+s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
+ [x] Automatically creates an "ESC" tag
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] Generates a regexp for its config array
+ [x] The config array contains the name of the tag
 
 s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() returns the name of the tag it creates
@@ -885,6 +895,14 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() creates a regexp filter for each attribute created
  [x] asConfig() returns FALSE if no replacements were set
  [x] Generates a regexp for every replacement, using its tag name as key
+
+s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
+ [x] Automatically creates an "HE" tag
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] disable() throws an exception on invalid entity
+ [x] Generates a regexp for its config array
+ [x] The config array contains the name of the tag
+ [x] The config array contains the disabled entities, if any
 
 s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] allowElement('b') creates a tag named 'html:b'

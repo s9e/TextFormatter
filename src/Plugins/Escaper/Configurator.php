@@ -5,41 +5,29 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\Escaper;
 
 use DOMDocument;
-use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class EscaperConfig extends ConfiguratorBase
+class Configurator extends ConfiguratorBase
 {
+	/**
+	* @var string Regexp that matches one backslash and one single Unicode character
+	*/
+	protected $regexp = '#\\\\.#us';
 	/**
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'ESC';
 
+	/**
+	* {@inheritdoc}
+	*/
 	public function setUp()
 	{
-		$this->configurator->addTag($this->tagName)->setOptions(array(
-			'defaultChildRule' => 'deny',
-			'defaultDescendantRule' => 'deny',
-			'template' => '<xsl:value-of select="substring(.,2)"/>'
-		));
-	}
-
-	/**
-	* @return array
-	*/
-	public function getConfig()
-	{
-		return array(
-			'tagName' => $this->tagName,
-			'regexp'  => '#\\\\.#us'
-		);
-	}
-
-	public function getJSParser()
-	{
-		return file_get_contents(__DIR__ . '/EscaperParser.js');
+		$tag = $this->configurator->tags->add($this->tagName);
+		$tag->rules->denyAll();
+		$tag->defaultTemplate = '<xsl:value-of select="substring(.,2)"/>';
 	}
 }

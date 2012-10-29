@@ -2,8 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Autolink;
 
-use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Plugins\Autolink\Configurator;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\Autolink\Configurator
@@ -57,12 +57,34 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox Generates a regexp for its config array
 	*/
-	public function testAsConfig()
+	public function testConfigRegexp()
 	{
 		$this->assertArrayHasKey(
 			'regexp',
 			$this->configurator->plugins->load('Autolink')->asConfig()
 		);
+	}
+
+	/**
+	* @testdox The config array contains the name of the tag
+	*/
+	public function testConfigTagName()
+	{
+		$config = $this->configurator->plugins->load('Autolink')->asConfig();
+
+		$this->assertArrayHasKey('tagName', $config);
+		$this->assertSame('URL', $config['tagName']);
+	}
+
+	/**
+	* @testdox The config array contains the name of the attribute
+	*/
+	public function testConfigAttributeName()
+	{
+		$config = $this->configurator->plugins->load('Autolink')->asConfig();
+
+		$this->assertArrayHasKey('attrName', $config);
+		$this->assertSame('url', $config['attrName']);
 	}
 
 	/**

@@ -54,7 +54,6 @@ trait TagStackHandling
 		return $tag;
 	}
 
-
 	/**
 	* Sort tags by position and precedence
 	*

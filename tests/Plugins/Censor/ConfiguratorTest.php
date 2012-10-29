@@ -69,6 +69,20 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The config array contains the name of the tag
+	*/
+	public function testConfigTagName()
+	{
+		$plugin = $this->configurator->plugins->load('Censor', array('tagName' => 'FOO'));
+		$plugin->add('apple');
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('tagName', $config);
+		$this->assertSame('FOO', $config['tagName']);
+	}
+
+	/**
 	* @testdox Returns the replacements in its config in the form [regexp => replacement]
 	*/
 	public function testAsConfigReplacements()

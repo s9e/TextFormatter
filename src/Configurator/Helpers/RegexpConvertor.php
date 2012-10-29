@@ -9,6 +9,9 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 
 use RuntimeException;
 
+/**
+* @todo create a method that replaces capturing subpatterns with non-capturing subpatterns, and perhaps even no subpattern at all. Unless backreferences are used
+*/
 abstract class RegexpConvertor
 {
 	/**

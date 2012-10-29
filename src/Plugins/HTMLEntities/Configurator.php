@@ -5,45 +5,50 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\HTMLEntities;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class HTMLEntitiesConfig extends ConfiguratorBase
+class Configurator extends ConfiguratorBase
 {
-	/**
-	* @var string Name of the tag used by this plugin
-	*/
-	protected $tagName = 'HE';
-
 	/**
 	* @var string Name of the attribute used by this plugin
 	*/
 	protected $attrName = 'char';
 
 	/**
-	* @var array  List of entities NOT to decode
+	* @var array  List of entities NOT to decode, stored as keys
 	*/
 	protected $disabled = array();
 
+	/**
+	* @var string Regexp that matches entities
+	*/
+	protected $regexp = '/&(?:[a-z]+|#[0-9]+|#x[0-9a-f]+);/i';
+
+	/**
+	* @var string Name of the tag used by this plugin
+	*/
+	protected $tagName = 'HE';
+
+	/**
+	* {@inheritdoc}
+	*/
 	public function setUp()
 	{
-		if (!$this->configurator->tagExists($this->tagName))
-		{
-			$tag = $this->configurator->addTag($this->tagName);
-			$tag->addAttribute($this->attrName);
-			$tag->setTemplate('<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
-		}
+		$tag = $this->configurator->tags->add($this->tagName);
+		$tag->attributes->add($this->attrName);
+		$tag->defaultTemplate
+			= '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>';
 	}
 
 	/**
-	* Add an emoticon
+	* Disable the conversion of a specific entity
 	*
 	* @param string $entity HTML entity, e.g. "&amp;" or "&eacute;"
 	*/
-	public function disableEntity($entity)
+	public function disable($entity)
 	{
 		if (!preg_match('/^&(?:[a-z]+|#[0-9]+|#x[0-9a-f]+);$/Di', $entity, $m))
 		{
@@ -51,42 +56,5 @@ class HTMLEntitiesConfig extends ConfiguratorBase
 		}
 
 		$this->disabled[$entity] = 1;
-	}
-
-	/**
-	* @return array
-	*/
-	public function getConfig()
-	{
-		$config = array(
-			'tagName'  => $this->tagName,
-			'attrName' => $this->attrName,
-			'regexp'   => '/&(?:[a-z]+|#[0-9]+|#x[0-9a-f]+);/i'
-		);
-
-		if ($this->disabled)
-		{
-			$config['disabled'] = $this->disabled;
-		}
-
-		return $config;
-	}
-
-	//==========================================================================
-	// JS Parser stuff
-	//==========================================================================
-
-	public function getJSParser()
-	{
-		return file_get_contents(__DIR__ . '/HTMLEntitiesParser.js');
-	}
-
-	public function getJSConfigMeta()
-	{
-		return array(
-			'preserveKeys' => array(
-				array('disabled', true)
-			)
-		);
 	}
 }

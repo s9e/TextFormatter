@@ -185,7 +185,6 @@ abstract class RegexpParser
 						$pos - ($startToken['pos'] + $startToken['len'])
 					);
 
-
 					/**
 					* Look for quantifiers after the subpattern, e.g. (?:ab)++
 					*/

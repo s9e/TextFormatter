@@ -128,4 +128,18 @@ class ConfiguratorTest extends Test
 
 		$this->assertArrayHasKey('regexp', $plugin->asConfig());
 	}
+
+	/**
+	* @testdox The config array contains the name of the tag
+	*/
+	public function testConfigTagName()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons', array('tagName' => 'FOO'));
+		$plugin->add(':)', ':)');
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('tagName', $config);
+		$this->assertSame('FOO', $config['tagName']);
+	}
 }

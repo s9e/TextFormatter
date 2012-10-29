@@ -158,7 +158,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		$this->items['closeParent'][] = TagName::normalize($tagName);
 	}
 
-
 	/**
 	* Set the default child rule
 	*

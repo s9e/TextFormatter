@@ -37,7 +37,6 @@ class Repository
 			$dom = new DOMDocument;
 			$dom->preserveWhiteSpace = false;
 
-
 			$useErrors = libxml_use_internal_errors(true);
 			$success = $dom->load($value);
 			libxml_use_internal_errors($useErrors);

@@ -55,7 +55,9 @@ class Configurator extends ConfiguratorBase
 			= RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes());
 
 		return array(
-			'regexp' => '#' . $schemeRegexp . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS'
+			'attrName' => $this->attrName,
+			'regexp'   => '#' . $schemeRegexp . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS',
+			'tagName'  => $this->tagName
 		);
 	}
 
@@ -69,7 +71,6 @@ class Configurator extends ConfiguratorBase
 	{
 		$this->attrName = AttributeName::normalize($attrName);
 	}
-
 
 	/**
 	* Change the tag name used by this plugin
