@@ -76,7 +76,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 
 	/**
-	* 
+	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
@@ -85,13 +85,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			return false;
 		}
 
-		/**
-		* Build the regexp that matches all the BBCode names
-		*/
+		// Build the regexp that matches all the BBCode names
 		$regexp = RegexpBuilder::fromList(array_keys(iterator_to_array($this->collection)));
 
 		// Remove the non-capturing subpattern since we place the regexp inside a capturing pattern
-		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
+		if (substr($regexp, 0, 3) === '(?:')
+		{
+			$regexp = substr($regexp, 3, -1);
+		}
 
 		return array(
 			'bbcodes' => $this->collection->asConfig(),

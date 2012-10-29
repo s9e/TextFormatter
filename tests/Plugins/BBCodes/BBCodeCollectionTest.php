@@ -93,4 +93,40 @@ class BBCodeCollectionTest extends Test
 
 		$this->assertTrue($collection->exists('X'));
 	}
+
+	/**
+	* @testdox asConfig() removes the defaultAttribute value of BBCodes where it is the same as the BBCode's name
+	*/
+	public function testDefaultAttributeRemoved()
+	{
+		$collection = new BBCodeCollection;
+		$collection->add('X', array('defaultAttribute' => 'x'));
+		$collection->add('Y', array('defaultAttribute' => 'x'));
+
+		$this->assertSame(
+			array(
+				'X' => array(),
+				'Y' => array('defaultAttribute' => 'x')
+			),
+			$collection->asConfig()
+		);
+	}
+
+	/**
+	* @testdox asConfig() removes the tagName value of BBCodes where it is the same as the BBCode's name
+	*/
+	public function testTagNameRemoved()
+	{
+		$collection = new BBCodeCollection;
+		$collection->add('X', array('tagName' => 'X'));
+		$collection->add('Y', array('tagName' => 'X'));
+
+		$this->assertSame(
+			array(
+				'X' => array(),
+				'Y' => array('tagName' => 'X')
+			),
+			$collection->asConfig()
+		);
+	}
 }

@@ -810,6 +810,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
  [x] exists() normalizes the BBCode's name
  [x] get() normalizes the BBCode's name
  [x] set() normalizes the BBCode's name
+ [x] asConfig() removes the defaultAttribute value of BBCodes where it is the same as the BBCode's name
+ [x] asConfig() removes the tagName value of BBCodes where it is the same as the BBCode's name
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeMonkey
  [x] parse() works
@@ -839,6 +841,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
  [x] addFromRepository() returns the newly-created BBCode
  [x] asConfig() returns FALSE if no BBCodes were created
+ [x] Generates a regexp for its config array
+ [x] The regexp that matches BBCode names does not contain a superfluous subpattern
 
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag

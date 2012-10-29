@@ -117,4 +117,29 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('BBCodes');
 		$this->assertFalse($plugin->asConfig());
 	}
+
+	/**
+	* @testdox Generates a regexp for its config array
+	*/
+	public function testRegexp()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->add('B');
+
+		$this->assertArrayHasKey('regexp', $plugin->asConfig());
+	}
+
+	/**
+	* @testdox The regexp that matches BBCode names does not contain a superfluous subpattern
+	*/
+	public function testRegexpSubpattern()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->add('BAR');
+		$plugin->add('FOO');
+
+		$config = $plugin->asConfig();
+
+		$this->assertNotContains('(?:', $config['regexp']);
+	}
 }
