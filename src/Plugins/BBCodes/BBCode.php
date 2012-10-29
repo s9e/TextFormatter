@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Plugins\BBCodes;
 
 use s9e\TextFormatter\Configurator\Collections\AttributeList;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
@@ -54,24 +55,7 @@ class BBCode implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$config = array();
-
-		if (count($this->contentAttributes))
-		{
-			$config['contentAttributes'] = $this->contentAttributes->asConfig();
-		}
-
-		if (isset($this->defaultAttribute))
-		{
-			$config['defaultAttribute'] = $this->defaultAttribute;
-		}
-
-		if (isset($this->tagName))
-		{
-			$config['tagName'] = $this->tagName;
-		}
-
-		return $config;
+		return ConfigHelper::toArray(get_object_vars($this));
 	}
 
 	/**

@@ -76,7 +76,6 @@ class AttributeTest extends Test
 		$this->assertEquals(
 			array(
 				'defaultValue' => 'foo',
-				'filterChain'  => array(),
 				'required'     => true
 			),
 			$attr->asConfig()

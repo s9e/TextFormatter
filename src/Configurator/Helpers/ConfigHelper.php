@@ -25,6 +25,12 @@ abstract class ConfigHelper
 
 		foreach ($value as $k => $v)
 		{
+			if (!isset($v))
+			{
+				// We don't record NULL values
+				continue;
+			}
+
 			if ($v instanceof ConfigProvider)
 			{
 				$v = $v->asConfig();
@@ -36,6 +42,12 @@ abstract class ConfigHelper
 			elseif (!is_scalar($v))
 			{
 				throw new RuntimeException('Cannot convert ' . gettype($v) . ' to array');
+			}
+
+			if ($v === array())
+			{
+				// We don't record empty structures
+				continue;
 			}
 
 			$array[$k] = $v;

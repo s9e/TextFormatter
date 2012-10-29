@@ -290,11 +290,7 @@ class TagTest extends Test
 
 		$this->assertEquals(
 			array(
-				'attributes' => array(),
-				'attributePreprocessors' => array(),
-				'filterChain' => array(),
 				'nestingLimit' => 10,
-				'rules' => array(),
 				'tagLimit' => 100
 			),
 			$tag->asConfig()

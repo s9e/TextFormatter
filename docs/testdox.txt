@@ -200,6 +200,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() works with deep arrays
  [x] toArray() calls asConfig() for objects in deep arrays that implement ConfigProvider
  [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
+ [x] Omits NULL values
+ [x] Omits empty arrays from values
+ [x] Omits empty Collections from values
 
 s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child
@@ -801,6 +804,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCode
  [x] BBCode::normalizeName('*invalid*') throws an exception
  [x] defaultAttribute accepts an attribute name and normalizes it accordingly
  [x] tagName accepts a tag name and normalizes it accordingly
+ [x] asConfig() returns its set properties
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
  [x] add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\BBCode

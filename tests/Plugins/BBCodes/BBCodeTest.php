@@ -65,4 +65,18 @@ class BBCodeTest extends Test
 
 		$this->assertSame('URL', $bbcode->tagName);
 	}
+
+	/**
+	* @testdox asConfig() returns its set properties
+	*/
+	public function testAsConfig()
+	{
+		$bbcode = new BBCode;
+		$bbcode->tagName = 'FOO';
+
+		$this->assertSame(
+			array('tagName' => 'FOO'),
+			$bbcode->asConfig()
+		);
+	}
 }
