@@ -638,7 +638,7 @@ class RulesetTest extends Test
 	/**
 	* @testdox asConfig() does not return rules that are not used during parsing
 	*/
-	public function testToConfigOmitsUnneededRules()
+	public function testAsConfigOmitsUnneededRules()
 	{
 		$ruleset = new Ruleset;
 		$rules = array(
@@ -668,7 +668,7 @@ class RulesetTest extends Test
 	/**
 	* @testdox asConfig() flips arrays to use target names as keys
 	*/
-	public function testToConfigFlipsArrays()
+	public function testAsConfigFlipsArrays()
 	{
 		$ruleset = new Ruleset;
 
@@ -685,7 +685,7 @@ class RulesetTest extends Test
 	/**
 	* @testdox asConfig() does not attempt to flip scalar rules such as "isTransparent"
 	*/
-	public function testToConfigDoesNotFlipScalars()
+	public function testAsConfigDoesNotFlipScalars()
 	{
 		$ruleset = new Ruleset;
 		$ruleset->isTransparent(true);

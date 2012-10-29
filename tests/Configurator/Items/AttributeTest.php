@@ -68,7 +68,7 @@ class AttributeTest extends Test
 	/**
 	* @testdox asConfig() correctly produces a config array
 	*/
-	public function testToConfig()
+	public function testAsConfig()
 	{
 		$attr = new Attribute;
 		$attr->defaultValue = 'foo';

@@ -89,7 +89,12 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 
 	/**
-	* @return array|bool This plugin's config, or FALSE to disable this plugin
+	* Convert this plugin's config for use in the Javascript parser
+	*
+	* This is the base implementation. Plugins that require special modifications can override it
+	*
+	* @param  array $config Original config
+	* @return array         The config used by the JS parser
 	*/
 	public function toJS(array $config)
 	{
@@ -104,7 +109,8 @@ abstract class ConfiguratorBase implements ConfigProvider
 
 			$config['regexp'] = (is_array($config['regexp'])) ? $regexps : $regexps[0];
 		}
-		return ConfigHelper::toArray($properties);
+
+		return $config;
 	}
 
 	//==========================================================================

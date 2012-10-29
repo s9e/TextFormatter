@@ -60,11 +60,61 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox Generates a regexp for its config array
 	*/
-	public function testToConfig()
+	public function testAsConfig()
 	{
 		$plugin = $this->configurator->plugins->load('Censor');
 		$plugin->add('apple');
 
 		$this->assertArrayHasKey('regexp', $plugin->asConfig());
+	}
+
+	/**
+	* @testdox Returns the replacements in its config in the form [regexp => replacement]
+	*/
+	public function testAsConfigReplacements()
+	{
+		$plugin = $this->configurator->plugins->load('Censor');
+		$plugin->add('apple', 'banana');
+
+		$config = $plugin->asConfig();
+
+		$this->assertSame(
+			array('/^apple$/Diu' => 'banana'),
+			$config['replacements']
+		);
+	}
+
+	/**
+	* @testdox Words sharing the same replacement share a common regexp
+	*/
+	public function testAsConfigReplacementsMerge()
+	{
+		$plugin = $this->configurator->plugins->load('Censor');
+		$plugin->add('apple', 'banana');
+		$plugin->add('cherry', 'banana');
+
+		$config = $plugin->asConfig();
+
+		$this->assertSame(
+			array('/^(?:apple|cherry)$/Diu' => 'banana'),
+			$config['replacements']
+		);
+	}
+
+	/**
+	* @testdox Words using the default replacement do not appear in the replacements
+	*/
+	public function testAsConfigDefaultReplacement()
+	{
+		$plugin = $this->configurator->plugins->load('Censor', array('defaultReplacement' => '**'));
+		$plugin->add('apple', '**');
+		$plugin->add('cherry', 'banana');
+
+		$config = $plugin->asConfig();
+
+		$this->assertSame(
+			array('/^cherry$/Diu' => 'banana'),
+			$config['replacements']
+		);
 	}
 }

@@ -284,7 +284,7 @@ class TagTest extends Test
 	/**
 	* @testdox asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
 	*/
-	public function testToConfig()
+	public function testAsConfig()
 	{
 		$tag = new Tag;
 

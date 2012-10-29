@@ -121,7 +121,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox Generates a regexp for its config array
 	*/
-	public function testToConfig()
+	public function testAsConfig()
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->add(':)', ':)');

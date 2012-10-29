@@ -101,7 +101,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		{
 			$words[] = $word;
 
-			if (isset($replacement))
+			if (isset($replacement) && $replacement !== $this->defaultReplacement)
 			{
 				$replacementWords[$replacement][] = $word;
 			}

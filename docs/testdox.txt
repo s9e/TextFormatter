@@ -779,6 +779,8 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
  [x] Offers a default getXSL() implementation that returns an empty string
+ [x] toJS() converts the regexp in 'regexp' if applicable
+ [x] toJS() converts the array of regexps in 'regexp' if applicable
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] Automatically creates an "URL" tag with an "url" attribute with a "#url" filter
@@ -845,6 +847,9 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] The name of the attribute used can be changed through the "attrName" constructor option
  [x] asConfig() returns FALSE if no words were added
  [x] Generates a regexp for its config array
+ [x] Returns the replacements in its config in the form [regexp => replacement]
+ [x] Words sharing the same replacement share a common regexp
+ [x] Words using the default replacement do not appear in the replacements
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Automatically creates an "E" tag
