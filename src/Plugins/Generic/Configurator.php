@@ -5,33 +5,41 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\Generic;
 
 use Exception;
-use InvalidArgumentException,
-	RuntimeException;
-use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\JSParserGenerator;
+use InvalidArgumentException;
+use RuntimeException;
+use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
 * NOTE: does not support duplicate named captures
 */
-class GenericConfig extends ConfiguratorBase
+class Configurator extends ConfiguratorBase
 {
 	/**
-	* @var array Associative array of regexps. The keys are the corresponding tag names
+	* @var NormalizedCollection
 	*/
-	protected $regexp = array();
+	protected $collection;
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function setUp()
+	{
+		$this->collection = new NormalizedCollection;
+	}
 
 	/**
 	* Add a generic replacement
 	*
-	* @param  string $regexp
-	* @param  string $template
-	* @return string           The name of the tag
+	* @param  string $regexp   Regexp to be used by the parser
+	* @param  string $template Template to be used for rendering
+	* @return string           The name of the tag created to represent this replacement
 	*/
-	public function addReplacement($regexp, $template)
+	public function add($regexp, $template)
 	{
 		$valid = false;
 
@@ -48,19 +56,14 @@ class GenericConfig extends ConfiguratorBase
 			throw new InvalidArgumentException('Invalid regexp');
 		}
 
-		/**
-		* Tag options, will store attributes and template
-		*/
-		$tagOptions = array(
-			'template' => $template
-		);
+		// Generate a tag name based on the regexp
+		$tagName = sprintf('G%08X', crc32($regexp));
 
-		/**
-		* Parse the regexp, and generate an attribute for every named capture
-		*/
-		$regexpInfo = $this->configurator->getRegexpHelper()->parseRegexp($regexp);
+		// Create the tag that will represent the regexp
+		$tag = $this->configurator->tags->add($tagName);
 
-		$attrs = array();
+		// Parse the regexp, and generate an attribute for every named capture
+		$regexpInfo = RegexpParser::parse($regexp);
 
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
@@ -69,7 +72,7 @@ class GenericConfig extends ConfiguratorBase
 			{
 				$attrName = $tok['name'];
 
-				if (isset($tagOptions['attrs'][$attrName]))
+				if (isset($tag->attributes[$attrName]))
 				{
 					throw new RuntimeException('Duplicate named subpatterns are not allowed');
 				}
@@ -81,77 +84,35 @@ class GenericConfig extends ConfiguratorBase
 				$attrRegexp = $regexpInfo['delimiter']
 				            . '^' . substr($regexpInfo['regexp'], $lpos, $rpos - $lpos) . '$'
 				            . $regexpInfo['delimiter']
-				            . $regexpInfo['modifiers']
+				            . str_replace('D', '', $regexpInfo['modifiers'])
 				            . 'D';
 
-				$tagOptions['attrs'][$attrName] = array(
-					'filter'   => '#regexp',
-					'regexp'   => $attrRegexp,
-					'required' => true
-				);
+				$attribute = $tag->attributes->add($attrName);
+
+				$attribute->required = true;
+				$attribute->filterChain->append('#regexp', array('regexp' => $attrRegexp));
 			}
 		}
 
-		/**
-		* Generate a tag name based on the regexp
-		*/
-		$tagName = 'G' . strtr(dechex(crc32($regexp)), 'abcdef', 'ABCDEF');
+		// Now that all attributes have been created we can assign the template
+		$tag->defaultTemplate = $template;
 
-		/**
-		* Create the tag
-		*/
-		$this->configurator->addTag($tagName, $tagOptions);
-
-		/**
-		* Finally, record the replacement
-		*/
-		$this->regexp[$tagName] = $regexp;
+		// Finally, record the regexp
+		$this->collection[$tagName] = $regexp;
 
 		return $tagName;
 	}
 
-	public function getConfig()
+	/**
+	* {@inheritdoc}
+	*/
+	public function asConfig()
 	{
-		if (empty($this->regexp))
+		if (!count($this->collection))
 		{
 			return false;
 		}
 
-		return array('regexp' => $this->regexp);
-	}
-
-	//==========================================================================
-	// JS Parser stuff
-	//==========================================================================
-
-	public function getJSConfig()
-	{
-		$config = $this->getConfig();
-
-		if ($config)
-		{
-			foreach ($config['regexp'] as $tagName => $regexp)
-			{
-				$this->configurator->getRegexpHelper()->pcreToJs($regexp, $config['regexpMap'][$tagName]);
-			}
-		}
-
-		return $config;
-	}
-
-	public function getJSConfigMeta()
-	{
-		return array(
-			'preserveKeys' => array(
-				array('regexp', true),
-				array('regexpMap', true),
-				array('regexpMap', true, true)
-			)
-		);
-	}
-
-	public function getJSParser()
-	{
-		return file_get_contents(__DIR__ . '/GenericParser.js');
+		return array('regexp' => $this->collection->asConfig());
 	}
 }

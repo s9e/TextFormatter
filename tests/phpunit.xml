@@ -65,12 +65,15 @@
 			<file>Plugins/Censor/ConfiguratorTest.php</file>
 			<file>Plugins/Emoticons/ConfiguratorTest.php</file>
 			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
+			<file>Plugins/Generic/ConfiguratorTest.php</file>
 			<file>Plugins/RawHTML/ConfiguratorTest.php</file>
 		</testsuite>
 	</testsuites>
 
 	<filter>
 		<whitelist>
+			<!--directory suffix=".php">../src</directory-->
+
 			<file>../src/Configurator/Collections/AttributeCollection.php</file>
 			<file>../src/Configurator/Collections/AttributeList.php</file>
 			<file>../src/Configurator/Collections/AttributePreprocessorCollection.php</file>
@@ -116,6 +119,7 @@
 			<file>../src/Plugins/Censor/Configurator.php</file>
 			<file>../src/Plugins/Emoticons/Configurator.php</file>
 			<file>../src/Plugins/Emoticons/EmoticonCollection.php</file>
+			<file>../src/Plugins/Generic/Configurator.php</file>
 			<file>../src/Plugins/RawHTML/Configurator.php</file>
 		</whitelist>
 	</filter>

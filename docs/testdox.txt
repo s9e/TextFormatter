@@ -876,6 +876,16 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
  [x] Throws an exception when an invalid template is set
  [x] Throws an exception when an unsafe template is set
 
+s9e\TextFormatter\Tests\Plugins\Generic\Configurator
+ [x] add() returns the name of the tag it creates
+ [x] add() throws an exception if the regexp is invalid
+ [x] add() throws an exception on duplicate named subpatterns
+ [x] add() creates a tag to represent the replacement
+ [x] add() creates an attribute for each named subpattern
+ [x] add() creates a regexp filter for each attribute created
+ [x] asConfig() returns FALSE if no replacements were set
+ [x] Generates a regexp for every replacement, using its tag name as key
+
 s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] allowElement('b') creates a tag named 'html:b'
  [x] allowElement('B') creates a tag named 'html:b'
