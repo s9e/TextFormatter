@@ -78,7 +78,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	/**
 	* 
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		if (!count($this->collection))
 		{
@@ -94,7 +94,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$regexp = preg_replace('#^\\(\\?:(.*)\\)$#D', '$1', $regexp);
 
 		return array(
-			'bbcodes' => $this->collection->toConfig(),
+			'bbcodes' => $this->collection->asConfig(),
 			'regexp'  => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		);
 	}

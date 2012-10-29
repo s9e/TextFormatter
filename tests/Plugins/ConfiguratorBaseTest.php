@@ -81,7 +81,7 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
-	* @testdox Offers a default toConfig() implementation that leaves out the configurator instance
+	* @testdox Offers a default asConfig() implementation that leaves out the configurator instance
 	*/
 	public function testToConfig()
 	{
@@ -94,7 +94,7 @@ class ConfiguratorBaseTest extends Test
 				'regexpLimit' => 1000,
 				'regexpLimitAction' => 'ignore'
 			),
-			$dummy->toConfig()
+			$dummy->asConfig()
 		);
 	}
 

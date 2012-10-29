@@ -26,7 +26,7 @@ class AttributePreprocessorCollectionTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() returns a list of regexps for each attribute
+	* @testdox asConfig() returns a list of regexps for each attribute
 	*/
 	public function testGetConfig()
 	{
@@ -42,7 +42,7 @@ class AttributePreprocessorCollectionTest extends Test
 				'x' => array('#x1#', '#x2#'),
 				'y' => array('#y1#', '#y2#')
 			),
-			$collection->toConfig()
+			$collection->asConfig()
 		);
 	}
 
@@ -102,7 +102,7 @@ class AttributePreprocessorCollectionTest extends Test
 
 		$this->assertEquals(
 			$attributePreprocessors,
-			$attributePreprocessorCollection->toConfig()
+			$attributePreprocessorCollection->asConfig()
 		);
 	}
 
@@ -127,7 +127,7 @@ class AttributePreprocessorCollectionTest extends Test
 				'foo' => array('/a/', '/b/'),
 				'bar' => array('/c/')
 			),
-			$attributePreprocessorCollection->toConfig()
+			$attributePreprocessorCollection->asConfig()
 		);
 	}
 

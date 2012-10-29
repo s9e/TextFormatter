@@ -16,6 +16,7 @@ use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Items\Filter;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
 class Configurator implements ConfigProvider
@@ -23,7 +24,7 @@ class Configurator implements ConfigProvider
 	/**
 	* @var FilterCollection Custom filters
 	*/
-	public $filters;
+	public $customFilters;
 
 	/**
 	* @var PluginCollection Loaded plugins
@@ -55,11 +56,47 @@ class Configurator implements ConfigProvider
 	}
 
 	/**
+	* Magic __get automatically loads plugins, PredefinedTags class
+	*
+	* @param  string $k Property name
+	* @return mixed
+	*/
+	public function __get($k)
+	{
+		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
+		{
+			return $this->plugins->get($k);
+		}
+
+		throw new RuntimeException("Undefined property '" . __CLASS__ . '::$' . $k . "'");
+	}
+
+	/**
+	* Return an instance of Parser based on the current config
+	*
+	* @return Parser
+	*/
+	public function getParser()
+	{
+		return new Parser($this->asConfig());
+	}
+
+	/**
+	* Return an instance of Renderer based on the current config
+	*
+	* @return Renderer
+	*/
+	public function getRenderer()
+	{
+		return new Renderer($this->getXSL());
+	}
+
+	/**
 	* Generate and return the complete config array
 	*
 	* @return array
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		$config    = ConfigHelper::toArray($this);
 		$bitfields = RulesHelper::getBitfield($this->tags);
@@ -83,53 +120,72 @@ class Configurator implements ConfigProvider
 	}
 
 	/**
-	* 
+	* Test the filterChain of every tag/attribute and generate a warning for every invalid filter
 	*
 	* @return void
 	*/
-	protected function doStuff()
+	protected function warnAboutUnknownFilters()
 	{
 		foreach ($this->tags as $tagName => $tag)
 		{
+			foreach ($tag->filterChain as $k => $filter)
+			{
+				if (!$this->filterIsValid($filter))
+				{
+					trigger_error('Filter #' . $k . " of tag '" . $tagName . "' is invalid", E_USER_WARNING);
+				}
+			}
+
 			foreach ($tag->attributes as $attrName => $attribute)
 			{
-				foreach ($attribute->filterChain as $filter)
+				foreach ($attribute->filterChain as $k => $filter)
 				{
-					$callback = $filter->getCallback();
-
-					// Test whether this callback is a built-in/custom filter
-					if (!is_string($callback) || $callback[0] !== '#')
+					if (!$this->filterIsValid($filter))
 					{
-						continue;
+						trigger_error('Filter #' . $k . " used in attribute '" . $attrName . "' of tag '" . $tagName . "' is invalid", E_USER_WARNING);
 					}
-
-					// Remove the # sign from the start of the name
-					$filterName = substr($callback, 1);
-
-					// Test whether we have a custom filter by that name
-					if (isset($this->customFilters[$filterName]))
-					{
-						// All good
-						continue;
-					}
-
-					// Test whether we have a built-in filter by that name
-					$className = 's9e\\TextFormatter\\Parser\\Filters\\' . ucfirst($filterName);
-
-					if (class_exists($className))
-					{
-						// All good
-						continue;
-					}
-
-					// This filter doesn't seem to exist. We'll issue a warning for now and the
-					// parser will systematically invalidate this attribute
-					trigger_error("Filter '" . $callback . "' used in attribute '" . $attrName . "' of tag '" . $tagName . "' does not exist", E_USER_WARNING);
 				}
 			}
 		}
 	}
 
+	/**
+	* Test whether a filter is valid
+	*
+	* Currently only tests whether the callback exists, but could be expanded to test other
+	* conditions as well, such as whether the values in a #range are valid.
+	*
+	* @param  Filter $filter
+	* @return bool
+	*/
+	protected function filterIsValid(Filter $filter)
+	{
+		$callback = $filter->getCallback();
+
+		// Test whether this callback is anything but a built-in/custom filter
+		if (!is_string($callback) || $callback[0] !== '#')
+		{
+			return true;
+		}
+
+		// Remove the # sign from the start of the name
+		$filterName = substr($callback, 1);
+
+		// Test whether we have a custom filter by that name
+		if (isset($this->customFilters[$filterName]))
+		{
+			return true;
+		}
+
+		// Test whether we have a built-in filter by that name
+		$className = 's9e\\TextFormatter\\Parser\\Filters\\' . ucfirst($filterName);
+		if (class_exists($className))
+		{
+			return true;
+		}
+
+		return false;
+	}
 
 	// NOTE: when building the JS config, keys from Collections should probably automatically be preserved, although not always (e.g. rule names?)
 
@@ -152,122 +208,9 @@ class Configurator implements ConfigProvider
 	// Plugins
 	//==========================================================================
 
-	/**
-	* Magic __get automatically loads plugins, PredefinedTags class
-	*
-	* @param  string $k Property name
-	* @return mixed
-	*/
-	public function __get($k)
-	{
-		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
-		{
-			return $this->plugins->get($k);
-		}
-
-		throw new RuntimeException("Undefined property '" . __CLASS__ . '::$' . $k . "'");
-	}
-
 	//==========================================================================
 	// Factories
 	//==========================================================================
-
-	/**
-	* Return an instance of Parser based on the current config
-	*
-	* @return Parser
-	*/
-	public function getParser()
-	{
-		return new Parser($this->getParserConfig());
-	}
-
-	/**
-	* Return an instance of Renderer based on the current config
-	*
-	* @return Renderer
-	*/
-	public function getRenderer()
-	{
-		return new Renderer($this->getXSL());
-	}
-
-	/**
-	* Return a (cached) instance of RegexpHelper
-	*
-	* @return RegexpHelper
-	*/
-	public function getRegexpHelper()
-	{
-		static $rm;
-
-		if (!isset($rm))
-		{
-			$rm = new RegexpHelper;
-		}
-
-		return $rm;
-	}
-
-	//==========================================================================
-	// Config
-	//==========================================================================
-
-	/**
-	* Return the config needed by the global parser
-	*
-	* @param  bool  $keepJs Whether to keep the Javascript filters in the array
-	* @return array
-	*/
-	public function getParserConfig($keepJs = false)
-	{
-		$config = array(
-			'urlConfig' => $this->getUrlConfig(),
-			'plugins'   => $this->getPluginsConfig(),
-			'tags'      => $this->getTagsConfig(true)
-		);
-
-		foreach ($this->filters as $filterName => $filter)
-		{
-			$filterConf = $filter->toArray();
-
-			if (!$keepJs)
-			{
-				unset($filterConf['js']);
-			}
-
-			$config['filters'][$filterName] = $filterConf;
-		}
-
-		/**
-		* Generate the root context to be used by the Parser
-		*/
-		$config['rootContext'] = array(
-			'allowedChildren'    => str_repeat("\x00", ceil(count($config['tags']) / 8)),
-			'allowedDescendants' => str_repeat("\x00", ceil(count($config['tags']) / 8))
-		);
-
-		foreach ($config['tags'] as &$tagConfig)
-		{
-			$n = $tagConfig['n'];
-
-			// We set the bit only if the tag is allowed at the root of document
-			if (empty($tagConfig['disallowAsRoot']))
-			{
-				$config['rootContext']['allowedChildren'][$n >> 3]
-					= $config['rootContext']['allowedChildren'][$n >> 3] | chr(1 << ($n & 7));
-			}
-
-			$config['rootContext']['allowedDescendants'][$n >> 3]
-				= $config['rootContext']['allowedDescendants'][$n >> 3] | chr(1 << ($n & 7));
-
-			// We don't need this anymore
-			unset($tagConfig['disallowAsRoot']);
-		}
-		unset($tagConfig);
-
-		return $config;
-	}
 
 	/**
 	* Return the configs generated by plugins
@@ -311,169 +254,6 @@ class Configurator implements ConfigProvider
 		return $config;
 	}
 
-	/**
-	* Return the tags' config, normalized and sorted, minus the tags' templates
-	*
-	* @param  bool  $reduce If true, remove unnecessary/empty entries and build the list of allowed
-	*                       decendants for each tag
-	* @return array
-	*/
-	public function getTagsConfig($reduce = false)
-	{
-		$tagsConfig = $this->tags;
-		ksort($tagsConfig);
-
-		$n = -1;
-
-		foreach ($tagsConfig as $tagName => &$tagConfig)
-		{
-			if ($reduce)
-			{
-				if ($tagConfig['disable'])
-				{
-					// This tag is disabled, remove it
-					unset($tagsConfig[$tagName]);
-					continue;
-				}
-
-				$tagConfig['n'] = ++$n;
-
-				/**
-				* Build the list of allowed children and descendants.
-				* Note: $tagsConfig is already sorted, so we don't have to sort the list
-				*/
-				$tagConfig['allowedChildren'] = array_fill_keys(
-					array_keys($tagsConfig),
-					($tagConfig['defaultChildRule'] === 'allow') ? '1' : '0'
-				);
-				$tagConfig['allowedDescendants'] = array_fill_keys(
-					array_keys($tagsConfig),
-					($tagConfig['defaultDescendantRule'] === 'allow') ? '1' : '0'
-				);
-
-				if (isset($tagConfig['rules']))
-				{
-					/**
-					* Sort the rules so that "deny" overwrites "allow"
-					*/
-					ksort($tagConfig['rules']);
-
-					foreach ($tagConfig['rules'] as $action => &$targets)
-					{
-						switch ($action)
-						{
-							case 'allowChild':
-							case 'allowDescendant':
-							case 'denyChild':
-							case 'denyDescendant':
-								/**
-								* Those rules are converted into the allowedChildren and
-								* allowedDescendants bitmaps
-								*/
-								$k = (substr($action, -5) === 'Child')
-								   ? 'allowedChildren'
-								   : 'allowedDescendants';
-
-								$v = (substr($action, 0, 4) === 'deny') ? '0' : '1';
-
-								foreach ($targets as $target)
-								{
-									// make sure the target really exists
-									if (isset($tagConfig[$k][$target]))
-									{
-										$tagConfig[$k][$target] = $v;
-									}
-								}
-
-								// We don't need those anymore
-								unset($tagConfig['rules'][$action]);
-								break;
-
-							case 'requireParent':
-							case 'requireAncestor':
-								/**
-								* Nothing to do here. If the target tag does not exist, this tag
-								* will never be valid but we still leave it in the configuration
-								*/
-								break;
-
-							default:
-								// keep only the rules that target existing tags
-								$targets = array_intersect_key($targets, $tagsConfig);
-						}
-					}
-					unset($targets);
-
-					/**
-					* Remove rules with no targets
-					*/
-					$tagConfig['rules'] = array_filter($tagConfig['rules']);
-
-					if (empty($tagConfig['rules']))
-					{
-						unset($tagConfig['rules']);
-					}
-
-					if (!empty($tagConfig['attrs']))
-					{
-						foreach ($tagConfig['attrs'] as &$attrConf)
-						{
-							/**
-							* Remove the filterChain if it's empty
-							*/
-							if (empty($attrConf['filterChain']))
-							{
-								unset($attrConf['filterChain']);
-							}
-						}
-						unset($attrConf);
-					}
-				}
-
-				unset($tagConfig['defaultChildRule']);
-				unset($tagConfig['defaultDescendantRule']);
-				unset($tagConfig['disable']);
-
-				/**
-				* We only need to store this option if it's true
-				*/
-				if (!$tagConfig['disallowAsRoot'])
-				{
-					unset($tagConfig['disallowAsRoot']);
-				}
-
-				/**
-				* We don't need the tag's template
-				*/
-				unset($tagConfig['xsl']);
-
-				/**
-				* Generate a proper (binary) bitfield
-				*/
-				$tagConfig['allowedChildren'] = self::bin2raw($tagConfig['allowedChildren']);
-				$tagConfig['allowedDescendants'] = self::bin2raw($tagConfig['allowedDescendants']);
-
-				/**
-				* Children are descendants of current node, so we apply denyDescendant rules to them
-				* as well.
-				*/
-				$tagConfig['allowedChildren'] &= $tagConfig['allowedDescendants'];
-			}
-
-			ksort($tagConfig);
-		}
-		unset($tagConfig);
-
-		return $tagsConfig;
-	}
-
-	protected static function bin2raw($values)
-	{
-		$bin = implode('', $values) . str_repeat('0', (((count($values) + 7) & 7) ^ 7));
-
-		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bin, 8)))));
-	}
-
 	//==========================================================================
 	// XSL stuff
 	//==========================================================================
@@ -487,50 +267,5 @@ class Configurator implements ConfigProvider
 	public function getXSL($prefix = 'xsl')
 	{
 		return TemplateHelper::getXSL($this);
-	}
-
-	//==========================================================================
-	// Javascript parser stuff
-	//==========================================================================
-
-	/**
-	* Return the Javascript parser that corresponds to this configuration
-	*
-	* @param  array  $options Options to be passed to the JSParser configurator
-	* @return string
-	*/
-	public function getJSParser(array $options = array())
-	{
-		$jspg = new JSParserGenerator($this);
-
-		return $jspg->get($options);
-	}
-
-	/**
-	* Return JS parsers and their config
-	*
-	* @return array
-	*/
-	public function getJSPlugins()
-	{
-		$plugins = array();
-
-		foreach ($this->getPluginsConfig('getJSConfig') as $pluginName => $pluginConfig)
-		{
-			$js = $this->$pluginName->getJSParser();
-
-			if (!$js)
-			{
-				continue;
-			}
-
-			$plugins[$pluginName] = array(
-				'parser' => $js,
-				'config' => $pluginConfig,
-				'meta'   => $this->$pluginName->getJSConfigMeta()
-			);
-		}
-
-		return $plugins;
 	}
 }

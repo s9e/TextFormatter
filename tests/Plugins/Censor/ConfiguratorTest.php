@@ -49,12 +49,12 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() returns FALSE if no words were added
+	* @testdox asConfig() returns FALSE if no words were added
 	*/
 	public function testFalseConfig()
 	{
 		$plugin = $this->configurator->plugins->load('Censor');
-		$this->assertFalse($plugin->toConfig());
+		$this->assertFalse($plugin->asConfig());
 	}
 
 	/**
@@ -65,6 +65,6 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('Censor');
 		$plugin->add('apple');
 
-		$this->assertArrayHasKey('regexp', $plugin->toConfig());
+		$this->assertArrayHasKey('regexp', $plugin->asConfig());
 	}
 }

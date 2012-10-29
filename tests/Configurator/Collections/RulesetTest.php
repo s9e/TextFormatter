@@ -636,7 +636,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() does not return rules that are not used during parsing
+	* @testdox asConfig() does not return rules that are not used during parsing
 	*/
 	public function testToConfigOmitsUnneededRules()
 	{
@@ -657,7 +657,7 @@ class RulesetTest extends Test
 			$ruleset->$k($v);
 		}
 
-		$config = $ruleset->toConfig();
+		$config = $ruleset->asConfig();
 
 		foreach ($rules as $k => $v)
 		{
@@ -666,7 +666,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() flips arrays to use target names as keys
+	* @testdox asConfig() flips arrays to use target names as keys
 	*/
 	public function testToConfigFlipsArrays()
 	{
@@ -675,7 +675,7 @@ class RulesetTest extends Test
 		$ruleset->closeParent('X');
 		$ruleset->closeParent('Y');
 
-		$config = $ruleset->toConfig();
+		$config = $ruleset->asConfig();
 
 		$this->assertArrayHasKey('closeParent', $config);
 		$this->assertArrayHasKey('X', $config['closeParent']);
@@ -683,7 +683,7 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() does not attempt to flip scalar rules such as "isTransparent"
+	* @testdox asConfig() does not attempt to flip scalar rules such as "isTransparent"
 	*/
 	public function testToConfigDoesNotFlipScalars()
 	{
@@ -692,7 +692,7 @@ class RulesetTest extends Test
 
 		$this->assertSame(
 			array('isTransparent' => true),
-			$ruleset->toConfig()
+			$ruleset->asConfig()
 		);
 	}
 }

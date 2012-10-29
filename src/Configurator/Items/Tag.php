@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
+use s9e\TextFormatter\Configurator\Collections\FilterChain;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\Templateset;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
@@ -31,14 +32,9 @@ class Tag implements ConfigProvider
 	protected $attributePreprocessors;
 
 	/**
-	* @var string Default rule governing this tag's childen
+	* @var FilterChain
 	*/
-	protected $defaultChildRule = 'allow';
-
-	/**
-	* @var string Default rule governing this tag's descendants
-	*/
-	protected $defaultDescendantRule = 'allow';
+	protected $filterChain;
 
 	/**
 	* @var integer Maximum nesting level for this tag
@@ -67,6 +63,7 @@ class Tag implements ConfigProvider
 	{
 		$this->attributes             = new AttributeCollection;
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
+		$this->filterChain            = new FilterChain(array('tag' => null));
 		$this->rules                  = new Ruleset;
 		$this->templates              = new Templateset($this);
 
@@ -187,7 +184,7 @@ class Tag implements ConfigProvider
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		$config = array();
 		foreach ($this as $k => $v)

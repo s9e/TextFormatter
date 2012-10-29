@@ -36,7 +36,7 @@ class UrlConfig implements ConfigProvider
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		$config = array(
 			'allowedSchemes' => '/^' . RegexpBuilder::fromList($this->allowedSchemes) . '$/Di'

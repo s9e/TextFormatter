@@ -49,7 +49,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		$schemeRegexp
 			= RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes());

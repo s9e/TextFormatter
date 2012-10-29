@@ -2,7 +2,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\Collection
  [x] Collection is countable
  [x] Collection is iterable with foreach
  [x] clear() empties the collection
- [x] toConfig() returns the items as an array
+ [x] asConfig() returns the items as an array
 
 s9e\TextFormatter\Tests\Configurator\Collections\NormalizedCollection
  [x] set() calls normalizeKey()
@@ -81,11 +81,11 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
 s9e\TextFormatter\Tests\Configurator\Lists\AttributeList
  [x] Attribute names are normalized for storage
  [x] Attribute names are normalized during retrieval
- [x] toConfig() returns a deduplicated list of attribute names
+ [x] asConfig() returns a deduplicated list of attribute names
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributePreprocessorCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\AttributePreprocessor
- [x] toConfig() returns a list of regexps for each attribute
+ [x] asConfig() returns a list of regexps for each attribute
  [x] Is iterable with foreach
  [x] Uses the name of the source attribute as key when iterating
  [x] merge() accepts a 2D array of regexps
@@ -178,9 +178,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] merge() correctly copies the disallowAtRoot setting from an instance of Ruleset
  [x] merge() correctly copies the isTransparent setting from an instance of Ruleset
  [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
- [x] toConfig() does not return rules that are not used during parsing
- [x] toConfig() flips arrays to use target names as keys
- [x] toConfig() does not attempt to flip scalar rules such as "isTransparent"
+ [x] asConfig() does not return rules that are not used during parsing
+ [x] asConfig() flips arrays to use target names as keys
+ [x] asConfig() does not attempt to flip scalar rules such as "isTransparent"
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Tag
@@ -198,7 +198,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\Templateset
 
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() works with deep arrays
- [x] toArray() calls toConfig() for objects in deep arrays that implement ConfigProvider
+ [x] toArray() calls asConfig() for objects in deep arrays that implement ConfigProvider
  [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
 
 s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
@@ -353,6 +353,38 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['d', 'dd', 'ddd'], ["specialChars" => ["d" => "\\d"]]) returns '\\d\\d?\\d?'
  [x] fromList() throws a RuntimeException if any word is not legal UTF-8
 
+s9e\TextFormatter\Tests\Configurator\Helpers\RegexpConvertor
+ [x] toJS() can convert plain regexps
+ [x] toJS() escapes forward slashes
+ [x] toJS() does not double-escape forward slashes that are already escaped
+ [x] toJS() does not "eat" backslashes while escaping forward slashes
+ [x] toJS() can convert regexps with the "i" modifier
+ [x] toJS() can convert regexps with capturing subpatterns
+ [x] toJS() can convert regexps with non-capturing subpatterns
+ [x] toJS() can convert regexps with non-capturing subpatterns with a quantifier
+ [x] toJS() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
+ [x] toJS() throws a RuntimeException on options (?i)
+ [x] toJS() throws a RuntimeException on subpattern options (?i:)
+ [x] toJS() can convert regexps with character classes with a quantifier
+ [x] toJS() converts greedy quantifiers to normal quantifiers in character classes
+ [x] toJS() replaces \pL with the full character range in character classes
+ [x] toJS() replaces \p{L} with the full character range in character classes
+ [x] toJS() replaces \pL outside of character classes with a character class containing the full character range
+ [x] toJS() replaces \p{L} outside of character classes with a character class containing the full character range
+ [x] toJS() replaces \p{^L} with a character class containing the full character range
+ [x] toJS() replaces \p{^L} with a character class equivalent to \PL
+ [x] toJS() replaces \P{^L} with a character class equivalent to \pL
+ [x] toJS() can convert regexps with lookahead assertions
+ [x] toJS() can convert regexps with negative lookahead assertions
+ [x] toJS() throws a RuntimeException on lookbehind assertions
+ [x] toJS() throws a RuntimeException on negative lookbehind assertions
+ [x] toJS() converts . to [\s\S] outside of character classes if the "s" modifier is set
+ [x] toJS() does not convert . to [\s\S] if the "s" modifier is not set
+ [x] toJS() does not convert . inside of character classes
+ [x] toJS() converts named captures into normal captures
+ [x] toJS() replaces its second parameter with an array that maps named captures to their index
+ [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
+
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
  [x] parse() can parse plain regexps
  [x] parse() throws a RuntimeException if delimiters can't be parsed
@@ -379,36 +411,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
  [x] parse() parses negative lookahead assertions
  [x] parse() parses lookbehind assertions
  [x] parse() parses negative lookbehind assertions
- [x] pcreToJs() can convert plain regexps
- [x] pcreToJs() escapes forward slashes
- [x] pcreToJs() does not double-escape forward slashes that are already escaped
- [x] pcreToJs() does not "eat" backslashes while escaping forward slashes
- [x] pcreToJs() can convert regexps with the "i" modifier
- [x] pcreToJs() can convert regexps with capturing subpatterns
- [x] pcreToJs() can convert regexps with non-capturing subpatterns
- [x] pcreToJs() can convert regexps with non-capturing subpatterns with a quantifier
- [x] pcreToJs() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
- [x] pcreToJs() throws a RuntimeException on options (?i)
- [x] pcreToJs() throws a RuntimeException on subpattern options (?i:)
- [x] pcreToJs() can convert regexps with character classes with a quantifier
- [x] pcreToJs() converts greedy quantifiers to normal quantifiers in character classes
- [x] pcreToJs() replaces \pL with the full character range in character classes
- [x] pcreToJs() replaces \p{L} with the full character range in character classes
- [x] pcreToJs() replaces \pL outside of character classes with a character class containing the full character range
- [x] pcreToJs() replaces \p{L} outside of character classes with a character class containing the full character range
- [x] pcreToJs() replaces \p{^L} with a character class containing the full character range
- [x] pcreToJs() replaces \p{^L} with a character class equivalent to \PL
- [x] pcreToJs() replaces \P{^L} with a character class equivalent to \pL
- [x] pcreToJs() can convert regexps with lookahead assertions
- [x] pcreToJs() can convert regexps with negative lookahead assertions
- [x] pcreToJs() throws a RuntimeException on lookbehind assertions
- [x] pcreToJs() throws a RuntimeException on negative lookbehind assertions
- [x] pcreToJs() converts . to [\s\S] outside of character classes if the "s" modifier is set
- [x] pcreToJs() does not convert . to [\s\S] if the "s" modifier is not set
- [x] pcreToJs() does not convert . inside of character classes
- [x] pcreToJs() converts named captures into normal captures
- [x] pcreToJs() replaces its second parameter with an array that maps named captures to their index
- [x] pcreToJs() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Works with a single tag
@@ -667,7 +669,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] $attr->filterChain can be assigned an array
  [x] $attr->filterChain can be assigned an instance of FilterChain to copy its content
  [x] setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
- [x] toConfig() correctly produces a config array
+ [x] asConfig() correctly produces a config array
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
@@ -709,7 +711,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
  [x] $tag->defaultTemplate maps to $tag->templates->get('')
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
- [x] toConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
+ [x] asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] Disallowed IDNs are punycoded
@@ -775,7 +777,7 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimit() throws an exception on invalid values
  [x] setRegexpLimitAction() sets the regexpLimitAction property
  [x] setRegexpLimitAction() throws an exception on invalid values
- [x] Offers a default toConfig() implementation that leaves out the configurator instance
+ [x] Offers a default asConfig() implementation that leaves out the configurator instance
  [x] Offers a default getXSL() implementation that returns an empty string
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
@@ -834,14 +836,14 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository('B', 'foo', ['title' => 'bar']) adds BBCode B and its tag from the 'foo' repository with variable 'title' replaced with content 'bar'
  [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
  [x] addFromRepository() returns the newly-created BBCode
- [x] toConfig() returns FALSE if no BBCodes were created
+ [x] asConfig() returns FALSE if no BBCodes were created
 
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
- [x] toConfig() returns FALSE if no words were added
+ [x] asConfig() returns FALSE if no words were added
  [x] Generates a regexp for its config array
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
@@ -853,7 +855,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Emoticons can contain single quotes
  [x] Emoticons can contain double quotes
  [x] Emoticons can contain both quotes at once
- [x] toConfig() returns FALSE if no emoticons were set
+ [x] asConfig() returns FALSE if no emoticons were set
  [x] Generates a regexp for its config array
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
@@ -876,6 +878,6 @@ s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] allowAttribute('span', 'onmouseover') allows the 'onmouseover' attribute on 'span' elements
  [x] allowElement('*invalid*') throws an exception
  [x] allowAttribute('b', '*invalid*') throws an exception
- [x] toConfig() returns FALSE if no elements were allowed
+ [x] asConfig() returns FALSE if no elements were allowed
  [x] Generates a regexp for its config array
 

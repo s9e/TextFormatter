@@ -95,7 +95,7 @@ class AttributePreprocessorCollection extends Collection
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		$config = array();
 

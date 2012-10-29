@@ -25,7 +25,7 @@ class AttributeList extends NormalizedList
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		return array_unique($this->items);
 	}

@@ -12,6 +12,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\RegexpConvertor;
 
 abstract class ConfiguratorBase implements ConfigProvider
 {
@@ -79,11 +80,30 @@ abstract class ConfiguratorBase implements ConfigProvider
 	/**
 	* @return array|bool This plugin's config, or FALSE to disable this plugin
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		$properties = get_object_vars($this);
 		unset($properties['configurator']);
 
+		return ConfigHelper::toArray($properties);
+	}
+
+	/**
+	* @return array|bool This plugin's config, or FALSE to disable this plugin
+	*/
+	public function toJS(array $config)
+	{
+		if (isset($config['regexp']))
+		{
+			$regexps = array();
+
+			foreach ((array) $config['regexp'] as $k => $regexp)
+			{
+				$regexps[$k] = RegexpConvertor::toJS($regexp);
+			}
+
+			$config['regexp'] = (is_array($config['regexp'])) ? $regexps : $regexps[0];
+		}
 		return ConfigHelper::toArray($properties);
 	}
 

@@ -80,7 +80,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		if (!count($this->collection))
 		{

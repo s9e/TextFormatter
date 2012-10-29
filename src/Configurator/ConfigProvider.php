@@ -14,5 +14,5 @@ interface ConfigProvider
 	*
 	* @return array
 	*/
-	public function toConfig();
+	public function asConfig();
 }

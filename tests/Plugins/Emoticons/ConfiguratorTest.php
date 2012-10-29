@@ -110,12 +110,12 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() returns FALSE if no emoticons were set
+	* @testdox asConfig() returns FALSE if no emoticons were set
 	*/
 	public function testFalseConfig()
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
-		$this->assertFalse($plugin->toConfig());
+		$this->assertFalse($plugin->asConfig());
 	}
 
 	/**
@@ -126,6 +126,6 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->add(':)', ':)');
 
-		$this->assertArrayHasKey('regexp', $plugin->toConfig());
+		$this->assertArrayHasKey('regexp', $plugin->asConfig());
 	}
 }

@@ -167,22 +167,22 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() returns FALSE if no elements were allowed
+	* @testdox asConfig() returns FALSE if no elements were allowed
 	*/
 	public function testFalseConfig()
 	{
 		$plugin = $this->configurator->plugins->load('RawHTML');
-		$this->assertFalse($plugin->toConfig());
+		$this->assertFalse($plugin->asConfig());
 	}
 
 	/**
 	* @testdox Generates a regexp for its config array
 	*/
-	public function testToConfig()
+	public function testAsConfig()
 	{
 		$plugin = $this->configurator->plugins->load('RawHTML');
 		$plugin->allowElement('b');
 
-		$this->assertArrayHasKey('regexp', $plugin->toConfig());
+		$this->assertArrayHasKey('regexp', $plugin->asConfig());
 	}
 }

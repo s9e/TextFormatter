@@ -69,7 +69,7 @@ class Attribute
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		$config = array();
 		foreach ($this as $k => $v)

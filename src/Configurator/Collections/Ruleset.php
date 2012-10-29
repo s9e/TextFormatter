@@ -292,7 +292,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	/**
 	* {@inheritdoc}
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		$config = $this->items;
 

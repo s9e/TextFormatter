@@ -61,7 +61,7 @@ class ConfiguratorTest extends Test
 	{
 		$this->assertArrayHasKey(
 			'regexp',
-			$this->configurator->plugins->load('Autolink')->toConfig()
+			$this->configurator->plugins->load('Autolink')->asConfig()
 		);
 	}
 
@@ -73,7 +73,7 @@ class ConfiguratorTest extends Test
 		$text = 'foo http://www.bar.com baz';
 		$url  = 'http://www.bar.com';
 
-		$config = $this->configurator->plugins->load('Autolink')->toConfig();
+		$config = $this->configurator->plugins->load('Autolink')->asConfig();
 		$this->assertRegExp($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
@@ -88,7 +88,7 @@ class ConfiguratorTest extends Test
 		$text = 'FOO HTTP://WWW.BAR.COM BAZ';
 		$url  = 'HTTP://WWW.BAR.COM';
 
-		$config = $this->configurator->plugins->load('Autolink')->toConfig();
+		$config = $this->configurator->plugins->load('Autolink')->asConfig();
 		$this->assertRegExp($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
@@ -103,7 +103,7 @@ class ConfiguratorTest extends Test
 		$text = 'foo http://www.bar.com/index.php?arr[foo]=1 baz';
 		$url  = 'http://www.bar.com/index.php?arr[foo]=1';
 
-		$config = $this->configurator->plugins->load('Autolink')->toConfig();
+		$config = $this->configurator->plugins->load('Autolink')->asConfig();
 		$this->assertRegExp($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
@@ -118,7 +118,7 @@ class ConfiguratorTest extends Test
 		$text = 'foo [http://www.bar.com/index.php?foo=1] baz';
 		$url  = 'http://www.bar.com/index.php?foo=1';
 
-		$config = $this->configurator->plugins->load('Autolink')->toConfig();
+		$config = $this->configurator->plugins->load('Autolink')->asConfig();
 		$this->assertRegExp($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);
@@ -133,7 +133,7 @@ class ConfiguratorTest extends Test
 		$text = 'foo [http://www.bar.com/index.php?arr[foo]=1] baz';
 		$url  = 'http://www.bar.com/index.php?arr[foo]=1';
 
-		$config = $this->configurator->plugins->load('Autolink')->toConfig();
+		$config = $this->configurator->plugins->load('Autolink')->asConfig();
 		$this->assertRegExp($config['regexp'], $text);
 
 		preg_match($config['regexp'], $text, $m);

@@ -33,7 +33,7 @@ class AttributeListTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() returns a deduplicated list of attribute names
+	* @testdox asConfig() returns a deduplicated list of attribute names
 	*/
 	public function testGetConfigDedupes()
 	{
@@ -43,7 +43,7 @@ class AttributeListTest extends Test
 
 		$this->assertSame(
 			array('url'),
-			$attributeList->toConfig()
+			$attributeList->asConfig()
 		);
 	}
 }

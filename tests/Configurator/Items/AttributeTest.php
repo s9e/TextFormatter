@@ -66,7 +66,7 @@ class AttributeTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() correctly produces a config array
+	* @testdox asConfig() correctly produces a config array
 	*/
 	public function testToConfig()
 	{
@@ -79,7 +79,7 @@ class AttributeTest extends Test
 				'filterChain'  => array(),
 				'required'     => true
 			),
-			$attr->toConfig()
+			$attr->asConfig()
 		);
 	}
 }

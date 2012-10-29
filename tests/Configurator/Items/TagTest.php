@@ -37,7 +37,7 @@ class TagTest extends Test
 
 		$this->assertEquals(
 			$attributePreprocessors,
-			$tag->attributePreprocessors->toConfig()
+			$tag->attributePreprocessors->asConfig()
 		);
 	}
 
@@ -81,7 +81,7 @@ class TagTest extends Test
 
 		$this->assertEquals(
 			$attributePreprocessors,
-			$tag->attributePreprocessors->toConfig()
+			$tag->attributePreprocessors->asConfig()
 		);
 	}
 
@@ -282,7 +282,7 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox toConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
+	* @testdox asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
 	*/
 	public function testToConfig()
 	{
@@ -292,11 +292,12 @@ class TagTest extends Test
 			array(
 				'attributes' => array(),
 				'attributePreprocessors' => array(),
+				'filterChain' => array(),
 				'nestingLimit' => 10,
 				'rules' => array(),
 				'tagLimit' => 100
 			),
-			$tag->toConfig()
+			$tag->asConfig()
 		);
 	}
 }

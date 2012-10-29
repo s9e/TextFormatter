@@ -243,7 +243,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Generate this plugin's config
 	*/
-	public function toConfig()
+	public function asConfig()
 	{
 		if (empty($this->tags))
 		{
