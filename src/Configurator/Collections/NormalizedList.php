@@ -42,6 +42,25 @@ class NormalizedList extends NormalizedCollection
 	}
 
 	/**
+	* Insert a value at an arbitrary 0-based position
+	*
+	* @param  integer $offset
+	* @param  mixed   $value
+	* @return mixed           Normalized value
+	*/
+	public function insert($offset, $value)
+	{
+		$offset = $this->normalizeKey($offset);
+		$value  = $this->normalizeValue($value);
+
+		// Insert the value at given offset. We put the value into an array so that array_splice()
+		// won't insert it as multiple elements if it happens to be an array
+		array_splice($this->items, $offset, 0, array($value));
+
+		return $value;
+	}
+
+	/**
 	* Test whether a given value is present in this list
 	*
 	* @param  mixed $value

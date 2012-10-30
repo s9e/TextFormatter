@@ -34,18 +34,6 @@ class NormalizedListTest extends Test
 	}
 
 	/**
-	* @testdox prepend() adds the value at the beginning of the list
-	*/
-	public function testPrepend()
-	{
-		$this->normalizedList->prepend(1);
-		$this->normalizedList->prepend(2);
-
-		$this->assertSame(2, $this->normalizedList[0]);
-		$this->assertSame(1, $this->normalizedList[1]);
-	}
-
-	/**
 	* @testdox $normalizedList[] = 'foo' maps to $normalizedList->append('foo')
 	*/
 	public function testArrayAccessAppend()
@@ -60,6 +48,56 @@ class NormalizedListTest extends Test
 		     ->with($this->equalTo('foo'));
 
 		$mock[] = 'foo';
+	}
+
+	/**
+	* @testdox prepend() adds the value at the beginning of the list
+	*/
+	public function testPrepend()
+	{
+		$this->normalizedList->prepend(1);
+		$this->normalizedList->prepend(2);
+
+		$this->assertSame(2, $this->normalizedList[0]);
+		$this->assertSame(1, $this->normalizedList[1]);
+	}
+
+	/**
+	* @testdox insert() inserts the value at given offset
+	*/
+	public function testInsert()
+	{
+		$this->normalizedList->append(1);
+		$this->normalizedList->append(3);
+		$this->normalizedList->insert(1, 2);
+
+		$this->assertSame(1, $this->normalizedList[0]);
+		$this->assertSame(2, $this->normalizedList[1]);
+		$this->assertSame(3, $this->normalizedList[2]);
+	}
+
+	/**
+	* @testdox insert() can insert value that is an array
+	*/
+	public function testInsertArray()
+	{
+		$this->normalizedList->append(1);
+		$this->normalizedList->append(3);
+		$this->normalizedList->insert(1, array('foo', 'bar'));
+
+		$this->assertSame(1, $this->normalizedList[0]);
+		$this->assertSame(array('foo', 'bar'), $this->normalizedList[1]);
+		$this->assertSame(3, $this->normalizedList[2]);
+	}
+
+	/**
+	* @testdox insert() throws an exception if the offset is out of bounds
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid offset '3'
+	*/
+	public function testInsertInvalid()
+	{
+		$this->normalizedList->insert(3, 1);
 	}
 
 	/**

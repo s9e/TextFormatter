@@ -26,8 +26,11 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedCollection
 
 s9e\TextFormatter\Tests\Configurator\Collections\NormalizedList
  [x] append() adds the value at the end of the list
- [x] prepend() adds the value at the beginning of the list
  [x] $normalizedList[] = 'foo' maps to $normalizedList->append('foo')
+ [x] prepend() adds the value at the beginning of the list
+ [x] insert() inserts the value at given offset
+ [x] insert() can insert value that is an array
+ [x] insert() throws an exception if the offset is out of bounds
  [x] contains() returns true if the given value is present in the list
  [x] contains() returns false if the given value is not present in the list
  [x] contains() checks for equality, not identity
