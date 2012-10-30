@@ -46,7 +46,7 @@ abstract class RegexpParser
 					break;
 
 				case '[':
-					if (!preg_match('#\\[(.*?(?<!\\\\)(?:\\\\\\\\)*)\\]((?:[\\+\\*]\\+?)?)#', $regexp, $m, 0, $pos))
+					if (!preg_match('#\\[(.*?(?<!\\\\)(?:\\\\\\\\)*+)\\]((?:[\\+\\*]\\+?)?)#', $regexp, $m, 0, $pos))
 					{
 						throw new RuntimeException('Could not find matching bracket from pos ' . $pos);
 					}

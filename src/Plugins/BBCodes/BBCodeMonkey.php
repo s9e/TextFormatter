@@ -582,7 +582,7 @@ abstract class BBCodeMonkey
 	{
 		// This regexp should match a regexp, including its delimiters and optionally the i, u
 		// and/or i flags
-		$regexpMatcher = '(?<regexp>(?<delim>.).*?(?<!\\\\)(?:\\\\\\\\)*(?P=delim)[ius]*)';
+		$regexpMatcher = '(?<regexp>(?<delim>.).*?(?<!\\\\)(?:\\\\\\\\)*+(?P=delim)[ius]*)';
 
 		$tokenTypes = array(
 			'regexp' => '(?:REGEXP[0-9]*|PARSE)=' . $regexpMatcher,

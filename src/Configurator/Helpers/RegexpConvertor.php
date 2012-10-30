@@ -117,7 +117,7 @@ abstract class RegexpConvertor
 
 		if ($regexpInfo['delimiter'] !== '/')
 		{
-			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)/#', '$1\\/', $regexp);
+			$regexp = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*+)/#', '$1\\/', $regexp);
 		}
 
 		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
@@ -139,7 +139,7 @@ abstract class RegexpConvertor
 		}
 
 		$str = preg_replace_callback(
-			'#(?<!\\\\)((?:\\\\\\\\)*)\\\\(' . implode('|', $propNames) . ')#',
+			'#(?<!\\\\)((?:\\\\\\\\)*+)\\\\(' . implode('|', $propNames) . ')#',
 			function ($m) use ($inCharacterClass, $unicodeProps)
 			{
 				$propName = preg_replace('#[\\{\\}]#', '', $m[2]);
@@ -162,7 +162,7 @@ abstract class RegexpConvertor
 		if ($dotAll)
 		{
 			$str = preg_replace(
-				'#(?<!\\\\)((?:\\\\\\\\)*)\\.#',
+				'#(?<!\\\\)((?:\\\\\\\\)*+)\\.#',
 				'$1[\\s\\S]',
 				$str
 			);
