@@ -23,6 +23,12 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedCollection
  [x] $collection['foo'] maps to $collection->get('foo')
  [x] $collection['foo'] = 42 maps to $collection->set('foo', 42)
  [x] unset($collection['foo']) maps to $collection->delete('foo')
+ [x] contains() returns true if the given value is present in the collection
+ [x] contains() returns false if the given value is not present in the collection
+ [x] contains() checks for equality, not identity
+ [x] indexOf() returns the key if the given value is present in the collection
+ [x] indexOf() returns false if the given value is not present in the collection
+ [x] indexOf() checks for equality, not identity
 
 s9e\TextFormatter\Tests\Configurator\Collections\NormalizedList
  [x] append() adds the value at the end of the list
@@ -31,9 +37,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedList
  [x] insert() inserts the value at given offset
  [x] insert() can insert value that is an array
  [x] insert() throws an exception if the offset is out of bounds
- [x] contains() returns true if the given value is present in the list
- [x] contains() returns false if the given value is not present in the list
- [x] contains() checks for equality, not identity
  [x] $normalizedList[0] = 'foo' replaces the first value of the list if it exists
  [x] $normalizedList[0] = 'foo' appends to the list if it's empty
  [x] $normalizedList[1] = 'foo' throws an InvalidArgumentException if the list is empty

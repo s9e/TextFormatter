@@ -13,17 +13,17 @@ class CollectionTest extends Test
 {
 	public function testCollectionIsCountable()
 	{
-		$dumbCollection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
-		$this->assertSame(3, count($dumbCollection));
+		$collection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
+		$this->assertSame(3, count($collection));
 	}
 
 	public function testCollectionIsIterableWithForeach()
 	{
-		$expectedValue  = array('a' => 1, 'b' => 2, 'c' => 5);
-		$dumbCollection = new DumbCollection($expectedValue);
+		$expectedValue = array('a' => 1, 'b' => 2, 'c' => 5);
+		$collection    = new DumbCollection($expectedValue);
 
 		$actualValue = array();
-		foreach ($dumbCollection as $k => $v)
+		foreach ($collection as $k => $v)
 		{
 			$actualValue[$k] = $v;
 		}
@@ -37,9 +37,9 @@ class CollectionTest extends Test
 	*/
 	public function testClear()
 	{
-		$dumbCollection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
-		$dumbCollection->clear();
-		$this->assertSame(0, count($dumbCollection));
+		$collection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
+		$collection->clear();
+		$this->assertSame(0, count($collection));
 	}
 
 	/**
@@ -47,10 +47,10 @@ class CollectionTest extends Test
 	*/
 	public function testGetConfig()
 	{
-		$dumbCollection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
+		$collection = new DumbCollection(array('a' => 1, 'b' => 2, 'c' => 5));
 		$this->assertEquals(
 			array('a' => 1, 'b' => 2, 'c' => 5),
-			$dumbCollection->asConfig()
+			$collection->asConfig()
 		);
 	}
 }

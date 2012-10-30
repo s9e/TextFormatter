@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
-use stdClass;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\NormalizedList;
 use s9e\TextFormatter\Configurator\Items\CallbackTemplate;
@@ -98,36 +97,6 @@ class NormalizedListTest extends Test
 	public function testInsertInvalid()
 	{
 		$this->normalizedList->insert(3, 1);
-	}
-
-	/**
-	* @testdox contains() returns true if the given value is present in the list
-	*/
-	public function testPositiveContains()
-	{
-		$this->normalizedList->append(1);
-
-		$this->assertTrue($this->normalizedList->contains(1));
-	}
-
-	/**
-	* @testdox contains() returns false if the given value is not present in the list
-	*/
-	public function testNegativeContains()
-	{
-		$this->normalizedList->append(1);
-
-		$this->assertFalse($this->normalizedList->contains(2));
-	}
-
-	/**
-	* @testdox contains() checks for equality, not identity
-	*/
-	public function testEqualityContains()
-	{
-		$this->normalizedList->append(new stdClass);
-
-		$this->assertTrue($this->normalizedList->contains(new stdClass));
 	}
 
 	/**

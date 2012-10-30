@@ -61,17 +61,6 @@ class NormalizedList extends NormalizedCollection
 	}
 
 	/**
-	* Test whether a given value is present in this list
-	*
-	* @param  mixed $value
-	* @return bool
-	*/
-	public function contains($value)
-	{
-		return in_array($this->normalizeValue($value), $this->items);
-	}
-
-	/**
 	* Custom offsetSet() implementation to allow assignment with a null offset to append to the
 	* chain
 	*

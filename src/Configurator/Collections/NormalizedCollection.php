@@ -67,6 +67,17 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	}
 
 	/**
+	* Test whether a given value is present in this collection
+	*
+	* @param  mixed $value
+	* @return bool
+	*/
+	public function contains($value)
+	{
+		return in_array($this->normalizeValue($value), $this->items);
+	}
+
+	/**
 	* Delete an item from this collection
 	*
 	* @param string $key
@@ -107,6 +118,19 @@ class NormalizedCollection extends Collection implements ArrayAccess
 		$key = $this->normalizeKey($key);
 
 		return $this->items[$key];
+	}
+
+	/**
+	* Find the index of a given value
+	*
+	* Will return the first key associated with the given value, or FALSE if the value is not found
+	*
+	* @param  mixed $value
+	* @return mixed        Index of the value, or FALSE if not found
+	*/
+	public function indexOf($value)
+	{
+		return array_search($this->normalizeValue($value), $this->items);
 	}
 
 	/**

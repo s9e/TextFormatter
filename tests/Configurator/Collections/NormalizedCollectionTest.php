@@ -3,8 +3,9 @@
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use Exception;
-use s9e\TextFormatter\Tests\Test;
+use stdClass;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\NormalizedCollection
@@ -259,5 +260,73 @@ class NormalizedCollectionTest extends Test
 		     ->with($this->equalTo('foo'));
 
 		unset($mock['foo']);
+	}
+
+	/**
+	* @testdox contains() returns true if the given value is present in the collection
+	*/
+	public function testPositiveContains()
+	{
+		$collection = new DummyNormalizedCollection(array('a' => 1, 'b' => 2));
+
+		$this->assertTrue($collection->contains(1));
+	}
+
+	/**
+	* @testdox contains() returns false if the given value is not present in the collection
+	*/
+	public function testNegativeContains()
+	{
+		$collection = new DummyNormalizedCollection(array('a' => 1, 'b' => 2));
+
+		$this->assertFalse($collection->contains(4));
+	}
+
+	/**
+	* @testdox contains() checks for equality, not identity
+	*/
+	public function testEqualityContains()
+	{
+		$collection = new DummyNormalizedCollection(array('a' => new stdClass));
+
+		$this->assertTrue($collection->contains(new stdClass));
+	}
+
+	/**
+	* @testdox indexOf() returns the key if the given value is present in the collection
+	*/
+	public function testPositiveIndexOf()
+	{
+		$collection = new DummyNormalizedCollection(array('a' => 1, 'b' => 2));
+
+		$this->assertSame('a', $collection->indexOf(1));
+	}
+
+	/**
+	* @testdox indexOf() returns false if the given value is not present in the collection
+	*/
+	public function testNegativeIndexOf()
+	{
+		$collection = new DummyNormalizedCollection(array('a' => 1, 'b' => 2));
+
+		$this->assertFalse($collection->indexOf(4));
+	}
+
+	/**
+	* @testdox indexOf() checks for equality, not identity
+	*/
+	public function testEqualityIndexOf()
+	{
+		$collection = new DummyNormalizedCollection(array('a' => new stdClass));
+
+		$this->assertSame('a', $collection->indexOf(new stdClass));
+	}
+}
+
+class DummyNormalizedCollection extends NormalizedCollection
+{
+	public function __construct(array $items)
+	{
+		$this->items = $items;
 	}
 }
