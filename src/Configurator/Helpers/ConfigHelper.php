@@ -41,7 +41,11 @@ abstract class ConfigHelper
 			}
 			elseif (!is_scalar($v))
 			{
-				throw new RuntimeException('Cannot convert ' . gettype($v) . ' to array');
+				$type = (is_object($v))
+				      ? 'an instance of ' . get_class($v)
+				      : 'a ' . gettype($v);
+
+				throw new RuntimeException('Cannot convert ' . $type . ' to array');
 			}
 
 			if ($v === array())

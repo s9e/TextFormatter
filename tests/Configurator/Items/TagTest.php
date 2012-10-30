@@ -282,7 +282,7 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
+	* @testdox asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule, templates as well as the default filterChain
 	*/
 	public function testAsConfig()
 	{

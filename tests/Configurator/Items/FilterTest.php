@@ -66,4 +66,17 @@ class FilterTest extends Test
 
 		$this->assertSame($vars, $filter->getVars());
 	}
+
+	/**
+	* @testdox asConfig() returns the filter's callback and vars in an array
+	*/
+	public function testAsConfig()
+	{
+		$filter = new Filter('#url', array('bar' => 'baz'));
+
+		$this->assertEquals(
+			array('callback' => '#url', 'vars' => array('bar' => 'baz')),
+			$filter->asConfig()
+		);
+	}
 }

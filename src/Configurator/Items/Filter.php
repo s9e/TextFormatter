@@ -8,8 +8,10 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 
-class Filter
+class Filter implements ConfigProvider
 {
 	/**
 	* @var string|CallbackTemplate Either the name of a built-in filter, or a CallbackTemplate
@@ -39,6 +41,21 @@ class Filter
 
 		$this->callback = $callback;
 		$this->vars     = $vars;
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function asConfig()
+	{
+		$config = array('callback' => $this->callback);
+
+		if (!empty($this->vars))
+		{
+			$config['vars'] = $this->vars;
+		}
+
+		return $config;
 	}
 
 	/**

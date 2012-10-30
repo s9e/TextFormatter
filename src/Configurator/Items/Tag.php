@@ -67,6 +67,9 @@ class Tag implements ConfigProvider
 		$this->rules                  = new Ruleset;
 		$this->templates              = new Templateset($this);
 
+		// Start the filterChain with the default processing
+		$this->filterChain->append('#default');
+
 		if (isset($options))
 		{
 			// Sort the options by name so that attributes are set before templates, which is
@@ -186,17 +189,24 @@ class Tag implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$config = array();
-		foreach ($this as $k => $v)
-		{
-			$config[$k] = $v;
-		}
+		$config = ConfigHelper::toArray(get_object_vars($this));
 
 		// Remove properties that are not needed during parsing
 		unset($config['defaultChildRule']);
 		unset($config['defaultDescendantRule']);
 		unset($config['templates']);
 
-		return ConfigHelper::toArray($config);
+		// Omit the filterChain if it's in its default state
+		if (isset($config['filterChain']))
+		{
+			$defaultChain = array(array('callback' => '#default'));
+
+			if ($config['filterChain'] === $defaultChain )
+			{
+				unset($config['filterChain']);
+			}
+		}
+
+		return $config;
 	}
 }

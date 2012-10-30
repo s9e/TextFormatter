@@ -171,6 +171,12 @@ class Configurator implements ConfigProvider
 		// Remove the # sign from the start of the name
 		$filterName = substr($callback, 1);
 
+		// Test whether it's the tag's default processing filter
+		if ($filterName === 'default')
+		{
+			return true;
+		}
+
 		// Test whether we have a custom filter by that name
 		if (isset($this->customFilters[$filterName]))
 		{

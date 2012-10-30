@@ -693,6 +693,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Filter
  [x] __construct() throws an exception on invalid filters
  [x] Filter vars can be passed as __construct()'s second argument
  [x] Filter vars can be set with setVars()
+ [x] asConfig() returns the filter's callback and vars in an array
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor
@@ -714,7 +715,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
  [x] $tag->defaultTemplate maps to $tag->templates->get('')
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
- [x] asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
+ [x] asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule, templates as well as the default filterChain
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] Disallowed IDNs are punycoded

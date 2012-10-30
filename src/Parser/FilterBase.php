@@ -17,7 +17,7 @@ abstract class FilterBase
 	public static function getFilter()
 	{
 		return array(
-			'callback' => get_called_class(),
+			'callback' => array(get_called_class(), 'filter'),
 			'params'   => array('attrValue' => null)
 		);
 	}

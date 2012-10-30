@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Parser\Filters;
 
 use s9e\TextFormatter\Parser\FilterBase;
 
-class Number extends FilterBase
+abstract class Number extends FilterBase
 {
 	/**
 	* Filter a number
