@@ -87,4 +87,27 @@ class CallbackTemplateTest extends Test
 			$ct->toArray()
 		);
 	}
+
+	/**
+	* @testdox Callback ['foo','bar'] is normalized to 'foo::bar'
+	*/
+	public function testNormalizeStatic()
+	{
+		$ct = new CallbackTemplate(array(__NAMESPACE__ . '\\DummyStaticCallback', 'bar'));
+
+		$this->assertEquals(
+			array(
+				'callback' => __NAMESPACE__ . '\\DummyStaticCallback::bar',
+				'params'   => array()
+			),
+			$ct->toArray()
+		);
+	}
+}
+
+class DummyStaticCallback
+{
+	public static function bar()
+	{
+	}
 }

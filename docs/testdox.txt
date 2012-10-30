@@ -686,6 +686,7 @@ s9e\TextFormatter\Tests\Configurator\Items\CallbackTemplate
  [x] CallbackTemplate::fromArray() creates an instance from an array
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
+ [x] Callback ['foo','bar'] is normalized to 'foo::bar'
 
 s9e\TextFormatter\Tests\Configurator\Items\Filter
  [x] __construct() accepts an instance of CallbackTemplate as its first argument

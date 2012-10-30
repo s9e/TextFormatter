@@ -31,6 +31,12 @@ class CallbackTemplate
 			throw new InvalidArgumentException('Callback ' . var_export($callback, true) . ' is not callable');
 		}
 
+		// Normalize ['foo', 'bar'] to 'foo::bar'
+		if (is_array($callback) && is_string($callback[0]))
+		{
+			$callback = $callback[0] . '::' . $callback[1];
+		}
+
 		$this->callback = $callback;
 	}
 
