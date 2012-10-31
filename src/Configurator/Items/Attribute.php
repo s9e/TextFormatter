@@ -71,12 +71,6 @@ class Attribute
 	*/
 	public function asConfig()
 	{
-		$config = array();
-		foreach ($this as $k => $v)
-		{
-			$config[$k] = $v;
-		}
-
-		return ConfigHelper::toArray($config);
+		return ConfigHelper::toArray(get_object_vars($this));
 	}
 }
