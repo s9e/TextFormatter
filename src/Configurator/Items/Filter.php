@@ -48,7 +48,11 @@ class Filter implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$config = array('callback' => $this->callback);
+		// If the callback is an instance of CallbackTemplate, we use its config as base so that
+		// we return its callback *and* its params
+		$config = ($this->callback instanceof CallbackTemplate)
+		        ? $this->callback->asConfig()
+		        : array('callback' => $this->callback);
 
 		if (!empty($this->vars))
 		{

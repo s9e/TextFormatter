@@ -16,7 +16,10 @@ class FilterTest extends Test
 	*/
 	public function testCallbackTemplate()
 	{
-		$callback = new CallbackTemplate('strtolower');
+		$callback = CallbackTemplate::fromArray(array(
+			'callback' => 'strtolower',
+			'params'   => array('attrValue' => null)
+		));
 		$filter   = new Filter($callback);
 
 		$this->assertSame($callback, $filter->getCallback());
@@ -76,6 +79,30 @@ class FilterTest extends Test
 
 		$this->assertEquals(
 			array('callback' => '#url', 'vars' => array('bar' => 'baz')),
+			$filter->asConfig()
+		);
+	}
+
+	/**
+	* @testdox asConfig() folds the callback and params of a CallbackTemplate into its config
+	*/
+	public function testAsConfigCallbackTemplate()
+	{
+		$params = array('attrValue' => null, 'trimChars' => null);
+		$vars   = array('trimChars' => " \n");
+
+		$callback = CallbackTemplate::fromArray(array(
+			'callback' => 'trim',
+			'params'   => $params
+		));
+		$filter   = new Filter($callback, $vars);
+
+		$this->assertEquals(
+			array(
+				'callback' => 'trim',
+				'params'   => $params,
+				'vars'     => $vars
+			),
 			$filter->asConfig()
 		);
 	}

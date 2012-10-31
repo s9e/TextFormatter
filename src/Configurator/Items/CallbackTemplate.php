@@ -8,8 +8,9 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\ConfigProvider;
 
-class CallbackTemplate
+class CallbackTemplate implements ConfigProvider
 {
 	/**
 	* @var callback
@@ -106,18 +107,11 @@ class CallbackTemplate
 	/**
 	* @return array
 	*/
-	public function toArray()
+	public function asConfig()
 	{
-		$arr = array(
+		return array(
 			'callback' => $this->callback,
 			'params'   => $this->params
 		);
-
-		if (isset($this->js))
-		{
-			$arr['js'] = $this->js;
-		}
-
-		return $arr;
 	}
 }

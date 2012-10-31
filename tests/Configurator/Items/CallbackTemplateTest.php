@@ -21,7 +21,7 @@ class CallbackTemplateTest extends Test
 	}
 
 	/**
-	* @testdox toArray() returns the callback template as an array
+	* @testdox asConfig() returns the callback template as an array
 	*/
 	public function testToArray()
 	{
@@ -32,7 +32,7 @@ class CallbackTemplateTest extends Test
 				'callback' => 'mt_rand',
 				'params'   => array()
 			),
-			$ct->toArray()
+			$ct->asConfig()
 		);
 	}
 
@@ -67,7 +67,7 @@ class CallbackTemplateTest extends Test
 				'callback' => 'strtolower',
 				'params'   => array('foobar')
 			),
-			$ct->toArray()
+			$ct->asConfig()
 		);
 	}
 
@@ -84,7 +84,7 @@ class CallbackTemplateTest extends Test
 				'callback' => 'strtolower',
 				'params'   => array('foobar' => null)
 			),
-			$ct->toArray()
+			$ct->asConfig()
 		);
 	}
 
@@ -100,7 +100,7 @@ class CallbackTemplateTest extends Test
 				'callback' => __NAMESPACE__ . '\\DummyStaticCallback::bar',
 				'params'   => array()
 			),
-			$ct->toArray()
+			$ct->asConfig()
 		);
 	}
 }
