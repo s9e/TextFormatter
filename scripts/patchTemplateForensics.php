@@ -569,7 +569,7 @@ foreach ($elements as $elName => $element)
 
 	$arr[$elName] = $el;
 }
-exit;
+
 // Sort the elements so that their order remain consistent across revisions
 ksort($arr);
 
