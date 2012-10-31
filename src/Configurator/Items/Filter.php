@@ -45,6 +45,11 @@ class Filter implements ConfigProvider
 
 	/**
 	* {@inheritdoc}
+	*
+	* Will return up to three keys:
+	*   - callback: the filter's callback, or the name of a built-in filter
+	*   - params:   the callback's signature, if applicable
+	*   - vars:     the filter's vars, if applicable
 	*/
 	public function asConfig()
 	{
