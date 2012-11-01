@@ -723,7 +723,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
  [x] $tag->defaultTemplate maps to $tag->templates->get('')
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
- [x] asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule, templates as well as the default filterChain
+ [x] asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] Disallowed IDNs are punycoded

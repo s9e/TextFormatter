@@ -189,24 +189,27 @@ class Tag implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$config = ConfigHelper::toArray(get_object_vars($this));
+		$vars = get_object_vars($this);
 
 		// Remove properties that are not needed during parsing
-		unset($config['defaultChildRule']);
-		unset($config['defaultDescendantRule']);
-		unset($config['templates']);
+		unset($vars['defaultChildRule']);
+		unset($vars['defaultDescendantRule']);
+		unset($vars['templates']);
 
-		// Omit the filterChain if it's in its default state
-		if (isset($config['filterChain']))
+		// If this tag has no attribute preprocessors, we replace the filterChain in the config
+		// with one that does not contain the #executeAttributePreprocessors filter
+		if (!count($this->attributePreprocessors))
 		{
-			$defaultChain = array(array('callback' => '#default'));
+			$filterChain = clone $this->filterChain;
 
-			if ($config['filterChain'] === $defaultChain )
+			while ($filterChain->contains('#executeAttributePreprocessors'))
 			{
-				unset($config['filterChain']);
+				$filterChain->delete($filterChain->indexOf('#executeAttributePreprocessors'));
 			}
+
+			$vars['filterChain'] = $filterChain;
 		}
 
-		return $config;
+		return ConfigHelper::toArray($vars);
 	}
 }

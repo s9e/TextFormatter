@@ -282,18 +282,27 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() correctly produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule, templates as well as the default filterChain
+	* @testdox asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
 	*/
 	public function testAsConfig()
 	{
 		$tag = new Tag;
+		$tag->defaultChildRule      = 'allow';
+		$tag->defaultDescendantRule = 'allow';
+		$tag->defaultTemplate       = '';
+		$tag->nestingLimit          = 3;
+		$tag->tagLimit              = 99;
 
-		$this->assertEquals(
-			array(
-				'nestingLimit' => 10,
-				'tagLimit' => 100
-			),
-			$tag->asConfig()
-		);
+		$config = $tag->asConfig();
+
+		$this->assertArrayHasKey('nestingLimit', $config);
+		$this->assertSame(3, $config['nestingLimit']);
+
+		$this->assertArrayHasKey('tagLimit', $config);
+		$this->assertSame(99, $config['tagLimit']);
+
+		$this->assertArrayNotHasKey('defaultChildRule', $config);
+		$this->assertArrayNotHasKey('defaultDescendantRule', $config);
+		$this->assertArrayNotHasKey('templates', $config);
 	}
 }
