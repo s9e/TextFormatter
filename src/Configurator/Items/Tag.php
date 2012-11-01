@@ -197,31 +197,16 @@ class Tag implements ConfigProvider
 		unset($vars['defaultDescendantRule']);
 		unset($vars['templates']);
 
-		// Remove filters that are not needed
-		$removeFilters = array();
-
+		// If there are no attribute preprocessors defined, we can remove the step from this tag's
+		// filterChain
 		if (!count($this->attributePreprocessors))
-		{
-			$removeFilters[] = '#executeAttributePreprocessors';
-		}
-
-		if (!count($this->attributes))
-		{
-			$removeFilters[] = '#executeAttributePreprocessors';
-			$removeFilters[] = '#filterAttributes';
-		}
-
-		if (!empty($removeFilters))
 		{
 			// We operate on a copy of the filterChain, without modifying the original
 			$filterChain = clone $vars['filterChain'];
 
-			foreach (array_unique($removeFilters) as $filterName)
+			while ($filterChain->contains('#executeAttributePreprocessors'))
 			{
-				while ($filterChain->contains($filterName))
-				{
-					$filterChain->delete($filterChain->indexOf($filterName));
-				}
+				$filterChain->delete($filterChain->indexOf('#executeAttributePreprocessors'));
 			}
 
 			$vars['filterChain'] = $filterChain;

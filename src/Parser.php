@@ -52,11 +52,6 @@ class Parser
 	//==============================================================================================
 
 	/**
-	* @var array Tags config
-	*/
-	protected $tagsConfig;
-
-	/**
 	* @var array Plugins config
 	*/
 	protected $pluginsConfig;
@@ -67,14 +62,24 @@ class Parser
 	protected $filters = array();
 
 	/**
+	* @var array Array of PluginParser instances
+	*/
+	protected $pluginParsers = array();
+
+	/**
+	* @var array Vars available to filters
+	*/
+	protected $registeredVars = array();
+
+	/**
 	* @var array Context to be used for tags at the root of the document
 	*/
 	protected $rootContext;
 
 	/**
-	* @var array Array of PluginParser instances
+	* @var array Tags config
 	*/
-	protected $pluginParsers = array();
+	protected $tagsConfig;
 
 	/**
 	* @var array URL-specific config (disallowed hosts, allowed schemes, etc...)
@@ -131,19 +136,9 @@ class Parser
 	protected $cntTotal;
 
 	/**
-	* @var array   Tag currently being processed, used in processTags()
+	* @var Tag     Tag currently being processed
 	*/
 	protected $currentTag;
-
-	/**
-	* @var array   Current tag's configuration, copy of $this->tagsConfig[$this->currentTag['name']]
-	*/
-	protected $currentTagConfig;
-
-	/**
-	* @var string  Name of the attribute currently being validated, used in processTags()
-	*/
-	protected $currentAttribute;
 
 	/**
 	* @var array   Current context
@@ -168,9 +163,9 @@ class Parser
 	public function __construct(array $config)
 	{
 		$this->pluginsConfig = $config['plugins'];
+		$this->rootContext   = $config['rootContext'];
 		$this->tagsConfig    = $config['tags'];
 		$this->urlConfig     = $config['urlConfig'];
-		$this->rootContext   = $config['rootContext'];
 
 		if (isset($config['filters']))
 		{
@@ -186,11 +181,11 @@ class Parser
 	public function serialize()
 	{
 		return serialize(array(
+			'filters'     => $this->filters,
 			'plugins'     => $this->pluginsConfig,
-			'tags'        => $this->tagsConfig,
-			'urlConfig'   => $this->urlConfig,
 			'rootContext' => $this->rootContext,
-			'filters'     => $this->filters
+			'tags'        => $this->tagsConfig,
+			'urlConfig'   => $this->urlConfig
 		));
 	}
 
@@ -202,6 +197,16 @@ class Parser
 	public function unserialize($data)
 	{
 		$this->__construct(unserialize($data));
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function registerVar($name, $value)
+	{
+		$this->registeredVars[$name] = $value;
 	}
 
 	/**

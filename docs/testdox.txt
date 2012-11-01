@@ -727,7 +727,6 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] $tag->filterChain contains the built-in filter '#executeAttributePreprocessors' by default
  [x] $tag->filterChain contains the built-in filter '#filterAttributes' by default
  [x] asConfig() omits '#executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
- [x] asConfig() omits '#executeAttributePreprocessors' and '#filterAttributes' from the returned filterChain if no attribute is defined
  [x] asConfig() does not modify the tag's filterChain itself
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig

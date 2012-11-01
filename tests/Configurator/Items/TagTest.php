@@ -327,7 +327,7 @@ class TagTest extends Test
 	/**
 	* @testdox asConfig() omits '#executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
 	*/
-	public function testFilterChainConfigOmits1()
+	public function testFilterChainConfigOmitsUnusedFilter()
 	{
 		$tag = new Tag;
 		$tag->attributes->add('foo');
@@ -339,18 +339,6 @@ class TagTest extends Test
 			array(array('callback' => '#filterAttributes')),
 			$config['filterChain']
 		);
-	}
-
-	/**
-	* @testdox asConfig() omits '#executeAttributePreprocessors' and '#filterAttributes' from the returned filterChain if no attribute is defined
-	*/
-	public function testFilterChainConfigOmits2()
-	{
-		$tag = new Tag;
-
-		$config = $tag->asConfig();
-
-		$this->assertArrayNotHasKey('filterChain', $config);
 	}
 
 	/**
