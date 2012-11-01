@@ -724,6 +724,11 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] $tag->defaultTemplate maps to $tag->templates->get('')
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
  [x] asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
+ [x] $tag->filterChain contains the built-in filter '#executeAttributePreprocessors' by default
+ [x] $tag->filterChain contains the built-in filter '#filterAttributes' by default
+ [x] asConfig() omits '#executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
+ [x] asConfig() omits '#executeAttributePreprocessors' and '#filterAttributes' from the returned filterChain if no attribute is defined
+ [x] asConfig() does not modify the tag's filterChain itself
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] Disallowed IDNs are punycoded

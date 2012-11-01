@@ -68,7 +68,8 @@ class Tag implements ConfigProvider
 		$this->templates              = new Templateset($this);
 
 		// Start the filterChain with the default processing
-		$this->filterChain->append('#default');
+		$this->filterChain->append('#executeAttributePreprocessors');
+		$this->filterChain->append('#filterAttributes');
 
 		if (isset($options))
 		{
@@ -196,15 +197,31 @@ class Tag implements ConfigProvider
 		unset($vars['defaultDescendantRule']);
 		unset($vars['templates']);
 
-		// If this tag has no attribute preprocessors, we replace the filterChain in the config
-		// with one that does not contain the #executeAttributePreprocessors filter
+		// Remove filters that are not needed
+		$removeFilters = array();
+
 		if (!count($this->attributePreprocessors))
 		{
-			$filterChain = clone $this->filterChain;
+			$removeFilters[] = '#executeAttributePreprocessors';
+		}
 
-			while ($filterChain->contains('#executeAttributePreprocessors'))
+		if (!count($this->attributes))
+		{
+			$removeFilters[] = '#executeAttributePreprocessors';
+			$removeFilters[] = '#filterAttributes';
+		}
+
+		if (!empty($removeFilters))
+		{
+			// We operate on a copy of the filterChain, without modifying the original
+			$filterChain = clone $vars['filterChain'];
+
+			foreach (array_unique($removeFilters) as $filterName)
 			{
-				$filterChain->delete($filterChain->indexOf('#executeAttributePreprocessors'));
+				while ($filterChain->contains($filterName))
+				{
+					$filterChain->delete($filterChain->indexOf($filterName));
+				}
 			}
 
 			$vars['filterChain'] = $filterChain;

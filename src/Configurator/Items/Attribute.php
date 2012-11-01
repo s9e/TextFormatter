@@ -9,10 +9,11 @@ namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\FilterChain;
+use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
-class Attribute
+class Attribute implements ConfigProvider
 {
 	use Configurable;
 

@@ -305,4 +305,65 @@ class TagTest extends Test
 		$this->assertArrayNotHasKey('defaultDescendantRule', $config);
 		$this->assertArrayNotHasKey('templates', $config);
 	}
+
+	/**
+	* @testdox $tag->filterChain contains the built-in filter '#executeAttributePreprocessors' by default
+	*/
+	public function testFilterChainDefault1()
+	{
+		$tag = new Tag;
+		$this->assertTrue($tag->filterChain->contains('#executeAttributePreprocessors'));
+	}
+
+	/**
+	* @testdox $tag->filterChain contains the built-in filter '#filterAttributes' by default
+	*/
+	public function testFilterChainDefault2()
+	{
+		$tag = new Tag;
+		$this->assertTrue($tag->filterChain->contains('#filterAttributes'));
+	}
+
+	/**
+	* @testdox asConfig() omits '#executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
+	*/
+	public function testFilterChainConfigOmits1()
+	{
+		$tag = new Tag;
+		$tag->attributes->add('foo');
+
+		$config = $tag->asConfig();
+
+		$this->assertArrayHasKey('filterChain', $config);
+		$this->assertSame(
+			array(array('callback' => '#filterAttributes')),
+			$config['filterChain']
+		);
+	}
+
+	/**
+	* @testdox asConfig() omits '#executeAttributePreprocessors' and '#filterAttributes' from the returned filterChain if no attribute is defined
+	*/
+	public function testFilterChainConfigOmits2()
+	{
+		$tag = new Tag;
+
+		$config = $tag->asConfig();
+
+		$this->assertArrayNotHasKey('filterChain', $config);
+	}
+
+	/**
+	* @testdox asConfig() does not modify the tag's filterChain itself
+	*/
+	public function testFilterChainConfigIsSafe()
+	{
+		$tag = new Tag;
+		$config = $tag->asConfig();
+
+		$tag->attributes->add('foo');
+		$config = $tag->asConfig();
+
+		$this->assertArrayHasKey('filterChain', $config);
+	}
 }
