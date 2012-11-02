@@ -17,7 +17,6 @@ TODO
 - Add support for HD/other options in [YOUTUBE] ?
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
 - Fix [EMAIL]
-- Add a tag option that disallows plain text, e.g. any text node that is a child of given tag is put inside a <i> element.
 - Consider adding a "map" attribute filter that maps values, one to another. e.g. ["cpp"=>"C++"]
 - Tags that have a nestingLimit of 1: is there any benefit to adding a denyChild rule to it?
 - Add exception codes to exceptions?
@@ -30,11 +29,11 @@ TODO
 - Add support for <ol start="2"/>
 - Consider adding an #ip or #ipport filter
 - Add a [FONT face={SIMPLETEXT}] bbcode/tag (could render to <span style="font-family:{SIMPLETEXT}">
-- Remove reopenChild rule, add autoReopen as a tag option. Reopens tag if it gets closed by a closeParent (and closeAncestor?) rule, or if it gets closed by an ancestor's end tag, e.g. <b><i></b>
 - Implement the concept of a plugin "tag formatter": give it a tag from the intermediate form and it returns the string that could have generated it. e.g. BBCodes's tag formatter takes <URL url="..."> and returns [URL url="..."] or [URL="..."] -- tag content might be a problem though. Can we format any start/end tag without knowing what's in between?
 - Add a Picasa(?) BBCode
 - Read in #phpbb-dev: ""You cannot have 3 quotes within each other" I'm getting pretty annoyed by that one now >.<" "Has some kind of system that automatically removes the innermost quote been suggested? On large posts it's almost impossible to remove it by hand without messing the tags up :<" "Right now I just copy the text and paste it within [quote] because it's easier to see, but that kinda takes away the point with the quote button" -- could be implemented as a new setting: nestingLimitAction (similar to regexpLimitAction) with possible values "ignore" (leave as text), "strip" (remove content via <i> tag) and "abort" (throw exception?) -- Actually, this case is better handled at quoting time by removing the quotes from the original message directly, e.g. remove all //QUOTE//QUOTE//QUOTE nodes. Add a class that handles that kind of manipulation, e.g. removeNestedTags($tagName, $nestingLimit)
 - Consider a way to generate a random number or ID, at parsing time or perhaps at rendering time. [foo id={RANDOM=0,100;base=36}] -- http://area51.phpbb.com/phpBB/viewtopic.php?f=81&t=42947 -- (PHP: base_convert(mt_rand(min, max), 10, base) - Javascript: (min + Math.floor(Math.random() * (max + 1 - min))).toString(base)) -- NOTE: could not be implemented as an attribute filter, would need to be implemented similarly to the old tag-level preFilter pass
+- Consider allowing dynamic default values for attributes by using a CallbackTemplate as defaultValue
 - In url filter, escape special chars (such as quotes) first, then validate the URL so that the URL we validate and the URL we return are the same
 - Add a way to register variables in Parser. Those variables can then be used in filters. This way, it is possible to program a CallbackTemplate to use a custom parameter, e.g. "db" and then register the value for that parameter in Parser without touching the config.
 - Consider the addition of an option that removes tag pairs with no content (potentially excluding <st/> and <et/>) at parsing time, e.g. <rt><P></P><QUOTE>...</QUOTE></rt> becomes <rt><QUOTE>...</QUOTE></rt>

@@ -159,13 +159,13 @@ class Url extends FilterBase
 	/**
 	* Get the "Location:" value returned by an HTTP(S) query
 	*
-	* @param  string $attrValue Request URL
+	* @param  string $url Request URL
 	* @return mixed       Location URL if applicable, FALSE in case of error, NULL if no Location
 	*/
-	protected function getRedirectLocation($attrValue)
+	protected static function getRedirectLocation($url)
 	{
 		$fp = @fopen(
-			$attrValue,
+			$url,
 			'rb',
 			false,
 			stream_context_create(array(
@@ -204,15 +204,15 @@ class Url extends FilterBase
 	* Requires idn_to_ascii() in order to deal with IDNs. If idn_to_ascii() is not available, the
 	* host part will be URL-encoded with the rest of the URL.
 	*
-	* @param  string $attrValue Original URL
+	* @param  string $url Original URL
 	* @return Mixed       Encoded URL
 	*/
-	static protected function encodeUrlToAscii($attrValue)
+	protected static function encodeUrlToAscii($url)
 	{
 		if (function_exists('idn_to_ascii')
-		 && preg_match('#^([^:]+://(?:[^/]+@)?)([^/]+)#i', $attrValue, $m))
+		 && preg_match('#^([^:]+://(?:[^/]+@)?)([^/]+)#i', $url, $m))
 		{
-			$attrValue = $m[1] . idn_to_ascii($m[2]) . substr($attrValue, strlen($m[0]));
+			$url = $m[1] . idn_to_ascii($m[2]) . substr($url, strlen($m[0]));
 		}
 
 		// URL-encode non-ASCII stuff
@@ -222,7 +222,7 @@ class Url extends FilterBase
 			{
 				return urlencode($m[0]);
 			},
-			$attrValue
+			$url
 		);
 	}
 }

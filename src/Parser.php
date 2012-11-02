@@ -9,6 +9,7 @@ namespace s9e\TextFormatter;
 
 use s9e\TextFormatter\Parser\AttributeProcessing;
 use s9e\TextFormatter\Parser\RulesHandling;
+use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Parser\TagHandling;
 use s9e\TextFormatter\Parser\TagProcessing;
 use s9e\TextFormatter\Parser\TagStackHandling;
@@ -261,6 +262,62 @@ class Parser
 		$this->processTags();
 
 		return $this->output;
+	}
+
+	/**
+	* Create and append a start tag to the list of unprocessed tags
+	*
+	* @param  string  $name Name of the tag
+	* @param  integer $pos  Position of the tag in the current text
+	* @param  integer $len  Amount of text to consume
+	* @return Tag           Newly-created tag
+	*/
+	public function addStartTag($name, $pos, $len)
+	{
+		return $this->addTag($name, $pos, $len, Tag::START_TAG);
+	}
+
+	/**
+	* Create and append a end tag to the list of unprocessed tags
+	*
+	* @param  string  $name Name of the tag
+	* @param  integer $pos  Position of the tag in the current text
+	* @param  integer $len  Amount of text to consume
+	* @return Tag           Newly-created tag
+	*/
+	public function addEndTag($name, $pos, $len)
+	{
+		return $this->addTag($name, $pos, $len, Tag::END_TAG);
+	}
+
+	/**
+	* Create and append a self-closing tag to the list of unprocessed tags
+	*
+	* @param  string  $name Name of the tag
+	* @param  integer $pos  Position of the tag in the current text
+	* @param  integer $len  Amount of text to consume
+	* @return Tag           Newly-created tag
+	*/
+	public function addSelfClosingTag($name, $pos, $len)
+	{
+		return $this->addTag($name, $pos, $len, Tag::SELF_CLOSING_TAG);
+	}
+
+	/**
+	* Create and append a tag to the list of unprocessed tags
+	*
+	* @param  string  $name Name of the tag
+	* @param  integer $pos  Position of the tag in the current text
+	* @param  integer $len  Amount of text to consume
+	* @param  integer $type Tag type
+	* @return Tag           Newly-created tag
+	*/
+	protected function addTag($name, $pos, $len, $type)
+	{
+		$tag = new Tag($name, $this->tagsConfig[$name], $this->text, $pos, $len, $type);
+		$this->unprocessedTags[] = $tag;
+
+		return $tag;
 	}
 
 	/**

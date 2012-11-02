@@ -5,17 +5,14 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\Censor;
 
-use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\PluginParser;
+use s9e\TextFormatter\Plugins\ParserBase;
 
-class CensorParser extends PluginParser
+class Censor extends ParserBase
 {
 	public function getTags($text, array $matches)
 	{
-		$tags = array();
-
 		$tagName  = $this->config['tagName'];
 		$attrName = $this->config['attrName'];
 
@@ -25,25 +22,20 @@ class CensorParser extends PluginParser
 
 		foreach ($matches as $m)
 		{
-			$tag = array(
+			$tag = $this->parser->addSelfClosingTag(array(
 				'pos'  => $m[0][1],
 				'name' => $tagName,
-				'type' => Parser::SELF_CLOSING_TAG,
 				'len'  => strlen($m[0][0])
-			);
+			));
 
 			foreach ($replacements as $mask => $replacement)
 			{
 				if (preg_match($mask, $m[0][0]))
 				{
-					$tag['attrs'][$attrName] = $replacement;
+					$tag->setAttribute($attrName, $replacement);
 					break;
 				}
 			}
-
-			$tags[] = $tag;
 		}
-
-		return $tags;
 	}
 }
