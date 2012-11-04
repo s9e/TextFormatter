@@ -386,7 +386,7 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
-				'[foo={RANGE=2,5}/]',
+				'[foo={RANGE=-2,5}/]',
 				array(
 					'name'   => 'FOO',
 					'bbcode' => new BBCode(array(
@@ -398,7 +398,7 @@ class BBCodeMonkeyTest extends Test
 								'filterChain' => array(
 									ProgrammableCallback::fromArray(array(
 										'callback' => new CallbackPlaceholder('#range'),
-										'vars'     => array('min' => 2, 'max' => 5)
+										'vars'     => array('min' => -2, 'max' => 5)
 									))
 								)
 							)
@@ -406,6 +406,29 @@ class BBCodeMonkeyTest extends Test
 					)),
 					'tokens' => array(
 						'RANGE' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={RANDOM=1000,9999}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'generator' => ProgrammableCallback::fromArray(array(
+									'callback' => 'mt_rand',
+									'params'   => array(1000, 9999)
+								))
+							)
+						)
+					)),
+					'tokens' => array(
+						'RANDOM' => 'foo'
 					),
 					'passthroughToken' => null
 				)
