@@ -16,7 +16,6 @@ use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
-use s9e\TextFormatter\Configurator\Items\Filter;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
 class Configurator implements ConfigProvider

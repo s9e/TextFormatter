@@ -4,9 +4,6 @@ namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\NormalizedList;
-use s9e\TextFormatter\Configurator\Items\CallbackTemplate;
-use s9e\TextFormatter\Configurator\Items\Filter;
-use s9e\TextFormatter\Configurator\Items\FilterLink;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\NormalizedList

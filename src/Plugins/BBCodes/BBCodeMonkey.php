@@ -585,9 +585,10 @@ abstract class BBCodeMonkey
 		$regexpMatcher = '(?<regexp>(?<delim>.).*?(?<!\\\\)(?:\\\\\\\\)*+(?P=delim)[ius]*)';
 
 		$tokenTypes = array(
-			'regexp' => '(?:REGEXP[0-9]*|PARSE)=' . $regexpMatcher,
-			'range'  => 'RANGE[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
+			'regexp' => '(?:REGEXP[0-9]*|PARSE)=' . $regexpMatcher,
+			'random' => 'RANDOM[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
+			'range'  => 'RANGE[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
 			'other'  => '[A-Z_]+[0-9]*'
 		);
 
@@ -595,7 +596,7 @@ abstract class BBCodeMonkey
 		// only be one, as in "foo={URL}" but some older BBCodes use a form of composite
 		// attributes such as [FLASH={NUMBER},{NUMBER}]
 		preg_match_all(
-			'#\\{(' . implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
+			'#(?J)\\{(' . implode('|', $tokenTypes) . ')(?<options>(?:;[^;]*)*)\\}#',
 			$definition,
 			$matches,
 			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
@@ -688,7 +689,14 @@ abstract class BBCodeMonkey
 				'max' => $token['max']
 			));
 		}
-		elseif ($token['type'] === 'CHOICE')
+/*		elseif ($token['type'] === 'RANDOM')
+		{
+			$attribute->generator = CallbackTemplate::fromArray(array(
+				'callback' => 's9e\\TextFormatter\\Parser\\AttributeGenerators\\Random::get',
+				'params'   =>
+			));
+		}
+*/		elseif ($token['type'] === 'CHOICE')
 		{
 			// Build a regexp from the list of choices then add a "#regexp" filter
 			$regexp = RegexpBuilder::fromList(

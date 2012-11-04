@@ -5,7 +5,8 @@ namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Items\Filter;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\BBCodes\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey;
@@ -282,7 +283,10 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/^foo$/'))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#regexp'),
+										'vars'     => array('regexp' => '/^foo$/')
+									))
 								)
 							)
 						)
@@ -304,7 +308,10 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '#^foo$#'))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#regexp'),
+										'vars'     => array('regexp' => '#^foo$#')
+									))
 								)
 							)
 						)
@@ -326,7 +333,10 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/[a-z]{3}\\//'))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#regexp'),
+										'vars'     => array('regexp' => '/[a-z]{3}\\//')
+									))
 								)
 							)
 						)
@@ -355,12 +365,18 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/^(?:\\d+)$/D'))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#regexp'),
+										'vars'     => array('regexp' => '/^(?:\\d+)$/D')
+									))
 								)
 							),
 							'bar' => array(
 								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/^(?:\\D+)$/D'))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#regexp'),
+										'vars'     => array('regexp' => '/^(?:\\D+)$/D')
+									))
 								)
 							)
 						)
@@ -380,7 +396,10 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									new Filter('#range', array('min' => 2, 'max' => 5))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#range'),
+										'vars'     => array('min' => 2, 'max' => 5)
+									))
 								)
 							)
 						)
@@ -402,7 +421,10 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/^(?:one|two)$/Di'))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#regexp'),
+										'vars'     => array('regexp' => '/^(?:one|two)$/Di')
+									))
 								)
 							)
 						)
@@ -424,7 +446,10 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/^(?:pokémon|yugioh)$/Diu'))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#regexp'),
+										'vars'     => array('regexp' => '/^(?:pokémon|yugioh)$/Diu')
+									))
 								)
 							)
 						)
@@ -446,7 +471,10 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									new Filter('#regexp', array('regexp' => '/^(?:Pokémon|YuGiOh)$/Du'))
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#regexp'),
+										'vars'     => array('regexp' => '/^(?:Pokémon|YuGiOh)$/Du')
+									))
 								)
 							)
 						)

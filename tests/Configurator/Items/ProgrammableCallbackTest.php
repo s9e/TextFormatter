@@ -3,45 +3,41 @@
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\Configurator\Items\CallbackTemplate;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Items\CallbackTemplate
+* @covers s9e\TextFormatter\Configurator\Items\ProgrammableCallback
 */
-class CallbackTemplateTest extends Test
+class ProgrammableCallbackTest extends Test
 {
 	/**
 	* @testdox __construct() throws an InvalidArgumentException if its argument is not callable
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Callback '*invalid*' is not callable
+	* @expectedExceptionMessage s9e\TextFormatter\Configurator\Items\ProgrammableCallback::__construct() expects a callback
 	*/
 	public function testInvalidCallback()
 	{
-		new CallbackTemplate('*invalid*');
+		new ProgrammableCallback('*invalid*');
 	}
 
 	/**
-	* @testdox asConfig() returns the callback template as an array
+	* @testdox asConfig() returns an array containing the callback
 	*/
-	public function testToArray()
+	public function testAsConfig()
 	{
-		$ct = new CallbackTemplate('mt_rand');
+		$ct     = new ProgrammableCallback('mt_rand');
+		$config = $ct->asConfig();
 
-		$this->assertEquals(
-			array(
-				'callback' => 'mt_rand',
-				'params'   => array()
-			),
-			$ct->asConfig()
-		);
+		$this->assertArrayHasKey('callback', $config);
+		$this->assertSame('mt_rand', $config['callback']);
 	}
 
 	/**
-	* @testdox CallbackTemplate::fromArray() creates an instance from an array
+	* @testdox fromArray() creates an instance from an array
 	*/
 	public function testFromArray()
 	{
-		$ct = CallbackTemplate::fromArray(
+		$ct = ProgrammableCallback::fromArray(
 			array(
 				'callback' => 'mt_rand',
 				'params'   => array()
@@ -50,7 +46,7 @@ class CallbackTemplateTest extends Test
 
 		$this->assertEquals(
 			$ct,
-			new CallbackTemplate('mt_rand')
+			new ProgrammableCallback('mt_rand')
 		);
 	}
 
@@ -59,7 +55,7 @@ class CallbackTemplateTest extends Test
 	*/
 	public function testAddParameterByValue()
 	{
-		$ct = new CallbackTemplate('strtolower');
+		$ct = new ProgrammableCallback('strtolower');
 		$ct->addParameterByValue('foobar');
 
 		$this->assertEquals(
@@ -76,7 +72,7 @@ class CallbackTemplateTest extends Test
 	*/
 	public function testAddParameterByName()
 	{
-		$ct = new CallbackTemplate('strtolower');
+		$ct = new ProgrammableCallback('strtolower');
 		$ct->addParameterByName('foobar');
 
 		$this->assertEquals(
@@ -93,15 +89,11 @@ class CallbackTemplateTest extends Test
 	*/
 	public function testNormalizeStatic()
 	{
-		$ct = new CallbackTemplate(array(__NAMESPACE__ . '\\DummyStaticCallback', 'bar'));
+		$ct     = new ProgrammableCallback(array(__NAMESPACE__ . '\\DummyStaticCallback', 'bar'));
+		$config = $ct->asConfig();
 
-		$this->assertEquals(
-			array(
-				'callback' => __NAMESPACE__ . '\\DummyStaticCallback::bar',
-				'params'   => array()
-			),
-			$ct->asConfig()
-		);
+		$this->assertArrayHasKey('callback', $config);
+		$this->assertSame(__NAMESPACE__ . '\\DummyStaticCallback::bar', $config['callback']);
 	}
 }
 

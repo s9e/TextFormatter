@@ -8,8 +8,8 @@
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Items\CallbackTemplate;
-use s9e\TextFormatter\Configurator\Items\Filter;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 class FilterCollection extends NormalizedCollection
 {
@@ -18,14 +18,9 @@ class FilterCollection extends NormalizedCollection
 	*/
 	public function normalizeValue($value)
 	{
-		if (!($value instanceof Filter))
+		if (!($value instanceof ProgrammableCallback))
 		{
-			throw new InvalidArgumentException('Not an instance of s9e\\TextFormatter\\Configurator\\Items\\Filter');
-		}
-
-		if (!($value->getCallback() instanceof CallbackTemplate))
-		{
-			throw new InvalidArgumentException("Custom filters' callback must be an instance of CallbackTemplate");
+			throw new InvalidArgumentException('Not an instance of s9e\\TextFormatter\\Configurator\\Items\\ProgrammableCallback');
 		}
 
 		return $value;

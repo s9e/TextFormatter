@@ -9,8 +9,9 @@ namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 
-class CallbackTemplate implements ConfigProvider
+class ProgrammableCallback implements ConfigProvider
 {
 	/**
 	* @var callback
@@ -23,13 +24,18 @@ class CallbackTemplate implements ConfigProvider
 	protected $params = array();
 
 	/**
-	* @param callback $callback
+	* @var array Variables associated with this instance
+	*/
+	protected $vars = array();
+
+	/**
+	* @param callable $callback
 	*/
 	public function __construct($callback)
 	{
 		if (!is_callable($callback))
 		{
-			throw new InvalidArgumentException('Callback ' . var_export($callback, true) . ' is not callable');
+			throw new InvalidArgumentException(__METHOD__ . '() expects a callback');
 		}
 
 		// Normalize ['foo', 'bar'] to 'foo::bar'
@@ -64,6 +70,22 @@ class CallbackTemplate implements ConfigProvider
 	}
 
 	/**
+	* @return mixed
+	*/
+	public function getCallback()
+	{
+		return $this->callback;
+	}
+
+	/**
+	* @return array
+	*/
+	public function getVars()
+	{
+		return $this->vars;
+	}
+
+	/**
 	* Set the Javascript source for this callback
 	*
 	* @param string $js
@@ -74,34 +96,49 @@ class CallbackTemplate implements ConfigProvider
 	}
 
 	/**
+	* @param  array $vars
+	*/
+	public function setVars(array $vars)
+	{
+		$this->vars = $vars;
+	}
+
+	/**
+	* Create an instance of this class based on an array
+	*
 	* @param  array  $arr
 	* @return static
 	*/
 	public static function fromArray(array $arr)
 	{
-		$callback = new static($arr['callback']);
+		$obj = new static($arr['callback']);
 
-		if (!empty($arr['params']))
+		if (isset($arr['params']))
 		{
 			foreach ($arr['params'] as $k => $v)
 			{
 				if (is_numeric($k))
 				{
-					$callback->addParameterByValue($v);
+					$obj->addParameterByValue($v);
 				}
 				else
 				{
-					$callback->addParameterByName($k);
+					$obj->addParameterByName($k);
 				}
 			}
 		}
 
-		if (isset($arr['js']))
+		if (isset($arr['vars']))
 		{
-			$callback->setJavascript($arr['js']);
+			$obj->setVars($arr['vars']);
 		}
 
-		return $callback;
+		if (isset($arr['js']))
+		{
+			$obj->setJavascript($arr['js']);
+		}
+
+		return $obj;
 	}
 
 	/**
@@ -109,9 +146,31 @@ class CallbackTemplate implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		return array(
-			'callback' => $this->callback,
-			'params'   => $this->params
-		);
+		$config = array();
+		
+		$config['callback'] = ($this->callback instanceof CallbackPlaceholder)
+		                    ? $this->callback->asConfig()
+		                    : $this->callback;
+
+		foreach ($this->params as $k => $v)
+		{
+			if (is_numeric($k))
+			{
+				// By value
+				$config['params'][] = $v;
+			}
+			elseif (isset($this->vars[$k]))
+			{
+				// By name, but the value is readily available in $this->vars
+				$config['params'][] = $this->vars[$k];
+			}
+			else
+			{
+				// By name
+				$config['params'][$k] = null;
+			}
+		}
+
+		return $config;
 	}
 }

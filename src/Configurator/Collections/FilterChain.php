@@ -8,8 +8,8 @@
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Items\CallbackTemplate;
-use s9e\TextFormatter\Configurator\Items\Filter;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 class FilterChain extends NormalizedList
 {
@@ -31,9 +31,9 @@ class FilterChain extends NormalizedList
 	/**
 	* Append a filter to this chain
 	*
-	* @param  mixed  $callback
-	* @param  array  $vars
-	* @return Filter
+	* @param  mixed                $callback
+	* @param  array                $vars
+	* @return ProgrammableCallback
 	*/
 	public function append($callback, array $vars = null)
 	{
@@ -43,9 +43,9 @@ class FilterChain extends NormalizedList
 	/**
 	* Prepend a filter to this chain
 	*
-	* @param  mixed  $callback
-	* @param  array  $vars
-	* @return Filter
+	* @param  mixed                $callback
+	* @param  array                $vars
+	* @return ProgrammableCallback
 	*/
 	public function prepend($callback, array $vars = null)
 	{
@@ -53,48 +53,37 @@ class FilterChain extends NormalizedList
 	}
 
 	/**
-	* Normalize a value argument into a Filter instance
+	* Normalize a value argument into a ProgrammableCallback instance
 	*
-	* @param  mixed  $value
-	* @return Filter
+	* @param  mixed                $value Either a callback or the name of a built-in filter
+	* @return ProgrammableCallback
 	*/
 	public function normalizeValue($value)
 	{
-		if ($value instanceof Filter)
+		if ($value instanceof ProgrammableCallback)
 		{
 			return $value;
 		}
 
-		if ($value instanceof CallbackTemplate)
+		if (is_string($value) && $value[0] === '#')
 		{
-			$callback = $value;
+			$value = new CallbackPlaceholder($value);
 		}
-		elseif (is_string($value) && $value[0] === '#')
+		elseif (!is_callable($value))
 		{
-			$callback = $value;
-		}
-		elseif (is_callable($value))
-		{
-			// It's a callback with no signature, we'll give it the default signature
-			$callback = CallbackTemplate::fromArray(array(
-				'callback' => $value,
-				'params'   => $this->defaultSignature
-			));
-		}
-		else
-		{
-			throw new InvalidArgumentException("Filter " . var_export($value, true) . " is neither callable or the reference to a built-in filter");
+			throw new InvalidArgumentException('Filter ' . var_export($value, true) . ' is neither callable nor the name of a filter');
 		}
 
-		return new Filter($callback);
+		return new ProgrammableCallback($value);
 	}
 
 	/**
-	* Create/normalize a Filter instance based on a callback/filter name and optional vars
+	* Create/normalize a ProgrammableCallback instance based on a callback/filter name and optional
+	* vars
 	*
-	* @param  mixed  $callback
-	* @param  array  $vars
-	* @return Filter
+	* @param  mixed                $callback
+	* @param  array                $vars
+	* @return ProgrammableCallback
 	*/
 	public function normalizeFilter($callback, array $vars = null)
 	{

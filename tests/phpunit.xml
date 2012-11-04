@@ -47,8 +47,8 @@
 			<file>Configurator/Helpers/TemplateOptimizerTest.php</file>
 			<file>Configurator/Items/AttributeTest.php</file>
 			<file>Configurator/Items/AttributePreprocessorTest.php</file>
-			<file>Configurator/Items/CallbackTemplateTest.php</file>
-			<file>Configurator/Items/FilterTest.php</file>
+			<file>Configurator/Items/CallbackPlaceholderTest.php</file>
+			<file>Configurator/Items/ProgrammableCallbackTest.php</file>
 			<file>Configurator/Items/TagTest.php</file>
 			<file>Configurator/UrlConfigTest.php</file>
 			<file>Configurator/Validators/AttributeNameTest.php</file>
@@ -101,8 +101,8 @@
 			<file>../src/Configurator/Helpers/TemplateOptimizer.php</file>
 			<file>../src/Configurator/Items/Attribute.php</file>
 			<file>../src/Configurator/Items/AttributePreprocessor.php</file>
-			<file>../src/Configurator/Items/CallbackTemplate.php</file>
-			<file>../src/Configurator/Items/Filter.php</file>
+			<file>../src/Configurator/Items/CallbackPlaceholder.php</file>
+			<file>../src/Configurator/Items/ProgrammableCallback.php</file>
 			<file>../src/Configurator/Items/Tag.php</file>
 			<file>../src/Configurator/Traits/CollectionProxy.php</file>
 			<file>../src/Configurator/Traits/Configurable.php</file>

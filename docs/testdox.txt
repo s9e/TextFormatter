@@ -110,10 +110,10 @@ s9e\TextFormatter\Tests\Configurator\Collections\FilterChain
  [x] append() throws an InvalidArgumentException on uncallable callbacks
  [x] prepend() throws an InvalidArgumentException on uncallable callbacks
  [x] $filterChain[] = 'foo' maps to $filterChain->append('foo')
- [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\Filter
- [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\Filter
- [x] Instances of s9e\TextFormatter\Configurator\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\Configurator\Items\Filter
- [x] Instances of s9e\TextFormatter\Configurator\Items\Filter are added as-is
+ [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
+ [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
+ [x] Instances of s9e\TextFormatter\Configurator\Items\CallbackPlaceholder are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
+ [x] Instances of s9e\TextFormatter\Configurator\Items\ProgrammableCallback are added as-is
  [x] contains() returns false if the given filter is not present in the chain
  [x] contains() returns true if the given built-in filter is present in the chain
  [x] contains() returns true if the given PHP string callback is present in the chain
@@ -121,8 +121,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\FilterChain
  [x] Deleting a filter reorders the chain to remove gaps
 
 s9e\TextFormatter\Tests\Configurator\Collections\FilterCollection
- [x] Throws an exception if the value is not an instance of Filter
- [x] Throws an exception if the filter's callback is a built-in filter
+ [x] Throws an exception if the value is not an instance of ProgrammableCallback
  [x] Accepts instances of Filter
 
 s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
@@ -686,22 +685,18 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
  [x] getAttributes() preserves the original's regexp "i", "s" and "u" flags
  [x] getRegexp() returns the regexp associated with this attribute preprocessor
 
-s9e\TextFormatter\Tests\Configurator\Items\CallbackTemplate
+s9e\TextFormatter\Tests\Configurator\Items\CallbackPlaceholder
+ [x] Is callable
+ [x] Throws an exception if invoked
+ [x] asConfig() returns the value passed to the constructor
+
+s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] __construct() throws an InvalidArgumentException if its argument is not callable
- [x] asConfig() returns the callback template as an array
- [x] CallbackTemplate::fromArray() creates an instance from an array
+ [x] asConfig() returns an array containing the callback
+ [x] fromArray() creates an instance from an array
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
-
-s9e\TextFormatter\Tests\Configurator\Items\Filter
- [x] __construct() accepts an instance of CallbackTemplate as its first argument
- [x] __construct() accepts the name of a built-in filter such as '#url' as its first argument
- [x] __construct() throws an exception on invalid filters
- [x] Filter vars can be passed as __construct()'s second argument
- [x] Filter vars can be set with setVars()
- [x] asConfig() returns the filter's callback and vars in an array
- [x] asConfig() folds the callback and params of a CallbackTemplate into its config
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor

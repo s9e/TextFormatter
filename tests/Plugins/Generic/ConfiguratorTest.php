@@ -2,7 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Generic;
 
-use s9e\TextFormatter\Configurator\Items\Filter;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Plugins\Generic\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -83,13 +84,19 @@ class ConfiguratorTest extends Test
 
 		$this->assertTrue(
 			$tag->attributes->get('w')->filterChain->contains(
-				new Filter('#regexp', array('regexp' => '/^(?<w>[0-9]+)$/D'))
+				ProgrammableCallback::fromArray(array(
+					'callback' => new CallbackPlaceholder('#regexp'),
+					'vars'     => array('regexp' => '/^(?<w>[0-9]+)$/D')
+				))
 			)
 		);
 
 		$this->assertTrue(
 			$tag->attributes->get('h')->filterChain->contains(
-				new Filter('#regexp', array('regexp' => '/^(?<h>[0-9]+)$/D'))
+				ProgrammableCallback::fromArray(array(
+					'callback' => new CallbackPlaceholder('#regexp'),
+					'vars'     => array('regexp' => '/^(?<h>[0-9]+)$/D')
+				))
 			)
 		);
 	}

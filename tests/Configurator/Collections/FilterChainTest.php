@@ -4,9 +4,8 @@ namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\FilterChain;
-use s9e\TextFormatter\Configurator\Items\CallbackTemplate;
-use s9e\TextFormatter\Configurator\Items\Filter;
-use s9e\TextFormatter\Configurator\Items\FilterLink;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\FilterChain
@@ -29,14 +28,14 @@ class FilterChainTest extends Test
 	*/
 	public function testAppend()
 	{
-		$int = new Filter('#int');
-		$url = new Filter('#url');
+		$f1 = new ProgrammableCallback('strtolower');
+		$f2 = new ProgrammableCallback('strtoupper');
 
-		$this->filterChain->append($int);
-		$this->filterChain->append($url);
+		$this->filterChain->append($f1);
+		$this->filterChain->append($f2);
 
-		$this->assertSame($int, $this->filterChain[0]);
-		$this->assertSame($url, $this->filterChain[1]);
+		$this->assertSame($f1, $this->filterChain[0]);
+		$this->assertSame($f2, $this->filterChain[1]);
 	}
 
 	/**
@@ -44,14 +43,14 @@ class FilterChainTest extends Test
 	*/
 	public function testPrepend()
 	{
-		$int = new Filter('#int');
-		$url = new Filter('#url');
+		$f1 = new ProgrammableCallback('strtolower');
+		$f2 = new ProgrammableCallback('strtoupper');
 
-		$this->filterChain->prepend($url);
-		$this->filterChain->prepend($int);
+		$this->filterChain->prepend($f2);
+		$this->filterChain->prepend($f1);
 
-		$this->assertSame($int, $this->filterChain[0]);
-		$this->assertSame($url, $this->filterChain[1]);
+		$this->assertSame($f1, $this->filterChain[0]);
+		$this->assertSame($f2, $this->filterChain[1]);
 	}
 
 	/**
@@ -81,7 +80,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox append() throws an InvalidArgumentException on invalid callbacks 
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is neither callable or the reference to a built-in filter
+	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor the name of a filter
 	*/
 	public function testAppendInvalidCallback()
 	{
@@ -91,7 +90,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks 
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Filter '*invalid*' is neither callable or the reference to a built-in filter
+	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor the name of a filter
 	*/
 	public function testPrependInvalidCallback()
 	{
@@ -101,7 +100,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox append() throws an InvalidArgumentException on uncallable callbacks 
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is neither callable or the reference to a built-in filter
+	* @expectedExceptionMessage is neither callable nor the name of a filter
 	*/
 	public function testAppendUncallableCallback()
 	{
@@ -111,7 +110,7 @@ class FilterChainTest extends Test
 	/**
 	* @testdox prepend() throws an InvalidArgumentException on uncallable callbacks 
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage is neither callable or the reference to a built-in filter
+	* @expectedExceptionMessage is neither callable nor the name of a filter
 	*/
 	public function testPrependUncallableCallback()
 	{
@@ -137,51 +136,51 @@ class FilterChainTest extends Test
 	}
 
 	/**
-	* @testdox PHP string callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\Filter
+	* @testdox PHP string callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
 	*/
 	public function testStringCallback()
 	{
 		$this->filterChain->append('strtolower');
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Filter',
+			's9e\\TextFormatter\\Configurator\\Items\\ProgrammableCallback',
 			$this->filterChain[0]
 		);
 	}
 
 	/**
-	* @testdox PHP array callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\Filter
+	* @testdox PHP array callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
 	*/
 	public function testArrayCallback()
 	{
 		$this->filterChain->append(array($this, 'doNothing'));
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Filter',
+			's9e\\TextFormatter\\Configurator\\Items\\ProgrammableCallback',
 			$this->filterChain[0]
 		);
 	}
 
 	/**
-	* @testdox Instances of s9e\TextFormatter\Configurator\Items\CallbackTemplate are normalized to an instance of s9e\TextFormatter\Configurator\Items\Filter
+	* @testdox Instances of s9e\TextFormatter\Configurator\Items\CallbackPlaceholder are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
 	*/
-	public function testArrayCallbackTemplate()
+	public function testArrayCallbackPlaceholder()
 	{
-		$callback = new CallbackTemplate('strtolower');
+		$callback = new CallbackPlaceholder('#foo');
 		$this->filterChain->append($callback);
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Filter',
+			's9e\\TextFormatter\\Configurator\\Items\\ProgrammableCallback',
 			$this->filterChain[0]
 		);
 	}
 
 	/**
-	* @testdox Instances of s9e\TextFormatter\Configurator\Items\Filter are added as-is
+	* @testdox Instances of s9e\TextFormatter\Configurator\Items\ProgrammableCallback are added as-is
 	*/
-	public function testFilterInstance()
+	public function testProgrammableCallbackInstance()
 	{
-		$filter = new Filter('#int');
+		$filter = new ProgrammableCallback('strtolower');
 		$this->filterChain->append($filter);
 
 		$this->assertSame(
@@ -235,15 +234,15 @@ class FilterChainTest extends Test
 	*/
 	public function testDeleteReordersChain()
 	{
-		$int = new Filter('#int');
-		$url = new Filter('#url');
+		$f1 = new ProgrammableCallback('strtolower');
+		$f2 = new ProgrammableCallback('strtoupper');
 
-		$this->filterChain->append($int);
-		$this->filterChain->append($url);
+		$this->filterChain->append($f1);
+		$this->filterChain->append($f2);
 
 		$this->filterChain->delete(0);
 
 		$this->assertSame(1, count($this->filterChain));
-		$this->assertSame($url, $this->filterChain[0]);
+		$this->assertSame($f2, $this->filterChain[0]);
 	}
 }
