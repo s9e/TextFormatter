@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\FilterChain;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
 class Attribute implements ConfigProvider
@@ -26,6 +27,11 @@ class Attribute implements ConfigProvider
 	* @var FilterChain This attribute's filter chain
 	*/
 	protected $filterChain;
+
+	/**
+	* @var ProgrammableCallback
+	*/
+	protected $generator;
 
 	/**
 	* @var bool Whether this attribute is required for the tag to be valid
@@ -65,6 +71,19 @@ class Attribute implements ConfigProvider
 		{
 			$this->filterChain->append($filter);
 		}
+	}
+
+	/**
+	* @param callable|ProgrammableCallback $callback
+	*/
+	public function setGenerator($callback)
+	{
+		if (!($callback instanceof ProgrammableCallback))
+		{
+			$callback = new ProgrammableCallback($callback);
+		}
+
+		$this->generator = $callback;
 	}
 
 	/**

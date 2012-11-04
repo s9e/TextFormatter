@@ -25,8 +25,8 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testAsConfig()
 	{
-		$ct     = new ProgrammableCallback('mt_rand');
-		$config = $ct->asConfig();
+		$pc     = new ProgrammableCallback('mt_rand');
+		$config = $pc->asConfig();
 
 		$this->assertArrayHasKey('callback', $config);
 		$this->assertSame('mt_rand', $config['callback']);
@@ -37,7 +37,7 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testFromArray()
 	{
-		$ct = ProgrammableCallback::fromArray(
+		$pc = ProgrammableCallback::fromArray(
 			array(
 				'callback' => 'mt_rand',
 				'params'   => array()
@@ -45,7 +45,7 @@ class ProgrammableCallbackTest extends Test
 		);
 
 		$this->assertEquals(
-			$ct,
+			$pc,
 			new ProgrammableCallback('mt_rand')
 		);
 	}
@@ -55,15 +55,15 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testAddParameterByValue()
 	{
-		$ct = new ProgrammableCallback('strtolower');
-		$ct->addParameterByValue('foobar');
+		$pc = new ProgrammableCallback('strtolower');
+		$pc->addParameterByValue('foobar');
 
 		$this->assertEquals(
 			array(
 				'callback' => 'strtolower',
 				'params'   => array('foobar')
 			),
-			$ct->asConfig()
+			$pc->asConfig()
 		);
 	}
 
@@ -72,15 +72,15 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testAddParameterByName()
 	{
-		$ct = new ProgrammableCallback('strtolower');
-		$ct->addParameterByName('foobar');
+		$pc = new ProgrammableCallback('strtolower');
+		$pc->addParameterByName('foobar');
 
 		$this->assertEquals(
 			array(
 				'callback' => 'strtolower',
 				'params'   => array('foobar' => null)
 			),
-			$ct->asConfig()
+			$pc->asConfig()
 		);
 	}
 
@@ -89,11 +89,21 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testNormalizeStatic()
 	{
-		$ct     = new ProgrammableCallback(array(__NAMESPACE__ . '\\DummyStaticCallback', 'bar'));
-		$config = $ct->asConfig();
+		$pc     = new ProgrammableCallback(array(__NAMESPACE__ . '\\DummyStaticCallback', 'bar'));
+		$config = $pc->asConfig();
 
 		$this->assertArrayHasKey('callback', $config);
 		$this->assertSame(__NAMESPACE__ . '\\DummyStaticCallback::bar', $config['callback']);
+	}
+
+	/**
+	* @testdox getCallback() returns the callback
+	*/
+	public function testGetCallback()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+
+		$this->assertSame('strtolower', $pc->getCallback());
 	}
 }
 

@@ -677,6 +677,8 @@ s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] $attr->filterChain can be assigned an array
  [x] $attr->filterChain can be assigned an instance of FilterChain to copy its content
  [x] setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
+ [x] $attr->generator accepts an instance of ProgrammableCallback
+ [x] $attr->generator accepts a callback and normalizes it to an instance of ProgrammableCallback
  [x] asConfig() correctly produces a config array
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
@@ -697,6 +699,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
+ [x] getCallback() returns the callback
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor

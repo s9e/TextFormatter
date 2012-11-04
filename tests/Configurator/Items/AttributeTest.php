@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Items;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\FilterChain;
 use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Items\Attribute
@@ -63,6 +64,33 @@ class AttributeTest extends Test
 	{
 		$attr = new Attribute;
 		$attr->filterChain = false;
+	}
+
+	/**
+	* @testdox $attr->generator accepts an instance of ProgrammableCallback
+	*/
+	public function testSetGeneratorProgrammableCallback()
+	{
+		$attr     = new Attribute;
+		$callback = new ProgrammableCallback('mt_rand');
+
+		$attr->generator = $callback;
+
+		$this->assertSame($callback, $attr->generator);
+	}
+
+	/**
+	* @testdox $attr->generator accepts a callback and normalizes it to an instance of ProgrammableCallback
+	*/
+	public function testSetGeneratorCallback()
+	{
+		$attr = new Attribute;
+		$attr->generator = 'mt_rand';
+
+		$this->assertInstanceof(
+			's9e\\TextFormatter\\Configurator\\Items\\ProgrammableCallback',
+			$attr->generator
+		);
 	}
 
 	/**
