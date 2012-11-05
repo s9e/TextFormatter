@@ -194,7 +194,7 @@ foreach ($page->body->h4 as $h4)
 				case 'Content model':
 					if ($value === 'empty')
 					{
-						$elements[$elName]['isEmpty'][''] = 0;
+						$elements[$elName]['empty'][''] = 0;
 						break 2;
 					}
 
@@ -212,7 +212,7 @@ foreach ($page->body->h4 as $h4)
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is present: empty$#', $value, $m))
 					{
-						$elements[$elName]['isEmpty']['@' . $m[1]] = 0;
+						$elements[$elName]['empty']['@' . $m[1]] = 0;
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is absent: zero or more ([a-z]+) elements$#', $value, $m))
 					{
@@ -521,7 +521,7 @@ foreach ($elements as $elName => $element)
 		foreach ($element[$k] as $category => $xpath)
 		{
 			$bitNumber = $categories[$category];
-			$el[$v]  |= 1 << $bitNumber;
+			$el[$v] |= 1 << $bitNumber;
 
 			if ($xpath)
 			{
@@ -547,6 +547,17 @@ foreach ($elements as $elName => $element)
 	if ($noText && !isset($element['allowText']))
 	{
 		$el['nt'] = 1;
+	}
+
+	if (!empty($element['empty']))
+	{
+		$el['e'] = 1;
+
+		$xpath = key($element['empty']);
+		if ($xpath)
+		{
+			$el['e0'] = $xpath;
+		}
 	}
 
 	if (!empty($element['transparent']))

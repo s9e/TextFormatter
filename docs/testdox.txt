@@ -244,12 +244,18 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <div> should not be reopened automatically
  [x] "Hi" should not be reopened automatically
  [x] A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically
+ [x] <img> is considered empty
+ [x] <hr> is considered empty even if it has an <xsl:apply-templates/> child
+ [x] <span> is not considered empty if it has an <xsl:apply-templates/> child
+ [x] <colgroup span="2"> is considered empty
+ [x] <colgroup> is not considered empty if it has an <xsl:apply-templates/> child
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <div> has an allowChild rule for <div> and <span>
  [x] <span> has a denyChild rule for <div>
  [x] <a> has a denyDescendant rule for <a>
  [x] <a> has a denyChild rule for <a>
+ [x] Generates an autoClose rule for <hr>
  [x] Generates an autoReopen rule for <b>
  [x] Generates an isTransparent rule for <a>
  [x] <li> has a disallowAtRoot rule if parentHTML is not specified

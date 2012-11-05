@@ -172,6 +172,12 @@ abstract class RulesGenerator
 				$rules[$srcTagName]['autoReopen'] = true;
 			}
 
+			// Create an autoClose rule if the tag uses the "empty" content model
+			if ($srcTag->isEmpty())
+			{
+				$rules[$srcTagName]['autoClose'] = true;
+			}
+
 			// Create an isTransparent rule if the tag is transparent
 			if ($srcTag->isTransparent())
 			{

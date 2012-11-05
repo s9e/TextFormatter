@@ -10,7 +10,7 @@ use s9e\TextFormatter\Configurator\Helpers\HTML5\TemplateForensics;
 */
 class TemplateForensicsTest extends Test
 {
-	public function runCase($title, $xslSrc, $rule, $xslTrg)
+	public function runCase($title, $xslSrc, $rule, $xslTrg = null)
 	{
 		$st = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">';
 		$et = '</xsl:template>';
@@ -29,6 +29,8 @@ class TemplateForensicsTest extends Test
 			'denyDescendant'  => array('assertFalse', 'allowsDescendant'),
 			'closeParent'     => array('assertTrue',  'closesParent'),
 			'!closeParent'    => array('assertFalse', 'closesParent'),
+			'isEmpty'         => array('assertTrue',  'isEmpty'),
+			'!isEmpty'        => array('assertFalse', 'isEmpty'),
 			'isTransparent'   => array('assertTrue',  'isTransparent'),
 			'!isTransparent'  => array('assertFalse', 'isTransparent'),
 		);
@@ -237,52 +239,48 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <a> is considered transparent
 	*/
-	public function testA57E3A26()
+	public function test922375F7()
 	{
 		$this->runCase(
 			'<a> is considered transparent',
 			'<a><xsl:apply-templates/></a>',
-			'isTransparent',
-			NULL
+			'isTransparent'
 		);
 	}
 
 	/**
 	* @testdox <a><span> is not considered transparent
 	*/
-	public function test6D41EE34()
+	public function test314E8100()
 	{
 		$this->runCase(
 			'<a><span> is not considered transparent',
 			'<a><span><xsl:apply-templates/></span></a>',
-			'!isTransparent',
-			NULL
+			'!isTransparent'
 		);
 	}
 
 	/**
 	* @testdox <span><a> is not considered transparent
 	*/
-	public function testD1D36C1C()
+	public function test444B39F8()
 	{
 		$this->runCase(
 			'<span><a> is not considered transparent',
 			'<span><a><xsl:apply-templates/></a></span>',
-			'!isTransparent',
-			NULL
+			'!isTransparent'
 		);
 	}
 
 	/**
 	* @testdox A template composed entirely of a single <xsl:apply-templates/> is considered transparent
 	*/
-	public function test91DA5BEA()
+	public function test70793519()
 	{
 		$this->runCase(
 			'A template composed entirely of a single <xsl:apply-templates/> is considered transparent',
 			'<xsl:apply-templates/>',
-			'isTransparent',
-			NULL
+			'isTransparent'
 		);
 	}
 
@@ -315,26 +313,24 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <textarea> disallows text nodes
 	*/
-	public function test3CC45B5C()
+	public function testDD2BCD0B()
 	{
 		$this->runCase(
 			'<textarea> disallows text nodes',
 			'<textarea><xsl:apply-templates/></textarea>',
-			'allowText',
-			NULL
+			'allowText'
 		);
 	}
 
 	/**
 	* @testdox <table> disallows text nodes
 	*/
-	public function test90727C6C()
+	public function test96675F41()
 	{
 		$this->runCase(
 			'<table> disallows text nodes',
 			'<table><xsl:apply-templates/></table>',
-			'denyText',
-			NULL
+			'denyText'
 		);
 	}
 
@@ -393,65 +389,120 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <b> should be reopened automatically
 	*/
-	public function test97418839()
+	public function test22F9A918()
 	{
 		$this->runCase(
 			'<b> should be reopened automatically',
 			'<b><xsl:apply-templates/></b>',
-			'autoReopen',
-			NULL
+			'autoReopen'
 		);
 	}
 
 	/**
 	* @testdox <b><u> should be reopened automatically
 	*/
-	public function test3FB01B40()
+	public function test7AB1C861()
 	{
 		$this->runCase(
 			'<b><u> should be reopened automatically',
 			'<b><u><xsl:apply-templates/></u></b>',
-			'autoReopen',
-			NULL
+			'autoReopen'
 		);
 	}
 
 	/**
 	* @testdox <div> should not be reopened automatically
 	*/
-	public function test8696A210()
+	public function test3068CA4C()
 	{
 		$this->runCase(
 			'<div> should not be reopened automatically',
 			'<div><xsl:apply-templates/></div>',
-			'!autoReopen',
-			NULL
+			'!autoReopen'
 		);
 	}
 
 	/**
 	* @testdox "Hi" should not be reopened automatically
 	*/
-	public function testB89FCAF3()
+	public function testA216F4AE()
 	{
 		$this->runCase(
 			'"Hi" should not be reopened automatically',
 			'Hi',
-			'!autoReopen',
-			NULL
+			'!autoReopen'
 		);
 	}
 
 	/**
 	* @testdox A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically
 	*/
-	public function test7514845D()
+	public function test357C2DF0()
 	{
 		$this->runCase(
 			'A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically',
 			'<xsl:apply-templates/>',
-			'!autoReopen',
-			NULL
+			'!autoReopen'
+		);
+	}
+
+	/**
+	* @testdox <img> is considered empty
+	*/
+	public function test9DA424F2()
+	{
+		$this->runCase(
+			'<img> is considered empty',
+			'<img/>',
+			'isEmpty'
+		);
+	}
+
+	/**
+	* @testdox <hr> is considered empty even if it has an <xsl:apply-templates/> child
+	*/
+	public function testC63DE367()
+	{
+		$this->runCase(
+			'<hr> is considered empty even if it has an <xsl:apply-templates/> child',
+			'<hr><xsl:apply-templates/></hr>',
+			'isEmpty'
+		);
+	}
+
+	/**
+	* @testdox <span> is not considered empty if it has an <xsl:apply-templates/> child
+	*/
+	public function testB50A7E03()
+	{
+		$this->runCase(
+			'<span> is not considered empty if it has an <xsl:apply-templates/> child',
+			'<span><xsl:apply-templates/></span>',
+			'!isEmpty'
+		);
+	}
+
+	/**
+	* @testdox <colgroup span="2"> is considered empty
+	*/
+	public function test89A08E8B()
+	{
+		$this->runCase(
+			'<colgroup span="2"> is considered empty',
+			'<colgroup span="2"><xsl:apply-templates/></colgroup>',
+			'isEmpty'
+		);
+	}
+
+	/**
+	* @testdox <colgroup> is not considered empty if it has an <xsl:apply-templates/> child
+	*/
+	public function test9708E188()
+	{
+		$this->runCase(
+			'<colgroup> is not considered empty if it has an <xsl:apply-templates/> child',
+			'<colgroup><xsl:apply-templates/></colgroup>',
+			'!isEmpty'
 		);
 	}
 	// End of content generated by ../../../../scripts/patchTemplateForensicsTest.php
@@ -554,26 +605,22 @@ class TemplateForensicsTest extends Test
 			array(
 				'<a> is considered transparent',
 				'<a><xsl:apply-templates/></a>',
-				'isTransparent',
-				null
+				'isTransparent'
 			),
 			array(
 				'<a><span> is not considered transparent',
 				'<a><span><xsl:apply-templates/></span></a>',
-				'!isTransparent',
-				null
+				'!isTransparent'
 			),
 			array(
 				'<span><a> is not considered transparent',
 				'<span><a><xsl:apply-templates/></a></span>',
-				'!isTransparent',
-				null
+				'!isTransparent'
 			),
 			array(
 				'A template composed entirely of a single <xsl:apply-templates/> is considered transparent',
 				'<xsl:apply-templates/>',
-				'isTransparent',
-				null
+				'isTransparent'
 			),
 			array(
 				'<span> allows <unknownElement> as child',
@@ -590,14 +637,12 @@ class TemplateForensicsTest extends Test
 			array(
 				'<textarea> disallows text nodes',
 				'<textarea><xsl:apply-templates/></textarea>',
-				'allowText',
-				null
+				'allowText'
 			),
 			array(
 				'<table> disallows text nodes',
 				'<table><xsl:apply-templates/></table>',
-				'denyText',
-				null
+				'denyText'
 			),
 			array(
 				'<table><tr><td> allows "Hi"',
@@ -626,32 +671,52 @@ class TemplateForensicsTest extends Test
 			array(
 				'<b> should be reopened automatically',
 				'<b><xsl:apply-templates/></b>',
-				'autoReopen',
-				null
+				'autoReopen'
 			),
 			array(
 				'<b><u> should be reopened automatically',
 				'<b><u><xsl:apply-templates/></u></b>',
-				'autoReopen',
-				null
+				'autoReopen'
 			),
 			array(
 				'<div> should not be reopened automatically',
 				'<div><xsl:apply-templates/></div>',
-				'!autoReopen',
-				null
+				'!autoReopen'
 			),
 			array(
 				'"Hi" should not be reopened automatically',
 				'Hi',
-				'!autoReopen',
-				null
+				'!autoReopen'
 			),
 			array(
 				'A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically',
 				'<xsl:apply-templates/>',
-				'!autoReopen',
-				null
+				'!autoReopen'
+			),
+			array(
+				'<img> is considered empty',
+				'<img/>',
+				'isEmpty'
+			),
+			array(
+				'<hr> is considered empty even if it has an <xsl:apply-templates/> child',
+				'<hr><xsl:apply-templates/></hr>',
+				'isEmpty'
+			),
+			array(
+				'<span> is not considered empty if it has an <xsl:apply-templates/> child',
+				'<span><xsl:apply-templates/></span>',
+				'!isEmpty'
+			),
+			array(
+				'<colgroup span="2"> is considered empty',
+				'<colgroup span="2"><xsl:apply-templates/></colgroup>',
+				'isEmpty'
+			),
+			array(
+				'<colgroup> is not considered empty if it has an <xsl:apply-templates/> child',
+				'<colgroup><xsl:apply-templates/></colgroup>',
+				'!isEmpty'
 			),
 		);
 	}
