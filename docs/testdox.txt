@@ -144,6 +144,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] allowChild() normalizes tag name
  [x] allowDescendant() throws an exception on invalid tag name
  [x] allowDescendant() normalizes tag name
+ [x] autoClose() accepts a boolean
+ [x] autoClose() throws an exception if its argument is not a boolean
  [x] autoReopen() accepts a boolean
  [x] autoReopen() throws an exception if its argument is not a boolean
  [x] closeAncestor() throws an exception on invalid tag name

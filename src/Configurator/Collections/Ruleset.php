@@ -124,7 +124,25 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add a autoReopen rule
+	* Add an autoClose rule
+	*
+	* NOTE: this rule exists so that plugins don't have to specifically handle tags whose end tag
+	*       may/must be omitted such as <hr> or [img]
+	*
+	* @param bool $bool Whether or not the tag should automatically be closed if its start tag is not followed by an end tag
+	*/
+	public function autoClose($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('autoClose() expects a boolean');
+		}
+
+		$this->items['autoClose'] = $bool;
+	}
+
+	/**
+	* Add an autoReopen rule
 	*
 	* @param bool $bool Whether or not the tag should automatically be reopened if closed by an end tag of a different name
 	*/

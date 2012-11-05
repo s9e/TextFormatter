@@ -141,6 +141,26 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox autoClose() accepts a boolean
+	*/
+	public function testAutoCloseValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->autoClose(true);
+	}
+
+	/**
+	* @testdox autoClose() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage autoClose() expects a boolean
+	*/
+	public function testAutoCloseInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->autoClose('foo');
+	}
+
+	/**
 	* @testdox autoReopen() accepts a boolean
 	*/
 	public function testAutoReopenValid()
