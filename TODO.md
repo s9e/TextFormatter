@@ -41,3 +41,4 @@ TODO
 - Sort the "isTransparent" situation. Transparent tags probably should not have "allowedChildren" set in their config. <video>'s content model seems to indicate otherwise, though. Some tags are specifically allowed, *then* its content model is transparent.
 - Add a date/datetime filter, see http://dev.w3.org/html5/spec/Overview.html#valid-date-string-with-optional-time
 - Add Parser::disablePlugin() and Parser::enablePlugin() so that only one Parser instance (and config) is required even if the end user is given the option to disable some markup such as emoticons
+- There should be a way for an end tag to close its start tag even if it (the end tag) is skipped. For instance in BBCode parser when using the tag's content for an attribute... maybe

@@ -201,6 +201,9 @@ class TemplateForensics
 	* Whether this tag uses the "empty" content model
 	*
 	* @return bool
+	*
+	* @todo should be isVoid()
+	* @link http://dev.w3.org/html5/spec/single-page.html#void-elements
 	*/
 	public function isEmpty()
 	{
