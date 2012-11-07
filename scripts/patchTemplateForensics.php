@@ -6,7 +6,6 @@ use s9e\SimpleDOM\SimpleDOM;
 include 's9e/SimpleDOM/src/SimpleDOM.php';
 
 $filepath = '/tmp/single-page.html';
-//$filepath = '/tmp/grouping-content.html';
 
 if (!file_exists($filepath))
 {
@@ -28,7 +27,7 @@ $page = SimpleDOM::loadHTMLFile($filepath);
 // Tags on the "adoption agency" list
 //==============================================================================
 
-$nodes = $page->xpath('//*[@id="adoptionAgency"]');
+$nodes = $page->xpath('/html/body/div[@class="impl"]/dl[@class="switch"]/dt[@id="adoptionAgency"]');
 
 if (!$nodes)
 {
@@ -44,12 +43,30 @@ if (!preg_match_all('#"(\\w+)"#', $nodes[0]->textContent(), $matches))
 $autoReopen = array_flip($matches[1]);
 
 //==============================================================================
+// Void elements
+//==============================================================================
+
+$nodes = $page->xpath('/html/body/dl/dt[dfn/@id="void-elements"]/following-sibling::dd[1]/code/a');
+
+if (!$nodes)
+{
+	die("Could not find the void elements\n");
+}
+
+$voidElements = array();
+foreach ($nodes as $node)
+{
+	$elName = $node->textContent();
+	$voidElements[$elName] = 1;
+}
+
+//==============================================================================
 // End tags that can be omitted => closeParent rules
 //==============================================================================
 
 $closeParent = array();
 
-foreach ($page->xpath('//h5[@id="optional-tags"]/following-sibling::p[following-sibling::h5/@id="element-restrictions"]') as $p)
+foreach ($page->xpath('/html/body/h5[@id="optional-tags"]/following-sibling::p[following-sibling::h5/@id="element-restrictions"]') as $p)
 {
 	$text = preg_replace('#\\s+#', ' ', $p->textContent());
 
@@ -566,6 +583,11 @@ foreach ($elements as $elName => $element)
 				$el['da0'] = $xpath;
 			}
 		}
+	}
+
+	if (isset($voidElements[$elName]))
+	{
+		$el['v'] = 1;
 	}
 
 	if (!empty($element['transparent']))

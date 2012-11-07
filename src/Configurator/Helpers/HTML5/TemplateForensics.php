@@ -28,6 +28,8 @@ use s9e\TextFormatter\Configurator\Collections\Templateset;
 * @link http://dev.w3.org/html5/spec/content-models.html#content-models
 * @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
 * @see  /scripts/patchTemplateForensics.php
+*
+* @todo isVoid()
 */
 class TemplateForensics
 {
@@ -427,16 +429,15 @@ class TemplateForensics
 
 	/**
 	* "What is this?" you might ask. This is basically a compressed version of the HTML5 content
-	* models, with some liberties taken.
+	* models and rules, with some liberties taken.
 	*
 	* For each element, up to three bitfields are defined: "c", "ac" and "dd". Bitfields are stored
 	* as raw bytes, formatted using the octal notation to keep the sources ASCII.
 	*
 	*   "c" represents the categories the element belongs to. The categories are comprised of HTML5
 	*   content models (such as "phrasing content" or "interactive content") plus a few special
-	*   categories created dynamically (parts of the specs refer to "a group of X and Y elements"
-	*   rather than a specific content model, in which case a special category is formed for those
-	*   elements.)
+	*   categories created to cover the parts of the specs that refer to "a group of X and Y
+	*   elements" rather than a specific content model.
 	*
 	*   "ac" represents the categories that are allowed as children of given element.
 	*
@@ -454,6 +455,8 @@ class TemplateForensics
 	*   "t" indicates that the element uses the transparent content model.
 	*
 	*   "da" indicates that the element rejects any descendants. (denyAll)
+	*
+	*   "v" indicates that the element is a void element.
 	*
 	*   "nt" indicates that the element does not accept text nodes.
 	*
@@ -473,25 +476,25 @@ class TemplateForensics
 		'a'=>array('c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'ar'=>1),
 		'abbr'=>array('c'=>"\7",'ac'=>"\4"),
 		'address'=>array('c'=>"\3\10",'ac'=>"\1",'dd'=>"\100\14",'b'=>1,'cp'=>array('p')),
-		'area'=>array('c'=>"\5",'nt'=>1,'da'=>1),
+		'area'=>array('c'=>"\5",'nt'=>1,'da'=>1,'v'=>1),
 		'article'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'aside'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'audio'=>array('c'=>"\217",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\100\2",'ac22'=>'not(@src)','ac25'=>'@src','t'=>1),
 		'b'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
-		'base'=>array('c'=>"\20",'nt'=>1,'da'=>1,'b'=>1),
+		'base'=>array('c'=>"\20",'nt'=>1,'da'=>1,'v'=>1,'b'=>1),
 		'bdi'=>array('c'=>"\7",'ac'=>"\4"),
 		'bdo'=>array('c'=>"\7",'ac'=>"\4"),
 		'blockquote'=>array('c'=>"\43",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'body'=>array('c'=>"\40\200",'ac'=>"\1",'b'=>1),
-		'br'=>array('c'=>"\5",'nt'=>1,'da'=>1),
+		'br'=>array('c'=>"\5",'nt'=>1,'da'=>1,'v'=>1),
 		'button'=>array('c'=>"\17",'ac'=>"\4",'dd'=>"\10"),
 		'canvas'=>array('c'=>"\207",'ac'=>"\0",'t'=>1),
 		'caption'=>array('c'=>"\0\1",'ac'=>"\1",'dd'=>"\0\0\0\4",'b'=>1),
 		'cite'=>array('c'=>"\7",'ac'=>"\4"),
 		'code'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
-		'col'=>array('c'=>"\0\0\0\0\2",'nt'=>1,'da'=>1,'b'=>1),
+		'col'=>array('c'=>"\0\0\0\0\2",'nt'=>1,'da'=>1,'v'=>1,'b'=>1),
 		'colgroup'=>array('c'=>"\0\1",'ac'=>"\0\0\0\0\2",'ac33'=>'not(@span)','nt'=>1,'da'=>1,'da0'=>'@span','b'=>1),
-		'command'=>array('c'=>"\25",'nt'=>1,'da'=>1),
+		'command'=>array('c'=>"\25",'nt'=>1,'da'=>1,'v'=>1),
 		'datalist'=>array('c'=>"\5",'ac'=>"\4\0\200"),
 		'dd'=>array('c'=>"\0\0\4",'ac'=>"\1",'b'=>1,'cp'=>array('dd','dt')),
 		'del'=>array('c'=>"\5",'ac'=>"\0",'t'=>1),
@@ -502,7 +505,7 @@ class TemplateForensics
 		'dl'=>array('c'=>"\3",'ac'=>"\0\0\4",'nt'=>1,'b'=>1,'cp'=>array('p')),
 		'dt'=>array('c'=>"\0\0\4",'ac'=>"\1",'dd'=>"\100\104",'b'=>1,'cp'=>array('dd','dt')),
 		'em'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
-		'embed'=>array('c'=>"\217",'nt'=>1,'da'=>1),
+		'embed'=>array('c'=>"\217",'nt'=>1,'da'=>1,'v'=>1),
 		'fieldset'=>array('c'=>"\43",'ac'=>"\1\0\0\1",'b'=>1,'cp'=>array('p')),
 		'figcaption'=>array('c'=>"\0\0\0\0\20",'ac'=>"\1",'b'=>1),
 		'figure'=>array('c'=>"\43",'ac'=>"\1\0\0\0\20",'b'=>1),
@@ -517,23 +520,23 @@ class TemplateForensics
 		'head'=>array('c'=>"\0\200",'ac'=>"\20",'nt'=>1,'b'=>1),
 		'header'=>array('c'=>"\3\110",'ac'=>"\1",'dd'=>"\0\100",'b'=>1,'cp'=>array('p')),
 		'hgroup'=>array('c'=>"\103",'ac'=>"\0\2",'nt'=>1,'b'=>1,'cp'=>array('p')),
-		'hr'=>array('c'=>"\1",'nt'=>1,'da'=>1,'b'=>1,'cp'=>array('p')),
+		'hr'=>array('c'=>"\1",'nt'=>1,'da'=>1,'v'=>1,'b'=>1,'cp'=>array('p')),
 		'html'=>array('c'=>"\0",'ac'=>"\0\200",'nt'=>1,'b'=>1),
 		'i'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
 		'iframe'=>array('c'=>"\217",'nt'=>1,'da'=>1),
-		'img'=>array('c'=>"\217",'c3'=>'@usemap','nt'=>1,'da'=>1),
-		'input'=>array('c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'da'=>1),
+		'img'=>array('c'=>"\217",'c3'=>'@usemap','nt'=>1,'da'=>1,'v'=>1),
+		'input'=>array('c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'da'=>1,'v'=>1),
 		'ins'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
 		'kbd'=>array('c'=>"\7",'ac'=>"\4"),
-		'keygen'=>array('c'=>"\17",'nt'=>1,'da'=>1),
+		'keygen'=>array('c'=>"\17",'nt'=>1,'da'=>1,'v'=>1),
 		'label'=>array('c'=>"\17\0\0\40",'ac'=>"\4",'dd'=>"\0\0\0\40"),
 		'legend'=>array('c'=>"\0\0\0\1",'ac'=>"\4",'b'=>1),
 		'li'=>array('c'=>"\0\0\0\0\10",'ac'=>"\1",'b'=>1,'cp'=>array('li')),
-		'link'=>array('c'=>"\20",'nt'=>1,'da'=>1,'b'=>1),
+		'link'=>array('c'=>"\20",'nt'=>1,'da'=>1,'v'=>1,'b'=>1),
 		'map'=>array('c'=>"\7",'ac'=>"\0",'t'=>1),
 		'mark'=>array('c'=>"\7",'ac'=>"\4"),
 		'menu'=>array('c'=>"\13",'c3'=>'@type="toolbar"','c1'=>'@type="toolbar" or @type="list"','ac'=>"\1\0\0\0\10",'b'=>1,'cp'=>array('p')),
-		'meta'=>array('c'=>"\20",'nt'=>1,'da'=>1,'b'=>1),
+		'meta'=>array('c'=>"\20",'nt'=>1,'da'=>1,'v'=>1,'b'=>1),
 		'meter'=>array('c'=>"\7\20\0\20",'ac'=>"\4",'dd'=>"\0\0\0\20"),
 		'nav'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'noscript'=>array('c'=>"\25\0\20",'ac'=>"\0",'dd'=>"\0\0\20",'t'=>1),
@@ -543,7 +546,7 @@ class TemplateForensics
 		'option'=>array('c'=>"\0\40\200",'b'=>1,'cp'=>array('option')),
 		'output'=>array('c'=>"\7",'ac'=>"\4"),
 		'p'=>array('c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
-		'param'=>array('c'=>"\0\0\0\10",'nt'=>1,'da'=>1,'b'=>1),
+		'param'=>array('c'=>"\0\0\0\10",'nt'=>1,'da'=>1,'v'=>1,'b'=>1),
 		'pre'=>array('c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>array('p')),
 		'progress'=>array('c'=>"\7\20\10",'ac'=>"\4",'dd'=>"\0\0\10"),
 		'q'=>array('c'=>"\7",'ac'=>"\4"),
@@ -556,7 +559,7 @@ class TemplateForensics
 		'section'=>array('c'=>"\3\4",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'select'=>array('c'=>"\17",'ac'=>"\0\40",'nt'=>1),
 		'small'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
-		'source'=>array('c'=>"\0\0\100",'nt'=>1,'da'=>1,'b'=>1),
+		'source'=>array('c'=>"\0\0\100",'nt'=>1,'da'=>1,'v'=>1,'b'=>1),
 		'span'=>array('c'=>"\7",'ac'=>"\4"),
 		'strong'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
 		'style'=>array('c'=>"\21",'c0'=>'@scoped','nt'=>1,'da'=>1,'b'=>1),
@@ -573,12 +576,12 @@ class TemplateForensics
 		'time'=>array('c'=>"\7",'ac'=>"\4"),
 		'title'=>array('c'=>"\20",'b'=>1),
 		'tr'=>array('c'=>"\0\1\0\0\4",'ac'=>"\0\0\1",'nt'=>1,'b'=>1,'cp'=>array('tr')),
-		'track'=>array('c'=>"\0\0\0\2",'nt'=>1,'da'=>1,'b'=>1),
+		'track'=>array('c'=>"\0\0\0\2",'nt'=>1,'da'=>1,'v'=>1,'b'=>1),
 		'u'=>array('c'=>"\7",'ac'=>"\4",'ar'=>1),
 		'ul'=>array('c'=>"\3",'ac'=>"\0\0\0\0\10",'nt'=>1,'b'=>1,'cp'=>array('p')),
 		'var'=>array('c'=>"\7",'ac'=>"\4"),
 		'video'=>array('c'=>"\217",'c3'=>'@controls','ac'=>"\0\0\100\2",'ac22'=>'not(@src)','ac25'=>'@src','t'=>1),
-		'wbr'=>array('c'=>"\5",'nt'=>1,'da'=>1)
+		'wbr'=>array('c'=>"\5",'nt'=>1,'da'=>1,'v'=>1)
 	);
 
 	/**
