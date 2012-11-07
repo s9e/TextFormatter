@@ -58,6 +58,23 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Test whether given tag name is used as target for given rule
+	*
+	* @param  string $ruleName
+	* @param  string $tagName
+	* @return bool
+	*/
+	protected function hasTarget($ruleName, $tagName)
+	{
+		if (!isset($this->items[$ruleName]))
+		{
+			return false;
+		}
+
+		return in_array($tagName, $this->items[$ruleName], true);
+	}
+
+	/**
 	* Remove a subset of, or all the rules
 	*
 	* @param string $type Type of rules to clear
@@ -163,7 +180,14 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	*/
 	public function closeAncestor($tagName)
 	{
-		$this->items['closeAncestor'][] = TagName::normalize($tagName);
+		$tagName = TagName::normalize($tagName);
+
+		if ($this->hasTarget('forceParent', $tagName))
+		{
+			throw new RuntimeException("Cannot set both closeAncestor and forceParent on '" . $tagName . "'");
+		}
+
+		$this->items['closeAncestor'][] = $tagName;
 	}
 
 	/**
@@ -173,7 +197,14 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	*/
 	public function closeParent($tagName)
 	{
-		$this->items['closeParent'][] = TagName::normalize($tagName);
+		$tagName = TagName::normalize($tagName);
+
+		if ($this->hasTarget('forceParent', $tagName))
+		{
+			throw new RuntimeException("Cannot set both closeParent and forceParent on '" . $tagName . "'");
+		}
+
+		$this->items['closeParent'][] = $tagName;
 	}
 
 	/**
@@ -254,6 +285,28 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		$this->items['disallowAtRoot'] = $bool;
+	}
+
+	/**
+	* Add a forceParent rule
+	*
+	* @param string $tagName Name of the target tag
+	*/
+	public function forceParent($tagName)
+	{
+		$tagName = TagName::normalize($tagName);
+
+		if ($this->hasTarget('closeParent', $tagName))
+		{
+			throw new RuntimeException("Cannot set both closeParent and forceParent on '" . $tagName . "'");
+		}
+
+		if ($this->hasTarget('closeAncestor', $tagName))
+		{
+			throw new RuntimeException("Cannot set both closeAncestor and forceParent on '" . $tagName . "'");
+		}
+
+		$this->items['forceParent'][] = $tagName;
 	}
 
 	/**
