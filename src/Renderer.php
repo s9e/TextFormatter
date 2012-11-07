@@ -64,8 +64,10 @@ class Renderer implements Serializable
 
 	public function renderMulti(array $arr)
 	{
-		$uid = uniqid(mt_rand(), true);
-		$xml = '<m uid="' . $uid . '">' . implode('', $arr) . '</m>';
+		// NOTE: the UID is hashed to prevent leaking information about the random number generators
+		//       in case somebody finds a way to retrieve it
+		$uid = sha1(uniqid(mt_rand(), true));
+		$xml = '<m>' . implode($uid, $arr) . '</m>';
 
 		return array_combine(
 			array_keys($arr),

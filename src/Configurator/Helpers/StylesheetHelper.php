@@ -46,16 +46,8 @@ abstract class StylesheetHelper
 			$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
 		}
 
-		// Start the stylesheet with boilerplate stuff and the /m template for rendering multiple
-		// texts at once
-		$xsl .= '>'
-		      . '<xsl:output method="html" encoding="utf-8" indent="no"/>'
-		      . '<xsl:template match="/m">'
-		      . '<xsl:for-each select="*">'
-		      . '<xsl:apply-templates/>'
-		      . '<xsl:if test="following-sibling::*"><xsl:value-of select="/m/@uid"/></xsl:if>'
-		      . '</xsl:for-each>'
-		      . '</xsl:template>';
+		// Start the stylesheet with the boilerplate stuff
+		$xsl .= '><xsl:output method="html" encoding="utf-8" indent="no"/>';
 
 		// Append the plugins' XSL
 		if (isset($plugins))
