@@ -139,9 +139,9 @@ abstract class StylesheetHelper
 	/**
 	* Change the prefix used for XSL elements
 	*
-	* @param  string $xsl    Stylesheet
-	* @param  string $prefix New prefix
-	* @return string
+	* @param  string      $xsl    Stylesheet
+	* @param  string      $prefix New prefix
+	* @return DOMDocument
 	*/
 	public static function changeXSLPrefix($xsl, $prefix)
 	{
