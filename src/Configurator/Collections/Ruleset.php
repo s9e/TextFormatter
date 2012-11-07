@@ -244,7 +244,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	/**
 	* Add a disallowAtRoot rule
 	*
-	* @param bool $bool Whether to disallow the tag to be used at the root of a message
+	* @param bool $bool Whether to disallow the tag to be used at the root of a text
 	*/
 	public function disallowAtRoot($bool = true)
 	{
