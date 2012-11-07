@@ -90,25 +90,6 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates an autoClose rule for <hr>
-	*/
-	public function testAutoClose()
-	{
-		$tags = new TagCollection;
-
-		$tags->add('HR')->defaultTemplate = '<hr><xsl:apply-templates/></hr>';
-
-		$this->assertArrayMatches(
-			array(
-				'HR' => array(
-					'autoClose' => true
-				)
-			),
-			RulesGenerator::getRules($tags)
-		);
-	}
-
-	/**
 	* @testdox Generates an autoReopen rule for <b>
 	*/
 	public function testAutoReopen()
@@ -121,6 +102,25 @@ class RulesGeneratorTest extends Test
 			array(
 				'B' => array(
 					'autoReopen' => true
+				)
+			),
+			RulesGenerator::getRules($tags)
+		);
+	}
+
+	/**
+	* @testdox Generates an denyAll rule for <hr>
+	*/
+	public function testDenyAll()
+	{
+		$tags = new TagCollection;
+
+		$tags->add('HR')->defaultTemplate = '<hr><xsl:apply-templates/></hr>';
+
+		$this->assertArrayMatches(
+			array(
+				'HR' => array(
+					'denyAll' => true
 				)
 			),
 			RulesGenerator::getRules($tags)

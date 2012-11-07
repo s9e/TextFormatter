@@ -172,10 +172,10 @@ abstract class RulesGenerator
 				$rules[$srcTagName]['autoReopen'] = true;
 			}
 
-			// Create an autoClose rule if the tag uses the "empty" content model
-			if ($srcTag->isEmpty())
+			// Create an denyAll rule if the tag's forensics call for it
+			if ($srcTag->denyAll())
 			{
-				$rules[$srcTagName]['autoClose'] = true;
+				$rules[$srcTagName]['denyAll'] = true;
 			}
 
 			// Create an isTransparent rule if the tag is transparent

@@ -107,11 +107,6 @@ foreach ($page->body->h4 as $h4)
 	{
 		$elName = (string) $code;
 
-		if (!$elName || preg_match('#^(?:html|head|base|link|meta|title|style|script|noscript|body|iframe|command)$#', $elName))
-		{
-			continue;
-		}
-
 		$dl = $h4->firstOf('following-sibling::dl');
 
 		foreach ($dl->xpath('dt|dd') as $el)
@@ -194,7 +189,7 @@ foreach ($page->body->h4 as $h4)
 				case 'Content model':
 					if ($value === 'empty')
 					{
-						$elements[$elName]['empty'][''] = 0;
+						$elements[$elName]['denyAll'][''] = 0;
 						break 2;
 					}
 
@@ -212,7 +207,7 @@ foreach ($page->body->h4 as $h4)
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is present: empty$#', $value, $m))
 					{
-						$elements[$elName]['empty']['@' . $m[1]] = 0;
+						$elements[$elName]['denyAll']['@' . $m[1]] = 0;
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is absent: zero or more ([a-z]+) elements$#', $value, $m))
 					{
@@ -353,18 +348,28 @@ foreach ($page->body->h4 as $h4)
 					{
 						$elements[$elName]['allowChildCategory']['metadata content'][''] = 0;
 					}
-					elseif ($value === 'depends on the value of the type attribute, but must match requirements described in prose below')
+					elseif ($elName === 'style')
 					{
-						// <style>'s content model
+						$elements[$elName]['denyAll'][''] = 0;
 					}
-					elseif ($value === 'if there is no src attribute, depends on the value of the type attribute, but must match script content restrictions'
-					     || $value === 'if there is a src attribute, the element must be either empty or contain only script documentation that also matches script content restrictions')
+					elseif ($elName === 'script')
 					{
-						// <script>'s content model
+						$elements[$elName]['denyAll'][''] = 0;
+					}
+					elseif ($elName === 'noscript')
+					{
+						// This is a simplification of noscript's actual content model, which
+						// differs whether it's found in <head> or in <body>
+						$elements[$elName]['allowChildCategory']['transparent'][''] = 0;
+						$elements[$elName]['denyDescendantElement']['noscript'][''] = 0;
+					}
+					elseif ($elName === 'iframe')
+					{
+						$elements[$elName]['denyAll'][''] = 0;
 					}
 					else
 					{
-						die("Could not interpret '$value' as $elName's content model\n");
+						print("Could not interpret '$value' as $elName's content model\n");
 					}	
 					break;
 			}
@@ -549,14 +554,17 @@ foreach ($elements as $elName => $element)
 		$el['nt'] = 1;
 	}
 
-	if (!empty($element['empty']))
+	if (!empty($element['denyAll']))
 	{
-		$el['e'] = 1;
+		$el['da'] = 1;
 
-		$xpath = key($element['empty']);
-		if ($xpath)
+		if (!isset($element['denyAll']['']))
 		{
-			$el['e0'] = $xpath;
+			$xpath = key($element['denyAll']);
+			if ($xpath)
+			{
+				$el['da0'] = $xpath;
+			}
 		}
 	}
 
