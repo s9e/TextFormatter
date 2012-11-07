@@ -666,6 +666,7 @@ class RulesetTest extends Test
 			'allowDescendant'       => 'X',
 			'defaultChildRule'      => 'deny',
 			'defaultDescendantRule' => 'allow',
+			'denyAll'               => true,
 			'denyChild'             => 'X',
 			'denyDescendant'        => 'X',
 			'disallowAtRoot'        => true,

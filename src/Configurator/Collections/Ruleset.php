@@ -319,6 +319,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		unset($config['allowDescendant']);
 		unset($config['defaultChildRule']);
 		unset($config['defaultDescendantRule']);
+		unset($config['denyAll']);
 		unset($config['denyChild']);
 		unset($config['denyDescendant']);
 		unset($config['disallowAtRoot']);
