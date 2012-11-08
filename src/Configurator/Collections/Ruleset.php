@@ -378,7 +378,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		unset($config['disallowAtRoot']);
 		unset($config['requireParent']);
 
-		// In order to speed up lookups, we use tag names as keys
+		// In order to speed up lookups, we use the tag names as keys
 		foreach ($config as $ruleName => $targets)
 		{
 			if (!is_array($targets))
