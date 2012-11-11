@@ -95,9 +95,27 @@ class Repository
 		$usage  = $node->getElementsByTagName('usage')->item(0)->textContent;
 		$config = BBCodeMonkey::parse($usage);
 
+		// Set the optional tag name
 		if ($node->hasAttribute('tagName'))
 		{
 			$config['bbcode']->tagName = $node->getAttribute('tagName');
+		}
+
+		// Set the rules
+		foreach ($xpath->query('rules/*', $node) as $ruleNode)
+		{
+			$methodName = $ruleNode->nodeName;
+			$args       = array();
+
+			if ($ruleNode->textContent)
+			{
+				$args[] = $ruleNode->textContent;
+			}
+
+			call_user_func_array(
+				array($config['tag']->rules, $methodName),
+				$args
+			);
 		}
 
 		// Now process the template

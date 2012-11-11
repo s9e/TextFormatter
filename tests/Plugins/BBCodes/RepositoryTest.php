@@ -140,4 +140,59 @@ class RepositoryTest extends Test
 			$config['bbcode']->tagName
 		);
 	}
+
+	/**
+	* @testdox Rules targetting tags are correctly set
+	*/
+	public function testTargettingRules()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO]</usage>
+					<template></template>
+					<rules>
+						<allowChild>BAR</allowChild>
+						<allowChild>BAZ</allowChild>
+						<defaultChildRule>deny</defaultChildRule>
+					</rules>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
+		$config = $repository->get('FOO');
+
+		$this->assertEquals(
+			array('BAR', 'BAZ'),
+			$config['tag']->rules['allowChild']
+		);
+
+		$this->assertSame('deny', $config['tag']->rules['defaultChildRule']);
+	}
+
+	/**
+	* @testdox Boolean rules are set to their default value
+	*/
+	public function testBooleanRules()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO]</usage>
+					<template></template>
+					<rules>
+						<denyAll />
+					</rules>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
+		$config = $repository->get('FOO');
+
+		$this->assertTrue($config['tag']->rules['denyAll']);
+	}
 }

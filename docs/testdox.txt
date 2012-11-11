@@ -859,6 +859,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
  [x] Variables in <template/> are replaced
  [x] Variables that are not replaced are left intact
  [x] Custom tagName is correctly set
+ [x] Rules targetting tags are correctly set
+ [x] Boolean rules are set to their default value
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\RepositoryCollection
  [x] Instances of Repository are added as-is
