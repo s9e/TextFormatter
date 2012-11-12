@@ -33,7 +33,7 @@ function(str)
 		}
 	}
 
-	// Moving the modulo outside of the loop means that a and b can overflow if the input string is
+	// Having the modulo outside of the loop means that a and b can overflow if the input string is
 	// bigger than 8 MiB
 	a %= 65521;
 	b %= 65521;
