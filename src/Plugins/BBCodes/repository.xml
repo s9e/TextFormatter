@@ -66,4 +66,16 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="CODE">
+		<usage>[CODE lang={TEXT;optional} id={RANDOM=10000,99999}]{TEXT}[/CODE]</usage>
+		<template><![CDATA[
+			<pre id="code{RANDOM}"><code class="{@lang}"><xsl:apply-templates /></code></pre>
+			<script src="]]><var name="src">http://yandex.st/highlightjs/7.3/highlight.min.js</var><![CDATA["></script>
+			<script>hljs.highlightBlock(document.getElementById('code{RANDOM}'))</script>
+		]]></template>
+		<rules>
+			<denyAll />
+		</rules>
+	</bbcode>
+
 </repository>
