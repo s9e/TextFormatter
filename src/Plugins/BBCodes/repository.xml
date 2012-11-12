@@ -69,8 +69,15 @@
 	<bbcode name="CODE">
 		<usage>[CODE lang={TEXT;optional} id={RANDOM=10000,99999}]{TEXT}[/CODE]</usage>
 		<template><![CDATA[
-			<pre id="code{RANDOM}"><code class="{@lang}"><xsl:apply-templates /></code></pre>
-			<script src="]]><var name="src">http://yandex.st/highlightjs/7.3/highlight.min.js</var><![CDATA["></script>
+			<pre id="code{RANDOM}" data-s9e-LivePreview-contentHash="">
+				<code class="{@lang}">
+					<xsl:apply-templates />
+				</code>
+			</pre>
+			<script
+				data-s9e-LivePreview-includeOnce="1"
+				src="]]><var name="src">http://yandex.st/highlightjs/7.3/highlight.min.js</var><![CDATA["
+			></script>
 			<script>hljs.highlightBlock(document.getElementById('code{RANDOM}'))</script>
 		]]></template>
 		<rules>
