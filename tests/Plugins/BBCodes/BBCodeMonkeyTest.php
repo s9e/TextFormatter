@@ -653,6 +653,14 @@ class BBCodeMonkeyTest extends Test
 				'[foo={PARSE=/(?<bar>\\d+)/} foo={PARSE=/(?<bar>\\D+)/}]',
 				new RuntimeException("Ambiguous attribute 'bar' created using different regexps needs to be explicitly defined")
 			),
+			array(
+				'[foo={PARSE}]',
+				new RuntimeException("Malformed token 'PARSE'")
+			),
+			array(
+				'[foo={RANGE1}]',
+				new RuntimeException("Malformed token 'RANGE1'")
+			),
 		);
 	}
 

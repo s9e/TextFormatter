@@ -590,7 +590,7 @@ abstract class BBCodeMonkey
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
 			'regexp' => '(?:REGEXP[0-9]*|PARSE)=' . $regexpMatcher,
 			'range'  => 'RAN(?:DOM|GE)[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
-			'other'  => '[A-Z_]+[0-9]*'
+			'other'  => '(?<other>[A-Z_]+[0-9]*)'
 		);
 
 		// Capture the content of every token in that attribute's definition. Usually there will
@@ -606,6 +606,12 @@ abstract class BBCodeMonkey
 		$tokens = array();
 		foreach ($matches as $m)
 		{
+			if (isset($m['other'][0])
+			 && preg_match('#^(?:CHOICE|REGEXP|PARSE|RANDOM|RANGE)#', $m['other'][0]))
+			{
+				throw new RuntimeException("Malformed token '" . $m['other'][0] . "'");
+			}
+
 			$token = array(
 				'pos'     => $m[0][1],
 				'content' => $m[0][0],
