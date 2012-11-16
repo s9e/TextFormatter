@@ -118,11 +118,21 @@ class RepositoryTest extends Test
 	*/
 	public function testUnreplacedVars()
 	{
-		$repository = new Repository(__DIR__ . '/../../../src/Plugins/BBCodes/repository.xml');
-		$config = $repository->get('QUOTE');
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO]</usage>
+					<template>&lt;b&gt;<var name="text">foo</var>&lt;/b&gt;</template>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
+		$config = $repository->get('FOO');
 
 		$this->assertSame(
-			'<blockquote><div><xsl:if test="@author"><cite><xsl:value-of select="@author"/> wrote:</cite></xsl:if><xsl:apply-templates/></div></blockquote>',
+			'<b>foo</b>',
 			$config['tag']->defaultTemplate
 		);
 	}

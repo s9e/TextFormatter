@@ -39,7 +39,7 @@ function(str)
 	b %= 65521;
 
 	// Returns as 32 bit unsigned
-	return (b * 65536) + a;
+	// return (b * 65536) + a;
 
 	// Returns as 32 bit signed
 	return (b << 16) | a;

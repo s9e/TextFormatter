@@ -54,6 +54,9 @@
 		<usage>[QUOTE author={TEXT;optional}]{TEXT}[/QUOTE]</usage>
 		<template><![CDATA[
 			<blockquote>
+				<xsl:if test="not(@author)">
+					<xsl:attribute name="class">uncited</xsl:attribute>
+				</xsl:if>
 				<div>
 					<xsl:if test="@author">
 						<cite>]]>

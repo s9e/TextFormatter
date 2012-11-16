@@ -24,8 +24,6 @@ class BBCodesParser extends PluginParser
 
 	public function getTags($text, array $matches)
 	{
-		$tags = array();
-
 		$textLen = strlen($text);
 
 		foreach ($matches as $m)
@@ -57,19 +55,14 @@ class BBCodesParser extends PluginParser
 			*/
 			$attrs = array();
 
-			/**
-			* Check for BBCode suffix
-			*
-			* Used to skip the parsing of closing BBCodes, e.g.
-			*   [code:1][code]type your code here[/code][/code:1]
-			*
-			*/
+			// Check for a BBCode suffix
+			//
+			// Used to skip the parsing of closing BBCodes, e.g.
+			//   [code:1][code]type your code here[/code][/code:1]
 			if ($text[$rpos] === ':')
 			{
-				/**
-				* [code:1] or [/code:1]
-				* $suffix = ':1'
-				*/
+				// [code:1] or [/code:1]
+				// $suffix = ':1'
 				$spn     = strspn($text, '1234567890', 1 + $rpos);
 				$suffix  = substr($text, $rpos, 1 + $spn);
 				$rpos   += 1 + $spn;
@@ -146,9 +139,7 @@ class BBCodesParser extends PluginParser
 						continue;
 					}
 
-					/**
-					* Capture the attribute name
-					*/
+					// Capture the attribute name
 					$spn = strspn($text, 'abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-', $rpos);
 
 					if ($spn)
@@ -184,13 +175,6 @@ class BBCodesParser extends PluginParser
 							else
 							{
 								$attrName = strtolower($bbcodeName);
-
-								$this->parser->log('debug', array(
-									'pos'    => $rpos,
-									'len'    => 1,
-									'msg'    => 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
-									'params' => array($bbcodeName)
-								));
 							}
 						}
 						else
