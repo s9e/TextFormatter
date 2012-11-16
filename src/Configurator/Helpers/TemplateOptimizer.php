@@ -42,6 +42,7 @@ abstract class TemplateOptimizer
 		// Note: for some reason, $tmp->normalizeDocument() doesn't work
 		$dom->loadXML($tmp->saveXML());
 
+		self::removeComments($dom);
 		self::normalizeSpaceInSelectAttributes($dom);
 		self::inlineElements($dom);
 		self::inlineAttributes($dom);
@@ -51,6 +52,21 @@ abstract class TemplateOptimizer
 		self::inlineTextElements($dom);
 
 		return TemplateHelper::saveTemplate($dom);
+	}
+
+	/**
+	* Remove all comments from a document
+	*
+	* @param DOMDocument $dom xsl:template node
+	*/
+	protected static function removeComments(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+
+		foreach ($xpath->query('//comment()') as $comment)
+		{
+			$comment->parentNode->removeChild($comment);
+		}
 	}
 
 	/**

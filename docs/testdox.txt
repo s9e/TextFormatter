@@ -675,6 +675,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] normalize() throws an exception on malformed XSL
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
+ [x] Comments are removed
  [x] Superfluous whitespace between elements is removed
  [x] Single space characters are preserved
  [x] Superfluous whitespace inside tags is removed
