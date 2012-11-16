@@ -16,10 +16,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_2E6B327F()
 	{
-		$this->assertSame(
-			'foo',
-			RegexpBuilder::fromList(array('foo'))
-		);
+		$this->fromListTestCase(0);
 	}
 
 	/**
@@ -27,10 +24,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_EFC21F10()
 	{
-		$this->assertSame(
-			'foo',
-			RegexpBuilder::fromList(array('foo', 'foo'))
-		);
+		$this->fromListTestCase(1);
 	}
 
 	/**
@@ -38,10 +32,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_37E7519F()
 	{
-		$this->assertSame(
-			'a',
-			RegexpBuilder::fromList(array('a'))
-		);
+		$this->fromListTestCase(2);
 	}
 
 	/**
@@ -49,10 +40,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_46ECDB38()
 	{
-		$this->assertSame(
-			'a',
-			RegexpBuilder::fromList(array('a', 'a'))
-		);
+		$this->fromListTestCase(3);
 	}
 
 	/**
@@ -60,10 +48,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E2479414()
 	{
-		$this->assertSame(
-			'\\/',
-			RegexpBuilder::fromList(array('/'))
-		);
+		$this->fromListTestCase(4);
 	}
 
 	/**
@@ -71,13 +56,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_B3EEE700()
 	{
-		$this->assertSame(
-			'/',
-			RegexpBuilder::fromList(
-				array('/'),
-				array('delimiter' => '#')
-			)
-		);
+		$this->fromListTestCase(5);
 	}
 
 	/**
@@ -85,13 +64,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A1D05928()
 	{
-		$this->assertSame(
-			'\\#',
-			RegexpBuilder::fromList(
-				array('#'),
-				array('delimiter' => '#')
-			)
-		);
+		$this->fromListTestCase(6);
 	}
 
 	/**
@@ -99,10 +72,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8B59A499()
 	{
-		$this->assertSame(
-			'ap(?:ple|ril)',
-			RegexpBuilder::fromList(array('apple', 'april'))
-		);
+		$this->fromListTestCase(7);
 	}
 
 	/**
@@ -110,10 +80,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E7FFB86F()
 	{
-		$this->assertSame(
-			'ba[rz]',
-			RegexpBuilder::fromList(array('bar', 'baz'))
-		);
+		$this->fromListTestCase(8);
 	}
 
 	/**
@@ -121,10 +88,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_1DFF1AB5()
 	{
-		$this->assertSame(
-			'fool?',
-			RegexpBuilder::fromList(array('foo', 'fool'))
-		);
+		$this->fromListTestCase(9);
 	}
 
 	/**
@@ -132,10 +96,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_B4F156BE()
 	{
-		$this->assertSame(
-			'ax(?:ed)?',
-			RegexpBuilder::fromList(array('ax', 'axed'))
-		);
+		$this->fromListTestCase(10);
 	}
 
 	/**
@@ -143,10 +104,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C7373394()
 	{
-		$this->assertSame(
-			'[-!#$()*+.:<=>?[\\\\\\]{|}^]',
-			RegexpBuilder::fromList(array('!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}'))
-		);
+		$this->fromListTestCase(11);
 	}
 
 	/**
@@ -154,13 +112,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8A71E271()
 	{
-		$this->assertSame(
-			'(?:x|^)y',
-			RegexpBuilder::fromList(
-				array('xy', '^y'),
-				array('specialChars' => array('^' => '^'))
-			)
-		);
+		$this->fromListTestCase(12);
 	}
 
 	/**
@@ -168,13 +120,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_13BA1BFA()
 	{
-		$this->assertSame(
-			'x(?:y|$)',
-			RegexpBuilder::fromList(
-				array('xy', 'x$'),
-				array('specialChars' => array('$' => '$'))
-			)
-		);
+		$this->fromListTestCase(13);
 	}
 
 	/**
@@ -182,10 +128,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A3302107()
 	{
-		$this->assertSame(
-			'(?:bar|foo)',
-			RegexpBuilder::fromList(array('foo', 'bar'))
-		);
+		$this->fromListTestCase(14);
 	}
 
 	/**
@@ -193,13 +136,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_3CCC7313()
 	{
-		$this->assertSame(
-			'(?=[*\\\\])(?:\\*foo|\\\\bar)',
-			RegexpBuilder::fromList(
-				array('*foo', '\\bar'),
-				array('useLookahead' => true)
-			)
-		);
+		$this->fromListTestCase(15);
 	}
 
 	/**
@@ -207,13 +144,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_7FFB138D()
 	{
-		$this->assertSame(
-			'(?:.|bar)',
-			RegexpBuilder::fromList(
-				array('?', 'bar'),
-				array('specialChars' => array('?' => '.'), 'useLookahead' => true)
-			)
-		);
+		$this->fromListTestCase(16);
 	}
 
 	/**
@@ -221,10 +152,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C90B2457()
 	{
-		$this->assertSame(
-			'[ab]',
-			RegexpBuilder::fromList(array('a', 'b'))
-		);
+		$this->fromListTestCase(17);
 	}
 
 	/**
@@ -232,10 +160,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6335367B()
 	{
-		$this->assertSame(
-			'[♠♣♥♦]',
-			RegexpBuilder::fromList(array('♠', '♣', '♥', '♦'))
-		);
+		$this->fromListTestCase(18);
 	}
 
 	/**
@@ -243,13 +168,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_D9B63085()
 	{
-		$this->assertSame(
-			'.',
-			RegexpBuilder::fromList(
-				array('♠', '♣', '♥', '♦', '.'),
-				array('specialChars' => array('.' => '.'))
-			)
-		);
+		$this->fromListTestCase(19);
 	}
 
 	/**
@@ -257,10 +176,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A3CF0B4D()
 	{
-		$this->assertSame(
-			'[ls]ock',
-			RegexpBuilder::fromList(array('lock', 'sock'))
-		);
+		$this->fromListTestCase(20);
 	}
 
 	/**
@@ -268,13 +184,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8613531B()
 	{
-		$this->assertSame(
-			'(?=[af])a?foo',
-			RegexpBuilder::fromList(
-				array('foo', 'afoo'),
-				array('useLookahead' => true)
-			)
-		);
+		$this->fromListTestCase(21);
 	}
 
 	/**
@@ -282,10 +192,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4BBAD47D()
 	{
-		$this->assertSame(
-			'bo[ao]st',
-			RegexpBuilder::fromList(array('boast', 'boost'))
-		);
+		$this->fromListTestCase(22);
 	}
 
 	/**
@@ -293,10 +200,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_596D7420()
 	{
-		$this->assertSame(
-			'pe?st',
-			RegexpBuilder::fromList(array('pest', 'pst'))
-		);
+		$this->fromListTestCase(23);
 	}
 
 	/**
@@ -304,10 +208,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E644DCEB()
 	{
-		$this->assertSame(
-			'bo[ao]?st',
-			RegexpBuilder::fromList(array('boast', 'boost', 'bost'))
-		);
+		$this->fromListTestCase(24);
 	}
 
 	/**
@@ -315,10 +216,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_AEB9F217()
 	{
-		$this->assertSame(
-			'b(?:e|oo)st',
-			RegexpBuilder::fromList(array('boost', 'best'))
-		);
+		$this->fromListTestCase(25);
 	}
 
 	/**
@@ -326,10 +224,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_BE3CCBA2()
 	{
-		$this->assertSame(
-			'b(?:oo)?st',
-			RegexpBuilder::fromList(array('boost', 'bst'))
-		);
+		$this->fromListTestCase(26);
 	}
 
 	/**
@@ -337,10 +232,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_9753E32D()
 	{
-		$this->assertSame(
-			'b(?:[eu]|oo)st',
-			RegexpBuilder::fromList(array('best', 'boost', 'bust'))
-		);
+		$this->fromListTestCase(27);
 	}
 
 	/**
@@ -348,10 +240,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_9A764069()
 	{
-		$this->assertSame(
-			'(?:b(?:oo)?st|cool)',
-			RegexpBuilder::fromList(array('boost', 'bst', 'cool'))
-		);
+		$this->fromListTestCase(28);
 	}
 
 	/**
@@ -359,10 +248,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_53994AB6()
 	{
-		$this->assertSame(
-			'(?:b(?:oo)?|co)st',
-			RegexpBuilder::fromList(array('boost', 'bst', 'cost'))
-		);
+		$this->fromListTestCase(29);
 	}
 
 	/**
@@ -370,10 +256,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_560C8444()
 	{
-		$this->assertSame(
-			'aa[xy]',
-			RegexpBuilder::fromList(array('aax', 'aay', 'aax', 'aay'))
-		);
+		$this->fromListTestCase(30);
 	}
 
 	/**
@@ -381,10 +264,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_F3709BEF()
 	{
-		$this->assertSame(
-			'[ab]aa[xy]',
-			RegexpBuilder::fromList(array('aaax', 'aaay', 'baax', 'baay'))
-		);
+		$this->fromListTestCase(31);
 	}
 
 	/**
@@ -392,10 +272,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_7C889532()
 	{
-		$this->assertSame(
-			'(?:a|bb)aa[xy]',
-			RegexpBuilder::fromList(array('aaax', 'aaay', 'bbaax', 'bbaay'))
-		);
+		$this->fromListTestCase(32);
 	}
 
 	/**
@@ -403,10 +280,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_77F7FECB()
 	{
-		$this->assertSame(
-			'aaa?[xy]',
-			RegexpBuilder::fromList(array('aaax', 'aaay', 'aax', 'aay'))
-		);
+		$this->fromListTestCase(33);
 	}
 
 	/**
@@ -414,10 +288,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_62E02B3A()
 	{
-		$this->assertSame(
-			'(?:ab|cd)[xy]',
-			RegexpBuilder::fromList(array('abx', 'aby', 'cdx', 'cdy'))
-		);
+		$this->fromListTestCase(34);
 	}
 
 	/**
@@ -425,10 +296,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8A86C707()
 	{
-		$this->assertSame(
-			'(?:a|bb)(?:xx|yy)',
-			RegexpBuilder::fromList(array('axx', 'ayy', 'bbxx', 'bbyy'))
-		);
+		$this->fromListTestCase(35);
 	}
 
 	/**
@@ -436,10 +304,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_59FB8E0()
 	{
-		$this->assertSame(
-			'(?:c|(?:a|bb)(?:xx|yy))',
-			RegexpBuilder::fromList(array('axx', 'ayy', 'bbxx', 'bbyy', 'c'))
-		);
+		$this->fromListTestCase(36);
 	}
 
 	/**
@@ -447,10 +312,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_EA302659()
 	{
-		$this->assertSame(
-			'(?:c|a(?:xx|yy|zz)|bb(?:xx|yy))',
-			RegexpBuilder::fromList(array('axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c'))
-		);
+		$this->fromListTestCase(37);
 	}
 
 	/**
@@ -458,10 +320,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_1CC75402()
 	{
-		$this->assertSame(
-			'(?:c|a[cf]|bb[cf])',
-			RegexpBuilder::fromList(array('ac', 'af', 'bbc', 'bbf', 'c'))
-		);
+		$this->fromListTestCase(38);
 	}
 
 	/**
@@ -469,13 +328,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_D463A304()
 	{
-		$this->assertSame(
-			'(?:\\.|^)(?:example\\.org|localhost)$',
-			RegexpBuilder::fromList(
-				array('^example.org$', '.example.org$', '^localhost$', '.localhost$'),
-				array('specialChars' => array('^' => '^', '$' => '$'))
-			)
-		);
+		$this->fromListTestCase(39);
 	}
 
 	/**
@@ -483,10 +336,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_B33646C2()
 	{
-		$this->assertSame(
-			'x(?:ixi|oxo)x',
-			RegexpBuilder::fromList(array('xixix', 'xoxox'))
-		);
+		$this->fromListTestCase(40);
 	}
 
 	/**
@@ -494,10 +344,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C7D616C2()
 	{
-		$this->assertSame(
-			'x[io]x[io]x',
-			RegexpBuilder::fromList(array('xixix', 'xixox', 'xoxox', 'xoxix'))
-		);
+		$this->fromListTestCase(41);
 	}
 
 	/**
@@ -505,10 +352,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_B02E083B()
 	{
-		$this->assertSame(
-			'(?:a|bb)(?:bar|foo)?',
-			RegexpBuilder::fromList(array('afoo', 'abar', 'bbfoo', 'bbbar', 'a', 'bb'))
-		);
+		$this->fromListTestCase(42);
 	}
 
 	/**
@@ -516,10 +360,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4619FD0F()
 	{
-		$this->assertSame(
-			'[ab][xy]',
-			RegexpBuilder::fromList(array('ax', 'ay', 'bx', 'by'))
-		);
+		$this->fromListTestCase(43);
 	}
 
 	/**
@@ -527,10 +368,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_F7523978()
 	{
-		$this->assertSame(
-			'(?:c|[ab][xy])',
-			RegexpBuilder::fromList(array('ax', 'ay', 'bx', 'by', 'c'))
-		);
+		$this->fromListTestCase(44);
 	}
 
 	/**
@@ -538,10 +376,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_660FC1A9()
 	{
-		$this->assertSame(
-			'[ab]?[xy]',
-			RegexpBuilder::fromList(array('ax', 'ay', 'bx', 'by', 'x', 'y'))
-		);
+		$this->fromListTestCase(45);
 	}
 
 	/**
@@ -549,10 +384,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_58A1B850()
 	{
-		$this->assertSame(
-			'(?:c|a[xy]|bb[xy])',
-			RegexpBuilder::fromList(array('ax', 'ay', 'bbx', 'bby', 'c'))
-		);
+		$this->fromListTestCase(46);
 	}
 
 	/**
@@ -560,10 +392,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_23C1BD26()
 	{
-		$this->assertSame(
-			'(?:c|dd[xy]|[ab][xy])',
-			RegexpBuilder::fromList(array('ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy'))
-		);
+		$this->fromListTestCase(47);
 	}
 
 	/**
@@ -571,10 +400,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_5CBF14D3()
 	{
-		$this->assertSame(
-			'',
-			RegexpBuilder::fromList(array(''))
-		);
+		$this->fromListTestCase(48);
 	}
 
 	/**
@@ -582,10 +408,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_418D8F44()
 	{
-		$this->assertSame(
-			'',
-			RegexpBuilder::fromList(array('', ''))
-		);
+		$this->fromListTestCase(49);
 	}
 
 	/**
@@ -593,13 +416,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_5B18C2D1()
 	{
-		$this->assertSame(
-			'[ab]\\d',
-			RegexpBuilder::fromList(
-				array('ad', 'bd'),
-				array('specialChars' => array('d' => '\\d'))
-			)
-		);
+		$this->fromListTestCase(50);
 	}
 
 	/**
@@ -607,13 +424,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4032006C()
 	{
-		$this->assertSame(
-			'[\\da][\\dx]?',
-			RegexpBuilder::fromList(
-				array('a', 'ax', 'ad', 'd', 'dx', 'dd'),
-				array('specialChars' => array('d' => '\\d'))
-			)
-		);
+		$this->fromListTestCase(51);
 	}
 
 	/**
@@ -621,10 +432,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_561FE181()
 	{
-		$this->assertSame(
-			'(?:[yz]|bar|foo)',
-			RegexpBuilder::fromList(array('foo', 'bar', 'y', 'z'))
-		);
+		$this->fromListTestCase(52);
 	}
 
 	/**
@@ -632,10 +440,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C80C5A7F()
 	{
-		$this->assertSame(
-			'(?:[yz]|ba[rz]|foo)',
-			RegexpBuilder::fromList(array('foo', 'bar', 'baz', 'y', 'z'))
-		);
+		$this->fromListTestCase(53);
 	}
 
 	/**
@@ -643,10 +448,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_140F192A()
 	{
-		$this->assertSame(
-			'(?:a(?:a(?:cc|dd))?|bb(?:cc|dd))',
-			RegexpBuilder::fromList(array('a', 'aacc', 'aadd', 'bbcc', 'bbdd'))
-		);
+		$this->fromListTestCase(54);
 	}
 
 	/**
@@ -654,10 +456,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_FA3816E9()
 	{
-		$this->assertSame(
-			'(?:aa|bb)(?:cc|dd)?',
-			RegexpBuilder::fromList(array('aa', 'bb', 'aacc', 'aadd', 'bbcc', 'bbdd'))
-		);
+		$this->fromListTestCase(55);
 	}
 
 	/**
@@ -665,10 +464,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4EEB6994()
 	{
-		$this->assertSame(
-			'(?:aa|bb)(?:(?:cc|dd)(?:xx|yy))?',
-			RegexpBuilder::fromList(array('aa', 'bb', 'aaccxx', 'aaddxx', 'bbccxx', 'bbddxx', 'aaccyy', 'aaddyy', 'bbccyy', 'bbddyy'))
-		);
+		$this->fromListTestCase(56);
 	}
 
 	/**
@@ -676,13 +472,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_CDAEB9BF()
 	{
-		$this->assertSame(
-			'^foo',
-			RegexpBuilder::fromList(
-				array('^foo$', '^foo'),
-				array('specialChars' => array('^' => '^', '$' => '$'))
-			)
-		);
+		$this->fromListTestCase(57);
 	}
 
 	/**
@@ -690,13 +480,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_58B353C0()
 	{
-		$this->assertSame(
-			'foo$',
-			RegexpBuilder::fromList(
-				array('^foo$', 'foo$'),
-				array('specialChars' => array('^' => '^', '$' => '$'))
-			)
-		);
+		$this->fromListTestCase(58);
 	}
 
 	/**
@@ -704,13 +488,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6985D5F9()
 	{
-		$this->assertSame(
-			'\\bfoo',
-			RegexpBuilder::fromList(
-				array('bfoo', 'bfoob'),
-				array('specialChars' => array('b' => '\\b'))
-			)
-		);
+		$this->fromListTestCase(59);
 	}
 
 	/**
@@ -718,13 +496,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C73BB118()
 	{
-		$this->assertSame(
-			'apple.*?',
-			RegexpBuilder::fromList(
-				array('apple', 'apple*'),
-				array('specialChars' => array('*' => '.*?'))
-			)
-		);
+		$this->fromListTestCase(60);
 	}
 
 	/**
@@ -732,13 +504,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_BC8587F9()
 	{
-		$this->assertSame(
-			'apple.*?',
-			RegexpBuilder::fromList(
-				array('apple*', 'applepie'),
-				array('specialChars' => array('*' => '.*?'))
-			)
-		);
+		$this->fromListTestCase(61);
 	}
 
 	/**
@@ -746,13 +512,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C445AC48()
 	{
-		$this->assertSame(
-			'apple.+?',
-			RegexpBuilder::fromList(
-				array('apple*', 'applepie'),
-				array('specialChars' => array('*' => '.+?'))
-			)
-		);
+		$this->fromListTestCase(62);
 	}
 
 	/**
@@ -760,13 +520,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_3CD709C9()
 	{
-		$this->assertSame(
-			'apple.*?',
-			RegexpBuilder::fromList(
-				array('apple*', 'apple'),
-				array('specialChars' => array('*' => '.*?'))
-			)
-		);
+		$this->fromListTestCase(63);
 	}
 
 	/**
@@ -774,13 +528,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E13691C4()
 	{
-		$this->assertSame(
-			'apple.*',
-			RegexpBuilder::fromList(
-				array('apple*', 'apple+'),
-				array('specialChars' => array('*' => '.*?', '+' => '.*'))
-			)
-		);
+		$this->fromListTestCase(64);
 	}
 
 	/**
@@ -788,13 +536,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C1CD7108()
 	{
-		$this->assertSame(
-			'apple.+',
-			RegexpBuilder::fromList(
-				array('apple*', 'apple+'),
-				array('specialChars' => array('*' => '.+?', '+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(65);
 	}
 
 	/**
@@ -802,13 +544,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_9C89464A()
 	{
-		$this->assertSame(
-			'apple.*',
-			RegexpBuilder::fromList(
-				array('apple*', 'apple+'),
-				array('specialChars' => array('*' => '.*', '+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(66);
 	}
 
 	/**
@@ -816,13 +552,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C7A9B0A5()
 	{
-		$this->assertSame(
-			'.*pie',
-			RegexpBuilder::fromList(
-				array('applepie', 'lemonpie', 'pie', '*pie'),
-				array('specialChars' => array('*' => '.*'))
-			)
-		);
+		$this->fromListTestCase(67);
 	}
 
 	/**
@@ -830,13 +560,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C54CFAF6()
 	{
-		$this->assertSame(
-			'.*pie.*',
-			RegexpBuilder::fromList(
-				array('*pie*', 'lemonpie'),
-				array('specialChars' => array('*' => '.*'))
-			)
-		);
+		$this->fromListTestCase(68);
 	}
 
 	/**
@@ -844,13 +568,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_34EFDA6F()
 	{
-		$this->assertSame(
-			'(?:.*pie.*|banana)',
-			RegexpBuilder::fromList(
-				array('*pie*', 'lemonpie', 'banana'),
-				array('specialChars' => array('*' => '.*'))
-			)
-		);
+		$this->fromListTestCase(69);
 	}
 
 	/**
@@ -858,13 +576,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_F3C52183()
 	{
-		$this->assertSame(
-			'^foo(?:$|.+)',
-			RegexpBuilder::fromList(
-				array('^foo$', '^foo+'),
-				array('specialChars' => array('^' => '^', '$' => '$', '+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(70);
 	}
 
 	/**
@@ -872,13 +584,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_57BBBDB4()
 	{
-		$this->assertSame(
-			'^foo.*',
-			RegexpBuilder::fromList(
-				array('^foo$', '^foo*'),
-				array('specialChars' => array('^' => '^', '$' => '$', '*' => '.*'))
-			)
-		);
+		$this->fromListTestCase(71);
 	}
 
 	/**
@@ -886,13 +592,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_3C407EB8()
 	{
-		$this->assertSame(
-			'foo.+',
-			RegexpBuilder::fromList(
-				array('food', 'foo+'),
-				array('specialChars' => array('d' => '\\d', '+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(72);
 	}
 
 	/**
@@ -900,13 +600,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_7A1B32CC()
 	{
-		$this->assertSame(
-			'foo(?:\\w*|.+)',
-			RegexpBuilder::fromList(
-				array('foo*', 'foo+'),
-				array('specialChars' => array('*' => '\\w*', '+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(73);
 	}
 
 	/**
@@ -914,13 +608,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_44A90030()
 	{
-		$this->assertSame(
-			'foo(?:.+|\\w?)',
-			RegexpBuilder::fromList(
-				array('foo?', 'foo+'),
-				array('specialChars' => array('?' => '\\w?', '+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(74);
 	}
 
 	/**
@@ -928,13 +616,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_16E28B20()
 	{
-		$this->assertSame(
-			'foo(?:.+|\\B)',
-			RegexpBuilder::fromList(
-				array('fooB', 'foo+'),
-				array('specialChars' => array('B' => '\\B', '+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(75);
 	}
 
 	/**
@@ -942,13 +624,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_94F12345()
 	{
-		$this->assertSame(
-			'(?:.+foo.+|foo\\B)',
-			RegexpBuilder::fromList(
-				array('+foo+', 'fooB'),
-				array('specialChars' => array('B' => '\\B', '+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(76);
 	}
 
 	/**
@@ -956,13 +632,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C55ADFEF()
 	{
-		$this->assertSame(
-			'(?:.+foo.+|bar|foo)',
-			RegexpBuilder::fromList(
-				array('+foo+', 'foo', 'bar'),
-				array('specialChars' => array('+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(77);
 	}
 
 	/**
@@ -970,13 +640,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_69C9F3E0()
 	{
-		$this->assertSame(
-			'(?:.+foo.*|bar)',
-			RegexpBuilder::fromList(
-				array('+foo+', '+foo', 'bar'),
-				array('specialChars' => array('+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(78);
 	}
 
 	/**
@@ -984,13 +648,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6AA5ABFC()
 	{
-		$this->assertSame(
-			'.+foo.*',
-			RegexpBuilder::fromList(
-				array('+foo+', '+foo'),
-				array('specialChars' => array('+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(79);
 	}
 
 	/**
@@ -998,13 +656,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_51B52D9E()
 	{
-		$this->assertSame(
-			'(?:a|.+.+)',
-			RegexpBuilder::fromList(
-				array('++', 'a'),
-				array('specialChars' => array('+' => '.+'))
-			)
-		);
+		$this->fromListTestCase(80);
 	}
 
 	/**
@@ -1012,13 +664,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C29CED5()
 	{
-		$this->assertSame(
-			'.',
-			RegexpBuilder::fromList(
-				array('a', '.'),
-				array('specialChars' => array('.' => '.'))
-			)
-		);
+		$this->fromListTestCase(81);
 	}
 
 	/**
@@ -1026,13 +672,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6AB3A485()
 	{
-		$this->assertSame(
-			'h.p',
-			RegexpBuilder::fromList(
-				array('hip', 'hop', 'h.p'),
-				array('specialChars' => array('.' => '.'))
-			)
-		);
+		$this->fromListTestCase(82);
 	}
 
 	/**
@@ -1040,13 +680,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8FC43CB0()
 	{
-		$this->assertSame(
-			'h(?:i|.p)',
-			RegexpBuilder::fromList(
-				array('hi', 'hop', 'h.p'),
-				array('specialChars' => array('.' => '.'))
-			)
-		);
+		$this->fromListTestCase(83);
 	}
 
 	/**
@@ -1054,13 +688,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_9BA9174B()
 	{
-		$this->assertSame(
-			'h.?',
-			RegexpBuilder::fromList(
-				array('h', 'h.'),
-				array('specialChars' => array('.' => '.'))
-			)
-		);
+		$this->fromListTestCase(84);
 	}
 
 	/**
@@ -1068,13 +696,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A1628B44()
 	{
-		$this->assertSame(
-			'h(?:.|\\d\\d)',
-			RegexpBuilder::fromList(
-				array('h.', 'hd'),
-				array('specialChars' => array('.' => '.', 'd' => '\\d\\d'))
-			)
-		);
+		$this->fromListTestCase(85);
 	}
 
 	/**
@@ -1082,13 +704,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_71D6E963()
 	{
-		$this->assertSame(
-			'h(?:...........|otel)',
-			RegexpBuilder::fromList(
-				array('hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'),
-				array('specialChars' => array('X' => '.'))
-			)
-		);
+		$this->fromListTestCase(86);
 	}
 
 	/**
@@ -1096,13 +712,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4C2C4778()
 	{
-		$this->assertSame(
-			'z(?:..........|ebra)',
-			RegexpBuilder::fromList(
-				array('zdDhHsSvVwW', 'z..........', 'zebra'),
-				array('specialChars' => array('d' => '\\d', 'D' => 'D', 'h' => '\\h', 'H' => '\\H', 's' => '\\s', 'S' => 'S', 'v' => '\\v', 'V' => '\\V', 'w' => '\\w', 'W' => 'W', '.' => '.'))
-			)
-		);
+		$this->fromListTestCase(87);
 	}
 
 	/**
@@ -1110,13 +720,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_B05A865()
 	{
-		$this->assertSame(
-			'm(?:.|\\b)',
-			RegexpBuilder::fromList(
-				array('m.', 'mb'),
-				array('specialChars' => array('.' => '.', 'b' => '\\b'))
-			)
-		);
+		$this->fromListTestCase(88);
 	}
 
 	/**
@@ -1124,13 +728,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_823A9663()
 	{
-		$this->assertSame(
-			'm(?:.|\\B)',
-			RegexpBuilder::fromList(
-				array('m.', 'mB'),
-				array('specialChars' => array('.' => '.', 'B' => '\\B'))
-			)
-		);
+		$this->fromListTestCase(89);
 	}
 
 	/**
@@ -1138,13 +736,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E58BCD87()
 	{
-		$this->assertSame(
-			'm(?:.|\\A)',
-			RegexpBuilder::fromList(
-				array('m.', 'mA'),
-				array('specialChars' => array('.' => '.', 'A' => '\\A'))
-			)
-		);
+		$this->fromListTestCase(90);
 	}
 
 	/**
@@ -1152,13 +744,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_95245C1()
 	{
-		$this->assertSame(
-			'm(?:.|\\Z)',
-			RegexpBuilder::fromList(
-				array('m.', 'mZ'),
-				array('specialChars' => array('.' => '.', 'Z' => '\\Z'))
-			)
-		);
+		$this->fromListTestCase(91);
 	}
 
 	/**
@@ -1166,13 +752,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_806D7BC7()
 	{
-		$this->assertSame(
-			'm(?:.|\\z)',
-			RegexpBuilder::fromList(
-				array('m.', 'mz'),
-				array('specialChars' => array('.' => '.', 'z' => '\\z'))
-			)
-		);
+		$this->fromListTestCase(92);
 	}
 
 	/**
@@ -1180,13 +760,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_2AE97A4F()
 	{
-		$this->assertSame(
-			'm(?:.|\\G)',
-			RegexpBuilder::fromList(
-				array('m.', 'mG'),
-				array('specialChars' => array('.' => '.', 'G' => '\\G'))
-			)
-		);
+		$this->fromListTestCase(93);
 	}
 
 	/**
@@ -1194,13 +768,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A1145284()
 	{
-		$this->assertSame(
-			'm(?:.|\\Q)',
-			RegexpBuilder::fromList(
-				array('m.', 'mQ'),
-				array('specialChars' => array('.' => '.', 'Q' => '\\Q'))
-			)
-		);
+		$this->fromListTestCase(94);
 	}
 
 	/**
@@ -1208,13 +776,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6FC8E8F7()
 	{
-		$this->assertSame(
-			'm(?:.|\\E)',
-			RegexpBuilder::fromList(
-				array('m.', 'mE'),
-				array('specialChars' => array('.' => '.', 'E' => '\\E'))
-			)
-		);
+		$this->fromListTestCase(95);
 	}
 
 	/**
@@ -1222,13 +784,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6F5D139E()
 	{
-		$this->assertSame(
-			'm(?:.|\\K)',
-			RegexpBuilder::fromList(
-				array('m.', 'mK'),
-				array('specialChars' => array('.' => '.', 'K' => '\\K'))
-			)
-		);
+		$this->fromListTestCase(96);
 	}
 
 	/**
@@ -1236,13 +792,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_34005F32()
 	{
-		$this->assertSame(
-			'h(?:$|.)',
-			RegexpBuilder::fromList(
-				array('h$', 'h.'),
-				array('specialChars' => array('.' => '.', '$' => '$'))
-			)
-		);
+		$this->fromListTestCase(97);
 	}
 
 	/**
@@ -1250,13 +800,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8DB4D1E0()
 	{
-		$this->assertSame(
-			'h.?',
-			RegexpBuilder::fromList(
-				array('h?', 'ha'),
-				array('specialChars' => array('?' => '.?'))
-			)
-		);
+		$this->fromListTestCase(98);
 	}
 
 	/**
@@ -1264,13 +808,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_2ABBC9E3()
 	{
-		$this->assertSame(
-			'h(?:.|it)?',
-			RegexpBuilder::fromList(
-				array('h.', 'hi', 'hit'),
-				array('specialChars' => array('.' => '.?'))
-			)
-		);
+		$this->fromListTestCase(99);
 	}
 
 	/**
@@ -1278,13 +816,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8E336686()
 	{
-		$this->assertSame(
-			'a.?c.?e',
-			RegexpBuilder::fromList(
-				array('a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'),
-				array('specialChars' => array('.' => '.?'))
-			)
-		);
+		$this->fromListTestCase(100);
 	}
 
 	/**
@@ -1292,13 +824,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8E765F3B()
 	{
-		$this->assertSame(
-			'h.?.?.?.?',
-			RegexpBuilder::fromList(
-				array('h????', 'hello', 'heart'),
-				array('specialChars' => array('?' => '.?'))
-			)
-		);
+		$this->fromListTestCase(101);
 	}
 
 	/**
@@ -1306,10 +832,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A55EF35C()
 	{
-		$this->assertSame(
-			'xx?x?',
-			RegexpBuilder::fromList(array('x', 'xx', 'xxx'))
-		);
+		$this->fromListTestCase(102);
 	}
 
 	/**
@@ -1317,15 +840,20 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_69AB5342()
 	{
-		$this->assertSame(
-			'\\d\\d?\\d?',
-			RegexpBuilder::fromList(
-				array('d', 'dd', 'ddd'),
-				array('specialChars' => array('d' => '\\d'))
-			)
-		);
+		$this->fromListTestCase(103);
 	}
 	// End of content generated by ../../../scripts/patchRegexpBuilderTest.php
+
+	protected function fromListTestCase($k)
+	{
+		$data = $this->getWordsLists();
+
+		$expected = $data[$k][0];
+		$words    = $data[$k][1];
+		$options  = (isset($data[$k][2])) ? $data[$k][2] : array();
+
+		$this->assertSame($expected, RegexpBuilder::fromList($words, $options));
+	}
 
 	/**
 	* @expectedException RuntimeException

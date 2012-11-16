@@ -36,7 +36,7 @@ include __DIR__ . '/../tests/Configurator/Helpers/RegexpBuilderTest.php';
 $test = new Configurator\Helpers\RegexpBuilderTest;
 
 $php = '';
-foreach ($test->getWordsLists() as $case)
+foreach ($test->getWordsLists() as $k => $case)
 {
 	$regexp   = var_export($case[0], true);
 	$wordlist = _array($case[1]);
@@ -55,18 +55,7 @@ foreach ($test->getWordsLists() as $case)
 		$php .= ', ' . $options . '';
 	}
 
-	$php .= ") returns " . $regexp . "\n\t*/\n\tpublic function test_" . strtoupper(dechex(crc32(serialize($case)))) . "()\n\t{\n\t\t\$this->assertSame(\n\t\t\t" . $regexp . ",\n\t\t\tRegexpBuilder::fromList(";
-
-	if (isset($case[2]))
-	{
-		$php .= "\n\t\t\t\t" . $wordlist . ",\n\t\t\t\t" . _array($case[2]) . "\n\t\t\t";
-	}
-	else
-	{
-		$php .= $wordlist;
-	}
-
-	$php .= ")\n\t\t);\n\t}\n";
+	$php .= ") returns " . $regexp . "\n\t*/\n\tpublic function test_" . strtoupper(dechex(crc32(serialize($case)))) . "()\n\t{\n\t\t\$this->fromListTestCase(" . $k . ");\n\t}\n";
 }
 
 $filepath = __DIR__ . '/../tests/Configurator/Helpers/RegexpBuilderTest.php';
