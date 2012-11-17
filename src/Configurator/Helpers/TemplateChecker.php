@@ -49,6 +49,7 @@ abstract class TemplateChecker
 		self::checkCopyElements($DOMXPath);
 		self::checkUnsafeContent($DOMXPath, $tag);
 		self::checkPHPTags($DOMXPath);
+		self::checkAttributeSets($DOMXPath);
 	}
 
 	/**
@@ -372,6 +373,27 @@ abstract class TemplateChecker
 		if ($nodes->length)
 		{
 			throw new UnsafeTemplateException('PHP tags are not allowed', $nodes->item(0));
+		}
+	}
+
+	/**
+	* Test whether the template contains an <xsl:attribute-set/>
+	*
+	* Templates are checked outside of their stylesheet, which means we don't have access to the
+	* <xsl:attribute-set/> declarations and we can't easily test them. Attribute sets are fairly
+	* uncommon and there's little incentive to use them in small stylesheets, so we'll just disable
+	* them
+	*
+	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	*/
+	protected static function checkAttributeSets(DOMXPath $DOMXPath)
+	{
+		$xpath = '//@use-attribute-sets';
+		$nodes = $DOMXPath->query($xpath);
+
+		if ($nodes->length)
+		{
+			throw new UnsafeTemplateException('Cannot assess the safety of attribute sets', $nodes->item(0));
 		}
 	}
 

@@ -465,6 +465,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML
  [x] checkUnsafe() throws an exception if the template contains a <?php instruction
  [x] checkUnsafe() throws an exception if the template contains a <?PHP instruction
+ [x] checkUnsafe() throws an exception if an element has an "use-attribute-sets" attribute
  [x] Not safe: <embed src="{@url}"/>
  [x] Not safe: <iframe src="{@url}"/>
  [x] Not safe: <object data="{@url}"/>
