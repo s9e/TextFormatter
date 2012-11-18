@@ -148,14 +148,50 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox <xsl:attribute/> is inlined where possible
+	* @testdox <xsl:attribute/> with one single <xsl:value-of/> descendant is inlined
 	*/
-	public function testA48B1064()
+	public function testFD77EC72()
 	{
 		$this->runCase(
-			'<xsl:attribute/> is inlined where possible',
+			'<xsl:attribute/> with one single <xsl:value-of/> descendant is inlined',
 			'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
 			'<div class="{@foo}"><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
+	*/
+	public function test8613A729()
+	{
+		$this->runCase(
+			'<xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined',
+			'<div><xsl:attribute name="class">foo <xsl:value-of select="@bar"/><xsl:text> baz</xsl:text></xsl:attribute><xsl:apply-templates/></div>',
+			'<div class="foo {@bar} baz"><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
+	* @testdox Curly brackets in inline attributes are escaped
+	*/
+	public function test1ED0AAFE()
+	{
+		$this->runCase(
+			'Curly brackets in inline attributes are escaped',
+			'<div><xsl:attribute name="title">{foo}</xsl:attribute><xsl:apply-templates/></div>',
+			'<div title="{{foo}}"><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:attribute/> with <xsl:if/> child is not inlined
+	*/
+	public function test76FE1870()
+	{
+		$this->runCase(
+			'<xsl:attribute/> with <xsl:if/> child is not inlined',
+			'<div><xsl:attribute name="class">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>',
+			'<div><xsl:attribute name="class">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>'
 		);
 	}
 
@@ -277,9 +313,24 @@ class TemplateOptimizerTest extends Test
 				'<div><xsl:apply-templates/></div>'
 			),
 			array(
-				'<xsl:attribute/> is inlined where possible',
+				'<xsl:attribute/> with one single <xsl:value-of/> descendant is inlined',
 				'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
 				'<div class="{@foo}"><xsl:apply-templates/></div>'
+			),
+			array(
+				'<xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined',
+				'<div><xsl:attribute name="class">foo <xsl:value-of select="@bar"/><xsl:text> baz</xsl:text></xsl:attribute><xsl:apply-templates/></div>',
+				'<div class="foo {@bar} baz"><xsl:apply-templates/></div>'
+			),
+			array(
+				'Curly brackets in inline attributes are escaped',
+				'<div><xsl:attribute name="title">{foo}</xsl:attribute><xsl:apply-templates/></div>',
+				'<div title="{{foo}}"><xsl:apply-templates/></div>'
+			),
+			array(
+				'<xsl:attribute/> with <xsl:if/> child is not inlined',
+				'<div><xsl:attribute name="class">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>',
+				'<div><xsl:attribute name="class">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>'
 			),
 			array(
 				'Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible',

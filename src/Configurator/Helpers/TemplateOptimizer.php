@@ -11,6 +11,7 @@ use DOMAttr;
 use DOMDocument;
 use DOMElement;
 use DOMNodeList;
+use DOMText;
 use DOMXPath;
 use InvalidArgumentException;
 use LibXMLError;
@@ -138,17 +139,38 @@ abstract class TemplateOptimizer
 	{
 		$xpath = new DOMXPath($dom);
 
-		$query = '//*[namespace-uri() = ""]'
-		       . '/xsl:attribute[count(descendant::node()) = 1]'
-		       . '/xsl:value-of[@select]';
+		$query = '//*[namespace-uri() = ""]/xsl:attribute';
 
-		foreach ($xpath->query($query) as $valueOf)
+		foreach ($xpath->query($query) as $attribute)
 		{
-			$attribute = $valueOf->parentNode;
+			$value = '';
+
+			foreach ($attribute->childNodes as $childNode)
+			{
+				if ($childNode instanceof DOMText)
+				{
+					$value .= preg_replace('#([{}])#', '$1$1', $childNode->textContent);
+				}
+				elseif ($childNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
+				     && $childNode->localName === 'value-of')
+				{
+					$value .= '{' . $childNode->getAttribute('select') . '}';
+				}
+				elseif ($childNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
+				     && $childNode->localName === 'text')
+				{
+					$value .= preg_replace('#([{}])#', '$1$1', $childNode->textContent);
+				}
+				else
+				{
+					// Can't inline this attribute, move on to the next one
+					continue 2;
+				}
+			}
 
 			$attribute->parentNode->setAttribute(
 				$attribute->getAttribute('name'),
-				'{' . $valueOf->getAttribute('select') . '}'
+				$value
 			);
 
 			$attribute->parentNode->removeChild($attribute);
