@@ -43,7 +43,7 @@ abstract class TemplateOptimizer
 		$dom->loadXML($tmp->saveXML());
 
 		self::removeComments($dom);
-		self::normalizeSpaceInSelectAttributes($dom);
+		self::minifyXPathExpressions($dom);
 		self::inlineElements($dom);
 		self::inlineAttributes($dom);
 		self::optimizeConditionalAttributes($dom);
@@ -156,21 +156,84 @@ abstract class TemplateOptimizer
 	}
 
 	/**
-	* Remove extraneous space in simple select expressions
+	* Remove extraneous space in XPath expressions used in XSL elements
 	*
 	* @param DOMDocument $dom xsl:template node
 	*/
-	protected static function normalizeSpaceInSelectAttributes(DOMDocument $dom)
+	protected static function minifyXPathExpressions(DOMDocument $dom)
 	{
+		$alnum    = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$DOMXPath = new DOMXPath($dom);
 
-		$xpath = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"][@select]';
+		$xpath = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"]';
 		foreach ($DOMXPath->query($xpath) as $node)
 		{
-			$node->setAttribute(
-				'select',
-				preg_replace('#^@\\s+#', '@', trim($node->getAttribute('select')))
-			);
+			foreach ($DOMXPath->query('@match|@select|@test', $node) as $attribute)
+			{
+				$old = trim($attribute->nodeValue);
+				$new = '';
+
+				$pos = 0;
+				$len = strlen($old);
+
+				while ($pos < $len)
+				{
+					$c = $old[$pos];
+
+					// Test for a literal string
+					if ($c === '"' || $c === "'")
+					{
+						// Look for the matching quote
+						$nextPos = strpos($old, $c, 1 + $pos);
+
+						if ($nextPos === false)
+						{
+							throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
+						}
+
+						// Increment to account for the closing quote
+						++$nextPos;
+
+						$new .= substr($old, $pos, $nextPos - $pos);
+						$pos = $nextPos;
+
+						continue;
+					}
+
+					// Test for an alphanumeric character
+					$spn = strspn($old, $alnum, $pos);
+					if ($spn)
+					{
+						$new .= substr($old, $pos, $spn);
+						$pos += $spn;
+
+						continue;
+					}
+
+					// Test whether the current expression ends with an alphanumeric character
+					if ($new === '')
+					{
+						$endsWithAlpha = false;
+					}
+					else
+					{
+						$endsWithAlpha = (bool) (strpos($alnum, substr($new, -1)) !== false);
+					}
+
+					if ($c === '-' && $endsWithAlpha)
+					{
+						$new .= ' ';
+					}
+
+					// Append the current char if it's not whitespace
+					$new .= trim($c);
+
+					// Move the cursor past current char
+					++$pos;
+				}
+
+				$node->setAttribute($attribute->nodeName, $new);
+			}
 		}
 	}
 
