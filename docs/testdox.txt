@@ -687,9 +687,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Superfluous whitespace in @test expressions is removed
  [x] Whitespace necessary to delimit names in @test expressions is preserved
  [x] <xsl:element/> is inlined where possible
- [x] <xsl:attribute/> with one single <xsl:value-of/> descendant is inlined
+ [x] <xsl:attribute/> with one single <xsl:value-of/> child is inlined
  [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
- [x] Curly brackets in inline attributes are escaped
+ [x] Curly brackets in text are escaped when attributes are inlined
  [x] <xsl:attribute/> with <xsl:if/> child is not inlined
  [x] Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible
  [x] Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match

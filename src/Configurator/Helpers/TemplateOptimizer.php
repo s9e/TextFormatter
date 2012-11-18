@@ -184,7 +184,7 @@ abstract class TemplateOptimizer
 	*/
 	protected static function minifyXPathExpressions(DOMDocument $dom)
 	{
-		$alnum    = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$chars    = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
 		$DOMXPath = new DOMXPath($dom);
 
 		$xpath = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"]';
@@ -222,27 +222,32 @@ abstract class TemplateOptimizer
 						continue;
 					}
 
-					// Test for an alphanumeric character
-					$spn = strspn($old, $alnum, $pos);
+					// Test whether the current expression ends with an XML name character
+					if ($new === '')
+					{
+						$endsWithChar = false;
+					}
+					else
+					{
+						$endsWithChar = (bool) (strpos($chars, substr($new, -1)) !== false);
+					}
+
+					// Test for a character that normally appears in XML names
+					$spn = strspn($old, $chars, $pos);
 					if ($spn)
 					{
+						if ($endsWithChar)
+						{
+							$new .= ' ';
+						}
+
 						$new .= substr($old, $pos, $spn);
 						$pos += $spn;
 
 						continue;
 					}
 
-					// Test whether the current expression ends with an alphanumeric character
-					if ($new === '')
-					{
-						$endsWithAlpha = false;
-					}
-					else
-					{
-						$endsWithAlpha = (bool) (strpos($alnum, substr($new, -1)) !== false);
-					}
-
-					if ($c === '-' && $endsWithAlpha)
+					if ($c === '-' && $endsWithChar)
 					{
 						$new .= ' ';
 					}

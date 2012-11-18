@@ -114,24 +114,36 @@ class TemplateOptimizerTest extends Test
 	/**
 	* @testdox Superfluous whitespace in @test expressions is removed
 	*/
-	public function test1935833C()
+	public function testA8B67871()
 	{
 		$this->runCase(
 			'Superfluous whitespace in @test expressions is removed',
-			'<div><xsl:if select="@foo = 2">!</xsl:if></div>',
-			'<div><xsl:if select="@foo=2">!</xsl:if></div>'
+			'<div><xsl:if test="@foo = 2">!</xsl:if></div>',
+			'<div><xsl:if test="@foo=2">!</xsl:if></div>'
 		);
 	}
 
 	/**
 	* @testdox Whitespace necessary to delimit names in @test expressions is preserved
 	*/
-	public function testAFBB09C4()
+	public function testD4F6B3A9()
 	{
 		$this->runCase(
 			'Whitespace necessary to delimit names in @test expressions is preserved',
-			'<div><xsl:if select="@foo - bar = 2">!</xsl:if></div>',
-			'<div><xsl:if select="@foo -bar=2">!</xsl:if></div>'
+			'<div><xsl:if test="@foo - bar = 2">!</xsl:if></div>',
+			'<div><xsl:if test="@foo -bar=2">!</xsl:if></div>'
+		);
+	}
+
+	/**
+	* @testdox Whitespace necessary to delimit names in @test expressions is preserved
+	*/
+	public function test85CD9459()
+	{
+		$this->runCase(
+			'Whitespace necessary to delimit names in @test expressions is preserved',
+			'<div><xsl:if test="foo or _bar">!</xsl:if></div>',
+			'<div><xsl:if test="foo or _bar">!</xsl:if></div>'
 		);
 	}
 
@@ -148,12 +160,12 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox <xsl:attribute/> with one single <xsl:value-of/> descendant is inlined
+	* @testdox <xsl:attribute/> with one single <xsl:value-of/> child is inlined
 	*/
-	public function testFD77EC72()
+	public function test19670F1C()
 	{
 		$this->runCase(
-			'<xsl:attribute/> with one single <xsl:value-of/> descendant is inlined',
+			'<xsl:attribute/> with one single <xsl:value-of/> child is inlined',
 			'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
 			'<div class="{@foo}"><xsl:apply-templates/></div>'
 		);
@@ -172,12 +184,12 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox Curly brackets in inline attributes are escaped
+	* @testdox Curly brackets in text are escaped when attributes are inlined
 	*/
-	public function test1ED0AAFE()
+	public function test82AE6D82()
 	{
 		$this->runCase(
-			'Curly brackets in inline attributes are escaped',
+			'Curly brackets in text are escaped when attributes are inlined',
 			'<div><xsl:attribute name="title">{foo}</xsl:attribute><xsl:apply-templates/></div>',
 			'<div title="{{foo}}"><xsl:apply-templates/></div>'
 		);
@@ -299,13 +311,18 @@ class TemplateOptimizerTest extends Test
 			),
 			array(
 				'Superfluous whitespace in @test expressions is removed',
-				'<div><xsl:if select="@foo = 2">!</xsl:if></div>',
-				'<div><xsl:if select="@foo=2">!</xsl:if></div>'
+				'<div><xsl:if test="@foo = 2">!</xsl:if></div>',
+				'<div><xsl:if test="@foo=2">!</xsl:if></div>'
 			),
 			array(
 				'Whitespace necessary to delimit names in @test expressions is preserved',
-				'<div><xsl:if select="@foo - bar = 2">!</xsl:if></div>',
-				'<div><xsl:if select="@foo -bar=2">!</xsl:if></div>'
+				'<div><xsl:if test="@foo - bar = 2">!</xsl:if></div>',
+				'<div><xsl:if test="@foo -bar=2">!</xsl:if></div>'
+			),
+			array(
+				'Whitespace necessary to delimit names in @test expressions is preserved',
+				'<div><xsl:if test="foo or _bar">!</xsl:if></div>',
+				'<div><xsl:if test="foo or _bar">!</xsl:if></div>'
 			),
 			array(
 				'<xsl:element/> is inlined where possible',
