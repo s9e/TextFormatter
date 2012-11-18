@@ -313,7 +313,7 @@ class TemplateOptimizerTest extends Test
 				'<div><xsl:apply-templates/></div>'
 			),
 			array(
-				'<xsl:attribute/> with one single <xsl:value-of/> descendant is inlined',
+				'<xsl:attribute/> with one single <xsl:value-of/> child is inlined',
 				'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
 				'<div class="{@foo}"><xsl:apply-templates/></div>'
 			),
@@ -323,7 +323,7 @@ class TemplateOptimizerTest extends Test
 				'<div class="foo {@bar} baz"><xsl:apply-templates/></div>'
 			),
 			array(
-				'Curly brackets in inline attributes are escaped',
+				'Curly brackets in text are escaped when attributes are inlined',
 				'<div><xsl:attribute name="title">{foo}</xsl:attribute><xsl:apply-templates/></div>',
 				'<div title="{{foo}}"><xsl:apply-templates/></div>'
 			),
