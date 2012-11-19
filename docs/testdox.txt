@@ -697,6 +697,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Attribute names are lowercased
  [x] Attributes are deduplicated and the first one of a given name is kept
  [x] Attributes are deduplicated and the first one of a given lowercased name is kept
+ [x] <xsl:if test="@foo"><xsl:value-of select="@foo"/></xsl:if> is optimized to <xsl:value-of select="@foo"/>
+ [x] <xsl:if test="@foo"><xsl:value-of select="@bar"/></xsl:if> is left untouched
+ [x] <xsl:if test="1+@foo"><xsl:value-of select="1+@foo"/></xsl:if> is left untouched
  [x] Throws an exception during XPath minification if a string isn't properly closed
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute

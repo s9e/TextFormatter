@@ -46,6 +46,7 @@ abstract class TemplateOptimizer
 		self::removeComments($dom);
 		self::minifyXPathExpressions($dom);
 		self::normalizeAttributeNames($dom);
+		self::optimizeConditionalValueOf($dom);
 		self::inlineElements($dom);
 		self::inlineAttributes($dom);
 		self::optimizeConditionalAttributes($dom);
@@ -68,6 +69,39 @@ abstract class TemplateOptimizer
 		foreach ($xpath->query('//comment()') as $comment)
 		{
 			$comment->parentNode->removeChild($comment);
+		}
+	}
+
+	/**
+	* Remove unnecessary <xsl:if> tests around <xsl:value-of>
+	*
+	* NOTE: should be performed before attributes are inlined
+	*
+	* @param DOMDocument $dom xsl:template node
+	*/
+	protected static function optimizeConditionalValueOf(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+		$query = '//xsl:if[count(descendant::node()) = 1]/xsl:value-of';
+
+		foreach ($xpath->query($query) as $valueOf)
+		{
+			$if     = $valueOf->parentNode;
+			$test   = $if->getAttribute('test');
+			$select = $valueOf->getAttribute('select');
+
+			// Ensure that the expressions match, and that they select one single attribute
+			if ($select !== $test
+			 || !preg_match('#^@\\w+$#D', $select))
+			{
+				continue;
+			}
+
+			// Replace the <xsl:if/> node with the <xsl:value-of/> node
+			$if->parentNode->replaceChild(
+				$if->removeChild($valueOf),
+				$if
+			);
 		}
 	}
 
