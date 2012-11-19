@@ -7,8 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateChecker;
-use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
 /**
@@ -34,23 +33,12 @@ class Templateset extends NormalizedCollection
 	/**
 	* Normalize a template for storage
 	*
-	* Will optimize the template and check for unsafe content
-	*
-	* @see s9e\Configurator\Helpers\TemplateChecker
-	* @see s9e\Configurator\Helpers\TemplateOptimizer
-	*
 	* @param  string $template Original template
 	* @return string           Normalized template
 	*/
 	public function normalizeValue($template)
 	{
-		// We optimize the template before checking for unsafe elements because the optimizer tends
-		// to simplify the templates, which should make checking for unsafe elements easier
-		$template = $this->optimize($template);
-
-		$this->checkUnsafe($template);
-
-		return $template;
+		return TemplateHelper::normalize($template, $this->tag);
 	}
 
 	/**
@@ -63,32 +51,8 @@ class Templateset extends NormalizedCollection
 	public function setUnsafe($predicate, $template)
 	{
 		$predicate = $this->normalizeKey($predicate);
-		$template  = $this->optimize($template);
+		$template  = TemplateHelper::normalizeUnsafe($template, $this->tag);
 
 		$this->items[$predicate] = $template;
-	}
-
-	/**
-	* Check a given template for safeness
-	*
-	* @throws s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	*
-	* @param  string $template
-	* @return void
-	*/
-	public function checkUnsafe($template)
-	{
-		TemplateChecker::checkUnsafe($template, $this->tag);
-	}
-
-	/**
-	* Optimize a template
-	*
-	* @param  string $template Original template
-	* @return string           Optimized template
-	*/
-	public function optimize($template)
-	{
-		return TemplateOptimizer::optimize($template);
 	}
 }

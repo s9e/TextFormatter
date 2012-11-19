@@ -19,16 +19,31 @@ abstract class TemplateHelper
 	/**
 	* Normalize a template to a chunk of optimized, safe XSL
 	*
-	* @param  string $template
-	* @return void
+	* @param  string $template Original template
+	* @param  Tag    $tag      Tag this template belongs to
+	* @return string           Normalized template
 	*/
 	public static function normalize($template, Tag $tag = null)
+	{
+		$template = self::normalizeUnsafe($template);
+		TemplateChecker::checkUnsafe($template, $tag);
+
+		return $template;
+	}
+
+	/**
+	* Normalize a template to a chunk of optimized, potentially unsafe XSL
+	*
+	* @param  string $template Original template
+	* @param  Tag    $tag      Tag this template belongs to
+	* @return string           Normalized template
+	*/
+	public static function normalizeUnsafe($template, Tag $tag = null)
 	{
 		// NOTE: technically, we should start by normalizing the template by loading it with
 		//       loadTemplate() but this operation is already done in TemplateOptimizer::optimize()
 		//       and there's no practical reason for doing it twice
 		$template = TemplateOptimizer::optimize($template);
-		TemplateChecker::checkUnsafe($template, $tag);
 
 		return $template;
 	}
