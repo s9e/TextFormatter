@@ -45,6 +45,7 @@ abstract class TemplateOptimizer
 
 		self::removeComments($dom);
 		self::minifyXPathExpressions($dom);
+		self::normalizeAttributeNames($dom);
 		self::inlineElements($dom);
 		self::inlineAttributes($dom);
 		self::optimizeConditionalAttributes($dom);
@@ -138,7 +139,6 @@ abstract class TemplateOptimizer
 	protected static function inlineAttributes(DOMDocument $dom)
 	{
 		$xpath = new DOMXPath($dom);
-
 		$query = '//*[namespace-uri() = ""]/xsl:attribute';
 
 		foreach ($xpath->query($query) as $attribute)
@@ -184,13 +184,13 @@ abstract class TemplateOptimizer
 	*/
 	protected static function minifyXPathExpressions(DOMDocument $dom)
 	{
-		$chars    = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
-		$DOMXPath = new DOMXPath($dom);
+		$chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+		$xpath = new DOMXPath($dom);
 
-		$xpath = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"]';
-		foreach ($DOMXPath->query($xpath) as $node)
+		$query = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"]';
+		foreach ($xpath->query($query) as $node)
 		{
-			foreach ($DOMXPath->query('@match|@select|@test', $node) as $attribute)
+			foreach ($xpath->query('@match|@select|@test', $node) as $attribute)
 			{
 				$old = trim($attribute->nodeValue);
 				$new = '';
@@ -260,6 +260,43 @@ abstract class TemplateOptimizer
 				}
 
 				$node->setAttribute($attribute->nodeName, $new);
+			}
+		}
+	}
+
+	/**
+	* Lowercase attribute names
+	*
+	* @param DOMDocument $dom xsl:template node
+	*/
+	protected static function normalizeAttributeNames(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+
+		foreach ($xpath->query('//*') as $element)
+		{
+			$attributes = array();
+			foreach ($xpath->query('@*[namespace-uri() = ""]', $element) as $attribute)
+			{
+				$attrName = strtr(
+					$attribute->localName,
+					'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+					'abcdefghijklmnopqrstuvwxyz'
+				);
+
+				// Record the value of this attribute (if it's the first of its name) then remove
+				// the attribute
+				if (!isset($attributes[$attrName]))
+				{
+					$attributes[$attrName] = $attribute->value;
+				}
+
+				$element->removeAttributeNode($attribute);
+			}
+
+			foreach ($attributes as $attrName => $attrValue)
+			{
+				$element->setAttribute($attrName, $attrValue);
 			}
 		}
 	}
