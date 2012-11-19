@@ -506,6 +506,26 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox nl2br() accepts a boolean
+	*/
+	public function testNl2brValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->nl2br(true);
+	}
+
+	/**
+	* @testdox nl2br() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage nl2br() expects a boolean
+	*/
+	public function testNl2brInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->nl2br('foo');
+	}
+
+	/**
 	* @testdox requireParent() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo-bar'

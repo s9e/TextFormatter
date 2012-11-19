@@ -340,6 +340,21 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Add a nl2br rule
+	*
+	* @param bool $bool Whether to convert newlines to <br/>
+	*/
+	public function nl2br($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('nl2br() expects a boolean');
+		}
+
+		$this->items['nl2br'] = $bool;
+	}
+
+	/**
 	* Add an requireParent rule
 	*
 	* @param string $tagName Name of the target tag

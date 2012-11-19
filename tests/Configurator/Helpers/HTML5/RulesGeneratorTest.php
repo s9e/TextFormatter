@@ -147,6 +147,44 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox Generates a nl2br rule for <a>
+	*/
+	public function testNl2br()
+	{
+		$tags = new TagCollection;
+
+		$tags->add('A')->defaultTemplate = '<a><xsl:apply-templates/></a>';
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'nl2br' => true
+				)
+			),
+			RulesGenerator::getRules($tags)
+		);
+	}
+
+	/**
+	* @testdox Does not generate a nl2br rule for <ol>
+	*/
+	public function testNotNl2br()
+	{
+		$tags = new TagCollection;
+
+		$tags->add('OL')->defaultTemplate = '<ol><xsl:apply-templates/></ol>';
+
+		$this->assertArrayMatches(
+			array(
+				'OL' => array(
+					'nl2br' => null
+				)
+			),
+			RulesGenerator::getRules($tags)
+		);
+	}
+
+	/**
 	* @testdox <li> has a disallowAtRoot rule if parentHTML is not specified
 	*/
 	public function testDisallowAtRoot()

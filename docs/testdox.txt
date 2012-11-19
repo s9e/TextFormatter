@@ -175,6 +175,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] ignoreText() throws an exception if its argument is not a boolean
  [x] isTransparent() accepts a boolean
  [x] isTransparent() throws an exception if its argument is not a boolean
+ [x] nl2br() accepts a boolean
+ [x] nl2br() throws an exception if its argument is not a boolean
  [x] requireParent() throws an exception on invalid tag name
  [x] requireParent() normalizes tag name
  [x] requireAncestor() throws an exception on invalid tag name
@@ -264,6 +266,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Generates an autoReopen rule for <b>
  [x] Generates an denyAll rule for <hr>
  [x] Generates an isTransparent rule for <a>
+ [x] Generates a nl2br rule for <a>
+ [x] Does not generate a nl2br rule for <ol>
  [x] <li> has a disallowAtRoot rule if parentHTML is not specified
  [x] <li> does not have a disallowAtRoot rule if parentHTML is <ul>
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>

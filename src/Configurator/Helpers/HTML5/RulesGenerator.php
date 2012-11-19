@@ -157,6 +157,12 @@ abstract class RulesGenerator
 	*/
 	protected static function generateRules(array $templateForensics, TemplateForensics $rootForensics)
 	{
+		// Create a TemplateForensics object that will be used to determine whether to create a
+		// nl2br rule
+		$br = new TemplateForensics(
+			'<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><br/></xsl:template>'
+		);
+
 		$rules = array();
 		foreach ($templateForensics as $srcTagName => $srcTag)
 		{
@@ -182,6 +188,12 @@ abstract class RulesGenerator
 			if ($srcTag->isTransparent())
 			{
 				$rules[$srcTagName]['isTransparent'] = true;
+			}
+
+			// Create a nl2br rule if the tag would allow a <br/> child
+			if ($srcTag->allowsChild($br))
+			{
+				$rules[$srcTagName]['nl2br'] = true;
 			}
 
 			foreach ($templateForensics as $trgTagName => $trgTag)
