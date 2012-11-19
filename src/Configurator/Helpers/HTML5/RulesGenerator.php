@@ -166,12 +166,6 @@ abstract class RulesGenerator
 		$rules = array();
 		foreach ($templateForensics as $srcTagName => $srcTag)
 		{
-			// Test whether this tag can be used with no parent
-			if (!$rootForensics->allowsChild($srcTag))
-			{
-				$rules[$srcTagName]['disallowAtRoot'] = true;
-			}
-
 			// Test whether this tag should be reopened automatically
 			if ($srcTag->autoReopen())
 			{
@@ -182,6 +176,18 @@ abstract class RulesGenerator
 			if ($srcTag->denyAll())
 			{
 				$rules[$srcTagName]['denyAll'] = true;
+			}
+
+			// Test whether this tag can be used with no parent
+			if (!$rootForensics->allowsChild($srcTag))
+			{
+				$rules[$srcTagName]['disallowAtRoot'] = true;
+			}
+
+			// Test whether text children should be ignored
+			if (!$srcTag->allowsText())
+			{
+				$rules[$srcTagName]['ignoreText'] = true;
 			}
 
 			// Create an isTransparent rule if the tag is transparent

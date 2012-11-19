@@ -265,7 +265,10 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <a> has a denyChild rule for <a>
  [x] Generates an autoReopen rule for <b>
  [x] Generates an denyAll rule for <hr>
+ [x] Generates an ignoreText rule for <ul>
+ [x] Does not generate an ignoreText rule for <b>
  [x] Generates an isTransparent rule for <a>
+ [x] Does not generate an isTransparent rule for <b>
  [x] Generates a nl2br rule for <a>
  [x] Does not generate a nl2br rule for <ol>
  [x] <li> has a disallowAtRoot rule if parentHTML is not specified

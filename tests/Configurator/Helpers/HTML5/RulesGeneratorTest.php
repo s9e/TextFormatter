@@ -128,6 +128,44 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox Generates an ignoreText rule for <ul>
+	*/
+	public function testIgnoreText()
+	{
+		$tags = new TagCollection;
+
+		$tags->add('UL')->defaultTemplate = '<ul><xsl:apply-templates/></ul>';
+
+		$this->assertArrayMatches(
+			array(
+				'UL' => array(
+					'ignoreText' => true
+				)
+			),
+			RulesGenerator::getRules($tags)
+		);
+	}
+
+	/**
+	* @testdox Does not generate an ignoreText rule for <b>
+	*/
+	public function testNotIgnoreText()
+	{
+		$tags = new TagCollection;
+
+		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
+		$this->assertArrayMatches(
+			array(
+				'B' => array(
+					'ignoreText' => null
+				)
+			),
+			RulesGenerator::getRules($tags)
+		);
+	}
+
+	/**
 	* @testdox Generates an isTransparent rule for <a>
 	*/
 	public function testIsTransparent()
@@ -140,6 +178,25 @@ class RulesGeneratorTest extends Test
 			array(
 				'A' => array(
 					'isTransparent' => true
+				)
+			),
+			RulesGenerator::getRules($tags)
+		);
+	}
+
+	/**
+	* @testdox Does not generate an isTransparent rule for <b>
+	*/
+	public function testNotIsTransparent()
+	{
+		$tags = new TagCollection;
+
+		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
+		$this->assertArrayMatches(
+			array(
+				'B' => array(
+					'isTransparent' => null
 				)
 			),
 			RulesGenerator::getRules($tags)
