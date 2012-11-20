@@ -67,6 +67,30 @@ class BBCodeTest extends Test
 	}
 
 	/**
+	* @testdox $bbcode->attributeValues is an instance of AttributeValueCollection
+	*/
+	public function testAttributeValuesInstance()
+	{
+		$bbcode = new BBCode;
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Plugins\\BBCodes\\AttributeValueCollection',
+			$bbcode->attributeValues
+		);
+	}
+
+	/**
+	* @testdox $bbcode->contentAttributes is an instance of AttributeList
+	*/
+	public function testContentAttributesInstance()
+	{
+		$bbcode = new BBCode;
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Collections\\AttributeList',
+			$bbcode->contentAttributes
+		);
+	}
+
+	/**
 	* @testdox asConfig() returns its set properties
 	*/
 	public function testAsConfig()

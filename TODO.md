@@ -44,3 +44,4 @@ TODO
 - There should be a way for an end tag to close its start tag even if it (the end tag) is skipped. For instance in BBCode parser when using the tag's content for an attribute... maybe
 - Add the ability to predefine a default set of attribute values for BBCode, e.g. [php] would map to <CODE lang="php"> and [center] to <ALIGN alignment="center"> -- new BBCode(['tagName'=>'CODE','predefinedAttributes'=>['lang'=>'php']])
 - Whitespace trimming: up to 2 newlines outside of "block" elements, up to 1 newline inside of them. They should collapse somehow, or rather not be added to each other. For instance "[div]\n\n\n[div]..." should produce something like "<DIV><i>\n</i><BR>\n</BR><i>\n</i><DIV>..." -- the first newline inside the first DIV is trimmed, and up to 2 newlines before the second DIV should be trimmed too but since we're already removed 1 for the first DIV, we only remove 2-1=1
+- Add an NFO BBCode

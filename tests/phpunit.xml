@@ -56,6 +56,7 @@
 
 			<file>Plugins/ConfiguratorBaseTest.php</file>
 			<file>Plugins/Autolink/ConfiguratorTest.php</file>
+			<file>Plugins/BBCodes/AttributeValueCollectionTest.php</file>
 			<file>Plugins/BBCodes/BBCodeTest.php</file>
 			<file>Plugins/BBCodes/BBCodeCollectionTest.php</file>
 			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
@@ -112,6 +113,7 @@
 
 			<file>../src/Plugins/ConfiguratorBase.php</file>
 			<file>../src/Plugins/Autolink/Configurator.php</file>
+			<file>../src/Plugins/BBCodes/AttributeValueCollection.php</file>
 			<file>../src/Plugins/BBCodes/BBCode.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeCollection.php</file>
 			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>

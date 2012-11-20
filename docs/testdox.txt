@@ -847,6 +847,9 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?foo=1] baz'
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?arr[foo]=1] baz'
 
+s9e\TextFormatter\Tests\Plugins\BBCodes\AttributeValueCollection
+ [x] Throws an exception on invalid attribute name
+
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCode
  [x] An array of options can be passed to the constructor
  [x] BBCode::normalizeName('*') returns '*'
@@ -854,6 +857,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCode
  [x] BBCode::normalizeName('*invalid*') throws an exception
  [x] defaultAttribute accepts an attribute name and normalizes it accordingly
  [x] tagName accepts a tag name and normalizes it accordingly
+ [x] $bbcode->attributeValues is an instance of AttributeValueCollection
+ [x] $bbcode->contentAttributes is an instance of AttributeList
  [x] asConfig() returns its set properties
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
