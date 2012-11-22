@@ -394,6 +394,26 @@ foreach ($page->body->h4 as $h4)
 	}
 }
 
+//==============================================================================
+// Gather the names of elements with a built-in "white-space: pre" CSS rule
+//==============================================================================
+
+preg_match_all('#^(.*)\\{[^}]*?white-space:\\s*pre#m', $page->body->asXML(), $matches);
+
+foreach ($matches[1] as $elNames)
+{
+	foreach (explode(',', $elNames) as $elName)
+	{
+		// Remove predicates
+		$elName = preg_replace('#\\[\\w+\\]#', '', trim($elName));
+
+		if (isset($elements[$elName]))
+		{
+			$elements[$elName]['pre'] = 1;
+		}
+	}
+}
+
 // Flatten XPath queries for each target
 foreach ($elements as $elName => &$element)
 {
@@ -569,6 +589,12 @@ foreach ($elements as $elName => $element)
 	if ($noText && !isset($element['allowText']))
 	{
 		$el['nt'] = 1;
+	}
+	elseif (!empty($element['pre']))
+	{
+		// NOTE: elements that do not allow text won't convert newlines to <br/> so we only need to
+		//       mark elements that allow text AND preserve newlines
+		$el['pre'] = 1;
 	}
 
 	if (!empty($element['denyAll']))
