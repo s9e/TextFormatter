@@ -398,7 +398,11 @@ foreach ($page->body->h4 as $h4)
 // Gather the names of elements with a built-in "white-space: pre" CSS rule
 //==============================================================================
 
-preg_match_all('#^(.*)\\{[^}]*?white-space:\\s*pre#m', $page->body->asXML(), $matches);
+preg_match_all(
+	'#^(.*)\\{[^}]*?white-space:\\s*pre#m',
+	$page->body->firstOf('div[h2[@id="rendering"]]')->textContent(),
+	$matches
+);
 
 foreach ($matches[1] as $elNames)
 {
