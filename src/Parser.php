@@ -9,11 +9,36 @@ namespace s9e\TextFormatter;
 
 class Parser
 {
+	use PluginsHandling;
+
+	/**
+	* @var array Tags' config
+	*/
+	protected $tagsConfig;
+
+	/**
+	* @var string Text being parsed
+	*/
+	protected $text;
+
 	/**
 	* Constructor
 	*/
-	public function __construct()
+	public function __construct(array $config)
 	{
+		$this->logger        = new Logger;
+		$this->pluginsConfig = $config['plugins'];
+		$this->tagsConfig    = $config['tags'];
+	}
+
+	/**
+	* Get this parser's Logger instance
+	*
+	* @return Logger
+	*/
+	public function getLogger()
+	{
+		return $this->logger;
 	}
 
 	/**
@@ -24,11 +49,19 @@ class Parser
 	*/
 	public function parse($text)
 	{
-		$this->unprocessedTags = $tags->get();
+		$this->reset($text);
+		$this->executePluginParsers();
+	}
 
-		while (!empty($this->unprocessedTags))
-		{
-			$this->processTag();
-		}
+	/**
+	* Reset the parser for a new parsing
+	*
+	* @return void
+	*/
+	public function reset($text)
+	{
+		$this->tagStack = array();
+		$this->logger->clear();
+		$this->text = $text;
 	}
 }
