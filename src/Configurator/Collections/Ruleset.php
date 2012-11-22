@@ -16,6 +16,10 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
+	//==========================================================================
+	// ArrayAccess methods
+	//==========================================================================
+
 	/**
 	* Test whether a rule category exists
 	*
@@ -57,21 +61,42 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		return $this->clear($k);
 	}
 
+	//==========================================================================
+	// Generic methods
+	//==========================================================================
+
 	/**
-	* Test whether given tag name is used as target for given rule
-	*
-	* @param  string $ruleName
-	* @param  string $tagName
-	* @return bool
+	* {@inheritdoc}
 	*/
-	protected function hasTarget($ruleName, $tagName)
+	public function asConfig()
 	{
-		if (!isset($this->items[$ruleName]))
+		$config = $this->items;
+
+		// Remove rules that are not needed at parsing time. All of those are resolved when building
+		// the allowedChildren and allowedDescendants bitfields
+		unset($config['allowChild']);
+		unset($config['allowDescendant']);
+		unset($config['defaultChildRule']);
+		unset($config['defaultDescendantRule']);
+		unset($config['denyAll']);
+		unset($config['denyChild']);
+		unset($config['denyDescendant']);
+		unset($config['disallowAtRoot']);
+		unset($config['requireParent']);
+
+		// In order to speed up lookups, we use the tag names as keys
+		foreach ($config as $ruleName => $targets)
 		{
-			return false;
+			if (!is_array($targets))
+			{
+				// Don't touch boolean rules such as "isTransparent"
+				continue;
+			}
+
+			$config[$ruleName] = array_fill_keys($targets, 1);
 		}
 
-		return in_array($tagName, $this->items[$ruleName], true);
+		return $config;
 	}
 
 	/**
@@ -89,6 +114,23 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		{
 			$this->items = array();
 		}
+	}
+
+	/**
+	* Test whether given tag name is used as target for given rule
+	*
+	* @param  string $ruleName
+	* @param  string $tagName
+	* @return bool
+	*/
+	protected function hasTarget($ruleName, $tagName)
+	{
+		if (!isset($this->items[$ruleName]))
+		{
+			return false;
+		}
+
+		return in_array($tagName, $this->items[$ruleName], true);
 	}
 
 	/**
@@ -119,6 +161,10 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			}
 		}
 	}
+
+	//==========================================================================
+	// Rules
+	//==========================================================================
 
 	/**
 	* Add an allowChild rule
@@ -372,39 +418,5 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function requireAncestor($tagName)
 	{
 		$this->items['requireAncestor'][] = TagName::normalize($tagName);
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function asConfig()
-	{
-		$config = $this->items;
-
-		// Remove rules that are not needed at parsing time. All of those are resolved when building
-		// the allowedChildren and allowedDescendants bitfields
-		unset($config['allowChild']);
-		unset($config['allowDescendant']);
-		unset($config['defaultChildRule']);
-		unset($config['defaultDescendantRule']);
-		unset($config['denyAll']);
-		unset($config['denyChild']);
-		unset($config['denyDescendant']);
-		unset($config['disallowAtRoot']);
-		unset($config['requireParent']);
-
-		// In order to speed up lookups, we use the tag names as keys
-		foreach ($config as $ruleName => $targets)
-		{
-			if (!is_array($targets))
-			{
-				// Don't touch boolean rules such as "isTransparent"
-				continue;
-			}
-
-			$config[$ruleName] = array_fill_keys($targets, 1);
-		}
-
-		return $config;
 	}
 }

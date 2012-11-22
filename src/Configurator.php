@@ -12,6 +12,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\Collection;
 use s9e\TextFormatter\Configurator\Collections\FilterCollection;
 use s9e\TextFormatter\Configurator\Collections\PluginCollection;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
@@ -29,6 +30,11 @@ class Configurator implements ConfigProvider
 	* @var PluginCollection Loaded plugins
 	*/
 	public $plugins;
+
+	/**
+	* @var Ruleset Rules that apply at the root of the text
+	*/
+	public $rootRules;
 
 	/**
 	* @var TagCollection Tags repository
@@ -50,6 +56,7 @@ class Configurator implements ConfigProvider
 	{
 		$this->customFilters = new FilterCollection;
 		$this->plugins       = new PluginCollection($this);
+		$this->rootRules     = new Ruleset;
 		$this->tags          = new TagCollection;
 		$this->urlConfig     = new UrlConfig;
 	}
