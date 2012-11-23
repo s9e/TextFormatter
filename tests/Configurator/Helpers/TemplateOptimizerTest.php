@@ -148,6 +148,30 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox Superfluous whitespace in XPath expressions in inline attributes is removed
+	*/
+	public function test5D39AE3E()
+	{
+		$this->runCase(
+			'Superfluous whitespace in XPath expressions in inline attributes is removed',
+			'<b title="foo { @ bar } baz { @ quux }"/>',
+			'<b title="foo {@bar} baz {@quux}"/>'
+		);
+	}
+
+	/**
+	* @testdox Escaped curly brackets in inline attributes are preserved
+	*/
+	public function test5A553504()
+	{
+		$this->runCase(
+			'Escaped curly brackets in inline attributes are preserved',
+			'<b title="{{foo}} { @bar } {{{ @baz }}}"/>',
+			'<b title="{{foo}} {@bar} {{{@baz}}}"/>'
+		);
+	}
+
+	/**
 	* @testdox <xsl:element/> is inlined where possible
 	*/
 	public function testBBC4349B()
@@ -395,6 +419,16 @@ class TemplateOptimizerTest extends Test
 				'Whitespace necessary to delimit names in @test expressions is preserved',
 				'<div><xsl:if test=" foo or _bar ">!</xsl:if></div>',
 				'<div><xsl:if test="foo or _bar">!</xsl:if></div>'
+			),
+			array(
+				'Superfluous whitespace in XPath expressions in inline attributes is removed',
+				'<b title="foo { @ bar } baz { @ quux }"/>',
+				'<b title="foo {@bar} baz {@quux}"/>'
+			),
+			array(
+				'Escaped curly brackets in inline attributes are preserved',
+				'<b title="{{foo}} { @bar } {{{ @baz }}}"/>',
+				'<b title="{{foo}} {@bar} {{{@baz}}}"/>'
 			),
 			array(
 				'<xsl:element/> is inlined where possible',

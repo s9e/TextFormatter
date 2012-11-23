@@ -699,6 +699,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Whitespace is literal strings used in @select expressions is preserved
  [x] Superfluous whitespace in @test expressions is removed
  [x] Whitespace necessary to delimit names in @test expressions is preserved
+ [x] Superfluous whitespace in XPath expressions in inline attributes is removed
+ [x] Escaped curly brackets in inline attributes are preserved
  [x] <xsl:element/> is inlined where possible
  [x] <xsl:attribute/> with one single <xsl:value-of/> child is inlined
  [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined

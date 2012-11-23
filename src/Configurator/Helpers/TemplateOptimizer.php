@@ -218,7 +218,6 @@ abstract class TemplateOptimizer
 	*/
 	protected static function minifyXPathExpressions(DOMDocument $dom)
 	{
-		$chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
 		$xpath = new DOMXPath($dom);
 
 		$query = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"]';
@@ -226,76 +225,105 @@ abstract class TemplateOptimizer
 		{
 			foreach ($xpath->query('@match|@select|@test', $node) as $attribute)
 			{
-				$old = trim($attribute->nodeValue);
-				$new = '';
-
-				$pos = 0;
-				$len = strlen($old);
-
-				while ($pos < $len)
-				{
-					$c = $old[$pos];
-
-					// Test for a literal string
-					if ($c === '"' || $c === "'")
-					{
-						// Look for the matching quote
-						$nextPos = strpos($old, $c, 1 + $pos);
-
-						if ($nextPos === false)
-						{
-							throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
-						}
-
-						// Increment to account for the closing quote
-						++$nextPos;
-
-						$new .= substr($old, $pos, $nextPos - $pos);
-						$pos = $nextPos;
-
-						continue;
-					}
-
-					// Test whether the current expression ends with an XML name character
-					if ($new === '')
-					{
-						$endsWithChar = false;
-					}
-					else
-					{
-						$endsWithChar = (bool) (strpos($chars, substr($new, -1)) !== false);
-					}
-
-					// Test for a character that normally appears in XML names
-					$spn = strspn($old, $chars, $pos);
-					if ($spn)
-					{
-						if ($endsWithChar)
-						{
-							$new .= ' ';
-						}
-
-						$new .= substr($old, $pos, $spn);
-						$pos += $spn;
-
-						continue;
-					}
-
-					if ($c === '-' && $endsWithChar)
-					{
-						$new .= ' ';
-					}
-
-					// Append the current char if it's not whitespace
-					$new .= trim($c);
-
-					// Move the cursor past current char
-					++$pos;
-				}
-
-				$node->setAttribute($attribute->nodeName, $new);
+				$node->setAttribute(
+					$attribute->nodeName,
+					self::minifyXPath($attribute->nodeValue)
+				);
 			}
 		}
+
+		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]/@*';
+		foreach ($xpath->query($query) as $attribute)
+		{
+			$attribute->value = preg_replace_callback(
+				'#(?<!\\{)((?:\\{\\{)*\\{)([^}]+)#',
+				function ($m)
+				{
+					return $m[1] . self::minifyXPath($m[2]);
+				},
+				$attribute->value
+			);
+		}
+	}
+
+	/**
+	* Remove extraneous space in a given XPath expression
+	*
+	* @param  string $old Original XPath expression
+	* @return string      Minified XPath expression
+	*/
+	protected static function minifyXPath($old)
+	{
+		$chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+
+		$old = trim($old);
+		$new = '';
+
+		$pos = 0;
+		$len = strlen($old);
+
+		while ($pos < $len)
+		{
+			$c = $old[$pos];
+
+			// Test for a literal string
+			if ($c === '"' || $c === "'")
+			{
+				// Look for the matching quote
+				$nextPos = strpos($old, $c, 1 + $pos);
+
+				if ($nextPos === false)
+				{
+					throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
+				}
+
+				// Increment to account for the closing quote
+				++$nextPos;
+
+				$new .= substr($old, $pos, $nextPos - $pos);
+				$pos = $nextPos;
+
+				continue;
+			}
+
+			// Test whether the current expression ends with an XML name character
+			if ($new === '')
+			{
+				$endsWithChar = false;
+			}
+			else
+			{
+				$endsWithChar = (bool) (strpos($chars, substr($new, -1)) !== false);
+			}
+
+			// Test for a character that normally appears in XML names
+			$spn = strspn($old, $chars, $pos);
+			if ($spn)
+			{
+				if ($endsWithChar)
+				{
+					$new .= ' ';
+				}
+
+				$new .= substr($old, $pos, $spn);
+				$pos += $spn;
+
+				continue;
+			}
+
+			if ($c === '-' && $endsWithChar)
+			{
+				$new .= ' ';
+			}
+
+			// Append the current char if it's not whitespace
+			$new .= trim($c);
+
+			// Move the cursor past current char
+			++$pos;
+		}
+
+		return $new;
 	}
 
 	/**
