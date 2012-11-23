@@ -856,10 +856,10 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?foo=1] baz'
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?arr[foo]=1] baz'
 
-s9e\TextFormatter\Tests\Plugins\BBCodes\AttributeValueCollection
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\AttributeValueCollection
  [x] Throws an exception on invalid attribute name
 
-s9e\TextFormatter\Tests\Plugins\BBCodes\BBCode
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCode
  [x] An array of options can be passed to the constructor
  [x] BBCode::normalizeName('*') returns '*'
  [x] BBCode::normalizeName('foo') returns 'FOO'
@@ -870,9 +870,9 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCode
  [x] $bbcode->contentAttributes is an instance of AttributeList
  [x] asConfig() returns its set properties
 
-s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
- [x] add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\BBCode
- [x] Instances of s9e\TextFormatter\Plugins\BBCodes\BBCode are added as-is
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
+ [x] add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode
+ [x] Instances of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode are added as-is
  [x] add() normalizes the BBCode's name
  [x] delete() normalizes the BBCode's name
  [x] exists() normalizes the BBCode's name
@@ -881,11 +881,11 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeCollection
  [x] asConfig() removes the defaultAttribute value of BBCodes where it is the same as the BBCode's name
  [x] asConfig() removes the tagName value of BBCodes where it is the same as the BBCode's name
 
-s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodeMonkey
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
 
-s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] __construct() accepts the path to an XML file as argument
  [x] __construct() accepts a DOMDocument as argument
  [x] __construct() throws an exception if passed anything else
@@ -899,7 +899,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Repository
  [x] Rules targetting tags are correctly set
  [x] Boolean rules are set to their default value
 
-s9e\TextFormatter\Tests\Plugins\BBCodes\RepositoryCollection
+s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\RepositoryCollection
  [x] Instances of Repository are added as-is
  [x] Anything else gets a new instance of Repository to be created
 

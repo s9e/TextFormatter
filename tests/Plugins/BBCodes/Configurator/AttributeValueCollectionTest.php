@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
+namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 
-use s9e\TextFormatter\Plugins\BBCodes\AttributeValueCollection;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\AttributeValueCollection;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\BBCodes\AttributeValueCollection
+* @covers s9e\TextFormatter\Plugins\BBCodes\Configurator\AttributeValueCollection
 */
 class AttributeValueCollectionTest extends Test
 {

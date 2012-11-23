@@ -56,12 +56,12 @@
 
 			<file>Plugins/ConfiguratorBaseTest.php</file>
 			<file>Plugins/Autolink/ConfiguratorTest.php</file>
-			<file>Plugins/BBCodes/AttributeValueCollectionTest.php</file>
-			<file>Plugins/BBCodes/BBCodeTest.php</file>
-			<file>Plugins/BBCodes/BBCodeCollectionTest.php</file>
-			<file>Plugins/BBCodes/BBCodeMonkeyTest.php</file>
-			<file>Plugins/BBCodes/RepositoryTest.php</file>
-			<file>Plugins/BBCodes/RepositoryCollectionTest.php</file>
+			<file>Plugins/BBCodes/Configurator/AttributeValueCollectionTest.php</file>
+			<file>Plugins/BBCodes/Configurator/BBCodeTest.php</file>
+			<file>Plugins/BBCodes/Configurator/BBCodeCollectionTest.php</file>
+			<file>Plugins/BBCodes/Configurator/BBCodeMonkeyTest.php</file>
+			<file>Plugins/BBCodes/Configurator/RepositoryTest.php</file>
+			<file>Plugins/BBCodes/Configurator/RepositoryCollectionTest.php</file>
 			<file>Plugins/BBCodes/ConfiguratorTest.php</file>
 			<file>Plugins/Censor/ConfiguratorTest.php</file>
 			<file>Plugins/Emoticons/ConfiguratorTest.php</file>
@@ -113,13 +113,13 @@
 
 			<file>../src/Plugins/ConfiguratorBase.php</file>
 			<file>../src/Plugins/Autolink/Configurator.php</file>
-			<file>../src/Plugins/BBCodes/AttributeValueCollection.php</file>
-			<file>../src/Plugins/BBCodes/BBCode.php</file>
-			<file>../src/Plugins/BBCodes/BBCodeCollection.php</file>
-			<file>../src/Plugins/BBCodes/BBCodeMonkey.php</file>
+			<file>../src/Plugins/BBCodes/Configurator/AttributeValueCollection.php</file>
+			<file>../src/Plugins/BBCodes/Configurator/BBCode.php</file>
+			<file>../src/Plugins/BBCodes/Configurator/BBCodeCollection.php</file>
+			<file>../src/Plugins/BBCodes/Configurator/BBCodeMonkey.php</file>
+			<file>../src/Plugins/BBCodes/Configurator/Repository.php</file>
+			<file>../src/Plugins/BBCodes/Configurator/RepositoryCollection.php</file>
 			<file>../src/Plugins/BBCodes/Configurator.php</file>
-			<file>../src/Plugins/BBCodes/Repository.php</file>
-			<file>../src/Plugins/BBCodes/RepositoryCollection.php</file>
 			<file>../src/Plugins/Censor/Configurator.php</file>
 			<file>../src/Plugins/Emoticons/Configurator.php</file>
 			<file>../src/Plugins/Emoticons/EmoticonCollection.php</file>

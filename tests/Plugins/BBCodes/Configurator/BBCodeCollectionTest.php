@@ -1,31 +1,31 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
+namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 
-use s9e\TextFormatter\Plugins\BBCodes\BBCode;
-use s9e\TextFormatter\Plugins\BBCodes\BBCodeCollection;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\BBCodes\BBCodeCollection
+* @covers s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection
 */
 class BBCodeCollectionTest extends Test
 {
 	/**
-	* @testdox add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\BBCode
+	* @testdox add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode
 	*/
 	public function testAddNormalizeValue()
 	{
 		$collection = new BBCodeCollection;
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Plugins\\BBCodes\\BBCode',
+			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\BBCode',
 			$collection->add('x')
 		);
 	}
 
 	/**
-	* @testdox Instances of s9e\TextFormatter\Plugins\BBCodes\BBCode are added as-is
+	* @testdox Instances of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode are added as-is
 	*/
 	public function testAddInstance()
 	{

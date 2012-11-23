@@ -104,7 +104,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('BBCodes');
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Plugins\\BBCodes\\BBCode',
+			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\BBCode',
 			$plugin->addFromRepository('B')
 		);
 	}

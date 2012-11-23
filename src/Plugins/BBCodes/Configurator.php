@@ -13,6 +13,8 @@ use InvalidArgumentException;
 use Iterator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
@@ -39,7 +41,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$this->collection = new BBCodeCollection;
 
 		$this->repositories = new RepositoryCollection;
-		$this->repositories->add('default', __DIR__ . '/repository.xml');
+		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
 
 	/**

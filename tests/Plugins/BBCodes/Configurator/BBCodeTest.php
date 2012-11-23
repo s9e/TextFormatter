@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
+namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 
-use s9e\TextFormatter\Plugins\BBCodes\BBCode;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\BBCodes\BBCode
+* @covers s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode
 */
 class BBCodeTest extends Test
 {
@@ -73,7 +73,7 @@ class BBCodeTest extends Test
 	{
 		$bbcode = new BBCode;
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Plugins\\BBCodes\\AttributeValueCollection',
+			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\AttributeValueCollection',
 			$bbcode->attributeValues
 		);
 	}

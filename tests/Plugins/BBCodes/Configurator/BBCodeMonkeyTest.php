@@ -1,6 +1,6 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
+namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 
 use Exception;
 use InvalidArgumentException;
@@ -8,12 +8,12 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
-use s9e\TextFormatter\Plugins\BBCodes\BBCode;
-use s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey
+* @covers s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
 */
 class BBCodeMonkeyTest extends Test
 {
