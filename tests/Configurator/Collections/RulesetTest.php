@@ -506,23 +506,23 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox nl2br() accepts a boolean
+	* @testdox noBr() accepts a boolean
 	*/
-	public function testNl2brValid()
+	public function testNoBrValid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->nl2br(true);
+		$ruleset->noBr(true);
 	}
 
 	/**
-	* @testdox nl2br() throws an exception if its argument is not a boolean
+	* @testdox noBr() throws an exception if its argument is not a boolean
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage nl2br() expects a boolean
+	* @expectedExceptionMessage noBr() expects a boolean
 	*/
-	public function testNl2brInvalid()
+	public function testNoBrInvalid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->nl2br('foo');
+		$ruleset->noBr('foo');
 	}
 
 	/**

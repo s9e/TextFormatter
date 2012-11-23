@@ -386,18 +386,18 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add a nl2br rule
+	* Add a noBr rule
 	*
-	* @param bool $bool Whether to convert newlines to <br/>
+	* @param bool $bool Whether *not* to convert newlines to <br/> in descendant text nodes
 	*/
-	public function nl2br($bool = true)
+	public function noBr($bool = true)
 	{
 		if (!is_bool($bool))
 		{
-			throw new InvalidArgumentException('nl2br() expects a boolean');
+			throw new InvalidArgumentException('noBr() expects a boolean');
 		}
 
-		$this->items['nl2br'] = $bool;
+		$this->items['noBr'] = $bool;
 	}
 
 	/**

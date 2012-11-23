@@ -85,6 +85,11 @@ class TemplateForensics
 	protected $node;
 
 	/**
+	* @var bool Whether any branch has an element that preserves whitespace by default (e.g. <pre>)
+	*/
+	protected $preservesWhitespace = false;
+
+	/**
 	* @var array Bitfield of the first HTML element of every branch
 	*/
 	protected $rootBitfields = array();
@@ -223,6 +228,16 @@ class TemplateForensics
 	}
 
 	/**
+	* Whether this tag preserves the whitespace in its descendants
+	*
+	* @return bool
+	*/
+	public function preservesWhitespace()
+	{
+		return $this->preservesWhitespace;
+	}
+
+	/**
 	* Analyses the content of the whole template and set $this->contentBitfield accordingly
 	*/
 	protected function analyseContent()
@@ -343,6 +358,12 @@ class TemplateForensics
 				if (empty(self::$htmlElements[$nodeName]['ar']))
 				{
 					$autoReopen = false;
+				}
+
+				// Test whether this branch preserves whitespace
+				if (!empty(self::$htmlElements[$nodeName]['pre']))
+				{
+					$this->preservesWhitespace = true;
 				}
 
 				// Test whether this branch allows text nodes

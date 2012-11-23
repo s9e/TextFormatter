@@ -204,9 +204,9 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates a nl2br rule for <a>
+	* @testdox Does not generate a noBr rule for <a>
 	*/
-	public function testNl2br()
+	public function testNotNoBrA()
 	{
 		$tags = new TagCollection;
 
@@ -215,7 +215,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'A' => array(
-					'nl2br' => true
+					'noBr' => null
 				)
 			),
 			RulesGenerator::getRules($tags)
@@ -223,9 +223,9 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Does not generate a nl2br rule for <ol>
+	* @testdox Does not generate a noBr rule for <ol>
 	*/
-	public function testNotNl2br()
+	public function testNotNoBrOl()
 	{
 		$tags = new TagCollection;
 
@@ -234,7 +234,26 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'OL' => array(
-					'nl2br' => null
+					'noBr' => null
+				)
+			),
+			RulesGenerator::getRules($tags)
+		);
+	}
+
+	/**
+	* @testdox Generates a noBr rule for <pre>
+	*/
+	public function testNoBr()
+	{
+		$tags = new TagCollection;
+
+		$tags->add('PRE')->defaultTemplate = '<pre><xsl:apply-templates/></pre>';
+
+		$this->assertArrayMatches(
+			array(
+				'PRE' => array(
+					'noBr' => true
 				)
 			),
 			RulesGenerator::getRules($tags)

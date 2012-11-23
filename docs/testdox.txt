@@ -175,8 +175,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] ignoreText() throws an exception if its argument is not a boolean
  [x] isTransparent() accepts a boolean
  [x] isTransparent() throws an exception if its argument is not a boolean
- [x] nl2br() accepts a boolean
- [x] nl2br() throws an exception if its argument is not a boolean
+ [x] noBr() accepts a boolean
+ [x] noBr() throws an exception if its argument is not a boolean
  [x] requireParent() throws an exception on invalid tag name
  [x] requireParent() normalizes tag name
  [x] requireAncestor() throws an exception on invalid tag name
@@ -257,6 +257,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <span> denies all descendants if it does not have an <xsl:apply-templates/> child
  [x] <colgroup span="2"> denies all descendants
  [x] <colgroup> denies all descendants
+ [x] <pre> preserves whitespace
+ [x] <pre><code> preserves whitespace
+ [x] <span> does not preserve whitespace
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <div> has an allowChild rule for <div> and <span>
@@ -269,8 +272,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Does not generate an ignoreText rule for <b>
  [x] Generates an isTransparent rule for <a>
  [x] Does not generate an isTransparent rule for <b>
- [x] Generates a nl2br rule for <a>
- [x] Does not generate a nl2br rule for <ol>
+ [x] Does not generate a noBr rule for <a>
+ [x] Does not generate a noBr rule for <ol>
+ [x] Generates a noBr rule for <pre>
  [x] <li> has a disallowAtRoot rule if parentHTML is not specified
  [x] <li> does not have a disallowAtRoot rule if parentHTML is <ul>
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>
