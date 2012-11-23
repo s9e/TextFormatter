@@ -202,11 +202,14 @@ abstract class TemplateOptimizer
 				}
 			}
 
-			$attribute->parentNode->setAttribute(
+			// Normalize the attribute name
+			$name = strtr(
 				$attribute->getAttribute('name'),
-				$value
+				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+				'abcdefghijklmnopqrstuvwxyz'
 			);
 
+			$attribute->parentNode->setAttribute($name,	$value);
 			$attribute->parentNode->removeChild($attribute);
 		}
 	}

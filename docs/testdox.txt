@@ -703,6 +703,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Escaped curly brackets in inline attributes are preserved
  [x] <xsl:element/> is inlined where possible
  [x] <xsl:attribute/> with one single <xsl:value-of/> child is inlined
+ [x] Inlined attribute's name is lowercased
  [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
  [x] Curly brackets in text are escaped when attributes are inlined
  [x] <xsl:attribute/> with <xsl:if/> child is not inlined

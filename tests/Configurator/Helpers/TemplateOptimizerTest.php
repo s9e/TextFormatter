@@ -196,6 +196,18 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox Inlined attribute's name is lowercased
+	*/
+	public function test85109C2F()
+	{
+		$this->runCase(
+			'Inlined attribute\'s name is lowercased',
+			'<div><xsl:attribute name="CLASS"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
+			'<div class="{@foo}"><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
 	* @testdox <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
 	*/
 	public function test8613A729()
@@ -438,6 +450,11 @@ class TemplateOptimizerTest extends Test
 			array(
 				'<xsl:attribute/> with one single <xsl:value-of/> child is inlined',
 				'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
+				'<div class="{@foo}"><xsl:apply-templates/></div>'
+			),
+			array(
+				"Inlined attribute's name is lowercased",
+				'<div><xsl:attribute name="CLASS"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
 				'<div class="{@foo}"><xsl:apply-templates/></div>'
 			),
 			array(
