@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
 use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 
@@ -22,7 +23,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -34,7 +35,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -49,7 +50,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -61,7 +62,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -77,7 +78,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x03",
 					'allowedDescendants' => "\x03"
 				),
@@ -94,7 +95,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -109,7 +110,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -121,7 +122,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -138,7 +139,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -150,7 +151,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -167,7 +168,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -179,7 +180,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -196,7 +197,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -208,7 +209,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -225,7 +226,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -237,7 +238,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -252,7 +253,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -264,7 +265,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -281,7 +282,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -293,7 +294,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -310,7 +311,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -322,7 +323,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -339,7 +340,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -351,7 +352,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -368,7 +369,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -380,7 +381,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -400,7 +401,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -412,7 +413,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -432,7 +433,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -444,7 +445,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -460,7 +461,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x03"
 				),
@@ -477,7 +478,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -487,13 +488,15 @@ class RulesHelperTest extends Test
 	public function testUnusedTag()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('A')->rules->denyChild('B');
-		$tags->add('B')->rules->disallowAtRoot(true);
+		$tags->add('B');
+
+		$rootRules = new Ruleset;
+		$rootRules->denyChild('B');
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -505,7 +508,32 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, $rootRules)
+		);
+	}
+
+	/**
+	* @testdox Tags that are allowed in a closed dependency loop are omitted from the return array
+	*/
+	public function testUnusedTagsInLoop()
+	{
+		$tags = new TagCollection;
+		$tags->add('A');
+		$tags->add('B');
+
+		$rootRules = new Ruleset;
+		$rootRules->denyChild('A');
+		$rootRules->denyChild('B');
+
+		$this->assertEquals(
+			array(
+				'root' => array(
+					'allowedChildren'    => "\x00",
+					'allowedDescendants' => "\x00"
+				),
+				'tags' => array()
+			),
+			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
 
@@ -522,7 +550,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -534,7 +562,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 
@@ -550,7 +578,7 @@ class RulesHelperTest extends Test
 
 		$this->assertEquals(
 			array(
-				'rootContext' => array(
+				'root' => array(
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
 				),
@@ -567,7 +595,7 @@ class RulesHelperTest extends Test
 					)
 				)
 			),
-			RulesHelper::getBitfields($tags)
+			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
 }

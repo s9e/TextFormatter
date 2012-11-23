@@ -9,7 +9,16 @@ namespace s9e\TextFormatter;
 
 class Parser
 {
-	use PluginsHandling;
+	/**#@+
+	* Boolean rules bitfield
+	*/
+	const RULE_AUTO_CLOSE       = 1;
+	const RULE_AUTO_REOPEN      = 2;
+	const RULE_IGNORE_TEXT      = 4;
+	const RULE_IS_TRANSPARENT   = 8;
+	const RULE_NO_BR_CHILD      = 16;
+	const RULE_NO_BR_DESCENDANT = 32;
+	/**#@-*/
 
 	/**
 	* @var array Tags' config

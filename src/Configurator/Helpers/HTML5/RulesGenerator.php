@@ -25,7 +25,7 @@ abstract class RulesGenerator
 	*
 	* @param  TagCollection $tags    Tags collection
 	* @param  array         $options Array of option settings
-	* @return array
+	* @return array ['root'=>[ruleName=>targets],'tags'=>[tagName=>[ruleName=>targets]]]
 	*/
 	public static function getRules(TagCollection $tags, array $options = array())
 	{
@@ -47,7 +47,20 @@ abstract class RulesGenerator
 			$templateForensics[$tagName] = new TemplateForensics($xsl);
 		}
 
-		return self::cleanUpRules(self::generateRules($templateForensics, $rootForensics));
+		// Generate a full set of rules
+		$rules = self::generateRules($templateForensics, $rootForensics);
+
+		// Clean up tags' rules
+		foreach ($rules['tags'] as $tagName => &$tagRules)
+		{
+			$tagRules = self::cleanUpRules($tagRules);
+		}
+		unset($tagRules);
+
+		// Clean up root rules
+		$rules['root'] = self::cleanUpRules($rules['root']);
+
+		return $rules;
 	}
 
 	/**
@@ -111,25 +124,21 @@ abstract class RulesGenerator
 	}
 
 	/**
-	* 
+	* Generate a TemplateForensics instance for the root element
 	*
-	* @return void
+	* @param  string            $html Root HTML, e.g. "<div>"
+	* @return TemplateForensics
 	*/
 	protected static function generateRootForensics($html)
 	{
 		$dom = new DOMDocument;
 		$dom->loadHTML($html);
 
-		$xpath = new DOMXPath($dom);
-
 		// Get the document's <body> element
 		$body = $dom->getElementsByTagName('body')->item(0);
 
-		// Get the first child, which we'll consider the root of our parent DOM
-		$root = $body->firstChild;
+		// Grab the deepest node
 		$node = $body;
-
-		// Go as deep as possible
 		while ($node->firstChild)
 		{
 			$node = $node->firstChild;
@@ -143,7 +152,7 @@ abstract class RulesGenerator
 
 		// Generate our XSL template
 		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $dom->saveXML($root)
+		     . $dom->saveXML($body)
 		     . '</xsl:template>';
 
 		// Finally create and return a new TemplateForensics instance
@@ -151,49 +160,66 @@ abstract class RulesGenerator
 	}
 
 	/**
-	* 
+	* Generate and return rules based on a set of TemplateForensics
 	*
+	* @param  array             $templateForensics Array of [tagName => TemplateForensics]
+	* @param  TemplateForensics $rootForensics     TemplateForensics for the root of the text
 	* @return array
 	*/
 	protected static function generateRules(array $templateForensics, TemplateForensics $rootForensics)
 	{
-		$rules = array();
+		$rules = array(
+			'root' => array(),
+			'tags' => array()
+		);
+
+		// Create a TemplateForensics object that will be used to determine whether to create a
+		// nl2br rule
+		$br = new TemplateForensics(
+			'<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><br/></xsl:template>'
+		);
+
 		foreach ($templateForensics as $srcTagName => $srcTag)
 		{
+			// Test whether this tag can be used with no parent
+			$ruleName = ($rootForensics->allowsChild($srcTag)) ? 'allowChild' : 'denyChild';
+			$rules['root'][$ruleName][] = $srcTagName;
+
 			// Test whether this tag should be reopened automatically
 			if ($srcTag->autoReopen())
 			{
-				$rules[$srcTagName]['autoReopen'] = true;
+				$rules['tags'][$srcTagName]['autoReopen'] = true;
 			}
 
 			// Create an denyAll rule if the tag's forensics call for it
 			if ($srcTag->denyAll())
 			{
-				$rules[$srcTagName]['denyAll'] = true;
-			}
-
-			// Test whether this tag can be used with no parent
-			if (!$rootForensics->allowsChild($srcTag))
-			{
-				$rules[$srcTagName]['disallowAtRoot'] = true;
+				$rules['tags'][$srcTagName]['denyAll'] = true;
 			}
 
 			// Test whether text children should be ignored
 			if (!$srcTag->allowsText())
 			{
-				$rules[$srcTagName]['ignoreText'] = true;
+				$rules['tags'][$srcTagName]['ignoreText'] = true;
 			}
 
 			// Create an isTransparent rule if the tag is transparent
 			if ($srcTag->isTransparent())
 			{
-				$rules[$srcTagName]['isTransparent'] = true;
+				$rules['tags'][$srcTagName]['isTransparent'] = true;
 			}
 
-			// Create a noBr rule if the tag preserves whitespace
-			if ($srcTag->preservesWhitespace())
+			// Create a noBrChild rule if the tag does not allow <br/> children
+			if (!$srcTag->allowsChild($br))
 			{
-				$rules[$srcTagName]['noBr'] = true;
+				$rules['tags'][$srcTagName]['noBrChild'] = true;
+			}
+
+			// Create a noBrDescendant rule if the tag does not allow <br/> descendants or if it
+			// preserves whitespace (e.g. <pre>)
+			if (!$srcTag->allowsDescendant($br) || $srcTag->preservesWhitespace())
+			{
+				$rules['tags'][$srcTagName]['noBrDescendant'] = true;
 			}
 
 			foreach ($templateForensics as $trgTagName => $trgTag)
@@ -203,22 +229,22 @@ abstract class RulesGenerator
 				if ($srcTag->allowsChild($trgTag)
 				 && $rootForensics->allowsDescendant($trgTag))
 				{
-					$rules[$srcTagName]['allowChild'][] = $trgTagName;
+					$rules['tags'][$srcTagName]['allowChild'][] = $trgTagName;
 				}
 				else
 				{
-					$rules[$srcTagName]['denyChild'][] = $trgTagName;
+					$rules['tags'][$srcTagName]['denyChild'][] = $trgTagName;
 				}
 
 				// Test whether the target tag can be a descendant of the source tag
 				if (!$srcTag->allowsDescendant($trgTag))
 				{
-					$rules[$srcTagName]['denyDescendant'][] = $trgTagName;
+					$rules['tags'][$srcTagName]['denyDescendant'][] = $trgTagName;
 				}
 
 				if ($srcTag->closesParent($trgTag))
 				{
-					$rules[$srcTagName]['closeParent'][] = $trgTagName;
+					$rules['tags'][$srcTagName]['closeParent'][] = $trgTagName;
 				}
 			}
 		}
@@ -227,8 +253,9 @@ abstract class RulesGenerator
 	}
 
 	/**
-	* 
+	* Prune conflicting rules from a set
 	*
+	* @param  array $rules Array of [ruleName => targets]
 	* @return array
 	*/
 	protected static function cleanUpRules(array $rules)
@@ -236,31 +263,27 @@ abstract class RulesGenerator
 		// Prepare to resolve conflicting rules
 		$precedence = array(
 			array('denyDescendant', 'allowChild'),
-			array('denyChild', 'allowChild')
+			array('denyChild',      'allowChild')
 		);
 
-		foreach ($rules as $tagName => &$tagRules)
+		// Apply precedence, e.g. if there's a denyChild rule, remove any allowChild rules
+		foreach ($precedence as $pair)
 		{
-			// Apply precedence, e.g. if there's a denyChild rule, remove any allowChild rules
-			foreach ($precedence as $pair)
+			list($k1, $k2) = $pair;
+
+			if (!isset($rules[$k1], $rules[$k2]))
 			{
-				list($k1, $k2) = $pair;
-
-				if (!isset($tagRules[$k1], $tagRules[$k2]))
-				{
-					continue;
-				}
-
-				$tagRules[$k2] = array_diff(
-					$tagRules[$k2],
-					$tagRules[$k1]
-				);
+				continue;
 			}
 
-			// Remove empty rules
-			$tagRules = array_filter($tagRules);
+			$rules[$k2] = array_diff(
+				$rules[$k2],
+				$rules[$k1]
+			);
 		}
-		unset($tagRules);
+
+		// Remove empty rules
+		$rules = array_filter($rules);
 
 		return $rules;
 	}

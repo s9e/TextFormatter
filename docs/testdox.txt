@@ -166,8 +166,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] denyChild() normalizes tag name
  [x] denyDescendant() throws an exception on invalid tag name
  [x] denyDescendant() normalizes tag name
- [x] disallowAtRoot() accepts a boolean
- [x] disallowAtRoot() throws an exception if its argument is not a boolean
  [x] forceParent() normalizes tag name
  [x] forceParent() throws an exception if a closeAncestor rule targets the same tag
  [x] forceParent() throws an exception if a closeParent rule targets the same tag
@@ -175,26 +173,26 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] ignoreText() throws an exception if its argument is not a boolean
  [x] isTransparent() accepts a boolean
  [x] isTransparent() throws an exception if its argument is not a boolean
- [x] noBr() accepts a boolean
- [x] noBr() throws an exception if its argument is not a boolean
+ [x] noBrChild() accepts a boolean
+ [x] noBrChild() throws an exception if its argument is not a boolean
+ [x] noBrDescendant() accepts a boolean
+ [x] noBrDescendant() throws an exception if its argument is not a boolean
  [x] requireParent() throws an exception on invalid tag name
  [x] requireParent() normalizes tag name
  [x] requireAncestor() throws an exception on invalid tag name
  [x] requireAncestor() normalizes tag name
  [x] merge() accepts a 2D array of rules
- [x] merge() correctly copies the disallowAtRoot setting from an array
  [x] merge() correctly copies the defaultChildRule setting from an array
  [x] merge() correctly copies the defaultDescendantRule setting from an array
  [x] merge() correctly copies the isTransparent setting from an array
  [x] merge() accepts an instance of Ruleset to copy its content
  [x] merge() correctly copies the defaultChildRule setting from an instance of Ruleset
  [x] merge() correctly copies the defaultDescendantRule setting from an instance of Ruleset
- [x] merge() correctly copies the disallowAtRoot setting from an instance of Ruleset
  [x] merge() correctly copies the isTransparent setting from an instance of Ruleset
  [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
  [x] asConfig() does not return rules that are not used during parsing
  [x] asConfig() flips arrays to use target names as keys
- [x] asConfig() does not attempt to flip scalar rules such as "isTransparent"
+ [x] asConfig() packs boolean rules in a value named "flags"
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Tag
@@ -268,15 +266,18 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <a> has a denyChild rule for <a>
  [x] Generates an autoReopen rule for <b>
  [x] Generates an denyAll rule for <hr>
+ [x] Generates an denyAll rule for <style>
  [x] Generates an ignoreText rule for <ul>
  [x] Does not generate an ignoreText rule for <b>
  [x] Generates an isTransparent rule for <a>
  [x] Does not generate an isTransparent rule for <b>
- [x] Does not generate a noBr rule for <a>
- [x] Does not generate a noBr rule for <ol>
- [x] Generates a noBr rule for <pre>
- [x] <li> has a disallowAtRoot rule if parentHTML is not specified
- [x] <li> does not have a disallowAtRoot rule if parentHTML is <ul>
+ [x] Does not generate a noBrChild rule for <a>
+ [x] Does not generate a noBrDescendant rule for <ol>
+ [x] Generates a noBrDescendant rule for <pre>
+ [x] Generates a noBrDescendant rule for <style>
+ [x] Root has an allowChild rule for <span>
+ [x] Root has a denyChild rule for <li> if parentHTML is not specified
+ [x] Root has an allowChild rule for <li> if parentHTML is <ul>
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
@@ -463,6 +464,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] denyAll (false) has no effect
  [x] Tags with a requireParent rule are not allowed at the root
  [x] Tags that aren't allowed anywhere are omitted from the return array
+ [x] Tags that are allowed in a closed dependency loop are omitted from the return array
  [x] Rules targeting inexistent tags do not interfere
  [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 

@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
 
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
@@ -16,133 +17,118 @@ abstract class RulesHelper
 	* Generate the allowedChildren and allowedDescendants bitfields for every tag and for the root context
 	*
 	* @param  TagCollection $tags
+	* @param  Ruleset       $rootRules
 	* @return array
 	*/
-	public static function getBitfields(TagCollection $tags)
+	public static function getBitfields(TagCollection $tags, Ruleset $rootRules)
 	{
-		/**
-		* @var array Return array
-		*/
-		$ret = array();
-
-		$allowedChildrenAtRoot    = '';
-		$allowedDescendantsAtRoot = '';
-
-		// Compute the allowed children/descendants for each tag
-		list($allowedChildren, $allowedDescendants) = self::unrollRules($tags);
-
-		// Remove targets that don't exist and tags that aren't allowed anywhere
-		$allowedChildren    = self::cleanUpPermissions($allowedChildren, $tags);
-		$allowedDescendants = self::cleanUpPermissions($allowedDescendants, $tags);
-
-		// Order the tags by name to keep their order consistent
-		ksort($allowedChildren);
-		ksort($allowedDescendants);
-
-		// Group tags by bitfield, in order to group tags that are allowed in the exact same
-		// contexts together
-		$groupedTags = array();
+		$rules = array('*root*' => $rootRules);
 		foreach ($tags as $tagName => $tag)
 		{
-			if (!isset($allowedChildren[$tagName]))
+			$rules[$tagName] = $tag->rules;
+		}
+
+		// Create a matrix that contains all of the tags and whether every other tag is allowed as
+		// a child and as a descendant
+		$matrix = self::unrollRules($rules);
+
+		// Remove unusable tags from the matrix
+		self::pruneMatrix($matrix);
+
+		// Group together tags are allowed in the exact same contexts
+		$groupedTags = array();
+		foreach (array_keys($matrix) as $tagName)
+		{
+			if ($tagName === '*root*')
 			{
-				// This tag has been removed already
 				continue;
 			}
 
-			// We start with whether this tag is allowed at the root.
-			$k = (self::isAllowedAtRoot($tag)) ? '1' : '0';
+			$k = '';
 
-			// Then we append the bitfield that represents which parents allow this tag
-			foreach ($allowedChildren as $targets)
+			// Look into each matrix whether current tag is allowed as child/descendant
+			foreach ($matrix as $tagMatrix)
 			{
-				$k .= $targets[$tagName];
-			}
-
-			// Then we append the bitfield that represents which ancestors allow this tag
-			foreach ($allowedDescendants as $targets)
-			{
-				$k .= $targets[$tagName];
+				$k .= $tagMatrix['allowedChildren'][$tagName];
+				$k .= $tagMatrix['allowedDescendants'][$tagName];
 			}
 
 			$groupedTags[$k][] = $tagName;
 		}
 
-		// Now replace the bitfield (used as key) with the corresponding bit number
-		$groupedTags = array_values($groupedTags);
+		// Prepare the return value
+		$return = array();
 
-		// Assign a bit number to every tag. Tags with the same set of permissions get to share the
-		// same bit number
-		foreach ($groupedTags as $bitNumber => $tagNames)
+		// Record the bit number of each tag, and the name of a tag for each bit
+		$bitTag     = array();
+		$bitNumber  = 0;
+		foreach ($groupedTags as $k => $tagNames)
 		{
 			foreach ($tagNames as $tagName)
 			{
-				$ret['tags'][$tagName] = array(
-					'bitNumber'          => $bitNumber,
-					'allowedChildren'    => '',
-					'allowedDescendants' => ''
-				);
+				$return['tags'][$tagName]['bitNumber'] = $bitNumber;
 			}
 
-			// Fill in the root context's bitfields
-			$allowedChildrenAtRoot    .= self::isAllowedAtRoot($tags[$tagName]);
-
-			// Denied descendants are removed from the list, so we know this tag is allowed
-			$allowedDescendantsAtRoot .= '1';
+			$bitTag[] = $tagName;
+			++$bitNumber;
 		}
 
-		// Finalize the root context's bitfields
-		$ret['rootContext'] = array(
-			'allowedChildren'    => self::bin2raw($allowedChildrenAtRoot),
-			'allowedDescendants' => self::bin2raw($allowedDescendantsAtRoot)
-		);
-
-		// Now fill in each tag's bitfields
-		foreach ($ret['tags'] as $tagName => &$config)
+		// Build the bitfields of each tag, including the *root* pseudo-tag
+		foreach ($matrix as $tagName => $tagMatrix)
 		{
-			foreach ($groupedTags as $tagNames)
+			foreach (array('allowedChildren', 'allowedDescendants') as $fieldName)
 			{
-				$targetName = $tagNames[0];
+				$bitfield = '';
+				foreach ($bitTag as $targetName)
+				{
+					$bitfield .= $tagMatrix[$fieldName][$targetName];
+				}
 
-				$config['allowedChildren']    .= $allowedChildren[$tagName][$targetName];
-				$config['allowedDescendants'] .= $allowedDescendants[$tagName][$targetName];
+				$return['tags'][$tagName][$fieldName] = $bitfield;
 			}
-
-			$config['allowedChildren']    = self::bin2raw($config['allowedChildren']);
-			$config['allowedDescendants'] = self::bin2raw($config['allowedDescendants']);
 		}
-		unset($config);
 
-		return $ret;
+		// Pack the binary representations into raw bytes
+		foreach ($return['tags'] as $tag => &$bitfields)
+		{
+			$bitfields['allowedChildren']    = self::pack($bitfields['allowedChildren']);
+			$bitfields['allowedDescendants'] = self::pack($bitfields['allowedDescendants']);
+		}
+		unset($bitfields);
+
+		// Remove the *root* pseudo-tag from the list of tags and move it to its own entry
+		$return['root'] = $return['tags']['*root*'];
+		unset($return['tags']['*root*']);
+
+		return $return;
 	}
 
 	/**
-	* @param  TagCollection $tags
+	* @param  array $rules
 	* @return array
 	*/
-	protected static function unrollRules(TagCollection $tags)
+	protected static function unrollRules(array $rules)
 	{
-		$allowedChildren    = array();
-		$allowedDescendants = array();
+		$matrix = array();
 
-		// Save the tag names so we don't have to iterate over TagCollection twice
-		$tagNames = array_keys(iterator_to_array($tags));
+		// Keep a list of tag names for easy access
+		$tagNames = array_keys($rules);
 
 		// First we seed the list with default values
-		foreach ($tags as $tagName => $tag)
+		foreach ($rules as $tagName => $tagRules)
 		{
-			if (isset($tag->rules['defaultChildRule']))
+			if (isset($tagRules['defaultChildRule']))
 			{
-				$defaultChildValue = (int) ($tag->rules['defaultChildRule'] === 'allow');
+				$defaultChildValue = (int) ($tagRules['defaultChildRule'] === 'allow');
 			}
 			else
 			{
 				$defaultChildValue = 1;
 			}
 
-			if (isset($tag->rules['defaultDescendantRule']))
+			if (isset($tagRules['defaultDescendantRule']))
 			{
-				$defaultDescendantValue = (int) ($tag->rules['defaultDescendantRule'] === 'allow');
+				$defaultDescendantValue = (int) ($tagRules['defaultDescendantRule'] === 'allow');
 			}
 			else
 			{
@@ -151,164 +137,143 @@ abstract class RulesHelper
 
 			foreach ($tagNames as $targetName)
 			{
-				$allowedChildren[$tagName][$targetName]    = $defaultChildValue;
-				$allowedDescendants[$tagName][$targetName] = $defaultDescendantValue;
+				$matrix[$tagName]['allowedChildren'][$targetName]    = $defaultChildValue;
+				$matrix[$tagName]['allowedDescendants'][$targetName] = $defaultDescendantValue;
 			}
 		}
 
 		// Then we apply "allow" rules to grant usage, overwriting the default settings
-		foreach ($tags as $tagName => $tag)
+		foreach ($rules as $tagName => $tagRules)
 		{
-			if (isset($tag->rules['allowChild']))
+			if (isset($tagRules['allowChild']))
 			{
-				foreach ($tag->rules['allowChild'] as $targetName)
+				foreach ($tagRules['allowChild'] as $targetName)
 				{
-					$allowedChildren[$tagName][$targetName] = 1;
+					$matrix[$tagName]['allowedChildren'][$targetName] = 1;
 				}
 			}
 
-			if (isset($tag->rules['allowDescendant']))
+			if (isset($tagRules['allowDescendant']))
 			{
-				foreach ($tag->rules['allowDescendant'] as $targetName)
+				foreach ($tagRules['allowDescendant'] as $targetName)
 				{
-					$allowedDescendants[$tagName][$targetName] = 1;
+					$matrix[$tagName]['allowedDescendants'][$targetName] = 1;
 				}
 			}
 		}
 
 		// Then we apply "deny" rules (as well as "requireParent"), overwriting "allow" rules
-		foreach ($tags as $tagName => $tag)
+		foreach ($rules as $tagName => $tagRules)
 		{
-			if (!empty($tag->rules['denyAll']))
+			if (!empty($tagRules['denyAll']))
 			{
-				$allowedChildren[$tagName]    = array_fill_keys($tagNames, 0);
-				$allowedDescendants[$tagName] = array_fill_keys($tagNames, 0);
+				$matrix[$tagName]['allowedChildren']    = array_fill_keys($tagNames, 0);
+				$matrix[$tagName]['allowedDescendants'] = array_fill_keys($tagNames, 0);
+
+				continue;
 			}
 
-			if (isset($tag->rules['denyChild']))
+			if (isset($tagRules['denyChild']))
 			{
-				foreach ($tag->rules['denyChild'] as $targetName)
+				foreach ($tagRules['denyChild'] as $targetName)
 				{
-					$allowedChildren[$tagName][$targetName] = 0;
+					$matrix[$tagName]['allowedChildren'][$targetName] = 0;
 				}
 			}
 
-			if (isset($tag->rules['denyDescendant']))
+			if (isset($tagRules['denyDescendant']))
 			{
-				foreach ($tag->rules['denyDescendant'] as $targetName)
+				foreach ($tagRules['denyDescendant'] as $targetName)
 				{
-					$allowedDescendants[$tagName][$targetName] = 0;
+					$matrix[$tagName]['allowedDescendants'][$targetName] = 0;
 
 					// Carry the rule to children as well
-					$allowedChildren[$tagName][$targetName] = 0;
+					$matrix[$tagName]['allowedChildren'][$targetName] = 0;
 				}
 			}
 
-			if (isset($tag->rules['requireParent']))
+			if (isset($tagRules['requireParent']))
 			{
 				// Every parent that isn't in the "requireParent" list will explicitely deny the
 				// child tag
 				foreach ($tagNames as $parentName)
 				{
-					if (!in_array($parentName, $tag->rules['requireParent'], true))
+					if (!in_array($parentName, $tagRules['requireParent'], true))
 					{
-						$allowedChildren[$parentName][$tagName] = 0;
+						$matrix[$parentName]['allowedChildren'][$tagName] = 0;
 					}
 				}
 			}
 		}
 
 		// We still need to ensure that denied descendants override allowed children
-		foreach ($allowedDescendants as $tagName => $targets)
+		foreach ($matrix as $tagName => $tagMatrix)
 		{
-			foreach ($targets as $targetName => $isAllowed)
+			foreach ($tagMatrix['allowedDescendants'] as $targetName => $isAllowed)
 			{
 				if (!$isAllowed)
 				{
-					$allowedChildren[$tagName][$targetName] = 0;
+					$matrix[$tagName]['allowedChildren'][$targetName] = 0;
 				}
 			}
 		}
 
-		return array($allowedChildren, $allowedDescendants);
+		return $matrix;
 	}
 
 	/**
-	* Clean up an array of permissions by removing the names of tags that are not allowed anywhere
+	* Remove unusable tags from the matrix
 	*
-	* @param  array         $permissions
-	* @param  TagCollection $tags
-	* @return array
+	* @param  array &$matrix
+	* @return void
 	*/
-	protected static function cleanUpPermissions(array $permissions, TagCollection $tags)
+	protected static function pruneMatrix(array &$matrix)
 	{
-		/**
-		* @var array List of tags that are allowed anywhere in a text
-		*/
-		$keepTags = array();
+		$usableTags = array('*root*' => 1);
 
-		foreach ($tags as $tagName => $tag)
+		// Start from the root and keep digging
+		$parentTags = $usableTags;
+		do
 		{
-			// Test whether this tag is allowed at the root
-			if (self::isAllowedAtRoot($tag))
+			$nextTags = array();
+			foreach (array_keys($parentTags) as $tagName)
 			{
-				$keepTags[] = $tagName;
-				continue;
+				// Accumulate the names of tags that are allowed as children of our parent tags
+				$nextTags += array_filter($matrix[$tagName]['allowedChildren']);
 			}
 
-			foreach ($permissions as $parentName => $targets)
-			{
-				// Test whether this tag is allowed by any other tag than itself
-				if ($targets[$tagName] && $parentName !== $tagName)
-				{
-					$keepTags[] = $tagName;
-					continue 2;
-				}
-			}
+			// Keep only the tags that are in the matrix but aren't in the usable array yet, then
+			// add them to the array
+			$parentTags  = array_diff_key($nextTags, $usableTags);
+			$parentTags  = array_intersect_key($parentTags, $matrix);
+			$usableTags += $parentTags;
 		}
+		while ($parentTags);
 
-		// Flip the list of tags for convenience
-		$keepTags = array_flip($keepTags);
+		// Remove unusable tags from the matrix
+		$matrix = array_intersect_key($matrix, $usableTags);
+		unset($usableTags['*root*']);
 
-		// Discard unused tags from the lists
-		$permissions = array_intersect_key(
-			$permissions,
-			$keepTags
-		);
-
-		foreach ($permissions as &$targets)
+		// Remove unusable tags from the targets
+		foreach ($matrix as $tagName => &$tagMatrix)
 		{
-			$targets = array_intersect_key(
-				$targets,
-				$keepTags
-			);
-		}
-		unset($targets);
+			$tagMatrix['allowedChildren'] 
+				= array_intersect_key($tagMatrix['allowedChildren'], $usableTags);
 
-		return $permissions;
+			$tagMatrix['allowedDescendants']
+				= array_intersect_key($tagMatrix['allowedDescendants'], $usableTags);
+		}
+		unset($tagMatrix);
 	}
 
 	/**
 	* Convert a binary representation such as "101011" to raw bytes
 	*
-	* @param  string $bin "10000010"
-	* @return string      "\x82"
+	* @param  string $bitfield "10000010"
+	* @return string           "\x82"
 	*/
-	protected static function bin2raw($bin)
+	protected static function pack($bitfield)
 	{
-		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bin, 8)))));
-	}
-
-	/**
-	* Test whether a tag is allowed at the root of a text
-	*
-	* @param  Tag  $tag
-	* @return bool
-	*/
-	protected static function isAllowedAtRoot(Tag $tag)
-	{
-		return (empty($tag->rules['disallowAtRoot'])
-			 && empty($tag->rules['requireParent'])
-			 && empty($tag->rules['requireAncestor']));
+		return implode('', array_map('chr', array_map('bindec', array_map('strrev', str_split($bitfield, 8)))));
 	}
 }

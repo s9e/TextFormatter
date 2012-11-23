@@ -2,8 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
-use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\Ruleset
@@ -407,26 +408,6 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox disallowAtRoot() accepts a boolean
-	*/
-	public function testDisallowAtRootValid()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->disallowAtRoot(true);
-	}
-
-	/**
-	* @testdox disallowAtRoot() throws an exception if its argument is not a boolean
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage disallowAtRoot() expects a boolean
-	*/
-	public function testDisallowAtRootInvalid()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->disallowAtRoot('foo');
-	}
-
-	/**
 	* @testdox forceParent() normalizes tag name
 	*/
 	public function testForceParentNormalizesTagName()
@@ -506,23 +487,43 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox noBr() accepts a boolean
+	* @testdox noBrChild() accepts a boolean
 	*/
-	public function testNoBrValid()
+	public function testNoBrChildValid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->noBr(true);
+		$ruleset->noBrChild(true);
 	}
 
 	/**
-	* @testdox noBr() throws an exception if its argument is not a boolean
+	* @testdox noBrChild() throws an exception if its argument is not a boolean
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage noBr() expects a boolean
+	* @expectedExceptionMessage noBrChild() expects a boolean
 	*/
-	public function testNoBrInvalid()
+	public function testNoBrChildInvalid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->noBr('foo');
+		$ruleset->noBrChild('foo');
+	}
+
+	/**
+	* @testdox noBrDescendant() accepts a boolean
+	*/
+	public function testNoBrDescendantValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->noBrDescendant(true);
+	}
+
+	/**
+	* @testdox noBrDescendant() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage noBrDescendant() expects a boolean
+	*/
+	public function testNoBrDescendantInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->noBrDescendant('foo');
 	}
 
 	/**
@@ -594,22 +595,6 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox merge() correctly copies the disallowAtRoot setting from an array
-	*/
-	public function testMergeArrayDisallowAtRoot()
-	{
-		$rules = array(
-			'allowChild'     => array('B'),
-			'disallowAtRoot' => true
-		);
-
-		$ruleset = new Ruleset;
-		$ruleset->merge($rules);
-
-		$this->assertEquals($rules, iterator_to_array($ruleset));
-	}
-
-	/**
 	* @testdox merge() correctly copies the defaultChildRule setting from an array
 	*/
 	public function testMergeArrayDefaultChildRule()
@@ -647,7 +632,7 @@ class RulesetTest extends Test
 	public function testMergeArrayIsTransparent()
 	{
 		$rules = array(
-			'allowChild'   => array('B'),
+			'allowChild'    => array('B'),
 			'isTransparent' => true
 		);
 
@@ -700,20 +685,6 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox merge() correctly copies the disallowAtRoot setting from an instance of Ruleset
-	*/
-	public function testMergeInstanceOfRulesetDisallowAtRoot()
-	{
-		$ruleset1 = new Ruleset;
-		$ruleset1->disallowAtRoot(true);
-
-		$ruleset2 = new Ruleset;
-		$ruleset2->merge($ruleset1);
-
-		$this->assertEquals($ruleset1, $ruleset2);
-	}
-
-	/**
 	* @testdox merge() correctly copies the isTransparent setting from an instance of Ruleset
 	*/
 	public function testMergeInstanceOfRulesetIsTransparent()
@@ -752,7 +723,7 @@ class RulesetTest extends Test
 			'denyAll'               => true,
 			'denyChild'             => 'X',
 			'denyDescendant'        => 'X',
-			'disallowAtRoot'        => true,
+			'isTransparent'         => false,
 			'requireParent'         => 'X'
 		);
 
@@ -787,16 +758,16 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() does not attempt to flip scalar rules such as "isTransparent"
+	* @testdox asConfig() packs boolean rules in a value named "flags"
 	*/
-	public function testAsConfigDoesNotFlipScalars()
+	public function testAsConfigBitfield()
 	{
 		$ruleset = new Ruleset;
 		$ruleset->isTransparent(true);
 
-		$this->assertSame(
-			array('isTransparent' => true),
-			$ruleset->asConfig()
-		);
+		$config = $ruleset->asConfig();
+
+		$this->assertArrayHasKey('flags', $config);
+		$this->assertSame(Parser::RULE_IS_TRANSPARENT, $config['flags']);
 	}
 }

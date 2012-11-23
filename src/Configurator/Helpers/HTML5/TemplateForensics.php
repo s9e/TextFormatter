@@ -507,7 +507,7 @@ class TemplateForensics
 		'bdo'=>array('c'=>"\7",'ac'=>"\4"),
 		'blockquote'=>array('c'=>"\43",'ac'=>"\1",'b'=>1,'cp'=>array('p')),
 		'body'=>array('c'=>"\40\200",'ac'=>"\1",'b'=>1),
-		'br'=>array('c'=>"\5",'nt'=>1,'da'=>1,'v'=>1),
+		'br'=>array('c'=>"\5",'nt'=>1,'pre'=>1,'da'=>1,'v'=>1),
 		'button'=>array('c'=>"\17",'ac'=>"\4",'dd'=>"\10"),
 		'canvas'=>array('c'=>"\207",'ac'=>"\0",'t'=>1),
 		'caption'=>array('c'=>"\0\1",'ac'=>"\1",'dd'=>"\0\0\0\4",'b'=>1),

@@ -13,6 +13,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Validators\TagName;
+use s9e\TextFormatter\Parser;
 
 class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
@@ -81,20 +82,37 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		unset($config['denyAll']);
 		unset($config['denyChild']);
 		unset($config['denyDescendant']);
-		unset($config['disallowAtRoot']);
 		unset($config['requireParent']);
+
+		// Pack boolean rules into a bitfield
+		$flags = array(
+			'autoClose'      => Parser::RULE_AUTO_CLOSE,
+			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
+			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
+			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
+			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
+			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT
+		);
+
+		$bitfield = 0;
+		foreach ($flags as $ruleName => $bitValue)
+		{
+			if (!empty($config[$ruleName]))
+			{
+				$bitfield |= $bitValue;
+			}
+
+			unset($config[$ruleName]);
+		}
 
 		// In order to speed up lookups, we use the tag names as keys
 		foreach ($config as $ruleName => $targets)
 		{
-			if (!is_array($targets))
-			{
-				// Don't touch boolean rules such as "isTransparent"
-				continue;
-			}
-
 			$config[$ruleName] = array_fill_keys($targets, 1);
 		}
+
+		// Add the bitfield to the config
+		$config['flags'] = $bitfield;
 
 		return $config;
 	}
@@ -319,21 +337,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add a disallowAtRoot rule
-	*
-	* @param bool $bool Whether to disallow the tag to be used at the root of a text
-	*/
-	public function disallowAtRoot($bool = true)
-	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('disallowAtRoot() expects a boolean');
-		}
-
-		$this->items['disallowAtRoot'] = $bool;
-	}
-
-	/**
 	* Add a forceParent rule
 	*
 	* @param string $tagName Name of the target tag
@@ -386,18 +389,33 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add a noBr rule
+	* Add a noBrChild rule
 	*
-	* @param bool $bool Whether *not* to convert newlines to <br/> in descendant text nodes
+	* @param bool $bool Whether *not* to convert newlines to <br/> in child text nodes
 	*/
-	public function noBr($bool = true)
+	public function noBrChild($bool = true)
 	{
 		if (!is_bool($bool))
 		{
-			throw new InvalidArgumentException('noBr() expects a boolean');
+			throw new InvalidArgumentException('noBrChild() expects a boolean');
 		}
 
-		$this->items['noBr'] = $bool;
+		$this->items['noBrChild'] = $bool;
+	}
+
+	/**
+	* Add a noBrDescendant rule
+	*
+	* @param bool $bool Whether *not* to convert newlines to <br/> in descendant text nodes
+	*/
+	public function noBrDescendant($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('noBrDescendant() expects a boolean');
+		}
+
+		$this->items['noBrDescendant'] = $bool;
 	}
 
 	/**

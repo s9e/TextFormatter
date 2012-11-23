@@ -17,9 +17,10 @@ class RulesGeneratorTest extends Test
 	public function testAllowChild()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('DIV')->defaultTemplate  = '<div><xsl:apply-templates/></div>';
 		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -27,7 +28,7 @@ class RulesGeneratorTest extends Test
 					'allowChild' => array('DIV', 'SPAN')
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
@@ -37,9 +38,10 @@ class RulesGeneratorTest extends Test
 	public function testDenyChild()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('DIV')->defaultTemplate  = '<div><xsl:apply-templates/></div>';
 		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -47,7 +49,7 @@ class RulesGeneratorTest extends Test
 					'denyChild' => array('DIV')
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
@@ -57,8 +59,9 @@ class RulesGeneratorTest extends Test
 	public function testDenyDescendant()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('A')->defaultTemplate = '<a><xsl:apply-templates/></a>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -66,7 +69,7 @@ class RulesGeneratorTest extends Test
 					'denyDescendant' => array('A')
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
@@ -76,8 +79,9 @@ class RulesGeneratorTest extends Test
 	public function testDenyChildRemovedDueToDenyDescendant()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('A')->defaultTemplate = '<a><xsl:apply-templates/></a>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -85,7 +89,7 @@ class RulesGeneratorTest extends Test
 					'denyChild' => array('A')
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
@@ -95,8 +99,9 @@ class RulesGeneratorTest extends Test
 	public function testAutoReopen()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -104,18 +109,19 @@ class RulesGeneratorTest extends Test
 					'autoReopen' => true
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
 	/**
 	* @testdox Generates an denyAll rule for <hr>
 	*/
-	public function testDenyAll()
+	public function testDenyAllHr()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('HR')->defaultTemplate = '<hr><xsl:apply-templates/></hr>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -123,7 +129,27 @@ class RulesGeneratorTest extends Test
 					'denyAll' => true
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Generates an denyAll rule for <style>
+	*/
+	public function testDenyAllStyle()
+	{
+		$tags = new TagCollection;
+		$tags->add('STYLE')->templates->setUnsafe('', '<style><xsl:apply-templates/></style>');
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'STYLE' => array(
+					'denyAll' => true
+				)
+			),
+			$rules['tags']
 		);
 	}
 
@@ -133,8 +159,9 @@ class RulesGeneratorTest extends Test
 	public function testIgnoreText()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('UL')->defaultTemplate = '<ul><xsl:apply-templates/></ul>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -142,7 +169,7 @@ class RulesGeneratorTest extends Test
 					'ignoreText' => true
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
@@ -152,8 +179,9 @@ class RulesGeneratorTest extends Test
 	public function testNotIgnoreText()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -161,7 +189,7 @@ class RulesGeneratorTest extends Test
 					'ignoreText' => null
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
@@ -171,8 +199,9 @@ class RulesGeneratorTest extends Test
 	public function testIsTransparent()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('A')->defaultTemplate = '<a><xsl:apply-templates/></a>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -180,7 +209,7 @@ class RulesGeneratorTest extends Test
 					'isTransparent' => true
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
@@ -190,8 +219,9 @@ class RulesGeneratorTest extends Test
 	public function testNotIsTransparent()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
@@ -199,103 +229,141 @@ class RulesGeneratorTest extends Test
 					'isTransparent' => null
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
 	/**
-	* @testdox Does not generate a noBr rule for <a>
+	* @testdox Does not generate a noBrChild rule for <a>
 	*/
-	public function testNotNoBrA()
+	public function testNotNoBrChildA()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('A')->defaultTemplate = '<a><xsl:apply-templates/></a>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
 				'A' => array(
-					'noBr' => null
+					'noBrChild' => null
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
 	/**
-	* @testdox Does not generate a noBr rule for <ol>
+	* @testdox Does not generate a noBrDescendant rule for <ol>
 	*/
-	public function testNotNoBrOl()
+	public function testNotNoBrDescendantOl()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('OL')->defaultTemplate = '<ol><xsl:apply-templates/></ol>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
 				'OL' => array(
-					'noBr' => null
+					'noBrDescendant' => null
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
 	/**
-	* @testdox Generates a noBr rule for <pre>
+	* @testdox Generates a noBrDescendant rule for <pre>
 	*/
-	public function testNoBr()
+	public function testNoBrDescendantPre()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('PRE')->defaultTemplate = '<pre><xsl:apply-templates/></pre>';
+
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
 				'PRE' => array(
-					'noBr' => true
+					'noBrDescendant' => true
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
 	/**
-	* @testdox <li> has a disallowAtRoot rule if parentHTML is not specified
+	* @testdox Generates a noBrDescendant rule for <style>
 	*/
-	public function testDisallowAtRoot()
+	public function testNoBrChildStyle()
 	{
 		$tags = new TagCollection;
+		$tags->add('STYLE')->templates->setUnsafe('', '<style><xsl:apply-templates/></style>');
 
-		$tags->add('LI')->defaultTemplate = '<li><xsl:apply-templates/></li>';
+		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
 			array(
-				'LI' => array(
-					'disallowAtRoot' => true
+				'STYLE' => array(
+					'noBrChild' => true
 				)
 			),
-			RulesGenerator::getRules($tags)
+			$rules['tags']
 		);
 	}
 
 	/**
-	* @testdox <li> does not have a disallowAtRoot rule if parentHTML is <ul>
-	* @depends testDisallowAtRoot
+	* @testdox Root has an allowChild rule for <span>
+	*/
+	public function testRootAllowChild()
+	{
+		$tags = new TagCollection;
+		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'allowChild' => array('SPAN')
+			),
+			$rules['root']
+		);
+	}
+
+	/**
+	* @testdox Root has a denyChild rule for <li> if parentHTML is not specified
+	*/
+	public function testRootDenyChild()
+	{
+		$tags = new TagCollection;
+		$tags->add('LI')->defaultTemplate = '<li><xsl:apply-templates/></li>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'denyChild' => array('LI')
+			),
+			$rules['root']
+		);
+	}
+
+	/**
+	* @testdox Root has an allowChild rule for <li> if parentHTML is <ul>
 	*/
 	public function testParentHTML()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('LI')->defaultTemplate = '<li><xsl:apply-templates/></li>';
+
+		$rules = RulesGenerator::getRules($tags, array('parentHTML' => '<ul>'));
 
 		$this->assertArrayMatches(
 			array(
-				'LI' => array(
-					'disallowAtRoot' => null
-				)
+				'allowChild' => array('LI')
 			),
-			RulesGenerator::getRules($tags, array('parentHTML' => '<ul>'))
+			$rules['root']
 		);
 	}
 
@@ -305,9 +373,10 @@ class RulesGeneratorTest extends Test
 	public function testParentHTMLDeniesDescendant()
 	{
 		$tags = new TagCollection;
-
 		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
 		$tags->add('A')->defaultTemplate    = '<a><xsl:apply-templates/></a>';
+
+		$rules = RulesGenerator::getRules($tags, array('parentHTML' => '<a>'));
 
 		$this->assertArrayMatches(
 			array(
@@ -315,7 +384,7 @@ class RulesGeneratorTest extends Test
 					'allowChild' => array('SPAN')
 				)
 			),
-			RulesGenerator::getRules($tags, array('parentHTML' => '<a>'))
+			$rules['tags']
 		);
 	}
 }
