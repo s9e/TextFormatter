@@ -141,7 +141,7 @@ abstract class TemplateChecker
 
 		if ($node)
 		{
-			throw new UnsafeTemplateException("Cannot assess the safety of an 'xsl:copy' element", $node);
+			throw new UnsafeTemplateException("Cannot assess the safety of an '" . $node->nodeName . "' element", $node);
 		}
 	}
 
@@ -224,7 +224,7 @@ abstract class TemplateChecker
 					if (!preg_match('#^@([a-z_0-9\\-]+)$#Di', $expr, $m))
 					{
 						// Reject anything that is not a copy of an attribute
-						throw new UnsafeTemplateException("Cannot assess 'xsl:copy-of' select expression '" . $expr . "' to be safe", $node);
+						throw new UnsafeTemplateException("Cannot assess '" . $node->nodeName . "' select expression '" . $expr . "' to be safe", $node);
 					}
 
 					$matchName = $m[1];
@@ -327,7 +327,7 @@ abstract class TemplateChecker
 		{
 			if ($applyTemplates->hasAttribute('select'))
 			{
-				$msg = "Cannot assess the safety of 'xsl:apply-templates' select expression '" . $applyTemplates->getAttribute('select') . "'";
+				$msg = "Cannot assess the safety of '" . $applyTemplates->nodeName . "' select expression '" . $applyTemplates->getAttribute('select') . "'";
 			}
 			elseif ($element->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
 			{
@@ -350,9 +350,10 @@ abstract class TemplateChecker
 	*/
 	protected static function checkUnsafeContext(DOMXPath $xpath, DOMNode $node)
 	{
-		if ($xpath->query('ancestor::xsl:for-each', $node)->length)
+		$nodes = $xpath->query('ancestor::xsl:for-each', $node);
+		if ($nodes->length)
 		{
-			throw new UnsafeTemplateException("Cannot evaluate context node due to 'xsl:for-each'", $node);
+			throw new UnsafeTemplateException("Cannot evaluate context node due to '" . $nodes->item(0)->nodeName . "'", $node);
 		}
 	}
 
