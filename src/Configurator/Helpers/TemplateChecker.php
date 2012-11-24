@@ -211,7 +211,7 @@ abstract class TemplateChecker
 					// Ensure no shenanigans such as dynamic names, e.g. <xsl:element name="{foo}"/>
 					if (!preg_match('#^([a-z_0-9\\-]+)$#Di', $matchName))
 					{
-						throw new UnsafeTemplateException("Cannot assess 'xsl:" . $node->localName . "' name '" . $matchName . "'", $node);
+						throw new UnsafeTemplateException("Cannot assess '" . $node->nodeName . "' name '" . $matchName . "'", $node);
 					}
 				}
 				elseif ($node->localName === 'copy-of')
