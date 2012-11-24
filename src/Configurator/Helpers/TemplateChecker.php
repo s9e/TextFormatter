@@ -297,7 +297,7 @@ abstract class TemplateChecker
 	/**
 	* Check the descendants of given node
 	*
-	* @param DOMXPath   $xpath    DOMXPath associated with the template being checked
+	* @param DOMXPath   $xpath       DOMXPath associated with the template being checked
 	* @param DOMElement $element     Context node
 	* @param Tag        $tag         Owner tag of this template
 	* @param string     $contentType Content type (CSS, JS, etc...)
@@ -401,7 +401,7 @@ abstract class TemplateChecker
 	/**
 	* Check the safety of an XPath expression
 	*
-	* @param DOMXPath $xpath    DOMXPath associated with the template being checked
+	* @param DOMXPath $xpath       DOMXPath associated with the template being checked
 	* @param DOMNode  $node        Context node
 	* @param string   $expr        Expression to be checked
 	* @param string   $contentType Content type
