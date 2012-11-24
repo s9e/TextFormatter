@@ -42,22 +42,22 @@ abstract class TemplateChecker
 			$tag = new Tag;
 		}
 
-		$DOMXPath = new DOMXPath(TemplateHelper::loadTemplate($template));
+		$xpath = new DOMXPath(TemplateHelper::loadTemplate($template));
 
-		self::checkFixedSrcElements($DOMXPath);
-		self::checkDisableOutputEscaping($DOMXPath);
-		self::checkCopyElements($DOMXPath);
-		self::checkUnsafeContent($DOMXPath, $tag);
-		self::checkPHPTags($DOMXPath);
-		self::checkAttributeSets($DOMXPath);
+		self::checkFixedSrcElements($xpath);
+		self::checkDisableOutputEscaping($xpath);
+		self::checkCopyElements($xpath);
+		self::checkUnsafeContent($xpath, $tag);
+		self::checkPHPTags($xpath);
+		self::checkAttributeSets($xpath);
 	}
 
 	/**
 	* Check elements whose src attribute should never be completely dynamic, such as <script>
 	*
-	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	* @param DOMXPath $xpath DOMXPath associated with the template being checked
 	*/
-	protected static function checkFixedSrcElements(DOMXPath $DOMXPath)
+	protected static function checkFixedSrcElements(DOMXPath $xpath)
 	{
 		$elements = array(
 			'embed'  => 'src',
@@ -66,7 +66,7 @@ abstract class TemplateChecker
 			'script' => 'src'
 		);
 
-		foreach ($DOMXPath->query('//*') as $node)
+		foreach ($xpath->query('//*') as $node)
 		{
 			if ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
 			 && $node->localName    === 'element')
@@ -106,8 +106,8 @@ abstract class TemplateChecker
 			}
 
 			// Search for a generated attribute that uses dynamic content
-			$xpath = './/xsl:attribute[.//xsl:value-of or .//xsl:apply-templates]';
-			foreach ($DOMXPath->query($xpath, $node) as $attributeElement)
+			$query = './/xsl:attribute[.//xsl:value-of or .//xsl:apply-templates]';
+			foreach ($xpath->query($query, $node) as $attributeElement)
 			{
 				$name = $attributeElement->getAttribute('name');
 
@@ -133,11 +133,11 @@ abstract class TemplateChecker
 	/**
 	* Check for <xsl:copy/> elements
 	*
-	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	* @param DOMXPath $xpath DOMXPath associated with the template being checked
 	*/
-	protected static function checkCopyElements(DOMXPath $DOMXPath)
+	protected static function checkCopyElements(DOMXPath $xpath)
 	{
-		$node = $DOMXPath->query('//xsl:copy')->item(0);
+		$node = $xpath->query('//xsl:copy')->item(0);
 
 		if ($node)
 		{
@@ -148,11 +148,11 @@ abstract class TemplateChecker
 	/**
 	* Check a template for any tag using @disable-output-escaping
 	*
-	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	* @param DOMXPath $xpath DOMXPath associated with the template being checked
 	*/
-	protected static function checkDisableOutputEscaping(DOMXPath $DOMXPath)
+	protected static function checkDisableOutputEscaping(DOMXPath $xpath)
 	{
-		$node = $DOMXPath->query('//@disable-output-escaping')->item(0);
+		$node = $xpath->query('//@disable-output-escaping')->item(0);
 
 		if ($node)
 		{
@@ -163,10 +163,10 @@ abstract class TemplateChecker
 	/**
 	* Check for improperly filtered content used in HTML tags
 	*
-	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
-	* @param Tag      $tag      Tag that this template belongs to
+	* @param DOMXPath $xpath DOMXPath associated with the template being checked
+	* @param Tag      $tag   Tag that this template belongs to
 	*/
-	protected static function checkUnsafeContent(DOMXPath $DOMXPath, Tag $tag = null)
+	protected static function checkUnsafeContent(DOMXPath $xpath, Tag $tag = null)
 	{
 		$checkElements = array(
 			'/^style$/i'  => 'CSS',
@@ -190,7 +190,7 @@ abstract class TemplateChecker
 
 		// NOTE: this XPath query will return attributes from XSL nodes, but there should be no
 		//       false-positives from them, so we don't have to filter them out
-		foreach ($DOMXPath->query('//* | //@*') as $node)
+		foreach ($xpath->query('//* | //@*') as $node)
 		{
 			/**
 			* @var array XPath expressions to be checked
@@ -273,7 +273,7 @@ abstract class TemplateChecker
 				// <b onmouseover="this.title='{@title}';this.style.backgroundColor={@color}"/>
 				foreach ($checkExpr as $expr)
 				{
-					self::checkUnsafeExpression($DOMXPath, $node, $expr, $contentType, $tag);
+					self::checkUnsafeExpression($xpath, $node, $expr, $contentType, $tag);
 				}
 
 				// Check for unsafe descendants if our node is an element (not an attribute)
@@ -288,7 +288,7 @@ abstract class TemplateChecker
 					           ? ''
 					           : '[not(ancestor::xsl:attribute)]';
 
-					self::checkUnsafeDescendants($DOMXPath, $node, $tag, $contentType, $predicate);
+					self::checkUnsafeDescendants($xpath, $node, $tag, $contentType, $predicate);
 				}
 			}
 		}
@@ -297,20 +297,20 @@ abstract class TemplateChecker
 	/**
 	* Check the descendants of given node
 	*
-	* @param DOMXPath   $DOMXPath    DOMXPath associated with the template being checked
+	* @param DOMXPath   $xpath    DOMXPath associated with the template being checked
 	* @param DOMElement $element     Context node
 	* @param Tag        $tag         Owner tag of this template
 	* @param string     $contentType Content type (CSS, JS, etc...)
 	* @param string     $predicate   Extra predicate
 	*/
-	protected static function checkUnsafeDescendants(DOMXPath $DOMXPath, DOMElement $element, Tag $tag, $contentType, $predicate)
+	protected static function checkUnsafeDescendants(DOMXPath $xpath, DOMElement $element, Tag $tag, $contentType, $predicate)
 	{
 		// <script><xsl:value-of/></script>
-		$xpath = './/xsl:value-of[@select]' . $predicate;
-		foreach ($DOMXPath->query($xpath, $element) as $valueOf)
+		$query = './/xsl:value-of[@select]' . $predicate;
+		foreach ($xpath->query($query, $element) as $valueOf)
 		{
 			self::checkUnsafeExpression(
-				$DOMXPath,
+				$xpath,
 				$valueOf,
 				$valueOf->getAttribute('select'),
 				$contentType,
@@ -320,8 +320,8 @@ abstract class TemplateChecker
 
 		// <script><xsl:apply-templates/></script>
 		// <script><xsl:apply-templates select="foo"/></script>
-		$xpath = './/xsl:apply-templates' . $predicate;
-		$applyTemplates = $DOMXPath->query($xpath, $element)->item(0);
+		$query = './/xsl:apply-templates' . $predicate;
+		$applyTemplates = $xpath->query($query, $element)->item(0);
 
 		if ($applyTemplates)
 		{
@@ -345,12 +345,12 @@ abstract class TemplateChecker
 	/**
 	* Test whether the context of an element can be evaluated
 	*
-	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
-	* @param DOMNode  $node     Node being checked
+	* @param DOMXPath $xpath DOMXPath associated with the template being checked
+	* @param DOMNode  $node  Node being checked
 	*/
-	protected static function checkUnsafeContext(DOMXPath $DOMXPath, DOMNode $node)
+	protected static function checkUnsafeContext(DOMXPath $xpath, DOMNode $node)
 	{
-		if ($DOMXPath->query('ancestor::xsl:for-each', $node)->length)
+		if ($xpath->query('ancestor::xsl:for-each', $node)->length)
 		{
 			throw new UnsafeTemplateException("Cannot evaluate context node due to 'xsl:for-each'", $node);
 		}
@@ -363,12 +363,12 @@ abstract class TemplateChecker
 	*       used as a vector of intrusion, for example if a template is saved in a publicly
 	*       accessible file that the webserver is somehow configured to process as PHP
 	*
-	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	* @param DOMXPath $xpath DOMXPath associated with the template being checked
 	*/
-	protected static function checkPHPTags(DOMXPath $DOMXPath)
+	protected static function checkPHPTags(DOMXPath $xpath)
 	{
-		$xpath = '//processing-instruction()["php" = translate(name(),"HP","hp")]';
-		$nodes = $DOMXPath->query($xpath);
+		$query = '//processing-instruction()["php" = translate(name(),"HP","hp")]';
+		$nodes = $xpath->query($query);
 
 		if ($nodes->length)
 		{
@@ -384,12 +384,12 @@ abstract class TemplateChecker
 	* uncommon and there's little incentive to use them in small stylesheets, so we'll just disable
 	* them
 	*
-	* @param DOMXPath $DOMXPath DOMXPath associated with the template being checked
+	* @param DOMXPath $xpath DOMXPath associated with the template being checked
 	*/
-	protected static function checkAttributeSets(DOMXPath $DOMXPath)
+	protected static function checkAttributeSets(DOMXPath $xpath)
 	{
-		$xpath = '//@use-attribute-sets';
-		$nodes = $DOMXPath->query($xpath);
+		$query = '//@use-attribute-sets';
+		$nodes = $xpath->query($query);
 
 		if ($nodes->length)
 		{
@@ -400,13 +400,13 @@ abstract class TemplateChecker
 	/**
 	* Check the safety of an XPath expression
 	*
-	* @param DOMXPath $DOMXPath    DOMXPath associated with the template being checked
+	* @param DOMXPath $xpath    DOMXPath associated with the template being checked
 	* @param DOMNode  $node        Context node
 	* @param string   $expr        Expression to be checked
 	* @param string   $contentType Content type
 	* @param Tag      $tag         Tag that this template belongs to
 	*/
-	protected static function checkUnsafeExpression(DOMXPath $DOMXPath, DOMNode $node, $expr, $contentType, Tag $tag)
+	protected static function checkUnsafeExpression(DOMXPath $xpath, DOMNode $node, $expr, $contentType, Tag $tag)
 	{
 		// We don't even try to assess its safety if it's not a single attribute value
 		if (!preg_match('#^@\\s*([a-z_0-9\\-]+)$#Di', $expr, $m))
@@ -414,7 +414,7 @@ abstract class TemplateChecker
 			throw new UnsafeTemplateException("Cannot assess the safety of XPath expression '" . $expr . "'", $node);
 		}
 
-		self::checkUnsafeContext($DOMXPath, $node);
+		self::checkUnsafeContext($xpath, $node);
 
 		$attrName = $m[1];
 
