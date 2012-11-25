@@ -42,9 +42,10 @@
 			<file>Configurator/Helpers/RegexpParserTest.php</file>
 			<file>Configurator/Helpers/RulesHelperTest.php</file>
 			<file>Configurator/Helpers/StylesheetHelperTest.php</file>
+			<!-- TemplateChecker depends on TemplateOptimizer -->
+			<file>Configurator/Helpers/TemplateOptimizerTest.php</file>
 			<file>Configurator/Helpers/TemplateCheckerTest.php</file>
 			<file>Configurator/Helpers/TemplateHelperTest.php</file>
-			<file>Configurator/Helpers/TemplateOptimizerTest.php</file>
 			<file>Configurator/Items/AttributeTest.php</file>
 			<file>Configurator/Items/AttributePreprocessorTest.php</file>
 			<file>Configurator/Items/CallbackPlaceholderTest.php</file>

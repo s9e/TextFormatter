@@ -51,6 +51,7 @@ abstract class TemplateOptimizer
 		self::removeComments($dom);
 		self::minifyXPathExpressions($dom);
 		self::normalizeAttributeNames($dom);
+		self::normalizeElementNames($dom);
 		self::optimizeConditionalValueOf($dom);
 		self::inlineElements($dom);
 		self::inlineAttributes($dom);
@@ -368,6 +369,52 @@ abstract class TemplateOptimizer
 			{
 				$element->setAttribute($attrName, $attrValue);
 			}
+		}
+	}
+
+	/**
+	* Lowercase element names
+	*
+	* @param DOMDocument $dom xsl:template node
+	*/
+	protected static function normalizeElementNames(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+
+		foreach ($xpath->query('//*[namespace-uri() = ""]') as $element)
+		{
+			$elName = strtr(
+				$element->localName,
+				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+				'abcdefghijklmnopqrstuvwxyz'
+			);
+
+			if ($elName === $element->localName)
+			{
+				continue;
+			}
+
+			// Create a new element with the correct name
+			$newElement = $dom->createElement($elName);
+
+			// Move every child to the new element
+			while ($element->firstChild)
+			{
+				$newElement->appendChild($element->removeChild($element->firstChild));
+			}
+
+			// Copy attributes to the new node
+			foreach ($element->attributes as $attribute)
+			{
+				$newElement->setAttributeNS(
+					$attribute->namespaceURI,
+					$attribute->nodeName,
+					$attribute->value
+				);
+			}
+
+			// Replace the old element with the new one
+			$element->parentNode->replaceChild($newElement, $element);
 		}
 	}
 

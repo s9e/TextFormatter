@@ -139,7 +139,7 @@ class TemplateCheckerTest extends Test
 	{
 		$this->checkUnsafe(
 			'<SCRIPT src="{@url}"/>',
-			"The template contains a 'SCRIPT' element with a non-fixed URL attribute 'src'"
+			"The template contains a 'script' element with a non-fixed URL attribute 'src'"
 		);
 	}
 
@@ -247,7 +247,7 @@ class TemplateCheckerTest extends Test
 	{
 		$this->checkUnsafe(
 			'<OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>',
-			"The template contains a 'PARAM' element with a non-fixed URL attribute 'value'"
+			"The template contains a 'param' element with a non-fixed URL attribute 'value'"
 		);
 	}
 
@@ -2481,7 +2481,7 @@ class TemplateCheckerTest extends Test
 			// Try working around the safeguards
 			array(
 				'<SCRIPT src="{@url}"/>',
-				"The template contains a 'SCRIPT' element with a non-fixed URL attribute 'src'"
+				"The template contains a 'script' element with a non-fixed URL attribute 'src'"
 			),
 			array(
 				'<script SRC="{@url}"/>',
@@ -2519,7 +2519,7 @@ class TemplateCheckerTest extends Test
 			),
 			array(
 				'<OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>',
-				"The template contains a 'PARAM' element with a non-fixed URL attribute 'value'"
+				"The template contains a 'param' element with a non-fixed URL attribute 'value'"
 			)
 		);
 	}

@@ -474,6 +474,38 @@ s9e\TextFormatter\Tests\Configurator\Helpers\StylesheetHelper
  [x] Identical templates are merged together
  [x] Empty templates are merged with the empty templates used for <st>, <et> and <i>
 
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
+ [x] Comments are removed
+ [x] Superfluous whitespace between elements is removed
+ [x] Single space characters are preserved
+ [x] Superfluous whitespace inside tags is removed
+ [x] Superfluous whitespace around XSL attributes is removed
+ [x] Superfluous whitespace in simple attribute expressions is removed
+ [x] Superfluous whitespace in @select expressions is removed
+ [x] Whitespace is literal strings used in @select expressions is preserved
+ [x] Superfluous whitespace in @test expressions is removed
+ [x] Whitespace necessary to delimit names in @test expressions is preserved
+ [x] Superfluous whitespace in XPath expressions in inline attributes is removed
+ [x] Escaped curly brackets in inline attributes are preserved
+ [x] <xsl:element/> is inlined where possible
+ [x] Inlined elements' names are lowercased
+ [x] <xsl:attribute/> with one single <xsl:value-of/> child is inlined
+ [x] Inlined attributes' names are lowercased
+ [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
+ [x] Curly brackets in text are escaped when attributes are inlined
+ [x] <xsl:attribute/> with <xsl:if/> child is not inlined
+ [x] Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible
+ [x] Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match
+ [x] <xsl:text/> is inlined
+ [x] Attribute names are lowercased
+ [x] Attributes are deduplicated and the first one of a given name is kept
+ [x] Attributes are deduplicated and the first one of a given lowercased name is kept
+ [x] Element names are lowercased
+ [x] <xsl:if test="@foo"><xsl:value-of select="@foo"/></xsl:if> is optimized to <xsl:value-of select="@foo"/>
+ [x] <xsl:if test="@foo"><xsl:value-of select="@bar"/></xsl:if> is left untouched
+ [x] <xsl:if test="1+@foo"><xsl:value-of select="1+@foo"/></xsl:if> is left untouched
+ [x] Throws an exception during XPath minification if a string isn't properly closed
+
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML
  [x] checkUnsafe() throws an exception if the template contains a <?php instruction
@@ -690,37 +722,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() throws an exception on malformed XSL
  [x] normalize() normalizes '<br>' to '<br/>'
  [x] normalize() throws an exception on malformed XSL
-
-s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
- [x] Comments are removed
- [x] Superfluous whitespace between elements is removed
- [x] Single space characters are preserved
- [x] Superfluous whitespace inside tags is removed
- [x] Superfluous whitespace around XSL attributes is removed
- [x] Superfluous whitespace in simple attribute expressions is removed
- [x] Superfluous whitespace in @select expressions is removed
- [x] Whitespace is literal strings used in @select expressions is preserved
- [x] Superfluous whitespace in @test expressions is removed
- [x] Whitespace necessary to delimit names in @test expressions is preserved
- [x] Superfluous whitespace in XPath expressions in inline attributes is removed
- [x] Escaped curly brackets in inline attributes are preserved
- [x] <xsl:element/> is inlined where possible
- [x] Inlined element's name is lowercased
- [x] <xsl:attribute/> with one single <xsl:value-of/> child is inlined
- [x] Inlined attribute's name is lowercased
- [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
- [x] Curly brackets in text are escaped when attributes are inlined
- [x] <xsl:attribute/> with <xsl:if/> child is not inlined
- [x] Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible
- [x] Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match
- [x] <xsl:text/> is inlined
- [x] Attribute names are lowercased
- [x] Attributes are deduplicated and the first one of a given name is kept
- [x] Attributes are deduplicated and the first one of a given lowercased name is kept
- [x] <xsl:if test="@foo"><xsl:value-of select="@foo"/></xsl:if> is optimized to <xsl:value-of select="@foo"/>
- [x] <xsl:if test="@foo"><xsl:value-of select="@bar"/></xsl:if> is left untouched
- [x] <xsl:if test="1+@foo"><xsl:value-of select="1+@foo"/></xsl:if> is left untouched
- [x] Throws an exception during XPath minification if a string isn't properly closed
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor

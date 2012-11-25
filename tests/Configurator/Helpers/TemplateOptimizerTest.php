@@ -184,12 +184,12 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox Inlined element's name is lowercased
+	* @testdox Inlined elements' names are lowercased
 	*/
-	public function test7DC9C840()
+	public function test5FE35400()
 	{
 		$this->runCase(
-			'Inlined element\'s name is lowercased',
+			'Inlined elements\' names are lowercased',
 			'<xsl:element name="DIV"><xsl:apply-templates/></xsl:element>',
 			'<div><xsl:apply-templates/></div>'
 		);
@@ -208,12 +208,12 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox Inlined attribute's name is lowercased
+	* @testdox Inlined attributes' names are lowercased
 	*/
-	public function test85109C2F()
+	public function test2C4AC91E()
 	{
 		$this->runCase(
-			'Inlined attribute\'s name is lowercased',
+			'Inlined attributes\' names are lowercased',
 			'<div><xsl:attribute name="CLASS"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
 			'<div class="{@foo}"><xsl:apply-templates/></div>'
 		);
@@ -324,6 +324,18 @@ class TemplateOptimizerTest extends Test
 			'Attributes are deduplicated and the first one of a given lowercased name is kept',
 			'<b ID="foo" iD="bar" id="baz"/>',
 			'<b id="foo"/>'
+		);
+	}
+
+	/**
+	* @testdox Element names are lowercased
+	*/
+	public function testB6E52ECA()
+	{
+		$this->runCase(
+			'Element names are lowercased',
+			'<B id="b"><I id="i"><U id="u">x</U></I></B>',
+			'<b id="b"><i id="i"><u id="u">x</u></i></b>'
 		);
 	}
 
@@ -518,6 +530,11 @@ class TemplateOptimizerTest extends Test
 				'Attributes are deduplicated and the first one of a given lowercased name is kept',
 				'<b ID="foo" iD="bar" id="baz"/>',
 				'<b id="foo"/>'
+			),
+			array(
+				'Element names are lowercased',
+				'<B id="b"><I id="i"><U id="u">x</U></I></B>',
+				'<b id="b"><i id="i"><u id="u">x</u></i></b>'
 			),
 			array(
 				'<xsl:if test="@foo"><xsl:value-of select="@foo"/></xsl:if> is optimized to <xsl:value-of select="@foo"/>',
