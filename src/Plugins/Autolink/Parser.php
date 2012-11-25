@@ -12,19 +12,21 @@ use s9e\TextFormatter\PluginParser;
 
 class AutolinkParser extends PluginParser
 {
-	public function getTags($text, array $matches)
+	/**
+	* {@inheritdoc}
+	*/
+	public function parse($text, array $matches)
 	{
-		$tags = array();
-
 		foreach ($matches as $m)
 		{
-			$url = $m[0][0];
+			$url      = $m[0][0];
+			$startPos = $m[0][1];
+			$endPos   = $startPos + strlen($url);
 
-			/**
-			* Remove trailing punctuation. We preserve right parentheses if there's the right number
-			* of parentheses in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
-			*/
-			cleanUrl:
+			// Remove trailing punctuation. We preserve right parentheses if there's a balanced
+			// number of parentheses in the URL, e.g.
+			//   http://en.wikipedia.org/wiki/Mars_(disambiguation) 
+			while (1)
 			{
 				$url = preg_replace('#(?![\\)=\\-/])\\pP+$#Du', '', $url);
 
@@ -32,26 +34,13 @@ class AutolinkParser extends PluginParser
 				 && substr_count($url, '(') < substr_count($url, ')'))
 				{
 					$url = substr($url, 0, -1);
-					goto cleanUrl;
+					continue;
 				}
+				break;
 			}
 
-			$tags[] = array(
-				'pos'   => $m[0][1],
-				'name'  => 'URL',
-				'type'  => Parser::START_TAG,
-				'len'   => 0,
-				'attrs' => array('url' => $url)
-			);
-
-			$tags[] = array(
-				'pos'   => $m[0][1] + strlen($url),
-				'name'  => 'URL',
-				'type'  => Parser::END_TAG,
-				'len'   => 0
-			);
+			$this->parser->addStartTag($this->config['tagName'], $startPos, 0)->setAttribute($this->config['attrName'], $url);
+			$this->parser->addEndTag($this->config['tagName'], $endPos, 0);
 		}
-
-		return $tags;
 	}
 }

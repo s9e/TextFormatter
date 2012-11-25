@@ -1,13 +1,12 @@
-var tags = [];
-
 matches.forEach(function(m)
 {
-	var url = m[0][0];
+	var url      = m[0][0],
+		startPos = m[0][1],
+		endPos   = startPos + url.length;
 
-	/**
-	* Remove trailing dots. We preserve right parentheses if there's the right number of
-	* parentheses in the URL, as in http://en.wikipedia.org/wiki/Mars_(disambiguation) 
-	*/
+	// Remove trailing punctuation. We preserve right parentheses if there's a balanced
+	// number of parentheses in the URL, e.g.
+	//   http://en.wikipedia.org/wiki/Mars_(disambiguation) 
 	while (1)
 	{
 		url = url.replace(/[^-\w)=\/]+$/, '');
@@ -21,20 +20,6 @@ matches.forEach(function(m)
 		break;
 	}
 
-	tags.push({
-		pos   : m[0][1],
-		name  : 'URL',
-		type  : START_TAG,
-		len   : 0,
-		attrs : { 'url' : url }
-	});
-
-	tags.push({
-		pos   : m[0][1] + url.length,
-		name  : 'URL',
-		type  : END_TAG,
-		len   : 0
-	});
+	addStartTag(config.tagName, startPos, 0).setAttribute(config.attrName, url);
+	addEndTag(config.tagName, endPos, 0);
 });
-
-return tags;

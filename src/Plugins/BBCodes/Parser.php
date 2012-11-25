@@ -8,7 +8,8 @@
 namespace s9e\TextFormatter\Plugins;
 
 use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\PluginParser;
+use s9e\TextFormatter\Parser\Tag;
+use s9e\TextFormatter\PluginsParser;
 
 class BBCodesParser extends PluginParser
 {
@@ -17,12 +18,18 @@ class BBCodesParser extends PluginParser
 	*/
 	protected $bbcodes;
 
+	/**
+	* {@inheritdoc}
+	*/
 	public function setUp()
 	{
 		$this->bbcodes = $this->config['bbcodes'];
 	}
 
-	public function getTags($text, array $matches)
+	/**
+	* {@inheritdoc}
+	*/
+	public function parse($text, array $matches)
 	{
 		$textLen = strlen($text);
 
@@ -76,7 +83,7 @@ class BBCodesParser extends PluginParser
 			{
 				if ($text[$rpos] !== ']')
 				{
-					$this->parser->log('warning', array(
+					$this->parser->logger->warn(array(
 						'pos'    => $rpos,
 						'len'    => 1,
 						'msg'    => 'Unexpected character: expected %1$s found %2$s',
@@ -85,11 +92,11 @@ class BBCodesParser extends PluginParser
 					continue;
 				}
 
-				$type = Parser::END_TAG;
+				$type = Tag::END_TAG;
 			}
 			else
 			{
-				$type       = Parser::START_TAG;
+				$type       = Tag::START_TAG;
 				$wellFormed = false;
 				$firstPos   = $rpos;
 
