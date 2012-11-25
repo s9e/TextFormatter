@@ -483,17 +483,20 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Not safe: <iframe src="{@url}"/>
  [x] Not safe: <object data="{@url}"/>
  [x] Not safe: <script src="{@url}"/>
- [x] Not safe if attribute 'id' has filter '#url': <script src="{@url}"/>
+ [x] Not safe if attribute 'src' has filter '#url': <script src="{@url}"/>
+ [x] Not safe: <script src="http://{@foo}"/>
  [x] Safe if attribute 'id' has filter '#number': <script src="https://gist.github.com/{@id}.js"/>
  [x] Not safe: <SCRIPT src="{@url}"/>
  [x] Not safe: <script SRC="{@url}"/>
- [x] Not safe: <script><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></script>
- [x] Not safe: <script><xsl:attribute name="SRC"><xsl:value-of select="@url"/></xsl:attribute></script>
- [x] Safe: <script><xsl:attribute name="src">http://example.org/legit.js</xsl:attribute></script>
- [x] Safe: <script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/></xsl:attribute></script>
- [x] Not safe: <script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/></xsl:attribute></script>
- [x] Not safe: <xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>
- [x] Not safe: <xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>
+ [x] Not safe: <script><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>
+ [x] Not safe: <script><xsl:attribute name="SRC"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>
+ [x] Safe: <script><xsl:attribute name="src">http://example.org/legit.js<?dont-optimize?></xsl:attribute></script>
+ [x] Safe: <script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/><?dont-optimize?></xsl:attribute></script>
+ [x] Not safe: <script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/><?dont-optimize?></xsl:attribute></script>
+ [x] Not safe: <xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>
+ [x] Not safe: <xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>
+ [x] Not safe: <object><param name="movie" value="{@url}"/></object>
+ [x] Not safe: <OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>
  [x] Not safe: <b disable-output-escaping="1"/>
  [x] Not safe: <xsl:copy/>
  [x] Not safe: <b><xsl:copy-of select="@onclick"/></b>
@@ -702,6 +705,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Superfluous whitespace in XPath expressions in inline attributes is removed
  [x] Escaped curly brackets in inline attributes are preserved
  [x] <xsl:element/> is inlined where possible
+ [x] Inlined element's name is lowercased
  [x] <xsl:attribute/> with one single <xsl:value-of/> child is inlined
  [x] Inlined attribute's name is lowercased
  [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined

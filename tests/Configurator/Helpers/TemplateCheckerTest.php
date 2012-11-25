@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Helpers\TemplateChecker;
+use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Helpers\TemplateChecker
@@ -97,14 +98,25 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Not safe if attribute 'id' has filter '#url': <script src="{@url}"/>
+	* @testdox Not safe if attribute 'src' has filter '#url': <script src="{@url}"/>
 	*/
-	public function testCheckUnsafeD10CCD19()
+	public function testCheckUnsafeD8BB6D82()
 	{
 		$this->checkUnsafe(
 			'<script src="{@url}"/>',
 			"The template contains a 'script' element with a non-fixed URL",
-			array('attributes' => array('id' => array('filterChain' => array('#url'))))
+			array('attributes' => array('src' => array('filterChain' => array('#url'))))
+		);
+	}
+
+	/**
+	* @testdox Not safe: <script src="http://{@foo}"/>
+	*/
+	public function testCheckUnsafe4B4CB598()
+	{
+		$this->checkUnsafe(
+			'<script src="http://{@foo}"/>',
+			"The template contains a 'script' element with a non-fixed URL"
 		);
 	}
 
@@ -127,7 +139,7 @@ class TemplateCheckerTest extends Test
 	{
 		$this->checkUnsafe(
 			'<SCRIPT src="{@url}"/>',
-			"The template contains a 'script' element with a non-fixed URL"
+			"The template contains a 'SCRIPT' element with a non-fixed URL attribute 'src'"
 		);
 	}
 
@@ -138,82 +150,104 @@ class TemplateCheckerTest extends Test
 	{
 		$this->checkUnsafe(
 			'<script SRC="{@url}"/>',
-			"The template contains a 'script' element with a non-fixed URL"
+			"The template contains a 'script' element with a non-fixed URL attribute 'src'"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <script><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></script>
+	* @testdox Not safe: <script><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>
 	*/
-	public function testCheckUnsafe0852D347()
+	public function testCheckUnsafe959E6486()
 	{
 		$this->checkUnsafe(
-			'<script><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></script>',
+			'<script><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>',
 			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <script><xsl:attribute name="SRC"><xsl:value-of select="@url"/></xsl:attribute></script>
+	* @testdox Not safe: <script><xsl:attribute name="SRC"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>
 	*/
-	public function testCheckUnsafe28F6AB47()
+	public function testCheckUnsafeB8B19B4E()
 	{
 		$this->checkUnsafe(
-			'<script><xsl:attribute name="SRC"><xsl:value-of select="@url"/></xsl:attribute></script>',
-			"The template contains a 'script' element with a dynamically generated 'SRC' attribute that does not use a fixed URL"
-		);
-	}
-
-	/**
-	* @testdox Safe: <script><xsl:attribute name="src">http://example.org/legit.js</xsl:attribute></script>
-	*/
-	public function testCheckUnsafe1DFD8BFD()
-	{
-		$this->checkUnsafe(
-			'<script><xsl:attribute name="src">http://example.org/legit.js</xsl:attribute></script>'
-		);
-	}
-
-	/**
-	* @testdox Safe: <script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/></xsl:attribute></script>
-	*/
-	public function testCheckUnsafe10493F7B()
-	{
-		$this->checkUnsafe(
-			'<script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/></xsl:attribute></script>'
-		);
-	}
-
-	/**
-	* @testdox Not safe: <script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/></xsl:attribute></script>
-	*/
-	public function testCheckUnsafe2B0FC129()
-	{
-		$this->checkUnsafe(
-			'<script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/></xsl:attribute></script>',
+			'<script><xsl:attribute name="SRC"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>',
 			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
 		);
 	}
 
 	/**
-	* @testdox Not safe: <xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>
+	* @testdox Safe: <script><xsl:attribute name="src">http://example.org/legit.js<?dont-optimize?></xsl:attribute></script>
 	*/
-	public function testCheckUnsafe8127EF08()
+	public function testCheckUnsafe9C1DD25F()
 	{
 		$this->checkUnsafe(
-			'<xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>',
-			"The template contains a dynamically generated 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+			'<script><xsl:attribute name="src">http://example.org/legit.js<?dont-optimize?></xsl:attribute></script>'
 		);
 	}
 
 	/**
-	* @testdox Not safe: <xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>
+	* @testdox Safe: <script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/><?dont-optimize?></xsl:attribute></script>
 	*/
-	public function testCheckUnsafeC08FCE07()
+	public function testCheckUnsafeF8806A69()
 	{
 		$this->checkUnsafe(
-			'<xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>',
-			"The template contains a dynamically generated 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+			'<script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/><?dont-optimize?></xsl:attribute></script>'
+		);
+	}
+
+	/**
+	* @testdox Not safe: <script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/><?dont-optimize?></xsl:attribute></script>
+	*/
+	public function testCheckUnsafe1A457E75()
+	{
+		$this->checkUnsafe(
+			'<script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/><?dont-optimize?></xsl:attribute></script>',
+			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>
+	*/
+	public function testCheckUnsafeF6856A91()
+	{
+		$this->checkUnsafe(
+			'<xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>',
+			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>
+	*/
+	public function testCheckUnsafe5C2DA78D()
+	{
+		$this->checkUnsafe(
+			'<xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>',
+			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <object><param name="movie" value="{@url}"/></object>
+	*/
+	public function testCheckUnsafe75997FF6()
+	{
+		$this->checkUnsafe(
+			'<object><param name="movie" value="{@url}"/></object>',
+			"The template contains a 'param' element with a non-fixed URL attribute 'value'"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>
+	*/
+	public function testCheckUnsafe87C8D460()
+	{
+		$this->checkUnsafe(
+			'<OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>',
+			"The template contains a 'PARAM' element with a non-fixed URL attribute 'value'"
 		);
 	}
 
@@ -2383,7 +2417,7 @@ class TemplateCheckerTest extends Test
 		}
 
 		TemplateChecker::checkUnsafe(
-			$template,
+			TemplateOptimizer::optimize($template),
 			new Tag($tagOptions)
 		);
 	}
@@ -2391,14 +2425,14 @@ class TemplateCheckerTest extends Test
 	public function getUnsafeTemplatesTests()
 	{
 		return array_merge(
-			$this->getUnsafeFixedSrcTests(),
+			$this->getUnsafeFixedUrlTests(),
 			$this->getUnsafeDisableOutputEscapingTests(),
 			$this->getUnsafeCopyNodesTests(),
 			$this->getUnsafeContentTests()
 		);
 	}
 
-	public function getUnsafeFixedSrcTests()
+	public function getUnsafeFixedUrlTests()
 	{
 		return array(
 			array(
@@ -2423,11 +2457,15 @@ class TemplateCheckerTest extends Test
 				"The template contains a 'script' element with a non-fixed URL",
 				array(
 					'attributes' => array(
-						'id' => array(
+						'src' => array(
 							'filterChain' => array('#url')
 						)
 					)
 				)
+			),
+			array(
+				'<script src="http://{@foo}"/>',
+				"The template contains a 'script' element with a non-fixed URL"
 			),
 			array(
 				'<script src="https://gist.github.com/{@id}.js"/>',
@@ -2443,37 +2481,45 @@ class TemplateCheckerTest extends Test
 			// Try working around the safeguards
 			array(
 				'<SCRIPT src="{@url}"/>',
-				"The template contains a 'script' element with a non-fixed URL"
+				"The template contains a 'SCRIPT' element with a non-fixed URL attribute 'src'"
 			),
 			array(
 				'<script SRC="{@url}"/>',
-				"The template contains a 'script' element with a non-fixed URL"
+				"The template contains a 'script' element with a non-fixed URL attribute 'src'"
 			),
 			array(
-				'<script><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></script>',
+				'<script><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>',
 				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
 			),
 			array(
-				'<script><xsl:attribute name="SRC"><xsl:value-of select="@url"/></xsl:attribute></script>',
-				"The template contains a 'script' element with a dynamically generated 'SRC' attribute that does not use a fixed URL"
-			),
-			array(
-				'<script><xsl:attribute name="src">http://example.org/legit.js</xsl:attribute></script>'
-			),
-			array(
-				'<script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/></xsl:attribute></script>'
-			),
-			array(
-				'<script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/></xsl:attribute></script>',
+				'<script><xsl:attribute name="SRC"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>',
 				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
 			),
 			array(
-				'<xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>',
-				"The template contains a dynamically generated 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+				'<script><xsl:attribute name="src">http://example.org/legit.js<?dont-optimize?></xsl:attribute></script>'
 			),
 			array(
-				'<xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/></xsl:attribute></xsl:element>',
-				"The template contains a dynamically generated 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+				'<script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/><?dont-optimize?></xsl:attribute></script>'
+			),
+			array(
+				'<script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/><?dont-optimize?></xsl:attribute></script>',
+				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+			),
+			array(
+				'<xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>',
+				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+			),
+			array(
+				'<xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>',
+				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
+			),
+			array(
+				'<object><param name="movie" value="{@url}"/></object>',
+				"The template contains a 'param' element with a non-fixed URL attribute 'value'"
+			),
+			array(
+				'<OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>',
+				"The template contains a 'PARAM' element with a non-fixed URL attribute 'value'"
 			)
 		);
 	}

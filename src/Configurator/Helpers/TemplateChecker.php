@@ -23,6 +23,8 @@ use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 
 /**
 * Check individual templates for unsafe markup
+*
+* NOTE: this class expects the input to have been normalized by TemplateOptimizer
 */
 abstract class TemplateChecker
 {
@@ -44,7 +46,7 @@ abstract class TemplateChecker
 
 		$xpath = new DOMXPath(TemplateHelper::loadTemplate($template));
 
-		self::checkFixedSrcElements($xpath);
+		self::checkFixedUrlAttributes($xpath);
 		self::checkDisableOutputEscaping($xpath);
 		self::checkCopyElements($xpath);
 		self::checkUnsafeContent($xpath, $tag);
@@ -53,78 +55,63 @@ abstract class TemplateChecker
 	}
 
 	/**
-	* Check elements whose src attribute should never be completely dynamic, such as <script>
+	* Check URL-type attributes that should never be completely dynamic, such as <script src>
+	*
+	* NOTE: this will fail to recognize src="http://foo{'@'}{@textstuff}" because 'foo' will be
+	*       identified as the host part of the URL whereas it's actually a credential
 	*
 	* @param DOMXPath $xpath DOMXPath associated with the template being checked
 	*/
-	protected static function checkFixedSrcElements(DOMXPath $xpath)
+	protected static function checkFixedUrlAttributes(DOMXPath $xpath)
 	{
-		$elements = array(
-			'embed'  => 'src',
-			'iframe' => 'src',
-			'object' => 'data',
-			'script' => 'src'
+		$attributes = array(
+			'//*[translate(name(),"EMBD","embd")="embed" or translate(name(),"IFRAME","iframe")="iframe" or translate(name(),"SCRIPT","script")="script"]'
+				=> 'src',
+
+			'//*[translate(name(),"OBJECT","object")="object"]'
+				=> 'data',
+
+			'//*[translate(name(),"PARAM","param")="param"][translate(@name,"MOVIE","movie")="movie"]'
+				=> 'value',
 		);
 
-		foreach ($xpath->query('//*') as $node)
+		// Match protocol:// or // followed optional "user:pass@" credentials followed by an
+		// alphanumerical character
+		$regexp = '#^(?:[a-z0-9]+:)?//\\w#i';
+
+		foreach ($attributes as $elementQuery => $attrName)
 		{
-			if ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
-			 && $node->localName    === 'element')
+			foreach ($xpath->query($elementQuery) as $element)
 			{
-				// We have a <xsl:element>
-				$elName = $node->getAttribute('name');
-			}
-			else
-			{
-				// This is a static element, e.g. <script>, <iframe>, etc...
-				$elName = $node->localName;
-			}
-
-			// Normalize the element name
-			$elName = strtolower(trim($elName));
-
-			if (!isset($elements[$elName]))
-			{
-				// Not one of the elements we're looking for
-				continue;
-			}
-
-			// Grab the name of this element's attribute that contains an URL
-			$attrName = $elements[$elName];
-
-			if ($node->localName !== 'element')
-			{
-				// This is a static element, check for static attributes
-				foreach ($node->attributes as $attribute)
+				// Test the element's attribute
+				if ($element->hasAttribute($attrName))
 				{
-					if (strtolower($attribute->localName) === $attrName
-					 && preg_match('#^\\s*\\{#', $attribute->nodeValue))
+					if (!preg_match($regexp, $element->getAttribute($attrName)))
 					{
-						throw new UnsafeTemplateException("The template contains a '" . $elName . "' element with a non-fixed URL", $node);
+						throw new UnsafeTemplateException("The template contains a '" . $element->nodeName . "' element with a non-fixed URL attribute '" . $attrName . "'", $element);
 					}
 				}
-			}
 
-			// Search for a generated attribute that uses dynamic content
-			$query = './/xsl:attribute[.//xsl:value-of or .//xsl:apply-templates]';
-			foreach ($xpath->query($query, $node) as $attributeElement)
-			{
-				$name = $attributeElement->getAttribute('name');
+				// Match non-XSL ancestors
+				$ancestor = 'ancestor::*[namespace-uri()!="http://www.w3.org/1999/XSL/Transform"]';
 
-				if (trim(strtolower($name)) !== $attrName)
+				// Count the number of non-XSL ancestors
+				$cnt = $xpath->evaluate('count(' . $ancestor . ')', $element);
+
+				// Match <xsl:attribute/> descendants that don't have more non-XSL ancestors than
+				// our context node
+				$attributeQuery
+					= './/xsl:attribute'
+					. '[not(' . $ancestor . '[count(' . $ancestor. ')>' . $cnt . '])]'
+					. '[translate(@name,"' . strtoupper($attrName) . '","' . $attrName . '")="' . $attrName . '"]';
+
+				foreach ($xpath->query($attributeQuery, $element) as $attribute)
 				{
-					continue;
-				}
-
-				// Reject any src attribute that doesn't start with a non-whitespace text node
-				if ($attributeElement->firstChild->nodeType !== XML_TEXT_NODE
-				 || !preg_match('#\\S#', $attribute->firstChild->textContent))
-				{
-					$dynamic = ($node->localName === 'element')
-					         ? "dynamically generated "
-					         : '';
-
-					throw new UnsafeTemplateException('The template contains a ' . $dynamic . "'" . $elName . "' element with a dynamically generated '" . $name . "' attribute that does not use a fixed URL", $node);
+					if ($attribute->firstChild->nodeType !== XML_TEXT_NODE
+					 || !preg_match($regexp, $attribute->firstChild->textContent))
+					{
+						throw new UnsafeTemplateException("The template contains a '" . $element->nodeName . "' element with a dynamically generated '" . $attrName . "' attribute that does not use a fixed URL", $element);
+					}
 				}
 			}
 		}

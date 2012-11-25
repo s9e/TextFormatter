@@ -43,6 +43,11 @@ abstract class TemplateOptimizer
 		// Note: for some reason, $tmp->normalizeDocument() doesn't work
 		$dom->loadXML($tmp->saveXML());
 
+		/**
+		* @todo lowercase element names. This will allow to cut some code from TemplateChecker and
+		*       HTML elements should be lowercased anyway
+		*/
+
 		self::removeComments($dom);
 		self::minifyXPathExpressions($dom);
 		self::normalizeAttributeNames($dom);
@@ -141,10 +146,10 @@ abstract class TemplateOptimizer
 		{
 			$name = $element->getAttribute('name');
 
-			if (preg_match('#^[a-z0-9]+$#', $name))
+			if (strpos($name, '{') === false)
 			{
 				// Create the new static element
-				$newElement = $dom->createElement($name);
+				$newElement = $dom->createElement(strtolower($name));
 
 				// Replace the old <xsl:element/> with it. We do it now so that libxml doesn't have
 				// to redeclare the XSL namespace
