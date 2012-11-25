@@ -144,7 +144,7 @@ abstract class RulesGenerator
 			$node = $node->firstChild;
 		}
 
-		// Now append an <xsl:apply-templates/> node to make the markup looks like a normal template
+		// Now append an <xsl:apply-templates/> node to make the markup look like a normal template
 		$node->appendChild($dom->createElementNS(
 			'http://www.w3.org/1999/XSL/Transform',
 			'xsl:apply-templates'
