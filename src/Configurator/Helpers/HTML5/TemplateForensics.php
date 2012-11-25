@@ -285,12 +285,12 @@ class TemplateForensics
 		// out: nodes with a non-XSL ancestor,
 		$predicate = '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
 
-		// nodes with an <xsl:attribute/>, <xsl:comment/> or <xsl:variable/> ancestor
+		// ..and nodes with an <xsl:attribute/>, <xsl:comment/> or <xsl:variable/> ancestor
 		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
 
-		$xpath = '//text()' . $predicate
+		$xpath = '//text()[normalize-space() != ""]' . $predicate
 		       . '|'
-		       . '//xsl:text' . $predicate
+		       . '//xsl:text[normalize-space() != ""]' . $predicate
 		       . '|'
 		       . '//xsl:value-of' . $predicate;
 

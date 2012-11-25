@@ -243,7 +243,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <table><tr><td> allows "Hi"
  [x] <div><table> disallows "Hi"
  [x] <table> disallows <xsl:value-of/>
- [x] <table> disallows <xsl:text/>
+ [x] <table> disallows <xsl:text>Hi</xsl:text>
+ [x] <table> allows <xsl:text>  </xsl:text>
  [x] <b> should be reopened automatically
  [x] <b><u> should be reopened automatically
  [x] <div> should not be reopened automatically

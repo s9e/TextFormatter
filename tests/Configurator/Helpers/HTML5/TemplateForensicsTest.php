@@ -376,15 +376,28 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
-	* @testdox <table> disallows <xsl:text/>
+	* @testdox <table> disallows <xsl:text>Hi</xsl:text>
 	*/
-	public function test1C6900E3()
+	public function test78E6A7D9()
 	{
 		$this->runCase(
-			'<table> disallows <xsl:text/>',
+			'<table> disallows <xsl:text>Hi</xsl:text>',
 			'<table><xsl:apply-templates/></table>',
 			'denyChild',
 			'<xsl:text>Hi</xsl:text>'
+		);
+	}
+
+	/**
+	* @testdox <table> allows <xsl:text>  </xsl:text>
+	*/
+	public function test107CB766()
+	{
+		$this->runCase(
+			'<table> allows <xsl:text>  </xsl:text>',
+			'<table><xsl:apply-templates/></table>',
+			'allowChild',
+			'<xsl:text>  </xsl:text>'
 		);
 	}
 
@@ -713,10 +726,16 @@ class TemplateForensicsTest extends Test
 				'<xsl:value-of select="@foo"/>'
 			),
 			array(
-				'<table> disallows <xsl:text/>',
+				'<table> disallows <xsl:text>Hi</xsl:text>',
 				'<table><xsl:apply-templates/></table>',
 				'denyChild',
 				'<xsl:text>Hi</xsl:text>'
+			),
+			array(
+				'<table> allows <xsl:text>  </xsl:text>',
+				'<table><xsl:apply-templates/></table>',
+				'allowChild',
+				'<xsl:text>  </xsl:text>'
 			),
 			array(
 				'<b> should be reopened automatically',
