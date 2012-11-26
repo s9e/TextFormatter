@@ -77,10 +77,12 @@
 					<xsl:apply-templates />
 				</code>
 			</pre>
-			<script
+			<!-- Include the necessary Javascript if it's the first CODE tag -->
+			<xsl:if test="not(preceding::CODE)">
+				<script
 				data-s9e-LivePreview-includeOnce="1"
-				src="]]><var name="src">http://yandex.st/highlightjs/7.3/highlight.min.js</var><![CDATA["
-			></script>
+				src="]]><var name="src">http://yandex.st/highlightjs/7.3/highlight.min.js</var><![CDATA["></script>
+			</xsl:if>
 			<!-- TODO: data-s9e-hljs would be overwritten, use data-s9e-LivePreview-contentHash instead? -->
 			<script>setTimeout(function(){var el=document.getElementById('code{RANDOM}');if(!el.hasAttribute('data-s9e-hljs')){hljs.highlightBlock(el);el.setAttribute('data-s9e-hljs',1)}},100)</script>
 		]]></template>
