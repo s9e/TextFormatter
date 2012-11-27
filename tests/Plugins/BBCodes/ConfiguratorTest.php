@@ -3,7 +3,6 @@
 namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
 
 use DOMDocument;
-use s9e\TextFormatter\Plugins\Autolink\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
 /**

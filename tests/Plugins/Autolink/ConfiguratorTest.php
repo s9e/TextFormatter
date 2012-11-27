@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Autolink;
 
-use s9e\TextFormatter\Plugins\Autolink\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
 /**
