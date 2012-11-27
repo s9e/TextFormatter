@@ -5,31 +5,100 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\BBCodes;
 
 use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\Tag;
-use s9e\TextFormatter\PluginsParser;
+use s9e\TextFormatter\Plugins\ParserBase;
 
-class BBCodesParser extends PluginParser
+class Parser extends ParserBase
 {
-	/**
-	* @var array List of available BBCodes
-	*/
-	protected $bbcodes;
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function setUp()
-	{
-		$this->bbcodes = $this->config['bbcodes'];
-	}
-
 	/**
 	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
+	{
+		$textLen  = strlen($text);
+
+		/**
+		* @var array Array of start tags that were identified with a suffix. The key is made of the
+		*            BBCode name followed by a "#" character followed by the suffix, e.g. "B#123"
+		*/
+		$tagMates = array();
+
+		foreach ($matches as $m)
+		{
+			$bbcodeName = strtoupper($m[1][0]);
+
+			if (!isset($this->config['bbcodes'][$bbcodeName]))
+			{
+				// Not a known BBCode
+				continue;
+			}
+
+			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
+			$tagName      = $bbcodeConfig['tagName'];
+
+			/**
+			* @var integer Position of the first character of current BBCode, which should be a [
+			*/
+			$lpos = $m[0][1];
+
+			/**
+			* @var integer  Position of the last character of current BBCode, starts as the position
+			*               of the "=", "]" or ":" character, then moves to the right as the BBCode
+			*               is parsed
+			*/
+			$rpos = $lpos + strlen($m[0][0]);
+
+			// Check for a BBCode suffix
+			//
+			// Used to skip the parsing of closing BBCodes, e.g.
+			//   [code:1][code]type your code here[/code][/code:1]
+			if ($text[$rpos] === ':')
+			{
+				// Move past the colon
+				++$rpos;
+
+				// Capture the digits following it (potentially empty)
+				$spn       = strspn($text, '0123456789', $rpos);
+				$bbcodeId  = substr($text, $rpos, $spn);
+
+				// Move past the number
+				$rpos     += $spn;
+			}
+			else
+			{
+				$bbcodeId  = '';
+			}
+
+			// Test whether this is an end tag
+			if ($text[$lpos + 1] === '/')
+			{
+				// Test whether the tag is properly closed -- NOTE: this will fail on "[/foo ]"
+				if ($text[$rpos] === ']')
+				{
+					$tag = $this->parser->addEndTag($tagName, $lpos, 1 + $rpos - $lpos);
+
+					// Test whether this end tag is being paired with a start tag
+					$tagMateId = $bbcodeName . '#' . $bbcodeId;
+					if (isset($tagMates[$tagMateId]))
+					{
+						$tagMates[$tagMateId]->cascadeInvalidationTo($tag);
+						$tagMates[$tagMateId]->pairWith($tag);
+
+						// Free up the start tag now, it shouldn't be reused
+						unset($tagMates[$tagMateId]);
+					}
+				}
+
+				continue;
+			}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function _parse($text, array $matches)
 	{
 		$textLen = strlen($text);
 
@@ -37,13 +106,13 @@ class BBCodesParser extends PluginParser
 		{
 			$bbcodeName = strtoupper($m[1][0]);
 
-			if (!isset($this->bbcodes[$bbcodeName]))
+			if (!isset($this->config['bbcodes'][$bbcodeName]))
 			{
 				// Not a known BBCode
 				continue;
 			}
 
-			$bbcodeConfig = $this->bbcodes[$bbcodeName];
+			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
 			$tagName      = $bbcodeConfig['tagName'];
 
 			/**
@@ -60,7 +129,7 @@ class BBCodesParser extends PluginParser
 			/**
 			* @var Attributes parsed from the text
 			*/
-			$attrs = array();
+			$attributes = array();
 
 			// Check for a BBCode suffix
 			//
@@ -68,27 +137,34 @@ class BBCodesParser extends PluginParser
 			//   [code:1][code]type your code here[/code][/code:1]
 			if ($text[$rpos] === ':')
 			{
-				// [code:1] or [/code:1]
-				// $suffix = ':1'
-				$spn     = strspn($text, '1234567890', 1 + $rpos);
-				$suffix  = substr($text, $rpos, 1 + $spn);
-				$rpos   += 1 + $spn;
+				// Move past the colon
+				++$rpos;
+
+				// Capture the digits following it (potentially empty)
+				$spn       = strspn($text, '0123456789', $rpos);
+				$bbcodeId  = substr($text, $rpos, $spn);
+
+				// Move past the number
+				$rpos     += $spn;
 			}
 			else
 			{
-				$suffix  = '';
+				$bbcodeId  = '';
 			}
 
+			// Test whether this is an end tag
 			if ($m[0][0][1] === '/')
 			{
 				if ($text[$rpos] !== ']')
 				{
+					/*
 					$this->parser->logger->warn(array(
 						'pos'    => $rpos,
 						'len'    => 1,
 						'msg'    => 'Unexpected character: expected %1$s found %2$s',
 						'params' => array(']', $text[$rpos])
 					));
+					*/
 					continue;
 				}
 
@@ -106,32 +182,30 @@ class BBCodesParser extends PluginParser
 
 					if ($c === ']' || $c === '/')
 					{
-						/**
-						* We're closing this tag
-						*/
+						// We're closing this tag
 						if ($c === '/')
 						{
-							/**
-							* Self-closing tag, e.g. [foo/]
-							*/
-							$type = Parser::SELF_CLOSING_TAG;
+							// Self-closing tag, e.g. [foo/]
+							$type = Tag::SELF_CLOSING_TAG;
 							++$rpos;
 
 							if ($rpos === $textLen)
 							{
-								// text ends with [some tag/
+								// Text ends with [some tag/
 								continue 2;
 							}
 
 							$c = $text[$rpos];
 							if ($c !== ']')
 							{
+								/*
 								$this->parser->log('warning', array(
 									'pos'    => $rpos,
 									'len'    => 1,
 									'msg'    => 'Unexpected character: expected %1$s found %2$s',
 									'params' => array(']', $c)
 								));
+								*/
 								continue 2;
 							}
 						}
@@ -153,11 +227,13 @@ class BBCodesParser extends PluginParser
 					{
 						if ($rpos + $spn >= $textLen)
 						{
+							/*
 							$this->parser->log('debug', array(
 								'pos' => $rpos,
 								'len' => $spn,
 								'msg' => 'Attribute name seems to extend till the end of text'
 							));
+							*/
 							continue 2;
 						}
 
@@ -169,15 +245,12 @@ class BBCodesParser extends PluginParser
 						if ($c === '='
 						 && $rpos === $firstPos)
 						{
-							/**
-							* [quote=
-							*
-							* This is the default param. If there's no default param, we issue a
-							* warning and reuse the BBCode's name instead.
-							*/
-							if (isset($bbcodeConfig['defaultAttr']))
+							// [quote=
+							// This is the default param. If there's no default param, we reuse the
+							// BBCode's name instead.
+							if (isset($bbcodeConfig['defaultAttribute']))
 							{
-								$attrName = $bbcodeConfig['defaultAttr'];
+								$attrName = $bbcodeConfig['defaultAttribute'];
 							}
 							else
 							{
@@ -198,16 +271,12 @@ class BBCodesParser extends PluginParser
 
 					if ($text[$rpos] !== '=')
 					{
-						/**
-						* It's an attribute name not followed by an equal sign, let's just
-						* ignore it
-						*/
+						// It's an attribute name not followed by an equal sign, let's just ignore
+						// it
 						continue;
 					}
 
-					/**
-					* Move past the = and make sure we're not at the end of the text
-					*/
+					// Move past the = and make sure we're not at the end of the text
 					if (++$rpos >= $textLen)
 					{
 						$this->parser->log('debug', array(
@@ -278,7 +347,7 @@ class BBCodesParser extends PluginParser
 						$rpos += $spn;
 					}
 
-					$attrs[$attrName] = $value;
+					$attributes[$attrName] = $value;
 				}
 
 				if (!$wellFormed)
@@ -288,8 +357,8 @@ class BBCodesParser extends PluginParser
 
 				$usesContent = false;
 
-				if ($type === Parser::START_TAG
-				 && isset($bbcodeConfig['contentAttrs']))
+				if ($type === Tag::START_TAG
+				 && isset($bbcodeConfig['contentAttributes']))
 				{
 					/**
 					* Capture the content of that tag and use it as attribute value
@@ -300,15 +369,15 @@ class BBCodesParser extends PluginParser
 					*
 					* @todo perhaps disable all BBCodes when the content is used as param? how?
 					*/
-					foreach ($bbcodeConfig['contentAttrs'] as $attrName)
+					foreach ($bbcodeConfig['contentAttributes'] as $attrName)
 					{
-						if (!isset($attrs[$attrName]))
+						if (!isset($attributes[$attrName]))
 						{
 							$pos = stripos($text, '[/' . $bbcodeName . $suffix . ']', $rpos);
 
 							if ($pos)
 							{
-								$attrs[$attrName] = substr($text, 1 + $rpos, $pos - (1 + $rpos));
+								$attributes[$attrName] = substr($text, 1 + $rpos, $pos - (1 + $rpos));
 
 								$usesContent = true;
 							}
@@ -317,18 +386,18 @@ class BBCodesParser extends PluginParser
 				}
 			}
 
-			if ($type === Parser::START_TAG
+			if ($type === Tag::START_TAG
 			 && !$usesContent
 			 && !empty($bbcodeConfig['autoClose']))
 			{
 				$endTag = '[/' . $bbcodeName . $suffix . ']';
 
 				/**
-				* Make sure that the start tag isn't immediately followed by an endtag
+				* Make sure that the start tag isn't immediately followed by an end tag
 				*/
 				if (strtoupper(substr($text, 1 + $rpos, strlen($endTag))) !== $endTag)
 				{
-					$type |= Parser::END_TAG;
+					$type |= Tag::END_TAG;
 				}
 			}
 
@@ -338,7 +407,7 @@ class BBCodesParser extends PluginParser
 				'len'     => $rpos + 1 - $lpos,
 				'type'    => $type,
 				'tagMate' => ($suffix) ? substr($suffix, 1) : '',
-				'attrs'   => $attrs
+				'attrs'   => $attributes
 			);
 		}
 

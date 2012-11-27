@@ -25,9 +25,9 @@ class Tag
 	const SELF_CLOSING_TAG = 3;
 
 	/**
-	* @var array Tags that were bound to this tag
+	* @var array List of tags that are invalidated when this tag is invalidated
 	*/
-	protected $boundTags;
+	protected $cascade = array();
 
 	/**
 	* @var bool Whether this tag is invalid and should be skipped
@@ -75,20 +75,17 @@ class Tag
 		$this->name       = $name;
 		$this->pos        = (int) $pos;
 		$this->len        = (int) $len;
-		$this->boundTags  = array();
 	}
 
 	/**
-	* Bind this tag to given tag
-	*
-	* @todo bound tags share the same fate: if any of the bound start tags is skipped/invalidated, the following tags are skipped too. It's not retroactive though. A bound end tag should always close its matching bound start tag even if it's skipped
+	* 
 	*
 	* @param  Tag  $tag
 	* @return void
 	*/
-	public function bindTo(Tag $tag)
+	public function cascadeInvalidationTo(Tag $tag)
 	{
-		$tag->boundTags[] = $this;
+		$this->cascade[] = $tag;
 	}
 
 	/**
@@ -100,7 +97,7 @@ class Tag
 	{
 		$this->isInvalid = true;
 
-		foreach ($this->boundTags as $tag)
+		foreach ($this->cascade as $tag)
 		{
 			$tag->invalidate();
 		}
@@ -114,5 +111,17 @@ class Tag
 	public function isValid()
 	{
 		return empty($this->isInvalid);
+	}
+
+	/**
+	* 
+	*
+	* @param  Tag  $tag
+	* @return void
+	*/
+	public function pairWith(Tag $tag)
+	{
+		$this->tagMate = 'xxx';
+		$tag->tagMate = 'xxx';
 	}
 }
