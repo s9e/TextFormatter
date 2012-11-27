@@ -12,6 +12,7 @@ use Countable;
 use InvalidArgumentException;
 use Iterator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
@@ -88,12 +89,26 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		// Build the regexp that matches all the BBCode names
-		$regexp = RegexpBuilder::fromList(array_keys(iterator_to_array($this->collection)));
+		$regexp = RegexpBuilder::fromList(
+			array_keys(iterator_to_array($this->collection)),
+			array('delim' => '#')
+		);
 
-		// Remove the non-capturing subpattern since we place the regexp inside a capturing pattern
-		if (substr($regexp, 0, 3) === '(?:')
+		// Remove the non-capturing subpattern since we place the regexp inside a capturing pattern.
+		// For that, we need to reparse the regexp
+		$def    = RegexpParser::parse('#' . $regexp . '#');
+		$tokens = $def['tokens'];
+		if (isset($tokens[0]['endToken']) && $tokens[0]['pos'] === 0)
 		{
-			$regexp = substr($regexp, 3, -1);
+			// Here, we test that the whole regexp is covered by one subpattern, e.g.
+			// (?:AA(?:XXX|YYY)) not (?:AA|BB)XXX or (?:AA|BB)(?:XXX|YYY)
+			$endToken = $tokens[0]['endToken'];
+			$endPos   = $tokens[$endToken]['pos'] + $tokens[$endToken]['len'];
+
+			if ($endPos === strlen($regexp))
+			{
+				$regexp = substr($regexp, 3, -1);
+			}
 		}
 
 		return array(
