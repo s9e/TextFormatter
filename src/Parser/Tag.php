@@ -55,6 +55,11 @@ class Tag
 	protected $pos;
 
 	/**
+	* @var Tag Tag that is uniquely paired with this tag
+	*/
+	protected $tagMate = null;
+
+	/**
 	* @var integer Tag type
 	*/
 	protected $type;
@@ -75,6 +80,17 @@ class Tag
 		$this->name       = $name;
 		$this->pos        = (int) $pos;
 		$this->len        = (int) $len;
+	}
+
+	/**
+	* Getter
+	*
+	* @param  string $k Property name
+	* @return mixed
+	*/
+	public function __get($k)
+	{
+		return $this->$k;
 	}
 
 	/**
