@@ -1,309 +1,282 @@
-var tags = [];
+/**
+* @var array Array of start tags that were identified with a suffix. The key is made of the
+*            BBCode name followed by a "#" character followed by the suffix, e.g. "B#123"
+*/
+var tagMates = {};
 
 matches.forEach(function(m)
 {
 	var bbcodeName = m[1][0].toUpperCase();
 
-	if (!config.bbcodes[bbcodeName])
+	if (!config.bbcodes.[bbcodeName]))
 	{
 		// Not a known BBCode
 		return;
 	}
 
 	var bbcodeConfig = config.bbcodes[bbcodeName],
-	    tagName      = bbcodeConfig.tagName;
+		tagName      = bbcodeConfig.tagName;
 
 	/**
-	* Position of the first character of current BBCode, which should be a [
+	* @var integer Position of the first character of current BBCode, which should be a [
 	*/
 	var lpos = m[0][1];
 
 	/**
-	* Position of the last character of current BBCode, starts as the position of
-	* the =, ] or : char, then moves to the right as the BBCode is parsed
+	* @var integer  Position of the last character of current BBCode, starts as the position
+	*               of the "]", " ", "=", ":" or "/" character as per the plugin's regexp,
+	*               then advances towards the right as the BBCode is being parsed
 	*/
 	var rpos = lpos + m[0][0].length;
 
-	/**
-	* Attributes parsed from the text
-	*/
-	var attrs = {};
-
-	/**
-	* Check for BBCode suffix
-	*
-	* Used to skip the parsing of closing BBCodes, e.g.
-	*   [code:1][code]type your code here[/code][/code:1]
-	*
-	*/
-	var suffix = '';
-
+	// Check for a BBCode suffix
+	//
+	// Used to explicitly pair specific tags together, e.g.
+	//   [code:123][code]type your code here[/code][/code:123]
+	var bbcodeId;
 	if (text.charAt(rpos) === ':')
 	{
-		/**
-		* [code:1] or [/code:1]
-		* suffix = ':1'
-		*/
-		suffix  = /^:\d*/.exec(text.substr(rpos))[0];
-		rpos   += suffix.length;
-	}
+		// Move past the colon
+		++rpos;
 
-	var type;
+		// Capture the digits following it (potentially empty)
+		bbcodeId = /^\d*/.exec(text.substr(rpos))[0];
 
-	if (m[0][0].charAt(1) === '/')
-	{
-		if (text.charAt(rpos) !== ']')
-		{
-			logWarning({
-				'pos'    : rpos,
-				'len'    : 1,
-				'msg'    : 'Unexpected character: expected %1$s found %2$s',
-				'params' : [']', text.charAt(rpos)]
-			});
-			return;
-		}
-
-		type = END_TAG;
+		// Move past the number
+		rpos += bbcodeId.length;
 	}
 	else
 	{
-		type = START_TAG;
+		bbcodeId  = '';
+	}
 
-		var wellFormed = false,
-		    firstPos   = rpos;
-
-		while (rpos < textLen)
+	// Test whether this is an end tag
+	if (text.charAt(lpos + 1) === '/')
+	{
+		// Test whether the tag is properly closed -- NOTE: this will fail on "[/foo ]"
+		if (text.charAt(rpos) === ']')
 		{
-			c = text.charAt(rpos);
+			var tag = addEndTag(tagName, lpos, 1 + rpos - lpos);
 
-			if (c === ']' || c === '/')
+			// Test whether this end tag is being paired with a start tag
+			var tagMateId = bbcodeName + '#' + bbcodeId;
+			if (tagMates[tagMateId]))
 			{
-				/**
-				* We're closing this tag
-				*/
-				if (c === '/')
-				{
-					/**
-					* Self-closing tag, e.g. [foo/]
-					*/
-					type = SELF_CLOSING_TAG;
-					++rpos;
+				tag.pairWith(tagMates[tagMateId]);
 
-					if (rpos === textLen)
-					{
-						// text ends with [some tag/
-						return;
-					}
-
-					c = text.charAt(rpos);
-					if (c !== ']')
-					{
-						logWarning({
-							'pos'    : rpos,
-							'len'    : 1,
-							'msg'    : 'Unexpected character: expected %1$s found %2$s',
-							'params' : [']', c]
-						});
-						return;
-					}
-				}
-
-				wellFormed = true;
-				break;
+				// Free up the start tag now, it shouldn't be reused
+				delete tagMates[tagMateId];
 			}
+		}
 
-			if (c === ' ')
+		return;
+	}
+
+	// This is a start tag, now we'll parse attributes
+	var type       = Tag.START_TAG,
+		wellFormed = false,
+		firstPos   = rpos;
+
+	while (rpos < textLen)
+	{
+		var c = text.charAt(rpos);
+
+		if (c === ' ')
+		{
+			++rpos;
+			continue;
+		}
+
+		if (c === ']' || c === '/')
+		{
+			// We're closing this tag
+			if (c === '/')
 			{
+				// Self-closing tag, e.g. [foo/]
+				type = Tag.SELF_CLOSING_TAG;
 				++rpos;
-				continue;
-			}
 
-			/**
-			* Capture the attribute name
-			*/
-			var attrName = /^[-\w]*/.exec(text.substr(rpos))[0].toLowerCase();
-
-			if (attrName)
-			{
-				if (rpos + attrName.length >= textLen)
+				if (rpos === textLen
+				 || text.charAt(rpos) !== ']')
 				{
-					logDebug({
-						'pos' : rpos,
-						'len' : attrName.length,
-						'msg' : 'Attribute name seems to extend till the end of text'
-					});
-					return;
-				}
-
-				rpos += attrName.length;
-			}
-			else
-			{
-				if (c === '='
-				 && rpos === firstPos)
-				{
-					/**
-					* [quote=
-					*
-					* This is the default param. If there's no default param, we issue a
-					* warning and reuse the BBCode's name instead.
-					*/
-					if (config.hasDefaultAttrHint && bbcodeConfig.defaultAttr)
-					{
-						attrName = bbcodeConfig.defaultAttr;
-					}
-					else
-					{
-						attrName = bbcodeName.toLowerCase();
-
-						logDebug({
-							'pos'    : rpos,
-							'len'    : 1,
-							'msg'    : 'BBCode %1$s does not have a default attribute, using BBCode name as attribute name',
-							'params' : [bbcodeName]
-						});
-					}
-				}
-				else
-				{
-					logWarning({
-						'pos'    : rpos,
-						'len'    : 1,
-						'msg'    : 'Unexpected character %s',
-						'params' : [c]
-					});
+					// There isn't a closing bracket after the slash, e.g. [foo/
 					return;
 				}
 			}
+
+			wellFormed = true;
+			break;
+		}
+
+		// Capture the attribute name
+		var spn = /^[-\w]*/.exec(text.substr(rpos))[0].length,
+			attrName;
+
+		if (spn)
+		{
+			if (rpos + spn >= textLen)
+			{
+				// The attribute name extends to the end of the text
+				continue 2;
+			}
+
+			attrName = text.substr(rpos, spn).toLowerCase();
+			rpos += spn;
 
 			if (text.charAt(rpos) !== '=')
 			{
-				/**
-				* It's an attribute name not followed by an equal sign, let's just
-				* ignore it
-				*/
+				// It's an attribute name not followed by an equal sign, ignore it
 				continue;
 			}
-
-			/**
-			* Move past the = and make sure we're not at the end of the text
-			*/
-			if (++rpos >= textLen)
+		}
+		else if (c === '=' && rpos === firstPos)
+		{
+			// This is the default param, e.g. [quote=foo]. If there's no default attribute
+			// set, we reuse the BBCode's name instead
+			if (bbcodeConfig.defaultAttribute))
 			{
-				logDebug({
-					'msg' : 'Attribute definition seems to extend till the end of text'
-				});
-				return;
-			}
-
-			var value;
-			c = text.charAt(rpos);
-			if (c === '"' || c === "'")
-			{
-				// This is where the value starts
-				var valuePos = rpos + 1;
-
-				while (1)
-				{
-					// Move past the quote
-					++rpos;
-
-					// Look for the next quote
-					rpos = text.indexOf(c, rpos);
-
-					if (rpos === -1)
-					{
-						// No matching quote. Apparently that string never ends...
-						logWarning({
-							'pos' : valuePos - 1,
-							'len' : 1,
-							'msg' : 'Could not find matching quote'
-						});
-						return;
-					}
-
-					// Test for an odd number of backslashes before this character
-					var n = 0;
-					while (text.charAt(rpos - ++n) === '\\');
-
-					if (n % 2)
-					{
-						// If n is odd, it means there's an even number of backslashes so
-						// we can exit this loop
-						break;
-					}
-				}
-
-				// Unescape special characters ' " and \
-				value = text.substr(valuePos, rpos - valuePos).replace(/\\([\\'"])/g, '$1');
-
-				// Skip past the closing quote
-				++rpos;
+				attrName = bbcodeConfig.defaultAttribute;
 			}
 			else
 			{
-				value = /^[^\] \n\r]*/.exec(text.substr(rpos))[0];
-				rpos += value.length;
+				attrName = bbcodeName.toLowerCase();
 			}
-
-			attrs[attrName] = value;
 		}
-
-		if (!wellFormed)
+		else
 		{
 			return;
 		}
 
-		var usesContent = false;
-
-		if (config.hasContentAttrsHint
-		 && type === START_TAG
-		 && bbcodeConfig.contentAttrs)
+		// Move past the = and make sure we're not at the end of the text
+		if (++rpos >= textLen)
 		{
-			/**
-			* Capture the content of that tag and use it as attribute value
-			*/
-			bbcodeConfig.contentAttrs.forEach(function(attrName)
+			return;
+		}
+
+		// Grab the first character after the equal sign
+		c = text.charAt(rpos);
+
+		// Test whether the value is in quotes
+		if (c === '"' || c === "'")
+		{
+			// This is where the actual value starts
+			var valuePos = rpos + 1;
+
+			while (1)
 			{
-				if (!(attrName in attrs))
+				// Move past the quote
+				++rpos;
+
+				// Look for the next quote
+				rpos = text.strpos(c, rpos);
+
+				if (rpos < 0)
 				{
-					var pos = text.toUpperCase().indexOf('[/' + bbcodeName + suffix + ']', rpos);
-
-					if (pos > -1)
-					{
-						attrs[attrName] = text.substr(1 + rpos, pos - (1 + rpos));
-
-						usesContent = true;
-					}
+					// No matching quote. Apparently that string never ends...
+					return;
 				}
-			});
+
+				// Test for an odd number of backslashes before this character
+				var n = 0;
+				while (text.charAt(rpos - ++$n) === '\\');
+
+				if (n % 2)
+				{
+					// If $n is odd, it means there's an even number of backslashes so
+					// we can exit this loop
+					break;
+				}
+			}
+
+			// Unescape special characters ' " and \
+			value = text.substr(valuePos, rpos - valuePos).replace(/\\([\\'"])/g, '$1');
+
+			// Skip past the closing quote
+			++$rpos;
 		}
-	}
-
-	if (config.hasAutoCloseHint
-	 && type === START_TAG
-	 && !usesContent
-	 && bbcodeConfig.autoClose)
-	{
-		var endTag = '[/' + bbcodeName + suffix + ']';
-
-		/**
-		* Make sure that the start tag isn't immediately followed by an endtag
-		*/
-		if (text.substr(1 + rpos, endTag.length).toUpperCase() !== endTag)
+		else
 		{
-			type = SELF_CLOSING_TAG;
+			// Capture everything after the equal sign up to whichever comes first:
+			//  - a closing bracket
+			//  - whitespace followed by another attribute (name followed by equal sign)
+			//
+			// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
+			//       that do not put attribute values in quotes, e.g.
+			//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
+			m = /[^\]]*(?=\]|\s+[-\w]+=)/i.exec(text.substr(rpos));
+			if (!m)
+			{
+				continue;
+			}
+
+			value  = m[0];
+			rpos  += value.length;
 		}
+
+		attributes[attrName] = value;
 	}
 
-	tags.push({
-		name    : tagName,
-		pos     : lpos,
-		len     : rpos + 1 - lpos,
-		type    : type,
-		tagMate : (suffix > '') ? suffix.substr(1) : '',
-		attrs   : attrs
-	});
-});
+	if (!wellFormed)
+	{
+		return;
+	}
 
-return tags;
+	// We're done parsing the tag, we can add it to the list
+	var len = 1 + rpos - lpos,
+		tag = ($type === Tag.START_TAG)
+			? addStartTag(tagName, lpos, len)
+			: addSelfClosingTag(tagName, lpos, len);
+
+	// Add attributes
+	for (attrName in attributes)
+	{
+		tag.setAttribute(attrName, attributes[attrName]);
+	}
+
+	if (type === Tag.START_TAG)
+	{
+		if (bbcodeId !== '')
+		{
+			tagMates[tagName + '#' + bbcodeId] = tag;
+		}
+
+		// Some attributes use the content of a tag if no value is specified
+		if (bbcodeConfig.contentAttributes))
+		{
+			var value = false;
+			bbcodeConfig.contentAttributes.forEach(function(attrName)
+			{
+				if (attrName in attributes)
+				{
+					return;
+				}
+
+				if (value === false)
+				{
+					// Move the right cursor past the closing bracket
+					++rpos;
+
+					// Search for an end tag that matches our start tag
+					var match = '[/' + bbcodeName;
+					if (bbcodeId !== '')
+					{
+						match += ':' + $bbcodeId;
+					}
+					match += ']';
+
+					var pos = text.toUpperCase().indexOf(match, rpos);
+
+					if (pos < 0)
+					{
+						// No end tag for this start tag
+						return;
+					}
+
+					value = text.substr(rpos, pos - rpos);
+				}
+
+				tag.setAttribute(attrName, value);
+			}
+		}
+	}
+}
