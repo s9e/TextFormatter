@@ -288,7 +288,7 @@ class Parser extends ParserBase
 							}
 							$match .= ']';
 
-							$pos = stripos($text, '[/' . $match . ']', $rpos);
+							$pos = stripos($text, $match, $rpos);
 
 							if ($pos === false)
 							{
