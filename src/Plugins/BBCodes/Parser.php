@@ -295,6 +295,8 @@ class Parser extends ParserBase
 								// No end tag for this start tag
 								break;
 							}
+
+							$value = substr($text, $rpos, $pos - $rpos);
 						}
 
 						$tag->setAttribute($attrName, $value);
