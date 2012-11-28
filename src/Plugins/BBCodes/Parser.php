@@ -247,64 +247,59 @@ class Parser extends ParserBase
 
 			// We're done parsing the tag, we can add it to the list
 			$len = 1 + $rpos - $lpos;
-
-			if ($type === Tag::START_TAG)
-			{
-				$tag = $this->parser->addStartTag($tagName, $lpos, $len);
-
-				// Some attributes use the content of a tag if no value is specified
-				$endTag = false;
-				if (isset($bbcodeConfig['contentAttributes']))
-				{
-					foreach ($bbcodeConfig['contentAttributes'] as $attrName)
-					{
-						if (!isset($attributes[$attrName]))
-						{
-							if (!$endTag)
-							{
-								// Move the right cursor past the closing bracket
-								++$rpos;
-
-								// Search for an end tag that matches our start tag
-								$match = '[/' . $bbcodeName;
-								if ($bbcodeId !== '')
-								{
-									$match .= ':' . $bbcodeId;
-								}
-								$match .= ']';
-
-								$pos = stripos($text, '[/' . $match . ']', $rpos);
-
-								if ($pos === false)
-								{
-									// No end tag for this start tag
-									break;
-								}
-
-								// Create an end tag right now
-								$endTag = $this->parser->addEndTag($tagName, $pos, strlen($match));
-								$tag->pairWith($endTag);
-							}
-
-							$tag->setAttribute($attrName, substr($text, $rpos, $pos - $rpos));
-						}
-					}
-				}
-
-				if (!$endTag && $bbcodeId !== '')
-				{
-					$tagMates[$tagName . '#' . $bbcodeId] = $tag;
-				}
-			}
-			else
-			{
-				$this->parser->addSelfClosingTag($tagName, $lpos, $len);
-			}
+			$tag = ($type === Tag::START_TAG)
+			     ? $this->parser->addStartTag($tagName, $lpos, $len)
+			     : $this->parser->addSelfClosingTag($tagName, $lpos, $len);
 
 			// Add attributes
 			foreach ($attributes as $attrName => $value)
 			{
 				$tag->setAttribute($attrName, $value);
+			}
+
+			if ($type === Tag::START_TAG)
+			{
+				if ($bbcodeId !== '')
+				{
+					$tagMates[$tagName . '#' . $bbcodeId] = $tag;
+				}
+
+				// Some attributes use the content of a tag if no value is specified
+				if (isset($bbcodeConfig['contentAttributes']))
+				{
+					$value = false;
+					foreach ($bbcodeConfig['contentAttributes'] as $attrName)
+					{
+						if (isset($attributes[$attrName]))
+						{
+							continue;
+						}
+
+						if ($value === false)
+						{
+							// Move the right cursor past the closing bracket
+							++$rpos;
+
+							// Search for an end tag that matches our start tag
+							$match = '[/' . $bbcodeName;
+							if ($bbcodeId !== '')
+							{
+								$match .= ':' . $bbcodeId;
+							}
+							$match .= ']';
+
+							$pos = stripos($text, '[/' . $match . ']', $rpos);
+
+							if ($pos === false)
+							{
+								// No end tag for this start tag
+								break;
+							}
+						}
+
+						$tag->setAttribute($attrName, $value);
+					}
+				}
 			}
 		}
 	}
