@@ -292,6 +292,18 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox <xsl:text> </xsl:text> is inlined
+	*/
+	public function testD006032F()
+	{
+		$this->runCase(
+			'<xsl:text> </xsl:text> is inlined',
+			'<b>b</b><xsl:text> </xsl:text><i>i</i>',
+			'<b>b</b> <i>i</i>'
+		);
+	}
+
+	/**
 	* @testdox Attribute names are lowercased
 	*/
 	public function test0EF19F18()
@@ -515,6 +527,11 @@ class TemplateOptimizerTest extends Test
 				'<xsl:text/> is inlined',
 				'<b><xsl:text>Hello world</xsl:text></b>',
 				'<b>Hello world</b>'
+			),
+			array(
+				'<xsl:text> </xsl:text> is inlined',
+				'<b>b</b><xsl:text> </xsl:text><i>i</i>',
+				'<b>b</b> <i>i</i>'
 			),
 			array(
 				'Attribute names are lowercased',

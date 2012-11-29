@@ -24,6 +24,11 @@ use XSLTProcessor;
 abstract class TemplateOptimizer
 {
 	/**
+	* XSL namespace
+	*/
+	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
+
+	/**
 	* Optimize a template
 	*
 	* @param  string $template Content of the template. A root node is not required
@@ -42,11 +47,6 @@ abstract class TemplateOptimizer
 
 		// Note: for some reason, $tmp->normalizeDocument() doesn't work
 		$dom->loadXML($tmp->saveXML());
-
-		/**
-		* @todo lowercase element names. This will allow to cut some code from TemplateChecker and
-		*       HTML elements should be lowercased anyway
-		*/
 
 		self::removeComments($dom);
 		self::minifyXPathExpressions($dom);
@@ -120,9 +120,9 @@ abstract class TemplateOptimizer
 	{
 		$xpath = new DOMXPath($dom);
 
-		foreach ($xpath->query('//text()[. = " "]') as $textNode)
+		foreach ($xpath->query('//text()[. = " "][not(parent::xsl:text)]') as $textNode)
 		{
-			$newNode = $dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:text');
+			$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:text');
 			$newNode->nodeValue = ' ';
 
 			$textNode->parentNode->replaceChild($newNode, $textNode);
@@ -141,9 +141,7 @@ abstract class TemplateOptimizer
 	*/
 	protected static function inlineElements(DOMDocument $dom)
 	{
-		$xpath = new DOMXPath($dom);
-
-		foreach ($xpath->query('//xsl:element') as $element)
+		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'element') as $element)
 		{
 			$name = $element->getAttribute('name');
 
@@ -191,12 +189,12 @@ abstract class TemplateOptimizer
 				{
 					$value .= preg_replace('#([{}])#', '$1$1', $childNode->textContent);
 				}
-				elseif ($childNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
+				elseif ($childNode->namespaceURI === self::XMLNS_XSL
 				     && $childNode->localName === 'value-of')
 				{
 					$value .= '{' . $childNode->getAttribute('select') . '}';
 				}
-				elseif ($childNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform'
+				elseif ($childNode->namespaceURI === self::XMLNS_XSL
 				     && $childNode->localName === 'text')
 				{
 					$value .= preg_replace('#([{}])#', '$1$1', $childNode->textContent);
@@ -229,8 +227,7 @@ abstract class TemplateOptimizer
 	{
 		$xpath = new DOMXPath($dom);
 
-		$query = '//*[namespace-uri() = "http://www.w3.org/1999/XSL/Transform"]';
-		foreach ($xpath->query($query) as $node)
+		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, '*') as $node)
 		{
 			foreach ($xpath->query('@match|@select|@test', $node) as $attribute)
 			{
@@ -241,7 +238,7 @@ abstract class TemplateOptimizer
 			}
 		}
 
-		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]/@*';
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
 		foreach ($xpath->query($query) as $attribute)
 		{
 			$attribute->value = preg_replace_callback(
@@ -443,7 +440,7 @@ abstract class TemplateOptimizer
 
 		foreach ($xpath->query($query) as $if)
 		{
-			$copyOf = $dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:copy-of');
+			$copyOf = $dom->createElementNS(self::XMLNS_XSL, 'xsl:copy-of');
 			$copyOf->setAttribute('select', $if->getAttribute('test'));
 
 			$if->parentNode->replaceChild($copyOf, $if);
@@ -457,13 +454,11 @@ abstract class TemplateOptimizer
 	*/
 	protected static function inlineTextElements(DOMDocument $dom)
 	{
-		$xpath = new DOMXPath($dom);
-
-		foreach ($xpath->query('//xsl:text') as $xslNode)
+		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'text') as $node)
 		{
-			$xslNode->parentNode->replaceChild(
-				$dom->createTextNode($xslNode->textContent),
-				$xslNode
+			$node->parentNode->replaceChild(
+				$dom->createTextNode($node->textContent),
+				$node
 			);
 		}
 	}

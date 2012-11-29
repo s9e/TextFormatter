@@ -498,6 +498,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible
  [x] Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match
  [x] <xsl:text/> is inlined
+ [x] <xsl:text> </xsl:text> is inlined
  [x] Attribute names are lowercased
  [x] Attributes are deduplicated and the first one of a given name is kept
  [x] Attributes are deduplicated and the first one of a given lowercased name is kept
