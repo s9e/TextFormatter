@@ -30,9 +30,9 @@ class Tag
 	protected $cascade = array();
 
 	/**
-	* @var bool Whether this tag is invalid and should be skipped
+	* @var bool Whether this tag should be ignored
 	*/
-	protected $isInvalid;
+	protected $ignore = false;
 
 	/**
 	* @var integer Length of text consumed by this tag
@@ -83,14 +83,33 @@ class Tag
 	}
 
 	/**
-	* Getter
+	* Return the length of text consumed by this tag
 	*
-	* @param  string $k Property name
-	* @return mixed
+	* @return integer
 	*/
-	public function __get($k)
+	public function getLen()
 	{
-		return $this->$k;
+		return $this->len;
+	}
+
+	/**
+	* Return this tag's name
+	*
+	* @return string
+	*/
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
+	* Return this tag's position
+	*
+	* @return integer
+	*/
+	public function getPos()
+	{
+		return $this->pos;
 	}
 
 	/**
@@ -111,7 +130,7 @@ class Tag
 	*/
 	public function invalidate()
 	{
-		$this->isInvalid = true;
+		$this->ignore = true;
 
 		foreach ($this->cascade as $tag)
 		{
@@ -120,13 +139,23 @@ class Tag
 	}
 
 	/**
-	* Return whether this tag is valid
+	* Test whether this tag is a start tag (self-closing tags inclusive)
 	*
 	* @return bool
 	*/
-	public function isValid()
+	public function isStartTag()
 	{
-		return empty($this->isInvalid);
+		return (bool) ($this->type & self::START_TAG);
+	}
+
+	/**
+	* Test whether this tag is an end tag (self-closing tags inclusive)
+	*
+	* @return bool
+	*/
+	public function isEndTag()
+	{
+		return (bool) ($this->type & self::END_TAG);
 	}
 
 	/**

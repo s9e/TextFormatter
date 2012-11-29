@@ -12,10 +12,10 @@ class Parser
 	/**#@+
 	* Boolean rules bitfield
 	*/
-	const RULE_AUTO_CLOSE       = 1;
-	const RULE_AUTO_REOPEN      = 2;
-	const RULE_IGNORE_TEXT      = 4;
-	const RULE_IS_TRANSPARENT   = 8;
+	const RULE_AUTO_CLOSE       =  1;
+	const RULE_AUTO_REOPEN      =  2;
+	const RULE_IGNORE_TEXT      =  4;
+	const RULE_IS_TRANSPARENT   =  8;
 	const RULE_NO_BR_CHILD      = 16;
 	const RULE_NO_BR_DESCENDANT = 32;
 	/**#@-*/
@@ -37,6 +37,7 @@ class Parser
 	{
 		$this->logger        = new Logger;
 		$this->pluginsConfig = $config['plugins'];
+		$this->rootContext   = $config['rootContext'];
 		$this->tagsConfig    = $config['tags'];
 	}
 
@@ -60,17 +61,8 @@ class Parser
 	{
 		$this->reset($text);
 		$this->executePluginParsers();
-	}
+		$this->processTags();
 
-	/**
-	* Reset the parser for a new parsing
-	*
-	* @return void
-	*/
-	public function reset($text)
-	{
-		$this->tagStack = array();
-		$this->logger->clear();
-		$this->text = $text;
+		return $this->output;
 	}
 }
