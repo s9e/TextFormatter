@@ -268,6 +268,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <a> has a denyDescendant rule for <a>
  [x] <a> has a denyChild rule for <a>
  [x] Generates an autoReopen rule for <b>
+ [x] Does notg enerates an autoReopen rule for <div>
  [x] Generates an denyAll rule for <hr>
  [x] Generates an denyAll rule for <style>
  [x] Generates an ignoreText rule for <ul>

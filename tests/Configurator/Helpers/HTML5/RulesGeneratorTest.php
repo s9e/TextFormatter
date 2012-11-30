@@ -114,6 +114,26 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox Does notg enerates an autoReopen rule for <div>
+	*/
+	public function testNoAutoReopen()
+	{
+		$tags = new TagCollection;
+		$tags->add('DIV')->defaultTemplate = '<div><xsl:apply-templates/></div>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'DIV' => array(
+					'autoReopen' => null
+				)
+			),
+			$rules['tags']
+		);
+	}
+
+	/**
 	* @testdox Generates an denyAll rule for <hr>
 	*/
 	public function testDenyAllHr()
