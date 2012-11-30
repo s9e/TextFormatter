@@ -315,16 +315,24 @@ class TemplateForensics
 		*/
 		$autoReopen = true;
 
+		/**
+		* @var bool Whether this template lets content through
+		*/
+		$passthrough = false;
+
 		// For each <xsl:apply-templates/> element...
 		foreach ($this->node->xpath('//xsl:apply-templates') as $at)
 		{
+			// An <xsl:apply-templates/> element means the template lets content through
+			$passthrough = true;
+
 			// ...we retrieve all non-XSL ancestors
 			$nodes = $at->xpath('ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]');
 
 			if (empty($nodes))
 			{
 				// That tag might have an empty template for some reason, in which case there's
-				// nothing to do here
+				// nothing to do here except confirm that this template lets content through
 				continue;
 			}
 
@@ -343,6 +351,12 @@ class TemplateForensics
 				{
 					// Unknown elements are treated as if they were a <span> element
 					$nodeName = 'span';
+				}
+
+				// Test whether the element lets content through
+				if (self::elementIsEmpty($node))
+				{
+					$passthrough = false;
 				}
 
 				if (empty(self::$htmlElements[$nodeName]['t']))
@@ -401,6 +415,9 @@ class TemplateForensics
 			// Set the autoReopen property to our final value, but only if this tag had any branches
 			$this->autoReopen = $autoReopen;
 		}
+
+		// If the template doesn't let content through, we deny all descendants
+		$this->denyAll = !$passthrough;
 	}
 
 	/**
@@ -412,7 +429,7 @@ class TemplateForensics
 	*/
 	protected function analyseDenyAll()
 	{
-		foreach ($this->node->xpath('*[.//xsl:apply-templates]') as $node)
+		foreach ($this->node->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][.//xsl:apply-templates]') as $node)
 		{
 			if (!self::elementIsEmpty($node))
 			{
@@ -420,7 +437,7 @@ class TemplateForensics
 			}
 		}
 
-		$this->denyAll = true;
+//		$this->denyAll = true;
 	}
 
 	/**

@@ -474,6 +474,30 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
+	* @testdox <hr><xsl:apply-templates/></hr> denies all descendants
+	*/
+	public function test19DAC173()
+	{
+		$this->runCase(
+			'<hr><xsl:apply-templates/></hr> denies all descendants',
+			'<hr><xsl:apply-templates/></hr>',
+			'denyAll'
+		);
+	}
+
+	/**
+	* @testdox <div><hr><xsl:apply-templates/></hr></div> denies all descendants
+	*/
+	public function testB9757F1A()
+	{
+		$this->runCase(
+			'<div><hr><xsl:apply-templates/></hr></div> denies all descendants',
+			'<div><hr><xsl:apply-templates/></hr></div>',
+			'denyAll'
+		);
+	}
+
+	/**
 	* @testdox <style> denies all descendants even if it has an <xsl:apply-templates/> child
 	*/
 	public function testFC5CC479()
@@ -765,6 +789,16 @@ class TemplateForensicsTest extends Test
 			array(
 				'<img> denies all descendants',
 				'<img/>',
+				'denyAll'
+			),
+			array(
+				'<hr><xsl:apply-templates/></hr> denies all descendants',
+				'<hr><xsl:apply-templates/></hr>',
+				'denyAll'
+			),
+			array(
+				'<div><hr><xsl:apply-templates/></hr></div> denies all descendants',
+				'<div><hr><xsl:apply-templates/></hr></div>',
 				'denyAll'
 			),
 			array(

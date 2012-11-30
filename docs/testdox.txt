@@ -251,6 +251,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] "Hi" should not be reopened automatically
  [x] A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically
  [x] <img> denies all descendants
+ [x] <hr><xsl:apply-templates/></hr> denies all descendants
+ [x] <div><hr><xsl:apply-templates/></hr></div> denies all descendants
  [x] <style> denies all descendants even if it has an <xsl:apply-templates/> child
  [x] <span> does not deny all descendants if it has an <xsl:apply-templates/> child
  [x] <span> denies all descendants if it does not have an <xsl:apply-templates/> child
