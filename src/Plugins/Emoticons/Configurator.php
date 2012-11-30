@@ -42,7 +42,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	{
 		$this->collection = new EmoticonCollection;
 
-		$this->tag = (isset($this->configurator->tags[$this->tagName]))
+		$this->tag = ($this->configurator->tags->exists($this->tagName))
 		           ? $this->configurator->tags->get($this->tagName)
 		           : $this->configurator->tags->add($this->tagName);
 	}
