@@ -94,6 +94,46 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox Generates an autoClose rule for <hr/>
+	*/
+	public function testAutoClose()
+	{
+		$tags = new TagCollection;
+		$tags->add('HR')->defaultTemplate = '<hr/>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'HR' => array(
+					'autoClose' => true
+				)
+			),
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Does not generate an autoClose rule for <span>
+	*/
+	public function testNoAutoClose()
+	{
+		$tags = new TagCollection;
+		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'SPAN' => array(
+					'autoClose' => null
+				)
+			),
+			$rules['tags']
+		);
+	}
+
+	/**
 	* @testdox Generates an autoReopen rule for <b>
 	*/
 	public function testAutoReopen()

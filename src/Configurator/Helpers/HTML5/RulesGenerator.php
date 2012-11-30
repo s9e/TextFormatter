@@ -185,6 +185,12 @@ abstract class RulesGenerator
 			$ruleName = ($rootForensics->allowsChild($srcTag)) ? 'allowChild' : 'denyChild';
 			$rules['root'][$ruleName][] = $srcTagName;
 
+			// Test whether this tag should be closed automatically
+			if ($srcTag->isVoid())
+			{
+				$rules['tags'][$srcTagName]['autoClose'] = true;
+			}
+
 			// Test whether this tag should be reopened automatically
 			if ($srcTag->autoReopen())
 			{

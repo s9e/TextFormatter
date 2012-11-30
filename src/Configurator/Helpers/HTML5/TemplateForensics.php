@@ -28,8 +28,6 @@ use DOMXPath;
 * @link http://dev.w3.org/html5/spec/content-models.html#content-models
 * @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
 * @see  /scripts/patchTemplateForensics.php
-*
-* @todo isVoid()
 */
 class TemplateForensics
 {
@@ -56,7 +54,7 @@ class TemplateForensics
 	/**
 	* @var bool Whether to deny any descendants to this tag
 	*/
-	protected $denyAll = false;
+	protected $denyAll = true;
 
 	/**
 	* @var string denyDescendant bitfield
@@ -78,6 +76,11 @@ class TemplateForensics
 	*           no branch uses a content model other than transparent)
 	*/
 	protected $isTransparent = true;
+
+	/**
+	* @var bool Whether all branches have an ancestor that is a void element
+	*/
+	protected $isVoid = true;
 
 	/**
 	* @var array Names of every last HTML element that precedes an <xsl:apply-templates/> node
@@ -215,9 +218,6 @@ class TemplateForensics
 	* Whether this tag should deny any descendants
 	*
 	* @return bool
-	*
-	* @todo add isVoid()
-	* @link http://dev.w3.org/html5/spec/single-page.html#void-elements
 	*/
 	public function denyAll()
 	{
@@ -232,6 +232,16 @@ class TemplateForensics
 	public function isTransparent()
 	{
 		return $this->isTransparent;
+	}
+
+	/**
+	* Whether all branches have an ancestor that is a void element
+	*
+	* @return bool
+	*/
+	public function isVoid()
+	{
+		return $this->isVoid;
 	}
 
 	/**
@@ -318,18 +328,9 @@ class TemplateForensics
 		*/
 		$autoReopen = true;
 
-		/**
-		* @var bool Whether this template lets content through elements that are not void
-		*/
-		$passthrough = false;
-
 		// For each <xsl:apply-templates/> element...
 		foreach ($this->getXSLElements('apply-templates') as $applyTemplates)
 		{
-			// An <xsl:apply-templates/> element means the template lets content through, unless we
-			// find out that one of its ancestors denies descendants
-			$passthrough = true;
-
 			// ...we retrieve all non-XSL ancestors
 			$nodes = $this->xpath->query(
 				'ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]',
@@ -350,6 +351,16 @@ class TemplateForensics
 			*/
 			$branchBitfield = self::$htmlElements['span']['ac'];
 
+			/**
+			* @var bool Whether this branch denies all non-text descendants
+			*/
+			$denyAll = false;
+
+			/**
+			* @var bool Whether this branch contains a void element
+			*/
+			$isVoid = false;
+
 			foreach ($nodes as $node)
 			{
 				$elName = $node->localName;
@@ -360,14 +371,20 @@ class TemplateForensics
 					$elName = 'span';
 				}
 
-				// Test whether the element lets content through
+				// Test whether the element is void
+				if (!empty(self::$htmlElements[$elName]['v']))
+				{
+					$isVoid = true;
+				}
+
+				// Test whether the element denies all descendants
 				if (!empty(self::$htmlElements[$elName]['da']))
 				{
 					// Test the XPath condition
 					if (!isset(self::$htmlElements[$elName]['da0'])
 					 || $this->evaluate(self::$htmlElements[$elName]['da0'], $node))
 					{
-						$passthrough = false;
+						$denyAll = true;
 					}
 				}
 
@@ -402,6 +419,7 @@ class TemplateForensics
 				$this->denyDescendantBitfield |= $this->getBitfield($elName, 'dd', $node);
 			}
 
+			// Add this branch's bitfield to the list
 			$branchBitfields[] = $branchBitfield;
 
 			// Save the name of the last node processed. Its actual name, not the "span" workaround
@@ -411,6 +429,18 @@ class TemplateForensics
 			if (!$allowText)
 			{
 				$this->allowText = false;
+			}
+
+			// If any branch does not deny all descendants, the tag does not deny all descendants
+			if (!$denyAll)
+			{
+				$this->denyAll = false;
+			}
+
+			// If any branch is not void, the tag is not void
+			if (!$isVoid)
+			{
+				$this->isVoid = false;
 			}
 		}
 
@@ -427,9 +457,6 @@ class TemplateForensics
 			// Set the autoReopen property to our final value, but only if this tag had any branches
 			$this->autoReopen = $autoReopen;
 		}
-
-		// If the template doesn't let content through, we deny all descendants
-		$this->denyAll = !$passthrough;
 	}
 
 	/**
