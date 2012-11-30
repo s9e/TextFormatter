@@ -7,9 +7,9 @@
 */
 namespace s9e\TextFormatter\Configurator\Helpers\HTML5;
 
+use DOMDocument;
+use DOMNode;
 use DOMXPath;
-use SimpleXMLElement;
-use s9e\TextFormatter\Configurator\Collections\Templateset;
 
 /**
 * This class helps the RulesGenerator by analyzing a given template in order to answer questions
@@ -64,6 +64,11 @@ class TemplateForensics
 	protected $denyDescendantBitfield = "\0";
 
 	/**
+	* @var DOMDocument Document containing all the templates associated with this tag, concatenated
+	*/
+	protected $dom;
+
+	/**
 	* @var bool Whether this tag renders non-whitespace text nodes at its root
 	*/
 	protected $hasRootText = false;
@@ -78,11 +83,6 @@ class TemplateForensics
 	* @var array Names of every last HTML element that precedes an <xsl:apply-templates/> node
 	*/
 	protected $leafNodes = array();
-
-	/**
-	* @var SimpleXMLElement Node containing all the templates associated with this tag, concatenated
-	*/
-	protected $node;
 
 	/**
 	* @var bool Whether any branch has an element that preserves whitespace by default (e.g. <pre>)
@@ -100,17 +100,24 @@ class TemplateForensics
 	protected $rootNodes = array();
 
 	/**
+	* @var DOMXPath XPath engine associated with $this->dom
+	*/
+	protected $xpath;
+
+	/**
 	* @param  string $xsl One single <xsl:template/> element
 	* @return void
 	*/
 	public function __construct($xsl)
 	{
-		$this->node = simplexml_load_string($xsl);
+		$this->dom = new DOMDocument;
+		$this->dom->loadXML($xsl);
+
+		$this->xpath = new DOMXPath($this->dom);
 
 		$this->analyseRootNodes();
 		$this->analyseBranches();
 		$this->analyseContent();
-		$this->analyseDenyAll();
 	}
 
 	/**
@@ -243,16 +250,11 @@ class TemplateForensics
 	protected function analyseContent()
 	{
 		// Get all non-XSL elements
-		$nodes = $this->node->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]');
+		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]';
 
-		foreach ($nodes as $node)
+		foreach ($this->xpath->query($query) as $node)
 		{
-			$nodeName = $node->getName();
-
-			if (isset(self::$htmlElements[$nodeName]))
-			{
-				$this->contentBitfield |= self::getBitfield($nodeName, 'c', $node);
-			}
+			$this->contentBitfield |= $this->getBitfield($node->localName, 'c', $node);
 		}
 	}
 
@@ -263,22 +265,23 @@ class TemplateForensics
 	{
 		// Get every non-XSL element with no non-XSL ancestor. This should return us the first
 		// HTML element of every branch
-		$nodes = $this->node->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]');
+		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]'
+		       . '[not(ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"])]';
 
-		foreach ($nodes as $node)
+		foreach ($this->xpath->query($query) as $node)
 		{
-			$nodeName = $node->getName();
+			$elName = $node->localName;
 
 			// Save the actual name of the root node
-			$this->rootNodes[] = $nodeName;
+			$this->rootNodes[] = $elName;
 
-			if (!isset(self::$htmlElements[$nodeName]))
+			if (!isset(self::$htmlElements[$elName]))
 			{
 				// Unknown elements are treated as if they were a <span> element
-				$nodeName = 'span';
+				$elName = 'span';
 			}
 
-			$this->rootBitfields[] = self::getBitfield($nodeName, 'c', $node);
+			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
 		}
 
 		// Test for non-whitespace text nodes at the root. For that we need a predicate that filters
@@ -288,13 +291,13 @@ class TemplateForensics
 		// ..and nodes with an <xsl:attribute/>, <xsl:comment/> or <xsl:variable/> ancestor
 		$predicate .= '[not(ancestor::xsl:attribute | ancestor::xsl:comment | ancestor::xsl:variable)]';
 
-		$xpath = '//text()[normalize-space() != ""]' . $predicate
+		$query = '//text()[normalize-space() != ""]' . $predicate
 		       . '|'
 		       . '//xsl:text[normalize-space() != ""]' . $predicate
 		       . '|'
 		       . '//xsl:value-of' . $predicate;
 
-		if (count($this->node->xpath($xpath)))
+		if ($this->evaluate($query))
 		{
 			$this->hasRootText = true;
 		}
@@ -316,23 +319,27 @@ class TemplateForensics
 		$autoReopen = true;
 
 		/**
-		* @var bool Whether this template lets content through
+		* @var bool Whether this template lets content through elements that are not void
 		*/
 		$passthrough = false;
 
 		// For each <xsl:apply-templates/> element...
-		foreach ($this->node->xpath('//xsl:apply-templates') as $at)
+		foreach ($this->getXSLElements('apply-templates') as $applyTemplates)
 		{
-			// An <xsl:apply-templates/> element means the template lets content through
+			// An <xsl:apply-templates/> element means the template lets content through, unless we
+			// find out that one of its ancestors denies descendants
 			$passthrough = true;
 
 			// ...we retrieve all non-XSL ancestors
-			$nodes = $at->xpath('ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]');
+			$nodes = $this->xpath->query(
+				'ancestor::*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]',
+				$applyTemplates
+			);
 
-			if (empty($nodes))
+			if (!$nodes->length)
 			{
 				// That tag might have an empty template for some reason, in which case there's
-				// nothing to do here except confirm that this template lets content through
+				// nothing to do here
 				continue;
 			}
 
@@ -345,21 +352,26 @@ class TemplateForensics
 
 			foreach ($nodes as $node)
 			{
-				$nodeName = $node->getName();
+				$elName = $node->localName;
 
-				if (!isset(self::$htmlElements[$nodeName]))
+				if (!isset(self::$htmlElements[$elName]))
 				{
 					// Unknown elements are treated as if they were a <span> element
-					$nodeName = 'span';
+					$elName = 'span';
 				}
 
 				// Test whether the element lets content through
-				if (self::elementIsEmpty($node))
+				if (!empty(self::$htmlElements[$elName]['da']))
 				{
-					$passthrough = false;
+					// Test the XPath condition
+					if (!isset(self::$htmlElements[$elName]['da0'])
+					 || $this->evaluate(self::$htmlElements[$elName]['da0'], $node))
+					{
+						$passthrough = false;
+					}
 				}
 
-				if (empty(self::$htmlElements[$nodeName]['t']))
+				if (empty(self::$htmlElements[$elName]['t']))
 				{
 					// If the element isn't transparent, we reset its bitfield
 					$branchBitfield = "\0";
@@ -369,31 +381,31 @@ class TemplateForensics
 				}
 
 				// Test whether this element is on the adoption agency list
-				if (empty(self::$htmlElements[$nodeName]['ar']))
+				if (empty(self::$htmlElements[$elName]['ar']))
 				{
 					$autoReopen = false;
 				}
 
 				// Test whether this branch preserves whitespace
-				if (!empty(self::$htmlElements[$nodeName]['pre']))
+				if (!empty(self::$htmlElements[$elName]['pre']))
 				{
 					$this->preservesWhitespace = true;
 				}
 
 				// Test whether this branch allows text nodes
-				$allowText = empty(self::$htmlElements[$nodeName]['nt']);
+				$allowText = empty(self::$htmlElements[$elName]['nt']);
 
 				// allowChild rules are cumulative if transparent, and reset above otherwise
-				$branchBitfield |= self::getBitfield($nodeName, 'ac', $node);
+				$branchBitfield |= $this->getBitfield($elName, 'ac', $node);
 
 				// denyDescendant rules are cumulative
-				$this->denyDescendantBitfield |= self::getBitfield($nodeName, 'dd', $node);
+				$this->denyDescendantBitfield |= $this->getBitfield($elName, 'dd', $node);
 			}
 
 			$branchBitfields[] = $branchBitfield;
 
 			// Save the name of the last node processed. Its actual name, not the "span" workaround
-			$this->leafNodes[] = $node->getName();
+			$this->leafNodes[] = $node->localName;
 
 			// If any branch disallows text, the tag disallows text
 			if (!$allowText)
@@ -421,48 +433,26 @@ class TemplateForensics
 	}
 
 	/**
-	* Analyse whether this tag should deny all descendants
+	* Evaluate a boolean XPath query
 	*
-	* Templates with no <xsl:apply-templates/> will deny all descendants.
-	* Templates where an ancestor of every <xsl:apply-templates/> node is an HTML element that the
-	* HTML5 specifications categorize as "empty" will deny all descendants.
+	* @param  string  $query XPath query
+	* @param  DOMNode $node  Context node
+	* @return boolean
 	*/
-	protected function analyseDenyAll()
+	protected function evaluate($query, DOMNode $node = null)
 	{
-		foreach ($this->node->xpath('//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"][.//xsl:apply-templates]') as $node)
-		{
-			if (!self::elementIsEmpty($node))
-			{
-				return;
-			}
-		}
-
-//		$this->denyAll = true;
+		return $this->xpath->evaluate('boolean(' . $query . ')', $node);
 	}
 
 	/**
-	* Test whether an HTML element uses the "empty" content model
+	* Get all XSL elements of given name
 	*
-	* @param  SimpleXMLElement $node Test node
-	* @return bool
+	* @param  string      $elName XSL element's name, e.g. "apply-templates"
+	* @return DOMNodeList
 	*/
-	protected function elementIsEmpty($node)
+	protected function getXSLElements($elName)
 	{
-		$elName = $node->getName();
-
-		if (empty(self::$htmlElements[$elName]['da']))
-		{
-			return false;
-		}
-
-		// Test the XPath condition
-		if (isset(self::$htmlElements[$elName]['da0'])
-		 && !self::xpath($node, self::$htmlElements[$elName]['da0']))
-		{
-			return false;
-		}
-
-		return true;
+		return $this->dom->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', $elName);
 	}
 
 	/**
@@ -625,12 +615,12 @@ class TemplateForensics
 	/**
 	* Get the bitfield value for a given element name in a given context
 	*
-	* @param  string           $elName Name of the HTML element
-	* @param  string           $k      Bitfield name: either 'c', 'ac' or 'dd'
-	* @param  SimpleXMLElement $node   Context node (not necessarily the same as $elName)
+	* @param  string  $elName Name of the HTML element
+	* @param  string  $k      Bitfield name: either 'c', 'ac' or 'dd'
+	* @param  DOMNode $node   Context node (not necessarily the same as $elName)
 	* @return string
 	*/
-	protected static function getBitfield($elName, $k, SimpleXMLElement $node)
+	protected function getBitfield($elName, $k, DOMNode $node)
 	{
 		if (!isset(self::$htmlElements[$elName][$k]))
 		{
@@ -661,7 +651,7 @@ class TemplateForensics
 					$xpath = self::$htmlElements[$elName][$k . $n];
 
 					// If the XPath condition is not fulfilled...
-					if (!self::xpath($node, $xpath))
+					if (!$this->evaluate($xpath, $node))
 					{
 						// ...turn off the corresponding bit
 						$byteValue ^= $bitValue;
@@ -674,22 +664,6 @@ class TemplateForensics
 		}
 
 		return $bitfield;
-	}
-
-	/**
-	* Test an XPath condition
-	*
-	* @param  SimpleXMLElement $node  Context node
-	* @param  string           $xpath XPath query
-	* @return boolean
-	*/
-	protected static function xpath(SimpleXMLElement $node, $xpath)
-	{
-		// We need DOMXPath to correctly evaluate the absence of an attribute
-		$domNode  = dom_import_simplexml($node);
-		$domXPath = new DOMXPath($domNode->ownerDocument);
-
-		return $domXPath->evaluate('boolean(' . $xpath . ')', $domNode);
 	}
 
 	/**
