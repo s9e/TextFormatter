@@ -119,11 +119,17 @@ class Repository
 		}
 
 		// Now process the template
-		$config['tag']->defaultTemplate = BBCodeMonkey::replaceTokens(
-			$node->getElementsByTagName('template')->item(0)->textContent,
-			$config['tokens'],
-			$config['passthroughToken']
-		);
+		foreach ($node->getElementsByTagName('template') as $template)
+		{
+			$config['tag']->templates->set(
+				$template->getAttribute('predicate'),
+				BBCodeMonkey::replaceTokens(
+					$template->textContent,
+					$config['tokens'],
+					$config['passthroughToken']
+				)
+			);
+		}
 
 		return array(
 			'bbcode' => $config['bbcode'],

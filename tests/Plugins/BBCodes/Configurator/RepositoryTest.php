@@ -205,4 +205,27 @@ class RepositoryTest extends Test
 
 		$this->assertTrue($config['tag']->rules['denyAll']);
 	}
+
+	/**
+	* @testdox Multiple templates can be set
+	*/
+	public function testMultipleTemplates()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO]</usage>
+					<template>default</template>
+					<template predicate="ancestor::BAR">bar</template>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
+		$config = $repository->get('FOO');
+
+		$this->assertSame('default', $config['tag']->templates->get(''));
+		$this->assertSame('bar',     $config['tag']->templates->get('ancestor::BAR'));
+	}
 }

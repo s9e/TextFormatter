@@ -913,6 +913,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] Custom tagName is correctly set
  [x] Rules targetting tags are correctly set
  [x] Boolean rules are set to their default value
+ [x] Multiple templates can be set
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\RepositoryCollection
  [x] Instances of Repository are added as-is

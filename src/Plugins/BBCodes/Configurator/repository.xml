@@ -8,6 +8,16 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="LIST">
+		<usage>[LIST type={ID}]{TEXT}[/URL]</usage>
+		<template><![CDATA[
+			<ul><xsl:apply-templates /></ul>
+		]]></template>
+		<template predicate="@type='decimal'"><![CDATA[
+			<ol><xsl:apply-templates /></ol>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="*" tagName="LI">
 		<usage>[*]{TEXT}[/*]</usage>
 		<template><![CDATA[

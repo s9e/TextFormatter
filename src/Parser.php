@@ -35,7 +35,7 @@ class Parser
 	*/
 	public function __construct(array $config)
 	{
-		$this->logger        = new Logger;
+		$this->logger        = new Logger($this);
 		$this->pluginsConfig = $config['plugins'];
 		$this->rootContext   = $config['rootContext'];
 		$this->tagsConfig    = $config['tags'];
@@ -64,5 +64,21 @@ class Parser
 		$this->processTags();
 
 		return $this->output;
+	}
+
+	/**
+	* Reset the parser for a new parsing
+	*
+	* @return void
+	*/
+	public function reset($text)
+	{
+		$this->tagStack = array();
+		$this->logger->clear();
+
+		$this->output  = '';
+		$this->pos     = 0;
+		$this->text    = $text;
+		$this->textLen = strlen($text);
 	}
 }
