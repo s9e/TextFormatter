@@ -85,17 +85,18 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		unset($config['requireParent']);
 
 		// Pack boolean rules into a bitfield
-		$flags = array(
+		$bitValues = array(
 			'autoClose'      => Parser::RULE_AUTO_CLOSE,
 			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
 			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
 			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
-			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT
+			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT,
+			'trimWhitespace' => Parser::RULE_TRIM_WHITESPACE
 		);
 
 		$bitfield = 0;
-		foreach ($flags as $ruleName => $bitValue)
+		foreach ($bitValues as $ruleName => $bitValue)
 		{
 			if (!empty($config[$ruleName]))
 			{
@@ -436,5 +437,20 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function requireAncestor($tagName)
 	{
 		$this->items['requireAncestor'][] = TagName::normalize($tagName);
+	}
+
+	/**
+	* Trim whitespace around tags
+	*
+	* @param bool $bool Whether whitespace around this tag should be trimmed
+	*/
+	public function trimWhitespace($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('trimWhitespace() expects a boolean');
+		}
+
+		$this->items['trimWhitespace'] = $bool;
 	}
 }

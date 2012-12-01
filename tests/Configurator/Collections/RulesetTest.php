@@ -527,6 +527,26 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox trimWhitespace() accepts a boolean
+	*/
+	public function testTrimWhitespaceValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->trimWhitespace(true);
+	}
+
+	/**
+	* @testdox trimWhitespace() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage trimWhitespace() expects a boolean
+	*/
+	public function testTrimWhitespaceInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->trimWhitespace('foo');
+	}
+
+	/**
 	* @testdox requireParent() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo-bar'
@@ -762,12 +782,40 @@ class RulesetTest extends Test
 	*/
 	public function testAsConfigBitfield()
 	{
+		$booleanRules = array(
+			'autoClose'      => Parser::RULE_AUTO_CLOSE,
+			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
+			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
+			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
+			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
+			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT,
+			'trimWhitespace' => Parser::RULE_TRIM_WHITESPACE
+		);
+
 		$ruleset = new Ruleset;
-		$ruleset->isTransparent(true);
+		foreach ($booleanRules as $methodName => $bitValue)
+		{
+			$ruleset->clear();
+			$ruleset->$methodName();
+
+			$config = $ruleset->asConfig();
+
+			$this->assertArrayHasKey('flags', $config);
+			$this->assertSame($bitValue, $config['flags']);
+		}
+	}
+
+	/**
+	* @testdox asConfig() can pack multiple boolean rules in a value named "flags"
+	*/
+	public function testAsConfigBitfieldMultiple()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->autoClose();
+		$ruleset->trimWhitespace();
 
 		$config = $ruleset->asConfig();
 
-		$this->assertArrayHasKey('flags', $config);
-		$this->assertSame(Parser::RULE_IS_TRANSPARENT, $config['flags']);
+		$this->assertSame(Parser::RULE_AUTO_CLOSE | Parser::RULE_TRIM_WHITESPACE, $config['flags']);
 	}
 }

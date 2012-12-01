@@ -177,6 +177,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] noBrChild() throws an exception if its argument is not a boolean
  [x] noBrDescendant() accepts a boolean
  [x] noBrDescendant() throws an exception if its argument is not a boolean
+ [x] trimWhitespace() accepts a boolean
+ [x] trimWhitespace() throws an exception if its argument is not a boolean
  [x] requireParent() throws an exception on invalid tag name
  [x] requireParent() normalizes tag name
  [x] requireAncestor() throws an exception on invalid tag name
@@ -193,6 +195,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] asConfig() does not return rules that are not used during parsing
  [x] asConfig() flips arrays to use target names as keys
  [x] asConfig() packs boolean rules in a value named "flags"
+ [x] asConfig() can pack multiple boolean rules in a value named "flags"
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Tag
