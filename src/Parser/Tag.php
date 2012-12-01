@@ -30,11 +30,6 @@ class Tag
 	protected $cascade = array();
 
 	/**
-	* @var bool Whether this tag should be ignored
-	*/
-	protected $ignore = false;
-
-	/**
 	* @var integer Length of text consumed by this tag
 	*/
 	protected $len;
@@ -53,6 +48,11 @@ class Tag
 	* @var integer Position of this tag in the text
 	*/
 	protected $pos;
+
+	/**
+	* @var bool Whether this tag should be skipped
+	*/
+	protected $skip = false;
 
 	/**
 	* @var Tag Tag that is uniquely paired with this tag
@@ -130,22 +130,12 @@ class Tag
 	*/
 	public function invalidate()
 	{
-		$this->ignore = true;
+		$this->skip = true;
 
 		foreach ($this->cascade as $tag)
 		{
 			$tag->invalidate();
 		}
-	}
-
-	/**
-	* Test whether this tag is a start tag (self-closing tags inclusive)
-	*
-	* @return bool
-	*/
-	public function isStartTag()
-	{
-		return (bool) ($this->type & self::START_TAG);
 	}
 
 	/**
@@ -159,6 +149,26 @@ class Tag
 	}
 
 	/**
+	* Test whether this tag is an ignore tag
+	*
+	* @return bool
+	*/
+	public function isIgnoreTag()
+	{
+		return ($this->name === 'i');
+	}
+
+	/**
+	* Test whether this tag is a start tag (self-closing tags inclusive)
+	*
+	* @return bool
+	*/
+	public function isStartTag()
+	{
+		return (bool) ($this->type & self::START_TAG);
+	}
+
+	/**
 	* 
 	*
 	* @param  Tag  $tag
@@ -168,5 +178,18 @@ class Tag
 	{
 		$this->tagMate = 'xxx';
 		$tag->tagMate = 'xxx';
+	}
+
+	/**
+	* Test whether this tag should be skipped
+	*
+	* Will return true if this tag was invalidated or if the parser's cursor is past its position
+	*
+	* @param  integer $pos Parser's position in text
+	* @return bool
+	*/
+	public function shouldBeSkipped($pos)
+	{
+		return ($pos > $this->pos || $this->skip);
 	}
 }
