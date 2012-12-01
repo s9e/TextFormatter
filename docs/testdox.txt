@@ -267,6 +267,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <img/> is void
  [x] <img> is void even with a <xsl:apply-templates/> child
  [x] <span> is not void
+ [x] <blockquote> is a block-level element
+ [x] <span> is not a block-level element
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <div> has an allowChild rule for <div> and <span>
@@ -291,6 +293,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Root has a denyChild rule for <li> if parentHTML is not specified
  [x] Root has an allowChild rule for <li> if parentHTML is <ul>
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>
+ [x] Generates a trimWhitespace rule for <div>
+ [x] Does not generate a trimWhitespace rule for <span>
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'

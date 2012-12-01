@@ -228,6 +228,13 @@ abstract class RulesGenerator
 				$rules['tags'][$srcTagName]['noBrDescendant'] = true;
 			}
 
+			// Test whether this tag is a block-level element, which would mean its surrounding
+			// whitespace should be trimmed
+			if ($srcTag->isBlock())
+			{
+				$rules['tags'][$srcTagName]['trimWhitespace'] = true;
+			}
+
 			foreach ($templateForensics as $trgTagName => $trgTag)
 			{
 				// Test whether the target tag can be a child of the source tag and a descendant

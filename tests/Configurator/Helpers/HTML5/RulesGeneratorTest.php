@@ -447,4 +447,44 @@ class RulesGeneratorTest extends Test
 			$rules['tags']
 		);
 	}
+
+	/**
+	* @testdox Generates a trimWhitespace rule for <div>
+	*/
+	public function testTrimWhitespace()
+	{
+		$tags = new TagCollection;
+		$tags->add('DIV')->defaultTemplate = '<div><xsl:apply-templates/></div>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'DIV' => array(
+					'trimWhitespace' => true
+				)
+			),
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Does not generate a trimWhitespace rule for <span>
+	*/
+	public function testNoTrimWhitespace()
+	{
+		$tags = new TagCollection;
+		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'SPAN' => array(
+					'trimWhitespace' => null
+				)
+			),
+			$rules['tags']
+		);
+	}
 }

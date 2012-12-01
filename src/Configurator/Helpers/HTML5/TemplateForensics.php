@@ -72,6 +72,11 @@ class TemplateForensics
 	protected $hasRootText = false;
 
 	/**
+	* @var bool Whether this tag should be considered a block-level element
+	*/
+	protected $isBlock = false;
+
+	/**
 	* @var bool Whether all branches use the transparent content model (or more accurately, whether
 	*           no branch uses a content model other than transparent)
 	*/
@@ -225,6 +230,16 @@ class TemplateForensics
 	}
 
 	/**
+	* Whether this tag should be considered a block-level element
+	*
+	* @return bool
+	*/
+	public function isBlock()
+	{
+		return $this->isBlock;
+	}
+
+	/**
 	* Whether this tag should use the transparent content model
 	*
 	* @return bool
@@ -289,6 +304,12 @@ class TemplateForensics
 			{
 				// Unknown elements are treated as if they were a <span> element
 				$elName = 'span';
+			}
+
+			// If any root node is a block-level element, we'll mark the tag as such
+			if (!empty(self::$htmlElements[$elName]['b']))
+			{
+				$this->isBlock = true;
 			}
 
 			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
