@@ -64,17 +64,12 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Ensure that censored content can't ever be used by other tags
 		$tag->rules->denyAll();
 
-		// Create the default template
-		$tag->defaultTemplate = 
-			'<xsl:choose>' .
-				'<xsl:when test="@' . htmlspecialchars($this->attrName) . '">' .
-					'<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>' .
-				'</xsl:when>' .
-				'<xsl:otherwise>' .
-					htmlspecialchars($this->defaultReplacement) .
-				'</xsl:otherwise>' .
-			'</xsl:choose>'
-		;
+		// Create a template for censored words using the default replacement
+		$tag->templates[''] = htmlspecialchars($this->defaultReplacement);
+
+		// Create a template for censored words with custom replacements
+		$tag->templates['@' . $this->attrName]
+			= '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>';
 	}
 
 	/**
