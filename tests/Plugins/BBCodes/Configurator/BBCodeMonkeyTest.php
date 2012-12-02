@@ -539,6 +539,37 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				'[foo={MAP=one:uno,two:dos;caseSensitive;strict}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#map'),
+										'vars'     => array(
+											'map' => array(
+												array('/^one$/D', 'uno'),
+												array('/^two$/D', 'dos')
+											),
+											'strict' => true
+										)
+									))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'MAP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
 				'[foo={MAP=pokémon:Pikachu,yugioh:Yugi}/]',
 				array(
 					'name'   => 'FOO',

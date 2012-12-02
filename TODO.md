@@ -45,4 +45,3 @@ TODO
 - Whitespace trimming: up to 2 newlines outside of "block" elements, up to 1 newline inside of them. They should collapse somehow, or rather not be added to each other. For instance "[div]\n\n\n[div]..." should produce something like "<DIV><i>\n</i><BR>\n</BR><i>\n</i><DIV>..." -- the first newline inside the first DIV is trimmed, and up to 2 newlines before the second DIV should be trimmed too but since we're already removed 1 for the first DIV, we only remove 2-1=1
 - Add an NFO BBCode
 - IDEA: drop ConfiguratorBase::getXSL() and introduce the concept of a DynamicTemplate object that is serialized to an XSL template string whenever needed (e.g. when building the final stylesheet, which would require renormalization for safety)
-- Do add a "map" attribute filter that maps values, one to another. e.g. ["cpp"=>"C++"]

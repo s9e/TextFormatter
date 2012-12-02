@@ -774,11 +774,19 @@ abstract class BBCodeMonkey
 				$map[] = array($regexp, $value);
 			}
 
-			// The caseSensitive option is not needed anymore
-			unset($token['options']['caseSensitive']);
+			// Prepare this filter's options
+			$filterOptions = array('map' => $map);
+			if (!empty($token['options']['strict']))
+			{
+				$filterOptions['strict'] = true;
+			}
 
-			// Finally append the #map filter
-			$attribute->filterChain->append('#map', array('map' => $map));
+			// Append the #map filter
+			$attribute->filterChain->append('#map', $filterOptions);
+
+			// Remove options that are not needed anymore
+			unset($token['options']['caseSensitive']);
+			unset($token['options']['strict']);
 		}
 		elseif ($token['type'] !== 'TEXT')
 		{
