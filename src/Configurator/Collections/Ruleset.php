@@ -245,14 +245,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	*/
 	public function closeAncestor($tagName)
 	{
-		$tagName = TagName::normalize($tagName);
-
-		if ($this->hasTarget('forceParent', $tagName))
-		{
-			throw new RuntimeException("Cannot set both closeAncestor and forceParent on '" . $tagName . "'");
-		}
-
-		$this->items['closeAncestor'][] = $tagName;
+		$this->items['closeAncestor'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -262,14 +255,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	*/
 	public function closeParent($tagName)
 	{
-		$tagName = TagName::normalize($tagName);
-
-		if ($this->hasTarget('forceParent', $tagName))
-		{
-			throw new RuntimeException("Cannot set both closeParent and forceParent on '" . $tagName . "'");
-		}
-
-		$this->items['closeParent'][] = $tagName;
+		$this->items['closeParent'][] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -335,28 +321,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function denyDescendant($tagName)
 	{
 		$this->items['denyDescendant'][] = TagName::normalize($tagName);
-	}
-
-	/**
-	* Add a forceParent rule
-	*
-	* @param string $tagName Name of the target tag
-	*/
-	public function forceParent($tagName)
-	{
-		$tagName = TagName::normalize($tagName);
-
-		if ($this->hasTarget('closeParent', $tagName))
-		{
-			throw new RuntimeException("Cannot set both closeParent and forceParent on '" . $tagName . "'");
-		}
-
-		if ($this->hasTarget('closeAncestor', $tagName))
-		{
-			throw new RuntimeException("Cannot set both closeAncestor and forceParent on '" . $tagName . "'");
-		}
-
-		$this->items['forceParent'][] = $tagName;
 	}
 
 	/**

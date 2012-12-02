@@ -208,29 +208,6 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox closeAncestor() throws an exception if a forceParent rule targets the same tag
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot set both closeAncestor and forceParent on 'FOO'
-	*/
-	public function testCloseAncestorWithForceParent()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->forceParent('foo');
-		$ruleset->closeAncestor('foo');
-	}
-
-	/**
-	* @testdox closeParent() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
-	*/
-	public function testCloseParentInvalidTagName()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->closeParent('foo-bar');
-	}
-
-	/**
 	* @testdox closeParent() normalizes tag name
 	*/
 	public function testCloseParentNormalizesTagName()
@@ -243,18 +220,6 @@ class RulesetTest extends Test
 			array('closeParent' => array('B')),
 			iterator_to_array($ruleset)
 		);
-	}
-
-	/**
-	* @testdox closeParent() throws an exception if a forceParent rule targets the same tag
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot set both closeParent and forceParent on 'FOO'
-	*/
-	public function testCloseParentWithForceParent()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->forceParent('foo');
-		$ruleset->closeParent('foo');
 	}
 
 	/**
@@ -405,45 +370,6 @@ class RulesetTest extends Test
 			array('denyDescendant' => array('B')),
 			iterator_to_array($ruleset)
 		);
-	}
-
-	/**
-	* @testdox forceParent() normalizes tag name
-	*/
-	public function testForceParentNormalizesTagName()
-	{
-		$ruleset = new Ruleset;
-
-		$ruleset->forceParent('b');
-
-		$this->assertSame(
-			array('forceParent' => array('B')),
-			iterator_to_array($ruleset)
-		);
-	}
-
-	/**
-	* @testdox forceParent() throws an exception if a closeAncestor rule targets the same tag
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot set both closeAncestor and forceParent on 'FOO'
-	*/
-	public function testForceParentWithCloseAncestor()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->closeAncestor('foo');
-		$ruleset->forceParent('foo');
-	}
-
-	/**
-	* @testdox forceParent() throws an exception if a closeParent rule targets the same tag
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot set both closeParent and forceParent on 'FOO'
-	*/
-	public function testForceParentWithCloseParent()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->closeParent('foo');
-		$ruleset->forceParent('foo');
 	}
 
 	/**

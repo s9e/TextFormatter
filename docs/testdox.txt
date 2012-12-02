@@ -150,10 +150,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] autoReopen() throws an exception if its argument is not a boolean
  [x] closeAncestor() throws an exception on invalid tag name
  [x] closeAncestor() normalizes tag name
- [x] closeAncestor() throws an exception if a forceParent rule targets the same tag
- [x] closeParent() throws an exception on invalid tag name
  [x] closeParent() normalizes tag name
- [x] closeParent() throws an exception if a forceParent rule targets the same tag
  [x] defaultChildRule() accepts 'allow'
  [x] defaultChildRule() accepts 'deny'
  [x] defaultChildRule() throws an exception if passed anything else than 'allow' or 'deny'
@@ -166,9 +163,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] denyChild() normalizes tag name
  [x] denyDescendant() throws an exception on invalid tag name
  [x] denyDescendant() normalizes tag name
- [x] forceParent() normalizes tag name
- [x] forceParent() throws an exception if a closeAncestor rule targets the same tag
- [x] forceParent() throws an exception if a closeParent rule targets the same tag
  [x] ignoreText() accepts a boolean
  [x] ignoreText() throws an exception if its argument is not a boolean
  [x] isTransparent() accepts a boolean
