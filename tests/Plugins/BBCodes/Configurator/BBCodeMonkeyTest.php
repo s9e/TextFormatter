@@ -690,6 +690,10 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				'[foo={MAP=foo:bar,baz}/]',
+				new RuntimeException("Invalid map assignment 'baz'")
+			),
+			array(
 				/**
 				* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=2127991
 				*/

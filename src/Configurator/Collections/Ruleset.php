@@ -136,23 +136,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Test whether given tag name is used as target for given rule
-	*
-	* @param  string $ruleName
-	* @param  string $tagName
-	* @return bool
-	*/
-	protected function hasTarget($ruleName, $tagName)
-	{
-		if (!isset($this->items[$ruleName]))
-		{
-			return false;
-		}
-
-		return in_array($tagName, $this->items[$ruleName], true);
-	}
-
-	/**
 	* Merge a set of rules into this collection
 	*
 	* @param array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
