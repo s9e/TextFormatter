@@ -87,8 +87,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			'tagName'  => $this->tagName
 		);
 
-		$regexpOptions = array('specialChars' => array('*' => '\\pL*', '?' => '.'));
-
 		$words = array();
 		$replacementWords = array();
 
@@ -102,6 +100,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			}
 		}
 
+		$regexpOptions = array('specialChars' => array('*' => '\\pL*', '?' => '.'));
 		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
 		$config['regexp'] = '/(?<!\\pL)' . $regexp . '(?!\\pL)/iu';
 
