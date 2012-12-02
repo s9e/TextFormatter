@@ -7,39 +7,29 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\PluginParser;
+use s9e\TextFormatter\Plugins\ParserBase;
 
-class GenericParser extends PluginParser
+class GenericParser extends ParserBase
 {
-	public function getTags($text, array $matches)
+	/**
+	* {@inheritdoc}
+	*/
+	public function parse($text, array $matches)
 	{
-		$tags = array();
-
 		foreach ($matches as $tagName => $regexpMatches)
 		{
 			foreach ($regexpMatches as $m)
 			{
-				$attrs = array();
+				$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], strlen($m[0][0]));
 
 				foreach ($m as $k => $v)
 				{
 					if (!is_numeric($k))
 					{
-						$attrs[$k] = $v[0];
+						$tag->addAttribute($k, $v[0]);
 					}
 				}
-
-				$tags[] = array(
-					'pos'   => $m[0][1],
-					'name'  => $tagName,
-					'type'  => Parser::SELF_CLOSING_TAG,
-					'len'   => strlen($m[0][0]),
-					'attrs' => $attrs
-				);
 			}
 		}
-
-		return $tags;
 	}
 }
