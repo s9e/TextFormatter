@@ -251,21 +251,7 @@ class Parser extends ParserBase
 			     ? $this->parser->addStartTag($tagName, $lpos, $len)
 			     : $this->parser->addSelfClosingTag($tagName, $lpos, $len);
 
-			// Add predefined attribute values
-			if (isset($bbcodeConfig['attributeValues']))
-			{
-				foreach ($bbcodeConfig['attributeValues'] as $attrName => $attrValue)
-				{
-					$tag->addAttribute($attrName, $attrValue);
-				}
-			}
-
-			// Add parsed attributes
-			foreach ($attributes as $attrName => $attrValue)
-			{
-				$tag->addAttribute($attrName, $attrValue);
-			}
-
+			// Use this tag's content for attributes that require it
 			if ($type === Tag::START_TAG)
 			{
 				if ($bbcodeId !== '')
@@ -308,9 +294,24 @@ class Parser extends ParserBase
 							$value = substr($text, $rpos, $pos - $rpos);
 						}
 
-						$tag->addAttribute($attrName, $value);
+						$attributes[$attrName] = $value;
 					}
 				}
+			}
+
+			// Add predefined attribute values
+			if (isset($bbcodeConfig['attributeValues']))
+			{
+				foreach ($bbcodeConfig['attributeValues'] as $attrName => $attrValue)
+				{
+					$tag->addAttribute($attrName, $attrValue);
+				}
+			}
+
+			// Add parsed attributes
+			foreach ($attributes as $attrName => $attrValue)
+			{
+				$tag->addAttribute($attrName, $attrValue);
 			}
 		}
 	}
