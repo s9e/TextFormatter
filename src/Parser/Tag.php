@@ -25,6 +25,11 @@ class Tag
 	const SELF_CLOSING_TAG = 3;
 
 	/**
+	* @var array Dictionary of attributes
+	*/
+	protected $attributes = array();
+
+	/**
 	* @var array List of tags that are invalidated when this tag is invalidated
 	*/
 	protected $cascade = array();
@@ -80,6 +85,28 @@ class Tag
 		$this->name       = $name;
 		$this->pos        = (int) $pos;
 		$this->len        = (int) $len;
+	}
+
+	/**
+	* Add an attribute to this tag
+	*
+	* @param  string $attrName  Attribute's name
+	* @param  string $attrValue Attribute's value
+	* @return void
+	*/
+	public function addAttribute($attrName, $attrValue)
+	{
+		$this->attributes[$attrName] = $attrValue;
+	}
+
+	/**
+	* Return this tag's attributes
+	*
+	* @return array
+	*/
+	public function getAttributes()
+	{
+		return $this->attributes;
 	}
 
 	/**
