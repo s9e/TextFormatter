@@ -588,6 +588,7 @@ abstract class BBCodeMonkey
 
 		$tokenTypes = array(
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
+			'map'    => 'MAP[0-9]*=(?<map>.+?)',
 			'regexp' => '(?:REGEXP[0-9]*|PARSE)=' . $regexpMatcher,
 			'range'  => 'RAN(?:DOM|GE)[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
 			'other'  => '(?<other>[A-Z_]+[0-9]*)'
@@ -607,7 +608,7 @@ abstract class BBCodeMonkey
 		foreach ($matches as $m)
 		{
 			if (isset($m['other'][0])
-			 && preg_match('#^(?:CHOICE|REGEXP|PARSE|RANDOM|RANGE)#', $m['other'][0]))
+			 && preg_match('#^(?:CHOICE|MAP|REGEXP|PARSE|RANDOM|RANGE)#', $m['other'][0]))
 			{
 				throw new RuntimeException("Malformed token '" . $m['other'][0] . "'");
 			}
@@ -708,11 +709,11 @@ abstract class BBCodeMonkey
 			// Build a regexp from the list of choices then add a "#regexp" filter
 			$regexp = RegexpBuilder::fromList(
 				explode(',', $token['choices']),
-				array('specialChars' => array('/' => '\\/'))
+				array('delimiter' => '/')
 			);
 			$regexp = '/^' . $regexp . '$/D';
 
-			// Add the case-insensitive flag until specified otherwise
+			// Add the case-insensitive flag unless specified otherwise
 			if (empty($token['options']['caseSensitive']))
 			{
 				$regexp .= 'i';
@@ -726,6 +727,58 @@ abstract class BBCodeMonkey
 			}
 
 			$attribute->filterChain->append('#regexp', array('regexp' => $regexp));
+		}
+		elseif ($token['type'] === 'MAP')
+		{
+			// First we map individual keys to their value
+			$map = array();
+			foreach (explode(',', $token['map']) as $pair)
+			{
+				$pos = strpos($pair, ':');
+
+				if ($pos === false)
+				{
+					throw new RuntimeException("Invalid map assignment '" . $pair . "'");
+				}
+
+				$map[substr($pair, 0, $pos)] = substr($pair, 1 + $pos);
+			}
+
+			// Group values by keys
+			$valueKeys = array();
+			foreach ($map as $key => $value)
+			{
+				$valueKeys[$value][] = $key;
+			}
+
+			// Now create a regexp and an entry in the map for each group
+			$map = array();
+			foreach ($valueKeys as $value => $keys)
+			{
+				$regexp = RegexpBuilder::fromList($keys, array('delimiter' => '/'));
+				$regexp = '/^' . $regexp . '$/D';
+
+				// Add the case-insensitive flag unless specified otherwise
+				if (empty($token['options']['caseSensitive']))
+				{
+					$regexp .= 'i';
+				}
+
+				// Add the Unicode flag if the regexp isn't purely ASCII
+				if (!preg_match('#^[[:ascii:]]*$#D', $regexp))
+				{
+					$regexp .= 'u';
+				}
+
+				// Add the [regexp,value] pair to the map
+				$map[] = array($regexp, $value);
+			}
+
+			// The caseSensitive option is not needed anymore
+			unset($token['options']['caseSensitive']);
+
+			// Finally append the #map filter
+			$attribute->filterChain->append('#map', array('map' => $map));
 		}
 		elseif ($token['type'] !== 'TEXT')
 		{

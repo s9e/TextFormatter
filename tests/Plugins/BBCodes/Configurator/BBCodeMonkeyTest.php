@@ -509,6 +509,126 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				'[foo={MAP=one:uno,two:dos}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#map'),
+										'vars'     => array(
+											'map' => array(
+												array('/^one$/Di', 'uno'),
+												array('/^two$/Di', 'dos')
+											)
+										)
+									))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'MAP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={MAP=pokémon:Pikachu,yugioh:Yugi}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#map'),
+										'vars'     => array(
+											'map' => array(
+												array('/^pokémon$/Diu', 'Pikachu'),
+												array('/^yugioh$/Di',   'Yugi')
+											)
+										)
+									))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'MAP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={MAP=Pokémon:Pikachu,YuGiOh:Yugi;caseSensitive}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#map'),
+										'vars'     => array(
+											'map' => array(
+												array('/^Pokémon$/Du', 'Pikachu'),
+												array('/^YuGiOh$/D',   'Yugi')
+											)
+										)
+									))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'MAP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={MAP=pokémon:Pikachu,yugioh:Yugi,yugioh!:Yugi,yu-gi-oh:Yugi,yu-gi-oh!:Yugi}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									ProgrammableCallback::fromArray(array(
+										'callback' => new CallbackPlaceholder('#map'),
+										'vars'     => array(
+											'map' => array(
+												array('/^pokémon$/Diu',          'Pikachu'),
+												array('/^yu(?:-gi-|gi)oh!?$/Di', 'Yugi')
+											)
+										)
+									))
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'MAP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
 				'[foo={NUMBER1},{NUMBER2} foo={NUMBER2};{NUMBER1}/]',
 				array(
 					'name'   => 'FOO',
