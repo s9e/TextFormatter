@@ -5,10 +5,7 @@ TODO
 - finish the Fabric plugin
 - create a plugin for the Markdown syntax (or possibly Upskirt/Redcarpet) and name it Downmark to feel witty and have a plugin for each letter from A to H
 - write documentation, el oh el
-- Add a rule to automatically create a parent to a tag, e.g. create <LIST> when <LI> is used. After creating <LIST>, add its id to the "require" field so that we don't get in an infinite loop
-- Support forcing text to be wrapped inside tags. e.g. "<LIST>foo" becomes "<LIST><LI>foo</LI>"
-- There's potential for a bug in createMatchingTag when creating a tag based on a tag that with trimBefore enabled. The position of the new tag should probably be the actual position of the tag, not of the whitespace
-- Investigate the possibility of replacing autoClose with isEmpty
+- Add a rule to automatically create a parent to a tag, e.g. create <LIST> when <LI> is used. After creating <LIST>, add its id to the "require" field so that we don't get in an infinite loop position of the new tag should probably be the actual position of the tag, not of the whitespace
 - JSParserGenerator: if all the plugins' RLA is the same, remove them from the config and use hints to bypass the if test
 - Investigate the possibility of using an external CSS checker in order to enable a default "css" filter
 - Consider a Twitter BBCode (https://dev.twitter.com/docs/embedded-tweets)
@@ -23,7 +20,6 @@ TODO
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
 - Replace PluginConfig::getXSL() with PluginConfig::getTemplates() which should return array([match]=>[template]) and each template goes through Templates::setTemplate() (how to evaluate attributes safety though)
 - Look into properly implementing urlencode() and rawurlencode() in JS
-- Fix custom XSL namespace prefix + namespaced tags (tags' namespaces declarations are lost in the process)
 - Way to implement syntax highlighting at parsing time: create tags in the "stx" namespace and implement syntax highlighting via... a plugin maybe? At least some stuff would need to be hardcoded, first of which would be the end [/CODE] tag, and probably also its start tag, [CODE]. Make the namespaced tags requireAncestor their CODE tag
 - Add support for <ol start="2"/>
 - Consider adding an #ip or #ipport filter
