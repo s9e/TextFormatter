@@ -139,6 +139,16 @@ class Tag
 	}
 
 	/**
+	* Test whether this tag is a br tag
+	*
+	* @return bool
+	*/
+	public function isBrTag()
+	{
+		return ($this->name === 'br');
+	}
+
+	/**
 	* Test whether this tag is an end tag (self-closing tags inclusive)
 	*
 	* @return bool
