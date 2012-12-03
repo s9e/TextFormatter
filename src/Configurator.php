@@ -105,10 +105,13 @@ class Configurator implements ConfigProvider
 	public function asConfig()
 	{
 		$config    = ConfigHelper::toArray($this);
-		$bitfields = RulesHelper::getBitfield($this->tags);
+		$bitfields = RulesHelper::getBitfields($this->tags, $this->rootRules);
 
 		// Save the root context
-		$config['rootContext'] = $bitfields['rootContext'];
+		$config['rootContext'] = $bitfields['root'];
+
+		// Make sure those keys exist even if no tags were defined and plugins loaded
+		$config += array('plugins' => array(), 'tags' => array());
 
 		// Remove unused tags
 		$config['tags'] = array_intersect_key($config['tags'], $bitfields['tags']);

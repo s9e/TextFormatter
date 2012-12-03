@@ -14,7 +14,7 @@ class Logger
 	/**
 	* @var array Log entries
 	*/
-	protected log = array();
+	protected $log = array();
 
 	/**
 	* @var Parser

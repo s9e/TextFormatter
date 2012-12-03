@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter;
 
+use s9e\TextFormatter\Parser\Logger;
+
 class Parser
 {
 	/**#@+

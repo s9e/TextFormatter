@@ -69,4 +69,23 @@ class ConfiguratorTest extends Test
 			$this->configurator->urlConfig
 		);
 	}
+
+	/**
+	* @testdox asConfig() returns the parser's configuration
+	*/
+	public function testAsConfig()
+	{
+		$this->configurator->asConfig();
+	}
+
+	/**
+	* @testdox getParser() returns an instance of s9e\TextFormatter\Parser
+	*/
+	public function testGetParser()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Parser',
+			$this->configurator->getParser()
+		);
+	}
 }

@@ -4,6 +4,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->rootRules is an instance of Ruleset
  [x] $configurator->rootRules is an instance of TagCollection
  [x] $configurator->rootRules is an instance of UrlConfig
+ [x] asConfig() returns the parser's configuration
+ [x] getParser() returns an instance of s9e\TextFormatter\Parser
 
 s9e\TextFormatter\Tests\Configurator\Collections\Collection
  [x] Collection is countable
