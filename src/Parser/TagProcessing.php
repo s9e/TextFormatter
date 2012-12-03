@@ -146,13 +146,20 @@ trait TagAccumulator
 			$this->output .= $catchupText . $ignoredText;
 		}
 
-		// Output current tag and move the curosr
-		$this->output .= '<' . $tagName;
-		foreach ($this->currentTag->getAttributes() as $attrName => $attrValue)
+		// Output current tag and move the cursor
+		if ($this->currentTag->isStartTag())
 		{
-			$this->output .= ' ' . $attrName . '="' . htmlspecialchars($attrValue) . '"';
+			$this->output .= '<' . $tagName;
+			foreach ($this->currentTag->getAttributes() as $attrName => $attrValue)
+			{
+				$this->output .= ' ' . $attrName . '="' . htmlspecialchars($attrValue) . '"';
+			}
+			$this->output .= '>';
 		}
-		$this->output .= '>';
+		else
+		{
+			$this->output .= '</' . $tagName . '>';
+		}
 		$this->pos = $tagPos + $tagLen;
 
 		// Trim whitespace after this tag

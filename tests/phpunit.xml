@@ -17,6 +17,8 @@
 
 	<testsuites>
 		<testsuite name="TextFormatter">
+			<file>ConfiguratorTest.php</file>
+
 			<!-- Test the base classes and traits first -->
 			<file>Configurator/Collections/CollectionTest.php</file>
 			<file>Configurator/Collections/NormalizedCollectionTest.php</file>
@@ -78,6 +80,7 @@
 		<whitelist>
 			<!--directory suffix=".php">../src</directory-->
 
+			<file>../src/Configurator.php</file>
 			<file>../src/Configurator/Collections/AttributeCollection.php</file>
 			<file>../src/Configurator/Collections/AttributeList.php</file>
 			<file>../src/Configurator/Collections/AttributePreprocessorCollection.php</file>

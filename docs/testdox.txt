@@ -1,3 +1,10 @@
+s9e\TextFormatter\Tests\Configurator
+ [x] $configurator->customFilters is an instance of FilterCollection
+ [x] $configurator->plugins is an instance of PluginCollection
+ [x] $configurator->rootRules is an instance of Ruleset
+ [x] $configurator->rootRules is an instance of TagCollection
+ [x] $configurator->rootRules is an instance of UrlConfig
+
 s9e\TextFormatter\Tests\Configurator\Collections\Collection
  [x] Collection is countable
  [x] Collection is iterable with foreach
