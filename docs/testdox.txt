@@ -4,8 +4,11 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->rootRules is an instance of Ruleset
  [x] $configurator->rootRules is an instance of TagCollection
  [x] $configurator->rootRules is an instance of UrlConfig
- [x] asConfig() returns the parser's configuration
+ [x] asConfig() returns the parser's configuration as an array
+ [x] allowedChildren and allowedDescendants bitfields are added to each tag
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] $configurator->CamelCase returns $configurator->plugins->get('CamelCase')
+ [x] $configurator->foo throws an exception
 
 s9e\TextFormatter\Tests\Configurator\Collections\Collection
  [x] Collection is countable

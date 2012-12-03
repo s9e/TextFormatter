@@ -71,11 +71,35 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the parser's configuration
+	* @testdox asConfig() returns the parser's configuration as an array
 	*/
 	public function testAsConfig()
 	{
-		$this->configurator->asConfig();
+		$config = $this->configurator->asConfig();
+		$this->assertInternalType('array', $config);
+		$this->assertArrayHasKey('rootContext', $config);
+		$this->assertArrayHasKey('urlConfig', $config);
+	}
+
+	/**
+	* @testdox allowedChildren and allowedDescendants bitfields are added to each tag
+	*/
+	public function testAsConfigTagBitfields()
+	{
+		$this->configurator->tags->add('A');
+		$config = $this->configurator->asConfig();
+
+		$this->assertArrayMatches(
+			array(
+				'tags' => array(
+					'A' => array(
+						'allowedChildren'    => "\1",
+						'allowedDescendants' => "\1"
+					)
+				)
+			),
+			$config
+		);
 	}
 
 	/**
@@ -87,5 +111,33 @@ class ConfiguratorTest extends Test
 			's9e\\TextFormatter\\Parser',
 			$this->configurator->getParser()
 		);
+	}
+
+	/**
+	* @testdox $configurator->CamelCase returns $configurator->plugins->get('CamelCase')
+	*/
+	public function testMagicGet()
+	{
+		$mock = $this->getMock('stdClass', array('get'));
+
+		$mock->expects($this->once())
+		     ->method('get')
+		     ->with($this->equalTo('CamelCase'))
+		     ->will($this->returnValue('foobar'));
+
+		$this->configurator->plugins = $mock;
+
+		$this->assertSame('foobar', $this->configurator->CamelCase);
+	}
+
+
+	/**
+	* @testdox $configurator->foo throws an exception
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Undefined property
+	*/
+	public function testMagicGetInvalid()
+	{
+		$this->configurator->foo;
 	}
 }

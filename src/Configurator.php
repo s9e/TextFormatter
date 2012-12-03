@@ -125,6 +125,9 @@ class Configurator implements ConfigProvider
 		// Remove unused plugins
 		$config['plugins'] = array_filter($config['plugins']);
 
+		// Remove unused properties
+		unset($config['rootRules']);
+
 		return $config;
 	}
 
