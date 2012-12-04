@@ -104,8 +104,7 @@ class Parser extends ParserBase
 						$type = Tag::SELF_CLOSING_TAG;
 						++$rpos;
 
-						if ($rpos === $textLen
-						 || $text[$rpos] !== ']')
+						if ($rpos === $textLen || $text[$rpos] !== ']')
 						{
 							// There isn't a closing bracket after the slash, e.g. [foo/
 							continue 2;
@@ -240,7 +239,7 @@ class Parser extends ParserBase
 			if ($type === Tag::START_TAG)
 			{
 				// If this is a start tag with an identifier, look for its end tag now
-				$endTagPos = -1;
+				$endTagPos = false;
 				if ($bbcodeId !== '')
 				{
 					$match = '[/' . $bbcodeName . ':' . $bbcodeId . ']';
@@ -266,7 +265,7 @@ class Parser extends ParserBase
 						}
 
 						// Find the position of its end tag if we don't already know it
-						if ($endTagPos < 0)
+						if ($endTagPos === false)
 						{
 							$endTagPos = stripos($text, '[/' . $bbcodeName . ']', $rpos);
 
@@ -302,7 +301,7 @@ class Parser extends ParserBase
 				}
 			}
 
-			// Add parsed attributes
+			// Add parsed attributes, which will overwrite predefined attributes
 			foreach ($attributes as $attrName => $attrValue)
 			{
 				$tag->addAttribute($attrName, $attrValue);
