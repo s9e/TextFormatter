@@ -60,7 +60,7 @@ class Tag
 	protected $skip = false;
 
 	/**
-	* @var Tag Tag that is uniquely paired with this tag
+	* @var self Tag that is uniquely paired with this tag
 	*/
 	protected $tagMate = null;
 
@@ -97,6 +97,31 @@ class Tag
 	public function addAttribute($attrName, $attrValue)
 	{
 		$this->attributes[$attrName] = $attrValue;
+	}
+
+	/**
+	* 
+	*
+	* @param  self $tag
+	* @return void
+	*/
+	public function cascadeInvalidationTo(self $tag)
+	{
+		$this->cascade[] = $tag;
+	}
+
+	/**
+	* Test whether this tag closes given tag
+	*
+	* @param  self $tag
+	* @return bool
+	*/
+	public function closes(self $tag)
+	{
+		return ($tag->type  === self::START_TAG
+		     && $this->type === self::END_TAG
+		     && $this->name === $tag->name
+		     && $this->pluginName === $tag->pluginName);
 	}
 
 	/**
@@ -137,17 +162,6 @@ class Tag
 	public function getPos()
 	{
 		return $this->pos;
-	}
-
-	/**
-	* 
-	*
-	* @param  Tag  $tag
-	* @return void
-	*/
-	public function cascadeInvalidationTo(Tag $tag)
-	{
-		$this->cascade[] = $tag;
 	}
 
 	/**
@@ -206,15 +220,39 @@ class Tag
 	}
 
 	/**
-	* 
+	* Pair this tag with given tag
 	*
-	* @param  Tag  $tag
+	* Paired tags cascade their invalidation to each other. A start tag in a pair can only be closed
+	* by its paired end tag, and an end tag will only close its paired start tag
+	*
+	* @param  self $tag
 	* @return void
 	*/
-	public function pairWith(Tag $tag)
+	public function pairWith(self $tag)
 	{
-		$this->tagMate = 'xxx';
-		$tag->tagMate = 'xxx';
+		// If we're breaking a preexisting pair, we record the other tag of that pair, which we
+		// invalidate after this new pair is formed
+		$brokenPairs = array();
+		if (isset($tag->tagMate) && $tag->tagMate !== $this)
+		{
+			$brokenPairs[] = $tag->tagMate;
+			unset($tag->tagMate->tagMate);
+		}
+		if (isset($this->tagMate) && $this->tagMate !== $tag)
+		{
+			$brokenPairs[] = $this->tagMate;
+			unset($this->tagMate->tagMate);
+		}
+
+		$this->tagMate = $tag;
+		$tag->tagMate  = $this;
+		$this->cascadeInvalidationTo($tag);
+		$tag->cascadeInvalidationTo($this);
+
+		foreach ($brokenPairs as $brokenTag)
+		{
+			$brokenTag->invalidate();
+		}
 	}
 
 	/**

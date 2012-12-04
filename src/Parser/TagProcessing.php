@@ -53,6 +53,21 @@ trait TagAccumulator
 			$this->currentTag = array_pop($this->tagStack);
 			$this->processCurrentTag();
 		}
+
+		// Close unclosed tags
+
+		if ($this->pos < $this->textLen)
+		{
+			$catchupText = htmlspecialchars(substr($this->text, $this->pos));
+
+			if ($this->context->convertNewlines())
+			{
+				$catchupText = nl2br($catchupText);
+			}
+
+			// Append the catchup text (and the ignored whitespace) to the output
+			$this->output .= $catchupText . $ignoredText;
+		}
 	}
 
 	/**
@@ -92,12 +107,47 @@ trait TagAccumulator
 	*/
 	protected function outputCurrentTag()
 	{
-		$tagName = $this->currentTag->getName();
-		$tagPos  = $this->currentTag->getPos();
-		$tagLen  = $this->currentTag->getLen();
+		$tagName   = $this->currentTag->getName();
+		$tagPos    = $this->currentTag->getPos();
+		$tagLen    = $this->currentTag->getLen();
+		$tagConfig = $this->tagsConfig[$tagName];
 
-		$trimWhitespace
-			= (bool) ($this->tagsConfig[$tagName]['rules']['flags'] & self::RULE_TRIM_WHITESPACE);
+		$trimWhitespace = (bool) ($tagConfig['rules']['flags'] & self::RULE_TRIM_WHITESPACE);
+
+		// Maintain counters and update the context
+		if ($tag->isStartTag())
+		{
+			++$this->cntTotal[$tagName];
+
+			if (!$tag->isEndTag())
+			{
+				++$this->cntOpen[$tagName];
+				$this->openTags[] = $tag;
+
+				// Create a new context
+				$allowedChildren = (empty($tagConfig['isTransparent']))
+				                 ? $tagConfig['allowedChildren']
+				                 : $this->context['allowedChildren'];
+
+				$allowedDescendants = $this->context['allowedDescendants']
+				                    & $tagConfig['allowedDescendants'];
+
+				$allowedChildren &= $allowedDescendants;
+
+				$this->context = array(
+					'allowedChildren'    => $allowedChildren,
+					'allowedDescendants' => $allowedDescendants,
+					'parentContext'      => $this->context
+				);
+			}
+		}
+		else
+		{
+			--$this->cntOpen[$tagName];
+			$this->context = $this->context['parentContext'];
+
+			// update $this->openTags
+		}
 
 		if ($this->pos < $tagPos)
 		{
@@ -139,7 +189,7 @@ trait TagAccumulator
 
 			if ($this->context->convertNewlines())
 			{
-				$catchupText = nl2br($catchupText, true);
+				$catchupText = nl2br($catchupText);
 			}
 
 			// Append the catchup text (and the ignored whitespace) to the output

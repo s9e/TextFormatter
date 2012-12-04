@@ -82,6 +82,7 @@ class Parser
 		$this->cntTotal = array();
 		$this->tagStack = array();
 
+		$this->context = $this->rootContext;
 		$this->output  = '';
 		$this->pos     = 0;
 		$this->text    = $text;

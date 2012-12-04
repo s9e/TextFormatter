@@ -20,12 +20,6 @@ class Parser extends ParserBase
 	{
 		$textLen  = strlen($text);
 
-		/**
-		* @var array Array of start tags that were identified with a suffix. The key is made of the
-		*            BBCode name followed by a "#" character followed by the suffix, e.g. "B#123"
-		*/
-		$tagMates = array();
-
 		foreach ($matches as $m)
 		{
 			$bbcodeName = strtoupper($m[1][0]);
@@ -75,20 +69,12 @@ class Parser extends ParserBase
 			// Test whether this is an end tag
 			if ($text[$lpos + 1] === '/')
 			{
-				// Test whether the tag is properly closed -- NOTE: this will fail on "[/foo ]"
-				if ($text[$rpos] === ']')
+				// Test whether the tag is properly closed and whether this tag has an identifier.
+				// We skip end tags that carry an identifier because they're automatically added
+				// when their start tag is processed
+				if ($text[$rpos] === ']' && $bbcodeId === '')
 				{
-					$tag = $this->parser->addEndTag($tagName, $lpos, 1 + $rpos - $lpos);
-
-					// Test whether this end tag is being paired with a start tag
-					$tagMateId = $bbcodeName . '#' . $bbcodeId;
-					if (isset($tagMates[$tagMateId]))
-					{
-						$tag->pairWith($tagMates[$tagMateId]);
-
-						// Free up the start tag now, it shouldn't be reused
-						unset($tagMates[$tagMateId]);
-					}
+					$this->parser->addEndTag($tagName, $lpos, 1 + $rpos - $lpos);
 				}
 
 				continue;
@@ -126,7 +112,12 @@ class Parser extends ParserBase
 						}
 					}
 
+					// This tag is well-formed
 					$wellFormed = true;
+
+					// Move past the right bracket
+					++$rpos;
+
 					break;
 				}
 
@@ -246,23 +237,27 @@ class Parser extends ParserBase
 			}
 
 			// We're done parsing the tag, we can add it to the list
-			$len = 1 + $rpos - $lpos;
-			$tag = ($type === Tag::START_TAG)
-			     ? $this->parser->addStartTag($tagName, $lpos, $len)
-			     : $this->parser->addSelfClosingTag($tagName, $lpos, $len);
-
-			// Use this tag's content for attributes that require it
 			if ($type === Tag::START_TAG)
 			{
+				// If this is a start tag with an identifier, look for its end tag now
+				$endTagPos = -1;
 				if ($bbcodeId !== '')
 				{
-					$tagMates[$tagName . '#' . $bbcodeId] = $tag;
+					$match = '[/' . $bbcodeName . ':' . $bbcodeId . ']';
+					$endTagPos = stripos($text, $match, $rpos);
+
+					if ($endTagPos === false)
+					{
+						// No matching end tag, so we skip this start tag
+						continue;
+					}
+
+					$endTag = $this->parser->addEndTag($tagName, $endTagPos, strlen($match));
 				}
 
-				// Some attributes use the content of a tag if no value is specified
+				// Use this tag's content for attributes that require it
 				if (isset($bbcodeConfig['contentAttributes']))
 				{
-					$value = false;
 					foreach ($bbcodeConfig['contentAttributes'] as $attrName)
 					{
 						if (isset($attributes[$attrName]))
@@ -270,33 +265,32 @@ class Parser extends ParserBase
 							continue;
 						}
 
-						if ($value === false)
+						// Find the position of its end tag if we don't already know it
+						if ($endTagPos < 0)
 						{
-							// Move the right cursor past the closing bracket
-							++$rpos;
+							$endTagPos = stripos($text, '[/' . $bbcodeName . ']', $rpos);
 
-							// Search for an end tag that matches our start tag
-							$match = '[/' . $bbcodeName;
-							if ($bbcodeId !== '')
-							{
-								$match .= ':' . $bbcodeId;
-							}
-							$match .= ']';
-
-							$pos = stripos($text, $match, $rpos);
-
-							if ($pos === false)
+							if ($endTagPos === false)
 							{
 								// No end tag for this start tag
 								break;
 							}
-
-							$value = substr($text, $rpos, $pos - $rpos);
 						}
 
-						$attributes[$attrName] = $value;
+						$attributes[$attrName] = substr($text, $rpos, $endTagPos - $rpos);
 					}
 				}
+
+				$tag = $this->parser->addStartTag($tagName, $lpos, $rpos - $lpos);
+
+				if ($bbcodeId !== '')
+				{
+					$tag->pairWith($endTag);
+				}
+			}
+			else
+			{
+				$tag = $this->parser->addSelfClosingTag($tagName, $lpos, $rpos - $lpos);
 			}
 
 			// Add predefined attribute values
