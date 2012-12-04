@@ -45,7 +45,7 @@ class Parser extends ParserBase
 			*/
 			$rpos = $lpos + strlen($m[0][0]);
 
-			// Check for a BBCode suffix
+			// Check for an identifier
 			//
 			// Used to explicitly pair specific tags together, e.g.
 			//   [code:123][code]type your code here[/code][/code:123]
