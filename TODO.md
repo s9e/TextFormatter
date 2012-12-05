@@ -42,3 +42,4 @@ TODO
 - Add an NFO BBCode
 - IDEA: drop ConfiguratorBase::getXSL() and introduce the concept of a DynamicTemplate object that is serialized to an XSL template string whenever needed (e.g. when building the final stylesheet, which would require renormalization for safety)
 - Consider providing compatilibity for custom Mycodes via the Generic plugin. http://docs.mybb.com/Admin_CP_Config_MyCode.html
+- Closure Compiler's API exclude_default_externs to minify reserved names such as "attrName" -- https://developers.google.com/closure/compiler/docs/api-ref

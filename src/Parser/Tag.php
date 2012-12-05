@@ -88,6 +88,16 @@ class Tag
 	}
 
 	/**
+	* 
+	*
+	* @return void
+	*/
+	public static function createPair($pluginName, $tagName, $startPos, $startLen, $endPos, $endLen)
+	{
+		$startTag = new self(self::START_TAG
+	}
+
+	/**
 	* Add an attribute to this tag
 	*
 	* @param  string $attrName  Attribute's name
