@@ -39,7 +39,7 @@ class WittyPantsConfig extends ConfiguratorBase
 			*       "requires" option from parsed tags
 			*/
 			$tag = $this->configurator->addTag($this->tagName);
-			$tag->addAttribute($this->attrName);
+			$tag->setAttribute($this->attrName);
 			$tag->setTemplate('<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
 		}
 	}

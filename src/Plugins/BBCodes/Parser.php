@@ -297,14 +297,14 @@ class Parser extends ParserBase
 			{
 				foreach ($bbcodeConfig['attributeValues'] as $attrName => $attrValue)
 				{
-					$tag->addAttribute($attrName, $attrValue);
+					$tag->setAttribute($attrName, $attrValue);
 				}
 			}
 
 			// Add parsed attributes, which will overwrite predefined attributes
 			foreach ($attributes as $attrName => $attrValue)
 			{
-				$tag->addAttribute($attrName, $attrValue);
+				$tag->setAttribute($attrName, $attrValue);
 			}
 		}
 	}

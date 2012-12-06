@@ -255,5 +255,27 @@ trait TagAccumulator
 	{
 		$tagName   = $this->currentTag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
+
+		// 1. Check that this tag has not reached its global limit tagLimit
+		// 2. Filter this tag's attributes and check for missing attributes
+		// 3. Apply closeParent and closeAncestor rules
+		// 4. Check for nestingLimit
+		// 5. Apply requireAncestor rules
+		//
+		// This order ensures that the tag is valid and within the set limits before we attempt to
+		// close parents or ancestors. We need to close ancestors before we can check for nesting
+		// limits, whether this tag is allowed within current context (the context may change
+		// as ancestors are closed) or whether the required ancestors are still there (they might
+		// have been closed by a rule.)
+		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit']
+		 || !$this->filterAttributes()
+		 || $this->closeParent()
+		 || $this->closeAncestor()
+		 || $this->cntOpen[$tagName]  >= $tagConfig['nestingLimit']
+		 || $this->requireAncestor()
+		 || !$this->tagIsAllowed($tagName))
+		{
+			return;
+		}
 	}
 }

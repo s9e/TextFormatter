@@ -26,7 +26,7 @@ class GenericParser extends ParserBase
 				{
 					if (!is_numeric($k))
 					{
-						$tag->addAttribute($k, $v[0]);
+						$tag->setAttribute($k, $v[0]);
 					}
 				}
 			}

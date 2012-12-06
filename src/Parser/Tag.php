@@ -88,29 +88,7 @@ class Tag
 	}
 
 	/**
-	* 
-	*
-	* @return void
-	*/
-	public static function createPair($pluginName, $tagName, $startPos, $startLen, $endPos, $endLen)
-	{
-		$startTag = new self(self::START_TAG
-	}
-
-	/**
-	* Add an attribute to this tag
-	*
-	* @param  string $attrName  Attribute's name
-	* @param  string $attrValue Attribute's value
-	* @return void
-	*/
-	public function addAttribute($attrName, $attrValue)
-	{
-		$this->attributes[$attrName] = $attrValue;
-	}
-
-	/**
-	* 
+	* Set given tag to be invalidated if this tag is invalidated
 	*
 	* @param  self $tag
 	* @return void
@@ -121,17 +99,38 @@ class Tag
 	}
 
 	/**
-	* Test whether this tag closes given tag
+	* Test whether this tag would given tag
+	*
+	* NOTE: it is assumed that this tag's position is after given tag in the text and that this tag
+	*       was not invalidated
 	*
 	* @param  self $tag
 	* @return bool
 	*/
 	public function closes(self $tag)
 	{
-		return ($tag->type  === self::START_TAG
-		     && $this->type === self::END_TAG
-		     && $this->name === $tag->name
-		     && $this->pluginName === $tag->pluginName);
+		// Ensure that their characteristics match
+		if ($tag->type !== self::START_TAG
+		 || $this->type !== self::END_TAG
+		 || $this->name !== $tag->name
+		 || $this->pluginName !== $tag->pluginName)
+		{
+			return false;
+		}
+
+		// If given tag has a tagMate, ensure it's this tag
+		if (isset($tag->tagMate) && $tag->tagMate !== $this)
+		{
+			return false;
+		}
+
+		// If this tag has a tagMate, ensure it's given tag
+		if (isset($this->tagMate) && $this->tagMate !== $tag)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -182,6 +181,11 @@ class Tag
 	public function invalidate()
 	{
 		$this->skip = true;
+
+		if (isset($this->tagMate))
+		{
+			$this->tagMate->invalidate();
+		}
 
 		foreach ($this->cascade as $tag)
 		{
@@ -240,29 +244,20 @@ class Tag
 	*/
 	public function pairWith(self $tag)
 	{
-		// If we're breaking a preexisting pair, we record the other tag of that pair, which we
-		// invalidate after this new pair is formed
-		$brokenPairs = array();
-		if (isset($tag->tagMate) && $tag->tagMate !== $this)
-		{
-			$brokenPairs[] = $tag->tagMate;
-			unset($tag->tagMate->tagMate);
-		}
-		if (isset($this->tagMate) && $this->tagMate !== $tag)
-		{
-			$brokenPairs[] = $this->tagMate;
-			unset($this->tagMate->tagMate);
-		}
-
 		$this->tagMate = $tag;
 		$tag->tagMate  = $this;
-		$this->cascadeInvalidationTo($tag);
-		$tag->cascadeInvalidationTo($this);
+	}
 
-		foreach ($brokenPairs as $brokenTag)
-		{
-			$brokenTag->invalidate();
-		}
+	/**
+	* Set the value of an attribute
+	*
+	* @param  string $attrName  Attribute's name
+	* @param  string $attrValue Attribute's value
+	* @return void
+	*/
+	public function setAttribute($attrName, $attrValue)
+	{
+		$this->attributes[$attrName] = $attrValue;
 	}
 
 	/**
