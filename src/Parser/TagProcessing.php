@@ -147,7 +147,17 @@ trait TagAccumulator
 	*
 	* @return void
 	*/
-	protected function updateContext($tag)
+	protected function popContext()
+	{
+		$this->context = $this->context['parentContext'];
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function pushContext($tag)
 	{
 		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
@@ -163,9 +173,9 @@ trait TagAccumulator
 
 				// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise
 				// we use this tag's allowedChildren bitfield
-				$allowedChildren = (empty($tagConfig['isTransparent']))
-				                 ? $tagConfig['allowedChildren']
-				                 : $this->context['allowedChildren'];
+				$allowedChildren = ($tagConfig['flags'] & self::RULE_IS_TRANSPARENT)
+				                 ? $this->context['allowedChildren']
+				                 : $tagConfig['allowedChildren'];
 
 				// The allowedDescendants bitfield is restricted by this tag's
 				$allowedDescendants = $this->context['allowedDescendants']
