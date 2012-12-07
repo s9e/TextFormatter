@@ -161,19 +161,33 @@ trait TagAccumulator
 				++$this->cntOpen[$tagName];
 				$this->openTags[] = $tag;
 
-				// Create a new context
+				// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise
+				// we use this tag's allowedChildren bitfield
 				$allowedChildren = (empty($tagConfig['isTransparent']))
 				                 ? $tagConfig['allowedChildren']
 				                 : $this->context['allowedChildren'];
 
+				// The allowedDescendants bitfield is restricted by this tag's
 				$allowedDescendants = $this->context['allowedDescendants']
 				                    & $tagConfig['allowedDescendants'];
 
+				// Ensure that disallowed descendants are not allowed as children
 				$allowedChildren &= $allowedDescendants;
+
+				// Use this tag's flags except for noBrDescendant, which is inherited
+				$flags = $tagConfig['flags']
+				       | ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT);
+
+				// noBrDescendant is replicated onto noBrChild
+				if ($flags & self::RULE_NO_BR_DESCENDANT)
+				{
+					$flags |= self::RULE_NO_BR_CHILD;
+				}
 
 				$this->context = array(
 					'allowedChildren'    => $allowedChildren,
 					'allowedDescendants' => $allowedDescendants,
+					'flags'              => $flags
 					'parentContext'      => $this->context
 				);
 			}
