@@ -714,7 +714,7 @@ class RulesetTest extends Test
 			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
 			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
-			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT,
+			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT | Parser::RULE_NO_BR_CHILD,
 			'trimWhitespace' => Parser::RULE_TRIM_WHITESPACE
 		);
 
@@ -743,5 +743,18 @@ class RulesetTest extends Test
 		$config = $ruleset->asConfig();
 
 		$this->assertSame(Parser::RULE_AUTO_CLOSE | Parser::RULE_TRIM_WHITESPACE, $config['flags']);
+	}
+
+	/**
+	* @testdox asConfig() sets noBrChild's bit if noBrDescendant is set
+	*/
+	public function testAsConfigNoBrDescendantCascadesOnNoBrChild()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->noBrDescendant();
+
+		$config = $ruleset->asConfig();
+
+		$this->assertSame(Parser::RULE_NO_BR_CHILD | Parser::RULE_NO_BR_DESCENDANT, $config['flags']);
 	}
 }

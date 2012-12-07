@@ -134,16 +134,6 @@ class Tag
 	}
 
 	/**
-	* Return this tag's attributes
-	*
-	* @return array
-	*/
-	public function getAttributes()
-	{
-		return $this->attributes;
-	}
-
-	/**
 	* Return the length of text consumed by this tag
 	*
 	* @return integer
@@ -249,18 +239,6 @@ class Tag
 	}
 
 	/**
-	* Set the value of an attribute
-	*
-	* @param  string $attrName  Attribute's name
-	* @param  string $attrValue Attribute's value
-	* @return void
-	*/
-	public function setAttribute($attrName, $attrValue)
-	{
-		$this->attributes[$attrName] = $attrValue;
-	}
-
-	/**
 	* Test whether this tag should be skipped
 	*
 	* Will return true if this tag was invalidated or if the parser's cursor is past its position
@@ -271,5 +249,64 @@ class Tag
 	public function shouldBeSkipped($pos)
 	{
 		return ($pos > $this->pos || $this->skip);
+	}
+
+	//==========================================================================
+	// Attributes handling
+	//==========================================================================
+
+	/**
+	* Return the value of given attribute
+	*
+	* @param  string $attrName
+	* @return mixed
+	*/
+	public function getAttribute($attrName)
+	{
+		return $this->attributes[$attrName];
+	}
+
+	/**
+	* Return this tag's attributes
+	*
+	* @return array
+	*/
+	public function getAttributes()
+	{
+		return $this->attributes;
+	}
+
+	/**
+	* Return whether given attribute is set
+	*
+	* @param  string $attrName
+	* @return bool
+	*/
+	public function hasAttribute($attrName)
+	{
+		return isset($this->attributes[$attrName]);
+	}
+
+	/**
+	* Remove given attribute
+	*
+	* @param  string $attrName
+	* @return void
+	*/
+	public function hasAttribute($attrName)
+	{
+		unset($this->attributes[$attrName]);
+	}
+
+	/**
+	* Set the value of an attribute
+	*
+	* @param  string $attrName  Attribute's name
+	* @param  string $attrValue Attribute's value
+	* @return void
+	*/
+	public function setAttribute($attrName, $attrValue)
+	{
+		$this->attributes[$attrName] = $attrValue;
 	}
 }

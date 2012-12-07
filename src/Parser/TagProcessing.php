@@ -105,21 +105,58 @@ trait TagAccumulator
 	*
 	* @return void
 	*/
-	protected function outputCurrentTag()
+	protected function processCurrentIgnoreTag()
+	{
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function processCurrentStartTag()
 	{
 		$tagName   = $this->currentTag->getName();
-		$tagPos    = $this->currentTag->getPos();
-		$tagLen    = $this->currentTag->getLen();
 		$tagConfig = $this->tagsConfig[$tagName];
 
-		$trimWhitespace = (bool) ($tagConfig['rules']['flags'] & self::RULE_TRIM_WHITESPACE);
+		// 1. Check that this tag has not reached its global limit tagLimit
+		// 2. Filter this tag's attributes and check for missing attributes
+		// 3. Apply closeParent and closeAncestor rules
+		// 4. Check for nestingLimit
+		// 5. Apply requireAncestor rules
+		//
+		// This order ensures that the tag is valid and within the set limits before we attempt to
+		// close parents or ancestors. We need to close ancestors before we can check for nesting
+		// limits, whether this tag is allowed within current context (the context may change
+		// as ancestors are closed) or whether the required ancestors are still there (they might
+		// have been closed by a rule.)
+		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit']
+		 || $this->executeFilterChain()
+		 || $this->closeParent()
+		 || $this->closeAncestor()
+		 || $this->cntOpen[$tagName]  >= $tagConfig['nestingLimit']
+		 || $this->requireAncestor()
+		 || !$this->tagIsAllowed($tagName))
+		{
+			return;
+		}
+	}
 
-		// Maintain counters and update the context
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function updateContext($tag)
+	{
+		$tagName   = $tag->getName();
+		$tagConfig = $this->tagsConfig[$tagName];
+
 		if ($tag->isStartTag())
 		{
 			++$this->cntTotal[$tagName];
 
-			if (!$tag->isEndTag())
+			if (!$tag->isSelfClosingTag())
 			{
 				++$this->cntOpen[$tagName];
 				$this->openTags[] = $tag;
@@ -147,135 +184,6 @@ trait TagAccumulator
 			$this->context = $this->context['parentContext'];
 
 			// update $this->openTags
-		}
-
-		if ($this->pos < $tagPos)
-		{
-			/**
-			* @var string Text between the parser's last position and current tag's position
-			*/
-			$catchupText = htmlspecialchars(substr($this->text, $this->pos, $tagPos - $this->pos));
-
-			/**
-			* @var string Whitespace removed from the end of $catchupText
-			*/
-			$ignoredText = '';
-
-			// Trim whitespace before this tag
-			if ($trimWhitespace)
-			{
-				// Capture two lines of whitespace if it's a start tag (including self-closing tags)
-				// or one line if it's an end tag
-				if ($this->currentTag->isStartTag())
-				{
-					preg_match('#(?>(?:\\n\\r?|\\r\\n?)?[ \\t]*){1,2}$#D', $catchupText, $m);
-				}
-				else
-				{
-					preg_match('#(?:\\n\\r?|\\r\\n?)?[ \\t]*$#D', $catchupText, $m);
-				}
-
-				// Get the amount of whitespace captured (can be 0)
-				$len = strlen($m[0]);
-
-				if ($len)
-				{
-					// Remove the trailing whitespace from $catchupText and put it inside an ignore
-					// tag
-					$catchupText = substr($catchupText, 0, -$len);
-					$ignoredText = '<i>' . $m[0] . '</i>';
-				}
-			}
-
-			if ($this->context->convertNewlines())
-			{
-				$catchupText = nl2br($catchupText);
-			}
-
-			// Append the catchup text (and the ignored whitespace) to the output
-			$this->output .= $catchupText . $ignoredText;
-		}
-
-		// Output current tag and move the cursor
-		if ($this->currentTag->isStartTag())
-		{
-			$this->output .= '<' . $tagName;
-			foreach ($this->currentTag->getAttributes() as $attrName => $attrValue)
-			{
-				$this->output .= ' ' . $attrName . '="' . htmlspecialchars($attrValue) . '"';
-			}
-			$this->output .= '>';
-		}
-		else
-		{
-			$this->output .= '</' . $tagName . '>';
-		}
-		$this->pos = $tagPos + $tagLen;
-
-		// Trim whitespace after this tag
-		if ($trimWhitespace)
-		{
-			// Capture two lines after end tags (including self-closing tags) or one line after
-			// start tags
-			if ($this->currentTag->isEndTag())
-			{
-				preg_match('#(?>[ \\t]*(?:\\n\\r?|\\r\\n?)?){1,2}#A', $this->text, $m, 0, $this->pos);
-			}
-			else
-			{
-				preg_match('#[ \\t]*(?:\\n\\r?|\\r\\n?)?#A', $catchupText, $m, 0, $this->pos);
-			}
-
-			// Get the amount of whitespace captured (can be 0)
-			$len = strlen($m[0]);
-
-			if ($len)
-			{
-				$this->output .= '<i>' . substr($this->text, $this->pos, $len) . '</i>';
-				$this->pos += $len;
-			}
-		}
-	}
-
-	/**
-	* 
-	*
-	* @return void
-	*/
-	protected function processCurrentIgnoreTag()
-	{
-	}
-
-	/**
-	* 
-	*
-	* @return void
-	*/
-	protected function processCurrentStartTag()
-	{
-		$tagName   = $this->currentTag->getName();
-		$tagConfig = $this->tagsConfig[$tagName];
-
-		// 1. Check that this tag has not reached its global limit tagLimit
-		// 2. Filter this tag's attributes and check for missing attributes
-		// 3. Apply closeParent and closeAncestor rules
-		// 4. Check for nestingLimit
-		// 5. Apply requireAncestor rules
-		//
-		// This order ensures that the tag is valid and within the set limits before we attempt to
-		// close parents or ancestors. We need to close ancestors before we can check for nesting
-		// limits, whether this tag is allowed within current context (the context may change
-		// as ancestors are closed) or whether the required ancestors are still there (they might
-		// have been closed by a rule.)
-		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit']
-		 || !$this->filterAttributes()
-		 || $this->closeParent()
-		 || $this->closeAncestor()
-		 || $this->cntOpen[$tagName]  >= $tagConfig['nestingLimit']
-		 || $this->requireAncestor()
-		 || !$this->tagIsAllowed($tagName))
-		{
-			return;
 		}
 	}
 }

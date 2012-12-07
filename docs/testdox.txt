@@ -202,6 +202,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] asConfig() flips arrays to use target names as keys
  [x] asConfig() packs boolean rules in a value named "flags"
  [x] asConfig() can pack multiple boolean rules in a value named "flags"
+ [x] asConfig() sets noBrChild's bit if noBrDescendant is set
 
 s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Tag

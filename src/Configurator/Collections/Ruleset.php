@@ -84,6 +84,12 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		unset($config['denyDescendant']);
 		unset($config['requireParent']);
 
+		// If noBrDescendant is true, noBrChild should be true as well
+		if (!empty($config['noBrDescendant']))
+		{
+			$config['noBrChild'] = true;
+		}
+
 		// Pack boolean rules into a bitfield
 		$bitValues = array(
 			'autoClose'      => Parser::RULE_AUTO_CLOSE,

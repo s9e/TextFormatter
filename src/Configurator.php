@@ -109,6 +109,7 @@ class Configurator implements ConfigProvider
 
 		// Save the root context
 		$config['rootContext'] = $bitfields['root'];
+		$config['rootContext']['flags'] = $config['rootRules']['flags'];
 
 		// Make sure those keys exist even if no tags were defined and plugins loaded
 		$config += array('plugins' => array(), 'tags' => array());
