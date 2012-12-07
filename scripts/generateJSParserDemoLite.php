@@ -37,7 +37,7 @@ $cb->BBCodes->addBBCode('CODE', array(
 	'defaultDescendantRule' => 'deny'
 ));
 
-$cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
+$cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="s.png"/>');
 
 $cb->loadPlugin('Autolink');
 
