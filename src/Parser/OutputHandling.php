@@ -31,10 +31,8 @@ trait OutputHandling
 			$trimBefore = $trimAfter = 0;
 		}
 
-		if ($tagPos > $this->pos)
-		{
-			$this->catchupText($tagPos, $trimBefore);
-		}
+		// Let the cursor catch up with this tag's position
+		$this->outputText($tagPos, $trimBefore);
 
 		// Capture the text consumed by the tag
 		$tagText = htmlspecialchars($this->text, $tagPos, $tagLen)
@@ -113,12 +111,20 @@ trait OutputHandling
 	/**
 	* 
 	*
+	* NOTE: does not move the cursor
+	*
 	* @param  integer $catchupPos Position we're catching up to
 	* @param  integer $maxLines   Maximum number of lines to trim at the end of the text
 	* @return void
 	*/
-	protected function catchupText($catchupPos, $maxLines)
+	protected function outputText($catchupPos, $maxLines)
 	{
+		if ($this->pos >= $catchupPos)
+		{
+			// We're already there
+			return;
+		}
+
 		$catchupLen  = $catchupPos + 1 - $this->pos;
 		$catchupText = substr($this->text, $this->pos, $catchupLen);
 
@@ -166,7 +172,6 @@ trait OutputHandling
 			$ignoreText = '';
 		}
 
-
 		$catchupText = htmlspecialchars($catchupText);
 		if (!($this->context['flags'] & self::RULE_NO_BR_CHILD))
 		{
@@ -177,17 +182,29 @@ trait OutputHandling
 	}
 
 	/**
-	* 
+	* Output current tag, which is a linebreak tag
 	*
 	* @return void
 	*/
 	protected function outputBrTag()
 	{
-		$catchupText = htmlspecialchars(substr($this->text, $this->pos, $tagPos - $this->pos));
+		$this->outputText($this->currentTag->getPos(), 0);
+		$this->output .= '<br/>';
+	}
 
-		if ($this->context->convertNewlines())
-		{
-			$catchupText = nl2br($catchupText);
-		}
+	/**
+	* Output current tag, which is an ignore tag
+	*
+	* @return void
+	*/
+	protected function outputIgnoreTag()
+	{
+		$tagPos = $this->currentTag->getPos();
+		$tagLen = $this->currentTag->getLen();
+
+		$this->catchupText($tagPos, 0);
+		$this->output .= '<i>' . htmlspecialchars(substr($this->text, $tagPos, $tagLen)) . '</i>';
+
+		$this->pos = $tagPos + $tagLen;
 	}
 }

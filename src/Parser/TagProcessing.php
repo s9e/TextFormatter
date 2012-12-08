@@ -84,11 +84,11 @@ trait TagAccumulator
 
 		if ($this->currentTag->isIgnoreTag())
 		{
-			$this->processCurrentIgnoreTag();
+			$this->outputIgnoreTag();
 		}
 		elseif ($this->currentTag->isBrTag())
 		{
-			$this->processCurrentBrTag();
+			$this->outputBrTag();
 		}
 		elseif ($this->currentTag->isStartTag())
 		{
@@ -98,15 +98,6 @@ trait TagAccumulator
 		{
 			$this->processCurrentEndTag();
 		}
-	}
-
-	/**
-	* 
-	*
-	* @return void
-	*/
-	protected function processCurrentIgnoreTag()
-	{
 	}
 
 	/**
@@ -147,9 +138,12 @@ trait TagAccumulator
 	*
 	* @return void
 	*/
-	protected function popContext()
+	protected function popContext(Tag $tag)
 	{
+		--$this->cntOpen[$tagName];
 		$this->context = $this->context['parentContext'];
+
+		// update $this->openTags
 	}
 
 	/**
@@ -157,57 +151,47 @@ trait TagAccumulator
 	*
 	* @return void
 	*/
-	protected function pushContext($tag)
+	protected function pushContext(Tag $tag)
 	{
 		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
 
-		if ($tag->isStartTag())
-		{
-			++$this->cntTotal[$tagName];
+		++$this->cntTotal[$tagName];
 
-			if (!$tag->isSelfClosingTag())
+		if (!$tag->isSelfClosingTag())
+		{
+			++$this->cntOpen[$tagName];
+			$this->openTags[] = $tag;
+
+			// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise
+			// we use this tag's allowedChildren bitfield
+			$allowedChildren = ($tagConfig['flags'] & self::RULE_IS_TRANSPARENT)
+							 ? $this->context['allowedChildren']
+							 : $tagConfig['allowedChildren'];
+
+			// The allowedDescendants bitfield is restricted by this tag's
+			$allowedDescendants = $this->context['allowedDescendants']
+								& $tagConfig['allowedDescendants'];
+
+			// Ensure that disallowed descendants are not allowed as children
+			$allowedChildren &= $allowedDescendants;
+
+			// Use this tag's flags except for noBrDescendant, which is inherited
+			$flags = $tagConfig['flags']
+				   | ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT);
+
+			// noBrDescendant is replicated onto noBrChild
+			if ($flags & self::RULE_NO_BR_DESCENDANT)
 			{
-				++$this->cntOpen[$tagName];
-				$this->openTags[] = $tag;
-
-				// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise
-				// we use this tag's allowedChildren bitfield
-				$allowedChildren = ($tagConfig['flags'] & self::RULE_IS_TRANSPARENT)
-				                 ? $this->context['allowedChildren']
-				                 : $tagConfig['allowedChildren'];
-
-				// The allowedDescendants bitfield is restricted by this tag's
-				$allowedDescendants = $this->context['allowedDescendants']
-				                    & $tagConfig['allowedDescendants'];
-
-				// Ensure that disallowed descendants are not allowed as children
-				$allowedChildren &= $allowedDescendants;
-
-				// Use this tag's flags except for noBrDescendant, which is inherited
-				$flags = $tagConfig['flags']
-				       | ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT);
-
-				// noBrDescendant is replicated onto noBrChild
-				if ($flags & self::RULE_NO_BR_DESCENDANT)
-				{
-					$flags |= self::RULE_NO_BR_CHILD;
-				}
-
-				$this->context = array(
-					'allowedChildren'    => $allowedChildren,
-					'allowedDescendants' => $allowedDescendants,
-					'flags'              => $flags
-					'parentContext'      => $this->context
-				);
+				$flags |= self::RULE_NO_BR_CHILD;
 			}
-		}
-		else
-		{
-			--$this->cntOpen[$tagName];
-			$this->context = $this->context['parentContext'];
 
-			// update $this->openTags
+			$this->context = array(
+				'allowedChildren'    => $allowedChildren,
+				'allowedDescendants' => $allowedDescendants,
+				'flags'              => $flags
+				'parentContext'      => $this->context
+			);
 		}
 	}
 }
