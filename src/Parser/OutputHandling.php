@@ -21,19 +21,19 @@ trait OutputHandling
 		$tagLen    = $this->currentTag->getLen();
 		$tagConfig = $this->tagsConfig[$tagName];
 
+		if ($tagConfig['rules']['flags'] & self::RULE_TRIM_WHITESPACE)
+		{
+			$trimBefore = ($this->currentTag->isStartTag()) ? 2 : 1;
+			$trimAfter  = ($this->currentTag->isEndTag())   ? 2 : 1;
+		}
+		else
+		{
+			$trimBefore = $trimAfter = 0;
+		}
+
 		if ($tagPos > $this->pos)
 		{
-			if ($tagConfig['rules']['flags'] & self::RULE_TRIM_WHITESPACE)
-			{
-				$trimBefore = ($this->currentTag->isStartTag()) ? 2 : 1;
-				$trimAfter  = ($this->currentTag->isEndTag())   ? 2 : 1;
-			}
-			else
-			{
-				$trimBefore = $trimAfter = 0;
-			}
-
-			$this->outputText($this->pos, $tagPos, $trimBefore);
+			$this->catchupText($tagPos, $trimBefore);
 		}
 
 		// Capture the text consumed by the tag
@@ -51,7 +51,7 @@ trait OutputHandling
 
 			if ($this->currentTag->isSelfClosingTag())
 			{
-				if (!$tagLen)
+				if ($tagLen)
 				{
 					$this->output .= '>' . $tagText . '</' . $tagName . '>';
 				}
