@@ -5,8 +5,11 @@ namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 use stdClass;
 use Traversable;
 use s9e\TextFormatter\Configurator\Collections\Collection;
+use s9e\TextFormatter\Configurator\Collections\FilterCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -58,7 +61,7 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox Omits NULL values
+	* @testdox toArray() omits NULL values
 	*/
 	public function testNull()
 	{
@@ -69,7 +72,7 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox Omits empty arrays from values
+	* @testdox toArray() omits empty arrays from values
 	*/
 	public function testEmptyArray()
 	{
@@ -80,7 +83,7 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox Omits empty Collections from values
+	* @testdox toArray() omits empty Collections from values
 	*/
 	public function testEmptyCollection()
 	{
@@ -88,6 +91,52 @@ class ConfigHelperTest extends Test
 		$expected = array('foo' => 1);
 
 		$this->assertSame($expected, ConfigHelper::toArray($original));
+	}
+
+	/**
+	* @testdox Built-in filter #int is replaced by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
+	*/
+	public function testBuiltIn()
+	{
+		$tag  = new Tag;
+		$tag->attributes->add('foo')->filterChain->append('#int');
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, new FilterCollection);
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 's9e\\TextFormatter\\Parser\\BuiltInFilters::filterInt',
+					'params'   => array('attrValue' => null)
+				)
+			),
+			$tagsConfig['FOO']['attributes']['foo']['filterChain']
+		);
+	}
+
+	/**
+	* @testdox Custom filter #foo is replaced by its callback
+	*/
+	public function testCustom()
+	{
+		$tag  = new Tag;
+		$tag->attributes->add('foo')->filterChain->append('#foo');
+
+		$filters = new FilterCollection;
+		$filters->add('foo', new ProgrammableCallback('mt_rand'));
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, $filters);
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 'mt_rand'
+				)
+			),
+			$tagsConfig['FOO']['attributes']['foo']['filterChain']
+		);
 	}
 }
 

@@ -222,9 +222,11 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() works with deep arrays
  [x] toArray() calls asConfig() for objects in deep arrays that implement ConfigProvider
  [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
- [x] Omits NULL values
- [x] Omits empty arrays from values
- [x] Omits empty Collections from values
+ [x] toArray() omits NULL values
+ [x] toArray() omits empty arrays from values
+ [x] toArray() omits empty Collections from values
+ [x] Built-in filter #int is replaced by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
+ [x] Custom filter #foo is replaced by its callback
 
 s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child

@@ -123,10 +123,14 @@ class Configurator implements ConfigProvider
 			$config['tags'][$tagName] += $tagBitfields;
 		}
 
+		// Replace built-in and custom filters
+		ConfigHelper::replaceBuiltInFilters($config['tags'], $this->customFilters);
+
 		// Remove unused plugins
 		$config['plugins'] = array_filter($config['plugins']);
 
 		// Remove unused properties
+		unset($config['customFilters']);
 		unset($config['rootRules']);
 
 		return $config;

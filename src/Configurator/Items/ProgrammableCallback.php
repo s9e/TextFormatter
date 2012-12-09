@@ -147,10 +147,17 @@ class ProgrammableCallback implements ConfigProvider
 	public function asConfig()
 	{
 		$config = array();
-		
-		$config['callback'] = ($this->callback instanceof CallbackPlaceholder)
-		                    ? $this->callback->asConfig()
-		                    : $this->callback;
+
+		if ($this->callback instanceof CallbackPlaceholder)
+		{
+			// Keep the vars if the callback is a placeholder
+			$config['callback'] = $this->callback->asConfig();
+			$config['vars']     = $this->vars;
+		}
+		else
+		{
+			$config['callback'] = $this->callback;
+		}
 
 		foreach ($this->params as $k => $v)
 		{

@@ -7,10 +7,13 @@
 */
 namespace s9e\TextFormatter;
 
+use s9e\TextFormatter\Parser\FilterProcessing;
 use s9e\TextFormatter\Parser\Logger;
 
 class Parser
 {
+	use FilterProcessing;
+
 	/**#@+
 	* Boolean rules bitfield
 	*/
@@ -22,6 +25,16 @@ class Parser
 	const RULE_NO_BR_DESCENDANT = 32;
 	const RULE_TRIM_WHITESPACE  = 64;
 	/**#@-*/
+
+	/**
+	* @var Logger This parser's logger
+	*/
+	protected $logger;
+
+	/**
+	* @var array Variables registered for use in filters
+	*/
+	protected $registeredVars;
 
 	/**
 	* @var array Tags' config
@@ -42,6 +55,11 @@ class Parser
 		$this->pluginsConfig = $config['plugins'];
 		$this->rootContext   = $config['rootContext'];
 		$this->tagsConfig    = $config['tags'];
+
+		$this->registeredVars = array(
+			'parser' => $this,
+			'logger' => $this->logger
+		);
 	}
 
 	/**

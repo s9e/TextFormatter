@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 class FilterCollection extends NormalizedCollection

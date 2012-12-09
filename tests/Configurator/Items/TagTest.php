@@ -336,7 +336,7 @@ class TagTest extends Test
 
 		$this->assertArrayHasKey('filterChain', $config);
 		$this->assertSame(
-			array(array('callback' => '#filterAttributes')),
+			array(array('callback' => '#filterAttributes', 'vars' => array())),
 			$config['filterChain']
 		);
 	}

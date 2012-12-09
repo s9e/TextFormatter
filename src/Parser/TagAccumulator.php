@@ -98,8 +98,20 @@ trait TagAccumulator
 			$name = strtoupper($name);
 		}
 
+		// Create the tag
 		$tag = new Tag($type, $this->pluginName, $name, $pos, $len);
-		$this->tagStack[] = $tag;
+
+		// Add it to the stack if it's a known tag, or invalidate it right away if it's not. We'll
+		// still return the invalid tag because that's what plugins expect, but it will never be
+		// processed
+		if (isset($this->tagsConfig[$name]))
+		{
+			$this->tagStack[] = $tag;
+		}
+		else
+		{
+			$tag->invalidate();
+		}
 
 		return $tag;
 	}

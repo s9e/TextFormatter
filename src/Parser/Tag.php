@@ -96,6 +96,12 @@ class Tag
 	public function cascadeInvalidationTo(self $tag)
 	{
 		$this->cascade[] = $tag;
+
+		// If this tag is already invalid, cascade it now
+		if ($this->skip)
+		{
+			$tag->invalidate();
+		}
 	}
 
 	/**
