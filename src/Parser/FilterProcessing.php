@@ -19,16 +19,20 @@ trait FilterProcessing
 	}
 
 	/**
-	* Filter the attributes of current tag
+	* Filter the attributes of given tag
 	*
-	* @return bool Whether the whole attribute set is valid
+	* @param  Tag    $tag            Tag being checked
+	* @param  array  $tagConfig      Tag's config
+	* @param  Logger $logger         Logger instance
+	* @param  array  $registeredVars Array of registered vars for use in attribute filters
+	* @return bool                   Whether the whole attribute set is valid
 	*/
-	public static function filterAttributes(Tag $tag, array $tagConfig)
+	public static function filterAttributes(Tag $tag, array $tagConfig, Logger $logger, array $registeredVars)
 	{
-		// First, remove invalid attributes
+		// First, filter and remove invalid attributes
 		foreach ($tag->getAttributes() as $attrName => $attrValue)
 		{
-			// Test whether this attribute exists
+			// Test whether this attribute exists and remove it if it doesn't
 			if (!isset($tagConfig['attributes'][$attrName]))
 			{
 				$tag->removeAttribute($attrName);
@@ -45,11 +49,13 @@ trait FilterProcessing
 
 			foreach ($attrConfig['filterChain'] as $filter)
 			{
-				$attrValue = $this->executeAttributeFilter(
+				$attrValue = $this->executeFilter(
 					$filter,
 					array(
-						'attrName'  => $attrName,
-						'attrValue' => $attrValue
+						'attrName'       => $attrName,
+						'attrValue'      => $attrValue,
+						'logger'         => $logger,
+						'registeredVars' => $registeredVars
 					)
 				);
 
@@ -75,7 +81,7 @@ trait FilterProcessing
 				elseif (!empty($attrConfig['isRequired']))
 				{
 					// This attribute is missing, has no default value and is required, which means
-					// its tag is invalid
+					// the attribute set is invalid
 					return false;
 				}
 			}
@@ -91,82 +97,42 @@ trait FilterProcessing
 	*/
 	protected function filterTag()
 	{
-		$tagConfig = $this->tagsConfig[$this->currentTag->getName()];
+		$tagName   = $this->currentTag->getName();
+		$tagConfig = $this->tagsConfig[$tagName];
 
-		if (isset($tagConfig['filterChain']))
+		if (!isset($tagConfig['filterChain']))
 		{
-			foreach ($tagConfig['filterChain'] as $filter)
-			{
-				if (!$this->executeTagFilter($filter, array('tag' => $this->currentTag)))
-				{
-					return false;
-				}
-			}
+			// No filter == unconditionally valid
 			return true;
 		}
-	}
 
-	/**
-	* 
-	*
-	* @return bool
-	*/
-	protected function executeFilterChain(array $filterChain)
-	{
-		foreach ($filterChain as $filter)
+		// Prepare the variables that are accessible to filters
+		$vars = array(
+			'logger'         => $this->logger,
+			'registeredVars' => $this->registeredVars,
+			'tag'            => $this->currentTag,
+			'tagConfig'      => $tagConfig
+		);
+
+		foreach ($tagConfig['filterChain'] as $filter)
 		{
-			// TODO: built-in filters, e.g. #int or #filterAttributes -- perhaps use a FilterLocator
-			//       Also, how to reinject the return value into the filter vars while filtering
-			//       attributes
-			$value = $this->executeFilter($filter);
-
-			if ($value === false)
+			if (!self::executeFilter($filter, $vars))
 			{
-				break;
+				return false;
 			}
 		}
+		return true;
 	}
 
 	/**
-	* 
+	* Execute a filter
 	*
-	* @return mixed
-	*/
-	protected function executeAttributeFilter(array $filter, array $vars)
-	{
-		// Replace built-in filters with an actual callback
-		if (is_string($filter) && $filter[0] === '#')
-		{
-			// TODO
-			$filter = array();
-		}
-
-		return $this->executeFilter($filter, $vars);
-	}
-
-	/**
-	* 
+	* @see s9e\TextFormatter\Configurator\Items\ProgrammableCallback
 	*
-	* @return mixed
+	* @param  array $filter Programmed callback
+	* @return mixed         Whatever the callback returns
 	*/
-	protected function executeTagFilter(array $filter, array $vars)
-	{
-		// Replace built-in filters with an actual callback
-		if (is_string($filter) && $filter[0] === '#')
-		{
-			// Replace "#filterAttributes" with [$this,'filterAttributes']
-			$filter = array($this, substr($filter, 1));
-		}
-
-		return $this->executeFilter($filter, $vars);
-	}
-
-	/**
-	* 
-	*
-	* @return mixed
-	*/
-	protected function executeFilter(array $filter, array $vars)
+	protected static function executeFilter(array $filter, array $vars)
 	{
 		$callback = $filter['callback'];
 		$params   = (isset($filter['params'])) ? $filter['params'] : array();
@@ -176,21 +142,26 @@ trait FilterProcessing
 		{
 			if (is_numeric($k))
 			{
-				// Literal value
+				// By-value param
 				$args[] = $v;
 			}
 			elseif (isset($vars[$k]))
 			{
-				//
+				// By-name param using a supplied var
 				$args[] = $vars[$k];
 			}
-			elseif (isset($this->registeredVars[$k]))
+			elseif (isset($vars['registeredVars'][$k]))
 			{
-				$args[] = $this->registeredVars[$k];
+				// By-name param using a registered vars
+				$args[] = $vars['registeredVars'][$k];
 			}
 			else
 			{
-				$this->logger->err('Unknown callback parameter', array('paramName' => $k));
+				// Unknown param, log it if we have a Logger instance
+				if (isset($vars['logger']))
+				{
+					$vars['logger']->err('Unknown callback parameter', array('paramName' => $k));
+				}
 
 				return false;
 			}

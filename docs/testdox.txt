@@ -225,8 +225,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() omits NULL values
  [x] toArray() omits empty arrays from values
  [x] toArray() omits empty Collections from values
- [x] Built-in filter #int is replaced by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
- [x] Custom filter #foo is replaced by its callback
+ [x] Built-in attribute filter #int is replaced by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
+ [x] Custom attribute filter #foo is replaced by its registered callback
 
 s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child

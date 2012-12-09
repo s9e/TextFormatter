@@ -94,7 +94,7 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox Built-in filter #int is replaced by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
+	* @testdox Built-in attribute filter #int is replaced by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
 	*/
 	public function testBuiltIn()
 	{
@@ -116,7 +116,7 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox Custom filter #foo is replaced by its callback
+	* @testdox Custom attribute filter #foo is replaced by its registered callback
 	*/
 	public function testCustom()
 	{

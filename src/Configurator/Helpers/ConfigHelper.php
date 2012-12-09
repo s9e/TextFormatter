@@ -68,11 +68,11 @@ abstract class ConfigHelper
 	*
 	* - Custom filters are replaced by the ProgrammableCallback found in $customFilters
 	*
-	* - Built-in attribute filters are replaced by the actual callback to the corresponding static
+	* - Built-in attribute filters are replaced by an actual callback to the corresponding static
 	*   method in s9e\TextFormatter\Parser\BuiltInFilters
 	*
-	* - Built-in tag filters are replaced with the name of the method (from the Parser instance) to
-	*   be called. This is a departure from the rest of filters, due to the 
+	* - Built-in attribute filters are replaced by an actual callback to the corresponding static
+	*   method in s9e\TextFormatter\Parser
 	*
 	* @param  array            &$tagsConfig
 	* @param  FilterCollection  $customFilters
@@ -80,88 +80,111 @@ abstract class ConfigHelper
 	*/
 	public static function replaceBuiltInFilters(array &$tagsConfig, FilterCollection $customFilters)
 	{
-		foreach ($tagsConfig as $tagName => &$tagConfig)
+		foreach ($tagsConfig as &$tagConfig)
 		{
-			self::replaceTagFilters($tagConfig, $customFilters);
+			self::replaceFilters(
+				$tagConfig,
+				$customFilters,
+				function ($filterName)
+				{
+					return 's9e\\TextFormatter\\Parser::' . $filterName;
+				}
+			);
 
 			if (isset($tagConfig['attributes']))
 			{
-				foreach ($tagConfig['attributes'] as $attrName => &$attrConfig)
+				foreach ($tagConfig['attributes'] as &$attrConfig)
 				{
-					self::replaceAttributeFilters($attrConfig, $customFilters);
+					self::replaceFilters(
+						$attrConfig,
+						$customFilters,
+						function ($filterName)
+						{
+							return 's9e\\TextFormatter\\Parser\\BuiltInFilters::filter' . ucfirst($filterName);
+						}
+					);
 				}
-				unset($attribute);
+				unset($attrConfig);
 			}
 		}
-		unset($tag);
+		unset($tagConfig);
 	}
 
 	/**
-	* Replace built-in and custom filters in an attribute's config
+	* Replace built-in and custom filters in an attribute's or a tag's config
 	*
-	* @param  array            &$attrConfig    The attribute's config
-	* @param  FilterCollection  $customFilters Collection of ProgrammableCallback instances
+	* @param  array            &$config            The item's config
+	* @param  FilterCollection  $customFilters     Collection of ProgrammableCallback instances
+	* @param  callback          $callbackGenerator Function that generates the name of the callback
+	*                                              for a built-in filter
 	* @return void
 	*/
-	protected static function replaceAttributeFilters(array &$attrConfig, FilterCollection $customFilters)
+	protected static function replaceFilters(array &$config, FilterCollection $customFilters, $callbackGenerator)
 	{
-		if (!isset($attrConfig['filterChain']))
+		if (!isset($config['filterChain']))
 		{
 			return;
 		}
 
-		foreach ($attrConfig['filterChain'] as &$filter)
+		foreach ($config['filterChain'] as &$filter)
 		{
-			if (is_string($filter['callback']) && $filter['callback'][0] === '#')
+			if (!is_string($filter['callback']) || $filter['callback'][0] !== '#')
 			{
-				$filterName = substr($filter['callback'], 1);
-
-				if (isset($customFilters[$filterName]))
-				{
-					// Clone the custom filter so we don't alter the original
-					$customFilter = clone $customFilters[$filterName];
-
-					if (!empty($filter['vars']))
-					{
-						// Add this filter's vars to the custom filter's
-						$customFilter->setVars(
-							$customFilter->getVars() + $filter['vars']
-						);
-					}
-
-					// Replace this filter with the custom filter
-					$filter = $customFilter->asConfig();
-				}
-				else
-				{
-					$className  = 's9e\\TextFormatter\\Parser\\BuiltInFilters';
-					$methodName = 'filter' . ucfirst($filterName);
-
-					if (!method_exists($className, $methodName))
-					{
-						throw new RuntimeException("Unknown filter '#" . $filterName . "'");
-					}
-
-					// Create a new ProgrammableCallback based on this filter's reflection
-					$builtInFilter = new ProgrammableCallback($className . '::' . $methodName);
-
-					$reflection    = new ReflectionMethod($className, $methodName);
-					foreach ($reflection->getParameters() as $parameter)
-					{
-						$builtInFilter->addParameterByName($parameter->getName());
-					}
-
-					if (isset($filter['vars']))
-					{
-						$builtInFilter->setVars($filter['vars']);
-					}
-
-					$filter = $builtInFilter->asConfig();
-				}
+				continue;
 			}
 
-			// We don't need those anymore
-			unset($filter['vars']);
+			// Get the name of the filter, e.g. "#foo" becomes "foo"
+			$filterName = substr($filter['callback'], 1);
+
+			if (isset($customFilters[$filterName]))
+			{
+				// Clone the custom filter so we don't alter the original
+				$customFilter = clone $customFilters[$filterName];
+
+				if (isset($filter['vars']))
+				{
+					// Add this filter's vars to the custom filter's
+					$customFilter->setVars(
+						$customFilter->getVars() + $filter['vars']
+					);
+				}
+
+				// Replace this filter with the custom filter
+				$filter = $customFilter->asConfig();
+			}
+			else
+			{
+				// Generate the name of the callback for this built-in filter
+				$callback = $callbackGenerator($filterName);
+
+				// Ensure that it really exists
+				if (!is_callable($callback))
+				{
+					throw new RuntimeException("Unknown filter '#" . $filterName . "'");
+				}
+
+				// Create a new ProgrammableCallback based on this filter's reflection
+				$builtInFilter = new ProgrammableCallback($callback);
+
+				// Grab the class/method names from the callback
+				list($className, $methodName) = explode('::', $callback);
+
+				// Iterate over parameters and assign them by name to our programmable callback
+				$reflection = new ReflectionMethod($className, $methodName);
+				foreach ($reflection->getParameters() as $parameter)
+				{
+					$builtInFilter->addParameterByName($parameter->getName());
+				}
+
+				// Copy the vars that were set for this filter
+				if (isset($filter['vars']))
+				{
+					$builtInFilter->setVars($filter['vars']);
+				}
+
+				// Replace this filter with the correctly programmed callback
+				$filter = $builtInFilter->asConfig();
+			}
 		}
 		unset($filter);
 	}
