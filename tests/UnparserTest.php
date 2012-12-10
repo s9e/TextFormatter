@@ -55,6 +55,28 @@ class UnparserTest extends Test
 	}
 
 	/**
+	* @testdox unparse("<mt>a<br />\nb</mt>") returns "a\nb"
+	*/
+	public function testUnparsePlainTextWithLinebreaks()
+	{
+		$this->assertSame(
+			"a\nb",
+			Unparser::unparse("<mt>a<br />\nb</mt>")
+		);
+	}
+
+	/**
+	* @testdox asPlainText("<mt>a<br />\nb</mt>") returns "a\nb"
+	*/
+	public function testPlainTextPlainTextWithLinebreaks()
+	{
+		$this->assertSame(
+			"a\nb",
+			Unparser::asPlainText("<mt>a<br />\nb</mt>")
+		);
+	}
+
+	/**
 	* @testdox unparse('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
 	*/
 	public function testUnparseRichText()
