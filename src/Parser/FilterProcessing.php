@@ -12,6 +12,7 @@ trait FilterProcessing
 	/**
 	* Execute all the attribute preprocessors of given tag
 	*
+	* @private
 	* @param  Tag   $tag       Source tag
 	* @param  array $tagConfig Tag's config
 	* @return bool             Unconditionally TRUE
@@ -58,6 +59,7 @@ trait FilterProcessing
 	/**
 	* Filter the attributes of given tag
 	*
+	* @private
 	* @param  Tag    $tag            Tag being checked
 	* @param  array  $tagConfig      Tag's config
 	* @param  Logger $logger         Logger instance

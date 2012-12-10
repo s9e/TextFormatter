@@ -16,7 +16,7 @@ $values = array(
 	'integers'
 		=> 123,
 	'numbers that start with a zero'
-		=> '0123',
+		=> ['0123', '123'],
 	'negative numbers'
 		=> '-123',
 	'decimal numbers'
@@ -26,21 +26,16 @@ $values = array(
 	'numbers too big for the PHP integer type'
 		=> '10000000000000000000',
 	'positive numbers in E notation'
-		=> '12e3',
+		=> ['12e3', '12000'],
 	'negative numbers in E notation'
-		=> '-12e3',
+		=> ['-12e3', '-12000'],
 	'positive numbers in E notation with a negative exponent'
-		=> '12e-3',
+		=> ['12e-3', '0.012'],
 	'negative numbers in E notation with a negative exponent'
-		=> '-12e-3',
+		=> ['-12e-3', '-0.012'],
 	'numbers in hex notation'
 		=> '0x123',
 );
-
-$output = array();
-$output['float']['numbers that start with a zero'] = '123';
-$output['float']['numbers in scientific notation'] = '12000';
-$output['float']['numbers too big for the PHP integer type'] = '1.0E+19';
 
 $php = '';
 
@@ -49,6 +44,15 @@ foreach ($filters as $filter => $mask)
 	$i = 0;
 	foreach ($values as $name => $value)
 	{
+		if (is_array($value))
+		{
+			list($original, $expected) = $value;
+		}
+		else
+		{
+			$original = $expected = $value;
+		}
+
 		$testdox = 'Filter "' . $filter . '"'
 		         . (($mask[$i]) ? ' accepts ' : ' rejects ')
 		         . $name;
@@ -58,9 +62,10 @@ foreach ($filters as $filter => $mask)
 		$php .= "\n\t/** @testdox " . $testdox . ' */'
 		      . "\n\tpublic function " . $testName . '() { $this->assertFilterValueIs'
 		      . (($mask[$i]) ? 'Valid' : 'Invalid')
-		      . "('$filter', "
-		      . var_export($value, true)
-		      . ((isset($output[$filter][$name])) ? ', ' . var_export($output[$filter][$name], true) : '')
+		      . '('
+		      . var_export($filter, true)
+		      . ', ' . var_export($original, true)
+		      . (($mask[$i] && $expected !== $original && $filter !== 'number') ? ', ' . var_export($expected, true) : '')
 		      . "); }\n";
 
 		++$i;

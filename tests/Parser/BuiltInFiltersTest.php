@@ -114,7 +114,7 @@ class BuiltInFiltersTestTest extends Test
 	public function testFilter2E850068() { $this->assertFilterValueIsValid('number', 123); }
 
 	/** @testdox Filter "number" accepts numbers that start with a zero */
-	public function testFilterE618B0FB() { $this->assertFilterValueIsValid('number', '0123'); }
+	public function testFilterE618B0FB() { $this->assertFilterValueIsValid('number', '0123', '123'); }
 
 	/** @testdox Filter "number" rejects negative numbers */
 	public function testFilter30551C18() { $this->assertFilterValueIsInvalid('number', '-123'); }
@@ -165,19 +165,19 @@ class BuiltInFiltersTestTest extends Test
 	public function testFilter44B17C77() { $this->assertFilterValueIsValid('float', 12.3); }
 
 	/** @testdox Filter "float" accepts numbers too big for the PHP integer type */
-	public function testFilterEFD8B44B() { $this->assertFilterValueIsValid('float', '10000000000000000000', '1.0E+19'); }
+	public function testFilterEFD8B44B() { $this->assertFilterValueIsValid('float', '10000000000000000000'); }
 
 	/** @testdox Filter "float" accepts positive numbers in E notation */
-	public function testFilter79605CF6() { $this->assertFilterValueIsValid('float', '12e3'); }
+	public function testFilter79605CF6() { $this->assertFilterValueIsValid('float', '12e3', '12000'); }
 
 	/** @testdox Filter "float" accepts negative numbers in E notation */
-	public function testFilter0F61B001() { $this->assertFilterValueIsValid('float', '-12e3'); }
+	public function testFilter0F61B001() { $this->assertFilterValueIsValid('float', '-12e3', '-12000'); }
 
 	/** @testdox Filter "float" accepts positive numbers in E notation with a negative exponent */
-	public function testFilterD7DB86E9() { $this->assertFilterValueIsValid('float', '12e-3'); }
+	public function testFilterD7DB86E9() { $this->assertFilterValueIsValid('float', '12e-3', '0.012'); }
 
 	/** @testdox Filter "float" accepts negative numbers in E notation with a negative exponent */
-	public function testFilterCBA9A1EC() { $this->assertFilterValueIsValid('float', '-12e-3'); }
+	public function testFilterCBA9A1EC() { $this->assertFilterValueIsValid('float', '-12e-3', '-0.012'); }
 
 	/** @testdox Filter "float" rejects numbers in hex notation */
 	public function testFilter4A4B9639() { $this->assertFilterValueIsInvalid('float', '0x123'); }
