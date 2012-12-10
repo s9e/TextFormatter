@@ -10,12 +10,49 @@ namespace s9e\TextFormatter\Parser;
 trait FilterProcessing
 {
 	/**
-	* 
+	* Execute all the attribute preprocessors of given tag
 	*
-	* @return void
+	* @param  Tag   $tag       Source tag
+	* @param  array $tagConfig Tag's config
+	* @return bool             Unconditionally TRUE
 	*/
-	protected function executeAttributePreprocessors()
+	public function executeAttributePreprocessors(Tag $tag, array $tagConfig)
 	{
+		if (!empty($tagConfig['attributePreprocessors']))
+		{
+			foreach ($tagConfig['attributeParsers'] as $attrName => $regexps)
+			{
+				if (!$tag->hasAttribute($attrName))
+				{
+					continue;
+				}
+
+				$attrValue = $tag->getAttribute($attrName);
+
+				foreach ($regexps as $regexp)
+				{
+					// If the regexp matches, we remove the source attribute then we add the captured
+					// attributes
+					if (preg_match($regexp, $attrValue, $m))
+					{
+						$tag->removeAttribute($attrName);
+
+						foreach ($m as $k => $v)
+						{
+							if (!is_numeric($k) && !$tag->hasAttribute($k))
+							{
+								$tag->setAttribute($k, $v);
+							}
+						}
+
+						// We stop processing this attribute after the first match
+						break;
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -110,7 +147,7 @@ trait FilterProcessing
 	}
 
 	/**
-	* Filter current tag
+	* Execute given tag's filterChain
 	*
 	* @return bool Whether current tag is valid
 	*/
@@ -140,6 +177,7 @@ trait FilterProcessing
 				return false;
 			}
 		}
+
 		return true;
 	}
 
