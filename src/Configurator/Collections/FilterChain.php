@@ -67,14 +67,21 @@ class FilterChain extends NormalizedList
 
 		if (is_string($value) && $value[0] === '#')
 		{
-			$value = new CallbackPlaceholder($value);
+			$callback = new ProgrammableCallback(new CallbackPlaceholder($value));
 		}
 		elseif (!is_callable($value))
 		{
 			throw new InvalidArgumentException('Filter ' . var_export($value, true) . ' is neither callable nor the name of a filter');
 		}
+		else
+		{
+			$callback = ProgrammableCallback::fromArray(array(
+				'callback' => $value,
+				'params'   => $this->defaultSignature
+			));
+		}
 
-		return new ProgrammableCallback($value);
+		return $callback;
 	}
 
 	/**

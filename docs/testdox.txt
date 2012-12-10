@@ -122,10 +122,11 @@ s9e\TextFormatter\Tests\Configurator\Collections\FilterChain
  [x] append() throws an InvalidArgumentException on uncallable callbacks
  [x] prepend() throws an InvalidArgumentException on uncallable callbacks
  [x] $filterChain[] = 'foo' maps to $filterChain->append('foo')
- [x] PHP string callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
- [x] PHP array callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
- [x] Instances of s9e\TextFormatter\Configurator\Items\CallbackPlaceholder are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
- [x] Instances of s9e\TextFormatter\Configurator\Items\ProgrammableCallback are added as-is
+ [x] PHP string callbacks are normalized to an instance of ProgrammableCallback
+ [x] PHP array callbacks are normalized to an instance of ProgrammableCallback
+ [x] Instances of CallbackPlaceholder are normalized to an instance of ProgrammableCallback
+ [x] Instances of ProgrammableCallback are added as-is
+ [x] Generated instances of ProgrammableCallback based on PHP callbacks adopt the default signature
  [x] contains() returns false if the given filter is not present in the chain
  [x] contains() returns true if the given built-in filter is present in the chain
  [x] contains() returns true if the given PHP string callback is present in the chain

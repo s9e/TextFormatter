@@ -136,7 +136,7 @@ class FilterChainTest extends Test
 	}
 
 	/**
-	* @testdox PHP string callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
+	* @testdox PHP string callbacks are normalized to an instance of ProgrammableCallback
 	*/
 	public function testStringCallback()
 	{
@@ -149,7 +149,7 @@ class FilterChainTest extends Test
 	}
 
 	/**
-	* @testdox PHP array callbacks are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
+	* @testdox PHP array callbacks are normalized to an instance of ProgrammableCallback
 	*/
 	public function testArrayCallback()
 	{
@@ -162,7 +162,7 @@ class FilterChainTest extends Test
 	}
 
 	/**
-	* @testdox Instances of s9e\TextFormatter\Configurator\Items\CallbackPlaceholder are normalized to an instance of s9e\TextFormatter\Configurator\Items\ProgrammableCallback
+	* @testdox Instances of CallbackPlaceholder are normalized to an instance of ProgrammableCallback
 	*/
 	public function testArrayCallbackPlaceholder()
 	{
@@ -176,7 +176,7 @@ class FilterChainTest extends Test
 	}
 
 	/**
-	* @testdox Instances of s9e\TextFormatter\Configurator\Items\ProgrammableCallback are added as-is
+	* @testdox Instances of ProgrammableCallback are added as-is
 	*/
 	public function testProgrammableCallbackInstance()
 	{
@@ -186,6 +186,24 @@ class FilterChainTest extends Test
 		$this->assertSame(
 			$filter,
 			$this->filterChain[0]
+		);
+	}
+
+	/**
+	* @testdox Generated instances of ProgrammableCallback based on PHP callbacks adopt the default signature
+	*/
+	public function testDefaultSignature()
+	{
+		$filterChain = new FilterChain(array('attrValue' => null, '!'));
+		$filterChain->append('trim');
+
+		$filter = new ProgrammableCallback('trim');
+		$filter->addParameterByName('attrValue');
+		$filter->addParameterByValue('!');
+
+		$this->assertEquals(
+			$filter,
+			$filterChain[0]
 		);
 	}
 
