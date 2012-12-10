@@ -138,6 +138,40 @@ class ConfigHelperTest extends Test
 			$tagsConfig['FOO']['attributes']['foo']['filterChain']
 		);
 	}
+
+	/**
+	* @testdox Variables set for an attribute filter are added to the custom filter without overwriting the variables set for the custom filter
+	*/
+	public function testCustomFilterVarsArePreserved()
+	{
+		$tag  = new Tag;
+		$tag->attributes->add('foo')->filterChain->append('#range', array('min' => 2, 'max' => 5));
+
+		$fn = function($min, $max) {};
+
+		$filter = new ProgrammableCallback($fn);
+		$filter->addParameterByName('min');
+		$filter->addParameterByName('max');
+
+		// Set min to 1, it will overwrite the var that was set when appending the filter
+		$filter->setVars(array('min' => 1));
+
+		$filters = new FilterCollection;
+		$filters->add('range', $filter);
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, $filters);
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => $fn,
+					'params'   => array(1, 5)
+				)
+			),
+			$tagsConfig['FOO']['attributes']['foo']['filterChain']
+		);
+	}
 }
 
 class ConfigProviderDummy implements ConfigProvider
