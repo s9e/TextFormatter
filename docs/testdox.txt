@@ -1030,3 +1030,11 @@ s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] asConfig() returns FALSE if no elements were allowed
  [x] Generates a regexp for its config array
 
+s9e\TextFormatter\Tests\Unparser
+ [x] unparse('<pt>Plain text</pt>') returns 'Plain text'
+ [x] asPlainText('<pt>Plain text</pt>') returns 'Plain text'
+ [x] unparse('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+ [x] asPlainText('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+ [x] unparse('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
+ [x] asPlainText('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
+

@@ -111,7 +111,7 @@ trait TagAccumulator
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		// 1. Check that this tag has not reached its global limit tagLimit
-		// 2. Filter this tag's attributes and check for missing attributes
+		// 2. Execute this tag's filterChain, which will filter/validate its attributes
 		// 3. Apply closeParent and closeAncestor rules
 		// 4. Check for nestingLimit
 		// 5. Apply requireAncestor rules
@@ -122,13 +122,28 @@ trait TagAccumulator
 		// as ancestors are closed) or whether the required ancestors are still there (they might
 		// have been closed by a rule.)
 		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit']
-		 || $this->executeFilterChain()
-		 || $this->closeParent()
-		 || $this->closeAncestor()
-		 || $this->cntOpen[$tagName]  >= $tagConfig['nestingLimit']
+		 || !$this->filterTag($this->currentTag))
+		{
+			// This tag is invalid
+			$this->currentTag->invalidate();
+
+			return;
+		}
+
+		if ($this->closeParent()
+		 || $this->closeAncestor())
+		{
+			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
+			return;
+		}
+
+		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit']
 		 || $this->requireAncestor()
 		 || !$this->tagIsAllowed($tagName))
 		{
+			// This tag is invalid
+			$this->currentTag->invalidate();
+
 			return;
 		}
 	}

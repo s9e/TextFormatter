@@ -148,11 +148,12 @@ trait FilterProcessing
 	/**
 	* Execute given tag's filterChain
 	*
-	* @return bool Whether current tag is valid
+	* @param  Tag  $tag Tag to filter
+	* @return bool      Whether the tag is valid
 	*/
 	protected function filterTag()
 	{
-		$tagName   = $this->currentTag->getName();
+		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		if (!empty($tagConfig['filterChain']))
@@ -160,7 +161,7 @@ trait FilterProcessing
 			// Prepare the variables that are accessible to filters
 			$vars = array(
 				'registeredVars' => $this->registeredVars,
-				'tag'            => $this->currentTag,
+				'tag'            => $tag,
 				'tagConfig'      => $tagConfig
 			);
 

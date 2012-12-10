@@ -77,27 +77,25 @@ trait OutputHandling
 		{
 			$c = $this->text[$ignorePos];
 
-			if ($c === "\n" || $c === "\r")
-			{
-				// Decrement the number of lines to trim
-				--$trimAfter;
-
-				// Move the cursor past the newline
-				++$ignorePos;
-
-				// Test whether this is a \r\n or \n\r combo
-				if ($ignorePos < $this->textLen)
-				{
-					if (($c === "\n" && $this->text[$ignorePos + 1] === "\r")
-					 || ($c === "\r" && $this->text[$ignorePos + 1] === "\n"))
-					{
-						++$ignorePos;
-					}
-				}
-			}
-			else
+			if ($c !== "\n" && $c !== "\r")
 			{
 				break;
+			}
+
+			// Decrement the number of lines to trim
+			--$trimAfter;
+
+			// Move the cursor past the newline
+			++$ignorePos;
+
+			// Test whether this is a \r\n or \n\r combo
+			if ($ignorePos < $this->textLen)
+			{
+				if (($c === "\r" && $this->text[$ignorePos + 1] === "\n")
+				 || ($c === "\n" && $this->text[$ignorePos + 1] === "\r"))
+				{
+					++$ignorePos;
+				}
 			}
 		}
 
