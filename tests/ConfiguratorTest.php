@@ -114,22 +114,48 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->CamelCase returns $configurator->plugins->get('CamelCase')
+	* @testdox $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
 	*/
-	public function testMagicGet()
+	public function testMagicGetLoad()
 	{
-		$mock = $this->getMock('stdClass', array('get'));
+		$mock = $this->getMock('stdClass', array('exists', 'load'));
 
 		$mock->expects($this->once())
-		     ->method('get')
-		     ->with($this->equalTo('CamelCase'))
+		     ->method('exists')
+		     ->with($this->equalTo('BBCodes'))
+		     ->will($this->returnValue(false));
+
+		$mock->expects($this->once())
+		     ->method('load')
+		     ->with($this->equalTo('BBCodes'))
 		     ->will($this->returnValue('foobar'));
 
 		$this->configurator->plugins = $mock;
 
-		$this->assertSame('foobar', $this->configurator->CamelCase);
+		$this->assertSame('foobar', $this->configurator->BBCodes);
 	}
 
+	/**
+	* @testdox $configurator->BBCodes returns $configurator->plugins->get('BBCodes') if the plugin has already been loaded
+	*/
+	public function testMagicGetGet()
+	{
+		$mock = $this->getMock('stdClass', array('exists', 'get'));
+
+		$mock->expects($this->once())
+		     ->method('exists')
+		     ->with($this->equalTo('BBCodes'))
+		     ->will($this->returnValue(true));
+
+		$mock->expects($this->once())
+		     ->method('get')
+		     ->with($this->equalTo('BBCodes'))
+		     ->will($this->returnValue('foobar'));
+
+		$this->configurator->plugins = $mock;
+
+		$this->assertSame('foobar', $this->configurator->BBCodes);
+	}
 
 	/**
 	* @testdox $configurator->foo throws an exception

@@ -71,7 +71,9 @@ class Configurator implements ConfigProvider
 	{
 		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 		{
-			return $this->plugins->get($k);
+			return ($this->plugins->exists($k))
+			      ? $this->plugins->get($k)
+			      : $this->plugins->load($k);
 		}
 
 		throw new RuntimeException("Undefined property '" . __CLASS__ . '::$' . $k . "'");
