@@ -178,7 +178,7 @@ class BuiltInFilters
 	* @param  Logger $logger    Parser's logger
 	* @return mixed             Cleaned up URL if valid, FALSE otherwise
 	*/
-	public static function filter($attrValue, array $urlConfig, Logger $logger)
+	public static function filterUrl($attrValue, array $urlConfig, Logger $logger)
 	{
 		$followedUrls = array();
 		checkUrl:
