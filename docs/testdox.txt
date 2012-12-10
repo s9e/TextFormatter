@@ -2,9 +2,10 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->customFilters is an instance of FilterCollection
  [x] $configurator->plugins is an instance of PluginCollection
  [x] $configurator->rootRules is an instance of Ruleset
- [x] $configurator->rootRules is an instance of TagCollection
- [x] $configurator->rootRules is an instance of UrlConfig
- [x] asConfig() returns the parser's configuration as an array
+ [x] $configurator->tags is an instance of TagCollection
+ [x] $configurator->urlConfig is an instance of UrlConfig
+ [x] asConfig() returns an array with a rootContext element
+ [x] asConfig() returns an array with a registeredVars element that contains urlConfig
  [x] allowedChildren and allowedDescendants bitfields are added to each tag
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
  [x] $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already

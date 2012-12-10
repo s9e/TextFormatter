@@ -34,7 +34,7 @@ class Parser
 	/**
 	* @var array Variables registered for use in filters
 	*/
-	protected $registeredVars;
+	protected $registeredVars = array();
 
 	/**
 	* @var array Tags' config
@@ -56,10 +56,11 @@ class Parser
 		$this->rootContext   = $config['rootContext'];
 		$this->tagsConfig    = $config['tags'];
 
-		$this->registeredVars = array(
-			'parser' => $this,
-			'logger' => $this->logger
-		);
+		if (isset($config['registeredVars']))
+		{
+			$this->registeredVars = $config['registeredVars'];
+		}
+		$this->registeredVars['logger'] = $this->logger;
 	}
 
 	/**

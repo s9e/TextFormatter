@@ -125,6 +125,10 @@ class Configurator implements ConfigProvider
 			$config['tags'][$tagName] += $tagBitfields;
 		}
 
+		// Move the URL config to the registered vars, for use in filters
+		$config['registeredVars']['urlConfig'] = $config['urlConfig'];
+		unset($config['urlConfig']);
+
 		// Replace built-in and custom filters
 		ConfigHelper::replaceBuiltInFilters($config['tags'], $this->customFilters);
 
@@ -136,80 +140,6 @@ class Configurator implements ConfigProvider
 		unset($config['rootRules']);
 
 		return $config;
-	}
-
-	/**
-	* Test the filterChain of every tag/attribute and generate a warning for every invalid filter
-	*
-	* @return void
-	*/
-	protected function warnAboutUnknownFilters()
-	{
-		foreach ($this->tags as $tagName => $tag)
-		{
-			foreach ($tag->filterChain as $k => $filter)
-			{
-				if (!$this->filterIsValid($filter))
-				{
-					trigger_error('Filter #' . $k . " of tag '" . $tagName . "' is invalid", E_USER_WARNING);
-				}
-			}
-
-			foreach ($tag->attributes as $attrName => $attribute)
-			{
-				foreach ($attribute->filterChain as $k => $filter)
-				{
-					if (!$this->filterIsValid($filter))
-					{
-						trigger_error('Filter #' . $k . " used in attribute '" . $attrName . "' of tag '" . $tagName . "' is invalid", E_USER_WARNING);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	* Test whether a filter is valid
-	*
-	* Currently only tests whether the callback exists, but could be expanded to test other
-	* conditions as well, such as whether the values in a #range are valid.
-	*
-	* @param  Filter $filter
-	* @return bool
-	*/
-	protected function filterIsValid(Filter $filter)
-	{
-		$callback = $filter->getCallback();
-
-		// Test whether this callback is anything but a built-in/custom filter
-		if (!is_string($callback) || $callback[0] !== '#')
-		{
-			return true;
-		}
-
-		// Remove the # sign from the start of the name
-		$filterName = substr($callback, 1);
-
-		// Test whether it's the tag's default processing filter
-		if ($filterName === 'default')
-		{
-			return true;
-		}
-
-		// Test whether we have a custom filter by that name
-		if (isset($this->customFilters[$filterName]))
-		{
-			return true;
-		}
-
-		// Test whether we have a built-in filter by that name
-		$className = 's9e\\TextFormatter\\Parser\\Filters\\' . ucfirst($filterName);
-		if (class_exists($className))
-		{
-			return true;
-		}
-
-		return false;
 	}
 
 	// NOTE: when building the JS config, keys from Collections should probably automatically be preserved, although not always (e.g. rule names?)
@@ -225,13 +155,6 @@ class Configurator implements ConfigProvider
 
 
 
-
-
-
-
-	//==========================================================================
-	// Plugins
-	//==========================================================================
 
 	//==========================================================================
 	// Factories

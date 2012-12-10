@@ -62,12 +62,10 @@ trait FilterProcessing
 	* @private
 	* @param  Tag    $tag            Tag being checked
 	* @param  array  $tagConfig      Tag's config
-	* @param  Logger $logger         Logger instance
 	* @param  array  $registeredVars Array of registered vars for use in attribute filters
-	* @param  array  $urlConfig      Configuration used by URL filters
 	* @return bool                   Whether the whole attribute set is valid
 	*/
-	public static function filterAttributes(Tag $tag, array $tagConfig, Logger $logger, array $registeredVars, array $urlConfig)
+	public static function filterAttributes(Tag $tag, array $tagConfig, array $registeredVars)
 	{
 		// Generate values for attributes with a generator set
 		foreach ($tagConfig['attributes'] as $attrName => $attrConfig)
@@ -80,7 +78,6 @@ trait FilterProcessing
 						$attrConfig['generator'],
 						array(
 							'attrName'       => $attrName,
-							'logger'         => $logger,
 							'registeredVars' => $registeredVars
 						)
 					)
@@ -113,9 +110,7 @@ trait FilterProcessing
 					array(
 						'attrName'       => $attrName,
 						'attrValue'      => $attrValue,
-						'logger'         => $logger,
-						'registeredVars' => $registeredVars,
-						'urlConfig'      => $urlConfig
+						'registeredVars' => $registeredVars
 					)
 				);
 
@@ -164,11 +159,9 @@ trait FilterProcessing
 		{
 			// Prepare the variables that are accessible to filters
 			$vars = array(
-				'logger'         => $this->logger,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $this->currentTag,
-				'tagConfig'      => $tagConfig,
-				'urlConfig'      => $this->urlConfig
+				'tagConfig'      => $tagConfig
 			);
 
 			foreach ($tagConfig['filterChain'] as $filter)
@@ -217,9 +210,12 @@ trait FilterProcessing
 			else
 			{
 				// Unknown param, log it if we have a Logger instance
-				if (isset($vars['logger']))
+				if (isset($vars['registeredVars']['logger']))
 				{
-					$vars['logger']->err('Unknown callback parameter', array('paramName' => $k));
+					$vars['registeredVars']['logger']->err(
+						'Unknown callback parameter',
+						array('paramName' => $k)
+					);
 				}
 
 				return false;

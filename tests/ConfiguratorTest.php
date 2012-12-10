@@ -49,7 +49,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->rootRules is an instance of TagCollection
+	* @testdox $configurator->tags is an instance of TagCollection
 	*/
 	public function testTagsInstance()
 	{
@@ -60,7 +60,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->rootRules is an instance of UrlConfig
+	* @testdox $configurator->urlConfig is an instance of UrlConfig
 	*/
 	public function testUrlConfigInstance()
 	{
@@ -71,14 +71,24 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the parser's configuration as an array
+	* @testdox asConfig() returns an array with a rootContext element
 	*/
-	public function testAsConfig()
+	public function testAsConfigRootContext()
 	{
 		$config = $this->configurator->asConfig();
 		$this->assertInternalType('array', $config);
 		$this->assertArrayHasKey('rootContext', $config);
-		$this->assertArrayHasKey('urlConfig', $config);
+	}
+
+	/**
+	* @testdox asConfig() returns an array with a registeredVars element that contains urlConfig
+	*/
+	public function testAsConfigRegisteredVars()
+	{
+		$config = $this->configurator->asConfig();
+		$this->assertInternalType('array', $config);
+		$this->assertArrayHasKey('registeredVars', $config);
+		$this->assertArrayHasKey('urlConfig', $config['registeredVars']);
 	}
 
 	/**
