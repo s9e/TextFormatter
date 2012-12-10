@@ -62,9 +62,10 @@ trait FilterProcessing
 	* @param  array  $tagConfig      Tag's config
 	* @param  Logger $logger         Logger instance
 	* @param  array  $registeredVars Array of registered vars for use in attribute filters
+	* @param  array  $urlConfig      Configuration used by URL filters
 	* @return bool                   Whether the whole attribute set is valid
 	*/
-	public static function filterAttributes(Tag $tag, array $tagConfig, Logger $logger, array $registeredVars)
+	public static function filterAttributes(Tag $tag, array $tagConfig, Logger $logger, array $registeredVars, array $urlConfig)
 	{
 		// Generate values for attributes with a generator set
 		foreach ($tagConfig['attributes'] as $attrName => $attrConfig)
@@ -111,7 +112,8 @@ trait FilterProcessing
 						'attrName'       => $attrName,
 						'attrValue'      => $attrValue,
 						'logger'         => $logger,
-						'registeredVars' => $registeredVars
+						'registeredVars' => $registeredVars,
+						'urlConfig'      => $urlConfig
 					)
 				);
 
@@ -163,7 +165,8 @@ trait FilterProcessing
 				'logger'         => $this->logger,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $this->currentTag,
-				'tagConfig'      => $tagConfig
+				'tagConfig'      => $tagConfig,
+				'urlConfig'      => $this->urlConfig
 			);
 
 			foreach ($tagConfig['filterChain'] as $filter)
