@@ -32,8 +32,8 @@ trait FilterProcessing
 
 				foreach ($regexps as $regexp)
 				{
-					// If the regexp matches, we remove the source attribute then we add the captured
-					// attributes
+					// If the regexp matches, we remove the source attribute then we add the
+					// captured attributes
 					if (preg_match($regexp, $attrValue, $m))
 					{
 						$tag->removeAttribute($attrName);
