@@ -236,6 +236,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] replaceBuiltInFilters() doesn't choke on an empty filterChain
  [x] replaceBuiltInFilters() doesn't touch normal callbacks expressed as a string
  [x] replaceBuiltInFilters() throws an exception on unknown custom filters
+ [x] optimizeArray() uses references to deduplicate equal arrays
 
 s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child

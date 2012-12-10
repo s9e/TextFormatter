@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
 use stdClass;
 use Traversable;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Collections\Collection;
 use s9e\TextFormatter\Configurator\Collections\FilterCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
@@ -295,6 +296,29 @@ class ConfigHelperTest extends Test
 
 		$tagsConfig = array('FOO' => $tag->asConfig());
 		ConfigHelper::replaceBuiltInFilters($tagsConfig, new FilterCollection);
+	}
+
+	/**
+	* @testdox optimizeArray() uses references to deduplicate equal arrays
+	*/
+	public function testOptimizeArray()
+	{
+		// Create a Configurator and load a few of BBCodes
+		$configurator = new Configurator;
+		$configurator->BBCodes->addFromRepository('B');
+		$configurator->BBCodes->addFromRepository('I');
+		$configurator->BBCodes->addFromRepository('U');
+
+		$optimizedConfig = $configurator->asConfig();
+		ConfigHelper::optimizeArray($optimizedConfig);
+
+		$normalConfig = $configurator->asConfig();
+
+		$this->assertEquals($normalConfig, $optimizedConfig);
+		$this->assertLessThan(
+			strlen(serialize($normalConfig)),
+			strlen(serialize($optimizedConfig))
+		);
 	}
 }
 

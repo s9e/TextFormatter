@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
 
+use Exception;
 use ReflectionMethod;
 use RuntimeException;
 use Traversable;
@@ -17,50 +18,44 @@ use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 abstract class ConfigHelper
 {
 	/**
-	* Convert a structure to a (possibly multidimensional) array
+	* Optimize the size of a deep array by deduplicating identical structures
 	*
-	* @param  mixed $value
+	* This method is meant to be used on a config array which is only read and never modified
+	*
+	* @param  array &$config
+	* @param  array &$cache
 	* @return array
 	*/
-	public static function toArray($value)
+	public static function optimizeArray(array &$config, array &$cache = array())
 	{
-		$array = array();
-
-		foreach ($value as $k => $v)
+		foreach ($config as $k => &$v)
 		{
-			if (!isset($v))
+			if (!is_array($v))
 			{
-				// We don't record NULL values
 				continue;
 			}
 
-			if ($v instanceof ConfigProvider)
+			// Iterate over the cache to look for a matching structure
+			foreach ($cache as &$cachedArray)
 			{
-				$v = $v->asConfig();
-			}
-			elseif ($v instanceof Traversable || is_array($v))
-			{
-				$v = self::toArray($v);
-			}
-			elseif (!is_scalar($v))
-			{
-				$type = (is_object($v))
-				      ? 'an instance of ' . get_class($v)
-				      : 'a ' . gettype($v);
+				if ($cachedArray == $v)
+				{
+					// Replace the entry in $config with a reference to the cached value
+					$config[$k] =& $cachedArray;
 
-				throw new RuntimeException('Cannot convert ' . $type . ' to array');
+					// Skip to the next element
+					continue 2;
+				}
 			}
+			unset($cachedArray);
 
-			if ($v === array())
-			{
-				// We don't record empty structures
-				continue;
-			}
+			// Record this value in the cache
+			$cache[] =& $v;
 
-			$array[$k] = $v;
+			// Dig deeper into this array
+			self::optimizeArray($v, $cache);
 		}
-
-		return $array;
+		unset($v);
 	}
 
 	/**
@@ -187,5 +182,52 @@ abstract class ConfigHelper
 			}
 		}
 		unset($filter);
+	}
+
+	/**
+	* Convert a structure to a (possibly multidimensional) array
+	*
+	* @param  mixed $value
+	* @return array
+	*/
+	public static function toArray($value)
+	{
+		$array = array();
+
+		foreach ($value as $k => $v)
+		{
+			if (!isset($v))
+			{
+				// We don't record NULL values
+				continue;
+			}
+
+			if ($v instanceof ConfigProvider)
+			{
+				$v = $v->asConfig();
+			}
+			elseif ($v instanceof Traversable || is_array($v))
+			{
+				$v = self::toArray($v);
+			}
+			elseif (!is_scalar($v))
+			{
+				$type = (is_object($v))
+				      ? 'an instance of ' . get_class($v)
+				      : 'a ' . gettype($v);
+
+				throw new RuntimeException('Cannot convert ' . $type . ' to array');
+			}
+
+			if ($v === array())
+			{
+				// We don't record empty structures
+				continue;
+			}
+
+			$array[$k] = $v;
+		}
+
+		return $array;
 	}
 }
