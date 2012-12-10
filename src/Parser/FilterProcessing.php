@@ -156,25 +156,22 @@ trait FilterProcessing
 		$tagName   = $this->currentTag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
 
-		if (!isset($tagConfig['filterChain']))
+		if (!empty($tagConfig['filterChain']))
 		{
-			// No filter == unconditionally valid
-			return true;
-		}
+			// Prepare the variables that are accessible to filters
+			$vars = array(
+				'logger'         => $this->logger,
+				'registeredVars' => $this->registeredVars,
+				'tag'            => $this->currentTag,
+				'tagConfig'      => $tagConfig
+			);
 
-		// Prepare the variables that are accessible to filters
-		$vars = array(
-			'logger'         => $this->logger,
-			'registeredVars' => $this->registeredVars,
-			'tag'            => $this->currentTag,
-			'tagConfig'      => $tagConfig
-		);
-
-		foreach ($tagConfig['filterChain'] as $filter)
-		{
-			if (!self::executeFilter($filter, $vars))
+			foreach ($tagConfig['filterChain'] as $filter)
 			{
-				return false;
+				if (!self::executeFilter($filter, $vars))
+				{
+					return false;
+				}
 			}
 		}
 
