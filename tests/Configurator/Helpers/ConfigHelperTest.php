@@ -116,6 +116,28 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
+	* @testdox replaceBuiltInFilters() copies the built-in filters' signatures based on the names of their parameters
+	*/
+	public function testBuiltInSignature()
+	{
+		$tag  = new Tag;
+		$tag->attributes->add('foo')->filterChain->append('#regexp', array('regexp' => '#foo#'));
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, new FilterCollection);
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp',
+					'params'   => array('attrValue' => null, '#foo#')
+				)
+			),
+			$tagsConfig['FOO']['attributes']['foo']['filterChain']
+		);
+	}
+
+	/**
 	* @testdox replaceBuiltInFilters() replaces built-in tag filter #filterAttributes by its callback s9e\TextFormatter\Parser::filterAttributes
 	*/
 	public function testBuiltInTag()

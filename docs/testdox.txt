@@ -227,6 +227,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() omits empty arrays from values
  [x] toArray() omits empty Collections from values
  [x] replaceBuiltInFilters() replaces built-in attribute filter #int by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
+ [x] replaceBuiltInFilters() copies the built-in filters' signatures based on the names of their parameters
  [x] replaceBuiltInFilters() replaces built-in tag filter #filterAttributes by its callback s9e\TextFormatter\Parser::filterAttributes
  [x] replaceBuiltInFilters() replaces custom attribute filter #foo by its registered callback
  [x] replaceBuiltInFilters() replaces custom tag filter #foo by its registered callback
