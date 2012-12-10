@@ -43,7 +43,7 @@ class Attribute implements ConfigProvider
 	*/
 	public function __construct(array $options = null)
 	{
-		$this->filterChain = new FilterChain(array('attrVal' => null));
+		$this->filterChain = new FilterChain(array('attrValue' => null));
 
 		if (isset($options))
 		{

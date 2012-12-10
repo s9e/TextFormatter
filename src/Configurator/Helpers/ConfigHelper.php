@@ -82,7 +82,7 @@ abstract class ConfigHelper
 	{
 		foreach ($tagsConfig as &$tagConfig)
 		{
-			self::replaceFilters(
+			self::replaceItemFilters(
 				$tagConfig,
 				$customFilters,
 				function ($filterName)
@@ -95,7 +95,7 @@ abstract class ConfigHelper
 			{
 				foreach ($tagConfig['attributes'] as &$attrConfig)
 				{
-					self::replaceFilters(
+					self::replaceItemFilters(
 						$attrConfig,
 						$customFilters,
 						function ($filterName)
@@ -119,9 +119,9 @@ abstract class ConfigHelper
 	*                                              for a built-in filter
 	* @return void
 	*/
-	protected static function replaceFilters(array &$config, FilterCollection $customFilters, $callbackGenerator)
+	protected static function replaceItemFilters(array &$config, FilterCollection $customFilters, $callbackGenerator)
 	{
-		if (!isset($config['filterChain']))
+		if (empty($config['filterChain']))
 		{
 			return;
 		}
@@ -184,66 +184,6 @@ abstract class ConfigHelper
 
 				// Replace this filter with the correctly programmed callback
 				$filter = $builtInFilter->asConfig();
-			}
-		}
-		unset($filter);
-	}
-
-	/**
-	* Replace built-in and custom filters in a tag's config
-	*
-	* @param  array            &$tagConfig     The tag's config
-	* @param  FilterCollection  $customFilters Collection of ProgrammableCallback instances
-	* @return void
-	*/
-	protected static function replaceTagFilters(array &$tagConfig, FilterCollection $customFilters)
-	{
-		if (!isset($tagConfig['filterChain']))
-		{
-			return;
-		}
-
-		foreach ($tagConfig['filterChain'] as &$filter)
-		{
-			if (is_string($filter['callback']) && $filter['callback'][0] === '#')
-			{
-				$filterName = substr($filter['callback'], 1);
-
-				if (isset($customFilters[$filterName]))
-				{
-					// Clone the custom filter so we don't alter the original
-					$customFilter = clone $customFilters[$filterName];
-
-					if (!empty($filter['vars']))
-					{
-						// Add this filter's vars to the custom filter's
-						$customFilter->setVars(
-							$customFilter->getVars() + $filter['vars']
-						);
-					}
-
-					// Replace this filter with the custom filter
-					$filter = $customFilter->asConfig();
-				}
-				else
-				{
-					$className  = 's9e\\TextFormatter\\Parser';
-					$methodName = $filterName;
-
-					if (!method_exists($className, $methodName))
-					{
-						throw new RuntimeException("Unknown filter '#" . $filterName . "'");
-					}
-
-					// Store the built-in filter as a string
-					$filter = $methodName;
-				}
-			}
-
-			// We don't need those anymore
-			if (isset($filter['vars']))
-			{
-				unset($filter['vars']);
 			}
 		}
 		unset($filter);

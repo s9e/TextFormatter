@@ -94,9 +94,9 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox Built-in attribute filter #int is replaced by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
+	* @testdox replaceBuiltInFilters() replaces built-in attribute filter #int by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
 	*/
-	public function testBuiltIn()
+	public function testBuiltInAttribute()
 	{
 		$tag  = new Tag;
 		$tag->attributes->add('foo')->filterChain->append('#int');
@@ -116,9 +116,37 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox Custom attribute filter #foo is replaced by its registered callback
+	* @testdox replaceBuiltInFilters() replaces built-in tag filter #filterAttributes by its callback s9e\TextFormatter\Parser::filterAttributes
 	*/
-	public function testCustom()
+	public function testBuiltInTag()
+	{
+		$tag  = new Tag;
+		$tag->filterChain->clear();
+		$tag->filterChain->append('#filterAttributes');
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, new FilterCollection);
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 's9e\\TextFormatter\\Parser::filterAttributes',
+					'params'   => array(
+						'tag'            => null,
+						'tagConfig'      => null,
+						'logger'         => null,
+						'registeredVars' => null
+					)
+				)
+			),
+			$tagsConfig['FOO']['filterChain']
+		);
+	}
+
+	/**
+	* @testdox replaceBuiltInFilters() replaces custom attribute filter #foo by its registered callback
+	*/
+	public function testCustomAttribute()
 	{
 		$tag  = new Tag;
 		$tag->attributes->add('foo')->filterChain->append('#foo');
@@ -140,7 +168,32 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox Variables set for an attribute filter are added to the custom filter without overwriting the variables set for the custom filter
+	* @testdox replaceBuiltInFilters() replaces custom tag filter #foo by its registered callback
+	*/
+	public function testCustomTag()
+	{
+		$tag  = new Tag;
+		$tag->filterChain->clear();
+		$tag->filterChain->append('#foo');
+
+		$filters = new FilterCollection;
+		$filters->add('foo', new ProgrammableCallback('mt_rand'));
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, $filters);
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 'mt_rand'
+				)
+			),
+			$tagsConfig['FOO']['filterChain']
+		);
+	}
+
+	/**
+	* @testdox replaceBuiltInFilters() adds variables set for an attribute filter to the custom filter without overwriting the variables set for the custom filter
 	*/
 	public function testCustomFilterVarsArePreserved()
 	{
@@ -171,6 +224,54 @@ class ConfigHelperTest extends Test
 			),
 			$tagsConfig['FOO']['attributes']['foo']['filterChain']
 		);
+	}
+
+	/**
+	* @testdox replaceBuiltInFilters() doesn't choke on an empty filterChain
+	*/
+	public function testEmptyFilterChain()
+	{
+		$tag  = new Tag;
+		$tag->filterChain->clear();
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, new FilterCollection);
+	}
+
+	/**
+	* @testdox replaceBuiltInFilters() doesn't touch normal callbacks expressed as a string
+	*/
+	public function testStringCallback()
+	{
+		$tag  = new Tag;
+		$tag->attributes->add('foo')->filterChain->append('strtolower');
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, new FilterCollection);
+
+		$this->assertEquals(
+			array(
+				array(
+					'callback' => 'strtolower',
+					'params'   => array('attrValue' => null)
+				)
+			),
+			$tagsConfig['FOO']['attributes']['foo']['filterChain']
+		);
+	}
+
+	/**
+	* @testdox replaceBuiltInFilters() throws an exception on unknown custom filters
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Unknown filter '#null'
+	*/
+	public function testUnknownFilter()
+	{
+		$tag  = new Tag;
+		$tag->filterChain->append('#null');
+
+		$tagsConfig = array('FOO' => $tag->asConfig());
+		ConfigHelper::replaceBuiltInFilters($tagsConfig, new FilterCollection);
 	}
 }
 

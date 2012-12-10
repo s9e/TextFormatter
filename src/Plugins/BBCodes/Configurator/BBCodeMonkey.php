@@ -631,8 +631,8 @@ abstract class BBCodeMonkey
 			}
 			else
 			{
-				$token['id']       = substr($head, 0, $pos);
-				$token['type']     = rtrim($token['id'], '0123456789');
+				$token['id']   = substr($head, 0, $pos);
+				$token['type'] = rtrim($token['id'], '0123456789');
 
 				// Copy the content of named subpatterns into the token's config
 				foreach ($m as $k => $v)

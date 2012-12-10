@@ -45,7 +45,7 @@ class AttributeTest extends Test
 	*/
 	public function testSetFilterChainInstance()
 	{
-		$filterChain = new FilterChain(array('attrVal' => null));
+		$filterChain = new FilterChain(array('attrValue' => null));
 		$filterChain->append('strtolower');
 
 		$attr = new Attribute;

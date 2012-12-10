@@ -29,7 +29,26 @@ trait FilterProcessing
 	*/
 	public static function filterAttributes(Tag $tag, array $tagConfig, Logger $logger, array $registeredVars)
 	{
-		// First, filter and remove invalid attributes
+		// Generate values for attributes with a generator set
+		foreach ($tagConfig['attributes'] as $attrName => $attrConfig)
+		{
+			if (isset($attrConfig['generator']))
+			{
+				$tag->setAttribute(
+					$attrName,
+					self::executeFilter(
+						$attrConfig['generator'],
+						array(
+							'attrName'       => $attrName,
+							'logger'         => $logger,
+							'registeredVars' => $registeredVars
+						)
+					)
+				);
+			}
+		}
+
+		// Filter and remove invalid attributes
 		foreach ($tag->getAttributes() as $attrName => $attrValue)
 		{
 			// Test whether this attribute exists and remove it if it doesn't
