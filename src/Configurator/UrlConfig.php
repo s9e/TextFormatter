@@ -19,6 +19,11 @@ class UrlConfig implements ConfigProvider
 	protected $allowedSchemes = array('http', 'https');
 
 	/**
+	* @var string Default scheme to be used when validating scheme-less URLs
+	*/
+	protected $defaultScheme;
+
+	/**
 	* @var array List of disallowed hosts
 	*/
 	protected $disallowedHosts = array();
@@ -29,9 +34,10 @@ class UrlConfig implements ConfigProvider
 	protected $resolveRedirectsHosts = array();
 
 	/**
-	* @var string Default scheme to be used when validating schemeless URLs
+	* @var bool Whether URLs should require a scheme
+	* @link http://tools.ietf.org/html/rfc3986#section-4.2
 	*/
-	protected $defaultScheme;
+	protected $requireScheme = false;
 
 	/**
 	* {@inheritdoc}
@@ -45,6 +51,11 @@ class UrlConfig implements ConfigProvider
 		if (isset($this->defaultScheme))
 		{
 			$config['defaultScheme'] = $this->defaultScheme;
+		}
+
+		if ($this->requireScheme)
+		{
+			$config['requireScheme'] = true;
 		}
 
 		foreach (array('disallowedHosts', 'resolveRedirectsHosts') as $k)
@@ -85,44 +96,6 @@ class UrlConfig implements ConfigProvider
 	}
 
 	/**
-	* Set a default scheme to be used for validation of scheme-less URLs
-	*
-	* @param string $scheme URL scheme, e.g. "http" or "https"
-	*/
-	public function setDefaultScheme($scheme)
-	{
-		$this->defaultScheme = $this->normalizeScheme($scheme);
-	}
-
-	/**
-	* Validate and normalize a scheme name to lowercase, or throw an exception if invalid
-	*
-	* @link http://tools.ietf.org/html/rfc3986#section-3.1
-	*
-	* @param  string $scheme URL scheme, e.g. "file" or "ed2k"
-	* @return string
-	*/
-	protected function normalizeScheme($scheme)
-	{
-		if (!preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))
-		{
-			throw new InvalidArgumentException("Invalid scheme name '" . $scheme . "'");
-		}
-
-		return strtolower($scheme);
-	}
-
-	/**
-	* Return the list of allowed URL schemes
-	*
-	* @return array
-	*/
-	public function getAllowedSchemes()
-	{
-		return $this->allowedSchemes;
-	}
-
-	/**
 	* Disallow a hostname (or hostname mask) from being used in URLs
 	*
 	* @param string $host Hostname or hostmask
@@ -133,13 +106,13 @@ class UrlConfig implements ConfigProvider
 	}
 
 	/**
-	* Force URLs from given hostmask to be followed and resolved to their true location
+	* Return the list of allowed URL schemes
 	*
-	* @param string $host Hostname or hostmask
+	* @return array
 	*/
-	public function resolveRedirectsFrom($host)
+	public function getAllowedSchemes()
 	{
-		$this->resolveRedirectsHosts[] = $this->normalizeHostmask($host);
+		return $this->allowedSchemes;
 	}
 
 	/**
@@ -183,5 +156,58 @@ class UrlConfig implements ConfigProvider
 		}
 
 		return $host;
+	}
+
+	/**
+	* Validate and normalize a scheme name to lowercase, or throw an exception if invalid
+	*
+	* @link http://tools.ietf.org/html/rfc3986#section-3.1
+	*
+	* @param  string $scheme URL scheme, e.g. "file" or "ed2k"
+	* @return string
+	*/
+	protected function normalizeScheme($scheme)
+	{
+		if (!preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))
+		{
+			throw new InvalidArgumentException("Invalid scheme name '" . $scheme . "'");
+		}
+
+		return strtolower($scheme);
+	}
+
+	/**
+	* Force URLs from given hostmask to be followed and resolved to their true location
+	*
+	* @param string $host Hostname or hostmask
+	*/
+	public function resolveRedirectsFrom($host)
+	{
+		$this->resolveRedirectsHosts[] = $this->normalizeHostmask($host);
+	}
+
+	/**
+	* Force URLs to have a scheme part
+	*
+	* @param bool $bool Whether to disallow scheme-less URLs
+	*/
+	public function requireScheme($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('requireScheme() expects a boolean');
+		}
+
+		$this->requireScheme = $bool;
+	}
+
+	/**
+	* Set a default scheme to be used for validation of scheme-less URLs
+	*
+	* @param string $scheme URL scheme, e.g. "http" or "https"
+	*/
+	public function setDefaultScheme($scheme)
+	{
+		$this->defaultScheme = $this->normalizeScheme($scheme);
 	}
 }
