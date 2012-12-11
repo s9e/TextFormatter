@@ -105,7 +105,7 @@ trait FilterProcessing
 
 			foreach ($attrConfig['filterChain'] as $filter)
 			{
-				$attrValue = $this->executeFilter(
+				$attrValue = self::executeFilter(
 					$filter,
 					array(
 						'attrName'       => $attrName,

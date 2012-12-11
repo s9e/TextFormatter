@@ -2,7 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\Parser;
 
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser\BuiltInFilters;
+use s9e\TextFormatter\Parser\FilterProcessing;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -14,7 +16,7 @@ class BuiltInFiltersTestTest extends Test
 	* @dataProvider getData
 	* @testdox Regression tests
 	*/
-	public function test($original, array $results)
+	public function testRegressions($original, array $results)
 	{
 		foreach ($results as $filterName => $expected)
 		{
@@ -44,6 +46,17 @@ class BuiltInFiltersTestTest extends Test
 	}
 
 	/**
+	* 
+	*
+	* @return void
+	*/
+	public function test()
+	{
+//		var_dump(Hax::filterValue(3, 'range', array('min' => 2, 'max' => 5)));
+	}
+
+
+	/**
 	* NOTE: this test is not normative. Some cases exist solely to track regressions
 	*/
 	public function getData()
@@ -60,6 +73,32 @@ class BuiltInFiltersTestTest extends Test
 			array('12e-3', array('int' => false, 'uint' => false, 'float' => 0.012, 'number' => false)),
 			array('-12e-3', array('int' => false, 'uint' => false, 'float' => -0.012, 'number' => false)),
 			array('0x123', array('int' => false, 'uint' => false, 'float' => false, 'number' => false)),
+		);
+	}
+}
+
+class Hax
+{
+	use FilterProcessing;
+
+	public static function filterValue($attrValue, $filterName, array $filterOptions = array(), Logger $logger)
+	{
+		$configurator = new Configurator;
+		$configurator
+			->tags->add('FOO')
+			->attributes->add('foo')
+			->filterChain->append('#' . $filterName, $filterOptions);
+
+		$config = $configurator->asConfig();
+		$config['registeredVars']['logger'] = $logger;
+
+		return self::executeFilter(
+			$config['tags']['FOO']['attributes']['foo']['filterChain'][0],
+			array(
+				'attrName'       => 'foo',
+				'attrValue'      => $attrValue,
+				'registeredVars' => $config['registeredVars']
+			)
 		);
 	}
 }
