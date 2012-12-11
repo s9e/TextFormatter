@@ -13,8 +13,39 @@ use s9e\TextFormatter\Tests\Test;
 */
 class BuiltInFiltersTest extends Test
 {
+	protected static function filterTestdox($filterName, array $filterOptions, $original, $expected)
+	{
+		$testdox = '#' . $filterName;
+
+		if ($filterOptions)
+		{
+			$testdox .= ' [';
+			foreach ($filterOptions as $k => $v)
+			{
+				$testdox .= "'$k'=>$v,";
+			}
+			$testdox = substr($testdox, 0, -1) . ']';
+		}
+
+		if ($expected === false)
+		{
+			$testdox .= ' rejects ' . var_export($original, true);
+		}
+		elseif ($expected === $original)
+		{
+			$testdox .= ' accepts ' . var_export($original, true);
+		}
+		else
+		{
+			$testdox .= ' transforms ' . var_export($original, true)
+					  . ' into ' . var_export($expected, true);
+		}
+
+		return $testdox;
+	}
+
 	/**
-	* @dataProvider getData
+	* @dataProvider getRegressionsData
 	* @testdox Regression tests
 	*/
 	public function testRegressions($original, array $results)
@@ -22,21 +53,7 @@ class BuiltInFiltersTest extends Test
 		foreach ($results as $filterName => $expected)
 		{
 			$methodName = 'filter' . ucfirst($filterName);
-			$testdox = '#' . $filterName;
-
-			if ($expected === false)
-			{
-				$testdox .= ' rejects ' . var_export($original, true);
-			}
-			elseif ($expected === $original)
-			{
-				$testdox .= ' accepts ' . var_export($original, true);
-			}
-			else
-			{
-				$testdox .= ' transforms ' . var_export($original, true)
-				          . ' into ' . var_export($expected, true);
-			}
+			$testdox = self::filterTestdox($filterName, array(), $original, $expected);
 
 			$this->assertSame(
 				$expected,
@@ -47,18 +64,48 @@ class BuiltInFiltersTest extends Test
 	}
 
 	/**
-	* @testdox #range
+	* @dataProvider getData
 	*/
-	public function test()
+	public function test($filterName, $original, $expected, array $filterOptions = array(), array $logs = array())
 	{
-		$this->assertSame(3, Hax::filterValue(3, 'range', array('min' => 2, 'max' => 5), new Logger));
+		$testdox = self::filterTestdox($filterName, $filterOptions, $original, $expected);
+
+		$logger = new Logger;
+
+		$this->assertSame(
+			$expected,
+			Hax::filterValue($original, $filterName, $filterOptions, $logger),
+			'Failed asserting that ' . $testdox
+		);
+
+		$this->assertSame($logs, $logger->get(), "Logs don't match");
 	}
 
+	public function getData()
+	{
+		return array(
+			array('range', '2', 2, array('min' => 2, 'max' => 5)),
+			array('range', '5', 5, array('min' => 2, 'max' => 5)),
+			array('range', '-5', -5, array('min' => -5, 'max' => 5)),
+			array('range', '1', 2, array('min' => 2, 'max' => 5), array(
+				array('warn', 'Value outside of range, adjusted up to min value', array(
+					'attrValue' => 1, 'min' => 2, 'max' => 5
+				))
+			)),
+			array('range', '10', 5, array('min' => 2, 'max' => 5), array(
+				array('warn', 'Value outside of range, adjusted down to max value', array(
+					'attrValue' => 10, 'min' => 2, 'max' => 5
+				))
+			)),
+			array('range', '5x', false, array('min' => 2, 'max' => 5)),
+		);
+	}
 
 	/**
-	* NOTE: this test is not normative. Some cases exist solely to track regressions
+	* NOTE: this test is not normative. Some cases exist solely to track regressions or changes in
+	*       behaviour in ext/filter
 	*/
-	public function getData()
+	public function getRegressionsData()
 	{
 		return array(
 			array('123', array('int' => 123, 'uint' => 123, 'float' => 123.0, 'number' => '123')),

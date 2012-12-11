@@ -873,10 +873,20 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
 
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests
- [x] #range
+ [x] 
 
 s9e\TextFormatter\Tests\Parser\Logger
+ [x] debug() generates a "debug" entry in the logs
+ [x] err() generates a "err" entry in the logs
+ [x] info() generates a "info" entry in the logs
+ [x] warn() generates a "warn" entry in the logs
+ [x] The attribute name set by setAttribute() is added to the context if no 'attrName' element is provided
+ [x] The attribute name set by setAttribute() is not added to the context if an 'attrName' element is provided
+ [x] unsetAttribute() unsets the value stored by setAttribute()
  [x] The tag set by setTag() is added to the context if no 'tag' element is provided
+ [x] The tag set by setTag() is not added to the context if a 'tag' element is provided
+ [x] unsetTag() unsets the value stored by setTag()
+ [x] clear() empties the logs
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument

@@ -17,7 +17,7 @@ class Logger
 	protected $attrName;
 
 	/**
-	* @var array Log entries
+	* @var array Log entries in the form [[<type>,<msg>,<context>]]
 	*/
 	protected $logs = array();
 
@@ -46,7 +46,7 @@ class Logger
 			$context['tag'] = $this->tag;
 		}
 
-		$this->logs[$type][] = array($msg, $context);
+		$this->logs[] = array($type, $msg, $context);
 	}
 
 	/**
@@ -62,20 +62,12 @@ class Logger
 	}
 
 	/**
-	* Return the logs (either all of one given type only)
+	* Return the logs
 	*
-	* @param  string $type
 	* @return array
 	*/
-	public function get($type = null)
+	public function get()
 	{
-		if (isset($type)) 
-		{
-			return (isset($this->logs[$type]))
-			      ? $this->logs[$type]
-			      : array();
-		}
-
 		return $this->logs;
 	}
 
