@@ -164,6 +164,19 @@ class BuiltInFiltersTest extends Test
 					$configurator->urlConfig->allowScheme('ftp');
 				}
 			),
+/*
+			array(
+				'url',
+				'http://www.pаypal.com',
+				false,
+				array(),
+				array(),
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('pаypal.com');
+				}
+			),
+*/
 		);
 	}
 
