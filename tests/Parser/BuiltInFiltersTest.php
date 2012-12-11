@@ -131,6 +131,39 @@ class BuiltInFiltersTest extends Test
 					$configurator->urlConfig->requireScheme();
 				}
 			),
+			array('url', 'HTTP://www.example.com', 'http://www.example.com'),
+			array('url', ' http://www.example.com ', 'http://www.example.com'),
+			array('url', "http://example.com/''", 'http://example.com/%27%27'),
+			array('url', 'http://example.com/""', 'http://example.com/%22%22'),
+			array('url', 'http://example.com/(', 'http://example.com/%28'),
+			array('url', 'http://example.com/)', 'http://example.com/%29'),
+			array(
+				'url',
+				'ftp://example.com',
+				false,
+				array(),
+				array(
+					array(
+						'err',
+						'URL scheme is not allowed',
+						array(
+							'attrValue' => 'ftp://example.com',
+							'scheme'    => 'ftp'
+						)
+					)
+				)
+			),
+			array(
+				'url',
+				'ftp://example.com',
+				'ftp://example.com',
+				array(),
+				array(),
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('ftp');
+				}
+			),
 		);
 	}
 
