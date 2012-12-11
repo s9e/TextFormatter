@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Parser;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser\BuiltInFilters;
 use s9e\TextFormatter\Parser\FilterProcessing;
+use s9e\TextFormatter\Parser\Logger;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -46,13 +47,11 @@ class BuiltInFiltersTestTest extends Test
 	}
 
 	/**
-	* 
-	*
-	* @return void
+	* @testdox #range
 	*/
 	public function test()
 	{
-//		var_dump(Hax::filterValue(3, 'range', array('min' => 2, 'max' => 5)));
+		$this->assertSame(3, Hax::filterValue(3, 'range', array('min' => 2, 'max' => 5), new Logger));
 	}
 
 
@@ -81,7 +80,7 @@ class Hax
 {
 	use FilterProcessing;
 
-	public static function filterValue($attrValue, $filterName, array $filterOptions = array(), Logger $logger)
+	public static function filterValue($attrValue, $filterName, array $filterOptions, Logger $logger)
 	{
 		$configurator = new Configurator;
 		$configurator

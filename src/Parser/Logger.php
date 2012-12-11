@@ -17,45 +17,6 @@ class Logger
 	protected $log = array();
 
 	/**
-	* @var Parser
-	*/
-	protected $parser;
-
-	/**
-	* Constructor
-	*
-	* @param  Parser $parser
-	* @return void
-	*/
-	public function __construct(Parser $parser)
-	{
-		$this->parser = $parser;
-	}
-
-	/**
-	* Add a log entry
-	*
-	* @param  string $type
-	* @param  string $msg
-	* @param  array  $context
-	* @return void
-	*/
-	protected function add($type, $msg, array $context)
-	{
-		if (!isset($context['tag']))
-		{
-			$tag = $this->parser->getCurrentTag();
-
-			if ($tag)
-			{
-				$context['tag'] = $tag;
-			}
-		}
-
-		$this->log[$type][] = array($msg, $context);
-	}
-
-	/**
 	* Clear the log
 	*
 	* @return void
@@ -74,7 +35,7 @@ class Logger
 	*/
 	public function debug($msg, array $context = array())
 	{
-		$this->add('debug', $context);
+		$this->log['debug'][] = array($msg, $context);
 	}
 
 	/**
@@ -86,7 +47,7 @@ class Logger
 	*/
 	public function err($msg, array $context = array())
 	{
-		$this->add('err', $context);
+		$this->log['err'][] = array($msg, $context);
 	}
 
 	/**
@@ -98,7 +59,7 @@ class Logger
 	*/
 	public function info($msg, array $context = array())
 	{
-		$this->add('info', $context);
+		$this->log['info'][] = array($msg, $context);
 	}
 
 	/**
@@ -110,6 +71,6 @@ class Logger
 	*/
 	public function warn($msg, array $context = array())
 	{
-		$this->add('warn', $context);
+		$this->log['warn'][] = array($msg, $context);
 	}
 }

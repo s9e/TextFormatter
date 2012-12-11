@@ -873,7 +873,7 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
 
 s9e\TextFormatter\Tests\Parser\BuiltInFiltersTest
  [x] Regression tests
- [x] 
+ [x] #range
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
