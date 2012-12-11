@@ -57,6 +57,8 @@
 			<file>Configurator/Validators/AttributeNameTest.php</file>
 			<file>Configurator/Validators/TagNameTest.php</file>
 
+			<file>Parser/BuiltInFiltersTest.php</file>
+
 			<file>Plugins/ConfiguratorBaseTest.php</file>
 			<file>Plugins/Autolink/ConfiguratorTest.php</file>
 			<file>Plugins/BBCodes/Configurator/AttributeValueCollectionTest.php</file>
@@ -116,6 +118,8 @@
 			<file>../src/Configurator/UrlConfig.php</file>
 			<file>../src/Configurator/Validators/AttributeName.php</file>
 			<file>../src/Configurator/Validators/TagName.php</file>
+
+			<file>../src/Parser/BuiltInFilters.php</file>
 
 			<file>../src/Plugins/ConfiguratorBase.php</file>
 			<file>../src/Plugins/Autolink/Configurator.php</file>

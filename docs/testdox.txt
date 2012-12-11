@@ -871,6 +871,9 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
 
+s9e\TextFormatter\Tests\Parser\BuiltInFiltersTest
+ [x] Regression tests
+
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
  [x] Constructor calls setFoo() if 'foo' is being set

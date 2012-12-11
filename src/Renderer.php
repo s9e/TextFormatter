@@ -24,25 +24,11 @@ class Renderer implements Serializable
 	protected $proc;
 
 	/**
-	* 
+	* Constructor
 	*
+	* @param  string $stylesheet The stylesheet used to render intermediate representations
 	* @return void
 	*/
-	public function serialize()
-	{
-		return $this->stylesheet;
-	}
-
-	/**
-	* 
-	*
-	* @return void
-	*/
-	public function unserialize($data)
-	{
-		$this->__construct($data);
-	}
-
 	public function __construct($stylesheet)
 	{
 		$xsl = new DOMDocument;
@@ -54,6 +40,33 @@ class Renderer implements Serializable
 		$this->stylesheet = $stylesheet;
 	}
 
+	/**
+	* Serializer
+	*
+	* @return string This renderer's stylesheet
+	*/
+	public function serialize()
+	{
+		return $this->stylesheet;
+	}
+
+	/**
+	* Unserializer
+	*
+	* @param  string $data Serialized data
+	* @return void
+	*/
+	public function unserialize($data)
+	{
+		$this->__construct($data);
+	}
+
+	/**
+	* Render an intermediate representation
+	*
+	* @param  string $xml Intermediate representation
+	* @return string      Rendered result
+	*/
 	public function render($xml)
 	{
 		$dom  = new DOMDocument;
@@ -62,10 +75,14 @@ class Renderer implements Serializable
 		return rtrim($this->proc->transformToXml($dom));
 	}
 
+	/**
+	* Render an array of intermediate representations
+	*
+	* @param  array $arr Array of XML strings
+	* @return array      Array of render results (same keys, same order)
+	*/
 	public function renderMulti(array $arr)
 	{
-		// NOTE: the UID is hashed to prevent leaking information about the random number generators
-		//       in case somebody finds a way to retrieve it
 		$uid = sha1(uniqid(mt_rand(), true));
 		$xml = '<m>' . implode($uid, $arr) . '</m>';
 
