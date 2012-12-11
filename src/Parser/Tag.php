@@ -299,7 +299,7 @@ class Tag
 	* @param  string $attrName
 	* @return void
 	*/
-	public function hasAttribute($attrName)
+	public function removeAttribute($attrName)
 	{
 		unset($this->attributes[$attrName]);
 	}

@@ -11,7 +11,7 @@ use s9e\TextFormatter\Tests\Test;
 /**
 * @covers s9e\TextFormatter\Parser\BuiltInFilters
 */
-class BuiltInFiltersTestTest extends Test
+class BuiltInFiltersTest extends Test
 {
 	/**
 	* @dataProvider getData

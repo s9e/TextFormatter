@@ -58,6 +58,7 @@
 			<file>Configurator/Validators/TagNameTest.php</file>
 
 			<file>Parser/BuiltInFiltersTest.php</file>
+			<file>Parser/LoggerTest.php</file>
 
 			<file>Plugins/ConfiguratorBaseTest.php</file>
 			<file>Plugins/Autolink/ConfiguratorTest.php</file>
@@ -120,6 +121,7 @@
 			<file>../src/Configurator/Validators/TagName.php</file>
 
 			<file>../src/Parser/BuiltInFilters.php</file>
+			<file>../src/Parser/Logger.php</file>
 
 			<file>../src/Plugins/ConfiguratorBase.php</file>
 			<file>../src/Plugins/Autolink/Configurator.php</file>

@@ -12,9 +12,42 @@ use s9e\TextFormatter\Parser;
 class Logger
 {
 	/**
+	* @var string Name of the attribute being processed
+	*/
+	protected $attrName;
+
+	/**
 	* @var array Log entries
 	*/
-	protected $log = array();
+	protected $logs = array();
+
+	/**
+	* @var Tag Tag being processed
+	*/
+	protected $tag;
+
+	/**
+	* Add a log entry
+	*
+	* @param  string $type
+	* @param  string $msg
+	* @param  array  $context
+	* @return void
+	*/
+	protected function add($type, $msg, array $context)
+	{
+		if (!isset($context['attrName']) && isset($this->attrName))
+		{
+			$context['attrName'] = $this->attrName;
+		}
+
+		if (!isset($context['tag']) && isset($this->tag))
+		{
+			$context['tag'] = $this->tag;
+		}
+
+		$this->logs[$type][] = array($msg, $context);
+	}
 
 	/**
 	* Clear the log
@@ -23,11 +56,73 @@ class Logger
 	*/
 	public function clear()
 	{
-		$this->log = array();
+		$this->logs = array();
+		$this->unsetAttribute();
+		$this->unsetTag();
 	}
 
 	/**
-	* Add an "debug" type log entry
+	* Return the logs (either all of one given type only)
+	*
+	* @param  string $type
+	* @return array
+	*/
+	public function get($type = null)
+	{
+		if (isset($type)) 
+		{
+			return (isset($this->logs[$type]))
+			      ? $this->logs[$type]
+			      : array();
+		}
+
+		return $this->logs;
+	}
+
+	/**
+	* Record the name of the attribute being processed
+	*
+	* @param  string $attrName
+	* @return void
+	*/
+	public function setAttribute($attrName)
+	{
+		$this->attrName = $attrName;
+	}
+
+	/**
+	* Record the tag being processed
+	*
+	* @param  Tag  $tag
+	* @return void
+	*/
+	public function setTag(Tag $tag)
+	{
+		$this->tag = $tag;
+	}
+
+	/**
+	* Unset the name of the attribute being processed
+	*
+	* @return void
+	*/
+	public function unsetAttribute()
+	{
+		unset($this->attrName);
+	}
+
+	/**
+	* Unset the tag being processed
+	*
+	* @return void
+	*/
+	public function unsetTag()
+	{
+		unset($this->tag);
+	}
+
+	/**
+	* Add a "debug" type log entry
 	*
 	* @param  string $msg     Log message
 	* @param  array  $context
@@ -35,7 +130,7 @@ class Logger
 	*/
 	public function debug($msg, array $context = array())
 	{
-		$this->log['debug'][] = array($msg, $context);
+		$this->add('debug', $msg, $context);
 	}
 
 	/**
@@ -47,7 +142,7 @@ class Logger
 	*/
 	public function err($msg, array $context = array())
 	{
-		$this->log['err'][] = array($msg, $context);
+		$this->add('err', $msg, $context);
 	}
 
 	/**
@@ -59,11 +154,11 @@ class Logger
 	*/
 	public function info($msg, array $context = array())
 	{
-		$this->log['info'][] = array($msg, $context);
+		$this->add('info', $msg, $context);
 	}
 
 	/**
-	* Add an "warn" type log entry
+	* Add a "warn" type log entry
 	*
 	* @param  string $msg     Log message
 	* @param  array  $context
@@ -71,6 +166,6 @@ class Logger
 	*/
 	public function warn($msg, array $context = array())
 	{
-		$this->log['warn'][] = array($msg, $context);
+		$this->add('warn', $msg, $context);
 	}
 }

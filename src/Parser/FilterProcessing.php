@@ -103,6 +103,9 @@ trait FilterProcessing
 				continue;
 			}
 
+			// Record the name of the attribute being filtered into the logger
+			$this->logger->setAttribute($attrName);
+
 			foreach ($attrConfig['filterChain'] as $filter)
 			{
 				$attrValue = self::executeFilter(
@@ -120,6 +123,9 @@ trait FilterProcessing
 					break;
 				}
 			}
+
+			// Remove the attribute's name from the logger
+			$this->logger->unsetAttribute();
 		}
 
 		// Iterate over the attribute definitions to handle missing attributes
@@ -155,9 +161,14 @@ trait FilterProcessing
 	{
 		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
+		$isValid   = true;
 
 		if (!empty($tagConfig['filterChain']))
 		{
+			// Record the tag being processed into the logger it can be added to the context of
+			// messages logged during the execution
+			$this->logger->setTag($this->currentTag);
+
 			// Prepare the variables that are accessible to filters
 			$vars = array(
 				'registeredVars' => $this->registeredVars,
@@ -169,9 +180,13 @@ trait FilterProcessing
 			{
 				if (!self::executeFilter($filter, $vars))
 				{
-					return false;
+					$isValid = false;
+					break;
 				}
 			}
+
+			// Remove the tag from the logger
+			$this->logger->unsetTag();
 		}
 
 		return true;
