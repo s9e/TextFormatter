@@ -25,7 +25,7 @@ abstract class Unparser
 	/**
 	* Transform an intermediate representation into plain text
 	*
-	* This will remove start tags and end tags but will keep everything else
+	* This will remove start tags and end tags but will keep the text content of everything else
 	*
 	* @param  string $xml Intermediate representation
 	* @return string      Plain text
