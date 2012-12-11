@@ -98,6 +98,22 @@ class BuiltInFiltersTest extends Test
 				))
 			)),
 			array('range', '5x', false, array('min' => 2, 'max' => 5)),
+			array('url', 'http://www.älypää.com', 'http://www.xn--lyp-plada.com'),
+			array(
+				'url',
+				'http://en.wikipedia.org/wiki/Matti_Nykänen', 'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen'
+			),
+			array(
+				'url',
+				'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nykänen?foo&bar#baz', 'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nyk%C3%A4nen?foo&bar#baz'
+			),
+			array(
+				'url',
+				'http://älypää.com:älypää.com@älypää.com',
+				'http://%C3%A4lyp%C3%A4%C3%A4.com:%C3%A4lyp%C3%A4%C3%A4.com@xn--lyp-plada.com'
+			),
+			array('url', '*invalid*', false),
+			array('url', 'http://www.example.com', 'http://www.example.com'),
 		);
 	}
 
