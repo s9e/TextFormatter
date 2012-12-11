@@ -13,7 +13,7 @@ use s9e\TextFormatter\Tests\Test;
 */
 class BuiltInFiltersTest extends Test
 {
-	protected static function filterTestdox($filterName, array $filterOptions, $original, $expected)
+	protected static function filterTestdox($filterName, array $filterOptions, $original, $expected, $setup = null)
 	{
 		$testdox = '#' . $filterName;
 
@@ -41,6 +41,11 @@ class BuiltInFiltersTest extends Test
 					  . ' into ' . var_export($expected, true);
 		}
 
+		if (isset($setup))
+		{
+			$testdox .= ' with the appropriate configuration';
+		}
+
 		return $testdox;
 	}
 
@@ -66,15 +71,15 @@ class BuiltInFiltersTest extends Test
 	/**
 	* @dataProvider getData
 	*/
-	public function test($filterName, $original, $expected, array $filterOptions = array(), array $logs = array())
+	public function test($filterName, $original, $expected, array $filterOptions = array(), array $logs = array(), $setup = null)
 	{
-		$testdox = self::filterTestdox($filterName, $filterOptions, $original, $expected);
+		$testdox = self::filterTestdox($filterName, $filterOptions, $original, $expected, $setup);
 
 		$logger = new Logger;
 
 		$this->assertSame(
 			$expected,
-			Hax::filterValue($original, $filterName, $filterOptions, $logger),
+			Hax::filterValue($original, $filterName, $filterOptions, $logger, $setup),
 			'Failed asserting that ' . $testdox
 		);
 
@@ -114,6 +119,18 @@ class BuiltInFiltersTest extends Test
 			),
 			array('url', '*invalid*', false),
 			array('url', 'http://www.example.com', 'http://www.example.com'),
+			array('url', '//www.example.com', '//www.example.com'),
+			array(
+				'url',
+				'//www.example.com',
+				false,
+				array(),
+				array(),
+				function ($configurator)
+				{
+					$configurator->urlConfig->requireScheme();
+				}
+			),
 		);
 	}
 
@@ -143,13 +160,18 @@ class Hax
 {
 	use FilterProcessing;
 
-	public static function filterValue($attrValue, $filterName, array $filterOptions, Logger $logger)
+	public static function filterValue($attrValue, $filterName, array $filterOptions, Logger $logger, $setup = null)
 	{
 		$configurator = new Configurator;
 		$configurator
 			->tags->add('FOO')
 			->attributes->add('foo')
 			->filterChain->append('#' . $filterName, $filterOptions);
+
+		if (isset($setup))
+		{
+			$setup($configurator);
+		}
 
 		$config = $configurator->asConfig();
 		$config['registeredVars']['logger'] = $logger;

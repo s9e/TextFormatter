@@ -194,11 +194,24 @@ class BuiltInFilters
 		*/
 		$removeScheme = false;
 
-		if (substr($attrValue, 0, 2) === '//'
-		 && isset($urlConfig['defaultScheme']))
+		/**
+		* @var bool Whether to validate the scheme part of the URL
+		*/
+		$validateScheme = true;
+
+		if (substr($attrValue, 0, 2) === '//')
 		{
-			 $attrValue = $urlConfig['defaultScheme'] . ':' . $attrValue;
-			 $removeScheme = true;
+			if (isset($urlConfig['defaultScheme']))
+			{
+				$attrValue    = $urlConfig['defaultScheme'] . ':' . $attrValue;
+				$removeScheme = true;
+			}
+			elseif (empty($urlConfig['requireScheme']))
+			{
+				$attrValue      = 'http:' . $attrValue;
+				$removeScheme   = true;
+				$validateScheme = false;
+			}
 		}
 
 		// Test whether the URL contains only ASCII characters
@@ -228,7 +241,7 @@ class BuiltInFilters
 		// Now parse it to check its scheme and host
 		$p = parse_url($attrValue);
 
-		if (!preg_match($urlConfig['allowedSchemes'], $p['scheme']))
+		if ($validateScheme && !preg_match($urlConfig['allowedSchemes'], $p['scheme']))
 		{
 			$logger->err(
 				'URL scheme is not allowed',
