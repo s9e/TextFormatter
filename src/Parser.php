@@ -91,7 +91,7 @@ class Parser
 	*
 	* @return void
 	*/
-	public function reset($text)
+	protected function reset($text)
 	{
 		$this->logger->clear();
 
