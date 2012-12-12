@@ -166,6 +166,27 @@ class BuiltInFiltersTest extends Test
 			),
 			array(
 				'url',
+				'http://evil.example.com',
+				false,
+				array(),
+				array(
+					array(
+						'err',
+						'URL host is not allowed',
+						array(
+							'attrValue' => 'http://evil.example.com',
+							'host'      => 'evil.example.com'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					// This is a paypal homograph
+					$configurator->urlConfig->disallowHost('evil.example.com');
+				}
+			),
+			array(
+				'url',
 				'http://www.pаypal.com',
 				false,
 				array(),
