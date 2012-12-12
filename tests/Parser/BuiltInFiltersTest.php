@@ -381,6 +381,49 @@ class BuiltInFiltersTest extends Test
 					Hax::fakeRedirect('http://redirect.tld', 'http://evil.tld');
 				}
 			),
+			array(
+				'url',
+				'//t.co/gksG6xlq',
+				'http://twitter.com/',
+				array(),
+				array(
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://t.co/gksG6xlq',
+							'to'   => 'http://twitter.com/'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					$configurator->urlConfig->resolveRedirectsFrom('t.co');
+					$configurator->urlConfig->setDefaultScheme('http');
+					Hax::fakeRedirect('http://t.co/gksG6xlq', 'http://twitter.com/');
+				}
+			),
+			array(
+				'url',
+				'http://js.tld',
+				false,
+				array(),
+				array(
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://js.tld',
+							'to'   => 'javascript:alert'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					$configurator->urlConfig->resolveRedirectsFrom('js.tld');
+					Hax::fakeRedirect('http://js.tld', 'javascript:alert');
+				}
+			),
 		);
 	}
 
