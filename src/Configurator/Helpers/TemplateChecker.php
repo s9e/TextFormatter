@@ -32,6 +32,7 @@ abstract class TemplateChecker
 	* Check an XSL template for unsafe markup
 	*
 	* @todo Possible additions: unsafe <object> and <embed>
+	* @todo Investigate <embed name="foo.swf" src="foo.swf"/>, also <param name="movie" value="foo.swf"/>
 	*
 	* @param  string $template Content of the template. A root node is not required
 	* @param  Tag    $tag      Tag that this template belongs to
