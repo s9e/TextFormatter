@@ -58,7 +58,17 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('example.org', false) does not disallow"www.example.org"
+	* @testdox disallowHost('example.org') does not disallow "myexample.org"
+	*/
+	public function testDisallowHostSubdomainsNoPartialMatch()
+	{
+		$this->urlConfig->disallowHost('example.org');
+		$urlConfig = $this->urlConfig->asConfig();
+		$this->assertNotRegexp($urlConfig['disallowedHosts'], 'myexample.org');
+	}
+
+	/**
+	* @testdox disallowHost('example.org', false) does not disallow "www.example.org"
 	*/
 	public function testDisallowHostNoSubdomains()
 	{
