@@ -291,7 +291,7 @@ class BuiltInFilters
 			if (isset($redirect))
 			{
 				$logger->debug(
-					'Followed redirect',
+					'Resolved redirect',
 					array('from' => $attrValue, 'to' => $redirect)
 				);
 

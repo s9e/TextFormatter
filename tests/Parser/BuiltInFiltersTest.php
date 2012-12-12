@@ -117,7 +117,7 @@ class BuiltInFiltersTest extends Test
 				'http://älypää.com:älypää.com@älypää.com',
 				'http://%C3%A4lyp%C3%A4%C3%A4.com:%C3%A4lyp%C3%A4%C3%A4.com@xn--lyp-plada.com'
 			),
-			array('url', '*invalid*', false),
+			array('url', 'javascript:alert()', false),
 			array('url', 'http://www.example.com', 'http://www.example.com'),
 			array('url', '//www.example.com', '//www.example.com'),
 			array(
@@ -206,6 +206,151 @@ class BuiltInFiltersTest extends Test
 					$configurator->urlConfig->disallowHost('pаypal.com');
 				}
 			),
+			array(
+				'url',
+				'http://t.co/gksG6xlq',
+				'http://twitter.com/',
+				array(),
+				array(
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://t.co/gksG6xlq',
+							'to'   => 'http://twitter.com/'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					$configurator->urlConfig->resolveRedirectsFrom('t.co');
+					Hax::fakeRedirect('http://t.co/gksG6xlq', 'http://twitter.com/');
+				}
+			),
+			array(
+				'url',
+				'http://bit.ly/go',
+				'http://bit.ly/',
+				array(),
+				array(
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://bit.ly/go',
+							'to'   => 'http://bit.ly/2lkCBm'
+						)
+					),
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://bit.ly/2lkCBm',
+							'to'   => 'http://bit.ly/'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					$configurator->urlConfig->resolveRedirectsFrom('bit.ly');
+					Hax::fakeRedirect('http://bit.ly/go',     'http://bit.ly/2lkCBm');
+					Hax::fakeRedirect('http://bit.ly/2lkCBm', 'http://bit.ly/');
+				}
+			),
+			array(
+				'url',
+				'http://bit.ly/2lkCBm',
+				false,
+				array(),
+				array(
+					array(
+						'err',
+						'Could not resolve redirect',
+						array(
+							'attrValue' => 'http://bit.ly/2lkCBm'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					$configurator->urlConfig->resolveRedirectsFrom('bit.ly');
+					Hax::fakeRedirect('http://bit.ly/2lkCBm', false);
+				}
+			),
+			array(
+				'url',
+				'http://bit.ly/2lkCBm',
+				false,
+				array(),
+				array(
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://bit.ly/2lkCBm',
+							'to'   => 'http://bit.ly/2lkCBm'
+						)
+					),
+					array(
+						'err',
+						'Infinite recursion detected while following redirects',
+						array(
+							'attrValue' => 'http://bit.ly/2lkCBm'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					$configurator->urlConfig->resolveRedirectsFrom('bit.ly');
+					Hax::fakeRedirect('http://bit.ly/2lkCBm', 'http://bit.ly/2lkCBm');
+				}
+			),
+			array(
+				'url',
+				'http://t.co/foo',
+				false,
+				array(),
+				array(
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://t.co/foo',
+							'to'   => 'http://t.co/bar'
+						)
+					),
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://t.co/bar',
+							'to'   => 'http://t.co/baz'
+						)
+					),
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://t.co/baz',
+							'to'   => 'http://t.co/foo'
+						)
+					),
+					array(
+						'err',
+						'Infinite recursion detected while following redirects',
+						array(
+							'attrValue' => 'http://t.co/foo'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					$configurator->urlConfig->resolveRedirectsFrom('t.co');
+					Hax::fakeRedirect('http://t.co/foo', 'http://t.co/bar');
+					Hax::fakeRedirect('http://t.co/bar', 'http://t.co/baz');
+					Hax::fakeRedirect('http://t.co/baz', 'http://t.co/foo');
+				}
+			),
 		);
 	}
 
@@ -235,6 +380,8 @@ class Hax
 {
 	use FilterProcessing;
 
+	static protected $redirectTo = array();
+
 	public static function filterValue($attrValue, $filterName, array $filterOptions, Logger $logger, $setup = null)
 	{
 		$configurator = new Configurator;
@@ -251,13 +398,73 @@ class Hax
 		$config = $configurator->asConfig();
 		$config['registeredVars']['logger'] = $logger;
 
-		return self::executeFilter(
-			$config['tags']['FOO']['attributes']['foo']['filterChain'][0],
-			array(
-				'attrName'       => 'foo',
-				'attrValue'      => $attrValue,
-				'registeredVars' => $config['registeredVars']
-			)
-		);
+		if (self::$redirectTo)
+		{
+			stream_wrapper_unregister('http');
+			stream_wrapper_register('http', __CLASS__);
+		}
+
+		try
+		{
+			$attrValue = self::executeFilter(
+				$config['tags']['FOO']['attributes']['foo']['filterChain'][0],
+				array(
+					'attrName'       => 'foo',
+					'attrValue'      => $attrValue,
+					'registeredVars' => $config['registeredVars']
+				)
+			);
+		}
+		catch (Exception $e)
+		{
+		}
+
+		if (self::$redirectTo)
+		{
+			self::$redirectTo = array();
+			stream_wrapper_restore('http');
+		}
+
+		if (isset($e))
+		{
+			throw $e;
+		}
+
+		return $attrValue;
+	}
+
+	public static function fakeRedirect($from, $to)
+	{
+		self::$redirectTo[$from] = $to;
+	}
+
+	public function stream_open($url)
+	{
+		if (isset(self::$redirectTo[$url]))
+		{
+			if (self::$redirectTo[$url] === false)
+			{
+				return false;
+			}
+
+			$this->{'0'} = 'Location: ' . self::$redirectTo[$url];
+		}
+
+		return true;
+	}
+
+	public function stream_stat()
+	{
+		return false;
+	}
+
+	public function stream_read()
+	{
+		return '';
+	}
+
+	public function stream_eof()
+	{
+		return true;
 	}
 }
