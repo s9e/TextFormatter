@@ -88,7 +88,7 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('*.example.org') will not disallow "example.org"
+	* @testdox disallowHost('*.example.org') does not disallow "example.org"
 	*/
 	public function testDisallowHostWithWildcard3()
 	{
@@ -98,7 +98,7 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('*.example.org') will not disallow "example.org.org"
+	* @testdox disallowHost('*.example.org') does not disallow "example.org.org"
 	*/
 	public function testDisallowHostWithWildcard4()
 	{
@@ -229,7 +229,7 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox allowScheme('ftp') will allow "ftp" as scheme
+	* @testdox allowScheme('ftp') allows "ftp" as scheme
 	*/
 	public function testAllowSchemeFTP()
 	{
