@@ -454,6 +454,13 @@ class BuiltInFiltersTest extends Test
 					array('/^dos$/', 'two')
 				)
 			)),
+			array('map', 'three', false, array(
+				'map' => array(
+					array('/^uno$/', 'one'),
+					array('/^dos$/', 'two'),
+					array('//',      false)
+				)
+			)),
 		);
 	}
 
