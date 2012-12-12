@@ -17,7 +17,7 @@ trait FilterProcessing
 	* @param  array $tagConfig Tag's config
 	* @return bool             Unconditionally TRUE
 	*/
-	public function executeAttributePreprocessors(Tag $tag, array $tagConfig)
+	public static function executeAttributePreprocessors(Tag $tag, array $tagConfig)
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
 		{

@@ -782,12 +782,16 @@ s9e\TextFormatter\Tests\Configurator\Items\CallbackPlaceholder
 
 s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] __construct() throws an InvalidArgumentException if its argument is not callable
- [x] asConfig() returns an array containing the callback
- [x] fromArray() creates an instance from an array
+ [x] An array of variables can be set with setVars() or retrieved with getVars()
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
  [x] getCallback() returns the callback
+ [x] fromArray() creates an instance from an array
+ [x] asConfig() returns an array containing the callback
+ [x] asConfig() replaces the by-name parameters by the values stored in vars if available
+ [x] If the callback is an instance of CallbackPlaceholder, asConfig() calls the callback's asConfig() and returns its value as callback
+ [x] asConfig() returns the vars set with setVars() if the callback is an instance of CallbackPlaceholder
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor

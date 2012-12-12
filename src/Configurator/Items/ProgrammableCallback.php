@@ -86,16 +86,6 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
-	* Set the Javascript source for this callback
-	*
-	* @param string $js
-	*/
-	public function setJavascript($js)
-	{
-		$this->js = $js;
-	}
-
-	/**
 	* @param  array $vars
 	*/
 	public function setVars(array $vars)
@@ -131,11 +121,6 @@ class ProgrammableCallback implements ConfigProvider
 		if (isset($arr['vars']))
 		{
 			$obj->setVars($arr['vars']);
-		}
-
-		if (isset($arr['js']))
-		{
-			$obj->setJavascript($arr['js']);
 		}
 
 		return $obj;

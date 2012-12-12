@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
 use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 
 /**
@@ -21,33 +22,15 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns an array containing the callback
+	* @testdox An array of variables can be set with setVars() or retrieved with getVars()
 	*/
-	public function testAsConfig()
+	public function testVars()
 	{
-		$pc     = new ProgrammableCallback('mt_rand');
-		$config = $pc->asConfig();
+		$vars = array('foo' => 'bar', 'baz' => 'quux');
+		$pc   = new ProgrammableCallback(function($a,$b){});
+		$pc->setVars($vars);
 
-		$this->assertArrayHasKey('callback', $config);
-		$this->assertSame('mt_rand', $config['callback']);
-	}
-
-	/**
-	* @testdox fromArray() creates an instance from an array
-	*/
-	public function testFromArray()
-	{
-		$pc = ProgrammableCallback::fromArray(
-			array(
-				'callback' => 'mt_rand',
-				'params'   => array()
-			)
-		);
-
-		$this->assertEquals(
-			$pc,
-			new ProgrammableCallback('mt_rand')
-		);
+		$this->assertSame($vars, $pc->getVars());
 	}
 
 	/**
@@ -104,6 +87,85 @@ class ProgrammableCallbackTest extends Test
 		$pc = new ProgrammableCallback('strtolower');
 
 		$this->assertSame('strtolower', $pc->getCallback());
+	}
+
+	/**
+	* @testdox fromArray() creates an instance from an array
+	*/
+	public function testFromArray()
+	{
+		$pc1 = ProgrammableCallback::fromArray(
+			array(
+				'callback' => 'mt_rand',
+				'params'   => array('min' => null, 55),
+				'vars'     => array('foo' => 'bar')
+			)
+		);
+
+		$pc2 = new ProgrammableCallback('mt_rand');
+		$pc2->addParameterByName('min');
+		$pc2->addParameterByValue(55);
+		$pc2->setVars(array('foo' => 'bar'));
+
+		$this->assertEquals($pc2, $pc1);
+	}
+
+	/**
+	* @testdox asConfig() returns an array containing the callback
+	*/
+	public function testAsConfig()
+	{
+		$pc     = new ProgrammableCallback('mt_rand');
+		$config = $pc->asConfig();
+
+		$this->assertArrayHasKey('callback', $config);
+		$this->assertSame('mt_rand', $config['callback']);
+	}
+
+	/**
+	* @testdox asConfig() replaces the by-name parameters by the values stored in vars if available
+	*/
+	public function testAsConfigVars()
+	{
+		$pc = new ProgrammableCallback('mt_rand');
+		$pc->addParameterByName('min');
+		$pc->addParameterByValue(55);
+		$pc->setVars(array('min' => 5));
+
+		$this->assertSame(
+			array(
+				'callback' => 'mt_rand',
+				'params'   => array(5, 55)
+			),
+			$pc->asConfig()
+		);
+	}
+
+	/**
+	* @testdox If the callback is an instance of CallbackPlaceholder, asConfig() calls the callback's asConfig() and returns its value as callback
+	*/
+	public function testAsConfigCallbackPlaceholder()
+	{
+		$pc     = new ProgrammableCallback(new CallbackPlaceholder('#foo'));
+		$config = $pc->asConfig();
+
+		$this->assertArrayHasKey('callback', $config);
+		$this->assertSame('#foo', $config['callback']);
+	}
+
+	/**
+	* @testdox asConfig() returns the vars set with setVars() if the callback is an instance of CallbackPlaceholder
+	*/
+	public function testAsConfigCallbackPlaceholderVars()
+	{
+		$pc   = new ProgrammableCallback(new CallbackPlaceholder('#foo'));
+		$vars = array('foo' => 'bar');
+		$pc->setVars($vars);
+
+		$config = $pc->asConfig();
+
+		$this->assertArrayHasKey('vars', $config);
+		$this->assertSame($vars, $config['vars']);
 	}
 }
 
