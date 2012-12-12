@@ -44,3 +44,4 @@ TODO
 - Consider providing compatilibity for custom Mycodes via the Generic plugin. http://docs.mybb.com/Admin_CP_Config_MyCode.html
 - Closure Compiler's API exclude_default_externs to minify reserved names such as "attrName" -- https://developers.google.com/closure/compiler/docs/api-ref -- would require to use the bracket syntax for DOM stuff, e.g. el['getAttribute'](attrName) unless special types/externs are created
 - Consider allowing absolute paths in #url, e.g. "/foo.html"
+- Consider a way to disallow HTML elements globally or at the tag-level. For example, a way to globally disable <a> so that BBCodes that produces links are disabled
