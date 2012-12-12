@@ -830,7 +830,8 @@ abstract class BBCodeMonkey
 	{
 		foreach (preg_split('#\\s*,\\s*#', $filters) as $filter)
 		{
-			if (!in_array($filter, self::$allowedFilters, true))
+			if (substr($filter, 0, 1) !== '#'
+			 && !in_array($filter, self::$allowedFilters, true))
 			{
 				throw new RuntimeException("Filter '" . $filter . "' is not allowed");
 			}

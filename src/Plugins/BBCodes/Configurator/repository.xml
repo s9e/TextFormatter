@@ -9,12 +9,12 @@
 	</bbcode>
 
 	<bbcode name="LIST">
-		<usage>[LIST type={ID}]{TEXT}[/URL]</usage>
+		<usage>[LIST type={MAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;caseSensitive;optional;postFilter=#id}]{TEXT}[/URL]</usage>
 		<template><![CDATA[
-			<ul><xsl:apply-templates /></ul>
+			<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
 		]]></template>
-		<template predicate="@type='decimal'"><![CDATA[
-			<ol><xsl:apply-templates /></ol>
+		<template predicate="contains('upperlowerdecim',substr(@type,1,5))"><![CDATA[
+			<ol type="list-style-type:{@type}"><xsl:apply-templates /></ol>
 		]]></template>
 	</bbcode>
 

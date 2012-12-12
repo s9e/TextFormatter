@@ -265,6 +265,26 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				'[foo={INT;postFilter=#id}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array('#int', '#id')
+							)
+						)
+					)),
+					'tokens' => array(
+						'INT' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
 				'[foo={INT;preFilter=eval}/]',
 				new RuntimeException("Filter 'eval' is not allowed")
 			),
