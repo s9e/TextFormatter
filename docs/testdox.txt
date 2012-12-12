@@ -881,7 +881,7 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
 
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests
- [x] 
+ [x] Filters work
 
 s9e\TextFormatter\Tests\Parser\Logger
  [x] debug() generates a "debug" entry in the logs

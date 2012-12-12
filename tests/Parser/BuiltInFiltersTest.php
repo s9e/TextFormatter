@@ -69,6 +69,7 @@ class BuiltInFiltersTest extends Test
 	}
 
 	/**
+	* @testdox Filters work
 	* @dataProvider getData
 	*/
 	public function test($filterName, $original, $expected, array $filterOptions = array(), array $logs = array(), $setup = null)
