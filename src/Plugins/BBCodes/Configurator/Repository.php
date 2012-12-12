@@ -94,11 +94,13 @@ class Repository
 		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
 		$usage  = $node->getElementsByTagName('usage')->item(0)->textContent;
 		$config = BBCodeMonkey::parse($usage);
+		$bbcode = $config['bbcode'];
+		$tag    = $config['tag'];
 
 		// Set the optional tag name
 		if ($node->hasAttribute('tagName'))
 		{
-			$config['bbcode']->tagName = $node->getAttribute('tagName');
+			$bbcode->tagName = $node->getAttribute('tagName');
 		}
 
 		// Set the rules
@@ -113,7 +115,7 @@ class Repository
 			}
 
 			call_user_func_array(
-				array($config['tag']->rules, $methodName),
+				array($tag->rules, $methodName),
 				$args
 			);
 		}
@@ -121,7 +123,7 @@ class Repository
 		// Now process the template
 		foreach ($node->getElementsByTagName('template') as $template)
 		{
-			$config['tag']->templates->set(
+			$tag->templates->set(
 				$template->getAttribute('predicate'),
 				BBCodeMonkey::replaceTokens(
 					$template->textContent,
@@ -132,8 +134,8 @@ class Repository
 		}
 
 		return array(
-			'bbcode' => $config['bbcode'],
-			'tag'    => $config['tag']
+			'bbcode' => $bbcode,
+			'tag'    => $tag
 		);
 	}
 }
