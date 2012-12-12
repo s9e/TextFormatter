@@ -351,6 +351,36 @@ class BuiltInFiltersTest extends Test
 					Hax::fakeRedirect('http://t.co/baz', 'http://t.co/foo');
 				}
 			),
+			array(
+				'url',
+				'http://redirect.tld',
+				false,
+				array(),
+				array(
+					array(
+						'debug',
+						'Resolved redirect',
+						array(
+							'from' => 'http://redirect.tld',
+							'to'   => 'http://evil.tld'
+						)
+					),
+					array(
+						'err',
+						'URL host is not allowed',
+						array(
+							'attrValue' => 'http://evil.tld',
+							'host'      => 'evil.tld'
+						)
+					)
+				),
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('evil.tld');
+					$configurator->urlConfig->resolveRedirectsFrom('redirect.tld');
+					Hax::fakeRedirect('http://redirect.tld', 'http://evil.tld');
+				}
+			),
 		);
 	}
 
