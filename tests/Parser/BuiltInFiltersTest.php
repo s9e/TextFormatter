@@ -424,6 +424,23 @@ class BuiltInFiltersTest extends Test
 					Hax::fakeRedirect('http://js.tld', 'javascript:alert');
 				}
 			),
+			array('identifier', '123abcABC', '123abcABC'),
+			array('identifier', '-_-', '-_-'),
+			array('identifier', 'a b', false),
+			array('color', '#123abc', '#123abc'),
+			array('color', 'red', 'red'),
+			array('color', '#1234567', false),
+			array('color', 'blue()', false),
+			array(
+				'simpletext',
+				'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+.,_ ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+.,_ '
+			),
+			array('simpletext', 'a()b', false),
+			array('simpletext', 'a[]b', false),
+			array('regexp', 'ABC', 'ABC', array('regexp' => '/^[A-Z]+$/D')),
+			array('regexp', 'Abc', false, array('regexp' => '/^[A-Z]+$/D')),
+			array('email', 'example@example.com', 'example@example.com'),
+			array('email', 'example@example.com()', false),
 		);
 	}
 

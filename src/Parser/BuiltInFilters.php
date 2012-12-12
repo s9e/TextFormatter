@@ -45,12 +45,12 @@ class BuiltInFilters
 	}
 
 	/**
-	* Filter an id value
+	* Filter an identifier value
 	*
 	* @param  string $attrValue Original value
 	* @return mixed             Filtered value, or FALSE if invalid
 	*/
-	public static function filterId($attrValue)
+	public static function filterIdentifier($attrValue)
 	{
 		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
 			'options' => array('regexp' => '#^[A-Za-z0-9\\-_]+$#D')
