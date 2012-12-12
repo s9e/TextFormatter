@@ -164,19 +164,27 @@ class BuiltInFiltersTest extends Test
 					$configurator->urlConfig->allowScheme('ftp');
 				}
 			),
-/*
 			array(
 				'url',
 				'http://www.pаypal.com',
 				false,
 				array(),
-				array(),
+				array(
+					array(
+						'err',
+						'URL host is not allowed',
+						array(
+							'attrValue' => 'http://www.xn--pypal-4ve.com',
+							'host'      => 'www.xn--pypal-4ve.com'
+						)
+					)
+				),
 				function ($configurator)
 				{
+					// This is a paypal homograph
 					$configurator->urlConfig->disallowHost('pаypal.com');
 				}
 			),
-*/
 		);
 	}
 
