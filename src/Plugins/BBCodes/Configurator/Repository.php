@@ -120,6 +120,15 @@ class Repository
 			);
 		}
 
+		// Set predefined attributes
+		foreach ($node->getElementsByTagName('predefinedAttributes') as $predefinedAttributes)
+		{
+			foreach ($predefinedAttributes->attributes as $attribute)
+			{
+				$bbcode->predefinedAttributes->set($attribute->name, $attribute->value);
+			}
+		}
+
 		// Now process the template
 		foreach ($node->getElementsByTagName('template') as $template)
 		{

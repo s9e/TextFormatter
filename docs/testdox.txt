@@ -966,6 +966,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] Rules targetting tags are correctly set
  [x] Boolean rules are set to their default value
  [x] Multiple templates can be set
+ [x] predefinedAttributes is correctly set
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\RepositoryCollection
  [x] Instances of Repository are added as-is

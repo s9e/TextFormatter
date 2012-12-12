@@ -228,4 +228,30 @@ class RepositoryTest extends Test
 		$this->assertSame('default', $config['tag']->templates->get(''));
 		$this->assertSame('bar',     $config['tag']->templates->get('ancestor::BAR'));
 	}
+
+	/**
+	* @testdox predefinedAttributes is correctly set
+	*/
+	public function testPredefinedAttributes()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO]</usage>
+					<template></template>
+					<predefinedAttributes foo="bar" baz="quux" />
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
+		$config = $repository->get('FOO');
+
+		$this->assertTrue(isset($config['bbcode']->predefinedAttributes['foo']));
+		$this->assertSame('bar', $config['bbcode']->predefinedAttributes['foo']);
+
+		$this->assertTrue(isset($config['bbcode']->predefinedAttributes['baz']));
+		$this->assertSame('quux', $config['bbcode']->predefinedAttributes['baz']);
+	}
 }
