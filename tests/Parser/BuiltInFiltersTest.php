@@ -22,7 +22,7 @@ class BuiltInFiltersTest extends Test
 			$testdox .= ' [';
 			foreach ($filterOptions as $k => $v)
 			{
-				$testdox .= "'$k'=>$v,";
+				$testdox .= "'$k'=>" . var_export($v, true) . ',';
 			}
 			$testdox = substr($testdox, 0, -1) . ']';
 		}
@@ -442,6 +442,18 @@ class BuiltInFiltersTest extends Test
 			array('regexp', 'Abc', false, array('regexp' => '/^[A-Z]+$/D')),
 			array('email', 'example@example.com', 'example@example.com'),
 			array('email', 'example@example.com()', false),
+			array('map', 'dos', 'two', array(
+				'map' => array(
+					array('/^uno$/', 'one'),
+					array('/^dos$/', 'two')
+				)
+			)),
+			array('map', 'three', 'three', array(
+				'map' => array(
+					array('/^uno$/', 'one'),
+					array('/^dos$/', 'two')
+				)
+			)),
 		);
 	}
 
