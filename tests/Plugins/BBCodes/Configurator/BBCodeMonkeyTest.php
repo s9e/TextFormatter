@@ -554,9 +554,9 @@ class BBCodeMonkeyTest extends Test
 										'vars'     => array(
 											'map' => array(
 												array('/^one$/D', 'uno'),
-												array('/^two$/D', 'dos')
-											),
-											'strict' => true
+												array('/^two$/D', 'dos'),
+												array('//',       false)
+											)
 										)
 									))
 								)

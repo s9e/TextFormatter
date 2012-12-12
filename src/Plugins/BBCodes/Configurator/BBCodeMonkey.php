@@ -774,15 +774,15 @@ abstract class BBCodeMonkey
 				$map[] = array($regexp, $value);
 			}
 
-			// Prepare this filter's options
-			$filterOptions = array('map' => $map);
+			// If the "strict" option is enabled, a catch-all regexp which replaces the value with
+			// false is appended to the list
 			if (!empty($token['options']['strict']))
 			{
-				$filterOptions['strict'] = true;
+				$map[] = array('//', false);
 			}
 
 			// Append the #map filter
-			$attribute->filterChain->append('#map', $filterOptions);
+			$attribute->filterChain->append('#map', array('map' => $map));
 
 			// Remove options that are not needed anymore
 			unset($token['options']['caseSensitive']);
