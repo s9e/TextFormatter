@@ -66,13 +66,13 @@ abstract class TemplateChecker
 	protected static function checkFixedUrlAttributes(DOMXPath $xpath)
 	{
 		$attributes = array(
-			'//*[translate(name(),"EMBD","embd")="embed" or translate(name(),"IFRAME","iframe")="iframe" or translate(name(),"SCRIPT","script")="script"]'
+			'//embed | //iframe | //script'
 				=> 'src',
 
-			'//*[translate(name(),"OBJECT","object")="object"]'
+			'//object'
 				=> 'data',
 
-			'//*[translate(name(),"PARAM","param")="param"][translate(@name,"MOVIE","movie")="movie"]'
+			'//param[translate(@name, "MOVIE", "movie") = "movie"]'
 				=> 'value',
 		);
 
