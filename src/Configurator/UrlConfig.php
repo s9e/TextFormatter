@@ -98,11 +98,17 @@ class UrlConfig implements ConfigProvider
 	/**
 	* Disallow a hostname (or hostname mask) from being used in URLs
 	*
-	* @param string $host Hostname or hostmask
+	* @param string $host            Hostname or hostmask
+	* @param bool   $matchSubdomains Whether to match subdomains of given host
 	*/
-	public function disallowHost($host)
+	public function disallowHost($host, $matchSubdomains = true)
 	{
 		$this->disallowedHosts[] = $this->normalizeHostmask($host);
+
+		if ($matchSubdomains && substr($host, 0, 1) !== '*')
+		{
+			$this->disallowedHosts[] = $this->normalizeHostmask('*.' . $host);
+		}
 	}
 
 	/**
@@ -135,23 +141,23 @@ class UrlConfig implements ConfigProvider
 
 		if (substr($host, 0, 1) === '*')
 		{
-			// *.example.com => #\.example\.com$#
+			// *.example.com => /\.example\.com$/
 			$host = ltrim($host, '*');
 		}
 		else
 		{
-			// example.com => #^example\.com$#
+			// example.com => /^example\.com$/
 			$host = '^' . $host;
 		}
 
 		if (substr($host, -1) === '*')
 		{
-			// example.* => #^example\.#
+			// example.* => /^example\./
 			$host = rtrim($host, '*');
 		}
 		else
 		{
-			// example.com => #^example\.com$#
+			// example.com => /^example\.com$/
 			$host .= '$';
 		}
 
@@ -179,11 +185,17 @@ class UrlConfig implements ConfigProvider
 	/**
 	* Force URLs from given hostmask to be followed and resolved to their true location
 	*
-	* @param string $host Hostname or hostmask
+	* @param string $host            Hostname or hostmask
+	* @param bool   $matchSubdomains Whether to match subdomains of given host
 	*/
-	public function resolveRedirectsFrom($host)
+	public function resolveRedirectsFrom($host, $matchSubdomains = true)
 	{
 		$this->resolveRedirectsHosts[] = $this->normalizeHostmask($host);
+
+		if ($matchSubdomains && substr($host, 0, 1) !== '*')
+		{
+			$this->resolveRedirectsHosts[] = $this->normalizeHostmask('*.' . $host);
+		}
 	}
 
 	/**

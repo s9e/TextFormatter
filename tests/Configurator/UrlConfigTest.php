@@ -18,7 +18,7 @@ class UrlConfigTest extends Test
 	/**
 	* @testdox Disallowed IDNs are punycoded
 	*/
-	public function Disallowed_IDNs_are_punycoded()
+	public function testDisallowedIDNsArePunycoded()
 	{
 		$this->urlConfig->disallowHost('pаypal.com');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -28,9 +28,9 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('example.org') will disallow "example.org"
+	* @testdox disallowHost('example.org') disallows "example.org"
 	*/
-	public function testCanDisallowHosts()
+	public function testDisallowHost()
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -38,9 +38,9 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('example.org') will disallow "EXAMPLE.ORG"
+	* @testdox disallowHost('example.org') disallows "EXAMPLE.ORG"
 	*/
-	public function testCanDisallowHostsCaseInsensitive()
+	public function testDisallowHostCaseInsensitive()
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -48,9 +48,29 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('*.example.org') will disallow "www.example.org"
+	* @testdox disallowHost('example.org') disallows "www.example.org"
 	*/
-	public function testCanDisallowHostsWithWildcard()
+	public function testDisallowHostSubdomains()
+	{
+		$this->urlConfig->disallowHost('example.org');
+		$urlConfig = $this->urlConfig->asConfig();
+		$this->assertRegexp($urlConfig['disallowedHosts'], 'www.example.org');
+	}
+
+	/**
+	* @testdox disallowHost('example.org', false) does not disallow"www.example.org"
+	*/
+	public function testDisallowHostNoSubdomains()
+	{
+		$this->urlConfig->disallowHost('example.org', false);
+		$urlConfig = $this->urlConfig->asConfig();
+		$this->assertNotRegexp($urlConfig['disallowedHosts'], 'www.example.org');
+	}
+
+	/**
+	* @testdox disallowHost('*.example.org') disallows "www.example.org"
+	*/
+	public function testDisallowHostWithWildcard()
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -58,9 +78,9 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('*.example.org') will disallow "www.xxx.example.org"
+	* @testdox disallowHost('*.example.org') disallows "www.xxx.example.org"
 	*/
-	public function testCanDisallowHostsWithWildcard2()
+	public function testDisallowHostWithWildcard2()
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -70,7 +90,7 @@ class UrlConfigTest extends Test
 	/**
 	* @testdox disallowHost('*.example.org') will not disallow "example.org"
 	*/
-	public function testCanDisallowHostsWithWildcard3()
+	public function testDisallowHostWithWildcard3()
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -80,7 +100,7 @@ class UrlConfigTest extends Test
 	/**
 	* @testdox disallowHost('*.example.org') will not disallow "example.org.org"
 	*/
-	public function testCanDisallowHostsWithWildcard4()
+	public function testDisallowHostWithWildcard4()
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -88,9 +108,9 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('*xxx*') will disallow "xxx.com"
+	* @testdox disallowHost('*xxx*') disallows "xxx.com"
 	*/
-	public function testCanDisallowHostsWithWildcard5()
+	public function testDisallowHostWithWildcard5()
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -98,9 +118,9 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('*xxx*') will disallow "foo.xxx"
+	* @testdox disallowHost('*xxx*') disallows "foo.xxx"
 	*/
-	public function testCanDisallowHostsWithWildcard6()
+	public function testDisallowHostWithWildcard6()
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -108,9 +128,9 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox disallowHost('*xxx*') will disallow "myxxxsite.com"
+	* @testdox disallowHost('*xxx*') disallows "myxxxsite.com"
 	*/
-	public function testCanDisallowHostsWithWildcard7()
+	public function testDisallowHostWithWildcard7()
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
@@ -118,15 +138,39 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox resolveRedirectsFrom('bit.ly') will match "bit.ly"
+	* @testdox resolveRedirectsFrom('bit.ly') matches "bit.ly"
 	*/
-	public function Url_filter_can_be_configured_to_resolve_redirects_from_a_given_host()
+	public function testResolveRedirects()
 	{
 		$this->urlConfig->resolveRedirectsFrom('bit.ly');
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
 		$this->assertRegexp($urlConfig['resolveRedirectsHosts'], 'bit.ly');
+	}
+
+	/**
+	* @testdox resolveRedirectsFrom('bit.ly') matches "foo.bit.ly"
+	*/
+	public function testResolveRedirectsSubdomains()
+	{
+		$this->urlConfig->resolveRedirectsFrom('bit.ly');
+		$urlConfig = $this->urlConfig->asConfig();
+
+		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
+		$this->assertRegexp($urlConfig['resolveRedirectsHosts'], 'foo.bit.ly');
+	}
+
+	/**
+	* @testdox resolveRedirectsFrom('bit.ly', false) does not match "foo.bit.ly"
+	*/
+	public function testResolveRedirectsNoSubdomains()
+	{
+		$this->urlConfig->resolveRedirectsFrom('bit.ly', false);
+		$urlConfig = $this->urlConfig->asConfig();
+
+		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
+		$this->assertNotRegexp($urlConfig['resolveRedirectsHosts'], 'foo.bit.ly');
 	}
 
 	/**
