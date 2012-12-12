@@ -933,8 +933,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCode
  [x] BBCode::normalizeName('*invalid*') throws an exception
  [x] defaultAttribute accepts an attribute name and normalizes it accordingly
  [x] tagName accepts a tag name and normalizes it accordingly
- [x] $bbcode->attributeValues is an instance of AttributeValueCollection
  [x] $bbcode->contentAttributes is an instance of AttributeList
+ [x] $bbcode->predefinedAttributes is an instance of AttributeValueCollection
  [x] asConfig() returns its set properties
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection

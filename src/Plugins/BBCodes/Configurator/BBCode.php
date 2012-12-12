@@ -19,11 +19,6 @@ class BBCode implements ConfigProvider
 	use Configurable;
 
 	/**
-	* @var AttributeValueCollection Predefined attribute values, can be overwritten by user input
-	*/
-	protected $attributeValues;
-
-	/**
 	* @var AttributeList List of attributes whose value is to be made the content between the
 	*                    BBCode's tags if it's not explicitly given
 	*/
@@ -35,6 +30,11 @@ class BBCode implements ConfigProvider
 	protected $defaultAttribute;
 
 	/**
+	* @var AttributeValueCollection Predefined attribute values, can be overwritten by user input
+	*/
+	protected $predefinedAttribute;
+
+	/**
 	* @var string Name of the tag used to represent this BBCode in the intermediate representation
 	*/
 	protected $tagName;
@@ -44,8 +44,8 @@ class BBCode implements ConfigProvider
 	*/
 	public function __construct(array $options = null)
 	{
-		$this->attributeValues   = new AttributeValueCollection;
-		$this->contentAttributes = new AttributeList;
+		$this->contentAttributes    = new AttributeList;
+		$this->predefinedAttributes = new AttributeValueCollection;
 
 		if (isset($options))
 		{
