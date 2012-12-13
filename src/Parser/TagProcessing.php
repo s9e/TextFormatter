@@ -96,8 +96,20 @@ trait TagAccumulator
 	*/
 	protected function processTag()
 	{
-		if ($this->currentTag->shouldBeSkipped($this->pos))
+		if ($this->currentTag->getPos() < $this->pos)
 		{
+			$this->currentTag->invalidate();
+		}
+
+		if ($this->currentTag->shouldBeSkipped())
+		{
+			// TODO: paired end tag should still close start tag
+			if ($this->currentTag->getTagMate())
+			{
+				// test whether its tagmate is in $this->openTags and add a matching end tag at
+				// current position
+			}
+
 			return;
 		}
 

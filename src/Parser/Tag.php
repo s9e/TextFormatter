@@ -62,7 +62,7 @@ class Tag
 	/**
 	* @var self Tag that is uniquely paired with this tag
 	*/
-	protected $tagMate = null;
+	protected $tagMate = false;
 
 	/**
 	* @var integer Tag type
@@ -125,13 +125,13 @@ class Tag
 		}
 
 		// If given tag has a tagMate, ensure it's this tag
-		if (isset($tag->tagMate) && $tag->tagMate !== $this)
+		if ($tag->tagMate && $tag->tagMate !== $this)
 		{
 			return false;
 		}
 
 		// If this tag has a tagMate, ensure it's given tag
-		if (isset($this->tagMate) && $this->tagMate !== $tag)
+		if ($this->tagMate && $this->tagMate !== $tag)
 		{
 			return false;
 		}
@@ -160,6 +160,16 @@ class Tag
 	}
 
 	/**
+	* Return this tag's plugin name
+	*
+	* @return string
+	*/
+	public function getPluginName()
+	{
+		return $this->pluginName;
+	}
+
+	/**
 	* Return this tag's position
 	*
 	* @return integer
@@ -167,6 +177,16 @@ class Tag
 	public function getPos()
 	{
 		return $this->pos;
+	}
+
+	/**
+	* Return this tag's tagMate, or FALSE if none is set
+	*
+	* @return Tag|bool
+	*/
+	public function getTagMate()
+	{
+		return $this->tagMate;
 	}
 
 	/**
@@ -178,7 +198,7 @@ class Tag
 	{
 		$this->skip = true;
 
-		if (isset($this->tagMate))
+		if ($this->tagMate)
 		{
 			$this->tagMate->invalidate();
 		}
@@ -245,16 +265,13 @@ class Tag
 	}
 
 	/**
-	* Test whether this tag should be skipped
+	* Test whether this tag was marked to be skipped
 	*
-	* Will return true if this tag was invalidated or if the parser's cursor is past its position
-	*
-	* @param  integer $pos Parser's position in text
 	* @return bool
 	*/
-	public function shouldBeSkipped($pos)
+	public function shouldBeSkipped()
 	{
-		return ($pos > $this->pos || $this->skip);
+		return $this->skip;
 	}
 
 	//==========================================================================
