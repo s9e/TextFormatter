@@ -25,6 +25,18 @@ trait TagAccumulator
 	protected $currentTag;
 
 	/**
+	* @var array Number of open tags for each plugin/tag combination. Used as a lookup table that
+	*            determines whether an end tag has a matching start tag open, but doesn't take tag
+	*            pairs into account
+	*/
+	protected $openIndex;
+
+	/**
+	* @var array Stack of open tags (instances of Tag)
+	*/
+	protected $openTags;
+
+	/**
 	* @var integer Position of the cursor in the original text
 	*/
 	protected $pos;
@@ -46,7 +58,14 @@ trait TagAccumulator
 	*/
 	protected function processTags()
 	{
-		$this->context = $this->rootContext;
+		// Reset some internal vars
+		$this->pos       = 0;
+		$this->cntOpen   = array();
+		$this->cntTotal  = array();
+		$this->openIndex = array();
+		$this->openTags  = array();
+		$this->context   = $this->rootContext;
+		unset($this->currentTag);
 
 		while (!empty($this->tagStack))
 		{

@@ -95,16 +95,10 @@ class Parser
 	{
 		$this->logger->clear();
 
-		$this->cntOpen  = array();
-		$this->cntTotal = array();
+		$this->context  = $this->rootContext;
+		$this->output   = '';
+		$this->text     = $text;
+		$this->textLen  = strlen($text);
 		$this->tagStack = array();
-
-		$this->context = $this->rootContext;
-		$this->output  = '';
-		$this->pos     = 0;
-		$this->text    = $text;
-		$this->textLen = strlen($text);
-
-		unset($this->currentTag);
 	}
 }
