@@ -108,6 +108,36 @@ foreach ($page->xpath('/html/body/h5[@id="optional-tags"]/following-sibling::p[f
 }
 
 //==============================================================================
+// closeAncestor rules generated in "in body" insertion mode
+//==============================================================================
+
+/**
+$closeAncestor = array();
+
+foreach ($page->xpath('/html/body/div[@class="impl"]/h6[@id="parsing-main-inbody"]/following-sibling::dl[@class="switch"]/*') as $el)
+{
+	if ($el->nodeName() === 'dt')
+	{
+		$dt = $el->textContent();
+		continue;
+	}
+	elseif ($el->nodeName() !== 'dd')
+	{
+		continue;
+	}
+
+	if (!preg_match('#^A start +tag (?:token )?whose (?:tag )?name is#', $dt))
+	{
+		continue;
+	}
+
+	echo "\n",$dt,"\n",$el->asXML(),"\n";
+}
+
+die("\n");
+/**/
+
+//==============================================================================
 // Content models
 //==============================================================================
 
