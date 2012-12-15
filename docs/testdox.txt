@@ -902,6 +902,9 @@ s9e\TextFormatter\Tests\Parser\Logger
  [x] unsetTag() unsets the value stored by setTag()
  [x] clear() empties the logs
 
+s9e\TextFormatter\Tests\Parser\Tag
+ [x] Mutual invalidation doesn't cause an infinite loop
+
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
  [x] Constructor calls setFoo() if 'foo' is being set

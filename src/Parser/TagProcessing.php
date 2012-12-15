@@ -77,6 +77,12 @@ trait TagAccumulator
 
 		if ($this->currentTag->isInvalid())
 		{
+			$tagMate = $this->currentTag->getTagMate();
+
+			if ($tagMate && in_array($tagMate, $this->openTags, true))
+			{
+			}
+
 			// TODO: paired end tag should still close start tag
 			if ($this->currentTag->closesTagMate())
 			{

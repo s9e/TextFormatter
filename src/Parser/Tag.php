@@ -55,11 +55,6 @@ class Tag
 	protected $pos;
 
 	/**
-	* @var self Tag that is uniquely paired with this tag
-	*/
-	protected $tagMate = false;
-
-	/**
 	* @var integer Tag type
 	*/
 	protected $type;
@@ -75,10 +70,10 @@ class Tag
 	*/
 	public function __construct($type, $name, $pos, $len)
 	{
-		$this->type       = (int) $type;
-		$this->name       = $name;
-		$this->pos        = (int) $pos;
-		$this->len        = (int) $len;
+		$this->type = (int) $type;
+		$this->name = $name;
+		$this->pos  = (int) $pos;
+		$this->len  = (int) $len;
 	}
 
 	/**
@@ -163,28 +158,19 @@ class Tag
 	}
 
 	/**
-	* Return this tag's tagMate, or FALSE if none is set
-	*
-	* @return Tag|bool
-	*/
-	public function getTagMate()
-	{
-		return $this->tagMate;
-	}
-
-	/**
 	* Invalidate this tag, as well as tags bound to this tag
 	*
 	* @return void
 	*/
 	public function invalidate()
 	{
-		$this->invalid = true;
-
-		if ($this->tagMate)
+		// If this tag is already invalid, we can return now. This prevent infinite loops
+		if ($this->invalid)
 		{
-			$this->tagMate->invalidate();
+			return;
 		}
+
+		$this->invalid = true;
 
 		foreach ($this->cascade as $tag)
 		{
@@ -245,24 +231,22 @@ class Tag
 	/**
 	* Pair this tag with given tag
 	*
-	* Paired tags cascade their invalidation to each other. A start tag in a pair can only be closed
-	* by its paired end tag, and an end tag will only close its paired start tag
-	*
 	* @param  self $tag
 	* @return void
 	*/
 	public function pairWith(self $tag)
 	{
-		$this->tagMate = $tag;
-		$tag->tagMate  = $this;
-
-		if ($tag->invalid)
+		if ($this->type === self::START_TAG
+		 && $tag->type  === self::END_TAG)
 		{
-			$this->invalidate();
+			$this->endTag  = $tag;
+			$tag->startTag = $this;
 		}
-		elseif ($this->invalid)
+		elseif ($this->type === self::END_TAG
+		     && $tag->type  === self::START_TAG)
 		{
-			$tag->invalidate();
+			$this->startTag = $tag;
+			$tag->endTag    = $this;
 		}
 	}
 
