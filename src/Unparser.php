@@ -19,7 +19,7 @@ abstract class Unparser
 	*/
 	public static function unparse($xml)
 	{
-		return html_entity_decode(strip_tags($xml), ENT_QUOTES, 'UTF-8');
+		return htmlspecialchars_decode(strip_tags($xml), ENT_NOQUOTES);
 	}
 
 	/**
