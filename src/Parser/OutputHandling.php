@@ -180,29 +180,27 @@ trait OutputHandling
 	}
 
 	/**
-	* Output current tag, which is a linebreak tag
+	* Output a linebreak tag
+	*
+	* NOTE: using <br /> rather than <br/> to remain consistent with nl2br()'s output
 	*
 	* @return void
 	*/
 	protected function outputBrTag()
 	{
-		$this->outputText($this->currentTag->getPos(), 0);
-		$this->output .= '<br/>';
+		$this->output .= '<br />';
 	}
 
 	/**
-	* Output current tag, which is an ignore tag
+	* Output an ignore tag
 	*
+	* @param  integer $ignoreLen Length of text to consume
 	* @return void
 	*/
-	protected function outputIgnoreTag()
+	protected function outputIgnoreTag($ignoreLen)
 	{
-		$tagPos = $this->currentTag->getPos();
-		$tagLen = $this->currentTag->getLen();
+		$this->output .= '<i>' . htmlspecialchars(substr($this->text, $this->pos, $ignoreLen)) . '</i>';
 
-		$this->catchupText($tagPos, 0);
-		$this->output .= '<i>' . htmlspecialchars(substr($this->text, $tagPos, $tagLen)) . '</i>';
-
-		$this->pos = $tagPos + $tagLen;
+		$this->pos += $ignoreLen;
 	}
 }

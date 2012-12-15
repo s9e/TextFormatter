@@ -38,12 +38,12 @@ class StylesheetHelperTest extends Test
 
 		$tag = $tags->add('A');
 		$tag->templates->add('@foo', '<hr/>');
-		$tag->templates->add('@bar', '<br/>');
+		$tag->templates->add('@bar', '<wbr/>');
 
 		$xsl = StylesheetHelper::generate($tags);
 
 		$this->assertContains('<xsl:template match="A[@foo]"><hr/></xsl:template>', $xsl);
-		$this->assertContains('<xsl:template match="A[@bar]"><br/></xsl:template>', $xsl);
+		$this->assertContains('<xsl:template match="A[@bar]"><wbr/></xsl:template>', $xsl);
 	}
 
 	/**

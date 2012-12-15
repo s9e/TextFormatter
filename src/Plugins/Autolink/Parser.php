@@ -41,6 +41,10 @@ class AutolinkParser extends PluginParser
 
 			$this->parser->addStartTag($this->config['tagName'], $startPos, 0)->setAttribute($this->config['attrName'], $url);
 			$this->parser->addEndTag($this->config['tagName'], $endPos, 0);
+
+			/**
+			* @todo pair tags together
+			*/
 		}
 	}
 }

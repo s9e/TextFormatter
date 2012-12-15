@@ -31,12 +31,6 @@ class Renderer implements Serializable
 	*/
 	public function __construct($stylesheet)
 	{
-		$xsl = new DOMDocument;
-		$xsl->loadXML($stylesheet);
-
-		$this->proc = new XSLTProcessor;
-		$this->proc->importStylesheet($xsl);
-
 		$this->stylesheet = $stylesheet;
 	}
 
@@ -69,10 +63,26 @@ class Renderer implements Serializable
 	*/
 	public function render($xml)
 	{
+		// Fast path for plain text
+		if (substr($xml, 0, 4) === '<pt>')
+		{
+			return substr($xml, 4, -5);
+		}
+
 		$dom  = new DOMDocument;
 		$dom->loadXML($xml);
 
-		return rtrim($this->proc->transformToXml($dom));
+		if (!isset($this->proc))
+		{
+			$xsl = new DOMDocument;
+			$xsl->loadXML($this->stylesheet);
+
+			$this->proc = new XSLTProcessor;
+			$this->proc->importStylesheet($xsl);
+		}
+
+		// Remove the \n that XSL adds at the end of the output
+		return substr($this->proc->transformToXml($dom), 0, -1);
 	}
 
 	/**

@@ -35,6 +35,11 @@ class Tag
 	protected $cascade = array();
 
 	/**
+	* @var bool Whether this tag is be invalid
+	*/
+	protected $invalid = false;
+
+	/**
 	* @var integer Length of text consumed by this tag
 	*/
 	protected $len;
@@ -45,19 +50,9 @@ class Tag
 	protected $name;
 
 	/**
-	* @var string Name of the plugin that created this tag
-	*/
-	protected $pluginName;
-
-	/**
 	* @var integer Position of this tag in the text
 	*/
 	protected $pos;
-
-	/**
-	* @var bool Whether this tag should be skipped
-	*/
-	protected $skip = false;
 
 	/**
 	* @var self Tag that is uniquely paired with this tag
@@ -78,10 +73,9 @@ class Tag
 	* @param  integer $len  Length of text consumed by the tag
 	* @return void
 	*/
-	public function __construct($type, $pluginName, $name, $pos, $len)
+	public function __construct($type, $name, $pos, $len)
 	{
 		$this->type       = (int) $type;
-		$this->pluginName = $pluginName;
 		$this->name       = $name;
 		$this->pos        = (int) $pos;
 		$this->len        = (int) $len;
@@ -98,7 +92,7 @@ class Tag
 		$this->cascade[] = $tag;
 
 		// If this tag is already invalid, cascade it now
-		if ($this->skip)
+		if ($this->invalid)
 		{
 			$tag->invalidate();
 		}
@@ -118,8 +112,7 @@ class Tag
 		// Ensure that their characteristics match
 		if ($tag->type !== self::START_TAG
 		 || $this->type !== self::END_TAG
-		 || $this->name !== $tag->name
-		 || $this->pluginName !== $tag->pluginName)
+		 || $this->name !== $tag->name)
 		{
 			return false;
 		}
@@ -160,16 +153,6 @@ class Tag
 	}
 
 	/**
-	* Return this tag's plugin name
-	*
-	* @return string
-	*/
-	public function getPluginName()
-	{
-		return $this->pluginName;
-	}
-
-	/**
 	* Return this tag's position
 	*
 	* @return integer
@@ -196,7 +179,7 @@ class Tag
 	*/
 	public function invalidate()
 	{
-		$this->skip = true;
+		$this->invalid = true;
 
 		if ($this->tagMate)
 		{
@@ -240,6 +223,16 @@ class Tag
 	}
 
 	/**
+	* Test whether this tag is invalid
+	*
+	* @return bool
+	*/
+	public function isInvalid()
+	{
+		return $this->invalid;
+	}
+
+	/**
 	* Test whether this tag is a start tag (self-closing tags inclusive)
 	*
 	* @return bool
@@ -262,16 +255,15 @@ class Tag
 	{
 		$this->tagMate = $tag;
 		$tag->tagMate  = $this;
-	}
 
-	/**
-	* Test whether this tag was marked to be skipped
-	*
-	* @return bool
-	*/
-	public function shouldBeSkipped()
-	{
-		return $this->skip;
+		if ($tag->invalid)
+		{
+			$this->invalidate();
+		}
+		elseif ($this->invalid)
+		{
+			$tag->invalidate();
+		}
 	}
 
 	//==========================================================================

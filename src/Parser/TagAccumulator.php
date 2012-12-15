@@ -10,11 +10,6 @@ namespace s9e\TextFormatter\Parser;
 trait TagAccumulator
 {
 	/**
-	* @var string Name of the plugin new tags will be associated with
-	*/
-	public $pluginName;
-
-	/**
 	* @var array Tag storage
 	*/
 	protected $tagStack;
@@ -66,7 +61,7 @@ trait TagAccumulator
 	*/
 	public function addBrTag($pos)
 	{
-		$this->tags[] = new Tag(Tag::SELF_CLOSING, $this->pluginName, 'br', $pos, 0);
+		$this->tags[] = new Tag(Tag::SELF_CLOSING, 'br', $pos, 0);
 	}
 
 	/**
@@ -78,7 +73,13 @@ trait TagAccumulator
 	*/
 	public function addIgnoreTag($pos, $len)
 	{
-		$this->tags[] = new Tag(Tag::SELF_CLOSING, $this->pluginName, 'i', $pos, $len);
+		$tag = new Tag(Tag::SELF_CLOSING, 'i', $pos, $len);
+		$this->tags[] = $tag;
+
+		if ($len < 1)
+		{
+			$tag->invalidate();
+		}
 	}
 
 	/**
@@ -99,7 +100,7 @@ trait TagAccumulator
 		}
 
 		// Create the tag
-		$tag = new Tag($type, $this->pluginName, $name, $pos, $len);
+		$tag = new Tag($type, $name, $pos, $len);
 
 		// Add it to the stack if it's a known tag, or invalidate it right away if it's not. We'll
 		// still return the invalid tag because that's what plugins expect, but it will never be
