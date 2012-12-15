@@ -35,7 +35,7 @@ trait OutputHandling
 		$this->outputText($tagPos, $trimBefore);
 
 		// Capture the text consumed by the tag
-		$tagText = htmlspecialchars($this->text, $tagPos, $tagLen)
+		$tagText = htmlspecialchars(substr($this->text, $tagPos, $tagLen), ENT_NOQUOTES, 'UTF-8');
 
 		// Output current tag
 		if ($this->currentTag->isStartTag())
@@ -44,7 +44,7 @@ trait OutputHandling
 			$this->output .= '<' . $tagName;
 			foreach ($this->currentTag->getAttributes() as $attrName => $attrValue)
 			{
-				$this->output .= ' ' . $attrName . '="' . htmlspecialchars($attrValue) . '"';
+				$this->output .= ' ' . $attrName . '="' . htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8') . '"';
 			}
 
 			if ($this->currentTag->isSelfClosingTag())
@@ -170,7 +170,7 @@ trait OutputHandling
 			$ignoreText = '';
 		}
 
-		$catchupText = htmlspecialchars($catchupText);
+		$catchupText = htmlspecialchars($catchupText, ENT_NOQUOTES, 'UTF-8');
 		if (!($this->context['flags'] & self::RULE_NO_BR_CHILD))
 		{
 			$catchupText = nl2br($catchupText);
@@ -199,7 +199,7 @@ trait OutputHandling
 	*/
 	protected function outputIgnoreTag($ignoreLen)
 	{
-		$this->output .= '<i>' . htmlspecialchars(substr($this->text, $this->pos, $ignoreLen)) . '</i>';
+		$this->output .= '<i>' . htmlspecialchars(substr($this->text, $this->pos, $ignoreLen), ENT_NOQUOTES, 'UTF-8') . '</i>';
 
 		$this->pos += $ignoreLen;
 	}
