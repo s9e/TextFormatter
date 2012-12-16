@@ -54,12 +54,6 @@ function convertFile($filepath)
 			list(, $traitTable) = fqn($file);
 			$table += $traitTable;
 
-			preg_match_all('#^use ([^;]+)#m', $file, $m);
-			foreach ($m[1] as $fqn)
-			{
-				$table[basename($fqn)] = $fqn;
-			}
-
 			preg_match('#\\n{\\n(.*)\\n}$#s', $file, $m);
 
 			return $m[1];
