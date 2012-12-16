@@ -39,6 +39,51 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
+	* @testdox getBaseProperties() return the values of quickMatch, regexpLimit and regexpLimitAction
+	*/
+	public function testGetBaseProperties()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+		$config = $dummy->getBaseProperties();
+
+		$this->assertArrayHasKey('quickMatch', $config);
+		$this->assertArrayHasKey('regexpLimit', $config);
+		$this->assertArrayHasKey('regexpLimitAction', $config);
+	}
+
+	/**
+	* @testdox setQuickMatch() sets the quickMatch property
+	*/
+	public function testSetQuickMatch()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+		$dummy->setQuickMatch('@');
+		$this->assertAttributeEquals('@', 'quickMatch', $dummy);
+	}
+
+	/**
+	* @testdox setQuickMatch() throws an exception on non-strings
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage quickMatch must be a string
+	*/
+	public function testSetQuickMatchInvalid()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+		$dummy->setQuickMatch(null);
+	}
+
+	/**
+	* @testdox disableQuickMatch() sets the quickMatch property to false
+	*/
+	public function testDisableQuickMatch()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+		$dummy->setQuickMatch('@');
+		$dummy->disableQuickMatch();
+		$this->assertAttributeEquals(false, 'quickMatch', $dummy);
+	}
+
+	/**
 	* @testdox setRegexpLimit() sets the regexpLimit property
 	*/
 	public function testSetRegexpLimit()

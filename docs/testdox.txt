@@ -916,6 +916,10 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
  [x] Constructor calls setFoo() if 'foo' is being set
  [x] An exception is thrown if an unknown property is being set by the constructor
+ [x] getBaseProperties() return the values of quickMatch, regexpLimit and regexpLimitAction
+ [x] setQuickMatch() sets the quickMatch property
+ [x] setQuickMatch() throws an exception on non-strings
+ [x] disableQuickMatch() sets the quickMatch property to false
  [x] setRegexpLimit() sets the regexpLimit property
  [x] setRegexpLimit() throws an exception on invalid values
  [x] setRegexpLimitAction() sets the regexpLimitAction property
