@@ -68,7 +68,7 @@ trait PluginsHandling
 			}
 
 			$matches = array();
-			
+
 			if (isset($pluginConfig['regexp']))
 			{
 				$matches = $this->executePluginRegexp($pluginName);
