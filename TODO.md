@@ -45,4 +45,4 @@ TODO
 - Closure Compiler's API exclude_default_externs to minify reserved names such as "attrName" -- https://developers.google.com/closure/compiler/docs/api-ref -- would require to use the bracket syntax for DOM stuff, e.g. el['getAttribute'](attrName) unless special types/externs are created
 - Consider allowing absolute paths in #url, e.g. "/foo.html"
 - Consider a way to disallow HTML elements globally or at the tag-level. For example, a way to globally disable <a> so that BBCodes that produces links are disabled
-- Implement a fast test for plugins to see if they can match anything in a given test. Given a string (or a list of strings), only execute their regexp if the string is in the text. For example, only run BBCodes' regexp if "[" is in the text, only run Autolink if "://" is in the text, only run Autoemail if "@" is in the text. Theorically could be guessed automatically by parsing their regexp (if they have a regexp) -- Also, RawHTML: "<", HTMLEntities: "&"
+- Consider guessing a value for quickMatch based on a plugin's regexp, using its fixed part if applicable

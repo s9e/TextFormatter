@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests;
 
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -92,6 +93,98 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox asConfig() adds regexpLimit to the plugin's configuration if it's not specified
+	*/
+	public function testAsConfigAddRegexpLimit()
+	{
+		$this->configurator->plugins->add(
+			'Dummy',
+			new DummyPluginConfigurator($this->configurator)
+		);
+		$config = $this->configurator->asConfig();
+
+		$this->assertArrayMatches(
+			array(
+				'plugins' => array(
+					'Dummy' => array(
+						'regexpLimit' => 1000
+					)
+				)
+			),
+			$config
+		);
+	}
+
+	/**
+	* @testdox asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified
+	*/
+	public function testAsConfigAddRegexpLimitAction()
+	{
+		$this->configurator->plugins->add(
+			'Dummy',
+			new DummyPluginConfigurator($this->configurator)
+		);
+		$config = $this->configurator->asConfig();
+
+		$this->assertArrayMatches(
+			array(
+				'plugins' => array(
+					'Dummy' => array(
+						'regexpLimitAction' => 'warn'
+					)
+				)
+			),
+			$config
+		);
+	}
+
+	/**
+	* @testdox asConfig() adds quickMatch to the plugin's configuration if available
+	*/
+	public function testAsConfigAddQuickMatch()
+	{
+		$this->configurator->plugins->add(
+			'Dummy',
+			new DummyPluginConfigurator($this->configurator)
+		)->setQuickMatch('foo');
+		$config = $this->configurator->asConfig();
+
+		$this->assertArrayMatches(
+			array(
+				'plugins' => array(
+					'Dummy' => array(
+						'quickMatch' => 'foo'
+					)
+				)
+			),
+			$config
+		);
+	}
+
+	/**
+	* @testdox asConfig() omits a plugin's quickMatch if it's false
+	*/
+	public function testAsConfigOmitsQuickMatch()
+	{
+		$this->configurator->plugins->add(
+			'Dummy',
+			new DummyPluginConfigurator($this->configurator)
+		);
+		$config = $this->configurator->asConfig();
+
+		$this->assertArrayMatches(
+			array(
+				'plugins' => array(
+					'Dummy' => array(
+						'quickMatch' => null
+					)
+				)
+			),
+			$config
+		);
+	}
+
+	/**
 	* @testdox allowedChildren and allowedDescendants bitfields are added to each tag
 	*/
 	public function testAsConfigTagBitfields()
@@ -175,5 +268,20 @@ class ConfiguratorTest extends Test
 	public function testMagicGetInvalid()
 	{
 		$this->configurator->foo;
+	}
+}
+
+class DummyPluginConfigurator extends ConfiguratorBase
+{
+	protected $config = array('foo' => 1);
+
+	public function asConfig()
+	{
+		return $this->config;
+	}
+
+	public function setConfig(array $config)
+	{
+		$this->config = $config;
 	}
 }

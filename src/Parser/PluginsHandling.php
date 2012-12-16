@@ -61,8 +61,14 @@ trait PluginsHandling
 				continue;
 			}
 
-			$matches = array();
+			if (isset($pluginConfig['quickMatch'])
+			 && strpos($this->text, $pluginConfig['quickMatch']) === false)
+			{
+				continue;
+			}
 
+			$matches = array();
+			
 			if (isset($pluginConfig['regexp']))
 			{
 				$matches = $this->executePluginRegexp($pluginName);

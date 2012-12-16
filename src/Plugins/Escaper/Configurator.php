@@ -13,9 +13,15 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	/**
+	* {@inheritdoc}
+	*/
+	protected $quickMatch = '\\';
+
+	/**
 	* @var string Regexp that matches one backslash and one single Unicode character
 	*/
 	protected $regexp = '#\\\\.#us';
+
 	/**
 	* @var string Name of the tag used by this plugin
 	*/

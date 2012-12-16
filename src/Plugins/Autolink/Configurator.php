@@ -20,6 +20,11 @@ class Configurator extends ConfiguratorBase
 	protected $attrName = 'url';
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected $quickMatch = '://';
+
+	/**
 	* @var string Name of the tag used to represent links
 	*/
 	protected $tagName = 'URL';
@@ -55,9 +60,10 @@ class Configurator extends ConfiguratorBase
 			= RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes());
 
 		return array(
-			'attrName' => $this->attrName,
-			'regexp'   => '#' . $schemeRegexp . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS',
-			'tagName'  => $this->tagName
+			'attrName'   => $this->attrName,
+			'quickMatch' => $this->quickMatch,
+			'regexp'     => '#' . $schemeRegexp . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS',
+			'tagName'    => $this->tagName
 		);
 	}
 

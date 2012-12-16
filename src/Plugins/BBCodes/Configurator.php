@@ -28,6 +28,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public $collection;
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected $quickMatch = '[';
+
+	/**
 	* @var RepositoryCollection BBCode repositories
 	*/
 	public $repositories;
@@ -112,8 +117,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		return array(
-			'bbcodes' => $this->collection->asConfig(),
-			'regexp'  => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
+			'bbcodes'    => $this->collection->asConfig(),
+			'quickMatch' => $this->quickMatch,
+			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		);
 	}
 }

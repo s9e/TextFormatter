@@ -20,6 +20,11 @@ class Configurator extends ConfiguratorBase
 	protected $prefix = 'html';
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected $quickMatch = '<';
+
+	/**
 	* @var string Catch-all XSL, used to render all tags in the "html" namespace
 	*/
 	protected $xsl = '<xsl:template match="html:*"><xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element></xsl:template>';
@@ -265,6 +270,7 @@ class Configurator extends ConfiguratorBase
 
 		return array(
 			'attrRegexp' => '#' . $attrRegexp . '#i',
+			'quickMatch' => $this->quickMatch,
 			'prefix'     => $this->prefix,
 			'regexp'     => $regexp
 		);

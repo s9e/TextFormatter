@@ -22,6 +22,12 @@ abstract class ConfiguratorBase implements ConfigProvider
 	protected $configurator;
 
 	/**
+	* @var mixed Ignored if FALSE. Otherwise, this plugin's parser will only be executed if this
+	*            string is present in the original text
+	*/
+	protected $quickMatch = false;
+
+	/**
 	* @var integer Maximum amount of matches to process - used by the parser when running the global
 	*              regexp
 	*/
@@ -32,7 +38,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*              (ignore matches past limit), "warn" (same as "ignore" but also log a warning) and
 	*              "abort" (abort parsing)
 	*/
-	protected $regexpLimitAction = 'ignore';
+	protected $regexpLimitAction = 'warn';
 
 	/**
 	* @param Configurator $configurator
@@ -89,6 +95,25 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 
 	/**
+	* Return a list of base properties meant to be added to asConfig()'s return
+	*
+	* NOTE: this final method exists so that the plugin's configuration can always specify those
+	*       base properties, even if they're omitted from asConfig(). Going forward, this ensure
+	*       that new base properties added to ConfiguratorBase appear in the plugin's config without
+	*       having to update every plugin
+	*
+	* @return array
+	*/
+	final public function getBaseProperties()
+	{
+		return array(
+			'quickMatch'        => $this->quickMatch,
+			'regexpLimit'       => $this->regexpLimit,
+			'regexpLimitAction' => $this->regexpLimitAction
+		);
+	}
+
+	/**
 	* Convert this plugin's config for use in the Javascript parser
 	*
 	* This is the base implementation. Plugins that require special modifications can override it
@@ -116,6 +141,32 @@ abstract class ConfiguratorBase implements ConfigProvider
 	//==========================================================================
 	// Setters
 	//==========================================================================
+
+	/**
+	* Disable quickMatch
+	*
+	* @return void
+	*/
+	public function disableQuickMatch()
+	{
+		$this->quickMatch = false;
+	}
+
+	/**
+	* Set the quickMatch string
+	*
+	* @param  string $quickMatch
+	* @return void
+	*/
+	public function setQuickMatch($quickMatch)
+	{
+		if (!is_string($quickMatch))
+		{
+			throw new InvalidArgumentException('quickMatch must be a string');
+		}
+
+		$this->quickMatch = $quickMatch;
+	}
 
 	/**
 	* Set the maximum number of regexp matches

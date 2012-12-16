@@ -23,6 +23,11 @@ class Configurator extends ConfiguratorBase
 	protected $disabled = array();
 
 	/**
+	* {@inheritdoc}
+	*/
+	protected $quickMatch = '&';
+
+	/**
 	* @var string Regexp that matches entities
 	*/
 	protected $regexp = '/&(?:[a-z]+|#[0-9]+|#x[0-9a-f]+);/i';
