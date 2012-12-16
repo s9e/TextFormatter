@@ -125,7 +125,7 @@
 			<file>../src/Parser/BuiltInFilters.php</file>
 			<file>../src/Parser/Logger.php</file>
 			<file>../src/Parser/Tag.php</file>
-			<file>../src/Parser/Parser.php</file>
+			<file>../src/Parser.php</file>
 
 			<file>../src/Plugins/ConfiguratorBase.php</file>
 			<file>../src/Plugins/Autolink/Configurator.php</file>
