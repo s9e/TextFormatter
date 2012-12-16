@@ -95,6 +95,9 @@ trait PluginsHandling
 	{
 		$pluginConfig = $this->pluginsConfig[$pluginName];
 
+		/**
+		* @todo regexpLimit and regexpLimitAction are always available now
+		*/
 		$regexpLimit = (isset($pluginConfig['regexpLimit']))
 		             ? $pluginConfig['regexpLimit']
 		             : 1000;
