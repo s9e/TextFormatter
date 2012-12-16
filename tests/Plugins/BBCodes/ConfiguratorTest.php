@@ -118,6 +118,20 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Has a quickMatch
+	*/
+	public function testConfigQuickMatch()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->add('B');
+
+		$this->assertArrayHasKey(
+			'quickMatch',
+			$plugin->asConfig()
+		);
+	}
+
+	/**
 	* @testdox Generates a regexp for its config array
 	*/
 	public function testRegexp()

@@ -176,6 +176,20 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Has a quickMatch
+	*/
+	public function testConfigQuickMatch()
+	{
+		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin->allowElement('b');
+
+		$this->assertArrayHasKey(
+			'quickMatch',
+			$plugin->asConfig()
+		);
+	}
+
+	/**
 	* @testdox Generates a regexp for its config array
 	*/
 	public function testAsConfig()

@@ -929,11 +929,22 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] toJS() converts the regexp in 'regexp' if applicable
  [x] toJS() converts the array of regexps in 'regexp' if applicable
 
+s9e\TextFormatter\Tests\Plugins\Autoemail\Configurator
+ [x] Automatically creates an "EMAIL" tag with an "email" attribute with a "#email" filter and a rawurlencode() filter
+ [x] Does not attempt to create a tag if it already exists
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] Has a quickMatch
+ [x] Generates a regexp for its config array
+ [x] The config array contains the name of the tag
+ [x] The config array contains the name of the attribute
+
 s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] Automatically creates an "URL" tag with an "url" attribute with a "#url" filter
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] Has a quickMatch
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
@@ -1000,6 +1011,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
  [x] addFromRepository() returns the newly-created BBCode
  [x] asConfig() returns FALSE if no BBCodes were created
+ [x] Has a quickMatch
  [x] Generates a regexp for its config array
  [x] The regexp that matches BBCode names does not contain a superfluous non-capturing subpattern
  [x] Essential non-capturing subpatterns are preserved
@@ -1037,6 +1049,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
 s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
  [x] Automatically creates an "ESC" tag
  [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] Has a quickMatch
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
 
@@ -1054,6 +1067,7 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
  [x] Automatically creates an "HE" tag
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] disable() throws an exception on invalid entity
+ [x] Has a quickMatch
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
  [x] The config array contains the disabled entities, if any
@@ -1074,6 +1088,7 @@ s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] allowElement('*invalid*') throws an exception
  [x] allowAttribute('b', '*invalid*') throws an exception
  [x] asConfig() returns FALSE if no elements were allowed
+ [x] Has a quickMatch
  [x] Generates a regexp for its config array
 
 s9e\TextFormatter\Tests\Renderer

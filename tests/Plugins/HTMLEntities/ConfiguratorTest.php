@@ -40,6 +40,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Has a quickMatch
+	*/
+	public function testConfigQuickMatch()
+	{
+		$this->assertArrayHasKey(
+			'quickMatch',
+			$this->configurator->plugins->load('HTMLEntities')->asConfig()
+		);
+	}
+
+	/**
 	* @testdox Generates a regexp for its config array
 	*/
 	public function testConfigRegexp()
