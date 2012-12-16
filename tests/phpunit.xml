@@ -60,6 +60,7 @@
 			<file>Parser/BuiltInFiltersTest.php</file>
 			<file>Parser/LoggerTest.php</file>
 			<file>Parser/TagTest.php</file>
+			<file>ParserTest.php</file>
 
 			<file>Plugins/ConfiguratorBaseTest.php</file>
 			<file>Plugins/Autolink/ConfiguratorTest.php</file>
@@ -124,6 +125,7 @@
 			<file>../src/Parser/BuiltInFilters.php</file>
 			<file>../src/Parser/Logger.php</file>
 			<file>../src/Parser/Tag.php</file>
+			<file>../src/Parser/Parser.php</file>
 
 			<file>../src/Plugins/ConfiguratorBase.php</file>
 			<file>../src/Plugins/Autolink/Configurator.php</file>

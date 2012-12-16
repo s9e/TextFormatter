@@ -14,6 +14,7 @@ class Parser
 	use Parser\FilterProcessing;
 	use Parser\OutputHandling;
 	use Parser\PluginsHandling;
+	use Parser\RulesHandling;
 	use Parser\TagAccumulator;
 	use Parser\TagProcessing;
 
@@ -84,6 +85,7 @@ class Parser
 	{
 		$this->reset($text);
 		$this->executePluginParsers();
+		$this->sortTags();
 		$this->processTags();
 
 		return $this->output;

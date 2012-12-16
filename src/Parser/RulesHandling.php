@@ -114,4 +114,17 @@ trait RulesHandling
 
 		return false;
 	}
+
+	/**
+	* Return whether given tag is allowed in current context
+	*
+	* @param  string $tagName
+	* @return bool
+	*/
+	protected function tagIsAllowed($tagName)
+	{
+		$n = $this->tagsConfig[$tagName]['bitNumber'];
+
+		return (bool) (ord($this->context['allowedChildren'][$n >> 8]) & (1 << ($n & 7)));
+	}
 }

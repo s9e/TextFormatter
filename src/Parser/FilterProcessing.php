@@ -67,6 +67,13 @@ trait FilterProcessing
 	*/
 	public static function filterAttributes(Tag $tag, array $tagConfig, array $registeredVars)
 	{
+		if (empty($tagConfig['attributes']))
+		{
+			$tag->setAttributes(array());
+
+			return true;
+		}
+
 		// Generate values for attributes with a generator set
 		foreach ($tagConfig['attributes'] as $attrName => $attrConfig)
 		{
@@ -157,7 +164,7 @@ trait FilterProcessing
 	* @param  Tag  $tag Tag to filter
 	* @return bool      Whether the tag is valid
 	*/
-	protected function filterTag()
+	protected function filterTag(Tag $tag)
 	{
 		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
@@ -167,7 +174,7 @@ trait FilterProcessing
 		{
 			// Record the tag being processed into the logger it can be added to the context of
 			// messages logged during the execution
-			$this->logger->setTag($this->currentTag);
+			$this->logger->setTag($tag);
 
 			// Prepare the variables that are accessible to filters
 			$vars = array(

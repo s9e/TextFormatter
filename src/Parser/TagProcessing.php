@@ -178,6 +178,8 @@ trait TagProcessing
 			return;
 		}
 
+		// This tag is valid, output it and update the context
+		$this->outputCurrentTag();
 		$this->pushContext($this->currentTag);
 	}
 
@@ -189,6 +191,10 @@ trait TagProcessing
 	protected function processCurrentEndTag()
 	{
 		$tagName = $this->currentTag->getName();
+
+
+		$this->outputCurrentTag();
+
 
 		--$this->cntOpen[$tagName];
 		$this->context = $this->context['parentContext'];
@@ -220,7 +226,7 @@ trait TagProcessing
 
 		// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise
 		// we use this tag's allowedChildren bitfield
-		$allowedChildren = ($tagConfig['flags'] & self::RULE_IS_TRANSPARENT)
+		$allowedChildren = ($tagConfig['rules']['flags'] & self::RULE_IS_TRANSPARENT)
 						 ? $this->context['allowedChildren']
 						 : $tagConfig['allowedChildren'];
 
@@ -232,7 +238,7 @@ trait TagProcessing
 		$allowedChildren &= $allowedDescendants;
 
 		// Use this tag's flags except for noBrDescendant, which is inherited
-		$flags = $tagConfig['flags']
+		$flags = $tagConfig['rules']['flags']
 			   | ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT);
 
 		// noBrDescendant is replicated onto noBrChild

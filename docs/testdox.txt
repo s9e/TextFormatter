@@ -905,6 +905,9 @@ s9e\TextFormatter\Tests\Parser\Logger
 s9e\TextFormatter\Tests\Parser\Tag
  [x] Mutual invalidation doesn't cause an infinite loop
 
+s9e\TextFormatter\Tests\Parser
+ [x] 
+
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
  [x] Constructor calls setFoo() if 'foo' is being set

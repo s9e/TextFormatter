@@ -195,6 +195,16 @@ class Tag
 	}
 
 	/**
+	* Test whether this tag is a self-closing tag
+	*
+	* @return bool
+	*/
+	public function isSelfClosingTag()
+	{
+		return (bool) ($this->type === self::SELF_CLOSING_TAG);
+	}
+
+	/**
 	* Test whether this tag is a start tag (self-closing tags inclusive)
 	*
 	* @return bool
@@ -312,5 +322,16 @@ class Tag
 	public function setAttribute($attrName, $attrValue)
 	{
 		$this->attributes[$attrName] = $attrValue;
+	}
+
+	/**
+	* Set all of this tag's attributes at once
+	*
+	* @param  array $attributes
+	* @return void
+	*/
+	public function setAttributes(array $attributes)
+	{
+		$this->attributes = $attributes;
 	}
 }

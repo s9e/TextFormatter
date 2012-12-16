@@ -107,7 +107,7 @@ trait OutputHandling
 	}
 
 	/**
-	* 
+	* Output the text between the cursor's position and given position
 	*
 	* NOTE: does not move the cursor
 	*
@@ -123,7 +123,7 @@ trait OutputHandling
 			return;
 		}
 
-		$catchupLen  = $catchupPos + 1 - $this->pos;
+		$catchupLen  = $catchupPos - $this->pos;
 		$catchupText = substr($this->text, $this->pos, $catchupLen);
 
 		if ($this->context['flags'] & self::RULE_IGNORE_TEXT)
