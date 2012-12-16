@@ -192,42 +192,84 @@ trait TagProcessing
 	{
 		$tagName = $tag->getName();
 
-		if (empty($this->cntOpen[$tagName]))
+		/**
+		* @var array List of non-related tags that were closed because of this tag
+		*/
+		$closedTags = array();
+
+		$i = count($this->openTags);
+		while (--$i >= 0)
 		{
-			$this->logger->debug('Skipping end tag with no start tag');
+			$startTag  = $this->openTags[$i];
+			$pairedTag = $startTag->getEndTag();
+
+			if ($pairedTag)
+			{
+				if ($tag === $pairedTag)
+				{
+					break;
+				}
+			}
+			elseif ($tagName === $startTag->getName())
+			{
+				break;
+			}
+
+			$closedTags[] = $startTag;
+		}
+
+		if ($i < 0)
+		{
+			// Did not find a matching tag
+			$this->logger->debug('Skipping end tag with no start tag', array('tag' => $tag));
 
 			return;
 		}
 
-		// Test whether this tag is paired with another
-		$startTag = $tag->getStartTag();
-		if ($startTag)
+		$keepReopening = true;
+		$reopenTags    = array();
+		foreach ($closedTags as $startTag)
 		{
-			if (!in_array($startTag, $this->openTags, true))
+			$startTagName = $startTag->getName();
+
+			// Test whether this tag should be reopened automatically
+			if ($keepReopening)
 			{
-				// The other tag is not open, nothing to do here I guess
-				return;
+				if ($this->tagsConfig[$startTagName]['rules']['flags'] & self::RULE_AUTO_REOPEN)
+				{
+					$reopenTags[] = $startTagName;
+				}
+				else
+				{
+					$keepReopening = false;
+				}
 			}
-		}
-		else
-		{
-			$i = count($this->openTags);
 
-			while (--$i >= 0)
-			{
-				$startTag = $this->openTags[$i];
-
-			}
+			// Output an end tag to close this start tag
+			$this->outputTag(new Tag(Tag::END_TAG, $startTagName, $tag->getPos(), 0));
 		}
 
-
+		// Output our tag, moving the cursor past it, then update the context
 		$this->outputTag($tag);
+		$this->popContext();
 
+		// Re-add tags that need to be reopened, at current cursor position
+		foreach ($reopenTags as $startTagName)
+		{
+			$this->addStartTag($startTagName, $this->pos, 0);
+		}
+	}
 
-		--$this->cntOpen[$tagName];
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function popContext()
+	{
+		$tag = array_pop($this->openTags);
+		--$this->cntOpen[$tag->getName()];
 		$this->context = $this->context['parentContext'];
-
-		// update $this->openTags
 	}
 
 	/**

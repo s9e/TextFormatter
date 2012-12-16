@@ -18,12 +18,15 @@ class ParserTest extends Test
 	{
 		$configurator = new Configurator;
 		$configurator->BBCodes->addFromRepository('B');
+		$configurator->BBCodes->addFromRepository('I');
+
+		$configurator->tags['I']->rules->autoReopen();
 
 		$parser = $configurator->getParser();
 
 		$this->assertSame(
-			'<B><st>[b]</st>xyz<et>[/b]</et></B>',
-			$parser->parse('[b]xyz[/b]')
+			'<B><st>[b]</st>x<I><st>[i]</st>y</I><et>[/b]</et></B><I>z<et>[/i]</et></I>',
+			$parser->parse('[b]x[i]y[/b]z[/i]')
 		);
 	}
 }

@@ -35,7 +35,9 @@ trait OutputHandling
 		$this->outputText($tagPos, $trimBefore);
 
 		// Capture the text consumed by the tag
-		$tagText = htmlspecialchars(substr($this->text, $tagPos, $tagLen), ENT_NOQUOTES, 'UTF-8');
+		$tagText = ($tagLen)
+		         ? htmlspecialchars(substr($this->text, $tagPos, $tagLen), ENT_NOQUOTES, 'UTF-8')
+		         : '';
 
 		// Output current tag
 		if ($tag->isStartTag())
@@ -58,14 +60,23 @@ trait OutputHandling
 					$this->output .= '/>';
 				}
 			}
-			else
+			elseif ($tagLen)
 			{
 				$this->output .= '><st>' . $tagText . '</st>';
+			}
+			else
+			{
+				$this->output .= '>';
 			}
 		}
 		else
 		{
-			$this->output .= '<et>' . $tagText . '</et></' . $tagName . '>';
+			if ($tagLen)
+			{
+				$this->output .= '<et>' . $tagText . '</et>';
+			}
+
+			$this->output .= '</' . $tagName . '>';
 		}
 
 		// Move the cursor past the tag
