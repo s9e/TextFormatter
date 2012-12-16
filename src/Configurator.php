@@ -17,6 +17,7 @@ use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Helpers\StylesheetHelper;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
 class Configurator implements ConfigProvider
@@ -214,6 +215,6 @@ class Configurator implements ConfigProvider
 	*/
 	public function getXSL($prefix = 'xsl')
 	{
-		return TemplateHelper::getXSL($this);
+		return StylesheetHelper::generate($this->tags);
 	}
 }

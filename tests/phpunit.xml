@@ -79,6 +79,8 @@
 			<file>Plugins/HTMLEntities/ConfiguratorTest.php</file>
 			<file>Plugins/RawHTML/ConfiguratorTest.php</file>
 
+			<file>RendererTest.php</file>
+
 			<file>UnparserTest.php</file>
 		</testsuite>
 	</testsuites>
@@ -143,6 +145,8 @@
 			<file>../src/Plugins/Generic/Configurator.php</file>
 			<file>../src/Plugins/HTMLEntities/Configurator.php</file>
 			<file>../src/Plugins/RawHTML/Configurator.php</file>
+
+			<file>../src/Renderer.php</file>
 
 			<file>../src/Unparser.php</file>
 		</whitelist>

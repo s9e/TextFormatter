@@ -13,6 +13,7 @@
 		<template><![CDATA[
 			<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
 		]]></template>
+		<!-- Use an ol element if @type starts with "upper" "lower" or "decim" -->
 		<template predicate="@type and contains('upperlowerdecim',substring(@type,1,5))"><![CDATA[
 			<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
 		]]></template>

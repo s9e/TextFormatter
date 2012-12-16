@@ -1068,6 +1068,14 @@ s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] asConfig() returns FALSE if no elements were allowed
  [x] Generates a regexp for its config array
 
+s9e\TextFormatter\Tests\Renderer
+ [x] Renders plain text
+ [x] Renders multi-line text
+ [x] Renders rich text
+ [x] renderMulti() renders multiple messages at once
+ [x] renderMulti() preserves keys and order
+ [x] Renderer is serializable
+
 s9e\TextFormatter\Tests\Unparser
  [x] unparse('<pt>Plain text</pt>') returns 'Plain text'
  [x] asPlainText('<pt>Plain text</pt>') returns 'Plain text'
