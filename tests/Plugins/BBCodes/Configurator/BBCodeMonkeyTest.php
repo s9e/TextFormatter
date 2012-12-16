@@ -63,6 +63,10 @@ class BBCodeMonkeyTest extends Test
 				new InvalidArgumentException('Cannot interpret the BBCode definition')
 			),
 			array(
+				'[föö]',
+				new InvalidArgumentException("Invalid tag name 'föö'")
+			),
+			array(
 				'[foo bar=TEXT]{TEXT}[/foo]',
 				new RuntimeException("No tokens found in bar's definition")
 			),
