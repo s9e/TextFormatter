@@ -14,17 +14,17 @@ trait OutputHandling
 	*
 	* @return void
 	*/
-	protected function outputCurrentTag()
+	protected function outputTag(Tag $tag)
 	{
-		$tagName   = $this->currentTag->getName();
-		$tagPos    = $this->currentTag->getPos();
-		$tagLen    = $this->currentTag->getLen();
+		$tagName   = $tag->getName();
+		$tagPos    = $tag->getPos();
+		$tagLen    = $tag->getLen();
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		if ($tagConfig['rules']['flags'] & self::RULE_TRIM_WHITESPACE)
 		{
-			$trimBefore = ($this->currentTag->isStartTag()) ? 2 : 1;
-			$trimAfter  = ($this->currentTag->isEndTag())   ? 2 : 1;
+			$trimBefore = ($tag->isStartTag()) ? 2 : 1;
+			$trimAfter  = ($tag->isEndTag())   ? 2 : 1;
 		}
 		else
 		{
@@ -38,16 +38,16 @@ trait OutputHandling
 		$tagText = htmlspecialchars(substr($this->text, $tagPos, $tagLen), ENT_NOQUOTES, 'UTF-8');
 
 		// Output current tag
-		if ($this->currentTag->isStartTag())
+		if ($tag->isStartTag())
 		{
 			// Open the start tag and add its attributes, but don't close the tag
 			$this->output .= '<' . $tagName;
-			foreach ($this->currentTag->getAttributes() as $attrName => $attrValue)
+			foreach ($tag->getAttributes() as $attrName => $attrValue)
 			{
 				$this->output .= ' ' . $attrName . '="' . htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8') . '"';
 			}
 
-			if ($this->currentTag->isSelfClosingTag())
+			if ($tag->isSelfClosingTag())
 			{
 				if ($tagLen)
 				{
@@ -107,7 +107,7 @@ trait OutputHandling
 	}
 
 	/**
-	* Output the text between the cursor's position and given position
+	* Output the text between the cursor's position (included) and given position (not included)
 	*
 	* NOTE: does not move the cursor
 	*

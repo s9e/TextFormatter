@@ -10,13 +10,13 @@ namespace s9e\TextFormatter\Parser;
 trait RulesHandling
 {
 	/**
-	* Apply closeAncestor rules from current tag
+	* Apply closeAncestor rules associated with given tag
 	*
-	* @return bool Whether a new tag has been added
+	* @param  string $tagName Name of the tag
+	* @return bool            Whether a new tag has been added
 	*/
-	protected function closeAncestor()
+	protected function closeAncestor($tagName)
 	{
-		$tagName   = $this->currentTag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		if (!empty($tagConfig['rules']['closeAncestor']))
@@ -50,13 +50,13 @@ trait RulesHandling
 	}
 
 	/**
-	* Apply closeParent rules from current tag
+	* Apply closeParent rules associated with given tag
 	*
-	* @return bool Whether a new tag has been added
+	* @param  string $tagName Name of the tag
+	* @return bool            Whether a new tag has been added
 	*/
-	protected function closeParent()
+	protected function closeParent($tagName)
 	{
-		$tagName   = $this->currentTag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		if (!empty($this->openTags)
@@ -67,16 +67,11 @@ trait RulesHandling
 
 			if (isset($tagConfig['rules']['closeParent'][$parentName]))
 			{
-				// We have to close that parent. First we reinsert current tag...
-				$this->tagStack[] = $this->currentTag;
+				// We have to close that parent. First we reinsert the tag...
+				$this->tagStack[] = $tag;
 
-				// ...then we create a new end tag which we put on top of the stack
-				$this->tagStack[] = new Tag(
-					Tag::END_TAG,
-					$parentName,
-					$this->currentTag->getPos(),
-					0
-				);
+				// ...then we create a new end tag for its parent
+				$this->addEndTag($parentName, $tag->getPos(), 0);
 
 				return true;
 			}
@@ -86,13 +81,13 @@ trait RulesHandling
 	}
 
 	/**
-	* Apply requireAncestor rules from current tag
+	* Apply requireAncestor rules associated with given tag
 	*
-	* @return bool Whether current tag is invalid
+	* @param  string $tagName Name of the tag
+	* @return bool            Whether a new tag has been added
 	*/
-	protected function requireAncestor()
+	protected function requireAncestor($tagName)
 	{
-		$tagName   = $this->currentTag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		if (isset($tagConfig['rules']['requireAncestor']))
@@ -106,7 +101,8 @@ trait RulesHandling
 			}
 
 			$this->logger->err('Tag requires an ancestor', array(
-				'requireAncestor' => implode(',', $tagConfig['rules']['requireAncestor'])
+				'requireAncestor' => implode(',', $tagConfig['rules']['requireAncestor']),
+				'tag'             => $tag
 			));
 
 			return true;

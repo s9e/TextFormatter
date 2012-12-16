@@ -123,11 +123,11 @@ trait TagProcessing
 		}
 		elseif ($this->currentTag->isStartTag())
 		{
-			$this->processCurrentStartTag();
+			$this->processStartTag($this->currentTag);
 		}
 		else
 		{
-			$this->processCurrentEndTag();
+			$this->processEndTag($this->currentTag);
 		}
 	}
 
@@ -136,9 +136,9 @@ trait TagProcessing
 	*
 	* @return void
 	*/
-	protected function processCurrentStartTag()
+	protected function processStartTag(Tag $tag)
 	{
-		$tagName   = $this->currentTag->getName();
+		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		// 1. Check that this tag has not reached its global limit tagLimit
@@ -153,34 +153,34 @@ trait TagProcessing
 		// as ancestors are closed) or whether the required ancestors are still there (they might
 		// have been closed by a rule.)
 		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit']
-		 || !$this->filterTag($this->currentTag))
+		 || !$this->filterTag($tag))
 		{
 			// This tag is invalid
-			$this->currentTag->invalidate();
+			$tag->invalidate();
 
 			return;
 		}
 
-		if ($this->closeParent()
-		 || $this->closeAncestor())
+		if ($this->closeParent($tagName)
+		 || $this->closeAncestor($tagName))
 		{
 			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
 			return;
 		}
 
 		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit']
-		 || $this->requireAncestor()
+		 || $this->requireAncestor($tagName)
 		 || !$this->tagIsAllowed($tagName))
 		{
 			// This tag is invalid
-			$this->currentTag->invalidate();
+			$tag->invalidate();
 
 			return;
 		}
 
 		// This tag is valid, output it and update the context
-		$this->outputCurrentTag();
-		$this->pushContext($this->currentTag);
+		$this->outputTag($tag);
+		$this->pushContext($tag);
 	}
 
 	/**
@@ -188,12 +188,40 @@ trait TagProcessing
 	*
 	* @return void
 	*/
-	protected function processCurrentEndTag()
+	protected function processEndTag(Tag $tag)
 	{
-		$tagName = $this->currentTag->getName();
+		$tagName = $tag->getName();
+
+		if (empty($this->cntOpen[$tagName]))
+		{
+			$this->logger->debug('Skipping end tag with no start tag');
+
+			return;
+		}
+
+		// Test whether this tag is paired with another
+		$startTag = $tag->getStartTag();
+		if ($startTag)
+		{
+			if (!in_array($startTag, $this->openTags, true))
+			{
+				// The other tag is not open, nothing to do here I guess
+				return;
+			}
+		}
+		else
+		{
+			$i = count($this->openTags);
+
+			while (--$i >= 0)
+			{
+				$startTag = $this->openTags[$i];
+
+			}
+		}
 
 
-		$this->outputCurrentTag();
+		$this->outputTag($tag);
 
 
 		--$this->cntOpen[$tagName];
