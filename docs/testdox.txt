@@ -876,7 +876,7 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "H1" is normalized to "H1"
  [x] "1H" is invalid (name must start with a letter or an underscore)
  [x] "" is invalid (name must start with a letter or an underscore)
- [x] "foo-bar" is invalid (no dashes allowed)
+ [x] "foo#bar" is invalid (no pound sign allowed)
  [x] "foo:bar" is normalized to "foo:bar"
  [x] ":bar" is invalid (empty prefix)
  [x] "_foo:bar" is normalized to "_foo:bar"

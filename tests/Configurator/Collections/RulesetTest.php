@@ -94,12 +94,12 @@ class RulesetTest extends Test
 	/**
 	* @testdox allowChild() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testAllowChildInvalidTagName()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->allowChild('foo-bar');
+		$ruleset->allowChild('foo#bar');
 	}
 
 	/**
@@ -119,12 +119,12 @@ class RulesetTest extends Test
 	/**
 	* @testdox allowDescendant() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testAllowDescendantInvalidTagName()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->allowDescendant('foo-bar');
+		$ruleset->allowDescendant('foo#bar');
 	}
 
 	/**
@@ -184,12 +184,12 @@ class RulesetTest extends Test
 	/**
 	* @testdox closeAncestor() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testCloseAncestorInvalidTagName()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->closeAncestor('foo-bar');
+		$ruleset->closeAncestor('foo#bar');
 	}
 
 	/**
@@ -323,12 +323,12 @@ class RulesetTest extends Test
 	/**
 	* @testdox denyChild() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testDenyChildInvalidTagName()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->denyChild('foo-bar');
+		$ruleset->denyChild('foo#bar');
 	}
 
 	/**
@@ -349,12 +349,12 @@ class RulesetTest extends Test
 	/**
 	* @testdox denyDescendant() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testDenyDescendantInvalidTagName()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->denyDescendant('foo-bar');
+		$ruleset->denyDescendant('foo#bar');
 	}
 
 	/**
@@ -475,12 +475,12 @@ class RulesetTest extends Test
 	/**
 	* @testdox requireParent() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testRequireParentInvalidTagName()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->requireParent('foo-bar');
+		$ruleset->requireParent('foo#bar');
 	}
 
 	/**
@@ -501,12 +501,12 @@ class RulesetTest extends Test
 	/**
 	* @testdox requireAncestor() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo-bar'
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
 	*/
 	public function testRequireAncestorInvalidTagName()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->requireAncestor('foo-bar');
+		$ruleset->requireAncestor('foo#bar');
 	}
 
 	/**

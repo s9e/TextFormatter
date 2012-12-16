@@ -74,11 +74,11 @@ class TagNameTest extends Test
 	}
 
 	/**
-	* @testdox "foo-bar" is invalid (no dashes allowed)
+	* @testdox "foo#bar" is invalid (no pound sign allowed)
 	*/
-	public function testInvalid4C2CD9E9()
+	public function testInvalidACF3AEDA()
 	{
-		$this->assertFalse(TagName::isValid("foo-bar"));
+		$this->assertFalse(TagName::isValid("foo#bar"));
 	}
 
 	/**
@@ -184,7 +184,7 @@ class TagNameTest extends Test
 			'H1'          => 'H1',
 			'1H'          => 'Invalid: name must start with a letter or an underscore',
 			''            => 'Invalid: name must start with a letter or an underscore',
-			'foo-bar'     => 'Invalid: no dashes allowed',
+			'foo#bar'     => 'Invalid: no pound sign allowed',
 			'foo:bar'     => 'foo:bar',
 			':bar'        => 'Invalid: empty prefix',
 			'_foo:bar'    => '_foo:bar',

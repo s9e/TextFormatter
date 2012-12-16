@@ -28,7 +28,7 @@ abstract class TagName
 	*/
 	public static function isValid($name)
 	{
-		return (bool) preg_match('#^(?:(?!xsl|s9e)[a-z_][a-z_0-9]*:)?[a-z_][a-z_0-9]*$#Di', $name);
+		return (bool) preg_match('#^(?:(?!xsl|s9e)[a-z_][a-z_0-9]*:)?[a-z_][-a-z_0-9]*$#Di', $name);
 	}
 
 	/**
