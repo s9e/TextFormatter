@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
+use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\AttributeList;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
@@ -78,6 +79,11 @@ class BBCode implements ConfigProvider
 		if ($bbcodeName === '*')
 		{
 			return '*';
+		}
+
+		if (!TagName::isValid($bbcodeName))
+		{
+			throw new InvalidArgumentException("Invalid BBCode name '" . $bbcodeName . "'");
 		}
 
 		return TagName::normalize($bbcodeName);

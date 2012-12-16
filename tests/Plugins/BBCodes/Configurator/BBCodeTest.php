@@ -38,6 +38,7 @@ class BBCodeTest extends Test
 	/**
 	* @testdox BBCode::normalizeName('*invalid*') throws an exception
 	* @expectedException Exception
+	* @expectedExceptionMessage Invalid BBCode name
 	*/
 	public function testNormalizeNameInvalid()
 	{

@@ -64,7 +64,7 @@ class BBCodeMonkeyTest extends Test
 			),
 			array(
 				'[föö]',
-				new InvalidArgumentException("Invalid tag name 'föö'")
+				new InvalidArgumentException("Invalid BBCode name 'föö'")
 			),
 			array(
 				'[foo bar=TEXT]{TEXT}[/foo]',
