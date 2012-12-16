@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes;
 
-use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\ParserBase;
 
@@ -31,7 +30,12 @@ class Parser extends ParserBase
 			}
 
 			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
-			$tagName      = $bbcodeConfig['tagName'];
+
+			// Use the configured tagName if available, or reuse the BBCode's name (normalized to
+			// lowercase) otherwise
+			$tagName = (isset($bbcodeConfig['tagName']))
+			         ? $bbcodeConfig['tagName']
+			         : strtolower($bbcodeName);
 
 			/**
 			* @var integer Position of the first character of current BBCode, which should be a [
@@ -82,6 +86,7 @@ class Parser extends ParserBase
 
 			// This is a start tag, now we'll parse attributes
 			$type       = Tag::START_TAG;
+			$attributes = array();
 			$wellFormed = false;
 			$firstPos   = $rpos;
 

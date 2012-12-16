@@ -73,7 +73,6 @@ trait PluginsHandling
 				}
 			}
 
-			$tags->pluginName = $pluginName;
 			$this->getPluginParser($pluginName)->parse($this->text, $matches);
 		}
 	}
@@ -89,6 +88,14 @@ trait PluginsHandling
 	protected function executePluginRegexp($pluginName)
 	{
 		$pluginConfig = $this->pluginsConfig[$pluginName];
+
+		$regexpLimit = (isset($pluginConfig['regexpLimit']))
+		             ? $pluginConfig['regexpLimit']
+		             : 1000;
+
+		$regexpLimitAction = (isset($pluginConfig['regexpLimitAction']))
+		                   ? $pluginConfig['regexpLimitAction']
+		                   : 'ignore';
 
 		// Some plugins have several regexps in an array, others have a single regexp as a string.
 		// We convert the latter to an array so that we can iterate over it.
@@ -116,19 +123,19 @@ trait PluginsHandling
 
 			$cnt += $_cnt;
 
-			if ($cnt > $pluginConfig['regexpLimit'])
+			if ($cnt > $regexpLimit)
 			{
-				if ($pluginConfig['regexpLimitAction'] === 'abort')
+				if ($regexpLimitAction === 'abort')
 				{
 					throw new RuntimeException($pluginName . ' limit exceeded');
 				}
 				else
 				{
-					$limit       = $pluginConfig['regexpLimit'] + $_cnt - $cnt;
+					$limit       = $regexpLimit + $_cnt - $cnt;
 					$matches[$k] = array_slice($matches[$k], 0, $limit);
 
 					$msg = '%1$s limit exceeded. Only the first %2$s matches will be processed';
-					if ($pluginConfig['regexpLimitAction'] === 'ignore')
+					if ($regexpLimitAction === 'ignore')
 					{
 						$this->logger->debug($msg, array($pluginName, $limit));
 					}

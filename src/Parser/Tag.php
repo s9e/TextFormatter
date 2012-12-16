@@ -35,6 +35,11 @@ class Tag
 	protected $cascade = array();
 
 	/**
+	* @var Tag End tag that unconditionally ends this start tag
+	*/
+	protected $endTag;
+
+	/**
 	* @var bool Whether this tag is be invalid
 	*/
 	protected $invalid = false;
@@ -53,6 +58,11 @@ class Tag
 	* @var integer Position of this tag in the text
 	*/
 	protected $pos;
+
+	/**
+	* @var Tag Start tag that is unconditionally closed this end tag
+	*/
+	protected $startTag;
 
 	/**
 	* @var integer Tag type
@@ -91,40 +101,6 @@ class Tag
 		{
 			$tag->invalidate();
 		}
-	}
-
-	/**
-	* Test whether this tag would given tag
-	*
-	* NOTE: it is assumed that this tag's position is after given tag in the text and that this tag
-	*       was not invalidated
-	*
-	* @param  self $tag
-	* @return bool
-	*/
-	public function closes(self $tag)
-	{
-		// Ensure that their characteristics match
-		if ($tag->type !== self::START_TAG
-		 || $this->type !== self::END_TAG
-		 || $this->name !== $tag->name)
-		{
-			return false;
-		}
-
-		// If given tag has a tagMate, ensure it's this tag
-		if ($tag->tagMate && $tag->tagMate !== $this)
-		{
-			return false;
-		}
-
-		// If this tag has a tagMate, ensure it's given tag
-		if ($this->tagMate && $this->tagMate !== $tag)
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -236,17 +212,22 @@ class Tag
 	*/
 	public function pairWith(self $tag)
 	{
-		if ($this->type === self::START_TAG
-		 && $tag->type  === self::END_TAG)
+		if ($this->name === $tag->name)
 		{
-			$this->endTag  = $tag;
-			$tag->startTag = $this;
-		}
-		elseif ($this->type === self::END_TAG
-		     && $tag->type  === self::START_TAG)
-		{
-			$this->startTag = $tag;
-			$tag->endTag    = $this;
+			if ($this->type === self::START_TAG
+			 && $tag->type  === self::END_TAG
+			 && $tag->pos > $this->pos)
+			{
+				$this->endTag  = $tag;
+				$tag->startTag = $this;
+			}
+			elseif ($this->type === self::END_TAG
+				 && $tag->type  === self::START_TAG
+			     && $tag->pos < $this->pos)
+			{
+				$this->startTag = $tag;
+				$tag->endTag    = $this;
+			}
 		}
 	}
 
@@ -273,6 +254,30 @@ class Tag
 	public function getAttributes()
 	{
 		return $this->attributes;
+	}
+
+	/**
+	* Return this tag's end tag
+	*
+	* @return Tag|bool This tag's end tag, or FALSE if none is set
+	*/
+	public function getEndTag()
+	{
+		return (isset($this->endTag))
+	          ? $this->endTag
+		      : false;
+	}
+
+	/**
+	* Return this tag's start tag
+	*
+	* @return Tag|bool This tag's start tag, or FALSE if none is set
+	*/
+	public function getStartTag()
+	{
+		return (isset($this->startTag))
+	          ? $this->startTag
+		      : false;
 	}
 
 	/**

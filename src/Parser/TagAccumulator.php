@@ -165,7 +165,7 @@ trait TagAccumulator
 					Tag::SELF_CLOSING_TAG => 1,
 					Tag::START_TAG        => 0
 				);
-				return $order[$a->getType()]] - $order[$b->getType()]];
+				return $order[$a->getType()] - $order[$b->getType()];
 			}
 
 			// Here, we know that only one of $a or $b is a zero-width tags. Zero-width tags are

@@ -7,10 +7,9 @@
 */
 namespace s9e\TextFormatter\Plugins;
 
-use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\PluginParser;
+use s9e\TextFormatter\Plugins\ParserBase;
 
-class AutolinkParser extends PluginParser
+class AutolinkParser extends ParserBase
 {
 	/**
 	* {@inheritdoc}

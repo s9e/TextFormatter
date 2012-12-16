@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Parser;
 
-trait TagAccumulator
+trait TagProcessing
 {
 	/**
 	* @var array Number of open tags for each tag name
@@ -49,6 +49,13 @@ trait TagAccumulator
 		$this->context   = $this->rootContext;
 		unset($this->currentTag);
 
+		// Initialize the count tables
+		foreach (array_keys($this->tagsConfig) as $tagName)
+		{
+			$this->cntOpen[$tagName]  = 0;
+			$this->cntTotal[$tagName] = 0;
+		}
+
 		while (!empty($this->tagStack))
 		{
 			$this->currentTag = array_pop($this->tagStack);
@@ -68,45 +75,50 @@ trait TagAccumulator
 	*
 	* @return void
 	*/
-	protected function processTag()
+	protected function processCurrentTag()
 	{
-		if ($this->currentTag->getPos() < $this->pos)
-		{
-			$this->currentTag->invalidate();
-		}
-
 		if ($this->currentTag->isInvalid())
 		{
-			$tagMate = $this->currentTag->getTagMate();
+			return;
+		}
 
-			if ($tagMate && in_array($tagMate, $this->openTags, true))
+		$tagPos = $this->currentTag->getPos();
+		$tagLen = $this->currentTag->getLen();
+
+		// Test whether the cursor passed this tag's position already
+		if ($this->pos > $tagPos)
+		{
+			// Test whether this tag is paired with a start tag and this tag is still open
+			$startTag = $this->currentTag->getStartTag();
+
+			if ($startTag && in_array($startTag, $this->openTags, true))
 			{
+				// Create an end tag that matches current tag's start tag, which consumes as much of
+				// the same text as current tag and is paired with the same start tag
+				$this->addEndTag(
+					$startTag->getName(),
+					$this->pos,
+					max(0, $tagPos + $tagLen - $this->pos)
+				)->pairWith($startTag);
+
+				// Note that current tag is not invalidated, it's merely replaced
+				return;
 			}
 
-			// TODO: paired end tag should still close start tag
-			if ($this->currentTag->closesTagMate())
-			{
-				$tagMate = $this->currentTag->getTagMate();
-
-				if (in_array($tagMate, $this->openTags, true))
-				{
-					$tag = $this->currentTag->createMatchingEndTag($this->pos);
-					$tag->pairWith($this->currentTag->getTagMate());
-					$this->tagStack[] = $tag;
-				}
-			}
+			// Skipped tags are invalidated
+			$this->currentTag->invalidate();
 
 			return;
 		}
 
 		if ($this->currentTag->isIgnoreTag())
 		{
-			$this->outputText($this->currentTag->getPos(), 0);
-			$this->outputIgnoreTag($this->currentTag->getLen());
+			$this->outputText($tagPos, 0);
+			$this->outputIgnoreTag($tagLen);
 		}
 		elseif ($this->currentTag->isBrTag())
 		{
-			$this->outputText($this->currentTag->getPos(), 0);
+			$this->outputText($tagPos, 0);
 			$this->outputBrTag();
 		}
 		elseif ($this->currentTag->isStartTag())
@@ -165,6 +177,8 @@ trait TagAccumulator
 
 			return;
 		}
+
+		$this->pushContext($this->currentTag);
 	}
 
 	/**
@@ -230,7 +244,7 @@ trait TagAccumulator
 		$this->context = array(
 			'allowedChildren'    => $allowedChildren,
 			'allowedDescendants' => $allowedDescendants,
-			'flags'              => $flags
+			'flags'              => $flags,
 			'parentContext'      => $this->context
 		);
 	}

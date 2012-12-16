@@ -7,12 +7,15 @@
 */
 namespace s9e\TextFormatter;
 
-use s9e\TextFormatter\Parser\FilterProcessing;
 use s9e\TextFormatter\Parser\Logger;
 
 class Parser
 {
-	use FilterProcessing;
+	use Parser\FilterProcessing;
+	use Parser\OutputHandling;
+	use Parser\PluginsHandling;
+	use Parser\TagAccumulator;
+	use Parser\TagProcessing;
 
 	/**#@+
 	* Boolean rules bitfield
