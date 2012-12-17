@@ -34,10 +34,10 @@ $configurator->Generic->addReplacement(
 	'<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>'
 );
 
-$configurator->RawHTML->allowElement('a');
-$configurator->RawHTML->allowElement('b');
-$configurator->RawHTML->allowAttribute('a', 'href');
-$configurator->RawHTML->allowAttribute('a', 'title');
+$configurator->HTMLElements->allowElement('a');
+$configurator->HTMLElements->allowElement('b');
+$configurator->HTMLElements->allowAttribute('a', 'href');
+$configurator->HTMLElements->allowAttribute('a', 'title');
 
 $configurator->loadPlugin('Autolink');
 $configurator->loadPlugin('Escaper');
@@ -150,14 +150,14 @@ The following plugins have been enabled:
   [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]/#(?<tag>[a-z0-9]+)/i[/CODE] is replaced with the template [CODE]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/CODE] -- For example: #PHP, #fml
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
   [*][b]Linebreaker[/b] --- Linefeeds are converted to &lt;br&gt;
-  [*][b]RawHTML[/b] --- [CODE]<a>[/CODE] and [CODE]<b>[/CODE] tags are allowed, with two whitelisted attributes for [CODE]<a>[/CODE]: [CODE]href[/CODE] and [CODE]title[/CODE]. Example: <a href="https://github.com" title="GitHub - Social Coding"><b>GitHub</b></a>
+  [*][b]HTMLElements[/b] --- [CODE]<a>[/CODE] and [CODE]<b>[/CODE] tags are allowed, with two whitelisted attributes for [CODE]<a>[/CODE]: [CODE]href[/CODE] and [CODE]title[/CODE]. Example: <a href="https://github.com" title="GitHub - Social Coding"><b>GitHub</b></a>
   [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
 Additionally, in order to demonstrate some other features:
 
 [list=square]
-  [*][b]Configurator::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]RawHTML[/b] as well: <a href="http://example.com">example.com</a>
+  [*][b]Configurator::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]HTMLElements[/b] as well: <a href="http://example.com">example.com</a>
   [*][b]Configurator::setDefaultScheme('https')[/b] --- schemeless URLs are allowed and they are treated as if their scheme was 'https'
   [*][b]HTMLEntitiesConfig::disableEntity()[/b] --- the HTML entity &amp;lt; is arbitrarily disabled
   [*]a YouTube video, at the right, keeps playing as you're editing the text [i](including its own tag!)[/i] to demonstrate the partial-update algorithm used to refresh the live preview

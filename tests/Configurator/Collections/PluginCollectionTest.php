@@ -17,10 +17,10 @@ class PluginCollectionTest extends Test
 	*/
 	public function testLoad()
 	{
-		$this->configurator->plugins->load('RawHTML');
+		$this->configurator->plugins->load('HTMLElements');
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Plugins\\RawHTML\\Configurator',
-			$this->configurator->plugins['RawHTML']
+			's9e\\TextFormatter\\Plugins\\HTMLElements\\Configurator',
+			$this->configurator->plugins['HTMLElements']
 		);
 	}
 

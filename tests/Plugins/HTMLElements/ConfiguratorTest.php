@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\RawHTML;
+namespace s9e\TextFormatter\Tests\Plugins\HTMLElements;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\Plugins\RawHTML\Configurator;
+use s9e\TextFormatter\Plugins\HTMLElements\Configurator;
 
 /**
-* @covers s9e\TextFormatter\Plugins\RawHTML\Configurator
+* @covers s9e\TextFormatter\Plugins\HTMLElements\Configurator
 */
 class ConfiguratorTest extends Test
 {
@@ -15,7 +15,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCreatesTags()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('b');
 
 		$this->assertTrue($this->configurator->tags->exists('html:b'));
@@ -26,7 +26,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCreatesTagsCaseInsensitive()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('B');
 
 		$this->assertTrue($this->configurator->tags->exists('html:b'));
@@ -37,7 +37,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomPrefix()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML', array('prefix' => 'xyz'));
+		$plugin = $this->configurator->plugins->load('HTMLElements', array('prefix' => 'xyz'));
 		$plugin->allowElement('b');
 
 		$this->assertTrue($this->configurator->tags->exists('xyz:b'));
@@ -49,7 +49,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testUnsafeElement()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('script');
 	}
 
@@ -58,7 +58,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testUnsafeElementAllowed()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowUnsafeElement('script');
 
 		$this->assertTrue($this->configurator->tags->exists('html:script'));
@@ -69,7 +69,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCreatesAttributes()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('b');
 		$plugin->allowAttribute('b', 'title');
 
@@ -81,7 +81,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCreatesOptionalAttributes()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('b');
 		$plugin->allowAttribute('b', 'title');
 
@@ -93,7 +93,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testFilter()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('a');
 		$plugin->allowAttribute('a', 'href');
 
@@ -107,7 +107,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAttributeOnUnknownElement()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowAttribute('b', 'title');
 	}
 
@@ -117,7 +117,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testUnsafeAttribute()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('span');
 		$plugin->allowAttribute('span', 'onmouseover');
 	}
@@ -128,7 +128,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testUnsafeAttribute2()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('span');
 		$plugin->allowAttribute('span', 'style');
 	}
@@ -138,7 +138,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testUnsafeAttributeAllowed()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('span');
 		$plugin->allowUnsafeAttribute('span', 'onmouseover');
 
@@ -151,7 +151,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testInvalidElementName()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('*invalid*');
 	}
 
@@ -161,7 +161,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testInvalidAttributeName()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('b');
 		$plugin->allowAttribute('b', '*invalid*');
 	}
@@ -171,7 +171,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testFalseConfig()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$this->assertFalse($plugin->asConfig());
 	}
 
@@ -180,7 +180,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigQuickMatch()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('b');
 
 		$this->assertArrayHasKey(
@@ -194,7 +194,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfig()
 	{
-		$plugin = $this->configurator->plugins->load('RawHTML');
+		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('b');
 
 		$this->assertArrayHasKey('regexp', $plugin->asConfig());

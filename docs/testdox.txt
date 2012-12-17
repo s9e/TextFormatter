@@ -1105,16 +1105,7 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] asConfig() returns FALSE if no replacements were set
  [x] Generates a regexp for every replacement, using its tag name as key
 
-s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
- [x] Automatically creates an "HE" tag
- [x] The name of the tag used can be changed through the "tagName" constructor option
- [x] disable() throws an exception on invalid entity
- [x] Has a quickMatch
- [x] Generates a regexp for its config array
- [x] The config array contains the name of the tag
- [x] The config array contains the disabled entities, if any
-
-s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
+s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] allowElement('b') creates a tag named 'html:b'
  [x] allowElement('B') creates a tag named 'html:b'
  [x] The prefix can be customized at loading time through the 'prefix' property
@@ -1132,6 +1123,15 @@ s9e\TextFormatter\Tests\Plugins\RawHTML\Configurator
  [x] asConfig() returns FALSE if no elements were allowed
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
+
+s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
+ [x] Automatically creates an "HE" tag
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] disable() throws an exception on invalid entity
+ [x] Has a quickMatch
+ [x] Generates a regexp for its config array
+ [x] The config array contains the name of the tag
+ [x] The config array contains the disabled entities, if any
 
 s9e\TextFormatter\Tests\Renderer
  [x] Renders plain text

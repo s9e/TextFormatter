@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Plugins;
 use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\PluginParser;
 
-class RawHTMLParser extends PluginParser
+class HTMLElementsParser extends PluginParser
 {
 	public function getTags($text, array $matches)
 	{
