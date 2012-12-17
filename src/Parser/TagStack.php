@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Parser;
 
-trait TagAccumulator
+trait TagStack
 {
 	/**
 	* @var array Tag storage
@@ -57,11 +57,11 @@ trait TagAccumulator
 	* Add a 0-width "br" tag to force a line break at given position
 	*
 	* @param  integer $pos  Position of the tag in the text
-	* @return void
+	* @return Tag
 	*/
 	public function addBrTag($pos)
 	{
-		$this->tags[] = new Tag(Tag::SELF_CLOSING, 'br', $pos, 0);
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'br', $pos, 0);
 	}
 
 	/**
@@ -69,17 +69,11 @@ trait TagAccumulator
 	*
 	* @param  integer $pos  Position of the tag in the text
 	* @param  integer $len  Length of text consumed by the tag
-	* @return void
+	* @return Tag
 	*/
 	public function addIgnoreTag($pos, $len)
 	{
-		$tag = new Tag(Tag::SELF_CLOSING, 'i', $pos, $len);
-		$this->tags[] = $tag;
-
-		if ($len < 1)
-		{
-			$tag->invalidate();
-		}
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'i', $pos, $len);
 	}
 
 	/**
@@ -93,25 +87,21 @@ trait TagAccumulator
 	*/
 	protected function addTag($type, $name, $pos, $len)
 	{
-		// Normalize the name of the tag if it's not namespaced
-		if (strpos($name, ':') === false)
-		{
-			$name = strtoupper($name);
-		}
-
 		// Create the tag
 		$tag = new Tag($type, $name, $pos, $len);
 
-		// Add it to the stack if it's a known tag, or invalidate it right away if it's not. We'll
-		// still return the invalid tag because that's what plugins expect, but it will never be
-		// processed
-		if (isset($this->tagsConfig[$name]))
+		// Invalidate this tag if it's an unknown tag, or if its length or its position is negative
+		if (!isset($this->tagsConfig[$name]) && $name !== 'i' && $name !== 'br')
 		{
-			$this->tagStack[] = $tag;
+			$tag->invalidate();
+		}
+		elseif ($len < 0 || $pos < 0)
+		{
+			$tag->invalidate();
 		}
 		else
 		{
-			$tag->invalidate();
+			$this->tagStack[] = $tag;
 		}
 
 		return $tag;

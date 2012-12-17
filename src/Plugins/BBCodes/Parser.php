@@ -31,11 +31,10 @@ class Parser extends ParserBase
 
 			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
 
-			// Use the configured tagName if available, or reuse the BBCode's name (normalized to
-			// lowercase) otherwise
+			// Use the configured tagName if available, or reuse the BBCode's name otherwise
 			$tagName = (isset($bbcodeConfig['tagName']))
 			         ? $bbcodeConfig['tagName']
-			         : strtolower($bbcodeName);
+			         : $bbcodeName;
 
 			/**
 			* @var integer Position of the first character of current BBCode, which should be a [

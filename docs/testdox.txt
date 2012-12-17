@@ -951,6 +951,17 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] hasAttribute('foo') returns true if attribute 'foo' is set
  [x] removeAttribute('foo') unsets attribute 'foo'
 
+s9e\TextFormatter\Tests\Parser\TagStack
+ [x] addStartTag() adds a start tag to the stack
+ [x] addEndTag() adds an end tag to the stack
+ [x] addSelfClosingTag() adds a self-closing tag to the stack
+ [x] addStartTag() returns the newly added tag
+ [x] addStartTag() does not add anything to the stack if the tag name does not exist but it returns an invalidated tag
+ [x] addStartTag() does not add anything to the stack if the position is negative but it returns an invalidated tag
+ [x] addStartTag() does not add anything to the stack if the length is negative but it returns an invalidated tag
+ [x] addBrTag() adds a zero-width, self-closing "br" tag to the stack then returns it
+ [x] addIgnoreTag() adds self-closing "i" tag to the stack then returns it
+
 s9e\TextFormatter\Tests\Parser
  [x] 
 

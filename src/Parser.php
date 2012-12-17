@@ -15,8 +15,8 @@ class Parser
 	use Parser\OutputHandling;
 	use Parser\PluginsHandling;
 	use Parser\RulesHandling;
-	use Parser\TagAccumulator;
 	use Parser\TagProcessing;
+	use Parser\TagStack;
 
 	/**#@+
 	* Boolean rules bitfield
