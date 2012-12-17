@@ -907,7 +907,49 @@ s9e\TextFormatter\Tests\Parser\Logger
  [x] clear() empties the logs
 
 s9e\TextFormatter\Tests\Parser\Tag
+ [x] getAttributes() returns the tag's attributes as an array
+ [x] getEndTag() returns false if the tag has no end tag set
+ [x] getPos() returns the tag's length (amount of text consumed)
+ [x] getName() returns the tag's name
+ [x] getPos() returns the tag's position
+ [x] getStartTag() returns false if the tag has no start tag set
+ [x] isInvalid() returns false by default
+ [x] isBrTag() returns true if the tag's name is "br"
+ [x] isBrTag() returns false by default
+ [x] isIgnoreTag() returns true if the tag's name is "i"
+ [x] isIgnoreTag() returns false by default
+ [x] isStartTag() returns true if the tag's type is Tag::START_TAG
+ [x] isStartTag() returns true if the tag's type is Tag::END_TAG
+ [x] isStartTag() returns true if the tag's type is Tag::SELF_CLOSING_TAG
+ [x] isEndTag() returns false if the tag's type is Tag::START_TAG
+ [x] isEndTag() returns true if the tag's type is Tag::END_TAG
+ [x] isEndTag() returns true if the tag's type is Tag::SELF_CLOSING_TAG
+ [x] isSelfClosingTag() returns false if the tag's type is Tag::START_TAG
+ [x] isSelfClosingTag() returns false if the tag's type is Tag::END_TAG
+ [x] isSelfClosingTag() returns true if the tag's type is Tag::SELF_CLOSING_TAG
+ [x] invalidate() makes isInvalid() return true
+ [x] $tag1->cascadeInvalidationTo($tag2) causes $tag1->invalidate() to call $tag2->invalidate()
+ [x] $tag1->cascadeInvalidationTo($tag2) does not cause $tag2->invalidate() to call $tag1->invalidate()
+ [x] $tag1->cascadeInvalidationTo($tag2) immediately calls $tag2->invalidate() if $tag1 is invalid
  [x] Mutual invalidation doesn't cause an infinite loop
+ [x] $tag1->pairWith($tag2) does not do anything if the tags have different names
+ [x] $startTag->pairWith($endTag) does not do anything if $startTag's position is greater than $endTag's
+ [x] $startTag->pairWith($endTag) sets $endTag->startTag if they share the same position
+ [x] $startTag->pairWith($endTag) sets $endTag->startTag if $endTag's position is greater than $startTag's
+ [x] $startTag->pairWith($endTag) sets $startTag->endTag if they share the same position
+ [x] $startTag->pairWith($endTag) sets $startTag->endTag if $endTag's position is greater than $startTag's
+ [x] $endTag->pairWith($startTag) sets $endTag->startTag if they share the same position
+ [x] $endTag->pairWith($startTag) sets $endTag->startTag if $endTag's position is greater than $startTag's
+ [x] $endTag->pairWith($startTag) sets $startTag->endTag if they share the same position
+ [x] $endTag->pairWith($startTag) sets $startTag->endTag if $endTag's position is greater than $startTag's
+ [x] setAttribute('foo', 'bar') sets attribute 'foo' to 'bar'
+ [x] setAttribute() overwrites existing attributes
+ [x] setAttributes() sets multiple attributes at once
+ [x] setAttributes() removes all other attributes
+ [x] getAttribute('foo') returns the value of attribute 'foo'
+ [x] hasAttribute('foo') returns false if attribute 'foo' is not set
+ [x] hasAttribute('foo') returns true if attribute 'foo' is set
+ [x] removeAttribute('foo') unsets attribute 'foo'
 
 s9e\TextFormatter\Tests\Parser
  [x] 

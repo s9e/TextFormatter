@@ -86,6 +86,10 @@ class Tag
 		$this->len  = (int) $len;
 	}
 
+	//==========================================================================
+	// Actions
+	//==========================================================================
+
 	/**
 	* Set given tag to be invalidated if this tag is invalidated
 	*
@@ -101,6 +105,80 @@ class Tag
 		{
 			$tag->invalidate();
 		}
+	}
+
+	/**
+	* Invalidate this tag, as well as tags bound to this tag
+	*
+	* @return void
+	*/
+	public function invalidate()
+	{
+		// If this tag is already invalid, we can return now. This prevent infinite loops
+		if ($this->invalid)
+		{
+			return;
+		}
+
+		$this->invalid = true;
+
+		foreach ($this->cascade as $tag)
+		{
+			$tag->invalidate();
+		}
+	}
+
+	/**
+	* Pair this tag with given tag
+	*
+	* @param  self $tag
+	* @return void
+	*/
+	public function pairWith(self $tag)
+	{
+		if ($this->name === $tag->name)
+		{
+			if ($this->type === self::START_TAG
+			 && $tag->type  === self::END_TAG
+			 && $tag->pos   >=  $this->pos)
+			{
+				$this->endTag  = $tag;
+				$tag->startTag = $this;
+			}
+			elseif ($this->type === self::END_TAG
+				 && $tag->type  === self::START_TAG
+			     && $tag->pos   <=  $this->pos)
+			{
+				$this->startTag = $tag;
+				$tag->endTag    = $this;
+			}
+		}
+	}
+
+	//==========================================================================
+	// Getters
+	//==========================================================================
+
+	/**
+	* Return this tag's attributes
+	*
+	* @return array
+	*/
+	public function getAttributes()
+	{
+		return $this->attributes;
+	}
+
+	/**
+	* Return this tag's end tag
+	*
+	* @return Tag|bool This tag's end tag, or FALSE if none is set
+	*/
+	public function getEndTag()
+	{
+		return (isset($this->endTag))
+	          ? $this->endTag
+		      : false;
 	}
 
 	/**
@@ -134,25 +212,20 @@ class Tag
 	}
 
 	/**
-	* Invalidate this tag, as well as tags bound to this tag
+	* Return this tag's start tag
 	*
-	* @return void
+	* @return Tag|bool This tag's start tag, or FALSE if none is set
 	*/
-	public function invalidate()
+	public function getStartTag()
 	{
-		// If this tag is already invalid, we can return now. This prevent infinite loops
-		if ($this->invalid)
-		{
-			return;
-		}
-
-		$this->invalid = true;
-
-		foreach ($this->cascade as $tag)
-		{
-			$tag->invalidate();
-		}
+		return (isset($this->startTag))
+	          ? $this->startTag
+		      : false;
 	}
+
+	//==========================================================================
+	// Tag's status
+	//==========================================================================
 
 	/**
 	* Test whether this tag is a br tag
@@ -214,33 +287,6 @@ class Tag
 		return (bool) ($this->type & self::START_TAG);
 	}
 
-	/**
-	* Pair this tag with given tag
-	*
-	* @param  self $tag
-	* @return void
-	*/
-	public function pairWith(self $tag)
-	{
-		if ($this->name === $tag->name)
-		{
-			if ($this->type === self::START_TAG
-			 && $tag->type  === self::END_TAG
-			 && $tag->pos > $this->pos)
-			{
-				$this->endTag  = $tag;
-				$tag->startTag = $this;
-			}
-			elseif ($this->type === self::END_TAG
-				 && $tag->type  === self::START_TAG
-			     && $tag->pos < $this->pos)
-			{
-				$this->startTag = $tag;
-				$tag->endTag    = $this;
-			}
-		}
-	}
-
 	//==========================================================================
 	// Attributes handling
 	//==========================================================================
@@ -254,40 +300,6 @@ class Tag
 	public function getAttribute($attrName)
 	{
 		return $this->attributes[$attrName];
-	}
-
-	/**
-	* Return this tag's attributes
-	*
-	* @return array
-	*/
-	public function getAttributes()
-	{
-		return $this->attributes;
-	}
-
-	/**
-	* Return this tag's end tag
-	*
-	* @return Tag|bool This tag's end tag, or FALSE if none is set
-	*/
-	public function getEndTag()
-	{
-		return (isset($this->endTag))
-	          ? $this->endTag
-		      : false;
-	}
-
-	/**
-	* Return this tag's start tag
-	*
-	* @return Tag|bool This tag's start tag, or FALSE if none is set
-	*/
-	public function getStartTag()
-	{
-		return (isset($this->startTag))
-	          ? $this->startTag
-		      : false;
 	}
 
 	/**
