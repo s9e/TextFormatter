@@ -470,6 +470,12 @@ class BuiltInFiltersTest extends Test
 			array('ipv6', '8.8.8.8', false),
 			array('ipv6', 'ff02::1', 'ff02::1'),
 			array('ipv6', 'localhost', false),
+			array('ipport', '8.8.8.8:80', '8.8.8.8:80'),
+			array('ipport', '[ff02::1]:80', '[ff02::1]:80'),
+			array('ipport', 'localhost:80', false),
+			array('ipport', '[localhost]:80', false),
+			array('ipport', '8.8.8.8', false),
+			array('ipport', 'ff02::1', false),
 		);
 	}
 

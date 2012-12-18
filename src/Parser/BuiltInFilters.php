@@ -53,7 +53,7 @@ class BuiltInFilters
 	public static function filterIdentifier($attrValue)
 	{
 		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '#^[A-Za-z0-9\\-_]+$#D')
+			'options' => array('regexp' => '/^[A-Za-z0-9\\-_]+$/D')
 		));
 	}
 
@@ -66,6 +66,41 @@ class BuiltInFilters
 	public static function filterIp($attrValue)
 	{
 		return filter_var($attrValue, FILTER_VALIDATE_IP);
+	}
+
+	/**
+	* Filter an IP:port value (includes IPv4 and IPv6)
+	*
+	* @param  string $attrValue Original value
+	* @return mixed             Filtered value, or FALSE if invalid
+	*/
+	public static function filterIpport($attrValue)
+	{
+		if (preg_match('/^\\[([^\\]]+)(\\]:[1-9][0-9]*)$/D', $attrValue, $m))
+		{
+			$ip = self::filterIpv6($m[1]);
+
+			if ($ip === false)
+			{
+				return false;
+			}
+
+			return '[' . $ip . $m[2];
+		}
+
+		if (preg_match('/^([^:]+)(:[1-9][0-9]*)$/D', $attrValue, $m))
+		{
+			$ip = self::filterIpv4($m[1]);
+
+			if ($ip === false)
+			{
+				return false;
+			}
+
+			return $ip . $m[2];
+		}
+
+		return false;
 	}
 
 	/**
