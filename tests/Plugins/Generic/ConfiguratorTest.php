@@ -111,7 +111,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates a regexp for every replacement, using its tag name as key
+	* @testdox asConfig() returns the regexps in a "regexps" array where keys are tag names
 	*/
 	public function testAsConfig()
 	{
@@ -121,7 +121,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame(
 			array(
-				'regexp' => Array (
+				'regexps' => Array (
 					'GC53BB427' => '/(?<foo>[0-9]+)/',
 					'GDCEA6E9C' => '/(?<bar>[a-z]+)/'
 				)

@@ -113,6 +113,6 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
-		return array('regexp' => $this->collection->asConfig());
+		return array('regexps' => $this->collection->asConfig());
 	}
 }

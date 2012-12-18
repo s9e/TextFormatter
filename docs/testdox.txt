@@ -1134,7 +1134,7 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() creates an attribute for each named subpattern
  [x] add() creates a regexp filter for each attribute created
  [x] asConfig() returns FALSE if no replacements were set
- [x] Generates a regexp for every replacement, using its tag name as key
+ [x] asConfig() returns the regexps in a "regexps" array where keys are tag names
 
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] allowElement('b') creates a tag named 'html:b'
