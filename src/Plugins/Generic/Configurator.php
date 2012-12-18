@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
@@ -59,8 +60,8 @@ class Configurator extends ConfiguratorBase
 		// Generate a tag name based on the regexp
 		$tagName = sprintf('G%08X', crc32($regexp));
 
-		// Create the tag that will represent the regexp
-		$tag = $this->configurator->tags->add($tagName);
+		// Create the tag that will represent the regexp but don't add it right now
+		$tag = new Tag;
 
 		// Parse the regexp, and generate an attribute for every named capture
 		$regexpInfo = RegexpParser::parse($regexp);
@@ -96,6 +97,9 @@ class Configurator extends ConfiguratorBase
 
 		// Now that all attributes have been created we can assign the template
 		$tag->defaultTemplate = $template;
+
+		// Add the tag to the configurator
+		$this->configurator->tags->add($tagName, $tag);
 
 		// Finally, record the regexp
 		$this->collection[$tagName] = $regexp;

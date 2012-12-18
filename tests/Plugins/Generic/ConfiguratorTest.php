@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Generic;
 
+use Exception;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Plugins\Generic\Configurator;
@@ -99,6 +100,24 @@ class ConfiguratorTest extends Test
 				))
 			)
 		);
+	}
+
+	/**
+	* @testdox An error occuring during add() does not leave a half-configured tag in the configurator's collection
+	*/
+	public function testErrorDuringAddDoesNotLeadToInconsistencies()
+	{
+		$plugin = $this->configurator->plugins->load('Generic');
+
+		try
+		{
+			$plugin->add('#(?J)(?<foo>x)(?<foo>z)#', '');
+		}
+		catch (Exception $e)
+		{
+		}
+
+		$this->assertSame(0, count($this->configurator->tags));
 	}
 
 	/**
