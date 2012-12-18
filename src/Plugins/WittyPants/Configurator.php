@@ -50,37 +50,7 @@ class WittyPantsConfig extends ConfiguratorBase
 	{
 		return array(
 			'attrName' => $this->attrName,
-			'regexp' => array(
-				'apostrophe' => "#(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})|(?<=[0-9])'(?=s)#uS",
-				// Covers the multiply sign and primes
-				'numbers'    => '#[0-9](?:["\']? ?x(?= ?[0-9])|["\'])#S',
-				'quotes'     => '#(?<![0-9\\pL])(["\']).+?\\1(?![0-9\\pL])#uS',
-				'singletons' => '#(?:---?|\\.\\.\\.)#S',
-				'symbols'    => '#\\((?:c|r|tm)\\)#i'
-			),
-			'replacements' => array(
-				'apostrophe' => "\xE2\x80\x99",
-				'multiply'   => "\xC3\x97",
-				'primes' => array(
-					"'"   => "\xE2\x80\xB2",
-					'"'   => "\xE2\x80\xB3"
-				),
-				'quotes' => array(
-					"'" => array("\xE2\x80\x98", "\xE2\x80\x99"),
-					'"' => array("\xE2\x80\x9C", "\xE2\x80\x9D")
-				),
-				'singletons' => array(
-					'--'  => "\xE2\x80\x93",
-					'---' => "\xE2\x80\x94",
-					'...' => "\xE2\x80\xA6"
-				),
-				'symbols' => array(
-					'(tm)' => "\xE2\x84\xA2",
-					'(r)'  => "\xC2\xAE",
-					'(c)'  => "\xC2\xA9"
-				)
-			),
-			'tagName' => $this->tagName
+			'tagName'  => $this->tagName
 		);
 	}
 }

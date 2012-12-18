@@ -5,116 +5,131 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\WittyPants;
 
 use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\PluginParser;
+use s9e\TextFormatter\Plugins\ParserBase;
 
-class WittyPantsParser extends PluginParser
+class Parser extends ParserBase
 {
-	public function getTags($text, array $matches)
+	/**
+	* {@inheritdoc}
+	*/
+	public function parse($text, array $matches)
 	{
-		$tags = array();
+		$attrName = $this->config['attrName'];
+		$tagName  = $this->config['tagName'];
 
-		$tagName      = $this->config['tagName'];
-		$attrName     = $this->config['attrName'];
-		$replacements = $this->config['replacements'];
-
-		foreach ($matches['singletons'] as $m)
+		// Do apostrophes ’ after a letter or at the beginning of a word
+		preg_match_all(
+			"#(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})#uS",
+			$text,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+		foreach ($matches[0] as $m)
 		{
-			$tags[] = array(
-				'pos'   => $m[0][1],
-				'type'  => Parser::SELF_CLOSING_TAG,
-				'name'  => $tagName,
-				'len'   => strlen($m[0][0]),
-				'attrs' => array(
-					$attrName => $replacements['singletons'][$m[0][0]]
-				)
-			);
+			$this->parser->addSelfClosingTag($tagName, $m[1], 1)->setAttribute($attrName, "\xE2\x80\x99");
 		}
 
-		foreach (array_merge($matches['quotationSingle'], $matches['quotationDouble']) as $m)
+		// Do symbols found after a digit:
+		//  - apostrophe ’ if it's followed by an "s" as in 80's
+		//  - prime ′ and double prime ″
+		//  - multiply sign × if it's followed by an optional space and another digit
+		preg_match_all(
+			'#[0-9](?:["\']? ?x(?= ?[0-9])|["\']s?)#S',
+			$text,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+		foreach ($matches[0] as $m)
 		{
-			// left character
-			$tags[] = array(
-				'pos'   => $m[0][1],
-				'type'  => Parser::SELF_CLOSING_TAG,
-				'name'  => $tagName,
-				'len'   => 1,
-				'attrs' => array(
-					$attrName => $replacements['quotation'][$m[0][0][0]][0]
-				)
-			);
+			// Test for a multiply sign or an "s" at the end of the match
+			$c = substr($m[0][0], -1);
+			if ($c === 's')
+			{
+				$pos  = $m[0][1] + strlen($m[0][0]) - 2;
+				$char = "\xE2\x80\x99";
 
-			// right character
-			$tags[] = array(
-				'pos'   => $m[0][1] + strlen($m[0][0]) - 1,
-				'type'  => Parser::SELF_CLOSING_TAG,
-				'name'  => $tagName,
-				'len'   => 1,
-				'attrs' => array(
-					$attrName => $replacements['quotation'][$m[0][0][0]][1]
-				),
-				'requires' => array(count($tags) - 1)
-			);
+				$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $char);
+			}
+			elseif ($c === 'x')
+			{
+				$pos  = $m[0][1] + strlen($m[0][0]) - 1;
+				$char = "\xC3\x97";
+
+				$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $char);
+			}
+
+			// Test for a prime right after the digit
+			$c = $m[0][0][1];
+			if ($c === "'" || $c === '"')
+			{
+				$pos  = 1 + $m[0][1];
+				$char = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
+
+				$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $char);
+			}
 		}
 
-		foreach ($matches['symbols'] as $m)
+		// Do quote pairs ‘’ and “”
+		preg_match_all(
+			'#(?<![0-9\\pL])(["\']).+?\\1(?![0-9\\pL])#uS',
+			$text,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+		foreach ($matches[0] as $m)
 		{
-			$tags[] = array(
-				'pos'   => $m[0][1],
-				'type'  => Parser::SELF_CLOSING_TAG,
-				'name'  => $tagName,
-				'len'   => strlen($m[0][0]),
-				'attrs' => array(
-					$attrName => $replacements['symbols'][strtr($m[0][0], "CTMR", 'ctmr')]
-				)
-			);
+			$left  = $this->parser->addSelfClosingTag($tagName, $m[1], 1);
+			$right = $this->parser->addSelfClosingTag($tagName, $m[1] + strlen($m[0]) - 1, 1);
+
+			$left->setAttribute($attrName, ($m[0][0] === '"') ? "\xE2\x80\x9C" : "\xE2\x80\x98");
+			$right->setAttribute($attrName, ($m[0][0] === '"') ? "\xE2\x80\x9D" : "\xE2\x80\x99");
+
+			$left->pairWith($right);
 		}
 
-		foreach ($matches['apostrophe'] as $m)
+		// Do en dash –, em dash — and ellipsis …
+		preg_match_all(
+			'#(?:---?|\\.\\.\\.)#S',
+			$text,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+		$chars = array(
+			'--'  => "\xE2\x80\x93",
+			'---' => "\xE2\x80\x94",
+			'...' => "\xE2\x80\xA6"
+		);
+		foreach ($matches[0] as $m)
 		{
-			$tags[] = array(
-				'pos'   => $m[0][1],
-				'type'  => Parser::SELF_CLOSING_TAG,
-				'name'  => $tagName,
-				'len'   => 1,
-				'attrs' => array(
-					$attrName => $replacements['apostrophe']
-				)
-			);
+			$pos  = $m[1];
+			$len  = strlen($m[0]);
+			$char = $chars[$m[0]];
+
+			$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $char);
 		}
 
-		/**
-		* We do "primes" after "apostrophe" so that the character in "80's" gets replaced by an
-		* apostrophe rather than a prime
-		*/
-		foreach ($matches['primes'] as $m)
+		// Do symbols ©, ® and ™
+		preg_match_all(
+			'#\\((?:c|r|tm)\\)#i',
+			$text,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+		$chars = array(
+			'(c)'  => "\xC2\xA9",
+			'(r)'  => "\xC2\xAE",
+			'(tm)' => "\xE2\x84\xA2"
+		);
+		foreach ($matches[0] as $m)
 		{
-			$tags[] = array(
-				'pos'   => 1 + $m[0][1],
-				'type'  => Parser::SELF_CLOSING_TAG,
-				'name'  => $tagName,
-				'len'   => 1,
-				'attrs' => array(
-					$attrName => $replacements['primes'][$m[0][0][1]]
-				)
-			);
-		}
+			$pos  = $m[1];
+			$len  = strlen($m[0]);
+			$char = $chars[strtr($m[0][0], 'CMRT', 'cmrt')];
 
-		foreach ($matches['multiply'] as $m)
-		{
-			$tags[] = array(
-				'pos'   => $m[1][1],
-				'type'  => Parser::SELF_CLOSING_TAG,
-				'name'  => $tagName,
-				'len'   => 1,
-				'attrs' => array(
-					$attrName => $replacements['multiply']
-				)
-			);
+			$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $char);
 		}
-
-		return $tags;
 	}
 }
