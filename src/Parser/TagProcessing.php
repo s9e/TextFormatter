@@ -220,6 +220,7 @@ trait TagProcessing
 
 		if ($i < 0)
 		{
+			/** @todo if the tag was paired, replace it with an ignore tag? its start tag might have been closed by a rule already or skipped (pairing doesn't imply cascading invalidation) so if that tag is clearly part of a pair it would make sense to hide it from view. What should happen with [list][*:123]foo[*]bar[/*:123] -- should closeParent close paired tags? */
 			// Did not find a matching tag
 			$this->logger->debug('Skipping end tag with no start tag', array('tag' => $tag));
 

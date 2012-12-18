@@ -33,13 +33,9 @@ trait RulesHandling
 					// We have to close this ancestor. First we reinsert current tag...
 					$this->tagStack[] = $this->currentTag;
 
-					// ...then we create a new end tag which we put on top of the stack
-					$this->tagStack[] = new Tag(
-						Tag::END_TAG,
-						$ancestorName,
-						$this->currentTag->getPos(),
-						0
-					);
+					// ...then we add a new end tag which we pair with the one we want closed
+					$this->addEndTag($ancestorName, $this->currentTag->getPos(), 0)
+					     ->pairWith($ancestor);
 
 					return true;
 				}

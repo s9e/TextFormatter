@@ -20,9 +20,9 @@ class Parser extends ParserBase
 		$attrName = $this->config['attrName'];
 		$tagName  = $this->config['tagName'];
 
-		// Do apostrophes ’ after a letter or at the beginning of a word
+		// Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits
 		preg_match_all(
-			"#(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})#uS",
+			"/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS",
 			$text,
 			$matches,
 			PREG_OFFSET_CAPTURE
@@ -37,23 +37,15 @@ class Parser extends ParserBase
 		//  - prime ′ and double prime ″
 		//  - multiply sign × if it's followed by an optional space and another digit
 		preg_match_all(
-			'#[0-9](?:["\']? ?x(?= ?[0-9])|["\']s?)#S',
+			'/[0-9](?:\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
 			$text,
 			$matches,
 			PREG_OFFSET_CAPTURE
 		);
 		foreach ($matches[0] as $m)
 		{
-			// Test for a multiply sign or an "s" at the end of the match
-			$c = substr($m[0][0], -1);
-			if ($c === 's')
-			{
-				$pos  = $m[0][1] + strlen($m[0][0]) - 2;
-				$char = "\xE2\x80\x99";
-
-				$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $char);
-			}
-			elseif ($c === 'x')
+			// Test for a multiply sign
+			if (substr($m[0][0], -1) === 'x')
 			{
 				$pos  = $m[0][1] + strlen($m[0][0]) - 1;
 				$char = "\xC3\x97";
@@ -73,8 +65,9 @@ class Parser extends ParserBase
 		}
 
 		// Do quote pairs ‘’ and “”
+		/** @todo got to do them separately in order to deal with nested quotes, e.g. "'hello' said the man" */
 		preg_match_all(
-			'#(?<![0-9\\pL])(["\']).+?\\1(?![0-9\\pL])#uS',
+			'/(?<![0-9\\pL])(["\']).+?\\1(?![0-9\\pL])/uS',
 			$text,
 			$matches,
 			PREG_OFFSET_CAPTURE
@@ -87,12 +80,14 @@ class Parser extends ParserBase
 			$left->setAttribute($attrName, ($m[0][0] === '"') ? "\xE2\x80\x9C" : "\xE2\x80\x98");
 			$right->setAttribute($attrName, ($m[0][0] === '"') ? "\xE2\x80\x9D" : "\xE2\x80\x99");
 
-			$left->pairWith($right);
+			// Cascade left tag's invalidation to the right so that if we skip the left quote, the
+			// right quote is left untouched
+			$left->cascadeInvalidationTo($right);
 		}
 
 		// Do en dash –, em dash — and ellipsis …
 		preg_match_all(
-			'#(?:---?|\\.\\.\\.)#S',
+			'/(?:---?|\\.\\.\\.)/S',
 			$text,
 			$matches,
 			PREG_OFFSET_CAPTURE
@@ -113,7 +108,7 @@ class Parser extends ParserBase
 
 		// Do symbols ©, ® and ™
 		preg_match_all(
-			'#\\((?:c|r|tm)\\)#i',
+			'/\\((?:c|r|tm)\\)/i',
 			$text,
 			$matches,
 			PREG_OFFSET_CAPTURE
