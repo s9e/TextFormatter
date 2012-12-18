@@ -461,6 +461,15 @@ class BuiltInFiltersTest extends Test
 					array('//',      false)
 				)
 			)),
+			array('ip', '8.8.8.8', '8.8.8.8'),
+			array('ip', 'ff02::1', 'ff02::1'),
+			array('ip', 'localhost', false),
+			array('ipv4', '8.8.8.8', '8.8.8.8'),
+			array('ipv4', 'ff02::1', false),
+			array('ipv4', 'localhost', false),
+			array('ipv6', '8.8.8.8', false),
+			array('ipv6', 'ff02::1', 'ff02::1'),
+			array('ipv6', 'localhost', false),
 		);
 	}
 

@@ -58,6 +58,39 @@ class BuiltInFilters
 	}
 
 	/**
+	* Filter an IP value (includes IPv4 and IPv6)
+	*
+	* @param  string $attrValue Original value
+	* @return mixed             Filtered value, or FALSE if invalid
+	*/
+	public static function filterIp($attrValue)
+	{
+		return filter_var($attrValue, FILTER_VALIDATE_IP);
+	}
+
+	/**
+	* Filter an IPv4 value
+	*
+	* @param  string $attrValue Original value
+	* @return mixed             Filtered value, or FALSE if invalid
+	*/
+	public static function filterIpv4($attrValue)
+	{
+		return filter_var($attrValue, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+	}
+
+	/**
+	* Filter an IPv6 value
+	*
+	* @param  string $attrValue Original value
+	* @return mixed             Filtered value, or FALSE if invalid
+	*/
+	public static function filterIpv6($attrValue)
+	{
+		return filter_var($attrValue, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+	}
+
+	/**
 	* Filter a mapped value
 	*
 	* NOTE: if there's no match, the original value is returned
