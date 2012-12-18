@@ -228,10 +228,10 @@ s9e\TextFormatter\Tests\Configurator\Collections\Templateset
  [x] setUnsafe() does not check the template for unsafe content
 
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
- [x] generateQuickMatch() returns the longest common substring of a list of strings
- [x] generateQuickMatch() returns a string even if it contains only digit characters
- [x] generateQuickMatch() returns FALSE if no common substring is found
- [x] generateQuickMatch() compares strings as bytes and returns a binary string
+ [x] generateQuickMatchFromList() returns the longest common substring of a list of strings
+ [x] generateQuickMatchFromList() returns a string even if it contains only digit characters
+ [x] generateQuickMatchFromList() returns FALSE if no common substring is found
+ [x] generateQuickMatchFromList() compares strings as bytes and returns a binary string
  [x] toArray() works with deep arrays
  [x] toArray() calls asConfig() for objects in deep arrays that implement ConfigProvider
  [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
@@ -1112,6 +1112,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] asConfig() returns FALSE if no emoticons were set
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
+ [x] asConfig() generates a quickMatch if applicable
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
  [x] Normalizes HTML templates

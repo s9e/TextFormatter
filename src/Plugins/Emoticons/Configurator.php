@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Plugins\Emoticons;
 use ArrayAccess;
 use Countable;
 use Iterator;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -60,13 +61,19 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Grab the emoticons from the collection
 		$codes = array_keys(iterator_to_array($this->collection));
 
-		// Non-anchored pattern, will benefit from the S modifier
-		$regexp = '/' . RegexpBuilder::fromList($codes) . '/S';
-
-		return array(
-			'regexp'  => $regexp,
-			'tagName' => $this->tagName
+		$config = array(
+			'quickMatch' => $this->quickMatch,
+			'regexp'     => '/' . RegexpBuilder::fromList($codes) . '/S',
+			'tagName'    => $this->tagName
 		);
+
+		// Try to find a quickMatch if none is set
+		if ($this->quickMatch === false)
+		{
+			$config['quickMatch'] = ConfigHelper::generateQuickMatchFromList($codes);
+		}
+
+		return $config;
 	}
 
 	/**

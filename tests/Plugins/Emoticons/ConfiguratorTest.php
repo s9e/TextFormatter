@@ -142,4 +142,19 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey('tagName', $config);
 		$this->assertSame('FOO', $config['tagName']);
 	}
+
+	/**
+	* @testdox asConfig() generates a quickMatch if applicable
+	*/
+	public function testConfigQuickMatch()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add(':)', ':)');
+		$plugin->add(':(', ':(');
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('quickMatch', $config);
+		$this->assertSame(':', $config['quickMatch']);
+	}
 }

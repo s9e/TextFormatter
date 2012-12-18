@@ -19,13 +19,13 @@ use s9e\TextFormatter\Tests\Test;
 class ConfigHelperTest extends Test
 {
 	/**
-	* @testdox generateQuickMatch() returns the longest common substring of a list of strings
+	* @testdox generateQuickMatchFromList() returns the longest common substring of a list of strings
 	*/
 	public function testGenerateQuickMatch()
 	{
 		$this->assertSame(
 			'xxx',
-			ConfigHelper::generateQuickMatch(array(
+			ConfigHelper::generateQuickMatchFromList(array(
 				'xxx12345d',
 				'xxx54321d'
 			))
@@ -33,13 +33,13 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox generateQuickMatch() returns a string even if it contains only digit characters
+	* @testdox generateQuickMatchFromList() returns a string even if it contains only digit characters
 	*/
 	public function testGenerateQuickMatchNumbers()
 	{
 		$this->assertSame(
 			'123',
-			ConfigHelper::generateQuickMatch(array(
+			ConfigHelper::generateQuickMatchFromList(array(
 				'01234',
 				'123a'
 			))
@@ -47,12 +47,12 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox generateQuickMatch() returns FALSE if no common substring is found
+	* @testdox generateQuickMatchFromList() returns FALSE if no common substring is found
 	*/
 	public function testGenerateQuickMatchFalse()
 	{
 		$this->assertFalse(
-			ConfigHelper::generateQuickMatch(array(
+			ConfigHelper::generateQuickMatchFromList(array(
 				':)',
 				';)',
 				':('
@@ -61,13 +61,13 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox generateQuickMatch() compares strings as bytes and returns a binary string
+	* @testdox generateQuickMatchFromList() compares strings as bytes and returns a binary string
 	*/
 	public function testGenerateQuickMatchBinary()
 	{
 		$this->assertSame(
 			"\xA9\xC3",
-			ConfigHelper::generateQuickMatch(array(
+			ConfigHelper::generateQuickMatchFromList(array(
 				'©ö',
 				'éô'
 			))

@@ -25,7 +25,7 @@ abstract class ConfigHelper
 	* @param  array $strings Array of strings
 	* @return mixed          quickMatch string, or FALSE if none could be generated
 	*/
-	public static function generateQuickMatch(array $strings)
+	public static function generateQuickMatchFromList(array $strings)
 	{
 		foreach ($strings as $string)
 		{

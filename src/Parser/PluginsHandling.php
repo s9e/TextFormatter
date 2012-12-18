@@ -48,7 +48,7 @@ trait PluginsHandling
 	}
 
 	/**
-	* Execute all the plugins and @todo
+	* Execute all the plugins
 	*
 	* @return void
 	*/
@@ -71,116 +71,56 @@ trait PluginsHandling
 
 			if (isset($pluginConfig['regexp']))
 			{
-				$matches = $this->executePluginRegexp($pluginName);
+				$cnt = preg_match_all(
+					$pluginConfig['regexp'],
+					$this->text,
+					$matches,
+					PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+				);
 
-				if (empty($matches))
+				if (!$cnt)
 				{
 					continue;
 				}
-			}
 
-			$this->getPluginParser($pluginName)->parse($this->text, $matches);
-		}
-	}
-
-	/**
-	* Execute a plugin's regexps and return the result
-	*
-	* Takes care of regexpLimit/regexpAction
-	*
-	* @param  string $pluginName
-	* @return mixed              An array of matches, or a 2D array of matches
-	*/
-	protected function executePluginRegexp($pluginName)
-	{
-		$pluginConfig = $this->pluginsConfig[$pluginName];
-
-		/**
-		* @todo regexpLimit and regexpLimitAction are always available now
-		*/
-		$regexpLimit = (isset($pluginConfig['regexpLimit']))
-		             ? $pluginConfig['regexpLimit']
-		             : 1000;
-
-		$regexpLimitAction = (isset($pluginConfig['regexpLimitAction']))
-		                   ? $pluginConfig['regexpLimitAction']
-		                   : 'ignore';
-
-		// Some plugins have several regexps in an array, others have a single regexp as a string.
-		// We convert the latter to an array so that we can iterate over it.
-		$isArray = is_array($pluginConfig['regexp']);
-		$regexps = ($isArray) ? $pluginConfig['regexp'] : array('r' => $pluginConfig['regexp']);
-
-		/**
-		* @var integer Total number of matches
-		*/
-		$cnt = 0;
-
-		/**
-		* @var array Matches returned
-		*/
-		$matches = array();
-
-		foreach ($regexps as $k => $regexp)
-		{
-			$_cnt = preg_match_all(
-				$regexp,
-				$this->text,
-				$matches[$k],
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-			);
-
-			$cnt += $_cnt;
-
-			if ($cnt > $regexpLimit)
-			{
-				if ($regexpLimitAction === 'abort')
+				if ($cnt > $pluginConfig['regexpLimit'])
 				{
-					throw new RuntimeException($pluginName . ' limit exceeded');
-				}
-				else
-				{
-					$limit       = $regexpLimit + $_cnt - $cnt;
-					$matches[$k] = array_slice($matches[$k], 0, $limit);
-
-					$msg = '%1$s limit exceeded. Only the first %2$s matches will be processed';
-					if ($regexpLimitAction === 'ignore')
+					if ($pluginConfig['regexpLimitAction'] === 'abort')
 					{
-						$this->logger->debug($msg, array($pluginName, $limit));
+						throw new RuntimeException($pluginName . ' limit exceeded');
+					}
+
+					$matches = array_slice($matches, 0, $pluginConfig['regexpLimit']);
+
+					$msg = 'Regexp limit exceeded. Only the allowed number of matches will be processed';
+					$context = array(
+						'pluginName' => $pluginName,
+						'limit'      => $pluginConfig['regexpLimit']
+					);
+
+					if ($pluginConfig['regexpLimitAction'] === 'ignore')
+					{
+						$this->logger->debug($msg, $context);
 					}
 					else
 					{
-						$this->logger->warn($msg, array($pluginName, $limit));
+						$this->logger->warn($msg, $context);
 					}
 				}
-
-				break;
 			}
+
+			// Cache a new instance of this plugin's parser if there isn't one already
+			if (!isset($this->pluginParsers[$pluginName]))
+			{
+				$className = (isset($pluginConfig['className']))
+						   ? $pluginConfig['className']
+						   : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
+
+				$this->pluginParsers[$pluginName] = new $className($this, $pluginConfig);
+			}
+
+			// Execute the plugin's parser, which will add tags via $this->addStartTag() and others
+			$this->pluginParsers[$pluginName]->parse($this->text, $matches);
 		}
-
-		return ($isArray) ? $matches : $matches['r'];
-	}
-
-	/**
-	* Return a cached instance of a PluginParser
-	*
-	* @param  string $pluginName
-	* @return PluginParser
-	*/
-	protected function getPluginParser($pluginName)
-	{
-		// Cache a new instance if there isn't one already
-		if (!isset($this->pluginParsers[$pluginName]))
-		{
-			$pluginConfig = $this->pluginsConfig[$pluginName];
-
-			$className = (isset($pluginConfig['className']))
-			           ? $pluginConfig['className']
-			           : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
-
-			$this->pluginParsers[$pluginName] = new $className($this, $pluginConfig);
-		}
-
-		return $this->pluginParsers[$pluginName];
 	}
 }
