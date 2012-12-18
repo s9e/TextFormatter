@@ -22,7 +22,7 @@ TODO
 - Look into properly implementing urlencode() and rawurlencode() in JS
 - Way to implement syntax highlighting at parsing time: create tags in the "stx" namespace and implement syntax highlighting via... a plugin maybe? At least some stuff would need to be hardcoded, first of which would be the end [/CODE] tag, and probably also its start tag, [CODE]. Make the namespaced tags requireAncestor their CODE tag
 - Add support for <ol start="2"/>
-- Consider adding an #ip or #ipport filter
+- Consider adding an #ipport filter to complement #ip
 - Add a [FONT face={SIMPLETEXT}] bbcode/tag (could render to <span style="font-family:{SIMPLETEXT}">
 - Implement the concept of a plugin "tag formatter": give it a tag from the intermediate form and it returns the string that could have generated it. e.g. BBCodes's tag formatter takes <URL url="..."> and returns [URL url="..."] or [URL="..."] -- tag content might be a problem though. Can we format any start/end tag without knowing what's in between?
 - Add a Picasa(?) BBCode
