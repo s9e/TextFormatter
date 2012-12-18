@@ -18,6 +18,56 @@ use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 abstract class ConfigHelper
 {
 	/**
+	* Generate a quickMatch string from a list of strings
+	*
+	* This is basically a LCS implementation, tuned for small strings and fast failure
+	*
+	* @param  array $strings Array of strings
+	* @return mixed          quickMatch string, or FALSE if none could be generated
+	*/
+	public static function generateQuickMatch(array $strings)
+	{
+		foreach ($strings as $string)
+		{
+			$stringLen  = strlen($string);
+			$substrings = array();
+
+			for ($len = $stringLen; $len; --$len)
+			{
+				$pos = $stringLen - $len;
+
+				do
+				{
+					$substrings[substr($string, $pos, $len)] = 1;
+				}
+				while (--$pos >= 0);
+			}
+
+			if (isset($goodStrings))
+			{
+				$goodStrings = array_intersect_key($goodStrings, $substrings);
+
+				if (empty($goodStrings))
+				{
+					break;
+				}
+			}
+			else
+			{
+				$goodStrings = $substrings;
+			}
+		}
+
+		if (empty($goodStrings))
+		{
+			return false;
+		}
+
+		// The strings are stored by length descending, so we return the first in the list
+		return strval(key($goodStrings));
+	}
+
+	/**
 	* Optimize the size of a deep array by deduplicating identical structures
 	*
 	* This method is meant to be used on a config array which is only read and never modified
