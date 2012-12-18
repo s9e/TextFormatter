@@ -183,4 +183,89 @@ class LoggerTest extends Test
 			$logger->get()
 		);
 	}
+
+	/**
+	* @testdox on() attaches a callback to be executed when the corresponding log type is used
+	*/
+	public function testOn()
+	{
+		$mock = $this->getMock('stdClass', array('foo'));
+		$mock->expects($this->once())
+		     ->method('foo');
+
+		$logger = new Logger;
+		$logger->on('err', array($mock, 'foo'));
+		$logger->err('hi');
+	}
+
+	/**
+	* @testdox on() throws an exception on invalid callback
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage on() expects a valid callback
+	*/
+	public function testOnInvalid()
+	{
+		$logger = new Logger;
+		$logger->on('err', '*invalid*');
+	}
+
+	/**
+	* @testdox on() callbacks receive the log message and its context
+	*/
+	public function testOnArguments()
+	{
+		$mock = $this->getMock('stdClass', array('foo'));
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with('hi', array('x' => 'y'));
+
+		$logger = new Logger;
+		$logger->on('err', array($mock, 'foo'));
+		$logger->err('hi', array('x' => 'y'));
+	}
+
+	/**
+	* @testdox on() callbacks can modify the log message and its context if their signature accepts them as a reference
+	*/
+	public function testOnArgumentsByReference()
+	{
+		$logger = new Logger;
+		$logger->on(
+			'err',
+			function (&$msg, &$context)
+			{
+				$msg     = 'foo';
+				$context = array('bar' => 'baz');
+			}
+		);
+
+		$logger->err('hi', array('x' => 'y'));
+
+		$this->assertSame(
+			array(array('err', 'foo', array('bar' => 'baz'))),
+			$logger->get()
+		);
+	}
+
+	/**
+	* @testdox on() callbacks are only executed for the log type they were registered for
+	*/
+	public function testOnLogType()
+	{
+		$mock = $this->getMock('stdClass', array('debug', 'err', 'warn'));
+		$mock->expects($this->once())
+		     ->method('err');
+		$mock->expects($this->once())
+		     ->method('warn');
+		$mock->expects($this->never())
+		     ->method('debug');
+
+		$logger = new Logger;
+		$logger->on('err',  array($mock, 'err'));
+		$logger->on('warn', array($mock, 'warn'));
+		$logger->on('debug', array($mock, 'debug'));
+
+		$logger->err('hi');
+		$logger->warn('hi');
+	}
 }

@@ -905,6 +905,11 @@ s9e\TextFormatter\Tests\Parser\Logger
  [x] The tag set by setTag() is not added to the context if a 'tag' element is provided
  [x] unsetTag() unsets the value stored by setTag()
  [x] clear() empties the logs
+ [x] on() attaches a callback to be executed when the corresponding log type is used
+ [x] on() throws an exception on invalid callback
+ [x] on() callbacks receive the log message and its context
+ [x] on() callbacks can modify the log message and its context if their signature accepts them as a reference
+ [x] on() callbacks are only executed for the log type they were registered for
 
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
