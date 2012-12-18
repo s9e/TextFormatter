@@ -6,8 +6,10 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->urlConfig is an instance of UrlConfig
  [x] asConfig() returns an array with a rootContext element
  [x] asConfig() returns an array with a registeredVars element that contains urlConfig
- [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified
- [x] asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified
+ [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
+ [x] asConfig() removes regexpLimit from the plugin's configuration if it does not have a regexp
+ [x] asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified and the plugin has a regexp
+ [x] asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
  [x] asConfig() adds quickMatch to the plugin's configuration if available
  [x] asConfig() omits a plugin's quickMatch if it's false
  [x] allowedChildren and allowedDescendants bitfields are added to each tag

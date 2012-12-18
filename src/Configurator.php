@@ -147,6 +147,13 @@ class Configurator implements ConfigProvider
 			{
 				unset($pluginConfig['quickMatch']);
 			}
+
+			// Remove regexpLimit if there's no regexp
+			if (!isset($pluginConfig['regexp']))
+			{
+				unset($pluginConfig['regexpLimit']);
+				unset($pluginConfig['regexpLimitAction']);
+			}
 		}
 		unset($pluginConfig);
 

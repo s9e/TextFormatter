@@ -15,3 +15,4 @@ Differences between the PHP parser and phpBB's
  * [b ] gets parsed as [b] -- some people use that form to describe BBCodes and they would need to be escaped somehow, or put inside a [c] tag
  * No recursive parsing of attributes, IOW no [quote="[b]foo[/b]"] ([b] will be displayed as plain text)
  * Different rules for emoticons, censored words, autolinking
+ * Censor is run at posting time, whenever the censor list is changed, posts containing the word that has been added or removed would need to be updated (could use the search backend to find them)
