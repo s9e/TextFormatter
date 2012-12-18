@@ -83,6 +83,20 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The config array contains the name of the attribute
+	*/
+	public function testConfigAttrName()
+	{
+		$plugin = $this->configurator->plugins->load('Censor', array('attrName' => 'bar'));
+		$plugin->add('apple');
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('attrName', $config);
+		$this->assertSame('bar', $config['attrName']);
+	}
+
+	/**
 	* @testdox Returns the replacements in its config in the form [regexp => replacement]
 	*/
 	public function testAsConfigReplacements()

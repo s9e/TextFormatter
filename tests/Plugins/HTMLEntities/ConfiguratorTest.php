@@ -29,6 +29,15 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The name of the attribute used can be changed through the "attrName" constructor option
+	*/
+	public function testCustomAttrName()
+	{
+		$this->configurator->plugins->load('HTMLEntities', array('attrName' => 'bar'));
+		$this->assertTrue($this->configurator->tags['HE']->attributes->exists('bar'));
+	}
+
+	/**
 	* @testdox disable() throws an exception on invalid entity
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid HTML entity 'amp;'
@@ -70,6 +79,19 @@ class ConfiguratorTest extends Test
 
 		$this->assertArrayHasKey('tagName', $config);
 		$this->assertSame('HE', $config['tagName']);
+	}
+
+	/**
+	* @testdox The config array contains the name of the attribute
+	*/
+	public function testConfigAttrName()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLEntities', array('attrName' => 'bar'));
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('attrName', $config);
+		$this->assertSame('bar', $config['attrName']);
 	}
 
 	/**
