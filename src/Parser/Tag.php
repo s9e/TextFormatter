@@ -223,6 +223,16 @@ class Tag
 		      : false;
 	}
 
+	/**
+	* Return this tag's type
+	*
+	* @return integer
+	*/
+	public function getType()
+	{
+		return $this->type;
+	}
+
 	//==========================================================================
 	// Tag's status
 	//==========================================================================

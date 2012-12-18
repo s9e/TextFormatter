@@ -46,3 +46,4 @@ TODO
 - Consider allowing absolute paths in #url, e.g. "/foo.html"
 - Consider a way to disallow HTML elements globally or at the tag-level. For example, a way to globally disable <a> so that BBCodes that produces links are disabled
 - Consider guessing a value for quickMatch based on a plugin's regexp, using its fixed part if applicable
+- Read in phpBB's forum 'maybe you put a threshold on errors -- if there are more than, say, 10, put out an error saying "Too many BBCode formatting errors found; fix the above and Preview the post again."' -- https://area51.phpbb.com/phpBB/viewtopic.php?f=108&t=33021&p=249335#p249335

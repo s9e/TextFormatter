@@ -166,11 +166,137 @@ class TagStackTest extends Test
 			$tag
 		);
 	}
+
+	/**
+	* @testdox sortTags() sorts tags by position descending (tags processed in text order)
+	*/
+	public function testSortTagsByPos()
+	{
+		$dummyStack = new DummyStack;
+
+		$y = $dummyStack->addStartTag('Y', 1, 1);
+		$x = $dummyStack->addStartTag('X', 0, 1);
+		$z = $dummyStack->addStartTag('Z', 2, 1);
+
+		$dummyStack->sortTags();
+
+		$this->assertSame(
+			array($z, $y, $x),
+			$dummyStack->tagStack
+		);
+	}
+
+	/**
+	* @testdox sortTags() tiebreaker sorts zero-width tags after longer tags at the same position (zero-width tags are processed first)
+	*/
+	public function testSortTagsZeroWidthAfterWider()
+	{
+		$dummyStack = new DummyStack;
+
+		$t0 = $dummyStack->addStartTag('X', 0, 0);
+		$t1 = $dummyStack->addStartTag('X', 0, 1);
+		$t3 = $dummyStack->addStartTag('X', 1, 1);
+		$t2 = $dummyStack->addStartTag('X', 1, 0);
+
+		$dummyStack->sortTags();
+
+		$this->assertSame(
+			array($t3, $t2, $t1, $t0),
+			$dummyStack->tagStack
+		);
+	}
+
+	/**
+	* @testdox sortTags() tiebreaker sorts zero-width end tags after zero width start tag (end tags get the opportunity to close their parent before a new tag is open)
+	*/
+	public function testSortTagsZeroWidthEndAfterZeroWidthStart()
+	{
+		$dummyStack = new DummyStack;
+
+		$expected = array(
+			$dummyStack->addStartTag('X', 1, 0),
+			$dummyStack->addEndTag('X', 1, 0),
+			$dummyStack->addStartTag('X', 0, 0),
+			$dummyStack->addEndTag('X', 0, 0)
+		);
+
+		$dummyStack->sortTags();
+
+		$this->assertSame(
+			$expected,
+			$dummyStack->tagStack
+		);
+	}
+
+	/**
+	* @testdox sortTags() tiebreaker sorts zero-width self-closing tags between zero-width start tags and zero-width end tags (attempting to keep them outside of tag pairs)
+	*/
+	public function testSortTagsZeroWidthSelfClosingBetweenStartAndEnd()
+	{
+		$dummyStack = new DummyStack;
+
+		$t2 = $dummyStack->addStartTag('X', 1, 0);
+		$t1 = $dummyStack->addSelfClosingTag('X', 1, 0);
+		$t0 = $dummyStack->addEndTag('X', 1, 0);
+
+		$dummyStack->sortTags();
+
+		$this->assertSame(
+			array($t2, $t1, $t0),
+			$dummyStack->tagStack
+		);
+	}
+
+	/**
+	* @testdox sortTags() tiebreaker sorts tags by length ascending (longer tags processed first)
+	*/
+	public function testSortTagsByLen()
+	{
+		$dummyStack = new DummyStack;
+
+		$t3 = $dummyStack->addStartTag('X', 0, 3);
+		$t1 = $dummyStack->addStartTag('X', 0, 1);
+		$t2 = $dummyStack->addStartTag('X', 0, 2);
+
+		$dummyStack->sortTags();
+
+		$this->assertSame(
+			array($t1, $t2, $t3),
+			$dummyStack->tagStack
+		);
+	}
+
+	/**
+	* @testdox sortTags() lets PHP sorts tags in whatever order if they are at the same position, have the same non-zero length, which ends up sorting them in reverse insertion order
+	*/
+	public function testSortTagsByWhatever()
+	{
+		$dummyStack = new DummyStack;
+
+		$t1 = $dummyStack->addStartTag('X', 0, 1);
+		$t2 = $dummyStack->addStartTag('X', 0, 1);
+
+		$dummyStack->sortTags();
+
+		$this->assertSame(
+			array($t2, $t1),
+			$dummyStack->tagStack
+		);
+	}
 }
 
 class DummyStack extends Parser
 {
-	public $tagsConfig = array('FOO' => array());
+	public $tagsConfig = array(
+		'FOO' => array(),
+		'X' => array(),
+		'Y' => array(),
+		'Z' => array()
+	);
 	public $tagStack = array();
 	public function __construct() {}
+	public function sortTags()
+	{
+		parent::sortTags();
+	}
 }

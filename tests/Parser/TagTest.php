@@ -65,6 +65,15 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox getType() returns the tag's type
+	*/
+	public function testGetType()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 12, 34);
+		$this->assertSame(Tag::SELF_CLOSING_TAG, $tag->getType());
+	}
+
+	/**
 	* @testdox isInvalid() returns false by default
 	*/
 	public function testIsInvalidFalse()

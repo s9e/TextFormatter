@@ -913,6 +913,7 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] getName() returns the tag's name
  [x] getPos() returns the tag's position
  [x] getStartTag() returns false if the tag has no start tag set
+ [x] getType() returns the tag's type
  [x] isInvalid() returns false by default
  [x] isBrTag() returns true if the tag's name is "br"
  [x] isBrTag() returns false by default
@@ -961,6 +962,12 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] addStartTag() does not add anything to the stack if the length is negative but it returns an invalidated tag
  [x] addBrTag() adds a zero-width, self-closing "br" tag to the stack then returns it
  [x] addIgnoreTag() adds self-closing "i" tag to the stack then returns it
+ [x] sortTags() sorts tags by position descending (tags processed in text order)
+ [x] sortTags() tiebreaker sorts zero-width tags after longer tags at the same position (zero-width tags are processed first)
+ [x] sortTags() tiebreaker sorts zero-width end tags after zero width start tag (end tags get the opportunity to close their parent before a new tag is open)
+ [x] sortTags() tiebreaker sorts zero-width self-closing tags between zero-width start tags and zero-width end tags (attempting to keep them outside of tag pairs)
+ [x] sortTags() tiebreaker sorts tags by length ascending (longer tags processed first)
+ [x] sortTags() lets PHP sorts tags in whatever order if they are at the same position, have the same non-zero length, which ends up sorting them in reverse insertion order
 
 s9e\TextFormatter\Tests\Parser
  [x] 

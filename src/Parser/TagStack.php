@@ -151,11 +151,12 @@ trait TagStack
 			if (!$aLen && !$bLen)
 			{
 				$order = array(
-					Tag::END_TAG          => 2,
+					Tag::END_TAG          => 0,
 					Tag::SELF_CLOSING_TAG => 1,
-					Tag::START_TAG        => 0
+					Tag::START_TAG        => 2
 				);
-				return $order[$a->getType()] - $order[$b->getType()];
+
+				return $order[$b->getType()] - $order[$a->getType()];
 			}
 
 			// Here, we know that only one of $a or $b is a zero-width tags. Zero-width tags are
