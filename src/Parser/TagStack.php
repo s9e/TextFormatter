@@ -171,14 +171,10 @@ trait TagStack
 			return ($aLen - $bLen);
 		}
 
-		// Finally, if the tags start at the same position and are the same length, sort them by id
-		// descending, which is our version of a stable sort (tags that were added first end up
-		// being processed first)
-		/**
-		* @todo reevaluate
-		*/
-//		return $b['id'] - $a['id'];
-
+		// Finally, if the tags consume exactly the same text then we'll let PHP sort them either
+		// way. PHP's sort is not stable but it seems to consistenly sort items in reverse order,
+		// which means tag would be processed in order of their addition. This case shouldn't happen
+		// very often (if ever) and does not matter much
 		return 0;
 	}
 }
