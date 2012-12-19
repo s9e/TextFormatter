@@ -475,7 +475,7 @@ class BuiltInFilters
 
 		// URL-encode non-ASCII stuff
 		return preg_replace_callback(
-			'#[^[:ascii:]]+#u',
+			'#[^[:ascii:]]+#',
 			function ($m)
 			{
 				return urlencode($m[0]);
