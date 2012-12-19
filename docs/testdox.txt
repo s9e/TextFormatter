@@ -1136,6 +1136,10 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
 
+s9e\TextFormatter\Tests\Plugins\Escaper\Parser
+ [x] Parsing tests
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() returns the name of the tag it creates
  [x] add() throws an exception if the regexp is invalid

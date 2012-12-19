@@ -80,6 +80,7 @@
 			<file>Plugins/Emoticons/ConfiguratorTest.php</file>
 			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
 			<file>Plugins/Escaper/ConfiguratorTest.php</file>
+			<file>Plugins/Escaper/ParserTest.php</file>
 			<file>Plugins/Generic/ConfiguratorTest.php</file>
 			<file>Plugins/HTMLElements/ConfiguratorTest.php</file>
 			<file>Plugins/HTMLEntities/ConfiguratorTest.php</file>
@@ -154,6 +155,7 @@
 			<file>../src/Plugins/Emoticons/Configurator.php</file>
 			<file>../src/Plugins/Emoticons/EmoticonCollection.php</file>
 			<file>../src/Plugins/Escaper/Configurator.php</file>
+			<file>../src/Plugins/Escaper/Parser.php</file>
 			<file>../src/Plugins/Generic/Configurator.php</file>
 			<file>../src/Plugins/HTMLElements/Configurator.php</file>
 			<file>../src/Plugins/HTMLEntities/Configurator.php</file>
