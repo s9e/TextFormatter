@@ -1167,6 +1167,14 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
  [x] The config array contains the name of the attribute
  [x] The config array contains the disabled entities, if any
 
+s9e\TextFormatter\Tests\Plugins\WittyPants\Configurator
+ [x] Automatically creates a "WP" tag
+ [x] Does not attempt to create a tag if it already exists
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] The config array contains the name of the tag
+ [x] The config array contains the name of the attribute
+
 s9e\TextFormatter\Tests\Renderer
  [x] Renders plain text
  [x] Renders multi-line text

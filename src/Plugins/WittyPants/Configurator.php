@@ -5,9 +5,8 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\WittyPants;
 
-use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
@@ -16,7 +15,7 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 * @link http://daringfireball.net/projects/smartypants/
 * @link http://textile.thresholdstate.com/
 */
-class WittyPantsConfig extends ConfiguratorBase
+class Configurator extends ConfiguratorBase
 {
 	/**
 	* @var string Name of attribute used to for the replacement
@@ -35,12 +34,20 @@ class WittyPantsConfig extends ConfiguratorBase
 	*/
 	public function setUp()
 	{
-		if (!$this->configurator->tagExists($this->tagName))
+		if (isset($this->configurator->tags[$this->tagName]))
 		{
-			$tag = $this->configurator->addTag($this->tagName);
-			$tag->setAttribute($this->attrName);
-			$tag->setTemplate('<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>');
+			return;
 		}
+
+		// Create tag
+		$tag = $this->configurator->tags->add($this->tagName);
+
+		// Create attribute
+		$tag->attributes->add($this->attrName);
+
+		// Create a template that replaces its content with the replacement chat
+		$tag->defaultTemplate
+			= '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>';
 	}
 
 	/**

@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Plugins\WittyPants;
 
-use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Plugins\ParserBase;
 
 class Parser extends ParserBase
@@ -64,25 +63,33 @@ class Parser extends ParserBase
 			}
 		}
 
-		// Do quote pairs ‘’ and “”
-		/** @todo got to do them separately in order to deal with nested quotes, e.g. "'hello' said the man" */
-		preg_match_all(
-			'/(?<![0-9\\pL])(["\']).+?\\1(?![0-9\\pL])/uS',
-			$text,
-			$matches,
-			PREG_OFFSET_CAPTURE
+		// Do quote pairs ‘’ and “” -- must be done separately to handle nesting
+		$replacements = array(
+			array("/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS", "\xE2\x80\x98", "\xE2\x80\x99"),
+			array('/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS', "\xE2\x80\x9C", "\xE2\x80\x9D")
 		);
-		foreach ($matches[0] as $m)
+		foreach ($replacements as $replacement)
 		{
-			$left  = $this->parser->addSelfClosingTag($tagName, $m[1], 1);
-			$right = $this->parser->addSelfClosingTag($tagName, $m[1] + strlen($m[0]) - 1, 1);
+			list($regexp, $leftQuote, $rightQuote) = $replacement;
 
-			$left->setAttribute($attrName, ($m[0][0] === '"') ? "\xE2\x80\x9C" : "\xE2\x80\x98");
-			$right->setAttribute($attrName, ($m[0][0] === '"') ? "\xE2\x80\x9D" : "\xE2\x80\x99");
+			preg_match_all(
+				"/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS",
+				$text,
+				$matches,
+				PREG_OFFSET_CAPTURE
+			);
+			foreach ($matches[0] as $m)
+			{
+				$left  = $this->parser->addSelfClosingTag($tagName, $m[1], 1);
+				$right = $this->parser->addSelfClosingTag($tagName, $m[1] + strlen($m[0]) - 1, 1);
 
-			// Cascade left tag's invalidation to the right so that if we skip the left quote, the
-			// right quote is left untouched
-			$left->cascadeInvalidationTo($right);
+				$left->setAttribute($attrName, $leftQuote);
+				$right->setAttribute($attrName, $rightQuote);
+
+				// Cascade left tag's invalidation to the right so that if we skip the left quote,
+				// the right quote is left untouched
+				$left->cascadeInvalidationTo($right);
+			}
 		}
 
 		// Do en dash –, em dash — and ellipsis …

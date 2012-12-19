@@ -9,9 +9,12 @@ namespace s9e\TextFormatter\Plugins\Censor;
 
 use s9e\TextFormatter\Plugins\ParserBase;
 
-class Censor extends ParserBase
+class Parser extends ParserBase
 {
-	public function getTags($text, array $matches)
+	/**
+	* {@inheritDoc}
+	*/
+	public function parse($text, array $matches)
 	{
 		$tagName  = $this->config['tagName'];
 		$attrName = $this->config['attrName'];
