@@ -47,21 +47,31 @@ class Parser extends ParserBase
 		);
 		foreach ($matches[0] as $m)
 		{
-			// Test for a multiply sign
-			if (substr($m[0][0], -1) === 'x')
+			// Test for a multiply sign at the end
+			if (substr($m[0], -1) === 'x')
 			{
-				$pos  = $m[0][1] + strlen($m[0][0]) - 1;
+				$pos  = $m[1] + strlen($m[0]) - 1;
 				$char = "\xC3\x97";
 
 				$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $char);
 			}
 
-			// Test for a prime right after the digit
-			$c = $m[0][0][1];
+			// Test for a apostrophe/prime right after the digit
+			$c = $m[0][1];
 			if ($c === "'" || $c === '"')
 			{
-				$pos  = 1 + $m[0][1];
-				$char = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
+				$pos  = 1 + $m[1];
+
+				if (substr($m[0], 1, 2) === "'s")
+				{
+					// 80's -- use an apostrophe
+					$char = "\xE2\x80\x99";
+				}
+				else
+				{
+					// 12' or 12" -- use a prime
+					$char = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
+				}
 
 				$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $char);
 			}
@@ -128,7 +138,7 @@ class Parser extends ParserBase
 		{
 			$pos  = $m[1];
 			$len  = strlen($m[0]);
-			$char = $chars[strtr($m[0][0], 'CMRT', 'cmrt')];
+			$char = $chars[strtr($m[0], 'CMRT', 'cmrt')];
 
 			$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $char);
 		}
