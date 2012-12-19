@@ -1,9 +1,9 @@
 Differences between the PHP parser and its Javascript port
 ==========================================================
 
- * #url filter
- * #email filter
- * Does not follow redirectors
+ * #url filter (non-validating regexp, does not follow redirector)
+ * #email filter (non-validating regexp, only catches the most egregious errors)
+ * HTMLEntities might convert a slightly different set of HTML entities due to the differences between each browser's translation table and PHP's
 
 Differences between the PHP parser and phpBB's
 ==============================================
