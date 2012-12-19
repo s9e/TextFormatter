@@ -1002,6 +1002,10 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] toJS() converts the regexp in 'regexp' if applicable
  [x] toJS() converts the array of regexps in 'regexp' if applicable
 
+s9e\TextFormatter\Tests\Plugins\ParserBase
+ [x] Constructor calls setUp()
+ [x] Constructor sets up $this->config and $this->parser before calling setUp()
+
 s9e\TextFormatter\Tests\Plugins\Autoemail\Configurator
  [x] Automatically creates an "EMAIL" tag with an "email" attribute with a "#email" filter and a rawurlencode() filter
  [x] Does not attempt to create a tag if it already exists

@@ -40,9 +40,11 @@ abstract class ParserBase
 	*
 	* @return void
 	*/
+	// @codeCoverageIgnoreStart
 	public function setUp()
 	{
 	}
+	// @codeCoverageIgnoreEnd
 
 	/**
 	* @param  string $text
