@@ -64,10 +64,7 @@ trait TagProcessing
 
 		// Close unclosed tags
 
-		if ($this->pos < $this->textLen)
-		{
-			$this->outputText($this->textLen, 0);
-		}
+		$this->finalizeOutput();
 	}
 
 	/**

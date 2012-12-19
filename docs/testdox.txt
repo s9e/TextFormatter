@@ -1177,6 +1177,9 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Configurator
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
 
+s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
+ [x] Parser works
+
 s9e\TextFormatter\Tests\Renderer
  [x] Renders plain text
  [x] Renders multi-line text

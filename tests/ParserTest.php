@@ -25,7 +25,7 @@ class ParserTest extends Test
 		$parser = $configurator->getParser();
 
 		$this->assertSame(
-			'<B><st>[b]</st>x<I><st>[i]</st>y</I><et>[/b]</et></B><I>z<et>[/i]</et></I>',
+			'<rt><B><st>[b]</st>x<I><st>[i]</st>y</I><et>[/b]</et></B><I>z<et>[/i]</et></I></rt>',
 			$parser->parse('[b]x[i]y[/b]z[/i]')
 		);
 	}

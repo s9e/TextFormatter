@@ -14,6 +14,31 @@ trait OutputHandling
 	*
 	* @return void
 	*/
+	protected function finalizeOutput()
+	{
+		if (!$this->pos)
+		{
+			$this->output = '<pt>';
+			$this->outputText($this->textLen, 0);
+			$this->output .= '</pt>';
+
+			return;
+		}
+
+		if ($this->pos < $this->textLen)
+		{
+			$this->outputText($this->textLen, 0);
+		}
+
+		/** @todo add namespace declarations */
+		$this->output = '<rt>' . $this->output . '</rt>';
+	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
 	protected function outputTag(Tag $tag)
 	{
 		$tagName   = $tag->getName();

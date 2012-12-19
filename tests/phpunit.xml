@@ -82,6 +82,7 @@
 			<file>Plugins/HTMLElements/ConfiguratorTest.php</file>
 			<file>Plugins/HTMLEntities/ConfiguratorTest.php</file>
 			<file>Plugins/WittyPants/ConfiguratorTest.php</file>
+			<file>Plugins/WittyPants/ParserTest.php</file>
 
 			<file>RendererTest.php</file>
 
@@ -152,6 +153,7 @@
 			<file>../src/Plugins/HTMLElements/Configurator.php</file>
 			<file>../src/Plugins/HTMLEntities/Configurator.php</file>
 			<file>../src/Plugins/WittyPants/Configurator.php</file>
+			<file>../src/Plugins/WittyPants/Parser.php</file>
 
 			<file>../src/Renderer.php</file>
 
