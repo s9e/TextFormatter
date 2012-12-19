@@ -26,7 +26,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* {@inheritdoc}
 	*/
-	protected $regexp = '/[-a-z0-9_+.]++@[-a-z0-9.]++/iS';
+	protected $regexp = '/\\b[-a-z0-9_+.]+@[-a-z0-9.]+/Si';
 
 	/**
 	* @var string Name of the tag used to represent links
@@ -40,21 +40,23 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function setUp()
 	{
-		// If the tag does not exist...
-		if (!isset($this->configurator->tags[$this->tagName]))
+		if (isset($this->configurator->tags[$this->tagName]))
 		{
-			// Create a tag
-			$tag = $this->configurator->tags->add($this->tagName);
-
-			// Add an attribute using the #url filter followed by rawurlencode()
-			$filterChain = $tag->attributes->add($this->attrName)->filterChain;
-			$filterChain->append('#email');
-			$filterChain->append('rawurlencode');
-
-			// Set the default template
-			$tag->defaultTemplate
-				= '<a href="mailto:{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
+			return;
 		}
+
+		// Create a tag
+		$tag = $this->configurator->tags->add($this->tagName);
+
+		// Add an attribute using the #email filter followed by rawurlencode() to encode the @ and
+		// potentially the + sign(s) found in the local part of the address
+		$filterChain = $tag->attributes->add($this->attrName)->filterChain;
+		$filterChain->append('#email');
+		$filterChain->append('rawurlencode');
+
+		// Set the default template
+		$tag->defaultTemplate
+			= '<a href="mailto:{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
 	}
 
 	/**
