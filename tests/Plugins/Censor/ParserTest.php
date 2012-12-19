@@ -71,6 +71,24 @@ class ParserTest extends Test
 				}
 			),
 			array(
+				'You dirty apple',
+				'You dirty ****',
+				array('tagName' => 'FOO'),
+				function ($constructor)
+				{
+					$constructor->Censor->add('apple');
+				}
+			),
+			array(
+				'You dirty apple',
+				'You dirty orange',
+				array('attrName' => 'replacement'),
+				function ($constructor)
+				{
+					$constructor->Censor->add('apple', 'orange');
+				}
+			),
+			array(
 				'You dirty 苹果',
 				'You dirty orange',
 				array(),
