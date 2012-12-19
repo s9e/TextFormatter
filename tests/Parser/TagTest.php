@@ -56,6 +56,15 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox getSortPriority() returns the tag's sortPriority
+	*/
+	public function testGetSortPriority()
+	{
+		$tag = new Tag(Tag::START_TAG, 'X', 12, 34);
+		$this->assertSame(0, $tag->getSortPriority());
+	}
+
+	/**
 	* @testdox getStartTag() returns false if the tag has no start tag set
 	*/
 	public function testGetStartTag()
@@ -416,6 +425,16 @@ class TagTest extends Test
 		$endTag->pairWith($startTag);
 
 		$this->assertSame($endTag, $startTag->getEndTag());
+	}
+
+	/**
+	* @testdox setSortPriority() sets the tag's sortPriority
+	*/
+	public function testSetSortPriority()
+	{
+		$tag = new Tag(Tag::START_TAG, 'X', 12, 34);
+		$tag->setSortPriority(-10);
+		$this->assertSame(-10, $tag->getSortPriority());
 	}
 
 	/**

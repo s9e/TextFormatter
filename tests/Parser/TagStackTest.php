@@ -267,19 +267,24 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox sortTags() lets PHP sorts tags in whatever order if they are at the same position, have the same non-zero length, which ends up sorting them in reverse insertion order
+	* @testdox sortTags() tiebreaker sorts tag by sortPriority descending (-10 is processed before 10)
 	*/
-	public function testSortTagsByWhatever()
+	public function testSortTagsBySortPriority()
 	{
 		$dummyStack = new DummyStack;
 
-		$t1 = $dummyStack->addStartTag('X', 0, 1);
 		$t2 = $dummyStack->addStartTag('X', 0, 1);
+		$t3 = $dummyStack->addStartTag('X', 0, 1);
+		$t1 = $dummyStack->addStartTag('X', 0, 1);
+
+		$t1->setSortPriority(-10);
+		$t2->setSortPriority(0);
+		$t3->setSortPriority(10);
 
 		$dummyStack->sortTags();
 
 		$this->assertSame(
-			array($t2, $t1),
+			array($t3, $t2, $t1),
 			$dummyStack->tagStack
 		);
 	}

@@ -60,6 +60,12 @@ class Tag
 	protected $pos;
 
 	/**
+	* @var integer Tiebreaker used when sorting identical tags
+	* @see TagStack::compareTags()
+	*/
+	protected $sortPriority = 0;
+
+	/**
 	* @var Tag Start tag that is unconditionally closed this end tag
 	*/
 	protected $startTag;
@@ -155,6 +161,17 @@ class Tag
 		}
 	}
 
+	/**
+	* Set this tag's tiebreaker
+	*
+	* @param  integer $sortPriority
+	* @return void
+	*/
+	public function setSortPriority($sortPriority)
+	{
+		$this->sortPriority = $sortPriority;
+	}
+
 	//==========================================================================
 	// Getters
 	//==========================================================================
@@ -209,6 +226,16 @@ class Tag
 	public function getPos()
 	{
 		return $this->pos;
+	}
+
+	/**
+	* Return this tag's tiebreaker
+	*
+	* @return integer
+	*/
+	public function getSortPriority()
+	{
+		return $this->sortPriority;
 	}
 
 	/**

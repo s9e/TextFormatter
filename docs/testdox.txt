@@ -923,6 +923,7 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] getPos() returns the tag's length (amount of text consumed)
  [x] getName() returns the tag's name
  [x] getPos() returns the tag's position
+ [x] getSortPriority() returns the tag's sortPriority
  [x] getStartTag() returns false if the tag has no start tag set
  [x] getType() returns the tag's type
  [x] isInvalid() returns false by default
@@ -954,6 +955,7 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] $endTag->pairWith($startTag) sets $endTag->startTag if $endTag's position is greater than $startTag's
  [x] $endTag->pairWith($startTag) sets $startTag->endTag if they share the same position
  [x] $endTag->pairWith($startTag) sets $startTag->endTag if $endTag's position is greater than $startTag's
+ [x] setSortPriority() sets the tag's sortPriority
  [x] setAttribute('foo', 'bar') sets attribute 'foo' to 'bar'
  [x] setAttribute() overwrites existing attributes
  [x] setAttributes() sets multiple attributes at once
@@ -978,7 +980,7 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] sortTags() tiebreaker sorts zero-width end tags after zero width start tag (end tags get the opportunity to close their parent before a new tag is open)
  [x] sortTags() tiebreaker sorts zero-width self-closing tags between zero-width start tags and zero-width end tags (attempting to keep them outside of tag pairs)
  [x] sortTags() tiebreaker sorts tags by length ascending (longer tags processed first)
- [x] sortTags() lets PHP sorts tags in whatever order if they are at the same position, have the same non-zero length, which ends up sorting them in reverse insertion order
+ [x] sortTags() tiebreaker sorts tag by sortPriority descending (-10 is processed before 10)
 
 s9e\TextFormatter\Tests\Parser
  [x] 

@@ -172,10 +172,10 @@ trait TagStack
 			return ($aLen - $bLen);
 		}
 
-		// Finally, if the tags consume exactly the same text then we'll let PHP sort them either
-		// way. PHP's sort is not stable but it seems to consistenly sort items in reverse order,
-		// which means tag would be processed in order of their addition. This case shouldn't happen
-		// very often (if ever) and does not matter much
-		return 0;
+		// Finally, if the tags consume exactly the same text we'll use their sortPriority as
+		// tiebreaker. Tags with a lower value get sorted last, which means they'll be processed
+		// first. IOW, -10 is processed before 10. Most of the time, this value will be the same,
+		// and since PHP's sort isn't stable it means the sort order of identical tags is undefined
+		return $b->getSortPriority() - $a->getSortPriority();
 	}
 }
