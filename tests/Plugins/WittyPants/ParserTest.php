@@ -2,31 +2,57 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\WittyPants;
 
-use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\WittyPants\Parser;
+use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
+use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\WittyPants\Parser
 */
 class ParserTest extends Test
 {
-	/**
-	* @testdox Parser works
-	* @dataProvider getData
-	*/
-	public function test($original, $expected, $setup = null)
-	{
-		$this->configurator->plugins->load('WittyPants');
+	use ParsingTestsRunner;
+	use RenderingTestsRunner;
 
-		$parser   = $this->configurator->getParser();
-		$renderer = $this->configurator->getRenderer();
-
-		$this->assertSame($expected, $renderer->render($parser->parse($original)));
-	}
-
-	public function getData()
+	public function getParsingTests()
 	{
 		return array(
+			array(
+				'...',
+				'<rt><WP char="…">...</WP></rt>'
+			),
+			array(
+				'...',
+				'<rt><FOO char="…">...</FOO></rt>',
+				array('tagName' => 'FOO')
+			),
+			array(
+				'...',
+				'<rt><WP bar="…">...</WP></rt>',
+				array('attrName' => 'bar')
+			),
+		);
+	}
+
+	public function getRenderingTests()
+	{
+		return array(
+			array(
+				'...',
+				'…'
+			),
+			array(
+				'...',
+				'…',
+				array('tagName' => 'FOO')
+			),
+			array(
+				'...',
+				'…',
+				array('attrName' => 'bar')
+			),
 			array(
 				"'Good morning, Frank,' greeted HAL.",
 				'‘Good morning, Frank,’ greeted HAL.'

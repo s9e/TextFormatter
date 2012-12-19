@@ -1102,6 +1102,10 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Words sharing the same replacement share a common regexp
  [x] Words using the default replacement do not appear in the replacements
 
+s9e\TextFormatter\Tests\Plugins\Censor\Parser
+ [x] Parsing tests
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Automatically creates an "E" tag
  [x] Does not attempt to create a tag if it already exists
@@ -1178,7 +1182,8 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Configurator
  [x] The config array contains the name of the attribute
 
 s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
- [x] Parser works
+ [x] Parsing tests
+ [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Renderer
  [x] Renders plain text

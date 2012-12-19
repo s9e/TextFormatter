@@ -25,11 +25,7 @@ class Parser extends ParserBase
 
 		foreach ($matches as $m)
 		{
-			$tag = $this->parser->addSelfClosingTag(array(
-				'pos'  => $m[0][1],
-				'name' => $tagName,
-				'len'  => strlen($m[0][0])
-			));
+			$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], strlen($m[0][0]));
 
 			foreach ($replacements as $mask => $replacement)
 			{

@@ -297,9 +297,9 @@ class Parser extends ParserBase
 			}
 
 			// Add predefined attribute values
-			if (isset($bbcodeConfig['attributeValues']))
+			if (isset($bbcodeConfig['predefinedAttributes']))
 			{
-				foreach ($bbcodeConfig['attributeValues'] as $attrName => $attrValue)
+				foreach ($bbcodeConfig['predefinedAttributes'] as $attrName => $attrValue)
 				{
 					$tag->setAttribute($attrName, $attrValue);
 				}

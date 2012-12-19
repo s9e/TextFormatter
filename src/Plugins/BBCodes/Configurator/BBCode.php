@@ -33,7 +33,7 @@ class BBCode implements ConfigProvider
 	/**
 	* @var AttributeValueCollection Predefined attribute values, can be overwritten by user input
 	*/
-	protected $predefinedAttribute;
+	protected $predefinedAttributes;
 
 	/**
 	* @var string Name of the tag used to represent this BBCode in the intermediate representation
