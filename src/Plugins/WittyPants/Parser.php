@@ -60,7 +60,7 @@ class Parser extends ParserBase
 			$c = $m[0][1];
 			if ($c === "'" || $c === '"')
 			{
-				$pos  = 1 + $m[1];
+				$pos = 1 + $m[1];
 
 				if (substr($m[0], 1, 2) === "'s")
 				{
