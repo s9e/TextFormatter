@@ -417,11 +417,26 @@ abstract class TemplateChecker
 		$attribute = $tag->attributes->get($attrName);
 
 		// Test the attribute with the configured isSafeIn* method
-		if (!call_user_func(array('self', 'isSafeIn' . $contentType), $attribute))
+		if (call_user_func(array('self', 'isSafeIn' . $contentType), $attribute))
 		{
-			// Not safe
-			throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly filtered to be used in " . $contentType, $node);
+			// Safe
+			return;
 		}
+
+		// Deal with special cases
+		if ($node instanceof DOMAttr)
+		{
+			// Allowed match
+			$match = 'mailto:{' . $expr . '}';
+			if (substr($node->textContent, 0, strlen($match)) === $match)
+			{
+				// Safe
+				return;
+			}
+		}
+
+		// Not safe
+		throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly filtered to be used in " . $contentType, $node);
 	}
 
 	/**

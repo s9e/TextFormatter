@@ -10,7 +10,7 @@ use s9e\TextFormatter\Tests\Test;
 class ConfiguratorTest extends Test
 {
 	/**
-	* @testdox Automatically creates an "EMAIL" tag with an "email" attribute with a "#email" filter and a rawurlencode() filter
+	* @testdox Automatically creates an "EMAIL" tag with an "email" attribute with a "#email" filter
 	*/
 	public function testCreatesTag()
 	{
@@ -22,7 +22,6 @@ class ConfiguratorTest extends Test
 
 		$attribute = $tag->attributes->get('email');
 		$this->assertTrue($attribute->filterChain->contains('#email'));
-		$this->assertTrue($attribute->filterChain->contains('rawurlencode'));
 	}
 
 	/**

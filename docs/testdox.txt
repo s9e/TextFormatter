@@ -560,6 +560,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception if an element has an "use-attribute-sets" attribute
  [x] Not safe: <x:element name="script" xmlns:x="http://www.w3.org/1999/XSL/Transform"><xsl:apply-templates/></x:element>
  [x] Not safe: <element name="script" xmlns="http://www.w3.org/1999/XSL/Transform"><apply-templates/></element>
+ [x] Safe if attribute 'email' has filter '#email': <a href="mailto:{@email}"/>
+ [x] Safe if attribute 'email' has filter '#email': <a href="mailto:{@email}?subject=foo"/>
+ [x] Unsafe even if attribute 'email' has filter '#email': <a href="http://{@email}"/>
  [x] Not safe: <embed src="{@url}"/>
  [x] Not safe: <iframe src="{@url}"/>
  [x] Not safe: <object data="{@url}"/>
@@ -1007,7 +1010,7 @@ s9e\TextFormatter\Tests\Plugins\ParserBase
  [x] Constructor sets up $this->config and $this->parser before calling setUp()
 
 s9e\TextFormatter\Tests\Plugins\Autoemail\Configurator
- [x] Automatically creates an "EMAIL" tag with an "email" attribute with a "#email" filter and a rawurlencode() filter
+ [x] Automatically creates an "EMAIL" tag with an "email" attribute with a "#email" filter
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option

@@ -48,11 +48,8 @@ class Configurator extends ConfiguratorBase
 		// Create a tag
 		$tag = $this->configurator->tags->add($this->tagName);
 
-		// Add an attribute using the #email filter followed by rawurlencode() to encode the @ and
-		// potentially the + sign(s) found in the local part of the address
-		$filterChain = $tag->attributes->add($this->attrName)->filterChain;
-		$filterChain->append('#email');
-		$filterChain->append('rawurlencode');
+		// Add an attribute using the #email filter
+		$tag->attributes->add($this->attrName)->filterChain->append('#email');
 
 		// Set the default template
 		$tag->defaultTemplate
