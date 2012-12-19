@@ -426,12 +426,15 @@ abstract class TemplateChecker
 		// Deal with special cases
 		if ($node instanceof DOMAttr)
 		{
-			// Allowed match
-			$match = 'mailto:{' . $expr . '}';
-			if (substr($node->textContent, 0, strlen($match)) === $match)
+			if ($contentType === 'URL')
 			{
-				// Safe
-				return;
+				// Allowed match
+				$match = 'mailto:{' . $expr . '}';
+				if (substr($node->textContent, 0, strlen($match)) === $match)
+				{
+					// Safe
+					return;
+				}
 			}
 		}
 
