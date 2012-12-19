@@ -19,6 +19,22 @@ class Parser extends ParserBase
 		$attrName = $this->config['attrName'];
 		$tagName  = $this->config['tagName'];
 
+		// Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits
+		preg_match_all(
+			"/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS",
+			$text,
+			$matches,
+			PREG_OFFSET_CAPTURE
+		);
+		foreach ($matches[0] as $m)
+		{
+			$tag = $this->parser->addSelfClosingTag($tagName, $m[1], 1);
+			$tag->setAttribute($attrName, "\xE2\x80\x99");
+
+			// Give this tag a worse priority than default so that quote pairs take precedence
+			$tag->setSortPriority(10);
+		}
+
 		// Do symbols found after a digit:
 		//  - apostrophe ’ if it's followed by an "s" as in 80's
 		//  - prime ′ and double prime ″
@@ -73,19 +89,6 @@ class Parser extends ParserBase
 				// the right quote is left untouched
 				$left->cascadeInvalidationTo($right);
 			}
-		}
-
-		// Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits.
-		// NOTE: this is performed after quote pairs to give them priority
-		preg_match_all(
-			"/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS",
-			$text,
-			$matches,
-			PREG_OFFSET_CAPTURE
-		);
-		foreach ($matches[0] as $m)
-		{
-			$this->parser->addSelfClosingTag($tagName, $m[1], 1)->setAttribute($attrName, "\xE2\x80\x99");
 		}
 
 		// Do en dash –, em dash — and ellipsis …
