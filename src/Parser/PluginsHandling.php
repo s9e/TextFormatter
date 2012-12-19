@@ -29,7 +29,7 @@ trait PluginsHandling
 	{
 		if (isset($this->pluginsConfig[$pluginName]))
 		{
-			$this->pluginsConfig[$pluginName]['disabled'] = true;
+			$this->pluginsConfig[$pluginName]['isDisabled'] = true;
 		}
 	}
 
@@ -43,7 +43,7 @@ trait PluginsHandling
 	{
 		if (isset($this->pluginsConfig[$pluginName]))
 		{
-			$this->pluginsConfig[$pluginName]['disabled'] = false;
+			$this->pluginsConfig[$pluginName]['isDisabled'] = false;
 		}
 	}
 
@@ -56,7 +56,7 @@ trait PluginsHandling
 	{
 		foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
 		{
-			if (!empty($pluginConfig['disabled']))
+			if (!empty($pluginConfig['isDisabled']))
 			{
 				continue;
 			}
