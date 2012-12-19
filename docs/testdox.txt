@@ -1031,6 +1031,10 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?foo=1] baz'
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?arr[foo]=1] baz'
 
+s9e\TextFormatter\Tests\Plugins\Autolink\Parser
+ [x] Parsing tests
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\AttributeValueCollection
  [x] Throws an exception on invalid attribute name
 

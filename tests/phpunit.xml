@@ -68,6 +68,7 @@
 			<file>Plugins/ParserBaseTest.php</file>
 			<file>Plugins/Autoemail/ConfiguratorTest.php</file>
 			<file>Plugins/Autolink/ConfiguratorTest.php</file>
+			<file>Plugins/Autolink/ParserTest.php</file>
 			<file>Plugins/BBCodes/Configurator/AttributeValueCollectionTest.php</file>
 			<file>Plugins/BBCodes/Configurator/BBCodeTest.php</file>
 			<file>Plugins/BBCodes/Configurator/BBCodeCollectionTest.php</file>
@@ -143,6 +144,7 @@
 			<file>../src/Plugins/ParserBase.php</file>
 			<file>../src/Plugins/Autoemail/Configurator.php</file>
 			<file>../src/Plugins/Autolink/Configurator.php</file>
+			<file>../src/Plugins/Autolink/Parser.php</file>
 			<file>../src/Plugins/BBCodes/Configurator/AttributeValueCollection.php</file>
 			<file>../src/Plugins/BBCodes/Configurator/BBCode.php</file>
 			<file>../src/Plugins/BBCodes/Configurator/BBCodeCollection.php</file>

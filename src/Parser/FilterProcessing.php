@@ -92,6 +92,8 @@ trait FilterProcessing
 			}
 		}
 
+		$logger = (isset($registeredVars['logger'])) ? $registeredVars['logger'] : false;
+
 		// Filter and remove invalid attributes
 		foreach ($tag->getAttributes() as $attrName => $attrValue)
 		{
@@ -111,7 +113,10 @@ trait FilterProcessing
 			}
 
 			// Record the name of the attribute being filtered into the logger
-			$this->logger->setAttribute($attrName);
+			if ($logger)
+			{
+				$logger->setAttribute($attrName);
+			}
 
 			foreach ($attrConfig['filterChain'] as $filter)
 			{
@@ -131,8 +136,17 @@ trait FilterProcessing
 				}
 			}
 
+			// Update the attribute value if it's valid
+			if ($attrValue !== false)
+			{
+				$tag->setAttribute($attrName, $attrValue);
+			}
+
 			// Remove the attribute's name from the logger
-			$this->logger->unsetAttribute();
+			if ($logger)
+			{
+				$logger->unsetAttribute();
+			}
 		}
 
 		// Iterate over the attribute definitions to handle missing attributes
