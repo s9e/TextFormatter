@@ -2,7 +2,7 @@
 
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="autoloader.php"
+         bootstrap="bootstrap.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -17,7 +17,7 @@
 
 	<testsuites>
 		<testsuite name="TextFormatter">
-			<file>ConfiguratorTest.php</file>
+			<file>autoloaderTest.php</file>
 
 			<!-- Test the base classes and traits first -->
 			<file>Configurator/Collections/CollectionTest.php</file>
@@ -26,6 +26,7 @@
 			<file>Configurator/Traits/CollectionProxyTest.php</file>
 			<file>Configurator/Traits/ConfigurableTest.php</file>
 
+			<file>ConfiguratorTest.php</file>
 			<file>Configurator/Collections/AttributeCollectionTest.php</file>
 			<file>Configurator/Collections/AttributeListTest.php</file>
 			<file>Configurator/Collections/AttributePreprocessorCollectionTest.php</file>
@@ -81,6 +82,7 @@
 			<file>Plugins/Censor/ParserTest.php</file>
 			<file>Plugins/Emoticons/ConfiguratorTest.php</file>
 			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
+			<file>Plugins/Emoticons/ParserTest.php</file>
 			<file>Plugins/Escaper/ConfiguratorTest.php</file>
 			<file>Plugins/Escaper/ParserTest.php</file>
 			<file>Plugins/Generic/ConfiguratorTest.php</file>

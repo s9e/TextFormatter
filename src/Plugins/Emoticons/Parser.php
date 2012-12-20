@@ -5,27 +5,20 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins;
+namespace s9e\TextFormatter\Plugins\Emoticons;
 
-use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\PluginParser;
+use s9e\TextFormatter\Plugins\ParserBase;
 
-class EmoticonsParser extends PluginParser
+class Parser extends ParserBase
 {
-	public function getTags($text, array $matches)
+	/**
+	* {@inheritDoc}
+	*/
+	public function parse($text, array $matches)
 	{
-		$tags = array();
-
 		foreach ($matches as $m)
 		{
-			$tags[] = array(
-				'pos'  => $m[0][1],
-				'type' => Parser::SELF_CLOSING_TAG,
-				'name' => $this->config['tagName'],
-				'len'  => strlen($m[0][0])
-			);
+			$this->parser->addSelfClosingTag($this->config['tagName'], $m[0][1], strlen($m[0][0]));
 		}
-
-		return $tags;
 	}
 }

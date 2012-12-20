@@ -1,22 +1,7 @@
-s9e\TextFormatter\Tests\Configurator
- [x] $configurator->customFilters is an instance of FilterCollection
- [x] $configurator->plugins is an instance of PluginCollection
- [x] $configurator->rootRules is an instance of Ruleset
- [x] $configurator->tags is an instance of TagCollection
- [x] $configurator->urlConfig is an instance of UrlConfig
- [x] asConfig() returns an array with a rootContext element
- [x] asConfig() returns an array with a registeredVars element that contains urlConfig
- [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
- [x] asConfig() removes regexpLimit from the plugin's configuration if it does not have a regexp
- [x] asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified and the plugin has a regexp
- [x] asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
- [x] asConfig() adds quickMatch to the plugin's configuration if available
- [x] asConfig() omits a plugin's quickMatch if it's false
- [x] allowedChildren and allowedDescendants bitfields are added to each tag
- [x] getParser() returns an instance of s9e\TextFormatter\Parser
- [x] $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
- [x] $configurator->BBCodes returns $configurator->plugins->get('BBCodes') if the plugin has already been loaded
- [x] $configurator->foo throws an exception
+autoloader
+ [x] Can load s9e\TextFormatter\Configurator
+ [x] Can load s9e\TextFormatter\Parser\Tag
+ [x] Can load s9e\TextFormatter\Plugins\Emoticons\Parser
 
 s9e\TextFormatter\Tests\Configurator\Collections\Collection
  [x] Collection is countable
@@ -95,6 +80,26 @@ s9e\TextFormatter\Tests\Configurator\Traits\Configurable
  [x] __set() will clear and repopulate a NormalizedCollection rather than overwrite it
  [x] __set() throws an exception if a NormalizedCollection would be overwritten by a non-array, non-Traversable value
  [x] __isset($k) returns true if the property exists
+
+s9e\TextFormatter\Tests\Configurator
+ [x] $configurator->customFilters is an instance of FilterCollection
+ [x] $configurator->plugins is an instance of PluginCollection
+ [x] $configurator->rootRules is an instance of Ruleset
+ [x] $configurator->tags is an instance of TagCollection
+ [x] $configurator->urlConfig is an instance of UrlConfig
+ [x] asConfig() returns an array with a rootContext element
+ [x] asConfig() returns an array with a registeredVars element that contains urlConfig
+ [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
+ [x] asConfig() removes regexpLimit from the plugin's configuration if it does not have a regexp
+ [x] asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified and the plugin has a regexp
+ [x] asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
+ [x] asConfig() adds quickMatch to the plugin's configuration if available
+ [x] asConfig() omits a plugin's quickMatch if it's false
+ [x] allowedChildren and allowedDescendants bitfields are added to each tag
+ [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
+ [x] $configurator->BBCodes returns $configurator->plugins->get('BBCodes') if the plugin has already been loaded
+ [x] $configurator->foo throws an exception
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute
@@ -1139,6 +1144,10 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
  [x] Normalizes HTML templates
  [x] Throws an exception when an invalid template is set
  [x] Throws an exception when an unsafe template is set
+
+s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
+ [x] Parsing tests
+ [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
  [x] Automatically creates an "ESC" tag
