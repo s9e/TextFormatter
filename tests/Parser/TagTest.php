@@ -286,6 +286,7 @@ class TagTest extends Test
 		$tag1->cascadeInvalidationTo($tag2);
 		$tag2->cascadeInvalidationTo($tag1);
 
+		set_time_limit(1);
 		$tag1->invalidate();
 	}
 
