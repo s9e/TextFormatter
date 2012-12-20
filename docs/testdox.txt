@@ -1162,6 +1162,10 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] asConfig() returns FALSE if no replacements were set
  [x] asConfig() returns the regexps in a "regexps" array where keys are tag names
 
+s9e\TextFormatter\Tests\Plugins\Generic\Parser
+ [x] Parsing tests
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] allowElement('b') creates a tag named 'html:b'
  [x] allowElement('B') creates a tag named 'html:b'

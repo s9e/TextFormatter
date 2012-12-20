@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use XSLTProcessor;
 use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
@@ -463,7 +464,6 @@ abstract class TemplateChecker
 			'#int',
 			'#uint',
 			'#float',
-			'#range',
 			'#number'
 		);
 
@@ -472,6 +472,23 @@ abstract class TemplateChecker
 			if ($attribute->filterChain->contains($filter))
 			{
 				return true;
+			}
+		}
+
+		/** @todo we should probably test that the regexp isn't a catch-all expression */
+		foreach ($attribute->filterChain as $filter)
+		{
+			$callback = $filter->getCallback();
+
+			if ($callback instanceof CallbackPlaceholder)
+			{
+				$filterName = $callback->asConfig();
+
+				if ($filterName === '#regexp'
+				 || $filterName === '#range')
+				{
+					 return true;
+				}
 			}
 		}
 
@@ -504,7 +521,6 @@ abstract class TemplateChecker
 			'#uint',
 			'#float',
 			'#color',
-			'#range',
 			'#number',
 			'#simpletext'
 		);
@@ -514,6 +530,21 @@ abstract class TemplateChecker
 			if ($attribute->filterChain->contains($filter))
 			{
 				return true;
+			}
+		}
+
+		foreach ($attribute->filterChain as $filter)
+		{
+			$callback = $filter->getCallback();
+
+			if ($callback instanceof CallbackPlaceholder)
+			{
+				$filterName = $callback->asConfig();
+
+				if ($filterName === '#range')
+				{
+					 return true;
+				}
 			}
 		}
 
@@ -545,7 +576,6 @@ abstract class TemplateChecker
 			'#int',
 			'#uint',
 			'#float',
-			'#range',
 			'#number',
 			'#simpletext'
 		);
@@ -555,6 +585,21 @@ abstract class TemplateChecker
 			if ($attribute->filterChain->contains($filter))
 			{
 				return true;
+			}
+		}
+
+		foreach ($attribute->filterChain as $filter)
+		{
+			$callback = $filter->getCallback();
+
+			if ($callback instanceof CallbackPlaceholder)
+			{
+				$filterName = $callback->asConfig();
+
+				if ($filterName === '#range')
+				{
+					 return true;
+				}
 			}
 		}
 

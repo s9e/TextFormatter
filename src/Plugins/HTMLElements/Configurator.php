@@ -264,7 +264,7 @@ class Configurator extends ConfiguratorBase
 		$tagRegexp  = RegexpBuilder::fromList(array_keys($this->tags));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
-		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*+)/?';
+		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*+)\\s*/?';
 
 		$regexp = '#<(?:' . $endTagRegexp . '|' . $startTagRegexp . ')\\s*>#i';
 

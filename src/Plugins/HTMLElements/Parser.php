@@ -43,13 +43,19 @@ class Parser extends ParserBase
 			{
 				$pos = strpos($attrMatch[0], '=');
 
-				// Give boolean attributes a value equal to their name, lowercased
+				/**
+				* If there's no equal sign, it's a boolean attribute and we generate a value equal
+				* to the attribute's name, lowercased
+				*
+				* @link http://www.w3.org/html/wg/drafts/html/master/single-page.html#boolean-attributes
+				*/
 				if ($pos === false)
 				{
 					$pos = strlen($attrMatch[0]);
 					$attrMatch[0] .= '=' . strtolower($attrMatch[0]);
 				}
 
+				// Give boolean attributes a value equal to their name, lowercased
 				$attrName  = strtolower(trim(substr($attrMatch[0], 0, $pos)));
 				$attrValue = trim(substr($attrMatch[0], 1 + $pos));
 
