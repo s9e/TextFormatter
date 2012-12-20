@@ -10,6 +10,11 @@ namespace s9e\TextFormatter\Parser;
 trait OutputHandling
 {
 	/**
+	* @var array Associative array of namespace prefixes in use in document (prefixes used as key)
+	*/
+	protected $namespaces;
+
+	/**
 	* 
 	*
 	* @return void
@@ -30,8 +35,13 @@ trait OutputHandling
 			$this->outputText($this->textLen, 0);
 		}
 
-		/** @todo add namespace declarations */
-		$this->output = '<rt>' . $this->output . '</rt>';
+		$tmp = '<rt';
+		foreach (array_keys($this->namespaces) as $prefix)
+		{
+			$tmp .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
+		}
+
+		$this->output = $tmp . '>' . $this->output . '</rt>';
 	}
 
 	/**
@@ -67,6 +77,13 @@ trait OutputHandling
 		// Output current tag
 		if ($tag->isStartTag())
 		{
+			// Record this tag's namespace, if applicable
+			$colonPos = strpos($tagName, ':');
+			if ($colonPos)
+			{
+				$this->namespaces[substr($tagName, 0, $colonPos)] = 0;
+			}
+
 			// Open the start tag and add its attributes, but don't close the tag
 			$this->output .= '<' . $tagName;
 			foreach ($tag->getAttributes() as $attrName => $attrValue)

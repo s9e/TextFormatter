@@ -111,8 +111,13 @@ abstract class StylesheetHelper
 	*/
 	public static function checkValid($xsl)
 	{
+		return;
+
+		/** @todo need namespace declarations */
 		$xsl = '<?xml version="1.0" encoding="utf-8" ?>'
-		     . '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+//		     . '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . '<xsl:output method="html" encoding="utf-8"/>'
 		     . $xsl
 		     . '</xsl:stylesheet>';
 
@@ -134,7 +139,8 @@ abstract class StylesheetHelper
 		libxml_use_internal_errors($useInternalErrors);
 
 		if ($error)
-		{
+		{die($xsl);
+			/** @todo libxml_get_last_error() can return false */
 			throw new InvalidXslException(libxml_get_last_error()->error);
 		}
 	}

@@ -275,4 +275,14 @@ class Configurator extends ConfiguratorBase
 			'regexp'     => $regexp
 		);
 	}
+
+	/**
+	* 
+	* @todo
+	* @return string
+	*/
+	public function getXSL()
+	{
+		return $this->xsl;
+	}
 }

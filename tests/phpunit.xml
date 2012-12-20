@@ -85,6 +85,7 @@
 			<file>Plugins/Escaper/ParserTest.php</file>
 			<file>Plugins/Generic/ConfiguratorTest.php</file>
 			<file>Plugins/HTMLElements/ConfiguratorTest.php</file>
+			<file>Plugins/HTMLElements/ParserTest.php</file>
 			<file>Plugins/HTMLEntities/ConfiguratorTest.php</file>
 			<file>Plugins/HTMLEntities/ParserTest.php</file>
 			<file>Plugins/WittyPants/ConfiguratorTest.php</file>
@@ -162,6 +163,7 @@
 			<file>../src/Plugins/Escaper/Parser.php</file>
 			<file>../src/Plugins/Generic/Configurator.php</file>
 			<file>../src/Plugins/HTMLElements/Configurator.php</file>
+			<file>../src/Plugins/HTMLElements/Parser.php</file>
 			<file>../src/Plugins/HTMLEntities/Configurator.php</file>
 			<file>../src/Plugins/HTMLEntities/Parser.php</file>
 			<file>../src/Plugins/WittyPants/Configurator.php</file>

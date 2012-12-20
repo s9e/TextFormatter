@@ -182,6 +182,6 @@ class Configurator implements ConfigProvider
 	*/
 	public function getXSL($prefix = 'xsl')
 	{
-		return StylesheetHelper::generate($this->tags);
+		return StylesheetHelper::generate($this->tags, $this->plugins);
 	}
 }

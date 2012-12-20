@@ -1181,6 +1181,10 @@ s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
 
+s9e\TextFormatter\Tests\Plugins\HTMLElements\Parser
+ [x] Parsing tests
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
  [x] Automatically creates an "HE" tag
  [x] The name of the tag used can be changed through the "tagName" constructor option

@@ -94,16 +94,18 @@ class Parser
 	/**
 	* Reset the parser for a new parsing
 	*
+	* @param  string $text Text to be parsed
 	* @return void
 	*/
 	protected function reset($text)
 	{
 		$this->logger->clear();
 
-		$this->context  = $this->rootContext;
-		$this->output   = '';
-		$this->text     = $text;
-		$this->textLen  = strlen($text);
-		$this->tagStack = array();
+		$this->context    = $this->rootContext;
+		$this->namespaces = array();
+		$this->output     = '';
+		$this->text       = $text;
+		$this->textLen    = strlen($text);
+		$this->tagStack   = array();
 	}
 }
