@@ -17,19 +17,17 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		$textLen  = strlen($text);
+		$textLen = strlen($text);
 
 		foreach ($matches as $m)
 		{
 			$bbcodeName = strtoupper($m[1][0]);
 
-			if (!isset($this->config['bbcodes'][$bbcodeName]))
-			{
-				// Not a known BBCode
-				continue;
-			}
-
-			$bbcodeConfig = $this->config['bbcodes'][$bbcodeName];
+			// BBCodes with no custom setting may not appear in the config. We only know they exist
+			// because the regexp matches exact names
+			$bbcodeConfig = (isset($this->config['bbcodes'][$bbcodeName]))
+			              ? $this->config['bbcodes'][$bbcodeName]
+			              : array();
 
 			// Use the configured tagName if available, or reuse the BBCode's name otherwise
 			$tagName = (isset($bbcodeConfig['tagName']))
@@ -222,7 +220,7 @@ class Parser extends ParserBase
 					// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 					//       that do not put attribute values in quotes, e.g.
 					//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-					if (!preg_match('#[^\\]]*(?=\\]|\\s+[-a-z_0-9]+=)#i', $text, $m, null, $rpos))
+					if (!preg_match('#[^\\]]*?(?=\\]|\\s+[-a-z_0-9]+=)#i', $text, $m, null, $rpos))
 					{
 						continue;
 					}

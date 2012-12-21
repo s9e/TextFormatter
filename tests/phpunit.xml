@@ -78,6 +78,7 @@
 			<file>Plugins/BBCodes/Configurator/RepositoryTest.php</file>
 			<file>Plugins/BBCodes/Configurator/RepositoryCollectionTest.php</file>
 			<file>Plugins/BBCodes/ConfiguratorTest.php</file>
+			<file>Plugins/BBCodes/ParserTest.php</file>
 			<file>Plugins/Censor/ConfiguratorTest.php</file>
 			<file>Plugins/Censor/ParserTest.php</file>
 			<file>Plugins/Emoticons/ConfiguratorTest.php</file>

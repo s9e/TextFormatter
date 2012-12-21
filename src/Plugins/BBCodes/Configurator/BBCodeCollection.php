@@ -15,11 +15,17 @@ use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class BBCodeCollection extends NormalizedCollection
 {
+	/**
+	* {@inheritdoc}
+	*/
 	public function normalizeKey($key)
 	{
 		return BBCode::normalizeName($key);
 	}
 
+	/**
+	* {@inheritdoc}
+	*/
 	public function normalizeValue($value)
 	{
 		return ($value instanceof BBCode)

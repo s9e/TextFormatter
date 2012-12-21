@@ -1109,6 +1109,9 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] The regexp that matches BBCode names does not contain a superfluous non-capturing subpattern
  [x] Essential non-capturing subpatterns are preserved
 
+s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
+ [x] Parsing tests
+
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag
  [x] Does not attempt to create a tag if it already exists
