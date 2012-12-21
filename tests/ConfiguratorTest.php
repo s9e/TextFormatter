@@ -263,6 +263,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox getRenderer() returns an instance of s9e\TextFormatter\Renderer
+	*/
+	public function testGetRenderer()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Renderer',
+			$this->configurator->getRenderer()
+		);
+	}
+
+	/**
 	* @testdox $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
 	*/
 	public function testMagicGetLoad()
@@ -314,6 +325,59 @@ class ConfiguratorTest extends Test
 	public function testMagicGetInvalid()
 	{
 		$this->configurator->foo;
+	}
+
+	/**
+	* @testdox addHTML5Rules() add root rules
+	*/
+	public function testAddHTML5RulesRoot()
+	{
+		$this->configurator->tags->add('UL')->defaultTemplate
+			= '<ul><xsl:apply-templates/></ul>';
+
+		$this->configurator->tags->add('LI')->defaultTemplate
+			= '<li><xsl:apply-templates/></li>';
+
+		$this->configurator->addHTML5Rules();
+
+		$this->assertSame(array('UL'), $this->configurator->rootRules['allowChild']);
+		$this->assertSame(array('LI'), $this->configurator->rootRules['denyChild']);
+	}
+
+	/**
+	* @testdox addHTML5Rules() add tag rules
+	*/
+	public function testAddHTML5RulesTags()
+	{
+		$ul = $this->configurator->tags->add('UL');
+		$ul->defaultTemplate = '<ul><xsl:apply-templates/></ul>';
+
+		$li = $this->configurator->tags->add('LI');
+		$li->defaultTemplate = '<li><xsl:apply-templates/></li>';
+
+		$this->configurator->addHTML5Rules();
+
+		$this->assertSame(array('LI'), $ul->rules['allowChild']);
+		$this->assertSame(array('UL'), $ul->rules['denyChild']);
+		$this->assertSame(array('UL'), $li->rules['allowChild']);
+		$this->assertSame(array('LI'), $li->rules['denyChild']);
+	}
+
+	/**
+	* @testdox addHTML5Rules() passes its options to the generator
+	*/
+	public function testAddHTML5RulesOptions()
+	{
+		$ul = $this->configurator->tags->add('UL');
+		$ul->defaultTemplate = '<ul><xsl:apply-templates/></ul>';
+
+		$li = $this->configurator->tags->add('LI');
+		$li->defaultTemplate = '<li><xsl:apply-templates/></li>';
+
+		$this->configurator->addHTML5Rules(array('parentHTML' => '<ul>'));
+
+		$this->assertSame(array('LI'), $this->configurator->rootRules['allowChild']);
+		$this->assertSame(array('UL'), $this->configurator->rootRules['denyChild']);
 	}
 }
 

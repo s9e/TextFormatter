@@ -96,6 +96,30 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addFromRepository() throws an exception if the BBCode already exists
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage BBCode 'B' already exists
+	*/
+	public function testAddFromRepositoryBBCodeExists()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->add('B');
+		$plugin->addFromRepository('B');
+	}
+
+	/**
+	* @testdox addFromRepository() throws an exception if the tag already exists
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Tag 'B' already exists
+	*/
+	public function testAddFromRepositoryTagExists()
+	{
+		$this->configurator->tags->add('B');
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->addFromRepository('B');
+	}
+
+	/**
 	* @testdox addFromRepository() returns the newly-created BBCode
 	*/
 	public function testAddFromRepositoryReturn()
@@ -106,6 +130,21 @@ class ConfiguratorTest extends Test
 			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\BBCode',
 			$plugin->addFromRepository('B')
 		);
+	}
+
+	/**
+	* @testdox addCustom() returns the newly-created BBCode
+	*/
+	public function testAddCustom()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\BBCode',
+			$plugin->addCustom('[B]{TEXT}[/B]', '<b>{TEXT}</b>')
+		);
+
+		$this->assertTrue($this->configurator->tags->exists('B'));
 	}
 
 	/**

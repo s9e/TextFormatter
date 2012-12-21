@@ -9,12 +9,17 @@ namespace s9e\TextFormatter\Plugins\BBCodes;
 
 use ArrayAccess;
 use Countable;
+use DOMDocument;
 use InvalidArgumentException;
 use Iterator;
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\Repository;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
@@ -51,29 +56,73 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 
 	/**
+	* Add a BBCode using their human-readable representation
+	*
+	* @see s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
+	*
+	* @param  string $usage    BBCode's usage
+	* @param  string $template BBCode's template
+	* @return BBCode           Newly-created BBCode
+	*/
+	public function addCustom($usage, $template)
+	{
+		// Create a temporary repository for this BBCode
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<?xml version="1.0" encoding="utf-8" ?>
+			<repository>
+				<bbcode name="CUSTOM">
+					<usage>' . htmlspecialchars($usage) . '</usage>
+					<template>' . htmlspecialchars($template) . '</template>
+				</bbcode>
+			</repository>'
+		);
+		$repository = new Repository($dom);
+
+		return $this->addFromRepository('CUSTOM', $repository);
+	}
+
+	/**
 	* Add a BBCode from a repository
 	*
-	* @param  string $bbcodeName Name of the BBCode to add
-	* @param  string $repository Name of the repository to use as source
+	* @param  string $name       Name of the entry in the repository
+	* @param  mixed  $repository Name of the repository to use as source, or instance of Repository
 	* @param  array  $vars       Variables that will replace default values in the tag definition
 	* @return BBCode             Newly-created BBCode
 	*/
-	public function addFromRepository($bbcodeName, $repository = 'default', array $vars = array())
+	public function addFromRepository($name, $repository = 'default', array $vars = array())
 	{
-		if (!$this->repositories->exists($repository))
+		// Load the Repository if necessary
+		if (!($repository instanceof Repository))
 		{
-			throw new InvalidArgumentException("Repository '" . $repository . "' does not exist");
+			if (!$this->repositories->exists($repository))
+			{
+				throw new InvalidArgumentException("Repository '" . $repository . "' does not exist");
+			}
+
+			$repository = $this->repositories->get($repository);
 		}
 
-		// Get the repository, then the BBCode/tag config from the repository
-		$config = $this->repositories->get($repository)->get($bbcodeName, $vars);
-		$bbcode = $config['bbcode'];
-		$tag    = $config['tag'];
+		// Get the BBCode/tag config from the repository
+		$config     = $repository->get($name, $vars);
+		$bbcodeName = $config['name'];
+		$bbcode     = $config['bbcode'];
+		$tag        = $config['tag'];
 
 		// If the BBCode doesn't specify a tag name, it's the same as the BBCode
 		if (!isset($bbcode->tagName))
 		{
 			$bbcode->tagName = $bbcodeName;
+		}
+
+		if ($this->collection->exists($bbcodeName))
+		{
+			throw new RuntimeException("BBCode '" . $bbcodeName . "' already exists");
+		}
+
+		if ($this->configurator->tags->exists($bbcode->tagName))
+		{
+			throw new RuntimeException("Tag '" . $bbcode->tagName . "' already exists");
 		}
 
 		// Add our BBCode then its tag

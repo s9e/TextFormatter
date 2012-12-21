@@ -97,9 +97,13 @@ s9e\TextFormatter\Tests\Configurator
  [x] asConfig() omits a plugin's quickMatch if it's false
  [x] allowedChildren and allowedDescendants bitfields are added to each tag
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
+ [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
  [x] $configurator->BBCodes returns $configurator->plugins->get('BBCodes') if the plugin has already been loaded
  [x] $configurator->foo throws an exception
+ [x] addHTML5Rules() add root rules
+ [x] addHTML5Rules() add tag rules
+ [x] addHTML5Rules() passes its options to the generator
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute
@@ -231,6 +235,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\Templateset
  [x] set() checks the template for unsafe content
  [x] setUnsafe() optimizes the template
  [x] setUnsafe() does not check the template for unsafe content
+
+s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
+ [x] getNode() returns the stored node
 
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] generateQuickMatchFromList() returns the longest common substring of a list of strings
@@ -992,6 +999,7 @@ s9e\TextFormatter\Tests\Parser\TagStack
 
 s9e\TextFormatter\Tests\Parser
  [x] 
+ [x] getLogger() returns an instance of Logger
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
@@ -1082,7 +1090,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] __construct() throws an exception if passed anything else
  [x] __construct() throws an exception if passed the path to a file that is not valid XML
  [x] get() throws an exception if the BBCode is not in repository
- [x] get() normalizes the BBCode name before retrieval
+ [x] get() normalizes the name before retrieval
+ [x] If the name is a BBCode name followed by a # character, get() normalizes only the first part
  [x] Variables in <usage/> are replaced
  [x] Variables in <template/> are replaced
  [x] Variables that are not replaced are left intact
@@ -1102,7 +1111,10 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository('MYBOLD', 'foo') adds BBCode B and its tag from the 'foo' repository
  [x] addFromRepository('B', 'foo', ['title' => 'bar']) adds BBCode B and its tag from the 'foo' repository with variable 'title' replaced with content 'bar'
  [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
+ [x] addFromRepository() throws an exception if the BBCode already exists
+ [x] addFromRepository() throws an exception if the tag already exists
  [x] addFromRepository() returns the newly-created BBCode
+ [x] addCustom() returns the newly-created BBCode
  [x] asConfig() returns FALSE if no BBCodes were created
  [x] Has a quickMatch
  [x] Generates a regexp for its config array

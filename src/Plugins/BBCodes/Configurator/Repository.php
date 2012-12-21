@@ -57,20 +57,28 @@ class Repository
 	/**
 	* Get a BBCode and its associated tag from this repository
 	*
-	* @param  string $bbcodeName BBCode's name
-	* @param  array  $vars       Template variables
-	* @return array              Array with two keys: "bbcode" and"tag"
+	* @param  string $name Name of the entry in the repository
+	* @param  array  $vars Template variables
+	* @return array        Array with three elements: "bbcode", "name" and "tag"
 	*/
-	public function get($bbcodeName, array $vars = array())
+	public function get($name, array $vars = array())
 	{
-		$bbcodeName = BBCode::normalizeName($bbcodeName);
+		// Everything before # should be a BBCode name
+		$name = preg_replace_callback(
+			'/^[^#]+/',
+			function ($m)
+			{
+				return BBCode::normalizeName($m[0]);
+			},
+			$name
+		);
 
 		$xpath = new DOMXPath($this->dom);
-		$node  = $xpath->query('//bbcode[@name="' . $bbcodeName . '"]')->item(0);
+		$node  = $xpath->query('//bbcode[@name="' . htmlspecialchars($name) . '"]')->item(0);
 
 		if (!$node)
 		{
-			throw new RuntimeException("Could not find BBCode '" . $bbcodeName . "' in repository");
+			throw new RuntimeException("Could not find '" . $name . "' in repository");
 		}
 
 		// Clone the node so we don't end up modifying the node in the repository
@@ -90,12 +98,13 @@ class Repository
 			}
 		}
 
-		// Now we can parse the BBCode usage and prepare the template
+		// Now we can parse the BBCode usage and prepare the template.
 		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
 		$usage  = $node->getElementsByTagName('usage')->item(0)->textContent;
 		$config = BBCodeMonkey::parse($usage);
-		$bbcode = $config['bbcode'];
-		$tag    = $config['tag'];
+		$bbcode     = $config['bbcode'];
+		$bbcodeName = $config['name'];
+		$tag        = $config['tag'];
 
 		// Set the optional tag name
 		if ($node->hasAttribute('tagName'))
@@ -144,6 +153,7 @@ class Repository
 
 		return array(
 			'bbcode' => $bbcode,
+			'name'   => $bbcodeName,
 			'tag'    => $tag
 		);
 	}

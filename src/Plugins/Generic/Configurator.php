@@ -78,9 +78,11 @@ class Configurator extends ConfiguratorBase
 					throw new RuntimeException('Duplicate named subpatterns are not allowed');
 				}
 
+				$endToken = $tok['endToken'];
+
 				$lpos = $tok['pos'];
-				$rpos = $regexpInfo['tokens'][$tok['endToken']]['pos']
-				      + $regexpInfo['tokens'][$tok['endToken']]['len'];
+				$rpos = $regexpInfo['tokens'][$endToken]['pos']
+				      + $regexpInfo['tokens'][$endToken]['len'];
 
 				$attrRegexp = $regexpInfo['delimiter']
 				            . '^' . substr($regexpInfo['regexp'], $lpos, $rpos - $lpos) . '$'

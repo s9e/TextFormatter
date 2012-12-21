@@ -54,7 +54,7 @@ class RepositoryTest extends Test
 	/**
 	* @testdox get() throws an exception if the BBCode is not in repository
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not find BBCode 'FOOBAR' in repository
+	* @expectedExceptionMessage Could not find 'FOOBAR' in repository
 	*/
 	public function testUnknownBBCode()
 	{
@@ -63,12 +63,41 @@ class RepositoryTest extends Test
 	}
 
 	/**
-	* @testdox get() normalizes the BBCode name before retrieval
+	* @testdox get() normalizes the name before retrieval
 	*/
 	public function testNameIsNormalized()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/Plugins/BBCodes/Configurator/repository.xml');
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="B">
+					<usage>[FOO]{TEXT}[/FOO]</usage>
+					<template/>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
 		$repository->get('b');
+	}
+
+	/**
+	* @testdox If the name is a BBCode name followed by a # character, get() normalizes only the first part
+	*/
+	public function testSpecialNameIsNormalized()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="B#special">
+					<usage>[FOO]{TEXT}[/FOO]</usage>
+					<template/>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
+		$repository->get('b#special');
 	}
 
 	/**

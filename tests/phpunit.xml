@@ -36,6 +36,7 @@
 			<file>Configurator/Collections/RulesetTest.php</file>
 			<file>Configurator/Collections/TagCollectionTest.php</file>
 			<file>Configurator/Collections/TemplatesetTest.php</file>
+			<file>Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>Configurator/Helpers/ConfigHelperTest.php</file>
 			<file>Configurator/Helpers/HTML5/TemplateForensicsTest.php</file>
 			<!-- RulesGenerator depends on TemplateForensics -->
@@ -119,6 +120,7 @@
 			<file>../src/Configurator/Collections/TagCollection.php</file>
 			<file>../src/Configurator/Collections/Templateset.php</file>
 			<file>../src/Configurator/Helpers/ConfigHelper.php</file>
+			<file>../src/Configurator/Exceptions/UnsafeTemplateException.php</file>
 			<file>../src/Configurator/Helpers/HTML5/RulesGenerator.php</file>
 			<file>../src/Configurator/Helpers/HTML5/TemplateForensics.php</file>
 			<file>../src/Configurator/Helpers/RegexpBuilder.php</file>

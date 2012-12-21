@@ -29,4 +29,15 @@ class ParserTest extends Test
 			$parser->parse('[b]x[i]y[/b]z[/i]')
 		);
 	}
+
+	/**
+	* @testdox getLogger() returns an instance of Logger
+	*/
+	public function testGetLogger()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Parser\\Logger',
+			$this->configurator->getParser()->getLogger()
+		);
+	}
 }

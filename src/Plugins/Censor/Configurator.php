@@ -100,6 +100,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			}
 		}
 
+		/** @todo "?" should probably become ".?" so that "apple?" matches both "apple" and "apples" */
 		$regexpOptions = array('specialChars' => array('*' => '\\pL*', '?' => '.'));
 		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
 		$config['regexp'] = '/(?<!\\pL)' . $regexp . '(?!\\pL)/iu';

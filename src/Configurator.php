@@ -16,6 +16,7 @@ use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Helpers\StylesheetHelper;
 use s9e\TextFormatter\Configurator\UrlConfig;
@@ -98,6 +99,28 @@ class Configurator implements ConfigProvider
 	public function getRenderer()
 	{
 		return new Renderer($this->getXSL());
+	}
+
+	/**
+	* Add the rules that are generated based on HTML5 specs
+	*
+	* @see s9e\TextFormatter\ConfigBuilder\Helpers\HTML5\RulesGenerator
+	*
+	* @param  array $options Options passed to RulesGenerator::getRules()
+	* @return void
+	*/
+	public function addHTML5Rules(array $options = array())
+	{
+		$rules = RulesGenerator::getRules($this->tags, $options);
+
+		// Add the rules pertaining to the root
+		$this->rootRules->merge($rules['root']);
+
+		// Add the rules pertaining to each tag
+		foreach ($rules['tags'] as $tagName => $tagRules)
+		{
+			$this->tags[$tagName]->rules->merge($tagRules);
+		}
 	}
 
 	/**
