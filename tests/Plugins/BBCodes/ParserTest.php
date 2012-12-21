@@ -352,6 +352,72 @@ class ParserTest extends Test
 					$attributes->add('url');
 				}
 			),
+			array(
+				'[C:123]foo[/C][/C:123]',
+				'<rt><C><st>[C:123]</st>foo[/C]<et>[/C:123]</et></C></rt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('C');
+					$constructor->tags->add('C');
+				}
+			),
+			array(
+				'[C]foo[/C:123][/C]',
+				'<rt><C><st>[C]</st>foo[/C:123]<et>[/C]</et></C></rt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('C');
+					$constructor->tags->add('C');
+				}
+			),
+			array(
+				'[C:123]foo[/C][/c:123]',
+				'<rt><C><st>[C:123]</st>foo[/C]<et>[/c:123]</et></C></rt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('C');
+					$constructor->tags->add('C');
+				}
+			),
+			array(
+				'[C:123]foo[/C]',
+				'<pt>[C:123]foo[/C]</pt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('C');
+					$constructor->tags->add('C');
+				}
+			),
+			array(
+				'[PHP]...[/PHP]',
+				'<rt><CODE lang="php"><st>[PHP]</st>...<et>[/PHP]</et></CODE></rt>',
+				array(),
+				function ($constructor)
+				{
+					$bbcode = $constructor->BBCodes->add('PHP');
+					$bbcode->predefinedAttributes['lang'] = 'php';
+					$bbcode->tagName = 'CODE';
+
+					$constructor->tags->add('CODE')->attributes->add('lang');
+				}
+			),
+			array(
+				'[PHP lang=php4]...[/PHP]',
+				'<rt><CODE lang="php4"><st>[PHP lang=php4]</st>...<et>[/PHP]</et></CODE></rt>',
+				array(),
+				function ($constructor)
+				{
+					$bbcode = $constructor->BBCodes->add('PHP');
+					$bbcode->predefinedAttributes['lang'] = 'php';
+					$bbcode->tagName = 'CODE';
+
+					$constructor->tags->add('CODE')->attributes->add('lang');
+				}
+			),
 		);
 	}
 }
