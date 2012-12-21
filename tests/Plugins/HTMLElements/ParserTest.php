@@ -26,7 +26,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
-				},
+				}
 			),
 			array(
 				'x <b>bold</b> x',
@@ -35,7 +35,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
-				},
+				}
 			),
 			array(
 				'x <b title="is bold">bold</b> x',
@@ -45,7 +45,7 @@ class ParserTest extends Test
 				{
 					$constructor->HTMLElements->allowElement('b');
 					$constructor->HTMLElements->allowAttribute('b', 'title');
-				},
+				}
 			),
 			array(
 				'x <b title="is bold">bold</b> x',
@@ -54,7 +54,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
-				},
+				}
 			),
 			array(
 				'x <B>bold</b> x',
@@ -63,7 +63,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
-				},
+				}
 			),
 			array(
 				'x <b Title="is bold">bold</b> x',
@@ -73,7 +73,7 @@ class ParserTest extends Test
 				{
 					$constructor->HTMLElements->allowElement('b');
 					$constructor->HTMLElements->allowAttribute('b', 'title');
-				},
+				}
 			),
 			array(
 				'x<br/>y',
@@ -82,7 +82,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('br');
-				},
+				}
 			),
 			array(
 				'x<br />y',
@@ -91,7 +91,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('br');
-				},
+				}
 			),
 			array(
 				'x <input type=checkbox disabled checked /> x',
@@ -103,7 +103,7 @@ class ParserTest extends Test
 					$constructor->HTMLElements->allowAttribute('input', 'type');
 					$constructor->HTMLElements->allowAttribute('input', 'disabled');
 					$constructor->HTMLElements->allowAttribute('input', 'checked');
-				},
+				}
 			),
 		);
 	}
@@ -118,7 +118,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
-				},
+				}
 			),
 			array(
 				'x <b>bold</b> x',
@@ -127,7 +127,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
-				},
+				}
 			),
 			array(
 				'x <b title="is bold">bold</b> x',
@@ -137,7 +137,7 @@ class ParserTest extends Test
 				{
 					$constructor->HTMLElements->allowElement('b');
 					$constructor->HTMLElements->allowAttribute('b', 'title');
-				},
+				}
 			),
 		);
 	}

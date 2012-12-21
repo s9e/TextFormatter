@@ -1114,6 +1114,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
 
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag
+ [x] Automatically creates a "with" attribute with required=false
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option

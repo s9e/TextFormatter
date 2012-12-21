@@ -26,7 +26,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->Censor->add('apple');
-				},
+				}
 			),
 			array(
 				'apple',
@@ -35,7 +35,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->Censor->add('apple');
-				},
+				}
 			),
 			array(
 				'apple',
@@ -44,7 +44,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->Censor->add('apple', 'orange');
-				},
+				}
 			),
 			array(
 				'You dirty 苹果',

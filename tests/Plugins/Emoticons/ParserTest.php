@@ -26,7 +26,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
-				},
+				}
 			),
 			array(
 				':)',
@@ -35,7 +35,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
-				},
+				}
 			),
 		);
 	}
@@ -50,7 +50,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
-				},
+				}
 			),
 			array(
 				':)',
@@ -59,7 +59,7 @@ class ParserTest extends Test
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
-				},
+				}
 			),
 		);
 	}

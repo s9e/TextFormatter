@@ -25,7 +25,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B');
-				},
+				}
 			),
 			array(
 				'x [B]BOLD[/B] y',
@@ -35,7 +35,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B');
-				},
+				}
 			),
 			array(
 				'x [B/] y',
@@ -45,7 +45,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B');
-				},
+				}
 			),
 			array(
 				'x [B /] y',
@@ -55,7 +55,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B');
-				},
+				}
 			),
 			array(
 				'x [B/[',
@@ -65,7 +65,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B');
-				},
+				}
 			),
 			array(
 				'x [B/',
@@ -75,7 +75,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B');
-				},
+				}
 			),
 			array(
 				'x [B  ',
@@ -85,7 +85,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B');
-				},
+				}
 			),
 			array(
 				'x [b]bold[/b] y',
@@ -95,7 +95,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B', array('tagName' => 'FOO'));
 					$constructor->tags->add('FOO');
-				},
+				}
 			),
 			array(
 				'x [b y="foo"]bold[/b] y',
@@ -105,7 +105,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B')->attributes->add('y');
-				},
+				}
 			),
 			array(
 				'x [b Y="foo"]bold[/b] y',
@@ -115,7 +115,7 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$constructor->tags->add('B')->attributes->add('y');
-				},
+				}
 			),
 			array(
 				'x [b x="bar" y="foo"]bold[/b] y',
@@ -127,7 +127,7 @@ class ParserTest extends Test
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
 					$attributes->add('y');
-				},
+				}
 			),
 			array(
 				"x [b x='bar' y='foo']bold[/b] y",
@@ -139,7 +139,7 @@ class ParserTest extends Test
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
 					$attributes->add('y');
-				},
+				}
 			),
 			array(
 				'x [b x=bar y=foo]bold[/b] y',
@@ -151,7 +151,7 @@ class ParserTest extends Test
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
 					$attributes->add('y');
-				},
+				}
 			),
 			array(
 				"x [b x='\"bar\"'/] y",
@@ -162,7 +162,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				'x [b x="\'bar\'"/] y',
@@ -173,7 +173,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				'x [b x="\\""/] y',
@@ -184,7 +184,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				"x [b x='\\''/] y",
@@ -195,7 +195,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				'x [b x="\\\\\\""/] y',
@@ -206,7 +206,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				'x [b x=" ] y',
@@ -217,7 +217,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				"x [b x=' ] y",
@@ -228,7 +228,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				'x [b x!',
@@ -239,30 +239,29 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
-				'x [b x]',
-				'<rt>x <B><st>[b x]</st></rt>',
+				'x [b x][/b] y',
+				'<rt>x <B><st>[b x]</st><et>[/b]</et></B> y</rt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('B');
+					$constructor->tags->add('B')->attributes->add('x')->required = false;
+				}
+			),
+			array(
+				'x [b foo x=1][/b] y',
+				'<rt>x <B x="1"><st>[b foo x=1]</st><et>[/b]</et></B> y</rt>',
 				array(),
 				function ($constructor)
 				{
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
-					$attributes->add('x');
-				},
-			),
-			array(
-				'x [b foo x=1]',
-				'<rt>x <B x="1"><st>[b foo x=1]</st></rt>',
-				array(),
-				function ($constructor)
-				{
-					$constructor->BBCodes->add('B');
-					$attributes = $constructor->tags->add('B')->attributes;
-					$attributes->add('x');
-					$attributes->add('foo');
-				},
+					$attributes->add('x')->required = false;
+					$attributes->add('foo')->required = false;
+				}
 			),
 			array(
 				'x [b x',
@@ -272,8 +271,8 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
-					$attributes->add('x');
-				},
+					$attributes->add('x')->required = false;
+				}
 			),
 			array(
 				'x [b x=',
@@ -284,7 +283,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				'x [b x=bar',
@@ -295,7 +294,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('x');
-				},
+				}
 			),
 			array(
 				'x [B="foo" /]',
@@ -306,7 +305,7 @@ class ParserTest extends Test
 					$constructor->BBCodes->add('B');
 					$attributes = $constructor->tags->add('B')->attributes;
 					$attributes->add('b');
-				},
+				}
 			),
 			array(
 				'x [b="foo" /]',
@@ -316,9 +315,42 @@ class ParserTest extends Test
 				{
 					$constructor->BBCodes->add('B')->defaultAttribute = 'x';
 					$attributes = $constructor->tags->add('B')->attributes;
-					$attributes->add('b');
-					$attributes->add('x');
-				},
+					$attributes->add('b')->required = false;
+					$attributes->add('x')->required = false;
+				}
+			),
+			array(
+				'x [URL]http://localhost[/URL] y',
+				'<rt>x <URL url="http://localhost"><st>[URL]</st>http://localhost<et>[/URL]</et></URL> y</rt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('URL')->contentAttributes[] = 'url';
+					$attributes = $constructor->tags->add('URL')->attributes;
+					$attributes->add('url');
+				}
+			),
+			array(
+				'x [URL=http://127.0.0.1]http://localhost[/URL] y',
+				'<rt>x <URL url="http://127.0.0.1"><st>[URL=http://127.0.0.1]</st>http://localhost<et>[/URL]</et></URL> y</rt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('URL')->contentAttributes[] = 'url';
+					$attributes = $constructor->tags->add('URL')->attributes;
+					$attributes->add('url');
+				}
+			),
+			array(
+				'x [URL]http://localhost y',
+				'<pt>x [URL]http://localhost y</pt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('URL')->contentAttributes[] = 'url';
+					$attributes = $constructor->tags->add('URL')->attributes;
+					$attributes->add('url');
+				}
 			),
 		);
 	}

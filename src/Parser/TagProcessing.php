@@ -62,7 +62,17 @@ trait TagProcessing
 			$this->processCurrentTag();
 		}
 
-		// Close unclosed tags
+		// Close tags that were left open
+		while (!empty($this->openTags))
+		{
+			$this->currentTag = new Tag(
+				Tag::END_TAG,
+				end($this->openTags)->getName(),
+				$this->textLen,
+				0
+			);
+			$this->processCurrentTag();
+		}
 
 		$this->finalizeOutput();
 	}
@@ -243,8 +253,9 @@ trait TagProcessing
 				}
 			}
 
-			// Output an end tag to close this start tag
+			// Output an end tag to close this start tag, then update the context
 			$this->outputTag(new Tag(Tag::END_TAG, $startTagName, $tag->getPos(), 0));
+			$this->popContext();
 		}
 
 		// Output our tag, moving the cursor past it, then update the context

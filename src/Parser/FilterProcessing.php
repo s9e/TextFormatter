@@ -160,7 +160,7 @@ trait FilterProcessing
 					// Use the attribute's default value
 					$tag->setAttribute($attrName, $attrConfig['defaultValue']);
 				}
-				elseif (!empty($attrConfig['isRequired']))
+				elseif (!empty($attrConfig['required']))
 				{
 					// This attribute is missing, has no default value and is required, which means
 					// the attribute set is invalid
@@ -210,7 +210,7 @@ trait FilterProcessing
 			$this->logger->unsetTag();
 		}
 
-		return true;
+		return $isValid;
 	}
 
 	/**

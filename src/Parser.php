@@ -99,8 +99,6 @@ class Parser
 	*/
 	protected function reset($text)
 	{
-		$this->logger->clear();
-
 		$this->context    = $this->rootContext;
 		$this->namespaces = array();
 		$this->output     = '';

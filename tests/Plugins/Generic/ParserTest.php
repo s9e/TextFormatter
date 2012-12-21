@@ -29,7 +29,7 @@ class ParserTest extends Test
 						'/@(?<username>[a-z0-9_]{1,15})/i',
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 					);
-				},
+				}
 			),
 		);
 	}
@@ -47,7 +47,7 @@ class ParserTest extends Test
 						'/@(?<username>[a-z0-9_]{1,15})/i',
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 					);
-				},
+				}
 			),
 		);
 	}

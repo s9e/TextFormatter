@@ -20,6 +20,16 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Automatically creates a "with" attribute with required=false
+	*/
+	public function testCreatesAttribute()
+	{
+		$this->configurator->plugins->load('Censor');
+		$this->assertTrue(isset($this->configurator->tags['CENSOR']->attributes['with']));
+		$this->assertFalse($this->configurator->tags['CENSOR']->attributes['with']->required);
+	}
+
+	/**
 	* @testdox Does not attempt to create a tag if it already exists
 	*/
 	public function testDoesNotCreateTag()
