@@ -238,9 +238,10 @@ abstract class ConfigHelper
 	* Convert a structure to a (possibly multidimensional) array
 	*
 	* @param  mixed $value
+	* @param  bool  $keepEmpty Whether to keep empty arrays instead of removing them
 	* @return array
 	*/
-	public static function toArray($value)
+	public static function toArray($value, $keepEmpty = false)
 	{
 		$array = array();
 
@@ -269,7 +270,7 @@ abstract class ConfigHelper
 				throw new RuntimeException('Cannot convert ' . $type . ' to array');
 			}
 
-			if ($v === array())
+			if (!$keepEmpty && $v === array())
 			{
 				// We don't record empty structures
 				continue;

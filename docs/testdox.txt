@@ -242,7 +242,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
  [x] toArray() omits NULL values
  [x] toArray() omits empty arrays from values
- [x] toArray() omits empty Collections from values
+ [x] toArray() keeps empty arrays if its second argument is TRUE
  [x] replaceBuiltInFilters() replaces built-in attribute filter #int by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
  [x] replaceBuiltInFilters() copies the built-in filters' signatures based on the names of their parameters
  [x] replaceBuiltInFilters() replaces built-in tag filter #filterAttributes by its callback s9e\TextFormatter\Parser::filterAttributes

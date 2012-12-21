@@ -140,14 +140,13 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox toArray() omits empty Collections from values
+	* @testdox toArray() keeps empty arrays if its second argument is TRUE
 	*/
-	public function testEmptyCollection()
+	public function testKeepEmptyArray()
 	{
-		$original = array('foo' => 1, 'bar' => new Collection);
-		$expected = array('foo' => 1);
+		$original = array('foo' => array(1), 'bar' => array());
 
-		$this->assertSame($expected, ConfigHelper::toArray($original));
+		$this->assertSame($original, ConfigHelper::toArray($original, true));
 	}
 
 	/**
