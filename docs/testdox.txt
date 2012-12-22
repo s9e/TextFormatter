@@ -915,7 +915,14 @@ s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Filters work
 
 s9e\TextFormatter\Tests\Parser\FilterProcessing
- [x] 
+ [x] registerVar($k, $v) sets registeredVars[$k] to $v
+ [x] executeAttributePreprocessors() sets captured attributes on match
+ [x] executeAttributePreprocessors() does not overwrite attributes that were already set
+ [x] executeAttributePreprocessors() unsets the source attribute on match
+ [x] executeAttributePreprocessors() does not unset the source attribute if there's nn match
+ [x] executeAttributePreprocessors() stops after the first match
+ [x] executeAttributePreprocessors() tries all preprocessors until there's a match
+ [x] executeAttributePreprocessors() returns TRUE even if the no source attribute was present
 
 s9e\TextFormatter\Tests\Parser\Logger
  [x] debug() generates a "debug" entry in the logs

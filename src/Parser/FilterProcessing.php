@@ -22,7 +22,7 @@ trait FilterProcessing
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
 		{
-			foreach ($tagConfig['attributeParsers'] as $attrName => $regexps)
+			foreach ($tagConfig['attributePreprocessors'] as $attrName => $regexps)
 			{
 				if (!$tag->hasAttribute($attrName))
 				{
