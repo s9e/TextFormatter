@@ -44,6 +44,8 @@ function convertFile($filepath)
 			$fqn  = (isset($table[$m[1]])) ? $table[$m[1]] : $namespace . '\\' . $m[1];
 			$path = __DIR__ . '/../src' . str_replace('\\', DIRECTORY_SEPARATOR, substr($fqn, 17)) . '.php';
 
+			$path = str_replace('/../src/Tests/', '/../tests/', $path);
+
 			if (!file_exists($path))
 			{
 				die("Cannot find $fqn in $path\n");
@@ -87,3 +89,4 @@ function convertDir($dir)
 }
 
 convertDir(realpath(__DIR__ . '/../src'));
+convertDir(realpath(__DIR__ . '/../tests'));
