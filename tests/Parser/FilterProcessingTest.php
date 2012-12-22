@@ -161,7 +161,10 @@ class FilterProcessingTest extends Test
 		);
 		$filter->addParameterByValue(42);
 
-		FilterProcessingDummy::__executeFilter($filter->asConfig(), array());
+		FilterProcessingDummy::__executeFilter(
+			$filter->asConfig(),
+			array()
+		);
 	}
 
 	/**
@@ -179,9 +182,11 @@ class FilterProcessingTest extends Test
 			}
 		);
 		$filter->addParameterByName('foo');
-		$filter->setVars(array('foo' => 42));
 
-		FilterProcessingDummy::__executeFilter($filter->asConfig(), array());
+		FilterProcessingDummy::__executeFilter(
+			$filter->asConfig(),
+			array('foo' => 42)
+		);
 	}
 
 	/**
@@ -199,9 +204,11 @@ class FilterProcessingTest extends Test
 			}
 		);
 		$filter->addParameterByName('foo');
-		$filter->setVars(array('registeredVars' => array('foo' => 42)));
 
-		FilterProcessingDummy::__executeFilter($filter->asConfig(), array());
+		FilterProcessingDummy::__executeFilter(
+			$filter->asConfig(),
+			array('registeredVars' => array('foo' => 42))
+		);
 	}
 }
 
