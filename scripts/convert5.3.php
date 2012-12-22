@@ -63,13 +63,54 @@ function convertFile($filepath)
 		$file
 	);
 
+	$oldFile = $file;
+
 	if ($table)
 	{
 		$table = array_unique($table);
 		sort($table);
 
 		$file = preg_replace('#^use.*?;\\n\\n#ms', 'use ' . implode(";\nuse ", $table) . ";\n\n", $file);
+	}
 
+	// Some specific tweaks for PHP 5.3 that would be considered bad code in 5.4
+	$replacements = array(
+		'FilterProcessingTest.php' => array(
+			array(
+				"\n\t\t\$filter = new ProgrammableCallback("
+				"\n\t\t\$test = \$this;\n\t\t\$filter = new ProgrammableCallback("
+			),
+			array(
+				"\n\t\t\t\t\$this->assert",
+				"\n\t\t\t\t\$test->assert"
+			)
+		),
+		'Logger.php' => array(
+			array(
+				'$callback($msg, $context);',
+				'call_user_func_array($callback, array(&$msg, &$context));'
+			)
+		),
+		'TemplateOptimizer.php' => array(
+			array(
+				'return $m[1] . self::minifyXPath($m[2]);',
+				'return $m[1] . TemplateOptimizer::minifyXPath($m[2]);'
+			),
+			array(
+				'protected static function minifyXPath($old)',
+				'public static function minifyXPath($old)'
+			)
+		),
+	);
+
+	$filename = basename($filepath);
+	if (isset($replacements[$basename]))
+	{
+		$file = strtr($file, $replacements[$basename]);
+	}
+
+	if ($file !== $oldFile)
+	{
 		echo "Replacing $filepath\n";
 		file_put_contents($filepath, $file);
 	}
