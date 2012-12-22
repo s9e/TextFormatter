@@ -25,8 +25,8 @@ function convertCustom($filepath, &$file)
 	$replacements = array(
 		'FilterProcessingTest.php' => array(
 			array(
-				"\n\t\t\$filter = new ProgrammableCallback(\n\t\t\t\tfunction()",
-				"\n\t\t\$test = \$this;\n\t\t\$filter = new ProgrammableCallback(\n\t\t\t\tfunction() use (\$test)"
+				"\n\t\t\$filter = new ProgrammableCallback(\n\t\t\tfunction()",
+				"\n\t\t\$test = \$this;\n\t\t\$filter = new ProgrammableCallback(\n\t\t\tfunction() use (\$test)"
 			),
 			array(
 				"\n\t\t\t\t\$this->assert",
