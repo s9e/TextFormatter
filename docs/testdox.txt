@@ -923,6 +923,9 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] executeAttributePreprocessors() stops after the first match
  [x] executeAttributePreprocessors() tries all preprocessors until there's a match
  [x] executeAttributePreprocessors() returns TRUE even if the no source attribute was present
+ [x] executeFilter() correctly passes a value to the callback
+ [x] executeFilter() correctly passes a named var to the callback
+ [x] executeFilter() correctly passes a var passed through registeredVars to the callback
 
 s9e\TextFormatter\Tests\Parser\Logger
  [x] debug() generates a "debug" entry in the logs
