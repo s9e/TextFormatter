@@ -77,7 +77,7 @@ function convertFile($filepath)
 	$replacements = array(
 		'FilterProcessingTest.php' => array(
 			array(
-				"\n\t\t\$filter = new ProgrammableCallback("
+				"\n\t\t\$filter = new ProgrammableCallback(",
 				"\n\t\t\$test = \$this;\n\t\t\$filter = new ProgrammableCallback("
 			),
 			array(
