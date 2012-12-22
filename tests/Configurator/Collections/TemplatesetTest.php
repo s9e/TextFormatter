@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Collections;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\Templateset;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TemplatePlaceholder;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\Templateset
@@ -65,5 +66,35 @@ class TemplatesetTest extends Test
 			$xsl,
 			$this->templateset->get('')
 		);
+	}
+
+	/**
+	* @testdox set() accepts an instance of TemplatePlaceholder if it does not allow unsafe markup
+	*/
+	public function testSetPlaceholder()
+	{
+		$this->templateset->set('', new TemplatePlaceholder(function(){}));
+	}
+
+	/**
+	* @testdox set() rejects an instance of TemplatePlaceholder if it allows unsafe markup
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Cannot add unsafe template
+	*/
+	public function testSetPlaceholderUnsafe()
+	{
+		$template = new TemplatePlaceholder(function(){});
+		$template->disableTemplateChecking();
+		$this->templateset->set('', $template);
+	}
+
+	/**
+	* @testdox setUnsafe() accepts an instance of TemplatePlaceholder and disable its template checking
+	*/
+	public function testSetUnsafePlaceholder()
+	{
+		$template = new TemplatePlaceholder(function(){});
+		$this->templateset->setUnsafe('', $template);
+		$this->assertTrue($template->allowsUnsafeMarkup());
 	}
 }

@@ -7,12 +7,11 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\TemplatePlaceholder;
 
-/**
-* @todo check the predicate for well-formedness in normalizeKey() - also ensure that entities in predicate are escaped either here or when the final stylesheet is assembled
-*/
 class Templateset extends NormalizedCollection
 {
 	/**
@@ -33,25 +32,43 @@ class Templateset extends NormalizedCollection
 	/**
 	* Normalize a template for storage
 	*
-	* @param  string $template Original template
-	* @return string           Normalized template
+	* @param  string|TemplatePlaceholder $template Original template
+	* @return mixed                                Normalized template
 	*/
 	public function normalizeValue($template)
 	{
+		if ($template instanceof TemplatePlaceholder)
+		{
+			if ($template->allowsUnsafeMarkup())
+			{
+				throw new InvalidArgumentException('Cannot add unsafe template');
+			}
+
+			return $template;
+		}
+
 		return TemplateHelper::normalize($template, $this->tag);
 	}
 
 	/**
 	* Set a template without checking it for unsafe markup
 	*
-	* @param  string $predicate Template's predicate
-	* @param  string $template  Template's content
+	* @param  string                     $predicate Template's predicate
+	* @param  string|TemplatePlaceholder $template  Template's content
 	* @return void
 	*/
 	public function setUnsafe($predicate, $template)
 	{
 		$predicate = $this->normalizeKey($predicate);
-		$template  = TemplateHelper::normalizeUnsafe($template, $this->tag);
+
+		if ($template instanceof TemplatePlaceholder)
+		{
+			$template->disableTemplateChecking();
+		}
+		else
+		{
+			$template  = TemplateHelper::normalizeUnsafe($template, $this->tag);
+		}
 
 		$this->items[$predicate] = $template;
 	}
