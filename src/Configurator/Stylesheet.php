@@ -9,6 +9,10 @@ namespace s9e\TextFormatter\Configurator;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Helpers\TemplateChecker;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class Stylesheet
@@ -46,15 +50,66 @@ class Stylesheet
 	*/
 	public function get()
 	{
-		$templates = array();
+		$prefixes  = array();
+		$templates = array(
+			'br' => '<br/>',
+			'st' => '',
+			'et' => '',
+			'i'  => ''
+		);
 
+		// Iterate over the wildcards to collect their templates and their prefix
+		foreach ($this->wildcards as $prefix => $template)
+		{
+			$inUse = false;
+			$checkUnsafe = !($template instanceof UnsafeTemplate);
+
+			// First, normalize the template without asserting its safety
+			$template = TemplateHelper::normalizeUnsafe((string) $template);
+
+			// Then, iterate over tags to assess the template's safety
+			foreach ($this->tags as $tagName => $tag)
+			{
+				if (strncmp($tagName, $prefix . ':', strlen($prefix) + 1))
+				{
+					continue;
+				}
+
+				if ($checkUnsafe)
+				{
+					TemplateChecker::checkUnsafe($template, $tag);
+				}
+
+				$inUse = true;
+			}
+
+			if ($inUse)
+			{
+				$prefixes[$prefix] = 1;
+				$templates[$prefix . ':*'] = $template;
+			}
+		}
+
+		// Iterate over the tags to collect their templates and their prefix
 		foreach ($this->tags as $tagName => $tag)
 		{
 			foreach ($tag->templates as $predicate => $template)
 			{
-				/**
-				* @todo recheck templates -- the attribute filters might have changed
-				*/
+				$match = $tagName;
+				if ($predicate !== '')
+				{
+					$match .= '[' . $predicate . ']';
+				}
+
+				$pos = strpos($tagName, ':');
+				if ($pos !== false)
+				{
+					$prefixes[substr($tagName, 0, $pos)] = 1;
+				}
+
+				$templates[$match] = ($template instanceof UnsafeTemplate)
+				                   ? TemplateHelper::normalizeUnsafe((string) $template, $tag)
+				                   : TemplateHelper::normalize((string) $template, $tag);
 			}
 		}
 
@@ -62,25 +117,8 @@ class Stylesheet
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
 		     . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
 
-		// Collect the unique prefixes used in tag names
-		$prefixes = array();
-		foreach ($this->tags as $tagName => $tag)
-		{
-			$pos = strpos($tagName, ':');
-
-			if ($pos !== false)
-			{
-				$prefixes[substr($tagName, 0, $pos)] = 1;
-			}
-		}
-
-		// Add prefixes from wildcard templates
-		foreach ($this->wildcards as $prefix => $template)
-		{
-			$prefixes[$prefix] = 1;
-		}
-
 		// Append the namespace declarations to the stylesheet
+		ksort($prefixes);
 		foreach (array_keys($prefixes) as $prefix)
 		{
 			$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
@@ -88,6 +126,15 @@ class Stylesheet
 
 		// Start the stylesheet with the boilerplate stuff
 		$xsl .= '><xsl:output method="' . $this->outputMethod . '" encoding="utf-8" indent="no"/>';
+
+		// Add our templates
+		/** @todo dedupe */
+		foreach ($templates as $match => $template)
+		{
+			$xsl .= '<xsl:template match="' . htmlspecialchars($match) . '">'
+			      . $template
+			      . '</xsl:template>';
+		}
 
 		$xsl .= '</xsl:stylesheet>';
 

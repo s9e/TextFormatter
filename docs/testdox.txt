@@ -85,6 +85,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->customFilters is an instance of FilterCollection
  [x] $configurator->plugins is an instance of PluginCollection
  [x] $configurator->rootRules is an instance of Ruleset
+ [x] $configurator->stylesheet is an instance of Stylesheet
  [x] $configurator->tags is an instance of TagCollection
  [x] $configurator->urlConfig is an instance of UrlConfig
  [x] asConfig() returns an array with a rootContext element
@@ -842,6 +843,13 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] asConfig() omits '#executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
  [x] asConfig() does not modify the tag's filterChain itself
 
+s9e\TextFormatter\Tests\Configurator\Items\Template
+ [x] Template::__construct() accepts a string
+ [x] Template::__construct() accepts a valid callback
+ [x] Template::__construct() throws an exception on anything else
+ [x] When cast as string, returns the string passed to constructor if applicable
+ [x] When cast as string, executes the callback passed to constructor and returns its result if applicable
+
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
  [x] setOutputMethod('text') throws an exception
@@ -1032,7 +1040,6 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimitAction() sets the regexpLimitAction property
  [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
- [x] Offers a default getXSL() implementation that returns an empty string
  [x] toJS() converts the regexp in 'regexp' if applicable
  [x] toJS() converts the array of regexps in 'regexp' if applicable
 

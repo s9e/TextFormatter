@@ -47,7 +47,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->set(':)', '<img src="e.png"/>');
 
-		$xsl = $plugin->getXSL();
+		$xsl = $plugin->getTemplate();
 
 		$this->assertContains(':)', $xsl);
 		$this->assertContains('<img src="e.png"/>', $xsl);
@@ -61,7 +61,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->set(':)', '<img src="e.png">');
 
-		$xsl = $plugin->getXSL();
+		$xsl = $plugin->getTemplate();
 
 		$this->assertContains(':)', $xsl);
 		$this->assertContains('<img src="e.png"/>', $xsl);
@@ -74,11 +74,6 @@ class ConfiguratorTest extends Test
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->set(":')", '<img src="e.png">');
-
-		$this->assertSame(
-			'<img src="e.png">',
-			$this->renderSnippet('<E>:&#039;)</E>', $plugin->getXSL())
-		);
 	}
 
 	/**
@@ -88,11 +83,6 @@ class ConfiguratorTest extends Test
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->set('"_"', '<img src="e.png">');
-
-		$this->assertSame(
-			'<img src="e.png">',
-			$this->renderSnippet('<E>&quot;_&quot;</E>', $plugin->getXSL())
-		);
 	}
 
 	/**
@@ -102,11 +92,6 @@ class ConfiguratorTest extends Test
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->set('\':")', '<img src="e.png">');
-
-		$this->assertSame(
-			'<img src="e.png">',
-			$this->renderSnippet('<E>&#039;:&quot;)</E>', $plugin->getXSL())
-		);
 	}
 
 	/**

@@ -50,6 +50,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox $configurator->stylesheet is an instance of Stylesheet
+	*/
+	public function testStylesheetInstance()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Stylesheet',
+			$this->configurator->stylesheet
+		);
+	}
+
+	/**
 	* @testdox $configurator->tags is an instance of TagCollection
 	*/
 	public function testTagsInstance()

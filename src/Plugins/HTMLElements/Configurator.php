@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Plugins\HTMLElements;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
@@ -27,7 +28,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var string Catch-all XSL, used to render all tags in the "html" namespace
 	*/
-	protected $xsl = '<xsl:template match="html:*"><xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element></xsl:template>';
+	protected $template = '<xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element>';
 
 	/**
 	* @var array  Default filter of a few known attributes
@@ -83,13 +84,10 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function setUp()
 	{
-		if ($this->prefix !== 'html')
-		{
-			/**
-			* Not terribly reliable but should work in all but the most peculiar of cases
-			*/
-			$this->xsl = str_replace('="html:', '="' . $this->prefix . ':', $this->xsl);
-		}
+		$this->configurator->stylesheet->setWildcardTemplate(
+			$this->prefix,
+			new UnsafeTemplate($this->template)
+		);
 	}
 
 	/**
@@ -274,15 +272,5 @@ class Configurator extends ConfiguratorBase
 			'prefix'     => $this->prefix,
 			'regexp'     => $regexp
 		);
-	}
-
-	/**
-	* 
-	* @todo
-	* @return string
-	*/
-	public function getXSL()
-	{
-		return $this->xsl;
 	}
 }

@@ -3,7 +3,7 @@
 namespace s9e\TextFormatter\Tests;
 
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
-use s9e\TextFormatter\Configurator\Helpers\StylesheetHelper;
+use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Renderer;
 use s9e\TextFormatter\Tests\Test;
 
@@ -19,7 +19,8 @@ class RendererTest extends Test
 		$tags = new TagCollection;
 		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
 
-		$this->renderer = new Renderer(StylesheetHelper::generate($tags));
+		$stylesheet = new Stylesheet($tags);
+		$this->renderer = new Renderer($stylesheet->get());
 	}
 
 	/**

@@ -18,7 +18,7 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
-use s9e\TextFormatter\Configurator\Helpers\StylesheetHelper;
+use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
 class Configurator implements ConfigProvider
@@ -37,6 +37,11 @@ class Configurator implements ConfigProvider
 	* @var Ruleset Rules that apply at the root of the text
 	*/
 	public $rootRules;
+
+	/**
+	* @var Stylesheet Stylesheet object
+	*/
+	public $stylesheet;
 
 	/**
 	* @var TagCollection Tags repository
@@ -60,6 +65,7 @@ class Configurator implements ConfigProvider
 		$this->plugins       = new PluginCollection($this);
 		$this->rootRules     = new Ruleset;
 		$this->tags          = new TagCollection;
+		$this->stylesheet    = new Stylesheet($this->tags);
 		$this->urlConfig     = new UrlConfig;
 	}
 
@@ -130,7 +136,10 @@ class Configurator implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$config    = ConfigHelper::toArray($this);
+		$properties = get_object_vars($this);
+		unset($properties['stylesheet']);
+
+		$config    = ConfigHelper::toArray($properties);
 		$bitfields = RulesHelper::getBitfields($this->tags, $this->rootRules);
 
 		// Save the root context
@@ -187,24 +196,13 @@ class Configurator implements ConfigProvider
 		return $config;
 	}
 
-	// NOTE: when building the JS config, keys from Collections should probably automatically be preserved, although not always (e.g. rule names?)
-
-
-
-
-
-	//==========================================================================
-	// XSL stuff
-	//==========================================================================
-
 	/**
 	* Return the XSL used for rendering
 	*
-	* @param  string $prefix Prefix to use for XSL elements (defaults to "xsl")
 	* @return string
 	*/
-	public function getXSL($prefix = 'xsl')
+	public function getXSL()
 	{
-		return StylesheetHelper::generate($this->tags, $this->plugins);
+		return $this->stylesheet->get();
 	}
 }

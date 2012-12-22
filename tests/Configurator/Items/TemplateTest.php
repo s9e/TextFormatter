@@ -19,7 +19,7 @@ class TemplateTest extends Test
 	}
 
 	/**
-	* @testdox Template::__construct() accepts a callback
+	* @testdox Template::__construct() accepts a valid callback
 	*/
 	public function testAcceptsCallback()
 	{
@@ -27,9 +27,19 @@ class TemplateTest extends Test
 	}
 
 	/**
+	* @testdox Template::__construct() throws an exception on anything else
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage must be a string or a valid callback
+	*/
+	public function testRejectsEverythingElse()
+	{
+		new Template(false);
+	}
+
+	/**
 	* @testdox When cast as string, returns the string passed to constructor if applicable
 	*/
-	public function testToStringCallback()
+	public function testToStringString()
 	{
 		$template = new Template('foo');
 

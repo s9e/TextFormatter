@@ -46,6 +46,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$this->tag = ($this->configurator->tags->exists($this->tagName))
 		           ? $this->configurator->tags->get($this->tagName)
 		           : $this->configurator->tags->add($this->tagName);
+
+		$this->tag->defaultTemplate = array($this, 'getTemplate');
 	}
 
 	/**
@@ -81,7 +83,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*
 	* @return string
 	*/
-	public function getXSL()
+	public function getTemplate()
 	{
 		$templates = array();
 		foreach ($this->collection as $code => $template)
@@ -89,7 +91,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$templates[$template][] = $code;
 		}
 
-		$xsl = '<xsl:template match="' . $this->tagName . '">';
+		$xsl = '';
 
 		// Iterate over codes, replace codes with their representation as a string (with quotes)
 		// and create variables as needed
@@ -138,7 +140,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$xsl .= '<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>';
 
 		// Now close everything and return
-		$xsl .= '</xsl:choose></xsl:template>';
+		$xsl .= '</xsl:choose>';
 
 		return $xsl;
 	}

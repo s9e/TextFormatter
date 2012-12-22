@@ -145,16 +145,6 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
-	* @testdox Offers a default getXSL() implementation that returns an empty string
-	*/
-	public function testGetXSL()
-	{
-		$dummy = new DummyPluginConfigurator($this->configurator);
-
-		$this->assertSame('', $dummy->getXSL());
-	}
-
-	/**
 	* @testdox toJS() converts the regexp in 'regexp' if applicable
 	*/
 	public function testToJSRegexp()
