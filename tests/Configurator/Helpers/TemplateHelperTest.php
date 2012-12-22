@@ -58,6 +58,16 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox saveTemplate() correctly handles an empty string
+	*/
+	public function testSaveXSLEmpty()
+	{
+		$xsl = '';
+
+		$this->assertSame($xsl, TemplateHelper::saveTemplate(TemplateHelper::loadTemplate($xsl)));
+	}
+
+	/**
 	* @testdox loadTemplate() can load '<ul><li>one<li>two</ul>'
 	*/
 	public function testLoadHTML()

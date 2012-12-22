@@ -35,7 +35,7 @@
 			<file>Configurator/Collections/PluginCollectionTest.php</file>
 			<file>Configurator/Collections/RulesetTest.php</file>
 			<file>Configurator/Collections/TagCollectionTest.php</file>
-			<file>Configurator/Collections/TemplatesetTest.php</file>
+			<file>Configurator/Collections/TemplateCollectionTest.php</file>
 			<file>Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>Configurator/Helpers/ConfigHelperTest.php</file>
 			<file>Configurator/Helpers/HTML5/TemplateForensicsTest.php</file>
@@ -45,7 +45,6 @@
 			<file>Configurator/Helpers/RegexpConvertorTest.php</file>
 			<file>Configurator/Helpers/RegexpParserTest.php</file>
 			<file>Configurator/Helpers/RulesHelperTest.php</file>
-			<file>Configurator/Helpers/StylesheetHelperTest.php</file>
 			<!-- TemplateChecker depends on TemplateOptimizer -->
 			<file>Configurator/Helpers/TemplateOptimizerTest.php</file>
 			<file>Configurator/Helpers/TemplateCheckerTest.php</file>
@@ -121,7 +120,7 @@
 			<file>../src/Configurator/Collections/PluginCollection.php</file>
 			<file>../src/Configurator/Collections/Ruleset.php</file>
 			<file>../src/Configurator/Collections/TagCollection.php</file>
-			<file>../src/Configurator/Collections/Templateset.php</file>
+			<file>../src/Configurator/Collections/TemplateCollection.php</file>
 			<file>../src/Configurator/Helpers/ConfigHelper.php</file>
 			<file>../src/Configurator/Exceptions/UnsafeTemplateException.php</file>
 			<file>../src/Configurator/Helpers/HTML5/RulesGenerator.php</file>
@@ -130,7 +129,6 @@
 			<file>../src/Configurator/Helpers/RegexpConvertor.php</file>
 			<file>../src/Configurator/Helpers/RegexpParser.php</file>
 			<file>../src/Configurator/Helpers/RulesHelper.php</file>
-			<file>../src/Configurator/Helpers/StylesheetHelper.php</file>
 			<file>../src/Configurator/Helpers/TemplateChecker.php</file>
 			<file>../src/Configurator/Helpers/TemplateHelper.php</file>
 			<file>../src/Configurator/Helpers/TemplateOptimizer.php</file>

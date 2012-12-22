@@ -230,14 +230,12 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] get() normalizes the tag name
  [x] set() normalizes the tag name
 
-s9e\TextFormatter\Tests\Configurator\Collections\Templateset
- [x] set() optimizes the template
- [x] set() checks the template for unsafe content
- [x] setUnsafe() optimizes the template
- [x] setUnsafe() does not check the template for unsafe content
- [x] set() accepts an instance of TemplatePlaceholder if it does not allow unsafe markup
- [x] set() rejects an instance of TemplatePlaceholder if it allows unsafe markup
- [x] setUnsafe() accepts an instance of TemplatePlaceholder and disable its template checking
+s9e\TextFormatter\Tests\Configurator\Collections\TemplateCollection
+ [x] set() accepts a string and returns an instance of Template
+ [x] set() accepts a callback and returns an instance of Template
+ [x] set() accepts an instance of Template, which it returns
+ [x] set() optimizes string templates
+ [x] set() checks string templates for unsafe content
 
 s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
  [x] getNode() returns the stored node
@@ -529,12 +527,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Rules targeting inexistent tags do not interfere
  [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 
-s9e\TextFormatter\Tests\Configurator\Helpers\StylesheetHelper
- [x] Correctly declares namespaces for prefixed tags
- [x] Predicates are preserved
- [x] Identical templates are merged together
- [x] Empty templates are merged with the empty templates used for <st>, <et> and <i>
-
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Comments are removed
  [x] Superfluous whitespace between elements is removed
@@ -784,6 +776,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] saveTemplate() correctly handles 'foo'
  [x] loadTemplate() can load '<xsl:value-of select="@foo"/>'
  [x] saveTemplate() correctly handles '<xsl:value-of select="@foo"/>'
+ [x] saveTemplate() correctly handles an empty string
  [x] loadTemplate() can load '<ul><li>one<li>two</ul>'
  [x] saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
  [x] loadTemplate() throws an exception on malformed XSL
@@ -838,9 +831,9 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] $tag->tagLimit rejects non-numbers
  [x] $tag->tagLimit rejects numbers less than 1
  [x] $tag->templates can be assigned an array of templates
- [x] $tag->templates can be assigned an instance of Templateset to copy its content
+ [x] $tag->templates can be assigned an instance of TemplateCollection to copy its content
  [x] Setting $tag->templates clears previous templates
- [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
+ [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of TemplateCollection
  [x] $tag->defaultTemplate maps to $tag->templates->get('')
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
  [x] asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
@@ -848,13 +841,6 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] $tag->filterChain contains the built-in filter '#filterAttributes' by default
  [x] asConfig() omits '#executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
  [x] asConfig() does not modify the tag's filterChain itself
-
-s9e\TextFormatter\Tests\Configurator\Items\TemplatePlaceholder
- [x] Throws an exception if callback is not callable
- [x] allowsUnsafeMarkup() returns false by default
- [x] disableTemplateChecking() allows unsafe markup to be used
- [x] enableTemplateChecking() re-enables template checking if it was disabled
- [x] Executes the callback when cast as string and return its result
 
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'

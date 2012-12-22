@@ -139,7 +139,7 @@ class RepositoryTest extends Test
 		$repository = new Repository($dom);
 		$config = $repository->get('FOO', array('text' => 'Hello'));
 
-		$this->assertSame('Hello', $config['tag']->defaultTemplate);
+		$this->assertSame('Hello', (string) $config['tag']->defaultTemplate);
 	}
 
 	/**
@@ -162,7 +162,7 @@ class RepositoryTest extends Test
 
 		$this->assertSame(
 			'<b>foo</b>',
-			$config['tag']->defaultTemplate
+			(string) $config['tag']->defaultTemplate
 		);
 	}
 
@@ -254,8 +254,8 @@ class RepositoryTest extends Test
 		$repository = new Repository($dom);
 		$config = $repository->get('FOO');
 
-		$this->assertSame('default', $config['tag']->templates->get(''));
-		$this->assertSame('bar',     $config['tag']->templates->get('ancestor::BAR'));
+		$this->assertSame('default', (string) $config['tag']->templates->get(''));
+		$this->assertSame('bar',     (string) $config['tag']->templates->get('ancestor::BAR'));
 	}
 
 	/**

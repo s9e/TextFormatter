@@ -24,6 +24,11 @@ class Stylesheet
 	protected $tags;
 
 	/**
+	* @var array Array of wildcard templates, using prefix as key
+	*/
+	protected $wildcards = array();
+
+	/**
 	* Constructor
 	*
 	* @param  TagCollection $tags Tag collection from which templates are pulled
@@ -41,6 +46,18 @@ class Stylesheet
 	*/
 	public function get()
 	{
+		$templates = array();
+
+		foreach ($this->tags as $tagName => $tag)
+		{
+			foreach ($tag->templates as $predicate => $template)
+			{
+				/**
+				* @todo recheck templates -- the attribute filters might have changed
+				*/
+			}
+		}
+
 		// Declare all the namespaces in use at the top
 		$xsl = '<?xml version="1.0" encoding="utf-8"?>'
 		     . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
@@ -57,6 +74,13 @@ class Stylesheet
 			}
 		}
 
+		// Add prefixes from wildcard templates
+		foreach ($this->wildcards as $prefix => $template)
+		{
+			$prefixes[$prefix] = 1;
+		}
+
+		// Append the namespace declarations to the stylesheet
 		foreach (array_keys($prefixes) as $prefix)
 		{
 			$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
@@ -68,6 +92,28 @@ class Stylesheet
 		$xsl .= '</xsl:stylesheet>';
 
 		return $xsl;
+	}
+
+	/**
+	* Set a wildcard template for given namespace
+	*
+	* @param  string                     $prefix   Prefix of the namespace this template applies to
+	* @param  string|TemplatePlaceholder $template Template's content
+	* @return void
+	*/
+	public function setWildcardTemplate($prefix, $template)
+	{
+		// Use the tag name validator to validate the prefix
+		if (!TagName::isValid($prefix . ':X'))
+		{
+			throw new InvalidArgumentException("Invalid prefix '" . $prefix . "'");
+		}
+
+		/**
+		* @todo ensure that $template is the right type or something
+		*/
+
+		$this->wildcards[$prefix] = $template;
 	}
 
 	/**

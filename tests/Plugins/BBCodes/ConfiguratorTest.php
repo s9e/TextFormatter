@@ -79,8 +79,8 @@ class ConfiguratorTest extends Test
 		$plugin->addFromRepository('B', 'foo', array('title' => 'bar'));
 
 		$this->assertSame(
-			$this->configurator->tags['B']->defaultTemplate,
-			'<b title="bar"><xsl:apply-templates/></b>'
+			'<b title="bar"><xsl:apply-templates/></b>',
+			(string) $this->configurator->tags['B']->defaultTemplate
 		);
 	}
 

@@ -12,7 +12,7 @@ use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\Configurator\Collections\FilterChain;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
-use s9e\TextFormatter\Configurator\Collections\Templateset;
+use s9e\TextFormatter\Configurator\Collections\TemplateCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
@@ -52,7 +52,7 @@ class Tag implements ConfigProvider
 	protected $tagLimit = 100;
 
 	/**
-	* @var Templateset Templates associated with this tag
+	* @var TemplateCollection Templates associated with this tag
 	*/
 	protected $templates;
 
@@ -65,7 +65,7 @@ class Tag implements ConfigProvider
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
 		$this->filterChain            = new FilterChain(array('tag' => null));
 		$this->rules                  = new Ruleset;
-		$this->templates              = new Templateset($this);
+		$this->templates              = new TemplateCollection($this);
 
 		// Start the filterChain with the default processing
 		$this->filterChain->append('#executeAttributePreprocessors');
@@ -157,14 +157,14 @@ class Tag implements ConfigProvider
 	/**
 	* Set all templates associated with this tag
 	*
-	* @param array|Templateset $templates
+	* @param array|TemplateCollection $templates
 	*/
 	public function setTemplates($templates)
 	{
 		if (!is_array($templates)
-		 && !($templates instanceof Templateset))
+		 && !($templates instanceof TemplateCollection))
 		{
-			throw new InvalidArgumentException('setTemplates() expects an array or an instance of Templateset');
+			throw new InvalidArgumentException('setTemplates() expects an array or an instance of TemplateCollection');
 		}
 
 		$this->templates->clear();

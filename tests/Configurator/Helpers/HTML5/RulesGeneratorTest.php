@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator
@@ -199,7 +200,10 @@ class RulesGeneratorTest extends Test
 	public function testDenyAllStyle()
 	{
 		$tags = new TagCollection;
-		$tags->add('STYLE')->templates->setUnsafe('', '<style><xsl:apply-templates/></style>');
+		$tags->add('STYLE')->templates->set(
+			'',
+			new UnsafeTemplate('<style><xsl:apply-templates/></style>')
+		);
 
 		$rules = RulesGenerator::getRules($tags);
 
@@ -359,7 +363,10 @@ class RulesGeneratorTest extends Test
 	public function testNoBrChildStyle()
 	{
 		$tags = new TagCollection;
-		$tags->add('STYLE')->templates->setUnsafe('', '<style><xsl:apply-templates/></style>');
+		$tags->add('STYLE')->templates->set(
+			'',
+			new UnsafeTemplate('<style><xsl:apply-templates/></style>')
+		);
 
 		$rules = RulesGenerator::getRules($tags);
 

@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Items;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
-use s9e\TextFormatter\Configurator\Collections\Templateset;
+use s9e\TextFormatter\Configurator\Collections\TemplateCollection;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
 /**
@@ -215,19 +215,19 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox $tag->templates can be assigned an instance of Templateset to copy its content
+	* @testdox $tag->templates can be assigned an instance of TemplateCollection to copy its content
 	*/
-	public function testTemplatesInstanceOfTemplateset()
+	public function testTemplatesInstanceOfTemplateCollection()
 	{
 		$tag = new Tag;
 
-		$templateset = new Templateset($tag);
-		$templateset->setUnsafe('', 'foo');
+		$templates = new TemplateCollection($tag);
+		$templates->set('', 'foo');
 
-		$tag->templates = $templateset;
+		$tag->templates = $templates;
 
-		$this->assertEquals($templateset, $tag->templates);
-		$this->assertNotSame($templateset, $tag->templates, '$tag->templates should not have been replaced with $templateset');
+		$this->assertEquals($templates, $tag->templates);
+		$this->assertNotSame($templates, $tag->templates, '$tag->templates should not have been replaced with $templates');
 	}
 
 	/**
@@ -249,9 +249,9 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of Templateset
+	* @testdox setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of TemplateCollection
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage setTemplates() expects an array or an instance of Templateset
+	* @expectedExceptionMessage setTemplates() expects an array or an instance of TemplateCollection
 	*/
 	public function testSetTemplatesInvalid()
 	{
@@ -267,7 +267,7 @@ class TagTest extends Test
 		$tag = new Tag;
 		$tag->templates->set('', 'foo');
 
-		$this->assertSame('foo', $tag->defaultTemplate);
+		$this->assertSame('foo', (string) $tag->defaultTemplate);
 	}
 
 	/**
@@ -278,7 +278,7 @@ class TagTest extends Test
 		$tag = new Tag;
 		$tag->defaultTemplate = 'foo';
 
-		$this->assertSame('foo', $tag->templates->get(''));
+		$this->assertSame('foo', (string) $tag->templates->get(''));
 	}
 
 	/**
