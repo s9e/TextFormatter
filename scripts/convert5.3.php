@@ -28,6 +28,7 @@ function convertFile($filepath)
 		return;
 	}
 
+	$oldFile = $file;
 	list($namespace, $table) = fqn($file);
 
 	// Hardcode a couple of names
@@ -62,8 +63,6 @@ function convertFile($filepath)
 		},
 		$file
 	);
-
-	$oldFile = $file;
 
 	if ($table)
 	{
