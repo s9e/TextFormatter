@@ -19,16 +19,71 @@ function fqn($file)
 	return array($namespace, $table);
 }
 
+function convertCustom($filepath, &$file)
+{
+	// Some specific tweaks for PHP 5.3 that would be considered bad code in 5.4
+	$replacements = array(
+		'FilterProcessingTest.php' => array(
+			array(
+				"\n\t\t\$filter = new ProgrammableCallback(",
+				"\n\t\t\$test = \$this;\n\t\t\$filter = new ProgrammableCallback("
+			),
+			array(
+				"\n\t\t\t\t\$this->assert",
+				"\n\t\t\t\t\$test->assert"
+			)
+		),
+		'Logger.php' => array(
+			array(
+				'$callback($msg, $context);',
+				'call_user_func_array($callback, array(&$msg, &$context));'
+			)
+		),
+		'TemplateOptimizer.php' => array(
+			array(
+				'return $m[1] . self::minifyXPath($m[2]);',
+				'return $m[1] . TemplateOptimizer::minifyXPath($m[2]);'
+			),
+			array(
+				'protected static function minifyXPath($old)',
+				'public static function minifyXPath($old)'
+			)
+		),
+	);
+
+	$filename = basename($filepath);
+	if (isset($replacements[$filename]))
+	{
+		foreach ($replacements[$filename] as $pair)
+		{
+			list($search, $replace) = $pair;
+			$file = str_replace($search, $replace, $file);
+		}
+	}
+}
+
 function convertFile($filepath)
 {
-	$file = file_get_contents($filepath);
+	$file    = file_get_contents($filepath);
+	$oldFile = $file;
 
+	convertUse($filepath, $file);
+	convertCustom($filepath, $file);
+
+	if ($file !== $oldFile)
+	{
+		echo "Replacing $filepath\n";
+		file_put_contents($filepath, $file);
+	}
+}
+
+function convertUse($filepath, &$file)
+{
 	if (!strpos($file, "\tuse "))
 	{
 		return;
 	}
 
-	$oldFile = $file;
 	list($namespace, $table) = fqn($file);
 
 	// Hardcode a couple of names
@@ -70,52 +125,6 @@ function convertFile($filepath)
 		sort($table);
 
 		$file = preg_replace('#^use.*?;\\n\\n#ms', 'use ' . implode(";\nuse ", $table) . ";\n\n", $file);
-	}
-
-	// Some specific tweaks for PHP 5.3 that would be considered bad code in 5.4
-	$replacements = array(
-		'FilterProcessingTest.php' => array(
-			array(
-				"\n\t\t\$filter = new ProgrammableCallback(",
-				"\n\t\t\$test = \$this;\n\t\t\$filter = new ProgrammableCallback("
-			),
-			array(
-				"\n\t\t\t\t\$this->assert",
-				"\n\t\t\t\t\$test->assert"
-			)
-		),
-		'Logger.php' => array(
-			array(
-				'$callback($msg, $context);',
-				'call_user_func_array($callback, array(&$msg, &$context));'
-			)
-		),
-		'TemplateOptimizer.php' => array(
-			array(
-				'return $m[1] . self::minifyXPath($m[2]);',
-				'return $m[1] . TemplateOptimizer::minifyXPath($m[2]);'
-			),
-			array(
-				'protected static function minifyXPath($old)',
-				'public static function minifyXPath($old)'
-			)
-		),
-	);
-
-	$filename = basename($filepath);
-	if (isset($replacements[$filename]))
-	{
-		foreach ($replacements[$filename] as $pair)
-		{
-			list($search, $replace) = $pair;
-			$file = str_replace($search, $replace, $file);
-		}
-	}
-
-	if ($file !== $oldFile)
-	{
-		echo "Replacing $filepath\n";
-		file_put_contents($filepath, $file);
 	}
 }
 
