@@ -856,6 +856,10 @@ s9e\TextFormatter\Tests\Configurator\Items\TemplatePlaceholder
  [x] enableTemplateChecking() re-enables template checking if it was disabled
  [x] Executes the callback when cast as string and return its result
 
+s9e\TextFormatter\Tests\Configurator\Stylesheet
+ [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
+ [x] setOutputMethod('text') throws an exception
+
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] Disallowed IDNs are punycoded
  [x] disallowHost('example.org') disallows "example.org"
