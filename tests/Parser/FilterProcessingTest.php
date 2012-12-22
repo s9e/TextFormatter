@@ -151,7 +151,7 @@ class FilterProcessingTest extends Test
 	public function testExecuteFilterByValue()
 	{
 		$filter = new ProgrammableCallback(
-			function ($value)
+			function()
 			{
 				$this->assertSame(
 					array(42),
@@ -173,7 +173,7 @@ class FilterProcessingTest extends Test
 	public function testExecuteFilterByName()
 	{
 		$filter = new ProgrammableCallback(
-			function ($value)
+			function()
 			{
 				$this->assertSame(
 					array(42),
@@ -195,7 +195,7 @@ class FilterProcessingTest extends Test
 	public function testExecuteFilterRegisteredVar()
 	{
 		$filter = new ProgrammableCallback(
-			function ($value)
+			function()
 			{
 				$this->assertSame(
 					array(42),
