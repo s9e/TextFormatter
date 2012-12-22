@@ -58,6 +58,14 @@ class TagNameTest extends Test
 	}
 
 	/**
+	* @testdox "-H" is invalid (name must start with a letter or an underscore)
+	*/
+	public function testInvalid19F481B2()
+	{
+		$this->assertFalse(TagName::isValid("-H"));
+	}
+
+	/**
 	* @testdox "1H" is invalid (name must start with a letter or an underscore)
 	*/
 	public function testInvalidFF83DCEF()
@@ -71,6 +79,15 @@ class TagNameTest extends Test
 	public function testInvalid0()
 	{
 		$this->assertFalse(TagName::isValid(""));
+	}
+
+	/**
+	* @testdox "foo-bar" is normalized to "FOO-BAR"
+	*/
+	public function testValid4C2CD9E9()
+	{
+		$this->assertTrue(TagName::isValid("foo-bar"));
+		$this->assertSame("FOO-BAR", TagName::normalize("foo-bar"));
 	}
 
 	/**
@@ -151,6 +168,14 @@ class TagNameTest extends Test
 	}
 
 	/**
+	* @testdox "xmlns:foo" is invalid ('xmlns' prefix is reserved)
+	*/
+	public function testInvalidCAA2B65B()
+	{
+		$this->assertFalse(TagName::isValid("xmlns:foo"));
+	}
+
+	/**
 	* @testdox "xsl:foo" is invalid ('xsl' prefix is reserved)
 	*/
 	public function testInvalid7F3B00E7()
@@ -182,8 +207,10 @@ class TagNameTest extends Test
 			'B'           => 'B',
 			'_b'          => '_B',
 			'H1'          => 'H1',
+			'-H'          => 'Invalid: name must start with a letter or an underscore',
 			'1H'          => 'Invalid: name must start with a letter or an underscore',
 			''            => 'Invalid: name must start with a letter or an underscore',
+			'foo-bar'     => 'FOO-BAR',
 			'foo#bar'     => 'Invalid: no pound sign allowed',
 			'foo:bar'     => 'foo:bar',
 			':bar'        => 'Invalid: empty prefix',
@@ -193,6 +220,7 @@ class TagNameTest extends Test
 			'foo_bar:baz' => 'foo_bar:baz',
 			'7up:foo'     => 'Invalid: prefix must start with a letter',
 			'foo:bar:baz' => 'Invalid: only one colon allowed',
+			'xmlns:foo'   => "Invalid: 'xmlns' prefix is reserved",
 			'xsl:foo'     => "Invalid: 'xsl' prefix is reserved",
 			's9e:foo'     => "Invalid: 's9e' prefix is reserved",
 			"B\n"         => 'Invalid: no newlines allowed'

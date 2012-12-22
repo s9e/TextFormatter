@@ -74,6 +74,14 @@ class AttributeNameTest extends Test
 	}
 
 	/**
+	* @testdox "xmlns" is invalid ('xmlns' is reserved)
+	*/
+	public function testInvalidB5732726()
+	{
+		$this->assertFalse(AttributeName::isValid("xmlns"));
+	}
+
+	/**
 	* @testdox "data-src" is normalized to "data-src"
 	*/
 	public function testValidE5FEAD2F()
@@ -108,6 +116,7 @@ class AttributeNameTest extends Test
 			'md5'      => 'md5',
 			'5md'      => 'Invalid: name must start with a letter or an underscore',
 			''         => 'Invalid: name must start with a letter or an underscore',
+			'xmlns'    => "Invalid: 'xmlns' is reserved",
 			'data-src' => 'data-src',
 			'foo:bar'  => 'Invalid: no colons allowed',
 			"foo\n"    => 'Invalid: no newlines allowed'

@@ -26,7 +26,7 @@ abstract class AttributeName
 	*/
 	public static function isValid($name)
 	{
-		return (bool) preg_match('#^[a-z_][-a-z_0-9]*$#Di', $name);
+		return (bool) preg_match('#^(?!xmlns$)[a-z_][-a-z_0-9]*$#Di', $name);
 	}
 
 	/**

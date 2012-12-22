@@ -885,6 +885,7 @@ s9e\TextFormatter\Tests\Configurator\Validators\AttributeName
  [x] "md5" is normalized to "md5"
  [x] "5md" is invalid (name must start with a letter or an underscore)
  [x] "" is invalid (name must start with a letter or an underscore)
+ [x] "xmlns" is invalid ('xmlns' is reserved)
  [x] "data-src" is normalized to "data-src"
  [x] "foo:bar" is invalid (no colons allowed)
  [x] "foo\n" is invalid (no newlines allowed)
@@ -895,8 +896,10 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "B" is normalized to "B"
  [x] "_b" is normalized to "_B"
  [x] "H1" is normalized to "H1"
+ [x] "-H" is invalid (name must start with a letter or an underscore)
  [x] "1H" is invalid (name must start with a letter or an underscore)
  [x] "" is invalid (name must start with a letter or an underscore)
+ [x] "foo-bar" is normalized to "FOO-BAR"
  [x] "foo#bar" is invalid (no pound sign allowed)
  [x] "foo:bar" is normalized to "foo:bar"
  [x] ":bar" is invalid (empty prefix)
@@ -906,6 +909,7 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "foo_bar:baz" is normalized to "foo_bar:baz"
  [x] "7up:foo" is invalid (prefix must start with a letter)
  [x] "foo:bar:baz" is invalid (only one colon allowed)
+ [x] "xmlns:foo" is invalid ('xmlns' prefix is reserved)
  [x] "xsl:foo" is invalid ('xsl' prefix is reserved)
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
