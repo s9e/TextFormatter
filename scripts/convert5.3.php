@@ -104,9 +104,9 @@ function convertFile($filepath)
 	);
 
 	$filename = basename($filepath);
-	if (isset($replacements[$basename]))
+	if (isset($replacements[$filename]))
 	{
-		$file = strtr($file, $replacements[$basename]);
+		$file = strtr($file, $replacements[$filename]);
 	}
 
 	if ($file !== $oldFile)
