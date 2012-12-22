@@ -12,21 +12,28 @@ use s9e\TextFormatter\Tests\Test;
 class ParserTest extends Test
 {
 	/**
-	* @testdox
+	* @testdox Parser is serializable
 	*/
-	public function test()
+	public function testSerialize()
 	{
-		$configurator = new Configurator;
-		$configurator->BBCodes->addFromRepository('B');
-		$configurator->BBCodes->addFromRepository('I');
+		$parser = $this->configurator->getParser();
 
-		$configurator->tags['I']->rules->autoReopen();
+		$this->assertStringStartsWith(
+			'C:24:"s9e\\TextFormatter\\Parser"',
+			serialize($parser)
+		);
+	}
 
-		$parser = $configurator->getParser();
+	/**
+	* @testdox Parser can be unserialized
+	*/
+	public function testUnserialize()
+	{
+		$parser = $this->configurator->getParser();
 
-		$this->assertSame(
-			'<rt><B><st>[b]</st>x<I><st>[i]</st>y</I><et>[/b]</et></B><I>z<et>[/i]</et></I></rt>',
-			$parser->parse('[b]x[i]y[/b]z[/i]')
+		$this->assertEquals(
+			$parser,
+			unserialize(serialize($parser))
 		);
 	}
 

@@ -7,9 +7,10 @@
 */
 namespace s9e\TextFormatter;
 
+use Serializable;
 use s9e\TextFormatter\Parser\Logger;
 
-class Parser
+class Parser implements Serializable
 {
 	use Parser\FilterProcessing;
 	use Parser\OutputHandling;
@@ -38,7 +39,7 @@ class Parser
 	/**
 	* @var array Variables registered for use in filters
 	*/
-	protected $registeredVars;
+	protected $registeredVars = array();
 
 	/**
 	* @var array Tags' config
@@ -55,18 +56,39 @@ class Parser
 	*/
 	public function __construct(array $config)
 	{
-		$this->logger        = new Logger($this);
-		$this->pluginsConfig = $config['plugins'];
-		$this->rootContext   = $config['rootContext'];
-		$this->tagsConfig    = $config['tags'];
+		$this->logger         = new Logger($this);
+		$this->pluginsConfig  = $config['plugins'];
+		$this->registeredVars = $config['registeredVars'];
+		$this->rootContext    = $config['rootContext'];
+		$this->tagsConfig     = $config['tags'];
+	}
 
-		// Add the registeredVars if present
-		$this->registeredVars = (isset($config['registeredVars']))
-		                      ? $config['registeredVars']
-		                      : array();
+	/**
+	* Serializer
+	*
+	* Rebuilds the config array and returns it serialized
+	*
+	* @return string
+	*/
+	public function serialize()
+	{
+		return serialize(array(
+			'plugins'        => $this->pluginsConfig,
+			'registeredVars' => $this->registeredVars,
+			'rootContext'    => $this->rootContext,
+			'tags'           => $this->tagsConfig
+		));
+	}
 
-		// Add our instance of Logger to it
-		$this->registeredVars['logger'] = $this->logger;
+	/**
+	* Unserializer
+	*
+	* @param  string $data Serialized data
+	* @return void
+	*/
+	public function unserialize($data)
+	{
+		$this->__construct(unserialize($data));
 	}
 
 	/**

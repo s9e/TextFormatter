@@ -1011,7 +1011,8 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] sortTags() tiebreaker sorts tag by sortPriority descending (-10 is processed before 10)
 
 s9e\TextFormatter\Tests\Parser
- [x] 
+ [x] Parser is serializable
+ [x] Parser can be unserialized
  [x] getLogger() returns an instance of Logger
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase

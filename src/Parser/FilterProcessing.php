@@ -248,6 +248,12 @@ trait FilterProcessing
 				'tagConfig'      => $tagConfig
 			);
 
+			// Add our logger if there isn't one there already
+			if (!isset($vars['registeredVars']['logger']))
+			{
+				$vars['registeredVars']['logger'] = $this->logger;
+			}
+
 			foreach ($tagConfig['filterChain'] as $filter)
 			{
 				if (!self::executeFilter($filter, $vars))
