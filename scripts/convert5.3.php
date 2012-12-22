@@ -105,7 +105,11 @@ function convertFile($filepath)
 	$filename = basename($filepath);
 	if (isset($replacements[$filename]))
 	{
-		$file = strtr($file, $replacements[$filename]);
+		foreach ($replacements[$filename] as $pair)
+		{
+			list($search, $replace) = $pair;
+			$file = str_replace($search, $replace, $file);
+		}
 	}
 
 	if ($file !== $oldFile)
