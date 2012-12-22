@@ -61,6 +61,7 @@
 
 			<!-- Third party classes first, then traits -->
 			<file>Parser/BuiltInFiltersTest.php</file>
+			<file>Parser/FilterProcessingTest.php</file>
 			<file>Parser/LoggerTest.php</file>
 			<file>Parser/TagTest.php</file>
 			<file>Parser/TagStackTest.php</file>
@@ -143,6 +144,7 @@
 			<file>../src/Configurator/Validators/TagName.php</file>
 
 			<file>../src/Parser/BuiltInFilters.php</file>
+			<file>../src/Parser/FilterProcessing.php</file>
 			<file>../src/Parser/Logger.php</file>
 			<file>../src/Parser/Tag.php</file>
 			<file>../src/Parser/TagStack.php</file>

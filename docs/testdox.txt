@@ -914,6 +914,9 @@ s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests
  [x] Filters work
 
+s9e\TextFormatter\Tests\Parser\FilterProcessing
+ [x] 
+
 s9e\TextFormatter\Tests\Parser\Logger
  [x] debug() generates a "debug" entry in the logs
  [x] err() generates a "err" entry in the logs

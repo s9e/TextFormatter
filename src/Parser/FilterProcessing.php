@@ -13,6 +13,7 @@ trait FilterProcessing
 	* Execute all the attribute preprocessors of given tag
 	*
 	* @private
+	*
 	* @param  Tag   $tag       Source tag
 	* @param  array $tagConfig Tag's config
 	* @return bool             Unconditionally TRUE
@@ -57,9 +58,59 @@ trait FilterProcessing
 	}
 
 	/**
+	* Execute a filter
+	*
+	* @see s9e\TextFormatter\Configurator\Items\ProgrammableCallback
+	*
+	* @param  array $filter Programmed callback
+	* @return mixed         Whatever the callback returns
+	*/
+	protected static function executeFilter(array $filter, array $vars)
+	{
+		$callback = $filter['callback'];
+		$params   = (isset($filter['params'])) ? $filter['params'] : array();
+
+		$args = array();
+		foreach ($params as $k => $v)
+		{
+			if (is_numeric($k))
+			{
+				// By-value param
+				$args[] = $v;
+			}
+			elseif (isset($vars[$k]))
+			{
+				// By-name param using a supplied var
+				$args[] = $vars[$k];
+			}
+			elseif (isset($vars['registeredVars'][$k]))
+			{
+				// By-name param using a registered vars
+				$args[] = $vars['registeredVars'][$k];
+			}
+			else
+			{
+				// Unknown param, log it if we have a Logger instance
+				if (isset($vars['registeredVars']['logger']))
+				{
+					$vars['registeredVars']['logger']->err(
+						'Unknown callback parameter',
+						array('paramName' => $k)
+					);
+				}
+
+				return false;
+			}
+		}
+
+		return call_user_func_array($callback, $args);
+	}
+
+	/**
 	* Filter the attributes of given tag
 	*
 	* @private
+	*
 	* @param  Tag    $tag            Tag being checked
 	* @param  array  $tagConfig      Tag's config
 	* @param  array  $registeredVars Array of registered vars for use in attribute filters
@@ -211,55 +262,6 @@ trait FilterProcessing
 		}
 
 		return $isValid;
-	}
-
-	/**
-	* Execute a filter
-	*
-	* @see s9e\TextFormatter\Configurator\Items\ProgrammableCallback
-	*
-	* @param  array $filter Programmed callback
-	* @return mixed         Whatever the callback returns
-	*/
-	protected static function executeFilter(array $filter, array $vars)
-	{
-		$callback = $filter['callback'];
-		$params   = (isset($filter['params'])) ? $filter['params'] : array();
-
-		$args = array();
-		foreach ($params as $k => $v)
-		{
-			if (is_numeric($k))
-			{
-				// By-value param
-				$args[] = $v;
-			}
-			elseif (isset($vars[$k]))
-			{
-				// By-name param using a supplied var
-				$args[] = $vars[$k];
-			}
-			elseif (isset($vars['registeredVars'][$k]))
-			{
-				// By-name param using a registered vars
-				$args[] = $vars['registeredVars'][$k];
-			}
-			else
-			{
-				// Unknown param, log it if we have a Logger instance
-				if (isset($vars['registeredVars']['logger']))
-				{
-					$vars['registeredVars']['logger']->err(
-						'Unknown callback parameter',
-						array('paramName' => $k)
-					);
-				}
-
-				return false;
-			}
-		}
-
-		return call_user_func_array($callback, $args);
 	}
 
 	/**

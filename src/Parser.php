@@ -60,9 +60,13 @@ class Parser
 		$this->rootContext   = $config['rootContext'];
 		$this->tagsConfig    = $config['tags'];
 
-		// Add the logger to the config then copy registeredVars
-		$config['registeredVars']['logger'] = $this->logger;
-		$this->registeredVars = $config['registeredVars'];
+		// Add the registeredVars if present
+		$this->registeredVars = (isset($config['registeredVars']))
+		                      ? $config['registeredVars']
+		                      : array();
+
+		// Add our instance of Logger to it
+		$this->registeredVars['logger'] = $this->logger;
 	}
 
 	/**
