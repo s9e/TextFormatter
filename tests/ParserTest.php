@@ -47,4 +47,32 @@ class ParserTest extends Test
 			$this->configurator->getParser()->getLogger()
 		);
 	}
+
+	/**
+	* @testdox parse() returns the intermediate representation
+	*/
+	public function testParse()
+	{
+		$parser = $this->configurator->getParser();
+
+		$this->assertSame(
+			'<pt>Plain text</pt>',
+			$parser->parse('Plain text')
+		);
+	}
+
+	/**
+	* @testdox parse() can be called multiple times in succession
+	*/
+	public function testParseIsClean()
+	{
+		$parser = $this->configurator->getParser();
+
+		$parser->parse('Foo');
+
+		$this->assertSame(
+			'<pt>Plain text</pt>',
+			$parser->parse('Plain text')
+		);
+	}
 }
