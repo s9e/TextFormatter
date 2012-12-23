@@ -270,7 +270,6 @@ class PluginsHandlingTest extends Test
 		$dummy->executePluginParsers();
 	}
 
-
 	/**
 	* @testdox executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'ignore'
 	*/
@@ -300,6 +299,26 @@ class PluginsHandlingTest extends Test
 		$dummy->executePluginParsers();
 	}
 
+	/**
+	* @testdox executePluginParsers() creates an instance of the class name stored in className if present
+	*/
+	public function testExecutePluginParsersCustomClass()
+	{
+		$dummy  = new PluginsHandlingDummy('...foo...');
+		$plugin = $this->getMock(
+			's9e\\TextFormatter\\Plugins\\ParserBase',
+			array('parse'),
+			array($dummy, array())
+		);
+
+		$className = get_class($plugin);
+		$dummy->pluginsConfig['Test']['className'] = $className;
+
+		$dummy->executePluginParsers();
+
+		$this->assertArrayHasKey('Test', $dummy->pluginParsers);
+		$this->assertInstanceOf($className, $dummy->pluginParsers['Test']);
+	}
 }
 
 class PluginsHandlingDummy extends Parser
