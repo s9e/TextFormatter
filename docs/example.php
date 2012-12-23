@@ -18,7 +18,7 @@ $configurator->BBCodes->add('I');
 $tag = $configurator->tags->add('I');
 $tag->defaultTemplate = '<i><xsl:apply-templates/></i>';
 
-// Add a URL BBCode, and use it for magic links too. Note that
+// Add a URL BBCode, and use it for magic links too
 $configurator->BBCodes->addCustom(
 	'[URL={URL;useContent}]{TEXT}[/URL]',
 	'<a href="{URL}">{TEXT}</a>'
