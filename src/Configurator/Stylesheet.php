@@ -123,10 +123,21 @@ class Stylesheet
 		     . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"';
 
 		// Append the namespace declarations to the stylesheet
-		ksort($prefixes);
-		foreach (array_keys($prefixes) as $prefix)
+		$prefixes = array_keys($prefixes);
+		sort($prefixes);
+		foreach ($prefixes as $prefix)
 		{
 			$xsl .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
+		}
+
+		/**
+		* Exclude those prefixes to keep the HTML neat
+		*
+		* @link http://lenzconsulting.com/namespaces-in-xslt/#exclude-result-prefixes
+		*/
+		if ($prefixes)
+		{
+			$xsl .= ' exclude-result-prefixes="' . implode(' ', $prefixes) . '"';
 		}
 
 		// Start the stylesheet with the boilerplate stuff

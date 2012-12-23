@@ -218,4 +218,38 @@ class StylesheetTest extends Test
 			$stylesheet->get()
 		);
 	}
+
+	/**
+	* @testdox get() generates the namespace declarations necessary for prefixed tags
+	*/
+	public function testGetDeclaresNamespaces()
+	{
+		$tags = new TagCollection;
+		$tags->add('X:A')->defaultTemplate = 'X';
+		$tags->add('Y:B')->defaultTemplate = 'Y';
+
+		$stylesheet = new Stylesheet($tags);
+
+		$this->assertContains(
+			'xmlns:X="urn:s9e:TextFormatter:X" xmlns:Y="urn:s9e:TextFormatter:Y"',
+			$stylesheet->get()
+		);
+	}
+
+	/**
+	* @testdox get() generates an exclude-result-prefixes directive for all the declared prefixes
+	*/
+	public function testGetExcludesPrefixes()
+	{
+		$tags = new TagCollection;
+		$tags->add('X:A')->defaultTemplate = 'X';
+		$tags->add('Y:B')->defaultTemplate = 'Y';
+
+		$stylesheet = new Stylesheet($tags);
+
+		$this->assertContains(
+			'exclude-result-prefixes="X Y"',
+			$stylesheet->get()
+		);
+	}
 }

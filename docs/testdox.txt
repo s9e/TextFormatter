@@ -868,6 +868,8 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() correctly escapes predicates
  [x] get() merges duplicate templates
  [x] get() represents empty templates with a self-closing element
+ [x] get() generates the namespace declarations necessary for prefixed tags
+ [x] get() generates an exclude-result-prefixes directive for all the declared prefixes
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] Disallowed IDNs are punycoded
