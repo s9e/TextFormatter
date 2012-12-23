@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\Parser;
 
+use RuntimeException;
+
 trait PluginsHandling
 {
 	/**
@@ -43,7 +45,7 @@ trait PluginsHandling
 	{
 		if (isset($this->pluginsConfig[$pluginName]))
 		{
-			$this->pluginsConfig[$pluginName]['isDisabled'] = false;
+			unset($this->pluginsConfig[$pluginName]['isDisabled']);
 		}
 	}
 

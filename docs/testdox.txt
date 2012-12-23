@@ -989,6 +989,16 @@ s9e\TextFormatter\Tests\Parser\Logger
  [x] on() callbacks can modify the log message and its context if their signature accepts them as a reference
  [x] on() callbacks are only executed for the log type they were registered for
 
+s9e\TextFormatter\Tests\Parser\PluginsHandling
+ [x] disablePlugin() disables given plugin
+ [x] enablePlugin() re-enables a disabled plugin
+ [x] Nothing happens if disablePlugin() is called for an inexistent plugin
+ [x] Nothing happens if enablePlugin() is called for an inexistent plugin
+ [x] executePluginParsers() executes plugins' parse() method
+ [x] executePluginParsers() does not execute disabled plugins
+ [x] executePluginParsers() executes a plugin if its quickMatch test passes
+ [x] executePluginParsers() does not execute a plugin if its quickMatch test fails
+
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
  [x] getEndTag() returns false if the tag has no end tag set

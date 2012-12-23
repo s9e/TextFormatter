@@ -64,6 +64,7 @@
 			<file>Parser/BuiltInFiltersTest.php</file>
 			<file>Parser/FilterProcessingTest.php</file>
 			<file>Parser/LoggerTest.php</file>
+			<file>Parser/PluginsHandlingTest.php</file>
 			<file>Parser/TagTest.php</file>
 			<file>Parser/TagStackTest.php</file>
 			<file>ParserTest.php</file>
@@ -148,6 +149,7 @@
 			<file>../src/Parser/BuiltInFilters.php</file>
 			<file>../src/Parser/FilterProcessing.php</file>
 			<file>../src/Parser/Logger.php</file>
+			<file>../src/Parser/PluginsHandling.php</file>
 			<file>../src/Parser/Tag.php</file>
 			<file>../src/Parser/TagStack.php</file>
 			<file>../src/Parser.php</file>
