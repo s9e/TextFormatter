@@ -494,4 +494,35 @@ class RulesGeneratorTest extends Test
 			$rules['tags']
 		);
 	}
+
+	/**
+	* @testdox Uses the renderer to generate a template
+	*/
+	public function testRenderer()
+	{
+		$tags = $this->configurator->tags;
+		$tags->add('DIV')->defaultTemplate = new UnsafeTemplate(
+			'<xsl:element name="{\'div\'}"><xsl:apply-templates/></xsl:element>'
+		);
+		$tags->add('A')->defaultTemplate = new UnsafeTemplate(
+			'<xsl:element name="{\'a\'}"><xsl:apply-templates/></xsl:element>'
+		);
+
+		$rules = RulesGenerator::getRules(
+			$tags,
+			array('renderer' => $this->configurator->getRenderer())
+		);
+
+		$this->assertArrayMatches(
+			array(
+				'DIV' => array(
+					'allowChild' => array('DIV', 'A')
+				),
+				'A' => array(
+					'denyChild'  => array('DIV', 'A')
+				)
+			),
+			$rules['tags']
+		);
+	}
 }

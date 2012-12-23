@@ -78,7 +78,9 @@ abstract class RulesGenerator
 			$xsl .= $template;
 		}
 
-		// If the tag is prefixed and has no default template, see if we have a wildcard
+		// Render the tag and use the result as a template. This allows us to handle tags that are
+		// meant to be rendered via a wildcard template, and also cases where the name of an element
+		// is not readily available in the template
 		if (isset($options['renderer']))
 		{
 			$uid = sha1(uniqid(mt_rand(), true));

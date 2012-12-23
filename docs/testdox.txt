@@ -339,6 +339,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>
  [x] Generates a trimWhitespace rule for <div>
  [x] Does not generate a trimWhitespace rule for <span>
+ [x] Uses the renderer to generate a template
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
