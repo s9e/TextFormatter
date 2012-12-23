@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\Helpers\HTML5;
 use DOMDocument;
 use DOMXPath;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
 abstract class RulesGenerator
@@ -38,15 +39,6 @@ abstract class RulesGenerator
 		// Create a proxy for the parent markup so that we can determine which tags are allowed at
 		// the root of the message (IOW, with no parent) or even disabled altogether
 		$rootForensics = self::generateRootForensics($parentHTML);
-
-		// Collect wildcard templates if a Stylesheet object was passed
-		if (isset($options['stylesheet']))
-		{
-			foreach ($options['stylesheet']->getWildcardTemplates() as $prefix => $template)
-			{
-				$options['wildcards'][$prefix] = (string) $template;
-			}
-		}
 
 		$templateForensics = array();
 		foreach ($tags as $tagName => $tag)
@@ -87,19 +79,27 @@ abstract class RulesGenerator
 		}
 
 		// If the tag is prefixed and has no default template, see if we have a wildcard
-		if (!$tag->templates	->exists(''))
+		if (isset($options['renderer']))
 		{
-			$pos = strpos(':', $tagName);
+			$uid = sha1(uniqid(mt_rand(), true));
+			$xml = '<rt><' . $tagName;
 
-			if ($pos !== false)
+			// Create every attribute defined, given it a value of "x"
+			foreach ($tag->attributes as $attrName => $attribute)
 			{
-				$prefix = substr($tagName, 0, $pos);
-
-				if (isset($options['wildcards'][$prefix]))
-				{
-					$xsl .= $options['wildcards'][$prefix];
-				}
+				$xml .= ' ' . $attrName . '="x"';
 			}
+
+			// Add a unique token that will help detect the output of <xsl:apply-templates/>
+			$xml .= '>' . $uid . '</' . $tagName . '>';
+
+			// Render the tag and use TemplateHelper to ensure the result is well-formed XML
+			$template = TemplateHelper::saveTemplate(TemplateHelper::loadTemplate(
+				$options['renderer']->render($xml)
+			));
+
+			// Replace the unique token and append to the XSL
+			$xsl .= str_replace($uid, '<xsl:apply-templates/>', $template);
 		}
 
 		$xsl .= '</xsl:template>';

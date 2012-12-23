@@ -64,7 +64,7 @@ abstract class TemplateHelper
 
 		// Generate a random tag name so that the user cannot inject stuff outside of that template.
 		// For instance, if the tag was <t>, one could input </t><xsl:evil-stuff/><t>
-		$t = 't' . sha1(microtime(true) . mt_rand());
+		$t = 't' . sha1(uniqid(mt_rand(), true));
 
 		// First try as XML
 		$xml = '<?xml version="1.0" encoding="utf-8" ?><' . $t . ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $template . '</' . $t . '>';

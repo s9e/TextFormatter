@@ -5,13 +5,13 @@ include __DIR__ . '/../src/autoloader.php';
 $configurator = new s9e\TextFormatter\Configurator;
 
 // Add a BBCode from the default repository src/Plugins/BBCodes/Configurator/repository.xml
-//$configurator->BBCodes->addFromRepository('QUOTE');
+$configurator->BBCodes->addFromRepository('QUOTE');
 
 // Add a few BBCodes using their human readable representation. You can check out repository.xml for
 // a more advanced [LIST] BBCode
-//$configurator->BBCodes->addCustom('[B]{TEXT}[/B]',   '<b>{TEXT}</b>');
-//$configurator->BBCodes->addCustom('[UL]{TEXT}[/UL]', '<ul>{TEXT}</ul>');
-//$configurator->BBCodes->addCustom('[LI]{TEXT}[/LI]', '<li>{TEXT}</li>');
+$configurator->BBCodes->addCustom('[B]{TEXT}[/B]',   '<b>{TEXT}</b>');
+$configurator->BBCodes->addCustom('[UL]{TEXT}[/UL]', '<ul>{TEXT}</ul>');
+$configurator->BBCodes->addCustom('[LI]{TEXT}[/LI]', '<li>{TEXT}</li>');
 
 // Add a BBCode using the verbose API
 $configurator->BBCodes->add('I');
@@ -20,10 +20,10 @@ $tag->defaultTemplate = '<i><xsl:apply-templates/></i>';
 
 // Add a URL BBCode, and use it for magic links too. Note that
 $configurator->BBCodes->addCustom(
-	'[UrL={URL;useContent}]{TEXT}[/URL]',
+	'[URL={URL;useContent}]{TEXT}[/URL]',
 	'<a href="{URL}">{TEXT}</a>'
 );
-exit;
+
 // When we created the [URL] BBCode, it automatically created a general purpose URL tag which can
 // be used by other plugins. Here we load the Autolink plugin and specify which tag to use. In this
 // case, it's redundant because "URL" is the default value for Autolink's tags. Also, if the tag
@@ -51,7 +51,7 @@ $configurator->urlConfig->disallowHost('example.org');
 $configurator->addHTML5Rules();
 
 // ...or uncomment the following for a quick look at what rules would be created
-//print_r(s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator::getRules($configurator->tags));
+print_r(s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator::getRules($configurator->tags));
 
 //==============================================================================
 
