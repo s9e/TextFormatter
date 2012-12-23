@@ -39,6 +39,15 @@ abstract class RulesGenerator
 		// the root of the message (IOW, with no parent) or even disabled altogether
 		$rootForensics = self::generateRootForensics($parentHTML);
 
+		// Collect wildcard templates if a Stylesheet object was passed
+		if (isset($options['stylesheet']))
+		{
+			foreach ($options['stylesheet']->getWildcardTemplates() as $prefix => $template)
+			{
+				$options['wildcards'][$prefix] = (string) $template;
+			}
+		}
+
 		$templateForensics = array();
 		foreach ($tags as $tagName => $tag)
 		{
@@ -72,50 +81,25 @@ abstract class RulesGenerator
 	{
 		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">';
 
-		if (count($tag->templates))
+		foreach ($tag->templates as $template)
 		{
-			foreach ($tag->templates as $template)
-			{
-				$xsl .= $template;
-			}
+			$xsl .= $template;
 		}
-		elseif (isset($options['renderer']))
-		{
-			$xml = '<' . $tagName;
 
-			// Add namespace declaration if the name has a prefix
-			$pos = strpos($tagName, ':');
+		// If the tag is prefixed and has no default template, see if we have a wildcard
+		if (!$tag->templates	->exists(''))
+		{
+			$pos = strpos(':', $tagName);
+
 			if ($pos !== false)
 			{
 				$prefix = substr($tagName, 0, $pos);
-				$xml .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
+
+				if (isset($options['wildcards'][$prefix]))
+				{
+					$xsl .= $options['wildcards'][$prefix];
+				}
 			}
-
-			// Add all attributes with an empty value
-			foreach ($tag->attributes as $attrName => $attribute)
-			{
-				$xml .= ' ' . $attrName . '=""';
-			}
-
-			// Close the start tag
-			$xml .= '>';
-
-			// Add a unique token to identify whether and where the tag's content is displayed
-			$uniqid = uniqid('', true);
-			$xml .= $uniqid;
-
-			// And finally append the end tag
-			$xml .= '</' . $tagName . '>';
-
-			// Add the renderered markup to our XSL
-			/**
-			* @todo ensure the result is valid XML, not HTML
-			*/
-			$xsl .= str_replace(
-				$uniqid,
-				'<xsl:apply-templates/>',
-				$renderer->render($xml)
-			);
 		}
 
 		$xsl .= '</xsl:template>';
