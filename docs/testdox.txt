@@ -866,6 +866,8 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() only tests the wildcard templates' safeness against tags that do not have a default template
  [x] get() minifies predicates
  [x] get() correctly escapes predicates
+ [x] get() merges duplicate templates
+ [x] get() represents empty templates with a self-closing element
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] Disallowed IDNs are punycoded

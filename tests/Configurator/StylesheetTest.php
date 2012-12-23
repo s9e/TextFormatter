@@ -186,4 +186,36 @@ class StylesheetTest extends Test
 			$stylesheet->get()
 		);
 	}
+
+	/**
+	* @testdox get() merges duplicate templates
+	*/
+	public function testGetMergesDuplicateTemplates()
+	{
+		$tags = new TagCollection;
+		$tags->add('X')->defaultTemplate = 'X';
+		$tags->add('Y')->defaultTemplate = 'X';
+
+		$stylesheet = new Stylesheet($tags);
+
+		$this->assertContains(
+			'<xsl:template match="X|Y">X</xsl:template>',
+			$stylesheet->get()
+		);
+	}
+
+	/**
+	* @testdox get() represents empty templates with a self-closing element
+	*/
+	public function testGetEmptyTemplates()
+	{
+		$tags = new TagCollection;
+
+		$stylesheet = new Stylesheet($tags);
+
+		$this->assertContains(
+			'<xsl:template match="et|i|st"/>',
+			$stylesheet->get()
+		);
+	}
 }

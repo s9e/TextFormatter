@@ -132,28 +132,36 @@ class Stylesheet
 		// Start the stylesheet with the boilerplate stuff
 		$xsl .= '><xsl:output method="' . $this->outputMethod . '" encoding="utf-8" indent="no"/>';
 
-		// Add our templates
-		/** @todo dedupe */
+		// Group templates by content so we can deduplicate them
+		$groupedTemplates = array();
 		foreach ($templates as $match => $template)
 		{
-			$xsl .= '<xsl:template match="' . htmlspecialchars($match) . '">'
-			      . $template
-			      . '</xsl:template>';
+			$groupedTemplates[$template][] = $match;
+		}
+
+		foreach ($groupedTemplates as $template => $matches)
+		{
+			// Sort the matches, join them and don't forget to escape special chars
+			sort($matches);
+			$match = htmlspecialchars(implode('|', $matches));
+
+			// Open the template element
+			$xsl .= '<xsl:template match="' . $match . '"';
+
+			// Make it a self-closing element if the template is empty
+			if ($template === '')
+			{
+				$xsl .= '/>';
+			}
+			else
+			{
+				$xsl .= '>' . $template . '</xsl:template>';
+			}
 		}
 
 		$xsl .= '</xsl:stylesheet>';
 
 		return $xsl;
-	}
-
-	/**
-	* Return the array of wildcard templates
-	*
-	* @return array
-	*/
-	public function getWildcardTemplates()
-	{
-		return $this->wildcards;
 	}
 
 	/**

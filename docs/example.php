@@ -60,6 +60,18 @@ print_r(s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator::getRules(
 
 //==============================================================================
 
-// Done with configuration, we save the parser and its renderer so they can be reused later
-file_put_contents('/tmp/parser.txt',   serialize($configurator->getParser()));
-file_put_contents('/tmp/renderer.txt', serialize($configurator->getRenderer()));
+// Done with configuration, now we create a parser and its renderer
+$parser   = $configurator->getParser();
+$renderer = $configurator->getRenderer();
+
+// The parser and renderer should be cached somewhere so we don't have recreate them every time
+//file_put_contents('/tmp/parser.txt',   serialize($parser));
+//file_put_contents('/tmp/renderer.txt', serialize($renderer));
+
+// Parse a simple message
+$xml = $parser->parse('Hello, [i]world[/i] :)');
+// <rt>Hello, <I><st>[i]</st>world<et>[/i]</et></I> <E>:)</E></rt>
+
+// Render a parsed message
+$html = $renderer->render($xml);
+// Hello, <i>world</i> <img src="happy.png" alt=":)">
