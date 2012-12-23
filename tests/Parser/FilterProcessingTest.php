@@ -210,6 +210,49 @@ class FilterProcessingTest extends Test
 			array('registeredVars' => array('foo' => 42))
 		);
 	}
+
+	/**
+	* @testdox executeFilter() does not execute the callback and returns FALSE if a variable is missing
+	*/
+	public function testExecuteFilterMissingVar()
+	{
+		$filter = new ProgrammableCallback(
+			function()
+			{
+				$this->fail('The callback should not have been executed');
+			}
+		);
+		$filter->addParameterByName('foo');
+
+		$this->assertFalse(FilterProcessingDummy::__executeFilter(
+			$filter->asConfig(),
+			array()
+		));
+	}
+
+	/**
+	* @testdox executeFilter() logs an error if a variable is missing
+	*/
+	public function testExecuteFilterMissingVarLog()
+	{
+		$filter = new ProgrammableCallback(
+			function()
+			{
+				$this->fail('The callback should not have been executed');
+			}
+		);
+		$filter->addParameterByName('foo');
+
+		$logger = $this->getMock('stdClass', array('err'));
+		$logger->expects($this->once())
+		       ->method('err')
+		       ->with('Unknown callback parameter', array('paramName' => 'foo'));
+
+		$this->assertFalse(FilterProcessingDummy::__executeFilter(
+			$filter->asConfig(),
+			array('registeredVars' => array('logger' => $logger))
+		));
+	}
 }
 
 class FilterProcessingDummy extends Parser

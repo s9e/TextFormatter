@@ -74,6 +74,11 @@ class ConfiguratorTest extends Test
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->set(":')", '<img src="e.png">');
+
+		$xsl = $plugin->getTemplate();
+
+		$this->assertContains(":')", $xsl);
+		$this->assertContains('<img src="e.png"/>', $xsl);
 	}
 
 	/**
@@ -83,6 +88,11 @@ class ConfiguratorTest extends Test
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->set('"_"', '<img src="e.png">');
+
+		$xsl = $plugin->getTemplate();
+
+		$this->assertContains("'&quot;_&quot;'", $xsl);
+		$this->assertContains('<img src="e.png"/>', $xsl);
 	}
 
 	/**
@@ -92,6 +102,11 @@ class ConfiguratorTest extends Test
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->set('\':")', '<img src="e.png">');
+
+		$xsl = $plugin->getTemplate();
+
+		$this->assertContains("':&quot;)", $xsl);
+		$this->assertContains('<img src="e.png"/>', $xsl);
 	}
 
 	/**

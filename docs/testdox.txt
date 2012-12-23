@@ -955,6 +955,8 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] executeFilter() correctly passes a value to the callback
  [x] executeFilter() correctly passes a named var to the callback
  [x] executeFilter() correctly passes a var passed through registeredVars to the callback
+ [x] executeFilter() does not execute the callback and returns FALSE if a variable is missing
+ [x] executeFilter() logs an error if a variable is missing
 
 s9e\TextFormatter\Tests\Parser\Logger
  [x] debug() generates a "debug" entry in the logs

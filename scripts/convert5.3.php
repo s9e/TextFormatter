@@ -31,6 +31,10 @@ function convertCustom($filepath, &$file)
 			array(
 				"\n\t\t\t\t\$this->assert",
 				"\n\t\t\t\t\$test->assert"
+			),
+			array(
+				"\n\t\t\t\t\$this->fail",
+				"\n\t\t\t\t\$test->fail"
 			)
 		),
 		'Logger.php' => array(
