@@ -50,8 +50,13 @@ $configurator->urlConfig->disallowHost('example.org');
 // configurator define a bunch of rules based on HTML5
 $configurator->addHTML5Rules();
 
-// ...or uncomment the following for a quick look at what rules would be created
-print_r(s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator::getRules($configurator->tags));
+// ...or uncomment the following for a look at what rules would be created
+/**
+print_r(s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator::getRules(
+	$configurator->tags,
+	array('renderer' => $configurator->getRenderer())
+));
+/**/
 
 //==============================================================================
 

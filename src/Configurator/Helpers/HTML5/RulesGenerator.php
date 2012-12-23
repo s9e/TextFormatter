@@ -84,6 +84,14 @@ abstract class RulesGenerator
 			$uid = sha1(uniqid(mt_rand(), true));
 			$xml = '<rt><' . $tagName;
 
+			// Add the namespace declaraction, if applicable
+			$pos = strpos($tagName, ':');
+			if ($pos !== false)
+			{
+				$prefix = substr($tagName, 0, $pos);
+				$xml .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
+			}
+
 			// Create every attribute defined, given it a value of "x"
 			foreach ($tag->attributes as $attrName => $attribute)
 			{
@@ -91,7 +99,7 @@ abstract class RulesGenerator
 			}
 
 			// Add a unique token that will help detect the output of <xsl:apply-templates/>
-			$xml .= '>' . $uid . '</' . $tagName . '>';
+			$xml .= '>' . $uid . '</' . $tagName . '></rt>';
 
 			// Render the tag and use TemplateHelper to ensure the result is well-formed XML
 			$template = TemplateHelper::saveTemplate(TemplateHelper::loadTemplate(
