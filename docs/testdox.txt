@@ -812,6 +812,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
  [x] getCallback() returns the callback
  [x] fromArray() creates an instance from an array
+ [x] fromArray() accepts the name of a built-in filter as callback
  [x] asConfig() returns an array containing the callback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
  [x] If the callback is an instance of CallbackPlaceholder, asConfig() calls the callback's asConfig() and returns its value as callback

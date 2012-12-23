@@ -111,6 +111,24 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
+	* @testdox fromArray() accepts the name of a built-in filter as callback
+	*/
+	public function testFromArrayBuiltInFilter()
+	{
+		$pc1 = ProgrammableCallback::fromArray(
+			array(
+				'callback' => '#range',
+				'vars'     => array('min' => 3, 'max' => 5)
+			)
+		);
+
+		$pc2 = new ProgrammableCallback(new CallbackPlaceholder('#range'));
+		$pc2->setVars(array('min' => 3, 'max' => 5));
+
+		$this->assertEquals($pc2, $pc1);
+	}
+
+	/**
 	* @testdox asConfig() returns an array containing the callback
 	*/
 	public function testAsConfig()

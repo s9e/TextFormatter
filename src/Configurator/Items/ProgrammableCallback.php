@@ -101,6 +101,13 @@ class ProgrammableCallback implements ConfigProvider
 	*/
 	public static function fromArray(array $arr)
 	{
+		// Replace the name of a built-in filter with a CallbackPlaceholder
+		if (is_string($arr['callback'])
+		 && substr($arr['callback'], 0, 1) === '#')
+		{
+			$arr['callback'] = new CallbackPlaceholder($arr['callback']);
+		}
+
 		$obj = new static($arr['callback']);
 
 		if (isset($arr['params']))

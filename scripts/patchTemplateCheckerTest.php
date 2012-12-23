@@ -3,7 +3,7 @@
 
 class PHPUnit_Framework_TestCase {}
 
-include __DIR__ . '/../tests/autoloader.php';
+include __DIR__ . '/../tests/bootstrap.php';
 
 function format($var)
 {
@@ -72,8 +72,17 @@ foreach ($test->getUnsafeTemplatesTests() as $case)
 		}
 		else
 		{
-			$filter = $attribute['filterChain'][0];
-			$attributeInfo = " if attribute '$attrName' has filter " . var_export($filter, true);
+			$filter = $attribute['filterChain'][count($attribute['filterChain']) - 1];
+			$attributeInfo = " if attribute '$attrName' has filter ";
+
+			if (is_string($filter))
+			{
+				$attributeInfo .= "'" . $filter . "'";
+			}
+			else
+			{
+				$attributeInfo .= "'" . $filter->getCallback()->asConfig() . "'";
+			}
 
 			if (isset($attribute['regexp']))
 			{

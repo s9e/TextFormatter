@@ -3,6 +3,8 @@
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
 use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Helpers\TemplateChecker;
 use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
@@ -2790,17 +2792,6 @@ class TemplateCheckerTest extends Test
 			// Test safe filters
 			foreach ($filters as $filter)
 			{
-				if ($filter === '#range')
-				{
-					$filter = new ProgrammableCallback(new CallbackPlaceholder($value));
-					$filter->setVars(array('min' => 1, 'max' => 5));
-				}
-				elseif ($filter === '#regexp')
-				{
-					$filter = new ProgrammableCallback(new CallbackPlaceholder($value));
-					$filter->setVars(array('regexp' => '.*'));
-				}
-
 				$tests[] = array(
 					'<' . $elName . '><xsl:value-of select="@foo"/></' . $elName . '>',
 					null,

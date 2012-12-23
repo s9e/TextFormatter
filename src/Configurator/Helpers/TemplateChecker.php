@@ -464,35 +464,13 @@ abstract class TemplateChecker
 			'#int',
 			'#uint',
 			'#float',
-			'#number'
+			'#range',
+			'#number',
+			/** @todo should probably ensure the regexp isn't something useless like /./ */
+			'#regexp'
 		);
 
-		foreach ($safeFilters as $filter)
-		{
-			if ($attribute->filterChain->contains($filter))
-			{
-				return true;
-			}
-		}
-
-		/** @todo we should probably test that the regexp isn't a catch-all expression */
-		foreach ($attribute->filterChain as $filter)
-		{
-			$callback = $filter->getCallback();
-
-			if ($callback instanceof CallbackPlaceholder)
-			{
-				$filterName = $callback->asConfig();
-
-				if ($filterName === '#regexp'
-				 || $filterName === '#range')
-				{
-					 return true;
-				}
-			}
-		}
-
-		return false;
+		return self::hasSafeFilter($attribute, $safeFilters);
 	}
 
 	/**
@@ -522,33 +500,11 @@ abstract class TemplateChecker
 			'#float',
 			'#color',
 			'#number',
+			'#range',
 			'#simpletext'
 		);
 
-		foreach ($safeFilters as $filter)
-		{
-			if ($attribute->filterChain->contains($filter))
-			{
-				return true;
-			}
-		}
-
-		foreach ($attribute->filterChain as $filter)
-		{
-			$callback = $filter->getCallback();
-
-			if ($callback instanceof CallbackPlaceholder)
-			{
-				$filterName = $callback->asConfig();
-
-				if ($filterName === '#range')
-				{
-					 return true;
-				}
-			}
-		}
-
-		return false;
+		return self::hasSafeFilter($attribute, $safeFilters);
 	}
 
 	/**
@@ -576,30 +532,35 @@ abstract class TemplateChecker
 			'#int',
 			'#uint',
 			'#float',
+			'#range',
 			'#number',
 			'#simpletext'
 		);
 
-		foreach ($safeFilters as $filter)
-		{
-			if ($attribute->filterChain->contains($filter))
-			{
-				return true;
-			}
-		}
+		return self::hasSafeFilter($attribute, $safeFilters);
+	}
 
+	/**
+	* Return whether an attribute's filterChain contains a filter from given list
+	*
+	* @param  Attribute $attribute
+	* @param  array     $safeFilters
+	* @return bool
+	*/
+	protected static function hasSafeFilter(Attribute $attribute, array $safeFilters)
+	{
 		foreach ($attribute->filterChain as $filter)
 		{
 			$callback = $filter->getCallback();
 
 			if ($callback instanceof CallbackPlaceholder)
 			{
-				$filterName = $callback->asConfig();
+				$callback = $callback->asConfig();
+			}
 
-				if ($filterName === '#range')
-				{
-					 return true;
-				}
+			if (in_array($callback, $safeFilters, true))
+			{
+				return true;
 			}
 		}
 
