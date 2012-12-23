@@ -382,7 +382,7 @@ abstract class BBCodeMonkey
 		* @var array Map of [tokenId => attrName]. If the same token is used in multiple attributes
 		*            it is set to FALSE
 		*/
-		$tokenAttribute = array();
+		$table = array();
 
 		foreach (preg_split('#\\s+#', trim($str), -1, PREG_SPLIT_NO_EMPTY) as $k => $pair)
 		{
@@ -399,7 +399,7 @@ abstract class BBCodeMonkey
 
 			// The name at the left of the equal sign is the attribute's or attribute preprocessor's
 			// name, the rest is their definition
-			$attrName   = trim(substr($pair, 0, $pos));
+			$attrName   = strtolower(trim(substr($pair, 0, $pos)));
 			$definition = trim(substr($pair, 1 + $pos));
 
 			// The first attribute defined is set as default
@@ -444,9 +444,9 @@ abstract class BBCodeMonkey
 
 					// Record the token ID if applicable
 					$tokenId = $token['id'];
-					$tokenAttribute[$tokenId] = (isset($tokenAttribute[$tokenId]))
-					                          ? false
-					                          : $attrName;
+					$table[$tokenId] = (isset($table[$tokenId]))
+					                 ? false
+					                 : $attrName;
 				}
 			}
 			else
@@ -486,9 +486,9 @@ abstract class BBCodeMonkey
 
 				// Find the attribute name associated with this token, or create an attribute
 				// otherwise
-				if (isset($tokenAttribute[$tokenId]))
+				if (isset($table[$tokenId]))
 				{
-					$matchName = $tokenAttribute[$tokenId];
+					$matchName = $table[$tokenId];
 
 					if ($matchName === false)
 					{
@@ -513,7 +513,7 @@ abstract class BBCodeMonkey
 					$tag->attributes[$matchName]->filterChain->append('#' . strtolower($tokenType));
 
 					// Record the attribute name associated with this token ID
-					$tokenAttribute[$tokenId] = $matchName;
+					$table[$tokenId] = $matchName;
 				}
 
 				// Append the literal text between the last position and current position
@@ -571,7 +571,7 @@ abstract class BBCodeMonkey
 			$tag->attributes[$attrName]->filterChain->append('#regexp', array('regexp' => $regexp));
 		}
 
-		return $tokenAttribute;
+		return $table;
 	}
 
 	/**

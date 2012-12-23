@@ -92,6 +92,26 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
+				'[URL={URL}]{TEXT}[/URL]',
+				array(
+					'name'   => 'URL',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute' => 'url'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'url' => array(
+								'filterChain' => array('#url')
+							)
+						)
+					)),
+					'tokens' => array(
+						'URL' => 'url'
+					),
+					'passthroughToken' => 'TEXT'
+				)
+			),
+			array(
 				'[b]{TEXT}[/B]',
 				array(
 					'name'   => 'B',
