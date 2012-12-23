@@ -25,6 +25,8 @@ use DOMXPath;
 * would entail. Additionally, it does not evaluate the scope of <xsl:apply-templates/>. For
 * instance, it will treat <xsl:apply-templates select="LI"/> as if it was <xsl:apply-templates/>
 *
+* @todo try to fold element names?
+*
 * @link http://dev.w3.org/html5/spec/content-models.html#content-models
 * @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
 * @see  /scripts/patchTemplateForensics.php
