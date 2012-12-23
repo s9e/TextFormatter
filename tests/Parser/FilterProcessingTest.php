@@ -253,16 +253,109 @@ class FilterProcessingTest extends Test
 			array('registeredVars' => array('logger' => $logger))
 		));
 	}
+
+	/**
+	* @testdox filterTag() returns TRUE if the tag has an empty filterChain
+	*/
+	public function testFilterTagNoFilterChain()
+	{
+		$dummy = new FilterProcessingDummy;
+		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+
+		$this->assertTrue($dummy->__filterTag($tag));
+	}
+
+	/**
+	* @testdox filterTag() executes the tag's filterChain and returns TRUE
+	*/
+	public function testFilterTag()
+	{
+		$mock = $this->getMock('stdClass', array('foo', 'bar'));
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->will($this->returnValue(true));
+		$mock->expects($this->once())
+		     ->method('bar')
+		     ->will($this->returnValue(true));
+
+		$tag = $this->configurator->tags->add('X');
+		$tag->filterChain->append(array($mock, 'foo'));
+		$tag->filterChain->append(array($mock, 'bar'));
+
+		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
+		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+
+		$this->assertTrue($dummy->__filterTag($tag));
+	}
+
+	/**
+	* @testdox filterTag() stops executing the tag's filterChain and returns FALSE if a filter returns FALSE
+	*/
+	public function testFilterTagReturnsFalse()
+	{
+		$mock = $this->getMock('stdClass', array('foo', 'bar'));
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->will($this->returnValue(false));
+		$mock->expects($this->never())
+		     ->method('bar');
+
+		$tag = $this->configurator->tags->add('X');
+		$tag->filterChain->append(array($mock, 'foo'));
+		$tag->filterChain->append(array($mock, 'bar'));
+
+		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
+		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+
+		$this->assertFalse($dummy->__filterTag($tag));
+	}
+
+	/**
+	* @testdox filterTag() calls the logger's setTag() and unsetTag() methods
+	*/
+	public function testFilterTagCallsLoggerSetTag()
+	{
+		$mock = $this->getMock('stdClass', array('foo'));
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->will($this->returnValue(false));
+
+		$tag = $this->configurator->tags->add('X');
+		$tag->filterChain->append(array($mock, 'foo'));
+
+		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
+		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+
+		$dummy->logger = $this->getMock('stdClass', array('setTag', 'unsetTag'));
+		$dummy->logger->expects($this->once())
+		              ->method('setTag')
+		              ->with($this->identicalTo($tag));
+		$dummy->logger->expects($this->once())
+		              ->method('unsetTag');
+
+		$dummy->__filterTag($tag);
+	}
 }
 
 class FilterProcessingDummy extends Parser
 {
 	public $registeredVars;
 	public $tagsConfig = array(
+		'X' => array()
 	);
+	public $logger;
 
-	public function __construct()
+	public function __construct(array $config = null)
 	{
+		if (isset($config))
+		{
+			parent::__construct($config);
+		}
+	}
+
+	public function __filterTag()
+	{
+		return call_user_func_array(array($this, 'filterTag'), func_get_args());
 	}
 
 	public static function __executeFilter()
