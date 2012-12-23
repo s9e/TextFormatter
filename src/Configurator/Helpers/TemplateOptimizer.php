@@ -258,7 +258,7 @@ abstract class TemplateOptimizer
 	* @param  string $old Original XPath expression
 	* @return string      Minified XPath expression
 	*/
-	protected static function minifyXPath($old)
+	public static function minifyXPath($old)
 	{
 		$chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
 

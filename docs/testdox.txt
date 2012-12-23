@@ -853,6 +853,18 @@ s9e\TextFormatter\Tests\Configurator\Items\Template
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
  [x] setOutputMethod('text') throws an exception
+ [x] setWildcardTemplate() accepts a string as template
+ [x] setWildcardTemplate() accepts a callback as template
+ [x] setWildcardTemplate() accepts an instance of Template as template
+ [x] setWildcardTemplate() rejects anything else
+ [x] setWildcardTemplate() sets a template with a * matching rule for given prefix
+ [x] setWildcardTemplate() throws an exception if the prefix is empty
+ [x] setWildcardTemplate() throws an exception if the prefix is invalid
+ [x] get() tests the wildcard templates' safeness
+ [x] get() only tests the wildcard templates' safeness against tags in its namespace
+ [x] get() only tests the wildcard templates' safeness against tags that do not have a default template
+ [x] get() minifies predicates
+ [x] get() correctly escapes predicates
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] Disallowed IDNs are punycoded

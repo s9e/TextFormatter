@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Helpers\TemplateChecker;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\Validators\TagName;
@@ -61,33 +62,33 @@ class Stylesheet
 		// Iterate over the wildcards to collect their templates and their prefix
 		foreach ($this->wildcards as $prefix => $template)
 		{
-			$inUse = false;
 			$checkUnsafe = !($template instanceof UnsafeTemplate);
 
-			// First, normalize the template without asserting its safety
+			// First, normalize the template without asserting its safeness
 			$template = TemplateHelper::normalizeUnsafe((string) $template);
 
-			// Then, iterate over tags to assess the template's safety
-			foreach ($this->tags as $tagName => $tag)
+			// Then, iterate over tags to assess the template's safeness
+			if ($checkUnsafe)
 			{
-				if (strncmp($tagName, $prefix . ':', strlen($prefix) + 1))
+				foreach ($this->tags as $tagName => $tag)
 				{
-					continue;
-				}
+					// Ensure that the tag is in the right namespace
+					if (strncmp($tagName, $prefix . ':', strlen($prefix) + 1))
+					{
+						continue;
+					}
 
-				if ($checkUnsafe)
-				{
-					TemplateChecker::checkUnsafe($template, $tag);
+					// Only check for safeness if the tag has no default template set
+					if ($checkUnsafe && !$tag->templates->exists(''))
+					{
+						TemplateChecker::checkUnsafe($template, $tag);
+					}
 				}
-
-				$inUse = true;
 			}
 
-			if ($inUse)
-			{
-				$prefixes[$prefix] = 1;
-				$templates[$prefix . ':*'] = $template;
-			}
+			// Record the prefix and template
+			$prefixes[$prefix] = 1;
+			$templates[$prefix . ':*'] = $template;
 		}
 
 		// Iterate over the tags to collect their templates and their prefix
@@ -95,18 +96,22 @@ class Stylesheet
 		{
 			foreach ($tag->templates as $predicate => $template)
 			{
+				// Build the match rule used by this template
 				$match = $tagName;
 				if ($predicate !== '')
 				{
-					$match .= '[' . $predicate . ']';
+					// Minify and append this template's predicate
+					$match .= '[' . TemplateOptimizer::minifyXPath($predicate) . ']';
 				}
 
+				// Record the tag's prefix
 				$pos = strpos($tagName, ':');
 				if ($pos !== false)
 				{
 					$prefixes[substr($tagName, 0, $pos)] = 1;
 				}
 
+				// Normalize and record the template
 				$templates[$match] = ($template instanceof UnsafeTemplate)
 				                   ? TemplateHelper::normalizeUnsafe((string) $template, $tag)
 				                   : TemplateHelper::normalize((string) $template, $tag);
@@ -156,9 +161,12 @@ class Stylesheet
 			throw new InvalidArgumentException("Invalid prefix '" . $prefix . "'");
 		}
 
-		/**
-		* @todo ensure that $template is the right type or something
-		*/
+		if (!is_string($template)
+		 && !($template instanceof Template)
+		 && !is_callable($template))
+		{
+			throw new InvalidArgumentException('Argument 2 passed to ' . __METHOD__ . ' must be a string, a valid callback or an instance of Template');
+		}
 
 		$this->wildcards[$prefix] = $template;
 	}

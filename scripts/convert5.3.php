@@ -43,10 +43,6 @@ function convertCustom($filepath, &$file)
 			array(
 				'return $m[1] . self::minifyXPath($m[2]);',
 				'return $m[1] . TemplateOptimizer::minifyXPath($m[2]);'
-			),
-			array(
-				'protected static function minifyXPath($old)',
-				'public static function minifyXPath($old)'
 			)
 		),
 	);
