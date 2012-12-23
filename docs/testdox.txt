@@ -961,6 +961,9 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] filterTag() executes the tag's filterChain and returns TRUE
  [x] filterTag() stops executing the tag's filterChain and returns FALSE if a filter returns FALSE
  [x] filterTag() calls the logger's setTag() and unsetTag() methods
+ [x] filterAttributes() removes the tag's attributes if none were configured
+ [x] filterAttributes() calls the attribute's generator and uses its return value as attribute's value
+ [x] filterAttributes() removes undefined attributes
 
 s9e\TextFormatter\Tests\Parser\Logger
  [x] debug() generates a "debug" entry in the logs

@@ -335,6 +335,51 @@ class FilterProcessingTest extends Test
 
 		$dummy->__filterTag($tag);
 	}
+
+	/**
+	* @testdox filterAttributes() removes the tag's attributes if none were configured
+	*/
+	public function testFilterAttributesNukesAttributes()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$tag->setAttribute('foo', 'foo');
+
+		Parser::filterAttributes($tag, array(), array());
+
+		$this->assertSame(array(), $tag->getAttributes());
+	}
+
+	/**
+	* @testdox filterAttributes() calls the attribute's generator and uses its return value as attribute's value
+	*/
+	public function testFilterAttributesCallsAttributeGenerator()
+	{
+		$tagConfig = new TagConfig;
+		$tagConfig->attributes->add('foo')->generator = function() { return 42; };
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+
+		$this->assertSame(array('foo' => 42), $tag->getAttributes());
+	}
+
+	/**
+	* @testdox filterAttributes() removes undefined attributes
+	*/
+	public function testFilterAttributesRemovesUndefinedAttributes()
+	{
+		$tagConfig = new TagConfig;
+		$tagConfig->attributes->add('foo');
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$tag->setAttribute('foo', 'foo');
+		$tag->setAttribute('bar', 'bar');
+
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+
+		$this->assertSame(array('foo' => 'foo'), $tag->getAttributes());
+	}
 }
 
 class FilterProcessingDummy extends Parser
