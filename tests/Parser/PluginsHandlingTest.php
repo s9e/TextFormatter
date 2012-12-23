@@ -139,6 +139,75 @@ class PluginsHandlingTest extends Test
 		$dummy->executePluginParsers();
 	}
 
+	/**
+	* @testdox executePluginParsers() executes a plugin if its regexp test passes
+	*/
+	public function testExecutePluginParsersRegexpPass()
+	{
+		$dummy  = new PluginsHandlingDummy('...foo...');
+		$plugin = $this->getMock(
+			's9e\\TextFormatter\\Plugins\\ParserBase',
+			array('parse'),
+			array($dummy, array())
+		);
+
+		$plugin->expects($this->once())
+		       ->method('parse');
+
+		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginsConfig['Test']['regexp'] = '/foo/';
+		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
+
+		$dummy->executePluginParsers();
+	}
+
+	/**
+	* @testdox executePluginParsers() does not execute a plugin if its regexp test fails
+	*/
+	public function testExecutePluginParsersRegexpFail()
+	{
+		$dummy  = new PluginsHandlingDummy;
+		$plugin = $this->getMock(
+			's9e\\TextFormatter\\Plugins\\ParserBase',
+			array('parse'),
+			array($dummy, array())
+		);
+
+		$plugin->expects($this->never())
+		       ->method('parse');
+
+		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginsConfig['Test']['regexp'] = '/foo/';
+		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
+
+		$dummy->executePluginParsers();
+	}
+
+	/**
+	* @testdox executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Test limit exceeded
+	*/
+	public function testExecutePluginParsersRegexpLimitActionAbort()
+	{
+		$dummy  = new PluginsHandlingDummy('...foo...');
+		$plugin = $this->getMock(
+			's9e\\TextFormatter\\Plugins\\ParserBase',
+			array('parse'),
+			array($dummy, array())
+		);
+
+		$plugin->expects($this->never())
+		       ->method('parse');
+
+		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
+		$dummy->pluginsConfig['Test']['regexpLimit'] = 1;
+		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'abort';
+
+		$dummy->executePluginParsers();
+	}
+
 }
 
 class PluginsHandlingDummy extends Parser

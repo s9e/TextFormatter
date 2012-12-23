@@ -998,6 +998,9 @@ s9e\TextFormatter\Tests\Parser\PluginsHandling
  [x] executePluginParsers() does not execute disabled plugins
  [x] executePluginParsers() executes a plugin if its quickMatch test passes
  [x] executePluginParsers() does not execute a plugin if its quickMatch test fails
+ [x] executePluginParsers() executes a plugin if its regexp test passes
+ [x] executePluginParsers() does not execute a plugin if its regexp test fails
+ [x] executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
 
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
