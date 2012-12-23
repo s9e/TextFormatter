@@ -45,7 +45,7 @@ class Stylesheet
 	}
 
 	/**
-	* 
+	* Get the finalized XSL stylesheet
 	*
 	* @return string
 	*/
@@ -144,6 +144,16 @@ class Stylesheet
 		$xsl .= '</xsl:stylesheet>';
 
 		return $xsl;
+	}
+
+	/**
+	* Return the array of wildcard templates
+	*
+	* @return array
+	*/
+	public function getWildcardTemplates()
+	{
+		return $this->wildcards;
 	}
 
 	/**
