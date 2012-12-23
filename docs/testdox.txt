@@ -964,6 +964,12 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] filterAttributes() removes the tag's attributes if none were configured
  [x] filterAttributes() calls the attribute's generator and uses its return value as attribute's value
  [x] filterAttributes() removes undefined attributes
+ [x] filterAttributes() executes every filter of an attribute's filterChain and returns the value
+ [x] filterAttributes() stops executing the attribute's filterChain and returns FALSE if a filter returns FALSE
+ [x] filterAttributes() removes invalid attributes
+ [x] filterAttributes() replaces invalid attributes with their defaultValue if applicable
+ [x] filterAttributes() adds missing attributes with their defaultValue if applicable
+ [x] filterAttributes() calls the logger's setAttribute() and unsetAttribute() methods for each attribute with a filterChain
 
 s9e\TextFormatter\Tests\Parser\Logger
  [x] debug() generates a "debug" entry in the logs

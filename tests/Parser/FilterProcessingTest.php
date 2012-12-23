@@ -346,7 +346,10 @@ class FilterProcessingTest extends Test
 
 		Parser::filterAttributes($tag, array(), array());
 
-		$this->assertSame(array(), $tag->getAttributes());
+		$this->assertSame(
+			array(),
+			$tag->getAttributes()
+		);
 	}
 
 	/**
@@ -361,7 +364,10 @@ class FilterProcessingTest extends Test
 
 		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
 
-		$this->assertSame(array('foo' => 42), $tag->getAttributes());
+		$this->assertSame(
+			array('foo' => 42),
+			$tag->getAttributes()
+		);
 	}
 
 	/**
@@ -378,7 +384,163 @@ class FilterProcessingTest extends Test
 
 		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
 
-		$this->assertSame(array('foo' => 'foo'), $tag->getAttributes());
+		$this->assertSame(
+			array('foo' => 'foo'),
+			$tag->getAttributes()
+		);
+	}
+
+	/**
+	* @testdox filterAttributes() executes every filter of an attribute's filterChain and returns the value
+	*/
+	public function testFilterAttributesExecutesFilterChain()
+	{
+		$mock = $this->getMock('stdClass', array('foo', 'bar'));
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with('xxx')
+		     ->will($this->returnValue('foo'));
+		$mock->expects($this->once())
+		     ->method('bar')
+		     ->with('foo')
+		     ->will($this->returnValue('bar'));
+
+		$tagConfig = new TagConfig;
+		$attribute = $tagConfig->attributes->add('x');
+		$attribute->filterChain->append(array($mock, 'foo'));
+		$attribute->filterChain->append(array($mock, 'bar'));
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$tag->setAttribute('x', 'xxx');
+
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+
+		$this->assertSame(
+			array('x' => 'bar'),
+			$tag->getAttributes()
+		);
+	}
+
+	/**
+	* @testdox filterAttributes() stops executing the attribute's filterChain and returns FALSE if a filter returns FALSE
+	*/
+	public function testFilterAttributesReturnsFalse()
+	{
+		$mock = $this->getMock('stdClass', array('foo', 'bar'));
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with('xxx')
+		     ->will($this->returnValue(false));
+		$mock->expects($this->never())
+		     ->method('bar');
+
+		$tagConfig = new TagConfig;
+		$attribute = $tagConfig->attributes->add('x');
+		$attribute->filterChain->append(array($mock, 'foo'));
+		$attribute->filterChain->append(array($mock, 'bar'));
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$tag->setAttribute('x', 'xxx');
+
+		$this->assertFalse(Parser::filterAttributes($tag, $tagConfig->asConfig(), array()));
+	}
+
+	/**
+	* @testdox filterAttributes() removes invalid attributes
+	*/
+	public function testFilterAttributesRemovesInvalid()
+	{
+		$mock = $this->getMock('stdClass', array('foo'));
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with('xxx')
+		     ->will($this->returnValue(false));
+
+		$tagConfig = new TagConfig;
+		$attribute = $tagConfig->attributes->add('x');
+		$attribute->filterChain->append(array($mock, 'foo'));
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$tag->setAttribute('x', 'xxx');
+
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+
+		$this->assertSame(
+			array(),
+			$tag->getAttributes()
+		);
+	}
+
+	/**
+	* @testdox filterAttributes() replaces invalid attributes with their defaultValue if applicable
+	*/
+	public function testFilterAttributesReplacesInvalid()
+	{
+		$mock = $this->getMock('stdClass', array('foo'));
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with('xxx')
+		     ->will($this->returnValue(false));
+
+		$tagConfig = new TagConfig;
+		$attribute = $tagConfig->attributes->add('x');
+		$attribute->filterChain->append(array($mock, 'foo'));
+		$attribute->defaultValue = 'default';
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$tag->setAttribute('x', 'xxx');
+
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+
+		$this->assertSame(
+			array('x' => 'default'),
+			$tag->getAttributes()
+		);
+	}
+
+	/**
+	* @testdox filterAttributes() adds missing attributes with their defaultValue if applicable
+	*/
+	public function testFilterAttributesReplacesMissing()
+	{
+		$tagConfig = new TagConfig;
+		$attribute = $tagConfig->attributes->add('x');
+		$attribute->defaultValue = 'default';
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+
+		$this->assertSame(
+			array('x' => 'default'),
+			$tag->getAttributes()
+		);
+	}
+
+	/**
+	* @testdox filterAttributes() calls the logger's setAttribute() and unsetAttribute() methods for each attribute with a filterChain
+	*/
+	public function testFilterAttributesCallsLoggerSetAttribute()
+	{
+		$logger = $this->getMock('stdClass', array('setAttribute', 'unsetAttribute'));
+		$logger->expects($this->at(0))
+		       ->method('setAttribute')
+		       ->with('foo');
+		$logger->expects($this->at(2))
+		       ->method('setAttribute')
+		       ->with('bar');
+		$logger->expects($this->exactly(2))
+		       ->method('unsetAttribute');
+
+		$tagConfig = new TagConfig;
+		$tagConfig->attributes->add('foo')->filterChain->append(function(){});
+		$tagConfig->attributes->add('bar')->filterChain->append(function(){});
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$tag->setAttribute('foo', 'foo');
+		$tag->setAttribute('bar', 'bar');
+
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array('logger' => $logger));
 	}
 }
 
