@@ -100,11 +100,7 @@ trait PluginsHandling
 						'limit'      => $pluginConfig['regexpLimit']
 					);
 
-					if ($pluginConfig['regexpLimitAction'] === 'ignore')
-					{
-						$this->logger->debug($msg, $context);
-					}
-					else
+					if ($pluginConfig['regexpLimitAction'] !== 'ignore')
 					{
 						$this->logger->warn($msg, $context);
 					}
