@@ -1000,6 +1000,7 @@ s9e\TextFormatter\Tests\Parser\PluginsHandling
  [x] executePluginParsers() does not execute a plugin if its quickMatch test fails
  [x] executePluginParsers() executes a plugin if its regexp test passes
  [x] executePluginParsers() does not execute a plugin if its regexp test fails
+ [x] executePluginParsers() passes the text and the matches to the plugin's parser
  [x] executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
 
 s9e\TextFormatter\Tests\Parser\Tag

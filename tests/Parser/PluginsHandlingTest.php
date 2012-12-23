@@ -184,6 +184,35 @@ class PluginsHandlingTest extends Test
 	}
 
 	/**
+	* @testdox executePluginParsers() passes the text and the matches to the plugin's parser
+	*/
+	public function testExecutePluginParsersArguments()
+	{
+		$text = '...foo...';
+		$matches = array(
+			array(array('o', 4)),
+			array(array('o', 5))
+		);
+
+		$dummy  = new PluginsHandlingDummy($text);
+		$plugin = $this->getMock(
+			's9e\\TextFormatter\\Plugins\\ParserBase',
+			array('parse'),
+			array($dummy, array())
+		);
+
+		$plugin->expects($this->once())
+		       ->method('parse')
+		       ->with($text, $matches);
+
+		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
+		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
+
+		$dummy->executePluginParsers();
+	}
+
+	/**
 	* @testdox executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Test limit exceeded
