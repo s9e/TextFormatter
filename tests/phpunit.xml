@@ -69,6 +69,7 @@
 			<file>Parser/TagStackTest.php</file>
 			<file>Parser/OutputHandlingTest.php</file>
 			<file>Parser/TagProcessingTest.php</file>
+			<file>Parser/RulesHandlingTest.php</file>
 			<file>ParserTest.php</file>
 
 			<file>Plugins/ConfiguratorBaseTest.php</file>
@@ -153,6 +154,7 @@
 			<file>../src/Parser/Logger.php</file>
 			<file>../src/Parser/OutputHandling.php</file>
 			<file>../src/Parser/PluginsHandling.php</file>
+			<file>../src/Parser/RulesHandling.php</file>
 			<file>../src/Parser/Tag.php</file>
 			<file>../src/Parser/TagProcessing.php</file>
 			<file>../src/Parser/TagStack.php</file>

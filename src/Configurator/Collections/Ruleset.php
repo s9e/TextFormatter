@@ -113,9 +113,13 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		// In order to speed up lookups, we use the tag names as keys
-		foreach ($config as $ruleName => $targets)
+		if (isset($config['closeAncestor']))
 		{
-			$config[$ruleName] = array_fill_keys($targets, 1);
+			$config['closeAncestor'] = array_fill_keys($config['closeAncestor'], 1);
+		}
+		if (isset($config['closeParent']))
+		{
+			$config['closeParent'] = array_fill_keys($config['closeParent'], 1);
 		}
 
 		// Add the bitfield to the config

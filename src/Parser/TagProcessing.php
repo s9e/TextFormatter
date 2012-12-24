@@ -196,15 +196,14 @@ trait TagProcessing
 			return;
 		}
 
-		if ($this->closeParent($tag)
-		 || $this->closeAncestor($tagName))
+		if ($this->closeParent($tag) || $this->closeAncestor($tag))
 		{
 			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
 			return;
 		}
 
 		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit']
-		 || $this->requireAncestor($tagName)
+		 || $this->requireAncestor($tag)
 		 || !$this->tagIsAllowed($tagName))
 		{
 			// This tag is invalid
@@ -378,5 +377,18 @@ trait TagProcessing
 			'flags'              => $flags,
 			'parentContext'      => $this->context
 		);
+	}
+
+	/**
+	* Return whether given tag is allowed in current context
+	*
+	* @param  string $tagName
+	* @return bool
+	*/
+	protected function tagIsAllowed($tagName)
+	{
+		$n = $this->tagsConfig[$tagName]['bitNumber'];
+
+		return (bool) (ord($this->context['allowedChildren'][$n >> 8]) & (1 << ($n & 7)));
 	}
 }

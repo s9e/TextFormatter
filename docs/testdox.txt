@@ -218,7 +218,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] merge() correctly copies the isTransparent setting from an instance of Ruleset
  [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
  [x] asConfig() does not return rules that are not used during parsing
- [x] asConfig() flips arrays to use target names as keys
+ [x] asConfig() uses target names as keys for closeAncestor
+ [x] asConfig() uses target names as keys for closeParent
+ [x] asConfig() uses target names as keys for requireAncestor
  [x] asConfig() packs boolean rules in a value named "flags"
  [x] asConfig() can pack multiple boolean rules in a value named "flags"
  [x] asConfig() sets noBrChild's bit if noBrDescendant is set
@@ -1082,6 +1084,9 @@ s9e\TextFormatter\Tests\Parser\OutputHandling
  [x] Works
 
 s9e\TextFormatter\Tests\Parser\TagProcessing
+ [x] Works
+
+s9e\TextFormatter\Tests\Parser\RulesHandling
  [x] Works
 
 s9e\TextFormatter\Tests\Parser

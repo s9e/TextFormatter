@@ -687,9 +687,26 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() flips arrays to use target names as keys
+	* @testdox asConfig() uses target names as keys for closeAncestor
 	*/
-	public function testAsConfigFlipsArrays()
+	public function testAsConfigFlipsCloseAncestor()
+	{
+		$ruleset = new Ruleset;
+
+		$ruleset->closeAncestor('X');
+		$ruleset->closeAncestor('Y');
+
+		$config = $ruleset->asConfig();
+
+		$this->assertArrayHasKey('closeAncestor', $config);
+		$this->assertArrayHasKey('X', $config['closeAncestor']);
+		$this->assertArrayHasKey('Y', $config['closeAncestor']);
+	}
+
+	/**
+	* @testdox asConfig() uses target names as keys for closeParent
+	*/
+	public function testAsConfigFlipsCloseParent()
 	{
 		$ruleset = new Ruleset;
 
@@ -701,6 +718,22 @@ class RulesetTest extends Test
 		$this->assertArrayHasKey('closeParent', $config);
 		$this->assertArrayHasKey('X', $config['closeParent']);
 		$this->assertArrayHasKey('Y', $config['closeParent']);
+	}
+
+	/**
+	* @testdox asConfig() uses target names as keys for requireAncestor
+	*/
+	public function testAsConfigDoesNotFlipRequireAncestor()
+	{
+		$ruleset = new Ruleset;
+
+		$ruleset->requireAncestor('X');
+		$ruleset->requireAncestor('Y');
+
+		$config = $ruleset->asConfig();
+
+		$this->assertArrayHasKey('requireAncestor', $config);
+		$this->assertEquals(array('X', 'Y'), $config['requireAncestor']);
 	}
 
 	/**

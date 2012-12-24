@@ -12,32 +12,36 @@ trait RulesHandling
 	/**
 	* Apply closeAncestor rules associated with given tag
 	*
-	* @param  string $tagName Name of the tag
-	* @return bool            Whether a new tag has been added
+	* @param  Tag  $tag Name of the tag
+	* @return bool      Whether a new tag has been added
 	*/
-	protected function closeAncestor($tagName)
+	protected function closeAncestor(Tag $tag)
 	{
-		$tagConfig = $this->tagsConfig[$tagName];
-
-		if (!empty($tagConfig['rules']['closeAncestor']))
+		if (!empty($this->openTags))
 		{
-			$i = count($this->openTags);
+			$tagName   = $tag->getName();
+			$tagConfig = $this->tagsConfig[$tagName];
 
-			while (--$i >= 0)
+			if (!empty($tagConfig['rules']['closeAncestor']))
 			{
-				$ancestor     = $this->openTags[$i];
-				$ancestorName = $ancestor->getName();
+				$i = count($this->openTags);
 
-				if (isset($tagConfig['rules']['closeAncestor'][$ancestorName]))
+				while (--$i >= 0)
 				{
-					// We have to close this ancestor. First we reinsert current tag...
-					$this->tagStack[] = $this->currentTag;
+					$ancestor     = $this->openTags[$i];
+					$ancestorName = $ancestor->getName();
 
-					// ...then we add a new end tag which we pair with the one we want closed
-					$this->addEndTag($ancestorName, $this->currentTag->getPos(), 0)
-					     ->pairWith($ancestor);
+					if (isset($tagConfig['rules']['closeAncestor'][$ancestorName]))
+					{
+						// We have to close this ancestor. First we reinsert this tag...
+						$this->tagStack[] = $tag;
 
-					return true;
+						// ...then we add a new end tag which we pair with the one we want closed
+						$this->addEndTag($ancestorName, $tag->getPos(), 0)
+							 ->pairWith($ancestor);
+
+						return true;
+					}
 				}
 			}
 		}
@@ -51,7 +55,7 @@ trait RulesHandling
 	* @param  Tag  $tag Name of the tag
 	* @return bool      Whether a new tag has been added
 	*/
-	protected function closeParent($tag)
+	protected function closeParent(Tag $tag)
 	{
 		if (!empty($this->openTags))
 		{
@@ -82,11 +86,12 @@ trait RulesHandling
 	/**
 	* Apply requireAncestor rules associated with given tag
 	*
-	* @param  string $tagName Name of the tag
-	* @return bool            Whether a new tag has been added
+	* @param  Tag  $tag Name of the tag
+	* @return bool      Whether this tag has an unfulfilled requireAncestor requirement
 	*/
-	protected function requireAncestor($tagName)
+	protected function requireAncestor(Tag $tag)
 	{
+		$tagName   = $tag->getName();
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		if (isset($tagConfig['rules']['requireAncestor']))
@@ -108,18 +113,5 @@ trait RulesHandling
 		}
 
 		return false;
-	}
-
-	/**
-	* Return whether given tag is allowed in current context
-	*
-	* @param  string $tagName
-	* @return bool
-	*/
-	protected function tagIsAllowed($tagName)
-	{
-		$n = $this->tagsConfig[$tagName]['bitNumber'];
-
-		return (bool) (ord($this->context['allowedChildren'][$n >> 8]) & (1 << ($n & 7)));
 	}
 }
