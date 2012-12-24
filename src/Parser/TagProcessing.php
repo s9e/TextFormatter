@@ -118,6 +118,14 @@ trait TagProcessing
 			return;
 		}
 
+		// Test whether this tag is out of bounds
+		if ($tagPos + $tagLen > $this->textLen)
+		{
+			$this->currentTag->invalidate();
+
+			return;
+		}
+
 		if ($this->currentTag->isIgnoreTag())
 		{
 			$this->outputText($tagPos, 0);
