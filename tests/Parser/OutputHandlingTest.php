@@ -145,4 +145,24 @@ class OutputHandlingTest extends Test
 			$parser->parse('foo bar')
 		);
 	}
+
+	/**
+	* @testdox Correctly outputs br tags
+	*/
+	public function testBr()
+	{
+		$parser = $this->configurator->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$parser->addBrTag(3);
+			}
+		);
+
+		$this->assertSame(
+			'<rt>foo<br /> bar</rt>',
+			$parser->parse('foo bar')
+		);
+	}
 }

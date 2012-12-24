@@ -112,6 +112,20 @@ trait TagProcessing
 				return;
 			}
 
+			// If this is an ignore tag, try to ignore as much as the remaining text as possible
+			if ($this->currentTag->isIgnoreTag())
+			{
+				$ignoreLen = $tagPos + $tagLen - $this->pos;
+
+				if ($ignoreLen > 0)
+				{
+					// Create a new ignore tag and move on
+					$this->addIgnoreTag($this->pos, $ignoreLen);
+
+					return;
+				}
+			}
+
 			// Skipped tags are invalidated
 			$this->currentTag->invalidate();
 

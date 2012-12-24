@@ -234,19 +234,21 @@ trait OutputHandling
 	/**
 	* Output a linebreak tag
 	*
-	* NOTE: using <br /> rather than <br/> to remain consistent with nl2br()'s output
+	* NOTE: uses <br /> rather than <br/> to remain consistent with nl2br()'s output
 	*
+	* @param  Tag  $tag
 	* @return void
 	*/
-	protected function outputBrTag()
+	protected function outputBrTag(Tag $tag)
 	{
+		$this->outputText($tag->getPos(), 0);
 		$this->output .= '<br />';
 	}
 
 	/**
 	* Output an ignore tag
 	*
-	* @param  integer $ignoreLen Length of text to consume
+	* @param  Tag  $tag
 	* @return void
 	*/
 	protected function outputIgnoreTag(Tag $tag)
