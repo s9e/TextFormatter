@@ -10,6 +10,11 @@ namespace s9e\TextFormatter\Parser;
 trait OutputHandling
 {
 	/**
+	* @var bool Whether the output contains "rich" tags, IOW any tag that is not <i> or <br/>
+	*/
+	protected $isRich;
+
+	/**
 	* @var array Associative array of namespace prefixes in use in document (prefixes used as key)
 	*/
 	protected $namespaces;
@@ -21,18 +26,6 @@ trait OutputHandling
 	*/
 	protected function finalizeOutput()
 	{
-		/**
-		* @todo ignore/br tags that were manually added result in a <rt> tag even if there's no other tag
-		*/
-		if ($this->output === '')
-		{
-			$this->output = '<pt>';
-			$this->outputText($this->textLen, 0);
-			$this->output .= '</pt>';
-
-			return;
-		}
-
 		// Output the rest of the text
 		if ($this->pos < $this->textLen)
 		{
@@ -45,14 +38,17 @@ trait OutputHandling
 			$this->output = str_replace('</i><i>', '', $this->output);
 		}
 
+		// Use a <rt> root if the text is rich, or <pt> for plain text (including <i> and <br/>)
+		$tagName = ($this->isRich) ? 'rt' : 'pt';
+
 		// Prepare the root node with all the namespace declarations
-		$tmp = '<rt';
+		$tmp = '<' . $tagName;
 		foreach (array_keys($this->namespaces) as $prefix)
 		{
 			$tmp .= ' xmlns:' . $prefix . '="urn:s9e:TextFormatter:' . $prefix . '"';
 		}
 
-		$this->output = $tmp . '>' . $this->output . '</rt>';
+		$this->output = $tmp . '>' . $this->output . '</' . $tagName . '>';
 	}
 
 	/**
@@ -62,6 +58,8 @@ trait OutputHandling
 	*/
 	protected function outputTag(Tag $tag)
 	{
+		$this->isRich = true;
+
 		$tagName   = $tag->getName();
 		$tagPos    = $tag->getPos();
 		$tagLen    = $tag->getLen();
