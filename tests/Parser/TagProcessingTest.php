@@ -84,6 +84,38 @@ class TagProcessingTest extends Test
 			),
 			array(
 				'foo bar',
+				'<rt><X>fo<Y>o</Y></X> bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addEndTag('X', 3, 0);
+					$parser->addStartTag('Y', 2, 0);
+					$parser->addEndTag('Y', 4, 1);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt><X>fo<Y>o</Y></X><Y> b</Y>ar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addEndTag('X', 3, 0);
+					$parser->addStartTag('Y', 2, 0);
+					$parser->addEndTag('Y', 5, 0);
+				}
+			),
+			array(
+				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
 				function ($constructor)
 				{
@@ -153,6 +185,88 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 0, 3);
 					$parser->addSelfClosingTag('Y', 1, 1)
 					       ->cascadeInvalidationTo($parser->addSelfClosingTag('Y', 5, 1));
+				}
+			),
+			array(
+				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
+				"<rt><PRE><st>[pre]</st>foo<B><st>[b]</st>x<br/>\ny<et>[/b]</et></B>bar<et>[/pre]</et></PRE>a<br/>\nb</rt>",
+				function ($constructor)
+				{
+					$constructor->tags->add('PRE')->rules->noBrChild();
+					$constructor->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('PRE', 0, 5);
+					$parser->addEndTag('PRE', 21, 6);
+					$parser->addStartTag('B', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+				}
+			),
+			array(
+				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
+				"<rt><PRE><st>[pre]</st>foo<B><st>[b]</st>x\ny<et>[/b]</et></B>bar<et>[/pre]</et></PRE>a<br/>\nb</rt>",
+				function ($constructor)
+				{
+					$constructor->tags->add('PRE')->rules->noBrDescendant();
+					$constructor->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('PRE', 0, 5);
+					$parser->addEndTag('PRE', 21, 6);
+					$parser->addStartTag('B', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt><X>foo</X> bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addIgnoreTag(2, 1);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt><X>foo</X><i> b</i>ar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addIgnoreTag(2, 3);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt>foo <X>bar</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 4, 3);
+				}
+			),
+			array(
+				'foo bar',
+				'<pt>foo bar</pt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 4, 4);
 				}
 			),
 		);
