@@ -184,6 +184,18 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox <xsl:element/> with an invalid name is ignored
+	*/
+	public function test2523AA46()
+	{
+		$this->runCase(
+			'<xsl:element/> with an invalid name is ignored',
+			'<xsl:element name="foo#bar"/>',
+			'<xsl:element name="foo#bar"/>'
+		);
+	}
+
+	/**
 	* @testdox Inlined elements' names are lowercased
 	*/
 	public function test5FE35400()
@@ -204,6 +216,18 @@ class TemplateOptimizerTest extends Test
 			'<xsl:attribute/> with one single <xsl:value-of/> child is inlined',
 			'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
 			'<div class="{@foo}"><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:attribute/> with an invalid name is ignored
+	*/
+	public function test2BA75419()
+	{
+		$this->runCase(
+			'<xsl:attribute/> with an invalid name is ignored',
+			'<div><xsl:attribute name="foo#bar">x</xsl:attribute><xsl:apply-templates/></div>',
+			'<div><xsl:attribute name="foo#bar">x</xsl:attribute><xsl:apply-templates/></div>'
 		);
 	}
 
@@ -398,24 +422,6 @@ class TemplateOptimizerTest extends Test
 		TemplateOptimizer::optimize('<xsl:if test="foo=&quot;bar">!</xsl:if>');
 	}
 
-	/**
-	* @testdox <xsl:attribute/> with an invalid name is ignored
-	*/
-	public function testInvalidAttribute()
-	{
-		$template = '<b><xsl:attribute name="{@id}"/></b>';
-		$this->assertSame($template, TemplateOptimizer::optimize($template));
-	}
-
-	/**
-	* @testdox <xsl:element/> with an invalid name is ignored
-	*/
-	public function testInvalidElement()
-	{
-		$template = '<xsl:element name="{@id}"/>';
-		$this->assertSame($template, TemplateOptimizer::optimize($template));
-	}
-
 	public function runCase($title, $input, $expected)
 	{
 		$this->assertSame(
@@ -502,6 +508,11 @@ class TemplateOptimizerTest extends Test
 				'<div><xsl:apply-templates/></div>'
 			),
 			array(
+				'<xsl:element/> with an invalid name is ignored',
+				'<xsl:element name="foo#bar"/>',
+				'<xsl:element name="foo#bar"/>'
+			),
+			array(
 				"Inlined elements' names are lowercased",
 				'<xsl:element name="DIV"><xsl:apply-templates/></xsl:element>',
 				'<div><xsl:apply-templates/></div>'
@@ -510,6 +521,11 @@ class TemplateOptimizerTest extends Test
 				'<xsl:attribute/> with one single <xsl:value-of/> child is inlined',
 				'<div><xsl:attribute name="class"><xsl:value-of select="@foo"/></xsl:attribute><xsl:apply-templates/></div>',
 				'<div class="{@foo}"><xsl:apply-templates/></div>'
+			),
+			array(
+				'<xsl:attribute/> with an invalid name is ignored',
+				'<div><xsl:attribute name="foo#bar">x</xsl:attribute><xsl:apply-templates/></div>',
+				'<div><xsl:attribute name="foo#bar">x</xsl:attribute><xsl:apply-templates/></div>'
 			),
 			array(
 				"Inlined attributes' names are lowercased",

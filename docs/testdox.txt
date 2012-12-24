@@ -543,8 +543,10 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Superfluous whitespace in XPath expressions in inline attributes is removed
  [x] Escaped curly brackets in inline attributes are preserved
  [x] <xsl:element/> is inlined where possible
+ [x] <xsl:element/> with an invalid name is ignored
  [x] Inlined elements' names are lowercased
  [x] <xsl:attribute/> with one single <xsl:value-of/> child is inlined
+ [x] <xsl:attribute/> with an invalid name is ignored
  [x] Inlined attributes' names are lowercased
  [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
  [x] Curly brackets in text are escaped when attributes are inlined
@@ -561,8 +563,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] <xsl:if test="@foo"><xsl:value-of select="@bar"/></xsl:if> is left untouched
  [x] <xsl:if test="1+@foo"><xsl:value-of select="1+@foo"/></xsl:if> is left untouched
  [x] Throws an exception during XPath minification if a string isn't properly closed
- [x] <xsl:attribute/> with an invalid name is ignored
- [x] <xsl:element/> with an invalid name is ignored
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML

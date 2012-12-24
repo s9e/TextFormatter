@@ -144,12 +144,16 @@ abstract class TemplateOptimizer
 	{
 		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'element') as $element)
 		{
-			$name = $element->getAttribute('name');
+			$name = strtr(
+				$element->getAttribute('name'),
+				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+				'abcdefghijklmnopqrstuvwxyz'
+			);
 
 			try
 			{
 				// Create the new static element
-				$newElement = $dom->createElement(strtolower($name));
+				$newElement = $dom->createElement($name);
 			}
 			catch (DOMException $e)
 			{
