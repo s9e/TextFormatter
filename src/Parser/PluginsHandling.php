@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Parser;
 
+use InvalidArgumentException;
 use RuntimeException;
 
 trait PluginsHandling
@@ -124,5 +125,31 @@ trait PluginsHandling
 			// Execute the plugin's parser, which will add tags via $this->addStartTag() and others
 			call_user_func($this->pluginParsers[$pluginName], $this->text, $matches);
 		}
+	}
+
+	/**
+	* Register a parser
+	*
+	* Can be used to add a new parser with no plugin config, or pre-generate a parser for an
+	* existing plugin
+	*
+	* @param  string   $pluginName
+	* @param  callback $parser
+	* @return void
+	*/
+	public function registerParser($pluginName, $parser)
+	{
+		if (!is_callable($parser))
+		{
+			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
+		}
+
+		// Create an empty config for this plugin to ensure it is executed
+		if (!isset($this->pluginsConfig[$pluginName]))
+		{
+			$this->pluginsConfig[$pluginName] = array();
+		}
+
+		$this->pluginParsers[$pluginName] = $parser;
 	}
 }

@@ -86,7 +86,6 @@ class PluginsHandlingTest extends Test
 			array('parse'),
 			array($dummy, array())
 		);
-
 		$plugin->expects($this->never())
 		       ->method('parse');
 
@@ -127,7 +126,6 @@ class PluginsHandlingTest extends Test
 			array('parse'),
 			array($dummy, array())
 		);
-
 		$plugin->expects($this->never())
 		       ->method('parse');
 
@@ -169,7 +167,6 @@ class PluginsHandlingTest extends Test
 			array('parse'),
 			array($dummy, array())
 		);
-
 		$plugin->expects($this->never())
 		       ->method('parse');
 
@@ -319,6 +316,49 @@ class PluginsHandlingTest extends Test
 		$this->assertArrayHasKey('Test', $dummy->pluginParsers);
 		$this->assertArrayHasKey(0, $dummy->pluginParsers['Test']);
 		$this->assertInstanceOf($className, $dummy->pluginParsers['Test'][0]);
+	}
+
+	/**
+	* @testdox registerParser() can register a callback that replaces the parser of an existing plugin
+	*/
+	public function testRegisterParserExisting()
+	{
+		$dummy  = new PluginsHandlingDummy;
+		$parser = $this->getMock('stdClass', array('foo'));
+		$parser->expects($this->once())
+		       ->method('foo');
+
+		$dummy->registerParser('Test', array($parser, 'foo'));
+
+		$dummy->executePluginParsers();
+	}
+
+	/**
+	* @testdox registerParser() can register a callback that acts as the parser of a new plugin
+	*/
+	public function testRegisterParserNew()
+	{
+		$dummy  = new PluginsHandlingDummy;
+		$dummy->pluginsConfig = array();
+
+		$parser = $this->getMock('stdClass', array('foo'));
+		$parser->expects($this->once())
+		       ->method('foo');
+
+		$dummy->registerParser('Foo', array($parser, 'foo'));
+
+		$dummy->executePluginParsers();
+	}
+
+	/**
+	* @testdox registerParser() throws an exception if its second argument is not callable
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage must be a valid callback
+	*/
+	public function testRegisterParserInvalid()
+	{
+		$dummy  = new PluginsHandlingDummy;
+		$dummy->registerParser('Foo', '*invalid*');
 	}
 }
 

@@ -1006,6 +1006,9 @@ s9e\TextFormatter\Tests\Parser\PluginsHandling
  [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'abort' or 'ignore'
  [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'ignore'
  [x] executePluginParsers() creates an instance of the class name stored in className if present
+ [x] registerParser() can register a callback that replaces the parser of an existing plugin
+ [x] registerParser() can register a callback that acts as the parser of a new plugin
+ [x] registerParser() throws an exception if its second argument is not callable
 
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
