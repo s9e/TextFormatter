@@ -21,7 +21,7 @@ trait OutputHandling
 	*/
 	protected function finalizeOutput()
 	{
-		if (!$this->pos)
+		if ($this->output === '')
 		{
 			$this->output = '<pt>';
 			$this->outputText($this->textLen, 0);
