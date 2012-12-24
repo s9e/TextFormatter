@@ -19,7 +19,7 @@ class Attribute implements ConfigProvider
 	use Configurable;
 
 	/**
-	* @var mixed
+	* @var mixed Default value used for this attribute
 	*/
 	protected $defaultValue;
 
@@ -29,7 +29,7 @@ class Attribute implements ConfigProvider
 	protected $filterChain;
 
 	/**
-	* @var ProgrammableCallback
+	* @var ProgrammableCallback Generator used to generate a value for this attribute during parsing
 	*/
 	protected $generator;
 
@@ -39,6 +39,8 @@ class Attribute implements ConfigProvider
 	protected $required = true;
 
 	/**
+	* Constructor
+	*
 	* @param array $options This attribute's options
 	*/
 	public function __construct(array $options = null)
@@ -55,6 +57,8 @@ class Attribute implements ConfigProvider
 	}
 
 	/**
+	* Replace this attribute's filterChain with given structure
+	*
 	* @param FilterChain|array $filterChain
 	*/
 	public function setFilterChain($filterChain)
@@ -74,6 +78,8 @@ class Attribute implements ConfigProvider
 	}
 
 	/**
+	* Set a generator for this attribute
+	*
 	* @param callable|ProgrammableCallback $callback
 	*/
 	public function setGenerator($callback)
