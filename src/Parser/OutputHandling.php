@@ -20,7 +20,7 @@ trait OutputHandling
 	protected $namespaces;
 
 	/**
-	* 
+	* Finalize the output by appending the rest of the unprocessed text and create the root node
 	*
 	* @return void
 	*/
@@ -52,8 +52,9 @@ trait OutputHandling
 	}
 
 	/**
-	* 
+	* Append a tag to the output
 	*
+	* @param  Tag  $tag Tag to append
 	* @return void
 	*/
 	protected function outputTag(Tag $tag)
