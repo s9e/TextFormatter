@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Parser;
 
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\OutputHandling;
 use s9e\TextFormatter\Plugins\ParserBase;
@@ -13,156 +14,127 @@ use s9e\TextFormatter\Tests\Test;
 class OutputHandlingTest extends Test
 {
 	/**
-	* @testdox Correctly outputs plain text
+	* @testdox Works
+	* @dataProvider getData
 	*/
-	public function testPlainText()
+	public function test($original, $expected, $setup = null, $callback = null)
 	{
-		$parser = $this->configurator->getParser();
+		$configurator = new Configurator;
 
-		$this->assertSame(
-			'<pt>Plain text</pt>',
-			$parser->parse('Plain text')
-		);
-	}
+		if (isset($setup))
+		{
+			call_user_func($setup, $configurator);
+		}
 
-	/**
-	* @testdox Correctly outputs plain text with line breaks
-	*/
-	public function testPlainTextMultiline()
-	{
-		$parser = $this->configurator->getParser();
-
-		$this->assertSame(
-			"<pt>Plain<br/>\ntext</pt>",
-			$parser->parse("Plain\ntext")
-		);
-	}
-
-	/**
-	* @testdox Correctly outputs one zero-width self-closing tag at the start of the text
-	*/
-	public function testSelfClosingStart()
-	{
-		$this->configurator->tags->add('X');
-
-		$parser = $this->configurator->getParser();
+		$parser = $configurator->getParser();
 		$parser->registerParser(
 			'Test',
-			function () use ($parser)
+			function () use ($callback, $parser)
 			{
-				$parser->addSelfClosingTag('X', 0, 0);
+				if (isset($callback))
+				{
+					call_user_func($callback, $parser);
+				}
 			}
 		);
 
-		$this->assertSame(
-			'<rt><X/>foo bar</rt>',
-			$parser->parse('foo bar')
-		);
+		$this->assertSame($expected, $parser->parse($original));
 	}
 
 	/**
-	* @testdox Correctly outputs one zero-width self-closing tag in the middle of the text
+	* 
+	*
+	* @return void
 	*/
-	public function testSelfClosingMiddle()
+	public function getData()
 	{
-		$this->configurator->tags->add('X');
-
-		$parser = $this->configurator->getParser();
-		$parser->registerParser(
-			'Test',
-			function () use ($parser)
-			{
-				$parser->addSelfClosingTag('X', 3, 0);
-			}
-		);
-
-		$this->assertSame(
-			'<rt>foo<X/> bar</rt>',
-			$parser->parse('foo bar')
-		);
-	}
-
-	/**
-	* @testdox Correctly outputs one zero-width self-closing tag at the end of the text
-	*/
-	public function testSelfClosingEnd()
-	{
-		$this->configurator->tags->add('X');
-
-		$parser = $this->configurator->getParser();
-		$parser->registerParser(
-			'Test',
-			function () use ($parser)
-			{
-				$parser->addSelfClosingTag('X', 7, 0);
-			}
-		);
-
-		$this->assertSame(
-			'<rt>foo bar<X/></rt>',
-			$parser->parse('foo bar')
-		);
-	}
-
-	/**
-	* @testdox Correctly outputs a self-closing tag that consumes text
-	*/
-	public function testSelfClosingConsuming()
-	{
-		$this->configurator->tags->add('X');
-
-		$parser = $this->configurator->getParser();
-		$parser->registerParser(
-			'Test',
-			function () use ($parser)
-			{
-				$parser->addSelfClosingTag('X', 0, 3);
-			}
-		);
-
-		$this->assertSame(
-			'<rt><X>foo</X> bar</rt>',
-			$parser->parse('foo bar')
-		);
-	}
-
-	/**
-	* @testdox Correctly outputs ignore tags
-	*/
-	public function testIgnore()
-	{
-		$parser = $this->configurator->getParser();
-		$parser->registerParser(
-			'Test',
-			function () use ($parser)
-			{
-				$parser->addIgnoreTag(3, 1);
-			}
-		);
-
-		$this->assertSame(
-			'<rt>foo<i> </i>bar</rt>',
-			$parser->parse('foo bar')
-		);
-	}
-
-	/**
-	* @testdox Correctly outputs br tags
-	*/
-	public function testBr()
-	{
-		$parser = $this->configurator->getParser();
-		$parser->registerParser(
-			'Test',
-			function () use ($parser)
-			{
-				$parser->addBrTag(3);
-			}
-		);
-
-		$this->assertSame(
-			'<rt>foo<br/> bar</rt>',
-			$parser->parse('foo bar')
+		return array(
+			array(
+				'Plain text',
+				'<pt>Plain text</pt>'
+			),
+			array(
+				"Plain\ntext",
+				"<pt>Plain<br/>\ntext</pt>"
+			),
+			array(
+				'foo bar',
+				'<rt><X/>foo bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt>foo<X/> bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 3, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt>foo bar<X/></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 7, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt><X>foo</X> bar</rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt>foo<X> </X>bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 3, 1);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt>foo<i> </i>bar</rt>',
+				null,
+				function ($parser)
+				{
+					$parser->addIgnoreTag(3, 1);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt>foo<br/> bar</rt>',
+				null,
+				function ($parser)
+				{
+					$parser->addBrTag(3);
+				}
+			),
 		);
 	}
 }

@@ -21,6 +21,9 @@ trait OutputHandling
 	*/
 	protected function finalizeOutput()
 	{
+		/**
+		* @todo ignore/br tags that were manually added result in a <rt> tag even if there's no other tag
+		*/
 		if ($this->output === '')
 		{
 			$this->output = '<pt>';

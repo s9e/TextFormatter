@@ -1077,14 +1077,7 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] sortTags() tiebreaker sorts tag by sortPriority descending (-10 is processed before 10)
 
 s9e\TextFormatter\Tests\Parser\OutputHandling
- [x] Correctly outputs plain text
- [x] Correctly outputs plain text with line breaks
- [x] Correctly outputs one zero-width self-closing tag at the start of the text
- [x] Correctly outputs one zero-width self-closing tag in the middle of the text
- [x] Correctly outputs one zero-width self-closing tag at the end of the text
- [x] Correctly outputs a self-closing tag that consumes text
- [x] Correctly outputs ignore tags
- [x] Correctly outputs br tags
+ [x] Works
 
 s9e\TextFormatter\Tests\Parser
  [x] Parser is serializable
