@@ -322,9 +322,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Generates an autoClose rule for <hr/>
  [x] Does not generate an autoClose rule for <span>
  [x] Generates an autoReopen rule for <b>
- [x] Does notg enerates an autoReopen rule for <div>
- [x] Generates an denyAll rule for <hr>
- [x] Generates an denyAll rule for <style>
+ [x] Does not generate an autoReopen rule for <div>
+ [x] Generates a denyAll rule for <hr>
+ [x] Generates a denyAll rule for <style>
  [x] Generates an ignoreText rule for <ul>
  [x] Does not generate an ignoreText rule for <b>
  [x] Generates an isTransparent rule for <a>

@@ -155,7 +155,7 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Does notg enerates an autoReopen rule for <div>
+	* @testdox Does not generate an autoReopen rule for <div>
 	*/
 	public function testNoAutoReopen()
 	{
@@ -175,7 +175,7 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates an denyAll rule for <hr>
+	* @testdox Generates a denyAll rule for <hr>
 	*/
 	public function testDenyAllHr()
 	{
@@ -195,7 +195,7 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates an denyAll rule for <style>
+	* @testdox Generates a denyAll rule for <style>
 	*/
 	public function testDenyAllStyle()
 	{
@@ -507,7 +507,6 @@ class RulesGeneratorTest extends Test
 		$tags->add('A')->defaultTemplate = new UnsafeTemplate(
 			'<xsl:element name="{\'a\'}"><xsl:apply-templates/></xsl:element>'
 		);
-
 		$rules = RulesGenerator::getRules(
 			$tags,
 			array('renderer' => $this->configurator->getRenderer())
@@ -520,6 +519,59 @@ class RulesGeneratorTest extends Test
 				),
 				'A' => array(
 					'denyChild'  => array('DIV', 'A')
+				)
+			),
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Uses the renderer to generate a template
+	*/
+	public function testRendererPrefixedTag()
+	{
+		$tags = $this->configurator->tags;
+		$tags->add('html:a')->defaultTemplate = new UnsafeTemplate(
+			'<xsl:element name="{local-name()}"><xsl:apply-templates/></xsl:element>'
+		);
+
+		$rules = RulesGenerator::getRules(
+			$tags,
+			array('renderer' => $this->configurator->getRenderer())
+		);
+
+		$this->assertArrayMatches(
+			array(
+				'html:a' => array(
+					'denyChild'  => array('html:a')
+				)
+			),
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Uses the renderer to generate a template
+	*/
+	public function testRendererAttributes()
+	{
+		$tags = $this->configurator->tags;
+		$tags->add('A')->defaultTemplate   = '<a><xsl:apply-templates/></a>';
+		$tags->add('IMG')->defaultTemplate = '<img/>';
+		$tags->add('USEMAP')->defaultTemplate = new UnsafeTemplate(
+			'<img><xsl:attribute name="{\'usemap\'}"/></img>'
+		);
+
+		$rules = RulesGenerator::getRules(
+			$tags,
+			array('renderer' => $this->configurator->getRenderer())
+		);
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'allowChild' => array('IMG'),
+					'denyChild'  => array('A', 'USEMAP')
 				)
 			),
 			$rules['tags']
