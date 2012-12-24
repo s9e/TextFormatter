@@ -130,6 +130,19 @@ class OutputHandlingTest extends Test
 					$parser->addBrTag(3);
 				}
 			),
+			array(
+				"xxx\n[DIV]\n...\n[/DIV]\nyyy",
+				"<rt>xxx<i>\n</i><DIV><st>[DIV]</st><i>\n</i>...<i>\n</i><et>[/DIV]</et></DIV><i>\n</i>yyy</rt>",
+				function ($constructor)
+				{
+					$constructor->tags->add('DIV')->rules->trimWhitespace();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('DIV', 4, 5);
+					$parser->addEndTag('DIV', 14, 6);
+				}
+			),
 		);
 	}
 }

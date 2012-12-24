@@ -190,7 +190,7 @@ trait OutputHandling
 
 		if ($ignoreLen)
 		{
-			$ignoreText  = substr($catchupText, -$ignoreLen);
+			$ignoreText  = '<i>' . substr($catchupText, -$ignoreLen) . '</i>';
 			$catchupText = substr($catchupText, 0, $catchupLen - $ignoreLen);
 		}
 		else
