@@ -946,6 +946,7 @@ s9e\TextFormatter\Tests\Parser\BuiltInFilters
 
 s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] registerVar($k, $v) sets registeredVars[$k] to $v
+ [x] getRegisteredVars() returns all registered vars
  [x] executeAttributePreprocessors() sets captured attributes on match
  [x] executeAttributePreprocessors() does not overwrite attributes that were already set
  [x] executeAttributePreprocessors() unsets the source attribute on match

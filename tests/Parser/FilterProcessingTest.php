@@ -29,6 +29,20 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
+	* @testdox getRegisteredVars() returns all registered vars
+	*/
+	public function testGetRegisteredVars()
+	{
+		$dummy = new FilterProcessingDummy;
+		$dummy->registerVar('foo', 'bar');
+
+		$this->assertSame(
+			array('foo' => 'bar'),
+			$dummy->getRegisteredVars()
+		);
+	}
+
+	/**
 	* @testdox executeAttributePreprocessors() sets captured attributes on match
 	*/
 	public function testExecuteAttributePreprocessorsSetAttributesOnMatch()
