@@ -33,11 +33,19 @@ trait OutputHandling
 			return;
 		}
 
+		// Output the rest of the text
 		if ($this->pos < $this->textLen)
 		{
 			$this->outputText($this->textLen, 0);
 		}
 
+		// Merge consecutive <i> tags
+		if (strpos($this->output, '</i><i>') !== false)
+		{
+			$this->output = str_replace('</i><i>', '', $this->output);
+		}
+
+		// Prepare the root node with all the namespace declarations
 		$tmp = '<rt';
 		foreach (array_keys($this->namespaces) as $prefix)
 		{

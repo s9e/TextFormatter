@@ -229,6 +229,38 @@ class OutputHandlingTest extends Test
 					$parser->addEndTag('DIV', 17, 6);
 				}
 			),
+			array(
+				'xxx
+
+				[UL]
+					[LI]aaa[/LI]
+					[LI]bbb[/LI]
+				[/UL]
+
+yyy',
+				'<rt>xxx<i>
+
+				</i><UL><st>[UL]</st><i>
+					</i><LI><st>[LI]</st>aaa<et>[/LI]</et></LI><i>
+					</i><LI><st>[LI]</st>bbb<et>[/LI]</et></LI><i>
+				</i><et>[/UL]</et></UL><i>
+
+</i>yyy</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('UL')->rules->trimWhitespace();
+					$constructor->tags->add('LI')->rules->trimWhitespace();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('UL', 9, 4);
+					$parser->addStartTag('LI', 19, 4);
+					$parser->addEndTag('LI', 26, 5);
+					$parser->addStartTag('LI', 37, 4);
+					$parser->addEndTag('LI', 44, 5);
+					$parser->addEndTag('UL', 54, 5);
+				}
+			),
 		);
 	}
 }
