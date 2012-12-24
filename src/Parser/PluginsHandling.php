@@ -12,7 +12,7 @@ use RuntimeException;
 trait PluginsHandling
 {
 	/**
-	* @var array Instantiated plugin parsers
+	* @var array Array of callbacks, using plugin names as keys
 	*/
 	protected $pluginParsers = array();
 
@@ -114,11 +114,15 @@ trait PluginsHandling
 						   ? $pluginConfig['className']
 						   : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
 
-				$this->pluginParsers[$pluginName] = new $className($this, $pluginConfig);
+				// Register the parser as a callback
+				$this->pluginParsers[$pluginName] = array(
+					new $className($this, $pluginConfig),
+					'parse'
+				);
 			}
 
 			// Execute the plugin's parser, which will add tags via $this->addStartTag() and others
-			$this->pluginParsers[$pluginName]->parse($this->text, $matches);
+			call_user_func($this->pluginParsers[$pluginName], $this->text, $matches);
 		}
 	}
 }

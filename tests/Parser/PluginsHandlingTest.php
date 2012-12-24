@@ -70,7 +70,7 @@ class PluginsHandlingTest extends Test
 		$plugin->expects($this->once())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 
 		$dummy->executePluginParsers();
 	}
@@ -90,7 +90,7 @@ class PluginsHandlingTest extends Test
 		$plugin->expects($this->never())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->disablePlugin('Test');
 
 		$dummy->executePluginParsers();
@@ -110,7 +110,7 @@ class PluginsHandlingTest extends Test
 		$plugin->expects($this->once())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->pluginsConfig['Test']['quickMatch'] = '[';
 
 		$dummy->executePluginParsers();
@@ -131,7 +131,7 @@ class PluginsHandlingTest extends Test
 		$plugin->expects($this->never())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->pluginsConfig['Test']['quickMatch'] = '[';
 
 		$dummy->executePluginParsers();
@@ -151,7 +151,7 @@ class PluginsHandlingTest extends Test
 		$plugin->expects($this->once())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->pluginsConfig['Test']['regexp'] = '/foo/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
 
@@ -173,7 +173,7 @@ class PluginsHandlingTest extends Test
 		$plugin->expects($this->never())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->pluginsConfig['Test']['regexp'] = '/foo/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
 
@@ -201,7 +201,7 @@ class PluginsHandlingTest extends Test
 		       ->method('parse')
 		       ->with($text, $matches);
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
 
@@ -224,7 +224,7 @@ class PluginsHandlingTest extends Test
 		$plugin->expects($this->never())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 1;
 		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'abort';
@@ -262,7 +262,7 @@ class PluginsHandlingTest extends Test
 		       ->with('Regexp limit exceeded. Only the allowed number of matches will be processed', array('pluginName' => 'Test', 'limit' => 2));
 		$dummy->logger = $logger;
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 2;
 		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'warn';
@@ -291,7 +291,7 @@ class PluginsHandlingTest extends Test
 		       ->method('parse')
 		       ->with($text, $matches);
 
-		$dummy->pluginParsers['Test'] = $plugin;
+		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 2;
 		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'ignore';
@@ -317,7 +317,8 @@ class PluginsHandlingTest extends Test
 		$dummy->executePluginParsers();
 
 		$this->assertArrayHasKey('Test', $dummy->pluginParsers);
-		$this->assertInstanceOf($className, $dummy->pluginParsers['Test']);
+		$this->assertArrayHasKey(0, $dummy->pluginParsers['Test']);
+		$this->assertInstanceOf($className, $dummy->pluginParsers['Test'][0]);
 	}
 }
 
