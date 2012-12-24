@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 use DOMAttr;
 use DOMDocument;
 use DOMElement;
+use DOMException;
 use DOMNodeList;
 use DOMText;
 use DOMXPath;
@@ -145,21 +146,25 @@ abstract class TemplateOptimizer
 		{
 			$name = $element->getAttribute('name');
 
-			if (strpos($name, '{') === false)
+			try
 			{
 				// Create the new static element
 				$newElement = $dom->createElement(strtolower($name));
+			}
+			catch (DOMException $e)
+			{
+				// Ignore this element and keep going if an exception got thrown
+				continue;
+			}
 
-				// Replace the old <xsl:element/> with it. We do it now so that libxml doesn't have
-				// to redeclare the XSL namespace
-				$element->parentNode->replaceChild($newElement, $element);
+			// Replace the old <xsl:element/> with it. We do it now so that libxml doesn't have to
+			// redeclare the XSL namespace
+			$element->parentNode->replaceChild($newElement, $element);
 
-				// Now one by one and in order, we move the nodes from the old element to the new
-				// one
-				while ($element->firstChild)
-				{
-					$newElement->appendChild($element->removeChild($element->firstChild));
-				}
+			// Now one by one and in order, we move the nodes from the old element to the new one
+			while ($element->firstChild)
+			{
+				$newElement->appendChild($element->removeChild($element->firstChild));
 			}
 		}
 	}
@@ -213,7 +218,16 @@ abstract class TemplateOptimizer
 				'abcdefghijklmnopqrstuvwxyz'
 			);
 
-			$attribute->parentNode->setAttribute($name,	$value);
+			try
+			{
+				$attribute->parentNode->setAttribute($name,	$value);
+			}
+			catch (DOMException $e)
+			{
+				// Ignore this attribute and keep going if an exception got thrown
+				continue;
+			}
+
 			$attribute->parentNode->removeChild($attribute);
 		}
 	}

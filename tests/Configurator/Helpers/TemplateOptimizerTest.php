@@ -398,6 +398,24 @@ class TemplateOptimizerTest extends Test
 		TemplateOptimizer::optimize('<xsl:if test="foo=&quot;bar">!</xsl:if>');
 	}
 
+	/**
+	* @testdox <xsl:attribute/> with an invalid name is ignored
+	*/
+	public function testInvalidAttribute()
+	{
+		$template = '<b><xsl:attribute name="{@id}"/></b>';
+		$this->assertSame($template, TemplateOptimizer::optimize($template));
+	}
+
+	/**
+	* @testdox <xsl:element/> with an invalid name is ignored
+	*/
+	public function testInvalidElement()
+	{
+		$template = '<xsl:element name="{@id}"/>';
+		$this->assertSame($template, TemplateOptimizer::optimize($template));
+	}
+
 	public function runCase($title, $input, $expected)
 	{
 		$this->assertSame(
