@@ -140,6 +140,21 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 2, 1);
 				}
 			),
+			array(
+				'foo bar',
+				'<rt><X>foo</X> bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addSelfClosingTag('Y', 1, 1)
+					       ->cascadeInvalidationTo($parser->addSelfClosingTag('Y', 5, 1));
+				}
+			),
 		);
 	}
 }
