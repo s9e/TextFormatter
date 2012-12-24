@@ -41,10 +41,10 @@ class RendererTest extends Test
 	*/
 	public function testMultiLineText()
 	{
-		$xml = '<pt>One<br />two</pt>';
+		$xml = '<pt>One<br/>two</pt>';
 
 		$this->assertSame(
-			'One<br />two',
+			'One<br/>two',
 			$this->renderer->render($xml)
 		);
 	}

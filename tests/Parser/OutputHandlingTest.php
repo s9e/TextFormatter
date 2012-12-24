@@ -33,7 +33,7 @@ class OutputHandlingTest extends Test
 		$parser = $this->configurator->getParser();
 
 		$this->assertSame(
-			"<pt>Plain<br />\ntext</pt>",
+			"<pt>Plain<br/>\ntext</pt>",
 			$parser->parse("Plain\ntext")
 		);
 	}
@@ -161,7 +161,7 @@ class OutputHandlingTest extends Test
 		);
 
 		$this->assertSame(
-			'<rt>foo<br /> bar</rt>',
+			'<rt>foo<br/> bar</rt>',
 			$parser->parse('foo bar')
 		);
 	}

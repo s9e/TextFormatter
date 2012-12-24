@@ -126,30 +126,13 @@ trait OutputHandling
 
 		// Trim newlines (no other whitespace) after this tag
 		$ignorePos = $this->pos;
-		while ($trimAfter && $ignorePos < $this->textLen)
+		while ($trimAfter && $ignorePos < $this->textLen && $this->text[$ignorePos] === "\n")
 		{
-			$c = $this->text[$ignorePos];
-
-			if ($c !== "\n" && $c !== "\r")
-			{
-				break;
-			}
-
 			// Decrement the number of lines to trim
 			--$trimAfter;
 
 			// Move the cursor past the newline
 			++$ignorePos;
-
-			// Test whether this is a \r\n or \n\r combo
-			if ($ignorePos < $this->textLen)
-			{
-				if (($c === "\r" && $this->text[$ignorePos + 1] === "\n")
-				 || ($c === "\n" && $this->text[$ignorePos + 1] === "\r"))
-				{
-					++$ignorePos;
-				}
-			}
 		}
 
 		if ($ignorePos !== $this->pos)
@@ -189,7 +172,7 @@ trait OutputHandling
 		while ($maxLines && --$ignorePos >= 0)
 		{
 			$c = $catchupText[$ignorePos];
-			if (strpos(" \n\r\t\0\x0B", $c) === false)
+			if (strpos(" \n\t", $c) === false)
 			{
 				break;
 			}
@@ -197,16 +180,6 @@ trait OutputHandling
 			if ($c === "\n")
 			{
 				--$maxLines;
-
-				if ($ignorePos)
-				{
-					if (($c === "\n" && $catchupText[$ignorePos - 1] === "\r")
-					 || ($c === "\r" && $catchupText[$ignorePos - 1] === "\n"))
-					{
-						--$ignorePos;
-						++$ignoreLen;
-					}
-				}
 			}
 
 			++$ignoreLen;
@@ -225,7 +198,7 @@ trait OutputHandling
 		$catchupText = htmlspecialchars($catchupText, ENT_NOQUOTES, 'UTF-8');
 		if (!($this->context['flags'] & self::RULE_NO_BR_CHILD))
 		{
-			$catchupText = nl2br($catchupText);
+			$catchupText = str_replace("\n", "<br/>\n", $catchupText);
 		}
 
 		$this->output .= $catchupText . $ignoreText;
@@ -234,15 +207,13 @@ trait OutputHandling
 	/**
 	* Output a linebreak tag
 	*
-	* NOTE: uses <br /> rather than <br/> to remain consistent with nl2br()'s output
-	*
 	* @param  Tag  $tag
 	* @return void
 	*/
 	protected function outputBrTag(Tag $tag)
 	{
 		$this->outputText($tag->getPos(), 0);
-		$this->output .= '<br />';
+		$this->output .= '<br/>';
 	}
 
 	/**
