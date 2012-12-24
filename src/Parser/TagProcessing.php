@@ -35,7 +35,7 @@ trait TagProcessing
 	protected $pos;
 
 	/**
-	* 
+	* Process all tags in the stack
 	*
 	* @return void
 	*/
@@ -65,20 +65,27 @@ trait TagProcessing
 		// Close tags that were left open
 		while (!empty($this->openTags))
 		{
-			$this->currentTag = new Tag(
+			// Get the last open tag
+			$openTag = end($this->openTags);
+
+			// Create a tag paired to the last open tag
+			$endTag = new Tag(
 				Tag::END_TAG,
-				end($this->openTags)->getName(),
+				$openTag->getName(),
 				$this->textLen,
 				0
 			);
-			$this->processCurrentTag();
+			$openTag->pairWith($endTag);
+
+			// Now process the end tag
+			$this->processEndTag($endTag);
 		}
 
 		$this->finalizeOutput();
 	}
 
 	/**
-	* 
+	* Process current tag
 	*
 	* @return void
 	*/
@@ -91,6 +98,14 @@ trait TagProcessing
 
 		$tagPos = $this->currentTag->getPos();
 		$tagLen = $this->currentTag->getLen();
+
+		// Test whether this tag is out of bounds
+		if ($tagPos + $tagLen > $this->textLen)
+		{
+			$this->currentTag->invalidate();
+
+			return;
+		}
 
 		// Test whether the cursor passed this tag's position already
 		if ($this->pos > $tagPos)
@@ -132,14 +147,6 @@ trait TagProcessing
 			return;
 		}
 
-		// Test whether this tag is out of bounds
-		if ($tagPos + $tagLen > $this->textLen)
-		{
-			$this->currentTag->invalidate();
-
-			return;
-		}
-
 		if ($this->currentTag->isIgnoreTag())
 		{
 			$this->outputIgnoreTag($this->currentTag);
@@ -159,8 +166,9 @@ trait TagProcessing
 	}
 
 	/**
-	* 
+	* Process given start tag (including self-closing tags) at current position
 	*
+	* @param  Tag  $tag Start tag (including self-closing)
 	* @return void
 	*/
 	protected function processStartTag(Tag $tag)
@@ -211,8 +219,9 @@ trait TagProcessing
 	}
 
 	/**
-	* 
+	* Process given end tag at current position
 	*
+	* @param  Tag  $tag end tag
 	* @return void
 	*/
 	protected function processEndTag(Tag $tag)
@@ -304,7 +313,7 @@ trait TagProcessing
 	}
 
 	/**
-	* 
+	* Update counters and replace current context with its parent context
 	*
 	* @return void
 	*/
@@ -316,8 +325,11 @@ trait TagProcessing
 	}
 
 	/**
-	* 
+	* Update counters and replace current context with a new context based on given tag
 	*
+	* If given tag is a self-closing tag, the context won't change
+	*
+	* @param  Tag  $tag Start tag (including self-closing)
 	* @return void
 	*/
 	protected function pushContext(Tag $tag)
@@ -337,8 +349,8 @@ trait TagProcessing
 		++$this->cntOpen[$tagName];
 		$this->openTags[] = $tag;
 
-		// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise
-		// we use this tag's allowedChildren bitfield
+		// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise we use
+		// this tag's allowedChildren bitfield
 		$allowedChildren = ($tagConfig['rules']['flags'] & self::RULE_IS_TRANSPARENT)
 						 ? $this->context['allowedChildren']
 						 : $tagConfig['allowedChildren'];

@@ -269,6 +269,63 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 4, 4);
 				}
 			),
+			array(
+				'*foo* bar',
+				'<rt><X><st>*</st>foo<et>*</et></X> bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1)
+					       ->pairWith($parser->addEndTag('X', 4, 1));
+				}
+			),
+			array(
+				'*foo* bar',
+				'<rt><X><st>*</st>foo* bar</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1)
+					       ->pairWith($parser->addEndTag('X', 99, 1));
+				}
+			),
+			array(
+				'*foo* bar',
+				'<rt><X><st>*</st>foo* bar</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1)
+					       ->pairWith($parser->addEndTag('X', 99, 1));
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'*_foo* bar_',
+				'<rt><X><st>*</st><Y><st>_</st>foo</Y><et>*</et></X><Y> bar<et>_</et></Y></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1)
+					       ->pairWith($parser->addEndTag('X', 5, 1));
+					$parser->addStartTag('Y', 1, 1)
+					       ->pairWith($parser->addEndTag('Y', 10, 1));
+					$parser->addEndTag('Y', 6, 1);
+				}
+			),
 		);
 	}
 }
