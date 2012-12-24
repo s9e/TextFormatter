@@ -131,6 +131,79 @@ class OutputHandlingTest extends Test
 				}
 			),
 			array(
+				'foo bar',
+				'<rt xmlns:foo="urn:s9e:TextFormatter:foo"><foo:X/>foo bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('foo:X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('foo:X', 0, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt xmlns:foo="urn:s9e:TextFormatter:foo"><foo:X/>foo bar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('foo:X');
+					$constructor->tags->add('bar:X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('foo:X', 0, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt><X xx="&quot;xx&quot;" yy="&lt;&gt;"/>foo bar</rt>',
+				function ($constructor)
+				{
+					$tag = $constructor->tags->add('X');
+					$tag->attributes->add('xx');
+					$tag->attributes->add('yy');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 0)->setAttributes(array(
+						'xx' => '"xx"',
+						'yy' => '<>'
+					));
+				}
+			),
+			array(
+				'foo bar',
+				'<rt><X><i>foo</i></X> bar</rt>',
+				function ($constructor)
+				{
+					$tag = $constructor->tags->add('X')->rules->ignoreText();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addEndTag('X', 3, 0);
+				}
+			),
+			array(
+				'foo bar',
+				'<rt><X xx="&quot;xx&quot;" yy="&lt;&gt;">foo</X> bar</rt>',
+				function ($constructor)
+				{
+					$tag = $constructor->tags->add('X');
+					$tag->attributes->add('xx');
+					$tag->attributes->add('yy');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0)->setAttributes(array(
+						'xx' => '"xx"',
+						'yy' => '<>'
+					));
+					$parser->addEndTag('X', 3, 0);
+				}
+			),
+			array(
 				"xxx\n[DIV]\n...\n[/DIV]\nyyy",
 				"<rt>xxx<i>\n</i><DIV><st>[DIV]</st><i>\n</i>...<i>\n</i><et>[/DIV]</et></DIV><i>\n</i>yyy</rt>",
 				function ($constructor)
