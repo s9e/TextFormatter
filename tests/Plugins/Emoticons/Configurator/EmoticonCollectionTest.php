@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\Emoticons;
+namespace s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator;
 
-use s9e\TextFormatter\Plugins\Emoticons\EmoticonCollection;
+use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\Emoticons\EmoticonCollection
+* @covers s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection
 */
 class EmoticonCollectionTest extends Test
 {

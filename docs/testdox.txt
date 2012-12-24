@@ -1233,7 +1233,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] The config array contains the name of the tag
  [x] asConfig() generates a quickMatch if applicable
 
-s9e\TextFormatter\Tests\Plugins\Emoticons\EmoticonCollection
+s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
  [x] Throws an exception when an invalid template is set
  [x] Throws an exception when an unsafe template is set

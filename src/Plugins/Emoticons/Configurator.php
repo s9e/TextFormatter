@@ -14,6 +14,7 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
 
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {

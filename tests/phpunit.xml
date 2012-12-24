@@ -60,7 +60,7 @@
 			<file>Configurator/Validators/AttributeNameTest.php</file>
 			<file>Configurator/Validators/TagNameTest.php</file>
 
-			<!-- Third party classes first, then traits -->
+			<!-- Trying to sort by order of dependency  -->
 			<file>Parser/BuiltInFiltersTest.php</file>
 			<file>Parser/FilterProcessingTest.php</file>
 			<file>Parser/LoggerTest.php</file>
@@ -86,7 +86,7 @@
 			<file>Plugins/Censor/ConfiguratorTest.php</file>
 			<file>Plugins/Censor/ParserTest.php</file>
 			<file>Plugins/Emoticons/ConfiguratorTest.php</file>
-			<file>Plugins/Emoticons/EmoticonCollectionTest.php</file>
+			<file>Plugins/Emoticons/Configurator/EmoticonCollectionTest.php</file>
 			<file>Plugins/Emoticons/ParserTest.php</file>
 			<file>Plugins/Escaper/ConfiguratorTest.php</file>
 			<file>Plugins/Escaper/ParserTest.php</file>
