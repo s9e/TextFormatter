@@ -162,8 +162,6 @@ trait OutputHandling
 	/**
 	* Output the text between the cursor's position (included) and given position (not included)
 	*
-	* NOTE: does not move the cursor
-	*
 	* @param  integer $catchupPos Position we're catching up to
 	* @param  integer $maxLines   Maximum number of lines to trim at the end of the text
 	* @return void
@@ -178,6 +176,7 @@ trait OutputHandling
 
 		$catchupLen  = $catchupPos - $this->pos;
 		$catchupText = substr($this->text, $this->pos, $catchupLen);
+		$this->pos   = $catchupPos;
 
 		if ($this->context['flags'] & self::RULE_IGNORE_TEXT)
 		{
@@ -250,10 +249,19 @@ trait OutputHandling
 	* @param  integer $ignoreLen Length of text to consume
 	* @return void
 	*/
-	protected function outputIgnoreTag($ignoreLen)
+	protected function outputIgnoreTag(Tag $tag)
 	{
-		$this->output .= '<i>' . htmlspecialchars(substr($this->text, $this->pos, $ignoreLen), ENT_NOQUOTES, 'UTF-8') . '</i>';
+		$tagPos = $tag->getPos();
+		$tagLen = $tag->getLen();
 
-		$this->pos += $ignoreLen;
+		// Capture the text to ignore
+		$ignoreText = substr($this->text, $tagPos, $tagLen);
+
+		// Catch up with the tag's position then output the tag
+		$this->outputText($tagPos, 0);
+		$this->output .= '<i>' . htmlspecialchars($ignoreText, ENT_NOQUOTES, 'UTF-8') . '</i>';
+
+		// Move the cursor past this tag
+		$this->pos = $tagPos + $tagLen;
 	}
 }

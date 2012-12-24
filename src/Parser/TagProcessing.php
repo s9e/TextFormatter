@@ -128,13 +128,11 @@ trait TagProcessing
 
 		if ($this->currentTag->isIgnoreTag())
 		{
-			$this->outputText($tagPos, 0);
-			$this->outputIgnoreTag($tagLen);
+			$this->outputIgnoreTag($this->currentTag);
 		}
 		elseif ($this->currentTag->isBrTag())
 		{
-			$this->outputText($tagPos, 0);
-			$this->outputBrTag();
+			$this->outputBrTag($this->currentTag);
 		}
 		elseif ($this->currentTag->isStartTag())
 		{

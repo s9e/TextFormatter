@@ -103,4 +103,46 @@ class OutputHandlingTest extends Test
 			$parser->parse('foo bar')
 		);
 	}
+
+	/**
+	* @testdox Correctly outputs a self-closing tag that consumes text
+	*/
+	public function testSelfClosingConsuming()
+	{
+		$this->configurator->tags->add('X');
+
+		$parser = $this->configurator->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$parser->addSelfClosingTag('X', 0, 3);
+			}
+		);
+
+		$this->assertSame(
+			'<rt><X>foo</X> bar</rt>',
+			$parser->parse('foo bar')
+		);
+	}
+
+	/**
+	* @testdox Correctly outputs ignore tags
+	*/
+	public function testIgnore()
+	{
+		$parser = $this->configurator->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$parser->addIgnoreTag(3, 1);
+			}
+		);
+
+		$this->assertSame(
+			'<rt>foo<i> </i>bar</rt>',
+			$parser->parse('foo bar')
+		);
+	}
 }

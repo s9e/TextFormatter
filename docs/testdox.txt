@@ -1082,6 +1082,8 @@ s9e\TextFormatter\Tests\Parser\OutputHandling
  [x] Correctly outputs one zero-width self-closing tag at the start of the text
  [x] Correctly outputs one zero-width self-closing tag in the middle of the text
  [x] Correctly outputs one zero-width self-closing tag at the end of the text
+ [x] Correctly outputs a self-closing tag that consumes text
+ [x] Correctly outputs ignore tags
 
 s9e\TextFormatter\Tests\Parser
  [x] Parser is serializable
