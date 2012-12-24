@@ -75,4 +75,46 @@ class ParserTest extends Test
 			$parser->parse('Plain text')
 		);
 	}
+
+	/**
+	* @testdox parse() normalizes \r to \n
+	*/
+	public function testParseCR()
+	{
+		$this->configurator->rootRules->noBrChild();
+		$parser = $this->configurator->getParser();
+
+		$this->assertSame(
+			"<pt>Plain\ntext</pt>",
+			$parser->parse("Plain\rtext")
+		);
+	}
+
+	/**
+	* @testdox parse() normalizes \r\n to \n
+	*/
+	public function testParseCRLF()
+	{
+		$this->configurator->rootRules->noBrChild();
+		$parser = $this->configurator->getParser();
+
+		$this->assertSame(
+			"<pt>Plain\ntext</pt>",
+			$parser->parse("Plain\r\ntext")
+		);
+	}
+
+	/**
+	* @testdox parse() removes control characters that aren't allowed in XML
+	*/
+	public function testParseFiltersLowAscii()
+	{
+		$this->configurator->rootRules->noBrChild();
+		$parser = $this->configurator->getParser();
+
+		$this->assertSame(
+			"<pt>Plain\t\n\n text</pt>",
+			$parser->parse('Plain' . implode('', array_map('chr', range(0, 0x20))) . 'text')
+		);
+	}
 }

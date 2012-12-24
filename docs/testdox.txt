@@ -1092,6 +1092,9 @@ s9e\TextFormatter\Tests\Parser
  [x] getLogger() returns an instance of Logger
  [x] parse() returns the intermediate representation
  [x] parse() can be called multiple times in succession
+ [x] parse() normalizes \r to \n
+ [x] parse() normalizes \r\n to \n
+ [x] parse() removes control characters that aren't allowed in XML
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
