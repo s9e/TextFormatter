@@ -326,6 +326,59 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('Y', 6, 1);
 				}
 			),
+			array(
+				'**x**x***',
+				'<rt><X><st>**</st>x<Y><st>**</st>x<et>**</et></Y><et>*</et></X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 2)
+					       ->pairWith($parser->addEndTag('X', 7, 2));
+					$parser->addStartTag('Y', 3, 2)
+					       ->pairWith($parser->addEndTag('Y', 6, 2));
+				}
+			),
+			array(
+				'**x[**]x',
+				'<rt><X><st>**</st>x<Y>[**]</Y></X>x</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 2)
+					       ->pairWith($parser->addEndTag('X', 4, 2));
+					$parser->addSelfClosingTag('Y', 3, 4);
+				}
+			),
+			array(
+				'xy',
+				'<pt>x<br/>y</pt>',
+				null,
+				function ($parser)
+				{
+					$parser->addBrTag(1);
+				}
+			),
+			array(
+				'xx',
+				'<rt><X>x</X><X>x</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->rules->closeParent('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addStartTag('X', 1, 0);
+				}
+			),
 		);
 	}
 }

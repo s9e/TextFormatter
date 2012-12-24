@@ -196,7 +196,7 @@ trait TagProcessing
 			return;
 		}
 
-		if ($this->closeParent($tagName)
+		if ($this->closeParent($tag)
 		 || $this->closeAncestor($tagName))
 		{
 			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)

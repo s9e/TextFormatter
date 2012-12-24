@@ -48,28 +48,31 @@ trait RulesHandling
 	/**
 	* Apply closeParent rules associated with given tag
 	*
-	* @param  string $tagName Name of the tag
-	* @return bool            Whether a new tag has been added
+	* @param  Tag  $tag Name of the tag
+	* @return bool      Whether a new tag has been added
 	*/
-	protected function closeParent($tagName)
+	protected function closeParent($tag)
 	{
-		$tagConfig = $this->tagsConfig[$tagName];
-
-		if (!empty($this->openTags)
-		 && !empty($tagConfig['rules']['closeParent']))
+		if (!empty($this->openTags))
 		{
-			$parent     = end($this->openTags);
-			$parentName = $parent->getName();
+			$tagName   = $tag->getName();
+			$tagConfig = $this->tagsConfig[$tagName];
 
-			if (isset($tagConfig['rules']['closeParent'][$parentName]))
+			if (!empty($tagConfig['rules']['closeParent']))
 			{
-				// We have to close that parent. First we reinsert the tag...
-				$this->tagStack[] = $tag;
+				$parent     = end($this->openTags);
+				$parentName = $parent->getName();
 
-				// ...then we create a new end tag for its parent
-				$this->addEndTag($parentName, $tag->getPos(), 0);
+				if (isset($tagConfig['rules']['closeParent'][$parentName]))
+				{
+					// We have to close that parent. First we reinsert the tag...
+					$this->tagStack[] = $tag;
 
-				return true;
+					// ...then we create a new end tag for its parent
+					$this->addEndTag($parentName, $tag->getPos(), 0);
+
+					return true;
+				}
 			}
 		}
 
