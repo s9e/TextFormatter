@@ -41,11 +41,6 @@ class OutputHandlingTest extends Test
 		$this->assertSame($expected, $parser->parse($original));
 	}
 
-	/**
-	* 
-	*
-	* @return void
-	*/
 	public function getData()
 	{
 		return array(
