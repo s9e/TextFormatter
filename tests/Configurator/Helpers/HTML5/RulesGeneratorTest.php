@@ -558,8 +558,13 @@ class RulesGeneratorTest extends Test
 		$tags = $this->configurator->tags;
 		$tags->add('A')->defaultTemplate   = '<a><xsl:apply-templates/></a>';
 		$tags->add('IMG')->defaultTemplate = '<img/>';
-		$tags->add('USEMAP')->defaultTemplate = new UnsafeTemplate(
-			'<img><xsl:attribute name="{\'usemap\'}"/></img>'
+		$tags->add('html:img')->attributes->add('usemap');
+		
+		$this->configurator->stylesheet->setWildcardTemplate(
+			'html',
+			new UnsafeTemplate(
+				'<xsl:element name="{local-name()}"><xsl:copy-of select="@*"/></xsl:element>'
+			)
 		);
 
 		$rules = RulesGenerator::getRules(
@@ -571,7 +576,7 @@ class RulesGeneratorTest extends Test
 			array(
 				'A' => array(
 					'allowChild' => array('IMG'),
-					'denyChild'  => array('A', 'USEMAP')
+					'denyChild'  => array('A', 'html:img')
 				)
 			),
 			$rules['tags']
