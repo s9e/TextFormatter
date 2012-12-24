@@ -220,34 +220,41 @@ trait TagProcessing
 		$tagName = $tag->getName();
 
 		/**
-		* @var array List of non-related tags that were closed because of this tag
+		* @var array List of tags need to be closed before given tag
 		*/
-		$closedTags = array();
+		$closeTags = array();
 
+		// Iterate through all open tags from last to first to find a match for our tag
 		$i = count($this->openTags);
 		while (--$i >= 0)
 		{
-			$startTag  = $this->openTags[$i];
-			$pairedTag = $startTag->getEndTag();
+			$openTag  = $this->openTags[$i];
 
-			if ($pairedTag)
+			// Test whether this open tag could be a match for our tag
+			if ($tagName === $openTag->getName())
 			{
-				if ($tag === $pairedTag)
+				// Test whether this open tag is paired and if so, if it's paired to our tag
+				$pairedTag = $openTag->getEndTag();
+				if ($pairedTag)
 				{
+					if ($tag === $pairedTag)
+					{
+						// Pair found
+						break;
+					}
+				}
+				elseif (!$tag->getStartTag())
+				{
+					// If neither tag is paired and they have the same name, we got a match
 					break;
 				}
 			}
-			elseif ($tagName === $startTag->getName())
-			{
-				break;
-			}
 
-			$closedTags[] = $startTag;
+			$closeTags[] = $openTag;
 		}
 
 		if ($i < 0)
 		{
-			/** @todo if the tag was paired, replace it with an ignore tag? its start tag might have been closed by a rule already or skipped (pairing doesn't imply cascading invalidation) so if that tag is clearly part of a pair it would make sense to hide it from view. What should happen with [list][*:123]foo[*]bar[/*:123] -- should closeParent close paired tags? */
 			// Did not find a matching tag
 			$this->logger->debug('Skipping end tag with no start tag', array('tag' => $tag));
 
@@ -256,16 +263,16 @@ trait TagProcessing
 
 		$keepReopening = true;
 		$reopenTags    = array();
-		foreach ($closedTags as $startTag)
+		foreach ($closeTags as $openTag)
 		{
-			$startTagName = $startTag->getName();
+			$openTagName = $openTag->getName();
 
 			// Test whether this tag should be reopened automatically
 			if ($keepReopening)
 			{
-				if ($this->tagsConfig[$startTagName]['rules']['flags'] & self::RULE_AUTO_REOPEN)
+				if ($this->tagsConfig[$openTagName]['rules']['flags'] & self::RULE_AUTO_REOPEN)
 				{
-					$reopenTags[] = $startTagName;
+					$reopenTags[] = $openTag;
 				}
 				else
 				{
@@ -274,7 +281,7 @@ trait TagProcessing
 			}
 
 			// Output an end tag to close this start tag, then update the context
-			$this->outputTag(new Tag(Tag::END_TAG, $startTagName, $tag->getPos(), 0));
+			$this->outputTag(new Tag(Tag::END_TAG, $openTagName, $tag->getPos(), 0));
 			$this->popContext();
 		}
 
@@ -283,9 +290,16 @@ trait TagProcessing
 		$this->popContext();
 
 		// Re-add tags that need to be reopened, at current cursor position
-		foreach ($reopenTags as $startTagName)
+		foreach ($reopenTags as $startTag)
 		{
-			$this->addStartTag($startTagName, $this->pos, 0);
+			$newTag = $this->addStartTag($startTag->getName(), $this->pos, 0);
+
+			// Re-pair the new tag
+			$endTag = $startTag->getEndTag();
+			if ($endTag)
+			{
+				$newTag->pairWith($endTag);
+			}
 		}
 	}
 
