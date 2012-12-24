@@ -1072,6 +1072,10 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] sortTags() tiebreaker sorts tags by length ascending (longer tags processed first)
  [x] sortTags() tiebreaker sorts tag by sortPriority descending (-10 is processed before 10)
 
+s9e\TextFormatter\Tests\Parser\OutputHandling
+ [x] Outputs plain text
+ [x] Outputs plain text with line breaks
+
 s9e\TextFormatter\Tests\Parser
  [x] Parser is serializable
  [x] Parser can be unserialized
