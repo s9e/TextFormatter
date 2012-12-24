@@ -190,14 +190,6 @@ foreach ($page->body->h4 as $h4)
 						$category = $m[2];
 						$xpath = '@' . $m[1];
 					}
-					elseif ($value === 'when the element only contains phrasing content: phrasing content')
-					{
-						/**
-						* @todo add XPath condition to check for non-phrasing content markup inside
-						*       template, e.g. not(.//div | .//p ...)
-						*/
-						$category = 'phrasing content';
-					}
 					elseif (preg_match('#^if the (?:element\'s )?([a-z]+) attribute is (not )?in the ([a-z]+) state: +(interactive content|palpable content)$#', $value, $m))
 					{
 						$category = $m[4];
