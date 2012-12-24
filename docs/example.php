@@ -13,12 +13,12 @@ $configurator->BBCodes->addCustom('[B]{TEXT}[/B]',   '<b>{TEXT}</b>');
 $configurator->BBCodes->addCustom('[UL]{TEXT}[/UL]', '<ul>{TEXT}</ul>');
 $configurator->BBCodes->addCustom('[LI]{TEXT}[/LI]', '<li>{TEXT}</li>');
 
-// Add a BBCode using the verbose API
+// Add a BBCode and its underlying tag using the verbose API
 $configurator->BBCodes->add('I');
 $tag = $configurator->tags->add('I');
 $tag->defaultTemplate = '<i><xsl:apply-templates/></i>';
 
-// Add a URL BBCode, and use it for magic links too
+// Add a URL BBCode, which we will use for magic links too
 $configurator->BBCodes->addCustom(
 	'[URL={URL;useContent}]{TEXT}[/URL]',
 	'<a href="{URL}">{TEXT}</a>'
@@ -38,9 +38,10 @@ $configurator->Censor->add('bananas', 'oranges');
 $configurator->Emoticons->add(':)', '<img src="happy.png" alt=":)" />');
 $configurator->Emoticons->add(':(', '<img src="sad.png" alt=":(" />');
 
-// We'll also allow a bit of HTML. Specifically, <a> elements and HTML entities
+// We'll also allow a bit of HTML. Specifically, <a> elements with a non-optional href attribute and
+// HTML entities
 $configurator->HTMLElements->allowElement('a');
-$configurator->HTMLElements->allowAttribute('a', 'href');
+$configurator->HTMLElements->allowAttribute('a', 'href')->required = true;
 $configurator->plugins->load('HTMLEntities');
 
 // We'll disallow links to example.org, which will automagically apply to [URL] and <a>

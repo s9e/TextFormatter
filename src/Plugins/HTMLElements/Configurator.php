@@ -93,31 +93,31 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Allow an HTML element to be used
 	*
-	* @param  string $elName
-	* @return void
+	* @param  string $elName Name of the element
+	* @return Tag            Tag that represents this element
 	*/
 	public function allowElement($elName)
 	{
-		$this->_allowElement($elName, false);
+		return $this->_allowElement($elName, false);
 	}
 
 	/**
 	* Allow an unsafe HTML element to be used
 	*
-	* @param  string $elName
-	* @return void
+	* @param  string $elName Name of the element
+	* @return Tag            Tag that represents this element
 	*/
 	public function allowUnsafeElement($elName)
 	{
-		$this->_allowElement($elName, true);
+		return $this->_allowElement($elName, true);
 	}
 
 	/**
 	* Allow a (potentially unsafe) HTML element to be used
 	*
-	* @param  string $elName
-	* @param  bool   $allowUnsafe
-	* @return void
+	* @param  string $elName      Name of the element
+	* @param  bool   $allowUnsafe Whether allow unsafe elements
+	* @return Tag                 Tag that represents this element
 	*/
 	protected function _allowElement($elName, $allowUnsafe)
 	{
@@ -135,39 +135,41 @@ class Configurator extends ConfiguratorBase
 		}
 
 		$this->tags[$elName] = 1;
+
+		return $this->configurator->tags->get($tagName);
 	}
 
 	/**
 	* Allow an attribute to be used in an HTML element
 	*
-	* @param  string $elName
-	* @param  string $attrName
-	* @return void
+	* @param  string    $elName   Name of the element
+	* @param  string    $attrName Name of the attribute
+	* @return Attribute
 	*/
 	public function allowAttribute($elName, $attrName)
 	{
-		$this->_allowAttribute($elName, $attrName, false);
+		return $this->_allowAttribute($elName, $attrName, false);
 	}
 
 	/**
 	* Allow an unsafe attribute to be used in an HTML element
 	*
-	* @param  string $elName
-	* @param  string $attrName
-	* @return void
+	* @param  string    $elName   Name of the element
+	* @param  string    $attrName Name of the attribute
+	* @return Attribute
 	*/
 	public function allowUnsafeAttribute($elName, $attrName)
 	{
-		$this->_allowAttribute($elName, $attrName, true);
+		return $this->_allowAttribute($elName, $attrName, true);
 	}
 
 	/**
 	* Allow a (potentially unsafe) attribute to be used in an HTML element
 	*
-	* @param  string $elName
-	* @param  string $attrName
-	* @param  bool   $allowUnsafe
-	* @return void
+	* @param  string    $elName   Name of the element
+	* @param  string    $attrName Name of the attribute
+	* @param  bool      $allowUnsafe
+	* @return Attribute
 	*/
 	protected function _allowAttribute($elName, $attrName, $allowUnsafe)
 	{
@@ -200,6 +202,8 @@ class Configurator extends ConfiguratorBase
 				$attribute->filterChain->append($this->attributeFilters[$attrName]);
 			}
 		}
+
+		return $tag->attributes[$attrName];
 	}
 
 	/**

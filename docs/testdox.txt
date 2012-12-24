@@ -1286,16 +1286,20 @@ s9e\TextFormatter\Tests\Plugins\Generic\Parser
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] allowElement('b') creates a tag named 'html:b'
  [x] allowElement('B') creates a tag named 'html:b'
+ [x] allowElement() returns an instance of Tag
  [x] The prefix can be customized at loading time through the 'prefix' property
  [x] allowElement('script') throws an exception
  [x] allowUnsafeElement('script') allows the 'script' element
+ [x] allowUnsafeElement() returns an instance of Tag
  [x] allowAttribute('b', 'title') creates an attribute 'title' on tag 'html:b'
+ [x] allowAttribute() returns an instance of Attribute
  [x] Attributes created by allowAttribute() are considered optional
  [x] Attributes that are known to expect an URL are created with the '#url' filter
  [x] allowAttribute('b', 'title') throws an exception if 'b' was not explicitly allowed
  [x] allowAttribute('span', 'onmouseover') throws an exception
  [x] allowAttribute('span', 'style') throws an exception
  [x] allowAttribute('span', 'onmouseover') allows the 'onmouseover' attribute on 'span' elements
+ [x] allowUnsafeAttribute() returns an instance of Attribute
  [x] allowElement('*invalid*') throws an exception
  [x] allowAttribute('b', '*invalid*') throws an exception
  [x] asConfig() returns FALSE if no elements were allowed

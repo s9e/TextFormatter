@@ -33,6 +33,19 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox allowElement() returns an instance of Tag
+	*/
+	public function testAllowElementInstance()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Tag',
+			$plugin->allowElement('b')
+		);
+	}
+
+	/**
 	* @testdox The prefix can be customized at loading time through the 'prefix' property
 	*/
 	public function testCustomPrefix()
@@ -65,6 +78,19 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox allowUnsafeElement() returns an instance of Tag
+	*/
+	public function testAllowUnsafeElementInstance()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Tag',
+			$plugin->allowUnsafeElement('script')
+		);
+	}
+
+	/**
 	* @testdox allowAttribute('b', 'title') creates an attribute 'title' on tag 'html:b'
 	*/
 	public function testCreatesAttributes()
@@ -74,6 +100,20 @@ class ConfiguratorTest extends Test
 		$plugin->allowAttribute('b', 'title');
 
 		$this->assertTrue($this->configurator->tags['html:b']->attributes->exists('title'));
+	}
+
+	/**
+	* @testdox allowAttribute() returns an instance of Attribute
+	*/
+	public function testAllowAttributeInstance()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+		$plugin->allowElement('b');
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Attribute',
+			$plugin->allowAttribute('b', 'title')
+		);
 	}
 
 	/**
@@ -143,6 +183,20 @@ class ConfiguratorTest extends Test
 		$plugin->allowUnsafeAttribute('span', 'onmouseover');
 
 		$this->assertTrue($this->configurator->tags['html:span']->attributes->exists('onmouseover'));
+	}
+
+	/**
+	* @testdox allowUnsafeAttribute() returns an instance of Attribute
+	*/
+	public function testAllowUnsafeAttributeInstance()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+		$plugin->allowElement('b');
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Attribute',
+			$plugin->allowUnsafeAttribute('b', 'onclick')
+		);
 	}
 
 	/**
