@@ -1081,6 +1081,9 @@ s9e\TextFormatter\Tests\Parser\TagStack
 s9e\TextFormatter\Tests\Parser\OutputHandling
  [x] Works
 
+s9e\TextFormatter\Tests\Parser\TagProcessing
+ [x] Works
+
 s9e\TextFormatter\Tests\Parser
  [x] Parser is serializable
  [x] Parser can be unserialized
