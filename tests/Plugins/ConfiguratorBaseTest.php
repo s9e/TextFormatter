@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins;
 
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
@@ -141,6 +142,28 @@ class ConfiguratorBaseTest extends Test
 				'regexpLimitAction' => 'warn'
 			),
 			$dummy->asConfig()
+		);
+	}
+
+	/**
+	* @testdox getJSParser() returns FALSE for custom plugins
+	*/
+	public function testGetJSParserFalse()
+	{
+		$dummy = new DummyPluginConfigurator(new Configurator);
+		$this->assertFalse($dummy->getJSParser());
+	}
+
+	/**
+	* @testdox getJSParser() returns the content of Parser.js for stock plugins
+	*/
+	public function testGetJSParserStock()
+	{
+		$configurator = new Configurator;
+
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../src/Plugins/Autolink/Parser.js',
+			$configurator->Autolink->getJSParser()
 		);
 	}
 }

@@ -1112,6 +1112,8 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimitAction() sets the regexpLimitAction property
  [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
+ [x] getJSParser() returns FALSE for custom plugins
+ [x] getJSParser() returns the content of Parser.js for stock plugins
 
 s9e\TextFormatter\Tests\Plugins\ParserBase
  [x] Constructor calls setUp()

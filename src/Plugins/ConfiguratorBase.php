@@ -120,13 +120,17 @@ abstract class ConfiguratorBase implements ConfigProvider
 		{
 			$p = explode('\\', $className);
 			$pluginName = $p[3];
-		}
 
-		$filepath = __DIR__ . '/' . $pluginName . '/Parser.js';
-		if (file_exists($filepath))
-		{
-			return file_get_contents($filepath);
+			$filepath = __DIR__ . '/' . $pluginName . '/Parser.js';
+			if (file_exists($filepath))
+			{
+				return file_get_contents($filepath);
+			}
+
+			// All stock plugins should have a JS parser, so this codepath cannot be reached
+			// @codeCoverageIgnoreStart
 		}
+		// @codeCoverageIgnoreEnd
 
 		return false;
 	}
