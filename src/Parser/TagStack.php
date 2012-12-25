@@ -123,8 +123,8 @@ trait TagStack
 	* Tags are stored as a stack, in LIFO order. We sort tags by position _descending_ so that they
 	* are processed in the order they appear in the text.
 	*
-	* @param  Tag     First tag to compare
-	* @param  Tag     Second tag to compare
+	* @param  Tag     $a First tag to compare
+	* @param  Tag     $b Second tag to compare
 	* @return integer
 	*/
 	static protected function compareTags(Tag $a, Tag $b)

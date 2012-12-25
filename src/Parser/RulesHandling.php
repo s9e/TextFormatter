@@ -12,7 +12,7 @@ trait RulesHandling
 	/**
 	* Apply closeAncestor rules associated with given tag
 	*
-	* @param  Tag  $tag Name of the tag
+	* @param  Tag  $tag Tag
 	* @return bool      Whether a new tag has been added
 	*/
 	protected function closeAncestor(Tag $tag)
@@ -52,7 +52,7 @@ trait RulesHandling
 	/**
 	* Apply closeParent rules associated with given tag
 	*
-	* @param  Tag  $tag Name of the tag
+	* @param  Tag  $tag Tag
 	* @return bool      Whether a new tag has been added
 	*/
 	protected function closeParent(Tag $tag)
@@ -86,7 +86,7 @@ trait RulesHandling
 	/**
 	* Apply requireAncestor rules associated with given tag
 	*
-	* @param  Tag  $tag Name of the tag
+	* @param  Tag  $tag Tag
 	* @return bool      Whether this tag has an unfulfilled requireAncestor requirement
 	*/
 	protected function requireAncestor(Tag $tag)

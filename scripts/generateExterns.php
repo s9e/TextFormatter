@@ -4,12 +4,14 @@
 $externs = array(
 	'es3.js' => array(
 		'function Array',
+		'Array.prototype.join',
 		'Array.prototype.length',
 		'Array.prototype.pop',
 		'Array.prototype.push',
 		'Array.prototype.slice',
 		'Array.prototype.sort',
 		'function escape',
+		'function parseInt',
 		'function RegExp',
 		'RegExp.prototype.exec',
 		'RegExp.prototype.test',
@@ -20,6 +22,7 @@ $externs = array(
 		'String.prototype.indexOf',
 		'String.prototype.length',
 		'String.prototype.replace',
+		'String.prototype.split',
 		'String.prototype.substr',
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase',

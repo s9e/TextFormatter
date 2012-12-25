@@ -11,23 +11,27 @@ function executeAttributePreprocessors(tag, tagConfig)
 {
 	if (tagConfig.attributePreprocessors))
 	{
-		foreach ($tagConfig['attributePreprocessors'] as $attrName => $regexps)
+		for (var attrName in tagConfig.attributePreprocessors)
 		{
-			if (!$tag->hasAttribute($attrName))
+			if (!tag.hasAttribute(attrName))
 			{
 				continue;
 			}
 
-			$attrValue = $tag->getAttribute($attrName);
+			var attrValue = tag.getAttribute(attrName),
+				regexps = tagConfig.attributePreprocessors[attrName],
+				i = -1,
+				m;
 
-			foreach ($regexps as $regexp)
+			while (++i < regexps.length)
 			{
 				// If the regexp matches, we remove the source attribute then we add the
 				// captured attributes
-				if (preg_match($regexp, $attrValue, $m))
+				if (m = regexps[i].exec(attrValue))
 				{
-					$tag->removeAttribute($attrName);
+					tag.removeAttribute(attrName);
 
+					// TODO: regexpMap
 					foreach ($m as $k => $v)
 					{
 						if (!is_numeric($k) && !$tag->hasAttribute($k))
@@ -51,10 +55,10 @@ function executeAttributePreprocessors(tag, tagConfig)
 *
 * @private
 *
-* @param  Tag    $tag            Tag being checked
-* @param  array  $tagConfig      Tag's config
-* @param  array  $registeredVars Array of registered vars for use in attribute filters
-* @return bool                   Whether the whole attribute set is valid
+* @param  {!Tag}     tag            Tag being checked
+* @param  {!Object}  tagConfig      Tag's config
+* @param  {!Object}  registeredVars Registered vars for use in attribute filters
+* @return {!boolean}                Whether the whole attribute set is valid
 */
 function filterAttributes(tag, tagConfig, registeredVars)
 {
@@ -66,8 +70,11 @@ function filterAttributes(tag, tagConfig, registeredVars)
 	}
 
 	// Generate values for attributes with a generator set
-	foreach(tagConfig.attributes, function(attrName, attrConfig)
+	var attrName, attrConfig;
+	for (attrName in tagConfig.attributes)
 	{
+		attrConfig = tagConfig.attributes[attrName];
+
 		if (attrConfig.generator)
 		{
 			tag.setAttribute(
@@ -78,7 +85,7 @@ function filterAttributes(tag, tagConfig, registeredVars)
 				})
 			);
 		}
-	})
+	}
 
 	$logger = (isset($registeredVars['logger'])) ? $registeredVars['logger'] : false;
 
