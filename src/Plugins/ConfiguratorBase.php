@@ -105,6 +105,32 @@ abstract class ConfiguratorBase implements ConfigProvider
 		);
 	}
 
+	/**
+	* Return this plugin's Javascript parser
+	*
+	* This is the base implementation, meant to be overridden by custom plugins. By default it
+	* returns the Parser.js file from stock plugins' directory, if available
+	*
+	* @return string Javascript source
+	*/
+	public function getJSParser()
+	{
+		$className = get_class($this);
+		if (substr($className, 0 , 26) === 's9e\\TextFormatter\\Plugins\\')
+		{
+			$p = explode('\\', $className);
+			$pluginName = $p[3];
+		}
+
+		$filepath = __DIR__ . '/' . $pluginName . '/Parser.js';
+		if (file_exists($filepath))
+		{
+			return file_get_contents($filepath);
+		}
+
+		return false;
+	}
+
 	//==========================================================================
 	// Setters
 	//==========================================================================
