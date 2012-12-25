@@ -74,5 +74,5 @@ $xml = $parser->parse('Hello, [i]world[/i] :)');
 // <rt>Hello, <I><st>[i]</st>world<et>[/i]</et></I> <E>:)</E></rt>
 
 // Render a parsed message
-$html = $renderer->render($xml);
+echo $renderer->render($xml), "\n";
 // Hello, <i>world</i> <img src="happy.png" alt=":)">
