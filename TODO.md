@@ -43,3 +43,5 @@ TODO
 - Read in phpBB's forum 'maybe you put a threshold on errors -- if there are more than, say, 10, put out an error saying "Too many BBCode formatting errors found; fix the above and Preview the post again."' -- https://area51.phpbb.com/phpBB/viewtopic.php?f=108&t=33021&p=249335#p249335 -- NOTE: kind of sucks when those errors come from false positive from things like Autolink
 - IDEA(redux): create a Stylesheet object in Configurator. Params and templates can be registered somehow. Reconsider the DynamicTemplate thing from above. Get rid of ConfiguratorBase::getXSL()
 - Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
+- JS parser needs quickMatch to be UTF-8
+- redo isVoid?

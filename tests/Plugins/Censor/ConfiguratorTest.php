@@ -107,17 +107,21 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox Returns the replacements in its config in the form [regexp => replacement]
+	* @testdox Returns the replacements in its config in the form [[regexp, replacement]]
 	*/
 	public function testAsConfigReplacements()
 	{
 		$plugin = $this->configurator->plugins->load('Censor');
 		$plugin->add('apple', 'banana');
+		$plugin->add('lemon', 'citrus');
 
 		$config = $plugin->asConfig();
 
 		$this->assertSame(
-			array('/^apple$/Diu' => 'banana'),
+			array(
+				array('/^apple$/Diu', 'banana'),
+				array('/^lemon$/Diu', 'citrus')
+			),
 			$config['replacements']
 		);
 	}
@@ -134,7 +138,7 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 
 		$this->assertSame(
-			array('/^(?:apple|cherry)$/Diu' => 'banana'),
+			array(array('/^(?:apple|cherry)$/Diu', 'banana')),
 			$config['replacements']
 		);
 	}
@@ -151,7 +155,7 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 
 		$this->assertSame(
-			array('/^cherry$/Diu' => 'banana'),
+			array(array('/^cherry$/Diu', 'banana')),
 			$config['replacements']
 		);
 	}

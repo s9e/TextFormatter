@@ -108,7 +108,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		foreach ($replacementWords as $replacement => $words)
 		{
 			$regexp = '/^' . RegexpBuilder::fromList($words, $regexpOptions) . '$/Diu';
-			$config['replacements'][$regexp] = $replacement;
+			$config['replacements'][] = array($regexp, $replacement);
 		}
 
 		return $config;
