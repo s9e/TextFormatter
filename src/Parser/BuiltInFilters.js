@@ -5,26 +5,46 @@
 */
 var BuiltInFilters =
 {
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterColor: function(attrValue)
 	{
 		return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrValue) ? attrValue : false;
 	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterEmail: function(attrValue)
 	{
 		return /^[-\w.+]+@[-\w.]+$/.test(attrValue) ? attrValue : false;
 	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterFloat: function(attrValue)
 	{
 		return /^(?:0|-?[1-9]\d*)(?:\.\d+)?(?:e[1-9]\d*)?$/i.test(attrValue) ? attrValue : false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterIdentifier: function(attrValue)
 	{
 		return /^[-\w]+$/.test(attrValue) ? attrValue : false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterIp: function(attrValue)
 	{
 		if (/^[\d.]+$/.test(attrValue))
@@ -38,8 +58,12 @@ var BuiltInFilters =
 		}
 
 		return false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterIpport: function(attrValue)
 	{
 		var m, ip;
@@ -69,8 +93,12 @@ var BuiltInFilters =
 		}
 
 		return false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterIpv4: function(attrValue)
 	{
 		if (/^\d+\.\d+\.\d+\.\d+$/.test(attrValue))
@@ -89,13 +117,22 @@ var BuiltInFilters =
 		}
 
 		return true;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterIpv6: function(attrValue)
 	{
 		return /^(\d*:){2,7}\d+(?:\.\d+\.\d+\.\d+)?$/.test(attrValue) ? attrValue : false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @param  {!Array.<Array>}  map
+	* @return {*}
+	*/
 	filterMap: function(attrValue, map)
 	{
 		var i = -1, cnt = map.length;
@@ -109,24 +146,41 @@ var BuiltInFilters =
 		}
 
 		return attrValue;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterInt: function(attrValue)
 	{
 		return /^(?:0|-?[1-9]\d*)$/.test(attrValue) ? attrValue : false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterNumber: function(attrValue)
 	{
 		return /^\d+$/.test(attrValue) ? attrValue : false;
-	}
+	},
 
+	/**
+	* @param  {*} attrValue
+	* @param  {!number} min
+	* @param  {!number} max
+	* @param  {?} logger
+	* @return {!number|boolean}
+	*/
 	filterRange: function(attrValue, min, max, logger)
 	{
 		if (!/^(?:0|-?[1-9]\d*)$/.test(attrValue))
 		{
 			return false;
 		}
+
+		attrValue = parseInt(attrValue);
 
 		if (attrValue < min)
 		{
@@ -157,24 +211,43 @@ var BuiltInFilters =
 		}
 
 		return attrValue;
-	}
+	},
 
 	/** @todo convert regexp */
+	/**
+	* @param  {!string} attrValue
+	* @param  {!RegExp} regexp
+	* @return {*}
+	*/
 	filterRegexp: function(attrValue, regexp)
 	{
 		return regexp.test(attrValue) ? attrValue : false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterSimpletext: function(attrValue)
 	{
 		return /^[-\w+., ]+$/.test(attrValue) ? attrValue : false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {*}
+	*/
 	filterUint: function(attrValue)
 	{
 		return /^(?:0|[1-9]\d*)$/.test(attrValue) ? attrValue : false;
-	}
+	},
 
+	/**
+	* @param  {!string} attrValue
+	* @return {!Object} urlConfig
+	* @return {?} logger
+	* @return {*}
+	*/
 	filterUrl: function(attrValue, urlConfig, logger)
 	{
 		/** @todo */

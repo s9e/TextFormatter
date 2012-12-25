@@ -24,7 +24,7 @@ Tag.END_TAG = 2;
 Tag.SELF_CLOSING_TAG = 3;
 
 /**
-* @type {!Object.<string>} Dictionary of attributes
+* @type {!Object} Dictionary of attributes
 */
 Tag.prototype.attributes = {};
 
@@ -337,7 +337,7 @@ Tag.prototype.removeAttribute = function(attrName)
 * Set the value of an attribute
 *
 * @param {!string} attrName  Attribute's name
-* @param {!string} attrValue Attribute's value
+* @param {*}       attrValue Attribute's value
 */
 Tag.prototype.setAttribute = function(attrName, attrValue)
 {
@@ -347,7 +347,7 @@ Tag.prototype.setAttribute = function(attrName, attrValue)
 /**
 * Set all of this tag's attributes at once
 *
-* @param {!Object.<string>} attributes
+* @param {!Object} attributes
 */
 Tag.prototype.setAttributes = function(attributes)
 {
