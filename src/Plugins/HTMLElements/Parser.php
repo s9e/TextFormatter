@@ -37,7 +37,12 @@ class Parser extends ParserBase
 			     : $this->parser->addStartTag($tagName, $pos, $len);
 
 			// Capture attributes
-			preg_match_all($this->config['attrRegexp'], $m[3][0], $attrMatches, PREG_SET_ORDER);
+			preg_match_all(
+				'/[a-z][-a-z]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i',
+				$m[3][0],
+				$attrMatches,
+				PREG_SET_ORDER
+			);
 
 			foreach ($attrMatches as $attrMatch)
 			{

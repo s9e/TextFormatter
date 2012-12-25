@@ -262,7 +262,7 @@ class Configurator extends ConfiguratorBase
 		*
 		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
 		*/
-		$attrRegexp = '[a-z][a-z\\-]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
+		$attrRegexp = '[a-z][-a-z]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
 		$tagRegexp  = RegexpBuilder::fromList(array_keys($this->tags));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
@@ -271,7 +271,6 @@ class Configurator extends ConfiguratorBase
 		$regexp = '#<(?:' . $endTagRegexp . '|' . $startTagRegexp . ')\\s*>#i';
 
 		return array(
-			'attrRegexp' => '#' . $attrRegexp . '#i',
 			'quickMatch' => $this->quickMatch,
 			'prefix'     => $this->prefix,
 			'regexp'     => $regexp
