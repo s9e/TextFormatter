@@ -6,7 +6,7 @@
 var BuiltInFilters =
 {
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterColor: function(attrValue)
@@ -15,7 +15,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterEmail: function(attrValue)
@@ -24,7 +24,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterFloat: function(attrValue)
@@ -33,7 +33,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterIdentifier: function(attrValue)
@@ -42,7 +42,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterIp: function(attrValue)
@@ -61,7 +61,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterIpport: function(attrValue)
@@ -96,7 +96,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterIpv4: function(attrValue)
@@ -120,7 +120,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterIpv6: function(attrValue)
@@ -129,7 +129,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @param  {!Array.<Array>}  map
 	* @return {*}
 	*/
@@ -138,7 +138,7 @@ var BuiltInFilters =
 		var i = -1, cnt = map.length;
 		while (++i < cnt)
 		{
-			/** @todo the map should be converted to [/regexp/,replacement] */
+			// TODO: the map should be converted to [/regexp/,replacement]
 			if (map[i][0].test(attrValue))
 			{
 				return map[i][1];
@@ -149,7 +149,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterInt: function(attrValue)
@@ -158,7 +158,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterNumber: function(attrValue)
@@ -180,7 +180,7 @@ var BuiltInFilters =
 			return false;
 		}
 
-		attrValue = parseInt(attrValue);
+		attrValue = parseInt(attrValue, 10);
 
 		if (attrValue < min)
 		{
@@ -213,9 +213,9 @@ var BuiltInFilters =
 		return attrValue;
 	},
 
-	/** @todo convert regexp */
+	// TODO: convert regexp
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @param  {!RegExp} regexp
 	* @return {*}
 	*/
@@ -225,7 +225,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterSimpletext: function(attrValue)
@@ -234,7 +234,7 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
+	* @param  {*} attrValue
 	* @return {*}
 	*/
 	filterUint: function(attrValue)
@@ -243,14 +243,14 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {!string} attrValue
-	* @return {!Object} urlConfig
-	* @return {?} logger
+	* @param  {*} attrValue
+	* @param  {!Object} urlConfig
+	* @param  {?} logger
 	* @return {*}
 	*/
 	filterUrl: function(attrValue, urlConfig, logger)
 	{
-		/** @todo */
+		// TODO
 		return attrValue;
 	}
 }
