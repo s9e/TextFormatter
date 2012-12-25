@@ -143,30 +143,6 @@ class ConfiguratorBaseTest extends Test
 			$dummy->asConfig()
 		);
 	}
-
-	/**
-	* @testdox toJS() converts the regexp in 'regexp' if applicable
-	*/
-	public function testToJSRegexp()
-	{
-		$dummy    = new DummyPluginConfigurator($this->configurator);
-		$config   = array('regexp' => '#foo#');
-		$expected = array('regexp' => '/foo/');
-
-		$this->assertSame($expected, $dummy->toJS($config));
-	}
-
-	/**
-	* @testdox toJS() converts the array of regexps in 'regexp' if applicable
-	*/
-	public function testToJSRegexps()
-	{
-		$dummy    = new DummyPluginConfigurator($this->configurator);
-		$config   = array('regexp' => array('#foo#', '#bar#'));
-		$expected = array('regexp' => array('/foo/', '/bar/'));
-
-		$this->assertSame($expected, $dummy->toJS($config));
-	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase

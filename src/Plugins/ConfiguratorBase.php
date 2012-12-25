@@ -106,28 +106,29 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 
 	/**
-	* Convert this plugin's config for use in the Javascript parser
+	* Return this plugin's Javascript parser
 	*
-	* This is the base implementation. Plugins that require special modifications can override it
+	* This is the base implementation, meant to be overridden by custom plugins. By default it
+	* returns the Parser.js file from stock plugins' directory, if available
 	*
-	* @param  array $config Original config
-	* @return array         The config used by the JS parser
+	* @return string Javascript source
 	*/
-	public function toJS(array $config)
+	public function getJSParser()
 	{
-		if (isset($config['regexp']))
+		$className = get_class($this);
+		if (substr($className, 0 , 26) === 's9e\\TextFormatter\\Plugins\\')
 		{
-			$regexps = array();
-
-			foreach ((array) $config['regexp'] as $k => $regexp)
-			{
-				$regexps[$k] = RegexpConvertor::toJS($regexp);
-			}
-
-			$config['regexp'] = (is_array($config['regexp'])) ? $regexps : $regexps[0];
+			$p = explode('\\', $className);
+			$pluginName = $p[3];
 		}
 
-		return $config;
+		$filepath = __DIR__ . '/' . $pluginName . '/Parser.js';
+		if (file_exists($filepath))
+		{
+			return file_get_contents($filepath);
+		}
+
+		return false;
 	}
 
 	//==========================================================================

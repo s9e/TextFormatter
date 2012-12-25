@@ -1112,8 +1112,6 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimitAction() sets the regexpLimitAction property
  [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
- [x] toJS() converts the regexp in 'regexp' if applicable
- [x] toJS() converts the array of regexps in 'regexp' if applicable
 
 s9e\TextFormatter\Tests\Plugins\ParserBase
  [x] Constructor calls setUp()

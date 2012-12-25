@@ -249,6 +249,8 @@ class Configurator extends ConfiguratorBase
 
 	/**
 	* Generate this plugin's config
+	*
+	* @return array
 	*/
 	public function asConfig()
 	{
