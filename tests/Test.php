@@ -2,13 +2,8 @@
 
 namespace s9e\TextFormatter\Tests;
 
-use ReflectionClass,
-    ReflectionMethod,
-    RuntimeException,
-    stdClass,
-    s9e\TextFormatter\Callback,
-    s9e\TextFormatter\ConfigBuilder,
-    s9e\TextFormatter\JSParserGenerator;
+use RuntimeException;
+use s9e\TextFormatter\Configurator;
 
 abstract class Test extends \PHPUnit_Framework_TestCase
 {
@@ -16,17 +11,8 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	{
 		switch ($k)
 		{
-			case 'cb':
-				return $this->cb = new ConfigBuilder;
-
-			case 'parser':
-				return $this->parser = $this->cb->getParser();
-
-			case 'renderer':
-				return $this->renderer = $this->cb->getRenderer();
-
-			case 'jspg':
-				return $this->jspg = new JSParserGenerator($this->cb);
+			case 'configurator':
+				return $this->configurator = new Configurator;
 
 			default:
 				throw new RuntimeException("Bad __get('$k')");
@@ -59,9 +45,8 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 			}
 		}
 
-		/**
-		* Remove null values from $expected, they indicate that the key should NOT appear in $actual
-		*/
+		// Remove null values from $expected, they indicate that the key should NOT appear in
+		// $actual
 		if ($removeNull)
 		{
 			foreach (array_keys($expected, null, true) as $k)
@@ -69,110 +54,5 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 				unset($expected[$k]);
 			}
 		}
-	}
-
-	protected function assertArrayHasNestedKeys($array)
-	{
-		$keys = array_slice(func_get_args(), 1);
-
-		$this->assertInternalType('array', $array);
-
-		foreach ($keys as $key)
-		{
-			$this->assertArrayHasKey($key, $array);
-			$array =& $array[$key];
-		}
-	}
-
-	protected function assertParsing($text, $expectedXml, $expectedLog = array('error' => null))
-	{
-		$actualXml = $this->parser->parse($text);
-		$actualLog = $this->parser->getLog();
-
-		if (!isset($expectedLog['debug']))
-		{
-			unset($actualLog['debug']);
-		}
-
-		$this->assertXmlStringEqualsXmlString($expectedXml, $actualXml);
-		$this->assertArrayMatches($expectedLog, $actualLog);
-
-		$this->assertReversible($text, $actualXml);
-		$this->assertParserIsInACleanState();
-	}
-
-	protected function assertRendering($text, $expectedHtml, $expectedLog = array('error' => null))
-	{
-		$actualXml = $this->parser->parse($text);
-		$actualLog = $this->parser->getLog();
-
-		$this->assertArrayMatches($expectedLog, $actualLog);
-
-		$actualHtml = $this->renderer->render($actualXml);
-		$this->assertSame($expectedHtml, $actualHtml);
-
-		$this->assertReversible($text, $actualXml);
-		$this->assertParserIsInACleanState();
-	}
-
-	protected function assertTransformation($text, $expectedXml, $expectedHtml, $expectedLog = array('error' => null))
-	{
-		$actualXml = $this->parser->parse($text);
-		$actualLog = $this->parser->getLog();
-
-		$this->assertArrayMatches($expectedLog, $actualLog);
-		$this->assertXmlStringEqualsXmlString($expectedXml, $actualXml);
-
-		$actualHtml = $this->renderer->render($actualXml);
-		$this->assertSame($expectedHtml, $actualHtml);
-
-		$this->assertReversible($text, $actualXml);
-		$this->assertParserIsInACleanState();
-	}
-
-	protected function assertReversible($text, $actualXml)
-	{
-		$this->assertSame(
-			$text,
-			html_entity_decode(strip_tags($actualXml)),
-			'Could not revert to plain text'
-		);
-	}
-
-	protected function assertParserIsInACleanState()
-	{
-		$r = new ReflectionClass($this->parser);
-
-		$propNames = array(
-			'unprocessedTags',
-			'openTags',
-			'openStartTags',
-			'cntOpen'
-		);
-
-		foreach ($propNames as $propName)
-		{
-			$p = $r->getProperty($propName);
-			$p->setAccessible(true);
-
-			$this->assertSame(
-				array(),
-				array_filter($p->getValue($this->parser)),
-				'The parser did not end up in a clean state: ' . $propName . ' is not empty'
-			);
-		}
-	}
-
-	protected function call($class, $methodName, array $args = array())
-	{
-		$r = new ReflectionMethod($class, $methodName);
-		$r->setAccessible(true);
-
-		return $r->invokeArgs((is_object($class) ? $class : null), $args);
-	}
-
-	protected function newCallback($callback)
-	{
-		return new Callback($callback);
 	}
 }

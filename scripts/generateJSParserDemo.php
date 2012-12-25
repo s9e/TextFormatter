@@ -3,51 +3,51 @@
 
 include __DIR__ . '/../src/autoloader.php';
 
-$cb = new s9e\TextFormatter\ConfigBuilder;
+$configurator = new s9e\TextFormatter\Configurator;
 
-$cb->disallowHost('*.example.com');
-$cb->setDefaultScheme('https');
+$configurator->disallowHost('*.example.com');
+$configurator->setDefaultScheme('https');
 
-$cb->BBCodes->addPredefinedBBCode('B');
-$cb->BBCodes->addPredefinedBBCode('I');
-$cb->BBCodes->addPredefinedBBCode('U');
-$cb->BBCodes->addPredefinedBBCode('S');
-$cb->BBCodes->addPredefinedBBCode('URL');
-$cb->BBCodes->addPredefinedBBCode('LIST');
-$cb->BBCodes->addPredefinedBBCode('COLOR');
-$cb->BBCodes->addPredefinedBBCode('YOUTUBE');
-$cb->BBCodes->addPredefinedBBCode('FLOAT');
+$configurator->BBCodes->addPredefinedBBCode('B');
+$configurator->BBCodes->addPredefinedBBCode('I');
+$configurator->BBCodes->addPredefinedBBCode('U');
+$configurator->BBCodes->addPredefinedBBCode('S');
+$configurator->BBCodes->addPredefinedBBCode('URL');
+$configurator->BBCodes->addPredefinedBBCode('LIST');
+$configurator->BBCodes->addPredefinedBBCode('COLOR');
+$configurator->BBCodes->addPredefinedBBCode('YOUTUBE');
+$configurator->BBCodes->addPredefinedBBCode('FLOAT');
 
-$cb->BBCodes->addBBCode('CODE', array(
+$configurator->BBCodes->addBBCode('CODE', array(
 	'template' => '<code><xsl:apply-templates/></code>',
 	'defaultDescendantRule' => 'deny'
 ));
 
-$cb->Emoticons->addEmoticon(':)', '<img alt=":)" src="s.png"/>');
+$configurator->Emoticons->addEmoticon(':)', '<img alt=":)" src="https://github.com/images/icons/public.png"/>');
 // Limit the number of emoticons to 7
-$cb->setTagOption('E', 'tagLimit', 7);
+$configurator->setTagOption('E', 'tagLimit', 7);
 
-$cb->Censor->addWord('apple', 'banana');
+$configurator->Censor->addWord('apple', 'banana');
 
-$cb->Generic->addReplacement(
+$configurator->Generic->addReplacement(
 	'/#(?<tag>[a-z0-9]+)/i',
 	'<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>'
 );
 
-$cb->RawHTML->allowElement('a');
-$cb->RawHTML->allowElement('b');
-$cb->RawHTML->allowAttribute('a', 'href');
-$cb->RawHTML->allowAttribute('a', 'title');
+$configurator->HTMLElements->allowElement('a');
+$configurator->HTMLElements->allowElement('b');
+$configurator->HTMLElements->allowAttribute('a', 'href');
+$configurator->HTMLElements->allowAttribute('a', 'title');
 
-$cb->loadPlugin('Autolink');
-$cb->loadPlugin('Escaper');
-$cb->loadPlugin('HTMLEntities')->disableEntity('&lt;');
-$cb->loadPlugin('Linebreaker');
-$cb->loadPlugin('WittyPants');
+$configurator->loadPlugin('Autolink');
+$configurator->loadPlugin('Escaper');
+$configurator->loadPlugin('HTMLEntities')->disableEntity('&lt;');
+$configurator->loadPlugin('Linebreaker');
+$configurator->loadPlugin('WittyPants');
 
-$cb->addRulesFromHTML5Specs();
+$configurator->addRulesFromHTML5Specs();
 
-$jsParser = $cb->getJSParser(array(
+$jsParser = $configurator->getJSParser(array(
 	'compilationLevel'          => 'ADVANCED_OPTIMIZATIONS',
 	'enableLivePreviewFastPath' => true,
 	'setOptimizationHints'      => true
@@ -150,15 +150,15 @@ The following plugins have been enabled:
   [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [CODE]/#(?<tag>[a-z0-9]+)/i[/CODE] is replaced with the template [CODE]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/CODE] -- For example: #PHP, #fml
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
   [*][b]Linebreaker[/b] --- Linefeeds are converted to &lt;br&gt;
-  [*][b]RawHTML[/b] --- [CODE]<a>[/CODE] and [CODE]<b>[/CODE] tags are allowed, with two whitelisted attributes for [CODE]<a>[/CODE]: [CODE]href[/CODE] and [CODE]title[/CODE]. Example: <a href="https://github.com" title="GitHub - Social Coding"><b>GitHub</b></a>
+  [*][b]HTMLElements[/b] --- [CODE]<a>[/CODE] and [CODE]<b>[/CODE] tags are allowed, with two whitelisted attributes for [CODE]<a>[/CODE]: [CODE]href[/CODE] and [CODE]title[/CODE]. Example: <a href="https://github.com" title="GitHub - Social Coding"><b>GitHub</b></a>
   [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
 Additionally, in order to demonstrate some other features:
 
 [list=square]
-  [*][b]ConfigBuilder::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]RawHTML[/b] as well: <a href="http://example.com">example.com</a>
-  [*][b]ConfigBuilder::setDefaultScheme('https')[/b] --- schemeless URLs are allowed and they are treated as if their scheme was 'https'
+  [*][b]Configurator::disallowHost()[/b] --- links to [url=http://example.com]example.com[/url] are disabled. This applies to [b]Autolink[/b] and [b]HTMLElements[/b] as well: <a href="http://example.com">example.com</a>
+  [*][b]Configurator::setDefaultScheme('https')[/b] --- schemeless URLs are allowed and they are treated as if their scheme was 'https'
   [*][b]HTMLEntitiesConfig::disableEntity()[/b] --- the HTML entity &amp;lt; is arbitrarily disabled
   [*]a YouTube video, at the right, keeps playing as you're editing the text [i](including its own tag!)[/i] to demonstrate the partial-update algorithm used to refresh the live preview
 [/list]
@@ -179,7 +179,7 @@ The parser/renderer used on this page page has been generated via [url=https://g
 	<div style="float:left;">
 		<form><?php
 
-			$plugins = $cb->getLoadedPlugins();
+			$plugins = $configurator->getLoadedPlugins();
 			ksort($plugins);
 
 			foreach ($plugins as $pluginName => $plugin)

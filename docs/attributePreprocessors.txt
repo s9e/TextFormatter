@@ -1,0 +1,11 @@
+Explain attribute preprocessors.
+
+Also,
+
+[media url={URL} url={PARSE=#^http://www.youtube.com/watch?v=(?<youtube>\w+)#} url={PARSE=^http://imgur.com/(?<imgur>\w+)#}]
+
+<xsl:choose>
+	<xsl:when test="@youtube">...</xsl:when>
+	<xsl:when test="@imgur"><img src="http://i.imgur.com/{@imgur}.jpg"/></xsl:when>
+	<xsl:otherwise><a href="{@url}">{@url}</a></xsl:otherwise>
+</:xsl:choose>

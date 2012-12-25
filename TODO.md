@@ -5,27 +5,43 @@ TODO
 - finish the Fabric plugin
 - create a plugin for the Markdown syntax (or possibly Upskirt/Redcarpet) and name it Downmark to feel witty and have a plugin for each letter from A to H
 - write documentation, el oh el
-- Add a rule to automatically create a parent to a tag, e.g. create <LIST> when <LI> is used. After creating <LIST>, add its id to the "require" field so that we don't get in an infinite loop
-- Support forcing text to be wrapped inside tags. e.g. "<LIST>foo" becomes "<LIST><LI>foo</LI>"
-- There's potential for a bug in createMatchingTag when creating a tag based on a tag that with trimBefore enabled. The position of the new tag should probably be the actual position of the tag, not of the whitespace
-- Investigate the possibility of replacing autoClose with isEmpty
+- Add a rule to automatically create a parent to a tag, e.g. create <LIST> when <LI> is used. After creating <LIST>, add its id to the "require" field so that we don't get in an infinite loop position of the new tag should probably be the actual position of the tag, not of the whitespace
 - JSParserGenerator: if all the plugins' RLA is the same, remove them from the config and use hints to bypass the if test
 - Investigate the possibility of using an external CSS checker in order to enable a default "css" filter
 - Consider a Twitter BBCode (https://dev.twitter.com/docs/embedded-tweets)
 - Create a way for special XSL to be evaluated at the start/end of a rendering in order to embed resources such as external scripts
 - Add a [TWITCH] BBCode. Add support for embeding TwitchTV/JustinTV videos AND live channels
 - Add support for HD/other options in [YOUTUBE] ?
-- BBCodesConfig::addBBCodeFromExample() -- when passing [FOO={COMPOUND=/(?<bar>[0-9]+)/}] create @bar if it's not defined, make it a regexp based on the subpattern and possible sniff its type, e.g. [0-9] => NUMBER
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
 - Fix [EMAIL]
-- Add a tag option that disallows plain text, e.g. any text node that is a child of given tag is put inside a <i> element.
-- Consider adding a "map" attribute filter that maps values, one to another. e.g. ["cpp"=>"C++"]
-- Move the "reduce" part of ConfigBuilder::getTagsConfig() to its own method
-- Tags with a require* rule should not be enabled in the root context
-- Investigate whether requireParent rules can be optimized away by replacing them with allowChild/denyChild rules
+- Tags that have a nestingLimit of 1: is there any benefit to adding a denyChild rule to it?
 - Add exception codes to exceptions?
 - Add an "alnum" or "alphanum" built-in filter that matches /^[a-z0-9]+$/iD and possibly an "hex" filter for /^[0-9a-f]+$/iD
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
-- Fix custom XSL namespace prefix + namespaced tags (tags' namespaces declarations are lost in the process)
+- Replace PluginConfig::getXSL() with PluginConfig::getTemplates() which should return array([match]=>[template]) and each template goes through Templates::setTemplate() (how to evaluate attributes safety though)
+- Look into properly implementing urlencode() and rawurlencode() in JS
 - Way to implement syntax highlighting at parsing time: create tags in the "stx" namespace and implement syntax highlighting via... a plugin maybe? At least some stuff would need to be hardcoded, first of which would be the end [/CODE] tag, and probably also its start tag, [CODE]. Make the namespaced tags requireAncestor their CODE tag
-- Let generateRulesFromHTML5Specs() create rules that apply to the root context
+- Add support for <ol start="2"/>
+- Add a [FONT face={SIMPLETEXT}] bbcode/tag (could render to <span style="font-family:{SIMPLETEXT}">
+- Implement the concept of a plugin "tag formatter": give it a tag from the intermediate form and it returns the string that could have generated it. e.g. BBCodes's tag formatter takes <URL url="..."> and returns [URL url="..."] or [URL="..."] -- tag content might be a problem though. Can we format any start/end tag without knowing what's in between?
+- Add a Picasa(?) BBCode
+- Read in #phpbb-dev: ""You cannot have 3 quotes within each other" I'm getting pretty annoyed by that one now >.<" "Has some kind of system that automatically removes the innermost quote been suggested? On large posts it's almost impossible to remove it by hand without messing the tags up :<" "Right now I just copy the text and paste it within [quote] because it's easier to see, but that kinda takes away the point with the quote button" -- could be implemented as a new setting: nestingLimitAction (similar to regexpLimitAction) with possible values "ignore" (leave as text), "strip" (remove content via <i> tag) and "abort" (throw exception?) -- Actually, this case is better handled at quoting time by removing the quotes from the original message directly, e.g. remove all //QUOTE//QUOTE//QUOTE nodes. Add a class that handles that kind of manipulation, e.g. removeNestedTags($tagName, $nestingLimit)
+- Consider allowing dynamic default values for attributes by using a CallbackTemplate as defaultValue
+- Consider the addition of an option that removes tag pairs with no content (potentially excluding <st/> and <et/>) at parsing time, e.g. <rt><P></P><QUOTE>...</QUOTE></rt> becomes <rt><QUOTE>...</QUOTE></rt>
+- Fix the path in "// Start of content generated by .." comments
+- Sort the "isTransparent" situation. Transparent tags probably should not have "allowedChildren" set in their config. <video>'s content model seems to indicate otherwise, though. Some tags are specifically allowed, *then* its content model is transparent.
+- Add a date/datetime filter, see http://dev.w3.org/html5/spec/Overview.html#valid-date-string-with-optional-time
+- There should be a way for an end tag to close its start tag even if it (the end tag) is skipped. For instance in BBCode parser when using the tag's content for an attribute... maybe
+- Whitespace trimming: up to 2 newlines outside of "block" elements, up to 1 newline inside of them. They should collapse somehow, or rather not be added to each other. For instance "[div]\n\n\n[div]..." should produce something like "<DIV><i>\n</i><BR>\n</BR><i>\n</i><DIV>..." -- the first newline inside the first DIV is trimmed, and up to 2 newlines before the second DIV should be trimmed too but since we're already removed 1 for the first DIV, we only remove 2-1=1
+- Add an NFO BBCode
+- IDEA: drop ConfiguratorBase::getXSL() and introduce the concept of a DynamicTemplate object that is serialized to an XSL template string whenever needed (e.g. when building the final stylesheet, which would require renormalization for safety)
+- Consider providing compatilibity for custom Mycodes via the Generic plugin. http://docs.mybb.com/Admin_CP_Config_MyCode.html
+- Closure Compiler's API exclude_default_externs to minify reserved names such as "attrName" -- https://developers.google.com/closure/compiler/docs/api-ref -- would require to use the bracket syntax for DOM stuff, e.g. el['getAttribute'](attrName) unless special types/externs are created
+- Consider allowing absolute paths in #url, e.g. "/foo.html"
+- Consider a way to disallow HTML elements globally or at the tag-level. For example, a way to globally disable <a> so that BBCodes that produces links are disabled
+- Consider guessing a value for quickMatch based on a plugin's regexp, using its fixed part if applicable [NOTE: gotta identify escape sequences such as \d and modifiers such as a+]
+- Read in phpBB's forum 'maybe you put a threshold on errors -- if there are more than, say, 10, put out an error saying "Too many BBCode formatting errors found; fix the above and Preview the post again."' -- https://area51.phpbb.com/phpBB/viewtopic.php?f=108&t=33021&p=249335#p249335 -- NOTE: kind of sucks when those errors come from false positive from things like Autolink
+- IDEA(redux): create a Stylesheet object in Configurator. Params and templates can be registered somehow. Reconsider the DynamicTemplate thing from above. Get rid of ConfiguratorBase::getXSL()
+- Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
+- JS parser needs quickMatch to be UTF-8
+- redo isVoid?

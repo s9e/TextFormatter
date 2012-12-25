@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<repository>
+
+	<bbcode name="URL">
+		<usage>[URL={URL;useContent} title={TEXT;optional}]{TEXT}[/URL]</usage>
+		<template><![CDATA[
+			<a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="LIST">
+		<usage>[LIST type={MAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;caseSensitive;optional;postFilter=#id}]{TEXT}[/URL]</usage>
+		<template><![CDATA[
+			<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
+		]]></template>
+		<!-- Use an ol element if @type starts with "upper" "lower" or "decim" -->
+		<template predicate="@type and contains('upperlowerdecim',substring(@type,1,5))"><![CDATA[
+			<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="*" tagName="LI">
+		<usage>[*]{TEXT}[/*]</usage>
+		<template><![CDATA[
+			<li><xsl:apply-templates /></li>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="B">
+		<usage>[B]{TEXT}[/B]</usage>
+		<template><![CDATA[
+			<b><xsl:apply-templates /></b>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="I">
+		<usage>[I]{TEXT}[/I]</usage>
+		<template><![CDATA[
+			<i><xsl:apply-templates /></i>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="U">
+		<usage>[U]{TEXT}[/U]</usage>
+		<template><![CDATA[
+			<u><xsl:apply-templates /></u>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="S">
+		<usage>[S]{TEXT}[/S]</usage>
+		<template><![CDATA[
+			<s><xsl:apply-templates /></s>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="IMG">
+		<usage>[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional}]</usage>
+		<template><![CDATA[
+			<img src="{@src}" title="{@title}" alt="{@alt}" />
+		]]></template>
+	</bbcode>
+
+	<bbcode name="QUOTE">
+		<usage>[QUOTE author={TEXT;optional}]{TEXT}[/QUOTE]</usage>
+		<template><![CDATA[
+			<blockquote>
+				<xsl:if test="not(@author)">
+					<xsl:attribute name="class">uncited</xsl:attribute>
+				</xsl:if>
+				<div>
+					<xsl:if test="@author">
+						<cite>]]>
+							<var name="authorStr"><![CDATA[<xsl:value-of select="@author" /> wrote:]]></var>
+						<![CDATA[</cite>
+					</xsl:if>
+					<xsl:apply-templates />
+				</div>
+			</blockquote>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="CODE">
+		<usage>[CODE lang={TEXT;optional} id={RANDOM=10000,99999}]{TEXT}[/CODE]</usage>
+		<template><![CDATA[
+			<!-- Include the necessary Javascript if it's the first CODE tag -->
+			<xsl:if test="not(preceding::CODE)">
+				<script
+					data-s9e-include-once="1"
+					src="]]><var name="src">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</var><![CDATA["
+				></script>
+			</xsl:if>
+			<pre id="code{RANDOM}" data-s9e-LivePreview-contentHash="">
+				<code class="{@lang}">
+					<xsl:apply-templates />
+				</code>
+				<script>setTimeout(function(){hljs.highlightBlock(document.getElementById('code{RANDOM}'))},100)</script>
+			</pre>
+		]]></template>
+		<rules>
+			<denyAll />
+		</rules>
+	</bbcode>
+
+</repository>

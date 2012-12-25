@@ -1,0 +1,50 @@
+Attribute filters exist to validate, sanitize and/or transform an attribute's value.
+
+A filter can be any of the following type:
+- built-in filter. Their name is prefixed with the character "#", e.g. "#int"
+- any valid PHP callback (tested with is_callable())
+- an instance of s9e\TextFormatter\Configurator\Items\Filter
+- a registered filter. Identical in form to built-in filters. They can override built-in filters
+
+TODO: in order to know which custom filters have been registered, a FilterChain would need to keep
+      a refence to the Generator, which in turn means that Attribute and Tag must carry a
+      reference to it, which kind of sucks.
+
+IDEA: do not verify built-in/registered filters when the filter is added to the chain. Instead,
+      optionally(?) verify it when the final config is generated.
+
+================================================================================
+
+$attribute->filterChain->append('#int');           // built-in filter
+$attribute->filterChain->append('strtolower');     // PHP callback strtolower()
+$attribute->filterChain->append(['foo', 'bar']);   // PHP callback foo::bar()
+$attribute->filterChain->append(function(){ .. }); // PHP closure
+
+// Custom filter, appended directly to an attribute's filterChain
+$filter = new Filter('preg_replace');
+$filter->addParameterByValue('#[^\\w]+#');
+$filter->addParameterByValue('.');
+$filter->addParameterByName('attrValue');
+$attribute->filterChain->append($filter);
+// same as:
+$attribute->filterChain->append(
+	function ($attrValue)
+	{
+		return preg_replace('#[^\\w]+#', '.', $attrValue);
+	}
+);
+
+
+// Register a custom filter
+$cb->registerFilter('cleanstring', $filter);
+$attribute->filterChain->append('#cleanstring');
+
+// Override a built-in filter (either form)
+$cb->registerFilter('#url', $myUrlFilter);
+$cb->customFilters->register('#url', $myUrlFilter);
+
+
+================================================================================
+
+$attribute->filterChain->append('#range', array('min' => 1, 'max' => 3));
+

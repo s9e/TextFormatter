@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-die("Not currently used.\n");
+//die("Not currently used.\n");
 
 if (!file_exists('/tmp/entities-unicode.inc'))
 {
@@ -55,4 +55,3 @@ foreach ($matches as $m)
 		$table[$entity] = $glyph;
 	}
 }
-
