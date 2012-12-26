@@ -35,77 +35,101 @@ function enablePlugin(pluginName)
 }
 
 /**
+* Get regexp matches in a manner similar to preg_match_all() with PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+*
+* @param  {!RegExp} regexp
+* @return {!Array.<!Array>}
+*/
+function getMatches(regexp)
+{
+	var container = [];
+
+	// Reset the regexp
+	regexp.lastIndex = 0;
+
+	while (matches = regexp.exec(text))
+	{
+		var pos   = matches.index,
+			match = [[matches[0], pos]],
+			i = 0;
+
+		while (++i < matches.length)
+		{
+			var str = matches[i];
+
+			// Sub-expressions that were not evaluated return undefined
+			if (str === undefined)
+			{
+				match.push(['', -1]);
+			}
+			else
+			{
+				match.push([str, text.indexOf(str, pos)]);
+				pos += str.length;
+			}
+		}
+
+		container.push(match);
+	}
+}
+
+/**
 * Execute all the plugins
 */
 function executePluginParsers()
 {
-	foreach ($this->pluginsConfig as $pluginName => $pluginConfig)
+	for (var pluginName in pluginsConfig)
 	{
-		if (!empty($pluginConfig['isDisabled']))
+		var pluginConfig = pluginsConfig[pluginName];
+
+		if (pluginConfig.isDisabled)
 		{
 			continue;
 		}
 
-		if (isset($pluginConfig['quickMatch'])
-		 && strpos($this->text, $pluginConfig['quickMatch']) === false)
+		if (pluginConfig.quickMatch
+		 && text.indexOf(pluginConfig.quickMatch) < 0)
 		{
 			continue;
 		}
 
-		$matches = array();
+		var matches = [];
 
-		if (isset($pluginConfig['regexp']))
+		if (pluginConfig.regexp)
 		{
-			$cnt = preg_match_all(
-				$pluginConfig['regexp'],
-				$this->text,
-				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-			);
+			matches = getMatches(pluginConfig.regexp);
 
-			if (!$cnt)
+			var cnt = matches.length;
+
+			if (!cnt)
 			{
 				continue;
 			}
 
-			if ($cnt > $pluginConfig['regexpLimit'])
+			if (cnt > pluginConfig.regexpLimit)
 			{
-				if ($pluginConfig['regexpLimitAction'] === 'abort')
+				if (pluginConfig.regexpLimitAction === 'abort')
 				{
-					throw new RuntimeException($pluginName . ' limit exceeded');
+					throw (pluginName + ' limit exceeded');
 				}
 
-				$matches = array_slice($matches, 0, $pluginConfig['regexpLimit']);
+				matches = matches.slice(0, pluginConfig.regexpLimit);
 
-				$msg = 'Regexp limit exceeded. Only the allowed number of matches will be processed';
-				$context = array(
-					'pluginName' => $pluginName,
-					'limit'      => $pluginConfig['regexpLimit']
-				);
+				var msg = 'Regexp limit exceeded. Only the allowed number of matches will be processed',
+					context = {
+						'pluginName' : pluginName,
+						'limit'      : pluginConfig.regexpLimit
+					};
 
-				if ($pluginConfig['regexpLimitAction'] !== 'ignore')
+				if (pluginConfig.regexpLimitAction !== 'ignore')
 				{
-					$this->logger->warn($msg, $context);
+					logger.warn(msg, context);
 				}
 			}
 		}
 
-		// Cache a new instance of this plugin's parser if there isn't one already
-		if (!isset($this->pluginParsers[$pluginName]))
-		{
-			$className = (isset($pluginConfig['className']))
-					   ? $pluginConfig['className']
-					   : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
-
-			// Register the parser as a callback
-			$this->pluginParsers[$pluginName] = array(
-				new $className($this, $pluginConfig),
-				'parse'
-			);
-		}
-
-		// Execute the plugin's parser, which will add tags via $this->addStartTag() and others
-		call_user_func($this->pluginParsers[$pluginName], $this->text, $matches);
+		// Execute the plugin's parser, which will add tags via addStartTag() and others
+		pluginParsers[pluginName](text, matches);
 	}
 }
 
@@ -115,22 +139,16 @@ function executePluginParsers()
 * Can be used to add a new parser with no plugin config, or pre-generate a parser for an
 * existing plugin
 *
-* @param  string   $pluginName
-* @param  callback $parser
-* @return void
+* @param  {!string}   pluginName
+* @param  {!Function} parser
 */
 function registerParser($pluginName, $parser)
 {
-	if (!is_callable($parser))
-	{
-		throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
-	}
-
 	// Create an empty config for this plugin to ensure it is executed
-	if (!isset($this->pluginsConfig[$pluginName]))
+	if (!pluginsConfig[pluginName])
 	{
-		$this->pluginsConfig[$pluginName] = array();
+		pluginsConfig[pluginName] = {};
 	}
 
-	$this->pluginParsers[$pluginName] = $parser;
+	pluginParsers[pluginName] = parser;
 }

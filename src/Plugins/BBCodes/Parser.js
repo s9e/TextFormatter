@@ -245,7 +245,7 @@ matches.forEach(function(m)
 					}
 				}
 
-				attributes[attrName] = text.substring(rpos, endTagPos);
+				attributes[attrName] = text.substr(rpos, endTagPos - rpos);
 			}
 		}
 
