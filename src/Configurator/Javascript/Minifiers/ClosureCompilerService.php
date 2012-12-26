@@ -7,12 +7,39 @@
 */
 namespace s9e\TextFormatter\Configurator\Javascript\Minifiers;
 
+use s9e\TextFormatter\Configurator\Javascript\Minifier;
+
 class ClosureCompilerService implements Minifier
 {
 	/**
-	* @var 
+	* @var string Closure Compiler's compilation level
 	*/
-	protected $url = 'http://closure-compiler.appspot.com/compile';
+	public $compilationLevel = 'ADVANCED_OPTIMIZATIONS';
+
+	/**
+	* @var bool Whether to exclude Closure Compiler's default externs
+	*/
+	public $excludeDefaultExterns = true;
+
+	/**
+	* @var string Externs used for compilation
+	*/
+	public $externs;
+
+	/**
+	* @var string Closure Compiler Service's URL
+	*/
+	public $url = 'http://closure-compiler.appspot.com/compile';
+
+	/**
+	* Constructor
+	*
+	* @return void
+	*/
+	public function __construct()
+	{
+		$this->externs = file_get_contents(__DIR__ . '/../externs.js');
+	}
 
 	/**
 	* Compile given Javascript source via the Closure Compiler Service
@@ -22,17 +49,21 @@ class ClosureCompilerService implements Minifier
 	*/
 	public function minify($src)
 	{
-		$content = http_build_query(array(
-			'compilation_level' => 'ADVANCED_OPTIMIZATIONS',
-			'exclude_default_externs' => 'true',
+		$params = array(
+			'compilation_level' => $this->compilationLevel,
 			'js_code'           => $src,
-			'js_externs'        => file_get_contents(__DIR__ . '/../externs.js'),
+			'js_externs'        => $this->externs,
 			'output_format'     => 'json',
 			'output_info'       => 'compiled_code'
-		));
+		);
+
+		if ($this->excludeDefaultExterns)
+		{
+			$params['exclude_default_externs'] = 'true';
+		}
 
 		// Got to add dupe variables by hand
-		$content .= '&output_info=errors';
+		$content = http_build_query($params) . '&output_info=errors';
 
 		$response = json_decode(file_get_contents(
 			$this->url,
@@ -47,5 +78,7 @@ class ClosureCompilerService implements Minifier
 				)
 			))
 		), true);
+
+		return $response['compiledCode'];
 	}
 }
