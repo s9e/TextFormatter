@@ -170,5 +170,5 @@ Logger.prototype.info = function(msg, context)
 */
 Logger.prototype.warn = function(msg, context)
 {
-	this.add('warn', msg, context);
+	this.add('warn', msg, context); 
 }
