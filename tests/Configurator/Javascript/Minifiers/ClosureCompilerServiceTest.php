@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Javascript\Minifiers;
 
-use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Javascript\Minifiers\ClosureCompilerService;
 use s9e\TextFormatter\Tests\Test;
 

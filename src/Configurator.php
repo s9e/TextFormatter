@@ -18,6 +18,7 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Javascript;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
@@ -27,6 +28,11 @@ class Configurator implements ConfigProvider
 	* @var FilterCollection Custom filters
 	*/
 	public $customFilters;
+
+	/**
+	* @var Javascript Javascript manipulation object
+	*/
+	public $javascript;
 
 	/**
 	* @var PluginCollection Loaded plugins
@@ -62,6 +68,7 @@ class Configurator implements ConfigProvider
 	public function __construct()
 	{
 		$this->customFilters = new FilterCollection;
+		$this->javascript    = new Javascript($this);
 		$this->plugins       = new PluginCollection($this);
 		$this->rootRules     = new Ruleset;
 		$this->tags          = new TagCollection;
@@ -144,6 +151,7 @@ class Configurator implements ConfigProvider
 	public function asConfig()
 	{
 		$properties = get_object_vars($this);
+		unset($properties['javascript']);
 		unset($properties['stylesheet']);
 
 		$config    = ConfigHelper::toArray($properties);

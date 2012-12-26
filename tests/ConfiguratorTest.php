@@ -28,6 +28,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox $configurator->javascript is an instance of Javascript
+	*/
+	public function testJavascriptInstance()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Javascript',
+			$this->configurator->javascript
+		);
+	}
+
+	/**
 	* @testdox $configurator->plugins is an instance of PluginCollection
 	*/
 	public function testPluginsInstance()

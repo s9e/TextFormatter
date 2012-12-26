@@ -65,7 +65,9 @@
 			<file>Configurator/UrlConfigTest.php</file>
 			<file>Configurator/Validators/AttributeNameTest.php</file>
 			<file>Configurator/Validators/TagNameTest.php</file>
+			<file>Configurator/JavascriptTest.php</file>
 			<file>Configurator/Javascript/Minifiers/ClosureCompilerServiceTest.php</file>
+			<file>Configurator/Javascript/Minifiers/NoopTest.php</file>
 
 			<!-- Trying to sort by order of dependency  -->
 			<file>Parser/BuiltInFiltersTest.php</file>
@@ -149,7 +151,9 @@
 			<file>../src/Configurator/Items/ProgrammableCallback.php</file>
 			<file>../src/Configurator/Items/Tag.php</file>
 			<file>../src/Configurator/Items/Template.php</file>
+			<file>../src/Configurator/Javascript.php</file>
 			<file>../src/Configurator/Javascript/Minifiers/ClosureCompilerService.php</file>
+			<file>../src/Configurator/Javascript/Minifiers/Noop.php</file>
 			<file>../src/Configurator/Stylesheet.php</file>
 			<file>../src/Configurator/Traits/CollectionProxy.php</file>
 			<file>../src/Configurator/Traits/Configurable.php</file>

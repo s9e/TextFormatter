@@ -83,6 +83,7 @@ s9e\TextFormatter\Tests\Configurator\Traits\Configurable
 
 s9e\TextFormatter\Tests\Configurator
  [x] $configurator->customFilters is an instance of FilterCollection
+ [x] $configurator->javascript is an instance of Javascript
  [x] $configurator->plugins is an instance of PluginCollection
  [x] $configurator->rootRules is an instance of Ruleset
  [x] $configurator->stylesheet is an instance of Stylesheet
@@ -943,6 +944,12 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "xsl:foo" is invalid ('xsl' prefix is reserved)
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
+
+s9e\TextFormatter\Tests\Configurator\Javascript
+ [x] getMinifier() returns an instance of ClosureCompilerService by default
+
+s9e\TextFormatter\Tests\Configurator\Javascript\Minifiers\Noop
+ [x] minify() returns its first argument
 
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests
