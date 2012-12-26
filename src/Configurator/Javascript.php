@@ -11,6 +11,7 @@ use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Javascript\Minifier;
 use s9e\TextFormatter\Configurator\Javascript\Minifiers\ClosureCompilerService;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Javascript
 {
@@ -86,5 +87,27 @@ class Javascript
 	public function setMinifier(Minifier $minifier)
 	{
 		$this->minifier = $minifier;
+	}
+
+	//==========================================================================
+	// Internal
+	//==========================================================================
+
+	/**
+	* 
+	*
+	* @param  ConfiguratorBase $plugin Plugin to format
+	* @return string
+	*/
+	protected function formatPlugin(ConfiguratorBase $plugin)
+	{
+		$src = $plugin->getJSParser();
+
+		if ($src === false)
+		{
+			return false;
+		}
+
+		$src = 'function(text,matches){/** @const */var config={};' . $src . '}';
 	}
 }

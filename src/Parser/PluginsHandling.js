@@ -49,7 +49,7 @@ function getMatches(regexp)
 
 	while (matches = regexp.exec(text))
 	{
-		var /** @type {!number} */ pos   = matches['index'],
+		var pos   = matches['index'],
 			match = [[matches[0], pos]],
 			i = 0;
 
