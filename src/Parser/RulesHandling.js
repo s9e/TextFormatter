@@ -20,7 +20,7 @@ function closeAncestor(tag)
 				var ancestor     = openTags[$i],
 					ancestorName = ancestor.getName();
 
-				if (isset(tagConfig.rules.closeAncestor[ancestorName]))
+				if (tagConfig.rules.closeAncestor[ancestorName])
 				{
 					// We have to close this ancestor. First we reinsert this tag...
 					tagStack.push(tag);

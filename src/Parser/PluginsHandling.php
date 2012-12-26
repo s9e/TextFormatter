@@ -46,7 +46,7 @@ trait PluginsHandling
 	{
 		if (isset($this->pluginsConfig[$pluginName]))
 		{
-			unset($this->pluginsConfig[$pluginName]['isDisabled']);
+			$this->pluginsConfig[$pluginName]['isDisabled'] = false;
 		}
 	}
 
