@@ -3,13 +3,13 @@
 *
 * @private
 *
-* @param  Tag   $tag       Source tag
-* @param  array $tagConfig Tag's config
-* @return bool             Unconditionally TRUE
+* @param  {!Tag}     tag       Source tag
+* @param  {!Object}  tagConfig Tag's config
+* @return {!boolean}           Unconditionally TRUE
 */
 function executeAttributePreprocessors(tag, tagConfig)
 {
-	if (tagConfig.attributePreprocessors))
+	if (tagConfig.attributePreprocessors)
 	{
 		for (var attrName in tagConfig.attributePreprocessors)
 		{
@@ -32,11 +32,11 @@ function executeAttributePreprocessors(tag, tagConfig)
 					tag.removeAttribute(attrName);
 
 					// TODO: regexpMap
-					foreach ($m as $k => $v)
+					for (var k in m)
 					{
-						if (!is_numeric($k) && !$tag->hasAttribute($k))
+						if (!is_numeric(k) && !tag.hasAttribute(k))
 						{
-							$tag->setAttribute($k, $v);
+							tag.setAttribute(k, m[k]);
 						}
 					}
 
@@ -87,75 +87,80 @@ function filterAttributes(tag, tagConfig, registeredVars)
 		}
 	}
 
-	$logger = (isset($registeredVars['logger'])) ? $registeredVars['logger'] : false;
+	logger = registeredVars['logger'] || false;
 
 	// Filter and remove invalid attributes
-	foreach ($tag->getAttributes() as $attrName => $attrValue)
+	var attributes = tag.getAttributes();
+	for (attrName in attributes)
 	{
+		var attrValue = attributes[attrName];
+
 		// Test whether this attribute exists and remove it if it doesn't
-		if (!isset($tagConfig['attributes'][$attrName]))
+		if (!tagConfig.attributes[attrName])
 		{
-			$tag->removeAttribute($attrName);
+			tag.removeAttribute(attrName);
 			continue;
 		}
 
-		$attrConfig = $tagConfig['attributes'][$attrName];
+		attrConfig = tagConfig.attributes[attrName];
 
 		// Test whether this attribute has a filterChain
-		if (!isset($attrConfig['filterChain']))
+		if (!attrConfig.filterChain)
 		{
 			continue;
 		}
 
 		// Record the name of the attribute being filtered into the logger
-		if ($logger)
+		if (logger)
 		{
-			$logger->setAttribute($attrName);
+			logger.setAttribute(attrName);
 		}
 
-		foreach ($attrConfig['filterChain'] as $filter)
+		for (var i = 0; i < attrConfig.filterChain.length; ++i)
 		{
-			$attrValue = self::executeFilter(
-				$filter,
-				array(
-					'attrName'       => $attrName,
-					'attrValue'      => $attrValue,
-					'registeredVars' => $registeredVars
-				)
+			attrValue = executeFilter(
+				filter,
+				{
+					'attrName'       : attrName,
+					'attrValue'      : attrValue,
+					'registeredVars' : registeredVars
+				}
 			);
 
-			if ($attrValue === false)
+			if (attrValue === false)
 			{
-				$tag->removeAttribute($attrName);
+				tag.removeAttribute(attrName);
 				break;
 			}
 		}
 
 		// Update the attribute value if it's valid
-		if ($attrValue !== false)
+		if (attrValue !== false)
 		{
-			$tag->setAttribute($attrName, $attrValue);
+			tag.setAttribute(attrName, attrValue);
 		}
 
 		// Remove the attribute's name from the logger
-		if ($logger)
+		if (logger)
 		{
-			$logger->unsetAttribute();
+			logger.unsetAttribute();
 		}
 	}
 
 	// Iterate over the attribute definitions to handle missing attributes
-	foreach ($tagConfig['attributes'] as $attrName => $attrConfig)
+	for (attrName in tagConfig.attributes)
 	{
+		attrConfig = tagConfig.attributes[attrName];
+
 		// Test whether this attribute is missing
-		if (!$tag->hasAttribute($attrName))
+		if (!tag.hasAttribute(attrName))
 		{
-			if (isset($attrConfig['defaultValue']))
+			if (attrConfig.defaultValue !== undefined)
 			{
 				// Use the attribute's default value
-				$tag->setAttribute($attrName, $attrConfig['defaultValue']);
+				tag.setAttribute(attrName, attrConfig.defaultValue);
 			}
-			else if (!empty($attrConfig['required']))
+			else if (attrConfig.required)
 			{
 				// This attribute is missing, has no default value and is required, which means
 				// the attribute set is invalid
@@ -170,69 +175,67 @@ function filterAttributes(tag, tagConfig, registeredVars)
 /**
 * Execute given tag's filterChain
 *
-* @param  Tag  $tag Tag to filter
-* @return bool      Whether the tag is valid
+* @param  {!Tag}     tag Tag to filter
+* @return {!boolean}     Whether the tag is valid
 */
-protected function filterTag(Tag $tag)
+function filterTag(tag)
 {
-	$tagName   = $tag->getName();
-	$tagConfig = $this->tagsConfig[$tagName];
-	$isValid   = true;
+	var tagName   = tag.getName(),
+		tagConfig = tagsConfig[tagName],
+		isValid   = true;
 
-	if (!empty($tagConfig['filterChain']))
+	if (tagConfig.filterChain)
 	{
 		// Record the tag being processed into the logger it can be added to the context of
 		// messages logged during the execution
-		$this->logger->setTag($tag);
+		logger.setTag(tag);
 
 		// Prepare the variables that are accessible to filters
-		$vars = array(
-			'registeredVars' => $this->registeredVars,
-			'tag'            => $tag,
-			'tagConfig'      => $tagConfig
-		);
+		var vars = {
+			'registeredVars' : registeredVars,
+			'tag'            : tag,
+			'tagConfig'      : tagConfig
+		};
 
 		// Add our logger if there isn't one there already
-		if (!isset($vars['registeredVars']['logger']))
+		if (!vars.registeredVars['logger'])
 		{
-			$vars['registeredVars']['logger'] = $this->logger;
+			vars.registeredVars['logger'] = logger;
 		}
 
-		foreach ($tagConfig['filterChain'] as $filter)
+		for (var i = 0; i < tagConfig.filterChain.length; ++i)
 		{
-			if (!self::executeFilter($filter, $vars))
+			if (!executeFilter(tagConfig.filterChain[i], vars))
 			{
-				$isValid = false;
+				isValid = false;
 				break;
 			}
 		}
 
 		// Remove the tag from the logger
-		$this->logger->unsetTag();
+		logger.unsetTag();
 	}
 
-	return $isValid;
+	return isValid;
 }
 
 /**
 * Get all registered vars
 *
-* @return array
+* @return {!Object}
 */
-public function getRegisteredVars()
+function getRegisteredVars()
 {
-	return $this->registeredVars;
+	return registeredVars;
 }
 
 /**
 * Set a variable's value for use in filters
 *
-* @param  string $name  Variable's name
-* @param  mixed  $value Value
-* @return void
+* @param  {!string} name  Variable's name
+* @param  {*}       value Value
 */
-public function registerVar($name, $value)
+function registerVar(name, value)
 {
-	$this->registeredVars[$name] = $value;
-}
+	registeredVars[name] = value;
 }

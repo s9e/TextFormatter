@@ -8,6 +8,18 @@ var isRich;
 */
 var namespaces;
 
+// TODO: replace -- also, handle the quotes/noquotes thing
+function htmlspecialchars(str)
+{
+	var t = {
+		'<' : '&lt;',
+		'>' : '&gt;',
+		'&' : '&amp;',
+		'"' : '&quot;'
+	}
+	return str.replace(/[<>&"]/g, function(c) { return t[c]; });
+}
+
 /**
 * Finalize the output by appending the rest of the unprocessed text and create the root node
 */
@@ -26,10 +38,10 @@ function finalizeOutput()
 	var tagName = (isRich) ? 'rt' : 'pt';
 
 	// Prepare the root node with all the namespace declarations
-	var tmp = '<' . tagName;
+	var tmp = '<' + tagName;
 	for (var prefix in namespaces)
 	{
-		tmp += ' xmlns:' + prefix + '="urn:s9e:TextFormatter:' + prefix . '"';
+		tmp += ' xmlns:' + prefix + '="urn:s9e:TextFormatter:' + prefix + '"';
 	}
 
 	output = tmp + '>' + output + '</' + tagName + '>';
@@ -62,7 +74,7 @@ function outputTag(tag)
 
 	// Capture the text consumed by the tag
 	tagText = (tagLen)
-			 ? htmlspecialchars(substr(text, tagPos, tagLen), ENT_NOQUOTES, 'UTF-8')
+			 ? htmlspecialchars(substr(text, tagPos, tagLen))
 			 : '';
 
 	// Output current tag
@@ -76,48 +88,49 @@ function outputTag(tag)
 		}
 
 		// Open the start tag and add its attributes, but don't close the tag
-		output .= '<' . tagName;
-		foreach (tag.getAttributes() as attrName => attrValue)
+		output += '<' + tagName;
+		var attributes = tag.getAttributes();
+		for (var attrName in attributes)
 		{
-			output .= ' ' . attrName . '="' . htmlspecialchars(attrValue, ENT_COMPAT, 'UTF-8') . '"';
+			output += ' ' + attrName + '="' + htmlspecialchars(attributes[attrName]) + '"';
 		}
 
 		if (tag.isSelfClosingTag())
 		{
 			if (tagLen)
 			{
-				output .= '>' . tagText . '</' . tagName . '>';
+				output += '>' + tagText + '</' + tagName + '>';
 			}
 			else
 			{
-				output .= '/>';
+				output += '/>';
 			}
 		}
 		else if (tagLen)
 		{
-			output .= '><st>' . tagText . '</st>';
+			output += '><st>' + tagText + '</st>';
 		}
 		else
 		{
-			output .= '>';
+			output += '>';
 		}
 	}
 	else
 	{
 		if (tagLen)
 		{
-			output .= '<et>' . tagText . '</et>';
+			output += '<et>' + tagText + '</et>';
 		}
 
-		output .= '</' . tagName . '>';
+		output += '</' + tagName + '>';
 	}
 
 	// Move the cursor past the tag
 	pos = tagPos + tagLen;
 
 	// Trim newlines (no other whitespace) after this tag
-	ignorePos = pos;
-	while (trimAfter && ignorePos < textLen && text[ignorePos] === "\n")
+	var ignorePos = pos;
+	while (trimAfter && ignorePos < textLen && text.charAt(ignorePos) === "\n")
 	{
 		// Decrement the number of lines to trim
 		--trimAfter;
@@ -128,7 +141,7 @@ function outputTag(tag)
 
 	if (ignorePos !== pos)
 	{
-		output .= '<i>' . substr(text, pos, ignorePos - pos) . '</i>';
+		output += '<i>' + text.substr(pos, ignorePos - pos) + '</i>';
 		pos = ignorePos;
 	}
 }
@@ -136,11 +149,10 @@ function outputTag(tag)
 /**
 * Output the text between the cursor's position (included) and given position (not included)
 *
-* @param  integer catchupPos Position we're catching up to
-* @param  integer maxLines   Maximum number of lines to trim at the end of the text
-* @return void
+* @param  {!number} catchupPos Position we're catching up to
+* @param  {!number} maxLines   Maximum number of lines to trim at the end of the text
 */
-protected function outputText(catchupPos, maxLines)
+function outputText(catchupPos, maxLines)
 {
 	if (pos >= catchupPos)
 	{
@@ -148,22 +160,23 @@ protected function outputText(catchupPos, maxLines)
 		return;
 	}
 
-	catchupLen  = catchupPos - pos;
-	catchupText = substr(text, pos, catchupLen);
-	pos   = catchupPos;
+	var catchupLen  = catchupPos - pos,
+		catchupText = substr(text, pos, catchupLen);
 
-	if (context['flags'] & self::RULE_IGNORE_TEXT)
+	pos = catchupPos;
+
+	if (context.flags & RULE_IGNORE_TEXT)
 	{
-		output .= '<i>' . catchupText . '</i>';
+		output += '<i>' + catchupText + '</i>';
 		return;
 	}
 
-	ignorePos = catchupLen;
-	ignoreLen = 0;
+	var ignorePos = catchupLen,
+		ignoreLen = 0;
 	while (maxLines && --ignorePos >= 0)
 	{
-		c = catchupText[ignorePos];
-		if (strpos(" \n\t", c) === false)
+		var c = catchupText.charAt(ignorePos);
+		if (c !== ' ' || c !== "\n" || c !== "\t")
 		{
 			break;
 		}
@@ -178,52 +191,53 @@ protected function outputText(catchupPos, maxLines)
 
 	if (ignoreLen)
 	{
-		ignoreText  = '<i>' . substr(catchupText, -ignoreLen) . '</i>';
-		catchupText = substr(catchupText, 0, catchupLen - ignoreLen);
+		// TODO: IE compat
+		ignoreText  = '<i>' + catchupText.substr(-ignoreLen) + '</i>';
+		catchupText = catchupText.substr(0, catchupLen - ignoreLen);
 	}
 	else
 	{
 		ignoreText = '';
 	}
 
-	catchupText = htmlspecialchars(catchupText, ENT_NOQUOTES, 'UTF-8');
-	if (!(context['flags'] & self::RULE_NO_BR_CHILD))
+	catchupText = htmlspecialchars(catchupText);
+	if (!(context.flags & RULE_NO_BR_CHILD))
 	{
-		catchupText = str_replace("\n", "<br/>\n", catchupText);
+		catchupText = catchupText.replace(/\n/g, "<br/>\n");
 	}
 
-	output .= catchupText . ignoreText;
+	output += catchupText + ignoreText;
 }
 
 /**
 * Output a linebreak tag
 *
-* @param  Tag  tag
+* @param  {!Tag} tag
 * @return void
 */
-protected function outputBrTag(Tag tag)
+function outputBrTag(tag)
 {
 	outputText(tag.getPos(), 0);
-	output .= '<br/>';
+	output += '<br/>';
 }
 
 /**
 * Output an ignore tag
 *
-* @param  Tag  tag
+* @param  {!Tag} tag
 * @return void
 */
-protected function outputIgnoreTag(Tag tag)
+function outputIgnoreTag(tag)
 {
-	tagPos = tag.getPos();
-	tagLen = tag.getLen();
+	var tagPos = tag.getPos(),
+		tagLen = tag.getLen();
 
 	// Capture the text to ignore
-	ignoreText = substr(text, tagPos, tagLen);
+	var ignoreText = text.substr(tagPos, tagLen);
 
 	// Catch up with the tag's position then output the tag
 	outputText(tagPos, 0);
-	output .= '<i>' . htmlspecialchars(ignoreText, ENT_NOQUOTES, 'UTF-8') . '</i>';
+	output += '<i>' + htmlspecialchars(ignoreText) + '</i>';
 
 	// Move the cursor past this tag
 	pos = tagPos + tagLen;

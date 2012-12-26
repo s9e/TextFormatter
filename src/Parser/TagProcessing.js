@@ -242,7 +242,7 @@ function processEndTag(tag)
 			}
 		}
 
-		closeTags[] = openTag;
+		closeTags.push(openTag);
 	}
 
 	if (i < 0)
@@ -313,9 +313,9 @@ function popContext()
 *
 * If given tag is a self-closing tag, the context won't change
 *
-* @param  Tag  tag Start tag (including self-closing)
+* @param {!Tag} tag Start tag (including self-closing)
 */
-function pushContext(Tag tag)
+function pushContext(tag)
 {
 	var tagName   = tag.getName(),
 		tagConfig = tagsConfig[tagName];
@@ -365,7 +365,7 @@ function pushContext(Tag tag)
 		allowedDescendants : allowedDescendants,
 		flags              : flags,
 		parentContext      : context
-	);
+	};
 }
 
 /**

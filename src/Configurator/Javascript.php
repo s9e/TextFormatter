@@ -54,6 +54,27 @@ class Javascript
 	*/
 	public function getParser()
 	{
+		$files = array(
+			'Parser/BuiltInFilters.js',
+			'Parser/Logger.js',
+			'Parser/Tag.js',
+			'Parser.js',
+			'Parser/FilterProcessing.js',
+			'Parser/OutputHandling.js',
+			'Parser/PluginsHandling.js',
+			'Parser/RulesHandling.js',
+			'Parser/TagProcessing.js',
+			'Parser/TagStack.js'
+		);
+
+		$src = '';
+		foreach ($files as $filename)
+		{
+			$filepath = __DIR__ . '/../' . $filename;
+			$src .= file_get_contents($filepath) . "\n";
+		}
+
+		file_put_contents('/tmp/z.js', $src);
 	}
 
 	/**
