@@ -6,7 +6,7 @@ if [[ -n `git diff --cached --name-only -b "$ROOT/src" "$ROOT/tests" | grep php`
 then
 	cd "$ROOT/tests"
 	phpunit -c "$ROOT/tests/phpunit.xml" | tee $TMP
-exit 1;
+
 	if [[ `tail -n3 $TMP` != *OK* ]]
 	then
 		exit 1;
