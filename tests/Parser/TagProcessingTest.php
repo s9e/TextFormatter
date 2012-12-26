@@ -116,6 +116,24 @@ class TagProcessingTest extends Test
 			),
 			array(
 				'foo bar',
+				'<rt><X>fo<Y attr="foo">o</Y></X><Y attr="foo"> b</Y>ar</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$tag = $constructor->tags->add('Y');
+					$tag->attributes->add('attr')->required = false;
+					$tag->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addEndTag('X', 3, 0);
+					$parser->addStartTag('Y', 2, 0)->setAttribute('attr', 'foo');
+					$parser->addEndTag('Y', 5, 0);
+				}
+			),
+			array(
+				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
 				function ($constructor)
 				{
