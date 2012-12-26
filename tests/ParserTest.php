@@ -117,4 +117,40 @@ class ParserTest extends Test
 			$parser->parse('Plain' . implode('', array_map('chr', range(0, 0x20))) . 'text')
 		);
 	}
+
+	/**
+	* @testdox disableTag('FOO') disables tag 'FOO'
+	*/
+	public function testDisableTag()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('FOO');
+
+		$parser = new DummyParser($configurator->asConfig());
+
+		$this->assertTrue(empty($parser->tagsConfig['FOO']['isDisabled']));
+		$parser->disableTag('FOO');
+		$this->assertFalse(empty($parser->tagsConfig['FOO']['isDisabled']));
+	}
+
+	/**
+	* @testdox enableTag('FOO') re-enables tag 'FOO'
+	*/
+	public function testEnableTag()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('FOO');
+
+		$parser = new DummyParser($configurator->asConfig());
+
+		$parser->disableTag('FOO');
+		$this->assertFalse(empty($parser->tagsConfig['FOO']['isDisabled']));
+		$parser->enableTag('FOO');
+		$this->assertTrue(empty($parser->tagsConfig['FOO']['isDisabled']));
+	}
+}
+
+class DummyParser extends Parser
+{
+	public $tagsConfig;
 }

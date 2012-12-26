@@ -1069,6 +1069,7 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] addSelfClosingTag() adds a self-closing tag to the stack
  [x] addStartTag() returns the newly added tag
  [x] addStartTag() does not add anything to the stack if the tag name does not exist but it returns an invalidated tag
+ [x] addStartTag() does not add the created tag to the stack if the tag has been disabled
  [x] addStartTag() does not add anything to the stack if the position is negative but it returns an invalidated tag
  [x] addStartTag() does not add anything to the stack if the length is negative but it returns an invalidated tag
  [x] addBrTag() adds a zero-width, self-closing "br" tag to the stack then returns it
@@ -1098,6 +1099,8 @@ s9e\TextFormatter\Tests\Parser
  [x] parse() normalizes \r to \n
  [x] parse() normalizes \r\n to \n
  [x] parse() removes control characters that aren't allowed in XML
+ [x] disableTag('FOO') disables tag 'FOO'
+ [x] enableTag('FOO') re-enables tag 'FOO'
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
