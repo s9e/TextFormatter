@@ -91,6 +91,38 @@ class Parser implements Serializable
 		$this->__construct(unserialize($data));
 	}
 
+	//==========================================================================
+	// Public API
+	//==========================================================================
+
+	/**
+	* Disable a tag
+	*
+	* @param  string $tagName Name of the tag
+	* @return void
+	*/
+	public function disableTag($tagName)
+	{
+		if (isset($this->tagsConfig[$tagName]))
+		{
+			$this->tagsConfig[$tagName]['isDisabled'] = true;
+		}
+	}
+
+	/**
+	* Enable a tag
+	*
+	* @param  string $tagName Name of the tag
+	* @return void
+	*/
+	public function enableTag($tagName)
+	{
+		if (isset($this->tagsConfig[$tagName]))
+		{
+			unset($this->tagsConfig[$tagName]['isDisabled']);
+		}
+	}
+
 	/**
 	* Get this parser's Logger instance
 	*

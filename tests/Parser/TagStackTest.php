@@ -71,12 +71,34 @@ class TagStackTest extends Test
 	/**
 	* @testdox addStartTag() does not add anything to the stack if the tag name does not exist but it returns an invalidated tag
 	*/
-	public function testAddStartTagInexistent()
+	public function testAddStartTagDisabled()
 	{
 		$dummyStack = new DummyStack;
 		$tag = $dummyStack->addStartTag('BAR', 12, 34);
 
 		$expected = new Tag(Tag::START_TAG, 'BAR', 12, 34);
+		$expected->invalidate();
+
+		$this->assertSame(
+			array(),
+			$dummyStack->tagStack
+		);
+
+		$this->assertEquals(
+			$expected,
+			$tag
+		);
+	}
+
+	/**
+	* @testdox addStartTag() does not add the created tag to the stack if the tag has been disabled
+	*/
+	public function testAddStartTagInexistent()
+	{
+		$dummyStack = new DummyStack;
+		$tag = $dummyStack->addStartTag('DISABLED', 12, 34);
+
+		$expected = new Tag(Tag::START_TAG, 'DISABLED', 12, 34);
 		$expected->invalidate();
 
 		$this->assertSame(
@@ -296,7 +318,8 @@ class DummyStack extends Parser
 		'FOO' => array(),
 		'X' => array(),
 		'Y' => array(),
-		'Z' => array()
+		'Z' => array(),
+		'DISABLED' => array('isDisabled' => true)
 	);
 	public $tagStack = array();
 	public function __construct() {}
