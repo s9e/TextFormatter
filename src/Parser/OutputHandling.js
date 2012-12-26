@@ -93,7 +93,7 @@ function outputTag(tag)
 				output .= '/>';
 			}
 		}
-		elseif (tagLen)
+		else if (tagLen)
 		{
 			output .= '><st>' . tagText . '</st>';
 		}

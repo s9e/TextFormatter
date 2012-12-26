@@ -151,11 +151,11 @@ trait TagProcessing
 		{
 			$this->outputIgnoreTag($this->currentTag);
 		}
-		elseif ($this->currentTag->isBrTag())
+		else if ($this->currentTag->isBrTag())
 		{
 			$this->outputBrTag($this->currentTag);
 		}
-		elseif ($this->currentTag->isStartTag())
+		else if ($this->currentTag->isStartTag())
 		{
 			$this->processStartTag($this->currentTag);
 		}
@@ -236,7 +236,7 @@ trait TagProcessing
 		$i = count($this->openTags);
 		while (--$i >= 0)
 		{
-			$openTag  = $this->openTags[$i];
+			$openTag = $this->openTags[$i];
 
 			// Test whether this open tag could be a match for our tag
 			if ($tagName === $openTag->getName())
@@ -251,7 +251,7 @@ trait TagProcessing
 						break;
 					}
 				}
-				elseif (!$tag->getStartTag())
+				else if (!$tag->getStartTag())
 				{
 					// If neither tag is paired and they have the same name, we got a match
 					break;

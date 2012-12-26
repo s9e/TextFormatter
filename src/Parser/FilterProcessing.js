@@ -155,7 +155,7 @@ function filterAttributes(tag, tagConfig, registeredVars)
 				// Use the attribute's default value
 				$tag->setAttribute($attrName, $attrConfig['defaultValue']);
 			}
-			elseif (!empty($attrConfig['required']))
+			else if (!empty($attrConfig['required']))
 			{
 				// This attribute is missing, has no default value and is required, which means
 				// the attribute set is invalid

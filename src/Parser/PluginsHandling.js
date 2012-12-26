@@ -1,17 +1,17 @@
 /**
-* @var array Array of callbacks, using plugin names as keys
+* @type {!Object.<!Function>} Array of callbacks, using plugin names as keys
 */
-var $pluginParsers = array();
+var pluginParsers = {};
 
 /**
-* @var array
+* @type {!Object.<!Object>}
 */
-$pluginsConfig;
+var pluginsConfig = {};
 
 /**
 * Disable a plugin
 *
-* @param  {!string} pluginName Name of the plugin
+* @param {!string} pluginName Name of the plugin
 */
 function disablePlugin(pluginName)
 {
@@ -24,11 +24,11 @@ function disablePlugin(pluginName)
 /**
 * Enable a plugin
 *
-* @param  {!string} pluginName Name of the plugin
+* @param {!string} pluginName Name of the plugin
 */
 function enablePlugin(pluginName)
 {
-	if (pluginsConfig[pluginName]))
+	if (pluginsConfig[pluginName])
 	{
 		pluginsConfig[pluginName].isDisabled = false;
 	}
@@ -71,6 +71,8 @@ function getMatches(regexp)
 
 		container.push(match);
 	}
+
+	return container;
 }
 
 /**
@@ -142,7 +144,7 @@ function executePluginParsers()
 * @param  {!string}   pluginName
 * @param  {!Function} parser
 */
-function registerParser($pluginName, $parser)
+function registerParser(pluginName, parser)
 {
 	// Create an empty config for this plugin to ensure it is executed
 	if (!pluginsConfig[pluginName])
