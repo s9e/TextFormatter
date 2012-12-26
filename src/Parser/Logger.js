@@ -28,9 +28,9 @@ Logger.prototype.tag;
 /**
 * Add a log entry
 *
-* @param  {!string} type
-* @param  {!string} msg
-* @param  {Object}  context
+* @param  {!string}  type    Log type
+* @param  {!string}  msg     Log message
+* @param  {!Object=} context Log context
 */
 Logger.prototype.add = function(type, msg, context)
 {
@@ -132,9 +132,8 @@ Logger.prototype.unsetTag = function()
 /**
 * Add a "debug" type log entry
 *
-* @param  {!string} msg     Log message
-* @param  {Object}  context Log context
-* @return void
+* @param  {!string}  msg     Log message
+* @param  {!Object=} context Log context
 */
 Logger.prototype.debug = function(msg, context)
 {
@@ -144,9 +143,8 @@ Logger.prototype.debug = function(msg, context)
 /**
 * Add an "err" type log entry
 *
-* @param  {!string} msg     Log message
-* @param  {Object}  context Log context
-* @return void
+* @param  {!string}  msg     Log message
+* @param  {!Object=} context Log context
 */
 Logger.prototype.err = function(msg, context)
 {
@@ -156,9 +154,8 @@ Logger.prototype.err = function(msg, context)
 /**
 * Add an "info" type log entry
 *
-* @param  {!string} msg     Log message
-* @param  {Object}  context Log context
-* @return void
+* @param  {!string}  msg     Log message
+* @param  {!Object=} context Log context
 */
 Logger.prototype.info = function(msg, context)
 {
@@ -168,9 +165,8 @@ Logger.prototype.info = function(msg, context)
 /**
 * Add a "warn" type log entry
 *
-* @param  {!string} msg     Log message
-* @param  {Object}  context Log context
-* @return void
+* @param  {!string}  msg     Log message
+* @param  {!Object=} context Log context
 */
 Logger.prototype.warn = function(msg, context)
 {
