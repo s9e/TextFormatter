@@ -302,6 +302,9 @@ trait TagProcessing
 		{
 			$newTag = $this->addStartTag($startTag->getName(), $this->pos, 0);
 
+			// Copy the original tag's attributes
+			$newTag->setAttributes($startTag->getAttributes());
+
 			// Re-pair the new tag
 			$endTag = $startTag->getEndTag();
 			if ($endTag)
