@@ -83,7 +83,9 @@ class Parser extends ParserBase
 
 			// This is a start tag, now we'll parse attributes
 			$type       = Tag::START_TAG;
-			$attributes = array();
+			$attributes = (isset($bbcodeConfig['predefinedAttributes']))
+			            ? $bbcodeConfig['predefinedAttributes']
+			            : array();
 			$wellFormed = false;
 			$firstPos   = $rpos;
 
@@ -294,20 +296,8 @@ class Parser extends ParserBase
 				$tag = $this->parser->addSelfClosingTag($tagName, $lpos, $rpos - $lpos);
 			}
 
-			// Add predefined attribute values
-			if (isset($bbcodeConfig['predefinedAttributes']))
-			{
-				foreach ($bbcodeConfig['predefinedAttributes'] as $attrName => $attrValue)
-				{
-					$tag->setAttribute($attrName, $attrValue);
-				}
-			}
-
-			// Add parsed attributes, which will overwrite predefined attributes
-			foreach ($attributes as $attrName => $attrValue)
-			{
-				$tag->setAttribute($attrName, $attrValue);
-			}
+			// Add all attributes to the tag
+			$tag->setAttributes($attributes);
 		}
 	}
 }

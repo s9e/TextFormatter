@@ -16,6 +16,7 @@ matches.forEach(function(m)
 		// and parentheses, which are balanced separately
 		url = url.replace(/[^-=\/\w)]+$/, '');
 
+		// TODO: url.substr(url.length - 1) for IE7
 		if (url.substr(-1) === ')'
 		 && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length))
 		{
