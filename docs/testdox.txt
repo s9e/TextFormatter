@@ -947,6 +947,7 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
 
 s9e\TextFormatter\Tests\Configurator\Javascript
  [x] getMinifier() returns an instance of ClosureCompilerService by default
+ [x] setMinifier() accepts an object that implements Minifier
 
 s9e\TextFormatter\Tests\Configurator\Javascript\Minifiers\Noop
  [x] minify() returns its first argument
