@@ -26,6 +26,13 @@
  */
 function Array(var_args) {}
 /**
+ * @param {*=} opt_separator Specifies a string to separate each element of the
+ * @return {string}
+ * @this {Object}
+ * @nosideeffects
+ */
+Array.prototype.join = function(opt_separator) {};
+/**
  * @type {number}
  */
 Array.prototype.length;
@@ -61,6 +68,13 @@ Array.prototype.sort = function(opt_compareFunction) {};
  */
 function escape(str) {}
 /**
+ * @param {*} num
+ * @param {number|undefined} base
+ * @return {number}
+ * @nosideeffects
+ */
+function parseInt(num, base) {}
+/**
  * @constructor
  * @param {*=} opt_pattern
  * @param {*=} opt_flags
@@ -74,14 +88,14 @@ function RegExp(opt_pattern, opt_flags) {}
  */
 RegExp.prototype.exec = function(str) {};
 /**
+ * @type {number}
+ */
+RegExp.prototype.lastIndex;
+/**
  * @param {*} str The string to search.
  * @return {boolean} Whether the string was matched.
  */
 RegExp.prototype.test = function(str) {};
-/**
- * @type {number}
- */
-RegExp.prototype.lastIndex;
 /**
  * @constructor
  * @param {*=} opt_str
@@ -95,12 +109,6 @@ function String(opt_str) {}
  * @nosideeffects
  */
 String.prototype.charAt = function(index) {};
-/**
- * @param {number=} opt_index
- * @return {number}
- * @nosideeffects
- */
-String.prototype.charCodeAt = function(opt_index) {};
 /**
  * @param {string|null} searchValue
  * @param {(number|null)=} opt_fromIndex
@@ -119,6 +127,13 @@ String.prototype.length;
  * @return {string}
  */
 String.prototype.replace = function(regex, str, opt_flags) {};
+/**
+ * @param {*=} opt_separator
+ * @param {number=} opt_limit
+ * @return {!Array.<string>}
+ * @nosideeffects
+ */
+String.prototype.split = function(opt_separator, opt_limit) {};
 /**
  * @param {number} start
  * @param {number=} opt_length

@@ -14,19 +14,17 @@ $externs = array(
 		'function parseInt',
 		'function RegExp',
 		'RegExp.prototype.exec',
-		'RegExp.prototype.index',
 		'RegExp.prototype.lastIndex',
 		'RegExp.prototype.test',
 		'function String',
 		'String.prototype.charAt',
-		'String.prototype.charCodeAt',
 		'String.prototype.indexOf',
 		'String.prototype.length',
 		'String.prototype.replace',
 		'String.prototype.split',
 		'String.prototype.substr',
 		'String.prototype.toLowerCase',
-		'String.prototype.toUpperCase',
+		'String.prototype.toUpperCase'
 	)
 );
 
@@ -34,7 +32,6 @@ $out  = '';
 
 foreach ($externs as $filename => $names)
 {
-/**
 	$file = file_get_contents(
 		'compress.zlib://http://closure-compiler.googlecode.com/svn/trunk/externs/' . $filename,
 		false,
@@ -44,8 +41,7 @@ foreach ($externs as $filename => $names)
 			)
 		))
 	);
-/**/
-	$file = file_get_contents('/tmp/es3.js');
+
 	preg_match_all('#/\\*\\*.*?\\*/\\n([^\\n]+)#s', $file, $m);
 
 	foreach ($names as $name)
