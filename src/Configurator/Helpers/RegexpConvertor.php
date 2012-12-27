@@ -31,7 +31,8 @@ abstract class RegexpConvertor
 		$regexp = '';
 		$pos = 0;
 
-		$map = array();
+		// Add an empty entry for match #0
+		$map = array('');
 
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
