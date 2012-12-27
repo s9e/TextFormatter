@@ -38,17 +38,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox disable() throws an exception on invalid entity
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid HTML entity 'amp;'
-	*/
-	public function testDisableInvalid()
-	{
-		$plugin = $this->configurator->plugins->load('HTMLEntities');
-		$plugin->disable('amp;');
-	}
-
-	/**
 	* @testdox Has a quickMatch
 	*/
 	public function testConfigQuickMatch()
@@ -92,23 +81,5 @@ class ConfiguratorTest extends Test
 
 		$this->assertArrayHasKey('attrName', $config);
 		$this->assertSame('bar', $config['attrName']);
-	}
-
-	/**
-	* @testdox The config array contains the disabled entities, if any
-	*/
-	public function testConfigDisabled()
-	{
-		$plugin = $this->configurator->plugins->load('HTMLEntities');
-		$plugin->disable('&amp;');
-		$plugin->disable('&lt;');
-
-		$config = $plugin->asConfig();
-
-		$this->assertArrayHasKey('disabled', $config);
-		$this->assertEquals(
-			array('&amp;' => 1, '&lt;' => 1),
-			$config['disabled']
-		);
 	}
 }

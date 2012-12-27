@@ -46,15 +46,6 @@ class ParserTest extends Test
 				'<rt>I <HE char="♥">&amp;#9829;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
 			),
 			array(
-				'I &hearts; AT&amp;T',
-				'<rt>I <HE char="♥">&amp;hearts;</HE> AT&amp;amp;T</rt>',
-				array(),
-				function ($configurator)
-				{
-					$configurator->HTMLEntities->disable('&amp;');
-				}
-			),
-			array(
 				'Some &unknown; entity',
 				'<pt>Some &amp;unknown; entity</pt>'
 			),
