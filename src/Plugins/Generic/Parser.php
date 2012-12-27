@@ -16,8 +16,9 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
-		foreach ($this->config['regexps'] as $tagName => $regexp)
+		foreach ($this->config['generics'] as $generic)
 		{
+			list($tagName, $regexp) = $generic;
 			preg_match_all($regexp, $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
 			foreach ($matches as $m)
