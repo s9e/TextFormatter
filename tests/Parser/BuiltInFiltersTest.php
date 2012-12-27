@@ -13,7 +13,7 @@ use s9e\TextFormatter\Tests\Test;
 */
 class BuiltInFiltersTest extends Test
 {
-	protected static function filterTestdox($filterName, array $filterOptions, $original, $expected, $setup = null)
+	protected static function getFilterTestdox($filterName, array $filterOptions, $original, $expected, $setup = null)
 	{
 		$testdox = '#' . $filterName;
 
@@ -58,7 +58,7 @@ class BuiltInFiltersTest extends Test
 		foreach ($results as $filterName => $expected)
 		{
 			$methodName = 'filter' . ucfirst($filterName);
-			$testdox = self::filterTestdox($filterName, array(), $original, $expected);
+			$testdox = self::getFilterTestdox($filterName, array(), $original, $expected);
 
 			$this->assertSame(
 				$expected,
@@ -74,7 +74,7 @@ class BuiltInFiltersTest extends Test
 	*/
 	public function test($filterName, $original, $expected, array $filterOptions = array(), array $logs = array(), $setup = null)
 	{
-		$testdox = self::filterTestdox($filterName, $filterOptions, $original, $expected, $setup);
+		$testdox = self::getFilterTestdox($filterName, $filterOptions, $original, $expected, $setup);
 
 		$logger = new Logger;
 

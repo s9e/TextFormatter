@@ -19,26 +19,7 @@ class OutputHandlingTest extends Test
 	*/
 	public function test($original, $expected, $setup = null, $callback = null)
 	{
-		$configurator = new Configurator;
-
-		if (isset($setup))
-		{
-			call_user_func($setup, $configurator);
-		}
-
-		$parser = $configurator->getParser();
-		$parser->registerParser(
-			'Test',
-			function () use ($callback, $parser)
-			{
-				if (isset($callback))
-				{
-					call_user_func($callback, $parser);
-				}
-			}
-		);
-
-		$this->assertSame($expected, $parser->parse($original));
+		$this->assertParsing($original, $expected, $setup, $callback);
 	}
 
 	public function getData()

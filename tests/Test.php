@@ -55,4 +55,28 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 			}
 		}
 	}
+
+	protected function assertParsing($original, $expected, $setup = null, $callback = null)
+	{
+		$configurator = new Configurator;
+
+		if (isset($setup))
+		{
+			call_user_func($setup, $configurator);
+		}
+
+		$parser = $configurator->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($callback, $parser)
+			{
+				if (isset($callback))
+				{
+					call_user_func($callback, $parser);
+				}
+			}
+		);
+
+		$this->assertSame($expected, $parser->parse($original));
+	}
 }
