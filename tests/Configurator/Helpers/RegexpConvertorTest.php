@@ -321,7 +321,7 @@ class RegexpConvertorTest extends Test
 	}
 
 	/**
-	* @testdox toJS() replaces its second parameter with an array that maps named captures to their index
+	* @testdox toJS() replaces its second parameter with a list of capturing subpattern names
 	*/
 	public function testConvertRegexpNamedCapturesMap()
 	{
@@ -333,7 +333,25 @@ class RegexpConvertorTest extends Test
 		);
 
 		$this->assertEquals(
-			array('foo' => 1, 'bar' => 2),
+			array('foo', 'bar'),
+			$map
+		);
+	}
+
+	/**
+	* @testdox toJS() non-named capturing subpatterns leave an empty name in the map
+	*/
+	public function testConvertRegexpNamedCapturesMapIndices()
+	{
+		$map = null;
+
+		$this->assertEquals(
+			'/x([0-9]+)([a-z]+)x/',
+			RegexpConvertor::toJS('#x([0-9]+)(?<bar>[a-z]+)x#', $map)
+		);
+
+		$this->assertEquals(
+			array('', 'bar'),
 			$map
 		);
 	}
