@@ -479,7 +479,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpConvertor
  [x] toJS() does not convert . to [\s\S] if the "s" modifier is not set
  [x] toJS() does not convert . inside of character classes
  [x] toJS() converts named captures into normal captures
- [x] toJS() replaces its second parameter with an array that maps named captures to their index
+ [x] toJS() replaces its second parameter with a list of capturing subpattern names
+ [x] toJS() non-named capturing subpatterns leave an empty name in the map
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser

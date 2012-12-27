@@ -17,11 +17,12 @@ abstract class RegexpConvertor
 	/**
 	* Convert a PCRE regexp to a Javascript regexp
 	*
-	* @param  string  $regexp    PCRE regexp
-	* @param  array  &$regexpMap Will be replaced with an array mapping named capture to their index
-	* @return string
+	* @param  string  $regexp PCRE regexp
+	* @param  array  &$map    Will be replaced with a list of attribute names, matching the order of
+	*                         the captures
+	* @return string          Javascript regexp literal
 	*/
-	public static function toJS($regexp, &$regexpMap = null)
+	public static function toJS($regexp, &$map = null)
 	{
 		$regexpInfo = RegexpParser::parse($regexp);
 
@@ -30,8 +31,7 @@ abstract class RegexpConvertor
 		$regexp = '';
 		$pos = 0;
 
-		$captureIndex = 0;
-		$regexpMap    = array();
+		$map = array();
 
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
@@ -49,12 +49,9 @@ abstract class RegexpConvertor
 				case 'capturingSubpatternStart':
 					$regexp .= '(';
 
-					++$captureIndex;
-
-					if (isset($tok['name']))
-					{
-						$regexpMap[$tok['name']] = $captureIndex;
-					}
+					// Each capturing subpattern adds an entry to the map. Non-named subpatterns
+					// leave an empty entry
+					$map[] = (isset($tok['name'])) ? $tok['name'] : '';
 					break;
 
 				case 'nonCapturingSubpatternStart':
