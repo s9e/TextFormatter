@@ -24,7 +24,7 @@ matche.forEach(function(m)
 		attrName,
 		attrValue;
 
-	while (attrMatch = attrRegexp.exec()
+	while (attrMatch = attrRegexp.exec())
 	{
 		pos = attrMatch[0].indexOf('=');
 
