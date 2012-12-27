@@ -18,11 +18,6 @@ class Configurator extends ConfiguratorBase
 	protected $attrName = 'char';
 
 	/**
-	* @var array  List of entities NOT to decode, stored as keys
-	*/
-	protected $disabled = array();
-
-	/**
 	* {@inheritdoc}
 	*/
 	protected $quickMatch = '&';
@@ -46,20 +41,5 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName);
 		$tag->defaultTemplate
 			= '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>';
-	}
-
-	/**
-	* Disable the conversion of a specific entity
-	*
-	* @param string $entity HTML entity, e.g. "&amp;" or "&eacute;"
-	*/
-	public function disable($entity)
-	{
-		if (!preg_match('/^&(?:[a-z]+|#[0-9]+|#x[0-9a-f]+);$/Di', $entity, $m))
-		{
-			throw new InvalidArgumentException("Invalid HTML entity '" . $entity . "'");
-		}
-
-		$this->disabled[$entity] = 1;
 	}
 }

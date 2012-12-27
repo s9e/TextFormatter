@@ -23,11 +23,6 @@ class Parser extends ParserBase
 		{
 			$entity = $m[0][0];
 
-			if (isset($this->config['disabled'][$entity]))
-			{
-				continue;
-			}
-
 			$char = html_entity_decode($entity, ENT_QUOTES, 'UTF-8');
 
 			if ($char === $entity)
