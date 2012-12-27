@@ -58,9 +58,16 @@ matches.forEach(function(m)
 
 	// This is a start tag, now we'll parse attributes
 	var type       = Tag.START_TAG,
-		attributes = bbcodeConfig.predefinedAttributes || {},
+		attributes = {},
 		wellFormed = false,
-		firstPos   = rpos;
+		firstPos   = rpos,
+		attrName;
+
+	// Add predefined attributes
+	for (attrName in bbcodeConfig.predefinedAttributes)
+	{
+		attributes[attrName] = bbcodeConfig.predefinedAttributes[attrName];
+	}
 
 	while (rpos < textLen)
 	{
@@ -98,8 +105,7 @@ matches.forEach(function(m)
 		}
 
 		// Capture the attribute name
-		var spn = /^[-\w]*/.exec(text.substr(rpos))[0].length,
-			attrName;
+		var spn = /^[-\w]*/.exec(text.substr(rpos))[0].length;
 
 		if (spn)
 		{

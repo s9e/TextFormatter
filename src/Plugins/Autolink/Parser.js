@@ -1,4 +1,3 @@
-<?php
 var tagName  = config.tagName,
 	attrName = config.attrName;
 
