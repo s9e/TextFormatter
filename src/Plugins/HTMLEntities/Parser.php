@@ -22,16 +22,15 @@ class Parser extends ParserBase
 		foreach ($matches as $m)
 		{
 			$entity = $m[0][0];
+			$chr    = html_entity_decode($entity, ENT_QUOTES, 'UTF-8');
 
-			$char = html_entity_decode($entity, ENT_QUOTES, 'UTF-8');
-
-			if ($char === $entity)
+			if ($chr === $entity)
 			{
 				// The entity was not decoded, so we assume it's not valid and we ignore it
 				continue;
 			}
 
-			$this->parser->addSelfClosingTag($tagName, $m[0][1], strlen($entity))->setAttribute($attrName, $char);
+			$this->parser->addSelfClosingTag($tagName, $m[0][1], strlen($entity))->setAttribute($attrName, $chr);
 		}
 	}
 }
