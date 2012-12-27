@@ -102,12 +102,27 @@ class Javascript
 	protected function formatPlugin(ConfiguratorBase $plugin)
 	{
 		$src = $plugin->getJSParser();
+		$pluginConfig = $plugin->asConfig();
 
-		if ($src === false)
+		if ($src === false || $pluginConfig === false)
 		{
 			return false;
 		}
 
-		$src = 'function(text,matches){/** @const */var config={};' . $src . '}';
+		/**
+		* @var array Keys of elements that are kept in the global scope. Everything else will be
+		*            moved into the plugin's parser
+		*/
+		$globalKeys = array(
+			'quickMatch'        => 1,
+			'regexp'            => 1,
+			'regexpLimit'       => 1,
+			'regexpLimitAction' => 1
+		);
+
+		$globalConfig = array_intersect_key($pluginConfig, $globalKeys);
+		$localConfig  = array_diff_key($pluginConfig, $globalKeys);
+
+		$src = 'function(text,matches){/** @const */var config=' . self::encode($localConfig) . ';' . $src . '}';
 	}
 }

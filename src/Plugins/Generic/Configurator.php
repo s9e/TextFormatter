@@ -132,7 +132,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Generate and return the Javascript source for this plugin's parser
 	*
-	* @return string Javascript source
+	* @return string|bool Javascript source, or FALSE if no JS parser is available
 	*/
 	public function getJSParser()
 	{
@@ -142,7 +142,7 @@ class Configurator extends ConfiguratorBase
 		// If there's no generics, no need for a parser -- this is not supposed to happen though
 		if ($config === false)
 		{
-			return '';
+			return false;
 		}
 
 		$src = '[';

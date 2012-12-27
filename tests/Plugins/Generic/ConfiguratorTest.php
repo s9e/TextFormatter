@@ -171,6 +171,6 @@ class ConfiguratorTest extends Test
 	{
 		$plugin = $this->configurator->plugins->load('Generic');
 
-		$this->assertSame('', $plugin->getJSParser());
+		$this->assertFalse($plugin->getJSParser());
 	}
 }

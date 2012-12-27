@@ -111,7 +111,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	* This is the base implementation, meant to be overridden by custom plugins. By default it
 	* returns the Parser.js file from stock plugins' directory, if available
 	*
-	* @return string Javascript source
+	* @return string|bool Javascript source, or FALSE if no JS parser is available
 	*/
 	public function getJSParser()
 	{
