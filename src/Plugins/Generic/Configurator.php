@@ -11,9 +11,9 @@ use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
-use s9e\TextFormatter\Configurator\Helpers\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**

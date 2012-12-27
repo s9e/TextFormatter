@@ -451,40 +451,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['d', 'dd', 'ddd'], ["specialChars" => ["d" => "\\d"]]) returns '\\d\\d?\\d?'
  [x] fromList() throws a RuntimeException if any word is not legal UTF-8
 
-s9e\TextFormatter\Tests\Configurator\Helpers\RegexpConvertor
- [x] toJS() returns an instance of s9e\TextFormatter\Configurator\Javascript\RegExp
- [x] toJS() can convert plain regexps
- [x] toJS() escapes forward slashes
- [x] toJS() does not double-escape forward slashes that are already escaped
- [x] toJS() does not "eat" backslashes while escaping forward slashes
- [x] toJS() can convert regexps with the "i" modifier
- [x] toJS() can convert regexps with capturing subpatterns
- [x] toJS() can convert regexps with non-capturing subpatterns
- [x] toJS() can convert regexps with non-capturing subpatterns with a quantifier
- [x] toJS() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
- [x] toJS() throws a RuntimeException on options (?i)
- [x] toJS() throws a RuntimeException on subpattern options (?i:)
- [x] toJS() can convert regexps with character classes with a quantifier
- [x] toJS() converts greedy quantifiers to normal quantifiers in character classes
- [x] toJS() replaces \pL with the full character range in character classes
- [x] toJS() replaces \p{L} with the full character range in character classes
- [x] toJS() replaces \pL outside of character classes with a character class containing the full character range
- [x] toJS() replaces \p{L} outside of character classes with a character class containing the full character range
- [x] toJS() replaces \p{^L} with a character class containing the full character range
- [x] toJS() replaces \p{^L} with a character class equivalent to \PL
- [x] toJS() replaces \P{^L} with a character class equivalent to \pL
- [x] toJS() can convert regexps with lookahead assertions
- [x] toJS() can convert regexps with negative lookahead assertions
- [x] toJS() throws a RuntimeException on lookbehind assertions
- [x] toJS() throws a RuntimeException on negative lookbehind assertions
- [x] toJS() converts . to [\s\S] outside of character classes if the "s" modifier is set
- [x] toJS() does not convert . to [\s\S] if the "s" modifier is not set
- [x] toJS() does not convert . inside of character classes
- [x] toJS() converts named captures into normal captures
- [x] toJS() replaces its second parameter with a list of capturing subpattern names
- [x] toJS() non-named capturing subpatterns leave an empty name in the map
- [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
-
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
  [x] parse() can parse plain regexps
  [x] parse() throws a RuntimeException if delimiters can't be parsed
@@ -951,6 +917,43 @@ s9e\TextFormatter\Tests\Configurator\Javascript
  [x] getMinifier() returns an instance of ClosureCompilerService by default
  [x] setMinifier() accepts an object that implements Minifier
  [x] 
+
+s9e\TextFormatter\Tests\Configurator\Javascript\RegExp
+ [x] Returns a Javascript literal when cast as a string
+
+s9e\TextFormatter\Tests\Configurator\Javascript\RegexpConvertor
+ [x] toJS() returns an instance of s9e\TextFormatter\Configurator\Javascript\RegExp
+ [x] toJS() can convert plain regexps
+ [x] toJS() escapes forward slashes
+ [x] toJS() does not double-escape forward slashes that are already escaped
+ [x] toJS() does not "eat" backslashes while escaping forward slashes
+ [x] toJS() can convert regexps with the "i" modifier
+ [x] toJS() can convert regexps with capturing subpatterns
+ [x] toJS() can convert regexps with non-capturing subpatterns
+ [x] toJS() can convert regexps with non-capturing subpatterns with a quantifier
+ [x] toJS() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
+ [x] toJS() throws a RuntimeException on options (?i)
+ [x] toJS() throws a RuntimeException on subpattern options (?i:)
+ [x] toJS() can convert regexps with character classes with a quantifier
+ [x] toJS() converts greedy quantifiers to normal quantifiers in character classes
+ [x] toJS() replaces \pL with the full character range in character classes
+ [x] toJS() replaces \p{L} with the full character range in character classes
+ [x] toJS() replaces \pL outside of character classes with a character class containing the full character range
+ [x] toJS() replaces \p{L} outside of character classes with a character class containing the full character range
+ [x] toJS() replaces \p{^L} with a character class containing the full character range
+ [x] toJS() replaces \p{^L} with a character class equivalent to \PL
+ [x] toJS() replaces \P{^L} with a character class equivalent to \pL
+ [x] toJS() can convert regexps with lookahead assertions
+ [x] toJS() can convert regexps with negative lookahead assertions
+ [x] toJS() throws a RuntimeException on lookbehind assertions
+ [x] toJS() throws a RuntimeException on negative lookbehind assertions
+ [x] toJS() converts . to [\s\S] outside of character classes if the "s" modifier is set
+ [x] toJS() does not convert . to [\s\S] if the "s" modifier is not set
+ [x] toJS() does not convert . inside of character classes
+ [x] toJS() converts named captures into normal captures
+ [x] toJS() replaces its second parameter with a list of capturing subpattern names
+ [x] toJS() non-named capturing subpatterns leave an empty name in the map
+ [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 
 s9e\TextFormatter\Tests\Configurator\Javascript\Minifiers\Noop
  [x] minify() returns its first argument

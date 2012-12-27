@@ -12,7 +12,6 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Helpers\RegexpConvertor;
 
 abstract class ConfiguratorBase implements ConfigProvider
 {

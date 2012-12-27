@@ -5,10 +5,10 @@
 * @copyright Copyright (c) 2010-2012 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Configurator\Helpers;
+namespace s9e\TextFormatter\Configurator\Javascript;
 
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Javascript\RegExp;
+use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 
 /**
 * @todo create a method that replaces capturing subpatterns with non-capturing subpatterns, and perhaps even no subpattern at all. Unless backreferences are used

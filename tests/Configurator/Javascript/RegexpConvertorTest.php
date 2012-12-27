@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Helpers;
+namespace s9e\TextFormatter\Tests\Configurator\Javascript;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\Configurator\Helpers\RegexpConvertor;
+use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Helpers\RegexpConvertor
+* @covers s9e\TextFormatter\Configurator\Javascript\RegexpConvertor
 */
 class RegexpConvertorTest extends Test
 {

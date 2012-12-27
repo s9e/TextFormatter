@@ -48,7 +48,6 @@
 			<!-- RulesGenerator depends on TemplateForensics -->
 			<file>Configurator/Helpers/HTML5/RulesGeneratorTest.php</file>
 			<file>Configurator/Helpers/RegexpBuilderTest.php</file>
-			<file>Configurator/Helpers/RegexpConvertorTest.php</file>
 			<file>Configurator/Helpers/RegexpParserTest.php</file>
 			<file>Configurator/Helpers/RulesHelperTest.php</file>
 			<!-- TemplateChecker depends on TemplateOptimizer -->
@@ -66,6 +65,8 @@
 			<file>Configurator/Validators/AttributeNameTest.php</file>
 			<file>Configurator/Validators/TagNameTest.php</file>
 			<file>Configurator/JavascriptTest.php</file>
+			<file>Configurator/Javascript/RegExpTest.php</file>
+			<file>Configurator/Javascript/RegexpConvertorTest.php</file>
 			<file>Configurator/Javascript/Minifiers/ClosureCompilerServiceTest.php</file>
 			<file>Configurator/Javascript/Minifiers/NoopTest.php</file>
 
@@ -139,7 +140,6 @@
 			<file>../src/Configurator/Helpers/HTML5/RulesGenerator.php</file>
 			<file>../src/Configurator/Helpers/HTML5/TemplateForensics.php</file>
 			<file>../src/Configurator/Helpers/RegexpBuilder.php</file>
-			<file>../src/Configurator/Helpers/RegexpConvertor.php</file>
 			<file>../src/Configurator/Helpers/RegexpParser.php</file>
 			<file>../src/Configurator/Helpers/RulesHelper.php</file>
 			<file>../src/Configurator/Helpers/TemplateChecker.php</file>
@@ -152,6 +152,8 @@
 			<file>../src/Configurator/Items/Tag.php</file>
 			<file>../src/Configurator/Items/Template.php</file>
 			<file>../src/Configurator/Javascript.php</file>
+			<file>../src/Configurator/Javascript/RegExp.php</file>
+			<file>../src/Configurator/Javascript/RegexpConvertor.php</file>
 			<file>../src/Configurator/Javascript/Minifiers/ClosureCompilerService.php</file>
 			<file>../src/Configurator/Javascript/Minifiers/Noop.php</file>
 			<file>../src/Configurator/Stylesheet.php</file>
