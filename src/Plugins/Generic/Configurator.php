@@ -119,6 +119,12 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
-		return array('regexps' => $this->collection->asConfig());
+		$generics = array();
+		foreach ($this->collection as $tagName => $regexp)
+		{
+			$generics[] = array($tagName, $regexp);
+		}
+
+		return array('generics' => $generics);
 	}
 }

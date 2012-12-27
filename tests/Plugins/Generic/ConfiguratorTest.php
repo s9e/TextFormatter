@@ -130,7 +130,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the regexps in a "regexps" array where keys are tag names
+	* @testdox asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>]
 	*/
 	public function testAsConfig()
 	{
@@ -140,9 +140,9 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame(
 			array(
-				'regexps' => Array (
-					'GC53BB427' => '/(?<foo>[0-9]+)/',
-					'GDCEA6E9C' => '/(?<bar>[a-z]+)/'
+				'generics' => array(
+					array('GC53BB427', '/(?<foo>[0-9]+)/'),
+					array('GDCEA6E9C', '/(?<bar>[a-z]+)/')
 				)
 			),
 			$plugin->asConfig()

@@ -1294,7 +1294,7 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() creates a regexp filter for each attribute created
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set
- [x] asConfig() returns the regexps in a "regexps" array where keys are tag names
+ [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>]
 
 s9e\TextFormatter\Tests\Plugins\Generic\Parser
  [x] Parsing tests
