@@ -171,4 +171,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
 		);
 	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function asJSConfig()
+	{
+	}
 }

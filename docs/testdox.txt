@@ -452,6 +452,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList() throws a RuntimeException if any word is not legal UTF-8
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpConvertor
+ [x] toJS() returns an instance of s9e\TextFormatter\Configurator\Javascript\RegExp
  [x] toJS() can convert plain regexps
  [x] toJS() escapes forward slashes
  [x] toJS() does not double-escape forward slashes that are already escaped

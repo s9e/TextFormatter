@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$filepath = __DIR__ . '/../src/Configurator/Helpers/RegexpParser.php';
+$filepath = __DIR__ . '/../src/Configurator/Helpers/RegexpConvertor.php';
 
 function generateRange($start, $end)
 {
@@ -46,7 +46,7 @@ if (!file_exists('/tmp/props.txt'))
 {
 	file_put_contents(
 		'/tmp/props.txt',
-		file_get_contents('http://unicode.org/Public/UNIDATA/PropList.txt') . "\n" . file_get_contents('http://unicode.org/Public/UNIDATA/DerivedCoreProperties.txt')
+		wget('http://unicode.org/Public/UNIDATA/PropList.txt') . "\n" . wget('http://unicode.org/Public/UNIDATA/DerivedCoreProperties.txt')
 	);
 }
 

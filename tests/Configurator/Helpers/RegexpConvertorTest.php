@@ -11,6 +11,17 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpConvertor;
 class RegexpConvertorTest extends Test
 {
 	/**
+	* @testdox toJS() returns an instance of s9e\TextFormatter\Configurator\Javascript\RegExp
+	*/
+	public function testReturnInstance()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
+			RegexpConvertor::toJS('//')
+		);
+	}
+
+	/**
 	* @testdox toJS() can convert plain regexps
 	*/
 	public function testConvertRegexp1()
@@ -159,7 +170,7 @@ class RegexpConvertorTest extends Test
 		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
 		$this->assertRegexp(
 			'#^/\\[0-9' . $unicodeRange . '\\]/$#D',
-			RegexpConvertor::toJS('#[0-9\\pL]#')
+			(string) RegexpConvertor::toJS('#[0-9\\pL]#')
 		);
 	}
 
@@ -171,7 +182,7 @@ class RegexpConvertorTest extends Test
 		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
 		$this->assertRegexp(
 			'#^/\\[0-9' . $unicodeRange . '\\]/$#D',
-			RegexpConvertor::toJS('#[0-9\\p{L}]#')
+			(string) RegexpConvertor::toJS('#[0-9\\p{L}]#')
 		);
 	}
 
@@ -183,7 +194,7 @@ class RegexpConvertorTest extends Test
 		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
 		$this->assertRegexp(
 			'#^/\\[' . $unicodeRange . '\\]00\\[' . $unicodeRange . '\\]/$#D',
-			RegexpConvertor::toJS('#\\pL00\\pL#')
+			(string) RegexpConvertor::toJS('#\\pL00\\pL#')
 		);
 	}
 
@@ -195,7 +206,7 @@ class RegexpConvertorTest extends Test
 		$unicodeRange = '(?:[a-zA-Z]-?)*(?:\\\\u[0-9A-F]{4}-?)*';
 		$this->assertRegexp(
 			'#^/\\[' . $unicodeRange . '\\]00\\[' . $unicodeRange . '\\]/$#D',
-			RegexpConvertor::toJS('#\\p{L}00\\p{L}#')
+			(string) RegexpConvertor::toJS('#\\p{L}00\\p{L}#')
 		);
 	}
 
@@ -208,7 +219,7 @@ class RegexpConvertorTest extends Test
 
 		$this->assertRegexp(
 			'#^/\\[' . $unicodeRange . '\\]/$#D',
-			RegexpConvertor::toJS('#\\p{^L}#')
+			(string) RegexpConvertor::toJS('#\\p{^L}#')
 		);
 	}
 
@@ -217,7 +228,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp8d()
 	{
-		$this->assertSame(
+		$this->assertEquals(
 			RegexpConvertor::toJS('#\\PL#'),
 			RegexpConvertor::toJS('#\\p{^L}#')
 		);
@@ -228,7 +239,7 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexp8e()
 	{
-		$this->assertSame(
+		$this->assertEquals(
 			RegexpConvertor::toJS('#\\pL#'),
 			RegexpConvertor::toJS('#\\P{^L}#')
 		);
@@ -316,7 +327,7 @@ class RegexpConvertorTest extends Test
 	{
 		$this->assertEquals(
 			'/x([0-9]+)([a-z]+)x/',
-			RegexpConvertor::toJS('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#', $map)
+			RegexpConvertor::toJS('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#')
 		);
 	}
 
@@ -325,16 +336,16 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpNamedCapturesMap()
 	{
-		$map = null;
+		$regexp = RegexpConvertor::toJS('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#');
 
 		$this->assertEquals(
 			'/x([0-9]+)([a-z]+)x/',
-			RegexpConvertor::toJS('#x(?<foo>[0-9]+)(?<bar>[a-z]+)x#', $map)
+			$regexp
 		);
 
 		$this->assertEquals(
 			array('', 'foo', 'bar'),
-			$map
+			$regexp->map
 		);
 	}
 
@@ -343,16 +354,16 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertRegexpNamedCapturesMapIndices()
 	{
-		$map = null;
+		$regexp = RegexpConvertor::toJS('#x([0-9]+)(?<bar>[a-z]+)x#');
 
 		$this->assertEquals(
 			'/x([0-9]+)([a-z]+)x/',
-			RegexpConvertor::toJS('#x([0-9]+)(?<bar>[a-z]+)x#', $map)
+			$regexp
 		);
 
 		$this->assertEquals(
 			array('', '', 'bar'),
-			$map
+			$regexp->map
 		);
 	}
 
@@ -362,11 +373,9 @@ class RegexpConvertorTest extends Test
 	*/
 	public function testConvertNamedSubatternAfterNormalSubpattern()
 	{
-		$map = null;
-
-		$this->assertSame(
+		$this->assertEquals(
 			'/(?:foo)(bar)/',
-			RegexpConvertor::toJS('/(?:foo)(?<z>bar)/', $map)
+			RegexpConvertor::toJS('/(?:foo)(?<z>bar)/')
 		);
 	}
 }

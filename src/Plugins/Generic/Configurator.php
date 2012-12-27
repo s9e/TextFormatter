@@ -149,13 +149,12 @@ class Configurator extends ConfiguratorBase
 		foreach ($config['generics'] as $entry)
 		{
 			list($tagName, $regexp) = $entry;
-			$map = array();
-
 			// Convert the PCRE regexp to a Javascript regexp literal with the global flag
-			$regexp = RegexpConvertor::toJS($regexp, $map) . 'g';
+			$regexp = RegexpConvertor::toJS($regexp);
+			$regexp->flags .= 'g';
 
 			// Add the entry to the list
-			$src .= '[' . json_encode($tagName) . ',' . $regexp . ',' . json_encode($map) . '],';
+			$src .= '[' . json_encode($tagName) . ',' . $regexp . ',' . json_encode($regexp->map) . '],';
 		}
 		unset($entry);
 
