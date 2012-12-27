@@ -16,6 +16,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Javascript\Dictionary;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection;
@@ -173,11 +174,26 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 
 	/**
-	* 
-	*
-	* @return void
+	* {@inheritdoc}
 	*/
 	public function asJSConfig()
 	{
+		$config = $this->asConfig();
+
+		// Ensure that attribute names are preserved
+		foreach ($config['bbcodes'] as &$bbcodeConfig)
+		{
+			if (isset($bbcodeConfig['predefinedAttributes']))
+			{
+				$bbcodeConfig['predefinedAttributes']
+					= new Dictionary($bbcodeConfig['predefinedAttributes']);
+			}
+		}
+		unset($bbcodeConfig);
+
+		// Ensure that BBCode names, used as keys, are preserved
+		$config['bbcodes'] = new Dictionary($config['bbcodes']);
+
+		return $config;
 	}
 }

@@ -210,4 +210,38 @@ class ConfiguratorTest extends Test
 
 		$this->assertContains('((?:AA|BB)(?:XXX|YYY))', $config['regexp']);
 	}
+
+	/**
+	* @testdox asJSConfig() preserves BBCode names
+	*/
+	public function testAsJSConfigPreservesBBCodeNames()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->add('FOO')->tagName = 'BAR';
+
+		$config = $plugin->asJSConfig();
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Javascript\\Dictionary',
+			$config['bbcodes']
+		);
+		$this->assertArrayHasKey('FOO', $config['bbcodes']);
+	}
+
+	/**
+	* @testdox asJSConfig() preserves attribute names in predefinedAttributes
+	*/
+	public function testAsJSConfigPreservesPredefinedAttributeNames()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->add('FOO')->predefinedAttributes['k'] = 'v';
+
+		$config = $plugin->asJSConfig();
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Javascript\\Dictionary',
+			$config['bbcodes']['FOO']['predefinedAttributes']
+		);
+		$this->assertArrayHasKey('k', $config['bbcodes']['FOO']['predefinedAttributes']);
+	}
 }

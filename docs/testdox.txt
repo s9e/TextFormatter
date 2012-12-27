@@ -1129,6 +1129,7 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimitAction() sets the regexpLimitAction property
  [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
+ [x] Offers a default asJSConfig() implementation that returns the value of asConfig()
  [x] getJSParser() returns FALSE for custom plugins
  [x] getJSParser() returns the content of Parser.js for stock plugins
 
@@ -1234,6 +1235,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] Generates a regexp for its config array
  [x] The regexp that matches BBCode names does not contain a superfluous non-capturing subpattern
  [x] Essential non-capturing subpatterns are preserved
+ [x] asJSConfig() preserves BBCode names
+ [x] asJSConfig() preserves attribute names in predefinedAttributes
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests
