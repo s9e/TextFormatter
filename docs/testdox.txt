@@ -1296,6 +1296,8 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>]
+ [x] getJSParser() converts the regexps to Javascript and includes them in the source
+ [x] getJSParser() returns an empty string if no generics were added
 
 s9e\TextFormatter\Tests\Plugins\Generic\Parser
  [x] Parsing tests

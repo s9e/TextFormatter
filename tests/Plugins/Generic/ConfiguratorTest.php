@@ -148,4 +148,29 @@ class ConfiguratorTest extends Test
 			$plugin->asConfig()
 		);
 	}
+
+	/**
+	* @testdox getJSParser() converts the regexps to Javascript and includes them in the source
+	*/
+	public function testGetJSParser()
+	{
+		$plugin = $this->configurator->plugins->load('Generic');
+		$plugin->add('/(?<foo>[0-9]+)/', '');
+		$plugin->add('/(?<bar>[a-z]+)/', '');
+
+		$this->assertStringStartsWith(
+			'[["GC53BB427",/([0-9]+)/g,["","foo"]],["GDCEA6E9C",/([a-z]+)/g,["","bar"]]]',
+			$plugin->getJSParser()
+		);
+	}
+
+	/**
+	* @testdox getJSParser() returns an empty string if no generics were added
+	*/
+	public function testGetJSParserEmpty()
+	{
+		$plugin = $this->configurator->plugins->load('Generic');
+
+		$this->assertSame('', $plugin->getJSParser());
+	}
 }

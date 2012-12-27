@@ -11,6 +11,7 @@ use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Helpers\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -126,5 +127,44 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return array('generics' => $generics);
+	}
+
+	/**
+	* Generate and return the Javascript source for this plugin's parser
+	*
+	* @return string Javascript source
+	*/
+	public function getJSParser()
+	{
+		// Start with the normal config
+		$config = $this->asConfig();
+
+		// If there's no generics, no need for a parser -- this is not supposed to happen though
+		if ($config === false)
+		{
+			return '';
+		}
+
+		$src = '[';
+		foreach ($config['generics'] as $entry)
+		{
+			list($tagName, $regexp) = $entry;
+			$map = array();
+
+			// Convert the PCRE regexp to a Javascript regexp literal with the global flag
+			$regexp = RegexpConvertor::toJS($regexp, $map) . 'g';
+
+			// Add the entry to the list
+			$src .= '[' . json_encode($tagName) . ',' . $regexp . ',' . json_encode($map) . '],';
+		}
+		unset($entry);
+
+		// Remove the last comma and close the list
+		$src = substr($src, 0, -1) . ']';
+
+		// Append the plugin's source
+		$src .= parent::getJSParser();
+
+		return $src;
 	}
 }
