@@ -60,10 +60,12 @@ class Parser extends ParserBase
 					$attrMatch[0] .= '=' . strtolower($attrMatch[0]);
 				}
 
-				// Give boolean attributes a value equal to their name, lowercased
+				// Normalize the attribute name, remove the whitespace around its value to account
+				// for cases like <b title = "foo"/>
 				$attrName  = strtolower(trim(substr($attrMatch[0], 0, $pos)));
 				$attrValue = trim(substr($attrMatch[0], 1 + $pos));
 
+				// Remove quotes around the value
 				if ($attrValue[0] === '"'
 				 || $attrValue[0] === "'")
 				{
