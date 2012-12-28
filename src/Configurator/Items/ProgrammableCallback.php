@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
+use s9e\TextFormatter\Configurator\Javascript\Code;
 
 class ProgrammableCallback implements ConfigProvider
 {
@@ -19,7 +20,7 @@ class ProgrammableCallback implements ConfigProvider
 	protected $callback;
 
 	/**
-	* @var string Javascript source code for this callback
+	* @var Code Javascript source code for this callback
 	*/
 	protected $js = null;
 
@@ -88,7 +89,7 @@ class ProgrammableCallback implements ConfigProvider
 	* Set this callback's Javascript
 	*
 	* @param  string $js Javascript source code for this callback
-	* @return mixed      Source code if available, NULL otherwise
+	* @return mixed      Instance of Code if available, NULL otherwise
 	*/
 	public function getJS()
 	{
@@ -108,11 +109,16 @@ class ProgrammableCallback implements ConfigProvider
 	/**
 	* Set this callback's Javascript
 	*
-	* @param  string $js Javascript source code for this callback
+	* @param  Code|string $js Javascript source code for this callback
 	* @return void
 	*/
 	public function setJS($js)
 	{
+		if (!($js instanceof Code))
+		{
+			$js = new Code($js);
+		}
+
 		$this->js = $js;
 	}
 

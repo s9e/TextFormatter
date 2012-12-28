@@ -786,14 +786,15 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
  [x] getCallback() returns the callback
  [x] getJS() returns NULL by default
- [x] setJS() sets the callback's Javascript
+ [x] setJS() accepts a string and normalizes it to an instance of Code
+ [x] setJS() accepts an instance of Code
  [x] fromArray() creates an instance from an array
  [x] fromArray() accepts the name of a built-in filter as callback
  [x] asConfig() returns an array containing the callback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
  [x] If the callback is an instance of CallbackPlaceholder, asConfig() calls the callback's asConfig() and returns its value as callback
  [x] asConfig() returns the vars set with setVars() if the callback is an instance of CallbackPlaceholder
- [x] asConfig() returns the callback's Javascript if available
+ [x] asConfig() returns the callback's Javascript as an instance of Code if available
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor

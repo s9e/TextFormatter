@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Items;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Javascript\Code;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Items\ProgrammableCallback
@@ -100,11 +101,24 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox setJS() sets the callback's Javascript
+	* @testdox setJS() accepts a string and normalizes it to an instance of Code
 	*/
-	public function testSetJS()
+	public function testSetJSString()
 	{
 		$js = 'function(str){return str.toLowerCase();}';
+
+		$pc = new ProgrammableCallback('strtolower');
+		$pc->setJS($js);
+
+		$this->assertEquals(new Code($js), $pc->getJS());
+	}
+
+	/**
+	* @testdox setJS() accepts an instance of Code
+	*/
+	public function testSetJSInstance()
+	{
+		$js = new Code('function(str){return str.toLowerCase();}');
 
 		$pc = new ProgrammableCallback('strtolower');
 		$pc->setJS($js);
@@ -117,12 +131,10 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testFromArray()
 	{
-		$js = 'function(){return 1;}';
 
 		$pc1 = ProgrammableCallback::fromArray(
 			array(
 				'callback' => 'mt_rand',
-				'js'       => $js,
 				'params'   => array('min' => null, 55),
 				'vars'     => array('foo' => 'bar')
 			)
@@ -131,7 +143,6 @@ class ProgrammableCallbackTest extends Test
 		$pc2 = new ProgrammableCallback('mt_rand');
 		$pc2->addParameterByName('min');
 		$pc2->addParameterByValue(55);
-		$pc2->setJS($js);
 		$pc2->setVars(array('foo' => 'bar'));
 
 		$this->assertEquals($pc2, $pc1);
@@ -214,11 +225,11 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the callback's Javascript if available
+	* @testdox asConfig() returns the callback's Javascript as an instance of Code if available
 	*/
 	public function testAsConfigJavascript()
 	{
-		$js = 'function(str){return str.toLowerCase();}';
+		$js = new Code('function(str){return str.toLowerCase();}');
 
 		$pc = new ProgrammableCallback('strtolower');
 		$pc->setJS($js);
