@@ -14,6 +14,7 @@ use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Collections\FilterCollection;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Javascript\Code;
 
 abstract class ConfigHelper
 {
@@ -104,6 +105,28 @@ abstract class ConfigHelper
 
 			// Dig deeper into this array
 			self::optimizeArray($v, $cache);
+		}
+		unset($v);
+	}
+
+	/**
+	* Remove all instances of Code from an array
+	*
+	* @param  array &$arr Source array
+	* @return void
+	*/
+	public static function removeJavascriptCode(array &$arr)
+	{
+		foreach ($arr as $k => &$v)
+		{
+			if ($v instanceof Code)
+			{
+				unset($arr[$k]);
+			}
+			elseif (is_array($v))
+			{
+				self::removeJavascriptCode($v);
+			}
 		}
 		unset($v);
 	}

@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests;
 
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
@@ -253,7 +254,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox allowedChildren and allowedDescendants bitfields are added to each tag
+	* @testdox asConfig() adds allowedChildren and allowedDescendants bitfields to each tag
 	*/
 	public function testAsConfigTagBitfields()
 	{
@@ -270,6 +271,41 @@ class ConfiguratorTest extends Test
 				)
 			),
 			$config
+		);
+	}
+
+	/**
+	* @testdox asConfig() removes Javascript-specific data from tag filters
+	*/
+	public function testAsConfigRemovesJavascriptTagFilters()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+		$pc->setJS('function(){return false;}');
+
+		$filterChain = $this->configurator->tags->add('A')->filterChain;
+		$filterChain->clear();
+		$filterChain->append($pc);
+
+		$config = $this->configurator->asConfig();
+
+		$this->assertArrayNotHasKey('js', $config['tags']['A']['filterChain'][0]);
+	}
+
+	/**
+	* @testdox asConfig() removes Javascript-specific data from attribute filters
+	*/
+	public function testAsConfigRemovesJavascriptAttributeFilters()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+		$pc->setJS('function(){return false;}');
+
+		$this->configurator->tags->add('A')->attributes->add('a')->filterChain->append($pc);
+
+		$config = $this->configurator->asConfig();
+
+		$this->assertArrayNotHasKey(
+			'js',
+			$config['tags']['A']['attributes']['a']['filterChain'][0]
 		);
 	}
 

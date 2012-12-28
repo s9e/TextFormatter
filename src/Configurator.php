@@ -150,6 +150,32 @@ class Configurator implements ConfigProvider
 	*/
 	public function asConfig()
 	{
+		// Generate the config array
+		$config = $this->generateConfig();
+
+		// Remove instances of Code, recursively and in-place
+		ConfigHelper::removeJavascriptCode($config);
+
+		return $config;
+	}
+
+	/**
+	* Generate and return the complete config array for the Javascript parser
+	*
+	* @return array
+	*/
+	public function asJSConfig()
+	{
+		return $this->generateConfig();
+	}
+
+	/**
+	* Generate and return the complete config array
+	*
+	* @return array
+	*/
+	protected function generateConfig()
+	{
 		$properties = get_object_vars($this);
 		unset($properties['javascript']);
 		unset($properties['stylesheet']);
