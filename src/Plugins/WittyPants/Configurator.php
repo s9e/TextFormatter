@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Plugins\WittyPants;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
-* This plugin combines some of the functionalities found in SmartyPants and Textile.
+* This plugin combines some of the functionalities found in SmartyPants and Textile
 *
 * @link http://daringfireball.net/projects/smartypants/
 * @link http://textile.thresholdstate.com/
