@@ -90,13 +90,39 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
+	* @testdox getJS() returns NULL by default
+	*/
+	public function testGetJS()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+
+		$this->assertNull($pc->getJS());
+	}
+
+	/**
+	* @testdox setJS() sets the callback's Javascript
+	*/
+	public function testSetJS()
+	{
+		$js = 'function(str){return str.toLowerCase();}';
+
+		$pc = new ProgrammableCallback('strtolower');
+		$pc->setJS($js);
+
+		$this->assertSame($js, $pc->getJS());
+	}
+
+	/**
 	* @testdox fromArray() creates an instance from an array
 	*/
 	public function testFromArray()
 	{
+		$js = 'function(){return 1;}';
+
 		$pc1 = ProgrammableCallback::fromArray(
 			array(
 				'callback' => 'mt_rand',
+				'js'       => $js,
 				'params'   => array('min' => null, 55),
 				'vars'     => array('foo' => 'bar')
 			)
@@ -105,6 +131,7 @@ class ProgrammableCallbackTest extends Test
 		$pc2 = new ProgrammableCallback('mt_rand');
 		$pc2->addParameterByName('min');
 		$pc2->addParameterByValue(55);
+		$pc2->setJS($js);
 		$pc2->setVars(array('foo' => 'bar'));
 
 		$this->assertEquals($pc2, $pc1);
@@ -184,6 +211,22 @@ class ProgrammableCallbackTest extends Test
 
 		$this->assertArrayHasKey('vars', $config);
 		$this->assertSame($vars, $config['vars']);
+	}
+
+	/**
+	* @testdox asConfig() returns the callback's Javascript if available
+	*/
+	public function testAsConfigJavascript()
+	{
+		$js = 'function(str){return str.toLowerCase();}';
+
+		$pc = new ProgrammableCallback('strtolower');
+		$pc->setJS($js);
+
+		$config = $pc->asConfig();
+
+		$this->assertArrayHasKey('js', $config);
+		$this->assertSame($js, $config['js']);
 	}
 }
 

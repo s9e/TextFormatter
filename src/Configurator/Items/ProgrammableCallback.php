@@ -14,9 +14,14 @@ use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 class ProgrammableCallback implements ConfigProvider
 {
 	/**
-	* @var callback
+	* @var callback Callback
 	*/
 	protected $callback;
+
+	/**
+	* @var string Javascript source code for this callback
+	*/
+	protected $js = null;
 
 	/**
 	* @var array List of params to be passed to the callback
@@ -70,7 +75,9 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
-	* @return mixed
+	* Get this object's callback
+	*
+	* @return callback
 	*/
 	public function getCallback()
 	{
@@ -78,6 +85,19 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
+	* Set this callback's Javascript
+	*
+	* @param  string $js Javascript source code for this callback
+	* @return mixed      Source code if available, NULL otherwise
+	*/
+	public function getJS()
+	{
+		return $this->js;
+	}
+
+	/**
+	* Get this object's variables
+	*
 	* @return array
 	*/
 	public function getVars()
@@ -86,7 +106,21 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
-	* @param  array $vars
+	* Set this callback's Javascript
+	*
+	* @param  string $js Javascript source code for this callback
+	* @return void
+	*/
+	public function setJS($js)
+	{
+		$this->js = $js;
+	}
+
+	/**
+	* Set this callback's variables
+	*
+	* @param  array $vars Associative array of values
+	* @return void
 	*/
 	public function setVars(array $vars)
 	{
@@ -96,7 +130,7 @@ class ProgrammableCallback implements ConfigProvider
 	/**
 	* Create an instance of this class based on an array
 	*
-	* @param  array  $arr
+	* @param  array  $arr Callback's config array
 	* @return static
 	*/
 	public static function fromArray(array $arr)
@@ -130,11 +164,16 @@ class ProgrammableCallback implements ConfigProvider
 			$obj->setVars($arr['vars']);
 		}
 
+		if (isset($arr['js']))
+		{
+			$obj->setJS($arr['js']);
+		}
+
 		return $obj;
 	}
 
 	/**
-	* @return array
+	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
@@ -168,6 +207,11 @@ class ProgrammableCallback implements ConfigProvider
 				// By name
 				$config['params'][$k] = null;
 			}
+		}
+
+		if (isset($this->js))
+		{
+			$config['js'] = $this->js;
 		}
 
 		return $config;

@@ -21,7 +21,12 @@ class Javascript
 	use Configurable;
 
 	/**
-	* @var Minifier
+	* @var Configurator Configurator this instance belongs to
+	*/
+	protected $configurator;
+
+	/**
+	* @var Minifier Instance of Minifier used to minify the Javascript parser
 	*/
 	protected $minifier;
 
@@ -78,6 +83,8 @@ class Javascript
 			$src .= file_get_contents($filepath) . "\n";
 		}
 
+		// TODO: to tagsConfig (do filters?), do plugins
+
 		file_put_contents('/tmp/z.js', $src);
 	}
 
@@ -97,12 +104,21 @@ class Javascript
 	//==========================================================================
 
 	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function getTagsConfig()
+	{
+	}
+
+	/**
 	* Encode a PHP array an equivalent Javascript representation
 	*
 	* @param  array|ArrayObject $array Original array
 	* @return string                   Javascript representation
 	*/
-	protected function encode($array)
+	protected static function encode($array)
 	{
 		$preserveKeys = ($v instanceof Dictionary);
 		$isArray = (!$preserveKeys && array_keys($array) === range(0, count($array) - 1));
