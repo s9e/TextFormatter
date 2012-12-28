@@ -65,6 +65,7 @@
 			<file>Configurator/Validators/AttributeNameTest.php</file>
 			<file>Configurator/Validators/TagNameTest.php</file>
 			<file>Configurator/JavascriptTest.php</file>
+			<file>Configurator/Javascript/CodeTest.php</file>
 			<file>Configurator/Javascript/RegExpTest.php</file>
 			<file>Configurator/Javascript/RegexpConvertorTest.php</file>
 			<file>Configurator/Javascript/Minifiers/ClosureCompilerServiceTest.php</file>
@@ -152,6 +153,7 @@
 			<file>../src/Configurator/Items/Tag.php</file>
 			<file>../src/Configurator/Items/Template.php</file>
 			<file>../src/Configurator/Javascript.php</file>
+			<file>../src/Configurator/Javascript/Code.php</file>
 			<file>../src/Configurator/Javascript/RegExp.php</file>
 			<file>../src/Configurator/Javascript/RegexpConvertor.php</file>
 			<file>../src/Configurator/Javascript/Minifiers/ClosureCompilerService.php</file>

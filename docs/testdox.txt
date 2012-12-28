@@ -921,6 +921,9 @@ s9e\TextFormatter\Tests\Configurator\Javascript
  [x] setMinifier() accepts an object that implements Minifier
  [x] 
 
+s9e\TextFormatter\Tests\Configurator\Javascript\Code
+ [x] Can be cast as a string
+
 s9e\TextFormatter\Tests\Configurator\Javascript\RegExp
  [x] Returns a Javascript literal when cast as a string
 
