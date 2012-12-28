@@ -101,7 +101,13 @@ class Configurator implements ConfigProvider
 	*/
 	public function getParser()
 	{
-		return new Parser($this->asConfig());
+		// Generate the config array
+		$config = $this->asConfig();
+
+		// Remove instances of Code, recursively and in-place
+		ConfigHelper::removeJavascriptCode($config);
+
+		return new Parser($config);
 	}
 
 	/**
@@ -111,7 +117,7 @@ class Configurator implements ConfigProvider
 	*/
 	public function getRenderer()
 	{
-		return new Renderer($this->getXSL());
+		return new Renderer($this->stylesheet->get());
 	}
 
 	/**
@@ -149,32 +155,6 @@ class Configurator implements ConfigProvider
 	* @return array
 	*/
 	public function asConfig()
-	{
-		// Generate the config array
-		$config = $this->generateConfig();
-
-		// Remove instances of Code, recursively and in-place
-		ConfigHelper::removeJavascriptCode($config);
-
-		return $config;
-	}
-
-	/**
-	* Generate and return the complete config array for the Javascript parser
-	*
-	* @return array
-	*/
-	public function asJSConfig()
-	{
-		return $this->generateConfig();
-	}
-
-	/**
-	* Generate and return the complete config array
-	*
-	* @return array
-	*/
-	protected function generateConfig()
 	{
 		$properties = get_object_vars($this);
 		unset($properties['javascript']);
@@ -235,15 +215,5 @@ class Configurator implements ConfigProvider
 		unset($config['rootRules']);
 
 		return $config;
-	}
-
-	/**
-	* Return the XSL used for rendering
-	*
-	* @return string
-	*/
-	public function getXSL()
-	{
-		return $this->stylesheet->get();
 	}
 }

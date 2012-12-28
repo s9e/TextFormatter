@@ -275,41 +275,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() removes Javascript-specific data from tag filters
-	*/
-	public function testAsConfigRemovesJavascriptTagFilters()
-	{
-		$pc = new ProgrammableCallback('strtolower');
-		$pc->setJS('function(){return false;}');
-
-		$filterChain = $this->configurator->tags->add('A')->filterChain;
-		$filterChain->clear();
-		$filterChain->append($pc);
-
-		$config = $this->configurator->asConfig();
-
-		$this->assertArrayNotHasKey('js', $config['tags']['A']['filterChain'][0]);
-	}
-
-	/**
-	* @testdox asConfig() removes Javascript-specific data from attribute filters
-	*/
-	public function testAsConfigRemovesJavascriptAttributeFilters()
-	{
-		$pc = new ProgrammableCallback('strtolower');
-		$pc->setJS('function(){return false;}');
-
-		$this->configurator->tags->add('A')->attributes->add('a')->filterChain->append($pc);
-
-		$config = $this->configurator->asConfig();
-
-		$this->assertArrayNotHasKey(
-			'js',
-			$config['tags']['A']['attributes']['a']['filterChain'][0]
-		);
-	}
-
-	/**
 	* @testdox getParser() returns an instance of s9e\TextFormatter\Parser
 	*/
 	public function testGetParser()
@@ -317,6 +282,45 @@ class ConfiguratorTest extends Test
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Parser',
 			$this->configurator->getParser()
+		);
+	}
+
+
+	/**
+	* @testdox getParser() removes Javascript-specific data from tag filters
+	*/
+	public function testAsConfigRemovesJavascriptTagFilters()
+	{
+		$pc = new ProgrammableCallback(function(){});
+		$pc->setJS('function(){return false;}');
+
+		$this->configurator->tags->add('A')->filterChain->append($pc);
+
+		$parser = $this->configurator->getParser();
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+
+		$this->assertArrayNotHasKey(
+			'js',
+			$tagsConfig['A']['filterChain'][0]
+		);
+	}
+
+	/**
+	* @testdox getParser() removes Javascript-specific data from attribute filters
+	*/
+	public function testAsConfigRemovesJavascriptAttributeFilters()
+	{
+		$pc = new ProgrammableCallback(function(){});
+		$pc->setJS('function(){return false;}');
+
+		$this->configurator->tags->add('A')->attributes->add('a')->filterChain->append($pc);
+
+		$parser = $this->configurator->getParser();
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+
+		$this->assertArrayNotHasKey(
+			'js',
+			$tagsConfig['A']['attributes']['a']['filterChain'][0]
 		);
 	}
 

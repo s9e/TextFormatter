@@ -131,10 +131,12 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testFromArray()
 	{
+		$js = new Code('function(){return 1;}');
 
 		$pc1 = ProgrammableCallback::fromArray(
 			array(
 				'callback' => 'mt_rand',
+				'js'       => $js,
 				'params'   => array('min' => null, 55),
 				'vars'     => array('foo' => 'bar')
 			)
@@ -143,6 +145,7 @@ class ProgrammableCallbackTest extends Test
 		$pc2 = new ProgrammableCallback('mt_rand');
 		$pc2->addParameterByName('min');
 		$pc2->addParameterByValue(55);
+		$pc2->setJS($js);
 		$pc2->setVars(array('foo' => 'bar'));
 
 		$this->assertEquals($pc2, $pc1);
