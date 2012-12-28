@@ -59,9 +59,9 @@ class Parser extends ParserBase
 				if (substr($m[0], -1) === 'x')
 				{
 					$pos  = $m[1] + strlen($m[0]) - 1;
-					$char = "\xC3\x97";
+					$chr = "\xC3\x97";
 
-					$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $char);
+					$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $chr);
 				}
 
 				// Test for a apostrophe/prime right after the digit
@@ -73,15 +73,15 @@ class Parser extends ParserBase
 					if (substr($m[0], 1, 2) === "'s")
 					{
 						// 80's -- use an apostrophe
-						$char = "\xE2\x80\x99";
+						$chr = "\xE2\x80\x99";
 					}
 					else
 					{
 						// 12' or 12" -- use a prime
-						$char = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
+						$chr = ($c === "'") ? "\xE2\x80\xB2" : "\xE2\x80\xB3";
 					}
 
-					$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $char);
+					$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $chr);
 				}
 			}
 		}
@@ -129,7 +129,7 @@ class Parser extends ParserBase
 				$matches,
 				PREG_OFFSET_CAPTURE
 			);
-			$chars = array(
+			$chrs = array(
 				'--'  => "\xE2\x80\x93",
 				'---' => "\xE2\x80\x94",
 				'...' => "\xE2\x80\xA6"
@@ -138,9 +138,9 @@ class Parser extends ParserBase
 			{
 				$pos  = $m[1];
 				$len  = strlen($m[0]);
-				$char = $chars[$m[0]];
+				$chr = $chrs[$m[0]];
 
-				$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $char);
+				$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $chr);
 			}
 		}
 
@@ -153,7 +153,7 @@ class Parser extends ParserBase
 				$matches,
 				PREG_OFFSET_CAPTURE
 			);
-			$chars = array(
+			$chrs = array(
 				'(c)'  => "\xC2\xA9",
 				'(r)'  => "\xC2\xAE",
 				'(tm)' => "\xE2\x84\xA2"
@@ -162,9 +162,9 @@ class Parser extends ParserBase
 			{
 				$pos  = $m[1];
 				$len  = strlen($m[0]);
-				$char = $chars[strtr($m[0], 'CMRT', 'cmrt')];
+				$chr = $chrs[strtr($m[0], 'CMRT', 'cmrt')];
 
-				$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $char);
+				$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $chr);
 			}
 		}
 	}
