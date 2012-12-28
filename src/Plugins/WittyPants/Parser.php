@@ -124,7 +124,7 @@ class Parser extends ParserBase
 		 || strpos($text, '--')  !== false)
 		{
 			preg_match_all(
-				'/(?:---?|\\.\\.\\.)/S',
+				'/---?|\\.\\.\\./S',
 				$text,
 				$matches,
 				PREG_OFFSET_CAPTURE

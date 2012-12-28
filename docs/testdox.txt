@@ -1359,5 +1359,24 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Configurator
  [x] The config array contains the name of the attribute
 
 s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
- [ ] Parsing tests
+ [x] Parsing tests
+ [x] Parsing+rendering tests
+
+s9e\TextFormatter\Tests\Renderer
+ [x] Renders plain text
+ [x] Renders multi-line text
+ [x] Renders rich text
+ [x] renderMulti() renders multiple messages at once
+ [x] renderMulti() preserves keys and order
+ [x] Renderer is serializable
+
+s9e\TextFormatter\Tests\Unparser
+ [x] unparse('<pt>Plain text</pt>') returns 'Plain text'
+ [x] asPlainText('<pt>Plain text</pt>') returns 'Plain text'
+ [x] unparse('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+ [x] asPlainText('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+ [x] unparse("<mt>a<br />\nb</mt>") returns "a\nb"
+ [x] asPlainText("<mt>a<br />\nb</mt>") returns "a\nb"
+ [x] unparse('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
+ [x] asPlainText('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
 
