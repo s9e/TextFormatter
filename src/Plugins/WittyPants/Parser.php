@@ -168,30 +168,4 @@ class Parser extends ParserBase
 			}
 		}
 	}
-
-	/**
-	* Capture the quote pairs in a text
-	*
-	* @param  string $text       Source text
-	* @param  string $regexp     Regexp used to match quote pairs
-	* @param  string $leftQuote  Character used to replace the left quote
-	* @param  string $rightQuote Character used to replace the right quote
-	* @return void
-	*/
-	protected function captureQuotePairs($text, $regexp, $leftQuote, $rightQuote)
-	{
-		preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE);
-		foreach ($matches[0] as $m)
-		{
-			$left  = $this->parser->addSelfClosingTag($tagName, $m[1], 1);
-			$right = $this->parser->addSelfClosingTag($tagName, $m[1] + strlen($m[0]) - 1, 1);
-
-			$left->setAttribute($attrName, $leftQuote);
-			$right->setAttribute($attrName, $rightQuote);
-
-			// Cascade left tag's invalidation to the right so that if we skip the left quote,
-			// the right quote is left untouched
-			$left->cascadeInvalidationTo($right);
-		}
-	}
 }
