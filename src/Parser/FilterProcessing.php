@@ -63,6 +63,7 @@ trait FilterProcessing
 	* @see s9e\TextFormatter\Configurator\Items\ProgrammableCallback
 	*
 	* @param  array $filter Programmed callback
+	* @param  array $vars   Variables to be used when executing the callback
 	* @return mixed         Whatever the callback returns
 	*/
 	protected static function executeFilter(array $filter, array $vars)
@@ -90,7 +91,7 @@ trait FilterProcessing
 			}
 			else
 			{
-				// Unknown param, log it if we have a Logger instance
+				// Unknown param
 				if (isset($vars['registeredVars']['logger']))
 				{
 					$vars['registeredVars']['logger']->err(
@@ -114,9 +115,10 @@ trait FilterProcessing
 	* @param  Tag    $tag            Tag being checked
 	* @param  array  $tagConfig      Tag's config
 	* @param  array  $registeredVars Array of registered vars for use in attribute filters
+	* @param  Logger $logger         This parser's Logger instance
 	* @return bool                   Whether the whole attribute set is valid
 	*/
-	public static function filterAttributes(Tag $tag, array $tagConfig, array $registeredVars)
+	public static function filterAttributes(Tag $tag, array $tagConfig, array $registeredVars, Logger $logger)
 	{
 		if (empty($tagConfig['attributes']))
 		{
@@ -136,14 +138,13 @@ trait FilterProcessing
 						$attrConfig['generator'],
 						array(
 							'attrName'       => $attrName,
+							'logger'         => $logger,
 							'registeredVars' => $registeredVars
 						)
 					)
 				);
 			}
 		}
-
-		$logger = (isset($registeredVars['logger'])) ? $registeredVars['logger'] : false;
 
 		// Filter and remove invalid attributes
 		foreach ($tag->getAttributes() as $attrName => $attrValue)
@@ -164,10 +165,7 @@ trait FilterProcessing
 			}
 
 			// Record the name of the attribute being filtered into the logger
-			if ($logger)
-			{
-				$logger->setAttribute($attrName);
-			}
+			$logger->setAttribute($attrName);
 
 			foreach ($attrConfig['filterChain'] as $filter)
 			{
@@ -176,6 +174,7 @@ trait FilterProcessing
 					array(
 						'attrName'       => $attrName,
 						'attrValue'      => $attrValue,
+						'logger'         => $logger,
 						'registeredVars' => $registeredVars
 					)
 				);
@@ -194,10 +193,7 @@ trait FilterProcessing
 			}
 
 			// Remove the attribute's name from the logger
-			if ($logger)
-			{
-				$logger->unsetAttribute();
-			}
+			$logger->unsetAttribute();
 		}
 
 		// Iterate over the attribute definitions to handle missing attributes
@@ -243,16 +239,11 @@ trait FilterProcessing
 
 			// Prepare the variables that are accessible to filters
 			$vars = array(
+				'logger'         => $this->logger,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $tag,
 				'tagConfig'      => $tagConfig
 			);
-
-			// Add our logger if there isn't one there already
-			if (!isset($vars['registeredVars']['logger']))
-			{
-				$vars['registeredVars']['logger'] = $this->logger;
-			}
 
 			foreach ($tagConfig['filterChain'] as $filter)
 			{

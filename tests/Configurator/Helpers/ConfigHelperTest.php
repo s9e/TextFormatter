@@ -212,7 +212,8 @@ class ConfigHelperTest extends Test
 					'params'   => array(
 						'tag'            => null,
 						'tagConfig'      => null,
-						'registeredVars' => null
+						'registeredVars' => null,
+						'logger'         => null
 					)
 				)
 			),

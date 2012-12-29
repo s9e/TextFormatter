@@ -23,6 +23,7 @@ trait ParsingTestsRunner
 		}
 
 		$parser = $configurator->getParser();
+		$parser->parse($original);
 
 		$this->assertSame($expected, $parser->parse($original));
 	}
