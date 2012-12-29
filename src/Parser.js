@@ -25,6 +25,7 @@ var logger;
 /**
 * @type {!Object} Variables registered for use in filters
 */
+// TODO: should include logger for convenience
 var registeredVars = {};
 
 /**

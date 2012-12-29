@@ -63,6 +63,10 @@ class Javascript
 	*/
 	public function getParser()
 	{
+		$config = $this->configurator->asConfig();
+
+		$this->replaceCallbacks($config);
+
 		$files = array(
 			'Parser/BuiltInFilters.js',
 			'Parser/Logger.js',
@@ -200,5 +204,57 @@ class Javascript
 		$localConfig  = array_diff_key($pluginConfig, $globalKeys);
 
 		$src = 'function(text,matches){/** @const */var config=' . self::encode($localConfig) . ';' . $src . '}';
+	}
+
+	/**
+	* 
+	*
+	* @return array
+	*/
+	protected function replaceCallbacks(array $config)
+	{
+		$callbacks = array();
+
+		foreach ($config['tags'] as &$tagConfig)
+		{
+			if (isset($tagConfig['filterChain']))
+			{
+				foreach ($tagConfig['filterChain'] as &$filter)
+				{
+					$callback = $filter['callback'];
+
+					if (isset($filter['js']))
+					{
+						$jsCode     = (string) $filter['js'];
+						$jsCallback = crc32($jsCode);
+
+						$callbacks[$jsCallback] = $jsCode;
+					}
+					if (substr($callback, 0, 8) === 'Parser::')
+					{
+						// Parser::filterAttributes => filterAttributes
+						$jsCallback = substr($callback, 8);
+					}
+					elseif (substr($callback, 0, 16) === 'BuiltInFilters::')
+					{
+						// BuiltInFilters::filterUrl => BuiltInFilters.filterUrl
+						$jsCallback = 'BuiltInFilters.' . substr($callback, 16);
+					}
+					elseif (is_string($callback) && preg_match('#^\\w+$#D', $callback))
+					{
+						$filepath = __DIR__ . '/Javascript/' . $callback . '.js';
+
+						if (file_exists($filepath))
+						{
+							$jsCode     = file_get_contents($filepath);
+							$jsCallback = crc32($jsCode);
+
+							$callbacks[$jsCallback] = $jsCode;
+						}
+					}
+				}
+			}
+		}
+		unset($tagConfig);
 	}
 }

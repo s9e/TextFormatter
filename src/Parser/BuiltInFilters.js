@@ -2,6 +2,8 @@
 * IMPORTANT NOTE: those filters are only meant to catch bad input and honest mistakes. They don't
 *                 match their PHP equivalent exactly and may let unwanted values through. Their
 *                 result should always be checked by PHP filters
+*
+* @const
 */
 var BuiltInFilters =
 {

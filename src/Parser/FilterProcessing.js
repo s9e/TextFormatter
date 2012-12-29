@@ -79,10 +79,7 @@ function filterAttributes(tag, tagConfig, registeredVars)
 		{
 			tag.setAttribute(
 				attrName,
-				attrConfig.generator({
-					attrName       : attrName,
-					registeredVars : registeredVars
-				})
+				attrConfig.generator(attrName, registeredVars)
 			);
 		}
 	}
@@ -118,14 +115,7 @@ function filterAttributes(tag, tagConfig, registeredVars)
 
 		for (var i = 0; i < attrConfig.filterChain.length; ++i)
 		{
-			attrValue = executeFilter(
-				filter,
-				{
-					'attrName'       : attrName,
-					'attrValue'      : attrValue,
-					'registeredVars' : registeredVars
-				}
-			);
+			attrValue = attrConfig.filterChain[i](attrName, attrValue, registeredVars);
 
 			if (attrValue === false)
 			{
@@ -190,22 +180,9 @@ function filterTag(tag)
 		// messages logged during the execution
 		logger.setTag(tag);
 
-		// Prepare the variables that are accessible to filters
-		var vars = {
-			'registeredVars' : registeredVars,
-			'tag'            : tag,
-			'tagConfig'      : tagConfig
-		};
-
-		// Add our logger if there isn't one there already
-		if (!vars.registeredVars['logger'])
-		{
-			vars.registeredVars['logger'] = logger;
-		}
-
 		for (var i = 0; i < tagConfig.filterChain.length; ++i)
 		{
-			if (!executeFilter(tagConfig.filterChain[i], vars))
+			if (!tagConfig.filterChain[i](registeredVars, tag, tagConfig))
 			{
 				isValid = false;
 				break;
