@@ -521,7 +521,6 @@ class Hax
 		}
 
 		$config = $configurator->asConfig();
-		$config['registeredVars']['logger'] = $logger;
 
 		if (self::$redirectTo)
 		{
@@ -536,6 +535,7 @@ class Hax
 				array(
 					'attrName'       => 'foo',
 					'attrValue'      => $attrValue,
+					'logger'         => $logger,
 					'registeredVars' => $config['registeredVars']
 				)
 			);

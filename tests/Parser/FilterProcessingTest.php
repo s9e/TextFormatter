@@ -6,6 +6,7 @@ use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag as TagConfig;
 use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\FilterProcessing;
+use s9e\TextFormatter\Parser\Logger;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Tests\Test;
 
@@ -240,7 +241,7 @@ class FilterProcessingTest extends Test
 
 		$this->assertFalse(FilterProcessingDummy::__executeFilter(
 			$filter->asConfig(),
-			array()
+			array('logger' => new Logger)
 		));
 	}
 
@@ -340,7 +341,10 @@ class FilterProcessingTest extends Test
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
-		$dummy->logger = $this->getMock('stdClass', array('setTag', 'unsetTag'));
+		$dummy->logger = $this->getMock(
+			's9e\\TextFormatter\\Parser\\Logger',
+			array('setTag', 'unsetTag')
+		);
 		$dummy->logger->expects($this->once())
 		              ->method('setTag')
 		              ->with($this->identicalTo($tag));
@@ -358,7 +362,7 @@ class FilterProcessingTest extends Test
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', 'foo');
 
-		Parser::filterAttributes($tag, array(), array());
+		Parser::filterAttributes($tag, array(), array(), new Logger);
 
 		$this->assertSame(
 			array(),
@@ -376,7 +380,7 @@ class FilterProcessingTest extends Test
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
 
 		$this->assertSame(
 			array('foo' => 42),
@@ -396,7 +400,7 @@ class FilterProcessingTest extends Test
 		$tag->setAttribute('foo', 'foo');
 		$tag->setAttribute('bar', 'bar');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
 
 		$this->assertSame(
 			array('foo' => 'foo'),
@@ -427,7 +431,7 @@ class FilterProcessingTest extends Test
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
 
 		$this->assertSame(
 			array('x' => 'bar'),
@@ -456,7 +460,7 @@ class FilterProcessingTest extends Test
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		$this->assertFalse(Parser::filterAttributes($tag, $tagConfig->asConfig(), array()));
+		$this->assertFalse(Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger));
 	}
 
 	/**
@@ -477,7 +481,7 @@ class FilterProcessingTest extends Test
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
 
 		$this->assertSame(
 			array(),
@@ -504,7 +508,7 @@ class FilterProcessingTest extends Test
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
 
 		$this->assertSame(
 			array('x' => 'default'),
@@ -523,7 +527,7 @@ class FilterProcessingTest extends Test
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array());
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
 
 		$this->assertSame(
 			array('x' => 'default'),
@@ -536,7 +540,10 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesCallsLoggerSetAttribute()
 	{
-		$logger = $this->getMock('stdClass', array('setAttribute', 'unsetAttribute'));
+		$logger = $this->getMock(
+			's9e\\TextFormatter\\Parser\\Logger',
+			array('setAttribute', 'unsetAttribute')
+		);
 		$logger->expects($this->at(0))
 		       ->method('setAttribute')
 		       ->with('foo');
@@ -554,7 +561,7 @@ class FilterProcessingTest extends Test
 		$tag->setAttribute('foo', 'foo');
 		$tag->setAttribute('bar', 'bar');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array('logger' => $logger));
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), $logger);
 	}
 }
 
