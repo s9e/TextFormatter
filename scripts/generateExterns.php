@@ -22,6 +22,11 @@ $externs = array(
 		'function Date',
 		'Date.prototype.getTime',
 
+		// Math object
+		'var Math',
+		'Math.floor',
+		'Math.random',
+
 		// Number object
 		'function Number',
 		'Number.prototype.toString',

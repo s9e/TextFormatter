@@ -104,6 +104,21 @@ function Date(opt_yr_num, opt_mo_num, opt_day_num, opt_hr_num, opt_min_num,
  */
 Date.prototype.getTime = function() {};
 /**
+ * @const
+ */
+var Math = {};
+/**
+ * @param {*} x
+ * @return {number}
+ * @nosideeffects
+ */
+Math.floor = function(x) {};
+/**
+ * @return {number}
+ * @nosideeffects
+ */
+Math.random = function() {};
+/**
  * @constructor
  * @param {*=} opt_value
  * @return {number}

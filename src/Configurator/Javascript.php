@@ -65,8 +65,6 @@ class Javascript
 	{
 		$config = $this->configurator->asConfig();
 
-		print_r(self::replaceCallbacks($config));
-		print_r($config['tags']);exit;
 
 		$files = array(
 			'Parser/BuiltInFilters.js',

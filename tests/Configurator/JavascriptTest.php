@@ -38,4 +38,17 @@ class JavascriptTest extends Test
 
 		$this->assertSame($minifier, $javascript->getMinifier());
 	}
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	public function test()
+	{
+		$configurator = new Configurator;
+		$configurator->BBCodes->addCustom('[a id={RANDOM=10,30} href={URL}]{TEXT}[/a]', '');
+
+		$configurator->javascript->getParser();
+	}
 }
