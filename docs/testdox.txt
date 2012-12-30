@@ -166,6 +166,12 @@ s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] Throws an exception if the value is neither an instance of or the name of a class that implements ConfiguratorBase
  [x] Throws an exception if the plugin name is not entirely composed of letters, numbers and underscores
  [x] Throws an exception if the plugin name does not start with an uppercase letter
+ [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
+ [x] asConfig() removes regexpLimit from the plugin's configuration if it does not have a regexp
+ [x] asConfig() adds regexpLimitAction to the plugin's configuration if it's not specified and the plugin has a regexp
+ [x] asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
+ [x] asConfig() adds quickMatch to the plugin's configuration if available
+ [x] asConfig() omits a plugin's quickMatch if it's false
 
 s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] isset($ruleset['allowChild']) tests whether any allowChild rules exist
