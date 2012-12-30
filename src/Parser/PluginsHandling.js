@@ -1,12 +1,7 @@
 /**
-* @type {!Object.<!Function>} Array of callbacks, using plugin names as keys
-*/
-var pluginParsers = {};
-
-/**
 * @type {!Object.<!Object>}
 */
-var pluginsConfig = {};
+var plugins = {};
 
 /**
 * Disable a plugin
@@ -15,9 +10,9 @@ var pluginsConfig = {};
 */
 function disablePlugin(pluginName)
 {
-	if (pluginsConfig[pluginName])
+	if (plugins[pluginName])
 	{
-		pluginsConfig[pluginName].isDisabled = true;
+		plugins[pluginName].isDisabled = true;
 	}
 }
 
@@ -28,9 +23,9 @@ function disablePlugin(pluginName)
 */
 function enablePlugin(pluginName)
 {
-	if (pluginsConfig[pluginName])
+	if (plugins[pluginName])
 	{
-		pluginsConfig[pluginName].isDisabled = false;
+		plugins[pluginName].isDisabled = false;
 	}
 }
 
@@ -80,26 +75,26 @@ function getMatches(regexp)
 */
 function executePluginParsers()
 {
-	for (var pluginName in pluginsConfig)
+	for (var pluginName in plugins)
 	{
-		var pluginConfig = pluginsConfig[pluginName];
+		var plugin = plugins[pluginName];
 
-		if (pluginConfig.isDisabled)
+		if (plugin.isDisabled)
 		{
 			continue;
 		}
 
-		if (pluginConfig.quickMatch
-		 && text.indexOf(pluginConfig.quickMatch) < 0)
+		if (plugin.quickMatch
+		 && text.indexOf(plugin.quickMatch) < 0)
 		{
 			continue;
 		}
 
 		var matches = [];
 
-		if (pluginConfig.regexp)
+		if (plugin.regexp)
 		{
-			matches = getMatches(pluginConfig.regexp);
+			matches = getMatches(plugin.regexp);
 
 			var cnt = matches.length;
 
@@ -108,22 +103,22 @@ function executePluginParsers()
 				continue;
 			}
 
-			if (cnt > pluginConfig.regexpLimit)
+			if (cnt > plugin.regexpLimit)
 			{
-				if (pluginConfig.regexpLimitAction === 'abort')
+				if (plugin.regexpLimitAction === 'abort')
 				{
 					throw (pluginName + ' limit exceeded');
 				}
 
-				matches = matches.slice(0, pluginConfig.regexpLimit);
+				matches = matches.slice(0, plugin.regexpLimit);
 
 				var msg = 'Regexp limit exceeded. Only the allowed number of matches will be processed',
 					context = {
 						'pluginName' : pluginName,
-						'limit'      : pluginConfig.regexpLimit
+						'limit'      : plugin.regexpLimit
 					};
 
-				if (pluginConfig.regexpLimitAction !== 'ignore')
+				if (plugin.regexpLimitAction !== 'ignore')
 				{
 					logger.warn(msg, context);
 				}
@@ -131,7 +126,7 @@ function executePluginParsers()
 		}
 
 		// Execute the plugin's parser, which will add tags via addStartTag() and others
-		pluginParsers[pluginName](text, matches);
+		plugin[pluginName].parse(text, matches);
 	}
 }
 
@@ -147,10 +142,10 @@ function executePluginParsers()
 function registerParser(pluginName, parser)
 {
 	// Create an empty config for this plugin to ensure it is executed
-	if (!pluginsConfig[pluginName])
+	if (!plugins[pluginName])
 	{
-		pluginsConfig[pluginName] = {};
+		plugins[pluginName] = {};
 	}
 
-	pluginParsers[pluginName] = parser;
+	plugin[pluginName].parser = parser;
 }

@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator;
 
+use ArrayObject;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Javascript\Code;
@@ -14,6 +15,7 @@ use s9e\TextFormatter\Configurator\Javascript\Dictionary;
 use s9e\TextFormatter\Configurator\Javascript\Minifier;
 use s9e\TextFormatter\Configurator\Javascript\Minifiers\ClosureCompilerService;
 use s9e\TextFormatter\Configurator\Javascript\RegExp;
+use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
@@ -68,15 +70,7 @@ class Javascript
 	*/
 	public function getParser()
 	{
-		// Reset this instance's callbacks
-		$this->callbacks = array();
-
-		// Grab the parser's config
-		$config = $this->configurator->asConfig();
-
-		// Replace callback arrays with Javascript code
-		self::replaceCallbacks($config);
-
+		// Load the sources
 		$files = array(
 			'Parser/BuiltInFilters.js',
 			'Parser/Logger.js',
@@ -97,7 +91,28 @@ class Javascript
 			$src .= file_get_contents($filepath) . "\n";
 		}
 
-		// TODO: to tagsConfig (do filters?), do plugins
+		// Reset this instance's callbacks
+		$this->callbacks = array();
+
+		// Inject the tags' config
+		$src = str_replace(
+			"\nvar tagsConfig = {};",
+			"\nvar tagsConfig = " . $this->getTagsConfig() . ';',
+			$src
+		);
+
+		// Inject the plugins' config
+		$src = str_replace(
+			"\nvar plugins = {};",
+			"\nvar plugins = " . $this->getPluginsConfig() . ';',
+			$src
+		);
+
+		// Append the callbacks from filters and generators
+		foreach ($this->callbacks as $name => $code)
+		{
+			$src .= "var $name=$code;\n";
+		}
 
 		file_put_contents('/tmp/z.js', $src);
 	}
@@ -118,12 +133,121 @@ class Javascript
 	//==========================================================================
 
 	/**
-	* 
+	* Convert a bitfield to the Javascript representationg of an array of number
 	*
-	* @return void
+	* Context bitfields are stored as binary strings, but Javascript doesn't really have binary
+	* strings so instead we split up that string in 4-bytes chunk, which we represent in hex
+	* notation to avoid the number overflowing to a float in 32bit PHP
+	*
+	* @param  string $bitfield Raw bytes
+	* @return Code             Javascript code
+	*/
+	static protected function convertBitfield($bitfield)
+	{
+		$hex = array();
+
+		foreach (str_split($bitfield, 4) as $quad)
+		{
+			$v = '';
+			foreach (str_split($quad, 1) as $n => $c)
+			{
+				$v = sprintf('%02X', ord($c)) . $v;
+			}
+
+			$hex[] = '0x' . $v;
+		}
+
+		$code = new Code('[' . implode(',', $hex) . ']');
+
+		return $code;
+	}
+
+	/**
+	* Get the Javascript representation of the plugins
+	*
+	* @return Code Javascript code
+	*/
+	protected function getPluginsConfig()
+	{
+		$plugins = new Dictionary;
+
+		foreach ($this->configurator->plugins as $pluginName => $plugin)
+		{
+			$src = $plugin->getJSParser();
+			$pluginConfig = $plugin->asJSConfig();
+
+			if ($src === false || $pluginConfig === false)
+			{
+				// Skip this plugin
+				continue;
+			}
+
+			/**
+			* @var array Keys of elements that are kept in the global scope. Everything else will be
+			*            moved into the plugin's parser
+			*/
+			$globalKeys = array(
+				'quickMatch'        => 1,
+				'regexp'            => 1,
+				'regexpLimit'       => 1,
+				'regexpLimitAction' => 1
+			);
+
+			$globalConfig = array_intersect_key($pluginConfig, $globalKeys);
+			$localConfig  = array_diff_key($pluginConfig, $globalKeys);
+
+			if (isset($globalConfig['regexp'])
+			 && !($globalConfig['regexp'] instanceof RegExp))
+			{
+				$globalConfig['regexp'] = RegexpConvertor::toJS($globalConfig['regexp']);
+			}
+
+			$globalConfig['parser'] = new Code('function(text,matches){/** @const */var config=' . self::encode($localConfig) . ';' . $src . '}');
+
+			$plugins[$pluginName] = $globalConfig;
+		}
+
+		// Create an instance of Code that represents the plugins array
+		$code = new Code(self::encode($plugins));
+
+		return $code;
+	}
+
+	/**
+	* Generate a Javascript representation of the tags' config
+	*
+	* @return Code Javascript source code
 	*/
 	protected function getTagsConfig()
 	{
+		// Grab the parser's config
+		$config = $this->configurator->asConfig();
+
+		// Replace callback arrays with Javascript code
+		self::replaceCallbacks($config);
+
+		// Prepare a Dictionary that will preserve tags' names
+		$tags = new Dictionary;
+		foreach ($config['tags'] as $tagName => $tagConfig)
+		{
+			if (isset($tagConfig['attributes']))
+			{
+				// Make the attributes array a Dictionary, to preserve the attributes' names
+				$tagConfig['attributes'] = new Dictionary($tagConfig['attributes']);
+			}
+
+			$tagConfig['allowedChildren']
+				= self::convertBitfield($tagConfig['allowedChildren']);
+			$tagConfig['allowedDescendants']
+				= self::convertBitfield($tagConfig['allowedDescendants']);
+
+			$tags[$tagName] = $tagConfig;
+		}
+
+		// Create an instance of Code that represents the tags array
+		$code = new Code(self::encode($tags));
+
+		return $code;
 	}
 
 	/**
@@ -134,7 +258,7 @@ class Javascript
 	*/
 	protected static function encode($array)
 	{
-		$preserveKeys = ($v instanceof Dictionary);
+		$preserveKeys = ($array instanceof Dictionary);
 		$isArray = (!$preserveKeys && array_keys($array) === range(0, count($array) - 1));
 
 		$src = ($isArray) ? '[' : '{';
@@ -192,7 +316,7 @@ class Javascript
 	protected function formatPlugin(ConfiguratorBase $plugin)
 	{
 		$src = $plugin->getJSParser();
-		$pluginConfig = $plugin->asConfig();
+		$pluginConfig = $plugin->asJSConfig();
 
 		if ($src === false || $pluginConfig === false)
 		{
@@ -221,7 +345,7 @@ class Javascript
 	*
 	* @return array
 	*/
-	protected function replaceCallbacks(array $config)
+	protected function replaceCallbacks(array &$config)
 	{
 		foreach ($config['tags'] as $tagName => &$tagConfig)
 		{

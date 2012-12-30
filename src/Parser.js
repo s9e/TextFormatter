@@ -1,20 +1,13 @@
-// use Parser\FilterProcessing;
-// use Parser\OutputHandling;
-// use Parser\PluginsHandling;
-// use Parser\RulesHandling;
-// use Parser\TagProcessing;
-// use Parser\TagStack;
-
 /**#@+
 * Boolean rules bitfield
 */
-/** @const */ RULE_AUTO_CLOSE       =  1;
-/** @const */ RULE_AUTO_REOPEN      =  2;
-/** @const */ RULE_IGNORE_TEXT      =  4;
-/** @const */ RULE_IS_TRANSPARENT   =  8;
-/** @const */ RULE_NO_BR_CHILD      = 16;
-/** @const */ RULE_NO_BR_DESCENDANT = 32;
-/** @const */ RULE_TRIM_WHITESPACE  = 64;
+/** @const */ var RULE_AUTO_CLOSE       =  1;
+/** @const */ var RULE_AUTO_REOPEN      =  2;
+/** @const */ var RULE_IGNORE_TEXT      =  4;
+/** @const */ var RULE_IS_TRANSPARENT   =  8;
+/** @const */ var RULE_NO_BR_CHILD      = 16;
+/** @const */ var RULE_NO_BR_DESCENDANT = 32;
+/** @const */ var RULE_TRIM_WHITESPACE  = 64;
 /**#@-*/
 
 /**
@@ -25,7 +18,6 @@ var logger = new Logger;
 /**
 * @type {!Object} Variables registered for use in filters
 */
-// TODO: should include logger for convenience
 var registeredVars = {};
 
 /**

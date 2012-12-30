@@ -338,8 +338,23 @@ function pushContext(tag)
 						? context.allowedChildren
 						: tagConfig.allowedChildren;
 
+	/**
+	* @param {!Array} a1
+	* @param {!Array} a2
+	*/
+	function contextAnd(a1, a2)
+	{
+		var i = -1, cnt = a1.length, ret = new Array(cnt);
+
+		while (++i < cnt)
+		{
+			ret[i] = a1[i] & a2[i];
+		}
+
+		return ret;
+	}
+
 	// The allowedDescendants bitfield is restricted by this tag's
-	// TODO: contextAnd()
 	var allowedDescendants = contextAnd(
 		context.allowedDescendants,
 		tagConfig.allowedDescendants
