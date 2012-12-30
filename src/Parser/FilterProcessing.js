@@ -55,12 +55,11 @@ function executeAttributePreprocessors(tag, tagConfig)
 *
 * @private
 *
-* @param  {!Tag}     tag            Tag being checked
-* @param  {!Object}  tagConfig      Tag's config
-* @param  {!Object}  registeredVars Registered vars for use in attribute filters
-* @return {!boolean}                Whether the whole attribute set is valid
+* @param  {!Tag}     tag       Tag being checked
+* @param  {!Object}  tagConfig Tag's config
+* @return {!boolean}           Whether the whole attribute set is valid
 */
-function filterAttributes(tag, tagConfig, registeredVars)
+function filterAttributes(tag, tagConfig)
 {
 	if (!tagConfig.attributes)
 	{
@@ -77,14 +76,9 @@ function filterAttributes(tag, tagConfig, registeredVars)
 
 		if (attrConfig.generator)
 		{
-			tag.setAttribute(
-				attrName,
-				attrConfig.generator(attrName, registeredVars)
-			);
+			tag.setAttribute(attrName, attrConfig.generator(attrName));
 		}
 	}
-
-	logger = registeredVars['logger'] || false;
 
 	// Filter and remove invalid attributes
 	var attributes = tag.getAttributes();
@@ -108,14 +102,12 @@ function filterAttributes(tag, tagConfig, registeredVars)
 		}
 
 		// Record the name of the attribute being filtered into the logger
-		if (logger)
-		{
-			logger.setAttribute(attrName);
-		}
+		logger.setAttribute(attrName);
 
 		for (var i = 0; i < attrConfig.filterChain.length; ++i)
 		{
-			attrValue = attrConfig.filterChain[i](attrName, attrValue, registeredVars);
+			// NOTE: attrValue is intentionally set as the first argument to facilitate inlining
+			attrValue = attrConfig.filterChain[i](attrValue, attrName);
 
 			if (attrValue === false)
 			{
@@ -131,10 +123,7 @@ function filterAttributes(tag, tagConfig, registeredVars)
 		}
 
 		// Remove the attribute's name from the logger
-		if (logger)
-		{
-			logger.unsetAttribute();
-		}
+		logger.unsetAttribute();
 	}
 
 	// Iterate over the attribute definitions to handle missing attributes
@@ -182,7 +171,7 @@ function filterTag(tag)
 
 		for (var i = 0; i < tagConfig.filterChain.length; ++i)
 		{
-			if (!tagConfig.filterChain[i](registeredVars, tag, tagConfig))
+			if (!tagConfig.filterChain[i](tag, tagConfig))
 			{
 				isValid = false;
 				break;

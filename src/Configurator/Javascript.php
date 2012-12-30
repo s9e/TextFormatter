@@ -65,7 +65,8 @@ class Javascript
 	{
 		$config = $this->configurator->asConfig();
 
-		$this->replaceCallbacks($config);
+		print_r(self::replaceCallbacks($config));
+		print_r($config['tags']);exit;
 
 		$files = array(
 			'Parser/BuiltInFilters.js',
@@ -211,9 +212,11 @@ class Javascript
 	*
 	* @return array
 	*/
-	protected function replaceCallbacks(array $config)
+	protected static function replaceCallbacks(array &$config)
 	{
 		$callbacks = array();
+
+		$usedCallbacks = array();
 
 		foreach ($config['tags'] as &$tagConfig)
 		{
@@ -221,40 +224,130 @@ class Javascript
 			{
 				foreach ($tagConfig['filterChain'] as &$filter)
 				{
-					$callback = $filter['callback'];
+					$usedCallbacks['tagFilter'][] =& $filter;
+				}
+				unset($filter);
+			}
 
-					if (isset($filter['js']))
+			if (isset($tagConfig['attributes']))
+			{
+				foreach ($tagConfig['attributes'] as &$attrConfig)
+				{
+					if (isset($attrConfig['filterChain']))
 					{
-						$jsCode     = (string) $filter['js'];
-						$jsCallback = crc32($jsCode);
-
-						$callbacks[$jsCallback] = $jsCode;
+						foreach ($attrConfig['filterChain'] as &$filter)
+						{
+							$usedCallbacks['attributeFilter'][] =& $filter;
+						}
+						unset($filter);
 					}
-					if (substr($callback, 0, 8) === 'Parser::')
+
+					if (isset($attrConfig['generator']))
+					{
+						$usedCallbacks['attributeGenerator'][] =& $attrConfig['generator'];
+					}
+				}
+				unset($attrConfig);
+			}
+		}
+		unset($tagConfig);
+
+		// List of arguments for each type of callbacks. MUST be kept in sync with the invokations
+		// in FilterProcessing.js
+		$arguments = array(
+			'attributeFilter'    => array('attrValue', 'attrName'),
+			'attributeGenerator' => array('attrName'),
+			'tagFilter'          => array('tag', 'tagConfig')
+		);
+
+		foreach ($usedCallbacks as $callbackType => &$callbacksConfig)
+		{
+			foreach ($callbacksConfig as &$callbackConfig)
+			{
+				$callback   = $callbackConfig['callback'];
+				$params     = $callbackConfig['params'];
+				$jsCallback = null;
+
+				if (isset($callbackConfig['js']))
+				{
+					$jsCode     = '(' . $callbackConfig['js'] . ')';
+					$jsCallback = sprintf('c%08X', crc32($jsCode));
+
+					$callbacks[$jsCallback] = $jsCode;
+				}
+				elseif (is_string($callback))
+				{
+					if (substr($callback, 0, 41) === 's9e\\TextFormatter\\Parser\\BuiltInFilters::')
+					{
+						// BuiltInFilters::filterNumber => BuiltInFilters.filterNumber
+						$jsCallback = 'BuiltInFilters.' . substr($callback, 41);
+					}
+					elseif (substr($callback, 0, 26) === 's9e\\TextFormatter\\Parser::')
 					{
 						// Parser::filterAttributes => filterAttributes
-						$jsCallback = substr($callback, 8);
+						$jsCallback = substr($callback, 26);
 					}
-					elseif (substr($callback, 0, 16) === 'BuiltInFilters::')
+					elseif (preg_match('#^[-a-z_0-9]+$#Di', $callback))
 					{
-						// BuiltInFilters::filterUrl => BuiltInFilters.filterUrl
-						$jsCallback = 'BuiltInFilters.' . substr($callback, 16);
-					}
-					elseif (is_string($callback) && preg_match('#^\\w+$#D', $callback))
-					{
-						$filepath = __DIR__ . '/Javascript/' . $callback . '.js';
+						$filepath = __DIR__ . '/Javascript/functions/' . $callback . '.js';
 
 						if (file_exists($filepath))
 						{
-							$jsCode     = file_get_contents($filepath);
-							$jsCallback = crc32($jsCode);
+							$jsCode     = '(' . file_get_contents($filepath) . ')';
+							$jsCallback = sprintf('c%08X', crc32($jsCode));
 
 							$callbacks[$jsCallback] = $jsCode;
 						}
 					}
 				}
+
+				// If we don't have a Javascript implementation of this filter, we make it
+				// return FALSE unconditionally
+				if (!isset($jsCallback))
+				{
+					$jsCode     = '(function(){return false;})';
+					$jsCallback = sprintf('c%08X', crc32($jsCode));
+					$params     = array();
+
+					$callbacks[$jsCallback] = $jsCode;
+				}
+
+				$js  = $jsCallback . '(';
+				$sep = '';
+
+				foreach ($params as $k => $v)
+				{
+					$js .= $sep;
+					$sep = ',';
+
+					if (isset($v))
+					{
+						// By value
+						$js .= json_encode($v);
+					}
+					else
+					{
+						if (!in_array($k, $arguments[$callbackType], true)
+						 && $k !== 'logger'
+						 && $k !== 'registeredVars')
+						{
+							 $k = 'registeredVars[' . json_encode($k) . ']';
+						}
+
+						// By name
+						$js .= $k;
+					}
+				}
+
+				$js .= ')';
+
+
+				$callbackConfig = new Code('function(' . implode(',', $arguments[$callbackType]) . '){return ' . $js . ';}');
 			}
+			unset($callbackConfig);
 		}
-		unset($tagConfig);
+		unset($callbacksConfig);
+
+		return $callbacks;
 	}
 }

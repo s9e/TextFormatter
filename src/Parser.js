@@ -20,7 +20,7 @@
 /**
 * @type {!Logger} This parser's logger
 */
-var logger;
+var logger = new Logger;
 
 /**
 * @type {!Object} Variables registered for use in filters

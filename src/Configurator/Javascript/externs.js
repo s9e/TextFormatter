@@ -19,6 +19,25 @@
 // See https://github.com/s9e/TextFormatter/blob/master/scripts/generateExterns.php for details.
 
 /**
+ * @param {string} uri
+ * @return {string}
+ * @nosideeffects
+ */
+function encodeURIComponent(uri) {}
+/**
+ * @param {string} str
+ * @return {string}
+ * @nosideeffects
+ */
+function escape(str) {}
+/**
+ * @param {*} num
+ * @param {number|undefined} base
+ * @return {number}
+ * @nosideeffects
+ */
+function parseInt(num, base) {}
+/**
  * @constructor
  * @param {...*} var_args
  * @return {!Array}
@@ -49,6 +68,11 @@ Array.prototype.pop = function() {};
  */
 Array.prototype.push = function(var_args) {};
 /**
+ * @this {Object}
+ * @modifies {this}
+ */
+Array.prototype.reverse = function() {};
+/**
  * @param {*=} opt_begin Zero-based index at which to begin extraction.  A
  * @param {*=} opt_end Zero-based index at which to end extraction.  slice
  * @return {!Array}
@@ -62,18 +86,37 @@ Array.prototype.slice = function(opt_begin, opt_end) {};
  */
 Array.prototype.sort = function(opt_compareFunction) {};
 /**
- * @param {string} str
+ * @param {?=} opt_yr_num
+ * @param {?=} opt_mo_num
+ * @param {?=} opt_day_num
+ * @param {?=} opt_hr_num
+ * @param {?=} opt_min_num
+ * @param {?=} opt_sec_num
+ * @param {?=} opt_ms_num
+ * @constructor
  * @return {string}
  * @nosideeffects
  */
-function escape(str) {}
+function Date(opt_yr_num, opt_mo_num, opt_day_num, opt_hr_num, opt_min_num,
 /**
- * @param {*} num
- * @param {number|undefined} base
  * @return {number}
  * @nosideeffects
  */
-function parseInt(num, base) {}
+Date.prototype.getTime = function() {};
+/**
+ * @constructor
+ * @param {*=} opt_value
+ * @return {number}
+ * @nosideeffects
+ */
+function Number(opt_value) {}
+/**
+ * @param {(number|Number)=} opt_radix An optional radix.
+ * @return {string}
+ * @nosideeffects
+ * @override
+ */
+Number.prototype.toString = function(opt_radix) {};
 /**
  * @constructor
  * @param {*=} opt_pattern
@@ -104,11 +147,23 @@ RegExp.prototype.test = function(str) {};
  */
 function String(opt_str) {}
 /**
+ * @param {...number} var_args
+ * @return {string}
+ * @nosideeffects
+ */
+String.fromCharCode = function(var_args) {};
+/**
  * @param {number} index
  * @return {string}
  * @nosideeffects
  */
 String.prototype.charAt = function(index) {};
+/**
+ * @param {number=} opt_index
+ * @return {number}
+ * @nosideeffects
+ */
+String.prototype.charCodeAt = function(opt_index) {};
 /**
  * @param {string|null} searchValue
  * @param {(number|null)=} opt_fromIndex

@@ -3,21 +3,40 @@
 
 $externs = array(
 	'es3.js' => array(
+		// functions
+		'function encodeURIComponent',
+		'function escape',
+		'function parseInt',
+
+		// Array object
 		'function Array',
 		'Array.prototype.join',
 		'Array.prototype.length',
 		'Array.prototype.pop',
 		'Array.prototype.push',
+		'Array.prototype.reverse',
 		'Array.prototype.slice',
 		'Array.prototype.sort',
-		'function escape',
-		'function parseInt',
+
+		// Date object
+		'function Date',
+		'Date.prototype.getTime',
+
+		// Number object
+		'function Number',
+		'Number.prototype.toString',
+
+		// Regexp object
 		'function RegExp',
 		'RegExp.prototype.exec',
 		'RegExp.prototype.lastIndex',
 		'RegExp.prototype.test',
+
+		// String object
 		'function String',
+		'String.fromCharCode',
 		'String.prototype.charAt',
+		'String.prototype.charCodeAt',
 		'String.prototype.indexOf',
 		'String.prototype.length',
 		'String.prototype.replace',

@@ -38,15 +38,4 @@ class JavascriptTest extends Test
 
 		$this->assertSame($minifier, $javascript->getMinifier());
 	}
-
-	/**
-	* 
-	*
-	* @return void
-	*/
-	public function test()
-	{
-		$javascript = new Javascript(new Configurator);
-		$javascript->getParser();
-	}
 }
