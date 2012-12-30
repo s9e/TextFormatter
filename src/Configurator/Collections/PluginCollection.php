@@ -93,4 +93,38 @@ class PluginCollection extends NormalizedCollection
 		// Return it
 		return $plugin;
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function asConfig()
+	{
+		$plugins = parent::asConfig();
+
+		// Remove unused plugins
+		$plugins = array_filter($plugins);
+
+		// Adjust plugins' default properties
+		foreach ($plugins as $pluginName => &$pluginConfig)
+		{
+			// Add base properties
+			$pluginConfig += $this->get($pluginName)->getBaseProperties();
+
+			// Remove quickMatch if it's false
+			if ($pluginConfig['quickMatch'] === false)
+			{
+				unset($pluginConfig['quickMatch']);
+			}
+
+			// Remove regexpLimit if there's no regexp
+			if (!isset($pluginConfig['regexp']))
+			{
+				unset($pluginConfig['regexpLimit']);
+				unset($pluginConfig['regexpLimitAction']);
+			}
+		}
+		unset($pluginConfig);
+
+		return $plugins;
+	}
 }
