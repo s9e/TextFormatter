@@ -173,6 +173,7 @@ class Javascript
 
 		foreach ($this->configurator->plugins as $pluginName => $plugin)
 		{
+			// TODO: see PluginCollection::asConfig
 			$src = $plugin->getJSParser();
 			$pluginConfig = $plugin->asJSConfig();
 

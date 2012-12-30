@@ -27,11 +27,11 @@ matches.forEach(function(m)
 
 	// Create a zero-width start tag right before the URL
 	var startTag = addStartTag(tagName, m[0][1], 0);
-	startTag->setAttribute(attrName, url);
+	startTag.setAttribute(attrName, url);
 
 	// Create a zero-width end tag right after the URL
 	var endTag = addEndTag(tagName, m[0][1] + url.length, 0);
 
 	// Pair the tags together
-	startTag->pairWith(endTag);
+	startTag.pairWith(endTag);
 });

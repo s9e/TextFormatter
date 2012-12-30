@@ -186,30 +186,6 @@ class Configurator implements ConfigProvider
 		// Replace built-in and custom filters
 		ConfigHelper::replaceBuiltInFilters($config['tags'], $this->customFilters);
 
-		// Remove unused plugins
-		$config['plugins'] = array_filter($config['plugins']);
-
-		// Adjust plugins' default properties
-		foreach ($config['plugins'] as $pluginName => &$pluginConfig)
-		{
-			// Add base properties
-			$pluginConfig += $this->plugins[$pluginName]->getBaseProperties();
-
-			// Remove quickMatch if it's false
-			if ($pluginConfig['quickMatch'] === false)
-			{
-				unset($pluginConfig['quickMatch']);
-			}
-
-			// Remove regexpLimit if there's no regexp
-			if (!isset($pluginConfig['regexp']))
-			{
-				unset($pluginConfig['regexpLimit']);
-				unset($pluginConfig['regexpLimitAction']);
-			}
-		}
-		unset($pluginConfig);
-
 		// Remove unused properties
 		unset($config['customFilters']);
 		unset($config['rootRules']);

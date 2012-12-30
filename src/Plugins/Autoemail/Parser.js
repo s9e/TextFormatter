@@ -11,5 +11,5 @@ matches.forEach(function(m)
 	var endTag = addEndTag(tagName, m[0][1] + m[0][0].length, 0);
 
 	// Pair the tags together
-	startTag->pairWith(endTag);
+	startTag.pairWith(endTag);
 });

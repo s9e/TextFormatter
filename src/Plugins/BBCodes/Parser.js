@@ -32,14 +32,14 @@ matches.forEach(function(m)
 		++rpos;
 
 		// Capture the digits following it (potentially empty)
-		var bbcodeId = /^\d*/.exec(text.substr(rpos))[0];
+		bbcodeId = /^\d*/.exec(text.substr(rpos))[0];
 
 		// Move past the number
 		rpos += bbcodeId.length;
 	}
 	else
 	{
-		var bbcodeId  = '';
+		bbcodeId  = '';
 	}
 
 	// Test whether this is an end tag
@@ -53,7 +53,7 @@ matches.forEach(function(m)
 			addEndTag(tagName, lpos, 1 + rpos - lpos);
 		}
 
-		continue;
+		return;
 	}
 
 	// This is a start tag, now we'll parse attributes
@@ -91,7 +91,7 @@ matches.forEach(function(m)
 				if (rpos === textLen || text.charAt(rpos) !== ']')
 				{
 					// There isn't a closing bracket after the slash, e.g. [foo/
-					continue 2;
+					return;
 				}
 			}
 
@@ -112,7 +112,7 @@ matches.forEach(function(m)
 			if (rpos + spn >= textLen)
 			{
 				// The attribute name extends to the end of the text
-				continue 2;
+				return;
 			}
 
 			attrName = text.substr(rpos, spn).toLowerCase();
@@ -132,13 +132,13 @@ matches.forEach(function(m)
 		}
 		else
 		{
-			continue 2;
+			return;
 		}
 
 		// Move past the = and make sure we're not at the end of the text
 		if (++rpos >= textLen)
 		{
-			continue 2;
+			return;
 		}
 
 		// Grab the first character after the equal sign
@@ -161,12 +161,14 @@ matches.forEach(function(m)
 				if (rpos < 0)
 				{
 					// No matching quote. Apparently that string never ends...
-					continue 3;
+					return;
 				}
 
 				// Test for an odd number of backslashes before this character
 				var n = 0;
-				while (text.charAt(rpos - ++n) === '\\');
+				while (text.charAt(rpos - ++n) === '\\')
+				{
+				}
 
 				if (n % 2)
 				{
@@ -206,7 +208,7 @@ matches.forEach(function(m)
 
 	if (!wellFormed)
 	{
-		continue;
+		return;
 	}
 
 	// We're done parsing the tag, we can add it to the list
@@ -217,13 +219,13 @@ matches.forEach(function(m)
 			endTag;
 		if (bbcodeId !== '')
 		{
-			var match = '[/' . bbcodeName . ':' . bbcodeId . ']';
+			var match = '[/' + bbcodeName + ':' + bbcodeId + ']';
 			endTagPos = text.toUpperCase().indexOf(match, rpos);
 
 			if (endTagPos < 0)
 			{
 				// No matching end tag, so we skip this start tag
-				continue;
+				return;
 			}
 
 			endTag = addEndTag(tagName, endTagPos, match.length);
@@ -242,7 +244,7 @@ matches.forEach(function(m)
 				// Find the position of its end tag if we don't already know it
 				if (endTagPos === false)
 				{
-					endTagPos = text.toUpperCase().indexOf('[/' . bbcodeName . ']', rpos);
+					endTagPos = text.toUpperCase().indexOf('[/' + bbcodeName + ']', rpos);
 
 					if (endTagPos < 0)
 					{
@@ -252,14 +254,14 @@ matches.forEach(function(m)
 				}
 
 				attributes[attrName] = text.substr(rpos, endTagPos - rpos);
-			}
+			});
 		}
 
 		tag = addStartTag(tagName, lpos, rpos - lpos);
 
 		if (bbcodeId !== '')
 		{
-			tag->pairWith(endTag);
+			tag.pairWith(endTag);
 		}
 	}
 	else
@@ -268,5 +270,5 @@ matches.forEach(function(m)
 	}
 
 	// Add all attributes to the tag
-	tag->setAttributes(attributes);
-}
+	tag.setAttributes(attributes);
+});

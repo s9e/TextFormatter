@@ -23,5 +23,5 @@ matches.forEach(function(m)
 		return;
 	}
 
-	addSelfClosingTag(tagName, m[0][1], entity.length)->setAttribute(attrName, chr);
+	addSelfClosingTag(tagName, m[0][1], entity.length).setAttribute(attrName, chr);
 });
