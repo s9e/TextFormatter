@@ -169,10 +169,10 @@ var BuiltInFilters =
 	},
 
 	/**
-	* @param  {*} attrValue
+	* @param  {*}       attrValue
 	* @param  {!number} min
 	* @param  {!number} max
-	* @param  {?} logger
+	* @param  {!Logger} logger
 	* @return {!number|boolean}
 	*/
 	filterRange: function(attrValue, min, max, logger)
