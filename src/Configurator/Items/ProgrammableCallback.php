@@ -10,7 +10,9 @@ namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\Javascript\Code;
+use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
 
 class ProgrammableCallback implements ConfigProvider
 {
@@ -206,7 +208,19 @@ class ProgrammableCallback implements ConfigProvider
 			elseif (isset($this->vars[$k]))
 			{
 				// By name, but the value is readily available in $this->vars
-				$config['params'][] = $this->vars[$k];
+				$value = $this->vars[$k];
+
+				// Special case: "regexp" vars get a Javascript variant
+				if ($k === 'regexp' && is_string($this->vars[$k]))
+				{
+					$variant = new Variant($value);
+					$variant->set('Javascript', RegexpConvertor::toJS($value));
+
+					$value = $variant;
+				}
+
+				// By name, but the value is readily available in $this->vars
+				$config['params'][] = $value;
 			}
 			else
 			{

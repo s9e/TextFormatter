@@ -242,6 +242,29 @@ class ProgrammableCallbackTest extends Test
 		$this->assertArrayHasKey('js', $config);
 		$this->assertSame($js, $config['js']);
 	}
+
+	/**
+	* @testdox asConfig() creates a Javascript variant for values named "regexp"
+	*/
+	public function testAsConfigVarsRegexp()
+	{
+		$pc = new ProgrammableCallback(new CallbackPlaceholder('#regexp'));
+		$pc->addParameterByName('attrValue');
+		$pc->addParameterByName('regexp');
+		$pc->setVars(array('regexp' => '/foo/'));
+
+		$config = $pc->asConfig();
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			end($config['params'])
+		);
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
+			end($config['params'])->get('Javascript')
+		);
+	}
 }
 
 class DummyStaticCallback

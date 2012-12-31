@@ -257,7 +257,7 @@ class ConfigHelperTest extends Test
 	public function testBuiltInSignature()
 	{
 		$tag  = new Tag;
-		$tag->attributes->add('foo')->filterChain->append('#regexp', array('regexp' => '#foo#'));
+		$tag->attributes->add('foo')->filterChain->append('#range', array('min' => 1, 'max' => 4));
 
 		$tagsConfig = array('FOO' => $tag->asConfig());
 		ConfigHelper::replaceBuiltInFilters($tagsConfig, new FilterCollection);
@@ -265,8 +265,8 @@ class ConfigHelperTest extends Test
 		$this->assertEquals(
 			array(
 				array(
-					'callback' => 's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRegexp',
-					'params'   => array('attrValue' => null, '#foo#')
+					'callback' => 's9e\\TextFormatter\\Parser\\BuiltInFilters::filterRange',
+					'params'   => array('attrValue' => null, 1, 4, 'logger' => null)
 				)
 			),
 			$tagsConfig['FOO']['attributes']['foo']['filterChain']
