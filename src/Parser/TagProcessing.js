@@ -212,7 +212,7 @@ function processEndTag(tag)
 	var tagName = tag.getName();
 
 	/**
-	* @type array List of tags need to be closed before given tag
+	* @type {!Array.<!Tag>} List of tags need to be closed before given tag
 	*/
 	var closeTags = [];
 
