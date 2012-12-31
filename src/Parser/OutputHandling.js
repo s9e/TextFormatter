@@ -9,7 +9,7 @@ var isRich;
 var namespaces;
 
 // TODO: replace -- also, handle the quotes/noquotes thing
-function htmlspecialchars(str)
+function htmlspecialchars_compat(str)
 {
 	var t = {
 		'<' : '&lt;',
@@ -18,6 +18,16 @@ function htmlspecialchars(str)
 		'"' : '&quot;'
 	}
 	return str.replace(/[<>&"]/g, function(c) { return t[c]; });
+}
+
+function htmlspecialchars_noquotes(str)
+{
+	var t = {
+		'<' : '&lt;',
+		'>' : '&gt;',
+		'&' : '&amp;'
+	}
+	return str.replace(/[<>&]/g, function(c) { return t[c]; });
 }
 
 /**
@@ -74,7 +84,7 @@ function outputTag(tag)
 
 	// Capture the text consumed by the tag
 	tagText = (tagLen)
-			 ? htmlspecialchars(text.substr(tagPos, tagLen))
+			 ? htmlspecialchars_noquotes(text.substr(tagPos, tagLen))
 			 : '';
 
 	// Output current tag
@@ -92,7 +102,7 @@ function outputTag(tag)
 		var attributes = tag.getAttributes();
 		for (var attrName in attributes)
 		{
-			output += ' ' + attrName + '="' + htmlspecialchars(attributes[attrName]) + '"';
+			output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName]) + '"';
 		}
 
 		if (tag.isSelfClosingTag())
@@ -200,7 +210,7 @@ function outputText(catchupPos, maxLines)
 		ignoreText = '';
 	}
 
-	catchupText = htmlspecialchars(catchupText);
+	catchupText = htmlspecialchars_noquotes(catchupText);
 	if (!(context.flags & RULE_NO_BR_CHILD))
 	{
 		catchupText = catchupText.replace(/\n/g, "<br/>\n");
@@ -237,7 +247,7 @@ function outputIgnoreTag(tag)
 
 	// Catch up with the tag's position then output the tag
 	outputText(tagPos, 0);
-	output += '<i>' + htmlspecialchars(ignoreText) + '</i>';
+	output += '<i>' + htmlspecialchars_noquotes(ignoreText) + '</i>';
 
 	// Move the cursor past this tag
 	pos = tagPos + tagLen;

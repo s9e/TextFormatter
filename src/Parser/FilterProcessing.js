@@ -19,7 +19,7 @@ function executeAttributePreprocessors(tag, tagConfig)
 
 			if (!tag.hasAttribute(attrName))
 			{
-				continue;
+				return;
 			}
 
 			var m, attrValue = tag.getAttribute(attrName);
@@ -40,7 +40,7 @@ function executeAttributePreprocessors(tag, tagConfig)
 					}
 				});
 			}
-		}
+		});
 	}
 
 	return true;

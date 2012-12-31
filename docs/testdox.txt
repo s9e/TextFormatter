@@ -1277,6 +1277,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests
+ [x] Parsing tests (Javascript)
 
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag

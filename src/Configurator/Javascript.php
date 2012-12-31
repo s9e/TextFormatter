@@ -125,7 +125,9 @@ class Javascript
 			$src .= "var $name=$code;\n";
 		}
 
-		file_put_contents('/tmp/z.js', $src."console.dir(parse('[a href=http://www.google.com]hi[/a]'));");
+		file_put_contents('/tmp/z.js', $src);
+
+		return $src;
 	}
 
 	/**
@@ -307,8 +309,12 @@ class Javascript
 		$isArray = (!$preserveKeys && array_keys($array) === range(0, count($array) - 1));
 
 		$src = ($isArray) ? '[' : '{';
+		$sep = '';
+
 		foreach ($array as $k => $v)
 		{
+			$src .= $sep;
+
 			if (!$isArray)
 			{
 				$src .= (($preserveKeys) ? json_encode($k) : $k) . ':';
@@ -342,11 +348,10 @@ class Javascript
 				throw new RuntimeException('Cannot encode non-scalar value');
 			}
 
-			$src .= ',';
+			$sep = ',';
 		}
 
-		// Remove the last comma and close that structure
-		$src  = substr($src, 0, -1);
+		// Close that structure
 		$src .= ($isArray) ? ']' : '}';
 
 		return $src;
