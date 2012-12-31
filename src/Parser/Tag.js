@@ -166,11 +166,11 @@ Tag.prototype.getAttributes = function()
 /**
 * Return this tag's end tag
 *
-* @return {Tag|boolean} This tag's end tag, or FALSE if none is set
+* @return {Tag} This tag's end tag
 */
 Tag.prototype.getEndTag = function()
 {
-	return this.endTag || false;
+	return this.endTag;
 }
 
 /**
@@ -216,11 +216,11 @@ Tag.prototype.getSortPriority = function()
 /**
 * Return this tag's start tag
 *
-* @return {Tag|boolean} This tag's start tag, or FALSE if none is set
+* @return {Tag} This tag's start tag
 */
 Tag.prototype.getStartTag = function()
 {
-	return this.startTag || false;
+	return this.startTag;
 }
 
 /**

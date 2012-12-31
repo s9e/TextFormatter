@@ -20,12 +20,12 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox getEndTag() returns false if the tag has no end tag set
+	* @testdox getEndTag() returns NULL if the tag has no end tag set
 	*/
 	public function testGetEndTag()
 	{
 		$tag = new Tag(Tag::START_TAG, 'X', 12, 34);
-		$this->assertFalse($tag->getEndTag());
+		$this->assertNull($tag->getEndTag());
 	}
 
 	/**
@@ -65,12 +65,12 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox getStartTag() returns false if the tag has no start tag set
+	* @testdox getStartTag() returns NULL if the tag has no start tag set
 	*/
 	public function testGetStartTag()
 	{
 		$tag = new Tag(Tag::START_TAG, 'X', 12, 34);
-		$this->assertFalse($tag->getStartTag());
+		$this->assertNull($tag->getStartTag());
 	}
 
 	/**

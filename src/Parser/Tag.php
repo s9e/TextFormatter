@@ -37,7 +37,7 @@ class Tag
 	/**
 	* @var Tag End tag that unconditionally ends this start tag
 	*/
-	protected $endTag;
+	protected $endTag = null;
 
 	/**
 	* @var bool Whether this tag is be invalid
@@ -68,7 +68,7 @@ class Tag
 	/**
 	* @var Tag Start tag that is unconditionally closed this end tag
 	*/
-	protected $startTag;
+	protected $startTag = null;
 
 	/**
 	* @var integer Tag type
@@ -189,13 +189,11 @@ class Tag
 	/**
 	* Return this tag's end tag
 	*
-	* @return Tag|bool This tag's end tag, or FALSE if none is set
+	* @return Tag|null This tag's end tag, or NULL if none is set
 	*/
 	public function getEndTag()
 	{
-		return (isset($this->endTag))
-	          ? $this->endTag
-		      : false;
+		return $this->endTag;
 	}
 
 	/**
@@ -241,13 +239,11 @@ class Tag
 	/**
 	* Return this tag's start tag
 	*
-	* @return Tag|bool This tag's start tag, or FALSE if none is set
+	* @return Tag|null This tag's start tag, or NULL if none is set
 	*/
 	public function getStartTag()
 	{
-		return (isset($this->startTag))
-	          ? $this->startTag
-		      : false;
+		return $this->startTag;
 	}
 
 	/**

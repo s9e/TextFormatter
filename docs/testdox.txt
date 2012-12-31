@@ -1064,12 +1064,12 @@ s9e\TextFormatter\Tests\Parser\PluginsHandling
 
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
- [x] getEndTag() returns false if the tag has no end tag set
+ [x] getEndTag() returns NULL if the tag has no end tag set
  [x] getPos() returns the tag's length (amount of text consumed)
  [x] getName() returns the tag's name
  [x] getPos() returns the tag's position
  [x] getSortPriority() returns the tag's sortPriority
- [x] getStartTag() returns false if the tag has no start tag set
+ [x] getStartTag() returns NULL if the tag has no start tag set
  [x] getType() returns the tag's type
  [x] isInvalid() returns false by default
  [x] isBrTag() returns true if the tag's name is "br"
