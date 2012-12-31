@@ -454,24 +454,6 @@ class ConfigHelperTest extends Test
 			strlen(serialize($optimizedConfig))
 		);
 	}
-
-	/**
-	* @testdox removeJavascriptCode() recursively removes all instances of Code from a deep array, in-place
-	*/
-	public function testRemoveJavascriptCode()
-	{
-		$arr = array(
-			'foo' => new Code(''),
-			'bar' => array('baz' => new Code(''), 'quux' => 3)
-		);
-
-		ConfigHelper::removeJavascriptCode($arr);
-
-		$this->assertSame(
-			array('bar' => array('quux' => 3)),
-			$arr
-		);
-	}
 }
 
 class ConfigProviderDummy implements ConfigProvider

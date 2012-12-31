@@ -108,9 +108,6 @@ class Configurator implements ConfigProvider
 		// Remove variants
 		ConfigHelper::filterVariants($config);
 
-		// Remove instances of Code, recursively and in-place
-		ConfigHelper::removeJavascriptCode($config);
-
 		return new Parser($config);
 	}
 

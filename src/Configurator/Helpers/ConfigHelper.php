@@ -144,28 +144,6 @@ abstract class ConfigHelper
 	}
 
 	/**
-	* Remove all instances of Code from an array
-	*
-	* @param  array &$arr Source array
-	* @return void
-	*/
-	public static function removeJavascriptCode(array &$arr)
-	{
-		foreach ($arr as $k => &$v)
-		{
-			if ($v instanceof Code)
-			{
-				unset($arr[$k]);
-			}
-			elseif (is_array($v))
-			{
-				self::removeJavascriptCode($v);
-			}
-		}
-		unset($v);
-	}
-
-	/**
 	* Replace built-in filters and custom filters in an array of tags
 	*
 	* - Custom filters are replaced by the ProgrammableCallback found in $customFilters
