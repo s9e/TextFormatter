@@ -228,7 +228,7 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the callback's Javascript as an instance of Code if available
+	* @testdox asConfig() returns the callback's Javascript as a variant if available
 	*/
 	public function testAsConfigJavascript()
 	{
@@ -240,7 +240,11 @@ class ProgrammableCallbackTest extends Test
 		$config = $pc->asConfig();
 
 		$this->assertArrayHasKey('js', $config);
-		$this->assertSame($js, $config['js']);
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			$config['js']
+		);
+		$this->assertSame($js, $config['js']->get('Javascript'));
 	}
 
 	/**

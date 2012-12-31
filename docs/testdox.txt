@@ -807,7 +807,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
  [x] If the callback is an instance of CallbackPlaceholder, asConfig() calls the callback's asConfig() and returns its value as callback
  [x] asConfig() returns the vars set with setVars() if the callback is an instance of CallbackPlaceholder
- [x] asConfig() returns the callback's Javascript as an instance of Code if available
+ [x] asConfig() returns the callback's Javascript as a variant if available
  [x] asConfig() creates a Javascript variant for values named "regexp"
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag

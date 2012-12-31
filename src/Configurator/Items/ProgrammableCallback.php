@@ -231,7 +231,8 @@ class ProgrammableCallback implements ConfigProvider
 
 		if (isset($this->js))
 		{
-			$config['js'] = $this->js;
+			$config['js'] = new Variant;
+			$config['js']->set('Javascript', $this->js);
 		}
 
 		return $config;
