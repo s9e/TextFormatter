@@ -9,6 +9,8 @@ namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
 class AttributePreprocessorCollection extends Collection
@@ -45,7 +47,7 @@ class AttributePreprocessorCollection extends Collection
 	/**
 	* Merge a set of attribute preprocessors into this collection
 	*
-	* @param array|AttributePreprocessorCollection $attributePreprocessors Instance of AttributePreprocessorCollection or 2D array of [attrName=>[regexp/AttributePreprocessor]] 
+	* @param array|AttributePreprocessorCollection $attributePreprocessors Instance of AttributePreprocessorCollection or 2D array of [[attrName,regexp|AttributePreprocessor]]
 	*/
 	public function merge($attributePreprocessors)
 	{
@@ -60,9 +62,9 @@ class AttributePreprocessorCollection extends Collection
 		}
 		elseif (is_array($attributePreprocessors))
 		{
-			// This should be an array where keys are attribute names and values should be either
-			// an array of regexps and/or AttributePreprocessor instances
-			foreach ($attributePreprocessors as $attrName => $values)
+			// This should be a list where each element is a [attrName,regexp] pair, or
+			// [attrName,AttributePreprocessor]
+			foreach ($attributePreprocessors as $values)
 			{
 				if (!is_array($values))
 				{
@@ -70,15 +72,14 @@ class AttributePreprocessorCollection extends Collection
 					break;
 				}
 
-				foreach ($values as $value)
-				{
-					if ($value instanceof AttributePreprocessor)
-					{
-						$value = $value->getRegexp();
-					}
+				list($attrName, $value) = $values;
 
-					$this->add($attrName, $value);
+				if ($value instanceof AttributePreprocessor)
+				{
+					$value = $value->getRegexp();
 				}
+
+				$this->add($attrName, $value);
 			}
 		}
 		else
@@ -88,7 +89,7 @@ class AttributePreprocessorCollection extends Collection
 
 		if ($error)
 		{
-			throw new InvalidArgumentException('merge() expects an instance of AttributePreprocessorCollection or a 2D array where keys are attribute names and values are arrays of regexps and AttributePreprocessor instances');
+			throw new InvalidArgumentException('merge() expects an instance of AttributePreprocessorCollection or a 2D array where each element is a [attribute name, regexp] pair');
 		}
 	}
 
@@ -102,7 +103,14 @@ class AttributePreprocessorCollection extends Collection
 		foreach ($this->items as $k => $ap)
 		{
 			list($attrName, $regexp) = unserialize($k);
-			$config[$attrName][] = $regexp;
+
+			$variant = new Variant(array($attrName, $regexp));
+
+			// Create a Javascript variant that contains a map of the regexp's named subpatterns
+			$jsRegexp = RegexpConvertor::toJS($regexp);
+			$variant->set('Javascript', array($attrName, $jsRegexp, $jsRegexp->map));
+
+			$config[] = $variant;
 		}
 
 		return $config;

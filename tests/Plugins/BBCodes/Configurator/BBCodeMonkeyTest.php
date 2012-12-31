@@ -401,10 +401,8 @@ class BBCodeMonkeyTest extends Test
 					)),
 					'tag'    => new Tag(array(
 						'attributePreprocessors' => array(
-							'foo' => array(
-								'/(?<foo>\\d+)/',
-								'/(?<bar>\\D+)/'
-							)
+							array('foo', '/(?<foo>\\d+)/'),
+							array('foo', '/(?<bar>\\D+)/')
 						),
 						'attributes' => array(
 							'foo' => array(
@@ -712,10 +710,8 @@ class BBCodeMonkeyTest extends Test
 					)),
 					'tag'    => new Tag(array(
 						'attributePreprocessors' => array(
-							'foo' => array(
-								'/^(?<foo0>\\d+),(?<foo1>\\d+)$/D',
-								'/^(?<foo1>\\d+);(?<foo0>\\d+)$/D'
-							)
+							array('foo', '/^(?<foo0>\\d+),(?<foo1>\\d+)$/D'),
+							array('foo', '/^(?<foo1>\\d+);(?<foo0>\\d+)$/D')
 						),
 						'attributes' => array(
 							'foo0' => array(
@@ -750,7 +746,7 @@ class BBCodeMonkeyTest extends Test
 					)),
 					'tag'    => new Tag(array(
 						'attributePreprocessors' => array(
-							'flash' => array('/^(?<flash0>\\d+),(?<flash1>\\d+)$/D')
+							array('flash', '/^(?<flash0>\\d+),(?<flash1>\\d+)$/D')
 						),
 						'attributes' => array(
 							'content' => array(
@@ -782,7 +778,7 @@ class BBCodeMonkeyTest extends Test
 					)),
 					'tag'    => new Tag(array(
 						'attributePreprocessors' => array(
-							'flash' => array('/^(?<width>\\d+),(?<height>\\d+)$/D')
+							array('flash', '/^(?<width>\\d+),(?<height>\\d+)$/D')
 						),
 						'attributes' => array(
 							'url' => array(
@@ -816,7 +812,7 @@ class BBCodeMonkeyTest extends Test
 					)),
 					'tag'    => new Tag(array(
 						'attributePreprocessors' => array(
-							'quote' => array('/(?<author>.+?)(?:;(?<id>\\d+))?/')
+							array('quote', '/(?<author>.+?)(?:;(?<id>\\d+))?/')
 						),
 						'attributes' => array(
 							'author' => array(

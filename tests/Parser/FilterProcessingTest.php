@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Parser;
 
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag as TagConfig;
 use s9e\TextFormatter\Parser;
@@ -51,6 +52,7 @@ class FilterProcessingTest extends Test
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
 		$tagConfig = $tagConfig->asConfig();
+		ConfigHelper::filterVariants($tagConfig);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -68,6 +70,7 @@ class FilterProcessingTest extends Test
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
 		$tagConfig = $tagConfig->asConfig();
+		ConfigHelper::filterVariants($tagConfig);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -86,6 +89,7 @@ class FilterProcessingTest extends Test
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
 		$tagConfig = $tagConfig->asConfig();
+		ConfigHelper::filterVariants($tagConfig);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -102,6 +106,7 @@ class FilterProcessingTest extends Test
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
 		$tagConfig = $tagConfig->asConfig();
+		ConfigHelper::filterVariants($tagConfig);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', 'xx');
@@ -119,6 +124,7 @@ class FilterProcessingTest extends Test
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])/i');
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
 		$tagConfig = $tagConfig->asConfig();
+		ConfigHelper::filterVariants($tagConfig);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -137,6 +143,7 @@ class FilterProcessingTest extends Test
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[a-z])(?<baz>[a-z])$/i');
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
 		$tagConfig = $tagConfig->asConfig();
+		ConfigHelper::filterVariants($tagConfig);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', '2x');
@@ -154,6 +161,7 @@ class FilterProcessingTest extends Test
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[a-z])(?<baz>[a-z])$/i');
 		$tagConfig = $tagConfig->asConfig();
+		ConfigHelper::filterVariants($tagConfig);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 

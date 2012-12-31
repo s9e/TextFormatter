@@ -11,37 +11,32 @@ function executeAttributePreprocessors(tag, tagConfig)
 {
 	if (tagConfig.attributePreprocessors)
 	{
-		for (var attrName in tagConfig.attributePreprocessors)
+		tagConfig.attributePreprocessors.forEach(function(attributePreprocessor)
 		{
+			var attrName = attributePreprocessor[0],
+			    regexp   = attributePreprocessor[1],
+			    map      = attributePreprocessor[2];
+
 			if (!tag.hasAttribute(attrName))
 			{
 				continue;
 			}
 
-			var attrValue = tag.getAttribute(attrName),
-				regexps = tagConfig.attributePreprocessors[attrName],
-				i = -1,
-				m;
+			var m, attrValue = tag.getAttribute(attrName);
 
-			while (++i < regexps.length)
+			// If the regexp matches, we remove the source attribute then we add the
+			// captured attributes
+			if (m = regexp.exec(attrValue))
 			{
-				// If the regexp matches, we remove the source attribute then we add the
-				// captured attributes
-				if (m = regexps[i].exec(attrValue))
+				tag.removeAttribute(attrName);
+
+				// TODO: regexpMap
+				for (var k in m)
 				{
-					tag.removeAttribute(attrName);
-
-					// TODO: regexpMap
-					for (var k in m)
+					if (!is_numeric(k) && !tag.hasAttribute(k))
 					{
-						if (!is_numeric(k) && !tag.hasAttribute(k))
-						{
-							tag.setAttribute(k, m[k]);
-						}
+						tag.setAttribute(k, m[k]);
 					}
-
-					// We stop processing this attribute after the first match
-					break;
 				}
 			}
 		}

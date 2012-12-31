@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Items;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TemplateCollection;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Tests\Test;
 
@@ -28,16 +29,20 @@ class TagTest extends Test
 	public function testAttributePreprocessorsArray()
 	{
 		$attributePreprocessors = array(
-			'foo' => array('/a/', '/b/'),
-			'bar' => array('/c/')
+			array('foo', '/a/'),
+			array('foo', '/b/'),
+			array('bar', '/c/')
 		);
 
 		$tag = new Tag;
 		$tag->attributePreprocessors = $attributePreprocessors;
 
+		$config = $tag->attributePreprocessors->asConfig();
+		ConfigHelper::filterVariants($config);
+
 		$this->assertEquals(
 			$attributePreprocessors,
-			$tag->attributePreprocessors->asConfig()
+			$config
 		);
 	}
 
@@ -71,17 +76,21 @@ class TagTest extends Test
 	public function testAttributePreprocessorsArrayClears()
 	{
 		$attributePreprocessors = array(
-			'foo' => array('/a/', '/b/'),
-			'bar' => array('/c/')
+			array('foo', '/a/'),
+			array('foo', '/b/'),
+			array('bar', '/c/')
 		);
 
 		$tag = new Tag;
 		$tag->attributePreprocessors->add('baz', '/d/');
 		$tag->attributePreprocessors = $attributePreprocessors;
 
-		$this->assertEquals(
+		$config = $tag->attributePreprocessors->asConfig();
+		ConfigHelper::filterVariants($config);
+
+		$this->assertSame(
 			$attributePreprocessors,
-			$tag->attributePreprocessors->asConfig()
+			$config
 		);
 	}
 

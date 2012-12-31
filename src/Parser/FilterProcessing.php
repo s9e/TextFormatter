@@ -22,8 +22,10 @@ trait FilterProcessing
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
 		{
-			foreach ($tagConfig['attributePreprocessors'] as $attrName => $regexps)
+			foreach ($tagConfig['attributePreprocessors'] as $attributePreprocessor)
 			{
+				list($attrName, $regexp) = $attributePreprocessor;
+
 				if (!$tag->hasAttribute($attrName))
 				{
 					continue;
@@ -31,24 +33,18 @@ trait FilterProcessing
 
 				$attrValue = $tag->getAttribute($attrName);
 
-				foreach ($regexps as $regexp)
+				// If the regexp matches, we remove the source attribute then we add the
+				// captured attributes
+				if (preg_match($regexp, $attrValue, $m))
 				{
-					// If the regexp matches, we remove the source attribute then we add the
-					// captured attributes
-					if (preg_match($regexp, $attrValue, $m))
+					$tag->removeAttribute($attrName);
+
+					foreach ($m as $k => $v)
 					{
-						$tag->removeAttribute($attrName);
-
-						foreach ($m as $k => $v)
+						if (!is_numeric($k) && !$tag->hasAttribute($k))
 						{
-							if (!is_numeric($k) && !$tag->hasAttribute($k))
-							{
-								$tag->setAttribute($k, $v);
-							}
+							$tag->setAttribute($k, $v);
 						}
-
-						// We stop processing this attribute after the first match
-						break;
 					}
 				}
 			}
