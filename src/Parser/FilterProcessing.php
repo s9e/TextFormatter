@@ -37,8 +37,10 @@ trait FilterProcessing
 				// captured attributes
 				if (preg_match($regexp, $attrValue, $m))
 				{
+					// Remove the source attribute
 					$tag->removeAttribute($attrName);
 
+					// Set the target attributes
 					foreach ($m as $k => $v)
 					{
 						if (!is_numeric($k) && !$tag->hasAttribute($k))

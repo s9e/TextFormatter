@@ -28,16 +28,17 @@ function executeAttributePreprocessors(tag, tagConfig)
 			// captured attributes
 			if (m = regexp.exec(attrValue))
 			{
+				// Remove the source attribute
 				tag.removeAttribute(attrName);
 
-				// TODO: regexpMap
-				for (var k in m)
+				// Set the target attributes
+				map.forEach(function(targetName, k)
 				{
-					if (!is_numeric(k) && !tag.hasAttribute(k))
+					if (!tag.hasAttribute(targetName))
 					{
-						tag.setAttribute(k, m[k]);
+						tag.setAttribute(targetName, m[k]);
 					}
-				}
+				});
 			}
 		}
 	}
