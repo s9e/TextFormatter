@@ -20,6 +20,11 @@ trait TagProcessing
 	protected $cntTotal;
 
 	/**
+	* @var array Current context
+	*/
+	protected $context;
+
+	/**
 	* @var Tag Current tag being processed
 	*/
 	protected $currentTag;
@@ -33,6 +38,11 @@ trait TagProcessing
 	* @var integer Position of the cursor in the original text
 	*/
 	protected $pos;
+
+	/**
+	* @var array Root context, used at the root of the document
+	*/
+	protected $rootContext;
 
 	/**
 	* Process all tags in the stack

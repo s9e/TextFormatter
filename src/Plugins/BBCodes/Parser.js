@@ -196,13 +196,13 @@ matches.forEach(function(m)
 			// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 			//       that do not put attribute values in quotes, e.g.
 			//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-			var m = /[^\]]*(?=\]|\s+[-\w]+=)/.exec(text.substr(rpos));
-			if (!m)
+			var match = /[^\]]*(?=\]|\s+[-\w]+=)/.exec(text.substr(rpos));
+			if (!match)
 			{
 				continue;
 			}
 
-			value  = m[0];
+			value  = match[0];
 			rpos  += value.length;
 		}
 

@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Parser;
 
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Parser\BuiltInFilters;
 use s9e\TextFormatter\Parser\FilterProcessing;
 use s9e\TextFormatter\Parser\Logger;
@@ -521,6 +522,7 @@ class Hax
 		}
 
 		$config = $configurator->asConfig();
+		ConfigHelper::filterVariants($config);
 
 		if (self::$redirectTo)
 		{

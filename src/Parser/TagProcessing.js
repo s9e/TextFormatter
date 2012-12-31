@@ -9,6 +9,11 @@ var cntOpen;
 var cntTotal;
 
 /**
+* @type {!Object} Current context
+*/
+var context;
+
+/**
 * @type {Tag} Current tag being processed
 */
 var currentTag;
@@ -22,6 +27,11 @@ var openTags;
 * @type {!number} Position of the cursor in the original text
 */
 var pos;
+
+/**
+* @type {!Object} Root context, used at the root of the document
+*/
+var rootContext;
 
 /**
 * Process all tags in the stack

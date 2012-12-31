@@ -74,17 +74,17 @@ function outputTag(tag)
 
 	// Capture the text consumed by the tag
 	tagText = (tagLen)
-			 ? htmlspecialchars(substr(text, tagPos, tagLen))
+			 ? htmlspecialchars(text.substr(tagPos, tagLen))
 			 : '';
 
 	// Output current tag
 	if (tag.isStartTag())
 	{
 		// Record this tag's namespace, if applicable
-		colonPos = strpos(tagName, ':');
-		if (colonPos)
+		colonPos = tagName.indexOf(':');
+		if (colonPos > 0)
 		{
-			namespaces[substr(tagName, 0, colonPos)] = 0;
+			namespaces[tagName.substr(0, colonPos)] = 0;
 		}
 
 		// Open the start tag and add its attributes, but don't close the tag
@@ -161,7 +161,7 @@ function outputText(catchupPos, maxLines)
 	}
 
 	var catchupLen  = catchupPos - pos,
-		catchupText = substr(text, pos, catchupLen);
+		catchupText = text.substr(pos, catchupLen);
 
 	pos = catchupPos;
 

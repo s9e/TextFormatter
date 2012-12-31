@@ -1,7 +1,7 @@
 /**
 * @type {!Object.<!Object>}
 */
-var plugins = {};
+var plugins;
 
 /**
 * Disable a plugin
@@ -37,20 +37,21 @@ function enablePlugin(pluginName)
 */
 function getMatches(regexp)
 {
-	var container = [];
+	var matches = [], m;
 
 	// Reset the regexp
 	regexp.lastIndex = 0;
 
-	while (matches = regexp.exec(text))
+	while (m = regexp.exec(text))
 	{
-		var pos   = matches['index'],
-			match = [[matches[0], pos]],
+		// NOTE: using parseInt() here because Closure Compiler thinks pos is a string otherwise
+		var pos   = parseInt(m['index'], 10),
+			match = [[m[0], pos]],
 			i = 0;
 
-		while (++i < matches.length)
+		while (++i < m.length)
 		{
-			var str = matches[i];
+			var str = m[i];
 
 			// Sub-expressions that were not evaluated return undefined
 			if (str === undefined)
@@ -64,10 +65,10 @@ function getMatches(regexp)
 			}
 		}
 
-		container.push(match);
+		matches.push(match);
 	}
 
-	return container;
+	return matches;
 }
 
 /**
@@ -126,7 +127,7 @@ function executePluginParsers()
 		}
 
 		// Execute the plugin's parser, which will add tags via addStartTag() and others
-		plugin[pluginName].parse(text, matches);
+		plugin.parser(text, matches);
 	}
 }
 

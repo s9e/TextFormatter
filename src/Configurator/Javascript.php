@@ -103,17 +103,19 @@ class Javascript
 		// Reset this instance's callbacks
 		$this->callbacks = array();
 
-		// Inject the tags' config
-		$src = str_replace(
-			"\nvar tagsConfig = {};",
-			"\nvar tagsConfig = " . $this->getTagsConfig() . ';',
-			$src
+		// Inject the parser config
+		$config = array(
+			'plugins'        => $this->getPluginsConfig(),
+			'registeredVars' => $this->getRegisteredVarsConfig(),
+			'rootContext'    => $this->getRootContext(),
+			'tagsConfig'     => $this->getTagsConfig()
 		);
-
-		// Inject the plugins' config
-		$src = str_replace(
-			"\nvar plugins = {};",
-			"\nvar plugins = " . $this->getPluginsConfig() . ';',
+		$src = preg_replace_callback(
+			'/(\\nvar (' . implode('|', array_keys($config)) . '))(;)/',
+			function ($m) use ($config)
+			{
+				return $m[1] . '=' . $config[$m[2]] . $m[3];
+			},
 			$src
 		);
 
@@ -123,7 +125,7 @@ class Javascript
 			$src .= "var $name=$code;\n";
 		}
 
-		file_put_contents('/tmp/z.js', $src);
+		file_put_contents('/tmp/z.js', $src."console.dir(parse('[a href=http://www.google.com]hi[/a]'));");
 	}
 
 	/**
@@ -206,7 +208,10 @@ class Javascript
 			if (isset($globalConfig['regexp'])
 			 && !($globalConfig['regexp'] instanceof RegExp))
 			{
-				$globalConfig['regexp'] = RegexpConvertor::toJS($globalConfig['regexp']);
+				$regexp = RegexpConvertor::toJS($globalConfig['regexp']);
+				$regexp->flags .= 'g';
+
+				$globalConfig['regexp'] = $regexp;
 			}
 
 			$globalConfig['parser'] = new Code('function(text,matches){/** @const */var config=' . self::encode($localConfig) . ';' . $globalConfig['parser'] . '}');
@@ -216,6 +221,42 @@ class Javascript
 
 		// Create an instance of Code that represents the plugins array
 		$code = new Code(self::encode($plugins));
+
+		return $code;
+	}
+
+	/**
+	* Generate a Javascript representation of the registered vars
+	*
+	* @return Code Javascript source code
+	*/
+	protected function getRegisteredVarsConfig()
+	{
+		if (empty($this->config['registeredVars']))
+		{
+			return new Code('{}');
+		}
+
+		$code = new Code(self::encode(new Dictionary($this->config['registeredVars'])));
+
+		return $code;
+	}
+
+	/**
+	* Generate a Javascript representation of the root context
+	*
+	* @return Code Javascript source code
+	*/
+	protected function getRootContext()
+	{
+		$rootContext = $this->config['rootContext'];
+
+		$rootContext['allowedChildren']
+				= self::convertBitfield($rootContext['allowedChildren']);
+		$rootContext['allowedDescendants']
+				= self::convertBitfield($rootContext['allowedDescendants']);
+
+		$code = new Code(self::encode($rootContext));
 
 		return $code;
 	}
@@ -297,7 +338,7 @@ class Javascript
 				$src .= json_encode($v);
 			}
 			else
-			{var_dump($k,$v);
+			{
 				throw new RuntimeException('Cannot encode non-scalar value');
 			}
 
@@ -445,20 +486,12 @@ class Javascript
 			}
 			else
 			{
-/*
 				// Param by name -- if it's not one of the local vars passed to the callback, and
 				// it's not one of the global vars "logger" and "registeredVars" then we assume that
 				// it's a variable registered in registeredVars
 				if (!in_array($k, $arguments[$callbackType], true)
 				 && $k !== 'logger'
 				 && $k !== 'registeredVars')
-				{
-					 $k = 'registeredVars[' . json_encode($k) . ']';
-				}
-*/
-				// Param by name -- if it's not one of the local vars passed to the callback then we
-				// assume that it's a variable from registeredVars
-				if (!in_array($k, $arguments[$callbackType], true))
 				{
 					 $k = 'registeredVars[' . json_encode($k) . ']';
 				}

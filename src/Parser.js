@@ -18,13 +18,13 @@ var logger = new Logger;
 /**
 * @type {!Object} Variables registered for use in filters
 */
-var registeredVars = {};
+var registeredVars;
 
 /**
 * @type {!Object} Tags' config
 * @const
 */
-var tagsConfig = {};
+var tagsConfig;
 
 /**
 * @type {!string} Text being parsed

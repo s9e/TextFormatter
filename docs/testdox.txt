@@ -876,6 +876,9 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() generates an exclude-result-prefixes directive for all the declared prefixes
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
+ [x] asConfig() creates a Javascript variant for allowedSchemes
+ [x] asConfig() creates a Javascript variant for disallowedHosts
+ [x] asConfig() creates a Javascript variant for resolveRedirectsHosts
  [x] Disallowed IDNs are punycoded
  [x] disallowHost('example.org') disallows "example.org"
  [x] disallowHost('example.org') disallows "EXAMPLE.ORG"
