@@ -9,7 +9,7 @@ var cntOpen;
 var cntTotal;
 
 /**
-* @type {!Tag} Current tag being processed
+* @type {Tag} Current tag being processed
 */
 var currentTag;
 
@@ -29,12 +29,12 @@ var pos;
 function processTags()
 {
 	// Reset some internal vars
-	pos       = 0;
-	cntOpen   = {};
-	cntTotal  = {};
-	openTags  = [];
-	context   = rootContext;
-	delete currentTag;
+	pos        = 0;
+	cntOpen    = {};
+	cntTotal   = {};
+	openTags   = [];
+	context    = rootContext;
+	currentTag = null;
 
 	// Initialize the count tables
 	for (var tagName in tagsConfig)

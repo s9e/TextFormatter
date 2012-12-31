@@ -64,9 +64,12 @@ matches.forEach(function(m)
 		attrName;
 
 	// Add predefined attributes
-	for (attrName in bbcodeConfig.predefinedAttributes)
+	if (bbcodeConfig.predefinedAttributes)
 	{
-		attributes[attrName] = bbcodeConfig.predefinedAttributes[attrName];
+		for (attrName in bbcodeConfig.predefinedAttributes)
+		{
+			attributes[attrName] = bbcodeConfig.predefinedAttributes[attrName];
+		}
 	}
 
 	while (rpos < textLen)
@@ -259,7 +262,7 @@ matches.forEach(function(m)
 
 		tag = addStartTag(tagName, lpos, rpos - lpos);
 
-		if (bbcodeId !== '')
+		if (endTag)
 		{
 			tag.pairWith(endTag);
 		}

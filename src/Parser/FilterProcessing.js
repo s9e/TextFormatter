@@ -55,11 +55,13 @@ function executeAttributePreprocessors(tag, tagConfig)
 *
 * @private
 *
-* @param  {!Tag}     tag       Tag being checked
-* @param  {!Object}  tagConfig Tag's config
+* @param  {!Tag}     tag            Tag being checked
+* @param  {!Object}  tagConfig      Tag's config
+* @param  {!Object}  registeredVars Vars registered for use in attribute filters
+* @param  {!Logger}  logger         This parser's Logger instance
 * @return {!boolean}           Whether the whole attribute set is valid
 */
-function filterAttributes(tag, tagConfig)
+function filterAttributes(tag, tagConfig, registeredVars, logger)
 {
 	if (!tagConfig.attributes)
 	{

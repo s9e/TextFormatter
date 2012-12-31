@@ -445,12 +445,20 @@ class Javascript
 			}
 			else
 			{
+/*
 				// Param by name -- if it's not one of the local vars passed to the callback, and
 				// it's not one of the global vars "logger" and "registeredVars" then we assume that
-				// it's a variables registered in registeredVars
+				// it's a variable registered in registeredVars
 				if (!in_array($k, $arguments[$callbackType], true)
 				 && $k !== 'logger'
 				 && $k !== 'registeredVars')
+				{
+					 $k = 'registeredVars[' . json_encode($k) . ']';
+				}
+*/
+				// Param by name -- if it's not one of the local vars passed to the callback then we
+				// assume that it's a variable from registeredVars
+				if (!in_array($k, $arguments[$callbackType], true))
 				{
 					 $k = 'registeredVars[' . json_encode($k) . ']';
 				}
