@@ -850,6 +850,10 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] has('Javascript') returns FALSE if it does not have a 'Javascript' variant
  [x] Creating a new Variant with a Variant value makes it copy its default value and its variants instead
  [x] __construct() can be called with no arguments, and the default value will be NULL
+ [x] setDynamic() saves a dynamic variant whose callback does not get called if the variant is not read
+ [x] setDynamic() saves a dynamic variant whose callback is called and its value returned when the variant is retrieved
+ [x] setDynamic() saves a dynamic variant whose callback is called and its value returned everytime the variant is retrieved
+ [x] setDynamic() throws an exception on invalid callback
 
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
