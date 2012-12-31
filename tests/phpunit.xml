@@ -60,6 +60,7 @@
 			<file>Configurator/Items/ProgrammableCallbackTest.php</file>
 			<file>Configurator/Items/TagTest.php</file>
 			<file>Configurator/Items/TemplateTest.php</file>
+			<file>Configurator/Items/VariantTest.php</file>
 			<file>Configurator/StylesheetTest.php</file>
 			<file>Configurator/UrlConfigTest.php</file>
 			<file>Configurator/Validators/AttributeNameTest.php</file>
@@ -152,6 +153,7 @@
 			<file>../src/Configurator/Items/ProgrammableCallback.php</file>
 			<file>../src/Configurator/Items/Tag.php</file>
 			<file>../src/Configurator/Items/Template.php</file>
+			<file>../src/Configurator/Items/Variant.php</file>
 			<file>../src/Configurator/Javascript.php</file>
 			<file>../src/Configurator/Javascript/Code.php</file>
 			<file>../src/Configurator/Javascript/RegExp.php</file>

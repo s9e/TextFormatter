@@ -2,10 +2,10 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
-use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Javascript\Code;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Items\ProgrammableCallback

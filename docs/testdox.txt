@@ -838,6 +838,14 @@ s9e\TextFormatter\Tests\Configurator\Items\Template
  [x] When cast as string, returns the string passed to constructor if applicable
  [x] When cast as string, executes the callback passed to constructor and returns its result if applicable
 
+s9e\TextFormatter\Tests\Configurator\Items\Variant
+ [x] get() returns the default value
+ [x] get('Javascript') returns the 'Javascript' variant if it exists
+ [x] get('Javascript') returns the default value if the 'Javascript' variant does not exist
+ [x] has('Javascript') returns TRUE if it has a 'Javascript' variant
+ [x] has('Javascript') returns FALSE if it does not have a 'Javascript' variant
+ [x] Creating a new Variant with a Variant value makes it copy its default value and its variants instead
+
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
  [x] setOutputMethod('text') throws an exception
