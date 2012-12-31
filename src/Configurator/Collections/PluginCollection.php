@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class PluginCollection extends NormalizedCollection
@@ -107,8 +108,10 @@ class PluginCollection extends NormalizedCollection
 		// Adjust plugins' default properties
 		foreach ($plugins as $pluginName => &$pluginConfig)
 		{
+			$plugin = $this->get($pluginName);
+
 			// Add base properties
-			$pluginConfig += $this->get($pluginName)->getBaseProperties();
+			$pluginConfig += $plugin->getBaseProperties();
 
 			// Remove quickMatch if it's false
 			if ($pluginConfig['quickMatch'] === false)
@@ -121,6 +124,12 @@ class PluginCollection extends NormalizedCollection
 			{
 				unset($pluginConfig['regexpLimit']);
 				unset($pluginConfig['regexpLimitAction']);
+			}
+
+			if (!isset($pluginConfig['parser']))
+			{
+				$pluginConfig['parser'] = new Variant;
+				$pluginConfig['parser']->setDynamic('Javascript', array($plugin, 'getJSParser'));
 			}
 		}
 		unset($pluginConfig);

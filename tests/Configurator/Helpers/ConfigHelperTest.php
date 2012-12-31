@@ -11,6 +11,7 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\Javascript\Code;
 use s9e\TextFormatter\Tests\Test;
 
@@ -19,6 +20,84 @@ use s9e\TextFormatter\Tests\Test;
 */
 class ConfigHelperTest extends Test
 {
+	/**
+	* @testdox filterVariants() filters the right variant
+	*/
+	public function testFilterVariants()
+	{
+		$foo = new Variant(0);
+		$foo->set('variant', 1);
+
+		$config = array('foo' => $foo);
+
+		ConfigHelper::filterVariants($config, 'variant');
+
+		$this->assertSame(
+			array('foo' => 1),
+			$config
+		);
+	}
+
+	/**
+	* @testdox filterVariants() recurses into deep arrays
+	*/
+	public function testFilterVariantsDeep()
+	{
+		$config = array(
+			'foo' => new Variant(42),
+			'bar' => array('baz' => new Variant(55))
+		);
+
+		ConfigHelper::filterVariants($config);
+
+		$this->assertSame(
+			array(
+				'foo' => 42,
+				'bar' => array('baz' => 55)
+			),
+			$config
+		);
+	}
+
+	/**
+	* @testdox filterVariants() recurses into variants
+	*/
+	public function testFilterVariantsRecursive()
+	{
+		$foo = new Variant(0);
+		$bar = new Variant(0);
+
+		$foo->set('vv', array('bar' => $bar));
+		$bar->set('vv', array('baz' => 42));
+
+		$config = array('foo' => $foo);
+
+		ConfigHelper::filterVariants($config, 'vv');
+
+		$this->assertSame(
+			array('foo' => array('bar' => array('baz' => 42))),
+			$config
+		);
+	}
+
+	/**
+	* @testdox filterVariants() removes NULL variants
+	*/
+	public function testFilterVariantsNull()
+	{
+		$foo = new Variant;
+		$foo->set('foo', 42);
+
+		$config = array('foo' => $foo);
+
+		ConfigHelper::filterVariants($config, 'vv');
+
+		$this->assertSame(
+			array(),
+			$config
+		);
+	}
+
 	/**
 	* @testdox generateQuickMatchFromList() returns the longest common substring of a list of strings
 	*/

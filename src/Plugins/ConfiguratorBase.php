@@ -86,18 +86,6 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 
 	/**
-	* Return this plugin's config, as needed for its Javascript parser
-	*
-	* This is the base implementation, meant to be overridden by custom plugins on a as-needed basis
-	*
-	* @return array|bool This plugin's config, or FALSE to disable this plugin
-	*/
-	public function asJSConfig()
-	{
-		return $this->asConfig();
-	}
-
-	/**
 	* Return a list of base properties meant to be added to asConfig()'s return
 	*
 	* NOTE: this final method exists so that the plugin's configuration can always specify those
@@ -122,7 +110,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	* This is the base implementation, meant to be overridden by custom plugins. By default it
 	* returns the Parser.js file from stock plugins' directory, if available
 	*
-	* @return string|bool Javascript source, or FALSE if no JS parser is available
+	* @return string|null Javascript source, or NULL if no JS parser is available
 	*/
 	public function getJSParser()
 	{
@@ -143,7 +131,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 		}
 		// @codeCoverageIgnoreEnd
 
-		return false;
+		return null;
 	}
 
 	//==========================================================================

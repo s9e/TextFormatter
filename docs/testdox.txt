@@ -253,6 +253,10 @@ s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
  [x] getNode() returns the stored node
 
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
+ [x] filterVariants() filters the right variant
+ [x] filterVariants() recurses into deep arrays
+ [x] filterVariants() recurses into variants
+ [x] filterVariants() removes NULL variants
  [x] generateQuickMatchFromList() returns the longest common substring of a list of strings
  [x] generateQuickMatchFromList() returns a string even if it contains only digit characters
  [x] generateQuickMatchFromList() returns FALSE if no common substring is found
@@ -845,6 +849,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] has('Javascript') returns TRUE if it has a 'Javascript' variant
  [x] has('Javascript') returns FALSE if it does not have a 'Javascript' variant
  [x] Creating a new Variant with a Variant value makes it copy its default value and its variants instead
+ [x] __construct() can be called with no arguments, and the default value will be NULL
 
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
@@ -1153,8 +1158,7 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimitAction() sets the regexpLimitAction property
  [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
- [x] Offers a default asJSConfig() implementation that returns the value of asConfig()
- [x] getJSParser() returns FALSE for custom plugins
+ [x] getJSParser() returns NULL for custom plugins
  [x] getJSParser() returns the content of Parser.js for stock plugins
 
 s9e\TextFormatter\Tests\Plugins\ParserBase
@@ -1259,8 +1263,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] Generates a regexp for its config array
  [x] The regexp that matches BBCode names does not contain a superfluous non-capturing subpattern
  [x] Essential non-capturing subpatterns are preserved
- [x] asJSConfig() preserves BBCode names
- [x] asJSConfig() preserves attribute names in predefinedAttributes
+ [x] asConfig() creates a Javascript variant that preserves BBCode names
+ [x] asConfig() creates a Javascript variant that preserves attribute names in predefinedAttributes
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests

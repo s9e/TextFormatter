@@ -71,4 +71,13 @@ class VariantTest extends Test
 		$this->assertNotSame($variant, $another);
 		$this->assertEquals($variant, $another);
 	}
+
+	/**
+	* @testdox __construct() can be called with no arguments, and the default value will be NULL
+	*/
+	public function testDefaultNull()
+	{
+		$variant = new Variant;
+		$this->assertNull($variant->get());
+	}
 }

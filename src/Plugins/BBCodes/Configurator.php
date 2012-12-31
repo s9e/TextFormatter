@@ -16,6 +16,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\Javascript\Dictionary;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
@@ -166,34 +167,30 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			}
 		}
 
-		return array(
-			'bbcodes'    => $this->collection->asConfig(),
-			'quickMatch' => $this->quickMatch,
-			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
-		);
-	}
+		// Create the BBCodes config, with its Javascript variant
+		$bbcodesConfig = new Variant($this->collection->asConfig());
 
-	/**
-	* {@inheritdoc}
-	*/
-	public function asJSConfig()
-	{
-		$config = $this->asConfig();
-
-		// Ensure that attribute names are preserved
-		foreach ($config['bbcodes'] as &$bbcodeConfig)
+		// Create the Javascript config. Ensure that BBCode names are preserved
+		$jsConfig = new Dictionary;
+		foreach ($bbcodesConfig->get() as $bbcodeName => $bbcodeConfig)
 		{
 			if (isset($bbcodeConfig['predefinedAttributes']))
 			{
+				// Ensure that attribute names are preserved
 				$bbcodeConfig['predefinedAttributes']
 					= new Dictionary($bbcodeConfig['predefinedAttributes']);
 			}
+
+			$jsConfig[$bbcodeName] = $bbcodeConfig;
 		}
-		unset($bbcodeConfig);
 
-		// Ensure that BBCode names, used as keys, are preserved
-		$config['bbcodes'] = new Dictionary($config['bbcodes']);
+		// Add the Javascript config as a variant
+		$bbcodesConfig->set('Javascript', $jsConfig);
 
-		return $config;
+		return array(
+			'bbcodes'    => $bbcodesConfig,
+			'quickMatch' => $this->quickMatch,
+			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
+		);
 	}
 }

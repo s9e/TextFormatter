@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\Configurator\Items;
 
+use InvalidArgumentException;
+
 class Variant
 {
 	/**
@@ -25,7 +27,7 @@ class Variant
 	* @param  mixed $value Default value
 	* @return void
 	*/
-	public function __construct($value)
+	public function __construct($value = null)
 	{
 		// If we're trying to create a variant of a variant, we just become a copy of it
 		if ($value instanceof self)
@@ -49,7 +51,9 @@ class Variant
 	{
 		if (isset($variant) && isset($this->variants[$variant]))
 		{
-			return $this->variants[$variant];
+			list($isDynamic, $value) = $this->variants[$variant];
+
+			return ($isDynamic) ? $value() : $value;
 		}
 
 		return $this->defaultValue;
@@ -75,6 +79,24 @@ class Variant
 	*/
 	public function set($variant, $value)
 	{
-		$this->variants[$variant] = $value;
+		$this->variants[$variant] = array(false, $value);
+	}
+
+
+	/**
+	* Set a dynamic variant for this value
+	*
+	* @param  string   $variant  Name of variant
+	* @param  callback $callback Callback that returns this variant's value
+	* @return void
+	*/
+	public function setDynamic($variant, $callback)
+	{
+		if (!is_callable($callback))
+		{
+			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
+		}
+
+		$this->variants[$variant] = array(true, $callback);
 	}
 }

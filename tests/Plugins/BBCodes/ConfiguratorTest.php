@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
 
 use DOMDocument;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -212,14 +213,15 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asJSConfig() preserves BBCode names
+	* @testdox asConfig() creates a Javascript variant that preserves BBCode names
 	*/
-	public function testAsJSConfigPreservesBBCodeNames()
+	public function testAsConfigPreservesBBCodeNames()
 	{
 		$plugin = $this->configurator->plugins->load('BBCodes');
 		$plugin->add('FOO')->tagName = 'BAR';
 
-		$config = $plugin->asJSConfig();
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config, 'Javascript');
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Javascript\\Dictionary',
@@ -229,14 +231,15 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asJSConfig() preserves attribute names in predefinedAttributes
+	* @testdox asConfig() creates a Javascript variant that preserves attribute names in predefinedAttributes
 	*/
-	public function testAsJSConfigPreservesPredefinedAttributeNames()
+	public function testAsConfigPreservesPredefinedAttributeNames()
 	{
 		$plugin = $this->configurator->plugins->load('BBCodes');
 		$plugin->add('FOO')->predefinedAttributes['k'] = 'v';
 
-		$config = $plugin->asJSConfig();
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config, 'Javascript');
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Javascript\\Dictionary',

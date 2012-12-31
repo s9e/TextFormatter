@@ -14,10 +14,44 @@ use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Collections\FilterCollection;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\Javascript\Code;
 
 abstract class ConfigHelper
 {
+	/**
+	* Recursively filter a config array to replace variants with the desired value
+	*
+	* @param  array|Traversable &$config  Config array
+	* @param  string             $variant Preferred variant
+	* @return void
+	*/
+	public static function filterVariants(&$config, $variant = null)
+	{
+		foreach ($config as $k => &$v)
+		{
+			// Use while instead of if to handle recursive variants. This is not supposed to happen
+			// though
+			while ($v instanceof Variant)
+			{
+				$v = $v->get($variant);
+
+				// A null value indicates that the value is not supposed to exist for given variant.
+				// This is different from having no specific value for given variant
+				if ($v === null)
+				{
+					unset($config[$k]);
+					continue 2;
+				}
+			}
+
+			if (is_array($v) || $v instanceof Traversable)
+			{
+				self::filterVariants($v, $variant);
+			}
+		}
+	}
+
 	/**
 	* Generate a quickMatch string from a list of strings
 	*

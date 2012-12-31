@@ -146,25 +146,12 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
-	* @testdox Offers a default asJSConfig() implementation that returns the value of asConfig()
-	*/
-	public function testAsJSConfig()
-	{
-		$dummy = new DummyPluginConfigurator($this->configurator);
-
-		$this->assertSame(
-			$dummy->asConfig(),
-			$dummy->asJSConfig()
-		);
-	}
-
-	/**
-	* @testdox getJSParser() returns FALSE for custom plugins
+	* @testdox getJSParser() returns NULL for custom plugins
 	*/
 	public function testGetJSParserFalse()
 	{
 		$dummy = new DummyPluginConfigurator(new Configurator);
-		$this->assertFalse($dummy->getJSParser());
+		$this->assertNull($dummy->getJSParser());
 	}
 
 	/**

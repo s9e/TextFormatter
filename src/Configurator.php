@@ -18,6 +18,7 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\Javascript;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\UrlConfig;
@@ -104,6 +105,9 @@ class Configurator implements ConfigProvider
 		// Generate the config array
 		$config = $this->asConfig();
 
+		// Remove variants
+		ConfigHelper::filterVariants($config);
+
 		// Remove instances of Code, recursively and in-place
 		ConfigHelper::removeJavascriptCode($config);
 
@@ -189,6 +193,11 @@ class Configurator implements ConfigProvider
 		// Remove unused properties
 		unset($config['customFilters']);
 		unset($config['rootRules']);
+
+		// Create a variant that adds the stylesheet to the config if we're building a Javascript
+		// config
+		$config['stylesheet'] = new Variant;
+		$config['stylesheet']->setDynamic('Javascript', array($this->stylesheet, 'get'));
 
 		return $config;
 	}

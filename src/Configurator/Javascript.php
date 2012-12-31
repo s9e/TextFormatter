@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator;
 use ArrayObject;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Javascript\Code;
 use s9e\TextFormatter\Configurator\Javascript\Dictionary;
 use s9e\TextFormatter\Configurator\Javascript\Minifier;
@@ -26,6 +27,11 @@ class Javascript
 	*            ProgrammableCallback instances
 	*/
 	protected $callbacks;
+
+	/**
+	* @var array Configuration, filtered for Javascript
+	*/
+	protected $config;
 
 	/**
 	* @var Configurator Configurator this instance belongs to
@@ -90,6 +96,9 @@ class Javascript
 			$filepath = __DIR__ . '/../' . $filename;
 			$src .= file_get_contents($filepath) . "\n";
 		}
+
+		$this->config = $this->configurator->asConfig();
+		ConfigHelper::filterVariants($this->config, 'Javascript');
 
 		// Reset this instance's callbacks
 		$this->callbacks = array();
@@ -171,13 +180,9 @@ class Javascript
 	{
 		$plugins = new Dictionary;
 
-		foreach ($this->configurator->plugins as $pluginName => $plugin)
+		foreach ($this->config['plugins'] as $pluginName => $pluginConfig)
 		{
-			// TODO: see PluginCollection::asConfig
-			$src = $plugin->getJSParser();
-			$pluginConfig = $plugin->asJSConfig();
-
-			if ($src === false || $pluginConfig === false)
+			if (!isset($pluginConfig['parser']))
 			{
 				// Skip this plugin
 				continue;
@@ -188,6 +193,7 @@ class Javascript
 			*            moved into the plugin's parser
 			*/
 			$globalKeys = array(
+				'parser'            => 1,
 				'quickMatch'        => 1,
 				'regexp'            => 1,
 				'regexpLimit'       => 1,
@@ -203,7 +209,7 @@ class Javascript
 				$globalConfig['regexp'] = RegexpConvertor::toJS($globalConfig['regexp']);
 			}
 
-			$globalConfig['parser'] = new Code('function(text,matches){/** @const */var config=' . self::encode($localConfig) . ';' . $src . '}');
+			$globalConfig['parser'] = new Code('function(text,matches){/** @const */var config=' . self::encode($localConfig) . ';' . $globalConfig['parser'] . '}');
 
 			$plugins[$pluginName] = $globalConfig;
 		}
@@ -221,15 +227,12 @@ class Javascript
 	*/
 	protected function getTagsConfig()
 	{
-		// Grab the parser's config
-		$config = $this->configurator->asConfig();
-
 		// Replace callback arrays with Javascript code
-		self::replaceCallbacks($config);
+		self::replaceCallbacks($this->config);
 
 		// Prepare a Dictionary that will preserve tags' names
 		$tags = new Dictionary;
-		foreach ($config['tags'] as $tagName => $tagConfig)
+		foreach ($this->config['tags'] as $tagName => $tagConfig)
 		{
 			if (isset($tagConfig['attributes']))
 			{
@@ -294,7 +297,7 @@ class Javascript
 				$src .= json_encode($v);
 			}
 			else
-			{
+			{var_dump($k,$v);
 				throw new RuntimeException('Cannot encode non-scalar value');
 			}
 
@@ -306,39 +309,6 @@ class Javascript
 		$src .= ($isArray) ? ']' : '}';
 
 		return $src;
-	}
-
-	/**
-	* 
-	*
-	* @param  ConfiguratorBase $plugin Plugin to format
-	* @return string
-	*/
-	protected function formatPlugin(ConfiguratorBase $plugin)
-	{
-		$src = $plugin->getJSParser();
-		$pluginConfig = $plugin->asJSConfig();
-
-		if ($src === false || $pluginConfig === false)
-		{
-			return false;
-		}
-
-		/**
-		* @var array Keys of elements that are kept in the global scope. Everything else will be
-		*            moved into the plugin's parser
-		*/
-		$globalKeys = array(
-			'quickMatch'        => 1,
-			'regexp'            => 1,
-			'regexpLimit'       => 1,
-			'regexpLimitAction' => 1
-		);
-
-		$globalConfig = array_intersect_key($pluginConfig, $globalKeys);
-		$localConfig  = array_diff_key($pluginConfig, $globalKeys);
-
-		$src = 'function(text,matches){/** @const */var config=' . self::encode($localConfig) . ';' . $src . '}';
 	}
 
 	/**
