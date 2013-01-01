@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         verbose="true"
+>
+	<logging>
+		<log type="testdox-text" target="docs/testdox.txt" />
+	</logging>
+
+	<groups>
+		<exclude>
+			<group>needs-network</group>
+			<!--group>needs-nodejs</group-->
+		</exclude>
+	</groups>
+
+	<testsuites>
+		<testsuite name="TextFormatter">
+			<file>tests/autoloaderTest.php</file>
+
+			<!-- Test the base classes and traits first -->
+			<file>tests/Configurator/Collections/CollectionTest.php</file>
+			<file>tests/Configurator/Collections/NormalizedCollectionTest.php</file>
+			<file>tests/Configurator/Collections/NormalizedListTest.php</file>
+			<file>tests/Configurator/Traits/CollectionProxyTest.php</file>
+			<file>tests/Configurator/Traits/ConfigurableTest.php</file>
+
+			<file>tests/ConfiguratorTest.php</file>
+			<file>tests/Configurator/Collections/AttributeCollectionTest.php</file>
+			<file>tests/Configurator/Collections/AttributeListTest.php</file>
+			<file>tests/Configurator/Collections/AttributePreprocessorCollectionTest.php</file>
+			<file>tests/Configurator/Collections/FilterChainTest.php</file>
+			<file>tests/Configurator/Collections/FilterCollectionTest.php</file>
+			<file>tests/Configurator/Collections/PluginCollectionTest.php</file>
+			<file>tests/Configurator/Collections/RulesetTest.php</file>
+			<file>tests/Configurator/Collections/TagCollectionTest.php</file>
+			<file>tests/Configurator/Collections/TemplateCollectionTest.php</file>
+			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
+			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
+			<file>tests/Configurator/Helpers/HTML5/TemplateForensicsTest.php</file>
+			<!-- RulesGenerator depends on TemplateForensics -->
+			<file>tests/Configurator/Helpers/HTML5/RulesGeneratorTest.php</file>
+			<file>tests/Configurator/Helpers/RegexpBuilderTest.php</file>
+			<file>tests/Configurator/Helpers/RegexpParserTest.php</file>
+			<file>tests/Configurator/Helpers/RulesHelperTest.php</file>
+			<!-- TemplateChecker depends on TemplateOptimizer -->
+			<file>tests/Configurator/Helpers/TemplateOptimizerTest.php</file>
+			<file>tests/Configurator/Helpers/TemplateCheckerTest.php</file>
+			<file>tests/Configurator/Helpers/TemplateHelperTest.php</file>
+			<file>tests/Configurator/Items/AttributeTest.php</file>
+			<file>tests/Configurator/Items/AttributePreprocessorTest.php</file>
+			<file>tests/Configurator/Items/CallbackPlaceholderTest.php</file>
+			<file>tests/Configurator/Items/ProgrammableCallbackTest.php</file>
+			<file>tests/Configurator/Items/TagTest.php</file>
+			<file>tests/Configurator/Items/TemplateTest.php</file>
+			<file>tests/Configurator/Items/VariantTest.php</file>
+			<file>tests/Configurator/StylesheetTest.php</file>
+			<file>tests/Configurator/UrlConfigTest.php</file>
+			<file>tests/Configurator/Validators/AttributeNameTest.php</file>
+			<file>tests/Configurator/Validators/TagNameTest.php</file>
+			<file>tests/Configurator/JavascriptTest.php</file>
+			<file>tests/Configurator/Javascript/CodeTest.php</file>
+			<file>tests/Configurator/Javascript/RegExpTest.php</file>
+			<file>tests/Configurator/Javascript/RegexpConvertorTest.php</file>
+			<file>tests/Configurator/Javascript/Minifiers/ClosureCompilerServiceTest.php</file>
+			<file>tests/Configurator/Javascript/Minifiers/NoopTest.php</file>
+
+			<!-- Trying to sort by order of dependency  -->
+			<file>tests/Parser/BuiltInFiltersTest.php</file>
+			<file>tests/Parser/FilterProcessingTest.php</file>
+			<file>tests/Parser/LoggerTest.php</file>
+			<file>tests/Parser/PluginsHandlingTest.php</file>
+			<file>tests/Parser/TagTest.php</file>
+			<file>tests/Parser/TagStackTest.php</file>
+			<file>tests/Parser/OutputHandlingTest.php</file>
+			<file>tests/Parser/TagProcessingTest.php</file>
+			<file>tests/Parser/RulesHandlingTest.php</file>
+			<file>tests/ParserTest.php</file>
+
+			<file>tests/Plugins/ConfiguratorBaseTest.php</file>
+			<file>tests/Plugins/ParserBaseTest.php</file>
+			<file>tests/Plugins/Autoemail/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Autoemail/ParserTest.php</file>
+			<file>tests/Plugins/Autolink/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Autolink/ParserTest.php</file>
+			<file>tests/Plugins/BBCodes/Configurator/AttributeValueCollectionTest.php</file>
+			<file>tests/Plugins/BBCodes/Configurator/BBCodeTest.php</file>
+			<file>tests/Plugins/BBCodes/Configurator/BBCodeCollectionTest.php</file>
+			<file>tests/Plugins/BBCodes/Configurator/BBCodeMonkeyTest.php</file>
+			<file>tests/Plugins/BBCodes/Configurator/RepositoryTest.php</file>
+			<file>tests/Plugins/BBCodes/Configurator/RepositoryCollectionTest.php</file>
+			<file>tests/Plugins/BBCodes/ConfiguratorTest.php</file>
+			<file>tests/Plugins/BBCodes/ParserTest.php</file>
+			<file>tests/Plugins/Censor/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Censor/ParserTest.php</file>
+			<file>tests/Plugins/Emoticons/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Emoticons/Configurator/EmoticonCollectionTest.php</file>
+			<file>tests/Plugins/Emoticons/ParserTest.php</file>
+			<file>tests/Plugins/Escaper/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Escaper/ParserTest.php</file>
+			<file>tests/Plugins/Generic/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Generic/ParserTest.php</file>
+			<file>tests/Plugins/HTMLElements/ConfiguratorTest.php</file>
+			<file>tests/Plugins/HTMLElements/ParserTest.php</file>
+			<file>tests/Plugins/HTMLEntities/ConfiguratorTest.php</file>
+			<file>tests/Plugins/HTMLEntities/ParserTest.php</file>
+			<file>tests/Plugins/WittyPants/ConfiguratorTest.php</file>
+			<file>tests/Plugins/WittyPants/ParserTest.php</file>
+
+			<file>tests/RendererTest.php</file>
+
+			<file>tests/UnparserTest.php</file>
+		</testsuite>
+	</testsuites>
+
+	<filter>
+		<whitelist>
+			<directory suffix=".php">src</directory>
+		</whitelist>
+	</filter>
+</phpunit>

@@ -2,17 +2,17 @@
 TMP=/dev/shm/phpunit.out
 ROOT=$(dirname $(dirname $(realpath $0)))
 
-if [[ -n `git diff --cached --name-only -b "$ROOT/src" "$ROOT/tests" | grep php` ]]
+cd "$ROOT"
+
+if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
 then
-	cd "$ROOT/tests"
-	phpunit -c "$ROOT/tests/phpunit.xml" | tee $TMP
+	phpunit | tee $TMP
 
 	if [[ `tail -n3 $TMP` != *OK* ]]
 	then
 		exit 1;
 	fi
 
-	cd "$ROOT"
 	git update-index --add "docs/testdox.txt"
 fi
 
