@@ -47,6 +47,11 @@ $configurator->plugins->load('HTMLEntities');
 // We'll disallow links to example.org, which will automagically apply to [URL] and <a>
 $configurator->urlConfig->disallowHost('example.org');
 
+// You can set limits on the number of matches passed to plugins, number of tags used or nested
+$configurator->HTMLElements->setRegexpLimit(10);
+$configurator->tags['QUOTE']->setNestingLimit(3);
+$configurator->tags['URL']->setTagLimit(1);
+
 // Finally, instead of having to explicitly define what tag is allowed where and how, we'll let the
 // configurator define a bunch of rules based on HTML5
 $configurator->addHTML5Rules();
