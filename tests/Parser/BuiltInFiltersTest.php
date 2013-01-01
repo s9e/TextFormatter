@@ -91,6 +91,11 @@ class BuiltInFiltersTest extends Test
 	public function getData()
 	{
 		return array(
+			array('alnum', '', false),
+			array('alnum', 'abcDEF', 'abcDEF'),
+			array('alnum', 'abc_def', false),
+			array('alnum', '0123', '0123'),
+			array('alnum', 'é', false),
 			array('range', '2', 2, array('min' => 2, 'max' => 5)),
 			array('range', '5', 5, array('min' => 2, 'max' => 5)),
 			array('range', '-5', -5, array('min' => -5, 'max' => 5)),

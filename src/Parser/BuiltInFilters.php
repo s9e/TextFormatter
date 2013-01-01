@@ -10,6 +10,19 @@ namespace s9e\TextFormatter\Parser;
 class BuiltInFilters
 {
 	/**
+	* Filter an alphanumeric value
+	*
+	* @param  string $attrValue Original value
+	* @return mixed             Filtered value, or FALSE if invalid
+	*/
+	public static function filterAlnum($attrValue)
+	{
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
+			'options' => array('regexp' => '/^[0-9A-Za-z]+$/D')
+		));
+	}
+
+	/**
 	* Filter a color value
 	*
 	* @param  string $attrValue Original value

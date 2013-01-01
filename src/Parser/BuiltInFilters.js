@@ -11,6 +11,15 @@ var BuiltInFilters =
 	* @param  {*} attrValue
 	* @return {*}
 	*/
+	filterAlnum: function(attrValue)
+	{
+		return /^[0-9A-Za-z]+$/.test(attrValue) ? attrValue : false;
+	},
+
+	/**
+	* @param  {*} attrValue
+	* @return {*}
+	*/
 	filterColor: function(attrValue)
 	{
 		return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrValue) ? attrValue : false;
