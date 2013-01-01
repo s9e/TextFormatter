@@ -49,6 +49,12 @@ function convertCustom($filepath, &$file)
 				'return $m[1] . TemplateOptimizer::minifyXPath($m[2]);'
 			)
 		),
+		'Variant.php' => array(
+			array(
+				'return ($isDynamic) ? $value() : $value;',
+				'return ($isDynamic) ? call_user_func($value) : $value;'
+			)
+		),
 	);
 
 	$filename = basename($filepath);
