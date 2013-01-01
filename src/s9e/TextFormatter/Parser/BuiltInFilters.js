@@ -224,7 +224,6 @@ var BuiltInFilters =
 		return attrValue;
 	},
 
-	// TODO: convert regexp
 	/**
 	* @param  {*} attrValue
 	* @param  {!RegExp} regexp

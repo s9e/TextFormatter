@@ -13,7 +13,7 @@ var namespaces;
 */
 var output;
 
-// TODO: replace -- also, handle the quotes/noquotes thing
+// TODO: replace/merge?
 function htmlspecialchars_compat(str)
 {
 	var t = {

@@ -61,9 +61,6 @@ class Parser implements Serializable
 	*/
 	public function __construct(array $config)
 	{
-		/**
-		* @todo add logger to registeredVars for convenience
-		*/
 		$this->logger         = new Logger($this);
 		$this->pluginsConfig  = $config['plugins'];
 		$this->registeredVars = $config['registeredVars'];

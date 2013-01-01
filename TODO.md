@@ -39,3 +39,4 @@ TODO
 - IDEA(redux): create a Stylesheet object in Configurator. Params and templates can be registered somehow. Reconsider the DynamicTemplate thing from above. Get rid of ConfiguratorBase::getXSL()
 - Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
 - JS parser needs quickMatch to be UTF-8
+- Find a good way to test the Javascript HTML plugins
