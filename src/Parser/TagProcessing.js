@@ -207,6 +207,17 @@ function processStartTag(tag)
 		return;
 	}
 
+	// If this tag has an autoClose rule and it's not paired with an end tag, we replace it
+	// with a self-closing tag with the same properties
+	if (tagConfig.rules.flags & RULE_AUTO_CLOSE
+	 && !tag.getEndTag())
+	{
+		var newTag = new Tag(Tag.SELF_CLOSING_TAG, tagName, tag.getPos(), tag.getLen());
+		newTag.setAttributes(tag.getAttributes());
+
+		tag = newTag;
+	}
+
 	// This tag is valid, output it and update the context
 	outputTag(tag);
 	pushContext(tag);

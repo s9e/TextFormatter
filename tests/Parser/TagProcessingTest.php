@@ -378,6 +378,49 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('X', 1, 0);
 				}
 			),
+			array(
+				'xx [hr] yy',
+				'<rt>xx <HR>[hr]</HR> yy</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('HR')->rules->autoClose();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('HR', 3, 4);
+				}
+			),
+			array(
+				'xx [img=foo.png] yy',
+				'<rt>xx <IMG src="foo.png">[img=foo.png]</IMG> yy</rt>',
+				function ($constructor)
+				{
+					$tag = $constructor->tags->add('IMG');
+					$tag->attributes->add('src');
+					$tag->rules->autoClose();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('IMG', 3, 13)->setAttribute('src', 'foo.png');
+				}
+			),
+			array(
+				'xx [img]foo.png[/img] yy',
+				'<rt>xx <IMG src="foo.png"><st>[img]</st>foo.png<et>[/img]</et></IMG> yy</rt>',
+				function ($constructor)
+				{
+					$tag = $constructor->tags->add('IMG');
+					$tag->attributes->add('src');
+					$tag->rules->autoClose();
+				},
+				function ($parser)
+				{
+					$tag = $parser->addStartTag('IMG', 3, 5);
+					$tag->setAttribute('src', 'foo.png');
+
+					$tag->pairWith($parser->addEndTag('IMG', 15, 6));
+				}
+			),
 		);
 	}
 }
