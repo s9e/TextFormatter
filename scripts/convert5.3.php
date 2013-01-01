@@ -1,6 +1,11 @@
 #!/usr/bin/php
 <?php
 
+if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+{
+	die('No need to convert sources on PHP ' . PHP_VERSION . "\n");
+}
+
 function fqn($file)
 {
 	$table = array();
