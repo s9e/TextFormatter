@@ -179,9 +179,9 @@ class BuiltInFilters
 	*/
 	public static function filterNumber($attrValue)
 	{
-		return (preg_match('#^[0-9]+$#D', $attrValue))
-			  ? $attrValue
-			  : false;
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
+			'options' => array('regexp' => '/^[0-9]+$/D')
+		));
 	}
 
 	/**
@@ -242,9 +242,9 @@ class BuiltInFilters
 	*/
 	public static function filterRegexp($attrValue, $regexp)
 	{
-		return (preg_match($regexp, $attrValue))
-		     ? $attrValue
-		     : false;
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
+			'options' => array('regexp' => $regexp)
+		));
 	}
 
 	/**
@@ -256,7 +256,7 @@ class BuiltInFilters
 	public static function filterSimpletext($attrValue)
 	{
 		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '#^[A-Za-z0-9\\-+.,_ ]+$#D')
+			'options' => array('regexp' => '/^[- +,.0-9A-Za-z_]+$/D')
 		));
 	}
 
