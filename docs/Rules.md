@@ -16,7 +16,7 @@ $tag->rules->denyChild('X');
 <dl>
 
 <dt>allowChild</dt>
-<dt><code>$tag->rules->allowChild('X');</code>
-Allows tag X to be used as a child of given tag.</dt>
+<dd><i>Example:</i> <code>$tag->rules->allowChild('X');</code><br/>
+Allows tag X to be used as a child of given tag.</dd>
 
 </dl>
