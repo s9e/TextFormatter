@@ -125,6 +125,7 @@ class Javascript
 			$src .= "var $name=$code;\n";
 		}
 
+//		$src = $this->getMinifier()->minify($src);
 		file_put_contents('/tmp/z.js', $src);
 
 		return $src;

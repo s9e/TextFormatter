@@ -8,6 +8,11 @@ var isRich;
 */
 var namespaces;
 
+/**
+* @type {!string} This parser's output
+*/
+var output;
+
 // TODO: replace -- also, handle the quotes/noquotes thing
 function htmlspecialchars_compat(str)
 {
@@ -83,15 +88,15 @@ function outputTag(tag)
 	outputText(tagPos, trimBefore);
 
 	// Capture the text consumed by the tag
-	tagText = (tagLen)
-			 ? htmlspecialchars_noquotes(text.substr(tagPos, tagLen))
-			 : '';
+	var tagText = (tagLen)
+				? htmlspecialchars_noquotes(text.substr(tagPos, tagLen))
+				: '';
 
 	// Output current tag
 	if (tag.isStartTag())
 	{
 		// Record this tag's namespace, if applicable
-		colonPos = tagName.indexOf(':');
+		var colonPos = tagName.indexOf(':');
 		if (colonPos > 0)
 		{
 			namespaces[tagName.substr(0, colonPos)] = 0;
@@ -199,15 +204,12 @@ function outputText(catchupPos, maxLines)
 		++ignoreLen;
 	}
 
+	var ignoreText = '';
 	if (ignoreLen)
 	{
 		// TODO: IE compat
 		ignoreText  = '<i>' + catchupText.substr(-ignoreLen) + '</i>';
 		catchupText = catchupText.substr(0, catchupLen - ignoreLen);
-	}
-	else
-	{
-		ignoreText = '';
 	}
 
 	catchupText = htmlspecialchars_noquotes(catchupText);

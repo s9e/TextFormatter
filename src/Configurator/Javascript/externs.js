@@ -19,6 +19,11 @@
 // See https://github.com/s9e/TextFormatter/blob/master/scripts/generateExterns.php for details.
 
 /**
+ * @type {undefined}
+ * @const
+ */
+var undefined;
+/**
  * @param {string} uri
  * @return {string}
  * @nosideeffects
@@ -97,7 +102,7 @@ Array.prototype.sort = function(opt_compareFunction) {};
  * @return {string}
  * @nosideeffects
  */
-function Date(opt_yr_num, opt_mo_num, opt_day_num, opt_hr_num, opt_min_num,
+function Date(opt_yr_num, opt_mo_num, opt_day_num, opt_hr_num, opt_min_num,     opt_sec_num, opt_ms_num) {}
 /**
  * @return {number}
  * @nosideeffects
@@ -113,6 +118,12 @@ var Math = {};
  * @nosideeffects
  */
 Math.floor = function(x) {};
+/**
+ * @param {...*} var_args
+ * @return {number}
+ * @nosideeffects
+ */
+Math.max = function(var_args) {};
 /**
  * @return {number}
  * @nosideeffects

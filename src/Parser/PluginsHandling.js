@@ -148,5 +148,5 @@ function registerParser(pluginName, parser)
 		plugins[pluginName] = {};
 	}
 
-	plugin[pluginName].parser = parser;
+	plugins[pluginName].parser = parser;
 }

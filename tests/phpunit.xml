@@ -18,7 +18,7 @@
 	<groups>
 		<exclude>
 			<group>needs-network</group>
-			<group>needs-nodejs</group>
+			<!--group>needs-nodejs</group-->
 		</exclude>
 	</groups>
 

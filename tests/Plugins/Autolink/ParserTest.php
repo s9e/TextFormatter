@@ -78,7 +78,7 @@ class ParserTest extends Test
 				'<rt><URL url="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</URL> for <URL url="http://www.xn--lyp-plada.com">http://www.älypää.com</URL></rt>',
 				array(),
 				null,
-				'No Punycode in Javascript'
+				'<rt><URL url="http://www.%C3%A4lyp%C3%A4%C3%A4.com">http://www.xn--lyp-plada.com</URL> for <URL url="http://www.%C3%A4lyp%C3%A4%C3%A4.com">http://www.älypää.com</URL></rt>'
 			),
 			array(
 				'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen for http://en.wikipedia.org/wiki/Matti_Nykänen',

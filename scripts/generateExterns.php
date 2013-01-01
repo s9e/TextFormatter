@@ -3,6 +3,8 @@
 
 $externs = array(
 	'es3.js' => array(
+		'var undefined',
+
 		// functions
 		'function encodeURIComponent',
 		'function escape',
@@ -25,6 +27,7 @@ $externs = array(
 		// Math object
 		'var Math',
 		'Math.floor',
+		'Math.max',
 		'Math.random',
 
 		// Number object
@@ -65,6 +68,9 @@ foreach ($externs as $filename => $names)
 			)
 		))
 	);
+
+	// Concat multiline definitions
+	$file = preg_replace('#, *\n#', ', ', $file);
 
 	preg_match_all('#/\\*\\*.*?\\*/\\n([^\\n]+)#s', $file, $m);
 

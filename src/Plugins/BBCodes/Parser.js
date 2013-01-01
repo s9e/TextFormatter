@@ -61,7 +61,9 @@ matches.forEach(function(m)
 		attributes = {},
 		wellFormed = false,
 		firstPos   = rpos,
-		attrName;
+		attrName,
+		attrValue,
+		tag;
 
 	// Add predefined attributes
 	if (bbcodeConfig.predefinedAttributes)
@@ -74,7 +76,7 @@ matches.forEach(function(m)
 
 	while (rpos < textLen)
 	{
-		c = text.charAt(rpos);
+		var c = text.charAt(rpos);
 
 		if (c === ' ')
 		{
@@ -182,7 +184,7 @@ matches.forEach(function(m)
 			}
 
 			// Unescape special characters ' " and \
-			value = text.substr(valuePos, rpos - valuePos).replace(/\\([\\'"])/g, '$1');
+			attrValue = text.substr(valuePos, rpos - valuePos).replace(/\\([\\'"])/g, '$1');
 
 			// Skip past the closing quote
 			++rpos;
@@ -202,11 +204,11 @@ matches.forEach(function(m)
 				continue;
 			}
 
-			value  = match[0];
-			rpos  += value.length;
+			attrValue  = match[0];
+			rpos  += attrValue.length;
 		}
 
-		attributes[attrName] = value;
+		attributes[attrName] = attrValue;
 	}
 
 	if (!wellFormed)

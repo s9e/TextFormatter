@@ -32,6 +32,11 @@ var tagsConfig;
 var text;
 
 /**
+* @type {!number} Length of the text being parsed
+*/
+var textLen;
+
+/**
 * Get this parser's Logger instance
 *
 * @return {!Logger}

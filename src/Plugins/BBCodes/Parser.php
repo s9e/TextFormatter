@@ -204,7 +204,7 @@ class Parser extends ParserBase
 					}
 
 					// Unescape special characters ' " and \
-					$value = preg_replace(
+					$attrValue = preg_replace(
 						'#\\\\([\\\\\'"])#',
 						'$1',
 						substr($text, $valuePos, $rpos - $valuePos)
@@ -227,11 +227,11 @@ class Parser extends ParserBase
 						continue;
 					}
 
-					$value  = $m[0];
-					$rpos  += strlen($value);
+					$attrValue  = $m[0];
+					$rpos  += strlen($attrValue);
 				}
 
-				$attributes[$attrName] = $value;
+				$attributes[$attrName] = $attrValue;
 			}
 
 			if (!$wellFormed)

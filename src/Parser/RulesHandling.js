@@ -17,7 +17,7 @@ function closeAncestor(tag)
 
 			while (--i >= 0)
 			{
-				var ancestor     = openTags[$i],
+				var ancestor     = openTags[i],
 					ancestorName = ancestor.getName();
 
 				if (tagConfig.rules.closeAncestor[ancestorName])

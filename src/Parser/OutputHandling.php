@@ -20,6 +20,11 @@ trait OutputHandling
 	protected $namespaces;
 
 	/**
+	* @var string This parser's output
+	*/
+	protected $output;
+
+	/**
 	* Finalize the output by appending the rest of the unprocessed text and create the root node
 	*
 	* @return void

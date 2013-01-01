@@ -52,6 +52,11 @@ class Parser implements Serializable
 	protected $text;
 
 	/**
+	* @var integer Length of the text being parsed
+	*/
+	protected $textLen;
+
+	/**
 	* Constructor
 	*/
 	public function __construct(array $config)

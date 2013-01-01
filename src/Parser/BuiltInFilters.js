@@ -314,7 +314,7 @@ var BuiltInFilters =
 		if (urlConfig.disallowedHosts)
 		{
 			var a = document.createElement('a');
-			a.href = url;
+			a.href = attrValue;
 
 			if (urlConfig.disallowedHosts.test(a.hostname))
 			{

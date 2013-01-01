@@ -116,7 +116,7 @@ function processCurrentTag()
 			addEndTag(
 				startTag.getName(),
 				pos,
-				max(0, tagPos + tagLen - pos)
+				Math.max(0, tagPos + tagLen - pos)
 			).pairWith(startTag);
 
 			// Note that current tag is not invalidated, it's merely replaced
