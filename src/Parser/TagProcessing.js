@@ -315,7 +315,7 @@ function popContext()
 {
 	var tag = openTags.pop();
 	--cntOpen[tag.getName()];
-	context = context['parentContext'];
+	context = context.parentContext;
 }
 
 /**
