@@ -66,7 +66,7 @@ class BuiltInFilters
 	public static function filterIdentifier($attrValue)
 	{
 		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[A-Za-z0-9\\-_]+$/D')
+			'options' => array('regexp' => '/^[-0-9A-Za-z_]+$/D')
 		));
 	}
 
