@@ -99,7 +99,25 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox executeAttributePreprocessors() does not unset the source attribute if there's nn match
+	* @testdox executeAttributePreprocessors() can reset the source attribute on match
+	*/
+	public function testExecuteAttributePreprocessorsResetSource()
+	{
+		$tagConfig = new TagConfig;
+		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<foo>(?<baz>[a-z]))$/i');
+		$tagConfig = $tagConfig->asConfig();
+		ConfigHelper::filterVariants($tagConfig);
+
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$tag->setAttribute('foo', '2x');
+
+		$this->assertTrue(Parser::executeAttributePreprocessors($tag, $tagConfig));
+		$this->assertTrue($tag->hasAttribute('foo'));
+		$this->assertSame('x', $tag->getAttribute('foo'));
+	}
+
+	/**
+	* @testdox executeAttributePreprocessors() does not unset the source attribute if there's no match
 	*/
 	public function testExecuteAttributePreprocessorsDoesNotUnsetSourceIfNoMatch()
 	{
