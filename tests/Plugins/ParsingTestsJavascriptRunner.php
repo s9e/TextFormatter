@@ -7,6 +7,7 @@ use s9e\TextFormatter\Configurator;
 trait ParsingTestsJavascriptRunner
 {
 	/**
+	* @group needs-nodejs
 	* @testdox Parsing tests (Javascript)
 	* @dataProvider getParsingTests
 	*/
