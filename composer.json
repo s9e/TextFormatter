@@ -1,5 +1,5 @@
 {
-    "name": "s9e/TextFormatter",
+    "name": "s9e/text-formatter",
     "require": {
         "php": ">=5.3.0"
     },
