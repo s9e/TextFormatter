@@ -138,42 +138,4 @@ class Configurator extends ConfiguratorBase
 
 		return array('generics' => $variant);
 	}
-
-	/**
-	* Generate and return the Javascript source for this plugin's parser
-	*
-	* @return string|bool Javascript source, or FALSE if no JS parser is available
-	*/
-	public function _getJSParser()
-	{
-		// Start with the normal config
-		$config = $this->asConfig();
-
-		// If there's no generics, no need for a parser -- this is not supposed to happen though
-		if ($config === false)
-		{
-			return false;
-		}
-
-		$src = '[';
-		foreach ($config['generics'] as $entry)
-		{
-			list($tagName, $regexp) = $entry;
-			// Convert the PCRE regexp to a Javascript regexp literal with the global flag
-			$regexp = RegexpConvertor::toJS($regexp);
-			$regexp->flags .= 'g';
-
-			// Add the entry to the list
-			$src .= '[' . json_encode($tagName) . ',' . $regexp . ',' . json_encode($regexp->map) . '],';
-		}
-		unset($entry);
-
-		// Remove the last comma and close the list
-		$src = substr($src, 0, -1) . ']';
-
-		// Append the plugin's source
-		$src .= parent::getJSParser();
-die($src);
-		return $src;
-	}
 }
