@@ -116,44 +116,6 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox executeAttributePreprocessors() stops after the first match
-	*/
-	public function testExecuteAttributePreprocessorsStopsOnFirstMatch()
-	{
-		$tagConfig = new TagConfig;
-		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])/i');
-		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
-		$tagConfig = $tagConfig->asConfig();
-		ConfigHelper::filterVariants($tagConfig);
-
-		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
-		$tag->setAttribute('foo', '2x');
-
-		$this->assertTrue(Parser::executeAttributePreprocessors($tag, $tagConfig));
-		$this->assertSame('2', $tag->getAttribute('bar'));
-		$this->assertFalse($tag->hasAttribute('baz'));
-	}
-
-	/**
-	* @testdox executeAttributePreprocessors() tries all preprocessors until there's a match
-	*/
-	public function testExecuteAttributePreprocessorsTriesAll()
-	{
-		$tagConfig = new TagConfig;
-		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[a-z])(?<baz>[a-z])$/i');
-		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
-		$tagConfig = $tagConfig->asConfig();
-		ConfigHelper::filterVariants($tagConfig);
-
-		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
-		$tag->setAttribute('foo', '2x');
-
-		$this->assertTrue(Parser::executeAttributePreprocessors($tag, $tagConfig));
-		$this->assertSame('2', $tag->getAttribute('bar'));
-		$this->assertSame('x', $tag->getAttribute('baz'));
-	}
-
-	/**
 	* @testdox executeAttributePreprocessors() returns TRUE even if the no source attribute was present
 	*/
 	public function testExecuteAttributePreprocessorsReturnsTrue()

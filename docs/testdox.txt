@@ -1007,8 +1007,6 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] executeAttributePreprocessors() does not overwrite attributes that were already set
  [x] executeAttributePreprocessors() unsets the source attribute on match
  [x] executeAttributePreprocessors() does not unset the source attribute if there's nn match
- [x] executeAttributePreprocessors() stops after the first match
- [x] executeAttributePreprocessors() tries all preprocessors until there's a match
  [x] executeAttributePreprocessors() returns TRUE even if the no source attribute was present
  [x] executeFilter() correctly passes a value to the callback
  [x] executeFilter() correctly passes a named var to the callback
