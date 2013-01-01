@@ -109,9 +109,13 @@ function convertUse($filepath, &$file)
 		function ($m) use ($namespace, &$table)
 		{
 			$fqn  = (isset($table[$m[1]])) ? $table[$m[1]] : $namespace . '\\' . $m[1];
-			$path = __DIR__ . '/../src' . str_replace('\\', DIRECTORY_SEPARATOR, substr($fqn, 17)) . '.php';
+			$path = __DIR__ . '/../src/s9e/TextFormatter' . str_replace('\\', DIRECTORY_SEPARATOR, substr($fqn, 17)) . '.php';
 
-			$path = str_replace('/../src/Tests/', '/../tests/', $path);
+			$path = str_replace(
+				'/../src/s9e/TextFormatter/Tests/',
+				'/../tests/',
+				$path
+			);
 
 			if (!file_exists($path))
 			{
@@ -152,5 +156,5 @@ function convertDir($dir)
 	}
 }
 
-convertDir(realpath(__DIR__ . '/../src'));
+convertDir(realpath(__DIR__ . '/../src/s9e/TextFormatter'));
 convertDir(realpath(__DIR__ . '/../tests'));
