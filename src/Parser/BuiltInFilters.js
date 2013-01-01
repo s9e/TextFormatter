@@ -252,7 +252,120 @@ var BuiltInFilters =
 	*/
 	filterUrl: function(attrValue, urlConfig, logger)
 	{
-		// TODO
+		/**
+		* Trim the URL to conform with HTML5
+		* @link http://dev.w3.org/html5/spec/links.html#attr-hyperlink-href
+		*/
+		attrValue = attrValue.replace(/^\s+/, '').replace(/\s+$/, '');
+
+		/**
+		* @type {!boolean} Whether to remove the scheme part of the URL
+		*/
+		var removeScheme = false;
+
+		/**
+		* @type {!boolean} Whether to validate the scheme part of the URL
+		*/
+		var validateScheme = true;
+
+		if (attrValue.substr(0, 2) === '//')
+		{
+			if (urlConfig.defaultScheme)
+			{
+				attrValue    = urlConfig.defaultScheme + ':' + attrValue;
+				removeScheme = true;
+			}
+			else if (!urlConfig.requireScheme)
+			{
+				attrValue      = 'http:' + attrValue;
+				removeScheme   = true;
+				validateScheme = false;
+			}
+		}
+
+		// Test whether the URL contains only ASCII characters, and encode them if not
+		if (!/^[\u0020-\u007f]+$/.test(attrValue))
+		{
+			attrValue = BuiltInFilters.encodeUrlToAscii(attrValue);
+		}
+
+		// We URL-encode quotes and parentheses just in case someone would want to use the URL in
+		// some Javascript thingy, or in CSS
+		attrValue = attrValue.replace(/['"()]/g, escape);
+
+		// Parse the URL... kinda
+		var m =/^([a-z\d]+):\/\/\S+(?:\/.*)?$/i.exec(attrValue);
+
+		if (!m)
+		{
+			return false;
+		}
+
+		if (validateScheme && !urlConfig.allowedSchemes.test(m[1]))
+		{
+			logger.err(
+				'URL scheme is not allowed',
+				{'attrValue': attrValue, 'scheme': m[1]}
+			);
+
+			return false;
+		}
+
+		if (urlConfig.disallowedHosts)
+		{
+			var a = document.createElement('a');
+			a.href = url;
+
+			if (urlConfig.disallowedHosts.test(a.hostname))
+			{
+				logger.err(
+					'URL host is not allowed',
+					{'attrValue': attrValue, 'host': a.hostname}
+				);
+
+				return false;
+			}
+		}
+
+		// Normalize scheme, or remove if applicable
+		var pos = attrValue.indexOf(':');
+
+		if (removeScheme)
+		{
+			attrValue = attrValue.substr(pos + 1);
+		}
+		else
+		{
+			/**
+			* @link http://tools.ietf.org/html/rfc3986#section-3.1
+			*
+			* 'An implementation should accept uppercase letters as equivalent to lowercase in
+			* scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but
+			* should only produce lowercase scheme names for consistency.'
+			*/
+			attrValue = attrValue.substr(0, pos).toLowerCase() + attrValue.substr(pos);
+		}
+
 		return attrValue;
+	},
+
+	/**
+	* Encode an UTF-8 URL to ASCII
+	*
+	* No Punycode encoding in Javascript, only URL-encoding
+	*
+	* @param  {!string} url Original URL
+	* @return {!string}     Encoded URL
+	*/
+	encodeUrlToAscii: function(url)
+	{
+//		if (function_exists('idn_to_ascii')
+//		 && preg_match('#^([^:]+://(?:[^/]+@)?)([^/]+)#i', $url, $m))
+//		{
+//			$url = $m[1] . idn_to_ascii($m[2]) . substr($url, strlen($m[0]));
+//		}
+
+		// URL-encode non-ASCII stuff
+		return url.replace(/[^\u0020-\u007f]+/g, encodeURIComponent);
 	}
 }

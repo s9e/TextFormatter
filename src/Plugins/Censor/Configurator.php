@@ -12,6 +12,9 @@ use Countable;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\Javascript\RegExp;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
@@ -103,12 +106,26 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		/** @todo "?" should probably become ".?" so that "apple?" matches both "apple" and "apples" */
 		$regexpOptions = array('specialChars' => array('*' => '\\pL*', '?' => '.'));
 		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
-		$config['regexp'] = '/(?<!\\pL)' . $regexp . '(?!\\pL)/iu';
+
+		// Add the regexp to the config, along with a Javascript variant
+		$config['regexp'] = new Variant('/(?<!\\pL)' . $regexp . '(?!\\pL)/iu');
+
+		// Javascript regexps don't support Unicode properties, so instead of Unicode letters
+		// we'll accept any non-whitespace, non-common punctuation
+		$regexp = str_replace('\\pL', '[^\s!-\\/:-?]', $regexp);
+		$config['regexp']->set('Javascript', new RegExp('(?:^|\W)' . $regexp . '(?!\w)', 'gi'));
 
 		foreach ($replacementWords as $replacement => $words)
 		{
 			$regexp = '/^' . RegexpBuilder::fromList($words, $regexpOptions) . '$/Diu';
-			$config['replacements'][] = array($regexp, $replacement);
+
+			// Create a regexp with a Javascript variant for each group of words
+			$variant = new Variant($regexp);
+
+			$regexp = str_replace('\\pL', '[^\s!-\\/:-?]', $regexp);
+			$variant->set('Javascript', RegexpConvertor::toJS($regexp));
+
+			$config['replacements'][] = array($variant, $replacement);
 		}
 
 		return $config;

@@ -3,7 +3,11 @@ var tagName  = config.tagName,
 
 matches.forEach(function(m)
 {
-	var tag = addSelfClosingTag(tagName, m[0][1], m[0][0].length);
+	// NOTE: unlike the PCRE regexp, the Javascript regexp can consume an extra character at the
+	//       start of the match, so we have to adjust the position and length accordingly
+	var offset = /^\W/.test(m[0][0]) ? 1 : 0,
+		word   = m[0][0].substr(offset),
+		tag    = addSelfClosingTag(tagName, m[0][1] + offset, word.length);
 
 	// TODO: revisit loop, get Closure Compiler to optimize the block away if there's no replacements
 	if (config.replacements)
@@ -13,7 +17,7 @@ matches.forEach(function(m)
 			var regexp      = config.replacements[i][0],
 				replacement = config.replacements[i][1];
 
-			if (regexp.test(m[0][0]))
+			if (regexp.test(word))
 			{
 				tag.setAttribute(attrName, replacement);
 				break;

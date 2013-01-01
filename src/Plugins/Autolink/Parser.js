@@ -10,14 +10,13 @@ matches.forEach(function(m)
 	//   http://en.wikipedia.org/wiki/Mars_(disambiguation) 
 	while (1)
 	{
-		// We remove all Unicode punctuation except dashes (some YouTube URLs end with a
-		// dash due to the video ID), equal signs (because of "foo?bar="), trailing slashes,
-		// and parentheses, which are balanced separately
-		url = url.replace(/[^-=\/\w)]+$/, '');
+		// We remove some common ASCII punctuation and whitespace. We don't have access to Unicode
+		// properties, so we try to cover the most common usage
+		url = url.replace(/[\s!"',.<>?]+$/, '');
 
 		// TODO: url.substr(url.length - 1) for IE7
 		if (url.substr(-1) === ')'
-		 && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length))
+		 && url.replace(/[^(]+/g, '').length < url.replace(/[^)]+/g, '').length)
 		{
 			url = url.substr(0, url.length - 1);
 			continue;

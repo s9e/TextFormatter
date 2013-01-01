@@ -1,4 +1,15 @@
-matche.forEach(function(m)
+function html_entity_decode(str)
+{
+	var b = document.createElement('b');
+
+	// We escape left brackets so that we don't inadvertently evaluate some nasty HTML such as
+	// <img src=... onload=evil() />
+	b.innerHTML = str.replace(/</g, '&lt;');
+
+	return b.textContent;
+}
+	
+matches.forEach(function(m)
 {
 	// Test whether this is an end tag
 	var isEnd = (text.charAt(m[0][1] + 1) === '/');
@@ -10,7 +21,8 @@ matche.forEach(function(m)
 	if (isEnd)
 	{
 		addEndTag(tagName, pos, len);
-		continue;
+
+		return;
 	}
 
 	// Test whether it's a self-closing tag or a start tag
@@ -42,15 +54,15 @@ matche.forEach(function(m)
 
 		// Normalize the attribute name, remove the whitespace around its value to account
 		// for cases like <b title = "foo"/>
-		attrName  = strtolower(trim(substr(attrMatch[0], 0, pos)));
-		attrValue = trim(substr(attrMatch[0], 1 + pos));
+		attrName  = attrMatch[0].substr(0, pos).toLowerCase().replace(/^\s+/, '').replace('/\s+$/', '');
+		attrValue = attrMatch[0].substr(1 + pos).replace(/^\s+/, '').replace('/\s+$/', '');
 
 		// Remove quotes around the value
-		if (attrValue.test(/^["']/))
+		if (/^["']/.test(attrValue))
 		{
 			 attrValue = attrValue.substr(1, attrValue.length - 2);
 		}
 
 		tag.setAttribute(attrName, html_entity_decode(attrValue));
 	}
-}
+});

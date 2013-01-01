@@ -47,12 +47,12 @@ if (doSingleQuote || doDoubleQuote || text.indexOf('x') >= 0)
 			if (m[0].substr(1, 2) === "'s")
 			{
 				// 80's -- use an apostrophe
-				chr = "\u8217";
+				chr = "\u2019";
 			}
 			else
 			{
 				// 12' or 12" -- use a prime
-				chr = (c === "'") ? "\u8242" : "\u8243";
+				chr = (c === "'") ? "\u2032" : "\u2033";
 			}
 
 			addSelfClosingTag(tagName, pos, 1).setAttribute(attrName, chr);
@@ -79,12 +79,12 @@ function captureQuotePairs(q, regexp, leftQuote, rightQuote)
 if (doSingleQuote)
 {
 	// "/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS"
-	captureQuotePairs("'", /(?:^|\\W)'.+?'(?!\\w)/g, "\u8216", "\u8217");
+	captureQuotePairs("'", /(?:^|\\W)'.+?'(?!\\w)/g, "\u2018", "\u2019");
 }
 if (doDoubleQuote)
 {
 	// '/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS'
-	captureQuotePairs('"', /(?:^|\\W)".+?"(?!\\w)/g, "\u8220", "\u8221");
+	captureQuotePairs('"', /(?:^|\\W)".+?"(?!\\w)/g, "\u201c", "\u201d");
 }
 
 // Do en dash –, em dash — and ellipsis …
@@ -99,9 +99,9 @@ if (text.indexOf('...') >= 0
 		pos = m.index;
 		len = m[0].length;
 		chr = {
-			'--'  : "\u8211",
-			'---' : "\u8212",
-			'...' : "\u8230"
+			'--'  : "\u2013",
+			'---' : "\u2014",
+			'...' : "\u2026"
 		}[m[0]];
 
 		addSelfClosingTag(tagName, pos, len).setAttribute(attrName, chr);

@@ -3,8 +3,10 @@
 namespace s9e\TextFormatter\Tests\Plugins\Generic;
 
 use Exception;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Javascript\RegExp;
 use s9e\TextFormatter\Plugins\Generic\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -138,6 +140,9 @@ class ConfiguratorTest extends Test
 		$plugin->add('/(?<foo>[0-9]+)/', '');
 		$plugin->add('/(?<bar>[a-z]+)/', '');
 
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config);
+
 		$this->assertSame(
 			array(
 				'generics' => array(
@@ -145,32 +150,46 @@ class ConfiguratorTest extends Test
 					array('GDCEA6E9C', '/(?<bar>[a-z]+)/')
 				)
 			),
-			$plugin->asConfig()
+			$config
 		);
 	}
 
 	/**
-	* @testdox getJSParser() converts the regexps to Javascript and includes them in the source
+	* @testdox asConfig() creates a Javascript variant of generics
 	*/
-	public function testGetJSParser()
+	public function testAsConfigVariant()
 	{
 		$plugin = $this->configurator->plugins->load('Generic');
 		$plugin->add('/(?<foo>[0-9]+)/', '');
 		$plugin->add('/(?<bar>[a-z]+)/', '');
 
-		$this->assertStringStartsWith(
-			'[["GC53BB427",/([0-9]+)/g,["","foo"]],["GDCEA6E9C",/([a-z]+)/g,["","bar"]]]',
-			$plugin->getJSParser()
+		$config = $plugin->asConfig();
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			$config['generics']
 		);
+
+		$this->assertTrue($config['generics']->has('Javascript'));
 	}
 
 	/**
-	* @testdox getJSParser() returns an empty string if no generics were added
+	* @testdox asConfig() creates Javascript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
 	*/
-	public function testGetJSParserEmpty()
+	public function testAsConfigVariantContent()
 	{
 		$plugin = $this->configurator->plugins->load('Generic');
+		$plugin->add('/(?<foo>[0-9]+)/', '');
 
-		$this->assertFalse($plugin->getJSParser());
+		$regexp = new RegExp('([0-9]+)', 'g');
+		$regexp->map = array('', 'foo');
+
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config, 'Javascript');
+
+		$this->assertEquals(
+			array(array('GC53BB427', $regexp, $regexp->map)),
+			$config['generics']
+		);
 	}
 }

@@ -4,8 +4,8 @@ namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
 
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\BBCodes\Parser;
-use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavascriptRunner;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
+use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavascriptRunner;
 use s9e\TextFormatter\Tests\Test;
 
 /**

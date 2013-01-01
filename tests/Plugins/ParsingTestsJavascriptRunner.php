@@ -10,8 +10,15 @@ trait ParsingTestsJavascriptRunner
 	* @testdox Parsing tests (Javascript)
 	* @dataProvider getParsingTests
 	*/
-	public function testJavascriptParsing($original, $expected, array $pluginOptions = array(), $setup = null)
+	public function testJavascriptParsing($original, $expected, array $pluginOptions = array(), $setup = null, $skip = false)
 	{
+		if ($skip)
+		{
+			$this->markTestSkipped($skip);
+
+			return;
+		}
+
 		$pluginName = preg_replace('/.*\\\\([^\\\\]+)\\\\.*/', '$1', get_class($this));
 
 		$configurator = new Configurator;

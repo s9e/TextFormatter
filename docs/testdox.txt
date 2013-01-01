@@ -1186,6 +1186,7 @@ s9e\TextFormatter\Tests\Plugins\Autoemail\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Autoemail\Parser
  [x] Parsing tests
+ [x] Parsing tests (Javascript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
@@ -1205,6 +1206,7 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Parser
  [x] Parsing tests
+ [ ] Parsing tests (Javascript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\AttributeValueCollection
@@ -1292,9 +1294,12 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Returns the replacements in its config in the form [[regexp, replacement]]
  [x] Words sharing the same replacement share a common regexp
  [x] Words using the default replacement do not appear in the replacements
+ [x] asConfig() creates a Javascript variant for the plugin's regexp
+ [x] asConfig() creates a Javascript variant for the regexps used in replacements
 
 s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests
+ [x] Parsing tests (Javascript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
@@ -1318,6 +1323,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
  [x] Parsing tests
+ [x] Parsing tests (Javascript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
@@ -1329,6 +1335,7 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing tests
+ [x] Parsing tests (Javascript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Generic\Configurator
@@ -1341,11 +1348,12 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>]
- [x] getJSParser() converts the regexps to Javascript and includes them in the source
- [x] getJSParser() returns an empty string if no generics were added
+ [x] asConfig() creates a Javascript variant of generics
+ [x] asConfig() creates Javascript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
 
 s9e\TextFormatter\Tests\Plugins\Generic\Parser
  [x] Parsing tests
+ [x] Parsing tests (Javascript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
@@ -1398,6 +1406,7 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Configurator
 
 s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
  [x] Parsing tests
+ [x] Parsing tests (Javascript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Renderer

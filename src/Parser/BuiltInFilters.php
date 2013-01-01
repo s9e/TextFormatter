@@ -304,7 +304,7 @@ class BuiltInFilters
 			}
 		}
 
-		// Test whether the URL contains only ASCII characters
+		// Test whether the URL contains only ASCII characters, and encode them if not
 		if (!preg_match('#^[[:ascii]]+$#D', $attrValue))
 		{
 			$attrValue = self::encodeUrlToAscii($attrValue);

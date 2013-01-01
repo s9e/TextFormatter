@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Plugins\Autolink;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\Autolink\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
+use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavascriptRunner;
 use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
 use s9e\TextFormatter\Tests\Test;
 
@@ -14,6 +15,7 @@ use s9e\TextFormatter\Tests\Test;
 class ParserTest extends Test
 {
 	use ParsingTestsRunner;
+	use ParsingTestsJavascriptRunner;
 	use RenderingTestsRunner;
 
 	public function getParsingTests()
@@ -73,7 +75,10 @@ class ParserTest extends Test
 			array(
 				/** @link http://area51.phpbb.com/phpBB/viewtopic.php?f=75&t=32142 */
 				'http://www.xn--lyp-plada.com for http://www.älypää.com',
-				'<rt><URL url="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</URL> for <URL url="http://www.xn--lyp-plada.com">http://www.älypää.com</URL></rt>'
+				'<rt><URL url="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</URL> for <URL url="http://www.xn--lyp-plada.com">http://www.älypää.com</URL></rt>',
+				array(),
+				null,
+				'No Punycode in Javascript'
 			),
 			array(
 				'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen for http://en.wikipedia.org/wiki/Matti_Nykänen',

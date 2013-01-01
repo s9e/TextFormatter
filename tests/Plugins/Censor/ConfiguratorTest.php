@@ -2,8 +2,10 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Censor;
 
-use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Plugins\Censor\Configurator;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\Censor\Configurator
@@ -116,6 +118,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('lemon', 'citrus');
 
 		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
 			array(
@@ -136,6 +139,7 @@ class ConfiguratorTest extends Test
 		$plugin->add('cherry', 'banana');
 
 		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
 			array(array('/^(?:apple|cherry)$/Diu', 'banana')),
@@ -153,10 +157,51 @@ class ConfiguratorTest extends Test
 		$plugin->add('cherry', 'banana');
 
 		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
 			array(array('/^cherry$/Diu', 'banana')),
 			$config['replacements']
+		);
+	}
+
+	/**
+	* @testdox asConfig() creates a Javascript variant for the plugin's regexp
+	*/
+	public function testAsConfigJavascriptRegexp()
+	{
+		$plugin = $this->configurator->plugins->load('Censor');
+		$plugin->add('apple');
+
+		$config = $plugin->asConfig();
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			$config['regexp']
+		);
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
+			$config['regexp']->get('Javascript')
+		);
+	}
+
+	/**
+	* @testdox asConfig() creates a Javascript variant for the regexps used in replacements
+	*/
+	public function testAsConfigJavascriptReplacements()
+	{
+		$plugin = $this->configurator->plugins->load('Censor');
+		$plugin->add('apple', 'banana');
+
+		$config = $plugin->asConfig();
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			$config['replacements'][0][0]
+		);
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
+			$config['replacements'][0][0]->get('Javascript')
 		);
 	}
 }

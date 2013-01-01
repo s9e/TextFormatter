@@ -487,7 +487,14 @@ class Javascript
 			if (isset($v))
 			{
 				// Param by value
-				$js .= json_encode($v);
+				if ($v instanceof RegExp || $v instanceof Code)
+				{
+					$js .= $v;
+				}
+				else
+				{
+					$js .= json_encode($v);
+				}
 			}
 			else
 			{

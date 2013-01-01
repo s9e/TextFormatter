@@ -13,6 +13,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
@@ -120,13 +121,22 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
-		$generics = array();
+		$generics   = array();
+		$jsGenerics = array();
 		foreach ($this->collection as $tagName => $regexp)
 		{
 			$generics[] = array($tagName, $regexp);
+
+			$jsRegexp = RegexpConvertor::toJS($regexp);
+			$jsRegexp->flags .= 'g';
+
+			$jsGenerics[] = array($tagName, $jsRegexp, $jsRegexp->map);
 		}
 
-		return array('generics' => $generics);
+		$variant = new Variant($generics);
+		$variant->set('Javascript', $jsGenerics);
+
+		return array('generics' => $variant);
 	}
 
 	/**
@@ -134,7 +144,7 @@ class Configurator extends ConfiguratorBase
 	*
 	* @return string|bool Javascript source, or FALSE if no JS parser is available
 	*/
-	public function getJSParser()
+	public function _getJSParser()
 	{
 		// Start with the normal config
 		$config = $this->asConfig();
@@ -163,7 +173,7 @@ class Configurator extends ConfiguratorBase
 
 		// Append the plugin's source
 		$src .= parent::getJSParser();
-
+die($src);
 		return $src;
 	}
 }

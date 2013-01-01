@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Plugins\Emoticons;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\Emoticons\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
+use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavascriptRunner;
 use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
 use s9e\TextFormatter\Tests\Test;
 
@@ -14,6 +15,7 @@ use s9e\TextFormatter\Tests\Test;
 class ParserTest extends Test
 {
 	use ParsingTestsRunner;
+	use ParsingTestsJavascriptRunner;
 	use RenderingTestsRunner;
 
 	public function getParsingTests()
