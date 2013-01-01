@@ -2,4 +2,4 @@ language: php
 php:
   - "5.4"
   - "5.3"
-before_script: ./scripts/convert5.3.php
+before_script: php ./scripts/convert5.3.php
