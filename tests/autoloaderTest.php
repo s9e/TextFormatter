@@ -7,7 +7,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 {
 	public function autoload($className)
 	{
-		include_once __DIR__ . '/../src/autoloader.php';
+		include_once __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 
 		if (class_exists($className, false))
 		{

@@ -17,7 +17,7 @@ class RepositoryTest extends Test
 	*/
 	public function testConstructorFile()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/Plugins/BBCodes/Configurator/repository.xml');
+		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
 	}
 
 	/**
@@ -26,7 +26,7 @@ class RepositoryTest extends Test
 	public function testConstructorDOMDocument()
 	{
 		$dom = new DOMDocument;
-		$dom->load(__DIR__ . '/../../../../src/Plugins/BBCodes/Configurator/repository.xml');
+		$dom->load(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
 
 		$repository = new Repository($dom);
 	}
@@ -58,7 +58,7 @@ class RepositoryTest extends Test
 	*/
 	public function testUnknownBBCode()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/Plugins/BBCodes/Configurator/repository.xml');
+		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
 		$repository->get('FOOBAR');
 	}
 
@@ -171,7 +171,7 @@ class RepositoryTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/Plugins/BBCodes/Configurator/repository.xml');
+		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
 		$config = $repository->get('*');
 
 		$this->assertSame(

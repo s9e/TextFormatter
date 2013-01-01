@@ -117,5 +117,5 @@ $out = '/*
 
 ' . $out;
 
-file_put_contents(__DIR__ . '/../src/Configurator/Javascript/externs.js', $out);
+file_put_contents(__DIR__ . '/../src/s9e/TextFormatter/Configurator/Javascript/externs.js', $out);
 die("Done.\n");
