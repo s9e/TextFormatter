@@ -213,13 +213,13 @@ class Parser extends ParserBase
 				else
 				{
 					// Capture everything after the equal sign up to whichever comes first:
-					//  - a closing bracket
+					//  - a closing bracket, potentially preceded by whitespace and a slash
 					//  - whitespace followed by another attribute (name followed by equal sign)
 					//
 					// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 					//       that do not put attribute values in quotes, e.g.
 					//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-					if (!preg_match('#[^\\]]*?(?=\\]|\\s+[-a-z_0-9]+=)#i', $text, $m, null, $rpos))
+					if (!preg_match('#[^\\]]*?(?=\\s*/?\\]|\\s+[-a-z_0-9]+=)#i', $text, $m, null, $rpos))
 					{
 						continue;
 					}

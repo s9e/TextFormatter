@@ -420,6 +420,16 @@ class ParserTest extends Test
 					$constructor->tags->add('CODE')->attributes->add('lang');
 				}
 			),
+			array(
+				'x [IMG=http://localhost/foo.png /] y',
+				'<rt>x <IMG src="http://localhost/foo.png">[IMG=http://localhost/foo.png /]</IMG> y</rt>',
+				array(),
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('IMG')->defaultAttribute = 'src';
+					$constructor->tags->add('IMG')->attributes->add('src');
+				}
+			),
 		);
 	}
 }
