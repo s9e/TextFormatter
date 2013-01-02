@@ -321,6 +321,9 @@ trait TagProcessing
 		// Re-add tags that need to be reopened, at current cursor position
 		foreach ($reopenTags as $startTag)
 		{
+			/**
+			* @todo don't reopen if there's an end tag immediately after? Replace end tag with ignore tag. Repeat for consecutive end tags. renders [b][i]x[/i][/b] nicely, without the extra <i></i>
+			*/
 			$newTag = $this->addStartTag($startTag->getName(), $this->pos, 0);
 
 			// Copy the original tag's attributes
