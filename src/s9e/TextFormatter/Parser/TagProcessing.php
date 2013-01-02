@@ -272,7 +272,7 @@ trait TagProcessing
 						break;
 					}
 				}
-				else if (!$tag->getStartTag())
+				elseif (!$tag->getStartTag())
 				{
 					// If neither tag is paired and they have the same name, we got a match
 					break;
