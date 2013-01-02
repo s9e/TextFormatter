@@ -786,7 +786,7 @@ class TemplateForensicsTest extends Test
 				'<span/>'
 			),
 			array(
-				'<textarea> disallows text nodes',
+				'<textarea> allows text nodes',
 				'<textarea><xsl:apply-templates/></textarea>',
 				'allowText'
 			),
