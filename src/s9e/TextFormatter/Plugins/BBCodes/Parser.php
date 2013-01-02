@@ -52,19 +52,16 @@ class Parser extends ParserBase
 			//   [code:123][code]type your code here[/code][/code:123]
 			if ($text[$rpos] === ':')
 			{
-				// Move past the colon
-				++$rpos;
+				// Capture the colon and the (0 or more) digits following it
+				$spn      = 1 + strspn($text, '0123456789', 1 + $rpos);
+				$bbcodeId = substr($text, $rpos, $spn);
 
-				// Capture the digits following it (potentially empty)
-				$spn       = strspn($text, '0123456789', $rpos);
-				$bbcodeId  = substr($text, $rpos, $spn);
-
-				// Move past the number
-				$rpos     += $spn;
+				// Move past the suffix
+				$rpos += $spn;
 			}
 			else
 			{
-				$bbcodeId  = '';
+				$bbcodeId = '';
 			}
 
 			// Test whether this is an end tag
@@ -239,54 +236,60 @@ class Parser extends ParserBase
 				continue;
 			}
 
-			// We're done parsing the tag, we can add it to the list
 			if ($type === Tag::START_TAG)
 			{
-				// If this is a start tag with an identifier, look for its end tag now
-				$endTagPos = false;
-				if ($bbcodeId !== '')
-				{
-					$match = '[/' . $bbcodeName . ':' . $bbcodeId . ']';
-					$endTagPos = stripos($text, $match, $rpos);
+				/**
+				* @var array List of attributes whose value should be set to this tag's content
+				*/
+				$contentAttributes = array();
 
-					if ($endTagPos === false)
-					{
-						// No matching end tag, so we skip this start tag
-						continue;
-					}
-
-					$endTag = $this->parser->addEndTag($tagName, $endTagPos, strlen($match));
-				}
-
-				// Use this tag's content for attributes that require it
+				// Record the names of attributes that need the content of this tag
 				if (isset($bbcodeConfig['contentAttributes']))
 				{
 					foreach ($bbcodeConfig['contentAttributes'] as $attrName)
 					{
-						if (isset($attributes[$attrName]))
+						if (!isset($attributes[$attrName]))
 						{
-							continue;
+							$contentAttributes[] = $attrName;
 						}
-
-						// Find the position of its end tag if we don't already know it
-						if ($endTagPos === false)
-						{
-							$endTagPos = stripos($text, '[/' . $bbcodeName . ']', $rpos);
-
-							if ($endTagPos === false)
-							{
-								// No end tag for this start tag
-								break;
-							}
-						}
-
-						$attributes[$attrName] = substr($text, $rpos, $endTagPos - $rpos);
 					}
 				}
 
+				// Test whether we need to look for this tag's end tag
+				$endTag = null;
+				if ($contentAttributes || $bbcodeId)
+				{
+					// Find the position of its end tag
+					$match     = '[/' . $bbcodeName . $bbcodeId . ']';
+					$endTagPos = stripos($text, $match, $rpos);
+
+					if ($endTagPos === false)
+					{
+						// We didn't find an end tag, did we *need* one?
+						if ($bbcodeId)
+						{
+							// No matching end tag, we skip this start tag
+							continue;
+						}
+					}
+					else
+					{
+						// We found the end tag, we can use the content of this tag pair
+						foreach ($contentAttributes as $attrName)
+						{
+							$attributes[$attrName] = substr($text, $rpos, $endTagPos - $rpos);
+						}
+
+						// We create an end tag, which we will pair with this start tag
+						$endTag = $this->parser->addEndTag($tagName, $endTagPos, strlen($match));
+					}
+				}
+
+				// Create this start tag
 				$tag = $this->parser->addStartTag($tagName, $lpos, $rpos - $lpos);
 
-				if ($bbcodeId !== '')
+				// If an end tag was created, pair it with this start tag
+				if ($endTag)
 				{
 					$tag->pairWith($endTag);
 				}

@@ -28,13 +28,10 @@ matches.forEach(function(m)
 	var bbcodeId;
 	if (text.charAt(rpos) === ':')
 	{
-		// Move past the colon
-		++rpos;
+		// Capture the colon and the (0 or more) digits following it
+		bbcodeId = /^:\d*/.exec(text.substr(rpos))[0];
 
-		// Capture the digits following it (potentially empty)
-		bbcodeId = /^\d*/.exec(text.substr(rpos))[0];
-
-		// Move past the number
+		// Move past the suffix
 		rpos += bbcodeId.length;
 	}
 	else
@@ -216,54 +213,59 @@ matches.forEach(function(m)
 		return;
 	}
 
-	// We're done parsing the tag, we can add it to the list
 	if (type === Tag.START_TAG)
 	{
-		// If this is a start tag with an identifier, look for its end tag now
-		var endTagPos = false,
-			endTag;
-		if (bbcodeId !== '')
-		{
-			var match = '[/' + bbcodeName + ':' + bbcodeId + ']';
-			endTagPos = text.toUpperCase().indexOf(match, rpos);
+		/**
+		* @type {!Array} List of attributes whose value should be set to this tag's content
+		*/
+		var contentAttributes = [];
 
-			if (endTagPos < 0)
-			{
-				// No matching end tag, so we skip this start tag
-				return;
-			}
-
-			endTag = addEndTag(tagName, endTagPos, match.length);
-		}
-
-		// Use this tag's content for attributes that require it
+		// Record the names of attributes that need the content of this tag
 		if (bbcodeConfig.contentAttributes)
 		{
 			bbcodeConfig.contentAttributes.forEach(function(attrName)
 			{
-				if (attrName in attributes)
+				if (!(attrName in attributes))
 				{
-					return;
+					contentAttributes.push(attrName);
 				}
-
-				// Find the position of its end tag if we don't already know it
-				if (endTagPos === false)
-				{
-					endTagPos = text.toUpperCase().indexOf('[/' + bbcodeName + ']', rpos);
-
-					if (endTagPos < 0)
-					{
-						// No end tag for this start tag
-						return;
-					}
-				}
-
-				attributes[attrName] = text.substr(rpos, endTagPos - rpos);
 			});
 		}
 
+		// Test whether we need to look for this tag's end tag
+		var endTag;
+		if (contentAttributes.length || bbcodeId)
+		{
+			// Find the position of its end tag
+			var match     = '[/' + bbcodeName + bbcodeId + ']',
+				endTagPos = text.toUpperCase().indexOf(match, rpos);
+
+			if (endTagPos < 0)
+			{
+				// We didn't find an end tag, did we *need* one?
+				if (bbcodeId)
+				{
+					// No matching end tag, we skip this start tag
+					return;
+				}
+			}
+			else
+			{
+				// We found the end tag, we can use the content of this tag pair
+				contentAttributes.forEach(function(attrName)
+				{
+					attributes[attrName] = text.substr(rpos, endTagPos - rpos);
+				});
+
+				// We create an end tag, which we will pair with this start tag
+				endTag = addEndTag(tagName, endTagPos, match.length);
+			}
+		}
+
+		// Create this start tag
 		tag = addStartTag(tagName, lpos, rpos - lpos);
 
+		// If an end tag was created, pair it with this start tag
 		if (endTag)
 		{
 			tag.pairWith(endTag);
