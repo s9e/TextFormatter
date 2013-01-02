@@ -100,6 +100,14 @@ class ParserTest extends Test
 				'[url=http://example.com]Non-existent URL tag[/url]',
 				'<rt>[url=<URL url="http://example.com">http://example.com</URL>]Non-existent URL tag[/url]</rt>'
 			),
+			array(
+				'Link in brackets: [http://example.com/foo] --',
+				'<rt>Link in brackets: [<URL url="http://example.com/foo">http://example.com/foo</URL>] --</rt>'
+			),
+			array(
+				'Link in brackets: [http://example.com/foo?a[]=1] --',
+				'<rt>Link in brackets: [<URL url="http://example.com/foo?a[]=1">http://example.com/foo?a[]=1</URL>] --</rt>'
+			),
 		);
 	}
 
