@@ -15,9 +15,14 @@ class BBCodesTest extends Test
 	* @testdox BBCodes from repository.xml render nicely
 	* @dataProvider getPredefinedBBCodesTests
 	*/
-	public function test($original, $expected)
+	public function test($original, $expected, $setup = null)
 	{
 		$configurator = new Configurator;
+
+		if (isset($setup))
+		{
+			call_user_func($setup, $configurator);
+		}
 
 		// Capture the names of the BBCodes used
 		preg_match_all('/\\[([\\w*]+)/', $original, $matches);
@@ -95,6 +100,171 @@ class BBCodesTest extends Test
 			array(
 				'x [img=http://example.org/foo.png /] y',
 				'x <img src="http://example.org/foo.png" title="" alt=""> y'
+			),
+			array(
+				'[LIST][*]one[*]two[/LIST]',
+				'<ul style="list-style-type:disc"><li>one</li><li>two</li></ul>'
+			),
+			array(
+				'[LIST]
+					[*]one
+					[*]two
+				[/LIST]',
+				'<ul style="list-style-type:disc"><li>one</li><li>two</li></ul>'
+			),
+			array(
+				'[LIST]
+					[*][LIST]
+						[*]one.one
+						[*]one.two
+					[/LIST]
+
+					[*]two
+				[/LIST]',
+				'<ul style="list-style-type:disc"><li><ul style="list-style-type:disc"><li>one.one</li><li>one.two</li></ul></li><li>two</li></ul>'
+			),
+			array(
+				'[LIST=1][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:decimal"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'[LIST=a][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:lower-alpha"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'[LIST=A][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:upper-alpha"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'[LIST=i][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:lower-roman"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'[LIST=I][*]one[*]two[/LIST]',
+				'<ol style="list-style-type:upper-roman"><li>one</li><li>two</li></ol>'
+			),
+			array(
+				'[LIST=square][*]one[*]two[/LIST]',
+				'<ul style="list-style-type:square"><li>one</li><li>two</li></ul>'
+			),
+			array(
+				'[LIST=";zoom:100"][*]one[*]two[/LIST]',
+				'<ul style="list-style-type:disc"><li>one</li><li>two</li></ul>'
+			),
+			array(
+				'[QUOTE]...text...[/QUOTE]',
+				'<blockquote class="uncited"><div>...text...</div></blockquote>'
+			),
+			array(
+				'[QUOTE=namehere]...text...[/QUOTE]',
+				'<blockquote><div><cite>namehere wrote:</cite>...text...</div></blockquote>'
+			),
+			array(
+				'[QUOTE=namehere]...text...[/QUOTE]',
+				'<blockquote><div><cite>namehere ha escrit:</cite>...text...</div></blockquote>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('QUOTE', 'default', array(
+						'authorStr' => '<xsl:value-of select="@author"/> ha escrit:'
+					));
+				}
+			),
+			array(
+				"my quote:\n" .
+				"\n" .
+				"[QUOTE]...text...[/QUOTE]\n" .
+				"\n" .
+				"follow-up",
+				'my quote:<blockquote class="uncited"><div>...text...</div></blockquote>follow-up'
+			),
+			array(
+				"my quote:\n" .
+				"\n" .
+				"\n" .
+				"[QUOTE]...text...[/QUOTE]\n" .
+				"\n" .
+				"\n" .
+				"follow-up",
+
+				"my quote:<br>\n" .
+				"<blockquote class=\"uncited\"><div>...text...</div></blockquote><br>\n" .
+				"follow-up"
+			),
+			array(
+				'x [s]strikethrough[/s] y',
+				'x <s>strikethrough</s> y'
+			),
+			array(
+				'x [u]underline[/u] y',
+				'x <u>underline</u> y'
+			),
+			array(
+				'x [url]http://example.org[/url] y',
+				'x <a href="http://example.org">http://example.org</a> y'
+			),
+			array(
+				'x [url]https://example.org[/url] y',
+				'x <a href="https://example.org">https://example.org</a> y'
+			),
+			array(
+				'x [url=http://example.org]text[/url] y',
+				'x <a href="http://example.org">text</a> y'
+			),
+			array(
+				'x [url=http://example.org title="my title"]text[/url] y',
+				'x <a href="http://example.org" title="my title">text</a> y'
+			),
+			array(
+				'x [url=http://example.org][url=http://example.org]text[/url][/url] y',
+				'x <a href="http://example.org">[url=http://example.org]text</a>[/url] y'
+			),
+			array(
+				'x [url:123=http://example.org][url=http://example.org]text[/url][/url:123] y',
+				'x <a href="http://example.org">[url=http://example.org]text[/url]</a> y'
+			),
+			array(
+				'x [url=http://example.org][EMAIL]test@example.org[/EMAIL][/url] y',
+				'x <a href="http://example.org">[EMAIL]test@example.org[/EMAIL]</a> y'
+			),
+			array(
+				'x [url=javascript:foo]text[/url] y',
+				'x [url=javascript:foo]text[/url] y'
+			),
+			array(
+				'x [url=http://example.org]text[/url] [url=http://evil.example.org]evil[/url] y',
+				'x <a href="http://example.org">text</a> <a href="http://evil.example.org">evil</a> y'
+			),
+			array(
+				'x [url=http://example.org]text[/url] [url=http://evil.example.org]evil[/url] y',
+				'x <a href="http://example.org">text</a> [url=http://evil.example.org]evil[/url] y',
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('evil.example.org');
+				}
+			),
+			array(
+				'x [url=//example.org]text[/url] y',
+				'x <a href="//example.org">text</a> y'
+			),
+			array(
+				'x [url=//example.org]text[/url] y',
+				'x [url=//example.org]text[/url] y',
+				function ($configurator)
+				{
+					$configurator->urlConfig->requireScheme();
+				}
+			),
+			array(
+				'x [url=foo://example.org]text[/url] y',
+				'x [url=foo://example.org]text[/url] y',
+			),
+			array(
+				'x [url=foo://example.org]text[/url] y',
+				'x <a href="foo://example.org">text</a> y',
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('foo');
+				}
 			),
 		);
 	}
