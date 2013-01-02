@@ -40,3 +40,4 @@ TODO
 - Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
 - JS parser needs quickMatch to be UTF-8
 - Find a good way to test the Javascript HTML plugins
+- Should skipped end tags consume their text? Probably not, but it renders "[B]bold [i]italic[/b][/I]" more nicely by hiding the extra [/I] -- on the other hand, some people post invalid BBCodes expecting them to be displayed as text

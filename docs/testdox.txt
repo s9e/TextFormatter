@@ -1280,6 +1280,9 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests
  [x] Parsing tests (Javascript)
 
+s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes
+ [x] BBCodes from repository.xml render nicely
+
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag
  [x] Automatically creates a "with" attribute with required=false

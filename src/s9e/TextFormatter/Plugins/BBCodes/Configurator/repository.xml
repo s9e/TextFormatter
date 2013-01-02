@@ -1,10 +1,69 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <repository>
 
-	<bbcode name="URL">
-		<usage>[URL={URL;useContent} title={TEXT;optional}]{TEXT}[/URL]</usage>
+	<bbcode name="B">
+		<usage>[B]{TEXT}[/B]</usage>
 		<template><![CDATA[
-			<a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
+			<b><xsl:apply-templates /></b>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="C">
+		<usage>[C]{TEXT}[/C]</usage>
+		<template><![CDATA[
+			<code class="inline"><xsl:apply-templates /></code>
+		]]></template>
+		<rules>
+			<denyAll />
+			<noBrChild />
+		</rules>
+	</bbcode>
+
+	<bbcode name="CODE">
+		<usage>[CODE lang={TEXT;optional} id={RANDOM=10000,99999}]{TEXT}[/CODE]</usage>
+		<template><![CDATA[
+			<!-- Include the necessary Javascript if it's the first CODE tag -->
+			<xsl:if test="not(preceding::CODE)">
+				<script src="]]><var name="src">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</var><![CDATA["
+				></script>
+			</xsl:if>
+			<pre id="code{RANDOM}">
+				<code class="{@lang}">
+					<xsl:apply-templates />
+				</code>
+				<script>setTimeout(function(){hljs.highlightBlock(document.getElementById('code{RANDOM}'))},100)</script>
+			</pre>
+		]]></template>
+		<rules>
+			<denyAll />
+		</rules>
+	</bbcode>
+
+	<bbcode name="COLOR">
+		<usage>[COLOR={COLOR}]{TEXT}[/COLOR]</usage>
+		<template><![CDATA[
+			<span style="color:{COLOR}">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="EMAIL">
+		<usage>[EMAIL={EMAIL;useContent}]{TEXT}[/EMAIL]</usage>
+		<template><![CDATA[
+			<a href="mailto:{EMAIL}">{TEXT}</a>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="I">
+		<usage>[I]{TEXT}[/I]</usage>
+		<template><![CDATA[
+			<i><xsl:apply-templates /></i>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="IMG">
+		<usage>[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional}]</usage>
+		<template><![CDATA[
+			<img src="{@src}" title="{@title}" alt="{@alt}" />
 		]]></template>
 	</bbcode>
 
@@ -23,41 +82,6 @@
 		<usage>[*]{TEXT}[/*]</usage>
 		<template><![CDATA[
 			<li><xsl:apply-templates /></li>
-		]]></template>
-	</bbcode>
-
-	<bbcode name="B">
-		<usage>[B]{TEXT}[/B]</usage>
-		<template><![CDATA[
-			<b><xsl:apply-templates /></b>
-		]]></template>
-	</bbcode>
-
-	<bbcode name="I">
-		<usage>[I]{TEXT}[/I]</usage>
-		<template><![CDATA[
-			<i><xsl:apply-templates /></i>
-		]]></template>
-	</bbcode>
-
-	<bbcode name="U">
-		<usage>[U]{TEXT}[/U]</usage>
-		<template><![CDATA[
-			<u><xsl:apply-templates /></u>
-		]]></template>
-	</bbcode>
-
-	<bbcode name="S">
-		<usage>[S]{TEXT}[/S]</usage>
-		<template><![CDATA[
-			<s><xsl:apply-templates /></s>
-		]]></template>
-	</bbcode>
-
-	<bbcode name="IMG">
-		<usage>[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional}]</usage>
-		<template><![CDATA[
-			<img src="{@src}" title="{@title}" alt="{@alt}" />
 		]]></template>
 	</bbcode>
 
@@ -80,26 +104,25 @@
 		]]></template>
 	</bbcode>
 
-	<bbcode name="CODE">
-		<usage>[CODE lang={TEXT;optional} id={RANDOM=10000,99999}]{TEXT}[/CODE]</usage>
+	<bbcode name="S">
+		<usage>[S]{TEXT}[/S]</usage>
 		<template><![CDATA[
-			<!-- Include the necessary Javascript if it's the first CODE tag -->
-			<xsl:if test="not(preceding::CODE)">
-				<script
-					data-s9e-include-once="1"
-					src="]]><var name="src">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</var><![CDATA["
-				></script>
-			</xsl:if>
-			<pre id="code{RANDOM}" data-s9e-LivePreview-contentHash="">
-				<code class="{@lang}">
-					<xsl:apply-templates />
-				</code>
-				<script>setTimeout(function(){hljs.highlightBlock(document.getElementById('code{RANDOM}'))},100)</script>
-			</pre>
+			<s><xsl:apply-templates /></s>
 		]]></template>
-		<rules>
-			<denyAll />
-		</rules>
+	</bbcode>
+
+	<bbcode name="U">
+		<usage>[U]{TEXT}[/U]</usage>
+		<template><![CDATA[
+			<u><xsl:apply-templates /></u>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="URL">
+		<usage>[URL={URL;useContent} title={TEXT;optional}]{TEXT}[/URL]</usage>
+		<template><![CDATA[
+			<a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
+		]]></template>
 	</bbcode>
 
 </repository>
