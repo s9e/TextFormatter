@@ -189,7 +189,7 @@ matches.forEach(function(m)
 		else
 		{
 			// Capture everything after the equal sign up to whichever comes first:
-					//  - a closing bracket, potentially preceded by whitespace and a slash
+			//  - a closing bracket, potentially preceded by whitespace and a slash
 			//  - whitespace followed by another attribute (name followed by equal sign)
 			//
 			// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
