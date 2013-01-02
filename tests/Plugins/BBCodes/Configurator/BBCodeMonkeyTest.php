@@ -911,12 +911,6 @@ class BBCodeMonkeyTest extends Test
 				'foo<xsl:apply-templates/>bar'
 			),
 			array(
-				'foo{TEXT}bar',
-				array(),
-				'TEXT',
-				'foo<xsl:apply-templates/>bar'
-			),
-			array(
 				'<hr><img src={IMG}><br>',
 				array('IMG' => 'url'),
 				'TEXT',
