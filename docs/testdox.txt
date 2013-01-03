@@ -303,6 +303,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <span> allows <unknownElement> as child
  [x] <unknownElement> allows <span> as child
  [x] <textarea> allows text nodes
+ [x] <xsl:apply-templates/> allows text nodes
  [x] <table> disallows text nodes
  [x] <table><tr><td> allows "Hi"
  [x] <div><table> disallows "Hi"
@@ -348,6 +349,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Generates an isTransparent rule for <a>
  [x] Does not generate an isTransparent rule for <b>
  [x] Does not generate a noBrChild rule for <a>
+ [x] Does not generate a noBrChild rule for a template composed entirely of <xsl:apply-templates/>
  [x] Does not generate a noBrDescendant rule for <ol>
  [x] Generates a noBrDescendant rule for <pre>
  [x] Generates a noBrDescendant rule for <style>

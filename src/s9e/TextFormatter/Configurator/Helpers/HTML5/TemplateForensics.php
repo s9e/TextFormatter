@@ -360,14 +360,10 @@ class TemplateForensics
 				$applyTemplates
 			);
 
-			if (!$nodes->length)
-			{
-				// That tag might has a fully transparent branch. Nothing there to do except record
-				// that it's not void
-				$this->isVoid = false;
-
-				continue;
-			}
+			/**
+			* @var bool Whether this branch allows text nodes
+			*/
+			$allowText = true;
 
 			/**
 			* @var string allowChild bitfield for current branch. Starts with the value associated
@@ -386,9 +382,14 @@ class TemplateForensics
 			*/
 			$isVoid = false;
 
+			/**
+			* @var string Name of the last node of this branch
+			*/
+			$leafNode = null;
+
 			foreach ($nodes as $node)
 			{
-				$elName = $node->localName;
+				$elName = $leafNode = $node->localName;
 
 				if (!isset(self::$htmlElements[$elName]))
 				{
@@ -447,8 +448,11 @@ class TemplateForensics
 			// Add this branch's bitfield to the list
 			$branchBitfields[] = $branchBitfield;
 
-			// Save the name of the last node processed. Its actual name, not the "span" workaround
-			$this->leafNodes[] = $node->localName;
+			// Save the name of the last node processed
+			if (isset($leafNode))
+			{
+				$this->leafNodes[] = $node->localName;
+			}
 
 			// If any branch disallows text, the tag disallows text
 			if (!$allowText)
@@ -480,7 +484,10 @@ class TemplateForensics
 			}
 
 			// Set the autoReopen property to our final value, but only if this tag had any branches
-			$this->autoReopen = $autoReopen;
+			if (!empty($this->leafNodes))
+			{
+				$this->autoReopen = $autoReopen;
+			}
 		}
 	}
 

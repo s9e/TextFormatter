@@ -329,6 +329,18 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
+	* @testdox <xsl:apply-templates/> allows text nodes
+	*/
+	public function testA7F8F927()
+	{
+		$this->runCase(
+			'<xsl:apply-templates/> allows text nodes',
+			'<xsl:apply-templates/>',
+			'allowText'
+		);
+	}
+
+	/**
 	* @testdox <table> disallows text nodes
 	*/
 	public function test96675F41()
@@ -800,6 +812,11 @@ class TemplateForensicsTest extends Test
 			array(
 				'<textarea> allows text nodes',
 				'<textarea><xsl:apply-templates/></textarea>',
+				'allowText'
+			),
+			array(
+				'<xsl:apply-templates/> allows text nodes',
+				'<xsl:apply-templates/>',
 				'allowText'
 			),
 			array(

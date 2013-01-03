@@ -318,6 +318,26 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox Does not generate a noBrChild rule for a template composed entirely of <xsl:apply-templates/>
+	*/
+	public function testNotNoBrChildTransparent()
+	{
+		$tags = new TagCollection;
+		$tags->add('A')->defaultTemplate = '<xsl:apply-templates/>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			array(
+				'A' => array(
+					'noBrChild' => null
+				)
+			),
+			$rules['tags']
+		);
+	}
+
+	/**
 	* @testdox Does not generate a noBrDescendant rule for <ol>
 	*/
 	public function testNotNoBrDescendantOl()
