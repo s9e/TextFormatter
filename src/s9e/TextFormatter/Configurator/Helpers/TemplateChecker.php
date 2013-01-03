@@ -527,6 +527,7 @@ abstract class TemplateChecker
 			'#color',
 			'#number',
 			'#range',
+			'#regexp',
 			'#simpletext'
 		);
 

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <repository>
 
+	<bbcode name="ALIGN">
+		<usage>[ALIGN={CHOICE=left,right,center,justify}]{TEXT}[/ALIGN]</usage>
+		<template><![CDATA[
+			<div style="text-align:{CHOICE}">{TEXT}</div>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="B">
 		<usage>[B]{TEXT}[/B]</usage>
 		<template><![CDATA[
@@ -19,20 +26,29 @@
 		</rules>
 	</bbcode>
 
-	<bbcode name="CODE">
-		<usage>[CODE lang={TEXT;optional} id={RANDOM=10000,99999}]{TEXT}[/CODE]</usage>
+	<bbcode name="CENTER">
+		<usage>[CENTER]{TEXT}[/CENTER]</usage>
 		<template><![CDATA[
-			<!-- Include the necessary Javascript if it's the first CODE tag -->
-			<xsl:if test="not(preceding::CODE)">
-				<script src="]]><var name="src">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</var><![CDATA["
-				></script>
-			</xsl:if>
-			<pre id="code{RANDOM}">
+			<div style="text-align:center">{TEXT}</div>
+		]]></template>
+	</bbcode>
+
+	<!-- [CODE] BBCode, uses Hightlight.js for highlighting: http://softwaremaniacs.org/soft/highlight/en/ -->
+	<bbcode name="CODE">
+		<usage>[CODE lang={IDENTIFIER;optional}]{TEXT}[/CODE]</usage>
+		<template><![CDATA[
+			<pre>
 				<code class="{@lang}">
 					<xsl:apply-templates />
 				</code>
-				<script>setTimeout(function(){hljs.highlightBlock(document.getElementById('code{RANDOM}'))},100)</script>
 			</pre>
+			<!-- Include the necessary Javascript/CSS if it's the last CODE tag -->
+			<xsl:if test="not(following::CODE)">
+				<!-- Append the stylesheet to head -->
+				<script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="]]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css</var><![CDATA[";document.getElementsByTagName("head")[0].appendChild(l)</script>
+				<!-- Load the script and use the onload event to trigger highlighting -->
+				<script onload="hljs.initHighlighting()" src="]]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</var><![CDATA["></script>
+			</xsl:if>
 		]]></template>
 		<rules>
 			<denyAll />
@@ -43,6 +59,20 @@
 		<usage>[COLOR={COLOR}]{TEXT}[/COLOR]</usage>
 		<template><![CDATA[
 			<span style="color:{COLOR}">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="DEL">
+		<usage>[DEL]{TEXT}[/DEL]</usage>
+		<template><![CDATA[
+			<del>{TEXT}</del>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="EM">
+		<usage>[EM]{TEXT}[/EM]</usage>
+		<template><![CDATA[
+			<em>{TEXT}</em>
 		]]></template>
 	</bbcode>
 
@@ -73,10 +103,15 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="HR">
+		<usage>[HR]</usage>
+		<template><![CDATA[<hr/>]]></template>
+	</bbcode>
+
 	<bbcode name="I">
 		<usage>[I]{TEXT}[/I]</usage>
 		<template><![CDATA[
-			<i><xsl:apply-templates /></i>
+			<i>{TEXT}</i>
 		]]></template>
 	</bbcode>
 
@@ -84,6 +119,27 @@
 		<usage>[IMG src={URL;useContent} title={TEXT;optional} alt={TEXT;optional}]</usage>
 		<template><![CDATA[
 			<img src="{@src}" title="{@title}" alt="{@alt}" />
+		]]></template>
+	</bbcode>
+
+	<bbcode name="INS">
+		<usage>[INS]{TEXT}[/INS]</usage>
+		<template><![CDATA[
+			<ins>{TEXT}</ins>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="JUSTIFY">
+		<usage>[JUSTIFY]{TEXT}[/JUSTIFY]</usage>
+		<template><![CDATA[
+			<div style="text-align:justify">{TEXT}</div>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="LEFT">
+		<usage>[LEFT]{TEXT}[/LEFT]</usage>
+		<template><![CDATA[
+			<div style="text-align:left">{TEXT}</div>
 		]]></template>
 	</bbcode>
 
@@ -124,17 +180,45 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="RIGHT">
+		<usage>[RIGHT]{TEXT}[/RIGHT]</usage>
+		<template><![CDATA[
+			<div style="text-align:right">{TEXT}</div>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="S">
 		<usage>[S]{TEXT}[/S]</usage>
 		<template><![CDATA[
-			<s><xsl:apply-templates /></s>
+			<s>{TEXT}</s>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="STRONG">
+		<usage>[STRONG]{TEXT}[/STRONG]</usage>
+		<template><![CDATA[
+			<strong>{TEXT}</strong>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="SUB">
+		<usage>[SUB]{TEXT}[/SUB]</usage>
+		<template><![CDATA[
+			<sub>{TEXT}</sub>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="SUP">
+		<usage>[SUP]{TEXT}[/SUP]</usage>
+		<template><![CDATA[
+			<sup>{TEXT}</sup>
 		]]></template>
 	</bbcode>
 
 	<bbcode name="U">
 		<usage>[U]{TEXT}[/U]</usage>
 		<template><![CDATA[
-			<u><xsl:apply-templates /></u>
+			<u>{TEXT}</u>
 		]]></template>
 	</bbcode>
 
@@ -142,6 +226,13 @@
 		<usage>[URL={URL;useContent} title={TEXT;optional}]{TEXT}[/URL]</usage>
 		<template><![CDATA[
 			<a href="{@url}"><xsl:copy-of select="@title" /><xsl:apply-templates /></a>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="VAR">
+		<usage>[VAR]{TEXT}[/VAR]</usage>
+		<template><![CDATA[
+			<var>{TEXT}</var>
 		]]></template>
 	</bbcode>
 

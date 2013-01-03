@@ -50,6 +50,14 @@ class BBCodesTest extends Test
 	{
 		return array(
 			array(
+				'[align=center]...[/align]',
+				'<div style="text-align:center">...</div>'
+			),
+			array(
+				'[align=;color:red]...[/align]',
+				'[align=;color:red]...[/align]'
+			),
+			array(
 				'x [b]bold[/b] y',
 				'x <b>bold</b> y'
 			),
@@ -66,12 +74,47 @@ class BBCodesTest extends Test
 				'x <code class="inline">[C][b]not bold[/b][/C]</code> y'
 			),
 			array(
+				'[center]...[/center]',
+				'<div style="text-align:center">...</div>'
+			),
+			array(
+				'[code]echo "Hello world";[/code]',
+				'<pre><code class="">echo "Hello world";</code></pre><script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css";document.getElementsByTagName("head")[0].appendChild(l)</script><script onload="hljs.initHighlighting()" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>',
+			),
+			array(
+				'[code=html]<b>Hello world</b>[/code]',
+				'<pre><code class="html">&lt;b&gt;Hello world&lt;/b&gt;</code></pre><script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css";document.getElementsByTagName("head")[0].appendChild(l)</script><script onload="hljs.initHighlighting()" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>',
+			),
+			array(
+				'[code]alert("first");[/code][code]alert("second");[/code]',
+				'<pre><code class="">alert("first");</code></pre><pre><code class="">alert("second");</code></pre><script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css";document.getElementsByTagName("head")[0].appendChild(l)</script><script onload="hljs.initHighlighting()" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>'
+			),
+			array(
+				'[code=php]echo "Hello world";[/code]',
+				'<pre><code class="php">echo "Hello world";</code></pre><script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="highlight.css";document.getElementsByTagName("head")[0].appendChild(l)</script><script onload="hljs.initHighlighting()" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('CODE', 'default', array(
+						'scriptUrl'     => 'highlight.js',
+						'stylesheetUrl' => 'highlight.css'
+					));
+				}
+			),
+			array(
 				'x [COLOR=red]is red[/COLOR] y',
 				'x <span style="color:red">is red</span> y'
 			),
 			array(
 				'x [COLOR=red]is [COLOR=green]green[/COLOR] and red[/COLOR] y',
 				'x <span style="color:red">is <span style="color:green">green</span> and red</span> y'
+			),
+			array(
+				'our [del]great [/del]leader',
+				'our <del>great </del>leader'
+			),
+			array(
+				'Putting the EM in [em]em[/em]phasis',
+				'Putting the EM in <em>em</em>phasis'
 			),
 			array(
 				'x [EMAIL]test@example.org[/EMAIL] y',
@@ -124,6 +167,12 @@ class BBCodesTest extends Test
 				'x <i>italic</i> y'
 			),
 			array(
+				"xxxx\n" .
+				"[hr]\n" .
+				"yyyyy",
+				'xxxx<hr>yyyyy'
+			),
+			array(
 				'x [B]bold [i]italic[/b][/I] y',
 				'x <b>bold <i>italic</i></b><i></i> y'
 			),
@@ -138,6 +187,18 @@ class BBCodesTest extends Test
 			array(
 				'x [img=http://example.org/foo.png /] y',
 				'x <img src="http://example.org/foo.png" title="" alt=""> y'
+			),
+			array(
+				'our [ins]great [/ins]leader',
+				'our <ins>great </ins>leader'
+			),
+			array(
+				'[justify]...[/justify]',
+				'<div style="text-align:justify">...</div>'
+			),
+			array(
+				'[left]...[/left]',
+				'<div style="text-align:left">...</div>'
 			),
 			array(
 				'[LIST][*]one[*]two[/LIST]',
@@ -229,8 +290,24 @@ class BBCodesTest extends Test
 				"follow-up"
 			),
 			array(
+				'[right]...[/right]',
+				'<div style="text-align:right">...</div>'
+			),
+			array(
 				'x [s]strikethrough[/s] y',
 				'x <s>strikethrough</s> y'
+			),
+			array(
+				'Some [strong]strong[/strong] words',
+				'Some <strong>strong</strong> words'
+			),
+			array(
+				'x [sub]sub[/sub] y',
+				'x <sub>sub</sub> y'
+			),
+			array(
+				'x [sup]sup[/sup] y',
+				'x <sup>sup</sup> y'
 			),
 			array(
 				'x [u]underline[/u] y',
@@ -321,6 +398,14 @@ class BBCodesTest extends Test
 					$configurator->BBCodes->addFromRepository('img');
 					$configurator->tags['url']->rules->denyDescendant('img');
 				}
+			),
+			array(
+				'x [var]var[/var] y',
+				'x <var>var</var> y'
+			),
+			array(
+				'[var]x[sub][var]i[/var][/sub][/var]',
+				'<var>x<sub><var>i</var></sub></var>'
 			),
 		);
 	}
