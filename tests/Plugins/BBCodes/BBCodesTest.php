@@ -251,6 +251,14 @@ class BBCodesTest extends Test
 				'<ul style="list-style-type:disc"><li>one</li><li>two</li></ul>'
 			),
 			array(
+				'[NOPARSE][b]no bold[/b][/NOPARSE] [b]bold[/b]',
+				'[b]no bold[/b] <b>bold</b>'
+			),
+			array(
+				"[NOPARSE]still converts new\nlines[/NOPARSE]",
+				"still converts new<br>\nlines"
+			),
+			array(
 				'[QUOTE]...text...[/QUOTE]',
 				'<blockquote class="uncited"><div>...text...</div></blockquote>'
 			),

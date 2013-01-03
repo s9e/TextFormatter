@@ -161,6 +161,14 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="NOPARSE">
+		<usage>[NOPARSE]{TEXT}[/NOPARSE]</usage>
+		<template>{TEXT}</template>
+		<rules>
+			<denyAll />
+		</rules>
+	</bbcode>
+
 	<bbcode name="QUOTE">
 		<usage>[QUOTE author={TEXT;optional}]{TEXT}[/QUOTE]</usage>
 		<template><![CDATA[
