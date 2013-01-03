@@ -125,6 +125,40 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
+	* @testdox Not safe: <embed src="{@url}" allowscriptaccess="always"/>
+	*/
+	public function testCheckUnsafe85F4F19A()
+	{
+		$this->checkUnsafe(
+			'<embed src="{@url}" allowscriptaccess="always"/>',
+			"The template contains a 'embed' element with a non-fixed URL"
+		);
+	}
+
+	/**
+	* @testdox Not safe: <embed src="{@url}" allowscriptaccess="sameDomain"/>
+	*/
+	public function testCheckUnsafe50932DE0()
+	{
+		$this->checkUnsafe(
+			'<embed src="{@url}" allowscriptaccess="sameDomain"/>',
+			"The template contains a 'embed' element with a non-fixed URL"
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'url' has filter '#url': <embed src="{@url}" allowscriptaccess="never"/>
+	*/
+	public function testCheckUnsafe173B922C()
+	{
+		$this->checkUnsafe(
+			'<embed src="{@url}" allowscriptaccess="never"/>',
+			NULL,
+			array('attributes' => array('url' => array('filterChain' => array('#url'))))
+		);
+	}
+
+	/**
 	* @testdox Not safe: <iframe src="{@url}"/>
 	*/
 	public function testCheckUnsafeA56D0DBC()
@@ -143,6 +177,18 @@ class TemplateCheckerTest extends Test
 		$this->checkUnsafe(
 			'<object data="{@url}"/>',
 			"The template contains a 'object' element with a non-fixed URL"
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'url' has filter '#url': <object data="{@url}"><param name="allowscriptaccess" value="never"/></object>
+	*/
+	public function testCheckUnsafeF7367941()
+	{
+		$this->checkUnsafe(
+			'<object data="{@url}"><param name="allowscriptaccess" value="never"/></object>',
+			NULL,
+			array('attributes' => array('url' => array('filterChain' => array('#url'))))
 		);
 	}
 
@@ -308,6 +354,18 @@ class TemplateCheckerTest extends Test
 		$this->checkUnsafe(
 			'<OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>',
 			"The template contains a 'param' element with a non-fixed URL attribute 'value'"
+		);
+	}
+
+	/**
+	* @testdox Safe if attribute 'url' has filter '#url': <object><param name="movie" value="{@url}"/><param name="allowscriptaccess" value="never"/></object>
+	*/
+	public function testCheckUnsafe7AB5F968()
+	{
+		$this->checkUnsafe(
+			'<object><param name="movie" value="{@url}"/><param name="allowscriptaccess" value="never"/></object>',
+			NULL,
+			array('attributes' => array('url' => array('filterChain' => array('#url'))))
 		);
 	}
 
@@ -2500,12 +2558,42 @@ class TemplateCheckerTest extends Test
 				"The template contains a 'embed' element with a non-fixed URL"
 			),
 			array(
+				'<embed src="{@url}" allowscriptaccess="always"/>',
+				"The template contains a 'embed' element with a non-fixed URL"
+			),
+			array(
+				'<embed src="{@url}" allowscriptaccess="sameDomain"/>',
+				"The template contains a 'embed' element with a non-fixed URL"
+			),
+			array(
+				'<embed src="{@url}" allowscriptaccess="never"/>',
+				null,
+				array(
+					'attributes' => array(
+						'url' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
+			),
+			array(
 				'<iframe src="{@url}"/>',
 				"The template contains a 'iframe' element with a non-fixed URL"
 			),
 			array(
 				'<object data="{@url}"/>',
 				"The template contains a 'object' element with a non-fixed URL"
+			),
+			array(
+				'<object data="{@url}"><param name="allowscriptaccess" value="never"/></object>',
+				null,
+				array(
+					'attributes' => array(
+						'url' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
 			),
 			array(
 				'<script src="{@url}"/>',
@@ -2580,6 +2668,17 @@ class TemplateCheckerTest extends Test
 			array(
 				'<OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>',
 				"The template contains a 'param' element with a non-fixed URL attribute 'value'"
+			),
+			array(
+				'<object><param name="movie" value="{@url}"/><param name="allowscriptaccess" value="never"/></object>',
+				null,
+				array(
+					'attributes' => array(
+						'url' => array(
+							'filterChain' => array('#url')
+						)
+					)
+				)
 			)
 		);
 	}

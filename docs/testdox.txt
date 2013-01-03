@@ -560,8 +560,12 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'email' has filter '#email': <a href="mailto:{@email}?subject=foo"/>
  [x] Unsafe even if attribute 'email' has filter '#email': <a href="http://{@email}"/>
  [x] Not safe: <embed src="{@url}"/>
+ [x] Not safe: <embed src="{@url}" allowscriptaccess="always"/>
+ [x] Not safe: <embed src="{@url}" allowscriptaccess="sameDomain"/>
+ [x] Safe if attribute 'url' has filter '#url': <embed src="{@url}" allowscriptaccess="never"/>
  [x] Not safe: <iframe src="{@url}"/>
  [x] Not safe: <object data="{@url}"/>
+ [x] Safe if attribute 'url' has filter '#url': <object data="{@url}"><param name="allowscriptaccess" value="never"/></object>
  [x] Not safe: <script src="{@url}"/>
  [x] Not safe if attribute 'src' has filter '#url': <script src="{@url}"/>
  [x] Not safe: <script src="http://{@foo}"/>
@@ -577,6 +581,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Not safe: <xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>
  [x] Not safe: <object><param name="movie" value="{@url}"/></object>
  [x] Not safe: <OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>
+ [x] Safe if attribute 'url' has filter '#url': <object><param name="movie" value="{@url}"/><param name="allowscriptaccess" value="never"/></object>
  [x] Not safe: <b disable-output-escaping="1"/>
  [x] Not safe: <xsl:copy/>
  [x] Not safe: <b><xsl:copy-of select="@onclick"/></b>

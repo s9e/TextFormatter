@@ -68,24 +68,50 @@ abstract class TemplateChecker
 	protected static function checkFixedUrlAttributes(DOMXPath $xpath)
 	{
 		$attributes = array(
-			'//embed | //iframe | //script'
-				=> 'src',
+			'//iframe | //script'
+				=> array('src', null),
+
+			'//embed'
+				=> array('src', '@allowscriptaccess = "never"'),
 
 			'//object'
-				=> 'data',
+				=> array(
+					'data',
+					'param'
+					. '[translate(@name, "ACEILOPRSTW", "aceiloprstw") = "allowscriptaccess"]'
+					. '[@value = "never"]'
+				),
 
 			'//param[translate(@name, "MOVIE", "movie") = "movie"]'
-				=> 'value',
+				=> array(
+					'value',
+					'parent::object/param'
+					. '[translate(@name, "ACEILOPRSTW", "aceiloprstw") = "allowscriptaccess"]'
+					. '[@value = "never"]'
+				)
 		);
 
 		// Match protocol:// or // followed optional "user:pass@" credentials followed by an
 		// alphanumerical character
 		$regexp = '#^(?:[a-z0-9]+:)?//\\w#i';
 
-		foreach ($attributes as $elementQuery => $attrName)
+		foreach ($attributes as $elementQuery => $pair)
 		{
+			list($attrName, $exceptionQuery) = $pair;
+
 			foreach ($xpath->query($elementQuery) as $element)
 			{
+				/**
+				* @todo move that to a new method dedicated to checking Flash stuff
+				* @todo what about multiple definitions of the "allowscriptaccess" param? what happens if one says "never" and two other say "always"
+				*/
+				// Test whether this case allows some exceptions
+				if (isset($exceptionQuery)
+				 && $xpath->evaluate('boolean(' . $exceptionQuery . ')', $element))
+				{
+					continue;
+				}
+
 				// Test the element's attribute
 				if ($element->hasAttribute($attrName))
 				{
