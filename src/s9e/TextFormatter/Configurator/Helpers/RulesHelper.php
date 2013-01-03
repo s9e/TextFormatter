@@ -89,7 +89,7 @@ abstract class RulesHelper
 		}
 
 		// Pack the binary representations into raw bytes
-		foreach ($return['tags'] as $tag => &$bitfields)
+		foreach ($return['tags'] as &$bitfields)
 		{
 			$bitfields['allowedChildren']    = self::pack($bitfields['allowedChildren']);
 			$bitfields['allowedDescendants'] = self::pack($bitfields['allowedDescendants']);

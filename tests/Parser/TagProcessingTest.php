@@ -421,6 +421,123 @@ class TagProcessingTest extends Test
 					$tag->pairWith($parser->addEndTag('IMG', 15, 6));
 				}
 			),
+			array(
+				'XYX',
+				'<rt><X><st>X</st><Y>Y</Y><et>X</et></X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				}
+			),
+			array(
+				'XYX',
+				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->rules->denyChild('Y');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				}
+			),
+			array(
+				'XYZYX',
+				'<rt><X><st>X</st><Y><st>Y</st><Z>Z</Z><et>Y</et></Y><et>X</et></X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->rules->denyChild('Z');
+					$constructor->tags->add('Y');
+					$constructor->tags->add('Z');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addSelfClosingTag('Z', 2, 1);
+					$parser->addEndTag('Y', 3, 1);
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'XYZYX',
+				'<rt><X><st>X</st><Y><st>Y</st>Z<et>Y</et></Y><et>X</et></X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->rules->denyChild('Z');
+					$constructor->tags->add('Y')->rules->isTransparent();
+					$constructor->tags->add('Z');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addSelfClosingTag('Z', 2, 1);
+					$parser->addEndTag('Y', 3, 1);
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'XYX',
+				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->rules->denyDescendant('Y');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				}
+			),
+			array(
+				'XYZYX',
+				'<rt><X><st>X</st><Y><st>Y</st>Z<et>Y</et></Y><et>X</et></X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->rules->denyDescendant('Z');
+					$constructor->tags->add('Y');
+					$constructor->tags->add('Z');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addSelfClosingTag('Z', 2, 1);
+					$parser->addEndTag('Y', 3, 1);
+					$parser->addEndTag('X', 4, 1);
+				}
+			),
+			array(
+				'XYX',
+				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
+				function ($constructor)
+				{
+					$rules = $constructor->tags->add('X')->rules;
+					$rules->isTransparent();
+					$rules->denyChild('Y');
+
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 1);
+					$parser->addSelfClosingTag('Y', 1, 1);
+					$parser->addEndTag('X', 2, 1);
+				}
+			),
 		);
 	}
 }

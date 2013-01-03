@@ -366,11 +366,14 @@ trait TagProcessing
 		++$this->cntOpen[$tagName];
 		$this->openTags[] = $tag;
 
-		// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise we use
-		// this tag's allowedChildren bitfield
-		$allowedChildren = ($tagConfig['rules']['flags'] & self::RULE_IS_TRANSPARENT)
-						 ? $this->context['allowedChildren']
-						 : $tagConfig['allowedChildren'];
+		$allowedChildren = $tagConfig['allowedChildren'];
+
+		// If the tag is transparent, we restrict its allowed children to the same set as its
+		// parent, minus this tag's own disallowed children
+		if ($tagConfig['rules']['flags'] & self::RULE_IS_TRANSPARENT)
+		{
+			$allowedChildren &= $this->context['allowedChildren'];
+		}
 
 		// The allowedDescendants bitfield is restricted by this tag's
 		$allowedDescendants = $this->context['allowedDescendants']

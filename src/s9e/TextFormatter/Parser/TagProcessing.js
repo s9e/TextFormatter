@@ -344,12 +344,6 @@ function pushContext(tag)
 	++cntOpen[tagName];
 	openTags.push(tag);
 
-	// If the tag is transparent, we keep the same allowedChildren bitfield, otherwise we use
-	// this tag's allowedChildren bitfield
-	var allowedChildren = (tagConfig.rules.flags & RULE_IS_TRANSPARENT)
-						? context.allowedChildren
-						: tagConfig.allowedChildren;
-
 	/**
 	* @param {!Array} a1
 	* @param {!Array} a2
@@ -364,6 +358,16 @@ function pushContext(tag)
 		}
 
 		return ret;
+	}
+
+	// Using contextAnd() to copy the array
+	var allowedChildren = contextAnd(tagConfig.allowedChildren, tagConfig.allowedChildren);
+
+	// If the tag is transparent, we restrict its allowed children to the same set as its
+	// parent, minus this tag's own disallowed children
+	if (tagConfig.rules.flags & RULE_IS_TRANSPARENT)
+	{
+		allowedChildren = contextAnd(allowedChildren, context.allowedChildren);
 	}
 
 	// The allowedDescendants bitfield is restricted by this tag's
