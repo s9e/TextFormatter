@@ -294,7 +294,7 @@ class BBCodesTest extends Test
 			),
 			array(
 				'x [url=foo://example.org]text[/url] y',
-				'x [url=foo://example.org]text[/url] y',
+				'x [url=foo://example.org]text[/url] y'
 			),
 			array(
 				'x [url=foo://example.org]text[/url] y',
@@ -302,6 +302,24 @@ class BBCodesTest extends Test
 				function ($configurator)
 				{
 					$configurator->urlConfig->allowScheme('foo');
+				}
+			),
+			array(
+				'x [url=http://example.org][flash=10,20]http://example.org/foo.swf[/flash][/url] y',
+				'x <a href="http://example.org">[flash=10,20]http://example.org/foo.swf[/flash]</a> y'
+			),
+			array(
+				'x [url=http://example.org][img]http://example.org/foo.png[/img][/url] y',
+				'x <a href="http://example.org"><img src="http://example.org/foo.png" title="" alt=""></a> y'
+			),
+			array(
+				'x [url=http://example.org][img]http://example.org/foo.png[/img][/url] y',
+				'x <a href="http://example.org">[img]http://example.org/foo.png[/img]</a> y',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('url');
+					$configurator->BBCodes->addFromRepository('img');
+					$configurator->tags['url']->rules->denyDescendant('img');
 				}
 			),
 		);
