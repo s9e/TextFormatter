@@ -238,6 +238,28 @@ Tag.prototype.getType = function()
 //==========================================================================
 
 /**
+* Test whether this tag can close given start tag
+*
+* @param  {!Tag} startTag
+* @return {!boolean}
+*/
+Tag.prototype.canClose = function(startTag)
+{
+	if (this.invalid
+	 || this.name !== startTag.name
+	 || startTag.type !== Tag.START_TAG
+	 || this.type !== Tag.END_TAG
+	 || this.pos < startTag.pos
+	 || (this.startTag && this.startTag !== startTag)
+	 || (startTag.endTag && startTag.endTag !== this))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+/**
 * Test whether this tag is a br tag
 *
 * @return {!boolean}

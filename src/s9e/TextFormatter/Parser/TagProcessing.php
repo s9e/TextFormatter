@@ -248,6 +248,12 @@ trait TagProcessing
 	{
 		$tagName = $tag->getName();
 
+		if (empty($this->cntOpen[$tagName]))
+		{
+			// This is an end tag with no start tag
+			return;
+		}
+
 		/**
 		* @var array List of tags need to be closed before given tag
 		*/
@@ -259,24 +265,9 @@ trait TagProcessing
 		{
 			$openTag = $this->openTags[$i];
 
-			// Test whether this open tag could be a match for our tag
-			if ($tagName === $openTag->getName())
+			if ($tag->canClose($openTag))
 			{
-				// Test whether this open tag is paired and if so, if it's paired to our tag
-				$pairedTag = $openTag->getEndTag();
-				if ($pairedTag)
-				{
-					if ($tag === $pairedTag)
-					{
-						// Pair found
-						break;
-					}
-				}
-				elseif (!$tag->getStartTag())
-				{
-					// If neither tag is paired and they have the same name, we got a match
-					break;
-				}
+				break;
 			}
 
 			$closeTags[] = $openTag;

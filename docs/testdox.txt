@@ -1113,6 +1113,18 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] hasAttribute('foo') returns false if attribute 'foo' is not set
  [x] hasAttribute('foo') returns true if attribute 'foo' is set
  [x] removeAttribute('foo') unsets attribute 'foo'
+ [x] canClose() returns FALSE if this tag is invalid
+ [x] canClose() returns FALSE if the tag names don't match
+ [x] canClose() returns FALSE if given tag is a self-closing tag
+ [x] canClose() returns FALSE if given tag is an end tag
+ [x] canClose() returns FALSE if this tag is a self-closing tag
+ [x] canClose() returns FALSE if this tag is a start tag
+ [x] canClose() returns FALSE if this tag's position is before given tag's
+ [x] canClose() returns TRUE if this tag's position is the same as given tag's
+ [x] canClose() returns TRUE if this tag's position is after given tag's
+ [x] canClose() returns FALSE if given tag is paired with another tag
+ [x] canClose() returns FALSE if this tag is paired with another tag
+ [x] canClose() returns TRUE if the tags are paired together
 
 s9e\TextFormatter\Tests\Parser\TagStack
  [x] addStartTag() adds a start tag to the stack

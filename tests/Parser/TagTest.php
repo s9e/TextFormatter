@@ -528,4 +528,143 @@ class TagTest extends Test
 
 		$this->assertSame(array('baz' => 'quux'), $tag->getAttributes());
 	}
+
+	/**
+	* @testdox canClose() returns FALSE if this tag is invalid
+	*/
+	public function testCanCloseInvalid()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG,   'X', 1, 0);
+		$endTag->invalidate();
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns FALSE if the tag names don't match
+	*/
+	public function testCanCloseDifferentNames()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG,   'Y', 1, 0);
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns FALSE if given tag is a self-closing tag
+	*/
+	public function testCanCloseTargetSelfClosing()
+	{
+		$startTag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG,          'X', 1, 0);
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns FALSE if given tag is an end tag
+	*/
+	public function testCanCloseTargetEnd()
+	{
+		$startTag = new Tag(Tag::END_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG, 'X', 1, 0);
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns FALSE if this tag is a self-closing tag
+	*/
+	public function testCanCloseSelfClosing()
+	{
+		$startTag = new Tag(Tag::START_TAG,        'X', 0, 0);
+		$endTag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 1, 0);
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns FALSE if this tag is a start tag
+	*/
+	public function testCanCloseStart()
+	{
+		$startTag = new Tag(Tag::END_TAG,   'X', 0, 0);
+		$endTag   = new Tag(Tag::START_TAG, 'X', 1, 0);
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns FALSE if this tag's position is before given tag's
+	*/
+	public function testCanCloseBeforePos()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 1, 0);
+		$endTag   = new Tag(Tag::END_TAG,   'X', 0, 0);
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns TRUE if this tag's position is the same as given tag's
+	*/
+	public function testCanCloseSamePos()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG,   'X', 0, 0);
+
+		$this->assertTrue($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns TRUE if this tag's position is after given tag's
+	*/
+	public function testCanCloseAfterPos()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG,   'X', 1, 0);
+
+		$this->assertTrue($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns FALSE if given tag is paired with another tag
+	*/
+	public function testCanCloseStartPairInvalid()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG,   'X', 1, 0);
+
+		$startTag->pairWith(clone $endTag);
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns FALSE if this tag is paired with another tag
+	*/
+	public function testCanCloseEndPairInvalid()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG,   'X', 1, 0);
+
+		$endTag->pairWith(clone $startTag);
+
+		$this->assertFalse($endTag->canClose($startTag));
+	}
+
+	/**
+	* @testdox canClose() returns TRUE if the tags are paired together
+	*/
+	public function testCanClosePaired()
+	{
+		$startTag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$endTag   = new Tag(Tag::END_TAG,   'X', 1, 0);
+
+		$endTag->pairWith($startTag);
+
+		$this->assertTrue($endTag->canClose($startTag));
+	}
 }

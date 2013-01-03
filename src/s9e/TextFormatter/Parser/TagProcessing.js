@@ -232,6 +232,12 @@ function processEndTag(tag)
 {
 	var tagName = tag.getName();
 
+	if (!cntOpen[tagName])
+	{
+		// This is an end tag with no start tag
+		return;
+	}
+
 	/**
 	* @type {!Array.<!Tag>} List of tags need to be closed before given tag
 	*/
@@ -243,24 +249,9 @@ function processEndTag(tag)
 	{
 		var openTag = openTags[i];
 
-		// Test whether this open tag could be a match for our tag
-		if (tagName === openTag.getName())
+		if (tag.canClose(openTag))
 		{
-			// Test whether this open tag is paired and if so, if it's paired to our tag
-			var pairedTag = openTag.getEndTag();
-			if (pairedTag)
-			{
-				if (tag === pairedTag)
-				{
-					// Pair found
-					break;
-				}
-			}
-			else if (!tag.getStartTag())
-			{
-				// If neither tag is paired and they have the same name, we got a match
-				break;
-			}
+			break;
 		}
 
 		closeTags.push(openTag);

@@ -261,6 +261,28 @@ class Tag
 	//==========================================================================
 
 	/**
+	* Test whether this tag can close given start tag
+	*
+	* @param  Tag  $startTag A start tag
+	* @return bool
+	*/
+	public function canClose(Tag $startTag)
+	{
+		if ($this->invalid
+		 || $this->name !== $startTag->name
+		 || $startTag->type !== self::START_TAG
+		 || $this->type !== self::END_TAG
+		 || $this->pos < $startTag->pos
+		 || ($this->startTag && $this->startTag !== $startTag)
+		 || ($startTag->endTag && $startTag->endTag !== $this))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	* Test whether this tag is a br tag
 	*
 	* @return bool
