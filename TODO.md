@@ -41,3 +41,4 @@ TODO
 - JS parser needs quickMatch to be UTF-8
 - Find a good way to test the Javascript HTML plugins
 - Should skipped end tags consume their text? Probably not, but it renders "[B]bold [i]italic[/b][/I]" more nicely by hiding the extra [/I] -- on the other hand, some people post invalid BBCodes expecting them to be displayed as text
+- Look into ext/dom's XML_PARSE_HUGE -- apparently it's needed to render text with 1000s of tags
