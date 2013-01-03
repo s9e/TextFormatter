@@ -54,7 +54,8 @@
 	</bbcode>
 
 	<bbcode name="FLASH">
-		<usage><![CDATA[[FLASH={PARSE=/^(?<width>\d+),(?<height>\d+)/} width={RANGE=]]><var name="minWidth">0</var>,<var name="maxWidth">1920</var><![CDATA[} height={RANGE=]]><var name="minHeight">0</var>,<var name="maxHeight">1080</var><![CDATA[} url={URL;useContent}]
+		<!-- The size of the object is set to range from 0x0 to 1920x1080 and defaults to 80x60 -->
+		<usage><![CDATA[[FLASH={PARSE=/^(?<width>\d+),(?<height>\d+)/} width={RANGE=]]><var name="minWidth">0</var>,<var name="maxWidth">1920</var><![CDATA[;defaultValue=80} height={RANGE=]]><var name="minHeight">0</var>,<var name="maxHeight">1080</var><![CDATA[;defaultValue=60} url={URL;useContent}]
 		]]></usage>
 		<template><![CDATA[
 			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="{@width}" height="{@height}">
