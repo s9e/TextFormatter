@@ -518,7 +518,7 @@ class RulesGeneratorTest extends Test
 					'allowChild' => array('DIV', 'A')
 				),
 				'A' => array(
-					'denyChild'  => array('DIV', 'A')
+					'denyChild'  => array('A')
 				)
 			),
 			$rules['tags']

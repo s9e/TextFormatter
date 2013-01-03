@@ -371,10 +371,10 @@ class TemplateForensics
 
 			/**
 			* @var string allowChild bitfield for current branch. Starts with the value associated
-			*             with <span> in order to approximate a value if the whole branch uses the
+			*             with <div> in order to approximate a value if the whole branch uses the
 			*             transparent content model
 			*/
-			$branchBitfield = self::$htmlElements['span']['ac'];
+			$branchBitfield = self::$htmlElements['div']['ac'];
 
 			/**
 			* @var bool Whether this branch denies all non-text descendants
