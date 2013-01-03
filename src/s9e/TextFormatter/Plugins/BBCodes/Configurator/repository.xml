@@ -53,6 +53,25 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="FLASH">
+		<usage><![CDATA[[FLASH={PARSE=/^(?<width>\d+),(?<height>\d+)/} width={RANGE=]]><var name="minWidth">0</var>,<var name="maxWidth">1920</var><![CDATA[} height={RANGE=]]><var name="minHeight">0</var>,<var name="maxHeight">1080</var><![CDATA[} url={URL;useContent}]
+		]]></usage>
+		<template><![CDATA[
+			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="{@width}" height="{@height}">
+				<param name="movie" value="{@url}" />
+				<param name="quality" value="high" />
+				<param name="wmode" value="opaque" />
+				<param name="play" value="false" />
+				<param name="loop" value="false" />
+
+				<param name="allowScriptAccess" value="never" />
+				<param name="allowNetworking" value="internal" />
+
+				<embed src="{@url}" quality="high" width="{@width}" height="{@height}" wmode="opaque" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" play="false" loop="false" allowscriptaccess="never" allownetworking="internal"></embed>
+			</object>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="I">
 		<usage>[I]{TEXT}[/I]</usage>
 		<template><![CDATA[
