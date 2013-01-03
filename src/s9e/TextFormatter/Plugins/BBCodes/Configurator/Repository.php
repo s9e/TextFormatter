@@ -58,7 +58,7 @@ class Repository
 	* Get a BBCode and its associated tag from this repository
 	*
 	* @param  string $name Name of the entry in the repository
-	* @param  array  $vars Template variables
+	* @param  array  $vars Replacement variables
 	* @return array        Array with three elements: "bbcode", "name" and "tag"
 	*/
 	public function get($name, array $vars = array())
@@ -100,8 +100,8 @@ class Repository
 
 		// Now we can parse the BBCode usage and prepare the template.
 		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
-		$usage  = $node->getElementsByTagName('usage')->item(0)->textContent;
-		$config = BBCodeMonkey::parse($usage);
+		$usage      = $node->getElementsByTagName('usage')->item(0)->textContent;
+		$config     = BBCodeMonkey::parse($usage);
 		$bbcode     = $config['bbcode'];
 		$bbcodeName = $config['name'];
 		$tag        = $config['tag'];
