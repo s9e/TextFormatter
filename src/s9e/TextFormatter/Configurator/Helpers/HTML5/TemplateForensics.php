@@ -362,8 +362,10 @@ class TemplateForensics
 
 			if (!$nodes->length)
 			{
-				// That tag might have an empty template for some reason, in which case there's
-				// nothing to do here
+				// That tag might has a fully transparent branch. Nothing there to do except record
+				// that it's not void
+				$this->isVoid = false;
+
 				continue;
 			}
 

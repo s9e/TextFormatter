@@ -328,6 +328,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <img/> is void
  [x] <img> is void even with a <xsl:apply-templates/> child
  [x] <span> is not void
+ [x] <xsl:apply-templates/> is not void
  [x] <blockquote> is a block-level element
  [x] <span> is not a block-level element
 

@@ -634,6 +634,18 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
+	* @testdox <xsl:apply-templates/> is not void
+	*/
+	public function test517E8D2B()
+	{
+		$this->runCase(
+			'<xsl:apply-templates/> is not void',
+			'<xsl:apply-templates/>',
+			'!isVoid'
+		);
+	}
+
+	/**
 	* @testdox <blockquote> is a block-level element
 	*/
 	public function test602395E3()
@@ -918,6 +930,11 @@ class TemplateForensicsTest extends Test
 			array(
 				'<span> is not void',
 				'<span><xsl:apply-templates/></span>',
+				'!isVoid'
+			),
+			array(
+				'<xsl:apply-templates/> is not void',
+				'<xsl:apply-templates/>',
 				'!isVoid'
 			),
 			array(
