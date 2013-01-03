@@ -302,7 +302,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] A template composed entirely of a single <xsl:apply-templates/> is considered transparent
  [x] <span> allows <unknownElement> as child
  [x] <unknownElement> allows <span> as child
- [x] <textarea> disallows text nodes
+ [x] <textarea> allows text nodes
  [x] <table> disallows text nodes
  [x] <table><tr><td> allows "Hi"
  [x] <div><table> disallows "Hi"

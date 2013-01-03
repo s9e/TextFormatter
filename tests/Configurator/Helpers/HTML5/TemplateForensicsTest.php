@@ -317,12 +317,12 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
-	* @testdox <textarea> disallows text nodes
+	* @testdox <textarea> allows text nodes
 	*/
-	public function testDD2BCD0B()
+	public function test1B650F69()
 	{
 		$this->runCase(
-			'<textarea> disallows text nodes',
+			'<textarea> allows text nodes',
 			'<textarea><xsl:apply-templates/></textarea>',
 			'allowText'
 		);
