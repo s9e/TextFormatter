@@ -41,6 +41,7 @@
 			<file>tests/Configurator/Collections/FilterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/PluginCollectionTest.php</file>
 			<file>tests/Configurator/Collections/RulesetTest.php</file>
+			<file>tests/Configurator/Collections/StylesheetParameterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TemplateCollectionTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
@@ -65,6 +66,7 @@
 			<file>tests/Configurator/StylesheetTest.php</file>
 			<file>tests/Configurator/UrlConfigTest.php</file>
 			<file>tests/Configurator/Validators/AttributeNameTest.php</file>
+			<file>tests/Configurator/Validators/StylesheetParameterNameTest.php</file>
 			<file>tests/Configurator/Validators/TagNameTest.php</file>
 			<file>tests/Configurator/JavascriptTest.php</file>
 			<file>tests/Configurator/Javascript/CodeTest.php</file>

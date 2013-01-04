@@ -236,6 +236,10 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] asConfig() can pack multiple boolean rules in a value named "flags"
  [x] asConfig() sets noBrChild's bit if noBrDescendant is set
 
+s9e\TextFormatter\Tests\Configurator\Collections\StylesheetParameterCollection
+ [x] add('foo') adds parameter 'foo' with a NULL value
+ [x] add('foo', 1) adds parameter 'foo' with value '1'
+
 s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Tag
  [x] add() normalizes the tag name
@@ -886,6 +890,9 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() represents empty templates with a self-closing element
  [x] get() generates the namespace declarations necessary for prefixed tags
  [x] get() generates an exclude-result-prefixes directive for all the declared prefixes
+ [x] get() includes parameters in the stylesheet
+ [x] get() includes a parameter's default value in the stylesheet
+ [x] get() escapes a parameter's default value
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] asConfig() creates a Javascript variant for allowedSchemes
@@ -932,6 +939,14 @@ s9e\TextFormatter\Tests\Configurator\Validators\AttributeName
  [x] "xmlns" is invalid ('xmlns' is reserved)
  [x] "data-src" is normalized to "data-src"
  [x] "foo:bar" is invalid (no colons allowed)
+ [x] "foo\n" is invalid (no newlines allowed)
+
+s9e\TextFormatter\Tests\Configurator\Validators\StylesheetParameterName
+ [x] normalize() throws an InvalidArgumentException if the name is invalid
+ [x] "foo" is normalized to "foo"
+ [x] "Foo" is normalized to "Foo"
+ [x] "*" is invalid (name must start with a letter or an underscore)
+ [x] "foo:bar" is invalid (name can only contain letters, digits, dashes and underscores)
  [x] "foo\n" is invalid (no newlines allowed)
 
 s9e\TextFormatter\Tests\Configurator\Validators\TagName
@@ -1441,6 +1456,8 @@ s9e\TextFormatter\Tests\Renderer
  [x] renderMulti() renders multiple messages at once
  [x] renderMulti() preserves keys and order
  [x] Renderer is serializable
+ [x] setParameter() sets the value of a parameter
+ [x] setParameters() sets the values of any number of parameters in an associative array
 
 s9e\TextFormatter\Tests\Unparser
  [x] unparse('<pt>Plain text</pt>') returns 'Plain text'

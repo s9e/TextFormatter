@@ -8,20 +8,29 @@
 namespace s9e\TextFormatter\Configurator;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Collections\StylesheetParameterCollection;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Helpers\TemplateChecker;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 
 class Stylesheet
 {
+	use Configurable;
+
 	/**
 	* @var string Output method
 	*/
 	protected $outputMethod = 'html';
+
+	/**
+	* @var StylesheetParameterCollection
+	*/
+	protected $parameters;
 
 	/**
 	* @var TagCollection
@@ -41,7 +50,8 @@ class Stylesheet
 	*/
 	public function __construct(TagCollection $tags)
 	{
-		$this->tags = $tags;
+		$this->tags       = $tags;
+		$this->parameters = new StylesheetParameterCollection;
 	}
 
 	/**
@@ -142,6 +152,20 @@ class Stylesheet
 
 		// Start the stylesheet with the boilerplate stuff
 		$xsl .= '><xsl:output method="' . $this->outputMethod . '" encoding="utf-8" indent="no"/>';
+
+		// Add stylesheet parameters
+		foreach ($this->parameters as $paramName => $paramValue)
+		{
+			$xsl .= '<xsl:param name="' . htmlspecialchars($paramName) . '"';
+
+			// Add the default value if the parameter has one
+			if (isset($paramValue))
+			{
+				$xsl .= ' select="' . htmlspecialchars($paramValue) . '"';
+			}
+
+			$xsl .= '/>';
+		}
 
 		// Group templates by content so we can deduplicate them
 		$groupedTemplates = array();

@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests;
 
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Renderer;
@@ -120,6 +121,46 @@ class RendererTest extends Test
 		$this->assertEquals(
 			$this->renderer,
 			unserialize(serialize($this->renderer))
+		);
+	}
+
+	/**
+	* @testdox setParameter() sets the value of a parameter
+	*/
+	public function testSetParameter()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$configurator->stylesheet->parameters->add('foo');
+
+		$renderer = $configurator->getRenderer();
+		$renderer->setParameter('foo', 'bar');
+
+		$this->assertSame(
+			'bar',
+			$renderer->render('<rt><X/></rt>')
+		);
+	}
+
+	/**
+	* @testdox setParameters() sets the values of any number of parameters in an associative array
+	*/
+	public function testSetParameters()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/><xsl:value-of select="$bar"/>';
+		$configurator->stylesheet->parameters->add('foo');
+		$configurator->stylesheet->parameters->add('bar');
+
+		$renderer = $configurator->getRenderer();
+		$renderer->setParameters(array(
+			'foo' => 'FOO',
+			'bar' => 'BAR'
+		));
+
+		$this->assertSame(
+			'FOOBAR',
+			$renderer->render('<rt><X/></rt>')
 		);
 	}
 }

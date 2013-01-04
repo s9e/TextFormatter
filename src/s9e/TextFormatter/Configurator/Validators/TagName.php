@@ -12,7 +12,7 @@ use InvalidArgumentException;
 /**
 * Tag name rules:
 *  - must start with a letter or an underscore
-*  - can only contain letters, numbers and underscores
+*  - can only contain letters, numbers, dashes and underscores
 *  - can be prefixed with one prefix following the same rules, separated with one colon
 *  - the prefixes "xsl" and "s9e" are reserved
 *

@@ -14,14 +14,14 @@ use XSLTProcessor;
 class Renderer implements Serializable
 {
 	/**
-	* @var string
-	*/
-	protected $stylesheet;
-
-	/**
 	* @var XSLTProcessor
 	*/
 	protected $proc;
+
+	/**
+	* @var string
+	*/
+	protected $stylesheet;
 
 	/**
 	* Constructor
@@ -32,6 +32,12 @@ class Renderer implements Serializable
 	public function __construct($stylesheet)
 	{
 		$this->stylesheet = $stylesheet;
+
+		$xsl = new DOMDocument;
+		$xsl->loadXML($stylesheet);
+
+		$this->proc = new XSLTProcessor;
+		$this->proc->importStylesheet($xsl);
 	}
 
 	/**
@@ -56,6 +62,29 @@ class Renderer implements Serializable
 	}
 
 	/**
+	* Set the value of a parameter from the stylesheet
+	*
+	* @param  string $paramName  Parameter name
+	* @param  mixed  $paramValue Parameter's value
+	* @return void
+	*/
+	public function setParameter($paramName, $paramValue)
+	{
+		$this->proc->setParameter('', $paramName, $paramValue);
+	}
+
+	/**
+	* Set thes value of several parameters from the stylesheet
+	*
+	* @param  string $params Associative array of [parameter name => parameter value]
+	* @return void
+	*/
+	public function setParameters(array $params)
+	{
+		$this->proc->setParameter('', $params);
+	}
+
+	/**
 	* Render an intermediate representation
 	*
 	* @param  string $xml Intermediate representation
@@ -69,20 +98,21 @@ class Renderer implements Serializable
 			return substr($xml, 4, -5);
 		}
 
+		// Load the intermediate representation
 		$dom  = new DOMDocument;
 		$dom->loadXML($xml);
 
-		if (!isset($this->proc))
-		{
-			$xsl = new DOMDocument;
-			$xsl->loadXML($this->stylesheet);
+		// Perform the transformation and cast it as a string because it may return NULL if the
+		// transformation didn't output anything
+		$output = (string) $this->proc->transformToXml($dom);
 
-			$this->proc = new XSLTProcessor;
-			$this->proc->importStylesheet($xsl);
+		// Remove the \n that XSL adds at the end of the output, if applicable
+		if (substr($output, -1) === "\n")
+		{
+			$output = substr($output, 0, -1);
 		}
 
-		// Remove the \n that XSL adds at the end of the output
-		return substr($this->proc->transformToXml($dom), 0, -1);
+		return $output;
 	}
 
 	/**

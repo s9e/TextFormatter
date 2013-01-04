@@ -2,6 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Configurator;
 
+use DOMDocument;
+use DOMXPath;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Stylesheet;
@@ -249,6 +251,54 @@ class StylesheetTest extends Test
 
 		$this->assertContains(
 			'exclude-result-prefixes="X Y"',
+			$stylesheet->get()
+		);
+	}
+
+	/**
+	* @testdox get() includes parameters in the stylesheet
+	*/
+	public function testGetParameters()
+	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->parameters->add('foo');
+		$stylesheet->parameters->add('bar');
+
+		$this->assertContains(
+			'<xsl:param name="foo"',
+			$stylesheet->get()
+		);
+
+		$this->assertContains(
+			'<xsl:param name="bar"',
+			$stylesheet->get()
+		);
+	}
+
+	/**
+	* @testdox get() includes a parameter's default value in the stylesheet
+	*/
+	public function testGetParameterValue()
+	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->parameters->add('foo', 1);
+
+		$this->assertContains(
+			'<xsl:param name="foo" select="1"/>',
+			$stylesheet->get()
+		);
+	}
+
+	/**
+	* @testdox get() escapes a parameter's default value
+	*/
+	public function testGetParameterValueEscaped()
+	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->parameters->add('foo', '\'"&<>');
+
+		$this->assertContains(
+			'<xsl:param name="foo" select="\'&quot;&amp;&lt;&gt;"/>',
 			$stylesheet->get()
 		);
 	}

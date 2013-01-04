@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests;
 
 class Test {}
 
-foreach (array('AttributeName', 'TagName')  as $type)
+foreach (array('AttributeName', 'StylesheetParameterName', 'TagName')  as $type)
 {
 	$filepath = __DIR__ . '/../tests/Configurator/Validators/' . $type . 'Test.php';
 	$class    = 's9e\\TextFormatter\\Tests\\Configurator\\Validators\\' . $type . 'Test';
