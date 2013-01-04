@@ -486,7 +486,7 @@ abstract class TemplateChecker
 			'#url',
 			'urlencode',
 			'rawurlencode',
-			'#id',
+			'#identifier',
 			'#int',
 			'#uint',
 			'#float',

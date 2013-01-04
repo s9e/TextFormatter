@@ -1481,14 +1481,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <form action="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <form action="{@foo}"/>
 	*/
 	public function testCheckUnsafe5C18A403()
 	{
 		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -1601,14 +1601,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <q cite="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <q cite="{@foo}"/>
 	*/
 	public function testCheckUnsafe210BF52A()
 	{
 		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -1721,14 +1721,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <xbject data="{@foo}"/>
 	*/
 	public function testCheckUnsafeE9DCC43A()
 	{
 		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -1841,14 +1841,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <input formaction="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <input formaction="{@foo}"/>
 	*/
 	public function testCheckUnsafeE6E582E8()
 	{
 		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -1961,14 +1961,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <a href="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <a href="{@foo}"/>
 	*/
 	public function testCheckUnsafeDED7364B()
 	{
 		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -2081,14 +2081,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <html manifest="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <html manifest="{@foo}"/>
 	*/
 	public function testCheckUnsafeCEA62160()
 	{
 		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -2201,14 +2201,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <video poster="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <video poster="{@foo}"/>
 	*/
 	public function testCheckUnsafe9415F70C()
 	{
 		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -2321,14 +2321,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <img src="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <img src="{@foo}"/>
 	*/
 	public function testCheckUnsafe9D5D3010()
 	{
 		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -2441,14 +2441,14 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#id': <img lowsrc="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <img lowsrc="{@foo}"/>
 	*/
 	public function testCheckUnsafe944FB292()
 	{
 		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
 			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#id'))))
+			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
 		);
 	}
 
@@ -2794,7 +2794,7 @@ class TemplateCheckerTest extends Test
 				'urlencode',
 				'rawurlencode',
 				'#url',
-				'#id',
+				'#identifier',
 				'#int',
 				'#uint',
 				'#float',

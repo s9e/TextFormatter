@@ -680,7 +680,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <form action="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <form action="{@foo}"/>
@@ -690,7 +690,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <q cite="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <q cite="{@foo}"/>
@@ -700,7 +700,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <xbject data="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <xbject data="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <xbject data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <xbject data="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <xbject data="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <xbject data="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <xbject data="{@foo}"/>
@@ -710,7 +710,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <input formaction="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <input formaction="{@foo}"/>
@@ -720,7 +720,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <a href="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <a href="{@foo}"/>
@@ -730,7 +730,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <html manifest="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <html manifest="{@foo}"/>
@@ -740,7 +740,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <video poster="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <video poster="{@foo}"/>
@@ -750,7 +750,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <img src="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <img src="{@foo}"/>
@@ -760,7 +760,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter 'urlencode': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#id': <img lowsrc="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#uint': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <img lowsrc="{@foo}"/>

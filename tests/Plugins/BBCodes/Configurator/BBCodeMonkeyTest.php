@@ -289,7 +289,7 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
-				'[foo={INT;postFilter=#id}/]',
+				'[foo={INT;postFilter=#identifier}/]',
 				array(
 					'name'   => 'FOO',
 					'bbcode' => new BBCode(array(
@@ -298,7 +298,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array('#int', '#id')
+								'filterChain' => array('#int', '#identifier')
 							)
 						)
 					)),
