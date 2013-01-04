@@ -16,3 +16,4 @@ Differences between the PHP parser and phpBB's
  * No recursive parsing of attributes, IOW no [quote="[b]foo[/b]"] ([b] will be displayed as plain text) -- could be implemented as a tag filter which uses its own Parser instance (Parser is not reentrant) and stores the parsed author name as a data: URI containing its intermediate representation which would be rendered via <xsl:apply-templates select="document(@data-uri)"/>
  * Different rules for emoticons, censored words, autolinking
  * Censor is run at posting time, whenever the censor list is changed, posts containing the word that has been added or removed would need to be updated (could use the search backend to find them)
+ * Accepts any valid URL for images. Does not test image size. Can be implemented as a custom filter
