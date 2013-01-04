@@ -22,6 +22,13 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="BACKGROUND">
+		<usage>[BACKGROUND={COLOR}]{TEXT}[/BACKGROUND]</usage>
+		<template><![CDATA[
+			<span style="background-color:{COLOR}">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="C">
 		<usage>[C]{TEXT}[/C]</usage>
 		<template><![CDATA[
@@ -128,6 +135,13 @@
 
 				<embed src="{@url}" quality="high" width="{@width}" height="{@height}" wmode="opaque" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" play="false" loop="false" allowscriptaccess="never" allownetworking="internal"></embed>
 			</object>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="FONT">
+		<usage>[font={SIMPLETEXT}]{TEXT}[/font]</usage>
+		<template><![CDATA[
+			<span style="font-family:{SIMPLETEXT}">{TEXT}</span>
 		]]></template>
 	</bbcode>
 
@@ -269,6 +283,19 @@
 		<usage>[S]{TEXT}[/S]</usage>
 		<template><![CDATA[
 			<s>{TEXT}</s>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="SPOILER">
+		<usage>[SPOILER title={TEXT1;optional}]{TEXT2}[/SPOILER]</usage>
+		<template><![CDATA[
+			<div class="spoiler">
+				<div class="spoiler-header">
+					<input type="button" value="]]><var name="showStr">Show</var><![CDATA[" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=''){{s.display='';this.value=']]><var name="hideStr">Hide</var><![CDATA['}}else{{s.display='none';this.value=']]><var name="showStr">Show</var><![CDATA['}}"/>
+					<span class="spoiler-title">]]><var name="spoilerStr">Spoiler:</var><![CDATA[ {TEXT1}</span>
+				</div>
+				<div class="spoiler-content" style="display:none">{TEXT2}</div>
+			</div>
 		]]></template>
 	</bbcode>
 

@@ -74,6 +74,10 @@ class BBCodesTest extends Test
 				'x <b>BOLD</b> y'
 			),
 			array(
+				'x [background=yellow]color me[/background] y',
+				'x <span style="background-color:yellow">color me</span> y'
+			),
+			array(
 				'x [C][b]not bold[/b][/C] y',
 				'x <code class="inline">[b]not bold[/b]</code> y'
 			),
@@ -178,6 +182,10 @@ class BBCodesTest extends Test
 						'minWidth'  => 80
 					));
 				}
+			),
+			array(
+				'x [font=Arial]Arial[/font] y',
+				'x <span style="font-family:Arial">Arial</span> y'
 			),
 			array(
 				'x [i]italic[/I] y',
@@ -338,6 +346,34 @@ class BBCodesTest extends Test
 			array(
 				'x [s]strikethrough[/s] y',
 				'x <s>strikethrough</s> y'
+			),
+			array(
+				"Spoiler ahead!\n" .
+				"[spoiler]Now you're spoiled[/spoiler]",
+				'Spoiler ahead!<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
+			),
+			array(
+				"Spoiler ahead!\n" .
+				'[spoiler="your spoilage status"]Now you\'re spoiled[/spoiler]',
+				'Spoiler ahead!<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: your spoilage status</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
+			),
+			array(
+				"Spoiler ahead!\n" .
+				"[spoiler][spoiler='Last chance']Now you're spoiled[/spoiler][/spoiler]",
+				'Spoiler ahead!<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none"><div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: Last chance</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div></div></div>'
+			),
+			array(
+				"Spoiler ahead!\n" .
+				"[spoiler]Now you're spoiled[/spoiler]",
+				'Spoiler ahead!<div class="spoiler"><div class="spoiler-header"><input type="button" value="Montrer" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Cacher\'}else{s.display=\'none\';this.value=\'Montrer\'}"><span class="spoiler-title">Spoiler : </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('SPOILER', 'default', array(
+						'showStr'    => 'Montrer',
+						'hideStr'    => 'Cacher',
+						'spoilerStr' => 'Spoiler :'
+					));
+				}
 			),
 			array(
 				'Some [strong]strong[/strong] words',
