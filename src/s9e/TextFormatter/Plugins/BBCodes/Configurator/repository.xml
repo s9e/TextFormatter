@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <repository>
 
+	<bbcode name="ACRONYM">
+		<usage>[ACRONYM title={TEXT1;optional}]{TEXT2}[/ACRONYM]</usage>
+		<template><![CDATA[
+			<acronym title="{TEXT1}">{TEXT2}</acronym>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="ALIGN">
 		<usage>[ALIGN={CHOICE=left,right,center,justify}]{TEXT}[/ALIGN]</usage>
 		<template><![CDATA[
@@ -62,10 +69,31 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="DD">
+		<usage>[DD]{TEXT}[/DD]</usage>
+		<template><![CDATA[
+			<dd>{TEXT}</dd>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="DEL">
 		<usage>[DEL]{TEXT}[/DEL]</usage>
 		<template><![CDATA[
 			<del>{TEXT}</del>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="DL">
+		<usage>[DL]{TEXT}[/DL]</usage>
+		<template><![CDATA[
+			<dl>{TEXT}</dl>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="DT">
+		<usage>[DT]{TEXT}[/DT]</usage>
+		<template><![CDATA[
+			<dt>{TEXT}</dt>
 		]]></template>
 	</bbcode>
 
@@ -100,6 +128,48 @@
 
 				<embed src="{@url}" quality="high" width="{@width}" height="{@height}" wmode="opaque" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" play="false" loop="false" allowscriptaccess="never" allownetworking="internal"></embed>
 			</object>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="H1">
+		<usage>[H1]{TEXT}[/H1]</usage>
+		<template><![CDATA[
+			<h1>{TEXT}</h1>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="H2">
+		<usage>[H2]{TEXT}[/H2]</usage>
+		<template><![CDATA[
+			<h2>{TEXT}</h2>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="H3">
+		<usage>[H3]{TEXT}[/H3]</usage>
+		<template><![CDATA[
+			<h3>{TEXT}</h3>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="H4">
+		<usage>[H4]{TEXT}[/H4]</usage>
+		<template><![CDATA[
+			<h4>{TEXT}</h4>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="H5">
+		<usage>[H5]{TEXT}[/H5]</usage>
+		<template><![CDATA[
+			<h5>{TEXT}</h5>
+		]]></template>
+	</bbcode>
+
+	<bbcode name="H6">
+		<usage>[H6]{TEXT}[/H6]</usage>
+		<template><![CDATA[
+			<h6>{TEXT}</h6>
 		]]></template>
 	</bbcode>
 

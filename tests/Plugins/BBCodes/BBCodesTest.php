@@ -50,6 +50,14 @@ class BBCodesTest extends Test
 	{
 		return array(
 			array(
+				'[acronym="foobar"]F.B[/acronym]',
+				'<acronym title="foobar">F.B</acronym>'
+			),
+			array(
+				'[acronym="\'\"foobar\"\'"]F.B[/acronym]',
+				'<acronym title="\'&quot;foobar&quot;\'">F.B</acronym>'
+			),
+			array(
 				'[align=center]...[/align]',
 				'<div style="text-align:center">...</div>'
 			),
@@ -113,6 +121,15 @@ class BBCodesTest extends Test
 				'our <del>great </del>leader'
 			),
 			array(
+				"[dl]
+					[dt]Hacker
+					[dd]a clever programmer
+					[dt]Nerd
+					[dd]technically bright but socially [s]inept[/s] awesome person
+				[/dl]",
+				'<dl><dt>Hacker</dt><dd>a clever programmer</dd><dt>Nerd</dt><dd>technically bright but socially <s>inept</s> awesome person</dd></dl>'
+			),
+			array(
 				'Putting the EM in [em]em[/em]phasis',
 				'Putting the EM in <em>em</em>phasis'
 			),
@@ -165,6 +182,23 @@ class BBCodesTest extends Test
 			array(
 				'x [i]italic[/I] y',
 				'x <i>italic</i> y'
+			),
+			array(
+				"[h1]h1[/h1]\n" .
+				"[h2]h2[/h2]\n" .
+				"[h3]h3[/h3]\n" .
+				"[h4]h4[/h4]\n" .
+				"[h5]h5[/h5]\n" .
+				"[h6]h6[/h6]\n",
+				'<h1>h1</h1><h2>h2</h2><h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6>'
+			),
+			array(
+				'[h1]h1 [b]b[/b][/h1]',
+				'<h1>h1 <b>b</b></h1>'
+			),
+			array(
+				'[h1]h1 [quote]...[/quote][/h1]',
+				'<h1>h1 [quote]...[/quote]</h1>'
 			),
 			array(
 				"xxxx\n" .
