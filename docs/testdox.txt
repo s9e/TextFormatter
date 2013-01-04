@@ -573,6 +573,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Not safe if attribute 'src' has filter '#url': <script src="{@url}"/>
  [x] Not safe: <script src="http://{@foo}"/>
  [x] Safe if attribute 'id' has filter '#number': <script src="https://gist.github.com/{@id}.js"/>
+ [x] Safe if attribute 'id' has filter '#number': <script src="//gist.github.com/{@id}.js"/>
+ [x] Safe: <script src="foo.js"/>
  [x] Not safe: <SCRIPT src="{@url}"/>
  [x] Not safe: <script SRC="{@url}"/>
  [x] Not safe: <script><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>
@@ -1267,6 +1269,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] If the name is a BBCode name followed by a # character, get() normalizes only the first part
  [x] Variables in <usage/> are replaced
  [x] Variables in <template/> are replaced
+ [x] Multiple variables can be replaced
  [x] Variables that are not replaced are left intact
  [x] Custom tagName is correctly set
  [x] Rules targetting tags are correctly set

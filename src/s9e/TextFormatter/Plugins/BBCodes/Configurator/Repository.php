@@ -85,7 +85,7 @@ class Repository
 		$node = $node->cloneNode(true);
 
 		// Replace all the <var> descendants if applicable
-		foreach ($node->getElementsByTagName('var') as $varNode)
+		foreach ($xpath->query('.//var', $node) as $varNode)
 		{
 			$varName = $varNode->getAttribute('name');
 

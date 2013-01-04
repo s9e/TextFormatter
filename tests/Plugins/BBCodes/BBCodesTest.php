@@ -99,7 +99,7 @@ class BBCodesTest extends Test
 			),
 			array(
 				'[code=php]echo "Hello world";[/code]',
-				'<pre><code class="php">echo "Hello world";</code></pre><script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="highlight.css";document.getElementsByTagName("head")[0].appendChild(l)</script><script onload="hljs.initHighlighting()" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>',
+				'<pre><code class="php">echo "Hello world";</code></pre><script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="highlight.css";document.getElementsByTagName("head")[0].appendChild(l)</script><script onload="hljs.initHighlighting()" src="highlight.js"></script>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('CODE', 'default', array(

@@ -143,6 +143,35 @@ class RepositoryTest extends Test
 	}
 
 	/**
+	* @testdox Multiple variables can be replaced
+	*/
+	public function testMultipleVars()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="FOO">
+					<usage>[FOO <var name="attr1">attr1</var>={TEXT1} <var name="attr2">attr2</var>={TEXT2}]{TEXT}[/FOO]</usage>
+					<template><var name="tpl" /></template>
+				</bbcode>
+			</repository>'
+		);
+
+		$repository = new Repository($dom);
+		$config = $repository->get('FOO', array(
+			'attr1' => 'x',
+			'attr2' => 'y',
+			'tpl'   => 'Hello'
+		));
+
+		$this->assertTrue(isset($config['tag']->attributes['x']));
+		$this->assertTrue(isset($config['tag']->attributes['y']));
+		$this->assertFalse(isset($config['tag']->attributes['attr1']));
+		$this->assertFalse(isset($config['tag']->attributes['attr2']));
+		$this->assertSame('Hello', (string) $config['tag']->defaultTemplate);
+	}
+
+	/**
 	* @testdox Variables that are not replaced are left intact
 	*/
 	public function testUnreplacedVars()

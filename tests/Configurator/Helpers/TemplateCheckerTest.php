@@ -239,6 +239,28 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
+	* @testdox Safe if attribute 'id' has filter '#number': <script src="//gist.github.com/{@id}.js"/>
+	*/
+	public function testCheckUnsafe966BB27F()
+	{
+		$this->checkUnsafe(
+			'<script src="//gist.github.com/{@id}.js"/>',
+			NULL,
+			array('attributes' => array('id' => array('filterChain' => array('#number'))))
+		);
+	}
+
+	/**
+	* @testdox Safe: <script src="foo.js"/>
+	*/
+	public function testCheckUnsafe48B39041()
+	{
+		$this->checkUnsafe(
+			'<script src="foo.js"/>'
+		);
+	}
+
+	/**
 	* @testdox Not safe: <SCRIPT src="{@url}"/>
 	*/
 	public function testCheckUnsafe22C6B53D()
@@ -1483,7 +1505,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <form action="{@foo}"/>
 	*/
-	public function testCheckUnsafe5C18A403()
+	public function testCheckUnsafe2FC1965C()
 	{
 		$this->checkUnsafe(
 			'<form action="{@foo}"/>',
@@ -1603,7 +1625,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafe210BF52A()
+	public function testCheckUnsafe7995C9B0()
 	{
 		$this->checkUnsafe(
 			'<q cite="{@foo}"/>',
@@ -1723,7 +1745,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <xbject data="{@foo}"/>
 	*/
-	public function testCheckUnsafeE9DCC43A()
+	public function testCheckUnsafe0FED7930()
 	{
 		$this->checkUnsafe(
 			'<xbject data="{@foo}"/>',
@@ -1843,7 +1865,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <input formaction="{@foo}"/>
 	*/
-	public function testCheckUnsafeE6E582E8()
+	public function testCheckUnsafe164389B1()
 	{
 		$this->checkUnsafe(
 			'<input formaction="{@foo}"/>',
@@ -1963,7 +1985,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <a href="{@foo}"/>
 	*/
-	public function testCheckUnsafeDED7364B()
+	public function testCheckUnsafe4E03DE7E()
 	{
 		$this->checkUnsafe(
 			'<a href="{@foo}"/>',
@@ -2083,7 +2105,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <html manifest="{@foo}"/>
 	*/
-	public function testCheckUnsafeCEA62160()
+	public function testCheckUnsafe71102336()
 	{
 		$this->checkUnsafe(
 			'<html manifest="{@foo}"/>',
@@ -2203,7 +2225,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <video poster="{@foo}"/>
 	*/
-	public function testCheckUnsafe9415F70C()
+	public function testCheckUnsafeB7BD50B1()
 	{
 		$this->checkUnsafe(
 			'<video poster="{@foo}"/>',
@@ -2323,7 +2345,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <img src="{@foo}"/>
 	*/
-	public function testCheckUnsafe9D5D3010()
+	public function testCheckUnsafeDDC1C52C()
 	{
 		$this->checkUnsafe(
 			'<img src="{@foo}"/>',
@@ -2443,7 +2465,7 @@ class TemplateCheckerTest extends Test
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#identifier': <img lowsrc="{@foo}"/>
 	*/
-	public function testCheckUnsafe944FB292()
+	public function testCheckUnsafe5332B36D()
 	{
 		$this->checkUnsafe(
 			'<img lowsrc="{@foo}"/>',
@@ -2625,6 +2647,21 @@ class TemplateCheckerTest extends Test
 						)
 					)
 				)
+			),
+			array(
+				'<script src="//gist.github.com/{@id}.js"/>',
+				null,
+				array(
+					'attributes' => array(
+						'id' => array(
+							'filterChain' => array('#number')
+						)
+					)
+				)
+			),
+			array(
+				'<script src="foo.js"/>',
+				null
 			),
 			// Try working around the safeguards
 			array(

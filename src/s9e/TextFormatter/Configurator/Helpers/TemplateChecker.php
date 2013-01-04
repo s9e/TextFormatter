@@ -115,7 +115,13 @@ abstract class TemplateChecker
 				// Test the element's attribute
 				if ($element->hasAttribute($attrName))
 				{
-					if (!preg_match($regexp, $element->getAttribute($attrName)))
+					$attrValue = $element->getAttribute($attrName);
+
+					// Test whether this value matches our regexp, but only if it has a dynamic
+					// component (the simple check for a curly bracket could theorically produce
+					// some rare false positive, but it doesn't matter)
+					if (strpos($attrValue, '{') !== false
+					 && !preg_match($regexp, $attrValue))
 					{
 						throw new UnsafeTemplateException("The template contains a '" . $element->nodeName . "' element with a non-fixed URL attribute '" . $attrName . "'", $element);
 					}
