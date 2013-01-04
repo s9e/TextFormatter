@@ -59,9 +59,9 @@
 			<!-- Include the necessary Javascript/CSS if it's the last CODE tag -->
 			<xsl:if test="not(following::CODE)">
 				<!-- Append the stylesheet to head -->
-				<script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="]]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css</var><![CDATA[";document.getElementsByTagName("head")[0].appendChild(l)</script>
+				<script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="]]><var name="stylesheetUrl" description="URL of the Highlight.js stylesheet">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css</var><![CDATA[";document.getElementsByTagName("head")[0].appendChild(l)</script>
 				<!-- Load the script and use the onload event to trigger highlighting -->
-				<script onload="hljs.initHighlighting()" src="]]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</var><![CDATA["></script>
+				<script onload="hljs.initHighlighting()" src="]]><var name="scriptUrl" description="URL of the Highlight.js script">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</var><![CDATA["></script>
 			</xsl:if>
 		]]></template>
 		<rules>
@@ -120,7 +120,7 @@
 
 	<bbcode name="FLASH">
 		<!-- The size of the object is set to range from 0x0 to 1920x1080 and defaults to 80x60 -->
-		<usage><![CDATA[[FLASH={PARSE=/^(?<width>\d+),(?<height>\d+)/} width={RANGE=]]><var name="minWidth">0</var>,<var name="maxWidth">1920</var><![CDATA[;defaultValue=80} height={RANGE=]]><var name="minHeight">0</var>,<var name="maxHeight">1080</var><![CDATA[;defaultValue=60} url={URL;useContent}]
+		<usage><![CDATA[[FLASH={PARSE=/^(?<width>\d+),(?<height>\d+)/} width={RANGE=]]><var name="minWidth" description="Minimum width for the Flash object">0</var>,<var name="maxWidth" description="Maximum width for the Flash object">1920</var><![CDATA[;defaultValue=80} height={RANGE=]]><var name="minHeight" description="Minimum height for the Flash object">0</var>,<var name="maxHeight" description="Maximum height for the Flash object">1080</var><![CDATA[;defaultValue=60} url={URL;useContent}]
 		]]></usage>
 		<template><![CDATA[
 			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="{@width}" height="{@height}">
