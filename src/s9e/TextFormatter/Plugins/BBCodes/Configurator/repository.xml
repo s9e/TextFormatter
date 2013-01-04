@@ -314,4 +314,14 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="YOUTUBE">
+		<usage><![CDATA[
+			[YOUTUBE id={IDENTIFIER}]{PARSE=/^(?:http:\/\/[a-z]+\.youtube\.com\/watch\?v=)?(?<id>[A-Za-z_0-9\\-]+)(?!\\:)/}[/YOUTUBE]
+		]]></usage>
+		<!-- Markup lifted from YouTube's "Share" form -->
+		<template><![CDATA[
+			<iframe width="]]><var name="width">560</var><![CDATA[" height="]]><var name="height">315</var><![CDATA[" src="http://www.youtube.com/embed/{IDENTIFIER}" frameborder="0" allowfullscreen=""></iframe>
+		]]></template>
+	</bbcode>
+
 </repository>

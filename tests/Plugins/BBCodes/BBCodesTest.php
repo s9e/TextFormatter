@@ -25,7 +25,7 @@ class BBCodesTest extends Test
 		}
 
 		// Capture the names of the BBCodes used
-		preg_match_all('/\\[([\\w*]+)/', $original, $matches);
+		preg_match_all('/\\[([*\\w]+)/', $original, $matches);
 
 		foreach ($matches[1] as $bbcodeName)
 		{
@@ -448,6 +448,25 @@ class BBCodesTest extends Test
 			array(
 				'[var]x[sub][var]i[/var][/sub][/var]',
 				'<var>x<sub><var>i</var></sub></var>'
+			),
+			array(
+				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
+			),
+			array(
+				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
+			),
+			array(
+				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
+				'<iframe width="853" height="505" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('youtube', 'default', array(
+						'width'  => 853,
+						'height' => 505
+					));
+				}
 			),
 		);
 	}
