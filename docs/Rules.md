@@ -37,7 +37,7 @@ Start tags of this tag are automatically closed if they are not paired with an e
 
 <dt>autoReopen</dt>
 <dd><i>Example:</i> <code>$tag->rules->autoReopen(false);</code><br/>
-Automatically reopens this tag if it's closed by a non-matching tag. This rule helps dealing with misnested tags such as `<B><I></B></I>`. In this case, if `I` has an autoReopen rule, it will automatically be reopen when `B` closes.</dd>
+Automatically reopens this tag if it's closed by a non-matching tag. This rule helps dealing with misnested tags such as `<B><I></B></I>`. In this case, if `I` has an autoReopen rule, it will automatically be reopened when `B` closes.</dd>
 
 <dt>closeAncestor</dt>
 <dd><i>Example:</i> <code>$tag->rules->closeAncestor('X');</code><br/>
