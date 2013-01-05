@@ -60,8 +60,8 @@ function closeParent(tag)
 				// We have to close that parent. First we reinsert the tag...
 				tagStack.push(tag);
 
-				// ...then we create a new end tag for its parent
-				addEndTag(parentName, tag.getPos(), 0);
+				// ...then we create a new end tag which we pair with its parent
+				addEndTag(parentName, tag.getPos(), 0).pairWith(parent);
 
 				return true;
 			}

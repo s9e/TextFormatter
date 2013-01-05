@@ -72,8 +72,9 @@ trait RulesHandling
 					// We have to close that parent. First we reinsert the tag...
 					$this->tagStack[] = $tag;
 
-					// ...then we create a new end tag for its parent
-					$this->addEndTag($parentName, $tag->getPos(), 0);
+					// ...then we create a new end tag for its parent, which we pair
+					$this->addEndTag($parentName, $tag->getPos(), 0)
+					     ->pairWith($parent);
 
 					return true;
 				}

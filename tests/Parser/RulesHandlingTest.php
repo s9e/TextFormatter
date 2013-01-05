@@ -53,6 +53,36 @@ class RulesHandlingTest extends Test
 				}
 			),
 			array(
+				'xyx',
+				'<rt><X>x</X><Y>y</Y>x</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y')->rules->closeParent('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0)
+					       ->pairWith($parser->addEndTag('X', 3, 0));
+					$parser->addSelfClosingTag('Y', 1, 1);
+				}
+			),
+			array(
+				'xyx',
+				'<rt><X>x</X><Y>y</Y>x</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y')->rules->closeAncestor('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0)
+					       ->pairWith($parser->addEndTag('X', 3, 0));
+					$parser->addSelfClosingTag('Y', 1, 1);
+				}
+			),
+			array(
 				'xxy',
 				'<rt><X>x<X>x</X></X><Y>y</Y></rt>',
 				function ($constructor)
