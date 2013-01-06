@@ -108,7 +108,7 @@ class PluginCollectionTest extends Test
 			array(
 				'plugins' => array(
 					'Dummy' => array(
-						'regexpLimit' => 1000
+						'regexpLimit' => 10000
 					)
 				)
 			),

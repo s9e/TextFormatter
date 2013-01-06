@@ -49,7 +49,7 @@ class Tag implements ConfigProvider
 	/**
 	* @var integer Maximum number of this tag per message
 	*/
-	protected $tagLimit = 100;
+	protected $tagLimit = 1000;
 
 	/**
 	* @var TemplateCollection Templates associated with this tag
