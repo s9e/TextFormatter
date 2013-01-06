@@ -216,7 +216,7 @@ class BBCodesTest extends Test
 			),
 			array(
 				'x [B]bold [i]italic[/b][/I] y',
-				'x <b>bold <i>italic</i></b><i></i> y'
+				'x <b>bold <i>italic</i></b> y'
 			),
 			array(
 				'x [img]http://example.org/foo.png[/img] y',

@@ -293,6 +293,59 @@ function processEndTag(tag)
 	outputTag(tag);
 	popContext();
 
+	// Filter out tags that would immediately be closed
+	if (1)
+	{
+		var upcomingEndTags = [],
+			i = tagStack.length;
+
+		/**
+		* @var integer Rightmost position of the portion of text to ignore
+		*/
+		var ignorePos = pos;
+
+		while (--i >= 0)
+		{
+			var upcomingTag = tagStack[i];
+
+			// Test whether the upcoming tag is positioned at current "ignore" position and it's
+			// strictly an end tag (not a start tag or a self-closing tag)
+			if (upcomingTag.getPos() > ignorePos
+			 || upcomingTag.isStartTag())
+			{
+				break;
+			}
+
+			// Test whether this tag would close any of the tags we're about to reopen
+			var j = reopenTags.length;
+
+			while (--j >= 0)
+			{
+				if (upcomingTag.canClose(reopenTags[j]))
+				{
+					// Remove the tag from the list of tags to reopen and keep the keys in order
+					reopenTags.splice(j, 1);
+
+					// Extend the ignored text to cover this tag
+					ignorePos = Math.max(
+						ignorePos,
+						upcomingTag.getPos() + upcomingTag.getLen()
+					);
+
+					break;
+				}
+			}
+		}
+
+		if (ignorePos > pos)
+		{
+			/**
+			* @todo have a method that takes (pos,len) rather than a Tag
+			*/
+			outputIgnoreTag(new Tag(Tag.SELF_CLOSING_TAG, 'i', pos, ignorePos - pos));
+		}
+	}
+
 	// Re-add tags that need to be reopened, at current cursor position
 	reopenTags.forEach(function(startTag)
 	{

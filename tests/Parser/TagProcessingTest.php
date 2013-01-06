@@ -114,6 +114,95 @@ class TagProcessingTest extends Test
 				}
 			),
 			array(
+				'x [b][i]...[/b][/i] y',
+				'<rt>x <B><st>[b]</st><I><st>[i]</st>...</I><et>[/b]</et></B><i>[/i]</i> y</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('B');
+					$constructor->tags->add('I')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addEndTag('B', 11, 4);
+					$parser->addEndTag('I', 15, 4);
+				}
+			),
+			array(
+				'x [b][i]...[/b]![/i] y',
+				'<rt>x <B><st>[b]</st><I><st>[i]</st>...</I><et>[/b]</et></B><I>!<et>[/i]</et></I> y</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('B');
+					$constructor->tags->add('I')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addEndTag('B', 11, 4);
+					$parser->addEndTag('I', 16, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/u][/i] y',
+				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/u][/i]</i> y</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('B');
+					$constructor->tags->add('I')->rules->autoReopen();
+					$constructor->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('U', 18, 4);
+					$parser->addEndTag('I', 22, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/i][/u] y',
+				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/i][/u]</i> y</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('B');
+					$constructor->tags->add('I')->rules->autoReopen();
+					$constructor->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('I', 18, 4);
+					$parser->addEndTag('U', 22, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/i]u[/u] y',
+				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/i]</i><U>u<et>[/u]</et></U> y</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('B');
+					$constructor->tags->add('I')->rules->autoReopen();
+					$constructor->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('I', 18, 4);
+					$parser->addEndTag('U', 23, 4);
+				}
+			),
+			array(
 				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
 				function ($constructor)
