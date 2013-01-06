@@ -167,6 +167,7 @@ class Parser implements Serializable
 		$text = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
 
 		$this->context    = $this->rootContext;
+		$this->currentFixingCost = 0;
 		$this->isRich     = false;
 		$this->namespaces = array();
 		$this->output     = '';

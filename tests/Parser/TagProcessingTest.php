@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Parser;
 
+use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\TagProcessing;
@@ -175,6 +176,29 @@ class TagProcessingTest extends Test
 				},
 				function ($parser)
 				{
+					$parser->addStartTag('B', 2, 3);
+					$parser->addStartTag('I', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('I', 18, 4);
+					$parser->addEndTag('U', 22, 4);
+				}
+			),
+			array(
+				'x [b][i][u]...[/b][/i][/u] y',
+				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B>[/i][/u] y</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('B');
+					$constructor->tags->add('I')->rules->autoReopen();
+					$constructor->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					// Set maxFixingCost to 2 so that it allows [u] and [i] to be closed, without
+					// spending any efforts on reopening them
+					$parser->maxFixingCost = 2;
+
 					$parser->addStartTag('B', 2, 3);
 					$parser->addStartTag('I', 5, 3);
 					$parser->addStartTag('U', 8, 3);
@@ -625,6 +649,47 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('X', 0, 1);
 					$parser->addSelfClosingTag('Y', 1, 1);
 					$parser->addEndTag('X', 2, 1);
+				}
+			),
+			array(
+				'XYYYYX',
+				new RuntimeException('Fixing cost exceeded'),
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->maxFixingCost = 0;
+
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addStartTag('Y', 2, 1);
+					$parser->addStartTag('Y', 3, 1);
+					$parser->addStartTag('Y', 4, 1);
+					$parser->addEndTag('X', 5, 1);
+				}
+			),
+			array(
+				'XYYYYX',
+				'<rt><X><st>X</st><Y><st>Y</st><Y>Y</Y><Y>Y</Y><et>Y</et></Y><et>X</et></X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+					$constructor->tags->add('Y');
+				},
+				function ($parser)
+				{
+					// Ensuring that we can still parse well-formed text if we disallow any fixing
+					$parser->maxFixingCost = 0;
+
+					$parser->addStartTag('X', 0, 1);
+					$parser->addStartTag('Y', 1, 1);
+					$parser->addSelfClosingTag('Y', 2, 1);
+					$parser->addSelfClosingTag('Y', 3, 1);
+					$parser->addEndTag('Y', 4, 1);
+					$parser->addEndTag('X', 5, 1);
 				}
 			),
 		);

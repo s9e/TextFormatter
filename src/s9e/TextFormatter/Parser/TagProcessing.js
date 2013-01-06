@@ -14,9 +14,19 @@ var cntTotal;
 var context;
 
 /**
+* @type {!number} How hard the parser has worked on fixing bad markup so far
+*/
+var currentFixingCost;
+
+/**
 * @type {Tag} Current tag being processed
 */
 var currentTag;
+
+/**
+* @type {!number} How hard the parser should work on fixing bad markup
+*/
+var maxFixingCost = 1000;
 
 /**
 * @type {!Array.<!Tag>} Stack of open tags (instances of Tag)
@@ -254,6 +264,11 @@ function processEndTag(tag)
 			break;
 		}
 
+		if (++currentFixingCost > maxFixingCost)
+		{
+			throw 'Fixing cost exceeded';
+		}
+
 		closeTags.push(openTag);
 	}
 
@@ -265,7 +280,8 @@ function processEndTag(tag)
 		return;
 	}
 
-	var keepReopening = true,
+	// Only reopen tags if we haven't exceeded our "fixing" budget
+	var keepReopening = (currentFixingCost < maxFixingCost),
 		reopenTags    = [];
 	closeTags.forEach(function(openTag)
 	{
@@ -293,9 +309,9 @@ function processEndTag(tag)
 	outputTag(tag);
 	popContext();
 
-	// Filter out tags that would immediately be closed
-	if (1)
+	if (reopenTags.length)
 	{
+		// Filter out tags that would immediately be closed
 		var upcomingEndTags = [],
 			i = tagStack.length;
 
@@ -321,6 +337,8 @@ function processEndTag(tag)
 
 			while (--j >= 0)
 			{
+				++currentFixingCost;
+
 				if (upcomingTag.canClose(reopenTags[j]))
 				{
 					// Remove the tag from the list of tags to reopen and keep the keys in order
@@ -344,23 +362,23 @@ function processEndTag(tag)
 			*/
 			outputIgnoreTag(new Tag(Tag.SELF_CLOSING_TAG, 'i', pos, ignorePos - pos));
 		}
-	}
 
-	// Re-add tags that need to be reopened, at current cursor position
-	reopenTags.forEach(function(startTag)
-	{
-		var newTag = addStartTag(startTag.getName(), pos, 0);
-
-		// Copy the original tag's attributes
-		newTag.setAttributes(startTag.getAttributes());
-
-		// Re-pair the new tag
-		var endTag = startTag.getEndTag();
-		if (endTag)
+		// Re-add tags that need to be reopened, at current cursor position
+		reopenTags.forEach(function(startTag)
 		{
-			newTag.pairWith(endTag);
-		}
-	});
+			var newTag = addStartTag(startTag.getName(), pos, 0);
+
+			// Copy the original tag's attributes
+			newTag.setAttributes(startTag.getAttributes());
+
+			// Re-pair the new tag
+			var endTag = startTag.getEndTag();
+			if (endTag)
+			{
+				newTag.pairWith(endTag);
+			}
+		});
+	}
 }
 
 /**

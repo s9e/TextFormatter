@@ -74,6 +74,7 @@ function reset(_text)
 	_text = _text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]+/g, '', _text);
 
 	context    = rootContext;
+	currentFixingCost = 0;
 	isRich     = false;
 	namespaces = {};
 	output     = '';

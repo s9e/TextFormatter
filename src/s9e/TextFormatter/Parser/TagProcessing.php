@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\Parser;
 
+use RuntimeException;
+
 trait TagProcessing
 {
 	/**
@@ -25,9 +27,19 @@ trait TagProcessing
 	protected $context;
 
 	/**
+	* @var integer How hard the parser has worked on fixing bad markup so far
+	*/
+	protected $currentFixingCost;
+
+	/**
 	* @var Tag Current tag being processed
 	*/
 	protected $currentTag;
+
+	/**
+	* @var integer How hard the parser should work on fixing bad markup
+	*/
+	public $maxFixingCost = 1000;
 
 	/**
 	* @var array Stack of open tags (instances of Tag)
@@ -270,6 +282,11 @@ trait TagProcessing
 				break;
 			}
 
+			if (++$this->currentFixingCost > $this->maxFixingCost)
+			{
+				throw new RuntimeException('Fixing cost exceeded');
+			}
+
 			$closeTags[] = $openTag;
 		}
 
@@ -281,7 +298,9 @@ trait TagProcessing
 			return;
 		}
 
-		$keepReopening = true;
+		// Only reopen tags if we haven't exceeded our "fixing" budget
+		$keepReopening = (bool) ($this->currentFixingCost < $this->maxFixingCost);
+
 		$reopenTags    = array();
 		foreach ($closeTags as $openTag)
 		{
@@ -309,9 +328,9 @@ trait TagProcessing
 		$this->outputTag($tag);
 		$this->popContext();
 
-		// Filter out tags that would immediately be closed
-		if (1)
+		if ($reopenTags)
 		{
+			// Filter out tags that would immediately be closed
 			$upcomingEndTags = array();
 			$i = count($this->tagStack);
 
@@ -320,7 +339,7 @@ trait TagProcessing
 			*/
 			$ignorePos = $this->pos;
 
-			while (--$i >= 0)
+			while (--$i >= 0 && $this->currentFixingCost < $this->maxFixingCost)
 			{
 				$upcomingTag = $this->tagStack[$i];
 
@@ -337,6 +356,8 @@ trait TagProcessing
 
 				while (--$j >= 0)
 				{
+					++$this->currentFixingCost;
+
 					if ($upcomingTag->canClose($reopenTags[$j]))
 					{
 						// Remove the tag from the list of tags to reopen and keep the keys in order
@@ -360,21 +381,21 @@ trait TagProcessing
 				*/
 				$this->outputIgnoreTag(new Tag(Tag::SELF_CLOSING_TAG, 'i', $this->pos, $ignorePos - $this->pos));
 			}
-		}
 
-		// Re-add tags that need to be reopened, at current cursor position
-		foreach ($reopenTags as $startTag)
-		{
-			$newTag = $this->addStartTag($startTag->getName(), $this->pos, 0);
-
-			// Copy the original tag's attributes
-			$newTag->setAttributes($startTag->getAttributes());
-
-			// Re-pair the new tag
-			$endTag = $startTag->getEndTag();
-			if ($endTag)
+			// Re-add tags that need to be reopened, at current cursor position
+			foreach ($reopenTags as $startTag)
 			{
-				$newTag->pairWith($endTag);
+				$newTag = $this->addStartTag($startTag->getName(), $this->pos, 0);
+
+				// Copy the original tag's attributes
+				$newTag->setAttributes($startTag->getAttributes());
+
+				// Re-pair the new tag
+				$endTag = $startTag->getEndTag();
+				if ($endTag)
+				{
+					$newTag->pairWith($endTag);
+				}
 			}
 		}
 	}

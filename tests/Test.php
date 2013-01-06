@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests;
 
+use Exception;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 
@@ -76,6 +77,11 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 				}
 			}
 		);
+
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
 
 		$this->assertSame($expected, $parser->parse($original));
 	}
