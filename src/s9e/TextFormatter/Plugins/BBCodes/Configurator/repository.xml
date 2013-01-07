@@ -138,6 +138,13 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="FLOAT">
+		<usage>[float={CHOICE=left,right,none}]{TEXT}[/float]</usage>
+		<template><![CDATA[
+			<div style="float:{CHOICE}">{TEXT}</div>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="FONT">
 		<usage>[font={SIMPLETEXT}]{TEXT}[/font]</usage>
 		<template><![CDATA[

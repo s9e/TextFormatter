@@ -184,6 +184,22 @@ class BBCodesTest extends Test
 				}
 			),
 			array(
+				'x [float=left]left[/float] y',
+				'x<div style="float:left">left</div> y'
+			),
+			array(
+				'x [float=right]right[/float] y',
+				'x<div style="float:right">right</div> y'
+			),
+			array(
+				'x [float=none]none[/float] y',
+				'x<div style="float:none">none</div> y'
+			),
+			array(
+				'x [float=none;color:red]none[/float] y',
+				'x [float=none;color:red]none[/float] y'
+			),
+			array(
 				'x [font=Arial]Arial[/font] y',
 				'x <span style="font-family:Arial">Arial</span> y'
 			),
