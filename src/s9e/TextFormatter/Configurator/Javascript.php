@@ -299,20 +299,43 @@ class Javascript
 	}
 
 	/**
-	* Encode a PHP array an equivalent Javascript representation
+	* Encode a PHP value into an equivalent Javascript representation
 	*
-	* @param  array|ArrayObject $array Original array
-	* @return string                   Javascript representation
+	* @param  mixed  $value Original value
+	* @return string        Javascript representation
 	*/
-	protected static function encode($array)
+	protected static function encode($value)
 	{
-		$preserveKeys = ($array instanceof Dictionary);
-		$isArray = (!$preserveKeys && array_keys($array) === range(0, count($array) - 1));
+		if (is_scalar($value))
+		{
+			if (is_bool($value))
+			{
+				// Represent true/false as 1/0
+				$value = (int) $value;
+			}
+
+			return json_encode($value);
+		}
+
+		if ($value instanceof RegExp
+		 || $value instanceof Code)
+		{
+			// Rely on RegExp::__toString() and Code::__toString()
+			return (string) $value;
+		}
+
+		if (!is_array($value) && !($value instanceof ArrayObject))
+		{
+			throw new RuntimeException('Cannot encode non-scalar value');
+		}
+
+		$preserveKeys = ($value instanceof Dictionary);
+		$isArray = (!$preserveKeys && array_keys($value) === range(0, count($value) - 1));
 
 		$src = ($isArray) ? '[' : '{';
 		$sep = '';
 
-		foreach ($array as $k => $v)
+		foreach ($value as $k => $v)
 		{
 			$src .= $sep;
 
@@ -321,34 +344,7 @@ class Javascript
 				$src .= (($preserveKeys) ? json_encode($k) : $k) . ':';
 			}
 
-			if (is_bool($v))
-			{
-				// Represent true/false as 1/0
-				$src .= (string) (int) $v;
-			}
-			elseif ($v instanceof RegExp)
-			{
-				// Rely on RegExp::__toString()
-				$src .= $v;
-			}
-			elseif ($v instanceof Code)
-			{
-				// Rely on Code::__toString()
-				$src .= $v;
-			}
-			elseif (is_array($v) || $v instanceof ArrayObject)
-			{
-				$src .= self::encode($v);
-			}
-			elseif (is_scalar($v))
-			{
-				$src .= json_encode($v);
-			}
-			else
-			{
-				throw new RuntimeException('Cannot encode non-scalar value');
-			}
-
+			$src .= self::encode($v);
 			$sep = ',';
 		}
 
@@ -488,14 +484,7 @@ class Javascript
 			if (isset($v))
 			{
 				// Param by value
-				if ($v instanceof RegExp || $v instanceof Code)
-				{
-					$js .= $v;
-				}
-				else
-				{
-					$js .= json_encode($v);
-				}
+				$js .= self::encode($v);
 			}
 			else
 			{

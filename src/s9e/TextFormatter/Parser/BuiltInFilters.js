@@ -149,7 +149,6 @@ var BuiltInFilters =
 		var i = -1, cnt = map.length;
 		while (++i < cnt)
 		{
-			// TODO: the map should be converted to [/regexp/,replacement]
 			if (map[i][0].test(attrValue))
 			{
 				return map[i][1];

@@ -63,6 +63,8 @@ if (doSingleQuote || doDoubleQuote || text.indexOf('x') >= 0)
 // Do quote pairs ‘’ and “” -- must be done separately to handle nesting
 function captureQuotePairs(q, regexp, leftQuote, rightQuote)
 {
+	console.log(regexp);
+	console.log(regexp.test(text));
 	while (m = regexp.exec(text))
 	{
 		var left  = addSelfClosingTag(tagName, m.index + m[0].indexOf(q), 1),
@@ -79,12 +81,12 @@ function captureQuotePairs(q, regexp, leftQuote, rightQuote)
 if (doSingleQuote)
 {
 	// "/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS"
-	captureQuotePairs("'", /(?:^|\\W)'.+?'(?!\\w)/g, "\u2018", "\u2019");
+	captureQuotePairs("'", /(?:^|\W)'.+?'(?!\w)/g, "\u2018", "\u2019");
 }
 if (doDoubleQuote)
 {
 	// '/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS'
-	captureQuotePairs('"', /(?:^|\\W)".+?"(?!\\w)/g, "\u201c", "\u201d");
+	captureQuotePairs('"', /(?:^|\W)".+?"(?!\w)/g, "\u201c", "\u201d");
 }
 
 // Do en dash –, em dash — and ellipsis …
@@ -119,9 +121,9 @@ if (text.indexOf('(') >= 0)
 		pos = m.index;
 		len = m[0].length;
 		chr = {
-			'(c)'  : "\xE2\x80\x93",
-			'(r)'  : "\xE2\x80\x94",
-			'(tm)' : "\xE2\x80\xA6"
+			'(c)'  : "\u00A9",
+			'(r)'  : "\u00AE",
+			'(tm)' : "\u2122"
 		}[m[0]];
 
 		addSelfClosingTag(tagName, pos, len).setAttribute(attrName, chr);

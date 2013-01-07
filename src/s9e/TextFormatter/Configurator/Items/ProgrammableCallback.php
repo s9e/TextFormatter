@@ -218,6 +218,24 @@ class ProgrammableCallback implements ConfigProvider
 
 					$value = $variant;
 				}
+				elseif ($k === 'map')
+				{
+					$map = array();
+					foreach ($this->vars[$k] as $entry)
+					{
+						list($regexp, $replacement) = $entry;
+
+						$map[] = array(
+							RegexpConvertor::toJS($regexp),
+							$replacement
+						);
+					}
+
+					$variant = new Variant($value);
+					$variant->set('Javascript', $map);
+
+					$value = $variant;
+				}
 
 				// By name, but the value is readily available in $this->vars
 				$config['params'][] = $value;

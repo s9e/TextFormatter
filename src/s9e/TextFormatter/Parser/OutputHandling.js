@@ -105,6 +105,7 @@ function outputTag(tag)
 		// Open the start tag and add its attributes, but don't close the tag
 		output += '<' + tagName;
 		var attributes = tag.getAttributes();
+
 		for (var attrName in attributes)
 		{
 			output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName]) + '"';

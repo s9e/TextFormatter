@@ -1,7 +1,7 @@
 config.generics.forEach(function(entry)
 {
 	var tagName = entry[0],
-	    regexp  = entry[1],
+		regexp  = entry[1],
 		map     = entry[2],
 		match;
 

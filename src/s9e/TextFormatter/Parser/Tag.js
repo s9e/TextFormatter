@@ -12,6 +12,9 @@ function Tag(type, name, pos, len)
 	this.name = name;
 	this.pos  = pos;
 	this.len  = len;
+
+	this.attributes = {};
+	this.cascade    = [];
 }
 
 /** @const */
@@ -26,12 +29,12 @@ Tag.SELF_CLOSING_TAG = 3;
 /**
 * @type {!Object} Dictionary of attributes
 */
-Tag.prototype.attributes = {};
+Tag.prototype.attributes;
 
 /**
 * @type {!Array.<Tag>} List of tags that are invalidated when this tag is invalidated
 */
-Tag.prototype.cascade = [];
+Tag.prototype.cascade;
 
 /**
 * @type {Tag} End tag that unconditionally ends this start tag
@@ -160,7 +163,13 @@ Tag.prototype.setSortPriority = function(sortPriority)
 */
 Tag.prototype.getAttributes = function()
 {
-	return this.attributes;
+	var attributes = {}
+	for (var attrName in this.attributes)
+	{
+		attributes[attrName] = this.attributes[attrName];
+	}
+
+	return attributes;
 }
 
 /**
@@ -373,5 +382,10 @@ Tag.prototype.setAttribute = function(attrName, attrValue)
 */
 Tag.prototype.setAttributes = function(attributes)
 {
-	this.attributes = attributes;
+	this.attributes = {}
+	
+	for (var attrName in attributes)
+	{
+		this.attributes[attrName] = attributes[attrName];
+	}
 }
