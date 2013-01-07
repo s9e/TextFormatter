@@ -159,7 +159,7 @@ Tag.prototype.setSortPriority = function(sortPriority)
 /**
 * Return this tag's attributes
 *
-* @return {Object}
+* @return {!Object}
 */
 Tag.prototype.getAttributes = function()
 {

@@ -63,8 +63,6 @@ if (doSingleQuote || doDoubleQuote || text.indexOf('x') >= 0)
 // Do quote pairs ‘’ and “” -- must be done separately to handle nesting
 function captureQuotePairs(q, regexp, leftQuote, rightQuote)
 {
-	console.log(regexp);
-	console.log(regexp.test(text));
 	while (m = regexp.exec(text))
 	{
 		var left  = addSelfClosingTag(tagName, m.index + m[0].indexOf(q), 1),
