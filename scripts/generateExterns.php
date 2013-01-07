@@ -28,6 +28,7 @@ $externs = array(
 		'var Math',
 		'Math.floor',
 		'Math.max',
+		'Math.min',
 		'Math.random',
 
 		// Number object
@@ -52,6 +53,9 @@ $externs = array(
 		'String.prototype.substr',
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase'
+	),
+	'w3c_dom1' => array(
+		'function Node',
 	)
 );
 
