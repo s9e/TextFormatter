@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 
 class AttributePreprocessorCollection extends Collection
@@ -106,9 +106,9 @@ class AttributePreprocessorCollection extends Collection
 
 			$variant = new Variant(array($attrName, $regexp));
 
-			// Create a Javascript variant that contains a map of the regexp's named subpatterns
+			// Create a JavaScript variant that contains a map of the regexp's named subpatterns
 			$jsRegexp = RegexpConvertor::toJS($regexp);
-			$variant->set('Javascript', array($attrName, $jsRegexp, $jsRegexp->map));
+			$variant->set('JS', array($attrName, $jsRegexp, $jsRegexp->map));
 
 			$config[] = $variant;
 		}

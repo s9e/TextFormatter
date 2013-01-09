@@ -129,7 +129,7 @@ class PluginCollection extends NormalizedCollection
 			if (!isset($pluginConfig['parser']))
 			{
 				$pluginConfig['parser'] = new Variant;
-				$pluginConfig['parser']->setDynamic('Javascript', array($plugin, 'getJSParser'));
+				$pluginConfig['parser']->setDynamic('JS', array($plugin, 'getJSParser'));
 			}
 		}
 		unset($pluginConfig);

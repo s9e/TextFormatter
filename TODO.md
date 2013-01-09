@@ -39,7 +39,7 @@ TODO
 - IDEA(redux): create a Stylesheet object in Configurator. Params and templates can be registered somehow. Reconsider the DynamicTemplate thing from above. Get rid of ConfiguratorBase::getXSL()
 - Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
 - JS parser needs quickMatch to be UTF-8
-- Find a good way to test the Javascript HTML plugins
+- Find a good way to test the JavaScript HTML plugins
 - Should skipped end tags consume their text? Probably not, but it renders "[B]bold [i]italic[/b][/I]" more nicely by hiding the extra [/I] -- on the other hand, some people post invalid BBCodes expecting them to be displayed as text
 - Look into ext/dom's XML_PARSE_HUGE -- apparently it's needed to render text with 1000s of tags
 - Add some sort of optional filtering/escaping to the variables used in repositories? htmlspecialchars(), json_encode()

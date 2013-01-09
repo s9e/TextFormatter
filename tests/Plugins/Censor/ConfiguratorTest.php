@@ -166,9 +166,9 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant for the plugin's regexp
+	* @testdox asConfig() creates a JavaScript variant for the plugin's regexp
 	*/
-	public function testAsConfigJavascriptRegexp()
+	public function testAsConfigJavaScriptRegexp()
 	{
 		$plugin = $this->configurator->plugins->load('Censor');
 		$plugin->add('apple');
@@ -180,15 +180,15 @@ class ConfiguratorTest extends Test
 			$config['regexp']
 		);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
-			$config['regexp']->get('Javascript')
+			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			$config['regexp']->get('JS')
 		);
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant for the regexps used in replacements
+	* @testdox asConfig() creates a JavaScript variant for the regexps used in replacements
 	*/
-	public function testAsConfigJavascriptReplacements()
+	public function testAsConfigJavaScriptReplacements()
 	{
 		$plugin = $this->configurator->plugins->load('Censor');
 		$plugin->add('apple', 'banana');
@@ -200,8 +200,8 @@ class ConfiguratorTest extends Test
 			$config['replacements'][0][0]
 		);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
-			$config['replacements'][0][0]->get('Javascript')
+			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			$config['replacements'][0][0]->get('JS')
 		);
 	}
 }

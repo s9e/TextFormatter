@@ -6,7 +6,7 @@ use Exception;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
-use s9e\TextFormatter\Configurator\Javascript\RegExp;
+use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\Generic\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -155,7 +155,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant of generics
+	* @testdox asConfig() creates a JavaScript variant of generics
 	*/
 	public function testAsConfigVariant()
 	{
@@ -170,11 +170,11 @@ class ConfiguratorTest extends Test
 			$config['generics']
 		);
 
-		$this->assertTrue($config['generics']->has('Javascript'));
+		$this->assertTrue($config['generics']->has('JS'));
 	}
 
 	/**
-	* @testdox asConfig() creates Javascript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
+	* @testdox asConfig() creates JavaScript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
 	*/
 	public function testAsConfigVariantContent()
 	{
@@ -185,7 +185,7 @@ class ConfiguratorTest extends Test
 		$regexp->map = array('', 'foo');
 
 		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'Javascript');
+		ConfigHelper::filterVariants($config, 'JS');
 
 		$this->assertEquals(
 			array(array('GC53BB427', $regexp, $regexp->map)),

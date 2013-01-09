@@ -11,7 +11,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
 class UrlConfig implements ConfigProvider
 {
@@ -72,13 +72,13 @@ class UrlConfig implements ConfigProvider
 			$config[$k] = '/' . $regexp . '/DiS';
 		}
 
-		// Create a Javascript variant of the regexps
+		// Create a JavaScript variant of the regexps
 		foreach ($config as $k => $v)
 		{
 			$regexp = $v;
 
 			$config[$k] = new Variant($regexp);
-			$config[$k]->set('Javascript', RegexpConvertor::toJS($regexp));
+			$config[$k]->set('JS', RegexpConvertor::toJS($regexp));
 		}
 
 		if (isset($this->defaultScheme))

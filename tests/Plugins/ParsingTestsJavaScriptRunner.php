@@ -4,14 +4,14 @@ namespace s9e\TextFormatter\Tests\Plugins;
 
 use s9e\TextFormatter\Configurator;
 
-trait ParsingTestsJavascriptRunner
+trait ParsingTestsJavaScriptRunner
 {
 	/**
 	* @group needs-nodejs
-	* @testdox Parsing tests (Javascript)
+	* @testdox Parsing tests (JavaScript)
 	* @dataProvider getParsingTests
 	*/
-	public function testJavascriptParsing($original, $expected, array $pluginOptions = array(), $setup = null, $expectedJS = false)
+	public function testJavaScriptParsing($original, $expected, array $pluginOptions = array(), $setup = null, $expectedJS = false)
 	{
 		if ($expectedJS)
 		{

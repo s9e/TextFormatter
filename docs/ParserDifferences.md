@@ -1,4 +1,4 @@
-Differences between the PHP parser and its Javascript port
+Differences between the PHP parser and its JavaScript port
 ==========================================================
 
  * #url filter (non-validating regexp, does not follow redirector, no punycode)

@@ -56,7 +56,7 @@
 					<xsl:apply-templates />
 				</code>
 			</pre>
-			<!-- Include the necessary Javascript/CSS if it's the last CODE tag -->
+			<!-- Include the necessary JavaScript/CSS if it's the last CODE tag -->
 			<xsl:if test="not(following::CODE)">
 				<!-- Append the stylesheet to head -->
 				<script>var l=document.createElement("link");l.type="text/css";l.rel="stylesheet";l.href="]]><var name="stylesheetUrl" description="URL of the Highlight.js stylesheet">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css</var><![CDATA[";document.getElementsByTagName("head")[0].appendChild(l)</script>

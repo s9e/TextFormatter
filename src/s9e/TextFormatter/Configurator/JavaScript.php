@@ -11,16 +11,16 @@ use ArrayObject;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Javascript\Code;
-use s9e\TextFormatter\Configurator\Javascript\Dictionary;
-use s9e\TextFormatter\Configurator\Javascript\Minifier;
-use s9e\TextFormatter\Configurator\Javascript\Minifiers\ClosureCompilerService;
-use s9e\TextFormatter\Configurator\Javascript\RegExp;
-use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\Minifier;
+use s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService;
+use s9e\TextFormatter\Configurator\JavaScript\RegExp;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
-class Javascript
+class JavaScript
 {
 	/**
 	* @var array Associative array of functions [name => function literal] built from and for
@@ -29,7 +29,7 @@ class Javascript
 	protected $callbacks;
 
 	/**
-	* @var array Configuration, filtered for Javascript
+	* @var array Configuration, filtered for JavaScript
 	*/
 	protected $config;
 
@@ -39,7 +39,7 @@ class Javascript
 	protected $configurator;
 
 	/**
-	* @var Minifier Instance of Minifier used to minify the Javascript parser
+	* @var Minifier Instance of Minifier used to minify the JavaScript parser
 	*/
 	protected $minifier;
 
@@ -70,7 +70,7 @@ class Javascript
 	}
 
 	/**
-	* Get a Javascript parser
+	* Get a JavaScript parser
 	*
 	* @return string
 	*/
@@ -98,7 +98,7 @@ class Javascript
 		}
 
 		$this->config = $this->configurator->asConfig();
-		ConfigHelper::filterVariants($this->config, 'Javascript');
+		ConfigHelper::filterVariants($this->config, 'JS');
 
 		// Reset this instance's callbacks
 		$this->callbacks = array();
@@ -147,14 +147,14 @@ class Javascript
 	//==========================================================================
 
 	/**
-	* Convert a bitfield to the Javascript representationg of an array of number
+	* Convert a bitfield to the JavaScript representationg of an array of number
 	*
-	* Context bitfields are stored as binary strings, but Javascript doesn't really have binary
+	* Context bitfields are stored as binary strings, but JavaScript doesn't really have binary
 	* strings so instead we split up that string in 4-bytes chunk, which we represent in hex
 	* notation to avoid the number overflowing to a float in 32bit PHP
 	*
 	* @param  string $bitfield Raw bytes
-	* @return Code             Javascript code
+	* @return Code             JavaScript code
 	*/
 	static protected function convertBitfield($bitfield)
 	{
@@ -177,9 +177,9 @@ class Javascript
 	}
 
 	/**
-	* Get the Javascript representation of the plugins
+	* Get the JavaScript representation of the plugins
 	*
-	* @return Code Javascript code
+	* @return Code JavaScript code
 	*/
 	protected function getPluginsConfig()
 	{
@@ -229,9 +229,9 @@ class Javascript
 	}
 
 	/**
-	* Generate a Javascript representation of the registered vars
+	* Generate a JavaScript representation of the registered vars
 	*
-	* @return Code Javascript source code
+	* @return Code JavaScript source code
 	*/
 	protected function getRegisteredVarsConfig()
 	{
@@ -246,9 +246,9 @@ class Javascript
 	}
 
 	/**
-	* Generate a Javascript representation of the root context
+	* Generate a JavaScript representation of the root context
 	*
-	* @return Code Javascript source code
+	* @return Code JavaScript source code
 	*/
 	protected function getRootContext()
 	{
@@ -265,13 +265,13 @@ class Javascript
 	}
 
 	/**
-	* Generate a Javascript representation of the tags' config
+	* Generate a JavaScript representation of the tags' config
 	*
-	* @return Code Javascript source code
+	* @return Code JavaScript source code
 	*/
 	protected function getTagsConfig()
 	{
-		// Replace callback arrays with Javascript code
+		// Replace callback arrays with JavaScript code
 		self::replaceCallbacks($this->config);
 
 		// Prepare a Dictionary that will preserve tags' names
@@ -299,10 +299,10 @@ class Javascript
 	}
 
 	/**
-	* Encode a PHP value into an equivalent Javascript representation
+	* Encode a PHP value into an equivalent JavaScript representation
 	*
 	* @param  mixed  $value Original value
-	* @return string        Javascript representation
+	* @return string        JavaScript representation
 	*/
 	protected static function encode($value)
 	{
@@ -399,7 +399,7 @@ class Javascript
 	}
 
 	/**
-	* Convert a callback array into Javascript code
+	* Convert a callback array into JavaScript code
 	*
 	* NOTE: custom callbacks will create entries in $this->callbacks
 	*
@@ -424,7 +424,7 @@ class Javascript
 
 		if (isset($callbackConfig['js']))
 		{
-			// Use the Javascript source code that was set in the callback
+			// Use the JavaScript source code that was set in the callback
 			$jsCode     = $callbackConfig['js'];
 			$jsCallback = sprintf('c%08X', crc32($jsCode));
 
@@ -446,8 +446,8 @@ class Javascript
 			elseif (preg_match('#^[-a-z_0-9]+$#Di', $callback))
 			{
 				// If the callback looks like the name of a PHP function, see if we have a
-				// Javascript implementation available for it
-				$filepath = __DIR__ . '/Javascript/functions/' . $callback . '.js';
+				// JavaScript implementation available for it
+				$filepath = __DIR__ . '/JavaScript/functions/' . $callback . '.js';
 
 				if (file_exists($filepath))
 				{
@@ -460,7 +460,7 @@ class Javascript
 			}
 		}
 
-		// If we don't have a Javascript implementation of this filter, we make it return FALSE
+		// If we don't have a JavaScript implementation of this filter, we make it return FALSE
 		// unconditionally
 		if (!isset($jsCallback))
 		{
@@ -508,7 +508,7 @@ class Javascript
 		// Wrap the code inside of a function definition using this callback's type's arguments list
 		$js = 'function(' . implode(',', $arguments[$callbackType]) . '){return ' . $js . ';}';
 
-		// Return the Javascript source code as an instance of Code
+		// Return the JavaScript source code as an instance of Code
 		return new Code($js);
 	}
 }

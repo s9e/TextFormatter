@@ -19,7 +19,7 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\Javascript;
+use s9e\TextFormatter\Configurator\JavaScript;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
@@ -31,7 +31,7 @@ class Configurator implements ConfigProvider
 	public $customFilters;
 
 	/**
-	* @var Javascript Javascript manipulation object
+	* @var JavaScript JavaScript manipulation object
 	*/
 	public $javascript;
 
@@ -69,7 +69,7 @@ class Configurator implements ConfigProvider
 	public function __construct()
 	{
 		$this->customFilters = new FilterCollection;
-		$this->javascript    = new Javascript($this);
+		$this->javascript    = new JavaScript($this);
 		$this->plugins       = new PluginCollection($this);
 		$this->rootRules     = new Ruleset;
 		$this->tags          = new TagCollection;
@@ -191,10 +191,10 @@ class Configurator implements ConfigProvider
 		unset($config['customFilters']);
 		unset($config['rootRules']);
 
-		// Create a variant that adds the stylesheet to the config if we're building a Javascript
+		// Create a variant that adds the stylesheet to the config if we're building a JavaScript
 		// config
 		$config['stylesheet'] = new Variant;
-		$config['stylesheet']->setDynamic('Javascript', array($this->stylesheet, 'get'));
+		$config['stylesheet']->setDynamic('JS', array($this->stylesheet, 'get'));
 
 		return $config;
 	}

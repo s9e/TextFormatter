@@ -324,7 +324,7 @@ class BuiltInFilters
 		}
 
 		// We URL-encode quotes and parentheses just in case someone would want to use the URL in
-		// some Javascript thingy, or in CSS
+		// some JavaScript thingy, or in CSS
 		$attrValue = strtr(
 			$attrValue,
 			array(

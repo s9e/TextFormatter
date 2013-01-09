@@ -1,22 +1,22 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Javascript;
+namespace s9e\TextFormatter\Tests\Configurator\JavaScript;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Javascript\RegexpConvertor
+* @covers s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor
 */
 class RegexpConvertorTest extends Test
 {
 	/**
-	* @testdox toJS() returns an instance of s9e\TextFormatter\Configurator\Javascript\RegExp
+	* @testdox toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
 	*/
 	public function testReturnInstance()
 	{
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
 			RegexpConvertor::toJS('//')
 		);
 	}

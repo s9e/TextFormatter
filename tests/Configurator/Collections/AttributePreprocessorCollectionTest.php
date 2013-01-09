@@ -7,7 +7,7 @@ use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
-use s9e\TextFormatter\Configurator\Javascript\RegExp;
+use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection
@@ -54,7 +54,7 @@ class AttributePreprocessorCollectionTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() has a Javascript variant for each attribute preprocessor
+	* @testdox asConfig() has a JavaScript variant for each attribute preprocessor
 	*/
 	public function testGetConfigVariant()
 	{
@@ -77,9 +77,9 @@ class AttributePreprocessorCollectionTest extends Test
 	}
 
 	/**
-	* @testdox asConfig()'s Javascript variants contain a RegExp object instead of a regexp string, plus a map of named subpatterns
+	* @testdox asConfig()'s JavaScript variants contain a RegExp object instead of a regexp string, plus a map of named subpatterns
 	*/
-	public function testGetConfigJavascript()
+	public function testGetConfigJavaScript()
 	{
 		$collection = new AttributePreprocessorCollection;
 
@@ -89,7 +89,7 @@ class AttributePreprocessorCollectionTest extends Test
 		$collection->add('y', '#(?<y2>y2)#');
 
 		$config = $collection->asConfig();
-		ConfigHelper::filterVariants($config, 'Javascript');
+		ConfigHelper::filterVariants($config, 'JS');
 
 		$rx1 = new RegExp('(x1)');
 		$rx1->map = array('', 'x1');

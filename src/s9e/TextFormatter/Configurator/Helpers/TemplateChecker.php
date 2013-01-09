@@ -513,11 +513,11 @@ abstract class TemplateChecker
 	* text because it does not allow ":" or "(" so it cannot be used to set new CSS attributes.
 	*
 	* Raw text has security implications:
-	*  - MSIE's "behavior" extension can execute Javascript
+	*  - MSIE's "behavior" extension can execute JavaScript
 	*  - Mozilla's -moz-binding
 	*  - complex CSS can be used for phishing
 	*  - javascript: and data: URI in background images
-	*  - CSS expressions (MSIE only?) can execute Javascript
+	*  - CSS expressions (MSIE only?) can execute JavaScript
 	*
 	* @param  Attribute $attribute
 	* @return bool
@@ -542,7 +542,7 @@ abstract class TemplateChecker
 	}
 
 	/**
-	* Evaluate whether an attribute is safe(ish) to use in Javascript context
+	* Evaluate whether an attribute is safe(ish) to use in JavaScript context
 	*
 	* What we look out for: anything that is not a number or a URL. We allow "simple" text because
 	* it is sometimes used in spoiler tags. #simpletext doesn't allow quotes or parentheses so it

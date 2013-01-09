@@ -5,7 +5,7 @@
 * @copyright Copyright (c) 2010-2013 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Configurator\Javascript;
+namespace s9e\TextFormatter\Configurator\JavaScript;
 
 use ArrayObject;
 
@@ -40,7 +40,7 @@ class RegExp
 	}
 
 	/**
-	* Return this regexp as a Javascript regexp literal
+	* Return this regexp as a JavaScript regexp literal
 	*
 	* @return string
 	*/

@@ -297,7 +297,7 @@ var BuiltInFilters =
 		}
 
 		// We URL-encode quotes and parentheses just in case someone would want to use the URL in
-		// some Javascript thingy, or in CSS
+		// some JavaScript thingy, or in CSS
 		attrValue = attrValue.replace(/['"()]/g, escape);
 
 		// Parse the URL... kinda
@@ -359,7 +359,7 @@ var BuiltInFilters =
 	/**
 	* Encode an UTF-8 URL to ASCII
 	*
-	* No Punycode encoding in Javascript, only URL-encoding
+	* No Punycode encoding in JavaScript, only URL-encoding
 	*
 	* @param  {!string} url Original URL
 	* @return {!string}     Encoded URL

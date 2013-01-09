@@ -15,7 +15,7 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Collections\FilterCollection;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\Javascript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 
 abstract class ConfigHelper
 {

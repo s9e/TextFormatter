@@ -20,42 +20,42 @@ class VariantTest extends Test
 	}
 
 	/**
-	* @testdox get('Javascript') returns the 'Javascript' variant if it exists
+	* @testdox get('JS') returns the 'JS' variant if it exists
 	*/
 	public function testGetVariant()
 	{
 		$variant = new Variant(42);
-		$variant->set('Javascript', 55);
-		$this->assertSame(55, $variant->get('Javascript'));
+		$variant->set('JS', 55);
+		$this->assertSame(55, $variant->get('JS'));
 	}
 
 	/**
-	* @testdox get('Javascript') returns the default value if the 'Javascript' variant does not exist
+	* @testdox get('JS') returns the default value if the 'JS' variant does not exist
 	*/
 	public function testGetInexistentVariant()
 	{
 		$variant = new Variant(42);
-		$this->assertSame(42, $variant->get('Javascript'));
+		$this->assertSame(42, $variant->get('JS'));
 	}
 
 	/**
-	* @testdox has('Javascript') returns TRUE if it has a 'Javascript' variant
+	* @testdox has('JS') returns TRUE if it has a 'JS' variant
 	*/
 	public function testHasTrue()
 	{
 		$variant = new Variant(42);
-		$variant->set('Javascript', 55);
-		$this->assertTrue($variant->has('Javascript'));
+		$variant->set('JS', 55);
+		$this->assertTrue($variant->has('JS'));
 	}
 
 	/**
-	* @testdox has('Javascript') returns FALSE if it does not have a 'Javascript' variant
+	* @testdox has('JavaScript') returns FALSE if it does not have a 'JS' variant
 	*/
 	public function testHasFalse()
 	{
 		$variant = new Variant(42);
 		$variant->set('foo', 55);
-		$this->assertFalse($variant->has('Javascript'));
+		$this->assertFalse($variant->has('JS'));
 	}
 
 	/**
@@ -64,7 +64,7 @@ class VariantTest extends Test
 	public function testVariantVariant()
 	{
 		$variant = new Variant(42);
-		$variant->set('Javascript', 55);
+		$variant->set('JS', 55);
 
 		$another = new Variant($variant);
 

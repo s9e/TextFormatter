@@ -5,9 +5,9 @@
 * @copyright Copyright (c) 2010-2013 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Configurator\Javascript\Minifiers;
+namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
 
-use s9e\TextFormatter\Configurator\Javascript\Minifier;
+use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 
 class ClosureCompilerService implements Minifier
 {
@@ -42,9 +42,9 @@ class ClosureCompilerService implements Minifier
 	}
 
 	/**
-	* Compile given Javascript source via the Closure Compiler Service
+	* Compile given JavaScript source via the Closure Compiler Service
 	*
-	* @param  string $src Javascript source
+	* @param  string $src JavaScript source
 	* @return string      Compiled source
 	*/
 	public function minify($src)

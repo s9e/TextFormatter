@@ -29,12 +29,12 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->javascript is an instance of Javascript
+	* @testdox $configurator->javascript is an instance of JavaScript
 	*/
-	public function testJavascriptInstance()
+	public function testJavaScriptInstance()
 	{
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript',
+			's9e\\TextFormatter\\Configurator\\JavaScript',
 			$this->configurator->javascript
 		);
 	}
@@ -287,9 +287,9 @@ class ConfiguratorTest extends Test
 
 
 	/**
-	* @testdox getParser() removes Javascript-specific data from tag filters
+	* @testdox getParser() removes JavaScript-specific data from tag filters
 	*/
-	public function testAsConfigRemovesJavascriptTagFilters()
+	public function testAsConfigRemovesJavaScriptTagFilters()
 	{
 		$pc = new ProgrammableCallback(function(){});
 		$pc->setJS('function(){return false;}');
@@ -306,9 +306,9 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getParser() removes Javascript-specific data from attribute filters
+	* @testdox getParser() removes JavaScript-specific data from attribute filters
 	*/
-	public function testAsConfigRemovesJavascriptAttributeFilters()
+	public function testAsConfigRemovesJavaScriptAttributeFilters()
 	{
 		$pc = new ProgrammableCallback(function(){});
 		$pc->setJS('function(){return false;}');

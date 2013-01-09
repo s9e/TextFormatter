@@ -4,7 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator;
 
 use s9e\TextFormatter\Configurator\UrlConfig;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\Javascript\RegExp;
+use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -18,7 +18,7 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant for allowedSchemes
+	* @testdox asConfig() creates a JavaScript variant for allowedSchemes
 	*/
 	public function testAsConfigAllowedSchemesVariant()
 	{
@@ -31,13 +31,13 @@ class UrlConfigTest extends Test
 			$urlConfig['allowedSchemes']
 		);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
-			$urlConfig['allowedSchemes']->get('Javascript')
+			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			$urlConfig['allowedSchemes']->get('JS')
 		);
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant for disallowedHosts
+	* @testdox asConfig() creates a JavaScript variant for disallowedHosts
 	*/
 	public function testAsConfigDisallowedHostsVariant()
 	{
@@ -50,13 +50,13 @@ class UrlConfigTest extends Test
 			$urlConfig['disallowedHosts']
 		);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
-			$urlConfig['disallowedHosts']->get('Javascript')
+			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			$urlConfig['disallowedHosts']->get('JS')
 		);
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant for resolveRedirectsHosts
+	* @testdox asConfig() creates a JavaScript variant for resolveRedirectsHosts
 	*/
 	public function testAsConfigResolveRedirectsHostsVariant()
 	{
@@ -69,8 +69,8 @@ class UrlConfigTest extends Test
 			$urlConfig['resolveRedirectsHosts']
 		);
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
-			$urlConfig['resolveRedirectsHosts']->get('Javascript')
+			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			$urlConfig['resolveRedirectsHosts']->get('JS')
 		);
 	}
 

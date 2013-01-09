@@ -68,12 +68,12 @@
 			<file>tests/Configurator/Validators/AttributeNameTest.php</file>
 			<file>tests/Configurator/Validators/StylesheetParameterNameTest.php</file>
 			<file>tests/Configurator/Validators/TagNameTest.php</file>
-			<file>tests/Configurator/JavascriptTest.php</file>
-			<file>tests/Configurator/Javascript/CodeTest.php</file>
-			<file>tests/Configurator/Javascript/RegExpTest.php</file>
-			<file>tests/Configurator/Javascript/RegexpConvertorTest.php</file>
-			<file>tests/Configurator/Javascript/Minifiers/ClosureCompilerServiceTest.php</file>
-			<file>tests/Configurator/Javascript/Minifiers/NoopTest.php</file>
+			<file>tests/Configurator/JavaScriptTest.php</file>
+			<file>tests/Configurator/JavaScript/CodeTest.php</file>
+			<file>tests/Configurator/JavaScript/RegExpTest.php</file>
+			<file>tests/Configurator/JavaScript/RegexpConvertorTest.php</file>
+			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerServiceTest.php</file>
+			<file>tests/Configurator/JavaScript/Minifiers/NoopTest.php</file>
 
 			<!-- Trying to sort by order of dependency  -->
 			<file>tests/Parser/BuiltInFiltersTest.php</file>

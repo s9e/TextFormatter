@@ -213,7 +213,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant that preserves BBCode names
+	* @testdox asConfig() creates a JavaScript variant that preserves BBCode names
 	*/
 	public function testAsConfigPreservesBBCodeNames()
 	{
@@ -221,17 +221,17 @@ class ConfiguratorTest extends Test
 		$plugin->add('FOO')->tagName = 'BAR';
 
 		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'Javascript');
+		ConfigHelper::filterVariants($config, 'JS');
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\Dictionary',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Dictionary',
 			$config['bbcodes']
 		);
 		$this->assertArrayHasKey('FOO', $config['bbcodes']);
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant that preserves attribute names in predefinedAttributes
+	* @testdox asConfig() creates a JavaScript variant that preserves attribute names in predefinedAttributes
 	*/
 	public function testAsConfigPreservesPredefinedAttributeNames()
 	{
@@ -239,10 +239,10 @@ class ConfiguratorTest extends Test
 		$plugin->add('FOO')->predefinedAttributes['k'] = 'v';
 
 		$config = $plugin->asConfig();
-		ConfigHelper::filterVariants($config, 'Javascript');
+		ConfigHelper::filterVariants($config, 'JS');
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\Dictionary',
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Dictionary',
 			$config['bbcodes']['FOO']['predefinedAttributes']
 		);
 		$this->assertArrayHasKey('k', $config['bbcodes']['FOO']['predefinedAttributes']);

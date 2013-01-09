@@ -5,22 +5,22 @@
 * @copyright Copyright (c) 2010-2013 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Configurator\Javascript;
+namespace s9e\TextFormatter\Configurator\JavaScript;
 
 /**
-* Wrapper used to identify strings that should be treated as Javascript source code
+* Wrapper used to identify strings that should be treated as JavaScript source code
 */
 class Code
 {
 	/**
-	* @var string Javascript source code
+	* @var string JavaScript source code
 	*/
 	public $code;
 
 	/**
 	* Constructor
 	*
-	* @param  string $code Javascript source code
+	* @param  string $code JavaScript source code
 	* @return void
 	*/
 	public function __construct($code)

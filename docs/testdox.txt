@@ -83,7 +83,7 @@ s9e\TextFormatter\Tests\Configurator\Traits\Configurable
 
 s9e\TextFormatter\Tests\Configurator
  [x] $configurator->customFilters is an instance of FilterCollection
- [x] $configurator->javascript is an instance of Javascript
+ [x] $configurator->javascript is an instance of JavaScript
  [x] $configurator->plugins is an instance of PluginCollection
  [x] $configurator->rootRules is an instance of Ruleset
  [x] $configurator->stylesheet is an instance of Stylesheet
@@ -99,8 +99,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] asConfig() omits a plugin's quickMatch if it's false
  [x] asConfig() adds allowedChildren and allowedDescendants bitfields to each tag
  [x] getParser() returns an instance of s9e\TextFormatter\Parser
- [x] getParser() removes Javascript-specific data from tag filters
- [x] getParser() removes Javascript-specific data from attribute filters
+ [x] getParser() removes JavaScript-specific data from tag filters
+ [x] getParser() removes JavaScript-specific data from attribute filters
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
  [x] $configurator->BBCodes returns $configurator->plugins->get('BBCodes') if the plugin has already been loaded
@@ -125,8 +125,8 @@ s9e\TextFormatter\Tests\Configurator\Lists\AttributeList
 s9e\TextFormatter\Tests\Configurator\Collections\AttributePreprocessorCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\AttributePreprocessor
  [x] asConfig() returns a list of [attrName, regexp] arrays
- [x] asConfig() has a Javascript variant for each attribute preprocessor
- [x] asConfig()'s Javascript variants contain a RegExp object instead of a regexp string, plus a map of named subpatterns
+ [x] asConfig() has a JavaScript variant for each attribute preprocessor
+ [x] asConfig()'s JavaScript variants contain a RegExp object instead of a regexp string, plus a map of named subpatterns
  [x] Is iterable with foreach
  [x] Uses the name of the source attribute as key when iterating
  [x] merge() accepts a 2D array of regexps
@@ -822,8 +822,8 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
  [x] If the callback is an instance of CallbackPlaceholder, asConfig() calls the callback's asConfig() and returns its value as callback
  [x] asConfig() returns the vars set with setVars() if the callback is an instance of CallbackPlaceholder
- [x] asConfig() returns the callback's Javascript as a variant if available
- [x] asConfig() creates a Javascript variant for values named "regexp"
+ [x] asConfig() returns the callback's JavaScript as a variant if available
+ [x] asConfig() creates a JavaScript variant for values named "regexp"
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor
@@ -860,10 +860,10 @@ s9e\TextFormatter\Tests\Configurator\Items\Template
 
 s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] get() returns the default value
- [x] get('Javascript') returns the 'Javascript' variant if it exists
- [x] get('Javascript') returns the default value if the 'Javascript' variant does not exist
- [x] has('Javascript') returns TRUE if it has a 'Javascript' variant
- [x] has('Javascript') returns FALSE if it does not have a 'Javascript' variant
+ [x] get('JS') returns the 'JS' variant if it exists
+ [x] get('JS') returns the default value if the 'JS' variant does not exist
+ [x] has('JS') returns TRUE if it has a 'JS' variant
+ [x] has('JavaScript') returns FALSE if it does not have a 'JS' variant
  [x] Creating a new Variant with a Variant value makes it copy its default value and its variants instead
  [x] __construct() can be called with no arguments, and the default value will be NULL
  [x] setDynamic() saves a dynamic variant whose callback does not get called if the variant is not read
@@ -895,9 +895,9 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() escapes a parameter's default value
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
- [x] asConfig() creates a Javascript variant for allowedSchemes
- [x] asConfig() creates a Javascript variant for disallowedHosts
- [x] asConfig() creates a Javascript variant for resolveRedirectsHosts
+ [x] asConfig() creates a JavaScript variant for allowedSchemes
+ [x] asConfig() creates a JavaScript variant for disallowedHosts
+ [x] asConfig() creates a JavaScript variant for resolveRedirectsHosts
  [x] Disallowed IDNs are punycoded
  [x] disallowHost('example.org') disallows "example.org"
  [x] disallowHost('example.org') disallows "EXAMPLE.ORG"
@@ -973,19 +973,19 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "s9e:foo" is invalid ('s9e' prefix is reserved)
  [x] "B\n" is invalid (no newlines allowed)
 
-s9e\TextFormatter\Tests\Configurator\Javascript
+s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] getMinifier() returns an instance of ClosureCompilerService by default
  [x] setMinifier() accepts an object that implements Minifier
  [x] 
 
-s9e\TextFormatter\Tests\Configurator\Javascript\Code
+s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
 
-s9e\TextFormatter\Tests\Configurator\Javascript\RegExp
- [x] Returns a Javascript literal when cast as a string
+s9e\TextFormatter\Tests\Configurator\JavaScript\RegExp
+ [x] Returns a JavaScript literal when cast as a string
 
-s9e\TextFormatter\Tests\Configurator\Javascript\RegexpConvertor
- [x] toJS() returns an instance of s9e\TextFormatter\Configurator\Javascript\RegExp
+s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
+ [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
  [x] toJS() can convert plain regexps
  [x] toJS() escapes forward slashes
  [x] toJS() does not double-escape forward slashes that are already escaped
@@ -1018,7 +1018,7 @@ s9e\TextFormatter\Tests\Configurator\Javascript\RegexpConvertor
  [x] toJS() non-named capturing subpatterns leave an empty name in the map
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 
-s9e\TextFormatter\Tests\Configurator\Javascript\Minifiers\Noop
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
 
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
@@ -1222,7 +1222,7 @@ s9e\TextFormatter\Tests\Plugins\Autoemail\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Autoemail\Parser
  [x] Parsing tests
- [x] Parsing tests (Javascript)
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
@@ -1242,7 +1242,7 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Parser
  [x] Parsing tests
- [x] Parsing tests (Javascript)
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\AttributeValueCollection
@@ -1311,12 +1311,12 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] Generates a regexp for its config array
  [x] The regexp that matches BBCode names does not contain a superfluous non-capturing subpattern
  [x] Essential non-capturing subpatterns are preserved
- [x] asConfig() creates a Javascript variant that preserves BBCode names
- [x] asConfig() creates a Javascript variant that preserves attribute names in predefinedAttributes
+ [x] asConfig() creates a JavaScript variant that preserves BBCode names
+ [x] asConfig() creates a JavaScript variant that preserves attribute names in predefinedAttributes
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests
- [x] Parsing tests (Javascript)
+ [x] Parsing tests (JavaScript)
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes
  [x] BBCodes from repository.xml render nicely
@@ -1334,12 +1334,12 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Returns the replacements in its config in the form [[regexp, replacement]]
  [x] Words sharing the same replacement share a common regexp
  [x] Words using the default replacement do not appear in the replacements
- [x] asConfig() creates a Javascript variant for the plugin's regexp
- [x] asConfig() creates a Javascript variant for the regexps used in replacements
+ [x] asConfig() creates a JavaScript variant for the plugin's regexp
+ [x] asConfig() creates a JavaScript variant for the regexps used in replacements
 
 s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests
- [x] Parsing tests (Javascript)
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
@@ -1363,7 +1363,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
  [x] Parsing tests
- [x] Parsing tests (Javascript)
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
@@ -1375,7 +1375,7 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing tests
- [x] Parsing tests (Javascript)
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Generic\Configurator
@@ -1388,12 +1388,12 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>]
- [x] asConfig() creates a Javascript variant of generics
- [x] asConfig() creates Javascript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
+ [x] asConfig() creates a JavaScript variant of generics
+ [x] asConfig() creates JavaScript variants that contain a RegExp object instead of a regexp string, plus a map of named subpatterns
 
 s9e\TextFormatter\Tests\Plugins\Generic\Parser
  [x] Parsing tests
- [x] Parsing tests (Javascript)
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
@@ -1446,7 +1446,7 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Configurator
 
 s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
  [x] Parsing tests
- [x] Parsing tests (Javascript)
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Renderer

@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Javascript\Minifiers;
+namespace s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers;
 
-use s9e\TextFormatter\Configurator\Javascript\Minifiers\ClosureCompilerService;
+use s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Javascript\Minifiers\ClosureCompilerService
+* @covers s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService
 */
 class ClosureCompilerServiceTest extends Test
 {

@@ -17,7 +17,7 @@ use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\Javascript\Dictionary;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection;
@@ -167,10 +167,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			}
 		}
 
-		// Create the BBCodes config, with its Javascript variant
+		// Create the BBCodes config, with its JavaScript variant
 		$bbcodesConfig = new Variant($this->collection->asConfig());
 
-		// Create the Javascript config. Ensure that BBCode names are preserved
+		// Create the JavaScript config. Ensure that BBCode names are preserved
 		$jsConfig = new Dictionary;
 		foreach ($bbcodesConfig->get() as $bbcodeName => $bbcodeConfig)
 		{
@@ -184,8 +184,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$jsConfig[$bbcodeName] = $bbcodeConfig;
 		}
 
-		// Add the Javascript config as a variant
-		$bbcodesConfig->set('Javascript', $jsConfig);
+		// Add the JavaScript config as a variant
+		$bbcodesConfig->set('JS', $jsConfig);
 
 		return array(
 			'bbcodes'    => $bbcodesConfig,

@@ -4,7 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Items;
 
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
-use s9e\TextFormatter\Configurator\Javascript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -228,9 +228,9 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the callback's Javascript as a variant if available
+	* @testdox asConfig() returns the callback's JavaScript as a variant if available
 	*/
-	public function testAsConfigJavascript()
+	public function testAsConfigJavaScript()
 	{
 		$js = new Code('function(str){return str.toLowerCase();}');
 
@@ -244,11 +244,11 @@ class ProgrammableCallbackTest extends Test
 			's9e\\TextFormatter\\Configurator\\Items\\Variant',
 			$config['js']
 		);
-		$this->assertSame($js, $config['js']->get('Javascript'));
+		$this->assertSame($js, $config['js']->get('JS'));
 	}
 
 	/**
-	* @testdox asConfig() creates a Javascript variant for values named "regexp"
+	* @testdox asConfig() creates a JavaScript variant for values named "regexp"
 	*/
 	public function testAsConfigVarsRegexp()
 	{
@@ -265,8 +265,8 @@ class ProgrammableCallbackTest extends Test
 		);
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Javascript\\RegExp',
-			end($config['params'])->get('Javascript')
+			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
+			end($config['params'])->get('JS')
 		);
 	}
 }

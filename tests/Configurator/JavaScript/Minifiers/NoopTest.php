@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Javascript\Minifiers;
+namespace s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers;
 
-use s9e\TextFormatter\Configurator\Javascript\Minifiers\Noop;
+use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Javascript\Minifiers\Noop
+* @covers s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop
 */
 class NoopTest extends Test
 {

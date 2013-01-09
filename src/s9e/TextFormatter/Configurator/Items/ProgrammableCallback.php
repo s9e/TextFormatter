@@ -11,8 +11,8 @@ use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\Javascript\Code;
-use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
 class ProgrammableCallback implements ConfigProvider
 {
@@ -22,7 +22,7 @@ class ProgrammableCallback implements ConfigProvider
 	protected $callback;
 
 	/**
-	* @var Code Javascript source code for this callback
+	* @var Code JavaScript source code for this callback
 	*/
 	protected $js = null;
 
@@ -88,9 +88,9 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
-	* Set this callback's Javascript
+	* Set this callback's JavaScript
 	*
-	* @param  string $js Javascript source code for this callback
+	* @param  string $js JavaScript source code for this callback
 	* @return mixed      Instance of Code if available, NULL otherwise
 	*/
 	public function getJS()
@@ -109,9 +109,9 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
-	* Set this callback's Javascript
+	* Set this callback's JavaScript
 	*
-	* @param  Code|string $js Javascript source code for this callback
+	* @param  Code|string $js JavaScript source code for this callback
 	* @return void
 	*/
 	public function setJS($js)
@@ -210,11 +210,11 @@ class ProgrammableCallback implements ConfigProvider
 				// By name, but the value is readily available in $this->vars
 				$value = $this->vars[$k];
 
-				// Special case: "regexp" vars get a Javascript variant
+				// Special case: "regexp" vars get a JavaScript variant
 				if ($k === 'regexp' && is_string($this->vars[$k]))
 				{
 					$variant = new Variant($value);
-					$variant->set('Javascript', RegexpConvertor::toJS($value));
+					$variant->set('JS', RegexpConvertor::toJS($value));
 
 					$value = $variant;
 				}
@@ -232,7 +232,7 @@ class ProgrammableCallback implements ConfigProvider
 					}
 
 					$variant = new Variant($value);
-					$variant->set('Javascript', $map);
+					$variant->set('JS', $map);
 
 					$value = $variant;
 				}
@@ -250,7 +250,7 @@ class ProgrammableCallback implements ConfigProvider
 		if (isset($this->js))
 		{
 			$config['js'] = new Variant;
-			$config['js']->set('Javascript', $this->js);
+			$config['js']->set('JS', $this->js);
 		}
 
 		return $config;

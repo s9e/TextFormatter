@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\Javascript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
@@ -134,7 +134,7 @@ class Configurator extends ConfiguratorBase
 		}
 
 		$variant = new Variant($generics);
-		$variant->set('Javascript', $jsGenerics);
+		$variant->set('JS', $jsGenerics);
 
 		return array('generics' => $variant);
 	}

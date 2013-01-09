@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Javascript;
+namespace s9e\TextFormatter\Tests\Configurator\JavaScript;
 
-use s9e\TextFormatter\Configurator\Javascript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Javascript\Code
+* @covers s9e\TextFormatter\Configurator\JavaScript\Code
 */
 class CodeTest extends Test
 {
