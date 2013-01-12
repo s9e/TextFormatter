@@ -224,7 +224,7 @@ abstract class TemplateOptimizer
 
 			try
 			{
-				$attribute->parentNode->setAttribute($name,	$value);
+				$attribute->parentNode->setAttribute($name, $value);
 			}
 			catch (DOMException $e)
 			{
