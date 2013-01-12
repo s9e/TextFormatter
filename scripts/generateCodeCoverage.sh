@@ -5,7 +5,7 @@ TARGET=$(dirname $DIR)/s9e.github.com/TextFormatter/coverage
 cd $DIR
 
 rm -rf $TARGET
-phpunit -d memory_limit=256M -c phpunit.xml --coverage-html $TARGET
+phpunit -d memory_limit=256M -c phpunit.xml --exclude-group "needs-nodejs" --coverage-html $TARGET
 
 REGEXP=s/`echo $(dirname $(dirname $DIR)) | sed -e 's/\\//\\\\\//g'`//g
 sed -i $REGEXP $TARGET/*.html
