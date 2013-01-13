@@ -43,3 +43,6 @@ TODO
 - Should skipped end tags consume their text? Probably not, but it renders "[B]bold [i]italic[/b][/I]" more nicely by hiding the extra [/I] -- on the other hand, some people post invalid BBCodes expecting them to be displayed as text
 - Look into ext/dom's XML_PARSE_HUGE -- apparently it's needed to render text with 1000s of tags
 - Add some sort of optional filtering/escaping to the variables used in repositories? htmlspecialchars(), json_encode()
+- Add a way to declare an attribute "safe in X", e.g. "safe in CSS" regardless of its filterChain to account for filters whose safety is unclear. Also try to determine whether a given regexp is safe: collect all the fixed parts (what about meta-characters and escape sequences?) plus the content of character classes (also negated classes) and make it a big character class then individually test whether it matches a list of forbidden characters
+- Limit URLs length to whatever browsers grok
+- Add some sort of TemplateHelper::loadHTML() to load HTML templates. XSL elements should be dropped or converted to HTML elements, and curly brackets in attributes should be escaped
