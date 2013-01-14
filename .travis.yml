@@ -4,4 +4,3 @@ php:
   - "5.4"
   - "5.3"
 before_script: php ./scripts/convert5.3.php
-script: phpunit --coverage-text
