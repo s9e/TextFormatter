@@ -296,9 +296,9 @@ var BuiltInFilters =
 			attrValue = BuiltInFilters.encodeUrlToAscii(attrValue);
 		}
 
-		// We URL-encode quotes and parentheses just in case someone would want to use the URL in
+		// We URL-encode some sensitive characters in case someone would want to use the URL in
 		// some JavaScript thingy, or in CSS
-		attrValue = attrValue.replace(/['"()]/g, escape);
+		attrValue = attrValue.replace(/['"()<>\r\n]/g, escape).replace(/[\u2028\u2029]/g, encodeURIComponent);
 
 		// Parse the URL... kinda
 		var m =/^([a-z\d]+):\/\/\S+(?:\/.*)?$/i.exec(attrValue);
