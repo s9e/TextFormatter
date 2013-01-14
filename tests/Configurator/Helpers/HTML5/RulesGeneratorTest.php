@@ -26,7 +26,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'DIV' => array(
-					'allowChild' => array('DIV', 'SPAN')
+					'allowChild' => array('DIV'  => 'DIV', 'SPAN' => 'SPAN')
 				)
 			),
 			$rules['tags']
@@ -47,7 +47,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'SPAN' => array(
-					'denyChild' => array('DIV')
+					'denyChild' => array('DIV' => 'DIV')
 				)
 			),
 			$rules['tags']
@@ -67,7 +67,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'A' => array(
-					'denyDescendant' => array('A')
+					'denyDescendant' => array('A' => 'A')
 				)
 			),
 			$rules['tags']
@@ -87,7 +87,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'A' => array(
-					'denyChild' => array('A')
+					'denyChild' => array('A' => 'A')
 				)
 			),
 			$rules['tags']
@@ -412,7 +412,7 @@ class RulesGeneratorTest extends Test
 
 		$this->assertArrayMatches(
 			array(
-				'allowChild' => array('SPAN')
+				'allowChild' => array('SPAN' => 'SPAN')
 			),
 			$rules['root']
 		);
@@ -430,7 +430,7 @@ class RulesGeneratorTest extends Test
 
 		$this->assertArrayMatches(
 			array(
-				'denyChild' => array('LI')
+				'denyChild' => array('LI' => 'LI')
 			),
 			$rules['root']
 		);
@@ -448,7 +448,7 @@ class RulesGeneratorTest extends Test
 
 		$this->assertArrayMatches(
 			array(
-				'allowChild' => array('LI')
+				'allowChild' => array('LI' => 'LI')
 			),
 			$rules['root']
 		);
@@ -468,7 +468,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'SPAN' => array(
-					'allowChild' => array('SPAN')
+					'allowChild' => array('SPAN' => 'SPAN')
 				)
 			),
 			$rules['tags']
@@ -535,10 +535,10 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'DIV' => array(
-					'allowChild' => array('DIV', 'A')
+					'allowChild' => array('DIV' => 'DIV', 'A' => 'A')
 				),
 				'A' => array(
-					'denyChild'  => array('A')
+					'denyChild'  => array('A' => 'A')
 				)
 			),
 			$rules['tags']
@@ -563,7 +563,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'html:a' => array(
-					'denyChild'  => array('html:a')
+					'denyChild'  => array('html:a' => 'html:a')
 				)
 			),
 			$rules['tags']
@@ -595,8 +595,8 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			array(
 				'A' => array(
-					'allowChild' => array('IMG'),
-					'denyChild'  => array('A', 'html:img')
+					'allowChild' => array('IMG' => 'IMG'),
+					'denyChild'  => array('A' => 'A', 'html:img' => 'html:img')
 				)
 			),
 			$rules['tags']

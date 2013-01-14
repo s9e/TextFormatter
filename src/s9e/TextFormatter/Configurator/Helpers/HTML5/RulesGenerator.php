@@ -177,7 +177,7 @@ abstract class RulesGenerator
 		{
 			// Test whether this tag can be used with no parent
 			$ruleName = ($rootForensics->allowsChild($srcTag)) ? 'allowChild' : 'denyChild';
-			$rules['root'][$ruleName][] = $srcTagName;
+			$rules['root'][$ruleName][$srcTagName] = $srcTagName;
 
 			// Test whether this tag should be closed automatically
 			if ($srcTag->isVoid())
@@ -236,22 +236,22 @@ abstract class RulesGenerator
 				if ($srcTag->allowsChild($trgTag)
 				 && $rootForensics->allowsDescendant($trgTag))
 				{
-					$rules['tags'][$srcTagName]['allowChild'][] = $trgTagName;
+					$rules['tags'][$srcTagName]['allowChild'][$trgTagName] = $trgTagName;
 				}
 				else
 				{
-					$rules['tags'][$srcTagName]['denyChild'][] = $trgTagName;
+					$rules['tags'][$srcTagName]['denyChild'][$trgTagName] = $trgTagName;
 				}
 
 				// Test whether the target tag can be a descendant of the source tag
 				if (!$srcTag->allowsDescendant($trgTag))
 				{
-					$rules['tags'][$srcTagName]['denyDescendant'][] = $trgTagName;
+					$rules['tags'][$srcTagName]['denyDescendant'][$trgTagName] = $trgTagName;
 				}
 
 				if ($srcTag->closesParent($trgTag))
 				{
-					$rules['tags'][$srcTagName]['closeParent'][] = $trgTagName;
+					$rules['tags'][$srcTagName]['closeParent'][$trgTagName] = $trgTagName;
 				}
 			}
 		}
