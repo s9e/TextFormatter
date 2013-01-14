@@ -144,6 +144,17 @@ class BuiltInFiltersTest extends Test
 			array('url', 'http://example.com/""', 'http://example.com/%22%22'),
 			array('url', 'http://example.com/(', 'http://example.com/%28'),
 			array('url', 'http://example.com/)', 'http://example.com/%29'),
+			array('url', 'http://example.com/</script>', 'http://example.com/%3C/script%3E'),
+			array(
+				'url',
+				"http://example.com/\xE2\x80\xA8",
+				'http://example.com/%E2%80%A8'
+			),
+			array(
+				'url',
+				"http://example.com/\xE2\x80\xA9",
+				'http://example.com/%E2%80%A9'
+			),
 			array(
 				'url',
 				'ftp://example.com',

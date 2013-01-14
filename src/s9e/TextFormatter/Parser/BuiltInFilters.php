@@ -323,13 +323,36 @@ class BuiltInFilters
 			$attrValue = self::encodeUrlToAscii($attrValue);
 		}
 
-		// We URL-encode quotes and parentheses just in case someone would want to use the URL in
+		// We URL-encode some sensitive characters in case someone would want to use the URL in
 		// some JavaScript thingy, or in CSS
 		$attrValue = strtr(
 			$attrValue,
 			array(
-				'"' => '%22', "'" => '%27',
-				'(' => '%28', ')' => '%29'
+				// Prevents breaking out of quotes
+				'"' => '%22',
+				"'" => '%27',
+
+				// Prevents the use of functions in JS (eval()) and CSS (expression())
+				'(' => '%28',
+				')' => '%29',
+
+				/**
+				* Prevents breaking out of <script>
+				* @link http://sla.ckers.org/forum/read.php?2,51478
+				*/
+				'<' => '%3C',
+				'>' => '%3E',
+
+				/**
+				* Those are illegal in JavaScript
+				* @link http://timelessrepo.com/json-isnt-a-javascript-subset
+				*
+				* NOTE: the Unicode terminators would get escaped by encodeUrlToAscii() anyway
+				*/
+				"\x0A" => '%0A',
+				"\x0D" => '%0D',
+				"\xE2\x80\xA8" => '%E2%80%A8',
+				"\xE2\x80\xA9" => '%E2%80%A9'
 			)
 		);
 
