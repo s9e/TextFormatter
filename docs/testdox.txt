@@ -182,6 +182,11 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] unset($ruleset['allowChild']) clears all allowChild rules
  [x] clear() removes all rules
  [x] clear('allowChild') removes only 'allowChild' rules
+ [x] remove('denyChild', 'IMG') removes all denyChild rules targeting IMG
+ [x] remove('denyChild') unsets the denyChild list in the ruleset
+ [x] remove('denyChild', 'IMG') unsets the denyChild list in the ruleset if there is no denyChild rules left
+ [x] remove('denyChild', 'IMG') rearranges keys to remove gaps
+ [x] remove('denyChild', 'img') normalizes tag name
  [x] allowChild() throws an exception on invalid tag name
  [x] allowChild() normalizes tag name
  [x] allowDescendant() throws an exception on invalid tag name

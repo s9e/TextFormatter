@@ -174,6 +174,45 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 	}
 
+	/**
+	* Remove a specific rule, or all the rules of a given type
+	*
+	* @param  string $type    Type of rules to clear
+	* @param  string $tagName Name of the target tag, or none to remove all rules of given type
+	* @return void
+	*/
+	public function remove($type, $tagName = null)
+	{
+		if (isset($tagName))
+		{
+			$tagName = TagName::normalize($tagName);
+
+			if (isset($this->items[$type]))
+			{
+				// Compute the difference between current list and our one tag name
+				$this->items[$type] = array_diff(
+					$this->items[$type],
+					array($tagName)
+				);
+
+				if (empty($this->items[$type]))
+				{
+					// If the list is now empty, keep it neat and unset it
+					unset($this->items[$type]);
+				}
+				else
+				{
+					// If the list still have names, keep it neat and rearrange keys
+					$this->items[$type] = array_values($this->items[$type]);
+				}
+			}
+		}
+		else
+		{
+			unset($this->items[$type]);
+		}
+	}
+
 	//==========================================================================
 	// Rules
 	//==========================================================================

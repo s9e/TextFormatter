@@ -92,6 +92,90 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox remove('denyChild', 'IMG') removes all denyChild rules targeting IMG
+	*/
+	public function testRemoveTagName()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->denyChild('FOO');
+		$ruleset->denyChild('IMG');
+		$ruleset->denyChild('IMG');
+		$ruleset->remove('denyChild', 'IMG');
+
+		$this->assertSame(
+			array('denyChild' => array('FOO')),
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox remove('denyChild') unsets the denyChild list in the ruleset
+	*/
+	public function testRemoveAll()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->denyChild('FOO');
+		$ruleset->denyChild('IMG');
+		$ruleset->denyChild('IMG');
+		$ruleset->remove('denyChild');
+
+		$this->assertSame(
+			array(),
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox remove('denyChild', 'IMG') unsets the denyChild list in the ruleset if there is no denyChild rules left
+	*/
+	public function testRemoveUnsets()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->denyChild('IMG');
+		$ruleset->remove('denyChild', 'IMG');
+
+		$this->assertSame(
+			array(),
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox remove('denyChild', 'IMG') rearranges keys to remove gaps
+	*/
+	public function testRemoveTagNameRearrange()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->denyChild('FOO');
+		$ruleset->denyChild('IMG');
+		$ruleset->denyChild('IMG');
+		$ruleset->denyChild('BAR');
+		$ruleset->remove('denyChild', 'IMG');
+
+		$this->assertSame(
+			array('denyChild' => array('FOO', 'BAR')),
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox remove('denyChild', 'img') normalizes tag name
+	*/
+	public function testRemoveNormalizesTagName()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->denyChild('FOO');
+		$ruleset->denyChild('IMG');
+		$ruleset->denyChild('IMG');
+		$ruleset->remove('denyChild', 'img');
+
+		$this->assertSame(
+			array('denyChild' => array('FOO')),
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
 	* @testdox allowChild() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo#bar'
