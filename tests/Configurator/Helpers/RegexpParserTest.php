@@ -638,4 +638,185 @@ class RegexpParserTest extends Test
 			)
 		);
 	}
+
+	/**
+	* @testdox getAllowedCharacterRegexp() works
+	* @dataProvider getAllowedCharacterRegexpData
+	*/
+	public function testGetAllowedCharacterRegexp($regexp, $results)
+	{
+		$allowedCharRegexp = RegexpParser::getAllowedCharacterRegexp($regexp);
+
+		foreach ($results as $char => $result)
+		{
+			if ($result)
+			{
+				$methodName = 'assertRegExp';
+				$msg = var_export($regexp, true) . ' should match ' . json_encode($char);
+			}
+			else
+			{
+				$methodName = 'assertNotRegExp';
+				$msg = var_export($regexp, true) . ' should not match ' . json_encode($char);
+			}
+
+			$this->$methodName($allowedCharRegexp, (string) $char, $msg);
+		}
+	}
+
+	public function getAllowedCharacterRegexpData()
+	{
+		return array(
+			array(
+				'/^a+$/',
+				array(
+					'a'  => true,
+					'A'  => false,
+					'b'  => false,
+					'+'  => false,
+					"\n" => true
+				)
+			),
+			array(
+				'/^a+$/Di',
+				array(
+					'a'  => true,
+					'A'  => true,
+					'b'  => false
+				)
+			),
+			array(
+				'/^a+$/D',
+				array(
+					'a'  => true,
+					'b'  => false,
+					'+'  => false,
+					"\n" => false
+				)
+			),
+			array(
+				'/a/D',
+				array(
+					'a'  => true,
+					'b'  => true,
+					"\n" => true
+				)
+			),
+			array(
+				'/^a$/Dm',
+				array(
+					'a'  => true,
+					'b'  => true,
+					"\n" => true
+				)
+			),
+			array(
+				'/^\\w+$/D',
+				array(
+					'a'  => true,
+					'b'  => true,
+					'+'  => false,
+					'\\' => false
+				)
+			),
+			array(
+				'/^[0-4][6-9]$/D',
+				array(
+					'0' => true,
+					'2' => true,
+					'4' => true,
+					'5' => false,
+					'8' => true,
+					'[' => false,
+					']' => false,
+					'-' => false
+				)
+			),
+			array(
+				'/^[-]$/D',
+				array(
+					'-' => true,
+					'[' => false,
+					']' => false
+				)
+			),
+			array(
+				'/^[a][-][z]$/D',
+				array(
+					'-' => true,
+					'[' => false,
+					']' => false,
+					'a' => true,
+					'x' => false,
+					'z' => true
+				)
+			),
+			array(
+				'/^[^a-z]$/D',
+				array(
+					'-' => true,
+					'[' => true,
+					'a' => false,
+					'x' => false,
+					'z' => false,
+					'A' => true
+				)
+			),
+			array(
+				'/^[^a-z]$/Di',
+				array(
+					'a' => false,
+					'A' => false
+				)
+			),
+			array(
+				'/^a|a$/D',
+				array(
+					'a' => true,
+					'b' => true
+				)
+			),
+			array(
+				'/^.$/D',
+				array(
+					'a'  => true,
+					"\n" => false
+				)
+			),
+			array(
+				'/^.$/',
+				array(
+					'a'  => true,
+					"\n" => true
+				)
+			),
+			array(
+				'/^.$/Ds',
+				array(
+					'a'  => true,
+					"\n" => true
+				)
+			),
+			array(
+				'/^.$/',
+				array(
+					'é' => true
+				)
+			),
+			array(
+				'/^Pokémon$/iu',
+				array(
+					'é' => true,
+					'É' => true
+				)
+			),
+			array(
+				'/^\\pL$/iu',
+				array(
+					'é' => true,
+					'É' => true
+				)
+			),
+		);
+	}
 }

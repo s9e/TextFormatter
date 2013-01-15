@@ -503,6 +503,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
  [x] parse() parses negative lookahead assertions
  [x] parse() parses lookbehind assertions
  [x] parse() parses negative lookbehind assertions
+ [x] getAllowedCharacterRegexp() works
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Works with a single tag

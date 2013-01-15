@@ -215,4 +215,160 @@ abstract class RegexpParser
 
 		return $ret;
 	}
+
+	/**
+	* Generate a regexp that matches any single character allowed in a regexp
+	*
+	* This method will generate a regexp that can be used to determine whether a given character
+	* could in theory be allowed in a string that matches the source regexp. For example, the source
+	* regexp /^a+$/D would generate /a/ while /^foo\d+$/D would generate /[fo\d]/ whereas the regexp
+	* /foo/ would generate // because it's not anchored so any characters could be found before or
+	* after the literal "foo".
+	*
+	* @param  string $regexp Source regexp
+	* @return string         Regexp that matches any single character allowed in the source regexp
+	*/
+	public static function getAllowedCharacterRegexp($regexp)
+	{
+		$def = self::parse($regexp);
+
+		// If the regexp is uses the multiline modifier, this regexp can't match the whole string if
+		// it contains newlines, so in effect it could allow any content
+		if (strpos($def['modifiers'], 'm') !== false)
+		{
+			return '//';
+		}
+
+		// Test whether the regexp is anchored to match the whole input
+		if (!self::isAnchored($def['regexp']))
+		{
+			return '//';
+		}
+
+		// Append a token to mark the end of the regexp
+		$def['tokens'][] = array(
+			'pos'  => strlen($def['regexp']),
+			'len'  => 0,
+			'type' => 'end'
+		);
+
+		$patterns = array();
+
+		// Collect the literal portions of the source regexp
+		$literal = '';
+		$pos = 0;
+		$depth = 0;
+		foreach ($def['tokens'] as $token)
+		{
+			if ($token['pos'] > $pos)
+			{
+				// Append the content between last position and current position
+				$literal .= substr($def['regexp'], $pos, $token['pos'] - $pos);
+			}
+
+			$pos = $token['pos'] + $token['len'];
+
+			if ($token['type'] === 'characterClass')
+			{
+				$patterns[] = '[' . $token['content'] . ']';
+			}
+		}
+
+		// Test for the presence of an unescaped dot
+		if (preg_match('#(?<!\\\\)(?:\\\\\\\\)*\\.#', $literal))
+		{
+			if (strpos($def['modifiers'], 's') !== false
+			 || strpos($literal, "\n") !== false)
+			{
+				return '//';
+			}
+
+			$patterns[] = '.';
+
+			// Remove unescaped dots
+			$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\.#', '$1', $literal);
+		}
+
+		// Remove unescaped quantifiers *, + and ?
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[*+?]#', '$1', $literal);
+
+		// Remove unescaped quantifiers {}
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\{[^}]+\\}#', '$1', $literal);
+
+		// Remove backslash assertions \b, \B, \A, \Z, \z and \G
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\\\[bBAZzG]#', '$1', $literal);
+
+		// Remove unescaped ^ and $
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[$^]#', '$1', $literal);
+
+		// Escape unescaped - and ] so they are safe to use in a character class
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)([-^\\]])#', '$1\\\\$2', $literal);
+
+		// If the regexp doesn't use PCRE_DOLLAR_ENDONLY, it could end with a \n
+		if (strpos($def['modifiers'], 'D') === false)
+		{
+			$literal .= "\n";
+		}
+
+		// Add the literal portion of the regexp to the patterns, as a character class
+		if ($literal !== '')
+		{
+			$patterns[] = '[' . $literal . ']';
+		}
+
+		// Build the allowed characters regexp
+		$regexp = '/' . implode('|', $patterns) . '/';
+
+		// Add the modifiers
+		if (strpos($def['modifiers'], 'i') !== false)
+		{
+			$regexp .= 'i';
+		}
+		if (strpos($def['modifiers'], 'u') !== false)
+		{
+			$regexp .= 'u';
+		}
+
+		return $regexp;
+	}
+
+	/**
+	* Test whether a regexp is anchored
+	*
+	* @param  string $regexp Regexp, without delimiters
+	* @return bool
+	*/
+	protected static function isAnchored($regexp)
+	{
+		// Remove character classes
+		$regexp = preg_replace(
+			'#(?<!\\\\)(?:\\\\\\\\)*\\[.*?(?<!\\\\)((?:\\\\\\\\)*)\\]#s',
+			'',
+			$regexp
+		);
+
+		// Remove subpatterns and assertions
+		$regexp = preg_replace(
+			'#(?<!\\\\)(?:\\\\\\\\)*\\(.*?(?<!\\\\)((?:\\\\\\\\)*)\\)#s',
+			'',
+			$regexp
+		);
+
+		// Remove escaped |
+		$regexp = preg_replace(
+			'#(?<!\\\\)(?:\\\\\\\\)*\\\\\\|#',
+			'',
+			$regexp
+		);
+
+		foreach (explode('|', $regexp) as $pattern)
+		{
+			if (!preg_match('#^\\^.*(?<!\\\\)(?:\\\\\\\\)*\\$$#Ds', $pattern))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
