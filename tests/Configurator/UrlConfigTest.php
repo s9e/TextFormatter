@@ -93,7 +93,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegexp($urlConfig['disallowedHosts']->get(), 'example.org');
+		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'example.org');
 	}
 
 	/**
@@ -103,7 +103,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegexp($urlConfig['disallowedHosts']->get(), 'EXAMPLE.ORG');
+		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'EXAMPLE.ORG');
 	}
 
 	/**
@@ -113,7 +113,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegexp($urlConfig['disallowedHosts']->get(), 'www.example.org');
+		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'www.example.org');
 	}
 
 	/**
@@ -143,7 +143,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegexp($urlConfig['disallowedHosts']->get(), 'www.example.org');
+		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'www.example.org');
 	}
 
 	/**
@@ -153,7 +153,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*.example.org');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegexp($urlConfig['disallowedHosts']->get(), 'www.xxx.example.org');
+		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'www.xxx.example.org');
 	}
 
 	/**
@@ -183,7 +183,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegexp($urlConfig['disallowedHosts']->get(), 'xxx.com');
+		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'xxx.com');
 	}
 
 	/**
@@ -193,7 +193,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegexp($urlConfig['disallowedHosts']->get(), 'foo.xxx');
+		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'foo.xxx');
 	}
 
 	/**
@@ -203,7 +203,7 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->disallowHost('*xxx*');
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertRegexp($urlConfig['disallowedHosts']->get(), 'myxxxsite.com');
+		$this->assertRegExp($urlConfig['disallowedHosts']->get(), 'myxxxsite.com');
 	}
 
 	/**
@@ -215,7 +215,7 @@ class UrlConfigTest extends Test
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
-		$this->assertRegexp($urlConfig['resolveRedirectsHosts']->get(), 'bit.ly');
+		$this->assertRegExp($urlConfig['resolveRedirectsHosts']->get(), 'bit.ly');
 	}
 
 	/**
@@ -227,7 +227,7 @@ class UrlConfigTest extends Test
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('resolveRedirectsHosts', $urlConfig);
-		$this->assertRegexp($urlConfig['resolveRedirectsHosts']->get(), 'foo.bit.ly');
+		$this->assertRegExp($urlConfig['resolveRedirectsHosts']->get(), 'foo.bit.ly');
 	}
 
 	/**
@@ -250,7 +250,7 @@ class UrlConfigTest extends Test
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegexp($urlConfig['allowedSchemes']->get(), 'http');
+		$this->assertRegExp($urlConfig['allowedSchemes']->get(), 'http');
 	}
 
 	/**
@@ -261,7 +261,7 @@ class UrlConfigTest extends Test
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegexp($urlConfig['allowedSchemes']->get(), 'https');
+		$this->assertRegExp($urlConfig['allowedSchemes']->get(), 'https');
 	}
 
 	/**
@@ -272,7 +272,7 @@ class UrlConfigTest extends Test
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegexp($urlConfig['allowedSchemes']->get(), 'HTTPS');
+		$this->assertRegExp($urlConfig['allowedSchemes']->get(), 'HTTPS');
 	}
 
 	/**
@@ -306,7 +306,7 @@ class UrlConfigTest extends Test
 		$urlConfig = $this->urlConfig->asConfig();
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegexp($urlConfig['allowedSchemes']->get(), 'ftp');
+		$this->assertRegExp($urlConfig['allowedSchemes']->get(), 'ftp');
 	}
 
 	/**
