@@ -933,6 +933,13 @@ class RegexpParserTest extends Test
 					'c' => true
 				)
 			),
+			array(
+				'#^/$#D',
+				array(
+					'#' => false,
+					'/' => true
+				)
+			),
 		);
 	}
 }

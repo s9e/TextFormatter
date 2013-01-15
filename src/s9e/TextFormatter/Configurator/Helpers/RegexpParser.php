@@ -299,7 +299,7 @@ abstract class RegexpParser
 		}
 
 		// Build the allowed characters regexp
-		$regexp = '/' . implode('|', $patterns) . '/';
+		$regexp = $def['delimiter'] . implode('|', $patterns) . $def['delimiter'];
 
 		// Add the modifiers
 		if (strpos($def['modifiers'], 'i') !== false)
