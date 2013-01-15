@@ -280,8 +280,8 @@ abstract class RegexpParser
 		// Remove backslash assertions \b, \B, \A, \Z, \z and \G
 		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\\\[bBAZzG]#', '$1', $literal);
 
-		// Remove unescaped ^ and $
-		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[$^]#', '$1', $literal);
+		// Remove unescaped ^, | and $
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[$^|]#', '$1', $literal);
 
 		// Escape unescaped - and ] so they are safe to use in a character class
 		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)([-^\\]])#', '$1\\\\$2', $literal);

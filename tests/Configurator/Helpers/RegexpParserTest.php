@@ -817,6 +817,78 @@ class RegexpParserTest extends Test
 					'É' => true
 				)
 			),
+			array(
+				'/^(left|right|center)$/',
+				array(
+					'l' => true,
+					'(' => false,
+					'|' => false,
+					')' => false
+				)
+			),
+			array(
+				'/^[$]$/',
+				array(
+					'$' => true,
+					'[' => false
+				)
+			),
+			array(
+				'/^\\$$/',
+				array(
+					'$'  => true,
+					'\\' => false
+				)
+			),
+			array(
+				'/^\\\\\\$$/',
+				array(
+					'$'  => true,
+					'\\' => true
+				)
+			),
+			array(
+				'/^[\\^]$/',
+				array(
+					'^'  => true,
+					'\\' => false
+				)
+			),
+			array(
+				'/^[\\\\^]$/',
+				array(
+					'^'  => true,
+					'\\' => true
+				)
+			),
+			array(
+				'/^\\^$/',
+				array(
+					'^'  => true,
+					'\\' => false
+				)
+			),
+			array(
+				'/^\\\\\\^$/',
+				array(
+					'^'  => true,
+					'\\' => true
+				)
+			),
+			array(
+				'/^\\($/',
+				array(
+					'('  => true,
+					'\\' => false
+				)
+			),
+			array(
+				'/^\\\\\\($/',
+				array(
+					'('  => true,
+					'\\' => true
+				)
+			),
 		);
 	}
 }
