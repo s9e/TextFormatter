@@ -65,9 +65,7 @@ abstract class RegexpParser
 				case '(';
 					if (preg_match('#\\(\\?([a-z]*)\\)#i', $regexp, $m, 0, $pos))
 					{
-						/**
-						* This is an option (?i) so we skip past the right parenthesis
-						*/
+						// This is an option (?i) so we skip past the right parenthesis
 						$ret['tokens'][] = array(
 							'pos'     => $pos,
 							'len'     => strlen($m[0]),
@@ -79,14 +77,10 @@ abstract class RegexpParser
 						break;
 					}
 
-					/**
-					* This should be a subpattern, we just have to sniff which kind
-					*/
+					// This should be a subpattern, we just have to sniff which kind
 					if (preg_match("#(?J)\\(\\?(?:P?<(?<name>[a-z_0-9]+)>|'(?<name>[a-z_0-9]+)')#A", $regexp, $m, \PREG_OFFSET_CAPTURE, $pos))
 					{
-						/**
-						* This is a named capture
-						*/
+						// This is a named capture
 						$tok = array(
 							'pos'  => $pos,
 							'len'  => strlen($m[0][0]),
@@ -98,9 +92,7 @@ abstract class RegexpParser
 					}
 					elseif (preg_match('#\\(\\?([a-z]*):#iA', $regexp, $m, 0, $pos))
 					{
-						/**
-						* This is a non-capturing subpattern (?:xxx)
-						*/
+						// This is a non-capturing subpattern (?:xxx)
 						$tok = array(
 							'pos'     => $pos,
 							'len'     => strlen($m[0]),
@@ -112,9 +104,7 @@ abstract class RegexpParser
 					}
 					elseif (preg_match('#\\(\\?>#iA', $regexp, $m, 0, $pos))
 					{
-						/**
-						* This is a non-capturing subpattern with atomic grouping (?>x+)
-						*/
+						/* This is a non-capturing subpattern with atomic grouping "(?>x+)" */
 						$tok = array(
 							'pos'     => $pos,
 							'len'     => strlen($m[0]),
@@ -126,9 +116,7 @@ abstract class RegexpParser
 					}
 					elseif (preg_match('#\\(\\?(<?[!=])#A', $regexp, $m, 0, $pos))
 					{
-						/**
-						* This is an assertion
-						*/
+						// This is an assertion
 						$assertions = array(
 							'='  => 'lookahead',
 							'<=' => 'lookbehind',
@@ -150,9 +138,7 @@ abstract class RegexpParser
 					}
 					else
 					{
-						/**
-						* This should be a normal capture
-						*/
+						// This should be a normal capture
 						$tok = array(
 							'pos'  => $pos,
 							'len'  => 1,
@@ -172,10 +158,8 @@ abstract class RegexpParser
 						throw new RuntimeException('Could not find matching pattern start for right parenthesis at pos ' . $pos);
 					}
 
-					/**
-					* Add the key to this token to its matching token and capture this subpattern's
-					* content
-					*/
+					// Add the key to this token to its matching token and capture this subpattern's
+					// content
 					$k = array_pop($openSubpatterns);
 					$startToken =& $ret['tokens'][$k];
 					$startToken['endToken'] = count($ret['tokens']);
@@ -185,9 +169,7 @@ abstract class RegexpParser
 						$pos - ($startToken['pos'] + $startToken['len'])
 					);
 
-					/**
-					* Look for quantifiers after the subpattern, e.g. (?:ab)++
-					*/
+					// Look for quantifiers after the subpattern, e.g. (?:ab)++
 					$spn = strspn($regexp, '+*', 1 + $pos);
 					$quantifiers = substr($regexp, 1 + $pos, $spn);
 
