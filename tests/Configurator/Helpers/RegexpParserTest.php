@@ -889,6 +889,50 @@ class RegexpParserTest extends Test
 					'\\' => true
 				)
 			),
+			array(
+				'/^(a)\\1$/',
+				array(
+					'a'  => true,
+					'\\' => false,
+					'1'  => false
+				)
+			),
+			array(
+				'/^(1)\\1$/',
+				array(
+					'1'  => true,
+					'\\' => false
+				)
+			),
+			array(
+				'/^\\050$/',
+				array(
+					'0' => false,
+					'5' => false,
+					'(' => true
+				)
+			),
+			array(
+				'/^[a-z\\050]$/',
+				array(
+					'0' => false,
+					'5' => false,
+					'(' => true
+				)
+			),
+			array(
+				'/^a\\b\\B\\A\\Z\\z\\Gc$/',
+				array(
+					'a' => true,
+					'b' => false,
+					'B' => false,
+					'A' => false,
+					'Z' => false,
+					'z' => false,
+					'G' => false,
+					'c' => true
+				)
+			),
 		);
 	}
 }

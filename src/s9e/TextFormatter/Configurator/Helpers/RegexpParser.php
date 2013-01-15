@@ -277,8 +277,8 @@ abstract class RegexpParser
 		// Remove unescaped quantifiers {}
 		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\{[^}]+\\}#', '$1', $literal);
 
-		// Remove backslash assertions \b, \B, \A, \Z, \z and \G
-		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\\\[bBAZzG]#', '$1', $literal);
+		// Remove backslash assertions \b, \B, \A, \Z, \z and \G, as well as back references
+		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)\\\\[bBAZzG1-9]#', '$1', $literal);
 
 		// Remove unescaped ^, | and $
 		$literal = preg_replace('#(?<!\\\\)((?:\\\\\\\\)*)[$^|]#', '$1', $literal);
