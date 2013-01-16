@@ -103,6 +103,16 @@ class OutputHandlingTest extends Test
 				}
 			),
 			array(
+				'foo  bar',
+				'<pt>foo<i>  </i>bar</pt>',
+				null,
+				function ($parser)
+				{
+					$parser->addIgnoreTag(3, 1);
+					$parser->addIgnoreTag(4, 1);
+				}
+			),
+			array(
 				'foo bar',
 				'<pt>foo<br/> bar</pt>',
 				null,
