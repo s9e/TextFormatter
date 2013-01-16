@@ -37,12 +37,6 @@ trait OutputHandling
 			$this->outputText($this->textLen, 0);
 		}
 
-		// Merge consecutive <i> tags
-		if (strpos($this->output, '</i><i>') !== false)
-		{
-			$this->output = str_replace('</i><i>', '', $this->output);
-		}
-
 		// Remove empty tag pairs, e.g. <I><U></U></I>
 		do
 		{
@@ -55,6 +49,12 @@ trait OutputHandling
 			);
 		}
 		while ($cnt);
+
+		// Merge consecutive <i> tags
+		if (strpos($this->output, '</i><i>') !== false)
+		{
+			$this->output = str_replace('</i><i>', '', $this->output);
+		}
 
 		// Use a <rt> root if the text is rich, or <pt> for plain text (including <i> and <br/>)
 		$tagName = ($this->isRich) ? 'rt' : 'pt';

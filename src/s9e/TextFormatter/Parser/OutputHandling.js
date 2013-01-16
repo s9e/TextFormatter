@@ -40,28 +40,30 @@ function htmlspecialchars_noquotes(str)
 */
 function finalizeOutput()
 {
+	var tmp;
+
 	// Output the rest of the text
 	if (pos < textLen)
 	{
 		outputText(textLen, 0);
 	}
 
-	// Merge consecutive <i> tags
-	output = output.replace(/<\/i><i>/g, '', output);
-
 	// Remove empty tag pairs, e.g. <I><U></U></I>
 	do
 	{
-		var tmp = output;
+		tmp = output;
 		output = output.replace(/<((?:\w+:)?\w+)[^>]*><\/\1>/g, '');
 	}
 	while (output !== tmp);
+
+	// Merge consecutive <i> tags
+	output = output.replace(/<\/i><i>/g, '', output);
 
 	// Use a <rt> root if the text is rich, or <pt> for plain text (including <i> and <br/>)
 	var tagName = (isRich) ? 'rt' : 'pt';
 
 	// Prepare the root node with all the namespace declarations
-	var tmp = '<' + tagName;
+	tmp = '<' + tagName;
 	for (var prefix in namespaces)
 	{
 		tmp += ' xmlns:' + prefix + '="urn:s9e:TextFormatter:' + prefix + '"';
