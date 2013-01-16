@@ -227,6 +227,25 @@ class TagProcessingTest extends Test
 				}
 			),
 			array(
+				'x [i][b][u]...[/b][/i][/u] y',
+				'<rt>x <I><st>[i]</st><B><st>[b]</st><U><st>[u]</st>...</U><et>[/b]</et></B><et>[/i]</et></I><i>[/u]</i> y</rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('B')->rules->autoReopen();
+					$constructor->tags->add('I')->rules->autoReopen();
+					$constructor->tags->add('U')->rules->autoReopen();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('I', 2, 3);
+					$parser->addStartTag('B', 5, 3);
+					$parser->addStartTag('U', 8, 3);
+					$parser->addEndTag('B', 14, 4);
+					$parser->addEndTag('I', 18, 4);
+					$parser->addEndTag('U', 22, 4);
+				}
+			),
+			array(
 				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
 				function ($constructor)

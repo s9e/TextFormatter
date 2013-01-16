@@ -49,6 +49,14 @@ function finalizeOutput()
 	// Merge consecutive <i> tags
 	output = output.replace(/<\/i><i>/g, '', output);
 
+	// Remove empty tag pairs, e.g. <I><U></U></I>
+	do
+	{
+		var tmp = output;
+		output = output.replace(/<((?:\w+:)?\w+)[^>]*><\/\1>/g, '');
+	}
+	while (output !== tmp);
+
 	// Use a <rt> root if the text is rich, or <pt> for plain text (including <i> and <br/>)
 	var tagName = (isRich) ? 'rt' : 'pt';
 

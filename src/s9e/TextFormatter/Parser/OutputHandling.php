@@ -43,6 +43,19 @@ trait OutputHandling
 			$this->output = str_replace('</i><i>', '', $this->output);
 		}
 
+		// Remove empty tag pairs, e.g. <I><U></U></I>
+		do
+		{
+			$this->output = preg_replace(
+				'#<((?:\\w+:)?\\w+)[^>]*></\\1>#',
+				'',
+				$this->output,
+				-1,
+				$cnt
+			);
+		}
+		while ($cnt);
+
 		// Use a <rt> root if the text is rich, or <pt> for plain text (including <i> and <br/>)
 		$tagName = ($this->isRich) ? 'rt' : 'pt';
 

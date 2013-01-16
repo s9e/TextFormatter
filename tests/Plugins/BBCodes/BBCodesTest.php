@@ -235,6 +235,10 @@ class BBCodesTest extends Test
 				'x <b>bold <i>italic</i></b> y'
 			),
 			array(
+				'x [i][b][u]...[/b][/i][/u] y',
+				'x <i><b><u>...</u></b></i> y'
+			),
+			array(
 				'x [img]http://example.org/foo.png[/img] y',
 				'x <img src="http://example.org/foo.png" title="" alt=""> y'
 			),
