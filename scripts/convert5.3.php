@@ -48,6 +48,12 @@ function convertCustom($filepath, &$file)
 				'call_user_func_array($callback, array(&$msg, &$context));'
 			)
 		),
+		'Regexp.php' => array(
+			array(
+				"\$variant->setDynamic(\n\t\t\t'JS',\n\t\t\tfunction ()\n\t\t\t{\n\t\t\t\treturn \$this",
+				"\$_this=\$this;\$variant->setDynamic(\n\t\t\t'JS',\n\t\t\tfunction () use (\$_this)\n\t\t\t{\n\t\t\t\treturn \$_this"
+			)
+		),
 		'TemplateOptimizer.php' => array(
 			array(
 				'return $m[1] . self::minifyXPath($m[2]);',

@@ -55,26 +55,32 @@ class Regexp
 	*/
 	public function asConfig()
 	{
-		$regexp   = $this->regexp;
-		$isGlobal = $this->isGlobal;
-
-		$variant = new Variant($regexp);
-
+		$variant = new Variant($this->regexp);
 		$variant->setDynamic(
 			'JS',
-			function () use ($regexp, $isGlobal)
+			function ()
 			{
-				$obj = RegexpConvertor::toJS($regexp);
-
-				if ($isGlobal)
-				{
-					$obj->flags .= 'g';
-				}
-
-				return $obj;
+				return $this->toJS();
 			}
 		);
 
 		return $variant;
+	}
+
+	/**
+	* Return this regexp as a Javascript RegExp
+	*
+	* @return RegExp
+	*/
+	public function toJS()
+	{
+		$obj = RegexpConvertor::toJS($this->regexp);
+
+		if ($this->isGlobal)
+		{
+			$obj->flags .= 'g';
+		}
+
+		return $obj;
 	}
 }

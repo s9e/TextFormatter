@@ -32,6 +32,19 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox toJS() returns a JavaScript RegExp
+	*/
+	public function testToJS()
+	{
+		$regexp = new Regexp('/foo/i');
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\JavaScript\RegExp',
+			$regexp->toJS()
+		);
+	}
+
+	/**
 	* @testdox asConfig() returns an instance of Variant
 	*/
 	public function testAsConfigInstance()
