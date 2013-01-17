@@ -57,27 +57,6 @@ class Attribute implements ConfigProvider
 	}
 
 	/**
-	* Replace this attribute's filterChain with given structure
-	*
-	* @param FilterChain|array $filterChain
-	*/
-	public function setFilterChain($filterChain)
-	{
-		if (!is_array($filterChain)
-		 && !($filterChain instanceof FilterChain))
-		{
-			throw new InvalidArgumentException('setFilterChain() expects an array or an instance of FilterChain');
-		}
-
-		$this->filterChain->clear();
-
-		foreach ($filterChain as $filter)
-		{
-			$this->filterChain->append($filter);
-		}
-	}
-
-	/**
 	* Set a generator for this attribute
 	*
 	* @param callable|ProgrammableCallback $callback

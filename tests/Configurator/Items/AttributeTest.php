@@ -41,32 +41,6 @@ class AttributeTest extends Test
 	}
 
 	/**
-	* @testdox $attr->filterChain can be assigned an instance of FilterChain to copy its content
-	*/
-	public function testSetFilterChainInstance()
-	{
-		$filterChain = new FilterChain(array('attrValue' => null));
-		$filterChain->append('strtolower');
-
-		$attr = new Attribute;
-		$attr->filterChain = $filterChain;
-
-		$this->assertEquals($filterChain, $attr->filterChain);
-		$this->assertNotSame($filterChain, $attr->filterChain, '$attr->filterChain should not have been replaced with $filterChain');
-	}
-
-	/**
-	* @testdox setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage setFilterChain() expects an array or an instance of FilterChain
-	*/
-	public function testSetFilterChainInvalid()
-	{
-		$attr = new Attribute;
-		$attr->filterChain = false;
-	}
-
-	/**
 	* @testdox $attr->generator accepts an instance of ProgrammableCallback
 	*/
 	public function testSetGeneratorProgrammableCallback()

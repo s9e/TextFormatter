@@ -795,8 +795,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor
  [x] $attr->filterChain can be assigned an array
- [x] $attr->filterChain can be assigned an instance of FilterChain to copy its content
- [x] setFilterChain() throws an InvalidArgumentException if its argument is not an array or an instance of FilterChain
  [x] $attr->generator accepts an instance of ProgrammableCallback
  [x] $attr->generator accepts a callback and normalizes it to an instance of ProgrammableCallback
  [x] asConfig() correctly produces a config array
