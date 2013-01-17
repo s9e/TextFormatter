@@ -94,17 +94,21 @@ class RendererTest extends Test
 	public function testMultiOrder()
 	{
 		$parsed = array(
-			'p1' => '<rt>One</rt>',
-			'p2' => '<pt>Two</pt>',
-			'p3' => '<rt>Three</rt>',
-			'p4' => '<pt>Four</pt>'
+			'<rt><B>One</B></rt>',
+			'<pt>Two</pt>',
+			'p3' => '<rt><B>Three</B></rt>',
+			'p4' => '<pt>Four</pt>',
+			'<rt><B>Five</B></rt>',
+			'<pt>Six</pt>'
 		);
 
 		$expected = array(
-			'p1' => 'One',
-			'p2' => 'Two',
-			'p3' => 'Three',
-			'p4' => 'Four'
+			'<b>One</b>',
+			'Two',
+			'p3' => '<b>Three</b>',
+			'p4' => 'Four',
+			'<b>Five</b>',
+			'Six'
 		);
 
 		$this->assertSame(

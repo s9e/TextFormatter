@@ -32,12 +32,6 @@ class Renderer implements Serializable
 	public function __construct($stylesheet)
 	{
 		$this->stylesheet = $stylesheet;
-
-		$xsl = new DOMDocument;
-		$xsl->loadXML($stylesheet);
-
-		$this->proc = new XSLTProcessor;
-		$this->proc->importStylesheet($xsl);
 	}
 
 	/**
@@ -70,6 +64,7 @@ class Renderer implements Serializable
 	*/
 	public function setParameter($paramName, $paramValue)
 	{
+		$this->load();
 		$this->proc->setParameter('', $paramName, $paramValue);
 	}
 
@@ -81,6 +76,7 @@ class Renderer implements Serializable
 	*/
 	public function setParameters(array $params)
 	{
+		$this->load();
 		$this->proc->setParameter('', $params);
 	}
 
@@ -101,6 +97,9 @@ class Renderer implements Serializable
 		// Load the intermediate representation
 		$dom  = new DOMDocument;
 		$dom->loadXML($xml);
+
+		// Load the stylesheet
+		$this->load();
 
 		// Perform the transformation and cast it as a string because it may return NULL if the
 		// transformation didn't output anything
@@ -123,12 +122,55 @@ class Renderer implements Serializable
 	*/
 	public function renderMulti(array $arr)
 	{
-		$uid = sha1(uniqid(mt_rand(), true));
-		$xml = '<m>' . implode($uid, $arr) . '</m>';
+		$keys   = array();
+		$render = array();
 
-		return array_combine(
-			array_keys($arr),
-			explode($uid, $this->render($xml))
-		);
+		// First replace intermediate representations of plain text
+		foreach ($arr as $k => &$xml)
+		{
+			if (substr($xml, 0, 4) === '<pt>')
+			{
+				$xml = substr($xml, 4, -5);
+			}
+			else
+			{
+				// Collect the keys and content of intermediate representations of rich text
+				$keys[]   = $k;
+				$render[] = $xml;
+			}
+		}
+		unset($xml);
+
+		// Render the rich text representations, if any
+		if (!empty($render))
+		{
+			$uid = sha1(uniqid(mt_rand(), true));
+			$xml = '<m>' . implode($uid, $render) . '</m>';
+
+			foreach (explode($uid, $this->render($xml)) as $i => $html)
+			{
+				// Replace the IR with its rendering
+				$arr[$keys[$i]] = $html;
+			}
+		}
+
+		return $arr;
+	}
+
+	/**
+	* Create an XSLTProcessor and load the stylesheet
+	*
+	* @return void
+	*/
+	protected function load()
+	{
+		if (!isset($this->proc))
+		{
+			$xsl = new DOMDocument;
+			$xsl->loadXML($this->stylesheet);
+
+			$this->proc = new XSLTProcessor;
+			$this->proc->importStylesheet($xsl);
+		}
 	}
 }
