@@ -922,6 +922,12 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Url
  [x] Is safe in JS
  [x] Is safe in URL
 
+s9e\TextFormatter\Tests\Configurator\Items\Regexp
+ [x] __construct() throws an InvalidArgumentException if the regexp is not valid
+ [x] asConfig() returns an instance of Variant
+ [x] asConfig() returns a JS variant
+ [x] asConfig() returns a JS variant that is an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
+
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor
  [x] $tag->attributePreprocessors can be assigned a 2D array of regexps

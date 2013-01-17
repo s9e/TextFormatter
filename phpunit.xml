@@ -60,7 +60,6 @@
 			<file>tests/Configurator/Items/AttributeTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributePreprocessorTest.php</file>
-			<file>tests/Configurator/Items/CallbackPlaceholderTest.php</file>
 			<file>tests/Configurator/Items/ProgrammableCallbackTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/AlnumTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/ChoiceTest.php</file>
@@ -80,6 +79,7 @@
 			<file>tests/Configurator/Items/AttributeFilters/SimpletextTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/UintTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/UrlTest.php</file>
+			<file>tests/Configurator/Items/RegexpTest.php</file>
 			<file>tests/Configurator/Items/TagTest.php</file>
 			<file>tests/Configurator/Items/TagFilterTest.php</file>
 			<file>tests/Configurator/Items/TemplateTest.php</file>
