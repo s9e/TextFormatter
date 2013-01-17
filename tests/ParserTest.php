@@ -16,7 +16,8 @@ class ParserTest extends Test
 	*/
 	public function testSerialize()
 	{
-		$parser = $this->configurator->getParser();
+		$configurator = new Configurator;
+		$parser       = $configurator->getParser();
 
 		$this->assertStringStartsWith(
 			'C:24:"s9e\\TextFormatter\\Parser"',
@@ -29,7 +30,8 @@ class ParserTest extends Test
 	*/
 	public function testUnserialize()
 	{
-		$parser = $this->configurator->getParser();
+		$configurator = new Configurator;
+		$parser       = $configurator->getParser();
 
 		$this->assertEquals(
 			$parser,
@@ -42,9 +44,12 @@ class ParserTest extends Test
 	*/
 	public function testGetLogger()
 	{
+		$configurator = new Configurator;
+		$parser       = $configurator->getParser();
+
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Parser\\Logger',
-			$this->configurator->getParser()->getLogger()
+			$parser->getLogger()
 		);
 	}
 
@@ -53,7 +58,8 @@ class ParserTest extends Test
 	*/
 	public function testParse()
 	{
-		$parser = $this->configurator->getParser();
+		$configurator = new Configurator;
+		$parser       = $configurator->getParser();
 
 		$this->assertSame(
 			'<pt>Plain text</pt>',
@@ -66,7 +72,8 @@ class ParserTest extends Test
 	*/
 	public function testParseIsClean()
 	{
-		$parser = $this->configurator->getParser();
+		$configurator = new Configurator;
+		$parser       = $configurator->getParser();
 
 		$parser->parse('Foo');
 
@@ -81,8 +88,9 @@ class ParserTest extends Test
 	*/
 	public function testParseCR()
 	{
-		$this->configurator->rootRules->noBrChild();
-		$parser = $this->configurator->getParser();
+		$configurator = new Configurator;
+		$configurator->rootRules->noBrChild();
+		$parser       = $configurator->getParser();
 
 		$this->assertSame(
 			"<pt>Plain\ntext</pt>",
@@ -95,8 +103,9 @@ class ParserTest extends Test
 	*/
 	public function testParseCRLF()
 	{
-		$this->configurator->rootRules->noBrChild();
-		$parser = $this->configurator->getParser();
+		$configurator = new Configurator;
+		$configurator->rootRules->noBrChild();
+		$parser       = $configurator->getParser();
 
 		$this->assertSame(
 			"<pt>Plain\ntext</pt>",
@@ -109,8 +118,9 @@ class ParserTest extends Test
 	*/
 	public function testParseFiltersLowAscii()
 	{
-		$this->configurator->rootRules->noBrChild();
-		$parser = $this->configurator->getParser();
+		$configurator = new Configurator;
+		$configurator->rootRules->noBrChild();
+		$parser       = $configurator->getParser();
 
 		$this->assertSame(
 			"<pt>Plain\t\n\n text</pt>",
@@ -125,12 +135,15 @@ class ParserTest extends Test
 	{
 		$configurator = new Configurator;
 		$configurator->tags->add('FOO');
+		$parser       = $configurator->getParser();
 
-		$parser = new DummyParser($configurator->asConfig());
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$this->assertTrue(empty($tagsConfig['FOO']['isDisabled']));
 
-		$this->assertTrue(empty($parser->tagsConfig['FOO']['isDisabled']));
 		$parser->disableTag('FOO');
-		$this->assertFalse(empty($parser->tagsConfig['FOO']['isDisabled']));
+
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$this->assertFalse(empty($tagsConfig['FOO']['isDisabled']));
 	}
 
 	/**
@@ -140,17 +153,16 @@ class ParserTest extends Test
 	{
 		$configurator = new Configurator;
 		$configurator->tags->add('FOO');
-
-		$parser = new DummyParser($configurator->asConfig());
+		$parser       = $configurator->getParser();
 
 		$parser->disableTag('FOO');
-		$this->assertFalse(empty($parser->tagsConfig['FOO']['isDisabled']));
-		$parser->enableTag('FOO');
-		$this->assertTrue(empty($parser->tagsConfig['FOO']['isDisabled']));
-	}
-}
 
-class DummyParser extends Parser
-{
-	public $tagsConfig;
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$this->assertFalse(empty($tagsConfig['FOO']['isDisabled']));
+
+		$parser->enableTag('FOO');
+
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$this->assertTrue(empty($tagsConfig['FOO']['isDisabled']));
+	}
 }
