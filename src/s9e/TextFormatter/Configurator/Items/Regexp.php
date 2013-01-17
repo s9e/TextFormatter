@@ -41,6 +41,16 @@ class Regexp
 	}
 
 	/**
+	* Return this regexp as a string
+	*
+	* @return string
+	*/
+	public function __toString()
+	{
+		return $this->regexp;
+	}
+
+	/**
 	* {@inheritdoc}
 	*/
 	public function asConfig()

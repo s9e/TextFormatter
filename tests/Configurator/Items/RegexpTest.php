@@ -21,6 +21,17 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox Can be cast as a string
+	*/
+	public function testToString()
+	{
+		$this->assertSame(
+			'/foo/i',
+			(string) new Regexp('/foo/i')
+		);
+	}
+
+	/**
 	* @testdox asConfig() returns an instance of Variant
 	*/
 	public function testAsConfigInstance()
