@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
@@ -48,29 +49,7 @@ class Regexp extends AttributeFilter
 			throw new RuntimeException("Regexp filter is missing a 'regexp' value");
 		}
 
-		// Create a variant for this filter's config
-		$regexp = $this->vars['regexp'];
-		if (is_string($regexp))
-		{
-			$variant = new Variant($regexp);
-			$variant->setDynamic(
-				'JS',
-				function () use ($regexp)
-				{
-					return RegexpConvertor::toJS($regexp);
-				}
-			);
-
-			$this->vars['regexp'] = $variant;
-		}
-
-		// Generate this filter's config
-		$config = parent::asConfig();
-
-		// Restore the original value for 'regexp'
-		$this->vars['regexp'] = $regexp;
-
-		return $config;
+		return parent::asConfig();
 	}
 
 	/**
@@ -81,9 +60,9 @@ class Regexp extends AttributeFilter
 	*/
 	public function setRegexp($regexp)
 	{
-		if (@preg_match($regexp, '') === false)
+		if (is_string($regexp))
 		{
-			throw new InvalidArgumentException('Invalid regular expression ' . var_export($regexp, true));
+			$regexp = new RegexpObject($regexp);
 		}
 
 		$this->vars['regexp'] = $regexp;
