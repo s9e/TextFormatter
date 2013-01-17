@@ -165,4 +165,28 @@ class ParserTest extends Test
 		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
 		$this->assertTrue(empty($tagsConfig['FOO']['isDisabled']));
 	}
+
+	/**
+	* @testdox parse() throws an exception if the parser is reset during its execution
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage The parser has been reset during execution
+	*/
+	public function testResetException()
+	{
+		$configurator = new Configurator;
+		$parser       = $configurator->getParser();
+
+		$parser->registerParser(
+			'Test',
+			function ($text) use ($parser)
+			{
+				if ($text === '...')
+				{
+					$parser->parse('___');
+				}
+			}
+		);
+
+		$parser->parse('...');
+	}
 }

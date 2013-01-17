@@ -37,6 +37,11 @@ var text;
 var textLen;
 
 /**
+* @type {!number} Random number generated everytime the parser is reset
+*/
+var uid;
+
+/**
 * Get this parser's Logger instance
 *
 * @return {!Logger}
@@ -54,10 +59,20 @@ function getLogger()
 */
 function parse(_text)
 {
+	// Reset the parser and save the uid
 	reset(_text);
+	var _uid = uid;
+
+	// Do the heavy lifting
 	executePluginParsers();
 	sortTags();
 	processTags();
+
+	// Check the uid in case a plugin or a filter reset the parser mid-execution
+	if (uid !== _uid)
+	{
+		throw 'The parser has been reset during execution';
+	}
 
 	return output;
 }
@@ -81,4 +96,5 @@ function reset(_text)
 	text       = _text;
 	textLen    = text.length;
 	tagStack   = [];
+	uid        = Math.random();
 }

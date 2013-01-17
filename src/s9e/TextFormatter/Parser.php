@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter;
 
+use RuntimeException;
 use Serializable;
 use s9e\TextFormatter\Parser\Logger;
 
@@ -55,6 +56,11 @@ class Parser implements Serializable
 	* @var integer Length of the text being parsed
 	*/
 	protected $textLen;
+
+	/**
+	* @var integer Random number generated everytime the parser is reset
+	*/
+	protected $uid;
 
 	/**
 	* Constructor
@@ -146,10 +152,20 @@ class Parser implements Serializable
 	*/
 	public function parse($text)
 	{
+		// Reset the parser and save the uid
 		$this->reset($text);
+		$uid = $this->uid;
+
+		// Do the heavy lifting
 		$this->executePluginParsers();
 		$this->sortTags();
 		$this->processTags();
+
+		// Check the uid in case a plugin or a filter reset the parser mid-execution
+		if ($this->uid !== $uid)
+		{
+			throw new RuntimeException('The parser has been reset during execution');
+		}
 
 		return $this->output;
 	}
@@ -174,5 +190,6 @@ class Parser implements Serializable
 		$this->text       = $text;
 		$this->textLen    = strlen($text);
 		$this->tagStack   = array();
+		$this->uid        = mt_rand();
 	}
 }

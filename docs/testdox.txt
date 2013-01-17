@@ -1314,6 +1314,7 @@ s9e\TextFormatter\Tests\Parser
  [x] parse() removes control characters that aren't allowed in XML
  [x] disableTag('FOO') disables tag 'FOO'
  [x] enableTag('FOO') re-enables tag 'FOO'
+ [x] parse() throws an exception if the parser is reset during its execution
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument
