@@ -805,6 +805,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] An array of variables can be set with setVars() or retrieved with getVars()
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
+ [x] resetParameters() removes all parameters
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
  [x] getCallback() returns the callback
  [x] getJS() returns NULL by default
@@ -868,6 +869,8 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Map
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterMap()
  [x] __construct() forwards its arguments to setMap()
  [x] asConfig() throws an exception if the 'map' var is missing
+ [x] setMap() throws an exception if the second argument is not a boolean
+ [x] setMap() throws an exception if the third argument is not a boolean
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Number
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterNumber()

@@ -50,4 +50,26 @@ class MapTest extends Test
 		$filter = new Map;
 		$filter->asConfig();
 	}
+
+	/**
+	* @testdox setMap() throws an exception if the second argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage must be a boolean
+	*/
+	public function testSetMapNotBool2()
+	{
+		$filter = new Map;
+		$filter->setMap(array('foo' => 'bar'), 'notbool');
+	}
+
+	/**
+	* @testdox setMap() throws an exception if the third argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage must be a boolean
+	*/
+	public function testSetMapNotBool3()
+	{
+		$filter = new Map;
+		$filter->setMap(array('foo' => 'bar'), true, 'notbool');
+	}
 }

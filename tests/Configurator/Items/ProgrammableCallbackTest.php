@@ -69,6 +69,27 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
+	* @testdox resetParameters() removes all parameters
+	*/
+	public function testResetParameters()
+	{
+		$pc = new ProgrammableCallback('mt_rand');
+		$pc->addParameterByValue(1);
+		$pc->addParameterByValue(2);
+		$pc->resetParameters();
+		$pc->addParameterByValue(4);
+		$pc->addParameterByValue(5);
+
+		$this->assertEquals(
+			array(
+				'callback' => 'mt_rand',
+				'params'   => array(4, 5)
+			),
+			$pc->asConfig()
+		);
+	}
+
+	/**
 	* @testdox Callback ['foo','bar'] is normalized to 'foo::bar'
 	*/
 	public function testNormalizeStatic()
