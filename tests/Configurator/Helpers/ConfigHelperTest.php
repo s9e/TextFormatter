@@ -239,9 +239,11 @@ class ConfigHelperTest extends Test
 		$configurator->BBCodes->addFromRepository('U');
 
 		$optimizedConfig = $configurator->asConfig();
+		ConfigHelper::filterVariants($optimizedConfig);
 		ConfigHelper::optimizeArray($optimizedConfig);
 
 		$normalConfig = $configurator->asConfig();
+		ConfigHelper::filterVariants($normalConfig);
 
 		$this->assertEquals($normalConfig, $optimizedConfig);
 		$this->assertLessThan(

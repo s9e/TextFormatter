@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters;
 
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
+use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -146,7 +147,7 @@ class RegexpTest extends Test
 		$filter = new Regexp;
 		$filter->setRegexp('/x/');
 
-		$this->assertSame(
+		$this->assertEquals(
 			array('regexp' => '/x/'),
 			$filter->getVars()
 		);

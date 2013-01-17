@@ -10,8 +10,7 @@ namespace s9e\TextFormatter\Configurator;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class UrlConfig implements ConfigProvider
 {
@@ -46,9 +45,9 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$config = array(
-			'allowedSchemes' => '/^' . RegexpBuilder::fromList($this->allowedSchemes) . '$/Di'
-		);
+		$regexp = RegexpBuilder::fromList($this->allowedSchemes);
+		$regexp = new Regexp('/^' . $regexp . '$/Di');
+		$config = array('allowedSchemes' => $regexp->asConfig());
 
 		foreach (array('disallowedHosts', 'resolveRedirectsHosts') as $k)
 		{
@@ -68,17 +67,9 @@ class UrlConfig implements ConfigProvider
 					)
 				)
 			);
+			$regexp = new Regexp('/' . $regexp . '/DiS');
 
-			$config[$k] = '/' . $regexp . '/DiS';
-		}
-
-		// Create a JavaScript variant of the regexps
-		foreach ($config as $k => $v)
-		{
-			$regexp = $v;
-
-			$config[$k] = new Variant($regexp);
-			$config[$k]->set('JS', RegexpConvertor::toJS($regexp));
+			$config[$k] = $regexp->asConfig();
 		}
 
 		if (isset($this->defaultScheme))
