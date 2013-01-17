@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Tests\Test;
 
@@ -174,6 +175,30 @@ class ProgrammableCallbackTest extends Test
 			$config['js']
 		);
 		$this->assertSame($js, $config['js']->get('JS'));
+	}
+
+	/**
+	* @testdox asConfig() replaces values that implement ConfigProvider with their config value
+	*/
+	public function testAsConfigProvider()
+	{
+		$pc = new ProgrammableCallback(function(){});
+		$pc->setVars(array('x' => new Regexp('/x/')));
+
+		$pc->addParameterByName('x');
+		$pc->addParameterByValue(new Regexp('/y/'));
+
+		$config = $pc->asConfig();
+
+		$this->assertNotInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
+			$config['params'][0]
+		);
+
+		$this->assertNotInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
+			$config['params'][1]
+		);
 	}
 }
 

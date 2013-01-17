@@ -156,12 +156,16 @@ class ProgrammableCallback implements ConfigProvider
 			if (is_numeric($k))
 			{
 				// By value
-				$config['params'][] = $v;
+				$config['params'][] = ($v instanceof ConfigProvider)
+				                    ? $v->asConfig()
+				                    : $v;
 			}
 			elseif (isset($this->vars[$k]))
 			{
 				// By name, but the value is readily available in $this->vars
-				$config['params'][] = $this->vars[$k];
+				$config['params'][] = ($this->vars[$k] instanceof ConfigProvider)
+				                    ? $this->vars[$k]->asConfig()
+				                    : $this->vars[$k];
 			}
 			else
 			{

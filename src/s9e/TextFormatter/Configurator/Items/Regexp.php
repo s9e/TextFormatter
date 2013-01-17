@@ -8,10 +8,11 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
-class Regexp
+class Regexp implements ConfigProvider
 {
 	/**
 	* @var bool Whether this regexp should become a JavaScript RegExp object with global flag

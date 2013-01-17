@@ -813,6 +813,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] asConfig() returns an array containing the callback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
  [x] asConfig() returns the callback's JavaScript as a variant if available
+ [x] asConfig() replaces values that implement ConfigProvider with their config value
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Alnum
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterAlnum()
