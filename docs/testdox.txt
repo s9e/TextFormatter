@@ -871,6 +871,11 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Map
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterMap()
  [x] __construct() forwards its arguments to setMap()
  [x] asConfig() throws an exception if the 'map' var is missing
+ [x] asConfig() returns an array
+ [x] setMap() creates case-insensitive regexps by default
+ [x] setMap() creates case-sensitive regexps if its second argument is TRUE
+ [x] setMap() appends a catch-all regexp that maps to FALSE if its third argument is TRUE
+ [x] setMap() uses the pattern modifier 'u' if a regexp is not entirely ASCII
  [x] setMap() throws an exception if the second argument is not a boolean
  [x] setMap() throws an exception if the third argument is not a boolean
 

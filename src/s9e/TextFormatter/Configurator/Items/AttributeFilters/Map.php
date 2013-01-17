@@ -11,7 +11,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
-use s9e\TextFormatter\Configurator\Items\Regexp as RegexpOjbect;
+use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
 
 class Map extends AttributeFilter
 {
@@ -75,16 +75,6 @@ class Map extends AttributeFilter
 		$valueKeys = array();
 		foreach ($map as $key => $value)
 		{
-			// Lowercase latin letters if the map is not case-sensitive
-			if (!$caseSensitive)
-			{
-				$value = strtr(
-					$value,
-					'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-					'abcdefghijklmnopqrstuvwxyz'
-				);
-			}
-
 			$valueKeys[$value][] = $key;
 		}
 
@@ -92,7 +82,13 @@ class Map extends AttributeFilter
 		$map = array();
 		foreach ($valueKeys as $value => $keys)
 		{
-			$regexp = RegexpBuilder::fromList($keys, array('delimiter' => '/'));
+			$regexp = RegexpBuilder::fromList(
+				$keys,
+				array(
+					'delimiter'       => '/',
+					'caseInsensitive' => !$caseSensitive
+				)
+			);
 			$regexp = '/^' . $regexp . '$/D';
 
 			// Add the case-insensitive flag if applicable
@@ -108,7 +104,7 @@ class Map extends AttributeFilter
 			}
 
 			// Add the [regexp,value] pair to the map
-			$map[] = array(new RegexpOjbect($regexp), $value);
+			$map[] = array(new RegexpObject($regexp), $value);
 		}
 
 		// If the "strict" option is enabled, a catch-all regexp which replaces the value with FALSE

@@ -52,6 +52,80 @@ class MapTest extends Test
 	}
 
 	/**
+	* @testdox asConfig() returns an array
+	*/
+	public function testAsConfig()
+	{
+		$filter = new Map(array('foo' => 'bar'));
+		$this->assertInternalType('array', $filter->asConfig());
+	}
+
+	/**
+	* @testdox setMap() creates case-insensitive regexps by default
+	*/
+	public function testSetMapCaseInsensitive()
+	{
+		$filter = new Map;
+		$filter->setMap(array('foo' => 'bar'));
+
+		$vars = $filter->getVars();
+
+		$this->assertSame(
+			'/^foo$/Di',
+			(string) $vars['map'][0][0]
+		);
+	}
+
+	/**
+	* @testdox setMap() creates case-sensitive regexps if its second argument is TRUE
+	*/
+	public function testSetMapCaseSensitive()
+	{
+		$filter = new Map;
+		$filter->setMap(array('foo' => 'bar'), true);
+
+		$vars = $filter->getVars();
+
+		$this->assertSame(
+			'/^foo$/D',
+			(string) $vars['map'][0][0]
+		);
+	}
+
+	/**
+	* @testdox setMap() appends a catch-all regexp that maps to FALSE if its third argument is TRUE
+	*/
+	public function testSetMapStrict()
+	{
+		$filter = new Map;
+		$filter->setMap(array('foo' => 'bar'), false, true);
+
+		$vars = $filter->getVars();
+
+		$this->assertSame(
+			'//',
+			(string) $vars['map'][1][0]
+		);
+		$this->assertFalse($vars['map'][1][1]);
+	}
+
+	/**
+	* @testdox setMap() uses the pattern modifier 'u' if a regexp is not entirely ASCII
+	*/
+	public function testSetMapUnicode()
+	{
+		$filter = new Map;
+		$filter->setMap(array('pokémon' => 'yugioh'));
+
+		$vars = $filter->getVars();
+
+		$this->assertSame(
+			'/^pokémon$/Diu',
+			(string) $vars['map'][0][0]
+		);
+	}
+
+	/**
 	* @testdox setMap() throws an exception if the second argument is not a boolean
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage must be a boolean
