@@ -4,6 +4,25 @@ namespace s9e\TextFormatter\Tests\Parser;
 
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Alnum;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Choice;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Color;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Email;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Float;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Identifier;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Int;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ip;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipport;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipv4;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipv6;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Map;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Number;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Range;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Simpletext;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Uint;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
 use s9e\TextFormatter\Parser\BuiltInFilters;
 use s9e\TextFormatter\Parser\FilterProcessing;
 use s9e\TextFormatter\Parser\Logger;
@@ -14,42 +33,6 @@ use s9e\TextFormatter\Tests\Test;
 */
 class BuiltInFiltersTest extends Test
 {
-	protected static function getFilterTestdox($filterName, array $filterOptions, $original, $expected, $setup = null)
-	{
-		$testdox = '#' . $filterName;
-
-		if ($filterOptions)
-		{
-			$testdox .= ' [';
-			foreach ($filterOptions as $k => $v)
-			{
-				$testdox .= "'$k'=>" . var_export($v, true) . ',';
-			}
-			$testdox = substr($testdox, 0, -1) . ']';
-		}
-
-		if ($expected === false)
-		{
-			$testdox .= ' rejects ' . var_export($original, true);
-		}
-		elseif ($expected === $original)
-		{
-			$testdox .= ' accepts ' . var_export($original, true);
-		}
-		else
-		{
-			$testdox .= ' transforms ' . var_export($original, true)
-					  . ' into ' . var_export($expected, true);
-		}
-
-		if (isset($setup))
-		{
-			$testdox .= ' with the appropriate configuration';
-		}
-
-		return $testdox;
-	}
-
 	/**
 	* @dataProvider getRegressionsData
 	* @testdox Regression tests
@@ -59,12 +42,10 @@ class BuiltInFiltersTest extends Test
 		foreach ($results as $filterName => $expected)
 		{
 			$methodName = 'filter' . ucfirst($filterName);
-			$testdox = self::getFilterTestdox($filterName, array(), $original, $expected);
 
 			$this->assertSame(
 				$expected,
-				BuiltInFilters::$methodName($original),
-				'Failed asserting that ' . $testdox
+				BuiltInFilters::$methodName($original)
 			);
 		}
 	}
@@ -73,16 +54,13 @@ class BuiltInFiltersTest extends Test
 	* @testdox Filters work
 	* @dataProvider getData
 	*/
-	public function test($filterName, $original, $expected, array $filterOptions = array(), array $logs = array(), $setup = null)
+	public function testFilters($filter, $original, $expected, array $logs = array(), $setup = null)
 	{
-		$testdox = self::getFilterTestdox($filterName, $filterOptions, $original, $expected, $setup);
-
 		$logger = new Logger;
 
 		$this->assertSame(
 			$expected,
-			Hax::filterValue($original, $filterName, $filterOptions, $logger, $setup),
-			'Failed asserting that ' . $testdox
+			Hax::filterValue($original, $filter, $logger, $setup)
 		);
 
 		$this->assertSame($logs, $logger->get(), "Logs don't match");
@@ -91,75 +69,73 @@ class BuiltInFiltersTest extends Test
 	public function getData()
 	{
 		return array(
-			array('alnum', '', false),
-			array('alnum', 'abcDEF', 'abcDEF'),
-			array('alnum', 'abc_def', false),
-			array('alnum', '0123', '0123'),
-			array('alnum', 'é', false),
-			array('range', '2', 2, array('min' => 2, 'max' => 5)),
-			array('range', '5', 5, array('min' => 2, 'max' => 5)),
-			array('range', '-5', -5, array('min' => -5, 'max' => 5)),
-			array('range', '1', 2, array('min' => 2, 'max' => 5), array(
+			array(new Alnum, '', false),
+			array(new Alnum, 'abcDEF', 'abcDEF'),
+			array(new Alnum, 'abc_def', false),
+			array(new Alnum, '0123', '0123'),
+			array(new Alnum, 'é', false),
+			array(new Range(2, 5), '2', 2),
+			array(new Range(2, 5), '5', 5),
+			array(new Range(-5, 5), '-5', -5),
+			array(new Range(2, 5), '1', 2, array(
 				array('warn', 'Value outside of range, adjusted up to min value', array(
 					'attrValue' => 1, 'min' => 2, 'max' => 5
 				))
 			)),
-			array('range', '10', 5, array('min' => 2, 'max' => 5), array(
+			array(new Range(2, 5), '10', 5, array(
 				array('warn', 'Value outside of range, adjusted down to max value', array(
 					'attrValue' => 10, 'min' => 2, 'max' => 5
 				))
 			)),
-			array('range', '5x', false, array('min' => 2, 'max' => 5)),
-			array('url', 'http://www.älypää.com', 'http://www.xn--lyp-plada.com'),
+			array(new Range(2, 5), '5x', false),
+			array(new Url, 'http://www.älypää.com', 'http://www.xn--lyp-plada.com'),
 			array(
-				'url',
+				new Url,
 				'http://en.wikipedia.org/wiki/Matti_Nykänen', 'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen'
 			),
 			array(
-				'url',
+				new Url,
 				'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nykänen?foo&bar#baz', 'http://user:pass@en.wikipedia.org:80/wiki/Matti_Nyk%C3%A4nen?foo&bar#baz'
 			),
 			array(
-				'url',
+				new Url,
 				'http://älypää.com:älypää.com@älypää.com',
 				'http://%C3%A4lyp%C3%A4%C3%A4.com:%C3%A4lyp%C3%A4%C3%A4.com@xn--lyp-plada.com'
 			),
-			array('url', 'javascript:alert()', false),
-			array('url', 'http://www.example.com', 'http://www.example.com'),
-			array('url', '//www.example.com', '//www.example.com'),
+			array(new Url, 'javascript:alert()', false),
+			array(new Url, 'http://www.example.com', 'http://www.example.com'),
+			array(new Url, '//www.example.com', '//www.example.com'),
 			array(
-				'url',
+				new Url,
 				'//www.example.com',
 				false,
-				array(),
 				array(),
 				function ($configurator)
 				{
 					$configurator->urlConfig->requireScheme();
 				}
 			),
-			array('url', 'HTTP://www.example.com', 'http://www.example.com'),
-			array('url', ' http://www.example.com ', 'http://www.example.com'),
-			array('url', "http://example.com/''", 'http://example.com/%27%27'),
-			array('url', 'http://example.com/""', 'http://example.com/%22%22'),
-			array('url', 'http://example.com/(', 'http://example.com/%28'),
-			array('url', 'http://example.com/)', 'http://example.com/%29'),
-			array('url', 'http://example.com/</script>', 'http://example.com/%3C/script%3E'),
+			array(new Url, 'HTTP://www.example.com', 'http://www.example.com'),
+			array(new Url, ' http://www.example.com ', 'http://www.example.com'),
+			array(new Url, "http://example.com/''", 'http://example.com/%27%27'),
+			array(new Url, 'http://example.com/""', 'http://example.com/%22%22'),
+			array(new Url, 'http://example.com/(', 'http://example.com/%28'),
+			array(new Url, 'http://example.com/)', 'http://example.com/%29'),
+			array(new Url, 'http://example.com/</script>', 'http://example.com/%3C/script%3E'),
 			array(
-				'url',
+				new Url,
 				"http://example.com/\xE2\x80\xA8",
 				'http://example.com/%E2%80%A8'
 			),
 			array(
-				'url',
+				new Url,
 				"http://example.com/\xE2\x80\xA9",
 				'http://example.com/%E2%80%A9'
 			),
 			array(
-				'url',
+				new Url,
 				'ftp://example.com',
 				false,
-				array(),
 				array(
 					array(
 						'err',
@@ -172,10 +148,9 @@ class BuiltInFiltersTest extends Test
 				)
 			),
 			array(
-				'url',
+				new Url,
 				'ftp://example.com',
 				'ftp://example.com',
-				array(),
 				array(),
 				function ($configurator)
 				{
@@ -183,10 +158,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://evil.example.com',
 				false,
-				array(),
 				array(
 					array(
 						'err',
@@ -204,10 +178,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://www.pаypal.com',
 				false,
-				array(),
 				array(
 					array(
 						'err',
@@ -225,10 +198,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://t.co/gksG6xlq',
 				'http://twitter.com/',
-				array(),
 				array(
 					array(
 						'debug',
@@ -246,10 +218,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://bit.ly/go',
 				'http://bit.ly/',
-				array(),
 				array(
 					array(
 						'debug',
@@ -276,10 +247,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://bit.ly/2lkCBm',
 				false,
-				array(),
 				array(
 					array(
 						'err',
@@ -296,10 +266,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://bit.ly/2lkCBm',
 				false,
-				array(),
 				array(
 					array(
 						'debug',
@@ -324,10 +293,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://t.co/foo',
 				false,
-				array(),
 				array(
 					array(
 						'debug',
@@ -370,10 +338,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://redirect.tld',
 				false,
-				array(),
 				array(
 					array(
 						'debug',
@@ -400,10 +367,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'//t.co/gksG6xlq',
 				'http://twitter.com/',
-				array(),
 				array(
 					array(
 						'debug',
@@ -422,10 +388,9 @@ class BuiltInFiltersTest extends Test
 				}
 			),
 			array(
-				'url',
+				new Url,
 				'http://js.tld',
 				false,
-				array(),
 				array(
 					array(
 						'debug',
@@ -442,57 +407,41 @@ class BuiltInFiltersTest extends Test
 					Hax::fakeRedirect('http://js.tld', 'javascript:alert');
 				}
 			),
-			array('identifier', '123abcABC', '123abcABC'),
-			array('identifier', '-_-', '-_-'),
-			array('identifier', 'a b', false),
-			array('color', '#123abc', '#123abc'),
-			array('color', 'red', 'red'),
-			array('color', '#1234567', false),
-			array('color', 'blue()', false),
+			array(new Identifier, '123abcABC', '123abcABC'),
+			array(new Identifier, '-_-', '-_-'),
+			array(new Identifier, 'a b', false),
+			array(new Color, '#123abc', '#123abc'),
+			array(new Color, 'red', 'red'),
+			array(new Color, '#1234567', false),
+			array(new Color, 'blue()', false),
 			array(
-				'simpletext',
+				new Simpletext,
 				'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+.,_ ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+.,_ '
 			),
-			array('simpletext', 'a()b', false),
-			array('simpletext', 'a[]b', false),
-			array('regexp', 'ABC', 'ABC', array('regexp' => '/^[A-Z]+$/D')),
-			array('regexp', 'Abc', false, array('regexp' => '/^[A-Z]+$/D')),
-			array('email', 'example@example.com', 'example@example.com'),
-			array('email', 'example@example.com()', false),
-			array('map', 'dos', 'two', array(
-				'map' => array(
-					array('/^uno$/', 'one'),
-					array('/^dos$/', 'two')
-				)
-			)),
-			array('map', 'three', 'three', array(
-				'map' => array(
-					array('/^uno$/', 'one'),
-					array('/^dos$/', 'two')
-				)
-			)),
-			array('map', 'three', false, array(
-				'map' => array(
-					array('/^uno$/', 'one'),
-					array('/^dos$/', 'two'),
-					array('//',      false)
-				)
-			)),
-			array('ip', '8.8.8.8', '8.8.8.8'),
-			array('ip', 'ff02::1', 'ff02::1'),
-			array('ip', 'localhost', false),
-			array('ipv4', '8.8.8.8', '8.8.8.8'),
-			array('ipv4', 'ff02::1', false),
-			array('ipv4', 'localhost', false),
-			array('ipv6', '8.8.8.8', false),
-			array('ipv6', 'ff02::1', 'ff02::1'),
-			array('ipv6', 'localhost', false),
-			array('ipport', '8.8.8.8:80', '8.8.8.8:80'),
-			array('ipport', '[ff02::1]:80', '[ff02::1]:80'),
-			array('ipport', 'localhost:80', false),
-			array('ipport', '[localhost]:80', false),
-			array('ipport', '8.8.8.8', false),
-			array('ipport', 'ff02::1', false),
+			array(new Simpletext, 'a()b', false),
+			array(new Simpletext, 'a[]b', false),
+			array(new Regexp('/^[A-Z]+$/D'), 'ABC', 'ABC'),
+			array(new Regexp('/^[A-Z]+$/D'), 'Abc', false),
+			array(new Email, 'example@example.com', 'example@example.com'),
+			array(new Email, 'example@example.com()', false),
+			array(new Map(array('uno' => 'one', 'dos' => 'two')), 'dos', 'two'),
+			array(new Map(array('uno' => 'one', 'dos' => 'two')), 'three', 'three'),
+			array(new Map(array('uno' => 'one', 'dos' => 'two'), true, true), 'three', false),
+			array(new Ip, '8.8.8.8', '8.8.8.8'),
+			array(new Ip, 'ff02::1', 'ff02::1'),
+			array(new Ip, 'localhost', false),
+			array(new Ipv4, '8.8.8.8', '8.8.8.8'),
+			array(new Ipv4, 'ff02::1', false),
+			array(new Ipv4, 'localhost', false),
+			array(new Ipv6, '8.8.8.8', false),
+			array(new Ipv6, 'ff02::1', 'ff02::1'),
+			array(new Ipv6, 'localhost', false),
+			array(new Ipport, '8.8.8.8:80', '8.8.8.8:80'),
+			array(new Ipport, '[ff02::1]:80', '[ff02::1]:80'),
+			array(new Ipport, 'localhost:80', false),
+			array(new Ipport, '[localhost]:80', false),
+			array(new Ipport, '8.8.8.8', false),
+			array(new Ipport, 'ff02::1', false),
 		);
 	}
 
@@ -524,13 +473,13 @@ class Hax
 
 	static protected $redirectTo = array();
 
-	public static function filterValue($attrValue, $filterName, array $filterOptions, Logger $logger, $setup = null)
+	public static function filterValue($attrValue, AttributeFilter $filter, Logger $logger, $setup = null)
 	{
 		$configurator = new Configurator;
 		$configurator
 			->tags->add('FOO')
 			->attributes->add('foo')
-			->filterChain->append('#' . $filterName, $filterOptions);
+			->filterChain->append($filter);
 
 		if (isset($setup))
 		{

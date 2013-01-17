@@ -53,7 +53,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	{
 		$this->collection = new BBCodeCollection;
 
-		$this->repositories = new RepositoryCollection;
+		$this->repositories = new RepositoryCollection($this->configurator);
 		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
 
@@ -79,7 +79,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				</bbcode>
 			</repository>'
 		);
-		$repository = new Repository($dom);
+		$repository = new Repository($dom, $this->configurator);
 
 		return $this->addFromRepository('CUSTOM', $repository);
 	}

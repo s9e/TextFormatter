@@ -10,8 +10,8 @@ namespace s9e\TextFormatter\Configurator\Items;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
-use s9e\TextFormatter\Configurator\Collections\FilterChain;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
 use s9e\TextFormatter\Configurator\Collections\TemplateCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
@@ -32,7 +32,7 @@ class Tag implements ConfigProvider
 	protected $attributePreprocessors;
 
 	/**
-	* @var FilterChain
+	* @var TagFilterChain This tag's filter chain
 	*/
 	protected $filterChain;
 
@@ -63,13 +63,24 @@ class Tag implements ConfigProvider
 	{
 		$this->attributes             = new AttributeCollection;
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
-		$this->filterChain            = new FilterChain(array('tag' => null));
+		$this->filterChain            = new TagFilterChain;
 		$this->rules                  = new Ruleset;
 		$this->templates              = new TemplateCollection($this);
 
 		// Start the filterChain with the default processing
-		$this->filterChain->append('#executeAttributePreprocessors');
-		$this->filterChain->append('#filterAttributes');
+		$filter = $this->filterChain->append(
+			's9e\\TextFormatter\\Parser::executeAttributePreprocessors'
+		);
+		$filter->addParameterByName('tag');
+		$filter->addParameterByName('tagConfig');
+
+		$filter = $this->filterChain->append(
+			's9e\\TextFormatter\\Parser::filterAttributes'
+		);
+		$filter->addParameterByName('tag');
+		$filter->addParameterByName('tagConfig');
+		$filter->addParameterByName('registeredVars');
+		$filter->addParameterByName('logger');
 
 		if (isset($options))
 		{
@@ -201,12 +212,19 @@ class Tag implements ConfigProvider
 		// filterChain
 		if (!count($this->attributePreprocessors))
 		{
+			$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
+
 			// We operate on a copy of the filterChain, without modifying the original
 			$filterChain = clone $vars['filterChain'];
 
-			while ($filterChain->contains('#executeAttributePreprocessors'))
+			// Process the chain in reverse order so that we don't skip indices
+			$i = count($filterChain);
+			while (--$i >= 0)
 			{
-				$filterChain->delete($filterChain->indexOf('#executeAttributePreprocessors'));
+				if ($filterChain[$i]->getCallback() === $callback)
+				{
+					unset($filterChain[$i]);
+				}
 			}
 
 			$vars['filterChain'] = $filterChain;

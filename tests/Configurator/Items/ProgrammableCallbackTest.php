@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
-use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Tests\Test;
@@ -127,49 +126,6 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox fromArray() creates an instance from an array
-	*/
-	public function testFromArray()
-	{
-		$js = new Code('function(){return 1;}');
-
-		$pc1 = ProgrammableCallback::fromArray(
-			array(
-				'callback' => 'mt_rand',
-				'js'       => $js,
-				'params'   => array('min' => null, 55),
-				'vars'     => array('foo' => 'bar')
-			)
-		);
-
-		$pc2 = new ProgrammableCallback('mt_rand');
-		$pc2->addParameterByName('min');
-		$pc2->addParameterByValue(55);
-		$pc2->setJS($js);
-		$pc2->setVars(array('foo' => 'bar'));
-
-		$this->assertEquals($pc2, $pc1);
-	}
-
-	/**
-	* @testdox fromArray() accepts the name of a built-in filter as callback
-	*/
-	public function testFromArrayBuiltInFilter()
-	{
-		$pc1 = ProgrammableCallback::fromArray(
-			array(
-				'callback' => '#range',
-				'vars'     => array('min' => 3, 'max' => 5)
-			)
-		);
-
-		$pc2 = new ProgrammableCallback(new CallbackPlaceholder('#range'));
-		$pc2->setVars(array('min' => 3, 'max' => 5));
-
-		$this->assertEquals($pc2, $pc1);
-	}
-
-	/**
 	* @testdox asConfig() returns an array containing the callback
 	*/
 	public function testAsConfig()
@@ -201,33 +157,6 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox If the callback is an instance of CallbackPlaceholder, asConfig() calls the callback's asConfig() and returns its value as callback
-	*/
-	public function testAsConfigCallbackPlaceholder()
-	{
-		$pc     = new ProgrammableCallback(new CallbackPlaceholder('#foo'));
-		$config = $pc->asConfig();
-
-		$this->assertArrayHasKey('callback', $config);
-		$this->assertSame('#foo', $config['callback']);
-	}
-
-	/**
-	* @testdox asConfig() returns the vars set with setVars() if the callback is an instance of CallbackPlaceholder
-	*/
-	public function testAsConfigCallbackPlaceholderVars()
-	{
-		$pc   = new ProgrammableCallback(new CallbackPlaceholder('#foo'));
-		$vars = array('foo' => 'bar');
-		$pc->setVars($vars);
-
-		$config = $pc->asConfig();
-
-		$this->assertArrayHasKey('vars', $config);
-		$this->assertSame($vars, $config['vars']);
-	}
-
-	/**
 	* @testdox asConfig() returns the callback's JavaScript as a variant if available
 	*/
 	public function testAsConfigJavaScript()
@@ -245,29 +174,6 @@ class ProgrammableCallbackTest extends Test
 			$config['js']
 		);
 		$this->assertSame($js, $config['js']->get('JS'));
-	}
-
-	/**
-	* @testdox asConfig() creates a JavaScript variant for values named "regexp"
-	*/
-	public function testAsConfigVarsRegexp()
-	{
-		$pc = new ProgrammableCallback(new CallbackPlaceholder('#regexp'));
-		$pc->addParameterByName('attrValue');
-		$pc->addParameterByName('regexp');
-		$pc->setVars(array('regexp' => '/foo/'));
-
-		$config = $pc->asConfig();
-
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			end($config['params'])
-		);
-
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
-			end($config['params'])->get('JS')
-		);
 	}
 }
 

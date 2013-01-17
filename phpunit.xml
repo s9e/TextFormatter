@@ -35,14 +35,15 @@
 
 			<file>tests/ConfiguratorTest.php</file>
 			<file>tests/Configurator/Collections/AttributeCollectionTest.php</file>
+			<file>tests/Configurator/Collections/AttributeFilterChainTest.php</file>
+			<file>tests/Configurator/Collections/AttributeFilterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/AttributeListTest.php</file>
 			<file>tests/Configurator/Collections/AttributePreprocessorCollectionTest.php</file>
-			<file>tests/Configurator/Collections/FilterChainTest.php</file>
-			<file>tests/Configurator/Collections/FilterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/PluginCollectionTest.php</file>
 			<file>tests/Configurator/Collections/RulesetTest.php</file>
 			<file>tests/Configurator/Collections/StylesheetParameterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagCollectionTest.php</file>
+			<file>tests/Configurator/Collections/TagFilterChainTest.php</file>
 			<file>tests/Configurator/Collections/TemplateCollectionTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
@@ -57,10 +58,30 @@
 			<file>tests/Configurator/Helpers/TemplateCheckerTest.php</file>
 			<file>tests/Configurator/Helpers/TemplateHelperTest.php</file>
 			<file>tests/Configurator/Items/AttributeTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilterTest.php</file>
 			<file>tests/Configurator/Items/AttributePreprocessorTest.php</file>
 			<file>tests/Configurator/Items/CallbackPlaceholderTest.php</file>
 			<file>tests/Configurator/Items/ProgrammableCallbackTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/AlnumTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/ChoiceTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/ColorTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/EmailTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/FloatTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/IdentifierTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/IntTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/IpTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/IpportTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/Ipv4Test.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/Ipv6Test.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/MapTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/NumberTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/RangeTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/RegexpTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/SimpletextTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/UintTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/UrlTest.php</file>
 			<file>tests/Configurator/Items/TagTest.php</file>
+			<file>tests/Configurator/Items/TagFilterTest.php</file>
 			<file>tests/Configurator/Items/TemplateTest.php</file>
 			<file>tests/Configurator/Items/VariantTest.php</file>
 			<file>tests/Configurator/StylesheetTest.php</file>

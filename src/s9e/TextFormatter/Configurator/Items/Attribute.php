@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Collections\FilterChain;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterChain;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
@@ -24,7 +24,7 @@ class Attribute implements ConfigProvider
 	protected $defaultValue;
 
 	/**
-	* @var FilterChain This attribute's filter chain
+	* @var AttributeFilterChain This attribute's filter chain
 	*/
 	protected $filterChain;
 
@@ -45,7 +45,7 @@ class Attribute implements ConfigProvider
 	*/
 	public function __construct(array $options = null)
 	{
-		$this->filterChain = new FilterChain(array('attrValue' => null));
+		$this->filterChain = new AttributeFilterChain;
 
 		if (isset($options))
 		{

@@ -48,8 +48,9 @@ class Configurator extends ConfiguratorBase
 		// Create a tag
 		$tag = $this->configurator->tags->add($this->tagName);
 
-		// Add an attribute using the #email filter
-		$tag->attributes->add($this->attrName)->filterChain->append('#email');
+		// Add an attribute using the default email filter
+		$filter = $this->configurator->attributeFilters->get('#email');
+		$tag->attributes->add($this->attrName)->filterChain->append($filter);
 
 		// Set the default template
 		$tag->defaultTemplate

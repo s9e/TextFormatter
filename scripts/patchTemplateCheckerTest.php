@@ -52,7 +52,7 @@ $test = new s9e\TextFormatter\Tests\Configurator\Helpers\TemplateCheckerTest;
 $done = array();
 
 $php = '';
-foreach ($test->getUnsafeTemplatesTests() as $case)
+foreach ($test->getUnsafeTemplatesTests() as $k => $case)
 {
 	$template     = $case[0];
 	$exceptionMsg = (isset($case[1])) ? $case[1] : null;
@@ -75,18 +75,20 @@ foreach ($test->getUnsafeTemplatesTests() as $case)
 			$filter = $attribute['filterChain'][count($attribute['filterChain']) - 1];
 			$attributeInfo = " if attribute '$attrName' has filter ";
 
-			if (is_string($filter))
+			$className = get_class($filter);
+			if ($className === 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilter')
 			{
-				$attributeInfo .= "'" . $filter . "'";
+				$attributeInfo .= "'" . $filter->getCallback() . "'";
 			}
 			else
 			{
-				$attributeInfo .= "'" . $filter->getCallback()->asConfig() . "'";
+				$attributeInfo .= "'#" . strtolower(preg_replace('#.*\\\\#', '', $className)) . "'";
 			}
 
-			if (isset($attribute['regexp']))
+			if ($filter instanceof s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp)
 			{
-				$attributeInfo .= ' with regexp ' . $attribute['regexp'];
+				$vars = $filter->getVars();
+				$attributeInfo .= ' with regexp ' . var_export($vars['regexp'], true);
 			}
 		}
 	}
@@ -110,20 +112,8 @@ foreach ($test->getUnsafeTemplatesTests() as $case)
 	      . $attributeInfo
 	      . ': ' . $template . "\n\t*/"
 	      . "\n\tpublic function testCheckUnsafe" . $hash . "()"
-	      . "\n\t{\n\t\t\$this->checkUnsafe("
-	      . "\n\t\t\t" . format($case[0]);
-
-	if (isset($case[1]) || isset($case[2]))
-	{
-		$php .= ",\n\t\t\t" . format($case[1]);
-
-		if (isset($case[2]))
-		{
-			$php .= ",\n\t\t\t" . format($case[2]);
-		}
-	}
-
-	$php .= "\n\t\t);\n\t}\n";
+	      . "\n\t{\n\t\t\$this->runCheckUnsafeCase($k);"
+	      . "\n\t}\n";
 }
 
 $filepath = __DIR__ . '/../tests/Configurator/Helpers/TemplateCheckerTest.php';

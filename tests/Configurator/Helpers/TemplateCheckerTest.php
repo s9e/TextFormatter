@@ -2,12 +2,14 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
-use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
-use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Email;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Number;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Helpers\TemplateChecker;
 use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Helpers\TemplateChecker
@@ -75,31 +77,31 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox Safe if attribute 'email' has filter '#email': <a href="mailto:{@email}"/>
+	* @testdox Safe if attribute 'email' has filter #email: <a href="mailto:{@email}"/>
 	*/
 	public function testMailto()
 	{
 		$this->checkUnsafe(
 			'<a href="mailto:{@email}"/>',
 			NULL,
-			array('attributes' => array('email' => array('filterChain' => array('#email'))))
+			array('attributes' => array('email' => array('filterChain' => array(new Email))))
 		);
 	}
 
 	/**
-	* @testdox Safe if attribute 'email' has filter '#email': <a href="mailto:{@email}?subject=foo"/>
+	* @testdox Safe if attribute 'email' has filter #email: <a href="mailto:{@email}?subject=foo"/>
 	*/
 	public function testMailtoSubject()
 	{
 		$this->checkUnsafe(
 			'<a href="mailto:{@email}?subject=foo"/>',
 			NULL,
-			array('attributes' => array('email' => array('filterChain' => array('#email'))))
+			array('attributes' => array('email' => array('filterChain' => array(new Email))))
 		);
 	}
 
 	/**
-	* @testdox Unsafe even if attribute 'email' has filter '#email': <a href="http://{@email}"/>
+	* @testdox Unsafe even if attribute 'email' has filter #email: <a href="http://{@email}"/>
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Attribute 'email' is not properly filtered to be used in URL
 	*/
@@ -108,7 +110,7 @@ class TemplateCheckerTest extends Test
 		$this->checkUnsafe(
 			'<a href="http://{@email}"/>',
 			NULL,
-			array('attributes' => array('email' => array('filterChain' => array('#email'))))
+			array('attributes' => array('email' => array('filterChain' => array(new Email))))
 		);
 	}
 
@@ -118,10 +120,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFFEA6CBF()
 	{
-		$this->checkUnsafe(
-			'<embed src="{@url}"/>',
-			"The template contains a 'embed' element with a non-fixed URL"
-		);
+		$this->runCheckUnsafeCase(0);
 	}
 
 	/**
@@ -129,10 +128,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe85F4F19A()
 	{
-		$this->checkUnsafe(
-			'<embed src="{@url}" allowscriptaccess="always"/>',
-			"The template contains a 'embed' element with a non-fixed URL"
-		);
+		$this->runCheckUnsafeCase(1);
 	}
 
 	/**
@@ -140,22 +136,15 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe50932DE0()
 	{
-		$this->checkUnsafe(
-			'<embed src="{@url}" allowscriptaccess="sameDomain"/>',
-			"The template contains a 'embed' element with a non-fixed URL"
-		);
+		$this->runCheckUnsafeCase(2);
 	}
 
 	/**
 	* @testdox Safe if attribute 'url' has filter '#url': <embed src="{@url}" allowscriptaccess="never"/>
 	*/
-	public function testCheckUnsafe173B922C()
+	public function testCheckUnsafe7704636D()
 	{
-		$this->checkUnsafe(
-			'<embed src="{@url}" allowscriptaccess="never"/>',
-			NULL,
-			array('attributes' => array('url' => array('filterChain' => array('#url'))))
-		);
+		$this->runCheckUnsafeCase(3);
 	}
 
 	/**
@@ -163,10 +152,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeA56D0DBC()
 	{
-		$this->checkUnsafe(
-			'<iframe src="{@url}"/>',
-			"The template contains a 'iframe' element with a non-fixed URL"
-		);
+		$this->runCheckUnsafeCase(4);
 	}
 
 	/**
@@ -174,22 +160,15 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe200651EB()
 	{
-		$this->checkUnsafe(
-			'<object data="{@url}"/>',
-			"The template contains a 'object' element with a non-fixed URL"
-		);
+		$this->runCheckUnsafeCase(5);
 	}
 
 	/**
 	* @testdox Safe if attribute 'url' has filter '#url': <object data="{@url}"><param name="allowscriptaccess" value="never"/></object>
 	*/
-	public function testCheckUnsafeF7367941()
+	public function testCheckUnsafe25E1DCEC()
 	{
-		$this->checkUnsafe(
-			'<object data="{@url}"><param name="allowscriptaccess" value="never"/></object>',
-			NULL,
-			array('attributes' => array('url' => array('filterChain' => array('#url'))))
-		);
+		$this->runCheckUnsafeCase(6);
 	}
 
 	/**
@@ -197,22 +176,15 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFDDAD6DB()
 	{
-		$this->checkUnsafe(
-			'<script src="{@url}"/>',
-			"The template contains a 'script' element with a non-fixed URL"
-		);
+		$this->runCheckUnsafeCase(7);
 	}
 
 	/**
 	* @testdox Not safe if attribute 'src' has filter '#url': <script src="{@url}"/>
 	*/
-	public function testCheckUnsafeD8BB6D82()
+	public function testCheckUnsafe5E3B5499()
 	{
-		$this->checkUnsafe(
-			'<script src="{@url}"/>',
-			"The template contains a 'script' element with a non-fixed URL",
-			array('attributes' => array('src' => array('filterChain' => array('#url'))))
-		);
+		$this->runCheckUnsafeCase(8);
 	}
 
 	/**
@@ -220,34 +192,23 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe4B4CB598()
 	{
-		$this->checkUnsafe(
-			'<script src="http://{@foo}"/>',
-			"The template contains a 'script' element with a non-fixed URL"
-		);
+		$this->runCheckUnsafeCase(9);
 	}
 
 	/**
 	* @testdox Safe if attribute 'id' has filter '#number': <script src="https://gist.github.com/{@id}.js"/>
 	*/
-	public function testCheckUnsafe6C30CE54()
+	public function testCheckUnsafe2C8EEEB9()
 	{
-		$this->checkUnsafe(
-			'<script src="https://gist.github.com/{@id}.js"/>',
-			NULL,
-			array('attributes' => array('id' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(10);
 	}
 
 	/**
 	* @testdox Safe if attribute 'id' has filter '#number': <script src="//gist.github.com/{@id}.js"/>
 	*/
-	public function testCheckUnsafe966BB27F()
+	public function testCheckUnsafe6272AD84()
 	{
-		$this->checkUnsafe(
-			'<script src="//gist.github.com/{@id}.js"/>',
-			NULL,
-			array('attributes' => array('id' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(11);
 	}
 
 	/**
@@ -255,9 +216,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe48B39041()
 	{
-		$this->checkUnsafe(
-			'<script src="foo.js"/>'
-		);
+		$this->runCheckUnsafeCase(12);
 	}
 
 	/**
@@ -265,10 +224,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe22C6B53D()
 	{
-		$this->checkUnsafe(
-			'<SCRIPT src="{@url}"/>',
-			"The template contains a 'script' element with a non-fixed URL attribute 'src'"
-		);
+		$this->runCheckUnsafeCase(13);
 	}
 
 	/**
@@ -276,10 +232,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe4C83A1C2()
 	{
-		$this->checkUnsafe(
-			'<script SRC="{@url}"/>',
-			"The template contains a 'script' element with a non-fixed URL attribute 'src'"
-		);
+		$this->runCheckUnsafeCase(14);
 	}
 
 	/**
@@ -287,10 +240,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe959E6486()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>',
-			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-		);
+		$this->runCheckUnsafeCase(15);
 	}
 
 	/**
@@ -298,10 +248,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeB8B19B4E()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:attribute name="SRC"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>',
-			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-		);
+		$this->runCheckUnsafeCase(16);
 	}
 
 	/**
@@ -309,9 +256,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9C1DD25F()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:attribute name="src">http://example.org/legit.js<?dont-optimize?></xsl:attribute></script>'
-		);
+		$this->runCheckUnsafeCase(17);
 	}
 
 	/**
@@ -319,9 +264,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF8806A69()
 	{
-		$this->checkUnsafe(
-			'<script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/><?dont-optimize?></xsl:attribute></script>'
-		);
+		$this->runCheckUnsafeCase(18);
 	}
 
 	/**
@@ -329,10 +272,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe1A457E75()
 	{
-		$this->checkUnsafe(
-			'<script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/><?dont-optimize?></xsl:attribute></script>',
-			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-		);
+		$this->runCheckUnsafeCase(19);
 	}
 
 	/**
@@ -340,10 +280,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF6856A91()
 	{
-		$this->checkUnsafe(
-			'<xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>',
-			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-		);
+		$this->runCheckUnsafeCase(20);
 	}
 
 	/**
@@ -351,10 +288,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5C2DA78D()
 	{
-		$this->checkUnsafe(
-			'<xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>',
-			"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-		);
+		$this->runCheckUnsafeCase(21);
 	}
 
 	/**
@@ -362,10 +296,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe75997FF6()
 	{
-		$this->checkUnsafe(
-			'<object><param name="movie" value="{@url}"/></object>',
-			"The template contains a 'param' element with a non-fixed URL attribute 'value'"
-		);
+		$this->runCheckUnsafeCase(22);
 	}
 
 	/**
@@ -373,22 +304,15 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe87C8D460()
 	{
-		$this->checkUnsafe(
-			'<OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>',
-			"The template contains a 'param' element with a non-fixed URL attribute 'value'"
-		);
+		$this->runCheckUnsafeCase(23);
 	}
 
 	/**
 	* @testdox Safe if attribute 'url' has filter '#url': <object><param name="movie" value="{@url}"/><param name="allowscriptaccess" value="never"/></object>
 	*/
-	public function testCheckUnsafe7AB5F968()
+	public function testCheckUnsafe65D5F45A()
 	{
-		$this->checkUnsafe(
-			'<object><param name="movie" value="{@url}"/><param name="allowscriptaccess" value="never"/></object>',
-			NULL,
-			array('attributes' => array('url' => array('filterChain' => array('#url'))))
-		);
+		$this->runCheckUnsafeCase(24);
 	}
 
 	/**
@@ -396,10 +320,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCCAC3746()
 	{
-		$this->checkUnsafe(
-			'<b disable-output-escaping="1"/>',
-			"The template contains a 'disable-output-escaping' attribute"
-		);
+		$this->runCheckUnsafeCase(25);
 	}
 
 	/**
@@ -407,10 +328,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe60753852()
 	{
-		$this->checkUnsafe(
-			'<xsl:copy/>',
-			"Cannot assess the safety of an 'xsl:copy' element"
-		);
+		$this->runCheckUnsafeCase(26);
 	}
 
 	/**
@@ -418,10 +336,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC19FCB6D()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:copy-of select="@onclick"/></b>',
-			"Undefined attribute 'onclick'"
-		);
+		$this->runCheckUnsafeCase(27);
 	}
 
 	/**
@@ -429,10 +344,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE26527B5()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:copy-of select=" @ onclick "/></b>',
-			"Undefined attribute 'onclick'"
-		);
+		$this->runCheckUnsafeCase(28);
 	}
 
 	/**
@@ -440,9 +352,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe990F4294()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:copy-of select="@title"/></b>'
-		);
+		$this->runCheckUnsafeCase(29);
 	}
 
 	/**
@@ -450,9 +360,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe358E72E5()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:copy-of select=" @ title "/></b>'
-		);
+		$this->runCheckUnsafeCase(30);
 	}
 
 	/**
@@ -460,23 +368,15 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE6B9D02C()
 	{
-		$this->checkUnsafe(
-			'<a><xsl:copy-of select="@href"/></a>',
-			"Attribute 'href' is not properly filtered to be used in URL",
-			array('attributes' => array('href' => array()))
-		);
+		$this->runCheckUnsafeCase(31);
 	}
 
 	/**
 	* @testdox Safe if attribute 'href' has filter '#url': <a><xsl:copy-of select="@href"/></a>
 	*/
-	public function testCheckUnsafeFE9871D1()
+	public function testCheckUnsafe8FFC2B06()
 	{
-		$this->checkUnsafe(
-			'<a><xsl:copy-of select="@href"/></a>',
-			NULL,
-			array('attributes' => array('href' => array('filterChain' => array('#url'))))
-		);
+		$this->runCheckUnsafeCase(32);
 	}
 
 	/**
@@ -484,10 +384,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC8E8CC43()
 	{
-		$this->checkUnsafe(
-			'<xsl:copy-of select="script"/>',
-			"Cannot assess 'xsl:copy-of' select expression 'script' to be safe"
-		);
+		$this->runCheckUnsafeCase(33);
 	}
 
 	/**
@@ -495,10 +392,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe10D2139E()
 	{
-		$this->checkUnsafe(
-			'<xsl:copy-of select=" script "/>',
-			"Cannot assess 'xsl:copy-of' select expression 'script' to be safe"
-		);
+		$this->runCheckUnsafeCase(34);
 	}
 
 	/**
@@ -506,10 +400,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe1BDDD975()
 	{
-		$this->checkUnsafe(
-			'<xsl:copy-of select="parent::*"/>',
-			"Cannot assess 'xsl:copy-of' select expression 'parent::*' to be safe"
-		);
+		$this->runCheckUnsafeCase(35);
 	}
 
 	/**
@@ -517,10 +408,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe87044075()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:apply-templates/></script>',
-			"A 'script' element lets unfiltered data through"
-		);
+		$this->runCheckUnsafeCase(36);
 	}
 
 	/**
@@ -528,10 +416,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeC968EED0()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:apply-templates select="st"/></script>',
-			"Cannot assess the safety of 'xsl:apply-templates' select expression 'st'"
-		);
+		$this->runCheckUnsafeCase(37);
 	}
 
 	/**
@@ -539,10 +424,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCC87BEB3()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:if test="1"><xsl:apply-templates/></xsl:if></script>',
-			"A 'script' element lets unfiltered data through"
-		);
+		$this->runCheckUnsafeCase(38);
 	}
 
 	/**
@@ -550,10 +432,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe5D562F28()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="st"/></script>',
-			"Cannot assess the safety of XPath expression 'st'"
-		);
+		$this->runCheckUnsafeCase(39);
 	}
 
 	/**
@@ -561,10 +440,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeAA242A38()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			"Undefined attribute 'foo'"
-		);
+		$this->runCheckUnsafeCase(40);
 	}
 
 	/**
@@ -572,11 +448,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeBD7323B9()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			"Attribute 'foo' is not properly filtered to be used in JS",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(41);
 	}
 
 	/**
@@ -584,11 +456,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe648A7C72()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></script>',
-			"Attribute 'foo' is not properly filtered to be used in JS",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(42);
 	}
 
 	/**
@@ -596,11 +464,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeD7E78277()
 	{
-		$this->checkUnsafe(
-			'<xsl:element name="script"><xsl:value-of select="@foo"/></xsl:element>',
-			"Attribute 'foo' is not properly filtered to be used in JS",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(43);
 	}
 
 	/**
@@ -608,155 +472,87 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF7D14089()
 	{
-		$this->checkUnsafe(
-			'<xsl:element name="SCRIPT"><xsl:value-of select="@foo"/></xsl:element>',
-			"Attribute 'foo' is not properly filtered to be used in JS",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(44);
 	}
 
 	/**
-	* @testdox Not safe if attribute 'foo' has filter 'json_encode': <script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>
+	* @testdox Not safe if attribute 'foo' has filter '#number': <script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>
 	*/
-	public function testCheckUnsafeA9307816()
+	public function testCheckUnsafe2F2F80C9()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>',
-			"Cannot evaluate context node due to 'xsl:for-each'",
-			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter 'json_encode': <script><xsl:value-of select="@foo"/></script>
-	*/
-	public function testCheckUnsafe6638EC01()
-	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
-		);
+		$this->runCheckUnsafeCase(45);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <script><xsl:value-of select="@foo"/></script>
 	*/
-	public function testCheckUnsafe80E31E96()
+	public function testCheckUnsafe7012AF9D()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
+		$this->runCheckUnsafeCase(46);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'strtotime': <script><xsl:value-of select="@foo"/></script>
 	*/
-	public function testCheckUnsafe3684D9D3()
+	public function testCheckUnsafe22244911()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
-		);
+		$this->runCheckUnsafeCase(47);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <script><xsl:value-of select="@foo"/></script>
 	*/
-	public function testCheckUnsafe3E82294D()
+	public function testCheckUnsafe3E385049()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <script><xsl:value-of select="@foo"/></script>
-	*/
-	public function testCheckUnsafe66FA78F6()
-	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <script><xsl:value-of select="@foo"/></script>
-	*/
-	public function testCheckUnsafeBEC2826B()
-	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <script><xsl:value-of select="@foo"/></script>
-	*/
-	public function testCheckUnsafe58430C01()
-	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(48);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <script><xsl:value-of select="@foo"/></script>
 	*/
-	public function testCheckUnsafe196B1007()
+	public function testCheckUnsafe4634FF28()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(49);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafeB3E7F29F()
+	{
+		$this->runCheckUnsafeCase(50);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#range': <script><xsl:value-of select="@foo"/></script>
 	*/
-	public function testCheckUnsafeF128A882()
+	public function testCheckUnsafe302CE09C()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(51);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <script><xsl:value-of select="@foo"/></script>
 	*/
-	public function testCheckUnsafe585E44A6()
+	public function testCheckUnsafeF8670CD8()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(52);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#simpletext': <script><xsl:value-of select="@foo"/></script>
+	* @testdox Safe if attribute 'foo' has filter '#uint': <script><xsl:value-of select="@foo"/></script>
 	*/
-	public function testCheckUnsafe61A72488()
+	public function testCheckUnsafeB213DF48()
 	{
-		$this->checkUnsafe(
-			'<script><xsl:value-of select="@foo"/></script>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
-		);
+		$this->runCheckUnsafeCase(53);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <script><xsl:value-of select="@foo"/></script>
+	*/
+	public function testCheckUnsafe9A103B25()
+	{
+		$this->runCheckUnsafeCase(54);
 	}
 
 	/**
@@ -764,10 +560,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9332F4DA()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:apply-templates/></style>',
-			"A 'style' element lets unfiltered data through"
-		);
+		$this->runCheckUnsafeCase(55);
 	}
 
 	/**
@@ -775,10 +568,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeE7A11344()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:apply-templates select="st"/></style>',
-			"Cannot assess the safety of 'xsl:apply-templates' select expression 'st'"
-		);
+		$this->runCheckUnsafeCase(56);
 	}
 
 	/**
@@ -786,10 +576,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe0F7C3E8F()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:if test="1"><xsl:apply-templates/></xsl:if></style>',
-			"A 'style' element lets unfiltered data through"
-		);
+		$this->runCheckUnsafeCase(57);
 	}
 
 	/**
@@ -797,10 +584,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF4114812()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="st"/></style>',
-			"Cannot assess the safety of XPath expression 'st'"
-		);
+		$this->runCheckUnsafeCase(58);
 	}
 
 	/**
@@ -808,10 +592,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFD7FAE5C()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			"Undefined attribute 'foo'"
-		);
+		$this->runCheckUnsafeCase(59);
 	}
 
 	/**
@@ -819,11 +600,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2BEA39BA()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			"Attribute 'foo' is not properly filtered to be used in CSS",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(60);
 	}
 
 	/**
@@ -831,11 +608,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe489BADA7()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></style>',
-			"Attribute 'foo' is not properly filtered to be used in CSS",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(61);
 	}
 
 	/**
@@ -843,11 +616,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFC0D6B8F()
 	{
-		$this->checkUnsafe(
-			'<xsl:element name="style"><xsl:value-of select="@foo"/></xsl:element>',
-			"Attribute 'foo' is not properly filtered to be used in CSS",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(62);
 	}
 
 	/**
@@ -855,119 +624,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe9092B290()
 	{
-		$this->checkUnsafe(
-			'<xsl:element name="STYLE"><xsl:value-of select="@foo"/></xsl:element>',
-			"Attribute 'foo' is not properly filtered to be used in CSS",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(63);
 	}
 
 	/**
-	* @testdox Not safe if attribute 'foo' has filter '#url': <style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>
+	* @testdox Not safe if attribute 'foo' has filter '#number': <style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>
 	*/
-	public function testCheckUnsafeD5AD8427()
+	public function testCheckUnsafe88003D4F()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>',
-			"Cannot evaluate context node due to 'xsl:for-each'",
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <style><xsl:value-of select="@foo"/></style>
-	*/
-	public function testCheckUnsafeA85C9010()
-	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <style><xsl:value-of select="@foo"/></style>
-	*/
-	public function testCheckUnsafe70646A8D()
-	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <style><xsl:value-of select="@foo"/></style>
-	*/
-	public function testCheckUnsafe11E4EDA4()
-	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#float': <style><xsl:value-of select="@foo"/></style>
-	*/
-	public function testCheckUnsafeBF9EE081()
-	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(64);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#color': <style><xsl:value-of select="@foo"/></style>
 	*/
-	public function testCheckUnsafe5B459886()
+	public function testCheckUnsafe35EAE475()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#color'))))
-		);
+		$this->runCheckUnsafeCase(65);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#float': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe7AE86C7A()
+	{
+		$this->runCheckUnsafeCase(66);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafeE54C9898()
+	{
+		$this->runCheckUnsafeCase(67);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#range': <style><xsl:value-of select="@foo"/></style>
 	*/
-	public function testCheckUnsafe57DD5804()
+	public function testCheckUnsafe91C3EC9A()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(68);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <style><xsl:value-of select="@foo"/></style>
 	*/
-	public function testCheckUnsafe5C239743()
+	public function testCheckUnsafe4256B11C()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(69);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#simpletext': <style><xsl:value-of select="@foo"/></style>
 	*/
-	public function testCheckUnsafe8D374457()
+	public function testCheckUnsafe2441AE99()
 	{
-		$this->checkUnsafe(
-			'<style><xsl:value-of select="@foo"/></style>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
-		);
+		$this->runCheckUnsafeCase(70);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe694A30D6()
+	{
+		$this->runCheckUnsafeCase(71);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <style><xsl:value-of select="@foo"/></style>
+	*/
+	public function testCheckUnsafe120F04AE()
+	{
+		$this->runCheckUnsafeCase(72);
 	}
 
 	/**
@@ -975,10 +704,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe95E78AB4()
 	{
-		$this->checkUnsafe(
-			'<xsl:element name="{FOO}"><xsl:apply-templates/></xsl:element>',
-			"Cannot assess 'xsl:element' name '{FOO}'"
-		);
+		$this->runCheckUnsafeCase(73);
 	}
 
 	/**
@@ -986,10 +712,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCC20E4F6()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'onclick' attribute lets unfiltered data through"
-		);
+		$this->runCheckUnsafeCase(74);
 	}
 
 	/**
@@ -997,10 +720,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe31C90A06()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'ONCLICK' attribute lets unfiltered data through"
-		);
+		$this->runCheckUnsafeCase(75);
 	}
 
 	/**
@@ -1008,10 +728,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe6519C7B2()
 	{
-		$this->checkUnsafe(
-			'<b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'onclick' attribute lets unfiltered data through"
-		);
+		$this->runCheckUnsafeCase(76);
 	}
 
 	/**
@@ -1019,10 +736,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF4D2CDD1()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>',
-			"Undefined attribute 'foo'"
-		);
+		$this->runCheckUnsafeCase(77);
 	}
 
 	/**
@@ -1030,10 +744,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCF6CEF14()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>',
-			"Undefined attribute 'foo'"
-		);
+		$this->runCheckUnsafeCase(78);
 	}
 
 	/**
@@ -1041,10 +752,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe7A1C2C9E()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
+		$this->runCheckUnsafeCase(79);
 	}
 
 	/**
@@ -1052,10 +760,7 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe3DB3E070()
 	{
-		$this->checkUnsafe(
-			'<b ONCLICK="{@foo}"/>',
-			"Undefined attribute 'foo'"
-		);
+		$this->runCheckUnsafeCase(80);
 	}
 
 	/**
@@ -1063,107 +768,71 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeCFE3D31C()
 	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in CSS",
-			array('attributes' => array('foo' => array()))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <b style="{@foo}"/>
-	*/
-	public function testCheckUnsafe0A9E5F7B()
-	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <b style="{@foo}"/>
-	*/
-	public function testCheckUnsafeD2A6A5E6()
-	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <b style="{@foo}"/>
-	*/
-	public function testCheckUnsafeCB2697BB()
-	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#float': <b style="{@foo}"/>
-	*/
-	public function testCheckUnsafe324C2F0E()
-	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(81);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#color': <b style="{@foo}"/>
 	*/
-	public function testCheckUnsafeD6975709()
+	public function testCheckUnsafe9A32FA1C()
 	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#color'))))
-		);
+		$this->runCheckUnsafeCase(82);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#float': <b style="{@foo}"/>
+	*/
+	public function testCheckUnsafeD5307213()
+	{
+		$this->runCheckUnsafeCase(83);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <b style="{@foo}"/>
+	*/
+	public function testCheckUnsafe9D1CF5DD()
+	{
+		$this->runCheckUnsafeCase(84);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#range': <b style="{@foo}"/>
 	*/
-	public function testCheckUnsafeDA0F978B()
+	public function testCheckUnsafeEE136CBF()
 	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(85);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <b style="{@foo}"/>
 	*/
-	public function testCheckUnsafe21A9DB3D()
+	public function testCheckUnsafe59192425()
 	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(86);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#simpletext': <b style="{@foo}"/>
 	*/
-	public function testCheckUnsafe6C246491()
+	public function testCheckUnsafe44A57F9B()
 	{
-		$this->checkUnsafe(
-			'<b style="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
-		);
+		$this->runCheckUnsafeCase(87);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <b style="{@foo}"/>
+	*/
+	public function testCheckUnsafeA4233B9B()
+	{
+		$this->runCheckUnsafeCase(88);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <b style="{@foo}"/>
+	*/
+	public function testCheckUnsafe528F81E5()
+	{
+		$this->runCheckUnsafeCase(89);
 	}
 
 	/**
@@ -1171,143 +840,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF82217B5()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in JS",
-			array('attributes' => array('foo' => array()))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter 'json_encode': <b onclick="{@foo}"/>
-	*/
-	public function testCheckUnsafeDAE45009()
-	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
-		);
+		$this->runCheckUnsafeCase(90);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafe8E844A18()
+	public function testCheckUnsafe8D21FD39()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
+		$this->runCheckUnsafeCase(91);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'strtotime': <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafeC7200790()
+	public function testCheckUnsafeAA37BCED()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
-		);
+		$this->runCheckUnsafeCase(92);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafeCF26F70E()
+	public function testCheckUnsafeB62BA5B5()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <b onclick="{@foo}"/>
-	*/
-	public function testCheckUnsafe47C79FE4()
-	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <b onclick="{@foo}"/>
-	*/
-	public function testCheckUnsafe9FFF6579()
-	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <b onclick="{@foo}"/>
-	*/
-	public function testCheckUnsafeABDB40AE()
-	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(93);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafe5FF13632()
+	public function testCheckUnsafe65AA3677()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(94);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <b onclick="{@foo}"/>
+	*/
+	public function testCheckUnsafeEF44679F()
+	{
+		$this->runCheckUnsafeCase(95);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#range': <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafeB7B28EB7()
+	public function testCheckUnsafe1A6F0785()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(96);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafe0EAB1AA3()
+	public function testCheckUnsafe9208B732()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(97);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#simpletext': <b onclick="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#uint': <b onclick="{@foo}"/>
 	*/
-	public function testCheckUnsafeDD7B9880()
+	public function testCheckUnsafeF1FA5319()
 	{
-		$this->checkUnsafe(
-			'<b onclick="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
-		);
+		$this->runCheckUnsafeCase(98);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <b onclick="{@foo}"/>
+	*/
+	public function testCheckUnsafe469E31F8()
+	{
+		$this->runCheckUnsafeCase(99);
 	}
 
 	/**
@@ -1315,143 +920,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe55C38875()
 	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in JS",
-			array('attributes' => array('foo' => array()))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter 'json_encode': <b onanything="{@foo}"/>
-	*/
-	public function testCheckUnsafe613418C4()
-	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('json_encode'))))
-		);
+		$this->runCheckUnsafeCase(100);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <b onanything="{@foo}"/>
 	*/
-	public function testCheckUnsafe6BEA245D()
+	public function testCheckUnsafe344CD60B()
 	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
+		$this->runCheckUnsafeCase(101);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'strtotime': <b onanything="{@foo}"/>
 	*/
-	public function testCheckUnsafeCBFD1A6C()
+	public function testCheckUnsafe5B2F739D()
 	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('strtotime'))))
-		);
+		$this->runCheckUnsafeCase(102);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <b onanything="{@foo}"/>
 	*/
-	public function testCheckUnsafeC3FBEAF2()
+	public function testCheckUnsafe47336AC5()
 	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <b onanything="{@foo}"/>
-	*/
-	public function testCheckUnsafeCC5BC677()
-	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <b onanything="{@foo}"/>
-	*/
-	public function testCheckUnsafe14633CEA()
-	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <b onanything="{@foo}"/>
-	*/
-	public function testCheckUnsafeC2561E09()
-	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(103);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <b onanything="{@foo}"/>
 	*/
-	public function testCheckUnsafe172A8D27()
+	public function testCheckUnsafeFAE3B2D0()
 	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(104);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <b onanything="{@foo}"/>
+	*/
+	public function testCheckUnsafe9C8C1F45()
+	{
+		$this->runCheckUnsafeCase(105);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#range': <b onanything="{@foo}"/>
 	*/
-	public function testCheckUnsafeFF6935A2()
+	public function testCheckUnsafe5A305389()
 	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(106);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <b onanything="{@foo}"/>
 	*/
-	public function testCheckUnsafe633E25F3()
+	public function testCheckUnsafe1ED05833()
 	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(107);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#simpletext': <b onanything="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#uint': <b onanything="{@foo}"/>
 	*/
-	public function testCheckUnsafe66ABD04D()
+	public function testCheckUnsafe03BD5AF0()
 	{
-		$this->checkUnsafe(
-			'<b onanything="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#simpletext'))))
-		);
+		$this->runCheckUnsafeCase(108);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <b onanything="{@foo}"/>
+	*/
+	public function testCheckUnsafe2DAF36B8()
+	{
+		$this->runCheckUnsafeCase(109);
 	}
 
 	/**
@@ -1459,119 +1000,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe4545A54D()
 	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(110);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <form action="{@foo}"/>
 	*/
-	public function testCheckUnsafeD213C6F9()
+	public function testCheckUnsafe011ED377()
 	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(111);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <form action="{@foo}"/>
 	*/
-	public function testCheckUnsafe71AB45CE()
+	public function testCheckUnsafeF62D2BCF()
 	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <form action="{@foo}"/>
-	*/
-	public function testCheckUnsafeF536BBFC()
-	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <form action="{@foo}"/>
-	*/
-	public function testCheckUnsafe2FC1965C()
-	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <form action="{@foo}"/>
-	*/
-	public function testCheckUnsafe2D0E4161()
-	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <form action="{@foo}"/>
-	*/
-	public function testCheckUnsafeB80529DC()
-	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(112);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <form action="{@foo}"/>
 	*/
-	public function testCheckUnsafeE1E9F84B()
+	public function testCheckUnsafe1D8FED00()
 	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(113);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <form action="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <form action="{@foo}"/>
 	*/
-	public function testCheckUnsafe09AA40CE()
+	public function testCheckUnsafeAD8285AC()
 	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(114);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <form action="{@foo}"/>
+	*/
+	public function testCheckUnsafeF4C8B6C3()
+	{
+		$this->runCheckUnsafeCase(115);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <form action="{@foo}"/>
 	*/
-	public function testCheckUnsafe27CCCBF5()
+	public function testCheckUnsafeEA7E010C()
 	{
-		$this->checkUnsafe(
-			'<form action="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(116);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <form action="{@foo}"/>
+	*/
+	public function testCheckUnsafe7A2D541E()
+	{
+		$this->runCheckUnsafeCase(117);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <form action="{@foo}"/>
+	*/
+	public function testCheckUnsafeE871BF83()
+	{
+		$this->runCheckUnsafeCase(118);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <form action="{@foo}"/>
+	*/
+	public function testCheckUnsafeD432C6E9()
+	{
+		$this->runCheckUnsafeCase(119);
 	}
 
 	/**
@@ -1579,239 +1080,159 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe4BB1ACC7()
 	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(120);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafeE946770E()
+	public function testCheckUnsafeA18FDA15()
 	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(121);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafeD841BFC2()
+	public function testCheckUnsafeD65F377B()
 	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <q cite="{@foo}"/>
-	*/
-	public function testCheckUnsafeB7F930C1()
-	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <q cite="{@foo}"/>
-	*/
-	public function testCheckUnsafe7995C9B0()
-	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <q cite="{@foo}"/>
-	*/
-	public function testCheckUnsafe6FC1CA5C()
-	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <q cite="{@foo}"/>
-	*/
-	public function testCheckUnsafeE02FAA46()
-	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(122);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafeF16BA892()
+	public function testCheckUnsafe4DF3EFB1()
 	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(123);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <q cite="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafe19281017()
+	public function testCheckUnsafe6B0254F0()
 	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(124);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <q cite="{@foo}"/>
+	*/
+	public function testCheckUnsafe030FA5BA()
+	{
+		$this->runCheckUnsafeCase(125);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafeD8D323D5()
+	public function testCheckUnsafe4567CAEE()
 	{
-		$this->checkUnsafe(
-			'<q cite="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(126);
 	}
 
 	/**
-	* @testdox Not safe if attribute 'foo' has no filter: <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#range': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafe37A16260()
+	public function testCheckUnsafe734CA0E4()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(127);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter 'urlencode': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#uint': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafe52EEA27B()
+	public function testCheckUnsafeD7BEFA2A()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(128);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#url': <q cite="{@foo}"/>
 	*/
-	public function testCheckUnsafe358F4452()
+	public function testCheckUnsafe0E4A95DC()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
+		$this->runCheckUnsafeCase(129);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <xbject data="{@foo}"/>
+	* @testdox Not safe if attribute 'foo' has no filter: <foo data="{@foo}"/>
 	*/
-	public function testCheckUnsafeAA86F794()
+	public function testCheckUnsafe222484DC()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
+		$this->runCheckUnsafeCase(130);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter 'urlencode': <foo data="{@foo}"/>
 	*/
-	public function testCheckUnsafe0FED7930()
+	public function testCheckUnsafe5949B936()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
+		$this->runCheckUnsafeCase(131);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <foo data="{@foo}"/>
 	*/
-	public function testCheckUnsafe72BE0D09()
+	public function testCheckUnsafe008F4834()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
+		$this->runCheckUnsafeCase(132);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#float': <foo data="{@foo}"/>
 	*/
-	public function testCheckUnsafeFB3370FA()
+	public function testCheckUnsafeF57A47E2()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(133);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#float': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <foo data="{@foo}"/>
 	*/
-	public function testCheckUnsafe33A74BEF()
+	public function testCheckUnsafeDCB55352()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(134);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#int': <foo data="{@foo}"/>
 	*/
-	public function testCheckUnsafeDBE4F36A()
+	public function testCheckUnsafeB5C3F8A9()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(135);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#number': <xbject data="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#number': <foo data="{@foo}"/>
 	*/
-	public function testCheckUnsafeF6A5E2B7()
+	public function testCheckUnsafeD92757DA()
 	{
-		$this->checkUnsafe(
-			'<xbject data="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(136);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <foo data="{@foo}"/>
+	*/
+	public function testCheckUnsafeE3857497()
+	{
+		$this->runCheckUnsafeCase(137);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <foo data="{@foo}"/>
+	*/
+	public function testCheckUnsafe54194A37()
+	{
+		$this->runCheckUnsafeCase(138);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <foo data="{@foo}"/>
+	*/
+	public function testCheckUnsafeF39397CC()
+	{
+		$this->runCheckUnsafeCase(139);
 	}
 
 	/**
@@ -1819,119 +1240,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe8822BDBC()
 	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(140);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <input formaction="{@foo}"/>
 	*/
-	public function testCheckUnsafe5CD442A0()
+	public function testCheckUnsafe163BDE98()
 	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(141);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <input formaction="{@foo}"/>
 	*/
-	public function testCheckUnsafeAF295914()
+	public function testCheckUnsafe1BC9BCD2()
 	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <input formaction="{@foo}"/>
-	*/
-	public function testCheckUnsafeC2547D2A()
-	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <input formaction="{@foo}"/>
-	*/
-	public function testCheckUnsafe164389B1()
-	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <input formaction="{@foo}"/>
-	*/
-	public function testCheckUnsafe1A6C87B7()
-	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <input formaction="{@foo}"/>
-	*/
-	public function testCheckUnsafeD7823CFB()
-	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(142);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <input formaction="{@foo}"/>
 	*/
-	public function testCheckUnsafe448CCA35()
+	public function testCheckUnsafe616C1659()
 	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(143);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <input formaction="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <input formaction="{@foo}"/>
 	*/
-	public function testCheckUnsafeACCF72B0()
+	public function testCheckUnsafe415E4E49()
 	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(144);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <input formaction="{@foo}"/>
+	*/
+	public function testCheckUnsafeAF49AEF4()
+	{
+		$this->runCheckUnsafeCase(145);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <input formaction="{@foo}"/>
 	*/
-	public function testCheckUnsafe90D4F2FC()
+	public function testCheckUnsafe47589FFB()
 	{
-		$this->checkUnsafe(
-			'<input formaction="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(146);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <input formaction="{@foo}"/>
+	*/
+	public function testCheckUnsafeD0986A86()
+	{
+		$this->runCheckUnsafeCase(147);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <input formaction="{@foo}"/>
+	*/
+	public function testCheckUnsafeD1F16722()
+	{
+		$this->runCheckUnsafeCase(148);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <input formaction="{@foo}"/>
+	*/
+	public function testCheckUnsafe1FA3041D()
+	{
+		$this->runCheckUnsafeCase(149);
 	}
 
 	/**
@@ -1939,119 +1320,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeFF6EB164()
 	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(150);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <a href="{@foo}"/>
 	*/
-	public function testCheckUnsafe56410B36()
+	public function testCheckUnsafe9569534D()
 	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(151);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <a href="{@foo}"/>
 	*/
-	public function testCheckUnsafeA4AAC662()
+	public function testCheckUnsafe1F9290E6()
 	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <a href="{@foo}"/>
-	*/
-	public function testCheckUnsafe8DB3BDCC()
-	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <a href="{@foo}"/>
-	*/
-	public function testCheckUnsafe4E03DE7E()
-	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <a href="{@foo}"/>
-	*/
-	public function testCheckUnsafe558B4751()
-	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <a href="{@foo}"/>
-	*/
-	public function testCheckUnsafe9EA49C76()
-	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(152);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <a href="{@foo}"/>
 	*/
-	public function testCheckUnsafeD7CC1308()
+	public function testCheckUnsafe66A53754()
 	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(153);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <a href="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <a href="{@foo}"/>
 	*/
-	public function testCheckUnsafe3F8FAB8D()
+	public function testCheckUnsafe03D1F230()
 	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(154);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <a href="{@foo}"/>
+	*/
+	public function testCheckUnsafe2F2ED620()
+	{
+		$this->runCheckUnsafeCase(155);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <a href="{@foo}"/>
 	*/
-	public function testCheckUnsafeC82FFE34()
+	public function testCheckUnsafe21A76358()
 	{
-		$this->checkUnsafe(
-			'<a href="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(156);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <a href="{@foo}"/>
+	*/
+	public function testCheckUnsafeAF6507EF()
+	{
+		$this->runCheckUnsafeCase(157);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <a href="{@foo}"/>
+	*/
+	public function testCheckUnsafe6F41FD4B()
+	{
+		$this->runCheckUnsafeCase(158);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <a href="{@foo}"/>
+	*/
+	public function testCheckUnsafe14BB2A31()
+	{
+		$this->runCheckUnsafeCase(159);
 	}
 
 	/**
@@ -2059,119 +1400,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF2542B4A()
 	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(160);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <html manifest="{@foo}"/>
 	*/
-	public function testCheckUnsafe264FD1D8()
+	public function testCheckUnsafeBB6166BF()
 	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(161);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <html manifest="{@foo}"/>
 	*/
-	public function testCheckUnsafeDC921C3D()
+	public function testCheckUnsafe0552EE76()
 	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <html manifest="{@foo}"/>
-	*/
-	public function testCheckUnsafe211F359B()
-	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <html manifest="{@foo}"/>
-	*/
-	public function testCheckUnsafe71102336()
-	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <html manifest="{@foo}"/>
-	*/
-	public function testCheckUnsafeF927CF06()
-	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <html manifest="{@foo}"/>
-	*/
-	public function testCheckUnsafe6B07F4A9()
-	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(162);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <html manifest="{@foo}"/>
 	*/
-	public function testCheckUnsafeC1557F25()
+	public function testCheckUnsafe49E08858()
 	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(163);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <html manifest="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <html manifest="{@foo}"/>
 	*/
-	public function testCheckUnsafe2916C7A0()
+	public function testCheckUnsafeF2122245()
 	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(164);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <html manifest="{@foo}"/>
+	*/
+	public function testCheckUnsafe9E3BB9E3()
+	{
+		$this->runCheckUnsafeCase(165);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <html manifest="{@foo}"/>
 	*/
-	public function testCheckUnsafe8DE63B2D()
+	public function testCheckUnsafe4D569D7B()
 	{
-		$this->checkUnsafe(
-			'<html manifest="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(166);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <html manifest="{@foo}"/>
+	*/
+	public function testCheckUnsafeD67481C9()
+	{
+		$this->runCheckUnsafeCase(167);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <html manifest="{@foo}"/>
+	*/
+	public function testCheckUnsafe73104660()
+	{
+		$this->runCheckUnsafeCase(168);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <html manifest="{@foo}"/>
+	*/
+	public function testCheckUnsafeB5085615()
+	{
+		$this->runCheckUnsafeCase(169);
 	}
 
 	/**
@@ -2179,119 +1480,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe90D5A413()
 	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(170);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <video poster="{@foo}"/>
 	*/
-	public function testCheckUnsafe3120DE12()
+	public function testCheckUnsafe78CC8E5E()
 	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(171);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <video poster="{@foo}"/>
 	*/
-	public function testCheckUnsafeAF88A7CD()
+	public function testCheckUnsafeD5A4189D()
 	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <video poster="{@foo}"/>
-	*/
-	public function testCheckUnsafe6541AB3E()
-	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <video poster="{@foo}"/>
-	*/
-	public function testCheckUnsafeB7BD50B1()
-	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <video poster="{@foo}"/>
-	*/
-	public function testCheckUnsafeBD7951A3()
-	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <video poster="{@foo}"/>
-	*/
-	public function testCheckUnsafeCDFFFD50()
-	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(172);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <video poster="{@foo}"/>
 	*/
-	public function testCheckUnsafe0592CD94()
+	public function testCheckUnsafeB7A8DF22()
 	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(173);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <video poster="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <video poster="{@foo}"/>
 	*/
-	public function testCheckUnsafeEDD17511()
+	public function testCheckUnsafe9BB59B6E()
 	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(174);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <video poster="{@foo}"/>
+	*/
+	public function testCheckUnsafeEF509C66()
+	{
+		$this->runCheckUnsafeCase(175);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <video poster="{@foo}"/>
 	*/
-	public function testCheckUnsafe31447F85()
+	public function testCheckUnsafe99CD7232()
 	{
-		$this->checkUnsafe(
-			'<video poster="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(176);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <video poster="{@foo}"/>
+	*/
+	public function testCheckUnsafe4AD2F4EE()
+	{
+		$this->runCheckUnsafeCase(177);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <video poster="{@foo}"/>
+	*/
+	public function testCheckUnsafeA67DF74D()
+	{
+		$this->runCheckUnsafeCase(178);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <video poster="{@foo}"/>
+	*/
+	public function testCheckUnsafe43294FB2()
+	{
+		$this->runCheckUnsafeCase(179);
 	}
 
 	/**
@@ -2299,119 +1560,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeF39CC4CF()
 	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(180);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <img src="{@foo}"/>
 	*/
-	public function testCheckUnsafe4F706364()
+	public function testCheckUnsafe5D20BBEC()
 	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(181);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <img src="{@foo}"/>
 	*/
-	public function testCheckUnsafe215C34A1()
+	public function testCheckUnsafeF9B0D150()
 	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <img src="{@foo}"/>
-	*/
-	public function testCheckUnsafe7149BFB6()
-	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <img src="{@foo}"/>
-	*/
-	public function testCheckUnsafeDDC1C52C()
-	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <img src="{@foo}"/>
-	*/
-	public function testCheckUnsafeA971452B()
-	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <img src="{@foo}"/>
-	*/
-	public function testCheckUnsafe2E88FE56()
-	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(182);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <img src="{@foo}"/>
 	*/
-	public function testCheckUnsafeEC121FA2()
+	public function testCheckUnsafe5AD4E126()
 	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(183);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <img src="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <img src="{@foo}"/>
 	*/
-	public function testCheckUnsafe0451A727()
+	public function testCheckUnsafe87F02840()
 	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(184);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <img src="{@foo}"/>
+	*/
+	public function testCheckUnsafeF043F4A6()
+	{
+		$this->runCheckUnsafeCase(185);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <img src="{@foo}"/>
 	*/
-	public function testCheckUnsafeFE176ACE()
+	public function testCheckUnsafe86B2FC69()
 	{
-		$this->checkUnsafe(
-			'<img src="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(186);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <img src="{@foo}"/>
+	*/
+	public function testCheckUnsafe55FA2ED5()
+	{
+		$this->runCheckUnsafeCase(187);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <img src="{@foo}"/>
+	*/
+	public function testCheckUnsafe1E48C163()
+	{
+		$this->runCheckUnsafeCase(188);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <img src="{@foo}"/>
+	*/
+	public function testCheckUnsafe46272257()
+	{
+		$this->runCheckUnsafeCase(189);
 	}
 
 	/**
@@ -2419,119 +1640,79 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafe2A2871AB()
 	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			"Attribute 'foo' is not properly filtered to be used in URL",
-			array('attributes' => array('foo' => array()))
-		);
+		$this->runCheckUnsafeCase(190);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'urlencode': <img lowsrc="{@foo}"/>
 	*/
-	public function testCheckUnsafe22EF91DE()
+	public function testCheckUnsafeBBB66DAA()
 	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('urlencode'))))
-		);
+		$this->runCheckUnsafeCase(191);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter 'rawurlencode': <img lowsrc="{@foo}"/>
 	*/
-	public function testCheckUnsafe2009B6D1()
+	public function testCheckUnsafeA0B9F5E2()
 	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('rawurlencode'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#url': <img lowsrc="{@foo}"/>
-	*/
-	public function testCheckUnsafe72F64F38()
-	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#url'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#identifier': <img lowsrc="{@foo}"/>
-	*/
-	public function testCheckUnsafe5332B36D()
-	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#identifier'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#int': <img lowsrc="{@foo}"/>
-	*/
-	public function testCheckUnsafeAACEB5A5()
-	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#int'))))
-		);
-	}
-
-	/**
-	* @testdox Safe if attribute 'foo' has filter '#uint': <img lowsrc="{@foo}"/>
-	*/
-	public function testCheckUnsafe248BEF81()
-	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#uint'))))
-		);
+		$this->runCheckUnsafeCase(192);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#float': <img lowsrc="{@foo}"/>
 	*/
-	public function testCheckUnsafeF4AF5BC4()
+	public function testCheckUnsafe4FA0965D()
 	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#float'))))
-		);
+		$this->runCheckUnsafeCase(193);
 	}
 
 	/**
-	* @testdox Safe if attribute 'foo' has filter '#range': <img lowsrc="{@foo}"/>
+	* @testdox Safe if attribute 'foo' has filter '#identifier': <img lowsrc="{@foo}"/>
 	*/
-	public function testCheckUnsafe1CECE341()
+	public function testCheckUnsafe3E0CC169()
 	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#range'))))
-		);
+		$this->runCheckUnsafeCase(194);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#int': <img lowsrc="{@foo}"/>
+	*/
+	public function testCheckUnsafeB47B7615()
+	{
+		$this->runCheckUnsafeCase(195);
 	}
 
 	/**
 	* @testdox Safe if attribute 'foo' has filter '#number': <img lowsrc="{@foo}"/>
 	*/
-	public function testCheckUnsafe5ADE13E7()
+	public function testCheckUnsafeE90021D9()
 	{
-		$this->checkUnsafe(
-			'<img lowsrc="{@foo}"/>',
-			NULL,
-			array('attributes' => array('foo' => array('filterChain' => array('#number'))))
-		);
+		$this->runCheckUnsafeCase(196);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#range': <img lowsrc="{@foo}"/>
+	*/
+	public function testCheckUnsafe7AEB28F9()
+	{
+		$this->runCheckUnsafeCase(197);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#uint': <img lowsrc="{@foo}"/>
+	*/
+	public function testCheckUnsafeF8E7C339()
+	{
+		$this->runCheckUnsafeCase(198);
+	}
+
+	/**
+	* @testdox Safe if attribute 'foo' has filter '#url': <img lowsrc="{@foo}"/>
+	*/
+	public function testCheckUnsafe717044CD()
+	{
+		$this->runCheckUnsafeCase(199);
 	}
 
 	/**
@@ -2539,12 +1720,20 @@ class TemplateCheckerTest extends Test
 	*/
 	public function testCheckUnsafeA0040D8C()
 	{
-		$this->checkUnsafe(
-			'<b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>',
-			"Cannot assess 'xsl:attribute' name '{FOO}'"
-		);
+		$this->runCheckUnsafeCase(200);
 	}
 	// End of content generated by ../../../scripts/patchTemplateCheckerTest.php
+
+	protected function runCheckUnsafeCase($k)
+	{
+		static $data;
+		if (!isset($data))
+		{
+			$data = $this->getUnsafeTemplatesTests();
+		}
+
+		call_user_func_array(array($this, 'checkUnsafe'), $data[$k]);
+	}
 
 	protected function checkUnsafe($template, $exceptionMsg = null, array $tagOptions = array())
 	{
@@ -2593,7 +1782,7 @@ class TemplateCheckerTest extends Test
 				array(
 					'attributes' => array(
 						'url' => array(
-							'filterChain' => array('#url')
+							'filterChain' => array(new Url)
 						)
 					)
 				)
@@ -2612,7 +1801,7 @@ class TemplateCheckerTest extends Test
 				array(
 					'attributes' => array(
 						'url' => array(
-							'filterChain' => array('#url')
+							'filterChain' => array(new Url)
 						)
 					)
 				)
@@ -2628,7 +1817,7 @@ class TemplateCheckerTest extends Test
 				array(
 					'attributes' => array(
 						'src' => array(
-							'filterChain' => array('#url')
+							'filterChain' => array(new Url)
 						)
 					)
 				)
@@ -2643,7 +1832,7 @@ class TemplateCheckerTest extends Test
 				array(
 					'attributes' => array(
 						'id' => array(
-							'filterChain' => array('#number')
+							'filterChain' => array(new Number)
 						)
 					)
 				)
@@ -2654,7 +1843,7 @@ class TemplateCheckerTest extends Test
 				array(
 					'attributes' => array(
 						'id' => array(
-							'filterChain' => array('#number')
+							'filterChain' => array(new Number)
 						)
 					)
 				)
@@ -2712,7 +1901,7 @@ class TemplateCheckerTest extends Test
 				array(
 					'attributes' => array(
 						'url' => array(
-							'filterChain' => array('#url')
+							'filterChain' => array(new Url)
 						)
 					)
 				)
@@ -2781,7 +1970,7 @@ class TemplateCheckerTest extends Test
 				array(
 					'attributes' => array(
 						'href' => array(
-							'filterChain' => array('#url')
+							'filterChain' => array(new Url)
 						)
 					)
 				)
@@ -2805,38 +1994,38 @@ class TemplateCheckerTest extends Test
 	{
 		$filters = array(
 			'CSS' => array(
-				'#url',
-				'#int',
-				'#uint',
-				'#float',
 				'#color',
+				'#float',
+				'#int',
 				'#range',
 				'#number',
-				'#simpletext'
+				'#simpletext',
+				'#uint',
+				'#url'
 			),
 			'JS' => array(
-				'json_encode',
+//				'json_encode',
 				'rawurlencode',
 				'strtotime',
 				'urlencode',
-				'#url',
-				'#int',
-				'#uint',
 				'#float',
+				'#int',
 				'#range',
 				'#number',
-				'#simpletext'
+//				'#simpletext',
+				'#uint',
+				'#url'
 			),
 			'URL' => array(
 				'urlencode',
 				'rawurlencode',
-				'#url',
+				'#float',
 				'#identifier',
 				'#int',
-				'#uint',
-				'#float',
+				'#number',
 				'#range',
-				'#number'
+				'#uint',
+				'#url'
 			)
 		);
 
@@ -2854,8 +2043,6 @@ class TemplateCheckerTest extends Test
 
 		foreach ($elements as $elName => $type)
 		{
-			$filters = $this->getSafeFilters($type);
-
 			$tests[] = array(
 				'<' . $elName . '><xsl:apply-templates/></' . $elName . '>',
 				"A '" . $elName . "' element lets unfiltered data through"
@@ -2919,15 +2106,17 @@ class TemplateCheckerTest extends Test
 				array(
 					'attributes' => array(
 						'foo' => array(
-							'filterChain' => array($filters[0])
+							'filterChain' => array(new Number)
 						)
 					)
 				)
 			);
 
 			// Test safe filters
-			foreach ($filters as $filter)
+			foreach ($this->getSafeFilters($type) as $filterName)
 			{
+				$filter = $this->configurator->attributeFilters->get($filterName);
+
 				$tests[] = array(
 					'<' . $elName . '><xsl:value-of select="@foo"/></' . $elName . '>',
 					null,
@@ -2961,7 +2150,7 @@ class TemplateCheckerTest extends Test
 			'q:cite'           => 'URL',
 			// Should really be <object> but it would require a more complicated test to avoid
 			// triggering the "fixed-src" checks
-			'xbject:data'      => 'URL',
+			'foo:data'         => 'URL',
 			'input:formaction' => 'URL',
 			'a:href'           => 'URL',
 			'html:manifest'    => 'URL',
@@ -3024,7 +2213,7 @@ class TemplateCheckerTest extends Test
 			);
 
 			// Test safe filters
-			foreach ($filters as $filter)
+			foreach ($filters as $filterName)
 			{
 				$tests[] = array(
 					'<' . $elName . ' ' . $attrName . '="{@foo}"/>',
@@ -3032,7 +2221,7 @@ class TemplateCheckerTest extends Test
 					array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array($filter)
+								'filterChain' => array($this->configurator->attributeFilters[$filterName])
 							)
 						)
 					)

@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\Repository;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
 use s9e\TextFormatter\Tests\Test;
@@ -16,9 +17,9 @@ class RepositoryCollectionTest extends Test
 	*/
 	public function testAddRepository()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
+		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new Configurator);
 
-		$collection = new RepositoryCollection;
+		$collection = new RepositoryCollection(new Configurator);
 		$collection->add('foo', $repository);
 
 		$this->assertSame($repository, $collection->get('foo'));
@@ -29,7 +30,7 @@ class RepositoryCollectionTest extends Test
 	*/
 	public function testAddFilePath()
 	{
-		$collection = new RepositoryCollection;
+		$collection = new RepositoryCollection(new Configurator);
 		$collection->add('foo', __DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
 
 		$this->assertInstanceOf(

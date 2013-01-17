@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Autoemail;
 
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Email;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -21,7 +22,7 @@ class ConfiguratorTest extends Test
 		$this->assertTrue($tag->attributes->exists('email'));
 
 		$attribute = $tag->attributes->get('email');
-		$this->assertTrue($attribute->filterChain->contains('#email'));
+		$this->assertTrue($attribute->filterChain->contains(new Email));
 	}
 
 	/**

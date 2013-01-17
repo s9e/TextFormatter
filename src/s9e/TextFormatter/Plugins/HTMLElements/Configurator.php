@@ -199,7 +199,10 @@ class Configurator extends ConfiguratorBase
 
 			if (isset($this->attributeFilters[$attrName]))
 			{
-				$attribute->filterChain->append($this->attributeFilters[$attrName]);
+				$filterName = $this->attributeFilters[$attrName];
+				$filter = $this->configurator->attributeFilters->get($filterName);
+
+				$attribute->filterChain->append($filter);
 			}
 		}
 

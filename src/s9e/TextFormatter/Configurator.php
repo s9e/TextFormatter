@@ -9,8 +9,7 @@ namespace s9e\TextFormatter;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Collections\Collection;
-use s9e\TextFormatter\Configurator\Collections\FilterCollection;
+use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
 use s9e\TextFormatter\Configurator\Collections\PluginCollection;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
@@ -26,9 +25,9 @@ use s9e\TextFormatter\Configurator\UrlConfig;
 class Configurator implements ConfigProvider
 {
 	/**
-	* @var FilterCollection Custom filters
+	* @var AttributeFilterCollection Dynamically-populated collection of AttributeFilter instances
 	*/
-	public $customFilters;
+	public $attributeFilters;
 
 	/**
 	* @var JavaScript JavaScript manipulation object
@@ -68,13 +67,13 @@ class Configurator implements ConfigProvider
 	*/
 	public function __construct()
 	{
-		$this->customFilters = new FilterCollection;
-		$this->javascript    = new JavaScript($this);
-		$this->plugins       = new PluginCollection($this);
-		$this->rootRules     = new Ruleset;
-		$this->tags          = new TagCollection;
-		$this->stylesheet    = new Stylesheet($this->tags);
-		$this->urlConfig     = new UrlConfig;
+		$this->attributeFilters = new AttributeFilterCollection;
+		$this->javascript       = new JavaScript($this);
+		$this->plugins          = new PluginCollection($this);
+		$this->rootRules        = new Ruleset;
+		$this->tags             = new TagCollection;
+		$this->stylesheet       = new Stylesheet($this->tags);
+		$this->urlConfig        = new UrlConfig;
 	}
 
 	/**
@@ -158,9 +157,13 @@ class Configurator implements ConfigProvider
 	public function asConfig()
 	{
 		$properties = get_object_vars($this);
+
+		// Remove properties that shouldn't be turned into config arrays
+		unset($properties['attributeFilters']);
 		unset($properties['javascript']);
 		unset($properties['stylesheet']);
 
+		// Create the config array
 		$config    = ConfigHelper::toArray($properties);
 		$bitfields = RulesHelper::getBitfields($this->tags, $this->rootRules);
 
@@ -184,11 +187,7 @@ class Configurator implements ConfigProvider
 		$config['registeredVars']['urlConfig'] = $config['urlConfig'];
 		unset($config['urlConfig']);
 
-		// Replace built-in and custom filters
-		ConfigHelper::replaceBuiltInFilters($config['tags'], $this->customFilters);
-
-		// Remove unused properties
-		unset($config['customFilters']);
+		// Remove unused entries
 		unset($config['rootRules']);
 
 		// Create a variant that adds the stylesheet to the config if we're building a JavaScript

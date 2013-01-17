@@ -56,6 +56,15 @@ var BuiltInFilters =
 	* @param  {*} attrValue
 	* @return {*}
 	*/
+	filterInt: function(attrValue)
+	{
+		return /^(?:0|-?[1-9]\d*)$/.test(attrValue) ? attrValue : false;
+	},
+
+	/**
+	* @param  {*} attrValue
+	* @return {*}
+	*/
 	filterIp: function(attrValue)
 	{
 		if (/^[\d.]+$/.test(attrValue))
@@ -156,15 +165,6 @@ var BuiltInFilters =
 		}
 
 		return attrValue;
-	},
-
-	/**
-	* @param  {*} attrValue
-	* @return {*}
-	*/
-	filterInt: function(attrValue)
-	{
-		return /^(?:0|-?[1-9]\d*)$/.test(attrValue) ? attrValue : false;
 	},
 
 	/**

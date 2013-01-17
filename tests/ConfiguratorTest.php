@@ -3,7 +3,8 @@
 namespace s9e\TextFormatter\Tests;
 
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
+use s9e\TextFormatter\Configurator\Items\TagFilter;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
@@ -18,13 +19,13 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->customFilters is an instance of FilterCollection
+	* @testdox $configurator->attributeFilters is an instance of AttributeFilterCollection
 	*/
-	public function testCustomFiltersInstance()
+	public function testAttributeFiltersInstance()
 	{
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Collections\\FilterCollection',
-			$this->configurator->customFilters
+			's9e\\TextFormatter\\Configurator\\Collections\\AttributeFilterCollection',
+			$this->configurator->attributeFilters
 		);
 	}
 
@@ -291,8 +292,8 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfigRemovesJavaScriptTagFilters()
 	{
-		$pc = new ProgrammableCallback(function(){});
-		$pc->setJS('function(){return false;}');
+		$pc = new TagFilter(function($tag){});
+		$pc->setJS('function(tag){return false;}');
 
 		$this->configurator->tags->add('A')->filterChain->append($pc);
 
@@ -310,10 +311,10 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfigRemovesJavaScriptAttributeFilters()
 	{
-		$pc = new ProgrammableCallback(function(){});
-		$pc->setJS('function(){return false;}');
+		$filter = new AttributeFilter(function($v){});
+		$filter->setJS('function(v){return false;}');
 
-		$this->configurator->tags->add('A')->attributes->add('a')->filterChain->append($pc);
+		$this->configurator->tags->add('A')->attributes->add('a')->filterChain->append($filter);
 
 		$parser = $this->configurator->getParser();
 		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');

@@ -7,10 +7,27 @@
 */
 namespace s9e\TextFormatter\Plugins\BBCodes\Configurator;
 
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 
 class RepositoryCollection extends NormalizedCollection
 {
+	/**
+	* @var Configurator Instance of Configurator
+	*/
+	protected $configurator;
+
+	/**
+	* Constructor
+	*
+	* @param  Configurator $configurator Instance of Configurator
+	* @return void
+	*/
+	public function __construct(Configurator $configurator)
+	{
+		$this->configurator = $configurator;
+	}
+
 	/**
 	* Normalize a value for storage
 	*
@@ -21,6 +38,6 @@ class RepositoryCollection extends NormalizedCollection
 	{
 		return ($value instanceof Repository)
 		     ? $value
-		     : new Repository($value);
+		     : new Repository($value, $this->configurator);
 	}
 }

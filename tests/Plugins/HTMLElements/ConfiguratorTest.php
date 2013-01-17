@@ -2,8 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\HTMLElements;
 
-use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
 use s9e\TextFormatter\Plugins\HTMLElements\Configurator;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\HTMLElements\Configurator
@@ -137,7 +138,7 @@ class ConfiguratorTest extends Test
 		$plugin->allowElement('a');
 		$plugin->allowAttribute('a', 'href');
 
-		$this->assertTrue($this->configurator->tags['html:a']->attributes['href']->filterChain->contains('#url'));
+		$this->assertTrue($this->configurator->tags['html:a']->attributes['href']->filterChain->contains(new Url));
 	}
 
 	/**

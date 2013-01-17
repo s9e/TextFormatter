@@ -5,9 +5,19 @@ namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
-use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Choice;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Identifier;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Int;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Map;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Number;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Range;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Simpletext;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Uint;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey;
 use s9e\TextFormatter\Tests\Test;
@@ -28,7 +38,8 @@ class BBCodeMonkeyTest extends Test
 			$this->setExpectedException(get_class($expected), $expected->getMessage());
 		}
 
-		$actual = BBCodeMonkey::parse($usage);
+		$bbcodeMonkey = new BBCodeMonkey(new Configurator);
+		$actual = $bbcodeMonkey->parse($usage);
 
 		if (!($expected instanceof Exception))
 		{
@@ -101,7 +112,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'url' => array(
-								'filterChain' => array('#url')
+								'filterChain' => array(new Url)
 							)
 						)
 					)),
@@ -219,7 +230,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'src' => array(
-								'filterChain' => array('#url')
+								'filterChain' => array(new Url)
 							)
 						)
 					)),
@@ -238,7 +249,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'url' => array(
-								'filterChain' => array('#url')
+								'filterChain' => array(new Url)
 							)
 						)
 					)),
@@ -258,7 +269,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array('strtolower', 'strtotime', '#int')
+								'filterChain' => array('strtolower', 'strtotime', new Int)
 							)
 						)
 					)),
@@ -278,7 +289,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array('#simpletext', 'strtolower', 'ucwords')
+								'filterChain' => array(new Simpletext, 'strtolower', 'ucwords')
 							)
 						)
 					)),
@@ -298,7 +309,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array('#int', '#identifier')
+								'filterChain' => array(new Int, new Identifier)
 							)
 						)
 					)),
@@ -326,12 +337,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#regexp'),
-										'vars'     => array('regexp' => '/^foo$/')
-									))
-								)
+								'filterChain' => array(new Regexp('/^foo$/'))
 							)
 						)
 					)),
@@ -351,12 +357,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#regexp'),
-										'vars'     => array('regexp' => '#^foo$#')
-									))
-								)
+								'filterChain' => array(new Regexp('#^foo$#'))
 							)
 						)
 					)),
@@ -376,12 +377,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#regexp'),
-										'vars'     => array('regexp' => '/[a-z]{3}\\//')
-									))
-								)
+								'filterChain' => array(new Regexp('/[a-z]{3}\\//'))
 							)
 						)
 					)),
@@ -406,20 +402,10 @@ class BBCodeMonkeyTest extends Test
 						),
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#regexp'),
-										'vars'     => array('regexp' => '/^(?:\\d+)$/D')
-									))
-								)
+								'filterChain' => array(new Regexp('/^(?:\\d+)$/D'))
 							),
 							'bar' => array(
-								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#regexp'),
-										'vars'     => array('regexp' => '/^(?:\\D+)$/D')
-									))
-								)
+								'filterChain' => array(new Regexp('/^(?:\\D+)$/D'))
 							)
 						)
 					)),
@@ -437,12 +423,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#range'),
-										'vars'     => array('min' => -2, 'max' => 5)
-									))
-								)
+								'filterChain' => array(new Range(-2, 5))
 							)
 						)
 					)),
@@ -462,10 +443,7 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag(array(
 						'attributes' => array(
 							'foo' => array(
-								'generator' => ProgrammableCallback::fromArray(array(
-									'callback' => 'mt_rand',
-									'params'   => array(1000, 9999)
-								))
+								'generator' => $this->getProgrammableCallback('mt_rand', 1000, 9999)
 							)
 						)
 					)),
@@ -486,10 +464,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#regexp'),
-										'vars'     => array('regexp' => '/^(?:one|two)$/Di')
-									))
+									new Choice(array('one', 'two'))
 								)
 							)
 						)
@@ -511,10 +486,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#regexp'),
-										'vars'     => array('regexp' => '/^(?:pokémon|yugioh)$/Diu')
-									))
+									new Choice(array('pokémon', 'yugioh'))
 								)
 							)
 						)
@@ -536,10 +508,7 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#regexp'),
-										'vars'     => array('regexp' => '/^(?:Pokémon|YuGiOh)$/Du')
-									))
+									new Choice(array('Pokémon', 'YuGiOh'), true)
 								)
 							)
 						)
@@ -561,14 +530,9 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#map'),
-										'vars'     => array(
-											'map' => array(
-												array('/^one$/Di', 'uno'),
-												array('/^two$/Di', 'dos')
-											)
-										)
+									new Map(array(
+										'one' => 'uno',
+										'two' => 'dos'
 									))
 								)
 							)
@@ -581,7 +545,7 @@ class BBCodeMonkeyTest extends Test
 				)
 			),
 			array(
-				'[foo={MAP=one:uno,two:dos;caseSensitive;strict}/]',
+				'[foo={MAP=one:uno,two:dos;caseSensitive}/]',
 				array(
 					'name'   => 'FOO',
 					'bbcode' => new BBCode(array(
@@ -591,16 +555,43 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#map'),
-										'vars'     => array(
-											'map' => array(
-												array('/^one$/D', 'uno'),
-												array('/^two$/D', 'dos'),
-												array('//',       false)
-											)
-										)
-									))
+									new Map(
+										array(
+											'one' => 'uno',
+											'two' => 'dos'
+										),
+										true,
+										false
+									)
+								)
+							)
+						)
+					)),
+					'tokens' => array(
+						'MAP' => 'foo'
+					),
+					'passthroughToken' => null
+				)
+			),
+			array(
+				'[foo={MAP=one:uno,two:dos;strict}/]',
+				array(
+					'name'   => 'FOO',
+					'bbcode' => new BBCode(array(
+						'defaultAttribute'  => 'foo'
+					)),
+					'tag'    => new Tag(array(
+						'attributes' => array(
+							'foo' => array(
+								'filterChain' => array(
+									new Map(
+										array(
+											'one' => 'uno',
+											'two' => 'dos'
+										),
+										false,
+										true
+									)
 								)
 							)
 						)
@@ -622,14 +613,9 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#map'),
-										'vars'     => array(
-											'map' => array(
-												array('/^pokémon$/Diu', 'Pikachu'),
-												array('/^yugioh$/Di',   'Yugi')
-											)
-										)
+									new Map(array(
+										'pokémon' => 'Pikachu',
+										'yugioh'  => 'Yugi'
 									))
 								)
 							)
@@ -652,45 +638,13 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => array(
 							'foo' => array(
 								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#map'),
-										'vars'     => array(
-											'map' => array(
-												array('/^Pokémon$/Du', 'Pikachu'),
-												array('/^YuGiOh$/D',   'Yugi')
-											)
-										)
-									))
-								)
-							)
-						)
-					)),
-					'tokens' => array(
-						'MAP' => 'foo'
-					),
-					'passthroughToken' => null
-				)
-			),
-			array(
-				'[foo={MAP=pokémon:Pikachu,yugioh:Yugi,yugioh!:Yugi,yu-gi-oh:Yugi,yu-gi-oh!:Yugi}/]',
-				array(
-					'name'   => 'FOO',
-					'bbcode' => new BBCode(array(
-						'defaultAttribute'  => 'foo'
-					)),
-					'tag'    => new Tag(array(
-						'attributes' => array(
-							'foo' => array(
-								'filterChain' => array(
-									ProgrammableCallback::fromArray(array(
-										'callback' => new CallbackPlaceholder('#map'),
-										'vars'     => array(
-											'map' => array(
-												array('/^pokémon$/Diu',          'Pikachu'),
-												array('/^yu(?:-gi-|gi)oh!?$/Di', 'Yugi')
-											)
-										)
-									))
+									new Map(
+										array(
+											'Pokémon' => 'Pikachu',
+											'YuGiOh'  => 'Yugi'
+										),
+										true
+									)
 								)
 							)
 						)
@@ -715,10 +669,10 @@ class BBCodeMonkeyTest extends Test
 						),
 						'attributes' => array(
 							'foo0' => array(
-								'filterChain' => array('#number')
+								'filterChain' => array(new Number)
 							),
 							'foo1' => array(
-								'filterChain' => array('#number')
+								'filterChain' => array(new Number)
 							)
 						)
 					)),
@@ -750,13 +704,13 @@ class BBCodeMonkeyTest extends Test
 						),
 						'attributes' => array(
 							'content' => array(
-								'filterChain' => array('#url')
+								'filterChain' => array(new Url)
 							),
 							'flash0' => array(
-								'filterChain' => array('#number')
+								'filterChain' => array(new Number)
 							),
 							'flash1' => array(
-								'filterChain' => array('#number')
+								'filterChain' => array(new Number)
 							)
 						)
 					)),
@@ -782,13 +736,13 @@ class BBCodeMonkeyTest extends Test
 						),
 						'attributes' => array(
 							'url' => array(
-								'filterChain' => array('#url')
+								'filterChain' => array(new Url)
 							),
 							'width' => array(
-								'filterChain' => array('#number')
+								'filterChain' => array(new Number)
 							),
 							'height' => array(
-								'filterChain' => array('#number')
+								'filterChain' => array(new Number)
 							)
 						)
 					)),
@@ -819,7 +773,7 @@ class BBCodeMonkeyTest extends Test
 								'required' => false
 							),
 							'id'     => array(
-								'filterChain' => array('#uint'),
+								'filterChain' => array(new Uint),
 								'required' => false
 							)
 						)
@@ -935,5 +889,18 @@ class BBCodeMonkeyTest extends Test
 				'Hello <xsl:value-of select="@username"/>'
 			)
 		);
+	}
+
+	protected function getProgrammableCallback()
+	{
+		$args = func_get_args();
+
+		$programmableCallback = new ProgrammableCallback(array_shift($args));
+		foreach ($args as $value)
+		{
+			$programmableCallback->addParameterByValue($value);
+		}
+
+		return $programmableCallback;
 	}
 }

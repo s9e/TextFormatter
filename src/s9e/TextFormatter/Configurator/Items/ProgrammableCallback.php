@@ -9,7 +9,6 @@ namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
-use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
@@ -109,6 +108,16 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
+	* Remove all the parameters
+	*
+	* @return void
+	*/
+	public function resetParameters()
+	{
+		$this->params = array();
+	}
+
+	/**
 	* Set this callback's JavaScript
 	*
 	* @param  Code|string $js JavaScript source code for this callback
@@ -136,67 +145,11 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
-	* Create an instance of this class based on an array
-	*
-	* @param  array  $arr Callback's config array
-	* @return static
-	*/
-	public static function fromArray(array $arr)
-	{
-		// Replace the name of a built-in filter with a CallbackPlaceholder
-		if (is_string($arr['callback'])
-		 && substr($arr['callback'], 0, 1) === '#')
-		{
-			$arr['callback'] = new CallbackPlaceholder($arr['callback']);
-		}
-
-		$obj = new static($arr['callback']);
-
-		if (isset($arr['params']))
-		{
-			foreach ($arr['params'] as $k => $v)
-			{
-				if (is_numeric($k))
-				{
-					$obj->addParameterByValue($v);
-				}
-				else
-				{
-					$obj->addParameterByName($k);
-				}
-			}
-		}
-
-		if (isset($arr['vars']))
-		{
-			$obj->setVars($arr['vars']);
-		}
-
-		if (isset($arr['js']))
-		{
-			$obj->setJS($arr['js']);
-		}
-
-		return $obj;
-	}
-
-	/**
 	* {@inheritdoc}
 	*/
 	public function asConfig()
 	{
-		$config = array();
-
-		if ($this->callback instanceof CallbackPlaceholder)
-		{
-			// Keep the vars if the callback is a placeholder
-			$config['callback'] = $this->callback->asConfig();
-			$config['vars']     = $this->vars;
-		}
-		else
-		{
-			$config['callback'] = $this->callback;
-		}
+		$config = array('callback' => $this->callback);
 
 		foreach ($this->params as $k => $v)
 		{
@@ -208,37 +161,7 @@ class ProgrammableCallback implements ConfigProvider
 			elseif (isset($this->vars[$k]))
 			{
 				// By name, but the value is readily available in $this->vars
-				$value = $this->vars[$k];
-
-				// Special case: "regexp" vars get a JavaScript variant
-				if ($k === 'regexp' && is_string($this->vars[$k]))
-				{
-					$variant = new Variant($value);
-					$variant->set('JS', RegexpConvertor::toJS($value));
-
-					$value = $variant;
-				}
-				elseif ($k === 'map')
-				{
-					$map = array();
-					foreach ($this->vars[$k] as $entry)
-					{
-						list($regexp, $replacement) = $entry;
-
-						$map[] = array(
-							RegexpConvertor::toJS($regexp),
-							$replacement
-						);
-					}
-
-					$variant = new Variant($value);
-					$variant->set('JS', $map);
-
-					$value = $variant;
-				}
-
-				// By name, but the value is readily available in $this->vars
-				$config['params'][] = $value;
+				$config['params'][] = $this->vars[$k];
 			}
 			else
 			{

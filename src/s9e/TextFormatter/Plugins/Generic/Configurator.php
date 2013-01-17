@@ -80,6 +80,11 @@ class Configurator extends ConfiguratorBase
 					throw new RuntimeException('Duplicate named subpatterns are not allowed');
 				}
 
+				// Create the attribute and ensure it's required
+				$attribute = $tag->attributes->add($attrName);
+				$attribute->required = true;
+
+				// Create the regexp for the attribute
 				$endToken = $tok['endToken'];
 
 				$lpos = $tok['pos'];
@@ -92,10 +97,10 @@ class Configurator extends ConfiguratorBase
 				            . str_replace('D', '', $regexpInfo['modifiers'])
 				            . 'D';
 
-				$attribute = $tag->attributes->add($attrName);
-
-				$attribute->required = true;
-				$attribute->filterChain->append('#regexp', array('regexp' => $attrRegexp));
+				// Create a regexp filter and append it to this attribute's filterChain
+				$filter = $this->configurator->attributeFilters->get('#regexp');
+				$filter->setRegexp($attrRegexp);
+				$attribute->filterChain->append($filter);
 			}
 		}
 

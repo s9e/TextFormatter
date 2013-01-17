@@ -316,25 +316,29 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox $tag->filterChain contains the built-in filter '#executeAttributePreprocessors' by default
+	* @testdox $tag->filterChain starts with Parser::executeAttributePreprocessors by default
 	*/
 	public function testFilterChainDefault1()
 	{
+		$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
+
 		$tag = new Tag;
-		$this->assertTrue($tag->filterChain->contains('#executeAttributePreprocessors'));
+		$this->assertSame($callback, $tag->filterChain[0]->getCallback());
 	}
 
 	/**
-	* @testdox $tag->filterChain contains the built-in filter '#filterAttributes' by default
+	* @testdox $tag->filterChain contains Parser::filterAttributes by default
 	*/
 	public function testFilterChainDefault2()
 	{
+		$callback = 's9e\\TextFormatter\\Parser::filterAttributes';
+
 		$tag = new Tag;
-		$this->assertTrue($tag->filterChain->contains('#filterAttributes'));
+		$this->assertSame($callback, $tag->filterChain[1]->getCallback());
 	}
 
 	/**
-	* @testdox asConfig() omits '#executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
+	* @testdox asConfig() omits 'Parser::executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
 	*/
 	public function testFilterChainConfigOmitsUnusedFilter()
 	{
@@ -343,11 +347,10 @@ class TagTest extends Test
 
 		$config = $tag->asConfig();
 
-		$this->assertArrayHasKey('filterChain', $config);
-		$this->assertSame(
-			array(array('callback' => '#filterAttributes', 'vars' => array())),
-			$config['filterChain']
-		);
+		foreach ($config['filterChain'] as $filter)
+		{
+			$this->assertNotContains('Parser::executeAttributePreprocessors', $filter['callback']);
+		}
 	}
 
 	/**

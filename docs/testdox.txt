@@ -82,7 +82,7 @@ s9e\TextFormatter\Tests\Configurator\Traits\Configurable
  [x] __isset($k) returns true if the property exists
 
 s9e\TextFormatter\Tests\Configurator
- [x] $configurator->customFilters is an instance of FilterCollection
+ [x] $configurator->attributeFilters is an instance of AttributeFilterCollection
  [x] $configurator->javascript is an instance of JavaScript
  [x] $configurator->plugins is an instance of PluginCollection
  [x] $configurator->rootRules is an instance of Ruleset
@@ -117,6 +117,27 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] get() normalizes the attribute name
  [x] set() normalizes the attribute name
 
+s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterChain
+ [x] append() throws an InvalidArgumentException on invalid callbacks
+ [x] prepend() throws an InvalidArgumentException on invalid callbacks
+ [x] append() throws an InvalidArgumentException on uncallable callbacks
+ [x] prepend() throws an InvalidArgumentException on uncallable callbacks
+ [x] PHP string callbacks are normalized to an instance of AttributeFilter
+ [x] PHP array callbacks are normalized to an instance of AttributeFilter
+ [x] Instances of AttributeFilter are added as-is
+
+s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterCollection
+ [x] Filter names that start with # are normalized to lowercase
+ [x] set() throws an exception if the value is not an instance of AttributeFilter
+ [x] set() accepts instances of AttributeFilter
+ [x] get() automatically loads built-in filters if no filter was set
+ [x] get() does not overwrite custom filters with built-in filters
+ [x] get() automatically creates filters whose name is a valid PHP callbacl if no filter was set
+ [x] get() does not overwrite custom filters with auto-generated callback filters
+ [x] get() throws an exception if the filter name is neither callable not starts with # and is entirely composed of letters and digits
+ [x] get() throws an exception on unknown filter
+ [x] get() returns a clone of the filter, not the original instance
+
 s9e\TextFormatter\Tests\Configurator\Lists\AttributeList
  [x] Attribute names are normalized for storage
  [x] Attribute names are normalized during retrieval
@@ -134,31 +155,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributePreprocessorCollection
  [x] merge() accepts an instance of AttributePreprocessorCollection to copy its content
  [x] merge() throws an exception when passed a non-array, non-AttributProcessorCollection
  [x] merge() throws an exception when passed a one-dimensional array
-
-s9e\TextFormatter\Tests\Configurator\Collections\FilterChain
- [x] append() adds the filter at the end of the chain
- [x] prepend() adds the filter at the beginning of the chain
- [x] append() correctly records filter vars
- [x] prepend() correctly records filter vars
- [x] append() throws an InvalidArgumentException on invalid callbacks
- [x] prepend() throws an InvalidArgumentException on invalid callbacks
- [x] append() throws an InvalidArgumentException on uncallable callbacks
- [x] prepend() throws an InvalidArgumentException on uncallable callbacks
- [x] $filterChain[] = 'foo' maps to $filterChain->append('foo')
- [x] PHP string callbacks are normalized to an instance of ProgrammableCallback
- [x] PHP array callbacks are normalized to an instance of ProgrammableCallback
- [x] Instances of CallbackPlaceholder are normalized to an instance of ProgrammableCallback
- [x] Instances of ProgrammableCallback are added as-is
- [x] Generated instances of ProgrammableCallback based on PHP callbacks adopt the default signature
- [x] contains() returns false if the given filter is not present in the chain
- [x] contains() returns true if the given built-in filter is present in the chain
- [x] contains() returns true if the given PHP string callback is present in the chain
- [x] $filterChain['foo'] = 'strtolower' throws an InvalidArgumentException
- [x] Deleting a filter reorders the chain to remove gaps
-
-s9e\TextFormatter\Tests\Configurator\Collections\FilterCollection
- [x] Throws an exception if the value is not an instance of ProgrammableCallback
- [x] Accepts instances of Filter
 
 s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] load() can load a stock plugin
@@ -253,6 +249,15 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagCollection
  [x] get() normalizes the tag name
  [x] set() normalizes the tag name
 
+s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
+ [x] append() throws an InvalidArgumentException on invalid callbacks
+ [x] prepend() throws an InvalidArgumentException on invalid callbacks
+ [x] append() throws an InvalidArgumentException on uncallable callbacks
+ [x] prepend() throws an InvalidArgumentException on uncallable callbacks
+ [x] PHP string callbacks are normalized to an instance of TagFilter
+ [x] PHP array callbacks are normalized to an instance of TagFilter
+ [x] Instances of TagFilter are added as-is
+
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateCollection
  [x] set() accepts a string and returns an instance of Template
  [x] set() accepts a callback and returns an instance of Template
@@ -278,15 +283,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() omits NULL values
  [x] toArray() omits empty arrays from values
  [x] toArray() keeps empty arrays if its second argument is TRUE
- [x] replaceBuiltInFilters() replaces built-in attribute filter #int by its callback s9e\TextFormatter\Parser\BuiltInFilters::filterInt
- [x] replaceBuiltInFilters() copies the built-in filters' signatures based on the names of their parameters
- [x] replaceBuiltInFilters() replaces built-in tag filter #filterAttributes by its callback s9e\TextFormatter\Parser::filterAttributes
- [x] replaceBuiltInFilters() replaces custom attribute filter #foo by its registered callback
- [x] replaceBuiltInFilters() replaces custom tag filter #foo by its registered callback
- [x] replaceBuiltInFilters() adds variables set for an attribute filter to the custom filter without overwriting the variables set for the custom filter
- [x] replaceBuiltInFilters() doesn't choke on an empty filterChain
- [x] replaceBuiltInFilters() doesn't touch normal callbacks expressed as a string
- [x] replaceBuiltInFilters() throws an exception on unknown custom filters
  [x] optimizeArray() uses references to deduplicate equal arrays
 
 s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
@@ -569,9 +565,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception if an element has an "use-attribute-sets" attribute
  [x] Not safe: <x:element name="script" xmlns:x="http://www.w3.org/1999/XSL/Transform"><xsl:apply-templates/></x:element>
  [x] Not safe: <element name="script" xmlns="http://www.w3.org/1999/XSL/Transform"><apply-templates/></element>
- [x] Safe if attribute 'email' has filter '#email': <a href="mailto:{@email}"/>
- [x] Safe if attribute 'email' has filter '#email': <a href="mailto:{@email}?subject=foo"/>
- [x] Unsafe even if attribute 'email' has filter '#email': <a href="http://{@email}"/>
+ [x] Safe if attribute 'email' has filter #email: <a href="mailto:{@email}"/>
+ [x] Safe if attribute 'email' has filter #email: <a href="mailto:{@email}?subject=foo"/>
+ [x] Unsafe even if attribute 'email' has filter #email: <a href="http://{@email}"/>
  [x] Not safe: <embed src="{@url}"/>
  [x] Not safe: <embed src="{@url}" allowscriptaccess="always"/>
  [x] Not safe: <embed src="{@url}" allowscriptaccess="sameDomain"/>
@@ -617,18 +613,16 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Not safe if attribute 'foo' has no filter: <script><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></script>
  [x] Not safe if attribute 'foo' has no filter: <xsl:element name="script"><xsl:value-of select="@foo"/></xsl:element>
  [x] Not safe if attribute 'foo' has no filter: <xsl:element name="SCRIPT"><xsl:value-of select="@foo"/></xsl:element>
- [x] Not safe if attribute 'foo' has filter 'json_encode': <script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>
- [x] Safe if attribute 'foo' has filter 'json_encode': <script><xsl:value-of select="@foo"/></script>
+ [x] Not safe if attribute 'foo' has filter '#number': <script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <script><xsl:value-of select="@foo"/></script>
  [x] Safe if attribute 'foo' has filter 'strtotime': <script><xsl:value-of select="@foo"/></script>
  [x] Safe if attribute 'foo' has filter 'urlencode': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#url': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#int': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#uint': <script><xsl:value-of select="@foo"/></script>
  [x] Safe if attribute 'foo' has filter '#float': <script><xsl:value-of select="@foo"/></script>
+ [x] Safe if attribute 'foo' has filter '#int': <script><xsl:value-of select="@foo"/></script>
  [x] Safe if attribute 'foo' has filter '#range': <script><xsl:value-of select="@foo"/></script>
  [x] Safe if attribute 'foo' has filter '#number': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#simpletext': <script><xsl:value-of select="@foo"/></script>
+ [x] Safe if attribute 'foo' has filter '#uint': <script><xsl:value-of select="@foo"/></script>
+ [x] Safe if attribute 'foo' has filter '#url': <script><xsl:value-of select="@foo"/></script>
  [x] Not safe: <style><xsl:apply-templates/></style>
  [x] Not safe: <style><xsl:apply-templates select="st"/></style>
  [x] Not safe: <style><xsl:if test="1"><xsl:apply-templates/></xsl:if></style>
@@ -638,15 +632,15 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Not safe if attribute 'foo' has no filter: <style><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></style>
  [x] Not safe if attribute 'foo' has no filter: <xsl:element name="style"><xsl:value-of select="@foo"/></xsl:element>
  [x] Not safe if attribute 'foo' has no filter: <xsl:element name="STYLE"><xsl:value-of select="@foo"/></xsl:element>
- [x] Not safe if attribute 'foo' has filter '#url': <style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>
- [x] Safe if attribute 'foo' has filter '#url': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#int': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#uint': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#float': <style><xsl:value-of select="@foo"/></style>
+ [x] Not safe if attribute 'foo' has filter '#number': <style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>
  [x] Safe if attribute 'foo' has filter '#color': <style><xsl:value-of select="@foo"/></style>
+ [x] Safe if attribute 'foo' has filter '#float': <style><xsl:value-of select="@foo"/></style>
+ [x] Safe if attribute 'foo' has filter '#int': <style><xsl:value-of select="@foo"/></style>
  [x] Safe if attribute 'foo' has filter '#range': <style><xsl:value-of select="@foo"/></style>
  [x] Safe if attribute 'foo' has filter '#number': <style><xsl:value-of select="@foo"/></style>
  [x] Safe if attribute 'foo' has filter '#simpletext': <style><xsl:value-of select="@foo"/></style>
+ [x] Safe if attribute 'foo' has filter '#uint': <style><xsl:value-of select="@foo"/></style>
+ [x] Safe if attribute 'foo' has filter '#url': <style><xsl:value-of select="@foo"/></style>
  [x] Not safe: <xsl:element name="{FOO}"><xsl:apply-templates/></xsl:element>
  [x] Not safe: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
  [x] Not safe: <b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>
@@ -656,128 +650,124 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Not safe: <b onclick="{@foo}"/>
  [x] Not safe: <b ONCLICK="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <b style="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#color': <b style="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <b style="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#int': <b style="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#range': <b style="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <b style="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#simpletext': <b style="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <b style="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <b style="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'json_encode': <b onclick="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <b onclick="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'strtotime': <b onclick="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <b onclick="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <b onclick="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#int': <b onclick="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#range': <b onclick="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#simpletext': <b onclick="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <b onclick="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <b onclick="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'json_encode': <b onanything="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <b onanything="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'strtotime': <b onanything="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <b onanything="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#float': <b onanything="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#int': <b onanything="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#range': <b onanything="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#simpletext': <b onanything="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <b onanything="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <b onanything="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <form action="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#identifier': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <form action="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <form action="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <form action="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <form action="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <form action="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <q cite="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#identifier': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <q cite="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <q cite="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <xbject data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <xbject data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <q cite="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <q cite="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <q cite="{@foo}"/>
+ [x] Not safe if attribute 'foo' has no filter: <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter 'urlencode': <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter 'rawurlencode': <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#identifier': <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#int': <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#number': <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <foo data="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <foo data="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <input formaction="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#identifier': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <input formaction="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <input formaction="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <input formaction="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <input formaction="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <input formaction="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <a href="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#identifier': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <a href="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <a href="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <a href="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <a href="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <a href="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <html manifest="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#identifier': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <html manifest="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <html manifest="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <html manifest="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <html manifest="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <html manifest="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <video poster="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#identifier': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <video poster="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <video poster="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <video poster="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <video poster="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <video poster="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <img src="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#identifier': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <img src="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <img src="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <img src="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <img src="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <img src="{@foo}"/>
  [x] Not safe if attribute 'foo' has no filter: <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'urlencode': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter 'rawurlencode': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <img lowsrc="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#float': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#identifier': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#int': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#number': <img lowsrc="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#range': <img lowsrc="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#uint': <img lowsrc="{@foo}"/>
+ [x] Safe if attribute 'foo' has filter '#url': <img lowsrc="{@foo}"/>
  [x] Not safe: <b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
@@ -799,16 +789,16 @@ s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] $attr->generator accepts a callback and normalizes it to an instance of ProgrammableCallback
  [x] asConfig() correctly produces a config array
 
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilter
+ [x] Sets the filter's signature to array('attrValue' => null)
+ [x] isSafeInCSS() returns FALSE by default
+ [x] isSafeInURL() returns FALSE by default
+
 s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
  [x] getAttributes() returns an array where keys are the name of the named subpatterns/attributes and values is the regexp that exactly matches them
  [x] getAttributes() preserves the original's regexp "i", "s" and "u" flags
  [x] getRegexp() returns the regexp associated with this attribute preprocessor
-
-s9e\TextFormatter\Tests\Configurator\Items\CallbackPlaceholder
- [x] Is callable
- [x] Throws an exception if invoked
- [x] asConfig() returns the value passed to the constructor
 
 s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] __construct() throws an InvalidArgumentException if its argument is not callable
@@ -820,14 +810,117 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] getJS() returns NULL by default
  [x] setJS() accepts a string and normalizes it to an instance of Code
  [x] setJS() accepts an instance of Code
- [x] fromArray() creates an instance from an array
- [x] fromArray() accepts the name of a built-in filter as callback
  [x] asConfig() returns an array containing the callback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
- [x] If the callback is an instance of CallbackPlaceholder, asConfig() calls the callback's asConfig() and returns its value as callback
- [x] asConfig() returns the vars set with setVars() if the callback is an instance of CallbackPlaceholder
  [x] asConfig() returns the callback's JavaScript as a variant if available
- [x] asConfig() creates a JavaScript variant for values named "regexp"
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Alnum
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterAlnum()
+ [x] Is safe in CSS
+ [x] Is safe in URL
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Choice
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
+ [x] __construct() forwards its arguments to setValues()
+ [x] setValues() creates a regexp that matches all given values (case-insensitive) and calls setRegexp()
+ [x] setValues() creates a case-sensitive regexp if its second argument is TRUE
+ [x] setValues() creates a Unicode-aware regexp if any values are non-ASCII
+ [x] setValues() throws an exception if its second argument is not a boolean
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Color
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterColor()
+ [x] Is safe in CSS
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Email
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterEmail()
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Float
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterFloat()
+ [x] Is safe in CSS
+ [x] Is safe in JS
+ [x] Is safe in URL
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Identifier
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIdentifier()
+ [x] Is safe in CSS
+ [x] Is safe in URL
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Int
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterInt()
+ [x] Is safe in CSS
+ [x] Is safe in JS
+ [x] Is safe in URL
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ip
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIp()
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipport
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpport()
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv4
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpv4()
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv6
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIpv6()
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Map
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterMap()
+ [x] __construct() forwards its arguments to setMap()
+ [x] asConfig() throws an exception if the 'map' var is missing
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Number
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterNumber()
+ [x] Is safe in CSS
+ [x] Is safe in JS
+ [x] Is safe in URL
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Range
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRange()
+ [x] Is safe in CSS
+ [x] Is safe in JS
+ [x] Is safe in URL
+ [x] __construct() forwards its arguments to setRange()
+ [x] asConfig() throws an exception if the 'min' var is missing
+ [x] asConfig() throws an exception if the 'max' var is missing
+ [x] asConfig() returns an array
+ [x] setRange() sets the 'min' and 'max' vars
+ [x] setRange() throws an exception if the first argument is not a number
+ [x] setRange() throws an exception if the second argument is not a number
+ [x] setRange() throws an exception if the min value is greater than the max value
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Regexp
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
+ [x] Is safe in CSS if the regexp is /^(?:left|right|center)$/
+ [x] Is safe in CSS if the regexp is /^[a-z]$/
+ [x] Is not safe in CSS if the regexp is /^[A-z]$/ because it would allow backslashes
+ [x] Is not safe in CSS if the regexp is invalid
+ [x] Is not safe in CSS if no regexp is set
+ [x] Is safe in URL if the regexp is /^[a-z]$/D
+ [x] Is not safe in URL if the regexp is /^foo:$/
+ [x] Is not safe in URL if the regexp is invalid
+ [x] Is not safe in URL if no regexp is set
+ [x] __construct() forwards its arguments to setRegexp()
+ [x] setRegexp() sets the filter's regexp
+ [x] setRegexp() throws an exception if the regexp is invalid
+ [x] asConfig() returns an array
+ [x] asConfig() throws an exception if the 'regexp' var is missing
+ [x] asConfig() creates a JS variant for the regexp
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Simpletext
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterSimpletext()
+ [x] Is safe in CSS
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Uint
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterUint()
+ [x] Is safe in CSS
+ [x] Is safe in JS
+ [x] Is safe in URL
+
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Url
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterUrl()
+ [x] Is safe in CSS
+ [x] Is safe in JS
+ [x] Is safe in URL
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor
@@ -850,10 +943,13 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] $tag->defaultTemplate maps to $tag->templates->get('')
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
  [x] asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
- [x] $tag->filterChain contains the built-in filter '#executeAttributePreprocessors' by default
- [x] $tag->filterChain contains the built-in filter '#filterAttributes' by default
- [x] asConfig() omits '#executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
+ [x] $tag->filterChain starts with Parser::executeAttributePreprocessors by default
+ [x] $tag->filterChain contains Parser::filterAttributes by default
+ [x] asConfig() omits 'Parser::executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
  [x] asConfig() does not modify the tag's filterChain itself
+
+s9e\TextFormatter\Tests\Configurator\Items\TagFilter
+ [x] Sets the filter's signature to array('tag' => null)
 
 s9e\TextFormatter\Tests\Configurator\Items\Template
  [x] Template::__construct() accepts a string

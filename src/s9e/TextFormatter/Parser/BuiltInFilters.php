@@ -71,6 +71,17 @@ class BuiltInFilters
 	}
 
 	/**
+	* Filter an int value
+	*
+	* @param  string $attrValue Original value
+	* @return mixed             Filtered value, or FALSE if invalid
+	*/
+	public static function filterInt($attrValue)
+	{
+		return filter_var($attrValue, FILTER_VALIDATE_INT);
+	}
+
+	/**
 	* Filter an IP value (includes IPv4 and IPv6)
 	*
 	* @param  string $attrValue Original value
@@ -158,17 +169,6 @@ class BuiltInFilters
 		}
 
 		return $attrValue;
-	}
-
-	/**
-	* Filter an int value
-	*
-	* @param  string $attrValue Original value
-	* @return mixed             Filtered value, or FALSE if invalid
-	*/
-	public static function filterInt($attrValue)
-	{
-		return filter_var($attrValue, FILTER_VALIDATE_INT);
 	}
 
 	/**

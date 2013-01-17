@@ -17,7 +17,6 @@ use InvalidArgumentException;
 use RuntimeException;
 use XSLTProcessor;
 use s9e\TextFormatter\Configurator\Items\Attribute;
-use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
@@ -477,36 +476,6 @@ abstract class TemplateChecker
 	}
 
 	/**
-	* Evaluate whether an attribute is safe(ish) to use in a URL
-	*
-	* What we look out for:
-	*  - javascript: URI
-	*  - data: URI (high potential for XSS)
-	*
-	* @param  Attribute $attribute
-	* @return bool
-	*/
-	protected static function isSafeInURL(Attribute $attribute)
-	{
-		// List of filters that make a value safe to be used as/in a URL
-		$safeFilters = array(
-			'#url',
-			'urlencode',
-			'rawurlencode',
-			'#identifier',
-			'#int',
-			'#uint',
-			'#float',
-			'#range',
-			'#number',
-			/** @todo should probably ensure the regexp isn't something useless like /./ */
-			'#regexp'
-		);
-
-		return self::hasSafeFilter($attribute, $safeFilters);
-	}
-
-	/**
 	* Evaluate whether an attribute is safe(ish) to use in a CSS declaration
 	*
 	* What we look out for: anything that is not a number, a URL or a color. We also allow "simple"
@@ -524,21 +493,15 @@ abstract class TemplateChecker
 	*/
 	protected static function isSafeInCSS(Attribute $attribute)
 	{
-		// List of filters that make a value safe to be used as/in CSS
-		$safeFilters = array(
-			// URLs should be safe because characters ()'" are urlencoded
-			'#url',
-			'#int',
-			'#uint',
-			'#float',
-			'#color',
-			'#number',
-			'#range',
-			'#regexp',
-			'#simpletext'
-		);
+		foreach ($attribute->filterChain as $filter)
+		{
+			if ($filter->isSafeInCSS())
+			{
+				return true;
+			}
+		}
 
-		return self::hasSafeFilter($attribute, $safeFilters);
+		return false;
 	}
 
 	/**
@@ -554,45 +517,47 @@ abstract class TemplateChecker
 	*/
 	protected static function isSafeInJS(Attribute $attribute)
 	{
-		// List of filters that make a value safe to be used in a script
-		$safeFilters = array(
-			// Those might see some usage
-			'json_encode',
-			'rawurlencode',
-			'strtotime',
+		// List of callbacks that make a value safe to be used in a script
+		$safeCallbacks = array(
 			'urlencode',
-			// URLs should be safe because characters ()'" are urlencoded
-			'#url',
-			'#int',
-			'#uint',
-			'#float',
-			'#range',
-			'#number',
-			'#simpletext'
+			'strtotime',
+			'rawurlencode'
 		);
 
-		return self::hasSafeFilter($attribute, $safeFilters);
+		foreach ($attribute->filterChain as $filter)
+		{
+			if ($filter->isSafeInJS()
+			 || in_array($filter->getCallback(), $safeCallbacks, true))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
-	* Return whether an attribute's filterChain contains a filter from given list
+	* Evaluate whether an attribute is safe(ish) to use in a URL
+	*
+	* What we look out for:
+	*  - javascript: URI
+	*  - data: URI (high potential for XSS)
 	*
 	* @param  Attribute $attribute
-	* @param  array     $safeFilters
 	* @return bool
 	*/
-	protected static function hasSafeFilter(Attribute $attribute, array $safeFilters)
+	protected static function isSafeInURL(Attribute $attribute)
 	{
+		// List of callbacks that make a value safe to be used in a script
+		$safeCallbacks = array(
+			'urlencode',
+			'rawurlencode'
+		);
+
 		foreach ($attribute->filterChain as $filter)
 		{
-			$callback = $filter->getCallback();
-
-			if ($callback instanceof CallbackPlaceholder)
-			{
-				$callback = $callback->asConfig();
-			}
-
-			if (in_array($callback, $safeFilters, true))
+			if ($filter->isSafeInURL()
+			 || in_array($filter->getCallback(), $safeCallbacks, true))
 			{
 				return true;
 			}

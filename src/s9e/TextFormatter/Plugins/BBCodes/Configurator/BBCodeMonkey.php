@@ -12,14 +12,21 @@ use DOMXPath;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
-abstract class BBCodeMonkey
+class BBCodeMonkey
 {
+	/**
+	* @var Configurator Instance of Configurator;
+	*/
+	protected $configurator;
+
 	/**
 	* @var array List of pre- and post- filters that are explicitly allowed in BBCode definitions.
 	*            We use a whitelist approach because there are so many different risky callbacks
@@ -68,12 +75,23 @@ abstract class BBCodeMonkey
 	);
 
 	/**
+	* Constructor
+	*
+	* @param  Configurator $configurator Instance of Configurator
+	* @return void
+	*/
+	public function __construct(Configurator $configurator)
+	{
+		$this->configurator = $configurator;
+	}
+
+	/**
 	* Create a BBCode based on its reference usage
 	*
 	* @param  string $usage BBCode usage, e.g. [B]{TEXT}[/b]
 	* @return array
 	*/
-	public static function parse($usage)
+	public function parse($usage)
 	{
 		$tag    = new Tag;
 		$bbcode = new BBCode;
@@ -130,7 +148,7 @@ abstract class BBCodeMonkey
 		}
 
 		// Add the attributes and get the token translation table
-		$tokens = self::addAttributes($attributes, $bbcode, $tag);
+		$tokens = $this->addAttributes($attributes, $bbcode, $tag);
 
 		// Test whether the passthrough token is used for something else, in which case we need
 		// to unset it
@@ -370,7 +388,7 @@ abstract class BBCodeMonkey
 	* @return array          Array of [token id => attribute name] where FALSE in place of the
 	*                        name indicates that the token is ambiguous (e.g. used multiple times)
 	*/
-	protected static function addAttributes($str, BBCode $bbcode, Tag $tag)
+	protected function addAttributes($str, BBCode $bbcode, Tag $tag)
 	{
 		/**
 		* @var array List of composites' tokens. Each element is composed of an attribute name, the
@@ -440,7 +458,7 @@ abstract class BBCodeMonkey
 					unset($token['options']['useContent']);
 
 					// Add the attribute
-					$tag->attributes[$attrName] = self::generateAttribute($token);
+					$tag->attributes[$attrName] = $this->generateAttribute($token);
 
 					// Record the token ID if applicable
 					$tokenId = $token['id'];
@@ -510,7 +528,10 @@ abstract class BBCodeMonkey
 
 					// Create the attribute that corresponds to this subpattern
 					$tag->attributes[$matchName] = new Attribute;
-					$tag->attributes[$matchName]->filterChain->append('#' . strtolower($tokenType));
+
+					// Append the corresponding filter
+					$filter = $this->configurator->attributeFilters->get('#' . strtolower($tokenType));
+					$tag->attributes[$matchName]->filterChain->append($filter);
 
 					// Record the attribute name associated with this token ID
 					$table[$tokenId] = $matchName;
@@ -566,9 +587,11 @@ abstract class BBCodeMonkey
 
 		foreach ($newAttributes as $attrName => $regexp)
 		{
+			$filter = $this->configurator->attributeFilters->get('#regexp');
+
 			// Create the attribute using this regexp as filter
 			$tag->attributes[$attrName] = new Attribute;
-			$tag->attributes[$attrName]->filterChain->append('#regexp', array('regexp' => $regexp));
+			$tag->attributes[$attrName]->filterChain->append($filter)->setRegexp($regexp);
 		}
 
 		return $table;
@@ -676,61 +699,44 @@ abstract class BBCodeMonkey
 	* @param  array  $token  Token this attribute is based on
 	* @return void
 	*/
-	protected static function generateAttribute(array $token)
+	protected function generateAttribute(array $token)
 	{
 		$attribute = new Attribute;
 
 		if (isset($token['options']['preFilter']))
 		{
-			self::appendFilters($attribute, $token['options']['preFilter']);
+			$this->appendFilters($attribute, $token['options']['preFilter']);
 			unset($token['options']['preFilter']);
 		}
 
 		if ($token['type'] === 'REGEXP')
 		{
-			$attribute->filterChain->append('#regexp', array('regexp' => $token['regexp']));
+			$filter = $this->configurator->attributeFilters->get('#regexp');
+			$attribute->filterChain->append($filter)->setRegexp($token['regexp']);
 		}
 		elseif ($token['type'] === 'RANGE')
 		{
-			$attribute->filterChain->append('#range', array(
-				'min' => $token['min'],
-				'max' => $token['max']
-			));
+			$filter = $this->configurator->attributeFilters->get('#range');
+			$attribute->filterChain->append($filter)->setRange($token['min'], $token['max']);
 		}
 		elseif ($token['type'] === 'RANDOM')
 		{
-			$attribute->generator = ProgrammableCallback::fromArray(array(
-				'callback' => 'mt_rand',
-				'params'   => array($token['min'], $token['max'])
-			));
+			$attribute->generator = new ProgrammableCallback('mt_rand');
+			$attribute->generator->addParameterByValue((int) $token['min']);
+			$attribute->generator->addParameterByValue((int) $token['max']);
 		}
 		elseif ($token['type'] === 'CHOICE')
 		{
-			// Build a regexp from the list of choices then add a "#regexp" filter
-			$regexp = RegexpBuilder::fromList(
+			$filter = $this->configurator->attributeFilters->get('#choice');
+			$attribute->filterChain->append($filter)->setValues(
 				explode(',', $token['choices']),
-				array('delimiter' => '/')
+				!empty($token['options']['caseSensitive'])
 			);
-			$regexp = '/^' . $regexp . '$/D';
-
-			// Add the case-insensitive flag unless specified otherwise
-			if (empty($token['options']['caseSensitive']))
-			{
-				$regexp .= 'i';
-			}
 			unset($token['options']['caseSensitive']);
-
-			// Add the Unicode flag if the regexp isn't purely ASCII
-			if (!preg_match('#^[[:ascii:]]*$#D', $regexp))
-			{
-				$regexp .= 'u';
-			}
-
-			$attribute->filterChain->append('#regexp', array('regexp' => $regexp));
 		}
 		elseif ($token['type'] === 'MAP')
 		{
-			// First we map individual keys to their value
+			// Build the map from the string
 			$map = array();
 			foreach (explode(',', $token['map']) as $pair)
 			{
@@ -744,45 +750,13 @@ abstract class BBCodeMonkey
 				$map[substr($pair, 0, $pos)] = substr($pair, 1 + $pos);
 			}
 
-			// Group values by keys
-			$valueKeys = array();
-			foreach ($map as $key => $value)
-			{
-				$valueKeys[$value][] = $key;
-			}
-
-			// Now create a regexp and an entry in the map for each group
-			$map = array();
-			foreach ($valueKeys as $value => $keys)
-			{
-				$regexp = RegexpBuilder::fromList($keys, array('delimiter' => '/'));
-				$regexp = '/^' . $regexp . '$/D';
-
-				// Add the case-insensitive flag unless specified otherwise
-				if (empty($token['options']['caseSensitive']))
-				{
-					$regexp .= 'i';
-				}
-
-				// Add the Unicode flag if the regexp isn't purely ASCII
-				if (!preg_match('#^[[:ascii:]]*$#D', $regexp))
-				{
-					$regexp .= 'u';
-				}
-
-				// Add the [regexp,value] pair to the map
-				$map[] = array($regexp, $value);
-			}
-
-			// If the "strict" option is enabled, a catch-all regexp which replaces the value with
-			// false is appended to the list
-			if (!empty($token['options']['strict']))
-			{
-				$map[] = array('//', false);
-			}
-
-			// Append the #map filter
-			$attribute->filterChain->append('#map', array('map' => $map));
+			// Create the filter then append it to the attribute
+			$filter = $this->configurator->attributeFilters->get('#map');
+			$attribute->filterChain->append($filter)->setMap(
+				$map,
+				!empty($token['options']['caseSensitive']),
+				!empty($token['options']['strict'])
+			);
 
 			// Remove options that are not needed anymore
 			unset($token['options']['caseSensitive']);
@@ -790,12 +764,13 @@ abstract class BBCodeMonkey
 		}
 		elseif ($token['type'] !== 'TEXT')
 		{
-			$attribute->filterChain->append('#' . strtolower($token['type']));
+			$filter = $this->configurator->attributeFilters->get('#' . $token['type']);
+			$attribute->filterChain->append($filter);
 		}
 
 		if (isset($token['options']['postFilter']))
 		{
-			self::appendFilters($attribute, $token['options']['postFilter']);
+			$this->appendFilters($attribute, $token['options']['postFilter']);
 			unset($token['options']['postFilter']);
 		}
 
@@ -826,16 +801,17 @@ abstract class BBCodeMonkey
 	* @param  string    $filters   List of filters, separated with commas
 	* @return void
 	*/
-	protected static function appendFilters(Attribute $attribute, $filters)
+	protected function appendFilters(Attribute $attribute, $filters)
 	{
-		foreach (preg_split('#\\s*,\\s*#', $filters) as $filter)
+		foreach (preg_split('#\\s*,\\s*#', $filters) as $filterName)
 		{
-			if (substr($filter, 0, 1) !== '#'
-			 && !in_array($filter, self::$allowedFilters, true))
+			if (substr($filterName, 0, 1) !== '#'
+			 && !in_array($filterName, self::$allowedFilters, true))
 			{
-				throw new RuntimeException("Filter '" . $filter . "' is not allowed");
+				throw new RuntimeException("Filter '" . $filterName . "' is not allowed");
 			}
 
+			$filter = $this->configurator->attributeFilters->get($filterName);
 			$attribute->filterChain->append($filter);
 		}
 	}

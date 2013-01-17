@@ -36,19 +36,21 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function setUp()
 	{
-		// If the tag does not exist...
-		if (!isset($this->configurator->tags[$this->tagName]))
+		if (isset($this->configurator->tags[$this->tagName]))
 		{
-			// Create a tag
-			$tag = $this->configurator->tags->add($this->tagName);
-
-			// Add an attribute using the #url filter
-			$tag->attributes->add($this->attrName)->filterChain->append('#url');
-
-			// Set the default template
-			$tag->defaultTemplate
-				= '<a href="{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
+			return;
 		}
+
+		// Create a tag
+		$tag = $this->configurator->tags->add($this->tagName);
+
+		// Add an attribute using the default url filter
+		$filter = $this->configurator->attributeFilters->get('#url');
+		$tag->attributes->add($this->attrName)->filterChain->append($filter);
+
+		// Set the default template
+		$tag->defaultTemplate
+			= '<a href="{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
 	}
 
 	/**

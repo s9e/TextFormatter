@@ -11,10 +11,16 @@ use DOMDocument;
 use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Collections\NormalizeCollection;
 
 class Repository
 {
+	/**
+	* @var BBCodeMonkey Instance of BBCodeMonkey used to parse definitions
+	*/
+	protected $bbcodeMonkey;
+
 	/**
 	* @var DOMDocument Repository document
 	*/
@@ -23,9 +29,11 @@ class Repository
 	/**
 	* Constructor
 	*
+	* @param  mixed        $value        Either a DOMDocument or the path to a repository's XML file
+	* @param  Configurator $configurator Instance of Configurator
 	* @return void
 	*/
-	public function __construct($value)
+	public function __construct($value, Configurator $configurator)
 	{
 		if (!($value instanceof DOMDocument))
 		{
@@ -49,6 +57,7 @@ class Repository
 			$value = $dom;
 		}
 
+		$this->bbcodeMonkey = new BBCodeMonkey($configurator);
 		$this->dom = $value;
 
 		return $value;
@@ -101,7 +110,7 @@ class Repository
 		// Now we can parse the BBCode usage and prepare the template.
 		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
 		$usage      = $node->getElementsByTagName('usage')->item(0)->textContent;
-		$config     = BBCodeMonkey::parse($usage);
+		$config     = $this->bbcodeMonkey->parse($usage);
 		$bbcode     = $config['bbcode'];
 		$bbcodeName = $config['name'];
 		$tag        = $config['tag'];

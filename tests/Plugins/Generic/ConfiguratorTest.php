@@ -4,8 +4,7 @@ namespace s9e\TextFormatter\Tests\Plugins\Generic;
 
 use Exception;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\CallbackPlaceholder;
-use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp as RegexpFilter;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\Generic\Configurator;
 use s9e\TextFormatter\Tests\Test;
@@ -87,19 +86,13 @@ class ConfiguratorTest extends Test
 
 		$this->assertTrue(
 			$tag->attributes->get('w')->filterChain->contains(
-				ProgrammableCallback::fromArray(array(
-					'callback' => new CallbackPlaceholder('#regexp'),
-					'vars'     => array('regexp' => '/^(?<w>[0-9]+)$/D')
-				))
+				new RegexpFilter('/^(?<w>[0-9]+)$/D')
 			)
 		);
 
 		$this->assertTrue(
 			$tag->attributes->get('h')->filterChain->contains(
-				ProgrammableCallback::fromArray(array(
-					'callback' => new CallbackPlaceholder('#regexp'),
-					'vars'     => array('regexp' => '/^(?<h>[0-9]+)$/D')
-				))
+				new RegexpFilter('/^(?<h>[0-9]+)$/D')
 			)
 		);
 	}
