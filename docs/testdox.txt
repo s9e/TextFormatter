@@ -774,6 +774,12 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Safe if attribute 'foo' has filter '#uint': <img lowsrc="{@foo}"/>
  [x] Safe if attribute 'foo' has filter '#url': <img lowsrc="{@foo}"/>
  [x] Not safe: <b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>
+ [x] Not safe: <xsl:value-of select="document(@foo)"/>
+ [x] Not safe: <b title="...{document()}"/>
+ [x] Not safe: <b title="...{ document () }"/>
+ [x] Not safe: <b title="...{ doc&#117;ment () }"/>
+ [x] Safe: <b title="document()"/>
+ [x] Safe: <b title="{&quot;document()&quot;}"/>
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() can load 'foo'

@@ -55,6 +55,7 @@ abstract class TemplateChecker
 		self::checkUnsafeContent($xpath, $tag);
 		self::checkPHPTags($xpath);
 		self::checkAttributeSets($xpath);
+		self::checkDocumentCalls($xpath);
 	}
 
 	/**
@@ -411,6 +412,48 @@ abstract class TemplateChecker
 		if ($nodes->length)
 		{
 			throw new UnsafeTemplateException('Cannot assess the safety of attribute sets', $nodes->item(0));
+		}
+	}
+
+	/**
+	* Look for document() calls
+	*
+	* @param DOMXPath $xpath DOMXPath associated with the template being checked
+	*/
+	protected static function checkDocumentCalls(DOMXPath $xpath)
+	{
+		$check = array();
+
+		foreach ($xpath->query('//@*') as $attribute)
+		{
+			if ($attribute->parentNode->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
+			{
+				// Attribute of an XSL element. May or may not use XPath, but it shouldn't produce
+				// false-positives
+				$check[] = array($attribute, $attribute->value);
+			}
+			else
+			{
+				// Attribute of an HTML (or otherwise) element -- Look for inline expressions
+				foreach (self::getInlineExpressions($attribute->value) as $expr)
+				{
+					$check[] = array($attribute, $expr);
+				}
+			}
+		}
+
+		foreach ($check as $pair)
+		{
+			list($attribute, $expr) = $pair;
+
+			// Remove string literals from the expression
+			$expr = preg_replace('#([\'"]).*?\\1#s', '', $expr);
+
+			// Test whether the expression contains a document() call
+			if (preg_match('#document\\s*\\(#i', $expr))
+			{
+				throw new UnsafeTemplateException("An XPath expression uses the document() function", $attribute);
+			}
 		}
 	}
 
