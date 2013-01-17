@@ -369,6 +369,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
  [x] fromList(['foo', 'foo']) returns 'foo'
+ [x] fromList(['FOO', 'foo']) returns '(?:FOO|foo)'
+ [x] fromList(['FOO', 'foo'], ["caseInsensitive" => true]) returns 'foo'
  [x] fromList(['a']) returns 'a'
  [x] fromList(['a', 'a']) returns 'a'
  [x] fromList(['/']) returns '\\/'

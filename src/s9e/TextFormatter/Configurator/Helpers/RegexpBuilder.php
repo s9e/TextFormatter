@@ -21,9 +21,10 @@ abstract class RegexpBuilder
 	public static function fromList(array $words, array $options = array())
 	{
 		$options += array(
-			'delimiter'    => '/',
-			'specialChars' => array(),
-			'useLookahead' => false
+			'delimiter'       => '/',
+			'caseInsensitive' => false,
+			'specialChars'    => array(),
+			'useLookahead'    => false
 		);
 
 		// Sort the words in order to produce the same regexp regardless of the words' order
@@ -64,6 +65,15 @@ abstract class RegexpBuilder
 
 		foreach ($words as $word)
 		{
+			if ($options['caseInsensitive'])
+			{
+				$word = strtr(
+					$word,
+					'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+					'abcdefghijklmnopqrstuvwxyz'
+				);
+			}
+
 			if (preg_match_all('#.#us', $word, $matches) === false)
 			{
 				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
