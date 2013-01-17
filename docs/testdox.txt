@@ -927,6 +927,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] asConfig() returns an instance of Variant
  [x] asConfig() returns a JS variant
  [x] asConfig() returns a JS variant that is an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
+ [x] asConfig() adds a global flag to the JavaScript RegExp if isGlobal is true
 
 s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] An array of options can be passed to the constructor

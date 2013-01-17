@@ -55,4 +55,17 @@ class RegexpTest extends Test
 			$regexp->asConfig()->get('JS')
 		);
 	}
+
+	/**
+	* @testdox asConfig() adds a global flag to the JavaScript RegExp if isGlobal is true
+	*/
+	public function testAsConfigGlobal()
+	{
+		$regexp = new Regexp('//', true);
+
+		$this->assertSame(
+			'g',
+			$regexp->asConfig()->get('JS')->flags
+		);
+	}
 }
