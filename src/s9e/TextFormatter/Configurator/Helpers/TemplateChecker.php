@@ -265,15 +265,9 @@ abstract class TemplateChecker
 				$matchName = $node->localName;
 				$matchList = $checkAttributes;
 
-				preg_match_all('#(\\{+)([^}]+)\\}#', $node->nodeValue, $matches, PREG_SET_ORDER);
-
-				foreach ($matches as $m)
+				foreach (self::getInlineExpressions($node->nodeValue) as $expr)
 				{
-					// If the number of { is odd, it means the expression will be evaluated
-					if (strlen($m[1]) % 2)
-					{
-						$checkExpr[] = $m[2];
-					}
+					$checkExpr[] = $expr;
 				}
 			}
 			else
@@ -473,6 +467,29 @@ abstract class TemplateChecker
 
 		// Not safe
 		throw new UnsafeTemplateException("Attribute '" . $attrName . "' is not properly filtered to be used in " . $contentType, $node);
+	}
+
+	/**
+	* Capture and return the content of all inline expressions contained in an attribute's value
+	*
+	* @param  string $str Attribute's value
+	* @return array       List of XPath expressions
+	*/
+	protected static function getInlineExpressions($str)
+	{
+		preg_match_all('#(\\{+)([^}]+)\\}#', $str, $matches, PREG_SET_ORDER);
+
+		$expressions = array();
+		foreach ($matches as $m)
+		{
+			// If the number of { is odd, it means the expression will be evaluated
+			if (strlen($m[1]) % 2)
+			{
+				$expressions[] = $m[2];
+			}
+		}
+
+		return $expressions;
 	}
 
 	/**
