@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
@@ -156,22 +157,23 @@ class ProgrammableCallback implements ConfigProvider
 			if (is_numeric($k))
 			{
 				// By value
-				$config['params'][] = ($v instanceof ConfigProvider)
-				                    ? $v->asConfig()
-				                    : $v;
+				$config['params'][] = $v;
 			}
 			elseif (isset($this->vars[$k]))
 			{
 				// By name, but the value is readily available in $this->vars
-				$config['params'][] = ($this->vars[$k] instanceof ConfigProvider)
-				                    ? $this->vars[$k]->asConfig()
-				                    : $this->vars[$k];
+				$config['params'][] = $this->vars[$k];
 			}
 			else
 			{
 				// By name
 				$config['params'][$k] = null;
 			}
+		}
+
+		if (isset($config['params']))
+		{
+			$config['params'] = ConfigHelper::toArray($config['params'], true, true);
 		}
 
 		if (isset($this->js))

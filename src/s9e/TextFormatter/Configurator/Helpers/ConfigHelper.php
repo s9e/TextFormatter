@@ -147,15 +147,16 @@ abstract class ConfigHelper
 	*
 	* @param  mixed $value
 	* @param  bool  $keepEmpty Whether to keep empty arrays instead of removing them
+	* @param  bool  $keepNull  Whether to keep NULL values instead of removing them
 	* @return array
 	*/
-	public static function toArray($value, $keepEmpty = false)
+	public static function toArray($value, $keepEmpty = false, $keepNull = false)
 	{
 		$array = array();
 
 		foreach ($value as $k => $v)
 		{
-			if (!isset($v))
+			if (!isset($v) && !$keepNull)
 			{
 				// We don't record NULL values
 				continue;
@@ -167,9 +168,13 @@ abstract class ConfigHelper
 			}
 			elseif ($v instanceof Traversable || is_array($v))
 			{
-				$v = self::toArray($v);
+				$v = self::toArray($v, $keepEmpty, $keepNull);
 			}
-			elseif (!is_scalar($v))
+			elseif (is_scalar($v) || is_null($v))
+			{
+				// Do nothing
+			}
+			else
 			{
 				$type = (is_object($v))
 				      ? 'an instance of ' . get_class($v)

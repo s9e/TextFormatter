@@ -196,17 +196,6 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox toArray() omits NULL values
-	*/
-	public function testNull()
-	{
-		$original = array('foo' => array(1), 'bar' => null);
-		$expected = array('foo' => array(1));
-
-		$this->assertSame($expected, ConfigHelper::toArray($original));
-	}
-
-	/**
 	* @testdox toArray() omits empty arrays from values
 	*/
 	public function testEmptyArray()
@@ -218,13 +207,58 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox toArray() keeps empty arrays if its second argument is TRUE
+	* @testdox toArray() preserves empty arrays if its second argument is TRUE
 	*/
 	public function testKeepEmptyArray()
 	{
 		$original = array('foo' => array(1), 'bar' => array());
+		$expected = $original;
 
-		$this->assertSame($original, ConfigHelper::toArray($original, true));
+		$this->assertSame($expected, ConfigHelper::toArray($original, true));
+	}
+
+	/**
+	* @testdox toArray() preserves empty arrays in deep arrays if its second argument is TRUE
+	*/
+	public function testKeepEmptyArrayDeep()
+	{
+		$original = array(array('bar' => array()));
+		$expected = $original;
+
+		$this->assertSame($expected, ConfigHelper::toArray($original, true));
+	}
+
+	/**
+	* @testdox toArray() omits NULL values
+	*/
+	public function testNull()
+	{
+		$original = array('foo' => array(1), 'bar' => null);
+		$expected = array('foo' => array(1));
+
+		$this->assertSame($expected, ConfigHelper::toArray($original));
+	}
+
+	/**
+	* @testdox toArray() preserves NULL values if its third argument is TRUE
+	*/
+	public function testKeepNull()
+	{
+		$original = array('foo' => array(1), 'bar' => null);
+		$expected = $original;
+
+		$this->assertSame($expected, ConfigHelper::toArray($original, false, true));
+	}
+
+	/**
+	* @testdox toArray() preserves NULL values in deep arrays if its third argument is TRUE
+	*/
+	public function testKeepNullDeep()
+	{
+		$original = array(array('bar' => null));
+		$expected = $original;
+
+		$this->assertSame($expected, ConfigHelper::toArray($original, false, true));
 	}
 
 	/**

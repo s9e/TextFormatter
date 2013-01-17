@@ -280,9 +280,12 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() works with deep arrays
  [x] toArray() calls asConfig() for objects in deep arrays that implement ConfigProvider
  [x] toArray() throws an exception for objects in deep arrays that are not Traversable and do not implement ConfigProvider
- [x] toArray() omits NULL values
  [x] toArray() omits empty arrays from values
- [x] toArray() keeps empty arrays if its second argument is TRUE
+ [x] toArray() preserves empty arrays if its second argument is TRUE
+ [x] toArray() preserves empty arrays in deep arrays if its second argument is TRUE
+ [x] toArray() omits NULL values
+ [x] toArray() preserves NULL values if its third argument is TRUE
+ [x] toArray() preserves NULL values in deep arrays if its third argument is TRUE
  [x] optimizeArray() uses references to deduplicate equal arrays
 
 s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
@@ -817,6 +820,8 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
  [x] asConfig() returns the callback's JavaScript as a variant if available
  [x] asConfig() replaces values that implement ConfigProvider with their config value
+ [x] asConfig() recurses into params via ConfigHelper::toArray() to convert structures to arrays
+ [x] asConfig() preserves NULL values and empty arrays in the callback's parameters
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Alnum
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterAlnum()

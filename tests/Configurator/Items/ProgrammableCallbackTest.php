@@ -221,6 +221,39 @@ class ProgrammableCallbackTest extends Test
 			$config['params'][1]
 		);
 	}
+
+	/**
+	* @testdox asConfig() recurses into params via ConfigHelper::toArray() to convert structures to arrays
+	*/
+	public function testAsConfigProviderDeep()
+	{
+		$pc = new ProgrammableCallback(function(){});
+		$pc->addParameterByValue(array(new Regexp('/x/')));
+
+		$config = $pc->asConfig();
+
+		$this->assertNotInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Regexp',
+			$config['params'][0][0]
+		);
+	}
+
+	/**
+	* @testdox asConfig() preserves NULL values and empty arrays in the callback's parameters
+	*/
+	public function testAsConfigPreserve()
+	{
+		$pc = new ProgrammableCallback(function(){});
+		$pc->addParameterByValue(null);
+		$pc->addParameterByValue(array());
+
+		$config = $pc->asConfig();
+
+		$this->assertSame(
+			array(null, array()),
+			$config['params']
+		);
+	}
 }
 
 class DummyStaticCallback
