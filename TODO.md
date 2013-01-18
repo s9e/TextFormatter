@@ -1,7 +1,6 @@
 TODO
 ====
 
-- add an option to enable/disable individual tags in Parser(?)
 - finish the Fabric plugin
 - create a plugin for the Markdown syntax (or possibly Upskirt/Redcarpet) and name it Downmark to feel witty and have a plugin for each letter from A to H
 - write documentation, el oh el
@@ -13,7 +12,6 @@ TODO
 - Add a [TWITCH] BBCode. Add support for embeding TwitchTV/JustinTV videos AND live channels
 - Add support for HD/other options in [YOUTUBE] ?
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
-- Fix [EMAIL]
 - Tags that have a nestingLimit of 1: is there any benefit to adding a denyChild rule to it?
 - Add exception codes to exceptions?
 - Possibly add an "hex" filter for /^[0-9a-f]+$/iD - what would be the return value though, string or integer? does "10" return 10 or 16 (0x10)
@@ -35,14 +33,13 @@ TODO
 - Consider a way to disallow HTML elements globally or at the tag-level. For example, a way to globally disable <a> so that BBCodes that produces links are disabled
 - Consider guessing a value for quickMatch based on a plugin's regexp, using its fixed part if applicable [NOTE: gotta identify escape sequences such as \d and modifiers such as a+]
 - Read in phpBB's forum 'maybe you put a threshold on errors -- if there are more than, say, 10, put out an error saying "Too many BBCode formatting errors found; fix the above and Preview the post again."' -- https://area51.phpbb.com/phpBB/viewtopic.php?f=108&t=33021&p=249335#p249335 -- NOTE: kind of sucks when those errors come from false positive from things like Autolink
-- IDEA(redux): create a Stylesheet object in Configurator. Params and templates can be registered somehow. Reconsider the DynamicTemplate thing from above. Get rid of ConfiguratorBase::getXSL()
 - Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
 - JS parser needs quickMatch to be UTF-8
 - Find a good way to test the JavaScript HTML plugins
-- Should skipped end tags consume their text? Probably not, but it renders "[B]bold [i]italic[/b][/I]" more nicely by hiding the extra [/I] -- on the other hand, some people post invalid BBCodes expecting them to be displayed as text
 - Look into ext/dom's XML_PARSE_HUGE -- apparently it's needed to render text with 1000s of tags
 - Add some sort of optional filtering/escaping to the variables used in repositories? htmlspecialchars(), json_encode()
 - Add a way to declare an attribute "safe in X", e.g. "safe in CSS" regardless of its filterChain to account for filters whose safety is unclear. Also try to determine whether a given regexp is safe: collect all the fixed parts (what about meta-characters and escape sequences?) plus the content of character classes (also negated classes) and make it a big character class then individually test whether it matches a list of forbidden characters
 - Limit URLs length to whatever browsers grok
 - Add some sort of TemplateHelper::loadHTML() to load HTML templates. XSL elements should be dropped or converted to HTML elements, and curly brackets in attributes should be escaped
 - Exploitable? http://sla.ckers.org/forum/read.php?2,36997
+- IDEA: when a tag is added, set a flag. Sort tags at beginning of processCurrentTag() if the flag is set. This way, a filter that adds a tag would force the tags to be re-sorted
