@@ -43,3 +43,4 @@ TODO
 - Add some sort of TemplateHelper::loadHTML() to load HTML templates. XSL elements should be dropped or converted to HTML elements, and curly brackets in attributes should be escaped
 - Exploitable? http://sla.ckers.org/forum/read.php?2,36997
 - IDEA: when a tag is added, set a flag. Sort tags at beginning of processCurrentTag() if the flag is set. This way, a filter that adds a tag would force the tags to be re-sorted
+- Add Filter::isSafeAsURL() to complement Filter::isSafeInURL() -- for example: <a href="http://foo.com/{IDENTIFIER}"/> and <a href="{IDENTIFIER}:{TEXT;postFilter=urlencode"/> -- {IDENTIFIER} is safe *in* URL, but not at the beginning ("javascript:alert%28%22k%22%29"), whereas {URL} is safe as URL
