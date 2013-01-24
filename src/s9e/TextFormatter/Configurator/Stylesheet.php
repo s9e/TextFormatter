@@ -151,7 +151,12 @@ class Stylesheet
 		}
 
 		// Start the stylesheet with the boilerplate stuff
-		$xsl .= '><xsl:output method="' . $this->outputMethod . '" encoding="utf-8" indent="no"/>';
+		$xsl .= '><xsl:output method="' . $this->outputMethod . '" encoding="utf-8" indent="no"';
+		if ($this->outputMethod === 'xml')
+		{
+			$xsl .= ' omit-xml-declaration="yes"';
+		}
+		$xsl .= '/>';
 
 		// Add stylesheet parameters
 		foreach ($this->parameters as $paramName => $paramValue)

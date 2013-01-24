@@ -1004,6 +1004,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
 
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
+ [x] setOutputMethod('xml') sets the stylesheet's output to omit the XML declaration
  [x] setOutputMethod('text') throws an exception
  [x] setWildcardTemplate() accepts a string as template
  [x] setWildcardTemplate() accepts a callback as template

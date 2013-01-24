@@ -26,6 +26,17 @@ class StylesheetTest extends Test
 	}
 
 	/**
+	* @testdox setOutputMethod('xml') sets the stylesheet's output to omit the XML declaration
+	*/
+	public function testSetOutputMethodProlog()
+	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->setOutputMethod('xml');
+
+		$this->assertContains(' omit-xml-declaration="yes"', $stylesheet->get());
+	}
+
+	/**
 	* @testdox setOutputMethod('text') throws an exception
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Only html and xml methods are supported
