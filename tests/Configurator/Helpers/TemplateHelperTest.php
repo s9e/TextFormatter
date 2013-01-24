@@ -2,6 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
+use Exception;
+use RuntimeException;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
@@ -136,5 +138,103 @@ class TemplateHelperTest extends Test
 	public function testNormalizeInvalid()
 	{
 		TemplateHelper::normalize('<xsl:value-of select="@foo">');
+	}
+
+	/**
+	* @testdox parseAttributeValueTemplate() tests
+	* @dataProvider getAVT
+	*/
+	public function testParseAttributeValueTemplate($attrValue, $expected)
+	{
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
+
+		$this->assertSame(
+			$expected,
+			TemplateHelper::parseAttributeValueTemplate($attrValue)
+		);
+	}
+
+	public function getAVT()
+	{
+		return array(
+			array(
+				'',
+				array()
+			),
+			array(
+				'foo',
+				array(
+					array('literal', 'foo')
+				)
+			),
+			array(
+				'foo {@bar} baz',
+				array(
+					array('literal',    'foo '),
+					array('expression', '@bar'),
+					array('literal',    ' baz')
+				)
+			),
+			array(
+				'foo {{@bar}} baz',
+				array(
+					array('literal', 'foo '),
+					array('literal', '{'),
+					array('literal', '@bar} baz')
+				)
+			),
+			array(
+				'foo {@bar}{baz} quux',
+				array(
+					array('literal',    'foo '),
+					array('expression', '@bar'),
+					array('expression', 'baz'),
+					array('literal',    ' quux')
+				)
+			),
+			array(
+				'foo {"bar"} baz',
+				array(
+					array('literal',    'foo '),
+					array('expression', '"bar"'),
+					array('literal',    ' baz')
+				)
+			),
+			array(
+				"foo {'bar'} baz",
+				array(
+					array('literal',    'foo '),
+					array('expression', "'bar'"),
+					array('literal',    ' baz')
+				)
+			),
+			array(
+				'foo {"\'bar\'"} baz',
+				array(
+					array('literal',    'foo '),
+					array('expression', '"\'bar\'"'),
+					array('literal',    ' baz')
+				)
+			),
+			array(
+				'foo {"{bar}"} baz',
+				array(
+					array('literal',    'foo '),
+					array('expression', '"{bar}"'),
+					array('literal',    ' baz')
+				)
+			),
+			array(
+				'foo {"bar} baz',
+				new RuntimeException('Unterminated XPath expression')
+			),
+			array(
+				'foo {bar',
+				new RuntimeException('Unterminated XPath expression')
+			),
+		);
 	}
 }

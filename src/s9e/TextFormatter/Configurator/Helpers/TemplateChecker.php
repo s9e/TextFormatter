@@ -515,20 +515,17 @@ abstract class TemplateChecker
 	/**
 	* Capture and return the content of all inline expressions contained in an attribute's value
 	*
-	* @param  string $str Attribute's value
-	* @return array       List of XPath expressions
+	* @param  string $attrValue Attribute value
+	* @return array             List of XPath expressions
 	*/
-	protected static function getInlineExpressions($str)
+	protected static function getInlineExpressions($attrValue)
 	{
-		preg_match_all('#(\\{+)([^}]+)\\}#', $str, $matches, PREG_SET_ORDER);
-
 		$expressions = array();
-		foreach ($matches as $m)
+		foreach (TemplateHelper::parseAttributeValueTemplate($attrValue) as $token)
 		{
-			// If the number of { is odd, it means the expression will be evaluated
-			if (strlen($m[1]) % 2)
+			if ($token[0] === 'expression')
 			{
-				$expressions[] = $m[2];
+				$expressions[] = $token[1];
 			}
 		}
 

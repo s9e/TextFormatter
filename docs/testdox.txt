@@ -572,7 +572,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Not safe: <element name="script" xmlns="http://www.w3.org/1999/XSL/Transform"><apply-templates/></element>
  [x] Safe if attribute 'email' has filter #email: <a href="mailto:{@email}"/>
  [x] Safe if attribute 'email' has filter #email: <a href="mailto:{@email}?subject=foo"/>
- [x] Unsafe even if attribute 'email' has filter #email: <a href="http://{@email}"/>
+ [x] Not safe even if attribute 'email' has filter #email: <a href="http://{@email}"/>
  [x] Not safe: <embed src="{@url}"/>
  [x] Not safe: <embed src="{@url}" allowscriptaccess="always"/>
  [x] Not safe: <embed src="{@url}" allowscriptaccess="sameDomain"/>
@@ -778,6 +778,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] Not safe: <b title="...{document()}"/>
  [x] Not safe: <b title="...{ document () }"/>
  [x] Not safe: <b title="...{ doc&#117;ment () }"/>
+ [x] Not safe: <b title="{concat('}',document())}"/>
  [x] Safe: <b title="document()"/>
  [x] Safe: <b title="{&quot;document()&quot;}"/>
 
@@ -792,6 +793,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() throws an exception on malformed XSL
  [x] normalize() normalizes '<br>' to '<br/>'
  [x] normalize() throws an exception on malformed XSL
+ [x] parseAttributeValueTemplate() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor

@@ -259,14 +259,25 @@ abstract class TemplateOptimizer
 		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
 		foreach ($xpath->query($query) as $attribute)
 		{
-			$attribute->value = preg_replace_callback(
-				'#(?<!\\{)((?:\\{\\{)*\\{)([^}]+)#',
-				function ($m)
+			// Parse this attribute's value
+			$tokens = TemplateHelper::parseAttributeValueTemplate($attribute->value);
+
+			// Rebuild the attribute value
+			$attrValue = '';
+			foreach ($tokens as $token)
+			{
+				if ($token[0] === 'literal')
 				{
-					return $m[1] . self::minifyXPath($m[2]);
-				},
-				$attribute->value
-			);
+					$attrValue .= preg_replace('/([{}])/', '$1$1', $token[1]);
+				}
+				else
+				{
+					$attrValue .= '{' . self::minifyXPath($token[1]) . '}';
+				}
+			}
+
+			// Replace the attribute value
+			$attribute->value = $attrValue;
 		}
 	}
 
