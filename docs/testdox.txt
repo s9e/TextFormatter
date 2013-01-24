@@ -1583,10 +1583,13 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
 
 s9e\TextFormatter\Tests\Renderer
  [x] Renders plain text
- [x] Renders multi-line text
+ [x] Renders multi-line text in HTML
+ [x] Renders multi-line text in XHTML
  [x] Renders rich text
  [x] renderMulti() renders multiple messages at once
  [x] renderMulti() preserves keys and order
+ [x] renderMulti() renders multi-line text in HTML
+ [x] renderMulti() renders multi-line text in XHTML
  [x] Renderer is serializable
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array

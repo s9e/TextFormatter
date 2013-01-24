@@ -38,15 +38,36 @@ class RendererTest extends Test
 	}
 
 	/**
-	* @testdox Renders multi-line text
+	* @testdox Renders multi-line text in HTML
 	*/
-	public function testMultiLineText()
+	public function testMultiLineTextHTML()
 	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->setOutputMethod('html');
+		$renderer = new Renderer($stylesheet->get());
+
+		$xml = '<pt>One<br/>two</pt>';
+
+		$this->assertSame(
+			'One<br>two',
+			$renderer->render($xml)
+		);
+	}
+
+	/**
+	* @testdox Renders multi-line text in XHTML
+	*/
+	public function testMultiLineTextXHTML()
+	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->setOutputMethod('xml');
+		$renderer = new Renderer($stylesheet->get());
+
 		$xml = '<pt>One<br/>two</pt>';
 
 		$this->assertSame(
 			'One<br/>two',
-			$this->renderer->render($xml)
+			$renderer->render($xml)
 		);
 	}
 
@@ -114,6 +135,42 @@ class RendererTest extends Test
 		$this->assertSame(
 			$expected,
 			$this->renderer->renderMulti($parsed)
+		);
+	}
+
+	/**
+	* @testdox renderMulti() renders multi-line text in HTML
+	*/
+	public function testMultiMultiPlainTextHTML()
+	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->setOutputMethod('html');
+		$renderer = new Renderer($stylesheet->get());
+
+		$parsed   = array('<pt>One<br/>two</pt>');
+		$expected = array('One<br>two');
+
+		$this->assertSame(
+			$expected,
+			$renderer->renderMulti($parsed)
+		);
+	}
+
+	/**
+	* @testdox renderMulti() renders multi-line text in XHTML
+	*/
+	public function testMultiMultiPlainTextXHTML()
+	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->setOutputMethod('xml');
+		$renderer = new Renderer($stylesheet->get());
+
+		$parsed   = array('<pt>One<br/>two</pt>');
+		$expected = array('One<br/>two');
+
+		$this->assertSame(
+			$expected,
+			$renderer->renderMulti($parsed)
 		);
 	}
 

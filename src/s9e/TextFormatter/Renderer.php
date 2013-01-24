@@ -14,12 +14,17 @@ use XSLTProcessor;
 class Renderer implements Serializable
 {
 	/**
-	* @var XSLTProcessor
+	* @var bool Whether the stylesheet used by this renderer output HTML
+	*/
+	protected $htmlOutput;
+
+	/**
+	* @var XSLTProcessor The lazy-loaded XSLTProcessor instance used by this renderer
 	*/
 	protected $proc;
 
 	/**
-	* @var string
+	* @var string The stylesheet used by this renderer
 	*/
 	protected $stylesheet;
 
@@ -91,7 +96,7 @@ class Renderer implements Serializable
 		// Fast path for plain text
 		if (substr($xml, 0, 4) === '<pt>')
 		{
-			return substr($xml, 4, -5);
+			return $this->renderPlainText($xml);
 		}
 
 		// Load the intermediate representation
@@ -130,7 +135,7 @@ class Renderer implements Serializable
 		{
 			if (substr($xml, 0, 4) === '<pt>')
 			{
-				$xml = substr($xml, 4, -5);
+				$xml = $this->renderPlainText($xml);
 			}
 			else
 			{
@@ -172,5 +177,31 @@ class Renderer implements Serializable
 			$this->proc = new XSLTProcessor;
 			$this->proc->importStylesheet($xsl);
 		}
+	}
+
+	/**
+	* Render an intermediate representation of plain text
+	*
+	* @param  string $xml Intermediate representation
+	* @return string      Rendered result
+	*/
+	protected function renderPlainText($xml)
+	{
+		if (!isset($this->htmlOutput))
+		{
+			// Test whether we output HTML or XML
+			$this->htmlOutput = (strpos($this->stylesheet, '<xsl:output method="html') !== false);
+		}
+
+		// Remove the <pt> and </pt> tags
+		$html = substr($xml, 4, -5);
+
+		// Replace all <br/> with <br> if we output HTML
+		if ($this->htmlOutput)
+		{
+			$html = str_replace('<br/>', '<br>', $html);
+		}
+
+		return $html;
 	}
 }
