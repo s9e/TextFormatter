@@ -541,6 +541,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Whitespace necessary to delimit names in @test expressions is preserved
  [x] Superfluous whitespace in XPath expressions in inline attributes is removed
  [x] Escaped curly brackets in inline attributes are preserved
+ [x] Special characters in inline expressions are preserved
  [x] <xsl:element/> is inlined where possible
  [x] <xsl:element/> with an invalid name is ignored
  [x] Inlined elements' names are lowercased

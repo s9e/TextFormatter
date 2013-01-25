@@ -277,7 +277,7 @@ abstract class TemplateOptimizer
 			}
 
 			// Replace the attribute value
-			$attribute->value = $attrValue;
+			$attribute->value = htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8');
 		}
 	}
 

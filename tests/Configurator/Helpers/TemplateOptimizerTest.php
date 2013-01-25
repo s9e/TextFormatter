@@ -172,6 +172,18 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox Special characters in inline expressions are preserved
+	*/
+	public function test245C39A0()
+	{
+		$this->runCase(
+			'Special characters in inline expressions are preserved',
+			'<b title="{ &quot;&amp;lt;&quot; }"/>',
+			'<b title="{&quot;&amp;lt;&quot;}"/>'
+		);
+	}
+
+	/**
 	* @testdox <xsl:element/> is inlined where possible
 	*/
 	public function testBBC4349B()
@@ -501,6 +513,11 @@ class TemplateOptimizerTest extends Test
 				'Escaped curly brackets in inline attributes are preserved',
 				'<b title="{{foo}} { @bar } {{{ @baz }}}"/>',
 				'<b title="{{foo}} {@bar} {{{@baz}}}"/>'
+			),
+			array(
+				'Special characters in inline expressions are preserved',
+				'<b title="{ &quot;&amp;lt;&quot; }"/>',
+				'<b title="{&quot;&amp;lt;&quot;}"/>'
 			),
 			array(
 				'<xsl:element/> is inlined where possible',
