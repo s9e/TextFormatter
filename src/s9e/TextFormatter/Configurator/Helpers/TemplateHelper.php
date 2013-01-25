@@ -229,9 +229,6 @@ abstract class TemplateHelper
 				// Unescape right brackets
 				$str = str_replace('}}', '}', $str);
 
-				// HTML-escape the value
-				$str = htmlspecialchars($str, ENT_COMPAT, 'UTF-8');
-
 				// Add the value and move the cursor
 				$tokens[] = array('literal', $str);
 				$pos += $spn;

@@ -235,6 +235,14 @@ class TemplateHelperTest extends Test
 				'foo {bar',
 				new RuntimeException('Unterminated XPath expression')
 			),
+			array(
+				'<foo> {"<bar>"} &amp;',
+				array(
+					array('literal',    '<foo> '),
+					array('expression', '"<bar>"'),
+					array('literal',    ' &amp;')
+				)
+			),
 		);
 	}
 }
