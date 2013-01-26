@@ -158,7 +158,6 @@ class Parser implements Serializable
 
 		// Do the heavy lifting
 		$this->executePluginParsers();
-		$this->sortTags();
 		$this->processTags();
 
 		// Check the uid in case a plugin or a filter reset the parser mid-execution
@@ -191,5 +190,8 @@ class Parser implements Serializable
 		$this->textLen    = strlen($text);
 		$this->tagStack   = array();
 		$this->uid        = mt_rand();
+
+		// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
+		$this->tagStackIsSorted = false;
 	}
 }

@@ -65,7 +65,6 @@ function parse(_text)
 
 	// Do the heavy lifting
 	executePluginParsers();
-	sortTags();
 	processTags();
 
 	// Check the uid in case a plugin or a filter reset the parser mid-execution
@@ -97,4 +96,7 @@ function reset(_text)
 	textLen    = text.length;
 	tagStack   = [];
 	uid        = Math.random();
+
+	// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
+	tagStackIsSorted = false;
 }

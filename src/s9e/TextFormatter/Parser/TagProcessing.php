@@ -80,6 +80,11 @@ trait TagProcessing
 
 		while (!empty($this->tagStack))
 		{
+			if (!$this->tagStackIsSorted)
+			{
+				$this->sortTags();
+			}
+
 			$this->currentTag = array_pop($this->tagStack);
 			$this->processCurrentTag();
 		}

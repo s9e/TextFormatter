@@ -84,7 +84,7 @@ trait FilterProcessing
 			}
 			elseif (isset($vars['registeredVars'][$k]))
 			{
-				// By-name param using a registered vars
+				// By-name param using a registered var
 				$args[] = $vars['registeredVars'][$k];
 			}
 			else
@@ -238,6 +238,7 @@ trait FilterProcessing
 			// Prepare the variables that are accessible to filters
 			$vars = array(
 				'logger'         => $this->logger,
+				'parser'         => $this,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $tag,
 				'tagConfig'      => $tagConfig

@@ -65,6 +65,11 @@ function processTags()
 
 	while (tagStack.length)
 	{
+		if (!tagStackIsSorted)
+		{
+			sortTags();
+		}
+
 		currentTag = tagStack.pop();
 		processCurrentTag();
 	}

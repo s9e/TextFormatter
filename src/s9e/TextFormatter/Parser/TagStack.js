@@ -4,6 +4,11 @@
 var tagStack;
 
 /**
+* @type {!boolean} Whether the tags in the stack are sorted
+*/
+var tagStackIsSorted;
+
+/**
 * Add a start tag
 *
 * @param  {!string} name Name of the tag
@@ -90,6 +95,11 @@ function addTag(type, name, pos, len)
 	}
 	else
 	{
+		if (tagStack.length && pos > tagStack[tagStack.length - 1].getPos())
+		{
+			tagStackIsSorted = false;
+		}
+
 		tagStack.push(tag);
 	}
 
@@ -102,6 +112,7 @@ function addTag(type, name, pos, len)
 function sortTags()
 {
 	tagStack.sort(compareTags);
+	tagStackIsSorted = true;
 }
 
 /**

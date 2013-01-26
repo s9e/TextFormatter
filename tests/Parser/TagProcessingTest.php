@@ -711,6 +711,46 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('X', 5, 1);
 				}
 			),
+			array(
+				'..',
+				'<rt><X>.</X><X>.</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					// NOTE: the tags are added in order of position, but the stack still needs to
+					//       be sorted following the right tiebreakers. This is what we're testing
+					$parser->addEndTag('X', 2, 0);
+					$parser->addEndTag('X', 1, 0);
+					$parser->addStartTag('X', 1, 0);
+					$parser->addStartTag('X', 0, 0);
+				}
+			),
+			array(
+				'...',
+				'<rt><X>.</X><X>.</X><X>.</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->filterChain->append(
+						function ($tag, $parser)
+						{
+							if ($tag->getPos() === 0)
+							{
+								$parser->addSelfClosingTag('X', 2, 1);
+							}
+
+							return true;
+						}
+					)->addParameterByName('parser');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			),
 		);
 	}
 }

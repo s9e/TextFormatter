@@ -15,6 +15,11 @@ trait TagStack
 	protected $tagStack;
 
 	/**
+	* @var bool Whether the tags in the stack are sorted
+	*/
+	protected $tagStackIsSorted;
+
+	/**
 	* Add a start tag
 	*
 	* @param  string  $name Name of the tag
@@ -106,6 +111,11 @@ trait TagStack
 		}
 		else
 		{
+			if (!empty($this->tagStack) && $pos > end($this->tagStack)->getPos())
+			{
+				$this->tagStackIsSorted = false;
+			}
+
 			$this->tagStack[] = $tag;
 		}
 
@@ -120,6 +130,7 @@ trait TagStack
 	protected function sortTags()
 	{
 		usort($this->tagStack, array(__CLASS__, 'compareTags'));
+		$this->tagStackIsSorted = true;
 	}
 
 	/**
