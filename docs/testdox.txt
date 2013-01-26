@@ -1598,6 +1598,18 @@ s9e\TextFormatter\Tests\Renderer
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
+ [x] Ignores comments
+ [x] Throws an exception if a template contains a processing instruction
+ [x] Throws an exception when encountering unsupported XSL elements
+ [x] Throws an exception when encountering namespaced elements
+ [x] Throws an exception on <xsl:copy-of/> that does not copy an attribute
+ [x] Throws an exception on unterminated strings in XPath expressions
+ [x] HTML rendering
+ [x] XHTML rendering
+ [x] BBCodes from repository.xml render nicely
+ [x] Edge cases
+
 s9e\TextFormatter\Tests\Unparser
  [x] unparse('<pt>Plain text</pt>') returns 'Plain text'
  [x] asPlainText('<pt>Plain text</pt>') returns 'Plain text'

@@ -74,7 +74,7 @@ class Renderer implements Serializable
 	}
 
 	/**
-	* Set thes value of several parameters from the stylesheet
+	* Set the values of several parameters from the stylesheet
 	*
 	* @param  string $params Associative array of [parameter name => parameter value]
 	* @return void

@@ -48,6 +48,24 @@ function convertCustom($filepath, &$file)
 				'call_user_func_array($callback, array(&$msg, &$context));'
 			)
 		),
+		'PHP.php' => array(
+			array(
+				"protected \$defaultParams=[' . implode(',', \$params) . '];",
+				"protected \$defaultParams=array(' . implode(',', \$params) . ');"
+			),
+			array(
+				'protected $params=[];',
+				'protected $params=array();'
+			),
+			array(
+				'protected $userParams=[];',
+				'protected $userParams=array();'
+			),
+			array(
+				'$toks = [];',
+				'$toks = array();'
+			)
+		),
 		'Regexp.php' => array(
 			array(
 				"\$variant->setDynamic(\n\t\t\t'JS',\n\t\t\tfunction ()\n\t\t\t{\n\t\t\t\treturn \$this",

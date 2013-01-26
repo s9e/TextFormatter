@@ -1,0 +1,1 @@
+x [url="http://google.com"]google[/url] y

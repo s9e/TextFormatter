@@ -141,6 +141,8 @@
 
 			<file>tests/RendererTest.php</file>
 
+			<file>tests/Configurator/RendererGenerators/PHPTest.php</file>
+
 			<file>tests/UnparserTest.php</file>
 		</testsuite>
 	</testsuites>
