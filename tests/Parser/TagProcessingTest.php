@@ -751,6 +751,29 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 1, 1);
 				}
 			),
+			array(
+				'...',
+				'<rt><X>.</X><X>.</X><X>.</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->filterChain->append(
+						function ($tag, $parser)
+						{
+							if ($tag->getPos() === 0)
+							{
+								$parser->addSelfClosingTag('X', 1, 1);
+							}
+
+							return true;
+						}
+					)->addParameterByName('parser');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+					$parser->addSelfClosingTag('X', 2, 1);
+				}
+			),
 		);
 	}
 }
