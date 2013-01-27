@@ -54,7 +54,11 @@ $externs = array(
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase'
 	),
-	'w3c_dom1' => array(
+	'gecko_xml.js' => array(
+		'function DOMParser',
+		'DOMParser.prototype.parseFromString'
+	),
+	'w3c_dom1.js' => array(
 		'function Node',
 	)
 );

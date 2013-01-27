@@ -125,6 +125,12 @@ Math.floor = function(x) {};
  */
 Math.max = function(var_args) {};
 /**
+ * @param {...*} var_args
+ * @return {number}
+ * @nosideeffects
+ */
+Math.min = function(var_args) {};
+/**
  * @return {number}
  * @nosideeffects
  */
@@ -232,3 +238,18 @@ String.prototype.toLowerCase = function() {};
  * @nosideeffects
  */
 String.prototype.toUpperCase = function() {};
+/**
+ * @constructor
+ */
+function DOMParser() {}
+/**
+ * @param {string} src The UTF16 string to be parsed.
+ * @param {string} type The content type of the string.
+ * @return {Document}
+ */
+DOMParser.prototype.parseFromString = function(src, type) {};
+/**
+ * @constructor
+ * @implements {EventTarget}
+ */
+function Node() {}
