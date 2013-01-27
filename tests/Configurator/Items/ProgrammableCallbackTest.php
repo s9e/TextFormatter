@@ -42,12 +42,11 @@ class ProgrammableCallbackTest extends Test
 		$pc = new ProgrammableCallback('strtolower');
 		$pc->addParameterByValue('foobar');
 
-		$this->assertEquals(
-			array(
-				'callback' => 'strtolower',
-				'params'   => array('foobar')
-			),
-			$pc->asConfig()
+		$config = $pc->asConfig();
+
+		$this->assertSame(
+			array('foobar'),
+			$config['params']
 		);
 	}
 
@@ -59,12 +58,11 @@ class ProgrammableCallbackTest extends Test
 		$pc = new ProgrammableCallback('strtolower');
 		$pc->addParameterByName('foobar');
 
-		$this->assertEquals(
-			array(
-				'callback' => 'strtolower',
-				'params'   => array('foobar' => null)
-			),
-			$pc->asConfig()
+		$config = $pc->asConfig();
+
+		$this->assertSame(
+			array('foobar' => null),
+			$config['params']
 		);
 	}
 
@@ -80,12 +78,11 @@ class ProgrammableCallbackTest extends Test
 		$pc->addParameterByValue(4);
 		$pc->addParameterByValue(5);
 
-		$this->assertEquals(
-			array(
-				'callback' => 'mt_rand',
-				'params'   => array(4, 5)
-			),
-			$pc->asConfig()
+		$config = $pc->asConfig();
+
+		$this->assertSame(
+			array(4, 5),
+			$config['params']
 		);
 	}
 
@@ -116,7 +113,32 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testGetJS()
 	{
+		$pc = new ProgrammableCallback(function(){});
+
+		$this->assertNull($pc->getJS());
+	}
+
+	/**
+	* @testdox getJS() returns an instance of Code if no JS was set and the callback is a function found in Configurator/Javascript/functions/
+	*/
+	public function testGetJSAutofills()
+	{
 		$pc = new ProgrammableCallback('strtolower');
+		$js = $pc->getJS();
+
+		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator\\JavaScript\\Code', $js);
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../../src/s9e/TextFormatter/Configurator/JavaScript/functions/strtolower.js',
+			(string) $js
+		);
+	}
+
+	/**
+	* @testdox getJS() returns NULL if no JS was set and the callback is a function that is not found in Configurator/Javascript/functions/
+	*/
+	public function testGetJSNoAutofill()
+	{
+		$pc = new ProgrammableCallback('levenshtein');
 
 		$this->assertNull($pc->getJS());
 	}
@@ -169,12 +191,11 @@ class ProgrammableCallbackTest extends Test
 		$pc->addParameterByValue(55);
 		$pc->setVars(array('min' => 5));
 
+		$config = $pc->asConfig();
+
 		$this->assertSame(
-			array(
-				'callback' => 'mt_rand',
-				'params'   => array(5, 55)
-			),
-			$pc->asConfig()
+			array(5, 55),
+			$config['params']
 		);
 	}
 
@@ -183,9 +204,9 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testAsConfigJavaScript()
 	{
-		$js = new Code('function(str){return str.toLowerCase();}');
+		$js = new Code('function(){return "";}');
 
-		$pc = new ProgrammableCallback('strtolower');
+		$pc = new ProgrammableCallback(function(){});
 		$pc->setJS($js);
 
 		$config = $pc->asConfig();
@@ -196,6 +217,26 @@ class ProgrammableCallbackTest extends Test
 			$config['js']
 		);
 		$this->assertSame($js, $config['js']->get('JS'));
+	}
+
+	/**
+	* @testdox asConfig() uses getJS() to autofill the JavaScript variant
+	*/
+	public function testAsConfigJavaScriptAutofill()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+
+		$config = $pc->asConfig();
+
+		$this->assertArrayHasKey('js', $config);
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Variant',
+			$config['js']
+		);
+		$this->assertStringEqualsFile(
+			__DIR__ . '/../../../src/s9e/TextFormatter/Configurator/JavaScript/functions/strtolower.js',
+			(string) $config['js']->get('JS')
+		);
 	}
 
 	/**

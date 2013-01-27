@@ -95,6 +95,20 @@ class ProgrammableCallback implements ConfigProvider
 	*/
 	public function getJS()
 	{
+		// If no JavaScript was set but the callback looks like a PHP function, look into
+		// ./../JavaScript/functions/ for a replacement
+		if (!isset($this->js)
+		 && is_string($this->callback)
+		 && preg_match('#^[a-z_0-9]+$#D', $this->callback))
+		{
+			$filepath = __DIR__ . '/../JavaScript/functions/' . $this->callback . '.js';
+
+			if (file_exists($filepath))
+			{
+				return new Code(file_get_contents($filepath));
+			}
+		}
+
 		return $this->js;
 	}
 
@@ -176,10 +190,12 @@ class ProgrammableCallback implements ConfigProvider
 			$config['params'] = ConfigHelper::toArray($config['params'], true, true);
 		}
 
-		if (isset($this->js))
+		// Add the callback's JavaScript representation, if available
+		$js = $this->getJS();
+		if (isset($js))
 		{
 			$config['js'] = new Variant;
-			$config['js']->set('JS', $this->js);
+			$config['js']->set('JS', $js);
 		}
 
 		return $config;

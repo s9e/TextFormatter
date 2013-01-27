@@ -823,11 +823,14 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
  [x] getCallback() returns the callback
  [x] getJS() returns NULL by default
+ [x] getJS() returns an instance of Code if no JS was set and the callback is a function found in Configurator/Javascript/functions/
+ [x] getJS() returns NULL if no JS was set and the callback is a function that is not found in Configurator/Javascript/functions/
  [x] setJS() accepts a string and normalizes it to an instance of Code
  [x] setJS() accepts an instance of Code
  [x] asConfig() returns an array containing the callback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
  [x] asConfig() returns the callback's JavaScript as a variant if available
+ [x] asConfig() uses getJS() to autofill the JavaScript variant
  [x] asConfig() replaces values that implement ConfigProvider with their config value
  [x] asConfig() recurses into params via ConfigHelper::toArray() to convert structures to arrays
  [x] asConfig() preserves NULL values and empty arrays in the callback's parameters
