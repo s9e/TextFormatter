@@ -41,14 +41,11 @@ class ClosureCompilerServiceTest extends Test
 
 class ClosureCompilerServiceProxy
 {
-	protected $cacheFile;
 	protected $eof = false;
 	protected $url;
 
 	public function __construct()
 	{
-		$id = sprintf('%08X', crc32(serialize(stream_context_get_options($this->context))));
-		$this->cacheFile = __DIR__ . '/cache/' . $id;
 	}
 
 	public function stream_open($url)
@@ -71,15 +68,18 @@ class ClosureCompilerServiceProxy
 		}
 		$this->eof = true;
 
-		if (file_exists($this->cacheFile))
+		$id        = sprintf('%08X', crc32(serialize(stream_context_get_options($this->context))));
+		$cacheFile = __DIR__ . '/cache/' . $id;
+
+		if (file_exists($cacheFile))
 		{
-			return unserialize(file_get_contents($this->cacheFile));
+			return unserialize(file_get_contents($cacheFile));
 		}
 
 		stream_wrapper_restore('http');
 
 		$response = file_get_contents($this->url, false, $this->context);
-		file_put_contents($this->cacheFile, serialize($response));
+		file_put_contents($cacheFile, serialize($response));
 
 		return $response;
 	}
