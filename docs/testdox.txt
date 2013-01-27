@@ -1156,6 +1156,9 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() non-named capturing subpatterns leave an empty name in the map
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
 
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
+ [x] Works
+
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
 
