@@ -97,11 +97,11 @@
 			<file>tests/Configurator/JavaScript/Minifiers/NoopTest.php</file>
 
 			<!-- Trying to sort by order of dependency  -->
+			<file>tests/Parser/TagTest.php</file>
 			<file>tests/Parser/BuiltInFiltersTest.php</file>
 			<file>tests/Parser/FilterProcessingTest.php</file>
 			<file>tests/Parser/LoggerTest.php</file>
 			<file>tests/Parser/PluginsHandlingTest.php</file>
-			<file>tests/Parser/TagTest.php</file>
 			<file>tests/Parser/TagStackTest.php</file>
 			<file>tests/Parser/OutputHandlingTest.php</file>
 			<file>tests/Parser/TagProcessingTest.php</file>

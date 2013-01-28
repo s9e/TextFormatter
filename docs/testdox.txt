@@ -1165,78 +1165,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
 
-s9e\TextFormatter\Tests\Parser\BuiltInFilters
- [x] Regression tests
- [x] Filters work
-
-s9e\TextFormatter\Tests\Parser\FilterProcessing
- [x] registerVar($k, $v) sets registeredVars[$k] to $v
- [x] getRegisteredVars() returns all registered vars
- [x] executeAttributePreprocessors() sets captured attributes on match
- [x] executeAttributePreprocessors() does not overwrite attributes that were already set
- [x] executeAttributePreprocessors() unsets the source attribute on match
- [x] executeAttributePreprocessors() can reset the source attribute on match
- [x] executeAttributePreprocessors() does not unset the source attribute if there's no match
- [x] executeAttributePreprocessors() returns TRUE even if the no source attribute was present
- [x] executeFilter() correctly passes a value to the callback
- [x] executeFilter() correctly passes a named var to the callback
- [x] executeFilter() correctly passes a var passed through registeredVars to the callback
- [x] executeFilter() does not execute the callback and returns FALSE if a variable is missing
- [x] executeFilter() logs an error if a variable is missing
- [x] filterTag() returns TRUE if the tag has an empty filterChain
- [x] filterTag() executes the tag's filterChain and returns TRUE
- [x] filterTag() stops executing the tag's filterChain and returns FALSE if a filter returns FALSE
- [x] filterTag() calls the logger's setTag() and unsetTag() methods
- [x] filterTag() can pass its own instance to tag filters via the 'parser' parameter
- [ ] filterTag() can pass the list of open tags to tag filters via the 'openTags' parameter
- [x] filterAttributes() removes the tag's attributes if none were configured
- [x] filterAttributes() calls the attribute's generator and uses its return value as attribute's value
- [x] filterAttributes() removes undefined attributes
- [x] filterAttributes() executes every filter of an attribute's filterChain and returns the value
- [x] filterAttributes() stops executing the attribute's filterChain and returns FALSE if a filter returns FALSE
- [x] filterAttributes() removes invalid attributes
- [x] filterAttributes() replaces invalid attributes with their defaultValue if applicable
- [x] filterAttributes() adds missing attributes with their defaultValue if applicable
- [x] filterAttributes() calls the logger's setAttribute() and unsetAttribute() methods for each attribute with a filterChain
-
-s9e\TextFormatter\Tests\Parser\Logger
- [x] debug() generates a "debug" entry in the logs
- [x] err() generates a "err" entry in the logs
- [x] info() generates a "info" entry in the logs
- [x] warn() generates a "warn" entry in the logs
- [x] The attribute name set by setAttribute() is added to the context if no 'attrName' element is provided
- [x] The attribute name set by setAttribute() is not added to the context if an 'attrName' element is provided
- [x] unsetAttribute() unsets the value stored by setAttribute()
- [x] The tag set by setTag() is added to the context if no 'tag' element is provided
- [x] The tag set by setTag() is not added to the context if a 'tag' element is provided
- [x] unsetTag() unsets the value stored by setTag()
- [x] clear() empties the logs
- [x] on() attaches a callback to be executed when the corresponding log type is used
- [x] on() throws an exception on invalid callback
- [x] on() callbacks receive the log message and its context
- [x] on() callbacks can modify the log message and its context if their signature accepts them as a reference
- [x] on() callbacks are only executed for the log type they were registered for
-
-s9e\TextFormatter\Tests\Parser\PluginsHandling
- [x] disablePlugin() disables given plugin
- [x] enablePlugin() re-enables a disabled plugin
- [x] Nothing happens if disablePlugin() is called for an inexistent plugin
- [x] Nothing happens if enablePlugin() is called for an inexistent plugin
- [x] executePluginParsers() executes plugins' parse() method
- [x] executePluginParsers() does not execute disabled plugins
- [x] executePluginParsers() executes a plugin if its quickMatch test passes
- [x] executePluginParsers() does not execute a plugin if its quickMatch test fails
- [x] executePluginParsers() executes a plugin if its regexp test passes
- [x] executePluginParsers() does not execute a plugin if its regexp test fails
- [x] executePluginParsers() passes the text and the matches to the plugin's parser
- [x] executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
- [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'abort' or 'ignore'
- [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'ignore'
- [x] executePluginParsers() creates an instance of the class name stored in className if present
- [x] registerParser() can register a callback that replaces the parser of an existing plugin
- [x] registerParser() can register a callback that acts as the parser of a new plugin
- [x] registerParser() throws an exception if its second argument is not callable
-
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
  [x] getEndTag() returns NULL if the tag has no end tag set
@@ -1296,6 +1224,78 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] canClose() returns FALSE if given tag is paired with another tag
  [x] canClose() returns FALSE if this tag is paired with another tag
  [x] canClose() returns TRUE if the tags are paired together
+
+s9e\TextFormatter\Tests\Parser\BuiltInFilters
+ [x] Regression tests
+ [x] Filters work
+
+s9e\TextFormatter\Tests\Parser\FilterProcessing
+ [x] registerVar($k, $v) sets registeredVars[$k] to $v
+ [x] getRegisteredVars() returns all registered vars
+ [x] executeAttributePreprocessors() sets captured attributes on match
+ [x] executeAttributePreprocessors() does not overwrite attributes that were already set
+ [x] executeAttributePreprocessors() unsets the source attribute on match
+ [x] executeAttributePreprocessors() can reset the source attribute on match
+ [x] executeAttributePreprocessors() does not unset the source attribute if there's no match
+ [x] executeAttributePreprocessors() returns TRUE even if the no source attribute was present
+ [x] executeFilter() correctly passes a value to the callback
+ [x] executeFilter() correctly passes a named var to the callback
+ [x] executeFilter() correctly passes a var passed through registeredVars to the callback
+ [x] executeFilter() does not execute the callback and returns FALSE if a variable is missing
+ [x] executeFilter() logs an error if a variable is missing
+ [x] filterTag() returns TRUE if the tag has an empty filterChain
+ [x] filterTag() executes the tag's filterChain and returns TRUE
+ [x] filterTag() stops executing the tag's filterChain and returns FALSE if a filter returns FALSE
+ [x] filterTag() calls the logger's setTag() and unsetTag() methods
+ [x] filterTag() can pass its own instance to tag filters via the 'parser' parameter
+ [x] filterTag() can pass the list of open tags to tag filters via the 'openTags' parameter
+ [x] filterAttributes() removes the tag's attributes if none were configured
+ [x] filterAttributes() calls the attribute's generator and uses its return value as attribute's value
+ [x] filterAttributes() removes undefined attributes
+ [x] filterAttributes() executes every filter of an attribute's filterChain and returns the value
+ [x] filterAttributes() stops executing the attribute's filterChain and returns FALSE if a filter returns FALSE
+ [x] filterAttributes() removes invalid attributes
+ [x] filterAttributes() replaces invalid attributes with their defaultValue if applicable
+ [x] filterAttributes() adds missing attributes with their defaultValue if applicable
+ [x] filterAttributes() calls the logger's setAttribute() and unsetAttribute() methods for each attribute with a filterChain
+
+s9e\TextFormatter\Tests\Parser\Logger
+ [x] debug() generates a "debug" entry in the logs
+ [x] err() generates a "err" entry in the logs
+ [x] info() generates a "info" entry in the logs
+ [x] warn() generates a "warn" entry in the logs
+ [x] The attribute name set by setAttribute() is added to the context if no 'attrName' element is provided
+ [x] The attribute name set by setAttribute() is not added to the context if an 'attrName' element is provided
+ [x] unsetAttribute() unsets the value stored by setAttribute()
+ [x] The tag set by setTag() is added to the context if no 'tag' element is provided
+ [x] The tag set by setTag() is not added to the context if a 'tag' element is provided
+ [x] unsetTag() unsets the value stored by setTag()
+ [x] clear() empties the logs
+ [x] on() attaches a callback to be executed when the corresponding log type is used
+ [x] on() throws an exception on invalid callback
+ [x] on() callbacks receive the log message and its context
+ [x] on() callbacks can modify the log message and its context if their signature accepts them as a reference
+ [x] on() callbacks are only executed for the log type they were registered for
+
+s9e\TextFormatter\Tests\Parser\PluginsHandling
+ [x] disablePlugin() disables given plugin
+ [x] enablePlugin() re-enables a disabled plugin
+ [x] Nothing happens if disablePlugin() is called for an inexistent plugin
+ [x] Nothing happens if enablePlugin() is called for an inexistent plugin
+ [x] executePluginParsers() executes plugins' parse() method
+ [x] executePluginParsers() does not execute disabled plugins
+ [x] executePluginParsers() executes a plugin if its quickMatch test passes
+ [x] executePluginParsers() does not execute a plugin if its quickMatch test fails
+ [x] executePluginParsers() executes a plugin if its regexp test passes
+ [x] executePluginParsers() does not execute a plugin if its regexp test fails
+ [x] executePluginParsers() passes the text and the matches to the plugin's parser
+ [x] executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
+ [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'abort' or 'ignore'
+ [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'ignore'
+ [x] executePluginParsers() creates an instance of the class name stored in className if present
+ [x] registerParser() can register a callback that replaces the parser of an existing plugin
+ [x] registerParser() can register a callback that acts as the parser of a new plugin
+ [x] registerParser() throws an exception if its second argument is not callable
 
 s9e\TextFormatter\Tests\Parser\TagStack
  [x] addStartTag() adds a start tag to the stack
