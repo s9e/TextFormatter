@@ -301,7 +301,7 @@ var BuiltInFilters =
 		attrValue = attrValue.replace(/['"()<>\r\n]/g, escape).replace(/[\u2028\u2029]/g, encodeURIComponent);
 
 		// Parse the URL... kinda
-		var m =/^([a-z\d]+):\/\/\S+(?:\/.*)?$/i.exec(attrValue);
+		var m =/^([a-z\d]+):\/\/(?:[^/]*@)?([^/]+)(?:\/.*)?$/i.exec(attrValue);
 
 		if (!m)
 		{
@@ -320,14 +320,11 @@ var BuiltInFilters =
 
 		if (urlConfig.disallowedHosts)
 		{
-			var a = document.createElement('a');
-			a.href = attrValue;
-
-			if (urlConfig.disallowedHosts.test(a.hostname))
+			if (urlConfig.disallowedHosts.test(m[2]))
 			{
 				logger.err(
 					'URL host is not allowed',
-					{'attrValue': attrValue, 'host': a.hostname}
+					{'attrValue': attrValue, 'host': m[2]}
 				);
 
 				return false;

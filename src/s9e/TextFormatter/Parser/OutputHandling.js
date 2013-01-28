@@ -118,7 +118,7 @@ function outputTag(tag)
 
 		for (var attrName in attributes)
 		{
-			output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName]) + '"';
+			output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName].toString()) + '"';
 		}
 
 		if (tag.isSelfClosingTag())
@@ -202,7 +202,7 @@ function outputText(catchupPos, maxLines)
 	while (maxLines && --ignorePos >= 0)
 	{
 		var c = catchupText.charAt(ignorePos);
-		if (c !== ' ' || c !== "\n" || c !== "\t")
+		if (c !== ' ' && c !== "\n" && c !== "\t")
 		{
 			break;
 		}

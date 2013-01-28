@@ -46,6 +46,42 @@ class BBCodesTest extends Test
 		);
 	}
 
+	/**
+	* @group needs-nodejs
+	* @testdox BBCodes from repository.xml are parsed identically by the JavaScript parser
+	* @dataProvider getPredefinedBBCodesTests
+	*/
+	public function testJS($original, $expected, $setup = null)
+	{
+		$configurator = new Configurator;
+
+		if (isset($setup))
+		{
+			call_user_func($setup, $configurator);
+		}
+
+		// Capture the names of the BBCodes used
+		preg_match_all('/\\[([*\\w]+)/', $original, $matches);
+
+		foreach ($matches[1] as $bbcodeName)
+		{
+			if (!isset($configurator->BBCodes[$bbcodeName]))
+			{
+				$configurator->BBCodes->addFromRepository($bbcodeName);
+			}
+		}
+
+		$configurator->addHTML5Rules();
+
+		$src = $configurator->javascript->getParser();
+		$src .= ';console.log(parse(' . json_encode($original) . '))';
+
+		$this->assertSame(
+			$configurator->getParser()->parse($original),
+			substr(shell_exec('node -e ' . escapeshellarg($src)), 0, -1)
+		);
+	}
+
 	public function getPredefinedBBCodesTests()
 	{
 		return array(
@@ -311,6 +347,14 @@ class BBCodesTest extends Test
 			array(
 				'[LIST=";zoom:100"][*]one[*]two[/LIST]',
 				'<ul style="list-style-type:disc"><li>one</li><li>two</li></ul>'
+			),
+			array(
+				'[*]no <li> element without a parent',
+				'[*]no &lt;li&gt; element without a parent'
+			),
+			array(
+				'[b][*]no <li> element without the right parent[/b]',
+				'<b>[*]no &lt;li&gt; element without the right parent</b>'
 			),
 			array(
 				'[NOPARSE][b]no bold[/b][/NOPARSE] [b]bold[/b]',

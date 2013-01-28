@@ -1467,6 +1467,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes
  [x] BBCodes from repository.xml render nicely
+ [x] BBCodes from repository.xml are parsed identically by the JavaScript parser
 
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag
