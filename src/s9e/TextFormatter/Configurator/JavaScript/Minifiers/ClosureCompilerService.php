@@ -52,14 +52,15 @@ class ClosureCompilerService implements Minifier
 		$params = array(
 			'compilation_level' => $this->compilationLevel,
 			'js_code'           => $src,
-			'js_externs'        => $this->externs,
 			'output_format'     => 'json',
 			'output_info'       => 'compiled_code'
 		);
 
+		// Add our custom externs if default externs are disabled
 		if ($this->excludeDefaultExterns)
 		{
 			$params['exclude_default_externs'] = 'true';
+			$params['js_externs'] = $this->externs;
 		}
 
 		// Got to add dupe variables by hand

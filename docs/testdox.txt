@@ -1158,6 +1158,9 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
  [x] Works
+ [x] Compilation level is ADVANCED_OPTIMIZATIONS by default
+ [x] Excludes default externs by default
+ [x] Includes our custom externs by default
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
