@@ -238,6 +238,7 @@ trait FilterProcessing
 			// Prepare the variables that are accessible to filters
 			$vars = array(
 				'logger'         => $this->logger,
+				'openTags'       => $this->openTags,
 				'parser'         => $this,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $tag,

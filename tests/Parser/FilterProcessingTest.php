@@ -366,6 +366,40 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
+	* @testdox filterTag() can pass the list of open tags to tag filters via the 'openTags' parameter
+	*/
+	public function testFilterTagPassesOpenTags()
+	{
+		$mock = $this->getMock('stdClass', array('foo'));
+		$mock->expects($this->at(0))
+		     ->method('foo')
+		     ->with(array())
+		     ->will($this->returnValue(true));
+		$mock->expects($this->at(1))
+		     ->method('foo')
+		     ->with(array(new Tag(Tag::START_TAG, 'X', 0, 0)))
+		     ->will($this->returnValue(true));
+
+		$filterChain = $this->configurator->tags->add('X')->filterChain;
+		$filter = $filterChain->append(array($mock, 'foo'));
+		$filter->resetParameters();
+		$filter->addParameterByName('openTags');
+
+		$parser = $this->configurator->getParser();
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				$parser->addStartTag('X', 0, 0);
+				$parser->addSelfClosingTag('X', 1, 0);
+				$parser->addEndTag('X', 2, 0);
+			}
+		);
+
+		$parser->parse('...');
+	}
+
+	/**
 	* @testdox filterAttributes() removes the tag's attributes if none were configured
 	*/
 	public function testFilterAttributesNukesAttributes()
