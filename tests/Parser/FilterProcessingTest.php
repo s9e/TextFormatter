@@ -343,6 +343,29 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
+	* @testdox filterTag() can pass its own instance to tag filters via the 'parser' parameter
+	*/
+	public function testFilterTagPassesParser()
+	{
+		$mock = $this->getMock('stdClass', array('foo'));
+
+		$tag    = $this->configurator->tags->add('X');
+		$filter = $tag->filterChain->append(array($mock, 'foo'));
+		$filter->resetParameters();
+		$filter->addParameterByName('parser');
+
+		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
+		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
+
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with($this->identicalTo($dummy))
+		     ->will($this->returnValue(true));
+
+		$this->assertTrue($dummy->__filterTag($tag));
+	}
+
+	/**
 	* @testdox filterAttributes() removes the tag's attributes if none were configured
 	*/
 	public function testFilterAttributesNukesAttributes()

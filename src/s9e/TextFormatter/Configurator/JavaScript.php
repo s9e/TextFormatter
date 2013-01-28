@@ -410,7 +410,7 @@ class JavaScript
 	*/
 	protected function convertCallback($callbackType, array $callbackConfig)
 	{
-		// List of arguments for each type of callbacks. MUST be kept in sync with the invokations
+		// List of arguments for each type of callbacks. MUST be kept in sync with the invocations
 		// in FilterProcessing.js
 		$arguments = array(
 			'attributeFilter'    => array('attrValue', 'attrName'),
