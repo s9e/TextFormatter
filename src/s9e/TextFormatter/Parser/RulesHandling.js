@@ -6,7 +6,7 @@
 */
 function closeAncestor(tag)
 {
-	if (openTags)
+	if (openTags.length)
 	{
 		var tagName   = tag.getName(),
 			tagConfig = tagsConfig[tagName];
@@ -45,7 +45,7 @@ function closeAncestor(tag)
 */
 function closeParent(tag)
 {
-	if (openTags)
+	if (openTags.length)
 	{
 		var tagName   = tag.getName(),
 			tagConfig = tagsConfig[tagName];
