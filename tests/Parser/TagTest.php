@@ -276,7 +276,6 @@ class TagTest extends Test
 
 	/**
 	* @testdox Mutual invalidation doesn't cause an infinite loop
-	* @runInSeparateProcess
 	*/
 	public function testInvalidateNoInfiniteLoop()
 	{
@@ -286,7 +285,6 @@ class TagTest extends Test
 		$tag1->cascadeInvalidationTo($tag2);
 		$tag2->cascadeInvalidationTo($tag1);
 
-		set_time_limit(1);
 		$tag1->invalidate();
 	}
 
