@@ -443,21 +443,6 @@ class JavaScript
 				// Parser::filterAttributes => filterAttributes
 				$jsCallback = substr($callback, 26);
 			}
-			elseif (preg_match('#^[-a-z_0-9]+$#Di', $callback))
-			{
-				// If the callback looks like the name of a PHP function, see if we have a
-				// JavaScript implementation available for it
-				$filepath = __DIR__ . '/JavaScript/functions/' . $callback . '.js';
-
-				if (file_exists($filepath))
-				{
-					$jsCode     = file_get_contents($filepath);
-					$jsCallback = sprintf('c%08X', crc32($jsCode));
-
-					// Record the content of that file to be injected in the source
-					$this->callbacks[$jsCallback] = $jsCode;
-				}
-			}
 		}
 
 		// If we don't have a JavaScript implementation of this filter, we make it return FALSE
