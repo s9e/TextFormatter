@@ -370,6 +370,8 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagPassesOpenTags()
 	{
+		$this->markTestSkipped('Makes PHP 5.4+ segfault :(');
+
 		$mock = $this->getMock('stdClass', array('foo'));
 		$mock->expects($this->at(0))
 		     ->method('foo')
