@@ -74,7 +74,7 @@ class RangeTest extends Test
 	public function testMissingMin()
 	{
 		$filter = new Range;
-		$filter->setVars(array('max' => 0));
+		$filter->setVars(['max' => 0]);
 		$filter->asConfig();
 	}
 
@@ -86,7 +86,7 @@ class RangeTest extends Test
 	public function testMissingMax()
 	{
 		$filter = new Range;
-		$filter->setVars(array('min' => 0));
+		$filter->setVars(['min' => 0]);
 		$filter->asConfig();
 	}
 
@@ -110,7 +110,7 @@ class RangeTest extends Test
 		$filter->setRange(1, 5);
 
 		$this->assertEquals(
-			array('min' => 1, 'max' => 5),
+			['min' => 1, 'max' => 5],
 			$filter->getVars()
 		);
 	}

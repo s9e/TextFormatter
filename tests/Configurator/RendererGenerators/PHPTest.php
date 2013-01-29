@@ -160,14 +160,14 @@ class PHPTest extends Test
 
 	public function getRendererData($pattern, $outputMethod)
 	{
-		$testCases = array();
+		$testCases = [];
 		foreach (glob(__DIR__ . '/data/' . $pattern . '.xml') as $filepath)
 		{
-			$testCases[] = array(
+			$testCases[] = [
 				file_get_contents($filepath),
 				file_get_contents(substr($filepath, 0, -3) . $outputMethod . '.xsl'),
 				file_get_contents(substr($filepath, 0, -3) . $outputMethod)
-			);
+			];
 		}
 
 		return $testCases;
@@ -223,16 +223,16 @@ class PHPTest extends Test
 
 	public function getEdgeCases()
 	{
-		return array(
-			array(
+		return [
+			[
 				"<rt>x <B/> y</rt>",
 				function ($configurator)
 				{
 					$configurator->tags->add('B')->defaultTemplate
 						= '<b><xsl:apply-templates/></b>';
 				}
-			),
-			array(
+			],
+			[
 				"<rt>x <B/> y</rt>",
 				function ($configurator)
 				{
@@ -240,8 +240,8 @@ class PHPTest extends Test
 						'<xsl:element name="{translate(name(),\'B\',\'b\')}"><xsl:apply-templates/></xsl:element>'
 					);
 				}
-			),
-			array(
+			],
+			[
 				"<rt>x <HR/> y</rt>",
 				function ($configurator)
 				{
@@ -249,8 +249,8 @@ class PHPTest extends Test
 						'<xsl:element name="{translate(name(),\'HR\',\'hr\')}" />'
 					);
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -258,8 +258,8 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="$foo"/>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/><X/></rt>',
 				function ($configurator)
 				{
@@ -267,8 +267,8 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="$foo"/>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -276,8 +276,8 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="$foo"/>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -289,8 +289,8 @@ class PHPTest extends Test
 				{
 					$renderer->setParameter('foo', 15);
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -302,8 +302,8 @@ class PHPTest extends Test
 				{
 					$renderer->setParameter('foo', "'...'");
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -315,8 +315,8 @@ class PHPTest extends Test
 				{
 					$renderer->setParameter('foo', '"..."');
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -328,8 +328,8 @@ class PHPTest extends Test
 				{
 					$renderer->setParameter('foo', '"\'"..."\'"');
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -337,8 +337,8 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:if test="$foo">!</xsl:if>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -346,8 +346,8 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:if test="not($foo)">!</xsl:if>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -359,8 +359,8 @@ class PHPTest extends Test
 				{
 					$renderer->setParameter('foo', true);
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -372,8 +372,8 @@ class PHPTest extends Test
 				{
 					$renderer->setParameter('foo', true);
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -381,8 +381,8 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:if test="$foo &lt; 5">!</xsl:if>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/></rt>',
 				function ($configurator)
 				{
@@ -390,8 +390,8 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:if test="$xxx &lt; 1">!</xsl:if>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/><Y>1</Y><Y>2</Y></rt>',
 				function ($configurator)
 				{
@@ -399,16 +399,16 @@ class PHPTest extends Test
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="$xxx"/>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt xmlns:html="urn:s9e:TextFormatter:html"><html:b>...</html:b></rt>',
 				function ($configurator)
 				{
 					$configurator->tags->add('html:b')->defaultTemplate
 						= '<b><xsl:apply-templates /></b>';
 				}
-			),
-			array(
+			],
+			[
 				'<rt xmlns:x="urn:s9e:TextFormatter:x"><x:b>...</x:b><x:c>!!!</x:c></rt>',
 				function ($configurator)
 				{
@@ -420,8 +420,8 @@ class PHPTest extends Test
 						'<span><xsl:apply-templates /></span>'
 					);
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/><X i="8"/><X i="4"/><X i="2"/></rt>',
 				function ($configurator)
 				{
@@ -430,8 +430,8 @@ class PHPTest extends Test
 					$tag->templates['@i < 5'] = '5';
 					$tag->templates['@i < 3'] = '3';
 				}
-			),
-			array(
+			],
+			[
 				'<rt><X/><X i="8"/><X i="4"/><X i="2"/></rt>',
 				function ($configurator)
 				{
@@ -440,8 +440,8 @@ class PHPTest extends Test
 					$tag->templates['@i < 3'] = '3';
 					$tag->templates['@i < 5'] = '5';
 				}
-			),
-			array(
+			],
+			[
 				'<rt xmlns:html="urn:s9e:TextFormatter:html"><html:b title="\'&quot;&amp;\'">...</html:b></rt>',
 				function ($configurator)
 				{
@@ -450,15 +450,15 @@ class PHPTest extends Test
 						new UnsafeTemplate('<xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element>')
 					);
 				}
-			),
-			array(
+			],
+			[
 				'<rt><E>:)</E><E>:(</E></rt>',
 				function ($configurator)
 				{
 					$configurator->tags->add('E')->defaultTemplate
 						= '<xsl:choose><xsl:when test=".=\':)\'"><img src="happy.png" alt=":)"/></xsl:when><xsl:when test=".=\':(\'"><img src="sad.png" alt=":("/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
 				}
-			),
-		);
+			],
+		];
 	}
 }

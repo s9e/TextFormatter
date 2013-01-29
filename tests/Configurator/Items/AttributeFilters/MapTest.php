@@ -35,9 +35,9 @@ class MapTest extends Test
 
 		$filter->expects($this->once())
 		       ->method('setMap')
-		       ->with(array('one' => 'uno', 'two' => 'dos'), true, true);
+		       ->with(['one' => 'uno', 'two' => 'dos'], true, true);
 
-		$filter->__construct(array('one' => 'uno', 'two' => 'dos'), true, true);
+		$filter->__construct(['one' => 'uno', 'two' => 'dos'], true, true);
 	}
 
 	/**
@@ -56,7 +56,7 @@ class MapTest extends Test
 	*/
 	public function testAsConfig()
 	{
-		$filter = new Map(array('foo' => 'bar'));
+		$filter = new Map(['foo' => 'bar']);
 		$this->assertInternalType('array', $filter->asConfig());
 	}
 
@@ -66,7 +66,7 @@ class MapTest extends Test
 	public function testSetMapCaseInsensitive()
 	{
 		$filter = new Map;
-		$filter->setMap(array('foo' => 'bar'));
+		$filter->setMap(['foo' => 'bar']);
 
 		$vars = $filter->getVars();
 
@@ -82,7 +82,7 @@ class MapTest extends Test
 	public function testSetMapCaseSensitive()
 	{
 		$filter = new Map;
-		$filter->setMap(array('foo' => 'bar'), true);
+		$filter->setMap(['foo' => 'bar'], true);
 
 		$vars = $filter->getVars();
 
@@ -98,7 +98,7 @@ class MapTest extends Test
 	public function testSetMapStrict()
 	{
 		$filter = new Map;
-		$filter->setMap(array('foo' => 'bar'), false, true);
+		$filter->setMap(['foo' => 'bar'], false, true);
 
 		$vars = $filter->getVars();
 
@@ -115,7 +115,7 @@ class MapTest extends Test
 	public function testSetMapUnicode()
 	{
 		$filter = new Map;
-		$filter->setMap(array('pokémon' => 'yugioh'));
+		$filter->setMap(['pokémon' => 'yugioh']);
 
 		$vars = $filter->getVars();
 
@@ -133,7 +133,7 @@ class MapTest extends Test
 	public function testSetMapNotBool2()
 	{
 		$filter = new Map;
-		$filter->setMap(array('foo' => 'bar'), 'notbool');
+		$filter->setMap(['foo' => 'bar'], 'notbool');
 	}
 
 	/**
@@ -144,6 +144,6 @@ class MapTest extends Test
 	public function testSetMapNotBool3()
 	{
 		$filter = new Map;
-		$filter->setMap(array('foo' => 'bar'), true, 'notbool');
+		$filter->setMap(['foo' => 'bar'], true, 'notbool');
 	}
 }

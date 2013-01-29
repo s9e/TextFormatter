@@ -37,7 +37,7 @@ class AttributePreprocessor
 	*/
 	public function getAttributes()
 	{
-		$attributes = array();
+		$attributes = [];
 		$regexpInfo = RegexpParser::parse($this->regexp);
 
 		// Ensure that we use the D modifier

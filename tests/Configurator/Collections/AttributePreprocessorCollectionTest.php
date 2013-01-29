@@ -43,12 +43,12 @@ class AttributePreprocessorCollectionTest extends Test
 		ConfigHelper::filterVariants($config);
 
 		$this->assertEquals(
-			array(
-				array('x', '#x1#'),
-				array('x', '#x2#'),
-				array('y', '#y1#'),
-				array('y', '#y2#')
-			),
+			[
+				['x', '#x1#'],
+				['x', '#x2#'],
+				['y', '#y1#'],
+				['y', '#y2#']
+			],
 			$config
 		);
 	}
@@ -92,21 +92,21 @@ class AttributePreprocessorCollectionTest extends Test
 		ConfigHelper::filterVariants($config, 'JS');
 
 		$rx1 = new RegExp('(x1)');
-		$rx1->map = array('', 'x1');
+		$rx1->map = ['', 'x1'];
 		$rx2 = new RegExp('(x2)');
-		$rx2->map = array('', 'x2');
+		$rx2->map = ['', 'x2'];
 		$ry1 = new RegExp('(y1)');
-		$ry1->map = array('', 'y1');
+		$ry1->map = ['', 'y1'];
 		$ry2 = new RegExp('(y2)');
-		$ry2->map = array('', 'y2');
+		$ry2->map = ['', 'y2'];
 
 		$this->assertEquals(
-			array(
-				array('x', $rx1, $rx1->map),
-				array('x', $rx2, $rx2->map),
-				array('y', $ry1, $ry1->map),
-				array('y', $ry2, $ry2->map)
-			),
+			[
+				['x', $rx1, $rx1->map],
+				['x', $rx2, $rx2->map],
+				['y', $ry1, $ry1->map],
+				['y', $ry2, $ry2->map]
+			],
 			$config
 		);
 	}
@@ -157,11 +157,11 @@ class AttributePreprocessorCollectionTest extends Test
 	*/
 	public function testMergeArrayRegexps()
 	{
-		$attributePreprocessors = array(
-			array('foo', '/a/'),
-			array('foo', '/b/'),
-			array('bar', '/c/')
-		);
+		$attributePreprocessors = [
+			['foo', '/a/'],
+			['foo', '/b/'],
+			['bar', '/c/']
+		];
 
 		$collection = new AttributePreprocessorCollection;
 		$collection->merge($attributePreprocessors);
@@ -181,21 +181,21 @@ class AttributePreprocessorCollectionTest extends Test
 	public function testMergeArrayOfInstances()
 	{
 		$collection = new AttributePreprocessorCollection;
-		$collection->merge(array(
-			array('foo', new AttributePreprocessor('/a/')),
-			array('foo', new AttributePreprocessor('/b/')),
-			array('bar', new AttributePreprocessor('/c/'))
-		));
+		$collection->merge([
+			['foo', new AttributePreprocessor('/a/')],
+			['foo', new AttributePreprocessor('/b/')],
+			['bar', new AttributePreprocessor('/c/')]
+		]);
 
 		$config = $collection->asConfig();
 		ConfigHelper::filterVariants($config);
 
 		$this->assertEquals(
-			array(
-				array('foo', '/a/'),
-				array('foo', '/b/'),
-				array('bar', '/c/')
-			),
+			[
+				['foo', '/a/'],
+				['foo', '/b/'],
+				['bar', '/c/']
+			],
 			$config
 		);
 	}
@@ -205,10 +205,10 @@ class AttributePreprocessorCollectionTest extends Test
 	*/
 	public function testMergeInstance()
 	{
-		$attributePreprocessors = array(
-			'foo' => array('/a/', '/b/'),
-			'bar' => array('/c/')
-		);
+		$attributePreprocessors = [
+			'foo' => ['/a/', '/b/'],
+			'bar' => ['/c/']
+		];
 
 		$collection1 = new AttributePreprocessorCollection;
 		$collection2 = new AttributePreprocessorCollection;
@@ -241,6 +241,6 @@ class AttributePreprocessorCollectionTest extends Test
 	public function testMergeInvalidArray()
 	{
 		$collection = new AttributePreprocessorCollection;
-		$collection->merge(array('/foo/'));
+		$collection->merge(['/foo/']);
 	}
 }

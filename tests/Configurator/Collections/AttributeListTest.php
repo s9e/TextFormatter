@@ -42,7 +42,7 @@ class AttributeListTest extends Test
 		$attributeList->append('url');
 
 		$this->assertSame(
-			array('url'),
+			['url'],
 			$attributeList->asConfig()
 		);
 	}

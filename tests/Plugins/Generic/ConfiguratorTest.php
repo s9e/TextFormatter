@@ -137,12 +137,12 @@ class ConfiguratorTest extends Test
 		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
-			array(
-				'generics' => array(
-					array('GC53BB427', '/(?<foo>[0-9]+)/'),
-					array('GDCEA6E9C', '/(?<bar>[a-z]+)/')
-				)
-			),
+			[
+				'generics' => [
+					['GC53BB427', '/(?<foo>[0-9]+)/'],
+					['GDCEA6E9C', '/(?<bar>[a-z]+)/']
+				]
+			],
 			$config
 		);
 	}
@@ -175,13 +175,13 @@ class ConfiguratorTest extends Test
 		$plugin->add('/(?<foo>[0-9]+)/', '');
 
 		$regexp = new RegExp('([0-9]+)', 'g');
-		$regexp->map = array('', 'foo');
+		$regexp->map = ['', 'foo'];
 
 		$config = $plugin->asConfig();
 		ConfigHelper::filterVariants($config, 'JS');
 
 		$this->assertEquals(
-			array(array('GC53BB427', $regexp, $regexp->map)),
+			[['GC53BB427', $regexp, $regexp->map]],
 			$config['generics']
 		);
 	}

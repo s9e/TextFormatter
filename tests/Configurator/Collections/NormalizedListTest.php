@@ -36,7 +36,7 @@ class NormalizedListTest extends Test
 	{
 		$mock = $this->getMock(
 			's9e\\TextFormatter\\Configurator\\Collections\\NormalizedList',
-			array('append')
+			['append']
 		);
 
 		$mock->expects($this->once())
@@ -79,10 +79,10 @@ class NormalizedListTest extends Test
 	{
 		$this->normalizedList->append(1);
 		$this->normalizedList->append(3);
-		$this->normalizedList->insert(1, array('foo', 'bar'));
+		$this->normalizedList->insert(1, ['foo', 'bar']);
 
 		$this->assertSame(1, $this->normalizedList[0]);
-		$this->assertSame(array('foo', 'bar'), $this->normalizedList[1]);
+		$this->assertSame(['foo', 'bar'], $this->normalizedList[1]);
 		$this->assertSame(3, $this->normalizedList[2]);
 	}
 

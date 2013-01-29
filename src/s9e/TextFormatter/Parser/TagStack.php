@@ -129,7 +129,7 @@ trait TagStack
 	*/
 	protected function sortTags()
 	{
-		usort($this->tagStack, array(__CLASS__, 'compareTags'));
+		usort($this->tagStack, [__CLASS__, 'compareTags']);
 		$this->tagStackIsSorted = true;
 	}
 
@@ -166,11 +166,11 @@ trait TagStack
 			// an attempt to keep them out of tag pairs
 			if (!$aLen && !$bLen)
 			{
-				$order = array(
+				$order = [
 					Tag::END_TAG          => 0,
 					Tag::SELF_CLOSING_TAG => 1,
 					Tag::START_TAG        => 2
-				);
+				];
 
 				return $order[$b->getType()] - $order[$a->getType()];
 			}

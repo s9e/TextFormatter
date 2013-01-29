@@ -10,7 +10,7 @@ trait RenderingTestsRunner
 	* @testdox Parsing+rendering tests
 	* @dataProvider getRenderingTests
 	*/
-	public function testRendering($original, $expected, array $pluginOptions = array(), $setup = null)
+	public function testRendering($original, $expected, array $pluginOptions = [], $setup = null)
 	{
 		$pluginName = preg_replace('/.*\\\\([^\\\\]+)\\\\.*/', '$1', get_class($this));
 

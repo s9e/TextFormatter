@@ -20,7 +20,7 @@ class LoggerTest extends Test
 		$logger->debug('Hi');
 
 		$this->assertSame(
-			array(array('debug', 'Hi', array())),
+			[['debug', 'Hi', []]],
 			$logger->get()
 		);
 	}
@@ -34,7 +34,7 @@ class LoggerTest extends Test
 		$logger->err('Hi');
 
 		$this->assertSame(
-			array(array('err', 'Hi', array())),
+			[['err', 'Hi', []]],
 			$logger->get()
 		);
 	}
@@ -48,7 +48,7 @@ class LoggerTest extends Test
 		$logger->info('Hi');
 
 		$this->assertSame(
-			array(array('info', 'Hi', array())),
+			[['info', 'Hi', []]],
 			$logger->get()
 		);
 	}
@@ -62,7 +62,7 @@ class LoggerTest extends Test
 		$logger->warn('Hi');
 
 		$this->assertSame(
-			array(array('warn', 'Hi', array())),
+			[['warn', 'Hi', []]],
 			$logger->get()
 		);
 	}
@@ -78,7 +78,7 @@ class LoggerTest extends Test
 		$logger->debug('Hi');
 
 		$this->assertSame(
-			array(array('debug', 'Hi', array('attrName' => 'foo'))),
+			[['debug', 'Hi', ['attrName' => 'foo']]],
 			$logger->get()
 		);
 	}
@@ -91,10 +91,10 @@ class LoggerTest extends Test
 		$logger = new Logger;
 
 		$logger->setAttribute('foo');
-		$logger->debug('Hi', array('attrName' => 'bar'));
+		$logger->debug('Hi', ['attrName' => 'bar']);
 
 		$this->assertSame(
-			array(array('debug', 'Hi', array('attrName' => 'bar'))),
+			[['debug', 'Hi', ['attrName' => 'bar']]],
 			$logger->get()
 		);
 	}
@@ -111,7 +111,7 @@ class LoggerTest extends Test
 		$logger->debug('Hi');
 
 		$this->assertSame(
-			array(array('debug', 'Hi', array())),
+			[['debug', 'Hi', []]],
 			$logger->get()
 		);
 	}
@@ -128,7 +128,7 @@ class LoggerTest extends Test
 		$logger->debug('Hi');
 
 		$this->assertSame(
-			array(array('debug', 'Hi', array('tag' => $tag))),
+			[['debug', 'Hi', ['tag' => $tag]]],
 			$logger->get()
 		);
 	}
@@ -142,10 +142,10 @@ class LoggerTest extends Test
 		$tag    = new Tag(Tag::SELF_CLOSING_TAG, 'foo', 'FOO', 1, 2);
 
 		$logger->setTag($tag);
-		$logger->debug('Hi', array('tag' => 'foo'));
+		$logger->debug('Hi', ['tag' => 'foo']);
 
 		$this->assertSame(
-			array(array('debug', 'Hi', array('tag' => 'foo'))),
+			[['debug', 'Hi', ['tag' => 'foo']]],
 			$logger->get()
 		);
 	}
@@ -163,7 +163,7 @@ class LoggerTest extends Test
 		$logger->debug('Hi');
 
 		$this->assertSame(
-			array(array('debug', 'Hi', array())),
+			[['debug', 'Hi', []]],
 			$logger->get()
 		);
 	}
@@ -179,7 +179,7 @@ class LoggerTest extends Test
 		$logger->debug('Hi');
 
 		$this->assertSame(
-			array(array('debug', 'Hi', array())),
+			[['debug', 'Hi', []]],
 			$logger->get()
 		);
 	}
@@ -189,12 +189,12 @@ class LoggerTest extends Test
 	*/
 	public function testOn()
 	{
-		$mock = $this->getMock('stdClass', array('foo'));
+		$mock = $this->getMock('stdClass', ['foo']);
 		$mock->expects($this->once())
 		     ->method('foo');
 
 		$logger = new Logger;
-		$logger->on('err', array($mock, 'foo'));
+		$logger->on('err', [$mock, 'foo']);
 		$logger->err('hi');
 	}
 
@@ -214,14 +214,14 @@ class LoggerTest extends Test
 	*/
 	public function testOnArguments()
 	{
-		$mock = $this->getMock('stdClass', array('foo'));
+		$mock = $this->getMock('stdClass', ['foo']);
 		$mock->expects($this->once())
 		     ->method('foo')
-		     ->with('hi', array('x' => 'y'));
+		     ->with('hi', ['x' => 'y']);
 
 		$logger = new Logger;
-		$logger->on('err', array($mock, 'foo'));
-		$logger->err('hi', array('x' => 'y'));
+		$logger->on('err', [$mock, 'foo']);
+		$logger->err('hi', ['x' => 'y']);
 	}
 
 	/**
@@ -235,14 +235,14 @@ class LoggerTest extends Test
 			function (&$msg, &$context)
 			{
 				$msg     = 'foo';
-				$context = array('bar' => 'baz');
+				$context = ['bar' => 'baz'];
 			}
 		);
 
-		$logger->err('hi', array('x' => 'y'));
+		$logger->err('hi', ['x' => 'y']);
 
 		$this->assertSame(
-			array(array('err', 'foo', array('bar' => 'baz'))),
+			[['err', 'foo', ['bar' => 'baz']]],
 			$logger->get()
 		);
 	}
@@ -252,7 +252,7 @@ class LoggerTest extends Test
 	*/
 	public function testOnLogType()
 	{
-		$mock = $this->getMock('stdClass', array('debug', 'err', 'warn'));
+		$mock = $this->getMock('stdClass', ['debug', 'err', 'warn']);
 		$mock->expects($this->once())
 		     ->method('err');
 		$mock->expects($this->once())
@@ -261,9 +261,9 @@ class LoggerTest extends Test
 		     ->method('debug');
 
 		$logger = new Logger;
-		$logger->on('err',  array($mock, 'err'));
-		$logger->on('warn', array($mock, 'warn'));
-		$logger->on('debug', array($mock, 'debug'));
+		$logger->on('err',  [$mock, 'err']);
+		$logger->on('warn', [$mock, 'warn']);
+		$logger->on('debug', [$mock, 'debug']);
 
 		$logger->err('hi');
 		$logger->warn('hi');

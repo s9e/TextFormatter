@@ -127,8 +127,8 @@ class Renderer implements Serializable
 	*/
 	public function renderMulti(array $arr)
 	{
-		$keys   = array();
-		$render = array();
+		$keys   = [];
+		$render = [];
 
 		// First replace intermediate representations of plain text
 		foreach ($arr as $k => &$xml)

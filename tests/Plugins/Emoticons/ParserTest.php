@@ -20,76 +20,76 @@ class ParserTest extends Test
 
 	public function getParsingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				':)',
 				'<rt><E>:)</E></rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
-			),
-			array(
+			],
+			[
 				':)',
 				'<rt><EMOTE>:)</EMOTE></rt>',
-				array('tagName' => 'EMOTE'),
+				['tagName' => 'EMOTE'],
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
-			),
-		);
+			],
+		];
 	}
 
 	public function getRenderingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				':)',
 				'<img src="s.png" alt=":)">',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
-			),
-			array(
+			],
+			[
 				':)',
 				'<img src="s.png" alt=":)">',
-				array('tagName' => 'EMOTE'),
+				['tagName' => 'EMOTE'],
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
-			),
-			array(
+			],
+			[
 				":')",
 				'<img src="s.png">',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(":')", '<img src="s.png"/>');
 				}
-			),
-			array(
+			],
+			[
 				':")',
 				'<img src="s.png">',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->Emoticons->add(':")', '<img src="s.png"/>');
 				}
-			),
-			array(
+			],
+			[
 				'\':")',
 				'<img src="s.png">',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->Emoticons->add('\':")', '<img src="s.png"/>');
 				}
-			),
-		);
+			],
+		];
 	}
 }

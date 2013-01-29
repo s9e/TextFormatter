@@ -156,7 +156,7 @@ abstract class TemplateHelper
 	*/
 	public static function parseAttributeValueTemplate($attrValue)
 	{
-		$tokens = array();
+		$tokens = [];
 		$attrLen = strlen($attrValue);
 
 		$pos = 0;
@@ -168,7 +168,7 @@ abstract class TemplateHelper
 				// Two brackets = one literal bracket
 				if (substr($attrValue, $pos, 2) === '{{')
 				{
-					$tokens[] = array('literal', '{');
+					$tokens[] = ['literal', '{'];
 					$pos += 2;
 
 					continue;
@@ -217,7 +217,7 @@ abstract class TemplateHelper
 					$pos = 1 + $quotePos;
 				}
 
-				$tokens[] = array('expression', $expr);
+				$tokens[] = ['expression', $expr];
 			}
 
 			$spn = strcspn($attrValue, '{', $pos);
@@ -230,7 +230,7 @@ abstract class TemplateHelper
 				$str = str_replace('}}', '}', $str);
 
 				// Add the value and move the cursor
-				$tokens[] = array('literal', $str);
+				$tokens[] = ['literal', $str];
 				$pos += $spn;
 			}
 		}

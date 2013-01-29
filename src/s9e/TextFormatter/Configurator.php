@@ -128,13 +128,13 @@ class Configurator implements ConfigProvider
 	* @param  array $options Options passed to RulesGenerator::getRules()
 	* @return void
 	*/
-	public function addHTML5Rules(array $options = array())
+	public function addHTML5Rules(array $options = [])
 	{
 		// Add the default options
-		$options += array(
+		$options += [
 			'renderer'   => $this->getRenderer(),
 			'stylesheet' => $this->stylesheet
-		);
+		];
 
 		// Get the rules
 		$rules = RulesGenerator::getRules($this->tags, $options);
@@ -172,7 +172,7 @@ class Configurator implements ConfigProvider
 		$config['rootContext']['flags'] = $config['rootRules']['flags'];
 
 		// Make sure those keys exist even if no tags were defined and plugins loaded
-		$config += array('plugins' => array(), 'tags' => array());
+		$config += ['plugins' => [], 'tags' => []];
 
 		// Remove unused tags
 		$config['tags'] = array_intersect_key($config['tags'], $bitfields['tags']);
@@ -193,7 +193,7 @@ class Configurator implements ConfigProvider
 		// Create a variant that adds the stylesheet to the config if we're building a JavaScript
 		// config
 		$config['stylesheet'] = new Variant;
-		$config['stylesheet']->setDynamic('JS', array($this->stylesheet, 'get'));
+		$config['stylesheet']->setDynamic('JS', [$this->stylesheet, 'get']);
 
 		return $config;
 	}

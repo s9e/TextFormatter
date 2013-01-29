@@ -17,14 +17,14 @@ class Collection implements ConfigProvider, Countable, Iterator
 	/**
 	* @var array Items that this collection holds
 	*/
-	protected $items = array();
+	protected $items = [];
 
 	/**
 	* Empty this collection
 	*/
 	public function clear()
 	{
-		$this->items = array();
+		$this->items = [];
 	}
 
 	/**

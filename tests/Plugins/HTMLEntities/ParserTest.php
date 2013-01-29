@@ -20,69 +20,69 @@ class ParserTest extends Test
 
 	public function getParsingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'AT&amp;T',
 				'<rt>AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
-			),
-			array(
+			],
+			[
 				'AT&amp;T',
 				'<rt>AT<FOO char="&amp;">&amp;amp;</FOO>T</rt>',
-				array('tagName' => 'FOO')
-			),
-			array(
+				['tagName' => 'FOO']
+			],
+			[
 				'AT&amp;T',
 				'<rt>AT<HE bar="&amp;">&amp;amp;</HE>T</rt>',
-				array('attrName' => 'bar')
-			),
-			array(
+				['attrName' => 'bar']
+			],
+			[
 				'I &hearts; AT&amp;T',
 				'<rt>I <HE char="♥">&amp;hearts;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
-			),
-			array(
+			],
+			[
 				'I &#x2665; AT&amp;T',
 				'<rt>I <HE char="♥">&amp;#x2665;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
-			),
-			array(
+			],
+			[
 				'I &#9829; AT&amp;T',
 				'<rt>I <HE char="♥">&amp;#9829;</HE> AT<HE char="&amp;">&amp;amp;</HE>T</rt>'
-			),
-			array(
+			],
+			[
 				'Some &unknown; entity',
 				'<pt>Some &amp;unknown; entity</pt>'
-			),
-		);
+			],
+		];
 	}
 
 	public function getRenderingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'AT&amp;T',
 				'AT&amp;T',
-			),
-			array(
+			],
+			[
 				'AT&amp;T',
 				'AT&amp;T',
-				array('tagName' => 'FOO')
-			),
-			array(
+				['tagName' => 'FOO']
+			],
+			[
 				'AT&amp;T',
 				'AT&amp;T',
-				array('attrName' => 'bar')
-			),
-			array(
+				['attrName' => 'bar']
+			],
+			[
 				'I &hearts; AT&amp;T',
 				'I ♥ AT&amp;T'
-			),
-			array(
+			],
+			[
 				'Pok&eacute;man',
 				'Pokéman'
-			),
-			array(
+			],
+			[
 				'POK&Eacute;MAN',
 				'POKÉMAN'
-			),
-		);
+			],
+		];
 	}
 }

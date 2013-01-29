@@ -105,10 +105,10 @@ trait RulesHandling
 				}
 			}
 
-			$this->logger->err('Tag requires an ancestor', array(
+			$this->logger->err('Tag requires an ancestor', [
 				'requireAncestor' => implode(',', $tagConfig['rules']['requireAncestor']),
 				'tag'             => $tag
-			));
+			]);
 
 			return true;
 		}

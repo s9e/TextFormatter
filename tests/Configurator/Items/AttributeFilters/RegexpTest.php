@@ -64,7 +64,7 @@ class RegexpTest extends Test
 	public function testCSSUnsafeInvalidRegexp()
 	{
 		$filter = new Regexp;
-		$filter->setVars(array('regexp' => ')invalid('));
+		$filter->setVars(['regexp' => ')invalid(']);
 
 		$this->assertFalse($filter->isSafeInCSS());
 	}
@@ -107,7 +107,7 @@ class RegexpTest extends Test
 	public function testURLUnsafeInvalidRegexp()
 	{
 		$filter = new Regexp;
-		$filter->setVars(array('regexp' => ')invalid('));
+		$filter->setVars(['regexp' => ')invalid(']);
 
 		$this->assertFalse($filter->isSafeInURL());
 	}
@@ -148,7 +148,7 @@ class RegexpTest extends Test
 		$filter->setRegexp('/x/');
 
 		$this->assertEquals(
-			array('regexp' => '/x/'),
+			['regexp' => '/x/'],
 			$filter->getVars()
 		);
 	}

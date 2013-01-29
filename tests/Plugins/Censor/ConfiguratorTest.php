@@ -47,7 +47,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('Censor', array('tagName' => 'FOO'));
+		$this->configurator->plugins->load('Censor', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 
@@ -56,7 +56,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomAttrName()
 	{
-		$this->configurator->plugins->load('Censor', array('attrName' => 'bar'));
+		$this->configurator->plugins->load('Censor', ['attrName' => 'bar']);
 		$this->assertTrue($this->configurator->tags['CENSOR']->attributes->exists('bar'));
 	}
 
@@ -85,7 +85,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigTagName()
 	{
-		$plugin = $this->configurator->plugins->load('Censor', array('tagName' => 'FOO'));
+		$plugin = $this->configurator->plugins->load('Censor', ['tagName' => 'FOO']);
 		$plugin->add('apple');
 
 		$config = $plugin->asConfig();
@@ -99,7 +99,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigAttrName()
 	{
-		$plugin = $this->configurator->plugins->load('Censor', array('attrName' => 'bar'));
+		$plugin = $this->configurator->plugins->load('Censor', ['attrName' => 'bar']);
 		$plugin->add('apple');
 
 		$config = $plugin->asConfig();
@@ -121,10 +121,10 @@ class ConfiguratorTest extends Test
 		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
-			array(
-				array('/^apple$/Diu', 'banana'),
-				array('/^lemon$/Diu', 'citrus')
-			),
+			[
+				['/^apple$/Diu', 'banana'],
+				['/^lemon$/Diu', 'citrus']
+			],
 			$config['replacements']
 		);
 	}
@@ -142,7 +142,7 @@ class ConfiguratorTest extends Test
 		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
-			array(array('/^(?:apple|cherry)$/Diu', 'banana')),
+			[['/^(?:apple|cherry)$/Diu', 'banana']],
 			$config['replacements']
 		);
 	}
@@ -152,7 +152,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfigDefaultReplacement()
 	{
-		$plugin = $this->configurator->plugins->load('Censor', array('defaultReplacement' => '**'));
+		$plugin = $this->configurator->plugins->load('Censor', ['defaultReplacement' => '**']);
 		$plugin->add('apple', '**');
 		$plugin->add('cherry', 'banana');
 
@@ -160,7 +160,7 @@ class ConfiguratorTest extends Test
 		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
-			array(array('/^cherry$/Diu', 'banana')),
+			[['/^cherry$/Diu', 'banana']],
 			$config['replacements']
 		);
 	}

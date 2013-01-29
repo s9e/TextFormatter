@@ -61,12 +61,12 @@ class Configurator extends ConfiguratorBase
 		$schemeRegexp
 			= RegexpBuilder::fromList($this->configurator->urlConfig->getAllowedSchemes());
 
-		return array(
+		return [
 			'attrName'   => $this->attrName,
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => '#' . $schemeRegexp . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS',
 			'tagName'    => $this->tagName
-		);
+		];
 	}
 
 	/**

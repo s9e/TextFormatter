@@ -24,8 +24,8 @@ class RulesHandlingTest extends Test
 
 	public function getData()
 	{
-		return array(
-			array(
+		return [
+			[
 				'xx',
 				'<rt><X>x</X><X>x</X></rt>',
 				function ($constructor)
@@ -37,8 +37,8 @@ class RulesHandlingTest extends Test
 					$parser->addStartTag('X', 0, 0);
 					$parser->addStartTag('X', 1, 0);
 				}
-			),
-			array(
+			],
+			[
 				'xy',
 				'<rt><X>x<Y>y</Y></X></rt>',
 				function ($constructor)
@@ -51,8 +51,8 @@ class RulesHandlingTest extends Test
 					$parser->addStartTag('X', 0, 0);
 					$parser->addStartTag('Y', 1, 0);
 				}
-			),
-			array(
+			],
+			[
 				'xyx',
 				'<rt><X>x</X><Y>y</Y>x</rt>',
 				function ($constructor)
@@ -66,8 +66,8 @@ class RulesHandlingTest extends Test
 					       ->pairWith($parser->addEndTag('X', 3, 0));
 					$parser->addSelfClosingTag('Y', 1, 1);
 				}
-			),
-			array(
+			],
+			[
 				'xyx',
 				'<rt><X>x</X><Y>y</Y>x</rt>',
 				function ($constructor)
@@ -81,8 +81,8 @@ class RulesHandlingTest extends Test
 					       ->pairWith($parser->addEndTag('X', 3, 0));
 					$parser->addSelfClosingTag('Y', 1, 1);
 				}
-			),
-			array(
+			],
+			[
 				'xxy',
 				'<rt><X>x<X>x</X></X><Y>y</Y></rt>',
 				function ($constructor)
@@ -96,8 +96,8 @@ class RulesHandlingTest extends Test
 					$parser->addStartTag('X', 1, 0);
 					$parser->addSelfClosingTag('Y', 2, 1);
 				}
-			),
-			array(
+			],
+			[
 				'xy',
 				'<rt><X>x<Y>y</Y></X></rt>',
 				function ($constructor)
@@ -110,8 +110,8 @@ class RulesHandlingTest extends Test
 					$parser->addStartTag('X', 0, 0);
 					$parser->addStartTag('Y', 1, 0);
 				}
-			),
-			array(
+			],
+			[
 				'xx',
 				'<pt>xx</pt>',
 				function ($constructor)
@@ -123,8 +123,8 @@ class RulesHandlingTest extends Test
 					$parser->addStartTag('X', 0, 0);
 					$parser->addStartTag('X', 1, 0);
 				}
-			),
-			array(
+			],
+			[
 				'xy',
 				'<rt><X>x<Y>y</Y></X></rt>',
 				function ($constructor)
@@ -137,7 +137,7 @@ class RulesHandlingTest extends Test
 					$parser->addStartTag('X', 0, 0);
 					$parser->addStartTag('Y', 1, 0);
 				}
-			),
-		);
+			],
+		];
 	}
 }

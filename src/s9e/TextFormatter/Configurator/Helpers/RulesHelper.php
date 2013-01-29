@@ -22,7 +22,7 @@ abstract class RulesHelper
 	*/
 	public static function getBitfields(TagCollection $tags, Ruleset $rootRules)
 	{
-		$rules = array('*root*' => $rootRules);
+		$rules = ['*root*' => $rootRules];
 		foreach ($tags as $tagName => $tag)
 		{
 			$rules[$tagName] = $tag->rules;
@@ -36,7 +36,7 @@ abstract class RulesHelper
 		self::pruneMatrix($matrix);
 
 		// Group together tags are allowed in the exact same contexts
-		$groupedTags = array();
+		$groupedTags = [];
 		foreach (array_keys($matrix) as $tagName)
 		{
 			if ($tagName === '*root*')
@@ -57,10 +57,10 @@ abstract class RulesHelper
 		}
 
 		// Prepare the return value
-		$return = array();
+		$return = [];
 
 		// Record the bit number of each tag, and the name of a tag for each bit
-		$bitTag     = array();
+		$bitTag     = [];
 		$bitNumber  = 0;
 		foreach ($groupedTags as $k => $tagNames)
 		{
@@ -76,7 +76,7 @@ abstract class RulesHelper
 		// Build the bitfields of each tag, including the *root* pseudo-tag
 		foreach ($matrix as $tagName => $tagMatrix)
 		{
-			foreach (array('allowedChildren', 'allowedDescendants') as $fieldName)
+			foreach (['allowedChildren', 'allowedDescendants'] as $fieldName)
 			{
 				$bitfield = '';
 				foreach ($bitTag as $targetName)
@@ -109,7 +109,7 @@ abstract class RulesHelper
 	*/
 	protected static function unrollRules(array $rules)
 	{
-		$matrix = array();
+		$matrix = [];
 
 		// Keep a list of tag names for easy access
 		$tagNames = array_keys($rules);
@@ -229,13 +229,13 @@ abstract class RulesHelper
 	*/
 	protected static function pruneMatrix(array &$matrix)
 	{
-		$usableTags = array('*root*' => 1);
+		$usableTags = ['*root*' => 1];
 
 		// Start from the root and keep digging
 		$parentTags = $usableTags;
 		do
 		{
-			$nextTags = array();
+			$nextTags = [];
 			foreach (array_keys($parentTags) as $tagName)
 			{
 				// Accumulate the names of tags that are allowed as children of our parent tags

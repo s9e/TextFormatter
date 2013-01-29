@@ -91,7 +91,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		// Pack boolean rules into a bitfield
-		$bitValues = array(
+		$bitValues = [
 			'autoClose'      => Parser::RULE_AUTO_CLOSE,
 			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
 			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
@@ -99,7 +99,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
 			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT,
 			'trimWhitespace' => Parser::RULE_TRIM_WHITESPACE
-		);
+		];
 
 		$bitfield = 0;
 		foreach ($bitValues as $ruleName => $bitValue)
@@ -141,7 +141,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 		else
 		{
-			$this->items = array();
+			$this->items = [];
 		}
 	}
 
@@ -192,7 +192,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 				// Compute the difference between current list and our one tag name
 				$this->items[$type] = array_diff(
 					$this->items[$type],
-					array($tagName)
+					[$tagName]
 				);
 
 				if (empty($this->items[$type]))

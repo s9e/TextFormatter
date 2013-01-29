@@ -267,7 +267,7 @@ class NormalizedCollectionTest extends Test
 	*/
 	public function testPositiveContains()
 	{
-		$collection = new DummyNormalizedCollection(array('a' => 1, 'b' => 2));
+		$collection = new DummyNormalizedCollection(['a' => 1, 'b' => 2]);
 
 		$this->assertTrue($collection->contains(1));
 	}
@@ -277,7 +277,7 @@ class NormalizedCollectionTest extends Test
 	*/
 	public function testNegativeContains()
 	{
-		$collection = new DummyNormalizedCollection(array('a' => 1, 'b' => 2));
+		$collection = new DummyNormalizedCollection(['a' => 1, 'b' => 2]);
 
 		$this->assertFalse($collection->contains(4));
 	}
@@ -287,7 +287,7 @@ class NormalizedCollectionTest extends Test
 	*/
 	public function testEqualityContains()
 	{
-		$collection = new DummyNormalizedCollection(array('a' => new stdClass));
+		$collection = new DummyNormalizedCollection(['a' => new stdClass]);
 
 		$this->assertTrue($collection->contains(new stdClass));
 	}
@@ -297,7 +297,7 @@ class NormalizedCollectionTest extends Test
 	*/
 	public function testPositiveIndexOf()
 	{
-		$collection = new DummyNormalizedCollection(array('a' => 1, 'b' => 2));
+		$collection = new DummyNormalizedCollection(['a' => 1, 'b' => 2]);
 
 		$this->assertSame('a', $collection->indexOf(1));
 	}
@@ -307,7 +307,7 @@ class NormalizedCollectionTest extends Test
 	*/
 	public function testNegativeIndexOf()
 	{
-		$collection = new DummyNormalizedCollection(array('a' => 1, 'b' => 2));
+		$collection = new DummyNormalizedCollection(['a' => 1, 'b' => 2]);
 
 		$this->assertFalse($collection->indexOf(4));
 	}
@@ -317,7 +317,7 @@ class NormalizedCollectionTest extends Test
 	*/
 	public function testEqualityIndexOf()
 	{
-		$collection = new DummyNormalizedCollection(array('a' => new stdClass));
+		$collection = new DummyNormalizedCollection(['a' => new stdClass]);
 
 		$this->assertSame('a', $collection->indexOf(new stdClass));
 	}

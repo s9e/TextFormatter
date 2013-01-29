@@ -20,85 +20,85 @@ class ParserTest extends Test
 
 	public function getParsingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'x <b>bold</b> x',
 				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b><st>&lt;b&gt;</st>bold<et>&lt;/b&gt;</et></html:b> x</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 				}
-			),
-			array(
+			],
+			[
 				'x <b>bold</b> x',
 				'<rt xmlns:foo="urn:s9e:TextFormatter:foo">x <foo:b><st>&lt;b&gt;</st>bold<et>&lt;/b&gt;</et></foo:b> x</rt>',
-				array('prefix' => 'foo'),
+				['prefix' => 'foo'],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 				}
-			),
-			array(
+			],
+			[
 				'x <b title="is bold">bold</b> x',
 				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b title="is bold"><st>&lt;b title="is bold"&gt;</st>bold<et>&lt;/b&gt;</et></html:b> x</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 					$constructor->HTMLElements->allowAttribute('b', 'title');
 				}
-			),
-			array(
+			],
+			[
 				'x <b title="is bold">bold</b> x',
 				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b><st>&lt;b title="is bold"&gt;</st>bold<et>&lt;/b&gt;</et></html:b> x</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 				}
-			),
-			array(
+			],
+			[
 				'x <B>bold</b> x',
 				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b><st>&lt;B&gt;</st>bold<et>&lt;/b&gt;</et></html:b> x</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 				}
-			),
-			array(
+			],
+			[
 				'x <b Title="is bold">bold</b> x',
 				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b title="is bold"><st>&lt;b Title="is bold"&gt;</st>bold<et>&lt;/b&gt;</et></html:b> x</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 					$constructor->HTMLElements->allowAttribute('b', 'title');
 				}
-			),
-			array(
+			],
+			[
 				'x<br/>y',
 				'<rt xmlns:html="urn:s9e:TextFormatter:html">x<html:br>&lt;br/&gt;</html:br>y</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('br');
 				}
-			),
-			array(
+			],
+			[
 				'x<br />y',
 				'<rt xmlns:html="urn:s9e:TextFormatter:html">x<html:br>&lt;br /&gt;</html:br>y</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('br');
 				}
-			),
-			array(
+			],
+			[
 				'x <input type=checkbox disabled checked /> x',
 				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:input type="checkbox" disabled="disabled" checked="checked">&lt;input type=checkbox disabled checked /&gt;</html:input> x</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('input');
@@ -106,41 +106,41 @@ class ParserTest extends Test
 					$constructor->HTMLElements->allowAttribute('input', 'disabled');
 					$constructor->HTMLElements->allowAttribute('input', 'checked');
 				}
-			),
-		);
+			],
+		];
 	}
 
 	public function getRenderingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'x <b>bold</b> x',
 				'x <b>bold</b> x',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 				}
-			),
-			array(
+			],
+			[
 				'x <b>bold</b> x',
 				'x <b>bold</b> x',
-				array('prefix' => 'foo'),
+				['prefix' => 'foo'],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 				}
-			),
-			array(
+			],
+			[
 				'x <b title="is bold">bold</b> x',
 				'x <b title="is bold">bold</b> x',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->HTMLElements->allowElement('b');
 					$constructor->HTMLElements->allowAttribute('b', 'title');
 				}
-			),
-		);
+			],
+		];
 	}
 }

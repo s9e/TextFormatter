@@ -99,19 +99,19 @@ class PluginCollectionTest extends Test
 	public function testAsConfigAddRegexpLimit()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(array('regexp' => '//'));
+		$plugin->setConfig(['regexp' => '//']);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'regexpLimit' => 10000
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -122,19 +122,19 @@ class PluginCollectionTest extends Test
 	public function testAsConfigRemoveRegexpLimit()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(array('regexpLimit' => 1000));
+		$plugin->setConfig(['regexpLimit' => 1000]);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'regexpLimit' => null
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -145,19 +145,19 @@ class PluginCollectionTest extends Test
 	public function testAsConfigAddRegexpLimitAction()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(array('regexp' => '//'));
+		$plugin->setConfig(['regexp' => '//']);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'regexpLimitAction' => 'warn'
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -168,19 +168,19 @@ class PluginCollectionTest extends Test
 	public function testAsConfigRemoveRegexpLimitAction()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(array('regexpLimitAction' => 1000));
+		$plugin->setConfig(['regexpLimitAction' => 1000]);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'regexpLimitAction' => null
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -197,13 +197,13 @@ class PluginCollectionTest extends Test
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'quickMatch' => 'foo'
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -220,13 +220,13 @@ class PluginCollectionTest extends Test
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'quickMatch' => null
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -234,7 +234,7 @@ class PluginCollectionTest extends Test
 
 class DummyPluginConfigurator extends ConfiguratorBase
 {
-	protected $config = array('foo' => 1);
+	protected $config = ['foo' => 1];
 
 	public function asConfig()
 	{

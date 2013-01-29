@@ -104,6 +104,7 @@ function convertFile($filepath)
 
 	convertUse($filepath, $file);
 	convertCustom($filepath, $file);
+	convertArraySyntax($file);
 
 	if ($file !== $oldFile)
 	{
@@ -177,6 +178,118 @@ function convertDir($dir)
 	foreach (glob($dir . '/*.php') as $filepath)
 	{
 		convertFile($filepath);
+	}
+}
+
+function toShort($filepath)
+{
+	$file   = file_get_contents($filepath);
+	$tokens = token_get_all($file);
+
+	$i       = 0;
+	$cnt     = count($tokens);
+	$level   = 0;
+	$replace = array();
+
+	while (++$i < $cnt)
+	{
+		$token = $tokens[$i];
+
+		if ($token === '(')
+		{
+			++$level;
+		}
+		elseif ($token === ')')
+		{
+			if ($level === end($replace))
+			{
+				$tokens[$i] = ']';
+				array_pop($replace);
+			}
+			else
+			{
+				--$level;
+			}
+		}
+		elseif (is_array($token) && $token[0] === T_ARRAY)
+		{
+			$j = $i;
+			while ($tokens[++$j][0] === T_WHITESPACE);
+
+			if ($tokens[$j] === '(')
+			{
+				do
+				{
+					unset($tokens[$i]);
+				}
+				while (++$i < $j);
+
+				$tokens[$i] = '[';
+				$replace[]  = $level;
+			}
+		}
+	}
+
+	$file = '';
+	foreach ($tokens as $token)
+	{
+		$file .= (is_string($token)) ? $token : $token[1];
+	}
+
+	file_put_contents($filepath, $file);
+}
+
+function convertArraySyntax(&$file)
+{
+	$tokens = token_get_all($file);
+
+	$i       = 0;
+	$cnt     = count($tokens);
+	$level   = 0;
+	$replace = array();
+
+	while (++$i < $cnt)
+	{
+		$token = $tokens[$i];
+
+		if ($token === '[')
+		{
+			$j = $i;
+			while ($tokens[--$j] === T_WHITESPACE);
+
+			if ($tokens[$j] === ']')
+			{
+				++$level;
+			}
+			elseif (is_array($tokens[$j])
+			    && ($tokens[$j][0] === T_STRING || $tokens[$j][0] === T_VARIABLE))
+			{
+				++$level;
+			}
+			else
+			{
+				$tokens[$i] = 'array(';
+				$replace[]  = $level;
+			}
+		}
+		elseif ($token === ']')
+		{
+			if ($level === end($replace))
+			{
+				$tokens[$i] = ')';
+				array_pop($replace);
+			}
+			else
+			{
+				--$level;
+			}
+		}
+	}
+
+	$file = '';
+	foreach ($tokens as $token)
+	{
+		$file .= (is_string($token)) ? $token : $token[1];
 	}
 }
 

@@ -41,7 +41,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('Autoemail', array('tagName' => 'FOO'));
+		$this->configurator->plugins->load('Autoemail', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 
@@ -50,7 +50,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomAttrName()
 	{
-		$this->configurator->plugins->load('Autoemail', array('attrName' => 'bar'));
+		$this->configurator->plugins->load('Autoemail', ['attrName' => 'bar']);
 		$this->assertTrue($this->configurator->tags['EMAIL']->attributes->exists('bar'));
 	}
 

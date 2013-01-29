@@ -44,7 +44,7 @@ class Choice extends Regexp
 		}
 
 		// Create a regexp based on the list of allowed values
-		$regexp = RegexpBuilder::fromList($values, array('delimiter' => '/'));
+		$regexp = RegexpBuilder::fromList($values, ['delimiter' => '/']);
 		$regexp = '/^' . $regexp . '$/D';
 
 		// Add the case-insensitive flag if applicable

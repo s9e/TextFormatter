@@ -35,7 +35,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('Emoticons', array('tagName' => 'FOO'));
+		$this->configurator->plugins->load('Emoticons', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 
@@ -134,7 +134,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigTagName()
 	{
-		$plugin = $this->configurator->plugins->load('Emoticons', array('tagName' => 'FOO'));
+		$plugin = $this->configurator->plugins->load('Emoticons', ['tagName' => 'FOO']);
 		$plugin->add(':)', ':)');
 
 		$config = $plugin->asConfig();

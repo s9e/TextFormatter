@@ -31,7 +31,7 @@ class RulesetTest extends Test
 		$ruleset->allowChild('FOO');
 
 		$this->assertSame(
-			array('FOO'),
+			['FOO'],
 			$ruleset['allowChild']
 		);
 	}
@@ -70,7 +70,7 @@ class RulesetTest extends Test
 		$ruleset->clear();
 
 		$this->assertSame(
-			array(),
+			[],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -86,7 +86,7 @@ class RulesetTest extends Test
 		$ruleset->clear('allowChild');
 
 		$this->assertSame(
-			array('requireParent' => array('BAR')),
+			['requireParent' => ['BAR']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -103,7 +103,7 @@ class RulesetTest extends Test
 		$ruleset->remove('denyChild', 'IMG');
 
 		$this->assertSame(
-			array('denyChild' => array('FOO')),
+			['denyChild' => ['FOO']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -120,7 +120,7 @@ class RulesetTest extends Test
 		$ruleset->remove('denyChild');
 
 		$this->assertSame(
-			array(),
+			[],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -135,7 +135,7 @@ class RulesetTest extends Test
 		$ruleset->remove('denyChild', 'IMG');
 
 		$this->assertSame(
-			array(),
+			[],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -153,7 +153,7 @@ class RulesetTest extends Test
 		$ruleset->remove('denyChild', 'IMG');
 
 		$this->assertSame(
-			array('denyChild' => array('FOO', 'BAR')),
+			['denyChild' => ['FOO', 'BAR']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -170,7 +170,7 @@ class RulesetTest extends Test
 		$ruleset->remove('denyChild', 'img');
 
 		$this->assertSame(
-			array('denyChild' => array('FOO')),
+			['denyChild' => ['FOO']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -195,7 +195,7 @@ class RulesetTest extends Test
 		$ruleset->allowChild('b');
 
 		$this->assertSame(
-			array('allowChild' => array('B')),
+			['allowChild' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -220,7 +220,7 @@ class RulesetTest extends Test
 		$ruleset->allowDescendant('b');
 
 		$this->assertSame(
-			array('allowDescendant' => array('B')),
+			['allowDescendant' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -286,7 +286,7 @@ class RulesetTest extends Test
 		$ruleset->closeAncestor('b');
 
 		$this->assertSame(
-			array('closeAncestor' => array('B')),
+			['closeAncestor' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -301,7 +301,7 @@ class RulesetTest extends Test
 		$ruleset->closeParent('b');
 
 		$this->assertSame(
-			array('closeParent' => array('B')),
+			['closeParent' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -315,7 +315,7 @@ class RulesetTest extends Test
 		$ruleset->defaultChildRule('allow');
 
 		$this->assertSame(
-			array('defaultChildRule' => 'allow'),
+			['defaultChildRule' => 'allow'],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -329,7 +329,7 @@ class RulesetTest extends Test
 		$ruleset->defaultChildRule('deny');
 
 		$this->assertSame(
-			array('defaultChildRule' => 'deny'),
+			['defaultChildRule' => 'deny'],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -354,7 +354,7 @@ class RulesetTest extends Test
 		$ruleset->defaultDescendantRule('allow');
 
 		$this->assertSame(
-			array('defaultDescendantRule' => 'allow'),
+			['defaultDescendantRule' => 'allow'],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -368,7 +368,7 @@ class RulesetTest extends Test
 		$ruleset->defaultDescendantRule('deny');
 
 		$this->assertSame(
-			array('defaultDescendantRule' => 'deny'),
+			['defaultDescendantRule' => 'deny'],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -425,7 +425,7 @@ class RulesetTest extends Test
 		$ruleset->denyChild('b');
 
 		$this->assertSame(
-			array('denyChild' => array('B')),
+			['denyChild' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -451,7 +451,7 @@ class RulesetTest extends Test
 		$ruleset->denyDescendant('b');
 
 		$this->assertSame(
-			array('denyDescendant' => array('B')),
+			['denyDescendant' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -577,7 +577,7 @@ class RulesetTest extends Test
 		$ruleset->requireParent('b');
 
 		$this->assertSame(
-			array('requireParent' => array('B')),
+			['requireParent' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -603,7 +603,7 @@ class RulesetTest extends Test
 		$ruleset->requireAncestor('b');
 
 		$this->assertSame(
-			array('requireAncestor' => array('B')),
+			['requireAncestor' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
@@ -613,10 +613,10 @@ class RulesetTest extends Test
 	*/
 	public function testMergeArray()
 	{
-		$rules = array(
-			'allowChild' => array('B'),
-			'denyChild'  => array('I')
-		);
+		$rules = [
+			'allowChild' => ['B'],
+			'denyChild'  => ['I']
+		];
 
 		$ruleset = new Ruleset;
 		$ruleset->merge($rules);
@@ -629,10 +629,10 @@ class RulesetTest extends Test
 	*/
 	public function testMergeArrayDefaultChildRule()
 	{
-		$rules = array(
-			'allowChild'       => array('B'),
+		$rules = [
+			'allowChild'       => ['B'],
 			'defaultChildRule' => 'allow'
-		);
+		];
 
 		$ruleset = new Ruleset;
 		$ruleset->merge($rules);
@@ -645,10 +645,10 @@ class RulesetTest extends Test
 	*/
 	public function testMergeArrayDefaultDescendantRule()
 	{
-		$rules = array(
-			'allowDescendant'       => array('B'),
+		$rules = [
+			'allowDescendant'       => ['B'],
 			'defaultDescendantRule' => 'allow'
-		);
+		];
 
 		$ruleset = new Ruleset;
 		$ruleset->merge($rules);
@@ -661,10 +661,10 @@ class RulesetTest extends Test
 	*/
 	public function testMergeArrayIsTransparent()
 	{
-		$rules = array(
-			'allowChild'    => array('B'),
+		$rules = [
+			'allowChild'    => ['B'],
 			'isTransparent' => true
-		);
+		];
 
 		$ruleset = new Ruleset;
 		$ruleset->merge($rules);
@@ -745,7 +745,7 @@ class RulesetTest extends Test
 	public function testAsConfigOmitsUnneededRules()
 	{
 		$ruleset = new Ruleset;
-		$rules = array(
+		$rules = [
 			'allowChild'            => 'X',
 			'allowDescendant'       => 'X',
 			'defaultChildRule'      => 'deny',
@@ -755,7 +755,7 @@ class RulesetTest extends Test
 			'denyDescendant'        => 'X',
 			'isTransparent'         => false,
 			'requireParent'         => 'X'
-		);
+		];
 
 		foreach ($rules as $k => $v)
 		{
@@ -817,7 +817,7 @@ class RulesetTest extends Test
 		$config = $ruleset->asConfig();
 
 		$this->assertArrayHasKey('requireAncestor', $config);
-		$this->assertEquals(array('X', 'Y'), $config['requireAncestor']);
+		$this->assertEquals(['X', 'Y'], $config['requireAncestor']);
 	}
 
 	/**
@@ -825,7 +825,7 @@ class RulesetTest extends Test
 	*/
 	public function testAsConfigBitfield()
 	{
-		$booleanRules = array(
+		$booleanRules = [
 			'autoClose'      => Parser::RULE_AUTO_CLOSE,
 			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
 			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
@@ -833,7 +833,7 @@ class RulesetTest extends Test
 			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
 			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT | Parser::RULE_NO_BR_CHILD,
 			'trimWhitespace' => Parser::RULE_TRIM_WHITESPACE
-		);
+		];
 
 		$ruleset = new Ruleset;
 		foreach ($booleanRules as $methodName => $bitValue)

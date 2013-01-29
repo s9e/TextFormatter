@@ -34,9 +34,9 @@ class ChoiceTest extends Test
 
 		$filter->expects($this->once())
 		       ->method('setValues')
-		       ->with(array('one', 'two'), true);
+		       ->with(['one', 'two'], true);
 
-		$filter->__construct(array('one', 'two'), true);
+		$filter->__construct(['one', 'two'], true);
 	}
 
 	/**
@@ -46,14 +46,14 @@ class ChoiceTest extends Test
 	{
 		$filter = $this->getMock(
 			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\Choice',
-			array('setRegexp')
+			['setRegexp']
 		);
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')
 		       ->with('/^(?:one|two)$/Di');
 
-		$filter->setValues(array('one', 'two'));
+		$filter->setValues(['one', 'two']);
 	}
 
 	/**
@@ -63,14 +63,14 @@ class ChoiceTest extends Test
 	{
 		$filter = $this->getMock(
 			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\Choice',
-			array('setRegexp')
+			['setRegexp']
 		);
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')
 		       ->with('/^(?:one|two)$/D');
 
-		$filter->setValues(array('one', 'two'), true);
+		$filter->setValues(['one', 'two'], true);
 	}
 
 	/**
@@ -80,14 +80,14 @@ class ChoiceTest extends Test
 	{
 		$filter = $this->getMock(
 			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\Choice',
-			array('setRegexp')
+			['setRegexp']
 		);
 
 		$filter->expects($this->once())
 		       ->method('setRegexp')
 		       ->with('/^(?:pokémon|yugioh)$/Diu');
 
-		$filter->setValues(array('pokémon', 'yugioh'));
+		$filter->setValues(['pokémon', 'yugioh']);
 	}
 
 	/**
@@ -98,6 +98,6 @@ class ChoiceTest extends Test
 	public function testSetValuesInvalidBool()
 	{
 		$filter = new Choice;
-		$filter->setValues(array('one', 'two'), 'notabool');
+		$filter->setValues(['one', 'two'], 'notabool');
 	}
 }

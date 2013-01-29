@@ -16,12 +16,12 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps1()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => 'foo',
-				'tokens'    => array()
-			),
+				'tokens'    => []
+			],
 			RegexpParser::parse(
 				'#foo#'
 			)
@@ -44,12 +44,12 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps2()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => 'iD',
 				'regexp'    => 'foo',
-				'tokens'    => array()
-			),
+				'tokens'    => []
+			],
 			RegexpParser::parse(
 				'#foo#iD'
 			)
@@ -62,20 +62,20 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps3()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '[a-z]',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 5,
 						'type' => 'characterClass',
 						'content' => 'a-z',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#[a-z]#'
 			)
@@ -88,20 +88,20 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps4()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '[a-z]+',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 6,
 						'type' => 'characterClass',
 						'content' => 'a-z',
 						'quantifiers' => '+'
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#[a-z]+#'
 			)
@@ -114,20 +114,20 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps5()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '[a-z\\]]',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 7,
 						'type' => 'characterClass',
 						'content' => 'a-z\\]',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#[a-z\\]]#'
 			)
@@ -150,12 +150,12 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps6()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '\\[x\\]',
-				'tokens'    => array()
-			),
+				'tokens'    => []
+			],
 			RegexpParser::parse(
 				'#\\[x\\]#'
 			)
@@ -168,12 +168,12 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps7()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '\\(x\\)',
-				'tokens'    => array()
-			),
+				'tokens'    => []
+			],
 			RegexpParser::parse(
 				'#\\(x\\)#'
 			)
@@ -186,27 +186,27 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps8()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?:x+)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 3,
 						'type' => 'nonCapturingSubpatternStart',
 						'options' => '',
 						'content' => 'x+',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 5,
 						'len' => 1,
 						'type' => 'nonCapturingSubpatternEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?:x+)#'
 			)
@@ -219,27 +219,27 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps8b()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?>x+)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 3,
 						'type' => 'nonCapturingSubpatternStart',
 						'subtype' => 'atomic',
 						'content' => 'x+',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 5,
 						'len' => 1,
 						'type' => 'nonCapturingSubpatternEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?>x+)#'
 			)
@@ -252,27 +252,27 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps9()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?:x+)++',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 3,
 						'type' => 'nonCapturingSubpatternStart',
 						'options' => '',
 						'content' => 'x+',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 5,
 						'len' => 3,
 						'type' => 'nonCapturingSubpatternEnd',
 						'quantifiers' => '++'
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?:x+)++#'
 			)
@@ -285,27 +285,27 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps10()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?i:x+)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 4,
 						'type' => 'nonCapturingSubpatternStart',
 						'options' => 'i',
 						'content' => 'x+',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 6,
 						'len' => 1,
 						'type' => 'nonCapturingSubpatternEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?i:x+)#'
 			)
@@ -318,19 +318,19 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps11()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?i)abc',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 4,
 						'type' => 'option',
 						'options' => 'i'
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?i)abc#'
 			)
@@ -343,27 +343,27 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps12()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?<foo>x+)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 7,
 						'type' => 'capturingSubpatternStart',
 						'name' => 'foo',
 						'content' => 'x+',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 9,
 						'len' => 1,
 						'type' => 'capturingSubpatternEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?<foo>x+)#'
 			)
@@ -376,27 +376,27 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps13()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?P<foo>x+)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 8,
 						'type' => 'capturingSubpatternStart',
 						'name' => 'foo',
 						'content' => 'x+',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 10,
 						'len' => 1,
 						'type' => 'capturingSubpatternEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?P<foo>x+)#'
 			)
@@ -409,27 +409,27 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps14()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => "(?'foo'x+)",
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 7,
 						'type' => 'capturingSubpatternStart',
 						'name' => 'foo',
 						'content' => 'x+',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 9,
 						'len' => 1,
 						'type' => 'capturingSubpatternEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				"#(?'foo'x+)#"
 			)
@@ -442,39 +442,39 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps15()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '/',
 				'modifiers' => '',
 				'regexp'    => '(x+)(abc\\d+)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 1,
 						'type' => 'capturingSubpatternStart',
 						'content' => 'x+',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 3,
 						'len' => 1,
 						'type' => 'capturingSubpatternEnd',
 						'quantifiers' => ''
-					),
-					array(
+					],
+					[
 						'pos' => 4,
 						'len' => 1,
 						'type' => 'capturingSubpatternStart',
 						'content' => 'abc\\d+',
 						'endToken' => 3
-					),
-					array(
+					],
+					[
 						'pos' => 11,
 						'len' => 1,
 						'type' => 'capturingSubpatternEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'/(x+)(abc\\d+)/'
 			)
@@ -517,26 +517,26 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps16()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?=foo)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 3,
 						'type' => 'lookaheadAssertionStart',
 						'content' => 'foo',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 6,
 						'len' => 1,
 						'type' => 'lookaheadAssertionEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?=foo)#'
 			)
@@ -549,26 +549,26 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps17()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?!foo)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 3,
 						'type' => 'negativeLookaheadAssertionStart',
 						'content' => 'foo',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 6,
 						'len' => 1,
 						'type' => 'negativeLookaheadAssertionEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?!foo)#'
 			)
@@ -581,26 +581,26 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps18()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?<=foo)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 4,
 						'type' => 'lookbehindAssertionStart',
 						'content' => 'foo',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 7,
 						'len' => 1,
 						'type' => 'lookbehindAssertionEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?<=foo)#'
 			)
@@ -613,26 +613,26 @@ class RegexpParserTest extends Test
 	public function testCanParseRegexps19()
 	{
 		$this->assertEquals(
-			array(
+			[
 				'delimiter' => '#',
 				'modifiers' => '',
 				'regexp'    => '(?<!foo)',
-				'tokens'    => array(
-					array(
+				'tokens'    => [
+					[
 						'pos' => 0,
 						'len' => 4,
 						'type' => 'negativeLookbehindAssertionStart',
 						'content' => 'foo',
 						'endToken' => 1
-					),
-					array(
+					],
+					[
 						'pos' => 7,
 						'len' => 1,
 						'type' => 'negativeLookbehindAssertionEnd',
 						'quantifiers' => ''
-					)
-				)
-			),
+					]
+				]
+			],
 			RegexpParser::parse(
 				'#(?<!foo)#'
 			)
@@ -666,62 +666,62 @@ class RegexpParserTest extends Test
 
 	public function getAllowedCharacterRegexpData()
 	{
-		return array(
-			array(
+		return [
+			[
 				'/^a+$/',
-				array(
+				[
 					'a'  => true,
 					'A'  => false,
 					'b'  => false,
 					'+'  => false,
 					"\n" => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^a+$/Di',
-				array(
+				[
 					'a'  => true,
 					'A'  => true,
 					'b'  => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^a+$/D',
-				array(
+				[
 					'a'  => true,
 					'b'  => false,
 					'+'  => false,
 					"\n" => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/a/D',
-				array(
+				[
 					'a'  => true,
 					'b'  => true,
 					"\n" => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^a$/Dm',
-				array(
+				[
 					'a'  => true,
 					'b'  => true,
 					"\n" => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\w+$/D',
-				array(
+				[
 					'a'  => true,
 					'b'  => true,
 					'+'  => false,
 					'\\' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[0-4][6-9]$/D',
-				array(
+				[
 					'0' => true,
 					'2' => true,
 					'4' => true,
@@ -730,199 +730,199 @@ class RegexpParserTest extends Test
 					'[' => false,
 					']' => false,
 					'-' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[-]$/D',
-				array(
+				[
 					'-' => true,
 					'[' => false,
 					']' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[a][-][z]$/D',
-				array(
+				[
 					'-' => true,
 					'[' => false,
 					']' => false,
 					'a' => true,
 					'x' => false,
 					'z' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[^a-z]$/D',
-				array(
+				[
 					'-' => true,
 					'[' => true,
 					'a' => false,
 					'x' => false,
 					'z' => false,
 					'A' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[^a-z]$/Di',
-				array(
+				[
 					'a' => false,
 					'A' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^a|a$/D',
-				array(
+				[
 					'a' => true,
 					'b' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^.$/D',
-				array(
+				[
 					'a'  => true,
 					"\n" => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^.$/',
-				array(
+				[
 					'a'  => true,
 					"\n" => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^.$/Ds',
-				array(
+				[
 					'a'  => true,
 					"\n" => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^.$/',
-				array(
+				[
 					'é' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^Pokémon$/iu',
-				array(
+				[
 					'é' => true,
 					'É' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\pL$/iu',
-				array(
+				[
 					'é' => true,
 					'É' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^(left|right|center)$/',
-				array(
+				[
 					'l' => true,
 					'(' => false,
 					'|' => false,
 					')' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[$]$/',
-				array(
+				[
 					'$' => true,
 					'[' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\$$/',
-				array(
+				[
 					'$'  => true,
 					'\\' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\\\\\$$/',
-				array(
+				[
 					'$'  => true,
 					'\\' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[\\^]$/',
-				array(
+				[
 					'^'  => true,
 					'\\' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[\\\\^]$/',
-				array(
+				[
 					'^'  => true,
 					'\\' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\^$/',
-				array(
+				[
 					'^'  => true,
 					'\\' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\\\\\^$/',
-				array(
+				[
 					'^'  => true,
 					'\\' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\($/',
-				array(
+				[
 					'('  => true,
 					'\\' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\\\\\($/',
-				array(
+				[
 					'('  => true,
 					'\\' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^(a)\\1$/',
-				array(
+				[
 					'a'  => true,
 					'\\' => false,
 					'1'  => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^(1)\\1$/',
-				array(
+				[
 					'1'  => true,
 					'\\' => false
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^\\050$/',
-				array(
+				[
 					'0' => false,
 					'5' => false,
 					'(' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^[a-z\\050]$/',
-				array(
+				[
 					'0' => false,
 					'5' => false,
 					'(' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'/^a\\b\\B\\A\\Z\\z\\Gc$/',
-				array(
+				[
 					'a' => true,
 					'b' => false,
 					'B' => false,
@@ -931,15 +931,15 @@ class RegexpParserTest extends Test
 					'z' => false,
 					'G' => false,
 					'c' => true
-				)
-			),
-			array(
+				]
+			],
+			[
 				'#^/$#D',
-				array(
+				[
 					'#' => false,
 					'/' => true
-				)
-			),
-		);
+				]
+			],
+		];
 	}
 }

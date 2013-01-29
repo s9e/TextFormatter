@@ -86,12 +86,12 @@ class VariantTest extends Test
 	*/
 	public function testSetDynamicNoRead()
 	{
-		$callback = $this->getMock('stdClass', array('foo'));
+		$callback = $this->getMock('stdClass', ['foo']);
 		$callback->expects($this->never())
 		         ->method('foo');
 
 		$variant = new Variant;
-		$variant->setDynamic('foo', array($callback, 'foo'));
+		$variant->setDynamic('foo', [$callback, 'foo']);
 
 		$variant->get();
 	}
@@ -101,13 +101,13 @@ class VariantTest extends Test
 	*/
 	public function testSetDynamicRead()
 	{
-		$callback = $this->getMock('stdClass', array('foo'));
+		$callback = $this->getMock('stdClass', ['foo']);
 		$callback->expects($this->once())
 		         ->method('foo')
 		         ->will($this->returnValue(42));
 
 		$variant = new Variant;
-		$variant->setDynamic('foo', array($callback, 'foo'));
+		$variant->setDynamic('foo', [$callback, 'foo']);
 
 		$this->assertSame(42, $variant->get('foo'));
 	}
@@ -117,13 +117,13 @@ class VariantTest extends Test
 	*/
 	public function testSetDynamicReads()
 	{
-		$callback = $this->getMock('stdClass', array('foo'));
+		$callback = $this->getMock('stdClass', ['foo']);
 		$callback->expects($this->exactly(2))
 		         ->method('foo')
 		         ->will($this->onConsecutiveCalls(42, 55));
 
 		$variant = new Variant;
-		$variant->setDynamic('foo', array($callback, 'foo'));
+		$variant->setDynamic('foo', [$callback, 'foo']);
 
 		$this->assertSame(42, $variant->get('foo'));
 		$this->assertSame(55, $variant->get('foo'));

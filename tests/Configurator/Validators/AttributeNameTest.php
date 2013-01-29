@@ -109,7 +109,7 @@ class AttributeNameTest extends Test
 
 	public static function getNames()
 	{
-		return array(
+		return [
 			'url'      => 'url',
 			'URL'      => 'url',
 			'_url'     => '_url',
@@ -120,6 +120,6 @@ class AttributeNameTest extends Test
 			'data-src' => 'data-src',
 			'foo:bar'  => 'Invalid: no colons allowed',
 			"foo\n"    => 'Invalid: no newlines allowed'
-		);
+		];
 	}
 }

@@ -28,7 +28,7 @@ class AttributePreprocessorCollection extends Collection
 
 		$ap = new AttributePreprocessor($regexp);
 
-		$k = serialize(array($attrName, $regexp));
+		$k = serialize([$attrName, $regexp]);
 		$this->items[$k] = $ap;
 
 		return $ap;
@@ -98,17 +98,17 @@ class AttributePreprocessorCollection extends Collection
 	*/
 	public function asConfig()
 	{
-		$config = array();
+		$config = [];
 
 		foreach ($this->items as $k => $ap)
 		{
 			list($attrName, $regexp) = unserialize($k);
 
-			$variant = new Variant(array($attrName, $regexp));
+			$variant = new Variant([$attrName, $regexp]);
 
 			// Create a JavaScript variant that contains a map of the regexp's named subpatterns
 			$jsRegexp = RegexpConvertor::toJS($regexp);
-			$variant->set('JS', array($attrName, $jsRegexp, $jsRegexp->map));
+			$variant->set('JS', [$attrName, $jsRegexp, $jsRegexp->map]);
 
 			$config[] = $variant;
 		}

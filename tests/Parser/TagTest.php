@@ -16,7 +16,7 @@ class TagTest extends Test
 	public function testGetAttributes()
 	{
 		$tag = new Tag(Tag::START_TAG, 'X', 12, 34);
-		$this->assertSame(array(), $tag->getAttributes());
+		$this->assertSame([], $tag->getAttributes());
 	}
 
 	/**
@@ -227,8 +227,8 @@ class TagTest extends Test
 		$tag1 = new Tag(Tag::START_TAG, 'X', 0, 0);
 		$tag2 = $this->getMock(
 			's9e\\TextFormatter\\Parser\\Tag',
-			array('invalidate'),
-			array(Tag::START_TAG, 'X', 0, 0)
+			['invalidate'],
+			[Tag::START_TAG, 'X', 0, 0]
 		);
 		$tag2->expects($this->once())
 		     ->method('invalidate');
@@ -244,8 +244,8 @@ class TagTest extends Test
 	{
 		$tag1 = $this->getMock(
 			's9e\\TextFormatter\\Parser\\Tag',
-			array('invalidate'),
-			array(Tag::START_TAG, 'X', 0, 0)
+			['invalidate'],
+			[Tag::START_TAG, 'X', 0, 0]
 		);
 		$tag1->expects($this->never())
 		     ->method('invalidate');
@@ -264,8 +264,8 @@ class TagTest extends Test
 		$tag1 = new Tag(Tag::START_TAG, 'X', 0, 0);
 		$tag2 = $this->getMock(
 			's9e\\TextFormatter\\Parser\\Tag',
-			array('invalidate'),
-			array(Tag::START_TAG, 'X', 0, 0)
+			['invalidate'],
+			[Tag::START_TAG, 'X', 0, 0]
 		);
 		$tag2->expects($this->once())
 		     ->method('invalidate');
@@ -444,7 +444,7 @@ class TagTest extends Test
 		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', 'bar');
 
-		$this->assertSame(array('foo' => 'bar'), $tag->getAttributes());
+		$this->assertSame(['foo' => 'bar'], $tag->getAttributes());
 	}
 
 	/**
@@ -456,7 +456,7 @@ class TagTest extends Test
 		$tag->setAttribute('foo', 'bar');
 		$tag->setAttribute('foo', 'xxx');
 
-		$this->assertSame(array('foo' => 'xxx'), $tag->getAttributes());
+		$this->assertSame(['foo' => 'xxx'], $tag->getAttributes());
 	}
 
 	/**
@@ -465,9 +465,9 @@ class TagTest extends Test
 	public function testSetAttributes()
 	{
 		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
-		$tag->setAttributes(array('foo' => 'bar', 'baz' => 'quux'));
+		$tag->setAttributes(['foo' => 'bar', 'baz' => 'quux']);
 
-		$this->assertSame(array('foo' => 'bar', 'baz' => 'quux'), $tag->getAttributes());
+		$this->assertSame(['foo' => 'bar', 'baz' => 'quux'], $tag->getAttributes());
 	}
 
 	/**
@@ -477,9 +477,9 @@ class TagTest extends Test
 	{
 		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'x');
-		$tag->setAttributes(array('foo' => 'bar', 'baz' => 'quux'));
+		$tag->setAttributes(['foo' => 'bar', 'baz' => 'quux']);
 
-		$this->assertSame(array('foo' => 'bar', 'baz' => 'quux'), $tag->getAttributes());
+		$this->assertSame(['foo' => 'bar', 'baz' => 'quux'], $tag->getAttributes());
 	}
 
 	/**
@@ -524,7 +524,7 @@ class TagTest extends Test
 		$tag->setAttribute('baz', 'quux');
 		$tag->removeAttribute('foo');
 
-		$this->assertSame(array('baz' => 'quux'), $tag->getAttributes());
+		$this->assertSame(['baz' => 'quux'], $tag->getAttributes());
 	}
 
 	/**

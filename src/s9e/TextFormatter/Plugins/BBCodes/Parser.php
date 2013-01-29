@@ -27,7 +27,7 @@ class Parser extends ParserBase
 			// because the regexp matches exact names
 			$bbcodeConfig = (isset($this->config['bbcodes'][$bbcodeName]))
 			              ? $this->config['bbcodes'][$bbcodeName]
-			              : array();
+			              : [];
 
 			// Use the configured tagName if available, or reuse the BBCode's name otherwise
 			$tagName = (isset($bbcodeConfig['tagName']))
@@ -82,7 +82,7 @@ class Parser extends ParserBase
 			$type       = Tag::START_TAG;
 			$attributes = (isset($bbcodeConfig['predefinedAttributes']))
 			            ? $bbcodeConfig['predefinedAttributes']
-			            : array();
+			            : [];
 			$wellFormed = false;
 			$firstPos   = $rpos;
 
@@ -241,7 +241,7 @@ class Parser extends ParserBase
 				/**
 				* @var array List of attributes whose value should be set to this tag's content
 				*/
-				$contentAttributes = array();
+				$contentAttributes = [];
 
 				// Record the names of attributes that need the content of this tag
 				if (isset($bbcodeConfig['contentAttributes']))

@@ -28,10 +28,10 @@ class AttributePreprocessorTest extends Test
 		$ap = new AttributePreprocessor('#(?<year>\\d{4}) (?<name>[a-z]+)#');
 
 		$this->assertSame(
-			array(
+			[
 				'year' => '#^(?:\\d{4})$#D',
 				'name' => '#^(?:[a-z]+)$#D'
-			),
+			],
 			$ap->getAttributes()
 		);
 	}
@@ -44,10 +44,10 @@ class AttributePreprocessorTest extends Test
 		$ap = new AttributePreprocessor('#(?<year>\\d{4}) (?<name>[a-z]+)#Disu');
 
 		$this->assertSame(
-			array(
+			[
 				'year' => '#^(?:\\d{4})$#Disu',
 				'name' => '#^(?:[a-z]+)$#Disu'
-			),
+			],
 			$ap->getAttributes()
 		);
 	}

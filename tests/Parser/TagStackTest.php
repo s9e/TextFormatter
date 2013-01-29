@@ -21,7 +21,7 @@ class TagStackTest extends Test
 		$dummyStack->addStartTag('FOO', 12, 34);
 
 		$this->assertEquals(
-			array(new Tag(Tag::START_TAG, 'FOO', 12, 34)),
+			[new Tag(Tag::START_TAG, 'FOO', 12, 34)],
 			$dummyStack->tagStack
 		);
 	}
@@ -35,7 +35,7 @@ class TagStackTest extends Test
 		$dummyStack->addEndTag('FOO', 12, 34);
 
 		$this->assertEquals(
-			array(new Tag(Tag::END_TAG, 'FOO', 12, 34)),
+			[new Tag(Tag::END_TAG, 'FOO', 12, 34)],
 			$dummyStack->tagStack
 		);
 	}
@@ -49,7 +49,7 @@ class TagStackTest extends Test
 		$dummyStack->addSelfClosingTag('FOO', 12, 34);
 
 		$this->assertEquals(
-			array(new Tag(Tag::SELF_CLOSING_TAG, 'FOO', 12, 34)),
+			[new Tag(Tag::SELF_CLOSING_TAG, 'FOO', 12, 34)],
 			$dummyStack->tagStack
 		);
 	}
@@ -63,7 +63,7 @@ class TagStackTest extends Test
 		$tag = $dummyStack->addStartTag('FOO', 12, 34);
 
 		$this->assertSame(
-			array($tag),
+			[$tag],
 			$dummyStack->tagStack
 		);
 	}
@@ -80,7 +80,7 @@ class TagStackTest extends Test
 		$expected->invalidate();
 
 		$this->assertSame(
-			array(),
+			[],
 			$dummyStack->tagStack
 		);
 
@@ -102,7 +102,7 @@ class TagStackTest extends Test
 		$expected->invalidate();
 
 		$this->assertSame(
-			array(),
+			[],
 			$dummyStack->tagStack
 		);
 
@@ -124,7 +124,7 @@ class TagStackTest extends Test
 		$expected->invalidate();
 
 		$this->assertSame(
-			array(),
+			[],
 			$dummyStack->tagStack
 		);
 
@@ -146,7 +146,7 @@ class TagStackTest extends Test
 		$expected->invalidate();
 
 		$this->assertSame(
-			array(),
+			[],
 			$dummyStack->tagStack
 		);
 
@@ -179,7 +179,7 @@ class TagStackTest extends Test
 		$tag = $dummyStack->addIgnoreTag(12, 34);
 
 		$this->assertSame(
-			array($tag),
+			[$tag],
 			$dummyStack->tagStack
 		);
 
@@ -203,7 +203,7 @@ class TagStackTest extends Test
 		$dummyStack->sortTags();
 
 		$this->assertSame(
-			array($z, $y, $x),
+			[$z, $y, $x],
 			$dummyStack->tagStack
 		);
 	}
@@ -223,7 +223,7 @@ class TagStackTest extends Test
 		$dummyStack->sortTags();
 
 		$this->assertSame(
-			array($t3, $t2, $t1, $t0),
+			[$t3, $t2, $t1, $t0],
 			$dummyStack->tagStack
 		);
 	}
@@ -235,12 +235,12 @@ class TagStackTest extends Test
 	{
 		$dummyStack = new DummyStack;
 
-		$expected = array(
+		$expected = [
 			$dummyStack->addStartTag('X', 1, 0),
 			$dummyStack->addEndTag('X', 1, 0),
 			$dummyStack->addStartTag('X', 0, 0),
 			$dummyStack->addEndTag('X', 0, 0)
-		);
+		];
 
 		$dummyStack->sortTags();
 
@@ -264,7 +264,7 @@ class TagStackTest extends Test
 		$dummyStack->sortTags();
 
 		$this->assertSame(
-			array($t2, $t1, $t0),
+			[$t2, $t1, $t0],
 			$dummyStack->tagStack
 		);
 	}
@@ -283,7 +283,7 @@ class TagStackTest extends Test
 		$dummyStack->sortTags();
 
 		$this->assertSame(
-			array($t1, $t2, $t3),
+			[$t1, $t2, $t3],
 			$dummyStack->tagStack
 		);
 	}
@@ -306,7 +306,7 @@ class TagStackTest extends Test
 		$dummyStack->sortTags();
 
 		$this->assertSame(
-			array($t3, $t2, $t1),
+			[$t3, $t2, $t1],
 			$dummyStack->tagStack
 		);
 	}
@@ -314,14 +314,14 @@ class TagStackTest extends Test
 
 class DummyStack extends Parser
 {
-	public $tagsConfig = array(
-		'FOO' => array(),
-		'X' => array(),
-		'Y' => array(),
-		'Z' => array(),
-		'DISABLED' => array('isDisabled' => true)
-	);
-	public $tagStack = array();
+	public $tagsConfig = [
+		'FOO' => [],
+		'X' => [],
+		'Y' => [],
+		'Z' => [],
+		'DISABLED' => ['isDisabled' => true]
+	];
+	public $tagStack = [];
 	public function __construct() {}
 	public function sortTags()
 	{

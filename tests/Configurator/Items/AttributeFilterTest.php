@@ -19,7 +19,7 @@ class AttributeFilterTest extends Test
 		$config = $filter->asConfig();
 
 		$this->assertSame(
-			array('attrValue' => null),
+			['attrValue' => null],
 			$config['params']
 		);
 	}

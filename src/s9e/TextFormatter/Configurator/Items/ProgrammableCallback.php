@@ -29,12 +29,12 @@ class ProgrammableCallback implements ConfigProvider
 	/**
 	* @var array List of params to be passed to the callback
 	*/
-	protected $params = array();
+	protected $params = [];
 
 	/**
 	* @var array Variables associated with this instance
 	*/
-	protected $vars = array();
+	protected $vars = [];
 
 	/**
 	* @param callable $callback
@@ -129,7 +129,7 @@ class ProgrammableCallback implements ConfigProvider
 	*/
 	public function resetParameters()
 	{
-		$this->params = array();
+		$this->params = [];
 	}
 
 	/**
@@ -164,7 +164,7 @@ class ProgrammableCallback implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$config = array('callback' => $this->callback);
+		$config = ['callback' => $this->callback];
 
 		foreach ($this->params as $k => $v)
 		{

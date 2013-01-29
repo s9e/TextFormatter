@@ -64,13 +64,13 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy;
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->once())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 
 		$dummy->executePluginParsers();
 	}
@@ -83,13 +83,13 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy;
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->never())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->disablePlugin('Test');
 
 		$dummy->executePluginParsers();
@@ -103,13 +103,13 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy('[.....');
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->once())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['quickMatch'] = '[';
 
 		$dummy->executePluginParsers();
@@ -123,13 +123,13 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy;
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->never())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['quickMatch'] = '[';
 
 		$dummy->executePluginParsers();
@@ -143,13 +143,13 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy('...foo...');
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->once())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['regexp'] = '/foo/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
 
@@ -164,13 +164,13 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy;
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->never())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['regexp'] = '/foo/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
 
@@ -183,22 +183,22 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersArguments()
 	{
 		$text = '...foo...';
-		$matches = array(
-			array(array('o', 4)),
-			array(array('o', 5))
-		);
+		$matches = [
+			[['o', 4]],
+			[['o', 5]]
+		];
 
 		$dummy  = new PluginsHandlingDummy($text);
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->once())
 		       ->method('parse')
 		       ->with($text, $matches);
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 1000;
 
@@ -215,13 +215,13 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy('...foo...');
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->never())
 		       ->method('parse');
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 1;
 		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'abort';
@@ -235,16 +235,16 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersRegexpLimitActionWarn()
 	{
 		$text = '...fooo...';
-		$matches = array(
-			array(array('o', 4)),
-			array(array('o', 5))
-		);
+		$matches = [
+			[['o', 4]],
+			[['o', 5]]
+		];
 
 		$dummy  = new PluginsHandlingDummy($text);
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->once())
 		       ->method('parse')
@@ -252,14 +252,14 @@ class PluginsHandlingTest extends Test
 
 		$logger = $this->getMock(
 			's9e\\TextFormatter\\Parser\\Logger',
-			array('warn')
+			['warn']
 		);
 		$logger->expects($this->once())
 		       ->method('warn')
-		       ->with('Regexp limit exceeded. Only the allowed number of matches will be processed', array('pluginName' => 'Test', 'limit' => 2));
+		       ->with('Regexp limit exceeded. Only the allowed number of matches will be processed', ['pluginName' => 'Test', 'limit' => 2]);
 		$dummy->logger = $logger;
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 2;
 		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'warn';
@@ -273,22 +273,22 @@ class PluginsHandlingTest extends Test
 	public function testExecutePluginParsersRegexpLimitActionIgnore()
 	{
 		$text = '...fooo...';
-		$matches = array(
-			array(array('o', 4)),
-			array(array('o', 5))
-		);
+		$matches = [
+			[['o', 4]],
+			[['o', 5]]
+		];
 
 		$dummy  = new PluginsHandlingDummy($text);
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 		$plugin->expects($this->once())
 		       ->method('parse')
 		       ->with($text, $matches);
 
-		$dummy->pluginParsers['Test'] = array($plugin, 'parse');
+		$dummy->pluginParsers['Test'] = [$plugin, 'parse'];
 		$dummy->pluginsConfig['Test']['regexp'] = '/o/';
 		$dummy->pluginsConfig['Test']['regexpLimit'] = 2;
 		$dummy->pluginsConfig['Test']['regexpLimitAction'] = 'ignore';
@@ -304,8 +304,8 @@ class PluginsHandlingTest extends Test
 		$dummy  = new PluginsHandlingDummy('...foo...');
 		$plugin = $this->getMock(
 			's9e\\TextFormatter\\Plugins\\ParserBase',
-			array('parse'),
-			array($dummy, array())
+			['parse'],
+			[$dummy, []]
 		);
 
 		$className = get_class($plugin);
@@ -324,11 +324,11 @@ class PluginsHandlingTest extends Test
 	public function testRegisterParserExisting()
 	{
 		$dummy  = new PluginsHandlingDummy;
-		$parser = $this->getMock('stdClass', array('foo'));
+		$parser = $this->getMock('stdClass', ['foo']);
 		$parser->expects($this->once())
 		       ->method('foo');
 
-		$dummy->registerParser('Test', array($parser, 'foo'));
+		$dummy->registerParser('Test', [$parser, 'foo']);
 
 		$dummy->executePluginParsers();
 	}
@@ -339,13 +339,13 @@ class PluginsHandlingTest extends Test
 	public function testRegisterParserNew()
 	{
 		$dummy  = new PluginsHandlingDummy;
-		$dummy->pluginsConfig = array();
+		$dummy->pluginsConfig = [];
 
-		$parser = $this->getMock('stdClass', array('foo'));
+		$parser = $this->getMock('stdClass', ['foo']);
 		$parser->expects($this->once())
 		       ->method('foo');
 
-		$dummy->registerParser('Foo', array($parser, 'foo'));
+		$dummy->registerParser('Foo', [$parser, 'foo']);
 
 		$dummy->executePluginParsers();
 	}
@@ -365,11 +365,11 @@ class PluginsHandlingTest extends Test
 class PluginsHandlingDummy extends Parser
 {
 	public $logger;
-	public $pluginParsers = array();
-	public $pluginsConfig = array(
-		'Test' => array(
-		)
-	);
+	public $pluginParsers = [];
+	public $pluginsConfig = [
+		'Test' => [
+		]
+	];
 
 	public function __construct($text = '')
 	{

@@ -89,19 +89,19 @@ class RendererTest extends Test
 	*/
 	public function testMulti()
 	{
-		$parsed = array(
+		$parsed = [
 			'<rt>Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>',
 			'<pt>Plain text</pt>',
 			'<rt>Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>',
 			'<pt>Plain text</pt>'
-		);
+		];
 
-		$expected = array(
+		$expected = [
 			'Hello <b>world</b>!',
 			'Plain text',
 			'Hello <b>world</b>!',
 			'Plain text'
-		);
+		];
 
 		$this->assertSame(
 			$expected,
@@ -114,23 +114,23 @@ class RendererTest extends Test
 	*/
 	public function testMultiOrder()
 	{
-		$parsed = array(
+		$parsed = [
 			'<rt><B>One</B></rt>',
 			'<pt>Two</pt>',
 			'p3' => '<rt><B>Three</B></rt>',
 			'p4' => '<pt>Four</pt>',
 			'<rt><B>Five</B></rt>',
 			'<pt>Six</pt>'
-		);
+		];
 
-		$expected = array(
+		$expected = [
 			'<b>One</b>',
 			'Two',
 			'p3' => '<b>Three</b>',
 			'p4' => 'Four',
 			'<b>Five</b>',
 			'Six'
-		);
+		];
 
 		$this->assertSame(
 			$expected,
@@ -147,8 +147,8 @@ class RendererTest extends Test
 		$stylesheet->setOutputMethod('html');
 		$renderer = new Renderer($stylesheet->get());
 
-		$parsed   = array('<pt>One<br/>two</pt>');
-		$expected = array('One<br>two');
+		$parsed   = ['<pt>One<br/>two</pt>'];
+		$expected = ['One<br>two'];
 
 		$this->assertSame(
 			$expected,
@@ -165,8 +165,8 @@ class RendererTest extends Test
 		$stylesheet->setOutputMethod('xml');
 		$renderer = new Renderer($stylesheet->get());
 
-		$parsed   = array('<pt>One<br/>two</pt>');
-		$expected = array('One<br/>two');
+		$parsed   = ['<pt>One<br/>two</pt>'];
+		$expected = ['One<br/>two'];
 
 		$this->assertSame(
 			$expected,
@@ -214,10 +214,10 @@ class RendererTest extends Test
 		$configurator->stylesheet->parameters->add('bar');
 
 		$renderer = $configurator->getRenderer();
-		$renderer->setParameters(array(
+		$renderer->setParameters([
 			'foo' => 'FOO',
 			'bar' => 'BAR'
-		));
+		]);
 
 		$this->assertSame(
 			'FOOBAR',

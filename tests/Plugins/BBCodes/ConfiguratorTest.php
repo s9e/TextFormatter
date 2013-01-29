@@ -77,7 +77,7 @@ class ConfiguratorTest extends Test
 		$plugin = $this->configurator->plugins->load('BBCodes');
 		$plugin->repositories->add('foo', $dom);
 
-		$plugin->addFromRepository('B', 'foo', array('title' => 'bar'));
+		$plugin->addFromRepository('B', 'foo', ['title' => 'bar']);
 
 		$this->assertSame(
 			'<b title="bar"><xsl:apply-templates/></b>',

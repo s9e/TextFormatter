@@ -117,7 +117,7 @@ class RepositoryTest extends Test
 		);
 
 		$repository = new Repository($dom, new Configurator);
-		$config = $repository->get('FOO', array('attrName' => 'bar'));
+		$config = $repository->get('FOO', ['attrName' => 'bar']);
 
 		$this->assertTrue(isset($config['tag']->attributes['bar']));
 	}
@@ -138,7 +138,7 @@ class RepositoryTest extends Test
 		);
 
 		$repository = new Repository($dom, new Configurator);
-		$config = $repository->get('FOO', array('text' => 'Hello'));
+		$config = $repository->get('FOO', ['text' => 'Hello']);
 
 		$this->assertSame('Hello', (string) $config['tag']->defaultTemplate);
 	}
@@ -159,11 +159,11 @@ class RepositoryTest extends Test
 		);
 
 		$repository = new Repository($dom, new Configurator);
-		$config = $repository->get('FOO', array(
+		$config = $repository->get('FOO', [
 			'attr1' => 'x',
 			'attr2' => 'y',
 			'tpl'   => 'Hello'
-		));
+		]);
 
 		$this->assertTrue(isset($config['tag']->attributes['x']));
 		$this->assertTrue(isset($config['tag']->attributes['y']));
@@ -234,7 +234,7 @@ class RepositoryTest extends Test
 		$config = $repository->get('FOO');
 
 		$this->assertEquals(
-			array('BAR', 'BAZ'),
+			['BAR', 'BAZ'],
 			$config['tag']->rules['allowChild']
 		);
 

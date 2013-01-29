@@ -21,7 +21,7 @@ class Parser extends ParserBase
 
 		$replacements = (isset($this->config['replacements']))
 		              ? $this->config['replacements']
-		              : array();
+		              : [];
 
 		foreach ($matches as $m)
 		{

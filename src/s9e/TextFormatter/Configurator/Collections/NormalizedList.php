@@ -55,7 +55,7 @@ class NormalizedList extends NormalizedCollection
 
 		// Insert the value at given offset. We put the value into an array so that array_splice()
 		// won't insert it as multiple elements if it happens to be an array
-		array_splice($this->items, $offset, 0, array($value));
+		array_splice($this->items, $offset, 0, [$value]);
 
 		return $value;
 	}
@@ -109,12 +109,12 @@ class NormalizedList extends NormalizedCollection
 		$normalizedKey = filter_var(
 			$key,
 			FILTER_VALIDATE_INT,
-			array(
-				'options' => array(
+			[
+				'options' => [
 					'min_range' => 0,
 					'max_range' => count($this->items)
-				)
-			)
+				]
+			]
 		);
 
 		if ($normalizedKey === false)

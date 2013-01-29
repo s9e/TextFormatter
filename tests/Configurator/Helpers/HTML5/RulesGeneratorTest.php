@@ -24,11 +24,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'DIV' => array(
-					'allowChild' => array('DIV'  => 'DIV', 'SPAN' => 'SPAN')
-				)
-			),
+			[
+				'DIV' => [
+					'allowChild' => ['DIV'  => 'DIV', 'SPAN' => 'SPAN']
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -45,11 +45,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'SPAN' => array(
-					'denyChild' => array('DIV' => 'DIV')
-				)
-			),
+			[
+				'SPAN' => [
+					'denyChild' => ['DIV' => 'DIV']
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -65,11 +65,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'denyDescendant' => array('A' => 'A')
-				)
-			),
+			[
+				'A' => [
+					'denyDescendant' => ['A' => 'A']
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -85,11 +85,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'denyChild' => array('A' => 'A')
-				)
-			),
+			[
+				'A' => [
+					'denyChild' => ['A' => 'A']
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -105,11 +105,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'HR' => array(
+			[
+				'HR' => [
 					'autoClose' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -125,11 +125,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'SPAN' => array(
+			[
+				'SPAN' => [
 					'autoClose' => null
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -145,11 +145,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'B' => array(
+			[
+				'B' => [
 					'autoReopen' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -165,11 +165,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'DIV' => array(
+			[
+				'DIV' => [
 					'autoReopen' => null
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -185,11 +185,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'HR' => array(
+			[
+				'HR' => [
 					'denyAll' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -208,11 +208,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'STYLE' => array(
+			[
+				'STYLE' => [
 					'denyAll' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -228,11 +228,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'UL' => array(
+			[
+				'UL' => [
 					'ignoreText' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -248,11 +248,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'B' => array(
+			[
+				'B' => [
 					'ignoreText' => null
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -268,11 +268,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'A' => array(
+			[
+				'A' => [
 					'isTransparent' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -288,11 +288,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'B' => array(
+			[
+				'B' => [
 					'isTransparent' => null
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -308,11 +308,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'A' => array(
+			[
+				'A' => [
 					'noBrChild' => null
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -328,11 +328,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'A' => array(
+			[
+				'A' => [
 					'noBrChild' => null
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -348,11 +348,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'OL' => array(
+			[
+				'OL' => [
 					'noBrDescendant' => null
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -368,11 +368,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'PRE' => array(
+			[
+				'PRE' => [
 					'noBrDescendant' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -391,11 +391,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'STYLE' => array(
+			[
+				'STYLE' => [
 					'noBrChild' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -411,9 +411,9 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'allowChild' => array('SPAN' => 'SPAN')
-			),
+			[
+				'allowChild' => ['SPAN' => 'SPAN']
+			],
 			$rules['root']
 		);
 	}
@@ -429,9 +429,9 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'denyChild' => array('LI' => 'LI')
-			),
+			[
+				'denyChild' => ['LI' => 'LI']
+			],
 			$rules['root']
 		);
 	}
@@ -444,12 +444,12 @@ class RulesGeneratorTest extends Test
 		$tags = new TagCollection;
 		$tags->add('LI')->defaultTemplate = '<li><xsl:apply-templates/></li>';
 
-		$rules = RulesGenerator::getRules($tags, array('parentHTML' => '<ul>'));
+		$rules = RulesGenerator::getRules($tags, ['parentHTML' => '<ul>']);
 
 		$this->assertArrayMatches(
-			array(
-				'allowChild' => array('LI' => 'LI')
-			),
+			[
+				'allowChild' => ['LI' => 'LI']
+			],
 			$rules['root']
 		);
 	}
@@ -463,14 +463,14 @@ class RulesGeneratorTest extends Test
 		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
 		$tags->add('A')->defaultTemplate    = '<a><xsl:apply-templates/></a>';
 
-		$rules = RulesGenerator::getRules($tags, array('parentHTML' => '<a>'));
+		$rules = RulesGenerator::getRules($tags, ['parentHTML' => '<a>']);
 
 		$this->assertArrayMatches(
-			array(
-				'SPAN' => array(
-					'allowChild' => array('SPAN' => 'SPAN')
-				)
-			),
+			[
+				'SPAN' => [
+					'allowChild' => ['SPAN' => 'SPAN']
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -486,11 +486,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'DIV' => array(
+			[
+				'DIV' => [
 					'trimWhitespace' => true
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -506,11 +506,11 @@ class RulesGeneratorTest extends Test
 		$rules = RulesGenerator::getRules($tags);
 
 		$this->assertArrayMatches(
-			array(
-				'SPAN' => array(
+			[
+				'SPAN' => [
 					'trimWhitespace' => null
-				)
-			),
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -529,18 +529,18 @@ class RulesGeneratorTest extends Test
 		);
 		$rules = RulesGenerator::getRules(
 			$tags,
-			array('renderer' => $this->configurator->getRenderer())
+			['renderer' => $this->configurator->getRenderer()]
 		);
 
 		$this->assertArrayMatches(
-			array(
-				'DIV' => array(
-					'allowChild' => array('DIV' => 'DIV', 'A' => 'A')
-				),
-				'A' => array(
-					'denyChild'  => array('A' => 'A')
-				)
-			),
+			[
+				'DIV' => [
+					'allowChild' => ['DIV' => 'DIV', 'A' => 'A']
+				],
+				'A' => [
+					'denyChild'  => ['A' => 'A']
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -557,15 +557,15 @@ class RulesGeneratorTest extends Test
 
 		$rules = RulesGenerator::getRules(
 			$tags,
-			array('renderer' => $this->configurator->getRenderer())
+			['renderer' => $this->configurator->getRenderer()]
 		);
 
 		$this->assertArrayMatches(
-			array(
-				'html:a' => array(
-					'denyChild'  => array('html:a' => 'html:a')
-				)
-			),
+			[
+				'html:a' => [
+					'denyChild'  => ['html:a' => 'html:a']
+				]
+			],
 			$rules['tags']
 		);
 	}
@@ -589,16 +589,16 @@ class RulesGeneratorTest extends Test
 
 		$rules = RulesGenerator::getRules(
 			$tags,
-			array('renderer' => $this->configurator->getRenderer())
+			['renderer' => $this->configurator->getRenderer()]
 		);
 
 		$this->assertArrayMatches(
-			array(
-				'A' => array(
-					'allowChild' => array('IMG' => 'IMG'),
-					'denyChild'  => array('A' => 'A', 'html:img' => 'html:img')
-				)
-			),
+			[
+				'A' => [
+					'allowChild' => ['IMG' => 'IMG'],
+					'denyChild'  => ['A' => 'A', 'html:img' => 'html:img']
+				]
+			],
 			$rules['tags']
 		);
 	}

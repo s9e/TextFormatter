@@ -19,7 +19,7 @@ class Variant
 	/**
 	* @var array Variants
 	*/
-	protected $variants = array();
+	protected $variants = [];
 
 	/**
 	* Constructor
@@ -79,7 +79,7 @@ class Variant
 	*/
 	public function set($variant, $value)
 	{
-		$this->variants[$variant] = array(false, $value);
+		$this->variants[$variant] = [false, $value];
 	}
 
 
@@ -97,6 +97,6 @@ class Variant
 			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a valid callback');
 		}
 
-		$this->variants[$variant] = array(true, $callback);
+		$this->variants[$variant] = [true, $callback];
 	}
 }

@@ -11,7 +11,7 @@ trait ParsingTestsJavaScriptRunner
 	* @testdox Parsing tests (JavaScript)
 	* @dataProvider getParsingTests
 	*/
-	public function testJavaScriptParsing($original, $expected, array $pluginOptions = array(), $setup = null, $expectedJS = false)
+	public function testJavaScriptParsing($original, $expected, array $pluginOptions = [], $setup = null, $expectedJS = false)
 	{
 		if ($expectedJS)
 		{

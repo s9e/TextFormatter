@@ -25,7 +25,7 @@ class FilterProcessingTest extends Test
 		$dummy->registerVar('foo', 'bar');
 
 		$this->assertSame(
-			array('foo' => 'bar'),
+			['foo' => 'bar'],
 			$dummy->registeredVars
 		);
 	}
@@ -39,7 +39,7 @@ class FilterProcessingTest extends Test
 		$dummy->registerVar('foo', 'bar');
 
 		$this->assertSame(
-			array('foo' => 'bar'),
+			['foo' => 'bar'],
 			$dummy->getRegisteredVars()
 		);
 	}
@@ -157,7 +157,7 @@ class FilterProcessingTest extends Test
 			function()
 			{
 				$this->assertSame(
-					array(42),
+					[42],
 					func_get_args()
 				);
 			}
@@ -166,7 +166,7 @@ class FilterProcessingTest extends Test
 
 		FilterProcessingDummy::__executeFilter(
 			$filter->asConfig(),
-			array()
+			[]
 		);
 	}
 
@@ -179,7 +179,7 @@ class FilterProcessingTest extends Test
 			function()
 			{
 				$this->assertSame(
-					array(42),
+					[42],
 					func_get_args()
 				);
 			}
@@ -188,7 +188,7 @@ class FilterProcessingTest extends Test
 
 		FilterProcessingDummy::__executeFilter(
 			$filter->asConfig(),
-			array('foo' => 42)
+			['foo' => 42]
 		);
 	}
 
@@ -201,7 +201,7 @@ class FilterProcessingTest extends Test
 			function()
 			{
 				$this->assertSame(
-					array(42),
+					[42],
 					func_get_args()
 				);
 			}
@@ -210,7 +210,7 @@ class FilterProcessingTest extends Test
 
 		FilterProcessingDummy::__executeFilter(
 			$filter->asConfig(),
-			array('registeredVars' => array('foo' => 42))
+			['registeredVars' => ['foo' => 42]]
 		);
 	}
 
@@ -229,7 +229,7 @@ class FilterProcessingTest extends Test
 
 		$this->assertFalse(FilterProcessingDummy::__executeFilter(
 			$filter->asConfig(),
-			array('logger' => new Logger)
+			['logger' => new Logger]
 		));
 	}
 
@@ -246,14 +246,14 @@ class FilterProcessingTest extends Test
 		);
 		$filter->addParameterByName('foo');
 
-		$logger = $this->getMock('stdClass', array('err'));
+		$logger = $this->getMock('stdClass', ['err']);
 		$logger->expects($this->once())
 		       ->method('err')
-		       ->with('Unknown callback parameter', array('paramName' => 'foo'));
+		       ->with('Unknown callback parameter', ['paramName' => 'foo']);
 
 		$this->assertFalse(FilterProcessingDummy::__executeFilter(
 			$filter->asConfig(),
-			array('registeredVars' => array('logger' => $logger))
+			['registeredVars' => ['logger' => $logger]]
 		));
 	}
 
@@ -273,7 +273,7 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTag()
 	{
-		$mock = $this->getMock('stdClass', array('foo', 'bar'));
+		$mock = $this->getMock('stdClass', ['foo', 'bar']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->will($this->returnValue(true));
@@ -282,8 +282,8 @@ class FilterProcessingTest extends Test
 		     ->will($this->returnValue(true));
 
 		$tag = $this->configurator->tags->add('X');
-		$tag->filterChain->append(array($mock, 'foo'));
-		$tag->filterChain->append(array($mock, 'bar'));
+		$tag->filterChain->append([$mock, 'foo']);
+		$tag->filterChain->append([$mock, 'bar']);
 
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
@@ -296,7 +296,7 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagReturnsFalse()
 	{
-		$mock = $this->getMock('stdClass', array('foo', 'bar'));
+		$mock = $this->getMock('stdClass', ['foo', 'bar']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->will($this->returnValue(false));
@@ -304,8 +304,8 @@ class FilterProcessingTest extends Test
 		     ->method('bar');
 
 		$tag = $this->configurator->tags->add('X');
-		$tag->filterChain->append(array($mock, 'foo'));
-		$tag->filterChain->append(array($mock, 'bar'));
+		$tag->filterChain->append([$mock, 'foo']);
+		$tag->filterChain->append([$mock, 'bar']);
 
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
@@ -318,20 +318,20 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagCallsLoggerSetTag()
 	{
-		$mock = $this->getMock('stdClass', array('foo'));
+		$mock = $this->getMock('stdClass', ['foo']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->will($this->returnValue(false));
 
 		$tag = $this->configurator->tags->add('X');
-		$tag->filterChain->append(array($mock, 'foo'));
+		$tag->filterChain->append([$mock, 'foo']);
 
 		$dummy = new FilterProcessingDummy($this->configurator->asConfig());
 		$tag   = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
 		$dummy->logger = $this->getMock(
 			's9e\\TextFormatter\\Parser\\Logger',
-			array('setTag', 'unsetTag')
+			['setTag', 'unsetTag']
 		);
 		$dummy->logger->expects($this->once())
 		              ->method('setTag')
@@ -347,10 +347,10 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagPassesParser()
 	{
-		$mock = $this->getMock('stdClass', array('foo'));
+		$mock = $this->getMock('stdClass', ['foo']);
 
 		$tag    = $this->configurator->tags->add('X');
-		$filter = $tag->filterChain->append(array($mock, 'foo'));
+		$filter = $tag->filterChain->append([$mock, 'foo']);
 		$filter->resetParameters();
 		$filter->addParameterByName('parser');
 
@@ -370,18 +370,18 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterTagPassesOpenTags()
 	{
-		$mock = $this->getMock('stdClass', array('foo'));
+		$mock = $this->getMock('stdClass', ['foo']);
 		$mock->expects($this->at(0))
 		     ->method('foo')
-		     ->with(array())
+		     ->with([])
 		     ->will($this->returnValue(true));
 		$mock->expects($this->at(1))
 		     ->method('foo')
-		     ->with(array(new Tag(Tag::START_TAG, 'X', 0, 0)))
+		     ->with([new Tag(Tag::START_TAG, 'X', 0, 0)])
 		     ->will($this->returnValue(true));
 
 		$filterChain = $this->configurator->tags->add('X')->filterChain;
-		$filter = $filterChain->append(array($mock, 'foo'));
+		$filter = $filterChain->append([$mock, 'foo']);
 		$filter->resetParameters();
 		$filter->addParameterByName('openTags');
 
@@ -407,10 +407,10 @@ class FilterProcessingTest extends Test
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('foo', 'foo');
 
-		Parser::filterAttributes($tag, array(), array(), new Logger);
+		Parser::filterAttributes($tag, [], [], new Logger);
 
 		$this->assertSame(
-			array(),
+			[],
 			$tag->getAttributes()
 		);
 	}
@@ -425,10 +425,10 @@ class FilterProcessingTest extends Test
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger);
 
 		$this->assertSame(
-			array('foo' => 42),
+			['foo' => 42],
 			$tag->getAttributes()
 		);
 	}
@@ -445,10 +445,10 @@ class FilterProcessingTest extends Test
 		$tag->setAttribute('foo', 'foo');
 		$tag->setAttribute('bar', 'bar');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger);
 
 		$this->assertSame(
-			array('foo' => 'foo'),
+			['foo' => 'foo'],
 			$tag->getAttributes()
 		);
 	}
@@ -458,7 +458,7 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesExecutesFilterChain()
 	{
-		$mock = $this->getMock('stdClass', array('foo', 'bar'));
+		$mock = $this->getMock('stdClass', ['foo', 'bar']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with('xxx')
@@ -470,16 +470,16 @@ class FilterProcessingTest extends Test
 
 		$tagConfig = new TagConfig;
 		$attribute = $tagConfig->attributes->add('x');
-		$attribute->filterChain->append(array($mock, 'foo'));
-		$attribute->filterChain->append(array($mock, 'bar'));
+		$attribute->filterChain->append([$mock, 'foo']);
+		$attribute->filterChain->append([$mock, 'bar']);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger);
 
 		$this->assertSame(
-			array('x' => 'bar'),
+			['x' => 'bar'],
 			$tag->getAttributes()
 		);
 	}
@@ -489,7 +489,7 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesReturnsFalse()
 	{
-		$mock = $this->getMock('stdClass', array('foo', 'bar'));
+		$mock = $this->getMock('stdClass', ['foo', 'bar']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with('xxx')
@@ -499,13 +499,13 @@ class FilterProcessingTest extends Test
 
 		$tagConfig = new TagConfig;
 		$attribute = $tagConfig->attributes->add('x');
-		$attribute->filterChain->append(array($mock, 'foo'));
-		$attribute->filterChain->append(array($mock, 'bar'));
+		$attribute->filterChain->append([$mock, 'foo']);
+		$attribute->filterChain->append([$mock, 'bar']);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		$this->assertFalse(Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger));
+		$this->assertFalse(Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger));
 	}
 
 	/**
@@ -513,7 +513,7 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesRemovesInvalid()
 	{
-		$mock = $this->getMock('stdClass', array('foo'));
+		$mock = $this->getMock('stdClass', ['foo']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with('xxx')
@@ -521,15 +521,15 @@ class FilterProcessingTest extends Test
 
 		$tagConfig = new TagConfig;
 		$attribute = $tagConfig->attributes->add('x');
-		$attribute->filterChain->append(array($mock, 'foo'));
+		$attribute->filterChain->append([$mock, 'foo']);
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger);
 
 		$this->assertSame(
-			array(),
+			[],
 			$tag->getAttributes()
 		);
 	}
@@ -539,7 +539,7 @@ class FilterProcessingTest extends Test
 	*/
 	public function testFilterAttributesReplacesInvalid()
 	{
-		$mock = $this->getMock('stdClass', array('foo'));
+		$mock = $this->getMock('stdClass', ['foo']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with('xxx')
@@ -547,16 +547,16 @@ class FilterProcessingTest extends Test
 
 		$tagConfig = new TagConfig;
 		$attribute = $tagConfig->attributes->add('x');
-		$attribute->filterChain->append(array($mock, 'foo'));
+		$attribute->filterChain->append([$mock, 'foo']);
 		$attribute->defaultValue = 'default';
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 		$tag->setAttribute('x', 'xxx');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger);
 
 		$this->assertSame(
-			array('x' => 'default'),
+			['x' => 'default'],
 			$tag->getAttributes()
 		);
 	}
@@ -572,10 +572,10 @@ class FilterProcessingTest extends Test
 
 		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), new Logger);
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], new Logger);
 
 		$this->assertSame(
-			array('x' => 'default'),
+			['x' => 'default'],
 			$tag->getAttributes()
 		);
 	}
@@ -587,7 +587,7 @@ class FilterProcessingTest extends Test
 	{
 		$logger = $this->getMock(
 			's9e\\TextFormatter\\Parser\\Logger',
-			array('setAttribute', 'unsetAttribute')
+			['setAttribute', 'unsetAttribute']
 		);
 		$logger->expects($this->at(0))
 		       ->method('setAttribute')
@@ -606,16 +606,16 @@ class FilterProcessingTest extends Test
 		$tag->setAttribute('foo', 'foo');
 		$tag->setAttribute('bar', 'bar');
 
-		Parser::filterAttributes($tag, $tagConfig->asConfig(), array(), $logger);
+		Parser::filterAttributes($tag, $tagConfig->asConfig(), [], $logger);
 	}
 }
 
 class FilterProcessingDummy extends Parser
 {
 	public $registeredVars;
-	public $tagsConfig = array(
-		'X' => array()
-	);
+	public $tagsConfig = [
+		'X' => []
+	];
 	public $logger;
 
 	public function __construct(array $config = null)
@@ -628,7 +628,7 @@ class FilterProcessingDummy extends Parser
 
 	public function __filterTag()
 	{
-		return call_user_func_array(array($this, 'filterTag'), func_get_args());
+		return call_user_func_array([$this, 'filterTag'], func_get_args());
 	}
 
 	public static function __executeFilter()

@@ -18,14 +18,14 @@ abstract class RegexpBuilder
 	* @param  array  $options
 	* @return string
 	*/
-	public static function fromList(array $words, array $options = array())
+	public static function fromList(array $words, array $options = [])
 	{
-		$options += array(
+		$options += [
 			'delimiter'       => '/',
 			'caseInsensitive' => false,
-			'specialChars'    => array(),
+			'specialChars'    => [],
 			'useLookahead'    => false
-		);
+		];
 
 		// Sort the words in order to produce the same regexp regardless of the words' order
 		sort($words);
@@ -34,21 +34,21 @@ abstract class RegexpBuilder
 		* Used to store the first character of each word so that we can generate the lookahead
 		* assertion
 		*/
-		$initials = array();
+		$initials = [];
 
 		/**
 		* Used to store the escaped representation of each character, e.g. "a"=>"a", "."=>"\\."
 		* Also used to give a special meaning to some characters, e.g. "*" => ".*?"
 		*/
 		$esc  = $options['specialChars'];
-		$esc += array($options['delimiter'] => '\\' . $options['delimiter']);
+		$esc += [$options['delimiter'] => '\\' . $options['delimiter']];
 
 		/**
 		* preg_quote() errs on the safe side when escaping characters that could have a special
 		* meaning in some situations. Since we're building the regexp in a controlled environment,
 		* we don't have to escape those characters.
 		*/
-		$esc += array(
+		$esc += [
 			'!' => '!',
 			'-' => '-',
 			':' => ':',
@@ -56,12 +56,12 @@ abstract class RegexpBuilder
 			'=' => '=',
 			'>' => '>',
 			'}' => '}'
-		);
+		];
 
 		/**
 		* List of words, split by character
 		*/
-		$splitWords = array();
+		$splitWords = [];
 
 		foreach ($words as $word)
 		{
@@ -79,7 +79,7 @@ abstract class RegexpBuilder
 				throw new RuntimeException("Invalid UTF-8 string '" . $word . "'");
 			}
 
-			$splitWord = array();
+			$splitWord = [];
 			foreach ($matches[0] as $pos => $c)
 			{
 				if (!isset($esc[$c]))
@@ -99,7 +99,7 @@ abstract class RegexpBuilder
 			$splitWords[] = $splitWord;
 		}
 
-		$regexp = self::assemble(array(self::mergeChains($splitWords)));
+		$regexp = self::assemble([self::mergeChains($splitWords)]);
 
 		if ($options['useLookahead']
 		 && count($initials) > 1
@@ -183,7 +183,7 @@ abstract class RegexpBuilder
 		$remerge = false;
 
 		// Here we group chains by their first atom (head of chain)
-		$groups = array();
+		$groups = [];
 		foreach ($chains as $chain)
 		{
 			if (!isset($chain[0]))
@@ -204,10 +204,10 @@ abstract class RegexpBuilder
 		}
 
 		// See if we can replace single characters with a character class
-		$characterClass = array();
+		$characterClass = [];
 		foreach ($groups as $head => $groupChains)
 		{
-			if ($groupChains === array(array($head))
+			if ($groupChains === [[$head]]
 			 && self::canBeUsedInCharacterClass($head))
 			{
 				// The whole chain is composed of exactly one token, a token that can be used in a
@@ -230,20 +230,20 @@ abstract class RegexpBuilder
 
 			// Create a new group for this character class
 			$head = self::generateCharacterClass($characterClass);
-			$groups[$head][] = array($head);
+			$groups[$head][] = [$head];
 
 			// Ensure that the character class is first in the alternation. Not only it looks nice
 			// and might be more performant, it's also how assemble() does it, so normalizing it
 			// might help with generating identical regexps (or subpatterns that would then be
 			// optimized away as a prefix/suffix)
-			$groups = array($head => $groups[$head])
+			$groups = [$head => $groups[$head]]
 			        + $groups;
 		}
 
 		if ($remerge)
 		{
 			// Merge all chains sharing the same head together
-			$mergedChains = array();
+			$mergedChains = [];
 			foreach ($groups as $head => $groupChains)
 			{
 				$mergedChains[] = self::mergeChains($groupChains);
@@ -307,7 +307,7 @@ abstract class RegexpBuilder
 	*/
 	protected static function mergeTailsCC(array &$chains)
 	{
-		$groups = array();
+		$groups = [];
 
 		foreach ($chains as $k => $chain)
 		{
@@ -348,7 +348,7 @@ abstract class RegexpBuilder
 	*/
 	protected static function mergeTailsAltern(array &$chains)
 	{
-		$groups = array();
+		$groups = [];
 		foreach ($chains as $k => $chain)
 		{
 			if (!empty($chain))
@@ -432,7 +432,7 @@ abstract class RegexpBuilder
 
 		if (!$pLen)
 		{
-			return array();
+			return [];
 		}
 
 		// Store prefix
@@ -504,7 +504,7 @@ abstract class RegexpBuilder
 
 		if (!$sLen)
 		{
-			return array();
+			return [];
 		}
 
 		// Store suffix
@@ -530,8 +530,8 @@ abstract class RegexpBuilder
 	{
 		$endOfChain = false;
 
-		$regexps        = array();
-		$characterClass = array();
+		$regexps        = [];
+		$characterClass = [];
 
 		foreach ($chains as $chain)
 		{
@@ -701,7 +701,7 @@ abstract class RegexpBuilder
 		// "-" should be the first character of the class to avoid ambiguity
 		if (isset($chars['-']))
 		{
-			$chars = array('-' => 1) + $chars;
+			$chars = ['-' => 1] + $chars;
 		}
 
 		// Ensure that ^ is at the end of the class to prevent it from negating the class
@@ -770,7 +770,7 @@ abstract class RegexpBuilder
 		* @var array List of valid atoms that should be matched by a dot but happen to be
 		*            represented by more than one character
 		*/
-		$validAtoms = array(
+		$validAtoms = [
 			// Escape sequences
 			'\\d' => 1, '\\D' => 1, '\\h' => 1, '\\H' => 1,
 			'\\s' => 1, '\\S' => 1, '\\v' => 1, '\\V' => 1,
@@ -780,7 +780,7 @@ abstract class RegexpBuilder
 			'\\^' => 1, '\\$' => 1, '\\.' => 1, '\\?' => 1,
 			'\\[' => 1, '\\]' => 1, '\\(' => 1, '\\)' => 1,
 			'\\+' => 1, '\\*' => 1, '\\\\' => 1
-		);
+		];
 
 		// First we replace chains such as ["a",".?","b"] with ["a",".","b"] and ["a","b"]
 		do
@@ -868,14 +868,14 @@ abstract class RegexpBuilder
 		// instead of (?:.*|.+) we will emit (?:.*). Zero-or-more trumps one-or-more and greedy
 		// trumps non-greedy. In some cases, (?:.+|.*?) might be preferable to (?:.*?) but it does
 		// not seem like a common enough case to warrant the extra logic
-		$precedence = array(
+		$precedence = [
 			'.*'  => 3,
 			'.*?' => 2,
 			'.+'  => 1,
 			'.+?' => 0
-		);
+		];
 
-		$tails = array();
+		$tails = [];
 
 		foreach ($chains as $k => $chain)
 		{
@@ -896,14 +896,14 @@ abstract class RegexpBuilder
 			if (!isset($tails[$tail])
 			 || $precedence[$head] > $tails[$tail]['precedence'])
 			{
-				$tails[$tail] = array(
+				$tails[$tail] = [
 					'key'        => $k,
 					'precedence' => $precedence[$head]
-				);
+				];
 			}
 		}
 
-		$catchallChains = array();
+		$catchallChains = [];
 		foreach ($tails as $tail => $info)
 		{
 			$catchallChains[$info['key']] = $chains[$info['key']];

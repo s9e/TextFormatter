@@ -20,12 +20,12 @@ class Logger
 	/**
 	* @var array 2D array of [<log type> => [<callbacks>]]
 	*/
-	protected $callbacks = array();
+	protected $callbacks = [];
 
 	/**
 	* @var array Log entries in the form [[<type>,<msg>,<context>]]
 	*/
-	protected $logs = array();
+	protected $logs = [];
 
 	/**
 	* @var Tag Tag being processed
@@ -61,7 +61,7 @@ class Logger
 			}
 		}
 
-		$this->logs[] = array($type, $msg, $context);
+		$this->logs[] = [$type, $msg, $context];
 	}
 
 	/**
@@ -71,7 +71,7 @@ class Logger
 	*/
 	public function clear()
 	{
-		$this->logs = array();
+		$this->logs = [];
 		$this->unsetAttribute();
 		$this->unsetTag();
 	}
@@ -156,7 +156,7 @@ class Logger
 	* @param  array  $context
 	* @return void
 	*/
-	public function debug($msg, array $context = array())
+	public function debug($msg, array $context = [])
 	{
 		$this->add('debug', $msg, $context);
 	}
@@ -168,7 +168,7 @@ class Logger
 	* @param  array  $context
 	* @return void
 	*/
-	public function err($msg, array $context = array())
+	public function err($msg, array $context = [])
 	{
 		$this->add('err', $msg, $context);
 	}
@@ -180,7 +180,7 @@ class Logger
 	* @param  array  $context
 	* @return void
 	*/
-	public function info($msg, array $context = array())
+	public function info($msg, array $context = [])
 	{
 		$this->add('info', $msg, $context);
 	}
@@ -192,7 +192,7 @@ class Logger
 	* @param  array  $context
 	* @return void
 	*/
-	public function warn($msg, array $context = array())
+	public function warn($msg, array $context = [])
 	{
 		$this->add('warn', $msg, $context);
 	}

@@ -77,7 +77,7 @@ class JavaScript
 	public function getParser()
 	{
 		// Load the sources
-		$files = array(
+		$files = [
 			'Parser/BuiltInFilters.js',
 			'Parser/Logger.js',
 			'Parser/Tag.js',
@@ -88,7 +88,7 @@ class JavaScript
 			'Parser/RulesHandling.js',
 			'Parser/TagProcessing.js',
 			'Parser/TagStack.js'
-		);
+		];
 
 		$src = '';
 		foreach ($files as $filename)
@@ -101,15 +101,15 @@ class JavaScript
 		ConfigHelper::filterVariants($this->config, 'JS');
 
 		// Reset this instance's callbacks
-		$this->callbacks = array();
+		$this->callbacks = [];
 
 		// Inject the parser config
-		$config = array(
+		$config = [
 			'plugins'        => $this->getPluginsConfig(),
 			'registeredVars' => $this->getRegisteredVarsConfig(),
 			'rootContext'    => $this->getRootContext(),
 			'tagsConfig'     => $this->getTagsConfig()
-		);
+		];
 		$src = preg_replace_callback(
 			'/(\\nvar (' . implode('|', array_keys($config)) . '))(;)/',
 			function ($m) use ($config)
@@ -158,7 +158,7 @@ class JavaScript
 	*/
 	static protected function convertBitfield($bitfield)
 	{
-		$hex = array();
+		$hex = [];
 
 		foreach (str_split($bitfield, 4) as $quad)
 		{
@@ -197,13 +197,13 @@ class JavaScript
 			* @var array Keys of elements that are kept in the global scope. Everything else will be
 			*            moved into the plugin's parser
 			*/
-			$globalKeys = array(
+			$globalKeys = [
 				'parser'            => 1,
 				'quickMatch'        => 1,
 				'regexp'            => 1,
 				'regexpLimit'       => 1,
 				'regexpLimitAction' => 1
-			);
+			];
 
 			$globalConfig = array_intersect_key($pluginConfig, $globalKeys);
 			$localConfig  = array_diff_key($pluginConfig, $globalKeys);
@@ -412,11 +412,11 @@ class JavaScript
 	{
 		// List of arguments for each type of callbacks. MUST be kept in sync with the invocations
 		// in FilterProcessing.js
-		$arguments = array(
-			'attributeFilter'    => array('attrValue', 'attrName'),
-			'attributeGenerator' => array('attrName'),
-			'tagFilter'          => array('tag', 'tagConfig')
-		);
+		$arguments = [
+			'attributeFilter'    => ['attrValue', 'attrName'],
+			'attributeGenerator' => ['attrName'],
+			'tagFilter'          => ['tag', 'tagConfig']
+		];
 
 		$callback   = $callbackConfig['callback'];
 		$params     = $callbackConfig['params'];
@@ -451,7 +451,7 @@ class JavaScript
 		{
 			$jsCode     = 'function(){return false;}';
 			$jsCallback = sprintf('c%08X', crc32($jsCode));
-			$params     = array();
+			$params     = [];
 
 			$this->callbacks[$jsCallback] = $jsCode;
 		}

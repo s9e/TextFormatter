@@ -44,7 +44,7 @@ class ClosureCompilerServiceTest extends Test
 		$minifier->minify('');
 
 		$content = ClosureCompilerServiceProxy::$lastContext['http']['content'];
-		$params  = array();
+		$params  = [];
 		foreach (explode('&', $content) as $pair)
 		{
 			$pair    = explode('=', $pair);
@@ -64,7 +64,7 @@ class ClosureCompilerServiceTest extends Test
 		$params = $this->getQueryParams('');
 
 		$this->assertContains(
-			array('compilation_level', 'ADVANCED_OPTIMIZATIONS'),
+			['compilation_level', 'ADVANCED_OPTIMIZATIONS'],
 			$params
 		);
 	}
@@ -77,7 +77,7 @@ class ClosureCompilerServiceTest extends Test
 		$params = $this->getQueryParams('');
 
 		$this->assertContains(
-			array('exclude_default_externs', 'true'),
+			['exclude_default_externs', 'true'],
 			$params
 		);
 	}
@@ -91,7 +91,7 @@ class ClosureCompilerServiceTest extends Test
 		$externs = file_get_contents(__DIR__ . '/../../../../src/s9e/TextFormatter/Configurator/JavaScript/externs.js');
 
 		$this->assertContains(
-			array('js_externs', $externs),
+			['js_externs', $externs],
 			$params
 		);
 	}

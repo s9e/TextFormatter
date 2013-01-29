@@ -100,14 +100,14 @@ class BBCodeCollectionTest extends Test
 	public function testDefaultAttributeRemoved()
 	{
 		$collection = new BBCodeCollection;
-		$collection->add('X', array('defaultAttribute' => 'x'));
-		$collection->add('Y', array('defaultAttribute' => 'x'));
+		$collection->add('X', ['defaultAttribute' => 'x']);
+		$collection->add('Y', ['defaultAttribute' => 'x']);
 
 		$this->assertSame(
-			array(
-				'X' => array(),
-				'Y' => array('defaultAttribute' => 'x')
-			),
+			[
+				'X' => [],
+				'Y' => ['defaultAttribute' => 'x']
+			],
 			$collection->asConfig()
 		);
 	}
@@ -118,14 +118,14 @@ class BBCodeCollectionTest extends Test
 	public function testTagNameRemoved()
 	{
 		$collection = new BBCodeCollection;
-		$collection->add('X', array('tagName' => 'X'));
-		$collection->add('Y', array('tagName' => 'X'));
+		$collection->add('X', ['tagName' => 'X']);
+		$collection->add('Y', ['tagName' => 'X']);
 
 		$this->assertSame(
-			array(
-				'X' => array(),
-				'Y' => array('tagName' => 'X')
-			),
+			[
+				'X' => [],
+				'Y' => ['tagName' => 'X']
+			],
 			$collection->asConfig()
 		);
 	}

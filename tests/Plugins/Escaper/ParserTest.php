@@ -20,47 +20,47 @@ class ParserTest extends Test
 
 	public function getParsingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'\\[',
 				'<rt><ESC>\\[</ESC></rt>'
-			),
-			array(
+			],
+			[
 				'\\[',
 				'<rt><FOO>\\[</FOO></rt>',
-				array('tagName' => 'FOO')
-			),
-			array(
+				['tagName' => 'FOO']
+			],
+			[
 				"a\\\nb",
 				"<rt>a<ESC>\\\n</ESC>b</rt>"
-			),
-			array(
+			],
+			[
 				'a\\♥b',
 				'<rt>a<ESC>\\♥</ESC>b</rt>'
-			),
-		);
+			],
+		];
 	}
 
 	public function getRenderingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'\\[',
 				'['
-			),
-			array(
+			],
+			[
 				'\\[',
 				'[',
-				array('tagName' => 'FOO')
-			),
-			array(
+				['tagName' => 'FOO']
+			],
+			[
 				"a\\\nb",
 				"a\nb"
-			),
-			array(
+			],
+			[
 				'a\\♥b',
 				'a♥b'
-			),
-		);
+			],
+		];
 	}
 }

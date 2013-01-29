@@ -70,7 +70,7 @@ class Repository
 	* @param  array  $vars Replacement variables
 	* @return array        Array with three elements: "bbcode", "name" and "tag"
 	*/
-	public function get($name, array $vars = array())
+	public function get($name, array $vars = [])
 	{
 		// Everything before # should be a BBCode name
 		$name = preg_replace_callback(
@@ -125,7 +125,7 @@ class Repository
 		foreach ($xpath->query('rules/*', $node) as $ruleNode)
 		{
 			$methodName = $ruleNode->nodeName;
-			$args       = array();
+			$args       = [];
 
 			if ($ruleNode->textContent)
 			{
@@ -133,7 +133,7 @@ class Repository
 			}
 
 			call_user_func_array(
-				array($tag->rules, $methodName),
+				[$tag->rules, $methodName],
 				$args
 			);
 		}
@@ -160,10 +160,10 @@ class Repository
 			);
 		}
 
-		return array(
+		return [
 			'bbcode' => $bbcode,
 			'name'   => $bbcodeName,
 			'tag'    => $tag
-		);
+		];
 	}
 }

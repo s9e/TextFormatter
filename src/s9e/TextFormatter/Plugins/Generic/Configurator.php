@@ -126,21 +126,21 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
-		$generics   = array();
-		$jsGenerics = array();
+		$generics   = [];
+		$jsGenerics = [];
 		foreach ($this->collection as $tagName => $regexp)
 		{
-			$generics[] = array($tagName, $regexp);
+			$generics[] = [$tagName, $regexp];
 
 			$jsRegexp = RegexpConvertor::toJS($regexp);
 			$jsRegexp->flags .= 'g';
 
-			$jsGenerics[] = array($tagName, $jsRegexp, $jsRegexp->map);
+			$jsGenerics[] = [$tagName, $jsRegexp, $jsRegexp->map];
 		}
 
 		$variant = new Variant($generics);
 		$variant->set('JS', $jsGenerics);
 
-		return array('generics' => $variant);
+		return ['generics' => $variant];
 	}
 }

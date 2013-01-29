@@ -43,7 +43,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	* @param Configurator $configurator
 	* @param array        $overrideProps Properties of the plugin will be overwritten with those
 	*/
-	final public function __construct(Configurator $configurator, array $overrideProps = array())
+	final public function __construct(Configurator $configurator, array $overrideProps = [])
 	{
 		foreach ($overrideProps as $k => $v)
 		{
@@ -97,11 +97,11 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	final public function getBaseProperties()
 	{
-		return array(
+		return [
 			'quickMatch'        => $this->quickMatch,
 			'regexpLimit'       => $this->regexpLimit,
 			'regexpLimitAction' => $this->regexpLimitAction
-		);
+		];
 	}
 
 	/**
@@ -172,9 +172,9 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	public function setRegexpLimit($limit)
 	{
-		$limit = filter_var($limit, FILTER_VALIDATE_INT, array(
-			'options' => array('min_range' => 1)
-		));
+		$limit = filter_var($limit, FILTER_VALIDATE_INT, [
+			'options' => ['min_range' => 1]
+		]);
 
 		if (!$limit)
 		{

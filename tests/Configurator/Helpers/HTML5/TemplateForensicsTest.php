@@ -18,28 +18,28 @@ class TemplateForensicsTest extends Test
 		$src = new TemplateForensics($st . $xslSrc . $et);
 		$trg = new TemplateForensics($st . $xslTrg . $et);
 
-		$methods = array(
-			'allowChild'           => array('assertTrue',  'allowsChild'),
-			'allowDescendant'      => array('assertTrue',  'allowsDescendant'),
-			'allowText'            => array('assertTrue',  'allowsText'),
-			'autoReopen'           => array('assertTrue',  'autoReopen'),
-			'!autoReopen'          => array('assertFalse', 'autoReopen'),
-			'denyText'             => array('assertFalse', 'allowsText'),
-			'denyChild'            => array('assertFalse', 'allowsChild'),
-			'denyDescendant'       => array('assertFalse', 'allowsDescendant'),
-			'closeParent'          => array('assertTrue',  'closesParent'),
-			'!closeParent'         => array('assertFalse', 'closesParent'),
-			'denyAll'              => array('assertTrue',  'denyAll'),
-			'!denyAll'             => array('assertFalse', 'denyAll'),
-			'isBlock'              => array('assertTrue',  'isBlock'),
-			'!isBlock'             => array('assertFalse', 'isBlock'),
-			'isTransparent'        => array('assertTrue',  'isTransparent'),
-			'!isTransparent'       => array('assertFalse', 'isTransparent'),
-			'isVoid'               => array('assertTrue',  'isVoid'),
-			'!isVoid'              => array('assertFalse', 'isVoid'),
-			'preservesWhitespace'  => array('assertTrue',  'preservesWhitespace'),
-			'!preservesWhitespace' => array('assertFalse', 'preservesWhitespace')
-		);
+		$methods = [
+			'allowChild'           => ['assertTrue',  'allowsChild'],
+			'allowDescendant'      => ['assertTrue',  'allowsDescendant'],
+			'allowText'            => ['assertTrue',  'allowsText'],
+			'autoReopen'           => ['assertTrue',  'autoReopen'],
+			'!autoReopen'          => ['assertFalse', 'autoReopen'],
+			'denyText'             => ['assertFalse', 'allowsText'],
+			'denyChild'            => ['assertFalse', 'allowsChild'],
+			'denyDescendant'       => ['assertFalse', 'allowsDescendant'],
+			'closeParent'          => ['assertTrue',  'closesParent'],
+			'!closeParent'         => ['assertFalse', 'closesParent'],
+			'denyAll'              => ['assertTrue',  'denyAll'],
+			'!denyAll'             => ['assertFalse', 'denyAll'],
+			'isBlock'              => ['assertTrue',  'isBlock'],
+			'!isBlock'             => ['assertFalse', 'isBlock'],
+			'isTransparent'        => ['assertTrue',  'isTransparent'],
+			'!isTransparent'       => ['assertFalse', 'isTransparent'],
+			'isVoid'               => ['assertTrue',  'isVoid'],
+			'!isVoid'              => ['assertFalse', 'isVoid'],
+			'preservesWhitespace'  => ['assertTrue',  'preservesWhitespace'],
+			'!preservesWhitespace' => ['assertFalse', 'preservesWhitespace']
+		];
 
 		list($assert, $method) = $methods[$rule];
 
@@ -684,286 +684,286 @@ class TemplateForensicsTest extends Test
 
 	public function getData()
 	{
-		return array(
-			array(
+		return [
+			[
 				'<span> does not allow <div> as child',
 				'<span><xsl:apply-templates/></span>',
 				'denyChild',
 				'<div><xsl:apply-templates/></div>'
-			),
-			array(
+			],
+			[
 				'<span> does not allow <div> as child even with a <span> sibling',
 				'<span><xsl:apply-templates/></span>',
 				'denyChild',
 				'<span>xxx</span><div><xsl:apply-templates/></div>'
-			),
-			array(
+			],
+			[
 				'<span> and <div> does not allow <span> and <div> as child',
 				'<span><xsl:apply-templates/></span><div><xsl:apply-templates/></div>',
 				'denyChild',
 				'<span/><div/>'
-			),
-			array(
+			],
+			[
 				'<li> closes parent <li>',
 				'<li/>',
 				'closeParent',
 				'<li><xsl:apply-templates/></li>'
-			),
-			array(
+			],
+			[
 				'<div> closes parent <p>',
 				'<div/>',
 				'closeParent',
 				'<p><xsl:apply-templates/></p>'
-			),
-			array(
+			],
+			[
 				'<p> closes parent <p>',
 				'<p/>',
 				'closeParent',
 				'<p><xsl:apply-templates/></p>'
-			),
-			array(
+			],
+			[
 				'<div> does not close parent <div>',
 				'<div/>',
 				'!closeParent',
 				'<div><xsl:apply-templates/></div>'
-			),
+			],
 			// This test mainly exist to ensure nothing bad happens with HTML tags that don't have
 			// a "cp" value in TemplateForensics::$htmlElements
-			array(
+			[
 				'<span> does not close parent <span>',
 				'<span/>',
 				'!closeParent',
 				'<span><xsl:apply-templates/></span>'
-			),
-			array(
+			],
+			[
 				'<a> denies <a> as descendant',
 				'<a><xsl:apply-templates/></a>',
 				'denyDescendant',
 				'<a/>'
-			),
-			array(
+			],
+			[
 				'<a> allows <img> with no usemap attribute as child',
 				'<a><xsl:apply-templates/></a>',
 				'allowChild',
 				'<img/>'
-			),
-			array(
+			],
+			[
 				'<a> denies <img usemap="#foo"> as child',
 				'<a><xsl:apply-templates/></a>',
 				'denyChild',
 				'<img usemap="#foo"/>'
-			),
-			array(
+			],
+			[
 				'<div><a> allows <div> as child',
 				'<div><a><xsl:apply-templates/></a></div>',
 				'allowChild',
 				'<div/>'
-			),
-			array(
+			],
+			[
 				'<span><a> denies <div> as child',
 				'<span><a><xsl:apply-templates/></a></span>',
 				'denyChild',
 				'<div/>'
-			),
-			array(
+			],
+			[
 				'<audio> with no src attribute allows <source> as child',
 				'<audio><xsl:apply-templates/></audio>',
 				'allowChild',
 				'<source/>'
-			),
-			array(
+			],
+			[
 				'<audio src="..."> denies <source> as child',
 				'<audio src="{@src}"><xsl:apply-templates/></audio>',
 				'denyChild',
 				'<source/>'
-			),
-			array(
+			],
+			[
 				'<a> is considered transparent',
 				'<a><xsl:apply-templates/></a>',
 				'isTransparent'
-			),
-			array(
+			],
+			[
 				'<a><span> is not considered transparent',
 				'<a><span><xsl:apply-templates/></span></a>',
 				'!isTransparent'
-			),
-			array(
+			],
+			[
 				'<span><a> is not considered transparent',
 				'<span><a><xsl:apply-templates/></a></span>',
 				'!isTransparent'
-			),
-			array(
+			],
+			[
 				'A template composed entirely of a single <xsl:apply-templates/> is considered transparent',
 				'<xsl:apply-templates/>',
 				'isTransparent'
-			),
-			array(
+			],
+			[
 				'<span> allows <unknownElement> as child',
 				'<span><xsl:apply-templates/></span>',
 				'allowChild',
 				'<unknownElement/>'
-			),
-			array(
+			],
+			[
 				'<unknownElement> allows <span> as child',
 				'<unknownElement><xsl:apply-templates/></unknownElement>',
 				'allowChild',
 				'<span/>'
-			),
-			array(
+			],
+			[
 				'<textarea> allows text nodes',
 				'<textarea><xsl:apply-templates/></textarea>',
 				'allowText'
-			),
-			array(
+			],
+			[
 				'<xsl:apply-templates/> allows text nodes',
 				'<xsl:apply-templates/>',
 				'allowText'
-			),
-			array(
+			],
+			[
 				'<table> disallows text nodes',
 				'<table><xsl:apply-templates/></table>',
 				'denyText'
-			),
-			array(
+			],
+			[
 				'<table><tr><td> allows "Hi"',
 				'<table><tr><td><xsl:apply-templates/></td></tr></table>',
 				'allowChild',
 				'Hi'
-			),
-			array(
+			],
+			[
 				'<div><table> disallows "Hi"',
 				'<div><table><xsl:apply-templates/></table></div>',
 				'denyChild',
 				'Hi'
-			),
-			array(
+			],
+			[
 				'<table> disallows <xsl:value-of/>',
 				'<table><xsl:apply-templates/></table>',
 				'denyChild',
 				'<xsl:value-of select="@foo"/>'
-			),
-			array(
+			],
+			[
 				'<table> disallows <xsl:text>Hi</xsl:text>',
 				'<table><xsl:apply-templates/></table>',
 				'denyChild',
 				'<xsl:text>Hi</xsl:text>'
-			),
-			array(
+			],
+			[
 				'<table> allows <xsl:text>  </xsl:text>',
 				'<table><xsl:apply-templates/></table>',
 				'allowChild',
 				'<xsl:text>  </xsl:text>'
-			),
-			array(
+			],
+			[
 				'<b> should be reopened automatically',
 				'<b><xsl:apply-templates/></b>',
 				'autoReopen'
-			),
-			array(
+			],
+			[
 				'<b><u> should be reopened automatically',
 				'<b><u><xsl:apply-templates/></u></b>',
 				'autoReopen'
-			),
-			array(
+			],
+			[
 				'<div> should not be reopened automatically',
 				'<div><xsl:apply-templates/></div>',
 				'!autoReopen'
-			),
-			array(
+			],
+			[
 				'"Hi" should not be reopened automatically',
 				'Hi',
 				'!autoReopen'
-			),
-			array(
+			],
+			[
 				'A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically',
 				'<xsl:apply-templates/>',
 				'!autoReopen'
-			),
-			array(
+			],
+			[
 				'<img> denies all descendants',
 				'<img/>',
 				'denyAll'
-			),
-			array(
+			],
+			[
 				'<hr><xsl:apply-templates/></hr> denies all descendants',
 				'<hr><xsl:apply-templates/></hr>',
 				'denyAll'
-			),
-			array(
+			],
+			[
 				'<div><hr><xsl:apply-templates/></hr></div> denies all descendants',
 				'<div><hr><xsl:apply-templates/></hr></div>',
 				'denyAll'
-			),
-			array(
+			],
+			[
 				'<style> denies all descendants even if it has an <xsl:apply-templates/> child',
 				'<style><xsl:apply-templates/></style>',
 				'denyAll'
-			),
-			array(
+			],
+			[
 				'<span> does not deny all descendants if it has an <xsl:apply-templates/> child',
 				'<span><xsl:apply-templates/></span>',
 				'!denyAll'
-			),
-			array(
+			],
+			[
 				'<span> denies all descendants if it does not have an <xsl:apply-templates/> child',
 				'<span></span>',
 				'denyAll'
-			),
-			array(
+			],
+			[
 				'<colgroup span="2"> denies all descendants',
 				'<colgroup span="2"><xsl:apply-templates/></colgroup>',
 				'denyAll'
-			),
-			array(
+			],
+			[
 				'<colgroup> denies all descendants',
 				'<colgroup><xsl:apply-templates/></colgroup>',
 				'!denyAll'
-			),
-			array(
+			],
+			[
 				'<pre> preserves whitespace',
 				'<pre><xsl:apply-templates/></pre>',
 				'preservesWhitespace'
-			),
-			array(
+			],
+			[
 				'<pre><code> preserves whitespace',
 				'<pre><code><xsl:apply-templates/></code></pre>',
 				'preservesWhitespace'
-			),
-			array(
+			],
+			[
 				'<span> does not preserve whitespace',
 				'<span><xsl:apply-templates/></span>',
 				'!preservesWhitespace'
-			),
-			array(
+			],
+			[
 				'<img/> is void',
 				'<img><xsl:apply-templates/></img>',
 				'isVoid'
-			),
-			array(
+			],
+			[
 				'<img> is void even with a <xsl:apply-templates/> child',
 				'<img><xsl:apply-templates/></img>',
 				'isVoid'
-			),
-			array(
+			],
+			[
 				'<span> is not void',
 				'<span><xsl:apply-templates/></span>',
 				'!isVoid'
-			),
-			array(
+			],
+			[
 				'<xsl:apply-templates/> is not void',
 				'<xsl:apply-templates/>',
 				'!isVoid'
-			),
-			array(
+			],
+			[
 				'<blockquote> is a block-level element',
 				'<blockquote><xsl:apply-templates/></blockquote>',
 				'isBlock'
-			),
-			array(
+			],
+			[
 				'<span> is not a block-level element',
 				'<span><xsl:apply-templates/></span>',
 				'!isBlock'
-			),
-		);
+			],
+		];
 	}
 }

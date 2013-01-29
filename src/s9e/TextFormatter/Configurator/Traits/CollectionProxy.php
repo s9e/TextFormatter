@@ -23,7 +23,7 @@ trait CollectionProxy
 	*/
 	public function __call($methodName, $args)
 	{
-		return call_user_func_array(array($this->collection, $methodName), $args);
+		return call_user_func_array([$this->collection, $methodName], $args);
 	}
 
 	//==========================================================================

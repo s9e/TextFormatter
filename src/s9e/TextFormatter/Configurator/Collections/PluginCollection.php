@@ -74,7 +74,7 @@ class PluginCollection extends NormalizedCollection
 	* @param  array  $overrideProps Properties of the plugin will be overwritten with those
 	* @return ConfiguratorBase
 	*/
-	public function load($pluginName, array $overrideProps = array())
+	public function load($pluginName, array $overrideProps = [])
 	{
 		// Validate the plugin name / class
 		$pluginName = $this->normalizeKey($pluginName);
@@ -129,7 +129,7 @@ class PluginCollection extends NormalizedCollection
 			if (!isset($pluginConfig['parser']))
 			{
 				$pluginConfig['parser'] = new Variant;
-				$pluginConfig['parser']->setDynamic('JS', array($plugin, 'getJSParser'));
+				$pluginConfig['parser']->setDynamic('JS', [$plugin, 'getJSParser']);
 			}
 		}
 		unset($pluginConfig);

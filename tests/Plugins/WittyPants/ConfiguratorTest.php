@@ -35,7 +35,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('WittyPants', array('tagName' => 'FOO'));
+		$this->configurator->plugins->load('WittyPants', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 
@@ -44,7 +44,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomAttrName()
 	{
-		$this->configurator->plugins->load('WittyPants', array('attrName' => 'bar'));
+		$this->configurator->plugins->load('WittyPants', ['attrName' => 'bar']);
 		$this->assertTrue($this->configurator->tags['WP']->attributes->exists('bar'));
 	}
 
@@ -53,7 +53,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigTagName()
 	{
-		$plugin = $this->configurator->plugins->load('WittyPants', array('tagName' => 'FOO'));
+		$plugin = $this->configurator->plugins->load('WittyPants', ['tagName' => 'FOO']);
 
 		$config = $plugin->asConfig();
 
@@ -66,7 +66,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigAttrName()
 	{
-		$plugin = $this->configurator->plugins->load('WittyPants', array('attrName' => 'bar'));
+		$plugin = $this->configurator->plugins->load('WittyPants', ['attrName' => 'bar']);
 
 		$config = $plugin->asConfig();
 

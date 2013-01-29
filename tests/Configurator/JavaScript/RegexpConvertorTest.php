@@ -344,7 +344,7 @@ class RegexpConvertorTest extends Test
 		);
 
 		$this->assertEquals(
-			array('', 'foo', 'bar'),
+			['', 'foo', 'bar'],
 			$regexp->map
 		);
 	}
@@ -362,7 +362,7 @@ class RegexpConvertorTest extends Test
 		);
 
 		$this->assertEquals(
-			array('', '', 'bar'),
+			['', '', 'bar'],
 			$regexp->map
 		);
 	}

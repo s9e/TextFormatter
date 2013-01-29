@@ -68,29 +68,29 @@ abstract class TemplateChecker
 	*/
 	protected static function checkFixedUrlAttributes(DOMXPath $xpath)
 	{
-		$attributes = array(
+		$attributes = [
 			'//iframe | //script'
-				=> array('src', null),
+				=> ['src', null],
 
 			'//embed'
-				=> array('src', '@allowscriptaccess = "never"'),
+				=> ['src', '@allowscriptaccess = "never"'],
 
 			'//object'
-				=> array(
+				=> [
 					'data',
 					'param'
 					. '[translate(@name, "ACEILOPRSTW", "aceiloprstw") = "allowscriptaccess"]'
 					. '[@value = "never"]'
-				),
+				],
 
 			'//param[translate(@name, "MOVIE", "movie") = "movie"]'
-				=> array(
+				=> [
 					'value',
 					'parent::object/param'
 					. '[translate(@name, "ACEILOPRSTW", "aceiloprstw") = "allowscriptaccess"]'
 					. '[@value = "never"]'
-				)
-		);
+				]
+		];
 
 		// Match protocol:// or // followed optional "user:pass@" credentials followed by an
 		// alphanumerical character
@@ -191,12 +191,12 @@ abstract class TemplateChecker
 	*/
 	protected static function checkUnsafeContent(DOMXPath $xpath, Tag $tag = null)
 	{
-		$checkElements = array(
+		$checkElements = [
 			'/^style$/i'  => 'CSS',
 			'/^script$/i' => 'JS'
-		);
+		];
 
-		$checkAttributes = array(
+		$checkAttributes = [
 			'/^style$/i'      => 'CSS',
 			// onclick, onmouseover, etc...
 			'/^on/i'          => 'JS',
@@ -209,7 +209,7 @@ abstract class TemplateChecker
 			'/^poster$/i'     => 'URL',
 			// Covers "src" as well as non-standard attributes "dynsrc", "lowsrc"
 			'/src$/i'         => 'URL'
-		);
+		];
 
 		// NOTE: this XPath query will return attributes from XSL nodes, but there should be no
 		//       false-positives from them, so we don't have to filter them out
@@ -218,7 +218,7 @@ abstract class TemplateChecker
 			/**
 			* @var array XPath expressions to be checked
 			*/
-			$checkExpr = array();
+			$checkExpr = [];
 
 			if ($node->namespaceURI === 'http://www.w3.org/1999/XSL/Transform')
 			{
@@ -422,7 +422,7 @@ abstract class TemplateChecker
 	*/
 	protected static function checkDocumentCalls(DOMXPath $xpath)
 	{
-		$check = array();
+		$check = [];
 
 		foreach ($xpath->query('//@*') as $attribute)
 		{
@@ -430,14 +430,14 @@ abstract class TemplateChecker
 			{
 				// Attribute of an XSL element. May or may not use XPath, but it shouldn't produce
 				// false-positives
-				$check[] = array($attribute, $attribute->value);
+				$check[] = [$attribute, $attribute->value];
 			}
 			else
 			{
 				// Attribute of an HTML (or otherwise) element -- Look for inline expressions
 				foreach (self::getInlineExpressions($attribute->value) as $expr)
 				{
-					$check[] = array($attribute, $expr);
+					$check[] = [$attribute, $expr];
 				}
 			}
 		}
@@ -487,7 +487,7 @@ abstract class TemplateChecker
 		$attribute = $tag->attributes->get($attrName);
 
 		// Test the attribute with the configured isSafeIn* method
-		if (call_user_func(array('self', 'isSafeIn' . $contentType), $attribute))
+		if (call_user_func(['self', 'isSafeIn' . $contentType], $attribute))
 		{
 			// Safe
 			return;
@@ -520,7 +520,7 @@ abstract class TemplateChecker
 	*/
 	protected static function getInlineExpressions($attrValue)
 	{
-		$expressions = array();
+		$expressions = [];
 		foreach (TemplateHelper::parseAttributeValueTemplate($attrValue) as $token)
 		{
 			if ($token[0] === 'expression')
@@ -575,11 +575,11 @@ abstract class TemplateChecker
 	protected static function isSafeInJS(Attribute $attribute)
 	{
 		// List of callbacks that make a value safe to be used in a script
-		$safeCallbacks = array(
+		$safeCallbacks = [
 			'urlencode',
 			'strtotime',
 			'rawurlencode'
-		);
+		];
 
 		foreach ($attribute->filterChain as $filter)
 		{
@@ -606,10 +606,10 @@ abstract class TemplateChecker
 	protected static function isSafeInURL(Attribute $attribute)
 	{
 		// List of callbacks that make a value safe to be used in a script
-		$safeCallbacks = array(
+		$safeCallbacks = [
 			'urlencode',
 			'rawurlencode'
-		);
+		];
 
 		foreach ($attribute->filterChain as $filter)
 		{

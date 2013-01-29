@@ -72,22 +72,22 @@ class Map extends AttributeFilter
 		}
 
 		// Group values by keys
-		$valueKeys = array();
+		$valueKeys = [];
 		foreach ($map as $key => $value)
 		{
 			$valueKeys[$value][] = $key;
 		}
 
 		// Now create a regexp and an entry in the map for each group
-		$map = array();
+		$map = [];
 		foreach ($valueKeys as $value => $keys)
 		{
 			$regexp = RegexpBuilder::fromList(
 				$keys,
-				array(
+				[
 					'delimiter'       => '/',
 					'caseInsensitive' => !$caseSensitive
-				)
+				]
 			);
 			$regexp = '/^' . $regexp . '$/D';
 
@@ -104,14 +104,14 @@ class Map extends AttributeFilter
 			}
 
 			// Add the [regexp,value] pair to the map
-			$map[] = array(new RegexpObject($regexp), $value);
+			$map[] = [new RegexpObject($regexp), $value];
 		}
 
 		// If the "strict" option is enabled, a catch-all regexp which replaces the value with FALSE
 		// is appended to the list
 		if ($strict)
 		{
-			$map[] = array('//', false);
+			$map[] = ['//', false];
 		}
 
 		// Record the map in this filter's variables

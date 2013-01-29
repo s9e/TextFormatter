@@ -866,7 +866,7 @@ class RegexpBuilderTest extends Test
 
 		$expected = $data[$k][0];
 		$words    = $data[$k][1];
-		$options  = (isset($data[$k][2])) ? $data[$k][2] : array();
+		$options  = (isset($data[$k][2])) ? $data[$k][2] : [];
 
 		$this->assertSame($expected, RegexpBuilder::fromList($words, $options));
 	}
@@ -878,515 +878,515 @@ class RegexpBuilderTest extends Test
 	*/
 	public function testUTF8Exception()
 	{
-		RegexpBuilder::fromList(array("\xff\xff"));
+		RegexpBuilder::fromList(["\xff\xff"]);
 	}
 
 	public function getWordsLists()
 	{
-		return array(
-			array(
+		return [
+			[
 				'foo',
-				array('foo')
-			),
-			array(
+				['foo']
+			],
+			[
 				'foo',
-				array('foo', 'foo')
-			),
-			array(
+				['foo', 'foo']
+			],
+			[
 				'(?:FOO|foo)',
-				array('FOO', 'foo')
-			),
-			array(
+				['FOO', 'foo']
+			],
+			[
 				'foo',
-				array('FOO', 'foo'),
-				array('caseInsensitive' => true)
-			),
-			array(
+				['FOO', 'foo'],
+				['caseInsensitive' => true]
+			],
+			[
 				'a',
-				array('a')
-			),
-			array(
+				['a']
+			],
+			[
 				'a',
-				array('a', 'a')
-			),
-			array(
+				['a', 'a']
+			],
+			[
 				'\\/',
-				array('/'),
-			),
-			array(
+				['/'],
+			],
+			[
 				'/',
-				array('/'),
-				array('delimiter' => '#')
-			),
-			array(
+				['/'],
+				['delimiter' => '#']
+			],
+			[
 				'\\#',
-				array('#'),
-				array('delimiter' => '#')
-			),
-			array(
+				['#'],
+				['delimiter' => '#']
+			],
+			[
 				'ap(?:ple|ril)',
-				array('apple', 'april')
-			),
-			array(
+				['apple', 'april']
+			],
+			[
 				'ba[rz]',
-				array('bar', 'baz')
-			),
-			array(
+				['bar', 'baz']
+			],
+			[
 				'fool?',
-				array('foo', 'fool')
-			),
-			array(
+				['foo', 'fool']
+			],
+			[
 				'ax(?:ed)?',
-				array('ax', 'axed')
-			),
-			array(
+				['ax', 'axed']
+			],
+			[
 				'[-!#$()*+.:<=>?[\\\\\\]{|}^]',
 				str_split('!#$()*+-.:<=>?[\\]^{|}', 1)
-			),
-			array(
+			],
+			[
 				'(?:x|^)y',
-				array('xy', '^y'),
-				array('specialChars' => array('^' => '^'))
-			),
-			array(
+				['xy', '^y'],
+				['specialChars' => ['^' => '^']]
+			],
+			[
 				'x(?:y|$)',
-				array('xy', 'x$'),
-				array('specialChars' => array('$' => '$'))
-			),
-			array(
+				['xy', 'x$'],
+				['specialChars' => ['$' => '$']]
+			],
+			[
 				'(?:bar|foo)',
-				array('foo', 'bar')
-			),
-			array(
+				['foo', 'bar']
+			],
+			[
 				'(?=[*\\\\])(?:\\*foo|\\\\bar)',
-				array('*foo', '\\bar'),
-				array('useLookahead' => true)
-			),
-			array(
+				['*foo', '\\bar'],
+				['useLookahead' => true]
+			],
+			[
 				'(?:.|bar)',
 				// Here, we build a regexp that matches one single character or the word "bar"
 				// The joker ? is replaced by the special character .
-				array('?', 'bar'),
-				array('specialChars' => array('?' => '.'), 'useLookahead' => true)
-			),
-			array(
+				['?', 'bar'],
+				['specialChars' => ['?' => '.'], 'useLookahead' => true]
+			],
+			[
 				'[ab]',
-				array('a', 'b')
-			),
-			array(
+				['a', 'b']
+			],
+			[
 				'[♠♣♥♦]',
-				array('♠', '♣', '♥', '♦')
-			),
-			array(
+				['♠', '♣', '♥', '♦']
+			],
+			[
 				'.',
-				array('♠', '♣', '♥', '♦', '.'),
-				array('specialChars' => array('.' => '.'))
-			),
-			array(
+				['♠', '♣', '♥', '♦', '.'],
+				['specialChars' => ['.' => '.']]
+			],
+			[
 				'[ls]ock',
-				array('lock', 'sock')
-			),
-			array(
+				['lock', 'sock']
+			],
+			[
 				'(?=[af])a?foo',
-				array('foo', 'afoo'),
-				array('useLookahead' => true)
-			),
-			array(
+				['foo', 'afoo'],
+				['useLookahead' => true]
+			],
+			[
 				'bo[ao]st',
-				array('boast', 'boost')
-			),
-			array(
+				['boast', 'boost']
+			],
+			[
 				'pe?st',
-				array('pest', 'pst')
-			),
-			array(
+				['pest', 'pst']
+			],
+			[
 				'bo[ao]?st',
-				array('boast', 'boost', 'bost')
-			),
-			array(
+				['boast', 'boost', 'bost']
+			],
+			[
 				'b(?:e|oo)st',
-				array('boost', 'best')
-			),
-			array(
+				['boost', 'best']
+			],
+			[
 				'b(?:oo)?st',
-				array('boost', 'bst')
-			),
-			array(
+				['boost', 'bst']
+			],
+			[
 				'b(?:[eu]|oo)st',
-				array('best', 'boost', 'bust')
-			),
-			array(
+				['best', 'boost', 'bust']
+			],
+			[
 				'(?:b(?:oo)?st|cool)',
-				array('boost', 'bst', 'cool')
-			),
-			array(
+				['boost', 'bst', 'cool']
+			],
+			[
 				'(?:b(?:oo)?|co)st',
-				array('boost', 'bst', 'cost')
-			),
-			array(
+				['boost', 'bst', 'cost']
+			],
+			[
 				'aa[xy]',
-				array('aax', 'aay', 'aax', 'aay')
-			),
-			array(
+				['aax', 'aay', 'aax', 'aay']
+			],
+			[
 				'[ab]aa[xy]',
-				array('aaax', 'aaay', 'baax', 'baay')
-			),
-			array(
+				['aaax', 'aaay', 'baax', 'baay']
+			],
+			[
 				'(?:a|bb)aa[xy]',
-				array('aaax', 'aaay', 'bbaax', 'bbaay')
-			),
-			array(
+				['aaax', 'aaay', 'bbaax', 'bbaay']
+			],
+			[
 				'aaa?[xy]',
-				array('aaax', 'aaay', 'aax', 'aay')
-			),
-			array(
+				['aaax', 'aaay', 'aax', 'aay']
+			],
+			[
 				'(?:ab|cd)[xy]',
-				array('abx', 'aby', 'cdx', 'cdy')
-			),
-			array(
+				['abx', 'aby', 'cdx', 'cdy']
+			],
+			[
 				'(?:a|bb)(?:xx|yy)',
-				array('axx', 'ayy', 'bbxx', 'bbyy')
-			),
-			array(
+				['axx', 'ayy', 'bbxx', 'bbyy']
+			],
+			[
 				'(?:c|(?:a|bb)(?:xx|yy))',
-				array('axx', 'ayy', 'bbxx', 'bbyy', 'c')
-			),
-			array(
+				['axx', 'ayy', 'bbxx', 'bbyy', 'c']
+			],
+			[
 				// Ensure it doesn't become (?:c|(?:a|bb)(?:xx|yy)|azz) even though it would be
 				// shorter, because having fewer alternations at the top level is more important
 				'(?:c|a(?:xx|yy|zz)|bb(?:xx|yy))',
-				array('axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c')
-			),
-			array(
+				['axx', 'ayy', 'azz', 'bbxx', 'bbyy', 'c']
+			],
+			[
 				// We don't merge "ac", "af", "bbc" and "bbf" tails because the result
 				// (?:c|(?:a|bb)[cf]) is neither more performant nor shorter
 				'(?:c|a[cf]|bb[cf])',
-				array('ac', 'af', 'bbc', 'bbf', 'c')
-			),
-			array(
+				['ac', 'af', 'bbc', 'bbf', 'c']
+			],
+			[
 				// Typical regexp used in UrlConfig for matching hostnames and subdomains
 				'(?:\.|^)(?:example\\.org|localhost)$',
-				array('^example.org$', '.example.org$', '^localhost$', '.localhost$'),
-				array('specialChars' => array('^' => '^', '$' => '$'))
-			),
-			array(
+				['^example.org$', '.example.org$', '^localhost$', '.localhost$'],
+				['specialChars' => ['^' => '^', '$' => '$']]
+			],
+			[
 				'x(?:ixi|oxo)x',
-				array('xixix', 'xoxox')
-			),
-			array(
+				['xixix', 'xoxox']
+			],
+			[
 				'x[io]x[io]x',
-				array('xixix', 'xixox', 'xoxox', 'xoxix')
-			),
-			array(
+				['xixix', 'xixox', 'xoxox', 'xoxix']
+			],
+			[
 				'(?:a|bb)(?:bar|foo)?',
-				array('afoo', 'abar', 'bbfoo', 'bbbar', 'a', 'bb')
-			),
-			array(
+				['afoo', 'abar', 'bbfoo', 'bbbar', 'a', 'bb']
+			],
+			[
 				'[ab][xy]',
-				array('ax', 'ay', 'bx', 'by')
-			),
-			array(
+				['ax', 'ay', 'bx', 'by']
+			],
+			[
 				'(?:c|[ab][xy])',
-				array('ax', 'ay', 'bx', 'by', 'c')
-			),
-			array(
+				['ax', 'ay', 'bx', 'by', 'c']
+			],
+			[
 				'[ab]?[xy]',
-				array('ax', 'ay', 'bx', 'by', 'x', 'y')
-			),
+				['ax', 'ay', 'bx', 'by', 'x', 'y']
+			],
 			// Ensure that merging tails does not create subpatterns
-			array(
+			[
 				'(?:c|a[xy]|bb[xy])',
-				array('ax', 'ay', 'bbx', 'bby', 'c')
-			),
-			array(
+				['ax', 'ay', 'bbx', 'bby', 'c']
+			],
+			[
 				'(?:c|dd[xy]|[ab][xy])',
-				array('ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy')
-			),
+				['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']
+			],
 			// Those two only exist to make sure nothing bad happens (e.g. no infinite loop)
-			array(
+			[
 				'',
-				array('')
-			),
-			array(
+				['']
+			],
+			[
 				'',
-				array('', '')
-			),
-			array(
+				['', '']
+			],
+			[
 				'[ab]\\d',
-				array('ad', 'bd'),
-				array('specialChars' => array('d' => '\\d'))
-			),
-			array(
+				['ad', 'bd'],
+				['specialChars' => ['d' => '\\d']]
+			],
+			[
 				'[\\da][\\dx]?',
-				array('a', 'ax', 'ad', 'd', 'dx', 'dd'),
-				array('specialChars' => array('d' => '\\d'))
-			),
+				['a', 'ax', 'ad', 'd', 'dx', 'dd'],
+				['specialChars' => ['d' => '\\d']]
+			],
 			// Ensure that character classes made from single characters appear first in alternation
-			array(
+			[
 				'(?:[yz]|bar|foo)',
-				array('foo', 'bar', 'y', 'z')
-			),
-			array(
+				['foo', 'bar', 'y', 'z']
+			],
+			[
 				'(?:[yz]|ba[rz]|foo)',
-				array('foo', 'bar', 'baz', 'y', 'z')
-			),
-			array(
+				['foo', 'bar', 'baz', 'y', 'z']
+			],
+			[
 				'(?:a(?:a(?:cc|dd))?|bb(?:cc|dd))',
-				array('a', 'aacc', 'aadd', 'bbcc', 'bbdd')
-			),
-			array(
+				['a', 'aacc', 'aadd', 'bbcc', 'bbdd']
+			],
+			[
 				'(?:aa|bb)(?:cc|dd)?',
-				array('aa', 'bb', 'aacc', 'aadd', 'bbcc', 'bbdd')
-			),
-			array(
+				['aa', 'bb', 'aacc', 'aadd', 'bbcc', 'bbdd']
+			],
+			[
 				'(?:aa|bb)(?:(?:cc|dd)(?:xx|yy))?',
-				array(
+				[
 					'aa', 'bb',
 					'aaccxx', 'aaddxx', 'bbccxx', 'bbddxx',
 					'aaccyy', 'aaddyy', 'bbccyy', 'bbddyy'
-				)
-			),
-			array(
+				]
+			],
+			[
 				'^foo',
-				array('^foo$', '^foo'),
-				array('specialChars' => array('^' => '^', '$' => '$'))
-			),
-			array(
+				['^foo$', '^foo'],
+				['specialChars' => ['^' => '^', '$' => '$']]
+			],
+			[
 				'foo$',
-				array('^foo$', 'foo$'),
-				array('specialChars' => array('^' => '^', '$' => '$'))
-			),
-			array(
+				['^foo$', 'foo$'],
+				['specialChars' => ['^' => '^', '$' => '$']]
+			],
+			[
 				'\\bfoo',
-				array('bfoo', 'bfoob'),
-				array('specialChars' => array('b' => '\\b'))
-			),
-			array(
+				['bfoo', 'bfoob'],
+				['specialChars' => ['b' => '\\b']]
+			],
+			[
 				'apple.*?',
-				array('apple', 'apple*'),
-				array('specialChars' => array('*' => '.*?'))
-			),
-			array(
+				['apple', 'apple*'],
+				['specialChars' => ['*' => '.*?']]
+			],
+			[
 				'apple.*?',
-				array('apple*', 'applepie'),
-				array('specialChars' => array('*' => '.*?'))
-			),
-			array(
+				['apple*', 'applepie'],
+				['specialChars' => ['*' => '.*?']]
+			],
+			[
 				'apple.+?',
-				array('apple*', 'applepie'),
-				array('specialChars' => array('*' => '.+?'))
-			),
-			array(
+				['apple*', 'applepie'],
+				['specialChars' => ['*' => '.+?']]
+			],
+			[
 				'apple.*?',
-				array('apple*', 'apple'),
-				array('specialChars' => array('*' => '.*?'))
-			),
-			array(
+				['apple*', 'apple'],
+				['specialChars' => ['*' => '.*?']]
+			],
+			[
 				'apple.*',
-				array('apple*', 'apple+'),
-				array('specialChars' => array('*' => '.*?', '+' => '.*'))
-			),
-			array(
+				['apple*', 'apple+'],
+				['specialChars' => ['*' => '.*?', '+' => '.*']]
+			],
+			[
 				'apple.+',
-				array('apple*', 'apple+'),
-				array('specialChars' => array('*' => '.+?', '+' => '.+'))
-			),
-			array(
+				['apple*', 'apple+'],
+				['specialChars' => ['*' => '.+?', '+' => '.+']]
+			],
+			[
 				'apple.*',
-				array('apple*', 'apple+'),
-				array('specialChars' => array('*' => '.*', '+' => '.+'))
-			),
-			array(
+				['apple*', 'apple+'],
+				['specialChars' => ['*' => '.*', '+' => '.+']]
+			],
+			[
 				'.*pie',
-				array('applepie', 'lemonpie', 'pie', '*pie'),
-				array('specialChars' => array('*' => '.*'))
-			),
-			array(
+				['applepie', 'lemonpie', 'pie', '*pie'],
+				['specialChars' => ['*' => '.*']]
+			],
+			[
 				'.*pie.*',
-				array('*pie*', 'lemonpie'),
-				array('specialChars' => array('*' => '.*'))
-			),
-			array(
+				['*pie*', 'lemonpie'],
+				['specialChars' => ['*' => '.*']]
+			],
+			[
 				'(?:.*pie.*|banana)',
-				array('*pie*', 'lemonpie', 'banana'),
-				array('specialChars' => array('*' => '.*'))
-			),
-			array(
+				['*pie*', 'lemonpie', 'banana'],
+				['specialChars' => ['*' => '.*']]
+			],
+			[
 				'^foo(?:$|.+)',
-				array('^foo$', '^foo+'),
-				array('specialChars' => array('^' => '^', '$' => '$', '+' => '.+'))
-			),
-			array(
+				['^foo$', '^foo+'],
+				['specialChars' => ['^' => '^', '$' => '$', '+' => '.+']]
+			],
+			[
 				'^foo.*',
-				array('^foo$', '^foo*'),
-				array('specialChars' => array('^' => '^', '$' => '$', '*' => '.*'))
-			),
-			array(
+				['^foo$', '^foo*'],
+				['specialChars' => ['^' => '^', '$' => '$', '*' => '.*']]
+			],
+			[
 				'foo.+',
-				array('food', 'foo+'),
-				array('specialChars' => array('d' => '\\d', '+' => '.+'))
-			),
-			array(
+				['food', 'foo+'],
+				['specialChars' => ['d' => '\\d', '+' => '.+']]
+			],
+			[
 				'foo(?:\\w*|.+)',
-				array('foo*', 'foo+'),
-				array('specialChars' => array('*' => '\\w*', '+' => '.+'))
-			),
-			array(
+				['foo*', 'foo+'],
+				['specialChars' => ['*' => '\\w*', '+' => '.+']]
+			],
+			[
 				'foo(?:.+|\\w?)',
-				array('foo?', 'foo+'),
-				array('specialChars' => array('?' => '\\w?', '+' => '.+'))
-			),
-			array(
+				['foo?', 'foo+'],
+				['specialChars' => ['?' => '\\w?', '+' => '.+']]
+			],
+			[
 				'foo(?:.+|\\B)',
-				array('fooB', 'foo+'),
-				array('specialChars' => array('B' => '\\B', '+' => '.+'))
-			),
-			array(
+				['fooB', 'foo+'],
+				['specialChars' => ['B' => '\\B', '+' => '.+']]
+			],
+			[
 				'(?:.+foo.+|foo\\B)',
-				array('+foo+', 'fooB'),
-				array('specialChars' => array('B' => '\\B', '+' => '.+'))
-			),
-			array(
+				['+foo+', 'fooB'],
+				['specialChars' => ['B' => '\\B', '+' => '.+']]
+			],
+			[
 				'(?:.+foo.+|bar|foo)',
-				array('+foo+', 'foo', 'bar'),
-				array('specialChars' => array('+' => '.+'))
-			),
-			array(
+				['+foo+', 'foo', 'bar'],
+				['specialChars' => ['+' => '.+']]
+			],
+			[
 				'(?:.+foo.*|bar)',
-				array('+foo+', '+foo', 'bar'),
-				array('specialChars' => array('+' => '.+'))
-			),
-			array(
+				['+foo+', '+foo', 'bar'],
+				['specialChars' => ['+' => '.+']]
+			],
+			[
 				'.+foo.*',
-				array('+foo+', '+foo'),
-				array('specialChars' => array('+' => '.+'))
-			),
-			array(
+				['+foo+', '+foo'],
+				['specialChars' => ['+' => '.+']]
+			],
+			[
 				'(?:a|.+.+)',
-				array('++', 'a'),
-				array('specialChars' => array('+' => '.+'))
-			),
-			array(
+				['++', 'a'],
+				['specialChars' => ['+' => '.+']]
+			],
+			[
 				'.',
-				array('a', '.'),
-				array('specialChars' => array('.' => '.'))
-			),
-			array(
+				['a', '.'],
+				['specialChars' => ['.' => '.']]
+			],
+			[
 				'h.p',
-				array('hip', 'hop', 'h.p'),
-				array('specialChars' => array('.' => '.'))
-			),
-			array(
+				['hip', 'hop', 'h.p'],
+				['specialChars' => ['.' => '.']]
+			],
+			[
 				'h(?:i|.p)',
-				array('hi', 'hop', 'h.p'),
-				array('specialChars' => array('.' => '.'))
-			),
-			array(
+				['hi', 'hop', 'h.p'],
+				['specialChars' => ['.' => '.']]
+			],
+			[
 				'h.?',
-				array('h', 'h.'),
-				array('specialChars' => array('.' => '.'))
-			),
-			array(
+				['h', 'h.'],
+				['specialChars' => ['.' => '.']]
+			],
+			[
 				'h(?:.|\\d\\d)',
-				array('h.', 'hd'),
-				array('specialChars' => array('.' => '.', 'd' => '\\d\\d'))
-			),
-			array(
+				['h.', 'hd'],
+				['specialChars' => ['.' => '.', 'd' => '\\d\\d']]
+			],
+			[
 				'h(?:...........|otel)',
-				array('hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'),
-				array('specialChars' => array('X' => '.'))
-			),
+				['hXXXXXXXXXXX', 'h\\^$.[]()+*?', 'hotel'],
+				['specialChars' => ['X' => '.']]
+			],
 			/**
 			* @link http://docs.php.net/manual/en/regexp.reference.escape.php
 			*/
-			array(
+			[
 				'z(?:..........|ebra)',
-				array('zdDhHsSvVwW', 'z..........', 'zebra'),
-				array('specialChars' => array(
+				['zdDhHsSvVwW', 'z..........', 'zebra'],
+				['specialChars' => [
 					'd' => '\\d', 'D' => 'D', 'h' => '\\h', 'H' => '\\H',
 					's' => '\\s', 'S' => 'S', 'v' => '\\v', 'V' => '\\V',
 					'w' => '\\w', 'W' => 'W', '.' => '.'
-				))
-			),
-			array(
+				]]
+			],
+			[
 				'm(?:.|\\b)',
-				array('m.', 'mb'),
-				array('specialChars' => array('.' => '.', 'b' => '\\b'))
-			),
-			array(
+				['m.', 'mb'],
+				['specialChars' => ['.' => '.', 'b' => '\\b']]
+			],
+			[
 				'm(?:.|\\B)',
-				array('m.', 'mB'),
-				array('specialChars' => array('.' => '.', 'B' => '\\B'))
-			),
-			array(
+				['m.', 'mB'],
+				['specialChars' => ['.' => '.', 'B' => '\\B']]
+			],
+			[
 				'm(?:.|\\A)',
-				array('m.', 'mA'),
-				array('specialChars' => array('.' => '.', 'A' => '\\A'))
-			),
-			array(
+				['m.', 'mA'],
+				['specialChars' => ['.' => '.', 'A' => '\\A']]
+			],
+			[
 				'm(?:.|\\Z)',
-				array('m.', 'mZ'),
-				array('specialChars' => array('.' => '.', 'Z' => '\\Z'))
-			),
-			array(
+				['m.', 'mZ'],
+				['specialChars' => ['.' => '.', 'Z' => '\\Z']]
+			],
+			[
 				'm(?:.|\\z)',
-				array('m.', 'mz'),
-				array('specialChars' => array('.' => '.', 'z' => '\\z'))
-			),
-			array(
+				['m.', 'mz'],
+				['specialChars' => ['.' => '.', 'z' => '\\z']]
+			],
+			[
 				'm(?:.|\\G)',
-				array('m.', 'mG'),
-				array('specialChars' => array('.' => '.', 'G' => '\\G'))
-			),
-			array(
+				['m.', 'mG'],
+				['specialChars' => ['.' => '.', 'G' => '\\G']]
+			],
+			[
 				'm(?:.|\\Q)',
-				array('m.', 'mQ'),
-				array('specialChars' => array('.' => '.', 'Q' => '\\Q'))
-			),
-			array(
+				['m.', 'mQ'],
+				['specialChars' => ['.' => '.', 'Q' => '\\Q']]
+			],
+			[
 				'm(?:.|\\E)',
-				array('m.', 'mE'),
-				array('specialChars' => array('.' => '.', 'E' => '\\E'))
-			),
-			array(
+				['m.', 'mE'],
+				['specialChars' => ['.' => '.', 'E' => '\\E']]
+			],
+			[
 				'm(?:.|\\K)',
-				array('m.', 'mK'),
-				array('specialChars' => array('.' => '.', 'K' => '\\K'))
-			),
-			array(
+				['m.', 'mK'],
+				['specialChars' => ['.' => '.', 'K' => '\\K']]
+			],
+			[
 				'h(?:$|.)',
-				array('h$', 'h.'),
-				array('specialChars' => array('.' => '.', '$' => '$'))
-			),
-			array(
+				['h$', 'h.'],
+				['specialChars' => ['.' => '.', '$' => '$']]
+			],
+			[
 				'h.?',
-				array('h?', 'ha'),
-				array('specialChars' => array('?' => '.?'))
-			),
-			array(
+				['h?', 'ha'],
+				['specialChars' => ['?' => '.?']]
+			],
+			[
 				'h(?:.|it)?',
-				array('h.', 'hi', 'hit'),
-				array('specialChars' => array('.' => '.?'))
-			),
-			array(
+				['h.', 'hi', 'hit'],
+				['specialChars' => ['.' => '.?']]
+			],
+			[
 				'a.?c.?e',
-				array('a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'),
-				array('specialChars' => array('.' => '.?'))
-			),
-			array(
+				['a.c.e', 'a.ce', 'ac.e', 'ace', 'acde', 'abce', 'abcde'],
+				['specialChars' => ['.' => '.?']]
+			],
+			[
 				'h.?.?.?.?',
-				array('h????', 'hello', 'heart'),
-				array('specialChars' => array('?' => '.?'))
-			),
-			array(
+				['h????', 'hello', 'heart'],
+				['specialChars' => ['?' => '.?']]
+			],
+			[
 				'xx?x?',
-				array('x', 'xx', 'xxx')
-			),
-			array(
+				['x', 'xx', 'xxx']
+			],
+			[
 				'\\d\\d?\\d?',
-				array('d', 'dd', 'ddd'),
-				array('specialChars' => array('d' => '\\d'))
-			),
-		);
+				['d', 'dd', 'ddd'],
+				['specialChars' => ['d' => '\\d']]
+			],
+		];
 	}
 }

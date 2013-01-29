@@ -372,7 +372,7 @@ abstract class TemplateOptimizer
 
 		foreach ($xpath->query('//*') as $element)
 		{
-			$attributes = array();
+			$attributes = [];
 			foreach ($xpath->query('@*[namespace-uri() = ""]', $element) as $attribute)
 			{
 				$attrName = strtr(

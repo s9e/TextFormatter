@@ -159,90 +159,90 @@ class TemplateHelperTest extends Test
 
 	public function getAVT()
 	{
-		return array(
-			array(
+		return [
+			[
 				'',
-				array()
-			),
-			array(
+				[]
+			],
+			[
 				'foo',
-				array(
-					array('literal', 'foo')
-				)
-			),
-			array(
+				[
+					['literal', 'foo']
+				]
+			],
+			[
 				'foo {@bar} baz',
-				array(
-					array('literal',    'foo '),
-					array('expression', '@bar'),
-					array('literal',    ' baz')
-				)
-			),
-			array(
+				[
+					['literal',    'foo '],
+					['expression', '@bar'],
+					['literal',    ' baz']
+				]
+			],
+			[
 				'foo {{@bar}} baz',
-				array(
-					array('literal', 'foo '),
-					array('literal', '{'),
-					array('literal', '@bar} baz')
-				)
-			),
-			array(
+				[
+					['literal', 'foo '],
+					['literal', '{'],
+					['literal', '@bar} baz']
+				]
+			],
+			[
 				'foo {@bar}{baz} quux',
-				array(
-					array('literal',    'foo '),
-					array('expression', '@bar'),
-					array('expression', 'baz'),
-					array('literal',    ' quux')
-				)
-			),
-			array(
+				[
+					['literal',    'foo '],
+					['expression', '@bar'],
+					['expression', 'baz'],
+					['literal',    ' quux']
+				]
+			],
+			[
 				'foo {"bar"} baz',
-				array(
-					array('literal',    'foo '),
-					array('expression', '"bar"'),
-					array('literal',    ' baz')
-				)
-			),
-			array(
+				[
+					['literal',    'foo '],
+					['expression', '"bar"'],
+					['literal',    ' baz']
+				]
+			],
+			[
 				"foo {'bar'} baz",
-				array(
-					array('literal',    'foo '),
-					array('expression', "'bar'"),
-					array('literal',    ' baz')
-				)
-			),
-			array(
+				[
+					['literal',    'foo '],
+					['expression', "'bar'"],
+					['literal',    ' baz']
+				]
+			],
+			[
 				'foo {"\'bar\'"} baz',
-				array(
-					array('literal',    'foo '),
-					array('expression', '"\'bar\'"'),
-					array('literal',    ' baz')
-				)
-			),
-			array(
+				[
+					['literal',    'foo '],
+					['expression', '"\'bar\'"'],
+					['literal',    ' baz']
+				]
+			],
+			[
 				'foo {"{bar}"} baz',
-				array(
-					array('literal',    'foo '),
-					array('expression', '"{bar}"'),
-					array('literal',    ' baz')
-				)
-			),
-			array(
+				[
+					['literal',    'foo '],
+					['expression', '"{bar}"'],
+					['literal',    ' baz']
+				]
+			],
+			[
 				'foo {"bar} baz',
 				new RuntimeException('Unterminated XPath expression')
-			),
-			array(
+			],
+			[
 				'foo {bar',
 				new RuntimeException('Unterminated XPath expression')
-			),
-			array(
+			],
+			[
 				'<foo> {"<bar>"} &amp;',
-				array(
-					array('literal',    '<foo> '),
-					array('expression', '"<bar>"'),
-					array('literal',    ' &amp;')
-				)
-			),
-		);
+				[
+					['literal',    '<foo> '],
+					['expression', '"<bar>"'],
+					['literal',    ' &amp;']
+				]
+			],
+		];
 	}
 }

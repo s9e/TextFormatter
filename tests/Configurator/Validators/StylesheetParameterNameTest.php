@@ -66,12 +66,12 @@ class StylesheetParameterNameTest extends Test
 
 	public static function getNames()
 	{
-		return array(
+		return [
 			'foo'     => 'foo',
 			'Foo'     => 'Foo',
 			'*'       => 'Invalid: name must start with a letter or an underscore',
 			'foo:bar' => 'Invalid: name can only contain letters, digits, dashes and underscores',
 			"foo\n"   => 'Invalid: no newlines allowed'
-		);
+		];
 	}
 }

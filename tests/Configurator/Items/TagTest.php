@@ -19,7 +19,7 @@ class TagTest extends Test
 	*/
 	public function testConstructorOptions()
 	{
-		$tag = new Tag(array('nestingLimit' => 123));
+		$tag = new Tag(['nestingLimit' => 123]);
 		$this->assertSame(123, $tag->nestingLimit);
 	}
 
@@ -28,11 +28,11 @@ class TagTest extends Test
 	*/
 	public function testAttributePreprocessorsArray()
 	{
-		$attributePreprocessors = array(
-			array('foo', '/a/'),
-			array('foo', '/b/'),
-			array('bar', '/c/')
-		);
+		$attributePreprocessors = [
+			['foo', '/a/'],
+			['foo', '/b/'],
+			['bar', '/c/']
+		];
 
 		$tag = new Tag;
 		$tag->attributePreprocessors = $attributePreprocessors;
@@ -75,11 +75,11 @@ class TagTest extends Test
 	*/
 	public function testAttributePreprocessorsArrayClears()
 	{
-		$attributePreprocessors = array(
-			array('foo', '/a/'),
-			array('foo', '/b/'),
-			array('bar', '/c/')
-		);
+		$attributePreprocessors = [
+			['foo', '/a/'],
+			['foo', '/b/'],
+			['bar', '/c/']
+		];
 
 		$tag = new Tag;
 		$tag->attributePreprocessors->add('baz', '/d/');
@@ -131,10 +131,10 @@ class TagTest extends Test
 	*/
 	public function testRulesArray()
 	{
-		$rules = array(
-			'allowChild' => array('B'),
-			'denyChild'  => array('I')
-		);
+		$rules = [
+			'allowChild' => ['B'],
+			'denyChild'  => ['I']
+		];
 
 		$tag = new Tag;
 		$tag->rules = $rules;
@@ -163,10 +163,10 @@ class TagTest extends Test
 	*/
 	public function testRulesArrayClears()
 	{
-		$rules = array(
-			'allowChild' => array('B'),
-			'denyChild'  => array('I')
-		);
+		$rules = [
+			'allowChild' => ['B'],
+			'denyChild'  => ['I']
+		];
 
 		$tag = new Tag;
 		$tag->rules->allowChild('U');
@@ -212,10 +212,10 @@ class TagTest extends Test
 	*/
 	public function testTemplatesArray()
 	{
-		$templates = array(
+		$templates = [
 			''     => 'first',
 			'@foo' => 'second'
-		);
+		];
 
 		$tag = new Tag;
 		$tag->templates = $templates;
@@ -245,13 +245,13 @@ class TagTest extends Test
 	*/
 	public function testTemplatesArrayClears()
 	{
-		$templates = array(
+		$templates = [
 			''     => 'first',
 			'@foo' => 'second'
-		);
+		];
 
 		$tag = new Tag;
-		$tag->templates = array('' => 'deleteme');
+		$tag->templates = ['' => 'deleteme'];
 		$tag->templates = $templates;
 
 		$this->assertEquals($templates, iterator_to_array($tag->templates));

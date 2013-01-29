@@ -24,7 +24,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('Escaper', array('tagName' => 'FOO'));
+		$this->configurator->plugins->load('Escaper', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 

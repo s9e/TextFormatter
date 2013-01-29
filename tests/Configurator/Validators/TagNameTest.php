@@ -202,7 +202,7 @@ class TagNameTest extends Test
 
 	public static function getNames()
 	{
-		return array(
+		return [
 			'b'           => 'B',
 			'B'           => 'B',
 			'_b'          => '_B',
@@ -224,6 +224,6 @@ class TagNameTest extends Test
 			'xsl:foo'     => "Invalid: 'xsl' prefix is reserved",
 			's9e:foo'     => "Invalid: 's9e' prefix is reserved",
 			"B\n"         => 'Invalid: no newlines allowed'
-		);
+		];
 	}
 }

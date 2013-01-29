@@ -33,7 +33,7 @@ class BBCodeMonkey
 	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
 	*            system, etc...
 	*/
-	protected static $allowedFilters = array(
+	protected static $allowedFilters = [
 		'addslashes',
 		'dechex',
 		'intval',
@@ -53,14 +53,14 @@ class BBCodeMonkey
 		'ucfirst',
 		'ucwords',
 		'urlencode'
-	);
+	];
 
 	/**
 	* @var array Regexps used in the named subpatterns generated automatically for composite
 	*            attributes. For instance, "foo={NUMBER},{NUMBER}" will be transformed into
 	*            'foo={PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}'
 	*/
-	protected static $tokenRegexp = array(
+	protected static $tokenRegexp = [
 		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
 		'EMAIL'      => '[^@]+@.+?',
 		'FLOAT'      => '(?:0|-?[1-9]\\d*)(?:\\.\\d+)?(?:e[1-9]\\d*)?',
@@ -72,7 +72,7 @@ class BBCodeMonkey
 		'RANGE'      => '\\d+',
 		'SIMPLETEXT' => '[-a-zA-Z0-9+.,_ ]+',
 		'UINT'       => '0|[1-9]\\d*'
-	);
+	];
 
 	/**
 	* Constructor
@@ -97,11 +97,11 @@ class BBCodeMonkey
 		$bbcode = new BBCode;
 
 		// This is the config we will return
-		$config = array(
+		$config = [
 			'tag'              => $tag,
 			'bbcode'           => $bbcode,
 			'passthroughToken' => null
-		);
+		];
 
 		$regexp = '#^'
 		        // [BBCODE
@@ -394,13 +394,13 @@ class BBCodeMonkey
 		* @var array List of composites' tokens. Each element is composed of an attribute name, the
 		*            composite's definition and an array of tokens
 		*/
-		$composites = array();
+		$composites = [];
 
 		/**
 		* @var array Map of [tokenId => attrName]. If the same token is used in multiple attributes
 		*            it is set to FALSE
 		*/
-		$table = array();
+		$table = [];
 
 		foreach (preg_split('#\\s+#', trim($str), -1, PREG_SPLIT_NO_EMPTY) as $k => $pair)
 		{
@@ -469,7 +469,7 @@ class BBCodeMonkey
 			}
 			else
 			{
-				$composites[] = array($attrName, $definition, $tokens);
+				$composites[] = [$attrName, $definition, $tokens];
 			}
 		}
 
@@ -480,7 +480,7 @@ class BBCodeMonkey
 			$regexp  = '/^';
 			$lastPos = 0;
 
-			$usedTokens = array();
+			$usedTokens = [];
 
 			foreach ($tokens as $token)
 			{
@@ -564,7 +564,7 @@ class BBCodeMonkey
 		// Now create attributes generated from attribute preprocessors. For instance, preprocessor
 		// #(?<width>\\d+),(?<height>\\d+)# will generate two attributes named "width" and height
 		// with a regexp filter "#^(?:\\d+)$#D", unless they were explicitly defined otherwise
-		$newAttributes = array();
+		$newAttributes = [];
 		foreach ($tag->attributePreprocessors as $attributePreprocessor)
 		{
 			foreach ($attributePreprocessor->getAttributes() as $attrName => $regexp)
@@ -609,13 +609,13 @@ class BBCodeMonkey
 		// and/or i flags
 		$regexpMatcher = '(?<regexp>(?<delim>.).*?(?<!\\\\)(?:\\\\\\\\)*+(?P=delim)[ius]*)';
 
-		$tokenTypes = array(
+		$tokenTypes = [
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
 			'map'    => 'MAP[0-9]*=(?<map>.+?)',
 			'regexp' => '(?:REGEXP[0-9]*|PARSE)=' . $regexpMatcher,
 			'range'  => 'RAN(?:DOM|GE)[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
 			'other'  => '(?<other>[A-Z_]+[0-9]*)'
-		);
+		];
 
 		// Capture the content of every token in that attribute's definition. Usually there will
 		// only be one, as in "foo={URL}" but some older BBCodes use a form of composite
@@ -627,7 +627,7 @@ class BBCodeMonkey
 			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
 		);
 
-		$tokens = array();
+		$tokens = [];
 		foreach ($matches as $m)
 		{
 			if (isset($m['other'][0])
@@ -636,11 +636,11 @@ class BBCodeMonkey
 				throw new RuntimeException("Malformed token '" . $m['other'][0] . "'");
 			}
 
-			$token = array(
+			$token = [
 				'pos'     => $m[0][1],
 				'content' => $m[0][0],
-				'options' => array()
-			);
+				'options' => []
+			];
 
 			$head    = $m[1][0];
 			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
@@ -737,7 +737,7 @@ class BBCodeMonkey
 		elseif ($token['type'] === 'MAP')
 		{
 			// Build the map from the string
-			$map = array();
+			$map = [];
 			foreach (explode(',', $token['map']) as $pair)
 			{
 				$pos = strpos($pair, ':');

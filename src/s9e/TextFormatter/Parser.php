@@ -40,7 +40,7 @@ class Parser implements Serializable
 	/**
 	* @var array Variables registered for use in filters
 	*/
-	protected $registeredVars = array();
+	protected $registeredVars = [];
 
 	/**
 	* @var array Tags' config
@@ -83,12 +83,12 @@ class Parser implements Serializable
 	*/
 	public function serialize()
 	{
-		return serialize(array(
+		return serialize([
 			'plugins'        => $this->pluginsConfig,
 			'registeredVars' => $this->registeredVars,
 			'rootContext'    => $this->rootContext,
 			'tags'           => $this->tagsConfig
-		));
+		]);
 	}
 
 	/**
@@ -184,11 +184,11 @@ class Parser implements Serializable
 		$this->context    = $this->rootContext;
 		$this->currentFixingCost = 0;
 		$this->isRich     = false;
-		$this->namespaces = array();
+		$this->namespaces = [];
 		$this->output     = '';
 		$this->text       = $text;
 		$this->textLen    = strlen($text);
-		$this->tagStack   = array();
+		$this->tagStack   = [];
 		$this->uid        = mt_rand();
 
 		// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use

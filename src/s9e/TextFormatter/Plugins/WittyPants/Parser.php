@@ -87,18 +87,18 @@ class Parser extends ParserBase
 		}
 
 		// Do quote pairs ‘’ and “” -- must be done separately to handle nesting
-		$replacements = array();
+		$replacements = [];
 		if ($doSingleQuote)
 		{
-			$replacements[] = array(
+			$replacements[] = [
 				"/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS", "\xE2\x80\x98", "\xE2\x80\x99"
-			);
+			];
 		}
 		if ($doDoubleQuote)
 		{
-			$replacements[] = array(
+			$replacements[] = [
 				'/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS', "\xE2\x80\x9C", "\xE2\x80\x9D"
-			);
+			];
 		}
 		foreach ($replacements as $replacement)
 		{
@@ -129,11 +129,11 @@ class Parser extends ParserBase
 				$matches,
 				PREG_OFFSET_CAPTURE
 			);
-			$chrs = array(
+			$chrs = [
 				'--'  => "\xE2\x80\x93",
 				'---' => "\xE2\x80\x94",
 				'...' => "\xE2\x80\xA6"
-			);
+			];
 			foreach ($matches[0] as $m)
 			{
 				$pos  = $m[1];
@@ -153,11 +153,11 @@ class Parser extends ParserBase
 				$matches,
 				PREG_OFFSET_CAPTURE
 			);
-			$chrs = array(
+			$chrs = [
 				'(c)'  => "\xC2\xA9",
 				'(r)'  => "\xC2\xAE",
 				'(tm)' => "\xE2\x84\xA2"
-			);
+			];
 			foreach ($matches[0] as $m)
 			{
 				$pos  = $m[1];

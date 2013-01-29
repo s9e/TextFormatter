@@ -25,8 +25,8 @@ class TagProcessingTest extends Test
 
 	public function getData()
 	{
-		return array(
-			array(
+		return [
+			[
 				'foo bar',
 				'<rt><X><Y>foo</Y> <Z>bar</Z></X></rt>',
 				function ($constructor)
@@ -42,8 +42,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('Z', 4, 3);
 					$parser->addEndTag('X', 7, 0);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
 				function ($constructor)
@@ -54,8 +54,8 @@ class TagProcessingTest extends Test
 				{
 					$parser->addStartTag('X', 4, 0);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<pt>foo bar</pt>',
 				null,
@@ -63,8 +63,8 @@ class TagProcessingTest extends Test
 				{
 					$parser->addStartTag('X', 4, 0);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt><X>fo<Y>o</Y></X> bar</rt>',
 				function ($constructor)
@@ -79,8 +79,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('Y', 2, 0);
 					$parser->addEndTag('Y', 4, 1);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt><X>fo<Y>o</Y></X><Y> b</Y>ar</rt>',
 				function ($constructor)
@@ -95,8 +95,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('Y', 2, 0);
 					$parser->addEndTag('Y', 5, 0);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt><X>fo<Y attr="foo">o</Y></X><Y attr="foo"> b</Y>ar</rt>',
 				function ($constructor)
@@ -113,8 +113,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('Y', 2, 0)->setAttribute('attr', 'foo');
 					$parser->addEndTag('Y', 5, 0);
 				}
-			),
-			array(
+			],
+			[
 				'x [b][i]...[/b][/i] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st>...</I><et>[/b]</et></B><i>[/i]</i> y</rt>',
 				function ($constructor)
@@ -129,8 +129,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('B', 11, 4);
 					$parser->addEndTag('I', 15, 4);
 				}
-			),
-			array(
+			],
+			[
 				'x [b][i]...[/b]![/i] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st>...</I><et>[/b]</et></B><I>!<et>[/i]</et></I> y</rt>',
 				function ($constructor)
@@ -145,8 +145,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('B', 11, 4);
 					$parser->addEndTag('I', 16, 4);
 				}
-			),
-			array(
+			],
+			[
 				'x [b][i][u]...[/b][/u][/i] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/u][/i]</i> y</rt>',
 				function ($constructor)
@@ -164,8 +164,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('U', 18, 4);
 					$parser->addEndTag('I', 22, 4);
 				}
-			),
-			array(
+			],
+			[
 				'x [b][i][u]...[/b][/i][/u] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/i][/u]</i> y</rt>',
 				function ($constructor)
@@ -183,8 +183,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('I', 18, 4);
 					$parser->addEndTag('U', 22, 4);
 				}
-			),
-			array(
+			],
+			[
 				'x [b][i][u]...[/b][/i][/u] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B>[/i][/u] y</rt>',
 				function ($constructor)
@@ -206,8 +206,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('I', 18, 4);
 					$parser->addEndTag('U', 22, 4);
 				}
-			),
-			array(
+			],
+			[
 				'x [b][i][u]...[/b][/i]u[/u] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/i]</i><U>u<et>[/u]</et></U> y</rt>',
 				function ($constructor)
@@ -225,8 +225,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('I', 18, 4);
 					$parser->addEndTag('U', 23, 4);
 				}
-			),
-			array(
+			],
+			[
 				'x [i][b][u]...[/b][/i][/u] y',
 				'<rt>x <I><st>[i]</st><B><st>[b]</st><U><st>[u]</st>...</U><et>[/b]</et></B><et>[/i]</et></I><i>[/u]</i> y</rt>',
 				function ($constructor)
@@ -244,8 +244,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('I', 18, 4);
 					$parser->addEndTag('U', 22, 4);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
 				function ($constructor)
@@ -258,8 +258,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('X', 4, 0);
 					$parser->addEndTag('Y', 5, 0);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt><X>foo</X> bar</rt>',
 				function ($constructor)
@@ -272,8 +272,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 0, 3);
 					$parser->addSelfClosingTag('X', 1, 1);
 				}
-			),
-			array(
+			],
+			[
 				'fooo bar',
 				'<rt><X>f<X>oo</X>o</X> bar</rt>',
 				function ($constructor)
@@ -288,8 +288,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('X', 3, 0);
 					$parser->addEndTag('X', 4, 0);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt><X>f</X><X>o</X>o bar</rt>',
 				function ($constructor)
@@ -302,8 +302,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 1, 1);
 					$parser->addSelfClosingTag('X', 2, 1);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt><X>foo</X> bar</rt>',
 				function ($constructor)
@@ -317,8 +317,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('Y', 1, 1)
 					       ->cascadeInvalidationTo($parser->addSelfClosingTag('Y', 5, 1));
 				}
-			),
-			array(
+			],
+			[
 				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
 				"<rt><PRE><st>[pre]</st>foo<B><st>[b]</st>x<br/>\ny<et>[/b]</et></B>bar<et>[/pre]</et></PRE>a<br/>\nb</rt>",
 				function ($constructor)
@@ -333,8 +333,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('B', 8, 3);
 					$parser->addEndTag('B', 14, 4);
 				}
-			),
-			array(
+			],
+			[
 				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
 				"<rt><PRE><st>[pre]</st>foo<B><st>[b]</st>x\ny<et>[/b]</et></B>bar<et>[/pre]</et></PRE>a<br/>\nb</rt>",
 				function ($constructor)
@@ -349,8 +349,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('B', 8, 3);
 					$parser->addEndTag('B', 14, 4);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt><X>foo</X> bar</rt>',
 				function ($constructor)
@@ -362,8 +362,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 0, 3);
 					$parser->addIgnoreTag(2, 1);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt><X>foo</X><i> b</i>ar</rt>',
 				function ($constructor)
@@ -375,8 +375,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 0, 3);
 					$parser->addIgnoreTag(2, 3);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
 				function ($constructor)
@@ -387,8 +387,8 @@ class TagProcessingTest extends Test
 				{
 					$parser->addSelfClosingTag('X', 4, 3);
 				}
-			),
-			array(
+			],
+			[
 				'foo bar',
 				'<pt>foo bar</pt>',
 				function ($constructor)
@@ -399,8 +399,8 @@ class TagProcessingTest extends Test
 				{
 					$parser->addSelfClosingTag('X', 4, 4);
 				}
-			),
-			array(
+			],
+			[
 				'*foo* bar',
 				'<rt><X><st>*</st>foo<et>*</et></X> bar</rt>',
 				function ($constructor)
@@ -412,8 +412,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('X', 0, 1)
 					       ->pairWith($parser->addEndTag('X', 4, 1));
 				}
-			),
-			array(
+			],
+			[
 				'*foo* bar',
 				'<rt><X><st>*</st>foo* bar</X></rt>',
 				function ($constructor)
@@ -425,8 +425,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('X', 0, 1)
 					       ->pairWith($parser->addEndTag('X', 99, 1));
 				}
-			),
-			array(
+			],
+			[
 				'*foo* bar',
 				'<rt><X><st>*</st>foo* bar</X></rt>',
 				function ($constructor)
@@ -439,8 +439,8 @@ class TagProcessingTest extends Test
 					       ->pairWith($parser->addEndTag('X', 99, 1));
 					$parser->addEndTag('X', 4, 1);
 				}
-			),
-			array(
+			],
+			[
 				'*_foo* bar_',
 				'<rt><X><st>*</st><Y><st>_</st>foo</Y><et>*</et></X><Y> bar<et>_</et></Y></rt>',
 				function ($constructor)
@@ -456,8 +456,8 @@ class TagProcessingTest extends Test
 					       ->pairWith($parser->addEndTag('Y', 10, 1));
 					$parser->addEndTag('Y', 6, 1);
 				}
-			),
-			array(
+			],
+			[
 				'**x**x***',
 				'<rt><X><st>**</st>x<Y><st>**</st>x<et>**</et></Y><et>*</et></X></rt>',
 				function ($constructor)
@@ -472,8 +472,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('Y', 3, 2)
 					       ->pairWith($parser->addEndTag('Y', 6, 2));
 				}
-			),
-			array(
+			],
+			[
 				'**x[**]x',
 				'<rt><X><st>**</st>x<Y>[**]</Y></X>x</rt>',
 				function ($constructor)
@@ -487,8 +487,8 @@ class TagProcessingTest extends Test
 					       ->pairWith($parser->addEndTag('X', 4, 2));
 					$parser->addSelfClosingTag('Y', 3, 4);
 				}
-			),
-			array(
+			],
+			[
 				'xy',
 				'<pt>x<br/>y</pt>',
 				null,
@@ -496,8 +496,8 @@ class TagProcessingTest extends Test
 				{
 					$parser->addBrTag(1);
 				}
-			),
-			array(
+			],
+			[
 				'xx',
 				'<rt><X>x</X><X>x</X></rt>',
 				function ($constructor)
@@ -509,8 +509,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('X', 0, 0);
 					$parser->addStartTag('X', 1, 0);
 				}
-			),
-			array(
+			],
+			[
 				'xx [hr] yy',
 				'<rt>xx <HR>[hr]</HR> yy</rt>',
 				function ($constructor)
@@ -521,8 +521,8 @@ class TagProcessingTest extends Test
 				{
 					$parser->addStartTag('HR', 3, 4);
 				}
-			),
-			array(
+			],
+			[
 				'xx [img=foo.png] yy',
 				'<rt>xx <IMG src="foo.png">[img=foo.png]</IMG> yy</rt>',
 				function ($constructor)
@@ -535,8 +535,8 @@ class TagProcessingTest extends Test
 				{
 					$parser->addStartTag('IMG', 3, 13)->setAttribute('src', 'foo.png');
 				}
-			),
-			array(
+			],
+			[
 				'xx [img]foo.png[/img] yy',
 				'<rt>xx <IMG src="foo.png"><st>[img]</st>foo.png<et>[/img]</et></IMG> yy</rt>',
 				function ($constructor)
@@ -552,8 +552,8 @@ class TagProcessingTest extends Test
 
 					$tag->pairWith($parser->addEndTag('IMG', 15, 6));
 				}
-			),
-			array(
+			],
+			[
 				'XYX',
 				'<rt><X><st>X</st><Y>Y</Y><et>X</et></X></rt>',
 				function ($constructor)
@@ -567,8 +567,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('Y', 1, 1);
 					$parser->addEndTag('X', 2, 1);
 				}
-			),
-			array(
+			],
+			[
 				'XYX',
 				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
 				function ($constructor)
@@ -582,8 +582,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('Y', 1, 1);
 					$parser->addEndTag('X', 2, 1);
 				}
-			),
-			array(
+			],
+			[
 				'XYZYX',
 				'<rt><X><st>X</st><Y><st>Y</st><Z>Z</Z><et>Y</et></Y><et>X</et></X></rt>',
 				function ($constructor)
@@ -600,8 +600,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('Y', 3, 1);
 					$parser->addEndTag('X', 4, 1);
 				}
-			),
-			array(
+			],
+			[
 				'XYZYX',
 				'<rt><X><st>X</st><Y><st>Y</st>Z<et>Y</et></Y><et>X</et></X></rt>',
 				function ($constructor)
@@ -618,8 +618,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('Y', 3, 1);
 					$parser->addEndTag('X', 4, 1);
 				}
-			),
-			array(
+			],
+			[
 				'XYX',
 				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
 				function ($constructor)
@@ -633,8 +633,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('Y', 1, 1);
 					$parser->addEndTag('X', 2, 1);
 				}
-			),
-			array(
+			],
+			[
 				'XYZYX',
 				'<rt><X><st>X</st><Y><st>Y</st>Z<et>Y</et></Y><et>X</et></X></rt>',
 				function ($constructor)
@@ -651,8 +651,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('Y', 3, 1);
 					$parser->addEndTag('X', 4, 1);
 				}
-			),
-			array(
+			],
+			[
 				'XYX',
 				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
 				function ($constructor)
@@ -669,8 +669,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('Y', 1, 1);
 					$parser->addEndTag('X', 2, 1);
 				}
-			),
-			array(
+			],
+			[
 				'XYYYYX',
 				new RuntimeException('Fixing cost exceeded'),
 				function ($constructor)
@@ -689,8 +689,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('Y', 4, 1);
 					$parser->addEndTag('X', 5, 1);
 				}
-			),
-			array(
+			],
+			[
 				'XYYYYX',
 				'<rt><X><st>X</st><Y><st>Y</st><Y>Y</Y><Y>Y</Y><et>Y</et></Y><et>X</et></X></rt>',
 				function ($constructor)
@@ -710,8 +710,8 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('Y', 4, 1);
 					$parser->addEndTag('X', 5, 1);
 				}
-			),
-			array(
+			],
+			[
 				'..',
 				'<rt><X>.</X><X>.</X></rt>',
 				function ($constructor)
@@ -727,8 +727,8 @@ class TagProcessingTest extends Test
 					$parser->addStartTag('X', 1, 0);
 					$parser->addStartTag('X', 0, 0);
 				}
-			),
-			array(
+			],
+			[
 				'...',
 				'<rt><X>.</X><X>.</X><X>.</X></rt>',
 				function ($constructor)
@@ -750,8 +750,8 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 0, 1);
 					$parser->addSelfClosingTag('X', 1, 1);
 				}
-			),
-			array(
+			],
+			[
 				'...',
 				'<rt><X>.</X><X>.</X><X>.</X></rt>',
 				function ($constructor)
@@ -773,7 +773,7 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 0, 1);
 					$parser->addSelfClosingTag('X', 2, 1);
 				}
-			),
-		);
+			],
+		];
 	}
 }

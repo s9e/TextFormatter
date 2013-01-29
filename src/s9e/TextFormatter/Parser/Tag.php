@@ -27,12 +27,12 @@ class Tag
 	/**
 	* @var array Dictionary of attributes
 	*/
-	protected $attributes = array();
+	protected $attributes = [];
 
 	/**
 	* @var array List of tags that are invalidated when this tag is invalidated
 	*/
-	protected $cascade = array();
+	protected $cascade = [];
 
 	/**
 	* @var Tag End tag that unconditionally ends this start tag

@@ -65,9 +65,9 @@ trait TagProcessing
 	{
 		// Reset some internal vars
 		$this->pos       = 0;
-		$this->cntOpen   = array();
-		$this->cntTotal  = array();
-		$this->openTags  = array();
+		$this->cntOpen   = [];
+		$this->cntTotal  = [];
+		$this->openTags  = [];
 		$this->context   = $this->rootContext;
 		unset($this->currentTag);
 
@@ -274,7 +274,7 @@ trait TagProcessing
 		/**
 		* @var array List of tags need to be closed before given tag
 		*/
-		$closeTags = array();
+		$closeTags = [];
 
 		// Iterate through all open tags from last to first to find a match for our tag
 		$i = count($this->openTags);
@@ -298,7 +298,7 @@ trait TagProcessing
 		if ($i < 0)
 		{
 			// Did not find a matching tag
-			$this->logger->debug('Skipping end tag with no start tag', array('tag' => $tag));
+			$this->logger->debug('Skipping end tag with no start tag', ['tag' => $tag]);
 
 			return;
 		}
@@ -306,7 +306,7 @@ trait TagProcessing
 		// Only reopen tags if we haven't exceeded our "fixing" budget
 		$keepReopening = (bool) ($this->currentFixingCost < $this->maxFixingCost);
 
-		$reopenTags    = array();
+		$reopenTags    = [];
 		foreach ($closeTags as $openTag)
 		{
 			$openTagName = $openTag->getName();
@@ -336,7 +336,7 @@ trait TagProcessing
 		if ($reopenTags)
 		{
 			// Filter out tags that would immediately be closed
-			$upcomingEndTags = array();
+			$upcomingEndTags = [];
 			$i = count($this->tagStack);
 
 			/**
@@ -468,12 +468,12 @@ trait TagProcessing
 			$flags |= self::RULE_NO_BR_CHILD;
 		}
 
-		$this->context = array(
+		$this->context = [
 			'allowedChildren'    => $allowedChildren,
 			'allowedDescendants' => $allowedDescendants,
 			'flags'              => $flags,
 			'parentContext'      => $this->context
-		);
+		];
 	}
 
 	/**

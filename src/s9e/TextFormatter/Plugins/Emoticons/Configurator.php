@@ -48,7 +48,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		           ? $this->configurator->tags->get($this->tagName)
 		           : $this->configurator->tags->add($this->tagName);
 
-		$this->tag->defaultTemplate = array($this, 'getTemplate');
+		$this->tag->defaultTemplate = [$this, 'getTemplate'];
 	}
 
 	/**
@@ -64,11 +64,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Grab the emoticons from the collection
 		$codes = array_keys(iterator_to_array($this->collection));
 
-		$config = array(
+		$config = [
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => '/' . RegexpBuilder::fromList($codes) . '/S',
 			'tagName'    => $this->tagName
-		);
+		];
 
 		// Try to find a quickMatch if none is set
 		if ($this->quickMatch === false)
@@ -86,7 +86,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	public function getTemplate()
 	{
-		$templates = array();
+		$templates = [];
 		foreach ($this->collection as $code => $template)
 		{
 			$templates[$template][] = $code;

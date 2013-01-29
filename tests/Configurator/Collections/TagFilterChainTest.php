@@ -44,7 +44,7 @@ class TagFilterChainTest extends Test
 	public function testAppendUncallableCallback()
 	{
 		$filterChain = new TagFilterChain;
-		$filterChain->append(array(__CLASS__, 'privateMethod'));
+		$filterChain->append([__CLASS__, 'privateMethod']);
 	}
 
 	/**
@@ -55,7 +55,7 @@ class TagFilterChainTest extends Test
 	public function testPrependUncallableCallback()
 	{
 		$filterChain = new TagFilterChain;
-		$filterChain->prepend(array(__CLASS__, 'privateMethod'));
+		$filterChain->prepend([__CLASS__, 'privateMethod']);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class TagFilterChainTest extends Test
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Items\\TagFilter',
-			$filterChain->append(array($this, 'doNothing'))
+			$filterChain->append([$this, 'doNothing'])
 		);
 	}
 

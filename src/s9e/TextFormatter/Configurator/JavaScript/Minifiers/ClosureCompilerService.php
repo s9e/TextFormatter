@@ -49,12 +49,12 @@ class ClosureCompilerService implements Minifier
 	*/
 	public function minify($src)
 	{
-		$params = array(
+		$params = [
 			'compilation_level' => $this->compilationLevel,
 			'js_code'           => $src,
 			'output_format'     => 'json',
 			'output_info'       => 'compiled_code'
-		);
+		];
 
 		// Add our custom externs if default externs are disabled
 		if ($this->excludeDefaultExterns)
@@ -69,15 +69,15 @@ class ClosureCompilerService implements Minifier
 		$response = json_decode(file_get_contents(
 			$this->url,
 			false,
-			stream_context_create(array(
-				'http' => array(
+			stream_context_create([
+				'http' => [
 					'method'  => 'POST',
 					'header'  => "Connection: close\r\n"
 					           . "Content-length: " . strlen($content) . "\r\n"
 					           . "Content-type: application/x-www-form-urlencoded",
 					'content' => $content
-				)
-			))
+				]
+			])
 		), true);
 
 		return $response['compiledCode'];

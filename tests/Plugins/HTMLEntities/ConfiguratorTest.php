@@ -24,7 +24,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('HTMLEntities', array('tagName' => 'FOO'));
+		$this->configurator->plugins->load('HTMLEntities', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 
@@ -33,7 +33,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomAttrName()
 	{
-		$this->configurator->plugins->load('HTMLEntities', array('attrName' => 'bar'));
+		$this->configurator->plugins->load('HTMLEntities', ['attrName' => 'bar']);
 		$this->assertTrue($this->configurator->tags['HE']->attributes->exists('bar'));
 	}
 
@@ -75,7 +75,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigAttrName()
 	{
-		$plugin = $this->configurator->plugins->load('HTMLEntities', array('attrName' => 'bar'));
+		$plugin = $this->configurator->plugins->load('HTMLEntities', ['attrName' => 'bar']);
 
 		$config = $plugin->asConfig();
 

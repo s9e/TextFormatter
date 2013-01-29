@@ -85,13 +85,13 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			return false;
 		}
 
-		$config = array(
+		$config = [
 			'attrName' => $this->attrName,
 			'tagName'  => $this->tagName
-		);
+		];
 
-		$words = array();
-		$replacementWords = array();
+		$words = [];
+		$replacementWords = [];
 
 		foreach ($this->collection as $word => $replacement)
 		{
@@ -104,10 +104,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		/** @todo "?" should probably become ".?" so that "apple?" matches both "apple" and "apples" */
-		$regexpOptions = array(
+		$regexpOptions = [
 			'caseInsensitive' => true,
-			'specialChars'    => array('*' => '\\pL*', '?' => '.')
-		);
+			'specialChars'    => ['*' => '\\pL*', '?' => '.']
+		];
 		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
 
 		// Add the regexp to the config, along with a JavaScript variant
@@ -128,7 +128,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$regexp = str_replace('\\pL', '[^\s!-\\/:-?]', $regexp);
 			$variant->set('JS', RegexpConvertor::toJS($regexp));
 
-			$config['replacements'][] = array($variant, $replacement);
+			$config['replacements'][] = [$variant, $replacement];
 		}
 
 		return $config;

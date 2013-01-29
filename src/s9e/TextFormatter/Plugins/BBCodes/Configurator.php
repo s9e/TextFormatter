@@ -92,7 +92,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	* @param  array  $vars       Variables that will replace default values in the tag definition
 	* @return BBCode             Newly-created BBCode
 	*/
-	public function addFromRepository($name, $repository = 'default', array $vars = array())
+	public function addFromRepository($name, $repository = 'default', array $vars = [])
 	{
 		// Load the Repository if necessary
 		if (!($repository instanceof Repository))
@@ -147,7 +147,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Build the regexp that matches all the BBCode names
 		$regexp = RegexpBuilder::fromList(
 			array_keys(iterator_to_array($this->collection)),
-			array('delim' => '#')
+			['delim' => '#']
 		);
 
 		// Remove the non-capturing subpattern since we place the regexp inside a capturing pattern.
@@ -187,10 +187,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Add the JavaScript config as a variant
 		$bbcodesConfig->set('JS', $jsConfig);
 
-		return array(
+		return [
 			'bbcodes'    => $bbcodesConfig,
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => '#\\[/?(' . $regexp . ')(?=[\\] =:/])#iS'
-		);
+		];
 	}
 }

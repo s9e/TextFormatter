@@ -16,7 +16,7 @@ class ConfiguratorBaseTest extends Test
 	*/
 	public function testOverwrite()
 	{
-		$dummy = new DummyPluginConfigurator($this->configurator, array('bar' => 'bar'));
+		$dummy = new DummyPluginConfigurator($this->configurator, ['bar' => 'bar']);
 		$this->assertSame('bar', $dummy->bar);
 	}
 
@@ -25,7 +25,7 @@ class ConfiguratorBaseTest extends Test
 	*/
 	public function testOverwriteMethod()
 	{
-		$dummy = new DummyPluginConfigurator($this->configurator, array('foo' => 'bar'));
+		$dummy = new DummyPluginConfigurator($this->configurator, ['foo' => 'bar']);
 		$this->assertSame('baz', $dummy->foo);
 	}
 
@@ -36,7 +36,7 @@ class ConfiguratorBaseTest extends Test
 	*/
 	public function testUnknownProperty()
 	{
-		new DummyPluginConfigurator($this->configurator, array('baz' => 'baz'));
+		new DummyPluginConfigurator($this->configurator, ['baz' => 'baz']);
 	}
 
 	/**
@@ -134,13 +134,13 @@ class ConfiguratorBaseTest extends Test
 		$dummy = new DummyPluginConfigurator($this->configurator);
 
 		$this->assertEquals(
-			array(
+			[
 				'foo' => 'foo',
 				'bar' => 'foo',
 				'quickMatch'  => false,
 				'regexpLimit' => 10000,
 				'regexpLimitAction' => 'warn'
-			),
+			],
 			$dummy->asConfig()
 		);
 	}

@@ -26,12 +26,12 @@ class ConfigHelperTest extends Test
 		$foo = new Variant(0);
 		$foo->set('variant', 1);
 
-		$config = array('foo' => $foo);
+		$config = ['foo' => $foo];
 
 		ConfigHelper::filterVariants($config, 'variant');
 
 		$this->assertSame(
-			array('foo' => 1),
+			['foo' => 1],
 			$config
 		);
 	}
@@ -41,18 +41,18 @@ class ConfigHelperTest extends Test
 	*/
 	public function testFilterVariantsDeep()
 	{
-		$config = array(
+		$config = [
 			'foo' => new Variant(42),
-			'bar' => array('baz' => new Variant(55))
-		);
+			'bar' => ['baz' => new Variant(55)]
+		];
 
 		ConfigHelper::filterVariants($config);
 
 		$this->assertSame(
-			array(
+			[
 				'foo' => 42,
-				'bar' => array('baz' => 55)
-			),
+				'bar' => ['baz' => 55]
+			],
 			$config
 		);
 	}
@@ -65,15 +65,15 @@ class ConfigHelperTest extends Test
 		$foo = new Variant(0);
 		$bar = new Variant(0);
 
-		$foo->set('vv', array('bar' => $bar));
-		$bar->set('vv', array('baz' => 42));
+		$foo->set('vv', ['bar' => $bar]);
+		$bar->set('vv', ['baz' => 42]);
 
-		$config = array('foo' => $foo);
+		$config = ['foo' => $foo];
 
 		ConfigHelper::filterVariants($config, 'vv');
 
 		$this->assertSame(
-			array('foo' => array('bar' => array('baz' => 42))),
+			['foo' => ['bar' => ['baz' => 42]]],
 			$config
 		);
 	}
@@ -86,12 +86,12 @@ class ConfigHelperTest extends Test
 		$foo = new Variant;
 		$foo->set('foo', 42);
 
-		$config = array('foo' => $foo);
+		$config = ['foo' => $foo];
 
 		ConfigHelper::filterVariants($config, 'vv');
 
 		$this->assertSame(
-			array(),
+			[],
 			$config
 		);
 	}
@@ -103,10 +103,10 @@ class ConfigHelperTest extends Test
 	{
 		$this->assertSame(
 			'xxx',
-			ConfigHelper::generateQuickMatchFromList(array(
+			ConfigHelper::generateQuickMatchFromList([
 				'xxx12345d',
 				'xxx54321d'
-			))
+			])
 		);
 	}
 
@@ -117,10 +117,10 @@ class ConfigHelperTest extends Test
 	{
 		$this->assertSame(
 			'123',
-			ConfigHelper::generateQuickMatchFromList(array(
+			ConfigHelper::generateQuickMatchFromList([
 				'01234',
 				'123a'
-			))
+			])
 		);
 	}
 
@@ -130,11 +130,11 @@ class ConfigHelperTest extends Test
 	public function testGenerateQuickMatchFalse()
 	{
 		$this->assertFalse(
-			ConfigHelper::generateQuickMatchFromList(array(
+			ConfigHelper::generateQuickMatchFromList([
 				':)',
 				';)',
 				':('
-			))
+			])
 		);
 	}
 
@@ -145,10 +145,10 @@ class ConfigHelperTest extends Test
 	{
 		$this->assertSame(
 			"\xA9\xC3",
-			ConfigHelper::generateQuickMatchFromList(array(
+			ConfigHelper::generateQuickMatchFromList([
 				'©ö',
 				'éô'
-			))
+			])
 		);
 	}
 
@@ -157,11 +157,11 @@ class ConfigHelperTest extends Test
 	*/
 	public function testDeepArrays()
 	{
-		$arr = array(
-			'foo' => array('foo1' => 4, 'foo2' => 5),
-			'bar' => array(1, 2, 3),
+		$arr = [
+			'foo' => ['foo1' => 4, 'foo2' => 5],
+			'bar' => [1, 2, 3],
 			'baz' => 42
-		);
+		];
 
 		$this->assertEquals($arr, ConfigHelper::toArray($arr));
 	}
@@ -171,16 +171,16 @@ class ConfigHelperTest extends Test
 	*/
 	public function testConfigProviderDeep()
 	{
-		$arr = array(
-			'foo' => array('foo1' => new ConfigProviderDummy),
+		$arr = [
+			'foo' => ['foo1' => new ConfigProviderDummy],
 			'bar' => new ConfigProviderDummy
-		);
+		];
 
 		$this->assertEquals(
-			array(
-				'foo' => array('foo1' => array('foo' => 42)),
-				'bar' => array('foo' => 42)
-			),
+			[
+				'foo' => ['foo1' => ['foo' => 42]],
+				'bar' => ['foo' => 42]
+			],
 			ConfigHelper::toArray($arr)
 		);
 	}
@@ -192,7 +192,7 @@ class ConfigHelperTest extends Test
 	*/
 	public function testInvalidObject()
 	{
-		ConfigHelper::toArray(array(new stdClass));
+		ConfigHelper::toArray([new stdClass]);
 	}
 
 	/**
@@ -200,8 +200,8 @@ class ConfigHelperTest extends Test
 	*/
 	public function testEmptyArray()
 	{
-		$original = array('foo' => array(1), 'bar' => array());
-		$expected = array('foo' => array(1));
+		$original = ['foo' => [1], 'bar' => []];
+		$expected = ['foo' => [1]];
 
 		$this->assertSame($expected, ConfigHelper::toArray($original));
 	}
@@ -211,7 +211,7 @@ class ConfigHelperTest extends Test
 	*/
 	public function testKeepEmptyArray()
 	{
-		$original = array('foo' => array(1), 'bar' => array());
+		$original = ['foo' => [1], 'bar' => []];
 		$expected = $original;
 
 		$this->assertSame($expected, ConfigHelper::toArray($original, true));
@@ -222,7 +222,7 @@ class ConfigHelperTest extends Test
 	*/
 	public function testKeepEmptyArrayDeep()
 	{
-		$original = array(array('bar' => array()));
+		$original = [['bar' => []]];
 		$expected = $original;
 
 		$this->assertSame($expected, ConfigHelper::toArray($original, true));
@@ -233,8 +233,8 @@ class ConfigHelperTest extends Test
 	*/
 	public function testNull()
 	{
-		$original = array('foo' => array(1), 'bar' => null);
-		$expected = array('foo' => array(1));
+		$original = ['foo' => [1], 'bar' => null];
+		$expected = ['foo' => [1]];
 
 		$this->assertSame($expected, ConfigHelper::toArray($original));
 	}
@@ -244,7 +244,7 @@ class ConfigHelperTest extends Test
 	*/
 	public function testKeepNull()
 	{
-		$original = array('foo' => array(1), 'bar' => null);
+		$original = ['foo' => [1], 'bar' => null];
 		$expected = $original;
 
 		$this->assertSame($expected, ConfigHelper::toArray($original, false, true));
@@ -255,7 +255,7 @@ class ConfigHelperTest extends Test
 	*/
 	public function testKeepNullDeep()
 	{
-		$original = array(array('bar' => null));
+		$original = [['bar' => null]];
 		$expected = $original;
 
 		$this->assertSame($expected, ConfigHelper::toArray($original, false, true));
@@ -291,6 +291,6 @@ class ConfigProviderDummy implements ConfigProvider
 {
 	public function asConfig()
 	{
-		return array('foo' => 42);
+		return ['foo' => 42];
 	}
 }

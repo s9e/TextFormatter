@@ -22,16 +22,16 @@ abstract class RegexpParser
 			throw new RuntimeException('Could not parse regexp delimiters');
 		}
 
-		$ret = array(
+		$ret = [
 			'delimiter' => $m[1],
 			'modifiers' => $m[3],
 			'regexp'    => $m[2],
-			'tokens'    => array()
-		);
+			'tokens'    => []
+		];
 
 		$regexp = $m[2];
 
-		$openSubpatterns = array();
+		$openSubpatterns = [];
 
 		$pos = 0;
 		$regexpLen = strlen($regexp);
@@ -51,13 +51,13 @@ abstract class RegexpParser
 						throw new RuntimeException('Could not find matching bracket from pos ' . $pos);
 					}
 
-					$ret['tokens'][] = array(
+					$ret['tokens'][] = [
 						'pos'         => $pos,
 						'len'         => strlen($m[0]),
 						'type'        => 'characterClass',
 						'content'     => $m[1],
 						'quantifiers' => $m[2]
-					);
+					];
 
 					$pos += strlen($m[0]);
 					break;
@@ -66,12 +66,12 @@ abstract class RegexpParser
 					if (preg_match('#\\(\\?([a-z]*)\\)#i', $regexp, $m, 0, $pos))
 					{
 						// This is an option (?i) so we skip past the right parenthesis
-						$ret['tokens'][] = array(
+						$ret['tokens'][] = [
 							'pos'     => $pos,
 							'len'     => strlen($m[0]),
 							'type'    => 'option',
 							'options' => $m[1]
-						);
+						];
 
 						$pos += strlen($m[0]);
 						break;
@@ -81,54 +81,54 @@ abstract class RegexpParser
 					if (preg_match("#(?J)\\(\\?(?:P?<(?<name>[a-z_0-9]+)>|'(?<name>[a-z_0-9]+)')#A", $regexp, $m, \PREG_OFFSET_CAPTURE, $pos))
 					{
 						// This is a named capture
-						$tok = array(
+						$tok = [
 							'pos'  => $pos,
 							'len'  => strlen($m[0][0]),
 							'type' => 'capturingSubpatternStart',
 							'name' => $m['name'][0]
-						);
+						];
 
 						$pos += strlen($m[0][0]);
 					}
 					elseif (preg_match('#\\(\\?([a-z]*):#iA', $regexp, $m, 0, $pos))
 					{
 						// This is a non-capturing subpattern (?:xxx)
-						$tok = array(
+						$tok = [
 							'pos'     => $pos,
 							'len'     => strlen($m[0]),
 							'type'    => 'nonCapturingSubpatternStart',
 							'options' => $m[1]
-						);
+						];
 
 						$pos += strlen($m[0]);
 					}
 					elseif (preg_match('#\\(\\?>#iA', $regexp, $m, 0, $pos))
 					{
 						/* This is a non-capturing subpattern with atomic grouping "(?>x+)" */
-						$tok = array(
+						$tok = [
 							'pos'     => $pos,
 							'len'     => strlen($m[0]),
 							'type'    => 'nonCapturingSubpatternStart',
 							'subtype' => 'atomic'
-						);
+						];
 
 						$pos += strlen($m[0]);
 					}
 					elseif (preg_match('#\\(\\?(<?[!=])#A', $regexp, $m, 0, $pos))
 					{
 						// This is an assertion
-						$assertions = array(
+						$assertions = [
 							'='  => 'lookahead',
 							'<=' => 'lookbehind',
 							'!'  => 'negativeLookahead',
 							'<!' => 'negativeLookbehind'
-						);
+						];
 
-						$tok = array(
+						$tok = [
 							'pos'     => $pos,
 							'len'     => strlen($m[0]),
 							'type'    => $assertions[$m[1]] . 'AssertionStart'
-						);
+						];
 
 						$pos += strlen($m[0]);
 					}
@@ -139,11 +139,11 @@ abstract class RegexpParser
 					else
 					{
 						// This should be a normal capture
-						$tok = array(
+						$tok = [
 							'pos'  => $pos,
 							'len'  => 1,
 							'type' => 'capturingSubpatternStart'
-						);
+						];
 
 						++$pos;
 					}
@@ -173,12 +173,12 @@ abstract class RegexpParser
 					$spn = strspn($regexp, '+*', 1 + $pos);
 					$quantifiers = substr($regexp, 1 + $pos, $spn);
 
-					$ret['tokens'][] = array(
+					$ret['tokens'][] = [
 						'pos'  => $pos,
 						'len'  => 1 + $spn,
 						'type' => substr($startToken['type'], 0, -5) . 'End',
 						'quantifiers' => $quantifiers
-					);
+					];
 
 					unset($startToken);
 
@@ -228,13 +228,13 @@ abstract class RegexpParser
 		}
 
 		// Append a token to mark the end of the regexp
-		$def['tokens'][] = array(
+		$def['tokens'][] = [
 			'pos'  => strlen($def['regexp']),
 			'len'  => 0,
 			'type' => 'end'
-		);
+		];
 
-		$patterns = array();
+		$patterns = [];
 
 		// Collect the literal portions of the source regexp
 		$literal = '';

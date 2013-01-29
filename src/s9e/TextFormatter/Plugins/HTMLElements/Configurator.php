@@ -37,7 +37,7 @@ class Configurator extends ConfiguratorBase
 	* not the purpose of this plugin. It does make sense however to declare URL attributes as such,
 	* so that they are subject to our constraints (disallowed hosts, etc...)
 	*/
-	protected $attributeFilters = array(
+	protected $attributeFilters = [
 		'action'     => '#url',
 		'cite'       => '#url',
 		'data'       => '#url',
@@ -47,12 +47,12 @@ class Configurator extends ConfiguratorBase
 		'manifest'   => '#url',
 		'poster'     => '#url',
 		'src'        => '#url'
-	);
+	];
 
 	/**
 	* @var array  Blacklist of elements that are considered unsafe
 	*/
-	protected $unsafeElements = array(
+	protected $unsafeElements = [
 		'base',
 		'embed',
 		'frame',
@@ -60,22 +60,22 @@ class Configurator extends ConfiguratorBase
 		'meta',
 		'object',
 		'script'
-	);
+	];
 
 	/**
 	* @var array  Blacklist of attributes that are considered unsafe, in addition of any attribute
 	*             whose name starts with "on" such as "onmouseover"
 	*/
-	protected $unsafeAttributes = array(
+	protected $unsafeAttributes = [
 		'style',
 		'target'
-	);
+	];
 
 	/**
 	* @var array  Hash of allowed HTML elements. Element names are lowercased and used as keys for
 	*             this array
 	*/
-	protected $tags = array();
+	protected $tags = [];
 
 	/**
 	* Plugin's setup
@@ -275,10 +275,10 @@ class Configurator extends ConfiguratorBase
 
 		$regexp = '#<(?:' . $endTagRegexp . '|' . $startTagRegexp . ')\\s*>#i';
 
-		return array(
+		return [
 			'quickMatch' => $this->quickMatch,
 			'prefix'     => $this->prefix,
 			'regexp'     => $regexp
-		);
+		];
 	}
 }

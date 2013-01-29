@@ -15,7 +15,7 @@ class BBCodeTest extends Test
 	*/
 	public function testConstructorOptions()
 	{
-		$bbcode = new BBCode(array('tagName' => 'URL'));
+		$bbcode = new BBCode(['tagName' => 'URL']);
 		$this->assertSame('URL', $bbcode->tagName);
 	}
 
@@ -100,7 +100,7 @@ class BBCodeTest extends Test
 		$bbcode->tagName = 'FOO';
 
 		$this->assertSame(
-			array('tagName' => 'FOO'),
+			['tagName' => 'FOO'],
 			$bbcode->asConfig()
 		);
 	}

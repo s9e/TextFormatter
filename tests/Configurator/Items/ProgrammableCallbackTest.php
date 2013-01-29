@@ -27,7 +27,7 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testVars()
 	{
-		$vars = array('foo' => 'bar', 'baz' => 'quux');
+		$vars = ['foo' => 'bar', 'baz' => 'quux'];
 		$pc   = new ProgrammableCallback(function($a,$b){});
 		$pc->setVars($vars);
 
@@ -45,7 +45,7 @@ class ProgrammableCallbackTest extends Test
 		$config = $pc->asConfig();
 
 		$this->assertSame(
-			array('foobar'),
+			['foobar'],
 			$config['params']
 		);
 	}
@@ -61,7 +61,7 @@ class ProgrammableCallbackTest extends Test
 		$config = $pc->asConfig();
 
 		$this->assertSame(
-			array('foobar' => null),
+			['foobar' => null],
 			$config['params']
 		);
 	}
@@ -81,7 +81,7 @@ class ProgrammableCallbackTest extends Test
 		$config = $pc->asConfig();
 
 		$this->assertSame(
-			array(4, 5),
+			[4, 5],
 			$config['params']
 		);
 	}
@@ -91,7 +91,7 @@ class ProgrammableCallbackTest extends Test
 	*/
 	public function testNormalizeStatic()
 	{
-		$pc     = new ProgrammableCallback(array(__NAMESPACE__ . '\\DummyStaticCallback', 'bar'));
+		$pc     = new ProgrammableCallback([__NAMESPACE__ . '\\DummyStaticCallback', 'bar']);
 		$config = $pc->asConfig();
 
 		$this->assertArrayHasKey('callback', $config);
@@ -189,12 +189,12 @@ class ProgrammableCallbackTest extends Test
 		$pc = new ProgrammableCallback('mt_rand');
 		$pc->addParameterByName('min');
 		$pc->addParameterByValue(55);
-		$pc->setVars(array('min' => 5));
+		$pc->setVars(['min' => 5]);
 
 		$config = $pc->asConfig();
 
 		$this->assertSame(
-			array(5, 55),
+			[5, 55],
 			$config['params']
 		);
 	}
@@ -245,7 +245,7 @@ class ProgrammableCallbackTest extends Test
 	public function testAsConfigProvider()
 	{
 		$pc = new ProgrammableCallback(function(){});
-		$pc->setVars(array('x' => new Regexp('/x/')));
+		$pc->setVars(['x' => new Regexp('/x/')]);
 
 		$pc->addParameterByName('x');
 		$pc->addParameterByValue(new Regexp('/y/'));
@@ -269,7 +269,7 @@ class ProgrammableCallbackTest extends Test
 	public function testAsConfigProviderDeep()
 	{
 		$pc = new ProgrammableCallback(function(){});
-		$pc->addParameterByValue(array(new Regexp('/x/')));
+		$pc->addParameterByValue([new Regexp('/x/')]);
 
 		$config = $pc->asConfig();
 
@@ -286,12 +286,12 @@ class ProgrammableCallbackTest extends Test
 	{
 		$pc = new ProgrammableCallback(function(){});
 		$pc->addParameterByValue(null);
-		$pc->addParameterByValue(array());
+		$pc->addParameterByValue([]);
 
 		$config = $pc->asConfig();
 
 		$this->assertSame(
-			array(null, array()),
+			[null, []],
 			$config['params']
 		);
 	}

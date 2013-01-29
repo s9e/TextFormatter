@@ -17,7 +17,7 @@ class ParserBaseTest extends Test
 	public function testSetup()
 	{
 		$parser = new DummyParser;
-		$plugin = new DummyPluginParser($parser, array());
+		$plugin = new DummyPluginParser($parser, []);
 
 		$this->assertSame(1, $plugin->called);
 	}
@@ -28,7 +28,7 @@ class ParserBaseTest extends Test
 	public function testPropsBeforeSetup()
 	{
 		$parser = new DummyParser;
-		$plugin = new DummyPluginParser($parser, array());
+		$plugin = new DummyPluginParser($parser, []);
 
 		$this->assertTrue($plugin->configWasSet);
 		$this->assertTrue($plugin->parserWasSet);

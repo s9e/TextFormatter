@@ -19,7 +19,7 @@ class TagFilterTest extends Test
 		$config = $filter->asConfig();
 
 		$this->assertSame(
-			array('tag' => null),
+			['tag' => null],
 			$config['params']
 		);
 	}

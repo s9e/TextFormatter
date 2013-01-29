@@ -48,7 +48,7 @@ class PHP
 		$className = 'Renderer_' . uniqid();
 
 		// Generate the array of parameters
-		$params = array();
+		$params = [];
 		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'param') as $param)
 		{
 			$paramName  = $param->getAttribute('name');
@@ -136,7 +136,7 @@ class PHP
 
 
 		// Collect and sort templates
-		$templates = array();
+		$templates = [];
 		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'template') as $template)
 		{
 			// Parse this template and save its internal representation
@@ -204,7 +204,7 @@ class PHP
 		// Sort templates by priority descending
 		krsort($templates);
 
-		$branches = array();
+		$branches = [];
 		$else = '';
 		foreach ($templates as $groupedTemplates)
 		{
@@ -1121,7 +1121,7 @@ class PHP
 			return "''";
 		}
 
-		$phpExpressions = array();
+		$phpExpressions = [];
 		foreach (TemplateHelper::parseAttributeValueTemplate($attrValue) as $token)
 		{
 			if ($token[0] === 'literal')
@@ -1227,7 +1227,7 @@ class PHP
 		}
 
 		// Parse the expression for variables
-		$phpTokens = array();
+		$phpTokens = [];
 		$pos = 0;
 		$len = strlen($expr);
 		while ($pos < $len)

@@ -41,7 +41,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('Autolink', array('tagName' => 'FOO'));
+		$this->configurator->plugins->load('Autolink', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 
@@ -50,7 +50,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomAttrName()
 	{
-		$this->configurator->plugins->load('Autolink', array('attrName' => 'bar'));
+		$this->configurator->plugins->load('Autolink', ['attrName' => 'bar']);
 		$this->assertTrue($this->configurator->tags['URL']->attributes->exists('bar'));
 	}
 

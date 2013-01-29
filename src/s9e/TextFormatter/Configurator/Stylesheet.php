@@ -40,7 +40,7 @@ class Stylesheet
 	/**
 	* @var array Array of wildcard templates, using prefix as key
 	*/
-	protected $wildcards = array();
+	protected $wildcards = [];
 
 	/**
 	* Constructor
@@ -61,13 +61,13 @@ class Stylesheet
 	*/
 	public function get()
 	{
-		$prefixes  = array();
-		$templates = array(
+		$prefixes  = [];
+		$templates = [
 			'br' => '<br/>',
 			'st' => '',
 			'et' => '',
 			'i'  => ''
-		);
+		];
 
 		// Iterate over the wildcards to collect their templates and their prefix
 		foreach ($this->wildcards as $prefix => $template)
@@ -173,7 +173,7 @@ class Stylesheet
 		}
 
 		// Group templates by content so we can deduplicate them
-		$groupedTemplates = array();
+		$groupedTemplates = [];
 		foreach ($templates as $match => $template)
 		{
 			$groupedTemplates[$template][] = $match;

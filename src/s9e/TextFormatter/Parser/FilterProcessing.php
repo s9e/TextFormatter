@@ -67,9 +67,9 @@ trait FilterProcessing
 	protected static function executeFilter(array $filter, array $vars)
 	{
 		$callback = $filter['callback'];
-		$params   = (isset($filter['params'])) ? $filter['params'] : array();
+		$params   = (isset($filter['params'])) ? $filter['params'] : [];
 
-		$args = array();
+		$args = [];
 		foreach ($params as $k => $v)
 		{
 			if (is_numeric($k))
@@ -94,7 +94,7 @@ trait FilterProcessing
 				{
 					$vars['registeredVars']['logger']->err(
 						'Unknown callback parameter',
-						array('paramName' => $k)
+						['paramName' => $k]
 					);
 				}
 
@@ -120,7 +120,7 @@ trait FilterProcessing
 	{
 		if (empty($tagConfig['attributes']))
 		{
-			$tag->setAttributes(array());
+			$tag->setAttributes([]);
 
 			return true;
 		}
@@ -134,11 +134,11 @@ trait FilterProcessing
 					$attrName,
 					self::executeFilter(
 						$attrConfig['generator'],
-						array(
+						[
 							'attrName'       => $attrName,
 							'logger'         => $logger,
 							'registeredVars' => $registeredVars
-						)
+						]
 					)
 				);
 			}
@@ -169,12 +169,12 @@ trait FilterProcessing
 			{
 				$attrValue = self::executeFilter(
 					$filter,
-					array(
+					[
 						'attrName'       => $attrName,
 						'attrValue'      => $attrValue,
 						'logger'         => $logger,
 						'registeredVars' => $registeredVars
-					)
+					]
 				);
 
 				if ($attrValue === false)
@@ -236,14 +236,14 @@ trait FilterProcessing
 			$this->logger->setTag($tag);
 
 			// Prepare the variables that are accessible to filters
-			$vars = array(
+			$vars = [
 				'logger'         => $this->logger,
 				'openTags'       => $this->openTags,
 				'parser'         => $this,
 				'registeredVars' => $this->registeredVars,
 				'tag'            => $tag,
 				'tagConfig'      => $tagConfig
-			);
+			];
 
 			foreach ($tagConfig['filterChain'] as $filter)
 			{

@@ -22,19 +22,19 @@ class RulesHelperTest extends Test
 		$tags->add('A')->rules->allowChild('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -49,19 +49,19 @@ class RulesHelperTest extends Test
 		$tags->add('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -77,24 +77,24 @@ class RulesHelperTest extends Test
 		$tags->add('B')->rules->denyChild('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x03",
 					'allowedDescendants' => "\x03"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x03",
 						'allowedDescendants' => "\x03"
-					),
-					'B' => array(
+					],
+					'B' => [
 						'bitNumber'          => 1,
 						'allowedChildren'    => "\x02",
 						'allowedDescendants' => "\x03"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -109,19 +109,19 @@ class RulesHelperTest extends Test
 		$tags->add('A')->rules->defaultChildRule('deny');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -138,19 +138,19 @@ class RulesHelperTest extends Test
 		$tag->rules->allowChild('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -167,19 +167,19 @@ class RulesHelperTest extends Test
 		$tag->rules->denyChild('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -196,19 +196,19 @@ class RulesHelperTest extends Test
 		$tag->rules->allowChild('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -225,19 +225,19 @@ class RulesHelperTest extends Test
 		$tag->rules->allowChild('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x00"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -252,19 +252,19 @@ class RulesHelperTest extends Test
 		$tags->add('A')->rules->defaultDescendantRule('deny');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x00"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -281,19 +281,19 @@ class RulesHelperTest extends Test
 		$tag->rules->allowDescendant('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -310,19 +310,19 @@ class RulesHelperTest extends Test
 		$tag->rules->allowDescendant('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -339,19 +339,19 @@ class RulesHelperTest extends Test
 		$tag->rules->denyDescendant('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x00"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -368,19 +368,19 @@ class RulesHelperTest extends Test
 		$tag->rules->allowDescendant('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x00"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -400,19 +400,19 @@ class RulesHelperTest extends Test
 		$tag->rules->denyAll(true);
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x00",
 						'allowedDescendants' => "\x00"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -432,19 +432,19 @@ class RulesHelperTest extends Test
 		$tag->rules->denyAll(false);
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -460,24 +460,24 @@ class RulesHelperTest extends Test
 		$tags->add('B')->rules->requireParent('A');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x03"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x03",
 						'allowedDescendants' => "\x03"
-					),
-					'B' => array(
+					],
+					'B' => [
 						'bitNumber'          => 1,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x03"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -495,19 +495,19 @@ class RulesHelperTest extends Test
 		$rootRules->denyChild('B');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
@@ -526,13 +526,13 @@ class RulesHelperTest extends Test
 		$rootRules->denyChild('B');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x00",
 					'allowedDescendants' => "\x00"
-				),
-				'tags' => array()
-			),
+				],
+				'tags' => []
+			],
 			RulesHelper::getBitfields($tags, $rootRules)
 		);
 	}
@@ -549,19 +549,19 @@ class RulesHelperTest extends Test
 		$tag->rules->allowDescendant('C');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}
@@ -577,24 +577,24 @@ class RulesHelperTest extends Test
 		$tags->add('B');
 
 		$this->assertEquals(
-			array(
-				'root' => array(
+			[
+				'root' => [
 					'allowedChildren'    => "\x01",
 					'allowedDescendants' => "\x01"
-				),
-				'tags' => array(
-					'A' => array(
+				],
+				'tags' => [
+					'A' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					),
-					'B' => array(
+					],
+					'B' => [
 						'bitNumber'          => 0,
 						'allowedChildren'    => "\x01",
 						'allowedDescendants' => "\x01"
-					)
-				)
-			),
+					]
+				]
+			],
 			RulesHelper::getBitfields($tags, new Ruleset)
 		);
 	}

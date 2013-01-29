@@ -156,7 +156,7 @@ class ConfigurableTest extends Test
 
 		$dummy->collection->set('old', 'old');
 
-		$values = array('foo' => 'bar', 'baz' => 'quux');
+		$values = ['foo' => 'bar', 'baz' => 'quux'];
 		$dummy->collection = $values;
 
 		$this->assertInstanceOf(

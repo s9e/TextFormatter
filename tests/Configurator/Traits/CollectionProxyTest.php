@@ -196,14 +196,14 @@ class CollectionProxyTest extends Test
 
 		$proxy = new CollectionProxyDummy($collection);
 
-		$actual = array();
+		$actual = [];
 		foreach ($proxy as $k => $v)
 		{
 			$actual[$k] = $v;
 		}
 
 		$this->assertSame(
-			array('one' => 1, 'two' => 2),
+			['one' => 1, 'two' => 2],
 			$actual
 		);
 	}

@@ -17,9 +17,9 @@ class BuiltInFilters
 	*/
 	public static function filterAlnum($attrValue)
 	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[0-9A-Za-z]+$/D')
-		));
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^[0-9A-Za-z]+$/D']
+		]);
 	}
 
 	/**
@@ -30,9 +30,9 @@ class BuiltInFilters
 	*/
 	public static function filterColor($attrValue)
 	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di')
-		));
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di']
+		]);
 	}
 
 	/**
@@ -65,9 +65,9 @@ class BuiltInFilters
 	*/
 	public static function filterIdentifier($attrValue)
 	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[-0-9A-Za-z_]+$/D')
-		));
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^[-0-9A-Za-z_]+$/D']
+		]);
 	}
 
 	/**
@@ -179,9 +179,9 @@ class BuiltInFilters
 	*/
 	public static function filterNumber($attrValue)
 	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[0-9]+$/D')
-		));
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^[0-9]+$/D']
+		]);
 	}
 
 	/**
@@ -206,11 +206,11 @@ class BuiltInFilters
 		{
 			$logger->warn(
 				'Value outside of range, adjusted up to min value',
-				array(
+				[
 					'attrValue' => $attrValue,
 					'min'       => $min,
 					'max'       => $max
-				)
+				]
 			);
 
 			return $min;
@@ -220,11 +220,11 @@ class BuiltInFilters
 		{
 			$logger->warn(
 				'Value outside of range, adjusted down to max value',
-				array(
+				[
 					'attrValue' => $attrValue,
 					'min'       => $min,
 					'max'       => $max
-				)
+				]
 			);
 
 			return $max;
@@ -242,9 +242,9 @@ class BuiltInFilters
 	*/
 	public static function filterRegexp($attrValue, $regexp)
 	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => $regexp)
-		));
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => $regexp]
+		]);
 	}
 
 	/**
@@ -255,9 +255,9 @@ class BuiltInFilters
 	*/
 	public static function filterSimpletext($attrValue)
 	{
-		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, array(
-			'options' => array('regexp' => '/^[- +,.0-9A-Za-z_]+$/D')
-		));
+		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
+			'options' => ['regexp' => '/^[- +,.0-9A-Za-z_]+$/D']
+		]);
 	}
 
 	/**
@@ -268,9 +268,9 @@ class BuiltInFilters
 	*/
 	public static function filterUint($attrValue)
 	{
-		return filter_var($attrValue, FILTER_VALIDATE_INT, array(
-			'options' => array('min_range' => 0)
-		));
+		return filter_var($attrValue, FILTER_VALIDATE_INT, [
+			'options' => ['min_range' => 0]
+		]);
 	}
 
 	/**
@@ -283,7 +283,7 @@ class BuiltInFilters
 	*/
 	public static function filterUrl($attrValue, array $urlConfig, Logger $logger)
 	{
-		$followedUrls = array();
+		$followedUrls = [];
 		checkUrl:
 
 		/**
@@ -327,7 +327,7 @@ class BuiltInFilters
 		// some JavaScript thingy, or in CSS
 		$attrValue = strtr(
 			$attrValue,
-			array(
+			[
 				// Prevents breaking out of quotes
 				'"' => '%22',
 				"'" => '%27',
@@ -353,7 +353,7 @@ class BuiltInFilters
 				"\x0D" => '%0D',
 				"\xE2\x80\xA8" => '%E2%80%A8',
 				"\xE2\x80\xA9" => '%E2%80%A9'
-			)
+			]
 		);
 
 		// Validate the URL
@@ -371,7 +371,7 @@ class BuiltInFilters
 		{
 			$logger->err(
 				'URL scheme is not allowed',
-				array('attrValue' => $attrValue, 'scheme' => $p['scheme'])
+				['attrValue' => $attrValue, 'scheme' => $p['scheme']]
 			);
 
 			return false;
@@ -382,7 +382,7 @@ class BuiltInFilters
 		{
 			$logger->err(
 				'URL host is not allowed',
-				array('attrValue' => $attrValue, 'host' => $p['host'])
+				['attrValue' => $attrValue, 'host' => $p['host']]
 			);
 
 			return false;
@@ -396,7 +396,7 @@ class BuiltInFilters
 			{
 				$logger->err(
 					'Infinite recursion detected while following redirects',
-					array('attrValue' => $attrValue)
+					['attrValue' => $attrValue]
 				);
 
 				return false;
@@ -408,7 +408,7 @@ class BuiltInFilters
 			{
 				$logger->err(
 					'Could not resolve redirect',
-					array('attrValue' => $attrValue)
+					['attrValue' => $attrValue]
 				);
 
 				return false;
@@ -418,7 +418,7 @@ class BuiltInFilters
 			{
 				$logger->debug(
 					'Resolved redirect',
-					array('from' => $attrValue, 'to' => $redirect)
+					['from' => $attrValue, 'to' => $redirect]
 				);
 
 				$followedUrls[$attrValue] = 1;
@@ -462,14 +462,14 @@ class BuiltInFilters
 			$url,
 			'rb',
 			false,
-			stream_context_create(array(
-				'http' => array(
+			stream_context_create([
+				'http' => [
 					// Bit.ly doesn't like HEAD =\
 					//'method' => 'HEAD',
 					'header' => "Connection: close\r\n",
 					'follow_location' => false
-				)
-			))
+				]
+			])
 		);
 
 		if (!$fp)

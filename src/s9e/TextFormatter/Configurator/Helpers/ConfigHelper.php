@@ -64,7 +64,7 @@ abstract class ConfigHelper
 		foreach ($strings as $string)
 		{
 			$stringLen  = strlen($string);
-			$substrings = array();
+			$substrings = [];
 
 			for ($len = $stringLen; $len; --$len)
 			{
@@ -110,7 +110,7 @@ abstract class ConfigHelper
 	* @param  array &$cache
 	* @return array
 	*/
-	public static function optimizeArray(array &$config, array &$cache = array())
+	public static function optimizeArray(array &$config, array &$cache = [])
 	{
 		foreach ($config as $k => &$v)
 		{
@@ -152,7 +152,7 @@ abstract class ConfigHelper
 	*/
 	public static function toArray($value, $keepEmpty = false, $keepNull = false)
 	{
-		$array = array();
+		$array = [];
 
 		foreach ($value as $k => $v)
 		{
@@ -183,7 +183,7 @@ abstract class ConfigHelper
 				throw new RuntimeException('Cannot convert ' . $type . ' to array');
 			}
 
-			if (!$keepEmpty && $v === array())
+			if (!$keepEmpty && $v === [])
 			{
 				// We don't record empty structures
 				continue;

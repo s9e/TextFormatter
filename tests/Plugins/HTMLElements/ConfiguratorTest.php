@@ -51,7 +51,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomPrefix()
 	{
-		$plugin = $this->configurator->plugins->load('HTMLElements', array('prefix' => 'xyz'));
+		$plugin = $this->configurator->plugins->load('HTMLElements', ['prefix' => 'xyz']);
 		$plugin->allowElement('b');
 
 		$this->assertTrue($this->configurator->tags->exists('xyz:b'));

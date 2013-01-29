@@ -15,7 +15,7 @@ trait PluginsHandling
 	/**
 	* @var array Array of callbacks, using plugin names as keys
 	*/
-	protected $pluginParsers = array();
+	protected $pluginParsers = [];
 
 	/**
 	* @var array
@@ -70,7 +70,7 @@ trait PluginsHandling
 				continue;
 			}
 
-			$matches = array();
+			$matches = [];
 
 			if (isset($pluginConfig['regexp']))
 			{
@@ -96,10 +96,10 @@ trait PluginsHandling
 					$matches = array_slice($matches, 0, $pluginConfig['regexpLimit']);
 
 					$msg = 'Regexp limit exceeded. Only the allowed number of matches will be processed';
-					$context = array(
+					$context = [
 						'pluginName' => $pluginName,
 						'limit'      => $pluginConfig['regexpLimit']
-					);
+					];
 
 					if ($pluginConfig['regexpLimitAction'] !== 'ignore')
 					{
@@ -116,10 +116,10 @@ trait PluginsHandling
 						   : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
 
 				// Register the parser as a callback
-				$this->pluginParsers[$pluginName] = array(
+				$this->pluginParsers[$pluginName] = [
 					new $className($this, $pluginConfig),
 					'parse'
-				);
+				];
 			}
 
 			// Execute the plugin's parser, which will add tags via $this->addStartTag() and others
@@ -147,7 +147,7 @@ trait PluginsHandling
 		// Create an empty config for this plugin to ensure it is executed
 		if (!isset($this->pluginsConfig[$pluginName]))
 		{
-			$this->pluginsConfig[$pluginName] = array();
+			$this->pluginsConfig[$pluginName] = [];
 		}
 
 		$this->pluginParsers[$pluginName] = $parser;

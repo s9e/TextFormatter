@@ -292,7 +292,7 @@ class UrlConfigTest extends Test
 	public function testGetAllowedSchemes()
 	{
 		$this->assertEquals(
-			array('http', 'https'),
+			['http', 'https'],
 			$this->urlConfig->getAllowedSchemes()
 		);
 	}

@@ -84,7 +84,7 @@ class TemplateCheckerTest extends Test
 		$this->checkUnsafe(
 			'<a href="mailto:{@email}"/>',
 			NULL,
-			array('attributes' => array('email' => array('filterChain' => array(new Email))))
+			['attributes' => ['email' => ['filterChain' => [new Email]]]]
 		);
 	}
 
@@ -96,7 +96,7 @@ class TemplateCheckerTest extends Test
 		$this->checkUnsafe(
 			'<a href="mailto:{@email}?subject=foo"/>',
 			NULL,
-			array('attributes' => array('email' => array('filterChain' => array(new Email))))
+			['attributes' => ['email' => ['filterChain' => [new Email]]]]
 		);
 	}
 
@@ -110,7 +110,7 @@ class TemplateCheckerTest extends Test
 		$this->checkUnsafe(
 			'<a href="http://{@email}"/>',
 			NULL,
-			array('attributes' => array('email' => array('filterChain' => array(new Email))))
+			['attributes' => ['email' => ['filterChain' => [new Email]]]]
 		);
 	}
 
@@ -1788,10 +1788,10 @@ class TemplateCheckerTest extends Test
 			$data = $this->getUnsafeTemplatesTests();
 		}
 
-		call_user_func_array(array($this, 'checkUnsafe'), $data[$k]);
+		call_user_func_array([$this, 'checkUnsafe'], $data[$k]);
 	}
 
-	protected function checkUnsafe($template, $exceptionMsg = null, array $tagOptions = array())
+	protected function checkUnsafe($template, $exceptionMsg = null, array $tagOptions = [])
 	{
 		if (isset($exceptionMsg))
 		{
@@ -1820,204 +1820,204 @@ class TemplateCheckerTest extends Test
 
 	public function getUnsafeExpressionTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'<xsl:value-of select="document(@foo)"/>',
 				"An XPath expression uses the document() function"
-			),
-			array(
+			],
+			[
 				'<b title="...{document()}"/>',
 				"An XPath expression uses the document() function"
-			),
-			array(
+			],
+			[
 				'<b title="...{ document () }"/>',
 				"An XPath expression uses the document() function"
-			),
-			array(
+			],
+			[
 				'<b title="...{ doc&#117;ment () }"/>',
 				"An XPath expression uses the document() function"
-			),
-			array(
+			],
+			[
 				'<b title="{concat(\'}\',document())}"/>',
 				"An XPath expression uses the document() function"
-			),
-			array(
+			],
+			[
 				'<b title="document()"/>',
 				null
-			),
-			array(
+			],
+			[
 				'<b title="{&quot;document()&quot;}"/>',
 				null
-			),
-		);
+			],
+		];
 	}
 
 	public function getUnsafeFixedUrlTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'<embed src="{@url}"/>',
 				"The template contains a 'embed' element with a non-fixed URL"
-			),
-			array(
+			],
+			[
 				'<embed src="{@url}" allowscriptaccess="always"/>',
 				"The template contains a 'embed' element with a non-fixed URL"
-			),
-			array(
+			],
+			[
 				'<embed src="{@url}" allowscriptaccess="sameDomain"/>',
 				"The template contains a 'embed' element with a non-fixed URL"
-			),
-			array(
+			],
+			[
 				'<embed src="{@url}" allowscriptaccess="never"/>',
 				null,
-				array(
-					'attributes' => array(
-						'url' => array(
-							'filterChain' => array(new Url)
-						)
-					)
-				)
-			),
-			array(
+				[
+					'attributes' => [
+						'url' => [
+							'filterChain' => [new Url]
+						]
+					]
+				]
+			],
+			[
 				'<iframe src="{@url}"/>',
 				"The template contains a 'iframe' element with a non-fixed URL"
-			),
-			array(
+			],
+			[
 				'<object data="{@url}"/>',
 				"The template contains a 'object' element with a non-fixed URL"
-			),
-			array(
+			],
+			[
 				'<object data="{@url}"><param name="allowscriptaccess" value="never"/></object>',
 				null,
-				array(
-					'attributes' => array(
-						'url' => array(
-							'filterChain' => array(new Url)
-						)
-					)
-				)
-			),
-			array(
+				[
+					'attributes' => [
+						'url' => [
+							'filterChain' => [new Url]
+						]
+					]
+				]
+			],
+			[
 				'<script src="{@url}"/>',
 				"The template contains a 'script' element with a non-fixed URL"
-			),
+			],
 			// Redundant but produces a nicer entry in testdox
-			array(
+			[
 				'<script src="{@url}"/>',
 				"The template contains a 'script' element with a non-fixed URL",
-				array(
-					'attributes' => array(
-						'src' => array(
-							'filterChain' => array(new Url)
-						)
-					)
-				)
-			),
-			array(
+				[
+					'attributes' => [
+						'src' => [
+							'filterChain' => [new Url]
+						]
+					]
+				]
+			],
+			[
 				'<script src="http://{@foo}"/>',
 				"The template contains a 'script' element with a non-fixed URL"
-			),
-			array(
+			],
+			[
 				'<script src="https://gist.github.com/{@id}.js"/>',
 				null,
-				array(
-					'attributes' => array(
-						'id' => array(
-							'filterChain' => array(new Number)
-						)
-					)
-				)
-			),
-			array(
+				[
+					'attributes' => [
+						'id' => [
+							'filterChain' => [new Number]
+						]
+					]
+				]
+			],
+			[
 				'<script src="//gist.github.com/{@id}.js"/>',
 				null,
-				array(
-					'attributes' => array(
-						'id' => array(
-							'filterChain' => array(new Number)
-						)
-					)
-				)
-			),
-			array(
+				[
+					'attributes' => [
+						'id' => [
+							'filterChain' => [new Number]
+						]
+					]
+				]
+			],
+			[
 				'<script src="foo.js"/>',
 				null
-			),
+			],
 			// Try working around the safeguards
-			array(
+			[
 				'<SCRIPT src="{@url}"/>',
 				"The template contains a 'script' element with a non-fixed URL attribute 'src'"
-			),
-			array(
+			],
+			[
 				'<script SRC="{@url}"/>',
 				"The template contains a 'script' element with a non-fixed URL attribute 'src'"
-			),
-			array(
+			],
+			[
 				'<script><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>',
 				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-			),
-			array(
+			],
+			[
 				'<script><xsl:attribute name="SRC"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>',
 				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-			),
-			array(
+			],
+			[
 				'<script><xsl:attribute name="src">http://example.org/legit.js<?dont-optimize?></xsl:attribute></script>'
-			),
-			array(
+			],
+			[
 				'<script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/><?dont-optimize?></xsl:attribute></script>'
-			),
-			array(
+			],
+			[
 				'<script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/><?dont-optimize?></xsl:attribute></script>',
 				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-			),
-			array(
+			],
+			[
 				'<xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>',
 				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-			),
-			array(
+			],
+			[
 				'<xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>',
 				"The template contains a 'script' element with a dynamically generated 'src' attribute that does not use a fixed URL"
-			),
-			array(
+			],
+			[
 				'<object><param name="movie" value="{@url}"/></object>',
 				"The template contains a 'param' element with a non-fixed URL attribute 'value'"
-			),
-			array(
+			],
+			[
 				'<OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>',
 				"The template contains a 'param' element with a non-fixed URL attribute 'value'"
-			),
-			array(
+			],
+			[
 				'<object><param name="movie" value="{@url}"/><param name="allowscriptaccess" value="never"/></object>',
 				null,
-				array(
-					'attributes' => array(
-						'url' => array(
-							'filterChain' => array(new Url)
-						)
-					)
-				)
-			)
-		);
+				[
+					'attributes' => [
+						'url' => [
+							'filterChain' => [new Url]
+						]
+					]
+				]
+			]
+		];
 	}
 
 	public function getUnsafeDisableOutputEscapingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'<b disable-output-escaping="1"/>',
 				"The template contains a 'disable-output-escaping' attribute"
-			)
-		);
+			]
+		];
 	}
 
 	public function getUnsafeCopyNodesTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'<xsl:copy/>',
 				"Cannot assess the safety of an 'xsl:copy' element"
-			)
-		);
+			]
+		];
 	}
 
 	public function getUnsafeContentTests()
@@ -2031,60 +2031,60 @@ class TemplateCheckerTest extends Test
 
 	public function getUnsafeCopyOfNodesTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'<b><xsl:copy-of select="@onclick"/></b>',
 				"Undefined attribute 'onclick'"
-			),
-			array(
+			],
+			[
 				'<b><xsl:copy-of select=" @ onclick "/></b>',
 				"Undefined attribute 'onclick'"
-			),
-			array(
+			],
+			[
 				'<b><xsl:copy-of select="@title"/></b>'
-			),
-			array(
+			],
+			[
 				'<b><xsl:copy-of select=" @ title "/></b>'
-			),
-			array(
+			],
+			[
 				'<a><xsl:copy-of select="@href"/></a>',
 				"Attribute 'href' is not properly filtered to be used in URL",
-				array(
-					'attributes' => array(
-						'href' => array()
-					)
-				)
-			),
-			array(
+				[
+					'attributes' => [
+						'href' => []
+					]
+				]
+			],
+			[
 				'<a><xsl:copy-of select="@href"/></a>',
 				null,
-				array(
-					'attributes' => array(
-						'href' => array(
-							'filterChain' => array(new Url)
-						)
-					)
-				)
-			),
-			array(
+				[
+					'attributes' => [
+						'href' => [
+							'filterChain' => [new Url]
+						]
+					]
+				]
+			],
+			[
 				'<xsl:copy-of select="script"/>',
 				"Cannot assess 'xsl:copy-of' select expression 'script' to be safe"
-			),
-			array(
+			],
+			[
 				'<xsl:copy-of select=" script "/>',
 				"Cannot assess 'xsl:copy-of' select expression 'script' to be safe"
-			),
-			array(
+			],
+			[
 				'<xsl:copy-of select="parent::*"/>',
 				"Cannot assess 'xsl:copy-of' select expression 'parent::*' to be safe"
-			),
-		);
+			],
+		];
 	}
 
 	protected function getSafeFilters($type)
 	{
-		$filters = array(
-			'CSS' => array(
+		$filters = [
+			'CSS' => [
 				'#color',
 				'#float',
 				'#int',
@@ -2093,8 +2093,8 @@ class TemplateCheckerTest extends Test
 				'#simpletext',
 				'#uint',
 				'#url'
-			),
-			'JS' => array(
+			],
+			'JS' => [
 //				'json_encode',
 				'rawurlencode',
 				'strtotime',
@@ -2106,8 +2106,8 @@ class TemplateCheckerTest extends Test
 //				'#simpletext',
 				'#uint',
 				'#url'
-			),
-			'URL' => array(
+			],
+			'URL' => [
 				'urlencode',
 				'rawurlencode',
 				'#float',
@@ -2117,123 +2117,123 @@ class TemplateCheckerTest extends Test
 				'#range',
 				'#uint',
 				'#url'
-			)
-		);
+			]
+		];
 
 		return $filters[$type];
 	}
 
 	public function getUnsafeElementsTests()
 	{
-		$elements = array(
+		$elements = [
 			'script' => 'JS',
 			'style'  => 'CSS'
-		);
+		];
 
-		$tests = array();
+		$tests = [];
 
 		foreach ($elements as $elName => $type)
 		{
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . '><xsl:apply-templates/></' . $elName . '>',
 				"A '" . $elName . "' element lets unfiltered data through"
-			);
+			];
 
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . '><xsl:apply-templates select="st"/></' . $elName . '>',
 				"Cannot assess the safety of 'xsl:apply-templates' select expression 'st'"
-			);
+			];
 
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . '><xsl:if test="1"><xsl:apply-templates/></xsl:if></' . $elName . '>',
 				"A '" . $elName . "' element lets unfiltered data through"
-			);
+			];
 
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . '><xsl:value-of select="st"/></' . $elName . '>',
 				"Cannot assess the safety of XPath expression 'st'"
-			);
+			];
 
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . '><xsl:value-of select="@foo"/></' . $elName . '>',
 				"Undefined attribute 'foo'"
-			);
+			];
 
 			// Try some variations to get around basic checks
-			$tagOptions = array(
-				'attributes' => array(
-					'foo' => array()
-				)
-			);
+			$tagOptions = [
+				'attributes' => [
+					'foo' => []
+				]
+			];
 
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . '><xsl:value-of select="@foo"/></' . $elName . '>',
 				"Attribute 'foo' is not properly filtered to be used in " . $type,
 				$tagOptions
-			);
+			];
 
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . '><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></' . $elName . '>',
 				"Attribute 'foo' is not properly filtered to be used in " . $type,
 				$tagOptions
-			);
+			];
 
-			$tests[] = array(
+			$tests[] = [
 				'<xsl:element name="' . $elName . '"><xsl:value-of select="@foo"/></xsl:element>',
 				"Attribute 'foo' is not properly filtered to be used in " . $type,
 				$tagOptions
-			);
+			];
 
-			$tests[] = array(
+			$tests[] = [
 				'<xsl:element name="' . strtoupper($elName) . '"><xsl:value-of select="@foo"/></xsl:element>',
 				"Attribute 'foo' is not properly filtered to be used in " . $type,
 				$tagOptions
-			);
+			];
 
 			// Using xsl:for-each to subvert the context
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . '><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></' . $elName . '>',
 				"Cannot evaluate context node due to 'xsl:for-each'",
-				array(
-					'attributes' => array(
-						'foo' => array(
-							'filterChain' => array(new Number)
-						)
-					)
-				)
-			);
+				[
+					'attributes' => [
+						'foo' => [
+							'filterChain' => [new Number]
+						]
+					]
+				]
+			];
 
 			// Test safe filters
 			foreach ($this->getSafeFilters($type) as $filterName)
 			{
 				$filter = $this->configurator->attributeFilters->get($filterName);
 
-				$tests[] = array(
+				$tests[] = [
 					'<' . $elName . '><xsl:value-of select="@foo"/></' . $elName . '>',
 					null,
-					array(
-						'attributes' => array(
-							'foo' => array(
-								'filterChain' => array($filter)
-							)
-						)
-					)
-				);
+					[
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [$filter]
+							]
+						]
+					]
+				];
 			}
 		}
 
 		// Dynamic element names are too hard to assess
-		$tests[] = array(
+		$tests[] = [
 			'<xsl:element name="{FOO}"><xsl:apply-templates/></xsl:element>',
 			"Cannot assess 'xsl:element' name '{FOO}'"
-		);
+		];
 
 		return $tests;
 	}
 
 	public function getUnsafeAttributesTests()
 	{
-		$attributes = array(
+		$attributes = [
 			'b:style'          => 'CSS',
 			'b:onclick'        => 'JS',
 			'b:onanything'     => 'JS',
@@ -2248,83 +2248,83 @@ class TemplateCheckerTest extends Test
 			'video:poster'     => 'URL',
 			'img:src'          => 'URL',
 			'img:lowsrc'       => 'URL'
-		);
+		];
 
-		$tests = array();
+		$tests = [];
 
 		// Those tests don't really need to be repeated for every attribute
-		$tests[] = array(
+		$tests[] = [
 			'<b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
 			"A dynamically generated 'onclick' attribute lets unfiltered data through"
-		);
+		];
 
-		$tests[] = array(
+		$tests[] = [
 			'<b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>',
 			"A dynamically generated 'ONCLICK' attribute lets unfiltered data through"
-		);
+		];
 
-		$tests[] = array(
+		$tests[] = [
 			'<b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>',
 			"A dynamically generated 'onclick' attribute lets unfiltered data through"
-		);
+		];
 
-		$tests[] = array(
+		$tests[] = [
 			'<b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>',
 			"Undefined attribute 'foo'"
-		);
+		];
 
-		$tests[] = array(
+		$tests[] = [
 			'<b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>',
 			"Undefined attribute 'foo'"
-		);
+		];
 
-		$tests[] = array(
+		$tests[] = [
 			'<b onclick="{@foo}"/>',
 			"Undefined attribute 'foo'"
-		);
+		];
 
-		$tests[] = array(
+		$tests[] = [
 			'<b ONCLICK="{@foo}"/>',
 			"Undefined attribute 'foo'"
-		);
+		];
 
 		foreach ($attributes as $attribute => $type)
 		{
 			list($elName, $attrName) = explode(':', $attribute);
 			$filters = $this->getSafeFilters($type);
 
-			$tests[] = array(
+			$tests[] = [
 				'<' . $elName . ' ' . $attrName . '="{@foo}"/>',
 				"Attribute 'foo' is not properly filtered to be used in " . $type,
-				array(
-					'attributes' => array(
-						'foo' => array()
-					)
-				)
-			);
+				[
+					'attributes' => [
+						'foo' => []
+					]
+				]
+			];
 
 			// Test safe filters
 			foreach ($filters as $filterName)
 			{
-				$tests[] = array(
+				$tests[] = [
 					'<' . $elName . ' ' . $attrName . '="{@foo}"/>',
 					null,
-					array(
-						'attributes' => array(
-							'foo' => array(
-								'filterChain' => array($this->configurator->attributeFilters[$filterName])
-							)
-						)
-					)
-				);
+					[
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [$this->configurator->attributeFilters[$filterName]]
+							]
+						]
+					]
+				];
 			}
 		}
 
 		// Dynamic attribute names are too hard to assess
-		$tests[] = array(
+		$tests[] = [
 			'<b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>',
 			"Cannot assess 'xsl:attribute' name '{FOO}'"
-		);
+		];
 
 		return $tests;
 	}

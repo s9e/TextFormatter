@@ -123,9 +123,9 @@ class Tag implements ConfigProvider
 	*/
 	public function setNestingLimit($limit)
 	{
-		$limit = filter_var($limit, FILTER_VALIDATE_INT, array(
-			'options' => array('min_range' => 0)
-		));
+		$limit = filter_var($limit, FILTER_VALIDATE_INT, [
+			'options' => ['min_range' => 0]
+		]);
 
 		if (!$limit)
 		{
@@ -153,9 +153,9 @@ class Tag implements ConfigProvider
 	*/
 	public function setTagLimit($limit)
 	{
-		$limit = filter_var($limit, FILTER_VALIDATE_INT, array(
-			'options' => array('min_range' => 0)
-		));
+		$limit = filter_var($limit, FILTER_VALIDATE_INT, [
+			'options' => ['min_range' => 0]
+		]);
 
 		if (!$limit)
 		{

@@ -19,10 +19,10 @@ class AttributeTest extends Test
 	*/
 	public function testConstructorOptions()
 	{
-		$attr = new Attribute(array('isRequired' => false));
+		$attr = new Attribute(['isRequired' => false]);
 		$this->assertFalse($attr->isRequired);
 
-		$attr = new Attribute(array('isRequired' => true));
+		$attr = new Attribute(['isRequired' => true]);
 		$this->assertTrue($attr->isRequired);
 	}
 
@@ -32,7 +32,7 @@ class AttributeTest extends Test
 	public function testSetFilterChainArray()
 	{
 		$attr = new Attribute;
-		$attr->filterChain = array(new Int, new Url);
+		$attr->filterChain = [new Int, new Url];
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Collections\\AttributeFilterChain',
@@ -78,10 +78,10 @@ class AttributeTest extends Test
 		$attr->defaultValue = 'foo';
 
 		$this->assertEquals(
-			array(
+			[
 				'defaultValue' => 'foo',
 				'required'     => true
-			),
+			],
 			$attr->asConfig()
 		);
 	}

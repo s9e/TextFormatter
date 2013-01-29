@@ -44,7 +44,7 @@ class AttributeFilterChainTest extends Test
 	public function testAppendUncallableCallback()
 	{
 		$filterChain = new AttributeFilterChain;
-		$filterChain->append(array(__CLASS__, 'privateMethod'));
+		$filterChain->append([__CLASS__, 'privateMethod']);
 	}
 
 	/**
@@ -55,7 +55,7 @@ class AttributeFilterChainTest extends Test
 	public function testPrependUncallableCallback()
 	{
 		$filterChain = new AttributeFilterChain;
-		$filterChain->prepend(array(__CLASS__, 'privateMethod'));
+		$filterChain->prepend([__CLASS__, 'privateMethod']);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class AttributeFilterChainTest extends Test
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilter',
-			$filterChain->append(array($this, 'doNothing'))
+			$filterChain->append([$this, 'doNothing'])
 		);
 	}
 

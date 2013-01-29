@@ -28,7 +28,7 @@ abstract class RulesGenerator
 	* @param  array         $options Array of option settings
 	* @return array ['root'=>[ruleName=>targets],'tags'=>[tagName=>[ruleName=>targets]]]
 	*/
-	public static function getRules(TagCollection $tags, array $options = array())
+	public static function getRules(TagCollection $tags, array $options = [])
 	{
 		// Unless specified otherwise, we consider that the renderered text will be displayed as
 		// the child of a <div> element
@@ -40,7 +40,7 @@ abstract class RulesGenerator
 		// the root of the message (IOW, with no parent) or even disabled altogether
 		$rootForensics = self::generateRootForensics($parentHTML);
 
-		$templateForensics = array();
+		$templateForensics = [];
 		foreach ($tags as $tagName => $tag)
 		{
 			$xsl = self::generateTagXSL($tagName, $tag, $options);
@@ -162,10 +162,10 @@ abstract class RulesGenerator
 	*/
 	protected static function generateRules(array $templateForensics, TemplateForensics $rootForensics)
 	{
-		$rules = array(
-			'root' => array(),
-			'tags' => array()
-		);
+		$rules = [
+			'root' => [],
+			'tags' => []
+		];
 
 		// Create a TemplateForensics object that will be used to determine whether to create a
 		// nl2br rule
@@ -268,10 +268,10 @@ abstract class RulesGenerator
 	protected static function cleanUpRules(array $rules)
 	{
 		// Prepare to resolve conflicting rules
-		$precedence = array(
-			array('denyDescendant', 'allowChild'),
-			array('denyChild',      'allowChild')
-		);
+		$precedence = [
+			['denyDescendant', 'allowChild'],
+			['denyChild',      'allowChild']
+		];
 
 		// Apply precedence, e.g. if there's a denyChild rule, remove any allowChild rules
 		foreach ($precedence as $pair)

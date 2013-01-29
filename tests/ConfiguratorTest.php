@@ -122,19 +122,19 @@ class ConfiguratorTest extends Test
 	public function testAsConfigAddRegexpLimit()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(array('regexp' => '//'));
+		$plugin->setConfig(['regexp' => '//']);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'regexpLimit' => 10000
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -145,19 +145,19 @@ class ConfiguratorTest extends Test
 	public function testAsConfigRemoveRegexpLimit()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(array('regexpLimit' => 1000));
+		$plugin->setConfig(['regexpLimit' => 1000]);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'regexpLimit' => null
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -168,19 +168,19 @@ class ConfiguratorTest extends Test
 	public function testAsConfigAddRegexpLimitAction()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(array('regexp' => '//'));
+		$plugin->setConfig(['regexp' => '//']);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'regexpLimitAction' => 'warn'
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -191,19 +191,19 @@ class ConfiguratorTest extends Test
 	public function testAsConfigRemoveRegexpLimitAction()
 	{
 		$plugin = new DummyPluginConfigurator($this->configurator);
-		$plugin->setConfig(array('regexpLimitAction' => 1000));
+		$plugin->setConfig(['regexpLimitAction' => 1000]);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'regexpLimitAction' => null
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -220,13 +220,13 @@ class ConfiguratorTest extends Test
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'quickMatch' => 'foo'
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -243,13 +243,13 @@ class ConfiguratorTest extends Test
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'plugins' => array(
-					'Dummy' => array(
+			[
+				'plugins' => [
+					'Dummy' => [
 						'quickMatch' => null
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -263,14 +263,14 @@ class ConfiguratorTest extends Test
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
-			array(
-				'tags' => array(
-					'A' => array(
+			[
+				'tags' => [
+					'A' => [
 						'allowedChildren'    => "\1",
 						'allowedDescendants' => "\1"
-					)
-				)
-			),
+					]
+				]
+			],
 			$config
 		);
 	}
@@ -341,7 +341,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testMagicGetLoad()
 	{
-		$mock = $this->getMock('stdClass', array('exists', 'load'));
+		$mock = $this->getMock('stdClass', ['exists', 'load']);
 
 		$mock->expects($this->once())
 		     ->method('exists')
@@ -363,7 +363,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testMagicGetGet()
 	{
-		$mock = $this->getMock('stdClass', array('exists', 'get'));
+		$mock = $this->getMock('stdClass', ['exists', 'get']);
 
 		$mock->expects($this->once())
 		     ->method('exists')
@@ -403,8 +403,8 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->addHTML5Rules();
 
-		$this->assertSame(array('UL'), $this->configurator->rootRules['allowChild']);
-		$this->assertSame(array('LI'), $this->configurator->rootRules['denyChild']);
+		$this->assertSame(['UL'], $this->configurator->rootRules['allowChild']);
+		$this->assertSame(['LI'], $this->configurator->rootRules['denyChild']);
 	}
 
 	/**
@@ -420,10 +420,10 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->addHTML5Rules();
 
-		$this->assertSame(array('LI'), $ul->rules['allowChild']);
-		$this->assertSame(array('UL'), $ul->rules['denyChild']);
-		$this->assertSame(array('UL'), $li->rules['allowChild']);
-		$this->assertSame(array('LI'), $li->rules['denyChild']);
+		$this->assertSame(['LI'], $ul->rules['allowChild']);
+		$this->assertSame(['UL'], $ul->rules['denyChild']);
+		$this->assertSame(['UL'], $li->rules['allowChild']);
+		$this->assertSame(['LI'], $li->rules['denyChild']);
 	}
 
 	/**
@@ -437,16 +437,16 @@ class ConfiguratorTest extends Test
 		$li = $this->configurator->tags->add('LI');
 		$li->defaultTemplate = '<li><xsl:apply-templates/></li>';
 
-		$this->configurator->addHTML5Rules(array('parentHTML' => '<ul>'));
+		$this->configurator->addHTML5Rules(['parentHTML' => '<ul>']);
 
-		$this->assertSame(array('LI'), $this->configurator->rootRules['allowChild']);
-		$this->assertSame(array('UL'), $this->configurator->rootRules['denyChild']);
+		$this->assertSame(['LI'], $this->configurator->rootRules['allowChild']);
+		$this->assertSame(['UL'], $this->configurator->rootRules['denyChild']);
 	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase
 {
-	protected $config = array('foo' => 1);
+	protected $config = ['foo' => 1];
 
 	public function asConfig()
 	{

@@ -20,11 +20,11 @@ class ParserTest extends Test
 
 	public function getParsingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'Follow @twitter for more info',
 				'<rt>Follow <GAC9F10E2 username="twitter">@twitter</GAC9F10E2> for more info</rt>',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->Generic->add(
@@ -32,17 +32,17 @@ class ParserTest extends Test
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 					);
 				}
-			),
-		);
+			],
+		];
 	}
 
 	public function getRenderingTests()
 	{
-		return array(
-			array(
+		return [
+			[
 				'Follow @twitter for more info',
 				'Follow <a href="https://twitter.com/twitter">@twitter</a> for more info',
-				array(),
+				[],
 				function ($constructor)
 				{
 					$constructor->Generic->add(
@@ -50,7 +50,7 @@ class ParserTest extends Test
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
 					);
 				}
-			),
-		);
+			],
+		];
 	}
 }

@@ -17,7 +17,7 @@ class UrlConfig implements ConfigProvider
 	/**
 	* @var array List of allowed schemes
 	*/
-	protected $allowedSchemes = array('http', 'https');
+	protected $allowedSchemes = ['http', 'https'];
 
 	/**
 	* @var string Default scheme to be used when validating scheme-less URLs
@@ -27,12 +27,12 @@ class UrlConfig implements ConfigProvider
 	/**
 	* @var array List of disallowed hosts
 	*/
-	protected $disallowedHosts = array();
+	protected $disallowedHosts = [];
 
 	/**
 	* @var array List of hosts whose URL we check for redirects
 	*/
-	protected $resolveRedirectsHosts = array();
+	protected $resolveRedirectsHosts = [];
 
 	/**
 	* @var bool Whether URLs should require a scheme
@@ -47,9 +47,9 @@ class UrlConfig implements ConfigProvider
 	{
 		$regexp = RegexpBuilder::fromList($this->allowedSchemes);
 		$regexp = new Regexp('/^' . $regexp . '$/Di');
-		$config = array('allowedSchemes' => $regexp->asConfig());
+		$config = ['allowedSchemes' => $regexp->asConfig()];
 
-		foreach (array('disallowedHosts', 'resolveRedirectsHosts') as $k)
+		foreach (['disallowedHosts', 'resolveRedirectsHosts'] as $k)
 		{
 			if (empty($this->$k))
 			{
@@ -59,13 +59,13 @@ class UrlConfig implements ConfigProvider
 			$regexp = RegexpBuilder::fromList(
 				$this->$k,
 				// Asterisks * are turned into a catch-all expression, while ^ and $ are preserved
-				array(
-					'specialChars' => array(
+				[
+					'specialChars' => [
 						'*' => '.*',
 						'^' => '^',
 						'$' => '$'
-					)
-				)
+					]
+				]
 			);
 			$regexp = new Regexp('/' . $regexp . '/DiS');
 
