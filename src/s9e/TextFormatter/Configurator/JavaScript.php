@@ -478,6 +478,7 @@ class JavaScript
 				// assume that it's a variable registered in registeredVars
 				if (!in_array($k, $arguments[$callbackType], true)
 				 && $k !== 'logger'
+				 && $k !== 'openTags'
 				 && $k !== 'registeredVars')
 				{
 					 $k = 'registeredVars[' . json_encode($k) . ']';
