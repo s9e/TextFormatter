@@ -6,7 +6,5 @@ php:
 before_script:
   - "php ./scripts/convert5.3.php"
   - "[[ `php -v` == PHP\\ 5.5* ]] && sed -i '/<exclude>/,/<\\/exclude>/d' phpunit.xml || echo 'Kept excluded groups'"
-git:
-  depth: 1
 branch:
   only: master
