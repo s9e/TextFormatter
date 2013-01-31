@@ -45,3 +45,4 @@ TODO
 - IDEA: when a tag is added, set a flag. Sort tags at beginning of processCurrentTag() if the flag is set. This way, a filter that adds a tag would force the tags to be re-sorted
 - Add Filter::isSafeAsURL() to complement Filter::isSafeInURL() -- for example: <a href="http://foo.com/{IDENTIFIER}"/> and <a href="{IDENTIFIER}:{TEXT;postFilter=urlencode"/> -- {IDENTIFIER} is safe *in* URL, but not at the beginning ("javascript:alert%28%22k%22%29"), whereas {URL} is safe as URL
 - Consider using preg_replace() to remove <st/>, <et/>, <i/> and any tag that is rendered by an empty template. Attention to predicates, a tag could have multiple templates -- doesn't seem to have any benefits on an average message
+- Look into single spaces being removed by XSLT: <xsl:template match="/"><b> <u>u</u> <i>i</i> </b></xsl:template>
