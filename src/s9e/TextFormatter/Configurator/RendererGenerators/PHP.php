@@ -579,6 +579,21 @@ class PHP
 	}
 
 	/**
+	* Parse an <xsl:comment/> into the internal representation
+	*
+	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMNode $node <xsl:comment/> node
+	* @return void
+	*/
+	protected function parseXslComment(DOMNode $ir, DOMNode $node)
+	{
+		$comment = $ir->appendChild($ir->ownerDocument->createElement('comment'));
+
+		// Parse this branch's content
+		$this->parseChildren($comment, $node);
+	}
+
+	/**
 	* Parse an <xsl:copy-of/> into the internal representation
 	*
 	* NOTE: only attributes are supported
@@ -653,6 +668,23 @@ class PHP
 
 		// Parse this branch's content
 		$this->parseChildren($case, $node);
+	}
+
+	/**
+	* Parse an <xsl:text/> into the internal representation
+	*
+	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
+	* @param  DOMNode $node <xsl:text/> node
+	* @return void
+	*/
+	protected function parseXslText(DOMNode $ir, DOMNode $node)
+	{
+		$ir->appendChild(
+			$ir->ownerDocument->createElement(
+				'output',
+				htmlspecialchars(var_export($node->textContent, true), ENT_NOQUOTES, 'UTF-8')
+			)
+		);
 	}
 
 	/**
@@ -760,6 +792,19 @@ class PHP
 		{
 			$this->php .= '}';
 		}
+	}
+
+	/**
+	* Serialize a <comment/> node
+	*
+	* @param  DOMNode $comment <comment/> node
+	* @return void
+	*/
+	protected function serializeComment(DOMNode $comment)
+	{
+		$this->php .= "\$this->out.='<!--';";
+		$this->serializeChildren($comment);
+		$this->php .= "\$this->out.='-->';";
 	}
 
 	/**

@@ -138,4 +138,11 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="T18">
+		<usage>[COMMENT]{TEXT}[/COMMENT]</usage>
+		<template><![CDATA[
+			<xsl:comment><xsl:apply-templates/></xsl:comment>
+		]]></template>
+	</bbcode>
+
 </repository>

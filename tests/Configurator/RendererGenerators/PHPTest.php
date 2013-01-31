@@ -459,6 +459,24 @@ class PHPTest extends Test
 						= '<xsl:choose><xsl:when test=".=\':)\'"><img src="happy.png" alt=":)"/></xsl:when><xsl:when test=".=\':(\'"><img src="sad.png" alt=":("/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
 				}
 			],
+			[
+				'<rt>x <X/> y</rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:text>&amp;foo</xsl:text>';
+				}
+			],
+/*
+			[
+				'<rt>x <X>...</X> y</rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<b>x <i>i</i> <u>u</u> y</b>';
+				}
+			],
+*/
 		];
 	}
 }
