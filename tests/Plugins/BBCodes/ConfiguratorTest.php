@@ -149,6 +149,51 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addCustom() accepts a single string as its second argument, representing the default template
+	*/
+	public function testAddCustomTemplate()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+
+		$plugin->addCustom(
+			'[B]{TEXT}[/B]',
+			'<b>{TEXT}</b>'
+		);
+
+		$this->assertTrue($this->configurator->tags->exists('B'));
+		$this->assertEquals(
+			'<b><xsl:apply-templates/></b>',
+			$this->configurator->tags['B']->templates->get('')
+		);
+	}
+
+	/**
+	* @testdox addCustom() accepts an array of [predicate => template] as its second argument
+	*/
+	public function testAddCustomTemplates()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+
+		$plugin->addCustom(
+			'[B]{TEXT}[/B]',
+			[
+				''     => '<b>{TEXT}</b>',
+				'@foo' => '<strong>{TEXT}</strong>'
+			]
+		);
+
+		$this->assertTrue($this->configurator->tags->exists('B'));
+		$this->assertEquals(
+			'<b><xsl:apply-templates/></b>',
+			$this->configurator->tags['B']->templates->get('')
+		);
+		$this->assertEquals(
+			'<strong><xsl:apply-templates/></strong>',
+			$this->configurator->tags['B']->templates->get('@foo')
+		);
+	}
+
+	/**
 	* @testdox asConfig() returns FALSE if no BBCodes were created
 	*/
 	public function testFalseConfig()

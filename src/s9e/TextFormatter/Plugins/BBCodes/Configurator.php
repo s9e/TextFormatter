@@ -62,23 +62,36 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*
 	* @see s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
 	*
-	* @param  string $usage    BBCode's usage
-	* @param  string $template BBCode's template
-	* @return BBCode           Newly-created BBCode
+	* @param  string       $usage    BBCode's usage
+	* @param  array|string $template BBCode's template, or array of [predicate => template]
+	* @return BBCode                 Newly-created BBCode
 	*/
 	public function addCustom($usage, $template)
 	{
+		$templates = (is_array($template)) ? $template : ['' => $template];
+
 		// Create a temporary repository for this BBCode
-		$dom = new DOMDocument;
-		$dom->loadXML(
-			'<?xml version="1.0" encoding="utf-8" ?>
+		$xml = '<?xml version="1.0" encoding="utf-8" ?>
 			<repository>
 				<bbcode name="CUSTOM">
-					<usage>' . htmlspecialchars($usage) . '</usage>
-					<template>' . htmlspecialchars($template) . '</template>
-				</bbcode>
-			</repository>'
-		);
+					<usage>' . htmlspecialchars($usage) . '</usage>';
+
+		foreach ($templates as $predicate => $template)
+		{
+			$xml .= '<template';
+
+			if ($predicate !== '')
+			{
+				$xml .= ' predicate="' . htmlspecialchars($predicate) . '"';
+			}
+
+			$xml .= '>' . htmlspecialchars($template) . '</template>';
+		}
+		$xml .= '</bbcode></repository>';
+
+		$dom = new DOMDocument;
+		$dom->loadXML($xml);
+
 		$repository = new Repository($dom, $this->configurator);
 
 		return $this->addFromRepository('CUSTOM', $repository);
