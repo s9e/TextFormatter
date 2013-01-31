@@ -139,7 +139,7 @@
 	</bbcode>
 
 	<bbcode name="T18">
-		<usage>[COMMENT]{TEXT}[/COMMENT]</usage>
+		<usage>[T18]{TEXT}[/T18]</usage>
 		<template><![CDATA[
 			<xsl:comment><xsl:apply-templates/></xsl:comment>
 		]]></template>

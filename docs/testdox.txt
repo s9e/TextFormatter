@@ -1369,7 +1369,6 @@ s9e\TextFormatter\Tests\Plugins\Autoemail\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Autoemail\Parser
  [x] Parsing tests
- [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
@@ -1389,7 +1388,6 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Parser
  [x] Parsing tests
- [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\AttributeValueCollection
@@ -1463,11 +1461,9 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests
- [x] Parsing tests (JavaScript)
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes
  [x] BBCodes from repository.xml render nicely
- [x] BBCodes from repository.xml are parsed identically by the JavaScript parser
 
 s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Automatically creates a "CENSOR" tag
@@ -1487,7 +1483,6 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests
- [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
@@ -1511,7 +1506,6 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
  [x] Parsing tests
- [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
@@ -1523,7 +1517,6 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing tests
- [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\Generic\Configurator
@@ -1541,7 +1534,6 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
 
 s9e\TextFormatter\Tests\Plugins\Generic\Parser
  [x] Parsing tests
- [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
@@ -1594,7 +1586,6 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Configurator
 
 s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
  [x] Parsing tests
- [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Renderer
