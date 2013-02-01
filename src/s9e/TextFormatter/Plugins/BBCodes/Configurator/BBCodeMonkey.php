@@ -171,7 +171,7 @@ class BBCodeMonkey
 	* @param  string $passthroughToken Token ID of the token that represents the BBCode's contents
 	* @return string                   Processed template
 	*/
-	public static function replaceTokens($template, array $tokens, $passthroughToken)
+	public function replaceTokens($template, array $tokens, $passthroughToken)
 	{
 		if ($template === '')
 		{
@@ -181,27 +181,39 @@ class BBCodeMonkey
 		$dom   = self::loadTemplate($template);
 		$xpath = new DOMXPath($dom);
 
+		$tokenRegexp = '#\\{[A-Z]+[A-Z_0-9]*\\}#';
+
 		// Replace tokens in attributes
 		foreach ($xpath->query('//@*') as $attr)
 		{
 			$attr->value = htmlspecialchars(preg_replace_callback(
-				'#\\{[A-Z]+[0-9]*?\\}#',
+				$tokenRegexp,
 				function ($m) use ($tokens, $passthroughToken)
 				{
 					$tokenId = substr($m[0], 1, -1);
 
-					if (!isset($tokens[$tokenId]))
+					// Test whether this is a known token
+					if (isset($tokens[$tokenId]))
 					{
-						if ($tokenId === $passthroughToken)
-						{
-							// Use substring() to exclude the <st/> and <et/> children
-							return '{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}';
-						}
+						// Replace with the corresponding attribute
+						return '{@' . $tokens[$tokenId] . '}';
+					}
 
+					// Test whether the token is used as passthrough
+					if ($tokenId === $passthroughToken)
+					{
+						// Use substring() to exclude the <st/> and <et/> children
+						return '{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}';
+					}
+
+					// Undefined token. If it's the name of a filter, consider it's an error
+					if ($this->isFilter($tokenId))
+					{
 						throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
 					}
 
-					return '{@' . $tokens[$tokenId] . '}';
+					// Use the token's name as parameter name
+					return '{$' . $tokenId . '}';
 				},
 				$attr->value
 			));
@@ -211,7 +223,7 @@ class BBCodeMonkey
 		foreach ($xpath->query('//text()') as $node)
 		{
 			preg_match_all(
-				'#\\{[A-Z]+[0-9]*?\\}#',
+				$tokenRegexp,
 				$node->textContent,
 				$matches,
 				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
@@ -247,6 +259,7 @@ class BBCodeMonkey
 
 				if (isset($tokens[$tokenId]))
 				{
+					// Known token, replace with corresponding attribute
 					$parentNode
 						->insertBefore(
 							$dom->createElementNS(
@@ -259,6 +272,7 @@ class BBCodeMonkey
 				}
 				elseif ($tokenId === $passthroughToken)
 				{
+					// Passthrough token, replace with <xsl:apply-templates/>
 					$parentNode->insertBefore(
 						$dom->createElementNS(
 							'http://www.w3.org/1999/XSL/Transform',
@@ -269,7 +283,22 @@ class BBCodeMonkey
 				}
 				else
 				{
-					throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
+					// Undefined token. If it's the name of a filter, consider it's an error
+					if ($this->isFilter($tokenId))
+					{
+						throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
+					}
+
+					// Replace with the value of a parameter of the same name
+					$parentNode
+						->insertBefore(
+							$dom->createElementNS(
+								'http://www.w3.org/1999/XSL/Transform',
+								'xsl:value-of'
+							),
+							$node
+						)
+						->setAttribute('select', '$' . $tokenId);
 				}
 			}
 
@@ -814,5 +843,35 @@ class BBCodeMonkey
 			$filter = $this->configurator->attributeFilters->get($filterName);
 			$attribute->filterChain->append($filter);
 		}
+	}
+
+	/**
+	* Test whether a token's name is the name of a filter
+	*
+	* @param  string $tokenId Token ID, e.g. "TEXT1"
+	* @return bool
+	*/
+	protected function isFilter($tokenId)
+	{
+		$filterName = rtrim($tokenId, '0123456789');
+
+		if ($filterName === 'TEXT')
+		{
+			return true;
+		}
+
+		// Try to load the filter
+		try
+		{
+			if ($this->configurator->attributeFilters->get('#' . $filterName))
+			{
+				return true;
+			}
+		}
+		catch (Exception $e)
+		{
+		}
+
+		return false;
 	}
 }

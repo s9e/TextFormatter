@@ -152,7 +152,7 @@ class Repository
 		{
 			$tag->templates->set(
 				$template->getAttribute('predicate'),
-				BBCodeMonkey::replaceTokens(
+				$this->bbcodeMonkey->replaceTokens(
 					$template->textContent,
 					$config['tokens'],
 					$config['passthroughToken']

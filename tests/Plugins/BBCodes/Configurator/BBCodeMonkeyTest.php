@@ -58,7 +58,8 @@ class BBCodeMonkeyTest extends Test
 			$this->setExpectedException(get_class($expected), $expected->getMessage());
 		}
 
-		$actual = BBCodeMonkey::replaceTokens($template, $tokens, $passthroughToken);
+		$bm     = new BBCodeMonkey(new Configurator);
+		$actual = $bm->replaceTokens($template, $tokens, $passthroughToken);
 
 		if (!($expected instanceof Exception))
 		{
@@ -823,16 +824,40 @@ class BBCodeMonkeyTest extends Test
 				'<b><xsl:apply-templates/></b>'
 			],
 			[
-				'<b>{TEXT}</b>',
+				'<b>{L_FOO}</b>',
 				[],
 				null,
-				new RuntimeException('Token {TEXT} is ambiguous or undefined')
+				'<b><xsl:value-of select="$L_FOO"/></b>'
+			],
+			[
+				'<b>{TEXT2}</b>',
+				[],
+				null,
+				new RuntimeException('Token {TEXT2} is ambiguous or undefined')
+			],
+			[
+				'<b>{NUMBER1}</b>',
+				[],
+				null,
+				new RuntimeException('Token {NUMBER1} is ambiguous or undefined')
 			],
 			[
 				'<span title="{TEXT}"/>',
 				[],
 				null,
 				new RuntimeException('Token {TEXT} is ambiguous or undefined')
+			],
+			[
+				'<span title="{NUMBER}"/>',
+				[],
+				null,
+				new RuntimeException('Token {NUMBER} is ambiguous or undefined')
+			],
+			[
+				'<span title="{L_FOO}">...</span>',
+				[],
+				null,
+				'<span title="{$L_FOO}">...</span>'
 			],
 			[
 				'<a href="{URL}">{TEXT}</a>',

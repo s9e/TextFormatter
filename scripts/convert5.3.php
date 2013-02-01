@@ -28,6 +28,20 @@ function convertCustom($filepath, &$file)
 {
 	// Some specific tweaks for PHP 5.3 that would be considered bad code in 5.4
 	$replacements = array(
+		'BBCodeMonkey.php' => array(
+			array(
+				'$xpath = new DOMXPath($dom);',
+				'$xpath = new DOMXPath($dom);$_this=$this;'
+			),
+			array(
+				'function ($m) use ($tokens, $passthroughToken)',
+				'function ($m) use ($_this, $tokens, $passthroughToken)'
+			),
+			array(
+				'if ($this->isFilter($tokenId))',
+				'if ($_this->isFilter($tokenId))'
+			)
+		),
 		'FilterProcessingTest.php' => array(
 			array(
 				"\n\t\t\$filter = new ProgrammableCallback(\n\t\t\tfunction()",
