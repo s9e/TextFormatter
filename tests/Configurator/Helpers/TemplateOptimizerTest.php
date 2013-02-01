@@ -64,54 +64,6 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox A single space between an end tag and a start tag is replaced with an <xsl:text/>
-	*/
-	public function test9D1E1887()
-	{
-		$this->runCase(
-			'A single space between an end tag and a start tag is replaced with an <xsl:text/>',
-			'<b>b</b> <i>i</i>',
-			'<b>b</b><xsl:text> </xsl:text><i>i</i>'
-		);
-	}
-
-	/**
-	* @testdox A single space between a start tag and an end tag is replaced with an <xsl:text/>
-	*/
-	public function testD58F220F()
-	{
-		$this->runCase(
-			'A single space between a start tag and an end tag is replaced with an <xsl:text/>',
-			'<b> </b>',
-			'<b><xsl:text> </xsl:text></b>'
-		);
-	}
-
-	/**
-	* @testdox A single space between two start tags is replaced with an <xsl:text/>
-	*/
-	public function test76174E8F()
-	{
-		$this->runCase(
-			'A single space between two start tags is replaced with an <xsl:text/>',
-			'<b> <i>!</i></b>',
-			'<b><xsl:text> </xsl:text><i>!</i></b>'
-		);
-	}
-
-	/**
-	* @testdox A single space between two end tags is replaced with an <xsl:text/>
-	*/
-	public function test15C29941()
-	{
-		$this->runCase(
-			'A single space between two end tags is replaced with an <xsl:text/>',
-			'<b><i>!</i> </b>',
-			'<b><i>!</i><xsl:text> </xsl:text></b>'
-		);
-	}
-
-	/**
 	* @testdox Superfluous whitespace inside tags is removed
 	*/
 	public function testAC8ED1D2()
@@ -504,26 +456,6 @@ class TemplateOptimizerTest extends Test
 					</b>
 				</div>',
 				'<div><b><xsl:apply-templates/></b></div>'
-			],
-			[
-				'A single space between an end tag and a start tag is replaced with an <xsl:text/>',
-				'<b>b</b> <i>i</i>',
-				'<b>b</b><xsl:text> </xsl:text><i>i</i>'
-			],
-			[
-				'A single space between a start tag and an end tag is replaced with an <xsl:text/>',
-				'<b> </b>',
-				'<b><xsl:text> </xsl:text></b>'
-			],
-			[
-				'A single space between two start tags is replaced with an <xsl:text/>',
-				'<b> <i>!</i></b>',
-				'<b><xsl:text> </xsl:text><i>!</i></b>'
-			],
-			[
-				'A single space between two end tags is replaced with an <xsl:text/>',
-				'<b><i>!</i> </b>',
-				'<b><i>!</i><xsl:text> </xsl:text></b>'
 			],
 			[
 				'Superfluous whitespace inside tags is removed',

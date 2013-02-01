@@ -41,9 +41,12 @@ abstract class TemplateHelper
 	*/
 	public static function normalizeUnsafe($template, Tag $tag = null)
 	{
-		// NOTE: technically, we should start by normalizing the template by loading it with
-		//       loadTemplate() but this operation is already done in TemplateOptimizer::optimize()
-		//       and there's no practical reason for doing it twice
+		// Preserve single-space nodes by putting them in an <xsl:text/> node
+		$dom = self::loadTemplate($template);
+		self::preserveSingleSpaces($dom);
+		$template = self::saveTemplate($dom);
+
+		// Optimize the template
 		$template = TemplateOptimizer::optimize($template);
 
 		return $template;
@@ -145,6 +148,24 @@ abstract class TemplateHelper
 		$xml = substr($xml, $pos, $len);
 
 		return $xml;
+	}
+
+	/**
+	* Preserve single space characters by replacing them with a <xsl:text/> node
+	*
+	* @param DOMDocument $dom xsl:template node
+	*/
+	protected static function preserveSingleSpaces(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+
+		foreach ($xpath->query('//text()[. = " "][not(parent::xsl:text)]') as $textNode)
+		{
+			$newNode = $dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:text');
+			$newNode->nodeValue = ' ';
+
+			$textNode->parentNode->replaceChild($newNode, $textNode);
+		}
 	}
 
 	/**

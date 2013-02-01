@@ -131,6 +131,50 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox normalize() normalizes '<b>b</b> <i>i</i>' to '<b>b</b><xsl:text> </xsl:text><i>i</i>'
+	*/
+	public function testNormalizeWhitespaceEndStart()
+	{
+		$this->assertSame(
+			'<b>b</b><xsl:text> </xsl:text><i>i</i>',
+			TemplateHelper::normalize('<b>b</b> <i>i</i>')
+		);
+	}
+
+	/**
+	* @testdox normalize() normalizes '<b> </b>' to '<b><xsl:text> </xsl:text></b>'
+	*/
+	public function testNormalizeWhitespaceStartEnd()
+	{
+		$this->assertSame(
+			'<b><xsl:text> </xsl:text></b>',
+			TemplateHelper::normalize('<b> </b>')
+		);
+	}
+
+	/**
+	* @testdox normalize() normalizes '<b> <i>!</i></b>' to '<b><xsl:text> </xsl:text><i>!</i></b>'
+	*/
+	public function testNormalizeWhitespaceStartStart()
+	{
+		$this->assertSame(
+			'<b><xsl:text> </xsl:text><i>!</i></b>',
+			TemplateHelper::normalize('<b> <i>!</i></b>')
+		);
+	}
+
+	/**
+	* @testdox normalize() normalizes '<b><i>!</i> </b>' to '<b><i>!</i><xsl:text> </xsl:text></b>'
+	*/
+	public function testNormalizeWhitespaceEndEnd()
+	{
+		$this->assertSame(
+			'<b><i>!</i><xsl:text> </xsl:text></b>',
+			TemplateHelper::normalize('<b><i>!</i> </b>')
+		);
+	}
+
+	/**
 	* @testdox normalize() throws an exception on malformed XSL
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\InvalidXslException
 	* @expectedExceptionMessage Premature end of data

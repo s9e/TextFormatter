@@ -39,9 +39,6 @@ abstract class TemplateOptimizer
 	{
 		$tmp = TemplateHelper::loadTemplate($template);
 
-		// Save single-space nodes then reload the template without whitespace
-		self::preserveSingleSpaces($tmp);
-
 		$dom = new DOMDocument;
 		$dom->preserveWhiteSpace = false;
 		$dom->formatOutput = false;
@@ -109,24 +106,6 @@ abstract class TemplateOptimizer
 				$if->removeChild($valueOf),
 				$if
 			);
-		}
-	}
-
-	/**
-	* Preserve single space characters by replacing them with a <xsl:text/> node
-	*
-	* @param DOMDocument $dom xsl:template node
-	*/
-	protected static function preserveSingleSpaces(DOMDocument $dom)
-	{
-		$xpath = new DOMXPath($dom);
-
-		foreach ($xpath->query('//text()[. = " "][not(parent::xsl:text)]') as $textNode)
-		{
-			$newNode = $dom->createElementNS(self::XMLNS_XSL, 'xsl:text');
-			$newNode->nodeValue = ' ';
-
-			$textNode->parentNode->replaceChild($newNode, $textNode);
 		}
 	}
 
