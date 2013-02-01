@@ -9,7 +9,9 @@ First, we need to express the typical BBCode usage. It takes the form of a mock 
 
     [b]{TEXT}[/b]
 
-Here, we see that the BBCode is named B and it contains some text. The pair of brackets with stuff in between is called a *token*. It takes the form of a name (a type) in uppercase, optionally followed by a number, e.g. {TEXT1} to keep them unique. Tokens are used as placeholders for actual data, e.g. {URL}, {NUMBER}, etc...
+Here, we see that the BBCode is named B and it contains some text. The pair of brackets with stuff in between is called a *token*. Tokens are used as placeholders for actual data, e.g. {URL}, {NUMBER}, etc... They takes the form of a name in uppercase, which is either:
+ * the name of an attribute filter optionally followed by a number, e.g. {TEXT1}
+ * the name of a stylesheet parameter, e.g. {L_WROTE} or {USERNAME}
 
 The closing tag is optional if the BBCode isn't supposed to have one, for example:
 
