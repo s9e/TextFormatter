@@ -246,7 +246,7 @@ class BBCodeMonkey
 				$tokenId = substr($m[0][0], 1, -1);
 				$pos     = $m[0][1];
 
-				if ($pos > ($lastPos + 1))
+				if ($pos > $lastPos)
 				{
 					$parentNode->insertBefore(
 						$dom->createTextNode(

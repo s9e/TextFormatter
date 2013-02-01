@@ -912,7 +912,13 @@ class BBCodeMonkeyTest extends Test
 				['TEXT' => 'username'],
 				null,
 				'Hello <xsl:value-of select="@username"/>'
-			]
+			],
+			[
+				'<div>{TEXT1} {TEXT2}</div>',
+				['TEXT1' => 'foo', 'TEXT2' => 'bar'],
+				null,
+				'<div><xsl:value-of select="@foo"/> <xsl:value-of select="@bar"/></div>'
+			],
 		];
 	}
 
