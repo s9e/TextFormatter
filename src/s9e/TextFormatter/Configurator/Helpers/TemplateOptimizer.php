@@ -58,7 +58,7 @@ abstract class TemplateOptimizer
 		self::inlineAttributes($dom);
 		self::optimizeConditionalAttributes($dom);
 
-		// Replace <xsl:text/> elements, which will restore single spaces to their original form
+		// Replace <xsl:text/> elements, except for whitespace nodes
 		self::inlineTextElements($dom);
 
 		return TemplateHelper::saveTemplate($dom);
@@ -477,7 +477,7 @@ abstract class TemplateOptimizer
 	}
 
 	/**
-	* Replace all <xsl:text/> nodes with a Text node
+	* Replace <xsl:text/> nodes with a Text node, except for nodes whose content is only whitespace
 	*
 	* @param DOMDocument $dom xsl:template node
 	*/
@@ -485,10 +485,13 @@ abstract class TemplateOptimizer
 	{
 		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'text') as $node)
 		{
-			$node->parentNode->replaceChild(
-				$dom->createTextNode($node->textContent),
-				$node
-			);
+			if (trim($node->textContent) !== '')
+			{
+				$node->parentNode->replaceChild(
+					$dom->createTextNode($node->textContent),
+					$node
+				);
+			}
 		}
 	}
 }

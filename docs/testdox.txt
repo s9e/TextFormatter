@@ -530,8 +530,13 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Comments are removed
+ [x] <xsl:text/> is inlined
+ [x] <xsl:text> </xsl:text> is not inlined
  [x] Superfluous whitespace between elements is removed
- [x] Single space characters are preserved
+ [x] A single space between an end tag and a start tag is replaced with an <xsl:text/>
+ [x] A single space between a start tag and an end tag is replaced with an <xsl:text/>
+ [x] A single space between two start tags is replaced with an <xsl:text/>
+ [x] A single space between two end tags is replaced with an <xsl:text/>
  [x] Superfluous whitespace inside tags is removed
  [x] Superfluous whitespace around XSL attributes is removed
  [x] Superfluous whitespace in simple attribute expressions is removed
@@ -553,8 +558,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] <xsl:attribute/> with <xsl:if/> child is not inlined
  [x] Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible
  [x] Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match
- [x] <xsl:text/> is inlined
- [x] <xsl:text> </xsl:text> is inlined
  [x] Attribute names are lowercased
  [x] Attributes are deduplicated and the first one of a given name is kept
  [x] Attributes are deduplicated and the first one of a given lowercased name is kept

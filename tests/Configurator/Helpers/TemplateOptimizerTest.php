@@ -24,6 +24,30 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox <xsl:text/> is inlined
+	*/
+	public function testFD8BE5D1()
+	{
+		$this->runCase(
+			'<xsl:text/> is inlined',
+			'<b><xsl:text>Hello world</xsl:text></b>',
+			'<b>Hello world</b>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:text> </xsl:text> is not inlined
+	*/
+	public function test44685F90()
+	{
+		$this->runCase(
+			'<xsl:text> </xsl:text> is not inlined',
+			'<b>b</b><xsl:text> </xsl:text><i>i</i>',
+			'<b>b</b><xsl:text> </xsl:text><i>i</i>'
+		);
+	}
+
+	/**
 	* @testdox Superfluous whitespace between elements is removed
 	*/
 	public function testE770FE93()
@@ -40,14 +64,50 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox Single space characters are preserved
+	* @testdox A single space between an end tag and a start tag is replaced with an <xsl:text/>
 	*/
-	public function test50A8C325()
+	public function test9D1E1887()
 	{
 		$this->runCase(
-			'Single space characters are preserved',
-			'<b>foo:</b> <i><xsl:apply-templates/></i>',
-			'<b>foo:</b> <i><xsl:apply-templates/></i>'
+			'A single space between an end tag and a start tag is replaced with an <xsl:text/>',
+			'<b>b</b> <i>i</i>',
+			'<b>b</b><xsl:text> </xsl:text><i>i</i>'
+		);
+	}
+
+	/**
+	* @testdox A single space between a start tag and an end tag is replaced with an <xsl:text/>
+	*/
+	public function testD58F220F()
+	{
+		$this->runCase(
+			'A single space between a start tag and an end tag is replaced with an <xsl:text/>',
+			'<b> </b>',
+			'<b><xsl:text> </xsl:text></b>'
+		);
+	}
+
+	/**
+	* @testdox A single space between two start tags is replaced with an <xsl:text/>
+	*/
+	public function test76174E8F()
+	{
+		$this->runCase(
+			'A single space between two start tags is replaced with an <xsl:text/>',
+			'<b> <i>!</i></b>',
+			'<b><xsl:text> </xsl:text><i>!</i></b>'
+		);
+	}
+
+	/**
+	* @testdox A single space between two end tags is replaced with an <xsl:text/>
+	*/
+	public function test15C29941()
+	{
+		$this->runCase(
+			'A single space between two end tags is replaced with an <xsl:text/>',
+			'<b><i>!</i> </b>',
+			'<b><i>!</i><xsl:text> </xsl:text></b>'
 		);
 	}
 
@@ -316,30 +376,6 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox <xsl:text/> is inlined
-	*/
-	public function testFD8BE5D1()
-	{
-		$this->runCase(
-			'<xsl:text/> is inlined',
-			'<b><xsl:text>Hello world</xsl:text></b>',
-			'<b>Hello world</b>'
-		);
-	}
-
-	/**
-	* @testdox <xsl:text> </xsl:text> is inlined
-	*/
-	public function testD006032F()
-	{
-		$this->runCase(
-			'<xsl:text> </xsl:text> is inlined',
-			'<b>b</b><xsl:text> </xsl:text><i>i</i>',
-			'<b>b</b> <i>i</i>'
-		);
-	}
-
-	/**
 	* @testdox Attribute names are lowercased
 	*/
 	public function test0EF19F18()
@@ -451,6 +487,16 @@ class TemplateOptimizerTest extends Test
 				'hi'
 			],
 			[
+				'<xsl:text/> is inlined',
+				'<b><xsl:text>Hello world</xsl:text></b>',
+				'<b>Hello world</b>'
+			],
+			[
+				'<xsl:text> </xsl:text> is not inlined',
+				'<b>b</b><xsl:text> </xsl:text><i>i</i>',
+				'<b>b</b><xsl:text> </xsl:text><i>i</i>'
+			],
+			[
 				'Superfluous whitespace between elements is removed',
 				'<div>
 					<b>
@@ -460,9 +506,24 @@ class TemplateOptimizerTest extends Test
 				'<div><b><xsl:apply-templates/></b></div>'
 			],
 			[
-				'Single space characters are preserved',
-				'<b>foo:</b> <i><xsl:apply-templates/></i>',
-				'<b>foo:</b> <i><xsl:apply-templates/></i>'
+				'A single space between an end tag and a start tag is replaced with an <xsl:text/>',
+				'<b>b</b> <i>i</i>',
+				'<b>b</b><xsl:text> </xsl:text><i>i</i>'
+			],
+			[
+				'A single space between a start tag and an end tag is replaced with an <xsl:text/>',
+				'<b> </b>',
+				'<b><xsl:text> </xsl:text></b>'
+			],
+			[
+				'A single space between two start tags is replaced with an <xsl:text/>',
+				'<b> <i>!</i></b>',
+				'<b><xsl:text> </xsl:text><i>!</i></b>'
+			],
+			[
+				'A single space between two end tags is replaced with an <xsl:text/>',
+				'<b><i>!</i> </b>',
+				'<b><i>!</i><xsl:text> </xsl:text></b>'
 			],
 			[
 				'Superfluous whitespace inside tags is removed',
@@ -573,16 +634,6 @@ class TemplateOptimizerTest extends Test
 				'Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match',
 				'<a><xsl:if test="@foo"><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>',
 				'<a><xsl:if test="@foo"><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>'
-			],
-			[
-				'<xsl:text/> is inlined',
-				'<b><xsl:text>Hello world</xsl:text></b>',
-				'<b>Hello world</b>'
-			],
-			[
-				'<xsl:text> </xsl:text> is inlined',
-				'<b>b</b><xsl:text> </xsl:text><i>i</i>',
-				'<b>b</b> <i>i</i>'
 			],
 			[
 				'Attribute names are lowercased',
