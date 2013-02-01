@@ -105,7 +105,6 @@ class ConfiguratorTest extends Test
 
 		$xsl = $plugin->getTemplate();
 
-		$this->assertContains("':&quot;)", $xsl);
 		$this->assertContains('<img src="e.png"/>', $xsl);
 	}
 

@@ -112,14 +112,25 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				}
 				else
 				{
-					// This code contains both ' and " so we store its content in a variable
-					$id = uniqid();
+					// This code contains both ' and ". XPath 1.0 doesn't have a mechanism to escape
+					// quotes, so we have to get creative and use concat() to join single-quote
+					// chunks and double-quote chunks
+					$toks = [];
+					$pos  = 0;
+					$len  = strlen($code);
+					$c    = '"';
+					while ($pos < $len)
+					{
+						$spn = strcspn($code, $c, $pos);
+						if ($spn)
+						{
+							$toks[] = $c . substr($code, $pos, $spn) . $c;
+							$pos += $spn;
+						}
+						$c = ($c === '"') ? "'" : '"';
+					}
 
-					$xsl .= '<xsl:variable name="e' . $id . '">'
-					      . htmlspecialchars($code)
-					      . '</xsl:variable>';
-
-					$code = '$e' . $id;
+					$code = 'concat(' . htmlspecialchars(implode(',', $toks)) . ')';
 				}
 			}
 			unset($code);
