@@ -40,6 +40,10 @@ function convertCustom($filepath, &$file)
 			array(
 				'if ($this->isFilter($tokenId))',
 				'if ($_this->isFilter($tokenId))'
+			),
+			array(
+				'protected function isFilter($tokenId)',
+				'public function isFilter($tokenId)'
 			)
 		),
 		'FilterProcessingTest.php' => array(
