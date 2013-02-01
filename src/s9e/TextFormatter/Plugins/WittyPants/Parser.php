@@ -58,7 +58,7 @@ class Parser extends ParserBase
 				// Test for a multiply sign at the end
 				if (substr($m[0], -1) === 'x')
 				{
-					$pos  = $m[1] + strlen($m[0]) - 1;
+					$pos = $m[1] + strlen($m[0]) - 1;
 					$chr = "\xC3\x97";
 
 					$this->parser->addSelfClosingTag($tagName, $pos, 1)->setAttribute($attrName, $chr);
@@ -136,8 +136,8 @@ class Parser extends ParserBase
 			];
 			foreach ($matches[0] as $m)
 			{
-				$pos  = $m[1];
-				$len  = strlen($m[0]);
+				$pos = $m[1];
+				$len = strlen($m[0]);
 				$chr = $chrs[$m[0]];
 
 				$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $chr);
@@ -160,8 +160,8 @@ class Parser extends ParserBase
 			];
 			foreach ($matches[0] as $m)
 			{
-				$pos  = $m[1];
-				$len  = strlen($m[0]);
+				$pos = $m[1];
+				$len = strlen($m[0]);
 				$chr = $chrs[strtr($m[0], 'CMRT', 'cmrt')];
 
 				$this->parser->addSelfClosingTag($tagName, $pos, $len)->setAttribute($attrName, $chr);

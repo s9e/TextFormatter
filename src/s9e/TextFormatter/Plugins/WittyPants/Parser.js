@@ -122,7 +122,7 @@ if (text.indexOf('(') >= 0)
 			'(c)'  : "\u00A9",
 			'(r)'  : "\u00AE",
 			'(tm)' : "\u2122"
-		}[m[0]];
+		}[m[0].toLowerCase()];
 
 		addSelfClosingTag(tagName, pos, len).setAttribute(attrName, chr);
 	}
