@@ -159,14 +159,14 @@ class Stylesheet
 		$xsl .= '/>';
 
 		// Add stylesheet parameters
-		foreach ($this->parameters as $paramName => $paramValue)
+		foreach ($this->getUsedParameters() as $paramName => $expr)
 		{
 			$xsl .= '<xsl:param name="' . htmlspecialchars($paramName) . '"';
 
 			// Add the default value if the parameter has one
-			if (isset($paramValue))
+			if (isset($expr) && $expr !== "''" && $expr !== '""')
 			{
-				$xsl .= ' select="' . htmlspecialchars($paramValue) . '"';
+				$xsl .= ' select="' . htmlspecialchars($expr) . '"';
 			}
 
 			$xsl .= '/>';
@@ -202,6 +202,48 @@ class Stylesheet
 		$xsl .= '</xsl:stylesheet>';
 
 		return $xsl;
+	}
+
+	/**
+	* Get all the parameters and values used in this stylesheet
+	*
+	* @return array Associative array of [paramName => xpathExpression]
+	*/
+	public function getUsedParameters()
+	{
+		$params = array();
+
+		// Collect all the parameters used by tags' templates and assign them an empty string
+		foreach ($this->tags as $tag)
+		{
+			foreach ($tag->templates as $template)
+			{
+				foreach ($template->getParameters() as $paramName)
+				{
+					$params[$paramName] = "''";
+				}
+			}
+		}
+
+		// Collect all the parameters used in wildcards and assign them an empty string
+		foreach ($this->wildcards as $xsl)
+		{
+			foreach (TemplateHelper::getParametersFromXSL($xsl) as $paramName)
+			{
+				$params[$paramName] = "''";
+			}
+		}
+
+		// Add parameters that have been formally defined
+		foreach ($this->parameters as $paramName => $expr)
+		{
+			$params[$paramName] = $expr;
+		}
+
+		// Keep them neat and ordered
+		ksort($params);
+
+		return $params;
 	}
 
 	/**

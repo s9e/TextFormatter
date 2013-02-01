@@ -1033,6 +1033,10 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() includes parameters in the stylesheet
  [x] get() includes a parameter's default value in the stylesheet
  [x] get() escapes a parameter's default value
+ [x] getUsedParameters() returns parameters that were formally defined
+ [x] getUsedParameters() returns undefined parameters used in tags' templates
+ [x] getUsedParameters() returns undefined parameters used in wildcard templates
+ [x] get() outputs <xsl:param/> elements for undefined parameters used in templates
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] asConfig() creates a JavaScript variant for allowedSchemes

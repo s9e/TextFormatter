@@ -313,4 +313,68 @@ class StylesheetTest extends Test
 			$stylesheet->get()
 		);
 	}
+
+	/**
+	* @testdox getUsedParameters() returns parameters that were formally defined
+	*/
+	public function testGetUsedParametersDefined()
+	{
+		$stylesheet = new Stylesheet(new TagCollection);
+		$stylesheet->parameters->add('foo', "'Foo'");
+
+		$this->assertSame(
+			['foo' => "'Foo'"],
+			$stylesheet->getUsedParameters()
+		);
+	}
+
+	/**
+	* @testdox getUsedParameters() returns undefined parameters used in tags' templates
+	*/
+	public function testGetUsedParametersUndefinedFromTemplates()
+	{
+		$tags = new TagCollection;
+		$tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
+		$tags->add('Y')->defaultTemplate = '<xsl:value-of select="$S_OK"/>';
+
+		$stylesheet = new Stylesheet($tags);
+
+		$this->assertSame(
+			['L_FOO' => "''", 'S_OK' => "''"],
+			$stylesheet->getUsedParameters()
+		);
+	}
+
+	/**
+	* @testdox getUsedParameters() returns undefined parameters used in wildcard templates
+	*/
+	public function testGetUsedParametersUndefinedFromWildcards()
+	{
+		$tags = new TagCollection;
+		$tags->add('foo:X');
+
+		$stylesheet = new Stylesheet($tags);
+		$stylesheet->setWildcardTemplate('foo', '<xsl:value-of select="$L_FOO"/>');
+
+		$this->assertSame(
+			['L_FOO' => "''"],
+			$stylesheet->getUsedParameters()
+		);
+	}
+
+	/**
+	* @testdox get() outputs <xsl:param/> elements for undefined parameters used in templates
+	*/
+	public function testGetOutputsUndefinedParameters()
+	{
+		$tags = new TagCollection;
+		$tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
+
+		$stylesheet = new Stylesheet($tags);
+
+		$this->assertContains(
+			'<xsl:param name="L_FOO"',
+			$stylesheet->get()
+		);
+	}
 }
