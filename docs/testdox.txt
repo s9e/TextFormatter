@@ -1628,6 +1628,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] HTML rendering
  [x] XHTML rendering
  [x] BBCodes from repository.xml render nicely
+ [x] Rendering tests from plugins
  [x] Edge cases
 
 s9e\TextFormatter\Tests\Unparser

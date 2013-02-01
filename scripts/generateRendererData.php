@@ -9,7 +9,7 @@ class PHPUnit_Framework_TestCase {}
 include __DIR__ . '/../tests/bootstrap.php';
 
 $dir = __DIR__ . '/../tests/Configurator/RendererGenerators/data/';
-
+/*
 // Generate edge-cases test data
 foreach (glob($dir . 'e*.txt') as $filepath)
 {
@@ -88,4 +88,42 @@ foreach ($test->getPredefinedBBCodesTests() as $case)
 	file_put_contents($filepath . '.xml', $xml);
 	file_put_contents($filepath . '.html.xsl', $xsl);
 	file_put_contents($filepath . '.html', $html);
+}
+*/
+// Generate Plugins test data
+foreach (glob(__DIR__ . '/../tests/Plugins/*', GLOB_ONLYDIR) as $dirpath)
+{
+	$pluginName = basename($dirpath);
+	$className  = 's9e\\TextFormatter\\Tests\\Plugins\\' . $pluginName . '\\ParserTest';
+	$test       = new $className;
+
+	if (!method_exists($test, 'getRenderingTests'))
+	{
+		continue;
+	}
+
+	foreach ($test->getRenderingTests() as $case)
+	{
+		$original      = $case[0];
+		$expected      = $case[1];
+		$pluginOptions = (isset($case[2])) ? $case[2] : array();
+		$setup         = (isset($case[3])) ? $case[3] : null;
+
+		$configurator = new Configurator;
+		$configurator->plugins->load($pluginName, $pluginOptions);
+
+		if ($setup)
+		{
+			call_user_func($setup, $configurator);
+		}
+
+		$xml  = $configurator->getParser()->parse($original);
+		$xsl  = $configurator->stylesheet->get();
+		$html = $configurator->getRenderer()->render($xml);
+
+		$filepath = $dir . $pluginName . '.' . sprintf('%08X', crc32($xml));
+		file_put_contents($filepath . '.xml', $xml);
+		file_put_contents($filepath . '.html.xsl', $xsl);
+		file_put_contents($filepath . '.html', $html);
+	}
 }

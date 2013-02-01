@@ -195,6 +195,29 @@ class PHPTest extends Test
 		return $this->getRendererData('b*', 'html');
 	}
 
+
+	/**
+	* @testdox Rendering tests from plugins
+	* @dataProvider getPluginsData
+	*/
+	public function testPlugins($xml, $xsl, $html)
+	{
+		$generator = new PHP;
+		$php = $generator->generate($xsl);
+
+		$renderer = eval('?>' . $php);
+
+		$this->assertSame(
+			$html,
+			$renderer->render($xml)
+		);
+	}
+
+	public function getPluginsData()
+	{
+		return $this->getRendererData('*.*', 'html');
+	}
+
 	/**
 	* @testdox Edge cases
 	* @dataProvider getEdgeCases
