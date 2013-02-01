@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\Helpers;
 
 use DOMDocument;
 use DOMNode;
+use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Exceptions\InvalidTemplateException;
 use s9e\TextFormatter\Configurator\Exceptions\InvalidXslException;
@@ -236,5 +237,100 @@ abstract class TemplateHelper
 		}
 
 		return $tokens;
+	}
+
+	/**
+	* Return the list of variables used in a given XPath expression
+	*
+	* @param  string $expr XPath expression
+	* @return array        Alphabetically sorted list of unique variable names
+	*/
+	public static function getVariablesFromXPath($expr)
+	{
+		// First, remove strings' contents to prevent false-positives
+		$expr = preg_replace('/(["\']).*?\\1/s', '$1$1', $expr);
+
+		// Capture all the variable names
+		preg_match_all('/\\$(\\w+)/', $expr, $matches);
+
+		// Dedupe and sort names
+		$varNames = array_unique($matches[1]);
+		sort($varNames);
+
+		return $varNames;
+	}
+
+	/**
+	* Return a list of parameters in use in given XSL
+	*
+	* @param  string $xsl XSL source
+	* @return array       Alphabetically sorted list of unique parameter names
+	*/
+	public static function getParametersFromXSL($xsl)
+	{
+		$paramNames = array();
+
+		// Wrap the XSL in boilerplate code because it might not have a root element
+		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . '<xsl:template>'
+		     . $xsl
+		     . '</xsl:template>'
+		     . '</xsl:stylesheet>';
+
+		$dom = new DOMDocument;
+		$dom->loadXML($xsl);
+
+		$xpath = new DOMXPath($dom);
+
+		// Start by collecting XPath expressions in XSL elements
+		$query = '//xsl:*/@match | //xsl:*/@select | //xsl:*/@test';
+		foreach ($xpath->query($query) as $attribute)
+		{
+			foreach (self::getVariablesFromXPath($attribute->value) as $varName)
+			{
+				// Test whether this is the name of a local variable
+				$varQuery = 'ancestor-or-self::*/'
+				          . 'preceding-sibling::xsl:variable[@name="' . $varName . '"]';
+
+				if (!$xpath->query($varQuery, $attribute)->length)
+				{
+					$paramNames[] = $varName;
+				}
+			}
+		}
+
+		// Collecting XPath expressions in attribute value templates
+		$query = '//*[namespace-uri() != "http://www.w3.org/1999/XSL/Transform"]'
+		       . '/@*[contains(., "{")]';
+		foreach ($xpath->query($query) as $attribute)
+		{
+			$tokens = self::parseAttributeValueTemplate($attribute->value);
+
+			foreach ($tokens as $token)
+			{
+				if ($token[0] !== 'expression')
+				{
+					continue;
+				}
+
+				foreach (self::getVariablesFromXPath($token[1]) as $varName)
+				{
+					// Test whether this is the name of a local variable
+					$varQuery = 'ancestor-or-self::*/'
+					          . 'preceding-sibling::xsl:variable[@name="' . $varName . '"]';
+
+					if (!$xpath->query($varQuery, $attribute)->length)
+					{
+						$paramNames[] = $varName;
+					}
+				}
+			}
+		}
+
+		// Dedupe and sort names
+		$paramNames = array_unique($paramNames);
+		sort($paramNames);
+
+		return $paramNames;
 	}
 }

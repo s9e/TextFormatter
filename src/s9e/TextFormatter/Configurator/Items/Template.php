@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\Items;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
 class Template
 {
@@ -53,5 +54,15 @@ class Template
 		return (isset($this->callback))
 		     ? call_user_func($this->callback)
 		     : $this->template;
+	}
+
+	/**
+	* Return a list of parameters in use in this template
+	*
+	* @return array Alphabetically sorted list of unique parameter names
+	*/
+	public function getParameters()
+	{
+		return TemplateHelper::getParametersFromXSL($this->__toString());
 	}
 }

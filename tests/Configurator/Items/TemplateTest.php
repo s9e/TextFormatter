@@ -60,4 +60,17 @@ class TemplateTest extends Test
 
 		$this->assertSame('foo', (string) $template);
 	}
+
+	/**
+	* @testdox getParameters() returns the list of parameters used in this template
+	*/
+	public function testGetParameters()
+	{
+		$template = new Template('<div><xsl:value-of select="$L_FOO"/></div>');
+
+		$this->assertSame(
+			['L_FOO'],
+			$template->getParameters()
+		);
+	}
 }

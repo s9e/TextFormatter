@@ -795,6 +795,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] normalize() normalizes '<br>' to '<br/>'
  [x] normalize() throws an exception on malformed XSL
  [x] parseAttributeValueTemplate() tests
+ [x] getParametersFromXSL() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor
@@ -994,6 +995,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Template
  [x] Template::__construct() throws an exception on anything else
  [x] When cast as string, returns the string passed to constructor if applicable
  [x] When cast as string, executes the callback passed to constructor and returns its result if applicable
+ [x] getParameters() returns the list of parameters used in this template
 
 s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] get() returns the default value

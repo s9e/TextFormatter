@@ -245,4 +245,90 @@ class TemplateHelperTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox getParametersFromXSL() tests
+	* @dataProvider getParametersTests
+	*/
+	public function testGetParametersFromXSL($xsl, $expected)
+	{
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
+
+		$this->assertSame(
+			$expected,
+			TemplateHelper::getParametersFromXSL($xsl)
+		);
+	}
+
+	public function getParametersTests()
+	{
+		return [
+			[
+				'',
+				[]
+			],
+			[
+				'<b><xsl:value-of select="concat($Foo, $BAR, $Foo)"/></b>',
+				['BAR', 'Foo']
+			],
+			[
+				'<b>
+					<xsl:variable name="FOO"/>
+					<xsl:value-of select="$FOO"/>
+				</b>',
+				[]
+			],
+			[
+				'<b>
+					<xsl:variable name="FOO"/>
+					<xsl:if test="$BAR">
+						<xsl:value-of select="$FOO"/>
+					</xsl:if>
+				</b>',
+				['BAR']
+			],
+			[
+				'<b>
+					<xsl:value-of select="$FOO"/>
+					<xsl:variable name="FOO"/>
+					<xsl:if test="$BAR">
+						<xsl:value-of select="$FOO"/>
+					</xsl:if>
+				</b>',
+				['BAR', 'FOO']
+			],
+			[
+				'<b title="$FOO{$BAR}$BAZ"/>',
+				['BAR']
+			],
+			[
+				'<b title="{concat($Foo, $BAR, $Foo)}"/>',
+				['BAR', 'Foo']
+			],
+			[
+				'<div>
+					<xsl:variable name="S_TEST"/>
+					<xsl:if test="$S_TEST">
+						<b title="{$FOO}"/>
+					</xsl:if>
+				</div>',
+				['FOO']
+			],
+			[
+				'<div>
+					<xsl:if test="$S_TEST">
+						<b title="{$FOO}"/>
+					</xsl:if>
+					<xsl:variable name="S_TEST"/>
+					<xsl:if test="$S_TEST">
+						<b title="{$FOO}"/>
+					</xsl:if>
+				</div>',
+				['FOO', 'S_TEST']
+			],
+		];
+	}
 }
