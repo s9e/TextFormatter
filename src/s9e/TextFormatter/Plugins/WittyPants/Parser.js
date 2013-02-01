@@ -35,7 +35,7 @@ if (doSingleQuote || doDoubleQuote || text.indexOf('x') >= 0)
 		pos = m.index + m[0].length - 1;
 		if (m[0].charAt(pos) === 'x')
 		{
-			addSelfClosingTag(tagName, pos, 1).setAttribute(attrName, "\u0215");
+			addSelfClosingTag(tagName, pos, 1).setAttribute(attrName, "\u00d7");
 		}
 
 		// Test for a apostrophe/prime right after the digit
