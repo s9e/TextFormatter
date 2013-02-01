@@ -490,7 +490,6 @@ class PHPTest extends Test
 						= '<xsl:text>&amp;foo</xsl:text>';
 				}
 			],
-/*
 			[
 				'<rt>x <X>...</X> y</rt>',
 				function ($configurator)
@@ -499,7 +498,6 @@ class PHPTest extends Test
 						= '<b>x <i>i</i> <u>u</u> y</b>';
 				}
 			],
-*/
 		];
 	}
 }
