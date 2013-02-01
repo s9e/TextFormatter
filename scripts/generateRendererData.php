@@ -9,7 +9,7 @@ class PHPUnit_Framework_TestCase {}
 include __DIR__ . '/../tests/bootstrap.php';
 
 $dir = __DIR__ . '/../tests/Configurator/RendererGenerators/data/';
-/*
+
 // Generate edge-cases test data
 foreach (glob($dir . 'e*.txt') as $filepath)
 {
@@ -89,7 +89,7 @@ foreach ($test->getPredefinedBBCodesTests() as $case)
 	file_put_contents($filepath . '.html.xsl', $xsl);
 	file_put_contents($filepath . '.html', $html);
 }
-*/
+
 // Generate Plugins test data
 foreach (glob(__DIR__ . '/../tests/Plugins/*', GLOB_ONLYDIR) as $dirpath)
 {
