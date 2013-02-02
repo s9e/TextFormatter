@@ -4,7 +4,8 @@ include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
 
-// Add a BBCode from the default repository src/Plugins/BBCodes/Configurator/repository.xml
+// Add a BBCode from the default repository at:
+// ../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml
 $configurator->BBCodes->addFromRepository('QUOTE');
 
 // Add a few BBCodes using their human readable representation. You can check out repository.xml for
@@ -23,6 +24,13 @@ $configurator->BBCodes->addCustom(
 	'[URL={URL;useContent}]{TEXT}[/URL]',
 	'<a href="{URL}">{TEXT}</a>'
 );
+
+// Trying to add unsafe BBCodes results in an UnsafeTemplateException being thrown
+//$configurator->BBCodes->addCustom('[BAD={TEXT1}]{TEXT2}[/BAD]', '<a href="{TEXT1}">{TEXT2}</a>');
+//$configurator->BBCodes->addCustom('[BAD={TEXT1}]{TEXT2}[/BAD]', '<b onblur="{TEXT1}">{TEXT2}</b>');
+//$configurator->BBCodes->addCustom('[BAD={TEXT1}]{TEXT2}[/BAD]', '<b style="{TEXT1}">{TEXT2}</b>');
+//$configurator->BBCodes->addCustom('[BAD]{TEXT}[/BAD]',          '<script>{TEXT}"</script>');
+//$configurator->BBCodes->addCustom('[BAD]{TEXT}[/BAD]',          '<style>{TEXT}"</script>');
 
 // When we created the [URL] BBCode, it automatically created a general purpose URL tag which can
 // be used by other plugins. Here we load the Autolink plugin and specify which tag to use. In this
