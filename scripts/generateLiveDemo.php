@@ -102,7 +102,7 @@ The following plugins have been enabled:
   [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
-The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/TextFormatter/blob/master/scripts/generateLiveDemo.php]this script[/url]. It has been minified to <?php echo round(strlen($js) / 1024, 1) . 'KB (' . round(strlen(gzencode($js, 9)) / 1024, 1) . 'KB gzipped)'; ?> with [url=http://closure-compiler.appspot.com/home]Google Closure Compiler[/url].</textarea>
+The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/TextFormatter/blob/master/scripts/generateLiveDemo.php]this script[/url].</textarea>
 		</form>
 	</div>
 
