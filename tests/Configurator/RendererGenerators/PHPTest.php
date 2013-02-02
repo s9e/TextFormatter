@@ -227,20 +227,21 @@ class PHPTest extends Test
 		$configurator = new Configurator;
 		call_user_func($configuratorSetup, $configurator);
 
-		$expected = $configurator->getRenderer()->render($xml);
-
 		$generator = new PHP;
 		$php = $generator->generate($configurator->stylesheet->get());
 
-		$renderer = eval('?>' . $php);
+		$phpRenderer  = eval('?>' . $php);
+		$xsltRenderer = $configurator->getRenderer();
+
 		if ($rendererSetup)
 		{
-			call_user_func($rendererSetup, $renderer);
+			call_user_func($rendererSetup, $phpRenderer);
+			call_user_func($rendererSetup, $xsltRenderer);
 		}
 
 		$this->assertSame(
-			$expected,
-			$renderer->render($xml)
+			$xsltRenderer->render($xml),
+			$phpRenderer->render($xml)
 		);
 	}
 
@@ -311,45 +312,6 @@ class PHPTest extends Test
 				function ($renderer)
 				{
 					$renderer->setParameter('foo', 15);
-				}
-			],
-			[
-				'<rt><X/></rt>',
-				function ($configurator)
-				{
-					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
-						= '<xsl:value-of select="$foo"/>';
-				},
-				function ($renderer)
-				{
-					$renderer->setParameter('foo', "'...'");
-				}
-			],
-			[
-				'<rt><X/></rt>',
-				function ($configurator)
-				{
-					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
-						= '<xsl:value-of select="$foo"/>';
-				},
-				function ($renderer)
-				{
-					$renderer->setParameter('foo', '"..."');
-				}
-			],
-			[
-				'<rt><X/></rt>',
-				function ($configurator)
-				{
-					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
-						= '<xsl:value-of select="$foo"/>';
-				},
-				function ($renderer)
-				{
-					$renderer->setParameter('foo', '"\'"..."\'"');
 				}
 			],
 			[

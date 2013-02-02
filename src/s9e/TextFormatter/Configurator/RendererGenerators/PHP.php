@@ -65,10 +65,14 @@ class PHP
 			public function setParameter($paramName, $paramValue)
 			{
 				$this->userParams[$paramName] = $paramValue;
+				unset($this->defaultParams[$paramName]);
 			}
 			public function setParameters(array $params)
 			{
-				$this->userParams = array_merge($this->userParams, $params);
+				foreach ($params as $paramName => $paramValue)
+				{
+					$this->setParameter($paramName, $paramValue);
+				}
 			}
 			public function render($xml)
 			{
