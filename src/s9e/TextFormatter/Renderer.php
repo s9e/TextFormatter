@@ -81,8 +81,10 @@ class Renderer implements Serializable
 	*/
 	public function setParameters(array $params)
 	{
-		$this->load();
-		$this->proc->setParameter('', $params);
+		foreach ($params as $paramName => $paramValue)
+		{
+			$this->setParameter($paramName, $paramValue);
+		}
 	}
 
 	/**

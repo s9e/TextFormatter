@@ -115,6 +115,30 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox setParameter() accepts values that contain both types of quotes
+	*/
+	public function testSetParameterBothQuotes()
+	{
+		$configurator = new Configurator;
+		$configurator->stylesheet->parameters->add('foo');
+		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+
+		$generator = new PHP;
+		$renderer  = eval('?>' . $generator->generate($configurator->stylesheet->get()));
+
+		$values = array(
+			'"\'...\'"',
+			'\'\'""...\'\'"\'"'
+		);
+
+		foreach ($values as $value)
+		{
+			$renderer->setParameter('foo', $value);
+			$this->assertSame($value, $renderer->render('<rt><X/></rt>'));
+		}
+	}
+
+	/**
 	* @dataProvider getHTMLData
 	* @testdox HTML rendering
 	*/

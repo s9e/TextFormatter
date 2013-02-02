@@ -1620,6 +1620,7 @@ s9e\TextFormatter\Tests\Renderer
  [x] Renderer is serializable
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array
+ [x] setParameter() accepts values that contain both types of quotes, but replaces apostrophes with acure accents (U+00B4)
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Ignores comments
