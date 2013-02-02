@@ -36,7 +36,7 @@ TODO
 - Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
 - JS parser needs quickMatch to be UTF-8
 - Find a good way to test the JavaScript HTML plugins
-- Look into ext/dom's XML_PARSE_HUGE -- apparently it's needed to render text with 1000s of tags
+- Look into ext/dom's XML_PARSE_HUGE -- apparently it's needed to render text with 1000s of tags. Also look into LIBXML_COMPACT
 - Add some sort of optional filtering/escaping to the variables used in repositories? htmlspecialchars(), json_encode()
 - Add a way to declare an attribute "safe in X", e.g. "safe in CSS" regardless of its filterChain to account for filters whose safety is unclear. Also try to determine whether a given regexp is safe: collect all the fixed parts (what about meta-characters and escape sequences?) plus the content of character classes (also negated classes) and make it a big character class then individually test whether it matches a list of forbidden characters
 - Limit URLs length to whatever browsers grok
