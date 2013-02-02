@@ -45,7 +45,7 @@ Built-in filters
 <dd>A string that matches <code>/^[- +,.0-9A-Za-z_]+$/</code>.</dd>
 
 <dt>#uint</dt>
-<dd>An unsigned integer value. Same as #int, but rejects value less than 0.</dd>
+<dd>An unsigned integer value. Same as #int, but rejects values less than 0.</dd>
 
 <dt>#url</dt>
 <dd>A valid URL. Uses ext/filter's FILTER_VALIDATE_URL. Trims surrounding whitespace to facilitate compliance with <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#valid-url-potentially-surrounded-by-spaces">HTML specs</a>. Uses the settings from UrlConfig. Allows scheme-less URLs by default. Punycodes IDNs if <code>idn_to_ascii()</code> is available. URL-encodes non-ASCII characters. Also URL-encodes the four following characters <code>"'()</code> to make the URL safe to use in CSS. Validates scheme against allowed schemes. Validates host against disallowed hosts. Optionally resolves redirectors. Does not support local URLs.</dd>
