@@ -4,7 +4,6 @@ TODO
 - finish the Fabric plugin
 - create a plugin for the Markdown syntax (or possibly Upskirt/Redcarpet) and name it Downmark to feel witty and have a plugin for each letter from A to H
 - write documentation, el oh el
-- Add a rule to automatically create a parent to a tag, e.g. create <LIST> when <LI> is used. After creating <LIST>, add its id to the "require" field so that we don't get in an infinite loop position of the new tag should probably be the actual position of the tag, not of the whitespace
 - JSParserGenerator: if all the plugins' RLA is the same, remove them from the config and use hints to bypass the if test
 - Investigate the possibility of using an external CSS checker in order to enable a default "css" filter
 - Consider a Twitter BBCode (https://dev.twitter.com/docs/embedded-tweets)
@@ -16,10 +15,7 @@ TODO
 - Add exception codes to exceptions?
 - Possibly add an "hex" filter for /^[0-9a-f]+$/iD - what would be the return value though, string or integer? does "10" return 10 or 16 (0x10)
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
-- Replace PluginConfig::getXSL() with PluginConfig::getTemplates() which should return array([match]=>[template]) and each template goes through Templates::setTemplate() (how to evaluate attributes safety though)
 - Look into properly implementing urlencode() and rawurlencode() in JS
-- Way to implement syntax highlighting at parsing time: create tags in the "stx" namespace and implement syntax highlighting via... a plugin maybe? At least some stuff would need to be hardcoded, first of which would be the end [/CODE] tag, and probably also its start tag, [CODE]. Make the namespaced tags requireAncestor their CODE tag
-- Add support for <ol start="2"/>
 - Add a [FONT face={SIMPLETEXT}] bbcode/tag (could render to <span style="font-family:{SIMPLETEXT}">
 - Implement the concept of a plugin "tag formatter": give it a tag from the intermediate form and it returns the string that could have generated it. e.g. BBCodes's tag formatter takes <URL url="..."> and returns [URL url="..."] or [URL="..."] -- tag content might be a problem though. Can we format any start/end tag without knowing what's in between?
 - Add a Picasa(?) BBCode
@@ -42,6 +38,5 @@ TODO
 - Limit URLs length to whatever browsers grok
 - Add some sort of TemplateHelper::loadHTML() to load HTML templates. XSL elements should be dropped or converted to HTML elements, and curly brackets in attributes should be escaped
 - Exploitable? http://sla.ckers.org/forum/read.php?2,36997
-- IDEA: when a tag is added, set a flag. Sort tags at beginning of processCurrentTag() if the flag is set. This way, a filter that adds a tag would force the tags to be re-sorted
 - Add Filter::isSafeAsURL() to complement Filter::isSafeInURL() -- for example: <a href="http://foo.com/{IDENTIFIER}"/> and <a href="{IDENTIFIER}:{TEXT;postFilter=urlencode"/> -- {IDENTIFIER} is safe *in* URL, but not at the beginning ("javascript:alert%28%22k%22%29"), whereas {URL} is safe as URL
 - Consider using preg_replace() to remove <st/>, <et/>, <i/> and any tag that is rendered by an empty template. Attention to predicates, a tag could have multiple templates -- doesn't seem to have any benefits on an average message
