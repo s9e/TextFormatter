@@ -35,6 +35,7 @@ abstract class TemplateChecker
 	* @todo Investigate <embed name="foo.swf" src="foo.swf"/>, also <param name="movie" value="foo.swf"/>
 	* @todo unsafe: <b onclick='alert("{@foo}")'/> even with json_encode() -- safe: <b onclick='alert({@foo})'/> -- IOW ensure the JSON thing is not enclosed in quotes -- also unsafe: onclick="/*{@foo}"
 	* @todo consider any variable safe? <xsl:value-of select="$foo"/>
+	* @todo unsafe: <a href="{IDENTIFIER}:...">
 	*
 	* @param  string $template Content of the template. A root node is not required
 	* @param  Tag    $tag      Tag that this template belongs to

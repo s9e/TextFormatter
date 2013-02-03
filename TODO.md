@@ -40,3 +40,4 @@ TODO
 - Exploitable? http://sla.ckers.org/forum/read.php?2,36997
 - Add Filter::isSafeAsURL() to complement Filter::isSafeInURL() -- for example: <a href="http://foo.com/{IDENTIFIER}"/> and <a href="{IDENTIFIER}:{TEXT;postFilter=urlencode"/> -- {IDENTIFIER} is safe *in* URL, but not at the beginning ("javascript:alert%28%22k%22%29"), whereas {URL} is safe as URL
 - Consider using preg_replace() to remove <st/>, <et/>, <i/> and any tag that is rendered by an empty template. Attention to predicates, a tag could have multiple templates -- doesn't seem to have any benefits on an average message
+- There are many SVG vectors, too many to chase after individually. Prevent any user-supplied data in <svg> tags (in any namespace) or add isSafeInSVG() with a very restricted set of allowed filters -- http://html5sec.org/#94
