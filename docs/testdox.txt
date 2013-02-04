@@ -798,6 +798,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] normalize() normalizes '<b> </b>' to '<b><xsl:text> </xsl:text></b>'
  [x] normalize() normalizes '<b> <i>!</i></b>' to '<b><xsl:text> </xsl:text><i>!</i></b>'
  [x] normalize() normalizes '<b><i>!</i> </b>' to '<b><i>!</i><xsl:text> </xsl:text></b>'
+ [x] normalize() normalizes '<![CDATA[<br/>]]><![CDATA[<br/>]]>' to '&lt;br/&gt;&lt;br/&gt;'
  [x] normalize() throws an exception on malformed XSL
  [x] parseAttributeValueTemplate() tests
  [x] getParametersFromXSL() tests

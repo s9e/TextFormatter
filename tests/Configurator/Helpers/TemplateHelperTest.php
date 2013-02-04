@@ -175,6 +175,17 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox normalize() normalizes '<![CDATA[<br/>]]><![CDATA[<br/>]]>' to '&lt;br/&gt;&lt;br/&gt;'
+	*/
+	public function testNormalizeCDATA()
+	{
+		$this->assertSame(
+			'&lt;br/&gt;&lt;br/&gt;',
+			TemplateHelper::normalize('<![CDATA[<br/>]]><![CDATA[<br/>]]>')
+		);
+	}
+
+	/**
 	* @testdox normalize() throws an exception on malformed XSL
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\InvalidXslException
 	* @expectedExceptionMessage Premature end of data

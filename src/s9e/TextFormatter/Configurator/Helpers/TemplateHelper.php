@@ -43,6 +43,7 @@ abstract class TemplateHelper
 	{
 		// Preserve single-space nodes by putting them in an <xsl:text/> node
 		$dom = self::loadTemplate($template);
+		self::inlineCDATA($dom);
 		self::preserveSingleSpaces($dom);
 		$template = self::saveTemplate($dom);
 
@@ -148,6 +149,27 @@ abstract class TemplateHelper
 		$xml = substr($xml, $pos, $len);
 
 		return $xml;
+	}
+
+	/**
+	* Replace CDATA sections with text literals
+	*
+	* @param DOMDocument $dom xsl:template node
+	*/
+	protected static function inlineCDATA(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+
+		foreach ($xpath->query('//text()') as $textNode)
+		{
+			if ($textNode->nodeType === XML_CDATA_SECTION_NODE)
+			{
+				$textNode->parentNode->replaceChild(
+					$dom->createTextNode($textNode->textContent),
+					$textNode
+				);
+			}
+		}
 	}
 
 	/**
