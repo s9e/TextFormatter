@@ -36,6 +36,8 @@ class Configurator extends ConfiguratorBase
 	* It doesn't make much sense to try to declare every known HTML attribute here. Validation is
 	* not the purpose of this plugin. It does make sense however to declare URL attributes as such,
 	* so that they are subject to our constraints (disallowed hosts, etc...)
+	*
+	* @see scripts/patchHTMLElementConfigurator.php
 	*/
 	protected $attributeFilters = [
 		'action'     => '#url',

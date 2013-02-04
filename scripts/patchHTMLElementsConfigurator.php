@@ -45,7 +45,18 @@ $php = substr($php, 0, -1) . "\n\t";
 
 $filepath = __DIR__ . '/../src/s9e/TextFormatter/Plugins/HTMLElements/Configurator.php';
 $file = file_get_contents($filepath);
-$file = preg_replace('/(protected \\$attributeFilters = array\\()[^)]+/', '$1' . $php, $file);
+$file = preg_replace(
+	'/(protected \\$attributeFilters = \\[)[^\\]]+/',
+	'$1' . $php,
+	$file,
+	-1,
+	$cnt
+);
+
+if ($cnt !== 1)
+{
+	die("Bad replacement count ($cnt) in $filepath\n");
+}
 
 file_put_contents($filepath, $file);
 
