@@ -13,8 +13,10 @@ use DOMText;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\Stylesheet;
 
-class PHP
+class PHP implements RendererGenerator
 {
 	/**
 	* XSL namespace
@@ -32,10 +34,26 @@ class PHP
 	protected $php;
 
 	/**
-	* Generate a PHP class that renders an intermediate representation according to given stylesheet
+	* {@inheritdoc}
+	*/
+	public function getRenderer(Stylesheet $stylesheet)
+	{
+		// Generate the source file
+		$php =$this->generate($stylesheet->get());
+
+		// Execute the source to get an instance, and copy the source into the instance
+		$renderer = eval('?>' . $php);
+		$renderer->source = $php;
+
+		return $renderer;
+	}
+
+	/**
+	* Generate a file that contains a PHP class that renders an intermediate representation
+	* according to given stylesheet
 	*
 	* @param  string $xsl XSL stylesheet
-	* @return void
+	* @return string
 	*/
 	public function generate($xsl)
 	{
@@ -57,8 +75,9 @@ class PHP
 			$params[] = var_export($paramName, true) . '=>' . var_export($paramValue, true);
 		}
 
-		$this->php = '<?php class ' . $className . '{
+		$this->php = '<?php class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
 			protected $defaultParams=[' . implode(',', $params) . '];
+			protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
 			protected $params=[];
 			protected $userParams=[];
 			protected $xpath;
@@ -67,14 +86,7 @@ class PHP
 				$this->userParams[$paramName] = $paramValue;
 				unset($this->defaultParams[$paramName]);
 			}
-			public function setParameters(array $params)
-			{
-				foreach ($params as $paramName => $paramValue)
-				{
-					$this->setParameter($paramName, $paramValue);
-				}
-			}
-			public function render($xml)
+			public function renderRichText($xml)
 			{
 				$dom = new DOMDocument;
 				$dom->loadXML($xml);

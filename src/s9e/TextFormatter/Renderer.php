@@ -7,85 +7,12 @@
 */
 namespace s9e\TextFormatter;
 
-use DOMDocument;
-use Serializable;
-use XSLTProcessor;
-
-class Renderer implements Serializable
+abstract class Renderer
 {
 	/**
-	* @var bool Whether the stylesheet used by this renderer output HTML
+	* @var bool Whether the output must be HTML (otherwise it is assumed it is XHTML)
 	*/
-	protected $htmlOutput;
-
-	/**
-	* @var XSLTProcessor The lazy-loaded XSLTProcessor instance used by this renderer
-	*/
-	protected $proc;
-
-	/**
-	* @var string The stylesheet used by this renderer
-	*/
-	protected $stylesheet;
-
-	/**
-	* Constructor
-	*
-	* @param  string $stylesheet The stylesheet used to render intermediate representations
-	* @return void
-	*/
-	public function __construct($stylesheet)
-	{
-		$this->stylesheet = $stylesheet;
-	}
-
-	/**
-	* Serializer
-	*
-	* @return string This renderer's stylesheet
-	*/
-	public function serialize()
-	{
-		return $this->stylesheet;
-	}
-
-	/**
-	* Unserializer
-	*
-	* @param  string $data Serialized data
-	* @return void
-	*/
-	public function unserialize($data)
-	{
-		$this->__construct($data);
-	}
-
-	/**
-	* Set the value of a parameter from the stylesheet
-	*
-	* @param  string $paramName  Parameter name
-	* @param  mixed  $paramValue Parameter's value
-	* @return void
-	*/
-	public function setParameter($paramName, $paramValue)
-	{
-		$this->load();
-		$this->proc->setParameter('', $paramName, $paramValue);
-	}
-
-	/**
-	* Set the values of several parameters from the stylesheet
-	*
-	* @param  string $params Associative array of [parameter name => parameter value]
-	* @return void
-	*/
-	public function setParameters(array $params)
-	{
-		foreach ($params as $paramName => $paramValue)
-		{
-			$this->setParameter($paramName, $paramValue);
-		}
-	}
+	protected $htmlOutput = true;
 
 	/**
 	* Render an intermediate representation
@@ -95,30 +22,9 @@ class Renderer implements Serializable
 	*/
 	public function render($xml)
 	{
-		// Fast path for plain text
-		if (substr($xml, 0, 4) === '<pt>')
-		{
-			return $this->renderPlainText($xml);
-		}
-
-		// Load the intermediate representation
-		$dom  = new DOMDocument;
-		$dom->loadXML($xml);
-
-		// Load the stylesheet
-		$this->load();
-
-		// Perform the transformation and cast it as a string because it may return NULL if the
-		// transformation didn't output anything
-		$output = (string) $this->proc->transformToXml($dom);
-
-		// Remove the \n that XSL adds at the end of the output, if applicable
-		if (substr($output, -1) === "\n")
-		{
-			$output = substr($output, 0, -1);
-		}
-
-		return $output;
+		return (substr($xml, 0, 4) === '<pt>')
+		     ? $this->renderPlainText($xml)
+		     : $this->renderRichText($xml);
 	}
 
 	/**
@@ -154,7 +60,7 @@ class Renderer implements Serializable
 			$uid = sha1(uniqid(mt_rand(), true));
 			$xml = '<m>' . implode($uid, $render) . '</m>';
 
-			foreach (explode($uid, $this->render($xml)) as $i => $html)
+			foreach (explode($uid, $this->renderRichText($xml)) as $i => $html)
 			{
 				// Replace the IR with its rendering
 				$arr[$keys[$i]] = $html;
@@ -165,23 +71,6 @@ class Renderer implements Serializable
 	}
 
 	/**
-	* Create an XSLTProcessor and load the stylesheet
-	*
-	* @return void
-	*/
-	protected function load()
-	{
-		if (!isset($this->proc))
-		{
-			$xsl = new DOMDocument;
-			$xsl->loadXML($this->stylesheet);
-
-			$this->proc = new XSLTProcessor;
-			$this->proc->importStylesheet($xsl);
-		}
-	}
-
-	/**
 	* Render an intermediate representation of plain text
 	*
 	* @param  string $xml Intermediate representation
@@ -189,12 +78,6 @@ class Renderer implements Serializable
 	*/
 	protected function renderPlainText($xml)
 	{
-		if (!isset($this->htmlOutput))
-		{
-			// Test whether we output HTML or XML
-			$this->htmlOutput = (strpos($this->stylesheet, '<xsl:output method="html') !== false);
-		}
-
 		// Remove the <pt> and </pt> tags
 		$html = substr($xml, 4, -5);
 
@@ -205,5 +88,36 @@ class Renderer implements Serializable
 		}
 
 		return $html;
+	}
+
+	/**
+	* Render an intermediate representation of rich text
+	*
+	* @param  string $xml Intermediate representation
+	* @return string      Rendered result
+	*/
+	abstract protected function renderRichText($xml);
+
+	/**
+	* Set the value of a parameter from the stylesheet
+	*
+	* @param  string $paramName  Parameter name
+	* @param  mixed  $paramValue Parameter's value
+	* @return void
+	*/
+	abstract public function setParameter($paramName, $paramValue);
+
+	/**
+	* Set the values of several parameters from the stylesheet
+	*
+	* @param  string $params Associative array of [parameter name => parameter value]
+	* @return void
+	*/
+	public function setParameters(array $params)
+	{
+		foreach ($params as $paramName => $paramValue)
+		{
+			$this->setParameter($paramName, $paramValue);
+		}
 	}
 }

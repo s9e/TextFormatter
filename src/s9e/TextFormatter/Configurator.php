@@ -19,6 +19,7 @@ use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
@@ -38,6 +39,11 @@ class Configurator implements ConfigProvider
 	* @var PluginCollection Loaded plugins
 	*/
 	public $plugins;
+
+	/**
+	* @var RendererGenerator Generator used by $this->getRenderer()
+	*/
+	public $rendererGenerator;
 
 	/**
 	* @var Ruleset Rules that apply at the root of the text
@@ -67,13 +73,14 @@ class Configurator implements ConfigProvider
 	*/
 	public function __construct()
 	{
-		$this->attributeFilters = new AttributeFilterCollection;
-		$this->javascript       = new JavaScript($this);
-		$this->plugins          = new PluginCollection($this);
-		$this->rootRules        = new Ruleset;
-		$this->tags             = new TagCollection;
-		$this->stylesheet       = new Stylesheet($this->tags);
-		$this->urlConfig        = new UrlConfig;
+		$this->attributeFilters  = new AttributeFilterCollection;
+		$this->javascript        = new JavaScript($this);
+		$this->plugins           = new PluginCollection($this);
+		$this->rendererGenerator = new XSLT;
+		$this->rootRules         = new Ruleset;
+		$this->tags              = new TagCollection;
+		$this->stylesheet        = new Stylesheet($this->tags);
+		$this->urlConfig         = new UrlConfig;
 	}
 
 	/**
@@ -117,7 +124,7 @@ class Configurator implements ConfigProvider
 	*/
 	public function getRenderer()
 	{
-		return new Renderer($this->stylesheet->get());
+		return $this->rendererGenerator->getRenderer($this->stylesheet);
 	}
 
 	/**
@@ -161,6 +168,7 @@ class Configurator implements ConfigProvider
 		// Remove properties that shouldn't be turned into config arrays
 		unset($properties['attributeFilters']);
 		unset($properties['javascript']);
+		unset($properties['rendererGenerator']);
 		unset($properties['stylesheet']);
 
 		// Create the config array

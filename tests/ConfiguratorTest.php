@@ -52,6 +52,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox $configurator->rendererGenerator is an instance of RendererGenerators\XSLT
+	*/
+	public function testRrendererGeneratorInstance()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\RendererGenerators\\XSLT',
+			$this->configurator->rendererGenerator
+		);
+	}
+
+	/**
 	* @testdox $configurator->rootRules is an instance of Ruleset
 	*/
 	public function testRootRulesInstance()
@@ -334,6 +345,20 @@ class ConfiguratorTest extends Test
 			's9e\\TextFormatter\\Renderer',
 			$this->configurator->getRenderer()
 		);
+	}
+
+	/**
+	* @testdox getRenderer() invokes $this->rendererGenerator->getRenderer()
+	*/
+	public function testGetRendererInvokesGenerator()
+	{
+		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\RendererGenerators\\XSLT');
+		$mock->expects($this->once())
+		     ->method('getRenderer')
+		     ->with($this->configurator->stylesheet);
+
+		$this->configurator->rendererGenerator = $mock;
+		$this->configurator->getRenderer();
 	}
 
 	/**

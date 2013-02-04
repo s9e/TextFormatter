@@ -8,22 +8,8 @@ use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Renderer;
 use s9e\TextFormatter\Tests\Test;
 
-/**
-* @covers s9e\TextFormatter\Renderer
-*/
-class RendererTest extends Test
+trait RendererTests
 {
-	protected $renderer;
-
-	public function setUp()
-	{
-		$tags = new TagCollection;
-		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
-
-		$stylesheet = new Stylesheet($tags);
-		$this->renderer = new Renderer($stylesheet->get());
-	}
-
 	/**
 	* @testdox Renders plain text
 	*/
@@ -33,7 +19,7 @@ class RendererTest extends Test
 
 		$this->assertSame(
 			'Plain text',
-			$this->renderer->render($xml)
+			$this->configurator->getRenderer()->render($xml)
 		);
 	}
 
@@ -42,15 +28,13 @@ class RendererTest extends Test
 	*/
 	public function testMultiLineTextHTML()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setOutputMethod('html');
-		$renderer = new Renderer($stylesheet->get());
-
 		$xml = '<pt>One<br/>two</pt>';
+
+		$this->configurator->stylesheet->setOutputMethod('html');
 
 		$this->assertSame(
 			'One<br>two',
-			$renderer->render($xml)
+			$this->configurator->getRenderer()->render($xml)
 		);
 	}
 
@@ -59,15 +43,13 @@ class RendererTest extends Test
 	*/
 	public function testMultiLineTextXHTML()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setOutputMethod('xml');
-		$renderer = new Renderer($stylesheet->get());
-
 		$xml = '<pt>One<br/>two</pt>';
+
+		$this->configurator->stylesheet->setOutputMethod('xml');
 
 		$this->assertSame(
 			'One<br/>two',
-			$renderer->render($xml)
+			$this->configurator->getRenderer()->render($xml)
 		);
 	}
 
@@ -78,9 +60,11 @@ class RendererTest extends Test
 	{
 		$xml = '<rt>Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>';
 
+		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
 		$this->assertSame(
 			'Hello <b>world</b>!',
-			$this->renderer->render($xml)
+			$this->configurator->getRenderer()->render($xml)
 		);
 	}
 
@@ -103,9 +87,11 @@ class RendererTest extends Test
 			'Plain text'
 		];
 
+		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
 		$this->assertSame(
 			$expected,
-			$this->renderer->renderMulti($parsed)
+			$this->configurator->getRenderer()->renderMulti($parsed)
 		);
 	}
 
@@ -132,9 +118,11 @@ class RendererTest extends Test
 			'Six'
 		];
 
+		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
 		$this->assertSame(
 			$expected,
-			$this->renderer->renderMulti($parsed)
+			$this->configurator->getRenderer()->renderMulti($parsed)
 		);
 	}
 
@@ -143,16 +131,14 @@ class RendererTest extends Test
 	*/
 	public function testMultiMultiPlainTextHTML()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setOutputMethod('html');
-		$renderer = new Renderer($stylesheet->get());
+		$this->configurator->stylesheet->setOutputMethod('html');
 
 		$parsed   = ['<pt>One<br/>two</pt>'];
 		$expected = ['One<br>two'];
 
 		$this->assertSame(
 			$expected,
-			$renderer->renderMulti($parsed)
+			$this->configurator->getRenderer()->renderMulti($parsed)
 		);
 	}
 
@@ -161,27 +147,14 @@ class RendererTest extends Test
 	*/
 	public function testMultiMultiPlainTextXHTML()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setOutputMethod('xml');
-		$renderer = new Renderer($stylesheet->get());
+		$this->configurator->stylesheet->setOutputMethod('xml');
 
 		$parsed   = ['<pt>One<br/>two</pt>'];
 		$expected = ['One<br/>two'];
 
 		$this->assertSame(
 			$expected,
-			$renderer->renderMulti($parsed)
-		);
-	}
-
-	/**
-	* @testdox Renderer is serializable
-	*/
-	public function testSerializable()
-	{
-		$this->assertEquals(
-			$this->renderer,
-			unserialize(serialize($this->renderer))
+			$this->configurator->getRenderer()->renderMulti($parsed)
 		);
 	}
 
@@ -190,11 +163,10 @@ class RendererTest extends Test
 	*/
 	public function testSetParameter()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
-		$configurator->stylesheet->parameters->add('foo');
+		$this->configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$this->configurator->stylesheet->parameters->add('foo');
 
-		$renderer = $configurator->getRenderer();
+		$renderer = $this->configurator->getRenderer();
 		$renderer->setParameter('foo', 'bar');
 
 		$this->assertSame(
@@ -208,12 +180,12 @@ class RendererTest extends Test
 	*/
 	public function testSetParameters()
 	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/><xsl:value-of select="$bar"/>';
-		$configurator->stylesheet->parameters->add('foo');
-		$configurator->stylesheet->parameters->add('bar');
+		$this->configurator->tags->add('X')->defaultTemplate
+			= '<xsl:value-of select="$foo"/><xsl:value-of select="$bar"/>';
+		$this->configurator->stylesheet->parameters->add('foo');
+		$this->configurator->stylesheet->parameters->add('bar');
 
-		$renderer = $configurator->getRenderer();
+		$renderer = $this->configurator->getRenderer();
 		$renderer->setParameters([
 			'foo' => 'FOO',
 			'bar' => 'BAR'
@@ -232,11 +204,9 @@ class RendererTest extends Test
 	{
 		$this->markTestSkipped();
 
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
-		$configurator->stylesheet->parameters->add('foo');
-
-		$renderer = $configurator->getRenderer();
+		$this->configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$this->configurator->stylesheet->parameters->add('foo');
+		$renderer = $this->configurator->getRenderer();
 
 		$values = array(
 			'"\'...\'"',
