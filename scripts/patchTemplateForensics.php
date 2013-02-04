@@ -10,7 +10,7 @@ $filepath = '/tmp/single-page.html';
 if (!file_exists($filepath))
 {
 	copy(
-		'compress.zlib://http://dev.w3.org/html5/spec/single-page.html',
+		'compress.zlib://http://www.w3.org/TR/html5/single-page.html',
 		$filepath,
 		stream_context_create(array(
 			'http' => array(
@@ -698,15 +698,15 @@ foreach ($arr as $elName => $elValues)
 	if (isset($closeParent[$elName]))
 	{
 		ksort($closeParent[$elName]);
-		$phpValues['cp'] = "array('" . implode("','", array_keys($closeParent[$elName])) . "')";
+		$phpValues['cp'] = "['" . implode("','", array_keys($closeParent[$elName])) . "']";
 	}
 
-	$php .= "\n\t\t'" . $elName . "'=>array(";
+	$php .= "\n\t\t'" . $elName . "'=>[";
 	foreach ($phpValues as $k => $v)
 	{
 		$php .= "'$k'=>$v,";
 	}
-	$php = substr($php, 0, -1) . '),';
+	$php = substr($php, 0, -1) . '],';
 }
 
 $php = substr($php, 0, -1);
@@ -714,7 +714,7 @@ $php = substr($php, 0, -1);
 $filepath = __DIR__ . '/../src/s9e/TextFormatter/Configurator/Helpers/HTML5/TemplateForensics.php';
 $file = file_get_contents($filepath);
 
-if (!preg_match('#(?<=static \\$htmlElements = array\\()(.*?)(?=\\n\\t\\);)#s', $file, $m, PREG_OFFSET_CAPTURE))
+if (!preg_match('#(?<=static \\$htmlElements = \\[)(.*?)(?=\\n\\t\\];)#s', $file, $m, PREG_OFFSET_CAPTURE))
 {
 	die("Could not find the location in the file\n");
 }
