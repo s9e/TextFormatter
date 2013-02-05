@@ -569,6 +569,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
  [x] checkUnsafe() throws an exception on invalid XML
  [x] checkUnsafe() throws an exception if the template contains a <?php instruction
  [x] checkUnsafe() throws an exception if the template contains a <?PHP instruction
+ [x] checkUnsafe() throws an exception if the template generates a <?php instruction
+ [x] checkUnsafe() throws an exception if the template generates a <?PHP instruction
+ [x] checkUnsafe() throws an exception if the template generates a dynamic processing instruction
  [x] checkUnsafe() throws an exception if an element has an "use-attribute-sets" attribute
  [x] Not safe: <x:element name="script" xmlns:x="http://www.w3.org/1999/XSL/Transform"><xsl:apply-templates/></x:element>
  [x] Not safe: <element name="script" xmlns="http://www.w3.org/1999/XSL/Transform"><apply-templates/></element>

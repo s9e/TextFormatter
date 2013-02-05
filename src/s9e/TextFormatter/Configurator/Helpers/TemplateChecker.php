@@ -377,22 +377,33 @@ abstract class TemplateChecker
 	}
 
 	/**
-	* Test whether the template contains a <?php tag
+	* Prevent <?php tags from appearing in the stylesheet or in renderings
 	*
-	* NOTE: PHP tags have no effect in templates, they are removed on the remote chance of being
-	*       used as a vector of intrusion, for example if a template is saved in a publicly
-	*       accessible file that the webserver is somehow configured to process as PHP
+	* NOTE: PHP tags have no effect in templates or in renderings, they are removed on the remote
+	*       chance of being used as a vector, for example if a template is saved in a publicly
+	*       accessible file that the webserver is somehow configured to process as PHP, or if the
+	*       output is saved in a file (e.g. for static archives) that is parsed by PHP
 	*
 	* @param DOMXPath $xpath DOMXPath associated with the template being checked
 	*/
 	protected static function checkPHPTags(DOMXPath $xpath)
 	{
-		$query = '//processing-instruction()["php" = translate(name(),"HP","hp")]';
+		$query = '//processing-instruction()["php" = translate(name(),"HP","hp")]'
+		       . '|'
+		       . '//xsl:processing-instruction["php" = translate(@name,"HP","hp")]';
 		$nodes = $xpath->query($query);
 
 		if ($nodes->length)
 		{
 			throw new UnsafeTemplateException('PHP tags are not allowed', $nodes->item(0));
+		}
+
+		$query = '//xsl:processing-instruction[contains(@name, "{")]';
+		$nodes = $xpath->query($query);
+
+		if ($nodes->length)
+		{
+			throw new UnsafeTemplateException('Dynamic processing instructions are not allowed', $nodes->item(0));
 		}
 	}
 

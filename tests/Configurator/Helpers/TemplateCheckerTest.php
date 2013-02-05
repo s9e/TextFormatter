@@ -47,6 +47,36 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
+	* @testdox checkUnsafe() throws an exception if the template generates a <?php instruction
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage PHP tags are not allowed
+	*/
+	public function testPHPTagOutput()
+	{
+		TemplateChecker::checkUnsafe('<x><xsl:processing-instruction name="php"/></x>');
+	}
+
+	/**
+	* @testdox checkUnsafe() throws an exception if the template generates a <?PHP instruction
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage PHP tags are not allowed
+	*/
+	public function testPHPTagCaseOutputInsensitive()
+	{
+		TemplateChecker::checkUnsafe('<x><xsl:processing-instruction name="PHP"/></x>');
+	}
+
+	/**
+	* @testdox checkUnsafe() throws an exception if the template generates a dynamic processing instruction
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage Dynamic processing instructions are not allowed
+	*/
+	public function testDynamicProcessingInstruction()
+	{
+		TemplateChecker::checkUnsafe('<x><xsl:processing-instruction name="{@foo}"/></x>');
+	}
+
+	/**
 	* @testdox checkUnsafe() throws an exception if an element has an "use-attribute-sets" attribute
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Cannot assess the safety of attribute sets
