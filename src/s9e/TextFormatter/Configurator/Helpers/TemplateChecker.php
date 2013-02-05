@@ -206,6 +206,7 @@ abstract class TemplateChecker
 			'/^data$/i'       => 'URL',
 			'/^formaction$/i' => 'URL',
 			'/^href$/i'       => 'URL',
+			'/^icon$/i'       => 'URL',
 			'/^manifest$/i'   => 'URL',
 			'/^poster$/i'     => 'URL',
 			// Covers "src" as well as non-standard attributes "dynsrc", "lowsrc"
