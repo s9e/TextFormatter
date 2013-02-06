@@ -462,15 +462,32 @@ abstract class TemplateOptimizer
 	*/
 	protected static function inlineTextElements(DOMDocument $dom)
 	{
-		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'text') as $node)
+		$xpath = new DOMXPath($dom);
+
+		foreach ($xpath->query('//xsl:text') as $node)
 		{
-			if (trim($node->textContent) !== '')
+			// If this node's content is whitespace, ensure it's preceded or followed by a text node
+			if (trim($node->textContent) === '')
 			{
-				$node->parentNode->replaceChild(
-					$dom->createTextNode($node->textContent),
-					$node
-				);
+				if ($node->previousSibling && $node->previousSibling->nodeType === XML_TEXT_NODE)
+				{
+					// This node is preceded by a text node
+				}
+				elseif ($node->nextSibling && $node->nextSibling->nodeType === XML_TEXT_NODE)
+				{
+					// This node is followed by a text node
+				}
+				else
+				{
+					// This would become inter-element whitespace, therefore we can't inline
+					continue;
+				}
 			}
+
+			$node->parentNode->replaceChild(
+				$dom->createTextNode($node->textContent),
+				$node
+			);
 		}
 	}
 }

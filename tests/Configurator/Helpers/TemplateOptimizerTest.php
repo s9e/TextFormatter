@@ -36,14 +36,74 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox <xsl:text> </xsl:text> is not inlined
+	* @testdox <xsl:text/> is inlined
 	*/
-	public function test44685F90()
+	public function testB5F16F13()
 	{
 		$this->runCase(
-			'<xsl:text> </xsl:text> is not inlined',
+			'<xsl:text/> is inlined',
+			'<b>Hello <xsl:text>world</xsl:text></b>',
+			'<b>Hello world</b>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:text/> is inlined
+	*/
+	public function test3A08609C()
+	{
+		$this->runCase(
+			'<xsl:text/> is inlined',
+			'<b><xsl:text>Hello</xsl:text> world</b>',
+			'<b>Hello world</b>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:text> </xsl:text> is not inlined if it would become inter-element whitespace
+	*/
+	public function testC30BC5E6()
+	{
+		$this->runCase(
+			'<xsl:text> </xsl:text> is not inlined if it would become inter-element whitespace',
 			'<b>b</b><xsl:text> </xsl:text><i>i</i>',
 			'<b>b</b><xsl:text> </xsl:text><i>i</i>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:text> </xsl:text> is inlined if it is preceded by a text node
+	*/
+	public function test15DED44E()
+	{
+		$this->runCase(
+			'<xsl:text> </xsl:text> is inlined if it is preceded by a text node',
+			'<b>b</b>Text<xsl:text> </xsl:text><i>i</i>',
+			'<b>b</b>Text <i>i</i>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:text> </xsl:text> is inlined if it is followed by a text node
+	*/
+	public function test437BB815()
+	{
+		$this->runCase(
+			'<xsl:text> </xsl:text> is inlined if it is followed by a text node',
+			'<b>b</b><xsl:text> </xsl:text>Text<i>i</i>',
+			'<b>b</b> Text<i>i</i>'
+		);
+	}
+
+	/**
+	* @testdox Multiple <xsl:text/> are inlined
+	*/
+	public function testB4EE4D8C()
+	{
+		$this->runCase(
+			'Multiple <xsl:text/> are inlined',
+			'<b><xsl:text>Hello</xsl:text><xsl:text> world</xsl:text></b>',
+			'<b>Hello world</b>'
 		);
 	}
 
@@ -444,9 +504,34 @@ class TemplateOptimizerTest extends Test
 				'<b>Hello world</b>'
 			],
 			[
-				'<xsl:text> </xsl:text> is not inlined',
+				'<xsl:text/> is inlined',
+				'<b>Hello <xsl:text>world</xsl:text></b>',
+				'<b>Hello world</b>'
+			],
+			[
+				'<xsl:text/> is inlined',
+				'<b><xsl:text>Hello</xsl:text> world</b>',
+				'<b>Hello world</b>'
+			],
+			[
+				'<xsl:text> </xsl:text> is not inlined if it would become inter-element whitespace',
 				'<b>b</b><xsl:text> </xsl:text><i>i</i>',
 				'<b>b</b><xsl:text> </xsl:text><i>i</i>'
+			],
+			[
+				'<xsl:text> </xsl:text> is inlined if it is preceded by a text node',
+				'<b>b</b>Text<xsl:text> </xsl:text><i>i</i>',
+				'<b>b</b>Text <i>i</i>'
+			],
+			[
+				'<xsl:text> </xsl:text> is inlined if it is followed by a text node',
+				'<b>b</b><xsl:text> </xsl:text>Text<i>i</i>',
+				'<b>b</b> Text<i>i</i>'
+			],
+			[
+				'Multiple <xsl:text/> are inlined',
+				'<b><xsl:text>Hello</xsl:text><xsl:text> world</xsl:text></b>',
+				'<b>Hello world</b>'
 			],
 			[
 				'Superfluous whitespace between elements is removed',
