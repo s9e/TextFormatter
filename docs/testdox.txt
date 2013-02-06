@@ -1646,6 +1646,7 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [ ] setParameter() accepts values that contain both types of quotes
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
+ [x] Returns an instance of Renderer
  [x] Ignores comments
  [x] Throws an exception if a template contains a processing instruction
  [x] Throws an exception when encountering unsupported XSL elements
@@ -1658,6 +1659,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] BBCodes from repository.xml render nicely
  [x] Rendering tests from plugins
  [x] Edge cases
+
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
+ [x] Returns an instance of Renderer
 
 s9e\TextFormatter\Tests\Unparser
  [x] unparse('<pt>Plain text</pt>') returns 'Plain text'

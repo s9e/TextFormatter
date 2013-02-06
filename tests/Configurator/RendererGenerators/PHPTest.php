@@ -13,6 +13,18 @@ use s9e\TextFormatter\Tests\Test;
 class PHPTest extends Test
 {
 	/**
+	* @testdox Returns an instance of Renderer
+	*/
+	public function testInstance()
+	{
+		$generator = new PHP;
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Renderer',
+			$generator->getRenderer($this->configurator->stylesheet)
+		);
+	}
+
+	/**
 	* @testdox Ignores comments
 	*/
 	public function testComment()

@@ -143,6 +143,7 @@
 			<file>tests/Renderers/PHPTest.php</file>
 
 			<file>tests/Configurator/RendererGenerators/PHPTest.php</file>
+			<file>tests/Configurator/RendererGenerators/XSLTTest.php</file>
 
 			<file>tests/UnparserTest.php</file>
 		</testsuite>
