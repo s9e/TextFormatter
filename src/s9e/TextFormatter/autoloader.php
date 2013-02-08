@@ -3,9 +3,9 @@
 spl_autoload_register(
 	function($className)
 	{
-		if (substr($className, 0, 18) === 's9e\\TextFormatter\\')
+		if (preg_match('#^s9e\\\\TextFormatter(\\\\[\\w\\\\]+)$#D', $className, $m))
 		{
-			$path = __DIR__ . str_replace('\\', DIRECTORY_SEPARATOR, substr($className, 17)) . '.php';
+			$path = __DIR__ . str_replace('\\', DIRECTORY_SEPARATOR, $m[1]) . '.php';
 
 			if (file_exists($path))
 			{

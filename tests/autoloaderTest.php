@@ -40,4 +40,13 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	{
 		$this->autoload('s9e\\TextFormatter\\Plugins\\Emoticons\\Parser');
 	}
+
+	/**
+	* @testdox Does not attempt to load a class whose name contains dots
+	*/
+	public function testBadPath()
+	{
+		include_once __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
+		class_exists('s9e\\TextFormatter\\..\\..\\..\\tests\\error');
+	}
 }
