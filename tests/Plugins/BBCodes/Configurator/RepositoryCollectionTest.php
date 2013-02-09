@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\Repository;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
 use s9e\TextFormatter\Tests\Test;
@@ -17,9 +18,9 @@ class RepositoryCollectionTest extends Test
 	*/
 	public function testAddRepository()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new Configurator);
+		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new BBCodeMonkey(new Configurator));
 
-		$collection = new RepositoryCollection(new Configurator);
+		$collection = new RepositoryCollection(new BBCodeMonkey(new Configurator));
 		$collection->add('foo', $repository);
 
 		$this->assertSame($repository, $collection->get('foo'));
@@ -30,7 +31,7 @@ class RepositoryCollectionTest extends Test
 	*/
 	public function testAddFilePath()
 	{
-		$collection = new RepositoryCollection(new Configurator);
+		$collection = new RepositoryCollection(new BBCodeMonkey(new Configurator));
 		$collection->add('foo', __DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
 
 		$this->assertInstanceOf(

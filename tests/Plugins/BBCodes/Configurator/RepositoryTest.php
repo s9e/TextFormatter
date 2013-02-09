@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator;
 use DOMDocument;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\Repository;
 use s9e\TextFormatter\Tests\Test;
 
@@ -18,7 +19,7 @@ class RepositoryTest extends Test
 	*/
 	public function testConstructorFile()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new Configurator);
+		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new BBCodeMonkey(new Configurator));
 	}
 
 	/**
@@ -29,7 +30,7 @@ class RepositoryTest extends Test
 		$dom = new DOMDocument;
 		$dom->load(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 	}
 
 	/**
@@ -39,7 +40,7 @@ class RepositoryTest extends Test
 	*/
 	public function testConstructorInvalidPath()
 	{
-		$repository = new Repository(null, new Configurator);
+		$repository = new Repository(null, new BBCodeMonkey(new Configurator));
 	}
 
 	/**
@@ -49,7 +50,7 @@ class RepositoryTest extends Test
 	*/
 	public function testConstructorInvalidFile()
 	{
-		$repository = new Repository(__FILE__, new Configurator);
+		$repository = new Repository(__FILE__, new BBCodeMonkey(new Configurator));
 	}
 
 	/**
@@ -59,7 +60,7 @@ class RepositoryTest extends Test
 	*/
 	public function testUnknownBBCode()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new Configurator);
+		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new BBCodeMonkey(new Configurator));
 		$repository->get('FOOBAR');
 	}
 
@@ -78,7 +79,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$repository->get('b');
 	}
 
@@ -97,7 +98,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$repository->get('b#special');
 	}
 
@@ -116,7 +117,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO', ['attrName' => 'bar']);
 
 		$this->assertTrue(isset($config['tag']->attributes['bar']));
@@ -137,7 +138,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO', ['text' => 'Hello']);
 
 		$this->assertSame('Hello', (string) $config['tag']->defaultTemplate);
@@ -158,7 +159,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO', [
 			'attr1' => 'x',
 			'attr2' => 'y',
@@ -187,7 +188,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO');
 
 		$this->assertSame(
@@ -201,7 +202,7 @@ class RepositoryTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new Configurator);
+		$repository = new Repository(__DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml', new BBCodeMonkey(new Configurator));
 		$config = $repository->get('*');
 
 		$this->assertSame(
@@ -230,7 +231,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO');
 
 		$this->assertEquals(
@@ -259,7 +260,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO');
 
 		$this->assertTrue($config['tag']->rules['denyAll']);
@@ -281,7 +282,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO');
 
 		$this->assertSame('default', (string) $config['tag']->templates->get(''));
@@ -304,7 +305,7 @@ class RepositoryTest extends Test
 			</repository>'
 		);
 
-		$repository = new Repository($dom, new Configurator);
+		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO');
 
 		$this->assertTrue(isset($config['bbcode']->predefinedAttributes['foo']));

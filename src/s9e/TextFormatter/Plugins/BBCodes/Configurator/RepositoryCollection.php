@@ -13,19 +13,19 @@ use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 class RepositoryCollection extends NormalizedCollection
 {
 	/**
-	* @var Configurator Instance of Configurator
+	* @var BBCodeMonkey Instance of BBCodeMonkey passed to new Repository instances
 	*/
-	protected $configurator;
+	protected $bbcodeMonkey;
 
 	/**
 	* Constructor
 	*
-	* @param  Configurator $configurator Instance of Configurator
+	* @param  BBCodeMonkey $bbcodeMonkey Instance of BBCodeMonkey used to parse definitions
 	* @return void
 	*/
-	public function __construct(Configurator $configurator)
+	public function __construct(BBCodeMonkey $bbcodeMonkey)
 	{
-		$this->configurator = $configurator;
+		$this->bbcodeMonkey = $bbcodeMonkey;
 	}
 
 	/**
@@ -38,6 +38,6 @@ class RepositoryCollection extends NormalizedCollection
 	{
 		return ($value instanceof Repository)
 		     ? $value
-		     : new Repository($value, $this->configurator);
+		     : new Repository($value, $this->bbcodeMonkey);
 	}
 }

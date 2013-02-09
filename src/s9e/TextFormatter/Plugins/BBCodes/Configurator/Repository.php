@@ -11,8 +11,6 @@ use DOMDocument;
 use DOMXPath;
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Collections\NormalizeCollection;
 
 class Repository
 {
@@ -30,10 +28,10 @@ class Repository
 	* Constructor
 	*
 	* @param  mixed        $value        Either a DOMDocument or the path to a repository's XML file
-	* @param  Configurator $configurator Instance of Configurator
+	* @param  BBCodeMonkey $bbcodeMonkey Instance of BBCodeMonkey used to parse definitions
 	* @return void
 	*/
-	public function __construct($value, Configurator $configurator)
+	public function __construct($value, BBCodeMonkey $bbcodeMonkey)
 	{
 		if (!($value instanceof DOMDocument))
 		{
@@ -57,7 +55,7 @@ class Repository
 			$value = $dom;
 		}
 
-		$this->bbcodeMonkey = new BBCodeMonkey($configurator);
+		$this->bbcodeMonkey = $bbcodeMonkey;
 		$this->dom = $value;
 
 		return $value;

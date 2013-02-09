@@ -59,7 +59,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	{
 		$this->bbcodeMonkey = new BBCodeMonkey($this->configurator);
 		$this->collection   = new BBCodeCollection;
-		$this->repositories = new RepositoryCollection($this->configurator);
+		$this->repositories = new RepositoryCollection($this->bbcodeMonkey);
 		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
 
@@ -76,31 +76,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	{
 		$templates = (is_array($template)) ? $template : ['' => $template];
 
-		// Create a temporary repository for this BBCode
-		$xml = '<?xml version="1.0" encoding="utf-8" ?>
-			<repository>
-				<bbcode name="CUSTOM">
-					<usage>' . htmlspecialchars($usage) . '</usage>';
-
-		foreach ($templates as $predicate => $template)
-		{
-			$xml .= '<template';
-
-			if ($predicate !== '')
-			{
-				$xml .= ' predicate="' . htmlspecialchars($predicate) . '"';
-			}
-
-			$xml .= '>' . htmlspecialchars($template) . '</template>';
-		}
-		$xml .= '</bbcode></repository>';
-
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		$repository = new Repository($dom, $this->configurator);
-
-		return $this->addFromRepository('CUSTOM', $repository);
+		return $this->addFromConfig($this->bbcodeMonkey->create($usage, $templates));
 	}
 
 	/**
@@ -124,8 +100,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			$repository = $this->repositories->get($repository);
 		}
 
-		// Get the BBCode/tag config from the repository
-		$config     = $repository->get($name, $vars);
+		return $this->addFromConfig($repository->get($name, $vars));
+	}
+
+	/**
+	* Add a BBCode and its tag based on the return config from BBCodeMonkey
+	*
+	* @param  array  $config BBCodeMonkey::create()'s return array
+	* @return BBCode
+	*/
+	protected function addFromConfig(array $config)
+	{
 		$bbcodeName = $config['bbcodeName'];
 		$bbcode     = $config['bbcode'];
 		$tag        = $config['tag'];
