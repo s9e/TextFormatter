@@ -86,6 +86,46 @@ class BBCodeMonkey
 	}
 
 	/**
+	* Create a BBCode and its underlying tag and template(s) based on its reference usage
+	*
+	* @param  string $usage     BBCode usage, e.g. [B]{TEXT}[/b]
+	* @param  mixed  $templates Template, or an array of [predicate => template]
+	* @return array             An array containing three elements: 'bbcode', 'bbcodeName' and 'tag'
+	*/
+	public function create($usage, $templates)
+	{
+		if (!is_array($templates))
+		{
+			$templates = array('' => $templates);
+		}
+
+		// Parse the BBCode usage
+		$config = $this->parse($usage);
+
+		// Prepare the return array
+		$return = array(
+			'bbcode'     => $config['bbcode'],
+			'bbcodeName' => $config['bbcodeName'],
+			'tag'        => $config['tag']
+		);
+
+		// Set the templates for this BBCode's tag
+		foreach ($templates as $predicate => $template)
+		{
+			$return['tag']->templates->set(
+				$predicate,
+				$this->replaceTokens(
+					$template,
+					$config['tokens'],
+					$config['passthroughToken']
+				)
+			);
+		}
+
+		return $return;
+	}
+
+	/**
 	* Create a BBCode based on its reference usage
 	*
 	* @param  string $usage BBCode usage, e.g. [B]{TEXT}[/b]
@@ -120,7 +160,7 @@ class BBCodeMonkey
 		}
 
 		// Save the BBCode's name
-		$config['name'] = BBCode::normalizeName($m['bbcodeName']);
+		$config['bbcodeName'] = BBCode::normalizeName($m['bbcodeName']);
 
 		// Prepare the attributes definition, e.g. "foo={BAR}"
 		$attributes = $m['attributes'];
@@ -331,6 +371,8 @@ class BBCodeMonkey
 
 	/**
 	* Attempt to load a template with DOM, first as XML then as HTML as a fallback
+	*
+	* @todo replace with TemplateHelper::loadTemplate() ?
 	*
 	* @param  string      $template
 	* @return DOMDocument

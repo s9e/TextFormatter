@@ -67,6 +67,53 @@ class BBCodeMonkeyTest extends Test
 		}
 	}
 
+	/**
+	* @testdox create() creates and return a BBCode, its name and its tag
+	*/
+	public function testCreate()
+	{
+		$bm = new BBCodeMonkey(new Configurator);
+
+		$this->assertEquals(
+			[
+				'bbcodeName' => 'FOO',
+				'bbcode'     => new BBCode,
+				'tag'        => new Tag([
+					'defaultTemplate' => '<b><xsl:apply-templates/></b>'
+				])
+			],
+			$bm->create('[FOO]{TEXT}[/FOO]', '<b>{TEXT}</b>')
+		);
+	}
+
+	/**
+	* @testdox create() accepts an array of [predicate => template] as second argument
+	*/
+	public function testCreateMultipleTemplates()
+	{
+		$bm = new BBCodeMonkey(new Configurator);
+
+		$this->assertEquals(
+			[
+				'bbcodeName' => 'FOO',
+				'bbcode'     => new BBCode,
+				'tag'        => new Tag([
+					'templates' => [
+						''            => '<b><xsl:apply-templates/></b>',
+						'parent::BAR' => '<i><xsl:apply-templates/></i>'
+					]
+				])
+			],
+			$bm->create(
+				'[FOO]{TEXT}[/FOO]',
+				[
+						''            => '<b>{TEXT}</b>',
+						'parent::BAR' => '<i>{TEXT}</i>'
+				]
+			)
+		);
+	}
+
 	public function getBBCodeTests()
 	{
 		return [
@@ -89,7 +136,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo bar={TEXT} baz={TEXT}]{TEXT}[/foo]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute' => 'bar'
 					]),
@@ -106,7 +153,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[URL={URL}]{TEXT}[/URL]',
 				[
-					'name'   => 'URL',
+					'bbcodeName' => 'URL',
 					'bbcode' => new BBCode([
 						'defaultAttribute' => 'url'
 					]),
@@ -126,17 +173,17 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[b]{TEXT}[/B]',
 				[
-					'name'   => 'B',
-					'bbcode' => new BBCode,
-					'tag'    => new Tag,
-					'tokens' => [],
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag,
+					'tokens'     => [],
 					'passthroughToken' => 'TEXT'
 				]
 			],
 			[
 				'[b title={TEXT1}]{TEXT2}[/B]',
 				[
-					'name'   => 'B',
+					'bbcodeName' => 'B',
 					'bbcode' => new BBCode([
 						'defaultAttribute' => 'title'
 					]),
@@ -154,7 +201,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[b title={TEXT1;optional;required;optional}]{TEXT2}[/B]',
 				[
-					'name'   => 'B',
+					'bbcodeName' => 'B',
 					'bbcode' => new BBCode([
 						'defaultAttribute' => 'title'
 					]),
@@ -172,7 +219,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[b title={TEXT1;defaultValue=Title;optional}]{TEXT2}[/B]',
 				[
-					'name'   => 'B',
+					'bbcodeName' => 'B',
 					'bbcode' => new BBCode([
 						'defaultAttribute' => 'title'
 					]),
@@ -193,7 +240,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[hr]',
 				[
-					'name'   => 'HR',
+					'bbcodeName' => 'HR',
 					'bbcode' => new BBCode,
 					'tag'    => new Tag,
 					'tokens' => [],
@@ -203,7 +250,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[hr][/hr]',
 				[
-					'name'   => 'HR',
+					'bbcodeName' => 'HR',
 					'bbcode' => new BBCode,
 					'tag'    => new Tag,
 					'tokens' => [],
@@ -213,7 +260,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[hr/]',
 				[
-					'name'   => 'HR',
+					'bbcodeName' => 'HR',
 					'bbcode' => new BBCode,
 					'tag'    => new Tag,
 					'tokens' => [],
@@ -223,7 +270,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[IMG src={URL;useContent}]',
 				[
-					'name'   => 'IMG',
+					'bbcodeName' => 'IMG',
 					'bbcode' => new BBCode([
 						'contentAttributes' => ['src'],
 						'defaultAttribute'  => 'src'
@@ -242,7 +289,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[url={URL;useContent}]{TEXT}[/url]',
 				[
-					'name'   => 'URL',
+					'bbcodeName' => 'URL',
 					'bbcode' => new BBCode([
 						'contentAttributes' => ['url'],
 						'defaultAttribute'  => 'url'
@@ -255,7 +302,7 @@ class BBCodeMonkeyTest extends Test
 						]
 					]),
 					'tokens' => [
-						'URL'     => 'url'
+						'URL' => 'url'
 					],
 					'passthroughToken' => 'TEXT'
 				]
@@ -263,7 +310,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={INT;preFilter=strtolower,strtotime}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -283,7 +330,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={SIMPLETEXT;postFilter=strtolower,ucwords}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -303,7 +350,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={INT;postFilter=#identifier}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -331,7 +378,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={REGEXP=/^foo$/}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -351,7 +398,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={REGEXP=#^foo$#}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -371,7 +418,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={REGEXP=/[a-z]{3}\\//}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -392,7 +439,7 @@ class BBCodeMonkeyTest extends Test
 				// Ensure that every subpattern creates an attribute with the corresponding regexp
 				'[foo={PARSE=/(?<foo>\\d+)/} foo={PARSE=/(?<bar>\\D+)/}]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -417,7 +464,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={RANGE=-2,5}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -437,7 +484,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={RANDOM=1000,9999}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -457,7 +504,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={CHOICE=one,two}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -479,7 +526,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={CHOICE=pokémon,yugioh}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -501,7 +548,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={CHOICE=Pokémon,YuGiOh;caseSensitive}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -523,7 +570,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={MAP=one:uno,two:dos}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -548,7 +595,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={MAP=one:uno,two:dos;caseSensitive}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -577,7 +624,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={MAP=one:uno,two:dos;strict}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -606,7 +653,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={MAP=pokémon:Pikachu,yugioh:Yugi}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -631,7 +678,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={MAP=Pokémon:Pikachu,YuGiOh:Yugi;caseSensitive}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -659,7 +706,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[foo={NUMBER1},{NUMBER2} foo={NUMBER2};{NUMBER1}/]',
 				[
-					'name'   => 'FOO',
+					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'foo'
 					]),
@@ -694,7 +741,7 @@ class BBCodeMonkeyTest extends Test
 				*/
 				'[flash={NUMBER1},{NUMBER2}]{URL}[/flash]',
 				[
-					'name'   => 'FLASH',
+					'bbcodeName' => 'FLASH',
 					'bbcode' => new BBCode([
 						'contentAttributes' => ['content'],
 						'defaultAttribute'  => 'flash'
@@ -726,7 +773,7 @@ class BBCodeMonkeyTest extends Test
 			[
 				'[flash={NUMBER1},{NUMBER2} width={NUMBER1} height={NUMBER2} url={URL;useContent}]',
 				[
-					'name'   => 'FLASH',
+					'bbcodeName' => 'FLASH',
 					'bbcode' => new BBCode([
 						'contentAttributes' => ['url'],
 						'defaultAttribute'  => 'flash'
@@ -761,7 +808,7 @@ class BBCodeMonkeyTest extends Test
 				*/
 				'[quote={PARSE=/(?<author>.+?)(?:;(?<id>\\d+))?/} author={TEXT1;optional} id={UINT;optional}]{TEXT2}[/quote]',
 				[
-					'name'   => 'QUOTE',
+					'bbcodeName' => 'QUOTE',
 					'bbcode' => new BBCode([
 						'defaultAttribute'  => 'quote'
 					]),

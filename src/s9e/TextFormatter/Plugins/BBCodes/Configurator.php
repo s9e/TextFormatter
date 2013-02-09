@@ -21,6 +21,7 @@ use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeCollection;
+use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\Repository;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\RepositoryCollection;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -28,6 +29,11 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
 {
 	use CollectionProxy;
+
+	/**
+	* @var BBCodeMonkey Instance of BBCodeMonkey used to parse definitions
+	*/
+	protected $bbcodeMonkey;
 
 	/**
 	* @var BBCodeCollection BBCode collection
@@ -51,8 +57,8 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	protected function setUp()
 	{
-		$this->collection = new BBCodeCollection;
-
+		$this->bbcodeMonkey = new BBCodeMonkey($this->configurator);
+		$this->collection   = new BBCodeCollection;
 		$this->repositories = new RepositoryCollection($this->configurator);
 		$this->repositories->add('default', __DIR__ . '/Configurator/repository.xml');
 	}
@@ -120,7 +126,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		// Get the BBCode/tag config from the repository
 		$config     = $repository->get($name, $vars);
-		$bbcodeName = $config['name'];
+		$bbcodeName = $config['bbcodeName'];
 		$bbcode     = $config['bbcode'];
 		$tag        = $config['tag'];
 

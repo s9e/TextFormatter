@@ -107,12 +107,20 @@ class Repository
 			}
 		}
 
+		// Collect the templates for this BBCode
+		$templates = array();
+		foreach ($node->getElementsByTagName('template') as $template)
+		{
+			$predicate = $template->getAttribute('predicate');
+			$templates[$predicate] = $template->textContent;
+		}
+
 		// Now we can parse the BBCode usage and prepare the template.
 		// Grab the content of the <usage> element then use BBCodeMonkey to parse it
 		$usage      = $node->getElementsByTagName('usage')->item(0)->textContent;
-		$config     = $this->bbcodeMonkey->parse($usage);
+		$config     = $this->bbcodeMonkey->create($usage, $templates);
 		$bbcode     = $config['bbcode'];
-		$bbcodeName = $config['name'];
+		$bbcodeName = $config['bbcodeName'];
 		$tag        = $config['tag'];
 
 		// Set the optional tag name
@@ -147,23 +155,10 @@ class Repository
 			}
 		}
 
-		// Now process the template
-		foreach ($node->getElementsByTagName('template') as $template)
-		{
-			$tag->templates->set(
-				$template->getAttribute('predicate'),
-				$this->bbcodeMonkey->replaceTokens(
-					$template->textContent,
-					$config['tokens'],
-					$config['passthroughToken']
-				)
-			);
-		}
-
 		return [
-			'bbcode' => $bbcode,
-			'name'   => $bbcodeName,
-			'tag'    => $tag
+			'bbcode'     => $bbcode,
+			'bbcodeName' => $bbcodeName,
+			'tag'        => $tag
 		];
 	}
 }
