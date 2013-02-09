@@ -14,6 +14,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Attribute;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
@@ -218,7 +219,7 @@ class BBCodeMonkey
 			return $template;
 		}
 
-		$dom   = self::loadTemplate($template);
+		$dom   = TemplateHelper::loadTemplate($template);
 		$xpath = new DOMXPath($dom);
 
 		$tokenRegexp = '#\\{[A-Z]+[A-Z_0-9]*\\}#';
@@ -367,67 +368,6 @@ class BBCodeMonkey
 		}
 
 		return $template;
-	}
-
-	/**
-	* Attempt to load a template with DOM, first as XML then as HTML as a fallback
-	*
-	* @todo replace with TemplateHelper::loadTemplate() ?
-	*
-	* @param  string      $template
-	* @return DOMDocument
-	*/
-	protected static function loadTemplate($template)
-	{
-		$dom = new DOMDocument;
-
-		// Generate a random tag name so that the user cannot inject stuff outside of that template.
-		// For instance, if the tag was <t>, one could input </t><xsl:evil-stuff/><t>
-		$t = 't' . md5(microtime(true) . mt_rand());
-
-		// First try as XML
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><' . $t . ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $template . '</' . $t . '>';
-
-		try
-		{
-			$useErrors = libxml_use_internal_errors(true);
-			$success = $dom->loadXML($xml);
-		}
-		catch (Exception $e)
-		{
-		}
-
-		libxml_use_internal_errors($useErrors);
-
-		if ($success)
-		{
-			// Success!
-			return $dom;
-		}
-
-		// Fall back to loading it inside a div, as HTML
-		$html = '<html><body><div id="' . $t . '">' . $template . '</div></body></html>';
-
-		$useErrors = libxml_use_internal_errors(true);
-		$success = $dom->loadHTML($html);
-		libxml_use_internal_errors($useErrors);
-
-		// @codeCoverageIgnoreStart
-		if (!$success)
-		{
-			$error = libxml_get_last_error();
-			throw new InvalidArgumentException('Invalid HTML in template - error was: ' . $error->message);
-		}
-		// @codeCoverageIgnoreEnd
-
-		// Now dump the thing as XML and reload it to ensure we don't have to worry about internal
-		// shenanigans
-		$xml = $dom->saveXML($dom->getElementById($t));
-
-		$dom = new DOMDocument;
-		$dom->loadXML($xml);
-
-		return $dom;
 	}
 
 	/**
