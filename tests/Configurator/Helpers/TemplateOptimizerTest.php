@@ -256,14 +256,38 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox <xsl:element/> is inlined where possible
+	* @testdox <xsl:element/> is inlined
 	*/
-	public function testBBC4349B()
+	public function testE24D08B2()
 	{
 		$this->runCase(
-			'<xsl:element/> is inlined where possible',
+			'<xsl:element/> is inlined',
 			'<xsl:element name="div"><xsl:apply-templates/></xsl:element>',
 			'<div><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:element namespace="..."/> is inlined
+	*/
+	public function testDDC55D00()
+	{
+		$this->runCase(
+			'<xsl:element namespace="..."/> is inlined',
+			'<xsl:element name="svg" namespace="http://www.w3.org/2000/svg"/>',
+			'<svg xmlns="http://www.w3.org/2000/svg"/>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:element namespace="..."/> preserves the element's prefix
+	*/
+	public function test2A0C8E8B()
+	{
+		$this->runCase(
+			'<xsl:element namespace="..."/> preserves the element\'s prefix',
+			'<xsl:element name="svg:svg" namespace="http://www.w3.org/2000/svg"/>',
+			'<svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>'
 		);
 	}
 
@@ -384,6 +408,18 @@ class TemplateOptimizerTest extends Test
 			'Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match',
 			'<a><xsl:if test="@foo"><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>',
 			'<a><xsl:if test="@foo"><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:element><xsl:attribute> is inlined
+	*/
+	public function test1269525D()
+	{
+		$this->runCase(
+			'<xsl:element><xsl:attribute> is inlined',
+			'<xsl:element name="hr"><xsl:attribute name="id">foo</xsl:attribute></xsl:element>',
+			'<hr id="foo"/>'
 		);
 	}
 
@@ -598,9 +634,19 @@ class TemplateOptimizerTest extends Test
 				'<b title="{&quot;&amp;lt;&quot;}"/>'
 			],
 			[
-				'<xsl:element/> is inlined where possible',
+				'<xsl:element/> is inlined',
 				'<xsl:element name="div"><xsl:apply-templates/></xsl:element>',
 				'<div><xsl:apply-templates/></div>'
+			],
+			[
+				'<xsl:element namespace="..."/> is inlined',
+				'<xsl:element name="svg" namespace="http://www.w3.org/2000/svg"/>',
+				'<svg xmlns="http://www.w3.org/2000/svg"/>'
+			],
+			[
+				'<xsl:element namespace="..."/> preserves the element\'s prefix',
+				'<xsl:element name="svg:svg" namespace="http://www.w3.org/2000/svg"/>',
+				'<svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>'
 			],
 			[
 				'<xsl:element/> with an invalid name is ignored',
@@ -651,6 +697,11 @@ class TemplateOptimizerTest extends Test
 				'Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match',
 				'<a><xsl:if test="@foo"><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>',
 				'<a><xsl:if test="@foo"><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>'
+			],
+			[
+				'<xsl:element><xsl:attribute> is inlined',
+				'<xsl:element name="hr"><xsl:attribute name="id">foo</xsl:attribute></xsl:element>',
+				'<hr id="foo"/>'
 			],
 			[
 				'Attribute names are lowercased',

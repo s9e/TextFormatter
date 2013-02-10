@@ -132,7 +132,9 @@ abstract class TemplateOptimizer
 			try
 			{
 				// Create the new static element
-				$newElement = $dom->createElement($name);
+				$newElement = ($element->hasAttribute('namespace'))
+				            ? $dom->createElementNS($element->getAttribute('namespace'), $name)
+				            : $dom->createElement($name);
 			}
 			catch (DOMException $e)
 			{
