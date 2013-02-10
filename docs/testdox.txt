@@ -549,6 +549,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Superfluous whitespace in XPath expressions in inline attributes is removed
  [x] Escaped curly brackets in inline attributes are preserved
  [x] Special characters in inline expressions are preserved
+ [x] Element names are lowercased
+ [x] Namespaced element names are lowercased
  [x] <xsl:element/> is inlined
  [x] <xsl:element namespace="..."/> is inlined
  [x] <xsl:element namespace="..."/> preserves the element's prefix
@@ -558,6 +560,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] <xsl:attribute/> with an invalid name is ignored
  [x] Inlined attributes' names are lowercased
  [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
+ [x] <xsl:attribute/> child of namespaced element is inlined
  [x] Curly brackets in text are escaped when attributes are inlined
  [x] <xsl:attribute/> with <xsl:if/> child is not inlined
  [x] Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible
@@ -567,7 +570,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Attribute names are lowercased
  [x] Attributes are deduplicated and the first one of a given name is kept
  [x] Attributes are deduplicated and the first one of a given lowercased name is kept
- [x] Element names are lowercased
  [x] <xsl:if test="@foo"><xsl:value-of select="@foo"/></xsl:if> is optimized to <xsl:value-of select="@foo"/>
  [x] <xsl:if test="@foo"><xsl:value-of select="@bar"/></xsl:if> is left untouched
  [x] <xsl:if test="1+@foo"><xsl:value-of select="1+@foo"/></xsl:if> is left untouched

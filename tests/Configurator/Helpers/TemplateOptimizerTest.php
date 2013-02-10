@@ -256,6 +256,30 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox Element names are lowercased
+	*/
+	public function testFF406A5F()
+	{
+		$this->runCase(
+			'Element names are lowercased',
+			'<BR/>',
+			'<br/>'
+		);
+	}
+
+	/**
+	* @testdox Namespaced element names are lowercased
+	*/
+	public function test94EF5277()
+	{
+		$this->runCase(
+			'Namespaced element names are lowercased',
+			'<SVG xmlns="http://www.w3.org/2000/svg"/>',
+			'<svg xmlns="http://www.w3.org/2000/svg"/>'
+		);
+	}
+
+	/**
 	* @testdox <xsl:element/> is inlined
 	*/
 	public function testE24D08B2()
@@ -360,6 +384,18 @@ class TemplateOptimizerTest extends Test
 			'<xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined',
 			'<div><xsl:attribute name="class">foo <xsl:value-of select="@bar"/><xsl:text> baz</xsl:text></xsl:attribute><xsl:apply-templates/></div>',
 			'<div class="foo {@bar} baz"><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
+	* @testdox <xsl:attribute/> child of namespaced element is inlined
+	*/
+	public function test88003BC2()
+	{
+		$this->runCase(
+			'<xsl:attribute/> child of namespaced element is inlined',
+			'<svg xmlns="http://www.w3.org/2000/svg"><xsl:attribute name="id">foo</xsl:attribute></svg>',
+			'<svg xmlns="http://www.w3.org/2000/svg" id="foo"/>'
 		);
 	}
 
@@ -646,6 +682,16 @@ class TemplateOptimizerTest extends Test
 				'<b title="{&quot;&amp;lt;&quot;}"/>'
 			],
 			[
+				'Element names are lowercased',
+				'<BR/>',
+				'<br/>'
+			],
+			[
+				'Namespaced element names are lowercased',
+				'<SVG xmlns="http://www.w3.org/2000/svg"/>',
+				'<svg xmlns="http://www.w3.org/2000/svg"/>'
+			],
+			[
 				'<xsl:element/> is inlined',
 				'<xsl:element name="div"><xsl:apply-templates/></xsl:element>',
 				'<div><xsl:apply-templates/></div>'
@@ -689,6 +735,11 @@ class TemplateOptimizerTest extends Test
 				'<xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined',
 				'<div><xsl:attribute name="class">foo <xsl:value-of select="@bar"/><xsl:text> baz</xsl:text></xsl:attribute><xsl:apply-templates/></div>',
 				'<div class="foo {@bar} baz"><xsl:apply-templates/></div>'
+			],
+			[
+				'<xsl:attribute/> child of namespaced element is inlined',
+				'<svg xmlns="http://www.w3.org/2000/svg"><xsl:attribute name="id">foo</xsl:attribute></svg>',
+				'<svg xmlns="http://www.w3.org/2000/svg" id="foo"/>'
 			],
 			[
 				'Curly brackets in text are escaped when attributes are inlined',

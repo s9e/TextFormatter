@@ -167,8 +167,7 @@ abstract class TemplateOptimizer
 	protected static function inlineAttributes(DOMDocument $dom)
 	{
 		$xpath = new DOMXPath($dom);
-		/** @todo replace with != XMLNS_XSL */
-		$query = '//*[namespace-uri() = ""]/xsl:attribute';
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/xsl:attribute';
 
 		foreach ($xpath->query($query) as $attribute)
 		{
@@ -395,7 +394,7 @@ abstract class TemplateOptimizer
 	{
 		$xpath = new DOMXPath($dom);
 
-		foreach ($xpath->query('//*[namespace-uri() = ""]') as $element)
+		foreach ($xpath->query('//*[namespace-uri() != "' . self::XMLNS_XSL . '"]') as $element)
 		{
 			$elName = strtr(
 				$element->localName,
@@ -409,7 +408,7 @@ abstract class TemplateOptimizer
 			}
 
 			// Create a new element with the correct name
-			$newElement = $dom->createElement($elName);
+			$newElement = $dom->createElementNS($element->namespaceURI, $elName);
 
 			// Move every child to the new element
 			while ($element->firstChild)
