@@ -412,6 +412,18 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox <xsl:attribute> name is lowercased
+	*/
+	public function test129F6F16()
+	{
+		$this->runCase(
+			'<xsl:attribute> name is lowercased',
+			'<div><xsl:attribute name="CLASS">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>',
+			'<div><xsl:attribute name="class">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>'
+		);
+	}
+
+	/**
 	* @testdox <xsl:element><xsl:attribute> is inlined
 	*/
 	public function test1269525D()
@@ -697,6 +709,11 @@ class TemplateOptimizerTest extends Test
 				'Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match',
 				'<a><xsl:if test="@foo"><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>',
 				'<a><xsl:if test="@foo"><xsl:attribute name="title"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if><xsl:apply-templates/></a>'
+			],
+			[
+				'<xsl:attribute> name is lowercased',
+				'<div><xsl:attribute name="CLASS">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>',
+				'<div><xsl:attribute name="class">foo<xsl:if test="@bar">bar</xsl:if></xsl:attribute><xsl:apply-templates/></div>'
 			],
 			[
 				'<xsl:element><xsl:attribute> is inlined',

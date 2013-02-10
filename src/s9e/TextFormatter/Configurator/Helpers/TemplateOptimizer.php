@@ -167,6 +167,7 @@ abstract class TemplateOptimizer
 	protected static function inlineAttributes(DOMDocument $dom)
 	{
 		$xpath = new DOMXPath($dom);
+		/** @todo replace with != XMLNS_XSL */
 		$query = '//*[namespace-uri() = ""]/xsl:attribute';
 
 		foreach ($xpath->query($query) as $attribute)
@@ -196,16 +197,9 @@ abstract class TemplateOptimizer
 				}
 			}
 
-			// Normalize the attribute name
-			$name = strtr(
-				$attribute->getAttribute('name'),
-				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'abcdefghijklmnopqrstuvwxyz'
-			);
-
 			try
 			{
-				$attribute->parentNode->setAttribute($name, $value);
+				$attribute->parentNode->setAttribute($attribute->getAttribute('name'), $value);
 			}
 			catch (DOMException $e)
 			{
@@ -351,10 +345,11 @@ abstract class TemplateOptimizer
 	{
 		$xpath = new DOMXPath($dom);
 
+		// Normalize elements' attributes
 		foreach ($xpath->query('//*') as $element)
 		{
 			$attributes = [];
-			foreach ($xpath->query('@*[namespace-uri() = ""]', $element) as $attribute)
+			foreach ($xpath->query('@*', $element) as $attribute)
 			{
 				$attrName = strtr(
 					$attribute->localName,
@@ -376,6 +371,18 @@ abstract class TemplateOptimizer
 			{
 				$element->setAttribute($attrName, $attrValue);
 			}
+		}
+
+		// Normalize <xsl:attribute/> names
+		foreach ($xpath->query('//xsl:attribute[not(contains(@name, "{"))]') as $attribute)
+		{
+			$attrName = strtr(
+				$attribute->getAttribute('name'),
+				'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+				'abcdefghijklmnopqrstuvwxyz'
+			);
+
+			$attribute->setAttribute('name', $attrName);
 		}
 	}
 

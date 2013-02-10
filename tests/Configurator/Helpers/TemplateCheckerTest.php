@@ -2290,7 +2290,7 @@ class TemplateCheckerTest extends Test
 
 		$tests[] = [
 			'<b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>',
-			"A dynamically generated 'ONCLICK' attribute lets unfiltered data through"
+			"A dynamically generated 'onclick' attribute lets unfiltered data through"
 		];
 
 		$tests[] = [
