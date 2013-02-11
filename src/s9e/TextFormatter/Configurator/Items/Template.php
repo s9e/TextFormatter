@@ -30,13 +30,13 @@ class Template
 	*/
 	public function __construct($arg)
 	{
-		if (is_callable($arg))
-		{
-			$this->callback = $arg;
-		}
-		elseif (is_string($arg))
+		if (is_string($arg))
 		{
 			$this->template = $arg;
+		}
+		elseif (is_callable($arg))
+		{
+			$this->callback = $arg;
 		}
 		else
 		{

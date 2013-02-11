@@ -1009,11 +1009,12 @@ s9e\TextFormatter\Tests\Configurator\Items\TagFilter
  [x] Sets the filter's signature to array('tag' => null)
 
 s9e\TextFormatter\Tests\Configurator\Items\Template
- [x] Template::__construct() accepts a string
- [x] Template::__construct() accepts a valid callback
- [x] Template::__construct() throws an exception on anything else
+ [x] Constructor accepts a string
+ [x] Constructor accepts a valid callback
+ [x] Constructor throws an exception on anything else
  [x] When cast as string, returns the string passed to constructor if applicable
  [x] When cast as string, executes the callback passed to constructor and returns its result if applicable
+ [x] Constructor interprets a string as a literal, even if it would be a valid callback
  [x] getParameters() returns the list of parameters used in this template
 
 s9e\TextFormatter\Tests\Configurator\Items\Variant

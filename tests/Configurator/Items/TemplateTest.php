@@ -11,7 +11,7 @@ use s9e\TextFormatter\Tests\Test;
 class TemplateTest extends Test
 {
 	/**
-	* @testdox Template::__construct() accepts a string
+	* @testdox Constructor accepts a string
 	*/
 	public function testAcceptsString()
 	{
@@ -19,7 +19,7 @@ class TemplateTest extends Test
 	}
 
 	/**
-	* @testdox Template::__construct() accepts a valid callback
+	* @testdox Constructor accepts a valid callback
 	*/
 	public function testAcceptsCallback()
 	{
@@ -27,7 +27,7 @@ class TemplateTest extends Test
 	}
 
 	/**
-	* @testdox Template::__construct() throws an exception on anything else
+	* @testdox Constructor throws an exception on anything else
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage must be a string or a valid callback
 	*/
@@ -59,6 +59,16 @@ class TemplateTest extends Test
 		);
 
 		$this->assertSame('foo', (string) $template);
+	}
+
+	/**
+	* @testdox Constructor interprets a string as a literal, even if it would be a valid callback
+	*/
+	public function testConstructorStringLiteral()
+	{
+		$template = new Template('uniqid');
+
+		$this->assertSame('uniqid', (string) $template);
 	}
 
 	/**
