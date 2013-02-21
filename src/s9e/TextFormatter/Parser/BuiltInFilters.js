@@ -318,17 +318,20 @@ var BuiltInFilters =
 			return false;
 		}
 
-		if (urlConfig.disallowedHosts)
-		{
-			if (urlConfig.disallowedHosts.test(m[2]))
-			{
-				logger.err(
-					'URL host is not allowed',
-					{'attrValue': attrValue, 'host': m[2]}
-				);
+		/**
+		* Normalize the domain label separators
+		* @link http://url.spec.whatwg.org/#domain-label-separators
+		*/
+		var host = m[2].replace(/[\u3002\uff0e\uff61]/g, '.');
 
-				return false;
-			}
+		if (urlConfig.disallowedHosts && urlConfig.disallowedHosts.test(host))
+		{
+			logger.err(
+				'URL host is not allowed',
+				{'attrValue': attrValue, 'host': m[2]}
+			);
+
+			return false;
 		}
 
 		// Normalize scheme, or remove if applicable

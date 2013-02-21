@@ -173,7 +173,63 @@ class BuiltInFiltersTest extends Test
 				],
 				function ($configurator)
 				{
-					// This is a paypal homograph
+					$configurator->urlConfig->disallowHost('evil.example.com');
+				}
+			],
+			[
+				new Url,
+				"http://evil\xE3\x80\x82example.com",
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => 'http://evil.example.com',
+							'host'      => 'evil.example.com'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('evil.example.com');
+				}
+			],
+			[
+				new Url,
+				"http://evil\xEF\xBC\x8Eexample.com",
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => 'http://evil.example.com',
+							'host'      => 'evil.example.com'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('evil.example.com');
+				}
+			],
+			[
+				new Url,
+				"http://evil\xEF\xBD\xA1example.com",
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => 'http://evil.example.com',
+							'host'      => 'evil.example.com'
+						]
+					]
+				],
+				function ($configurator)
+				{
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
