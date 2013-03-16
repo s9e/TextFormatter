@@ -74,11 +74,10 @@ class BBCodesTest extends Test
 		$configurator->addHTML5Rules();
 
 		$src = $configurator->javascript->getParser();
-		$src .= ';console.log(parse(' . json_encode($original) . '))';
 
 		$this->assertSame(
 			$configurator->getParser()->parse($original),
-			substr(shell_exec('node -e ' . escapeshellarg($src)), 0, -1)
+			$this->execJS($src, $original)
 		);
 	}
 

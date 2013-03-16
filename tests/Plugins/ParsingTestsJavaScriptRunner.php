@@ -29,11 +29,10 @@ trait ParsingTestsJavaScriptRunner
 		}
 
 		$src = $configurator->javascript->getParser();
-		$src .= ';console.log(parse(' . json_encode($original) . '))';
 
 		$this->assertSame(
 			$expected,
-			substr(shell_exec('node -e ' . escapeshellarg($src)), 0, -1)
+			$this->execJS($src, $original)
 		);
 	}
 }

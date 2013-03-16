@@ -85,4 +85,38 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame($expected, $parser->parse($original));
 	}
+
+	protected function execJS($src, $input)
+	{
+		static $exec, $function;
+
+		if (!isset($exec))
+		{
+			$interpreters = [
+				'd8'   => 'print',
+				'node' => 'console.log'
+			];
+
+			foreach ($interpreters as $interpreter => $function)
+			{
+				$exec = trim(shell_exec('which ' . $interpreter . ' 2> /dev/null'));
+
+				if ($exec)
+				{
+					break;
+				}
+			}
+		}
+
+		if (!$exec)
+		{
+			$this->markTestSkipped('No Javascript interpreter available');
+
+			return;
+		}
+
+		$src .= ';' . $function . '(parse(' . json_encode($input) . '))';
+
+		return substr(shell_exec($exec . ' -e ' . escapeshellarg($src)), 0, -1);
+	}
 }
