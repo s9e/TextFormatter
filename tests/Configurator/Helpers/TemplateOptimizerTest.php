@@ -258,12 +258,12 @@ class TemplateOptimizerTest extends Test
 	/**
 	* @testdox Element names are lowercased
 	*/
-	public function testFF406A5F()
+	public function test40B86331()
 	{
 		$this->runCase(
 			'Element names are lowercased',
-			'<BR/>',
-			'<br/>'
+			'<B><BR/></B>',
+			'<b><br/></b>'
 		);
 	}
 
@@ -683,8 +683,8 @@ class TemplateOptimizerTest extends Test
 			],
 			[
 				'Element names are lowercased',
-				'<BR/>',
-				'<br/>'
+				'<B><BR/></B>',
+				'<b><br/></b>'
 			],
 			[
 				'Namespaced element names are lowercased',
