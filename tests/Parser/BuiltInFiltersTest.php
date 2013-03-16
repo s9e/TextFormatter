@@ -235,6 +235,48 @@ class BuiltInFiltersTest extends Test
 			],
 			[
 				new Url,
+				"http://evil.example.com.",
+				false,
+				[
+/*
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => 'http://evil.example.com.',
+							'host'      => 'evil.example.com'
+						]
+					]
+*/
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('evil.example.com');
+				}
+			],
+			[
+				new Url,
+				"http://evil\xEF\xBD\xA1example.com\xEF\xBD\xA1",
+				false,
+				[
+/*
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => 'http://evil.example.com.',
+							'host'      => 'evil.example.com'
+						]
+					]
+*/
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('evil.example.com');
+				}
+			],
+			[
+				new Url,
 				'http://www.pаypal.com',
 				false,
 				[

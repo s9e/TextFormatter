@@ -367,6 +367,9 @@ class BuiltInFilters
 		// Now parse it to check its scheme and host
 		$p = parse_url($attrValue);
 
+		// Remove trailing dots from the hostname
+		$host = rtrim($p['host'], '.');
+
 		if ($validateScheme && !preg_match($urlConfig['allowedSchemes'], $p['scheme']))
 		{
 			$logger->err(
@@ -378,18 +381,18 @@ class BuiltInFilters
 		}
 
 		if (isset($urlConfig['disallowedHosts'])
-		 && preg_match($urlConfig['disallowedHosts'], $p['host']))
+		 && preg_match($urlConfig['disallowedHosts'], $host))
 		{
 			$logger->err(
 				'URL host is not allowed',
-				['attrValue' => $attrValue, 'host' => $p['host']]
+				['attrValue' => $attrValue, 'host' => $host]
 			);
 
 			return false;
 		}
 
 		if (isset($urlConfig['resolveRedirectsHosts'])
-		 && preg_match($urlConfig['resolveRedirectsHosts'], $p['host'])
+		 && preg_match($urlConfig['resolveRedirectsHosts'], $host)
 		 && preg_match('#^https?#i', $p['scheme']))
 		{
 			if (isset($followedUrls[$attrValue]))

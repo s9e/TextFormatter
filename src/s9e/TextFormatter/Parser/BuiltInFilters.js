@@ -319,10 +319,10 @@ var BuiltInFilters =
 		}
 
 		/**
-		* Normalize the domain label separators
+		* Normalize the domain label separators and remove trailing dots
 		* @link http://url.spec.whatwg.org/#domain-label-separators
 		*/
-		var host = m[2].replace(/[\u3002\uff0e\uff61]/g, '.');
+		var host = m[2].replace(/[\u3002\uff0e\uff61]/g, '.').replace(/\.+$/g, '');
 
 		if (urlConfig.disallowedHosts && urlConfig.disallowedHosts.test(host))
 		{
