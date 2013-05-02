@@ -159,6 +159,16 @@ class BuiltInFiltersTest extends Test
 			],
 			[
 				new Url,
+				'mailto:joe@example.com',
+				'mailto:joe@example.com',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->allowScheme('mailto');
+				}
+			],
+			[
+				new Url,
 				'http://evil.example.com',
 				false,
 				[

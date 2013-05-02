@@ -367,8 +367,8 @@ class BuiltInFilters
 		// Now parse it to check its scheme and host
 		$p = parse_url($attrValue);
 
-		// Remove trailing dots from the hostname
-		$host = rtrim($p['host'], '.');
+		// Save the host part if available, remove trailing dots from the hostname
+		$host = (isset($p['host'])) ? rtrim($p['host'], '.') : '';
 
 		if ($validateScheme && !preg_match($urlConfig['allowedSchemes'], $p['scheme']))
 		{
