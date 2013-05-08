@@ -156,4 +156,32 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey('quickMatch', $config);
 		$this->assertSame(':', $config['quickMatch']);
 	}
+
+	/**
+	* @testdox $plugin->beforeMatch appears at the start of the regexp
+	*/
+	public function testBeforeMatch()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add('x', 'x');
+		$plugin->beforeMatch = '(?<!\\w)';
+
+		$config = $plugin->asConfig();
+
+		$this->assertSame('/(?<!\\w)x/S', $config['regexp']);
+	}
+
+	/**
+	* @testdox $plugin->afterMatch appears at the end of the regexp
+	*/
+	public function testAfterMatch()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add('x', 'x');
+		$plugin->afterMatch = '(?!\\w)';
+
+		$config = $plugin->asConfig();
+
+		$this->assertSame('/x(?!\\w)/S', $config['regexp']);
+	}
 }

@@ -1533,6 +1533,8 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
  [x] asConfig() generates a quickMatch if applicable
+ [x] $plugin->beforeMatch appears at the start of the regexp
+ [x] $plugin->afterMatch appears at the end of the regexp
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
