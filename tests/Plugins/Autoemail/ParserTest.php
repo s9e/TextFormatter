@@ -26,6 +26,10 @@ class ParserTest extends Test
 				'<rt>Hit me at <EMAIL email="example@example.com">example@example.com</EMAIL></rt>'
 			],
 			[
+				'Hit me at example@example.com.',
+				'<rt>Hit me at <EMAIL email="example@example.com">example@example.com</EMAIL>.</rt>'
+			],
+			[
 				'Hit me at example@example.com',
 				'<rt>Hit me at <FOO email="example@example.com">example@example.com</FOO></rt>',
 				['tagName' => 'FOO']

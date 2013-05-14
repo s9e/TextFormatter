@@ -26,7 +26,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* {@inheritdoc}
 	*/
-	protected $regexp = '/\\b[-a-z0-9_+.]+@[-a-z0-9.]+/Si';
+	protected $regexp = '/\\b[-a-z0-9_+.]+@[-a-z0-9.]*[a-z0-9]/Si';
 
 	/**
 	* @var string Name of the tag used to represent links
