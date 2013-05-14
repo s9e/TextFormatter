@@ -19,7 +19,7 @@ $html = $renderer->render($xml);
 
 echo $html;
 ```
-```
+```html
 More info at <a href="http://example.org">http://example.org</a>.
 ```
 
@@ -40,6 +40,6 @@ $html = $renderer->render($xml);
 
 echo $html;
 ```
-```
+```html
 Download from <a href="ftp://example.org">ftp://example.org</a> or come chat at <a href="irc://example.org/help">irc://example.org/help</a>.
 ```

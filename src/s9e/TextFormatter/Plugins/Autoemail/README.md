@@ -17,6 +17,6 @@ $html = $renderer->render($xml);
 
 echo $html;
 ```
-```
+```html
 Email me at <a href="mailto:user@example.org">user@example.org</a>
 ```
