@@ -1565,7 +1565,16 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() throws an exception on duplicate named subpatterns
  [x] add() creates a tag to represent the replacement
  [x] add() creates an attribute for each named subpattern
+ [x] add() creates an attribute for each numeric subpattern in use
  [x] add() creates a regexp filter for each attribute created
+ [x] add() replaces numeric references in the template with the corresponding attribute value
+ [x] add() replaces numeric references pointing to named subpatterns in the template with the corresponding attribute value
+ [x] add() alters the regexp to give a name to unnamed subpatterns used in the template
+ [x] add() does not give a name to unnamed subpatterns that are not used in the template
+ [x] add() identifies $1 as a numeric reference
+ [x] add() identifies \1 as a numeric reference
+ [x] add() identifies ${1} as a numeric reference
+ [x] add() replaces $0 with <xsl:apply-templates/>
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>]

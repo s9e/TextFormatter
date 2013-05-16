@@ -24,7 +24,6 @@ TODO
 - Sort the "isTransparent" situation wrt <video>. isTransparent makes a tag inherit the list of disallowed children from its parent, but it cannot currently allow tags that aren't allowed by its parent. In most cases, it doesn't matter, but it prevents using <track> as the child of <video> through the HTMLElements plugin
 - Add a date/datetime filter, see http://dev.w3.org/html5/spec/Overview.html#valid-date-string-with-optional-time
 - Add an NFO BBCode
-- Consider providing compatilibity for custom Mycodes via the Generic plugin. http://docs.mybb.com/Admin_CP_Config_MyCode.html
 - Consider allowing absolute paths in #url, e.g. "/foo.html"
 - Consider a way to disallow HTML elements globally or at the tag-level. For example, a way to globally disable <a> so that BBCodes that produces links are disabled
 - Consider guessing a value for quickMatch based on a plugin's regexp, using its fixed part if applicable [NOTE: gotta identify escape sequences such as \d and modifiers such as a+]

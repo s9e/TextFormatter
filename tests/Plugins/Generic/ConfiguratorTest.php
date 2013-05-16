@@ -75,6 +75,20 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() creates an attribute for each numeric subpattern in use
+	*/
+	public function testCreatesAttributesForSubpatternsInUse()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '$1,$2');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertTrue($tag->attributes->exists('_1'), "Attribute '_1' does not exist");
+		$this->assertTrue($tag->attributes->exists('_2'), "Attribute '_2' does not exist");
+	}
+
+	/**
 	* @testdox add() creates a regexp filter for each attribute created
 	*/
 	public function testCreatesAttributesWithFilter()
@@ -94,6 +108,136 @@ class ConfiguratorTest extends Test
 			$tag->attributes->get('h')->filterChain->contains(
 				new RegexpFilter('/^(?<h>[0-9]+)$/D')
 			)
+		);
+	}
+
+	/**
+	* @testdox add() replaces numeric references in the template with the corresponding attribute value
+	*/
+	public function testNumericReferencesTemplate()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '$1,$2');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() replaces numeric references pointing to named subpatterns in the template with the corresponding attribute value
+	*/
+	public function testNumericReferencesFromNamedSubpatternsTemplate()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/(?<w>[0-9]+),(?<h>[0-9]+)/', '$1,$2');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<xsl:value-of select="@w"/>,<xsl:value-of select="@h"/>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() alters the regexp to give a name to unnamed subpatterns used in the template
+	*/
+	public function testAlterRegexpToNameSubpatterns()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '$1,$2');
+
+		$config   = $plugin->asConfig();
+		$generics = $config['generics']->get();
+
+		$this->assertSame(
+			'/(?<_1>[0-9]+),(?<_2>[0-9]+)/',
+			$generics[0][1]
+		);
+	}
+
+	/**
+	* @testdox add() does not give a name to unnamed subpatterns that are not used in the template
+	*/
+	public function testDoesNotNameUnusedSubpatterns()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '$2');
+
+		$config   = $plugin->asConfig();
+		$generics = $config['generics']->get();
+
+		$this->assertSame(
+			'/([0-9]+),(?<_2>[0-9]+)/',
+			$generics[0][1]
+		);
+	}
+
+	/**
+	* @testdox add() identifies $1 as a numeric reference
+	*/
+	public function testNumericReferenceDollar()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '$1,$2');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() identifies \1 as a numeric reference
+	*/
+	public function testNumericReferenceBackslash()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '\\1,\\2');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() identifies ${1} as a numeric reference
+	*/
+	public function testNumericReferenceBraces()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '${1},${2}');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() replaces $0 with <xsl:apply-templates/>
+	*/
+	public function testNumericReferencesPassthrough()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/@(\\w+)/', '<a href="https://twitter.com/$1">$0</a>');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<a href="https://twitter.com/{@_1}"><xsl:apply-templates/></a>',
+			$tag->defaultTemplate
 		);
 	}
 
