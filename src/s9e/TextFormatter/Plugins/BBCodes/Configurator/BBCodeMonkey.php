@@ -214,160 +214,37 @@ class BBCodeMonkey
 	*/
 	public function replaceTokens($template, array $tokens, $passthroughToken)
 	{
-		if ($template === '')
-		{
-			return $template;
-		}
-
-		$dom   = TemplateHelper::loadTemplate($template);
-		$xpath = new DOMXPath($dom);
-
-		$tokenRegexp = '#\\{[A-Z]+[A-Z_0-9]*\\}#';
-
-		// Replace tokens in attributes
-		foreach ($xpath->query('//@*') as $attr)
-		{
-			$attr->value = htmlspecialchars(preg_replace_callback(
-				$tokenRegexp,
-				function ($m) use ($tokens, $passthroughToken)
-				{
-					$tokenId = substr($m[0], 1, -1);
-
-					// Test whether this is a known token
-					if (isset($tokens[$tokenId]))
-					{
-						// Replace with the corresponding attribute
-						return '{@' . $tokens[$tokenId] . '}';
-					}
-
-					// Test whether the token is used as passthrough
-					if ($tokenId === $passthroughToken)
-					{
-						// Use substring() to exclude the <st/> and <et/> children
-						return '{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}';
-					}
-
-					// Undefined token. If it's the name of a filter, consider it's an error
-					if ($this->isFilter($tokenId))
-					{
-						throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
-					}
-
-					// Use the token's name as parameter name
-					return '{$' . $tokenId . '}';
-				},
-				$attr->value
-			));
-		}
-
-		// Replace tokens in text nodes
-		foreach ($xpath->query('//text()') as $node)
-		{
-			preg_match_all(
-				$tokenRegexp,
-				$node->textContent,
-				$matches,
-				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
-			);
-
-			if (empty($matches))
+		return TemplateHelper::replaceTokens(
+			$template,
+			'#\\{[A-Z]+[A-Z_0-9]*\\}#',
+			function ($m) use ($tokens, $passthroughToken)
 			{
-				continue;
-			}
+				$tokenId = substr($m[0], 1, -1);
 
-			// Grab the node's parent so that we can rebuild the text with added variables right
-			// before the node, using DOM's insertBefore(). Technically, it would make more sense
-			// to create a document fragment, append nodes then replace the node with the fragment
-			// but it leads to namespace redeclarations, which looks ugly
-			$parentNode = $node->parentNode;
-
-			$lastPos = 0;
-			foreach ($matches as $m)
-			{
-				$tokenId = substr($m[0][0], 1, -1);
-				$pos     = $m[0][1];
-
-				if ($pos > $lastPos)
-				{
-					$parentNode->insertBefore(
-						$dom->createTextNode(
-							substr($node->textContent, $lastPos, $pos - $lastPos)
-						),
-						$node
-					);
-				}
-				$lastPos = $pos + strlen($m[0][0]);
-
+				// Test whether this is a known token
 				if (isset($tokens[$tokenId]))
 				{
-					// Known token, replace with corresponding attribute
-					$parentNode
-						->insertBefore(
-							$dom->createElementNS(
-								'http://www.w3.org/1999/XSL/Transform',
-								'xsl:value-of'
-							),
-							$node
-						)
-						->setAttribute('select', '@' . $tokens[$tokenId]);
+					// Replace with the corresponding attribute
+					return ['expression', '@' . $tokens[$tokenId]];
 				}
-				elseif ($tokenId === $passthroughToken)
+
+				// Test whether the token is used as passthrough
+				if ($tokenId === $passthroughToken)
 				{
-					// Passthrough token, replace with <xsl:apply-templates/>
-					$parentNode->insertBefore(
-						$dom->createElementNS(
-							'http://www.w3.org/1999/XSL/Transform',
-							'xsl:apply-templates'
-						),
-						$node
-					);
+					// Use substring() to exclude the <st/> and <et/> children
+					return ['passthrough', false];
 				}
-				else
+
+				// Undefined token. If it's the name of a filter, consider it's an error
+				if ($this->isFilter($tokenId))
 				{
-					// Undefined token. If it's the name of a filter, consider it's an error
-					if ($this->isFilter($tokenId))
-					{
-						throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
-					}
-
-					// Replace with the value of a parameter of the same name
-					$parentNode
-						->insertBefore(
-							$dom->createElementNS(
-								'http://www.w3.org/1999/XSL/Transform',
-								'xsl:value-of'
-							),
-							$node
-						)
-						->setAttribute('select', '$' . $tokenId);
+					throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
 				}
+
+				// Use the token's name as parameter name
+				return ['expression', '$' . $tokenId];
 			}
-
-			// Append the rest of the text
-			$text = substr($node->textContent, $lastPos);
-			if ($text > '')
-			{
-				$parentNode->insertBefore($dom->createTextNode($text), $node);
-			}
-
-			// Now remove the old text node
-			$parentNode->removeChild($node);
-		}
-
-		// Now dump our temporary node as XML and remove the root node's markup
-		$xml = $dom->saveXML($dom->documentElement);
-
-		$lpos = 1 + strpos($xml, '>');
-		$rpos = strrpos($xml, '<');
-
-		$template = substr($xml, $lpos, $rpos - $lpos);
-
-		if ($template === false)
-		{
-			throw new RuntimeException('Invalid template');
-		}
-
-		return $template;
+		);
 	}
 
 	/**

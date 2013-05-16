@@ -200,7 +200,7 @@ abstract class TemplateHelper
 	*/
 	public static function parseAttributeValueTemplate($attrValue)
 	{
-		$tokens = [];
+		$tokens  = [];
 		$attrLen = strlen($attrValue);
 
 		$pos = 0;
@@ -375,5 +375,161 @@ abstract class TemplateHelper
 		sort($paramNames);
 
 		return $paramNames;
+	}
+
+	/**
+	* Replace parts of a template that match given regexp
+	*
+	* Treats attribute values as plain text. Replacements within XPath expression is unsupported.
+	* The callback must return an array with two elements. The first must be either of 'expression',
+	* 'literal' or 'passthrough', and the second element depends on the first.
+	*
+	*  - 'expression' indicates that the replacement must be treated as an XPath expression such as
+	*    '@foo', which must be passed as the second element.
+	*  - 'literal' indicates a literal (plain text) replacement, passed as its second element.
+	*  - 'passthrough' indicates that the replacement should the tag's content. It works differently
+	*    whether it is inside an attribute's value or a text node. Within an attribute's value, the
+	*    replacement will be the text content of the tag and the second element must be a boolean
+	*    that indicates whether it should include the start and end tags. Within a text node, the
+	*    replacement becomes an <xsl:apply-templates/> node and the second element is ignored.
+	*
+	* @param  string   $template Original template
+	* @param  array    $regexp   Regexp for matching parts that need replacement
+	* @param  callback $fn       Callback used to get the replacement
+	* @return string             Processed template
+	*/
+	public static function replaceTokens($template, $regexp, $fn)
+	{
+		if ($template === '')
+		{
+			return $template;
+		}
+
+		$dom   = self::loadTemplate($template);
+		$xpath = new DOMXPath($dom);
+
+		// Replace tokens in attributes
+		foreach ($xpath->query('//@*') as $attribute)
+		{
+			// Generate the new value
+			$attrValue = preg_replace_callback(
+				$regexp,
+				function ($m) use ($fn)
+				{
+					$replacement = $fn($m);
+
+					if ($replacement[0] === 'expression')
+					{
+						return '{' . $replacement[1] . '}';
+					}
+					elseif ($replacement[0] === 'passthrough')
+					{
+						return ($replacement[1]) ? '{.}' : '{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}';
+					}
+					else
+					{
+						// Literal replacement
+						return $replacement[1];
+					}
+				},
+				$attribute->value
+			);
+
+			// Replace the attribute value
+			$attribute->value = htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8');
+		}
+
+		// Replace tokens in text nodes
+		foreach ($xpath->query('//text()') as $node)
+		{
+			preg_match_all(
+				$regexp,
+				$node->textContent,
+				$matches,
+				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+			);
+
+			if (empty($matches))
+			{
+				continue;
+			}
+
+			// Grab the node's parent so that we can rebuild the text with added variables right
+			// before the node, using DOM's insertBefore(). Technically, it would make more sense
+			// to create a document fragment, append nodes then replace the node with the fragment
+			// but it leads to namespace redeclarations, which looks ugly
+			$parentNode = $node->parentNode;
+
+			$lastPos = 0;
+			foreach ($matches as $m)
+			{
+				$pos = $m[0][1];
+
+				// Catch-up to current position
+				if ($pos > $lastPos)
+				{
+					$parentNode->insertBefore(
+						$dom->createTextNode(
+							substr($node->textContent, $lastPos, $pos - $lastPos)
+						),
+						$node
+					);
+				}
+				$lastPos = $pos + strlen($m[0][0]);
+
+				// Remove the offset data from the array, keep only the content of captures so that
+				// $_m contains the same data that preg_match() or preg_replace() would return
+				$_m = [];
+				foreach ($m as $capture)
+				{
+					$_m[] = $capture[0];
+				}
+
+				// Get the replacement for this token
+				$replacement = $fn($_m);
+
+				if ($replacement[0] === 'expression')
+				{
+					// Expressions are evaluated in a <xsl:value-of/> node
+					$parentNode
+						->insertBefore(
+							$dom->createElementNS(
+								'http://www.w3.org/1999/XSL/Transform',
+								'xsl:value-of'
+							),
+							$node
+						)
+						->setAttribute('select', $replacement[1]);
+				}
+				elseif ($replacement[0] === 'passthrough')
+				{
+					// Passthrough token, replace with <xsl:apply-templates/>
+					$parentNode->insertBefore(
+						$dom->createElementNS(
+							'http://www.w3.org/1999/XSL/Transform',
+							'xsl:apply-templates'
+						),
+						$node
+					);
+				}
+				else
+				{
+					// Literal replacement
+					$parentNode->insertBefore($dom->createTextNode($replacement[1]), $node);
+				}
+			}
+
+			// Append the rest of the text
+			$text = substr($node->textContent, $lastPos);
+			if ($text > '')
+			{
+				$parentNode->insertBefore($dom->createTextNode($text), $node);
+			}
+
+			// Now remove the old text node
+			$parentNode->removeChild($node);
+		}
+
+		return self::saveTemplate($dom);
 	}
 }

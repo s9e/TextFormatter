@@ -943,12 +943,6 @@ class BBCodeMonkeyTest extends Test
 				'<hr/><img src="{@url}"/><br/>',
 			],
 			[
-				'</html><inv<alid',
-				[],
-				null,
-				new RuntimeException('Invalid template')
-			],
-			[
 				'',
 				[],
 				null,

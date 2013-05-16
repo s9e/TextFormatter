@@ -815,6 +815,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] normalize() throws an exception on malformed XSL
  [x] parseAttributeValueTemplate() tests
  [x] getParametersFromXSL() tests
+ [x] replaceTokens() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor

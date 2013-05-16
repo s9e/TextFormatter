@@ -386,4 +386,111 @@ class TemplateHelperTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox replaceTokens() tests
+	* @dataProvider replaceTokensTests
+	*/
+	public function testReplaceTokens($template, $regexp, $fn, $expected)
+	{
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
+
+		$this->assertSame(
+			$expected,
+			TemplateHelper::replaceTokens($template, $regexp, $fn, $expected)
+		);
+	}
+
+	public function replaceTokensTests()
+	{
+		return [
+			[
+				'',
+				'/foo/',
+				function ($m) {},
+				''
+			],
+			[
+				'<br/>',
+				'/foo/',
+				function ($m) {},
+				'<br/>'
+			],
+			[
+				'<b title="$1" alt="$2"/>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['literal', serialize($m)];
+				},
+				'<b title="a:1:{i:0;s:2:&quot;$1&quot;;}" alt="a:1:{i:0;s:2:&quot;$2&quot;;}"/>'
+			],
+			[
+				'<b title="$1"/>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['expression', '@foo'];
+				},
+				'<b title="{@foo}"/>'
+			],
+			[
+				'<b title="$1"/>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['passthrough', true];
+				},
+				'<b title="{.}"/>'
+			],
+			[
+				'<b title="$1"/>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['passthrough', false];
+				},
+				'<b title="{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}"/>'
+			],
+			[
+				'<b>$1</b>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['literal', serialize($m)];
+				},
+				'<b>a:1:{i:0;s:2:"$1";}</b>'
+			],
+			[
+				'<b>$1</b>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['expression', '@foo'];
+				},
+				'<b><xsl:value-of select="@foo"/></b>'
+			],
+			[
+				'<b>$1</b>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['passthrough', true];
+				},
+				'<b><xsl:apply-templates/></b>'
+			],
+			[
+				'<b>$1</b>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['passthrough', false];
+				},
+				'<b><xsl:apply-templates/></b>'
+			]
+		];
+	}
 }
