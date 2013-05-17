@@ -1571,9 +1571,12 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() replaces numeric references pointing to named subpatterns in the template with the corresponding attribute value
  [x] add() alters the regexp to give a name to unnamed subpatterns used in the template
  [x] add() does not give a name to unnamed subpatterns that are not used in the template
- [x] add() identifies $1 as a numeric reference
- [x] add() identifies \1 as a numeric reference
- [x] add() identifies ${1} as a numeric reference
+ [x] add() identifies $1 as a numeric reference in the template
+ [x] add() identifies \1 as a numeric reference in the template
+ [x] add() identifies ${1} as a numeric reference in the template
+ [x] add() interprets \\1 in the template as a literal \1
+ [x] add() interprets \\\1 in the template as a literal backslashes followed by a numeric reference
+ [x] add() interprets \$1 in the template as a literal $1
  [x] add() replaces $0 with <xsl:apply-templates/>
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set

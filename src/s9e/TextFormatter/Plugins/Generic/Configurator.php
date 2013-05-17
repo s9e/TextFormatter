@@ -20,7 +20,7 @@ use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 /**
-* NOTE: does not support duplicate named captures and does not support escaping in the replacement
+* NOTE: does not support duplicate named captures
 */
 class Configurator extends ConfiguratorBase
 {
@@ -61,9 +61,11 @@ class Configurator extends ConfiguratorBase
 			throw new InvalidArgumentException('Invalid regexp');
 		}
 
-		// Regexp used to find captures (supported: \1, $1, ${1}) in the replacement. Note that for
-		// the sake of simplicity, escaping with \\ is not supported
-		$capturesRegexp = '#(?:\\\\[0-9]+|\\$[0-9]+|\\$\\{[0-9]+\\})#';
+		// Regexp used to find captures (supported: \1, $1, ${1}) in the replacement. If the version
+		// of PCRE is recent enough (7.2, released 19-Jun-07) we ensure that the captures are not
+		// preceded with an odd number of backslashes (even number is fine)
+		$assertion      = (PCRE_VERSION >= 8.32) ? '(?<!\\\\)(?:\\\\\\\\)*\\K' : '';
+		$capturesRegexp = '#' . $assertion . '(?:\\\\[0-9]+|\\$[0-9]+|\\$\\{[0-9]+\\})#';
 
 		// Collect the captures used in the replacement
 		$captures = [];
@@ -169,6 +171,16 @@ class Configurator extends ConfiguratorBase
 				return ($idx == '0')
 				     ? ['passthrough', true]
 				     : ['expression', '@' . $captures[$idx]];
+			}
+		);
+
+		// Unescape backslashes and special characters in the template
+		$template = TemplateHelper::replaceTokens(
+			$template,
+			'#\\\\+[0-9${\\\\]#',
+			function ($m)
+			{
+				return ['literal', stripslashes($m[0])];
 			}
 		);
 

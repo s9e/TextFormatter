@@ -178,7 +178,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() identifies $1 as a numeric reference
+	* @testdox add() identifies $1 as a numeric reference in the template
 	*/
 	public function testNumericReferenceDollar()
 	{
@@ -194,7 +194,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() identifies \1 as a numeric reference
+	* @testdox add() identifies \1 as a numeric reference in the template
 	*/
 	public function testNumericReferenceBackslash()
 	{
@@ -210,7 +210,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() identifies ${1} as a numeric reference
+	* @testdox add() identifies ${1} as a numeric reference in the template
 	*/
 	public function testNumericReferenceBraces()
 	{
@@ -221,6 +221,69 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() interprets \\1 in the template as a literal \1
+	*/
+	public function testEscapedNumericReference()
+	{
+		if (PCRE_VERSION < 7.2)
+		{
+			$this->markTestSkipped('Requires PCRE 7.2');
+		}
+
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '\\1,\\\\1');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<xsl:value-of select="@_1"/>,\\1',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() interprets \\\1 in the template as a literal backslashes followed by a numeric reference
+	*/
+	public function testEscapedBackslashFollowedByNumericReference()
+	{
+		if (PCRE_VERSION < 7.2)
+		{
+			$this->markTestSkipped('Requires PCRE 7.2');
+		}
+
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '\\\\\\1');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'\\<xsl:value-of select="@_1"/>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() interprets \$1 in the template as a literal $1
+	*/
+	public function testEscapedDollar()
+	{
+		if (PCRE_VERSION < 7.2)
+		{
+			$this->markTestSkipped('Requires PCRE 7.2');
+		}
+
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add('/([0-9]+),([0-9]+)/', '$1,\\$1');
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<xsl:value-of select="@_1"/>,$1',
 			$tag->defaultTemplate
 		);
 	}
