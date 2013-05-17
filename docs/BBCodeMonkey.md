@@ -1,7 +1,7 @@
 BBCodeMonkey
 ============
 
-`s9e\TextFormatter\Plugins\BBCodes\BBCodeMonkey` is an helper class designed to allow end users to easily express a BBCode definition, both its usage and its template. Its syntax is based and expands on phpBB's own custom BBCode interface and it aims to be compatible with the many custom BBCodes available online while being able to express most BBCode constructs.
+`s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey` is an helper class designed to allow end users to easily express a BBCode definition, both its usage and its template. Its syntax is based and expands on phpBB's own custom BBCode interface and it aims to be compatible with the many custom BBCodes available online while being able to express most BBCode constructs.
 
 BBCode usage
 ------------
