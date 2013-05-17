@@ -1,7 +1,6 @@
 TODO
 ====
 
-- finish the Fabric plugin
 - create a plugin for the Markdown syntax (or possibly Upskirt/Redcarpet) and name it Downmark to feel witty and have a plugin for each letter from A to H
 - write documentation, el oh el
 - JSParserGenerator: if all the plugins' RLA is the same, remove them from the config and use hints to bypass the if test
@@ -11,12 +10,10 @@ TODO
 - Add a [TWITCH] BBCode. Add support for embeding TwitchTV/JustinTV videos AND live channels
 - Add support for HD/other options in [YOUTUBE] ?
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
-- Tags that have a nestingLimit of 1: is there any benefit to adding a denyChild rule to it?
 - Add exception codes to exceptions?
 - Possibly add an "hex" filter for /^[0-9a-f]+$/iD - what would be the return value though, string or integer? does "10" return 10 or 16 (0x10)
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
 - Look into properly implementing urlencode() and rawurlencode() in JS
-- Add a [FONT face={SIMPLETEXT}] bbcode/tag (could render to <span style="font-family:{SIMPLETEXT}">
 - Implement the concept of a plugin "tag formatter": give it a tag from the intermediate form and it returns the string that could have generated it. e.g. BBCodes's tag formatter takes <URL url="..."> and returns [URL url="..."] or [URL="..."] -- tag content might be a problem though. Can we format any start/end tag without knowing what's in between?
 - Add a Picasa(?) BBCode
 - Read in #phpbb-dev: ""You cannot have 3 quotes within each other" I'm getting pretty annoyed by that one now >.<" "Has some kind of system that automatically removes the innermost quote been suggested? On large posts it's almost impossible to remove it by hand without messing the tags up :<" "Right now I just copy the text and paste it within [quote] because it's easier to see, but that kinda takes away the point with the quote button" -- could be implemented as a new setting: nestingLimitAction (similar to regexpLimitAction) with possible values "ignore" (leave as text), "strip" (remove content via <i> tag) and "abort" (throw exception?) -- Actually, this case is better handled at quoting time by removing the quotes from the original message directly, e.g. remove all //QUOTE//QUOTE//QUOTE nodes. Add a class that handles that kind of manipulation, e.g. removeNestedTags($tagName, $nestingLimit)
@@ -38,6 +35,5 @@ TODO
 - Add some sort of TemplateHelper::loadHTML() to load HTML templates. XSL elements should be dropped or converted to HTML elements, and curly brackets in attributes should be escaped
 - Exploitable? http://sla.ckers.org/forum/read.php?2,36997
 - Add Filter::isSafeAsURL() to complement Filter::isSafeInURL() -- for example: <a href="http://foo.com/{IDENTIFIER}"/> and <a href="{IDENTIFIER}:{TEXT;postFilter=urlencode"/> -- {IDENTIFIER} is safe *in* URL, but not at the beginning ("javascript:alert%28%22k%22%29"), whereas {URL} is safe as URL
-- Consider using preg_replace() to remove <st/>, <et/>, <i/> and any tag that is rendered by an empty template. Attention to predicates, a tag could have multiple templates -- doesn't seem to have any benefits on an average message
 - There are many SVG vectors, too many to chase after individually. Prevent any user-supplied data in <svg> tags (in any namespace) or add isSafeInSVG() with a very restricted set of allowed filters -- http://html5sec.org/#94
 - http://html5sec.org/#49 -- http://shazzer.co.uk/database/All/Characters-allowed-inside-jsurl http://html5sec.org/#36
