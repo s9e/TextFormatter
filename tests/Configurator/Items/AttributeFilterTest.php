@@ -11,7 +11,7 @@ use s9e\TextFormatter\Tests\Test;
 class AttributeFilterTest extends Test
 {
 	/**
-	* @testdox Sets the filter's signature to array('attrValue' => null)
+	* @testdox Sets the filter's signature to ['attrValue' => null]
 	*/
 	public function testDefaultSignature()
 	{

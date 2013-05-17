@@ -208,10 +208,10 @@ trait RendererTests
 		$this->configurator->stylesheet->parameters->add('foo');
 		$renderer = $this->configurator->getRenderer();
 
-		$values = array(
+		$values = [
 			'"\'...\'"',
 			'\'\'""...\'\'"\'"'
-		);
+		];
 
 		foreach ($values as $value)
 		{

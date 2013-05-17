@@ -138,10 +138,10 @@ class PHPTest extends Test
 		$generator = new PHP;
 		$renderer  = eval('?>' . $generator->generate($configurator->stylesheet->get()));
 
-		$values = array(
+		$values = [
 			'"\'...\'"',
 			'\'\'""...\'\'"\'"'
-		);
+		];
 
 		foreach ($values as $value)
 		{

@@ -211,7 +211,7 @@ class Stylesheet
 	*/
 	public function getUsedParameters()
 	{
-		$params = array();
+		$params = [];
 
 		// Collect all the parameters used by tags' templates and assign them an empty string
 		foreach ($this->tags as $tag)

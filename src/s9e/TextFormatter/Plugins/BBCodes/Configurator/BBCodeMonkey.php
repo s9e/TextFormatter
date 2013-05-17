@@ -97,18 +97,18 @@ class BBCodeMonkey
 	{
 		if (!is_array($templates))
 		{
-			$templates = array('' => $templates);
+			$templates = ['' => $templates];
 		}
 
 		// Parse the BBCode usage
 		$config = $this->parse($usage);
 
 		// Prepare the return array
-		$return = array(
+		$return = [
 			'bbcode'     => $config['bbcode'],
 			'bbcodeName' => $config['bbcodeName'],
 			'tag'        => $config['tag']
-		);
+		];
 
 		// Set the templates for this BBCode's tag
 		foreach ($templates as $predicate => $template)

@@ -825,7 +825,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] asConfig() correctly produces a config array
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilter
- [x] Sets the filter's signature to array('attrValue' => null)
+ [x] Sets the filter's signature to ['attrValue' => null]
  [x] isSafeInCSS() returns FALSE by default
  [x] isSafeInURL() returns FALSE by default
 
@@ -1007,7 +1007,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] asConfig() does not modify the tag's filterChain itself
 
 s9e\TextFormatter\Tests\Configurator\Items\TagFilter
- [x] Sets the filter's signature to array('tag' => null)
+ [x] Sets the filter's signature to ['tag' => null]
 
 s9e\TextFormatter\Tests\Configurator\Items\Template
  [x] Constructor accepts a string

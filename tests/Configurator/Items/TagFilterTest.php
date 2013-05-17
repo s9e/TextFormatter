@@ -11,7 +11,7 @@ use s9e\TextFormatter\Tests\Test;
 class TagFilterTest extends Test
 {
 	/**
-	* @testdox Sets the filter's signature to array('tag' => null)
+	* @testdox Sets the filter's signature to ['tag' => null]
 	*/
 	public function testDefaultSignature()
 	{

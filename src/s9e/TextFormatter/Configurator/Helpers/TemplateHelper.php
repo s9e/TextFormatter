@@ -311,7 +311,7 @@ abstract class TemplateHelper
 	*/
 	public static function getParametersFromXSL($xsl)
 	{
-		$paramNames = array();
+		$paramNames = [];
 
 		// Wrap the XSL in boilerplate code because it might not have a root element
 		$xsl = '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'

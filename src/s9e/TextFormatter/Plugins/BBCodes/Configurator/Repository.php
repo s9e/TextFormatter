@@ -106,7 +106,7 @@ class Repository
 		}
 
 		// Collect the templates for this BBCode
-		$templates = array();
+		$templates = [];
 		foreach ($node->getElementsByTagName('template') as $template)
 		{
 			$predicate = $template->getAttribute('predicate');
