@@ -1,12 +1,10 @@
-Overview
-========
+## Overview
 
 s9e\\TextFormatter is a plugin-based text formatter.
 
 [![Build Status](https://travis-ci.org/s9e/TextFormatter.png?branch=master)](https://travis-ci.org/s9e/TextFormatter)
 
-Installation
-============
+## Installation
 
 Via [Packagist](https://packagist.org/):
 ```json
@@ -22,7 +20,6 @@ Or by cloning this repository and using the bundled autoloader:
 include 'src/s9e/TextFormatter/autoloader.php';
 ```
 
-Examples
-========
+## Examples
 
 See [docs/example.php](https://github.com/s9e/TextFormatter/blob/master/docs/example.php) and the [Plugins directory](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins).
