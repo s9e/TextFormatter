@@ -126,7 +126,7 @@ class JavaScript
 		}
 
 //		$src = $this->getMinifier()->minify($src);
-		file_put_contents('/tmp/z.js', $src);
+//		file_put_contents('/tmp/z.js', $src);
 
 		return $src;
 	}
@@ -191,6 +191,31 @@ class JavaScript
 			{
 				// Skip this plugin
 				continue;
+			}
+
+			// Ensure that quickMatch is UTF-8 if present
+			if (isset($pluginConfig['quickMatch']))
+			{
+				// Well-formed UTF-8 sequences
+				$valid = [
+					'[[:ascii:]]',
+					// [1100 0000-1101 1111] [1000 0000-1011 1111]
+					'[\\xC0-\\xDF][\\x80-\\xBF]',
+					// [1110 0000-1110 1111] [1000 0000-1011 1111]{2}
+					'[\\xE0-\\xEF][\\x80-\\xBF]{2}',
+					// [1111 0000-1111 0111] [1000 0000-1011 1111]{3}
+					'[\\xF0-\\xF7][\\x80-\\xBF]{3}'
+				];
+				preg_match('#(?:' . implode('|', $valid) . ')*#', $pluginConfig['quickMatch'], $m);
+
+				if ($m[0] === '')
+				{
+					unset($pluginConfig['quickMatch']);
+				}
+				else
+				{
+					$pluginConfig['quickMatch'] = $m[0];
+				}
 			}
 
 			/**

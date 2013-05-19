@@ -26,7 +26,6 @@ TODO
 - Consider guessing a value for quickMatch based on a plugin's regexp, using its fixed part if applicable [NOTE: gotta identify escape sequences such as \d and modifiers such as a+]
 - Read in phpBB's forum 'maybe you put a threshold on errors -- if there are more than, say, 10, put out an error saying "Too many BBCode formatting errors found; fix the above and Preview the post again."' -- https://area51.phpbb.com/phpBB/viewtopic.php?f=108&t=33021&p=249335#p249335 -- NOTE: kind of sucks when those errors come from false positive from things like Autolink
 - Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
-- JS parser needs quickMatch to be UTF-8
 - Find a good way to test the JavaScript HTML plugins
 - Look into ext/dom's XML_PARSE_HUGE -- apparently it's needed to render text with 1000s of tags. Also look into LIBXML_COMPACT
 - Add some sort of optional filtering/escaping to the variables used in repositories? htmlspecialchars(), json_encode()
