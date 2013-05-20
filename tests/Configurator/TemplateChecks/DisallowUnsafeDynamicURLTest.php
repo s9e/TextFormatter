@@ -189,6 +189,56 @@ class DisallowUnsafeDynamicURLTest extends Test
 	}
 
 	/**
+	* @testdox Disallowed if unfiltered: <a href="vbscript:{@foo}">...</a>
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
+	*/
+	public function testDisallowedUnfilteredVbcript()
+	{
+		$node = $this->loadTemplate('<a href="vbscript:{@foo}">...</a>');
+
+		$tag = new Tag;
+		$tag->attributes->add('foo');
+
+		try
+		{
+			$check = new DisallowUnsafeDynamicURL;
+			$check->check($node, $tag);
+		}
+		catch (UnsafeTemplateException $e)
+		{
+			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+
+			throw $e;
+		}
+	}
+
+	/**
+	* @testdox Disallowed if unfiltered: <a href="data:{@foo}">...</a>
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
+	*/
+	public function testDisallowedUnfilteredData()
+	{
+		$node = $this->loadTemplate('<a href="data:{@foo}">...</a>');
+
+		$tag = new Tag;
+		$tag->attributes->add('foo');
+
+		try
+		{
+			$check = new DisallowUnsafeDynamicURL;
+			$check->check($node, $tag);
+		}
+		catch (UnsafeTemplateException $e)
+		{
+			$this->assertSame($e->getNode(), $node->firstChild->getAttributeNode('href'));
+
+			throw $e;
+		}
+	}
+
+	/**
 	* @testdox Disallowed: <a href="{.}">...</a>
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Cannot assess the safety of expression '.'

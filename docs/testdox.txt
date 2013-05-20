@@ -956,6 +956,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicURL
  [x] Disallowed if unfiltered: <a href="javascript:{@foo}">...</a>
  [x] Disallowed if unfiltered: <a href="JAVASCRIPT:{@foo}">...</a>
  [x] Disallowed if unfiltered: <a href="<TAB>javascript:{@foo}">...</a>
+ [x] Disallowed if unfiltered: <a href="vbscript:{@foo}">...</a>
+ [x] Disallowed if unfiltered: <a href="data:{@foo}">...</a>
  [x] Disallowed: <a href="{.}">...</a>
  [x] Allowed if #url: <a><xsl:copy-of select="@href"/>...</a>
  [x] Disallowed if unknown: <a><xsl:copy-of select="@href"/>...</a>

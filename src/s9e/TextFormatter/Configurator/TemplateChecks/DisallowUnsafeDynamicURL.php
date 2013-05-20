@@ -24,7 +24,7 @@ class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 	/**
 	* @var string Regexp used to exclude nodes whose scheme part is hardcoded
 	*/
-	protected $exceptionRegexp = '#^(?!javascript)(?:\\w+:|//)#i';
+	protected $exceptionRegexp = '#^(?!data|\\w*script)(?:\\w+:|//)#i';
 
 	/**
 	* {@inheritdoc}
