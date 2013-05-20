@@ -90,6 +90,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->rootRules is an instance of Ruleset
  [x] $configurator->stylesheet is an instance of Stylesheet
  [x] $configurator->tags is an instance of TagCollection
+ [x] $configurator->templateChecker is an instance of TemplateChecker
  [x] $configurator->urlConfig is an instance of UrlConfig
  [x] asConfig() returns an array with a rootContext element
  [x] asConfig() returns an array with a registeredVars element that contains urlConfig
@@ -141,7 +142,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterCollection
  [x] get() throws an exception on unknown filter
  [x] get() returns a clone of the filter, not the original instance
 
-s9e\TextFormatter\Tests\Configurator\Lists\AttributeList
+s9e\TextFormatter\Tests\Configurator\Collections\AttributeList
  [x] Attribute names are normalized for storage
  [x] Attribute names are normalized during retrieval
  [x] asConfig() returns a deduplicated list of attribute names
@@ -261,12 +262,14 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
  [x] PHP array callbacks are normalized to an instance of TagFilter
  [x] Instances of TagFilter are added as-is
 
+s9e\TextFormatter\Tests\Configurator\Collections\TemplateCheckList
+ [x] append() normalizes string into an instance of the same name in s9e\TextFormatter\Configurator\TemplateChecks
+ [x] append() adds instances of s9e\TextFormatter\Configurator\TemplateCheck as-is
+
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateCollection
  [x] set() accepts a string and returns an instance of Template
  [x] set() accepts a callback and returns an instance of Template
  [x] set() accepts an instance of Template, which it returns
- [x] set() optimizes string templates
- [x] set() checks string templates for unsafe content
 
 s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
  [x] getNode() returns the stored node
@@ -575,228 +578,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] <xsl:if test="1+@foo"><xsl:value-of select="1+@foo"/></xsl:if> is left untouched
  [x] Throws an exception during XPath minification if a string isn't properly closed
 
-s9e\TextFormatter\Tests\Configurator\Helpers\TemplateChecker
- [x] checkUnsafe() throws an exception on invalid XML
- [x] checkUnsafe() throws an exception if the template contains a <?php instruction
- [x] checkUnsafe() throws an exception if the template contains a <?PHP instruction
- [x] checkUnsafe() throws an exception if the template generates a <?php instruction
- [x] checkUnsafe() throws an exception if the template generates a <?PHP instruction
- [x] checkUnsafe() throws an exception if the template generates a dynamic processing instruction
- [x] checkUnsafe() throws an exception if an element has an "use-attribute-sets" attribute
- [x] Not safe: <x:element name="script" xmlns:x="http://www.w3.org/1999/XSL/Transform"><xsl:apply-templates/></x:element>
- [x] Not safe: <element name="script" xmlns="http://www.w3.org/1999/XSL/Transform"><apply-templates/></element>
- [x] Safe if attribute 'email' has filter #email: <a href="mailto:{@email}"/>
- [x] Safe if attribute 'email' has filter #email: <a href="mailto:{@email}?subject=foo"/>
- [x] Not safe even if attribute 'email' has filter #email: <a href="http://{@email}"/>
- [x] Not safe: <embed src="{@url}"/>
- [x] Not safe: <embed src="{@url}" allowscriptaccess="always"/>
- [x] Not safe: <embed src="{@url}" allowscriptaccess="sameDomain"/>
- [x] Safe if attribute 'url' has filter '#url': <embed src="{@url}" allowscriptaccess="never"/>
- [x] Not safe: <iframe src="{@url}"/>
- [x] Not safe: <object data="{@url}"/>
- [x] Safe if attribute 'url' has filter '#url': <object data="{@url}"><param name="allowscriptaccess" value="never"/></object>
- [x] Not safe: <script src="{@url}"/>
- [x] Not safe if attribute 'src' has filter '#url': <script src="{@url}"/>
- [x] Not safe: <script src="http://{@foo}"/>
- [x] Safe if attribute 'id' has filter '#number': <script src="https://gist.github.com/{@id}.js"/>
- [x] Safe if attribute 'id' has filter '#number': <script src="//gist.github.com/{@id}.js"/>
- [x] Safe: <script src="foo.js"/>
- [x] Not safe: <SCRIPT src="{@url}"/>
- [x] Not safe: <script SRC="{@url}"/>
- [x] Not safe: <script><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>
- [x] Not safe: <script><xsl:attribute name="SRC"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></script>
- [x] Safe: <script><xsl:attribute name="src">http://example.org/legit.js<?dont-optimize?></xsl:attribute></script>
- [x] Safe: <script src="http://example.org/legit.js"><xsl:attribute name="id"><xsl:value-of select="foo"/><?dont-optimize?></xsl:attribute></script>
- [x] Not safe: <script src="http://example.org/legit.js"><xsl:attribute name="src"><xsl:value-of select="@hax"/><?dont-optimize?></xsl:attribute></script>
- [x] Not safe: <xsl:element name="script"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>
- [x] Not safe: <xsl:element name="SCRIPT"><xsl:attribute name="src"><xsl:value-of select="@url"/><?dont-optimize?></xsl:attribute></xsl:element>
- [x] Not safe: <object><param name="movie" value="{@url}"/></object>
- [x] Not safe: <OBJECT><PARAM NAME="MOVIE" VALUE="{@url}"/></OBJECT>
- [x] Safe if attribute 'url' has filter '#url': <object><param name="movie" value="{@url}"/><param name="allowscriptaccess" value="never"/></object>
- [x] Not safe: <b disable-output-escaping="1"/>
- [x] Not safe: <xsl:copy/>
- [x] Not safe: <b><xsl:copy-of select="@onclick"/></b>
- [x] Not safe: <b><xsl:copy-of select=" @ onclick "/></b>
- [x] Safe: <b><xsl:copy-of select="@title"/></b>
- [x] Safe: <b><xsl:copy-of select=" @ title "/></b>
- [x] Not safe if attribute 'href' has no filter: <a><xsl:copy-of select="@href"/></a>
- [x] Safe if attribute 'href' has filter '#url': <a><xsl:copy-of select="@href"/></a>
- [x] Not safe: <xsl:copy-of select="script"/>
- [x] Not safe: <xsl:copy-of select=" script "/>
- [x] Not safe: <xsl:copy-of select="parent::*"/>
- [x] Not safe: <script><xsl:apply-templates/></script>
- [x] Not safe: <script><xsl:apply-templates select="st"/></script>
- [x] Not safe: <script><xsl:if test="1"><xsl:apply-templates/></xsl:if></script>
- [x] Not safe: <script><xsl:value-of select="st"/></script>
- [x] Not safe: <script><xsl:value-of select="@foo"/></script>
- [x] Not safe if attribute 'foo' has no filter: <script><xsl:value-of select="@foo"/></script>
- [x] Not safe if attribute 'foo' has no filter: <script><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></script>
- [x] Not safe if attribute 'foo' has no filter: <xsl:element name="script"><xsl:value-of select="@foo"/></xsl:element>
- [x] Not safe if attribute 'foo' has no filter: <xsl:element name="SCRIPT"><xsl:value-of select="@foo"/></xsl:element>
- [x] Not safe if attribute 'foo' has filter '#number': <script><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></script>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter 'strtotime': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter 'urlencode': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#float': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#int': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#range': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#number': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#uint': <script><xsl:value-of select="@foo"/></script>
- [x] Safe if attribute 'foo' has filter '#url': <script><xsl:value-of select="@foo"/></script>
- [x] Not safe: <style><xsl:apply-templates/></style>
- [x] Not safe: <style><xsl:apply-templates select="st"/></style>
- [x] Not safe: <style><xsl:if test="1"><xsl:apply-templates/></xsl:if></style>
- [x] Not safe: <style><xsl:value-of select="st"/></style>
- [x] Not safe: <style><xsl:value-of select="@foo"/></style>
- [x] Not safe if attribute 'foo' has no filter: <style><xsl:value-of select="@foo"/></style>
- [x] Not safe if attribute 'foo' has no filter: <style><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></style>
- [x] Not safe if attribute 'foo' has no filter: <xsl:element name="style"><xsl:value-of select="@foo"/></xsl:element>
- [x] Not safe if attribute 'foo' has no filter: <xsl:element name="STYLE"><xsl:value-of select="@foo"/></xsl:element>
- [x] Not safe if attribute 'foo' has filter '#number': <style><xsl:for-each select="/*"><xsl:value-of select="@foo"/></xsl:for-each></style>
- [x] Safe if attribute 'foo' has filter '#color': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#float': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#int': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#range': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#number': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#simpletext': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#uint': <style><xsl:value-of select="@foo"/></style>
- [x] Safe if attribute 'foo' has filter '#url': <style><xsl:value-of select="@foo"/></style>
- [x] Not safe: <xsl:element name="{FOO}"><xsl:apply-templates/></xsl:element>
- [x] Not safe: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
- [x] Not safe: <b><xsl:attribute name="ONCLICK"><xsl:apply-templates/></xsl:attribute></b>
- [x] Not safe: <b onclick=""><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute></b>
- [x] Not safe: <b><xsl:if test="1"><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute></xsl:if></b>
- [x] Not safe: <b><xsl:attribute name="onclick"><xsl:if test="1"><xsl:value-of select="@foo"/></xsl:if></xsl:attribute></b>
- [x] Not safe: <b onclick="{@foo}"/>
- [x] Not safe: <b ONCLICK="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#color': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#simpletext': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <b style="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <b style="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'strtotime': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <b onclick="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <b onclick="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'strtotime': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <b onanything="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <b onanything="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <form action="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <form action="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <q cite="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <q cite="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <foo data="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <foo data="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <input formaction="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <input formaction="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <a href="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <a href="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <html manifest="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <html manifest="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <video poster="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <video poster="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <img src="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <img src="{@foo}"/>
- [x] Not safe if attribute 'foo' has no filter: <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'urlencode': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter 'rawurlencode': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#float': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#identifier': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#int': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#number': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#range': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#uint': <img lowsrc="{@foo}"/>
- [x] Safe if attribute 'foo' has filter '#url': <img lowsrc="{@foo}"/>
- [x] Not safe: <b><xsl:attribute name="{FOO}"><xsl:apply-templates/></xsl:attribute></b>
- [x] Not safe: <xsl:value-of select="document(@foo)"/>
- [x] Not safe: <b title="...{document()}"/>
- [x] Not safe: <b title="...{ document () }"/>
- [x] Not safe: <b title="...{ doc&#117;ment () }"/>
- [x] Not safe: <b title="{concat('}',document())}"/>
- [x] Safe: <b title="document()"/>
- [x] Safe: <b title="{&quot;document()&quot;}"/>
-
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() can load 'foo'
  [x] saveTemplate() correctly handles 'foo'
@@ -815,6 +596,11 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] normalize() throws an exception on malformed XSL
  [x] parseAttributeValueTemplate() tests
  [x] getParametersFromXSL() tests
+ [x] getObjectParamsByRegexp() tests
+ [x] getCSSNodes() tests
+ [x] getJSNodes() tests
+ [x] getURLNodes() tests
+ [x] getElementsByRegexp() can return elements created via <xsl:copy-of/>
  [x] replaceTokens() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
@@ -823,11 +609,24 @@ s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] $attr->generator accepts an instance of ProgrammableCallback
  [x] $attr->generator accepts a callback and normalizes it to an instance of ProgrammableCallback
  [x] asConfig() correctly produces a config array
+ [x] isSafeAsURL() returns FALSE by default
+ [x] isSafeAsURL() returns TRUE if any filter is safe in context
+ [x] markAsSafeAsURL() unconditionally marks the attribute as safe in context
+ [x] isSafeInCSS() returns FALSE by default
+ [x] isSafeInCSS() returns TRUE if any filter is safe in context
+ [x] markAsSafeInCSS() unconditionally marks the attribute as safe in context
+ [x] isSafeInJS() returns FALSE by default
+ [x] isSafeInJS() returns TRUE if any filter is safe in context
+ [x] markAsSafeInJS() unconditionally marks the attribute as safe in context
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilter
  [x] Sets the filter's signature to ['attrValue' => null]
  [x] isSafeInCSS() returns FALSE by default
- [x] isSafeInURL() returns FALSE by default
+ [x] isSafeInJS() returns FALSE by default
+ [x] isSafeInJS() returns TRUE if the callback is 'rawurlencode'
+ [x] isSafeInJS() returns TRUE if the callback is 'strtotime'
+ [x] isSafeInJS() returns TRUE if the callback is 'urlencode'
+ [x] isSafeAsURL() returns FALSE by default
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
@@ -841,7 +640,9 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
  [x] resetParameters() removes all parameters
+ [x] Callback '\\strtotime' is normalized to 'strtotime'
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
+ [x] Callback ['\\foo','bar'] is normalized to 'foo::bar'
  [x] getCallback() returns the callback
  [x] getJS() returns NULL by default
  [x] getJS() returns an instance of Code if no JS was set and the callback is a function found in Configurator/Javascript/functions/
@@ -1013,10 +814,16 @@ s9e\TextFormatter\Tests\Configurator\Items\Template
  [x] Constructor accepts a string
  [x] Constructor accepts a valid callback
  [x] Constructor throws an exception on anything else
+ [x] Constructor normalizes string templates
  [x] When cast as string, returns the string passed to constructor if applicable
  [x] When cast as string, executes the callback passed to constructor and returns its result if applicable
+ [x] When cast as string, executes the callback passed and normalizes the returned template
  [x] Constructor interprets a string as a literal, even if it would be a valid callback
  [x] getParameters() returns the list of parameters used in this template
+ [x] asDOM() returns the template as a DOMDocument
+ [x] getCSSNodes() returns all nodes that normally contain CSS
+ [x] getJSNodes() returns all nodes that normally contain JS
+ [x] getURLNodes() returns all nodes that normally contain a URL
 
 s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] get() returns the default value
@@ -1030,6 +837,224 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned when the variant is retrieved
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned everytime the variant is retrieved
  [x] setDynamic() throws an exception on invalid callback
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowAttributeSets
+ [x] Disallowed: <b use-attribute-sets="foo"/>
+ [x] Allowed: <b>...</b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowCopy
+ [x] Disallowed: <b><xsl:copy/></b>
+ [x] Allowed: <b>...</b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowDisableOutputEscaping
+ [x] Disallowed: <b disable-output-escaping="1"/>
+ [x] Allowed: <b>...</b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowDynamicAttributeNames
+ [x] Disallowed: <b><xsl:attribute name="{@foo}"/></b>
+ [x] Allowed: <b><xsl:attribute name="title"/></b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowDynamicElementNames
+ [x] Disallowed: <xsl:element name="{st}"/>
+ [x] Allowed: <xsl:element name="b"/>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowElement
+ [x] DisallowElement('script') disallows <b><script/></b>
+ [x] DisallowElement('svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
+ [x] DisallowElement('script') allows <b><span/></b>
+ [x] DisallowElement('script') disallows new Template('<b><SCRIPT/></b>')
+ [x] DisallowElement('script') disallows new Template('<b><xsl:element name="script"/></b>')
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowElementNS
+ [x] DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
+ [x] DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg xmlns="http://www.w3.org/2000/svg"/>
+ [x] DisallowElementNS('urn:foo', 'script') allows <b><script/></b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowFlashFullScreen
+ [x] Disallows <embed allowFullScreen="true"/>
+ [x] Allows <embed allowFullScreen="false"/>
+ [x] Allows <embed/>
+ [x] Disallows <embed allowFullScreen="unknown"/>
+ [x] Disallows <embed allowFullScreen="{@foo}"/>
+ [x] Disallows <embed allowFullScreen="false"><xsl:attribute name="allowFullScreen"/></embed>
+ [x] Disallows <object><param name="allowFullScreen" value="true"/></object>
+ [x] Allows <object><param name="allowFullScreen" value="false"/></object>
+ [x] Allows <object/>
+ [x] Disallows <object><param name="allowFullScreen" value="unknown"/></object>
+ [x] Disallows <object><param name="allowFullScreen" value="{@foo}"/></object>
+ [x] Disallows <object><param name="allowFullScreen" value="false"><xsl:attribute name="value">true</xsl:attribute></param></object>
+ [x] DisallowFlashFullScreen(true) allows <embed allowFullScreen="true" src="http://example.com/example.swf"/>
+ [x] DisallowFlashFullScreen(false) disallows <embed allowFullScreen="true" src="http://example.com/example.swf"/>
+ [x] DisallowFlashFullScreen(true) disallows <embed allowFullScreen="true" src="{@url}"/>
+ [x] DisallowFlashFullScreen(true) disallows <embed allowFullScreen="true"><xsl:copy-of select="@src"/></embed>
+ [x] DisallowFlashFullScreen(true) allows <object><param name="allowFullScreen" value="true"/><param name="movie" value="http://example.com/example.swf"/></object>
+ [x] DisallowFlashFullScreen(false) disallows <object><param name="allowFullScreen" value="true"/><param name="movie" value="http://example.com/example.swf"/></object>
+ [x] DisallowFlashFullScreen(true) disallows <object><param name="allowFullScreen" value="true"/><param name="movie" value="{@url}"/></object>
+ [x] DisallowFlashFullScreen(true) disallows <embed allowFullScreen="true"><xsl:apply-templates/></embed>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowNodeByXPath
+ [x] '//script[@src]' disallows <div><script src=""/></div>
+ [x] '//script[@src]' allows <div><script/></div>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowObjectParamsWithGeneratedName
+ [x] Allowed: <object><param name="foo"/></object>
+ [x] Disallowed: <object><param name="{@foo"/></object>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowPHPTags
+ [x] Disallowed: <b><?php ?></b>
+ [x] Disallowed: <b><?PHP ?></b>
+ [x] Disallowed: <b><xsl:processing-instruction name="php"/></b>
+ [x] Disallowed: <b><xsl:processing-instruction name="PHP"/></b>
+ [x] Disallowed: <b><xsl:processing-instruction name="{@foo}"/></b>
+ [x] Allowed: <b><?foo ?></b>
+ [x] Allowed: <b><xsl:processing-instruction name="foo"/></b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeCopyOf
+ [x] Allowed: <b><xsl:copy-of select="@title"/></b>
+ [x] Disallowed: <b><xsl:copy-of select="FOO"/></b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicCSS
+ [x] Allowed: <style>.important { color:red }</style>
+ [x] Allowed: <b style="color:red">...</b>
+ [x] Allowed if #color: <b style="color:{@foo}">...</b>
+ [x] Disallowed if unknown: <b style="color:{@foo}">...</b>
+ [x] Disallowed if unfiltered: <b style="color:{@foo}">...</b>
+ [x] Disallowed: <b style="color:{.}">...</b>
+ [x] Allowed if #color: <b><xsl:copy-of select="@style"/>...</b>
+ [x] Disallowed if unknown: <b><xsl:copy-of select="@style"/>...</b>
+ [x] Disallowed if unfiltered: <b><xsl:copy-of select="@style"/>...</b>
+ [x] Allowed if #color: <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
+ [x] Disallowed if unknown: <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
+ [x] Disallowed if unfiltered: <b><xsl:attribute name="style"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
+ [x] Disallowed if unfiltered: <b><xsl:attribute name="style"><xsl:value-of select="."/></xsl:attribute>...</b>
+ [x] Disallowed: <b><xsl:attribute name="style"><xsl:apply-templates/></xsl:attribute>...</b>
+ [x] Disallowed: <b><xsl:attribute name="style"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicJS
+ [x] Allowed: <script>.important { alert(1) }</script>
+ [x] Allowed: <b onclick="alert(1)">...</b>
+ [x] Allowed if #number: <b onclick="alert({@foo})">...</b>
+ [x] Disallowed if unknown: <b onclick="alert({@foo})">...</b>
+ [x] Disallowed if unfiltered: <b onclick="alert({@foo})">...</b>
+ [x] Disallowed: <b onclick="alert({.})">...</b>
+ [x] Allowed if #number: <b><xsl:copy-of select="@onclick"/>...</b>
+ [x] Disallowed if unknown: <b><xsl:copy-of select="@onclick"/>...</b>
+ [x] Disallowed if unfiltered: <b><xsl:copy-of select="@onclick"/>...</b>
+ [x] Allowed if #number: <b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
+ [x] Disallowed if unknown: <b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
+ [x] Disallowed if unfiltered: <b><xsl:attribute name="onclick"><xsl:value-of select="@foo"/></xsl:attribute>...</b>
+ [x] Disallowed if unfiltered: <b><xsl:attribute name="onclick"><xsl:value-of select="."/></xsl:attribute>...</b>
+ [x] Disallowed: <b><xsl:attribute name="onclick"><xsl:apply-templates/></xsl:attribute>...</b>
+ [x] Disallowed: <b><xsl:attribute name="onclick"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</b>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicURL
+ [x] Allowed: <a href="http://example.org">...</a>
+ [x] Allowed if #url: <a href="{@foo}">...</a>
+ [x] Allowed even if unknown: <a href="http://{@foo}">...</a>
+ [x] Disallowed if unknown: <a href="{@foo}">...</a>
+ [x] Disallowed if unfiltered: <a href="{@foo}">...</a>
+ [x] Disallowed if unfiltered: <a href="javascript:{@foo}">...</a>
+ [x] Disallowed if unfiltered: <a href="JAVASCRIPT:{@foo}">...</a>
+ [x] Disallowed if unfiltered: <a href="<TAB>javascript:{@foo}">...</a>
+ [x] Disallowed: <a href="{.}">...</a>
+ [x] Allowed if #url: <a><xsl:copy-of select="@href"/>...</a>
+ [x] Disallowed if unknown: <a><xsl:copy-of select="@href"/>...</a>
+ [x] Disallowed if unfiltered: <a><xsl:copy-of select="@href"/>...</a>
+ [x] Allowed if #url: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+ [x] Disallowed if unknown: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+ [x] Allowed even if unknown: <a><xsl:attribute name="href">http://<xsl:value-of select="@foo"/></xsl:attribute>...</a>
+ [x] Disallowed if unfiltered: <a><xsl:attribute name="href"><xsl:value-of select="@foo"/></xsl:attribute>...</a>
+ [x] Disallowed if unfiltered: <a><xsl:attribute name="href"><xsl:value-of select="."/></xsl:attribute>...</a>
+ [x] Disallowed: <a><xsl:attribute name="href"><xsl:apply-templates/></xsl:attribute>...</a>
+ [x] Disallowed: <a><xsl:attribute name="href"><xsl:for-each select="//*"><xsl:value-of select="@foo"/></xsl:for-each></xsl:attribute>...</a>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowXPathFunction
+ [x] Disallowed: <xsl:value-of select="document(@foo)"/>
+ [x] Disallowed: <xsl:value-of select="php:function()"/>
+ [x] Disallowed: <xsl:value-of select="php : function()"/>
+ [x] Disallowed: <b title="...{document()}"/>
+ [x] Disallowed: <b title="...{ document () }"/>
+ [x] Disallowed: <b title="...{ doc&#117;ment () }"/>
+ [x] Disallowed: <b title="{concat(\'}\',document())}"/>
+ [x] Allowed: <b title="document()"/>
+ [x] Allowed: <b title="{&quot;document()&quot;}"/>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\RestrictFlashNetworking
+ [x] 'internal' disallows <embed allowNetworking="all"/>
+ [x] 'internal' allows <embed allowNetworking="internal"/>
+ [x] 'internal' allows <embed allowNetworking="none"/>
+ [x] 'internal' disallows <embed/>
+ [x] 'internal' disallows <embed allowNetworking="unknown"/>
+ [x] 'internal' disallows <embed allowNetworking="{@foo}"/>
+ [x] 'none' disallows <embed allowNetworking="all"/>
+ [x] 'none' disallows <embed allowNetworking="internal"/>
+ [x] 'none' allows <embed allowNetworking="none"/>
+ [x] 'none' disallows <embed/>
+ [x] 'internal' disallows <embed allowNetworking="internal"><xsl:attribute name="allowNetworking"/></embed>
+ [x] 'internal' disallows <object><param name="allowNetworking" value="all"/></object>
+ [x] 'internal' allows <object><param name="allowNetworking" value="internal"/></object>
+ [x] 'internal' allows <object><param name="allowNetworking" value="none"/></object>
+ [x] 'internal' disallows <object/>
+ [x] 'internal' disallows <object><param name="allowNetworking" value="unknown"/></object>
+ [x] 'internal' disallows <object><param name="allowNetworking" value="{@foo}"/></object>
+ [x] 'none' disallows <object><xsl:if><param name="allowNetworking" value="none"/></xsl:if></object>
+ [x] 'none' disallows <object><param name="allowNetworking" value="none"><xsl:attribute name="value">all</xsl:attribute></param></object>
+ [x] 'none',true allows <embed src="http://example.com/example.swf"/>
+ [x] 'none',false disallows <embed src="http://example.com/example.swf"/>
+ [x] 'none',true disallows <embed src="{@url}"/>
+ [x] 'none',true disallows <embed><xsl:copy-of select="@src"/></embed>
+ [x] 'none',true allows <object><param name="movie" value="http://example.com/example.swf"/></object>
+ [x] 'none',false disallows <object><param name="movie" value="http://example.com/example.swf"/></object>
+ [x] 'none',true disallows <object><param name="movie" value="{@url}"/></object>
+ [x] 'none',true disallows <embed><xsl:apply-templates/></embed>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\RestrictFlashScriptAccess
+ [x] 'sameDomain' disallows <embed allowScriptAccess="always"/>
+ [x] 'sameDomain' allows <embed allowScriptAccess="sameDomain"/>
+ [x] 'sameDomain' allows <embed allowScriptAccess="never"/>
+ [x] 'sameDomain' allows <embed/>
+ [x] 'sameDomain' disallows <embed allowScriptAccess="unknown"/>
+ [x] 'sameDomain' disallows <embed allowScriptAccess="{@foo}"/>
+ [x] 'never' disallows <embed allowScriptAccess="always"/>
+ [x] 'never' disallows <embed allowScriptAccess="sameDomain"/>
+ [x] 'never' allows <embed allowScriptAccess="never"/>
+ [x] 'never' disallows <embed/>
+ [x] Disallows <embed><xsl:attribute name="allowScriptAccess"/></embed>
+ [x] 'sameDomain' disallows <object><param name="allowScriptAccess" value="always"/></object>
+ [x] 'sameDomain' allows <object><param name="allowScriptAccess" value="sameDomain"/></object>
+ [x] 'sameDomain' allows <object><param name="allowScriptAccess" value="never"/></object>
+ [x] 'sameDomain' allows <object/>
+ [x] 'sameDomain' disallows <object><param name="allowScriptAccess" value="unknown"/></object>
+ [x] 'sameDomain' disallows <object><param name="allowScriptAccess" value="{@foo}"/></object>
+ [x] 'never' disallows <object><xsl:if><param name="allowScriptAccess" value="never"/></xsl:if></object>
+ [x] 'never' disallows <object><param name="allowScriptAccess" value="never"><xsl:attribute name="value">always</xsl:attribute></param></object>
+ [x] 'never',true allows <embed src="http://example.com/example.swf"/>
+ [x] 'never',false disallows <embed src="http://example.com/example.swf"/>
+ [x] 'never',true disallows <embed src="{@url}"/>
+ [x] 'never',true disallows <embed><xsl:copy-of select="@src"/></embed>
+ [x] 'never',true allows <object><param name="movie" value="http://example.com/example.swf"/></object>
+ [x] 'never',false disallows <object><param name="movie" value="http://example.com/example.swf"/></object>
+ [x] 'never',true disallows <object><param name="movie" value="{@url}"/></object>
+ [x] 'never',true disallows <embed><xsl:apply-templates/></embed>
+
+s9e\TextFormatter\Tests\Configurator\TemplateChecker
+ [x] Disallows attribute sets by default
+ [x] Disallows <xsl:copy/> by default
+ [x] Disallows disabling output escaping by default
+ [x] Disallows dynamic attribute names by default
+ [x] Disallows dynamic element names by default
+ [x] Disallows dynamic object param names by default
+ [x] Disallows PHP tags by default
+ [x] Disallows outputing PHP tags by default
+ [x] Disallows potentially unsafe <xsl:copy-of/> by default
+ [x] Disallows potentially unsafe dynamic CSS by default
+ [x] Disallows potentially unsafe dynamic JS by default
+ [x] Disallows potentially unsafe dynamic URLs by default
+ [x] Disallows document() in XPath by default
+ [x] Restricts Flash's allowScriptAccess to "sameDomain" (or lower) by default, in objects that use dynamic values
+ [x] checkTag() doesn't check templates that are marked as unsafe
+ [x] checkTag() checks all the templates of a tag
+ [x] Can be reset and reconfigured with different checks
 
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'
@@ -1540,7 +1565,6 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
  [x] Throws an exception when an invalid template is set
- [x] Throws an exception when an unsafe template is set
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Parser
  [x] Parsing tests

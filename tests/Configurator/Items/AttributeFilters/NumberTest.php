@@ -47,6 +47,6 @@ class NumberTest extends Test
 	public function testIsSafeInURL()
 	{
 		$filter = new Number;
-		$this->assertTrue($filter->isSafeInURL());
+		$this->assertTrue($filter->isSafeAsURL());
 	}
 }

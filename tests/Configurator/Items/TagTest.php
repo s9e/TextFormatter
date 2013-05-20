@@ -230,7 +230,7 @@ class TagTest extends Test
 	{
 		$tag = new Tag;
 
-		$templates = new TemplateCollection($tag);
+		$templates = new TemplateCollection;
 		$templates->set('', 'foo');
 
 		$tag->templates = $templates;

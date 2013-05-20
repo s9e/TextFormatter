@@ -1,0 +1,31 @@
+<?php
+
+/**
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2013 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+*/
+namespace s9e\TextFormatter\Configurator\TemplateChecks;
+
+use DOMNode;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Items\Attribute;
+
+class DisallowUnsafeDynamicJS extends AbstractDynamicContentCheck
+{
+	/**
+	* {@inheritdoc}
+	*/
+	protected function getNodes(DOMNode $template)
+	{
+		return TemplateHelper::getJSNodes($template->ownerDocument);
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected function isSafe(Attribute $attribute)
+	{
+		return $attribute->isSafeInJS();
+	}
+}

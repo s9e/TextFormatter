@@ -9,26 +9,10 @@ namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
-use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\Template;
 
 class TemplateCollection extends NormalizedCollection
 {
-	/**
-	* @var Tag Tag used by TemplateChecker to assess the safeness of attributes used in templates
-	*/
-	protected $tag;
-
-	/**
-	* Constructor
-	*
-	* @param Tag $tag Tag that these templates belong to
-	*/
-	public function __construct(Tag $tag)
-	{
-		$this->tag = $tag;
-	}
-
 	/**
 	* Normalize a template for storage
 	*
@@ -40,12 +24,6 @@ class TemplateCollection extends NormalizedCollection
 		// Create an instance of Template if it's not one
 		if (!($template instanceof Template))
 		{
-			// Normalize the template if it's a string
-			if (is_string($template))
-			{
-				$template = TemplateHelper::normalize($template, $this->tag);
-			}
-
 			$template = new Template($template);
 		}
 

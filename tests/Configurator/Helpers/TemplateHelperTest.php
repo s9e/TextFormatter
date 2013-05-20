@@ -2,10 +2,13 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
+use DOMDocument;
+use DOMXPath;
 use Exception;
 use RuntimeException;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
 /**
@@ -387,6 +390,313 @@ class TemplateHelperTest extends Test
 		];
 	}
 
+	public function runTestGetNodes($methodName, $template, $query)
+	{
+		$dom = new DOMDocument;
+		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . $template
+		     . '</xsl:template>';
+		$dom->loadXML($xsl);
+
+		$xpath = new DOMXPath($dom);
+		$nodes = ($query) ? iterator_to_array($xpath->query($query)) : [];
+
+		$this->assertEquals(
+			$nodes,
+			TemplateHelper::$methodName($dom)
+		);
+	}
+
+	/**
+	* @testdox getObjectParamsByRegexp() tests
+	* @dataProvider getObjectParamsByRegexpTests
+	*/
+	public function testGetObjectParamsByRegexp($regexp, $template, $query = null)
+	{
+		$dom = new DOMDocument;
+		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . $template
+		     . '</xsl:template>';
+		$dom->loadXML($xsl);
+
+		$xpath = new DOMXPath($dom);
+		$nodes = ($query) ? iterator_to_array($xpath->query($query)) : [];
+
+		$this->assertEquals(
+			$nodes,
+			TemplateHelper::getObjectParamsByRegexp($dom, $regexp)
+		);
+	}
+
+	/**
+	* @testdox getCSSNodes() tests
+	* @dataProvider getCSSNodesTests
+	*/
+	public function testGetCSSNodes($template, $query = null)
+	{
+		$this->runTestGetNodes('getCSSNodes', $template, $query);
+	}
+
+	/**
+	* @testdox getJSNodes() tests
+	* @dataProvider getJSNodesTests
+	*/
+	public function testGetJSNodes($template, $query = null)
+	{
+		$this->runTestGetNodes('getJSNodes', $template, $query);
+	}
+
+	/**
+	* @testdox getURLNodes() tests
+	* @dataProvider getURLNodesTests
+	*/
+	public function testGetURLNodes($template, $query = null)
+	{
+		$this->runTestGetNodes('getURLNodes', $template, $query);
+	}
+
+	public function getObjectParamsByRegexpTests()
+	{
+		return [
+			[
+				'//',
+				'...',
+				null
+			],
+			[
+				'/^allowscriptaccess$/i',
+				'<embed AllowScriptAccess="always"/>',
+				'//@*'
+			],
+			[
+				'/^allowscriptaccess$/i',
+				'<div allowscriptaccess="always"/>',
+				null
+			],
+			[
+				'/^allowscriptaccess$/i',
+				'<embed><xsl:attribute name="AllowScriptAccess"/></embed>',
+				'//xsl:attribute'
+			],
+			[
+				'/^allowscriptaccess$/i',
+				'<embed><xsl:if test="@foo"><xsl:attribute name="AllowScriptAccess"/></xsl:if></embed>',
+				'//xsl:attribute'
+			],
+			[
+				'/^allowscriptaccess$/i',
+				'<embed><xsl:copy-of select="@allowscriptaccess"/></embed>',
+				'//xsl:copy-of'
+			],
+			[
+				'/^allowscriptaccess$/i',
+				'<object><param name="AllowScriptAccess"/><param name="foo"/></object>',
+				'//param[@name != "foo"]'
+			],
+			[
+				'/^allowscriptaccess$/i',
+				'<object><xsl:if test="@foo"><param name="AllowScriptAccess"/><param name="foo"/></xsl:if></object>',
+				'//param[@name != "foo"]'
+			],
+		];
+	}
+
+	public function getCSSNodesTests()
+	{
+		return [
+			[
+				'...'
+			],
+			[
+				'<b style="1">...<i style="2">...</i></b><b style="3">...</b>',
+				'//@style'
+			],
+			[
+				'<b STYLE="">...</b>',
+				'//@*'
+			],
+			[
+				'<b><xsl:if test="@foo"><xsl:attribute name="style"/></xsl:if></b>',
+				'//xsl:attribute'
+			],
+			[
+				'<b><xsl:if test="@foo"><xsl:attribute name="STYLE"/></xsl:if></b>',
+				'//xsl:attribute'
+			],
+			[
+				'<b><xsl:copy-of select="@style"/></b>',
+				'//xsl:copy-of'
+			],
+			[
+				'<style/>',
+				'*'
+			],
+			[
+				'<STYLE/>',
+				'*'
+			],
+			[
+				'<xsl:element name="style"/>',
+				'*'
+			],
+			[
+				'<xsl:element name="STYLE"/>',
+				'*'
+			],
+		];
+	}
+
+	public function getJSNodesTests()
+	{
+		return [
+			[
+				'...'
+			],
+			[
+				'<script/>',
+				'*'
+			],
+			[
+				'<SCRIPT/>',
+				'*'
+			],
+			[
+				'<xsl:element name="script"/>',
+				'*'
+			],
+			[
+				'<xsl:element name="SCRIPT"/>',
+				'*'
+			],
+			[
+				'<b onclick=""/><i title=""/><b onfocus=""/>',
+				'//@onclick | //@onfocus'
+			],
+			[
+				'<b ONHOVER=""/>',
+				'//@*'
+			],
+			[
+				'<b><xsl:if test="@foo"><xsl:attribute name="onclick"/></xsl:if></b>',
+				'//xsl:attribute'
+			],
+			[
+				'<b><xsl:if test="@foo"><xsl:attribute name="ONCLICK"/></xsl:if></b>',
+				'//xsl:attribute'
+			],
+			[
+				'<b><xsl:copy-of select="@onclick"/></b>',
+				'//xsl:copy-of'
+			],
+		];
+	}
+
+	public function getURLNodesTests()
+	{
+		return [
+			[
+				'...'
+			],
+			[
+				'<form action=""/>',
+				'//@action'
+			],
+			[
+				'<body background=""/>',
+				'//@background'
+			],
+			[
+				'<blockquote cite=""/>',
+				'//@cite',
+			],
+			[
+				'<cite/>',
+				null
+			],
+			[
+				'<object classid=""/>',
+				'//@classid'
+			],
+			[
+				'<object codebase=""/>',
+				'//@codebase'
+			],
+			[
+				'<object data=""/>',
+				'//@data'
+			],
+			[
+				'<input formaction=""/>',
+				'//@formaction'
+			],
+			[
+				'<a href=""/>',
+				'//@href'
+			],
+			[
+				'<command icon=""/>',
+				'//@icon'
+			],
+			[
+				'<img longdesc=""/>',
+				'//@longdesc'
+			],
+			[
+				'<cache manifest=""/>',
+				'//@manifest'
+			],
+			[
+				'<head profile=""/>',
+				'//@profile'
+			],
+			[
+				'<video poster=""/>',
+				'//@poster'
+			],
+			[
+				'<img src=""/>',
+				'//@src'
+			],
+			[
+				'<img lowsrc=""/>',
+				'//@lowsrc'
+			],
+			[
+				'<img dynsrc=""/>',
+				'//@dynsrc'
+			],
+			[
+				'<input usemap=""/>',
+				'//@usemap'
+			],
+			[
+				'<object><param name="movie" value=""/></object>',
+				'//@value'
+			],
+			[
+				'<OBJECT><PARAM NAME="MOVIE" VALUE=""/></OBJECT>',
+				'//@value'
+			],
+			[
+				'<object><param name="dataurl" value=""/></object>',
+				'//@value'
+			],
+		];
+	}
+
+	/**
+	* @testdox getElementsByRegexp() can return elements created via <xsl:copy-of/>
+	*/
+	public function testGetElementsByRegexp()
+	{
+		$dom = TemplateHelper::loadTemplate('<xsl:copy-of select="x"/><xsl:copy-of select="foo"/>');
+
+		$this->assertSame(
+			array($dom->firstChild->firstChild->nextSibling),
+			TemplateHelper::getElementsByRegexp($dom, '/^foo$/')
+		);
+	}
+
 	/**
 	* @testdox replaceTokens() tests
 	* @dataProvider replaceTokensTests
@@ -490,7 +800,7 @@ class TemplateHelperTest extends Test
 					return ['passthrough', false];
 				},
 				'<b><xsl:apply-templates/></b>'
-			]
+			],
 		];
 	}
 }

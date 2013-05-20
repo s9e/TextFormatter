@@ -52,6 +52,12 @@ class ProgrammableCallback implements ConfigProvider
 			$callback = $callback[0] . '::' . $callback[1];
 		}
 
+		// Normalize '\\foo' to 'foo' and '\\foo::bar' to 'foo::bar'
+		if (is_string($callback))
+		{
+			$callback = ltrim($callback, '\\');
+		}
+
 		$this->callback = $callback;
 	}
 

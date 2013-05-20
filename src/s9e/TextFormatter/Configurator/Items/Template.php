@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\Items;
 
+use DOMDocument;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
@@ -25,14 +26,14 @@ class Template
 	/**
 	* Constructor
 	*
-	* @param  callback|string $arg
+	* @param  callback|string $arg Either a template or a callback that returns the template
 	* @return void
 	*/
 	public function __construct($arg)
 	{
 		if (is_string($arg))
 		{
-			$this->template = $arg;
+			$this->template = TemplateHelper::normalize($arg);
 		}
 		elseif (is_callable($arg))
 		{
@@ -52,8 +53,57 @@ class Template
 	public function __toString()
 	{
 		return (isset($this->callback))
-		     ? call_user_func($this->callback)
+		     ? TemplateHelper::normalize(call_user_func($this->callback))
 		     : $this->template;
+	}
+
+	/**
+	* Return the content of this template as a DOMDocument
+	*
+	* NOTE: the content is wrapped in an <xsl:template/> node
+	*
+	* @return DOMDocument
+	*/
+	public function asDOM()
+	{
+		$xml = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+		     . $this->__toString()
+		     . '</xsl:template>';
+
+		$dom = new DOMDocument;
+		$dom->loadXML($xml);
+
+		return $dom;
+	}
+
+	/**
+	* Return all the nodes in this template whose content type is CSS
+	*
+	* @return array
+	*/
+	public function getCSSNodes()
+	{
+		return TemplateHelper::getCSSNodes($this->asDOM());
+	}
+
+	/**
+	* Return all the nodes in this template whose content type is JavaScript
+	*
+	* @return array
+	*/
+	public function getJSNodes()
+	{
+		return TemplateHelper::getJSNodes($this->asDOM());
+	}
+
+	/**
+	* Return all the nodes in this template whose value is an URL
+	*
+	* @return array
+	*/
+	public function getURLNodes()
+	{
+		return TemplateHelper::getURLNodes($this->asDOM());
 	}
 
 	/**

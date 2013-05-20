@@ -21,6 +21,7 @@ use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript;
 use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 use s9e\TextFormatter\Configurator\Stylesheet;
+use s9e\TextFormatter\Configurator\TemplateChecker;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
 class Configurator implements ConfigProvider
@@ -61,6 +62,11 @@ class Configurator implements ConfigProvider
 	public $tags;
 
 	/**
+	* @var TemplateChecker Default template checker
+	*/
+	public $templateChecker;
+
+	/**
 	* @var UrlConfig Config options related to URL validation
 	*/
 	public $urlConfig;
@@ -79,7 +85,8 @@ class Configurator implements ConfigProvider
 		$this->rendererGenerator = new XSLT;
 		$this->rootRules         = new Ruleset;
 		$this->tags              = new TagCollection;
-		$this->stylesheet        = new Stylesheet($this->tags);
+		$this->templateChecker   = new TemplateChecker;
+		$this->stylesheet        = new Stylesheet($this);
 		$this->urlConfig         = new UrlConfig;
 	}
 
@@ -169,6 +176,7 @@ class Configurator implements ConfigProvider
 		unset($properties['attributeFilters']);
 		unset($properties['javascript']);
 		unset($properties['rendererGenerator']);
+		unset($properties['templateChecker']);
 		unset($properties['stylesheet']);
 
 		// Create the config array

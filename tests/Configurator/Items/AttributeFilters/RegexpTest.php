@@ -87,7 +87,7 @@ class RegexpTest extends Test
 		$filter = new Regexp;
 		$filter->setRegexp('/^[a-z]$/D');
 
-		$this->assertTrue($filter->isSafeInURL());
+		$this->assertTrue($filter->isSafeAsURL());
 	}
 
 	/**
@@ -98,7 +98,7 @@ class RegexpTest extends Test
 		$filter = new Regexp;
 		$filter->setRegexp('/^foo:$/');
 
-		$this->assertFalse($filter->isSafeInURL());
+		$this->assertFalse($filter->isSafeAsURL());
 	}
 
 	/**
@@ -109,7 +109,7 @@ class RegexpTest extends Test
 		$filter = new Regexp;
 		$filter->setVars(['regexp' => ')invalid(']);
 
-		$this->assertFalse($filter->isSafeInURL());
+		$this->assertFalse($filter->isSafeAsURL());
 	}
 
 	/**
@@ -119,7 +119,7 @@ class RegexpTest extends Test
 	{
 		$filter = new Regexp;
 
-		$this->assertFalse($filter->isSafeInURL());
+		$this->assertFalse($filter->isSafeAsURL());
 	}
 
 	/**

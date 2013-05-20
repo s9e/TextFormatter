@@ -25,6 +25,16 @@ class AttributeFilter extends Filter
 	}
 
 	/**
+	* Return whether this filter makes a value safe to be used as a URL
+	*
+	* @return bool
+	*/
+	public function isSafeAsURL()
+	{
+		return false;
+	}
+
+	/**
 	* Return whether this filter makes a value safe to be used in CSS
 	*
 	* @return bool
@@ -41,16 +51,16 @@ class AttributeFilter extends Filter
 	*/
 	public function isSafeInJS()
 	{
-		return false;
-	}
+		// List of callbacks that make a value safe to be used in a script, hardcoded for
+		// convenience. Technically, there are numerous built-in PHP functions that would make an
+		// arbitrary value safe in JS, but only a handful have the potential to be used as an
+		// attribute filter
+		$safeCallbacks = [
+			'urlencode',
+			'strtotime',
+			'rawurlencode'
+		];
 
-	/**
-	* Return whether this filter makes a value safe to be used in a URL
-	*
-	* @return bool
-	*/
-	public function isSafeInURL()
-	{
-		return false;
+		return in_array($this->callback, $safeCallbacks, true);
 	}
 }

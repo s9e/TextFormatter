@@ -34,6 +34,11 @@ class Attribute implements ConfigProvider
 	protected $generator;
 
 	/**
+	* @var array Contexts in which this attribute is considered safe to be used
+	*/
+	protected $markedSafe = [];
+
+	/**
 	* @var bool Whether this attribute is required for the tag to be valid
 	*/
 	protected $required = true;
@@ -57,6 +62,94 @@ class Attribute implements ConfigProvider
 	}
 
 	/**
+	* Return whether this attribute is safe to be used in given context
+	*
+	* @param  string $context Either 'AsURL', 'InCSS' or 'InJS'
+	* @return bool
+	*/
+	protected function isSafe($context)
+	{
+		// Test whether this attribute was marked as safe in given context
+		if (!empty($this->markedSafe[$context]))
+		{
+			return true;
+		}
+
+		// Test this attribute's filters
+		$methodName = 'isSafe' . $context;
+		foreach ($this->filterChain as $filter)
+		{
+			if ($filter->$methodName())
+			{
+				// If any filter makes it safe, we consider it safe
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* Return whether this attribute is safe to be used as a URL
+	*
+	* @return bool
+	*/
+	public function isSafeAsURL()
+	{
+		return $this->isSafe('AsURL');
+	}
+
+	/**
+	* Return whether this attribute is safe to be used in CSS
+	*
+	* @return bool
+	*/
+	public function isSafeInCSS()
+	{
+		return $this->isSafe('InCSS');
+	}
+
+	/**
+	* Return whether this attribute is safe to be used in JavaScript
+	*
+	* @return bool
+	*/
+	public function isSafeInJS()
+	{
+		return $this->isSafe('InJS');
+	}
+
+	/**
+	* Return whether this attribute is safe to be used as a URL
+	*
+	* @return bool
+	*/
+	public function markAsSafeAsURL()
+	{
+		return $this->markedSafe['AsURL'] = true;
+	}
+
+	/**
+	* Return whether this attribute is safe to be used in CSS
+	*
+	* @return bool
+	*/
+	public function markAsSafeInCSS()
+	{
+		return $this->markedSafe['InCSS'] = true;
+	}
+
+	/**
+	* Return whether this attribute is safe to be used in JavaScript
+	*
+	* @return bool
+	*/
+	public function markAsSafeInJS()
+	{
+		return $this->markedSafe['InJS'] = true;
+	}
+
+	/**
 	* Set a generator for this attribute
 	*
 	* @param callable|ProgrammableCallback $callback
@@ -76,6 +169,9 @@ class Attribute implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		return ConfigHelper::toArray(get_object_vars($this));
+		$vars = get_object_vars($this);
+		unset($vars['markedSafe']);
+
+		return ConfigHelper::toArray($vars);
 	}
 }

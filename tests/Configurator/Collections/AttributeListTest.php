@@ -1,6 +1,6 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Lists;
+namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\AttributeList;

@@ -38,6 +38,6 @@ class IdentifierTest extends Test
 	public function testIsSafeInURL()
 	{
 		$filter = new Identifier;
-		$this->assertTrue($filter->isSafeInURL());
+		$this->assertTrue($filter->isSafeAsURL());
 	}
 }

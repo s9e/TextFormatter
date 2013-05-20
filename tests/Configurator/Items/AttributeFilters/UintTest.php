@@ -47,6 +47,6 @@ class UintTest extends Test
 	public function testIsSafeInURL()
 	{
 		$filter = new Uint;
-		$this->assertTrue($filter->isSafeInURL());
+		$this->assertTrue($filter->isSafeAsURL());
 	}
 }

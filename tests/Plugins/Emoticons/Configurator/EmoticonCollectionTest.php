@@ -30,14 +30,4 @@ class EmoticonCollectionTest extends Test
 		$collection = new EmoticonCollection;
 		$collection->set(':)', '<xsl:foo>');
 	}
-
-	/**
-	* @testdox Throws an exception when an unsafe template is set
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	*/
-	public function testUnsafe()
-	{
-		$collection = new EmoticonCollection;
-		$collection->set(':)', '<xsl:copy />');
-	}
 }

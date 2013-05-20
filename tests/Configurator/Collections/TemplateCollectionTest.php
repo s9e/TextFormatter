@@ -12,20 +12,16 @@ use s9e\TextFormatter\Configurator\Items\Template;
 */
 class TemplateCollectionTest extends Test
 {
-	public function setUp()
-	{
-		$this->tag = new Tag;
-		$this->templates = new TemplateCollection($this->tag);
-	}
-
 	/**
 	* @testdox set() accepts a string and returns an instance of Template
 	*/
 	public function testSetString()
 	{
+		$templates = new TemplateCollection;
+
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Items\\Template',
-			$this->templates->set('', 'foo')
+			$templates->set('', 'foo')
 		);
 	}
 
@@ -34,9 +30,11 @@ class TemplateCollectionTest extends Test
 	*/
 	public function testSetCallback()
 	{
+		$templates = new TemplateCollection;
+
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\Items\\Template',
-			$this->templates->set('', function(){})
+			$templates->set('', function(){})
 		);
 	}
 
@@ -45,33 +43,12 @@ class TemplateCollectionTest extends Test
 	*/
 	public function testSetInstance()
 	{
-		$template = new Template('foo');
+		$templates = new TemplateCollection;
+		$template  = new Template('foo');
+
 		$this->assertSame(
 			$template,
-			$this->templates->set('', $template)
+			$templates->set('', $template)
 		);
-	}
-
-	/**
-	* @testdox set() optimizes string templates
-	*/
-	public function testSetOptimize()
-	{
-		$this->templates->set('', '<b >foo</b >');
-
-		$this->assertEquals(
-			'<b>foo</b>',
-			$this->templates->get('')
-		);
-	}
-
-	/**
-	* @testdox set() checks string templates for unsafe content
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage The template contains a 'disable-output-escaping' attribute
-	*/
-	public function testSetCheckUnsafe()
-	{
-		$this->templates->set('', '<b disable-output-escaping="1"><xsl:apply-templates/></b>');
 	}
 }

@@ -105,7 +105,7 @@ class Range extends AttributeFilter
 	/**
 	* {@inheritdoc}
 	*/
-	public function isSafeInURL()
+	public function isSafeAsURL()
 	{
 		return true;
 	}

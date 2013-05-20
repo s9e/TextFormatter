@@ -87,6 +87,17 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
+	* @testdox Callback '\\strtotime' is normalized to 'strtotime'
+	*/
+	public function testNormalizeNamespace()
+	{
+		$pc     = new ProgrammableCallback('\\strtotime');
+		$config = $pc->asConfig();
+
+		$this->assertSame('strtotime', $config['callback']);
+	}
+
+	/**
 	* @testdox Callback ['foo','bar'] is normalized to 'foo::bar'
 	*/
 	public function testNormalizeStatic()
@@ -94,7 +105,17 @@ class ProgrammableCallbackTest extends Test
 		$pc     = new ProgrammableCallback([__NAMESPACE__ . '\\DummyStaticCallback', 'bar']);
 		$config = $pc->asConfig();
 
-		$this->assertArrayHasKey('callback', $config);
+		$this->assertSame(__NAMESPACE__ . '\\DummyStaticCallback::bar', $config['callback']);
+	}
+
+	/**
+	* @testdox Callback ['\\foo','bar'] is normalized to 'foo::bar'
+	*/
+	public function testNormalizeStaticNamespace()
+	{
+		$pc     = new ProgrammableCallback(['\\' . __NAMESPACE__ . '\\DummyStaticCallback', 'bar']);
+		$config = $pc->asConfig();
+
 		$this->assertSame(__NAMESPACE__ . '\\DummyStaticCallback::bar', $config['callback']);
 	}
 

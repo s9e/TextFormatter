@@ -29,10 +29,10 @@ TODO
 - Find a good way to test the JavaScript HTML plugins
 - Look into ext/dom's XML_PARSE_HUGE -- apparently it's needed to render text with 1000s of tags. Also look into LIBXML_COMPACT
 - Add some sort of optional filtering/escaping to the variables used in repositories? htmlspecialchars(), json_encode()
-- Add a way to declare an attribute "safe in X", e.g. "safe in CSS" regardless of its filterChain to account for filters whose safety is unclear. Also try to determine whether a given regexp is safe: collect all the fixed parts (what about meta-characters and escape sequences?) plus the content of character classes (also negated classes) and make it a big character class then individually test whether it matches a list of forbidden characters
 - Limit URLs length to whatever browsers grok
 - Add some sort of TemplateHelper::loadHTML() to load HTML templates. XSL elements should be dropped or converted to HTML elements, and curly brackets in attributes should be escaped
 - Exploitable? http://sla.ckers.org/forum/read.php?2,36997
-- Add Filter::isSafeAsURL() to complement Filter::isSafeInURL() -- for example: <a href="http://foo.com/{IDENTIFIER}"/> and <a href="{IDENTIFIER}:{TEXT;postFilter=urlencode"/> -- {IDENTIFIER} is safe *in* URL, but not at the beginning ("javascript:alert%28%22k%22%29"), whereas {URL} is safe as URL
 - There are many SVG vectors, too many to chase after individually. Prevent any user-supplied data in <svg> tags (in any namespace) or add isSafeInSVG() with a very restricted set of allowed filters -- http://html5sec.org/#94
 - http://html5sec.org/#49 -- http://shazzer.co.uk/database/All/Characters-allowed-inside-jsurl http://html5sec.org/#36
+- Consider a way to allow anchor links such as [url=#foo]
+- TemplateCheck: <a href="javascript:{TEXT}"/>

@@ -47,6 +47,6 @@ class FloatTest extends Test
 	public function testIsSafeInURL()
 	{
 		$filter = new Float;
-		$this->assertTrue($filter->isSafeInURL());
+		$this->assertTrue($filter->isSafeAsURL());
 	}
 }

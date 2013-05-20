@@ -96,6 +96,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox $configurator->templateChecker is an instance of TemplateChecker
+	*/
+	public function testTemplateCheckerInstance()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\TemplateChecker',
+			$this->configurator->templateChecker
+		);
+	}
+
+	/**
 	* @testdox $configurator->urlConfig is an instance of UrlConfig
 	*/
 	public function testUrlConfigInstance()

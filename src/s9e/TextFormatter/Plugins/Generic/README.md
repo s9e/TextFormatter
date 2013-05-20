@@ -63,6 +63,7 @@ try
 		'/<(.*)>/',
 		'<a href="$1">$1</a>'
 	);
+	$configurator->getRenderer();
 }
 catch (Exception $e)
 {
@@ -70,5 +71,5 @@ catch (Exception $e)
 }
 ```
 ```html
-Attribute '_1' is not properly filtered to be used in URL
+Attribute '_1' is not properly sanitized to be used in this context
 ```

@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\Items;
 
 use s9e\TextFormatter\Configurator\Collections\AttributeFilterChain;
 use s9e\TextFormatter\Configurator\Items\Attribute;
+use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Int;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
@@ -84,5 +85,119 @@ class AttributeTest extends Test
 			],
 			$attr->asConfig()
 		);
+	}
+
+	/**
+	* @testdox isSafeAsURL() returns FALSE by default
+	*/
+	public function testIsSafeAsURLDefault()
+	{
+		$attr = new Attribute;
+		$this->assertFalse($attr->isSafeAsURL());
+	}
+
+	/**
+	* @testdox isSafeAsURL() returns TRUE if any filter is safe in context
+	*/
+	public function testIsSafeAsURLFilter()
+	{
+		$attr = new Attribute;
+		$attr->filterChain->append(new DummyURLFilter);
+		$this->assertTrue($attr->isSafeAsURL());
+	}
+
+	/**
+	* @testdox markAsSafeAsURL() unconditionally marks the attribute as safe in context
+	*/
+	public function testMarkAsSafeAsURL()
+	{
+		$attr = new Attribute;
+		$attr->markAsSafeAsURL();
+		$this->assertTrue($attr->isSafeAsURL());
+	}
+
+	/**
+	* @testdox isSafeInCSS() returns FALSE by default
+	*/
+	public function testIsSafeInCSSDefault()
+	{
+		$attr = new Attribute;
+		$this->assertFalse($attr->isSafeInCSS());
+	}
+
+	/**
+	* @testdox isSafeInCSS() returns TRUE if any filter is safe in context
+	*/
+	public function testIsSafeInCSSFilter()
+	{
+		$attr = new Attribute;
+		$attr->filterChain->append(new DummyCSSFilter);
+		$this->assertTrue($attr->isSafeInCSS());
+	}
+
+	/**
+	* @testdox markAsSafeInCSS() unconditionally marks the attribute as safe in context
+	*/
+	public function testMarkAsSafeInCSS()
+	{
+		$attr = new Attribute;
+		$attr->markAsSafeInCSS();
+		$this->assertTrue($attr->isSafeInCSS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns FALSE by default
+	*/
+	public function testIsSafeInJSDefault()
+	{
+		$attr = new Attribute;
+		$this->assertFalse($attr->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns TRUE if any filter is safe in context
+	*/
+	public function testIsSafeInJSFilter()
+	{
+		$attr = new Attribute;
+		$attr->filterChain->append(new DummyJSFilter);
+		$this->assertTrue($attr->isSafeInJS());
+	}
+
+	/**
+	* @testdox markAsSafeInJS() unconditionally marks the attribute as safe in context
+	*/
+	public function testMarkAsSafeInJS()
+	{
+		$attr = new Attribute;
+		$attr->markAsSafeInJS();
+		$this->assertTrue($attr->isSafeInJS());
+	}
+}
+
+class DummyCSSFilter extends AttributeFilter
+{
+	public function __construct() {}
+	public function isSafeInCSS()
+	{
+		return true;
+	}
+}
+
+class DummyJSFilter extends AttributeFilter
+{
+	public function __construct() {}
+	public function isSafeInJS()
+	{
+		return true;
+	}
+}
+
+class DummyURLFilter extends AttributeFilter
+{
+	public function __construct() {}
+	public function isSafeAsURL()
+	{
+		return true;
 	}
 }

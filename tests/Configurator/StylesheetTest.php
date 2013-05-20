@@ -4,7 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator;
 
 use DOMDocument;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Collections\TagCollection;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Tests\Test;
@@ -19,10 +19,10 @@ class StylesheetTest extends Test
 	*/
 	public function testSetOutputMethod()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setOutputMethod('xml');
+		$configurator = new Configurator;
+		$configurator->stylesheet->setOutputMethod('xml');
 
-		$this->assertContains(' method="xml"', $stylesheet->get());
+		$this->assertContains(' method="xml"', $configurator->stylesheet->get());
 	}
 
 	/**
@@ -30,10 +30,10 @@ class StylesheetTest extends Test
 	*/
 	public function testSetOutputMethodProlog()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setOutputMethod('xml');
+		$configurator = new Configurator;
+		$configurator->stylesheet->setOutputMethod('xml');
 
-		$this->assertContains(' omit-xml-declaration="yes"', $stylesheet->get());
+		$this->assertContains(' omit-xml-declaration="yes"', $configurator->stylesheet->get());
 	}
 
 	/**
@@ -43,8 +43,8 @@ class StylesheetTest extends Test
 	*/
 	public function testSetOutputMethodInvalid()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setOutputMethod('text');
+		$configurator = new Configurator;
+		$configurator->stylesheet->setOutputMethod('text');
 	}
 
 	/**
@@ -52,8 +52,8 @@ class StylesheetTest extends Test
 	*/
 	public function testSetWildcardTemplateString()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setWildcardTemplate('foo', 'FOO');
+		$configurator = new Configurator;
+		$configurator->stylesheet->setWildcardTemplate('foo', 'FOO');
 	}
 
 	/**
@@ -61,8 +61,8 @@ class StylesheetTest extends Test
 	*/
 	public function testSetWildcardTemplateCallback()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setWildcardTemplate('foo', function(){});
+		$configurator = new Configurator;
+		$configurator->stylesheet->setWildcardTemplate('foo', function(){});
 	}
 
 	/**
@@ -70,8 +70,8 @@ class StylesheetTest extends Test
 	*/
 	public function testSetWildcardTemplateInstance()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setWildcardTemplate('foo', new Template(''));
+		$configurator = new Configurator;
+		$configurator->stylesheet->setWildcardTemplate('foo', new Template(''));
 	}
 
 	/**
@@ -81,8 +81,8 @@ class StylesheetTest extends Test
 	*/
 	public function testSetWildcardTemplateInvalidType()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setWildcardTemplate('foo', false);
+		$configurator = new Configurator;
+		$configurator->stylesheet->setWildcardTemplate('foo', false);
 	}
 
 	/**
@@ -90,12 +90,12 @@ class StylesheetTest extends Test
 	*/
 	public function testSetWildcardTemplate()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setWildcardTemplate('foo', 'FOO');
+		$configurator = new Configurator;
+		$configurator->stylesheet->setWildcardTemplate('foo', 'FOO');
 
 		$this->assertContains(
 			'<xsl:template match="foo:*">FOO</xsl:template>',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -106,8 +106,8 @@ class StylesheetTest extends Test
 	*/
 	public function testSetWildcardTemplateEmpty()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setWildcardTemplate('', 'FOO');
+		$configurator = new Configurator;
+		$configurator->stylesheet->setWildcardTemplate('', 'FOO');
 	}
 
 	/**
@@ -117,23 +117,22 @@ class StylesheetTest extends Test
 	*/
 	public function testSetWildcardTemplateInvalid()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->setWildcardTemplate('*invalid*', 'FOO');
+		$configurator = new Configurator;
+		$configurator->stylesheet->setWildcardTemplate('*invalid*', 'FOO');
 	}
 
 	/**
 	* @testdox get() tests the wildcard templates' safeness
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException bar
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException escaping
 	*/
 	public function testGetUnsafeWildcard()
 	{
-		$tags = new TagCollection;
-		$tags->add('foo:X')->attributes->add('bar');
+		$configurator = new Configurator;
+		$configurator->tags->add('foo:X')->attributes->add('bar');
 
-		$stylesheet = new Stylesheet($tags);
-		$stylesheet->setWildcardTemplate('foo', '<a href="{@bar}">_</a>');
+		$configurator->stylesheet->setWildcardTemplate('foo', '<b disable-output-escaping="yes"><xsl:apply-templates/></b>');
 
-		$stylesheet->get();
+		$configurator->stylesheet->get();
 	}
 
 	/**
@@ -141,15 +140,14 @@ class StylesheetTest extends Test
 	*/
 	public function testGetUnsafeWildcardWrongPrefix()
 	{
-		$tags = new TagCollection;
-		$tags->add('X')->attributes->add('bar');
-		$tags->add('bar:X')->attributes->add('bar');
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->attributes->add('bar');
+		$configurator->tags->add('bar:X')->attributes->add('bar');
 
-		$stylesheet = new Stylesheet($tags);
-		$stylesheet->setWildcardTemplate('foo', '<a href="{@bar}">_</a>');
-		$stylesheet->setWildcardTemplate('bar', 'BAR');
+		$configurator->stylesheet->setWildcardTemplate('foo', '<a href="{@bar}">_</a>');
+		$configurator->stylesheet->setWildcardTemplate('bar', 'BAR');
 
-		$stylesheet->get();
+		$configurator->stylesheet->get();
 	}
 
 	/**
@@ -157,15 +155,14 @@ class StylesheetTest extends Test
 	*/
 	public function testGetUnsafeWildcardDefaultTemplate()
 	{
-		$tags = new TagCollection;
-		$tag = $tags->add('foo:X');
+		$configurator = new Configurator;
+		$tag = $configurator->tags->add('foo:X');
 		$tag->attributes->add('bar');
 		$tag->defaultTemplate = 'FOO';
 
-		$stylesheet = new Stylesheet($tags);
-		$stylesheet->setWildcardTemplate('foo', '<a href="{@bar}">_</a>');
+		$configurator->stylesheet->setWildcardTemplate('foo', '<a href="{@bar}">_</a>');
 
-		$stylesheet->get();
+		$configurator->stylesheet->get();
 	}
 
 	/**
@@ -173,14 +170,13 @@ class StylesheetTest extends Test
 	*/
 	public function testGetMinifiesPredicates()
 	{
-		$tags = new TagCollection;
-		$tags->add('X')->templates['. = 2'] = 'BAR';
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->templates['. = 2'] = 'BAR';
 
-		$stylesheet = new Stylesheet($tags);
 
 		$this->assertContains(
 			'match="X[.=2]"',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -189,14 +185,13 @@ class StylesheetTest extends Test
 	*/
 	public function testGetEscapesPredicates()
 	{
-		$tags = new TagCollection;
-		$tags->add('X')->templates['.>""'] = 'BAR';
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->templates['.>""'] = 'BAR';
 
-		$stylesheet = new Stylesheet($tags);
 
 		$this->assertContains(
 			'match="X[.&gt;&quot;&quot;]"',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -205,15 +200,14 @@ class StylesheetTest extends Test
 	*/
 	public function testGetMergesDuplicateTemplates()
 	{
-		$tags = new TagCollection;
-		$tags->add('X')->defaultTemplate = 'X';
-		$tags->add('Y')->defaultTemplate = 'X';
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = 'X';
+		$configurator->tags->add('Y')->defaultTemplate = 'X';
 
-		$stylesheet = new Stylesheet($tags);
 
 		$this->assertContains(
 			'<xsl:template match="X|Y">X</xsl:template>',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -222,13 +216,12 @@ class StylesheetTest extends Test
 	*/
 	public function testGetEmptyTemplates()
 	{
-		$tags = new TagCollection;
+		$configurator = new Configurator;
 
-		$stylesheet = new Stylesheet($tags);
 
 		$this->assertContains(
 			'<xsl:template match="et|i|st"/>',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -237,15 +230,14 @@ class StylesheetTest extends Test
 	*/
 	public function testGetDeclaresNamespaces()
 	{
-		$tags = new TagCollection;
-		$tags->add('X:A')->defaultTemplate = 'X';
-		$tags->add('Y:B')->defaultTemplate = 'Y';
+		$configurator = new Configurator;
+		$configurator->tags->add('X:A')->defaultTemplate = 'X';
+		$configurator->tags->add('Y:B')->defaultTemplate = 'Y';
 
-		$stylesheet = new Stylesheet($tags);
 
 		$this->assertContains(
 			'xmlns:X="urn:s9e:TextFormatter:X" xmlns:Y="urn:s9e:TextFormatter:Y"',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -254,15 +246,14 @@ class StylesheetTest extends Test
 	*/
 	public function testGetExcludesPrefixes()
 	{
-		$tags = new TagCollection;
-		$tags->add('X:A')->defaultTemplate = 'X';
-		$tags->add('Y:B')->defaultTemplate = 'Y';
+		$configurator = new Configurator;
+		$configurator->tags->add('X:A')->defaultTemplate = 'X';
+		$configurator->tags->add('Y:B')->defaultTemplate = 'Y';
 
-		$stylesheet = new Stylesheet($tags);
 
 		$this->assertContains(
 			'exclude-result-prefixes="X Y"',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -271,18 +262,18 @@ class StylesheetTest extends Test
 	*/
 	public function testGetParameters()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->parameters->add('foo');
-		$stylesheet->parameters->add('bar');
+		$configurator = new Configurator;
+		$configurator->stylesheet->parameters->add('foo');
+		$configurator->stylesheet->parameters->add('bar');
 
 		$this->assertContains(
 			'<xsl:param name="foo"',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 
 		$this->assertContains(
 			'<xsl:param name="bar"',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -291,12 +282,12 @@ class StylesheetTest extends Test
 	*/
 	public function testGetParameterValue()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->parameters->add('foo', 1);
+		$configurator = new Configurator;
+		$configurator->stylesheet->parameters->add('foo', 1);
 
 		$this->assertContains(
 			'<xsl:param name="foo" select="1"/>',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -305,12 +296,12 @@ class StylesheetTest extends Test
 	*/
 	public function testGetParameterValueEscaped()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->parameters->add('foo', '\'"&<>');
+		$configurator = new Configurator;
+		$configurator->stylesheet->parameters->add('foo', '\'"&<>');
 
 		$this->assertContains(
 			'<xsl:param name="foo" select="\'&quot;&amp;&lt;&gt;"/>',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 
@@ -319,12 +310,12 @@ class StylesheetTest extends Test
 	*/
 	public function testGetUsedParametersDefined()
 	{
-		$stylesheet = new Stylesheet(new TagCollection);
-		$stylesheet->parameters->add('foo', "'Foo'");
+		$configurator = new Configurator;
+		$configurator->stylesheet->parameters->add('foo', "'Foo'");
 
 		$this->assertSame(
 			['foo' => "'Foo'"],
-			$stylesheet->getUsedParameters()
+			$configurator->stylesheet->getUsedParameters()
 		);
 	}
 
@@ -333,15 +324,14 @@ class StylesheetTest extends Test
 	*/
 	public function testGetUsedParametersUndefinedFromTemplates()
 	{
-		$tags = new TagCollection;
-		$tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
-		$tags->add('Y')->defaultTemplate = '<xsl:value-of select="$S_OK"/>';
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
+		$configurator->tags->add('Y')->defaultTemplate = '<xsl:value-of select="$S_OK"/>';
 
-		$stylesheet = new Stylesheet($tags);
 
 		$this->assertSame(
 			['L_FOO' => "''", 'S_OK' => "''"],
-			$stylesheet->getUsedParameters()
+			$configurator->stylesheet->getUsedParameters()
 		);
 	}
 
@@ -350,15 +340,14 @@ class StylesheetTest extends Test
 	*/
 	public function testGetUsedParametersUndefinedFromWildcards()
 	{
-		$tags = new TagCollection;
-		$tags->add('foo:X');
+		$configurator = new Configurator;
+		$configurator->tags->add('foo:X');
 
-		$stylesheet = new Stylesheet($tags);
-		$stylesheet->setWildcardTemplate('foo', '<xsl:value-of select="$L_FOO"/>');
+		$configurator->stylesheet->setWildcardTemplate('foo', '<xsl:value-of select="$L_FOO"/>');
 
 		$this->assertSame(
 			['L_FOO' => "''"],
-			$stylesheet->getUsedParameters()
+			$configurator->stylesheet->getUsedParameters()
 		);
 	}
 
@@ -367,14 +356,13 @@ class StylesheetTest extends Test
 	*/
 	public function testGetOutputsUndefinedParameters()
 	{
-		$tags = new TagCollection;
-		$tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
 
-		$stylesheet = new Stylesheet($tags);
 
 		$this->assertContains(
 			'<xsl:param name="L_FOO"',
-			$stylesheet->get()
+			$configurator->stylesheet->get()
 		);
 	}
 }

@@ -34,7 +34,7 @@ class AttributeFilterTest extends Test
 	}
 
 	/**
-	* @testdox isSafeInCSS() returns FALSE by default
+	* @testdox isSafeInJS() returns FALSE by default
 	*/
 	public function testNotSafeInJS()
 	{
@@ -43,11 +43,38 @@ class AttributeFilterTest extends Test
 	}
 
 	/**
-	* @testdox isSafeInURL() returns FALSE by default
+	* @testdox isSafeInJS() returns TRUE if the callback is 'rawurlencode'
+	*/
+	public function testSafeInJSRawurlencode()
+	{
+		$filter = new AttributeFilter('rawurlencode');
+		$this->assertTrue($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns TRUE if the callback is 'strtotime'
+	*/
+	public function testSafeInJSStrtotime()
+	{
+		$filter = new AttributeFilter('strtotime');
+		$this->assertTrue($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns TRUE if the callback is 'urlencode'
+	*/
+	public function testSafeInJSUrlencode()
+	{
+		$filter = new AttributeFilter('urlencode');
+		$this->assertTrue($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeAsURL() returns FALSE by default
 	*/
 	public function testNotSafeInURL()
 	{
 		$filter = new AttributeFilter(function(){});
-		$this->assertFalse($filter->isSafeInURL());
+		$this->assertFalse($filter->isSafeAsURL());
 	}
 }

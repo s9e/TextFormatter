@@ -8,9 +8,8 @@
 namespace s9e\TextFormatter\Configurator;
 
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Collections\StylesheetParameterCollection;
-use s9e\TextFormatter\Configurator\Collections\TagCollection;
-use s9e\TextFormatter\Configurator\Helpers\TemplateChecker;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
 use s9e\TextFormatter\Configurator\Items\Template;
@@ -23,6 +22,11 @@ class Stylesheet
 	use Configurable;
 
 	/**
+	* @var Configurator Instance of Configurator this stylesheet is attached to
+	*/
+	protected $configurator;
+
+	/**
 	* @var string Output method
 	*/
 	protected $outputMethod = 'html';
@@ -33,11 +37,6 @@ class Stylesheet
 	protected $parameters;
 
 	/**
-	* @var TagCollection
-	*/
-	protected $tags;
-
-	/**
 	* @var array Array of wildcard templates, using prefix as key
 	*/
 	protected $wildcards = [];
@@ -45,13 +44,13 @@ class Stylesheet
 	/**
 	* Constructor
 	*
-	* @param  TagCollection $tags Tag collection from which templates are pulled
+	* @param  Configurator $configurator Instance of Configurator this stylesheet is attached to
 	* @return void
 	*/
-	public function __construct(TagCollection $tags)
+	public function __construct(Configurator $configurator)
 	{
-		$this->tags       = $tags;
-		$this->parameters = new StylesheetParameterCollection;
+		$this->configurator = $configurator;
+		$this->parameters   = new StylesheetParameterCollection;
 	}
 
 	/**
@@ -72,15 +71,16 @@ class Stylesheet
 		// Iterate over the wildcards to collect their templates and their prefix
 		foreach ($this->wildcards as $prefix => $template)
 		{
-			$checkUnsafe = !($template instanceof UnsafeTemplate);
+			// Check this template if it's not an UnsafeTemplate
+			$checkTemplate = !($template instanceof UnsafeTemplate);
 
-			// First, normalize the template without asserting its safeness
-			$template = TemplateHelper::normalizeUnsafe((string) $template);
+			// First, cast this template as string so it can be checked and stored
+			$template = (string) $template;
 
 			// Then, iterate over tags to assess the template's safeness
-			if ($checkUnsafe)
+			if ($checkTemplate)
 			{
-				foreach ($this->tags as $tagName => $tag)
+				foreach ($this->configurator->tags as $tagName => $tag)
 				{
 					// Ensure that the tag is in the right namespace
 					if (strncmp($tagName, $prefix . ':', strlen($prefix) + 1))
@@ -89,9 +89,9 @@ class Stylesheet
 					}
 
 					// Only check for safeness if the tag has no default template set
-					if ($checkUnsafe && !$tag->templates->exists(''))
+					if (!$tag->templates->exists(''))
 					{
-						TemplateChecker::checkUnsafe($template, $tag);
+						$this->configurator->templateChecker->checkTemplate($template, $tag);
 					}
 				}
 			}
@@ -102,8 +102,11 @@ class Stylesheet
 		}
 
 		// Iterate over the tags to collect their templates and their prefix
-		foreach ($this->tags as $tagName => $tag)
+		foreach ($this->configurator->tags as $tagName => $tag)
 		{
+			// Test this tag's templates
+			$this->configurator->templateChecker->checkTag($tag);
+
 			foreach ($tag->templates as $predicate => $template)
 			{
 				// Build the match rule used by this template
@@ -121,10 +124,8 @@ class Stylesheet
 					$prefixes[substr($tagName, 0, $pos)] = 1;
 				}
 
-				// Normalize and record the template
-				$templates[$match] = ($template instanceof UnsafeTemplate)
-				                   ? TemplateHelper::normalizeUnsafe((string) $template, $tag)
-				                   : TemplateHelper::normalize((string) $template, $tag);
+				// Record the template as a string
+				$templates[$match] = (string) $template;
 			}
 		}
 
@@ -214,7 +215,7 @@ class Stylesheet
 		$params = [];
 
 		// Collect all the parameters used by tags' templates and assign them an empty string
-		foreach ($this->tags as $tag)
+		foreach ($this->configurator->tags as $tag)
 		{
 			foreach ($tag->templates as $template)
 			{

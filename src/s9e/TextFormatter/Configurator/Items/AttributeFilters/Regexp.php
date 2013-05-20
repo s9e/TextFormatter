@@ -99,7 +99,7 @@ class Regexp extends AttributeFilter
 	/**
 	* {@inheritdoc}
 	*/
-	public function isSafeInURL()
+	public function isSafeAsURL()
 	{
 		try
 		{

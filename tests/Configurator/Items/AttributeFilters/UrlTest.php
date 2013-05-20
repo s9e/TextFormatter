@@ -47,6 +47,6 @@ class UrlTest extends Test
 	public function testIsSafeInURL()
 	{
 		$filter = new Url;
-		$this->assertTrue($filter->isSafeInURL());
+		$this->assertTrue($filter->isSafeAsURL());
 	}
 }

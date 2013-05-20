@@ -44,6 +44,7 @@
 			<file>tests/Configurator/Collections/StylesheetParameterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagFilterChainTest.php</file>
+			<file>tests/Configurator/Collections/TemplateCheckListTest.php</file>
 			<file>tests/Configurator/Collections/TemplateCollectionTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
@@ -53,9 +54,7 @@
 			<file>tests/Configurator/Helpers/RegexpBuilderTest.php</file>
 			<file>tests/Configurator/Helpers/RegexpParserTest.php</file>
 			<file>tests/Configurator/Helpers/RulesHelperTest.php</file>
-			<!-- TemplateChecker depends on TemplateOptimizer -->
 			<file>tests/Configurator/Helpers/TemplateOptimizerTest.php</file>
-			<file>tests/Configurator/Helpers/TemplateCheckerTest.php</file>
 			<file>tests/Configurator/Helpers/TemplateHelperTest.php</file>
 			<file>tests/Configurator/Items/AttributeTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilterTest.php</file>
@@ -84,6 +83,25 @@
 			<file>tests/Configurator/Items/TagFilterTest.php</file>
 			<file>tests/Configurator/Items/TemplateTest.php</file>
 			<file>tests/Configurator/Items/VariantTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowAttributeSetsTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowCopyTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowDisableOutputEscapingTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowDynamicAttributeNamesTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowDynamicElementNamesTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowElementTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowElementNSTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowFlashFullScreenTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowNodeByXPathTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowObjectParamsWithGeneratedNameTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowPHPTagsTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowUnsafeCopyOfTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowUnsafeDynamicCSSTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowUnsafeDynamicJSTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowUnsafeDynamicURLTest.php</file>
+			<file>tests/Configurator/TemplateChecks/DisallowXPathFunctionTest.php</file>
+			<file>tests/Configurator/TemplateChecks/RestrictFlashNetworkingTest.php</file>
+			<file>tests/Configurator/TemplateChecks/RestrictFlashScriptAccessTest.php</file>
+			<file>tests/Configurator/TemplateCheckerTest.php</file>
 			<file>tests/Configurator/StylesheetTest.php</file>
 			<file>tests/Configurator/UrlConfigTest.php</file>
 			<file>tests/Configurator/Validators/AttributeNameTest.php</file>

@@ -47,6 +47,6 @@ class IntTest extends Test
 	public function testIsSafeInURL()
 	{
 		$filter = new Int;
-		$this->assertTrue($filter->isSafeInURL());
+		$this->assertTrue($filter->isSafeAsURL());
 	}
 }
