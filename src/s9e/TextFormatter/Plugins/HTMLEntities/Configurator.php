@@ -35,7 +35,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* {@inheritdoc}
 	*/
-	public function setUp()
+	protected function setUp()
 	{
 		$tag = $this->configurator->tags->add($this->tagName);
 		$tag->attributes->add($this->attrName);

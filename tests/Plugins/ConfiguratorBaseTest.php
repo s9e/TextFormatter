@@ -30,6 +30,24 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
+	* @testdox Constructor calls setUp()
+	*/
+	public function testSetUp()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+		$this->assertSame('foo', $dummy->setup);
+	}
+
+	/**
+	* @testdox Constructor calls setUp() after overwriting properties
+	*/
+	public function testSetUpAfterProps()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator, ['bar' => 'baz']);
+		$this->assertSame('baz', $dummy->setup);
+	}
+
+	/**
 	* @testdox An exception is thrown if an unknown property is being set by the constructor
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Unknown property 'baz'
@@ -135,8 +153,9 @@ class ConfiguratorBaseTest extends Test
 
 		$this->assertEquals(
 			[
-				'foo' => 'foo',
-				'bar' => 'foo',
+				'foo'   => 'foo',
+				'bar'   => 'foo',
+				'setup' => 'foo',
 				'quickMatch'  => false,
 				'regexpLimit' => 10000,
 				'regexpLimitAction' => 'warn'
@@ -172,9 +191,19 @@ class DummyPluginConfigurator extends ConfiguratorBase
 {
 	public $foo = 'foo';
 	public $bar = 'foo';
+	public $setup = false;
 
 	public function setFoo()
 	{
 		$this->foo = 'baz';
 	}
+
+	protected function setUp()
+	{
+		$this->setup = $this->bar;
+	}
+}
+
+class EmptyPluginConfigurator extends ConfiguratorBase
+{
 }

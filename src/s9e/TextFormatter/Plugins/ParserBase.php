@@ -41,7 +41,7 @@ abstract class ParserBase
 	* @return void
 	*/
 	// @codeCoverageIgnoreStart
-	public function setUp()
+	protected function setUp()
 	{
 	}
 	// @codeCoverageIgnoreEnd

@@ -84,7 +84,7 @@ class Configurator extends ConfiguratorBase
 	*
 	* @return void
 	*/
-	public function setUp()
+	protected function setUp()
 	{
 		$this->configurator->stylesheet->setWildcardTemplate(
 			$this->prefix,

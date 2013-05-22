@@ -38,7 +38,7 @@ class Configurator extends ConfiguratorBase
 	*
 	* @return void
 	*/
-	public function setUp()
+	protected function setUp()
 	{
 		if (isset($this->configurator->tags[$this->tagName]))
 		{

@@ -32,7 +32,7 @@ class Configurator extends ConfiguratorBase
 	*
 	* Will initialize create the plugin's tag if it does not exist
 	*/
-	public function setUp()
+	protected function setUp()
 	{
 		if (isset($this->configurator->tags[$this->tagName]))
 		{

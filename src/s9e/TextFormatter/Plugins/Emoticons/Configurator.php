@@ -50,7 +50,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*
 	* Will create the tag used by this plugin
 	*/
-	public function setUp()
+	protected function setUp()
 	{
 		$this->collection = new EmoticonCollection;
 

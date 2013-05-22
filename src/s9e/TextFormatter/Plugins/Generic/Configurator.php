@@ -32,7 +32,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* {@inheritdoc}
 	*/
-	public function setUp()
+	protected function setUp()
 	{
 		$this->collection = new NormalizedCollection;
 	}

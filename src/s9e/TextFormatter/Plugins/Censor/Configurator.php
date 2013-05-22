@@ -49,7 +49,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*
 	* Will initialize its collection and create the plugin's tag if it does not exist
 	*/
-	public function setUp()
+	protected function setUp()
 	{
 		$this->collection = new NormalizedCollection;
 
