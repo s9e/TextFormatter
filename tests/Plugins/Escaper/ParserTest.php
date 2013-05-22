@@ -32,11 +32,21 @@ class ParserTest extends Test
 			],
 			[
 				"a\\\nb",
-				"<rt>a<ESC>\\\n</ESC>b</rt>"
+				"<rt>a<ESC>\\\n</ESC>b</rt>",
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->escapeAll();
+				}
 			],
 			[
 				'a\\♥b',
-				'<rt>a<ESC>\\♥</ESC>b</rt>'
+				'<rt>a<ESC>\\♥</ESC>b</rt>',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->escapeAll();
+				}
 			],
 		];
 	}
@@ -55,11 +65,21 @@ class ParserTest extends Test
 			],
 			[
 				"a\\\nb",
-				"a\nb"
+				"a\nb",
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->escapeAll();
+				}
 			],
 			[
 				'a\\♥b',
-				'a♥b'
+				'a♥b',
+				[],
+				function ($configurator, $plugin)
+				{
+					$plugin->escapeAll();
+				}
 			],
 		];
 	}

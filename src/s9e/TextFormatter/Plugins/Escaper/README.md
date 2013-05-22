@@ -4,6 +4,10 @@ This plugin defines the backslash character `\\` as an escape character.
 
 ## Examples
 
+### Using the default escape list
+
+By default, this plugin treats most ASCII punctuation as escapable.
+
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('Escaper');
@@ -19,12 +23,33 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-The emoticon :) becomes <img src="happy.png" alt=":)" title="Happy">
+The emoticon \<img src="happy.png" alt=":)" title="Happy"> becomes <img src="happy.png" alt=":)" title="Happy">
+```
+
+### Escape any Unicode character
+
+By calling `$plugin->escapeAll()`, any character can be escaped. Attention, this is only suitable in some specific situations.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Escaper->escapeAll();
+
+$parser   = $configurator->getParser();
+$renderer = $configurator->getRenderer();
+
+$text = 's9e\\TextFormatter -- s9e\\\\TextFormatter'; 
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+s9eTextFormatter -- s9e\TextFormatter
 ```
 
 ### How to escape only certain characters
 
-By default, this plugin escapes any character following a backslash, using the regular expression `/\\./us`. Expert users can change this regular expression at loading time. Note that only regular expressions starting with a backslash are supported.
+Expert users can change the regular expression that matches escapable characters at loading time. Note that only regular expressions starting with a backslash are supported.
 
 In the following example, this plugin is limited to escaping ASCII non-word characters. Other backslashes are preserved.
 ```php

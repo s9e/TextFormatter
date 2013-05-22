@@ -21,11 +21,11 @@ trait ParsingTestsJavaScriptRunner
 		$pluginName = preg_replace('/.*\\\\([^\\\\]+)\\\\.*/', '$1', get_class($this));
 
 		$configurator = new Configurator;
-		$configurator->plugins->load($pluginName, $pluginOptions);
+		$plugin = $configurator->plugins->load($pluginName, $pluginOptions);
 
 		if ($setup)
 		{
-			$setup($configurator);
+			$setup($configurator, $plugin);
 		}
 
 		$src = $configurator->javascript->getParser();
