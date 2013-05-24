@@ -1,11 +1,11 @@
 var attrName = config['attrName'],
 	tagName  = config['tagName'],
-	doSingleQuote = (text.indexOf("'") >= 0),
-	doDoubleQuote = (text.indexOf('"') >= 0),
+	hasSingleQuote = (text.indexOf("'") >= 0),
+	hasDoubleQuote = (text.indexOf('"') >= 0),
 	regexp, m, pos, chr;
 
 // Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits
-if (doSingleQuote)
+if (hasSingleQuote)
 {
 	// "/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS"
 	regexp = /[a-z]'|(?:^|\s)'(?=[a-z]|[0-9]{2})/gi;
@@ -24,9 +24,9 @@ if (doSingleQuote)
 //  - apostrophe ’ if it's followed by an "s" as in 80's
 //  - prime ′ and double prime ″
 //  - multiply sign × if it's followed by an optional space and another digit
-if (doSingleQuote || doDoubleQuote || text.indexOf('x') >= 0)
+if (hasSingleQuote || hasDoubleQuote || text.indexOf('x') >= 0)
 {
-	// '/[0-9](?:\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
+	// '/[0-9](?:\'s|["\']? ?x(?= ?[0-9])|["\'])/S'
 	regexp = /[0-9](?:'s|["']? ?x(?= ?[0-9])|["'])/g;
 
 	while (m = regexp.exec(text))
@@ -76,12 +76,12 @@ function captureQuotePairs(q, regexp, leftQuote, rightQuote)
 		left.cascadeInvalidationTo(right);
 	}
 }
-if (doSingleQuote)
+if (hasSingleQuote)
 {
 	// "/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS"
 	captureQuotePairs("'", /(?:^|\W)'.+?'(?!\w)/g, "\u2018", "\u2019");
 }
-if (doDoubleQuote)
+if (hasDoubleQuote)
 {
 	// '/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS'
 	captureQuotePairs('"', /(?:^|\W)".+?"(?!\w)/g, "\u201c", "\u201d");
@@ -91,7 +91,7 @@ if (doDoubleQuote)
 if (text.indexOf('...') >= 0
  || text.indexOf('--')  >= 0)
 {
-	// '/[0-9](?:\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
+	// '/---?|\\.\\.\\./S'
 	regexp = /---?|\.\.\./g;
 
 	while (m = regexp.exec(text))

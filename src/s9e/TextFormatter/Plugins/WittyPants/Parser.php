@@ -19,11 +19,11 @@ class Parser extends ParserBase
 		$attrName = $this->config['attrName'];
 		$tagName  = $this->config['tagName'];
 
-		$doSingleQuote = (strpos($text, "'") !== false);
-		$doDoubleQuote = (strpos($text, '"') !== false);
+		$hasSingleQuote = (strpos($text, "'") !== false);
+		$hasDoubleQuote = (strpos($text, '"') !== false);
 
 		// Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits
-		if ($doSingleQuote)
+		if ($hasSingleQuote)
 		{
 			preg_match_all(
 				"/(?<=\\pL)'|(?<!\\S)'(?=\\pL|[0-9]{2})/uS",
@@ -45,7 +45,7 @@ class Parser extends ParserBase
 		//  - apostrophe ’ if it's followed by an "s" as in 80's
 		//  - prime ′ and double prime ″
 		//  - multiply sign × if it's followed by an optional space and another digit
-		if ($doSingleQuote || $doDoubleQuote || strpos($text, 'x') !== false)
+		if ($hasSingleQuote || $hasDoubleQuote || strpos($text, 'x') !== false)
 		{
 			preg_match_all(
 				'/[0-9](?:\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
@@ -88,13 +88,13 @@ class Parser extends ParserBase
 
 		// Do quote pairs ‘’ and “” -- must be done separately to handle nesting
 		$replacements = [];
-		if ($doSingleQuote)
+		if ($hasSingleQuote)
 		{
 			$replacements[] = [
 				"/(?<![0-9\\pL])'[^'\\n]+'(?![0-9\\pL])/uS", "\xE2\x80\x98", "\xE2\x80\x99"
 			];
 		}
-		if ($doDoubleQuote)
+		if ($hasDoubleQuote)
 		{
 			$replacements[] = [
 				'/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS', "\xE2\x80\x9C", "\xE2\x80\x9D"
