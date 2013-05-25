@@ -3,8 +3,9 @@ php:
   - "5.5"
   - "5.4"
   - "5.3"
-allow_failures:
-  - php: "5.5"
+matrix:
+  allow_failures:
+    - php: "5.5"
 before_script:
   - "php ./scripts/convert5.3.php"
   - "[[ `php -v` == PHP\\ 5.5* ]] && sed -i '/<exclude>/,/<\\/exclude>/d' phpunit.xml || echo 'Kept excluded groups'"
