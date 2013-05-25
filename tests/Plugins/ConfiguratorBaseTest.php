@@ -200,6 +200,7 @@ class DummyPluginConfigurator extends ConfiguratorBase
 
 	protected function setUp()
 	{
+		parent::setUp();
 		$this->setup = $this->bar;
 	}
 }
