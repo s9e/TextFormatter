@@ -80,40 +80,7 @@ class RegexpTest extends Test
 	}
 
 	/**
-	* @testdox Is safe in URL if the regexp is /^[a-z]$/D
-	*/
-	public function testURLSafeAlpha()
-	{
-		$filter = new Regexp;
-		$filter->setRegexp('/^[a-z]$/D');
-
-		$this->assertTrue($filter->isSafeAsURL());
-	}
-
-	/**
-	* @testdox Is not safe in URL if the regexp is /^foo:$/
-	*/
-	public function testURLUnsafeColon()
-	{
-		$filter = new Regexp;
-		$filter->setRegexp('/^foo:$/');
-
-		$this->assertFalse($filter->isSafeAsURL());
-	}
-
-	/**
-	* @testdox Is not safe in URL if the regexp is invalid
-	*/
-	public function testURLUnsafeInvalidRegexp()
-	{
-		$filter = new Regexp;
-		$filter->setVars(['regexp' => ')invalid(']);
-
-		$this->assertFalse($filter->isSafeAsURL());
-	}
-
-	/**
-	* @testdox Is not safe in URL if no regexp is set
+	* @testdox Is not safe as URL
 	*/
 	public function testURLUnsafeNoRegexp()
 	{

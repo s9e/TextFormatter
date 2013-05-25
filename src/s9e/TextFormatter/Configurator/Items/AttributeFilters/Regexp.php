@@ -95,38 +95,4 @@ class Regexp extends AttributeFilter
 			return false;
 		}
 	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function isSafeAsURL()
-	{
-		try
-		{
-			$regexp = RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']);
-
-			$allowedChars = '_-'
-			              . implode('', range('0', '9'))
-			              . implode('', range('A', 'Z'))
-			              . implode('', range('a', 'z'));
-
-			// Try the first 255 Unicode characters except 0-9, A-Z, a-z, _ and -
-			$disallowedChars = count_chars($allowedChars, 4);
-
-			foreach (str_split($disallowedChars, 1) as $char)
-			{
-				if (preg_match($regexp, utf8_encode($char)))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-		catch (Exception $e)
-		{
-			// If anything unexpected happens, we'll consider this filter is not safe
-			return false;
-		}
-	}
 }
