@@ -6,7 +6,7 @@ git push
 
 wait
 
-cd ../../s9e.github.com/TextFormatter
+cd ../../s9e.github.io/TextFormatter
 
 git add *
 git commit -a -m "Synced"

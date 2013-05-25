@@ -152,6 +152,6 @@ The parser/renderer used on this page page has been generated via [url=https://g
 </body>
 </html><?php
 
-file_put_contents(__DIR__ . '/../../s9e.github.com/TextFormatter/demo.html', ob_get_clean());
+file_put_contents(__DIR__ . '/../../s9e.github.io/TextFormatter/demo.html', ob_get_clean());
 
 echo "Done.\n";

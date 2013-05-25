@@ -1,6 +1,6 @@
 #!/bin/bash
 DIR=$(dirname $(dirname $(realpath $0)))
-TARGET=$(dirname $DIR)/s9e.github.com/TextFormatter/coverage
+TARGET=$(dirname $DIR)/s9e.github.io/TextFormatter/coverage
 
 cd $DIR
 
