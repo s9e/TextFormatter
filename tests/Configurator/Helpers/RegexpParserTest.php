@@ -940,6 +940,15 @@ class RegexpParserTest extends Test
 					'/' => true
 				]
 			],
+			[
+				'/^a-c$/D',
+				[
+					'a' => true,
+					'b' => false,
+					'c' => true,
+					'-' => true
+				]
+			],
 		];
 	}
 }
