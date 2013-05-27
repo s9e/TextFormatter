@@ -7,6 +7,7 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Items\AttributeFilter
+* @covers s9e\TextFormatter\Configurator\Traits\TemplateSafeness
 */
 class AttributeFilterTest extends Test
 {
@@ -34,12 +35,32 @@ class AttributeFilterTest extends Test
 	}
 
 	/**
+	* @testdox isSafeInCSS() returns TRUE if markAsSafeInCSS() is called
+	*/
+	public function testMarkedSafeInCSS()
+	{
+		$filter = new AttributeFilter(function(){});
+		$filter->markAsSafeInCSS();
+		$this->assertTrue($filter->isSafeInCSS());
+	}
+
+	/**
 	* @testdox isSafeInJS() returns FALSE by default
 	*/
 	public function testNotSafeInJS()
 	{
 		$filter = new AttributeFilter(function(){});
 		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
+	* @testdox isSafeInJS() returns TRUE if markAsSafeInCSS() is called
+	*/
+	public function testMarkedSafeInjS()
+	{
+		$filter = new AttributeFilter(function(){});
+		$filter->markAsSafeInJS();
+		$this->assertTrue($filter->isSafeInJS());
 	}
 
 	/**
@@ -72,9 +93,19 @@ class AttributeFilterTest extends Test
 	/**
 	* @testdox isSafeAsURL() returns FALSE by default
 	*/
-	public function testNotSafeInURL()
+	public function testNotSafeAsURL()
 	{
 		$filter = new AttributeFilter(function(){});
 		$this->assertFalse($filter->isSafeAsURL());
+	}
+
+	/**
+	* @testdox isSafeAsURL() returns TRUE if markAsSafeAsURL() is called
+	*/
+	public function testMarkedSafeAsURL()
+	{
+		$filter = new AttributeFilter(function(){});
+		$filter->markAsSafeAsURL();
+		$this->assertTrue($filter->isSafeAsURL());
 	}
 }

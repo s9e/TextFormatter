@@ -12,6 +12,7 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Items\Attribute
+* @covers s9e\TextFormatter\Configurator\Traits\TemplateSafeness
 */
 class AttributeTest extends Test
 {

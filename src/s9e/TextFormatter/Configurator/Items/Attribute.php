@@ -13,10 +13,12 @@ use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
+use s9e\TextFormatter\Configurator\Traits\TemplateSafeness;
 
 class Attribute implements ConfigProvider
 {
 	use Configurable;
+	use TemplateSafeness;
 
 	/**
 	* @var mixed Default value used for this attribute
@@ -32,11 +34,6 @@ class Attribute implements ConfigProvider
 	* @var ProgrammableCallback Generator used to generate a value for this attribute during parsing
 	*/
 	protected $generator;
-
-	/**
-	* @var array Contexts in which this attribute is considered safe to be used
-	*/
-	protected $markedSafe = [];
 
 	/**
 	* @var bool Whether this attribute is required for the tag to be valid
@@ -69,12 +66,6 @@ class Attribute implements ConfigProvider
 	*/
 	protected function isSafe($context)
 	{
-		// Test whether this attribute was marked as safe in given context
-		if (!empty($this->markedSafe[$context]))
-		{
-			return true;
-		}
-
 		// Test this attribute's filters
 		$methodName = 'isSafe' . $context;
 		foreach ($this->filterChain as $filter)
@@ -86,67 +77,7 @@ class Attribute implements ConfigProvider
 			}
 		}
 
-		return false;
-	}
-
-	/**
-	* Return whether this attribute is safe to be used as a URL
-	*
-	* @return bool
-	*/
-	public function isSafeAsURL()
-	{
-		return $this->isSafe('AsURL');
-	}
-
-	/**
-	* Return whether this attribute is safe to be used in CSS
-	*
-	* @return bool
-	*/
-	public function isSafeInCSS()
-	{
-		return $this->isSafe('InCSS');
-	}
-
-	/**
-	* Return whether this attribute is safe to be used in JavaScript
-	*
-	* @return bool
-	*/
-	public function isSafeInJS()
-	{
-		return $this->isSafe('InJS');
-	}
-
-	/**
-	* Return whether this attribute is safe to be used as a URL
-	*
-	* @return bool
-	*/
-	public function markAsSafeAsURL()
-	{
-		return $this->markedSafe['AsURL'] = true;
-	}
-
-	/**
-	* Return whether this attribute is safe to be used in CSS
-	*
-	* @return bool
-	*/
-	public function markAsSafeInCSS()
-	{
-		return $this->markedSafe['InCSS'] = true;
-	}
-
-	/**
-	* Return whether this attribute is safe to be used in JavaScript
-	*
-	* @return bool
-	*/
-	public function markAsSafeInJS()
-	{
-		return $this->markedSafe['InJS'] = true;
+		return !empty($this->markedSafe[$context]);
 	}
 
 	/**

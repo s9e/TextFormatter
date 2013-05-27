@@ -7,8 +7,12 @@
 */
 namespace s9e\TextFormatter\Configurator\Items;
 
+use s9e\TextFormatter\Configurator\Traits\TemplateSafeness;
+
 class AttributeFilter extends Filter
 {
+	use TemplateSafeness;
+
 	/**
 	* Constructor
 	*
@@ -22,26 +26,6 @@ class AttributeFilter extends Filter
 		// Set the default signature
 		$this->resetParameters();
 		$this->addParameterByName('attrValue');
-	}
-
-	/**
-	* Return whether this filter makes a value safe to be used as a URL
-	*
-	* @return bool
-	*/
-	public function isSafeAsURL()
-	{
-		return false;
-	}
-
-	/**
-	* Return whether this filter makes a value safe to be used in CSS
-	*
-	* @return bool
-	*/
-	public function isSafeInCSS()
-	{
-		return false;
 	}
 
 	/**
@@ -61,6 +45,11 @@ class AttributeFilter extends Filter
 			'rawurlencode'
 		];
 
-		return in_array($this->callback, $safeCallbacks, true);
+		if (in_array($this->callback, $safeCallbacks, true))
+		{
+			return true;
+		}
+
+		return $this->isSafe('InJS');
 	}
 }

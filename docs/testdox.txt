@@ -622,11 +622,14 @@ s9e\TextFormatter\Tests\Configurator\Items\Attribute
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilter
  [x] Sets the filter's signature to ['attrValue' => null]
  [x] isSafeInCSS() returns FALSE by default
+ [x] isSafeInCSS() returns TRUE if markAsSafeInCSS() is called
  [x] isSafeInJS() returns FALSE by default
+ [x] isSafeInJS() returns TRUE if markAsSafeInCSS() is called
  [x] isSafeInJS() returns TRUE if the callback is 'rawurlencode'
  [x] isSafeInJS() returns TRUE if the callback is 'strtotime'
  [x] isSafeInJS() returns TRUE if the callback is 'urlencode'
  [x] isSafeAsURL() returns FALSE by default
+ [x] isSafeAsURL() returns TRUE if markAsSafeAsURL() is called
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid
