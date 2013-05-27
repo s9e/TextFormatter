@@ -29,18 +29,6 @@ class AttributeFilter extends Filter
 	}
 
 	/**
-	* Return whether this filter makes a value safe to be used in given context
-	*
-	* @param  string $context Either 'AsURL', 'InCSS' or 'InJS'
-	* @return bool
-	*/
-	protected function isSafe($context)
-	{
-		// Test whether this attribute was marked as safe in given context
-		return !empty($this->markedSafe[$context]);
-	}
-
-	/**
 	* Return whether this filter makes a value safe to be used in Javascript
 	*
 	* @return bool

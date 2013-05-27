@@ -113,6 +113,44 @@ function convertCustom($filepath, &$file)
 			$file = str_replace($search, $replace, $file);
 		}
 	}
+
+	// Some class-specific modifications
+	switch ($filename)
+	{
+		case 'AttributeFilter.php':
+			$block =
+<<<'END'
+	/**
+	* Return whether this object is safe to be used in JavaScript
+	*
+	* @return bool
+	*/
+	public function isSafeInJS()
+	{
+		return $this->isSafe('InJS');
+	}
+END;
+			$file = str_replace($block, '', $file);
+			break;
+
+		case 'Attribute.php':
+			$block =
+<<<'END'
+	/**
+	* Return whether this object is safe to be used in given context
+	*
+	* @param  string $context Either 'AsURL', 'InCSS' or 'InJS'
+	* @return bool
+	*/
+	protected function isSafe($context)
+	{
+		// Test whether this attribute was marked as safe in given context
+		return !empty($this->markedSafe[$context]);
+	}
+END;
+			$file = str_replace($block, '', $file);
+			break;
+	}
 }
 
 function convertFile($filepath)
