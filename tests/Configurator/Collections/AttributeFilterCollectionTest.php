@@ -73,7 +73,7 @@ class AttributeFilterCollectionTest extends Test
 	}
 
 	/**
-	* @testdox get() automatically creates filters whose name is a valid PHP callbacl if no filter was set
+	* @testdox get() automatically creates filters whose name is a valid PHP callback if no filter was set
 	*/
 	public function testGetAutoloadCallback()
 	{
