@@ -171,6 +171,27 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[URL]{URL}[/URL]',
+				[
+					'bbcodeName' => 'URL',
+					'bbcode' => new BBCode([
+						'contentAttributes' => ['content'],
+						'defaultAttribute'  => 'content'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'content' => [
+								'filterChain' => [new Url]
+							]
+						]
+					]),
+					'tokens' => [
+						'URL' => 'content'
+					],
+					'passthroughToken' => null
+				]
+			],
+			[
 				'[b]{TEXT}[/B]',
 				[
 					'bbcodeName' => 'B',
