@@ -35,6 +35,19 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
+	* @testdox A single variable can be set with setVar() without overwriting other variables
+	*/
+	public function testSetVar()
+	{
+		$vars = ['foo' => 'bar', 'baz' => 'quux'];
+		$pc   = new ProgrammableCallback(function($a,$b){});
+		$pc->setVars(['foo' => 'bar']);
+		$pc->setVar('baz', 'quux');
+
+		$this->assertSame($vars, $pc->getVars());
+	}
+
+	/**
 	* @testdox addParameterByValue() adds a parameter as a value with no name
 	*/
 	public function testAddParameterByValue()

@@ -155,7 +155,19 @@ class ProgrammableCallback implements ConfigProvider
 	}
 
 	/**
-	* Set this callback's variables
+	* Set or overwrite one of this callback's variable
+	*
+	* @param  string $name  Variable name
+	* @param  string $value Variable value
+	* @return void
+	*/
+	public function setVar($name, $value)
+	{
+		$this->vars[$name] = $value;;
+	}
+
+	/**
+	* Set all of this callback's variables at once
 	*
 	* @param  array $vars Associative array of values
 	* @return void

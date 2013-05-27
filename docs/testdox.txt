@@ -637,6 +637,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
 s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] __construct() throws an InvalidArgumentException if its argument is not callable
  [x] An array of variables can be set with setVars() or retrieved with getVars()
+ [x] A single variable can be set with setVar() without overwriting other variables
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByName() adds a parameter as a name with no value
  [x] resetParameters() removes all parameters
