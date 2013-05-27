@@ -15,18 +15,6 @@ trait TemplateSafeness
 	protected $markedSafe = [];
 
 	/**
-	* Return whether this object is safe to be used in given context
-	*
-	* @param  string $context Either 'AsURL', 'InCSS' or 'InJS'
-	* @return bool
-	*/
-	protected function isSafe($context)
-	{
-		// Test whether this attribute was marked as safe in given context
-		return !empty($this->markedSafe[$context]);
-	}
-
-	/**
 	* Return whether this object is safe to be used as a URL
 	*
 	* @return bool
