@@ -71,6 +71,28 @@ class Regexp extends AttributeFilter
 	/**
 	* {@inheritdoc}
 	*/
+	public function isSafeAsURL()
+	{
+		try
+		{
+			// Test whether this regexp could allow the use of a colon :
+			if (preg_match(RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']), ':'))
+			{
+				return false;
+			}
+
+			return true;
+		}
+		catch (Exception $e)
+		{
+			// If anything unexpected happens, we'll consider this filter is not safe
+			return false;
+		}
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
 	public function isSafeInCSS()
 	{
 		try

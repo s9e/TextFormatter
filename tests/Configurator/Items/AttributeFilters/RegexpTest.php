@@ -26,6 +26,49 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox Is not safe as URL
+	*/
+	public function testURLUnsafeNoRegexp()
+	{
+		$filter = new Regexp;
+
+		$this->assertFalse($filter->isSafeAsURL());
+	}
+
+	/**
+	* @testdox Is safe as URL if the regexp is /^[a-z]$/
+	*/
+	public function testURLSafeAlpha()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^[a-z]$/');
+
+		$this->assertTrue($filter->isSafeAsURL());
+	}
+
+	/**
+	* @testdox Is not safe as URL if the regexp allows a colon to be used
+	*/
+	public function testURLUnsafeColon()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^:$/');
+
+		$this->assertFalse($filter->isSafeAsURL());
+	}
+
+	/**
+	* @testdox Is not safe as URL if the regexp is invalid
+	*/
+	public function testURLUnsafeInvalidRegexp()
+	{
+		$filter = new Regexp;
+		$filter->setVars(['regexp' => ')invalid(']);
+
+		$this->assertFalse($filter->isSafeAsURL());
+	}
+
+	/**
 	* @testdox Is safe in CSS if the regexp is /^(?:left|right|center)$/
 	*/
 	public function testCSSSafe()
@@ -77,16 +120,6 @@ class RegexpTest extends Test
 		$filter = new Regexp;
 
 		$this->assertFalse($filter->isSafeInCSS());
-	}
-
-	/**
-	* @testdox Is not safe as URL
-	*/
-	public function testURLUnsafeNoRegexp()
-	{
-		$filter = new Regexp;
-
-		$this->assertFalse($filter->isSafeAsURL());
 	}
 
 	/**

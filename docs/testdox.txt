@@ -744,12 +744,15 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Range
 
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Regexp
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
+ [x] Is not safe as URL
+ [x] Is safe as URL if the regexp is /^[a-z]$/
+ [x] Is not safe as URL if the regexp allows a colon to be used
+ [x] Is not safe as URL if the regexp is invalid
  [x] Is safe in CSS if the regexp is /^(?:left|right|center)$/
  [x] Is safe in CSS if the regexp is /^[a-z]$/
  [x] Is not safe in CSS if the regexp is /^[A-z]$/ because it would allow backslashes
  [x] Is not safe in CSS if the regexp is invalid
  [x] Is not safe in CSS if no regexp is set
- [x] Is not safe as URL
  [x] __construct() forwards its arguments to setRegexp()
  [x] setRegexp() sets the filter's regexp
  [x] setRegexp() throws an exception if the regexp is invalid
