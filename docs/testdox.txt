@@ -1507,6 +1507,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
  [x] addFromRepository() throws an exception if the BBCode already exists
  [x] addFromRepository() throws an exception if the tag already exists
+ [x] addCustom() checks that the tag is safe before adding it
  [x] addFromRepository() returns the newly-created BBCode
  [x] addCustom() returns the newly-created BBCode
  [x] addCustom() accepts a single string as its second argument, representing the default template

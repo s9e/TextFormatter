@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Plugins\BBCodes;
 
 use DOMDocument;
+use Exception;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Tests\Test;
 
@@ -121,6 +122,44 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addCustom() checks that the tag is safe before adding it
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	*/
+	public function testAddFromRepositoryCheckUnsafe()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="X">
+					<usage>[X]{TEXT}[/X]</usage>
+					<template><![CDATA[
+						<img onerror="{TEXT}"/>
+					]]></template>
+				</bbcode>
+			</repository>'
+		);
+
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->repositories->add('foo', $dom);
+
+		try
+		{
+			$plugin->addFromRepository('X', 'foo');
+		}
+		catch (Exception $e)
+		{
+		}
+
+		$this->assertFalse($this->configurator->tags->exists('X'));
+		$this->assertFalse($plugin->exists('X'));
+
+		if (isset($e))
+		{
+			throw $e;
+		}
+	}
+
+	/**
 	* @testdox addFromRepository() returns the newly-created BBCode
 	*/
 	public function testAddFromRepositoryReturn()
@@ -191,6 +230,31 @@ class ConfiguratorTest extends Test
 			'<strong><xsl:apply-templates/></strong>',
 			$this->configurator->tags['B']->templates->get('@foo')
 		);
+	}
+
+	/**
+	* @testdox addCustom() checks that the tag is safe before adding it
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	*/
+	public function testAddCustomCheckUnsafe()
+	{
+		$plugin = $this->configurator->plugins->load('BBCodes');
+
+		try
+		{
+			$plugin->addCustom('[X]{TEXT}[/X]', '<img onerror="{TEXT}"/>');
+		}
+		catch (Exception $e)
+		{
+		}
+
+		$this->assertFalse($this->configurator->tags->exists('X'));
+		$this->assertFalse($plugin->exists('X'));
+
+		if (isset($e))
+		{
+			throw $e;
+		}
 	}
 
 	/**

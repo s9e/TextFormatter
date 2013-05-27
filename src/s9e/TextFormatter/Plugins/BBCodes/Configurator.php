@@ -131,6 +131,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			throw new RuntimeException("Tag '" . $bbcode->tagName . "' already exists");
 		}
 
+		// Test whether this BBCode/tag is safe before adding it
+		$this->configurator->templateChecker->checkTag($tag);
+
 		// Add our BBCode then its tag
 		$this->collection->add($bbcodeName, $bbcode);
 		$this->configurator->tags->add($bbcode->tagName, $tag);
