@@ -261,6 +261,7 @@ function outputIgnoreTag(tag)
 	// Catch up with the tag's position then output the tag
 	outputText(tagPos, 0);
 	output += '<i>' + htmlspecialchars_noquotes(ignoreText) + '</i>';
+	isRich = true;
 
 	// Move the cursor past this tag
 	pos = tagPos + tagLen;

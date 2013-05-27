@@ -261,6 +261,7 @@ trait OutputHandling
 		// Catch up with the tag's position then output the tag
 		$this->outputText($tagPos, 0);
 		$this->output .= '<i>' . htmlspecialchars($ignoreText, ENT_NOQUOTES, 'UTF-8') . '</i>';
+		$this->isRich = true;
 
 		// Move the cursor past this tag
 		$this->pos = $tagPos + $tagLen;

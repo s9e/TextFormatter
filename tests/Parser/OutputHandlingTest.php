@@ -95,7 +95,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo bar',
-				'<pt>foo<i> </i>bar</pt>',
+				'<rt>foo<i> </i>bar</rt>',
 				null,
 				function ($parser)
 				{
@@ -104,7 +104,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				'foo  bar',
-				'<pt>foo<i>  </i>bar</pt>',
+				'<rt>foo<i>  </i>bar</rt>',
 				null,
 				function ($parser)
 				{
