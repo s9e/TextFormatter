@@ -3,7 +3,9 @@
 namespace s9e\TextFormatter\Tests\Configurator;
 
 use DOMDocument;
+use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -21,5 +23,51 @@ class UnsafeTemplateExceptionTest extends Test
 		$exception = new UnsafeTemplateException('Msg', $dom->documentElement);
 
 		$this->assertSame($dom->documentElement, $exception->getNode());
+	}
+
+	/**
+	* @testdox highlightNode() returns the template's source formatted and with the stored node highlighted
+	* @dataProvider getHighlights
+	*/
+	public function testHighlightNode($template, $expected)
+	{
+		$configurator = new Configurator;
+		$tag = new Tag;
+		$tag->defaultTemplate = $template;
+
+		try
+		{
+			$configurator->templateChecker->checkTag($tag);
+			$this->markTestSkipped('Template checker did generate an exception');
+
+			return;
+		}
+		catch (UnsafeTemplateException $e)
+		{
+		}
+
+		$this->assertSame($expected, $e->highlightNode());
+	}
+
+	public function getHighlights()
+	{
+		return [
+			[
+				'<script><xsl:apply-templates/></script>',
+'&lt;script&gt;
+  <span style="background-color:#ff0">&lt;xsl:apply-templates/&gt;</span>
+&lt;/script&gt;'
+			],
+			[
+				'<a href="{@foo}"><xsl:apply-templates/></a>',
+'&lt;a <span style="background-color:#ff0">href=&quot;{@foo}&quot;</span>&gt;
+  &lt;xsl:apply-templates/&gt;
+&lt;/a&gt;'
+			],
+			[
+				'<?php foo(); ?>',
+				'<span style="background-color:#ff0">&lt;?php foo(); ?&gt;</span>'
+			]
+		];
 	}
 }
