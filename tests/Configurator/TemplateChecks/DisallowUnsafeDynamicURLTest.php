@@ -56,9 +56,31 @@ class DisallowUnsafeDynamicURLTest extends Test
 	/**
 	* @testdox Allowed even if unknown: <a href="http://{@foo}">...</a>
 	*/
-	public function testAllowedAnchored()
+	public function testAllowedAnchoredScheme()
 	{
 		$node = $this->loadTemplate('<a href="http://{@foo}">...</a>');
+
+		$check = new DisallowUnsafeDynamicURL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed even if unknown: <a href="//{@foo}">...</a>
+	*/
+	public function testAllowedAnchoredSchemeless()
+	{
+		$node = $this->loadTemplate('<a href="//{@foo}">...</a>');
+
+		$check = new DisallowUnsafeDynamicURL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Allowed even if unknown: <a href="#{@foo}">...</a>
+	*/
+	public function testAllowedAnchoredFragment()
+	{
+		$node = $this->loadTemplate('<a href="#{@foo}">...</a>');
 
 		$check = new DisallowUnsafeDynamicURL;
 		$check->check($node, new Tag);

@@ -955,6 +955,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowUnsafeDynamicURL
  [x] Allowed: <a href="http://example.org">...</a>
  [x] Allowed if #url: <a href="{@foo}">...</a>
  [x] Allowed even if unknown: <a href="http://{@foo}">...</a>
+ [x] Allowed even if unknown: <a href="//{@foo}">...</a>
+ [x] Allowed even if unknown: <a href="#{@foo}">...</a>
  [x] Disallowed if unknown: <a href="{@foo}">...</a>
  [x] Disallowed if unfiltered: <a href="{@foo}">...</a>
  [x] Disallowed if unfiltered: <a href="javascript:{@foo}">...</a>

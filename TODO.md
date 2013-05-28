@@ -21,7 +21,7 @@ TODO
 - Sort the "isTransparent" situation wrt <video>. isTransparent makes a tag inherit the list of disallowed children from its parent, but it cannot currently allow tags that aren't allowed by its parent. In most cases, it doesn't matter, but it prevents using <track> as the child of <video> through the HTMLElements plugin
 - Add a date/datetime filter, see http://dev.w3.org/html5/spec/Overview.html#valid-date-string-with-optional-time
 - Add an NFO BBCode
-- Consider allowing absolute paths in #url, e.g. "/foo.html"
+- Consider allowing absolute paths in #url, e.g. "/foo.html" - also, fragment "#foo"
 - Consider a way to disallow HTML elements globally or at the tag-level. For example, a way to globally disable <a> so that BBCodes that produces links are disabled
 - Consider guessing a value for quickMatch based on a plugin's regexp, using its fixed part if applicable [NOTE: gotta identify escape sequences such as \d and modifiers such as a+]
 - Read in phpBB's forum 'maybe you put a threshold on errors -- if there are more than, say, 10, put out an error saying "Too many BBCode formatting errors found; fix the above and Preview the post again."' -- https://area51.phpbb.com/phpBB/viewtopic.php?f=108&t=33021&p=249335#p249335 -- NOTE: kind of sucks when those errors come from false positive from things like Autolink
@@ -34,4 +34,3 @@ TODO
 - Exploitable? http://sla.ckers.org/forum/read.php?2,36997
 - There are many SVG vectors, too many to chase after individually. Prevent any user-supplied data in <svg> tags (in any namespace) or add isSafeInSVG() with a very restricted set of allowed filters -- http://html5sec.org/#94
 - http://html5sec.org/#49 -- http://shazzer.co.uk/database/All/Characters-allowed-inside-jsurl http://html5sec.org/#36
-- Consider a way to allow anchor links such as [url=#foo]
