@@ -38,7 +38,7 @@ class UnsafeTemplateExceptionTest extends Test
 		try
 		{
 			$configurator->templateChecker->checkTag($tag);
-			$this->markTestSkipped('Template checker did generate an exception');
+			$this->markTestSkipped('Template checker did not generate an exception');
 
 			return;
 		}
