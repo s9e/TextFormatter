@@ -158,13 +158,13 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $plugin->beforeMatch appears at the start of the regexp
+	* @testdox $plugin->regexpStart can be changed
 	*/
-	public function testBeforeMatch()
+	public function testRegexpStart()
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->add('x', 'x');
-		$plugin->beforeMatch = '(?<!\\w)';
+		$plugin->regexpStart = '/(?<!\\w)';
 
 		$config = $plugin->asConfig();
 
@@ -172,13 +172,13 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $plugin->afterMatch appears at the end of the regexp
+	* @testdox $plugin->regexpEnd can be changed
 	*/
-	public function testAfterMatch()
+	public function testRegexpEnd()
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->add('x', 'x');
-		$plugin->afterMatch = '(?!\\w)';
+		$plugin->regexpEnd = '(?!\\w)/S';
 
 		$config = $plugin->asConfig();
 

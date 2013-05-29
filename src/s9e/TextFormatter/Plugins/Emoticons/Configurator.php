@@ -21,14 +21,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	use CollectionProxy;
 
 	/**
-	* @var string Regular expression to match after the emoticon
+	* @var string Head of the regular expression to match emoticons
 	*/
-	public $afterMatch = '';
+	public $regexpStart = '/';
 
 	/**
-	* @var string Regular expression to match before the emoticon
+	* @var string Tail of the regular expression to match emoticons
 	*/
-	public $beforeMatch = '';
+	public $regexpEnd = '/S';
 
 	/**
 	* @var EmoticonCollection
@@ -75,11 +75,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$codes = array_keys(iterator_to_array($this->collection));
 
 		// Build the regexp used to match emoticons
-		$regexp = '/'
-		        . $this->beforeMatch
-		        . RegexpBuilder::fromList($codes)
-		        . $this->afterMatch
-		        . '/S';
+		$regexp = $this->regexpStart
+		        . RegexpBuilder::fromList($codes, ['delimiter' => $this->regexpStart[0]])
+		        . $this->regexpEnd;
 
 		$config = [
 			'quickMatch' => $this->quickMatch,
