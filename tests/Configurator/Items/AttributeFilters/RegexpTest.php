@@ -47,6 +47,50 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox Is safe as URL if the regexp is /^foo:(.*)/
+	*/
+	public function testURLSafeFixedScheme()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^foo:(.*)/');
+
+		$this->assertTrue($filter->isSafeAsURL());
+	}
+
+	/**
+	* @testdox Is safe as URL if the regexp is /^https?:(.*)/
+	*/
+	public function testURLSafeFixedSchemeWithJoker()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^https?:(.*)/');
+
+		$this->assertTrue($filter->isSafeAsURL());
+	}
+
+	/**
+	* @testdox Is not safe as URL if the regexp is /^javascript:(.*)/
+	*/
+	public function testURLUnsafeJavascriptScheme()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^javascript:(.*)/');
+
+		$this->assertFalse($filter->isSafeAsURL());
+	}
+
+	/**
+	* @testdox Is not safe as URL if the regexp is /^javascriptx?:(.*)/
+	*/
+	public function testURLUnsafeJavascriptSchemeWithJoker()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^javascriptx?:(.*)/');
+
+		$this->assertFalse($filter->isSafeAsURL());
+	}
+
+	/**
 	* @testdox Is not safe as URL if the regexp allows a colon to be used
 	*/
 	public function testURLUnsafeColon()

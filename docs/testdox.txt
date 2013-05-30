@@ -748,6 +748,10 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Regexp
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterRegexp()
  [x] Is not safe as URL
  [x] Is safe as URL if the regexp is /^[a-z]$/
+ [x] Is safe as URL if the regexp is /^foo:(.*)/
+ [x] Is safe as URL if the regexp is /^https?:(.*)/
+ [x] Is not safe as URL if the regexp is /^javascript:(.*)/
+ [x] Is not safe as URL if the regexp is /^javascriptx?:(.*)/
  [x] Is not safe as URL if the regexp allows a colon to be used
  [x] Is not safe as URL if the regexp is invalid
  [x] Is safe in CSS if the regexp is /^(?:left|right|center)$/

@@ -75,6 +75,13 @@ class Regexp extends AttributeFilter
 	{
 		try
 		{
+			// Regexps that start with a fixed scheme are considered safe. As a special case, we
+			// allow the scheme part to end with a single ? to allow the regexp "https?"
+			if (preg_match('#.\\^(?!data|\\w*script)\\w+\\??:#i', $this->vars['regexp']))
+			{
+				return true;
+			}
+
 			// Test whether this regexp could allow the use of a colon :
 			if (preg_match(RegexpParser::getAllowedCharacterRegexp($this->vars['regexp']), ':'))
 			{
