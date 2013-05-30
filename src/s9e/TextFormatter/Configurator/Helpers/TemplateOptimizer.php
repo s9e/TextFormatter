@@ -46,6 +46,7 @@ abstract class TemplateOptimizer
 		// Note: for some reason, $tmp->normalizeDocument() doesn't work
 		$dom->loadXML($tmp->saveXML());
 
+		self::replaceConditionalComments($dom);
 		self::removeComments($dom);
 		self::minifyXPathExpressions($dom);
 		self::normalizeAttributeNames($dom);
@@ -73,6 +74,29 @@ abstract class TemplateOptimizer
 		foreach ($xpath->query('//comment()') as $comment)
 		{
 			$comment->parentNode->removeChild($comment);
+		}
+	}
+
+	/**
+	* Replace all conditional comments from a document with an <xsl:comment/> declaration
+	*
+	* @link http://en.wikipedia.org/wiki/Conditional_comment
+	*
+	* @param DOMDocument $dom xsl:template node
+	*/
+	protected static function replaceConditionalComments(DOMDocument $dom)
+	{
+		$xpath = new DOMXPath($dom);
+
+		foreach ($xpath->query('//comment()') as $comment)
+		{
+			if (preg_match('#^\\[if|endif\\]$#', $comment->textContent))
+			{
+				$comment->parentNode->replaceChild(
+					$dom->createElementNS(self::XMLNS_XSL, 'xsl:comment', $comment->textContent),
+					$comment
+				);
+			}
 		}
 	}
 

@@ -537,6 +537,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Comments are removed
+ [x] Conditional comments are replaced with <xsl:comment/>
  [x] <xsl:text/> is inlined
  [x] <xsl:text> </xsl:text> is not inlined if it would become inter-element whitespace
  [x] <xsl:text> </xsl:text> is inlined if it is preceded by a text node

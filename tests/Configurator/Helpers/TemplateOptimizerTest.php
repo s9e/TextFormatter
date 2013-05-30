@@ -24,6 +24,18 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox Conditional comments are replaced with <xsl:comment/>
+	*/
+	public function test835C131E()
+	{
+		$this->runCase(
+			'Conditional comments are replaced with <xsl:comment/>',
+			'<!--[if IE 6]><p>You are using Internet Explorer 6.</p><![endif]--><!--[if !IE]><!--><p>You are not using Internet Explorer.</p><!--<![endif]-->',
+			'<xsl:comment>[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</xsl:comment><xsl:comment>[if !IE]&gt;&lt;!</xsl:comment><p>You are not using Internet Explorer.</p><xsl:comment>&lt;![endif]</xsl:comment>'
+		);
+	}
+
+	/**
 	* @testdox <xsl:text/> is inlined
 	*/
 	public function testFD8BE5D1()
@@ -581,6 +593,11 @@ class TemplateOptimizerTest extends Test
 				'Comments are removed',
 				'<!-- This is a comment -->hi',
 				'hi'
+			],
+			[
+				'Conditional comments are replaced with <xsl:comment/> nodes',
+				'<!--[if IE 6]><p>You are using Internet Explorer 6.</p><![endif]--><!--[if !IE]><!--><p>You are not using Internet Explorer.</p><!--<![endif]-->',
+				'<xsl:comment>[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</xsl:comment><xsl:comment>[if !IE]&gt;&lt;!</xsl:comment><p>You are not using Internet Explorer.</p><xsl:comment>&lt;![endif]</xsl:comment>'
 			],
 			[
 				'<xsl:text/> is inlined',
