@@ -2,9 +2,6 @@
 
 namespace s9e\TextFormatter\Tests;
 
-use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Collections\TagCollection;
-use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Renderer;
 use s9e\TextFormatter\Tests\Test;
 

@@ -2,9 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Renderers;
 
-use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Configurator\Collections\TagCollection;
-use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 use s9e\TextFormatter\Tests\RendererTests;
 use s9e\TextFormatter\Tests\Test;
