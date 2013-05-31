@@ -1688,6 +1688,8 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
 
 s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Is serializable
+ [x] Renders multi-line text in HTML after un/serialization
+ [x] Renders multi-line text in XHTML after un/serialization
  [x] Renders plain text
  [x] Renders multi-line text in HTML
  [x] Renders multi-line text in XHTML

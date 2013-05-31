@@ -8,12 +8,16 @@
 namespace s9e\TextFormatter\Renderers;
 
 use DOMDocument;
-use Serializable;
 use XSLTProcessor;
 use s9e\TextFormatter\Renderer;
 
-class XSLT extends Renderer implements Serializable
+class XSLT extends Renderer
 {
+	/**
+	* @var bool Whether this renderer's stylesheet produces HTML (as opposed to XHTML)
+	*/
+	protected $htmlOutput;
+
 	/**
 	* @var XSLTProcessor The lazy-loaded XSLTProcessor instance used by this renderer
 	*/
@@ -41,22 +45,11 @@ class XSLT extends Renderer implements Serializable
 	/**
 	* Serializer
 	*
-	* @return string This renderer's stylesheet
+	* @return array List of properties to serialize
 	*/
-	public function serialize()
+	public function __sleep()
 	{
-		return $this->stylesheet;
-	}
-
-	/**
-	* Unserializer
-	*
-	* @param  string $data Serialized data
-	* @return void
-	*/
-	public function unserialize($data)
-	{
-		$this->__construct($data);
+		return ['htmlOutput', 'stylesheet'];
 	}
 
 	/**

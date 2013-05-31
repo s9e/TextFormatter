@@ -29,4 +29,37 @@ class XSLTTest extends Test
 			unserialize(serialize($renderer))
 		);
 	}
+
+
+	/**
+	* @testdox Renders multi-line text in HTML after un/serialization
+	*/
+	public function testUnserializedMultiLineTextHTML()
+	{
+		$xml = '<pt>One<br/>two</pt>';
+
+		$this->configurator->stylesheet->setOutputMethod('html');
+		$renderer = unserialize(serialize($this->configurator->getRenderer()));
+
+		$this->assertSame(
+			'One<br>two',
+			$renderer->render($xml)
+		);
+	}
+
+	/**
+	* @testdox Renders multi-line text in XHTML after un/serialization
+	*/
+	public function testUnserializedMultiLineTextXHTML()
+	{
+		$xml = '<pt>One<br/>two</pt>';
+
+		$this->configurator->stylesheet->setOutputMethod('xml');
+		$renderer = unserialize(serialize($this->configurator->getRenderer()));
+
+		$this->assertSame(
+			'One<br/>two',
+			$renderer->render($xml)
+		);
+	}
 }
