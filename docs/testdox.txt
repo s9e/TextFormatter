@@ -1686,7 +1686,45 @@ s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
+ [x] Returns an instance of Renderer
+ [x] Ignores comments
+ [x] Throws an exception if a template contains a processing instruction
+ [x] Throws an exception when encountering unsupported XSL elements
+ [x] Throws an exception when encountering namespaced elements
+ [x] Throws an exception on <xsl:copy-of/> that does not copy an attribute
+ [x] Throws an exception on unterminated strings in XPath expressions
+ [x] setParameter() accepts values that contain both types of quotes
+ [x] HTML rendering
+ [x] XHTML rendering
+ [x] BBCodes from repository.xml render nicely
+ [x] Rendering tests from plugins
+ [x] Edge cases
+
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
+ [x] Returns an instance of Renderer
+
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
+ [x] Returns an instance of Renderer
+
 s9e\TextFormatter\Tests\Renderers\XSLT
+ [x] Is serializable
+ [x] Renders multi-line text in HTML after un/serialization
+ [x] Renders multi-line text in XHTML after un/serialization
+ [x] Renders plain text
+ [x] Renders multi-line text in HTML
+ [x] Renders multi-line text in XHTML
+ [x] Renders rich text
+ [x] renderMulti() renders multiple messages at once
+ [x] renderMulti() preserves keys and order
+ [x] renderMulti() renders multi-line text in HTML
+ [x] renderMulti() renders multi-line text in XHTML
+ [x] setParameter() sets the value of a parameter
+ [x] setParameters() sets the values of any number of parameters in an associative array
+ [ ] setParameter() accepts values that contain both types of quotes
+
+s9e\TextFormatter\Tests\Renderers\XSLCache
+ [x] getFilepath() returns the path to the stylesheet file
  [x] Is serializable
  [x] Renders multi-line text in HTML after un/serialization
  [x] Renders multi-line text in XHTML after un/serialization
@@ -1715,24 +1753,6 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array
  [ ] setParameter() accepts values that contain both types of quotes
-
-s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
- [x] Returns an instance of Renderer
- [x] Ignores comments
- [x] Throws an exception if a template contains a processing instruction
- [x] Throws an exception when encountering unsupported XSL elements
- [x] Throws an exception when encountering namespaced elements
- [x] Throws an exception on <xsl:copy-of/> that does not copy an attribute
- [x] Throws an exception on unterminated strings in XPath expressions
- [x] setParameter() accepts values that contain both types of quotes
- [x] HTML rendering
- [x] XHTML rendering
- [x] BBCodes from repository.xml render nicely
- [x] Rendering tests from plugins
- [x] Edge cases
-
-s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
- [x] Returns an instance of Renderer
 
 s9e\TextFormatter\Tests\Unparser
  [x] unparse('<pt>Plain text</pt>') returns 'Plain text'

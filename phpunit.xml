@@ -157,11 +157,13 @@
 			<file>tests/Plugins/WittyPants/ConfiguratorTest.php</file>
 			<file>tests/Plugins/WittyPants/ParserTest.php</file>
 
-			<file>tests/Renderers/XSLTTest.php</file>
-			<file>tests/Renderers/PHPTest.php</file>
-
 			<file>tests/Configurator/RendererGenerators/PHPTest.php</file>
+			<file>tests/Configurator/RendererGenerators/XSLCacheTest.php</file>
 			<file>tests/Configurator/RendererGenerators/XSLTTest.php</file>
+
+			<file>tests/Renderers/XSLTTest.php</file>
+			<file>tests/Renderers/XSLCacheTest.php</file>
+			<file>tests/Renderers/PHPTest.php</file>
 
 			<file>tests/UnparserTest.php</file>
 		</testsuite>
