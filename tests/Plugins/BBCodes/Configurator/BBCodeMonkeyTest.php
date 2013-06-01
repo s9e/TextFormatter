@@ -127,7 +127,7 @@ class BBCodeMonkeyTest extends Test
 			],
 			[
 				'[foo bar=TEXT]{TEXT}[/foo]',
-				new RuntimeException("No tokens found in bar's definition")
+				new RuntimeException("No valid tokens found in bar's definition")
 			],
 			[
 				'[foo bar={TEXT} bar={INT}]{TEXT}[/foo]',
