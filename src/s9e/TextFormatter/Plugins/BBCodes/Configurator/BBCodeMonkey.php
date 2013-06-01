@@ -329,7 +329,10 @@ class BBCodeMonkey
 
 				if ($token['type'] === 'PARSE')
 				{
-					$tag->attributePreprocessors->add($attrName, $token['regexp']);
+					foreach ($token['regexps'] as $regexp)
+					{
+						$tag->attributePreprocessors->add($attrName, $regexp);
+					}
 				}
 				elseif (isset($tag->attributes[$attrName]))
 				{
@@ -493,15 +496,16 @@ class BBCodeMonkey
 	*/
 	protected static function parseTokens($definition)
 	{
-		// This regexp should match a regexp, including its delimiters and optionally the i, u
-		// and/or i flags
-		$regexpMatcher = '(?<regexp>(?<delim>.).*?(?<!\\\\)(?:\\\\\\\\)*+(?P=delim)[ius]*)';
+		// This regexp should match a regexp, including its delimiters and optionally the i, s
+		// and/or u flags
+		$regexpMatcher = '(.).*?(?<!\\\\)(?:\\\\\\\\)*+\\g{-1}[isu]*';
 
 		$tokenTypes = [
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
 			'map'    => 'MAP[0-9]*=(?<map>.+?)',
-			'regexp' => '(?:REGEXP[0-9]*|PARSE)=' . $regexpMatcher,
+			'parse'  => 'PARSE=(?<regexps>' . $regexpMatcher . '(?:,' . $regexpMatcher . ')*)',
 			'range'  => 'RAN(?:DOM|GE)[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
+			'regexp' => 'REGEXP[0-9]*=(?<regexp>' . $regexpMatcher . ')',
 			'other'  => '(?<other>[A-Z_]+[0-9]*)'
 		];
 
@@ -530,32 +534,35 @@ class BBCodeMonkey
 				'options' => []
 			];
 
-			$head    = $m[1][0];
-			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
-
-			$pos = strpos($head, '=');
+			// Get this token's type by looking at the start of the match
+			$head = $m[1][0];
+			$pos  = strpos($head, '=');
 
 			if ($pos === false)
 			{
-				$token['id']   = $head;
-				$token['type'] = rtrim($token['id'], '0123456789');
+				// {FOO}
+				$token['id'] = $head;
 			}
 			else
 			{
-				$token['id']   = substr($head, 0, $pos);
-				$token['type'] = rtrim($token['id'], '0123456789');
+				// {FOO=...}
+				$token['id'] = substr($head, 0, $pos);
 
 				// Copy the content of named subpatterns into the token's config
 				foreach ($m as $k => $v)
 				{
-					if (!is_numeric($k) && $k !== 'delim' && $k !== 'options')
+					if (!is_numeric($k) && $k !== 'options' && $v[1] !== -1)
 					{
 						$token[$k] = $v[0];
 					}
 				}
 			}
 
+			// The token's type is its id minus the number, e.g. NUMBER1 => NUMBER
+			$token['type'] = rtrim($token['id'], '0123456789');
+
 			// Parse the options
+			$options = (isset($m['options'][0])) ? $m['options'][0] : '';
 			foreach (preg_split('#;+#', $options, -1, PREG_SPLIT_NO_EMPTY) as $pair)
 			{
 				$pos = strpos($pair, '=');
@@ -573,6 +580,23 @@ class BBCodeMonkey
 				}
 
 				$token['options'][$k] = $v;
+			}
+
+			// {PARSE} tokens can have several regexps separated with commas, we split them up here
+			if ($token['type'] === 'PARSE')
+			{
+				// Match all occurences of a would-be regexp followed by a comma or the end of the
+				// string
+				preg_match_all('#' . $regexpMatcher . '(?:,|$)#', $token['regexps'], $m);
+
+				$regexps = [];
+				foreach ($m[0] as $regexp)
+				{
+					// remove the potential comma at the end
+					$regexps[] = rtrim($regexp, ',');
+				}
+
+				$token['regexps'] = $regexps;
 			}
 
 			$tokens[] = $token;

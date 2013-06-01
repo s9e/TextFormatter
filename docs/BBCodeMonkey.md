@@ -62,7 +62,7 @@ This BBCode can be used as `[url]http://localhost[/url]` and will be interpreted
 
 Attribute preprocessors
 -----------------------
-Attribute preprocessors are a mechanism to parse the content of attributes before validation to extract the values of other attributes. They take the form of a {PARSE} token containing a regexp. Any [named subpattern](http://docs.php.net/manual/en/regexp.reference.subpatterns.php) will create an attribute of the same name. For example, let's consider a BBCode that displays a user's first and last name:
+Attribute preprocessors are a mechanism to parse the content of attributes before validation to extract the values of other attributes. They take the form of a {PARSE} token containing a regexp, or several regexps separated with commas. Any [named subpattern](http://docs.php.net/manual/en/regexp.reference.subpatterns.php) will create an attribute of the same name. For example, let's consider a BBCode that displays a user's first and last name:
 
     [name={PARSE=/(?<first>\w+) (?<last>\w+)/}]
 
@@ -89,11 +89,15 @@ Note that values extracted by attribute preprocessors do not overwrite explicit 
     [name="John Smith" first="Johnny"]
     [name first="Johnny" last="Smith"]
 
-Any number of attribute preprocessors can be defined. They are applied in the same order they are defined, but currently the behaviour of multiple preprocessors trying to set the same attributes is undefined until an actual, practical case where it matters is found. Here's how we can define an improved BBCode that allows the user's name to be given as "John Smith" or as "Smith, John"
+Any number of attribute preprocessors can be defined, either by using multiple {PARSE} tokens or by assigning multiple regexps (separated with commas) to the same {PARSE} token (both methods produce the same result.) Attribute preprocessors are applied in the same order they are defined, but currently the behaviour of multiple preprocessors trying to set the same attributes is undefined until an actual, practical case where it matters is found. Here's how we can define an improved BBCode that allows the user's name to be given as "John Smith" or as "Smith, John". First using multiple {PARSE} tokens:
 
     [name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]
 
-And how it will be interpreted:
+...or using one {PARSE} token with two regexps separated with a comma:
+
+    [name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]
+
+Here's how user input will be interpreted: (user input on top, how it's interpreted below)
 
     [name="John Smith"]
     [name first="John" last="Smith"]

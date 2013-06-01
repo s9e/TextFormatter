@@ -483,6 +483,57 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				// Ensure that every subpattern creates an attribute with the corresponding regexp
+				'[foo={PARSE=/(?<foo>\\d+)/,/(?<bar>\\D+)/}]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/(?<foo>\\d+)/'],
+							['foo', '/(?<bar>\\D+)/']
+						],
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [new Regexp('/^(?:\\d+)$/D')]
+							],
+							'bar' => [
+								'filterChain' => [new Regexp('/^(?:\\D+)$/D')]
+							]
+						]
+					]),
+					'tokens' => [],
+					'passthroughToken' => null
+				]
+			],
+			[
+				'[foo={PARSE=/,\\/(?<foo>\\d+)/u,/,(?<bar>\\D+)\\/,/u}]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/,\\/(?<foo>\\d+)/u'],
+							['foo', '/,(?<bar>\\D+)\\/,/u']
+						],
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [new Regexp('/^(?:\\d+)$/uD')]
+							],
+							'bar' => [
+								'filterChain' => [new Regexp('/^(?:\\D+)$/uD')]
+							]
+						]
+					]),
+					'tokens' => [],
+					'passthroughToken' => null
+				]
+			],
+			[
 				'[foo={RANGE=-2,5}/]',
 				[
 					'bbcodeName' => 'FOO',
