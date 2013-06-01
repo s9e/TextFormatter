@@ -565,6 +565,10 @@ class BBCodesTest extends Test
 				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
 			],
 			[
+				'[YOUTUBE]http://youtu.be/-cEzsCAzTak[/YOUTUBE]',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
+			],
+			[
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
 				'<iframe width="853" height="505" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>',
 				function ($configurator)
