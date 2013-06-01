@@ -76,6 +76,20 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="DAILYMOTION">
+		<usage><![CDATA[
+			[DAILYMOTION id={IDENTIFIER}]{PARSE=/^(?<id>[A-Za-z0-9]+)$/,!^(?:http://[a-z]+\.dailymotion.com\/(?:video/|user/[^#]+#video=))(?<id>[A-Za-z0-9]+)!}[/DAILYMOTION]
+		]]></usage>
+		<template><![CDATA[
+			<object width="]]><var name="width">560</var><![CDATA[" height="]]><var name="height">315</var><![CDATA[">
+				<param name="movie" value="http://www.dailymotion.com/swf/video/{IDENTIFIER}"></param>
+				<param name="allowFullScreen" value="true"></param>
+
+				<embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/{IDENTIFIER}" width="]]><var name="width">560</var><![CDATA[" height="]]><var name="height">315</var><![CDATA[" allowfullscreen="true"></embed>
+			</object>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="DD">
 		<usage>[DD]{TEXT}[/DD]</usage>
 		<template><![CDATA[

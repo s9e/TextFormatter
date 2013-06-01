@@ -156,6 +156,29 @@ class BBCodesTest extends Test
 				'x <span style="color:red">is <span style="color:green">green</span> and red</span> y'
 			],
 			[
+				'[DAILYMOTION]x222z1[/DAILYMOTION]',
+				'<object width="560" height="315"><param name="movie" value="http://www.dailymotion.com/swf/video/x222z1"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/x222z1" width="560" height="315" allowfullscreen="true"></embed></object>'
+			],
+			[
+				'[DAILYMOTION]x222z1[/DAILYMOTION]',
+				'<object width="644" height="333"><param name="movie" value="http://www.dailymotion.com/swf/video/x222z1"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/x222z1" width="644" height="333" allowfullscreen="true"></embed></object>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('dailymotion', 'default', [
+						'width'  => 644,
+						'height' => 333
+					]);
+				}
+			],
+			[
+				'[DAILYMOTION]http://www.dailymotion.com/video/x222z1[/DAILYMOTION]',
+				'<object width="560" height="315"><param name="movie" value="http://www.dailymotion.com/swf/video/x222z1"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/x222z1" width="560" height="315" allowfullscreen="true"></embed></object>'
+			],
+			[
+				'[DAILYMOTION]http://www.dailymotion.com/user/Dailymotion/2#video=x222z1[/DAILYMOTION]',
+				'<object width="560" height="315"><param name="movie" value="http://www.dailymotion.com/swf/video/x222z1"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/x222z1" width="560" height="315" allowfullscreen="true"></embed></object>'
+			],
+			[
 				'our [del]great [/del]leader',
 				'our <del>great </del>leader'
 			],
