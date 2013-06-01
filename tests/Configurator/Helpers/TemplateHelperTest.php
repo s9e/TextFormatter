@@ -692,7 +692,7 @@ class TemplateHelperTest extends Test
 		$dom = TemplateHelper::loadTemplate('<xsl:copy-of select="x"/><xsl:copy-of select="foo"/>');
 
 		$this->assertSame(
-			array($dom->firstChild->firstChild->nextSibling),
+			[$dom->firstChild->firstChild->nextSibling],
 			TemplateHelper::getElementsByRegexp($dom, '/^foo$/')
 		);
 	}
