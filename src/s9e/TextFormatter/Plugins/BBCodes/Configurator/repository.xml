@@ -370,6 +370,15 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="VIMEO">
+		<usage><![CDATA[
+			[VIMEO id={NUMBER}]{PARSE=/^(?<id>[0-9]+)$/,#^http://vimeo\.com/(?:channels/[^/]+/)?(?<id>[0-9]+)#}[/VIMEO]
+		]]></usage>
+		<template><![CDATA[
+			<iframe src="http://player.vimeo.com/video/{NUMBER}" width="]]><var name="width">560</var><![CDATA[" height="]]><var name="height">315</var><![CDATA[" frameborder="0" webkitAllowFullScreen="" mozallowfullscreen="" allowFullScreen=""></iframe>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="YOUTUBE">
 		<usage><![CDATA[
 			[YOUTUBE id={IDENTIFIER}]{PARSE=#^(?<id>[-0-9A-Z_a-z]+)$#,#^http://[a-z]+\.youtube\.com/watch\?v=(?<id>[-0-9A-Z_a-z]+)#,#^http://youtu\.be/(?<id>[-0-9A-Z_a-z]+)#}[/YOUTUBE]

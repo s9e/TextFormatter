@@ -580,6 +580,29 @@ class BBCodesTest extends Test
 				'<var>x<sub><var>i</var></sub></var>'
 			],
 			[
+				'[VIMEO]67207222[/VIMEO]',
+				'<iframe src="http://player.vimeo.com/video/67207222" width="560" height="315" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>'
+			],
+			[
+				'[VIMEO]http://vimeo.com/67207222[/VIMEO]',
+				'<iframe src="http://player.vimeo.com/video/67207222" width="560" height="315" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>'
+			],
+			[
+				'[VIMEO]http://vimeo.com/channels/staffpicks/67207222[/VIMEO]',
+				'<iframe src="http://player.vimeo.com/video/67207222" width="560" height="315" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>'
+			],
+			[
+				'[VIMEO]67207222[/VIMEO]',
+				'<iframe src="http://player.vimeo.com/video/67207222" width="400" height="226" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('vimeo', 'default', [
+						'width'  => 400,
+						'height' => 226
+					]);
+				}
+			],
+			[
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
 				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
 			],
