@@ -8,5 +8,6 @@ matrix:
     - php: "5.5"
 before_script:
   - "php ./scripts/convert5.3.php"
+  - "[[ `php -v` == PHP\\ 5.3* ]] && pecl install xslcache"
 branches:
   only: master
