@@ -1,6 +1,6 @@
 ## Synopsis
 
-This plugin provides enhanced typography, aka "fancy Unicode symbols." It is loosely based on [SmartyPants](http://daringfireball.net/projects/smartypants/).
+This plugin provides enhanced typography, aka "fancy Unicode symbols." It is loosely based on [SmartyPants](http://daringfireball.net/projects/smartypants/) and [RedCloth's Textile](http://redcloth.org/textile/writing-paragraph-text/#typographers-quotes).
 
 ## Example
 
