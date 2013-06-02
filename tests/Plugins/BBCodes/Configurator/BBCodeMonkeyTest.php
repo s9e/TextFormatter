@@ -437,6 +437,26 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[foo={REGEXP=#^foo$#iusDSU}/]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [new Regexp('#^foo$#iusDSU')]
+							]
+						]
+					]),
+					'tokens' => [
+						'REGEXP' => 'foo'
+					],
+					'passthroughToken' => null
+				]
+			],
+			[
 				'[foo={REGEXP=/[a-z]{3}\\//}/]',
 				[
 					'bbcodeName' => 'FOO',
@@ -475,6 +495,27 @@ class BBCodeMonkeyTest extends Test
 							],
 							'bar' => [
 								'filterChain' => [new Regexp('/^(?:\\D+)$/D')]
+							]
+						]
+					]),
+					'tokens' => [],
+					'passthroughToken' => null
+				]
+			],
+			[
+				'[foo={PARSE=/(?<foo>\\d+)/uD}]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/(?<foo>\\d+)/uD'],
+						],
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [new Regexp('/^(?:\\d+)$/uD')]
 							]
 						]
 					]),

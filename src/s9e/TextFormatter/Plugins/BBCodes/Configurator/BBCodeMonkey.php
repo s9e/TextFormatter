@@ -498,7 +498,7 @@ class BBCodeMonkey
 	{
 		// This regexp should match a regexp, including its delimiters and optionally the i, s
 		// and/or u flags
-		$regexpMatcher = '(.).*?(?<!\\\\)(?:\\\\\\\\)*+\\g{-1}[isu]*';
+		$regexpMatcher = '(.).*?(?<!\\\\)(?:\\\\\\\\)*+\\g{-1}[DSUisu]*';
 
 		$tokenTypes = [
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
