@@ -34,7 +34,7 @@ $configurator->HTMLElements->allowAttribute('a', 'title');
 
 $configurator->plugins->load('Autolink');
 $configurator->plugins->load('HTMLEntities');
-$configurator->plugins->load('WittyPants');
+$configurator->plugins->load('FancyPants');
 
 $configurator->addHTML5Rules();
 
@@ -96,10 +96,10 @@ The following plugins have been enabled:
   [/list][/*]
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
   [*][b]Emoticons[/b] --- one emoticon :) has been added
+  [*][b]FancyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
   [*][b]Generic[/b] --- the Generic plugin provides a way to perform generic regexp-based replacements that are HTML-safe. Here, text that matches [C]/#(?<tag>[a-z0-9]+)/i[/C] is replaced with the template [C]<a href="https://twitter.com/#!/search/%23{@tag}"><xsl:apply-templates/></a>[/C] -- For example: #PHP, #fml
   [*][b]HTMLElements[/b] --- [C]<a>[/C] and [C]<b>[/C] tags are allowed, with two whitelisted attributes for [C]<a>[/C]: [C]href[/C] and [C]title[/C]. Example: <a href="https://github.com" title="GitHub - Social Coding"><b>GitHub</b></a>
   [*][b]HTMLEntities[/b] --- HTML entities such as &amp;hearts; are decoded
-  [*][b]WittyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"
 [/list]
 
 The parser/renderer used on this page page has been generated via [url=https://github.com/s9e/TextFormatter/blob/master/scripts/generateLiveDemo.php]this script[/url].</textarea>

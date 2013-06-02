@@ -1,12 +1,12 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\WittyPants;
+namespace s9e\TextFormatter\Tests\Plugins\FancyPants;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\Plugins\WittyPants\Configurator;
+use s9e\TextFormatter\Plugins\FancyPants\Configurator;
 
 /**
-* @covers s9e\TextFormatter\Plugins\WittyPants\Configurator
+* @covers s9e\TextFormatter\Plugins\FancyPants\Configurator
 */
 class ConfiguratorTest extends Test
 {
@@ -15,7 +15,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCreatesTag()
 	{
-		$this->configurator->plugins->load('WittyPants');
+		$this->configurator->plugins->load('FancyPants');
 		$this->assertTrue($this->configurator->tags->exists('WP'));
 	}
 
@@ -25,7 +25,7 @@ class ConfiguratorTest extends Test
 	public function testDoesNotCreateTag()
 	{
 		$tag = $this->configurator->tags->add('WP');
-		$this->configurator->plugins->load('WittyPants');
+		$this->configurator->plugins->load('FancyPants');
 
 		$this->assertSame($tag, $this->configurator->tags->get('WP'));
 	}
@@ -35,7 +35,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomTagName()
 	{
-		$this->configurator->plugins->load('WittyPants', ['tagName' => 'FOO']);
+		$this->configurator->plugins->load('FancyPants', ['tagName' => 'FOO']);
 		$this->assertTrue($this->configurator->tags->exists('FOO'));
 	}
 
@@ -44,7 +44,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testCustomAttrName()
 	{
-		$this->configurator->plugins->load('WittyPants', ['attrName' => 'bar']);
+		$this->configurator->plugins->load('FancyPants', ['attrName' => 'bar']);
 		$this->assertTrue($this->configurator->tags['WP']->attributes->exists('bar'));
 	}
 
@@ -53,7 +53,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigTagName()
 	{
-		$plugin = $this->configurator->plugins->load('WittyPants', ['tagName' => 'FOO']);
+		$plugin = $this->configurator->plugins->load('FancyPants', ['tagName' => 'FOO']);
 
 		$config = $plugin->asConfig();
 
@@ -66,7 +66,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testConfigAttrName()
 	{
-		$plugin = $this->configurator->plugins->load('WittyPants', ['attrName' => 'bar']);
+		$plugin = $this->configurator->plugins->load('FancyPants', ['attrName' => 'bar']);
 
 		$config = $plugin->asConfig();
 

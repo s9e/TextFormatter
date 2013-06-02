@@ -6,7 +6,7 @@ This plugin provides enhanced typography, aka "fancy Unicode symbols." It is loo
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->plugins->load('WittyPants');
+$configurator->plugins->load('FancyPants');
 
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();

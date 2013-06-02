@@ -5,7 +5,7 @@
 * @copyright Copyright (c) 2010-2013 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Plugins\WittyPants;
+namespace s9e\TextFormatter\Plugins\FancyPants;
 
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 

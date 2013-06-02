@@ -1,16 +1,16 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Plugins\WittyPants;
+namespace s9e\TextFormatter\Tests\Plugins\FancyPants;
 
 use s9e\TextFormatter\Configurator;
-use s9e\TextFormatter\Plugins\WittyPants\Parser;
+use s9e\TextFormatter\Plugins\FancyPants\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavaScriptRunner;
 use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
 use s9e\TextFormatter\Tests\Test;
 
 /**
-* @covers s9e\TextFormatter\Plugins\WittyPants\Parser
+* @covers s9e\TextFormatter\Plugins\FancyPants\Parser
 */
 class ParserTest extends Test
 {

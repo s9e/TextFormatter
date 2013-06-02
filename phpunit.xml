@@ -148,14 +148,14 @@
 			<file>tests/Plugins/Emoticons/ParserTest.php</file>
 			<file>tests/Plugins/Escaper/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Escaper/ParserTest.php</file>
+			<file>tests/Plugins/FancyPants/ConfiguratorTest.php</file>
+			<file>tests/Plugins/FancyPants/ParserTest.php</file>
 			<file>tests/Plugins/Generic/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Generic/ParserTest.php</file>
 			<file>tests/Plugins/HTMLElements/ConfiguratorTest.php</file>
 			<file>tests/Plugins/HTMLElements/ParserTest.php</file>
 			<file>tests/Plugins/HTMLEntities/ConfiguratorTest.php</file>
 			<file>tests/Plugins/HTMLEntities/ParserTest.php</file>
-			<file>tests/Plugins/WittyPants/ConfiguratorTest.php</file>
-			<file>tests/Plugins/WittyPants/ParserTest.php</file>
 
 			<file>tests/Configurator/RendererGenerators/PHPTest.php</file>
 			<file>tests/Configurator/RendererGenerators/XSLCacheTest.php</file>

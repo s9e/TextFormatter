@@ -1603,6 +1603,19 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
+s9e\TextFormatter\Tests\Plugins\FancyPants\Configurator
+ [x] Automatically creates a "WP" tag
+ [x] Does not attempt to create a tag if it already exists
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] The config array contains the name of the tag
+ [x] The config array contains the name of the attribute
+
+s9e\TextFormatter\Tests\Plugins\FancyPants\Parser
+ [x] Parsing tests
+ [x] Parsing tests (JavaScript)
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() returns the name of the tag it creates
  [x] add() throws an exception if the regexp is invalid
@@ -1671,19 +1684,6 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
 
 s9e\TextFormatter\Tests\Plugins\HTMLEntities\Parser
  [x] Parsing tests
- [x] Parsing+rendering tests
-
-s9e\TextFormatter\Tests\Plugins\WittyPants\Configurator
- [x] Automatically creates a "WP" tag
- [x] Does not attempt to create a tag if it already exists
- [x] The name of the tag used can be changed through the "tagName" constructor option
- [x] The name of the attribute used can be changed through the "attrName" constructor option
- [x] The config array contains the name of the tag
- [x] The config array contains the name of the attribute
-
-s9e\TextFormatter\Tests\Plugins\WittyPants\Parser
- [x] Parsing tests
- [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
