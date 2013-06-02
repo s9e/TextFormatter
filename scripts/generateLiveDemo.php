@@ -80,7 +80,7 @@ ob_start();
 <body>
 	<div style="float:left;width:80%;max-width:800px">
 		<form>
-			<textarea style="width:99%" rows="15">[float=right][youtube width=240 height=180]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
+			<textarea style="width:99%" rows="15">[float=right][youtube]http://www.youtube.com/watch?v=QH2-TGUlwu4[/youtube][/float]
 
 This is a demo of the JavaScript port of [url=https://github.com/s9e/TextFormatter/tree/master/src/ title="s9e\TextFormatter at GitHub.com"]s9e\TextFormatter[/url].
 
