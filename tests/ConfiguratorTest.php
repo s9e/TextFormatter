@@ -373,6 +373,25 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox getRenderer('PHP') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP to generate a renderer
+	*/
+	public function testGetRendererArg()
+	{
+		$renderer = $this->configurator->getRenderer('PHP');
+		$this->assertRegexp('/^\\w+$/', get_class($renderer));
+	}
+
+	/**
+	* @testdox getRenderer('PHP', 'foo') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing 'foo' to its constructor
+	*/
+	public function testGetRendererArgs()
+	{
+		$className = 'renderer_' . uniqid();
+		$renderer  = $this->configurator->getRenderer('PHP', $className);
+		$this->assertSame($className, get_class($renderer));
+	}
+
+	/**
 	* @testdox $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
 	*/
 	public function testMagicGetLoad()

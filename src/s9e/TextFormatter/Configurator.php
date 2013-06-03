@@ -128,11 +128,25 @@ class Configurator implements ConfigProvider
 	/**
 	* Return an instance of Renderer based on the current config
 	*
+	* NOTE: extra parameters are passed to the RendererGenerator's constructor
+	*
+	* @param  string $name Name of the RendererGenerator, e.g. "PHP"
 	* @return Renderer
 	*/
-	public function getRenderer()
+	public function getRenderer($name = null)
 	{
-		return $this->rendererGenerator->getRenderer($this->stylesheet);
+		if (isset($name))
+		{
+			// Create a specific generator
+			$rendererGenerator = $this->getRendererGenerator(func_get_args());
+		}
+		else
+		{
+			// Use the default renderer
+			$rendererGenerator = $this->rendererGenerator;
+		}
+
+		return $rendererGenerator->getRenderer($this->stylesheet);
 	}
 
 	/**
@@ -225,9 +239,20 @@ class Configurator implements ConfigProvider
 	*/
 	public function setRendererGenerator($name)
 	{
-		$className  = 's9e\\TextFormatter\\Configurator\\RendererGenerators\\' . $name;
+		$this->rendererGenerator = $this->getRendererGenerator(func_get_args());
+	}
+
+	/**
+	* Generate and return an instance of RendererGenerator
+	*
+	* @param  array $args List of arguments, starting with the name of the generator
+	* @return RendererGenerator
+	*/
+	protected function getRendererGenerator(array $args)
+	{
+		$className  = 's9e\\TextFormatter\\Configurator\\RendererGenerators\\' . $args[0];
 		$reflection = new ReflectionClass($className);
 
-		$this->rendererGenerator = $reflection->newInstanceArgs(array_slice(func_get_args(), 1));
+		return $reflection->newInstanceArgs(array_slice($args, 1));
 	}
 }

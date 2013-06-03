@@ -106,6 +106,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] getParser() removes JavaScript-specific data from attribute filters
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] getRenderer() invokes $this->rendererGenerator->getRenderer()
+ [x] getRenderer('PHP') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP to generate a renderer
+ [x] getRenderer('PHP', 'foo') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing 'foo' to its constructor
  [x] $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
  [x] $configurator->BBCodes returns $configurator->plugins->get('BBCodes') if the plugin has already been loaded
  [x] $configurator->foo throws an exception
