@@ -35,3 +35,4 @@ TODO
 - There are many SVG vectors, too many to chase after individually. Prevent any user-supplied data in <svg> tags (in any namespace) or add isSafeInSVG() with a very restricted set of allowed filters -- http://html5sec.org/#94
 - http://html5sec.org/#49 -- http://shazzer.co.uk/database/All/Characters-allowed-inside-jsurl http://html5sec.org/#36
 - Test how conditional comments in templates are rendered
+- Re-enable the optimization that uses <xsl:element name="{translate('ABC','abc',name())}"/>
