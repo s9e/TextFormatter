@@ -478,6 +478,31 @@ class ConfiguratorTest extends Test
 		$this->assertSame(['LI'], $this->configurator->rootRules['allowChild']);
 		$this->assertSame(['UL'], $this->configurator->rootRules['denyChild']);
 	}
+
+	/**
+	* @testdox setRendererGenerator('PHP') sets $configurator->rendererGenerator to an instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
+	*/
+	public function testSetRendererGenerator()
+	{
+		$this->configurator->setRendererGenerator('PHP');
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\RendererGenerators\\PHP',
+			$this->configurator->rendererGenerator
+		);
+	}
+
+	/**
+	* @testdox setRendererGenerator() passes extra arguments to the generator's constructor
+	*/
+	public function testSetRendererGeneratorArguments()
+	{
+		$this->configurator->setRendererGenerator('XSLCache', '/foo/bar');
+		$this->assertAttributeSame(
+			'/foo/bar',
+			'cacheDir',
+			$this->configurator->rendererGenerator
+		);
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase

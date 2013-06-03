@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter;
 
 use InvalidArgumentException;
+use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
 use s9e\TextFormatter\Configurator\Collections\PluginCollection;
@@ -19,7 +20,6 @@ use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript;
-use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\TemplateChecker;
 use s9e\TextFormatter\Configurator\UrlConfig;
@@ -79,15 +79,16 @@ class Configurator implements ConfigProvider
 	*/
 	public function __construct()
 	{
-		$this->attributeFilters  = new AttributeFilterCollection;
-		$this->javascript        = new JavaScript($this);
-		$this->plugins           = new PluginCollection($this);
-		$this->rendererGenerator = new XSLT;
-		$this->rootRules         = new Ruleset;
-		$this->tags              = new TagCollection;
-		$this->templateChecker   = new TemplateChecker;
-		$this->stylesheet        = new Stylesheet($this);
-		$this->urlConfig         = new UrlConfig;
+		$this->attributeFilters = new AttributeFilterCollection;
+		$this->javascript       = new JavaScript($this);
+		$this->plugins          = new PluginCollection($this);
+		$this->rootRules        = new Ruleset;
+		$this->tags             = new TagCollection;
+		$this->templateChecker  = new TemplateChecker;
+		$this->stylesheet       = new Stylesheet($this);
+		$this->urlConfig        = new UrlConfig;
+
+		$this->setRendererGenerator('XSLT');
 	}
 
 	/**
@@ -212,5 +213,21 @@ class Configurator implements ConfigProvider
 		$config['stylesheet']->setDynamic('JS', [$this->stylesheet, 'get']);
 
 		return $config;
+	}
+
+	/**
+	* Set the RendererGenerator instance used by this Configurator
+	*
+	* NOTE: extra parameters are passed to the RendererGenerator's constructor
+	*
+	* @param  string $name Name of the RendererGenerator, e.g. "PHP"
+	* @return void
+	*/
+	public function setRendererGenerator($name)
+	{
+		$className  = 's9e\\TextFormatter\\Configurator\\RendererGenerators\\' . $name;
+		$reflection = new ReflectionClass($className);
+
+		$this->rendererGenerator = $reflection->newInstanceArgs(array_slice(func_get_args(), 1));
 	}
 }
