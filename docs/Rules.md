@@ -1,7 +1,7 @@
 Rules
 =====
 
-See `s9e\TextFormatter\Configurator\Collections\Ruleset`.
+See <code>s9e\TextFormatter\Configurator\Collections\Ruleset<code>.
 Rules are set on a per-tag basis, for example:
 
 ```
@@ -15,9 +15,9 @@ $tag->rules->denyChild('X');
 
 Rules can be:
 
- * boolean -- they accept `true` or `false` as argument, with `true` being the default
+ * boolean -- they accept <code>true<code> or <code>false<code> as argument, with <code>true<code> being the default
  * targeted -- they accept a tag name as argument
- * other -- `defaultChildRule()` and `defaultDescendantRule()` accept either `"allow"` or `"deny"`
+ * other -- <code>defaultChildRule()<code> and <code>defaultDescendantRule()<code> accept either <code>"allow"<code> or <code>"deny"<code>
 
 Rules that apply to descendants also apply to children. Rules that apply to ancestors also apply to the parent. A tag that is explicitly denied cannot be allowed by another rule.
 
@@ -33,11 +33,11 @@ Allows tag X to be used as a descendant of given tag.</dd>
 
 <dt>autoClose</dt>
 <dd><i>Example:</i> <code>$tag->rules->autoClose(true);</code><br/>
-Start tags of this tag are automatically closed if they are not paired with an end tag. This rule exists primarily to deal with <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#void-elements">void elements</a> such as `<img>`.</dd>
+Start tags of this tag are automatically closed if they are not paired with an end tag. This rule exists primarily to deal with <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#void-elements">void elements</a> such as <code>&lt;img&gt;</code>.</dd>
 
 <dt>autoReopen</dt>
 <dd><i>Example:</i> <code>$tag->rules->autoReopen(false);</code><br/>
-Automatically reopens this tag if it's closed by a non-matching tag. This rule helps dealing with misnested tags such as `<B><I></B></I>`. In this case, if `I` has an autoReopen rule, it will automatically be reopened when `B` closes.</dd>
+Automatically reopens this tag if it's closed by a non-matching tag. This rule helps dealing with misnested tags such as <code>&lt;B&gt;&lt;I&gt;&lt;/B&gt;&lt;/I&gt;</code>. In this case, if <code>I</code> has an autoReopen rule, it will automatically be reopened when <code>B<code> closes.</dd>
 
 <dt>closeAncestor</dt>
 <dd><i>Example:</i> <code>$tag->rules->closeAncestor('X');</code><br/>
@@ -45,7 +45,7 @@ Forces all ancestor tags X to be closed when this tag is encountered.</dd>
 
 <dt>closeParent</dt>
 <dd><i>Example:</i> <code>$tag->rules->closeParent('LI');</code><br/>
-Forces current parent LI to be closed when this tag is encountered. Helps dealing with <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#optional-tags">optional end tags</a>. For instance, if LI has a closeParent rule targeting LI, the following `<LI>one<LI>two` is interpreted as `<LI>one</LI><LI>two`.</dd>
+Forces current parent LI to be closed when this tag is encountered. Helps dealing with <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#optional-tags">optional end tags</a>. For instance, if LI has a closeParent rule targeting LI, the following <code>&lt;LI&gt;one&lt;LI&gt;two<code> is interpreted as <code>&lt;LI&gt;one&lt;/LI&gt;&lt;LI&gt;two<code>.</dd>
 
 <dt>defaultChildRule</dt>
 <dd><i>Example:</i> <code>$tag->rules->defaultChildRule('deny');</code><br/>
