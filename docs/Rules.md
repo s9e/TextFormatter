@@ -77,11 +77,11 @@ Indicates that this tag uses the <a href="http://www.w3.org/html/wg/drafts/html/
 
 <dt>noBrChild</dt>
 <dd><i>Example:</i> <code>$tag->rules->noBrChild();</code><br/>
-Prevents newlines in child text nodes from being converted to `<br/>`.</dd>
+Prevents newlines in child text nodes from being converted to <code>&lt;br/&gt;</code>.</dd>
 
 <dt>noBrDescendant</dt>
 <dd><i>Example:</i> <code>$tag->rules->noBrDescendant();</code><br/>
-Prevents newlines in descendant text nodes from being converted to `<br/>`. Useful for elements that preserves whitespace.</dd>
+Prevents newlines in descendant text nodes from being converted to <code>&lt;br/&gt;</code>. Useful for elements that preserves whitespace.</dd>
 
 <dt>requireParent</dt>
 <dd><i>Example:</i> <code>$tag->rules->requireParent('X');</code><br/>
