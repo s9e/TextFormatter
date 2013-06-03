@@ -4,7 +4,7 @@ Rules
 See <code>s9e\TextFormatter\Configurator\Collections\Ruleset</code>.
 Rules are set on a per-tag basis, for example:
 
-```
+```php
 $configurator = new Configurator;
 
 $tag = $configurator->tags->add('B');
