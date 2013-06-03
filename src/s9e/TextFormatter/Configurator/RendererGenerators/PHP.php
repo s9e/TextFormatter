@@ -39,7 +39,7 @@ class PHP implements RendererGenerator
 	public function getRenderer(Stylesheet $stylesheet)
 	{
 		// Generate the source file
-		$php =$this->generate($stylesheet->get());
+		$php = $this->generate($stylesheet->get());
 
 		// Execute the source to get an instance, and copy the source into the instance
 		$renderer = eval('?>' . $php);
