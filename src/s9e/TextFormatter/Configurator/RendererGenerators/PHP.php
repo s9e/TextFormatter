@@ -24,6 +24,11 @@ class PHP implements RendererGenerator
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
+	* @var string Name of the class to be created. If null, a random name will be generated
+	*/
+	public $className;
+
+	/**
 	* @var string Output method
 	*/
 	protected $outputMethod;
@@ -34,6 +39,20 @@ class PHP implements RendererGenerator
 	protected $php;
 
 	/**
+	* Constructor
+	*
+	* @param  string $className Name of the class to be created
+	* @return void
+	*/
+	public function __construct($className = null)
+	{
+		if (isset($className))
+		{
+			$this->className = $className;
+		}
+	}
+
+	/**
 	* {@inheritdoc}
 	*/
 	public function getRenderer(Stylesheet $stylesheet)
@@ -42,7 +61,7 @@ class PHP implements RendererGenerator
 		$php = $this->generate($stylesheet->get());
 
 		// Execute the source to get an instance, and copy the source into the instance
-		$renderer = eval('?>' . $php);
+		$renderer = eval($php);
 		$renderer->source = $php;
 
 		return $renderer;
@@ -62,8 +81,8 @@ class PHP implements RendererGenerator
 
 		$this->outputMethod = $dom->getElementsByTagNameNS(self::XMLNS_XSL, 'output')->item(0)->getAttribute('method');
 
-		// Generate a random name for that class
-		$className = 'Renderer_' . uniqid();
+		// Generate a random name for that class if necessary
+		$className = (isset($this->className)) ? $this->className : 'Renderer_' . uniqid();
 
 		// Generate the array of parameters
 		$params = [];
@@ -75,7 +94,7 @@ class PHP implements RendererGenerator
 			$params[] = var_export($paramName, true) . '=>' . var_export($paramValue, true);
 		}
 
-		$this->php = '<?php class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
+		$this->php = 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
 			protected $defaultParams=[' . implode(',', $params) . '];
 			protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
 			protected $params=[];
@@ -150,6 +169,8 @@ class PHP implements RendererGenerator
 					{
 						$nodeName = $node->nodeName;';
 
+		// Remove the excessive indentation
+		$this->php = str_replace("\n\t\t\t", "\n", $this->php);
 
 		// Collect and sort templates
 		$templates = [];
@@ -203,7 +224,7 @@ class PHP implements RendererGenerator
 				}
 				else
 				{
-					$condition = '$node->nodeName===' . var_export($tagName, true);
+					$condition = '$nodeName===' . var_export($tagName, true);
 				}
 
 				// Add the predicate to the condition
@@ -973,8 +994,9 @@ class PHP implements RendererGenerator
 	*/
 	protected function optimizeCode()
 	{
-		$tokens = token_get_all($this->php);
+		$tokens = token_get_all('<?php ' . $this->php);
 
+		// Limit the number of loops to 100, in case something would make it loop indefinitely
 		$remainingLoops = 100;
 		do
 		{
@@ -984,6 +1006,10 @@ class PHP implements RendererGenerator
 		}
 		while (--$remainingLoops && $tokens !== $old);
 
+		// Remove the first token, which should be T_OPEN_TAG, aka "<?php"
+		unset($tokens[0]);
+
+		// Rebuild the source;
 		$this->php = '';
 		foreach ($tokens as $token)
 		{

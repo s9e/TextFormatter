@@ -25,6 +25,64 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox The returned instance contains its own source code in $renderer->source
+	*/
+	public function testInstanceSource()
+	{
+		$generator = new PHP;
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertObjectHasAttribute('source', $renderer, 'class');
+		$this->assertStringStartsWith('class', $renderer->source);
+	}
+
+	/**
+	* @testdox The name of the generated class can be passed to the constructor
+	*/
+	public function testClassNameConstructor()
+	{
+		$className = 'renderer_' . uniqid();
+		$generator = new PHP($className);
+
+		$this->assertInstanceOf(
+			$className,
+			$generator->getRenderer($this->configurator->stylesheet)
+		);
+	}
+
+	/**
+	* @testdox If no class name is set, a new random class name is generated for every call
+	*/
+	public function testClassNameRandom()
+	{
+		$generator = new PHP;
+		$renderer1 = $generator->getRenderer($this->configurator->stylesheet);
+		$renderer2 = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertNotSame(
+			get_class($renderer1),
+			get_class($renderer2),
+			'The two renderers should have different class names'
+		);
+	}
+
+	/**
+	* @testdox The class name can be set in $rendererGenerator->className
+	*/
+	public function testClassNameProp()
+	{
+		$className = 'renderer_' . uniqid();
+
+		$generator = new PHP;
+		$generator->className = $className;
+
+		$this->assertInstanceOf(
+			$className,
+			$generator->getRenderer($this->configurator->stylesheet)
+		);
+	}
+
+	/**
 	* @testdox Ignores comments
 	*/
 	public function testComment()
@@ -136,7 +194,7 @@ class PHPTest extends Test
 		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
 
 		$generator = new PHP;
-		$renderer  = eval('?>' . $generator->generate($configurator->stylesheet->get()));
+		$renderer  = eval($generator->generate($configurator->stylesheet->get()));
 
 		$values = [
 			'"\'...\'"',
@@ -159,7 +217,7 @@ class PHPTest extends Test
 		$generator = new PHP;
 		$php = $generator->generate($xsl);
 
-		$renderer = eval('?>' . $php);
+		$renderer = eval($php);
 
 		$this->assertSame(
 			$html,
@@ -176,7 +234,7 @@ class PHPTest extends Test
 		$generator = new PHP;
 		$php = $generator->generate($xsl);
 
-		$renderer = eval('?>' . $php);
+		$renderer = eval($php);
 
 		$this->assertSame(
 			$xhtml,
@@ -218,7 +276,7 @@ class PHPTest extends Test
 		$generator = new PHP;
 		$php = $generator->generate($xsl);
 
-		$renderer = eval('?>' . $php);
+		$renderer = eval($php);
 
 		$this->assertSame(
 			$html,
@@ -231,7 +289,6 @@ class PHPTest extends Test
 		return $this->getRendererData('b*', 'html');
 	}
 
-
 	/**
 	* @testdox Rendering tests from plugins
 	* @dataProvider getPluginsData
@@ -241,7 +298,7 @@ class PHPTest extends Test
 		$generator = new PHP;
 		$php = $generator->generate($xsl);
 
-		$renderer = eval('?>' . $php);
+		$renderer = eval($php);
 
 		$this->assertSame(
 			$html,
@@ -266,7 +323,7 @@ class PHPTest extends Test
 		$generator = new PHP;
 		$php = $generator->generate($configurator->stylesheet->get());
 
-		$phpRenderer  = eval('?>' . $php);
+		$phpRenderer  = eval($php);
 		$xsltRenderer = $configurator->getRenderer();
 
 		if ($rendererSetup)
