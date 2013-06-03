@@ -88,9 +88,9 @@ class PHP implements RendererGenerator
 			}
 			public function renderRichText($xml)
 			{
-				$dom = new DOMDocument;
+				$dom = new \\DOMDocument;
 				$dom->loadXML($xml);
-				$this->xpath = new DOMXPath($dom);
+				$this->xpath = new \\DOMXPath($dom);
 				$this->out = "";
 				$this->params = $this->userParams;
 				foreach ($this->defaultParams as $k => $v)
@@ -212,8 +212,9 @@ class PHP implements RendererGenerator
 					$condition = '(' . $condition . '&&' . $this->convertCondition($predicate) . ')';
 				}
 
-				// Record this template -- cast the float as string
-				$templates["$priority"][$irXML][] = $condition;
+				// Record this template -- cast the float as string so it can be used as array key
+				$priority = (string) $priority;
+				$templates[$priority][$irXML][] = $condition;
 			}
 		}
 
