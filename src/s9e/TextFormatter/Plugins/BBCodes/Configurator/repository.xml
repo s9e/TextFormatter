@@ -381,7 +381,7 @@
 
 	<bbcode name="YOUTUBE">
 		<usage><![CDATA[
-			[YOUTUBE id={IDENTIFIER}]{PARSE=#^(?<id>[-0-9A-Z_a-z]+)$#,#^http://[a-z]+\.youtube\.com/(?:watch\?v=|v/)(?<id>[-0-9A-Z_a-z]+)#,#^http://youtu\.be/(?<id>[-0-9A-Z_a-z]+)#}[/YOUTUBE]
+			[YOUTUBE id={IDENTIFIER}]{PARSE=#^(?<id>[-0-9A-Z_a-z]+)$#,#^http://[a-z]+\.youtube\.com/(?:watch\?.*?v=|v/)(?<id>[-0-9A-Z_a-z]+)#,#^http://youtu\.be/(?<id>[-0-9A-Z_a-z]+)#}[/YOUTUBE]
 		]]></usage>
 		<!-- Markup lifted from YouTube's "Share" form -->
 		<template><![CDATA[

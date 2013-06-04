@@ -611,6 +611,10 @@ class BBCodesTest extends Test
 				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
 			],
 			[
+				'[YOUTUBE]http://www.youtube.com/watch?feature=player_embedded&v=-cEzsCAzTak[/YOUTUBE]',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
+			],
+			[
 				'[YOUTUBE]http://www.youtube.com/v/-cEzsCAzTak[/YOUTUBE]',
 				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
 			],
