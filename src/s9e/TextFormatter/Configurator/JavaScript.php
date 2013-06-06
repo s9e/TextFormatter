@@ -280,9 +280,9 @@ class JavaScript
 		$rootContext = $this->config['rootContext'];
 
 		$rootContext['allowedChildren']
-				= self::convertBitfield($rootContext['allowedChildren']);
+			= self::convertBitfield($rootContext['allowedChildren']);
 		$rootContext['allowedDescendants']
-				= self::convertBitfield($rootContext['allowedDescendants']);
+			= self::convertBitfield($rootContext['allowedDescendants']);
 
 		$code = new Code(self::encode($rootContext));
 

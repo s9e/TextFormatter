@@ -62,7 +62,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$tag = $this->configurator->tags->add($this->tagName);
 
 		// Create attribute and make it optional
-		$tag->attributes->add($this->attrName)->required = false	;
+		$tag->attributes->add($this->attrName)->required = false;
 
 		// Ensure that censored content can't ever be used by other tags
 		$tag->rules->denyAll();
