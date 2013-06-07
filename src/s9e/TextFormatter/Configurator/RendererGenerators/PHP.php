@@ -29,6 +29,11 @@ class PHP implements RendererGenerator
 	public $className;
 
 	/**
+	* @var string Name of the last class generated
+	*/
+	public $lastClassName;
+
+	/**
 	* @var string Output method
 	*/
 	protected $outputMethod;
@@ -60,16 +65,19 @@ class PHP implements RendererGenerator
 		// Generate the source file
 		$php = $this->generate($stylesheet->get());
 
-		// Execute the source to get an instance, and copy the source into the instance
-		$renderer = eval($php);
+		// Execute the source to create the class
+		eval($php);
+
+		// Create an instance and copy the source into the instance
+		$renderer = new $this->lastClassName;
 		$renderer->source = $php;
 
 		return $renderer;
 	}
 
 	/**
-	* Generate a file that contains a PHP class that renders an intermediate representation
-	* according to given stylesheet
+	* Generate the source for a PHP class that renders an intermediate representation according to
+	* given stylesheet
 	*
 	* @param  string $xsl XSL stylesheet
 	* @return string
@@ -81,9 +89,6 @@ class PHP implements RendererGenerator
 
 		$this->outputMethod = $dom->getElementsByTagNameNS(self::XMLNS_XSL, 'output')->item(0)->getAttribute('method');
 
-		// Generate a random name for that class if necessary
-		$className = (isset($this->className)) ? $this->className : 'Renderer_' . uniqid();
-
 		// Generate the array of parameters
 		$params = [];
 		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'param') as $param)
@@ -94,10 +99,14 @@ class PHP implements RendererGenerator
 			$params[] = var_export($paramName, true) . '=>' . var_export($paramValue, true);
 		}
 
+		// Generate a random name for that class if necessary, and save it
+		$className = (isset($this->className)) ? $this->className : 'Renderer_' . uniqid();
+		$this->lastClassName = $className;
+
 		$this->php = 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
 			protected $defaultParams=[' . implode(',', $params) . '];
 			protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
-			protected $params=[];
+			protected $currentParams=[];
 			protected $userParams=[];
 			protected $xpath;
 			public function setParameter($paramName, $paramValue)
@@ -111,10 +120,10 @@ class PHP implements RendererGenerator
 				$dom->loadXML($xml);
 				$this->xpath = new \\DOMXPath($dom);
 				$this->out = "";
-				$this->params = $this->userParams;
+				$this->currentParams = $this->userParams;
 				foreach ($this->defaultParams as $k => $v)
 				{
-					$this->params[$k] = $this->xpath->evaluate("string($v)", $dom);
+					$this->currentParams[$k] = $this->xpath->evaluate("string($v)", $dom);
 				}
 				$this->at($dom->documentElement);
 
@@ -264,7 +273,7 @@ class PHP implements RendererGenerator
 		}
 
 		// Add the default handling
-		$this->php .= 'else $this->at($node);}}}}return new ' . $className . ';';
+		$this->php .= 'else $this->at($node);}}}}';
 
 		// Optimize the generated code
 		$this->optimizeCode();
@@ -1121,15 +1130,15 @@ class PHP implements RendererGenerator
 			}
 
 			// Merge htmlspecialchars() calls
-			if ($tokens[$i + 1][0]    === T_STRING
-			 && $tokens[$i + 1][1]    === 'htmlspecialchars'
-			 && $tokens[$i + 2]       === '('
-			 && $tokens[$i - 1]       === ')'
-			 && $tokens[$i - 2][0]    === T_CONSTANT_ENCAPSED_STRING
-			 && $tokens[$i - 2][1]    === "'UTF-8'"
-			 && $tokens[$i - 3]       === ','
-			 && $tokens[$i - 4][0]    === T_LNUMBER
-			 && $tokens[$i - 5]       === ',')
+			if ($tokens[$i + 1][0] === T_STRING
+			 && $tokens[$i + 1][1] === 'htmlspecialchars'
+			 && $tokens[$i + 2]    === '('
+			 && $tokens[$i - 1]    === ')'
+			 && $tokens[$i - 2][0] === T_CONSTANT_ENCAPSED_STRING
+			 && $tokens[$i - 2][1] === "'UTF-8'"
+			 && $tokens[$i - 3]    === ','
+			 && $tokens[$i - 4][0] === T_LNUMBER
+			 && $tokens[$i - 5]    === ',')
 			{
 				// Save the escape mode of the first call
 				$escapeMode = $tokens[$i - 4][1];
@@ -1251,17 +1260,17 @@ class PHP implements RendererGenerator
 		}
 
 		// <xsl:if test="$foo">
-		// if (!empty($this->params['foo']))
+		// if (!empty($this->currentParams['foo']))
 		if (preg_match('#^\\$(\\w+)$#', $expr, $m))
 		{
-			return '!empty($this->params[' . var_export($m[1], true) . '])';
+			return '!empty($this->currentParams[' . var_export($m[1], true) . '])';
 		}
 
 		// <xsl:if test="not($foo)">
-		// if (empty($this->params['foo']))
+		// if (empty($this->currentParams['foo']))
 		if (preg_match('#^not\\(\\$(\\w+)\\)$#', $expr, $m))
 		{
-			return 'empty($this->params[' . var_export($m[1], true) . '])';
+			return 'empty($this->currentParams[' . var_export($m[1], true) . '])';
 		}
 
 		// If the condition does not seem to contain a relational expression, or start with a
@@ -1301,10 +1310,10 @@ class PHP implements RendererGenerator
 		}
 
 		// <xsl:value-of select="$foo"/>
-		// $this->out .= $this->params['foo'];
+		// $this->out .= $this->currentParams['foo'];
 		if (preg_match('#^\\$(\\w+)$#', $expr, $m))
 		{
-			return '$this->params[' . var_export($m[1], true) . ']';
+			return '$this->currentParams[' . var_export($m[1], true) . ']';
 		}
 
 		// If the condition does not seem to contain a relational expression, or start with a

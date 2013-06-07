@@ -12,6 +12,19 @@ use s9e\TextFormatter\Tests\Test;
 */
 class PHPTest extends Test
 {
+	protected function getRendererFromXsl($xsl)
+	{
+		$className = 'Renderer_' . md5($xsl);
+
+		if (!class_exists($className, false))
+		{
+			$generator = new PHP($className);
+			eval($generator->generate($xsl));
+		}
+
+		return new $className;
+	}
+
 	/**
 	* @testdox Returns an instance of Renderer
 	*/
@@ -193,8 +206,7 @@ class PHPTest extends Test
 		$configurator->stylesheet->parameters->add('foo');
 		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
 
-		$generator = new PHP;
-		$renderer  = eval($generator->generate($configurator->stylesheet->get()));
+		$renderer = $configurator->getRenderer('PHP');
 
 		$values = [
 			'"\'...\'"',
@@ -214,14 +226,9 @@ class PHPTest extends Test
 	*/
 	public function testHTML($xml, $xsl, $html)
 	{
-		$generator = new PHP;
-		$php = $generator->generate($xsl);
-
-		$renderer = eval($php);
-
 		$this->assertSame(
 			$html,
-			$renderer->render($xml)
+			$this->getRendererFromXsl($xsl)->render($xml)
 		);
 	}
 
@@ -231,14 +238,9 @@ class PHPTest extends Test
 	*/
 	public function testXHTML($xml, $xsl, $xhtml)
 	{
-		$generator = new PHP;
-		$php = $generator->generate($xsl);
-
-		$renderer = eval($php);
-
 		$this->assertSame(
 			$xhtml,
-			$renderer->render($xml)
+			$this->getRendererFromXsl($xsl)->render($xml)
 		);
 	}
 
@@ -273,14 +275,9 @@ class PHPTest extends Test
 	*/
 	public function testBBCodes($xml, $xsl, $html)
 	{
-		$generator = new PHP;
-		$php = $generator->generate($xsl);
-
-		$renderer = eval($php);
-
 		$this->assertSame(
 			$html,
-			$renderer->render($xml)
+			$this->getRendererFromXsl($xsl)->render($xml)
 		);
 	}
 
@@ -295,14 +292,9 @@ class PHPTest extends Test
 	*/
 	public function testPlugins($xml, $xsl, $html)
 	{
-		$generator = new PHP;
-		$php = $generator->generate($xsl);
-
-		$renderer = eval($php);
-
 		$this->assertSame(
 			$html,
-			$renderer->render($xml)
+			$this->getRendererFromXsl($xsl)->render($xml)
 		);
 	}
 
@@ -320,11 +312,8 @@ class PHPTest extends Test
 		$configurator = new Configurator;
 		call_user_func($configuratorSetup, $configurator);
 
-		$generator = new PHP;
-		$php = $generator->generate($configurator->stylesheet->get());
-
-		$phpRenderer  = eval($php);
-		$xsltRenderer = $configurator->getRenderer();
+		$phpRenderer  = $configurator->getRenderer('PHP');
+		$xsltRenderer = $configurator->getRenderer('XSLT');
 
 		if ($rendererSetup)
 		{
