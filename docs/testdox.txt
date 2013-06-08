@@ -1708,6 +1708,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] BBCodes from repository.xml render nicely
  [x] Rendering tests from plugins
  [x] Edge cases
+ [x] Code optimization tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
  [x] Returns an instance of Renderer

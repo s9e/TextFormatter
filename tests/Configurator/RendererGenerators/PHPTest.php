@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators;
 
+use DOMDocument;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
@@ -542,6 +543,83 @@ class PHPTest extends Test
 						= '<b>x <i>i</i> <u>u</u> y</b>';
 				}
 			],
+		];
+	}
+
+	/**
+	* @dataProvider getOptimizationTests
+	* @testdox Code optimization tests
+	*/
+	public function testOptimizations($xsl, $contains = null, $notContains = null)
+	{
+		if (strpos('xsl:output', $xsl) === false)
+		{
+			$xsl = '<xsl:output method="html" encoding="utf-8" />' . $xsl;
+		}
+
+		$xsl = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $xsl . '</xsl:stylesheet>';
+
+		// Remove whitespace
+		$dom = new DOMDocument;
+		$dom->preserveWhiteSpace = false;
+		$dom->loadXML($xsl);
+		$xsl = $dom->saveXML();
+
+		$generator = new PHP('foo');
+		$php = $generator->generate($xsl);
+
+		if (isset($contains))
+		{
+			foreach ((array) $contains as $str)
+			{
+				$this->assertContains($str, $php);
+			}
+		}
+
+		if (isset($notContains))
+		{
+			foreach ((array) $notContains as $str)
+			{
+				$this->assertNotContains($str, $php);
+			}
+		}
+	}
+
+	public function getOptimizationTests()
+	{
+		return [
+			[
+				'<xsl:template match="FOO"><br/></xsl:template>',
+				"\$this->out.='<br>';"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:text/></xsl:template>',
+				"if(\$nodeName==='FOO'){}",
+				"\$this->out.='';"
+			],
+			[
+				'<xsl:template match="FOO">
+					<xsl:choose>
+						<xsl:when test="@foo">foo</xsl:when>
+						<xsl:otherwise><xsl:text/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:template>',
+				"{if(\$node->hasAttribute('foo')){\$this->out.='foo';}}",
+				['else{}', "\$this->out.=''"]
+			],
+			[
+				'<xsl:template match="html:*">
+					<xsl:element name="{local-name()}">
+						<xsl:copy-of select="@*"/>
+						<xsl:apply-templates/>
+					</xsl:element>
+				</xsl:template>',
+				[
+					"=htmlspecialchars(\$this->xpath->evaluate('local-name()',\$node),2,'UTF-8');\$this->out.='<'.\$",
+					"\$this->out.='</'.\$e"
+				],
+				"\$this->out.='</'.htmlspecialchars("
+			]
 		];
 	}
 }

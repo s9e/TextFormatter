@@ -654,7 +654,7 @@ class PHP implements RendererGenerator
 		$expr = $node->getAttribute('select');
 
 		// <xsl:copy-of select="@foo"/>
-		if (preg_match('#^@(\\w+)$#', $expr, $m))
+		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
 		{
 			$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
 			$case   = $switch->appendChild($ir->ownerDocument->createElement('case'));
@@ -726,6 +726,11 @@ class PHP implements RendererGenerator
 	*/
 	protected function parseXslText(DOMNode $ir, DOMNode $node)
 	{
+		if ($node->textContent === '')
+		{
+			return;
+		}
+
 		$ir->appendChild(
 			$ir->ownerDocument->createElement(
 				'output',
@@ -821,16 +826,16 @@ class PHP implements RendererGenerator
 	*/
 	protected function serializeCloseTag(DOMNode $closeTag)
 	{
-		$varName = 't' . $closeTag->getAttribute('id');
+		$varName = '$t' . $closeTag->getAttribute('id');
 
 		if ($closeTag->hasAttribute('check'))
 		{
-			$this->php .= 'if(!isset($' . $varName . ')){';
+			$this->php .= 'if(!isset(' . $varName . ')){';
 		}
 
 		if ($closeTag->hasAttribute('set'))
 		{
-			$this->php .= '$' . $varName . '=1;';
+			$this->php .= $varName . '=1;';
 		}
 
 		$this->php .= "\$this->out.='>';";
@@ -881,6 +886,14 @@ class PHP implements RendererGenerator
 	protected function serializeElement(DOMNode $element)
 	{
 		$elName = $element->getAttribute('name');
+
+		if (!preg_match("#^'[^']*'$#", $elName))
+		{
+			$varName    = '$e' . uniqid();
+			$this->php .= $varName . '=' . $elName . ';';
+			$elName     = $varName;
+		}
+
 		$this->php .= "\$this->out.='<'." . $elName . ';';
 
 		// Whether we should check for voidness
@@ -1247,7 +1260,7 @@ class PHP implements RendererGenerator
 	{
 		// <xsl:if test="@foo">
 		// if ($node->hasAttribute('foo'))
-		if (preg_match('#^@(\\w+)$#', $expr, $m))
+		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
 		{
 			return '$node->hasAttribute(' . var_export($m[1], true) . ')';
 		}
@@ -1297,7 +1310,7 @@ class PHP implements RendererGenerator
 	{
 		// <xsl:value-of select="@foo"/>
 		// $this->out .= $node->getAttribute('foo');
-		if (preg_match('#^@(\\w+)$#', $expr, $m))
+		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
 		{
 			return '$node->getAttribute(' . var_export($m[1], true) . ')';
 		}
@@ -1318,7 +1331,7 @@ class PHP implements RendererGenerator
 
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a string() call
-		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^\\w+\\(#', $expr))
+		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-a-z]+\\(#', $expr))
 		{
 			$expr = 'string(' . $expr . ')';
 		}
