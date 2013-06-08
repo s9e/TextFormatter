@@ -169,7 +169,7 @@ class PHP implements RendererGenerator
 			{
 				if ($root->nodeType === 3)
 				{
-					$this->out .= htmlspecialchars($root->textContent,' . ENT_NOQUOTES . ',"UTF-8");
+					$this->out .= htmlspecialchars($root->textContent,' . ENT_NOQUOTES . ');
 				}
 				else
 				{
@@ -479,11 +479,10 @@ class PHP implements RendererGenerator
 							'output',
 							htmlspecialchars(
 								var_export(
-									htmlspecialchars($child->textContent, ENT_NOQUOTES, 'UTF-8'),
+									htmlspecialchars($child->textContent, ENT_NOQUOTES),
 									true
 								),
-								ENT_NOQUOTES,
-								'UTF-8'
+								ENT_NOQUOTES
 							)
 						)
 					);
@@ -539,8 +538,7 @@ class PHP implements RendererGenerator
 					'attribute',
 					htmlspecialchars(
 						$this->convertAttributeValueTemplate($attribute->value),
-						ENT_NOQUOTES,
-						'UTF-8'
+						ENT_NOQUOTES
 					)
 				)
 			)->setAttribute('name', var_export($attribute->name, true));
@@ -734,7 +732,7 @@ class PHP implements RendererGenerator
 		$ir->appendChild(
 			$ir->ownerDocument->createElement(
 				'output',
-				htmlspecialchars(var_export($node->textContent, true), ENT_NOQUOTES, 'UTF-8')
+				htmlspecialchars(var_export($node->textContent, true), ENT_NOQUOTES)
 			)
 		);
 	}
@@ -755,9 +753,8 @@ class PHP implements RendererGenerator
 			$ir->ownerDocument->createElement(
 				'output',
 				htmlspecialchars(
-					'htmlspecialchars(' . $this->convertXPath($node->getAttribute('select')) . ',' . $escapeMode . ",'UTF-8')",
-					ENT_NOQUOTES,
-					'UTF-8'
+					'htmlspecialchars(' . $this->convertXPath($node->getAttribute('select')) . ',' . $escapeMode . ")",
+					ENT_NOQUOTES
 				)
 			)
 		);
@@ -872,7 +869,7 @@ class PHP implements RendererGenerator
 		$this->php .= '$this->out.=\' \';';
 		$this->php .= '$this->out.=$attribute->name;';
 		$this->php .= '$this->out.=\'="\';';
-		$this->php .= '$this->out.=htmlspecialchars($attribute->value,' . ENT_COMPAT . ",'UTF-8');";
+		$this->php .= '$this->out.=htmlspecialchars($attribute->value,' . ENT_COMPAT . ");";
 		$this->php .= '$this->out.=\'"\';';
 		$this->php .= '}';
 	}
@@ -1147,17 +1144,14 @@ class PHP implements RendererGenerator
 			 && $tokens[$i + 1][1] === 'htmlspecialchars'
 			 && $tokens[$i + 2]    === '('
 			 && $tokens[$i - 1]    === ')'
-			 && $tokens[$i - 2][0] === T_CONSTANT_ENCAPSED_STRING
-			 && $tokens[$i - 2][1] === "'UTF-8'"
-			 && $tokens[$i - 3]    === ','
-			 && $tokens[$i - 4][0] === T_LNUMBER
-			 && $tokens[$i - 5]    === ',')
+			 && $tokens[$i - 2][0] === T_LNUMBER
+			 && $tokens[$i - 3]    === ',')
 			{
 				// Save the escape mode of the first call
-				$escapeMode = $tokens[$i - 4][1];
+				$escapeMode = $tokens[$i - 2][1];
 
 				// Save the index of the comma that comes after the first argument of the first call
-				$startIndex = $i - 5;
+				$startIndex = $i - 3;
 
 				// Save the index of the parenthesis that follows the second htmlspecialchars
 				$endIndex = $i + 2;
@@ -1183,10 +1177,7 @@ class PHP implements RendererGenerator
 				}
 
 				if ($tokens[$i + 1][0] === T_LNUMBER
-				 && $tokens[$i + 1][1] === $escapeMode
-				 && $tokens[$i + 2]    === ','
-				 && $tokens[$i + 3][0] === T_CONSTANT_ENCAPSED_STRING
-				 && $tokens[$i + 3][1] === "'UTF-8'")
+				 && $tokens[$i + 1][1] === $escapeMode)
 				{
 					 // Replace the first comma of the first call with a concatenator operator
 					 $tokens[$startIndex] = '.';
@@ -1236,11 +1227,11 @@ class PHP implements RendererGenerator
 		{
 			if ($token[0] === 'literal')
 			{
-				$phpExpressions[] = var_export(htmlspecialchars($token[1], ENT_COMPAT, 'UTF-8'), true);
+				$phpExpressions[] = var_export(htmlspecialchars($token[1], ENT_COMPAT), true);
 			}
 			else
 			{
-				$phpExpressions[] = 'htmlspecialchars(' . $this->convertXPath($token[1]) . ',' . ENT_COMPAT . ",'UTF-8')";
+				$phpExpressions[] = 'htmlspecialchars(' . $this->convertXPath($token[1]) . ',' . ENT_COMPAT . ")";
 			}
 		}
 

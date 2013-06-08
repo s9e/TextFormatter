@@ -615,7 +615,7 @@ class PHPTest extends Test
 					</xsl:element>
 				</xsl:template>',
 				[
-					"=htmlspecialchars(\$this->xpath->evaluate('local-name()',\$node),2,'UTF-8');\$this->out.='<'.\$",
+					"=htmlspecialchars(\$this->xpath->evaluate('local-name()',\$node),2);\$this->out.='<'.\$",
 					"\$this->out.='</'.\$e"
 				],
 				"\$this->out.='</'.htmlspecialchars("
