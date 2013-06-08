@@ -68,16 +68,12 @@ function convertCustom($filepath, &$file)
 		),
 		'PHP.php' => array(
 			array(
-				"protected \$defaultParams=[' . implode(',', \$params) . '];",
-				"protected \$defaultParams=array(' . implode(',', \$params) . ');"
+				"protected \$dynamicParams=[' . implode(',', \$dynamicParams) . '];",
+				"protected \$dynamicParams=array(' . implode(',', \$dynamicParams) . ');"
 			),
 			array(
-				'protected $currentParams=[];',
-				'protected $currentParams=array();'
-			),
-			array(
-				'protected $userParams=[];',
-				'protected $userParams=array();'
+				"protected \$params=[' . implode(',', \$staticParams) . '];",
+				"protected \$params=array(' . implode(',', \$staticParams) . ');"
 			),
 			array(
 				'$toks = [];',
