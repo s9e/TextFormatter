@@ -102,6 +102,12 @@ function convertCustom($filepath, &$file)
 				'return ($isDynamic) ? call_user_func($value) : $value;'
 			)
 		),
+		'XSLTTest.php' => array(
+			array(
+				"/**\n\t* @testdox setParameter() accepts values that contain both types of quotes but replaces ASCII character \" with Unicode character 0xFF02 because of https://bugs.php.net/64137\n\t*/\n\tpublic function testSetParameterBothQuotes()",
+				"/**\n\t* @testdox setParameter() accepts values that contain both types of quotes but replaces ASCII character \" with Unicode character 0xFF02 because of https://bugs.php.net/64137\n\t*/\n\tpublic function testSetParameterBothQuotes2()"
+			)
+		)
 	);
 
 	$filename = basename($filepath);
