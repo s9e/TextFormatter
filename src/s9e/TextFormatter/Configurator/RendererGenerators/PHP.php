@@ -104,8 +104,8 @@ class PHP implements RendererGenerator
 		$this->lastClassName = $className;
 
 		$this->php = 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
-			protected $defaultParams=[' . implode(',', $params) . '];
 			protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
+			protected $defaultParams=[' . implode(',', $params) . '];
 			protected $currentParams=[];
 			protected $userParams=[];
 			protected $xpath;

@@ -72,8 +72,8 @@ function convertCustom($filepath, &$file)
 				"protected \$defaultParams=array(' . implode(',', \$params) . ');"
 			),
 			array(
-				'protected $params=[];',
-				'protected $params=array();'
+				'protected $currentParams=[];',
+				'protected $currentParams=array();'
 			),
 			array(
 				'protected $userParams=[];',
