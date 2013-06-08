@@ -104,8 +104,8 @@ function convertCustom($filepath, &$file)
 		),
 		'XSLTTest.php' => array(
 			array(
-				"/**\n\t* @testdox setParameter() accepts values that contain both types of quotes but replaces ASCII character \" with Unicode character 0xFF02 because of https://bugs.php.net/64137\n\t*/\n\tpublic function testSetParameterBothQuotes()",
-				"/**\n\t* @testdox setParameter() accepts values that contain both types of quotes but replaces ASCII character \" with Unicode character 0xFF02 because of https://bugs.php.net/64137\n\t*/\n\tpublic function testSetParameterBothQuotes2()"
+				"/**\n\t* @testdox setParameter() accepts values that contain both types of quotes\n\t*/\n\tpublic function testSetParameterBothQuotes()",
+				"public function _ignore()"
 			)
 		)
 	);
