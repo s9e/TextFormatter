@@ -619,6 +619,11 @@ class PHPTest extends Test
 					"\$this->out.='</'.\$e"
 				],
 				"\$this->out.='</'.htmlspecialchars("
+			],
+			[
+				'<xsl:template match="FOO">...</xsl:template>',
+				null,
+				'foreach ($this->dynamicParams as $k => $v)'
 			]
 		];
 	}
