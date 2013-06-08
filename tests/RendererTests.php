@@ -199,8 +199,6 @@ trait RendererTests
 	*/
 	public function testSetParameterBothQuotes()
 	{
-		$this->markTestSkipped();
-
 		$this->configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
 		$this->configurator->stylesheet->parameters->add('foo');
 		$renderer = $this->configurator->getRenderer();

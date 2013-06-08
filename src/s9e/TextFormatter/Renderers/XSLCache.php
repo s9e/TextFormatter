@@ -73,6 +73,15 @@ class XSLCache extends Renderer
 	*/
 	public function setParameter($paramName, $paramValue)
 	{
+		/**
+		* @link https://bugs.php.net/64137
+		*/
+		if (strpos($paramValue, '"') !== false
+		 && strpos($paramValue, "'") !== false)
+		{
+			$paramValue = str_replace('"', "\xEF\xBC\x82", $paramValue);
+		}
+
 		$this->load();
 		$this->proc->setParameter('', $paramName, $paramValue);
 	}

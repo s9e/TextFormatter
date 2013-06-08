@@ -58,4 +58,28 @@ class XSLTTest extends Test
 			$renderer->render($xml)
 		);
 	}
+
+	/**
+	* @testdox setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
+	*/
+	public function testSetParameterBothQuotes()
+	{
+		$this->configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$this->configurator->stylesheet->parameters->add('foo');
+		$renderer = $this->configurator->getRenderer();
+
+		$values = [
+			'"\'...\'"',
+			'\'\'""...\'\'"\'"'
+		];
+
+		foreach ($values as $value)
+		{
+			$renderer->setParameter('foo', $value);
+			$this->assertSame(
+				str_replace('"', "\xEF\xBC\x82", $value),
+				$renderer->render('<rt><X/></rt>')
+			);
+		}
+	}
 }

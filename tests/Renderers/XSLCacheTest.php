@@ -14,6 +14,11 @@ class XSLCacheTest extends XSLTTest
 		$this->configurator->setRendererGenerator('XSLCache', sys_get_temp_dir());
 	}
 
+	public function tearDown()
+	{
+		array_map('unlink', glob(sys_get_temp_dir() . '/xslcache.*.xsl'));
+	}
+
 	/**
 	* @testdox getFilepath() returns the path to the stylesheet file
 	*/
