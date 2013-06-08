@@ -1273,7 +1273,7 @@ class PHP implements RendererGenerator
 
 		// <xsl:if test="not(@foo)">
 		// if (!$node->hasAttribute('foo'))
-		if (preg_match('#^not\\(@(\\w+)\\)$#', $expr, $m))
+		if (preg_match('#^not\\(@([-\\w]+)\\)$#', $expr, $m))
 		{
 			return '!$node->hasAttribute(' . var_export($m[1], true) . ')';
 		}
@@ -1294,7 +1294,7 @@ class PHP implements RendererGenerator
 
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a boolean() call
-		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^\\w+\\(#', $expr))
+		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\(#', $expr))
 		{
 			// <xsl:if test="parent::foo">
 			// if ($this->xpath->evaluate("boolean(parent::foo)",$node))
