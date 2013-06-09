@@ -36,3 +36,4 @@ TODO
 - http://html5sec.org/#49 -- http://shazzer.co.uk/database/All/Characters-allowed-inside-jsurl http://html5sec.org/#36
 - Test how conditional comments in templates are rendered
 - Re-enable the optimization that uses <xsl:element name="{translate('ABC','abc',name())}"/>
+- Handle <xsl:attribute><xsl:choose/></xsl:attribute> in PHP renderer generator
