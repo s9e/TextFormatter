@@ -543,6 +543,30 @@ class PHPTest extends Test
 						= '<b>x <i>i</i> <u>u</u> y</b>';
 				}
 			],
+			[
+				'<rt><X foo="FOO"/></rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<b><xsl:attribute name="title">
+							<xsl:choose>
+								<xsl:when test="@foo">foo=<xsl:value-of select="@foo"/>;</xsl:when>
+								<xsl:otherwise>bar=<xsl:value-of select="@bar"/>;</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute></b>';
+				}
+			],
+			[
+				'<rt><X foo="FOO"/></rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<b><xsl:attribute name="title">
+							<xsl:if test="@foo">foo=<xsl:value-of select="@foo"/>;</xsl:if>
+							<xsl:if test="@bar">bar=<xsl:value-of select="@bar"/>;</xsl:if>
+						</xsl:attribute></b>';
+				}
+			],
 		];
 	}
 

@@ -545,18 +545,22 @@ class PHP implements RendererGenerator
 		$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
 		$element->setAttribute('name', var_export($node->localName, true));
 
-		// Add an <attribute/> element for each of this node's attribute
+		// Append an <attribute/> element for each of this node's attribute
 		foreach ($node->attributes as $attribute)
 		{
-			$element->appendChild(
+			$irAttribute = $element->appendChild($ir->ownerDocument->createElement('attribute'));
+			$irAttribute->setAttribute('name', var_export($attribute->name, true));
+
+			// Append an <output/> element to represent the attribute's value
+			$irAttribute->appendChild(
 				$ir->ownerDocument->createElement(
-					'attribute',
+					'output',
 					htmlspecialchars(
 						$this->convertAttributeValueTemplate($attribute->value),
 						ENT_NOQUOTES
 					)
 				)
-			)->setAttribute('name', var_export($attribute->name, true));
+			);
 		}
 
 		// Parse the content of this node
@@ -673,12 +677,14 @@ class PHP implements RendererGenerator
 			$case   = $switch->appendChild($ir->ownerDocument->createElement('case'));
 			$case->setAttribute('test', $this->convertCondition($expr));
 
-			$case->appendChild(
+			$attribute = $case->appendChild($ir->ownerDocument->createElement('attribute'));
+			$attribute->appendChild(
 				$ir->ownerDocument->createElement(
-					'attribute',
+					'output',
 					$this->convertXPath($expr)
 				)
-			)->setAttribute('name', var_export($m[1], true));
+			);
+			$attribute->setAttribute('name', var_export($m[1], true));
 
 			return;
 		}
@@ -805,14 +811,9 @@ class PHP implements RendererGenerator
 	*/
 	protected function serializeAttribute(DOMNode $attribute)
 	{
-		$this->php .= "\$this->out.=' '." . $attribute->getAttribute('name') . ".'=\"'.";
-
-		if ($attribute->textContent !== '')
-		{
-			$this->php .= $attribute->textContent . '.';
-		}
-
-		$this->php .= "'\"';";
+		$this->php .= "\$this->out.=' '." . $attribute->getAttribute('name') . ".'=\"';";
+		$this->serializeChildren($attribute);
+		$this->php .= "\$this->out.='\"';";
 	}
 
 	/**
