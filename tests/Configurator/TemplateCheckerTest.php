@@ -218,4 +218,32 @@ class TemplateCheckerTest extends Test
 
 		$this->fail();
 	}
+
+	/**
+	* @testdox disable() disables all checks
+	* @depends testDefaultDisableOutputEscaping
+	*/
+	public function testDisable()
+	{
+		$template = '<b disable-output-escaping="1"/>';
+
+		$templateChecker = new TemplateChecker;
+		$templateChecker->disable();
+		$templateChecker->checkTemplate($template);
+	}
+
+	/**
+	* @testdox enable() re-enables all checks
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @depends testDefaultDisableOutputEscaping
+	*/
+	public function testEnable()
+	{
+		$template = '<b disable-output-escaping="1"/>';
+
+		$templateChecker = new TemplateChecker;
+		$templateChecker->disable();
+		$templateChecker->enable();
+		$templateChecker->checkTemplate($template);
+	}
 }

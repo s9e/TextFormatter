@@ -1075,6 +1075,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecker
  [x] checkTag() doesn't check templates that are marked as unsafe
  [x] checkTag() checks all the templates of a tag
  [x] Can be reset and reconfigured with different checks
+ [x] disable() disables all checks
+ [x] enable() re-enables all checks
 
 s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output method to 'xml'

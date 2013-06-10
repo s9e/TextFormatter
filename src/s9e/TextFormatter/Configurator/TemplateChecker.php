@@ -26,6 +26,11 @@ class TemplateChecker
 	protected $collection;
 
 	/**
+	* @var bool Whether checks are currently disabled
+	*/
+	protected $disabled = false;
+
+	/**
 	* Constructor
 	*
 	* Will load the default checks
@@ -76,6 +81,11 @@ class TemplateChecker
 	*/
 	public function checkTemplate($template, Tag $tag = null)
 	{
+		if ($this->disabled)
+		{
+			return;
+		}
+
 		if (!isset($tag))
 		{
 			$tag = new Tag;
@@ -88,5 +98,25 @@ class TemplateChecker
 		{
 			$check->check($dom->documentElement, $tag);
 		}
+	}
+
+	/**
+	* Disable all checks
+	*
+	* @return void
+	*/
+	public function disable()
+	{
+		$this->disabled = true;
+	}
+
+	/**
+	* Enable all checks
+	*
+	* @return void
+	*/
+	public function enable()
+	{
+		$this->disabled = false;
 	}
 }
