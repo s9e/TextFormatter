@@ -495,13 +495,15 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RegexpParser
  [x] parse() parses pattern modifiers
  [x] parse() parses character classes
  [x] parse() parses character classes with quantifiers
+ [x] parse() parses character classes with quantifiers and greediness operator
  [x] parse() parses character classes that end with an escaped ]
  [x] parse() throws a RuntimeException if a character class is not properly closed
  [x] parse() correctly parses escaped brackets
  [x] parse() correctly parses escaped parentheses
  [x] parse() parses non-capturing subpatterns
  [x] parse() parses non-capturing subpatterns with atomic grouping
- [x] parse() parses non-capturing subpatterns with quantifiers
+ [x] parse() parses non-capturing subpatterns with (possessive) quantifier
+ [x] parse() parses non-capturing subpatterns with (ungreedy) quantifier
  [x] parse() parses non-capturing subpatterns with options
  [x] parse() parses option settings
  [x] parse() parses named subpatterns using the (?<name>) syntax

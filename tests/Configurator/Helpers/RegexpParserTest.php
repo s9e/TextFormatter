@@ -109,6 +109,32 @@ class RegexpParserTest extends Test
 	}
 
 	/**
+	* @testdox parse() parses character classes with quantifiers and greediness operator
+	*/
+	public function testCanParseRegexps4b()
+	{
+		$this->assertEquals(
+			[
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '[a-z]+?',
+				'tokens'    => [
+					[
+						'pos' => 0,
+						'len' => 7,
+						'type' => 'characterClass',
+						'content' => 'a-z',
+						'quantifiers' => '+?'
+					]
+				]
+			],
+			RegexpParser::parse(
+				'#[a-z]+?#'
+			)
+		);
+	}
+
+	/**
 	* @testdox parse() parses character classes that end with an escaped ]
 	*/
 	public function testCanParseRegexps5()
@@ -247,7 +273,7 @@ class RegexpParserTest extends Test
 	}
 
 	/**
-	* @testdox parse() parses non-capturing subpatterns with quantifiers
+	* @testdox parse() parses non-capturing subpatterns with (possessive) quantifier
 	*/
 	public function testCanParseRegexps9()
 	{
@@ -275,6 +301,39 @@ class RegexpParserTest extends Test
 			],
 			RegexpParser::parse(
 				'#(?:x+)++#'
+			)
+		);
+	}
+
+	/**
+	* @testdox parse() parses non-capturing subpatterns with (ungreedy) quantifier
+	*/
+	public function testCanParseRegexps9b()
+	{
+		$this->assertEquals(
+			[
+				'delimiter' => '#',
+				'modifiers' => '',
+				'regexp'    => '(?:x+)+?',
+				'tokens'    => [
+					[
+						'pos' => 0,
+						'len' => 3,
+						'type' => 'nonCapturingSubpatternStart',
+						'options' => '',
+						'content' => 'x+',
+						'endToken' => 1
+					],
+					[
+						'pos' => 5,
+						'len' => 3,
+						'type' => 'nonCapturingSubpatternEnd',
+						'quantifiers' => '+?'
+					]
+				]
+			],
+			RegexpParser::parse(
+				'#(?:x+)+?#'
 			)
 		);
 	}

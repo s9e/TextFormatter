@@ -46,7 +46,7 @@ abstract class RegexpParser
 					break;
 
 				case '[':
-					if (!preg_match('#\\[(.*?(?<!\\\\)(?:\\\\\\\\)*+)\\]((?:[\\+\\*]\\+?)?)#', $regexp, $m, 0, $pos))
+					if (!preg_match('#\\[(.*?(?<!\\\\)(?:\\\\\\\\)*+)\\]((?:[+*][+?]?|\\?)?)#', $regexp, $m, 0, $pos))
 					{
 						throw new RuntimeException('Could not find matching bracket from pos ' . $pos);
 					}
@@ -170,7 +170,7 @@ abstract class RegexpParser
 					);
 
 					// Look for quantifiers after the subpattern, e.g. (?:ab)++
-					$spn = strspn($regexp, '+*', 1 + $pos);
+					$spn = strspn($regexp, '+*?', 1 + $pos);
 					$quantifiers = substr($regexp, 1 + $pos, $spn);
 
 					$ret['tokens'][] = [
