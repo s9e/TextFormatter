@@ -150,6 +150,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributeList
  [x] Attribute names are normalized for storage
  [x] Attribute names are normalized during retrieval
  [x] asConfig() returns a deduplicated list of attribute names
+ [x] asConfig() returns a list of attribute names in alphabetical order
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributePreprocessorCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\AttributePreprocessor
@@ -265,6 +266,12 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain
  [x] PHP string callbacks are normalized to an instance of TagFilter
  [x] PHP array callbacks are normalized to an instance of TagFilter
  [x] Instances of TagFilter are added as-is
+
+s9e\TextFormatter\Tests\Configurator\Collections\TagList
+ [x] Tag names are normalized for storage
+ [x] Tag names are normalized during retrieval
+ [x] asConfig() returns a deduplicated list of tag names
+ [x] asConfig() returns a list of tag names in alphabetical order
 
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateCheckList
  [x] append() normalizes string into an instance of the same name in s9e\TextFormatter\Configurator\TemplateChecks

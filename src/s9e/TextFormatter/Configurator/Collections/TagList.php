@@ -7,20 +7,19 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
-use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
 
 /**
-* Hosts a list of attribute names. The config array it returns contains the names, deduplicated and
-* sorted
+* Hosts a list of tag names. The config array it returns contains the names, deduplicated and sorted
 */
-class AttributeList extends NormalizedList
+class TagList extends NormalizedList
 {
 	/**
 	* {@inheritdoc}
 	*/
 	public function normalizeValue($attrName)
 	{
-		return AttributeName::normalize($attrName);
+		return TagName::normalize($attrName);
 	}
 
 	/**

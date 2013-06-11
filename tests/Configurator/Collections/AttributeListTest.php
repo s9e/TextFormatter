@@ -35,7 +35,7 @@ class AttributeListTest extends Test
 	/**
 	* @testdox asConfig() returns a deduplicated list of attribute names
 	*/
-	public function testGetConfigDedupes()
+	public function testAsConfigDedupes()
 	{
 		$attributeList = new AttributeList;
 		$attributeList->append('url');
@@ -43,6 +43,22 @@ class AttributeListTest extends Test
 
 		$this->assertSame(
 			['url'],
+			$attributeList->asConfig()
+		);
+	}
+
+	/**
+	* @testdox asConfig() returns a list of attribute names in alphabetical order
+	*/
+	public function testAsConfigSort()
+	{
+		$attributeList = new AttributeList;
+		$attributeList->append('url');
+		$attributeList->append('title');
+		$attributeList->append('width');
+
+		$this->assertSame(
+			['title', 'url', 'width'],
 			$attributeList->asConfig()
 		);
 	}
