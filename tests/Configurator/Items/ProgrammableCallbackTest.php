@@ -35,6 +35,16 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
+	* @testdox setVars() is chainable
+	*/
+	public function testSetVarsChainable()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+
+		$this->assertSame($pc, $pc->setVars(['foo' => 'bar']));
+	}
+
+	/**
 	* @testdox A single variable can be set with setVar() without overwriting other variables
 	*/
 	public function testSetVar()
@@ -45,6 +55,16 @@ class ProgrammableCallbackTest extends Test
 		$pc->setVar('baz', 'quux');
 
 		$this->assertSame($vars, $pc->getVars());
+	}
+
+	/**
+	* @testdox setVars() is chainable
+	*/
+	public function testSetVarChainable()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+
+		$this->assertSame($pc, $pc->setVar('foo', 'bar'));
 	}
 
 	/**
@@ -70,10 +90,7 @@ class ProgrammableCallbackTest extends Test
 	{
 		$pc = new ProgrammableCallback('strtolower');
 
-		$this->assertSame(
-			$pc,
-			$pc->addParameterByValue('foobar')
-		);
+		$this->assertSame($pc, $pc->addParameterByValue('foobar'));
 	}
 
 	/**
@@ -99,10 +116,7 @@ class ProgrammableCallbackTest extends Test
 	{
 		$pc = new ProgrammableCallback('strtolower');
 
-		$this->assertSame(
-			$pc,
-			$pc->addParameterByName('foobar')
-		);
+		$this->assertSame($pc, $pc->addParameterByName('foobar'));
 	}
 
 	/**
@@ -123,6 +137,16 @@ class ProgrammableCallbackTest extends Test
 			[4, 5],
 			$config['params']
 		);
+	}
+
+	/**
+	* @testdox resetParameters() is chainable
+	*/
+	public function testResetParametersChainable()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+
+		$this->assertSame($pc, $pc->resetParameters());
 	}
 
 	/**
@@ -227,6 +251,17 @@ class ProgrammableCallbackTest extends Test
 		$pc->setJS($js);
 
 		$this->assertSame($js, $pc->getJS());
+	}
+
+	/**
+	* @testdox setJS() is chainable
+	*/
+	public function testSetJSChainable()
+	{
+		$js = 'function(str){return str.toLowerCase();}';
+		$pc = new ProgrammableCallback('strtolower');
+
+		$this->assertSame($pc, $pc->setJS($js));
 	}
 
 	/**

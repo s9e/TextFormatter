@@ -137,18 +137,20 @@ class ProgrammableCallback implements ConfigProvider
 	/**
 	* Remove all the parameters
 	*
-	* @return void
+	* @return self
 	*/
 	public function resetParameters()
 	{
 		$this->params = [];
+
+		return $this;
 	}
 
 	/**
 	* Set this callback's JavaScript
 	*
 	* @param  Code|string $js JavaScript source code for this callback
-	* @return void
+	* @return self
 	*/
 	public function setJS($js)
 	{
@@ -158,6 +160,8 @@ class ProgrammableCallback implements ConfigProvider
 		}
 
 		$this->js = $js;
+
+		return $this;
 	}
 
 	/**
@@ -165,22 +169,26 @@ class ProgrammableCallback implements ConfigProvider
 	*
 	* @param  string $name  Variable name
 	* @param  string $value Variable value
-	* @return void
+	* @return self
 	*/
 	public function setVar($name, $value)
 	{
 		$this->vars[$name] = $value;;
+
+		return $this;
 	}
 
 	/**
 	* Set all of this callback's variables at once
 	*
 	* @param  array $vars Associative array of values
-	* @return void
+	* @return self
 	*/
 	public function setVars(array $vars)
 	{
 		$this->vars = $vars;
+
+		return $this;
 	}
 
 	/**

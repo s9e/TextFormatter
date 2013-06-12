@@ -655,12 +655,14 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributePreprocessor
 s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] __construct() throws an InvalidArgumentException if its argument is not callable
  [x] An array of variables can be set with setVars() or retrieved with getVars()
+ [x] setVars() is chainable
  [x] A single variable can be set with setVar() without overwriting other variables
  [x] addParameterByValue() adds a parameter as a value with no name
  [x] addParameterByValue() is chainable
  [x] addParameterByName() adds a parameter as a name with no value
  [x] addParameterByName() is chainable
  [x] resetParameters() removes all parameters
+ [x] resetParameters() is chainable
  [x] Callback '\\strtotime' is normalized to 'strtotime'
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
  [x] Callback ['\\foo','bar'] is normalized to 'foo::bar'
@@ -670,6 +672,7 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] getJS() returns NULL if no JS was set and the callback is a function that is not found in Configurator/Javascript/functions/
  [x] setJS() accepts a string and normalizes it to an instance of Code
  [x] setJS() accepts an instance of Code
+ [x] setJS() is chainable
  [x] asConfig() returns an array containing the callback
  [x] asConfig() replaces the by-name parameters by the values stored in vars if available
  [x] asConfig() returns the callback's JavaScript as a variant if available
