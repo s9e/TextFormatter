@@ -82,6 +82,11 @@ s9e\TextFormatter\Tests\Configurator\Traits\Configurable
  [x] __set() throws an exception if a NormalizedCollection would be overwritten by a non-array, non-Traversable value
  [x] __isset($k) returns true if the property exists
 
+s9e\TextFormatter\Tests\Configurator\Traits\TemplateSafeness
+ [x] markAsSafeAsURL() is chainable
+ [x] markAsSafeInCSS() is chainable
+ [x] markAsSafeInJS() is chainable
+
 s9e\TextFormatter\Tests\Configurator
  [x] $configurator->attributeFilters is an instance of AttributeFilterCollection
  [x] $configurator->javascript is an instance of JavaScript

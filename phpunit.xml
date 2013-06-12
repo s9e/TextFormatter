@@ -32,6 +32,7 @@
 			<file>tests/Configurator/Collections/NormalizedListTest.php</file>
 			<file>tests/Configurator/Traits/CollectionProxyTest.php</file>
 			<file>tests/Configurator/Traits/ConfigurableTest.php</file>
+			<file>tests/Configurator/Traits/TemplateSafenessTest.php</file>
 
 			<file>tests/ConfiguratorTest.php</file>
 			<file>tests/Configurator/Collections/AttributeCollectionTest.php</file>

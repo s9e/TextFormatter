@@ -59,30 +59,36 @@ trait TemplateSafeness
 	/**
 	* Return whether this object is safe to be used as a URL
 	*
-	* @return bool
+	* @return self
 	*/
 	public function markAsSafeAsURL()
 	{
-		return $this->markedSafe['AsURL'] = true;
+		$this->markedSafe['AsURL'] = true;
+
+		return $this;
 	}
 
 	/**
 	* Return whether this object is safe to be used in CSS
 	*
-	* @return bool
+	* @return self
 	*/
 	public function markAsSafeInCSS()
 	{
-		return $this->markedSafe['InCSS'] = true;
+		$this->markedSafe['InCSS'] = true;
+
+		return $this;
 	}
 
 	/**
 	* Return whether this object is safe to be used in JavaScript
 	*
-	* @return bool
+	* @return self
 	*/
 	public function markAsSafeInJS()
 	{
-		return $this->markedSafe['InJS'] = true;
+		$this->markedSafe['InJS'] = true;
+
+		return $this;
 	}
 }
