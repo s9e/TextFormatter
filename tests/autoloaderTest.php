@@ -1,14 +1,9 @@
 <?php
 
-/**
-* @runTestsInSeparateProcesses
-*/
 class autoloaderTest extends PHPUnit_Framework_TestCase
 {
 	public function autoload($className)
 	{
-		include_once __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
-
 		if (class_exists($className, false))
 		{
 			$this->markTestSkipped("$className already loaded");
@@ -19,6 +14,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 
 	/**
 	* @testdox Can load s9e\TextFormatter\Configurator
+	* @runInSeparateProcess
 	*/
 	public function testConfigurator()
 	{
@@ -27,6 +23,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 
 	/**
 	* @testdox Can load s9e\TextFormatter\Parser\Tag
+	* @runInSeparateProcess
 	*/
 	public function testParserTag()
 	{
@@ -35,6 +32,7 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 
 	/**
 	* @testdox Can load s9e\TextFormatter\Plugins\Emoticons\Parser
+	* @runInSeparateProcess
 	*/
 	public function testEmoticonsParserTag()
 	{
