@@ -64,6 +64,19 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
+	* @testdox addParameterByValue() is chainable
+	*/
+	public function testAddParameterByValueChainable()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+
+		$this->assertSame(
+			$pc,
+			$pc->addParameterByValue('foobar')
+		);
+	}
+
+	/**
 	* @testdox addParameterByName() adds a parameter as a name with no value
 	*/
 	public function testAddParameterByName()
@@ -76,6 +89,19 @@ class ProgrammableCallbackTest extends Test
 		$this->assertSame(
 			['foobar' => null],
 			$config['params']
+		);
+	}
+
+	/**
+	* @testdox addParameterByName() is chainable
+	*/
+	public function testAddParameterByNameChainable()
+	{
+		$pc = new ProgrammableCallback('strtolower');
+
+		$this->assertSame(
+			$pc,
+			$pc->addParameterByName('foobar')
 		);
 	}
 

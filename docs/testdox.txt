@@ -657,7 +657,9 @@ s9e\TextFormatter\Tests\Configurator\Items\ProgrammableCallback
  [x] An array of variables can be set with setVars() or retrieved with getVars()
  [x] A single variable can be set with setVar() without overwriting other variables
  [x] addParameterByValue() adds a parameter as a value with no name
+ [x] addParameterByValue() is chainable
  [x] addParameterByName() adds a parameter as a name with no value
+ [x] addParameterByName() is chainable
  [x] resetParameters() removes all parameters
  [x] Callback '\\strtotime' is normalized to 'strtotime'
  [x] Callback ['foo','bar'] is normalized to 'foo::bar'
