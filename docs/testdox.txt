@@ -86,6 +86,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->attributeFilters is an instance of AttributeFilterCollection
  [x] $configurator->javascript is an instance of JavaScript
  [x] $configurator->plugins is an instance of PluginCollection
+ [x] $configurator->registeredVars is a publicly accessible array
  [x] $configurator->rendererGenerator is an instance of RendererGenerators\XSLT
  [x] $configurator->rootRules is an instance of Ruleset
  [x] $configurator->stylesheet is an instance of Stylesheet

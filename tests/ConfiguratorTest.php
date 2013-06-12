@@ -52,6 +52,14 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox $configurator->registeredVars is a publicly accessible array
+	*/
+	public function testRegisteredVarsVisibility()
+	{
+		$this->assertInternalType('array', $this->configurator->registeredVars);
+	}
+
+	/**
 	* @testdox $configurator->rendererGenerator is an instance of RendererGenerators\XSLT
 	*/
 	public function testRrendererGeneratorInstance()

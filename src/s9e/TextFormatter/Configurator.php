@@ -42,6 +42,11 @@ class Configurator implements ConfigProvider
 	public $plugins;
 
 	/**
+	* @var array Array of variables that are available to the filters during parsing
+	*/
+	public $registeredVars;
+
+	/**
 	* @var RendererGenerator Generator used by $this->getRenderer()
 	*/
 	public $rendererGenerator;
@@ -87,6 +92,7 @@ class Configurator implements ConfigProvider
 		$this->templateChecker  = new TemplateChecker;
 		$this->stylesheet       = new Stylesheet($this);
 		$this->urlConfig        = new UrlConfig;
+		$this->registeredVars   = ['urlConfig' => $this->urlConfig];
 
 		$this->setRendererGenerator('XSLT');
 	}
@@ -193,6 +199,7 @@ class Configurator implements ConfigProvider
 		unset($properties['rendererGenerator']);
 		unset($properties['templateChecker']);
 		unset($properties['stylesheet']);
+		unset($properties['urlConfig']);
 
 		// Create the config array
 		$config    = ConfigHelper::toArray($properties);
@@ -213,10 +220,6 @@ class Configurator implements ConfigProvider
 		{
 			$config['tags'][$tagName] += $tagBitfields;
 		}
-
-		// Move the URL config to the registered vars, for use in filters
-		$config['registeredVars']['urlConfig'] = $config['urlConfig'];
-		unset($config['urlConfig']);
 
 		// Remove unused entries
 		unset($config['rootRules']);
