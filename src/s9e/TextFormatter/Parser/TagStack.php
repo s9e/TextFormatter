@@ -123,6 +123,24 @@ trait TagStack
 	}
 
 	/**
+	* Add a pair of tags
+	*
+	* @param  string  $name     Name of the tags
+	* @param  integer $startPos Position of the start tag
+	* @param  integer $startLen Length of the starttag
+	* @param  integer $endPos   Position of the start tag
+	* @param  integer $endLen   Length of the starttag
+	* @return Tag               Start tag
+	*/
+	public function addTagPair($name, $startPos, $startLen, $endPos, $endLen)
+	{
+		$tag = $this->addStartTag($name, $startPos, $startLen);
+		$tag->pairWith($this->addEndTag($name, $endPos, $endLen));
+
+		return $tag;
+	}
+
+	/**
 	* Sort tags by position and precedence
 	*
 	* @return void

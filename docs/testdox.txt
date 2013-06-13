@@ -1398,6 +1398,8 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] addStartTag() does not add the created tag to the stack if the tag has been disabled
  [x] addStartTag() does not add anything to the stack if the position is negative but it returns an invalidated tag
  [x] addStartTag() does not add anything to the stack if the length is negative but it returns an invalidated tag
+ [x] addTagPair() creates both a start tag and an end tag of the same name, paired together
+ [x] addTagPair() returns the newly-created start tag
  [x] addBrTag() adds a zero-width, self-closing "br" tag to the stack then returns it
  [x] addIgnoreTag() adds self-closing "i" tag to the stack then returns it
  [x] sortTags() sorts tags by position descending (tags processed in text order)

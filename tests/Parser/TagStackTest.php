@@ -157,6 +157,41 @@ class TagStackTest extends Test
 	}
 
 	/**
+	* @testdox addTagPair() creates both a start tag and an end tag of the same name, paired together
+	*/
+	public function testAddTagPair()
+	{
+		$dummyStack = new DummyStack;
+		$dummyStack->addTagPair('FOO', 1, 2, 3, 4);
+
+		$startTag = new Tag(Tag::START_TAG, 'FOO', 1, 2);
+		$endTag   = new Tag(Tag::END_TAG,   'FOO', 3, 4);
+		$startTag->pairWith($endTag);
+
+		$this->assertEquals(
+			[$startTag, $endTag],
+			$dummyStack->tagStack
+		);
+	}
+
+	/**
+	* @testdox addTagPair() returns the newly-created start tag
+	*/
+	public function testAddTagPairReturn()
+	{
+		$dummyStack = new DummyStack;
+
+		$startTag = new Tag(Tag::START_TAG, 'FOO', 1, 2);
+		$endTag   = new Tag(Tag::END_TAG,   'FOO', 3, 4);
+		$startTag->pairWith($endTag);
+
+		$this->assertEquals(
+			$startTag,
+			$dummyStack->addTagPair('FOO', 1, 2, 3, 4)
+		);
+	}
+
+	/**
 	* @testdox addBrTag() adds a zero-width, self-closing "br" tag to the stack then returns it
 	*/
 	public function testAddBrTag()
