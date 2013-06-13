@@ -137,7 +137,7 @@ Internally, the {URL} token will be replaced with the XPath expression `{@url}` 
 
     <a href="{@url}"><xsl:apply-templates/></a>
 
-Here, the {TEXT} token is replaced with the XSL element `<xsl:apply-templates/>` which will render the content of this BBCode, including the descendants' markup. This only applies to {TEXT} tokens (which have no filters set) which are the sole content of a BBCode. Otherwise, any filtered attribute will be output as-is, with no markup. For example, the following BBCode:
+Here, the {TEXT} token is replaced with the XSL element `<xsl:apply-templates/>` which will render the content of this BBCode, including the descendants' markup. This only applies to tokens that represent unfiltered content (by default, {TEXT} and {ANYTHING}) and only if the token is the sole content of a BBCode. Otherwise, any filtered attribute will be output as-is, with no markup. For example, the following BBCode:
 
     [foo]{SIMPLETEXT}[/foo]
 

@@ -61,7 +61,7 @@ class BBCodeMonkey
 	*            attributes. For instance, "foo={NUMBER},{NUMBER}" will be transformed into
 	*            'foo={PARSE=#^(?<foo0>\\d+),(?<foo1>\\d+)$#D}'
 	*/
-	protected static $tokenRegexp = [
+	public $tokenRegexp = [
 		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
 		'EMAIL'      => '[^@]+@.+?',
 		'FLOAT'      => '(?:0|-?[1-9]\\d*)(?:\\.\\d+)?(?:e[1-9]\\d*)?',
@@ -73,6 +73,14 @@ class BBCodeMonkey
 		'RANGE'      => '\\d+',
 		'SIMPLETEXT' => '[-a-zA-Z0-9+.,_ ]+',
 		'UINT'       => '0|[1-9]\\d*'
+	];
+
+	/**
+	* @var array List of token types that are used to represent raw, unfiltered content
+	*/
+	public $unfilteredTokens = [
+		'ANYTHING',
+		'TEXT'
 	];
 
 	/**
@@ -174,10 +182,12 @@ class BBCodeMonkey
 		}
 
 		// Append the content token to the attributes list under the name "content" if it's anything
-		// but raw {TEXT}
+		// but raw {TEXT} (or other unfiltered tokens)
 		if (!empty($m['content']))
 		{
-			if (preg_match('#^\\{TEXT[0-9]*\\}$#D', $m['content']))
+			$regexp = '#^\\{' . RegexpBuilder::fromList($this->unfilteredTokens) . '[0-9]*\\}$#D';
+
+			if (preg_match($regexp, $m['content']))
 			{
 				$config['passthroughToken'] = substr($m['content'], 1, -1);
 			}
@@ -433,8 +443,8 @@ class BBCodeMonkey
 
 				// Grab the expression that corresponds to the token type, or use a catch-all
 				// expression otherwise
-				$expr = (isset(self::$tokenRegexp[$tokenType]))
-				      ? self::$tokenRegexp[$tokenType]
+				$expr = (isset($this->tokenRegexp[$tokenType]))
+				      ? $this->tokenRegexp[$tokenType]
 				      : '.+?';
 
 				// Append the named subpattern. Its name is made of the attribute preprocessor's
@@ -674,7 +684,7 @@ class BBCodeMonkey
 			unset($token['options']['caseSensitive']);
 			unset($token['options']['strict']);
 		}
-		elseif ($token['type'] !== 'TEXT')
+		elseif (!in_array($token['type'], $this->unfilteredTokens, true))
 		{
 			$filter = $this->configurator->attributeFilters->get('#' . $token['type']);
 			$attribute->filterChain->append($filter);
@@ -738,7 +748,7 @@ class BBCodeMonkey
 	{
 		$filterName = rtrim($tokenId, '0123456789');
 
-		if ($filterName === 'TEXT')
+		if (in_array($filterName, $this->unfilteredTokens, true))
 		{
 			return true;
 		}

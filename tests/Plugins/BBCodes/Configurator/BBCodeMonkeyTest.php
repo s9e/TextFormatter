@@ -202,6 +202,16 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[b]{ANYTHING}[/B]',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag,
+					'tokens'     => [],
+					'passthroughToken' => 'ANYTHING'
+				]
+			],
+			[
 				'[b title={TEXT1}]{TEXT2}[/B]',
 				[
 					'bbcodeName' => 'B',
