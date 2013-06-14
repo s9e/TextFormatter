@@ -98,6 +98,6 @@ Cannot allow unfiltered data in this context
   &lt;/code&gt;
 &lt;/pre&gt;
 &lt;script&gt;
-  <font color="red">&lt;xsl:apply-templates/&gt;</font>
+  <b><i>&lt;xsl:apply-templates/&gt;</i></b>
 &lt;/script&gt;</code>
 </pre>
