@@ -23,7 +23,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-The emoticon \<img src="happy.png" alt=":)" title="Happy"> becomes <img src="happy.png" alt=":)" title="Happy">
+The emoticon :) becomes <img src="happy.png" alt=":)" title="Happy">
 ```
 
 ### Escape any Unicode character
