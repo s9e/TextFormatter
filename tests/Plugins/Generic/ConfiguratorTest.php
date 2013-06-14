@@ -399,6 +399,31 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() checks the safeness of the tag
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	*/
+	public function testUnsafe()
+	{
+		$this->configurator->plugins->load('Generic')->add('#<(.*)>#', '<script>$1</script>');
+	}
+
+	/**
+	* @testdox add() checks the safeness of the tag before adding it to the configurator's collection
+	*/
+	public function testUnsafeBeforeAdd()
+	{
+		try
+		{
+			$this->configurator->plugins->load('Generic')->add('#<(.*)>#', '<script>$1</script>');
+		}
+		catch (Exception $e)
+		{
+		}
+
+		$this->assertSame(0, count($this->configurator->tags));
+	}
+
+	/**
 	* @testdox asConfig() returns FALSE if no replacements were set
 	*/
 	public function testFalseConfig()

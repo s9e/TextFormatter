@@ -1669,6 +1669,8 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] A passthrough capture used in an attribute does not include the start/end tags
  [x] Captures from non-existent subpattern are removed from the template
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
+ [x] add() checks the safeness of the tag
+ [x] add() checks the safeness of the tag before adding it to the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
  [x] asConfig() creates a JavaScript variant of generics

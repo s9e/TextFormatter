@@ -73,46 +73,26 @@ echo $html;
 This is <em>emphasised <s>striked</s> text</em>.
 ```
 
-### Unsafe markup
+## Unsafe markup
 
-The following example will fail because its template is unsafe.
-
+Unsafe markup is rejected and an exception is thrown. The following example will fail because its template uses unfiltered content in a JavaScript context. Note that it's the XSL representation of the template that is displayed.
 ```php
 try
 {
 	$configurator = new s9e\TextFormatter\Configurator;
 	$configurator->Generic->add(
-		'/<(.*)>/',
-		'<a href="$1">$1</a>'
+		'#<script>(.*)</script>#',
+		'<script>$1</script>'
 	);
-	$configurator->getRenderer();
 }
-catch (Exception $e)
+catch (s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException $e)
 {
-	echo $e->getMessage();
+	echo $e->getMessage(), "\n<code>", $e->highlightNode(), "</code>";
 }
 ```
-```html
-Cannot assess the safety of expression '.'
-```
-
-Instead, you can use this following example:
-```php
-$configurator = new s9e\TextFormatter\Configurator;
-$configurator->Generic->add(
-	'#<(https?://.*)>#',
-	'<a href="$1">$1</a>'
-);
-
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
-
-$text = 'Link: <http://example.org/>'; 
-$xml  = $parser->parse($text);
-$html = $renderer->render($xml);
-
-echo $html;
-```
-```html
-Link: <a href="http://example.org/">http://example.org/</a>
-```
+<pre>
+Cannot allow unfiltered data in this context
+<code>&lt;script&gt;
+  <span style="background-color:#ff0">&lt;xsl:apply-templates/&gt;</span>
+&lt;/script&gt;</code>
+</pre>
