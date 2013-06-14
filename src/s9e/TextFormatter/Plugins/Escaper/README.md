@@ -1,6 +1,6 @@
 ## Synopsis
 
-This plugin defines the backslash character `\\` as an escape character.
+This plugin defines the backslash character `\` as an escape character.
 
 ## Examples
 
