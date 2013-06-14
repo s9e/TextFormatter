@@ -101,3 +101,25 @@ Cannot allow unfiltered data in this context
   <b><i>&lt;xsl:apply-templates/&gt;</i></b>
 &lt;/script&gt;</code>
 </pre>
+
+Additionally, if a replacement is used as a URL, this plugin will automatically filter it as a URL, using the default URL filter. For instance:
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Generic->add(
+	'#<(.*?)>#',
+	'<a href="$1">$1</a>'
+);
+
+$parser   = $configurator->getParser();
+$renderer = $configurator->getRenderer();
+
+$text = "Good link: <http://example.org/>\nBad link:  <javascript:alert(1)>";
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+Good link: <a href="http://example.org/">http://example.org/</a><br>
+Bad link:  &lt;javascript:alert(1)&gt;
+```

@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Plugins\Generic;
 use Exception;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp as RegexpFilter;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url as UrlFilter;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\Generic\Configurator;
 use s9e\TextFormatter\Tests\Test;
@@ -89,7 +90,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() creates a regexp filter for each attribute created
+	* @testdox add() creates a #regexp filter for each attribute created
 	*/
 	public function testCreatesAttributesWithFilter()
 	{
@@ -107,6 +108,26 @@ class ConfiguratorTest extends Test
 		$this->assertTrue(
 			$tag->attributes->get('h')->filterChain->contains(
 				new RegexpFilter('/^(?<h>[0-9]+)$/D')
+			)
+		);
+	}
+
+	/**
+	* @testdox add() appends a #url filter to attributes that are used as a URL
+	*/
+	public function testCreatesAttributesWithUrlFilter()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add(
+			'/<([^>]+)>/',
+			'<a href="$1">$1</a>'
+		);
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertTrue(
+			$tag->attributes->get('_1')->filterChain->contains(
+				new UrlFilter
 			)
 		);
 	}
@@ -358,6 +379,24 @@ class ConfiguratorTest extends Test
 		$this->assertEquals(
 			'<b title="{substring(.,1+string -length(st),string -length()-(string -length(st)+string -length(et)))}"><xsl:apply-templates/></b>',
 			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox A capture used as a URL can also be used as a passthrough, in which case it will used the filtered attribute when used in an attribute, and the normal passthrough when used in text
+	* depends testCreatesAttributesWithUrlFilter
+	*/
+	public function testUrlCapturePassthrough()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add(
+			'/<(.*?)>/',
+			'<a href="$1">$1</a>'
+		);
+
+		$this->assertEquals(
+			'<a href="{@_1}"><xsl:apply-templates/></a>',
+			$this->configurator->tags[$tagName]->defaultTemplate
 		);
 	}
 

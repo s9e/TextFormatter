@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins\Generic;
 
+use DOMAttr;
+use DOMText;
 use DOMXPath;
 use Exception;
 use InvalidArgumentException;
@@ -57,8 +59,9 @@ class Configurator extends ConfiguratorBase
 		// Regexp used to find captures (supported: \1, $1, ${1}) in the replacement. If the version
 		// of PCRE is recent enough (7.2, released 19-Jun-07) we ensure that the captures are not
 		// preceded with an odd number of backslashes (even number is fine)
-		$assertion      = (PCRE_VERSION >= 7.2) ? '(?<!\\\\)(?:\\\\\\\\)*\\K' : '';
-		$capturesRegexp = '#' . $assertion . '(?:\\\\[0-9]+|\\$[0-9]+|\\$\\{[0-9]+\\})#';
+		$assertion         = (PCRE_VERSION >= 7.2) ? '(?<!\\\\)(?:\\\\\\\\)*\\K' : '';
+		$captureSubpattern = '(?:\\\\[0-9]+|\\$[0-9]+|\\$\\{[0-9]+\\})';
+		$capturesRegexp    = '#' . $assertion . $captureSubpattern . '#';
 
 		// Collect all the captures used in the replacement
 		$captures = [];
@@ -69,11 +72,14 @@ class Configurator extends ConfiguratorBase
 			$captures[$idx] = false;
 		}
 
+		// Load the template as a DOM so we can inspect it
+		$dom   = TemplateHelper::loadTemplate($template);
+		$xpath = new DOMXPath($dom);
+
 		// Find which captures are used in text nodes in the template. One of them may be replaced
 		// with an <xsl:apply-templates/> element if the corresponding subpattern matches any text.
 		// They are informally called "passthrough"
 		$passthrough = [];
-		$xpath = new DOMXPath(TemplateHelper::loadTemplate($template));
 		foreach ($xpath->query('//text()') as $node)
 		{
 			preg_match_all($capturesRegexp, $node->textContent, $matches);
@@ -83,6 +89,23 @@ class Configurator extends ConfiguratorBase
 
 				// The value is false until we confirm that the subpattern is a match-all such as .*
 				$passthrough[$idx] = false;
+			}
+		}
+
+		// Collect the indices of the captures that are used as a URL, so that we can properly
+		// filter the corresponding attribute later on. The indices are stored as keys for
+		// convenience
+		$urlCaptures = [];
+		$nodes       = TemplateHelper::getURLNodes($dom);
+		foreach ($nodes as $node)
+		{
+			// We only bother with literal attributes, and we only collect captures at the start
+			// of an URL attribute
+			if ($node instanceof DOMAttr
+			 && preg_match('#^\\s*' . $captureSubpattern . '#', $node->value, $m))
+			{
+				$idx = preg_replace('#\\D+#', '', $m[0]);
+				$urlCaptures[$idx] = $idx;
 			}
 		}
 
@@ -145,8 +168,12 @@ class Configurator extends ConfiguratorBase
 		{
 			$passthroughIdx = key($passthrough);
 
-			// The capture used as passthrough should not create an attribute
-			unset($attributes[$passthroughIdx]);
+			// The capture used as passthrough should not create an attribute, unless it needs to be
+			// filtered as a URL
+			if (!isset($urlCaptures[$passthroughIdx]))
+			{
+				unset($attributes[$passthroughIdx]);
+			}
 		}
 
 		// Subpatterns used in the template will be given a name if they don't have one already.
@@ -186,11 +213,9 @@ class Configurator extends ConfiguratorBase
 			$attribute->required = true;
 
 			// Create the regexp for the attribute
-			$endToken = $token['endToken'];
-
+			$endToken = $regexpInfo['tokens'][$token['endToken']];
 			$lpos = $token['pos'];
-			$rpos = $regexpInfo['tokens'][$endToken]['pos']
-			      + $regexpInfo['tokens'][$endToken]['len'];
+			$rpos = $endToken['pos'] + $endToken['len'];
 
 			$attrRegexp = $regexpInfo['delimiter']
 			            . '^' . substr($regexpInfo['regexp'], $lpos, $rpos - $lpos) . '$'
@@ -198,10 +223,17 @@ class Configurator extends ConfiguratorBase
 			            . str_replace('D', '', $regexpInfo['modifiers'])
 			            . 'D';
 
-			// Create a regexp filter and append it to this attribute's filterChain
+			// Create a #regexp filter and append it to this attribute's filterChain
 			$filter = $this->configurator->attributeFilters->get('#regexp');
 			$filter->setRegexp($attrRegexp);
 			$attribute->filterChain->append($filter);
+
+			// Append a #url filter if the attribute is used as a URL
+			if (isset($urlCaptures[$idx]))
+			{
+				$filter = $this->configurator->attributeFilters->get('#url');
+				$attribute->filterChain->append($filter);
+			}
 
 			// Record the name of the attribute to match it to the subpattern
 			$captures[$idx] = $attrName;
@@ -216,12 +248,15 @@ class Configurator extends ConfiguratorBase
 			$regexp = substr_replace($regexp, '?<' . $attrName . '>', 2 + $pos, 0);
 		}
 
+		// Remove captures with that have not created an attribute from the list
+		$captures = array_filter($captures);
+
 		// Replace numeric references in the template with the value of the corresponding attribute
 		// values or passthrough
 		$template = TemplateHelper::replaceTokens(
 			$template,
 			$capturesRegexp,
-			function ($m) use ($captures, $passthroughIdx)
+			function ($m, $node) use ($captures, $passthroughIdx)
 			{
 				$idx  = (int) trim($m[0], '\\${}');
 
@@ -231,14 +266,22 @@ class Configurator extends ConfiguratorBase
 					return ['expression', '.'];
 				}
 
-				// Passthrough captures, does not include start/end tags
+				// Passthrough capture, does not include start/end tags
 				if ($idx === $passthroughIdx)
 				{
-					return ['passthrough', false];
+					// We only use it as a passthrough if it's inside a text node or there's no
+					// corresponding attribute for it. It means that a capture that has been
+					// identified as a URL will be replaced with a passthrough in text, and with the
+					// filtered value in attributes
+					if (!isset($captures[$idx])
+					 || $node instanceof DOMText)
+					{
+						return ['passthrough', false];
+					}
 				}
 
 				// Normal capture, replaced by the equivalent expression
-				if ($captures[$idx] !== false)
+				if (isset($captures[$idx]))
 				{
 					return ['expression', '@' . $captures[$idx]];
 				}

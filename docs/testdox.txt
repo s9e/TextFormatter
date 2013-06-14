@@ -1654,7 +1654,8 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() creates a tag to represent the replacement
  [x] add() creates an attribute for each named subpattern
  [x] add() creates an attribute for each numeric subpattern in use
- [x] add() creates a regexp filter for each attribute created
+ [x] add() creates a #regexp filter for each attribute created
+ [x] add() appends a #url filter to attributes that are used as a URL
  [x] add() replaces numeric references in the template with the corresponding attribute value
  [x] add() replaces numeric references pointing to named subpatterns in the template with the corresponding attribute value
  [x] add() alters the regexp to give a name to unnamed subpatterns used in the template
@@ -1668,6 +1669,7 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() replaces $0 with the whole match
  [x] add() interprets a (.*?) capture used in template's text as a passthrough
  [x] A passthrough capture used in an attribute does not include the start/end tags
+ [x] A capture used as a URL can also be used as a passthrough, in which case it will used the filtered attribute when used in an attribute, and the normal passthrough when used in text
  [x] Captures from non-existent subpattern are removed from the template
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
  [x] add() checks the safeness of the tag
