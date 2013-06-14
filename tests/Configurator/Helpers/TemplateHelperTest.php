@@ -856,7 +856,7 @@ class TemplateHelperTest extends Test
 				'&lt;b&gt;<span style="background-color:#ff0">foo</span>&lt;/b&gt;'
 			],
 			[
-				'//xsl:apply-templates[2]',
+				'//script/xsl:apply-templates',
 				'<b><xsl:apply-templates/></b><script><xsl:apply-templates/></script><i><xsl:apply-templates/></i>',
 '&lt;b&gt;
   &lt;xsl:apply-templates/&gt;
