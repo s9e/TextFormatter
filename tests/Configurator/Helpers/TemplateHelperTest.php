@@ -801,6 +801,15 @@ class TemplateHelperTest extends Test
 				},
 				'<b><xsl:apply-templates/></b>'
 			],
+			[
+				'<b id="$1">$1</b>',
+				'/\\$[0-9]+/',
+				function ($m, $node)
+				{
+					return ['literal', get_class($node)];
+				},
+				'<b id="DOMAttr">DOMText</b>'
+			],
 		];
 	}
 

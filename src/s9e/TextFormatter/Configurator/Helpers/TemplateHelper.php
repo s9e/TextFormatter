@@ -602,9 +602,9 @@ abstract class TemplateHelper
 			// Generate the new value
 			$attrValue = preg_replace_callback(
 				$regexp,
-				function ($m) use ($fn)
+				function ($m) use ($fn, $attribute)
 				{
-					$replacement = $fn($m);
+					$replacement = $fn($m, $attribute);
 
 					if ($replacement[0] === 'expression')
 					{
@@ -674,7 +674,7 @@ abstract class TemplateHelper
 				}
 
 				// Get the replacement for this token
-				$replacement = $fn($_m);
+				$replacement = $fn($_m, $node);
 
 				if ($replacement[0] === 'expression')
 				{
