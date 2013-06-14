@@ -69,6 +69,17 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox Is safe as URL if the regexp is /^(https?:.*)/
+	*/
+	public function testURLSafeCapturedFixedSchemeWithJoker()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^(https?:.*)/');
+
+		$this->assertTrue($filter->isSafeAsURL());
+	}
+
+	/**
 	* @testdox Is not safe as URL if the regexp is /^javascript:(.*)/
 	*/
 	public function testURLUnsafeJavascriptScheme()

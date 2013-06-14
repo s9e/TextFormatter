@@ -77,7 +77,7 @@ class Regexp extends AttributeFilter
 		{
 			// Regexps that start with a fixed scheme are considered safe. As a special case, we
 			// allow the scheme part to end with a single ? to allow the regexp "https?"
-			if (preg_match('#.\\^(?!data|\\w*script)\\w+\\??:#i', $this->vars['regexp']))
+			if (preg_match('#.\\^\\(*(?!data|\\w*script)\\w+\\??:#i', $this->vars['regexp']))
 			{
 				return true;
 			}
