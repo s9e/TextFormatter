@@ -6,7 +6,7 @@ include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Plugins/*/README.md') as $filepath)
 {
 	$text = preg_replace_callback(
-		'#(```php(.*?)```.*?(?:```html|<pre>)).*?(\\n(?:```|</pre>)\\n)#s',
+		'#(```php(.*?)```.*?(?:```html|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
 		function ($m)
 		{
 			ob_start();
