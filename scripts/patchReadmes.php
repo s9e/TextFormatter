@@ -6,13 +6,13 @@ include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Plugins/*/README.md') as $filepath)
 {
 	$text = preg_replace_callback(
-		'/(```php(.*?)```.*?```html).*?```/s',
+		'#(```php(.*?)```.*?(?:```html|<pre>)).*?(\\n(?:```|</pre>)\\n)#s',
 		function ($m)
 		{
 			ob_start();
 			eval($m[2]);
 
-			return $m[1] . "\n" . ob_get_clean() . "\n```";
+			return $m[1] . "\n" . ob_get_clean() . $m[3];
 		},
 		file_get_contents($filepath)
 	);
