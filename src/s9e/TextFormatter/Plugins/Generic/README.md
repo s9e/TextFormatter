@@ -87,7 +87,7 @@ try
 }
 catch (s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException $e)
 {
-	echo $e->getMessage(), "\n<code>", $e->highlightNode(), "</code>";
+	echo $e->getMessage(), "\n<code>", $e->highlightNode('<font color="red">', '</font>'), "</code>";
 }
 ```
 <pre>
@@ -98,6 +98,6 @@ Cannot allow unfiltered data in this context
   &lt;/code&gt;
 &lt;/pre&gt;
 &lt;script&gt;
-  <span style="background-color:#ff0">&lt;xsl:apply-templates/&gt;</span>
+  <font color="red">&lt;xsl:apply-templates/&gt;</font>
 &lt;/script&gt;</code>
 </pre>
