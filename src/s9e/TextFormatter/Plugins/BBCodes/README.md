@@ -57,3 +57,28 @@ echo $html;
 ```html
 <span style="color:pink">La vie en rose.</span>
 ```
+
+## Security
+
+Unsafe markup and unsafe BBCode definitions are rejected, and an exception is thrown. The following will fail because unfiltered content is used in a JavaScript context. We use `UnsafeTemplateException::highlightNode()` to display exactly which node caused the exception to be thrown. In this case, `title="{@title}"` is fine, but `onclick="{@title}"` is not. Note that the XSL representation of the template is used.
+
+```php
+try
+{
+	$configurator = new s9e\TextFormatter\Configurator;
+	$configurator->BBCodes->addCustom(
+		'[url={URL} title={TEXT1}]{TEXT2}[/url]',
+		'<a href="{URL}" title="{TEXT1}" onclick="{TEXT1}">{TEXT2}</a>'
+	);
+}
+catch (s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException $e)
+{
+	echo $e->getMessage(), "\n<code>", $e->highlightNode('<b><i>', '</i></b>'), "</code>";
+}
+```
+<pre>
+Attribute 'title' is not properly sanitized to be used in this context
+<code>&lt;a href=&quot;{@url}&quot; title=&quot;{@title}&quot; <b><i>onclick=&quot;{@title}&quot;</i></b>&gt;
+  &lt;xsl:apply-templates/&gt;
+&lt;/a&gt;</code>
+</pre>

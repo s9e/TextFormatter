@@ -73,7 +73,7 @@ echo $html;
 This is <em>emphasised <s>striked</s> text</em>.
 ```
 
-## Unsafe markup
+## Security
 
 Unsafe markup is rejected and an exception is thrown. The following example will fail because its template uses unfiltered content in a JavaScript context. We use the `highlightNode()` method of `UnsafeTemplateException` to display exactly which node caused the exception to be thrown. Note that it's the XSL representation of the template that is displayed.
 ```php
