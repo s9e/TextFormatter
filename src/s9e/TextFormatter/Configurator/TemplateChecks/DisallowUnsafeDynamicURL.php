@@ -22,10 +22,10 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 class DisallowUnsafeDynamicURL extends AbstractDynamicContentCheck
 {
 	/**
-	* @var string Regexp used to exclude nodes that start with "#" or "//" or whose scheme part is
-	*             hardcoded
+	* @var string Regexp used to exclude nodes that start with a hardcoded scheme part, a hardcoded
+	*             local part, or a fragment
 	*/
-	protected $exceptionRegexp = '(^(?!data|\\w*script)(?:\\w+:|//|#))i';
+	protected $exceptionRegexp = '(^(?:(?!data|\\w*script)\\w+:|[^:]*/|#))i';
 
 	/**
 	* {@inheritdoc}
