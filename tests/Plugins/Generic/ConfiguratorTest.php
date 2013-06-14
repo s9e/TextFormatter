@@ -289,9 +289,9 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() replaces $0 with <xsl:apply-templates/>
+	* @testdox add() replaces $0 with the whole match
 	*/
-	public function testNumericReferencesPassthrough()
+	public function testNumericReferenceZeroWholeMatch()
 	{
 		$plugin  = $this->configurator->plugins->load('Generic');
 		$tagName = $plugin->add('/@(\\w+)/', '<a href="https://twitter.com/$1">$0</a>');
@@ -299,7 +299,7 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->tags->get($tagName);
 
 		$this->assertEquals(
-			'<a href="https://twitter.com/{@_1}"><xsl:apply-templates/></a>',
+			'<a href="https://twitter.com/{@_1}"><xsl:value-of select="."/></a>',
 			$tag->defaultTemplate
 		);
 	}
@@ -338,6 +338,25 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<a href="{@_2}"><xsl:apply-templates/></a>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox A passthrough capture used in an attribute does not include the start/end tags
+	*/
+	public function testPassthroughInAttribute()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add(
+			'#<(.*)>#',
+			'<b title="$1">$1</a>'
+		);
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<b title="{substring(.,1+string -length(st),string -length()-(string -length(st)+string -length(et)))}"><xsl:apply-templates/></b>',
 			$tag->defaultTemplate
 		);
 	}

@@ -225,16 +225,25 @@ class Configurator extends ConfiguratorBase
 			{
 				$idx  = (int) trim($m[0], '\\${}');
 
-				if ($idx === 0 || $idx === $passthroughIdx)
+				// $0 copies the whole textContent
+				if ($idx === 0)
 				{
-					return ['passthrough', true];
+					return ['expression', '.'];
 				}
 
+				// Passthrough captures, does not include start/end tags
+				if ($idx === $passthroughIdx)
+				{
+					return ['passthrough', false];
+				}
+
+				// Normal capture, replaced by the equivalent expression
 				if ($captures[$idx] !== false)
 				{
 					return ['expression', '@' . $captures[$idx]];
 				}
 
+				// Non-existent captures are simply ignored, similarly to preg_replace()
 				return ['literal', ''];
 			}
 		);

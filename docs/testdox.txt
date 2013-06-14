@@ -1664,8 +1664,9 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() interprets \\1 in the template as a literal \1
  [x] add() interprets \\\1 in the template as a literal backslashes followed by a numeric reference
  [x] add() interprets \$1 in the template as a literal $1
- [x] add() replaces $0 with <xsl:apply-templates/>
+ [x] add() replaces $0 with the whole match
  [x] add() interprets a (.*?) capture used in template's text as a passthrough
+ [x] A passthrough capture used in an attribute does not include the start/end tags
  [x] Captures from non-existent subpattern are removed from the template
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set
