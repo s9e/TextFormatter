@@ -305,6 +305,63 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() interprets a (.*?) capture used in template's text as a passthrough
+	*/
+	public function testPassthrough()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add(
+			'/\\*(.*?)\\*/i',
+			'<em>$1</em>'
+		);
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<em><xsl:apply-templates/></em>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() interprets a (.*?) capture used in template's text as a passthrough
+	*/
+	public function testPassthrough2()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add(
+			'#\\[(.*?)\\]\\((https?://.*?)\\)#i',
+			'<a href="$2">$1</a>'
+		);
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'<a href="{@_2}"><xsl:apply-templates/></a>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox Captures from non-existent subpattern are removed from the template
+	*/
+	public function testNonExistentCaptures()
+	{
+		$plugin  = $this->configurator->plugins->load('Generic');
+		$tagName = $plugin->add(
+			'#[0-9]+#i',
+			'x$1y'
+		);
+
+		$tag = $this->configurator->tags->get($tagName);
+
+		$this->assertEquals(
+			'xy',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
 	* @testdox An error occuring during add() does not leave a half-configured tag in the configurator's collection
 	*/
 	public function testErrorDuringAddDoesNotLeadToInconsistencies()
@@ -332,7 +389,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>]
+	* @testdox asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
 	*/
 	public function testAsConfig()
 	{
@@ -346,8 +403,8 @@ class ConfiguratorTest extends Test
 		$this->assertSame(
 			[
 				'generics' => [
-					['GC53BB427', '/(?<foo>[0-9]+)/'],
-					['GDCEA6E9C', '/(?<bar>[a-z]+)/']
+					['GC53BB427', '/(?<foo>[0-9]+)/', 0],
+					['GDCEA6E9C', '/(?<bar>[a-z]+)/', 0]
 				]
 			],
 			$config
@@ -388,7 +445,7 @@ class ConfiguratorTest extends Test
 		ConfigHelper::filterVariants($config, 'JS');
 
 		$this->assertEquals(
-			[['GC53BB427', $regexp, $regexp->map]],
+			[['GC53BB427', $regexp, 0, $regexp->map]],
 			$config['generics']
 		);
 	}

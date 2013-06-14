@@ -51,6 +51,28 @@ echo $html;
 Twitter's official tweets <a href="https://twitter.com/Twitter">@Twitter</a>
 ```
 
+### Passthrough capture
+
+Multiple replacements can be applied to the same span of text, provided that they use a match-all pattern such as `(.*?)` to display its content.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Generic->add('/_(.*?)_/', '<em>$1</em>');
+$configurator->Generic->add('/~(.*?)~/', '<s>$1</s>');
+
+$parser   = $configurator->getParser();
+$renderer = $configurator->getRenderer();
+
+$text = 'This is _emphasised ~striked~ text_.'; 
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+This is <em>emphasised <s>striked</s> text</em>.
+```
+
 ### Unsafe markup
 
 The following example will fail because its template is unsafe.
@@ -71,5 +93,26 @@ catch (Exception $e)
 }
 ```
 ```html
-Attribute '_1' is not properly sanitized to be used in this context
+Cannot assess the safety of expression '.'
+```
+
+Instead, you can use this following example:
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Generic->add(
+	'#<(https?://.*)>#',
+	'<a href="$1">$1</a>'
+);
+
+$parser   = $configurator->getParser();
+$renderer = $configurator->getRenderer();
+
+$text = 'Link: <http://example.org/>'; 
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+Link: <a href="http://example.org/">http://example.org/</a>
 ```

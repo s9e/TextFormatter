@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Plugins\Generic;
 use DOMXPath;
 use Exception;
 use InvalidArgumentException;
+use LogicException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Configurator\Helpers\RegexpParser;
@@ -25,17 +26,9 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	/**
-	* @var NormalizedCollection
+	* @var array Array of [tagName => [regexp, passthroughIdx]]
 	*/
-	protected $collection;
-
-	/**
-	* {@inheritdoc}
-	*/
-	protected function setUp()
-	{
-		$this->collection = new NormalizedCollection;
-	}
+	protected $collection = [];
 
 	/**
 	* Add a generic replacement
@@ -67,7 +60,7 @@ class Configurator extends ConfiguratorBase
 		$assertion      = (PCRE_VERSION >= 7.2) ? '(?<!\\\\)(?:\\\\\\\\)*\\K' : '';
 		$capturesRegexp = '#' . $assertion . '(?:\\\\[0-9]+|\\$[0-9]+|\\$\\{[0-9]+\\})#';
 
-		// Collect the captures used in the replacement
+		// Collect all the captures used in the replacement
 		$captures = [];
 		preg_match_all($capturesRegexp, $template, $matches);
 		foreach ($matches[0] as $match)
@@ -76,35 +69,97 @@ class Configurator extends ConfiguratorBase
 			$captures[$idx] = false;
 		}
 
+		// Find which captures are used in text nodes in the template. One of them may be replaced
+		// with an <xsl:apply-templates/> element if the corresponding subpattern matches any text.
+		// They are informally called "passthrough"
+		$passthrough = [];
+		$xpath = new DOMXPath(TemplateHelper::loadTemplate($template));
+		foreach ($xpath->query('//text()') as $node)
+		{
+			preg_match_all($capturesRegexp, $node->textContent, $matches);
+			foreach ($matches[0] as $match)
+			{
+				$idx = trim($match, '\\${}');
+
+				// The value is false until we confirm that the subpattern is a match-all such as .*
+				$passthrough[$idx] = false;
+			}
+		}
+
 		// Generate a tag name based on the regexp
 		$tagName = sprintf('G%08X', crc32($regexp));
 
 		// Create the tag that will represent the regexp but don't add it right now
 		$tag = new Tag;
 
-		// Parse the regexp, and generate an attribute for every named capture, or capture used in
+		// Parse the regexp. We'll generate an attribute for every named capture, or capture used in
 		// the replacement
 		$regexpInfo = RegexpParser::parse($regexp);
 
-		// Record the name and position of the subpatterns that need to be named
-		$newNamedSubpatterns = [];
+		// List of attributes to create. The capture index is used as key, the subpattern's info as
+		// value
+		$attributes = [];
 
-		// Subpattern's index
+		// Capture index
 		$idx = 0;
 
-		foreach ($regexpInfo['tokens'] as $tok)
+		foreach ($regexpInfo['tokens'] as $token)
 		{
-			if ($tok['type'] !== 'capturingSubpatternStart')
+			if ($token['type'] !== 'capturingSubpatternStart')
 			{
 				continue;
 			}
 
 			++$idx;
 
-			if (isset($tok['name']))
+			// Test whether this subpattern has a name
+			if (!isset($token['name']))
+			{
+				// If the subpattern does not have a name and is not used in the template, we just
+				// ignore it
+				if (!isset($captures[$idx]))
+				{
+					continue;
+				}
+
+				// If the subpattern does not have a name and it's used in a text node in the
+				// template and it can match anything (e.g. ".*?"), it can be a passthrough to be
+				// replaced with an <xsl:apply-templates/> element
+				if (isset($passthrough[$idx]) && preg_match('#^\\.[*+]\\??$#D', $token['content']))
+				{
+					$passthrough[$idx] = true;
+				}
+			}
+
+			// This subpattern either has a name or it's used in the template so it will create an
+			// attribute unless it turns out that it's used as a passthrough. For now we store its
+			// information
+			$attributes[$idx] = $token;
+		}
+
+		// Remove any passthrough whose value isn't true. We can only have one passthrough, so we
+		// if there are more than one left, we ignore them all
+		$passthrough    = array_filter($passthrough);
+		$passthroughIdx = 0;
+		if (count($passthrough) === 1)
+		{
+			$passthroughIdx = key($passthrough);
+
+			// The capture used as passthrough should not create an attribute
+			unset($attributes[$passthroughIdx]);
+		}
+
+		// Subpatterns used in the template will be given a name if they don't have one already.
+		// We need to record their name and position in the regexp
+		$newNamedSubpatterns = [];
+
+		// Now create all the attributes
+		foreach ($attributes as $idx => $token)
+		{
+			if (isset($token['name']))
 			{
 				// Named subpatterns create an attribute of the same name
-				$attrName = $tok['name'];
+				$attrName = $token['name'];
 			}
 			elseif (isset($captures[$idx]))
 			{
@@ -112,12 +167,14 @@ class Configurator extends ConfiguratorBase
 				$attrName = '_' . $idx;
 
 				// Record its name so we can alter the original regexp afterwards
-				$newNamedSubpatterns[$attrName] = $tok['pos'];
+				$newNamedSubpatterns[$attrName] = $token['pos'];
 			}
+			// @codeCoverageIgnoreStart
 			else
 			{
-				continue;
+				throw new LogicException('Tried to create an attribute for an unused capture with no name. Please file a bug');
 			}
+			// @codeCoverageIgnoreEnd
 
 			if (isset($tag->attributes[$attrName]))
 			{
@@ -129,9 +186,9 @@ class Configurator extends ConfiguratorBase
 			$attribute->required = true;
 
 			// Create the regexp for the attribute
-			$endToken = $tok['endToken'];
+			$endToken = $token['endToken'];
 
-			$lpos = $tok['pos'];
+			$lpos = $token['pos'];
 			$rpos = $regexpInfo['tokens'][$endToken]['pos']
 			      + $regexpInfo['tokens'][$endToken]['len'];
 
@@ -164,13 +221,21 @@ class Configurator extends ConfiguratorBase
 		$template = TemplateHelper::replaceTokens(
 			$template,
 			$capturesRegexp,
-			function ($m) use ($captures)
+			function ($m) use ($captures, $passthroughIdx)
 			{
-				$idx  = trim($m[0], '\\${}');
+				$idx  = (int) trim($m[0], '\\${}');
 
-				return ($idx == '0')
-				     ? ['passthrough', true]
-				     : ['expression', '@' . $captures[$idx]];
+				if ($idx === 0 || $idx === $passthroughIdx)
+				{
+					return ['passthrough', true];
+				}
+
+				if ($captures[$idx] !== false)
+				{
+					return ['expression', '@' . $captures[$idx]];
+				}
+
+				return ['literal', ''];
 			}
 		);
 
@@ -191,7 +256,7 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->tags->add($tagName, $tag);
 
 		// Finally, record the regexp
-		$this->collection[$tagName] = $regexp;
+		$this->collection[$tagName] = [$regexp, $passthroughIdx];
 
 		return $tagName;
 	}
@@ -208,14 +273,15 @@ class Configurator extends ConfiguratorBase
 
 		$generics   = [];
 		$jsGenerics = [];
-		foreach ($this->collection as $tagName => $regexp)
+		foreach ($this->collection as $tagName => $data)
 		{
-			$generics[] = [$tagName, $regexp];
+			list($regexp, $passthroughIdx) = $data;
+			$generics[] = [$tagName, $regexp, $passthroughIdx];
 
 			$jsRegexp = RegexpConvertor::toJS($regexp);
 			$jsRegexp->flags .= 'g';
 
-			$jsGenerics[] = [$tagName, $jsRegexp, $jsRegexp->map];
+			$jsGenerics[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
 		}
 
 		$variant = new Variant($generics);

@@ -33,6 +33,46 @@ class ParserTest extends Test
 					);
 				}
 			],
+			[
+				'Some *emphasis*.',
+				'<rt>Some <G86655032><st>*</st>emphasis<et>*</et></G86655032>.</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->Generic->add(
+						'/\\*(.*?)\\*/',
+						'<em>$1</em>'
+					);
+				}
+			],
+			[
+				'Markdown [link](http://example.com) style.',
+				'<rt>Markdown <G792685FB _2="http://example.com"><st>[</st>link<et>](http://example.com)</et></G792685FB> style.</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->Generic->add(
+						'#\\[(.*?)\\]\\((https?://.*?)\\)#i',
+						'<a href="$2">$1</a>'
+					);
+				}
+			],
+			[
+				'Some *_bold_ emphasis* or _*emphasised* boldness_.',
+				'<rt>Some <G86655032><st>*</st><G74E475F4><st>_</st>bold<et>_</et></G74E475F4> emphasis<et>*</et></G86655032> or <G74E475F4><st>_</st><G86655032><st>*</st>emphasised<et>*</et></G86655032> boldness<et>_</et></G74E475F4>.</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->Generic->add(
+						'/\\*(.*?)\\*/',
+						'<em>$1</em>'
+					);
+					$constructor->Generic->add(
+						'/_(.*?)_/',
+						'<b>$1</b>'
+					);
+				}
+			],
 		];
 	}
 
@@ -48,6 +88,46 @@ class ParserTest extends Test
 					$constructor->Generic->add(
 						'/@(?<username>[a-z0-9_]{1,15})/i',
 						'<a href="https://twitter.com/{@username}"><xsl:apply-templates/></a>'
+					);
+				}
+			],
+			[
+				'Some *emphasis*.',
+				'Some <em>emphasis</em>.',
+				[],
+				function ($constructor)
+				{
+					$constructor->Generic->add(
+						'/\\*(.*?)\\*/',
+						'<em>$1</em>'
+					);
+				}
+			],
+			[
+				'Markdown [link](http://example.com) style.',
+				'Markdown <a href="http://example.com">link</a> style.',
+				[],
+				function ($constructor)
+				{
+					$constructor->Generic->add(
+						'#\\[(.*?)\\]\\((https?://.*?)\\)#i',
+						'<a href="$2">$1</a>'
+					);
+				}
+			],
+			[
+				'Some *_bold_ emphasis* or _*emphasised* boldness_.',
+				'Some <em><b>bold</b> emphasis</em> or <b><em>emphasised</em> boldness</b>.',
+				[],
+				function ($constructor)
+				{
+					$constructor->Generic->add(
+						'/\\*(.*?)\\*/',
+						'<em>$1</em>'
+					);
+					$constructor->Generic->add(
+						'/_(.*?)_/',
+						'<b>$1</b>'
 					);
 				}
 			],

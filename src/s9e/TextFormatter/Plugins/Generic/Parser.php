@@ -18,12 +18,38 @@ class Parser extends ParserBase
 	{
 		foreach ($this->config['generics'] as $generic)
 		{
-			list($tagName, $regexp) = $generic;
+			list($tagName, $regexp, $passthroughIdx) = $generic;
 			preg_match_all($regexp, $text, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
 			foreach ($matches as $m)
 			{
-				$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], strlen($m[0][0]));
+				$startTagPos = $m[0][1];
+				$matchLen    = strlen($m[0][0]);
+
+				if ($passthroughIdx && isset($m[$passthroughIdx]) && $m[$passthroughIdx][0] !== '')
+				{
+					// Compute the position and length of the start tag, end tag, and the content in
+					// between. PREG_OFFSET_CAPTURE gives us the position of the content, and we
+					// know its length. Everything before is considered part of the start tag, and
+					// everything after is considered part of the end tag
+					$contentPos  = $m[$passthroughIdx][1];
+					$contentLen  = strlen($m[$passthroughIdx][0]);
+					$startTagLen = $contentPos - $startTagPos;
+					$endTagPos   = $contentPos + $contentLen;
+					$endTagLen   = $matchLen - ($startTagLen + $contentLen);
+
+					$tag = $this->parser->addTagPair(
+						$tagName,
+						$startTagPos,
+						$startTagLen,
+						$endTagPos,
+						$endTagLen
+					);
+				}
+				else
+				{
+					$tag = $this->parser->addSelfClosingTag($tagName, $startTagPos, $matchLen);
+				}
 
 				foreach ($m as $k => $v)
 				{
