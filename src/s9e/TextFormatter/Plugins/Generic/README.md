@@ -87,7 +87,7 @@ try
 }
 catch (s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException $e)
 {
-	echo $e->getMessage(), "\n<code>", $e->highlightNode('<font color="red">', '</font>'), "</code>";
+	echo $e->getMessage(), "\n<code>", $e->highlightNode('<b><i>', '</i></b>'), "</code>";
 }
 ```
 <pre>
