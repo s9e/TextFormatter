@@ -7,8 +7,12 @@
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
 
+use DOMAttr;
+use DOMCharacterData;
 use DOMDocument;
+use DOMElement;
 use DOMNode;
+use DOMProcessingInstruction;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Exceptions\InvalidTemplateException;
@@ -715,5 +719,67 @@ abstract class TemplateHelper
 		}
 
 		return self::saveTemplate($dom);
+	}
+
+	/**
+	* Highlight the source of a node inside of a template
+	*
+	* NOTE: this method expects the template to be wrapped in a <t.../> node, which will be omitted
+	*
+	* @param  DOMNode $node    Node to highlight
+	* @param  string  $prepend HTML to prepend
+	* @param  string  $append  HTML to append
+	* @return string           Template's source, as HTML
+	*/
+	static public function highlightNode(DOMNode $node, $prepend, $append)
+	{
+		// Add a unique token to the node
+		$uniqid = uniqid('_');
+		if ($node instanceof DOMAttr)
+		{
+			$node->value .= $uniqid;
+		}
+		elseif ($node instanceof DOMElement)
+		{
+			$node->setAttribute($uniqid, '');
+		}
+		elseif ($node instanceof DOMCharacterData
+		     || $node instanceof DOMProcessingInstruction)
+		{
+			$node->data .= $uniqid;
+		}
+
+		$dom = $node->ownerDocument;
+		$dom->formatOutput = true;
+
+		$docXml = $dom->saveXML($dom->documentElement);
+		$docXml = preg_replace('#^<(t\\w*)[^>]*>(.*)</\\1>$#s', '$2', $docXml);
+		$docXml = trim(str_replace("\n  ", "\n", $docXml));
+
+		$nodeHtml = htmlspecialchars(trim($dom->saveXML($node)));
+		$docHtml  = htmlspecialchars($docXml);
+
+		// Enclose the node's representation in our hilighting HTML
+		$html = str_replace($nodeHtml, $prepend . $nodeHtml . $append, $docHtml);
+
+		// Remove the unique token from HTML and from the node
+		if ($node instanceof DOMAttr)
+		{
+			$node->value = substr($node->value, 0, -strlen($uniqid));
+			$html = str_replace($uniqid, '', $html);
+		}
+		elseif ($node instanceof DOMElement)
+		{
+			$node->removeAttribute($uniqid);
+			$html = str_replace(' ' . $uniqid . '=&quot;&quot;', '', $html);
+		}
+		elseif ($node instanceof DOMCharacterData
+		     || $node instanceof DOMProcessingInstruction)
+		{
+			$node->data .= $uniqid;
+			$html = str_replace($uniqid, '', $html);
+		}
+
+		return $html;
 	}
 }

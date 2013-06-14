@@ -623,6 +623,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] getURLNodes() tests
  [x] getElementsByRegexp() can return elements created via <xsl:copy-of/>
  [x] replaceTokens() tests
+ [x] highlightNode() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor

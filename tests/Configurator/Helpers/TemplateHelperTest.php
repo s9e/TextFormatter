@@ -803,4 +803,100 @@ class TemplateHelperTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox highlightNode() tests
+	* @dataProvider getHighlights
+	*/
+	public function testHighlightNode($query, $template, $expected)
+	{
+		$dom   = TemplateHelper::loadTemplate($template);
+		$xpath = new DOMXPath($dom);
+
+		$this->assertSame(
+			$expected,
+			TemplateHelper::highlightNode(
+				$xpath->query($query)->item(0),
+				'<span style="background-color:#ff0">',
+				'</span>'
+			)
+		);
+	}
+
+	public function getHighlights()
+	{
+		return [
+			[
+				'//xsl:apply-templates',
+				'<script><xsl:apply-templates/></script>',
+'&lt;script&gt;
+  <span style="background-color:#ff0">&lt;xsl:apply-templates/&gt;</span>
+&lt;/script&gt;'
+			],
+			[
+				'//@href',
+				'<a href="{@foo}"><xsl:apply-templates/></a>',
+'&lt;a <span style="background-color:#ff0">href=&quot;{@foo}&quot;</span>&gt;
+  &lt;xsl:apply-templates/&gt;
+&lt;/a&gt;'
+			],
+			[
+				'//processing-instruction()',
+				'<?php foo(); ?>',
+				'<span style="background-color:#ff0">&lt;?php foo(); ?&gt;</span>'
+			],
+			[
+				'//comment()',
+				'xx<!-- foo -->yy',
+				'xx<span style="background-color:#ff0">&lt;!-- foo --&gt;</span>yy'
+			],
+			[
+				'//text()',
+				'<b>foo</b>',
+				'&lt;b&gt;<span style="background-color:#ff0">foo</span>&lt;/b&gt;'
+			],
+			[
+				'//xsl:apply-templates[2]',
+				'<b><xsl:apply-templates/></b><script><xsl:apply-templates/></script><i><xsl:apply-templates/></i>',
+'&lt;b&gt;
+  &lt;xsl:apply-templates/&gt;
+&lt;/b&gt;
+&lt;script&gt;
+  <span style="background-color:#ff0">&lt;xsl:apply-templates/&gt;</span>
+&lt;/script&gt;
+&lt;i&gt;
+  &lt;xsl:apply-templates/&gt;
+&lt;/i&gt;'
+			],
+			[
+				'//a[2]/@href',
+				'<a href="{@foo}"><xsl:apply-templates/></a><a href="{@foo}"><xsl:apply-templates/></a>',
+'&lt;a href=&quot;{@foo}&quot;&gt;
+  &lt;xsl:apply-templates/&gt;
+&lt;/a&gt;
+&lt;a <span style="background-color:#ff0">href=&quot;{@foo}&quot;</span>&gt;
+  &lt;xsl:apply-templates/&gt;
+&lt;/a&gt;'
+			],
+			[
+				'//processing-instruction()[2]',
+				'<?php foo(); ?><?php foo(); ?><?php foo(); ?>',
+'&lt;?php foo(); ?&gt;
+<span style="background-color:#ff0">&lt;?php foo(); ?&gt;</span>
+&lt;?php foo(); ?&gt;'
+			],
+			[
+				'//comment()[2]',
+				'xx<!-- foo --><!-- foo --><!-- foo -->yy',
+				'xx&lt;!-- foo --&gt;<span style="background-color:#ff0">&lt;!-- foo --&gt;</span>&lt;!-- foo --&gt;yy'
+			],
+			[
+				'//b[2]/text()',
+				'<b>foo</b><b>foo</b><b>foo</b>',
+'&lt;b&gt;foo&lt;/b&gt;
+&lt;b&gt;<span style="background-color:#ff0">foo</span>&lt;/b&gt;
+&lt;b&gt;foo&lt;/b&gt;'
+			],
+		];
+	}
 }

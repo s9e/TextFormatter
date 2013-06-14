@@ -75,14 +75,14 @@ This is <em>emphasised <s>striked</s> text</em>.
 
 ## Unsafe markup
 
-Unsafe markup is rejected and an exception is thrown. The following example will fail because its template uses unfiltered content in a JavaScript context. Note that it's the XSL representation of the template that is displayed.
+Unsafe markup is rejected and an exception is thrown. The following example will fail because its template uses unfiltered content in a JavaScript context. We use the `highlightNode()` method of `UnsafeTemplateException` to display exactly which node caused the exception to be thrown. Note that it's the XSL representation of the template that is displayed.
 ```php
 try
 {
 	$configurator = new s9e\TextFormatter\Configurator;
 	$configurator->Generic->add(
 		'#<script>(.*)</script>#',
-		'<script>$1</script>'
+		'<pre><code>$1</code></pre><script>$1</script>'
 	);
 }
 catch (s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException $e)
@@ -92,7 +92,12 @@ catch (s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException $e)
 ```
 <pre>
 Cannot allow unfiltered data in this context
-<code>&lt;script&gt;
+<code>&lt;pre&gt;
+  &lt;code&gt;
+    &lt;xsl:apply-templates/&gt;
+  &lt;/code&gt;
+&lt;/pre&gt;
+&lt;script&gt;
   <span style="background-color:#ff0">&lt;xsl:apply-templates/&gt;</span>
 &lt;/script&gt;</code>
 </pre>
