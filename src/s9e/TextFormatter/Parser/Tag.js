@@ -133,8 +133,8 @@ Tag.prototype.pairWith = function(tag)
 			tag.startTag = this;
 		}
 		else if (this.type === Tag.END_TAG
-			 && tag.type  === Tag.START_TAG
-			 && tag.pos   <=  this.pos)
+		      && tag.type  === Tag.START_TAG
+		      && tag.pos   <=  this.pos)
 		{
 			this.startTag = tag;
 			tag.endTag    = this;

@@ -152,7 +152,7 @@ class Tag
 				$tag->startTag = $this;
 			}
 			elseif ($this->type === self::END_TAG
-				 && $tag->type  === self::START_TAG
+			     && $tag->type  === self::START_TAG
 			     && $tag->pos   <=  $this->pos)
 			{
 				$this->startTag = $tag;
