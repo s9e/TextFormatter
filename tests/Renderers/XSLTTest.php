@@ -26,6 +26,34 @@ class XSLTTest extends Test
 		);
 	}
 
+	/**
+	* @testdox Does not serialize the XSLTProcessor instance
+	*/
+	public function testSerializableNoProc()
+	{
+		$renderer = $this->configurator->getRenderer();
+		$renderer->render('<rt>..</rt>');
+
+		$this->assertNotContains(
+			'XSLTProcessor',
+			serialize($renderer)
+		);
+	}
+
+	/**
+	* @testdox Preserves other properties during serialization
+	*/
+	public function testSerializableCustomProps()
+	{
+		$renderer = $this->configurator->getRenderer();
+		$renderer->foo = 'bar';
+
+		$this->assertAttributeEquals(
+			'bar',
+			'foo',
+			unserialize(serialize($renderer))
+		);
+	}
 
 	/**
 	* @testdox Renders multi-line text in HTML after un/serialization

@@ -49,7 +49,10 @@ class XSLT extends Renderer
 	*/
 	public function __sleep()
 	{
-		return ['htmlOutput', 'stylesheet'];
+		$props = get_object_vars($this);
+		unset($props['proc']);
+
+		return array_keys($props);
 	}
 
 	/**

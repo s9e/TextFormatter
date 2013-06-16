@@ -1754,6 +1754,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
 
 s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Is serializable
+ [x] Does not serialize the XSLTProcessor instance
+ [x] Preserves other properties during serialization
  [x] Renders multi-line text in HTML after un/serialization
  [x] Renders multi-line text in XHTML after un/serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
@@ -1771,6 +1773,8 @@ s9e\TextFormatter\Tests\Renderers\XSLT
 s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] getFilepath() returns the path to the stylesheet file
  [x] Is serializable
+ [x] Does not serialize the XSLTProcessor instance
+ [x] Preserves other properties during serialization
  [x] Renders multi-line text in HTML after un/serialization
  [x] Renders multi-line text in XHTML after un/serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137

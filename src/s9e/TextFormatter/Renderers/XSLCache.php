@@ -55,7 +55,10 @@ class XSLCache extends Renderer
 	*/
 	public function __sleep()
 	{
-		return ['filepath', 'htmlOutput'];
+		$props = get_object_vars($this);
+		unset($props['proc']);
+
+		return array_keys($props);
 	}
 
 	/**
