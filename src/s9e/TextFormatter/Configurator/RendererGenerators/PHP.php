@@ -1311,7 +1311,7 @@ class PHP implements RendererGenerator
 				$tests[] = '$node->textContent===' . var_export(
 					html_entity_decode(
 						substr($str, 1, -1),
-						ENT_XML1,
+						ENT_QUOTES,
 						'UTF-8'
 					),
 					true
