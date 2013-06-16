@@ -57,7 +57,7 @@ class AttributeFilterCollection extends NormalizedCollection
 	public function normalizeKey($key)
 	{
 		// Built-in/custom filter, normalized to lowercase
-		if (preg_match('/^#[a-z0-9]+$/Di', $key))
+		if (preg_match('/^#[a-z_0-9]+$/Di', $key))
 		{
 			return strtolower($key);
 		}
