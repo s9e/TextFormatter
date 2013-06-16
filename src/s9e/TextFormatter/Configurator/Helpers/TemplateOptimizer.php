@@ -282,81 +282,49 @@ abstract class TemplateOptimizer
 	/**
 	* Remove extraneous space in a given XPath expression
 	*
-	* @param  string $old Original XPath expression
-	* @return string      Minified XPath expression
+	* @param  string $expr Original XPath expression
+	* @return string       Minified XPath expression
 	*/
-	public static function minifyXPath($old)
+	public static function minifyXPath($expr)
 	{
-		$chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+		$old     = $expr;
+		$strings = [];
 
-		$old = trim($old);
-		$new = '';
+		// Trim the surrounding whitespace then temporarily remove literal strings
+		$expr = preg_replace_callback(
+			'/(?:"[^"]*"|\'[^\']*\')/',
+			function ($m) use (&$strings)
+			{
+				$uniqid = '_' . sha1(uniqid()) . '_';
+				$strings[$uniqid] = $m[0];
 
-		$pos = 0;
-		$len = strlen($old);
+				return $uniqid;
+			},
+			trim($expr)
+		);
 
-		while ($pos < $len)
+		if (preg_match('/[\'"]/', $expr))
 		{
-			$c = $old[$pos];
-
-			// Test for a literal string
-			if ($c === '"' || $c === "'")
-			{
-				// Look for the matching quote
-				$nextPos = strpos($old, $c, 1 + $pos);
-
-				if ($nextPos === false)
-				{
-					throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
-				}
-
-				// Increment to account for the closing quote
-				++$nextPos;
-
-				$new .= substr($old, $pos, $nextPos - $pos);
-				$pos = $nextPos;
-
-				continue;
-			}
-
-			// Test whether the current expression ends with an XML name character
-			if ($new === '')
-			{
-				$endsWithChar = false;
-			}
-			else
-			{
-				$endsWithChar = (bool) (strpos($chars, substr($new, -1)) !== false);
-			}
-
-			// Test for a character that normally appears in XML names
-			$spn = strspn($old, $chars, $pos);
-			if ($spn)
-			{
-				if ($endsWithChar)
-				{
-					$new .= ' ';
-				}
-
-				$new .= substr($old, $pos, $spn);
-				$pos += $spn;
-
-				continue;
-			}
-
-			if ($c === '-' && $endsWithChar)
-			{
-				$new .= ' ';
-			}
-
-			// Append the current char if it's not whitespace
-			$new .= trim($c);
-
-			// Move the cursor past current char
-			++$pos;
+			throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
 		}
 
-		return $new;
+		// Normalize whitespace to a single space
+		$expr = preg_replace('/\\s+/', ' ', $expr);
+
+		// Remove the space between a non-word character and a word character
+		$expr = preg_replace('/([-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
+		$expr = preg_replace('/([^-a-z_0-9]) ([-a-z_0-9])/i', '$1$2', $expr);
+
+		// Remove the space between two non-word characters as long as they're not two -
+		$expr = preg_replace('/(?!- -)([^-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
+
+		// Remove the space between a - and a word character, as long as there's a space before -
+		$expr = preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
+
+		// Restore the literals
+		$expr = strtr($expr, $strings);
+
+		return $expr;
 	}
 
 	/**

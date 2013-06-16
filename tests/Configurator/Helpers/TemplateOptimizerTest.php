@@ -24,12 +24,12 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox Conditional comments are replaced with <xsl:comment/>
+	* @testdox Conditional comments are replaced with <xsl:comment/> nodes
 	*/
-	public function test835C131E()
+	public function test801B05AF()
 	{
 		$this->runCase(
-			'Conditional comments are replaced with <xsl:comment/>',
+			'Conditional comments are replaced with <xsl:comment/> nodes',
 			'<!--[if IE 6]><p>You are using Internet Explorer 6.</p><![endif]--><!--[if !IE]><!--><p>You are not using Internet Explorer.</p><!--<![endif]-->',
 			'<xsl:comment>[if IE 6]&gt;&lt;p&gt;You are using Internet Explorer 6.&lt;/p&gt;&lt;![endif]</xsl:comment><xsl:comment>[if !IE]&gt;&lt;!</xsl:comment><p>You are not using Internet Explorer.</p><xsl:comment>&lt;![endif]</xsl:comment>'
 		);
@@ -184,12 +184,12 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
-	* @testdox Whitespace is literal strings used in @select expressions is preserved
+	* @testdox Whitespace in literal strings used in @select expressions is preserved
 	*/
-	public function test2811C0C5()
+	public function test654D8198()
 	{
 		$this->runCase(
-			'Whitespace is literal strings used in @select expressions is preserved',
+			'Whitespace in literal strings used in @select expressions is preserved',
 			'<div><xsl:value-of select="concat(@foo, \' @bar \', @baz)"/></div>',
 			'<div><xsl:value-of select="concat(@foo,\' @bar \',@baz)"/></div>'
 		);
@@ -208,6 +208,18 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox Superfluous whitespace in @select expressions is removed
+	*/
+	public function testA206264B()
+	{
+		$this->runCase(
+			'Superfluous whitespace in @select expressions is removed',
+			'<div><xsl:value-of select="substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))"/></div>',
+			'<div><xsl:value-of select="substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))"/></div>'
+		);
+	}
+
+	/**
 	* @testdox Whitespace necessary to delimit names in @test expressions is preserved
 	*/
 	public function testD4F6B3A9()
@@ -216,6 +228,18 @@ class TemplateOptimizerTest extends Test
 			'Whitespace necessary to delimit names in @test expressions is preserved',
 			'<div><xsl:if test="@foo - bar = 2">!</xsl:if></div>',
 			'<div><xsl:if test="@foo -bar=2">!</xsl:if></div>'
+		);
+	}
+
+	/**
+	* @testdox Whitespace necessary to delimit names in @test expressions is preserved
+	*/
+	public function test0859E6D5()
+	{
+		$this->runCase(
+			'Whitespace necessary to delimit names in @test expressions is preserved',
+			'<div><xsl:if test="@foo- - 1 = 2">!</xsl:if></div>',
+			'<div><xsl:if test="@foo- -1=2">!</xsl:if></div>'
 		);
 	}
 
@@ -664,7 +688,7 @@ class TemplateOptimizerTest extends Test
 				'<div><xsl:value-of select="concat(@foo,@bar,@baz)"/></div>'
 			],
 			[
-				'Whitespace is literal strings used in @select expressions is preserved',
+				'Whitespace in literal strings used in @select expressions is preserved',
 				'<div><xsl:value-of select="concat(@foo, \' @bar \', @baz)"/></div>',
 				'<div><xsl:value-of select="concat(@foo,\' @bar \',@baz)"/></div>'
 			],
@@ -674,9 +698,19 @@ class TemplateOptimizerTest extends Test
 				'<div><xsl:if test="@foo=2">!</xsl:if></div>'
 			],
 			[
+				'Superfluous whitespace in @select expressions is removed',
+				'<div><xsl:value-of select="substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))"/></div>',
+				'<div><xsl:value-of select="substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))"/></div>'
+			],
+			[
 				'Whitespace necessary to delimit names in @test expressions is preserved',
 				'<div><xsl:if test="@foo - bar = 2">!</xsl:if></div>',
 				'<div><xsl:if test="@foo -bar=2">!</xsl:if></div>'
+			],
+			[
+				'Whitespace necessary to delimit names in @test expressions is preserved',
+				'<div><xsl:if test="@foo- - 1 = 2">!</xsl:if></div>',
+				'<div><xsl:if test="@foo- -1=2">!</xsl:if></div>'
 			],
 			[
 				'Whitespace necessary to delimit names in @test expressions is preserved',

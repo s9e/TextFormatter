@@ -377,7 +377,7 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->tags->get($tagName);
 
 		$this->assertEquals(
-			'<b title="{substring(.,1+string -length(st),string -length()-(string -length(st)+string -length(et)))}"><xsl:apply-templates/></b>',
+			'<b title="{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}"><xsl:apply-templates/></b>',
 			$tag->defaultTemplate
 		);
 	}
