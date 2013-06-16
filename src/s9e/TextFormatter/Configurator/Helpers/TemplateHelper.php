@@ -731,7 +731,7 @@ abstract class TemplateHelper
 	* @param  string  $append  HTML to append
 	* @return string           Template's source, as HTML
 	*/
-	static public function highlightNode(DOMNode $node, $prepend, $append)
+	public static function highlightNode(DOMNode $node, $prepend, $append)
 	{
 		// Add a unique token to the node
 		$uniqid = uniqid('_');
