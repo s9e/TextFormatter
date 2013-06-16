@@ -6,7 +6,7 @@ cd "$ROOT"
 
 if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
 then
-	phpunit --exclude-group none | tee $TMP
+	phpunit --exclude-group none --testdox-text docs/testdox.txt | tee $TMP
 
 	if [[ `tail -n3 $TMP` != *OK* ]]
 	then

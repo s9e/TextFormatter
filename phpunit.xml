@@ -11,10 +11,6 @@
          stopOnFailure="true"
          verbose="true"
 >
-	<logging>
-		<log type="testdox-text" target="docs/testdox.txt" />
-	</logging>
-
 	<groups>
 		<exclude>
 			<group>needs-network</group>
