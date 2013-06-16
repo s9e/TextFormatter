@@ -1293,6 +1293,34 @@ class PHP implements RendererGenerator
 			return 'empty($this->params[' . var_export($m[1], true) . '])';
 		}
 
+		// <xsl:if test=".=':)'">
+		// if ($node->textContent===':)')
+		//
+		// NOTE: this optimization is mainly for the Emoticons plugin
+		$testExpr = '.=("[^"]*"|\'[^\']*\')';
+		if (preg_match('#^' . $testExpr . '(?:\\s*or\\s*' . $testExpr . ')*$#', $expr))
+		{
+			preg_match_all('#' . $testExpr . '#', $expr, $m);
+
+			$tests = [];
+			foreach ($m[1] as $str)
+			{
+				// NOTE: first we remove the quotes with substr(), then we decode HTML entities
+				//       before generating the PHP representation with var_export(). This way, even
+				//       if the XPath string is somehow malformed, its PHP representation will be ok
+				$tests[] = '$node->textContent===' . var_export(
+					html_entity_decode(
+						substr($str, 1, -1),
+						ENT_XML1,
+						'UTF-8'
+					),
+					true
+				);
+			}
+
+			return implode('||', $tests);
+		}
+
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a boolean() call
 		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\(#', $expr))

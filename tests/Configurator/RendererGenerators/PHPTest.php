@@ -528,6 +528,14 @@ class PHPTest extends Test
 				}
 			],
 			[
+				'<rt><E>:)</E><E>:(</E><E>:-)</E></rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('E')->defaultTemplate
+						= '<xsl:choose><xsl:when test=".=\':)\'or.=\':-)\'"><img src="happy.png" alt=":)"/></xsl:when><xsl:when test=".=\':(\'"><img src="sad.png" alt=":("/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
+				}
+			],
+			[
 				'<rt>x <X/> y</rt>',
 				function ($configurator)
 				{
@@ -570,11 +578,7 @@ class PHPTest extends Test
 		];
 	}
 
-	/**
-	* @dataProvider getOptimizationTests
-	* @testdox Code optimization tests
-	*/
-	public function testOptimizations($xsl, $contains = null, $notContains = null)
+	protected function runCodeTest($xsl, $contains, $notContains)
 	{
 		if (strpos('xsl:output', $xsl) === false)
 		{
@@ -607,6 +611,15 @@ class PHPTest extends Test
 				$this->assertNotContains($str, $php);
 			}
 		}
+	}
+
+	/**
+	* @dataProvider getOptimizationTests
+	* @testdox Code optimization tests
+	*/
+	public function testOptimizations($xsl, $contains = null, $notContains = null)
+	{
+		$this->runCodeTest($xsl, $contains, $notContains);
 	}
 
 	public function getOptimizationTests()
@@ -649,6 +662,68 @@ class PHPTest extends Test
 				null,
 				'foreach ($this->dynamicParams as $k => $v)'
 			]
+		];
+	}
+
+	/**
+	* @dataProvider getXPathTests
+	* @testdox XPath expressions are inlined as PHP whenever possible
+	*/
+	public function testXPath($xsl, $contains = null, $notContains = null)
+	{
+		if (strpos('xsl:output', $xsl) === false)
+		$this->runCodeTest($xsl, $contains, $notContains);
+	}
+
+	public function getXPathTests()
+	{
+		return [
+			// XPath in values
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="@bar"/></xsl:template>',
+				"\$node->getAttribute('bar')"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="."/></xsl:template>',
+				"\$node->textContent"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="$foo"/></xsl:template>',
+				"\$this->params['foo']"
+			],
+			// XPath in conditions
+			[
+				'<xsl:template match="FOO"><xsl:if test="@foo">Foo</xsl:if></xsl:template>',
+				"if(\$node->hasAttribute('foo'))"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="not(@foo)">Foo</xsl:if></xsl:template>',
+				"if(!\$node->hasAttribute('foo'))"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="$foo">Foo</xsl:if></xsl:template>',
+				"if(!empty(\$this->params['foo']))"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="not($foo)">Foo</xsl:if></xsl:template>',
+				"if(empty(\$this->params['foo']))"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test=".=\'foo\'">Foo</xsl:if></xsl:template>',
+				"if(\$node->textContent==='foo')"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test=".=\'fo&quot;o\'">Foo</xsl:if></xsl:template>',
+				"if(\$node->textContent==='fo\"o')"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test=".=\'&quot;_&quot;\'">Foo</xsl:if></xsl:template>',
+				'if($node->textContent===\'"_"\')'
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test=".=\'foo\'or.=\'bar\'">Foo</xsl:if></xsl:template>',
+				"if(\$node->textContent==='foo'||\$node->textContent==='bar')"
+			],
 		];
 	}
 }
