@@ -1609,6 +1609,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] asConfig() generates a quickMatch if applicable
  [x] $plugin->regexpStart can be changed
  [x] $plugin->regexpEnd can be changed
+ [x] getTemplate() merges identical templates
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates

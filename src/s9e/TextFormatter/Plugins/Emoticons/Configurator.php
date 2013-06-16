@@ -101,64 +101,54 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	public function getTemplate()
 	{
+		// Group the codes by template in order to merge duplicate templates. Replace codes with
+		// their representation as a string (with quotes)
 		$templates = [];
 		foreach ($this->collection as $code => $template)
 		{
+			if (strpos($code, "'") === false)
+			{
+				// :)  produces <xsl:when test=".=':)'">
+				$code = "'" . htmlspecialchars($code) . "'";
+			}
+			elseif (strpos($code, '"') === false)
+			{
+				// :') produces <xsl:when test=".=&quot;:')&quot;">
+				$code = '&quot;' . $code . '&quot;';
+			}
+			else
+			{
+				// This code contains both ' and ". XPath 1.0 doesn't have a mechanism to escape
+				// quotes, so we have to get creative and use concat() to join single-quote
+				// chunks and double-quote chunks
+				$toks = [];
+				$pos  = 0;
+				$len  = strlen($code);
+				$c    = '"';
+				while ($pos < $len)
+				{
+					$spn = strcspn($code, $c, $pos);
+					if ($spn)
+					{
+						$toks[] = $c . substr($code, $pos, $spn) . $c;
+						$pos += $spn;
+					}
+					$c = ($c === '"') ? "'" : '"';
+				}
+
+				$code = 'concat(' . htmlspecialchars(implode(',', $toks)) . ')';
+			}
+
 			$templates[$template][] = $code;
 		}
 
-		$xsl = '';
-
-		// Iterate over codes, replace codes with their representation as a string (with quotes)
-		// and create variables as needed
-		foreach ($templates as $template => &$codes)
-		{
-			foreach ($codes as &$code)
-			{
-				if (strpos($code, "'") === false)
-				{
-					// :)  produces <xsl:when test=".=':)'">
-					$code = "'" . htmlspecialchars($code) . "'";
-				}
-				elseif (strpos($code, '"') === false)
-				{
-					// :') produces <xsl:when test=".=&quot;:')&quot;">
-					$code = '&quot;' . $code . '&quot;';
-				}
-				else
-				{
-					// This code contains both ' and ". XPath 1.0 doesn't have a mechanism to escape
-					// quotes, so we have to get creative and use concat() to join single-quote
-					// chunks and double-quote chunks
-					$toks = [];
-					$pos  = 0;
-					$len  = strlen($code);
-					$c    = '"';
-					while ($pos < $len)
-					{
-						$spn = strcspn($code, $c, $pos);
-						if ($spn)
-						{
-							$toks[] = $c . substr($code, $pos, $spn) . $c;
-							$pos += $spn;
-						}
-						$c = ($c === '"') ? "'" : '"';
-					}
-
-					$code = 'concat(' . htmlspecialchars(implode(',', $toks)) . ')';
-				}
-			}
-			unset($code);
-		}
-		unset($codes);
-
-		// Now build the <xsl:choose> node
-		$xsl .= '<xsl:choose>';
+		// Build the <xsl:choose> node
+		$xsl = '<xsl:choose>';
 
 		// Iterate over codes, create an <xsl:when> for each group of codes
 		foreach ($templates as $template => $codes)
 		{
-			$xsl .= '<xsl:when test=".=' . implode(' or .=', $codes) . '">'
+			$xsl .= '<xsl:when test=".=' . implode('or.=', $codes) . '">'
 			      . $template
 			      . '</xsl:when>';
 		}

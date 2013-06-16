@@ -184,4 +184,19 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame('/x(?!\\w)/S', $config['regexp']);
 	}
+
+	/**
+	* @testdox getTemplate() merges identical templates
+	*/
+	public function testGetTemplateMerge()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add(':)', '<img src="happy.png"/>');
+		$plugin->add(':-)', '<img src="happy.png"/>');
+
+		$this->assertContains(
+			'<xsl:when test=".=\':)\'or.=\':-)\'"><img src="happy.png"/></xsl:when>',
+			$plugin->getTemplate()
+		);
+	}
 }
