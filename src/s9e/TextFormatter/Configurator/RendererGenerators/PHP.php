@@ -125,8 +125,7 @@ class PHP implements RendererGenerator
 			}
 			public function renderRichText($xml)
 			{
-				$dom = new \\DOMDocument;
-				$dom->loadXML($xml);
+				$dom = $this->loadXML($xml);
 				$this->xpath = new \\DOMXPath($dom);
 				$this->out = "";';
 

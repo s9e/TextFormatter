@@ -90,8 +90,7 @@ class XSLCache extends Renderer
 	protected function renderRichText($xml)
 	{
 		// Load the intermediate representation
-		$dom  = new DOMDocument;
-		$dom->loadXML($xml);
+		$dom = $this->loadXML($xml);
 
 		// Load the stylesheet
 		$this->load();

@@ -74,8 +74,7 @@ class XSLT extends Renderer
 	protected function renderRichText($xml)
 	{
 		// Load the intermediate representation
-		$dom  = new DOMDocument;
-		$dom->loadXML($xml);
+		$dom = $this->loadXML($xml);
 
 		// Load the stylesheet
 		$this->load();
@@ -102,8 +101,7 @@ class XSLT extends Renderer
 	{
 		if (!isset($this->proc))
 		{
-			$xsl = new DOMDocument;
-			$xsl->loadXML($this->stylesheet);
+			$xsl = $this->loadXML($this->stylesheet);
 
 			$this->proc = new XSLTProcessor;
 			$this->proc->importStylesheet($xsl);

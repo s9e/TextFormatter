@@ -7,12 +7,41 @@
 */
 namespace s9e\TextFormatter;
 
+use DOMDocument;
+
 abstract class Renderer
 {
 	/**
 	* @var bool Whether the output must be HTML (otherwise it is assumed it is XHTML)
 	*/
 	protected $htmlOutput = true;
+
+	/**
+	* Create a return a new DOMDocument loaded with given XML
+	*
+	* @param  string      $xml   Source XML
+	* @param  integer     $flags Bitwise OR of the libxml option constants
+	* @return DOMDocument
+	*/
+	protected function loadXML($xml, $flags = 0)
+	{
+		// Activate small nodes allocation
+		if (defined('LIBXML_COMPACT'))
+		{
+			$flags |= LIBXML_COMPACT;
+		}
+
+		// Relax LibXML's hardcoded limits. Limits on tags can be set during configuration
+		if (defined('LIBXML_PARSEHUGE'))
+		{
+			$flags |= LIBXML_PARSEHUGE;
+		}
+
+		$dom = new DOMDocument;
+		$dom->loadXML($xml, $flags);
+
+		return $dom;
+	}
 
 	/**
 	* Render an intermediate representation

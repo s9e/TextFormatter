@@ -1760,6 +1760,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Returns an instance of Renderer
 
+s9e\TextFormatter\Tests\Renderer
+ [x] loadXML() returns a DOMDocument
+
 s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Is serializable
  [x] Does not serialize the XSLTProcessor instance
