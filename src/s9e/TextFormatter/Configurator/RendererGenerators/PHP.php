@@ -310,10 +310,10 @@ class PHP implements RendererGenerator
 	{
 		$ir = new DOMDocument;
 		$ir->loadXML('<ir/>');
-
-		$this->parseChildren($ir->documentElement, $template);
-
 		$xpath = new DOMXPath($ir);
+
+		// Parse this template's content
+		$this->parseChildren($ir->documentElement, $template);
 
 		// Add an empty default <case/> to <switch/> nodes that don't have one
 		foreach ($xpath->query('//switch[not(case[not(@test)])]') as $switch)
