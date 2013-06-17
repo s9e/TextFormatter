@@ -1746,6 +1746,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Code optimization tests
  [x] XPath expressions are inlined as PHP whenever possible
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
+ [x] Returns an instance of Renderer
+
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
  [x] Returns an instance of Renderer
 
@@ -1802,6 +1805,13 @@ s9e\TextFormatter\Tests\Renderers\PHP
  [x] setParameter() sets the value of a parameter
  [x] setParameters() sets the values of any number of parameters in an associative array
  [x] setParameter() accepts values that contain both types of quotes
+
+s9e\TextFormatter\Tests\Renderers\Unformatted
+ [x] Returns unformatted version of rich text
+ [x] Converts newlines to <br>
+ [x] Converts newlines to <br/> if output is set to xml
+ [x] Keeps HTML's special characters escaped
+ [x] setParameter() doesn't do anything
 
 s9e\TextFormatter\Tests\Unparser
  [x] unparse('<pt>Plain text</pt>') returns 'Plain text'
