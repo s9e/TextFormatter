@@ -1751,6 +1751,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer
+ [x] Configures the renderer for HTML output if applicable
+ [x] Configures the renderer for XML output if applicable
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
  [x] Returns an instance of Renderer

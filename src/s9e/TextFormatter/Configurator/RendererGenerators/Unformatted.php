@@ -18,6 +18,8 @@ class Unformatted implements RendererGenerator
 	*/
 	public function getRenderer(Stylesheet $stylesheet)
 	{
-		return new UnformattedRenderer;
+		$htmlOutput = (bool) ($stylesheet->outputMethod === 'html');
+
+		return new UnformattedRenderer($htmlOutput);
 	}
 }

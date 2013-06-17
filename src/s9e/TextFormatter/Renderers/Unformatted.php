@@ -31,7 +31,11 @@ class Unformatted extends Renderer
 	*/
 	protected function renderRichText($xml)
 	{
-		return nl2br(strip_tags($xml), !$this->htmlOutput);
+		return str_replace(
+			"\n",
+			($this->htmlOutput) ? "<br>\n" : "<br/>\n",
+			strip_tags($xml)
+		);
 	}
 
 	/**

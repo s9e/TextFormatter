@@ -44,7 +44,7 @@ class UnformattedTest extends Test
 		$renderer = $this->configurator->getRenderer('Unformatted');
 
 		$this->assertSame(
-			"a<br>\nb",
+			"a<br/>\nb",
 			$renderer->render("<rt>a\nb</rt>")
 		);
 	}
