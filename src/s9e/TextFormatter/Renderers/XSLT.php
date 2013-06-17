@@ -14,11 +14,6 @@ use s9e\TextFormatter\Renderer;
 class XSLT extends Renderer
 {
 	/**
-	* @var bool Whether this renderer's stylesheet produces HTML (as opposed to XHTML)
-	*/
-	protected $htmlOutput;
-
-	/**
 	* @var XSLTProcessor The lazy-loaded XSLTProcessor instance used by this renderer
 	*/
 	protected $proc;

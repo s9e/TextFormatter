@@ -25,11 +25,6 @@ class XSLCache extends Renderer
 	protected $filepath;
 
 	/**
-	* @var bool Whether this renderer's stylesheet produces HTML (as opposed to XHTML)
-	*/
-	protected $htmlOutput;
-
-	/**
 	* @var XSLCache The lazy-loaded XSLCache instance used by this renderer
 	*/
 	protected $proc;
