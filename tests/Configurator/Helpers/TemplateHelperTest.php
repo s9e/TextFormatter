@@ -810,6 +810,24 @@ class TemplateHelperTest extends Test
 				},
 				'<b id="DOMAttr">DOMText</b>'
 			],
+			[
+				'<b>$1</b><i>$$</i>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['literal', 'ONE'];
+				},
+				'<b>ONE</b><i>$$</i>'
+			],
+			[
+				'<b>foo $1 bar</b>',
+				'/\\$[0-9]+/',
+				function ($m)
+				{
+					return ['literal', 'ONE'];
+				},
+				'<b>foo ONE bar</b>'
+			],
 		];
 	}
 
