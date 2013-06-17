@@ -597,8 +597,9 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] <xsl:if test="@foo"><xsl:value-of select="@foo"/></xsl:if> is optimized to <xsl:value-of select="@foo"/>
  [x] <xsl:if test="@foo"><xsl:value-of select="@bar"/></xsl:if> is left untouched
  [x] <xsl:if test="1+@foo"><xsl:value-of select="1+@foo"/></xsl:if> is left untouched
- [x] <xsl:if test=".=':)'"><xsl:value-of select="."/></xsl:if> is replaced with <xsl:if test=".=':)'">:)</xsl:if>
- [x] <xsl:choose><xsl:when test=".=':)'"><img alt="{.}"/></xsl:when><xsl:when test=".=':('"><img alt="{.}"/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose> is replaced with <xsl:choose><xsl:when test=".=':)'"><img alt=":)"/></xsl:when><xsl:when test=".=':('"><img alt=":("/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>
+ [x] Values are inlined in <xsl:if test=".=':)'"><xsl:value-of select="."/></xsl:if>
+ [x] Values are inlined in <xsl:choose><xsl:when test=".=':)'"><img alt="{.}"/></xsl:when><xsl:when test=".=':('"><img alt="{.}"/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>
+ [x] Values and expressions are preserved in <xsl:if test=".=':)'"><hr title="{{.}}{@foo}"/></xsl:if>
  [x] Throws an exception during XPath minification if a string isn't properly closed
 
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
