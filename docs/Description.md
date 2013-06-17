@@ -108,6 +108,7 @@
 		<?php
 		$configurator->urlConfig->allowScheme('ftp');
 		```
+
 		* You can set a blacklist of hosts that cause an URL to be invalid
 		```php
 		<?php
@@ -116,6 +117,7 @@
 		// Bans example.com, example.org, etc...
 		$configurator->urlConfig->disallowHost('example.*');
 		```
+
 		* You can force some redirectors to be resolved to reveal the actual URL, e.g.
 		```php
 		<?php
