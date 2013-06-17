@@ -54,17 +54,19 @@
 
 	* Comprehensive [list of rules](https://github.com/s9e/TextFormatter/blob/master/docs/Rules.md) that control what tag is allowed where
 		* Most of the rules can be automatically created, based on heuristics provided by the HTML5 specs
-		```php
-		<?php
-		$configurator->addHTML5Rules();
-		```
+
+			```php
+			<?php
+			$configurator->addHTML5Rules();
+			```
 
 	* You can control the maximum number of times a given tag can be used, or how many times they can be nested into each other (limit set at the tag level)
-	```php
-	<?php
-	$configurator->tags['QUOTE']->setNestingLimit(3);
-	$configurator->tags['URL']->setTagLimit(1);
-	```
+
+		```php
+		<?php
+		$configurator->tags['QUOTE']->setNestingLimit(3);
+		$configurator->tags['URL']->setTagLimit(1);
+		```
 
 	* Tag filters can alter a tag at parsing time and determine whether to invalidate it
 
@@ -79,9 +81,11 @@
 
 	* Uses XSLT
 		* Syntax almost identical to XHTML, e.g.
-		```xslt
-		<a href="{@url}"><xsl:apply-templates/></a>
-		```
+
+			```xslt
+			<a href="{@url}"><xsl:apply-templates/></a>
+			```
+
 		* Automatic escaping of HTML entities
 		* Supports conditionals and user-set parameters
 
@@ -104,25 +108,28 @@
 	* You can create your own custom filters, or replace the default ones
 	* URLs
 		* URLs only accept http and https schemes. You can allow more URL schemes:
-		```php
-		<?php
-		$configurator->urlConfig->allowScheme('ftp');
-		```
+
+			```php
+			<?php
+			$configurator->urlConfig->allowScheme('ftp');
+			```
 
 		* You can set a blacklist of hosts that cause an URL to be invalid
-		```php
-		<?php
-		// Bans example.org and all subdomains such as bad.example.org
-		$configurator->urlConfig->disallowHost('example.org');
-		// Bans example.com, example.org, etc...
-		$configurator->urlConfig->disallowHost('example.*');
-		```
+
+			```php
+			<?php
+			// Bans example.org and all subdomains such as bad.example.org
+			$configurator->urlConfig->disallowHost('example.org');
+			// Bans example.com, example.org, etc...
+			$configurator->urlConfig->disallowHost('example.*');
+			```
 
 		* You can force some redirectors to be resolved to reveal the actual URL, e.g.
-		```php
-		<?php
-		$configurator->resolveRedirectsFrom('t.co');
-		```
+
+			```php
+			<?php
+			$configurator->resolveRedirectsFrom('t.co');
+			```
 
 * Templates are systematically inspected
 
