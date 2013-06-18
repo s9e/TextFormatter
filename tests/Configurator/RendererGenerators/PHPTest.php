@@ -691,6 +691,18 @@ class PHPTest extends Test
 				'<xsl:template match="FOO"><xsl:value-of select="$foo"/></xsl:template>',
 				"\$this->params['foo']"
 			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'foo\'"/></xsl:template>',
+				"\$this->out.=htmlspecialchars('foo',0);"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'fo\\o\'"/></xsl:template>',
+				"\$this->out.=htmlspecialchars('fo\\\\o',0);"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'&lt;AT&amp;T&gt;\'"/></xsl:template>',
+				"\$this->out.=htmlspecialchars('<AT&T>',0);"
+			],
 			// XPath in conditions
 			[
 				'<xsl:template match="FOO"><xsl:if test="@foo">Foo</xsl:if></xsl:template>',

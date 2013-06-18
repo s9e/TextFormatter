@@ -1363,6 +1363,13 @@ class PHP implements RendererGenerator
 			return '$this->params[' . var_export($m[1], true) . ']';
 		}
 
+		// <xsl:value-of select="'foo'"/>
+		// $this->out .= 'foo';
+		if (preg_match('#^\\s*("[^"]*"|\'[^\']*\')\\s*#', $expr, $m))
+		{
+			return var_export(substr($m[1], 1, -1), true);
+		}
+
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a string() call
 		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-a-z]+\\(#', $expr))
