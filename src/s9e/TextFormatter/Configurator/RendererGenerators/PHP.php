@@ -1037,7 +1037,8 @@ class PHP implements RendererGenerator
 			$old = $tokens;
 			$this->optimizeAssignments($tokens);
 			$this->optimizeConcatenations($tokens);
-			$this->optimizeLiterals($tokens);
+			$this->optimizeHtmlspecialcharsLiterals($tokens);
+			$this->optimizeHtmlspecialcharsInapplicable($tokens);
 		}
 		while (--$remainingLoops && $tokens !== $old);
 
@@ -1055,7 +1056,7 @@ class PHP implements RendererGenerator
 	/**
 	* Optimize variable assignments in an array of PHP tokens
 	*
-	* @para   array &$tokens PHP tokens from tokens_get_all()
+	* @param  array &$tokens PHP tokens from tokens_get_all()
 	* @return void
 	*/
 	protected function optimizeAssignments(array &$tokens)
@@ -1121,7 +1122,7 @@ class PHP implements RendererGenerator
 	/**
 	* Optimize string concatenations in an array of PHP tokens
 	*
-	* @para   array &$tokens PHP tokens from tokens_get_all()
+	* @param  array &$tokens PHP tokens from tokens_get_all()
 	* @return void
 	*/
 	protected function optimizeConcatenations(array &$tokens)
@@ -1220,12 +1221,54 @@ class PHP implements RendererGenerator
 	}
 
 	/**
-	* Optimize htmlspecialchars() calls on literals
+	* Optimize htmlspecialchars() calls on inapplicable values
 	*
-	* @para   array &$tokens PHP tokens from tokens_get_all()
+	* By default, the generator escapes all values, including variables that cannot contain special
+	* characters such as $node->localName. This pass removes those calls
+	*
+	* @param  array &$tokens PHP tokens from tokens_get_all()
 	* @return void
 	*/
-	protected function optimizeLiterals(array &$tokens)
+	protected function optimizeHtmlspecialcharsInapplicable(array &$tokens)
+	{
+		$cnt = count($tokens);
+
+		$i = 0;
+		while (++$i < $cnt)
+		{
+			if (is_array($tokens[$i])
+			 && $tokens[$i    ][0]  === T_STRING
+			 && $tokens[$i    ][1]  === 'htmlspecialchars'
+			 && $tokens[$i + 1]     === '('
+			 && $tokens[$i + 2][0]  === T_VARIABLE
+			 && $tokens[$i + 2][1]  === '$node'
+			 && $tokens[$i + 3][0]  === T_OBJECT_OPERATOR
+			 && $tokens[$i + 4][0]  === T_STRING
+			 && ($tokens[$i + 4][1] === 'localName' || $tokens[$i + 4][1] === 'nodeName')
+			 && $tokens[$i + 5]     === ','
+			 && $tokens[$i + 6][0]  === T_LNUMBER
+			 && $tokens[$i + 7]     === ')')
+			{
+				 unset($tokens[$i]);
+				 unset($tokens[$i + 1]);
+				 unset($tokens[$i + 5]);
+				 unset($tokens[$i + 6]);
+				 unset($tokens[$i + 7]);
+
+				 $i += 7;
+			}
+		}
+
+		$tokens = array_values($tokens);
+	}
+
+	/**
+	* Optimize htmlspecialchars() calls on literals
+	*
+	* @param  array &$tokens PHP tokens from tokens_get_all()
+	* @return void
+	*/
+	protected function optimizeHtmlspecialcharsLiterals(array &$tokens)
 	{
 		$cnt = count($tokens);
 

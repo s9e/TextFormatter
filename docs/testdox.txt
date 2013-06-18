@@ -1746,8 +1746,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] BBCodes from repository.xml render nicely
  [x] Rendering tests from plugins
  [x] Edge cases
- [x] Code optimization tests
  [x] XPath expressions are inlined as PHP whenever possible
+ [x] Code optimization tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer

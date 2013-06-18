@@ -614,82 +614,6 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @dataProvider getOptimizationTests
-	* @testdox Code optimization tests
-	*/
-	public function testOptimizations($xsl, $contains = null, $notContains = null)
-	{
-		$this->runCodeTest($xsl, $contains, $notContains);
-	}
-
-	public function getOptimizationTests()
-	{
-		return [
-			[
-				'<xsl:template match="FOO"><br/></xsl:template>',
-				"\$this->out.='<br>';"
-			],
-			[
-				'<xsl:template match="FOO"><xsl:text/></xsl:template>',
-				"if(\$nodeName==='FOO'){}",
-				"\$this->out.='';"
-			],
-			[
-				'<xsl:template match="FOO">
-					<xsl:choose>
-						<xsl:when test="@foo">foo</xsl:when>
-						<xsl:otherwise><xsl:text/></xsl:otherwise>
-					</xsl:choose>
-				</xsl:template>',
-				"{if(\$node->hasAttribute('foo')){\$this->out.='foo';}}",
-				['else{}', "\$this->out.=''"]
-			],
-			[
-				'<xsl:template match="html:*">
-					<xsl:element name="{local-name()}">
-						<xsl:copy-of select="@*"/>
-						<xsl:apply-templates/>
-					</xsl:element>
-				</xsl:template>',
-				[
-					"=htmlspecialchars(\$node->localName,2);\$this->out.='<'.\$",
-					"\$this->out.='</'.\$e"
-				],
-				"\$this->out.='</'.htmlspecialchars("
-			],
-			[
-				'<xsl:template match="FOO">...</xsl:template>',
-				null,
-				'foreach ($this->dynamicParams as $k => $v)'
-			],
-			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'foo\'"/></xsl:template>',
-				"\$this->out.='foo';"
-			],
-			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'fo\\o\'"/></xsl:template>',
-				"\$this->out.='fo\\\\o';"
-			],
-			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'&quot;&lt;AT&amp;T&gt;\'"/></xsl:template>',
-				"\$this->out.='\"&lt;AT&amp;T&gt;';"
-			],
-			[
-				'<xsl:template match="FOO"><xsl:value-of select="&quot;&apos;&lt;AT&amp;T&gt;&quot;"/></xsl:template>',
-				"\$this->out.='\\'&lt;AT&amp;T&gt;';"
-			],
-			[
-				'<xsl:template match="FOO"><b title="{\'&quot;foo&quot;\'}"></b></xsl:template>',
-				var_export('<b title="&quot;foo&quot;"></b>', true)
-			],
-			[
-				'<xsl:template match="FOO"><b title="{&quot;&apos;foo&apos;&quot;}"></b></xsl:template>',
-				var_export('<b title="\'foo\'"></b>', true)
-			],
-		];
-	}
-
-	/**
 	* @dataProvider getXPathTests
 	* @testdox XPath expressions are inlined as PHP whenever possible
 	*/
@@ -766,6 +690,99 @@ class PHPTest extends Test
 			[
 				'<xsl:template match="FOO"><xsl:if test=".=\'foo\'or.=\'bar\'">Foo</xsl:if></xsl:template>',
 				"if(\$node->textContent==='foo'||\$node->textContent==='bar')"
+			],
+		];
+	}
+
+
+	/**
+	* @dataProvider getOptimizationTests
+	* @testdox Code optimization tests
+	*/
+	public function testOptimizations($xsl, $contains = null, $notContains = null)
+	{
+		$this->runCodeTest($xsl, $contains, $notContains);
+	}
+
+	public function getOptimizationTests()
+	{
+		return [
+			[
+				'<xsl:template match="FOO"><br/></xsl:template>',
+				"\$this->out.='<br>';"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:text/></xsl:template>',
+				"if(\$nodeName==='FOO'){}",
+				"\$this->out.='';"
+			],
+			[
+				'<xsl:template match="FOO">
+					<xsl:choose>
+						<xsl:when test="@foo">foo</xsl:when>
+						<xsl:otherwise><xsl:text/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:template>',
+				"{if(\$node->hasAttribute('foo')){\$this->out.='foo';}}",
+				['else{}', "\$this->out.=''"]
+			],
+			[
+				'<xsl:template match="html:*">
+					<xsl:element name="{concat(\'x\',local-name())}">
+						<xsl:copy-of select="@*"/>
+						<xsl:apply-templates/>
+					</xsl:element>
+				</xsl:template>',
+				[
+					"\$this->out.='<'.\$e",
+					"\$this->out.='</'.\$e"
+				],
+				"\$this->out.='</'.htmlspecialchars("
+			],
+			[
+				'<xsl:template match="FOO">...</xsl:template>',
+				null,
+				'foreach ($this->dynamicParams as $k => $v)'
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'foo\'"/></xsl:template>',
+				"\$this->out.='foo';"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'fo\\o\'"/></xsl:template>',
+				"\$this->out.='fo\\\\o';"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'&quot;&lt;AT&amp;T&gt;\'"/></xsl:template>',
+				"\$this->out.='\"&lt;AT&amp;T&gt;';"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="&quot;&apos;&lt;AT&amp;T&gt;&quot;"/></xsl:template>',
+				"\$this->out.='\\'&lt;AT&amp;T&gt;';"
+			],
+			[
+				'<xsl:template match="FOO"><b title="{\'&quot;foo&quot;\'}"></b></xsl:template>',
+				var_export('<b title="&quot;foo&quot;"></b>', true)
+			],
+			[
+				'<xsl:template match="FOO"><b title="{&quot;&apos;foo&apos;&quot;}"></b></xsl:template>',
+				var_export('<b title="\'foo\'"></b>', true)
+			],
+			[
+				'<xsl:template match="*"><xsl:value-of select="local-name()"/></xsl:template>',
+				'$this->out.=$node->localName',
+				'htmlspecialchars($node->localName'
+			],
+			[
+				'<xsl:template match="*"><xsl:value-of select="name()"/></xsl:template>',
+				'$this->out.=$node->nodeName',
+				'htmlspecialchars($node->nodeName'
+			],
+			[
+				// This test ensures that we concatenate inside the htmlspecialchars() call rather
+				// than concatenate the result of two htmlspecialchars() calls
+				'<xsl:template match="*"><xsl:value-of select="@foo"/><xsl:value-of select="name()"/><xsl:value-of select="@bar"/></xsl:template>',
+				"htmlspecialchars(\$node->getAttribute('foo').\$node->nodeName.\$node->getAttribute('bar')"
 			],
 		];
 	}
