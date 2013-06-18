@@ -1037,6 +1037,7 @@ class PHP implements RendererGenerator
 			$old = $tokens;
 			$this->optimizeAssignments($tokens);
 			$this->optimizeConcatenations($tokens);
+			$this->optimizeLiterals($tokens);
 		}
 		while (--$remainingLoops && $tokens !== $old);
 
@@ -1213,6 +1214,49 @@ class PHP implements RendererGenerator
 				// consecutive htmlspecialchars() calls with different escape modes
 			}
 			// @codeCoverageIgnoreEnd
+		}
+
+		$tokens = array_values($tokens);
+	}
+
+	/**
+	* Optimize htmlspecialchars() calls on literals
+	*
+	* @para   array &$tokens PHP tokens from tokens_get_all()
+	* @return void
+	*/
+	protected function optimizeLiterals(array &$tokens)
+	{
+		$cnt = count($tokens);
+
+		$i = 0;
+		while (++$i < $cnt)
+		{
+			if (is_array($tokens[$i])
+			 && $tokens[$i    ][0] === T_CONSTANT_ENCAPSED_STRING
+			 && $tokens[$i - 1]    === '('
+			 && $tokens[$i - 2][0] === T_STRING
+			 && $tokens[$i - 2][1] === 'htmlspecialchars'
+			 && $tokens[$i + 1]    === ','
+			 && $tokens[$i + 2][0] === T_LNUMBER
+			 && $tokens[$i + 3]    === ')')
+			{
+				$tokens[$i][1] = var_export(
+					htmlspecialchars(
+						stripslashes(substr($tokens[$i][1], 1, -1)),
+						$tokens[$i + 2][1]
+					),
+					true
+				);
+
+				unset($tokens[$i - 1]);
+				unset($tokens[$i - 2]);
+				unset($tokens[$i + 1]);
+				unset($tokens[$i + 2]);
+				unset($tokens[$i + 3]);
+
+				$i += 3;
+			}
 		}
 
 		$tokens = array_values($tokens);

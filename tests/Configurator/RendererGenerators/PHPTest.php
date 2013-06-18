@@ -661,7 +661,31 @@ class PHPTest extends Test
 				'<xsl:template match="FOO">...</xsl:template>',
 				null,
 				'foreach ($this->dynamicParams as $k => $v)'
-			]
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'foo\'"/></xsl:template>',
+				"\$this->out.='foo';"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'fo\\o\'"/></xsl:template>',
+				"\$this->out.='fo\\\\o';"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="\'&quot;&lt;AT&amp;T&gt;\'"/></xsl:template>',
+				"\$this->out.='\"&lt;AT&amp;T&gt;';"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="&quot;&apos;&lt;AT&amp;T&gt;&quot;"/></xsl:template>',
+				"\$this->out.='\\'&lt;AT&amp;T&gt;';"
+			],
+			[
+				'<xsl:template match="FOO"><b title="{\'&quot;foo&quot;\'}"></b></xsl:template>',
+				var_export('<b title="&quot;foo&quot;"></b>', true)
+			],
+			[
+				'<xsl:template match="FOO"><b title="{&quot;&apos;foo&apos;&quot;}"></b></xsl:template>',
+				var_export('<b title="\'foo\'"></b>', true)
+			],
 		];
 	}
 
@@ -693,15 +717,8 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:template match="FOO"><xsl:value-of select="\'foo\'"/></xsl:template>',
-				"\$this->out.=htmlspecialchars('foo',0);"
-			],
-			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'fo\\o\'"/></xsl:template>',
-				"\$this->out.=htmlspecialchars('fo\\\\o',0);"
-			],
-			[
-				'<xsl:template match="FOO"><xsl:value-of select="\'&lt;AT&amp;T&gt;\'"/></xsl:template>',
-				"\$this->out.=htmlspecialchars('<AT&T>',0);"
+				null,
+				'$this->xpath->evaluate'
 			],
 			// XPath in conditions
 			[
