@@ -394,7 +394,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testGetRendererArgs()
 	{
-		$className = 'renderer_' . uniqid();
+		$className = uniqid('renderer_');
 		$renderer  = $this->configurator->getRenderer('PHP', $className);
 		$this->assertSame($className, get_class($renderer));
 	}

@@ -110,7 +110,7 @@ class PHP implements RendererGenerator
 		}
 
 		// Generate a random name for that class if necessary, and save it
-		$className = (isset($this->className)) ? $this->className : 'Renderer_' . uniqid();
+		$className = (isset($this->className)) ? $this->className : uniqid('Renderer_');
 		$this->lastClassName = $className;
 
 		$this->php = 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
@@ -901,7 +901,7 @@ class PHP implements RendererGenerator
 
 		if (!preg_match("#^'[^']*'$#", $elName))
 		{
-			$varName    = '$e' . uniqid();
+			$varName    = uniqid('$e');
 			$this->php .= $varName . '=' . $elName . ';';
 			$elName     = $varName;
 		}

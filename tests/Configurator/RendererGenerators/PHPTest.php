@@ -55,7 +55,7 @@ class PHPTest extends Test
 	*/
 	public function testClassNameConstructor()
 	{
-		$className = 'renderer_' . uniqid();
+		$className = uniqid('renderer_');
 		$generator = new PHP($className);
 
 		$this->assertInstanceOf(
@@ -85,7 +85,7 @@ class PHPTest extends Test
 	*/
 	public function testClassNameProp()
 	{
-		$className = 'renderer_' . uniqid();
+		$className = uniqid('renderer_');
 
 		$generator = new PHP;
 		$generator->className = $className;
