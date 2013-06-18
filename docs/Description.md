@@ -70,6 +70,8 @@
 
 	* Tag filters can alter a tag at parsing time and determine whether to invalidate it
 
+	* No misnesting, or dangling tags. `[b][i][/b][/i]` will never produce malformed HTML
+
 * Attribute control
 
 	* Tags can have attributes. The same way BBCodes and HTML elements have a 1:1 relation to tags, BBCode attributes and HTML attributes have a 1:1 to *tag attributes*
@@ -87,7 +89,10 @@
 			```
 
 		* Automatic escaping of HTML entities
-		* Supports conditionals and user-set parameters
+		* Supports conditionals and user-set parameters (template variables)
+		* Can render as HTML or XHTML
+		* Cannot produce malformed HTML or XHTML
+			* ...unless you purposely disable some of the template checks and manually disable the escaping
 
 	* Offer multiple renderers
 		* __XSLT__ uses [PHP's ext/xsl](http://docs.php.net/manual/en/book.xsl.php)
@@ -98,9 +103,10 @@
 
 * Plugins do *not* modify the text, they only describe how to transform it
 	* A bad plugin cannot accidentally introduce new XSS vectors
+	* ...but a bad renderer could, that's why they're extensively tested
 
 * XSLT automatically escapes special characters, so even unfiltered content cannot "break out" of an attribute
-	* The PHP renderer follows the same logic
+	* The PHP renderer follows the same logic and run the same tests (plus a few more)
 
 * Attributes (from BBCodes and other plugins) are filtered/sanitized
 	* By type, e.g. number, numeric range, color, URL
@@ -136,7 +142,7 @@
 	* Improperly sanitized content is not allowed in a sensitive context:
 		* Text that can contain quotes or parentheses is not allowed in JavaScript (e.g. in an onclick event), but numbers are
 		* Unfiltered text is not allowed in a CSS context (e.g. in an style attribute) but colors are
-		* Unfiltered text is not allowed *as* a URL, but content using the URL filter is
+		* Unfiltered text is not allowed *as* a URL, but attributes using the URL filter are
 
 	* Other security checks [listed separately](https://github.com/s9e/TextFormatter/blob/master/docs/TemplateSecurity.md)
 
@@ -163,6 +169,7 @@
 		* Multiple attributes: `[flash width=100 height=50]`
 		* Optional attributes: `[flash height=50]` *(will use the default width)*
 		* Default attribute, e.g. `[size=1]`
+		* Composite attributes: `[flash=100,50]` *(values for height and width extracted by an attribute preprocessor)*
 		* Attribute values can be:
 			* in single quotes: `[quote='Author']`
 			* in double quotes: `[quote="Author"]`
