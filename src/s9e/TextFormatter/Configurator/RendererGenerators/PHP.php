@@ -1408,6 +1408,20 @@ class PHP implements RendererGenerator
 			return var_export(substr($m[1], 1, -1), true);
 		}
 
+		// <xsl:value-of select="local-name()"/>
+		// $this->out .= $node->localName;
+		if ($expr === 'local-name()')
+		{
+			return '$node->localName';
+		}
+
+		// <xsl:value-of select="name()"/>
+		// $this->out .= $node->nodeName;
+		if ($expr === 'name()')
+		{
+			return '$node->nodeName';
+		}
+
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a string() call
 		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-a-z]+\\(#', $expr))

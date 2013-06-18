@@ -652,7 +652,7 @@ class PHPTest extends Test
 					</xsl:element>
 				</xsl:template>',
 				[
-					"=htmlspecialchars(\$this->xpath->evaluate('local-name()',\$node),2);\$this->out.='<'.\$",
+					"=htmlspecialchars(\$node->localName,2);\$this->out.='<'.\$",
 					"\$this->out.='</'.\$e"
 				],
 				"\$this->out.='</'.htmlspecialchars("
@@ -718,6 +718,16 @@ class PHPTest extends Test
 			[
 				'<xsl:template match="FOO"><xsl:value-of select="\'foo\'"/></xsl:template>',
 				null,
+				'$this->xpath->evaluate'
+			],
+			[
+				'<xsl:template match="*"><xsl:value-of select="local-name()"/></xsl:template>',
+				'$node->localName',
+				'$this->xpath->evaluate'
+			],
+			[
+				'<xsl:template match="*"><xsl:value-of select="name()"/></xsl:template>',
+				'$node->nodeName',
 				'$this->xpath->evaluate'
 			],
 			// XPath in conditions
