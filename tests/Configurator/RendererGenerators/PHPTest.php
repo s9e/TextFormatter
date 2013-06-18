@@ -742,6 +742,10 @@ class PHPTest extends Test
 				"if(\$node->textContent==='foo')"
 			],
 			[
+				'<xsl:template match="FOO"><xsl:if test="@foo=\'foo\'">Foo</xsl:if></xsl:template>',
+				"if(\$node->getAttribute('foo')==='foo')"
+			],
+			[
 				'<xsl:template match="FOO"><xsl:if test=".=\'fo&quot;o\'">Foo</xsl:if></xsl:template>',
 				"if(\$node->textContent==='fo\"o')"
 			],

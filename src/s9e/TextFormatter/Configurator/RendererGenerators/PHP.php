@@ -1339,26 +1339,20 @@ class PHP implements RendererGenerator
 		// <xsl:if test=".=':)'">
 		// if ($node->textContent===':)')
 		//
+		// <xsl:if test="@foo=':)'">
+		// if ($node->getAttribute('foo')===':)')
+		//
 		// NOTE: this optimization is mainly for the Emoticons plugin
-		$testExpr = '.=("[^"]*"|\'[^\']*\')';
+		$operandExpr = '(@[-\\w]+|\\.|"[^"]*"|\'[^\']*\')';
+		$testExpr    = $operandExpr . '\\s*=\\s*' . $operandExpr;
 		if (preg_match('#^' . $testExpr . '(?:\\s*or\\s*' . $testExpr . ')*$#', $expr))
 		{
-			preg_match_all('#' . $testExpr . '#', $expr, $m);
+			preg_match_all('#' . $testExpr . '#', $expr, $matches, PREG_SET_ORDER);
 
 			$tests = [];
-			foreach ($m[1] as $str)
+			foreach ($matches as $m)
 			{
-				// NOTE: first we remove the quotes with substr(), then we decode HTML entities
-				//       before generating the PHP representation with var_export(). This way, even
-				//       if the XPath string is somehow malformed, its PHP representation will be ok
-				$tests[] = '$node->textContent===' . var_export(
-					html_entity_decode(
-						substr($str, 1, -1),
-						ENT_QUOTES,
-						'UTF-8'
-					),
-					true
-				);
+				$tests[] = $this->convertXPath($m[1]) . '===' . $this->convertXPath($m[2]);
 			}
 
 			return implode('||', $tests);
