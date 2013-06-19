@@ -110,11 +110,11 @@ foreach (glob(__DIR__ . '/../tests/Plugins/*', GLOB_ONLYDIR) as $dirpath)
 		$setup         = (isset($case[3])) ? $case[3] : null;
 
 		$configurator = new Configurator;
-		$configurator->plugins->load($pluginName, $pluginOptions);
+		$plugin = $configurator->plugins->load($pluginName, $pluginOptions);
 
 		if ($setup)
 		{
-			call_user_func($setup, $configurator);
+			call_user_func($setup, $configurator, $plugin);
 		}
 
 		$xml  = $configurator->getParser()->parse($original);
