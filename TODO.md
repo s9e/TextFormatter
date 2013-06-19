@@ -36,3 +36,4 @@ TODO
 - Test how conditional comments in templates are rendered
 - Re-enable the optimization that uses <xsl:element name="{translate('ABC','abc',name())}"/>
 - PHP renderer: consider caching $node->textContent for performance, especially wrt Emoticons
+- PHP renderer generator: test whether <html:img/> produces <img></img> in HTML mode
