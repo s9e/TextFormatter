@@ -247,12 +247,12 @@ class PHPTest extends Test
 
 	public function getHTMLData()
 	{
-		return $this->getRendererData('e*', 'html');
+		return $this->getRendererData('EdgeCases/e*', 'html');
 	}
 
 	public function getXHTMLData()
 	{
-		return $this->getRendererData('e*', 'xhtml');
+		return $this->getRendererData('EdgeCases/e*', 'xhtml');
 	}
 
 	public function getRendererData($pattern, $outputMethod)
@@ -271,23 +271,6 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox BBCodes from repository.xml render nicely
-	* @dataProvider getBBCodesData
-	*/
-	public function testBBCodes($xml, $xsl, $html)
-	{
-		$this->assertSame(
-			$html,
-			$this->getRendererFromXsl($xsl)->render($xml)
-		);
-	}
-
-	public function getBBCodesData()
-	{
-		return $this->getRendererData('b*', 'html');
-	}
-
-	/**
 	* @testdox Rendering tests from plugins
 	* @dataProvider getPluginsData
 	*/
@@ -301,7 +284,7 @@ class PHPTest extends Test
 
 	public function getPluginsData()
 	{
-		return $this->getRendererData('*.*', 'html');
+		return $this->getRendererData('Plugins/*/*', 'html');
 	}
 
 	/**

@@ -8,15 +8,17 @@ class PHPUnit_Framework_TestCase {}
 
 include __DIR__ . '/../tests/bootstrap.php';
 
-$dir = __DIR__ . '/../tests/Configurator/RendererGenerators/data/';
+$dataDir      = realpath(__DIR__ . '/../tests/Configurator/RendererGenerators/data');
+$pluginsDir   = $dataDir . '/Plugins';
+$edgeCasesDir = $dataDir . '/EdgeCases';
 
 // Generate edge-cases test data
-foreach (glob($dir . 'e*.txt') as $filepath)
+foreach (glob($edgeCasesDir . '/e*.txt') as $filepath)
 {
 	$original = file_get_contents($filepath);
 
 	$configurator = new s9e\TextFormatter\Configurator;
-	$configurator->BBCodes->repositories->add('custom', $dir . 'repository.xml');
+	$configurator->BBCodes->repositories->add('custom', $edgeCasesDir . '/repository.xml');
 
 	preg_match_all('/\\[(\\w+)/', $original, $matches);
 
@@ -33,22 +35,72 @@ foreach (glob($dir . 'e*.txt') as $filepath)
 		);
 	}
 
+	$basename = substr($filepath, 0, -4);
+
 	$xml  = $configurator->getParser()->parse($original);
-	file_put_contents(substr($filepath, 0, -3) . 'xml', $xml);
+	file_put_contents($basename . '.xml', $xml);
 
 	$xsl  = $configurator->stylesheet->get();
 	$html = $configurator->getRenderer()->render($xml);
-	file_put_contents(substr($filepath, 0, -3) . 'html.xsl', $xsl);
-	file_put_contents(substr($filepath, 0, -3) . 'html', $html);
+	file_put_contents($basename . '.html.xsl', $xsl);
+	file_put_contents($basename . '.html', $html);
 
 	$configurator->stylesheet->setOutputMethod('xml');
 	$xsl   = $configurator->stylesheet->get();
 	$xhtml = $configurator->getRenderer()->render($xml);
-	file_put_contents(substr($filepath, 0, -3) . 'xhtml.xsl', $xsl);
-	file_put_contents(substr($filepath, 0, -3) . 'xhtml', $xhtml);
+	file_put_contents($basename . '.xhtml.xsl', $xsl);
+	file_put_contents($basename . '.xhtml', $xhtml);
+}
+
+// Destroy then regenerate Plugins test data
+array_map('unlink', glob($pluginsDir . '/*/*'));
+array_map('rmdir', glob($pluginsDir . '/*'));
+
+foreach (glob(__DIR__ . '/../tests/Plugins/*', GLOB_ONLYDIR) as $dirpath)
+{
+	$pluginName = basename($dirpath);
+	$className  = 's9e\\TextFormatter\\Tests\\Plugins\\' . $pluginName . '\\ParserTest';
+	$test       = new $className;
+
+	if (!method_exists($test, 'getRenderingTests'))
+	{
+		continue;
+	}
+
+	// Create a directory for this plugin's data
+	$pluginDir = $pluginsDir . '/' . $pluginName;
+	mkdir($pluginDir);
+
+	foreach ($test->getRenderingTests() as $case)
+	{
+		$original      = $case[0];
+		$expected      = $case[1];
+		$pluginOptions = (isset($case[2])) ? $case[2] : array();
+		$setup         = (isset($case[3])) ? $case[3] : null;
+
+		$configurator = new Configurator;
+		$plugin = $configurator->plugins->load($pluginName, $pluginOptions);
+
+		if ($setup)
+		{
+			call_user_func($setup, $configurator, $plugin);
+		}
+
+		$xml  = $configurator->getParser()->parse($original);
+		$xsl  = $configurator->stylesheet->get();
+		$html = $configurator->getRenderer()->render($xml);
+
+		$filepath = $pluginDir . '/' . sprintf('%08X', crc32($xml));
+		file_put_contents($filepath . '.xml', $xml);
+		file_put_contents($filepath . '.html.xsl', $xsl);
+		file_put_contents($filepath . '.html', $html);
+	}
 }
 
 // Generate BBCodes test data
+$pluginDir = $pluginsDir . '/BBCodes';
+mkdir($pluginDir);
+
 $test = new BBCodesTest;
 foreach ($test->getPredefinedBBCodesTests() as $case)
 {
@@ -84,46 +136,8 @@ foreach ($test->getPredefinedBBCodesTests() as $case)
 	// default rendering. We correct the expected rendering manually
 	$html = str_replace('</embed>', '', $html);
 
-	$filepath = $dir . 'b' . sprintf('%08X', crc32($xml));
+	$filepath = $pluginDir . '/' . sprintf('%08X', crc32($xml));
 	file_put_contents($filepath . '.xml', $xml);
 	file_put_contents($filepath . '.html.xsl', $xsl);
 	file_put_contents($filepath . '.html', $html);
-}
-
-// Generate Plugins test data
-foreach (glob(__DIR__ . '/../tests/Plugins/*', GLOB_ONLYDIR) as $dirpath)
-{
-	$pluginName = basename($dirpath);
-	$className  = 's9e\\TextFormatter\\Tests\\Plugins\\' . $pluginName . '\\ParserTest';
-	$test       = new $className;
-
-	if (!method_exists($test, 'getRenderingTests'))
-	{
-		continue;
-	}
-
-	foreach ($test->getRenderingTests() as $case)
-	{
-		$original      = $case[0];
-		$expected      = $case[1];
-		$pluginOptions = (isset($case[2])) ? $case[2] : array();
-		$setup         = (isset($case[3])) ? $case[3] : null;
-
-		$configurator = new Configurator;
-		$plugin = $configurator->plugins->load($pluginName, $pluginOptions);
-
-		if ($setup)
-		{
-			call_user_func($setup, $configurator, $plugin);
-		}
-
-		$xml  = $configurator->getParser()->parse($original);
-		$xsl  = $configurator->stylesheet->get();
-		$html = $configurator->getRenderer()->render($xml);
-
-		$filepath = $dir . $pluginName . '.' . sprintf('%08X', crc32($xml));
-		file_put_contents($filepath . '.xml', $xml);
-		file_put_contents($filepath . '.html.xsl', $xsl);
-		file_put_contents($filepath . '.html', $html);
-	}
 }

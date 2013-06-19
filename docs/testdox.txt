@@ -1743,7 +1743,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] setParameter() accepts values that contain both types of quotes
  [x] HTML rendering
  [x] XHTML rendering
- [x] BBCodes from repository.xml render nicely
  [x] Rendering tests from plugins
  [x] Edge cases
  [x] XPath expressions are inlined as PHP whenever possible
