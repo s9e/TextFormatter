@@ -471,6 +471,26 @@ class PHP implements RendererGenerator
 	}
 
 	/**
+	* Append an <output/> element to given node in the IR
+	*
+	* @param  DOMNode $ir      Parent node
+	* @param  string  $type    Either 'avt', 'literal' or 'xpath'
+	* @param  string  $content Content to output
+	* @return void
+	*/
+	protected function appendOutput(DOMNode $ir, $type, $content)
+	{
+		$ir
+			->appendChild(
+				$ir->ownerDocument->createElement(
+					'output',
+					htmlspecialchars($content)
+				)
+			)
+			->setAttribute('type', $type);
+	}
+
+	/**
 	* Parse all the children of a given node
 	*
 	* @param  DOMNode $ir     Node in the internal representation that represents the parent node
@@ -488,18 +508,7 @@ class PHP implements RendererGenerator
 					break;
 
 				case XML_TEXT_NODE:
-					$ir->appendChild(
-						$ir->ownerDocument->createElement(
-							'output',
-							htmlspecialchars(
-								var_export(
-									htmlspecialchars($child->textContent, ENT_NOQUOTES),
-									true
-								),
-								ENT_NOQUOTES
-							)
-						)
-					);
+					$this->appendOutput($ir, 'literal', $child->textContent);
 					break;
 
 				case XML_ELEMENT_NODE:
@@ -542,24 +551,16 @@ class PHP implements RendererGenerator
 
 		// Create an <element/> with a name attribute equal to given node's name
 		$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
-		$element->setAttribute('name', var_export($node->localName, true));
+		$element->setAttribute('name', $node->localName);
 
 		// Append an <attribute/> element for each of this node's attribute
 		foreach ($node->attributes as $attribute)
 		{
 			$irAttribute = $element->appendChild($ir->ownerDocument->createElement('attribute'));
-			$irAttribute->setAttribute('name', var_export($attribute->name, true));
+			$irAttribute->setAttribute('name', $attribute->name);
 
 			// Append an <output/> element to represent the attribute's value
-			$irAttribute->appendChild(
-				$ir->ownerDocument->createElement(
-					'output',
-					htmlspecialchars(
-						$this->convertAttributeValueTemplate($attribute->value),
-						ENT_NOQUOTES
-					)
-				)
-			);
+			$this->appendOutput($irAttribute, 'avt', $attribute->value);
 		}
 
 		// Parse the content of this node
@@ -597,11 +598,8 @@ class PHP implements RendererGenerator
 	{
 		$attribute = $ir->appendChild($ir->ownerDocument->createElement('attribute'));
 
-		// Set this attribute's name
-		$attribute->setAttribute(
-			'name',
-			$this->convertAttributeValueTemplate($node->getAttribute('name'))
-		);
+		// Copy this attribute's name
+		$attribute->setAttribute('name', $node->getAttribute('name'));
 
 		// Parse this attribute's content
 		$this->parseChildren($attribute, $node);
@@ -621,8 +619,9 @@ class PHP implements RendererGenerator
 
 		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'when') as $when)
 		{
+			// Create a <case/> element with the original test condition in @test
 			$case = $switch->appendChild($ir->ownerDocument->createElement('case'));
-			$case->setAttribute('test', $this->convertCondition($when->getAttribute('test')));
+			$case->setAttribute('test', $when->getAttribute('test'));
 
 			// Parse this branch's content
 			$this->parseChildren($case, $when);
@@ -672,18 +671,17 @@ class PHP implements RendererGenerator
 		// <xsl:copy-of select="@foo"/>
 		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
 		{
+			// Create a switch element in the IR
 			$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
 			$case   = $switch->appendChild($ir->ownerDocument->createElement('case'));
-			$case->setAttribute('test', $this->convertCondition($expr));
+			$case->setAttribute('test', $expr);
 
+			// Append an attribute element
 			$attribute = $case->appendChild($ir->ownerDocument->createElement('attribute'));
-			$attribute->appendChild(
-				$ir->ownerDocument->createElement(
-					'output',
-					$this->convertXPath($expr)
-				)
-			);
-			$attribute->setAttribute('name', var_export($m[1], true));
+			$attribute->setAttribute('name', $m[1]);
+
+			// Set the attribute's content, which is simply the copied attribute's value
+			$this->appendOutput($attribute, 'xpath', $expr);
 
 			return;
 		}
@@ -709,10 +707,9 @@ class PHP implements RendererGenerator
 	protected function parseXslElement(DOMNode $ir, DOMNode $node)
 	{
 		$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
-		$element->setAttribute(
-			'name',
-			$this->convertAttributeValueTemplate($node->getAttribute('name'))
-		);
+
+		// Copy this element's name
+		$element->setAttribute('name', $node->getAttribute('name'));
 
 		// Parse this element's content
 		$this->parseChildren($element, $node);
@@ -727,9 +724,10 @@ class PHP implements RendererGenerator
 	*/
 	protected function parseXslIf(DOMNode $ir, DOMNode $node)
 	{
+		// An <xsl:if/> is represented by a <switch/> with only one <case/>
 		$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
 		$case   = $switch->appendChild($ir->ownerDocument->createElement('case'));
-		$case->setAttribute('test', $this->convertCondition($node->getAttribute('test')));
+		$case->setAttribute('test', $node->getAttribute('test'));
 
 		// Parse this branch's content
 		$this->parseChildren($case, $node);
@@ -749,12 +747,7 @@ class PHP implements RendererGenerator
 			return;
 		}
 
-		$ir->appendChild(
-			$ir->ownerDocument->createElement(
-				'output',
-				htmlspecialchars(var_export($node->textContent, true), ENT_NOQUOTES)
-			)
-		);
+		$this->appendOutput($ir, 'literal', $node->textContent);
 	}
 
 	/**
@@ -766,18 +759,7 @@ class PHP implements RendererGenerator
 	*/
 	protected function parseXslValueOf(DOMNode $ir, DOMNode $node)
 	{
-		$xpath      = new DOMXPath($ir->ownerDocument);
-		$escapeMode = ($xpath->evaluate('count(ancestor::attribute)')) ? ENT_COMPAT : ENT_NOQUOTES;
-
-		$ir->appendChild(
-			$ir->ownerDocument->createElement(
-				'output',
-				htmlspecialchars(
-					'htmlspecialchars(' . $this->convertXPath($node->getAttribute('select')) . ',' . $escapeMode . ")",
-					ENT_NOQUOTES
-				)
-			)
-		);
+		$this->appendOutput($ir, 'xpath', $node->getAttribute('select'));
 	}
 
 	//==========================================================================
@@ -810,7 +792,15 @@ class PHP implements RendererGenerator
 	*/
 	protected function serializeAttribute(DOMNode $attribute)
 	{
-		$this->php .= "\$this->out.=' '." . $attribute->getAttribute('name') . ".'=\"';";
+		$attrName = $attribute->getAttribute('name');
+
+		// PHP representation of this attribute's name
+		$phpAttrName = $this->convertAttributeValueTemplate($attrName);
+
+		// NOTE: the attribute name is escaped by default to account for dynamically-generated names
+		$phpAttrName = 'htmlspecialchars(' . $phpAttrName . ',' . ENT_QUOTES . ')';
+
+		$this->php .= "\$this->out.=' '." . $phpAttrName . ".'=\"';";
 		$this->serializeChildren($attribute);
 		$this->php .= "\$this->out.='\"';";
 	}
@@ -884,7 +874,7 @@ class PHP implements RendererGenerator
 		$this->php .= '$this->out.=\' \';';
 		$this->php .= '$this->out.=$attribute->name;';
 		$this->php .= '$this->out.=\'="\';';
-		$this->php .= '$this->out.=htmlspecialchars($attribute->value,' . ENT_COMPAT . ");";
+		$this->php .= '$this->out.=htmlspecialchars($attribute->value,' . ENT_COMPAT . ');';
 		$this->php .= '$this->out.=\'"\';';
 		$this->php .= '}';
 	}
@@ -899,14 +889,30 @@ class PHP implements RendererGenerator
 	{
 		$elName = $element->getAttribute('name');
 
-		if (!preg_match("#^'[^']*'$#", $elName))
+		// Test whether this element name is dynamic
+		$isDynamic = (bool) (strpos($elName, '{') !== false);
+
+		// PHP representation of this element's name
+		$phpElName = $this->convertAttributeValueTemplate($elName);
+
+		// NOTE: the element name is escaped by default to account for dynamically-generated names
+		$phpElName = 'htmlspecialchars(' . $phpElName . ',' . ENT_QUOTES . ')';
+
+		// If the element name is dynamic, we cache its name for convenience and performance
+		if ($isDynamic)
 		{
-			$varName    = uniqid('$e');
-			$this->php .= $varName . '=' . $elName . ';';
-			$elName     = $varName;
+			// Create a unique var name, e.g. $e12345678
+			$varName = uniqid('$e');
+
+			// Add the var declaration to the source
+			$this->php .= $varName . '=' . $phpElName . ';';
+
+			// Replace the element name with the var
+			$phpElName = $varName;
 		}
 
-		$this->php .= "\$this->out.='<'." . $elName . ';';
+		// Open the start tag
+		$this->php .= "\$this->out.='<'." . $phpElName . ';';
 
 		// Whether we should check for voidness
 		$checkVoid = false;
@@ -934,29 +940,27 @@ class PHP implements RendererGenerator
 			$regexp = '/^(?:area|base|br|col|command|embed|hr|img|input|'
 					. 'keygen|link|meta|param|source|track|wbr)$/D';
 
-			// Test whether the element name is fixed
-			if (preg_match("/^'([^']+)'$/", $elName, $m))
-			{
-				// Test whether the element is a void element
-				if (preg_match($regexp, $m[1]))
-				{
-					$this->php .= "\$this->out.='";
-					$this->php .= ($this->outputMethod !== 'html') ? '/' : '';
-					$this->php .= ">';";
-
-					return;
-				}
-			}
-			else
+			if ($isDynamic)
 			{
 				// This is an empty element with a dynamic name, we need some PHP to determine
-				// whether this is a void element
-				$this->php .= 'if(preg_match(' . var_export($regexp, true) . ',' . $elName . ')){';
-				$this->php .= '$this->out.=\'';
+				// whether this is a void element at runtime
+				$this->php .= 'if(preg_match(' . var_export($regexp, true) . ',' . $phpElName . '))';
+				$this->php .= '{';
+				$this->php .= "\$this->out.='";
 				$this->php .= ($this->outputMethod !== 'html') ? '/' : '';
 				$this->php .= ">';}else{";
-				$this->php .= "\$this->out.='></'." . $elName . ".'>';";
+				$this->php .= "\$this->out.='></'." . $phpElName . ".'>';";
 				$this->php .= '}';
+
+				return;
+			}
+
+			// Test whether the element is a void element
+			if (preg_match($regexp, $elName))
+			{
+				$this->php .= "\$this->out.='";
+				$this->php .= ($this->outputMethod !== 'html') ? '/' : '';
+				$this->php .= ">';";
 
 				return;
 			}
@@ -966,7 +970,7 @@ class PHP implements RendererGenerator
 			$this->php .= "\$this->out.='>';";
 		}
 
-		$this->php .= "\$this->out.='</'." . $elName . ".'>';";
+		$this->php .= "\$this->out.='</'." . $phpElName . ".'>';";
 	}
 
 	/**
@@ -977,10 +981,31 @@ class PHP implements RendererGenerator
 	*/
 	protected function serializeOutput(DOMNode $output)
 	{
-		if ($output->textContent !== '')
+		// Unconditionally escape the output. We'll let the optimization pass optimize away the
+		// htmlspecialchars() call if applicable (e.g. with literals)
+		$this->php .= '$this->out.=htmlspecialchars(';
+
+		$xpath      = new DOMXPath($output->ownerDocument);
+		$escapeMode = ($xpath->evaluate('count(ancestor::attribute)', $output))
+		            ? ENT_COMPAT
+		            : ENT_NOQUOTES;
+
+		switch ($output->getAttribute('type'))
 		{
-			$this->php .= '$this->out.=' . $output->textContent . ';';
+			case 'avt':
+				$this->php .= $this->convertAttributeValueTemplate($output->textContent);
+				break;
+
+			case 'literal':
+				$this->php .= var_export($output->textContent, true);
+				break;
+
+			case 'xpath':
+				$this->php .= $this->convertXPath($output->textContent);
+				break;
 		}
+
+		$this->php .= ',' . $escapeMode . ');';
 	}
 
 	/**
@@ -997,7 +1022,7 @@ class PHP implements RendererGenerator
 		{
 			if ($case->hasAttribute('test'))
 			{
-				$this->php .= $else . 'if(' . $case->getAttribute('test') . ')';
+				$this->php .= $else . 'if(' . $this->convertCondition($case->getAttribute('test')) . ')';
 			}
 			elseif (!$case->firstChild)
 			{
@@ -1312,6 +1337,8 @@ class PHP implements RendererGenerator
 	/**
 	* Convert an attribute value template into PHP
 	*
+	* NOTE: escaping must be performed by the caller
+	*
 	* @link http://www.w3.org/TR/xslt#dt-attribute-value-template
 	*
 	* @param  string $attrValue Attribute value template
@@ -1329,11 +1356,11 @@ class PHP implements RendererGenerator
 		{
 			if ($token[0] === 'literal')
 			{
-				$phpExpressions[] = var_export(htmlspecialchars($token[1], ENT_COMPAT), true);
+				$phpExpressions[] = var_export($token[1], true);
 			}
 			else
 			{
-				$phpExpressions[] = 'htmlspecialchars(' . $this->convertXPath($token[1]) . ',' . ENT_COMPAT . ")";
+				$phpExpressions[] = $this->convertXPath($token[1]);
 			}
 		}
 
