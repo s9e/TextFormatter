@@ -1,0 +1,19 @@
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">FOO</match>
+		<element name="div" id="1">
+			<switch>
+				<case test="@a">
+					<attribute name="title">
+						<output type="literal">foo</output>
+					</attribute>
+				</case>
+				<case>
+					<closeTag id="1" set=""/>
+					<output type="literal">foo</output>
+				</case>
+			</switch>
+			<closeTag id="1" check=""/>
+		</element>
+	</template>
+</stylesheet>

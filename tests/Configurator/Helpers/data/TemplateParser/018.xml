@@ -1,0 +1,12 @@
+<stylesheet outputMethod="html">
+	<param name="foo"/>
+	<param name="bar" select="'bar'"/>
+	<param name="baz" select="//@baz"/>
+	<template>
+		<match priority="0">B</match>
+		<element name="b" id="1">
+			<closeTag id="1"/>
+			<applyTemplates/>
+		</element>
+	</template>
+</stylesheet>

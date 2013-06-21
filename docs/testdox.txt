@@ -602,6 +602,13 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
  [x] Values and expressions are preserved in <xsl:if test=".=':)'"><hr title="{{.}}{@foo}"/></xsl:if>
  [x] Throws an exception during XPath minification if a string isn't properly closed
 
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateParser
+ [x] parse() tests
+ [x] parse() throws an exception if it encounters a processing instruction in the stylesheet
+ [x] parse() throws an exception if it encounters an unsupported XSL element
+ [x] parse() throws an exception if it encounters an unsupported <xsl:copy/> expression
+ [x] parse() throws an exception if it encounters a non-XSL namespaced element
+
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() can load 'foo'
  [x] saveTemplate() correctly handles 'foo'

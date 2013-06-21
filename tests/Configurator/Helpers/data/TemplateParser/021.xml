@@ -1,0 +1,5 @@
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">HW</match>
+	</template>
+</stylesheet>

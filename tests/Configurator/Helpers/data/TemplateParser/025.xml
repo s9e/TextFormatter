@@ -1,0 +1,9 @@
+<stylesheet outputMethod="xml">
+	<template>
+		<match priority="0">B</match>
+		<element name="b" id="1">
+			<closeTag id="1"/>
+			<applyTemplates/>
+		</element>
+	</template>
+</stylesheet>

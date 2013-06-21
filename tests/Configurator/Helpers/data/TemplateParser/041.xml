@@ -1,0 +1,9 @@
+<stylesheet outputMethod="xml">
+	<template>
+		<match priority="0">br</match>
+		<element name="br" id="1" void="">
+			<closeTag id="1" void=""/>
+			<output type="literal">foo</output>
+		</element>
+	</template>
+</stylesheet>

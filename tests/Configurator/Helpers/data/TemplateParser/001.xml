@@ -1,0 +1,8 @@
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">br</match>
+		<element name="br" id="1" void="">
+			<closeTag id="1" void=""/>
+		</element>
+	</template>
+</stylesheet>

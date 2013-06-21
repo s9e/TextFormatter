@@ -13,6 +13,7 @@ use DOMText;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\Stylesheet;
 
@@ -84,16 +85,15 @@ class PHP implements RendererGenerator
 	*/
 	public function generate($xsl)
 	{
-		$dom = new DOMDocument;
-		$dom->loadXML($xsl);
+		$ir = TemplateParser::parse($xsl);
 
-		$this->outputMethod = $dom->getElementsByTagNameNS(self::XMLNS_XSL, 'output')->item(0)->getAttribute('method');
+		$this->outputMethod = $ir->documentElement->getAttribute('outputMethod');
 
 		// Generate the arrays of parameters, sorted by whether they are static or dynamic
 		$dynamicParams = [];
 		$staticParams  = [];
 
-		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'param') as $param)
+		foreach ($ir->getElementsByTagName('param') as $param)
 		{
 			$paramName  = $param->getAttribute('name');
 			$paramValue = ($param->hasAttribute('select')) ? $param->getAttribute('select') : "''";
@@ -197,36 +197,16 @@ class PHP implements RendererGenerator
 
 		// Collect and sort templates
 		$templates = [];
-		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, 'template') as $template)
+		foreach ($ir->getElementsByTagName('template') as $template)
 		{
 			// Parse this template and save its internal representation
-			$irXML = $this->parseTemplate($template)->saveXML();
+			$irXML = $template->ownerDocument->saveXML($template);
 
-			// Get the template's match value
-			$match = $template->getAttribute('match');
-
-			// Capture the values separated by |
-			preg_match_all('#(?:[^|"\']+(?:"[^"]*"|\'[^\']*\')?)+#', $match, $m);
-
-			foreach ($m[0] as $expr)
+			// Get the template's match values
+			foreach ($template->getElementsByTagName('match') as $match)
 			{
-				/**
-				* Compute this template's priority
-				*
-				* @link http://www.w3.org/TR/xslt#conflict
-				*/
-				if (preg_match('#^(?:\\w+:)?\\w+$#', $expr))
-				{
-					$priority = 0;
-				}
-				elseif (preg_match('#^\\w+:\\*#', $expr))
-				{
-					$priority = -0.25;
-				}
-				else
-				{
-					$priority = 0.5;
-				}
+				$expr     = $match->textContent;
+				$priority = $match->getAttribute('priority');
 
 				// Separate the tagName from the predicate, if any
 				if (preg_match('#^(\\w+)\\[(.*)\\]$#s', $expr, $m))
@@ -256,8 +236,7 @@ class PHP implements RendererGenerator
 					$condition = '(' . $condition . '&&' . $this->convertCondition($predicate) . ')';
 				}
 
-				// Record this template -- cast the float as string so it can be used as array key
-				$priority = (string) $priority;
+				// Record this template
 				$templates[$priority][$irXML][] = $condition;
 			}
 		}
@@ -293,473 +272,6 @@ class PHP implements RendererGenerator
 		$this->optimizeCode();
 
 		return $this->php;
-	}
-
-	//==========================================================================
-	// Template parsing
-	//==========================================================================
-
-	/**
-	* Parse an <xsl:template/> node
-	*
-	* @param  DOMNode $template <xsl:template/> node
-	* @return DOMNode           Internal representation of the template
-	*/
-	protected function parseTemplate(DOMNode $template)
-	{
-		$ir = new DOMDocument;
-		$ir->loadXML('<ir/>');
-		$xpath = new DOMXPath($ir);
-
-		// Parse this template's content
-		$this->parseChildren($ir->documentElement, $template);
-
-		// Add an empty default <case/> to <switch/> nodes that don't have one
-		foreach ($xpath->query('//switch[not(case[not(@test)])]') as $switch)
-		{
-			$switch->appendChild($ir->createElement('case'));
-		}
-
-		// Add an id attribute to <element/> nodes
-		$id = 0;
-		foreach ($ir->getElementsByTagName('element') as $element)
-		{
-			$element->setAttribute('id', ++$id);
-		}
-
-		// Add <closeTag/> elements to the internal representation, everywhere an open start tag
-		// should be closed
-		$query = '//applyTemplates[not(ancestor::attribute)]'
-		       . '|'
-		       . '//element'
-		       . '|'
-		       . '//output[not(ancestor::attribute)]';
-
-		foreach ($xpath->query($query) as $node)
-		{
-			// Climb through this node's ascendants to find the closest <element/>, if applicable
-			$parentNode = $node->parentNode;
-			while ($parentNode)
-			{
-				if ($parentNode->nodeName === 'element')
-				{
-					$node->parentNode->insertBefore(
-						$ir->createElement('closeTag'),
-						$node
-					)->setAttribute('id', $parentNode->getAttribute('id'));
-
-					break;
-				}
-
-				$parentNode = $parentNode->parentNode;
-			}
-
-			// Append a <closeTag/> to <element/> nodes to ensure that empty elements get closed
-			if ($node->nodeName === 'element')
-			{
-				$node->appendChild($ir->createElement('closeTag'))
-				     ->setAttribute('id', $node->getAttribute('id'));
-			}
-		}
-
-		// Get a snapshot of current internal representation
-		$xml = $ir->saveXML();
-
-		// Set a maximum number of loops to ward against infinite loops
-		$remainingLoops = 10;
-
-		// From now on, keep looping until no further modifications are applied
-		do
-		{
-			$old = $xml;
-
-			// If there's a <closeTag/> right after a <switch/>, clone the <closeTag/> at the end of
-			// the every <case/> that does not end with a <closeTag/>
-			$query = '//switch[name(following-sibling::*) = "closeTag"]';
-			foreach ($xpath->query($query) as $switch)
-			{
-				$closeTag = $switch->nextSibling;
-
-				foreach ($switch->childNodes as $case)
-				{
-					if (!$case->lastChild || $case->lastChild->nodeName !== 'closeTag')
-					{
-						$case->appendChild($closeTag->cloneNode());
-					}
-				}
-			}
-
-			// If there's a <closeTag/> at the beginning of every <case/>, clone it and insert it
-			// right before the <switch/> unless there's already one
-			$query = '//switch[not(preceding-sibling::closeTag)]';
-			foreach ($xpath->query($query) as $switch)
-			{
-				foreach ($switch->childNodes as $case)
-				{
-					if (!$case->firstChild || $case->firstChild->nodeName !== 'closeTag')
-					{
-						// This case is either empty or does not start with a <closeTag/> so we skip
-						// to the next <switch/>
-						continue 2;
-					}
-				}
-
-				// Insert the first child of the last <case/>, which should be the same <closeTag/>
-				// as every other <case/>
-				$switch->parentNode->insertBefore(
-					$case->firstChild->cloneNode(),
-					$switch
-				);
-			}
-
-			// If there's a <closeTag/> right after a <switch/>, remove all <closeTag/> nodes at the
-			// end of every <case/>
-			$query = '//switch[name(following-sibling::*) = "closeTag"]';
-			foreach ($xpath->query($query) as $switch)
-			{
-				foreach ($switch->childNodes as $case)
-				{
-					while ($case->lastChild && $case->lastChild->nodeName === 'closeTag')
-					{
-						$case->removeChild($case->lastChild);
-					}
-				}
-			}
-
-			// Finally, for each <closeTag/> remove duplicate <closeTag/> nodes that are either
-			// siblings or descendants of a sibling
-			$query = '//closeTag';
-			foreach ($xpath->query($query) as $closeTag)
-			{
-				$id    = $closeTag->getAttribute('id');
-				$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
-
-				foreach ($xpath->query($query, $closeTag) as $dupe)
-				{
-					$dupe->parentNode->removeChild($dupe);
-				}
-			}
-
-			$xml = $ir->saveXML();
-		}
-		while (--$remainingLoops > 0 && $xml !== $old);
-
-		// Mark conditional <closeTag/> nodes
-		foreach ($ir->getElementsByTagName('closeTag') as $closeTag)
-		{
-			$id = $closeTag->getAttribute('id');
-
-			// For each <switch/> ancestor, look for a <closeTag/> and that is either a sibling or
-			// the descendant of a sibling, and that matches the id
-			$query = 'ancestor::switch/'
-			       . 'following-sibling::*/'
-			       . 'descendant-or-self::closeTag[@id = "' . $id . '"]';
-
-			foreach ($xpath->query($query, $closeTag) as $following)
-			{
-				// Mark following <closeTag/> nodes to indicate that the status of this tag must
-				// be checked before it is closed
-				$following->setAttribute('check', '');
-
-				// Mark the current <closeTag/> to indicate that it must set a flag to indicate
-				// that its tag has been closed
-				$closeTag->setAttribute('set', '');
-			}
-		}
-
-		return $ir;
-	}
-
-	/**
-	* Append an <output/> element to given node in the IR
-	*
-	* @param  DOMNode $ir      Parent node
-	* @param  string  $type    Either 'avt', 'literal' or 'xpath'
-	* @param  string  $content Content to output
-	* @return void
-	*/
-	protected function appendOutput(DOMNode $ir, $type, $content)
-	{
-		$ir
-			->appendChild(
-				$ir->ownerDocument->createElement(
-					'output',
-					htmlspecialchars($content)
-				)
-			)
-			->setAttribute('type', $type);
-	}
-
-	/**
-	* Parse all the children of a given node
-	*
-	* @param  DOMNode $ir     Node in the internal representation that represents the parent node
-	* @param  DOMNode $parent Parent node
-	* @return void
-	*/
-	protected function parseChildren(DOMNode $ir, DOMNode $parent)
-	{
-		foreach ($parent->childNodes as $child)
-		{
-			switch ($child->nodeType)
-			{
-				case XML_COMMENT_NODE:
-					// Do nothing
-					break;
-
-				case XML_TEXT_NODE:
-					$this->appendOutput($ir, 'literal', $child->textContent);
-					break;
-
-				case XML_ELEMENT_NODE:
-					$this->parseNode($ir, $child);
-					break;
-
-				default:
-					throw new RuntimeException("Cannot parse node '" . $child->nodeName . "'");
-			}
-		}
-	}
-
-	/**
-	* Parse a given node into the internal representation of its template
-	*
-	* @param  DOMNode $ir     Node in the internal representation that represents the node's parent
-	* @param  DOMNode $parent Node
-	* @return void
-	*/
-	protected function parseNode(DOMNode $ir, DOMNode $node)
-	{
-		// XSL elements are parsed by the corresponding parseXsl* method
-		if ($node->namespaceURI === self::XMLNS_XSL)
-		{
-			$methodName = 'parseXsl' . str_replace(' ', '', ucwords(str_replace('-', ' ', $node->localName)));
-
-			if (!method_exists($this, $methodName))
-			{
-				throw new RuntimeException("Element '" . $node->nodeName . "' is not supported");
-			}
-
-			return $this->$methodName($ir, $node);
-		}
-
-		// Namespaced elements are not supported
-		if (isset($node->namespaceURI))
-		{
-			throw new RuntimeException("Namespaced element '" . $node->nodeName . "' is not supported");
-		}
-
-		// Create an <element/> with a name attribute equal to given node's name
-		$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
-		$element->setAttribute('name', $node->localName);
-
-		// Append an <attribute/> element for each of this node's attribute
-		foreach ($node->attributes as $attribute)
-		{
-			$irAttribute = $element->appendChild($ir->ownerDocument->createElement('attribute'));
-			$irAttribute->setAttribute('name', $attribute->name);
-
-			// Append an <output/> element to represent the attribute's value
-			$this->appendOutput($irAttribute, 'avt', $attribute->value);
-		}
-
-		// Parse the content of this node
-		$this->parseChildren($element, $node);
-	}
-
-	/**
-	* Parse an <xsl:apply-templates/> into the internal representation
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:apply-templates/> node
-	* @return void
-	*/
-	protected function parseXslApplyTemplates(DOMNode $ir, DOMNode $node)
-	{
-		$applyTemplates = $ir->appendChild($ir->ownerDocument->createElement('applyTemplates'));
-
-		if ($node->hasAttribute('select'))
-		{
-			$applyTemplates->setAttribute(
-				'select',
-				$node->getAttribute('select')
-			);
-		}
-	}
-
-	/**
-	* Parse an <xsl:attribute/> into the internal representation
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:attribute/> node
-	* @return void
-	*/
-	protected function parseXslAttribute(DOMNode $ir, DOMNode $node)
-	{
-		$attribute = $ir->appendChild($ir->ownerDocument->createElement('attribute'));
-
-		// Copy this attribute's name
-		$attribute->setAttribute('name', $node->getAttribute('name'));
-
-		// Parse this attribute's content
-		$this->parseChildren($attribute, $node);
-	}
-
-	/**
-	* Parse an <xsl:choose/> and its <xsl:when/> and <xsl:otherwise> children into the internal
-	* representation
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:choose/> node
-	* @return void
-	*/
-	protected function parseXslChoose(DOMNode $ir, DOMNode $node)
-	{
-		$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
-
-		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'when') as $when)
-		{
-			// Create a <case/> element with the original test condition in @test
-			$case = $switch->appendChild($ir->ownerDocument->createElement('case'));
-			$case->setAttribute('test', $when->getAttribute('test'));
-
-			// Parse this branch's content
-			$this->parseChildren($case, $when);
-		}
-
-		// Add the default branch, which is presumed to be last
-		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'otherwise') as $otherwise)
-		{
-			$case = $switch->appendChild($ir->ownerDocument->createElement('case'));
-
-			// Parse this branch's content
-			$this->parseChildren($case, $otherwise);
-
-			// There should be only one <xsl:otherwise/> but we'll break anyway
-			break;
-		}
-	}
-
-	/**
-	* Parse an <xsl:comment/> into the internal representation
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:comment/> node
-	* @return void
-	*/
-	protected function parseXslComment(DOMNode $ir, DOMNode $node)
-	{
-		$comment = $ir->appendChild($ir->ownerDocument->createElement('comment'));
-
-		// Parse this branch's content
-		$this->parseChildren($comment, $node);
-	}
-
-	/**
-	* Parse an <xsl:copy-of/> into the internal representation
-	*
-	* NOTE: only attributes are supported
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:copy-of/> node
-	* @return void
-	*/
-	protected function parseXslCopyOf(DOMNode $ir, DOMNode $node)
-	{
-		$expr = $node->getAttribute('select');
-
-		// <xsl:copy-of select="@foo"/>
-		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
-		{
-			// Create a switch element in the IR
-			$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
-			$case   = $switch->appendChild($ir->ownerDocument->createElement('case'));
-			$case->setAttribute('test', $expr);
-
-			// Append an attribute element
-			$attribute = $case->appendChild($ir->ownerDocument->createElement('attribute'));
-			$attribute->setAttribute('name', $m[1]);
-
-			// Set the attribute's content, which is simply the copied attribute's value
-			$this->appendOutput($attribute, 'xpath', $expr);
-
-			return;
-		}
-
-		// <xsl:copy-of select="@*"/>
-		if ($expr === '@*')
-		{
-			$ir->appendChild($ir->ownerDocument->createElement('copyOfAttributes'));
-
-			return;
-		}
-
-		throw new RuntimeException("Unsupported <xsl:copy-of/> expression '" . $expr . "'");
-	}
-
-	/**
-	* Parse an <xsl:element/> into the internal representation
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:element/> node
-	* @return void
-	*/
-	protected function parseXslElement(DOMNode $ir, DOMNode $node)
-	{
-		$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
-
-		// Copy this element's name
-		$element->setAttribute('name', $node->getAttribute('name'));
-
-		// Parse this element's content
-		$this->parseChildren($element, $node);
-	}
-
-	/**
-	* Parse an <xsl:if/> into the internal representation
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:if/> node
-	* @return void
-	*/
-	protected function parseXslIf(DOMNode $ir, DOMNode $node)
-	{
-		// An <xsl:if/> is represented by a <switch/> with only one <case/>
-		$switch = $ir->appendChild($ir->ownerDocument->createElement('switch'));
-		$case   = $switch->appendChild($ir->ownerDocument->createElement('case'));
-		$case->setAttribute('test', $node->getAttribute('test'));
-
-		// Parse this branch's content
-		$this->parseChildren($case, $node);
-	}
-
-	/**
-	* Parse an <xsl:text/> into the internal representation
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:text/> node
-	* @return void
-	*/
-	protected function parseXslText(DOMNode $ir, DOMNode $node)
-	{
-		if ($node->textContent === '')
-		{
-			return;
-		}
-
-		$this->appendOutput($ir, 'literal', $node->textContent);
-	}
-
-	/**
-	* Parse an <xsl:value-of/> into the internal representation
-	*
-	* @param  DOMNode $ir   Node in the internal representation that represents the node's parent
-	* @param  DOMNode $node <xsl:value-of/> node
-	* @return void
-	*/
-	protected function parseXslValueOf(DOMNode $ir, DOMNode $node)
-	{
-		$this->appendOutput($ir, 'xpath', $node->getAttribute('select'));
 	}
 
 	//==========================================================================
@@ -971,6 +483,13 @@ class PHP implements RendererGenerator
 		}
 
 		$this->php .= "\$this->out.='</'." . $phpElName . ".'>';";
+	}
+
+	/**
+	* Unused
+	*/
+	protected function serializeMatch()
+	{
 	}
 
 	/**

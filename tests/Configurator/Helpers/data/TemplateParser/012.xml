@@ -1,0 +1,28 @@
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">QUOTE</match>
+		<element name="blockquote" id="1">
+			<switch>
+				<case test="not(@author)">
+					<attribute name="class">
+						<output type="literal">uncited</output>
+					</attribute>
+				</case>
+			</switch>
+			<closeTag id="1"/>
+			<element name="div" id="2">
+				<closeTag id="2"/>
+				<switch>
+					<case test="@author">
+						<element name="cite" id="3">
+							<closeTag id="3"/>
+							<output type="xpath">@author</output>
+							<output type="literal"> wrote:</output>
+						</element>
+					</case>
+				</switch>
+				<applyTemplates/>
+			</element>
+		</element>
+	</template>
+</stylesheet>

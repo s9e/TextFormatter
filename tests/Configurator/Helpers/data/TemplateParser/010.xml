@@ -1,0 +1,16 @@
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">B</match>
+		<element name="b" id="1">
+			<switch>
+				<case test="@foo">
+					<attribute name="title">
+						<output type="xpath">@bar</output>
+					</attribute>
+				</case>
+			</switch>
+			<closeTag id="1"/>
+			<applyTemplates/>
+		</element>
+	</template>
+</stylesheet>

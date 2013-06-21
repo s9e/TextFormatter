@@ -1,0 +1,19 @@
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">A</match>
+		<element name="a" id="1">
+			<attribute name="href">
+				<output type="xpath">@href</output>
+			</attribute>
+			<switch>
+				<case test="@title">
+					<attribute name="title">
+						<output type="xpath">@title</output>
+					</attribute>
+				</case>
+			</switch>
+			<closeTag id="1"/>
+			<applyTemplates/>
+		</element>
+	</template>
+</stylesheet>

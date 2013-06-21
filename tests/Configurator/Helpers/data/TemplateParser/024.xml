@@ -1,0 +1,7 @@
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0.5">X[boolean(foo|bar)]</match>
+		<match priority="0">Y</match>
+		<output type="literal">Hello World</output>
+	</template>
+</stylesheet>
