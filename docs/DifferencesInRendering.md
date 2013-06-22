@@ -42,14 +42,19 @@ Arguably, the XML rendering is wrong in that it's not valid XHTML but whatever t
 
 ### How to handle void elements in each mode
 
+Based on XSLTProcessor's output:
+
 | Void | Empty | HTML | XML |
 |:----:|:-----:|------|-----|
-| Yes  | Yes   |      |     |
-| Yes  | Maybe | Ignore content at runtime | Check for voidness at runtime (self-closing tag) |
+| Yes  | Yes   |      | Use a self-closing tag |
+| Yes  | Maybe | Ignore content at runtime | Check for emptiness at runtime (self-closing tag) |
 | Yes  | No    | Remove content | |
-| Maybe| Yes   | Check for voidness at runtime (no end tag) | Check for voidness at runtime (self-closing tag) |
-| Maybe| Maybe | Check for voidness at runtime (no end tag/ignore content) | Check for voidness at runtime (self-closing tag)
+| Maybe| Yes   | Check for voidness at runtime (no end tag) | Use a self-closing tag |
+| Maybe| Maybe | Check for voidness at runtime (no end tag/ignore content) | Check for emptiness at runtime (self-closing tag)
 | Maybe| No    | Check for voidness at runtime (no end tag/ignore content) | |
-| No   | Yes   |      |     |
-| No   | Maybe |      |     |
+| No   | Yes   |      | Use a self-closing tag |
+| No   | Maybe |      | Check for emptiness at runtime (self-closing tag) |
 | No   | No    |      |     |
+
+In short, the XML mode does not treat void elements differently. An empty element (no content) gets a self-closing tag.
+In HTML mode, a void element will never have any content or an end tag. If possible, its content can be removed in advance from its template. For dynamic elements, the content/end tag should only be output if the element is verified not to be a void element.
