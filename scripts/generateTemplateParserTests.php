@@ -23,7 +23,7 @@ $emptyAttr = [
 	'N' => ''
 ];
 
-$i = 40;
+$i = 100;
 foreach ($modes as $iMode => $mode)
 {
 	foreach ($void as $iVoid => $elName)
@@ -63,8 +63,8 @@ foreach ($modes as $iMode => $mode)
 	</template>
 </stylesheet>';
 
-			file_put_contents($dirpath . '/' . sprintf('%03d', $i) . '.xsl', $xsl);
-			file_put_contents($dirpath . '/' . sprintf('%03d', $i) . '.xml', $xml);
+			file_put_contents($dirpath . '/' . $i . '.xsl', $xsl);
+			file_put_contents($dirpath . '/' . $i . '.xml', $xml);
 
 			++$i;
 		}
