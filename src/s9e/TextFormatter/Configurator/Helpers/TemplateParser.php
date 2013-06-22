@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\Helpers;
 
 use DOMDocument;
+use DOMElement;
 use DOMNode;
 use DOMText;
 use DOMXPath;
@@ -523,30 +524,34 @@ class TemplateParser
 			}
 		}
 
-		// Mark void elements - this only works on static names. Dynamic elements must be checked
-		// at runtime
+		// Mark void elements and elements with no content
 		foreach ($ir->getElementsByTagName('element') as $element)
 		{
-			if (preg_match(self::$voidRegexp, $element->getAttribute('name')))
+			$elName = $element->getAttribute('name');
+
+			// Test whether this element is (maybe) void
+			if (strpos($elName, '{') !== false)
 			{
-				$element->setAttribute('void', '');
+				// Dynamic element names must be checked at runtime
+				$element->setAttribute('void', 'maybe');
+			}
+			elseif (preg_match(self::$voidRegexp, $elName))
+			{
+				// Static element names can be checked right now
+				$element->setAttribute('void', 'yes');
+			}
+
+			// Find whether this element is empty
+			$isEmpty = self::isEmpty($element);
+
+			if ($isEmpty === 'yes' || $isEmpty === 'maybe')
+			{
+				$element->setAttribute('empty', $isEmpty);
 			}
 		}
 
 		// Optimize the IR
 		self::optimize($ir);
-
-		// Mark the <closeTag/> nodes of void elements
-		foreach ($xpath->query('//element[@void]') as $element)
-		{
-			$id    = $element->getAttribute('id');
-			$query = './/closeTag[@id="' . $id . '"]';
-
-			foreach ($xpath->query($query, $element) as $closeTag)
-			{
-				$closeTag->setAttribute('void', '');
-			}
-		}
 
 		// Mark conditional <closeTag/> nodes
 		foreach ($ir->getElementsByTagName('closeTag') as $closeTag)
@@ -678,7 +683,7 @@ class TemplateParser
 			{
 				// For each void element, we find whichever <closeTag/> elements closes it and
 				// remove everything after
-				foreach ($xpath->query('//element[@void]') as $element)
+				foreach ($xpath->query('//element[@void="yes"]') as $element)
 				{
 					$id    = $element->getAttribute('id');
 					$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
@@ -766,5 +771,58 @@ class TemplateParser
 				)
 			)
 			->setAttribute('type', $type);
+	}
+
+	/**
+	* Test whether given element will be empty at runtime (no content, no children)
+	*
+	* @param  DOMElement $ir Element in the IR
+	* @return string         'yes', 'maybe' or 'no'
+	*/
+	protected static function isEmpty(DOMElement $ir)
+	{
+		$xpath = new DOMXPath($ir->ownerDocument);
+
+		// Elements count as not-empty and literal output is sure to output something
+		if ($xpath->evaluate('count(element | output[@type="literal"])', $ir))
+		{
+			return 'no';
+		}
+
+		// Default return value
+		$isEmpty = 'yes';
+
+		// Test all branches of a <switch/>
+		// NOTE: this assumes that <switch/> are normalized to always have a default <case/>
+		$cases = [];
+		foreach ($xpath->query('switch/case', $ir) as $case)
+		{
+			$cases[self::isEmpty($case)] = 1;
+		}
+
+		if (isset($cases['maybe']))
+		{
+			$isEmpty = 'maybe';
+		}
+		elseif (isset($cases['no']))
+		{
+			// If all the cases are not-empty, the element is not-empty
+			if (!isset($cases['yes']))
+			{
+				return 'no';
+			}
+
+			// Some 'yes' and some 'no', the element is a 'maybe'
+			$isEmpty = 'maybe';
+		}
+
+		// Test for <apply-templates/> or XPath output
+		if ($xpath->evaluate('count(applyTemplates | output[@type="xpath"])', $ir))
+		{
+			// We can't know in advance whether those will produce output
+			$isEmpty = 'maybe';
+		}
+
+		return $isEmpty;
 	}
 }

@@ -10,7 +10,7 @@
 				</case>
 			</switch>
 			<closeTag id="1"/>
-			<element name="div" id="2">
+			<element name="div" id="2" empty="maybe">
 				<closeTag id="2"/>
 				<switch>
 					<case test="@author">

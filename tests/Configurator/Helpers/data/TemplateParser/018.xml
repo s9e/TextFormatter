@@ -4,7 +4,7 @@
 	<param name="baz" select="//@baz"/>
 	<template>
 		<match priority="0">B</match>
-		<element name="b" id="1">
+		<element name="b" id="1" empty="maybe">
 			<closeTag id="1"/>
 			<applyTemplates/>
 		</element>

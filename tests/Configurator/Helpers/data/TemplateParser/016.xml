@@ -1,7 +1,7 @@
 <stylesheet outputMethod="html">
 	<template>
 		<match priority="0">A</match>
-		<element name="a" id="1">
+		<element name="a" id="1" empty="maybe">
 			<attribute name="href">
 				<output type="xpath">@href</output>
 			</attribute>

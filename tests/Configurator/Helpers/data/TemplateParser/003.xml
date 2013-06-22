@@ -2,7 +2,7 @@
 	<template>
 		<match priority="0">B</match>
 		<match priority="0.5">FOO[@style='[bold]']</match>
-		<element name="b" id="1">
+		<element name="b" id="1" empty="maybe">
 			<closeTag id="1"/>
 			<applyTemplates/>
 		</element>

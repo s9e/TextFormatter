@@ -1,14 +1,14 @@
 <stylesheet outputMethod="html">
 	<template>
 		<match priority="0">B</match>
-		<element name="b" id="1">
+		<element name="b" id="1" empty="maybe">
 			<closeTag id="1"/>
 			<applyTemplates select="I"/>
 		</element>
 	</template>
 	<template>
 		<match priority="0">I</match>
-		<element name="i" id="2">
+		<element name="i" id="2" empty="maybe">
 			<closeTag id="2"/>
 			<applyTemplates/>
 		</element>

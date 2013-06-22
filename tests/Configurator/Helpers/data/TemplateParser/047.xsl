@@ -3,9 +3,9 @@
 
 	<xsl:output method="html" encoding="utf-8" />
 
-	<!-- YYH -->
+	<!-- NMH -->
 	<xsl:template match="FOO">
-		<xsl:element name="hr"><xsl:attribute name="id">foo</xsl:attribute></xsl:element>
+		<xsl:element name="div"><xsl:attribute name="id">foo</xsl:attribute><xsl:apply-templates/></xsl:element>
 	</xsl:template>
 
 </xsl:stylesheet>

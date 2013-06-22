@@ -1,4 +1,4 @@
-<stylesheet outputMethod="html">
+<stylesheet outputMethod="xml">
 	<template>
 		<match priority="0">FOO</match>
 		<element name="hr" id="1" void="yes" empty="maybe">
@@ -6,7 +6,7 @@
 				<output type="literal">foo</output>
 			</attribute>
 			<closeTag id="1"/>
-			
+			<applyTemplates/>
 		</element>
 	</template>
 </stylesheet>

@@ -1,7 +1,7 @@
 <stylesheet outputMethod="html">
 	<template>
 		<match priority="-0.25">html:*</match>
-		<element name="{local-name()}" id="1">
+		<element name="{local-name()}" id="1" void="maybe" empty="maybe">
 			<copyOfAttributes/>
 			<closeTag id="1"/>
 			<applyTemplates/>

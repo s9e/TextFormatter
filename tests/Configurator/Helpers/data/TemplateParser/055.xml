@@ -1,7 +1,7 @@
-<stylesheet outputMethod="html">
+<stylesheet outputMethod="xml">
 	<template>
 		<match priority="0">FOO</match>
-		<element name="hr" id="1" void="yes" empty="maybe">
+		<element name="div" id="1" empty="yes">
 			<attribute name="id">
 				<output type="literal">foo</output>
 			</attribute>
