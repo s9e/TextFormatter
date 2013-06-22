@@ -1,4 +1,4 @@
-### Empty tags
+### Empty elements
 
 What happens when a template outputs an element with no content, such as `<FOO></FOO>`?
 ```xslt
@@ -39,3 +39,17 @@ HTML: ```<br>```
 XML:  ```<br>Not supposed to happen</br>```
 
 Arguably, the XML rendering is wrong in that it's not valid XHTML but whatever the template says. If the content comes from user input (e.g. `<xsl:apply-templates/>`) this can easily be remedied by using `addHTML5Rules()` which automatically creates rules that prevent the tag from having any content.
+
+### How to handle void elements in each mode
+
+| Void | Empty | HTML | XML |
+|:----:|:-----:|------|-----|
+| Yes  | Yes   |      |     |
+| Yes  | Maybe | Ignore content at runtime | Check for voidness at runtime (self-closing tag) |
+| Yes  | No    | Remove content | |
+| Maybe| Yes   | Check for voidness at runtime (no end tag) | Check for voidness at runtime (self-closing tag) |
+| Maybe| Maybe | Check for voidness at runtime (no end tag/ignore content) | Check for voidness at runtime (self-closing tag)
+| Maybe| No    | Check for voidness at runtime (no end tag/ignore content) | |
+| No   | Yes   |      |     |
+| No   | Maybe |      |     |
+| No   | No    |      |     |
