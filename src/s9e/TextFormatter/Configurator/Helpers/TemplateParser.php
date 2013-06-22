@@ -28,10 +28,10 @@ class TemplateParser
 	protected static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
 
 	/**
-	* 
+	* Parse a stylesheet into an internal representation
 	*
-	* @param  string      $xsl
-	* @return DOMDocument
+	* @param  string      $xsl Original stylesheet
+	* @return DOMDocument      Internal representation
 	*/
 	public static function parse($xsl)
 	{
