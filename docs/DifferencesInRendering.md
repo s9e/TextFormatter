@@ -46,9 +46,9 @@ Based on XSLTProcessor's output:
 
 | Void | Empty | HTML | XML |
 |:----:|:-----:|------|-----|
-| Yes  | Yes   |      | Use a self-closing tag |
-| Yes  | Maybe | Ignore content at runtime | Check for emptiness at runtime (self-closing tag) |
-| Yes  | No    | Remove content | |
+| Yes  | Yes   | No end tag | Use a self-closing tag |
+| Yes  | Maybe | Ignore content at runtime, no end tag | Check for emptiness at runtime (self-closing tag) |
+| Yes  | No    | Remove content, no end tag | |
 | Maybe| Yes   | Check for voidness at runtime (no end tag) | Use a self-closing tag |
 | Maybe| Maybe | Check for voidness at runtime (no end tag/ignore content) | Check for emptiness at runtime (self-closing tag)
 | Maybe| No    | Check for voidness at runtime (no end tag/ignore content) | |
