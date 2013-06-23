@@ -699,6 +699,14 @@ class TemplateParser
 		}
 		while (--$remainingLoops > 0 && $xml !== $old);
 
+		// If all branches of a switch have a closeTag we can remove the any closeTag siblings of
+		// the switch
+		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
+		foreach ($xpath->query($query) as $closeTag)
+		{
+			$closeTag->parentNode->removeChild($closeTag);
+		}
+
 		// Coalesce consecutive literal outputs
 		foreach ($xpath->query('//output[@type="literal"]') as $output)
 		{
