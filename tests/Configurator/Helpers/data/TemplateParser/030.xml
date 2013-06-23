@@ -1,0 +1,25 @@
+<stylesheet outputMethod="xml">
+	<template>
+		<match priority="0">FOO</match>
+		<element name="div" id="1" empty="yes">
+			<switch>
+				<case test="@foo">
+					<attribute name="id">
+						<output type="literal">foo</output>
+					</attribute>
+				</case>
+				<case test="@bar">
+					<attribute name="id">
+						<output type="literal">bar</output>
+					</attribute>
+				</case>
+				<case>
+					<attribute name="id">
+						<output type="literal">baz</output>
+					</attribute>
+				</case>
+			</switch>
+			<closeTag id="1"/>
+		</element>
+	</template>
+</stylesheet>
