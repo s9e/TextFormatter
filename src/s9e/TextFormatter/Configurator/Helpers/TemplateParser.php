@@ -161,13 +161,18 @@ class TemplateParser
 	*/
 	protected static function parseXslAttribute(DOMNode $ir, DOMNode $node)
 	{
-		$attribute = $ir->appendChild($ir->ownerDocument->createElement('attribute'));
+		$attrName = $node->getAttribute('name');
 
-		// Copy this attribute's name
-		$attribute->setAttribute('name', $node->getAttribute('name'));
+		if ($attrName !== '')
+		{
+			$attribute = $ir->appendChild($ir->ownerDocument->createElement('attribute'));
 
-		// Parse this attribute's content
-		self::parseChildren($attribute, $node);
+			// Copy this attribute's name
+			$attribute->setAttribute('name', $attrName);
+
+			// Parse this attribute's content
+			self::parseChildren($attribute, $node);
+		}
 	}
 
 	/**
@@ -271,13 +276,18 @@ class TemplateParser
 	*/
 	protected static function parseXslElement(DOMNode $ir, DOMNode $node)
 	{
-		$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
+		$elName = $node->getAttribute('name');
 
-		// Copy this element's name
-		$element->setAttribute('name', $node->getAttribute('name'));
+		if ($elName !== '')
+		{
+			$element = $ir->appendChild($ir->ownerDocument->createElement('element'));
 
-		// Parse this element's content
-		self::parseChildren($element, $node);
+			// Copy this element's name
+			$element->setAttribute('name', $elName);
+
+			// Parse this element's content
+			self::parseChildren($element, $node);
+		}
 	}
 
 	/**

@@ -1,0 +1,5 @@
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">B</match>
+	</template>
+</stylesheet>
