@@ -24,5 +24,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<span style="font-size:10px">Small text</span>, <span style="font-size:16px">big</span>, <span style="font-size:32px">biggest</span>.
+<span style="font-size:10px">Small text</span>, <span style="font-size:24px">big</span>, <span style="font-size:32px">biggest</span>.
 ```

@@ -38,7 +38,7 @@ function addDir($root, $level = 0)
 
 file_put_contents(
 	__DIR__ . '/../docs/Cookbook/README.md',
-	'## Table of content' . addDir(__DIR__ . '/../docs/Cookbook/')
+	'## Table of content' . addDir(__DIR__ . '/../docs/Cookbook/') . "\n"
 );
 
 die("Done.\n");
