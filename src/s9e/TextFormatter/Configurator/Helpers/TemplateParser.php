@@ -695,21 +695,21 @@ class TemplateParser
 				}
 			}
 
-			// Coalesce consecutive literal outputs
-			foreach ($xpath->query('//output[@type="literal"]') as $output)
-			{
-				while ($output->nextSibling
-				    && $output->nextSibling->nodeName === 'output'
-				    && $output->nextSibling->getAttribute('type') === 'literal')
-				{
-					$output->nodeValue .= $output->nextSibling->textContent;
-					$output->parentNode->removeChild($output->nextSibling);
-				}
-			}
-
 			$xml = $ir->saveXML();
 		}
 		while (--$remainingLoops > 0 && $xml !== $old);
+
+		// Coalesce consecutive literal outputs
+		foreach ($xpath->query('//output[@type="literal"]') as $output)
+		{
+			while ($output->nextSibling
+				&& $output->nextSibling->nodeName === 'output'
+				&& $output->nextSibling->getAttribute('type') === 'literal')
+			{
+				$output->nodeValue .= $output->nextSibling->textContent;
+				$output->parentNode->removeChild($output->nextSibling);
+			}
+		}
 
 		// Remove empty default cases (no @test and no descendants)
 		foreach ($xpath->query('//case[not(@test | node())]') as $case)
