@@ -4,8 +4,6 @@ By default, the Emoticons plugin matches all emoticons regardless of their surro
 
 You can change the regexp using the two properties `regexpStart` and `regexpEnd`. By default they are set to `/` and `/S` respectively. In this example, we replace them with `/(?<!\S)` and `(?!\S)/S` to prevent transforming emoticons that are not surrounded with whitespace.
 
-This example uses a relative URL but you may want to use an absolute URL instead.
-
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Emoticons->add(':)', '<img src="happy.png" alt=":)" title="Happy">');
