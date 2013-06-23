@@ -539,19 +539,13 @@ class PHP implements RendererGenerator
 		            ? ENT_COMPAT
 		            : ENT_NOQUOTES;
 
-		switch ($output->getAttribute('type'))
+		if ($output->getAttribute('type') === 'xpath')
 		{
-			case 'avt':
-				$this->php .= $this->convertAttributeValueTemplate($output->textContent);
-				break;
-
-			case 'literal':
+			$this->php .= $this->convertXPath($output->textContent);
+		}
+		else
+		{
 				$this->php .= var_export($output->textContent, true);
-				break;
-
-			case 'xpath':
-				$this->php .= $this->convertXPath($output->textContent);
-				break;
 		}
 
 		$this->php .= ',' . $escapeMode . ');';
@@ -572,11 +566,6 @@ class PHP implements RendererGenerator
 			if ($case->hasAttribute('test'))
 			{
 				$this->php .= $else . 'if(' . $this->convertCondition($case->getAttribute('test')) . ')';
-			}
-			elseif (!$case->firstChild)
-			{
-				// Empty default case
-				continue;
 			}
 			else
 			{
@@ -895,11 +884,6 @@ class PHP implements RendererGenerator
 	*/
 	protected function convertAttributeValueTemplate($attrValue)
 	{
-		if ($attrValue === '')
-		{
-			return "''";
-		}
-
 		$phpExpressions = [];
 		foreach (TemplateHelper::parseAttributeValueTemplate($attrValue) as $token)
 		{
