@@ -79,7 +79,7 @@ class ParserTest extends Test
 			],
 			[
 				'x<br/>y',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x<html:br>&lt;br/&gt;</html:br>y</rt>',
+				'<rt xmlns:html="urn:s9e:TextFormatter:html">x<html:br><st>&lt;br/&gt;</st></html:br>y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -88,7 +88,7 @@ class ParserTest extends Test
 			],
 			[
 				'x<br />y',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x<html:br>&lt;br /&gt;</html:br>y</rt>',
+				'<rt xmlns:html="urn:s9e:TextFormatter:html">x<html:br><st>&lt;br /&gt;</st></html:br>y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -97,7 +97,7 @@ class ParserTest extends Test
 			],
 			[
 				'x <input type=checkbox disabled checked /> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:input type="checkbox" disabled="disabled" checked="checked">&lt;input type=checkbox disabled checked /&gt;</html:input> x</rt>',
+				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:input type="checkbox" disabled="disabled" checked="checked"><st>&lt;input type=checkbox disabled checked /&gt;</st></html:input> x</rt>',
 				[],
 				function ($constructor)
 				{
@@ -139,6 +139,46 @@ class ParserTest extends Test
 				{
 					$constructor->HTMLElements->allowElement('b');
 					$constructor->HTMLElements->allowAttribute('b', 'title');
+				}
+			],
+			[
+				'Break: <br/> :)',
+				'Break: <br> :)',
+				[],
+				function ($constructor)
+				{
+					$constructor->HTMLElements->allowElement('br');
+					$constructor->stylesheet->outputMethod = 'html';
+				}
+			],
+			[
+				'Break: <br/> :)',
+				'Break: <br/> :)',
+				[],
+				function ($constructor)
+				{
+					$constructor->HTMLElements->allowElement('br');
+					$constructor->stylesheet->outputMethod = 'xml';
+				}
+			],
+			[
+				'Div: <div/> :)',
+				'Div: <div></div> :)',
+				[],
+				function ($constructor)
+				{
+					$constructor->HTMLElements->allowElement('div');
+					$constructor->stylesheet->outputMethod = 'html';
+				}
+			],
+			[
+				'Div: <div/> :)',
+				'Div: <div/> :)',
+				[],
+				function ($constructor)
+				{
+					$constructor->HTMLElements->allowElement('div');
+					$constructor->stylesheet->outputMethod = 'xml';
 				}
 			],
 		];

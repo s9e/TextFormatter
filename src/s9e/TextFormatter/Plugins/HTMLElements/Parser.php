@@ -31,9 +31,13 @@ class Parser extends ParserBase
 				continue;
 			}
 
-			// Test whether it's a self-closing tag or a start tag
+			// Test whether it's a self-closing tag or a start tag.
+			//
+			// A self-closing tag will become one start tag consuming all of the text followed by a
+			// 0-width end tag. Alternatively, it could be replaced by a pair of 0-width tags plus
+			// an ignore tag to prevent the text in between from being output
 			$tag = (substr($m[0][0], -2) === '/>')
-			     ? $this->parser->addSelfClosingTag($tagName, $pos, $len)
+			     ? $this->parser->addTagPair($tagName, $pos, $len, $pos + $len, 0)
 			     : $this->parser->addStartTag($tagName, $pos, $len);
 
 			// Capture attributes
