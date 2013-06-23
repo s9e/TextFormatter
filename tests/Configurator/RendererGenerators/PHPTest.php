@@ -271,6 +271,40 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @dataProvider getVoidTestsHTML
+	* @testdox Rendering of void and empty elements in HTML
+	*/
+	public function testVoidHTML($xml, $xsl, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			$this->getRendererFromXsl($xsl)->render($xml)
+		);
+	}
+
+	public function getVoidTestsHTML()
+	{
+		return $this->getRendererData('VoidTests/*', 'html');
+	}
+
+	/**
+	* @dataProvider getVoidTestsXHTML
+	* @testdox Rendering of void and empty elements in XHTML
+	*/
+	public function testVoidXHTML($xml, $xsl, $expected)
+	{
+		$this->assertSame(
+			$expected,
+			$this->getRendererFromXsl($xsl)->render($xml)
+		);
+	}
+
+	public function getVoidTestsXHTML()
+	{
+		return $this->getRendererData('VoidTests/*', 'xhtml');
+	}
+
+	/**
 	* @testdox Rendering tests from plugins
 	* @dataProvider getPluginsData
 	*/

@@ -17,6 +17,9 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\Stylesheet;
 
+/**
+* @see docs/DifferencesInRendering.md
+*/
 class PHP implements RendererGenerator
 {
 	/**
@@ -340,19 +343,55 @@ class PHP implements RendererGenerator
 	*/
 	protected function serializeCloseTag(DOMNode $closeTag)
 	{
-		$varName = '$t' . $closeTag->getAttribute('id');
+		$id = $closeTag->getAttribute('id');
 
 		if ($closeTag->hasAttribute('check'))
 		{
-			$this->php .= 'if(!isset(' . $varName . ')){';
+			$this->php .= 'if(!isset($t' . $id . ')){';
 		}
 
 		if ($closeTag->hasAttribute('set'))
 		{
-			$this->php .= $varName . '=1;';
+			$this->php .= '$t' . $id . '=1;';
 		}
 
-		$this->php .= "\$this->out.='>';";
+		// Get the element that's being closed
+		$xpath   = new DOMXPath($closeTag->ownerDocument);
+		$element = $xpath->query('ancestor::element[@id="' . $id . '"]', $closeTag)->item(0);
+		$isVoid  = $element->getAttribute('void');
+		$isEmpty = $element->getAttribute('empty');
+
+		if ($this->outputMethod === 'html')
+		{
+			$this->php .= "\$this->out.='>';";
+
+			if ($isVoid === 'maybe')
+			{
+				// Check at runtime whether this element is not void
+				$this->php .= 'if(!$v' . $id . '){';
+			}
+		}
+		else
+		{
+			// In XML mode, we only care about whether this element is empty
+			if ($isEmpty === 'yes')
+			{
+				// Definitely empty, use a self-closing tag
+				$this->php .= "\$this->out.='/>';";
+			}
+			else
+			{
+				// Since it's not definitely empty, we'll close this start tag normally
+				$this->php .= "\$this->out.='>';";
+
+				if ($isEmpty === 'maybe')
+				{
+					// Maybe empty, record the length of the output and if it doesn't grow we'll
+					// change the start tag into a self-closing tag
+					$this->php .= '$l' . $id . '=strlen($this->out);';
+				}
+			}
+		}
 
 		if ($closeTag->hasAttribute('check'))
 		{
@@ -399,7 +438,10 @@ class PHP implements RendererGenerator
 	*/
 	protected function serializeElement(DOMNode $element)
 	{
-		$elName = $element->getAttribute('name');
+		$elName  = $element->getAttribute('name');
+		$id      = $element->getAttribute('id');
+		$isVoid  = $element->getAttribute('void');
+		$isEmpty = $element->getAttribute('empty');
 
 		// Test whether this element name is dynamic
 		$isDynamic = (bool) (strpos($elName, '{') !== false);
@@ -413,8 +455,7 @@ class PHP implements RendererGenerator
 		// If the element name is dynamic, we cache its name for convenience and performance
 		if ($isDynamic)
 		{
-			// Create a unique var name, e.g. $e12345678
-			$varName = uniqid('$e');
+			$varName = '$e' . $id;
 
 			// Add the var declaration to the source
 			$this->php .= $varName . '=' . $phpElName . ';';
@@ -423,66 +464,55 @@ class PHP implements RendererGenerator
 			$phpElName = $varName;
 		}
 
+		// Test whether this element is void if we need this information
+		if ($this->outputMethod === 'html' && $isVoid === 'maybe')
+		{
+			$this->php .= '$v' . $id . '=preg_match(' . var_export(TemplateParser::$voidRegexp, true) . ',' . $phpElName . ');';
+		}
+
 		// Open the start tag
 		$this->php .= "\$this->out.='<'." . $phpElName . ';';
-
-		// Whether we should check for voidness
-		$checkVoid = false;
-
-		// Test whether this element is empty
-		if ($element->lastChild->nodeName === 'closeTag'
-		 && $element->getElementsByTagName('closeTag')->length === 1)
-		{
-			$checkVoid = true;
-
-			// Remove the <closeTag/> element
-			$element->removeChild($element->lastChild);
-		}
 
 		// Serialize this element's content
 		$this->serializeChildren($element);
 
-		// Test whether this is a void element
-		if ($checkVoid)
+		// If we're in XML mode and the element is or may be empty, we may not need to close it at
+		// all
+		if ($this->outputMethod === 'xml')
 		{
-			/**
-			* Matches the names of all void elements
-			* @link http://www.w3.org/TR/html-markup/syntax.html#void-elements
-			*/
-			$regexp = '/^(?:area|base|br|col|command|embed|hr|img|input|'
-					. 'keygen|link|meta|param|source|track|wbr)$/D';
-
-			if ($isDynamic)
+			// If this element is definitely empty, it has already been closed with a self-closing
+			// tag in serializeCloseTag()
+			if ($isEmpty === 'yes')
 			{
-				// This is an empty element with a dynamic name, we need some PHP to determine
-				// whether this is a void element at runtime
-				$this->php .= 'if(preg_match(' . var_export($regexp, true) . ',' . $phpElName . '))';
-				$this->php .= '{';
-				$this->php .= "\$this->out.='";
-				$this->php .= ($this->outputMethod !== 'html') ? '/' : '';
-				$this->php .= ">';}else{";
-				$this->php .= "\$this->out.='></'." . $phpElName . ".'>';";
+				return;
+			}
+
+			// If this element may be empty, we need to check at runtime whether we turn its start
+			// tag into a self-closing tag or append an end tag
+			if ($isEmpty === 'maybe')
+			{
+				$this->php .= 'if($l' . $id . '===strlen($this->out)){';
+				$this->php .= "\$this->out=substr(\$this->out,0,-1).'/>';";
+				$this->php .= '}else{';
+				$this->php .= "\$this->out.='</'." . $phpElName . ".'>';";
 				$this->php .= '}';
 
 				return;
 			}
-
-			// Test whether the element is a void element
-			if (preg_match($regexp, $elName))
-			{
-				$this->php .= "\$this->out.='";
-				$this->php .= ($this->outputMethod !== 'html') ? '/' : '';
-				$this->php .= ">';";
-
-				return;
-			}
-
-			// Since the only <closeTag/> element has been removed, this branch MUST close the start
-			// tag of non-void elements
-			$this->php .= "\$this->out.='>';";
 		}
 
-		$this->php .= "\$this->out.='</'." . $phpElName . ".'>';";
+		// Close that element, unless we're in HTML mode and we know it's void
+		if ($this->outputMethod !== 'html' || $isVoid !== 'yes')
+		{
+			$this->php .= "\$this->out.='</'." . $phpElName . ".'>';";
+		}
+
+		// If this element was maybe void, serializeCloseTag() has put its content within an if
+		// block. We need to close that block
+		if ($this->outputMethod === 'html' && $isVoid === 'maybe')
+		{
+			$this->php .= '}';
+		}
 	}
 
 	/**

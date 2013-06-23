@@ -2,6 +2,7 @@
 <?php
 
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodesTest;
 
 class PHPUnit_Framework_TestCase {}
@@ -11,6 +12,7 @@ include __DIR__ . '/../tests/bootstrap.php';
 $dataDir      = realpath(__DIR__ . '/../tests/Configurator/RendererGenerators/data');
 $pluginsDir   = $dataDir . '/Plugins';
 $edgeCasesDir = $dataDir . '/EdgeCases';
+$voidTestsDir = $dataDir . '/VoidTests';
 
 // Generate edge-cases test data
 foreach (glob($edgeCasesDir . '/e*.txt') as $filepath)
@@ -140,4 +142,61 @@ foreach ($test->getPredefinedBBCodesTests() as $case)
 	file_put_contents($filepath . '.xml', $xml);
 	file_put_contents($filepath . '.html.xsl', $xsl);
 	file_put_contents($filepath . '.html', $html);
+}
+
+// Generate void/empty elements test data
+$void = [
+	'Void' => [
+		'hr',
+		'',
+	],
+	'NotVoid' => [
+		'div',
+		''
+	],
+	'MaybeVoidActuallyVoid' => [
+		'{@name}',
+		' name="hr"'
+	],
+	'MaybeVoidActuallyNotVoid' => [
+		'{@name}',
+		' name="div"'
+	]
+];
+
+$empty = [
+	'Empty'
+		=> '',
+	'NotEmpty'
+		=> 'foo',
+	'MaybeEmptyActuallyEmpty'
+		=> '<xsl:apply-templates/>',
+	'MaybeEmptyActuallyNotEmpty'
+		=> '<xsl:value-of select="@name"/>'
+];
+
+foreach ($void as $voidType => $case)
+{
+	list($elName, $attribute) = $case;
+
+	foreach ($empty as $emptyType => $content)
+	{
+		$basename = "$voidTestsDir/$voidType$emptyType";
+
+		$xml = '<rt><FOO' . $attribute . '/></rt>';
+		file_put_contents("$basename.xml", $xml);
+
+		foreach (['html' => 'html', 'xml' => 'xhtml'] as $mode => $ext)
+		{
+			$configurator = new Configurator;
+			$configurator->stylesheet->outputMethod = $mode;
+
+			$configurator->tags->add('FOO')->defaultTemplate = new UnsafeTemplate(
+				'<xsl:element name="' . $elName . '"><xsl:attribute name="id">foo</xsl:attribute>' . $content . '</xsl:element>'
+			);
+
+			file_put_contents("$basename.$ext.xsl", $configurator->stylesheet->get());
+			file_put_contents("$basename.$ext", $configurator->getRenderer('XSLT')->render($xml));
+		}
+	}
 }

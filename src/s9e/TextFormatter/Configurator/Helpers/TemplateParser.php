@@ -25,7 +25,7 @@ class TemplateParser
 	* @var string Regexp that matches the names of all void elements 
 	* @link http://www.w3.org/TR/html-markup/syntax.html#void-elements
 	*/
-	protected static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
+	public static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';
 
 	/**
 	* Parse a stylesheet into an internal representation
