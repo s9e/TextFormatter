@@ -585,16 +585,6 @@ class TemplateParser
 				$closeTag->setAttribute('set', '');
 			}
 		}
-
-		// Mark empty elements. We recognize them because they have only one <closeTag/> and it's
-		// at the end
-		foreach ($ir->getElementsByTagName('element') as $element)
-		{
-			if ($element->lastChild->nodeName === 'closeTag'
-			 && $element->getElementsByTagName('closeTag')->length === 1)
-			{
-			}
-		}
 	}
 
 	/**
