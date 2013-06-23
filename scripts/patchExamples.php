@@ -3,8 +3,17 @@
 
 include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 
-foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Plugins/*/README.md') as $filepath)
+function patchDir($dirpath)
 {
+	$dirpath = realpath($dirpath);
+	array_map('patchDir',  glob($dirpath . '/*', GLOB_ONLYDIR));
+	array_map('patchFile', glob($dirpath . '/*.md'));
+}
+
+function patchFile($filepath)
+{
+	echo "Patching $filepath\n";
+
 	$text = preg_replace_callback(
 		'#(```php(.*?)```.*?(?:```html|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
 		function ($m)
@@ -19,5 +28,8 @@ foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Plugins/*/README.md') as $fil
 
 	file_put_contents($filepath, $text);
 }
+
+patchDir(__DIR__ . '/../src/s9e/TextFormatter/Plugins/');
+patchDir(__DIR__ . '/../docs/Cookbook/');
 
 die("Done.\n");
