@@ -16,7 +16,7 @@ function addDir($root, $level = 0)
 
 	foreach (glob($root . '/*.md') as $filepath)
 	{
-		if (substr($filepath, -6) === 'TOC.md')
+		if (substr($filepath, -9) === 'README.md')
 		{
 			continue;
 		}
@@ -37,7 +37,7 @@ function addDir($root, $level = 0)
 }
 
 file_put_contents(
-	__DIR__ . '/../docs/Cookbook/TOC.md',
+	__DIR__ . '/../docs/Cookbook/README.md',
 	'## Table of content' . addDir(__DIR__ . '/../docs/Cookbook/')
 );
 
