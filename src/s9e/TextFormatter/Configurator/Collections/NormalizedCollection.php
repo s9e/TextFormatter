@@ -50,11 +50,11 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	/**
 	* Add an item to this collection
 	*
-	* Note: relies on exists() to normalize the key
+	* NOTE: relies on exists() to check the key for invalid values and on set() to normalize it
 	*
-	* @param  string $key
-	* @param  mixed  $value
-	* @return mixed
+	* @param  string $key   Item's key
+	* @param  mixed  $value Item's value
+	* @return mixed         Normalized value
 	*/
 	public function add($key, $value = null)
 	{
@@ -69,8 +69,8 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	/**
 	* Test whether a given value is present in this collection
 	*
-	* @param  mixed $value
-	* @return bool
+	* @param  mixed $value Original value
+	* @return bool         Whether the normalized value was found in this collection
 	*/
 	public function contains($value)
 	{
@@ -80,7 +80,8 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	/**
 	* Delete an item from this collection
 	*
-	* @param string $key
+	* @param  string $key Item's key
+	* @return void
 	*/
 	public function delete($key)
 	{
@@ -92,8 +93,8 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	/**
 	* Test whether an item of given key exists
 	*
-	* @param  string $key
-	* @return bool
+	* @param  string $key Item's key
+	* @return bool        Whether this key exists in this collection
 	*/
 	public function exists($key)
 	{
@@ -105,8 +106,8 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	/**
 	* Return a value from this collection
 	*
-	* @param  string $key
-	* @return mixed
+	* @param  string $key Item's key
+	* @return mixed       Normalized value
 	*/
 	public function get($key)
 	{
@@ -125,7 +126,7 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	*
 	* Will return the first key associated with the given value, or FALSE if the value is not found
 	*
-	* @param  mixed $value
+	* @param  mixed $value Original value
 	* @return mixed        Index of the value, or FALSE if not found
 	*/
 	public function indexOf($value)
@@ -136,9 +137,9 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	/**
 	* Set and overwrite a value in this collection
 	*
-	* @param  string $key
-	* @param  mixed  $value
-	* @return mixed
+	* @param  string $key   Item's key
+	* @param  mixed  $value Item's value
+	* @return mixed         Normalized value
 	*/
 	public function set($key, $value)
 	{
