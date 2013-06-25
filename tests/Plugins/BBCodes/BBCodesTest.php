@@ -47,7 +47,7 @@ class BBCodesTest extends Test
 	}
 
 	/**
-	* @group needs-nodejs
+	* @group needs-js
 	* @testdox BBCodes from repository.xml are parsed identically by the JavaScript parser
 	* @dataProvider getPredefinedBBCodesTests
 	*/
