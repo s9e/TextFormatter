@@ -12,7 +12,7 @@ use s9e\TextFormatter\Plugins\ParserBase;
 class Parser extends ParserBase
 {
 	/**
-	* {@inheritDoc}
+	* {@inheritdoc}
 	*/
 	public function parse($text, array $matches)
 	{
