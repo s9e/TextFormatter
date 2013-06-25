@@ -796,6 +796,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Regexp
  [x] Is not safe in CSS if the regexp is invalid
  [x] Is not safe in CSS if no regexp is set
  [x] __construct() forwards its arguments to setRegexp()
+ [x] getRegexp() returns the filter's regexp
  [x] setRegexp() sets the filter's regexp
  [x] setRegexp() throws an exception if the regexp is invalid
  [x] asConfig() returns an array

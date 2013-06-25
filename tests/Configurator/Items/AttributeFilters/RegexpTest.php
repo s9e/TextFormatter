@@ -195,6 +195,16 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox getRegexp() returns the filter's regexp
+	*/
+	public function testGetRegexp()
+	{
+		$filter = new Regexp('/foo/');
+
+		$this->assertSame('/foo/', $filter->getRegexp());
+	}
+
+	/**
 	* @testdox setRegexp() sets the filter's regexp
 	*/
 	public function testSetRegexp()

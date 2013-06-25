@@ -53,6 +53,16 @@ class Regexp extends AttributeFilter
 	}
 
 	/**
+	* Return this filter's regexp
+	*
+	* @return string
+	*/
+	public function getRegexp()
+	{
+		return (string) $this->vars['regexp'];
+	}
+
+	/**
 	* Set this filter's regexp
 	*
 	* @param  string $regexp PCRE regexp
