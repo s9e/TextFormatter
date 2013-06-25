@@ -401,6 +401,30 @@ class TagProcessingTest extends Test
 				}
 			],
 			[
+				'foo bar',
+				'<rt><X>foo bar</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 7);
+				}
+			],
+			[
+				'foo bar',
+				'<pt>foo bar</pt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 8);
+				}
+			],
+			[
 				'*foo* bar',
 				'<rt><X><st>*</st>foo<et>*</et></X> bar</rt>',
 				function ($constructor)
