@@ -454,6 +454,49 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox isset($configurator->BBCodes) returns $configurator->plugins->exists('BBCodes')
+	*/
+	public function testMagicIsset()
+	{
+		$mock = $this->getMock('stdClass', ['exists']);
+
+		$mock->expects($this->once())
+		     ->method('exists')
+		     ->with($this->equalTo('BBCodes'))
+		     ->will($this->returnValue(false));
+
+		$this->configurator->plugins = $mock;
+
+		$this->assertFalse(isset($this->configurator->BBCodes));
+	}
+
+	/**
+	* @testdox isset($configurator->BBCodes) returns false if the BBCodes plugin is not loaded
+	*/
+	public function testMagicIssetFalse()
+	{
+		$this->assertFalse(isset($this->configurator->BBCodes));
+	}
+
+	/**
+	* @testdox isset($configurator->BBCodes) does not load the BBCodes plugin
+	*/
+	public function testMagicIssetNotLoad()
+	{
+		$this->assertFalse(isset($this->configurator->BBCodes));
+		$this->assertFalse($this->configurator->plugins->exists('BBCodes'));
+	}
+
+	/**
+	* @testdox isset($configurator->BBCodes) returns true if the BBCodes plugin is loaded
+	*/
+	public function testMagicIssetTrue()
+	{
+		$this->configurator->plugins->load('BBCodes');
+		$this->assertTrue(isset($this->configurator->BBCodes));
+	}
+
+	/**
 	* @testdox addHTML5Rules() add root rules
 	*/
 	public function testAddHTML5RulesRoot()

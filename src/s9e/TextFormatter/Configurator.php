@@ -116,6 +116,22 @@ class Configurator implements ConfigProvider
 	}
 
 	/**
+	* Magic __isset forwards to the plugins collection when applicable
+	*
+	* @param  string $k Property name
+	* @return bool
+	*/
+	public function __isset($k)
+	{
+		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
+		{
+			return $this->plugins->exists($k);
+		}
+
+		return isset($this->$k);
+	}
+
+	/**
 	* Return an instance of Parser based on the current config
 	*
 	* @return Parser
