@@ -497,6 +497,23 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox isset($configurator->foo) returns false if the "foo" property is not set
+	*/
+	public function testMagicIssetPropFalse()
+	{
+		$this->assertFalse(isset($this->configurator->foo));
+	}
+
+	/**
+	* @testdox isset($configurator->foo) returns true if the "foo" property is set
+	*/
+	public function testMagicIssetPropTrue()
+	{
+		$this->configurator->foo = 1;
+		$this->assertTrue(isset($this->configurator->foo));
+	}
+
+	/**
 	* @testdox addHTML5Rules() add root rules
 	*/
 	public function testAddHTML5RulesRoot()

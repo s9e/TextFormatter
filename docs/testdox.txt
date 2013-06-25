@@ -121,6 +121,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] isset($configurator->BBCodes) returns false if the BBCodes plugin is not loaded
  [x] isset($configurator->BBCodes) does not load the BBCodes plugin
  [x] isset($configurator->BBCodes) returns true if the BBCodes plugin is loaded
+ [x] isset($configurator->foo) returns false if the "foo" property is not set
+ [x] isset($configurator->foo) returns true if the "foo" property is set
  [x] addHTML5Rules() add root rules
  [x] addHTML5Rules() add tag rules
  [x] addHTML5Rules() passes its options to the generator
