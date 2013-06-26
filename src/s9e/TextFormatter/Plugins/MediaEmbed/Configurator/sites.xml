@@ -69,13 +69,19 @@
 		<match>!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!</match>
 		<template><![CDATA[
 			<object type="application/x-shockwave-flash"
-					width="620"
-					height="378"
-					data="http://www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
+			        typemustmatch=""
+			        width="620"
+			        height="378"
+			        data="http://www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
 			>
 				<param name="flashvars">
 					<xsl:attribute name="value">channel=<xsl:value-of select="@channel"/><xsl:if test="@archive_id">&amp;archive_id=<xsl:value-of select="@archive_id"/></xsl:if><xsl:if test="@chapter_id">&amp;chapter_id=<xsl:value-of select="@chapter_id"/></xsl:if></xsl:attribute>
 				</param>
+				<embed type="application/x-shockwave-flash"
+				       width="620"
+				       height="378"
+				       src="http://www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
+				/>
 			</object>
 		]]></template>
 	</site>

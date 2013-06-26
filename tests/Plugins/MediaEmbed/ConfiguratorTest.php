@@ -289,7 +289,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" width="123" height="456"><param name="movie" value="foo"/><param name="allowFullScreen" value="true"/><embed src="foo" type="application/x-shockwave-flash" width="123" height="456" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowFullScreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen=""/></object>',
 			$tag->defaultTemplate
 		);
 	}

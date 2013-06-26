@@ -235,8 +235,11 @@ class Configurator extends ConfiguratorBase
 
 			switch ($renderingMethod)
 			{
+				/**
+				* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
+				*/
 				case 'flash':
-					$tag->defaultTemplate = '<object type="application/x-shockwave-flash" width="' . $siteConfig['flash']['width'] . '" height="' . $siteConfig['flash']['height'] . '"><param name="movie" value="' . $siteConfig['flash']['src'] . '"/><param name="allowFullScreen" value="true"/><embed src="' . $siteConfig['flash']['src'] . '" type="application/x-shockwave-flash" width="' . $siteConfig['flash']['width'] . '" height="' . $siteConfig['flash']['height'] . '" allowfullscreen=""></embed></object>';
+					$tag->defaultTemplate = '<object type="application/x-shockwave-flash" typemustmatch="" width="' . $siteConfig['flash']['width'] . '" height="' . $siteConfig['flash']['height'] . '" data="' . $siteConfig['flash']['src'] . '"><param name="allowFullScreen" value="true"/><embed type="application/x-shockwave-flash" src="' . $siteConfig['flash']['src'] . '" width="' . $siteConfig['flash']['width'] . '" height="' . $siteConfig['flash']['height'] . '" allowfullscreen=""></embed></object>';
 					break 2;
 
 				case 'iframe':
