@@ -24,7 +24,11 @@ class Parser extends ParserBase
 			$pos = $m[0][1];
 			$len = strlen($url);
 
-			$this->parser->addSelfClosingTag('MEDIA', $pos, $len)->setAttribute('url', $url);
+			$tag = $this->parser->addSelfClosingTag('MEDIA', $pos, $len);
+			$tag->setAttribute('url', $url);
+
+			// Give that tag priority over other tags such as Autolink's
+			$tag->setSortPriority(-10);
 		}
 	}
 

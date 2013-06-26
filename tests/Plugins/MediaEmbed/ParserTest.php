@@ -194,6 +194,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
+			[
+				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak and that: http://example.com',
+				'<rt>Check this: <YOUTUBE id="-cEzsCAzTak">http://www.youtube.com/watch?v=-cEzsCAzTak</YOUTUBE> and that: <URL url="http://example.com">http://example.com</URL></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Autolink;
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
 		];
 	}
 
@@ -342,6 +352,16 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak and that: http://example.com',
+				'Check this: <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe> and that: <a href="http://example.com">http://example.com</a>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Autolink;
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
