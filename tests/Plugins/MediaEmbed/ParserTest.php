@@ -132,6 +132,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://vimeo.com/67207222',
+				'<rt><VIMEO id="67207222">http://vimeo.com/67207222</VIMEO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
+				'http://vimeo.com/channels/staffpicks/67207222',
+				'<rt><VIMEO id="67207222">http://vimeo.com/channels/staffpicks/67207222</VIMEO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
 				'[media=youtube]-cEzsCAzTak[/media]',
 				'<rt><YOUTUBE id="-cEzsCAzTak">[media=youtube]-cEzsCAzTak[/media]</YOUTUBE></rt>',
 				[],
@@ -299,6 +317,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'http://vimeo.com/67207222',
+				'<iframe width="560" height="315" src="http://player.vimeo.com/video/67207222" allowfullscreen=""></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vimeo');
 				}
 			],
 			[

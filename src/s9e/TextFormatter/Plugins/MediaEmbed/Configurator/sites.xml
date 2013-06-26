@@ -2,6 +2,8 @@
 	<site id="collegehumor">
 		<name>CollegeHumor</name>
 		<homepage>http://www.collegehumor.com/</homepage>
+		<example>http://www.collegehumor.com/video/1181601/more-than-friends</example>
+
 		<host>collegehumor.com</host>
 		<match>!collegehumor\.com/(?:video|embed)/(?'id'[0-9]+)!</match>
 		<iframe width="600" height="369" src="http://www.collegehumor.com/e/{@id}"/>
@@ -11,6 +13,9 @@
 		<name>Dailymotion</name>
 		<homepage>http://www.dailymotion.com/</homepage>
 		<source>http://www.dailymotion.com/doc/api/player</source>
+		<example>http://www.dailymotion.com/video/x222z1</example>
+		<example>http://www.dailymotion.com/user/Dailymotion/2#video=x222z1</example>
+
 		<host>dailymotion.com</host>
 		<match>!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!</match>
 		<flash width="560" height="315" src="http://www.dailymotion.com/swf/{@id}"/>
@@ -19,6 +24,8 @@
 	<site id="facebook">
 		<name>Facebook</name>
 		<homepage>http://www.facebook.com/</homepage>
+		<example>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</example>
+
 		<host>facebook.com</host>
 		<match>!facebook\.com/photo\.php\?v=(?'id'[0-9]+)!</match>
 		<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id={@id}"/>
@@ -27,6 +34,8 @@
 	<site id="liveleak">
 		<name>LiveLeak</name>
 		<homepage>http://www.liveleak.com/</homepage>
+		<example>http://www.liveleak.com/view?i=3dd_1366238099</example>
+
 		<host>liveleak.com</host>
 		<match>!liveleak\.com/view\?i=(?'id'[a-f_0-9]+)!</match>
 		<iframe width="560" height="315" src="http://www.liveleak.com/e/{@id}"/>
@@ -35,6 +44,8 @@
 	<site id="metacafe">
 		<name>Metacafe</name>
 		<homepage>http://www.metacafe.com/</homepage>
+		<example>http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</example>
+
 		<host>metacafe.com</host>
 		<match>!metacafe\.com/watch/(?'id'[0-9]+)!</match>
 		<iframe width="560" height="315" src="http://www.metacafe.com/embed/{@id}/"/>
@@ -44,6 +55,8 @@
 		<name>SoundCloud</name>
 		<homepage>https://soundcloud.com/</homepage>
 		<source>https://soundcloud.com/pages/widgets</source>
+		<example>http://api.soundcloud.com/tracks/98282116</example>
+
 		<host>soundcloud.com</host>
 		<match>!soundcloud\.com(?:%2F|/)tracks(?:%2F|/)(?'id'[0-9]+)!</match>
 		<iframe width="560"
@@ -56,6 +69,9 @@
 		<name>TED Talks</name>
 		<homepage>http://www.ted.com/</homepage>
 		<source>http://blog.ted.com/2011/04/01/now-you-can-embed-tedtalks-with-subtitles-enabled/</source>
+		<example>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</example>
+		<example>http://embed.ted.com/playlists/26/our_digital_lives.html</example>
+
 		<host>ted.com</host>
 		<match>!ted\.com/(?'path'(?:talk|playlist)s/[^\s"]+)!i</match>
 		<iframe width="560" height="315" src="http://embed.ted.com/{@path}"/>
@@ -65,6 +81,10 @@
 		<name>Twitch</name>
 		<homepage>http://www.twitch.tv/</homepage>
 		<source>https://github.com/justintv/Twitch-API/blob/master/embedding.md</source>
+		<example>http://www.twitch.tv/minigolf2000</example>
+		<example>http://www.twitch.tv/minigolf2000/c/2475925</example>
+		<example>http://www.twitch.tv/minigolf2000/b/419320018</example>
+
 		<host>twitch.tv</host>
 		<match>!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!</match>
 		<template><![CDATA[
@@ -90,6 +110,9 @@
 		<name>Vimeo</name>
 		<homepage>http://vimeo.com/</homepage>
 		<source>http://developer.vimeo.com/player/embedding</source>
+		<example>http://vimeo.com/67207222</example>
+		<example>http://vimeo.com/channels/staffpicks/67207222</example>
+
 		<host>vimeo.com</host>
 		<match>!vimeo\.com/(?:channels/[^/]+/)?(?'id'[0-9]+)!</match>
 		<iframe width="560" height="315" src="http://player.vimeo.com/video/{@id}"/>
@@ -99,6 +122,9 @@
 		<name>YouTube</name>
 		<homepage>http://www.youtube.com/</homepage>
 		<source>http://support.google.com/youtube/bin/answer.py?hl=en&amp;answer=171780</source>
+		<example>http://www.youtube.com/watch?v=-cEzsCAzTak</example>
+		<example>http://youtu.be/-cEzsCAzTak</example>
+
 		<host>youtube.com</host>
 		<host>youtu.be</host>
 		<match>!youtube\.com/(?:watch\?.*?v=|v/)(?'id'[-0-9A-Z_a-z]+)!</match>
