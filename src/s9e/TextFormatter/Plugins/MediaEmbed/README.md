@@ -45,3 +45,36 @@ foreach ($examples as $text)
 <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>
 
 ```
+
+### Configure a site manually
+
+In addition to the sites that are directly available by name, you can define new, custom sites. More examples are available in the [Cookbook](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/README.md).
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+$configurator->MediaEmbed->add(
+	'youtube',
+	[
+		'host'   => 'youtube.com',
+		'match'  => "!youtube\\.com/watch\\?v=(?'id'[-0-9A-Z_a-z]+)!",
+		'iframe' => [
+			'width'  => 560,
+			'height' => 315,
+			'src'    => 'http://www.youtube.com/embed/{@id}'
+		]
+	]
+);
+
+$parser   = $configurator->getParser();
+$renderer = $configurator->getRenderer();
+
+$text = '[youtube]http://www.youtube.com/watch?v=-cEzsCAzTak[/youtube]';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>
+```
