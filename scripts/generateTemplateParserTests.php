@@ -70,3 +70,5 @@ foreach ($modes as $iMode => $mode)
 		}
 	}
 }
+
+die("Done.\n");

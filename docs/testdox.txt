@@ -1742,6 +1742,40 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntities\Parser
  [x] Parsing tests
  [x] Parsing+rendering tests
 
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
+ [x] Extends ArrayObject
+ [x] Implements ConfigProvider
+ [x] asConfig() returns a JS variant
+ [x] The config contains a map of ['host.tld' => 'site id']
+ [x] Accept "host" as a string or an array of strings
+
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
+ [x] Registers mediasites as a variable for the parser
+ [x] Creates a [media] BBCode by default
+ [x] Does not create a [media] BBCode if createBBCodes is false
+ [x] add('youtube') creates a [youtube] BBCode by default
+ [x] add('youtube') does not createc a [youtube] BBCode if createBBCodes is false
+ [x] add('inexistent') throws an exception
+ [x] add() returns a tag
+ [x] add() accepts an array as second argument
+ [x] add() creates an attribute for every named subpattern
+ [x] add() marks the "id" attribute as non-optional if present
+ [x] add() marks non-"id" attributes as optional
+ [x] add() adds the regexp used for the "id" attribute to the list of attribute preprocessors
+ [x] add() accepts multiple "match" elements
+ [x] add() accepts multiple "host" elements
+ [x] add() sets the tag's default template to the "template" element if available
+ [x] add() sets the tag's default template to the iframe defined in the "iframe" element if available
+ [x] add() sets the tag's default template to the object defined in the "flash" element if available
+ [x] asConfig() returns false if no site was added
+ [x] asConfig() returns a an array containing a "regexp" element by default, if any site was added
+ [x] asConfig() returns false if captureURLs is false
+
+s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
+ [x] Parsing tests
+ [x] Parsing tests (JavaScript)
+ [x] Parsing+rendering tests
+
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
  [x] The returned instance contains its own source code in $renderer->source

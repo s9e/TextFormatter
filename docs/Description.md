@@ -214,10 +214,18 @@
 * [HTMLElements](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/HTMLElements)
 
 	* Whitelist of HTML elements (each element has a whitelist of attributes)
+
 * [HTMLEntities](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/HTMLEntities)
 
 	* Turns HTML entities into their Unicode literal
 
+* [MediaEmbed](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/MediaEmbed)
+
+	* Creates a `[media]` BBCode for embedded content
+		* Creates a site-specific BBCode (e.g. `[youtube]`) for every available site
+	* Replaces URLs in plain text with embedded content
+	* Has built-in support for Dailymotion, Facebook, LiveLeak, Twitch, YouTube [and more](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml)
+	* Flexible syntax
+
 * Upcoming plugins
-	* MediaEmbed, offering features similar to Wordpress's media shortcodes or XenForo's media sites
 	* Markdown, depending on demand

@@ -155,6 +155,9 @@
 			<file>tests/Plugins/HTMLElements/ParserTest.php</file>
 			<file>tests/Plugins/HTMLEntities/ConfiguratorTest.php</file>
 			<file>tests/Plugins/HTMLEntities/ParserTest.php</file>
+			<file>tests/Plugins/MediaEmbed/Configurator/MediaSiteCollectionTest.php</file>
+			<file>tests/Plugins/MediaEmbed/ConfiguratorTest.php</file>
+			<file>tests/Plugins/MediaEmbed/ParserTest.php</file>
 
 			<file>tests/Configurator/RendererGenerators/PHPTest.php</file>
 			<file>tests/Configurator/RendererGenerators/UnformattedTest.php</file>

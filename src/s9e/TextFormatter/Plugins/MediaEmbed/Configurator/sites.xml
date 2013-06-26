@@ -1,0 +1,102 @@
+<sites>
+	<site id="collegehumor">
+		<name>CollegeHumor</name>
+		<homepage>http://www.collegehumor.com/</homepage>
+		<host>collegehumor.com</host>
+		<match>!collegehumor\.com/(?:video|embed)/(?'id'[0-9]+)!</match>
+		<iframe width="600" height="369" src="http://www.collegehumor.com/e/{@id}"/>
+	</site>
+
+	<site id="dailymotion">
+		<name>Dailymotion</name>
+		<homepage>http://www.dailymotion.com/</homepage>
+		<source>http://www.dailymotion.com/doc/api/player</source>
+		<host>dailymotion.com</host>
+		<match>!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!</match>
+		<flash width="560" height="315" src="http://www.dailymotion.com/swf/{@id}"/>
+	</site>
+
+	<site id="facebook">
+		<name>Facebook</name>
+		<homepage>http://www.facebook.com/</homepage>
+		<host>facebook.com</host>
+		<match>!facebook\.com/photo\.php\?v=(?'id'[0-9]+)!</match>
+		<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id={@id}"/>
+	</site>
+
+	<site id="liveleak">
+		<name>LiveLeak</name>
+		<homepage>http://www.liveleak.com/</homepage>
+		<host>liveleak.com</host>
+		<match>!liveleak\.com/view\?i=(?'id'[a-f_0-9]+)!</match>
+		<iframe width="560" height="315" src="http://www.liveleak.com/e/{@id}"/>
+	</site>
+
+	<site id="metacafe">
+		<name>Metacafe</name>
+		<homepage>http://www.metacafe.com/</homepage>
+		<host>metacafe.com</host>
+		<match>!metacafe\.com/watch/(?'id'[0-9]+)!</match>
+		<iframe width="560" height="315" src="http://www.metacafe.com/embed/{@id}/"/>
+	</site>
+
+	<site id="soundcloud">
+		<name>SoundCloud</name>
+		<homepage>https://soundcloud.com/</homepage>
+		<source>https://soundcloud.com/pages/widgets</source>
+		<host>soundcloud.com</host>
+		<match>!soundcloud\.com(?:%2F|/)tracks(?:%2F|/)(?'id'[0-9]+)!</match>
+		<iframe width="560"
+				height="166"
+				src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F{@id}"
+		/>
+	</site>
+
+	<site id="ted">
+		<name>TED Talks</name>
+		<homepage>http://www.ted.com/</homepage>
+		<source>http://blog.ted.com/2011/04/01/now-you-can-embed-tedtalks-with-subtitles-enabled/</source>
+		<host>ted.com</host>
+		<match>!ted\.com/(?'path'(?:talk|playlist)s/[^\s"]+)!i</match>
+		<iframe width="560" height="315" src="http://embed.ted.com/{@path}"/>
+	</site>
+
+	<site id="twitch">
+		<name>Twitch</name>
+		<homepage>http://www.twitch.tv/</homepage>
+		<source>https://github.com/justintv/Twitch-API/blob/master/embedding.md</source>
+		<host>twitch.tv</host>
+		<match>!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!</match>
+		<template><![CDATA[
+			<object type="application/x-shockwave-flash"
+					width="620"
+					height="378"
+					data="http://www.twitch.tv/widgets/{substring('archl',5-4*boolean(@archive_id|@chapter_id),4)}ive_embed_player.swf"
+			>
+				<param name="flashvars">
+					<xsl:attribute name="value">channel=<xsl:value-of select="@channel"/><xsl:if test="@archive_id">&amp;archive_id=<xsl:value-of select="@archive_id"/></xsl:if><xsl:if test="@chapter_id">&amp;chapter_id=<xsl:value-of select="@chapter_id"/></xsl:if></xsl:attribute>
+				</param>
+			</object>
+		]]></template>
+	</site>
+
+	<site id="vimeo">
+		<name>Vimeo</name>
+		<homepage>http://vimeo.com/</homepage>
+		<source>http://developer.vimeo.com/player/embedding</source>
+		<host>vimeo.com</host>
+		<match>!vimeo\.com/(?:channels/[^/]+/)?(?'id'[0-9]+)!</match>
+		<iframe width="560" height="315" src="http://player.vimeo.com/video/{@id}"/>
+	</site>
+
+	<site id="youtube">
+		<name>YouTube</name>
+		<homepage>http://www.youtube.com/</homepage>
+		<source>http://support.google.com/youtube/bin/answer.py?hl=en&amp;answer=171780</source>
+		<host>youtube.com</host>
+		<host>youtu.be</host>
+		<match>!youtube\.com/(?:watch\?.*?v=|v/)(?'id'[-0-9A-Z_a-z]+)!</match>
+		<match>!youtu\.be/(?'id'[-0-9A-Z_a-z]+)!</match>
+		<iframe width="560" height="315" src="http://www.youtube.com/embed/{@id}"/>
+	</site>
+</sites>
