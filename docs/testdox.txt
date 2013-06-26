@@ -1423,11 +1423,11 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] addBrTag() adds a zero-width, self-closing "br" tag to the stack then returns it
  [x] addIgnoreTag() adds self-closing "i" tag to the stack then returns it
  [x] sortTags() sorts tags by position descending (tags processed in text order)
- [x] sortTags() tiebreaker sorts zero-width tags after longer tags at the same position (zero-width tags are processed first)
+ [x] sortTags() tiebreaker sorts tag that start at the same position by sortPriority descending (-10 is processed before 10)
+ [x] sortTags() tiebreaker sorts zero-width tags after longer tags at the same position with the same priority (zero-width tags are processed first)
  [x] sortTags() tiebreaker sorts zero-width end tags after zero width start tag (end tags get the opportunity to close their parent before a new tag is open)
  [x] sortTags() tiebreaker sorts zero-width self-closing tags between zero-width start tags and zero-width end tags (attempting to keep them outside of tag pairs)
  [x] sortTags() tiebreaker sorts tags by length ascending (longer tags processed first)
- [x] sortTags() tiebreaker sorts tag by sortPriority descending (-10 is processed before 10)
 
 s9e\TextFormatter\Tests\Parser\OutputHandling
  [x] Works

@@ -244,7 +244,30 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox sortTags() tiebreaker sorts zero-width tags after longer tags at the same position (zero-width tags are processed first)
+	* @testdox sortTags() tiebreaker sorts tag that start at the same position by sortPriority descending (-10 is processed before 10)
+	*/
+	public function testSortTagsBySortPriority()
+	{
+		$dummyStack = new DummyStack;
+
+		$t2 = $dummyStack->addStartTag('X', 0, 2);
+		$t3 = $dummyStack->addStartTag('X', 0, 3);
+		$t1 = $dummyStack->addStartTag('X', 0, 1);
+
+		$t1->setSortPriority(-10);
+		$t2->setSortPriority(0);
+		$t3->setSortPriority(10);
+
+		$dummyStack->sortTags();
+
+		$this->assertSame(
+			[$t3, $t2, $t1],
+			$dummyStack->tagStack
+		);
+	}
+
+	/**
+	* @testdox sortTags() tiebreaker sorts zero-width tags after longer tags at the same position with the same priority (zero-width tags are processed first)
 	*/
 	public function testSortTagsZeroWidthAfterWider()
 	{
@@ -319,29 +342,6 @@ class TagStackTest extends Test
 
 		$this->assertSame(
 			[$t1, $t2, $t3],
-			$dummyStack->tagStack
-		);
-	}
-
-	/**
-	* @testdox sortTags() tiebreaker sorts tag by sortPriority descending (-10 is processed before 10)
-	*/
-	public function testSortTagsBySortPriority()
-	{
-		$dummyStack = new DummyStack;
-
-		$t2 = $dummyStack->addStartTag('X', 0, 1);
-		$t3 = $dummyStack->addStartTag('X', 0, 1);
-		$t1 = $dummyStack->addStartTag('X', 0, 1);
-
-		$t1->setSortPriority(-10);
-		$t2->setSortPriority(0);
-		$t3->setSortPriority(10);
-
-		$dummyStack->sortTags();
-
-		$this->assertSame(
-			[$t3, $t2, $t1],
 			$dummyStack->tagStack
 		);
 	}

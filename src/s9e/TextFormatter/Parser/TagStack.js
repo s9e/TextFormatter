@@ -154,6 +154,16 @@ function compareTags(a, b)
 		return bPos - aPos;
 	}
 
+	// If the tags start at the same position, we'll use their sortPriority if applicable. Tags
+	// with a lower value get sorted last, which means they'll be processed first. IOW, -10 is
+	// processed before 10
+	if (a.getSortPriority() !== b.getSortPriority())
+	{
+		return b.getSortPriority() - a.getSortPriority();
+	}
+
+	// If the tags start at the same position and have the same priority, we'll sort them
+	// according to their length, with special considerations for  zero-width tags
 	var aLen = a.getLen(),
 		bLen = b.getLen();
 
@@ -181,15 +191,7 @@ function compareTags(a, b)
 	}
 
 	// Here we know that both tags start at the same position and have a length greater than 0.
-	// We sort tags by length ascending, so that the longest matches are processed first
-	if (aLen !== bLen)
-	{
-		return (aLen - bLen);
-	}
-
-	// Finally, if the tags consume exactly the same text we'll use their sortPriority as
-	// tiebreaker. Tags with a lower value get sorted last, which means they'll be processed
-	// first. IOW, -10 is processed before 10. Most of the time, this value will be the same,
-	// and since PHP's sort isn't stable it means the sort order of identical tags is undefined
-	return b.getSortPriority() - a.getSortPriority();
+	// We sort tags by length ascending, so that the longest matches are processed first. If
+	// their length is identical, the order is undefined as PHP's sort isn't stable
+	return (aLen - bLen);
 }
