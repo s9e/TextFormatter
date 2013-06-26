@@ -92,10 +92,6 @@ foreach (glob(__DIR__ . '/../tests/Plugins/*', GLOB_ONLYDIR) as $dirpath)
 		$xsl  = $configurator->stylesheet->get();
 		$html = $configurator->getRenderer()->render($xml);
 
-		// XSLTProcessor does not correctly identify <embed> as a void element, which screws up the
-		// default rendering. We correct the expected rendering manually
-		$html = str_replace('</embed>', '', $html);
-
 		$filepath = $pluginDir . '/' . sprintf('%08X', crc32($xml));
 		file_put_contents($filepath . '.xml', $xml);
 		file_put_contents($filepath . '.html.xsl', $xsl);
@@ -137,10 +133,6 @@ foreach ($test->getPredefinedBBCodesTests() as $case)
 	$xml  = $configurator->getParser()->parse($original);
 	$xsl  = $configurator->stylesheet->get();
 	$html = $configurator->getRenderer()->render($xml);
-
-	// XSLTProcessor does not correctly identify <embed> as a void element, which screws up the
-	// default rendering. We correct the expected rendering manually
-	$html = str_replace('</embed>', '', $html);
 
 	$filepath = $pluginDir . '/' . sprintf('%08X', crc32($xml));
 	file_put_contents($filepath . '.xml', $xml);

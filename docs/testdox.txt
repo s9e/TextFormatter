@@ -1819,6 +1819,7 @@ s9e\TextFormatter\Tests\Renderers\XSLT
  [x] Renders multi-line text in HTML after un/serialization
  [x] Renders multi-line text in XHTML after un/serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
+ [x] Does not output </embed> end tags
  [x] Renders plain text
  [x] Renders multi-line text in HTML
  [x] Renders multi-line text in XHTML
@@ -1838,6 +1839,7 @@ s9e\TextFormatter\Tests\Renderers\XSLCache
  [x] Renders multi-line text in HTML after un/serialization
  [x] Renders multi-line text in XHTML after un/serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
+ [x] Does not output </embed> end tags
  [x] Renders plain text
  [x] Renders multi-line text in HTML
  [x] Renders multi-line text in XHTML

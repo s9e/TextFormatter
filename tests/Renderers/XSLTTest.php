@@ -110,4 +110,18 @@ class XSLTTest extends Test
 			);
 		}
 	}
+
+	/**
+	* @testdox Does not output </embed> end tags
+	*/
+	public function testNoEmbedEndTag()
+	{
+		$this->configurator->tags->add('X')->defaultTemplate
+			= '<object><embed src="foo"/></object>';
+
+		$this->assertSame(
+			'<object><embed src="foo"></object>',
+			$this->configurator->getRenderer()->render('<rt><X/></rt>')
+		);
+	}
 }

@@ -83,6 +83,13 @@ class XSLT extends Renderer
 		// transformation didn't output anything
 		$output = (string) $this->proc->transformToXml($dom);
 
+		// XSLTProcessor does not correctly identify <embed> as a void element. We fix it by
+		// removing </embed> end tags
+		if ($this->htmlOutput)
+		{
+			$output = str_replace('</embed>', '', $output);
+		}
+
 		// Remove the \n that XSL adds at the end of the output, if applicable
 		if (substr($output, -1) === "\n")
 		{

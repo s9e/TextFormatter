@@ -211,7 +211,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/video/x222z1',
-				'<object type="application/x-shockwave-flash" width="560" height="315"><param name="movie" value="http://www.dailymotion.com/swf/x222z1"><param name="allowFullScreen" value="true"><embed src="http://www.dailymotion.com/swf/x222z1" type="application/x-shockwave-flash" width="560" height="315" allowfullscreen=""></embed></object>',
+				'<object type="application/x-shockwave-flash" width="560" height="315"><param name="movie" value="http://www.dailymotion.com/swf/x222z1"><param name="allowFullScreen" value="true"><embed src="http://www.dailymotion.com/swf/x222z1" type="application/x-shockwave-flash" width="560" height="315" allowfullscreen=""></object>',
 				[],
 				function ($configurator)
 				{
