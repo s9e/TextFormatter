@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
 
-if (version_compare(PHP_VERSION, '5.4.0') >= 0)
+if (version_compare(PHP_VERSION, '5.4.0', '>='))
 {
-	die('No need to convert sources on PHP ' . PHP_VERSION . "\n");
+	die('No need to run ' . __FILE__ . ' on PHP ' . PHP_VERSION . "\n");
 }
 
 function fqn($file)
@@ -237,64 +237,6 @@ function convertDir($dir)
 	{
 		convertFile($filepath);
 	}
-}
-
-function toShort($filepath)
-{
-	$file   = file_get_contents($filepath);
-	$tokens = token_get_all($file);
-
-	$i       = 0;
-	$cnt     = count($tokens);
-	$level   = 0;
-	$replace = array();
-
-	while (++$i < $cnt)
-	{
-		$token = $tokens[$i];
-
-		if ($token === '(')
-		{
-			++$level;
-		}
-		elseif ($token === ')')
-		{
-			if ($level === end($replace))
-			{
-				$tokens[$i] = ']';
-				array_pop($replace);
-			}
-			else
-			{
-				--$level;
-			}
-		}
-		elseif (is_array($token) && $token[0] === T_ARRAY)
-		{
-			$j = $i;
-			while ($tokens[++$j][0] === T_WHITESPACE);
-
-			if ($tokens[$j] === '(')
-			{
-				do
-				{
-					unset($tokens[$i]);
-				}
-				while (++$i < $j);
-
-				$tokens[$i] = '[';
-				$replace[]  = $level;
-			}
-		}
-	}
-
-	$file = '';
-	foreach ($tokens as $token)
-	{
-		$file .= (is_string($token)) ? $token : $token[1];
-	}
-
-	file_put_contents($filepath, $file);
 }
 
 function convertArraySyntax(&$file)
