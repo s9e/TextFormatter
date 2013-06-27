@@ -76,6 +76,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.slideshare.net/Slideshare/how-23431564',
+				'<rt><SLIDESHARE id="23431564">http://www.slideshare.net/Slideshare/how-23431564</SLIDESHARE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('slideshare');
+				}
+			],
+			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
 				'<rt><SOUNDCLOUD id="98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
@@ -271,6 +280,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('metacafe');
+				}
+			],
+			[
+				'http://www.slideshare.net/Slideshare/how-23431564',
+				'<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/23431564" allowfullscreen=""></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('slideshare');
 				}
 			],
 			[
