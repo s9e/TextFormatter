@@ -14,8 +14,8 @@ function executeAttributePreprocessors(tag, tagConfig)
 		tagConfig.attributePreprocessors.forEach(function(attributePreprocessor)
 		{
 			var attrName = attributePreprocessor[0],
-			    regexp   = attributePreprocessor[1],
-			    map      = attributePreprocessor[2];
+				regexp   = attributePreprocessor[1],
+				map      = attributePreprocessor[2];
 
 			if (!tag.hasAttribute(attrName))
 			{

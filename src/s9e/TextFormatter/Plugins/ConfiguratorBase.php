@@ -196,7 +196,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 		 && $action !== 'warn'
 		 && $action !== 'abort')
 		{
-			 throw new InvalidArgumentException("regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'");
+			throw new InvalidArgumentException("regexpLimitAction must be any of: 'ignore', 'warn' or 'abort'");
 		}
 
 		$this->regexpLimitAction = $action;

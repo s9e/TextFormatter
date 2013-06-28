@@ -64,7 +64,7 @@ matches.forEach(function(m)
 		// Remove quotes around the value
 		if (/^["']/.test(attrValue))
 		{
-			 attrValue = attrValue.substr(1, attrValue.length - 2);
+			attrValue = attrValue.substr(1, attrValue.length - 2);
 		}
 
 		tag.setAttribute(attrName, html_entity_decode(attrValue));

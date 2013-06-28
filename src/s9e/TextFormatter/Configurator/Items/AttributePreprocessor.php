@@ -51,7 +51,7 @@ class AttributePreprocessor
 			if ($token['type'] !== 'capturingSubpatternStart'
 			 || !isset($token['name']))
 			{
-				 continue;
+				continue;
 			}
 
 			$attrName = $token['name'];

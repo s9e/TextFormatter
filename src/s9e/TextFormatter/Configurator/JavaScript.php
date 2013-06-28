@@ -506,7 +506,7 @@ class JavaScript
 				 && $k !== 'openTags'
 				 && $k !== 'registeredVars')
 				{
-					 $k = 'registeredVars[' . json_encode($k) . ']';
+					$k = 'registeredVars[' . json_encode($k) . ']';
 				}
 
 				$js .= $k;

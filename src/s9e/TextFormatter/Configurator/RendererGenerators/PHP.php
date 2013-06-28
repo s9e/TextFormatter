@@ -759,18 +759,18 @@ class PHP implements RendererGenerator
 				if ($tokens[$i + 1][0] === T_LNUMBER
 				 && $tokens[$i + 1][1] === $escapeMode)
 				{
-					 // Replace the first comma of the first call with a concatenator operator
-					 $tokens[$startIndex] = '.';
+					// Replace the first comma of the first call with a concatenator operator
+					$tokens[$startIndex] = '.';
 
-					 // Move the cursor back to the first comma then advance it and delete
-					 // everything up till the parenthesis of the second call, included
-					 $i = $startIndex;
-					 while (++$i <= $endIndex)
-					 {
-						 unset($tokens[$i]);
-					 }
+					// Move the cursor back to the first comma then advance it and delete
+					// everything up till the parenthesis of the second call, included
+					$i = $startIndex;
+					while (++$i <= $endIndex)
+					{
+						unset($tokens[$i]);
+					}
 
-					 continue;
+					continue;
 				}
 
 				// @codeCoverageIgnoreStart
@@ -812,13 +812,13 @@ class PHP implements RendererGenerator
 			 && $tokens[$i + 6][0]  === T_LNUMBER
 			 && $tokens[$i + 7]     === ')')
 			{
-				 unset($tokens[$i]);
-				 unset($tokens[$i + 1]);
-				 unset($tokens[$i + 5]);
-				 unset($tokens[$i + 6]);
-				 unset($tokens[$i + 7]);
+				unset($tokens[$i]);
+				unset($tokens[$i + 1]);
+				unset($tokens[$i + 5]);
+				unset($tokens[$i + 6]);
+				unset($tokens[$i + 7]);
 
-				 $i += 7;
+				$i += 7;
 			}
 		}
 
