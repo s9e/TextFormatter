@@ -5,7 +5,7 @@
 		<example>http://www.collegehumor.com/video/1181601/more-than-friends</example>
 
 		<host>collegehumor.com</host>
-		<match>!collegehumor\.com/(?:video|embed)/(?'id'[0-9]+)!</match>
+		<extract>!collegehumor\.com/(?:video|embed)/(?'id'[0-9]+)!</extract>
 		<iframe width="600" height="369" src="http://www.collegehumor.com/e/{@id}"/>
 	</site>
 
@@ -17,7 +17,7 @@
 		<example>http://www.dailymotion.com/user/Dailymotion/2#video=x222z1</example>
 
 		<host>dailymotion.com</host>
-		<match>!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!</match>
+		<extract>!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!</extract>
 		<flash width="560" height="315" src="http://www.dailymotion.com/swf/{@id}"/>
 	</site>
 
@@ -27,7 +27,7 @@
 		<example>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</example>
 
 		<host>facebook.com</host>
-		<match>!facebook\.com/photo\.php\?v=(?'id'[0-9]+)!</match>
+		<extract>!facebook\.com/photo\.php\?v=(?'id'[0-9]+)!</extract>
 		<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id={@id}"/>
 	</site>
 
@@ -37,7 +37,7 @@
 		<example>http://www.liveleak.com/view?i=3dd_1366238099</example>
 
 		<host>liveleak.com</host>
-		<match>!liveleak\.com/view\?i=(?'id'[a-f_0-9]+)!</match>
+		<extract>!liveleak\.com/view\?i=(?'id'[a-f_0-9]+)!</extract>
 		<iframe width="560" height="315" src="http://www.liveleak.com/e/{@id}"/>
 	</site>
 
@@ -47,7 +47,7 @@
 		<example>http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/</example>
 
 		<host>metacafe.com</host>
-		<match>!metacafe\.com/watch/(?'id'[0-9]+)!</match>
+		<extract>!metacafe\.com/watch/(?'id'[0-9]+)!</extract>
 		<iframe width="560" height="315" src="http://www.metacafe.com/embed/{@id}/"/>
 	</site>
 
@@ -58,7 +58,7 @@
 		<example>http://www.slideshare.net/Slideshare/how-23431564</example>
 
 		<host>slideshare.net</host>
-		<match>!slideshare\.net/[^/]+/[-\w]+-(?'id'[0-9]+)(?=/|$)!</match>
+		<extract>!slideshare\.net/[^/]+/[-\w]+-(?'id'[0-9]+)(?=/|$)!</extract>
 		<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/{@id}"/>
 	</site>
 
@@ -69,7 +69,7 @@
 		<example>http://api.soundcloud.com/tracks/98282116</example>
 
 		<host>soundcloud.com</host>
-		<match>!soundcloud\.com(?:%2F|/)tracks(?:%2F|/)(?'id'[0-9]+)!</match>
+		<extract>!soundcloud\.com(?:%2F|/)tracks(?:%2F|/)(?'id'[0-9]+)!</extract>
 		<iframe width="560"
 				height="166"
 				src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F{@id}"
@@ -84,7 +84,7 @@
 		<example>http://embed.ted.com/playlists/26/our_digital_lives.html</example>
 
 		<host>ted.com</host>
-		<match>!ted\.com/(?'path'(?:talk|playlist)s/[^\s"]+)!i</match>
+		<extract>!ted\.com/(?'path'(?:talk|playlist)s/[^\s"]+)!i</extract>
 		<iframe width="560" height="315" src="http://embed.ted.com/{@path}"/>
 	</site>
 
@@ -97,7 +97,7 @@
 		<example>http://www.twitch.tv/minigolf2000/b/419320018</example>
 
 		<host>twitch.tv</host>
-		<match>!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!</match>
+		<extract>!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!</extract>
 		<template><![CDATA[
 			<object type="application/x-shockwave-flash"
 			        typemustmatch=""
@@ -125,7 +125,7 @@
 		<example>http://vimeo.com/channels/staffpicks/67207222</example>
 
 		<host>vimeo.com</host>
-		<match>!vimeo\.com/(?:channels/[^/]+/)?(?'id'[0-9]+)!</match>
+		<extract>!vimeo\.com/(?:channels/[^/]+/)?(?'id'[0-9]+)!</extract>
 		<iframe width="560" height="315" src="http://player.vimeo.com/video/{@id}"/>
 	</site>
 
@@ -138,8 +138,8 @@
 
 		<host>youtube.com</host>
 		<host>youtu.be</host>
-		<match>!youtube\.com/(?:watch\?.*?v=|v/)(?'id'[-0-9A-Z_a-z]+)!</match>
-		<match>!youtu\.be/(?'id'[-0-9A-Z_a-z]+)!</match>
+		<extract>!youtube\.com/(?:watch\?.*?v=|v/)(?'id'[-0-9A-Z_a-z]+)!</extract>
+		<extract>!youtu\.be/(?'id'[-0-9A-Z_a-z]+)!</extract>
 		<iframe width="560" height="315" src="http://www.youtube.com/embed/{@id}"/>
 	</site>
 </sites>

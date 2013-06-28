@@ -3,7 +3,7 @@
 To add a site, you'll need to pass as a second argument to `add()` an array that contains at least 3 elements:
 
   * `host` must be a string (or an array of strings) that is the second-level domain name(s) of the URLs you want to match, e.g. `example.com`
-  * `match` must be a string (or an array of strings) that is the regexp(s) used to match the URLs
+  * `extract` must be a string (or an array of strings) that is the regexp(s) used to extract values from the URLs
   * plus at least one of the following:
     * `iframe`: array that contains the `width`, `height` and `src` of the iframe used to display the embedded content *(other attributes such as "allowfullscreen" are automatically added)*
     * `flash`: array that contains the `width`, `height` and `src` of the flash object used to display the embedded content *(will create a pair of boilerplate `<object>` and `<embed>` elements)*
@@ -17,12 +17,12 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->MediaEmbed->add(
 	'youtube',
 	[
-		'host'   => ['youtube.com', 'youtu.be'],
-		'match'  => [
+		'host'    => ['youtube.com', 'youtu.be'],
+		'extract' => [
 			"!youtube\\.com/watch\\?v=(?'id'[-0-9A-Z_a-z]+)!",
 			"!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!"
 		],
-		'iframe' => [
+		'iframe'  => [
 			'width'  => 560,
 			'height' => 315,
 			'src'    => 'http://www.youtube.com/embed/{@id}'
@@ -51,9 +51,9 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->MediaEmbed->add(
 	'youtube',
 	[
-		'host'   => 'youtube.com',
-		'match'  => "!youtube\\.com/watch\\?v=(?'id'[-0-9A-Z_a-z]+)!",
-		'iframe' => [
+		'host'    => 'youtube.com',
+		'extract' => "!youtube\\.com/watch\\?v=(?'id'[-0-9A-Z_a-z]+)!",
+		'iframe'  => [
 			'width'  => 560,
 			'height' => 315,
 			'src'    => 'http://www.youtube.com/embed/{@id}'
@@ -82,9 +82,9 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->MediaEmbed->add(
 	'dailymotion',
 	[
-		'host'   => 'dailymotion.com',
-		'match'  => "!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!",
-		'flash' => [
+		'host'    => 'dailymotion.com',
+		'extract' => "!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!",
+		'flash'   => [
 			'width'  => 560,
 			'height' => 315,
 			'src'    => 'http://www.dailymotion.com/swf/{@id}'
@@ -115,8 +115,8 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->MediaEmbed->add(
 	'twitch',
 	[
-		'host'   => 'twitch.tv',
-		'match'  => "!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!",
+		'host'     => 'twitch.tv',
+		'extract'  => "!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!",
 		'template' => <<<'EOT'
 			<object type="application/x-shockwave-flash"
 			        typemustmatch=""

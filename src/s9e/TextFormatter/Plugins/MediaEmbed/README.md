@@ -56,9 +56,9 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->MediaEmbed->add(
 	'youtube',
 	[
-		'host'   => 'youtube.com',
-		'match'  => "!youtube\\.com/watch\\?v=(?'id'[-0-9A-Z_a-z]+)!",
-		'iframe' => [
+		'host'    => 'youtube.com',
+		'extract' => "!youtube\\.com/watch\\?v=(?'id'[-0-9A-Z_a-z]+)!",
+		'iframe'  => [
 			'width'  => 560,
 			'height' => 315,
 			'src'    => 'http://www.youtube.com/embed/{@id}'

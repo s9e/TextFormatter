@@ -1762,7 +1762,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() marks the "id" attribute as non-optional if present
  [x] add() marks non-"id" attributes as optional
  [x] add() adds the regexp used for the "id" attribute to the list of attribute preprocessors
- [x] add() accepts multiple "match" elements
+ [x] add() accepts multiple "extract" elements
  [x] add() accepts multiple "host" elements
  [x] add() sets the tag's default template to the "template" element if available
  [x] add() sets the tag's default template to the iframe defined in the "iframe" element if available

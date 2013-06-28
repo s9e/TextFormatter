@@ -88,7 +88,7 @@ class ConfiguratorTest extends Test
 				'youtube',
 				[
 					'host'     => 'youtube.com',
-					'match'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+					'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
 					'template' => 'YouTube!'
 				]
 			)
@@ -104,7 +104,7 @@ class ConfiguratorTest extends Test
 			'youtube',
 			[
 				'host'     => 'youtube.com',
-				'match'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
 				'template' => 'YouTube!'
 			]
 		);
@@ -122,7 +122,7 @@ class ConfiguratorTest extends Test
 			'youtube',
 			[
 				'host'     => 'youtube.com',
-				'match'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
 				'template' => 'YouTube!'
 			]
 		);
@@ -139,7 +139,7 @@ class ConfiguratorTest extends Test
 			'youtube',
 			[
 				'host'     => 'youtube.com',
-				'match'    => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
 				'template' => 'YouTube!'
 			]
 		);
@@ -158,7 +158,7 @@ class ConfiguratorTest extends Test
 			'youtube',
 			[
 				'host'     => 'youtube.com',
-				'match'    => $r1,
+				'extract'  => $r1,
 				'template' => 'YouTube!'
 			]
 		);
@@ -177,7 +177,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() accepts multiple "match" elements
+	* @testdox add() accepts multiple "extract" elements
 	*/
 	public function testAddMultipleMatch()
 	{
@@ -188,7 +188,7 @@ class ConfiguratorTest extends Test
 			'youtube',
 			[
 				'host'     => 'youtube.com',
-				'match'    => [$r1, $r2],
+				'extract'  => [$r1, $r2],
 				'template' => 'YouTube!'
 			]
 		);
@@ -218,7 +218,7 @@ class ConfiguratorTest extends Test
 			'youtube',
 			[
 				'host'     => $hosts,
-				'match'    => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
+				'extract'  => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
 				'template' => 'YouTube!'
 			]
 		);
@@ -238,7 +238,7 @@ class ConfiguratorTest extends Test
 			'youtube',
 			[
 				'host'     => 'youtu.be',
-				'match'    => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
+				'extract'  => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
 				'template' => 'YouTube!'
 			]
 		);
@@ -254,9 +254,9 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'   => 'youtu.be',
-				'match'  => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
-				'iframe' => [
+				'host'    => 'youtu.be',
+				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
+				'iframe'  => [
 					'width'  => 123,
 					'height' => 456,
 					'src'    => 'foo'
@@ -278,9 +278,9 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
 			[
-				'host'   => 'youtu.be',
-				'match'  => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
-				'flash' => [
+				'host'    => 'youtu.be',
+				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
+				'flash'   => [
 					'width'  => 123,
 					'height' => 456,
 					'src'    => 'foo'

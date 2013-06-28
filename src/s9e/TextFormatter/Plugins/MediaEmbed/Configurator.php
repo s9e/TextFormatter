@@ -186,8 +186,8 @@ class Configurator extends ConfiguratorBase
 		// We'll store the regexp used for matching IDs
 		$idRegexp = false;
 
-		// Add each "match" as an attribute preprocessor
-		foreach ((array) $siteConfig['match'] as $regexp)
+		// Add each "extract" as an attribute preprocessor
+		foreach ((array) $siteConfig['extract'] as $regexp)
 		{
 			// Get the attributes filled by this regexp
 			$attributes = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
