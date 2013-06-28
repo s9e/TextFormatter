@@ -68,19 +68,15 @@ class Tag implements ConfigProvider
 		$this->templates              = new TemplateCollection($this);
 
 		// Start the filterChain with the default processing
-		$filter = $this->filterChain->append(
-			's9e\\TextFormatter\\Parser::executeAttributePreprocessors'
-		);
-		$filter->addParameterByName('tag');
-		$filter->addParameterByName('tagConfig');
+		$this->filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
+		                  ->addParameterByName('tag')
+		                  ->addParameterByName('tagConfig');
 
-		$filter = $this->filterChain->append(
-			's9e\\TextFormatter\\Parser::filterAttributes'
-		);
-		$filter->addParameterByName('tag');
-		$filter->addParameterByName('tagConfig');
-		$filter->addParameterByName('registeredVars');
-		$filter->addParameterByName('logger');
+		$this->filterChain->append('s9e\\TextFormatter\\Parser::filterAttributes')
+		                  ->addParameterByName('tag')
+		                  ->addParameterByName('tagConfig')
+		                  ->addParameterByName('registeredVars')
+		                  ->addParameterByName('logger');
 
 		if (isset($options))
 		{
