@@ -1,6 +1,8 @@
 ## Table of content
 
-### [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Installation.md)
+### **General**
+  * [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/00_Installation.md)
+  * [Basic usage](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/01_BasicUsage.md)
 
 ### **Plugins**
   * **BBCodes**

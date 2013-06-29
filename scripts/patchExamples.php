@@ -19,8 +19,24 @@ function patchFile($filepath)
 {
 	echo "Patching $filepath\n";
 
+	// Execute the lone PHP in BasicUsage.md
+	if (strpos($filepath, 'BasicUsage.md'))
+	{
+		$text = preg_replace_callback(
+			'#```php([^`]+)```\\s+(?!```html|<pre>)#s',
+			function ($m)
+			{
+				eval($m[1]);
+
+				return $m[0];
+			},
+			file_get_contents($filepath)
+		);
+	}
+
+	// Execute PHP and replace output
 	$text = preg_replace_callback(
-		'#(```php(.*?)```.*?(?:```html|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
+		'#(```php([^`]+)```\\s+(?:```html|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
 		function ($m)
 		{
 			ob_start();
