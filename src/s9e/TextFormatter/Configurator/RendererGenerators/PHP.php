@@ -545,7 +545,7 @@ class PHP implements RendererGenerator
 		}
 		else
 		{
-				$this->php .= var_export($output->textContent, true);
+			$this->php .= var_export($output->textContent, true);
 		}
 
 		$this->php .= ',' . $escapeMode . ');';
