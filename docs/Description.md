@@ -56,14 +56,12 @@
 		* Most of the rules can be automatically created, based on heuristics provided by the HTML5 specs
 
 			```php
-			<?php
 			$configurator->addHTML5Rules();
 			```
 
 	* You can control the maximum number of times a given tag can be used, or how many times they can be nested into each other (limit set at the tag level)
 
 		```php
-		<?php
 		$configurator->tags['QUOTE']->setNestingLimit(3);
 		$configurator->tags['URL']->setTagLimit(1);
 		```
@@ -116,14 +114,12 @@
 		* URLs only accept http and https schemes. You can allow more URL schemes:
 
 			```php
-			<?php
 			$configurator->urlConfig->allowScheme('ftp');
 			```
 
 		* You can set a blacklist of hosts that cause an URL to be invalid
 
 			```php
-			<?php
 			// Bans example.org and all subdomains such as bad.example.org
 			$configurator->urlConfig->disallowHost('example.org');
 			// Bans example.com, example.org, etc...
@@ -133,7 +129,6 @@
 		* You can force some redirectors to be resolved to reveal the actual URL, e.g.
 
 			```php
-			<?php
 			$configurator->resolveRedirectsFrom('t.co');
 			```
 
@@ -181,7 +176,6 @@
 	* BBCodes can be defined using [a syntax](https://github.com/s9e/TextFormatter/blob/master/docs/BBCodeMonkey.md) mostly compatible with [phpBB's](https://www.phpbb.com/customise/db/custom_bbcodes-26/), which makes it easy to create, import and distribute custom BBCodes:
 
 		```php
-		<?php
 		$configurator->BBCodes->addCustom(
 			'[COLOR={COLOR}]{TEXT}[/COLOR]',
 			'<span style="color:{COLOR}">{TEXT}</span>'
