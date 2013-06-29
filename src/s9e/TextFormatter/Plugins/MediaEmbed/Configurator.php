@@ -13,6 +13,7 @@ use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
@@ -145,7 +146,7 @@ class Configurator extends ConfiguratorBase
 		$this->collection[$siteId] = $siteConfig;
 
 		// Create the tag for this site
-		$tag = $this->configurator->tags->add($siteId);
+		$tag = new Tag;
 
 		// This tag should not need to be closed, and shouldn't have any descendants
 		$tag->rules->autoClose();
@@ -264,6 +265,12 @@ class Configurator extends ConfiguratorBase
 					break 2;
 			}
 		}
+
+		// Check the tag's safety
+		$this->configurator->templateChecker->checkTag($tag);
+
+		// Now add the tag to the list
+		$this->configurator->tags->add($siteId, $tag);
 
 		// Create a BBCode for this site if applicable
 		if ($this->createBBCodes)

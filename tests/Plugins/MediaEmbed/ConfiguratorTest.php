@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed;
 
+use Exception;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Tests\Test;
 
@@ -419,6 +420,35 @@ class ConfiguratorTest extends Test
 			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowFullScreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen=""/></object>',
 			$tag->defaultTemplate
 		);
+	}
+
+	/**
+	* @testdox add() checks the tag's safety before adding it
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage disable-output-escaping
+	*/
+	public function testAddUnsafe()
+	{
+		try
+		{
+			$this->configurator->MediaEmbed->add(
+				'youtube',
+				[
+					'host'     => 'youtube.com',
+					'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+					'template' => '<xsl:value-of select="." disable-output-escaping="yes"/>'
+				]
+			);
+		}
+		catch (Exception $e)
+		{
+			if (isset($this->configurator->tags['YOUTUBE']))
+			{
+				$this->fail('A tag was created');
+			}
+
+			throw $e;
+		}
 	}
 
 	/**
