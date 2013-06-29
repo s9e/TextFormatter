@@ -1,5 +1,7 @@
 ## Table of content
 
+### [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Installation.md)
+
 ### **Plugins**
   * **BBCodes**
     * [Add custom BBCodes](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Plugins/BBCodes/AddCustom.md)

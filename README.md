@@ -16,10 +16,13 @@ Via [Packagist](https://packagist.org/):
 ```
 
 Or by cloning this repository and using the bundled autoloader:
+```
+git clone https://github.com/s9e/TextFormatter.git
+```
 ```php
-include 'src/s9e/TextFormatter/autoloader.php';
+include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
 ```
 
 ## Examples
 
-See [docs/example.php](https://github.com/s9e/TextFormatter/blob/master/docs/example.php) and the [Plugins directory](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins).
+See [docs/example.php](https://github.com/s9e/TextFormatter/blob/master/docs/example.php), the [Plugins directory](https://github.com/s9e/TextFormatter/tree/master/src/s9e/TextFormatter/Plugins) or the [Cookbook](https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook).

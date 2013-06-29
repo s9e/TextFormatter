@@ -8,17 +8,17 @@ function addDir($root, $level = 0)
 
 	$prepend = (!$level) ? "\n\n### " : "\n" . str_repeat('  ', $level) . '* ';
 
-	foreach (glob($root . '/*', GLOB_ONLYDIR) as $dirpath)
-	{
-		$basename = basename($dirpath);
-		$out .= $prepend . '**' . $basename . '**' . addDir($dirpath, $level + 1);
-	}
-
-	foreach (glob($root . '/*.md') as $filepath)
+	foreach (glob($root . '/*') as $filepath)
 	{
 		if (substr($filepath, -9) === 'README.md')
 		{
 			continue;
+		}
+
+		if (is_dir($filepath))
+		{
+			$basename = preg_replace('/^\\d{2}_/', '', basename($filepath));
+			$out .= $prepend . '**' . $basename . '**' . addDir($filepath, $level + 1);
 		}
 
 		if (preg_match('/^#+\\s*(.*)/', file_get_contents($filepath), $m))
