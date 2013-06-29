@@ -8,10 +8,9 @@
 namespace s9e\TextFormatter;
 
 use RuntimeException;
-use Serializable;
 use s9e\TextFormatter\Parser\Logger;
 
-class Parser implements Serializable
+class Parser
 {
 	use Parser\FilterProcessing;
 	use Parser\OutputHandling;
@@ -67,39 +66,37 @@ class Parser implements Serializable
 	*/
 	public function __construct(array $config)
 	{
-		$this->logger         = new Logger($this);
 		$this->pluginsConfig  = $config['plugins'];
 		$this->registeredVars = $config['registeredVars'];
 		$this->rootContext    = $config['rootContext'];
 		$this->tagsConfig     = $config['tags'];
+
+		$this->__wakeup();
 	}
 
 	/**
 	* Serializer
 	*
-	* Rebuilds the config array and returns it serialized
+	* Returns the properties that need to persist through serialization.
 	*
-	* @return string
+	* NOTE: using __sleep() is preferable to implementing Serializable because it leaves the choice
+	* of the serializer to the user (e.g. igbinary)
+	*
+	* @return array
 	*/
-	public function serialize()
+	public function __sleep()
 	{
-		return serialize([
-			'plugins'        => $this->pluginsConfig,
-			'registeredVars' => $this->registeredVars,
-			'rootContext'    => $this->rootContext,
-			'tags'           => $this->tagsConfig
-		]);
+		return ['pluginsConfig', 'registeredVars', 'rootContext', 'tagsConfig'];
 	}
 
 	/**
 	* Unserializer
 	*
-	* @param  string $data Serialized data
 	* @return void
 	*/
-	public function unserialize($data)
+	public function __wakeup()
 	{
-		$this->__construct(unserialize($data));
+		$this->logger = new Logger($this);
 	}
 
 	//==========================================================================

@@ -20,7 +20,7 @@ class ParserTest extends Test
 		$parser       = $configurator->getParser();
 
 		$this->assertStringStartsWith(
-			'C:24:"s9e\\TextFormatter\\Parser"',
+			'O:24:"s9e\\TextFormatter\\Parser"',
 			serialize($parser)
 		);
 	}
