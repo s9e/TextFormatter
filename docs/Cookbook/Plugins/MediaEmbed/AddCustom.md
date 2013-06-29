@@ -2,14 +2,20 @@
 
 To add a site, you'll need to pass as a second argument to `add()` an array that contains at least 3 elements:
 
-  * `host` must be a string (or an array of strings) that is the second-level domain name(s) of the URLs you want to match, e.g. `example.com`
-  * `extract` must be a string (or an array of strings) that is the regexp(s) used to extract values from the URLs
+  * `host` is the second-level domain name of the URLs you want to match, e.g. `example.com`
+  * at least one of the following:
+    * `extract` is a regexp used to extract values from the URL
+    * `scrape` is an array that must contain at least one of each:
+      * `match` is a regexp used to determine whether to scrape the content of the URL
+      * `extract` is a regexp used to extract values from the scraped page 
   * plus at least one of the following:
     * `iframe`: array that contains the `width`, `height` and `src` of the iframe used to display the embedded content *(other attributes such as "allowfullscreen" are automatically added)*
     * `flash`: array that contains the `width`, `height` and `src` of the flash object used to display the embedded content *(will create a pair of boilerplate `<object>` and `<embed>` elements)*
-	* `template`: a string that contains a custom template
+    * `template`: a string that contains a custom template
 
-### How to configure multiple `host` and `match` values
+You can specify multiple `host`, `scrape`, `extract` or `match` values using arrays.
+
+### How to configure multiple `host` and `extract` values
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
@@ -148,4 +154,44 @@ echo $html;
 ```
 ```html
 <object type="application/x-shockwave-flash" typemustmatch="" width="620" height="378" data="http://www.twitch.tv/widgets/archive_embed_player.swf"><param name="flashvars" value="channel=minigolf2000&amp;archive_id=419320018"><embed type="application/x-shockwave-flash" width="620" height="378" src="http://www.twitch.tv/widgets/archive_embed_player.swf"></object>
+```
+
+### How to scrape content
+
+Some media sites don't put all of the necessary data (e.g. the ID of a video) in the URL. In that case, you may have to retrieve it from the page itself.
+
+Note that scraping content is a pretty expensive operation that can take several seconds to complete, in part due to network latency and the responsiveness of the target site.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+$configurator->MediaEmbed->add(
+	'slideshare',
+	[
+		'host'   => 'slideshare.net',
+		'scrape' => [
+			// Here we ensure that we don't scrape just every link to http://slideshare.net
+			'match'   => '!slideshare\\.net/[^/]+/\\w!',
+			// Retrieve the presentationId from the embedded JSON
+			'extract' => '!"presentationId":(?<id>[0-9]+)!'
+		],
+		'iframe' => [
+			'width'  => 560,
+			'height' => 315,
+			'src'    => 'http://www.youtube.com/embed/{@id}'
+		]
+	]
+);
+
+$parser   = $configurator->getParser();
+$renderer = $configurator->getRenderer();
+
+$text = 'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<iframe width="560" height="315" src="http://www.youtube.com/embed/21112125" allowfullscreen=""></iframe>
 ```

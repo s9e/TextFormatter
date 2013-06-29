@@ -3,6 +3,11 @@
 
 include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 
+// Reuse the caching hack from the MediaEmbed tests
+eval('namespace s9e\TextFormatter\Tests;class Test{}');
+include __DIR__ . '/../tests/bootstrap.php';
+include __DIR__ . '/../tests/Plugins/MediaEmbed/ParserTest.php';
+
 function patchDir($dirpath)
 {
 	$dirpath = realpath($dirpath);

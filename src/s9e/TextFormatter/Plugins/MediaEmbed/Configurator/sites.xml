@@ -58,7 +58,11 @@
 		<example>http://www.slideshare.net/Slideshare/how-23431564</example>
 
 		<host>slideshare.net</host>
-		<extract>!slideshare\.net/[^/]+/[-\w]+-(?'id'[0-9]+)(?=/|$)!</extract>
+		<extract>!slideshare\.net/[^/]+/[-\w]+-(?'id'[0-9]{6,})$!</extract>
+		<scrape>
+			<match>!slideshare\.net/[^/]+/\w!</match>
+			<extract>!"presentationId":(?'id'[0-9]+)!</extract>
+		</scrape>
 		<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/{@id}"/>
 	</site>
 

@@ -96,9 +96,9 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() creates an attribute for every named subpattern
+	* @testdox add() creates an attribute for every named subpattern in extract
 	*/
-	public function testAddAttributes()
+	public function testAddAttributesExtract()
 	{
 		$tag = $this->configurator->MediaEmbed->add(
 			'youtube',
@@ -111,6 +111,27 @@ class ConfiguratorTest extends Test
 
 		$this->assertTrue($tag->attributes->exists('path'));
 		$this->assertTrue($tag->attributes->exists('id'));
+	}
+
+	/**
+	* @testdox add() creates an attribute for every named subpattern in scrape/extract
+	*/
+	public function testAddAttributesScrape()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'example.org',
+				'scrape'   => [
+					'match'   => '#/\\d+#',
+					'extract' => "#/(?'vid'(?'id'\\d+))#"
+				],
+				'template' => 'Example!'
+			]
+		);
+
+		$this->assertTrue($tag->attributes->exists('id'));
+		$this->assertTrue($tag->attributes->exists('vid'));
 	}
 
 	/**
@@ -226,6 +247,112 @@ class ConfiguratorTest extends Test
 		$this->assertEquals(
 			$hosts,
 			$this->configurator->registeredVars['mediasites']['youtube']['host']
+		);
+	}
+
+	/**
+	* @testdox add() accepts multiple "scrape" elements
+	*/
+	public function testAddMultipleScrape()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'example.org',
+				'scrape'   => [
+					[
+						'match'   => '#/v/\\d+#',
+						'extract' => "#id=(?'id'\\d+)#"
+					],
+					[
+						'match'   => '#/V/\\d+#',
+						'extract' => "#id=(?'id'\\d+)#"
+					]
+				],
+				'template' => 'Example!'
+			]
+		);
+
+		$this->assertEquals(
+			[
+				'scrapeConfig' => [
+					['#/v/\d+#', "#id=(?'id'\d+)#", ['id']],
+					['#/V/\d+#', "#id=(?'id'\d+)#", ['id']]
+				]
+			],
+			$tag->filterChain[1]->getVars()
+		);
+	}
+
+	/**
+	* @testdox add() accepts multiple "match" elements in "scrape"
+	*/
+	public function testAddMultipleMatchScrape()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'example.org',
+				'scrape'   => [
+					[
+						'match'   => ['#/v/\\d+#', '#/V/\\d+#'],
+						'extract' => "#id=(?'id'\\d+)#"
+					]
+				],
+				'template' => 'Example!'
+			]
+		);
+
+		$this->assertEquals(
+			[
+				'scrapeConfig' => [
+					[
+						['#/v/\d+#', '#/V/\d+#'],
+						"#id=(?'id'\d+)#",
+						['id']
+					]
+				]
+			],
+			$tag->filterChain[1]->getVars()
+		);
+	}
+
+	/**
+	* @testdox add() accepts multiple "extract" elements in "scrape"
+	*/
+	public function testAddMultipleExtractScrape()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'example.org',
+				'scrape'   => [
+					[
+						'match'   => '#/v/\\d+#',
+						'extract' => [
+							"#id=(?'id'\\d+)#",
+							"#xd=(?'xd'\\d+)#"
+						]
+					]
+				],
+				'template' => 'Example!'
+			]
+		);
+
+		$this->assertEquals(
+			[
+				'scrapeConfig' => [
+					[
+						'#/v/\d+#',
+						[
+							"#id=(?'id'\d+)#",
+							"#xd=(?'xd'\d+)#"
+						],
+						['id', 'xd']
+					]
+				]
+			],
+			$tag->filterChain[1]->getVars()
 		);
 	}
 

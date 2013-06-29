@@ -41,7 +41,7 @@ class Parser extends ParserBase
 	* @param  Tag      $tag      The original tag
 	* @param  TagStack $tagStack Parser instance, so that we can add the new tag to the stack
 	* @param  array    $sites    Map of [host => siteId]
-	* @return bool               Always false
+	* @return bool               Unconditionally FALSE
 	*/
 	public static function filterTag(Tag $tag, TagStack $tagStack, array $sites)
 	{
@@ -87,5 +87,78 @@ class Parser extends ParserBase
 		}
 
 		return false;
+	}
+
+	/**
+	* Scrape the content of an URL to extract some data
+	*
+	* @param  Tag   $tag          Source tag
+	* @param  array $scrapeConfig Array of scrape directives
+	* @return bool                Unconditionally TRUE
+	*/
+	public static function scrape(Tag $tag, array $scrapeConfig)
+	{
+		if (!$tag->hasAttribute('url'))
+		{
+			return true;
+		}
+
+		// Ensure that the URL is valid
+		$url = filter_var($tag->getAttribute('url'), FILTER_VALIDATE_URL);
+		if (!preg_match('#^https?://#', $url))
+		{
+			// A bad URL means we don't scrape, but it doesn't necessarily invalidate the tag
+			return true;
+		}
+
+		foreach ($scrapeConfig as $scrape)
+		{
+			list($matchRegexp, $extractRegexp, $attrNames) = $scrape;
+
+			// Test whether this scrape would help fill any attribute
+			$skip = true;
+			foreach ($attrNames as $attrName)
+			{
+				if (!$tag->hasAttribute($attrName))
+				{
+					$skip = false;
+					break;
+				}
+			}
+
+			// Test whether we should skip this URL and whether it matches our regexp
+			if ($skip || !preg_match($matchRegexp, $url))
+			{
+				continue;
+			}
+
+			// Scrape the content of this URL
+			if (!isset($content))
+			{
+				$content = file_get_contents(
+					'compress.zlib://' . $url,
+					false,
+					stream_context_create(array(
+						'http' => array(
+							'header' => 'Accept-Encoding: gzip'
+						)
+					))
+				);
+			}
+
+			// Execute the extract regexp and fill any missing attribute
+			if (preg_match($extractRegexp, $content, $m))
+			{
+				foreach ($attrNames as $attrName)
+				{
+					if (isset($m[$attrName]) && !$tag->hasAttribute($attrName))
+					{
+						$tag->setAttribute($attrName, $m[$attrName]);
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 }

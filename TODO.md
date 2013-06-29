@@ -37,3 +37,5 @@ TODO
 - Re-enable the optimization that uses <xsl:element name="{translate('ABC','abc',name())}"/>
 - PHP renderer: consider caching $node->textContent for performance, especially wrt Emoticons
 - PHP renderer generator: test whether <html:img/> produces <img></img> in HTML mode
+- Consider *not* removing the source attribute of an attribute preprocessor
+- MediaEmbed: TemplateChecker::checkTag() before adding it

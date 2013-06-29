@@ -8,9 +8,11 @@
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
 
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
+use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
@@ -136,41 +138,7 @@ class Configurator extends ConfiguratorBase
 			}
 
 			// Extract the site info from the node and put it into an array
-			$siteConfig = [];
-			foreach ($node->childNodes as $childNode)
-			{
-				if ($childNode->nodeType !== XML_ELEMENT_NODE)
-				{
-					continue;
-				}
-
-				// Name of the configuration option
-				$k = $childNode->nodeName;
-
-				if ($childNode->attributes->length)
-				{
-					// Elements with attributes create a sub-array for their values
-					foreach ($childNode->attributes as $attribute)
-					{
-						$siteConfig[$k][$attribute->name] = $attribute->value;
-					}
-				}
-				elseif (isset($siteConfig[$k]))
-				{
-					// If there are multiple nodes of the same name, turn the config into an array
-					if (!is_array($siteConfig[$k]))
-					{
-						$siteConfig[$k] = (array) $siteConfig[$k];
-					}
-
-					$siteConfig[$k][] = $childNode->textContent;
-				}
-				else
-				{
-					// Elements with no attributes get their value as text
-					$siteConfig[$k] = $childNode->textContent;
-				}
-			}
+			$siteConfig = $this->getElementConfig($node);
 		}
 
 		// Add this site to the list
@@ -183,46 +151,91 @@ class Configurator extends ConfiguratorBase
 		$tag->rules->autoClose();
 		$tag->rules->denyAll();
 
-		// We'll store the regexp used for matching IDs
-		$idRegexp = false;
+		// Store the regexp used in extracted attributes
+		$attrRegexps = [];
+
+		// Process the "scrape" directives
+		if (isset($siteConfig['scrape']))
+		{
+			// Ensure that the array is multidimensional
+			if (!isset($siteConfig['scrape'][0]))
+			{
+				$siteConfig['scrape'] = [$siteConfig['scrape']];
+			}
+
+			$scrapeConfig = [];
+			foreach ($siteConfig['scrape'] as $scrape)
+			{
+				// Collect the names of the attributes filled by this scrape. At runtime, we will
+				// not scrape the content of the link if all of the attributes already have a value
+				$attrNames = [];
+				foreach ((array) $scrape['extract'] as $extractRegexp)
+				{
+					// Use an attribute preprocessor so we can reuse its routines
+					$attributePreprocessor = new AttributePreprocessor($extractRegexp);
+
+					foreach ($attributePreprocessor->getAttributes() as $attrName => $attrRegexp)
+					{
+						$attrNames[]            = $attrName;
+						$attrRegexps[$attrName] = $attrRegexp;
+					}
+				}
+
+				// Deduplicate and sort the attribute names so that they look tidy
+				$attrNames = array_unique($attrNames);
+				sort($attrNames);
+
+				// Add this scrape to the config
+				$scrapeConfig[] = [$scrape['match'], $scrape['extract'], $attrNames];
+			}
+
+			// Add the scrape filter to this tag, execute it right before attributes are filtered,
+			// which should be after attribute preprocessors are run. The offset is hardcoded here
+			// for convenience (and because we know the filterChain is in its default state) and
+			// since scraping is impossible in JavaScript without a PHP proxy, we just make it
+			// return true in order to keep the tag valid
+			$tag->filterChain->insert(1, __NAMESPACE__ . '\\Parser::scrape')
+			                 ->addParameterByName('scrapeConfig')
+			                 ->setVar('scrapeConfig', $scrapeConfig)
+			                 ->setJS('function(){return true;}');
+		}
 
 		// Add each "extract" as an attribute preprocessor
-		foreach ((array) $siteConfig['extract'] as $regexp)
+		if (isset($siteConfig['extract']))
 		{
-			// Get the attributes filled by this regexp
-			$attributes = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
-
-			// For each named subpattern in the regexp, ensure that an attribute exists and create
-			// it otherwise, using the subpattern as regexp filter
-			foreach ($attributes as $attrName => $attrRegexp)
+			foreach ((array) $siteConfig['extract'] as $regexp)
 			{
-				// Skip this attribute if it already exists
-				if (isset($tag->attributes[$attrName]))
-				{
-					continue;
-				}
+				// Get the attributes filled by this regexp
+				$attributes = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
 
-				$tag->attributes->add($attrName)->filterChain->append(new Regexp($attrRegexp));
+				// For each named subpattern in the regexp, ensure that an attribute exists and
+				// create it otherwise, using the subpattern as regexp filter
+				foreach ($attributes as $attrName => $attrRegexp)
+				{
+					$attrRegexps[$attrName] = $attrRegexp;
+				}
+			}
+		}
 
-				// If this is the "id" attribute, save its regexp
-				if ($attrName === 'id')
-				{
-					// Replace the non-capturing subpattern with a named subpattern
-					$idRegexp = str_replace('^(?:', "^(?'id'", $attrRegexp);
-				}
-				else
-				{
-					// Non-id attributes are marked as optional
-					$tag->attributes[$attrName]->required = false;
-				}
+		// Create the attributes filled by the "extract" regexps
+		foreach ($attrRegexps as $attrName => $attrRegexp)
+		{
+			$tag->attributes->add($attrName)->filterChain->append(new Regexp($attrRegexp));
+
+			// Non-id attributes are marked as optional
+			if ($attrName !== 'id')
+			{
+				$tag->attributes[$attrName]->required = false;
 			}
 		}
 
 		// If there is an attribute named "id" we'll append its regexp to the list of attribute
 		// preprocessors in order to support both forms [site]<url>[/site] and [site]<id>[/site]
-		if ($idRegexp !== false)
+		if (isset($attrRegexps['id']))
 		{
-			$tag->attributePreprocessors->add('url', $idRegexp);
+			// Replace the non-capturing subpattern with a named subpattern
+			$attrRegexp = str_replace('^(?:', "^(?'id'", $attrRegexps['id']);
+			$tag->attributePreprocessors->add('url', $attrRegexp);
 		}
 
 		// Create a template for this media site based on the preferred rendering method
@@ -265,5 +278,63 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $tag;
+	}
+
+	/**
+	* Extract a site's config from its XML representation
+	*
+	* @param  DOMElement $element Current node
+	* @return mixed
+	*/
+	protected function getElementConfig(DOMElement $element)
+	{
+		if ($element->childNodes->length > 1)
+		{
+			// Elements with children create a sub-array for their children's values
+			$config = [];
+			foreach ($element->childNodes as $childNode)
+			{
+				if ($childNode->nodeType !== XML_ELEMENT_NODE)
+				{
+					continue;
+				}
+
+				// Name and value of the configuration setting
+				$name  = $childNode->nodeName;
+				$value = $this->getElementConfig($childNode);
+
+				if (isset($config[$name]))
+				{
+					// If several values are set for the same setting, we turn the configuration
+					// into a numerically-indexed array
+					if (!is_array($config[$name]) || !isset($config[$name][0]))
+					{
+						$config[$name] = [$config[$name]];
+					}
+
+					$config[$name][] = $value;
+				}
+				else
+				{
+					$config[$name] = $value;
+				}
+			}
+		}
+		elseif ($element->attributes->length)
+		{
+			// Elements with attributes create a sub-array for their attributes' values
+			$config = [];
+			foreach ($element->attributes as $attribute)
+			{
+				$config[$attribute->name] = $attribute->value;
+			}
+		}
+		else
+		{
+			// Use the element's text
+			$config = $element->textContent;
+		}
+
+		return $config;
 	}
 }

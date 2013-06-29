@@ -18,9 +18,117 @@ class ParserTest extends Test
 	use ParsingTestsJavaScriptRunner;
 	use RenderingTestsRunner;
 
+	/**
+	* @testdox Scraping tests
+	* @dataProvider getScrapingTests
+	* @group needs-network
+	*/
+	public function testScraping()
+	{
+		call_user_func_array([$this, 'testParsing'], func_get_args());
+	}
+
+	public function getScrapingTests()
+	{
+		return [
+			[
+				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
+				'<rt><SLIDESHARE id="21112125">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('slideshare');
+				}
+			],
+		];
+	}
+
 	public function getParsingTests()
 	{
 		return [
+			// Scraping tests that don't require network
+			[
+				// Ensure that non-HTTP URLs don't get scraped
+				'[media]invalid://example.org/123[/media]',
+				'<pt>[media]invalid://example.org/123[/media]</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.org',
+							'scrape' => [
+								'match'   => '/./',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that invalid URLs don't get scraped
+				'[media]http://example.org/123?x"> foo="bar[/media]',
+				'<pt>[media]http://example.org/123?x"&gt; foo="bar[/media]</pt>',
+				['captureURLs' => false],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.org',
+							'scrape' => [
+								'match'   => '/./',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that we don't scrape the URL if it doesn't match
+				'[media]http://example.org/123[/media]',
+				'<pt>[media]http://example.org/123[/media]</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.org',
+							'scrape' => [
+								'match'   => '/XXX/',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that we don't scrape if the attributes are already filled
+				'http://example.invalid/123',
+				'<rt><EXAMPLE id="12">http://example.invalid/123</EXAMPLE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'    => 'example.invalid',
+							'extract' => "#/(?'id'[0-9]{2})#",
+							'scrape'  => [
+								'match'   => '.',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe'  => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			// Bundled sites
 			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
 				'<rt><COLLEGEHUMOR id="1181601">http://www.collegehumor.com/video/1181601/more-than-friends</COLLEGEHUMOR></rt>',
@@ -412,4 +520,34 @@ class ParserTest extends Test
 			],
 		];
 	}
+}
+
+namespace s9e\TextFormatter\Plugins\MediaEmbed;
+
+// Terrible hack ahead: this function will transparently cache the result of file_get_contents
+// when used on HTTP URLs
+function file_get_contents($filepath)
+{
+	if (!preg_match('#^(?:compress\\.zlib://)?(http://.*)#', $filepath, $m))
+	{
+		return call_user_func_array('file_get_contents', func_get_args());
+	}
+
+	$url       = $m[1];
+	$cacheFile = __DIR__ . '/../../.cache/http.' . crc32($url);
+
+	if (!file_exists($cacheFile))
+	{
+		copy(
+			'compress.zlib://' . $url,
+			$cacheFile,
+			stream_context_create(array(
+				'http' => array(
+					'header' => "Accept-Encoding: gzip"
+				)
+			))
+		);
+	}
+
+	return file_get_contents($cacheFile);
 }
