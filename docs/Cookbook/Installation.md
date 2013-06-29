@@ -22,4 +22,4 @@ include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
 
 Now you can use the examples in this cookbook.
 
-**NOTE:** if you're using PHP 5.3, you'll need to run `./scripts/convert5.3.php` first. (Composer will run it automatically)
+**NOTE:** if you're using PHP 5.3, you'll need to run `./scripts/convert5.3.php` first.
