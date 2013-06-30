@@ -10,8 +10,14 @@ $externs = array(
 		'function escape',
 		'function parseInt',
 
+		// Object
+		'function Object',
+		'Object.prototype.toString',
+
 		// Array object
 		'function Array',
+		'Array.prototype.forEach',
+		'Array.prototype.indexOf',
 		'Array.prototype.join',
 		'Array.prototype.length',
 		'Array.prototype.pop',
@@ -19,6 +25,7 @@ $externs = array(
 		'Array.prototype.reverse',
 		'Array.prototype.slice',
 		'Array.prototype.sort',
+		'Array.prototype.splice',
 
 		// Date object
 		'function Date',
@@ -60,6 +67,12 @@ $externs = array(
 	),
 	'w3c_dom1.js' => array(
 		'function Node',
+		'function Element',
+		'function Document()',
+		'Document.prototype.createElement'
+	),
+	'w3c_dom3.js' => array(
+		'Node.prototype.textContent'
 	)
 );
 
@@ -68,7 +81,7 @@ $out  = '';
 foreach ($externs as $filename => $names)
 {
 	$file = file_get_contents(
-		'compress.zlib://http://closure-compiler.googlecode.com/svn/trunk/externs/' . $filename,
+		'compress.zlib://http://closure-compiler.googlecode.com/git/externs/' . $filename,
 		false,
 		stream_context_create(array(
 			'http' => array(
@@ -101,6 +114,12 @@ foreach ($externs as $filename => $names)
 
 // Remove superfluous doc like comments and @see links
 $out = preg_replace('#^ \\*(?!/| @(?!see)).*\\n#m', '', $out);
+
+// Remove unnecessary annotations
+$annotations = [
+	" * @implements {EventTarget}\n",
+];
+$out = str_replace($annotations, '', $out);
 
 // Prepend some legalese to be on the safe side
 $out = '/*

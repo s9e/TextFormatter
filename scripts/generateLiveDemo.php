@@ -38,6 +38,8 @@ $configurator->plugins->load('FancyPants');
 
 $configurator->addHTML5Rules();
 
+//$configurator->javascript->setMinifier('ClosureCompilerService');
+
 $js = 'var xsl=' . json_encode($configurator->stylesheet->get()) . ";\n";
 $js .= $configurator->javascript->getParser();
 $js .= file_get_contents(__DIR__ . '/../src/s9e/TextFormatter/live.js');

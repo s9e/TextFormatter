@@ -32,7 +32,7 @@ Tag.SELF_CLOSING_TAG = 3;
 Tag.prototype.attributes;
 
 /**
-* @type {!Array.<Tag>} List of tags that are invalidated when this tag is invalidated
+* @type {!Array.<!Tag>} List of tags that are invalidated when this tag is invalidated
 */
 Tag.prototype.cascade;
 

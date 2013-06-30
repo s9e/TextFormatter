@@ -337,13 +337,13 @@ trait TagProcessing
 		{
 			// Filter out tags that would immediately be closed
 			$upcomingEndTags = [];
-			$i = count($this->tagStack);
 
 			/**
 			* @var integer Rightmost position of the portion of text to ignore
 			*/
 			$ignorePos = $this->pos;
 
+			$i = count($this->tagStack);
 			while (--$i >= 0 && $this->currentFixingCost < $this->maxFixingCost)
 			{
 				$upcomingTag = $this->tagStack[$i];

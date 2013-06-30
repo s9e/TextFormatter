@@ -44,11 +44,39 @@ function escape(str) {}
 function parseInt(num, base) {}
 /**
  * @constructor
+ * @param {*=} opt_value
+ * @nosideeffects
+ */
+function Object(opt_value) {}
+/**
+ * @this {*}
+ * @return {string}
+ * @nosideeffects
+ */
+Object.prototype.toString = function() {};
+/**
+ * @constructor
  * @param {...*} var_args
  * @return {!Array}
  * @nosideeffects
  */
 function Array(var_args) {}
+/**
+ * @param {?function(this:S, T, number, !Array.<T>): ?} callback
+ * @param {S=} opt_thisobj
+ * @this {{length: number}|Array.<T>|string}
+ * @template T,S
+ */
+Array.prototype.forEach = function(callback, opt_thisobj) {};
+/**
+ * @param {T} obj
+ * @param {number=} opt_fromIndex
+ * @return {number}
+ * @this {{length: number}|Array.<T>|string}
+ * @nosideeffects
+ * @template T
+ */
+Array.prototype.indexOf = function(obj, opt_fromIndex) {};
 /**
  * @param {*=} opt_separator Specifies a string to separate each element of the
  * @return {string}
@@ -61,14 +89,17 @@ Array.prototype.join = function(opt_separator) {};
  */
 Array.prototype.length;
 /**
- * @this {Object}
+ * @return {T}
+ * @this {{length: number}|Array.<T>}
  * @modifies {this}
+ * @template T
  */
 Array.prototype.pop = function() {};
 /**
- * @param {...*} var_args
+ * @param {...T} var_args
  * @return {number} The new length of the array.
- * @this {Object}
+ * @this {{length: number}|Array.<T>}
+ * @template T
  * @modifies {this}
  */
 Array.prototype.push = function(var_args) {};
@@ -80,16 +111,28 @@ Array.prototype.reverse = function() {};
 /**
  * @param {*=} opt_begin Zero-based index at which to begin extraction.  A
  * @param {*=} opt_end Zero-based index at which to end extraction.  slice
- * @return {!Array}
- * @this {Object}
+ * @return {!Array.<T>}
+ * @this {{length: number}|Array.<T>|string}
+ * @template T
  * @nosideeffects
  */
 Array.prototype.slice = function(opt_begin, opt_end) {};
 /**
- * @param {Function=} opt_compareFunction Specifies a function that defines the
- * @this {Object}
+ * @param {function(T,T):number=} opt_compareFunction Specifies a function that
+ * @this {{length: number}|Array.<T>}
+ * @template T
  */
 Array.prototype.sort = function(opt_compareFunction) {};
+/**
+ * @param {*=} opt_index Index at which to start changing the array. If negative,  *     will begin that many elements from the end.  A non-number type will be
+ * @param {*=} opt_howMany An integer indicating the number of old array elements
+ * @param {...T} var_args
+ * @return {!Array.<T>}
+ * @this {{length: number}|Array.<T>}
+ * @modifies {this}
+ * @template T
+ */
+Array.prototype.splice = function(opt_index, opt_howMany, var_args) {};
 /**
  * @param {?=} opt_yr_num
  * @param {?=} opt_mo_num
@@ -143,6 +186,7 @@ Math.random = function() {};
  */
 function Number(opt_value) {}
 /**
+ * @this {Number|number}
  * @param {(number|Number)=} opt_radix An optional radix.
  * @return {string}
  * @nosideeffects
@@ -185,18 +229,21 @@ function String(opt_str) {}
  */
 String.fromCharCode = function(var_args) {};
 /**
+ * @this {String|string}
  * @param {number} index
  * @return {string}
  * @nosideeffects
  */
 String.prototype.charAt = function(index) {};
 /**
+ * @this {String|string}
  * @param {number=} opt_index
  * @return {number}
  * @nosideeffects
  */
 String.prototype.charCodeAt = function(opt_index) {};
 /**
+ * @this {String|string}
  * @param {string|null} searchValue
  * @param {(number|null)=} opt_fromIndex
  * @return {number}
@@ -208,6 +255,7 @@ String.prototype.indexOf = function(searchValue, opt_fromIndex) {};
  */
 String.prototype.length;
 /**
+ * @this {String|string}
  * @param {RegExp|string} regex
  * @param {string|Function} str
  * @param {string=} opt_flags
@@ -215,6 +263,7 @@ String.prototype.length;
  */
 String.prototype.replace = function(regex, str, opt_flags) {};
 /**
+ * @this {String|string}
  * @param {*=} opt_separator
  * @param {number=} opt_limit
  * @return {!Array.<string>}
@@ -222,6 +271,7 @@ String.prototype.replace = function(regex, str, opt_flags) {};
  */
 String.prototype.split = function(opt_separator, opt_limit) {};
 /**
+ * @this {String|string}
  * @param {number} start
  * @param {number=} opt_length
  * @return {string} The specified substring.
@@ -229,11 +279,13 @@ String.prototype.split = function(opt_separator, opt_limit) {};
  */
 String.prototype.substr = function(start, opt_length) {};
 /**
+ * @this {String|string}
  * @return {string}
  * @nosideeffects
  */
 String.prototype.toLowerCase = function() {};
 /**
+ * @this {String|string}
  * @return {string}
  * @nosideeffects
  */
@@ -250,6 +302,25 @@ function DOMParser() {}
 DOMParser.prototype.parseFromString = function(src, type) {};
 /**
  * @constructor
- * @implements {EventTarget}
  */
 function Node() {}
+/**
+ * @constructor
+ * @extends {Node}
+ */
+function Element() {}
+/**
+ * @constructor
+ * @extends {Node}
+ */
+function Document() {}
+/**
+ * @param {string} tagName
+ * @return {!Element}
+ */
+Document.prototype.createElement = function(tagName) {};
+/**
+ * @type {string}
+ * @implicitCast
+ */
+Node.prototype.textContent;

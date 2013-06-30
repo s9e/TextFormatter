@@ -150,7 +150,7 @@ var BuiltInFilters =
 
 	/**
 	* @param  {*} attrValue
-	* @param  {!Array.<Array>}  map
+	* @param  {!Array.<!Array>}  map
 	* @return {*}
 	*/
 	filterMap: function(attrValue, map)

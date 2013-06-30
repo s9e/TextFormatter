@@ -1,5 +1,5 @@
 /**
-* @type {!Array.<Tag>} Tag storage
+* @type {!Array.<!Tag>} Tag storage
 */
 var tagStack;
 

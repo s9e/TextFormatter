@@ -317,14 +317,14 @@ function processEndTag(tag)
 	if (reopenTags.length)
 	{
 		// Filter out tags that would immediately be closed
-		var upcomingEndTags = [],
-			i = tagStack.length;
+		var upcomingEndTags = [];
 
 		/**
 		* @type {number} Rightmost position of the portion of text to ignore
 		*/
 		var ignorePos = pos;
 
+		i = tagStack.length;
 		while (--i >= 0)
 		{
 			var upcomingTag = tagStack[i];

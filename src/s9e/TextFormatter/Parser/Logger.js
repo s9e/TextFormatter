@@ -11,7 +11,7 @@ function Logger()
 Logger.prototype.attrName;
 
 /**
-* @type {!Object.<string,Array>} 2D array of [<log type> => [<callbacks>]]
+* @type {!Object.<string,!Array>} 2D array of [<log type> => [<callbacks>]]
 */
 Logger.prototype.callbacks = {};
 
