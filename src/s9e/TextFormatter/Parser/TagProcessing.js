@@ -321,7 +321,7 @@ function processEndTag(tag)
 			i = tagStack.length;
 
 		/**
-		* @var integer Rightmost position of the portion of text to ignore
+		* @type {number} Rightmost position of the portion of text to ignore
 		*/
 		var ignorePos = pos;
 
