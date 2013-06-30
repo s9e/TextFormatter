@@ -10,6 +10,7 @@ trait ParsingTestsJavaScriptRunner
 	* @group needs-js
 	* @testdox Parsing tests (JavaScript)
 	* @dataProvider getParsingTests
+	* @covers s9e\TextFormatter\Configurator\JavaScript
 	*/
 	public function testJavaScriptParsing($original, $expected, array $pluginOptions = [], $setup = null, $expectedJS = false)
 	{

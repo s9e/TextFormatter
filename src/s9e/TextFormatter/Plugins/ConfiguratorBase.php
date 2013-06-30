@@ -125,11 +125,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 			{
 				return file_get_contents($filepath);
 			}
-
-			// All stock plugins should have a JS parser, so this codepath cannot be reached
-			// @codeCoverageIgnoreStart
 		}
-		// @codeCoverageIgnoreEnd
 
 		return null;
 	}

@@ -225,8 +225,12 @@ class Configurator implements ConfigProvider
 		$config['rootContext'] = $bitfields['root'];
 		$config['rootContext']['flags'] = $config['rootRules']['flags'];
 
-		// Make sure those keys exist even if no tags were defined and plugins loaded
-		$config += ['plugins' => [], 'tags' => []];
+		// Make sure those keys exist even if they're empty
+		$config += [
+			'plugins'        => [],
+			'registeredVars' => [],
+			'tags'           => []
+		];
 
 		// Remove unused tags
 		$config['tags'] = array_intersect_key($config['tags'], $bitfields['tags']);

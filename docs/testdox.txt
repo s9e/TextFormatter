@@ -1224,9 +1224,19 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
  [x] "B\n" is invalid (no newlines allowed)
 
 s9e\TextFormatter\Tests\Configurator\JavaScript
- [x] getMinifier() returns an instance of ClosureCompilerService by default
+ [x] getMinifier() returns an instance of Noop by default
+ [x] setMinifier() accepts the name of a minifier type
  [x] setMinifier() accepts an object that implements Minifier
- [x] 
+ [x] getParser() calls the minifier and returns its result
+ [x] A plugin's quickMatch value is preserved if it's valid UTF-8
+ [x] A plugin's quickMatch value is discarded if it contains no valid UTF-8
+ [x] If a plugin's quickMatch value contains bad UTF-8, only the first consecutive valid characters are kept
+ [x] A plugin with no JS parser does not appear in the source
+ [x] getParser() throws an exception if it encounters a value that cannot be encoded into JavaScript
+ [x] Attribute generators are converted
+ [x] Built-in attribute filters are converted
+ [x] An attribute filter that uses a built-in filter as callback is converted
+ [x] An attribute filter with no JS representation unconditionally returns false
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Code
  [x] Can be cast as a string
@@ -1468,6 +1478,7 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
  [x] getJSParser() returns NULL for custom plugins
  [x] getJSParser() returns the content of Parser.js for stock plugins
+ [x] getJSParser() returns NULL if there's no Parser.js for a stock plugin
 
 s9e\TextFormatter\Tests\Plugins\ParserBase
  [x] Constructor calls setUp()

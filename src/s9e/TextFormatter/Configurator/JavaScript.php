@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
-use s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService;
+use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
@@ -63,7 +63,7 @@ class JavaScript
 	{
 		if (!isset($this->minifier))
 		{
-			$this->minifier = new ClosureCompilerService;
+			$this->minifier = new Noop;
 		}
 
 		return $this->minifier;
@@ -125,8 +125,8 @@ class JavaScript
 			$src .= "var $name=$code;\n";
 		}
 
-//		$src = $this->getMinifier()->minify($src);
-//		file_put_contents('/tmp/z.js', $src);
+		// Minify the source
+		$src = $this->getMinifier()->minify($src);
 
 		return $src;
 	}
@@ -134,11 +134,17 @@ class JavaScript
 	/**
 	* Set the cached instance of Minifier
 	*
-	* @param  Minifier $minifier
+	* @param  string|Minifier $minifier Name of a supported minifier, or an instance of Minifier
 	* @return void
 	*/
-	public function setMinifier(Minifier $minifier)
+	public function setMinifier($minifier)
 	{
+		if (is_string($minifier))
+		{
+			$className = __NAMESPACE__ . '\\JavaScript\\Minifiers\\' . $minifier;
+			$minifier  = new $className;
+		}
+
 		$this->minifier = $minifier;
 	}
 
@@ -260,14 +266,7 @@ class JavaScript
 	*/
 	protected function getRegisteredVarsConfig()
 	{
-		if (empty($this->config['registeredVars']))
-		{
-			return new Code('{}');
-		}
-
-		$code = new Code(self::encode(new Dictionary($this->config['registeredVars'])));
-
-		return $code;
+		return new Code(self::encode(new Dictionary($this->config['registeredVars'])));
 	}
 
 	/**
@@ -297,7 +296,7 @@ class JavaScript
 	protected function getTagsConfig()
 	{
 		// Replace callback arrays with JavaScript code
-		self::replaceCallbacks($this->config);
+		$this->replaceCallbacks();
 
 		// Prepare a Dictionary that will preserve tags' names
 		$tags = new Dictionary;
@@ -380,13 +379,13 @@ class JavaScript
 	}
 
 	/**
-	* 
+	* Replace the callbacks in the config with their JavaScript representation
 	*
-	* @return array
+	* @return void
 	*/
-	protected function replaceCallbacks(array &$config)
+	protected function replaceCallbacks()
 	{
-		foreach ($config['tags'] as $tagName => &$tagConfig)
+		foreach ($this->config['tags'] as $tagName => &$tagConfig)
 		{
 			if (isset($tagConfig['filterChain']))
 			{
@@ -444,17 +443,27 @@ class JavaScript
 		];
 
 		$callback   = $callbackConfig['callback'];
-		$params     = $callbackConfig['params'];
+		$params     = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : [];
 		$jsCallback = null;
 
 		if (isset($callbackConfig['js']))
 		{
 			// Use the JavaScript source code that was set in the callback
-			$jsCode     = $callbackConfig['js'];
-			$jsCallback = sprintf('c%08X', crc32($jsCode));
+			$jsCode = $callbackConfig['js'];
 
-			// Record this custom callback to be injected in the source
-			$this->callbacks[$jsCallback] = $jsCode;
+			// If the JS is just one function name such as "foo" or "foo.bar" we use the callback
+			// as-is, otherwise we move it to a variable. This will automatically deduplicate code
+			if (preg_match('#^[a-z_0-9.]+$#i', $jsCode))
+			{
+				$jsCallback = $jsCode;
+			}
+			else
+			{
+				$jsCallback = sprintf('c%08X', crc32($jsCode));
+
+				// Record this custom callback to be injected in the source
+				$this->callbacks[$jsCallback] = $jsCode;
+			}
 		}
 		elseif (is_string($callback))
 		{

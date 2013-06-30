@@ -185,6 +185,15 @@ class ConfiguratorBaseTest extends Test
 			$configurator->Autolink->getJSParser()
 		);
 	}
+
+	/**
+	* @testdox getJSParser() returns NULL if there's no Parser.js for a stock plugin
+	*/
+	public function testGetJSParserStockFalse()
+	{
+		$dummy = new \s9e\TextFormatter\Plugins\TotallyFakeDummyPlugin\Configurator(new Configurator);
+		$this->assertNull($dummy->getJSParser());
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase
@@ -206,5 +215,12 @@ class DummyPluginConfigurator extends ConfiguratorBase
 }
 
 class EmptyPluginConfigurator extends ConfiguratorBase
+{
+}
+
+namespace s9e\TextFormatter\Plugins\TotallyFakeDummyPlugin;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
+
+class Configurator extends ConfiguratorBase
 {
 }
