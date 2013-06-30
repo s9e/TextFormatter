@@ -2,9 +2,8 @@
 
 namespace s9e\TextFormatter\Tests\Configurator;
 
-use s9e\TextFormatter\Configurator\UrlConfig;
-use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
+use s9e\TextFormatter\Configurator\UrlConfig;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -355,7 +354,7 @@ class UrlConfigTest extends Test
 	public function testNoRequiredScheme()
 	{
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertArrayNotHasKey('requireScheme', $urlConfig);
+		$this->assertFalse($urlConfig['requireScheme']);
 	}
 
 	/**
@@ -365,7 +364,6 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->requireScheme();
 		$urlConfig = $this->urlConfig->asConfig();
-		$this->assertArrayHasKey('requireScheme', $urlConfig);
 		$this->assertTrue($urlConfig['requireScheme']);
 	}
 

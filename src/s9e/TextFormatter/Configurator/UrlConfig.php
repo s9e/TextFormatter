@@ -47,7 +47,10 @@ class UrlConfig implements ConfigProvider
 	{
 		$regexp = RegexpBuilder::fromList($this->allowedSchemes);
 		$regexp = new Regexp('/^' . $regexp . '$/Di');
-		$config = ['allowedSchemes' => $regexp->asConfig()];
+		$config = [
+			'allowedSchemes' => $regexp->asConfig(),
+			'requireScheme'  => $this->requireScheme
+		];
 
 		foreach (['disallowedHosts', 'resolveRedirectsHosts'] as $k)
 		{
@@ -75,11 +78,6 @@ class UrlConfig implements ConfigProvider
 		if (isset($this->defaultScheme))
 		{
 			$config['defaultScheme'] = $this->defaultScheme;
-		}
-
-		if ($this->requireScheme)
-		{
-			$config['requireScheme'] = true;
 		}
 
 		return $config;
