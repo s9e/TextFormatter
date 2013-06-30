@@ -32,3 +32,4 @@ TODO
 - Re-enable the optimization that uses <xsl:element name="{translate('ABC','abc',name())}"/>
 - PHP renderer: consider caching $node->textContent for performance, especially wrt Emoticons
 - Consider *not* removing the source attribute of an attribute preprocessor
+- Conditional comments can create IE-specific exploits. Consider removing them
