@@ -1,6 +1,8 @@
-## Use stylesheet parameters in BBCode templates
+## Use stylesheet parameters in a BBCode template
 
 As for localization, when creating a custom BBCode, any token that is not associated with a filter is presumed to be a stylesheet parameter. In the following example, we create a BBCode that only outputs its content if a parameter named `S_LOGGED_IN` is true.
+
+Note that the BBCodes plugin automatically creates stylesheet parameters for you.
 
 ```php
 // We'll create a fake user object for this example
