@@ -107,6 +107,15 @@ class ParserTest extends Test
 					$constructor->HTMLElements->allowAttribute('input', 'checked');
 				}
 			],
+			[
+				'x <b title = "is bold">bold</b> x',
+				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:b><st>&lt;b title = "is bold"&gt;</st>bold<et>&lt;/b&gt;</et></html:b> x</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->HTMLElements->allowElement('b');
+				}
+			],
 		];
 	}
 
