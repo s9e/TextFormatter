@@ -10,7 +10,7 @@ $filepath = '/tmp/index.html';
 if (!file_exists($filepath))
 {
 	copy(
-		'compress.zlib://http://www.w3.org/html/wg/drafts/html/master/iana.html',
+		'compress.zlib://http://www.w3.org/html/wg/drafts/html/master/index.html',
 		$filepath,
 		stream_context_create(array(
 			'http' => array(
@@ -23,11 +23,18 @@ if (!file_exists($filepath))
 $page  = SimpleDOM::loadHTMLFile($filepath);
 $table = array();
 
-$query = '/html/body/dl/h3[@id="attributes-1"]/following-sibling::table[1]/tbody/tr[contains(td[3],"URL")]';
+$query = '/html/body/h3[@id="attributes-1"]/following-sibling::table[1]/tbody/tr[contains(td[3],"URL")]';
 foreach ($page->xpath($query) as $tr)
 {
 	foreach (preg_split('/[;\\s]+/', $tr->th->textContent(), -1, PREG_SPLIT_NO_EMPTY) as $attrName)
 	{
+		// We manually ignore itemprop because it accepts plain text as well as URLs.
+		// We also ignore itemid because it actually accepts any URIs, not just URLs
+		if ($attrName === 'itemprop' || $attrName === 'itemid')
+		{
+			continue;
+		}
+
 		$table[$attrName] = '#url';
 	}
 }
