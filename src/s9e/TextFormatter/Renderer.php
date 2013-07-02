@@ -68,11 +68,11 @@ abstract class Renderer
 		$render = [];
 
 		// First replace intermediate representations of plain text
-		foreach ($arr as $k => &$xml)
+		foreach ($arr as $k => $xml)
 		{
 			if (substr($xml, 0, 4) === '<pt>')
 			{
-				$xml = $this->renderPlainText($xml);
+				$arr[$k] = $this->renderPlainText($xml);
 			}
 			else
 			{
@@ -81,7 +81,6 @@ abstract class Renderer
 				$render[] = $xml;
 			}
 		}
-		unset($xml);
 
 		// Render the rich text representations, if any
 		if (!empty($render))

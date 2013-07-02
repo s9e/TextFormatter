@@ -71,17 +71,17 @@ trait RendererTests
 	public function testMulti()
 	{
 		$parsed = [
-			'<rt>Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>',
-			'<pt>Plain text</pt>',
-			'<rt>Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>',
-			'<pt>Plain text</pt>'
+			'<rt>1Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>',
+			'<pt>2Plain text</pt>',
+			'<rt>3Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>',
+			'<pt>4Plain text</pt>'
 		];
 
 		$expected = [
-			'Hello <b>world</b>!',
-			'Plain text',
-			'Hello <b>world</b>!',
-			'Plain text'
+			'1Hello <b>world</b>!',
+			'2Plain text',
+			'3Hello <b>world</b>!',
+			'4Plain text'
 		];
 
 		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
@@ -98,21 +98,21 @@ trait RendererTests
 	public function testMultiOrder()
 	{
 		$parsed = [
-			'<rt><B>One</B></rt>',
-			'<pt>Two</pt>',
-			'p3' => '<rt><B>Three</B></rt>',
-			'p4' => '<pt>Four</pt>',
-			'<rt><B>Five</B></rt>',
-			'<pt>Six</pt>'
+			'<rt>1<B>One</B></rt>',
+			'<pt>2Two</pt>',
+			'p3' => '<rt>3<B>Three</B></rt>',
+			'p4' => '<pt>4Four</pt>',
+			'<rt>5<B>Five</B></rt>',
+			'<pt>6Six</pt>'
 		];
 
 		$expected = [
-			'<b>One</b>',
-			'Two',
-			'p3' => '<b>Three</b>',
-			'p4' => 'Four',
-			'<b>Five</b>',
-			'Six'
+			'1<b>One</b>',
+			'2Two',
+			'p3' => '3<b>Three</b>',
+			'p4' => '4Four',
+			'5<b>Five</b>',
+			'6Six'
 		];
 
 		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
