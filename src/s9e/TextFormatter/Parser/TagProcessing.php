@@ -453,14 +453,14 @@ trait TagProcessing
 
 		// The allowedDescendants bitfield is restricted by this tag's
 		$allowedDescendants = $this->context['allowedDescendants']
-							& $tagConfig['allowedDescendants'];
+		                    & $tagConfig['allowedDescendants'];
 
 		// Ensure that disallowed descendants are not allowed as children
 		$allowedChildren &= $allowedDescendants;
 
 		// Use this tag's flags except for noBrDescendant, which is inherited
 		$flags = $tagConfig['rules']['flags']
-			   | ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT);
+		       | ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT);
 
 		// noBrDescendant is replicated onto noBrChild
 		if ($flags & self::RULE_NO_BR_DESCENDANT)
