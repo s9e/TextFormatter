@@ -226,7 +226,7 @@ abstract class RulesGenerator
 			// whitespace should be trimmed
 			if ($srcTag->isBlock())
 			{
-				$rules['tags'][$srcTagName]['trimWhitespace'] = true;
+				$rules['tags'][$srcTagName]['ignoreSurroundingWhitespace'] = true;
 			}
 
 			foreach ($templateForensics as $trgTagName => $trgTag)

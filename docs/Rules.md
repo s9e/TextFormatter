@@ -67,6 +67,10 @@ Prevents tag X to be used as a child of this tag.</dd>
 <dd><i>Example:</i> <code>$tag->rules->denyDescendant('X');</code><br/>
 Prevents tag X to be used as a descendant of this tag.</dd>
 
+<dt>ignoreSurroundingWhitespace</dt>
+<dd><i>Example:</i> <code>$tag->rules->ignoreSurroundingWhitespace();</code><br/>
+Whether whitespace around this tag should be ignored. Useful for allowing whitespace around block elements without extra newlines being displayed. Limited to 2 newlines before and after the tag and 1 newline at the start and at the end of its content.</dd>
+
 <dt>ignoreText</dt>
 <dd><i>Example:</i> <code>$tag->rules->ignoreText();</code><br/>
 Prevents plain text from being displayed as a child of this tag. Also disables line breaks. This rule deals with elements that do not allow text, such as lists. Does not apply to descendants.</dd>
@@ -90,9 +94,5 @@ Prevents this tag from being used unless it's as a child of X. If multiple requi
 <dt>requireAncestor</dt>
 <dd><i>Example:</i> <code>$tag->rules->requireAncestor('X');</code><br/>
 Prevents this tag from being used unless it's as a descendant of X. If multiple requireDescendant rules are set, all of them must be satisfied.</dd>
-
-<dt>trimWhitespace</dt>
-<dd><i>Example:</i> <code>$tag->rules->trimWhitespace(false);</code><br/>
-Whether whitespace around this tag should be ignored. Useful for allowing whitespace around block elements without extra newlines being displayed. Limited to 2 newlines before and after the tag and 1 newline at the start and at the end of its content.</dd>
 
 </dl>

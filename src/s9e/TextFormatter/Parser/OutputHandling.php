@@ -56,7 +56,7 @@ trait OutputHandling
 			$this->output = str_replace('</i><i>', '', $this->output);
 		}
 
-		// Use a <rt> root if the text is rich, or <pt> for plain text (including <i> and <br/>)
+		// Use a <rt> root if the text is rich, or <pt> for plain text (including <br/>)
 		$tagName = ($this->isRich) ? 'rt' : 'pt';
 
 		// Prepare the root node with all the namespace declarations
@@ -165,7 +165,7 @@ trait OutputHandling
 
 		if ($ignorePos !== $this->pos)
 		{
-			$this->output .= '<i>' . substr($this->text, $this->pos, $ignorePos - $this->pos) . '</i>';
+			$this->output .= substr($this->text, $this->pos, $ignorePos - $this->pos);
 			$this->pos = $ignorePos;
 		}
 	}
@@ -191,7 +191,15 @@ trait OutputHandling
 
 		if ($this->context['flags'] & self::RULE_IGNORE_TEXT)
 		{
-			$this->output .= '<i>' . $catchupText . '</i>';
+			// If the catchup text is not entirely composed of whitespace, we put it inside ignore
+			// tags
+			if (strspn($catchupText, " \n\t") < $catchupLen)
+			{
+				$catchupText = '<i>' . $catchupText . '</i>';
+			}
+
+			$this->output .= $catchupText;
+
 			return;
 		}
 
@@ -215,7 +223,7 @@ trait OutputHandling
 
 		if ($ignoreLen)
 		{
-			$ignoreText  = '<i>' . substr($catchupText, -$ignoreLen) . '</i>';
+			$ignoreText  = substr($catchupText, -$ignoreLen);
 			$catchupText = substr($catchupText, 0, $catchupLen - $ignoreLen);
 		}
 		else

@@ -476,9 +476,9 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates a trimWhitespace rule for <div>
+	* @testdox Generates a ignoreSurroundingWhitespace rule for <div>
 	*/
-	public function testTrimWhitespace()
+	public function testIgnoreSurroundingWhitespace()
 	{
 		$tags = new TagCollection;
 		$tags->add('DIV')->defaultTemplate = '<div><xsl:apply-templates/></div>';
@@ -488,7 +488,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			[
 				'DIV' => [
-					'trimWhitespace' => true
+					'ignoreSurroundingWhitespace' => true
 				]
 			],
 			$rules['tags']
@@ -496,9 +496,9 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Does not generate a trimWhitespace rule for <span>
+	* @testdox Does not generate a ignoreSurroundingWhitespace rule for <span>
 	*/
-	public function testNoTrimWhitespace()
+	public function testNoIgnoreSurroundingWhitespace()
 	{
 		$tags = new TagCollection;
 		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
@@ -508,7 +508,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			[
 				'SPAN' => [
-					'trimWhitespace' => null
+					'ignoreSurroundingWhitespace' => null
 				]
 			],
 			$rules['tags']

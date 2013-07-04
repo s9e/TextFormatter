@@ -183,13 +183,18 @@ class BBCodesTest extends Test
 				'our <del>great </del>leader'
 			],
 			[
-				"[dl]
+				'[dl]
 					[dt]Hacker
 					[dd]a clever programmer
 					[dt]Nerd
 					[dd]technically bright but socially [s]inept[/s] awesome person
-				[/dl]",
-				'<dl><dt>Hacker</dt><dd>a clever programmer</dd><dt>Nerd</dt><dd>technically bright but socially <s>inept</s> awesome person</dd></dl>'
+				[/dl]',
+				'<dl>
+					<dt>Hacker
+					</dt><dd>a clever programmer
+					</dd><dt>Nerd
+					</dt><dd>technically bright but socially <s>inept</s> awesome person
+				</dd></dl>'
 			],
 			[
 				'Putting the EM in [em]em[/em]phasis',
@@ -243,15 +248,15 @@ class BBCodesTest extends Test
 			],
 			[
 				'x [float=left]left[/float] y',
-				'x<div style="float:left">left</div> y'
+				'x <div style="float:left">left</div> y'
 			],
 			[
 				'x [float=right]right[/float] y',
-				'x<div style="float:right">right</div> y'
+				'x <div style="float:right">right</div> y'
 			],
 			[
 				'x [float=none]none[/float] y',
-				'x<div style="float:none">none</div> y'
+				'x <div style="float:none">none</div> y'
 			],
 			[
 				'x [float=none;color:red]none[/float] y',
@@ -266,13 +271,8 @@ class BBCodesTest extends Test
 				'x <i>italic</i> y'
 			],
 			[
-				"[h1]h1[/h1]\n" .
-				"[h2]h2[/h2]\n" .
-				"[h3]h3[/h3]\n" .
-				"[h4]h4[/h4]\n" .
-				"[h5]h5[/h5]\n" .
-				"[h6]h6[/h6]\n",
-				'<h1>h1</h1><h2>h2</h2><h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6>'
+				"[h1]h1[/h1]\n[h2]h2[/h2]\n[h3]h3[/h3]\n[h4]h4[/h4]\n[h5]h5[/h5]\n[h6]h6[/h6]\n",
+				"<h1>h1</h1>\n<h2>h2</h2>\n<h3>h3</h3>\n<h4>h4</h4>\n<h5>h5</h5>\n<h6>h6</h6>\n",
 			],
 			[
 				'[h1]h1 [b]b[/b][/h1]',
@@ -283,10 +283,8 @@ class BBCodesTest extends Test
 				'<h1>h1 [quote]...[/quote]</h1>'
 			],
 			[
-				"xxxx\n" .
-				"[hr]\n" .
-				"yyyyy",
-				'xxxx<hr>yyyyy'
+				"xxxx\n[hr]\nyyyyy",
+				"xxxx\n<hr>\nyyyyy"
 			],
 			[
 				'x [B]bold [i]italic[/b][/I] y',
@@ -329,7 +327,10 @@ class BBCodesTest extends Test
 					[*]one
 					[*]two
 				[/LIST]',
-				'<ul style="list-style-type:disc"><li>one</li><li>two</li></ul>'
+				'<ul style="list-style-type:disc">
+					<li>one
+					</li><li>two
+				</li></ul>'
 			],
 			[
 				'[LIST]
@@ -340,7 +341,14 @@ class BBCodesTest extends Test
 
 					[*]two
 				[/LIST]',
-				'<ul style="list-style-type:disc"><li><ul style="list-style-type:disc"><li>one.one</li><li>one.two</li></ul></li><li>two</li></ul>'
+				'<ul style="list-style-type:disc">
+					<li><ul style="list-style-type:disc">
+						<li>one.one
+						</li><li>one.two
+					</li></ul>
+
+					</li><li>two
+				</li></ul>'
 			],
 			[
 				'[LIST=1][*]one[*]two[/LIST]',
@@ -413,25 +421,32 @@ class BBCodesTest extends Test
 				}
 			],
 			[
-				"my quote:\n" .
-				"\n" .
-				"[QUOTE]...text...[/QUOTE]\n" .
-				"\n" .
-				"follow-up",
-				'my quote:<blockquote class="uncited"><div>...text...</div></blockquote>follow-up'
+				'my quote:
+
+					[QUOTE]...text...[/QUOTE]
+
+				follow-up',
+				'my quote:
+
+					<blockquote class="uncited"><div>...text...</div></blockquote>
+
+				follow-up'
 			],
 			[
-				"my quote:\n" .
-				"\n" .
-				"\n" .
-				"[QUOTE]...text...[/QUOTE]\n" .
-				"\n" .
-				"\n" .
-				"follow-up",
+				'my quote:
 
-				"my quote:<br>\n" .
-				"<blockquote class=\"uncited\"><div>...text...</div></blockquote><br>\n" .
-				"follow-up"
+
+					[QUOTE]...text...[/QUOTE]
+
+
+				follow-up',
+				'my quote:<br>
+
+
+					<blockquote class="uncited"><div>...text...</div></blockquote>
+
+<br>
+				follow-up'
 			],
 			[
 				'[right]...[/right]',
@@ -444,22 +459,26 @@ class BBCodesTest extends Test
 			[
 				"Spoiler ahead!\n" .
 				"[spoiler]Now you're spoiled[/spoiler]",
-				'Spoiler ahead!<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
+				"Spoiler ahead!\n" .
+				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
 			],
 			[
 				"Spoiler ahead!\n" .
 				'[spoiler="your spoilage status"]Now you\'re spoiled[/spoiler]',
-				'Spoiler ahead!<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: your spoilage status</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
+				"Spoiler ahead!\n" . 
+				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: your spoilage status</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
 			],
 			[
 				"Spoiler ahead!\n" .
 				"[spoiler][spoiler='Last chance']Now you're spoiled[/spoiler][/spoiler]",
-				'Spoiler ahead!<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none"><div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: Last chance</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div></div></div>'
+				"Spoiler ahead!\n" .
+				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none"><div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: Last chance</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div></div></div>'
 			],
 			[
 				"Spoiler ahead!\n" .
 				"[spoiler]Now you're spoiled[/spoiler]",
-				'Spoiler ahead!<div class="spoiler"><div class="spoiler-header"><input type="button" value="Montrer" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Cacher\'}else{s.display=\'none\';this.value=\'Montrer\'}"><span class="spoiler-title">Spoiler : </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>',
+				"Spoiler ahead!\n" . 
+				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Montrer" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Cacher\'}else{s.display=\'none\';this.value=\'Montrer\'}"><span class="spoiler-title">Spoiler : </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('SPOILER', 'default', [

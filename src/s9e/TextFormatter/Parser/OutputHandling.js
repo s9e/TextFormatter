@@ -59,7 +59,7 @@ function finalizeOutput()
 	// Merge consecutive <i> tags
 	output = output.replace(/<\/i><i>/g, '', output);
 
-	// Use a <rt> root if the text is rich, or <pt> for plain text (including <i> and <br/>)
+	// Use a <rt> root if the text is rich, or <pt> for plain text (including <br/>)
 	var tagName = (isRich) ? 'rt' : 'pt';
 
 	// Prepare the root node with all the namespace declarations
@@ -167,7 +167,7 @@ function outputTag(tag)
 
 	if (ignorePos !== pos)
 	{
-		output += '<i>' + text.substr(pos, ignorePos - pos) + '</i>';
+		output += text.substr(pos, ignorePos - pos);
 		pos = ignorePos;
 	}
 }
@@ -193,7 +193,14 @@ function outputText(catchupPos, maxLines)
 
 	if (context.flags & RULE_IGNORE_TEXT)
 	{
-		output += '<i>' + catchupText + '</i>';
+		// If the catchup text is not entirely composed of whitespace, we put it inside ignore tags
+		if (!/^[ \n\t]*$/.test(catchupText))
+		{
+			catchupText = '<i>' + catchupText + '</i>';
+		}
+
+		output += catchupText;
+
 		return;
 	}
 
@@ -219,7 +226,7 @@ function outputText(catchupPos, maxLines)
 	if (ignoreLen)
 	{
 		// TODO: IE compat
-		ignoreText  = '<i>' + catchupText.substr(-ignoreLen) + '</i>';
+		ignoreText  = catchupText.substr(-ignoreLen);
 		catchupText = catchupText.substr(0, catchupLen - ignoreLen);
 	}
 

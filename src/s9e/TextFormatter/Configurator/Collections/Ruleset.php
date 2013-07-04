@@ -98,7 +98,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
 			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
 			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT,
-			'trimWhitespace' => Parser::RULE_TRIM_WHITESPACE
+			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE
 		];
 
 		$bitfield = 0;
@@ -356,6 +356,25 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Ignore (some) whitespace around tags
+	*
+	* When true, some whitespace around this tag will be ignored (not transformed to line breaks.)
+	* Up to 2 lines outside of a tag pair and 1 line inside of it:
+	*     {2 lines}{START_TAG}{1 line}{CONTENT}{1 line}{END_TAG}{2 lines}
+	*
+	* @param bool $bool Whether whitespace around this tag should be ignored
+	*/
+	public function ignoreSurroundingWhitespace($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('ignoreSurroundingWhitespace() expects a boolean');
+		}
+
+		$this->items['ignoreSurroundingWhitespace'] = $bool;
+	}
+
+	/**
 	* Add an ignoreText rule
 	*
 	* @param bool $bool Whether or not the tag should ignore text nodes
@@ -433,20 +452,5 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function requireAncestor($tagName)
 	{
 		$this->items['requireAncestor'][] = TagName::normalize($tagName);
-	}
-
-	/**
-	* Trim whitespace around tags
-	*
-	* @param bool $bool Whether whitespace around this tag should be trimmed
-	*/
-	public function trimWhitespace($bool = true)
-	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('trimWhitespace() expects a boolean');
-		}
-
-		$this->items['trimWhitespace'] = $bool;
 	}
 }

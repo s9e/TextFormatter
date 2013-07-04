@@ -235,8 +235,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] noBrChild() throws an exception if its argument is not a boolean
  [x] noBrDescendant() accepts a boolean
  [x] noBrDescendant() throws an exception if its argument is not a boolean
- [x] trimWhitespace() accepts a boolean
- [x] trimWhitespace() throws an exception if its argument is not a boolean
+ [x] ignoreSurroundingWhitespace() accepts a boolean
+ [x] ignoreSurroundingWhitespace() throws an exception if its argument is not a boolean
  [x] requireParent() throws an exception on invalid tag name
  [x] requireParent() normalizes tag name
  [x] requireAncestor() throws an exception on invalid tag name
@@ -395,8 +395,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Root has a denyChild rule for <li> if parentHTML is not specified
  [x] Root has an allowChild rule for <li> if parentHTML is <ul>
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>
- [x] Generates a trimWhitespace rule for <div>
- [x] Does not generate a trimWhitespace rule for <span>
+ [x] Generates a ignoreSurroundingWhitespace rule for <div>
+ [x] Does not generate a ignoreSurroundingWhitespace rule for <span>
  [x] Uses the renderer to generate a template
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder

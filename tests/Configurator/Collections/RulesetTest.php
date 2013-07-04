@@ -537,23 +537,23 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox trimWhitespace() accepts a boolean
+	* @testdox ignoreSurroundingWhitespace() accepts a boolean
 	*/
-	public function testTrimWhitespaceValid()
+	public function testIgnoreSurroundingWhitespaceValid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->trimWhitespace(true);
+		$ruleset->ignoreSurroundingWhitespace(true);
 	}
 
 	/**
-	* @testdox trimWhitespace() throws an exception if its argument is not a boolean
+	* @testdox ignoreSurroundingWhitespace() throws an exception if its argument is not a boolean
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage trimWhitespace() expects a boolean
+	* @expectedExceptionMessage ignoreSurroundingWhitespace() expects a boolean
 	*/
-	public function testTrimWhitespaceInvalid()
+	public function testIgnoreSurroundingWhitespaceInvalid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->trimWhitespace('foo');
+		$ruleset->ignoreSurroundingWhitespace('foo');
 	}
 
 	/**
@@ -828,11 +828,11 @@ class RulesetTest extends Test
 		$booleanRules = [
 			'autoClose'      => Parser::RULE_AUTO_CLOSE,
 			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
+			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE,
 			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
 			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
-			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT | Parser::RULE_NO_BR_CHILD,
-			'trimWhitespace' => Parser::RULE_TRIM_WHITESPACE
+			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT | Parser::RULE_NO_BR_CHILD
 		];
 
 		$ruleset = new Ruleset;
@@ -855,7 +855,7 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->autoClose();
-		$ruleset->trimWhitespace();
+		$ruleset->ignoreSurroundingWhitespace();
 
 		$config = $ruleset->asConfig();
 

@@ -177,6 +177,23 @@ class OutputHandlingTest extends Test
 				}
 			],
 			[
+				'foo bar baz',
+				'<rt><X><i>foo</i></X><X> </X>bar<X><i> baz</i></X></rt>',
+				function ($constructor)
+				{
+					$tag = $constructor->tags->add('X')->rules->ignoreText();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 0);
+					$parser->addEndTag('X', 3, 0);
+					$parser->addStartTag('X', 3, 0);
+					$parser->addEndTag('X', 4, 0);
+					$parser->addStartTag('X', 7, 0);
+					$parser->addEndTag('X', 11, 0);
+				}
+			],
+			[
 				'foo bar',
 				'<rt><X xx="&quot;xx&quot;" yy="&lt;&gt;">foo</X> bar</rt>',
 				function ($constructor)
@@ -196,10 +213,10 @@ class OutputHandlingTest extends Test
 			],
 			[
 				"xxx\n[DIV]\n...\n[/DIV]\nyyy",
-				"<rt>xxx<i>\n</i><DIV><st>[DIV]</st><i>\n</i>...<i>\n</i><et>[/DIV]</et></DIV><i>\n</i>yyy</rt>",
+				"<rt>xxx\n<DIV><st>[DIV]</st>\n...\n<et>[/DIV]</et></DIV>\nyyy</rt>",
 				function ($constructor)
 				{
-					$constructor->tags->add('DIV')->rules->trimWhitespace();
+					$constructor->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
 				{
@@ -209,10 +226,10 @@ class OutputHandlingTest extends Test
 			],
 			[
 				"xxx\n\n[DIV]\n\n...\n\n[/DIV]\n\nyyy",
-				"<rt>xxx<i>\n\n</i><DIV><st>[DIV]</st><i>\n</i><br/>\n...<br/>\n<i>\n</i><et>[/DIV]</et></DIV><i>\n\n</i>yyy</rt>",
+				"<rt>xxx\n\n<DIV><st>[DIV]</st>\n<br/>\n...<br/>\n\n<et>[/DIV]</et></DIV>\n\nyyy</rt>",
 				function ($constructor)
 				{
-					$constructor->tags->add('DIV')->rules->trimWhitespace();
+					$constructor->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
 				{
@@ -229,18 +246,18 @@ class OutputHandlingTest extends Test
 				[/UL]
 
 yyy',
-				'<rt>xxx<i>
+				'<rt>xxx
 
-				</i><UL><st>[UL]</st><i>
-					</i><LI><st>[LI]</st>aaa<et>[/LI]</et></LI><i>
-					</i><LI><st>[LI]</st>bbb<et>[/LI]</et></LI><i>
-				</i><et>[/UL]</et></UL><i>
+				<UL><st>[UL]</st>
+					<LI><st>[LI]</st>aaa<et>[/LI]</et></LI>
+					<LI><st>[LI]</st>bbb<et>[/LI]</et></LI>
+				<et>[/UL]</et></UL>
 
-</i>yyy</rt>',
+yyy</rt>',
 				function ($constructor)
 				{
-					$constructor->tags->add('UL')->rules->trimWhitespace();
-					$constructor->tags->add('LI')->rules->trimWhitespace();
+					$constructor->tags->add('UL')->rules->ignoreSurroundingWhitespace();
+					$constructor->tags->add('LI')->rules->ignoreSurroundingWhitespace();
 				},
 				function ($parser)
 				{
