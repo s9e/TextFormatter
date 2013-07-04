@@ -525,7 +525,7 @@ class ParserTest extends Test
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
 
 // Terrible hack ahead: this function will transparently cache the result of file_get_contents
-// when used on HTTP URLs
+// when used on HTTP URLs in the MediaEmbed namespace
 function file_get_contents($filepath)
 {
 	if (!preg_match('#^(?:compress\\.zlib://)?(http://.*)#', $filepath, $m))
@@ -537,18 +537,18 @@ function file_get_contents($filepath)
 	$cacheDir  = __DIR__ . '/../../.cache';
 	$cacheFile = $cacheDir . '/http.' . crc32($url);
 
-	if (!file_exists($cacheFile) && file_exists($cacheDir))
+	$context = stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']]);
+	$url     = 'compress.zlib://' . $url;
+
+	if (file_exists($cacheDir))
 	{
-		copy(
-			'compress.zlib://' . $url,
-			$cacheFile,
-			stream_context_create(array(
-				'http' => array(
-					'header' => "Accept-Encoding: gzip"
-				)
-			))
-		);
+		if (!file_exists($cacheFile))
+		{
+			copy($url, $cacheFile, $context);
+		}
+
+		return \file_get_contents($cacheFile);
 	}
 
-	return file_get_contents($cacheFile);
+	return \file_get_contents($url, null, $context);
 }
