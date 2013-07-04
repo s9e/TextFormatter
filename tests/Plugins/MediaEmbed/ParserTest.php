@@ -534,9 +534,10 @@ function file_get_contents($filepath)
 	}
 
 	$url       = $m[1];
-	$cacheFile = __DIR__ . '/../../.cache/http.' . crc32($url);
+	$cacheDir  = __DIR__ . '/../../.cache';
+	$cacheFile = $cacheDir . '/http.' . crc32($url);
 
-	if (!file_exists($cacheFile))
+	if (!file_exists($cacheFile) && file_exists($cacheDir))
 	{
 		copy(
 			'compress.zlib://' . $url,
