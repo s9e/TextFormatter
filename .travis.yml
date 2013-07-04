@@ -6,5 +6,6 @@ php:
 before_script:
   - "php ./scripts/convert5.3.php"
   - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.3' ]; then printf '\n' | pecl install xslcache-beta; fi"
+script: "phpunit --exclude-group none"
 branches:
   only: master
