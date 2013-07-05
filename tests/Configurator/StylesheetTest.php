@@ -173,7 +173,6 @@ class StylesheetTest extends Test
 		$configurator = new Configurator;
 		$configurator->tags->add('X')->templates['. = 2'] = 'BAR';
 
-
 		$this->assertContains(
 			'match="X[.=2]"',
 			$configurator->stylesheet->get()
@@ -187,7 +186,6 @@ class StylesheetTest extends Test
 	{
 		$configurator = new Configurator;
 		$configurator->tags->add('X')->templates['.>""'] = 'BAR';
-
 
 		$this->assertContains(
 			'match="X[.&gt;&quot;&quot;]"',
@@ -204,7 +202,6 @@ class StylesheetTest extends Test
 		$configurator->tags->add('X')->defaultTemplate = 'X';
 		$configurator->tags->add('Y')->defaultTemplate = 'X';
 
-
 		$this->assertContains(
 			'<xsl:template match="X|Y">X</xsl:template>',
 			$configurator->stylesheet->get()
@@ -217,7 +214,6 @@ class StylesheetTest extends Test
 	public function testGetEmptyTemplates()
 	{
 		$configurator = new Configurator;
-
 
 		$this->assertContains(
 			'<xsl:template match="et|i|st"/>',
@@ -234,7 +230,6 @@ class StylesheetTest extends Test
 		$configurator->tags->add('X:A')->defaultTemplate = 'X';
 		$configurator->tags->add('Y:B')->defaultTemplate = 'Y';
 
-
 		$this->assertContains(
 			'xmlns:X="urn:s9e:TextFormatter:X" xmlns:Y="urn:s9e:TextFormatter:Y"',
 			$configurator->stylesheet->get()
@@ -249,7 +244,6 @@ class StylesheetTest extends Test
 		$configurator = new Configurator;
 		$configurator->tags->add('X:A')->defaultTemplate = 'X';
 		$configurator->tags->add('Y:B')->defaultTemplate = 'Y';
-
 
 		$this->assertContains(
 			'exclude-result-prefixes="X Y"',
@@ -328,7 +322,6 @@ class StylesheetTest extends Test
 		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
 		$configurator->tags->add('Y')->defaultTemplate = '<xsl:value-of select="$S_OK"/>';
 
-
 		$this->assertSame(
 			['L_FOO' => "''", 'S_OK' => "''"],
 			$configurator->stylesheet->getUsedParameters()
@@ -359,9 +352,34 @@ class StylesheetTest extends Test
 		$configurator = new Configurator;
 		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
 
-
 		$this->assertContains(
 			'<xsl:param name="L_FOO"',
+			$configurator->stylesheet->get()
+		);
+	}
+
+	/**
+	* @testdox Creates a default template for <br/>
+	*/
+	public function testDefaultTemplateBr()
+	{
+		$configurator = new Configurator;
+
+		$this->assertContains(
+			'<xsl:template match="br"><br/></xsl:template>',
+			$configurator->stylesheet->get()
+		);
+	}
+
+	/**
+	* @testdox Creates a default template for <p></p>
+	*/
+	public function testDefaultTemplateP()
+	{
+		$configurator = new Configurator;
+
+		$this->assertContains(
+			'<xsl:template match="p"><p><xsl:apply-templates/></p></xsl:template>',
 			$configurator->stylesheet->get()
 		);
 	}

@@ -62,6 +62,7 @@ class Stylesheet
 	{
 		$prefixes  = [];
 		$templates = [
+			'p'  => '<p><xsl:apply-templates/></p>',
 			'br' => '<br/>',
 			'st' => '',
 			'et' => '',

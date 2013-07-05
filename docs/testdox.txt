@@ -1157,6 +1157,8 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] getUsedParameters() returns undefined parameters used in tags' templates
  [x] getUsedParameters() returns undefined parameters used in wildcard templates
  [x] get() outputs <xsl:param/> elements for undefined parameters used in templates
+ [x] Creates a default template for <br/>
+ [x] Creates a default template for <p></p>
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] asConfig() creates a JavaScript variant for allowedSchemes
