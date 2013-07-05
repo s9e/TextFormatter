@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
 use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
@@ -509,6 +510,135 @@ class RulesGeneratorTest extends Test
 			[
 				'SPAN' => [
 					'ignoreSurroundingWhitespace' => null
+				]
+			],
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Generates a breakParagraph rule for <blockquote>
+	*/
+	public function testBreakParagraph()
+	{
+		$tags = new TagCollection;
+		$tags->add('QUOTE')->defaultTemplate = '<blockquote><xsl:apply-templates/></blockquote>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			[
+				'QUOTE' => [
+					'breakParagraph' => true
+				]
+			],
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Does not generate a breakParagraph rule for <b>
+	*/
+	public function testNoBreakParagraph()
+	{
+		$tags = new TagCollection;
+		$tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			[
+				'B' => [
+					'breakParagraph' => null
+				]
+			],
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Generates a createParagraphs rule for <blockquote> if rootRules has a createParagraphs rule
+	*/
+	public function testCreateParagraphs()
+	{
+		$tags = new TagCollection;
+		$tags->add('QUOTE')->defaultTemplate = '<blockquote><xsl:apply-templates/></blockquote>';
+
+		$rootRules = new Ruleset;
+		$rootRules->createParagraphs();
+
+		$rules = RulesGenerator::getRules($tags, ['rootRules' => $rootRules]);
+
+		$this->assertArrayMatches(
+			[
+				'QUOTE' => [
+					'createParagraphs' => true
+				]
+			],
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Does not generate a createParagraphs rule for <blockquote> if rootRules does not have a createParagraphs rule
+	*/
+	public function testNoCreateParagraphsNoRoot()
+	{
+		$tags = new TagCollection;
+		$tags->add('QUOTE')->defaultTemplate = '<blockquote><xsl:apply-templates/></blockquote>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			[
+				'QUOTE' => [
+					'createParagraphs' => null
+				]
+			],
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Does not generate a createParagraphs rule for <span>
+	*/
+	public function testNoCreateParagraphsSpan()
+	{
+		$tags = new TagCollection;
+		$tags->add('SPAN')->defaultTemplate = '<span><xsl:apply-templates/></span>';
+
+		$rootRules = new Ruleset;
+		$rootRules->createParagraphs();
+
+		$rules = RulesGenerator::getRules($tags, ['rootRules' => $rootRules]);
+
+		$this->assertArrayMatches(
+			[
+				'SPAN' => [
+					'createParagraphs' => null
+				]
+			],
+			$rules['tags']
+		);
+	}
+
+	/**
+	* @testdox Does not generate a createParagraphs rule for <p>
+	*/
+	public function testNoCreateParagraphsP()
+	{
+		$tags = new TagCollection;
+		$tags->add('P')->defaultTemplate = '<p><xsl:apply-templates/></p>';
+
+		$rootRules = new Ruleset;
+		$rootRules->createParagraphs();
+
+		$rules = RulesGenerator::getRules($tags, ['rootRules' => $rootRules]);
+
+		$this->assertArrayMatches(
+			[
+				'P' => [
+					'createParagraphs' => null
 				]
 			],
 			$rules['tags']

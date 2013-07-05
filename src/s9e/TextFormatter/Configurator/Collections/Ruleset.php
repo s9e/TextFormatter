@@ -92,13 +92,15 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 
 		// Pack boolean rules into a bitfield
 		$bitValues = [
-			'autoClose'      => Parser::RULE_AUTO_CLOSE,
-			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
-			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
-			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
-			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
-			'noBrDescendant' => Parser::RULE_NO_BR_DESCENDANT,
-			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE
+			'autoClose'        => Parser::RULE_AUTO_CLOSE,
+			'autoReopen'       => Parser::RULE_AUTO_REOPEN,
+			'breakParagraph'   => Parser::RULE_BREAK_PARAGRAPH,
+			'createParagraphs' => Parser::RULE_CREATE_PARAGRAPHS,
+			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE,
+			'ignoreText'       => Parser::RULE_IGNORE_TEXT,
+			'isTransparent'    => Parser::RULE_IS_TRANSPARENT,
+			'noBrChild'        => Parser::RULE_NO_BR_CHILD,
+			'noBrDescendant'   => Parser::RULE_NO_BR_DESCENDANT
 		];
 
 		$bitfield = 0;
@@ -271,6 +273,21 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
+	* Add an breakParagraph rule
+	*
+	* @param bool $bool Whether or not this tag breaks current paragraph if applicable
+	*/
+	public function breakParagraph($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('breakParagraph() expects a boolean');
+		}
+
+		$this->items['breakParagraph'] = $bool;
+	}
+
+	/**
 	* Add an closeAncestor rule
 	*
 	* @param string $tagName Name of the target tag
@@ -288,6 +305,21 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function closeParent($tagName)
 	{
 		$this->items['closeParent'][] = TagName::normalize($tagName);
+	}
+
+	/**
+	* Add an createParagraphs rule
+	*
+	* @param bool $bool Whether or not paragraphs should automatically be created to handle content
+	*/
+	public function createParagraphs($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('createParagraphs() expects a boolean');
+		}
+
+		$this->items['createParagraphs'] = $bool;
 	}
 
 	/**

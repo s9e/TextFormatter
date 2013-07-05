@@ -68,8 +68,11 @@ trait TagProcessing
 		$this->cntOpen   = [];
 		$this->cntTotal  = [];
 		$this->openTags  = [];
-		$this->context   = $this->rootContext;
 		unset($this->currentTag);
+
+		// Initialize the root context
+		$this->context = $this->rootContext;
+		$this->context['inParagraph'] = false;
 
 		// Initialize the count tables
 		foreach (array_keys($this->tagsConfig) as $tagName)
@@ -472,6 +475,7 @@ trait TagProcessing
 			'allowedChildren'    => $allowedChildren,
 			'allowedDescendants' => $allowedDescendants,
 			'flags'              => $flags,
+			'inParagraph'        => false,
 			'parentContext'      => $this->context
 		];
 	}

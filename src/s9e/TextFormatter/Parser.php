@@ -22,14 +22,21 @@ class Parser
 	/**#@+
 	* Boolean rules bitfield
 	*/
-	const RULE_AUTO_CLOSE       =  1;
-	const RULE_AUTO_REOPEN      =  2;
-	const RULE_IGNORE_TEXT      =  4;
-	const RULE_IS_TRANSPARENT   =  8;
-	const RULE_NO_BR_CHILD      = 16;
-	const RULE_NO_BR_DESCENDANT = 32;
-	const RULE_TRIM_WHITESPACE  = 64;
+	const RULE_AUTO_CLOSE        =   1;
+	const RULE_AUTO_REOPEN       =   2;
+	const RULE_BREAK_PARAGRAPH   =   4;
+	const RULE_CREATE_PARAGRAPHS =   8;
+	const RULE_IGNORE_TEXT       =  16;
+	const RULE_IS_TRANSPARENT    =  32;
+	const RULE_NO_BR_CHILD       =  64;
+	const RULE_NO_BR_DESCENDANT  = 128;
+	const RULE_TRIM_WHITESPACE   = 256;
 	/**#@-*/
+
+	/**
+	* All the characters that are considered whitespace
+	*/
+	const WHITESPACE = " \n\t";
 
 	/**
 	* @var Logger This parser's logger
@@ -178,7 +185,7 @@ class Parser
 		$text = preg_replace('/\\r\\n?/', "\n", $text);
 		$text = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
 
-		$this->context    = $this->rootContext;
+		// Initialize the rest
 		$this->currentFixingCost = 0;
 		$this->isRich     = false;
 		$this->namespaces = [];

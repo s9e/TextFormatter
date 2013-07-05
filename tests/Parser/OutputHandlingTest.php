@@ -269,6 +269,145 @@ yyy</rt>',
 					$parser->addEndTag('UL', 54, 5);
 				}
 			],
+			[
+				'foo bar',
+				'<pt><p>foo bar</p></pt>',
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+				}
+			],
+			[
+				"foo\nbar",
+				"<pt><p>foo<br/>\nbar</p></pt>",
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+				}
+			],
+			[
+				"foo\n\nbar",
+				"<pt><p>foo</p>\n\n<p>bar</p></pt>",
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+				}
+			],
+			[
+				"foo\n\n\n\n\nbar\n\n\n\n\nbaz",
+				"<pt><p>foo</p>\n\n\n\n\n<p>bar</p>\n\n\n\n\n<p>baz</p></pt>",
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+				}
+			],
+			[
+				'
+[UL]
+	[LI]foo
+	[LI]bar
+[/UL]
+
+',
+				'<rt>
+<UL><st>[UL]</st>
+	<LI><st>[LI]</st>foo
+	</LI><LI><st>[LI]</st>bar
+</LI><et>[/UL]</et></UL>
+
+</rt>',
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$rules = $constructor->tags->add('UL')->rules;
+					$rules->breakParagraph();
+					$rules->ignoreSurroundingWhitespace();
+					$constructor->tags->add('LI')->rules->ignoreSurroundingWhitespace();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('UL', 1, 4);
+					$parser->addStartTag('LI', 7, 4);
+					$parser->addEndTag('LI', 16, 0);
+					$parser->addStartTag('LI', 16, 4);
+					$parser->addEndTag('LI', 24, 0);
+					$parser->addEndTag('UL', 24, 5);
+				}
+			],
+			[
+				'...
+
+[UL]
+	[LI]foo
+	[LI]bar
+[/UL]
+
+xxx',
+				'<rt><p>...</p>
+
+<UL><st>[UL]</st>
+	<LI><st>[LI]</st>foo
+	</LI><LI><st>[LI]</st>bar
+</LI><et>[/UL]</et></UL>
+
+<p>xxx</p></rt>',
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$rules = $constructor->tags->add('UL')->rules;
+					$rules->breakParagraph();
+					$rules->ignoreSurroundingWhitespace();
+					$constructor->tags->add('LI')->rules->ignoreSurroundingWhitespace();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('UL', 5, 4);
+					$parser->addStartTag('LI', 11, 4);
+					$parser->addEndTag('LI', 20, 0);
+					$parser->addStartTag('LI', 20, 4);
+					$parser->addEndTag('LI', 28, 0);
+					$parser->addEndTag('UL', 28, 5);
+				}
+			],
+			[
+				'[b]...[/b]',
+				'<rt><p><B><st>[b]</st>...<et>[/b]</et></B></p></rt>',
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$rules = $constructor->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('B', 0, 3, 6, 4);
+				}
+			],
+			[
+				"\n[b]...[/b]\n",
+				"<rt>\n<p><B><st>[b]</st>...<et>[/b]</et></B></p>\n</rt>",
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$rules = $constructor->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('B', 1, 3, 7, 4);
+				}
+			],
+			[
+				'[img]',
+				'<rt><p><IMG>[img]</IMG></p></rt>',
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$rules = $constructor->tags->add('IMG');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('IMG', 0, 5);
+				}
+			],
 		];
 	}
 }

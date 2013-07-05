@@ -266,6 +266,26 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox breakParagraph() accepts a boolean
+	*/
+	public function testBreakParagraphValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->breakParagraph(true);
+	}
+
+	/**
+	* @testdox breakParagraph() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage breakParagraph() expects a boolean
+	*/
+	public function testBreakParagraphInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->breakParagraph('foo');
+	}
+
+	/**
 	* @testdox closeAncestor() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo#bar'
@@ -304,6 +324,26 @@ class RulesetTest extends Test
 			['closeParent' => ['B']],
 			iterator_to_array($ruleset)
 		);
+	}
+
+	/**
+	* @testdox createParagraphs() accepts a boolean
+	*/
+	public function testCreateParagraphsValid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->createParagraphs(true);
+	}
+
+	/**
+	* @testdox createParagraphs() throws an exception if its argument is not a boolean
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage createParagraphs() expects a boolean
+	*/
+	public function testCreateParagraphsInvalid()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->createParagraphs('foo');
 	}
 
 	/**

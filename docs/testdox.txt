@@ -212,9 +212,13 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] autoClose() throws an exception if its argument is not a boolean
  [x] autoReopen() accepts a boolean
  [x] autoReopen() throws an exception if its argument is not a boolean
+ [x] breakParagraph() accepts a boolean
+ [x] breakParagraph() throws an exception if its argument is not a boolean
  [x] closeAncestor() throws an exception on invalid tag name
  [x] closeAncestor() normalizes tag name
  [x] closeParent() normalizes tag name
+ [x] createParagraphs() accepts a boolean
+ [x] createParagraphs() throws an exception if its argument is not a boolean
  [x] defaultChildRule() accepts 'allow'
  [x] defaultChildRule() accepts 'deny'
  [x] defaultChildRule() throws an exception if passed anything else than 'allow' or 'deny'
@@ -370,6 +374,10 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <xsl:apply-templates/> is not void
  [x] <blockquote> is a block-level element
  [x] <span> is not a block-level element
+ [x] <span> does not break paragraphs
+ [x] Text does not break paragraphs
+ [x] <p> breaks paragraphs
+ [x] <ul> breaks paragraphs
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <div> has an allowChild rule for <div> and <span>
@@ -397,6 +405,12 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <span> has a denyChild rule for <a> if parentHTML is <a>
  [x] Generates a ignoreSurroundingWhitespace rule for <div>
  [x] Does not generate a ignoreSurroundingWhitespace rule for <span>
+ [x] Generates a breakParagraph rule for <blockquote>
+ [x] Does not generate a breakParagraph rule for <b>
+ [x] Generates a createParagraphs rule for <blockquote> if rootRules has a createParagraphs rule
+ [x] Does not generate a createParagraphs rule for <blockquote> if rootRules does not have a createParagraphs rule
+ [x] Does not generate a createParagraphs rule for <span>
+ [x] Does not generate a createParagraphs rule for <p>
  [x] Uses the renderer to generate a template
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder

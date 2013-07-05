@@ -39,6 +39,10 @@ Start tags of this tag are automatically closed if they are not paired with an e
 <dd><i>Example:</i> <code>$tag->rules->autoReopen(false);</code><br/>
 Automatically reopens this tag if it's closed by a non-matching tag. This rule helps dealing with misnested tags such as <code>&lt;B&gt;&lt;I&gt;&lt;/B&gt;&lt;/I&gt;</code>. In this case, if <code>I</code> has an autoReopen rule, it will automatically be reopened when <code>B</code> closes.</dd>
 
+<dt>breakParagraph</dt>
+<dd><i>Example:</i> <code>$tag->rules->breakParagraph();</code><br/>
+This tag will break current paragraph if applicable.</dd>
+
 <dt>closeAncestor</dt>
 <dd><i>Example:</i> <code>$tag->rules->closeAncestor('X');</code><br/>
 Forces all ancestor tags X to be closed when this tag is encountered.</dd>
@@ -46,6 +50,10 @@ Forces all ancestor tags X to be closed when this tag is encountered.</dd>
 <dt>closeParent</dt>
 <dd><i>Example:</i> <code>$tag->rules->closeParent('LI');</code><br/>
 Forces current parent LI to be closed when this tag is encountered. Helps dealing with <a href="http://www.w3.org/html/wg/drafts/html/master/single-page.html#optional-tags">optional end tags</a>. For instance, if LI has a closeParent rule targeting LI, the following <code>&lt;LI&gt;one&lt;LI&gt;two</code> is interpreted as <code>&lt;LI&gt;one&lt;/LI&gt;&lt;LI&gt;two</code>.</dd>
+
+<dt>createParagraphs</dt>
+<dd><i>Example:</i> <code>$configurator->rootRules->createParagraphs();</code><br/>
+Automatically creates paragraphs (HTML element <code>&lt;p&gt;</code>) to host content. Using two consecutive new lines indicates a paragraph break in content.</dd>
 
 <dt>defaultChildRule</dt>
 <dd><i>Example:</i> <code>$tag->rules->defaultChildRule('deny');</code><br/>

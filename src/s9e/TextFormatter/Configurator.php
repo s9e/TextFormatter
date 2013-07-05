@@ -184,7 +184,7 @@ class Configurator implements ConfigProvider
 		// Add the default options
 		$options += [
 			'renderer'   => $this->getRenderer(),
-			'stylesheet' => $this->stylesheet
+			'rootRules'  => $this->rootRules
 		];
 
 		// Get the rules

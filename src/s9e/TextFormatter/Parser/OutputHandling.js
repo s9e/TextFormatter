@@ -45,10 +45,13 @@ function finalizeOutput()
 	// Output the rest of the text
 	if (pos < textLen)
 	{
-		outputText(textLen, 0);
+		outputText(textLen, 0, true);
 	}
 
-	// Remove empty tag pairs, e.g. <I><U></U></I>
+	// Close the last paragraph if applicable
+	outputParagraphEnd();
+
+	// Remove empty tag pairs, e.g. <I><U></U></I> as well as empty paragraphs
 	do
 	{
 		tmp = output;
@@ -59,7 +62,7 @@ function finalizeOutput()
 	// Merge consecutive <i> tags
 	output = output.replace(/<\/i><i>/g, '', output);
 
-	// Use a <rt> root if the text is rich, or <pt> for plain text (including <br/>)
+	// Use a <rt> root if the text is rich, or <pt> for plain text (including <p></p> and <br/>)
 	var tagName = (isRich) ? 'rt' : 'pt';
 
 	// Prepare the root node with all the namespace declarations
@@ -81,21 +84,37 @@ function outputTag(tag)
 {
 	isRich = true;
 
-	var tagName   = tag.getName(),
-		tagPos    = tag.getPos(),
-		tagLen    = tag.getLen(),
-		tagConfig = tagsConfig[tagName],
-		trimBefore = 0,
-		trimAfter  = 0;
+	var tagName    = tag.getName(),
+		tagPos     = tag.getPos(),
+		tagLen     = tag.getLen(),
+		tagConfig  = tagsConfig[tagName],
+		skipBefore = 0,
+		skipAfter  = 0;
 
 	if (tagConfig.rules.flags & RULE_TRIM_WHITESPACE)
 	{
-		trimBefore = (tag.isStartTag()) ? 2 : 1;
-		trimAfter  = (tag.isEndTag())   ? 2 : 1;
+		skipBefore = (tag.isStartTag()) ? 2 : 1;
+		skipAfter  = (tag.isEndTag())   ? 2 : 1;
+	}
+
+	// Current paragraph must end before the tag if:
+	//  - the tag is a start (or self-closing) tag and it breaks paragraphs, or
+	//  - the tag is an end tag (but not self-closing)
+	var closeParagraph = false;
+	if (tag.isStartTag())
+	{
+		if (tagConfig.rules.flags & RULE_BREAK_PARAGRAPH)
+		{
+			closeParagraph = true;
+		}
+	}
+	else
+	{
+		closeParagraph = true;
 	}
 
 	// Let the cursor catch up with this tag's position
-	outputText(tagPos, trimBefore);
+	outputText(tagPos, skipBefore, closeParagraph);
 
 	// Capture the text consumed by the tag
 	var tagText = (tagLen)
@@ -105,6 +124,16 @@ function outputTag(tag)
 	// Output current tag
 	if (tag.isStartTag())
 	{
+		// Handle paragraphs before opening the tag
+		if (tagConfig.rules.flags & RULE_BREAK_PARAGRAPH)
+		{
+			outputParagraphEnd();
+		}
+		else
+		{
+			outputParagraphStart(tagPos);
+		}
+
 		// Record this tag's namespace, if applicable
 		var colonPos = tagName.indexOf(':');
 		if (colonPos > 0)
@@ -154,12 +183,12 @@ function outputTag(tag)
 	// Move the cursor past the tag
 	pos = tagPos + tagLen;
 
-	// Trim newlines (no other whitespace) after this tag
+	// Skip newlines (no other whitespace) after this tag
 	var ignorePos = pos;
-	while (trimAfter && ignorePos < textLen && text.charAt(ignorePos) === "\n")
+	while (skipAfter && ignorePos < textLen && text.charAt(ignorePos) === "\n")
 	{
-		// Decrement the number of lines to trim
-		--trimAfter;
+		// Decrement the number of lines to skip
+		--skipAfter;
 
 		// Move the cursor past the newline
 		++ignorePos;
@@ -175,10 +204,11 @@ function outputTag(tag)
 /**
 * Output the text between the cursor's position (included) and given position (not included)
 *
-* @param  {!number} catchupPos Position we're catching up to
-* @param  {!number} maxLines   Maximum number of lines to trim at the end of the text
+* @param  {!number}  catchupPos     Position we're catching up to
+* @param  {!number}  maxLines       Maximum number of lines to ignore at the end of the text
+* @param  {!boolean} closeParagraph Whether to close the paragraph at the end, if applicable
 */
-function outputText(catchupPos, maxLines)
+function outputText(catchupPos, maxLines, closeParagraph)
 {
 	if (pos >= catchupPos)
 	{
@@ -186,13 +216,14 @@ function outputText(catchupPos, maxLines)
 		return;
 	}
 
-	var catchupLen  = catchupPos - pos,
-		catchupText = text.substr(pos, catchupLen);
+	var catchupLen, catchupText;
 
-	pos = catchupPos;
-
+	// Test whether we're even supposed to output anything
 	if (context.flags & RULE_IGNORE_TEXT)
 	{
+		catchupLen  = catchupPos - pos,
+		catchupText = text.substr(pos, catchupLen);
+
 		// If the catchup text is not entirely composed of whitespace, we put it inside ignore tags
 		if (!/^[ \n\t]*$/.test(catchupText))
 		{
@@ -200,12 +231,46 @@ function outputText(catchupPos, maxLines)
 		}
 
 		output += catchupText;
+		pos = catchupPos;
 
 		return;
 	}
 
+	// Start a paragraph if applicable
+	outputParagraphStart(catchupPos);
+
+	// Capture the catchup text after the paragraph has been opened (and the cursor moved)
+	catchupLen  = catchupPos - pos;
+	catchupText = text.substr(pos, catchupLen);
+
+	// Test whether we have to handle paragraphs
+	if (context.flags & RULE_CREATE_PARAGRAPHS)
+	{
+		// Look for a paragraph break in this text
+		var pbPos = catchupText.indexOf("\n\n");
+
+		if (pbPos >= 0)
+		{
+			// If there's a break, we split up the remaining text
+			outputText(pos + pbPos, 0, true);
+			outputText(catchupPos, maxLines, closeParagraph);
+
+			return;
+		}
+	}
+
+	// Compute the amount of text to ignore at the end of the output
 	var ignorePos = catchupLen,
 		ignoreLen = 0;
+
+	if (closeParagraph && context.inParagraph)
+	{
+		while (--ignorePos >= 0 && catchupText.charAt(ignorePos) === "\n")
+		{
+			++ignoreLen;
+		}
+	}
+
 	while (maxLines && --ignorePos >= 0)
 	{
 		var c = catchupText.charAt(ignorePos);
@@ -225,18 +290,24 @@ function outputText(catchupPos, maxLines)
 	var ignoreText = '';
 	if (ignoreLen)
 	{
-		// TODO: IE compat
-		ignoreText  = catchupText.substr(-ignoreLen);
+		ignoreText  = catchupText.substr(catchupLen - ignoreLen);
 		catchupText = catchupText.substr(0, catchupLen - ignoreLen);
 	}
 
+	// Escape the output
 	catchupText = htmlspecialchars_noquotes(catchupText);
+
+	// Format line breaks if applicable
 	if (!(context.flags & RULE_NO_BR_CHILD))
 	{
 		catchupText = catchupText.replace(/\n/g, "<br/>\n");
 	}
 
-	output += catchupText + ignoreText;
+	// Append to the output, close the paragraph, add the ignored text and move the cursor
+	output += catchupText;
+	outputParagraphEnd();
+	output += ignoreText;
+	pos     = catchupPos;
 }
 
 /**
@@ -272,4 +343,53 @@ function outputIgnoreTag(tag)
 
 	// Move the cursor past this tag
 	pos = tagPos + tagLen;
+}
+
+/**
+* Start a paragraph between current position and given position, if applicable
+*
+* @param  {!number} maxPos Rightmost position at which the paragraph can be opened
+*/
+function outputParagraphStart(maxPos)
+{
+	// Do nothing if we're already in a paragraph, or if we don't use paragraphs
+	if (context.inParagraph
+	 || !(context.flags & RULE_CREATE_PARAGRAPHS))
+	{
+		return;
+	}
+
+	// Output the whitespace between pos and maxPos if applicable
+	if (maxPos > pos)
+	{
+		var ignoreText = /^[ \n\t]*/.exec(text)[0];
+
+		if (ignoreText !== '')
+		{
+			output += ignoreText;
+			pos += ignoreText.length;
+		}
+	}
+
+	// Open the paragraph, but only if it's not at the very end of the text
+	if (pos < textLen)
+	{
+		output += '<p>';
+		context.inParagraph = true;
+	}
+}
+
+/**
+* Close current paragraph at current position if applicable
+*/
+function outputParagraphEnd()
+{
+	// Do nothing if we're not in a paragraph
+	if (!context.inParagraph)
+	{
+		return;
+	}
+
+	output += '</p>';
+	context.inParagraph = false;
 }

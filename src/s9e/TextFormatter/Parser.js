@@ -1,14 +1,21 @@
 /**#@+
 * Boolean rules bitfield
 */
-/** @const */ var RULE_AUTO_CLOSE       =  1;
-/** @const */ var RULE_AUTO_REOPEN      =  2;
-/** @const */ var RULE_IGNORE_TEXT      =  4;
-/** @const */ var RULE_IS_TRANSPARENT   =  8;
-/** @const */ var RULE_NO_BR_CHILD      = 16;
-/** @const */ var RULE_NO_BR_DESCENDANT = 32;
-/** @const */ var RULE_TRIM_WHITESPACE  = 64;
+/** @const */ var RULE_AUTO_CLOSE        =   1;
+/** @const */ var RULE_AUTO_REOPEN       =   2;
+/** @const */ var RULE_BREAK_PARAGRAPH   =   4;
+/** @const */ var RULE_CREATE_PARAGRAPHS =   8;
+/** @const */ var RULE_IGNORE_TEXT       =  16;
+/** @const */ var RULE_IS_TRANSPARENT    =  32;
+/** @const */ var RULE_NO_BR_CHILD       =  64;
+/** @const */ var RULE_NO_BR_DESCENDANT  = 128;
+/** @const */ var RULE_TRIM_WHITESPACE   = 256;
 /**#@-*/
+
+/**
+* @const All the characters that are considered whitespace
+*/
+var WHITESPACE = " \n\t";
 
 /**
 * @type {!Logger} This parser's logger

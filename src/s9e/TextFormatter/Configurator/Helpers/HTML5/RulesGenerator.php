@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator\Helpers\HTML5;
 
 use DOMDocument;
 use DOMXPath;
+use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
@@ -23,6 +24,7 @@ abstract class RulesGenerator
 	*  parentHTML: HTML leading to the start of the rendered text. Defaults to "<div>"
 	*  renderer:   instance of Renderer, used to render tags that have no individual templates set.
 	*              Must output valid XML, not HTML
+	*  rootRules:  instance of Ruleset that defines the rules set at the root of the text
 	*
 	* @param  TagCollection $tags    Tags collection
 	* @param  array         $options Array of option settings
@@ -37,9 +39,10 @@ abstract class RulesGenerator
 		            : '<div>';
 
 		// Create a proxy for the parent markup so that we can determine which tags are allowed at
-		// the root of the message (IOW, with no parent) or even disabled altogether
+		// the root of the text (IOW, with no parent) or even disabled altogether
 		$rootForensics = self::generateRootForensics($parentHTML);
 
+		// Study the tags
 		$templateForensics = [];
 		foreach ($tags as $tagName => $tag)
 		{
@@ -48,8 +51,13 @@ abstract class RulesGenerator
 			$templateForensics[$tagName] = new TemplateForensics($xsl);
 		}
 
+		// Get the root's ruleset or create an empty ruleset for it otherwise
+		$rootRules = (isset($options['rootRules']))
+		           ? $options['rootRules']
+		           : new Ruleset;
+
 		// Generate a full set of rules
-		$rules = self::generateRules($templateForensics, $rootForensics);
+		$rules = self::generateRules($templateForensics, $rootForensics, $rootRules);
 
 		// Clean up tags' rules
 		foreach ($rules['tags'] as $tagName => &$tagRules)
@@ -65,9 +73,12 @@ abstract class RulesGenerator
 	}
 
 	/**
-	* 
+	* Collect all the XSL used by given tag into a single string
 	*
-	* @return string
+	* @param  string $tagName Tag's name
+	* @param  Tag    $tag     Tag object
+	* @param  array  $options Helper's option
+	* @return string          Tag's XSL
 	*/
 	protected static function generateTagXSL($tagName, Tag $tag, array $options)
 	{
@@ -158,19 +169,23 @@ abstract class RulesGenerator
 	*
 	* @param  array             $templateForensics Array of [tagName => TemplateForensics]
 	* @param  TemplateForensics $rootForensics     TemplateForensics for the root of the text
+	* @param  Ruleset           $rootRules         Rules set for the root context
 	* @return array
 	*/
-	protected static function generateRules(array $templateForensics, TemplateForensics $rootForensics)
+	protected static function generateRules(array $templateForensics, TemplateForensics $rootForensics, Ruleset $rootRules)
 	{
 		$rules = [
 			'root' => [],
 			'tags' => []
 		];
 
-		// Create a TemplateForensics object that will be used to determine whether to create a
-		// nl2br rule
+		// Create TemplateForensics object that will be used to determine whether to create rules
+		// related to newlines and paragraphs
 		$br = new TemplateForensics(
 			'<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><br/></xsl:template>'
+		);
+		$p = new TemplateForensics(
+			'<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><p><xsl:apply-templates /></p></xsl:template>'
 		);
 
 		foreach ($templateForensics as $srcTagName => $srcTag)
@@ -189,6 +204,22 @@ abstract class RulesGenerator
 			if ($srcTag->autoReopen())
 			{
 				$rules['tags'][$srcTagName]['autoReopen'] = true;
+			}
+
+			// Test whether this tag should break current paragraph
+			if ($srcTag->breakParagraph())
+			{
+				$rules['tags'][$srcTagName]['breakParagraph'] = true;
+			}
+
+			// Create a createParagraphs rule for this tag if it's a block tag, the root rules
+			// have a createParagraphs rule themselves and the elements are compatible
+			if ($srcTag->allowsChild($p)
+			 && $srcTag->isBlock()
+			 && !$p->closesParent($srcTag)
+			 && !empty($rootRules['createParagraphs']))
+			{
+				$rules['tags'][$srcTagName]['createParagraphs'] = true;
 			}
 
 			// Create an denyAll rule if the tag's forensics call for it
