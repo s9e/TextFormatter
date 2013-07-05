@@ -46,6 +46,12 @@ function convertCustom($filepath, &$file)
 				'public function isFilter($tokenId)'
 			)
 		),
+		'Configurator.php' => array(
+			array(
+				'return $reflection->newInstanceArgs(array_slice($args, 1));',
+				'return (isset($args[1])) ? $reflection->newInstanceArgs(array_slice($args, 1)) : $reflection->newInstance();'
+			)
+		),
 		'FilterProcessingTest.php' => array(
 			array(
 				"\n\t\t\$filter = new ProgrammableCallback(\n\t\t\tfunction()",
