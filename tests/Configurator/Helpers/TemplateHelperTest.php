@@ -420,7 +420,7 @@ class TemplateHelperTest extends Test
 		$dom->loadXML($xsl);
 
 		$xpath = new DOMXPath($dom);
-		$nodes = ($query) ? iterator_to_array($xpath->query($query)) : [];
+		$nodes = ($query) ? iterator_to_array($xpath->query($query), false) : [];
 
 		$this->assertEquals(
 			$nodes,
