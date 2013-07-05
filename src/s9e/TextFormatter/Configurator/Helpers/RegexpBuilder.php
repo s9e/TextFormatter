@@ -30,24 +30,18 @@ abstract class RegexpBuilder
 		// Sort the words in order to produce the same regexp regardless of the words' order
 		sort($words);
 
-		/**
-		* Used to store the first character of each word so that we can generate the lookahead
-		* assertion
-		*/
+		// Used to store the first character of each word so that we can generate the lookahead
+		// assertion
 		$initials = [];
 
-		/**
-		* Used to store the escaped representation of each character, e.g. "a"=>"a", "."=>"\\."
-		* Also used to give a special meaning to some characters, e.g. "*" => ".*?"
-		*/
+		// Used to store the escaped representation of each character, e.g. "a"=>"a", "."=>"\\."
+		// Also used to give a special meaning to some characters, e.g. "*" => ".*?"
 		$esc  = $options['specialChars'];
 		$esc += [$options['delimiter'] => '\\' . $options['delimiter']];
 
-		/**
-		* preg_quote() errs on the safe side when escaping characters that could have a special
-		* meaning in some situations. Since we're building the regexp in a controlled environment,
-		* we don't have to escape those characters.
-		*/
+		// preg_quote() errs on the safe side when escaping characters that could have a special
+		// meaning in some situations. Since we're building the regexp in a controlled environment,
+		// we don't have to escape those characters.
 		$esc += [
 			'!' => '!',
 			'-' => '-',
@@ -58,9 +52,7 @@ abstract class RegexpBuilder
 			'}' => '}'
 		];
 
-		/**
-		* List of words, split by character
-		*/
+		// List of words, split by character
 		$splitWords = [];
 
 		foreach ($words as $word)
@@ -151,8 +143,6 @@ abstract class RegexpBuilder
 		{
 			return $chains[0];
 		}
-
-		// Remove chains 
 
 		// The merged chain starts with the chains' common prefix
 		$mergedChain = self::removeLongestCommonPrefix($chains);

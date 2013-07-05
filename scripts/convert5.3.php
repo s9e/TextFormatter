@@ -48,6 +48,7 @@ function convertCustom($filepath, &$file)
 		),
 		'Configurator.php' => array(
 			array(
+				// https://bugs.php.net/52854
 				'return $reflection->newInstanceArgs(array_slice($args, 1));',
 				'return (isset($args[1])) ? $reflection->newInstanceArgs(array_slice($args, 1)) : $reflection->newInstance();'
 			)
@@ -90,6 +91,12 @@ function convertCustom($filepath, &$file)
 			array(
 				"\$variant->setDynamic(\n\t\t\t'JS',\n\t\t\tfunction ()\n\t\t\t{\n\t\t\t\treturn \$this",
 				"\$_this=\$this;\$variant->setDynamic(\n\t\t\t'JS',\n\t\t\tfunction () use (\$_this)\n\t\t\t{\n\t\t\t\treturn \$_this"
+			)
+		),
+		'RegexpBuilder.php' => array(
+			array(
+				'if (preg_match_all(\'#.#us\', $word, $matches) === false)',
+				'if (!preg_match(\'/^(?:[[:ascii:]]|[\\xC0-\\xDF][\\x80-\\xBF]|[\\xE0-\\xEF][\\x80-\\xBF]{2}|[\\xF0-\\xF7][\\x80-\\xBF]{3})*$/D\', $word))'
 			)
 		),
 		'TemplateOptimizer.php' => array(
