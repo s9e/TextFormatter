@@ -96,7 +96,7 @@ function convertCustom($filepath, &$file)
 		'RegexpBuilder.php' => array(
 			array(
 				'if (preg_match_all(\'#.#us\', $word, $matches) === false)',
-				'if (preg_match_all(\'#.#us\', $word, $matches) === false && !preg_match(\'/^(?:[[:ascii:]]|[\\xC0-\\xDF][\\x80-\\xBF]|[\\xE0-\\xEF][\\x80-\\xBF]{2}|[\\xF0-\\xF7][\\x80-\\xBF]{3})*$/D\', $word))'
+				'if (preg_match_all(\'#.#us\', $word, $matches) === false || !preg_match(\'/^(?:[[:ascii:]]|[\\xC0-\\xDF][\\x80-\\xBF]|[\\xE0-\\xEF][\\x80-\\xBF]{2}|[\\xF0-\\xF7][\\x80-\\xBF]{3})*$/D\', $word))'
 			)
 		),
 		'TemplateOptimizer.php' => array(
