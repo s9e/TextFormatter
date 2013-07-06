@@ -14,7 +14,7 @@ $php = '';
 foreach ($test->getData() as $case)
 {
 	$php .= "\n\t/**\n\t* @testdox " . $case[0] . "\n\t*/\n\tpublic function test" . sprintf('%08X', crc32(serialize($case))) . "()\n\t{\n\t\t\$this->runCase(";
-	
+
 	foreach ($case as $k => $str)
 	{
 		if ($k)

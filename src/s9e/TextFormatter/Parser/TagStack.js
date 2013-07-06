@@ -176,7 +176,7 @@ function compareTags(a, b)
 		// an attempt to keep them out of tag pairs
 		if (!aLen && !bLen)
 		{
-			var order = {}	
+			var order = {};
 			order[Tag.END_TAG]          = 0;
 			order[Tag.SELF_CLOSING_TAG] = 1;
 			order[Tag.START_TAG]        = 2;

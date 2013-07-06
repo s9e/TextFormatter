@@ -2,7 +2,7 @@ function loadXML(xml)
 {
 	return new DOMParser().parseFromString(xml, 'text/xml');
 }
-	
+
 var xslt = new XSLTProcessor();
 xslt['importStylesheet'](loadXML(xsl));
 

@@ -8,7 +8,7 @@ function html_entity_decode(str)
 
 	return b.textContent;
 }
-	
+
 matches.forEach(function(m)
 {
 	// Test whether this is an end tag

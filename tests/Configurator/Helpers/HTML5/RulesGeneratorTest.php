@@ -709,7 +709,7 @@ class RulesGeneratorTest extends Test
 		$tags->add('A')->defaultTemplate   = '<a><xsl:apply-templates/></a>';
 		$tags->add('IMG')->defaultTemplate = '<img/>';
 		$tags->add('html:img')->attributes->add('usemap');
-		
+
 		$this->configurator->stylesheet->setWildcardTemplate(
 			'html',
 			new UnsafeTemplate(

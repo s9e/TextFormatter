@@ -383,7 +383,7 @@ Tag.prototype.setAttribute = function(attrName, attrValue)
 Tag.prototype.setAttributes = function(attributes)
 {
 	this.attributes = {}
-	
+
 	for (var attrName in attributes)
 	{
 		this.attributes[attrName] = attributes[attrName];

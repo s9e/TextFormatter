@@ -8,7 +8,7 @@ function html_entity_decode(str)
 
 	return b.textContent;
 }
-	
+
 var tagName  = config.tagName,
 	attrName = config.attrName;
 

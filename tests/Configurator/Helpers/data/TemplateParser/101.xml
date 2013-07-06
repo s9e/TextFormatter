@@ -6,7 +6,6 @@
 				<output type="literal">foo</output>
 			</attribute>
 			<closeTag id="1"/>
-			
 		</element>
 	</template>
 </stylesheet>

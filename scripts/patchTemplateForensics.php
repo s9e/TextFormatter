@@ -409,7 +409,7 @@ foreach ($page->body->h4 as $h4)
 					else
 					{
 						print("Could not interpret '$value' as $elName's content model\n");
-					}	
+					}
 					break;
 			}
 		}
