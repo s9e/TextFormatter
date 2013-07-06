@@ -320,14 +320,14 @@ class BBCodesTest extends Test
 			],
 			[
 				'[LIST][*]one[*]two[/LIST]',
-				'<ul style="list-style-type:disc"><li>one</li><li>two</li></ul>'
+				'<ul><li>one</li><li>two</li></ul>'
 			],
 			[
 				'[LIST]
 					[*]one
 					[*]two
 				[/LIST]',
-				'<ul style="list-style-type:disc">
+				'<ul>
 					<li>one
 					</li><li>two
 				</li></ul>'
@@ -341,8 +341,8 @@ class BBCodesTest extends Test
 
 					[*]two
 				[/LIST]',
-				'<ul style="list-style-type:disc">
-					<li><ul style="list-style-type:disc">
+				'<ul>
+					<li><ul>
 						<li>one.one
 						</li><li>one.two
 					</li></ul>
@@ -376,7 +376,7 @@ class BBCodesTest extends Test
 			],
 			[
 				'[LIST=";zoom:100"][*]one[*]two[/LIST]',
-				'<ul style="list-style-type:disc"><li>one</li><li>two</li></ul>'
+				'<ul><li>one</li><li>two</li></ul>'
 			],
 			[
 				'[*]no <li> element without a parent',

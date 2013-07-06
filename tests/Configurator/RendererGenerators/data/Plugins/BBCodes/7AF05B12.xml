@@ -1,5 +1,5 @@
-<rt><LIST type="disc"><st>[LIST]</st>
-					<LI><st>[*]</st><LIST type="disc"><st>[LIST]</st>
+<rt><LIST><st>[LIST]</st>
+					<LI><st>[*]</st><LIST><st>[LIST]</st>
 						<LI><st>[*]</st>one.one
 						</LI><LI><st>[*]</st>one.two
 					</LI><et>[/LIST]</et></LIST>

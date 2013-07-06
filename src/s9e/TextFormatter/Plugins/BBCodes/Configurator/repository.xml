@@ -249,8 +249,11 @@
 	</bbcode>
 
 	<bbcode name="LIST">
-		<usage>[LIST type={MAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;caseSensitive;defaultValue=disc;optional;postFilter=#simpletext}]{TEXT}[/LIST]</usage>
+		<usage>[LIST type={MAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;caseSensitive;optional;postFilter=#simpletext}]{TEXT}[/LIST]</usage>
 		<template><![CDATA[
+			<ul><xsl:apply-templates /></ul>
+		]]></template>
+		<template predicate="@type"><![CDATA[
 			<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
 		]]></template>
 		<!-- Use an ol element if @type starts with "upper" "lower" or "decim" -->

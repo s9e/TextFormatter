@@ -100,7 +100,7 @@ echo $html;
 ```
 ```html
 To-do list:
-	<ul style="list-style-type:disc">
+	<ul>
 		<li> Say hello to the world <img src="/path/to/happy.png" alt=":)" title="Happy">
 		</li><li> Go to <a href="http://example.com">http://example.com</a>
 		</li><li> Try to trip the parser with <b>mis<i>nes</i></b><i>ted<u> tags</u></i>
