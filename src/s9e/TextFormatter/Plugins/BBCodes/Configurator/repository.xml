@@ -318,6 +318,13 @@
 		]]></template>
 	</bbcode>
 
+	<bbcode name="SIZE">
+		<usage>[SIZE={RANGE=<var name="min">8</var>,<var name="max">36</var>}]{TEXT}[/SIZE]</usage>
+		<template><![CDATA[
+			<span style="font-size:{RANGE}px">{TEXT}</span>
+		]]></template>
+	</bbcode>
+
 	<bbcode name="SPOILER">
 		<usage>[SPOILER title={TEXT1;optional}]{TEXT2}[/SPOILER]</usage>
 		<template><![CDATA[

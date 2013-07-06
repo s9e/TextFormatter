@@ -457,6 +457,38 @@ class BBCodesTest extends Test
 				'x <s>strikethrough</s> y'
 			],
 			[
+				'x [size=16]bigger[/size] y',
+				'x <span style="font-size:16px">bigger</span> y'
+			],
+			[
+				'x [size=1]smaller[/size] y',
+				'x <span style="font-size:8px">smaller</span> y'
+			],
+			[
+				'x [size=160]biggest[/size] y',
+				'x <span style="font-size:36px">biggest</span> y'
+			],
+			[
+				'x [size=160]biggest[/size] y',
+				'x <span style="font-size:160px">biggest</span> y',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('SIZE', 'default', ['max' => 300]);
+				}
+			],
+			[
+				'x [size=1]smallest[/size] y',
+				'x <span style="font-size:8px">smallest</span> y'
+			],
+			[
+				'x [size=1]smallest[/size] y',
+				'x <span style="font-size:1px">smallest</span> y',
+				function ($configurator)
+				{
+					$configurator->BBCodes->addFromRepository('SIZE', 'default', ['min' => 1]);
+				}
+			],
+			[
 				"Spoiler ahead!\n" .
 				"[spoiler]Now you're spoiled[/spoiler]",
 				"Spoiler ahead!\n" .
