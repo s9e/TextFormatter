@@ -4,61 +4,50 @@ include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
 
-// Add a BBCode from the default repository at:
+// Add some BBCodes from the default repository that you can find in
 // ../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml
+$configurator->BBCodes->addFromRepository('B');
+$configurator->BBCodes->addFromRepository('I');
+$configurator->BBCodes->addFromRepository('U');
+$configurator->BBCodes->addFromRepository('S');
+$configurator->BBCodes->addFromRepository('COLOR');
+$configurator->BBCodes->addFromRepository('URL');
+$configurator->BBCodes->addFromRepository('EMAIL');
+$configurator->BBCodes->addFromRepository('CODE');
 $configurator->BBCodes->addFromRepository('QUOTE');
+$configurator->BBCodes->addFromRepository('LIST');
+$configurator->BBCodes->addFromRepository('*');
+$configurator->BBCodes->addFromRepository('SPOILER');
 
-// Add a few BBCodes using their human readable representation. You can check out repository.xml for
-// a more advanced [LIST] BBCode
-$configurator->BBCodes->addCustom('[B]{TEXT}[/B]',   '<b>{TEXT}</b>');
-$configurator->BBCodes->addCustom('[UL]{TEXT}[/UL]', '<ul>{TEXT}</ul>');
-$configurator->BBCodes->addCustom('[LI]{TEXT}[/LI]', '<li>{TEXT}</li>');
-
-// Add a BBCode and its underlying tag using the verbose API
-$configurator->BBCodes->add('I');
-$tag = $configurator->tags->add('I');
-$tag->defaultTemplate = '<i><xsl:apply-templates/></i>';
-
-// Add a URL BBCode, which we will use for magic links too
+// Add custom [size] BBCode which forces values to be between 8px and 36px
 $configurator->BBCodes->addCustom(
-	'[URL={URL;useContent}]{TEXT}[/URL]',
-	'<a href="{URL}">{TEXT}</a>'
+	'[size={RANGE=8,36}]{TEXT}[/size]',
+	'<span style="font-size:{RANGE}px">{TEXT}</span>'
 );
 
-// Trying to add unsafe BBCodes results in an UnsafeTemplateException being thrown
+// NOTE: trying to add unsafe BBCodes results in an UnsafeTemplateException being thrown
 //$configurator->BBCodes->addCustom('[BAD={TEXT1}]{TEXT2}[/BAD]', '<a href="{TEXT1}">{TEXT2}</a>');
 //$configurator->BBCodes->addCustom('[BAD={TEXT1}]{TEXT2}[/BAD]', '<b onblur="{TEXT1}">{TEXT2}</b>');
 //$configurator->BBCodes->addCustom('[BAD={TEXT1}]{TEXT2}[/BAD]', '<b style="{TEXT1}">{TEXT2}</b>');
 //$configurator->BBCodes->addCustom('[BAD]{TEXT}[/BAD]',          '<script>{TEXT}"</script>');
 //$configurator->BBCodes->addCustom('[BAD]{TEXT}[/BAD]',          '<style>{TEXT}"</script>');
 
-// When we created the [URL] BBCode, it automatically created a general purpose URL tag which can
-// be used by other plugins. Here we load the Autolink plugin and specify which tag to use. In this
-// case, it's redundant because "URL" is the default value for Autolink's tags. Also, if the tag
-// does not exist when Autolink is loaded, a default tag will be created
-$configurator->plugins->load('Autolink', array('tagName' => 'URL'));
-
 // Add a couple of censored words, one with a custom replacement
 $configurator->Censor->add('apple*');
 $configurator->Censor->add('bananas', 'oranges');
 
-// Add a couple of emoticons
-$configurator->Emoticons->add(':)', '<img src="happy.png" alt=":)" />');
-$configurator->Emoticons->add(':(', '<img src="sad.png" alt=":(" />');
+// Add a couple of emoticons. Normally you would use an <img> tag, but here we'll use HTML entities
+// instead
+$configurator->Emoticons->add(':)', '&#x263A;');
+$configurator->Emoticons->add(':(', '&#x263B;');
 
 // We'll also allow a bit of HTML. Specifically, <a> elements with a non-optional href attribute and
 // HTML entities
 $configurator->HTMLElements->allowElement('a');
 $configurator->HTMLElements->allowAttribute('a', 'href')->required = true;
-$configurator->plugins->load('HTMLEntities');
 
-// We'll disallow links to example.org, which will automagically apply to [URL] and <a>
-$configurator->urlConfig->disallowHost('example.org');
-
-// You can set limits on the number of matches passed to plugins, number of tags used or nested
-$configurator->HTMLElements->setRegexpLimit(10);
-$configurator->tags['QUOTE']->setNestingLimit(3);
-$configurator->tags['URL']->setTagLimit(1);
+// Automatically linkify URLs in plain text with the Autolink plugin
+$configurator->Autolink;
 
 // Finally, instead of having to explicitly define what tag is allowed where and how, we'll let the
 // configurator define a bunch of rules based on HTML5
@@ -82,10 +71,10 @@ $renderer = $configurator->getRenderer();
 //file_put_contents('/tmp/parser.txt',   serialize($parser));
 //file_put_contents('/tmp/renderer.txt', serialize($renderer));
 
-// Parse a simple message
-$xml = $parser->parse('Hello, [i]world[/i] :)');
-// <rt>Hello, <I><st>[i]</st>world<et>[/i]</et></I> <E>:)</E></rt>
+// Parse a simple message then render it as HTML. The XML result is what you save in your database
+// while the HTML rendering is what you show to the users
+$text = "Hello, [i]world[/i] :)\nFind more examples in the [url=https://github.com/s9e/TextFormatter/tree/master/docs/Cookbook]Cookbook[/url].";
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
 
-// Render a parsed message
-echo $renderer->render($xml), "\n";
-// Hello, <i>world</i> <img src="happy.png" alt=":)">
+echo $html, "\n";
