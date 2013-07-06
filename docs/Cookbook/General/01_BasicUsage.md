@@ -99,5 +99,11 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-To-do list:<ul style="list-style-type:disc"><li> Say hello to the world <img src="/path/to/happy.png" alt=":)" title="Happy"></li><li> Go to <a href="http://example.com">http://example.com</a></li><li> Try to trip the parser with <b>mis<i>nes</i></b><i>ted<u> tags</u></i></li><li> Watch this video: <iframe width="560" height="315" src="http://www.youtube.com/embed/QH2-TGUlwu4" allowfullscreen=""></iframe></li></ul>
+To-do list:
+	<ul style="list-style-type:disc">
+		<li> Say hello to the world <img src="/path/to/happy.png" alt=":)" title="Happy">
+		</li><li> Go to <a href="http://example.com">http://example.com</a>
+		</li><li> Try to trip the parser with <b>mis<i>nes</i></b><i>ted<u> tags</u></i>
+		</li><li> Watch this video: <iframe width="560" height="315" src="http://www.youtube.com/embed/QH2-TGUlwu4" allowfullscreen=""></iframe>
+	</li></ul>
 ```
