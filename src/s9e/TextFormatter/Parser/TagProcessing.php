@@ -81,36 +81,32 @@ trait TagProcessing
 			$this->cntTotal[$tagName] = 0;
 		}
 
-		while (!empty($this->tagStack))
+		// Process the tag stack, close tags that were left open and repeat until done
+		do
 		{
-			if (!$this->tagStackIsSorted)
+			while (!empty($this->tagStack))
 			{
-				$this->sortTags();
+				if (!$this->tagStackIsSorted)
+				{
+					$this->sortTags();
+				}
+
+				$this->currentTag = array_pop($this->tagStack);
+				$this->processCurrentTag();
 			}
 
-			$this->currentTag = array_pop($this->tagStack);
-			$this->processCurrentTag();
+			// Close tags that were left open
+			foreach ($this->openTags as $startTag)
+			{
+				// NOTE: we add tags in hierarchical order (ancestors to descendants) but since
+				//       the stack is processed in LIFO order, it means that tags get closed in
+				//       the correct order, from descendants to ancestors
+				$this->addEndTag($startTag->getName(), $this->textLen, 0)->pairWith($startTag);
+			}
 		}
+		while (!empty($this->tagStack));
 
-		// Close tags that were left open
-		while (!empty($this->openTags))
-		{
-			// Get the last open tag
-			$openTag = end($this->openTags);
-
-			// Create a tag paired to the last open tag
-			$endTag = new Tag(
-				Tag::END_TAG,
-				$openTag->getName(),
-				$this->textLen,
-				0
-			);
-			$openTag->pairWith($endTag);
-
-			// Now process the end tag
-			$this->processEndTag($endTag);
-		}
-
+		// Finalize the document
 		$this->finalizeOutput();
 	}
 

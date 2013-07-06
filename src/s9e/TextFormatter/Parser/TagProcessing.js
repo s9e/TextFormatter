@@ -63,36 +63,32 @@ function processTags()
 		cntTotal[tagName] = 0;
 	}
 
-	while (tagStack.length)
+	// Process the tag stack, close tags that were left open and repeat until done
+	do
 	{
-		if (!tagStackIsSorted)
+		while (tagStack.length)
 		{
-			sortTags();
+			if (!tagStackIsSorted)
+			{
+				sortTags();
+			}
+
+			currentTag = tagStack.pop();
+			processCurrentTag();
 		}
 
-		currentTag = tagStack.pop();
-		processCurrentTag();
+		// Close tags that were left open
+		openTags.forEach(function (startTag)
+		{
+			// NOTE: we add tags in hierarchical order (ancestors to descendants) but since
+			//       the stack is processed in LIFO order, it means that tags get closed in
+			//       the correct order, from descendants to ancestors
+			addEndTag(startTag.getName(), textLen, 0).pairWith(startTag);
+		});
 	}
+	while (tagStack.length);
 
-	// Close tags that were left open
-	while (openTags.length)
-	{
-		// Get the last open tag
-		var openTag = openTags[openTags.length - 1];
-
-		// Create a tag paired to the last open tag
-		var endTag = new Tag(
-			Tag.END_TAG,
-			openTag.getName(),
-			textLen,
-			0
-		);
-		openTag.pairWith(endTag);
-
-		// Now process the end tag
-		processEndTag(endTag);
-	}
-
+	// Finalize the document
 	finalizeOutput();
 }
 
