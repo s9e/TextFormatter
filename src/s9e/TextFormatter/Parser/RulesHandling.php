@@ -36,9 +36,8 @@ trait RulesHandling
 						// We have to close this ancestor. First we reinsert this tag...
 						$this->tagStack[] = $tag;
 
-						// ...then we add a new end tag which we pair with the one we want closed
-						$this->addEndTag($ancestorName, $tag->getPos(), 0)
-							 ->pairWith($ancestor);
+						// ...then we add a new end tag for it
+						$this->addMagicEndTag($ancestor, $tag->getPos());
 
 						return true;
 					}
@@ -72,9 +71,8 @@ trait RulesHandling
 					// We have to close that parent. First we reinsert the tag...
 					$this->tagStack[] = $tag;
 
-					// ...then we create a new end tag which we pair with its parent
-					$this->addEndTag($parentName, $tag->getPos(), 0)
-					     ->pairWith($parent);
+					// ...then we add a new end tag for it
+					$this->addMagicEndTag($parent, $tag->getPos());
 
 					return true;
 				}

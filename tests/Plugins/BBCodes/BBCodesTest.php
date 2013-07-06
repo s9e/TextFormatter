@@ -190,11 +190,11 @@ class BBCodesTest extends Test
 					[dd]technically bright but socially [s]inept[/s] awesome person
 				[/dl]',
 				'<dl>
-					<dt>Hacker
-					</dt><dd>a clever programmer
-					</dd><dt>Nerd
-					</dt><dd>technically bright but socially <s>inept</s> awesome person
-				</dd></dl>'
+					<dt>Hacker</dt>
+					<dd>a clever programmer</dd>
+					<dt>Nerd</dt>
+					<dd>technically bright but socially <s>inept</s> awesome person</dd>
+				</dl>'
 			],
 			[
 				'Putting the EM in [em]em[/em]phasis',
@@ -328,9 +328,9 @@ class BBCodesTest extends Test
 					[*]two
 				[/LIST]',
 				'<ul>
-					<li>one
-					</li><li>two
-				</li></ul>'
+					<li>one</li>
+					<li>two</li>
+				</ul>'
 			],
 			[
 				'[LIST]
@@ -343,12 +343,12 @@ class BBCodesTest extends Test
 				[/LIST]',
 				'<ul>
 					<li><ul>
-						<li>one.one
-						</li><li>one.two
-					</li></ul>
+						<li>one.one</li>
+						<li>one.two</li>
+					</ul></li>
 
-					</li><li>two
-				</li></ul>'
+					<li>two</li>
+				</ul>'
 			],
 			[
 				'[LIST=1][*]one[*]two[/LIST]',

@@ -798,6 +798,54 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 2, 1);
 				}
 			],
+			[
+				'[UL]
+					[*] foo
+					[*] bar
+				[/UL]',
+				'<rt><UL><st>[UL]</st>
+					<LI><st>[*]</st> foo</LI>
+					<LI><st>[*]</st> bar</LI>
+				<et>[/UL]</et></UL></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('UL');
+					$rules = $constructor->tags->add('LI')->rules;
+					$rules->closeAncestor('LI');
+					$rules->ignoreSurroundingWhitespace();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('UL', 0, 4);
+					$parser->addStartTag('LI', 10, 3);
+					$parser->addStartTag('LI', 23, 3);
+					$parser->addEndTag('UL', 35, 5);
+				}
+			],
+			[
+				'[UL]
+					[*] foo
+					[*] bar
+				[/UL]',
+				'<rt><UL><st>[UL]</st>
+					<LI><st>[*]</st> foo</LI>
+					<LI><st>[*]</st> bar</LI>
+				<et>[/UL]</et></UL></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('UL');
+					$rules = $constructor->tags->add('LI')->rules;
+					$rules->closeParent('LI');
+					$rules->ignoreSurroundingWhitespace();
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('UL', 0, 4);
+					$parser->addStartTag('LI', 10, 3);
+					$parser->addStartTag('LI', 23, 3);
+					$parser->addEndTag('UL', 35, 5);
+				}
+			],
 		];
 	}
 }

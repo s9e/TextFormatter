@@ -25,8 +25,8 @@ function closeAncestor(tag)
 					// We have to close this ancestor. First we reinsert this tag...
 					tagStack.push(tag);
 
-					// ...then we add a new end tag which we pair with the one we want closed
-					addEndTag(ancestorName, tag.getPos(), 0).pairWith(ancestor);
+					// ...then we add a new end tag for it
+					addMagicEndTag(ancestor, tag.getPos());
 
 					return true;
 				}
@@ -60,8 +60,8 @@ function closeParent(tag)
 				// We have to close that parent. First we reinsert the tag...
 				tagStack.push(tag);
 
-				// ...then we create a new end tag which we pair with its parent
-				addEndTag(parentName, tag.getPos(), 0).pairWith(parent);
+				// ...then we add a new end tag for it
+				addMagicEndTag(parent, tag.getPos());
 
 				return true;
 			}

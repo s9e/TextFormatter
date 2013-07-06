@@ -44,6 +44,44 @@ var pos;
 var rootContext;
 
 /**
+* Create and add an end tag for given start tag at given position
+*
+* @param  {!Tag}    startTag Start tag
+* @param  {!number} tagPos   End tag's position (will be adjusted for whitespace if applicable)
+*/
+function addMagicEndTag(startTag, tagPos)
+{
+	var tagName = startTag.getName();
+
+	// Adjust the end tag's position if whitespace is to be minimized
+	if (tagsConfig[tagName].rules.flags & RULE_TRIM_WHITESPACE)
+	{
+		tagPos = getMagicPos(tagPos);
+	}
+
+	// Add a 0-width end tag that is paired with the given start tag
+	addEndTag(tagName, tagPos, 0).pairWith(startTag);
+}
+
+/**
+* Compute the position of a magic end tag, adjusted for whitespace
+*
+* @param  {!number} tagPos Rightmost possible position for the tag
+* @return {!number}
+*/
+function getMagicPos(tagPos)
+{
+	// Back up from given position to the cursor's position until we find a character that
+	// is not whitespace
+	while (tagPos > pos && WHITESPACE.indexOf(text.charAt(tagPos - 1)) > -1)
+	{
+		--tagPos;
+	}
+
+	return tagPos;
+}
+
+/**
 * Process all tags in the stack
 */
 function processTags()
@@ -83,7 +121,7 @@ function processTags()
 			// NOTE: we add tags in hierarchical order (ancestors to descendants) but since
 			//       the stack is processed in LIFO order, it means that tags get closed in
 			//       the correct order, from descendants to ancestors
-			addEndTag(startTag.getName(), textLen, 0).pairWith(startTag);
+			addMagicEndTag(startTag, textLen);
 		});
 	}
 	while (tagStack.length);
@@ -301,8 +339,15 @@ function processEndTag(tag)
 			}
 		}
 
+		// Find the earliest position we can close this open tag
+		var tagPos = tag.getPos();
+		if (tagsConfig[openTagName].rules.flags & RULE_TRIM_WHITESPACE)
+		{
+			tagPos = getMagicPos(tagPos);
+		}
+
 		// Output an end tag to close this start tag, then update the context
-		outputTag(new Tag(Tag.END_TAG, openTagName, tag.getPos(), 0));
+		outputTag(new Tag(Tag.END_TAG, openTagName, tagPos, 0));
 		popContext();
 	});
 

@@ -57,6 +57,45 @@ trait TagProcessing
 	protected $rootContext;
 
 	/**
+	* Create and add an end tag for given start tag at given position
+	*
+	* @param  Tag     $startTag Start tag
+	* @param  integer $tagPos   End tag's position (will be adjusted for whitespace if applicable)
+	* @return void
+	*/
+	protected function addMagicEndTag(Tag $startTag, $tagPos)
+	{
+		$tagName = $startTag->getName();
+
+		// Adjust the end tag's position if whitespace is to be minimized
+		if ($this->tagsConfig[$tagName]['rules']['flags'] & self::RULE_TRIM_WHITESPACE)
+		{
+			$tagPos = $this->getMagicPos($tagPos);
+		}
+
+		// Add a 0-width end tag that is paired with the given start tag
+		$this->addEndTag($tagName, $tagPos, 0)->pairWith($startTag);
+	}
+
+	/**
+	* Compute the position of a magic end tag, adjusted for whitespace
+	*
+	* @param  integer $tagPos Rightmost possible position for the tag
+	* @return integer
+	*/
+	protected function getMagicPos($tagPos)
+	{
+		// Back up from given position to the cursor's position until we find a character that
+		// is not whitespace
+		while ($tagPos > $this->pos && strpos(self::WHITESPACE, $this->text[$tagPos - 1]) !== false)
+		{
+			--$tagPos;
+		}
+
+		return $tagPos;
+	}
+
+	/**
 	* Process all tags in the stack
 	*
 	* @return void
@@ -101,7 +140,7 @@ trait TagProcessing
 				// NOTE: we add tags in hierarchical order (ancestors to descendants) but since
 				//       the stack is processed in LIFO order, it means that tags get closed in
 				//       the correct order, from descendants to ancestors
-				$this->addEndTag($startTag->getName(), $this->textLen, 0)->pairWith($startTag);
+				$this->addMagicEndTag($startTag, $this->textLen);
 			}
 		}
 		while (!empty($this->tagStack));
@@ -305,7 +344,9 @@ trait TagProcessing
 		// Only reopen tags if we haven't exceeded our "fixing" budget
 		$keepReopening = (bool) ($this->currentFixingCost < $this->maxFixingCost);
 
-		$reopenTags    = [];
+		// Iterate over tags that are being closed, output their end tag and collect tags to be
+		// reopened
+		$reopenTags = [];
 		foreach ($closeTags as $openTag)
 		{
 			$openTagName = $openTag->getName();
@@ -323,8 +364,15 @@ trait TagProcessing
 				}
 			}
 
+			// Find the earliest position we can close this open tag
+			$tagPos = $tag->getPos();
+			if ($this->tagsConfig[$openTagName]['rules']['flags'] & self::RULE_TRIM_WHITESPACE)
+			{
+				$tagPos = $this->getMagicPos($tagPos);
+			}
+
 			// Output an end tag to close this start tag, then update the context
-			$this->outputTag(new Tag(Tag::END_TAG, $openTagName, $tag->getPos(), 0));
+			$this->outputTag(new Tag(Tag::END_TAG, $openTagName, $tagPos, 0));
 			$this->popContext();
 		}
 
