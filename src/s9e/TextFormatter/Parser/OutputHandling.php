@@ -25,6 +25,11 @@ trait OutputHandling
 	protected $output;
 
 	/**
+	* @var integer Position before which we output text verbatim, without paragraphs or linebreaks
+	*/
+	protected $wsPos;
+
+	/**
 	* Finalize the output by appending the rest of the unprocessed text and create the root node
 	*
 	* @return void
@@ -185,20 +190,14 @@ trait OutputHandling
 		$this->pos = $tagPos + $tagLen;
 
 		// Skip newlines (no other whitespace) after this tag
-		$ignorePos = $this->pos;
-		while ($skipAfter && $ignorePos < $this->textLen && $this->text[$ignorePos] === "\n")
+		$this->wsPos = $this->pos;
+		while ($skipAfter && $this->wsPos < $this->textLen && $this->text[$this->wsPos] === "\n")
 		{
 			// Decrement the number of lines to skip
 			--$skipAfter;
 
 			// Move the cursor past the newline
-			++$ignorePos;
-		}
-
-		if ($ignorePos !== $this->pos)
-		{
-			$this->output .= substr($this->text, $this->pos, $ignorePos - $this->pos);
-			$this->pos = $ignorePos;
+			++$this->wsPos;
 		}
 	}
 
@@ -216,6 +215,13 @@ trait OutputHandling
 		{
 			// We're already there
 			return;
+		}
+
+		// Skip over previously identified whitespace if applicable
+		if ($this->wsPos > $this->pos)
+		{
+			$this->output .= substr($this->text, $this->pos, $this->wsPos - $this->pos);
+			$this->pos = $this->wsPos;
 		}
 
 		// Test whether we're even supposed to output anything

@@ -103,6 +103,7 @@ function reset(_text)
 	textLen    = text.length;
 	tagStack   = [];
 	uid        = Math.random();
+	wsPos      = 0;
 
 	// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
 	tagStackIsSorted = false;

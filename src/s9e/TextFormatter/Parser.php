@@ -194,6 +194,7 @@ class Parser
 		$this->textLen    = strlen($text);
 		$this->tagStack   = [];
 		$this->uid        = mt_rand();
+		$this->wsPos      = 0;
 
 		// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
 		$this->tagStackIsSorted = false;

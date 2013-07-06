@@ -13,6 +13,11 @@ var namespaces;
 */
 var output;
 
+/**
+* @type {!integer} Position before which we output text verbatim, without paragraphs or linebreaks
+*/
+var wsPos;
+
 // TODO: replace/merge?
 function htmlspecialchars_compat(str)
 {
@@ -184,20 +189,14 @@ function outputTag(tag)
 	pos = tagPos + tagLen;
 
 	// Skip newlines (no other whitespace) after this tag
-	var ignorePos = pos;
-	while (skipAfter && ignorePos < textLen && text.charAt(ignorePos) === "\n")
+	wsPos = pos;
+	while (skipAfter && wsPos < textLen && text.charAt(wsPos) === "\n")
 	{
 		// Decrement the number of lines to skip
 		--skipAfter;
 
 		// Move the cursor past the newline
-		++ignorePos;
-	}
-
-	if (ignorePos !== pos)
-	{
-		output += text.substr(pos, ignorePos - pos);
-		pos = ignorePos;
+		++wsPos;
 	}
 }
 
@@ -214,6 +213,13 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	{
 		// We're already there
 		return;
+	}
+
+	// Skip over previously identified whitespace if applicable
+	if (wsPos > pos)
+	{
+		output += text.substr(pos, wsPos - pos);
+		pos = wsPos;
 	}
 
 	var catchupLen, catchupText;
