@@ -261,6 +261,14 @@ class PHP implements RendererGenerator
 				$this->php .= $else;
 				$else = 'else';
 
+				// If there's only one condition, remove its parentheses if applicable
+				if (count($conditions) === 1
+				 && $conditions[0][0] === '('
+				 && substr($conditions[0], -1) === ')')
+				{
+					 $conditions[0] = substr($conditions[0], 1, -1);
+				}
+
 				$this->php .= 'if(' . implode('||', $conditions) . ')';
 				$this->php .= '{';
 				$this->serializeChildren($ir->documentElement);

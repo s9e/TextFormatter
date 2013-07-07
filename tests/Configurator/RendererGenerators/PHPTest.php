@@ -711,7 +711,6 @@ class PHPTest extends Test
 		];
 	}
 
-
 	/**
 	* @dataProvider getOptimizationTests
 	* @testdox Code optimization tests
@@ -800,6 +799,18 @@ class PHPTest extends Test
 				// than concatenate the result of two htmlspecialchars() calls
 				'<xsl:template match="*"><xsl:value-of select="@foo"/><xsl:value-of select="name()"/><xsl:value-of select="@bar"/></xsl:template>',
 				"htmlspecialchars(\$node->getAttribute('foo').\$node->nodeName.\$node->getAttribute('bar')"
+			],
+			[
+				'<xsl:template match="FOO[@bar]|BAR[@baz]">...</xsl:template>
+				<xsl:template match="BAZ[@quux]">***</xsl:template>',
+				[
+					"if(\$nodeName==='BAZ'",
+					"if((\$nodeName==='BAR'"
+				],
+				[
+					"if((\$nodeName==='BAZ'",
+					"if(\$nodeName==='BAR'"
+				]
 			],
 		];
 	}
