@@ -27,10 +27,11 @@ function convertCustom($filepath, &$file)
 function convertForeachList($filepath, &$file)
 {
 	$file = preg_replace_callback(
-		'#(\\s+as\\s+(?:\\$\\w+\\s*=>\\s*)?)(list\\([^)]+\\))(\\)\\s*\\{(\\s*))#',
+		'#.*(\\s+as\\s+(?:\\$\\w+\\s*=>\\s*)?)(list\\([^)]+\\))(\\)\\s*\\{(\\s*)).*#',
 		function ($m)
 		{
-			$varName = uniqid('$_');
+			// Generate a var name based on surrounding code
+			$varName = '$_' . crc32($m[0]);
 
 			return $m[1] . $varName . $m[3] . $m[2] . ' = ' . $varName . ';' . $m[4];
 		},
