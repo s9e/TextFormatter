@@ -1,9 +1,11 @@
 #!/usr/bin/php
 <?php
 
-if (version_compare(PHP_VERSION, '5.4.0', '>='))
+$version = (isset($_SERVER['argv'][1])) ? $_SERVER['argv'][1] : PHP_VERSION;
+
+if (version_compare($version, '5.3.99', '>'))
 {
-	die('No need to run ' . __FILE__ . ' on PHP ' . PHP_VERSION . "\n");
+	die('No need to run ' . __FILE__ . ' on PHP ' . $version . "\n");
 }
 
 function fqn($file)
