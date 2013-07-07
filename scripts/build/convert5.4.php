@@ -66,5 +66,5 @@ function convertDir($dir)
 	}
 }
 
-convertDir(realpath(__DIR__ . '/../src/s9e/TextFormatter'));
-convertDir(realpath(__DIR__ . '/../tests'));
+convertDir(realpath(__DIR__ . '/../../src/s9e/TextFormatter'));
+convertDir(realpath(__DIR__ . '/../../tests'));
