@@ -71,10 +71,8 @@ class DisallowXPathFunction extends TemplateCheck
 		// Allow whitespace around colons (NOTE: colons are unnecessarily escaped by preg_quote())
 		$regexp = str_replace('\\:', '\\s*:\\s*', $regexp);
 
-		foreach ($check as $pair)
+		foreach ($check as list($attribute, $expr))
 		{
-			list($attribute, $expr) = $pair;
-
 			// Remove string literals from the expression
 			$expr = preg_replace('#([\'"]).*?\\1#s', '', $expr);
 

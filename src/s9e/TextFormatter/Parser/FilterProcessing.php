@@ -22,10 +22,8 @@ trait FilterProcessing
 	{
 		if (!empty($tagConfig['attributePreprocessors']))
 		{
-			foreach ($tagConfig['attributePreprocessors'] as $attributePreprocessor)
+			foreach ($tagConfig['attributePreprocessors'] as list($attrName, $regexp))
 			{
-				list($attrName, $regexp) = $attributePreprocessor;
-
 				if (!$tag->hasAttribute($attrName))
 				{
 					continue;

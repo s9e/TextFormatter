@@ -374,10 +374,8 @@ class BBCodeMonkey
 			}
 		}
 
-		foreach ($composites as $composite)
+		foreach ($composites as list($attrName, $definition, $tokens))
 		{
-			list($attrName, $definition, $tokens) = $composite;
-
 			$regexp  = '/^';
 			$lastPos = 0;
 

@@ -328,9 +328,8 @@ class Configurator extends ConfiguratorBase
 
 		$generics   = [];
 		$jsGenerics = [];
-		foreach ($this->collection as $tagName => $data)
+		foreach ($this->collection as $tagName => list($regexp, $passthroughIdx))
 		{
-			list($regexp, $passthroughIdx) = $data;
 			$generics[] = [$tagName, $regexp, $passthroughIdx];
 
 			$jsRegexp = RegexpConvertor::toJS($regexp);

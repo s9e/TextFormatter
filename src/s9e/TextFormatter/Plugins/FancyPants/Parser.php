@@ -100,10 +100,8 @@ class Parser extends ParserBase
 				'/(?<![0-9\\pL])"[^"\\n]+"(?![0-9\\pL])/uS', "\xE2\x80\x9C", "\xE2\x80\x9D"
 			];
 		}
-		foreach ($replacements as $replacement)
+		foreach ($replacements as list($regexp, $leftQuote, $rightQuote))
 		{
-			list($regexp, $leftQuote, $rightQuote) = $replacement;
-
 			preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE);
 			foreach ($matches[0] as $m)
 			{

@@ -27,10 +27,8 @@ class Parser extends ParserBase
 		{
 			$tag = $this->parser->addSelfClosingTag($tagName, $m[0][1], strlen($m[0][0]));
 
-			foreach ($replacements as $pair)
+			foreach ($replacements as list($regexp, $replacement))
 			{
-				list($regexp, $replacement) = $pair;
-
 				if (preg_match($regexp, $m[0][0]))
 				{
 					$tag->setAttribute($attrName, $replacement);

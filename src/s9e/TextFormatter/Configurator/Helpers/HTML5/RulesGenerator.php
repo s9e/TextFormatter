@@ -305,10 +305,8 @@ abstract class RulesGenerator
 		];
 
 		// Apply precedence, e.g. if there's a denyChild rule, remove any allowChild rules
-		foreach ($precedence as $pair)
+		foreach ($precedence as list($k1, $k2))
 		{
-			list($k1, $k2) = $pair;
-
 			if (!isset($rules[$k1], $rules[$k2]))
 			{
 				continue;
