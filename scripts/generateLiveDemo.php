@@ -38,7 +38,8 @@ $configurator->plugins->load('FancyPants');
 
 $configurator->addHTML5Rules();
 
-//$configurator->javascript->setMinifier('ClosureCompilerService');
+$configurator->javascript->setMinifier('ClosureCompilerService');
+$configurator->javascript->getMinifier()->compilationLevel = 'SIMPLE_OPTIMIZATIONS';
 
 $js = 'var xsl=' . json_encode($configurator->stylesheet->get()) . ";\n";
 $js .= $configurator->javascript->getParser();

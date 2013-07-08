@@ -14,7 +14,7 @@ var namespaces;
 var output;
 
 /**
-* @type {!integer} Position before which we output text verbatim, without paragraphs or linebreaks
+* @type {!number} Position before which we output text verbatim, without paragraphs or linebreaks
 */
 var wsPos;
 
@@ -324,7 +324,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 */
 function outputBrTag(tag)
 {
-	outputText(tag.getPos(), 0);
+	outputText(tag.getPos(), 0, false);
 	output += '<br/>';
 }
 
@@ -343,7 +343,7 @@ function outputIgnoreTag(tag)
 	var ignoreText = text.substr(tagPos, tagLen);
 
 	// Catch up with the tag's position then output the tag
-	outputText(tagPos, 0);
+	outputText(tagPos, 0, false);
 	output += '<i>' + htmlspecialchars_noquotes(ignoreText) + '</i>';
 	isRich = true;
 
