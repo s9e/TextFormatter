@@ -21,18 +21,7 @@ class AttributeFilterCollectionTest extends Test
 	}
 
 	/**
-	* @testdox set() throws an exception if the value is not an instance of AttributeFilter
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Not an instance of s9e\TextFormatter\Configurator\Items\AttributeFilter
-	*/
-	public function testInvalidValue()
-	{
-		$collection = new AttributeFilterCollection;
-		$collection->set('#foo', 'bar');
-	}
-
-	/**
-	* @testdox set() accepts instances of AttributeFilter
+	* @testdox set() accepts instances of AttributeFilter as-is
 	*/
 	public function testValidValue()
 	{
@@ -43,6 +32,22 @@ class AttributeFilterCollectionTest extends Test
 			$filter,
 			$collection->set('#foo', $filter)
 		);
+	}
+
+	/**
+	* @testdox set() accepts a valid callback and returns an instance of AttributeFilter
+	*/
+	public function testValidCallback()
+	{
+		$collection = new AttributeFilterCollection;
+		$filter     = $collection->set('#foo', 'strtolower');
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\AttributeFilter',
+			$filter
+		);
+
+		$this->assertSame('strtolower', $filter->getCallback());
 	}
 
 	/**

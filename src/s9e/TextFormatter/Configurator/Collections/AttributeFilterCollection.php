@@ -27,7 +27,7 @@ class AttributeFilterCollection extends NormalizedCollection
 			if ($key[0] === '#')
 			{
 				$filterName = ucfirst(substr($key, 1));
-				$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName;
+				$className  = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName;
 
 				if (!class_exists($className))
 				{
@@ -78,7 +78,7 @@ class AttributeFilterCollection extends NormalizedCollection
 	{
 		if (!($value instanceof AttributeFilter))
 		{
-			throw new InvalidArgumentException('Not an instance of s9e\\TextFormatter\\Configurator\\Items\\AttributeFilter');
+			$value = new AttributeFilter($value);
 		}
 
 		return $value;
