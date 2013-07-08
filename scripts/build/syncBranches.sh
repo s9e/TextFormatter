@@ -8,7 +8,7 @@ msg="Synced from master"
 for version in 5.4 5.3;
 do
 	git checkout -b tmp master
-	php $version.convert.php $version
+	php patchSources.php $version
 	cp $version.composer.json ../../composer.json
 	cp $version.travis.yml ../../.travis.yml
 	git commit -a --no-verify -m"$msg"
