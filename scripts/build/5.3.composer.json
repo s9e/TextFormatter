@@ -14,11 +14,5 @@
 		"psr-0": {
 			"s9e\\TextFormatter": "src"
 		}
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"php scripts/build/convert5.4.php",
-			"php scripts/build/convert5.3.php"
-		]
 	}
 }

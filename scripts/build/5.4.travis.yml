@@ -1,0 +1,5 @@
+language: php
+php: "5.4"
+script: "phpunit --exclude-group needs-network"
+branches:
+  only: dev/php5.4

@@ -1,7 +1,28 @@
 ## Installation
 
+s9e\\TextFormatter is developed on PHP 5.5 and is compatible with PHP 5.3.3 and above. Choose the branch that corresponds to the lowest PHP version you want to support, they are functionally identical.
+
 ### Via Composer/[Packagist](https://packagist.org/):
 
+#### PHP 5.3
+```json
+{   
+    "require": {
+        "s9e/text-formatter": "dev-dev/php5.3"
+    }
+}
+```
+
+#### PHP 5.4
+```json
+{   
+    "require": {
+        "s9e/text-formatter": "dev-dev/php5.4"
+    }
+}
+```
+
+#### PHP 5.5
 ```json
 {   
     "require": {
@@ -12,14 +33,28 @@
 
 ### Via Git
 
-Clone this repository and use the bundled autoloader:
-```
-git clone https://github.com/s9e/TextFormatter.git
+Clone this repository and use the bundled autoloader.
+
+#### PHP 5.3
+```bash
+git clone https://github.com/s9e/TextFormatter.git -b dev/php5.3
 ```
 ```php
 include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
 ```
 
-Now you can use the examples in this cookbook.
+#### PHP 5.4
+```bash
+git clone https://github.com/s9e/TextFormatter.git -b dev/php5.4
+```
+```php
+include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
+```
 
-**NOTE:** if you're using PHP 5.3, you'll need to run `./scripts/convert5.3.php` first.
+#### PHP 5.5
+```bash
+git clone https://github.com/s9e/TextFormatter.git -b master
+```
+```php
+include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
+```
