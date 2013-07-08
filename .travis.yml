@@ -8,5 +8,3 @@ before_script:
   - "php ./scripts/build/convert5.3.php"
   - sh -c "if [ '$TRAVIS_PHP_VERSION' \< '5.4' ]; then printf '\n' | pecl install xslcache-beta; fi"
 script: "phpunit --exclude-group needs-network"
-branches:
-  only: master
