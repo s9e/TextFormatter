@@ -4,6 +4,6 @@ php:
   - "5.4"
   - "5.3.3"
 before_script:
-  - "./scripts/build/patchSources.php"
+  - php ./scripts/build/patchSources.php
   - sh -c "if [ '$TRAVIS_PHP_VERSION' \< '5.4' ]; then printf '\n' | pecl install xslcache-beta; fi"
 script: "phpunit --exclude-group needs-network"
