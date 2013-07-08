@@ -8,8 +8,8 @@
 		"ext-pcre":   "*"
 	},
 	"suggest": {
-		"ext-xsl":    "Enables the XSLT renderer"
-	}
+		"ext-xsl": "Enables the XSLT renderer"
+	},
 	"autoload": {
 		"psr-0": {
 			"s9e\\TextFormatter": "src"
@@ -17,8 +17,8 @@
 	},
 	"scripts": {
 		"post-install-cmd": [
-			"php scripts/build/convert5.4.php",
-			"php scripts/build/convert5.3.php"
+			"php scripts/build/5.4.convert.php",
+			"php scripts/build/5.3.convert.php"
 		]
 	}
 }

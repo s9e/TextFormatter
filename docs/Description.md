@@ -14,8 +14,7 @@
 
 ## Requirements
 
-* Compatible with PHP 5.3, PHP 5.4+ recommended
-	* You need to run [convert5.3.php](https://github.com/s9e/TextFormatter/blob/master/scripts/convert5.3.php) to convert the source from git to PHP 5.3
+* PHP 5.3.3 or later (see [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/00_Installation.md))
 * [ext/dom](http://docs.php.net/manual/en/book.dom.php)
 * [ext/filter](http://docs.php.net/manual/en/book.filter.php)
 * [ext/pcre](http://docs.php.net/manual/en/book.pcre.php) with Unicode support
@@ -93,9 +92,9 @@
 			* ...unless you purposely disable some of the template checks and manually disable the escaping
 
 	* Offer multiple renderers
-		* __XSLT__ uses [PHP's ext/xsl](http://docs.php.net/manual/en/book.xsl.php)
-		* __PHP__ uses plain PHP (faster if you're using an opcode cache but does not support the whole range of XSLT. It *does* support everything listed on this page though)
-		* __XSLCache__ uses PECL's [xslcache](http://pecl.php.net/package/xslcache) (fastest but [requires some patching for PHP 5.4+](https://bugs.php.net/bug.php?id=62856))
+		* the __XSLT__ renderer uses [PHP's ext/xsl](http://docs.php.net/manual/en/book.xsl.php)
+		* the __PHP__ renderer uses plain PHP (faster if you're using an opcode cache but does not support the whole range of XSLT. It *does* support everything listed on this page though)
+		* the __XSLCache__ renderer uses PECL's [xslcache](http://pecl.php.net/package/xslcache) (fastest but [requires some patching for PHP 5.4+](https://bugs.php.net/bug.php?id=62856))
 
 ## Security
 
@@ -222,4 +221,4 @@
 	* Flexible syntax
 
 * Upcoming plugins
-	* Markdown, depending on demand
+	* MarkdownLite, a Markdown-like syntax

@@ -8,8 +8,8 @@
 		"ext-pcre":   "*"
 	},
 	"suggest": {
-		"ext-xsl":    "Enables the XSLT renderer"
-	}
+		"ext-xsl": "Enables the XSLT renderer"
+	},
 	"autoload": {
 		"psr-0": {
 			"s9e\\TextFormatter": "src"
