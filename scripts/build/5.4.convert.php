@@ -1,11 +1,13 @@
-#!/usr/bin/php
 <?php
+
+namespace s9e\TextFormatter\Build\PHP54;
 
 $version = (isset($_SERVER['argv'][1])) ? $_SERVER['argv'][1] : PHP_VERSION;
 
 if (version_compare($version, '5.4.99', '>'))
 {
-	die('No need to run ' . __FILE__ . ' on PHP ' . PHP_VERSION . "\n");
+	echo 'No need to run ', __FILE__, ' on PHP ', $version, "\n";
+	return;
 }
 
 function convertCustom($filepath, &$file)
