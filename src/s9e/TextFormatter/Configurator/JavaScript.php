@@ -366,7 +366,7 @@ class JavaScript
 
 			if (!$isArray)
 			{
-				$src .= (($preserveKeys) ? json_encode($k) : $k) . ':';
+				$src .= (($preserveKeys || $k === '') ? json_encode($k) : $k) . ':';
 			}
 
 			$src .= self::encode($v);

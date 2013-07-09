@@ -3,9 +3,15 @@ matches.forEach(function(m)
 	// Test whether this is an end tag
 	var isEnd = (text.charAt(m[0][1] + 1) === '/');
 
-	var pos = m[0][1],
-		len = m[0][0].length,
-		tagName = config.prefix + ':' + m[2 - isEnd][0].toLowerCase();
+	var pos    = m[0][1],
+		len    = m[0][0].length,
+		elName = m[2 - isEnd][0].toLowerCase();
+
+	// Use the element's alias if applicable, or the  name of the element (with the
+	// configured prefix) otherwise
+	var tagName = (config.aliases && config.aliases[elName] && config.aliases[elName][''])
+	            ? config.aliases[elName]['']
+	            : config.prefix + ':' + elName;
 
 	if (isEnd)
 	{
@@ -48,6 +54,12 @@ matches.forEach(function(m)
 		// for cases like <b title = "foo"/>
 		attrName  = attrMatch[0].substr(0, pos).toLowerCase().replace(/^\s+/, '').replace('/\s+$/', '');
 		attrValue = attrMatch[0].substr(1 + pos).replace(/^\s+/, '').replace('/\s+$/', '');
+
+		// Use the attribute's alias if applicable
+		if (config.aliases && config.aliases[elName] && config.aliases[elName][attrName])
+		{
+			attrName = config.aliases[elName][attrName];
+		}
 
 		// Remove quotes around the value
 		if (/^["']/.test(attrValue))

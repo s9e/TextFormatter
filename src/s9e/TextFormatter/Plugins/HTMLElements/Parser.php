@@ -21,9 +21,15 @@ class Parser extends ParserBase
 			// Test whether this is an end tag
 			$isEnd = (bool) ($text[$m[0][1] + 1] === '/');
 
-			$pos = $m[0][1];
-			$len = strlen($m[0][0]);
-			$tagName = $this->config['prefix'] . ':' . strtolower($m[2 - $isEnd][0]);
+			$pos    = $m[0][1];
+			$len    = strlen($m[0][0]);
+			$elName = strtolower($m[2 - $isEnd][0]);
+
+			// Use the element's alias if applicable, or the  name of the element (with the
+			// configured prefix) otherwise
+			$tagName = (isset($this->config['aliases'][$elName]['']))
+			         ? $this->config['aliases'][$elName]['']
+			         : $this->config['prefix'] . ':' . $elName;
 
 			if ($isEnd)
 			{
@@ -68,6 +74,12 @@ class Parser extends ParserBase
 				// for cases like <b title = "foo"/>
 				$attrName  = strtolower(trim(substr($attrMatch[0], 0, $pos)));
 				$attrValue = trim(substr($attrMatch[0], 1 + $pos));
+
+				// Use the attribute's alias if applicable
+				if (isset($this->config['aliases'][$elName][$attrName]))
+				{
+					$attrName = $this->config['aliases'][$elName][$attrName];
+				}
 
 				// Remove quotes around the value
 				if ($attrValue[0] === '"'

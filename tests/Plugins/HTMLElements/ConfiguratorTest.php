@@ -12,6 +12,38 @@ use s9e\TextFormatter\Tests\Test;
 class ConfiguratorTest extends Test
 {
 	/**
+	* @testdox aliasElement('A', 'url') creates an alias for HTML element "a" to tag "URL"
+	*/
+	public function testAliasElement()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+		$plugin->aliasElement('A', 'url');
+
+		$pluginConfig = $plugin->asConfig();
+
+		$this->assertArrayMatches(
+			['aliases' => ['a' => ['' => 'URL']]],
+			$pluginConfig
+		);
+	}
+
+	/**
+	* @testdox aliasAttribute('A', 'HREF', 'URL') creates an alias for HTML attribute "href" in HTML element "a" to attribute "url"
+	*/
+	public function testAliasAttribute()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+		$plugin->aliasAttribute('A', 'HREF', 'URL');
+
+		$pluginConfig = $plugin->asConfig();
+
+		$this->assertArrayMatches(
+			['aliases' => ['a' => ['href' => 'url']]],
+			$pluginConfig
+		);
+	}
+
+	/**
 	* @testdox allowElement('b') creates a tag named 'html:b'
 	*/
 	public function testCreatesTags()
@@ -175,7 +207,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox allowAttribute('span', 'onmouseover') allows the 'onmouseover' attribute on 'span' elements
+	* @testdox allowUnsafeAttribute('span', 'onmouseover') allows the 'onmouseover' attribute on 'span' elements
 	*/
 	public function testUnsafeAttributeAllowed()
 	{
@@ -208,6 +240,18 @@ class ConfiguratorTest extends Test
 	{
 		$plugin = $this->configurator->plugins->load('HTMLElements');
 		$plugin->allowElement('*invalid*');
+	}
+
+	/**
+	* @testdox allowAttribute('span', 'data-title') allows the 'data-title' attribute on 'span' elements
+	*/
+	public function testAttributeNameDash()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+		$plugin->allowElement('span');
+		$plugin->allowUnsafeAttribute('span', 'data-title');
+
+		$this->assertTrue($this->configurator->tags['html:span']->attributes->exists('data-title'));
 	}
 
 	/**

@@ -11,24 +11,18 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
 {
 	/**
-	* @var string Namespace prefix of the tags produced by this plugin's parser
+	* @var array 2D array using HTML element names as keys, each value being an associative array
+	*            using HTML attribute names as keys and their alias as values. A special empty entry
+	*            is used to store the HTML element's alias
 	*/
-	protected $prefix = 'html';
-
-	/**
-	* {@inheritdoc}
-	*/
-	protected $quickMatch = '<';
-
-	/**
-	* @var string Catch-all XSL, used to render all tags in the "html" namespace
-	*/
-	protected $template = '<xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element>';
+	protected $aliases = [];
 
 	/**
 	* @var array  Default filter of a few known attributes
@@ -53,6 +47,27 @@ class Configurator extends ConfiguratorBase
 	];
 
 	/**
+	* @var array  Hash of allowed HTML elements. Element names are lowercased and used as keys for
+	*             this array
+	*/
+	protected $elements = [];
+
+	/**
+	* @var string Namespace prefix of the tags produced by this plugin's parser
+	*/
+	protected $prefix = 'html';
+
+	/**
+	* {@inheritdoc}
+	*/
+	protected $quickMatch = '<';
+
+	/**
+	* @var string Catch-all XSL, used to render all tags in the "html" namespace
+	*/
+	protected $template = '<xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element>';
+
+	/**
 	* @var array  Blacklist of elements that are considered unsafe
 	*/
 	protected $unsafeElements = [
@@ -75,12 +90,6 @@ class Configurator extends ConfiguratorBase
 	];
 
 	/**
-	* @var array  Hash of allowed HTML elements. Element names are lowercased and used as keys for
-	*             this array
-	*/
-	protected $tags = [];
-
-	/**
 	* Plugin's setup
 	*
 	* @return void
@@ -91,6 +100,40 @@ class Configurator extends ConfiguratorBase
 			$this->prefix,
 			new UnsafeTemplate($this->template)
 		);
+	}
+
+	/**
+	* Alias the HTML attribute of given HTML element to a given attribute name
+	*
+	* NOTE: will *not* create the target attribute
+	*
+	* @param  string $elName   Name of the HTML element
+	* @param  string $attrName Name of the HTML attribute
+	* @param  string $alias    Alias
+	* @return void
+	*/
+	public function aliasAttribute($elName, $attrName, $alias)
+	{
+		$elName   = $this->normalizeElementName($elName);
+		$attrName = $this->normalizeAttributeName($attrName);
+
+		$this->aliases[$elName][$attrName] = AttributeName::normalize($alias);
+	}
+
+	/**
+	* Alias an HTML element to a given tag name
+	*
+	* NOTE: will *not* create the target tag
+	*
+	* @param  string $elName  Name of the HTML element
+	* @param  string $tagName Name of the tag
+	* @return void
+	*/
+	public function aliasElement($elName, $tagName)
+	{
+		$elName = $this->normalizeElementName($elName);
+
+		$this->aliases[$elName][''] = TagName::normalize($tagName);
 	}
 
 	/**
@@ -137,7 +180,7 @@ class Configurator extends ConfiguratorBase
 			$this->configurator->tags->add($tagName);
 		}
 
-		$this->tags[$elName] = 1;
+		$this->elements[$elName] = 1;
 
 		return $this->configurator->tags->get($tagName);
 	}
@@ -180,7 +223,7 @@ class Configurator extends ConfiguratorBase
 		$attrName = $this->normalizeAttributeName($attrName);
 		$tagName  = $this->prefix . ':' . $elName;
 
-		if (!isset($this->tags[$elName]))
+		if (!isset($this->elements[$elName]))
 		{
 			throw new RuntimeException("Element '" . $elName . "' has not been allowed");
 		}
@@ -245,7 +288,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function normalizeAttributeName($attrName)
 	{
-		if (!preg_match('#^[a-z]\\w*$#Di', $attrName))
+		if (!preg_match('#^[a-z][-\\w]*$#Di', $attrName))
 		{
 			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
 		}
@@ -260,7 +303,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		if (empty($this->tags))
+		if (empty($this->elements) && empty($this->aliases))
 		{
 			return false;
 		}
@@ -271,17 +314,30 @@ class Configurator extends ConfiguratorBase
 		* @link http://dev.w3.org/html5/spec/syntax.html#attributes-0
 		*/
 		$attrRegexp = '[a-z][-a-z]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?';
-		$tagRegexp  = RegexpBuilder::fromList(array_keys($this->tags));
+		$tagRegexp  = RegexpBuilder::fromList(array_merge(
+			array_keys($this->aliases),
+			array_keys($this->elements)
+		));
 
 		$endTagRegexp   = '/(' . $tagRegexp . ')';
 		$startTagRegexp = '(' . $tagRegexp . ')((?:\\s+' . $attrRegexp . ')*+)\\s*/?';
 
 		$regexp = '#<(?:' . $endTagRegexp . '|' . $startTagRegexp . ')\\s*>#i';
 
-		return [
+		$config = [
 			'quickMatch' => $this->quickMatch,
 			'prefix'     => $this->prefix,
 			'regexp'     => $regexp
 		];
+
+		if (!empty($this->aliases))
+		{
+			/**
+			* @todo Preserve the keys in JavaScript
+			*/
+			$config['aliases'] = $this->aliases;
+		}
+
+		return $config;
 	}
 }
