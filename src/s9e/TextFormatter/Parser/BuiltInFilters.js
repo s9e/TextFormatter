@@ -180,7 +180,7 @@ var BuiltInFilters =
 	* @param  {*}       attrValue
 	* @param  {!number} min
 	* @param  {!number} max
-	* @param  {!Logger} logger
+	* @param  {Logger}  logger
 	* @return {!number|boolean}
 	*/
 	filterRange: function(attrValue, min, max, logger)
@@ -194,28 +194,34 @@ var BuiltInFilters =
 
 		if (attrValue < min)
 		{
-			logger.warn(
-				'Value outside of range, adjusted up to min value',
-				{
-					'attrValue' : attrValue,
-					'min'       : min,
-					'max'       : max
-				}
-			);
+			if (logger)
+			{
+				logger.warn(
+					'Value outside of range, adjusted up to min value',
+					{
+						'attrValue' : attrValue,
+						'min'       : min,
+						'max'       : max
+					}
+				);
+			}
 
 			return min;
 		}
 
 		if (attrValue > max)
 		{
-			logger.warn(
-				'Value outside of range, adjusted down to max value',
-				{
-					'attrValue' : attrValue,
-					'min'       : min,
-					'max'       : max
-				}
-			);
+			if (logger)
+			{
+				logger.warn(
+					'Value outside of range, adjusted down to max value',
+					{
+						'attrValue' : attrValue,
+						'min'       : min,
+						'max'       : max
+					}
+				);
+			}
 
 			return max;
 		}
@@ -254,7 +260,7 @@ var BuiltInFilters =
 	/**
 	* @param  {*} attrValue
 	* @param  {!Object} urlConfig
-	* @param  {?} logger
+	* @param  {Logger} logger
 	* @return {*}
 	*/
 	filterUrl: function(attrValue, urlConfig, logger)
@@ -310,10 +316,13 @@ var BuiltInFilters =
 
 		if (validateScheme && !urlConfig.allowedSchemes.test(m[1]))
 		{
-			logger.err(
-				'URL scheme is not allowed',
-				{'attrValue': attrValue, 'scheme': m[1]}
-			);
+			if (logger)
+			{
+				logger.err(
+					'URL scheme is not allowed',
+					{'attrValue': attrValue, 'scheme': m[1]}
+				);
+			}
 
 			return false;
 		}
@@ -326,10 +335,13 @@ var BuiltInFilters =
 
 		if (urlConfig.disallowedHosts && urlConfig.disallowedHosts.test(host))
 		{
-			logger.err(
-				'URL host is not allowed',
-				{'attrValue': attrValue, 'host': m[2]}
-			);
+			if (logger)
+			{
+				logger.err(
+					'URL host is not allowed',
+					{'attrValue': attrValue, 'host': m[2]}
+				);
+			}
 
 			return false;
 		}

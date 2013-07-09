@@ -1366,6 +1366,8 @@ s9e\TextFormatter\Tests\Parser\Tag
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests
  [x] Filters work
+ [x] filterRange() can be called without a logger
+ [x] filterUrl() can be called without a logger
 
 s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] registerVar($k, $v) sets registeredVars[$k] to $v

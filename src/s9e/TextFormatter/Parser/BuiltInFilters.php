@@ -193,7 +193,7 @@ class BuiltInFilters
 	* @param  Logger  $logger    Parser's Logger instance
 	* @return mixed              Filtered value, or FALSE if invalid
 	*/
-	public static function filterRange($attrValue, $min, $max, Logger $logger)
+	public static function filterRange($attrValue, $min, $max, Logger $logger = null)
 	{
 		$attrValue = filter_var($attrValue, FILTER_VALIDATE_INT);
 
@@ -204,28 +204,34 @@ class BuiltInFilters
 
 		if ($attrValue < $min)
 		{
-			$logger->warn(
-				'Value outside of range, adjusted up to min value',
-				[
-					'attrValue' => $attrValue,
-					'min'       => $min,
-					'max'       => $max
-				]
-			);
+			if (isset($logger))
+			{
+				$logger->warn(
+					'Value outside of range, adjusted up to min value',
+					[
+						'attrValue' => $attrValue,
+						'min'       => $min,
+						'max'       => $max
+					]
+				);
+			}
 
 			return $min;
 		}
 
 		if ($attrValue > $max)
 		{
-			$logger->warn(
-				'Value outside of range, adjusted down to max value',
-				[
-					'attrValue' => $attrValue,
-					'min'       => $min,
-					'max'       => $max
-				]
-			);
+			if (isset($logger))
+			{
+				$logger->warn(
+					'Value outside of range, adjusted down to max value',
+					[
+						'attrValue' => $attrValue,
+						'min'       => $min,
+						'max'       => $max
+					]
+				);
+			}
 
 			return $max;
 		}
@@ -281,7 +287,7 @@ class BuiltInFilters
 	* @param  Logger $logger    Parser's logger
 	* @return mixed             Cleaned up URL if valid, FALSE otherwise
 	*/
-	public static function filterUrl($attrValue, array $urlConfig, Logger $logger)
+	public static function filterUrl($attrValue, array $urlConfig, Logger $logger = null)
 	{
 		$followedUrls = [];
 		checkUrl:
@@ -372,10 +378,13 @@ class BuiltInFilters
 
 		if ($validateScheme && !preg_match($urlConfig['allowedSchemes'], $p['scheme']))
 		{
-			$logger->err(
-				'URL scheme is not allowed',
-				['attrValue' => $attrValue, 'scheme' => $p['scheme']]
-			);
+			if (isset($logger))
+			{
+				$logger->err(
+					'URL scheme is not allowed',
+					['attrValue' => $attrValue, 'scheme' => $p['scheme']]
+				);
+			}
 
 			return false;
 		}
@@ -383,10 +392,13 @@ class BuiltInFilters
 		if (isset($urlConfig['disallowedHosts'])
 		 && preg_match($urlConfig['disallowedHosts'], $host))
 		{
-			$logger->err(
-				'URL host is not allowed',
-				['attrValue' => $attrValue, 'host' => $host]
-			);
+			if (isset($logger))
+			{
+				$logger->err(
+					'URL host is not allowed',
+					['attrValue' => $attrValue, 'host' => $host]
+				);
+			}
 
 			return false;
 		}
@@ -397,10 +409,13 @@ class BuiltInFilters
 		{
 			if (isset($followedUrls[$attrValue]))
 			{
-				$logger->err(
-					'Infinite recursion detected while following redirects',
-					['attrValue' => $attrValue]
-				);
+				if (isset($logger))
+				{
+					$logger->err(
+						'Infinite recursion detected while following redirects',
+						['attrValue' => $attrValue]
+					);
+				}
 
 				return false;
 			}
@@ -409,20 +424,26 @@ class BuiltInFilters
 
 			if ($redirect === false)
 			{
-				$logger->err(
-					'Could not resolve redirect',
-					['attrValue' => $attrValue]
-				);
+				if (isset($logger))
+				{
+					$logger->err(
+						'Could not resolve redirect',
+						['attrValue' => $attrValue]
+					);
+				}
 
 				return false;
 			}
 
 			if (isset($redirect))
 			{
-				$logger->debug(
-					'Resolved redirect',
-					['from' => $attrValue, 'to' => $redirect]
-				);
+				if (isset($logger))
+				{
+					$logger->debug(
+						'Resolved redirect',
+						['from' => $attrValue, 'to' => $redirect]
+					);
+				}
 
 				$followedUrls[$attrValue] = 1;
 				$attrValue = $redirect;

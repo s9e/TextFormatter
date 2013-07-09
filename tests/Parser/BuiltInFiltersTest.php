@@ -66,6 +66,38 @@ class BuiltInFiltersTest extends Test
 		$this->assertSame($logs, $logger->get(), "Logs don't match");
 	}
 
+	/**
+	* @testdox filterRange() can be called without a logger
+	*/
+	public function testRangeNoLogger()
+	{
+		$this->assertSame(1, BuiltInFilters::filterRange('-10', 1, 5));
+		$this->assertSame(5, BuiltInFilters::filterRange('10', 1, 5));
+		$this->assertSame(3, BuiltInFilters::filterRange('3', 1, 5));
+	}
+
+	/**
+	* @testdox filterUrl() can be called without a logger
+	*/
+	public function testUrlNoLogger()
+	{
+		$urlConfig = [
+			'allowedSchemes'  => '/^https?$/',
+			'disallowedHosts' => '/evil/'
+		];
+
+		$urls = [
+			'http://example.org' => 'http://example.org',
+			'http://evil.org'    => false,
+			'hax://example.org'  => false
+		];
+
+		foreach ($urls as $original => $expected)
+		{
+			$this->assertSame($expected, BuiltInFilters::filterUrl($original, $urlConfig));
+		}
+	}
+
 	public function getData()
 	{
 		return [
@@ -77,16 +109,30 @@ class BuiltInFiltersTest extends Test
 			[new Range(2, 5), '2', 2],
 			[new Range(2, 5), '5', 5],
 			[new Range(-5, 5), '-5', -5],
-			[new Range(2, 5), '1', 2, [
-				['warn', 'Value outside of range, adjusted up to min value', [
-					'attrValue' => 1, 'min' => 2, 'max' => 5
-				]]
-			]],
-			[new Range(2, 5), '10', 5, [
-				['warn', 'Value outside of range, adjusted down to max value', [
-					'attrValue' => 10, 'min' => 2, 'max' => 5
-				]]
-			]],
+			[
+				new Range(2, 5),
+				'1',
+				2,
+				[
+					[
+						'warn',
+						'Value outside of range, adjusted up to min value',
+						['attrValue' => 1, 'min' => 2, 'max' => 5]
+					]
+				]
+			],
+			[
+				new Range(2, 5),
+				'10',
+				5,
+				[
+					[
+						'warn',
+						'Value outside of range, adjusted down to max value',
+						['attrValue' => 10, 'min' => 2, 'max' => 5]
+					]
+				]
+			],
 			[new Range(2, 5), '5x', false],
 			[new Url, 'http://www.älypää.com', 'http://www.xn--lyp-plada.com'],
 			[
