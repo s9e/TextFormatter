@@ -1756,6 +1756,7 @@ s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
 
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Parser
  [x] Parsing tests
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
@@ -1769,6 +1770,7 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
 
 s9e\TextFormatter\Tests\Plugins\HTMLEntities\Parser
  [x] Parsing tests
+ [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection

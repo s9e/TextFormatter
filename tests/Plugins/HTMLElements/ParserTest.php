@@ -15,7 +15,7 @@ use s9e\TextFormatter\Tests\Test;
 class ParserTest extends Test
 {
 	use ParsingTestsRunner;
-//	use ParsingTestsJavaScriptRunner;
+	use ParsingTestsJavaScriptRunner;
 	use RenderingTestsRunner;
 
 	public function getParsingTests()

@@ -78,6 +78,7 @@ class JavaScript
 	{
 		// Load the sources
 		$files = [
+			'Parser/utils.js',
 			'Parser/BuiltInFilters.js',
 			'Parser/Logger.js',
 			'Parser/Tag.js',
