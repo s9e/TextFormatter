@@ -309,9 +309,15 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		catchupText = catchupText.replace(/\n/g, "<br/>\n");
 	}
 
-	// Append to the output, close the paragraph, add the ignored text and move the cursor
+	// Append to the output, close the paragraph if applicable, add the ignored text and move
+	// the cursor
 	output += catchupText;
-	outputParagraphEnd();
+
+	if (closeParagraph)
+	{
+		outputParagraphEnd();
+	}
+
 	output += ignoreText;
 	pos     = catchupPos;
 }

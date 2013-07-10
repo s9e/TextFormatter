@@ -396,6 +396,19 @@ xxx',
 				}
 			],
 			[
+				"x\n[b]...[/b]\ny",
+				"<rt><p>x<br/>\n<B><st>[b]</st>...<et>[/b]</et></B><br/>\ny</p></rt>",
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$rules = $constructor->tags->add('B');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('B', 2, 3, 8, 4);
+				}
+			],
+			[
 				'[img]',
 				'<rt><p><IMG>[img]</IMG></p></rt>',
 				function ($constructor)

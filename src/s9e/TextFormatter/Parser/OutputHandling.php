@@ -313,9 +313,15 @@ trait OutputHandling
 			$catchupText = str_replace("\n", "<br/>\n", $catchupText);
 		}
 
-		// Append to the output, close the paragraph, add the ignored text and move the cursor
+		// Append to the output, close the paragraph if applicable, add the ignored text and move
+		// the cursor
 		$this->output .= $catchupText;
-		$this->outputParagraphEnd();
+
+		if ($closeParagraph)
+		{
+			$this->outputParagraphEnd();
+		}
+
 		$this->output .= $ignoreText;
 		$this->pos     = $catchupPos;
 	}
