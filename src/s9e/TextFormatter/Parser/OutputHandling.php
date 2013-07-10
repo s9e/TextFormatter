@@ -220,8 +220,15 @@ trait OutputHandling
 		// Skip over previously identified whitespace if applicable
 		if ($this->wsPos > $this->pos)
 		{
-			$this->output .= substr($this->text, $this->pos, $this->wsPos - $this->pos);
-			$this->pos = $this->wsPos;
+			$skipPos       = min($catchupPos, $this->wsPos);
+			$this->output .= substr($this->text, $this->pos, $skipPos - $this->pos);
+			$this->pos     = $skipPos;
+
+			if ($skipPos === $catchupPos)
+			{
+				// Skipped everything, nothing else to do
+				return;
+			}
 		}
 
 		// Test whether we're even supposed to output anything
@@ -258,6 +265,9 @@ trait OutputHandling
 
 			if ($pbPos !== false)
 			{
+				/**
+				* @todo sucks if pbPos === 0
+				*/
 				// If there's a break, we split up the remaining text
 				$this->outputText($this->pos + $pbPos, 0, true);
 				$this->outputText($catchupPos, $maxLines, $closeParagraph);

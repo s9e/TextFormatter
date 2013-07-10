@@ -218,8 +218,15 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	// Skip over previously identified whitespace if applicable
 	if (wsPos > pos)
 	{
-		output += text.substr(pos, wsPos - pos);
-		pos = wsPos;
+		var skipPos = Math.min(catchupPos, wsPos);
+		output += text.substr(pos, skipPos - pos);
+		pos = skipPos;
+
+		if (skipPos === catchupPos)
+		{
+			// Skipped everything, nothing else to do
+			return;
+		}
 	}
 
 	var catchupLen, catchupText;

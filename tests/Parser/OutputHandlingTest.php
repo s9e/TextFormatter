@@ -421,6 +421,21 @@ xxx',
 					$parser->addSelfClosingTag('IMG', 0, 5);
 				}
 			],
+			[
+				"[x]\n\n\nxxx",
+				"<rt><p><X>[x]</X>\n<Y>\n</Y><br/>\nxxx</p></rt>",
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$constructor->tags->add('X')->rules->ignoreSurroundingWhitespace();
+					$constructor->tags->add('Y')->rules->noBrDescendant();
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 3);
+					$parser->addSelfClosingTag('Y', 4, 1);
+				}
+			],
 		];
 	}
 }
