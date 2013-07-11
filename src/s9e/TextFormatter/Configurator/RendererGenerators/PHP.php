@@ -601,17 +601,37 @@ class PHP implements RendererGenerator
 	{
 		$tokens = token_get_all('<?php ' . $this->php);
 
-		// Limit the number of loops to 100, in case something would make it loop indefinitely
-		$remainingLoops = 100;
+		// Optimization passes, in order of execution
+		$passes = [
+			'optimizeOutConcatEqual',
+			'optimizeLiteralsConcatenations',
+			'optimizeHtmlspecialcharsLiterals',
+			'optimizeHtmlspecialcharsInapplicable'
+		];
+
+		// Limit the number of loops to 10, in case something would make it loop indefinitely
+		$remainingLoops = 10;
 		do
 		{
-			$old = $tokens;
-			$this->optimizeAssignments($tokens);
-			$this->optimizeConcatenations($tokens);
-			$this->optimizeHtmlspecialcharsLiterals($tokens);
-			$this->optimizeHtmlspecialcharsInapplicable($tokens);
+			$continue = false;
+
+			foreach ($passes as $pass)
+			{
+				// Count the tokens
+				$cnt = count($tokens);
+
+				// Run the pass
+				$this->$pass($tokens);
+
+				// If the array was modified, reset the keys and keep going
+				if ($cnt !== count($tokens))
+				{
+					$tokens   = array_values($tokens);
+					$continue = true;
+				}
+			}
 		}
-		while (--$remainingLoops && $tokens !== $old);
+		while ($continue && --$remainingLoops);
 
 		// Remove the first token, which should be T_OPEN_TAG, aka "<?php"
 		unset($tokens[0]);
@@ -625,12 +645,14 @@ class PHP implements RendererGenerator
 	}
 
 	/**
-	* Optimize variable assignments in an array of PHP tokens
+	* Optimize T_CONCAT_EQUAL assignments in an array of PHP tokens
+	*
+	* Will only optimize $this->out.= assignments
 	*
 	* @param  array &$tokens PHP tokens from tokens_get_all()
 	* @return void
 	*/
-	protected function optimizeAssignments(array &$tokens)
+	protected function optimizeOutConcatEqual(array &$tokens)
 	{
 		$cnt = count($tokens);
 
@@ -642,52 +664,46 @@ class PHP implements RendererGenerator
 				continue;
 			}
 
-			// Get the index of the last T_VARIABLE token and build the name of the var
-			$varIndex = $i;
-			$varName  = '';
-			do
+			// Test whether this T_CONCAT_EQUAL is preceded with $this->out
+			if ($tokens[$i - 1][0] !== T_STRING
+			 || $tokens[$i - 1][1] !== 'out'
+			 || $tokens[$i - 2][0] !== T_OBJECT_OPERATOR
+			 || $tokens[$i - 3][0] !== T_VARIABLE
+			 || $tokens[$i - 3][1] !== '$this')
 			{
-				--$varIndex;
-
-				$str = (is_string($tokens[$varIndex])) ? $tokens[$varIndex] : $tokens[$varIndex][1];
-				$varName = $str . $varName;
-			}
-			while (!is_array($tokens[$varIndex]) || $tokens[$varIndex][0] !== T_VARIABLE);
-
-			// Capture the tokens used for the assignment from the variable to the operator
-			$assignment = array_slice($tokens, $varIndex, 1 + $i - $varIndex);
-
-			// We're only interested in $this->out assignments
-			if ($varName !== '$this->out')
-			{
-				continue;
+				 continue;
 			}
 
-			// Move the cursor to next semicolon
-			while ($tokens[++$i] !== ';');
-
-			// Move the cursor past the semicolon
-			++$i;
-
-			// Test whether the assignment is followed by another compatible assignment
-			if (array_slice($tokens, $i, count($assignment)) === $assignment)
+			while ($i < $cnt)
 			{
-				// Remove the following assignment and replace the semicolon with a concatenation
-				// operator
-				array_splice($tokens, $i, count($assignment));
+				// Move the cursor to next semicolon
+				while ($tokens[++$i] !== ';');
+
+				// Move the cursor past the semicolon
+				++$i;
+
+				// Test whether the assignment is followed by another $this->out.= assignment
+				if ($tokens[$i    ][0] !== T_VARIABLE
+				 || $tokens[$i    ][1] !== '$this'
+				 || $tokens[$i + 1][0] !== T_OBJECT_OPERATOR
+				 || $tokens[$i + 2][0] !== T_STRING
+				 || $tokens[$i + 2][1] !== 'out'
+				 || $tokens[$i + 3][0] !== T_CONCAT_EQUAL)
+				{
+					 break;
+				}
+
+				// Replace the semicolon between assignments with a concatenation operator
 				$tokens[$i - 1] = '.';
 
-				// Adjust the tokens count
-				$cnt = count($tokens);
-
-				// Rewind the cursor to the beginning and continue
-				$i = $varIndex;
-
-				continue;
+				// Remove the following $this->out.= assignment and move the cursor past it
+				unset($tokens[$i]);
+				unset($tokens[$i + 1]);
+				unset($tokens[$i + 2]);
+				unset($tokens[$i + 3]);
+				$i += 3;
 			}
 		}
-
-		$tokens = array_values($tokens);
 	}
 
 	/**
@@ -696,7 +712,7 @@ class PHP implements RendererGenerator
 	* @param  array &$tokens PHP tokens from tokens_get_all()
 	* @return void
 	*/
-	protected function optimizeConcatenations(array &$tokens)
+	protected function optimizeLiteralsConcatenations(array &$tokens)
 	{
 		$cnt = count($tokens);
 
@@ -787,8 +803,6 @@ class PHP implements RendererGenerator
 			}
 			// @codeCoverageIgnoreEnd
 		}
-
-		$tokens = array_values($tokens);
 	}
 
 	/**
@@ -829,8 +843,6 @@ class PHP implements RendererGenerator
 				$i += 7;
 			}
 		}
-
-		$tokens = array_values($tokens);
 	}
 
 	/**
@@ -872,8 +884,6 @@ class PHP implements RendererGenerator
 				$i += 3;
 			}
 		}
-
-		$tokens = array_values($tokens);
 	}
 
 	//==========================================================================
