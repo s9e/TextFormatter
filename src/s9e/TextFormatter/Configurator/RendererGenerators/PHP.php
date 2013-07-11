@@ -604,9 +604,8 @@ class PHP implements RendererGenerator
 		// Optimization passes, in order of execution
 		$passes = [
 			'optimizeOutConcatEqual',
-			'optimizeLiteralsConcatenations',
-			'optimizeHtmlspecialcharsLiterals',
-			'optimizeHtmlspecialcharsInapplicable'
+			'optimizeConcatenations',
+			'optimizeHtmlspecialchars'
 		];
 
 		// Limit the number of loops to 10, in case something would make it loop indefinitely
@@ -659,7 +658,7 @@ class PHP implements RendererGenerator
 		$i = 0;
 		while (++$i < $cnt)
 		{
-			if (!is_array($tokens[$i]) || $tokens[$i][0] !== T_CONCAT_EQUAL)
+			if ($tokens[$i][0] !== T_CONCAT_EQUAL)
 			{
 				continue;
 			}
@@ -707,12 +706,16 @@ class PHP implements RendererGenerator
 	}
 
 	/**
-	* Optimize string concatenations in an array of PHP tokens
+	* Optimize concatenations in an array of PHP tokens
+	*
+	* - Will precompute the result of the concatenation of constant strings
+	* - Will replace the concatenation of two compatible htmlspecialchars() calls with one call to
+	*   htmlspecialchars() on the concatenation of their first arguments
 	*
 	* @param  array &$tokens PHP tokens from tokens_get_all()
 	* @return void
 	*/
-	protected function optimizeLiteralsConcatenations(array &$tokens)
+	protected function optimizeConcatenations(array &$tokens)
 	{
 		$cnt = count($tokens);
 
@@ -806,26 +809,61 @@ class PHP implements RendererGenerator
 	}
 
 	/**
-	* Optimize htmlspecialchars() calls on inapplicable values
+	* Optimize htmlspecialchars() calls
 	*
-	* By default, the generator escapes all values, including variables that cannot contain special
-	* characters such as $node->localName. This pass removes those calls
+	* - The result of htmlspecialchars() on literals is precomputed
+	* - By default, the generator escapes all values, including variables that cannot contain
+	*   special characters such as $node->localName. This pass removes those calls
 	*
 	* @param  array &$tokens PHP tokens from tokens_get_all()
 	* @return void
 	*/
-	protected function optimizeHtmlspecialcharsInapplicable(array &$tokens)
+	protected function optimizeHtmlspecialchars(array &$tokens)
 	{
 		$cnt = count($tokens);
 
 		$i = 0;
 		while (++$i < $cnt)
 		{
-			if (is_array($tokens[$i])
-			 && $tokens[$i    ][0]  === T_STRING
-			 && $tokens[$i    ][1]  === 'htmlspecialchars'
-			 && $tokens[$i + 1]     === '('
-			 && $tokens[$i + 2][0]  === T_VARIABLE
+			// Skip this token if it's not the first of the "htmlspecialchars(" sequence
+			if ($tokens[$i    ][0] !== T_STRING
+			 || $tokens[$i    ][1] !== 'htmlspecialchars'
+			 || $tokens[$i + 1]    !== '(')
+			{
+				continue;
+			}
+
+			// Test whether a constant string is being escaped
+			if ($tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
+			 && $tokens[$i + 3]    === ','
+			 && $tokens[$i + 4][0] === T_LNUMBER
+			 && $tokens[$i + 5]    === ')')
+			{
+				// Escape the content of the T_CONSTANT_ENCAPSED_STRING token
+				$tokens[$i + 2][1] = var_export(
+					htmlspecialchars(
+						stripslashes(substr($tokens[$i + 2][1], 1, -1)),
+						$tokens[$i + 4][1]
+					),
+					true
+				);
+
+				// Remove the htmlspecialchars() call, except for the T_CONSTANT_ENCAPSED_STRING
+				// token
+				unset($tokens[$i]);
+				unset($tokens[$i + 1]);
+				unset($tokens[$i + 3]);
+				unset($tokens[$i + 4]);
+				unset($tokens[$i + 5]);
+
+				// Move the cursor past the call
+				$i += 5;
+
+				continue;
+			}
+
+			// Test whether a variable is being escaped
+			if ($tokens[$i + 2][0] === T_VARIABLE
 			 && $tokens[$i + 2][1]  === '$node'
 			 && $tokens[$i + 3][0]  === T_OBJECT_OPERATOR
 			 && $tokens[$i + 4][0]  === T_STRING
@@ -834,54 +872,17 @@ class PHP implements RendererGenerator
 			 && $tokens[$i + 6][0]  === T_LNUMBER
 			 && $tokens[$i + 7]     === ')')
 			{
+				// Remove the htmlspecialchars() call, except for its first argument
 				unset($tokens[$i]);
 				unset($tokens[$i + 1]);
 				unset($tokens[$i + 5]);
 				unset($tokens[$i + 6]);
 				unset($tokens[$i + 7]);
 
+				// Move the cursor past the call
 				$i += 7;
-			}
-		}
-	}
 
-	/**
-	* Optimize htmlspecialchars() calls on literals
-	*
-	* @param  array &$tokens PHP tokens from tokens_get_all()
-	* @return void
-	*/
-	protected function optimizeHtmlspecialcharsLiterals(array &$tokens)
-	{
-		$cnt = count($tokens);
-
-		$i = 0;
-		while (++$i < $cnt)
-		{
-			if (is_array($tokens[$i])
-			 && $tokens[$i    ][0] === T_CONSTANT_ENCAPSED_STRING
-			 && $tokens[$i - 1]    === '('
-			 && $tokens[$i - 2][0] === T_STRING
-			 && $tokens[$i - 2][1] === 'htmlspecialchars'
-			 && $tokens[$i + 1]    === ','
-			 && $tokens[$i + 2][0] === T_LNUMBER
-			 && $tokens[$i + 3]    === ')')
-			{
-				$tokens[$i][1] = var_export(
-					htmlspecialchars(
-						stripslashes(substr($tokens[$i][1], 1, -1)),
-						$tokens[$i + 2][1]
-					),
-					true
-				);
-
-				unset($tokens[$i - 1]);
-				unset($tokens[$i - 2]);
-				unset($tokens[$i + 1]);
-				unset($tokens[$i + 2]);
-				unset($tokens[$i + 3]);
-
-				$i += 3;
+				continue;
 			}
 		}
 	}
