@@ -1845,6 +1845,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLCache
  [x] Returns an instance of Renderer
+ [x] The path given to the constructor is canonicalized
+ [x] The constructor throws an exception if the given path does not exist
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\XSLT
  [x] Returns an instance of Renderer

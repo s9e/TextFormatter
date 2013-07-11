@@ -7,6 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators;
 
+use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Renderers\XSLCache as XSLCacheRenderer;
@@ -26,7 +27,12 @@ class XSLCache implements RendererGenerator
 	*/
 	public function __construct($cacheDir)
 	{
-		$this->cacheDir = $cacheDir;
+		$this->cacheDir = realpath($cacheDir);
+
+		if ($this->cacheDir === false)
+		{
+			throw new InvalidArgumentException("Path '" . $cacheDir . "' is invalid");
+		}
 	}
 
 	/**

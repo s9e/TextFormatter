@@ -583,12 +583,8 @@ class ConfiguratorTest extends Test
 	*/
 	public function testSetRendererGeneratorArguments()
 	{
-		$this->configurator->setRendererGenerator('XSLCache', '/foo/bar');
-		$this->assertAttributeSame(
-			'/foo/bar',
-			'cacheDir',
-			$this->configurator->rendererGenerator
-		);
+		$this->configurator->setRendererGenerator('PHP', 'Foo');
+		$this->assertSame('Foo', $this->configurator->rendererGenerator->className);
 	}
 }
 
