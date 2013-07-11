@@ -331,18 +331,20 @@ abstract class TemplateOptimizer
 	{
 		$xpath = new DOMXPath($dom);
 
-		foreach ($dom->getElementsByTagNameNS(self::XMLNS_XSL, '*') as $node)
+		// Get all the "match", "select" and "test" attributes of XSL elements, whose value contains
+		// a space
+		$query = '//xsl:*/@*[contains(., " ")][contains("matchselectest", name())]';
+		foreach ($xpath->query($query) as $attribute)
 		{
-			foreach ($xpath->query('@match|@select|@test', $node) as $attribute)
-			{
-				$node->setAttribute(
-					$attribute->nodeName,
-					self::minifyXPath($attribute->nodeValue)
-				);
-			}
+			$attribute->parentNode->setAttribute(
+				$attribute->nodeName,
+				self::minifyXPath($attribute->nodeValue)
+			);
 		}
 
-		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*';
+		// Get all the attributes of non-XSL elements, whose value contains a space
+		$query = '//*[namespace-uri() != "' . self::XMLNS_XSL . '"]'
+		       . '/@*[contains(., " ")]';
 		foreach ($xpath->query($query) as $attribute)
 		{
 			// Parse this attribute's value

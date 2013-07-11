@@ -631,11 +631,11 @@ class TemplateOptimizerTest extends Test
 	/**
 	* @testdox Throws an exception during XPath minification if a string isn't properly closed
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Cannot parse XPath expression 'foo="bar'
+	* @expectedExceptionMessage Cannot parse XPath expression 'foo = "bar'
 	*/
 	public function testInvalidXPath()
 	{
-		TemplateOptimizer::optimize('<xsl:if test="foo=&quot;bar">!</xsl:if>');
+		TemplateOptimizer::optimize('<xsl:if test="foo = &quot;bar">!</xsl:if>');
 	}
 
 	public function runCase($title, $input, $expected)
