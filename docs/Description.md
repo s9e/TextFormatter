@@ -94,7 +94,7 @@
 	* Offer multiple renderers
 		* the __XSLT__ renderer uses [PHP's ext/xsl](http://docs.php.net/manual/en/book.xsl.php)
 		* the __PHP__ renderer uses plain PHP (faster if you're using an opcode cache but does not support the whole range of XSLT. It *does* support everything listed on this page though)
-		* the __XSLCache__ renderer uses PECL's [xslcache](http://pecl.php.net/package/xslcache) (fastest but [requires some patching for PHP 5.4+](https://bugs.php.net/bug.php?id=62856))
+		* the __XSLCache__ renderer uses PECL's [xslcache](http://pecl.php.net/package/xslcache) (fastest of the three)
 
 ## Security
 
