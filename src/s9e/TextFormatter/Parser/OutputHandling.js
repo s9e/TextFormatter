@@ -211,8 +211,12 @@ function outputText(catchupPos, maxLines, closeParagraph)
 {
 	if (pos >= catchupPos)
 	{
-		// We're already there
-		return;
+		// We're already there, close the paragraph if applicable and return
+		if (closeParagraph)
+		{
+			outputParagraphEnd();
+		}
+
 	}
 
 	// Skip over previously identified whitespace if applicable
@@ -224,8 +228,11 @@ function outputText(catchupPos, maxLines, closeParagraph)
 
 		if (skipPos === catchupPos)
 		{
-			// Skipped everything, nothing else to do
-			return;
+			// Skipped everything. Close the paragraph if applicable and return
+			if (closeParagraph)
+			{
+				outputParagraphEnd();
+			}
 		}
 	}
 
@@ -246,47 +253,34 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		output += catchupText;
 		pos = catchupPos;
 
+		if (closeParagraph)
+		{
+			outputParagraphEnd();
+		}
+
 		return;
 	}
 
 	// Start a paragraph if applicable
 	outputParagraphStart(catchupPos);
 
-	// Capture the catchup text after the paragraph has been opened (and the cursor moved)
-	catchupLen  = catchupPos - pos;
-	catchupText = text.substr(pos, catchupLen);
-
-	// Test whether we have to handle paragraphs
-	if (context.flags & RULE_CREATE_PARAGRAPHS)
-	{
-		// Look for a paragraph break in this text
-		var pbPos = catchupText.indexOf("\n\n");
-
-		if (pbPos >= 0)
-		{
-			// If there's a break, we split up the remaining text
-			outputText(pos + pbPos, 0, true);
-			outputText(catchupPos, maxLines, closeParagraph);
-
-			return;
-		}
-	}
-
 	// Compute the amount of text to ignore at the end of the output
-	var ignorePos = catchupLen,
+	var ignorePos = catchupPos,
 		ignoreLen = 0;
 
+	// Ignore newlines at the end of the text if we're going to close the paragraph
 	if (closeParagraph && context.inParagraph)
 	{
-		while (--ignorePos >= 0 && catchupText.charAt(ignorePos) === "\n")
+		while (--ignorePos >= 0 && text.charAt(ignorePos) === "\n")
 		{
 			++ignoreLen;
 		}
 	}
 
-	while (maxLines && --ignorePos >= 0)
+	// Ignore as many lines (including whitespace) as specified
+	while (maxLines && --ignorePos >= pos)
 	{
-		var c = catchupText.charAt(ignorePos);
+		var c = text.charAt(ignorePos);
 		if (c !== ' ' && c !== "\n" && c !== "\t")
 		{
 			break;
@@ -300,33 +294,54 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		++ignoreLen;
 	}
 
-	var ignoreText = '';
-	if (ignoreLen)
+	// Adjust catchupPos to ignore the text at the end
+	catchupPos -= ignoreLen;
+
+	// Break down the text in paragraphs if applicable
+	if (context.flags & RULE_CREATE_PARAGRAPHS)
 	{
-		ignoreText  = catchupText.substr(catchupLen - ignoreLen);
-		catchupText = catchupText.substr(0, catchupLen - ignoreLen);
+		// Look for a paragraph break in this text
+		var pbPos = text.indexOf("\n\n", pos);
+
+		while (pbPos > -1 && pbPos < catchupPos)
+		{
+			outputText(pbPos, 0, true);
+			outputParagraphStart(catchupPos);
+
+			pbPos = text.indexOf("\n\n", pos);
+		}
 	}
 
-	// Escape the output
-	catchupText = htmlspecialchars_noquotes(catchupText);
-
-	// Format line breaks if applicable
-	if (!(context.flags & RULE_NO_BR_CHILD))
+	// Capture, escape and output the text
+	if (catchupPos > pos)
 	{
-		catchupText = catchupText.replace(/\n/g, "<br/>\n");
+		catchupText = htmlspecialchars_noquotes(
+			text.substr(pos, catchupPos - pos)
+		);
+
+		// Format line breaks if applicable
+		if (!(context.flags & RULE_NO_BR_CHILD))
+		{
+			catchupText = catchupText.replace(/\n/g, "<br/>\n");
+		}
+
+		output += catchupText;
 	}
 
-	// Append to the output, close the paragraph if applicable, add the ignored text and move
-	// the cursor
-	output += catchupText;
-
+	// Close the paragraph if applicable
 	if (closeParagraph)
 	{
 		outputParagraphEnd();
 	}
 
-	output += ignoreText;
-	pos     = catchupPos;
+	// Add the ignored text if applicable
+	if (ignoreLen)
+	{
+		output += text.substr(catchupPos, ignoreLen);
+	}
+
+	// Move the cursor past the text
+	pos = catchupPos + ignoreLen;
 }
 
 /**

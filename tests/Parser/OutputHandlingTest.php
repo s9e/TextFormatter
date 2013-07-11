@@ -436,6 +436,20 @@ xxx',
 					$parser->addSelfClosingTag('Y', 4, 1);
 				}
 			],
+			[
+				"x\n\n\n\nx",
+				"<rt><p><X>x</X></p>\n\n\n\n<p><X>x</X></p></rt>",
+				function ($constructor)
+				{
+					$constructor->rootRules->createParagraphs();
+					$constructor->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+					$parser->addSelfClosingTag('X', 5, 1);
+				}
+			],
 		];
 	}
 }

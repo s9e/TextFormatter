@@ -213,7 +213,12 @@ trait OutputHandling
 	{
 		if ($this->pos >= $catchupPos)
 		{
-			// We're already there
+			// We're already there, close the paragraph if applicable and return
+			if ($closeParagraph)
+			{
+				$this->outputParagraphEnd();
+			}
+
 			return;
 		}
 
@@ -226,7 +231,12 @@ trait OutputHandling
 
 			if ($skipPos === $catchupPos)
 			{
-				// Skipped everything, nothing else to do
+				// Skipped everything. Close the paragraph if applicable and return
+				if ($closeParagraph)
+				{
+					$this->outputParagraphEnd();
+				}
+
 				return;
 			}
 		}
@@ -247,51 +257,35 @@ trait OutputHandling
 			$this->output .= $catchupText;
 			$this->pos = $catchupPos;
 
+			if ($closeParagraph)
+			{
+				$this->outputParagraphEnd();
+			}
+
 			return;
 		}
 
 		// Start a paragraph if applicable
 		$this->outputParagraphStart($catchupPos);
 
-		// Capture the catchup text after the paragraph has been opened (and the cursor moved)
-		$catchupLen  = $catchupPos - $this->pos;
-		$catchupText = substr($this->text, $this->pos, $catchupLen);
-
-		// Test whether we have to handle paragraphs
-		if ($this->context['flags'] & self::RULE_CREATE_PARAGRAPHS)
-		{
-			// Look for a paragraph break in this text
-			$pbPos = strpos($catchupText, "\n\n");
-
-			if ($pbPos !== false)
-			{
-				/**
-				* @todo sucks if pbPos === 0
-				*/
-				// If there's a break, we split up the remaining text
-				$this->outputText($this->pos + $pbPos, 0, true);
-				$this->outputText($catchupPos, $maxLines, $closeParagraph);
-
-				return;
-			}
-		}
-
 		// Compute the amount of text to ignore at the end of the output
-		$ignorePos = $catchupLen;
+		$ignorePos = $catchupPos;
 		$ignoreLen = 0;
 
+		// Ignore newlines at the end of the text if we're going to close the paragraph
 		if ($closeParagraph && $this->context['inParagraph'])
 		{
-			while (--$ignorePos >= 0 && $catchupText[$ignorePos] === "\n")
+			while (--$ignorePos >= $this->pos && $this->text[$ignorePos] === "\n")
 			{
 				++$ignoreLen;
 			}
 		}
 
-		while ($maxLines && --$ignorePos >= 0)
+		// Ignore as many lines (including whitespace) as specified
+		while ($maxLines && --$ignorePos >= $this->pos)
 		{
-			$c = $catchupText[$ignorePos];
-			if (strpos(" \n\t", $c) === false)
+			$c = $this->text[$ignorePos];
+			if (strpos(self::WHITESPACE, $c) === false)
 			{
 				break;
 			}
@@ -304,36 +298,56 @@ trait OutputHandling
 			++$ignoreLen;
 		}
 
-		if ($ignoreLen)
+		// Adjust $catchupPos to ignore the text at the end
+		$catchupPos -= $ignoreLen;
+
+		// Break down the text in paragraphs if applicable
+		if ($this->context['flags'] & self::RULE_CREATE_PARAGRAPHS)
 		{
-			$ignoreText  = substr($catchupText, -$ignoreLen);
-			$catchupText = substr($catchupText, 0, $catchupLen - $ignoreLen);
+			// Look for a paragraph break in this text
+			$pbPos = strpos($this->text, "\n\n", $this->pos);
+
+			while ($pbPos !== false && $pbPos < $catchupPos)
+			{
+				$this->outputText($pbPos, 0, true);
+				$this->outputParagraphStart($catchupPos);
+
+				$pbPos = strpos($this->text, "\n\n", $this->pos);
+			}
 		}
-		else
+
+		// Capture, escape and output the text
+		if ($catchupPos > $this->pos)
 		{
-			$ignoreText = '';
+			$catchupText = htmlspecialchars(
+				substr($this->text, $this->pos, $catchupPos - $this->pos),
+				ENT_NOQUOTES,
+				'UTF-8'
+			);
+
+			// Format line breaks if applicable
+			if (!($this->context['flags'] & self::RULE_NO_BR_CHILD))
+			{
+				$catchupText = str_replace("\n", "<br/>\n", $catchupText);
+			}
+
+			$this->output .= $catchupText;
 		}
 
-		// Escape the output
-		$catchupText = htmlspecialchars($catchupText, ENT_NOQUOTES, 'UTF-8');
-
-		// Format line breaks if applicable
-		if (!($this->context['flags'] & self::RULE_NO_BR_CHILD))
-		{
-			$catchupText = str_replace("\n", "<br/>\n", $catchupText);
-		}
-
-		// Append to the output, close the paragraph if applicable, add the ignored text and move
-		// the cursor
-		$this->output .= $catchupText;
-
+		// Close the paragraph if applicable
 		if ($closeParagraph)
 		{
 			$this->outputParagraphEnd();
 		}
 
-		$this->output .= $ignoreText;
-		$this->pos     = $catchupPos;
+		// Add the ignored text if applicable
+		if ($ignoreLen)
+		{
+			$this->output .= substr($this->text, $catchupPos, $ignoreLen);
+		}
+
+		// Move the cursor past the text
+		$this->pos = $catchupPos + $ignoreLen;
 	}
 
 	/**
