@@ -126,6 +126,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] addHTML5Rules() add root rules
  [x] addHTML5Rules() add tag rules
  [x] addHTML5Rules() passes its options to the generator
+ [x] addHTML5Rules() does not call getRenderer() if a renderer was passed in the options
  [x] setRendererGenerator('PHP') sets $configurator->rendererGenerator to an instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
  [x] setRendererGenerator() passes extra arguments to the generator's constructor
 

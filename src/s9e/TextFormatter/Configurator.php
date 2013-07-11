@@ -182,10 +182,11 @@ class Configurator implements ConfigProvider
 	public function addHTML5Rules(array $options = [])
 	{
 		// Add the default options
-		$options += [
-			'renderer'   => $this->getRenderer(),
-			'rootRules'  => $this->rootRules
-		];
+		$options += ['rootRules' => $this->rootRules];
+		if (!isset($options['renderer']))
+		{
+			$options['renderer'] = $this->getRenderer();
+		}
 
 		// Get the rules
 		$rules = RulesGenerator::getRules($this->tags, $options);

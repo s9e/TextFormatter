@@ -567,6 +567,27 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addHTML5Rules() does not call getRenderer() if a renderer was passed in the options
+	*/
+	public function testAddHTML5RulesNoGetRenderer()
+	{
+		$mock = $this->getMock('stdClass', ['getRenderer']);
+		$mock->expects($this->never())
+		     ->method('getRenderer');
+
+		$renderer = $this->configurator->getRenderer();
+		$this->configurator->rendererGenerator = $mock;
+
+		$ul = $this->configurator->tags->add('UL');
+		$ul->defaultTemplate = '<ul><xsl:apply-templates/></ul>';
+
+		$li = $this->configurator->tags->add('LI');
+		$li->defaultTemplate = '<li><xsl:apply-templates/></li>';
+
+		$this->configurator->addHTML5Rules(['renderer' => $renderer]);
+	}
+
+	/**
 	* @testdox setRendererGenerator('PHP') sets $configurator->rendererGenerator to an instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
 	*/
 	public function testSetRendererGenerator()
