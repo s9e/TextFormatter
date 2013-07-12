@@ -3,6 +3,8 @@
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use s9e\TextFormatter\Configurator\Collections\StylesheetParameterCollection;
+use s9e\TextFormatter\Configurator\Items\DynamicStylesheetParameter;
+use s9e\TextFormatter\Configurator\Items\StaticStylesheetParameter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -11,14 +13,46 @@ use s9e\TextFormatter\Tests\Test;
 class StylesheetParameterCollectionTest extends Test
 {
 	/**
-	* @testdox add('foo') adds parameter 'foo' with a NULL value
+	* @testdox add() accepts instances of DynamicStylesheetParameter as-is
+	*/
+	public function testAddInstanceDynamic()
+	{
+		$parameter  = new DynamicStylesheetParameter;
+		$collection = new StylesheetParameterCollection;
+
+		$this->assertSame($parameter, $collection->add('foo', $parameter));
+	}
+	/**
+	* @testdox add() accepts instances of StaticStylesheetParameter as-is
+	*/
+	public function testAddInstanceStatic()
+	{
+		$parameter  = new StaticStylesheetParameter;
+		$collection = new StylesheetParameterCollection;
+
+		$this->assertSame($parameter, $collection->add('foo', $parameter));
+	}
+
+	/**
+	* @testdox add() normalizes values to an instance of StaticStylesheetParameter
+	*/
+	public function testAddString()
+	{
+		$parameter  = new StaticStylesheetParameter('bar');
+		$collection = new StylesheetParameterCollection;
+
+		$this->assertEquals($parameter, $collection->add('foo', 'bar'));
+	}
+
+	/**
+	* @testdox add('foo') adds parameter 'foo' with an empty value
 	*/
 	public function testAddNoValue()
 	{
 		$collection = new StylesheetParameterCollection;
 		$collection->add('foo');
 
-		$this->assertNull($collection->get('foo'));
+		$this->assertEquals(new StaticStylesheetParameter, $collection->get('foo'));
 	}
 
 	/**
@@ -29,6 +63,6 @@ class StylesheetParameterCollectionTest extends Test
 		$collection = new StylesheetParameterCollection;
 		$collection->add('foo', 1);
 
-		$this->assertSame('1', $collection->get('foo'));
+		$this->assertEquals(new StaticStylesheetParameter('1'), $collection->get('foo'));
 	}
 }

@@ -4,16 +4,14 @@ Stylesheet parameters come from [XSLT](http://www.w3.org/TR/xslt#variables). The
 
 ### How to use stylesheet parameters
 
-In the following example, we use the BBCodes plugin to create a BBCode that outputs the value of the parameter "username" (expressed as `$username`.)
+In the following example, we use the BBCodes plugin to create a BBCode that outputs the value of the parameter "username" (expressed as `$username` in the template.)
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->BBCodes->addCustom('[you]', '<xsl:value-of select="$username"/>');
 
-// Create the stylesheet parameter "username" with default value "you". Note
-// that default values are expressed as an XPath expression. It means that
-// literals have to be in quotes
-$configurator->stylesheet->parameters['username'] = "'you'";
+// Create the stylesheet parameter "username" with default value "you"
+$configurator->stylesheet->parameters['username'] = 'you';
 
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
@@ -37,6 +35,8 @@ Hello Joe123
 ### How to get a list of stylesheet parameters in use
 
 If you let the end user define their own templates (for custom BBCodes for example) you may not always know in advance what stylesheet parameters are in use. And since you have to set their value before rendering, you need to get their names. This can be done with `$configurator->stylesheet->getUsedParameters()`, which will return the names and default values of all the stylesheet parameters that have been created and/or are in use.
+
+Note that the values returned are expressed in XPath, meaning that the string `foo` (without quotes) is returned as `'foo'` (in quotes.)
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;

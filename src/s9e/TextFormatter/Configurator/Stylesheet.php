@@ -237,9 +237,9 @@ class Stylesheet
 		}
 
 		// Add parameters that have been formally defined
-		foreach ($this->parameters as $paramName => $expr)
+		foreach ($this->parameters as $paramName => $parameter)
 		{
-			$params[$paramName] = $expr;
+			$params[$paramName] = (string) $parameter;
 		}
 
 		// Keep them neat and ordered

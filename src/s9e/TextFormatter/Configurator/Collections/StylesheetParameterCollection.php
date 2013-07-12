@@ -7,6 +7,8 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
+use s9e\TextFormatter\Configurator\Items\StaticStylesheetParameter;
+use s9e\TextFormatter\Configurator\Items\StylesheetParameter;
 use s9e\TextFormatter\Configurator\Validators\StylesheetParameterName;
 
 class StylesheetParameterCollection extends NormalizedCollection
@@ -24,6 +26,8 @@ class StylesheetParameterCollection extends NormalizedCollection
 	*/
 	public function normalizeValue($value)
 	{
-		return (isset($value)) ? (string) $value : null;
+		return ($value instanceof StylesheetParameter)
+		      ? $value
+		      : new StaticStylesheetParameter($value);
 	}
 }

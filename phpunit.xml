@@ -77,6 +77,8 @@
 			<file>tests/Configurator/Items/AttributeFilters/SimpletextTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/UintTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/UrlTest.php</file>
+			<file>tests/Configurator/Items/DynamicStylesheetParameterTest.php</file>
+			<file>tests/Configurator/Items/StaticStylesheetParameterTest.php</file>
 			<file>tests/Configurator/Items/RegexpTest.php</file>
 			<file>tests/Configurator/Items/TagTest.php</file>
 			<file>tests/Configurator/Items/TagFilterTest.php</file>

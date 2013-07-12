@@ -277,10 +277,10 @@ class StylesheetTest extends Test
 	public function testGetParameterValue()
 	{
 		$configurator = new Configurator;
-		$configurator->stylesheet->parameters->add('foo', 1);
+		$configurator->stylesheet->parameters->add('foo', 'bar');
 
 		$this->assertContains(
-			'<xsl:param name="foo" select="1"/>',
+			'<xsl:param name="foo" select="\'bar\'"/>',
 			$configurator->stylesheet->get()
 		);
 	}
@@ -294,7 +294,7 @@ class StylesheetTest extends Test
 		$configurator->stylesheet->parameters->add('foo', '\'"&<>');
 
 		$this->assertContains(
-			'<xsl:param name="foo" select="\'&quot;&amp;&lt;&gt;"/>',
+			"<xsl:param name=\"foo\" select=\"concat(&quot;'&quot;,'&quot;&amp;&lt;&gt;')\"/>",
 			$configurator->stylesheet->get()
 		);
 	}
@@ -305,7 +305,7 @@ class StylesheetTest extends Test
 	public function testGetUsedParametersDefined()
 	{
 		$configurator = new Configurator;
-		$configurator->stylesheet->parameters->add('foo', "'Foo'");
+		$configurator->stylesheet->parameters->add('foo', 'Foo');
 
 		$this->assertSame(
 			['foo' => "'Foo'"],
