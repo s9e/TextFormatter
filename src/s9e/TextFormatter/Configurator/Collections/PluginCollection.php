@@ -102,12 +102,17 @@ class PluginCollection extends NormalizedCollection
 	{
 		$plugins = parent::asConfig();
 
-		// Remove unused plugins
-		$plugins = array_filter($plugins);
-
 		// Adjust plugins' default properties
 		foreach ($plugins as $pluginName => &$pluginConfig)
 		{
+			// Remove unused plugins
+			if ($pluginConfig === false)
+			{
+				unset($plugins[$pluginName]);
+
+				continue;
+			}
+
 			$plugin = $this->get($pluginName);
 
 			// Add base properties

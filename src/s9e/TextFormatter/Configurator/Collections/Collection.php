@@ -32,7 +32,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	*/
 	public function asConfig()
 	{
-		return ConfigHelper::toArray($this->items);
+		return ConfigHelper::toArray($this->items, true);
 	}
 
 	//==========================================================================

@@ -92,6 +92,36 @@ class PluginCollectionTest extends Test
 		$this->configurator->plugins->add('dummy', $plugin);
 	}
 
+	/**
+	* @testdox asConfig() does not return an entry for plugins whose asConfig() returns FALSE
+	*/
+	public function testAsConfigRemoveFalse()
+	{
+		$plugin = new DummyPluginConfigurator($this->configurator);
+		$plugin->setConfig(false);
+
+		$this->configurator->plugins->add('Dummy',$plugin);
+		$config = $this->configurator->plugins->asConfig();
+
+		$this->assertSame(
+			[],
+			$config
+		);
+	}
+
+	/**
+	* @testdox asConfig() returns an entry for plugins whose asConfig() returns an empty array
+	*/
+	public function testAsConfigKeepEmpty()
+	{
+		$plugin = new DummyPluginConfigurator($this->configurator);
+		$plugin->setConfig([]);
+
+		$this->configurator->plugins->add('Dummy',$plugin);
+		$config = $this->configurator->plugins->asConfig();
+
+		$this->assertArrayHasKey('Dummy', $config);
+	}
 
 	/**
 	* @testdox asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
@@ -229,7 +259,7 @@ class DummyPluginConfigurator extends ConfiguratorBase
 		return $this->config;
 	}
 
-	public function setConfig(array $config)
+	public function setConfig($config)
 	{
 		$this->config = $config;
 	}
