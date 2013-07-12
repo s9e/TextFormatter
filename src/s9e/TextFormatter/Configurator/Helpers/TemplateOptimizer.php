@@ -385,7 +385,7 @@ abstract class TemplateOptimizer
 			'/(?:"[^"]*"|\'[^\']*\')/',
 			function ($m) use (&$strings)
 			{
-				$uniqid = '_' . sha1(uniqid()) . '_';
+				$uniqid = '(' . sha1(uniqid()) . ')';
 				$strings[$uniqid] = $m[0];
 
 				return $uniqid;

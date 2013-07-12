@@ -208,6 +208,18 @@ class TemplateOptimizerTest extends Test
 	}
 
 	/**
+	* @testdox Superfluous whitespace in @test expressions is removed
+	*/
+	public function test054D5FD1()
+	{
+		$this->runCase(
+			'Superfluous whitespace in @test expressions is removed',
+			'<div><xsl:if test="x [ @foo = \'x\' or &quot;1&quot;]">!</xsl:if></div>',
+			'<div><xsl:if test="x[@foo=\'x\'or&quot;1&quot;]">!</xsl:if></div>'
+		);
+	}
+
+	/**
 	* @testdox Superfluous whitespace in @select expressions is removed
 	*/
 	public function testA206264B()
@@ -732,6 +744,11 @@ class TemplateOptimizerTest extends Test
 				'Superfluous whitespace in @test expressions is removed',
 				'<div><xsl:if test="@foo = 2">!</xsl:if></div>',
 				'<div><xsl:if test="@foo=2">!</xsl:if></div>'
+			],
+			[
+				'Superfluous whitespace in @test expressions is removed',
+				'<div><xsl:if test="x [ @foo = \'x\' or &quot;1&quot;]">!</xsl:if></div>',
+				'<div><xsl:if test="x[@foo=\'x\'or&quot;1&quot;]">!</xsl:if></div>'
 			],
 			[
 				'Superfluous whitespace in @select expressions is removed',
