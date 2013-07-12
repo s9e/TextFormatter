@@ -46,8 +46,8 @@ class PHPTest extends Test
 		$generator = new PHP;
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
-		$this->assertObjectHasAttribute('source', $renderer, 'class');
-		$this->assertStringStartsWith('class', $renderer->source);
+		$this->assertObjectHasAttribute('source', $renderer);
+		$this->assertStringStartsWith('namespace { class', $renderer->source);
 	}
 
 	/**
@@ -94,6 +94,19 @@ class PHPTest extends Test
 			$className,
 			$generator->getRenderer($this->configurator->stylesheet)
 		);
+	}
+
+	/**
+	* @testdox The class name can be namespaced
+	*/
+	public function testNamespacedClass()
+	{
+		$className = uniqid('foo\\bar\\renderer_');
+		$generator = new PHP($className);
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertInstanceOf($className,	$renderer);
+		$this->assertStringStartsWith('namespace foo\\bar { class renderer_', $renderer->source);
 	}
 
 	/**

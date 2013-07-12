@@ -116,7 +116,19 @@ class PHP implements RendererGenerator
 		$className = (isset($this->className)) ? $this->className : uniqid('Renderer_');
 		$this->lastClassName = $className;
 
-		$this->php = 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
+		// Declare the namespace and class name
+		$pos = strrpos($className, '\\');
+		if ($pos === false)
+		{
+			$this->php = 'namespace { class ' . $className;
+		}
+		else
+		{
+			$this->php = 'namespace ' . substr($className, 0, $pos) . ' { '
+			           . 'class ' . substr($className, 1 + $pos);
+		}
+
+		$this->php .= ' extends \\s9e\\TextFormatter\\Renderer {
 			protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
 			protected $dynamicParams=[' . implode(',', $dynamicParams) . '];
 			protected $params=[' . implode(',', $staticParams) . '];
@@ -277,7 +289,7 @@ class PHP implements RendererGenerator
 		}
 
 		// Add the default handling
-		$this->php .= 'else $this->at($node);}}}}';
+		$this->php .= 'else $this->at($node);}}}}}';
 
 		// Optimize the generated code
 		$this->optimizeCode();
