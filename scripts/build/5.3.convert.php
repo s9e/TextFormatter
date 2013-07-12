@@ -87,6 +87,10 @@ function convertCustom($filepath, &$file)
 				"protected \$params=array(' . implode(',', \$staticParams) . ');"
 			),
 			array(
+				'return ["htmlOutput","dynamicParams","params"];',
+				'return array("htmlOutput","dynamicParams","params");'
+			),
+			array(
 				'$toks = [];',
 				'$toks = array();'
 			)

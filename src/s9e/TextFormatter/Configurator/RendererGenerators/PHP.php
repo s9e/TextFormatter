@@ -133,6 +133,10 @@ class PHP implements RendererGenerator
 			protected $dynamicParams=[' . implode(',', $dynamicParams) . '];
 			protected $params=[' . implode(',', $staticParams) . '];
 			protected $xpath;
+			public function __sleep()
+			{
+				return ["htmlOutput","dynamicParams","params"];
+			}
 			public function setParameter($paramName, $paramValue)
 			{
 				$this->params[$paramName] = $paramValue;

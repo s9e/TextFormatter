@@ -22,11 +22,23 @@ class PHPTest extends Test
 	*/
 	public function testSerializable()
 	{
+		$this->configurator->stylesheet->parameters->add('foo', "'bar'");
 		$renderer = $this->configurator->getRenderer();
+		unset($renderer->source);
 
 		$this->assertEquals(
 			$renderer,
 			unserialize(serialize($renderer))
 		);
+	}
+
+	/**
+	* @testdox The source of the renderer is omitted for serialization
+	*/
+	public function testNoSourceSerialize()
+	{
+		$renderer = $this->configurator->getRenderer();
+
+		$this->assertNotContains('source', serialize($renderer));
 	}
 }
