@@ -135,7 +135,10 @@ class PHP implements RendererGenerator
 			protected $xpath;
 			public function __sleep()
 			{
-				return ["htmlOutput","dynamicParams","params"];
+				$props = get_object_vars($this);
+				unset($props["proc"], $props["source"], $props["xpath"]);
+
+				return array_keys($props);
 			}
 			public function setParameter($paramName, $paramValue)
 			{

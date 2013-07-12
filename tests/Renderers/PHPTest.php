@@ -41,4 +41,18 @@ class PHPTest extends Test
 
 		$this->assertNotContains('source', serialize($renderer));
 	}
+
+	/**
+	* @testdox Custom properties are preserved during serialization
+	*/
+	public function testSerializePreserveCustom()
+	{
+		$renderer = $this->configurator->getRenderer();
+		$renderer->foo = 'bar';
+
+		$renderer = unserialize(serialize($renderer));
+
+		$this->assertObjectHasAttribute('foo', $renderer);
+		$this->assertSame('bar', $renderer->foo);
+	}
 }

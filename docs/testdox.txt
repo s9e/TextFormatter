@@ -1900,6 +1900,7 @@ s9e\TextFormatter\Tests\Renderers\XSLCache
 s9e\TextFormatter\Tests\Renderers\PHP
  [x] Is serializable
  [x] The source of the renderer is omitted for serialization
+ [x] Custom properties are preserved in serialization
  [x] Renders plain text
  [x] Renders multi-line text in HTML
  [x] Renders multi-line text in XHTML
