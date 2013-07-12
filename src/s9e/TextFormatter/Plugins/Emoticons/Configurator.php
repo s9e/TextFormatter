@@ -12,6 +12,7 @@ use Countable;
 use Iterator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
@@ -106,40 +107,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$templates = [];
 		foreach ($this->collection as $code => $template)
 		{
-			if (strpos($code, "'") === false)
-			{
-				// :)  produces <xsl:when test=".=':)'">
-				$code = "'" . htmlspecialchars($code) . "'";
-			}
-			elseif (strpos($code, '"') === false)
-			{
-				// :') produces <xsl:when test=".=&quot;:')&quot;">
-				$code = '&quot;' . $code . '&quot;';
-			}
-			else
-			{
-				// This code contains both ' and ". XPath 1.0 doesn't have a mechanism to escape
-				// quotes, so we have to get creative and use concat() to join single-quote
-				// chunks and double-quote chunks
-				$toks = [];
-				$pos  = 0;
-				$len  = strlen($code);
-				$c    = '"';
-				while ($pos < $len)
-				{
-					$spn = strcspn($code, $c, $pos);
-					if ($spn)
-					{
-						$toks[] = $c . substr($code, $pos, $spn) . $c;
-						$pos += $spn;
-					}
-					$c = ($c === '"') ? "'" : '"';
-				}
-
-				$code = 'concat(' . htmlspecialchars(implode(',', $toks)) . ')';
-			}
-
-			$templates[$template][] = $code;
+			$templates[$template][] = htmlspecialchars(TemplateHelper::asXPath($code));
 		}
 
 		// Build the <xsl:choose> node

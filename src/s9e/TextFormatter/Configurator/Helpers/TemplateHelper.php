@@ -782,4 +782,44 @@ abstract class TemplateHelper
 
 		return $html;
 	}
+
+	/**
+	* Export a literal as an XPath expression
+	*
+	* @param  string $str Literal, e.g. "foo"
+	* @return string      XPath expression, e.g. "'foo'"
+	*/
+	public static function asXPath($str)
+	{
+		// foo becomes 'foo'
+		if (strpos($str, "'") === false)
+		{
+			return "'" . $str . "'";
+		}
+
+		// d'oh becomes "d'oh"
+		if (strpos($str, '"') === false)
+		{
+			return '"' . $str . '"';
+		}
+
+		// This string contains both ' and ". XPath 1.0 doesn't have a mechanism to escape quotes,
+		// so we have to get creative and use concat() to join chunks in single quotes and chunks
+		// in double quotes
+		$toks = [];
+		$c = '"';
+		$pos = 0;
+		while ($pos < strlen($str))
+		{
+			$spn = strcspn($str, $c, $pos);
+			if ($spn)
+			{
+				$toks[] = $c . substr($str, $pos, $spn) . $c;
+				$pos += $spn;
+			}
+			$c = ($c === '"') ? "'" : '"';
+		}
+
+		return 'concat(' . implode(',', $toks) . ')';
+	}
 }

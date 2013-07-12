@@ -199,6 +199,38 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
+	* @testdox asXPath('foo') returns 'foo'
+	*/
+	public function testAsXPathSingleQuotes()
+	{
+		$this->assertSame("'foo'", TemplateHelper::asXPath('foo'));
+	}
+
+	/**
+	* @testdox asXPath("d'oh") returns "d'oh"
+	*/
+	public function testAsXPathDoubleQuotes()
+	{
+		$this->assertSame('"d\'oh"', TemplateHelper::asXPath("d'oh"));
+	}
+
+	/**
+	* @testdox asXPath("'\"") returns concat("'",'"')
+	*/
+	public function testAsXPathBothQuotes1()
+	{
+		$this->assertSame("concat(\"'\",'\"')", TemplateHelper::asXPath("'\""));
+	}
+
+	/**
+	* @testdox asXPath('"\'') returns concat('"',"'")
+	*/
+	public function testAsXPathBothQuotes2()
+	{
+		$this->assertSame("concat('\"',\"'\")", TemplateHelper::asXPath('"\''));
+	}
+
+	/**
 	* @testdox parseAttributeValueTemplate() tests
 	* @dataProvider getAVT
 	*/

@@ -648,6 +648,10 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] normalize() normalizes '<b><i>!</i> </b>' to '<b><i>!</i><xsl:text> </xsl:text></b>'
  [x] normalize() normalizes '<![CDATA[<br/>]]><![CDATA[<br/>]]>' to '&lt;br/&gt;&lt;br/&gt;'
  [x] normalize() throws an exception on malformed XSL
+ [x] asXPath('foo') returns 'foo'
+ [x] asXPath("d'oh") returns "d'oh"
+ [x] asXPath("'\"") returns concat("'",'"')
+ [x] asXPath('"\'') returns concat('"',"'")
  [x] parseAttributeValueTemplate() tests
  [x] getParametersFromXSL() tests
  [x] getObjectParamsByRegexp() tests
