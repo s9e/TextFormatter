@@ -136,7 +136,7 @@ class PHP implements RendererGenerator
 			public function __sleep()
 			{
 				$props = get_object_vars($this);
-				unset($props["proc"], $props["source"], $props["xpath"]);
+				unset($props["out"], $props["proc"], $props["source"], $props["xpath"]);
 
 				return array_keys($props);
 			}

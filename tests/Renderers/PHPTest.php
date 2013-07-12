@@ -43,6 +43,17 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox The last output of the renderer is omitted for serialization
+	*/
+	public function testNoOutputSerialize()
+	{
+		$renderer = $this->configurator->getRenderer();
+		$renderer->render('<rt>xxx</rt>');
+
+		$this->assertNotContains('out', serialize($renderer));
+	}
+
+	/**
 	* @testdox Custom properties are preserved during serialization
 	*/
 	public function testSerializePreserveCustom()
