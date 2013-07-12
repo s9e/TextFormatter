@@ -165,42 +165,6 @@ class PHP implements RendererGenerator
 
 				return $this->out;
 			}
-			protected function getParamAsXPath($k)
-			{
-				if (isset($this->dynamicParams[$k]))
-				{
-					return $this->dynamicParams[$k];
-				}
-				if (!isset($this->params[$k]))
-				{
-					return "\'\'";
-				}
-				$str = $this->params[$k];
-				if (strpos($str, "\'") === false)
-				{
-					return "\'" . $str . "\'";
-				}
-				if (strpos($str, \'"\') === false)
-				{
-					return \'"\' . $str . \'"\';
-				}
-
-				$toks = [];
-				$c = \'"\';
-				$pos = 0;
-				while ($pos < strlen($str))
-				{
-					$spn = strcspn($str, $c, $pos);
-					if ($spn)
-					{
-						$toks[] = $c . substr($str, $pos, $spn) . $c;
-						$pos += $spn;
-					}
-					$c = ($c === \'"\') ? "\'" : \'"\';
-				}
-
-				return "concat(" . implode(",", $toks) . ")";
-			}
 			protected function at($root, $xpath = null)
 			{
 				if ($root->nodeType === 3)
@@ -296,7 +260,57 @@ class PHP implements RendererGenerator
 		}
 
 		// Add the default handling
-		$this->php .= 'else $this->at($node);}}}}}';
+		$this->php .= 'else $this->at($node);}}}';
+
+		// Add the getParamAsXPath() method if necessary
+		if (strpos($this->php, '$this->getParamAsXPath(') !== false)
+		{
+			$this->php .= str_replace(
+				"\n\t\t\t\t",
+				"\n",
+				<<<'EOT'
+				protected function getParamAsXPath($k)
+				{
+					if (isset($this->dynamicParams[$k]))
+					{
+						return $this->dynamicParams[$k];
+					}
+					if (!isset($this->params[$k]))
+					{
+						return "''";
+					}
+					$str = $this->params[$k];
+					if (strpos($str, "'") === false)
+					{
+						return "'" . $str . "'";
+					}
+					if (strpos($str, '"') === false)
+					{
+						return '"' . $str . '"';
+					}
+
+					$toks = [];
+					$c = '"';
+					$pos = 0;
+					while ($pos < strlen($str))
+					{
+						$spn = strcspn($str, $c, $pos);
+						if ($spn)
+						{
+							$toks[] = $c . substr($str, $pos, $spn) . $c;
+							$pos += $spn;
+						}
+						$c = ($c === '"') ? "'" : '"';
+					}
+
+					return 'concat(' . implode(',', $toks) . ')';
+				}
+EOT
+			);
+		}
+
+		// Close the class block and the namespace
+		$this->php .= '}}';
 
 		// Optimize the generated code
 		$this->optimizeCode();

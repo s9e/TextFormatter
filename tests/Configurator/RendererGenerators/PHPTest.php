@@ -721,6 +721,12 @@ class PHPTest extends Test
 				'<xsl:template match="FOO"><xsl:if test=".=\'foo\'or.=\'bar\'">Foo</xsl:if></xsl:template>',
 				"if(\$node->textContent==='foo'||\$node->textContent==='bar')"
 			],
+			// Not part of optimizeCode() but considered an optimization nonetheless
+			[
+				'<xsl:template match="FOO">Hi</xsl:template>',
+				null,
+				'getParamAsXPath'
+			],
 		];
 	}
 
