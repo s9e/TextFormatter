@@ -102,14 +102,12 @@ class PluginCollectionTest extends Test
 		$plugin->setConfig(['regexp' => '//']);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
-		$config = $this->configurator->asConfig();
+		$config = $this->configurator->plugins->asConfig();
 
 		$this->assertArrayMatches(
 			[
-				'plugins' => [
-					'Dummy' => [
-						'regexpLimit' => 10000
-					]
+				'Dummy' => [
+					'regexpLimit' => 10000
 				]
 			],
 			$config
@@ -125,14 +123,12 @@ class PluginCollectionTest extends Test
 		$plugin->setConfig(['regexpLimit' => 1000]);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
-		$config = $this->configurator->asConfig();
+		$config = $this->configurator->plugins->asConfig();
 
 		$this->assertArrayMatches(
 			[
-				'plugins' => [
-					'Dummy' => [
-						'regexpLimit' => null
-					]
+				'Dummy' => [
+					'regexpLimit' => null
 				]
 			],
 			$config
@@ -148,14 +144,12 @@ class PluginCollectionTest extends Test
 		$plugin->setConfig(['regexp' => '//']);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
-		$config = $this->configurator->asConfig();
+		$config = $this->configurator->plugins->asConfig();
 
 		$this->assertArrayMatches(
 			[
-				'plugins' => [
-					'Dummy' => [
-						'regexpLimitAction' => 'warn'
-					]
+				'Dummy' => [
+					'regexpLimitAction' => 'warn'
 				]
 			],
 			$config
@@ -171,14 +165,12 @@ class PluginCollectionTest extends Test
 		$plugin->setConfig(['regexpLimitAction' => 1000]);
 
 		$this->configurator->plugins->add('Dummy',$plugin);
-		$config = $this->configurator->asConfig();
+		$config = $this->configurator->plugins->asConfig();
 
 		$this->assertArrayMatches(
 			[
-				'plugins' => [
-					'Dummy' => [
-						'regexpLimitAction' => null
-					]
+				'Dummy' => [
+					'regexpLimitAction' => null
 				]
 			],
 			$config
@@ -194,14 +186,12 @@ class PluginCollectionTest extends Test
 			'Dummy',
 			new DummyPluginConfigurator($this->configurator)
 		)->setQuickMatch('foo');
-		$config = $this->configurator->asConfig();
+		$config = $this->configurator->plugins->asConfig();
 
 		$this->assertArrayMatches(
 			[
-				'plugins' => [
-					'Dummy' => [
-						'quickMatch' => 'foo'
-					]
+				'Dummy' => [
+					'quickMatch' => 'foo'
 				]
 			],
 			$config
@@ -217,14 +207,12 @@ class PluginCollectionTest extends Test
 			'Dummy',
 			new DummyPluginConfigurator($this->configurator)
 		);
-		$config = $this->configurator->asConfig();
+		$config = $this->configurator->plugins->asConfig();
 
 		$this->assertArrayMatches(
 			[
-				'plugins' => [
-					'Dummy' => [
-						'quickMatch' => null
-					]
+				'Dummy' => [
+					'quickMatch' => null
 				]
 			],
 			$config
