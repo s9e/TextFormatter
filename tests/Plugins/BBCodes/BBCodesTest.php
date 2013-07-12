@@ -492,25 +492,25 @@ class BBCodesTest extends Test
 				"Spoiler ahead!\n" .
 				"[spoiler]Now you're spoiled[/spoiler]",
 				"Spoiler ahead!\n" .
-				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
+				'<div class="spoiler"><div class="spoiler-header"><button onclick="var c=this.parentNode.nextSibling.style,s=this.firstChild.style,h=this.lastChild.style;\'\'!=c.display?(c.display=h.display=\'\',s.display=\'none\'):(c.display=h.display=\'none\',s.display=\'\')"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>',
 			],
 			[
 				"Spoiler ahead!\n" .
 				'[spoiler="your spoilage status"]Now you\'re spoiled[/spoiler]',
 				"Spoiler ahead!\n" . 
-				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: your spoilage status</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
+				'<div class="spoiler"><div class="spoiler-header"><button onclick="var c=this.parentNode.nextSibling.style,s=this.firstChild.style,h=this.lastChild.style;\'\'!=c.display?(c.display=h.display=\'\',s.display=\'none\'):(c.display=h.display=\'none\',s.display=\'\')"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler: your spoilage status</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
 			],
 			[
 				"Spoiler ahead!\n" .
 				"[spoiler][spoiler='Last chance']Now you're spoiled[/spoiler][/spoiler]",
 				"Spoiler ahead!\n" .
-				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none"><div class="spoiler"><div class="spoiler-header"><input type="button" value="Show" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Hide\'}else{s.display=\'none\';this.value=\'Show\'}"><span class="spoiler-title">Spoiler: Last chance</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div></div></div>'
+				'<div class="spoiler"><div class="spoiler-header"><button onclick="var c=this.parentNode.nextSibling.style,s=this.firstChild.style,h=this.lastChild.style;\'\'!=c.display?(c.display=h.display=\'\',s.display=\'none\'):(c.display=h.display=\'none\',s.display=\'\')"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none"><div class="spoiler"><div class="spoiler-header"><button onclick="var c=this.parentNode.nextSibling.style,s=this.firstChild.style,h=this.lastChild.style;\'\'!=c.display?(c.display=h.display=\'\',s.display=\'none\'):(c.display=h.display=\'none\',s.display=\'\')"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler: Last chance</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div></div></div>'
 			],
 			[
 				"Spoiler ahead!\n" .
 				"[spoiler]Now you're spoiled[/spoiler]",
 				"Spoiler ahead!\n" . 
-				'<div class="spoiler"><div class="spoiler-header"><input type="button" value="Montrer" onclick="var s=this.parentNode.nextSibling.style;if(s.display!=\'\'){s.display=\'\';this.value=\'Cacher\'}else{s.display=\'none\';this.value=\'Montrer\'}"><span class="spoiler-title">Spoiler : </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>',
+				'<div class="spoiler"><div class="spoiler-header"><button onclick="var c=this.parentNode.nextSibling.style,s=this.firstChild.style,h=this.lastChild.style;\'\'!=c.display?(c.display=h.display=\'\',s.display=\'none\'):(c.display=h.display=\'none\',s.display=\'\')"><span>Montrer</span><span style="display:none">Cacher</span></button><span class="spoiler-title">Spoiler : </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('SPOILER', 'default', [
