@@ -173,7 +173,7 @@ class ProgrammableCallback implements ConfigProvider
 	*/
 	public function setVar($name, $value)
 	{
-		$this->vars[$name] = $value;;
+		$this->vars[$name] = $value;
 
 		return $this;
 	}
