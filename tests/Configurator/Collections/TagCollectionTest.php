@@ -2,9 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
-use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\TagCollection

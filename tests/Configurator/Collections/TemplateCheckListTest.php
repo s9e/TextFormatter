@@ -2,9 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
-use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowCopy;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\Collections\TemplateCheckList
