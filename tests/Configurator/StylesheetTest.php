@@ -58,32 +58,12 @@ class StylesheetTest extends Test
 	}
 
 	/**
-	* @testdox setWildcardTemplate() accepts a callback as template
-	*/
-	public function testSetWildcardTemplateCallback()
-	{
-		$configurator = new Configurator;
-		$configurator->stylesheet->setWildcardTemplate('foo', function(){});
-	}
-
-	/**
 	* @testdox setWildcardTemplate() accepts an instance of Template as template
 	*/
 	public function testSetWildcardTemplateInstance()
 	{
 		$configurator = new Configurator;
 		$configurator->stylesheet->setWildcardTemplate('foo', new Template(''));
-	}
-
-	/**
-	* @testdox setWildcardTemplate() rejects anything else
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage must be a string, a valid callback or an instance of Template
-	*/
-	public function testSetWildcardTemplateInvalidType()
-	{
-		$configurator = new Configurator;
-		$configurator->stylesheet->setWildcardTemplate('foo', false);
 	}
 
 	/**
@@ -313,6 +293,34 @@ class StylesheetTest extends Test
 
 		$this->assertContains('BAZ', $xsl);
 		$this->assertNotContains('BAR', $xsl);
+	}
+
+	/**
+	* @testdox get() normalizes wildcard templates before assembling the stylesheet
+	*/
+	public function testGetNormalizeWildcard()
+	{
+		$configurator = new Configurator;
+		$configurator->stylesheet->setWildcardTemplate('xxx', '<FOO/>');
+
+		$xsl = $configurator->stylesheet->get();
+
+		$this->assertContains('<foo/>', $xsl);
+		$this->assertNotContains('<FOO/>', $xsl);
+	}
+
+	/**
+	* @testdox get() normalizes tags' templates before assembling the stylesheet
+	*/
+	public function testGetNormalizeTags()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('FOO')->defaultTemplate = '<FOO/>';
+
+		$xsl = $configurator->stylesheet->get();
+
+		$this->assertContains('<foo/>', $xsl);
+		$this->assertNotContains('<FOO/>', $xsl);
 	}
 
 	/**

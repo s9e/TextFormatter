@@ -7,7 +7,6 @@
 */
 namespace s9e\TextFormatter\Configurator\Collections;
 
-use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\TemplateCheck;
 
 class TemplateCheckList extends NormalizedList
@@ -23,7 +22,7 @@ class TemplateCheckList extends NormalizedList
 		if (!($check instanceof TemplateCheck))
 		{
 			$className = 's9e\\TextFormatter\\Configurator\\TemplateChecks\\' . $check;
-			$check = new $className;
+			$check     = new $className;
 		}
 
 		return $check;

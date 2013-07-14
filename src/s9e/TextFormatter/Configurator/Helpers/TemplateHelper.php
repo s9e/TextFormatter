@@ -22,26 +22,6 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 abstract class TemplateHelper
 {
 	/**
-	* Normalize a template to a chunk of optimized XSL
-	*
-	* @param  string $template Original template
-	* @return string           Normalized template
-	*/
-	public static function normalize($template)
-	{
-		// Load and normalize the template
-		$dom = self::loadTemplate($template);
-		self::inlineCDATA($dom);
-		self::preserveSingleSpaces($dom);
-		$template = self::saveTemplate($dom);
-
-		// Optimize the template
-		$template = TemplateOptimizer::optimize($template);
-
-		return $template;
-	}
-
-	/**
 	* Attempt to load a template with DOM, first as XML then as HTML as a fallback
 	*
 	* NOTE: in order to accomodate templates that don't have one single root node, the DOMDocument
@@ -137,45 +117,6 @@ abstract class TemplateHelper
 		$xml = substr($xml, $pos, $len);
 
 		return $xml;
-	}
-
-	/**
-	* Replace CDATA sections with text literals
-	*
-	* @param DOMDocument $dom xsl:template node
-	*/
-	protected static function inlineCDATA(DOMDocument $dom)
-	{
-		$xpath = new DOMXPath($dom);
-
-		foreach ($xpath->query('//text()') as $textNode)
-		{
-			if ($textNode->nodeType === XML_CDATA_SECTION_NODE)
-			{
-				$textNode->parentNode->replaceChild(
-					$dom->createTextNode($textNode->textContent),
-					$textNode
-				);
-			}
-		}
-	}
-
-	/**
-	* Preserve single space characters by replacing them with a <xsl:text/> node
-	*
-	* @param DOMDocument $dom xsl:template node
-	*/
-	protected static function preserveSingleSpaces(DOMDocument $dom)
-	{
-		$xpath = new DOMXPath($dom);
-
-		foreach ($xpath->query('//text()[. = " "][not(parent::xsl:text)]') as $textNode)
-		{
-			$newNode = $dom->createElementNS('http://www.w3.org/1999/XSL/Transform', 'xsl:text');
-			$newNode->nodeValue = ' ';
-
-			$textNode->parentNode->replaceChild($newNode, $textNode);
-		}
 	}
 
 	/**
@@ -821,5 +762,53 @@ abstract class TemplateHelper
 		}
 
 		return 'concat(' . implode(',', $toks) . ')';
+	}
+
+	/**
+	* Remove extraneous space in a given XPath expression
+	*
+	* @param  string $expr Original XPath expression
+	* @return string       Minified XPath expression
+	*/
+	public static function minifyXPath($expr)
+	{
+		$old     = $expr;
+		$strings = [];
+
+		// Trim the surrounding whitespace then temporarily remove literal strings
+		$expr = preg_replace_callback(
+			'/(?:"[^"]*"|\'[^\']*\')/',
+			function ($m) use (&$strings)
+			{
+				$uniqid = '(' . sha1(uniqid()) . ')';
+				$strings[$uniqid] = $m[0];
+
+				return $uniqid;
+			},
+			trim($expr)
+		);
+
+		if (preg_match('/[\'"]/', $expr))
+		{
+			throw new RuntimeException("Cannot parse XPath expression '" . $old . "'");
+		}
+
+		// Normalize whitespace to a single space
+		$expr = preg_replace('/\\s+/', ' ', $expr);
+
+		// Remove the space between a non-word character and a word character
+		$expr = preg_replace('/([-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
+		$expr = preg_replace('/([^-a-z_0-9]) ([-a-z_0-9])/i', '$1$2', $expr);
+
+		// Remove the space between two non-word characters as long as they're not two -
+		$expr = preg_replace('/(?!- -)([^-a-z_0-9]) ([^-a-z_0-9])/i', '$1$2', $expr);
+
+		// Remove the space between a - and a word character, as long as there's a space before -
+		$expr = preg_replace('/ - ([a-z_0-9])/i', ' -$1', $expr);
+
+		// Restore the literals
+		$expr = strtr($expr, $strings);
+
+		return $expr;
 	}
 }

@@ -22,6 +22,7 @@ use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\TemplateChecker;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 use s9e\TextFormatter\Configurator\UrlConfig;
 
 class Configurator implements ConfigProvider
@@ -72,6 +73,11 @@ class Configurator implements ConfigProvider
 	public $templateChecker;
 
 	/**
+	* @var TemplateNormalizer Default template normalizer
+	*/
+	public $templateNormalizer;
+
+	/**
 	* @var UrlConfig Config options related to URL validation
 	*/
 	public $urlConfig;
@@ -84,15 +90,16 @@ class Configurator implements ConfigProvider
 	*/
 	public function __construct()
 	{
-		$this->attributeFilters = new AttributeFilterCollection;
-		$this->javascript       = new JavaScript($this);
-		$this->plugins          = new PluginCollection($this);
-		$this->rootRules        = new Ruleset;
-		$this->tags             = new TagCollection;
-		$this->templateChecker  = new TemplateChecker;
-		$this->stylesheet       = new Stylesheet($this);
-		$this->urlConfig        = new UrlConfig;
-		$this->registeredVars   = ['urlConfig' => $this->urlConfig];
+		$this->attributeFilters   = new AttributeFilterCollection;
+		$this->javascript         = new JavaScript($this);
+		$this->plugins            = new PluginCollection($this);
+		$this->rootRules          = new Ruleset;
+		$this->tags               = new TagCollection;
+		$this->templateChecker    = new TemplateChecker;
+		$this->templateNormalizer = new TemplateNormalizer;
+		$this->stylesheet         = new Stylesheet($this);
+		$this->urlConfig          = new UrlConfig;
+		$this->registeredVars     = ['urlConfig' => $this->urlConfig];
 
 		$this->setRendererGenerator('XSLT');
 	}
@@ -188,6 +195,15 @@ class Configurator implements ConfigProvider
 			$options['renderer'] = $this->getRenderer();
 		}
 
+		// Finalize the plugins' config
+		$this->plugins->finalize();
+
+		// Normalize the tags' templates
+		foreach ($this->tags as $tag)
+		{
+			$this->templateNormalizer->normalizeTag($tag);
+		}
+
 		// Get the rules
 		$rules = RulesGenerator::getRules($this->tags, $options);
 
@@ -209,10 +225,7 @@ class Configurator implements ConfigProvider
 	public function asConfig()
 	{
 		// Finalize the plugins' config
-		foreach ($this->plugins as $plugin)
-		{
-			$plugin->finalize();
-		}
+		$this->plugins->finalize();
 
 		$properties = get_object_vars($this);
 
@@ -221,6 +234,7 @@ class Configurator implements ConfigProvider
 		unset($properties['javascript']);
 		unset($properties['rendererGenerator']);
 		unset($properties['templateChecker']);
+		unset($properties['templateNormalizer']);
 		unset($properties['stylesheet']);
 		unset($properties['urlConfig']);
 

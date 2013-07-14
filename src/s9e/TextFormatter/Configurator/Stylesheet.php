@@ -11,7 +11,6 @@ use InvalidArgumentException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Collections\StylesheetParameterCollection;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
-use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
@@ -61,10 +60,7 @@ class Stylesheet
 	public function get()
 	{
 		// Give plugins the opportunity to finalize their templates
-		foreach ($this->configurator->plugins as $plugin)
-		{
-			$plugin->finalize();
-		}
+		$this->configurator->plugins->finalize();
 
 		$prefixes  = [];
 		$templates = [
@@ -81,7 +77,13 @@ class Stylesheet
 			// Check this template if it's not an UnsafeTemplate
 			$checkTemplate = !($template instanceof UnsafeTemplate);
 
-			// First, cast this template as string so it can be checked and stored
+			// Normalize this template if applicable
+			if (!$template->isNormalized())
+			{
+				$template->normalize($this->configurator->templateNormalizer);
+			}
+
+			// Cast this template as string so it can be checked and stored
 			$template = (string) $template;
 
 			// Then, iterate over tags to assess the template's safeness
@@ -111,7 +113,10 @@ class Stylesheet
 		// Iterate over the tags to collect their templates and their prefix
 		foreach ($this->configurator->tags as $tagName => $tag)
 		{
-			// Test this tag's templates
+			// Normalize this tag's templates
+			$this->configurator->templateNormalizer->normalizeTag($tag);
+
+			// Check the safeness of this tag's templates
 			$this->configurator->templateChecker->checkTag($tag);
 
 			foreach ($tag->templates as $predicate => $template)
@@ -121,7 +126,7 @@ class Stylesheet
 				if ($predicate !== '')
 				{
 					// Minify and append this template's predicate
-					$match .= '[' . TemplateOptimizer::minifyXPath($predicate) . ']';
+					$match .= '[' . TemplateHelper::minifyXPath($predicate) . ']';
 				}
 
 				// Record the tag's prefix
@@ -269,11 +274,9 @@ class Stylesheet
 			throw new InvalidArgumentException("Invalid prefix '" . $prefix . "'");
 		}
 
-		if (!is_string($template)
-		 && !($template instanceof Template)
-		 && !is_callable($template))
+		if (!($template instanceof Template))
 		{
-			throw new InvalidArgumentException('Argument 2 passed to ' . __METHOD__ . ' must be a string, a valid callback or an instance of Template');
+			$template = new Template($template);
 		}
 
 		$this->wildcards[$prefix] = $template;

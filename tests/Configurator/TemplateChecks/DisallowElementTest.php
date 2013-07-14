@@ -52,7 +52,7 @@ class DisallowElementTest extends Test
 	/**
 	* @testdox DisallowElement('svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage Element 'svg:svg' is disallowed
+	* @expectedExceptionMessage Element 'svg' is disallowed
 	*/
 	public function testDisallowedNS()
 	{
@@ -83,13 +83,13 @@ class DisallowElementTest extends Test
 	}
 
 	/**
-	* @testdox DisallowElement('script') disallows new Template('<b><SCRIPT/></b>')
+	* @testdox DisallowElement('script') disallows <b><SCRIPT/></b>
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Element 'script' is disallowed
 	*/
 	public function testDisallowedUppercase()
 	{
-		$node = $this->loadTemplate(new Template('<b><SCRIPT/></b>'));
+		$node = $this->loadTemplate('<b><SCRIPT/></b>');
 
 		try
 		{
@@ -105,13 +105,13 @@ class DisallowElementTest extends Test
 	}
 
 	/**
-	* @testdox DisallowElement('script') disallows new Template('<b><xsl:element name="script"/></b>')
+	* @testdox DisallowElement('script') disallows <b><xsl:element name="script"/></b>
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Element 'script' is disallowed
 	*/
 	public function testDisallowedDynamic()
 	{
-		$node = $this->loadTemplate(new Template('<b><xsl:element name="script"/></b>'));
+		$node = $this->loadTemplate('<b><xsl:element name="script"/></b>');
 
 		try
 		{

@@ -57,6 +57,25 @@ function convertCustom($filepath, &$file)
 				'return (isset($args[1])) ? $reflection->newInstanceArgs(array_slice($args, 1)) : $reflection->newInstance();'
 			)
 		),
+		'Custom.php' => array(
+			array(
+				'public function __construct(callable $callback)',
+				'public function __construct($callback)'
+			),
+			array(
+				'$this->callback = $callback;',
+				str_replace(
+					"\n\t\t\t",
+					"\n",
+					'if (!is_callable($callback))
+					{
+						trigger_error("Argument 1 passed to " . __METHOD__ . "() must be an instance of DOMNode, " . gettype($callback) . " given", E_USER_ERROR);
+					}
+
+					$this->callback = $callback;'
+				)
+			)
+		),
 		'FilterProcessingTest.php' => array(
 			array(
 				"\n\t\t\$filter = new ProgrammableCallback(\n\t\t\tfunction()",
@@ -105,12 +124,6 @@ function convertCustom($filepath, &$file)
 			array(
 				'if (preg_match_all(\'#.#us\', $word, $matches) === false)',
 				'if (preg_match_all(\'#.#us\', $word, $matches) === false || !preg_match(\'/^(?:[[:ascii:]]|[\\xC0-\\xDF][\\x80-\\xBF]|[\\xE0-\\xEF][\\x80-\\xBF]{2}|[\\xF0-\\xF7][\\x80-\\xBF]{3})*$/D\', $word))'
-			)
-		),
-		'TemplateOptimizer.php' => array(
-			array(
-				'return $m[1] . self::minifyXPath($m[2]);',
-				'return $m[1] . TemplateOptimizer::minifyXPath($m[2]);'
 			)
 		),
 		'Variant.php' => array(

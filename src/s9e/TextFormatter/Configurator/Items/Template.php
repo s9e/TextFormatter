@@ -10,9 +10,15 @@ namespace s9e\TextFormatter\Configurator\Items;
 use DOMDocument;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class Template
 {
+	/**
+	* @var bool Whether this template has been normalized
+	*/
+	protected $isNormalized = false;
+
 	/**
 	* @var string This template's content
 	*/
@@ -26,7 +32,7 @@ class Template
 	*/
 	public function __construct($template)
 	{
-		$this->template = TemplateHelper::normalize($template);
+		$this->template = $template;
 	}
 
 	/**
@@ -96,5 +102,33 @@ class Template
 	public function getParameters()
 	{
 		return TemplateHelper::getParametersFromXSL($this->__toString());
+	}
+
+	/**
+	* Set and/or return whether this template has been normalized
+	*
+	* @param  bool $bool If present, the new value for this template's isNormalized flag
+	* @return bool       Whether this template has been normalized
+	*/
+	public function isNormalized($bool = null)
+	{
+		if (isset($bool))
+		{
+			$this->isNormalized = $bool;
+		}
+
+		return $this->isNormalized;
+	}
+
+	/**
+	* Normalize this template's content
+	*
+	* @param  TemplateNormalizer $templateNormalizer
+	* @return void
+	*/
+	public function normalize(TemplateNormalizer $templateNormalizer)
+	{
+		$this->template     = $templateNormalizer->normalizeTemplate($this->template);
+		$this->isNormalized = true;
 	}
 }

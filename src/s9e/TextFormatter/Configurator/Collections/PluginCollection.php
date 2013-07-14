@@ -31,6 +31,19 @@ class PluginCollection extends NormalizedCollection
 	}
 
 	/**
+	* Finalize all of this collection's plugins
+	*
+	* @return void
+	*/
+	public function finalize()
+	{
+		foreach ($this->items as $plugin)
+		{
+			$plugin->finalize();
+		}
+	}
+
+	/**
 	* Validate a plugin name
 	*
 	* @param  string $pluginName

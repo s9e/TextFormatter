@@ -266,6 +266,9 @@ class Configurator extends ConfiguratorBase
 			}
 		}
 
+		// Normalize the tag's templates
+		$this->configurator->templateNormalizer->normalizeTag($tag);
+
 		// Check the tag's safety
 		$this->configurator->templateChecker->checkTag($tag);
 

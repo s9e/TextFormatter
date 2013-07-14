@@ -123,82 +123,6 @@ class TemplateHelperTest extends Test
 	}
 
 	/**
-	* @testdox normalize() normalizes '<br>' to '<br/>'
-	*/
-	public function testNormalize()
-	{
-		$this->assertSame(
-			'<br/>',
-			TemplateHelper::normalize('<br>')
-		);
-	}
-
-	/**
-	* @testdox normalize() normalizes '<b>b</b> <i>i</i>' to '<b>b</b><xsl:text> </xsl:text><i>i</i>'
-	*/
-	public function testNormalizeWhitespaceEndStart()
-	{
-		$this->assertSame(
-			'<b>b</b><xsl:text> </xsl:text><i>i</i>',
-			TemplateHelper::normalize('<b>b</b> <i>i</i>')
-		);
-	}
-
-	/**
-	* @testdox normalize() normalizes '<b> </b>' to '<b><xsl:text> </xsl:text></b>'
-	*/
-	public function testNormalizeWhitespaceStartEnd()
-	{
-		$this->assertSame(
-			'<b><xsl:text> </xsl:text></b>',
-			TemplateHelper::normalize('<b> </b>')
-		);
-	}
-
-	/**
-	* @testdox normalize() normalizes '<b> <i>!</i></b>' to '<b><xsl:text> </xsl:text><i>!</i></b>'
-	*/
-	public function testNormalizeWhitespaceStartStart()
-	{
-		$this->assertSame(
-			'<b><xsl:text> </xsl:text><i>!</i></b>',
-			TemplateHelper::normalize('<b> <i>!</i></b>')
-		);
-	}
-
-	/**
-	* @testdox normalize() normalizes '<b><i>!</i> </b>' to '<b><i>!</i><xsl:text> </xsl:text></b>'
-	*/
-	public function testNormalizeWhitespaceEndEnd()
-	{
-		$this->assertSame(
-			'<b><i>!</i><xsl:text> </xsl:text></b>',
-			TemplateHelper::normalize('<b><i>!</i> </b>')
-		);
-	}
-
-	/**
-	* @testdox normalize() normalizes '<![CDATA[<br/>]]><![CDATA[<br/>]]>' to '&lt;br/&gt;&lt;br/&gt;'
-	*/
-	public function testNormalizeCDATA()
-	{
-		$this->assertSame(
-			'&lt;br/&gt;&lt;br/&gt;',
-			TemplateHelper::normalize('<![CDATA[<br/>]]><![CDATA[<br/>]]>')
-		);
-	}
-
-	/**
-	* @testdox normalize() throws an exception on malformed XSL
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\InvalidXslException
-	* @expectedExceptionMessage Premature end of data
-	*/
-	public function testNormalizeInvalid()
-	{
-		TemplateHelper::normalize('<xsl:value-of select="@foo">');
-	}
-
-	/**
 	* @testdox asXPath('foo') returns 'foo'
 	*/
 	public function testAsXPathSingleQuotes()
@@ -956,6 +880,73 @@ class TemplateHelperTest extends Test
 &lt;b&gt;<span style="background-color:#ff0">foo</span>&lt;/b&gt;
 &lt;b&gt;foo&lt;/b&gt;'
 			],
+		];
+	}
+
+	/**
+	* @testdox minifyXPath() tests
+	* @dataProvider minifyXPathTests
+	*/
+	public function testMinifyXPath($original, $expected)
+	{
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
+
+		$this->assertSame(
+			$expected,
+			TemplateHelper::minifyXPath($original)
+		);
+	}
+
+	public function minifyXPathTests()
+	{
+		return [
+			[
+				'',
+				''
+			],
+			[
+				' @foo ',
+				'@foo'
+			],
+			[
+				'@ foo',
+				'@foo'
+			],
+			[
+				'concat(@foo, @bar, @baz)',
+				'concat(@foo,@bar,@baz)'
+			],
+			[
+				"concat(@foo, ' @bar ', @baz)",
+				"concat(@foo,' @bar ',@baz)"
+			],
+			[
+				'@foo = 2',
+				'@foo=2'
+			],
+			[
+				'substring(., 1 + string-length(st), string-length() - (string-length(st) + string-length(et)))',
+				'substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))'
+			],
+			[
+				'@foo - bar = 2',
+				'@foo -bar=2'
+			],
+			[
+				'@foo- - 1 = 2',
+				'@foo- -1=2'
+			],
+			[
+				' foo or _bar ',
+				'foo or _bar'
+			],
+			[
+				'foo = "bar',
+				new RuntimeException("Cannot parse XPath expression 'foo = \"bar'")
+			]
 		];
 	}
 }

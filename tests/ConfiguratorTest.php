@@ -115,6 +115,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox $configurator->templateNormalizer is an instance of TemplateNormalizer
+	*/
+	public function testTemplateNormalizerInstance()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\TemplateNormalizer',
+			$this->configurator->templateNormalizer
+		);
+	}
+
+	/**
 	* @testdox $configurator->urlConfig is an instance of UrlConfig
 	*/
 	public function testUrlConfigInstance()

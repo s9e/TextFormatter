@@ -22,6 +22,6 @@ class EmoticonCollection extends NormalizedCollection
 	*/
 	public function normalizeValue($value)
 	{
-		return TemplateHelper::normalize($value);
+		return TemplateHelper::saveTemplate(TemplateHelper::loadTemplate($value));
 	}
 }

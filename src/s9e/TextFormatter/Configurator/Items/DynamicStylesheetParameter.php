@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\Items;
 
-use s9e\TextFormatter\Configurator\Helpers\TemplateOptimizer;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
 class DynamicStylesheetParameter extends StylesheetParameter
 {
@@ -19,6 +19,6 @@ class DynamicStylesheetParameter extends StylesheetParameter
 	*/
 	public function __construct($value = null)
 	{
-		$this->value = TemplateOptimizer::minifyXPath($value);
+		$this->value = TemplateHelper::minifyXPath($value);
 	}
 }

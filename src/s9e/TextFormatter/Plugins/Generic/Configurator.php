@@ -304,6 +304,9 @@ class Configurator extends ConfiguratorBase
 		// Now that all attributes have been created we can assign the template
 		$tag->defaultTemplate = $template;
 
+		// Normalize the tag's templates
+		$this->configurator->templateNormalizer->normalizeTag($tag);
+
 		// Check the safeness of this tag
 		$this->configurator->templateChecker->checkTag($tag);
 

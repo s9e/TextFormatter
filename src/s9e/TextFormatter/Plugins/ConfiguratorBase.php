@@ -77,8 +77,12 @@ abstract class ConfiguratorBase implements ConfigProvider
 	/**
 	* Finalize this plugin's configuration
 	*
-	* Executed by the configurator before the parser's config is generated and before the renderer's
-	* stylesheet is generated
+	* Executed by the configurator whenever the tags' config must be in a usable state:
+	*  - before the parser's config is generated
+	*  - before the renderer's stylesheet is generated
+	*  - before HTML5 rules are generated
+	*
+	* As such, this method may be called multiple times during configuration
 	*/
 	public function finalize()
 	{

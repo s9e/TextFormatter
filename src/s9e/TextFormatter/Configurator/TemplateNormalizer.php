@@ -1,0 +1,105 @@
+<?php
+
+/**
+* @package   s9e\TextFormatter
+* @copyright Copyright (c) 2010-2013 The s9e Authors
+* @license   http://www.opensource.org/licenses/mit-license'); The MIT License
+*/
+namespace s9e\TextFormatter\Configurator;
+
+use DOMDocument;
+use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
+use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
+
+class TemplateNormalizer
+{
+	use CollectionProxy;
+
+	/**
+	* @var TemplateNormalizationList Collection of TemplateNormalization instances
+	*/
+	protected $collection;
+
+	/**
+	* Constructor
+	*
+	* Will load the default normalization rules
+	*
+	* @return void
+	*/
+	public function __construct()
+	{
+		$this->collection = new TemplateNormalizationList;
+
+		$this->collection->append('InlineAttributes');
+		$this->collection->append('InlineCDATA');
+		$this->collection->append('InlineElements');
+		$this->collection->append('InlineInferredValues');
+		$this->collection->append('InlineTextElements');
+		$this->collection->append('MinifyXPathExpressions');
+		$this->collection->append('NormalizeAttributeNames');
+		$this->collection->append('NormalizeElementNames');
+		$this->collection->append('OptimizeConditionalAttributes');
+		$this->collection->append('OptimizeConditionalValueOf');
+		$this->collection->append('PreserveSingleSpaces');
+		$this->collection->append('RemoveComments');
+		$this->collection->append('RemoveInterElementWhitespace');
+	}
+
+	/**
+	* Normalize a tag's templates
+	*
+	* @param  Tag  $tag Tag whose templates will be normalized
+	* @return void
+	*/
+	public function normalizeTag(Tag $tag)
+	{
+		foreach ($tag->templates as $template)
+		{
+			if (!$template->isNormalized())
+			{
+				$template->normalize($this);
+			}
+		}
+	}
+
+	/**
+	* Normalize a template
+	*
+	* @param  string $template Original template
+	* @return string           Normalized template
+	*/
+	public function normalizeTemplate($template)
+	{
+		$dom = TemplateHelper::loadTemplate($template);
+
+		// We'll keep track of what normalizations have been applied
+		$applied = [];
+
+		// Apply all the normalizations until no more change is made or we've reached the maximum
+		// number of loops
+		$loops = 5;
+		do
+		{
+			$old = $template;
+
+			foreach ($this->collection as $k => $normalization)
+			{
+				if (isset($applied[$k]) && !empty($normalization->onlyOnce))
+				{
+					continue;
+				}
+
+				$normalization->normalize($dom->documentElement);
+				$applied[$k] = 1;
+			}
+
+			$template = TemplateHelper::saveTemplate($dom);
+		}
+		while (--$loops && $template !== $old);
+
+		return $template;
+	}
+}

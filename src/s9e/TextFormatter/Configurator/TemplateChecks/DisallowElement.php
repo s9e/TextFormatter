@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\TemplateChecks;
 
 use DOMNode;
+use DOMXPath;
 use s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\TemplateCheck;
@@ -27,7 +28,7 @@ class DisallowElement extends TemplateCheck
 	*/
 	public function __construct($elName)
 	{
-		// NOTE: TemplateHelper::normalize() forces elements' names to be lowercase
+		// NOTE: the default template normalization rules force elements' names to be lowercase
 		$this->elName = strtolower($elName);
 	}
 
@@ -40,11 +41,16 @@ class DisallowElement extends TemplateCheck
 	*/
 	public function check(DOMNode $template, Tag $tag)
 	{
-		$node = $template->getElementsByTagName($this->elName)->item(0);
+		$xpath = new DOMXPath($template->ownerDocument);
+		$query
+			= '//*[translate(local-name(), "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz") = "' . $this->elName . '"]'
+			. '|'
+			. '//xsl:element[translate(@name,"ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz") = "' . $this->elName . '"]';
 
+		$node = $xpath->query($query)->item(0);
 		if ($node)
 		{
-			throw new UnsafeTemplateException("Element '" . $node->nodeName . "' is disallowed", $node);
+			throw new UnsafeTemplateException("Element '" . $this->elName . "' is disallowed", $node);
 		}
 	}
 }

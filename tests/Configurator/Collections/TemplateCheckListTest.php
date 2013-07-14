@@ -12,7 +12,7 @@ use s9e\TextFormatter\Tests\Test;
 class TemplateCheckListTest extends Test
 {
 	/**
-	* @testdox append() normalizes string into an instance of the same name in s9e\TextFormatter\Configurator\TemplateChecks
+	* @testdox append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\TemplateChecks
 	*/
 	public function testAppendNormalizeValue()
 	{

@@ -97,6 +97,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->stylesheet is an instance of Stylesheet
  [x] $configurator->tags is an instance of TagCollection
  [x] $configurator->templateChecker is an instance of TemplateChecker
+ [x] $configurator->templateNormalizer is an instance of TemplateNormalizer
  [x] $configurator->urlConfig is an instance of UrlConfig
  [x] asConfig() calls every plugin's finalize() before retrieving their config
  [x] asConfig() returns an array with a rootContext element
@@ -195,6 +196,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
  [x] asConfig() adds quickMatch to the plugin's configuration if available
  [x] asConfig() omits a plugin's quickMatch if it's false
+ [x] finalize() calls every plugin's finalize() method
 
 s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] isset($ruleset['allowChild']) tests whether any allowChild rules exist
@@ -297,12 +299,17 @@ s9e\TextFormatter\Tests\Configurator\Collections\TagList
  [x] asConfig() returns a list of tag names in alphabetical order
 
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateCheckList
- [x] append() normalizes string into an instance of the same name in s9e\TextFormatter\Configurator\TemplateChecks
+ [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\TemplateChecks
  [x] append() adds instances of s9e\TextFormatter\Configurator\TemplateCheck as-is
 
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateCollection
  [x] set() accepts a string and returns an instance of Template
  [x] set() accepts an instance of Template, which it returns
+
+s9e\TextFormatter\Tests\Configurator\Collections\TemplateNormalizationList
+ [x] append() normalizes a callback into an instance of s9e\TextFormatter\Configurator\TemplateNormalizations\Custom
+ [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\TemplateNormalizations
+ [x] append() adds instances of s9e\TextFormatter\Configurator\TemplateNormalization as-is
 
 s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
  [x] getNode() returns the stored node
@@ -580,54 +587,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] Rules targeting inexistent tags do not interfere
  [x] Bitfields are compressed by making tags that are targeted by the same permissions share the same bit number
 
-s9e\TextFormatter\Tests\Configurator\Helpers\TemplateOptimizer
- [x] Comments are removed
- [x] Conditional comments are replaced with <xsl:comment/> nodes
- [x] <xsl:text/> is inlined
- [x] <xsl:text> </xsl:text> is not inlined if it would become inter-element whitespace
- [x] <xsl:text> </xsl:text> is inlined if it is preceded by a text node
- [x] <xsl:text> </xsl:text> is inlined if it is followed by a text node
- [x] Multiple <xsl:text/> are inlined
- [x] Superfluous whitespace between elements is removed
- [x] Superfluous whitespace inside tags is removed
- [x] Superfluous whitespace around XSL attributes is removed
- [x] Superfluous whitespace in simple attribute expressions is removed
- [x] Superfluous whitespace in @select expressions is removed
- [x] Whitespace in literal strings used in @select expressions is preserved
- [x] Superfluous whitespace in @test expressions is removed
- [x] Whitespace necessary to delimit names in @test expressions is preserved
- [x] Superfluous whitespace in XPath expressions in inline attributes is removed
- [x] Escaped curly brackets in inline attributes are preserved
- [x] Special characters in inline expressions are preserved
- [x] Element names are lowercased
- [x] Namespaced element names are lowercased
- [x] <xsl:element/> is inlined
- [x] <xsl:element namespace="..."/> is inlined
- [x] <xsl:element namespace="..."/> preserves the element's prefix
- [x] <xsl:element/> with an invalid name is ignored
- [x] Inlined elements' names are lowercased
- [x] <xsl:attribute/> with one single <xsl:value-of/> child is inlined
- [x] <xsl:attribute/> with an invalid name is ignored
- [x] Inlined attributes' names are lowercased
- [x] <xsl:attribute/> with <xsl:value-of/>, <xsl:text/> and text nodes descendants is inlined
- [x] <xsl:attribute/> child of namespaced element is inlined
- [x] Curly brackets in text are escaped when attributes are inlined
- [x] <xsl:attribute/> with <xsl:if/> child is not inlined
- [x] Conditional <xsl:attribute/> is replaced with <xsl:copy-of/> where possible
- [x] Conditional <xsl:attribute/> is not replaced with <xsl:copy-of/> if names do not match
- [x] <xsl:attribute> name is lowercased
- [x] <xsl:element><xsl:attribute> is inlined
- [x] Attribute names are lowercased
- [x] Attributes are deduplicated and the first one of a given name is kept
- [x] Attributes are deduplicated and the first one of a given lowercased name is kept
- [x] <xsl:if test="@foo"><xsl:value-of select="@foo"/></xsl:if> is optimized to <xsl:value-of select="@foo"/>
- [x] <xsl:if test="@foo"><xsl:value-of select="@bar"/></xsl:if> is left untouched
- [x] <xsl:if test="1+@foo"><xsl:value-of select="1+@foo"/></xsl:if> is left untouched
- [x] Values are inlined in <xsl:if test=".=':)'"><xsl:value-of select="."/></xsl:if>
- [x] Values are inlined in <xsl:choose><xsl:when test=".=':)'"><img alt="{.}"/></xsl:when><xsl:when test=".=':('"><img alt="{.}"/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>
- [x] Values and expressions are preserved in <xsl:if test=".=':)'"><hr title="{{.}}{@foo}"/></xsl:if>
- [x] Throws an exception during XPath minification if a string isn't properly closed
-
 s9e\TextFormatter\Tests\Configurator\Helpers\TemplateParser
  [x] parse() tests
  [x] parse() throws an exception if it encounters a processing instruction in the stylesheet
@@ -644,13 +603,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] loadTemplate() can load '<ul><li>one<li>two</ul>'
  [x] saveTemplate() correctly handles '<ul><li>one<li>two</ul>'
  [x] loadTemplate() throws an exception on malformed XSL
- [x] normalize() normalizes '<br>' to '<br/>'
- [x] normalize() normalizes '<b>b</b> <i>i</i>' to '<b>b</b><xsl:text> </xsl:text><i>i</i>'
- [x] normalize() normalizes '<b> </b>' to '<b><xsl:text> </xsl:text></b>'
- [x] normalize() normalizes '<b> <i>!</i></b>' to '<b><xsl:text> </xsl:text><i>!</i></b>'
- [x] normalize() normalizes '<b><i>!</i> </b>' to '<b><i>!</i><xsl:text> </xsl:text></b>'
- [x] normalize() normalizes '<![CDATA[<br/>]]><![CDATA[<br/>]]>' to '&lt;br/&gt;&lt;br/&gt;'
- [x] normalize() throws an exception on malformed XSL
  [x] asXPath('foo') returns 'foo'
  [x] asXPath("d'oh") returns "d'oh"
  [x] asXPath("'\"") returns concat("'",'"')
@@ -664,6 +616,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper
  [x] getElementsByRegexp() can return elements created via <xsl:copy-of/>
  [x] replaceTokens() tests
  [x] highlightNode() tests
+ [x] minifyXPath() tests
 
 s9e\TextFormatter\Tests\Configurator\Items\Attribute
  [x] An array of options can be passed to the constructor
@@ -911,13 +864,16 @@ s9e\TextFormatter\Tests\Configurator\Items\TagFilter
  [x] Sets the filter's signature to ['tag' => null]
 
 s9e\TextFormatter\Tests\Configurator\Items\Template
- [x] Constructor normalizes the template
- [x] When cast as string, returns the string passed to constructor if applicable
+ [x] When cast as string, returns the template's content
  [x] getParameters() returns the list of parameters used in this template
  [x] asDOM() returns the template as a DOMDocument
  [x] getCSSNodes() returns all nodes that normally contain CSS
  [x] getJSNodes() returns all nodes that normally contain JS
  [x] getURLNodes() returns all nodes that normally contain a URL
+ [x] isNormalized() returns false by default
+ [x] isNormalized() returns true if normalize() was called
+ [x] isNormalized(true) sets it to true
+ [x] isNormalized(false) sets it to false
 
 s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] get() returns the default value
@@ -931,6 +887,56 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned when the variant is retrieved
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned everytime the variant is retrieved
  [x] setDynamic() throws an exception on invalid callback
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
+ [x] Constructor expects a valid callback
+ [x] normalize() calls the user-defined callback with a DOMNode as argument
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineAttributes
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineCDATA
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineElements
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineTextElements
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineInferredValues
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyXPathExpressions
+ [x] Throws an exception if a string isn't properly closed
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\NormalizeAttributeNames
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\NormalizeElementNames
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\PreserveSingleSpaces
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveComments
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
+ [x] Works
+
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
+ [x] Only executes a normalization once per run if its "onlyOnce" property is true
+ [x] normalizeTag() calls each of the tag's template's normalize() method with itself as argument
+ [x] normalizeTag() does not call normalize() if the template was already normalized
+ [x] Default normalization rules
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowAttributeSets
  [x] Disallowed: <b use-attribute-sets="foo"/>
@@ -956,8 +962,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowElement
  [x] DisallowElement('script') disallows <b><script/></b>
  [x] DisallowElement('svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
  [x] DisallowElement('script') allows <b><span/></b>
- [x] DisallowElement('script') disallows new Template('<b><SCRIPT/></b>')
- [x] DisallowElement('script') disallows new Template('<b><xsl:element name="script"/></b>')
+ [x] DisallowElement('script') disallows <b><SCRIPT/></b>
+ [x] DisallowElement('script') disallows <b><xsl:element name="script"/></b>
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowElementNS
  [x] DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>
@@ -1162,9 +1168,7 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] setOutputMethod('xml') sets the stylesheet's output to omit the XML declaration
  [x] setOutputMethod('text') throws an exception
  [x] setWildcardTemplate() accepts a string as template
- [x] setWildcardTemplate() accepts a callback as template
  [x] setWildcardTemplate() accepts an instance of Template as template
- [x] setWildcardTemplate() rejects anything else
  [x] setWildcardTemplate() sets a template with a * matching rule for given prefix
  [x] setWildcardTemplate() throws an exception if the prefix is empty
  [x] setWildcardTemplate() throws an exception if the prefix is invalid
@@ -1181,6 +1185,8 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() includes a parameter's default value in the stylesheet
  [x] get() escapes a parameter's default value
  [x] get() calls the plugins' finalize() method before assembling the stylesheet
+ [x] get() normalizes wildcard templates before assembling the stylesheet
+ [x] get() normalizes tags' templates before assembling the stylesheet
  [x] getUsedParameters() returns parameters that were formally defined
  [x] getUsedParameters() returns undefined parameters used in tags' templates
  [x] getUsedParameters() returns undefined parameters used in wildcard templates
@@ -1860,6 +1866,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Throws an exception on <xsl:copy-of/> that does not copy an attribute
  [x] Throws an exception on unterminated strings in XPath expressions
  [x] setParameter() accepts values that contain both types of quotes
+ [x] Correctly handles dynamic stylesheet parameters
  [x] HTML rendering
  [x] XHTML rendering
  [x] Rendering of void and empty elements in HTML

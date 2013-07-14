@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Template;
+use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class TemplateCollection extends NormalizedCollection
 {

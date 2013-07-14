@@ -11,17 +11,7 @@ use s9e\TextFormatter\Tests\Test;
 class TemplateTest extends Test
 {
 	/**
-	* @testdox Constructor normalizes the template
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\InvalidXslException
-	* @expectedExceptionMessage Premature end of data
-	*/
-	public function testNormalizeTemplate()
-	{
-		new Template('<xsl:value-of select="@foo">');
-	}
-
-	/**
-	* @testdox When cast as string, returns the string passed to constructor if applicable
+	* @testdox When cast as string, returns the template's content
 	*/
 	public function testToStringString()
 	{
@@ -89,5 +79,53 @@ class TemplateTest extends Test
 
 		$this->assertSame(1, count($nodes));
 		$this->assertSame('{@foo}', $nodes[0]->value);
+	}
+
+	/**
+	* @testdox isNormalized() returns false by default
+	*/
+	public function testIsNormalizedDefault()
+	{
+		$template = new Template('<br/>');
+
+		$this->assertFalse($template->isNormalized());
+	}
+
+	/**
+	* @testdox isNormalized() returns true if normalize() was called
+	*/
+	public function testIsNormalizedCalled()
+	{
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\TemplateNormalizer')
+		             ->disableOriginalConstructor()
+		             ->getMock();
+		
+		$template = new Template('<br/>');
+		$template->normalize($mock);
+
+		$this->assertTrue($template->isNormalized());
+	}
+
+	/**
+	* @testdox isNormalized(true) sets it to true
+	*/
+	public function testIsNormalizedTrue()
+	{
+		$template = new Template('<br/>');
+
+		$template->isNormalized(true);
+		$this->assertTrue($template->isNormalized());
+	}
+
+	/**
+	* @testdox isNormalized(false) sets it to false
+	*/
+	public function testIsNormalizedFalse()
+	{
+		$template = new Template('<br/>');
+
+		$template->isNormalized(true);
+		$template->isNormalized(false);
+		$this->assertFalse($template->isNormalized());
 	}
 }

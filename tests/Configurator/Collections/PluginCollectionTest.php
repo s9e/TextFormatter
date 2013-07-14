@@ -248,15 +248,37 @@ class PluginCollectionTest extends Test
 			$config
 		);
 	}
+
+	/**
+	* @testdox finalize() calls every plugin's finalize() method
+	*/
+	public function testFinalize()
+	{
+		$plugin1 = new DummyPluginConfigurator($this->configurator);
+		$plugin2 = new DummyPluginConfigurator($this->configurator);
+		$this->configurator->plugins->add('Foo1', $plugin1);
+		$this->configurator->plugins->add('Foo2', $plugin2);
+
+		$this->configurator->plugins->finalize();
+
+		$this->assertSame(1, $plugin1->finalized);
+		$this->assertSame(1, $plugin2->finalized);
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase
 {
 	protected $config = ['foo' => 1];
+	public $finalized = 0;
 
 	public function asConfig()
 	{
 		return $this->config;
+	}
+
+	public function finalize()
+	{
+		++$this->finalized;
 	}
 
 	public function setConfig($config)
