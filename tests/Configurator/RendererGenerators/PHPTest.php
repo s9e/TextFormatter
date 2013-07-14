@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators;
 
 use DOMDocument;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Items\DynamicStylesheetParameter;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 use s9e\TextFormatter\Tests\Test;
@@ -232,6 +233,21 @@ class PHPTest extends Test
 			$renderer->setParameter('foo', $value);
 			$this->assertSame($value, $renderer->render('<rt><X/></rt>'));
 		}
+	}
+
+	/**
+	* @testdox Correctly handles dynamic stylesheet parameters
+	*/
+	public function testDynamicParameters()
+	{
+		$configurator = new Configurator;
+		$configurator->stylesheet->parameters['foo'] = new DynamicStylesheetParameter('count(//X)');
+		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+
+		$renderer = $configurator->getRenderer('PHP');
+
+		$this->assertSame('1',  $renderer->render('<rt><X/></rt>'));
+		$this->assertSame('22', $renderer->render('<rt><X/><X/></rt>'));
 	}
 
 	/**
