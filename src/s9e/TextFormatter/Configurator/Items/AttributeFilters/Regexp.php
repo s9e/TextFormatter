@@ -85,9 +85,16 @@ class Regexp extends AttributeFilter
 	{
 		try
 		{
+			$regexpInfo = RegexpParser::parse($this->vars['regexp']);
+
+			// Match any number of "(" optionally followed by "?:"
+			$captureStart = '(?>\\((?:\\?:)?)*';
+
 			// Regexps that start with a fixed scheme are considered safe. As a special case, we
 			// allow the scheme part to end with a single ? to allow the regexp "https?"
-			if (preg_match('#.\\^\\(*(?!data|\\w*script)\\w+\\??:#i', $this->vars['regexp']))
+			$regexp = '#^\\^' . $captureStart . '(?!data|\\w*script)\\w+\\??:#i';
+			if (preg_match($regexp, $regexpInfo['regexp'])
+			 && strpos($regexpInfo['modifiers'], 'm') === false)
 			{
 				return true;
 			}

@@ -58,6 +58,17 @@ class RegexpTest extends Test
 	}
 
 	/**
+	* @testdox Is not safe as URL if the regexp is /^foo:(.*)/m
+	*/
+	public function testURLUnsafeFixedSchemeMultiline()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^foo:(.*)/m');
+
+		$this->assertFalse($filter->isSafeAsURL());
+	}
+
+	/**
 	* @testdox Is safe as URL if the regexp is /^https?:(.*)/
 	*/
 	public function testURLSafeFixedSchemeWithJoker()
@@ -75,6 +86,17 @@ class RegexpTest extends Test
 	{
 		$filter = new Regexp;
 		$filter->setRegexp('/^(https?:.*)/');
+
+		$this->assertTrue($filter->isSafeAsURL());
+	}
+
+	/**
+	* @testdox Is safe as URL if the regexp is /^(?:https?:.*)/
+	*/
+	public function testURLSafeNonCapturingFixedSchemeWithJoker()
+	{
+		$filter = new Regexp;
+		$filter->setRegexp('/^(?:https?:.*)/');
 
 		$this->assertTrue($filter->isSafeAsURL());
 	}
