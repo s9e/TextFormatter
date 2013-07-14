@@ -76,20 +76,6 @@
 		]]></template>
 	</bbcode>
 
-	<bbcode name="DAILYMOTION">
-		<usage><![CDATA[
-			[DAILYMOTION id={IDENTIFIER}]{PARSE=/^(?<id>[A-Za-z0-9]+)$/,!^http://[a-z]+\.dailymotion.com\/(?:video/|user/[^#]+#video=)(?<id>[A-Za-z0-9]+)!}[/DAILYMOTION]
-		]]></usage>
-		<template><![CDATA[
-			<object width="]]><var name="width">560</var><![CDATA[" height="]]><var name="height">315</var><![CDATA[">
-				<param name="movie" value="http://www.dailymotion.com/swf/video/{IDENTIFIER}"></param>
-				<param name="allowFullScreen" value="true"></param>
-
-				<embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/{IDENTIFIER}" width="]]><var name="width">560</var><![CDATA[" height="]]><var name="height">315</var><![CDATA[" allowfullscreen="true"></embed>
-			</object>
-		]]></template>
-	</bbcode>
-
 	<bbcode name="DD">
 		<usage>[DD]{TEXT}[/DD]</usage>
 		<template><![CDATA[
@@ -377,25 +363,6 @@
 		<usage>[VAR]{TEXT}[/VAR]</usage>
 		<template><![CDATA[
 			<var>{TEXT}</var>
-		]]></template>
-	</bbcode>
-
-	<bbcode name="VIMEO">
-		<usage><![CDATA[
-			[VIMEO id={NUMBER}]{PARSE=/^(?<id>[0-9]+)$/,#^http://vimeo\.com/(?:channels/[^/]+/)?(?<id>[0-9]+)#}[/VIMEO]
-		]]></usage>
-		<template><![CDATA[
-			<iframe src="http://player.vimeo.com/video/{NUMBER}" width="]]><var name="width">560</var><![CDATA[" height="]]><var name="height">315</var><![CDATA[" frameborder="0" webkitAllowFullScreen="" mozallowfullscreen="" allowFullScreen=""></iframe>
-		]]></template>
-	</bbcode>
-
-	<bbcode name="YOUTUBE">
-		<usage><![CDATA[
-			[YOUTUBE id={IDENTIFIER}]{PARSE=#^(?<id>[-0-9A-Z_a-z]+)$#,#^http://[a-z]+\.youtube\.com/(?:watch\?.*?v=|v/)(?<id>[-0-9A-Z_a-z]+)#,#^http://youtu\.be/(?<id>[-0-9A-Z_a-z]+)#}[/YOUTUBE]
-		]]></usage>
-		<!-- Markup lifted from YouTube's "Share" form -->
-		<template><![CDATA[
-			<iframe width="]]><var name="width">560</var><![CDATA[" height="]]><var name="height">315</var><![CDATA[" src="http://www.youtube.com/embed/{IDENTIFIER}" frameborder="0" allowfullscreen=""></iframe>
 		]]></template>
 	</bbcode>
 

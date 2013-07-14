@@ -156,29 +156,6 @@ class BBCodesTest extends Test
 				'x <span style="color:red">is <span style="color:green">green</span> and red</span> y'
 			],
 			[
-				'[DAILYMOTION]x222z1[/DAILYMOTION]',
-				'<object width="560" height="315"><param name="movie" value="http://www.dailymotion.com/swf/video/x222z1"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/x222z1" width="560" height="315" allowfullscreen="true"></object>'
-			],
-			[
-				'[DAILYMOTION]x222z1[/DAILYMOTION]',
-				'<object width="644" height="333"><param name="movie" value="http://www.dailymotion.com/swf/video/x222z1"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/x222z1" width="644" height="333" allowfullscreen="true"></object>',
-				function ($configurator)
-				{
-					$configurator->BBCodes->addFromRepository('dailymotion', 'default', [
-						'width'  => 644,
-						'height' => 333
-					]);
-				}
-			],
-			[
-				'[DAILYMOTION]http://www.dailymotion.com/video/x222z1[/DAILYMOTION]',
-				'<object width="560" height="315"><param name="movie" value="http://www.dailymotion.com/swf/video/x222z1"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/x222z1" width="560" height="315" allowfullscreen="true"></object>'
-			],
-			[
-				'[DAILYMOTION]http://www.dailymotion.com/user/Dailymotion/2#video=x222z1[/DAILYMOTION]',
-				'<object width="560" height="315"><param name="movie" value="http://www.dailymotion.com/swf/video/x222z1"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.dailymotion.com/swf/video/x222z1" width="560" height="315" allowfullscreen="true"></object>'
-			],
-			[
 				'our [del]great [/del]leader',
 				'our <del>great </del>leader'
 			],
@@ -629,60 +606,6 @@ class BBCodesTest extends Test
 			[
 				'[var]x[sub][var]i[/var][/sub][/var]',
 				'<var>x<sub><var>i</var></sub></var>'
-			],
-			[
-				'[VIMEO]67207222[/VIMEO]',
-				'<iframe src="http://player.vimeo.com/video/67207222" width="560" height="315" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>'
-			],
-			[
-				'[VIMEO]http://vimeo.com/67207222[/VIMEO]',
-				'<iframe src="http://player.vimeo.com/video/67207222" width="560" height="315" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>'
-			],
-			[
-				'[VIMEO]http://vimeo.com/channels/staffpicks/67207222[/VIMEO]',
-				'<iframe src="http://player.vimeo.com/video/67207222" width="560" height="315" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>'
-			],
-			[
-				'[VIMEO]67207222[/VIMEO]',
-				'<iframe src="http://player.vimeo.com/video/67207222" width="400" height="226" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>',
-				function ($configurator)
-				{
-					$configurator->BBCodes->addFromRepository('vimeo', 'default', [
-						'width'  => 400,
-						'height' => 226
-					]);
-				}
-			],
-			[
-				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
-			],
-			[
-				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
-			],
-			[
-				'[YOUTUBE]http://www.youtube.com/watch?feature=player_embedded&v=-cEzsCAzTak[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
-			],
-			[
-				'[YOUTUBE]http://www.youtube.com/v/-cEzsCAzTak[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
-			],
-			[
-				'[YOUTUBE]http://youtu.be/-cEzsCAzTak[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>'
-			],
-			[
-				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<iframe width="853" height="505" src="http://www.youtube.com/embed/-cEzsCAzTak" frameborder="0" allowfullscreen=""></iframe>',
-				function ($configurator)
-				{
-					$configurator->BBCodes->addFromRepository('youtube', 'default', [
-						'width'  => 853,
-						'height' => 505
-					]);
-				}
 			],
 		];
 	}
