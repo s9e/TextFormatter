@@ -165,6 +165,15 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
+	* @testdox Has a default finalize() method that doesn't do anything
+	*/
+	public function testFinalize()
+	{
+		$dummy = new DummyPluginConfigurator(new Configurator);
+		$dummy->finalize();
+	}
+
+	/**
 	* @testdox getJSParser() returns NULL for custom plugins
 	*/
 	public function testGetJSParserFalse()

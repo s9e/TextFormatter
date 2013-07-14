@@ -14,47 +14,29 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 class Template
 {
 	/**
-	* @var callback
-	*/
-	protected $callback;
-
-	/**
-	* @var callback
+	* @var string This template's content
 	*/
 	protected $template;
 
 	/**
 	* Constructor
 	*
-	* @param  callback|string $arg Either a template or a callback that returns the template
+	* @param  string $template This template's content
 	* @return void
 	*/
-	public function __construct($arg)
+	public function __construct($template)
 	{
-		if (is_string($arg))
-		{
-			$this->template = TemplateHelper::normalize($arg);
-		}
-		elseif (is_callable($arg))
-		{
-			$this->callback = $arg;
-		}
-		else
-		{
-			throw new InvalidArgumentException('Argument 1 passed to ' . __METHOD__ . ' must be a string or a valid callback');
-		}
+		$this->template = TemplateHelper::normalize($template);
 	}
 
 	/**
-	* Return this template in string form, executing the stored callback if applicable
+	* Return this template's content
 	*
 	* @return string
 	*/
 	public function __toString()
 	{
-		return (isset($this->callback))
-		     ? TemplateHelper::normalize(call_user_func($this->callback))
-		     : $this->template;
+		return $this->template;
 	}
 
 	/**

@@ -98,6 +98,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->tags is an instance of TagCollection
  [x] $configurator->templateChecker is an instance of TemplateChecker
  [x] $configurator->urlConfig is an instance of UrlConfig
+ [x] asConfig() calls every plugin's finalize() before retrieving their config
  [x] asConfig() returns an array with a rootContext element
  [x] asConfig() returns an array with a registeredVars element that contains urlConfig
  [x] asConfig() adds regexpLimit to the plugin's configuration if it's not specified and the plugin has a regexp
@@ -301,7 +302,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\TemplateCheckList
 
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateCollection
  [x] set() accepts a string and returns an instance of Template
- [x] set() accepts a callback and returns an instance of Template
  [x] set() accepts an instance of Template, which it returns
 
 s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
@@ -911,14 +911,8 @@ s9e\TextFormatter\Tests\Configurator\Items\TagFilter
  [x] Sets the filter's signature to ['tag' => null]
 
 s9e\TextFormatter\Tests\Configurator\Items\Template
- [x] Constructor accepts a string
- [x] Constructor accepts a valid callback
- [x] Constructor throws an exception on anything else
- [x] Constructor normalizes string templates
+ [x] Constructor normalizes the template
  [x] When cast as string, returns the string passed to constructor if applicable
- [x] When cast as string, executes the callback passed to constructor and returns its result if applicable
- [x] When cast as string, executes the callback passed and normalizes the returned template
- [x] Constructor interprets a string as a literal, even if it would be a valid callback
  [x] getParameters() returns the list of parameters used in this template
  [x] asDOM() returns the template as a DOMDocument
  [x] getCSSNodes() returns all nodes that normally contain CSS
@@ -1186,6 +1180,7 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() includes parameters in the stylesheet
  [x] get() includes a parameter's default value in the stylesheet
  [x] get() escapes a parameter's default value
+ [x] get() calls the plugins' finalize() method before assembling the stylesheet
  [x] getUsedParameters() returns parameters that were formally defined
  [x] getUsedParameters() returns undefined parameters used in tags' templates
  [x] getUsedParameters() returns undefined parameters used in wildcard templates
@@ -1527,6 +1522,7 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] setRegexpLimitAction() sets the regexpLimitAction property
  [x] setRegexpLimitAction() throws an exception on invalid values
  [x] Offers a default asConfig() implementation that leaves out the configurator instance
+ [x] Has a default finalize() method that doesn't do anything
  [x] getJSParser() returns NULL for custom plugins
  [x] getJSParser() returns the content of Parser.js for stock plugins
  [x] getJSParser() returns NULL if there's no Parser.js for a stock plugin
@@ -1689,6 +1685,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] $plugin->regexpStart can be changed
  [x] $plugin->regexpEnd can be changed
  [x] getTemplate() merges identical templates
+ [x] finalize() sets the tag's template
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates

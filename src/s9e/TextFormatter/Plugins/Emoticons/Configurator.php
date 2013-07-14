@@ -37,11 +37,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	protected $collection;
 
 	/**
-	* @var Tag Tag used by this plugin
-	*/
-	protected $tag;
-
-	/**
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'E';
@@ -55,11 +50,20 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	{
 		$this->collection = new EmoticonCollection;
 
-		$this->tag = ($this->configurator->tags->exists($this->tagName))
-		           ? $this->configurator->tags->get($this->tagName)
-		           : $this->configurator->tags->add($this->tagName);
+		if (!$this->configurator->tags->exists($this->tagName))
+		{
+			$this->configurator->tags->add($this->tagName);
+		}
+	}
 
-		$this->tag->defaultTemplate = [$this, 'getTemplate'];
+	/**
+	* Create the template used for emoticons
+	*
+	* @return void
+	*/
+	public function finalize()
+	{
+		$this->configurator->tags[$this->tagName]->defaultTemplate = $this->getTemplate();
 	}
 
 	/**

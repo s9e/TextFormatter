@@ -208,6 +208,12 @@ class Configurator implements ConfigProvider
 	*/
 	public function asConfig()
 	{
+		// Finalize the plugins' config
+		foreach ($this->plugins as $plugin)
+		{
+			$plugin->finalize();
+		}
+
 		$properties = get_object_vars($this);
 
 		// Remove properties that shouldn't be turned into config arrays

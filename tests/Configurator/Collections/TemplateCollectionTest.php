@@ -26,19 +26,6 @@ class TemplateCollectionTest extends Test
 	}
 
 	/**
-	* @testdox set() accepts a callback and returns an instance of Template
-	*/
-	public function testSetCallback()
-	{
-		$templates = new TemplateCollection;
-
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Template',
-			$templates->set('', function(){})
-		);
-	}
-
-	/**
 	* @testdox set() accepts an instance of Template, which it returns
 	*/
 	public function testSetInstance()

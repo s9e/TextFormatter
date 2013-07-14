@@ -16,17 +16,13 @@ class TemplateCollection extends NormalizedCollection
 	/**
 	* Normalize a template for storage
 	*
-	* @param  mixed    $template Either a string, a callback or an instance of Template
+	* @param  mixed    $template Either a string or an instance of Template
 	* @return Template           An instance of Template
 	*/
 	public function normalizeValue($template)
 	{
-		// Create an instance of Template if it's not one
-		if (!($template instanceof Template))
-		{
-			$template = new Template($template);
-		}
-
-		return $template;
+		return ($template instanceof Template)
+		     ? $template
+		     : new Template($template);
 	}
 }

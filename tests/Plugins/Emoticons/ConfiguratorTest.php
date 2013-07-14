@@ -199,4 +199,16 @@ class ConfiguratorTest extends Test
 			$plugin->getTemplate()
 		);
 	}
+
+	/**
+	* @testdox finalize() sets the tag's template
+	*/
+	public function testFinalize()
+	{
+		$this->configurator->Emoticons;
+		$this->assertCount(0, $this->configurator->tags['E']->templates);
+
+		$this->configurator->Emoticons->finalize();
+		$this->assertCount(1, $this->configurator->tags['E']->templates);
+	}
 }

@@ -68,9 +68,19 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 
 	/**
-	* Executed by constructor
+	* Executed by this plugin's constructor
 	*/
 	protected function setUp()
+	{
+	}
+
+	/**
+	* Finalize this plugin's configuration
+	*
+	* Executed by the configurator before the parser's config is generated and before the renderer's
+	* stylesheet is generated
+	*/
+	public function finalize()
 	{
 	}
 

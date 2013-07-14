@@ -7,6 +7,7 @@ use DOMXPath;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Stylesheet;
+use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -300,6 +301,21 @@ class StylesheetTest extends Test
 	}
 
 	/**
+	* @testdox get() calls the plugins' finalize() method before assembling the stylesheet
+	*/
+	public function testGetFinalize()
+	{
+		$configurator = new Configurator;
+		$configurator->plugins->add('Dummy', __NAMESPACE__ . '\\DummyStylesheetPluginConfigurator');
+		$configurator->tags->add('FOO')->defaultTemplate = 'BAR';
+
+		$xsl = $configurator->stylesheet->get();
+
+		$this->assertContains('BAZ', $xsl);
+		$this->assertNotContains('BAR', $xsl);
+	}
+
+	/**
 	* @testdox getUsedParameters() returns parameters that were formally defined
 	*/
 	public function testGetUsedParametersDefined()
@@ -382,5 +398,13 @@ class StylesheetTest extends Test
 			'<xsl:template match="p"><p><xsl:apply-templates/></p></xsl:template>',
 			$configurator->stylesheet->get()
 		);
+	}
+}
+
+class DummyStylesheetPluginConfigurator extends ConfiguratorBase
+{
+	public function finalize()
+	{
+		$this->configurator->tags['FOO']->defaultTemplate = 'BAZ';
 	}
 }

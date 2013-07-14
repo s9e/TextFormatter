@@ -60,6 +60,12 @@ class Stylesheet
 	*/
 	public function get()
 	{
+		// Give plugins the opportunity to finalize their templates
+		foreach ($this->configurator->plugins as $plugin)
+		{
+			$plugin->finalize();
+		}
+
 		$prefixes  = [];
 		$templates = [
 			'p'  => '<p><xsl:apply-templates/></p>',

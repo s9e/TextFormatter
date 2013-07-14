@@ -126,6 +126,21 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox asConfig() calls every plugin's finalize() before retrieving their config
+	*/
+	public function testAsConfigFinalize()
+	{
+		$plugin = new DummyPluginConfigurator($this->configurator);
+		$this->configurator->plugins->add('Dummy', $plugin);
+
+		$config = $this->configurator->asConfig();
+		$this->assertArrayMatches(
+			['plugins' => ['Dummy' => ['finalized' => true]]],
+			$config
+		);
+	}
+
+	/**
 	* @testdox asConfig() returns an array with a rootContext element
 	*/
 	public function testAsConfigRootContext()
@@ -154,7 +169,7 @@ class ConfiguratorTest extends Test
 		$plugin = new DummyPluginConfigurator($this->configurator);
 		$plugin->setConfig(['regexp' => '//']);
 
-		$this->configurator->plugins->add('Dummy',$plugin);
+		$this->configurator->plugins->add('Dummy', $plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
@@ -177,7 +192,7 @@ class ConfiguratorTest extends Test
 		$plugin = new DummyPluginConfigurator($this->configurator);
 		$plugin->setConfig(['regexpLimit' => 1000]);
 
-		$this->configurator->plugins->add('Dummy',$plugin);
+		$this->configurator->plugins->add('Dummy', $plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
@@ -200,7 +215,7 @@ class ConfiguratorTest extends Test
 		$plugin = new DummyPluginConfigurator($this->configurator);
 		$plugin->setConfig(['regexp' => '//']);
 
-		$this->configurator->plugins->add('Dummy',$plugin);
+		$this->configurator->plugins->add('Dummy', $plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
@@ -223,7 +238,7 @@ class ConfiguratorTest extends Test
 		$plugin = new DummyPluginConfigurator($this->configurator);
 		$plugin->setConfig(['regexpLimitAction' => 1000]);
 
-		$this->configurator->plugins->add('Dummy',$plugin);
+		$this->configurator->plugins->add('Dummy', $plugin);
 		$config = $this->configurator->asConfig();
 
 		$this->assertArrayMatches(
@@ -621,5 +636,10 @@ class DummyPluginConfigurator extends ConfiguratorBase
 	public function setConfig(array $config)
 	{
 		$this->config = $config;
+	}
+
+	public function finalize()
+	{
+		$this->config['finalized'] = true;
 	}
 }
