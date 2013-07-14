@@ -438,6 +438,19 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() normalizes the tag's template
+	*/
+	public function testNormalize()
+	{
+		$tagName = $this->configurator->Generic->add('#^---+$#m', '<xsl:element name="hr"/>');
+
+		$this->assertEquals(
+			'<hr/>',
+			$this->configurator->tags[$tagName]->defaultTemplate
+		);
+	}
+
+	/**
 	* @testdox add() checks the safeness of the tag
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	*/

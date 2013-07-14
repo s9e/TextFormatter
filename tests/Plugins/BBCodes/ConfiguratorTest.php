@@ -122,7 +122,34 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox addCustom() checks that the tag is safe before adding it
+	* @testdox addFromRepository() normalizes the tag's templates
+	*/
+	public function testAddFromRepositoryNormalize()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML(
+			'<repository>
+				<bbcode name="X">
+					<usage>[X]{TEXT}[/X]</usage>
+					<template><![CDATA[
+						<xsl:element name="hr"/>
+					]]></template>
+				</bbcode>
+			</repository>'
+		);
+
+		$plugin = $this->configurator->plugins->load('BBCodes');
+		$plugin->repositories->add('foo', $dom);
+		$plugin->addFromRepository('X', 'foo');
+
+		$this->assertEquals(
+			'<hr/>',
+			$this->configurator->tags['X']->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox addFromRepository() checks that the tag is safe before adding it
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	*/
 	public function testAddFromRepositoryCheckUnsafe()
@@ -229,6 +256,19 @@ class ConfiguratorTest extends Test
 		$this->assertEquals(
 			'<strong><xsl:apply-templates/></strong>',
 			$this->configurator->tags['B']->templates->get('@foo')
+		);
+	}
+
+	/**
+	* @testdox addCustom() normalizes the tag's template
+	*/
+	public function testAddCustomNormalize()
+	{
+		$this->configurator->BBCodes->addCustom('[X/]', '<xsl:element name="hr"/>');
+
+		$this->assertEquals(
+			'<hr/>',
+			$this->configurator->tags['X']->defaultTemplate
 		);
 	}
 

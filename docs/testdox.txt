@@ -1633,11 +1633,14 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository('B', 'foo') throws an exception if repository 'foo' does not exist
  [x] addFromRepository() throws an exception if the BBCode already exists
  [x] addFromRepository() throws an exception if the tag already exists
- [x] addCustom() checks that the tag is safe before adding it
+ [x] addFromRepository() normalizes the tag's templates
+ [x] addFromRepository() checks that the tag is safe before adding it
  [x] addFromRepository() returns the newly-created BBCode
  [x] addCustom() returns the newly-created BBCode
  [x] addCustom() accepts a single string as its second argument, representing the default template
  [x] addCustom() accepts an array of [predicate => template] as its second argument
+ [x] addCustom() normalizes the tag's template
+ [x] addCustom() checks that the tag is safe before adding it
  [x] asConfig() returns FALSE if no BBCodes were created
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
@@ -1755,6 +1758,7 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] A capture used as a URL can also be used as a passthrough, in which case it will used the filtered attribute when used in an attribute, and the normal passthrough when used in text
  [x] Captures from non-existent subpattern are removed from the template
  [x] An error occuring during add() does not leave a half-configured tag in the configurator's collection
+ [x] add() normalizes the tag's template
  [x] add() checks the safeness of the tag
  [x] add() checks the safeness of the tag before adding it to the configurator's collection
  [x] asConfig() returns FALSE if no replacements were set
