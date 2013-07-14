@@ -9,6 +9,9 @@ namespace s9e\TextFormatter\Configurator;
 
 use DOMNode;
 
+/**
+* @codeCoverageIgnore
+*/
 abstract class TemplateNormalization
 {
 	/**
