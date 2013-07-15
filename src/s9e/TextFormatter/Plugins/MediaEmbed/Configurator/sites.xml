@@ -98,7 +98,7 @@
 		<source>https://github.com/justintv/Twitch-API/blob/master/embedding.md</source>
 		<example>http://www.twitch.tv/minigolf2000</example>
 		<example>http://www.twitch.tv/minigolf2000/c/2475925</example>
-		<example>http://www.twitch.tv/minigolf2000/b/419320018</example>
+		<example>http://www.twitch.tv/minigolf2000/b/361358487</example>
 
 		<host>twitch.tv</host>
 		<extract>!twitch\.tv/(?'channel'[A-Za-z0-9]+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?!</extract>
