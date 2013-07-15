@@ -737,12 +737,6 @@ class PHPTest extends Test
 				'<xsl:template match="FOO"><xsl:if test=".=\'foo\'or.=\'bar\'">Foo</xsl:if></xsl:template>',
 				"if(\$node->textContent==='foo'||\$node->textContent==='bar')"
 			],
-			// Not part of optimizeCode() but considered an optimization nonetheless
-			[
-				'<xsl:template match="FOO">Hi</xsl:template>',
-				null,
-				'getParamAsXPath'
-			],
 		];
 	}
 
@@ -832,8 +826,14 @@ class PHPTest extends Test
 			[
 				// This test ensures that we concatenate inside the htmlspecialchars() call rather
 				// than concatenate the result of two htmlspecialchars() calls
-				'<xsl:template match="*"><xsl:value-of select="@foo"/><xsl:value-of select="name()"/><xsl:value-of select="@bar"/></xsl:template>',
-				"htmlspecialchars(\$node->getAttribute('foo').\$node->nodeName.\$node->getAttribute('bar')"
+				'<xsl:template match="*"><xsl:value-of select="@foo"/><xsl:value-of select="@bar"/></xsl:template>',
+				"htmlspecialchars(\$node->getAttribute('foo').\$node->getAttribute('bar')"
+			],
+			[
+				// This test ensures that we pre-escape literals before merging htmlspecialchars()
+				// calls together
+				'<xsl:template match="FOO"><img src="{$PATH}/bar.png"/></xsl:template>',
+				"'<img src=\"'.htmlspecialchars(\$this->params['PATH'],2).'/bar.png\">'"
 			],
 			[
 				'<xsl:template match="FOO[@bar]|BAR[@baz]">...</xsl:template>
@@ -846,6 +846,12 @@ class PHPTest extends Test
 					"if((\$nodeName==='BAZ'",
 					"if(\$nodeName==='BAR'"
 				]
+			],
+			[
+				// Not part of optimizeCode() but considered an optimization nonetheless
+				'<xsl:template match="FOO">Hi</xsl:template>',
+				null,
+				'getParamAsXPath'
 			],
 		];
 	}

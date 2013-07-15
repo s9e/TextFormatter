@@ -571,10 +571,6 @@ EOT
 	*/
 	protected function serializeOutput(DOMNode $output)
 	{
-		// Unconditionally escape the output. We'll let the optimization pass optimize away the
-		// htmlspecialchars() call if applicable (e.g. with literals)
-		$this->php .= '$this->out.=htmlspecialchars(';
-
 		$xpath      = new DOMXPath($output->ownerDocument);
 		$escapeMode = ($xpath->evaluate('count(ancestor::attribute)', $output))
 		            ? ENT_COMPAT
@@ -582,14 +578,17 @@ EOT
 
 		if ($output->getAttribute('type') === 'xpath')
 		{
+			$this->php .= '$this->out.=htmlspecialchars(';
 			$this->php .= $this->convertXPath($output->textContent);
+			$this->php .= ',' . $escapeMode . ');';
 		}
 		else
 		{
-			$this->php .= var_export($output->textContent, true);
+			// Literal
+			$this->php .= '$this->out.=';
+			$this->php .= var_export(htmlspecialchars($output->textContent, $escapeMode), true);
+			$this->php .= ';';
 		}
-
-		$this->php .= ',' . $escapeMode . ');';
 	}
 
 	/**
