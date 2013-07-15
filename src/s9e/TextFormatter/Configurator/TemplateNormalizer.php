@@ -7,13 +7,15 @@
 */
 namespace s9e\TextFormatter\Configurator;
 
+use ArrayAccess;
 use DOMDocument;
+use Iterator;
 use s9e\TextFormatter\Configurator\Collections\TemplateNormalizationList;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
-class TemplateNormalizer
+class TemplateNormalizer implements ArrayAccess, Iterator
 {
 	use CollectionProxy;
 

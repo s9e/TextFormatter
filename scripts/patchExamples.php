@@ -36,7 +36,7 @@ function patchFile($filepath)
 
 	// Execute PHP and replace output
 	$text = preg_replace_callback(
-		'#(```php([^`]+)```\\s+(?:```html|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
+		'#(```php([^`]+)```\\s+(?:```\\w+|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
 		function ($m)
 		{
 			ob_start();

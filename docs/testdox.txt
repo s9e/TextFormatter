@@ -935,6 +935,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\RemoveInterElementWh
  [x] Works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
+ [x] Implements ArrayAccess
+ [x] Implements Iterator
  [x] Only executes a normalization once per run if its "onlyOnce" property is true
  [x] normalizeTag() calls each of the tag's template's normalize() method with itself as argument
  [x] normalizeTag() does not call normalize() if the template was already normalized
@@ -1145,6 +1147,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\RestrictFlashScriptAccess
  [x] 'never',true disallows <embed><xsl:apply-templates/></embed>
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecker
+ [x] Implements ArrayAccess
+ [x] Implements Iterator
  [x] Disallows attribute sets by default
  [x] Disallows <xsl:copy/> by default
  [x] Disallows disabling output escaping by default

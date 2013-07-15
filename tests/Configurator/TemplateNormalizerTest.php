@@ -14,6 +14,22 @@ use s9e\TextFormatter\Tests\Test;
 class TemplateNormalizerTest extends Test
 {
 	/**
+	* @testdox Implements ArrayAccess
+	*/
+	public function textImplementsArrayAccess()
+	{
+		$this->assertInstanceOf('ArrayAccess', new TemplateNormalizer);
+	}
+
+	/**
+	* @testdox Implements Iterator
+	*/
+	public function textImplementsIterator()
+	{
+		$this->assertInstanceOf('Iterator', new TemplateNormalizer);
+	}
+
+	/**
 	* @testdox Only executes a normalization once per run if its "onlyOnce" property is true
 	*/
 	public function testOnlyOnce()

@@ -20,8 +20,7 @@ function addDir($root, $level = 0)
 			$basename = preg_replace('/^\\d{2}_/', '', basename($filepath));
 			$out .= $prepend . '**' . $basename . '**' . addDir($filepath, $level + 1);
 		}
-
-		if (preg_match('/^#+\\s*(.*)/', file_get_contents($filepath), $m))
+		elseif (preg_match('/^#+\\s*(.*)/', file_get_contents($filepath), $m))
 		{
 			$url = str_replace(
 				realpath(__DIR__ . '/../'),

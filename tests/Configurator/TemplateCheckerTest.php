@@ -21,6 +21,22 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
+	* @testdox Implements ArrayAccess
+	*/
+	public function textImplementsArrayAccess()
+	{
+		$this->assertInstanceOf('ArrayAccess', new TemplateChecker);
+	}
+
+	/**
+	* @testdox Implements Iterator
+	*/
+	public function textImplementsIterator()
+	{
+		$this->assertInstanceOf('Iterator', new TemplateChecker);
+	}
+
+	/**
 	* @testdox Disallows attribute sets by default
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Cannot assess the safety of attribute sets

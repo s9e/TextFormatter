@@ -7,7 +7,9 @@
 */
 namespace s9e\TextFormatter\Configurator;
 
+use ArrayAccess;
 use DOMDocument;
+use Iterator;
 use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
@@ -16,7 +18,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
 use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 
-class TemplateChecker
+class TemplateChecker implements ArrayAccess, Iterator
 {
 	use CollectionProxy;
 
