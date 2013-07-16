@@ -18,6 +18,8 @@ function addDir($root, $level = 0)
 		if (is_dir($filepath))
 		{
 			$basename = preg_replace('/^\\d{2}_/', '', basename($filepath));
+			$basename = str_replace('_', ' ', $basename);
+
 			$out .= $prepend . '**' . $basename . '**' . addDir($filepath, $level + 1);
 		}
 		elseif (preg_match('/^#+\\s*(.*)/', file_get_contents($filepath), $m))

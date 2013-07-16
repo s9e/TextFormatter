@@ -6,9 +6,10 @@
 
 ### **Miscellaneous**
   * [Stylesheet parameters](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/StylesheetParameters.md)
-  * **Template_normalization**
-    * [Change the default normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Template_normalization/ChangeDefault.md)
-    * [Automatically set `rel="nofollow"` on every link](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Template_normalization/SetRelLink.md)
+  * **Template normalization**
+    * [Change the default normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Template_normalization/01_ChangeDefault.md)
+    * [Automatically set `rel="nofollow"` on every link](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Template_normalization/02_SetRelLink.md)
+    * [Extend the template syntax through normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Template_normalization/03_Extends.md)
 
 ### **Plugins**
   * **BBCodes**
