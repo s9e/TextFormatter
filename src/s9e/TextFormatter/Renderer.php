@@ -19,23 +19,14 @@ abstract class Renderer
 	/**
 	* Create a return a new DOMDocument loaded with given XML
 	*
-	* @param  string      $xml   Source XML
-	* @param  integer     $flags Bitwise OR of the libxml option constants
+	* @param  string      $xml Source XML
 	* @return DOMDocument
 	*/
-	protected function loadXML($xml, $flags = 0)
+	protected function loadXML($xml)
 	{
-		// Activate small nodes allocation
-		if (defined('LIBXML_COMPACT'))
-		{
-			$flags |= LIBXML_COMPACT;
-		}
-
-		// Relax LibXML's hardcoded limits. Limits on tags can be set during configuration
-		if (defined('LIBXML_PARSEHUGE'))
-		{
-			$flags |= LIBXML_PARSEHUGE;
-		}
+		// Activate small nodes allocation and relax LibXML's hardcoded limits if applicable. Limits
+		// on tags can be set during configuration
+		$flags = (LIBXML_VERSION >= 20700) ? LIBXML_COMPACT | LIBXML_PARSEHUGE : 0;
 
 		$dom = new DOMDocument;
 		$dom->loadXML($xml, $flags);
