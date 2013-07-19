@@ -380,9 +380,11 @@ trait TagProcessing
 		$this->outputTag($tag);
 		$this->popContext();
 
-		if ($reopenTags)
+		// If our fixing budget allows it, peek at upcoming tags and remove end tags that would
+		// close tags that are already being closed now. Also, filter our list of tags being
+		// reopened by removing those that would immediately be closed
+		if ($closeTags && $this->currentFixingCost < $this->maxFixingCost)
 		{
-			// Filter out tags that would immediately be closed
 			$upcomingEndTags = [];
 
 			/**
@@ -391,7 +393,7 @@ trait TagProcessing
 			$ignorePos = $this->pos;
 
 			$i = count($this->tagStack);
-			while (--$i >= 0 && $this->currentFixingCost < $this->maxFixingCost)
+			while (--$i >= 0 && ++$this->currentFixingCost < $this->maxFixingCost)
 			{
 				$upcomingTag = $this->tagStack[$i];
 
@@ -404,16 +406,19 @@ trait TagProcessing
 				}
 
 				// Test whether this tag would close any of the tags we're about to reopen
-				$j = count($reopenTags);
+				$j = count($closeTags);
 
-				while (--$j >= 0)
+				while (--$j >= 0 && ++$this->currentFixingCost < $this->maxFixingCost)
 				{
-					++$this->currentFixingCost;
-
-					if ($upcomingTag->canClose($reopenTags[$j]))
+					if ($upcomingTag->canClose($closeTags[$j]))
 					{
-						// Remove the tag from the list of tags to reopen and keep the keys in order
-						array_splice($reopenTags, $j, 1);
+						// Remove the tag from the lists and reset the keys
+						array_splice($closeTags, $j, 1);
+
+						if (isset($reopenTags[$j]))
+						{
+							array_splice($reopenTags, $j, 1);
+						}
 
 						// Extend the ignored text to cover this tag
 						$ignorePos = max(
@@ -433,21 +438,21 @@ trait TagProcessing
 				*/
 				$this->outputIgnoreTag(new Tag(Tag::SELF_CLOSING_TAG, 'i', $this->pos, $ignorePos - $this->pos));
 			}
+		}
 
-			// Re-add tags that need to be reopened, at current cursor position
-			foreach ($reopenTags as $startTag)
+		// Re-add tags that need to be reopened, at current cursor position
+		foreach ($reopenTags as $startTag)
+		{
+			$newTag = $this->addStartTag($startTag->getName(), $this->pos, 0);
+
+			// Copy the original tag's attributes
+			$newTag->setAttributes($startTag->getAttributes());
+
+			// Re-pair the new tag
+			$endTag = $startTag->getEndTag();
+			if ($endTag)
 			{
-				$newTag = $this->addStartTag($startTag->getName(), $this->pos, 0);
-
-				// Copy the original tag's attributes
-				$newTag->setAttributes($startTag->getAttributes());
-
-				// Re-pair the new tag
-				$endTag = $startTag->getEndTag();
-				if ($endTag)
-				{
-					$newTag->pairWith($endTag);
-				}
+				$newTag->pairWith($endTag);
 			}
 		}
 	}

@@ -355,9 +355,11 @@ function processEndTag(tag)
 	outputTag(tag);
 	popContext();
 
-	if (reopenTags.length)
+	// If our fixing budget allows it, peek at upcoming tags and remove end tags that would
+	// close tags that are already being closed now. Also, filter our list of tags being
+	// reopened by removing those that would immediately be closed
+	if (closeTags.length && currentFixingCost < maxFixingCost)
 	{
-		// Filter out tags that would immediately be closed
 		var upcomingEndTags = [];
 
 		/**
@@ -366,7 +368,7 @@ function processEndTag(tag)
 		var ignorePos = pos;
 
 		i = tagStack.length;
-		while (--i >= 0)
+		while (--i >= 0 && ++currentFixingCost < maxFixingCost)
 		{
 			var upcomingTag = tagStack[i];
 
@@ -379,16 +381,19 @@ function processEndTag(tag)
 			}
 
 			// Test whether this tag would close any of the tags we're about to reopen
-			var j = reopenTags.length;
+			var j = closeTags.length;
 
-			while (--j >= 0)
+			while (--j >= 0 && ++currentFixingCost < maxFixingCost)
 			{
-				++currentFixingCost;
-
-				if (upcomingTag.canClose(reopenTags[j]))
+				if (upcomingTag.canClose(closeTags[j]))
 				{
-					// Remove the tag from the list of tags to reopen and keep the keys in order
-					reopenTags.splice(j, 1);
+					// Remove the tag from the lists and reset the keys
+					closeTags.splice(j, 1);
+
+					if (reopenTags[j])
+					{
+						reopenTags.splice(j, 1);
+					}
 
 					// Extend the ignored text to cover this tag
 					ignorePos = Math.max(
@@ -408,23 +413,23 @@ function processEndTag(tag)
 			*/
 			outputIgnoreTag(new Tag(Tag.SELF_CLOSING_TAG, 'i', pos, ignorePos - pos));
 		}
-
-		// Re-add tags that need to be reopened, at current cursor position
-		reopenTags.forEach(function(startTag)
-		{
-			var newTag = addStartTag(startTag.getName(), pos, 0);
-
-			// Copy the original tag's attributes
-			newTag.setAttributes(startTag.getAttributes());
-
-			// Re-pair the new tag
-			var endTag = startTag.getEndTag();
-			if (endTag)
-			{
-				newTag.pairWith(endTag);
-			}
-		});
 	}
+
+	// Re-add tags that need to be reopened, at current cursor position
+	reopenTags.forEach(function(startTag)
+	{
+		var newTag = addStartTag(startTag.getName(), pos, 0);
+
+		// Copy the original tag's attributes
+		newTag.setAttributes(startTag.getAttributes());
+
+		// Re-pair the new tag
+		var endTag = startTag.getEndTag();
+		if (endTag)
+		{
+			newTag.pairWith(endTag);
+		}
+	});
 }
 
 /**
