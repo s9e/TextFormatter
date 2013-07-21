@@ -88,6 +88,7 @@ class PHP implements RendererGenerator
 	*/
 	public function generate($xsl)
 	{
+		$this->php = '';
 		$ir = TemplateParser::parse($xsl);
 
 		$this->outputMethod = $ir->documentElement->getAttribute('outputMethod');
@@ -118,17 +119,13 @@ class PHP implements RendererGenerator
 
 		// Declare the namespace and class name
 		$pos = strrpos($className, '\\');
-		if ($pos === false)
+		if ($pos !== false)
 		{
-			$this->php = 'namespace { class ' . $className;
-		}
-		else
-		{
-			$this->php = 'namespace ' . substr($className, 0, $pos) . ' { '
-			           . 'class ' . substr($className, 1 + $pos);
+			$this->php .= 'namespace ' . substr($className, 0, $pos) . ";\n";
+			$className = substr($className, 1 + $pos);
 		}
 
-		$this->php .= ' extends \\s9e\\TextFormatter\\Renderer {
+		$this->php .= 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
 			protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
 			protected $dynamicParams=[' . implode(',', $dynamicParams) . '];
 			protected $params=[' . implode(',', $staticParams) . '];
@@ -310,7 +307,7 @@ EOT
 		}
 
 		// Close the class block and the namespace
-		$this->php .= '}}';
+		$this->php .= '}';
 
 		// Optimize the generated code
 		$this->optimizeCode();

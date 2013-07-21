@@ -48,7 +48,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertObjectHasAttribute('source', $renderer);
-		$this->assertStringStartsWith('namespace { class', $renderer->source);
+		$this->assertStringStartsWith('class', $renderer->source);
 	}
 
 	/**
@@ -107,7 +107,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertInstanceOf($className,	$renderer);
-		$this->assertStringStartsWith('namespace foo\\bar { class renderer_', $renderer->source);
+		$this->assertStringStartsWith("namespace foo\\bar;\nclass renderer_", $renderer->source);
 	}
 
 	/**
