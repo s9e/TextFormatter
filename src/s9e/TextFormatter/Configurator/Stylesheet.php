@@ -125,8 +125,8 @@ class Stylesheet
 				$match = $tagName;
 				if ($predicate !== '')
 				{
-					// Minify and append this template's predicate
-					$match .= '[' . TemplateHelper::minifyXPath($predicate) . ']';
+					// Append this template's predicate
+					$match .= '[' . $predicate . ']';
 				}
 
 				// Record the tag's prefix

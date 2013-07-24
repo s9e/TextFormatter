@@ -10,10 +10,20 @@ namespace s9e\TextFormatter\Configurator\Collections;
 use InvalidArgumentException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Template;
-use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class TemplateCollection extends NormalizedCollection
 {
+	/**
+	* Normalize a predicate used as key
+	*
+	* @param  string Original key
+	* @return void   Normalized key
+	*/
+	public function normalizeKey($predicate)
+	{
+		return TemplateHelper::minifyXPath($predicate);
+	}
+
 	/**
 	* Normalize a template for storage
 	*

@@ -305,6 +305,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\TemplateCheckList
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateCollection
  [x] set() accepts a string and returns an instance of Template
  [x] set() accepts an instance of Template, which it returns
+ [x] Minifies predicates
 
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateNormalizationList
  [x] append() normalizes a callback into an instance of s9e\TextFormatter\Configurator\TemplateNormalizations\Custom
@@ -1181,7 +1182,6 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() tests the wildcard templates' safeness
  [x] get() only tests the wildcard templates' safeness against tags in its namespace
  [x] get() only tests the wildcard templates' safeness against tags that do not have a default template
- [x] get() minifies predicates
  [x] get() correctly escapes predicates
  [x] get() merges duplicate templates
  [x] get() represents empty templates with a self-closing element

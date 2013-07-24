@@ -147,20 +147,6 @@ class StylesheetTest extends Test
 	}
 
 	/**
-	* @testdox get() minifies predicates
-	*/
-	public function testGetMinifiesPredicates()
-	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->templates['. = 2'] = 'BAR';
-
-		$this->assertContains(
-			'match="X[.=2]"',
-			$configurator->stylesheet->get()
-		);
-	}
-
-	/**
 	* @testdox get() correctly escapes predicates
 	*/
 	public function testGetEscapesPredicates()

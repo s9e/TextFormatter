@@ -38,4 +38,17 @@ class TemplateCollectionTest extends Test
 			$templates->set('', $template)
 		);
 	}
+
+	/**
+	* @testdox Minifies predicates
+	*/
+	public function testMinifiesPredicates()
+	{
+		$templates = new TemplateCollection;
+
+		$this->assertFalse($templates->exists('@foo'));
+		$templates->set(' @ foo ', '');
+		$this->assertTrue($templates->exists(' @ foo '));
+		$this->assertTrue($templates->exists('@foo'));
+	}
 }
