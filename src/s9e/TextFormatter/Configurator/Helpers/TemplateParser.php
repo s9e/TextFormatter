@@ -797,9 +797,6 @@ class TemplateParser
 			return 'no';
 		}
 
-		// Default return value
-		$isEmpty = 'yes';
-
 		// Test all branches of a <switch/>
 		// NOTE: this assumes that <switch/> are normalized to always have a default <case/>
 		$cases = [];
@@ -810,9 +807,10 @@ class TemplateParser
 
 		if (isset($cases['maybe']))
 		{
-			$isEmpty = 'maybe';
+			return 'maybe';
 		}
-		elseif (isset($cases['no']))
+
+		if (isset($cases['no']))
 		{
 			// If all the cases are not-empty, the element is not-empty
 			if (!isset($cases['yes']))
@@ -821,16 +819,16 @@ class TemplateParser
 			}
 
 			// Some 'yes' and some 'no', the element is a 'maybe'
-			$isEmpty = 'maybe';
+			return 'maybe';
 		}
 
 		// Test for <apply-templates/> or XPath output
 		if ($xpath->evaluate('count(applyTemplates | output[@type="xpath"])', $ir))
 		{
 			// We can't know in advance whether those will produce output
-			$isEmpty = 'maybe';
+			return 'maybe';
 		}
 
-		return $isEmpty;
+		return 'yes';
 	}
 }
