@@ -116,24 +116,13 @@ class PHPTest extends Test
 	public function testFilepathConstructor()
 	{
 		$className = uniqid('renderer_');
-		$filepath  = sys_get_temp_dir() . '/tmp.PHPRenderer';
+		$filepath  = $this->tempnam();
 
 		$generator = new PHP($className, $filepath);
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
-		if (!file_exists($filepath))
-		{
-			$this->fail($filepath . ' was not created');
-		}
-
-		$containsSource = (strpos($renderer->source, file_get_contents($filepath)) !== false);
-
-		unlink($filepath);
-
-		if ($containsSource)
-		{
-			$this->fail($filepath . " does not contain the renderer's source");
-		}
+		$this->assertFileExists($filepath);
+		$this->assertContains($renderer->source, file_get_contents($filepath));
 	}
 
 	/**
@@ -141,26 +130,15 @@ class PHPTest extends Test
 	*/
 	public function testFilepathProp()
 	{
-		$filepath  = sys_get_temp_dir() . '/tmp.PHPRenderer';
+		$filepath  = $this->tempnam();
 
 		$generator = new PHP;
 		$generator->filepath = $filepath;
 
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
-		if (!file_exists($filepath))
-		{
-			$this->fail($filepath . ' was not created');
-		}
-
-		$containsSource = (strpos($renderer->source, file_get_contents($filepath)) !== false);
-
-		unlink($filepath);
-
-		if ($containsSource)
-		{
-			$this->fail($filepath . " does not contain the renderer's source");
-		}
+		$this->assertFileExists($filepath);
+		$this->assertContains($renderer->source, file_get_contents($filepath));
 	}
 
 	/**

@@ -8,6 +8,17 @@ use s9e\TextFormatter\Configurator;
 
 abstract class Test extends \PHPUnit_Framework_TestCase
 {
+	public static function tearDownAfterClass()
+	{
+		foreach (self::$tmpFiles as $filepath)
+		{
+			if (file_exists($filepath))
+			{
+				unlink($filepath);
+			}
+		}
+	}
+
 	public function __get($k)
 	{
 		switch ($k)
@@ -118,5 +129,14 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$src .= ';' . $function . '(parse(' . json_encode($input) . '))';
 
 		return substr(shell_exec($exec . ' -e ' . escapeshellarg($src)), 0, -1);
+	}
+
+	protected static $tmpFiles = [];
+	public function tempnam($suffix = '.tmp')
+	{
+		$filepath = sys_get_temp_dir() . '/' . uniqid() . $suffix;
+		self::$tmpFiles[] = $filepath;
+
+		return $filepath;
 	}
 }
