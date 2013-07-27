@@ -48,7 +48,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertObjectHasAttribute('source', $renderer);
-		$this->assertStringStartsWith('class', $renderer->source);
+		$this->assertContains('class Renderer', $renderer->source);
 	}
 
 	/**
@@ -107,7 +107,60 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertInstanceOf($className,	$renderer);
-		$this->assertStringStartsWith("namespace foo\\bar;\nclass renderer_", $renderer->source);
+		$this->assertContains("namespace foo\\bar;\n\nclass renderer_", $renderer->source);
+	}
+
+	/**
+	* @testdox A filepath can be passed as the constructor's second argument to create a file that contains the generated renderer
+	*/
+	public function testFilepathConstructor()
+	{
+		$className = uniqid('renderer_');
+		$filepath  = sys_get_temp_dir() . '/tmp.PHPRenderer';
+
+		$generator = new PHP($className, $filepath);
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		if (!file_exists($filepath))
+		{
+			$this->fail($filepath . ' was not created');
+		}
+
+		$containsSource = (strpos($renderer->source, file_get_contents($filepath)) !== false);
+
+		unlink($filepath);
+
+		if ($containsSource)
+		{
+			$this->fail($filepath . " does not contain the renderer's source");
+		}
+	}
+
+	/**
+	* @testdox A filepath can be set in $rendererGenerator->filepath
+	*/
+	public function testFilepathProp()
+	{
+		$filepath  = sys_get_temp_dir() . '/tmp.PHPRenderer';
+
+		$generator = new PHP;
+		$generator->filepath = $filepath;
+
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		if (!file_exists($filepath))
+		{
+			$this->fail($filepath . ' was not created');
+		}
+
+		$containsSource = (strpos($renderer->source, file_get_contents($filepath)) !== false);
+
+		unlink($filepath);
+
+		if ($containsSource)
+		{
+			$this->fail($filepath . " does not contain the renderer's source");
+		}
 	}
 
 	/**

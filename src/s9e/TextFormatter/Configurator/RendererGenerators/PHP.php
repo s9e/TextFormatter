@@ -33,6 +33,11 @@ class PHP implements RendererGenerator
 	public $className;
 
 	/**
+	* @var string If set, path to the file where the renderer will be saved
+	*/
+	public $filepath;
+
+	/**
 	* @var string Name of the last class generated
 	*/
 	public $lastClassName;
@@ -51,13 +56,19 @@ class PHP implements RendererGenerator
 	* Constructor
 	*
 	* @param  string $className Name of the class to be created
+	* @param  string $filepath  If set, path to the file where the renderer will be saved
 	* @return void
 	*/
-	public function __construct($className = null)
+	public function __construct($className = null, $filepath = null)
 	{
 		if (isset($className))
 		{
 			$this->className = $className;
+		}
+
+		if (isset($filepath))
+		{
+			$this->filepath = $filepath;
 		}
 	}
 
@@ -68,6 +79,12 @@ class PHP implements RendererGenerator
 	{
 		// Generate the source file
 		$php = $this->generate($stylesheet->get());
+
+		// Save the file if applicable
+		if (isset($this->filepath))
+		{
+			file_put_contents($this->filepath, "<?php\n" . $php);
+		}
 
 		// Execute the source to create the class
 		eval($php);
@@ -88,7 +105,12 @@ class PHP implements RendererGenerator
 	*/
 	public function generate($xsl)
 	{
-		$this->php = '';
+		$this->php = "/**\n"
+		           . "* @package   s9e\TextFormatter\n"
+		           . "* @copyright Copyright (c) 2010-2013 The s9e Authors\n"
+		           . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
+		           . "*/\n\n";
+
 		$ir = TemplateParser::parse($xsl);
 
 		$this->outputMethod = $ir->documentElement->getAttribute('outputMethod');
@@ -121,59 +143,60 @@ class PHP implements RendererGenerator
 		$pos = strrpos($className, '\\');
 		if ($pos !== false)
 		{
-			$this->php .= 'namespace ' . substr($className, 0, $pos) . ";\n";
+			$this->php .= 'namespace ' . substr($className, 0, $pos) . ";\n\n";
 			$className = substr($className, 1 + $pos);
 		}
 
-		$this->php .= 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer {
-			protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
-			protected $dynamicParams=[' . implode(',', $dynamicParams) . '];
-			protected $params=[' . implode(',', $staticParams) . '];
-			protected $xpath;
-			public function __sleep()
+		$this->php .= 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer
 			{
-				$props = get_object_vars($this);
-				unset($props["out"], $props["proc"], $props["source"], $props["xpath"]);
+				protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
+				protected $dynamicParams=[' . implode(',', $dynamicParams) . '];
+				protected $params=[' . implode(',', $staticParams) . '];
+				protected $xpath;
+				public function __sleep()
+				{
+					$props = get_object_vars($this);
+					unset($props["out"], $props["proc"], $props["source"], $props["xpath"]);
 
-				return array_keys($props);
-			}
-			public function setParameter($paramName, $paramValue)
-			{
-				$this->params[$paramName] = $paramValue;
-				unset($this->dynamicParams[$paramName]);
-			}
-			public function renderRichText($xml)
-			{
-				$dom = $this->loadXML($xml);
-				$this->xpath = new \\DOMXPath($dom);
-				$this->out = "";';
+					return array_keys($props);
+				}
+				public function setParameter($paramName, $paramValue)
+				{
+					$this->params[$paramName] = $paramValue;
+					unset($this->dynamicParams[$paramName]);
+				}
+				public function renderRichText($xml)
+				{
+					$dom = $this->loadXML($xml);
+					$this->xpath = new \\DOMXPath($dom);
+					$this->out = "";';
 
 		if ($dynamicParams)
 		{
 			$this->php .= '
-				foreach ($this->dynamicParams as $k => $v)
-				{
-					$this->params[$k] = $this->xpath->evaluate("string($v)", $dom);
-				}';
+					foreach ($this->dynamicParams as $k => $v)
+					{
+						$this->params[$k] = $this->xpath->evaluate("string($v)", $dom);
+					}';
 		}
 
 		$this->php .= '
-				$this->at($dom->documentElement);
+					$this->at($dom->documentElement);
 
-				return $this->out;
-			}
-			protected function at($root, $xpath = null)
-			{
-				if ($root->nodeType === 3)
-				{
-					$this->out .= htmlspecialchars($root->textContent,' . ENT_NOQUOTES . ');
+					return $this->out;
 				}
-				else
+				protected function at($root, $xpath = null)
 				{
-					$nodes = (isset($xpath)) ? $this->xpath->query($xpath, $root) : $root->childNodes;
-					foreach ($nodes as $node)
+					if ($root->nodeType === 3)
 					{
-						$nodeName = $node->nodeName;';
+						$this->out .= htmlspecialchars($root->textContent,' . ENT_NOQUOTES . ');
+					}
+					else
+					{
+						$nodes = (isset($xpath)) ? $this->xpath->query($xpath, $root) : $root->childNodes;
+						foreach ($nodes as $node)
+						{
+							$nodeName = $node->nodeName;';
 
 		// Remove the excess indentation
 		$this->php = str_replace("\n\t\t\t", "\n", $this->php);
@@ -256,8 +279,8 @@ class PHP implements RendererGenerator
 			}
 		}
 
-		// Add the default handling
-		$this->php .= 'else $this->at($node);}}}';
+		// Add the default handling and close the method
+		$this->php .= "else \$this->at(\$node);\n\t\t\t}\n\t\t}\n\t}";
 
 		// Add the getParamAsXPath() method if necessary
 		if (strpos($this->php, '$this->getParamAsXPath(') !== false)
@@ -306,8 +329,8 @@ EOT
 			);
 		}
 
-		// Close the class block and the namespace
-		$this->php .= '}';
+		// Close the class definition
+		$this->php .= "\n}";
 
 		// Optimize the generated code
 		$this->optimizeCode();

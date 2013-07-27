@@ -3,6 +3,7 @@
 ### **General**
   * [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/00_Installation.md)
   * [Basic usage](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/01_BasicUsage.md)
+  * [Renderers](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/10_Renderers.md)
 
 ### **Miscellaneous**
   * [Stylesheet parameters](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/StylesheetParameters.md)
