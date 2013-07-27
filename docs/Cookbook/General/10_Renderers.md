@@ -6,9 +6,9 @@ s9e\TextFormatter offers multiple renderers: 3 general purpose renderers, plus a
 
 If you call `$configurator->getRenderer()` you'll get an instance of the default renderer. If you want a specific renderer, you can specify its name and options.
 
-#### XSL renderer
+#### XSLT renderer
 
-`$configurator->getRenderer('XSL')` will return an instance of the XSL renderer, no configuration required. It uses [PHP's default XSL extension](http://php.net/manual/en/book.xsl.php).
+`$configurator->getRenderer('XSLT')` will return an instance of the XSLT renderer, no configuration required. It uses [PHP's default XSL extension](http://php.net/manual/en/book.xsl.php).
 
 #### PHP renderer
 
@@ -39,7 +39,6 @@ You can change the default renderer in the configurator, using the same syntax a
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->setRendererGenerator('PHP', 'MyRenderer', '/path/to/MyRenderer.php');
 
-// Will return an instance of MyRenderer (the PHP renderer) and save its source
-// to the specified path
+// Will return an instance of MyRenderer (the PHP renderer) and save it to /path/to/MyRenderer.php
 $configurator->getRenderer();
 ```
