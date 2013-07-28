@@ -17,26 +17,26 @@ function patchDir($dirpath)
 
 function patchFile($filepath)
 {
-	echo "Patching $filepath\n";
+	$file = file_get_contents($filepath);
 
 	// Execute the lone PHP in BasicUsage.md
 	if (strpos($filepath, 'BasicUsage.md'))
 	{
 		$text = preg_replace_callback(
-			'#```php([^`]+)```\\s+(?!```html|<pre>)#s',
+			'#```php([^`]+)\\n```\\s+(?!```html|<pre>)#s',
 			function ($m)
 			{
 				eval($m[1]);
 
 				return $m[0];
 			},
-			file_get_contents($filepath)
+			$file
 		);
 	}
 
 	// Execute PHP and replace output
 	$text = preg_replace_callback(
-		'#(```php([^`]+)```\\s+(?:```\\w+|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
+		'#(```php([^`]+)\\n```\\s+(?:```\\w+|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
 		function ($m)
 		{
 			ob_start();
@@ -44,10 +44,18 @@ function patchFile($filepath)
 
 			return $m[1] . "\n" . ob_get_clean() . $m[3];
 		},
-		file_get_contents($filepath)
+		$file
 	);
 
-	file_put_contents($filepath, $text);
+	if ($text === $file)
+	{
+		echo "Skipping $filepath\n";
+	}
+	else
+	{
+		echo "Patching $filepath\n";
+		file_put_contents($filepath, $text);
+	}
 }
 
 patchDir(__DIR__ . '/../src/s9e/TextFormatter/Plugins/');

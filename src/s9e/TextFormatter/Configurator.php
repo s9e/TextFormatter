@@ -10,6 +10,7 @@ namespace s9e\TextFormatter;
 use InvalidArgumentException;
 use ReflectionClass;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\BundleGenerator;
 use s9e\TextFormatter\Configurator\Collections\AttributeFilterCollection;
 use s9e\TextFormatter\Configurator\Collections\PluginCollection;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
@@ -31,6 +32,11 @@ class Configurator implements ConfigProvider
 	* @var AttributeFilterCollection Dynamically-populated collection of AttributeFilter instances
 	*/
 	public $attributeFilters;
+
+	/**
+	* @var BundleGenerator Default bundle generator
+	*/
+	public $bundleGenerator;
 
 	/**
 	* @var JavaScript JavaScript manipulation object
@@ -91,6 +97,7 @@ class Configurator implements ConfigProvider
 	public function __construct()
 	{
 		$this->attributeFilters   = new AttributeFilterCollection;
+		$this->bundleGenerator    = new BundleGenerator;
 		$this->javascript         = new JavaScript($this);
 		$this->plugins            = new PluginCollection($this);
 		$this->rootRules          = new Ruleset;
@@ -179,6 +186,20 @@ class Configurator implements ConfigProvider
 	}
 
 	/**
+	* Create and save a bundle based on this configuration
+	*
+	* @param  string $className Name of the bundle class
+	* @param  string $filepath  Path where to save the bundle file
+	* @return mixed             Number of bytes written, or FALSE
+	*/
+	public function saveBundle($className, $filepath)
+	{
+		$file = "<?php\n\n" . $this->bundleGenerator->generate($this, $className);
+
+		return file_put_contents($filepath, $file);
+	}
+
+	/**
 	* Add the rules that are generated based on HTML5 specs
 	*
 	* @see s9e\TextFormatter\ConfigBuilder\Helpers\HTML5\RulesGenerator
@@ -231,6 +252,7 @@ class Configurator implements ConfigProvider
 
 		// Remove properties that shouldn't be turned into config arrays
 		unset($properties['attributeFilters']);
+		unset($properties['bundleGenerator']);
 		unset($properties['javascript']);
 		unset($properties['rendererGenerator']);
 		unset($properties['templateChecker']);

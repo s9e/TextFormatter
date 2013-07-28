@@ -1,0 +1,10 @@
+[list]
+	[*][list]
+		[*]one.one
+		[*]one.two
+	[/list]
+
+	[*]two
+
+	[*]three
+[/list]

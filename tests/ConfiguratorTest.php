@@ -30,6 +30,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox $configurator->bundleGenerator is an instance of BundleGenerator
+	*/
+	public function testBundleGeneratorInstance()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\BundleGenerator',
+			$this->configurator->bundleGenerator
+		);
+	}
+
+	/**
 	* @testdox $configurator->javascript is an instance of JavaScript
 	*/
 	public function testJavaScriptInstance()
@@ -632,6 +643,32 @@ class ConfiguratorTest extends Test
 	{
 		$this->configurator->setRendererGenerator('PHP', 'Foo');
 		$this->assertSame('Foo', $this->configurator->rendererGenerator->className);
+	}
+
+	/**
+	* @testdox saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
+	*/
+	public function testSaveBundle()
+	{
+		$filepath = $this->tempnam();
+		$this->configurator->saveBundle('Foo', $filepath);
+
+		$this->assertFileExists($filepath);
+
+		$file = file_get_contents($filepath);
+		$this->assertStringStartsWith('<?php', $file);
+		$this->assertContains('class Foo', $file);
+	}
+
+	/**
+	* @testdox saveBundle() returns the number of bytes written to disk
+	*/
+	public function testSaveBundleReturn()
+	{
+		$filepath = $this->tempnam();
+		$return   = $this->configurator->saveBundle('Foo', $filepath);
+
+		$this->assertSame(filesize($filepath), $return);
 	}
 }
 

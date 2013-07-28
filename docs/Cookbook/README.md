@@ -1,11 +1,14 @@
 ## Table of content
 
-### **General**
-  * [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/00_Installation.md)
-  * [Basic usage](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/01_BasicUsage.md)
-  * [Renderers](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/10_Renderers.md)
+### **Getting started**
+  * [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/00_Installation.md)
+  * **Basic usage**
+    * [Zero-configuration: using predefined bundles](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/00_ZeroConfig.md)
+    * [À la carte: make your own bundle](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/01_CustomBundle.md)
+    * [Expert mode: configure everything yourself](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/02_Expert.md)
 
 ### **Miscellaneous**
+  * [Renderers](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Renderers.md)
   * [Stylesheet parameters](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/StylesheetParameters.md)
   * **Template normalization**
     * [Change the default normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Template_normalization/01_ChangeDefault.md)

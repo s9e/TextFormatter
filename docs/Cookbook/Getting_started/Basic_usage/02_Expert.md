@@ -1,4 +1,4 @@
-## Basic usage
+## Expert mode: configure everything yourself
 
 s9e\TextFormatter operates in 3 distinct phases: configuration, parsing, rendering.
 They are represented by those 3 objects: `s9e\TextFormatter\Configurator`, `s9e\TextFormatter\Parser`, `s9e\TextFormatter\Renderer`.

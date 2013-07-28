@@ -87,8 +87,21 @@ s9e\TextFormatter\Tests\Configurator\Traits\TemplateSafeness
  [x] markAsSafeInCSS() is chainable
  [x] markAsSafeInJS() is chainable
 
+s9e\TextFormatter\Tests\Bundle
+ [x] parse() creates a parser, parses the input and returns the output
+ [x] parse() reuses the same parser on consecutive calls
+ [x] render() creates a renderer, renders the input and returns the result
+ [x] render() reuses the same renderer on consecutive calls
+ [x] render() calls setParameters() with its second argument
+ [x] renderMulti() creates a renderer, renders the input and returns the result
+ [x] renderMulti() reuses the same renderer on consecutive calls
+ [x] renderMulti() calls setParameters() with its second argument
+ [x] unparse() takes the XML representation and returns the original text
+ [x] reset() removes the cached parser and renderer
+
 s9e\TextFormatter\Tests\Configurator
  [x] $configurator->attributeFilters is an instance of AttributeFilterCollection
+ [x] $configurator->bundleGenerator is an instance of BundleGenerator
  [x] $configurator->javascript is an instance of JavaScript
  [x] $configurator->plugins is an instance of PluginCollection
  [x] $configurator->registeredVars is a publicly accessible array
@@ -131,6 +144,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] addHTML5Rules() does not call getRenderer() if a renderer was passed in the options
  [x] setRendererGenerator('PHP') sets $configurator->rendererGenerator to an instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
  [x] setRendererGenerator() passes extra arguments to the generator's constructor
+ [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
+ [x] saveBundle() returns the number of bytes written to disk
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute
@@ -1343,6 +1358,18 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
 
+s9e\TextFormatter\Tests\Configurator\Bundle
+ [x] getConfigurator() returns a configured instance of Configurator
+
+s9e\TextFormatter\Tests\Configurator\BundleGenerator
+ [x] generate() returns the bundle's PHP source
+ [x] generate() accepts namespaced class names
+ [x] A custom serializer can be set in $bundleGenerator->serializer
+ [x] A custom unserializer can be set in $bundleGenerator->unserializer
+
+s9e\TextFormatter\Tests\Configurator\Bundles\Forum
+ [x] Features
+
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
  [x] getEndTag() returns NULL if the tag has no end tag set
@@ -1976,4 +2003,7 @@ s9e\TextFormatter\Tests\Unparser
  [x] asPlainText("<mt>a<br />\nb</mt>") returns "a\nb"
  [x] unparse('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
  [x] asPlainText('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
+
+s9e\TextFormatter\Tests\Bundles\Forum
+ [x] Rendering tests
 
