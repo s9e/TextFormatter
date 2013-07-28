@@ -212,6 +212,6 @@ trait TagStack
 		// Here we know that both tags start at the same position and have a length greater than 0.
 		// We sort tags by length ascending, so that the longest matches are processed first. If
 		// their length is identical, the order is undefined as PHP's sort isn't stable
-		return ($aLen - $bLen);
+		return $aLen - $bLen;
 	}
 }
