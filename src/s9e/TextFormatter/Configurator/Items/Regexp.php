@@ -69,7 +69,7 @@ class Regexp implements ConfigProvider
 	}
 
 	/**
-	* Return this regexp as a Javascript RegExp
+	* Return this regexp as a JavaScript RegExp
 	*
 	* @return RegExp
 	*/

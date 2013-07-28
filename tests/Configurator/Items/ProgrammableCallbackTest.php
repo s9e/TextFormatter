@@ -203,7 +203,7 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox getJS() returns an instance of Code if no JS was set and the callback is a function found in Configurator/Javascript/functions/
+	* @testdox getJS() returns an instance of Code if no JS was set and the callback is a function found in Configurator/JavaScript/functions/
 	*/
 	public function testGetJSAutofills()
 	{
@@ -218,7 +218,7 @@ class ProgrammableCallbackTest extends Test
 	}
 
 	/**
-	* @testdox getJS() returns NULL if no JS was set and the callback is a function that is not found in Configurator/Javascript/functions/
+	* @testdox getJS() returns NULL if no JS was set and the callback is a function that is not found in Configurator/JavaScript/functions/
 	*/
 	public function testGetJSNoAutofill()
 	{

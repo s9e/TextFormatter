@@ -121,7 +121,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		if (!$exec)
 		{
-			$this->markTestSkipped('No Javascript interpreter available');
+			$this->markTestSkipped('No JavaScript interpreter available');
 
 			return;
 		}

@@ -104,7 +104,7 @@ class RegexpTest extends Test
 	/**
 	* @testdox Is not safe as URL if the regexp is /^javascript:(.*)/
 	*/
-	public function testURLUnsafeJavascriptScheme()
+	public function testURLUnsafeJavaScriptScheme()
 	{
 		$filter = new Regexp;
 		$filter->setRegexp('/^javascript:(.*)/');
@@ -115,7 +115,7 @@ class RegexpTest extends Test
 	/**
 	* @testdox Is not safe as URL if the regexp is /^javascriptx?:(.*)/
 	*/
-	public function testURLUnsafeJavascriptSchemeWithJoker()
+	public function testURLUnsafeJavaScriptSchemeWithJoker()
 	{
 		$filter = new Regexp;
 		$filter->setRegexp('/^javascriptx?:(.*)/');

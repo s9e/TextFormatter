@@ -29,7 +29,7 @@ class AttributeFilter extends Filter
 	}
 
 	/**
-	* Return whether this filter makes a value safe to be used in Javascript
+	* Return whether this filter makes a value safe to be used in JavaScript
 	*
 	* @return bool
 	*/

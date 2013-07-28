@@ -151,7 +151,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
-	public function testDisallowedUnfilteredJavascript()
+	public function testDisallowedUnfilteredJavaScript()
 	{
 		$node = $this->loadTemplate('<a href="javascript:{@foo}">...</a>');
 
@@ -176,7 +176,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
-	public function testDisallowedUnfilteredJavascriptCase()
+	public function testDisallowedUnfilteredJavaScriptCase()
 	{
 		$node = $this->loadTemplate('<a href="JAVASCRIPT:{@foo}">...</a>');
 
@@ -201,7 +201,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Attribute 'foo' is not properly sanitized to be used in this context
 	*/
-	public function testDisallowedUnfilteredJavascriptTab()
+	public function testDisallowedUnfilteredJavaScriptTab()
 	{
 		$node = $this->loadTemplate("<a href=\"\tjavascript:{@foo}\">...</a>");
 
@@ -424,7 +424,7 @@ class DisallowUnsafeDynamicURLTest extends Test
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Cannot assess the safety of unknown attribute 'foo'
 	*/
-	public function testDisallowedUnknownValueOfJavascript()
+	public function testDisallowedUnknownValueOfJavaScript()
 	{
 		$node = $this->loadTemplate('<a><xsl:attribute name="href">javascript:<xsl:value-of select="@foo"/></xsl:attribute>...</a>');
 

@@ -460,7 +460,7 @@ abstract class TemplateHelper
 	}
 
 	/**
-	* Return all DOMNodes whose content is Javascript
+	* Return all DOMNodes whose content is JavaScript
 	*
 	* @param  DOMDocument $dom Document
 	* @return array            Array of DOMNode instances
