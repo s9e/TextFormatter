@@ -213,15 +213,17 @@ class JavaScript
 					// [1111 0000-1111 0111] [1000 0000-1011 1111]{3}
 					'[\\xF0-\\xF7][\\x80-\\xBF]{3}'
 				];
-				preg_match('#(?:' . implode('|', $valid) . ')*#', $pluginConfig['quickMatch'], $m);
 
-				if ($m[0] === '')
+				$regexp = '#(?>' . implode('|', $valid) . ')+#';
+
+				// Keep only the first valid sequence of UTF-8, or unset quickMatch if none is found
+				if (preg_match($regexp, $pluginConfig['quickMatch'], $m))
 				{
-					unset($pluginConfig['quickMatch']);
+					$pluginConfig['quickMatch'] = $m[0];
 				}
 				else
 				{
-					$pluginConfig['quickMatch'] = $m[0];
+					unset($pluginConfig['quickMatch']);
 				}
 			}
 

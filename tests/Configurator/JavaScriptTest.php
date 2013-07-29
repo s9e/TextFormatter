@@ -105,8 +105,8 @@ class JavaScriptTest extends Test
 	{
 		$this->configurator->plugins->load('Escaper', ['quickMatch' => "\xC0xÿz"]);
 
-		$this->assertNotContains(
-			'quickMatch:"xÿz"',
+		$this->assertContains(
+			'quickMatch:"x\\u00ffz"',
 			$this->configurator->javascript->getParser()
 		);
 	}
