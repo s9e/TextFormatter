@@ -1368,7 +1368,8 @@ s9e\TextFormatter\Tests\Configurator\Validators\TagName
 
 s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] getMinifier() returns an instance of Noop by default
- [x] setMinifier() accepts the name of a minifier type
+ [x] setMinifier() accepts the name of a minifier type and returns an instance
+ [x] setMinifier() accepts the name of a minifier type plus any number of arguments passed to the minifier's constructor
  [x] setMinifier() accepts an object that implements Minifier
  [x] setMinifier() returns the new instance
  [x] getParser() calls the minifier and returns its result

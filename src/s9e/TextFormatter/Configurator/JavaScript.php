@@ -184,9 +184,18 @@ class JavaScript
 		if (is_string($minifier))
 		{
 			$className = __NAMESPACE__ . '\\JavaScript\\Minifiers\\' . $minifier;
-			$reflection = new ReflectionClass($className);
 
-			$minifier = $reflection->newInstanceArgs(array_slice(func_get_args(), 1));
+			// Pass the extra argument to the constructor, if applicable
+			$args = array_slice(func_get_args(), 1);
+			if ($args)
+			{
+				$reflection = new ReflectionClass($className);
+				$minifier   = $reflection->newInstanceArgs($args);
+			}
+			else
+			{
+				$minifier = new $className;
+			}
 		}
 
 		$this->minifier = $minifier;

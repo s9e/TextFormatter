@@ -34,16 +34,28 @@ class JavaScriptTest extends Test
 	}
 
 	/**
-	* @testdox setMinifier() accepts the name of a minifier type
+	* @testdox setMinifier() accepts the name of a minifier type and returns an instance
 	*/
 	public function testSetMinifierName()
 	{
 		$javascript = new JavaScript(new Configurator);
-		$javascript->setMinifier('ClosureCompilerService');
 
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\JavaScript\\Minifiers\\ClosureCompilerService',
-			$javascript->getMinifier()
+			$javascript->setMinifier('ClosureCompilerService')
+		);
+	}
+
+	/**
+	* @testdox setMinifier() accepts the name of a minifier type plus any number of arguments passed to the minifier's constructor
+	*/
+	public function testSetMinifierArguments()
+	{
+		$javascript = new JavaScript(new Configurator);
+
+		$this->assertSame(
+			__FILE__,
+			$javascript->setMinifier('ClosureCompilerApplication', __FILE__)->closureCompilerBin
 		);
 	}
 
