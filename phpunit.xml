@@ -85,6 +85,13 @@
 			<file>tests/Configurator/Items/TagFilterTest.php</file>
 			<file>tests/Configurator/Items/TemplateTest.php</file>
 			<file>tests/Configurator/Items/VariantTest.php</file>
+			<file>tests/Configurator/JavaScript/CodeTest.php</file>
+			<file>tests/Configurator/JavaScript/RegExpTest.php</file>
+			<file>tests/Configurator/JavaScript/RegexpConvertorTest.php</file>
+			<file>tests/Configurator/JavaScript/MinifierTest.php</file>
+			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerApplicationTest.php</file>
+			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerServiceTest.php</file>
+			<file>tests/Configurator/JavaScript/Minifiers/NoopTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineCDATATest.php</file>
@@ -125,11 +132,6 @@
 			<file>tests/Configurator/Validators/StylesheetParameterNameTest.php</file>
 			<file>tests/Configurator/Validators/TagNameTest.php</file>
 			<file>tests/Configurator/JavaScriptTest.php</file>
-			<file>tests/Configurator/JavaScript/CodeTest.php</file>
-			<file>tests/Configurator/JavaScript/RegExpTest.php</file>
-			<file>tests/Configurator/JavaScript/RegexpConvertorTest.php</file>
-			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerServiceTest.php</file>
-			<file>tests/Configurator/JavaScript/Minifiers/NoopTest.php</file>
 			<file>tests/Configurator/BundleTest.php</file>
 			<file>tests/Configurator/BundleGeneratorTest.php</file>
 			<file>tests/Configurator/Bundles/ForumTest.php</file>

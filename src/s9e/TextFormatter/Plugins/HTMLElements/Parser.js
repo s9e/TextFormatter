@@ -32,7 +32,8 @@ matches.forEach(function(m)
 	// Capture attributes
 	var attrRegexp = /[a-z][-a-z]*(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/gi,
 		attrName,
-		attrValue;
+		attrValue,
+		attrMatch;
 
 	while (attrMatch = attrRegexp.exec(m[3][0]))
 	{

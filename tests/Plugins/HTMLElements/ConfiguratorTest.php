@@ -2,7 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\HTMLElements;
 
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Plugins\HTMLElements\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -20,6 +22,7 @@ class ConfiguratorTest extends Test
 		$plugin->aliasElement('A', 'url');
 
 		$pluginConfig = $plugin->asConfig();
+		ConfigHelper::filterVariants($pluginConfig);
 
 		$this->assertArrayMatches(
 			['aliases' => ['a' => ['' => 'URL']]],
@@ -36,6 +39,7 @@ class ConfiguratorTest extends Test
 		$plugin->aliasAttribute('A', 'HREF', 'URL');
 
 		$pluginConfig = $plugin->asConfig();
+		ConfigHelper::filterVariants($pluginConfig);
 
 		$this->assertArrayMatches(
 			['aliases' => ['a' => ['href' => 'url']]],
@@ -297,5 +301,39 @@ class ConfiguratorTest extends Test
 		$plugin->allowElement('b');
 
 		$this->assertArrayHasKey('regexp', $plugin->asConfig());
+	}
+
+	/**
+	* @testdox asConfig() preserves aliased elements' keys in a JS variant
+	*/
+	public function testAsConfigAliasElement()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+		$plugin->aliasElement('A', 'url');
+
+		$pluginConfig = $plugin->asConfig();
+		ConfigHelper::filterVariants($pluginConfig, 'JS');
+
+		$this->assertEquals(
+			new Dictionary(['a' => new Dictionary(['' => 'URL'])]),
+			$pluginConfig['aliases']
+		);
+	}
+
+	/**
+	* @testdox asConfig() preserves aliased attributes' keys in a JS variant
+	*/
+	public function testAsConfigAliasAttribute()
+	{
+		$plugin = $this->configurator->plugins->load('HTMLElements');
+		$plugin->aliasAttribute('A', 'HREF', 'URL');
+
+		$pluginConfig = $plugin->asConfig();
+		ConfigHelper::filterVariants($pluginConfig, 'JS');
+
+		$this->assertEquals(
+			new Dictionary(['a' => new Dictionary(['href' => 'url'])]),
+			$pluginConfig['aliases']
+		);
 	}
 }

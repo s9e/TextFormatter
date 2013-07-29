@@ -287,11 +287,6 @@ class Configurator implements ConfigProvider
 		// Remove unused entries
 		unset($config['rootRules']);
 
-		// Create a variant that adds the stylesheet to the config if we're building a JavaScript
-		// config
-		$config['stylesheet'] = new Variant;
-		$config['stylesheet']->setDynamic('JS', [$this->stylesheet, 'get']);
-
 		return $config;
 	}
 

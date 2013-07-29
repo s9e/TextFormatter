@@ -3,7 +3,7 @@ function loadXML(xml)
 	return new DOMParser().parseFromString(xml, 'text/xml');
 }
 
-var xslt = new XSLTProcessor();
+var xslt = new XSLTProcessor;
 xslt['importStylesheet'](loadXML(xsl));
 
 function preview(text, target)
@@ -139,7 +139,7 @@ function preview(text, target)
 		while (--i >= 0)
 		{
 			var oldAttr      = oldAttributes[i],
-				namespaceURI = oldAttr.namespaceURI,
+				namespaceURI = oldAttr['namespaceURI'],
 				attrName     = oldAttr['name'];
 
 			if (!newEl.hasAttributeNS(namespaceURI, attrName))
@@ -152,9 +152,9 @@ function preview(text, target)
 		while (--i >= 0)
 		{
 			var newAttr      = newAttributes[i],
-				namespaceURI = newAttr.namespaceURI,
+				namespaceURI = newAttr['namespaceURI'],
 				attrName     = newAttr['name'],
-				attrValue    = newAttr.value;
+				attrValue    = newAttr['value'];
 
 			if (attrValue !== oldEl.getAttributeNS(namespaceURI, attrName))
 			{

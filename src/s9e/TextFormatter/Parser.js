@@ -48,6 +48,36 @@ var textLen;
 */
 var uid;
 
+//==========================================================================
+// Public API
+//==========================================================================
+
+/**
+* Disable a tag
+*
+* @param {!string} tagName Name of the tag
+*/
+function disableTag(tagName)
+{
+	if (tagsConfig[tagName])
+	{
+		tagsConfig[tagName].isDisabled = true;
+	}
+}
+
+/**
+* Enable a tag
+*
+* @param {!string} tagName Name of the tag
+*/
+function enableTag(tagName)
+{
+	if (tagsConfig[tagName])
+	{
+		tagsConfig[tagName].isDisabled = false;
+	}
+}
+
 /**
 * Get this parser's Logger instance
 *

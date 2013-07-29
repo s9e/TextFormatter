@@ -11,6 +11,8 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\AttributeName;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
@@ -332,10 +334,14 @@ class Configurator extends ConfiguratorBase
 
 		if (!empty($this->aliases))
 		{
-			/**
-			* @todo Preserve the keys in JavaScript
-			*/
-			$config['aliases'] = $this->aliases;
+			// Preserve the aliases array's keys in JavaScript
+			$jsAliases = new Dictionary;
+			foreach ($this->aliases as $elName => $aliases)
+			{
+				$jsAliases[$elName] = new Dictionary($aliases);
+			}
+
+			$config['aliases'] = new Variant($this->aliases, ['JS' => $jsAliases]);
 		}
 
 		return $config;

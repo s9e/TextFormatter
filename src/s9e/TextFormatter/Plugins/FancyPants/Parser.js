@@ -1,8 +1,8 @@
-var attrName = config['attrName'],
-	tagName  = config['tagName'],
+var attrName = config.attrName,
+	tagName  = config.tagName,
 	hasSingleQuote = (text.indexOf("'") >= 0),
 	hasDoubleQuote = (text.indexOf('"') >= 0),
-	regexp, m, pos, chr;
+	regexp, m, pos, len, c, chr;
 
 // Do apostrophes ’ after a letter or at the beginning of a word or a couple of digits
 if (hasSingleQuote)
@@ -12,7 +12,7 @@ if (hasSingleQuote)
 
 	while (m = regexp.exec(text))
 	{
-		tag = addSelfClosingTag(tagName, m.index + m[0].indexOf("'"), 1);
+		tag = addSelfClosingTag(tagName, m['index'] + m[0].indexOf("'"), 1);
 		tag.setAttribute(attrName, "\u2019");
 
 		// Give this tag a worse priority than default so that quote pairs take precedence
@@ -32,7 +32,7 @@ if (hasSingleQuote || hasDoubleQuote || text.indexOf('x') >= 0)
 	while (m = regexp.exec(text))
 	{
 		// Test for a multiply sign at the end
-		pos = m.index + m[0].length - 1;
+		pos = m['index'] + m[0].length - 1;
 		if (m[0].charAt(pos) === 'x')
 		{
 			addSelfClosingTag(tagName, pos, 1).setAttribute(attrName, "\u00d7");
@@ -42,7 +42,7 @@ if (hasSingleQuote || hasDoubleQuote || text.indexOf('x') >= 0)
 		c = m[0].charAt(1);
 		if (c === "'" || c === '"')
 		{
-			pos = 1 + m.index;
+			pos = 1 + m['index'];
 
 			if (m[0].substr(1, 2) === "'s")
 			{
@@ -65,8 +65,8 @@ function captureQuotePairs(q, regexp, leftQuote, rightQuote)
 {
 	while (m = regexp.exec(text))
 	{
-		var left  = addSelfClosingTag(tagName, m.index + m[0].indexOf(q), 1),
-			right = addSelfClosingTag(tagName, m.index + m[0].length - 1, 1);
+		var left  = addSelfClosingTag(tagName, m['index'] + m[0].indexOf(q), 1),
+			right = addSelfClosingTag(tagName, m['index'] + m[0].length - 1, 1);
 
 		left.setAttribute(attrName, leftQuote);
 		right.setAttribute(attrName, rightQuote);
@@ -96,7 +96,7 @@ if (text.indexOf('...') >= 0
 
 	while (m = regexp.exec(text))
 	{
-		pos = m.index;
+		pos = m['index'];
 		len = m[0].length;
 		chr = {
 			'--'  : "\u2013",
@@ -116,7 +116,7 @@ if (text.indexOf('(') >= 0)
 
 	while (m = regexp.exec(text))
 	{
-		pos = m.index;
+		pos = m['index'];
 		len = m[0].length;
 		chr = {
 			'(c)'  : "\u00A9",

@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator;
 
 use ArrayObject;
+use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
@@ -37,6 +38,19 @@ class JavaScript
 	* @var Configurator Configurator this instance belongs to
 	*/
 	protected $configurator;
+
+	/**
+	* @var array List of methods to be exported in the s9e.TextFormatter object
+	*/
+	public $exportMethods = [
+		'disablePlugin',
+		'disableTag',
+		'enablePlugin',
+		'enableTag',
+		'getLogger',
+		'parse',
+		'preview'
+	];
 
 	/**
 	* @var Minifier Instance of Minifier used to minify the JavaScript parser
@@ -91,9 +105,22 @@ class JavaScript
 			'Parser/TagStack.js'
 		];
 
+		// Append render.js if we export the preview method
+		if (in_array('preview', $this->exportMethods, true))
+		{
+			$files[] = 'render.js';
+		}
+
 		$src = '';
 		foreach ($files as $filename)
 		{
+			if ($filename === 'render.js')
+			{
+				// Insert the stylesheet if we include the renderer
+				$src .= '/** @const */'
+				      . 'var xsl=' . json_encode($this->configurator->stylesheet->get()) . ";\n";
+			}
+
 			$filepath = __DIR__ . '/../' . $filename;
 			$src .= file_get_contents($filepath) . "\n";
 		}
@@ -126,8 +153,20 @@ class JavaScript
 			$src .= "var $name=$code;\n";
 		}
 
+		// Export the public API
+		if (!empty($this->exportMethods))
+		{
+			$methods = [];
+			foreach ($this->exportMethods as $method)
+			{
+				$methods[] = "'" . $method . "':" . $method;
+			}
+
+			$src .= "window['s9e'] = { 'TextFormatter': {" . implode(',', $methods) . "} }\n";
+		}
+
 		// Minify the source
-		$src = $this->getMinifier()->minify($src);
+		$src = $this->getMinifier()->get($src);
 
 		return $src;
 	}
@@ -135,18 +174,24 @@ class JavaScript
 	/**
 	* Set the cached instance of Minifier
 	*
+	* Extra arguments will be passed to the minifier's constructor
+	*
 	* @param  string|Minifier $minifier Name of a supported minifier, or an instance of Minifier
-	* @return void
+	* @return Minifier                  The new minifier
 	*/
 	public function setMinifier($minifier)
 	{
 		if (is_string($minifier))
 		{
 			$className = __NAMESPACE__ . '\\JavaScript\\Minifiers\\' . $minifier;
-			$minifier  = new $className;
+			$reflection = new ReflectionClass($className);
+
+			$minifier = $reflection->newInstanceArgs(array_slice(func_get_args(), 1));
 		}
 
 		$this->minifier = $minifier;
+
+		return $minifier;
 	}
 
 	//==========================================================================
@@ -269,7 +314,7 @@ class JavaScript
 	*/
 	protected function getRegisteredVarsConfig()
 	{
-		return new Code(self::encode(new Dictionary($this->config['registeredVars'])));
+		return new Code(self::encode($this->config['registeredVars']));
 	}
 
 	/**
@@ -331,7 +376,7 @@ class JavaScript
 	* @param  mixed  $value Original value
 	* @return string        JavaScript representation
 	*/
-	protected static function encode($value)
+	public static function encode($value)
 	{
 		if (is_scalar($value))
 		{
@@ -356,7 +401,18 @@ class JavaScript
 			throw new RuntimeException('Cannot encode non-scalar value');
 		}
 
-		$preserveKeys = ($value instanceof Dictionary);
+		if ($value instanceof Dictionary)
+		{
+			// For some reason, ArrayObject will omit elements whose key is an empty string or a
+			// NULL byte, so we'll use its array copy instead
+			$value = $value->getArrayCopy();
+			$preserveKeys = true;
+		}
+		else
+		{
+			$preserveKeys = false;
+		}
+
 		$isArray = (!$preserveKeys && array_keys($value) === range(0, count($value) - 1));
 
 		$src = ($isArray) ? '[' : '{';
@@ -368,7 +424,7 @@ class JavaScript
 
 			if (!$isArray)
 			{
-				$src .= (($preserveKeys || $k === '') ? json_encode($k) : $k) . ':';
+				$src .= (($preserveKeys || !self::isLegalProp($k)) ? json_encode($k) : $k) . ':';
 			}
 
 			$src .= self::encode($v);
@@ -379,6 +435,30 @@ class JavaScript
 		$src .= ($isArray) ? ']' : '}';
 
 		return $src;
+	}
+
+	/**
+	* Test whether a string can be used as a property name, unquoted
+	*
+	* @link http://es5.github.io/#A.1
+	*
+	* @param  string $name Property's name
+	* @return bool
+	*/
+	public static function isLegalProp($name)
+	{
+		/**
+		* @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Reserved_Words
+		* @link http://www.crockford.com/javascript/survey.html
+		*/
+		$reserved = ['abstract', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 'double', 'else', 'enum', 'export', 'extends', 'false', 'final', 'finally', 'float', 'for', 'function', 'goto', 'if', 'implements', 'import', 'in', 'instanceof', 'int', 'interface', 'let', 'long', 'native', 'new', 'null', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'try', 'typeof', 'var', 'void', 'volatile', 'while', 'with'];
+
+		if (in_array($name, $reserved, true))
+		{
+			return false;
+		}
+
+		return (bool) preg_match('#^[$_\\pL][$_\\pL\\pNl]+$#Du', $name);
 	}
 
 	/**
@@ -518,7 +598,14 @@ class JavaScript
 				 && $k !== 'openTags'
 				 && $k !== 'registeredVars')
 				{
-					$k = 'registeredVars[' . json_encode($k) . ']';
+					if (self::isLegalProp($k))
+					{
+						$k = 'registeredVars.' . $k;
+					}
+					else
+					{
+						$k = 'registeredVars[' . json_encode($k) . ']';
+					}
 				}
 
 				$js .= $k;

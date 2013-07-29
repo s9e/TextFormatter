@@ -6,16 +6,16 @@ $externs = array(
 		'var undefined',
 
 		// functions
-		'function encodeURIComponent',
-		'function escape',
-		'function parseInt',
+		'function encodeURIComponent(',
+		'function escape(',
+		'function parseInt(',
 
 		// Object
-		'function Object',
+		'function Object(',
 		'Object.prototype.toString',
 
 		// Array object
-		'function Array',
+		'function Array(',
 		'Array.prototype.forEach',
 		'Array.prototype.indexOf',
 		'Array.prototype.join',
@@ -28,7 +28,7 @@ $externs = array(
 		'Array.prototype.splice',
 
 		// Date object
-		'function Date',
+		'function Date(',
 		'Date.prototype.getTime',
 
 		// Math object
@@ -39,17 +39,17 @@ $externs = array(
 		'Math.random',
 
 		// Number object
-		'function Number',
+		'function Number(',
 		'Number.prototype.toString',
 
 		// Regexp object
-		'function RegExp',
+		'function RegExp(',
 		'RegExp.prototype.exec',
 		'RegExp.prototype.lastIndex',
 		'RegExp.prototype.test',
 
 		// String object
-		'function String',
+		'function String(',
 		'String.fromCharCode',
 		'String.prototype.charAt',
 		'String.prototype.charCodeAt',
@@ -61,17 +61,50 @@ $externs = array(
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase'
 	),
+	'gecko_dom.js' => array(
+		'Element.prototype.innerHTML'
+	),
 	'gecko_xml.js' => array(
-		'function DOMParser',
+		'function DOMParser(',
 		'DOMParser.prototype.parseFromString'
 	),
 	'w3c_dom1.js' => array(
-		'function Node',
-		'function Element',
-		'function Document()',
-		'Document.prototype.createElement'
+		'function Document(',
+		'Document.prototype.createDocumentFragment',
+		'Document.prototype.createElement',
+
+		'function DocumentFragment(',
+
+		'function NamedNodeMap(',
+		'NamedNodeMap.prototype.item',
+		'NamedNodeMap.prototype.length',
+
+		'function Node(',
+		'Node.prototype.attributes',
+		'Node.prototype.appendChild',
+		'Node.prototype.childNodes',
+		'Node.prototype.cloneNode',
+		'Node.prototype.insertBefore',
+		'Node.prototype.nodeName',
+		'Node.prototype.nodeType',
+		'Node.prototype.nodeValue',
+		'Node.prototype.ownerDocument',
+		'Node.prototype.parentNode',
+		'Node.prototype.removeChild',
+
+		'function NodeList(',
+		'NodeList.prototype.length',
+
+		'function Element(',
 	),
 	'w3c_dom3.js' => array(
+		'Element.prototype.getAttributeNS',
+		'Element.prototype.hasAttributeNS',
+		'Element.prototype.removeAttributeNS',
+		'Element.prototype.setAttributeNS',
+
+		'Node.prototype.isEqualNode',
+		'Node.prototype.namespaceURI',
 		'Node.prototype.textContent'
 	)
 );

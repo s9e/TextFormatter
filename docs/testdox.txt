@@ -907,6 +907,77 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned everytime the variant is retrieved
  [x] setDynamic() throws an exception on invalid callback
 
+s9e\TextFormatter\Tests\Configurator\JavaScript\Code
+ [x] Can be cast as a string
+
+s9e\TextFormatter\Tests\Configurator\JavaScript\RegExp
+ [x] Returns a JavaScript literal when cast as a string
+
+s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
+ [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
+ [x] toJS() can convert plain regexps
+ [x] toJS() escapes forward slashes
+ [x] toJS() does not double-escape forward slashes that are already escaped
+ [x] toJS() does not "eat" backslashes while escaping forward slashes
+ [x] toJS() can convert regexps with the "i" modifier
+ [x] toJS() can convert regexps with capturing subpatterns
+ [x] toJS() can convert regexps with non-capturing subpatterns
+ [x] toJS() can convert regexps with non-capturing subpatterns with a quantifier
+ [x] toJS() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
+ [x] toJS() throws a RuntimeException on options (?i)
+ [x] toJS() throws a RuntimeException on subpattern options (?i:)
+ [x] toJS() can convert regexps with character classes with a quantifier
+ [x] toJS() converts greedy quantifiers to normal quantifiers in character classes
+ [x] toJS() replaces \pL with the full character range in character classes
+ [x] toJS() replaces \p{L} with the full character range in character classes
+ [x] toJS() replaces \pL outside of character classes with a character class containing the full character range
+ [x] toJS() replaces \p{L} outside of character classes with a character class containing the full character range
+ [x] toJS() replaces \p{^L} with a character class containing the full character range
+ [x] toJS() replaces \p{^L} with a character class equivalent to \PL
+ [x] toJS() replaces \P{^L} with a character class equivalent to \pL
+ [x] toJS() can convert regexps with lookahead assertions
+ [x] toJS() can convert regexps with negative lookahead assertions
+ [x] toJS() throws a RuntimeException on lookbehind assertions
+ [x] toJS() throws a RuntimeException on negative lookbehind assertions
+ [x] toJS() converts . to [\s\S] outside of character classes if the "s" modifier is set
+ [x] toJS() does not convert . to [\s\S] if the "s" modifier is not set
+ [x] toJS() does not convert . inside of character classes
+ [x] toJS() converts named captures into normal captures
+ [x] toJS() replaces its second parameter with a list of capturing subpattern names
+ [x] toJS() non-named capturing subpatterns leave an empty name in the map
+ [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
+
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
+ [x] get() forwards the call to minify() and returns its result
+ [x] Caching is disabled by default
+ [x] Caching is enabled if cacheDir is set and the minifier implements getCacheDifferentiator()
+ [x] get() returns the cached result if applicable
+
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplication
+ [x] Throws an exception if the filename passed to the constructor does not exist
+ [x] Allows caching
+ [x] The cache key depends on the compilation level
+ [x] The cache key depends on the extra options
+ [x] The cache key depends on the Closure Compiler file
+ [x] The cache key does not depend on the path to the Closure Compiler application
+ [x] The cache key depends on whether the default externs are excluded
+ [x] If the default externs are excluded, the custom externs are baked into the cache key
+
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
+ [x] Works
+ [x] Compilation level is ADVANCED_OPTIMIZATIONS by default
+ [x] Excludes default externs by default
+ [x] Includes our custom externs by default
+ [x] Allows caching
+ [x] The cache key depends on the compilation level
+ [x] The cache key depends on whether the default externs are excluded
+ [x] If the default externs are excluded, the custom externs are baked into the cache key
+ [x] Throws an exception in case of a server error
+ [x] Throws an exception in case of a compilation error
+
+s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
+ [x] minify() returns its first argument
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
  [x] Constructor expects a valid callback
  [x] normalize() calls the user-defined callback with a DOMNode as argument
@@ -1299,6 +1370,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] getMinifier() returns an instance of Noop by default
  [x] setMinifier() accepts the name of a minifier type
  [x] setMinifier() accepts an object that implements Minifier
+ [x] setMinifier() returns the new instance
  [x] getParser() calls the minifier and returns its result
  [x] A plugin's quickMatch value is preserved if it's valid UTF-8
  [x] A plugin's quickMatch value is discarded if it contains no valid UTF-8
@@ -1309,55 +1381,11 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] Built-in attribute filters are converted
  [x] An attribute filter that uses a built-in filter as callback is converted
  [x] An attribute filter with no JS representation unconditionally returns false
-
-s9e\TextFormatter\Tests\Configurator\JavaScript\Code
- [x] Can be cast as a string
-
-s9e\TextFormatter\Tests\Configurator\JavaScript\RegExp
- [x] Returns a JavaScript literal when cast as a string
-
-s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
- [x] toJS() returns an instance of s9e\TextFormatter\Configurator\JavaScript\RegExp
- [x] toJS() can convert plain regexps
- [x] toJS() escapes forward slashes
- [x] toJS() does not double-escape forward slashes that are already escaped
- [x] toJS() does not "eat" backslashes while escaping forward slashes
- [x] toJS() can convert regexps with the "i" modifier
- [x] toJS() can convert regexps with capturing subpatterns
- [x] toJS() can convert regexps with non-capturing subpatterns
- [x] toJS() can convert regexps with non-capturing subpatterns with a quantifier
- [x] toJS() converts greedy quantifiers to normal quantifiers in non-capturing subpatterns
- [x] toJS() throws a RuntimeException on options (?i)
- [x] toJS() throws a RuntimeException on subpattern options (?i:)
- [x] toJS() can convert regexps with character classes with a quantifier
- [x] toJS() converts greedy quantifiers to normal quantifiers in character classes
- [x] toJS() replaces \pL with the full character range in character classes
- [x] toJS() replaces \p{L} with the full character range in character classes
- [x] toJS() replaces \pL outside of character classes with a character class containing the full character range
- [x] toJS() replaces \p{L} outside of character classes with a character class containing the full character range
- [x] toJS() replaces \p{^L} with a character class containing the full character range
- [x] toJS() replaces \p{^L} with a character class equivalent to \PL
- [x] toJS() replaces \P{^L} with a character class equivalent to \pL
- [x] toJS() can convert regexps with lookahead assertions
- [x] toJS() can convert regexps with negative lookahead assertions
- [x] toJS() throws a RuntimeException on lookbehind assertions
- [x] toJS() throws a RuntimeException on negative lookbehind assertions
- [x] toJS() converts . to [\s\S] outside of character classes if the "s" modifier is set
- [x] toJS() does not convert . to [\s\S] if the "s" modifier is not set
- [x] toJS() does not convert . inside of character classes
- [x] toJS() converts named captures into normal captures
- [x] toJS() replaces its second parameter with a list of capturing subpattern names
- [x] toJS() non-named capturing subpatterns leave an empty name in the map
- [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
-
-s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
- [x] Works
- [x] Compilation level is ADVANCED_OPTIMIZATIONS by default
- [x] Excludes default externs by default
- [x] Includes our custom externs by default
-
-s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
- [x] minify() returns its first argument
+ [x] The name of a registered vars is expressed in quotes if it wouldn't be legal as a property
+ [x] A callback that uses a registered vars whose name wouldn't be legal as a property uses the bracket syntax to access it
+ [x] A callback that uses a registered vars whose name is legal as a property uses the dot syntax to access it
+ [x] isLegalProp() tests
+ [x] encode() tests
 
 s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator
@@ -1830,6 +1858,8 @@ s9e\TextFormatter\Tests\Plugins\HTMLElements\Configurator
  [x] asConfig() returns FALSE if no elements were allowed
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
+ [x] asConfig() preserves aliased elements' keys in a JS variant
+ [x] asConfig() preserves aliased attributes' keys in a JS variant
 
 s9e\TextFormatter\Tests\Plugins\HTMLElements\Parser
  [x] Parsing tests

@@ -40,6 +40,7 @@ abstract class ConfigHelper
 				if ($v === null)
 				{
 					unset($config[$k]);
+
 					continue 2;
 				}
 			}

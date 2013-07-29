@@ -7,9 +7,10 @@
 */
 namespace s9e\TextFormatter\Configurator\JavaScript\Minifiers;
 
+use RuntimeException;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 
-class ClosureCompilerService implements Minifier
+class ClosureCompilerService extends Minifier
 {
 	/**
 	* @var string Closure Compiler's compilation level
@@ -42,6 +43,21 @@ class ClosureCompilerService implements Minifier
 	}
 
 	/**
+	* {@inheritdoc}
+	*/
+	public function getCacheDifferentiator()
+	{
+		$key = [$this->compilationLevel, $this->excludeDefaultExterns];
+
+		if ($this->excludeDefaultExterns)
+		{
+			$key[] = $this->externs;
+		}
+
+		return $key;
+	}
+
+	/**
 	* Compile given JavaScript source via the Closure Compiler Service
 	*
 	* @param  string $src JavaScript source
@@ -57,14 +73,14 @@ class ClosureCompilerService implements Minifier
 		];
 
 		// Add our custom externs if default externs are disabled
-		if ($this->excludeDefaultExterns)
+		if ($this->excludeDefaultExterns && $this->compilationLevel === 'ADVANCED_OPTIMIZATIONS')
 		{
 			$params['exclude_default_externs'] = 'true';
 			$params['js_externs'] = $this->externs;
 		}
 
 		// Got to add dupe variables by hand
-		$content = http_build_query($params) . '&output_info=errors';
+		$content = http_build_query($params) . '&output_info=errors&output_info=warnings';//&formatting=pretty_print';
 
 		$response = json_decode(file_get_contents(
 			$this->url,
@@ -79,6 +95,20 @@ class ClosureCompilerService implements Minifier
 				]
 			])
 		), true);
+
+		if (isset($response['serverErrors'][0]))
+		{
+			$error = $response['serverErrors'][0];
+
+			throw new RuntimeException('Server error ' . $error['code'] . ': ' . $error['error']);
+		}
+
+		if (isset($response['errors'][0]))
+		{
+			$error = $response['errors'][0];
+
+			throw new RuntimeException('Compilation error: ' . $error['error']);
+		}
 
 		return $response['compiledCode'];
 	}

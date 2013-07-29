@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Tests\Test;
 
@@ -821,6 +822,7 @@ class RulesetTest extends Test
 		$ruleset->closeAncestor('Y');
 
 		$config = $ruleset->asConfig();
+		ConfigHelper::filterVariants($config);
 
 		$this->assertArrayHasKey('closeAncestor', $config);
 		$this->assertArrayHasKey('X', $config['closeAncestor']);
@@ -838,6 +840,7 @@ class RulesetTest extends Test
 		$ruleset->closeParent('Y');
 
 		$config = $ruleset->asConfig();
+		ConfigHelper::filterVariants($config);
 
 		$this->assertArrayHasKey('closeParent', $config);
 		$this->assertArrayHasKey('X', $config['closeParent']);

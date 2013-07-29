@@ -12,6 +12,8 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Items\Variant;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Parser;
 
@@ -115,14 +117,19 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		// In order to speed up lookups, we use the tag names as keys
-		if (isset($config['closeAncestor']))
+		foreach (['closeAncestor', 'closeParent'] as $ruleName)
 		{
-			$config['closeAncestor'] = array_fill_keys($config['closeAncestor'], 1);
+			if (isset($config[$ruleName]))
+			{
+				$targets = array_fill_keys($config[$ruleName], 1);
+
+				$config[$ruleName] = new Variant($targets);
+				$config[$ruleName]->set('JS', new Dictionary($targets));
+			}
 		}
-		if (isset($config['closeParent']))
-		{
-			$config['closeParent'] = array_fill_keys($config['closeParent'], 1);
-		}
+
+		// Create the JavaScript config. Ensure that BBCode names are preserved
+		$jsConfig = new Dictionary;
 
 		// Add the bitfield to the config
 		$config['flags'] = $bitfield;

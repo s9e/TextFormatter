@@ -1,5 +1,3 @@
-// This file contains some JavaScript-specific utilities
-
 /**
 * @param  {!string} str
 * @return {!string}

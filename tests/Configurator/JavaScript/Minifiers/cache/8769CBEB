@@ -1,0 +1,1 @@
+s:172:"{"compiledCode":"","errors":[{"type":"JSC_PARSE_ERROR","file":"Input_0","lineno":1,"charno":5,"error":"Parse error. missing ; before statement","line":"This should fail"}]}";

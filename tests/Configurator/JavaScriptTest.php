@@ -7,8 +7,11 @@ use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\JavaScript\Code;
+use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService;
+use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
@@ -58,13 +61,29 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox setMinifier() returns the new instance
+	*/
+	public function testSetMinifierReturn()
+	{
+		$javascript  = new JavaScript(new Configurator);
+		$oldMinifier = $javascript->getMinifier();
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\JavaScript\\Minifiers\\Noop',
+			$javascript->setMinifier('Noop')
+		);
+
+		$this->assertNotSame($oldMinifier, $javascript->getMinifier());
+	}
+
+	/**
 	* @testdox getParser() calls the minifier and returns its result
 	*/
 	public function testMinifierReturn()
 	{
-		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifiers\\Noop');
+		$mock = $this->getMock('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier');
 		$mock->expects($this->once())
-		     ->method('minify')
+		     ->method('get')
 		     ->will($this->returnValue('/**/'));
 
 		$this->configurator->javascript->setMinifier($mock);
@@ -196,6 +215,156 @@ class JavaScriptTest extends Test
 			'cCB952229=function(){return false;}',
 			$this->configurator->javascript->getParser()
 		);
+	}
+
+	/**
+	* @testdox The name of a registered vars is expressed in quotes if it wouldn't be legal as a property
+	*/
+	public function testRegisteredVarIllegalProp()
+	{
+		$this->configurator->registeredVars = ['float' => 'value'];
+
+		$this->assertContains(
+			'registeredVars={"float":"value"}',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox A callback that uses a registered vars whose name wouldn't be legal as a property uses the bracket syntax to access it
+	*/
+	public function testCallbackRegisteredVarIllegalProp()
+	{
+		$this->configurator->registeredVars = ['float' => 'value'];
+
+		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain
+			->append('strtolower')
+			->resetParameters()
+			->addParameterByName('float');
+
+		$this->assertContains(
+			'registeredVars["float"]',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox A callback that uses a registered vars whose name is legal as a property uses the dot syntax to access it
+	*/
+	public function testCallbackRegisteredVarLegalProp()
+	{
+		$this->configurator->registeredVars = ['_float' => 'value'];
+
+		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain
+			->append('strtolower')
+			->resetParameters()
+			->addParameterByName('_float');
+
+		$this->assertContains(
+			'registeredVars._float',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox isLegalProp() tests
+	*/
+	public function testLegalProps()
+	{
+		$legal = [
+			'foo',
+			'foo33',
+			'G89',
+			'$foo',
+			'$foo$bar',
+			'foo_bar'
+		];
+
+		foreach ($legal as $name)
+		{
+			$this->assertTrue(JavaScript::isLegalProp($name), $name);
+		}
+
+		$illegal = [
+			'',
+			'0foo',
+			'foo bar',
+			"foo\n",
+			'foo-bar',
+			"'foo'",
+			'"foo"',
+			'youtube.com',
+			'with',
+			'break',
+			'false',
+			'float'
+		];
+
+		foreach ($illegal as $name)
+		{
+			$this->assertFalse(JavaScript::isLegalProp($name), $name);
+		}
+	}
+
+	/**
+	* @testdox encode() tests
+	* @dataProvider getEncodeTests
+	*/
+	public function testEncode($original, $expected)
+	{
+		$this->assertSame($expected, JavaScript::encode($original));
+	}
+
+	public function getEncodeTests()
+	{
+		return [
+			[
+				123,
+				'123'
+			],
+			[
+				'foo',
+				'"foo"'
+			],
+			[
+				// NOTE: false/true are converted to 0/1 as encode() is meant to be used for
+				// configuration settings and in that case any true-ish value will do
+				false,
+				'0'
+			],
+			[
+				true,
+				'1'
+			],
+			[
+				[1, 2],
+				'[1,2]'
+			],
+			[
+				['foo' => 'bar', 'baz' => 'quux'],
+				'{foo:"bar",baz:"quux"}'
+			],
+			[
+				['' => 'bar', 'baz' => 'quux'],
+				'{"":"bar",baz:"quux"}'
+			],
+			[
+				new Dictionary(['foo' => 'bar', 'baz' => 'quux']),
+				'{"foo":"bar","baz":"quux"}'
+			],
+			[
+				new Dictionary(['' => 'bar', 'baz' => 'quux']),
+				'{"":"bar","baz":"quux"}'
+			],
+			[
+				new RegExp('^foo$'),
+				'/^foo$/'
+			],
+			[
+				new Code('function(){return false;}'),
+				'function(){return false;}'
+			],
+		];
 	}
 }
 

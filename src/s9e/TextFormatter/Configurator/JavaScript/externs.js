@@ -80,7 +80,7 @@ Array.prototype.indexOf = function(obj, opt_fromIndex) {};
 /**
  * @param {*=} opt_separator Specifies a string to separate each element of the
  * @return {string}
- * @this {Object}
+ * @this {{length: number}|string}
  * @nosideeffects
  */
 Array.prototype.join = function(opt_separator) {};
@@ -104,7 +104,7 @@ Array.prototype.pop = function() {};
  */
 Array.prototype.push = function(var_args) {};
 /**
- * @this {Object}
+ * @this {{length: number}}
  * @modifies {this}
  */
 Array.prototype.reverse = function() {};
@@ -291,6 +291,11 @@ String.prototype.toLowerCase = function() {};
  */
 String.prototype.toUpperCase = function() {};
 /**
+ * @type {string}
+ * @implicitCast
+ */
+Element.prototype.innerHTML;
+/**
  * @constructor
  */
 function DOMParser() {}
@@ -302,23 +307,142 @@ function DOMParser() {}
 DOMParser.prototype.parseFromString = function(src, type) {};
 /**
  * @constructor
+ * @extends {Node}
+ */
+function Document() {}
+/**
+ * @return {!DocumentFragment}
+ * @nosideeffects
+ */
+Document.prototype.createDocumentFragment = function() {};
+/**
+ * @param {string} tagName
+ * @return {!Element}
+ */
+Document.prototype.createElement = function(tagName) {};
+/**
+ * @constructor
+ * @extends {Node}
+ */
+function DocumentFragment() {}
+/**
+ * @constructor
+ */
+function NamedNodeMap() {}
+/**
+ * @param {number} index
+ * @return {Node}
+ * @nosideeffects
+ */
+NamedNodeMap.prototype.item = function(index) {};
+/**
+ * @type {number}
+ */
+NamedNodeMap.prototype.length;
+/**
+ * @constructor
  */
 function Node() {}
+/**
+ * @type {NamedNodeMap}
+ */
+Node.prototype.attributes;
+/**
+ * @param {Node} newChild
+ * @return {Node}
+ */
+Node.prototype.appendChild = function(newChild) {};
+/**
+ * @type {!NodeList}
+ */
+Node.prototype.childNodes;
+/**
+ * @param {boolean} deep
+ * @return {Node}
+ * @nosideeffects
+ */
+Node.prototype.cloneNode = function(deep) {};
+/**
+ * @param {Node} newChild
+ * @param {Node?} refChild
+ * @return {Node}
+ */
+Node.prototype.insertBefore = function(newChild, refChild) {};
+/**
+ * @type {string}
+ */
+Node.prototype.nodeName;
+/**
+ * @type {number}
+ */
+Node.prototype.nodeType;
+/**
+ * @type {string}
+ */
+Node.prototype.nodeValue;
+/**
+ * @type {Document}
+ */
+Node.prototype.ownerDocument;
+/**
+ * @type {Node}
+ */
+Node.prototype.parentNode;
+/**
+ * @param {Node} oldChild
+ * @return {Node}
+ */
+Node.prototype.removeChild = function(oldChild) {};
+/**
+ * @constructor
+ */
+function NodeList() {}
+/**
+ * @type {number}
+ */
+NodeList.prototype.length;
 /**
  * @constructor
  * @extends {Node}
  */
 function Element() {}
 /**
- * @constructor
- * @extends {Node}
+ * @param {string} namespaceURI
+ * @param {string} localName
+ * @return {string}
+ * @nosideeffects
  */
-function Document() {}
+Element.prototype.getAttributeNS = function(namespaceURI, localName) {};
 /**
- * @param {string} tagName
- * @return {!Element}
+ * @param {string} namespaceURI
+ * @param {string} localName
+ * @return {boolean}
+ * @nosideeffects
  */
-Document.prototype.createElement = function(tagName) {};
+Element.prototype.hasAttributeNS = function(namespaceURI, localName) {};
+/**
+ * @param {string} namespaceURI
+ * @param {string} localName
+ * @return {undefined}
+ */
+Element.prototype.removeAttributeNS = function(namespaceURI, localName) {};
+/**
+ * @param {string} namespaceURI
+ * @param {string} qualifiedName
+ * @param {string|number|boolean} value Values are converted to strings with
+ * @return {undefined}
+ */
+Element.prototype.setAttributeNS = function(namespaceURI, qualifiedName, value) {};
+/**
+ * @param {Node} arg
+ * @return {boolean}
+ * @nosideeffects
+ */
+Node.prototype.isEqualNode = function(arg) {};
+/**
+ * @type {string}
+ */
+Node.prototype.namespaceURI;
 /**
  * @type {string}
  * @implicitCast

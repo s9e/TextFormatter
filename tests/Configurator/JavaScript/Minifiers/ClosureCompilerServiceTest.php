@@ -95,6 +95,84 @@ class ClosureCompilerServiceTest extends Test
 			$params
 		);
 	}
+
+	/**
+	* @testdox Allows caching
+	*/
+	public function testAllowsCaching()
+	{
+		$minifier = new ClosureCompilerService;
+
+		$this->assertNotSame(false, $minifier->getCacheDifferentiator());
+	}
+
+	/**
+	* @testdox The cache key depends on the compilation level
+	*/
+	public function testCacheKeyCompilationLevel()
+	{
+		$minifier = new ClosureCompilerService;
+
+		$minifier->compilationLevel = 'ADVANCED_OPTIMIZATIONS';
+		$k1 = $minifier->getCacheDifferentiator();
+
+		$minifier->compilationLevel = 'SIMPLE_OPTIMIZATIONS';
+		$k2 = $minifier->getCacheDifferentiator();
+
+		$this->assertNotEquals($k1, $k2);
+	}
+
+	/**
+	* @testdox The cache key depends on whether the default externs are excluded
+	*/
+	public function testCacheKeyDefaultExterns()
+	{
+		$minifier = new ClosureCompilerService;
+
+		$minifier->excludeDefaultExterns = true;
+		$k1 = $minifier->getCacheDifferentiator();
+
+		$minifier->excludeDefaultExterns = false;
+		$k2 = $minifier->getCacheDifferentiator();
+
+		$this->assertNotEquals($k1, $k2);
+	}
+
+	/**
+	* @testdox If the default externs are excluded, the custom externs are baked into the cache key
+	*/
+	public function testCacheKeyCustomExterns()
+	{
+		$minifier = new ClosureCompilerService;
+		$minifier->excludeDefaultExterns = true;
+
+		$this->assertTrue(in_array($minifier->externs, $minifier->getCacheDifferentiator(), true));
+	}
+
+	/**
+	* @testdox Throws an exception in case of a server error
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Server error 4: Unknown compression level: UNKNOWN
+	*/
+	public function testServerError()
+	{
+		$minifier = new ClosureCompilerService;
+		$minifier->compilationLevel = 'UNKNOWN';
+
+		$minifier->minify('alert()');
+	}
+
+	/**
+	* @testdox Throws an exception in case of a compilation error
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Parse error. missing ; before statement
+	*/
+	public function testCompilationError()
+	{
+		$minifier = new ClosureCompilerService;
+
+		$minifier->minify('This should fail');
+	}
 }
 
 class ClosureCompilerServiceProxy

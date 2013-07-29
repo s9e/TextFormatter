@@ -97,6 +97,28 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $parser->parse($original));
 	}
 
+	protected function assertJSParsing($original, $expected)
+	{
+		// Minify and cache the parser if we have a cache dir
+		$cacheDir           = __DIR__ . '/../../.cache';
+		$closureCompilerBin = '/usr/local/bin/compiler.jar';
+
+		if (file_exists($cacheDir) && file_exists($closureCompilerBin))
+		{
+			$this->configurator->javascript
+				->setMinifier('ClosureCompilerApplication', $closureCompilerBin)
+				->cacheDir = $cacheDir;
+		}
+
+		$this->configurator->javascript->exportMethods = ['parse'];
+		$src = $this->configurator->javascript->getParser();
+
+		$this->assertSame(
+			$expected,
+			$this->execJS($src, $original)
+		);
+	}
+
 	protected function execJS($src, $input)
 	{
 		static $exec, $function;
@@ -126,7 +148,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 			return;
 		}
 
-		$src .= ';' . $function . '(parse(' . json_encode($input) . '))';
+		$src = file_get_contents(__DIR__ . '/browserStub.js') . $src . ';' . $function . '(window.s9e.TextFormatter.parse(' . json_encode($input) . '))';
 
 		return substr(shell_exec($exec . ' -e ' . escapeshellarg($src)), 0, -1);
 	}

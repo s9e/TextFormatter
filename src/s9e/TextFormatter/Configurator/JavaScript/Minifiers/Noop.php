@@ -12,7 +12,7 @@ use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 /**
 * No-op minifier
 */
-class Noop implements Minifier
+class Noop extends Minifier
 {
 	/**
 	* No-op method, output is the same as input
