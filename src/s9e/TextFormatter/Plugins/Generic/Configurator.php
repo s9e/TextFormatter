@@ -341,9 +341,6 @@ class Configurator extends ConfiguratorBase
 			$jsGenerics[] = [$tagName, $jsRegexp, $passthroughIdx, $jsRegexp->map];
 		}
 
-		$variant = new Variant($generics);
-		$variant->set('JS', $jsGenerics);
-
-		return ['generics' => $variant];
+		return ['generics' => new Variant($generics, ['JS' => $jsGenerics])];
 	}
 }

@@ -24,10 +24,11 @@ class Variant
 	/**
 	* Constructor
 	*
-	* @param  mixed $value Default value
+	* @param  mixed $value    Default value
+	* @param  array $variants Associative array of variants ([name => value])
 	* @return void
 	*/
-	public function __construct($value = null)
+	public function __construct($value = null, array $variants = [])
 	{
 		// If we're trying to create a variant of a variant, we just become a copy of it
 		if ($value instanceof self)
@@ -38,6 +39,11 @@ class Variant
 		else
 		{
 			$this->defaultValue = $value;
+		}
+
+		foreach ($variants as $k => $v)
+		{
+			$this->set($k, $v);
 		}
 	}
 

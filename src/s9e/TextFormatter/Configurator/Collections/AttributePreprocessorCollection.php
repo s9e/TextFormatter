@@ -104,13 +104,15 @@ class AttributePreprocessorCollection extends Collection
 		{
 			list($attrName, $regexp) = unserialize($k);
 
-			$variant = new Variant([$attrName, $regexp]);
-
-			// Create a JavaScript variant that contains a map of the regexp's named subpatterns
+			// Create a JavaScript regexp for the JS variant
 			$jsRegexp = RegexpConvertor::toJS($regexp);
-			$variant->set('JS', [$attrName, $jsRegexp, $jsRegexp->map]);
 
-			$config[] = $variant;
+			$config[] = new Variant(
+				[$attrName, $regexp],
+				[
+					'JS' => [$attrName, $jsRegexp, $jsRegexp->map]
+				]
+			);
 		}
 
 		return $config;

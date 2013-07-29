@@ -82,6 +82,15 @@ class VariantTest extends Test
 	}
 
 	/**
+	* @testdox __construct() can take an associative array of variants as second argument
+	*/
+	public function testConstructorVariants()
+	{
+		$variant = new Variant(null, ['foo' => 'bar']);
+		$this->assertSame('bar', $variant->get('foo'));
+	}
+
+	/**
 	* @testdox setDynamic() saves a dynamic variant whose callback does not get called if the variant is not read
 	*/
 	public function testSetDynamicNoRead()

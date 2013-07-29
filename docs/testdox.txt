@@ -901,6 +901,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Variant
  [x] has('JavaScript') returns FALSE if it does not have a 'JS' variant
  [x] Creating a new Variant with a Variant value makes it copy its default value and its variants instead
  [x] __construct() can be called with no arguments, and the default value will be NULL
+ [x] __construct() can take an associative array of variants as second argument
  [x] setDynamic() saves a dynamic variant whose callback does not get called if the variant is not read
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned when the variant is retrieved
  [x] setDynamic() saves a dynamic variant whose callback is called and its value returned everytime the variant is retrieved
