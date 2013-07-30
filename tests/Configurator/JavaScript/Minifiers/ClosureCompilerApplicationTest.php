@@ -129,30 +129,16 @@ class ClosureCompilerApplicationTest extends Test
 		$closureCompilerBin = '/usr/local/bin/compiler.jar';
 		if (!file_exists($closureCompilerBin))
 		{
-			$this->skip($closureCompilerBin . ' does not exist');
+			$this->markTestSkipped($closureCompilerBin . ' does not exist');
 		}
 
 		$minifier = new ClosureCompilerApplication($closureCompilerBin);
-
-		// Set the cache dir if applicable.
-		// NOTE: since the hash key is based on the compiler itself, the test will be run anew
-		//       everytime the compiler gets updated so it will effectively run everytime anything
-		//       changes
-		$cacheDir = __DIR__ . '/../../../.cache';
-		if (file_exists($cacheDir))
-		{
-			$minifier->cacheDir = $cacheDir;
-		}
+		$minifier->compilationLevel = 'WHITESPACE_ONLY';
+		$minifier->options = '--use_only_custom_externs';
 
 		$this->assertSame(
 			'alert("Hello world");',
-			$minifier->get('
-				function hello(name)
-				{
-					alert("Hello " + name);
-				}
-				hello("world");
-			')
+			$minifier->minify(' alert ( "Hello world" ) ; ')
 		);
 	}
 }
