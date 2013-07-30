@@ -15,6 +15,7 @@
 		<exclude>
 			<group>needs-network</group>
 			<group>needs-js</group>
+			<group>slow</group>
 		</exclude>
 	</groups>
 
