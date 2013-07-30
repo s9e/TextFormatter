@@ -141,4 +141,22 @@ class ClosureCompilerApplicationTest extends Test
 			$minifier->minify(' alert ( "Hello world" ) ; ')
 		);
 	}
+
+	/**
+	* @testdox Replaces the default externs with custom externs if compilationLevel is ADVANCED_OPTIMIZATIONS and excludeDefaultExterns is true
+	*/
+	public function testReplacesExterns()
+	{
+		$minifier = new ClosureCompilerApplication(__FILE__);
+		$minifier->compilationLevel = 'ADVANCED_OPTIMIZATIONS';
+		$minifier->excludeDefaultExterns = true;
+
+		// Replace the Java interpreter with echo so that it outputs its own command line
+		$minifier->javaBin = 'echo';
+
+		$this->assertRegexp(
+			'#--externs \\S*externs.js --use_only_custom_externs#',
+			$minifier->minify('/**/')
+		);
+	}
 }

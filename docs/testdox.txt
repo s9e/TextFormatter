@@ -963,6 +963,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplica
  [x] The cache key depends on whether the default externs are excluded
  [x] If the default externs are excluded, the custom externs are baked into the cache key
  [x] Works
+ [x] Replaces the default externs with custom externs if compilationLevel is ADVANCED_OPTIMIZATIONS and excludeDefaultExterns is true
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
  [x] Works
