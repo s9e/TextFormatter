@@ -254,7 +254,7 @@ class JavaScript
 		];
 
 		// Start with testing which rules are in use. First we aggregate the flags set on all the
-		// tags as well as the root rules as well as test for the presence of other rules
+		// tags and test for the presence of other rules
 		$flags = 0;
 		foreach ($this->configurator->tags as $tag)
 		{
@@ -272,28 +272,19 @@ class JavaScript
 			}
 		}
 
-		foreach ($this->configurator->rootRules->asConfig() as $k => $v)
-		{
-			if ($k === 'flags')
-			{
-				$flags |= $v;
-			}
-			elseif (isset($hints[$k]))
-			{
-				$hints[$k] = 1;
-			}
-		}
+		// Add the flags set in the root rules
+		$rootRulesConfig = $this->configurator->rootRules->asConfig();
+		$flags |= $rootRulesConfig['flags'];
 
+		// Iterate over Parser::RULE_* constants and test which flags are set
 		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
 		foreach ($parser->getConstants() as $constName => $constValue)
 		{
-			if (substr($constName, 0, 5) !== 'RULE_')
+			if (substr($constName, 0, 5) === 'RULE_')
 			{
-				continue;
+				// This will set HINT.RULE_AUTO_CLOSE and others
+				$hints[$constName] = (bool) ($flags & $constValue);
 			}
-
-			// This will set HINT.RULE_AUTO_CLOSE and others
-			$hints[$constName] = (bool) ($flags & $constValue);
 		}
 
 		// Build the source. Note that Closure Compiler seems to require that each of HINT's
