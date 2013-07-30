@@ -80,7 +80,7 @@ class ClosureCompilerService extends Minifier
 		}
 
 		// Got to add dupe variables by hand
-		$content = http_build_query($params) . '&output_info=errors&output_info=warnings';//&formatting=pretty_print';
+		$content = http_build_query($params) . '&output_info=errors';
 
 		$response = json_decode(file_get_contents(
 			$this->url,
