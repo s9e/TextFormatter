@@ -962,6 +962,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplica
  [x] The cache key does not depend on the path to the Closure Compiler application
  [x] The cache key depends on whether the default externs are excluded
  [x] If the default externs are excluded, the custom externs are baked into the cache key
+ [x] Works
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
  [x] Works
