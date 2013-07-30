@@ -6,6 +6,11 @@
 */
 function closeAncestor(tag)
 {
+	if (!HINT.closeAncestor)
+	{
+		return false;
+	}
+
 	if (openTags.length)
 	{
 		var tagName   = tag.getName(),
@@ -45,6 +50,11 @@ function closeAncestor(tag)
 */
 function closeParent(tag)
 {
+	if (!HINT.closeParent)
+	{
+		return false;
+	}
+
 	if (openTags.length)
 	{
 		var tagName   = tag.getName(),
@@ -79,6 +89,11 @@ function closeParent(tag)
 */
 function requireAncestor(tag)
 {
+	if (!HINT.requireAncestor)
+	{
+		return false;
+	}
+
 	var tagName   = tag.getName(),
 		tagConfig = tagsConfig[tagName];
 

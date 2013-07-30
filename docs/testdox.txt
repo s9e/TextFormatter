@@ -1387,6 +1387,34 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] A callback that uses a registered vars whose name is legal as a property uses the dot syntax to access it
  [x] isLegalProp() tests
  [x] encode() tests
+ [x] HINT.closeAncestor=0 by default
+ [x] HINT.closeAncestor=1 if any tag has a closeAncestor rule
+ [x] HINT.closeParent=0 by default
+ [x] HINT.closeParent=1 if any tag has a closeParent rule
+ [x] HINT.requireAncestor=0 by default
+ [x] HINT.requireAncestor=1 if any tag has a requireAncestor rule
+ [x] HINT.RULE_AUTO_CLOSE=0 by default
+ [x] HINT.RULE_AUTO_CLOSE=1 if any tag has an autoClose rule
+ [x] HINT.RULE_AUTO_REOPEN=0 by default
+ [x] HINT.RULE_AUTO_REOPEN=1 if any tag has an autoReopen rule
+ [x] HINT.RULE_BREAK_PARAGRAPH=0 by default
+ [x] HINT.RULE_BREAK_PARAGRAPH=1 if any tag has a breakParagraph rule
+ [x] HINT.RULE_CREATE_PARAGRAPHS=0 by default
+ [x] HINT.RULE_CREATE_PARAGRAPHS=1 if any tag has a createParagraphs rule
+ [x] HINT.RULE_CREATE_PARAGRAPHS=1 if the root rules have a createParagraphs rule
+ [x] HINT.RULE_IGNORE_TEXT=0 by default
+ [x] HINT.RULE_IGNORE_TEXT=1 if any tag has an ignoreText rule
+ [x] HINT.RULE_IGNORE_TEXT=1 if the root rules have a createParagraphs rule
+ [x] HINT.RULE_IS_TRANSPARENT=0 by default
+ [x] HINT.RULE_IS_TRANSPARENT=1 if any tag has an isTransparent rule
+ [x] HINT.RULE_NO_BR_CHILD=0 by default
+ [x] HINT.RULE_NO_BR_CHILD=1 if any tag has a noBrChild rule
+ [x] HINT.RULE_NO_BR_CHILD=1 if the root rules have a createParagraphs rule
+ [x] HINT.RULE_NO_BR_DESCENDANT=0 by default
+ [x] HINT.RULE_NO_BR_DESCENDANT=1 if any tag has a noBrDescendant rule
+ [x] HINT.RULE_NO_BR_DESCENDANT=1 if the root rules have a createParagraphs rule
+ [x] HINT.RULE_TRIM_WHITESPACE=0 by default
+ [x] HINT.RULE_TRIM_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
 
 s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator

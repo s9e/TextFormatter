@@ -378,6 +378,346 @@ class JavaScriptTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox HINT.closeAncestor=0 by default
+	*/
+	public function testHintCloseAncestorFalse()
+	{
+		$this->assertContains(
+			'HINT.closeAncestor=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.closeAncestor=1 if any tag has a closeAncestor rule
+	*/
+	public function testHintCloseAncestorTrue()
+	{
+		$this->configurator->tags->add('X')->rules->closeAncestor('X');
+
+		$this->assertContains(
+			'HINT.closeAncestor=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.closeParent=0 by default
+	*/
+	public function testHintCloseParentFalse()
+	{
+		$this->assertContains(
+			'HINT.closeParent=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.closeParent=1 if any tag has a closeParent rule
+	*/
+	public function testHintCloseParentTrue()
+	{
+		$this->configurator->tags->add('X')->rules->closeParent('X');
+
+		$this->assertContains(
+			'HINT.closeParent=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.requireAncestor=0 by default
+	*/
+	public function testHintRequireAncestorFalse()
+	{
+		$this->assertContains(
+			'HINT.requireAncestor=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.requireAncestor=1 if any tag has a requireAncestor rule
+	*/
+	public function testHintRequireAncestorTrue()
+	{
+		$this->configurator->tags->add('X')->rules->requireAncestor('Y');
+
+		$this->assertContains(
+			'HINT.requireAncestor=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_AUTO_CLOSE=0 by default
+	*/
+	public function testHintRuleAutoCloseFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_AUTO_CLOSE=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_AUTO_CLOSE=1 if any tag has an autoClose rule
+	*/
+	public function testHintRuleAutoCloseTrue()
+	{
+		$this->configurator->tags->add('X')->rules->autoClose();
+
+		$this->assertContains(
+			'HINT.RULE_AUTO_CLOSE=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_AUTO_REOPEN=0 by default
+	*/
+	public function testHintRuleAutoReopenFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_AUTO_REOPEN=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_AUTO_REOPEN=1 if any tag has an autoReopen rule
+	*/
+	public function testHintRuleAutoReopenTrue()
+	{
+		$this->configurator->tags->add('X')->rules->autoReopen();
+
+		$this->assertContains(
+			'HINT.RULE_AUTO_REOPEN=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_BREAK_PARAGRAPH=0 by default
+	*/
+	public function testHintRuleBreakParagraphFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_BREAK_PARAGRAPH=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_BREAK_PARAGRAPH=1 if any tag has a breakParagraph rule
+	*/
+	public function testHintRuleBreakParagraphsTrue()
+	{
+		$this->configurator->tags->add('X')->rules->breakParagraph();
+
+		$this->assertContains(
+			'HINT.RULE_BREAK_PARAGRAPH=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_CREATE_PARAGRAPHS=0 by default
+	*/
+	public function testHintRuleCreateParagraphsFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_CREATE_PARAGRAPHS=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_CREATE_PARAGRAPHS=1 if any tag has a createParagraphs rule
+	*/
+	public function testHintRuleCreateParagraphsTrue()
+	{
+		$this->configurator->tags->add('X')->rules->createParagraphs();
+
+		$this->assertContains(
+			'HINT.RULE_CREATE_PARAGRAPHS=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_CREATE_PARAGRAPHS=1 if the root rules have a createParagraphs rule
+	*/
+	public function testHintRuleCreateParagraphsRoot()
+	{
+		$this->configurator->rootRules->createParagraphs();
+
+		$this->assertContains(
+			'HINT.RULE_CREATE_PARAGRAPHS=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_IGNORE_TEXT=0 by default
+	*/
+	public function testHintRuleIgnoreTextFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_IGNORE_TEXT=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_IGNORE_TEXT=1 if any tag has an ignoreText rule
+	*/
+	public function testHintRuleIgnoreTextTrue()
+	{
+		$this->configurator->tags->add('X')->rules->ignoreText();
+
+		$this->assertContains(
+			'HINT.RULE_IGNORE_TEXT=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_IGNORE_TEXT=1 if the root rules have a createParagraphs rule
+	*/
+	public function testHintRuleIgnoreTextRoot()
+	{
+		$this->configurator->rootRules->ignoreText();
+
+		$this->assertContains(
+			'HINT.RULE_IGNORE_TEXT=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_IS_TRANSPARENT=0 by default
+	*/
+	public function testHintRuleIsTransparentFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_IS_TRANSPARENT=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_IS_TRANSPARENT=1 if any tag has an isTransparent rule
+	*/
+	public function testHintRuleIsTransparentTrue()
+	{
+		$this->configurator->tags->add('X')->rules->isTransparent();
+
+		$this->assertContains(
+			'HINT.RULE_IS_TRANSPARENT=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_NO_BR_CHILD=0 by default
+	*/
+	public function testHintRuleNoBrChildFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_NO_BR_CHILD=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_NO_BR_CHILD=1 if any tag has a noBrChild rule
+	*/
+	public function testHintRuleNoBrChildTrue()
+	{
+		$this->configurator->tags->add('X')->rules->noBrChild();
+
+		$this->assertContains(
+			'HINT.RULE_NO_BR_CHILD=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_NO_BR_CHILD=1 if the root rules have a createParagraphs rule
+	*/
+	public function testHintRuleNoBrChildRoot()
+	{
+		$this->configurator->rootRules->noBrChild();
+
+		$this->assertContains(
+			'HINT.RULE_NO_BR_CHILD=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_NO_BR_DESCENDANT=0 by default
+	*/
+	public function testHintRuleNoBrDescendantFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_NO_BR_DESCENDANT=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_NO_BR_DESCENDANT=1 if any tag has a noBrDescendant rule
+	*/
+	public function testHintRuleNoBrDescendantTrue()
+	{
+		$this->configurator->tags->add('X')->rules->noBrDescendant();
+
+		$this->assertContains(
+			'HINT.RULE_NO_BR_DESCENDANT=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_NO_BR_DESCENDANT=1 if the root rules have a createParagraphs rule
+	*/
+	public function testHintRuleNoBrDescendantRoot()
+	{
+		$this->configurator->rootRules->noBrDescendant();
+
+		$this->assertContains(
+			'HINT.RULE_NO_BR_DESCENDANT=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_TRIM_WHITESPACE=0 by default
+	*/
+	public function testHintRuleIgnoreSurroundingWhitespaceFalse()
+	{
+		$this->assertContains(
+			'HINT.RULE_TRIM_WHITESPACE=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.RULE_TRIM_WHITESPACE=1 if any tag has an ignoreSurroundingWhitespace rule
+	*/
+	public function testHintRuleIgnoreSurroundingWhitespaceTrue()
+	{
+		$this->configurator->tags->add('X')->rules->ignoreSurroundingWhitespace();
+
+		$this->assertContains(
+			'HINT.RULE_TRIM_WHITESPACE=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
 }
 
 class NonScalarConfigThing implements ConfigProvider

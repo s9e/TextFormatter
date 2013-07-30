@@ -96,7 +96,7 @@ function outputTag(tag)
 		skipBefore = 0,
 		skipAfter  = 0;
 
-	if (tagConfig.rules.flags & RULE_TRIM_WHITESPACE)
+	if (HINT.RULE_TRIM_WHITESPACE && tagConfig.rules.flags & RULE_TRIM_WHITESPACE)
 	{
 		skipBefore = (tag.isStartTag()) ? 2 : 1;
 		skipAfter  = (tag.isEndTag())   ? 2 : 1;
@@ -108,7 +108,7 @@ function outputTag(tag)
 	var closeParagraph = false;
 	if (tag.isStartTag())
 	{
-		if (tagConfig.rules.flags & RULE_BREAK_PARAGRAPH)
+		if (HINT.RULE_BREAK_PARAGRAPH && tagConfig.rules.flags & RULE_BREAK_PARAGRAPH)
 		{
 			closeParagraph = true;
 		}
@@ -130,7 +130,7 @@ function outputTag(tag)
 	if (tag.isStartTag())
 	{
 		// Handle paragraphs before opening the tag
-		if (tagConfig.rules.flags & RULE_BREAK_PARAGRAPH)
+		if (HINT.RULE_BREAK_PARAGRAPH && tagConfig.rules.flags & RULE_BREAK_PARAGRAPH)
 		{
 			outputParagraphEnd();
 		}
@@ -239,7 +239,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	var catchupLen, catchupText;
 
 	// Test whether we're even supposed to output anything
-	if (context.flags & RULE_IGNORE_TEXT)
+	if (HINT.RULE_IGNORE_TEXT && context.flags & RULE_IGNORE_TEXT)
 	{
 		catchupLen  = catchupPos - pos,
 		catchupText = text.substr(pos, catchupLen);
@@ -298,7 +298,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	catchupPos -= ignoreLen;
 
 	// Break down the text in paragraphs if applicable
-	if (context.flags & RULE_CREATE_PARAGRAPHS)
+	if (HINT.RULE_CREATE_PARAGRAPHS && context.flags & RULE_CREATE_PARAGRAPHS)
 	{
 		// Look for a paragraph break in this text
 		var pbPos = text.indexOf("\n\n", pos);
@@ -320,7 +320,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		);
 
 		// Format line breaks if applicable
-		if (!(context.flags & RULE_NO_BR_CHILD))
+		if (!HINT.RULE_NO_BR_CHILD || !(context.flags & RULE_NO_BR_CHILD))
 		{
 			catchupText = catchupText.replace(/\n/g, "<br/>\n");
 		}
@@ -386,6 +386,11 @@ function outputIgnoreTag(tag)
 */
 function outputParagraphStart(maxPos)
 {
+	if (!HINT.RULE_CREATE_PARAGRAPHS)
+	{
+		return;
+	}
+
 	// Do nothing if we're already in a paragraph, or if we don't use paragraphs
 	if (context.inParagraph
 	 || !(context.flags & RULE_CREATE_PARAGRAPHS))

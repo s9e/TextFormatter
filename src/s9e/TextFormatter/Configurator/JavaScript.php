@@ -111,7 +111,10 @@ class JavaScript
 			$files[] = 'render.js';
 		}
 
-		$src = '';
+		// Start with the generated HINTS
+		$src = $this->getHints();
+
+		// Append the parser's source
 		foreach ($files as $filename)
 		{
 			if ($filename === 'render.js')
@@ -235,6 +238,73 @@ class JavaScript
 		$code = new Code('[' . implode(',', $hex) . ']');
 
 		return $code;
+	}
+
+	/**
+	* Generate a HINT object that contains informations about the configuration
+	*
+	* @return string JavaScript Code
+	*/
+	protected function getHints()
+	{
+		$hints = [
+			'closeAncestor'   => 0,
+			'closeParent'     => 0,
+			'requireAncestor' => 0
+		];
+
+		// Start with testing which rules are in use. First we aggregate the flags set on all the
+		// tags as well as the root rules as well as test for the presence of other rules
+		$flags = 0;
+		foreach ($this->configurator->tags as $tag)
+		{
+			foreach ($tag->rules->asConfig() as $k => $v)
+			{
+				if ($k === 'flags')
+				{
+					$flags |= $v;
+				}
+				elseif (isset($hints[$k]))
+				{
+					// This will set HINT.closeAncestor and others
+					$hints[$k] = 1;
+				}
+			}
+		}
+
+		foreach ($this->configurator->rootRules->asConfig() as $k => $v)
+		{
+			if ($k === 'flags')
+			{
+				$flags |= $v;
+			}
+			elseif (isset($hints[$k]))
+			{
+				$hints[$k] = 1;
+			}
+		}
+
+		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
+		foreach ($parser->getConstants() as $constName => $constValue)
+		{
+			if (substr($constName, 0, 5) !== 'RULE_')
+			{
+				continue;
+			}
+
+			// This will set HINT.RULE_AUTO_CLOSE and others
+			$hints[$constName] = (bool) ($flags & $constValue);
+		}
+
+		// Build the source. Note that Closure Compiler seems to require that each of HINT's
+		// properties be declared as a const
+		$js = "/** @const */ var HINT={};\n";
+		foreach ($hints as $hintName => $hintValue)
+		{
+			$js .= '/** @const */ HINT.' . $hintName . '=' . self::encode($hintValue) . ";\n";
+		}
+
+		return $js;
 	}
 
 	/**

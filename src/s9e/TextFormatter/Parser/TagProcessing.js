@@ -54,7 +54,7 @@ function addMagicEndTag(startTag, tagPos)
 	var tagName = startTag.getName();
 
 	// Adjust the end tag's position if whitespace is to be minimized
-	if (tagsConfig[tagName].rules.flags & RULE_TRIM_WHITESPACE)
+	if (HINT.RULE_TRIM_WHITESPACE && tagsConfig[tagName].rules.flags & RULE_TRIM_WHITESPACE)
 	{
 		tagPos = getMagicPos(tagPos);
 	}
@@ -258,7 +258,8 @@ function processStartTag(tag)
 
 	// If this tag has an autoClose rule and it's not paired with an end tag, we replace it
 	// with a self-closing tag with the same properties
-	if (tagConfig.rules.flags & RULE_AUTO_CLOSE
+	if (HINT.RULE_AUTO_CLOSE
+	 && tagConfig.rules.flags & RULE_AUTO_CLOSE
 	 && !tag.getEndTag())
 	{
 		var newTag = new Tag(Tag.SELF_CLOSING_TAG, tagName, tag.getPos(), tag.getLen());
@@ -320,7 +321,7 @@ function processEndTag(tag)
 	}
 
 	// Only reopen tags if we haven't exceeded our "fixing" budget
-	var keepReopening = (currentFixingCost < maxFixingCost),
+	var keepReopening = HINT.RULE_AUTO_REOPEN && (currentFixingCost < maxFixingCost),
 		reopenTags    = [];
 	closeTags.forEach(function(openTag)
 	{
@@ -341,7 +342,7 @@ function processEndTag(tag)
 
 		// Find the earliest position we can close this open tag
 		var tagPos = tag.getPos();
-		if (tagsConfig[openTagName].rules.flags & RULE_TRIM_WHITESPACE)
+		if (HINT.RULE_TRIM_WHITESPACE && tagsConfig[openTagName].rules.flags & RULE_TRIM_WHITESPACE)
 		{
 			tagPos = getMagicPos(tagPos);
 		}
@@ -487,7 +488,7 @@ function pushContext(tag)
 
 	// If the tag is transparent, we restrict its allowed children to the same set as its
 	// parent, minus this tag's own disallowed children
-	if (tagConfig.rules.flags & RULE_IS_TRANSPARENT)
+	if (HINT.RULE_IS_TRANSPARENT && tagConfig.rules.flags & RULE_IS_TRANSPARENT)
 	{
 		allowedChildren = contextAnd(allowedChildren, context.allowedChildren);
 	}
