@@ -130,8 +130,8 @@ function preview(text, target)
 	*/
 	function syncElementAttributes(oldEl, newEl)
 	{
-		var oldAttributes = oldEl.attributes,
-			newAttributes = newEl.attributes,
+		var oldAttributes = oldEl['attributes'],
+			newAttributes = newEl['attributes'],
 			oldCnt = oldAttributes.length,
 			newCnt = newAttributes.length,
 			i = oldCnt;

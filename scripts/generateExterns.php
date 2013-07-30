@@ -80,7 +80,6 @@ $externs = array(
 		'NamedNodeMap.prototype.length',
 
 		'function Node(',
-		'Node.prototype.attributes',
 		'Node.prototype.appendChild',
 		'Node.prototype.childNodes',
 		'Node.prototype.cloneNode',

@@ -344,10 +344,6 @@ NamedNodeMap.prototype.length;
  */
 function Node() {}
 /**
- * @type {NamedNodeMap}
- */
-Node.prototype.attributes;
-/**
  * @param {Node} newChild
  * @return {Node}
  */
