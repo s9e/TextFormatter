@@ -100,7 +100,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	protected function assertJSParsing($original, $expected)
 	{
 		// Minify and cache the parser if we have a cache dir
-		$cacheDir           = __DIR__ . '/../../.cache';
+		$cacheDir           = __DIR__ . '/.cache';
 		$closureCompilerBin = '/usr/local/bin/compiler.jar';
 
 		if (file_exists($cacheDir) && file_exists($closureCompilerBin))
