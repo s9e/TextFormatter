@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">B</match>
+		<element name="hr" id="1" void="yes" empty="yes">
+			<attribute name="title">
+				<output type="literal">{foo&amp;bar}</output>
+			</attribute>
+			<closeTag id="1"/>
+		</element>
+	</template>
+</stylesheet>

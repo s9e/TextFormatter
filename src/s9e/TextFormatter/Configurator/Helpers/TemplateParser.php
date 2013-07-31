@@ -714,7 +714,8 @@ class TemplateParser
 				&& $output->nextSibling->nodeName === 'output'
 				&& $output->nextSibling->getAttribute('type') === 'literal')
 			{
-				$output->nodeValue .= $output->nextSibling->textContent;
+				$output->nodeValue
+					= htmlspecialchars($output->nodeValue . $output->nextSibling->textContent);
 				$output->parentNode->removeChild($output->nextSibling);
 			}
 		}
