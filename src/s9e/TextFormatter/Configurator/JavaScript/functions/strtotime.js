@@ -1,4 +1,4 @@
 function(str)
 {
-	return (new Date(str).getTime()) / 1000;
+	return Date.parse(str) / 1000;
 }

@@ -29,7 +29,7 @@ $externs = array(
 
 		// Date object
 		'function Date(',
-		'Date.prototype.getTime',
+		'Date.parse',
 
 		// Math object
 		'var Math',

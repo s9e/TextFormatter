@@ -147,10 +147,11 @@ Array.prototype.splice = function(opt_index, opt_howMany, var_args) {};
  */
 function Date(opt_yr_num, opt_mo_num, opt_day_num, opt_hr_num, opt_min_num,     opt_sec_num, opt_ms_num) {}
 /**
+ * @param {*} date
  * @return {number}
  * @nosideeffects
  */
-Date.prototype.getTime = function() {};
+Date.parse = function(date) {};
 /**
  * @const
  */
