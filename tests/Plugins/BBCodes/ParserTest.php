@@ -156,6 +156,36 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'x [b=1]bold[/b] y',
+				'<rt>x <B b="1"><st>[b=1]</st>bold<et>[/b]</et></B> y</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('B');
+					$constructor->tags->add('B')->attributes->add('b');
+				}
+			],
+			[
+				'x [b=1 /] y',
+				'<rt>x <B b="1">[b=1 /]</B> y</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('B');
+					$constructor->tags->add('B')->attributes->add('b');
+				}
+			],
+			[
+				'x [url=http://example.org/]example[/url] y',
+				'<rt>x <URL url="http://example.org/"><st>[url=http://example.org/]</st>example<et>[/url]</et></URL> y</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('URL');
+					$constructor->tags->add('URL')->attributes->add('url');
+				}
+			],
+			[
 				"x [b x='\"bar\"'/] y",
 				'<rt>x <B x="&quot;bar&quot;">[b x=\'"bar"\'/]</B> y</rt>',
 				[],

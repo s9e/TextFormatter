@@ -189,13 +189,14 @@ matches.forEach(function(m)
 		else
 		{
 			// Capture everything after the equal sign up to whichever comes first:
-			//  - a closing bracket, potentially preceded by whitespace and a slash
+			//  - whitespace followed by a slash and a closing bracket
+			//  - a closing bracket, optionally preceded by whitespace
 			//  - whitespace followed by another attribute (name followed by equal sign)
 			//
 			// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 			//       that do not put attribute values in quotes, e.g.
 			//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-			var match = /[^\]]*?(?=\s*\/?\]|\s+[-\w]+=)/.exec(text.substr(rpos));
+			var match = /[^\]]*?(?=\s*(?: \/)?\]|\s+[-\w]+=)/.exec(text.substr(rpos));
 			if (!match)
 			{
 				continue;
