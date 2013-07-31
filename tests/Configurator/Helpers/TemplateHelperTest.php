@@ -544,6 +544,10 @@ class TemplateHelperTest extends Test
 				'<b><xsl:copy-of select="@onclick"/></b>',
 				'//xsl:copy-of'
 			],
+			[
+				'<b data-s9e-livepreview-postprocess=""/>',
+				'//@*'
+			],
 		];
 	}
 

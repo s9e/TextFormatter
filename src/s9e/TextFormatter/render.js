@@ -6,6 +6,14 @@ function loadXML(xml)
 var xslt = new XSLTProcessor;
 xslt['importStylesheet'](loadXML(xsl));
 
+var postProcessFunctions = {};
+
+/**
+* Parse a given text and render it into given HTML element
+*
+* @param {!string} text
+* @param {!HTMLElement} target
+*/
 function preview(text, target)
 {
 	var xml = parse(text),
@@ -13,7 +21,23 @@ function preview(text, target)
 		targetDoc = target.ownerDocument,
 		frag;
 
-	frag = xslt['transformToFragment'](DOM, targetDoc);
+	// NOTE: importNode() is used because of https://code.google.com/p/chromium/issues/detail?id=266305
+	frag = targetDoc.importNode(xslt['transformToFragment'](DOM, targetDoc), true);
+
+	// Apply post-processing
+	var nodes = frag['querySelectorAll']('[data-s9e-livepreview-postprocess]'),
+		i     = nodes.length;
+	while (--i >= 0)
+	{
+		var code = nodes[i]['getAttribute']('data-s9e-livepreview-postprocess');
+
+		if (!postProcessFunctions[code])
+		{
+			postProcessFunctions[code] = new Function(code);
+		}
+
+		postProcessFunctions[code]['call'](nodes[i]);
+	}
 
 	/**
 	* Update the content of given element oldEl to match element newEl
@@ -27,14 +51,16 @@ function preview(text, target)
 			newNodes = newEl.childNodes,
 			oldCnt = oldNodes.length,
 			newCnt = newNodes.length,
+			oldNode,
+			newNode,
 			left  = 0,
 			right = 0;
 
 		// Skip the leftmost matching nodes
 		while (left < oldCnt && left < newCnt)
 		{
-			var oldNode = oldNodes[left],
-				newNode = newNodes[left];
+			oldNode = oldNodes[left];
+			newNode = newNodes[left];
 
 			if (!refreshNode(oldNode, newNode))
 			{
@@ -49,8 +75,8 @@ function preview(text, target)
 
 		while (right < maxRight)
 		{
-			var oldNode = oldNodes[oldCnt - (right + 1)],
-				newNode = newNodes[newCnt - (right + 1)];
+			oldNode = oldNodes[oldCnt - (right + 1)];
+			newNode = newNodes[newCnt - (right + 1)];
 
 			if (!refreshNode(oldNode, newNode))
 			{
@@ -66,7 +92,9 @@ function preview(text, target)
 
 		while (i < (newCnt - right))
 		{
-			frag.appendChild(newNodes[i].cloneNode(true));
+			newNode = newNodes[i].cloneNode(true);
+
+			frag.appendChild(newNode);
 			++i;
 		}
 
@@ -93,7 +121,7 @@ function preview(text, target)
 	*
 	* @param {!HTMLElement} oldNode
 	* @param {!HTMLElement} newNode
-	* @return boolean TRUE if the nodes were made to match, FALSE otherwise
+	* @return boolean Whether the node can be skipped
 	*/
 	function refreshNode(oldNode, newNode)
 	{
@@ -103,10 +131,13 @@ function preview(text, target)
 			return false;
 		}
 
-		// IE 7.0 doesn't seem to have Node.TEXT_NODE so we use its value, 3, instead
+		// Node.TEXT_NODE
 		if (oldNode.nodeType === 3)
 		{
-			oldNode.nodeValue = newNode.nodeValue;
+			if (oldNode.nodeValue !== newNode.nodeValue)
+			{
+				oldNode.nodeValue = newNode.nodeValue;
+			}
 
 			return true;
 		}
@@ -164,4 +195,15 @@ function preview(text, target)
 	}
 
 	refreshElementContent(target, frag);
+}
+
+/**
+* Set the value of a stylesheet parameter
+*
+* @param {!string} paramName  Parameter name
+* @param {!string} paramValue Parameter's value
+*/
+function setParameter(paramName, paramValue)
+{
+	xslt['setParameter'](null, paramName, paramValue);
 }

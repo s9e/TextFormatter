@@ -49,7 +49,8 @@ class JavaScript
 		'enableTag',
 		'getLogger',
 		'parse',
-		'preview'
+		'preview',
+		'setParameter'
 	];
 
 	/**

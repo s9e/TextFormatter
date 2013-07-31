@@ -62,6 +62,7 @@ $externs = array(
 		'String.prototype.toUpperCase'
 	),
 	'gecko_dom.js' => array(
+		'Document.prototype.importNode',
 		'Element.prototype.innerHTML'
 	),
 	'gecko_xml.js' => array(

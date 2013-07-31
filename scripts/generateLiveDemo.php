@@ -16,6 +16,7 @@ $configurator->BBCodes->addFromRepository('*');
 $configurator->BBCodes->addFromRepository('C');
 $configurator->BBCodes->addFromRepository('COLOR');
 $configurator->BBCodes->addFromRepository('FLOAT');
+$configurator->BBCodes->addFromRepository('CODE');
 
 $configurator->Censor->add('apple', 'banana');
 $configurator->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
@@ -51,12 +52,13 @@ ob_start();
 <head>
 	<meta charset="utf-8" />
 	<title>s9e\TextFormatter &bull; Demo</title>
+	<base href="http://s9e.github.io/TextFormatter/demo.html" />
 	<style type="text/css">
 		#preview
 		{
 			font-family: sans;
 			padding: 5px;
-			background-color: #eee;
+			background-color: #f8f8f8;
 			border: dashed 1px #8af;
 			border-radius: 5px;
 		}
@@ -87,7 +89,10 @@ The following plugins have been enabled:
     [*][b]bold[/b], [i]italic[/i], [u]underline[/u], [s]strikethrough[/s],
     [*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
     [*][C][URL][/C], [C:123][C][/C:123], [C][YOUTUBE][/C], [C][FLOAT][/C], and [C][LIST][/C]
-  [/list][/*]
+    [*][C][CODE][/C] with real-time syntax highlighting via [url=http://softwaremaniacs.org/soft/highlight/en/]Highlight.js[/url]
+	[code]$who = "world";
+printf("Hello %s\n", $who);[/code]
+  [/list]
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
   [*][b]Emoticons[/b] --- one emoticon :) has been added
   [*][b]FancyPants[/b] --- some typography is enhanced, e.g. (c) (tm) and "quotes"

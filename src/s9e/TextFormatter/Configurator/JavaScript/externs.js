@@ -292,6 +292,12 @@ String.prototype.toLowerCase = function() {};
  */
 String.prototype.toUpperCase = function() {};
 /**
+ * @param {Node} externalNode
+ * @param {boolean} deep
+ * @return {Node}
+ */
+Document.prototype.importNode = function(externalNode, deep) {};
+/**
  * @type {string}
  * @implicitCast
  */
