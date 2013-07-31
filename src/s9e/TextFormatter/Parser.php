@@ -185,6 +185,9 @@ class Parser
 		$text = preg_replace('/\\r\\n?/', "\n", $text);
 		$text = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
 
+		// Clear the logs
+		$this->logger->clear();
+
 		// Initialize the rest
 		$this->currentFixingCost = 0;
 		$this->isRich     = false;

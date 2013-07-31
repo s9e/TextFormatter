@@ -44,13 +44,23 @@ class ParserTest extends Test
 	*/
 	public function testGetLogger()
 	{
-		$configurator = new Configurator;
-		$parser       = $configurator->getParser();
-
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Parser\\Logger',
-			$parser->getLogger()
+			$this->configurator->getParser()->getLogger()
 		);
+	}
+
+	/**
+	* @testdox The logger is cleared before parsing a new text
+	*/
+	public function testLoggerIsClearedAtStart()
+	{
+		$parser = $this->configurator->getParser();
+		$logger = $parser->getLogger();
+
+		$logger->debug('debug');
+		$parser->parse('');
+		$this->assertEmpty($logger->get());
 	}
 
 	/**

@@ -124,7 +124,10 @@ function reset(_text)
 	_text = _text.replace(/\r\n?/g, "\n", _text);
 	_text = _text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]+/g, '', _text);
 
-	context    = rootContext;
+	// Clear the logs
+	logger.clear();
+
+	// Initialize the rest
 	currentFixingCost = 0;
 	isRich     = false;
 	namespaces = {};

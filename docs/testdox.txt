@@ -1597,6 +1597,7 @@ s9e\TextFormatter\Tests\Parser
  [x] Parser is serializable
  [x] Parser can be unserialized
  [x] getLogger() returns an instance of Logger
+ [x] The logger is cleared before parsing a new text
  [x] parse() returns the intermediate representation
  [x] parse() can be called multiple times in succession
  [x] parse() normalizes \r to \n

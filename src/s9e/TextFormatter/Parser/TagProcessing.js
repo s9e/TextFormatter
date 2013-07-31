@@ -91,8 +91,11 @@ function processTags()
 	cntOpen    = {};
 	cntTotal   = {};
 	openTags   = [];
-	context    = rootContext;
 	currentTag = null;
+
+	// Initialize the root context
+	context = rootContext;
+	context.inParagraph = false;
 
 	// Initialize the count tables
 	for (var tagName in tagsConfig)
