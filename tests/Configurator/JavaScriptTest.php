@@ -428,6 +428,31 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox HINT.postProcessing=0 by default
+	*/
+	public function testHintPostProcessingFalse()
+	{
+		$this->assertContains(
+			'HINT.postProcessing=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
+	*/
+	public function testHintPostProcessingTrue()
+	{
+		$this->configurator->tags->add('X')->defaultTemplate
+			= '<hr data-s9e-livepreview-postprocess="foo(this)"/>';
+
+		$this->assertContains(
+			'HINT.postProcessing=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
 	* @testdox HINT.requireAncestor=0 by default
 	*/
 	public function testHintRequireAncestorFalse()

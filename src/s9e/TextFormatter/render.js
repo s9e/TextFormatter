@@ -25,18 +25,21 @@ function preview(text, target)
 	frag = targetDoc.importNode(xslt['transformToFragment'](DOM, targetDoc), true);
 
 	// Apply post-processing
-	var nodes = frag['querySelectorAll']('[data-s9e-livepreview-postprocess]'),
-		i     = nodes.length;
-	while (--i >= 0)
+	if (HINT.postProcessing)
 	{
-		var code = nodes[i]['getAttribute']('data-s9e-livepreview-postprocess');
-
-		if (!postProcessFunctions[code])
+		var nodes = frag['querySelectorAll']('[data-s9e-livepreview-postprocess]'),
+			i     = nodes.length;
+		while (--i >= 0)
 		{
-			postProcessFunctions[code] = new Function(code);
-		}
+			var code = nodes[i]['getAttribute']('data-s9e-livepreview-postprocess');
 
-		postProcessFunctions[code]['call'](nodes[i]);
+			if (!postProcessFunctions[code])
+			{
+				postProcessFunctions[code] = new Function(code);
+			}
+
+			postProcessFunctions[code]['call'](nodes[i]);
+		}
 	}
 
 	/**

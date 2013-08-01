@@ -112,8 +112,11 @@ class JavaScript
 			$files[] = 'render.js';
 		}
 
-		// Start with the generated HINTS
-		$src = $this->getHints();
+		// Get the stylesheet used for rendering
+		$xsl = $this->configurator->stylesheet->get();
+
+		// Start with the generated HINTs
+		$src = $this->getHints($xsl);
 
 		// Append the parser's source
 		foreach ($files as $filename)
@@ -121,8 +124,7 @@ class JavaScript
 			if ($filename === 'render.js')
 			{
 				// Insert the stylesheet if we include the renderer
-				$src .= '/** @const */'
-				      . 'var xsl=' . json_encode($this->configurator->stylesheet->get()) . ";\n";
+				$src .= '/** @const */ var xsl=' . json_encode($xsl) . ";\n";
 			}
 
 			$filepath = __DIR__ . '/../' . $filename;
@@ -244,13 +246,15 @@ class JavaScript
 	/**
 	* Generate a HINT object that contains informations about the configuration
 	*
-	* @return string JavaScript Code
+	* @param  string $xsl XSL stylesheet used for rendering
+	* @return string      JavaScript Code
 	*/
-	protected function getHints()
+	protected function getHints($xsl)
 	{
 		$hints = [
 			'closeAncestor'   => 0,
 			'closeParent'     => 0,
+			'postProcessing'  => (int) (strpos($xsl, 'data-s9e-livepreview-postprocess') !== false),
 			'requireAncestor' => 0
 		];
 
