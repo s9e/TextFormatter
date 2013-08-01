@@ -193,9 +193,15 @@ class JavaScriptTest extends Test
 			$this->configurator->attributeFilters->get('#number')
 		);
 
+		$js = $this->configurator->javascript->getParser();
+
 		$this->assertContains(
-			'filterChain:[function(attrValue,attrName){return BuiltInFilters.filterNumber(attrValue);}]',
-			$this->configurator->javascript->getParser()
+			'filterChain:[c4CA1D8BA]',
+			$js
+		);
+		$this->assertContains(
+			'function c4CA1D8BA(attrValue,attrName){return (BuiltInFilters.filterNumber)(attrValue);}',
+			$js
 		);
 	}
 
@@ -208,9 +214,15 @@ class JavaScriptTest extends Test
 			's9e\\TextFormatter\\Parser\\BuiltInFilters::filterInt'
 		);
 
+		$js = $this->configurator->javascript->getParser();
+
 		$this->assertContains(
-			'filterChain:[function(attrValue,attrName){return BuiltInFilters.filterInt(attrValue);}]',
-			$this->configurator->javascript->getParser()
+			'filterChain:[c2503AA6D]',
+			$js
+		);
+		$this->assertContains(
+			'function c2503AA6D(tag,tagConfig){return filterAttributes(tag,tagConfig,registeredVars,logger);}',
+			$js
 		);
 	}
 
@@ -223,9 +235,15 @@ class JavaScriptTest extends Test
 			function() {}
 		);
 
+		$js = $this->configurator->javascript->getParser();
+
 		$this->assertContains(
-			'cCB952229=function(){return false;}',
-			$this->configurator->javascript->getParser()
+			'filterChain:[c6FF7A507]',
+			$js
+		);
+		$this->assertContains(
+			'function c6FF7A507(attrValue,attrName){return (function(){return false;})(attrValue);}',
+			$js
 		);
 	}
 

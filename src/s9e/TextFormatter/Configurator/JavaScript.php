@@ -155,10 +155,7 @@ class JavaScript
 		);
 
 		// Append the callbacks from filters and generators
-		foreach ($this->callbacks as $name => $code)
-		{
-			$src .= "var $name=$code;\n";
-		}
+		$src .= "\n" . implode("\n", $this->callbacks) . "\n";
 
 		// Export the public API
 		if (!empty($this->exportMethods))
@@ -608,44 +605,28 @@ class JavaScript
 	/**
 	* Convert a callback array into JavaScript code
 	*
-	* NOTE: custom callbacks will create entries in $this->callbacks
+	* Will create entries in $this->callbacks
 	*
 	* @param  string $callbackType   Type of callback: either "attributeFilter",
 	*                                "attributeGenerator" or "tagFilter"
 	* @param  array  $callbackConfig Callback's config
-	* @return Code                   Instance of Code
+	* @return Code                   The name of the function representing this callback
 	*/
 	protected function convertCallback($callbackType, array $callbackConfig)
 	{
-		// List of arguments for each type of callbacks. MUST be kept in sync with the invocations
-		// in FilterProcessing.js
-		$arguments = [
-			'attributeFilter'    => ['attrValue', 'attrName'],
-			'attributeGenerator' => ['attrName'],
-			'tagFilter'          => ['tag', 'tagConfig']
-		];
+		$callback = $callbackConfig['callback'];
+		$params   = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : [];
 
-		$callback   = $callbackConfig['callback'];
-		$params     = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : [];
+		// Prepare the code for this callback. If we don't have a JavaScript implementation of this
+		// filter, we make it return FALSE unconditionally
+		$jsCallback = '(function(){return false;})';
 
 		if (isset($callbackConfig['js']))
 		{
-			// Use the JavaScript source code that was set in the callback
-			$jsCode = $callbackConfig['js'];
-
-			// If the JS is just one function name such as "foo" or "foo.bar" we use the callback
-			// as-is, otherwise we move it to a variable. This will automatically deduplicate code
-			if (preg_match('#^[a-z_0-9.]+$#i', $jsCode))
-			{
-				$jsCallback = $jsCode;
-			}
-			else
-			{
-				$jsCallback = sprintf('c%08X', crc32($jsCode));
-
-				// Record this custom callback to be injected in the source
-				$this->callbacks[$jsCallback] = $jsCode;
-			}
+			// Use the JavaScript source code that was set in the callback. Put it in parentheses to
+			// ensure we can use it in our "return" statement without worrying about empty lines or
+			// comments at the beginning
+			$jsCallback = '(' . $callbackConfig['js'] . ')';
 		}
 		elseif (is_string($callback))
 		{
@@ -660,22 +641,31 @@ class JavaScript
 				$jsCallback = substr($callback, 26);
 			}
 		}
-		else
-		{
-			// If we don't have a JavaScript implementation of this filter, we make it return FALSE
-			// unconditionally
-			$jsCode     = 'function(){return false;}';
-			$jsCallback = sprintf('c%08X', crc32($jsCode));
-			$params     = [];
 
-			$this->callbacks[$jsCallback] = $jsCode;
-		}
+		// List of arguments (and their type) for each type of callbacks. MUST be kept in sync with
+		// the invocations in FilterProcessing.js
+		$arguments = [
+			'attributeFilter' => [
+				'attrValue' => '*',
+				'attrName'  => '!string'
+			],
+			'attributeGenerator' => [
+				'attrName'  => '!string'
+			],
+			'tagFilter' => [
+				'tag'       => '!Tag',
+				'tagConfig' => '!Object'
+			]
+		];
 
-		// Build the code needed to execute this callback
-		$js  = $jsCallback . '(';
-		$sep = '';
+		// Generate the function that will call the callback with the right signature. The function
+		// name is a hash of its content so we start with the first parenthesis after the function
+		// name in the function definition, which will prepend once we know what it is
+		$js = '(' . implode(',', array_keys($arguments[$callbackType])) . '){'
+		    . 'return ' . $jsCallback . '(';
 
 		// Add this callback's params
+		$sep = '';
 		foreach ($params as $k => $v)
 		{
 			$js .= $sep;
@@ -691,7 +681,7 @@ class JavaScript
 				// Param by name -- if it's not one of the local vars passed to the callback, and
 				// it's not one of the global vars "logger", "openTags" and "registeredVars" then we
 				// assume that it's a variable registered in registeredVars
-				if (!in_array($k, $arguments[$callbackType], true)
+				if (!isset($arguments[$callbackType][$k])
 				 && $k !== 'logger'
 				 && $k !== 'openTags'
 				 && $k !== 'registeredVars')
@@ -710,13 +700,26 @@ class JavaScript
 			}
 		}
 
-		// Close the list of arguments
-		$js .= ')';
+		// Close the list of arguments and the function body
+		$js .= ');}';
 
-		// Wrap the code inside of a function definition using this callback's type's arguments list
-		$js = 'function(' . implode(',', $arguments[$callbackType]) . '){return ' . $js . ';}';
+		// Prepare the function's header
+		$header = "/**\n";
+		foreach ($arguments[$callbackType] as $paramName => $paramType)
+		{
+			$header .= '* @param {' . $paramType . '} ' . $paramName . "\n";
+		}
+		$header .= "*/\n";
 
-		// Return the JavaScript source code as an instance of Code
-		return new Code($js);
+		// Compute the function's name
+		$funcName = sprintf('c%08X', crc32($js));
+
+		// Prepend the function header and the fill the missing part of the function definition
+		$js = $header . 'function ' . $funcName . $js;
+
+		// Save the callback
+		$this->callbacks[$funcName] = $js;
+
+		return new Code($funcName);
 	}
 }
