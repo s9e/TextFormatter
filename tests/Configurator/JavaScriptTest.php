@@ -453,6 +453,111 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox HINT.regexpLimitActionAbort=0 by default
+	*/
+	public function testHintRegexpLimitActionAbortFalse()
+	{
+		$this->assertContains(
+			'HINT.regexpLimitActionAbort=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.regexpLimitActionAbort=1 if a plugin has setRegexpLimitAction('abort')
+	*/
+	public function testHintRegexpLimitActionAbortTrue()
+	{
+		$this->configurator->Autolink->setRegexpLimitAction('abort');
+		$this->assertContains(
+			'HINT.regexpLimitActionAbort=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.regexpLimitActionAbort=0 if a plugin has setRegexpLimitAction('abort') but is disabled
+	*/
+	public function testHintRegexpLimitActionAbortFalseDisabled()
+	{
+		$this->configurator->Generic->setRegexpLimitAction('abort');
+		$this->assertContains(
+			'HINT.regexpLimitActionAbort=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.regexpLimitActionIgnore=0 by default
+	*/
+	public function testHintRegexpLimitActionIgnoreFalse()
+	{
+		$this->assertContains(
+			'HINT.regexpLimitActionIgnore=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.regexpLimitActionIgnore=1 if a plugin has setRegexpLimitAction('ignore')
+	*/
+	public function testHintRegexpLimitActionIgnoreTrue()
+	{
+		$this->configurator->Autolink->setRegexpLimitAction('ignore');
+		$this->assertContains(
+			'HINT.regexpLimitActionIgnore=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.regexpLimitActionIgnore=0 if a plugin has setRegexpLimitAction('ignore') but is disabled
+	*/
+	public function testHintRegexpLimitActionIgnoreFalseDisabled()
+	{
+		$this->configurator->Generic->setRegexpLimitAction('ignore');
+		$this->assertContains(
+			'HINT.regexpLimitActionIgnore=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.regexpLimitActionWarn=0 by default
+	*/
+	public function testHintRegexpLimitActionWarnFalse()
+	{
+		$this->assertContains(
+			'HINT.regexpLimitActionWarn=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.regexpLimitActionWarn=1 if a plugin has setRegexpLimitAction('warn')
+	*/
+	public function testHintRegexpLimitActionWarnTrue()
+	{
+		$this->configurator->Autolink->setRegexpLimitAction('warn');
+		$this->assertContains(
+			'HINT.regexpLimitActionWarn=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.regexpLimitActionWarn=0 if a plugin has setRegexpLimitAction('warn') but is disabled
+	*/
+	public function testHintRegexpLimitActionWarnFalseDisabled()
+	{
+		$this->configurator->Generic->setRegexpLimitAction('warn');
+		$this->assertContains(
+			'HINT.regexpLimitActionWarn=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
 	* @testdox HINT.requireAncestor=0 by default
 	*/
 	public function testHintRequireAncestorFalse()

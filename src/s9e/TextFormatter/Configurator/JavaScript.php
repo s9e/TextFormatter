@@ -115,6 +115,13 @@ class JavaScript
 		// Get the stylesheet used for rendering
 		$xsl = $this->configurator->stylesheet->get();
 
+		// Reset this instance's callbacks
+		$this->callbacks = [];
+
+		// Store the parser's config
+		$this->config = $this->configurator->asConfig();
+		ConfigHelper::filterVariants($this->config, 'JS');
+
 		// Start with the generated HINTs
 		$src = $this->getHints($xsl);
 
@@ -130,12 +137,6 @@ class JavaScript
 			$filepath = __DIR__ . '/../' . $filename;
 			$src .= file_get_contents($filepath) . "\n";
 		}
-
-		$this->config = $this->configurator->asConfig();
-		ConfigHelper::filterVariants($this->config, 'JS');
-
-		// Reset this instance's callbacks
-		$this->callbacks = [];
 
 		// Inject the parser config
 		$config = [
@@ -252,18 +253,43 @@ class JavaScript
 	protected function getHints($xsl)
 	{
 		$hints = [
-			'closeAncestor'   => 0,
-			'closeParent'     => 0,
-			'postProcessing'  => (int) (strpos($xsl, 'data-s9e-livepreview-postprocess') !== false),
-			'requireAncestor' => 0
+			'closeAncestor'           => 0,
+			'closeParent'             => 0,
+			'postProcessing'          => 1,
+			'regexpLimitActionAbort'  => 0,
+			'regexpLimitActionIgnore' => 0,
+			'regexpLimitActionWarn'   => 0,
+			'requireAncestor'         => 0
 		];
 
-		// Start with testing which rules are in use. First we aggregate the flags set on all the
-		// tags and test for the presence of other rules
-		$flags = 0;
-		foreach ($this->configurator->tags as $tag)
+		// Test for post-processing in templates. Theorically allows for false positives and
+		// false negatives, but not in any realistic setting
+		if (strpos($xsl, 'data-s9e-livepreview-postprocess') === false)
 		{
-			foreach ($tag->rules->asConfig() as $k => $v)
+			$hints['postProcessing'] = 0;
+		}
+
+		// Test each plugin's regexpLimitAction
+		foreach ($this->config['plugins'] as $k=>$pluginConfig)
+		{
+			if (!isset($pluginConfig['regexpLimitAction']))
+			{
+				continue;
+			}
+
+			$hintName = 'regexpLimitAction' . ucfirst($pluginConfig['regexpLimitAction']);
+			if (isset($hints[$hintName]))
+			{
+				$hints[$hintName] = 1;
+			}
+		}
+
+		// Testing which rules are in use. First we aggregate the flags set on all the tags and test
+		// for the presence of other rules at the tag level
+		$flags = 0;
+		foreach ($this->config['tags'] as $tagConfig)
+		{
+			foreach ($tagConfig['rules'] as $k => $v)
 			{
 				if ($k === 'flags')
 				{
@@ -277,9 +303,8 @@ class JavaScript
 			}
 		}
 
-		// Add the flags set in the root rules
-		$rootRulesConfig = $this->configurator->rootRules->asConfig();
-		$flags |= $rootRulesConfig['flags'];
+		// Add the flags from the root context
+		$flags |= $this->config['rootContext']['flags'];
 
 		// Iterate over Parser::RULE_* constants and test which flags are set
 		$parser = new ReflectionClass('s9e\\TextFormatter\\Parser');
@@ -602,7 +627,6 @@ class JavaScript
 
 		$callback   = $callbackConfig['callback'];
 		$params     = (isset($callbackConfig['params'])) ? $callbackConfig['params'] : [];
-		$jsCallback = null;
 
 		if (isset($callbackConfig['js']))
 		{
@@ -636,11 +660,10 @@ class JavaScript
 				$jsCallback = substr($callback, 26);
 			}
 		}
-
-		// If we don't have a JavaScript implementation of this filter, we make it return FALSE
-		// unconditionally
-		if (!isset($jsCallback))
+		else
 		{
+			// If we don't have a JavaScript implementation of this filter, we make it return FALSE
+			// unconditionally
 			$jsCode     = 'function(){return false;}';
 			$jsCallback = sprintf('c%08X', crc32($jsCode));
 			$params     = [];

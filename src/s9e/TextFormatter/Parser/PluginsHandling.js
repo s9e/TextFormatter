@@ -106,7 +106,7 @@ function executePluginParsers()
 
 			if (cnt > plugin.regexpLimit)
 			{
-				if (plugin.regexpLimitAction === 'abort')
+				if (HINT.regexpLimitActionAbort && plugin.regexpLimitAction === 'abort')
 				{
 					throw (pluginName + ' limit exceeded');
 				}
@@ -119,7 +119,7 @@ function executePluginParsers()
 						'limit'      : plugin.regexpLimit
 					};
 
-				if (plugin.regexpLimitAction !== 'ignore')
+				if (HINT.regexpLimitActionWarn && plugin.regexpLimitAction === 'warn')
 				{
 					logger.warn(msg, context);
 				}

@@ -1395,6 +1395,15 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] HINT.closeParent=1 if any tag has a closeParent rule
  [x] HINT.postProcessing=0 by default
  [x] HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
+ [x] HINT.regexpLimitActionAbort=0 by default
+ [x] HINT.regexpLimitActionAbort=1 if a plugin has setRegexpLimitAction('abort')
+ [x] HINT.regexpLimitActionAbort=0 if a plugin has setRegexpLimitAction('abort') but is disabled
+ [x] HINT.regexpLimitActionIgnore=0 by default
+ [x] HINT.regexpLimitActionIgnore=1 if a plugin has setRegexpLimitAction('ignore')
+ [x] HINT.regexpLimitActionIgnore=0 if a plugin has setRegexpLimitAction('ignore') but is disabled
+ [x] HINT.regexpLimitActionWarn=0 by default
+ [x] HINT.regexpLimitActionWarn=1 if a plugin has setRegexpLimitAction('warn')
+ [x] HINT.regexpLimitActionWarn=0 if a plugin has setRegexpLimitAction('warn') but is disabled
  [x] HINT.requireAncestor=0 by default
  [x] HINT.requireAncestor=1 if any tag has a requireAncestor rule
  [x] HINT.RULE_AUTO_CLOSE=0 by default
