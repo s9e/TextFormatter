@@ -1559,8 +1559,8 @@ s9e\TextFormatter\Tests\Parser\PluginsHandling
  [x] executePluginParsers() does not execute a plugin if its regexp test fails
  [x] executePluginParsers() passes the text and the matches to the plugin's parser
  [x] executePluginParsers() does not execute a plugin and throws a RuntimeException if the number of matches exceeds regexpLimit and regexpLimitAction is 'abort'
- [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'abort' or 'ignore'
- [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'ignore'
+ [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is 'warn'
+ [x] executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is 'ignore'
  [x] executePluginParsers() creates an instance of the class name stored in className if present
  [x] registerParser() can register a callback that replaces the parser of an existing plugin
  [x] registerParser() can register a callback that acts as the parser of a new plugin

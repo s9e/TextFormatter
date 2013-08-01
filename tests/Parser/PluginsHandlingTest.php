@@ -230,7 +230,7 @@ class PluginsHandlingTest extends Test
 	}
 
 	/**
-	* @testdox executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'abort' or 'ignore'
+	* @testdox executePluginParsers() executes a plugin with the first regexpLimit number of matches and logs a warning if the number of matches exceeds regexpLimit and regexpLimitAction is 'warn'
 	*/
 	public function testExecutePluginParsersRegexpLimitActionWarn()
 	{
@@ -268,7 +268,7 @@ class PluginsHandlingTest extends Test
 	}
 
 	/**
-	* @testdox executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is neither 'ignore'
+	* @testdox executePluginParsers() executes a plugin with the first regexpLimit number of matches if the number of matches exceeds regexpLimit and regexpLimitAction is 'ignore'
 	*/
 	public function testExecutePluginParsersRegexpLimitActionIgnore()
 	{
