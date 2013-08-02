@@ -50,6 +50,16 @@ function convertCustom($filepath, &$file)
 				'public function isFilter($tokenId)'
 			)
 		),
+		'BundleGenerator.php' => array(
+			array(
+				'$finalize[\'parser\']($parser);',
+				'call_user_func($finalize[\'parser\'], $parser);'
+			),
+			array(
+				'$finalize[\'renderer\']($renderer);',
+				'call_user_func($finalize[\'renderer\'], $renderer);'
+			)
+		),
 		'Configurator.php' => array(
 			array(
 				// https://bugs.php.net/52854
