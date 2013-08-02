@@ -57,4 +57,79 @@ class BundleGeneratorTest extends Test
 
 		$this->assertContains('myunserializer', $php);
 	}
+
+	/**
+	* @testdox generate('Foo', ['parser' => $callback]) calls $callback and passes it an instance of Parser
+	*/
+	public function testParserCallback()
+	{
+		$mock = $this->getMock('stdClass', ['foo']);
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Parser'));
+
+		$this->configurator->bundleGenerator->generate('Foo', ['parser' => [$mock, 'foo']]);
+	}
+
+	/**
+	* @testdox Modification made to the parser via callback appear in the generated bundle
+	*/
+	public function testParserCallbackPersist()
+	{
+		$this->configurator->Autolink;
+
+		$bundle = $this->configurator->bundleGenerator->generate(
+			'Foo',
+			[
+				'parser' => function ($parser)
+				{
+					$parser->disablePlugin('Autolink');
+					$parser->disableTag('URL');
+				}
+			]
+		);
+
+		$this->assertRegexp(
+			'/\\\\"Autolink\\\\";[^}]*s:10:\\\\"isDisabled\\\\";b:1;/',
+			$bundle
+		);
+		$this->assertRegexp(
+			'/\\\\"URL\\\\";[^}]*s:10:\\\\"isDisabled\\\\";b:1;/',
+			$bundle
+		);
+	}
+
+	/**
+	* @testdox generate('Foo', ['renderer' => $callback]) calls $callback and passes it an instance of Renderer
+	*/
+	public function testRendererCallback()
+	{
+		$mock = $this->getMock('stdClass', ['foo']);
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Renderer'));
+
+		$this->configurator->bundleGenerator->generate('Foo', ['renderer' => [$mock, 'foo']]);
+	}
+
+	/**
+	* @testdox Modification made to the renderer via callback appear in the generated bundle
+	*/
+	public function testRendererCallbackPersist()
+	{
+		$bundle = $this->configurator->bundleGenerator->generate(
+			'Foo',
+			[
+				'renderer' => function ($renderer)
+				{
+					$renderer->foo = 'bar';
+				}
+			]
+		);
+
+		$this->assertContains(
+			's:3:\\"foo\\";s:3:\\"bar\\";',
+			$bundle
+		);
+	}
 }
