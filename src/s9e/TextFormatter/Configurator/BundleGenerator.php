@@ -59,9 +59,6 @@ class BundleGenerator
 		ConfigHelper::optimizeArray($config);
 		$parser = new Parser($config);
 
-		// Generate the source for the JavaScript live preview feature
-		$js = ';(function(){' . $this->configurator->javascript->getParser() . '})()';
-
 		// Split the bundle's class name and its namespace
 		$namespace = '';
 		if (preg_match('#(.*)\\\\([^\\\\]+)$#', $className, $m))
