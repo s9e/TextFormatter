@@ -97,7 +97,7 @@ class Configurator implements ConfigProvider
 	public function __construct()
 	{
 		$this->attributeFilters   = new AttributeFilterCollection;
-		$this->bundleGenerator    = new BundleGenerator;
+		$this->bundleGenerator    = new BundleGenerator($this);
 		$this->javascript         = new JavaScript($this);
 		$this->plugins            = new PluginCollection($this);
 		$this->rootRules          = new Ruleset;
@@ -194,7 +194,7 @@ class Configurator implements ConfigProvider
 	*/
 	public function saveBundle($className, $filepath)
 	{
-		$file = "<?php\n\n" . $this->bundleGenerator->generate($this, $className);
+		$file = "<?php\n\n" . $this->bundleGenerator->generate($className);
 
 		return file_put_contents($filepath, $file);
 	}

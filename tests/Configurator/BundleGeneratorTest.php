@@ -2,7 +2,6 @@
 
 namespace s9e\TextFormatter\Tests\Configurator;
 
-use s9e\TextFormatter\Configurator\BundleGenerator;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -17,7 +16,7 @@ class BundleGeneratorTest extends Test
 	{
 		$this->assertContains(
 			'class MyBundle',
-			$this->configurator->bundleGenerator->generate($this->configurator, 'MyBundle')
+			$this->configurator->bundleGenerator->generate('MyBundle')
 		);
 	}
 
@@ -26,7 +25,7 @@ class BundleGeneratorTest extends Test
 	*/
 	public function testGenerateNamespace()
 	{
-		$php = $this->configurator->bundleGenerator->generate($this->configurator, 'My\\Bundle');
+		$php = $this->configurator->bundleGenerator->generate('My\\Bundle');
 
 		$this->assertContains('namespace My;', $php);
 		$this->assertContains('class Bundle', $php);
@@ -43,7 +42,7 @@ class BundleGeneratorTest extends Test
 		     ->will($this->returnValue('O:8:"stdClass":1:{s:6:"foobar";i:1;}'));
 
 		$this->configurator->bundleGenerator->serializer = [$mock, 'serialize'];
-		$php = $this->configurator->bundleGenerator->generate($this->configurator, 'MyBundle');
+		$php = $this->configurator->bundleGenerator->generate('MyBundle');
 
 		$this->assertContains('foobar', $php);
 	}
@@ -54,7 +53,7 @@ class BundleGeneratorTest extends Test
 	public function testCustomUnserializer()
 	{
 		$this->configurator->bundleGenerator->unserializer = 'myunserializer';
-		$php = $this->configurator->bundleGenerator->generate($this->configurator, 'MyBundle');
+		$php = $this->configurator->bundleGenerator->generate('MyBundle');
 
 		$this->assertContains('myunserializer', $php);
 	}

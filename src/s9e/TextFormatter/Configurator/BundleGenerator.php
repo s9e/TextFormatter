@@ -14,6 +14,11 @@ use s9e\TextFormatter\Parser;
 class BundleGenerator
 {
 	/**
+	* @var Configurator Configurator this instance belongs to
+	*/
+	protected $configurator;
+
+	/**
 	* @var callback Callback used to serialize the objects
 	*/
 	public $serializer = 'serialize';
@@ -24,28 +29,38 @@ class BundleGenerator
 	public $unserializer = 'unserialize';
 
 	/**
+	* Constructor
+	*
+	* @param  Configurator $configurator Configurator
+	* @return void
+	*/
+	public function __construct(Configurator $configurator)
+	{
+		$this->configurator = $configurator;
+	}
+
+	/**
 	* Create and return the source of a bundle based on given Configurator instance
 	*
-	* @param  Configurator $configurator Configured instance of Configurator
-	* @param  string       $className    Name of the bundle class
-	* @return string                     PHP source for the bundle
+	* @param  string $className Name of the bundle class
+	* @return string            PHP source for the bundle
 	*/
-	public function generate(Configurator $configurator, $className)
+	public function generate($className)
 	{
 		// Create a renderer
-		$renderer = $configurator->getRenderer();
+		$renderer = $this->configurator->getRenderer();
 
 		// Add the automatic HTML5 rules
-		$configurator->addHTML5Rules(['renderer' => $renderer]);
+		$this->configurator->addHTML5Rules(['renderer' => $renderer]);
 
 		// Cleanup the config and create a parser
-		$config = $configurator->asConfig();
+		$config = $this->configurator->asConfig();
 		ConfigHelper::filterVariants($config);
 		ConfigHelper::optimizeArray($config);
 		$parser = new Parser($config);
 
 		// Generate the source for the JavaScript live preview feature
-		$js = ';(function(){' . $configurator->javascript->getParser() . '})()';
+		$js = ';(function(){' . $this->configurator->javascript->getParser() . '})()';
 
 		// Split the bundle's class name and its namespace
 		$namespace = '';
