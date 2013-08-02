@@ -108,6 +108,15 @@ class ParserTest extends Test
 				[],
 				function ($constructor)
 				{
+					$constructor->Censor->add('pok*man');
+				}
+			],
+			[
+				'You dirty Pok3man',
+				'<rt>You dirty <CENSOR>Pok3man</CENSOR></rt>',
+				[],
+				function ($constructor)
+				{
 					$constructor->Censor->add('pok?man');
 				}
 			],

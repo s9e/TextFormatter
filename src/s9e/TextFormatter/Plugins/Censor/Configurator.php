@@ -106,17 +106,17 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		/** @todo "?" should probably become ".?" so that "apple?" matches both "apple" and "apples" */
 		$regexpOptions = [
 			'caseInsensitive' => true,
-			'specialChars'    => ['*' => '\\pL*', '?' => '.']
+			'specialChars'    => ['*' => '[\\pL\\pN]*', '?' => '.']
 		];
 		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
 
 		// Add the regexp to the config, along with a JavaScript variant
-		$config['regexp'] = new Variant('/(?<!\\pL)' . $regexp . '(?!\\pL)/iu');
+		$config['regexp'] = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/iu');
 
 		// JavaScript regexps don't support Unicode properties, so instead of Unicode letters
 		// we'll accept any non-whitespace, non-common punctuation
-		$regexp = str_replace('\\pL', '[^\s!-\\/:-?]', $regexp);
-		$config['regexp']->set('JS', new RegExp('(?:^|\W)' . $regexp . '(?!\w)', 'gi'));
+		$regexp = str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
+		$config['regexp']->set('JS', new RegExp('(?:^|\\W)' . $regexp . '(?!\\w)', 'gi'));
 
 		foreach ($replacementWords as $replacement => $words)
 		{
@@ -125,7 +125,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			// Create a regexp with a JavaScript variant for each group of words
 			$variant = new Variant($regexp);
 
-			$regexp = str_replace('\\pL', '[^\s!-\\/:-?]', $regexp);
+			$regexp = str_replace('[\\pL\\pN]', '[^\\s!-\\/:-?]', $regexp);
 			$variant->set('JS', RegexpConvertor::toJS($regexp));
 
 			$config['replacements'][] = [$variant, $replacement];
