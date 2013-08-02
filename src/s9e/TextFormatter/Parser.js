@@ -141,3 +141,35 @@ function reset(_text)
 	// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
 	tagStackIsSorted = false;
 }
+
+/**
+* Change a tag's tagLimit
+*
+* NOTE: the default tagLimit should generally be set during configuration instead
+*
+* @param {!string} tagName  The tag's name, in UPPERCASE
+* @param {!number} tagLimit
+*/
+function setTagLimit(tagName, tagLimit)
+{
+	if (tagsConfig[tagName])
+	{
+		tagsConfig[tagName].tagLimit = tagLimit;
+	}
+}
+
+/**
+* Change a tag's nestingLimit
+*
+* NOTE: the default nestingLimit should generally be set during configuration instead
+*
+* @param {!string} tagName      The tag's name, in UPPERCASE
+* @param {!number} nestingLimit
+*/
+function setNestingLimit(tagName, nestingLimit)
+{
+	if (tagsConfig[tagName])
+	{
+		tagsConfig[tagName].nestingLimit = nestingLimit;
+	}
+}

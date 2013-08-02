@@ -106,6 +106,36 @@ class Parser
 		$this->logger = new Logger($this);
 	}
 
+	/**
+	* Reset the parser for a new parsing
+	*
+	* @param  string $text Text to be parsed
+	* @return void
+	*/
+	protected function reset($text)
+	{
+		// Normalize CR/CRLF to LF, remove control characters that aren't allowed in XML
+		$text = preg_replace('/\\r\\n?/', "\n", $text);
+		$text = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
+
+		// Clear the logs
+		$this->logger->clear();
+
+		// Initialize the rest
+		$this->currentFixingCost = 0;
+		$this->isRich     = false;
+		$this->namespaces = [];
+		$this->output     = '';
+		$this->text       = $text;
+		$this->textLen    = strlen($text);
+		$this->tagStack   = [];
+		$this->uid        = mt_rand();
+		$this->wsPos      = 0;
+
+		// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
+		$this->tagStackIsSorted = false;
+	}
+
 	//==========================================================================
 	// Public API
 	//==========================================================================
@@ -174,32 +204,36 @@ class Parser
 	}
 
 	/**
-	* Reset the parser for a new parsing
+	* Change a tag's tagLimit
 	*
-	* @param  string $text Text to be parsed
+	* NOTE: the default tagLimit should generally be set during configuration instead
+	*
+	* @param  string  $tagName  The tag's name, in UPPERCASE
+	* @param  integer $tagLimit
 	* @return void
 	*/
-	protected function reset($text)
+	public function setTagLimit($tagName, $tagLimit)
 	{
-		// Normalize CR/CRLF to LF, remove control characters that aren't allowed in XML
-		$text = preg_replace('/\\r\\n?/', "\n", $text);
-		$text = preg_replace('/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/S', '', $text);
+		if (isset($this->tagsConfig[$tagName]))
+		{
+			$this->tagsConfig[$tagName]['tagLimit'] = $tagLimit;
+		}
+	}
 
-		// Clear the logs
-		$this->logger->clear();
-
-		// Initialize the rest
-		$this->currentFixingCost = 0;
-		$this->isRich     = false;
-		$this->namespaces = [];
-		$this->output     = '';
-		$this->text       = $text;
-		$this->textLen    = strlen($text);
-		$this->tagStack   = [];
-		$this->uid        = mt_rand();
-		$this->wsPos      = 0;
-
-		// NOTE: we mark the tag start as unsorted to ensure it gets sorted at least once before use
-		$this->tagStackIsSorted = false;
+	/**
+	* Change a tag's nestingLimit
+	*
+	* NOTE: the default nestingLimit should generally be set during configuration instead
+	*
+	* @param  string  $tagName      The tag's name, in UPPERCASE
+	* @param  integer $nestingLimit
+	* @return void
+	*/
+	public function setNestingLimit($tagName, $nestingLimit)
+	{
+		if (isset($this->tagsConfig[$tagName]))
+		{
+			$this->tagsConfig[$tagName]['nestingLimit'] = $nestingLimit;
+		}
 	}
 }

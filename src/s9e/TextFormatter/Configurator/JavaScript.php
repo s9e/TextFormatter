@@ -50,7 +50,9 @@ class JavaScript
 		'getLogger',
 		'parse',
 		'preview',
-		'setParameter'
+		'setNestingLimit',
+		'setParameter',
+		'setTagLimit'
 	];
 
 	/**

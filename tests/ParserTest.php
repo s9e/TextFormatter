@@ -199,4 +199,70 @@ class ParserTest extends Test
 
 		$parser->parse('...');
 	}
+
+	/**
+	* @testdox setTagLimit('X', 7) set tag X's tagLimit to 7 if it exists
+	*/
+	public function testSetTagLimit()
+	{
+		$this->configurator->tags->add('X')->tagLimit = 3;
+
+		$parser = $this->configurator->getParser();
+
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				for ($i = 0; $i < 8; ++$i)
+				{
+					$parser->addSelfClosingTag('X', $i, 1);
+				}
+			}
+		);
+
+		$this->assertSame(
+			'<rt><X>0</X><X>1</X><X>2</X>34567</rt>',
+			$parser->parse('01234567')
+		);
+
+		$parser->setTagLimit('X', 7);
+
+		$this->assertSame(
+			'<rt><X>0</X><X>1</X><X>2</X><X>3</X><X>4</X><X>5</X><X>6</X>7</rt>',
+			$parser->parse('01234567')
+		);
+	}
+
+	/**
+	* @testdox setNestingLimit('X', 7) set tag X's tagLimit to 7 if it exists
+	*/
+	public function testSetNestingLimit()
+	{
+		$this->configurator->tags->add('X')->nestingLimit = 3;
+
+		$parser = $this->configurator->getParser();
+
+		$parser->registerParser(
+			'Test',
+			function () use ($parser)
+			{
+				for ($i = 0; $i < 8; ++$i)
+				{
+					$parser->addTagPair('X', 0, 0, 1, 0);
+				}
+			}
+		);
+
+		$this->assertSame(
+			'<rt><X><X><X> </X></X></X></rt>',
+			$parser->parse(' ')
+		);
+
+		$parser->setNestingLimit('X', 7);
+
+		$this->assertSame(
+			'<rt><X><X><X><X><X><X><X> </X></X></X></X></X></X></X></rt>',
+			$parser->parse(' ')
+		);
+	}
 }
