@@ -952,6 +952,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] Caching is disabled by default
  [x] Caching is enabled if cacheDir is set and the minifier implements getCacheDifferentiator()
  [x] get() returns the cached result if applicable
+ [x] get() rethrows exception thrown during minification by default
+ [x] get() discards exceptions thrown during minification and instead returns the original source if keepGoing is TRUE
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerApplication
  [x] Throws an exception if the filename passed to the constructor does not exist

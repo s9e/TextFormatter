@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\JavaScript;
 
+use Exception;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Tests\Test;
 
@@ -89,6 +90,30 @@ class MinifierTest extends Test
 			$minifier->get("alert('Hello world')")
 		);
 	}
+
+	/**
+	* @testdox get() rethrows exception thrown during minification by default
+	* @expectedException Exception foo
+	*/
+	public function testGetRethrow()
+	{
+		$minifier = new DummyThrowingMinifier;
+		$minifier->get('alert("Hi")');
+	}
+
+	/**
+	* @testdox get() discards exceptions thrown during minification and instead returns the original source if keepGoing is TRUE
+	*/
+	public function testGetKeepGoing()
+	{
+		$minifier = new DummyThrowingMinifier;
+		$minifier->keepGoing = true;
+
+		$this->assertSame(
+			'alert("Hi")',
+			$minifier->get('alert("Hi")')
+		);
+	}
 }
 
 class DummyNonCachingMinifier extends Minifier
@@ -109,5 +134,13 @@ class DummyCachingMinifier extends Minifier
 	public function getCacheDifferentiator()
 	{
 		return 'foo';
+	}
+}
+
+class DummyThrowingMinifier extends Minifier
+{
+	public function minify($src)
+	{
+		throw new Exception('foo');
 	}
 }
