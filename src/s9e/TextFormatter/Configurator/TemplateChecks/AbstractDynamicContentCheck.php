@@ -145,6 +145,40 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	{
 		$this->checkContext($node);
 
+		// Consider stylesheet parameters safe but test local variables/params
+		if (preg_match('/^\\$(\\w+)$/', $expr, $m))
+		{
+			$xpath = new DOMXPath($node->ownerDocument);
+			$qname = $m[1];
+
+			// Test whether this variable comes from a previous xsl:param or xsl:variable element
+			foreach (['xsl:param', 'xsl:variable'] as $nodeName)
+			{
+				$query = 'ancestor-or-self::*/'
+				       . 'preceding-sibling::' . $nodeName . '[@name="' . $qname . '"][@select]';
+
+				foreach ($xpath->query($query, $node) as $varNode)
+				{
+					// Intercept the UnsafeTemplateException and change the node to the one we're
+					// really checking before rethrowing it
+					try
+					{
+						$this->checkExpression($varNode, $varNode->getAttribute('select'), $tag);
+					}
+					catch (UnsafeTemplateException $e)
+					{
+						$e->setNode($node);
+
+						throw $e;
+					}
+				}
+			}
+
+			// Either this expression came from a variable that is considered safe, or it's a
+			// stylesheet parameters, which are considered safe by default
+			return;
+		}
+
 		// Test whether the expression contains one single attribute
 		if (!preg_match('/^@(\\w+)$/', $expr, $m))
 		{

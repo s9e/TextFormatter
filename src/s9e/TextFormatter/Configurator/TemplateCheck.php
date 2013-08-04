@@ -10,6 +10,9 @@ namespace s9e\TextFormatter\Configurator;
 use DOMNode;
 use s9e\TextFormatter\Configurator\Items\Tag;
 
+/**
+* @codeCoverageIgnore
+*/
 abstract class TemplateCheck
 {
 	/**
