@@ -67,7 +67,8 @@ $regexps = array(
 		'^style$'
 	),
 	'JS'  => array(
-		'^on'
+		'^on',
+		'^data-s9e-livepreview-postprocess$'
 	),
 	'URL' => array(
 		'^action$',

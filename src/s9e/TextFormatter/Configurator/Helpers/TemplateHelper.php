@@ -467,7 +467,7 @@ abstract class TemplateHelper
 	*/
 	public static function getJSNodes(DOMDocument $dom)
 	{
-		$regexp = '/^(?:on|data-s9e-livepreview-postprocess$)/i';
+		$regexp = '/^(?:data-s9e-livepreview-postprocess$|on)/i';
 		$nodes  = array_merge(
 			self::getAttributesByRegexp($dom, $regexp),
 			self::getElementsByRegexp($dom, '/^script$/i')
