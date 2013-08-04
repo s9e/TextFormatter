@@ -86,8 +86,11 @@ class PHP implements RendererGenerator
 			file_put_contents($this->filepath, "<?php\n" . $php);
 		}
 
-		// Execute the source to create the class
-		eval($php);
+		// Execute the source to create the class if it doesn't exist
+		if (!class_exists($this->lastClassName, false))
+		{
+			eval($php);
+		}
 
 		// Create an instance and copy the source into the instance
 		$renderer = new $this->lastClassName;
@@ -105,11 +108,11 @@ class PHP implements RendererGenerator
 	*/
 	public function generate($xsl)
 	{
-		$this->php = "/**\n"
-		           . "* @package   s9e\TextFormatter\n"
-		           . "* @copyright Copyright (c) 2010-2013 The s9e Authors\n"
-		           . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
-		           . "*/\n\n";
+		$header = "/**\n"
+		        . "* @package   s9e\TextFormatter\n"
+		        . "* @copyright Copyright (c) 2010-2013 The s9e Authors\n"
+		        . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
+		        . "*/\n\n";
 
 		$ir = TemplateParser::parse($xsl);
 
@@ -135,19 +138,8 @@ class PHP implements RendererGenerator
 			}
 		}
 
-		// Generate a random name for that class if necessary, and save it
-		$className = (isset($this->className)) ? $this->className : uniqid('Renderer_');
-		$this->lastClassName = $className;
-
-		// Declare the namespace and class name
-		$pos = strrpos($className, '\\');
-		if ($pos !== false)
-		{
-			$this->php .= 'namespace ' . substr($className, 0, $pos) . ";\n\n";
-			$className = substr($className, 1 + $pos);
-		}
-
-		$this->php .= 'class ' . $className . ' extends \\s9e\\TextFormatter\\Renderer
+		// Start the code right after the class name, we'll prepend the header when we're done
+		$this->php = ' extends \\s9e\\TextFormatter\\Renderer
 			{
 				protected $htmlOutput=' . var_export($this->outputMethod === 'html', true) . ';
 				protected $dynamicParams=[' . implode(',', $dynamicParams) . '];
@@ -331,6 +323,21 @@ EOT
 
 		// Close the class definition
 		$this->php .= "\n}";
+
+		// Generate a name for that class if necessary, and save it
+		$className = (isset($this->className)) ? $this->className : 'Renderer_' . sha1($this->php);
+		$this->lastClassName = $className;
+
+		// Declare the namespace and class name
+		$pos = strrpos($className, '\\');
+		if ($pos !== false)
+		{
+			$header .= 'namespace ' . substr($className, 0, $pos) . ";\n\n";
+			$className = substr($className, 1 + $pos);
+		}
+
+		// Prepend the header and the class name
+		$this->php = $header . 'class ' . $className . $this->php;
 
 		// Optimize the generated code
 		$this->optimizeCode();

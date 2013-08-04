@@ -1035,6 +1035,18 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizer
  [x] normalizeTag() does not call normalize() if the template was already normalized
  [x] Default normalization rules
 
+s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck
+ [x] Stylesheet parameters are considered safe
+ [x] Variables pointing to an unknown attribute are unsafe
+ [x] Variables pointing to a safe attribute are safe
+ [x] Variables pointing to an unsafe attribute are unsafe
+ [x] Variables pointing to a safe variable are safe
+ [x] Variables pointing to an unsafe variable are unsafe
+ [x] Variables pointing to a stylesheet parameter are safe
+ [x] Variables pointing to a stylesheet parameter of the same name are safe
+ [x] Local parameters pointing to an unknown attribute are unsafe
+ [x] Local parameters pointing to a safe attribute are safe
+
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowAttributeSets
  [x] Disallowed: <b use-attribute-sets="foo"/>
  [x] Allowed: <b>...</b>
@@ -1974,9 +1986,10 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
+ [x] get() can be called multiple times with the same stylesheet
  [x] The returned instance contains its own source code in $renderer->source
  [x] The name of the generated class can be passed to the constructor
- [x] If no class name is set, a new random class name is generated for every call
+ [x] If no class name is set, a class name is generated based on the renderer's source
  [x] The class name can be set in $rendererGenerator->className
  [x] The class name can be namespaced
  [x] A filepath can be passed as the constructor's second argument to create a file that contains the generated renderer

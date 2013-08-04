@@ -40,6 +40,19 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox get() can be called multiple times with the same stylesheet
+	*/
+	public function testMultipleGet()
+	{
+		$generator = new PHP;
+		$renderer1 = $generator->getRenderer($this->configurator->stylesheet);
+		$renderer2 = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertEquals($renderer1, $renderer2);
+		$this->assertNotSame($renderer1, $renderer2);
+	}
+
+	/**
 	* @testdox The returned instance contains its own source code in $renderer->source
 	*/
 	public function testInstanceSource()
@@ -66,18 +79,23 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox If no class name is set, a new random class name is generated for every call
+	* @testdox If no class name is set, a class name is generated based on the renderer's source
 	*/
 	public function testClassNameRandom()
 	{
 		$generator = new PHP;
-		$renderer1 = $generator->getRenderer($this->configurator->stylesheet);
-		$renderer2 = $generator->getRenderer($this->configurator->stylesheet);
+		$xsl =
+			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+				<xsl:output method="html" encoding="utf-8" indent="no"/>
+				<xsl:template match="p"><p><xsl:apply-templates/></p></xsl:template>
+				<xsl:template match="br"><br/></xsl:template>
+				<xsl:template match="et|i|st"/>
+			</xsl:stylesheet>';
 
-		$this->assertNotSame(
-			get_class($renderer1),
-			get_class($renderer2),
-			'The two renderers should have different class names'
+
+		$this->assertContains(
+			'class Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c',
+			$generator->generate($xsl)
 		);
 	}
 
@@ -147,7 +165,7 @@ class PHPTest extends Test
 	public function testComment()
 	{
 		$generator = new PHP;
-		$xsl = 
+		$xsl =
 			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:output method="html" encoding="utf-8" />
 				<xsl:template match="FOO"><!-- Nothing here --></xsl:template>
@@ -166,7 +184,7 @@ class PHPTest extends Test
 	public function testPI()
 	{
 		$generator = new PHP;
-		$xsl = 
+		$xsl =
 			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:output method="html" encoding="utf-8" />
 				<xsl:template match="FOO"><?pi ?></xsl:template>
@@ -183,7 +201,7 @@ class PHPTest extends Test
 	public function testUnsupported()
 	{
 		$generator = new PHP;
-		$xsl = 
+		$xsl =
 			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:output method="html" encoding="utf-8" />
 				<xsl:template match="FOO"><xsl:foo/></xsl:template>
@@ -200,7 +218,7 @@ class PHPTest extends Test
 	public function testUnsupportedNamespace()
 	{
 		$generator = new PHP;
-		$xsl = 
+		$xsl =
 			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:output method="html" encoding="utf-8" />
 				<xsl:template match="FOO"><x:x xmlns:x="urn:x"/></xsl:template>
@@ -217,7 +235,7 @@ class PHPTest extends Test
 	public function testUnsupportedCopyOf()
 	{
 		$generator = new PHP;
-		$xsl = 
+		$xsl =
 			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:output method="html" encoding="utf-8" />
 				<xsl:template match="FOO"><xsl:copy-of select="current()"/></xsl:template>
@@ -696,7 +714,6 @@ class PHPTest extends Test
 	*/
 	public function testXPath($xsl, $contains = null, $notContains = null)
 	{
-		if (strpos('xsl:output', $xsl) === false)
 		$this->runCodeTest($xsl, $contains, $notContains);
 	}
 
