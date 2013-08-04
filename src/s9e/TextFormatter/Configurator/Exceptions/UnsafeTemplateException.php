@@ -49,4 +49,15 @@ class UnsafeTemplateException extends InvalidTemplateException
 	{
 		return TemplateHelper::highlightNode($this->node, $prepend, $append);
 	}
+
+	/**
+	* Change the node associated with this exception
+	*
+	* @param  DOMNode $node
+	* @return void
+	*/
+	public function setNode(DOMNode $node)
+	{
+		$this->node = $node;
+	}
 }

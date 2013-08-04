@@ -26,6 +26,20 @@ class UnsafeTemplateExceptionTest extends Test
 	}
 
 	/**
+	* @testdox setNode() sets the stored node
+	*/
+	public function testSetNode()
+	{
+		$dom = new DOMDocument;
+		$dom->loadXML('<x><y/></x>');
+
+		$exception = new UnsafeTemplateException('Msg', $dom->documentElement);
+		$exception->setNode($exception->getNode()->firstChild);
+
+		$this->assertSame($dom->documentElement->firstChild, $exception->getNode());
+	}
+
+	/**
 	* @testdox highlightNode() returns the template's source formatted and with the stored node highlighted
 	* @dataProvider getHighlights
 	*/

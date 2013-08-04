@@ -329,6 +329,7 @@ s9e\TextFormatter\Tests\Configurator\Collections\TemplateNormalizationList
 
 s9e\TextFormatter\Tests\Configurator\UnsafeTemplateException
  [x] getNode() returns the stored node
+ [x] setNode() sets the stored node
  [x] highlightNode() returns the template's source formatted and with the stored node highlighted
 
 s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
