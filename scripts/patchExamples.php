@@ -19,8 +19,8 @@ function patchFile($filepath)
 {
 	$file = file_get_contents($filepath);
 
-	// Execute the lone PHP in BasicUsage.md
-	if (strpos($filepath, 'BasicUsage.md'))
+	// Execute the lone PHP in 02_Expert.md
+	if (strpos($filepath, '02_Expert.md'))
 	{
 		$text = preg_replace_callback(
 			'#```php([^`]+)\\n```\\s+(?!```html|<pre>)#s',
