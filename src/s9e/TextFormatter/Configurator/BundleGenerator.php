@@ -42,20 +42,24 @@ class BundleGenerator
 	/**
 	* Create and return the source of a bundle based on given Configurator instance
 	*
+	* Options:
+	*
+	*  - finalizeParser: callback executed after the parser is created. Receives the parser as param
+	*  - finalizeRenderer: same with the renderer
+	*
 	* @param  string $className Name of the bundle class
-	* @param  array  $finalize  Associative array of callbacks (two possible keys: "parser" and
-	*                           "renderer", executed on the corresponding object)
+	* @param  array  $options   Associative array of optional settings
 	* @return string            PHP source for the bundle
 	*/
-	public function generate($className, array $finalize = [])
+	public function generate($className, array $options = [])
 	{
 		// Create a renderer
 		$renderer = $this->configurator->getRenderer();
 
 		// Execute the renderer callback if applicable
-		if (isset($finalize['renderer']))
+		if (isset($options['finalizeRenderer']))
 		{
-			$finalize['renderer']($renderer);
+			$options['finalizeRenderer']($renderer);
 		}
 
 		// Add the automatic HTML5 rules
@@ -68,9 +72,9 @@ class BundleGenerator
 		$parser = new Parser($config);
 
 		// Execute the parser callback if applicable
-		if (isset($finalize['parser']))
+		if (isset($options['finalizeParser']))
 		{
-			$finalize['parser']($parser);
+			$options['finalizeParser']($parser);
 		}
 
 		// Split the bundle's class name and its namespace

@@ -190,13 +190,12 @@ class Configurator implements ConfigProvider
 	*
 	* @param  string $className Name of the bundle class
 	* @param  string $filepath  Path where to save the bundle file
-	* @param  array  $finalize  Associative array of callbacks (two possible keys: "parser" and
-	*                           "renderer", executed on the corresponding object)
+	* @param  array  $options   Options passed to the bundle generator
 	* @return mixed             Number of bytes written, or FALSE
 	*/
-	public function saveBundle($className, $filepath, array $finalize = [])
+	public function saveBundle($className, $filepath, array $options = [])
 	{
-		$file = "<?php\n\n" . $this->bundleGenerator->generate($className, $finalize);
+		$file = "<?php\n\n" . $this->bundleGenerator->generate($className, $options);
 
 		return file_put_contents($filepath, $file);
 	}

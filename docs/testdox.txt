@@ -146,7 +146,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] setRendererGenerator() passes extra arguments to the generator's constructor
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
  [x] saveBundle() returns the number of bytes written to disk
- [x] saveBundle() passes its third parameter BundleGenerator::generate()
+ [x] saveBundle() passes its third parameter to BundleGenerator::generate()
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute
@@ -1453,9 +1453,9 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] generate() accepts namespaced class names
  [x] A custom serializer can be set in $bundleGenerator->serializer
  [x] A custom unserializer can be set in $bundleGenerator->unserializer
- [x] generate('Foo', ['parser' => $callback]) calls $callback and passes it an instance of Parser
+ [x] generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Parser
  [x] Modification made to the parser via callback appear in the generated bundle
- [x] generate('Foo', ['renderer' => $callback]) calls $callback and passes it an instance of Renderer
+ [x] generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
  [x] Modification made to the renderer via callback appear in the generated bundle
 
 s9e\TextFormatter\Tests\Configurator\Bundles\Forum

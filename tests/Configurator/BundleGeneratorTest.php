@@ -59,16 +59,16 @@ class BundleGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox generate('Foo', ['parser' => $callback]) calls $callback and passes it an instance of Parser
+	* @testdox generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Parser
 	*/
 	public function testParserCallback()
 	{
-		$mock = $this->getMock('stdClass', ['foo']);
+		$mock = $this->getMock('stdClass', ['finalizeParser' => 'foo']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Parser'));
 
-		$this->configurator->bundleGenerator->generate('Foo', ['parser' => [$mock, 'foo']]);
+		$this->configurator->bundleGenerator->generate('Foo', ['finalizeParser' => [$mock, 'foo']]);
 	}
 
 	/**
@@ -81,7 +81,7 @@ class BundleGeneratorTest extends Test
 		$bundle = $this->configurator->bundleGenerator->generate(
 			'Foo',
 			[
-				'parser' => function ($parser)
+				'finalizeParser' => function ($parser)
 				{
 					$parser->disablePlugin('Autolink');
 					$parser->disableTag('URL');
@@ -100,7 +100,7 @@ class BundleGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox generate('Foo', ['renderer' => $callback]) calls $callback and passes it an instance of Renderer
+	* @testdox generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
 	*/
 	public function testRendererCallback()
 	{
@@ -109,7 +109,7 @@ class BundleGeneratorTest extends Test
 		     ->method('foo')
 		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Renderer'));
 
-		$this->configurator->bundleGenerator->generate('Foo', ['renderer' => [$mock, 'foo']]);
+		$this->configurator->bundleGenerator->generate('Foo', ['finalizeRenderer' => [$mock, 'foo']]);
 	}
 
 	/**
@@ -120,7 +120,7 @@ class BundleGeneratorTest extends Test
 		$bundle = $this->configurator->bundleGenerator->generate(
 			'Foo',
 			[
-				'renderer' => function ($renderer)
+				'finalizeRenderer' => function ($renderer)
 				{
 					$renderer->foo = 'bar';
 				}

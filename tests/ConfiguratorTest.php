@@ -682,10 +682,10 @@ class ConfiguratorTest extends Test
 
 		$mock->expects($this->once())
 		     ->method('generate')
-		     ->with('Foo', ['parser' => 'finalize']);
+		     ->with('Foo', ['finalizeParser' => 'finalize']);
 
 		$this->configurator->bundleGenerator = $mock;
-		$this->configurator->saveBundle('Foo', $this->tempnam(), ['parser' => 'finalize']);
+		$this->configurator->saveBundle('Foo', $this->tempnam(), ['finalizeParser' => 'finalize']);
 	}
 }
 
