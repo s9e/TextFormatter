@@ -296,12 +296,14 @@ class Configurator implements ConfigProvider
 	*
 	* NOTE: extra parameters are passed to the RendererGenerator's constructor
 	*
-	* @param  string $name Name of the RendererGenerator, e.g. "PHP"
-	* @return void
+	* @param  string $name      Name of the RendererGenerator, e.g. "PHP"
+	* @return RendererGenerator New instance of RendererGenerator
 	*/
 	public function setRendererGenerator($name)
 	{
 		$this->rendererGenerator = $this->getRendererGenerator(func_get_args());
+
+		return $this->rendererGenerator;
 	}
 
 	/**

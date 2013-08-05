@@ -646,6 +646,19 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox setRendererGenerator() returns the new instance of RendererGenerator
+	*/
+	public function testSetRendererGeneratorReturn()
+	{
+		$return = $this->configurator->setRendererGenerator('PHP', 'Foo');
+
+		$this->assertSame(
+			$this->configurator->rendererGenerator,
+			$return
+		);
+	}
+
+	/**
 	* @testdox saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
 	*/
 	public function testSaveBundle()
