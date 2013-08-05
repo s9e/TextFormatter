@@ -670,6 +670,23 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame(filesize($filepath), $return);
 	}
+
+	/**
+	* @testdox saveBundle() passes its third parameter BundleGenerator::generate()
+	*/
+	public function testSaveBundleForwardParameters()
+	{
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\BundleGenerator')
+		             ->disableOriginalConstructor()
+		             ->getMock();
+
+		$mock->expects($this->once())
+		     ->method('generate')
+		     ->with('Foo', ['parser' => 'finalize']);
+
+		$this->configurator->bundleGenerator = $mock;
+		$this->configurator->saveBundle('Foo', $this->tempnam(), ['parser' => 'finalize']);
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase

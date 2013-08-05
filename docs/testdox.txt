@@ -146,6 +146,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] setRendererGenerator() passes extra arguments to the generator's constructor
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
  [x] saveBundle() returns the number of bytes written to disk
+ [x] saveBundle() passes its third parameter BundleGenerator::generate()
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute
