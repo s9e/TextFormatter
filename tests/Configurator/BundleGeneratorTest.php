@@ -132,4 +132,52 @@ class BundleGeneratorTest extends Test
 			$bundle
 		);
 	}
+
+	/**
+	* @testdox If the renderer is an instance of the PHP renderer, its source is automatically loaded if the path to its file is known
+	*/
+	public function testAutoInclude()
+	{
+		$cacheDir = sys_get_temp_dir();
+		$rendererGenerator = $this->configurator->setRendererGenerator('PHP', $cacheDir);
+
+		$bundle    = $this->configurator->bundleGenerator->generate('Foo');
+		$className = $rendererGenerator->lastClassName;
+		$filepath  = $rendererGenerator->lastFilepath;
+
+		unlink($filepath);
+
+		$expected = "
+		if (!class_exists(" . var_export($className, true) . ", false)
+		 && file_exists(" . var_export($filepath, true) . "))
+		{
+			include " . var_export($filepath, true) . ";
+		}";
+
+		$this->assertContains($expected, $bundle);
+	}
+
+	/**
+	* @testdox Does not attempt to load the renderer's source if autoInclude is false
+	*/
+	public function testAutoIncludeFalse()
+	{
+		$cacheDir = sys_get_temp_dir();
+		$rendererGenerator = $this->configurator->setRendererGenerator('PHP', $cacheDir);
+
+		$bundle    = $this->configurator->bundleGenerator->generate('Foo', ['autoInclude' => false]);
+		$className = $rendererGenerator->lastClassName;
+		$filepath  = $rendererGenerator->lastFilepath;
+
+		unlink($filepath);
+
+		$expected = "
+		if (!class_exists(" . var_export($className, true) . ", false)
+		 && file_exists(" . var_export($filepath, true) . "))
+		{
+			include " . var_export($filepath, true) . ";
+		}";
+
+		$this->assertNotContains($expected, $bundle);
+	}
 }

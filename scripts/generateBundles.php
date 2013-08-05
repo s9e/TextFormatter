@@ -17,7 +17,8 @@ foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Configurator/Bundles/*.php') 
 
 	$configurator->saveBundle(
 		's9e\\TextFormatter\\Bundles\\' . $bundleName,
-		__DIR__ . '/../src/s9e/TextFormatter/Bundles/' . $bundleName . '.php'
+		__DIR__ . '/../src/s9e/TextFormatter/Bundles/' . $bundleName . '.php',
+		['autoInclude' => false]
 	);
 }
 

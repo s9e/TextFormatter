@@ -1458,6 +1458,8 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] Modification made to the parser via callback appear in the generated bundle
  [x] generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
  [x] Modification made to the renderer via callback appear in the generated bundle
+ [x] If the renderer is an instance of the PHP renderer, its source is automatically loaded if the path to its file is known
+ [x] Does not attempt to load the renderer's source if autoInclude is false
 
 s9e\TextFormatter\Tests\Configurator\Bundles\Forum
  [x] Features

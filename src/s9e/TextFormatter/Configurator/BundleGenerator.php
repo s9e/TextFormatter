@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator;
 
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 use s9e\TextFormatter\Parser;
 
 class BundleGenerator
@@ -44,6 +45,7 @@ class BundleGenerator
 	*
 	* Options:
 	*
+	*  - autoInclude: automatically load the source of the PHP renderer (default: true)
 	*  - finalizeParser: callback executed after the parser is created. Receives the parser as param
 	*  - finalizeRenderer: same with the renderer
 	*
@@ -53,6 +55,9 @@ class BundleGenerator
 	*/
 	public function generate($className, array $options = [])
 	{
+		// Add default options
+		$options += ['autoInclude' => true];
+
 		// Create a renderer
 		$renderer = $this->configurator->getRenderer();
 
@@ -123,6 +128,23 @@ class BundleGenerator
 		$php .= "	*/\n";
 		$php .= "	public static function getRenderer()\n";
 		$php .= "	{\n";
+
+		// If this is a PHP renderer and we know where it's saved, automatically load it as needed
+		if (!empty($options['autoInclude'])
+		 && $this->configurator->rendererGenerator instanceof PHP
+		 && isset($this->configurator->rendererGenerator->lastFilepath))
+		{
+			$className = get_class($renderer);
+			$filepath  = realpath($this->configurator->rendererGenerator->lastFilepath);
+
+			$php .= "		if (!class_exists(" . var_export($className, true) . ", false)\n";
+			$php .= "		 && file_exists(" . var_export($filepath, true) . "))\n";
+			$php .= "		{\n";
+			$php .= "			include " . var_export($filepath, true) . ";\n";
+			$php .= "		}\n";
+			$php .= "\n";
+		}
+
 		$php .= "		return " . $this->export($renderer) . ";\n";
 		$php .= "	}\n";
 		$php .= '}';
