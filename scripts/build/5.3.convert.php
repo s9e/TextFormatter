@@ -52,12 +52,12 @@ function convertCustom($filepath, &$file)
 		),
 		'BundleGenerator.php' => array(
 			array(
-				'$finalize[\'parser\']($parser);',
-				'call_user_func($finalize[\'parser\'], $parser);'
+				'$options[\'finalizeParser\']($parser);',
+				'call_user_func($options[\'finalizeParser\'], $parser);'
 			),
 			array(
-				'$finalize[\'renderer\']($renderer);',
-				'call_user_func($finalize[\'renderer\'], $renderer);'
+				'$options[\'finalizeRenderer\']($renderer);',
+				'call_user_func($options[\'finalizeRenderer\'], $renderer);'
 			)
 		),
 		'Configurator.php' => array(
