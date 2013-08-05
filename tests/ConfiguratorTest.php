@@ -672,7 +672,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox saveBundle() passes its third parameter BundleGenerator::generate()
+	* @testdox saveBundle() passes its third parameter to BundleGenerator::generate()
 	*/
 	public function testSaveBundleForwardParameters()
 	{
