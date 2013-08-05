@@ -427,13 +427,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox getRenderer('PHP', 'foo') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing 'foo' to its constructor
+	* @testdox getRenderer('PHP', '/tmp') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing '/tmp' to its constructor
 	*/
 	public function testGetRendererArgs()
 	{
-		$className = uniqid('renderer_');
-		$renderer  = $this->configurator->getRenderer('PHP', $className);
-		$this->assertSame($className, get_class($renderer));
+		$cacheDir = sys_get_temp_dir();
+		$renderer = $this->configurator->getRenderer('PHP', $cacheDir);
+
+		$this->assertFileExists(
+			$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php'
+		);
+		unlink($cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php');
 	}
 
 	/**
@@ -641,8 +645,8 @@ class ConfiguratorTest extends Test
 	*/
 	public function testSetRendererGeneratorArguments()
 	{
-		$this->configurator->setRendererGenerator('PHP', 'Foo');
-		$this->assertSame('Foo', $this->configurator->rendererGenerator->className);
+		$this->configurator->setRendererGenerator('PHP', '/tmp');
+		$this->assertSame('/tmp', $this->configurator->rendererGenerator->cacheDir);
 	}
 
 	/**
@@ -650,7 +654,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testSetRendererGeneratorReturn()
 	{
-		$return = $this->configurator->setRendererGenerator('PHP', 'Foo');
+		$return = $this->configurator->setRendererGenerator('PHP');
 
 		$this->assertSame(
 			$this->configurator->rendererGenerator,

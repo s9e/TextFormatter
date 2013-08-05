@@ -10,11 +10,10 @@ foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Configurator/Bundles/*.php') 
 
 	$configurator = $className::getConfigurator();
 
-	$configurator->setRendererGenerator(
-		'PHP',
-		's9e\\TextFormatter\\Bundles\\' . $bundleName . '\\Renderer',
-		__DIR__ . '/../src/s9e/TextFormatter/Bundles/' . $bundleName . '/Renderer.php'
-	);
+	$rendererGenerator = $configurator->setRendererGenerator('PHP');
+	$rendererGenerator->className = 's9e\\TextFormatter\\Bundles\\' . $bundleName . '\\Renderer';
+	$rendererGenerator->filepath
+		= __DIR__ . '/../src/s9e/TextFormatter/Bundles/' . $bundleName . '/Renderer.php';
 
 	$configurator->saveBundle(
 		's9e\\TextFormatter\\Bundles\\' . $bundleName,

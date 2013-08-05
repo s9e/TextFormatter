@@ -128,7 +128,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] getRenderer() returns an instance of s9e\TextFormatter\Renderer
  [x] getRenderer() invokes $this->rendererGenerator->getRenderer()
  [x] getRenderer('PHP') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP to generate a renderer
- [x] getRenderer('PHP', 'foo') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing 'foo' to its constructor
+ [x] getRenderer('PHP', '/tmp') creates a new instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP passing '/tmp' to its constructor
  [x] $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
  [x] $configurator->BBCodes returns $configurator->plugins->get('BBCodes') if the plugin has already been loaded
  [x] $configurator->foo throws an exception
@@ -1990,12 +1990,16 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
  [x] get() can be called multiple times with the same stylesheet
  [x] The returned instance contains its own source code in $renderer->source
- [x] The name of the generated class can be passed to the constructor
  [x] If no class name is set, a class name is generated based on the renderer's source
  [x] The class name can be set in $rendererGenerator->className
  [x] The class name can be namespaced
- [x] A filepath can be passed as the constructor's second argument to create a file that contains the generated renderer
- [x] A filepath can be set in $rendererGenerator->filepath
+ [x] If $rendererGenerator->filepath is set, the renderer is saved to this file
+ [x] A path to a cache dir can be passed to the constructor
+ [x] If $rendererGenerator->filepath is not set, and $rendererGenerator->cacheDir is set, the renderer is saved to the cache dir using the renderer's class name + '.php' as file name
+ [x] When saving the renderer to the cache dir, backslashes in the class name are replaced with underscores
+ [x] If $rendererGenerator->filepath and $rendererGenerator->cacheDir are set, the renderer is saved to $rendererGenerator->filepath
+ [x] The name of the class of the last generated renderer is available in $rendererGenerator->lastClassName
+ [x] The name of the class of the last saved renderer is available in $rendererGenerator->lastFilepath
  [x] Ignores comments
  [x] Throws an exception if a template contains a processing instruction
  [x] Throws an exception when encountering unsupported XSL elements

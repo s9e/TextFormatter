@@ -67,6 +67,16 @@ function convertCustom($filepath, &$file)
 				'return (isset($args[1])) ? $reflection->newInstanceArgs(array_slice($args, 1)) : $reflection->newInstance();'
 			)
 		),
+		'ConfiguratorTest.php' => array(
+			array(
+				"\$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php'",
+				"\$cacheDir . '/Renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41.php'"
+			),
+			array(
+				"unlink(\$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php');",
+				"unlink(\$cacheDir . '/Renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41.php');"
+			)
+		),
 		'Custom.php' => array(
 			array(
 				'public function __construct(callable $callback)',
@@ -128,6 +138,14 @@ function convertCustom($filepath, &$file)
 			array(
 				"'class Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c',",
 				"'class Renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41',"
+			),
+			array(
+				"\$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php'",
+				"\$cacheDir . '/Renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41.php'"
+			),
+			array(
+				"unlink(\$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php');",
+				"unlink(\$cacheDir . '/Renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41.php');"
 			)
 		),
 		'Regexp.php' => array(

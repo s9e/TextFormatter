@@ -14,13 +14,20 @@ use s9e\TextFormatter\Tests\Test;
 */
 class PHPTest extends Test
 {
+	protected function tearDown()
+	{
+		array_map('unlink', glob(sys_get_temp_dir() . '/Renderer_*.php'));
+	}
+
 	protected function getRendererFromXsl($xsl)
 	{
 		$className = 'Renderer_' . md5($xsl);
 
 		if (!class_exists($className, false))
 		{
-			$generator = new PHP($className);
+			$generator = new PHP;
+			$generator->className = $className;
+
 			eval($generator->generate($xsl));
 		}
 
@@ -65,23 +72,9 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox The name of the generated class can be passed to the constructor
-	*/
-	public function testClassNameConstructor()
-	{
-		$className = uniqid('renderer_');
-		$generator = new PHP($className);
-
-		$this->assertInstanceOf(
-			$className,
-			$generator->getRenderer($this->configurator->stylesheet)
-		);
-	}
-
-	/**
 	* @testdox If no class name is set, a class name is generated based on the renderer's source
 	*/
-	public function testClassNameRandom()
+	public function testClassNameGenerated()
 	{
 		$generator = new PHP;
 		$xsl =
@@ -121,7 +114,10 @@ class PHPTest extends Test
 	public function testNamespacedClass()
 	{
 		$className = uniqid('foo\\bar\\renderer_');
-		$generator = new PHP($className);
+
+		$generator = new PHP;
+		$generator->className = $className;
+
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertInstanceOf($className,	$renderer);
@@ -129,22 +125,7 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox A filepath can be passed as the constructor's second argument to create a file that contains the generated renderer
-	*/
-	public function testFilepathConstructor()
-	{
-		$className = uniqid('renderer_');
-		$filepath  = $this->tempnam();
-
-		$generator = new PHP($className, $filepath);
-		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
-
-		$this->assertFileExists($filepath);
-		$this->assertContains($renderer->source, file_get_contents($filepath));
-	}
-
-	/**
-	* @testdox A filepath can be set in $rendererGenerator->filepath
+	* @testdox If $rendererGenerator->filepath is set, the renderer is saved to this file
 	*/
 	public function testFilepathProp()
 	{
@@ -157,6 +138,88 @@ class PHPTest extends Test
 
 		$this->assertFileExists($filepath);
 		$this->assertContains($renderer->source, file_get_contents($filepath));
+	}
+
+	/**
+	* @testdox A path to a cache dir can be passed to the constructor
+	*/
+	public function testCacheDirConstructor()
+	{
+		$generator = new PHP('/tmp');
+
+		$this->assertSame('/tmp', $generator->cacheDir);
+	}
+
+	/**
+	* @testdox If $rendererGenerator->filepath is not set, and $rendererGenerator->cacheDir is set, the renderer is saved to the cache dir using the renderer's class name + '.php' as file name
+	*/
+	public function testCacheDirSave()
+	{
+		$cacheDir  = sys_get_temp_dir();
+		$generator = new PHP($cacheDir);
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertFileExists(
+			$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php'
+		);
+	}
+
+	/**
+	* @testdox When saving the renderer to the cache dir, backslashes in the class name are replaced with underscores
+	*/
+	public function testCacheDirSaveNamespace()
+	{
+		$cacheDir  = sys_get_temp_dir();
+		$generator = new PHP($cacheDir);
+		$generator->className = 'Foo\\Bar';
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertFileExists($cacheDir . '/Foo_Bar.php');
+		unlink($cacheDir . '/Foo_Bar.php');
+	}
+
+	/**
+	* @testdox If $rendererGenerator->filepath and $rendererGenerator->cacheDir are set, the renderer is saved to $rendererGenerator->filepath
+	*/
+	public function testCacheDirFilepath()
+	{
+		$cacheDir  = sys_get_temp_dir();
+		$filepath  = $this->tempnam();
+
+		$generator = new PHP($cacheDir);
+		$generator->filepath = $filepath;
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertFileExists($filepath);
+		$this->assertFileNotExists(
+			$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php'
+		);
+	}
+
+	/**
+	* @testdox The name of the class of the last generated renderer is available in $rendererGenerator->lastClassName
+	*/
+	public function testLastClassName()
+	{
+		$generator = new PHP;
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertSame(get_class($renderer), $generator->lastClassName);
+	}
+
+	/**
+	* @testdox The name of the class of the last saved renderer is available in $rendererGenerator->lastFilepath
+	*/
+	public function testLastFilepath()
+	{
+		$cacheDir  = sys_get_temp_dir();
+		$generator = new PHP($cacheDir);
+		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+
+		$this->assertSame(
+			$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php',
+			$generator->lastFilepath
+		);
 	}
 
 	/**
@@ -688,7 +751,8 @@ class PHPTest extends Test
 		$dom->loadXML($xsl);
 		$xsl = $dom->saveXML();
 
-		$generator = new PHP('foo');
+		$generator = new PHP;
+		$generator->className = 'foo';
 		$php = $generator->generate($xsl);
 
 		if (isset($contains))

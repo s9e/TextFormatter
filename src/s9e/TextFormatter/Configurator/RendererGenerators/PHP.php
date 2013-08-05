@@ -28,6 +28,11 @@ class PHP implements RendererGenerator
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
+	* @var string Directory where the renderer's source is automatically saved if set, and if filepath is not set
+	*/
+	public $cacheDir;
+
+	/**
 	* @var string Name of the class to be created. If null, a random name will be generated
 	*/
 	public $className;
@@ -41,6 +46,11 @@ class PHP implements RendererGenerator
 	* @var string Name of the last class generated
 	*/
 	public $lastClassName;
+
+	/**
+	* @var string Path to the last file saved
+	*/
+	public $lastFilepath;
 
 	/**
 	* @var string Output method
@@ -59,16 +69,11 @@ class PHP implements RendererGenerator
 	* @param  string $filepath  If set, path to the file where the renderer will be saved
 	* @return void
 	*/
-	public function __construct($className = null, $filepath = null)
+	public function __construct($cacheDir = null)
 	{
-		if (isset($className))
+		if (isset($cacheDir))
 		{
-			$this->className = $className;
-		}
-
-		if (isset($filepath))
-		{
-			$this->filepath = $filepath;
+			$this->cacheDir = $cacheDir;
 		}
 	}
 
@@ -83,7 +88,17 @@ class PHP implements RendererGenerator
 		// Save the file if applicable
 		if (isset($this->filepath))
 		{
-			file_put_contents($this->filepath, "<?php\n" . $php);
+			$filepath = $this->filepath;
+		}
+		elseif (isset($this->cacheDir))
+		{
+			$filepath = $this->cacheDir . '/' . str_replace('\\', '_', $this->lastClassName) . '.php';
+		}
+
+		if (isset($filepath))
+		{
+			file_put_contents($filepath, "<?php\n" . $php);
+			$this->lastFilepath = realpath($filepath);
 		}
 
 		// Execute the source to create the class if it doesn't exist
