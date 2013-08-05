@@ -124,6 +124,12 @@ function convertCustom($filepath, &$file)
 				'$toks = array();'
 			)
 		),
+		'PHPTest.php' => array(
+			array(
+				"'class Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c',",
+				"'class Renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41',"
+			)
+		),
 		'Regexp.php' => array(
 			array(
 				"\$variant->setDynamic(\n\t\t\t'JS',\n\t\t\tfunction ()\n\t\t\t{\n\t\t\t\treturn \$this",
