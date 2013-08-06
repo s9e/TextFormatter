@@ -1859,7 +1859,7 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Plugins\FancyPants\Configurator
- [x] Automatically creates a "WP" tag
+ [x] Automatically creates a "FP" tag
  [x] Does not attempt to create a tag if it already exists
  [x] The name of the tag used can be changed through the "tagName" constructor option
  [x] The name of the attribute used can be changed through the "attrName" constructor option

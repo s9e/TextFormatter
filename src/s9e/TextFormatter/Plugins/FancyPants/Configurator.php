@@ -25,7 +25,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var string Name of the tag used to mark the text to replace
 	*/
-	protected $tagName = 'WP';
+	protected $tagName = 'FP';
 
 	/**
 	* Plugin's setup

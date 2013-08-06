@@ -11,12 +11,12 @@ use s9e\TextFormatter\Plugins\FancyPants\Configurator;
 class ConfiguratorTest extends Test
 {
 	/**
-	* @testdox Automatically creates a "WP" tag
+	* @testdox Automatically creates a "FP" tag
 	*/
 	public function testCreatesTag()
 	{
 		$this->configurator->plugins->load('FancyPants');
-		$this->assertTrue($this->configurator->tags->exists('WP'));
+		$this->assertTrue($this->configurator->tags->exists('FP'));
 	}
 
 	/**
@@ -24,10 +24,10 @@ class ConfiguratorTest extends Test
 	*/
 	public function testDoesNotCreateTag()
 	{
-		$tag = $this->configurator->tags->add('WP');
+		$tag = $this->configurator->tags->add('FP');
 		$this->configurator->plugins->load('FancyPants');
 
-		$this->assertSame($tag, $this->configurator->tags->get('WP'));
+		$this->assertSame($tag, $this->configurator->tags->get('FP'));
 	}
 
 	/**
@@ -45,7 +45,7 @@ class ConfiguratorTest extends Test
 	public function testCustomAttrName()
 	{
 		$this->configurator->plugins->load('FancyPants', ['attrName' => 'bar']);
-		$this->assertTrue($this->configurator->tags['WP']->attributes->exists('bar'));
+		$this->assertTrue($this->configurator->tags['FP']->attributes->exists('bar'));
 	}
 
 	/**
