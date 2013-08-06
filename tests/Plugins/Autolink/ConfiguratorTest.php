@@ -172,4 +172,17 @@ class ConfiguratorTest extends Test
 		preg_match($config['regexp'], $text, $m);
 		$this->assertSame($url, $m[0]);
 	}
+
+	/**
+	* @testdox getTag() returns the tag that is associated with this plugin
+	*/
+	public function testGetTag()
+	{
+		$plugin = $this->configurator->plugins->load('Autolink');
+
+		$this->assertSame(
+			$this->configurator->tags['URL'],
+			$plugin->getTag()
+		);
+	}
 }

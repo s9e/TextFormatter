@@ -1669,6 +1669,8 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] getJSParser() returns NULL for custom plugins
  [x] getJSParser() returns the content of Parser.js for stock plugins
  [x] getJSParser() returns NULL if there's no Parser.js for a stock plugin
+ [x] getTag() returns the tag that is associated with this plugin
+ [x] getTag() throws an exception if the plugin does not have a tagName property set
 
 s9e\TextFormatter\Tests\Plugins\ParserBase
  [x] Constructor calls setUp()
@@ -1683,6 +1685,7 @@ s9e\TextFormatter\Tests\Plugins\Autoemail\Configurator
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
+ [x] getTag() returns the tag that is associated with this plugin
 
 s9e\TextFormatter\Tests\Plugins\Autoemail\Parser
  [x] Parsing tests
@@ -1703,6 +1706,7 @@ s9e\TextFormatter\Tests\Plugins\Autolink\Configurator
  [x] The regexp matches the URL in 'foo http://www.bar.com/index.php?arr[foo]=1 baz'
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?foo=1] baz'
  [x] The regexp matches the URL in 'foo [http://www.bar.com/index.php?arr[foo]=1] baz'
+ [x] getTag() returns the tag that is associated with this plugin
 
 s9e\TextFormatter\Tests\Plugins\Autolink\Parser
  [x] Parsing tests
@@ -1833,6 +1837,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] $plugin->regexpEnd can be changed
  [x] getTemplate() merges identical templates
  [x] finalize() sets the tag's template
+ [x] getTag() returns the tag that is associated with this plugin
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
@@ -1852,6 +1857,7 @@ s9e\TextFormatter\Tests\Plugins\Escaper\Configurator
  [x] Has a quickMatch
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
+ [x] getTag() returns the tag that is associated with this plugin
 
 s9e\TextFormatter\Tests\Plugins\Escaper\Parser
  [x] Parsing tests
@@ -1865,6 +1871,7 @@ s9e\TextFormatter\Tests\Plugins\FancyPants\Configurator
  [x] The name of the attribute used can be changed through the "attrName" constructor option
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
+ [x] getTag() returns the tag that is associated with this plugin
 
 s9e\TextFormatter\Tests\Plugins\FancyPants\Parser
  [x] Parsing tests
@@ -1950,6 +1957,7 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntities\Configurator
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
+ [x] getTag() returns the tag that is associated with this plugin
 
 s9e\TextFormatter\Tests\Plugins\HTMLEntities\Parser
  [x] Parsing tests

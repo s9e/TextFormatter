@@ -97,4 +97,17 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey('attrName', $config);
 		$this->assertSame('email', $config['attrName']);
 	}
+
+	/**
+	* @testdox getTag() returns the tag that is associated with this plugin
+	*/
+	public function testGetTag()
+	{
+		$plugin = $this->configurator->plugins->load('Autoemail');
+
+		$this->assertSame(
+			$this->configurator->tags['EMAIL'],
+			$plugin->getTag()
+		);
+	}
 }

@@ -76,16 +76,6 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 
 	/**
-	* Return the tag associated with this plugin
-	*
-	* @return Tag
-	*/
-	public function getTag()
-	{
-		return $this->configurator->tags[$this->tagName];
-	}
-
-	/**
 	* {@inheritdoc}
 	*/
 	public function asConfig()

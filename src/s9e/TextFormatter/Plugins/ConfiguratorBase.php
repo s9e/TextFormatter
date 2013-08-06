@@ -144,6 +144,21 @@ abstract class ConfiguratorBase implements ConfigProvider
 		return null;
 	}
 
+	/**
+	* Return the tag associated with this plugin, if applicable
+	*
+	* @return Tag
+	*/
+	public function getTag()
+	{
+		if (!isset($this->tagName))
+		{
+			throw new RuntimeException('Not tag associated with this plugin');
+		}
+
+		return $this->configurator->tags[$this->tagName];
+	}
+
 	//==========================================================================
 	// Setters
 	//==========================================================================

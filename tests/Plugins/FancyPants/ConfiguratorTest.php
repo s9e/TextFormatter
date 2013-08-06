@@ -73,4 +73,17 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey('attrName', $config);
 		$this->assertSame('bar', $config['attrName']);
 	}
+
+	/**
+	* @testdox getTag() returns the tag that is associated with this plugin
+	*/
+	public function testGetTag()
+	{
+		$plugin = $this->configurator->plugins->load('FancyPants');
+
+		$this->assertSame(
+			$this->configurator->tags['FP'],
+			$plugin->getTag()
+		);
+	}
 }

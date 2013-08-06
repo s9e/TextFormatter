@@ -116,4 +116,17 @@ class ConfiguratorTest extends Test
 			$this->configurator->plugins->load('Escaper')->asConfig()
 		);
 	}
+
+	/**
+	* @testdox getTag() returns the tag that is associated with this plugin
+	*/
+	public function testGetTag()
+	{
+		$plugin = $this->configurator->plugins->load('Escaper');
+
+		$this->assertSame(
+			$this->configurator->tags['ESC'],
+			$plugin->getTag()
+		);
+	}
 }

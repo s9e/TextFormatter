@@ -211,4 +211,17 @@ class ConfiguratorTest extends Test
 		$this->configurator->Emoticons->finalize();
 		$this->assertCount(1, $this->configurator->tags['E']->templates);
 	}
+
+	/**
+	* @testdox getTag() returns the tag that is associated with this plugin
+	*/
+	public function testGetTag()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+
+		$this->assertSame(
+			$this->configurator->tags['E'],
+			$plugin->getTag()
+		);
+	}
 }

@@ -203,6 +203,28 @@ class ConfiguratorBaseTest extends Test
 		$dummy = new \s9e\TextFormatter\Plugins\TotallyFakeDummyPlugin\Configurator(new Configurator);
 		$this->assertNull($dummy->getJSParser());
 	}
+
+	/**
+	* @testdox getTag() returns the tag that is associated with this plugin
+	*/
+	public function testGetTag()
+	{
+		$dummy = new TagCreatingPluginConfigurator($this->configurator);
+
+		$this->assertSame($this->configurator->tags['FOO'], $dummy->getTag());
+	}
+
+	/**
+	* @testdox getTag() throws an exception if the plugin does not have a tagName property set
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Not tag associated with this plugin
+	*/
+	public function testGetTagError()
+	{
+		$dummy = new EmptyPluginConfigurator($this->configurator);
+
+		$dummy->getTag();
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase
@@ -220,6 +242,16 @@ class DummyPluginConfigurator extends ConfiguratorBase
 	{
 		parent::setUp();
 		$this->setup = $this->bar;
+	}
+}
+
+class TagCreatingPluginConfigurator extends ConfiguratorBase
+{
+	protected $tagName = 'FOO';
+
+	protected function setUp()
+	{
+		$this->configurator->tags->add($this->tagName);
 	}
 }
 
