@@ -10,10 +10,11 @@ namespace s9e\TextFormatter\Configurator\Traits;
 use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
+use s9e\TextFormatter\Configurator\Collections\Collection;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 
 /**
-* Provides magic __get, __set and __isset implementations
+* Provides magic __get, __set, __isset and __unset implementations
 */
 trait Configurable
 {
@@ -140,6 +141,45 @@ trait Configurable
 	*/
 	public function __isset($propName)
 	{
+		$methodName = 'isset' . ucfirst($propName);
+
+		if (method_exists($this, $methodName))
+		{
+			return $this->$methodName();
+		}
+
 		return isset($this->$propName);
+	}
+
+	/**
+	* Unset a property, if the class supports it
+	*
+	* @param  string $propName
+	* @return void
+	*/
+	public function __unset($propName)
+	{
+		if (!isset($this->$propName))
+		{
+			return;
+		}
+
+		$methodName = 'unset' . ucfirst($propName);
+
+		if (method_exists($this, $methodName))
+		{
+			$this->$methodName();
+
+			return;
+		}
+
+		if ($this->$propName instanceof Collection)
+		{
+			$this->$propName->clear();
+
+			return;
+		}
+
+		throw new RuntimeException('Not supported');
 	}
 }

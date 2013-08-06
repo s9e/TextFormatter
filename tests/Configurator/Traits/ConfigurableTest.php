@@ -180,6 +180,17 @@ class ConfigurableTest extends Test
 	}
 
 	/**
+	* @testdox __isset('foo') calls issetFoo() if it exists
+	*/
+	public function testMagicIssetMethod()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		$this->assertTrue(isset($dummy->propSet));
+		$this->assertFalse(isset($dummy->propUnset));
+	}
+
+	/**
 	* @testdox __isset($k) returns true if the property exists
 	*/
 	public function testMagicIsset()
@@ -187,6 +198,55 @@ class ConfigurableTest extends Test
 		$dummy = new ConfigurableTestDummy;
 
 		$this->assertTrue(isset($dummy->int));
+	}
+
+	/**
+	* @testdox __unset('foo') has no effect if the property does not exist
+	*/
+	public function testMagicUnsetNone()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		unset($dummy->doesNotExist);
+	}
+
+	/**
+	* @testdox __unset('foo') calls unsetFoo() if it exists
+	*/
+	public function testMagicUnsetMethod()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		unset($dummy->unsettable);
+
+		$this->assertObjectHasAttribute('unsettable', $dummy);
+	}
+
+	/**
+	* @testdox __unset('foo') calls $this->foo->clear() if it's an instance of Collection
+	*/
+	public function testMagicUnsetCollection()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		$dummy->collection->set('foo', 'bar');
+		$this->assertSame(1, count($dummy->collection));
+
+		unset($dummy->collection);
+		$this->assertObjectHasAttribute('collection', $dummy);
+		$this->assertSame(0, count($dummy->collection));
+	}
+
+	/**
+	* @testdox __unset('foo') throws an exception if unsetFoo() does not exist
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Not supported
+	*/
+	public function testMagicUnsetFail()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		unset($dummy->notUnsettable);
 	}
 }
 
@@ -202,6 +262,8 @@ class ConfigurableTestDummy
 	protected $null = null;
 	protected $collection;
 	protected $fooObject;
+	protected $unsettable = true;
+	protected $notUnsettable = true;
 
 	public function __construct()
 	{
@@ -217,5 +279,20 @@ class ConfigurableTestDummy
 	protected function setFoo($str)
 	{
 		$this->foo = 'foo' . $str;
+	}
+
+	protected function issetPropSet()
+	{
+		return true;
+	}
+
+	protected function issetPropUnset()
+	{
+		return false;
+	}
+
+	protected function unsetUnsettable()
+	{
+		unset($this->unsettable);
 	}
 }

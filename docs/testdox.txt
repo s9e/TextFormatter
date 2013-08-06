@@ -80,7 +80,12 @@ s9e\TextFormatter\Tests\Configurator\Traits\Configurable
  [x] __set() throws an exception if a scalar value would be overwritten by a scalar value that cannot be losslessly cast to the same type
  [x] __set() will clear and repopulate a NormalizedCollection rather than overwrite it
  [x] __set() throws an exception if a NormalizedCollection would be overwritten by a non-array, non-Traversable value
+ [x] __isset('foo') calls issetFoo() if it exists
  [x] __isset($k) returns true if the property exists
+ [x] __unset('foo') has no effect if the property does not exist
+ [x] __unset('foo') calls unsetFoo() if it exists
+ [x] __unset('foo') calls $this->foo->clear() if it's an instance of Collection
+ [x] __unset('foo') throws an exception if unsetFoo() does not exist
 
 s9e\TextFormatter\Tests\Configurator\Traits\TemplateSafeness
  [x] markAsSafeAsURL() is chainable
