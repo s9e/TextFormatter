@@ -159,17 +159,17 @@ trait Configurable
 	*/
 	public function __unset($propName)
 	{
-		if (!isset($this->$propName))
-		{
-			return;
-		}
-
 		$methodName = 'unset' . ucfirst($propName);
 
 		if (method_exists($this, $methodName))
 		{
 			$this->$methodName();
 
+			return;
+		}
+
+		if (!isset($this->$propName))
+		{
 			return;
 		}
 
@@ -180,6 +180,6 @@ trait Configurable
 			return;
 		}
 
-		throw new RuntimeException('Not supported');
+		throw new RuntimeException("Property '" . $propName . "' cannot be unset");
 	}
 }

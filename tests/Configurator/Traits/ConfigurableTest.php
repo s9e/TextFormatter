@@ -201,16 +201,6 @@ class ConfigurableTest extends Test
 	}
 
 	/**
-	* @testdox __unset('foo') has no effect if the property does not exist
-	*/
-	public function testMagicUnsetNone()
-	{
-		$dummy = new ConfigurableTestDummy;
-
-		unset($dummy->doesNotExist);
-	}
-
-	/**
 	* @testdox __unset('foo') calls unsetFoo() if it exists
 	*/
 	public function testMagicUnsetMethod()
@@ -220,6 +210,18 @@ class ConfigurableTest extends Test
 		unset($dummy->unsettable);
 
 		$this->assertObjectHasAttribute('unsettable', $dummy);
+	}
+
+	/**
+	* @testdox __unset('foo') calls unsetFoo() even if the property does not exist
+	*/
+	public function testMagicUnsetMethodOverride()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		unset($dummy->unknown);
+
+		$this->assertObjectHasAttribute('unknownWasUnset', $dummy);
 	}
 
 	/**
@@ -238,9 +240,19 @@ class ConfigurableTest extends Test
 	}
 
 	/**
-	* @testdox __unset('foo') throws an exception if unsetFoo() does not exist
+	* @testdox __unset('foo') has no effect unsetFoo() does not exist and the the property is not set
+	*/
+	public function testMagicUnsetNone()
+	{
+		$dummy = new ConfigurableTestDummy;
+
+		unset($dummy->doesNotExist);
+	}
+
+	/**
+	* @testdox __unset('foo') throws an exception if unsetFoo() does not exist and the property is set
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Not supported
+	* @expectedExceptionMessage Property 'notUnsettable' cannot be unset
 	*/
 	public function testMagicUnsetFail()
 	{
@@ -294,5 +306,10 @@ class ConfigurableTestDummy
 	protected function unsetUnsettable()
 	{
 		unset($this->unsettable);
+	}
+
+	protected function unsetUnknown()
+	{
+		$this->unknownWasUnset = 1;
 	}
 }
