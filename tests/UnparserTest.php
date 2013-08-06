@@ -97,4 +97,15 @@ class UnparserTest extends Test
 			Unparser::asPlainText('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>')
 		);
 	}
+
+	/**
+	* @testdox Can unparse representations that were over-escaped
+	*/
+	public function testExoticIR()
+	{
+		$this->assertSame(
+			'&<>"\'',
+			Unparser::unparse('<pt>&amp;&lt;&gt;&quot;&#039;</pt>')
+		);
+	}
 }
