@@ -202,6 +202,16 @@ class Tag implements ConfigProvider
 	}
 
 	/**
+	* Unset the default template set for this tag
+	*
+	* @return void
+	*/
+	public function unsetDefaultTemplate()
+	{
+		$this->templates->delete('');
+	}
+
+	/**
 	* {@inheritdoc}
 	*/
 	public function asConfig()
