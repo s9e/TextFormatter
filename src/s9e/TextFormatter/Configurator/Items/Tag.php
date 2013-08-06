@@ -57,7 +57,10 @@ class Tag implements ConfigProvider
 	protected $templates;
 
 	/**
-	* @param array $options This tag's options
+	* Constructor
+	*
+	* @param  array $options This tag's options
+	* @return void
 	*/
 	public function __construct(array $options = null)
 	{
@@ -104,7 +107,8 @@ class Tag implements ConfigProvider
 	/**
 	* Set this tag's attribute preprocessors
 	*
-	* @param array|AttributePreprocessorCollection $attributePreprocessors 2D array of [attrName=>[regexp]], or an instance of AttributePreprocessorCollection
+	* @param  array|AttributePreprocessorCollection $attributePreprocessors 2D array of [attrName=>[regexp]], or an instance of AttributePreprocessorCollection
+	* @return void
 	*/
 	public function setAttributePreprocessors($attributePreprocessors)
 	{
@@ -115,7 +119,8 @@ class Tag implements ConfigProvider
 	/**
 	* Set this tag's nestingLimit
 	*
-	* @param integer $limit
+	* @param  integer $limit
+	* @return void
 	*/
 	public function setNestingLimit($limit)
 	{
@@ -134,7 +139,8 @@ class Tag implements ConfigProvider
 	/**
 	* Set this tag's rules
 	*
-	* @param array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
+	* @param  array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
+	* @return void
 	*/
 	public function setRules($rules)
 	{
@@ -145,7 +151,8 @@ class Tag implements ConfigProvider
 	/**
 	* Set this tag's tagLimit
 	*
-	* @param integer $limit
+	* @param  integer $limit
+	* @return void
 	*/
 	public function setTagLimit($limit)
 	{
@@ -164,7 +171,8 @@ class Tag implements ConfigProvider
 	/**
 	* Set all templates associated with this tag
 	*
-	* @param array|TemplateCollection $templates
+	* @param  array|TemplateCollection $templates
+	* @return void
 	*/
 	public function setTemplates($templates)
 	{
@@ -185,7 +193,8 @@ class Tag implements ConfigProvider
 	/**
 	* Set the default template for this tag
 	*
-	* @param string $template
+	* @param  string $template
+	* @return void
 	*/
 	public function setDefaultTemplate($template)
 	{
