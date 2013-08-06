@@ -204,4 +204,17 @@ class ConfiguratorTest extends Test
 			$config['replacements'][0][0]->get('JS')
 		);
 	}
+
+	/**
+	* @testdox getTag() returns the tag that is associated with this plugin
+	*/
+	public function testGetTag()
+	{
+		$plugin = $this->configurator->plugins->load('Censor');
+
+		$this->assertSame(
+			$this->configurator->tags['CENSOR'],
+			$plugin->getTag()
+		);
+	}
 }

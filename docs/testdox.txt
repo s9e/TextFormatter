@@ -1802,6 +1802,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] Words using the default replacement do not appear in the replacements
  [x] asConfig() creates a JavaScript variant for the plugin's regexp
  [x] asConfig() creates a JavaScript variant for the regexps used in replacements
+ [x] getTag() returns the tag that is associated with this plugin
 
 s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests
