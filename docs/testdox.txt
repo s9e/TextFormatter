@@ -1308,6 +1308,7 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() normalizes tags' templates before assembling the stylesheet
  [x] getUsedParameters() returns parameters that were formally defined
  [x] getUsedParameters() returns undefined parameters used in tags' templates
+ [x] getUsedParameters() returns undefined parameters used in tags' templates' predicates
  [x] getUsedParameters() returns undefined parameters used in wildcard templates
  [x] get() outputs <xsl:param/> elements for undefined parameters used in templates
  [x] Creates a default template for <br/>

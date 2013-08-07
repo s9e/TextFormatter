@@ -229,8 +229,15 @@ class Stylesheet
 		// Collect all the parameters used by tags' templates and assign them an empty string
 		foreach ($this->configurator->tags as $tag)
 		{
-			foreach ($tag->templates as $template)
+			foreach ($tag->templates as $predicate => $template)
 			{
+				// Collect the params from the template's predicate
+				foreach (TemplateHelper::getVariablesFromXPath($predicate) as $paramName)
+				{
+					$params[$paramName] = "''";
+				}
+
+				// Collect the params from the template's content
 				foreach ($template->getParameters() as $paramName)
 				{
 					$params[$paramName] = "''";

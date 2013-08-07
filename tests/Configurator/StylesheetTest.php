@@ -339,6 +339,21 @@ class StylesheetTest extends Test
 	}
 
 	/**
+	* @testdox getUsedParameters() returns undefined parameters used in tags' templates' predicates
+	*/
+	public function testGetUsedParametersUndefinedFromTemplatesPredicates()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->templates['$foo'] = '';
+		$configurator->tags->add('Y')->templates['not($bar)'] = '';
+
+		$this->assertEquals(
+			['foo' => "''", 'bar' => "''"],
+			$configurator->stylesheet->getUsedParameters()
+		);
+	}
+
+	/**
 	* @testdox getUsedParameters() returns undefined parameters used in wildcard templates
 	*/
 	public function testGetUsedParametersUndefinedFromWildcards()
