@@ -6,7 +6,7 @@ s9e\\TextFormatter is a plugin-based text formatter.
 
 ## Installation
 
-You can use s9e\\TextFormatter via Composer or by cloning this repository. See [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/General/00_Installation.md).
+You can use s9e\\TextFormatter via Composer or by cloning this repository. See [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/00_Installation.md).
 
 ## Examples
 
