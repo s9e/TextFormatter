@@ -85,9 +85,30 @@ class PHPTest extends Test
 				<xsl:template match="et|i|st"/>
 			</xsl:stylesheet>';
 
-
 		$this->assertContains(
 			'class Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c',
+			$generator->generate($xsl)
+		);
+	}
+
+	/**
+	* @testdox The prefix used for generated class names can be changed in $rendererGenerator->defaultClassPrefix
+	*/
+	public function testClassNameGeneratedCustom()
+	{
+		$generator = new PHP;
+		$generator->defaultClassPrefix = 'Foo\\Bar_renderer_';
+
+		$xsl =
+			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+				<xsl:output method="html" encoding="utf-8" indent="no"/>
+				<xsl:template match="p"><p><xsl:apply-templates/></p></xsl:template>
+				<xsl:template match="br"><br/></xsl:template>
+				<xsl:template match="et|i|st"/>
+			</xsl:stylesheet>';
+
+		$this->assertContains(
+			'class Bar_renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c',
 			$generator->generate($xsl)
 		);
 	}

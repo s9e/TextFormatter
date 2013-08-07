@@ -2009,6 +2009,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] get() can be called multiple times with the same stylesheet
  [x] The returned instance contains its own source code in $renderer->source
  [x] If no class name is set, a class name is generated based on the renderer's source
+ [x] The prefix used for generated class names can be changed in $rendererGenerator->defaultClassPrefix
  [x] The class name can be set in $rendererGenerator->className
  [x] The class name can be namespaced
  [x] If $rendererGenerator->filepath is set, the renderer is saved to this file

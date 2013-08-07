@@ -38,6 +38,11 @@ class PHP implements RendererGenerator
 	public $className;
 
 	/**
+	* @var string Prefix used when generating a default class name
+	*/
+	public $defaultClassPrefix = 'Renderer_';
+
+	/**
 	* @var string If set, path to the file where the renderer will be saved
 	*/
 	public $filepath;
@@ -340,7 +345,9 @@ EOT
 		$this->php .= "\n}";
 
 		// Generate a name for that class if necessary, and save it
-		$className = (isset($this->className)) ? $this->className : 'Renderer_' . sha1($this->php);
+		$className = (isset($this->className))
+		           ? $this->className
+		           : $this->defaultClassPrefix . sha1($this->php);
 		$this->lastClassName = $className;
 
 		// Declare the namespace and class name
