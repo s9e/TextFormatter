@@ -140,6 +140,10 @@ function convertCustom($filepath, &$file)
 				"'class Renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41',"
 			),
 			array(
+				"'class Bar_renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c',",
+				"'class Bar_renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41',"
+			),
+			array(
 				"\$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php'",
 				"\$cacheDir . '/Renderer_b55327f3f3582d614189d0d2a186c3ea2cf77a41.php'"
 			),
