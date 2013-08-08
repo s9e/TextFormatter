@@ -358,7 +358,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() omits NULL values
  [x] toArray() preserves NULL values if its third argument is TRUE
  [x] toArray() preserves NULL values in deep arrays if its third argument is TRUE
- [x] optimizeArray() uses references to deduplicate equal arrays
+ [x] optimizeArray() reduces the size of a serialized config
 
 s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <span> does not allow <div> as child

@@ -262,9 +262,9 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
-	* @testdox optimizeArray() uses references to deduplicate equal arrays
+	* @testdox optimizeArray() reduces the size of a serialized config
 	*/
-	public function testOptimizeArray()
+	public function testOptimizeArraySmaller()
 	{
 		// Create a Configurator and load a few of BBCodes
 		$configurator = new Configurator;
@@ -272,12 +272,11 @@ class ConfigHelperTest extends Test
 		$configurator->BBCodes->addFromRepository('I');
 		$configurator->BBCodes->addFromRepository('U');
 
-		$optimizedConfig = $configurator->asConfig();
-		ConfigHelper::filterVariants($optimizedConfig);
-		ConfigHelper::optimizeArray($optimizedConfig);
-
 		$normalConfig = $configurator->asConfig();
 		ConfigHelper::filterVariants($normalConfig);
+
+		$optimizedConfig = $normalConfig;
+		ConfigHelper::optimizeArray($optimizedConfig);
 
 		$this->assertEquals($normalConfig, $optimizedConfig);
 		$this->assertLessThan(
