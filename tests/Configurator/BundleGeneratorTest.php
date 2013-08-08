@@ -59,11 +59,11 @@ class BundleGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Parser
+	* @testdox generate('Foo', ['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
 	*/
 	public function testParserCallback()
 	{
-		$mock = $this->getMock('stdClass', ['finalizeParser' => 'foo']);
+		$mock = $this->getMock('stdClass', ['foo']);
 		$mock->expects($this->once())
 		     ->method('foo')
 		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Parser'));

@@ -1462,7 +1462,7 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] generate() accepts namespaced class names
  [x] A custom serializer can be set in $bundleGenerator->serializer
  [x] A custom unserializer can be set in $bundleGenerator->unserializer
- [x] generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Parser
+ [x] generate('Foo', ['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
  [x] Modification made to the parser via callback appear in the generated bundle
  [x] generate('Foo', ['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
  [x] Modification made to the renderer via callback appear in the generated bundle
