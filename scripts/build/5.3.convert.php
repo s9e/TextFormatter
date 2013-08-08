@@ -50,7 +50,12 @@ function convertCustom($filepath, &$file)
 				'public function isFilter($tokenId)'
 			)
 		),
-		'BundleGenerator.php' => array(
+		'Configurator.php' => array(
+			array(
+				// https://bugs.php.net/52854
+				'return $reflection->newInstanceArgs(array_slice($args, 1));',
+				'return (isset($args[1])) ? $reflection->newInstanceArgs(array_slice($args, 1)) : $reflection->newInstance();'
+			),
 			array(
 				'$options[\'finalizeParser\']($parser);',
 				'call_user_func($options[\'finalizeParser\'], $parser);'
@@ -58,13 +63,6 @@ function convertCustom($filepath, &$file)
 			array(
 				'$options[\'finalizeRenderer\']($renderer);',
 				'call_user_func($options[\'finalizeRenderer\'], $renderer);'
-			)
-		),
-		'Configurator.php' => array(
-			array(
-				// https://bugs.php.net/52854
-				'return $reflection->newInstanceArgs(array_slice($args, 1));',
-				'return (isset($args[1])) ? $reflection->newInstanceArgs(array_slice($args, 1)) : $reflection->newInstance();'
 			)
 		),
 		'ConfiguratorTest.php' => array(
