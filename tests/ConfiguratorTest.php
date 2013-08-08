@@ -704,6 +704,133 @@ class ConfiguratorTest extends Test
 		$this->configurator->bundleGenerator = $mock;
 		$this->configurator->saveBundle('Foo', $this->tempnam(), ['finalizeParser' => 'finalize']);
 	}
+
+	/**
+	* @testdox finalize() returns a parser and a renderer
+	*/
+	public function testFinalizeDefault()
+	{
+		$return = $this->configurator->finalize();
+
+		$this->assertArrayHasKey('parser', $return);
+		$this->assertInstanceOf('s9e\\TextFormatter\\Parser', $return['parser']);
+
+		$this->assertArrayHasKey('renderer', $return);
+		$this->assertInstanceOf('s9e\\TextFormatter\\Renderer', $return['renderer']);
+	}
+
+	/**
+	* @testdox finalize(['returnParser' => false]) does not return a parser
+	*/
+	public function testFinalizeNoParser()
+	{
+		$return = $this->configurator->finalize(['returnParser' => false]);
+
+		$this->assertArrayNotHasKey('parser', $return);
+	}
+
+	/**
+	* @testdox finalize(['returnRenderer' => false]) does not return a renderer
+	*/
+	public function testFinalizeNoRenderer()
+	{
+		$return = $this->configurator->finalize(['returnRenderer' => false]);
+
+		$this->assertArrayNotHasKey('renderer', $return);
+	}
+
+	/**
+	* @testdox finalize() calls addHTML5Rules() by default
+	*/
+	public function testFinalizeAddHTML5Rules()
+	{
+		$configurator = $this->getMock('s9e\\TextFormatter\\Configurator', ['addHTML5Rules']);
+		$configurator->expects($this->once())
+		             ->method('addHTML5Rules');
+
+		$configurator->finalize();
+	}
+
+	/**
+	* @testdox finalize() passes its options to addHTML5Rules()
+	*/
+	public function testFinalizeAddHTML5RulesOptions()
+	{
+		$configurator = $this->getMock('s9e\\TextFormatter\\Configurator', ['addHTML5Rules']);
+		$configurator->expects($this->once())
+		             ->method('addHTML5Rules')
+		             ->with($this->arrayHasKey('foo'));
+
+		$configurator->finalize(['foo' => 'bar']);
+	}
+
+	/**
+	* @testdox finalize() passes a renderer to addHTML5Rules()
+	*/
+	public function testFinalizeAddHTML5RulesRenderer()
+	{
+		$configurator = $this->getMock('s9e\\TextFormatter\\Configurator', ['addHTML5Rules']);
+		$configurator->expects($this->once())
+		             ->method('addHTML5Rules')
+		             ->with($this->arrayHasKey('renderer'));
+
+		$configurator->finalize();
+	}
+
+	/**
+	* @testdox finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
+	*/
+	public function testFinalizeNoAddHTML5Rules()
+	{
+		$configurator = $this->getMock('s9e\\TextFormatter\\Configurator', ['addHTML5Rules']);
+		$configurator->expects($this->never())
+		             ->method('addHTML5Rules');
+
+		$configurator->finalize(['addHTML5Rules' => false]);
+	}
+
+	/**
+	* @testdox finalize(['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
+	*/
+	public function testFinalizeParserCallback()
+	{
+		$mock = $this->getMock('stdClass', ['foo']);
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Parser'));
+
+		$this->configurator->finalize(['finalizeParser' => [$mock, 'foo']]);
+	}
+
+	/**
+	* @testdox finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
+	*/
+	public function testFinalizeRendererCallback()
+	{
+		$mock = $this->getMock('stdClass', ['foo']);
+		$mock->expects($this->once())
+		     ->method('foo')
+		     ->with($this->isInstanceOf('s9e\\TextFormatter\\Renderer'));
+
+		$this->configurator->finalize(['finalizeRenderer' => [$mock, 'foo']]);
+	}
+
+	/**
+	* @testdox finalize(['optimizeConfig' => true]) reduces the size of the serialized parser at the cost of not being configurable at runtime
+	*/
+	public function testFinalizeOptimizeConfig()
+	{
+		$this->configurator->tags->add('X');
+		$this->configurator->tags->add('Y');
+
+		$return1 = $this->configurator->finalize();
+		$return2 = $this->configurator->finalize(['optimizeConfig' => true]);
+
+		$this->assertLessThan(
+			strlen(serialize($return1['parser'])),
+			strlen(serialize($return2['parser']))
+		);
+	}
 }
 
 class DummyPluginConfigurator extends ConfiguratorBase

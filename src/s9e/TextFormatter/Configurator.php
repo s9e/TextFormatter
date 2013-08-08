@@ -146,6 +146,84 @@ class Configurator implements ConfigProvider
 	}
 
 	/**
+	* Finalize this configuration and return all the relevant objects
+	*
+	* Options: (also see addHTMLRules() options)
+	*
+	*  - addHTML5Rules:    whether to call addHTML5Rules()
+	*  - finalizeParser:   callback executed after the parser is created (gets the parser as arg)
+	*  - finalizeRenderer: same with the renderer
+	*  - optimizeConfig:   whether to optimize the parser's config. *DO NOT* use if the parser is
+	*                      modified at runtime
+	*  - returnParser:     whether to return an instance of Parser in the "parser" key
+	*  - returnRenderer:   whether to return an instance of Renderer in the "renderer" key
+	*
+	* @param  array $options
+	* @return void
+	*/
+	public function finalize(array $options = [])
+	{
+		$return = [];
+
+		// Add default options
+		$options += [
+			'addHTML5Rules'  => true,
+			'optimizeConfig' => false,
+			'returnParser'   => true,
+			'returnRenderer' => true
+		];
+
+		// Create a renderer as needed
+		if ($options['returnRenderer'] || $options['addHTML5Rules'])
+		{
+			// Create a renderer
+			$renderer = $this->getRenderer();
+
+			// Execute the renderer callback if applicable
+			if (isset($options['finalizeRenderer']))
+			{
+				$options['finalizeRenderer']($renderer);
+			}
+
+			if ($options['returnRenderer'])
+			{
+				$return['renderer'] = $renderer;
+			}
+
+			if ($options['addHTML5Rules'])
+			{
+				// Add the HTML5 rules. Pass the new renderer plus the other options
+				$this->addHTML5Rules(['renderer' => $renderer] + $options);
+			}
+		}
+
+		if ($options['returnParser'])
+		{
+			// Prepare the parser's config
+			$config = $this->asConfig();
+			ConfigHelper::filterVariants($config);
+
+			if ($options['optimizeConfig'])
+			{
+				ConfigHelper::optimizeArray($config);
+			}
+
+			// Create a parser
+			$parser = new Parser($config);
+
+			// Execute the parser callback if applicable
+			if (isset($options['finalizeParser']))
+			{
+				$options['finalizeParser']($parser);
+			}
+
+			$return['parser'] = $parser;
+		}
+
+		return $return;
+	}
+
+	/**
 	* Return an instance of Parser based on the current config
 	*
 	* @return Parser

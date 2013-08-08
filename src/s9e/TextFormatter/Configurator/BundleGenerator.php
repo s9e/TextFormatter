@@ -46,8 +46,6 @@ class BundleGenerator
 	* Options:
 	*
 	*  - autoInclude: automatically load the source of the PHP renderer (default: true)
-	*  - finalizeParser: callback executed after the parser is created. Receives the parser as param
-	*  - finalizeRenderer: same with the renderer
 	*
 	* @param  string $className Name of the bundle class
 	* @param  array  $options   Associative array of optional settings
@@ -58,29 +56,8 @@ class BundleGenerator
 		// Add default options
 		$options += ['autoInclude' => true];
 
-		// Create a renderer
-		$renderer = $this->configurator->getRenderer();
-
-		// Execute the renderer callback if applicable
-		if (isset($options['finalizeRenderer']))
-		{
-			$options['finalizeRenderer']($renderer);
-		}
-
-		// Add the automatic HTML5 rules
-		$this->configurator->addHTML5Rules(['renderer' => $renderer]);
-
-		// Cleanup the config and create a parser
-		$config = $this->configurator->asConfig();
-		ConfigHelper::filterVariants($config);
-		ConfigHelper::optimizeArray($config);
-		$parser = new Parser($config);
-
-		// Execute the parser callback if applicable
-		if (isset($options['finalizeParser']))
-		{
-			$options['finalizeParser']($parser);
-		}
+		// Get the parser and renderer
+		extract($this->configurator->finalize($options));
 
 		// Split the bundle's class name and its namespace
 		$namespace = '';

@@ -154,6 +154,16 @@ s9e\TextFormatter\Tests\Configurator
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
  [x] saveBundle() returns the number of bytes written to disk
  [x] saveBundle() passes its third parameter to BundleGenerator::generate()
+ [x] finalize() returns a parser and a renderer
+ [x] finalize(['returnParser' => false]) does not return a parser
+ [x] finalize(['returnRenderer' => false]) does not return a renderer
+ [x] finalize() calls addHTML5Rules() by default
+ [x] finalize() passes its options to addHTML5Rules()
+ [x] finalize() passes a renderer to addHTML5Rules()
+ [x] finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
+ [x] finalize(['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
+ [x] finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
+ [x] finalize(['optimizeConfig' => true]) reduces the size of the serialized parser at the cost of not being configurable at runtime
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute
