@@ -241,7 +241,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/minigolf2000/b/419320018',
-				'<rt><TWITCH channel="minigolf2000" archive_id="419320018">http://www.twitch.tv/minigolf2000/b/419320018</TWITCH></rt>',
+				'<rt><TWITCH archive_id="419320018" channel="minigolf2000">http://www.twitch.tv/minigolf2000/b/419320018</TWITCH></rt>',
 				[],
 				function ($configurator)
 				{

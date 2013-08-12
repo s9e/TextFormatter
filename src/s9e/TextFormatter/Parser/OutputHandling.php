@@ -148,7 +148,13 @@ trait OutputHandling
 
 			// Open the start tag and add its attributes, but don't close the tag
 			$this->output .= '<' . $tagName;
-			foreach ($tag->getAttributes() as $attrName => $attrValue)
+
+			// We output the attributes in lexical order. Helps canonicalizing the output and could
+			// prove useful someday
+			$attributes = $tag->getAttributes();
+			ksort($attributes);
+
+			foreach ($attributes as $attrName => $attrValue)
 			{
 				$this->output .= ' ' . $attrName . '="' . htmlspecialchars($attrValue, ENT_COMPAT, 'UTF-8') . '"';
 			}

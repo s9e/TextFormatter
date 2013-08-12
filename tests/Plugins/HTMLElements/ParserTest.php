@@ -96,15 +96,15 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'x <input type=checkbox disabled checked /> x',
-				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:input type="checkbox" disabled="disabled" checked="checked"><st>&lt;input type=checkbox disabled checked /&gt;</st></html:input> x</rt>',
+				'x <input disabled name=foo readonly /> x',
+				'<rt xmlns:html="urn:s9e:TextFormatter:html">x <html:input disabled="disabled" name="foo" readonly="readonly"><st>&lt;input disabled name=foo readonly /&gt;</st></html:input> x</rt>',
 				[],
 				function ($configurator)
 				{
 					$configurator->HTMLElements->allowElement('input');
-					$configurator->HTMLElements->allowAttribute('input', 'type');
 					$configurator->HTMLElements->allowAttribute('input', 'disabled');
-					$configurator->HTMLElements->allowAttribute('input', 'checked');
+					$configurator->HTMLElements->allowAttribute('input', 'name');
+					$configurator->HTMLElements->allowAttribute('input', 'readonly');
 				}
 			],
 			[

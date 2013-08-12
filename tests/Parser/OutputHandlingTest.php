@@ -450,6 +450,23 @@ xxx',
 					$parser->addSelfClosingTag('X', 5, 1);
 				}
 			],
+			[
+				// Test the attribute order
+				'X',
+				'<rt><X bar="2" baz="3" foo="1">X</X></rt>',
+				function ($constructor)
+				{
+					$tag = $constructor->tags->add('X');
+					$tag->attributes->add('foo');
+					$tag->attributes->add('bar');
+					$tag->attributes->add('baz');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1)
+					       ->setAttributes(['foo' => 1, 'bar' => 2, 'baz' => 3]);
+				}
+			],
 		];
 	}
 }

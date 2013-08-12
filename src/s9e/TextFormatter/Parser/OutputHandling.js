@@ -148,12 +148,27 @@ function outputTag(tag)
 
 		// Open the start tag and add its attributes, but don't close the tag
 		output += '<' + tagName;
-		var attributes = tag.getAttributes();
 
+		// We output the attributes in lexical order. Helps canonicalizing the output and could
+		// prove useful someday
+		var attributes = tag.getAttributes(),
+			attributeNames = [];
 		for (var attrName in attributes)
 		{
-			output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName].toString()) + '"';
+			attributeNames.push([attrName]);
 		}
+		attributeNames.sort(
+			function(a, b)
+			{
+				return (a > b) ? 1 : -1;
+			}
+		);
+		attributeNames.forEach(
+			function(attrName)
+			{
+				output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName].toString()) + '"';
+			}
+		);
 
 		if (tag.isSelfClosingTag())
 		{
