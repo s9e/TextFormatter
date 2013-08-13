@@ -886,6 +886,24 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('UL', 35, 5);
 				}
 			],
+			[
+				'XX',
+				'<rt>X<X>X</X></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->filterChain->append(
+						function ($tag)
+						{
+							return (bool) $tag->getPos();
+						}
+					);
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			],
 		];
 	}
 }
