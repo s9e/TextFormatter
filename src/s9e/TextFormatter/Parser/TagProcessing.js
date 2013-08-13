@@ -234,10 +234,23 @@ function processStartTag(tag)
 	// limits, whether this tag is allowed within current context (the context may change
 	// as ancestors are closed) or whether the required ancestors are still there (they might
 	// have been closed by a rule.)
-	if (cntTotal[tagName] >= tagConfig.tagLimit
-	 || !filterTag(tag))
+	if (cntTotal[tagName] >= tagConfig.tagLimit)
 	{
-		// This tag is invalid
+		logger.err(
+			'Tag limit exceeded',
+			{
+				'tag':      tag,
+				'tagName':  tagName,
+				'tagLimit': tagConfig.tagLimit
+			}
+		);
+		tag.invalidate();
+
+		return;
+	}
+
+	if (!filterTag(tag))
+	{
 		tag.invalidate();
 
 		return;
@@ -249,9 +262,22 @@ function processStartTag(tag)
 		return;
 	}
 
-	if (cntOpen[tagName] >= tagConfig.nestingLimit
-	 || requireAncestor(tag)
-	 || !tagIsAllowed(tagName))
+	if (cntOpen[tagName] >= tagConfig.nestingLimit)
+	{
+		logger.err(
+			'Nesting limit exceeded',
+			{
+				'tag':          tag,
+				'tagName':      tagName,
+				'nestingLimit': tagConfig.nestingLimit
+			}
+		);
+		tag.invalidate();
+
+		return;
+	}
+
+	if (requireAncestor(tag) || !tagIsAllowed(tagName))
 	{
 		// This tag is invalid
 		tag.invalidate();

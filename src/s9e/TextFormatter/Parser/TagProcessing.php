@@ -252,10 +252,23 @@ trait TagProcessing
 		// limits, whether this tag is allowed within current context (the context may change
 		// as ancestors are closed) or whether the required ancestors are still there (they might
 		// have been closed by a rule.)
-		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit']
-		 || !$this->filterTag($tag))
+		if ($this->cntTotal[$tagName] >= $tagConfig['tagLimit'])
 		{
-			// This tag is invalid
+			$this->logger->err(
+				'Tag limit exceeded',
+				[
+					'tag'      => $tag,
+					'tagName'  => $tagName,
+					'tagLimit' => $tagConfig['tagLimit']
+				]
+			);
+			$tag->invalidate();
+
+			return;
+		}
+
+		if (!$this->filterTag($tag))
+		{
 			$tag->invalidate();
 
 			return;
@@ -267,11 +280,23 @@ trait TagProcessing
 			return;
 		}
 
-		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit']
-		 || $this->requireAncestor($tag)
-		 || !$this->tagIsAllowed($tagName))
+		if ($this->cntOpen[$tagName] >= $tagConfig['nestingLimit'])
 		{
-			// This tag is invalid
+			$this->logger->err(
+				'Nesting limit exceeded',
+				[
+					'tag'          => $tag,
+					'tagName'      => $tagName,
+					'nestingLimit' => $tagConfig['nestingLimit']
+				]
+			);
+			$tag->invalidate();
+
+			return;
+		}
+
+		if ($this->requireAncestor($tag) || !$this->tagIsAllowed($tagName))
+		{
 			$tag->invalidate();
 
 			return;

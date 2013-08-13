@@ -5,6 +5,7 @@ namespace s9e\TextFormatter\Tests\Parser;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Parser\TagProcessing;
 use s9e\TextFormatter\Plugins\ParserBase;
 use s9e\TextFormatter\Tests\Test;
@@ -18,9 +19,9 @@ class TagProcessingTest extends Test
 	* @testdox Works
 	* @dataProvider getData
 	*/
-	public function test($original, $expected, $setup = null, $callback = null)
+	public function test($original, $expected, $setup = null, $callback = null, array $expectedLogs = null)
 	{
-		$this->assertParsing($original, $expected, $setup, $callback);
+		$this->assertParsing($original, $expected, $setup, $callback, $expectedLogs);
 	}
 
 	public function getData()
@@ -306,7 +307,17 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 2, 1);
 					$parser->addEndTag('X', 3, 0);
 					$parser->addEndTag('X', 4, 0);
-				}
+				},
+				[
+					[
+						'err',
+						'Nesting limit exceeded',
+						[
+							'tagName'      => 'X',
+							'nestingLimit' => 2
+						]
+					]
+				]
 			],
 			[
 				'foo bar',
@@ -320,7 +331,17 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 0, 1);
 					$parser->addSelfClosingTag('X', 1, 1);
 					$parser->addSelfClosingTag('X', 2, 1);
-				}
+				},
+				[
+					[
+						'err',
+						'Tag limit exceeded',
+						[
+							'tagName'  => 'X',
+							'tagLimit' => 2
+						]
+					]
+				]
 			],
 			[
 				'foo bar',

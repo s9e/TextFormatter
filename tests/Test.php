@@ -68,7 +68,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 	}
 
-	protected function assertParsing($original, $expected, $setup = null, $callback = null)
+	protected function assertParsing($original, $expected, $setup = null, $callback = null, array $expectedLogs = null)
 	{
 		$configurator = new Configurator;
 
@@ -95,6 +95,11 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 
 		$this->assertSame($expected, $parser->parse($original));
+
+		if (isset($expectedLogs))
+		{
+			$this->assertArrayMatches($expectedLogs, $parser->getLogger()->get());
+		}
 	}
 
 	protected function assertJSParsing($original, $expected)
