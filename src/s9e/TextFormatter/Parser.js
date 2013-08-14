@@ -98,7 +98,7 @@ function parse(_text)
 {
 	// Reset the parser and save the uid
 	reset(_text);
-	var _uid = +uid;
+	var _uid = uid;
 
 	// Do the heavy lifting
 	executePluginParsers();
