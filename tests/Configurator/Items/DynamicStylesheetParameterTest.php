@@ -20,12 +20,12 @@ class DynamicStylesheetParameterTest extends Test
 	}
 
 	/**
-	* @testdox __construct() can take the parameter's default value as argument
+	* @testdox __construct() can take the parameter's default expression as argument
 	*/
 	public function testConstructorArgument()
 	{
 		$parameter = new DynamicStylesheetParameter('foo');
-		$this->assertAttributeContains('foo', 'value', $parameter);
+		$this->assertAttributeContains('foo', 'expr', $parameter);
 	}
 
 	/**

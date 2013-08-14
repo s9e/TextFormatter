@@ -12,13 +12,29 @@ use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 class StaticStylesheetParameter extends StylesheetParameter
 {
 	/**
+	* @var string Literal value of this parameter
+	*/
+	protected $value;
+
+	/**
 	* Constructor
 	*
-	* @param  mixed $value This parameter's default value
+	* @param  mixed $value This parameter's default value as a literal
 	* @return void
 	*/
 	public function __construct($value = null)
 	{
-		$this->value = TemplateHelper::asXPath($value);
+		$this->expr  = TemplateHelper::asXPath($value);
+		$this->value = (string) $value;
+	}
+
+	/**
+	* Return the literal value of this parameter
+	*
+	* @return string
+	*/
+	public function getValue()
+	{
+		return $this->value;
 	}
 }

@@ -93,4 +93,13 @@ class StaticStylesheetParameterTest extends Test
 		$parameter->markAsSafeInJS();
 		$this->assertTrue($parameter->isSafeInJS());
 	}
+
+	/**
+	* @testdox getValue() returns the literal value of the parameter
+	*/
+	public function testGetValue()
+	{
+		$parameter = new StaticStylesheetParameter('foo');
+		$this->assertSame('foo', $parameter->getValue());
+	}
 }

@@ -861,6 +861,7 @@ s9e\TextFormatter\Tests\Configurator\Items\StaticStylesheetParameter
  [x] isSafeInCSS() returns true if markAsSafeInCSS() was called
  [x] isSafeInJS() returns false by default
  [x] isSafeInJS() returns true if markAsSafeInJS() was called
+ [x] getValue() returns the literal value of the parameter
 
 s9e\TextFormatter\Tests\Configurator\Items\Regexp
  [x] __construct() throws an InvalidArgumentException if the regexp is not valid

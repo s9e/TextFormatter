@@ -16,7 +16,7 @@ abstract class StylesheetParameter
 	/**
 	* @var string This parameter's default value, expressed in XPath
 	*/
-	protected $value;
+	protected $expr;
 
 	/**
 	* Constructor
@@ -27,12 +27,12 @@ abstract class StylesheetParameter
 	abstract public function __construct($value = null);
 
 	/**
-	* Return this parameter's default value
+	* Return this parameter's default value, expressed in XPath
 	*
 	* @return void
 	*/
 	public function __toString()
 	{
-		return $this->value;
+		return $this->expr;
 	}
 }

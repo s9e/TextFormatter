@@ -14,11 +14,11 @@ class DynamicStylesheetParameter extends StylesheetParameter
 	/**
 	* Constructor
 	*
-	* @param  mixed $value This parameter's default value
+	* @param  mixed $expr This parameter's default XPath expression
 	* @return void
 	*/
-	public function __construct($value = null)
+	public function __construct($expr = null)
 	{
-		$this->value = TemplateHelper::minifyXPath($value);
+		$this->expr = TemplateHelper::minifyXPath($expr);
 	}
 }
