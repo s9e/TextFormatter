@@ -33,3 +33,4 @@ TODO
 - Consider *not* removing the source attribute of an attribute preprocessor
 - Conditional comments can create IE-specific exploits. Consider removing them
 - http://wiki.simplemachines.org/smf/Bulletin_board_code#When_Order_Matters_Part_2 -- Is there a way to make the order *not* matter? How often does that happen anyway?
+- Renderer::getParameter()
