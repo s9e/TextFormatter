@@ -239,9 +239,9 @@ function processStartTag(tag)
 		logger.err(
 			'Tag limit exceeded',
 			{
-				'tag':      tag,
-				'tagName':  tagName,
-				'tagLimit': tagConfig.tagLimit
+				'tag'      : tag,
+				'tagName'  : tagName,
+				'tagLimit' : tagConfig.tagLimit
 			}
 		);
 		tag.invalidate();
@@ -267,9 +267,9 @@ function processStartTag(tag)
 		logger.err(
 			'Nesting limit exceeded',
 			{
-				'tag':          tag,
-				'tagName':      tagName,
-				'nestingLimit': tagConfig.nestingLimit
+				'tag'          : tag,
+				'tagName'      : tagName,
+				'nestingLimit' : tagConfig.nestingLimit
 			}
 		);
 		tag.invalidate();
@@ -277,9 +277,22 @@ function processStartTag(tag)
 		return;
 	}
 
-	if (requireAncestor(tag) || !tagIsAllowed(tagName))
+	if (!tagIsAllowed(tagName))
 	{
-		// This tag is invalid
+		logger.warn(
+			'Tag is not allowed in this context',
+			{
+				'tag'     : tag,
+				'tagName' : tagName
+			}
+		);
+		tag.invalidate();
+
+		return;
+	}
+
+	if (requireAncestor(tag))
+	{
 		tag.invalidate();
 
 		return;

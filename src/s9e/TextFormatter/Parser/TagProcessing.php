@@ -131,7 +131,6 @@ trait TagProcessing
 				}
 
 				$this->currentTag = array_pop($this->tagStack);
-				$this->logger->setTag($this->currentTag);
 				$this->processCurrentTag();
 			}
 
@@ -296,7 +295,21 @@ trait TagProcessing
 			return;
 		}
 
-		if ($this->requireAncestor($tag) || !$this->tagIsAllowed($tagName))
+		if (!$this->tagIsAllowed($tagName))
+		{
+			$this->logger->warn(
+				'Tag is not allowed in this context',
+				[
+					'tag'     => $tag,
+					'tagName' => $tagName
+				]
+			);
+			$tag->invalidate();
+
+			return;
+		}
+
+		if ($this->requireAncestor($tag))
 		{
 			$tag->invalidate();
 
