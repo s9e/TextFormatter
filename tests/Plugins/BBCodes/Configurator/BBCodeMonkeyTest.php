@@ -147,7 +147,8 @@ class BBCodeMonkeyTest extends Test
 						]
 					]),
 					'tokens' => [],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -167,7 +168,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'URL' => 'url'
 					],
-					'passthroughToken' => 'TEXT'
+					'passthroughToken' => 'TEXT',
+					'rules' => []
 				]
 			],
 			[
@@ -188,7 +190,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'URL' => 'content'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -198,7 +201,8 @@ class BBCodeMonkeyTest extends Test
 					'bbcode'     => new BBCode,
 					'tag'        => new Tag,
 					'tokens'     => [],
-					'passthroughToken' => 'TEXT'
+					'passthroughToken' => 'TEXT',
+					'rules'      => []
 				]
 			],
 			[
@@ -208,7 +212,19 @@ class BBCodeMonkeyTest extends Test
 					'bbcode'     => new BBCode,
 					'tag'        => new Tag,
 					'tokens'     => [],
-					'passthroughToken' => 'ANYTHING'
+					'passthroughToken' => 'ANYTHING',
+					'rules'      => []
+				]
+			],
+			[
+				'[b]{ANYTHING2}[/B]',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag,
+					'tokens'     => [],
+					'passthroughToken' => 'ANYTHING2',
+					'rules'      => []
 				]
 			],
 			[
@@ -226,7 +242,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'TEXT1' => 'title'
 					],
-					'passthroughToken' => 'TEXT2'
+					'passthroughToken' => 'TEXT2',
+					'rules' => []
 				]
 			],
 			[
@@ -244,7 +261,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'TEXT1' => 'title'
 					],
-					'passthroughToken' => 'TEXT2'
+					'passthroughToken' => 'TEXT2',
+					'rules' => []
 				]
 			],
 			[
@@ -265,7 +283,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'TEXT1' => 'title'
 					],
-					'passthroughToken' => 'TEXT2'
+					'passthroughToken' => 'TEXT2',
+					'rules' => []
 				]
 			],
 			[
@@ -275,7 +294,8 @@ class BBCodeMonkeyTest extends Test
 					'bbcode' => new BBCode,
 					'tag'    => new Tag,
 					'tokens' => [],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules'  => []
 				]
 			],
 			[
@@ -285,7 +305,8 @@ class BBCodeMonkeyTest extends Test
 					'bbcode' => new BBCode,
 					'tag'    => new Tag,
 					'tokens' => [],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules'  => []
 				]
 			],
 			[
@@ -295,7 +316,8 @@ class BBCodeMonkeyTest extends Test
 					'bbcode' => new BBCode,
 					'tag'    => new Tag,
 					'tokens' => [],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules'  => []
 				]
 			],
 			[
@@ -314,7 +336,8 @@ class BBCodeMonkeyTest extends Test
 						]
 					]),
 					'tokens' => ['URL' => 'src'],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -335,7 +358,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'URL' => 'url'
 					],
-					'passthroughToken' => 'TEXT'
+					'passthroughToken' => 'TEXT',
+					'rules' => []
 				]
 			],
 			[
@@ -355,7 +379,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'INT' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -375,7 +400,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'SIMPLETEXT' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -395,7 +421,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'INT' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -423,7 +450,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'REGEXP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -443,7 +471,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'REGEXP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -463,7 +492,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'REGEXP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -483,7 +513,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'REGEXP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -509,7 +540,8 @@ class BBCodeMonkeyTest extends Test
 						]
 					]),
 					'tokens' => [],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -530,7 +562,8 @@ class BBCodeMonkeyTest extends Test
 						]
 					]),
 					'tokens' => [],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -556,7 +589,8 @@ class BBCodeMonkeyTest extends Test
 						]
 					]),
 					'tokens' => [],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -581,7 +615,8 @@ class BBCodeMonkeyTest extends Test
 						]
 					]),
 					'tokens' => [],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -601,7 +636,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'RANGE' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -621,7 +657,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'RANDOM' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -643,7 +680,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'CHOICE' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -665,7 +703,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'CHOICE' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -687,7 +726,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'CHOICE' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -712,7 +752,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'MAP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -741,7 +782,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'MAP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -770,7 +812,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'MAP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -795,7 +838,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'MAP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -823,7 +867,8 @@ class BBCodeMonkeyTest extends Test
 					'tokens' => [
 						'MAP' => 'foo'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -851,7 +896,8 @@ class BBCodeMonkeyTest extends Test
 						'NUMBER1' => 'foo0',
 						'NUMBER2' => 'foo1'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -890,7 +936,8 @@ class BBCodeMonkeyTest extends Test
 						'NUMBER2' => 'flash1',
 						'URL' => 'content'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -922,7 +969,8 @@ class BBCodeMonkeyTest extends Test
 						'NUMBER2' => 'height',
 						'URL' => 'url'
 					],
-					'passthroughToken' => null
+					'passthroughToken' => null,
+					'rules' => []
 				]
 			],
 			[
@@ -953,7 +1001,8 @@ class BBCodeMonkeyTest extends Test
 						'TEXT1' => 'author',
 						'UINT'  => 'id'
 					],
-					'passthroughToken' => 'TEXT2'
+					'passthroughToken' => 'TEXT2',
+					'rules' => []
 				]
 			],
 			[

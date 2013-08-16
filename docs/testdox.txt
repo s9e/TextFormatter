@@ -841,7 +841,7 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Url
 
 s9e\TextFormatter\Tests\Configurator\Items\DynamicStylesheetParameter
  [x] __construct() does not require an argument
- [x] __construct() can take the parameter's default value as argument
+ [x] __construct() can take the parameter's default expression as argument
  [x] Returns its default value as an XPath expression when cast as a string
  [x] Minifies the XPath expression passed to the constructor
  [x] isSafeAsURL() returns false by default
