@@ -84,9 +84,21 @@ function addTag(type, name, pos, len)
 	// Create the tag
 	var tag = new Tag(type, name, pos, len);
 
-	// Invalidate this tag if it's an unknown tag, or if its length or its position is negative
+	// Invalidate this tag if it's an unknown tag, a disabled tag or if its length or its
+	// position is negative
 	if (!tagsConfig[name] && name !== 'i' && name !== 'br')
 	{
+		tag.invalidate();
+	}
+	else if (tagsConfig[name].isDisabled)
+	{
+		logger.warn(
+			'Tag is disabled',
+			{
+				'tag'     : tag,
+				'tagName' : tagName
+			}
+		);
 		tag.invalidate();
 	}
 	else if (len < 0 || pos < 0)

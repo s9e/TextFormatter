@@ -103,6 +103,13 @@ trait TagStack
 		}
 		elseif (!empty($this->tagsConfig[$name]['isDisabled']))
 		{
+			$this->logger->warn(
+				'Tag is disabled',
+				[
+					'tag'     => $tag,
+					'tagName' => $name
+				]
+			);
 			$tag->invalidate();
 		}
 		elseif ($len < 0 || $pos < 0)

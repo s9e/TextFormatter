@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Parser;
 
 use s9e\TextFormatter\Parser;
+use s9e\TextFormatter\Parser\Logger;
 use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Parser\TagStack;
 use s9e\TextFormatter\Tests\Test;
@@ -109,6 +110,20 @@ class TagStackTest extends Test
 		$this->assertEquals(
 			$expected,
 			$tag
+		);
+
+		$this->assertEquals(
+			[
+				[
+					'warn',
+					'Tag is disabled',
+					[
+						'tagName' => 'DISABLED',
+						'tag'     => $tag
+					]
+				]
+			],
+			$dummyStack->getLogger()->get()
 		);
 	}
 
@@ -357,7 +372,10 @@ class DummyStack extends Parser
 		'DISABLED' => ['isDisabled' => true]
 	];
 	public $tagStack = [];
-	public function __construct() {}
+	public function __construct()
+	{
+		$this->logger = new Logger;
+	}
 	public function sortTags()
 	{
 		parent::sortTags();
