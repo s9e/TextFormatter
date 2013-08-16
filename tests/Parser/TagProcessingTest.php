@@ -955,6 +955,19 @@ class TagProcessingTest extends Test
 					]
 				]
 			],
+			[
+				'X',
+				'<pt>X</pt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->rules->requireAncestor('Y');
+					$configurator->tags->add('Y');
+				},
+				function ($parser)
+				{
+					$parser->addSelfClosingTag('X', 0, 1);
+				}
+			],
 		];
 	}
 }
