@@ -131,6 +131,7 @@ trait TagProcessing
 				}
 
 				$this->currentTag = array_pop($this->tagStack);
+				$this->logger->setTag($this->currentTag);
 				$this->processCurrentTag();
 			}
 

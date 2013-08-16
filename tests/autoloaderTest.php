@@ -22,12 +22,12 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	* @testdox Can load s9e\TextFormatter\Parser\Tag
+	* @testdox Can load s9e\TextFormatter\Parser\Logger
 	* @runInSeparateProcess
 	*/
 	public function testParserTag()
 	{
-		$this->autoload('s9e\\TextFormatter\\Parser\\Tag');
+		$this->autoload('s9e\\TextFormatter\\Parser\\Logger');
 	}
 
 	/**
