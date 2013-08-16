@@ -8,11 +8,7 @@ if (!file_exists('/tmp/entities-unicode.inc'))
 	copy(
 		'compress.zlib://http://svn.whatwg.org/webapps/entities-unicode.inc',
 		'/tmp/entities-unicode.inc',
-		stream_context_create(array(
-			'http' => array(
-				'header' => "Accept-Encoding: gzip,deflate"
-			)
-		))
+		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);
 }
 
@@ -41,7 +37,7 @@ function cp_to_utf8($cp)
 	}
 }
 
-$table = array();
+$table = [];
 foreach ($matches as $m)
 {
 	$entity = trim($m[1], '&;');

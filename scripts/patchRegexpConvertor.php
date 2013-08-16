@@ -34,11 +34,7 @@ function wget($url)
 	return file_get_contents(
 		'compress.zlib://' . $url,
 		false,
-		stream_context_create(array(
-			'http' => array(
-				'header' => 'Accept-Encoding: gzip,deflate'
-			)
-		))
+		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);
 }
 
@@ -50,17 +46,17 @@ if (!file_exists('/tmp/props.txt'))
 	);
 }
 
-$supportedProperties = array_flip(array(
+$supportedProperties = array_flip([
 	'L&', 'Ll', 'Lm', 'Lo', 'Lt', 'Lu',
 	'Nd', 'Nl', 'No',
 	'Pc', 'Pd', 'Pe', 'Pf', 'Pi', 'Po', 'Ps',
 	'Sc', 'Sk', 'Sm', 'So',
 	'Zl', 'Zp', 'Zs'
-));
+]);
 
 $lines = file('/tmp/props.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-$ranges = array();
+$ranges = [];
 foreach ($lines as $line)
 {
 	if ($line[0] === '#'
@@ -93,7 +89,7 @@ foreach ($ranges as $propName => &$propRanges)
 	ksort($propRanges, SORT_STRING);
 
 	$nextCp = 0;
-	$tmp = array();
+	$tmp = [];
 
 	foreach ($propRanges as $range => $void)
 	{
@@ -163,11 +159,11 @@ $php = trim(var_export($props, true), "ary (\r\n),");
 $php = str_replace("\r\n", "\n", $php);
 $php = str_replace('  ', "\t\t", $php);
 
-$php = " = array(\n\t\t" . $php . "\n\t)";
+$php = " = [\n\t\t" . $php . "\n\t]";
 
 $file = file_get_contents($filepath);
 $file = preg_replace(
-	'#(protected static \\$unicodeProps)(.*?)\\n\\t\\);#s',
+	'#(protected static \\$unicodeProps)(.*?)\\n\\t[\\])];#s',
 	'$1;',
 	$file
 );

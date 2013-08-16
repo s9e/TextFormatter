@@ -12,16 +12,12 @@ if (!file_exists($filepath))
 	copy(
 		'compress.zlib://http://www.w3.org/html/wg/drafts/html/master/index.html',
 		$filepath,
-		stream_context_create(array(
-			'http' => array(
-				'header' => "Accept-Encoding: gzip"
-			)
-		))
+		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);
 }
 
 $page  = SimpleDOM::loadHTMLFile($filepath);
-$table = array();
+$table = [];
 
 $query = '/html/body/h3[@id="attributes-1"]/following-sibling::table[1]/tbody/tr[contains(td[3],"URL")]';
 foreach ($page->xpath($query) as $tr)

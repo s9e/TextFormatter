@@ -1,14 +1,14 @@
 #!/usr/bin/php
 <?php
 
-$filters = array(
+$filters = [
 	'int'     => '1010100000000',
 	'uint'    => '1010000000000',
 	'number'  => '1011000100000',
 	'float'   => '1011111111110'
-);
+];
 
-$values = array(
+$values = [
 	'strings made entirely of digits'
 		=> '123',
 	'strings that starts with digits'
@@ -35,7 +35,7 @@ $values = array(
 		=> ['-12e-3', '-0.012'],
 	'numbers in hex notation'
 		=> '0x123',
-);
+];
 
 $php = '';
 

@@ -12,11 +12,7 @@ if (!file_exists($filepath))
 	copy(
 		'compress.zlib://http://www.w3.org/TR/html5/single-page.html',
 		$filepath,
-		stream_context_create(array(
-			'http' => array(
-				'header' => "Accept-Encoding: gzip"
-			)
-		))
+		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);
 }
 
@@ -53,7 +49,7 @@ if (!$nodes)
 	die("Could not find the void elements\n");
 }
 
-$voidElements = array();
+$voidElements = [];
 foreach ($nodes as $node)
 {
 	$elName = $node->textContent();
@@ -64,7 +60,7 @@ foreach ($nodes as $node)
 // End tags that can be omitted => closeParent rules
 //==============================================================================
 
-$closeParent = array();
+$closeParent = [];
 
 foreach ($page->xpath('/html/body/h5[@id="optional-tags"]/following-sibling::p[following-sibling::h5/@id="element-restrictions"]') as $p)
 {
@@ -112,7 +108,7 @@ foreach ($page->xpath('/html/body/h5[@id="optional-tags"]/following-sibling::p[f
 //==============================================================================
 
 /**
-$closeAncestor = array();
+$closeAncestor = [];
 
 foreach ($page->xpath('/html/body/div[@class="impl"]/h6[@id="parsing-main-inbody"]/following-sibling::dl[@class="switch"]/*') as $el)
 {
@@ -141,7 +137,7 @@ die("\n");
 // Content models
 //==============================================================================
 
-$elements = array();
+$elements = [];
 
 foreach ($page->body->h4 as $h4)
 {
@@ -443,7 +439,7 @@ foreach ($matches[1] as $elNames)
 // Flatten XPath queries for each target
 foreach ($elements as $elName => &$element)
 {
-	$flatten = array(
+	$flatten = [
 		'categories',
 		'allowChildElement',
 		'allowChildCategory',
@@ -453,7 +449,7 @@ foreach ($elements as $elName => &$element)
 		'allowDescendantCategory',
 		'denyDescendantElement',
 		'denyDescendantCategory'
-	);
+	];
 
 	foreach ($flatten as $k)
 	{
@@ -481,15 +477,15 @@ foreach ($elements as $elName => &$element)
 }
 unset($element);
 
-$categories = array();
+$categories = [];
 
 // Create special categories for specific tag groups
 foreach ($elements as &$element)
 {
-	$convert = array(
+	$convert = [
 		'allowChildElement',
 		'denyDescendantElement'
-	);
+	];
 
 	foreach ($convert as $k)
 	{
@@ -499,7 +495,7 @@ foreach ($elements as &$element)
 			ksort($element[$k]);
 
 			// Sort elements by XPath condition
-			$xpathElements = array();
+			$xpathElements = [];
 			foreach ($element[$k] as $elName => $xpath)
 			{
 				$xpathElements[$xpath][] = $elName;
@@ -525,9 +521,7 @@ unset($element);
 // Count the number of tags per category and remove the "transparent" pseudo-category
 foreach ($elements as $elName => &$element)
 {
-	$element += array(
-		'categories' => array()
-	);
+	$element += ['categories' => []];
 
 	foreach ($element['categories'] as $category => $xpath)
 	{
@@ -566,16 +560,16 @@ unset($v);
 arsort($categories);
 $categories = array_flip(array_keys($categories));
 
-$arr = array();
+$arr = [];
 foreach ($elements as $elName => $element)
 {
-	$el = array();
+	$el = [];
 
-	$fields = array(
+	$fields = [
 		'categories' => 'c',
 		'allowChildCategory' => 'ac',
 		'denyDescendantCategory' => 'dd'
-	);
+	];
 
 	foreach ($fields as $k => $v)
 	{
@@ -602,7 +596,7 @@ foreach ($elements as $elName => $element)
 	$noText = true;
 	if (isset($el['ac']))
 	{
-		foreach (array('flow content', 'palpable content', 'phrasing content') as $category)
+		foreach (['flow content', 'palpable content', 'phrasing content'] as $category)
 		{
 			if ($el['ac'] & (1 << $categories[$category]))
 			{
@@ -669,7 +663,7 @@ ksort($arr);
 $php = '';
 foreach ($arr as $elName => $elValues)
 {
-	$phpValues = array();
+	$phpValues = [];
 
 	foreach ($elValues as $k => $v)
 	{

@@ -138,11 +138,7 @@ class Parser extends ParserBase
 				$content = file_get_contents(
 					'compress.zlib://' . $url,
 					false,
-					stream_context_create(array(
-						'http' => array(
-							'header' => 'Accept-Encoding: gzip'
-						)
-					))
+					stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 				);
 			}
 

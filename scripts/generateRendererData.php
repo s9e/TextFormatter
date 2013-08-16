@@ -77,7 +77,7 @@ foreach (glob(__DIR__ . '/../tests/Plugins/*', GLOB_ONLYDIR) as $dirpath)
 	{
 		$original      = $case[0];
 		$expected      = $case[1];
-		$pluginOptions = (isset($case[2])) ? $case[2] : array();
+		$pluginOptions = (isset($case[2])) ? $case[2] : [];
 		$setup         = (isset($case[3])) ? $case[3] : null;
 
 		$configurator = new Configurator;

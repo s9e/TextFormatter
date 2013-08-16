@@ -14,18 +14,14 @@ function getPage($filepath, $url)
 		copy(
 			'compress.zlib://' . $url,
 			$filepath,
-			stream_context_create(array(
-				'http' => array(
-					'header' => "Accept-Encoding: gzip"
-				)
-			))
+			stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 		);
 	}
 
 	return SimpleDOM::loadHTMLFile($filepath);
 }
 
-$attributes = array();
+$attributes = [];
 
 $query = '/html/body/table/tr/td[@title = "Type"]/a';
 $page  = getPage(
@@ -49,7 +45,7 @@ $page  = getPage(
 
 foreach ($page->xpath($query) as $tr)
 {
-	foreach (array('CSS', 'URL') as $type)
+	foreach (['CSS', 'URL'] as $type)
 	{
 		if (strpos($tr->td[2]->textContent(), $type) !== false)
 		{
@@ -62,15 +58,15 @@ foreach ($page->xpath($query) as $tr)
 }
 
 // Prefill with known attributes from HTML 5.0 and HTML 4.01
-$regexps = array(
-	'CSS' => array(
+$regexps = [
+	'CSS' => [
 		'^style$'
-	),
-	'JS'  => array(
+	],
+	'JS'  => [
 		'^on',
 		'^data-s9e-livepreview-postprocess$'
-	),
-	'URL' => array(
+	],
+	'URL' => [
 		'^action$',
 		'^cite$',
 		'^data$',
@@ -82,8 +78,8 @@ $regexps = array(
 		'^poster$',
 		// Covers "src" as well as non-standard attributes "dynsrc", "lowsrc"
 		'src$'
-	),
-);
+	],
+];
 
 foreach ($attributes as $type => $attrNames)
 {
@@ -109,10 +105,10 @@ foreach ($regexps as $type => $typeRegexps)
 {
 	$regexp = RegexpBuilder::fromList(
 		$typeRegexps,
-		array(
+		[
 			'delimiter'    => '/',
-			'specialChars' => array('^' => '^', '$' => '$')
-		)
+			'specialChars' => ['^' => '^', '$' => '$']
+		]
 	);
 
 	$file = preg_replace_callback(

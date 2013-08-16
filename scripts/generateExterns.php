@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
 
-$externs = array(
-	'es3.js' => array(
+$externs = [
+	'es3.js' => [
 		'var undefined',
 
 		// functions
@@ -60,16 +60,16 @@ $externs = array(
 		'String.prototype.substr',
 		'String.prototype.toLowerCase',
 		'String.prototype.toUpperCase'
-	),
-	'gecko_dom.js' => array(
+	],
+	'gecko_dom.js' => [
 		'Document.prototype.importNode',
 		'Element.prototype.innerHTML'
-	),
-	'gecko_xml.js' => array(
+	],
+	'gecko_xml.js' => [
 		'function DOMParser(',
 		'DOMParser.prototype.parseFromString'
-	),
-	'w3c_dom1.js' => array(
+	],
+	'w3c_dom1.js' => [
 		'function Document(',
 		'Document.prototype.createDocumentFragment',
 		'Document.prototype.createElement',
@@ -96,8 +96,8 @@ $externs = array(
 		'NodeList.prototype.length',
 
 		'function Element(',
-	),
-	'w3c_dom3.js' => array(
+	],
+	'w3c_dom3.js' => [
 		'Element.prototype.getAttributeNS',
 		'Element.prototype.hasAttributeNS',
 		'Element.prototype.removeAttributeNS',
@@ -106,8 +106,8 @@ $externs = array(
 		'Node.prototype.isEqualNode',
 		'Node.prototype.namespaceURI',
 		'Node.prototype.textContent'
-	)
-);
+	]
+];
 
 $out  = '';
 
@@ -116,11 +116,7 @@ foreach ($externs as $filename => $names)
 	$file = file_get_contents(
 		'compress.zlib://http://closure-compiler.googlecode.com/git/externs/' . $filename,
 		false,
-		stream_context_create(array(
-			'http' => array(
-				'header' => "Accept-Encoding: gzip,deflate"
-			)
-		))
+		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
 	);
 
 	// Concat multiline definitions

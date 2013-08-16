@@ -9,7 +9,7 @@ function _array(array $arr)
 {
 	$i = -1;
 
-	$php = 'array(';
+	$php = '[';
 	foreach ($arr as $k => $v)
 	{
 		if (++$i)
@@ -25,7 +25,7 @@ function _array(array $arr)
 		$php .= (is_array($v)) ? _array($v) : var_export($v, true);
 	}
 
-	$php .= ')';
+	$php .= ']';
 
 	return $php;
 }
@@ -41,16 +41,16 @@ foreach ($test->getWordsLists() as $k => $case)
 	$regexp   = var_export($case[0], true);
 	$wordlist = _array($case[1]);
 
-	$php .= "\n\t/**\n\t* @testdox fromList([" . substr($wordlist, 6, -1) . "]";
+	$php .= "\n\t/**\n\t* @testdox fromList(" . $wordlist;
 
 	if (isset($case[2]))
 	{
-		$options = strtr(json_encode($case[2]), array(
+		$options = strtr(json_encode($case[2]), [
 			'{' => '[',
 			'}' => ']',
 			',' => ', ',
 			':' => ' => '
-		));
+		]);
 
 		$php .= ', ' . $options . '';
 	}
