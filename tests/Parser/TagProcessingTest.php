@@ -30,11 +30,11 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X><Y>foo</Y> <Z>bar</Z></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
-					$constructor->tags->add('Z');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
+					$configurator->tags->add('Z');
 				},
 				function ($parser)
 				{
@@ -47,9 +47,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -68,10 +68,10 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>fo<Y>o</Y></X> bar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -84,10 +84,10 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>fo<Y>o</Y></X><Y> b</Y>ar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y')->rules->autoReopen();
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -100,10 +100,10 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>fo<Y attr="foo">o</Y></X><Y attr="foo"> b</Y>ar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$tag = $constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$tag = $configurator->tags->add('Y');
 					$tag->attributes->add('attr')->required = false;
 					$tag->rules->autoReopen();
 				},
@@ -118,10 +118,10 @@ class TagProcessingTest extends Test
 			[
 				'x [b][i]...[/b][/i] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st>...</I><et>[/b]</et></B><i>[/i]</i> y</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B');
-					$constructor->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -134,10 +134,10 @@ class TagProcessingTest extends Test
 			[
 				'x [b][i]...[/b]![/i] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st>...</I><et>[/b]</et></B><I>!<et>[/i]</et></I> y</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B');
-					$constructor->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -150,11 +150,11 @@ class TagProcessingTest extends Test
 			[
 				'x [b][i][u]...[/b][/u][/i] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/u][/i]</i> y</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B');
-					$constructor->tags->add('I')->rules->autoReopen();
-					$constructor->tags->add('U')->rules->autoReopen();
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -169,11 +169,11 @@ class TagProcessingTest extends Test
 			[
 				'x [b][i][u]...[/b][/u][/i] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/u][/i]</i> y</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B');
-					$constructor->tags->add('I');
-					$constructor->tags->add('U');
+					$configurator->tags->add('B');
+					$configurator->tags->add('I');
+					$configurator->tags->add('U');
 				},
 				function ($parser)
 				{
@@ -188,11 +188,11 @@ class TagProcessingTest extends Test
 			[
 				'x [b][i][u]...[/b][/i][/u] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/i][/u]</i> y</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B');
-					$constructor->tags->add('I')->rules->autoReopen();
-					$constructor->tags->add('U')->rules->autoReopen();
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -207,11 +207,11 @@ class TagProcessingTest extends Test
 			[
 				'x [b][i][u]...[/b][/i][/u] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B>[/i][/u] y</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B');
-					$constructor->tags->add('I')->rules->autoReopen();
-					$constructor->tags->add('U')->rules->autoReopen();
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -230,11 +230,11 @@ class TagProcessingTest extends Test
 			[
 				'x [b][i][u]...[/b][/i]u[/u] y',
 				'<rt>x <B><st>[b]</st><I><st>[i]</st><U><st>[u]</st>...</U></I><et>[/b]</et></B><i>[/i]</i><U>u<et>[/u]</et></U> y</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B');
-					$constructor->tags->add('I')->rules->autoReopen();
-					$constructor->tags->add('U')->rules->autoReopen();
+					$configurator->tags->add('B');
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -249,11 +249,11 @@ class TagProcessingTest extends Test
 			[
 				'x [i][b][u]...[/b][/i][/u] y',
 				'<rt>x <I><st>[i]</st><B><st>[b]</st><U><st>[u]</st>...</U><et>[/b]</et></B><et>[/i]</et></I><i>[/u]</i> y</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('B')->rules->autoReopen();
-					$constructor->tags->add('I')->rules->autoReopen();
-					$constructor->tags->add('U')->rules->autoReopen();
+					$configurator->tags->add('B')->rules->autoReopen();
+					$configurator->tags->add('I')->rules->autoReopen();
+					$configurator->tags->add('U')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -268,10 +268,10 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -282,9 +282,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>foo</X> bar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -296,9 +296,9 @@ class TagProcessingTest extends Test
 			[
 				'fooo bar',
 				'<rt><X>f<X>oo</X>o</X> bar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->nestingLimit = 2;
+					$configurator->tags->add('X')->nestingLimit = 2;
 				},
 				function ($parser)
 				{
@@ -322,9 +322,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>f</X><X>o</X>o bar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->tagLimit = 2;
+					$configurator->tags->add('X')->tagLimit = 2;
 				},
 				function ($parser)
 				{
@@ -346,10 +346,10 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>foo</X> bar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -361,10 +361,10 @@ class TagProcessingTest extends Test
 			[
 				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
 				"<rt><PRE><st>[pre]</st>foo<B><st>[b]</st>x<br/>\ny<et>[/b]</et></B>bar<et>[/pre]</et></PRE>a<br/>\nb</rt>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('PRE')->rules->noBrChild();
-					$constructor->tags->add('B');
+					$configurator->tags->add('PRE')->rules->noBrChild();
+					$configurator->tags->add('B');
 				},
 				function ($parser)
 				{
@@ -377,10 +377,10 @@ class TagProcessingTest extends Test
 			[
 				"[pre]foo[b]x\ny[/b]bar[/pre]a\nb",
 				"<rt><PRE><st>[pre]</st>foo<B><st>[b]</st>x\ny<et>[/b]</et></B>bar<et>[/pre]</et></PRE>a<br/>\nb</rt>",
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('PRE')->rules->noBrDescendant();
-					$constructor->tags->add('B');
+					$configurator->tags->add('PRE')->rules->noBrDescendant();
+					$configurator->tags->add('B');
 				},
 				function ($parser)
 				{
@@ -393,9 +393,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>foo</X> bar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -406,9 +406,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>foo</X><i> b</i>ar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -419,9 +419,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt>foo <X>bar</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -431,9 +431,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<pt>foo bar</pt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -443,9 +443,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<rt><X>foo bar</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -455,9 +455,9 @@ class TagProcessingTest extends Test
 			[
 				'foo bar',
 				'<pt>foo bar</pt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -467,9 +467,9 @@ class TagProcessingTest extends Test
 			[
 				'*foo* bar',
 				'<rt><X><st>*</st>foo<et>*</et></X> bar</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -480,9 +480,9 @@ class TagProcessingTest extends Test
 			[
 				'*foo* bar',
 				'<rt><X><st>*</st>foo* bar</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -493,9 +493,9 @@ class TagProcessingTest extends Test
 			[
 				'*foo* bar',
 				'<rt><X><st>*</st>foo* bar</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -507,10 +507,10 @@ class TagProcessingTest extends Test
 			[
 				'*_foo* bar_',
 				'<rt><X><st>*</st><Y><st>_</st>foo</Y><et>*</et></X><Y> bar<et>_</et></Y></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y')->rules->autoReopen();
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y')->rules->autoReopen();
 				},
 				function ($parser)
 				{
@@ -524,10 +524,10 @@ class TagProcessingTest extends Test
 			[
 				'**x**x***',
 				'<rt><X><st>**</st>x<Y><st>**</st>x<et>**</et></Y><et>*</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -540,10 +540,10 @@ class TagProcessingTest extends Test
 			[
 				'**x[**]x',
 				'<rt><X><st>**</st>x<Y>[**]</Y></X>x</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -564,9 +564,9 @@ class TagProcessingTest extends Test
 			[
 				'xx',
 				'<rt><X>x</X><X>x</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->closeParent('X');
+					$configurator->tags->add('X')->rules->closeParent('X');
 				},
 				function ($parser)
 				{
@@ -577,9 +577,9 @@ class TagProcessingTest extends Test
 			[
 				'xx [hr] yy',
 				'<rt>xx <HR>[hr]</HR> yy</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('HR')->rules->autoClose();
+					$configurator->tags->add('HR')->rules->autoClose();
 				},
 				function ($parser)
 				{
@@ -589,9 +589,9 @@ class TagProcessingTest extends Test
 			[
 				'xx [img=foo.png] yy',
 				'<rt>xx <IMG src="foo.png">[img=foo.png]</IMG> yy</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$tag = $constructor->tags->add('IMG');
+					$tag = $configurator->tags->add('IMG');
 					$tag->attributes->add('src');
 					$tag->rules->autoClose();
 				},
@@ -603,9 +603,9 @@ class TagProcessingTest extends Test
 			[
 				'xx [img]foo.png[/img] yy',
 				'<rt>xx <IMG src="foo.png"><st>[img]</st>foo.png<et>[/img]</et></IMG> yy</rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$tag = $constructor->tags->add('IMG');
+					$tag = $configurator->tags->add('IMG');
 					$tag->attributes->add('src');
 					$tag->rules->autoClose();
 				},
@@ -620,10 +620,10 @@ class TagProcessingTest extends Test
 			[
 				'XYX',
 				'<rt><X><st>X</st><Y>Y</Y><et>X</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -635,10 +635,10 @@ class TagProcessingTest extends Test
 			[
 				'XYX',
 				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->denyChild('Y');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X')->rules->denyChild('Y');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -650,11 +650,11 @@ class TagProcessingTest extends Test
 			[
 				'XYZYX',
 				'<rt><X><st>X</st><Y><st>Y</st><Z>Z</Z><et>Y</et></Y><et>X</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->denyChild('Z');
-					$constructor->tags->add('Y');
-					$constructor->tags->add('Z');
+					$configurator->tags->add('X')->rules->denyChild('Z');
+					$configurator->tags->add('Y');
+					$configurator->tags->add('Z');
 				},
 				function ($parser)
 				{
@@ -668,11 +668,11 @@ class TagProcessingTest extends Test
 			[
 				'XYZYX',
 				'<rt><X><st>X</st><Y><st>Y</st>Z<et>Y</et></Y><et>X</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->denyChild('Z');
-					$constructor->tags->add('Y')->rules->isTransparent();
-					$constructor->tags->add('Z');
+					$configurator->tags->add('X')->rules->denyChild('Z');
+					$configurator->tags->add('Y')->rules->isTransparent();
+					$configurator->tags->add('Z');
 				},
 				function ($parser)
 				{
@@ -686,10 +686,10 @@ class TagProcessingTest extends Test
 			[
 				'XYX',
 				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->denyDescendant('Y');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X')->rules->denyDescendant('Y');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -701,11 +701,11 @@ class TagProcessingTest extends Test
 			[
 				'XYZYX',
 				'<rt><X><st>X</st><Y><st>Y</st>Z<et>Y</et></Y><et>X</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->rules->denyDescendant('Z');
-					$constructor->tags->add('Y');
-					$constructor->tags->add('Z');
+					$configurator->tags->add('X')->rules->denyDescendant('Z');
+					$configurator->tags->add('Y');
+					$configurator->tags->add('Z');
 				},
 				function ($parser)
 				{
@@ -719,13 +719,13 @@ class TagProcessingTest extends Test
 			[
 				'XYX',
 				'<rt><X><st>X</st>Y<et>X</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$rules = $constructor->tags->add('X')->rules;
+					$rules = $configurator->tags->add('X')->rules;
 					$rules->isTransparent();
 					$rules->denyChild('Y');
 
-					$constructor->tags->add('Y');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -737,10 +737,10 @@ class TagProcessingTest extends Test
 			[
 				'XYYYYX',
 				new RuntimeException('Fixing cost exceeded'),
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -757,10 +757,10 @@ class TagProcessingTest extends Test
 			[
 				'XYYYYX',
 				'<rt><X><st>X</st><Y><st>Y</st><Y>Y</Y><Y>Y</Y><et>Y</et></Y><et>X</et></X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
-					$constructor->tags->add('Y');
+					$configurator->tags->add('X');
+					$configurator->tags->add('Y');
 				},
 				function ($parser)
 				{
@@ -778,9 +778,9 @@ class TagProcessingTest extends Test
 			[
 				'..',
 				'<rt><X>.</X><X>.</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X');
+					$configurator->tags->add('X');
 				},
 				function ($parser)
 				{
@@ -795,9 +795,9 @@ class TagProcessingTest extends Test
 			[
 				'...',
 				'<rt><X>.</X><X>.</X><X>.</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->filterChain->append(
+					$configurator->tags->add('X')->filterChain->append(
 						function ($tag, $parser)
 						{
 							if ($tag->getPos() === 0)
@@ -818,9 +818,9 @@ class TagProcessingTest extends Test
 			[
 				'...',
 				'<rt><X>.</X><X>.</X><X>.</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->filterChain->append(
+					$configurator->tags->add('X')->filterChain->append(
 						function ($tag, $parser)
 						{
 							if ($tag->getPos() === 0)
@@ -847,10 +847,10 @@ class TagProcessingTest extends Test
 					<LI><st>[*]</st> foo</LI>
 					<LI><st>[*]</st> bar</LI>
 				<et>[/UL]</et></UL></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('UL');
-					$rules = $constructor->tags->add('LI')->rules;
+					$configurator->tags->add('UL');
+					$rules = $configurator->tags->add('LI')->rules;
 					$rules->closeAncestor('LI');
 					$rules->ignoreSurroundingWhitespace();
 				},
@@ -871,10 +871,10 @@ class TagProcessingTest extends Test
 					<LI><st>[*]</st> foo</LI>
 					<LI><st>[*]</st> bar</LI>
 				<et>[/UL]</et></UL></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('UL');
-					$rules = $constructor->tags->add('LI')->rules;
+					$configurator->tags->add('UL');
+					$rules = $configurator->tags->add('LI')->rules;
 					$rules->closeParent('LI');
 					$rules->ignoreSurroundingWhitespace();
 				},
@@ -889,9 +889,9 @@ class TagProcessingTest extends Test
 			[
 				'XX',
 				'<rt>X<X>X</X></rt>',
-				function ($constructor)
+				function ($configurator)
 				{
-					$constructor->tags->add('X')->filterChain->append(
+					$configurator->tags->add('X')->filterChain->append(
 						function ($tag)
 						{
 							return (bool) $tag->getPos();
