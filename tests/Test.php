@@ -31,10 +31,10 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		}
 	}
 
-	protected function assertArrayMatches(array $expected, array $actual, $removeNull = true)
+	protected function assertArrayMatches(array $expected, array $actual, $removeNull = true, $methodName = 'assertSame')
 	{
 		$this->reduceAndSortArrays($expected, $actual, $removeNull);
-		$this->assertSame($expected, $actual);
+		$this->$methodName($expected, $actual);
 	}
 
 	protected function reduceAndSortArrays(array &$expected, array &$actual, $removeNull = true)
@@ -98,7 +98,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 
 		if (isset($expectedLogs))
 		{
-			$this->assertArrayMatches($expectedLogs, $parser->getLogger()->get());
+			$this->assertArrayMatches($expectedLogs, $parser->getLogger()->get(), true, 'assertEquals');
 		}
 	}
 
@@ -165,5 +165,10 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		self::$tmpFiles[] = $filepath;
 
 		return $filepath;
+	}
+
+	protected function runClosure($closure)
+	{
+		return $closure();
 	}
 }

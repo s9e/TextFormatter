@@ -313,6 +313,15 @@ class TagProcessingTest extends Test
 						'err',
 						'Nesting limit exceeded',
 						[
+							'tag'          => $this->runClosure(
+								function ()
+								{
+									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 2, 1);
+									$tag->invalidate();
+
+									return $tag;
+								}
+							),
 							'tagName'      => 'X',
 							'nestingLimit' => 2
 						]
@@ -337,6 +346,15 @@ class TagProcessingTest extends Test
 						'err',
 						'Tag limit exceeded',
 						[
+							'tag'      => $this->runClosure(
+								function ()
+								{
+									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 2, 1);
+									$tag->invalidate();
+
+									return $tag;
+								}
+							),
 							'tagName'  => 'X',
 							'tagLimit' => 2
 						]

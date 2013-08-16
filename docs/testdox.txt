@@ -1,6 +1,6 @@
 autoloader
  [x] Can load s9e\TextFormatter\Configurator
- [x] Can load s9e\TextFormatter\Parser\Tag
+ [ ] Can load s9e\TextFormatter\Parser\Tag
  [x] Can load s9e\TextFormatter\Plugins\Emoticons\Parser
  [x] Does not attempt to load a class whose name contains dots
 
