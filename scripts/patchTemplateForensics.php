@@ -23,7 +23,12 @@ $page = SimpleDOM::loadHTMLFile($filepath);
 // Tags on the "adoption agency" list
 //==============================================================================
 
-$nodes = $page->xpath('/html/body/div[@class="impl"]/dl[@class="switch"]/dt[@id="adoptionAgency"]');
+$nodes = $page->xpath('
+	/html/body/div[@class="impl"]
+	/dl[@class="switch"]
+	/dt
+		[starts-with(., "An end tag whose tag name is one of")]
+		[following-sibling::dd[1][starts-with(normalize-space(.), "Run the adoption agency algorithm for the token\'s tag name.")]]');
 
 if (!$nodes)
 {
@@ -176,7 +181,7 @@ foreach ($page->body->h4 as $h4)
 
 					$xpath = '';
 
-					if (preg_match('#^((?:palpable|flow|phrasing|metadata|sectioning|heading|interactive|embedded) content|sectioning root|transparent|labelable element)$#', $value, $m))
+					if (preg_match('#^((?:palpable|flow|phrasing|metadata|sectioning|heading|interactive|embedded) content|sectioning root|transparent|labelable element|script-supporting element)$#', $value, $m))
 					{
 						$category = $m[1];
 					}
@@ -209,6 +214,18 @@ foreach ($page->body->h4 as $h4)
 						$category = 'palpable content';
 					}
 					elseif (preg_match('#formatblock candidate|form-associated#', $value))
+					{
+						continue;
+					}
+					elseif ($value === 'flow content, but with no main element descendants')
+					{
+						$category = 'flow content';
+					}
+					elseif ($value === 'if the th element is a sorting interface th element: interactive content')
+					{
+						$category = 'interactive content';
+					}
+					elseif ($value === 'otherwise: none')
 					{
 						continue;
 					}
@@ -262,13 +279,14 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['allowChildElement']['h5'][''] = 0;
 						$elements[$elName]['allowChildElement']['h6'][''] = 0;
 					}
-					elseif (preg_match('#^flow content, but with no header or footer element descendants$#', $value))
+					elseif ($value === 'flow content, but with no header, footer, or main element descendants')
 					{
 						$elements[$elName]['allowChildCategory']['flow content'][''] = 0;
 						$elements[$elName]['denyDescendantElement']['header'][''] = 0;
 						$elements[$elName]['denyDescendantElement']['footer'][''] = 0;
+						$elements[$elName]['denyDescendantElement']['main'][''] = 0;
 					}
-					elseif (preg_match('#^flow content, but with no header, footer, sectioning content, or heading content descendants$#', $value))
+					elseif ($value === 'flow content, but with no header, footer, sectioning content, or heading content descendants')
 					{
 						$elements[$elName]['allowChildCategory']['flow content'][''] = 0;
 						$elements[$elName]['denyDescendantElement']['header'][''] = 0;
@@ -276,7 +294,7 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['denyDescendantCategory']['sectioning content'][''] = 0;
 						$elements[$elName]['denyDescendantCategory']['heading content'][''] = 0;
 					}
-					elseif (preg_match('#^flow content, but with no heading content descendants, no sectioning content descendants, and no header, footer, or address element descendants$#', $value))
+					elseif ($value === 'flow content, but with no heading content descendants, no sectioning content descendants, and no header, footer, or address element descendants')
 					{
 						$elements[$elName]['allowChildCategory']['flow content'][''] = 0;
 						$elements[$elName]['denyDescendantElement']['header'][''] = 0;
@@ -284,6 +302,15 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['denyDescendantElement']['address'][''] = 0;
 						$elements[$elName]['denyDescendantCategory']['heading content'][''] = 0;
 						$elements[$elName]['denyDescendantCategory']['sectioning content'][''] = 0;
+					}
+					elseif ($value === 'flow content, but with no header, footer, sectioning content, or heading content descendants, and if the th element is a sorting interface th element, no interactive content descendants')
+					{
+						$elements[$elName]['allowChildCategory']['flow content'][''] = 0;
+						$elements[$elName]['denyDescendantElement']['header'][''] = 0;
+						$elements[$elName]['denyDescendantElement']['footer'][''] = 0;
+						$elements[$elName]['denyDescendantCategory']['sectioning content'][''] = 0;
+						$elements[$elName]['denyDescendantCategory']['heading content'][''] = 0;
+						// Here we'll assume that th is not a sorting interface
 					}
 					elseif (preg_match('#^((?:phrasing|flow|interactive) content), but (?:there must be|with) no (?:descendant )?([a-z]+) element( descendant)?s?$#', $value, $m))
 					{
@@ -298,6 +325,11 @@ foreach ($page->body->h4 as $h4)
 						{
 							$elements[$elName]['allowChildElement'][$m[2]][''] = 0;
 						}
+					}
+					elseif ($value === 'zero or more li and script-supporting elements')
+					{
+						$elements[$elName]['allowChildElement']['li'][''] = 0;
+						$elements[$elName]['allowChildCategory']['script-supporting element'][''] = 0;
 					}
 					elseif (preg_match('#^zero or more groups each consisting of one or more\\s+([a-z]+) elements followed by one or more ([a-z]+)\\s+elements$#', $value, $m))
 					{
@@ -346,7 +378,7 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['allowChildElement']['source']['not(@src)'] = 0;
 						$elements[$elName]['denyChildCategory']['media']['not(@src)'] = 0;
 					}
-					elseif ($value === 'in this order: optionally a caption element, followed by zero or more colgroup elements, followed optionally by a thead element, followed optionally by a tfoot element, followed by either zero or more tbody elements or one or more tr elements, followed optionally by a tfoot element (but there can only be one tfoot element child in total)')
+					elseif ($value === 'in this order: optionally a caption element, followed by zero or more colgroup elements, followed optionally by a thead element, followed optionally by a tfoot element, followed by either zero or more tbody elements or one or more tr elements, followed optionally by a tfoot element (but there can only be one tfoot element child in total), optionally intermixed with one or more script-supporting elements')
 					{
 						$elements[$elName]['allowChildElement']['caption'][''] = 0;
 						$elements[$elName]['allowChildElement']['colgroup'][''] = 0;
@@ -354,6 +386,19 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['allowChildElement']['tfoot'][''] = 0;
 						$elements[$elName]['allowChildElement']['tbody'][''] = 0;
 						$elements[$elName]['allowChildElement']['tr'][''] = 0;
+						$elements[$elName]['allowChildElement']['tfoot'][''] = 0;
+						$elements[$elName]['allowChildCategory']['script-supporting element'][''] = 0;
+					}
+					elseif ($value === 'zero or more tr and script-supporting elements')
+					{
+						$elements[$elName]['allowChildElement']['tr'][''] = 0;
+						$elements[$elName]['allowChildCategory']['script-supporting element'][''] = 0;
+					}
+					elseif ($value === 'zero or more td, th, and script-supporting elements')
+					{
+						$elements[$elName]['allowChildElement']['td'][''] = 0;
+						$elements[$elName]['allowChildElement']['th'][''] = 0;
+						$elements[$elName]['allowChildCategory']['script-supporting element'][''] = 0;
 					}
 					elseif ($value === "phrasing content, but with no descendant labelable elements unless it is the element's labeled control, and no descendant label elements")
 					{
@@ -378,10 +423,27 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['allowChildElement']['rt'][''] = 0;
 						$elements[$elName]['allowChildElement']['rp'][''] = 0;
 					}
-					elseif ($value === 'if the document is an iframe srcdoc document or if title information is available from a higher-level protocol: zero or more elements of metadata content'
+					elseif ($value === 'if the document is an iframe srcdoc document or if title information is available from a higher-level protocol: zero or more elements of metadata content, of which no more than one is a title element'
 					     || $value === 'otherwise: one or more elements of metadata content, of which exactly one is a title element')
 					{
 						$elements[$elName]['allowChildCategory']['metadata content'][''] = 0;
+					}
+					elseif ($value === 'zero or more groups each consisting of one or more dt elements followed by one or more dd elements, optionally intermixed with script-supporting elements')
+					{
+						$elements[$elName]['allowChildElement']['dt'][''] = 0;
+						$elements[$elName]['allowChildElement']['dd'][''] = 0;
+						$elements[$elName]['allowChildCategory']['script-supporting element'][''] = 0;
+					}
+					elseif ($value === 'zero or more option, optgroup, and script-supporting elements')
+					{
+						$elements[$elName]['allowChildElement']['option'][''] = 0;
+						$elements[$elName]['allowChildElement']['optgroup'][''] = 0;
+						$elements[$elName]['allowChildCategory']['script-supporting element'][''] = 0;
+					}
+					elseif ($value === 'zero or more option and script-supporting elements')
+					{
+						$elements[$elName]['allowChildElement']['option'][''] = 0;
+						$elements[$elName]['allowChildCategory']['script-supporting element'][''] = 0;
 					}
 					elseif ($elName === 'style')
 					{
