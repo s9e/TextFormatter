@@ -58,6 +58,11 @@ class PHP implements RendererGenerator
 	public $lastFilepath;
 
 	/**
+	* @var bool Whether to force empty elements to use the empty-element tag syntax in XML mode
+	*/
+	public $forceEmptyElements = true;
+
+	/**
 	* @var string Output method
 	*/
 	protected $outputMethod;
@@ -474,7 +479,7 @@ EOT
 				// Since it's not definitely empty, we'll close this start tag normally
 				$this->php .= "\$this->out.='>';";
 
-				if ($isEmpty === 'maybe')
+				if ($isEmpty === 'maybe' && $this->forceEmptyElements)
 				{
 					// Maybe empty, record the length of the output and if it doesn't grow we'll
 					// change the start tag into a self-closing tag
@@ -579,7 +584,7 @@ EOT
 
 			// If this element may be empty, we need to check at runtime whether we turn its start
 			// tag into a self-closing tag or append an end tag
-			if ($isEmpty === 'maybe')
+			if ($isEmpty === 'maybe' && $this->forceEmptyElements)
 			{
 				$this->php .= 'if($l' . $id . '===strlen($this->out)){';
 				$this->php .= "\$this->out=substr(\$this->out,0,-1).'/>';";

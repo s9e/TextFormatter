@@ -2039,6 +2039,8 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Throws an exception on unterminated strings in XPath expressions
  [x] setParameter() accepts values that contain both types of quotes
  [x] Correctly handles dynamic stylesheet parameters
+ [x] Elements found to be empty at runtime use the empty-elements tag syntax in XML mode by default
+ [x] Elements found to be empty at runtime are not minimized if forceEmptyElements is FALSE
  [x] HTML rendering
  [x] XHTML rendering
  [x] Rendering of void and empty elements in HTML

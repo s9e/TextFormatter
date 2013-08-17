@@ -384,6 +384,36 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox Elements found to be empty at runtime use the empty-elements tag syntax in XML mode by default
+	*/
+	public function testForceEmptyElementsTrue()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<div><xsl:apply-templates/></div>';
+		$configurator->stylesheet->setOutputMethod('xml');
+
+		$configurator->setRendererGenerator('PHP');
+		$renderer = $configurator->getRenderer();
+
+		$this->assertSame('<div/>', $renderer->render('<rt><X/></rt>'));
+	}
+
+	/**
+	* @testdox Elements found to be empty at runtime are not minimized if forceEmptyElements is FALSE
+	*/
+	public function testForceEmptyElementsFalse()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<div><xsl:apply-templates/></div>';
+		$configurator->stylesheet->setOutputMethod('xml');
+
+		$configurator->setRendererGenerator('PHP')->forceEmptyElements = false;
+		$renderer = $configurator->getRenderer();
+
+		$this->assertSame('<div></div>', $renderer->render('<rt><X/></rt>'));
+	}
+
+	/**
 	* @dataProvider getHTMLData
 	* @testdox HTML rendering
 	*/
