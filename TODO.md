@@ -5,7 +5,6 @@ TODO
 - Investigate the possibility of using an external CSS checker in order to enable a default "css" filter
 - Consider a Twitter BBCode (https://dev.twitter.com/docs/embedded-tweets)
 - Create a way for special XSL to be evaluated at the start/end of a rendering in order to embed resources such as external scripts
-- Add support for HD/other options in [YOUTUBE] ?
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
 - Add exception codes to exceptions?
 - Possibly add an "hex" filter for /^[0-9a-f]+$/iD - what would be the return value though, string or integer? does "10" return 10 or 16 (0x10)
