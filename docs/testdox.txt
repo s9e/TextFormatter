@@ -1794,6 +1794,8 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addCustom() accepts an array of [predicate => template] as its second argument
  [x] addCustom() normalizes the tag's template
  [x] addCustom() checks that the tag is safe before adding it
+ [x] addCustom() accepts a custom "tagName" in options
+ [x] addCustom() accepts custom "rules" in options
  [x] asConfig() returns FALSE if no BBCodes were created
  [x] Has a quickMatch
  [x] Generates a regexp for its config array

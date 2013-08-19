@@ -298,6 +298,37 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addCustom() accepts a custom "tagName" in options
+	*/
+	public function testAddCustomTagName()
+	{
+		$this->configurator->BBCodes->addCustom(
+			'[*]{TEXT}[/*]',
+			'<li>{TEXT}</li>',
+			['tagName' => 'LI']
+		);
+
+		$this->assertTrue($this->configurator->tags->exists('LI'));
+		$this->assertTrue($this->configurator->BBCodes->exists('*'));
+	}
+
+	/**
+	* @testdox addCustom() accepts custom "rules" in options
+	*/
+	public function testAddCustomRules()
+	{
+		$this->configurator->BBCodes->addCustom(
+			'[C]{TEXT}[/C]',
+			'<code>{TEXT}</code>',
+			['rules' => ['denyAll' => true]]
+		);
+
+		$this->assertTrue($this->configurator->tags->exists('C'));
+		$this->assertTrue($this->configurator->BBCodes->exists('C'));
+		$this->assertTrue($this->configurator->tags['C']->rules['denyAll']);
+	}
+
+	/**
 	* @testdox asConfig() returns FALSE if no BBCodes were created
 	*/
 	public function testFalseConfig()

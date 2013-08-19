@@ -70,13 +70,25 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*
 	* @param  string       $usage    BBCode's usage
 	* @param  array|string $template BBCode's template, or array of [predicate => template]
+	* @param  array        $options  Supported: 'tagName' and 'rules'
 	* @return BBCode                 Newly-created BBCode
 	*/
-	public function addCustom($usage, $template)
+	public function addCustom($usage, $template, array $options = [])
 	{
 		$templates = (is_array($template)) ? $template : ['' => $template];
+		$config    = $this->bbcodeMonkey->create($usage, $templates);
 
-		return $this->addFromConfig($this->bbcodeMonkey->create($usage, $templates));
+		if (isset($options['tagName']))
+		{
+			$config['bbcode']->tagName = $options['tagName'];
+		}
+
+		if (isset($options['rules']))
+		{
+			$config['tag']->rules->merge($options['rules']);
+		}
+
+		return $this->addFromConfig($config);
 	}
 
 	/**
