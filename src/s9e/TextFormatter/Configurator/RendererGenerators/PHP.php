@@ -1095,7 +1095,7 @@ EOT
 		// if ($node->getAttribute('foo')===':)')
 		//
 		// NOTE: this optimization is mainly for the Emoticons plugin
-		$operandExpr = '(@[-\\w]+|\\.|"[^"]*"|\'[^\']*\')';
+		$operandExpr = '(@[-\\w]+|\\.|"[^"]*"|\'[^\']*\'|\\$\\w+|\\d+)';
 		$testExpr    = $operandExpr . '\\s*=\\s*' . $operandExpr;
 		if (preg_match('#^' . $testExpr . '(?:\\s*or\\s*' . $testExpr . ')*$#', $expr))
 		{
@@ -1104,7 +1104,17 @@ EOT
 			$tests = [];
 			foreach ($matches as $m)
 			{
-				$tests[] = $this->convertXPath($m[1]) . '===' . $this->convertXPath($m[2]);
+				$operator = '===';
+				foreach ([$m[1], $m[2]] as $operand)
+				{
+					// Use the equality operator if either operand is a number or a parameter
+					if (preg_match('#^[$\\d]#', $operand))
+					{
+						$operator = '==';
+					}
+				}
+
+				$tests[] = $this->convertXPath($m[1]) . $operator . $this->convertXPath($m[2]);
 			}
 
 			return implode('||', $tests);

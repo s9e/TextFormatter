@@ -975,6 +975,14 @@ class PHPTest extends Test
 				'<xsl:template match="FOO"><xsl:if test=".=\'foo\'or.=\'bar\'">Foo</xsl:if></xsl:template>',
 				"if(\$node->textContent==='foo'||\$node->textContent==='bar')"
 			],
+			[
+				'<xsl:template match="FOO"><xsl:if test=".=3">Foo</xsl:if></xsl:template>',
+				"if(\$node->textContent=='3')"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="$bar=$baz">Foo</xsl:if></xsl:template>',
+				"if(\$this->params['bar']==\$this->params['baz'])"
+			],
 		];
 	}
 
