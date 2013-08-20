@@ -1174,6 +1174,27 @@ EOT
 			return '$node->nodeName';
 		}
 
+		// <xsl:value-of select="'foo'"/>
+		// $this->out .= 'foo';
+		if (preg_match("#^'[^']'\$#D", $expr))
+		{
+			return $expr;
+		}
+
+		// <xsl:value-of select='"foo"'/>
+		// $this->out .= 'foo';
+		if (preg_match('#^"[^"]"$#D', $expr))
+		{
+			return "'" . substr($expr, 1, -1);
+		}
+
+		// <xsl:value-of select="3"/>
+		// $this->out .= '3';
+		if (preg_match('#^\\d+$#D', $expr))
+		{
+			return "'" . $expr . "'";
+		}
+
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a string() call
 		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-a-z]+\\(#', $expr))

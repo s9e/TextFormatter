@@ -926,6 +926,18 @@ class PHPTest extends Test
 				'$node->nodeName',
 				'$this->xpath->evaluate'
 			],
+			[
+				'<xsl:template match="*"><xsl:value-of select="\'foo\'"/></xsl:template>',
+				"\$this->out.='foo';"
+			],
+			[
+				'<xsl:template match="*"><xsl:value-of select=\'"foo"\'/></xsl:template>',
+				"\$this->out.='foo';"
+			],
+			[
+				'<xsl:template match="*"><xsl:value-of select="123"/></xsl:template>',
+				"\$this->out.='123';"
+			],
 			// XPath in conditions
 			[
 				'<xsl:template match="FOO"><xsl:if test="@foo">Foo</xsl:if></xsl:template>',
