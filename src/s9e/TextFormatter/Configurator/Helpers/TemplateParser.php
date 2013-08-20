@@ -189,6 +189,12 @@ class TemplateParser
 
 		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'when') as $when)
 		{
+			// Only children of current node, exclude other descendants
+			if ($when->parentNode !== $node)
+			{
+				continue;
+			}
+
 			// Create a <case/> element with the original test condition in @test
 			$case = $switch->appendChild($ir->ownerDocument->createElement('case'));
 			$case->setAttribute('test', $when->getAttribute('test'));
@@ -200,6 +206,12 @@ class TemplateParser
 		// Add the default branch, which is presumed to be last
 		foreach ($node->getElementsByTagNameNS(self::XMLNS_XSL, 'otherwise') as $otherwise)
 		{
+			// Only children of current node, exclude other descendants
+			if ($otherwise->parentNode !== $node)
+			{
+				continue;
+			}
+
 			$case = $switch->appendChild($ir->ownerDocument->createElement('case'));
 
 			// Parse this branch's content
