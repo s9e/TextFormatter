@@ -138,10 +138,7 @@ class Repository
 				$args[] = $ruleNode->textContent;
 			}
 
-			call_user_func_array(
-				[$tag->rules, $methodName],
-				$args
-			);
+			call_user_func_array([$tag->rules, $methodName], $args);
 		}
 
 		// Set predefined attributes

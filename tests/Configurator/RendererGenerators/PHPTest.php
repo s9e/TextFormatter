@@ -414,6 +414,69 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox Elements found to be empty at runtime are not minimized if useEmptyElements is FALSE
+	*/
+	public function testForceEmptyElementsTrueUseEmptyElementsFalse()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<div><xsl:apply-templates/></div>';
+		$configurator->stylesheet->setOutputMethod('xml');
+
+		$generator = $configurator->setRendererGenerator('PHP');
+		$generator->forceEmptyElements = true;
+		$generator->useEmptyElements   = false;
+
+		$renderer = $configurator->getRenderer();
+
+		$this->assertSame('<div></div>', $renderer->render('<rt><X/></rt>'));
+	}
+
+	/**
+	* @testdox Empty elements use the empty-elements tag syntax in XML mode by default
+	*/
+	public function testUseEmptyElementsTrue()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<div></div>';
+		$configurator->stylesheet->setOutputMethod('xml');
+
+		$configurator->setRendererGenerator('PHP');
+		$renderer = $configurator->getRenderer();
+
+		$this->assertSame('<div/>', $renderer->render('<rt><X/></rt>'));
+	}
+
+	/**
+	* @testdox Empty elements do not use the empty-elements tag syntax in XML mode if useEmptyElements is FALSE
+	*/
+	public function testUseEmptyElementsFalse()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<div></div>';
+		$configurator->stylesheet->setOutputMethod('xml');
+
+		$configurator->setRendererGenerator('PHP')->useEmptyElements = false;
+		$renderer = $configurator->getRenderer();
+
+		$this->assertSame('<div></div>', $renderer->render('<rt><X/></rt>'));
+	}
+
+	/**
+	* @testdox Empty void elements use the empty-elements tag syntax in XML mode even if useEmptyElements is FALSE
+	*/
+	public function testUseEmptyElementsFalseVoidTrue()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('X')->defaultTemplate = '<hr></hr>';
+		$configurator->stylesheet->setOutputMethod('xml');
+
+		$configurator->setRendererGenerator('PHP')->useEmptyElements = false;
+		$renderer = $configurator->getRenderer();
+
+		$this->assertSame('<hr/>', $renderer->render('<rt><X/></rt>'));
+	}
+
+	/**
 	* @dataProvider getHTMLData
 	* @testdox HTML rendering
 	*/

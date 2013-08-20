@@ -2043,6 +2043,10 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Correctly handles dynamic stylesheet parameters
  [x] Elements found to be empty at runtime use the empty-elements tag syntax in XML mode by default
  [x] Elements found to be empty at runtime are not minimized if forceEmptyElements is FALSE
+ [x] Elements found to be empty at runtime are not minimized if useEmptyElements is FALSE
+ [x] Empty elements use the empty-elements tag syntax in XML mode by default
+ [x] Empty elements do not use the empty-elements tag syntax in XML mode if useEmptyElements is FALSE
+ [x] Empty void elements use the empty-elements tag syntax in XML mode even if useEmptyElements is FALSE
  [x] HTML rendering
  [x] XHTML rendering
  [x] Rendering of void and empty elements in HTML

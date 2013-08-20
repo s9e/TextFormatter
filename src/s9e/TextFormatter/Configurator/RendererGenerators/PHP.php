@@ -58,7 +58,7 @@ class PHP implements RendererGenerator
 	public $lastFilepath;
 
 	/**
-	* @var bool Whether to force empty elements to use the empty-element tag syntax in XML mode
+	* @var bool Whether to force non-void, empty elements to use the empty-element tag syntax in XML mode
 	*/
 	public $forceEmptyElements = true;
 
@@ -71,6 +71,11 @@ class PHP implements RendererGenerator
 	* @var string PHP source of generated renderer
 	*/
 	protected $php;
+
+	/**
+	* @var bool Whether to use the empty-element tag syntax with non-void elements in XML mode
+	*/
+	public $useEmptyElements = true;
 
 	/**
 	* Constructor
@@ -139,9 +144,14 @@ class PHP implements RendererGenerator
 		        . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
 		        . "*/\n\n";
 
+		// Parse the stylesheet
 		$ir = TemplateParser::parse($xsl);
 
+		// Set the output method
 		$this->outputMethod = $ir->documentElement->getAttribute('outputMethod');
+
+		// Apply the empty-element options
+		$this->fixEmptyElements($ir);
 
 		// Generate the arrays of parameters, sorted by whether they are static or dynamic
 		$dynamicParams = [];
@@ -372,6 +382,40 @@ EOT
 		return $this->php;
 	}
 
+	/**
+	* Change the IR to respect the empty-element options
+	*
+	* @param  DOMNode $ir
+	* @return void
+	*/
+	protected function fixEmptyElements(DOMNode $ir)
+	{
+		if ($this->outputMethod !== 'xml')
+		{
+			return;
+		}
+
+		foreach ($ir->getElementsByTagName('element') as $element)
+		{
+			$isEmpty = $element->getAttribute('empty');
+			$isVoid  = $element->getAttribute('void');
+
+			if ($isVoid || $isEmpty === 'no')
+			{
+				continue;
+			}
+
+			if (!$this->useEmptyElements)
+			{
+				$element->setAttribute('empty', 'no');
+			}
+			elseif ($isEmpty === 'maybe' && !$this->forceEmptyElements)
+			{
+				$element->setAttribute('empty', 'no');
+			}
+		}
+	}
+
 	//==========================================================================
 	// Serialization of the internal representation into PHP
 	//==========================================================================
@@ -479,7 +523,7 @@ EOT
 				// Since it's not definitely empty, we'll close this start tag normally
 				$this->php .= "\$this->out.='>';";
 
-				if ($isEmpty === 'maybe' && $this->forceEmptyElements)
+				if ($isEmpty === 'maybe')
 				{
 					// Maybe empty, record the length of the output and if it doesn't grow we'll
 					// change the start tag into a self-closing tag
@@ -584,7 +628,7 @@ EOT
 
 			// If this element may be empty, we need to check at runtime whether we turn its start
 			// tag into a self-closing tag or append an end tag
-			if ($isEmpty === 'maybe' && $this->forceEmptyElements)
+			if ($isEmpty === 'maybe')
 			{
 				$this->php .= 'if($l' . $id . '===strlen($this->out)){';
 				$this->php .= "\$this->out=substr(\$this->out,0,-1).'/>';";
