@@ -577,7 +577,7 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox Edge cases
+	* @testdox Matches the reference rendering in edge cases
 	* @dataProvider getEdgeCases
 	*/
 	public function testEdgeCases($xml, $configuratorSetup, $rendererSetup = null)
@@ -827,8 +827,8 @@ class PHPTest extends Test
 				'<rt><X foo="FOO"/></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->defaultTemplate
-						= '<b><xsl:attribute name="title">
+					$configurator->tags->add('X')->defaultTemplate =
+						'<b><xsl:attribute name="title">
 							<xsl:choose>
 								<xsl:when test="@foo">foo=<xsl:value-of select="@foo"/>;</xsl:when>
 								<xsl:otherwise>bar=<xsl:value-of select="@bar"/>;</xsl:otherwise>
@@ -840,11 +840,32 @@ class PHPTest extends Test
 				'<rt><X foo="FOO"/></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->defaultTemplate
-						= '<b><xsl:attribute name="title">
+					$configurator->tags->add('X')->defaultTemplate =
+						'<b><xsl:attribute name="title">
 							<xsl:if test="@foo">foo=<xsl:value-of select="@foo"/>;</xsl:if>
 							<xsl:if test="@bar">bar=<xsl:value-of select="@bar"/>;</xsl:if>
 						</xsl:attribute></b>';
+				}
+			],
+			[
+				'<rt><X foo="FOO"/></rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('X')->defaultTemplate =
+						'<xsl:choose>
+							<xsl:when test="contains(.,\'a\')">
+								<xsl:choose>
+									<xsl:when test=".=1">aaa</xsl:when>
+									<xsl:otherwise>bbb</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:choose>
+									<xsl:when test=".=1">xxx</xsl:when>
+									<xsl:otherwise>yyy</xsl:otherwise>
+								</xsl:choose>
+							</xsl:otherwise>
+						</xsl:choose>';
 				}
 			],
 		];

@@ -2052,7 +2052,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Rendering of void and empty elements in HTML
  [x] Rendering of void and empty elements in XHTML
  [x] Rendering tests from plugins
- [x] Edge cases
+ [x] Matches the reference rendering in edge cases
  [x] XPath expressions are inlined as PHP whenever possible
  [x] Code optimization tests
 

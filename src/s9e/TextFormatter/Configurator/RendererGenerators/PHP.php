@@ -701,6 +701,11 @@ EOT
 
 		foreach ($switch->getElementsByTagName('case') as $case)
 		{
+			if ($case->parentNode !== $switch)
+			{
+				continue;
+			}
+
 			if ($case->hasAttribute('test'))
 			{
 				$this->php .= $else . 'if(' . $this->convertCondition($case->getAttribute('test')) . ')';
