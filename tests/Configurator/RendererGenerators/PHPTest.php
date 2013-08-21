@@ -998,7 +998,7 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:template match="FOO"><xsl:if test=".=3">Foo</xsl:if></xsl:template>',
-				"if(\$node->textContent=='3')"
+				"if(\$node->textContent==3)"
 			],
 			[
 				'<xsl:template match="FOO"><xsl:if test="$bar=$baz">Foo</xsl:if></xsl:template>',
