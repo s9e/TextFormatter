@@ -114,6 +114,17 @@ class BBCodeMonkeyTest extends Test
 		);
 	}
 
+	/**
+	* @testdox Internal checks
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Could not find = in 'xyz'
+	*/
+	public function testInternal()
+	{
+		$mm = new MutantMonkey(new Configurator);
+		$mm->foo();
+	}
+
 	public function getBBCodeTests()
 	{
 		return [
@@ -1204,5 +1215,13 @@ class BBCodeMonkeyTest extends Test
 		}
 
 		return $programmableCallback;
+	}
+}
+
+class MutantMonkey extends BBCodeMonkey
+{
+	public function foo()
+	{
+		$this->addAttributes(['xyz'], new BBCode, new Tag);
 	}
 }
