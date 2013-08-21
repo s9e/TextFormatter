@@ -22,13 +22,13 @@ class UnparserTest extends Test
 	}
 
 	/**
-	* @testdox stripFormatting('<pt>Plain text</pt>') returns 'Plain text'
+	* @testdox removeFormatting('<pt>Plain text</pt>') returns 'Plain text'
 	*/
-	public function testPlainTextPlainText()
+	public function testRemoveFormattingPlainText()
 	{
 		$this->assertSame(
 			'Plain text',
-			Unparser::stripFormatting('<pt>Plain text</pt>')
+			Unparser::removeFormatting('<pt>Plain text</pt>')
 		);
 	}
 
@@ -44,13 +44,13 @@ class UnparserTest extends Test
 	}
 
 	/**
-	* @testdox stripFormatting('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+	* @testdox removeFormatting('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
 	*/
-	public function testPlainTextPlainTextWithSpecialChars()
+	public function testRemoveFormattingPlainTextWithSpecialChars()
 	{
 		$this->assertSame(
 			'<Plain text>',
-			Unparser::stripFormatting('<pt>&lt;Plain text&gt;</pt>')
+			Unparser::removeFormatting('<pt>&lt;Plain text&gt;</pt>')
 		);
 	}
 
@@ -61,18 +61,18 @@ class UnparserTest extends Test
 	{
 		$this->assertSame(
 			"a\nb",
-			Unparser::unparse("<mt>a<br />\nb</mt>")
+			Unparser::unparse("<pt>a<br/>\nb</pt>")
 		);
 	}
 
 	/**
-	* @testdox stripFormatting("<mt>a<br />\nb</mt>") returns "a\nb"
+	* @testdox removeFormatting("<mt>a<br />\nb</mt>") returns "a\nb"
 	*/
-	public function testPlainTextPlainTextWithLinebreaks()
+	public function testRemoveFormattingPlainTextWithLinebreaks()
 	{
 		$this->assertSame(
 			"a\nb",
-			Unparser::stripFormatting("<mt>a<br />\nb</mt>")
+			Unparser::removeFormatting("<pt>a<br/>\nb</pt>")
 		);
 	}
 
@@ -88,13 +88,13 @@ class UnparserTest extends Test
 	}
 
 	/**
-	* @testdox stripFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
+	* @testdox removeFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
 	*/
-	public function testPlainTextRichText()
+	public function testRemoveFormattingRichText()
 	{
 		$this->assertSame(
 			'Rich text :)',
-			Unparser::stripFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>')
+			Unparser::removeFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>')
 		);
 	}
 

@@ -19,7 +19,7 @@ abstract class Unparser
 	* @param  string $xml Intermediate representation
 	* @return string      Plain text
 	*/
-	public static function stripFormatting($xml)
+	public static function removeFormatting($xml)
 	{
 		$dom = new DOMDocument;
 		$dom->loadXML($xml);

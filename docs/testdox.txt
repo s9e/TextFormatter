@@ -2137,13 +2137,13 @@ s9e\TextFormatter\Tests\Renderers\Unformatted
 
 s9e\TextFormatter\Tests\Unparser
  [x] unparse('<pt>Plain text</pt>') returns 'Plain text'
- [x] stripFormatting('<pt>Plain text</pt>') returns 'Plain text'
+ [x] removeFormatting('<pt>Plain text</pt>') returns 'Plain text'
  [x] unparse('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
- [x] stripFormatting('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+ [x] removeFormatting('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
  [x] unparse("<mt>a<br />\nb</mt>") returns "a\nb"
- [x] stripFormatting("<mt>a<br />\nb</mt>") returns "a\nb"
+ [x] removeFormatting("<mt>a<br />\nb</mt>") returns "a\nb"
  [x] unparse('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
- [x] stripFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
+ [x] removeFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
  [x] Can unparse representations that were over-escaped
 
 s9e\TextFormatter\Tests\Bundles\Forum
