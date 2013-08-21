@@ -1030,6 +1030,64 @@ class BBCodeMonkeyTest extends Test
 				'[foo={RANGE1}]',
 				new RuntimeException("Malformed token 'RANGE1'")
 			],
+			[
+				'[foo]{NUMBER1},{NUMBER2}[/foo]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'contentAttributes' => ['content'],
+						'defaultAttribute'  => 'content'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['content', '/^(?<content0>\\d+),(?<content1>\\d+)$/D']
+						],
+						'attributes' => [
+							'content0' => [
+								'filterChain' => [new Number]
+							],
+							'content1' => [
+								'filterChain' => [new Number]
+							]
+						]
+					]),
+					'tokens' => [
+						'NUMBER1' => 'content0',
+						'NUMBER2' => 'content1'
+					],
+					'passthroughToken' => null,
+					'rules' => []
+				]
+			],
+			[
+				'[foo]{NUMBER1} * {NUMBER2}[/foo]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'contentAttributes' => ['content'],
+						'defaultAttribute'  => 'content'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['content', '/^(?<content0>\\d+) \\* (?<content1>\\d+)$/D']
+						],
+						'attributes' => [
+							'content0' => [
+								'filterChain' => [new Number]
+							],
+							'content1' => [
+								'filterChain' => [new Number]
+							]
+						]
+					]),
+					'tokens' => [
+						'NUMBER1' => 'content0',
+						'NUMBER2' => 'content1'
+					],
+					'passthroughToken' => null,
+					'rules' => []
+				]
+			],
 		];
 	}
 

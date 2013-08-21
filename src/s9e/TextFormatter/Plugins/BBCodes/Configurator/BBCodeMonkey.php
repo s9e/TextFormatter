@@ -161,7 +161,7 @@ class BBCodeMonkey
 		        // foo={TOKEN} bar={TOKEN1},{TOKEN2}
 		        . '(?<attributes>(?:\\s+[^=]+=\\S+?)*?)?'
 		        // ] or /] or ]{TOKEN}[/BBCODE]
-		        . '(?:\\s*/?\\]|\\]\\s*(?<content>\\S+)?\\s*(?<endTag>\\[/\\1]))'
+		        . '(?:\\s*/?\\]|\\]\\s*(?<content>.*?)\\s*(?<endTag>\\[/\\1]))'
 		        . '$#i';
 
 		if (!preg_match($regexp, trim($usage), $m))
@@ -173,13 +173,13 @@ class BBCodeMonkey
 		$config['bbcodeName'] = BBCode::normalizeName($m['bbcodeName']);
 
 		// Prepare the attributes definition, e.g. "foo={BAR}"
-		$attributes = $m['attributes'];
+		$definitions = preg_split('#\\s+#', trim($m['attributes']), -1, PREG_SPLIT_NO_EMPTY);
 
 		// If there's a default attribute, we prepend it to the list using the BBCode's name as
 		// attribute name
 		if (!empty($m['defaultAttribute']))
 		{
-			$attributes = $m['bbcodeName'] . $m['defaultAttribute'] . $attributes;
+			array_unshift($definitions, $m['bbcodeName'] . $m['defaultAttribute']);
 		}
 
 		// Append the content token to the attributes list under the name "content" if it's anything
@@ -194,13 +194,13 @@ class BBCodeMonkey
 			}
 			else
 			{
-				$attributes .= ' content=' . $m['content'];
+				$definitions[] = 'content=' . $m['content'];
 				$bbcode->contentAttributes[] = 'content';
 			}
 		}
 
 		// Add the attributes and get the token translation table
-		$tokens = $this->addAttributes($attributes, $bbcode, $tag);
+		$tokens = $this->addAttributes($definitions, $bbcode, $tag);
 
 		// Test whether the passthrough token is used for something else, in which case we need
 		// to unset it
@@ -281,13 +281,14 @@ class BBCodeMonkey
 	* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=2127991
 	* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=579376
 	*
-	* @param  string $str    Attributes definitions, e.g. "foo={INT} bar={TEXT}"
-	* @param  BBCode $bbcode Owner BBCode
-	* @param  Tag    $tag    Owner tag
-	* @return array          Array of [token id => attribute name] where FALSE in place of the
-	*                        name indicates that the token is ambiguous (e.g. used multiple times)
+	* @param  array  $definitions Array of attributes definitions, e.g. ["foo={INT}", "bar={TEXT}"]
+	* @param  BBCode $bbcode      Owner BBCode
+	* @param  Tag    $tag         Owner tag
+	* @return array               Array of [token id => attribute name] where FALSE in place of the
+	*                             name indicates that the token is ambiguous (e.g. used multiple
+	*                             times)
 	*/
-	protected function addAttributes($str, BBCode $bbcode, Tag $tag)
+	protected function addAttributes(array $definitions, BBCode $bbcode, Tag $tag)
 	{
 		/**
 		* @var array List of composites' tokens. Each element is composed of an attribute name, the
@@ -301,18 +302,16 @@ class BBCodeMonkey
 		*/
 		$table = [];
 
-		foreach (preg_split('#\\s+#', trim($str), -1, PREG_SPLIT_NO_EMPTY) as $k => $pair)
+		foreach ($definitions as $k => $pair)
 		{
 			$pos = strpos($pair, '=');
 
-			// @codeCoverageIgnoreStart
 			if ($pos === false)
 			{
 				// NOTE: the regexp used makes this code impossible to reach, it's left there as
 				//       a failsafe
 				throw new RuntimeException("Could not find = in '" . $pair . "'");
 			}
-			// @codeCoverageIgnoreEnd
 
 			// The name at the left of the equal sign is the attribute's or attribute preprocessor's
 			// name, the rest is their definition
