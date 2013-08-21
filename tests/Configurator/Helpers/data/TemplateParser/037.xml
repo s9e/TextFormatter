@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<stylesheet outputMethod="html">
+	<template>
+		<match priority="0">FOO</match>
+		<element name="div" id="1">
+			<closeTag id="1"/>
+			<comment>
+				<output type="literal"> ... </output>
+			</comment>
+			<applyTemplates/>
+		</element>
+	</template>
+</stylesheet>
