@@ -22,13 +22,13 @@ class UnparserTest extends Test
 	}
 
 	/**
-	* @testdox asPlainText('<pt>Plain text</pt>') returns 'Plain text'
+	* @testdox stripFormatting('<pt>Plain text</pt>') returns 'Plain text'
 	*/
 	public function testPlainTextPlainText()
 	{
 		$this->assertSame(
 			'Plain text',
-			Unparser::asPlainText('<pt>Plain text</pt>')
+			Unparser::stripFormatting('<pt>Plain text</pt>')
 		);
 	}
 
@@ -44,13 +44,13 @@ class UnparserTest extends Test
 	}
 
 	/**
-	* @testdox asPlainText('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
+	* @testdox stripFormatting('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
 	*/
 	public function testPlainTextPlainTextWithSpecialChars()
 	{
 		$this->assertSame(
 			'<Plain text>',
-			Unparser::asPlainText('<pt>&lt;Plain text&gt;</pt>')
+			Unparser::stripFormatting('<pt>&lt;Plain text&gt;</pt>')
 		);
 	}
 
@@ -66,13 +66,13 @@ class UnparserTest extends Test
 	}
 
 	/**
-	* @testdox asPlainText("<mt>a<br />\nb</mt>") returns "a\nb"
+	* @testdox stripFormatting("<mt>a<br />\nb</mt>") returns "a\nb"
 	*/
 	public function testPlainTextPlainTextWithLinebreaks()
 	{
 		$this->assertSame(
 			"a\nb",
-			Unparser::asPlainText("<mt>a<br />\nb</mt>")
+			Unparser::stripFormatting("<mt>a<br />\nb</mt>")
 		);
 	}
 
@@ -88,13 +88,13 @@ class UnparserTest extends Test
 	}
 
 	/**
-	* @testdox asPlainText('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
+	* @testdox stripFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
 	*/
 	public function testPlainTextRichText()
 	{
 		$this->assertSame(
 			'Rich text :)',
-			Unparser::asPlainText('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>')
+			Unparser::stripFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>')
 		);
 	}
 

@@ -12,25 +12,14 @@ use DOMDocument;
 abstract class Unparser
 {
 	/**
-	* Transform an intermediate representation back to its original form
-	*
-	* @param  string $xml Intermediate representation
-	* @return string      Original text
-	*/
-	public static function unparse($xml)
-	{
-		return htmlspecialchars_decode(strip_tags($xml), ENT_QUOTES);
-	}
-
-	/**
-	* Transform an intermediate representation into plain text
+	* Strip the formatting of an intermediate representation and return plain text
 	*
 	* This will remove start tags and end tags but will keep the text content of everything else
 	*
 	* @param  string $xml Intermediate representation
 	* @return string      Plain text
 	*/
-	public static function asPlainText($xml)
+	public static function stripFormatting($xml)
 	{
 		$dom = new DOMDocument;
 		$dom->loadXML($xml);
@@ -46,5 +35,16 @@ abstract class Unparser
 		}
 
 		return $dom->documentElement->textContent;
+	}
+
+	/**
+	* Transform an intermediate representation back to its original form
+	*
+	* @param  string $xml Intermediate representation
+	* @return string      Original text
+	*/
+	public static function unparse($xml)
+	{
+		return htmlspecialchars_decode(strip_tags($xml), ENT_QUOTES);
 	}
 }
