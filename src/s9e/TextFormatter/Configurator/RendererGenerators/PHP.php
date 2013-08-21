@@ -1169,6 +1169,7 @@ EOT
 		}
 
 		// <xsl:value-of select="'foo'"/>
+		// <xsl:value-of select='"foo"'/>
 		// $this->out .= 'foo';
 		if (preg_match('#^\\s*("[^"]*"|\'[^\']*\')\\s*#', $expr, $m))
 		{
@@ -1187,20 +1188,6 @@ EOT
 		if ($expr === 'name()')
 		{
 			return '$node->nodeName';
-		}
-
-		// <xsl:value-of select="'foo'"/>
-		// $this->out .= 'foo';
-		if (preg_match("#^'[^']'\$#D", $expr))
-		{
-			return $expr;
-		}
-
-		// <xsl:value-of select='"foo"'/>
-		// $this->out .= 'foo';
-		if (preg_match('#^"[^"]"$#D', $expr))
-		{
-			return "'" . substr($expr, 1, -1);
 		}
 
 		// <xsl:value-of select="3"/>
