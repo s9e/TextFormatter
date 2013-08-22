@@ -1120,8 +1120,13 @@ EOT
 				}
 
 				// Convert operands to XPath unless it's a number, which stays as-is
-				$left  = (preg_match('#^\\d+$#D', $m[1])) ? $m[1] : $this->convertXPath($m[1]);
-				$right = (preg_match('#^\\d+$#D', $m[2])) ? $m[2] : $this->convertXPath($m[2]);
+				$left  = (preg_match('#^\\d+$#D', $m[1]))
+				       ? ltrim($m[1], '0')
+				       : $this->convertXPath($m[1]);
+
+				$right = (preg_match('#^\\d+$#D', $m[2]))
+				       ? ltrim($m[2], '0')
+				       : $this->convertXPath($m[2]);
 
 				$tests[] = $left . $operator . $right;
 			}

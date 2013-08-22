@@ -1001,6 +1001,14 @@ class PHPTest extends Test
 				"if(\$node->textContent==3)"
 			],
 			[
+				'<xsl:template match="FOO"><xsl:if test=".=022">Foo</xsl:if></xsl:template>',
+				"if(\$node->textContent==22)"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="044=.">Foo</xsl:if></xsl:template>',
+				"if(44==\$node->textContent)"
+			],
+			[
 				'<xsl:template match="FOO"><xsl:if test="$bar=$baz">Foo</xsl:if></xsl:template>',
 				"if(\$this->params['bar']==\$this->params['baz'])"
 			],
