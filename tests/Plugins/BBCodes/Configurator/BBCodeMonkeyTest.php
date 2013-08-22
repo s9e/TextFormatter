@@ -114,6 +114,17 @@ class BBCodeMonkeyTest extends Test
 		);
 	}
 
+	/**
+	* @testdox Internal checks
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Could not find = in 'xyz'
+	*/
+	public function testInternal()
+	{
+		$mm = new MutantMonkey(new Configurator);
+		$mm->foo();
+	}
+
 	public function getBBCodeTests()
 	{
 		return [
@@ -1030,6 +1041,64 @@ class BBCodeMonkeyTest extends Test
 				'[foo={RANGE1}]',
 				new RuntimeException("Malformed token 'RANGE1'")
 			],
+			[
+				'[foo]{NUMBER1},{NUMBER2}[/foo]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'contentAttributes' => ['content'],
+						'defaultAttribute'  => 'content'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['content', '/^(?<content0>\\d+),(?<content1>\\d+)$/D']
+						],
+						'attributes' => [
+							'content0' => [
+								'filterChain' => [new Number]
+							],
+							'content1' => [
+								'filterChain' => [new Number]
+							]
+						]
+					]),
+					'tokens' => [
+						'NUMBER1' => 'content0',
+						'NUMBER2' => 'content1'
+					],
+					'passthroughToken' => null,
+					'rules' => []
+				]
+			],
+			[
+				'[foo]{NUMBER1} * {NUMBER2}[/foo]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'contentAttributes' => ['content'],
+						'defaultAttribute'  => 'content'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['content', '/^(?<content0>\\d+) \\* (?<content1>\\d+)$/D']
+						],
+						'attributes' => [
+							'content0' => [
+								'filterChain' => [new Number]
+							],
+							'content1' => [
+								'filterChain' => [new Number]
+							]
+						]
+					]),
+					'tokens' => [
+						'NUMBER1' => 'content0',
+						'NUMBER2' => 'content1'
+					],
+					'passthroughToken' => null,
+					'rules' => []
+				]
+			],
 		];
 	}
 
@@ -1146,5 +1215,13 @@ class BBCodeMonkeyTest extends Test
 		}
 
 		return $programmableCallback;
+	}
+}
+
+class MutantMonkey extends BBCodeMonkey
+{
+	public function foo()
+	{
+		$this->addAttributes(['xyz'], new BBCode, new Tag);
 	}
 }

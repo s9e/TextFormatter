@@ -515,6 +515,8 @@ class TemplateParser
 		// should be closed
 		$query = '//applyTemplates[not(ancestor::attribute)]'
 		       . '|'
+		       . '//comment'
+		       . '|'
 		       . '//element'
 		       . '|'
 		       . '//output[not(ancestor::attribute)]';
@@ -804,8 +806,8 @@ class TemplateParser
 	{
 		$xpath = new DOMXPath($ir->ownerDocument);
 
-		// Elements count as not-empty and literal output is sure to output something
-		if ($xpath->evaluate('count(element | output[@type="literal"])', $ir))
+		// Comments and elements count as not-empty and literal output is sure to output something
+		if ($xpath->evaluate('count(comment | element | output[@type="literal"])', $ir))
 		{
 			return 'no';
 		}
