@@ -235,7 +235,7 @@ matches.forEach(function(m)
 
 		// Test whether we need to look for this tag's end tag
 		var endTag;
-		if (contentAttributes.length || bbcodeId)
+		if (contentAttributes.length || bbcodeId || bbcodeConfig.forceLookahead)
 		{
 			// Find the position of its end tag
 			var match     = '[/' + bbcodeName + bbcodeId + ']',
@@ -244,7 +244,7 @@ matches.forEach(function(m)
 			if (endTagPos < 0)
 			{
 				// We didn't find an end tag, did we *need* one?
-				if (bbcodeId)
+				if (bbcodeId || bbcodeConfig.forceLookahead)
 				{
 					// No matching end tag, we skip this start tag
 					return;

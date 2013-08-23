@@ -31,6 +31,12 @@ class BBCode implements ConfigProvider
 	protected $defaultAttribute;
 
 	/**
+	* @var bool Whether the parser should look ahead in the text for an end tag before adding a
+	*           start tag
+	*/
+	protected $forceLookahead = false;
+
+	/**
 	* @var AttributeValueCollection Predefined attribute values, can be overwritten by user input
 	*/
 	protected $predefinedAttributes;
@@ -62,7 +68,14 @@ class BBCode implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		return ConfigHelper::toArray(get_object_vars($this));
+		$config = ConfigHelper::toArray(get_object_vars($this));
+
+		if (!$this->forceLookahead)
+		{
+			unset($config['forceLookahead']);
+		}
+
+		return $config;
 	}
 
 	/**

@@ -258,7 +258,7 @@ class Parser extends ParserBase
 
 				// Test whether we need to look for this tag's end tag
 				$endTag = null;
-				if ($contentAttributes || $bbcodeId)
+				if ($contentAttributes || $bbcodeId || !empty($bbcodeConfig['forceLookahead']))
 				{
 					// Find the position of its end tag
 					$match     = '[/' . $bbcodeName . $bbcodeId . ']';
@@ -267,7 +267,7 @@ class Parser extends ParserBase
 					if ($endTagPos === false)
 					{
 						// We didn't find an end tag, did we *need* one?
-						if ($bbcodeId)
+						if ($bbcodeId || !empty($bbcodeConfig['forceLookahead']))
 						{
 							// No matching end tag, we skip this start tag
 							continue;

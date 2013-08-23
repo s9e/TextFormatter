@@ -1738,6 +1738,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCode
  [x] $bbcode->contentAttributes is an instance of AttributeList
  [x] $bbcode->predefinedAttributes is an instance of AttributeValueCollection
  [x] asConfig() returns its set properties
+ [x] asConfig() omits forceLookahead is it's FALSE
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
  [x] add() returns an instance of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode

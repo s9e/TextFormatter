@@ -103,9 +103,9 @@ class BBCodeCollectionTest extends Test
 		$collection->add('X', ['defaultAttribute' => 'x']);
 		$collection->add('Y', ['defaultAttribute' => 'x']);
 
-		$this->assertSame(
+		$this->assertArrayMatches(
 			[
-				'X' => [],
+				'X' => ['defaultAttribute' => null],
 				'Y' => ['defaultAttribute' => 'x']
 			],
 			$collection->asConfig()
@@ -121,9 +121,9 @@ class BBCodeCollectionTest extends Test
 		$collection->add('X', ['tagName' => 'X']);
 		$collection->add('Y', ['tagName' => 'X']);
 
-		$this->assertSame(
+		$this->assertArrayMatches(
 			[
-				'X' => [],
+				'X' => ['tagName' => null],
 				'Y' => ['tagName' => 'X']
 			],
 			$collection->asConfig()

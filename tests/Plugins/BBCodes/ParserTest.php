@@ -460,6 +460,66 @@ class ParserTest extends Test
 					$constructor->tags->add('IMG')->attributes->add('src');
 				}
 			],
+			[
+				'x [b]...[/b] y',
+				'<rt>x <B><st>[b]</st>...<et>[/b]</et></B> y</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('B')->forceLookahead = true;
+					$constructor->tags->add('B');
+				}
+			],
+			[
+				'x [b:123]...[/b:123] y',
+				'<rt>x <B><st>[b:123]</st>...<et>[/b:123]</et></B> y</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('B')->forceLookahead = true;
+					$constructor->tags->add('B');
+				}
+			],
+			[
+				'x [b:123]...[/b:456] y',
+				'<pt>x [b:123]...[/b:456] y</pt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('B')->forceLookahead = true;
+					$constructor->tags->add('B');
+				}
+			],
+			[
+				'x [b]...[/i] y',
+				'<pt>x [b]...[/i] y</pt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('B')->forceLookahead = true;
+					$constructor->tags->add('B');
+				}
+			],
+			[
+				'x [b]...[/b] [b]...[/i] y',
+				'<rt>x <B><st>[b]</st>...<et>[/b]</et></B> [b]...[/i] y</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('B')->forceLookahead = true;
+					$constructor->tags->add('B');
+				}
+			],
+			[
+				'x [img/] y',
+				'<rt>x <IMG>[img/]</IMG> y</rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->BBCodes->add('IMG')->forceLookahead = true;
+					$constructor->tags->add('IMG');
+				}
+			],
 		];
 	}
 }

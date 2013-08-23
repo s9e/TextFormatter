@@ -97,6 +97,22 @@ class BBCodeTest extends Test
 	public function testAsConfig()
 	{
 		$bbcode = new BBCode;
+		$bbcode->forceLookahead = true;
+		$bbcode->tagName = 'FOO';
+
+		$this->assertSame(
+			['forceLookahead' => true, 'tagName' => 'FOO'],
+			$bbcode->asConfig()
+		);
+	}
+
+	/**
+	* @testdox asConfig() omits forceLookahead is it's FALSE
+	*/
+	public function testAsConfigForceLookaheadFalse()
+	{
+		$bbcode = new BBCode;
+		$bbcode->forceLookahead = false;
 		$bbcode->tagName = 'FOO';
 
 		$this->assertSame(
