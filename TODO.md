@@ -34,3 +34,4 @@ TODO
 - http://wiki.simplemachines.org/smf/Bulletin_board_code#When_Order_Matters_Part_2 -- Is there a way to make the order *not* matter? How often does that happen anyway?
 - Renderer::getParameter()
 - Add a {PLAIN_TEXT} token to BBCodeMonkey (same as {TEXT} but with denyAll or <xsl:value-of select="."/>)
+- Consider following reopening tags after applying closeAncestor/closeParent. Either as a child of current tag, or as the next sibling
