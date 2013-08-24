@@ -81,7 +81,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		unset($config['allowDescendant']);
 		unset($config['defaultChildRule']);
 		unset($config['defaultDescendantRule']);
-		unset($config['denyAll']);
 		unset($config['denyChild']);
 		unset($config['denyDescendant']);
 		unset($config['requireParent']);
@@ -99,6 +98,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 			'breakParagraph'   => Parser::RULE_BREAK_PARAGRAPH,
 			'createParagraphs' => Parser::RULE_CREATE_PARAGRAPHS,
 			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE,
+			'ignoreTags'       => Parser::RULE_IGNORE_TAGS,
 			'ignoreText'       => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'    => Parser::RULE_IS_TRANSPARENT,
 			'noBrChild'        => Parser::RULE_NO_BR_CHILD,
@@ -360,21 +360,6 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add a denyAll rule
-	*
-	* @param bool $bool Whether to disallow any children to this tag
-	*/
-	public function denyAll($bool = true)
-	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('denyAll() expects a boolean');
-		}
-
-		$this->items['denyAll'] = $bool;
-	}
-
-	/**
 	* Add an denyChild rule
 	*
 	* @param string $tagName Name of the target tag
@@ -411,6 +396,21 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		$this->items['ignoreSurroundingWhitespace'] = $bool;
+	}
+
+	/**
+	* Add an ignoreTags rule
+	*
+	* @param bool $bool Whether to silently ignore all tags until current tag is closed
+	*/
+	public function ignoreTags($bool = true)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException('ignoreTags() expects a boolean');
+		}
+
+		$this->items['ignoreTags'] = $bool;
 	}
 
 	/**

@@ -476,96 +476,96 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <img> denies all descendants
 	*/
-	public function test44F68EAD()
+	public function testD511D438()
 	{
 		$this->runCase(
 			'<img> denies all descendants',
 			'<img/>',
-			'denyAll'
+			'ignoreTags'
 		);
 	}
 
 	/**
 	* @testdox <hr><xsl:apply-templates/></hr> denies all descendants
 	*/
-	public function test19DAC173()
+	public function test44B79688()
 	{
 		$this->runCase(
 			'<hr><xsl:apply-templates/></hr> denies all descendants',
 			'<hr><xsl:apply-templates/></hr>',
-			'denyAll'
+			'ignoreTags'
 		);
 	}
 
 	/**
 	* @testdox <div><hr><xsl:apply-templates/></hr></div> denies all descendants
 	*/
-	public function testB9757F1A()
+	public function test3210FED5()
 	{
 		$this->runCase(
 			'<div><hr><xsl:apply-templates/></hr></div> denies all descendants',
 			'<div><hr><xsl:apply-templates/></hr></div>',
-			'denyAll'
+			'ignoreTags'
 		);
 	}
 
 	/**
 	* @testdox <style> denies all descendants even if it has an <xsl:apply-templates/> child
 	*/
-	public function testFC5CC479()
+	public function test90789D3D()
 	{
 		$this->runCase(
 			'<style> denies all descendants even if it has an <xsl:apply-templates/> child',
 			'<style><xsl:apply-templates/></style>',
-			'denyAll'
+			'ignoreTags'
 		);
 	}
 
 	/**
 	* @testdox <span> does not deny all descendants if it has an <xsl:apply-templates/> child
 	*/
-	public function test8F0B951C()
+	public function testA0C589F6()
 	{
 		$this->runCase(
 			'<span> does not deny all descendants if it has an <xsl:apply-templates/> child',
 			'<span><xsl:apply-templates/></span>',
-			'!denyAll'
+			'!ignoreTags'
 		);
 	}
 
 	/**
 	* @testdox <span> denies all descendants if it does not have an <xsl:apply-templates/> child
 	*/
-	public function test83C38AC9()
+	public function testC16D8915()
 	{
 		$this->runCase(
 			'<span> denies all descendants if it does not have an <xsl:apply-templates/> child',
 			'<span></span>',
-			'denyAll'
+			'ignoreTags'
 		);
 	}
 
 	/**
 	* @testdox <colgroup span="2"> denies all descendants
 	*/
-	public function test3508F0F3()
+	public function test0D91646A()
 	{
 		$this->runCase(
 			'<colgroup span="2"> denies all descendants',
 			'<colgroup span="2"><xsl:apply-templates/></colgroup>',
-			'denyAll'
+			'ignoreTags'
 		);
 	}
 
 	/**
 	* @testdox <colgroup> denies all descendants
 	*/
-	public function testD01E4AFA()
+	public function test19654F6E()
 	{
 		$this->runCase(
 			'<colgroup> denies all descendants',
 			'<colgroup><xsl:apply-templates/></colgroup>',
-			'!denyAll'
+			'!ignoreTags'
 		);
 	}
 
@@ -926,42 +926,42 @@ class TemplateForensicsTest extends Test
 			[
 				'<img> denies all descendants',
 				'<img/>',
-				'denyAll'
+				'ignoreTags'
 			],
 			[
 				'<hr><xsl:apply-templates/></hr> denies all descendants',
 				'<hr><xsl:apply-templates/></hr>',
-				'denyAll'
+				'ignoreTags'
 			],
 			[
 				'<div><hr><xsl:apply-templates/></hr></div> denies all descendants',
 				'<div><hr><xsl:apply-templates/></hr></div>',
-				'denyAll'
+				'ignoreTags'
 			],
 			[
 				'<style> denies all descendants even if it has an <xsl:apply-templates/> child',
 				'<style><xsl:apply-templates/></style>',
-				'denyAll'
+				'ignoreTags'
 			],
 			[
 				'<span> does not deny all descendants if it has an <xsl:apply-templates/> child',
 				'<span><xsl:apply-templates/></span>',
-				'!denyAll'
+				'!ignoreTags'
 			],
 			[
 				'<span> denies all descendants if it does not have an <xsl:apply-templates/> child',
 				'<span></span>',
-				'denyAll'
+				'ignoreTags'
 			],
 			[
 				'<colgroup span="2"> denies all descendants',
 				'<colgroup span="2"><xsl:apply-templates/></colgroup>',
-				'denyAll'
+				'ignoreTags'
 			],
 			[
 				'<colgroup> denies all descendants',
 				'<colgroup><xsl:apply-templates/></colgroup>',
-				'!denyAll'
+				'!ignoreTags'
 			],
 			[
 				'<pre> preserves whitespace',

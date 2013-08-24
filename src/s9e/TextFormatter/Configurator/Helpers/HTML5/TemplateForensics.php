@@ -61,7 +61,7 @@ class TemplateForensics
 	/**
 	* @var bool Whether to deny any descendants to this tag
 	*/
-	protected $denyAll = true;
+	protected $ignoreTags = true;
 
 	/**
 	* @var string denyDescendant bitfield
@@ -241,9 +241,9 @@ class TemplateForensics
 	*
 	* @return bool
 	*/
-	public function denyAll()
+	public function ignoreTags()
 	{
-		return $this->denyAll;
+		return $this->ignoreTags;
 	}
 
 	/**
@@ -397,7 +397,7 @@ class TemplateForensics
 			/**
 			* @var bool Whether this branch denies all non-text descendants
 			*/
-			$denyAll = false;
+			$ignoreTags = false;
 
 			/**
 			* @var bool Whether this branch contains a void element
@@ -426,13 +426,13 @@ class TemplateForensics
 				}
 
 				// Test whether the element denies all descendants
-				if (!empty(self::$htmlElements[$elName]['da']))
+				if (!empty(self::$htmlElements[$elName]['it']))
 				{
 					// Test the XPath condition
-					if (!isset(self::$htmlElements[$elName]['da0'])
-					 || $this->evaluate(self::$htmlElements[$elName]['da0'], $node))
+					if (!isset(self::$htmlElements[$elName]['it0'])
+					 || $this->evaluate(self::$htmlElements[$elName]['it0'], $node))
 					{
-						$denyAll = true;
+						$ignoreTags = true;
 					}
 				}
 
@@ -483,9 +483,9 @@ class TemplateForensics
 			}
 
 			// If any branch does not deny all descendants, the tag does not deny all descendants
-			if (!$denyAll)
+			if (!$ignoreTags)
 			{
-				$this->denyAll = false;
+				$this->ignoreTags = false;
 			}
 
 			// If any branch is not void, the tag is not void
@@ -563,7 +563,7 @@ class TemplateForensics
 	*
 	*   "t" indicates that the element uses the transparent content model.
 	*
-	*   "da" indicates that the element rejects any descendants. (denyAll)
+	*   "it" indicates that the element should ignore tags until closed. (ignoreTags)
 	*
 	*   "v" indicates that the element is a void element.
 	*
@@ -585,24 +585,24 @@ class TemplateForensics
 		'a'=>['c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'ar'=>1],
 		'abbr'=>['c'=>"\7",'ac'=>"\4"],
 		'address'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\100\6",'b'=>1,'cp'=>['p']],
-		'area'=>['c'=>"\5",'nt'=>1,'da'=>1,'v'=>1],
+		'area'=>['c'=>"\5",'nt'=>1,'it'=>1,'v'=>1],
 		'article'=>['c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'aside'=>['c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\0\1",'b'=>1,'cp'=>['p']],
 		'audio'=>['c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1],
 		'b'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
-		'base'=>['c'=>"\0\1",'nt'=>1,'da'=>1,'v'=>1,'b'=>1],
+		'base'=>['c'=>"\0\1",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'bdi'=>['c'=>"\7",'ac'=>"\4"],
 		'bdo'=>['c'=>"\7",'ac'=>"\4"],
 		'blockquote'=>['c'=>"\23",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'body'=>['c'=>"\20\200",'ac'=>"\1",'b'=>1],
-		'br'=>['c'=>"\5",'nt'=>1,'da'=>1,'v'=>1],
+		'br'=>['c'=>"\5",'nt'=>1,'it'=>1,'v'=>1],
 		'button'=>['c'=>"\17",'ac'=>"\4",'dd'=>"\10"],
 		'canvas'=>['c'=>"\47",'ac'=>"\0",'t'=>1],
 		'caption'=>['c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\0\10",'b'=>1],
 		'cite'=>['c'=>"\7",'ac'=>"\4"],
 		'code'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
-		'col'=>['c'=>"\0\0\0\0\10",'nt'=>1,'da'=>1,'v'=>1,'b'=>1],
-		'colgroup'=>['c'=>"\200",'ac'=>"\0\0\0\0\10",'ac35'=>'not(@span)','nt'=>1,'da'=>1,'da0'=>'@span','b'=>1],
+		'col'=>['c'=>"\0\0\0\0\10",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
+		'colgroup'=>['c'=>"\200",'ac'=>"\0\0\0\0\10",'ac35'=>'not(@span)','nt'=>1,'it'=>1,'it0'=>'@span','b'=>1],
 		'data'=>['c'=>"\7",'ac'=>"\4"],
 		'datalist'=>['c'=>"\5",'ac'=>"\4\0\0\1"],
 		'dd'=>['c'=>"\0\0\4",'ac'=>"\1",'b'=>1,'cp'=>['dd','dt']],
@@ -614,7 +614,7 @@ class TemplateForensics
 		'dl'=>['c'=>"\3",'ac'=>"\0\0\14",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'dt'=>['c'=>"\0\0\4",'ac'=>"\1",'dd'=>"\100\102",'b'=>1,'cp'=>['dd','dt']],
 		'em'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
-		'embed'=>['c'=>"\57",'nt'=>1,'da'=>1,'v'=>1],
+		'embed'=>['c'=>"\57",'nt'=>1,'it'=>1,'v'=>1],
 		'fieldset'=>['c'=>"\23",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>['p']],
 		'figcaption'=>['c'=>"\0\0\0\0\100",'ac'=>"\1",'b'=>1],
 		'figure'=>['c'=>"\23",'ac'=>"\1\0\0\0\100",'b'=>1],
@@ -628,23 +628,23 @@ class TemplateForensics
 		'h6'=>['c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>['p']],
 		'head'=>['c'=>"\0\200",'ac'=>"\0\1",'nt'=>1,'b'=>1],
 		'header'=>['c'=>"\3\114",'ac'=>"\1",'dd'=>"\0\10",'b'=>1,'cp'=>['p']],
-		'hr'=>['c'=>"\1",'nt'=>1,'da'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
+		'hr'=>['c'=>"\1",'nt'=>1,'it'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
 		'html'=>['c'=>"\0",'ac'=>"\0\200",'nt'=>1,'b'=>1],
 		'i'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
-		'iframe'=>['c'=>"\57",'nt'=>1,'da'=>1],
-		'img'=>['c'=>"\57",'c3'=>'@usemap','nt'=>1,'da'=>1,'v'=>1],
-		'input'=>['c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'da'=>1,'v'=>1],
+		'iframe'=>['c'=>"\57",'nt'=>1,'it'=>1],
+		'img'=>['c'=>"\57",'c3'=>'@usemap','nt'=>1,'it'=>1,'v'=>1],
+		'input'=>['c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'it'=>1,'v'=>1],
 		'ins'=>['c'=>"\7",'ac'=>"\0",'t'=>1],
 		'kbd'=>['c'=>"\7",'ac'=>"\4"],
-		'keygen'=>['c'=>"\17",'nt'=>1,'da'=>1,'v'=>1],
+		'keygen'=>['c'=>"\17",'nt'=>1,'it'=>1,'v'=>1],
 		'label'=>['c'=>"\17\0\0\100",'ac'=>"\4",'dd'=>"\0\0\0\100"],
 		'legend'=>['c'=>"\0\0\0\2",'ac'=>"\4",'b'=>1],
 		'li'=>['c'=>"\0\0\0\0\40",'ac'=>"\1",'b'=>1,'cp'=>['li']],
-		'link'=>['c'=>"\0",'nt'=>1,'da'=>1,'v'=>1,'b'=>1],
+		'link'=>['c'=>"\0",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'main'=>['c'=>"\3\10\0\0\1",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'map'=>['c'=>"\7",'ac'=>"\0",'t'=>1],
 		'mark'=>['c'=>"\7",'ac'=>"\4"],
-		'meta'=>['c'=>"\0",'nt'=>1,'da'=>1,'v'=>1,'b'=>1],
+		'meta'=>['c'=>"\0",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'meter'=>['c'=>"\7\20\0\40",'ac'=>"\4",'dd'=>"\0\0\0\40"],
 		'nav'=>['c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\0\1",'b'=>1,'cp'=>['p']],
 		'noscript'=>['c'=>"\5\1\40",'ac'=>"\0",'dd'=>"\0\0\40",'t'=>1],
@@ -654,7 +654,7 @@ class TemplateForensics
 		'option'=>['c'=>"\0\40\0\1",'b'=>1,'cp'=>['option']],
 		'output'=>['c'=>"\7",'ac'=>"\4"],
 		'p'=>['c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'param'=>['c'=>"\0\0\0\20",'nt'=>1,'da'=>1,'v'=>1,'b'=>1],
+		'param'=>['c'=>"\0\0\0\20",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'pre'=>['c'=>"\3",'ac'=>"\4",'pre'=>1,'b'=>1,'cp'=>['p']],
 		'progress'=>['c'=>"\7\20\20",'ac'=>"\4",'dd'=>"\0\0\20"],
 		'q'=>['c'=>"\7",'ac'=>"\4"],
@@ -663,14 +663,14 @@ class TemplateForensics
 		'ruby'=>['c'=>"\7\0\0\200",'ac'=>"\4\0\2",'dd'=>"\0\0\0\200"],
 		's'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
 		'samp'=>['c'=>"\7",'ac'=>"\4"],
-		'script'=>['c'=>"\5\1\10",'nt'=>1,'da'=>1],
+		'script'=>['c'=>"\5\1\10",'nt'=>1,'it'=>1],
 		'section'=>['c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'select'=>['c'=>"\17",'ac'=>"\0\40\10",'nt'=>1],
 		'small'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
-		'source'=>['c'=>"\0\0\200",'nt'=>1,'da'=>1,'v'=>1,'b'=>1],
+		'source'=>['c'=>"\0\0\200",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'span'=>['c'=>"\7",'ac'=>"\4"],
 		'strong'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
-		'style'=>['c'=>"\1\1",'c0'=>'@scoped','nt'=>1,'da'=>1,'b'=>1],
+		'style'=>['c'=>"\1\1",'c0'=>'@scoped','nt'=>1,'it'=>1,'b'=>1],
 		'sub'=>['c'=>"\7",'ac'=>"\4"],
 		'summary'=>['c'=>"\0\0\100",'ac'=>"\4",'b'=>1],
 		'sup'=>['c'=>"\7",'ac'=>"\4"],
@@ -684,12 +684,12 @@ class TemplateForensics
 		'time'=>['c'=>"\7",'ac'=>"\4"],
 		'title'=>['c'=>"\0\1",'b'=>1],
 		'tr'=>['c'=>"\200\0\0\0\20",'ac'=>"\0\0\11",'nt'=>1,'b'=>1,'cp'=>['tr']],
-		'track'=>['c'=>"\0\0\0\4",'nt'=>1,'da'=>1,'v'=>1,'b'=>1],
+		'track'=>['c'=>"\0\0\0\4",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'u'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
 		'ul'=>['c'=>"\3",'ac'=>"\0\0\10\0\40",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'var'=>['c'=>"\7",'ac'=>"\4"],
 		'video'=>['c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1],
-		'wbr'=>['c'=>"\5",'nt'=>1,'da'=>1,'v'=>1]
+		'wbr'=>['c'=>"\5",'nt'=>1,'it'=>1,'v'=>1]
 	];
 
 	/**

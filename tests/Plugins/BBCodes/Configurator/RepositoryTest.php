@@ -254,7 +254,7 @@ class RepositoryTest extends Test
 					<usage>[FOO]</usage>
 					<template></template>
 					<rules>
-						<denyAll />
+						<ignoreTags />
 					</rules>
 				</bbcode>
 			</repository>'
@@ -263,7 +263,7 @@ class RepositoryTest extends Test
 		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO');
 
-		$this->assertTrue($config['tag']->rules['denyAll']);
+		$this->assertTrue($config['tag']->rules['ignoreTags']);
 	}
 
 	/**

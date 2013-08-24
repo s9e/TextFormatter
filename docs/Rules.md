@@ -63,10 +63,6 @@ If defaultChildRule is set to 'deny', all tags that are not targeted by an allow
 <dd><i>Example:</i> <code>$tag->rules->defaultDescendantRule('deny');</code><br/>
 Same as defaultChildRule but with descendants.</dd>
 
-<dt>denyAll</dt>
-<dd><i>Example:</i> <code>$tag->rules->denyAll();</code><br/>
-Prevents this tag from having any child.</dd>
-
 <dt>denyChild</dt>
 <dd><i>Example:</i> <code>$tag->rules->denyChild('X');</code><br/>
 Prevents tag X to be used as a child of this tag.</dd>
@@ -78,6 +74,10 @@ Prevents tag X to be used as a descendant of this tag.</dd>
 <dt>ignoreSurroundingWhitespace</dt>
 <dd><i>Example:</i> <code>$tag->rules->ignoreSurroundingWhitespace();</code><br/>
 Whether whitespace around this tag should be ignored. Useful for allowing whitespace around block elements without extra newlines being displayed. Limited to 2 newlines before and after the tag and 1 newline at the start and at the end of its content.</dd>
+
+<dt>ignoreTags</dt>
+<dd><i>Example:</i> <code>$tag->rules->ignoreTags();</code><br/>
+Silently ignore all tags until current tag is closed. Does not effect the automatic conversion of new lines.</dd>
 
 <dt>ignoreText</dt>
 <dd><i>Example:</i> <code>$tag->rules->ignoreText();</code><br/>

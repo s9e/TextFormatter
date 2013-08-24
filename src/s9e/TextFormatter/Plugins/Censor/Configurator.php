@@ -65,7 +65,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$tag->attributes->add($this->attrName)->required = false;
 
 		// Ensure that censored content can't ever be used by other tags
-		$tag->rules->denyAll();
+		$tag->rules->ignoreTags();
 
 		// Create a template for censored words using the default replacement
 		$tag->defaultTemplate = htmlspecialchars($this->defaultReplacement);

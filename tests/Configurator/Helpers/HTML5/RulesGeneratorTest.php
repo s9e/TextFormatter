@@ -176,9 +176,9 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates a denyAll rule for <hr>
+	* @testdox Generates a ignoreTags rule for <hr>
 	*/
-	public function testDenyAllHr()
+	public function testIgnoreTagsHr()
 	{
 		$tags = new TagCollection;
 		$tags->add('HR')->defaultTemplate = '<hr><xsl:apply-templates/></hr>';
@@ -188,7 +188,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			[
 				'HR' => [
-					'denyAll' => true
+					'ignoreTags' => true
 				]
 			],
 			$rules['tags']
@@ -196,9 +196,9 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates a denyAll rule for <style>
+	* @testdox Generates a ignoreTags rule for <style>
 	*/
-	public function testDenyAllStyle()
+	public function testIgnoreTagsStyle()
 	{
 		$tags = new TagCollection;
 		$tags->add('STYLE')->templates->set(
@@ -211,7 +211,7 @@ class RulesGeneratorTest extends Test
 		$this->assertArrayMatches(
 			[
 				'STYLE' => [
-					'denyAll' => true
+					'ignoreTags' => true
 				]
 			],
 			$rules['tags']

@@ -26,11 +26,12 @@ class Parser
 	const RULE_AUTO_REOPEN       =   2;
 	const RULE_BREAK_PARAGRAPH   =   4;
 	const RULE_CREATE_PARAGRAPHS =   8;
-	const RULE_IGNORE_TEXT       =  16;
-	const RULE_IS_TRANSPARENT    =  32;
-	const RULE_NO_BR_CHILD       =  64;
-	const RULE_NO_BR_DESCENDANT  = 128;
-	const RULE_TRIM_WHITESPACE   = 256;
+	const RULE_IGNORE_TAGS       =  16;
+	const RULE_IGNORE_TEXT       =  32;
+	const RULE_IS_TRANSPARENT    =  64;
+	const RULE_NO_BR_CHILD       = 128;
+	const RULE_NO_BR_DESCENDANT  = 256;
+	const RULE_TRIM_WHITESPACE   = 512;
 	/**#@-*/
 
 	/**

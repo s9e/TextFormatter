@@ -131,6 +131,17 @@ trait TagProcessing
 				}
 
 				$this->currentTag = array_pop($this->tagStack);
+
+				// Skip current tag if tags are disabled and current tag would not close the last
+				// open tag
+				if ($this->context['flags'] & self::RULE_IGNORE_TAGS)
+				{
+					if (!$this->currentTag->canClose(end($this->openTags)))
+					{
+						continue;
+					}
+				}
+
 				$this->processCurrentTag();
 			}
 

@@ -386,9 +386,9 @@ class RulesHelperTest extends Test
 	}
 
 	/**
-	* @testdox denyAll (true) overrides everything
+	* @testdox ignoreTags (true) overrides everything
 	*/
-	public function testDenyAllPositive()
+	public function testIgnoreTagsPositive()
 	{
 		$tags = new TagCollection;
 
@@ -397,7 +397,7 @@ class RulesHelperTest extends Test
 		$tag->rules->allowDescendant('A');
 		$tag->rules->defaultChildRule('allow');
 		$tag->rules->defaultDescendantRule('allow');
-		$tag->rules->denyAll(true);
+		$tag->rules->ignoreTags(true);
 
 		$this->assertEquals(
 			[
@@ -418,9 +418,9 @@ class RulesHelperTest extends Test
 	}
 
 	/**
-	* @testdox denyAll (false) has no effect
+	* @testdox ignoreTags (false) has no effect
 	*/
-	public function testDenyAllNegative()
+	public function testIgnoreTagsNegative()
 	{
 		$tags = new TagCollection;
 
@@ -429,7 +429,7 @@ class RulesHelperTest extends Test
 		$tag->rules->allowDescendant('A');
 		$tag->rules->defaultChildRule('allow');
 		$tag->rules->defaultDescendantRule('allow');
-		$tag->rules->denyAll(false);
+		$tag->rules->ignoreTags(false);
 
 		$this->assertEquals(
 			[

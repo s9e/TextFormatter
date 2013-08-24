@@ -5,11 +5,12 @@
 /** @const */ var RULE_AUTO_REOPEN       =   2;
 /** @const */ var RULE_BREAK_PARAGRAPH   =   4;
 /** @const */ var RULE_CREATE_PARAGRAPHS =   8;
-/** @const */ var RULE_IGNORE_TEXT       =  16;
-/** @const */ var RULE_IS_TRANSPARENT    =  32;
-/** @const */ var RULE_NO_BR_CHILD       =  64;
-/** @const */ var RULE_NO_BR_DESCENDANT  = 128;
-/** @const */ var RULE_TRIM_WHITESPACE   = 256;
+/** @const */ var RULE_IGNORE_TAGS       =  16;
+/** @const */ var RULE_IGNORE_TEXT       =  32;
+/** @const */ var RULE_IS_TRANSPARENT    =  64;
+/** @const */ var RULE_NO_BR_CHILD       = 128;
+/** @const */ var RULE_NO_BR_DESCENDANT  = 256;
+/** @const */ var RULE_TRIM_WHITESPACE   = 512;
 /**#@-*/
 
 /**

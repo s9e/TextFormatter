@@ -222,10 +222,10 @@ abstract class RulesGenerator
 				$rules['tags'][$srcTagName]['createParagraphs'] = true;
 			}
 
-			// Create an denyAll rule if the tag's forensics call for it
-			if ($srcTag->denyAll())
+			// Create an ignoreTags rule if the tag's forensics call for it
+			if ($srcTag->ignoreTags())
 			{
-				$rules['tags'][$srcTagName]['denyAll'] = true;
+				$rules['tags'][$srcTagName]['ignoreTags'] = true;
 			}
 
 			// Test whether text children should be ignored

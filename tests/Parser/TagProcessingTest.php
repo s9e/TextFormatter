@@ -968,6 +968,50 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('X', 0, 1);
 				}
 			],
+			[
+				'.X.',
+				'<rt><NOPARSE><st>.</st>X<et>.</et></NOPARSE></rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 1, 2, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			],
+			[
+				'.X.',
+				'<rt><NOPARSE><st>.</st>X<et>.</et></NOPARSE></rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+					$configurator->tags->add('X')->rules->closeParent('NOPARSE');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 0, 1, 2, 1);
+					$parser->addSelfClosingTag('X', 1, 1);
+				}
+			],
+			[
+				'X.X.X',
+				'<rt><X><st>X</st><NOPARSE><st>.</st>X<et>.</et></NOPARSE><et>X</et></X></rt>',
+				function ($configurator)
+				{
+					$configurator->tags->add('NOPARSE')->rules->ignoreTags();
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('NOPARSE', 1, 1, 3, 1);
+					$parser->addStartTag('X', 0, 1);
+					$parser->addEndTag('X', 2, 1);
+					$parser->addEndTag('X', 4, 1);
+				}
+			],
 		];
 	}
 }

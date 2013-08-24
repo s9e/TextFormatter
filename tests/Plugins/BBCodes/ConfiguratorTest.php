@@ -320,12 +320,12 @@ class ConfiguratorTest extends Test
 		$this->configurator->BBCodes->addCustom(
 			'[C]{TEXT}[/C]',
 			'<code>{TEXT}</code>',
-			['rules' => ['denyAll' => true]]
+			['rules' => ['ignoreTags' => true]]
 		);
 
 		$this->assertTrue($this->configurator->tags->exists('C'));
 		$this->assertTrue($this->configurator->BBCodes->exists('C'));
-		$this->assertTrue($this->configurator->tags['C']->rules['denyAll']);
+		$this->assertTrue($this->configurator->tags['C']->rules['ignoreTags']);
 	}
 
 	/**

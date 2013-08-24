@@ -264,8 +264,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] defaultDescendantRule() accepts 'allow'
  [x] defaultDescendantRule() accepts 'deny'
  [x] defaultDescendantRule() throws an exception if passed anything else than 'allow' or 'deny'
- [x] denyAll() accepts a boolean
- [x] denyAll() throws an exception if its argument is not a boolean
+ [x] ignoreTags() accepts a boolean
+ [x] ignoreTags() throws an exception if its argument is not a boolean
  [x] denyChild() throws an exception on invalid tag name
  [x] denyChild() normalizes tag name
  [x] denyDescendant() throws an exception on invalid tag name
@@ -436,8 +436,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Does not generate an autoClose rule for <span>
  [x] Generates an autoReopen rule for <b>
  [x] Does not generate an autoReopen rule for <div>
- [x] Generates a denyAll rule for <hr>
- [x] Generates a denyAll rule for <style>
+ [x] Generates a ignoreTags rule for <hr>
+ [x] Generates a ignoreTags rule for <style>
  [x] Generates an ignoreText rule for <ul>
  [x] Does not generate an ignoreText rule for <b>
  [x] Generates an isTransparent rule for <a>
@@ -614,8 +614,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesHelper
  [x] allowDescendant does not override denyChild
  [x] denyDescendant overrides defaultDescendantRule('allow')
  [x] denyDescendant overrides allowDescendant
- [x] denyAll (true) overrides everything
- [x] denyAll (false) has no effect
+ [x] ignoreTags (true) overrides everything
+ [x] ignoreTags (false) has no effect
  [x] Tags with a requireParent rule are not allowed at the root
  [x] Tags that aren't allowed anywhere are omitted from the return array
  [x] Tags that are allowed in a closed dependency loop are omitted from the return array

@@ -115,6 +115,17 @@ function processTags()
 			}
 
 			currentTag = tagStack.pop();
+
+			// Skip current tag if tags are disabled and current tag would not close the last
+			// open tag
+			if (context.flags & RULE_IGNORE_TAGS)
+			{
+				if (!currentTag.canClose(openTags[openTags.length - 1]))
+				{
+					continue;
+				}
+			}
+
 			processCurrentTag();
 		}
 

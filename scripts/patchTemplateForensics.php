@@ -241,7 +241,7 @@ foreach ($page->body->h4 as $h4)
 				case 'Content model':
 					if ($value === 'empty')
 					{
-						$elements[$elName]['denyAll'][''] = 0;
+						$elements[$elName]['ignoreTags'][''] = 0;
 						break 2;
 					}
 
@@ -259,7 +259,7 @@ foreach ($page->body->h4 as $h4)
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is present: empty$#', $value, $m))
 					{
-						$elements[$elName]['denyAll']['@' . $m[1]] = 0;
+						$elements[$elName]['ignoreTags']['@' . $m[1]] = 0;
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is absent: zero or more ([a-z]+) elements$#', $value, $m))
 					{
@@ -447,11 +447,11 @@ foreach ($page->body->h4 as $h4)
 					}
 					elseif ($elName === 'style')
 					{
-						$elements[$elName]['denyAll'][''] = 0;
+						$elements[$elName]['ignoreTags'][''] = 0;
 					}
 					elseif ($elName === 'script')
 					{
-						$elements[$elName]['denyAll'][''] = 0;
+						$elements[$elName]['ignoreTags'][''] = 0;
 					}
 					elseif ($elName === 'noscript')
 					{
@@ -462,7 +462,7 @@ foreach ($page->body->h4 as $h4)
 					}
 					elseif ($elName === 'iframe')
 					{
-						$elements[$elName]['denyAll'][''] = 0;
+						$elements[$elName]['ignoreTags'][''] = 0;
 					}
 					else
 					{
@@ -679,16 +679,16 @@ foreach ($elements as $elName => $element)
 		$el['pre'] = 1;
 	}
 
-	if (!empty($element['denyAll']))
+	if (!empty($element['ignoreTags']))
 	{
-		$el['da'] = 1;
+		$el['it'] = 1;
 
-		if (!isset($element['denyAll']['']))
+		if (!isset($element['ignoreTags']['']))
 		{
-			$xpath = key($element['denyAll']);
+			$xpath = key($element['ignoreTags']);
 			if ($xpath)
 			{
-				$el['da0'] = $xpath;
+				$el['it0'] = $xpath;
 			}
 		}
 	}

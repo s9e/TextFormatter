@@ -35,7 +35,7 @@
 			<code class="inline"><xsl:apply-templates /></code>
 		]]></template>
 		<rules>
-			<denyAll />
+			<ignoreTags />
 			<noBrChild />
 		</rules>
 	</bbcode>
@@ -104,7 +104,7 @@
 			</xsl:if>
 		]]></template>
 		<rules>
-			<denyAll />
+			<ignoreTags />
 		</rules>
 	</bbcode>
 
@@ -306,7 +306,7 @@
 		<usage>[NOPARSE]{TEXT}[/NOPARSE]</usage>
 		<template>{TEXT}</template>
 		<rules>
-			<denyAll />
+			<ignoreTags />
 		</rules>
 	</bbcode>
 

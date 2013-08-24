@@ -70,7 +70,7 @@ class Configurator extends ConfiguratorBase
 
 		// This tag should not need to be closed, and shouldn't have any descendants
 		$tag->rules->autoClose();
-		$tag->rules->denyAll();
+		$tag->rules->ignoreTags();
 
 		// Empty this tag's filter chain and add our tag filter
 		$tag->filterChain->clear();
@@ -150,7 +150,7 @@ class Configurator extends ConfiguratorBase
 
 		// This tag should not need to be closed, and shouldn't have any descendants
 		$tag->rules->autoClose();
-		$tag->rules->denyAll();
+		$tag->rules->ignoreTags();
 
 		// Store the regexp used in extracted attributes
 		$attrRegexps = [];

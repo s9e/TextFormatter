@@ -426,23 +426,23 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox denyAll() accepts a boolean
+	* @testdox ignoreTags() accepts a boolean
 	*/
-	public function testDenyAllValid()
+	public function testIgnoreTagsValid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->denyAll(true);
+		$ruleset->ignoreTags(true);
 	}
 
 	/**
-	* @testdox denyAll() throws an exception if its argument is not a boolean
+	* @testdox ignoreTags() throws an exception if its argument is not a boolean
 	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage denyAll() expects a boolean
+	* @expectedExceptionMessage ignoreTags() expects a boolean
 	*/
-	public function testDenyAllInvalid()
+	public function testIgnoreTagsInvalid()
 	{
 		$ruleset = new Ruleset;
-		$ruleset->denyAll('foo');
+		$ruleset->ignoreTags('foo');
 	}
 
 	/**
@@ -791,7 +791,7 @@ class RulesetTest extends Test
 			'allowDescendant'       => 'X',
 			'defaultChildRule'      => 'deny',
 			'defaultDescendantRule' => 'allow',
-			'denyAll'               => true,
+			'ignoreTags'               => true,
 			'denyChild'             => 'X',
 			'denyDescendant'        => 'X',
 			'isTransparent'         => false,
@@ -872,6 +872,7 @@ class RulesetTest extends Test
 			'autoClose'      => Parser::RULE_AUTO_CLOSE,
 			'autoReopen'     => Parser::RULE_AUTO_REOPEN,
 			'ignoreSurroundingWhitespace' => Parser::RULE_TRIM_WHITESPACE,
+			'ignoreTags'     => Parser::RULE_IGNORE_TAGS,
 			'ignoreText'     => Parser::RULE_IGNORE_TEXT,
 			'isTransparent'  => Parser::RULE_IS_TRANSPARENT,
 			'noBrChild'      => Parser::RULE_NO_BR_CHILD,
