@@ -18,30 +18,27 @@ if (!file_exists($filepath))
 
 $page = SimpleDOM::loadHTMLFile($filepath);
 
-
 //==============================================================================
-// Tags on the "adoption agency" list
+// Formatting elements, which are automatically reopened
 //==============================================================================
 
 $nodes = $page->xpath('
 	/html/body/div[@class="impl"]
-	/dl[@class="switch"]
-	/dt
-		[starts-with(., "An end tag whose tag name is one of")]
-		[following-sibling::dd[1][starts-with(normalize-space(.), "Run the adoption agency algorithm for the token\'s tag name.")]]');
+	/dl/dt[dfn[@id="formatting"]]
+	/following-sibling::dd[1]
+	//code
+');
 
 if (!$nodes)
 {
 	die("Could not find the adoption agency list\n");
 }
 
-if (!preg_match_all('#"(\\w+)"#', $nodes[0]->textContent(), $matches))
+$autoReopen = [];
+foreach ($nodes as $node)
 {
-	die("Could not parse the adoption agency list\n");
+	$autoReopen[$node->textContent()] = 1;
 }
-
-// Use element names as keys
-$autoReopen = array_flip($matches[1]);
 
 //==============================================================================
 // Void elements
