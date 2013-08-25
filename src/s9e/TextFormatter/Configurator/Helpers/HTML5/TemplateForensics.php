@@ -446,7 +446,7 @@ class TemplateForensics
 				}
 
 				// Test whether this element is on the adoption agency list
-				if (empty(self::$htmlElements[$elName]['ar']))
+				if (empty(self::$htmlElements[$elName]['fe']))
 				{
 					$autoReopen = false;
 				}
@@ -569,8 +569,8 @@ class TemplateForensics
 	*
 	*   "nt" indicates that the element does not accept text nodes.
 	*
-	*   "ar" indicates that the element is on the "adoption agency algorithm" list, which is used
-	*   to automatically reopen tags when they are closed by an end tag of a different name.
+	*   "fe" indicates that the element is a formatting element. It will automatically be reopened
+	*   when closed by an end tag of a different name.
 	*
 	*   "b" indicates that the element is not phrasing content, which makes it likely to act like
 	*   a block element.
@@ -582,14 +582,14 @@ class TemplateForensics
 	* @see /scripts/patchTemplateForensics.php
 	*/
 	protected static $htmlElements = [
-		'a'=>['c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'ar'=>1],
+		'a'=>['c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'fe'=>1],
 		'abbr'=>['c'=>"\7",'ac'=>"\4"],
 		'address'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\100\6",'b'=>1,'cp'=>['p']],
 		'area'=>['c'=>"\5",'nt'=>1,'it'=>1,'v'=>1],
 		'article'=>['c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'aside'=>['c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\0\1",'b'=>1,'cp'=>['p']],
 		'audio'=>['c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1],
-		'b'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
+		'b'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'base'=>['c'=>"\0\1",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'bdi'=>['c'=>"\7",'ac'=>"\4"],
 		'bdo'=>['c'=>"\7",'ac'=>"\4"],
@@ -600,7 +600,7 @@ class TemplateForensics
 		'canvas'=>['c'=>"\47",'ac'=>"\0",'t'=>1],
 		'caption'=>['c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\0\10",'b'=>1],
 		'cite'=>['c'=>"\7",'ac'=>"\4"],
-		'code'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
+		'code'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'col'=>['c'=>"\0\0\0\0\10",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'colgroup'=>['c'=>"\200",'ac'=>"\0\0\0\0\10",'ac35'=>'not(@span)','nt'=>1,'it'=>1,'it0'=>'@span','b'=>1],
 		'data'=>['c'=>"\7",'ac'=>"\4"],
@@ -613,7 +613,7 @@ class TemplateForensics
 		'div'=>['c'=>"\3",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'dl'=>['c'=>"\3",'ac'=>"\0\0\14",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'dt'=>['c'=>"\0\0\4",'ac'=>"\1",'dd'=>"\100\102",'b'=>1,'cp'=>['dd','dt']],
-		'em'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
+		'em'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'embed'=>['c'=>"\57",'nt'=>1,'it'=>1,'v'=>1],
 		'fieldset'=>['c'=>"\23",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>['p']],
 		'figcaption'=>['c'=>"\0\0\0\0\100",'ac'=>"\1",'b'=>1],
@@ -630,7 +630,7 @@ class TemplateForensics
 		'header'=>['c'=>"\3\114",'ac'=>"\1",'dd'=>"\0\10",'b'=>1,'cp'=>['p']],
 		'hr'=>['c'=>"\1",'nt'=>1,'it'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
 		'html'=>['c'=>"\0",'ac'=>"\0\200",'nt'=>1,'b'=>1],
-		'i'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
+		'i'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'iframe'=>['c'=>"\57",'nt'=>1,'it'=>1],
 		'img'=>['c'=>"\57",'c3'=>'@usemap','nt'=>1,'it'=>1,'v'=>1],
 		'input'=>['c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'it'=>1,'v'=>1],
@@ -661,15 +661,15 @@ class TemplateForensics
 		'rp'=>['c'=>"\0\0\2",'ac'=>"\4",'b'=>1,'cp'=>['rp','rt']],
 		'rt'=>['c'=>"\0\0\2",'ac'=>"\4",'b'=>1,'cp'=>['rp','rt']],
 		'ruby'=>['c'=>"\7\0\0\200",'ac'=>"\4\0\2",'dd'=>"\0\0\0\200"],
-		's'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
+		's'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'samp'=>['c'=>"\7",'ac'=>"\4"],
 		'script'=>['c'=>"\5\1\10",'nt'=>1,'it'=>1],
 		'section'=>['c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'select'=>['c'=>"\17",'ac'=>"\0\40\10",'nt'=>1],
-		'small'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
+		'small'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'source'=>['c'=>"\0\0\200",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
 		'span'=>['c'=>"\7",'ac'=>"\4"],
-		'strong'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
+		'strong'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'style'=>['c'=>"\1\1",'c0'=>'@scoped','nt'=>1,'it'=>1,'b'=>1],
 		'sub'=>['c'=>"\7",'ac'=>"\4"],
 		'summary'=>['c'=>"\0\0\100",'ac'=>"\4",'b'=>1],
@@ -685,7 +685,7 @@ class TemplateForensics
 		'title'=>['c'=>"\0\1",'b'=>1],
 		'tr'=>['c'=>"\200\0\0\0\20",'ac'=>"\0\0\11",'nt'=>1,'b'=>1,'cp'=>['tr']],
 		'track'=>['c'=>"\0\0\0\4",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
-		'u'=>['c'=>"\7",'ac'=>"\4",'ar'=>1],
+		'u'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'ul'=>['c'=>"\3",'ac'=>"\0\0\10\0\40",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'var'=>['c'=>"\7",'ac'=>"\4"],
 		'video'=>['c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1],

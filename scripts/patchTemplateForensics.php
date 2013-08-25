@@ -34,10 +34,10 @@ if (!$nodes)
 	die("Could not find the adoption agency list\n");
 }
 
-$autoReopen = [];
+$formattingElements = [];
 foreach ($nodes as $node)
 {
-	$autoReopen[$node->textContent()] = 1;
+	$formattingElements[$node->textContent()] = 1;
 }
 
 //==============================================================================
@@ -707,10 +707,10 @@ foreach ($elements as $elName => $element)
 		$el['b'] = 1;
 	}
 
-	// Mark elements that are on the "adoption agency" list
-	if (isset($autoReopen[$elName]))
+	// Mark formatting elements
+	if (isset($formattingElements[$elName]))
 	{
-		$el['ar'] = 1;
+		$el['fe'] = 1;
 	}
 
 	$arr[$elName] = $el;
