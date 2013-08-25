@@ -1,72 +1,79 @@
 #!/usr/bin/php
 <?php
 
-use s9e\SimpleDOM\SimpleDOM;
-
-include 's9e/SimpleDOM/src/SimpleDOM.php';
-
-$filepath = '/tmp/single-page.html';
-
-if (!file_exists($filepath))
+function loadPage($url)
 {
-	copy(
-		'compress.zlib://http://www.w3.org/TR/html5/single-page.html',
-		$filepath,
-		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
-	);
+	$filepath = sys_get_temp_dir() . '/' . basename($url);
+
+	if (!file_exists($filepath))
+	{
+		copy(
+			'compress.zlib://' . $url,
+			$filepath,
+			stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
+		);
+	}
+
+	$page = new DOMDocument;
+	$page->preserveWhiteSpace = false;
+	@$page->loadHTMLFile($filepath, LIBXML_COMPACT | LIBXML_NOBLANKS);
+
+	return $page;
 }
 
-$page = SimpleDOM::loadHTMLFile($filepath);
+$page = loadPage('http://www.w3.org/TR/html5/single-page.html');
 
 //==============================================================================
 // Formatting elements, which are automatically reopened
 //==============================================================================
 
-$nodes = $page->xpath('
-	/html/body/div[@class="impl"]
-	/dl/dt[dfn[@id="formatting"]]
-	/following-sibling::dd[1]
-	//code
-');
-
-if (!$nodes)
-{
-	die("Could not find the adoption agency list\n");
-}
+//$page  = loadPage('http://www.w3.org/TR/html5/syntax.html');
+$nodes = $page->getElementById('formatting')
+              ->parentNode->nextSibling->nextSibling
+              ->getElementsByTagName('code');
 
 $formattingElements = [];
 foreach ($nodes as $node)
 {
-	$formattingElements[$node->textContent()] = 1;
+	$formattingElements[$node->textContent] = 1;
 }
 
 //==============================================================================
 // Void elements
 //==============================================================================
 
-$nodes = $page->xpath('/html/body/dl/dt[dfn/@id="void-elements"]/following-sibling::dd[1]/code/a');
-
-if (!$nodes)
-{
-	die("Could not find the void elements\n");
-}
+$nodes = $page->getElementById('void-elements')
+              ->parentNode->nextSibling->nextSibling
+              ->getElementsByTagName('code');
 
 $voidElements = [];
 foreach ($nodes as $node)
 {
-	$elName = $node->textContent();
-	$voidElements[$elName] = 1;
+	$voidElements[$node->textContent] = 1;
 }
 
 //==============================================================================
 // End tags that can be omitted => closeParent rules
 //==============================================================================
 
-$closeParent = [];
+$node = $page->getElementById('optional-tags');
 
-foreach ($page->xpath('/html/body/h5[@id="optional-tags"]/following-sibling::p[following-sibling::h5/@id="element-restrictions"]') as $p)
+$closeParent = [];
+while (isset($node->nextSibling))
 {
-	$text = preg_replace('#\\s+#', ' ', $p->textContent());
+	$node = $node->nextSibling;
+
+	if ($node->nodeType !== XML_ELEMENT_NODE)
+	{
+		continue;
+	}
+
+	if ($node->nodeName !== 'p')
+	{
+		break;
+	}
+
+	$text = preg_replace('#\\s+#', ' ', $node->textContent);
 
 	if (!preg_match("#^An? ([a-z0-5]+) element's end tag may be omitted if the \\1 element is immediately followed by a(?:n(other)?)? #", $text, $m))
 	{
@@ -106,64 +113,40 @@ foreach ($page->xpath('/html/body/h5[@id="optional-tags"]/following-sibling::p[f
 }
 
 //==============================================================================
-// closeAncestor rules generated in "in body" insertion mode
-//==============================================================================
-
-/**
-$closeAncestor = [];
-
-foreach ($page->xpath('/html/body/div[@class="impl"]/h6[@id="parsing-main-inbody"]/following-sibling::dl[@class="switch"]/*') as $el)
-{
-	if ($el->nodeName() === 'dt')
-	{
-		$dt = $el->textContent();
-		continue;
-	}
-	elseif ($el->nodeName() !== 'dd')
-	{
-		continue;
-	}
-
-	if (!preg_match('#^A start +tag (?:token )?whose (?:tag )?name is#', $dt))
-	{
-		continue;
-	}
-
-	echo "\n",$dt,"\n",$el->asXML(),"\n";
-}
-
-die("\n");
-/**/
-
-//==============================================================================
 // Content models
 //==============================================================================
 
+$xpath    = new DOMXPath($page);
 $elements = [];
 
-foreach ($page->body->h4 as $h4)
+foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 {
-	if (!isset($h4->dfn, $h4->dfn->code))
+	$h4 = $dl->previousSibling;
+	while ($h4->nodeName !== 'h4')
 	{
-		continue;
+		$h4 = $h4->previousSibling;
 	}
 
-	foreach ($h4->xpath('dfn/code') as $code)
+	foreach ($h4->getElementsByTagName('dfn') as $dfn)
 	{
-		$elName = (string) $code;
+		$elName = $dfn->textContent;
 
-		$dl = $h4->firstOf('following-sibling::dl');
-
-		foreach ($dl->xpath('dt|dd') as $el)
+		foreach ($dl->childNodes as $node)
 		{
-			if ($el->getName() === 'dt')
+			if ($node->nodeName === 'dt')
 			{
-				$dt = $el->textContent();
+				$dt = $node->textContent;
+
+				continue;
+			}
+
+			if ($node->nodeName !== 'dd')
+			{
 				continue;
 			}
 
 			// Normalize whitespace and terminating punctuation
-			$value = rtrim(preg_replace('#\\s+#', ' ', strtolower($el->textContent())), '.');
+			$value = rtrim(preg_replace('#\\s+#', ' ', strtolower($node->textContent)), '.');
 
 			// Remove <a> tags
 			$value = preg_replace('#<a[^>]+>|</a>#', '', $value);
@@ -176,22 +159,22 @@ foreach ($page->body->h4 as $h4)
 						continue;
 					}
 
-					$xpath = '';
+					$predicate = '';
 
 					if (preg_match('#^((?:palpable|flow|phrasing|metadata|sectioning|heading|interactive|embedded) content|sectioning root|transparent|labelable element|script-supporting element)$#', $value, $m))
 					{
 						$category = $m[1];
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is present: +([a-z ]+)$#', $value, $m)
-					     || preg_match('#^if the element has a ([a-z]+) attribute: +([a-z ]+)$#', $value, $m))
+						 || preg_match('#^if the element has a ([a-z]+) attribute: +([a-z ]+)$#', $value, $m))
 					{
 						$category = $m[2];
-						$xpath = '@' . $m[1];
+						$predicate = '@' . $m[1];
 					}
 					elseif (preg_match('#^if the (?:element\'s )?([a-z]+) attribute is (not )?in the ([a-z]+) state: +(interactive content|palpable content)$#', $value, $m))
 					{
 						$category = $m[4];
-						$xpath = '@' . $m[1] . (($m[2]) ? '!=' : '=') . '"' . $m[3] . '"';
+						$predicate = '@' . $m[1] . (($m[2]) ? '!=' : '=') . '"' . $m[3] . '"';
 					}
 					elseif (preg_match('#^if the (?:element\'s )?([a-z]+) attribute is (not )?in the ([a-z]+) state or the ([a-z]+) state: +(interactive content|palpable content)$#', $value, $m))
 					{
@@ -199,11 +182,11 @@ foreach ($page->body->h4 as $h4)
 
 						if ($m[2])
 						{
-							$xpath = '@' . $m[1] . '!="' . $m[3] . '" and @' . $m[1] . '!="' . $m[4] . '"';
+							$predicate = '@' . $m[1] . '!="' . $m[3] . '" and @' . $m[1] . '!="' . $m[4] . '"';
 						}
 						else
 						{
-							$xpath = '@' . $m[1] . '="' . $m[3] . '" or @' . $m[1] . '="' . $m[4] . '"';
+							$predicate = '@' . $m[1] . '="' . $m[3] . '" or @' . $m[1] . '="' . $m[4] . '"';
 						}
 					}
 					elseif (preg_match('#if the element\'s children include at least one (?:[a-z_\\- ]+): palpable content$#', $value))
@@ -228,11 +211,11 @@ foreach ($page->body->h4 as $h4)
 					}
 					else
 					{
-						echo $el->asXML(), "\n";
+						echo $page->saveXML($node), "\n";
 						die("Could not interpret '$value' as $elName's category\n");
 					}
 
-					$elements[$elName]['categories'][$category][$xpath] = 0;
+					$elements[$elName]['categories'][$category][$predicate] = 0;
 					break;
 
 				case 'Content model':
@@ -421,7 +404,7 @@ foreach ($page->body->h4 as $h4)
 						$elements[$elName]['allowChildElement']['rp'][''] = 0;
 					}
 					elseif ($value === 'if the document is an iframe srcdoc document or if title information is available from a higher-level protocol: zero or more elements of metadata content, of which no more than one is a title element'
-					     || $value === 'otherwise: one or more elements of metadata content, of which exactly one is a title element')
+						 || $value === 'otherwise: one or more elements of metadata content, of which exactly one is a title element')
 					{
 						$elements[$elName]['allowChildCategory']['metadata content'][''] = 0;
 					}
@@ -477,7 +460,7 @@ foreach ($page->body->h4 as $h4)
 
 preg_match_all(
 	'#^(.*)\\{[^}]*?white-space:\\s*pre#m',
-	$page->body->firstOf('div[h2[@id="rendering"]]')->textContent(),
+	$page->getElementById('rendering')->parentNode->textContent,
 	$matches
 );
 
