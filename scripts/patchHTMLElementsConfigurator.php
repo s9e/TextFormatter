@@ -1,28 +1,47 @@
 #!/usr/bin/php
 <?php
 
-use s9e\SimpleDOM\SimpleDOM;
-
-include 's9e/SimpleDOM/src/SimpleDOM.php';
-
-$filepath = '/tmp/index.html';
-
-if (!file_exists($filepath))
+function loadPage($url)
 {
-	copy(
-		'compress.zlib://http://www.w3.org/html/wg/drafts/html/master/index.html',
-		$filepath,
-		stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
-	);
+	$filepath = sys_get_temp_dir() . '/' . basename($url);
+
+	if (!file_exists($filepath))
+	{
+		copy(
+			'compress.zlib://' . $url,
+			$filepath,
+			stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
+		);
+	}
+
+	$page = new DOMDocument;
+	$page->preserveWhiteSpace = false;
+	@$page->loadHTMLFile($filepath, LIBXML_COMPACT | LIBXML_NOBLANKS);
+
+	return $page;
 }
 
-$page  = SimpleDOM::loadHTMLFile($filepath);
-$table = [];
+$page = loadPage('http://www.w3.org/html/wg/drafts/html/master/index.html');
 
 $query = '/html/body/h3[@id="attributes-1"]/following-sibling::table[1]/tbody/tr[contains(td[3],"URL")]';
-foreach ($page->xpath($query) as $tr)
+
+$table = $page->getElementById('attributes-1')->nextSibling;
+while ($table->nodeName !== 'table')
 {
-	foreach (preg_split('/[;\\s]+/', $tr->th->textContent(), -1, PREG_SPLIT_NO_EMPTY) as $attrName)
+	$table = $table->nextSibling;
+}
+
+$filters = [];
+foreach ($table->getElementsByTagName('tr') as $tr)
+{
+	if (strpos($tr->textContent, 'URL') === false)
+	{
+		continue;
+	}
+
+	$th = $tr->getElementsByTagName('th')->item(0);
+
+	foreach (preg_split('/[;\\s]+/', $th->textContent, -1, PREG_SPLIT_NO_EMPTY) as $attrName)
 	{
 		// We manually ignore itemprop because it accepts plain text as well as URLs.
 		// We also ignore itemid because it actually accepts any URIs, not just URLs
@@ -31,15 +50,15 @@ foreach ($page->xpath($query) as $tr)
 			continue;
 		}
 
-		$table[$attrName] = '#url';
+		$filters[$attrName] = '#url';
 	}
 }
 
-ksort($table);
+ksort($filters);
 
-$len = max(array_map('strlen', array_keys($table)));
+$len = max(array_map('strlen', array_keys($filters)));
 $php = '';
-foreach ($table as $attrName => $filterName)
+foreach ($filters as $attrName => $filterName)
 {
 	$php .= "\n\t\t'$attrName'" . str_repeat(' ', $len - strlen($attrName)) . " => '$filterName',";
 }
