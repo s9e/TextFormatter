@@ -5,5 +5,6 @@ php:
   - "5.3.3"
 before_script:
   - php ./scripts/build/patchSources.php
-  - sh -c "printf '\n' | pecl install xslcache-beta; fi"
+  - sh -c "wget -O - http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar xzf - -C/usr/local/bin compiler.jar"
+  - sh -c "printf '\n' | pecl install xslcache-beta"
 script: "phpunit --exclude-group needs-network"
