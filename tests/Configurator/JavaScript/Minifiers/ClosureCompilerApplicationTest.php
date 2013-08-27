@@ -127,7 +127,7 @@ class ClosureCompilerApplicationTest extends Test
 	*/
 	public function testWorks()
 	{
-		$closureCompilerBin = '/usr/local/bin/compiler.jar';
+		$closureCompilerBin = $this->getClosureCompilerBin();
 		if (!file_exists($closureCompilerBin))
 		{
 			$this->markTestSkipped($closureCompilerBin . ' does not exist');

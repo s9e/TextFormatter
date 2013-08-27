@@ -106,7 +106,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 	{
 		// Minify and cache the parser if we have a cache dir
 		$cacheDir           = __DIR__ . '/.cache';
-		$closureCompilerBin = '/usr/local/bin/compiler.jar';
+		$closureCompilerBin = $this->getClosureCompilerBin();
 
 		if (file_exists($cacheDir) && file_exists($closureCompilerBin))
 		{
@@ -122,6 +122,11 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 			$expected,
 			$this->execJS($src, $original)
 		);
+	}
+
+	public function getClosureCompilerBin()
+	{
+		return (isset($_SERVER['CLOSURE_COMPILER'])) ? $_SERVER['CLOSURE_COMPILER'] : '/usr/local/bin/compiler.jar';
 	}
 
 	protected function execJS($src, $input)
