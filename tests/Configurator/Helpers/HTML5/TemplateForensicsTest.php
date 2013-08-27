@@ -450,6 +450,18 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
+	* @testdox <div><u> is not a formatting element
+	*/
+	public function test2EF441C1()
+	{
+		$this->runCase(
+			'<div><u> is not a formatting element',
+			'<div><u><xsl:apply-templates/></u></div>',
+			'!isFormattingElement'
+		);
+	}
+
+	/**
 	* @testdox "Hi" is not a formatting element
 	*/
 	public function test14421B19()
@@ -911,6 +923,11 @@ class TemplateForensicsTest extends Test
 			[
 				'<div> is not a formatting element',
 				'<div><xsl:apply-templates/></div>',
+				'!isFormattingElement'
+			],
+			[
+				'<div><u> is not a formatting element',
+				'<div><u><xsl:apply-templates/></u></div>',
 				'!isFormattingElement'
 			],
 			[

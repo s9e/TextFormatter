@@ -403,6 +403,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <b> is a formatting element
  [x] <b><u> is a formatting element
  [x] <div> is not a formatting element
+ [x] <div><u> is not a formatting element
  [x] "Hi" is not a formatting element
  [x] A template composed entirely of a single <xsl:apply-templates/> is not a formatting element
  [x] <img> denies all descendants
@@ -436,6 +437,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Does not generate an autoClose rule for <span>
  [x] Generates an autoReopen rule for <b>
  [x] Does not generate an autoReopen rule for <div>
+ [x] Does not generate an autoReopen rule for <div><b>
  [x] Generates a ignoreTags rule for <hr>
  [x] Generates a ignoreTags rule for <style>
  [x] Generates an ignoreText rule for <ul>

@@ -176,6 +176,26 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
+	* @testdox Does not generate an autoReopen rule for <div><b>
+	*/
+	public function testNoAutoReopenFormattingBlock()
+	{
+		$tags = new TagCollection;
+		$tags->add('DIV')->defaultTemplate = '<div><b><xsl:apply-templates/></b></div>';
+
+		$rules = RulesGenerator::getRules($tags);
+
+		$this->assertArrayMatches(
+			[
+				'DIV' => [
+					'autoReopen' => null
+				]
+			],
+			$rules['tags']
+		);
+	}
+
+	/**
 	* @testdox Generates a ignoreTags rule for <hr>
 	*/
 	public function testIgnoreTagsHr()
