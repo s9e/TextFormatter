@@ -333,6 +333,17 @@ class BuiltInFiltersTest extends Test
 			],
 			[
 				new Url,
+				// NOTE: this URL is actually rejected for being malformed
+				"http://evil.ex%41mple.com",
+				false,
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->disallowHost('evil.example.com');
+				}
+			],
+			[
+				new Url,
 				'http://www.pаypal.com',
 				false,
 				[
