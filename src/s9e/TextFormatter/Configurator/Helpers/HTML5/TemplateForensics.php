@@ -44,9 +44,9 @@ class TemplateForensics
 	protected $allowText = true;
 
 	/**
-	* @var string Whether this tag should automatically break current paragraph
+	* @var string Whether this template automatically breaks current paragraph
 	*/
-	protected $breakParagraph = false;
+	protected $breaksParagraph = false;
 
 	/**
 	* @var string OR-ed bitfield representing all of the categories used by this tag's templates
@@ -188,13 +188,13 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether to automatically close current paragraph
+	* Whether this template automatically breaks current paragraph
 	*
 	* @return bool
 	*/
-	public function breakParagraph()
+	public function breaksParagraph()
 	{
-		return $this->breakParagraph;
+		return $this->breaksParagraph;
 	}
 
 	/**
@@ -333,7 +333,7 @@ class TemplateForensics
 			if (isset(self::$htmlElements[$elName]['cp'])
 			 && in_array('p', self::$htmlElements[$elName]['cp'], true))
 			{
-				$this->breakParagraph = true;
+				$this->breaksParagraph = true;
 			}
 
 			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);
