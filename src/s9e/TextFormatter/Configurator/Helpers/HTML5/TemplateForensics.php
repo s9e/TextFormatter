@@ -41,7 +41,7 @@ class TemplateForensics
 	/**
 	* @var string Whether text nodes are allowed as children
 	*/
-	protected $allowText = true;
+	protected $allowsText = true;
 
 	/**
 	* @var string Whether this template automatically breaks current paragraph
@@ -158,7 +158,7 @@ class TemplateForensics
 			}
 		}
 
-		if (!$this->allowText && $child->hasRootText)
+		if (!$this->allowsText && $child->hasRootText)
 		{
 			return false;
 		}
@@ -184,7 +184,7 @@ class TemplateForensics
 	*/
 	public function allowsText()
 	{
-		return $this->allowText;
+		return $this->allowsText;
 	}
 
 	/**
@@ -385,7 +385,7 @@ class TemplateForensics
 			/**
 			* @var bool Whether this branch allows text nodes
 			*/
-			$allowText = true;
+			$allowsText = true;
 
 			/**
 			* @var string allowChild bitfield for current branch. Starts with the value associated
@@ -458,7 +458,7 @@ class TemplateForensics
 				}
 
 				// Test whether this branch allows text nodes
-				$allowText = empty(self::$htmlElements[$elName]['nt']);
+				$allowsText = empty(self::$htmlElements[$elName]['nt']);
 
 				// allowChild rules are cumulative if transparent, and reset above otherwise
 				$branchBitfield |= $this->getBitfield($elName, 'ac', $node);
@@ -477,9 +477,9 @@ class TemplateForensics
 			}
 
 			// If any branch disallows text, the tag disallows text
-			if (!$allowText)
+			if (!$allowsText)
 			{
-				$this->allowText = false;
+				$this->allowsText = false;
 			}
 
 			// If any branch does not deny all descendants, the tag does not deny all descendants
