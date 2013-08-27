@@ -44,11 +44,6 @@ class TemplateForensics
 	protected $allowText = true;
 
 	/**
-	* @var string Whether to automatically reopen this tag
-	*/
-	protected $autoReopen = false;
-
-	/**
 	* @var string Whether this tag should automatically break current paragraph
 	*/
 	protected $breakParagraph = false;
@@ -82,6 +77,11 @@ class TemplateForensics
 	* @var bool Whether this tag should be considered a block-level element
 	*/
 	protected $isBlock = false;
+
+	/**
+	* @var string Whether this template adds to the list of active formatting elements
+	*/
+	protected $isFormattingElement = false;
 
 	/**
 	* @var bool Whether all branches use the transparent content model (or more accurately, whether
@@ -188,16 +188,6 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether to automatically reopen this tag
-	*
-	* @return bool
-	*/
-	public function autoReopen()
-	{
-		return $this->autoReopen;
-	}
-
-	/**
 	* Whether to automatically close current paragraph
 	*
 	* @return bool
@@ -254,6 +244,16 @@ class TemplateForensics
 	public function isBlock()
 	{
 		return $this->isBlock;
+	}
+
+	/**
+	* Whether this tag adds to the list of active formatting elements
+	*
+	* @return bool
+	*/
+	public function isFormattingElement()
+	{
+		return $this->isFormattingElement;
 	}
 
 	/**
@@ -369,9 +369,9 @@ class TemplateForensics
 		$branchBitfields = [];
 
 		/**
-		* @var bool Whether this template should generate an autoReopen rules because all of the branches are entirely composed of elements from the adoption agency list
+		* @var bool Whether this template should be considered a formatting element
 		*/
-		$autoReopen = true;
+		$isFormattingElement = true;
 
 		// For each <xsl:apply-templates/> element...
 		foreach ($this->getXSLElements('apply-templates') as $applyTemplates)
@@ -445,10 +445,10 @@ class TemplateForensics
 					$this->isTransparent = false;
 				}
 
-				// Test whether this element is on the adoption agency list
+				// Test whether this element is a formatting element
 				if (empty(self::$htmlElements[$elName]['fe']))
 				{
-					$autoReopen = false;
+					$isFormattingElement = false;
 				}
 
 				// Test whether this branch preserves whitespace
@@ -505,10 +505,11 @@ class TemplateForensics
 				$this->allowChildBitfield &= $branchBitfield;
 			}
 
-			// Set the autoReopen property to our final value, but only if this tag had any branches
+			// Set the isFormattingElement property to our final value, but only if this tag had any
+			// branches
 			if (!empty($this->leafNodes))
 			{
-				$this->autoReopen = $autoReopen;
+				$this->isFormattingElement = $isFormattingElement;
 			}
 		}
 	}

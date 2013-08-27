@@ -400,11 +400,11 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <table> disallows <xsl:value-of/>
  [x] <table> disallows <xsl:text>Hi</xsl:text>
  [x] <table> allows <xsl:text>  </xsl:text>
- [x] <b> should be reopened automatically
- [x] <b><u> should be reopened automatically
- [x] <div> should not be reopened automatically
- [x] "Hi" should not be reopened automatically
- [x] A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically
+ [x] <b> is a formatting element
+ [x] <b><u> is a formatting element
+ [x] <div> is not a formatting element
+ [x] "Hi" is not a formatting element
+ [x] A template composed entirely of a single <xsl:apply-templates/> is not a formatting element
  [x] <img> denies all descendants
  [x] <hr><xsl:apply-templates/></hr> denies all descendants
  [x] <div><hr><xsl:apply-templates/></hr></div> denies all descendants

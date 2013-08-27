@@ -201,7 +201,7 @@ abstract class RulesGenerator
 			}
 
 			// Test whether this tag should be reopened automatically
-			if ($srcTag->autoReopen())
+			if ($srcTag->isFormattingElement())
 			{
 				$rules['tags'][$srcTagName]['autoReopen'] = true;
 			}

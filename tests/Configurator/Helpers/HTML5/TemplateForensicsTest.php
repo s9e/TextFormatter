@@ -414,62 +414,62 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
-	* @testdox <b> should be reopened automatically
+	* @testdox <b> is a formatting element
 	*/
-	public function test22F9A918()
+	public function test0FEB502E()
 	{
 		$this->runCase(
-			'<b> should be reopened automatically',
+			'<b> is a formatting element',
 			'<b><xsl:apply-templates/></b>',
-			'autoReopen'
+			'isFormattingElement'
 		);
 	}
 
 	/**
-	* @testdox <b><u> should be reopened automatically
+	* @testdox <b><u> is a formatting element
 	*/
-	public function test7AB1C861()
+	public function test845660E9()
 	{
 		$this->runCase(
-			'<b><u> should be reopened automatically',
+			'<b><u> is a formatting element',
 			'<b><u><xsl:apply-templates/></u></b>',
-			'autoReopen'
+			'isFormattingElement'
 		);
 	}
 
 	/**
-	* @testdox <div> should not be reopened automatically
+	* @testdox <div> is not a formatting element
 	*/
-	public function test3068CA4C()
+	public function testA5F32A8C()
 	{
 		$this->runCase(
-			'<div> should not be reopened automatically',
+			'<div> is not a formatting element',
 			'<div><xsl:apply-templates/></div>',
-			'!autoReopen'
+			'!isFormattingElement'
 		);
 	}
 
 	/**
-	* @testdox "Hi" should not be reopened automatically
+	* @testdox "Hi" is not a formatting element
 	*/
-	public function testA216F4AE()
+	public function test14421B19()
 	{
 		$this->runCase(
-			'"Hi" should not be reopened automatically',
+			'"Hi" is not a formatting element',
 			'Hi',
-			'!autoReopen'
+			'!isFormattingElement'
 		);
 	}
 
 	/**
-	* @testdox A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically
+	* @testdox A template composed entirely of a single <xsl:apply-templates/> is not a formatting element
 	*/
-	public function test357C2DF0()
+	public function testE1E4F3F4()
 	{
 		$this->runCase(
-			'A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically',
+			'A template composed entirely of a single <xsl:apply-templates/> is not a formatting element',
 			'<xsl:apply-templates/>',
-			'!autoReopen'
+			'!isFormattingElement'
 		);
 	}
 
@@ -899,29 +899,29 @@ class TemplateForensicsTest extends Test
 				'<xsl:text>  </xsl:text>'
 			],
 			[
-				'<b> should be reopened automatically',
+				'<b> is a formatting element',
 				'<b><xsl:apply-templates/></b>',
-				'autoReopen'
+				'isFormattingElement'
 			],
 			[
-				'<b><u> should be reopened automatically',
+				'<b><u> is a formatting element',
 				'<b><u><xsl:apply-templates/></u></b>',
-				'autoReopen'
+				'isFormattingElement'
 			],
 			[
-				'<div> should not be reopened automatically',
+				'<div> is not a formatting element',
 				'<div><xsl:apply-templates/></div>',
-				'!autoReopen'
+				'!isFormattingElement'
 			],
 			[
-				'"Hi" should not be reopened automatically',
+				'"Hi" is not a formatting element',
 				'Hi',
-				'!autoReopen'
+				'!isFormattingElement'
 			],
 			[
-				'A template composed entirely of a single <xsl:apply-templates/> should not be reopened automatically',
+				'A template composed entirely of a single <xsl:apply-templates/> is not a formatting element',
 				'<xsl:apply-templates/>',
-				'!autoReopen'
+				'!isFormattingElement'
 			],
 			[
 				'<img> denies all descendants',
