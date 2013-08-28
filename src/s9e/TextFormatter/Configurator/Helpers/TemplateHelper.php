@@ -22,11 +22,10 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 abstract class TemplateHelper
 {
 	/**
-	* Attempt to load a template with DOM, first as XML then as HTML as a fallback
+	* Load a template as an xsl:template node
 	*
-	* NOTE: in order to accomodate templates that don't have one single root node, the DOMDocument
-	*       returned by this method has its own root node (with a random name) that acts as a parent
-	*       to this template's content
+	* Will attempt to load it as XML first, then as HTML as a fallback. Either way, an xsl:template
+	* node is returned
 	*
 	* @param  string      $template
 	* @return DOMDocument
@@ -35,12 +34,8 @@ abstract class TemplateHelper
 	{
 		$dom = new DOMDocument;
 
-		// Generate a random tag name so that the user cannot inject stuff outside of that template.
-		// For instance, if the tag was <t>, one could input </t><xsl:evil-stuff/><t>
-		$t = 't' . sha1(uniqid(mt_rand(), true));
-
 		// First try as XML
-		$xml = '<?xml version="1.0" encoding="utf-8" ?><' . $t . ' xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $template . '</' . $t . '>';
+		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">' . $template . '</xsl:template>';
 
 		$useErrors = libxml_use_internal_errors(true);
 		$success   = $dom->loadXML($xml);
@@ -61,7 +56,7 @@ abstract class TemplateHelper
 		}
 
 		// Fall back to loading it inside a div, as HTML
-		$html = '<html><body><' . $t . '>' . $template . '</' . $t . '></body></html>';
+		$html = '<html><body><div>' . $template . '</div></body></html>';
 
 		$useErrors = libxml_use_internal_errors(true);
 		$success   = $dom->loadHTML($html);
@@ -76,7 +71,7 @@ abstract class TemplateHelper
 		// @codeCoverageIgnoreEnd
 
 		// Now dump the thing as XML and reload it with the proper namespace declaration
-		$xml = self::innerXML($dom->getElementsByTagName($t)->item(0));
+		$xml = self::innerXML($dom->getElementsByTagName('div')->item(0));
 
 		return self::loadTemplate($xml);
 	}
@@ -665,8 +660,6 @@ abstract class TemplateHelper
 	/**
 	* Highlight the source of a node inside of a template
 	*
-	* NOTE: this method expects the template to be wrapped in a <t.../> node, which will be omitted
-	*
 	* @param  DOMNode $node    Node to highlight
 	* @param  string  $prepend HTML to prepend
 	* @param  string  $append  HTML to append
@@ -693,8 +686,7 @@ abstract class TemplateHelper
 		$dom = $node->ownerDocument;
 		$dom->formatOutput = true;
 
-		$docXml = $dom->saveXML($dom->documentElement);
-		$docXml = preg_replace('#^<(t\\w*)[^>]*>(.*)</\\1>$#s', '$2', $docXml);
+		$docXml = self::innerXML($dom->documentElement);
 		$docXml = trim(str_replace("\n  ", "\n", $docXml));
 
 		$nodeHtml = htmlspecialchars(trim($dom->saveXML($node)));
