@@ -15,26 +15,8 @@ class TemplateForensicsTest extends Test
 		$src = new TemplateForensics($xslSrc);
 		$trg = new TemplateForensics($xslTrg);
 
-		$methods = [
-			'allowChild'           => ['assertTrue',  'allowsChild'],
-			'allowDescendant'      => ['assertTrue',  'allowsDescendant'],
-			'allowText'            => ['assertTrue',  'allowsText'],
-			'denyText'             => ['assertFalse', 'allowsText'],
-			'denyChild'            => ['assertFalse', 'allowsChild'],
-			'denyDescendant'       => ['assertFalse', 'allowsDescendant'],
-			'closeParent'          => ['assertTrue',  'closesParent'],
-			'!closeParent'         => ['assertFalse', 'closesParent']
-		];
-
-		if (isset($methods[$rule]))
-		{
-			list($assert, $method) = $methods[$rule];
-		}
-		else
-		{
-			$assert = ($rule[0] === '!') ? 'assertFalse' : 'assertTrue';
-			$method = ltrim($rule, '!');
-		}
+		$assert = ($rule[0] === '!') ? 'assertFalse' : 'assertTrue';
+		$method = ltrim($rule, '!');
 
 		$this->$assert($src->$method($trg), $title);
 	}
@@ -43,12 +25,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <span> does not allow <div> as child
 	*/
-	public function testD335F821()
+	public function test2CBBE8A9()
 	{
 		$this->runCase(
 			'<span> does not allow <div> as child',
 			'<span><xsl:apply-templates/></span>',
-			'denyChild',
+			'!allowsChild',
 			'<div><xsl:apply-templates/></div>'
 		);
 	}
@@ -56,12 +38,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <span> does not allow <div> as child even with a <span> sibling
 	*/
-	public function test114C6685()
+	public function test650ADBD4()
 	{
 		$this->runCase(
 			'<span> does not allow <div> as child even with a <span> sibling',
 			'<span><xsl:apply-templates/></span>',
-			'denyChild',
+			'!allowsChild',
 			'<span>xxx</span><div><xsl:apply-templates/></div>'
 		);
 	}
@@ -69,12 +51,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <span> and <div> does not allow <span> and <div> as child
 	*/
-	public function testE416F9F5()
+	public function test1806C2AF()
 	{
 		$this->runCase(
 			'<span> and <div> does not allow <span> and <div> as child',
 			'<span><xsl:apply-templates/></span><div><xsl:apply-templates/></div>',
-			'denyChild',
+			'!allowsChild',
 			'<span/><div/>'
 		);
 	}
@@ -82,12 +64,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <li> closes parent <li>
 	*/
-	public function test93A27904()
+	public function test55335E88()
 	{
 		$this->runCase(
 			'<li> closes parent <li>',
 			'<li/>',
-			'closeParent',
+			'closesParent',
 			'<li><xsl:apply-templates/></li>'
 		);
 	}
@@ -95,12 +77,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <div> closes parent <p>
 	*/
-	public function test1D189E22()
+	public function test4405B696()
 	{
 		$this->runCase(
 			'<div> closes parent <p>',
 			'<div/>',
-			'closeParent',
+			'closesParent',
 			'<p><xsl:apply-templates/></p>'
 		);
 	}
@@ -108,12 +90,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <p> closes parent <p>
 	*/
-	public function test94ADCE2C()
+	public function testA3342EC1()
 	{
 		$this->runCase(
 			'<p> closes parent <p>',
 			'<p/>',
-			'closeParent',
+			'closesParent',
 			'<p><xsl:apply-templates/></p>'
 		);
 	}
@@ -121,12 +103,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <div> does not close parent <div>
 	*/
-	public function test80EA2E75()
+	public function test95ADC105()
 	{
 		$this->runCase(
 			'<div> does not close parent <div>',
 			'<div/>',
-			'!closeParent',
+			'!closesParent',
 			'<div><xsl:apply-templates/></div>'
 		);
 	}
@@ -134,12 +116,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <span> does not close parent <span>
 	*/
-	public function test576AB9F1()
+	public function test78511A05()
 	{
 		$this->runCase(
 			'<span> does not close parent <span>',
 			'<span/>',
-			'!closeParent',
+			'!closesParent',
 			'<span><xsl:apply-templates/></span>'
 		);
 	}
@@ -147,12 +129,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <a> denies <a> as descendant
 	*/
-	public function test176B9DB6()
+	public function testD33EA39A()
 	{
 		$this->runCase(
 			'<a> denies <a> as descendant',
 			'<a><xsl:apply-templates/></a>',
-			'denyDescendant',
+			'!allowsDescendant',
 			'<a/>'
 		);
 	}
@@ -160,12 +142,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <a> allows <img> with no usemap attribute as child
 	*/
-	public function testFF711579()
+	public function testD351929A()
 	{
 		$this->runCase(
 			'<a> allows <img> with no usemap attribute as child',
 			'<a><xsl:apply-templates/></a>',
-			'allowChild',
+			'allowsChild',
 			'<img/>'
 		);
 	}
@@ -173,12 +155,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <a> denies <img usemap="#foo"> as child
 	*/
-	public function testF13726A8()
+	public function testA40F2EB6()
 	{
 		$this->runCase(
 			'<a> denies <img usemap="#foo"> as child',
 			'<a><xsl:apply-templates/></a>',
-			'denyChild',
+			'!allowsChild',
 			'<img usemap="#foo"/>'
 		);
 	}
@@ -186,12 +168,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <div><a> allows <div> as child
 	*/
-	public function test0266A932()
+	public function test21CE8315()
 	{
 		$this->runCase(
 			'<div><a> allows <div> as child',
 			'<div><a><xsl:apply-templates/></a></div>',
-			'allowChild',
+			'allowsChild',
 			'<div/>'
 		);
 	}
@@ -199,12 +181,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <span><a> denies <div> as child
 	*/
-	public function test8E52F053()
+	public function test041F623B()
 	{
 		$this->runCase(
 			'<span><a> denies <div> as child',
 			'<span><a><xsl:apply-templates/></a></span>',
-			'denyChild',
+			'!allowsChild',
 			'<div/>'
 		);
 	}
@@ -212,12 +194,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <audio> with no src attribute allows <source> as child
 	*/
-	public function test3B294484()
+	public function test8B0A9455()
 	{
 		$this->runCase(
 			'<audio> with no src attribute allows <source> as child',
 			'<audio><xsl:apply-templates/></audio>',
-			'allowChild',
+			'allowsChild',
 			'<source/>'
 		);
 	}
@@ -225,12 +207,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <audio src="..."> denies <source> as child
 	*/
-	public function testE990B9F2()
+	public function test2E32CC58()
 	{
 		$this->runCase(
 			'<audio src="..."> denies <source> as child',
 			'<audio src="{@src}"><xsl:apply-templates/></audio>',
-			'denyChild',
+			'!allowsChild',
 			'<source/>'
 		);
 	}
@@ -286,12 +268,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <span> allows <unknownElement> as child
 	*/
-	public function test79E09FE9()
+	public function test655D9122()
 	{
 		$this->runCase(
 			'<span> allows <unknownElement> as child',
 			'<span><xsl:apply-templates/></span>',
-			'allowChild',
+			'allowsChild',
 			'<unknownElement/>'
 		);
 	}
@@ -299,12 +281,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <unknownElement> allows <span> as child
 	*/
-	public function test4289BD7D()
+	public function testEE29F1FF()
 	{
 		$this->runCase(
 			'<unknownElement> allows <span> as child',
 			'<unknownElement><xsl:apply-templates/></unknownElement>',
-			'allowChild',
+			'allowsChild',
 			'<span/>'
 		);
 	}
@@ -312,60 +294,60 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <textarea> allows text nodes
 	*/
-	public function test1B650F69()
+	public function test2E7367FF()
 	{
 		$this->runCase(
 			'<textarea> allows text nodes',
 			'<textarea><xsl:apply-templates/></textarea>',
-			'allowText'
+			'allowsText'
 		);
 	}
 
 	/**
 	* @testdox <style> allows text nodes
 	*/
-	public function test2D08B430()
+	public function test19B9DD8B()
 	{
 		$this->runCase(
 			'<style> allows text nodes',
 			'<style><xsl:apply-templates/></style>',
-			'allowText'
+			'allowsText'
 		);
 	}
 
 	/**
 	* @testdox <xsl:apply-templates/> allows text nodes
 	*/
-	public function testA7F8F927()
+	public function test1457EEC0()
 	{
 		$this->runCase(
 			'<xsl:apply-templates/> allows text nodes',
 			'<xsl:apply-templates/>',
-			'allowText'
+			'allowsText'
 		);
 	}
 
 	/**
 	* @testdox <table> disallows text nodes
 	*/
-	public function test96675F41()
+	public function test6107CF00()
 	{
 		$this->runCase(
 			'<table> disallows text nodes',
 			'<table><xsl:apply-templates/></table>',
-			'denyText'
+			'!allowsText'
 		);
 	}
 
 	/**
 	* @testdox <table><tr><td> allows "Hi"
 	*/
-	public function test1B2ACE03()
+	public function test5ED10B0C()
 	{
 		$this->runCase(
 			'<table><tr><td> allows "Hi"',
 			'<table><tr><td><xsl:apply-templates/></td></tr></table>',
-			'allowChild',
+			'allowsChild',
 			'Hi'
 		);
 	}
@@ -373,12 +355,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <div><table> disallows "Hi"
 	*/
-	public function test5F404614()
+	public function test55D2B228()
 	{
 		$this->runCase(
 			'<div><table> disallows "Hi"',
 			'<div><table><xsl:apply-templates/></table></div>',
-			'denyChild',
+			'!allowsChild',
 			'Hi'
 		);
 	}
@@ -386,12 +368,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <table> disallows <xsl:value-of/>
 	*/
-	public function test4E1E4A38()
+	public function testAF701A06()
 	{
 		$this->runCase(
 			'<table> disallows <xsl:value-of/>',
 			'<table><xsl:apply-templates/></table>',
-			'denyChild',
+			'!allowsChild',
 			'<xsl:value-of select="@foo"/>'
 		);
 	}
@@ -399,12 +381,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <table> disallows <xsl:text>Hi</xsl:text>
 	*/
-	public function test78E6A7D9()
+	public function test069CFF2A()
 	{
 		$this->runCase(
 			'<table> disallows <xsl:text>Hi</xsl:text>',
 			'<table><xsl:apply-templates/></table>',
-			'denyChild',
+			'!allowsChild',
 			'<xsl:text>Hi</xsl:text>'
 		);
 	}
@@ -412,12 +394,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <table> allows <xsl:text>  </xsl:text>
 	*/
-	public function test107CB766()
+	public function test9F935BDA()
 	{
 		$this->runCase(
 			'<table> allows <xsl:text>  </xsl:text>',
 			'<table><xsl:apply-templates/></table>',
-			'allowChild',
+			'allowsChild',
 			'<xsl:text>  </xsl:text>'
 		);
 	}
@@ -593,12 +575,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child
 	*/
-	public function testBDD36E34()
+	public function testCAAEE63E()
 	{
 		$this->runCase(
 			'<script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child',
 			'<script><xsl:apply-templates/></script>',
-			'denyChild',
+			'!allowsChild',
 			'<span/>'
 		);
 	}
@@ -606,12 +588,12 @@ class TemplateForensicsTest extends Test
 	/**
 	* @testdox <script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child
 	*/
-	public function testF832AC8A()
+	public function testC2B440E5()
 	{
 		$this->runCase(
 			'<script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child',
 			'<script><xsl:apply-templates/></script>',
-			'denyDescendant',
+			'!allowsDescendant',
 			'<span/>'
 		);
 	}
@@ -731,93 +713,93 @@ class TemplateForensicsTest extends Test
 			[
 				'<span> does not allow <div> as child',
 				'<span><xsl:apply-templates/></span>',
-				'denyChild',
+				'!allowsChild',
 				'<div><xsl:apply-templates/></div>'
 			],
 			[
 				'<span> does not allow <div> as child even with a <span> sibling',
 				'<span><xsl:apply-templates/></span>',
-				'denyChild',
+				'!allowsChild',
 				'<span>xxx</span><div><xsl:apply-templates/></div>'
 			],
 			[
 				'<span> and <div> does not allow <span> and <div> as child',
 				'<span><xsl:apply-templates/></span><div><xsl:apply-templates/></div>',
-				'denyChild',
+				'!allowsChild',
 				'<span/><div/>'
 			],
 			[
 				'<li> closes parent <li>',
 				'<li/>',
-				'closeParent',
+				'closesParent',
 				'<li><xsl:apply-templates/></li>'
 			],
 			[
 				'<div> closes parent <p>',
 				'<div/>',
-				'closeParent',
+				'closesParent',
 				'<p><xsl:apply-templates/></p>'
 			],
 			[
 				'<p> closes parent <p>',
 				'<p/>',
-				'closeParent',
+				'closesParent',
 				'<p><xsl:apply-templates/></p>'
 			],
 			[
 				'<div> does not close parent <div>',
 				'<div/>',
-				'!closeParent',
+				'!closesParent',
 				'<div><xsl:apply-templates/></div>'
 			],
-			// This test mainly exist to ensure nothing bad happens with HTML tags that don't have
-			// a "cp" value in TemplateForensics::$htmlElements
 			[
+				// This test mainly exist to ensure nothing bad happens with HTML tags that don't
+				// have a "cp" value in TemplateForensics::$htmlElements
 				'<span> does not close parent <span>',
 				'<span/>',
-				'!closeParent',
+				'!closesParent',
 				'<span><xsl:apply-templates/></span>'
 			],
 			[
 				'<a> denies <a> as descendant',
 				'<a><xsl:apply-templates/></a>',
-				'denyDescendant',
+				'!allowsDescendant',
 				'<a/>'
 			],
 			[
 				'<a> allows <img> with no usemap attribute as child',
 				'<a><xsl:apply-templates/></a>',
-				'allowChild',
+				'allowsChild',
 				'<img/>'
 			],
 			[
 				'<a> denies <img usemap="#foo"> as child',
 				'<a><xsl:apply-templates/></a>',
-				'denyChild',
+				'!allowsChild',
 				'<img usemap="#foo"/>'
 			],
 			[
 				'<div><a> allows <div> as child',
 				'<div><a><xsl:apply-templates/></a></div>',
-				'allowChild',
+				'allowsChild',
 				'<div/>'
 			],
 			[
 				'<span><a> denies <div> as child',
 				'<span><a><xsl:apply-templates/></a></span>',
-				'denyChild',
+				'!allowsChild',
 				'<div/>'
 			],
 			[
 				'<audio> with no src attribute allows <source> as child',
 				'<audio><xsl:apply-templates/></audio>',
-				'allowChild',
+				'allowsChild',
 				'<source/>'
 			],
 			[
 				'<audio src="..."> denies <source> as child',
 				'<audio src="{@src}"><xsl:apply-templates/></audio>',
-				'denyChild',
+				'!allowsChild',
 				'<source/>'
 			],
 			[
@@ -843,63 +825,63 @@ class TemplateForensicsTest extends Test
 			[
 				'<span> allows <unknownElement> as child',
 				'<span><xsl:apply-templates/></span>',
-				'allowChild',
+				'allowsChild',
 				'<unknownElement/>'
 			],
 			[
 				'<unknownElement> allows <span> as child',
 				'<unknownElement><xsl:apply-templates/></unknownElement>',
-				'allowChild',
+				'allowsChild',
 				'<span/>'
 			],
 			[
 				'<textarea> allows text nodes',
 				'<textarea><xsl:apply-templates/></textarea>',
-				'allowText'
+				'allowsText'
 			],
 			[
 				'<style> allows text nodes',
 				'<style><xsl:apply-templates/></style>',
-				'allowText'
+				'allowsText'
 			],
 			[
 				'<xsl:apply-templates/> allows text nodes',
 				'<xsl:apply-templates/>',
-				'allowText'
+				'allowsText'
 			],
 			[
 				'<table> disallows text nodes',
 				'<table><xsl:apply-templates/></table>',
-				'denyText'
+				'!allowsText'
 			],
 			[
 				'<table><tr><td> allows "Hi"',
 				'<table><tr><td><xsl:apply-templates/></td></tr></table>',
-				'allowChild',
+				'allowsChild',
 				'Hi'
 			],
 			[
 				'<div><table> disallows "Hi"',
 				'<div><table><xsl:apply-templates/></table></div>',
-				'denyChild',
+				'!allowsChild',
 				'Hi'
 			],
 			[
 				'<table> disallows <xsl:value-of/>',
 				'<table><xsl:apply-templates/></table>',
-				'denyChild',
+				'!allowsChild',
 				'<xsl:value-of select="@foo"/>'
 			],
 			[
 				'<table> disallows <xsl:text>Hi</xsl:text>',
 				'<table><xsl:apply-templates/></table>',
-				'denyChild',
+				'!allowsChild',
 				'<xsl:text>Hi</xsl:text>'
 			],
 			[
 				'<table> allows <xsl:text>  </xsl:text>',
 				'<table><xsl:apply-templates/></table>',
-				'allowChild',
+				'allowsChild',
 				'<xsl:text>  </xsl:text>'
 			],
 			[
@@ -975,13 +957,13 @@ class TemplateForensicsTest extends Test
 			[
 				'<script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child',
 				'<script><xsl:apply-templates/></script>',
-				'denyChild',
+				'!allowsChild',
 				'<span/>'
 			],
 			[
 				'<script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child',
 				'<script><xsl:apply-templates/></script>',
-				'denyDescendant',
+				'!allowsDescendant',
 				'<span/>'
 			],
 			[
