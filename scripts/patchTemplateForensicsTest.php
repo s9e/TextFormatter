@@ -11,21 +11,9 @@ include $filepath;
 $test = new Configurator\Helpers\HTML5\TemplateForensicsTest;
 
 $php = '';
-foreach ($test->getData() as $case)
+foreach ($test->getData() as $k => $case)
 {
-	$php .= "\n\t/**\n\t* @testdox " . $case[0] . "\n\t*/\n\tpublic function test" . sprintf('%08X', crc32(serialize($case))) . "()\n\t{\n\t\t\$this->runCase(";
-
-	foreach ($case as $k => $str)
-	{
-		if ($k)
-		{
-			$php .= ',';
-		}
-
-		$php .= "\n\t\t\t" . var_export($str, true);
-	}
-
-	$php .= "\n\t\t);\n\t}\n";
+	$php .= "\n\t/** @testdox " . $case[0] . " */\n\tpublic function test" . sprintf('%08X', crc32(serialize($case))) . '() { $this->runCase(' . $k . "); }\n";
 }
 
 $file = file_get_contents($filepath);
