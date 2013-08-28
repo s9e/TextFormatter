@@ -393,6 +393,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <span> allows <unknownElement> as child
  [x] <unknownElement> allows <span> as child
  [x] <textarea> allows text nodes
+ [x] <style> allows text nodes
  [x] <xsl:apply-templates/> allows text nodes
  [x] <table> disallows text nodes
  [x] <table><tr><td> allows "Hi"
@@ -406,14 +407,16 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <div><u> is not a formatting element
  [x] "Hi" is not a formatting element
  [x] A template composed entirely of a single <xsl:apply-templates/> is not a formatting element
- [x] <img> denies all descendants
- [x] <hr><xsl:apply-templates/></hr> denies all descendants
- [x] <div><hr><xsl:apply-templates/></hr></div> denies all descendants
- [x] <style> denies all descendants even if it has an <xsl:apply-templates/> child
- [x] <span> does not deny all descendants if it has an <xsl:apply-templates/> child
- [x] <span> denies all descendants if it does not have an <xsl:apply-templates/> child
- [x] <colgroup span="2"> denies all descendants
- [x] <colgroup> denies all descendants
+ [x] <img> uses the "empty" content model
+ [x] <hr><xsl:apply-templates/></hr> uses the "empty" content model
+ [x] <div><hr><xsl:apply-templates/></hr></div> uses the "empty" content model
+ [x] <span> is not empty
+ [x] <colgroup span="2"> uses the "empty" content model
+ [x] <colgroup> does not use the "empty" content model
+ [x] <span> allows elements
+ [x] <script> does not allow elements even if it has an <xsl:apply-templates/> child
+ [x] <script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child
+ [x] <script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child
  [x] <pre> preserves whitespace
  [x] <pre><code> preserves whitespace
  [x] <span> does not preserve whitespace
@@ -439,7 +442,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] Does not generate an autoReopen rule for <div>
  [x] Does not generate an autoReopen rule for <div><b>
  [x] Generates a ignoreTags rule for <hr>
- [x] Generates a ignoreTags rule for <style>
  [x] Generates an ignoreText rule for <ul>
  [x] Does not generate an ignoreText rule for <b>
  [x] Generates an isTransparent rule for <a>

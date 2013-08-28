@@ -39,6 +39,11 @@ class TemplateForensics
 	protected $allowChildBitfield = "\0";
 
 	/**
+	* @var string Whether elements are allowed as children
+	*/
+	protected $allowsElements = true;
+
+	/**
 	* @var string Whether text nodes are allowed as children
 	*/
 	protected $allowsText = true;
@@ -49,14 +54,9 @@ class TemplateForensics
 	protected $breaksParagraph = false;
 
 	/**
-	* @var string OR-ed bitfield representing all of the categories used by this tag's templates
+	* @var string OR-ed bitfield representing all of the categories used by this template
 	*/
 	protected $contentBitfield = "\0";
-
-	/**
-	* @var bool Whether to deny any descendants to this tag
-	*/
-	protected $ignoreTags = true;
 
 	/**
 	* @var string denyDescendant bitfield
@@ -64,19 +64,29 @@ class TemplateForensics
 	protected $denyDescendantBitfield = "\0";
 
 	/**
-	* @var DOMDocument Document containing all the templates associated with this tag, concatenated
+	* @var DOMDocument Document containing the template
 	*/
 	protected $dom;
 
 	/**
-	* @var bool Whether this tag renders non-whitespace text nodes at its root
+	* @var bool Whether this template contains any HTML elements
+	*/
+	protected $hasElements = false;
+
+	/**
+	* @var bool Whether this template renders non-whitespace text nodes at its root
 	*/
 	protected $hasRootText = false;
 
 	/**
-	* @var bool Whether this tag should be considered a block-level element
+	* @var bool Whether this template should be considered a block-level element
 	*/
 	protected $isBlock = false;
+
+	/**
+	* @var bool Whether the template uses the "empty" content model
+	*/
+	protected $isEmpty = true;
 
 	/**
 	* @var string Whether this template adds to the list of active formatting elements
@@ -136,15 +146,14 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this tag allows given tag as a child
+	* Whether this template allows a given child
 	*
 	* @param  self $child
 	* @return bool
 	*/
 	public function allowsChild(self $child)
 	{
-		// Sometimes, a tag can technically be allowed as a child due to the transparent content
-		// model but denied as a descendant
+		// Sometimes, a template can technically be allowed as a child but denied as a descendant
 		if (!$this->allowsDescendant($child))
 		{
 			return false;
@@ -167,18 +176,40 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this tag allows given tag as a descendant
+	* Whether this template allows a given descendant
 	*
 	* @param  self $descendant
 	* @return bool
 	*/
 	public function allowsDescendant(self $descendant)
 	{
-		return !self::match($descendant->contentBitfield, $this->denyDescendantBitfield);
+		// Test whether the descendant is explicitly disallowed
+		if (self::match($descendant->contentBitfield, $this->denyDescendantBitfield))
+		{
+			return false;
+		}
+
+		// Test whether the descendant contains any elements and we disallow elements
+		if (!$this->allowsElements && $descendant->hasElements)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
-	* Whether this tag allows text nodes as children
+	* Whether this template allows elements as children
+	*
+	* @return bool
+	*/
+	public function allowsElements()
+	{
+		return $this->allowsElements;
+	}
+
+	/**
+	* Whether this template allows text nodes as children
 	*
 	* @return bool
 	*/
@@ -198,7 +229,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this tag automatically closes given parent tag
+	* Whether this template automatically closes given parent template
 	*
 	* @param  self $parent
 	* @return bool
@@ -216,8 +247,8 @@ class TemplateForensics
 			{
 				if (in_array($leafName, self::$htmlElements[$rootName]['cp'], true))
 				{
-					// If any of this tag's root node closes one of the parent's leaf node, we
-					// consider that this tag closes the other one
+					// If any of this template's root node closes one of the parent's leaf node, we
+					// consider that this template closes the other one
 					return true;
 				}
 			}
@@ -227,17 +258,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this tag should deny any descendants
-	*
-	* @return bool
-	*/
-	public function ignoreTags()
-	{
-		return $this->ignoreTags;
-	}
-
-	/**
-	* Whether this tag should be considered a block-level element
+	* Whether this template should be considered a block-level element
 	*
 	* @return bool
 	*/
@@ -247,7 +268,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this tag adds to the list of active formatting elements
+	* Whether this template adds to the list of active formatting elements
 	*
 	* @return bool
 	*/
@@ -257,7 +278,17 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this tag should use the transparent content model
+	* Whether this template uses the "empty" content model
+	*
+	* @return bool
+	*/
+	public function isEmpty()
+	{
+		return $this->isEmpty;
+	}
+
+	/**
+	* Whether this template uses the "transparent" content model
 	*
 	* @return bool
 	*/
@@ -277,7 +308,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this tag preserves the whitespace in its descendants
+	* Whether this template preserves the whitespace in its descendants
 	*
 	* @return bool
 	*/
@@ -297,6 +328,7 @@ class TemplateForensics
 		foreach ($this->xpath->query($query) as $node)
 		{
 			$this->contentBitfield |= $this->getBitfield($node->localName, 'c', $node);
+			$this->hasElements = true;
 		}
 	}
 
@@ -323,7 +355,7 @@ class TemplateForensics
 				$elName = 'span';
 			}
 
-			// If any root node is a block-level element, we'll mark the tag as such
+			// If any root node is a block-level element, we'll mark the template as such
 			if (!empty(self::$htmlElements[$elName]['b']))
 			{
 				$this->isBlock = true;
@@ -383,6 +415,11 @@ class TemplateForensics
 			);
 
 			/**
+			* @var bool Whether this branch allows elements
+			*/
+			$allowsElements = true;
+
+			/**
 			* @var bool Whether this branch allows text nodes
 			*/
 			$allowsText = true;
@@ -397,7 +434,7 @@ class TemplateForensics
 			/**
 			* @var bool Whether this branch denies all non-text descendants
 			*/
-			$ignoreTags = false;
+			$isEmpty = false;
 
 			/**
 			* @var bool Whether this branch contains a void element
@@ -425,14 +462,14 @@ class TemplateForensics
 					$isVoid = true;
 				}
 
-				// Test whether the element denies all descendants
-				if (!empty(self::$htmlElements[$elName]['it']))
+				// Test whether the element uses the "empty" content model
+				if (!empty(self::$htmlElements[$elName]['e']))
 				{
 					// Test the XPath condition
-					if (!isset(self::$htmlElements[$elName]['it0'])
-					 || $this->evaluate(self::$htmlElements[$elName]['it0'], $node))
+					if (!isset(self::$htmlElements[$elName]['e0'])
+					 || $this->evaluate(self::$htmlElements[$elName]['e0'], $node))
 					{
-						$ignoreTags = true;
+						$isEmpty = true;
 					}
 				}
 
@@ -441,7 +478,7 @@ class TemplateForensics
 					// If the element isn't transparent, we reset its bitfield
 					$branchBitfield = "\0";
 
-					// Also, it means that the tag itself isn't transparent
+					// Also, it means that the template itself isn't transparent
 					$this->isTransparent = false;
 				}
 
@@ -456,6 +493,9 @@ class TemplateForensics
 				{
 					$this->preservesWhitespace = true;
 				}
+
+				// Test whether this branch allows elements
+				$allowsElements = empty(self::$htmlElements[$elName]['to']);
 
 				// Test whether this branch allows text nodes
 				$allowsText = empty(self::$htmlElements[$elName]['nt']);
@@ -476,19 +516,25 @@ class TemplateForensics
 				$this->leafNodes[] = $node->localName;
 			}
 
-			// If any branch disallows text, the tag disallows text
+			// If any branch disallows elements, the template disallows elements
+			if (!$allowsElements)
+			{
+				$this->allowsElements = false;
+			}
+
+			// If any branch disallows text, the template disallows text
 			if (!$allowsText)
 			{
 				$this->allowsText = false;
 			}
 
-			// If any branch does not deny all descendants, the tag does not deny all descendants
-			if (!$ignoreTags)
+			// If any branch is not empty, the template is not empty
+			if (!$isEmpty)
 			{
-				$this->ignoreTags = false;
+				$this->isEmpty = false;
 			}
 
-			// If any branch is not void, the tag is not void
+			// If any branch is not void, the template is not void
 			if (!$isVoid)
 			{
 				$this->isVoid = false;
@@ -505,8 +551,8 @@ class TemplateForensics
 				$this->allowChildBitfield &= $branchBitfield;
 			}
 
-			// Set the isFormattingElement property to our final value, but only if this tag had any
-			// branches
+			// Set the isFormattingElement property to our final value, but only if this template
+			// had any branches
 			if (!empty($this->leafNodes))
 			{
 				$this->isFormattingElement = $isFormattingElement;
@@ -562,13 +608,15 @@ class TemplateForensics
 	*
 	* Additionally, other flags are set:
 	*
-	*   "t" indicates that the element uses the transparent content model.
+	*   "t" indicates that the element uses the "transparent" content model.
 	*
-	*   "it" indicates that the element should ignore tags until closed. (ignoreTags)
+	*   "e" indicates that the element uses the "empty" content model.
 	*
 	*   "v" indicates that the element is a void element.
 	*
-	*   "nt" indicates that the element does not accept text nodes.
+	*   "nt" indicates that the element does not accept text nodes. (no text)
+	*
+	*   "to" indicates that the element should only contain text. (text-only)
 	*
 	*   "fe" indicates that the element is a formatting element. It will automatically be reopened
 	*   when closed by an end tag of a different name.
@@ -586,24 +634,24 @@ class TemplateForensics
 		'a'=>['c'=>"\17",'ac'=>"\0",'dd'=>"\10",'t'=>1,'fe'=>1],
 		'abbr'=>['c'=>"\7",'ac'=>"\4"],
 		'address'=>['c'=>"\3\4",'ac'=>"\1",'dd'=>"\100\6",'b'=>1,'cp'=>['p']],
-		'area'=>['c'=>"\5",'nt'=>1,'it'=>1,'v'=>1],
+		'area'=>['c'=>"\5",'nt'=>1,'e'=>1,'v'=>1],
 		'article'=>['c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'aside'=>['c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\0\1",'b'=>1,'cp'=>['p']],
 		'audio'=>['c'=>"\57",'c3'=>'@controls','c1'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1],
 		'b'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'base'=>['c'=>"\0\1",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
+		'base'=>['c'=>"\0\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'bdi'=>['c'=>"\7",'ac'=>"\4"],
 		'bdo'=>['c'=>"\7",'ac'=>"\4"],
 		'blockquote'=>['c'=>"\23",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'body'=>['c'=>"\20\200",'ac'=>"\1",'b'=>1],
-		'br'=>['c'=>"\5",'nt'=>1,'it'=>1,'v'=>1],
+		'br'=>['c'=>"\5",'nt'=>1,'e'=>1,'v'=>1],
 		'button'=>['c'=>"\17",'ac'=>"\4",'dd'=>"\10"],
 		'canvas'=>['c'=>"\47",'ac'=>"\0",'t'=>1],
 		'caption'=>['c'=>"\200",'ac'=>"\1",'dd'=>"\0\0\0\10",'b'=>1],
 		'cite'=>['c'=>"\7",'ac'=>"\4"],
 		'code'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'col'=>['c'=>"\0\0\0\0\10",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
-		'colgroup'=>['c'=>"\200",'ac'=>"\0\0\0\0\10",'ac35'=>'not(@span)','nt'=>1,'it'=>1,'it0'=>'@span','b'=>1],
+		'col'=>['c'=>"\0\0\0\0\10",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
+		'colgroup'=>['c'=>"\200",'ac'=>"\0\0\0\0\10",'ac35'=>'not(@span)','nt'=>1,'e'=>1,'e0'=>'@span','b'=>1],
 		'data'=>['c'=>"\7",'ac'=>"\4"],
 		'datalist'=>['c'=>"\5",'ac'=>"\4\0\0\1"],
 		'dd'=>['c'=>"\0\0\4",'ac'=>"\1",'b'=>1,'cp'=>['dd','dt']],
@@ -615,7 +663,7 @@ class TemplateForensics
 		'dl'=>['c'=>"\3",'ac'=>"\0\0\14",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'dt'=>['c'=>"\0\0\4",'ac'=>"\1",'dd'=>"\100\102",'b'=>1,'cp'=>['dd','dt']],
 		'em'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'embed'=>['c'=>"\57",'nt'=>1,'it'=>1,'v'=>1],
+		'embed'=>['c'=>"\57",'nt'=>1,'e'=>1,'v'=>1],
 		'fieldset'=>['c'=>"\23",'ac'=>"\1\0\0\2",'b'=>1,'cp'=>['p']],
 		'figcaption'=>['c'=>"\0\0\0\0\100",'ac'=>"\1",'b'=>1],
 		'figure'=>['c'=>"\23",'ac'=>"\1\0\0\0\100",'b'=>1],
@@ -629,23 +677,23 @@ class TemplateForensics
 		'h6'=>['c'=>"\103",'ac'=>"\4",'b'=>1,'cp'=>['p']],
 		'head'=>['c'=>"\0\200",'ac'=>"\0\1",'nt'=>1,'b'=>1],
 		'header'=>['c'=>"\3\114",'ac'=>"\1",'dd'=>"\0\10",'b'=>1,'cp'=>['p']],
-		'hr'=>['c'=>"\1",'nt'=>1,'it'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
+		'hr'=>['c'=>"\1",'nt'=>1,'e'=>1,'v'=>1,'b'=>1,'cp'=>['p']],
 		'html'=>['c'=>"\0",'ac'=>"\0\200",'nt'=>1,'b'=>1],
 		'i'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'iframe'=>['c'=>"\57",'nt'=>1,'it'=>1],
-		'img'=>['c'=>"\57",'c3'=>'@usemap','nt'=>1,'it'=>1,'v'=>1],
-		'input'=>['c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'it'=>1,'v'=>1],
+		'iframe'=>['c'=>"\57",'nt'=>1,'e'=>1,'to'=>1],
+		'img'=>['c'=>"\57",'c3'=>'@usemap','nt'=>1,'e'=>1,'v'=>1],
+		'input'=>['c'=>"\17",'c3'=>'@type!="hidden"','c1'=>'@type!="hidden"','nt'=>1,'e'=>1,'v'=>1],
 		'ins'=>['c'=>"\7",'ac'=>"\0",'t'=>1],
 		'kbd'=>['c'=>"\7",'ac'=>"\4"],
-		'keygen'=>['c'=>"\17",'nt'=>1,'it'=>1,'v'=>1],
+		'keygen'=>['c'=>"\17",'nt'=>1,'e'=>1,'v'=>1],
 		'label'=>['c'=>"\17\0\0\100",'ac'=>"\4",'dd'=>"\0\0\0\100"],
 		'legend'=>['c'=>"\0\0\0\2",'ac'=>"\4",'b'=>1],
 		'li'=>['c'=>"\0\0\0\0\40",'ac'=>"\1",'b'=>1,'cp'=>['li']],
-		'link'=>['c'=>"\0",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
+		'link'=>['c'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'main'=>['c'=>"\3\10\0\0\1",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'map'=>['c'=>"\7",'ac'=>"\0",'t'=>1],
 		'mark'=>['c'=>"\7",'ac'=>"\4"],
-		'meta'=>['c'=>"\0",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
+		'meta'=>['c'=>"\0",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'meter'=>['c'=>"\7\20\0\40",'ac'=>"\4",'dd'=>"\0\0\0\40"],
 		'nav'=>['c'=>"\3\2",'ac'=>"\1",'dd'=>"\0\0\0\0\1",'b'=>1,'cp'=>['p']],
 		'noscript'=>['c'=>"\5\1\40",'ac'=>"\0",'dd'=>"\0\0\40",'t'=>1],
@@ -655,7 +703,7 @@ class TemplateForensics
 		'option'=>['c'=>"\0\40\0\1",'b'=>1,'cp'=>['option']],
 		'output'=>['c'=>"\7",'ac'=>"\4"],
 		'p'=>['c'=>"\3",'ac'=>"\4",'b'=>1,'cp'=>['p']],
-		'param'=>['c'=>"\0\0\0\20",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
+		'param'=>['c'=>"\0\0\0\20",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'pre'=>['c'=>"\3",'ac'=>"\4",'pre'=>1,'b'=>1,'cp'=>['p']],
 		'progress'=>['c'=>"\7\20\20",'ac'=>"\4",'dd'=>"\0\0\20"],
 		'q'=>['c'=>"\7",'ac'=>"\4"],
@@ -664,14 +712,14 @@ class TemplateForensics
 		'ruby'=>['c'=>"\7\0\0\200",'ac'=>"\4\0\2",'dd'=>"\0\0\0\200"],
 		's'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'samp'=>['c'=>"\7",'ac'=>"\4"],
-		'script'=>['c'=>"\5\1\10",'nt'=>1,'it'=>1],
+		'script'=>['c'=>"\5\1\10",'e'=>1,'e0'=>'@src','to'=>1],
 		'section'=>['c'=>"\3\2",'ac'=>"\1",'b'=>1,'cp'=>['p']],
 		'select'=>['c'=>"\17",'ac'=>"\0\40\10",'nt'=>1],
 		'small'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'source'=>['c'=>"\0\0\200",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
+		'source'=>['c'=>"\0\0\200",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'span'=>['c'=>"\7",'ac'=>"\4"],
 		'strong'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
-		'style'=>['c'=>"\1\1",'c0'=>'@scoped','nt'=>1,'it'=>1,'b'=>1],
+		'style'=>['c'=>"\1\1",'c0'=>'@scoped','to'=>1,'b'=>1],
 		'sub'=>['c'=>"\7",'ac'=>"\4"],
 		'summary'=>['c'=>"\0\0\100",'ac'=>"\4",'b'=>1],
 		'sup'=>['c'=>"\7",'ac'=>"\4"],
@@ -685,12 +733,12 @@ class TemplateForensics
 		'time'=>['c'=>"\7",'ac'=>"\4"],
 		'title'=>['c'=>"\0\1",'b'=>1],
 		'tr'=>['c'=>"\200\0\0\0\20",'ac'=>"\0\0\11",'nt'=>1,'b'=>1,'cp'=>['tr']],
-		'track'=>['c'=>"\0\0\0\4",'nt'=>1,'it'=>1,'v'=>1,'b'=>1],
+		'track'=>['c'=>"\0\0\0\4",'nt'=>1,'e'=>1,'v'=>1,'b'=>1],
 		'u'=>['c'=>"\7",'ac'=>"\4",'fe'=>1],
 		'ul'=>['c'=>"\3",'ac'=>"\0\0\10\0\40",'nt'=>1,'b'=>1,'cp'=>['p']],
 		'var'=>['c'=>"\7",'ac'=>"\4"],
 		'video'=>['c'=>"\57",'c3'=>'@controls','ac'=>"\0\0\200\4",'ac23'=>'not(@src)','ac26'=>'@src','t'=>1],
-		'wbr'=>['c'=>"\5",'nt'=>1,'it'=>1,'v'=>1]
+		'wbr'=>['c'=>"\5",'nt'=>1,'e'=>1,'v'=>1]
 	];
 
 	/**

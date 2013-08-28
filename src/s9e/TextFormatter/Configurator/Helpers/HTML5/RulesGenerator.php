@@ -223,7 +223,7 @@ abstract class RulesGenerator
 			}
 
 			// Create an ignoreTags rule if the tag's forensics call for it
-			if ($srcTag->ignoreTags())
+			if ($srcTag->isEmpty())
 			{
 				$rules['tags'][$srcTagName]['ignoreTags'] = true;
 			}

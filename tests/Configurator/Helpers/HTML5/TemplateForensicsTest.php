@@ -325,6 +325,18 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
+	* @testdox <style> allows text nodes
+	*/
+	public function test2D08B430()
+	{
+		$this->runCase(
+			'<style> allows text nodes',
+			'<style><xsl:apply-templates/></style>',
+			'allowText'
+		);
+	}
+
+	/**
 	* @testdox <xsl:apply-templates/> allows text nodes
 	*/
 	public function testA7F8F927()
@@ -486,98 +498,124 @@ class TemplateForensicsTest extends Test
 	}
 
 	/**
-	* @testdox <img> denies all descendants
+	* @testdox <img> uses the "empty" content model
 	*/
-	public function testD511D438()
+	public function test26941BF9()
 	{
 		$this->runCase(
-			'<img> denies all descendants',
+			'<img> uses the "empty" content model',
 			'<img/>',
-			'ignoreTags'
+			'isEmpty'
 		);
 	}
 
 	/**
-	* @testdox <hr><xsl:apply-templates/></hr> denies all descendants
+	* @testdox <hr><xsl:apply-templates/></hr> uses the "empty" content model
 	*/
-	public function test44B79688()
+	public function test11094568()
 	{
 		$this->runCase(
-			'<hr><xsl:apply-templates/></hr> denies all descendants',
+			'<hr><xsl:apply-templates/></hr> uses the "empty" content model',
 			'<hr><xsl:apply-templates/></hr>',
-			'ignoreTags'
+			'isEmpty'
 		);
 	}
 
 	/**
-	* @testdox <div><hr><xsl:apply-templates/></hr></div> denies all descendants
+	* @testdox <div><hr><xsl:apply-templates/></hr></div> uses the "empty" content model
 	*/
-	public function test3210FED5()
+	public function testACE6126C()
 	{
 		$this->runCase(
-			'<div><hr><xsl:apply-templates/></hr></div> denies all descendants',
+			'<div><hr><xsl:apply-templates/></hr></div> uses the "empty" content model',
 			'<div><hr><xsl:apply-templates/></hr></div>',
-			'ignoreTags'
+			'isEmpty'
 		);
 	}
 
 	/**
-	* @testdox <style> denies all descendants even if it has an <xsl:apply-templates/> child
+	* @testdox <span> is not empty
 	*/
-	public function test90789D3D()
+	public function testBF70FDFF()
 	{
 		$this->runCase(
-			'<style> denies all descendants even if it has an <xsl:apply-templates/> child',
-			'<style><xsl:apply-templates/></style>',
-			'ignoreTags'
-		);
-	}
-
-	/**
-	* @testdox <span> does not deny all descendants if it has an <xsl:apply-templates/> child
-	*/
-	public function testA0C589F6()
-	{
-		$this->runCase(
-			'<span> does not deny all descendants if it has an <xsl:apply-templates/> child',
+			'<span> is not empty',
 			'<span><xsl:apply-templates/></span>',
-			'!ignoreTags'
+			'!isEmpty'
 		);
 	}
 
 	/**
-	* @testdox <span> denies all descendants if it does not have an <xsl:apply-templates/> child
+	* @testdox <colgroup span="2"> uses the "empty" content model
 	*/
-	public function testC16D8915()
+	public function testAA6266BB()
 	{
 		$this->runCase(
-			'<span> denies all descendants if it does not have an <xsl:apply-templates/> child',
-			'<span></span>',
-			'ignoreTags'
-		);
-	}
-
-	/**
-	* @testdox <colgroup span="2"> denies all descendants
-	*/
-	public function test0D91646A()
-	{
-		$this->runCase(
-			'<colgroup span="2"> denies all descendants',
+			'<colgroup span="2"> uses the "empty" content model',
 			'<colgroup span="2"><xsl:apply-templates/></colgroup>',
-			'ignoreTags'
+			'isEmpty'
 		);
 	}
 
 	/**
-	* @testdox <colgroup> denies all descendants
+	* @testdox <colgroup> does not use the "empty" content model
 	*/
-	public function test19654F6E()
+	public function test62BCC022()
 	{
 		$this->runCase(
-			'<colgroup> denies all descendants',
+			'<colgroup> does not use the "empty" content model',
 			'<colgroup><xsl:apply-templates/></colgroup>',
-			'!ignoreTags'
+			'!isEmpty'
+		);
+	}
+
+	/**
+	* @testdox <span> allows elements
+	*/
+	public function testB0AA2D8C()
+	{
+		$this->runCase(
+			'<span> allows elements',
+			'<span><xsl:apply-templates/></span>',
+			'allowsElements'
+		);
+	}
+
+	/**
+	* @testdox <script> does not allow elements even if it has an <xsl:apply-templates/> child
+	*/
+	public function test029EA650()
+	{
+		$this->runCase(
+			'<script> does not allow elements even if it has an <xsl:apply-templates/> child',
+			'<script><xsl:apply-templates/></script>',
+			'!allowsElements'
+		);
+	}
+
+	/**
+	* @testdox <script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child
+	*/
+	public function testBDD36E34()
+	{
+		$this->runCase(
+			'<script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child',
+			'<script><xsl:apply-templates/></script>',
+			'denyChild',
+			'<span/>'
+		);
+	}
+
+	/**
+	* @testdox <script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child
+	*/
+	public function testF832AC8A()
+	{
+		$this->runCase(
+			'<script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child',
+			'<script><xsl:apply-templates/></script>',
+			'denyDescendant',
+			'<span/>'
 		);
 	}
 
@@ -871,6 +909,11 @@ class TemplateForensicsTest extends Test
 				'allowText'
 			],
 			[
+				'<style> allows text nodes',
+				'<style><xsl:apply-templates/></style>',
+				'allowText'
+			],
+			[
 				'<xsl:apply-templates/> allows text nodes',
 				'<xsl:apply-templates/>',
 				'allowText'
@@ -941,44 +984,56 @@ class TemplateForensicsTest extends Test
 				'!isFormattingElement'
 			],
 			[
-				'<img> denies all descendants',
+				'<img> uses the "empty" content model',
 				'<img/>',
-				'ignoreTags'
+				'isEmpty'
 			],
 			[
-				'<hr><xsl:apply-templates/></hr> denies all descendants',
+				'<hr><xsl:apply-templates/></hr> uses the "empty" content model',
 				'<hr><xsl:apply-templates/></hr>',
-				'ignoreTags'
+				'isEmpty'
 			],
 			[
-				'<div><hr><xsl:apply-templates/></hr></div> denies all descendants',
+				'<div><hr><xsl:apply-templates/></hr></div> uses the "empty" content model',
 				'<div><hr><xsl:apply-templates/></hr></div>',
-				'ignoreTags'
+				'isEmpty'
 			],
 			[
-				'<style> denies all descendants even if it has an <xsl:apply-templates/> child',
-				'<style><xsl:apply-templates/></style>',
-				'ignoreTags'
-			],
-			[
-				'<span> does not deny all descendants if it has an <xsl:apply-templates/> child',
+				'<span> is not empty',
 				'<span><xsl:apply-templates/></span>',
-				'!ignoreTags'
+				'!isEmpty'
 			],
 			[
-				'<span> denies all descendants if it does not have an <xsl:apply-templates/> child',
-				'<span></span>',
-				'ignoreTags'
-			],
-			[
-				'<colgroup span="2"> denies all descendants',
+				'<colgroup span="2"> uses the "empty" content model',
 				'<colgroup span="2"><xsl:apply-templates/></colgroup>',
-				'ignoreTags'
+				'isEmpty'
 			],
 			[
-				'<colgroup> denies all descendants',
+				'<colgroup> does not use the "empty" content model',
 				'<colgroup><xsl:apply-templates/></colgroup>',
-				'!ignoreTags'
+				'!isEmpty'
+			],
+			[
+				'<span> allows elements',
+				'<span><xsl:apply-templates/></span>',
+				'allowsElements'
+			],
+			[
+				'<script> does not allow elements even if it has an <xsl:apply-templates/> child',
+				'<script><xsl:apply-templates/></script>',
+				'!allowsElements'
+			],
+			[
+				'<script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child',
+				'<script><xsl:apply-templates/></script>',
+				'denyChild',
+				'<span/>'
+			],
+			[
+				'<script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child',
+				'<script><xsl:apply-templates/></script>',
+				'denyDescendant',
+				'<span/>'
 			],
 			[
 				'<pre> preserves whitespace',

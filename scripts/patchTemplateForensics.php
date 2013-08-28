@@ -221,7 +221,7 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 				case 'Content model':
 					if ($value === 'empty')
 					{
-						$elements[$elName]['ignoreTags'][''] = 0;
+						$elements[$elName]['isEmpty'][''] = 0;
 						break 2;
 					}
 
@@ -239,7 +239,7 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is present: empty$#', $value, $m))
 					{
-						$elements[$elName]['ignoreTags']['@' . $m[1]] = 0;
+						$elements[$elName]['isEmpty']['@' . $m[1]] = 0;
 					}
 					elseif (preg_match('#^if the ([a-z]+) attribute is absent: zero or more ([a-z]+) elements$#', $value, $m))
 					{
@@ -427,11 +427,14 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 					}
 					elseif ($elName === 'style')
 					{
-						$elements[$elName]['ignoreTags'][''] = 0;
+						$elements[$elName]['allowText'] = 0;
+						$elements[$elName]['textOnly'] = 0;
 					}
 					elseif ($elName === 'script')
 					{
-						$elements[$elName]['ignoreTags'][''] = 0;
+						$elements[$elName]['allowText'] = 0;
+						$elements[$elName]['textOnly'] = 0;
+						$elements[$elName]['isEmpty']['@src'] = 0;
 					}
 					elseif ($elName === 'noscript')
 					{
@@ -442,7 +445,8 @@ foreach ($xpath->query('/html/body/dl[@class="element"]') as $dl)
 					}
 					elseif ($elName === 'iframe')
 					{
-						$elements[$elName]['ignoreTags'][''] = 0;
+						$elements[$elName]['textOnly'] = 0;
+						$elements[$elName]['isEmpty'][''] = 0;
 					}
 					else
 					{
@@ -659,18 +663,23 @@ foreach ($elements as $elName => $element)
 		$el['pre'] = 1;
 	}
 
-	if (!empty($element['ignoreTags']))
+	if (!empty($element['isEmpty']))
 	{
-		$el['it'] = 1;
+		$el['e'] = 1;
 
-		if (!isset($element['ignoreTags']['']))
+		if (!isset($element['isEmpty']['']))
 		{
-			$xpath = key($element['ignoreTags']);
+			$xpath = key($element['isEmpty']);
 			if ($xpath)
 			{
-				$el['it0'] = $xpath;
+				$el['e0'] = $xpath;
 			}
 		}
+	}
+
+	if (isset($element['textOnly']))
+	{
+		$el['to'] = 1;
 	}
 
 	if (isset($voidElements[$elName]))

@@ -216,29 +216,6 @@ class RulesGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox Generates a ignoreTags rule for <style>
-	*/
-	public function testIgnoreTagsStyle()
-	{
-		$tags = new TagCollection;
-		$tags->add('STYLE')->templates->set(
-			'',
-			new UnsafeTemplate('<style><xsl:apply-templates/></style>')
-		);
-
-		$rules = RulesGenerator::getRules($tags);
-
-		$this->assertArrayMatches(
-			[
-				'STYLE' => [
-					'ignoreTags' => true
-				]
-			],
-			$rules['tags']
-		);
-	}
-
-	/**
 	* @testdox Generates an ignoreText rule for <ul>
 	*/
 	public function testIgnoreText()
