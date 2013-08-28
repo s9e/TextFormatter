@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Configurator\Helpers\HTML5;
 use DOMDocument;
 use DOMNode;
 use DOMXPath;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
 /**
 * This class helps the RulesGenerator by analyzing a given template in order to answer questions
@@ -24,8 +25,6 @@ use DOMXPath;
 * attributes created with <xsl:attribute> and may never will due to the increased complexity it
 * would entail. Additionally, it does not evaluate the scope of <xsl:apply-templates/>. For
 * instance, it will treat <xsl:apply-templates select="LI"/> as if it was <xsl:apply-templates/>
-*
-* @todo try to fold element names?
 *
 * @link http://dev.w3.org/html5/spec/content-models.html#content-models
 * @link http://dev.w3.org/html5/spec/syntax.html#optional-tags
@@ -130,14 +129,14 @@ class TemplateForensics
 	protected $xpath;
 
 	/**
-	* @param  string $xsl One single <xsl:template/> element
+	* Constructor
+	*
+	* @param  string $template Template content
 	* @return void
 	*/
-	public function __construct($xsl)
+	public function __construct($template)
 	{
-		$this->dom = new DOMDocument;
-		$this->dom->loadXML($xsl);
-
+		$this->dom   = TemplateHelper::loadTemplate($template);
 		$this->xpath = new DOMXPath($this->dom);
 
 		$this->analyseRootNodes();

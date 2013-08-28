@@ -78,11 +78,11 @@ abstract class RulesGenerator
 	* @param  string $tagName Tag's name
 	* @param  Tag    $tag     Tag object
 	* @param  array  $options Helper's option
-	* @return string          Tag's XSL
+	* @return string          Tag's XSL, minus the xsl:template root
 	*/
 	protected static function generateTagXSL($tagName, Tag $tag, array $options)
 	{
-		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">';
+		$xsl = '';
 
 		foreach ($tag->templates as $template)
 		{
@@ -123,8 +123,6 @@ abstract class RulesGenerator
 			$xsl .= str_replace($uid, '<xsl:apply-templates/>', $template);
 		}
 
-		$xsl .= '</xsl:template>';
-
 		return $xsl;
 	}
 
@@ -155,13 +153,8 @@ abstract class RulesGenerator
 			'xsl:apply-templates'
 		));
 
-		// Generate our XSL template
-		$xsl = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
-		     . $dom->saveXML($body)
-		     . '</xsl:template>';
-
 		// Finally create and return a new TemplateForensics instance
-		return new TemplateForensics($xsl);
+		return new TemplateForensics($dom->saveXML($body));
 	}
 
 	/**
@@ -181,12 +174,8 @@ abstract class RulesGenerator
 
 		// Create TemplateForensics object that will be used to determine whether to create rules
 		// related to newlines and paragraphs
-		$br = new TemplateForensics(
-			'<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><br/></xsl:template>'
-		);
-		$p = new TemplateForensics(
-			'<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><p><xsl:apply-templates /></p></xsl:template>'
-		);
+		$br = new TemplateForensics('<br/>');
+		$p  = new TemplateForensics('<p><xsl:apply-templates /></p>');
 
 		foreach ($templateForensics as $srcTagName => $srcTag)
 		{

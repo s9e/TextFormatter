@@ -12,11 +12,8 @@ class TemplateForensicsTest extends Test
 {
 	public function runCase($title, $xslSrc, $rule, $xslTrg = null)
 	{
-		$st = '<xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform">';
-		$et = '</xsl:template>';
-
-		$src = new TemplateForensics($st . $xslSrc . $et);
-		$trg = new TemplateForensics($st . $xslTrg . $et);
+		$src = new TemplateForensics($xslSrc);
+		$trg = new TemplateForensics($xslTrg);
 
 		$methods = [
 			'allowChild'           => ['assertTrue',  'allowsChild'],
