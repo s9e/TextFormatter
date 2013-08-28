@@ -196,7 +196,7 @@ abstract class RulesGenerator
 			}
 
 			// Test whether this tag should break current paragraph
-			if ($srcTag->breaksParagraph())
+			if ($srcTag->closesParent($p))
 			{
 				$rules['tags'][$srcTagName]['breakParagraph'] = true;
 			}

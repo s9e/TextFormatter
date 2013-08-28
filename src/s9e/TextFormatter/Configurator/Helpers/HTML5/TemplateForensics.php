@@ -48,11 +48,6 @@ class TemplateForensics
 	protected $allowsText = true;
 
 	/**
-	* @var string Whether this template automatically breaks current paragraph
-	*/
-	protected $breaksParagraph = false;
-
-	/**
 	* @var string OR-ed bitfield representing all of the categories used by this template
 	*/
 	protected $contentBitfield = "\0";
@@ -218,16 +213,6 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template automatically breaks current paragraph
-	*
-	* @return bool
-	*/
-	public function breaksParagraph()
-	{
-		return $this->breaksParagraph;
-	}
-
-	/**
 	* Whether this template automatically closes given parent template
 	*
 	* @param  self $parent
@@ -358,13 +343,6 @@ class TemplateForensics
 			if (!empty(self::$htmlElements[$elName]['b']))
 			{
 				$this->isBlock = true;
-			}
-
-			// Test if a root node would close a <p> element
-			if (isset(self::$htmlElements[$elName]['cp'])
-			 && in_array('p', self::$htmlElements[$elName]['cp'], true))
-			{
-				$this->breaksParagraph = true;
 			}
 
 			$this->rootBitfields[] = $this->getBitfield($elName, 'c', $node);

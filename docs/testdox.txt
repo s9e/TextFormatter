@@ -426,10 +426,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <xsl:apply-templates/> is not void
  [x] <blockquote> is a block-level element
  [x] <span> is not a block-level element
- [x] <span> does not break paragraphs
- [x] Text does not break paragraphs
- [x] <p> breaks paragraphs
- [x] <ul> breaks paragraphs
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
  [x] <div> has an allowChild rule for <div> and <span>
