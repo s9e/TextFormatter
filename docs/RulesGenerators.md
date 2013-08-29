@@ -12,7 +12,7 @@ See [Rules.md](Rules.md) for the rules definitions.
 <dt>AutoCloseIfVoid</dt>
 <dd>
 <i>Purpose: convenience, default: enabled.</i><br/>
-Generates an <code>autoClose</code> rule for tags that are rendered as void elements. For example, a BBCode that renders as an <code>img</code> element can be used as <code>[img=foo.png]</code>.
+Generates an <code>autoClose</code> rule for tags that are rendered as <a href="http://www.w3.org/TR/html5/syntax.html#void-elements">void elements</a>. For example, a BBCode that renders as an <code>img</code> element can be used as <code>[img=foo.png]</code>.
 </dd>
 
 <dt>AutoReopenFormattingElements</dt>
