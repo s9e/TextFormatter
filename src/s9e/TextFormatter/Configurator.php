@@ -17,10 +17,10 @@ use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator;
 use s9e\TextFormatter\Configurator\Helpers\RulesHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript;
+use s9e\TextFormatter\Configurator\RulesGenerator;
 use s9e\TextFormatter\Configurator\Stylesheet;
 use s9e\TextFormatter\Configurator\TemplateChecker;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
@@ -64,6 +64,11 @@ class Configurator implements ConfigProvider
 	public $rootRules;
 
 	/**
+	* @var RulesGenerator Generator used by $this->getRenderer()
+	*/
+	public $rulesGenerator;
+
+	/**
 	* @var Stylesheet Stylesheet object
 	*/
 	public $stylesheet;
@@ -101,6 +106,7 @@ class Configurator implements ConfigProvider
 		$this->javascript         = new JavaScript($this);
 		$this->plugins            = new PluginCollection($this);
 		$this->rootRules          = new Ruleset;
+		$this->rulesGenerator     = new RulesGenerator;
 		$this->tags               = new TagCollection;
 		$this->templateChecker    = new TemplateChecker;
 		$this->templateNormalizer = new TemplateNormalizer;
@@ -281,7 +287,7 @@ class Configurator implements ConfigProvider
 	/**
 	* Add the rules that are generated based on HTML5 specs
 	*
-	* @see s9e\TextFormatter\ConfigBuilder\Helpers\HTML5\RulesGenerator
+	* @see s9e\TextFormatter\ConfigBuilder\RulesGenerator
 	*
 	* @param  array $options Options passed to RulesGenerator::getRules()
 	* @return void
@@ -290,10 +296,6 @@ class Configurator implements ConfigProvider
 	{
 		// Add the default options
 		$options += ['rootRules' => $this->rootRules];
-		if (!isset($options['renderer']))
-		{
-			$options['renderer'] = $this->getRenderer();
-		}
 
 		// Finalize the plugins' config
 		$this->plugins->finalize();
@@ -305,7 +307,7 @@ class Configurator implements ConfigProvider
 		}
 
 		// Get the rules
-		$rules = RulesGenerator::getRules($this->tags, $options);
+		$rules = $this->rulesGenerator->getRules($this->tags, $options);
 
 		// Add the rules pertaining to the root
 		$this->rootRules->merge($rules['root']);
@@ -327,13 +329,13 @@ class Configurator implements ConfigProvider
 		// Finalize the plugins' config
 		$this->plugins->finalize();
 
-		$properties = get_object_vars($this);
-
 		// Remove properties that shouldn't be turned into config arrays
+		$properties = get_object_vars($this);
 		unset($properties['attributeFilters']);
 		unset($properties['bundleGenerator']);
 		unset($properties['javascript']);
 		unset($properties['rendererGenerator']);
+		unset($properties['rulesGenerator']);
 		unset($properties['templateChecker']);
 		unset($properties['templateNormalizer']);
 		unset($properties['stylesheet']);

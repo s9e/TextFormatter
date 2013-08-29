@@ -54,12 +54,7 @@ $configurator->Autolink;
 $configurator->addHTML5Rules();
 
 // ...or uncomment the following for a look at what rules would be created
-/**
-print_r(s9e\TextFormatter\Configurator\Helpers\HTML5\RulesGenerator::getRules(
-	$configurator->tags,
-	array('renderer' => $configurator->getRenderer())
-));
-/**/
+//print_r($configurator->rulesGenerator->getRules($configurator->tags));
 
 //==============================================================================
 

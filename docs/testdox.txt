@@ -113,6 +113,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] $configurator->registeredVars is a publicly accessible array
  [x] $configurator->rendererGenerator is an instance of RendererGenerators\XSLT
  [x] $configurator->rootRules is an instance of Ruleset
+ [x] $configurator->rulesGenerator is an instance of RulesGenerator
  [x] $configurator->stylesheet is an instance of Stylesheet
  [x] $configurator->tags is an instance of TagCollection
  [x] $configurator->templateChecker is an instance of TemplateChecker
@@ -147,7 +148,6 @@ s9e\TextFormatter\Tests\Configurator
  [x] addHTML5Rules() add root rules
  [x] addHTML5Rules() add tag rules
  [x] addHTML5Rules() passes its options to the generator
- [x] addHTML5Rules() does not call getRenderer() if a renderer was passed in the options
  [x] setRendererGenerator('PHP') sets $configurator->rendererGenerator to an instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
  [x] setRendererGenerator() passes extra arguments to the generator's constructor
  [x] setRendererGenerator() returns the new instance of RendererGenerator
@@ -301,6 +301,10 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] asConfig() can pack multiple boolean rules in a value named "flags"
  [x] asConfig() sets noBrChild's bit if noBrDescendant is set
 
+s9e\TextFormatter\Tests\Configurator\Collections\RulesGeneratorList
+ [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\RulesGenerators
+ [x] append() adds objects as-is
+
 s9e\TextFormatter\Tests\Configurator\Collections\StylesheetParameterCollection
  [x] add() accepts instances of DynamicStylesheetParameter as-is
  [x] add() accepts instances of StaticStylesheetParameter as-is
@@ -370,7 +374,8 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() preserves NULL values in deep arrays if its third argument is TRUE
  [x] optimizeArray() reduces the size of a serialized config
 
-s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
+s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
+ [x] getDOM() returns the template as a DOMDocument
  [x] <span> does not allow <div> as child
  [x] <span> does not allow <div> as child even with a <span> sibling
  [x] <span> and <div> does not allow <span> and <div> as child
@@ -426,40 +431,6 @@ s9e\TextFormatter\Tests\Configurator\Helpers\HTML5\TemplateForensics
  [x] <xsl:apply-templates/> is not void
  [x] <blockquote> is a block-level element
  [x] <span> is not a block-level element
-
-s9e\TextFormatter\Tests\Configurator\Helpers\RulesGenerator
- [x] <div> has an allowChild rule for <div> and <span>
- [x] <span> has a denyChild rule for <div>
- [x] <a> has a denyDescendant rule for <a>
- [x] <a> has a denyChild rule for <a>
- [x] Generates an autoClose rule for <hr/>
- [x] Does not generate an autoClose rule for <span>
- [x] Generates an autoReopen rule for <b>
- [x] Does not generate an autoReopen rule for <div>
- [x] Does not generate an autoReopen rule for <div><b>
- [x] Generates a ignoreTags rule for <hr>
- [x] Generates an ignoreText rule for <ul>
- [x] Does not generate an ignoreText rule for <b>
- [x] Generates an isTransparent rule for <a>
- [x] Does not generate an isTransparent rule for <b>
- [x] Does not generate a noBrChild rule for <a>
- [x] Does not generate a noBrChild rule for a template composed entirely of <xsl:apply-templates/>
- [x] Does not generate a noBrDescendant rule for <ol>
- [x] Generates a noBrDescendant rule for <pre>
- [x] Generates a noBrDescendant rule for <style>
- [x] Root has an allowChild rule for <span>
- [x] Root has a denyChild rule for <li> if parentHTML is not specified
- [x] Root has an allowChild rule for <li> if parentHTML is <ul>
- [x] <span> has a denyChild rule for <a> if parentHTML is <a>
- [x] Generates a ignoreSurroundingWhitespace rule for <div>
- [x] Does not generate a ignoreSurroundingWhitespace rule for <span>
- [x] Generates a breakParagraph rule for <blockquote>
- [x] Does not generate a breakParagraph rule for <b>
- [x] Generates a createParagraphs rule for <blockquote> if rootRules has a createParagraphs rule
- [x] Does not generate a createParagraphs rule for <blockquote> if rootRules does not have a createParagraphs rule
- [x] Does not generate a createParagraphs rule for <span>
- [x] Does not generate a createParagraphs rule for <p>
- [x] Uses the renderer to generate a template
 
 s9e\TextFormatter\Tests\Configurator\Helpers\RegexpBuilder
  [x] fromList(['foo']) returns 'foo'
@@ -1002,6 +973,60 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\Noop
  [x] minify() returns its first argument
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\AutoCloseIfVoid
+ [x] Generates an autoClose rule for <hr/>
+ [x] Does not generate an autoClose rule for <span>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\AutoReopenFormattingElements
+ [x] Generates an autoReopen rule for <b>
+ [x] Does not generate an autoReopen rule for <div>
+ [x] Does not generate an autoReopen rule for <div><b>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceContentModels
+ [x] <b> has a denyChild rule for <div>
+ [x] <a> has a denyChild and a denyDescendant rule for <a>
+ [x] <p> does not have a rule for <p>
+ [x] Generates an isTransparent rule for <a>
+ [x] Generates an isTransparent rule for a template composed entirely of <xsl:apply-templates/>
+ [x] Does not generate any boolean rules for <b>
+ [x] Generates a noBrChild rule and a noBrDescendant rule for <style>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceOptionalEndTags
+ [x] <li> closes parent <li>
+ [x] <ul> closes parent <p>
+ [x] <p> does not close parent <li>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\IgnoreTagsInCode
+ [x] Generates an ignoreTags rule for <code><xsl:apply-templates/></code>
+ [x] Generates an ignoreTags rule for <pre><code><xsl:apply-templates/></code></pre>
+ [x] Generates an ignoreTags rule if <code> does not have an xsl:apply-templates descendant
+ [x] Does not generate an ignoreTags rule for <b>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\IgnoreTextIfDisallowed
+ [x] Generates an ignoreText rule for <ul>
+ [x] Does not generate an ignoreText rule for <b>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
+ [x] Generates a ignoreSurroundingWhitespace rule for <div>
+ [x] Does not generate a ignoreSurroundingWhitespace rule for <span>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\ManageParagraphs
+ [x] Generates a breakParagraph rule for <ol>
+ [x] Does not generate any rules for <b>
+ [x] Generates a breakParagraph and a createParagraphs rule for <blockquote>
+ [x] Generates a breakParagraph rule but no createParagraphs rule for <p>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\NoBrIfWhitespaceIsPreserved
+ [x] Does not generate a noBrDescendant rule for <ol>
+ [x] Generates a noBrDescendant rule for <pre>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerator
+ [x] Implements ArrayAccess
+ [x] Implements Iterator
+ [x] Root has a denyChild rule for <li> if parentHTML is not specified
+ [x] Root does not have a denyChild rule for <li> if parentHTML is <ul>
+ [x] Default rules
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
  [x] Constructor expects a valid callback

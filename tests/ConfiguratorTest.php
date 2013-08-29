@@ -93,6 +93,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox $configurator->rulesGenerator is an instance of RulesGenerator
+	*/
+	public function testRulesGeneratorInstance()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Configurator\\RulesGenerator',
+			$this->configurator->rulesGenerator
+		);
+	}
+
+	/**
 	* @testdox $configurator->stylesheet is an instance of Stylesheet
 	*/
 	public function testStylesheetInstance()
@@ -567,7 +578,6 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->addHTML5Rules();
 
-		$this->assertSame(['UL'], $this->configurator->rootRules['allowChild']);
 		$this->assertSame(['LI'], $this->configurator->rootRules['denyChild']);
 	}
 
@@ -584,9 +594,7 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->addHTML5Rules();
 
-		$this->assertSame(['LI'], $ul->rules['allowChild']);
 		$this->assertSame(['UL'], $ul->rules['denyChild']);
-		$this->assertSame(['UL'], $li->rules['allowChild']);
 		$this->assertSame(['LI'], $li->rules['denyChild']);
 	}
 
@@ -603,29 +611,7 @@ class ConfiguratorTest extends Test
 
 		$this->configurator->addHTML5Rules(['parentHTML' => '<ul>']);
 
-		$this->assertSame(['LI'], $this->configurator->rootRules['allowChild']);
 		$this->assertSame(['UL'], $this->configurator->rootRules['denyChild']);
-	}
-
-	/**
-	* @testdox addHTML5Rules() does not call getRenderer() if a renderer was passed in the options
-	*/
-	public function testAddHTML5RulesNoGetRenderer()
-	{
-		$mock = $this->getMock('stdClass', ['getRenderer']);
-		$mock->expects($this->never())
-		     ->method('getRenderer');
-
-		$renderer = $this->configurator->getRenderer();
-		$this->configurator->rendererGenerator = $mock;
-
-		$ul = $this->configurator->tags->add('UL');
-		$ul->defaultTemplate = '<ul><xsl:apply-templates/></ul>';
-
-		$li = $this->configurator->tags->add('LI');
-		$li->defaultTemplate = '<li><xsl:apply-templates/></li>';
-
-		$this->configurator->addHTML5Rules(['renderer' => $renderer]);
 	}
 
 	/**

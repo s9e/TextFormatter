@@ -5,12 +5,11 @@
 * @copyright Copyright (c) 2010-2013 The s9e Authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
-namespace s9e\TextFormatter\Configurator\Helpers\HTML5;
+namespace s9e\TextFormatter\Configurator\Helpers;
 
 use DOMDocument;
 use DOMNode;
 use DOMXPath;
-use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 
 /**
 * This class helps the RulesGenerator by analyzing a given template in order to answer questions
@@ -239,6 +238,18 @@ class TemplateForensics
 		}
 
 		return false;
+	}
+
+	/**
+	* Return the source template as a DOMDocument
+	*
+	* NOTE: the document should not be modified
+	*
+	* @return DOMDocument
+	*/
+	public function getDOM()
+	{
+		return $this->dom;
 	}
 
 	/**

@@ -40,6 +40,7 @@
 			<file>tests/Configurator/Collections/AttributePreprocessorCollectionTest.php</file>
 			<file>tests/Configurator/Collections/PluginCollectionTest.php</file>
 			<file>tests/Configurator/Collections/RulesetTest.php</file>
+			<file>tests/Configurator/Collections/RulesGeneratorListTest.php</file>
 			<file>tests/Configurator/Collections/StylesheetParameterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagFilterChainTest.php</file>
@@ -49,9 +50,7 @@
 			<file>tests/Configurator/Collections/TemplateNormalizationListTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>
-			<file>tests/Configurator/Helpers/HTML5/TemplateForensicsTest.php</file>
-			<!-- RulesGenerator depends on TemplateForensics -->
-			<file>tests/Configurator/Helpers/HTML5/RulesGeneratorTest.php</file>
+			<file>tests/Configurator/Helpers/TemplateForensicsTest.php</file>
 			<file>tests/Configurator/Helpers/RegexpBuilderTest.php</file>
 			<file>tests/Configurator/Helpers/RegexpParserTest.php</file>
 			<file>tests/Configurator/Helpers/RulesHelperTest.php</file>
@@ -93,6 +92,16 @@
 			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerApplicationTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/ClosureCompilerServiceTest.php</file>
 			<file>tests/Configurator/JavaScript/Minifiers/NoopTest.php</file>
+			<file>tests/Configurator/RulesGenerators/AutoCloseIfVoidTest.php</file>
+			<file>tests/Configurator/RulesGenerators/AutoReopenFormattingElementsTest.php</file>
+			<file>tests/Configurator/RulesGenerators/EnforceContentModelsTest.php</file>
+			<file>tests/Configurator/RulesGenerators/EnforceOptionalEndTagsTest.php</file>
+			<file>tests/Configurator/RulesGenerators/IgnoreTagsInCodeTest.php</file>
+			<file>tests/Configurator/RulesGenerators/IgnoreTextIfDisallowedTest.php</file>
+			<file>tests/Configurator/RulesGenerators/IgnoreWhitespaceAroundBlockElementsTest.php</file>
+			<file>tests/Configurator/RulesGenerators/ManageParagraphsTest.php</file>
+			<file>tests/Configurator/RulesGenerators/NoBrIfWhitespaceIsPreservedTest.php</file>
+			<file>tests/Configurator/RulesGeneratorTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineCDATATest.php</file>

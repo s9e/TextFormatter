@@ -1,15 +1,25 @@
 <?php
 
-namespace s9e\TextFormatter\Tests\Configurator\Helpers\HTML5;
+namespace s9e\TextFormatter\Tests\Configurator\Helpers;
 
 use s9e\TextFormatter\Tests\Test;
-use s9e\TextFormatter\Configurator\Helpers\HTML5\TemplateForensics;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 
 /**
-* @covers s9e\TextFormatter\Configurator\Helpers\HTML5\TemplateForensics
+* @covers s9e\TextFormatter\Configurator\Helpers\TemplateForensics
 */
 class TemplateForensicsTest extends Test
 {
+	/**
+	* @testdox getDOM() returns the template as a DOMDocument
+	*/
+	public function testGetDOM()
+	{
+		$templateForensics = new TemplateForensics('<br/>');
+
+		$this->assertInstanceOf('DOMDocument', $templateForensics->getDOM());
+	}
+
 	public function runCase($k)
 	{
 		static $tests;
