@@ -73,7 +73,7 @@ class ConfiguratorTest extends Test
 	/**
 	* @testdox $configurator->rendererGenerator is an instance of RendererGenerators\XSLT
 	*/
-	public function testRrendererGeneratorInstance()
+	public function testRendererGeneratorInstance()
 	{
 		$this->assertInstanceOf(
 			's9e\\TextFormatter\\Configurator\\RendererGenerators\\XSLT',
