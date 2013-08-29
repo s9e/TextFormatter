@@ -56,7 +56,7 @@ Generates an <code>ignoreSurroundingWhitespace</code> rule for tags that render 
 <dt>ManageParagraphs</dt>
 <dd>
 <i>Purpose: convenience/compliance, default: disabled.</i><br/>
-Generates <code>createParagraphs</code> rules for tags that render their content in a "block" element and <code>breakParagraph</code> for elements whose template automatically close current paragraph as per HTML5's optional tags rules.
+Generates <code>createParagraphs</code> rules for tags that render their content in a "block" element and <code>breakParagraph</code> for elements whose template automatically closes current paragraph as per HTML5's optional tags rules.
 </dd>
 
 <dt>NoBrIfWhitespaceIsPreserved</dt>
