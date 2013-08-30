@@ -8,8 +8,7 @@
     * [Expert mode: configure everything yourself](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/02_Expert.md)
 
 ### **Miscellaneous**
-  * **Automatic rules generation**
-    * [Change the default rules generators](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Automatic_rules_generation/01_ChangeDefault.md)
+  * [Automatic Rules generation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/AutomaticRulesGeneration.md)
   * [Renderers](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/Renderers.md)
   * [Stylesheet parameters](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/StylesheetParameters.md)
   * **Template normalization**

@@ -1,4 +1,4 @@
-## Change the default rules generators
+## Automatic Rules generation
 
 Automatic rules generation is performed by `$configurator->rulesGenerator`, which you can access as an array.
 
