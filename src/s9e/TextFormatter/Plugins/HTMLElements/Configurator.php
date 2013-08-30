@@ -10,6 +10,7 @@ namespace s9e\TextFormatter\Plugins\HTMLElements;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
@@ -65,11 +66,6 @@ class Configurator extends ConfiguratorBase
 	protected $quickMatch = '<';
 
 	/**
-	* @var string Catch-all XSL, used to render all tags in the "html" namespace
-	*/
-	protected $template = '<xsl:element name="{local-name()}"><xsl:copy-of select="@*"/><xsl:apply-templates/></xsl:element>';
-
-	/**
 	* @var array  Blacklist of elements that are considered unsafe
 	*/
 	protected $unsafeElements = [
@@ -90,19 +86,6 @@ class Configurator extends ConfiguratorBase
 		'style',
 		'target'
 	];
-
-	/**
-	* Plugin's setup
-	*
-	* @return void
-	*/
-	protected function setUp()
-	{
-		$this->configurator->stylesheet->setWildcardTemplate(
-			$this->prefix,
-			new UnsafeTemplate($this->template)
-		);
-	}
 
 	/**
 	* Alias the HTML attribute of given HTML element to a given attribute name
@@ -164,7 +147,7 @@ class Configurator extends ConfiguratorBase
 	* Allow a (potentially unsafe) HTML element to be used
 	*
 	* @param  string $elName      Name of the element
-	* @param  bool   $allowUnsafe Whether allow unsafe elements
+	* @param  bool   $allowUnsafe Whether to allow unsafe elements
 	* @return Tag                 Tag that represents this element
 	*/
 	protected function _allowElement($elName, $allowUnsafe)
@@ -177,14 +160,18 @@ class Configurator extends ConfiguratorBase
 			throw new RuntimeException("'" . $elName . "' elements are unsafe and are disabled by default. Please use " . __CLASS__ . '::allowUnsafeElement() to bypass this security measure');
 		}
 
-		if (!$this->configurator->tags->exists($tagName))
-		{
-			$this->configurator->tags->add($tagName);
-		}
+		// Retrieve or create the tag
+		$tag = ($this->configurator->tags->exists($tagName))
+		      ? $this->configurator->tags->get($tagName)
+		      : $this->configurator->tags->add($tagName);
 
+		// Rebuild this tag's template
+		$this->rebuildTemplate($tag, $elName, $allowUnsafe);
+
+		// Record the element name
 		$this->elements[$elName] = 1;
 
-		return $this->configurator->tags->get($tagName);
+		return $tag;
 	}
 
 	/**
@@ -254,6 +241,9 @@ class Configurator extends ConfiguratorBase
 			}
 		}
 
+		// Rebuild this tag's template
+		$this->rebuildTemplate($tag, $elName, $allowUnsafe);
+
 		return $tag->attributes[$attrName];
 	}
 
@@ -296,6 +286,31 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return strtolower($attrName);
+	}
+
+	/**
+	* Rebuild a tag's template
+	*
+	* @param  Tag    $tag         Source tag
+	* @param  string $elName      Name of the HTML element created by the template
+	* @param  bool   $allowUnsafe Whether to allow unsafe markup
+	* @return void
+	*/
+	protected function rebuildTemplate(Tag $tag, $elName, $allowUnsafe)
+	{
+		$template = '<' . $elName . '>';
+		foreach ($tag->attributes as $attrName => $attribute)
+		{
+			$template .= '<xsl:copy-of select="@' . $attrName . '"/>';
+		}
+		$template .= '<xsl:apply-templates/></' . $elName . '>';
+
+		if ($allowUnsafe)
+		{
+			$template = new UnsafeTemplate($template);
+		}
+
+		$tag->defaultTemplate = $template;
 	}
 
 	/**
