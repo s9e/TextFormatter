@@ -1,8 +1,11 @@
 {
 	"name": "s9e/text-formatter",
+	"type": "library",
+	"description": "Multi-purpose text formatting and markup library. Plugins offer support for BBCodes, emoticons, HTML, embedding media, enhanced typography, etc...",
+	"keywords": ["bbcode","bbcodes","emoticons","censor","html","media","embed","shortcodes","markup","parser","engine","forum","blog"],
 	"license": "MIT",
 	"require": {
-		"php":        ">=5.3.0",
+		"php":        ">=5.3.3",
 		"ext-dom":    "*",
 		"ext-filter": "*",
 		"ext-pcre":   "*"
