@@ -1000,7 +1000,7 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceOptionalEndTags
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\IgnoreTagsInCode
  [x] Generates an ignoreTags rule for <code><xsl:apply-templates/></code>
  [x] Generates an ignoreTags rule for <pre><code><xsl:apply-templates/></code></pre>
- [x] Generates an ignoreTags rule if <code> does not have an xsl:apply-templates descendant
+ [x] Does not generate an ignoreTags rule if <code> does not have an xsl:apply-templates descendant
  [x] Does not generate an ignoreTags rule for <b>
 
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\IgnoreTextIfDisallowed

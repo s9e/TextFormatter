@@ -30,7 +30,7 @@ class IgnoreTagsInCodeTest extends AbstractTest
 	}
 
 	/**
-	* @testdox Generates an ignoreTags rule if <code> does not have an xsl:apply-templates descendant
+	* @testdox Does not generate an ignoreTags rule if <code> does not have an xsl:apply-templates descendant
 	*/
 	public function testNotIgnoreTagsIfNoDescendant()
 	{
