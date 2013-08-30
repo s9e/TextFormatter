@@ -38,6 +38,17 @@ class DisallowUnsafeCopyOfTest extends Test
 	}
 
 	/**
+	* @testdox Allowed: <b><xsl:copy-of select="@data-title"/></b>
+	*/
+	public function testAllowedDash()
+	{
+		$node = $this->loadTemplate('<b><xsl:copy-of select="@data-title"/></b>');
+
+		$check = new DisallowUnsafeCopyOf;
+		$check->check($node, new Tag);
+	}
+
+	/**
 	* @testdox Disallowed: <b><xsl:copy-of select="FOO"/></b>
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Cannot assess the safety of 'xsl:copy-of' select expression 'FOO'

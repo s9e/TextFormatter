@@ -31,7 +31,7 @@ class DisallowUnsafeCopyOf extends TemplateCheck
 		{
 			$expr = $node->getAttribute('select');
 
-			if (!preg_match('#^@\\w+$#D', $expr))
+			if (!preg_match('#^@[-\\w]*$#D', $expr))
 			{
 				throw new UnsafeTemplateException("Cannot assess the safety of '" . $node->nodeName . "' select expression '" . $expr . "'", $node);
 			}
