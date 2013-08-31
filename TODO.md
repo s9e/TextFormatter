@@ -35,3 +35,4 @@ TODO
 - Renderer::getParameter()
 - Add a {PLAIN_TEXT} token to BBCodeMonkey (same as {TEXT} but with ignoreTags or <xsl:value-of select="."/>)
 - Consider following reopening tags after applying closeAncestor/closeParent. Either as a child of current tag, or as the next sibling
+- PHP renderer generator: consider support for an external XPath converter (or converters, plural.) Could be used to micro-optimize some conversions (e.g. use custom PHP rather than xpath->evaluate()) and potentially unlock more dynamic rendering
