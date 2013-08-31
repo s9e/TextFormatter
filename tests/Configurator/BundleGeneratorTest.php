@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator;
 
+use s9e\TextFormatter\Configurator\BundleGenerator;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -179,5 +180,40 @@ class BundleGeneratorTest extends Test
 		}";
 
 		$this->assertNotContains($expected, $bundle);
+	}
+
+	/**
+	* @testdox export()
+	* @dataProvider getExportTests
+	*/
+	public function testExport($original, $expected)
+	{
+		$generator = new DummyBundleGenerator($this->configurator);
+		$actual    = $generator->export($original);
+
+		$this->assertSame($expected, $actual);
+		$this->assertEquals($original, eval('return ' . $actual . ';'), 'Not reversible');
+	}
+
+	public function getExportTests()
+	{
+		return [
+			[
+				"\7" . '0',
+				'unserialize("s:2:\\"\\0070\\";")'
+			],
+			[
+				'"$\\',
+				'unserialize("s:3:\\"\\"\\$\\\\\\";")'
+			],
+		];
+	}
+}
+
+class DummyBundleGenerator extends BundleGenerator
+{
+	public function export($obj)
+	{
+		return parent::export($obj);
 	}
 }

@@ -141,8 +141,22 @@ class BundleGenerator
 		$str = call_user_func($this->serializer, $obj);
 
 		// Escape control characters, bytes >= 0x7f and characters \ $ and "
-		$str = '"' . addcslashes($str, "\x00..\x1f\x7f..\xff\\\$\"") . '"';
+		$str = preg_replace_callback(
+			'#[\\x00-\\x1F\\x7F-\xFF\\\\$"]#',
+			function ($m)
+			{
+				$c = $m[0];
 
-		return $this->unserializer . '(' . $str . ')';
+				if ($c === '"' || $c === '\\' || $c === '$')
+				{
+					return '\\' . $c;
+				}
+
+				return '\\' . substr('00' . decoct(ord($c)), -3);
+			},
+			$str
+		);
+
+		return $this->unserializer . '("' . $str . '")';
 	}
 }
