@@ -34,10 +34,6 @@
 		<template><![CDATA[
 			<code class="inline"><xsl:apply-templates /></code>
 		]]></template>
-		<rules>
-			<ignoreTags />
-			<noBrChild />
-		</rules>
 	</bbcode>
 
 	<bbcode name="CENTER">
@@ -103,9 +99,6 @@
 				<script>if("undefined"===typeof hljs){var a=document.getElementsByTagName("head")[0],b=document.createElement("link");b.type="text/css";b.rel="stylesheet";b.href="]]><var name="stylesheetUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/github.min.css</var><![CDATA[";a.appendChild(b);b=document.createElement("script");b.type="text/javascript";b.onload=function(){hljs._={};hljs.initHighlighting()};b.async=!0;b.src="]]><var name="scriptUrl">//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js</var><![CDATA[";a.appendChild(b)};</script>
 			</xsl:if>
 		]]></template>
-		<rules>
-			<ignoreTags />
-		</rules>
 	</bbcode>
 
 	<bbcode name="COLOR">
@@ -303,11 +296,8 @@
 	</bbcode>
 
 	<bbcode name="NOPARSE">
-		<usage>[NOPARSE]{TEXT}[/NOPARSE]</usage>
+		<usage>[NOPARSE #ignoreTags=true]{TEXT}[/NOPARSE]</usage>
 		<template>{TEXT}</template>
-		<rules>
-			<ignoreTags />
-		</rules>
 	</bbcode>
 
 	<bbcode name="QUOTE">
