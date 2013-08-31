@@ -149,8 +149,7 @@ class BBCodeMonkey
 		$config = [
 			'tag'              => $tag,
 			'bbcode'           => $bbcode,
-			'passthroughToken' => null,
-			'rules'            => []
+			'passthroughToken' => null
 		];
 
 		$regexp = '#^'
