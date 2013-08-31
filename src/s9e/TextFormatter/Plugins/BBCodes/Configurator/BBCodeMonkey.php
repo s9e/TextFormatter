@@ -199,8 +199,40 @@ class BBCodeMonkey
 			}
 		}
 
+		// Separate the attribute definitions from the BBCode options
+		$attributeDefinitions = [];
+		foreach ($definitions as $definition)
+		{
+			$pos   = strpos($definition, '=');
+			$name  = substr($definition, 0, $pos);
+			$value = substr($definition, 1 + $pos);
+
+			// If name starts with $ then it's a BBCode options, otherwise it's an attribute
+			// definition
+			if ($name[0] === '$')
+			{
+				$optionName = substr($name, 1);
+
+				if ($value === 'true')
+				{
+					$value = true;
+				}
+				elseif ($value === 'false')
+				{
+					$value = false;
+				}
+
+				$bbcode->$optionName = $value;
+			}
+			else
+			{
+				$attrName = strtolower(trim($name));
+				$attributeDefinitions[] = [$attrName, $value];
+			}
+		}
+
 		// Add the attributes and get the token translation table
-		$tokens = $this->addAttributes($definitions, $bbcode, $tag);
+		$tokens = $this->addAttributes($attributeDefinitions, $bbcode, $tag);
 
 		// Test whether the passthrough token is used for something else, in which case we need
 		// to unset it
@@ -281,7 +313,7 @@ class BBCodeMonkey
 	* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=2127991
 	* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=579376
 	*
-	* @param  array  $definitions Array of attributes definitions, e.g. ["foo={INT}", "bar={TEXT}"]
+	* @param  array  $definitions List of attributes definitions as [[name, definition]*]
 	* @param  BBCode $bbcode      Owner BBCode
 	* @param  Tag    $tag         Owner tag
 	* @return array               Array of [token id => attribute name] where FALSE in place of the
@@ -302,22 +334,8 @@ class BBCodeMonkey
 		*/
 		$table = [];
 
-		foreach ($definitions as $k => $pair)
+		foreach ($definitions as list($attrName, $definition))
 		{
-			$pos = strpos($pair, '=');
-
-			if ($pos === false)
-			{
-				// NOTE: the regexp used makes this code impossible to reach, it's left there as
-				//       a failsafe
-				throw new RuntimeException("Could not find = in '" . $pair . "'");
-			}
-
-			// The name at the left of the equal sign is the attribute's or attribute preprocessor's
-			// name, the rest is their definition
-			$attrName   = strtolower(trim(substr($pair, 0, $pos)));
-			$definition = trim(substr($pair, 1 + $pos));
-
 			// The first attribute defined is set as default
 			if (!isset($bbcode->defaultAttribute))
 			{

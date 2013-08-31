@@ -114,17 +114,6 @@ class BBCodeMonkeyTest extends Test
 		);
 	}
 
-	/**
-	* @testdox Internal checks
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Could not find = in 'xyz'
-	*/
-	public function testInternal()
-	{
-		$mm = new MutantMonkey(new Configurator);
-		$mm->foo();
-	}
-
 	public function getBBCodeTests()
 	{
 		return [
@@ -1099,6 +1088,39 @@ class BBCodeMonkeyTest extends Test
 					'rules' => []
 				]
 			],
+			[
+				'[foo $tagName=bar]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode'     => new BBCode(['tagName' => 'BAR']),
+					'tag'        => new Tag,
+					'tokens'     => [],
+					'passthroughToken' => null,
+					'rules'      => []
+				]
+			],
+			[
+				'[B $forceLookahead=false]{TEXT}[/B]',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode(['forceLookahead' => false]),
+					'tag'        => new Tag,
+					'tokens'     => [],
+					'passthroughToken' => 'TEXT',
+					'rules'      => []
+				]
+			],
+			[
+				'[B $forceLookahead=true]{TEXT}[/B]',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode(['forceLookahead' => true]),
+					'tag'        => new Tag,
+					'tokens'     => [],
+					'passthroughToken' => 'TEXT',
+					'rules'      => []
+				]
+			],
 		];
 	}
 
@@ -1215,13 +1237,5 @@ class BBCodeMonkeyTest extends Test
 		}
 
 		return $programmableCallback;
-	}
-}
-
-class MutantMonkey extends BBCodeMonkey
-{
-	public function foo()
-	{
-		$this->addAttributes(['xyz'], new BBCode, new Tag);
 	}
 }

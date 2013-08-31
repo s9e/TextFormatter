@@ -123,6 +123,13 @@ An attribute name is automatically created for {NUMBER1} and {NUMBER2} unless th
 
     [flash={PARSE=/^(?<width>\d+),(?<height>\d+)$/} width={NUMBER1} height={NUMBER2}]
 
+BBCode options
+--------------
+BBCode options can be specified in the opening tag like an attribute, using their name preceded with a `$`. Boolean values can be expressed as `true` and `false` (in lowercase.) For example:
+
+    [B $forceLookahead=true]{TEXT}[/B]
+    [* $tagName=LI]{TEXT}[/*]
+
 Templates
 ---------
 Templates can consist either as a chunk of XSL (whatever is acceptable within an `<xsl:template/>` tag) or a chunk of HTML (which will be converted to XML, then XSL.) Tokens (from the BBCode usage) that are unique can be used in text nodes or in attribute values. For example, consider the following BBCode usage:
