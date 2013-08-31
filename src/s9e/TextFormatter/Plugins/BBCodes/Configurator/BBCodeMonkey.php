@@ -206,8 +206,8 @@ class BBCodeMonkey
 			$name  = substr($definition, 0, $pos);
 			$value = substr($definition, 1 + $pos);
 
-			// If name starts with $ then it's a BBCode options, otherwise it's an attribute
-			// definition
+			// If name starts with $ then it's a BBCode options, if it starts with # it's a rule and
+			// otherwise it's an attribute definition
 			if ($name[0] === '$')
 			{
 				$optionName = substr($name, 1);
@@ -222,6 +222,21 @@ class BBCodeMonkey
 				}
 
 				$bbcode->$optionName = $value;
+			}
+			elseif ($name[0] === '#')
+			{
+				$ruleName = substr($name, 1);
+
+				if ($value === 'true')
+				{
+					$value = true;
+				}
+				elseif ($value === 'false')
+				{
+					$value = false;
+				}
+
+				$tag->rules->$ruleName($value);
 			}
 			else
 			{

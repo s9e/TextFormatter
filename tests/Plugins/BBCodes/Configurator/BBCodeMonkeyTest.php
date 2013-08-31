@@ -1077,6 +1077,36 @@ class BBCodeMonkeyTest extends Test
 					'passthroughToken' => 'TEXT'
 				]
 			],
+			[
+				'[B #autoReopen=false]{TEXT}[/B]',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag(['rules' => ['autoReopen' => false]]),
+					'tokens'     => [],
+					'passthroughToken' => 'TEXT'
+				]
+			],
+			[
+				'[B #autoReopen=true]{TEXT}[/B]',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag(['rules' => ['autoReopen' => true]]),
+					'tokens'     => [],
+					'passthroughToken' => 'TEXT'
+				]
+			],
+			[
+				'[X #closeParent=X #closeParent=Y]',
+				[
+					'bbcodeName' => 'X',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag(['rules' => ['closeParent' => ['X', 'Y']]]),
+					'tokens'     => [],
+					'passthroughToken' => null
+				]
+			],
 		];
 	}
 
