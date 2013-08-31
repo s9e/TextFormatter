@@ -1507,6 +1507,9 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] Does not attempt to load the renderer's source if autoInclude is false
  [x] export()
 
+s9e\TextFormatter\Tests\Configurator\Bundles\F5
+ [x] Features
+
 s9e\TextFormatter\Tests\Configurator\Bundles\Forum
  [x] Features
 
@@ -2173,6 +2176,9 @@ s9e\TextFormatter\Tests\Unparser
  [x] unparse('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
  [x] removeFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
  [x] Can unparse representations that were over-escaped
+
+s9e\TextFormatter\Tests\Bundles\F5
+ [x] Rendering tests
 
 s9e\TextFormatter\Tests\Bundles\Forum
  [x] Rendering tests
