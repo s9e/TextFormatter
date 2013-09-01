@@ -158,7 +158,8 @@ class PHP implements RendererGenerator
 		        . "*/\n\n";
 
 		// Parse the stylesheet
-		$ir = TemplateParser::parse($xsl);
+		$ir    = TemplateParser::parse($xsl);
+		$xpath = new DOMXPath($ir);
 
 		// Set the output method
 		$this->outputMethod = $ir->documentElement->getAttribute('outputMethod');
@@ -220,6 +221,15 @@ class PHP implements RendererGenerator
 					}';
 		}
 
+		if ($xpath->evaluate('count(//applyTemplates[@select])'))
+		{
+			$nodesPHP = '(isset($xpath)) ? $this->xpath->query($xpath, $root) : $root->childNodes';
+		}
+		else
+		{
+			$nodesPHP = '$root->childNodes';
+		}
+
 		$this->php .= '
 					$this->at($dom->documentElement);
 
@@ -233,8 +243,7 @@ class PHP implements RendererGenerator
 					}
 					else
 					{
-						$nodes = (isset($xpath)) ? $this->xpath->query($xpath, $root) : $root->childNodes;
-						foreach ($nodes as $node)
+						foreach (' . $nodesPHP . ' as $node)
 						{
 							$nodeName = $node->nodeName;';
 
@@ -367,6 +376,12 @@ class PHP implements RendererGenerator
 				}
 EOT
 			);
+		}
+
+		// Remove the instantiation of $this->xpath if it's never used
+		if (strpos($this->php, '$this->xpath->') === false)
+		{
+			$this->php = preg_replace('#\\s*\\$this->xpath\\s*=.*#', '', $this->php);
 		}
 
 		// Close the class definition

@@ -86,7 +86,7 @@ class PHPTest extends Test
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1',
+			'class Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff',
 			$generator->generate($xsl)
 		);
 	}
@@ -108,7 +108,7 @@ class PHPTest extends Test
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Bar_renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1',
+			'class Bar_renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff',
 			$generator->generate($xsl)
 		);
 	}
@@ -181,7 +181,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertFileExists(
-			$cacheDir . '/Renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1.php'
+			$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php'
 		);
 	}
 
@@ -213,7 +213,7 @@ class PHPTest extends Test
 
 		$this->assertFileExists($filepath);
 		$this->assertFileNotExists(
-			$cacheDir . '/Renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1.php'
+			$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php'
 		);
 	}
 
@@ -238,7 +238,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertSame(
-			$cacheDir . '/Renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1.php',
+			$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php',
 			$generator->lastFilepath
 		);
 	}
@@ -1144,6 +1144,16 @@ class PHPTest extends Test
 				'<xsl:template match="FOO">Hi</xsl:template>',
 				null,
 				'getParamAsXPath'
+			],
+			[
+				// Not part of optimizeCode() but considered an optimization nonetheless
+				'<xsl:template match="FOO"><xsl:apply-templates/></xsl:template>',
+				null,
+				'$this->xpath'
+			],
+			[
+				'<xsl:template match="FOO"><xsl:apply-templates select="*"/></xsl:template>',
+				'$this->xpath = new \\DOMXPath'
 			],
 		];
 	}
