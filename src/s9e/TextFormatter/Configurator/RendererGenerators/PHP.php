@@ -1156,54 +1156,80 @@ EOT
 	*/
 	protected function convertXPath($expr)
 	{
-		// <xsl:value-of select="@foo"/>
-		// $this->out .= $node->getAttribute('foo');
-		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
+		static $regexp;
+
+		if (!isset($regexp))
 		{
-			return '$node->getAttribute(' . var_export($m[1], true) . ')';
+			$patterns = [
+				'attr'   => '@ (?<attrName>[-\\w]+)',
+				'dot'    => '\\.',
+				'name'   => 'name\\(\\)',
+				'lname'  => 'local-name\\(\\)',
+				'param'  => '\\$ (?<paramName>\\w+)',
+				'string' => '"[^"]*"|\'[^\']*\'',
+				'number' => '-? \\d++'
+			];
+
+			$regexp = '';
+			foreach ($patterns as $name => $pattern)
+			{
+				$regexp .= '(?<' . $name . '>' . str_replace(' ', '\\s*', $pattern) . ')|';
+			}
+
+			$regexp = '#^(?:' . substr($regexp, 0, -1) . ')$#s';
 		}
 
-		// <xsl:value-of select="."/>
-		// $this->out .= $node->textContent;
-		if ($expr === '.')
+		if (preg_match($regexp, $expr, $m))
 		{
-			return '$node->textContent';
-		}
+			if (!empty($m['attrName']))
+			{
+				// <xsl:value-of select="@foo"/>
+				// $this->out .= $node->getAttribute('foo');
+				return '$node->getAttribute(' . var_export($m['attrName'], true) . ')';
+			}
 
-		// <xsl:value-of select="$foo"/>
-		// $this->out .= $this->params['foo'];
-		if (preg_match('#^\\$(\\w+)$#', $expr, $m))
-		{
-			return '$this->params[' . var_export($m[1], true) . ']';
-		}
+			// <xsl:value-of select="."/>
+			// $this->out .= $node->textContent;
+			if (!empty($m['dot']))
+			{
+				return '$node->textContent';
+			}
 
-		// <xsl:value-of select="'foo'"/>
-		// <xsl:value-of select='"foo"'/>
-		// $this->out .= 'foo';
-		if (preg_match('#^\\s*("[^"]*"|\'[^\']*\')\\s*#', $expr, $m))
-		{
-			return var_export(substr($m[1], 1, -1), true);
-		}
+			// <xsl:value-of select="$foo"/>
+			// $this->out .= $this->params['foo'];
+			if (!empty($m['paramName']))
+			{
+				return '$this->params[' . var_export($m['paramName'], true) . ']';
+			}
 
-		// <xsl:value-of select="local-name()"/>
-		// $this->out .= $node->localName;
-		if ($expr === 'local-name()')
-		{
-			return '$node->localName';
-		}
+			// <xsl:value-of select="'foo'"/>
+			// <xsl:value-of select='"foo"'/>
+			// $this->out .= 'foo';
+			if (!empty($m['string']))
+			{
+				return var_export(substr($m['string'], 1, -1), true);
+			}
 
-		// <xsl:value-of select="name()"/>
-		// $this->out .= $node->nodeName;
-		if ($expr === 'name()')
-		{
-			return '$node->nodeName';
-		}
+			// <xsl:value-of select="local-name()"/>
+			// $this->out .= $node->localName;
+			if (!empty($m['lname']))
+			{
+				return '$node->localName';
+			}
 
-		// <xsl:value-of select="3"/>
-		// $this->out .= '3';
-		if (preg_match('#^\\d+$#D', $expr))
-		{
-			return "'" . $expr . "'";
+			// <xsl:value-of select="name()"/>
+			// $this->out .= $node->nodeName;
+			if (!empty($m['name']))
+			{
+				return '$node->nodeName';
+			}
+
+			// <xsl:value-of select="3"/>
+			// $this->out .= '3';
+			if (!empty($m['number']))
+			{
+				return "'" . $expr . "'";
+			}
 		}
 
 		// If the condition does not seem to contain a relational expression, or start with a
