@@ -269,14 +269,17 @@
 	<bbcode name="LIST">
 		<usage>[LIST type={MAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;caseSensitive;optional;postFilter=#simpletext}]{TEXT}[/LIST]</usage>
 		<template><![CDATA[
-			<ul><xsl:apply-templates /></ul>
-		]]></template>
-		<template predicate="@type"><![CDATA[
-			<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
-		]]></template>
-		<!-- Use an ol element if @type starts with "upper" "lower" or "decim" -->
-		<template predicate="@type and contains('upperlowerdecim',substring(@type,1,5))"><![CDATA[
-			<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
+			<xsl:choose>
+				<xsl:when test="not(@type)">
+					<ul><xsl:apply-templates /></ul>
+				</xsl:when>
+				<xsl:when test="contains('upperlowerdecim',substring(@type,1,5))">
+					<ol style="list-style-type:{@type}"><xsl:apply-templates /></ol>
+				</xsl:when>
+				<xsl:otherwise>
+					<ul style="list-style-type:{@type}"><xsl:apply-templates /></ul>
+				</xsl:otherwise>
+			</xsl:choose>
 		]]></template>
 	</bbcode>
 
