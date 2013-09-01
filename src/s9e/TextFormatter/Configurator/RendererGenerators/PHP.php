@@ -38,6 +38,19 @@ class PHP implements RendererGenerator
 	public $className;
 
 	/**
+	* @var array Custom XPath representations as [xpath => php]
+	*/
+	protected $customXPath = [
+		// BBcodes: LIST
+		"contains('upperlowerdecim',substring(@type,1,5))"
+			=> "strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false",
+
+		// MediaEmbed: Twitch
+		"substring('archl',5-4*boolean(@archive_id|@chapter_id),4)"
+			=> "((\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id'))?'arch':'l')"
+	];
+
+	/**
 	* @var string Prefix used when generating a default class name
 	*/
 	public $defaultClassPrefix = 'Renderer_';
@@ -1116,6 +1129,12 @@ EOT
 	protected function convertXPath($expr)
 	{
 		static $regexp;
+
+		// Use the custom representation if applicable
+		if (isset($this->customXPath[$expr]))
+		{
+			return $this->customXPath[$expr];
+		}
 
 		if (!isset($regexp))
 		{

@@ -1024,6 +1024,11 @@ class PHPTest extends Test
 				'<xsl:template match="FOO"><xsl:if test="not(@foo) and @bar">Foo</xsl:if></xsl:template>',
 				"if(!\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))"
 			],
+			// Custom representations
+			[
+				'<xsl:template match="FOO"><xsl:if test="contains(\'upperlowerdecim\',substring(@type,1,5))">Foo</xsl:if></xsl:template>',
+				"if(strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false)"
+			],
 		];
 	}
 
