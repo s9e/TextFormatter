@@ -1230,7 +1230,10 @@ EOT
 			{
 				return "'" . $expr . "'";
 			}
+
+			// @codeCoverageIgnoreStart
 		}
+		// @codeCoverageIgnoreEnd
 
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a string() call
