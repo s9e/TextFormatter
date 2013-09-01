@@ -1177,7 +1177,7 @@ EOT
 			$cmpRegexp = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
 
 			// Create a regexp that matches boolean operations
-			$boolRegexp = '(?<bool>(?<bool0>(?&cmp)|(?&value)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&value)))';
+			$boolRegexp = '(?<bool>(?<bool0>(?&cmp)|(?&value)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&value)|(?&bool)))';
 
 			// Assemble the final regexp
 			$regexp = '#^(?:' . $valueRegexp . '|' . $cmpRegexp . '|' . $boolRegexp . ')$#S';
