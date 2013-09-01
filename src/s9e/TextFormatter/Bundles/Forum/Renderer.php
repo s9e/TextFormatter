@@ -22,7 +22,7 @@ class Renderer extends \s9e\TextFormatter\Renderer
 	}
 	public function setParameter($paramName, $paramValue)
 	{
-		$this->params[$paramName] = $paramValue;
+		$this->params[$paramName] = (string) $paramValue;
 		unset($this->dynamicParams[$paramName]);
 	}
 	public function renderRichText($xml)

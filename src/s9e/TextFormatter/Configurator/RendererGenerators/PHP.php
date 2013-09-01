@@ -189,7 +189,7 @@ class PHP implements RendererGenerator
 				}
 				public function setParameter($paramName, $paramValue)
 				{
-					$this->params[$paramName] = $paramValue;
+					$this->params[$paramName] = (string) $paramValue;
 					unset($this->dynamicParams[$paramName]);
 				}
 				public function renderRichText($xml)
@@ -1093,47 +1093,6 @@ EOT
 			return 'empty($this->params[' . var_export($m[1], true) . '])';
 		}
 
-		// <xsl:if test=".=':)'">
-		// if ($node->textContent===':)')
-		//
-		// <xsl:if test="@foo=':)'">
-		// if ($node->getAttribute('foo')===':)')
-		//
-		// NOTE: this optimization is mainly for the Emoticons plugin
-		$operandExpr = '(@[-\\w]+|\\.|"[^"]*"|\'[^\']*\'|\\$\\w+|\\d+)';
-		$testExpr    = $operandExpr . '\\s*=\\s*' . $operandExpr;
-		if (preg_match('#^' . $testExpr . '(?:\\s*or\\s*' . $testExpr . ')*$#', $expr))
-		{
-			preg_match_all('#' . $testExpr . '#', $expr, $matches, PREG_SET_ORDER);
-
-			$tests = [];
-			foreach ($matches as $m)
-			{
-				$operator = '===';
-				foreach ([$m[1], $m[2]] as $operand)
-				{
-					// Use the equality operator if either operand is a number or a parameter
-					if (preg_match('#^[$\\d]#', $operand))
-					{
-						$operator = '==';
-					}
-				}
-
-				// Convert operands to XPath unless it's a number, which stays as-is
-				$left  = (preg_match('#^\\d+$#D', $m[1]))
-				       ? ltrim($m[1], '0')
-				       : $this->convertXPath($m[1]);
-
-				$right = (preg_match('#^\\d+$#D', $m[2]))
-				       ? ltrim($m[2], '0')
-				       : $this->convertXPath($m[2]);
-
-				$tests[] = $left . $operator . $right;
-			}
-
-			return implode('||', $tests);
-		}
-
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a boolean() call
 		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\(#', $expr))
@@ -1163,6 +1122,7 @@ EOT
 			$patterns = [
 				'attr'   => '@ (?<attrName>[-\\w]+)',
 				'dot'    => '\\.',
+				'not'    => 'not \\( (?&value) \\)',
 				'name'   => 'name\\(\\)',
 				'lname'  => 'local-name\\(\\)',
 				'param'  => '\\$ (?<paramName>\\w+)',
@@ -1170,13 +1130,26 @@ EOT
 				'number' => '-? \\d++'
 			];
 
-			$regexp = '';
+			// Create a regexp that matches values, such as "@foo" or "42"
+			$valueRegexp = '(?<value>';
 			foreach ($patterns as $name => $pattern)
 			{
-				$regexp .= '(?<' . $name . '>' . str_replace(' ', '\\s*', $pattern) . ')|';
+				$valueRegexp .= '(?<' . $name . '>' . str_replace(' ', '\\s*', $pattern) . ')|';
 			}
+			$valueRegexp = substr($valueRegexp, 0, -1) . ')';
 
-			$regexp = '#^(?:' . substr($regexp, 0, -1) . ')$#s';
+			// Create a regexp that matches a comparison such as "@foo = 1"
+			// NOTE: cannot support < or > because of NaN -- (@foo<5) returns false if @foo=''
+			$cmpRegexp = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
+
+			// Create a regexp that matches boolean operations
+			$boolRegexp = '(?<bool>(?<bool0>(?&cmp)|(?&value)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&value)))';
+
+			// Assemble the final regexp
+			$regexp = '#^(?:' . $valueRegexp . '|' . $cmpRegexp . '|' . $boolRegexp . ')$#S';
+
+			// Replace spaces with any amount of whitespace
+			$regexp = str_replace(' ', '\\s*', $regexp);
 		}
 
 		if (preg_match($regexp, $expr, $m))
@@ -1215,7 +1188,7 @@ EOT
 			if (!empty($m['lname']))
 			{
 				return '$node->localName';
-			}
+				}
 
 			// <xsl:value-of select="name()"/>
 			// $this->out .= $node->nodeName;
@@ -1231,9 +1204,47 @@ EOT
 				return "'" . $expr . "'";
 			}
 
-			// @codeCoverageIgnoreStart
+			if (!empty($m['cmp1']))
+			{
+				$operators = [
+					'='  => '===',
+					'!=' => '!==',
+					'>'  => '>',
+					'>=' => '>=',
+					'<'  => '<',
+					'<=' => '<='
+				];
+
+				// If either operand is a number, represent it as a PHP number and replace the
+				// identity operators
+				foreach (['cmp0', 'cmp2'] as $k)
+				{
+					if (preg_match('#^\\d+$#', $m[$k]))
+					{
+						$operators['=']  = '==';
+						$operators['!='] = '!=';
+
+						$m[$k] = ltrim($m[$k], '0');
+					}
+					else
+					{
+						$m[$k] = $this->convertXPath($m[$k]);
+					}
+				}
+
+				return $m['cmp0'] . $operators[$m['cmp1']] . $m['cmp2'];
+			}
+
+			if (!empty($m['bool1']))
+			{
+				$operators = [
+					'and' => '&&',
+					'or'  => '||'
+				];
+
+				return $this->convertCondition($m['bool0']) . $operators[$m['bool1']] . $this->convertCondition($m['bool2']);
+			}
 		}
-		// @codeCoverageIgnoreEnd
 
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a string() call

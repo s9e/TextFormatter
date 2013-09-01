@@ -86,7 +86,7 @@ class PHPTest extends Test
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c',
+			'class Renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1',
 			$generator->generate($xsl)
 		);
 	}
@@ -108,7 +108,7 @@ class PHPTest extends Test
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Bar_renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c',
+			'class Bar_renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1',
 			$generator->generate($xsl)
 		);
 	}
@@ -181,7 +181,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertFileExists(
-			$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php'
+			$cacheDir . '/Renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1.php'
 		);
 	}
 
@@ -213,7 +213,7 @@ class PHPTest extends Test
 
 		$this->assertFileExists($filepath);
 		$this->assertFileNotExists(
-			$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php'
+			$cacheDir . '/Renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1.php'
 		);
 	}
 
@@ -238,7 +238,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertSame(
-			$cacheDir . '/Renderer_b6bb2ac86f3be014a19e5bc8b669612aed768f2c.php',
+			$cacheDir . '/Renderer_9630597ecf8cc6e05862e16dcde0bd6b9eb839f1.php',
 			$generator->lastFilepath
 		);
 	}
@@ -959,6 +959,10 @@ class PHPTest extends Test
 				'<xsl:template match="*"><xsl:value-of select="123"/></xsl:template>',
 				"\$this->out.='123';"
 			],
+			[
+				'<xsl:template match="*"><xsl:value-of select="not(@bar)"/></xsl:template>',
+				"\$this->xpath->evaluate('not(@bar)',\$node)"
+			],
 			// XPath in conditions
 			[
 				'<xsl:template match="FOO"><xsl:if test="@foo">Foo</xsl:if></xsl:template>',
@@ -1009,8 +1013,16 @@ class PHPTest extends Test
 				"if(44==\$node->textContent)"
 			],
 			[
-				'<xsl:template match="FOO"><xsl:if test="$bar=$baz">Foo</xsl:if></xsl:template>',
-				"if(\$this->params['bar']==\$this->params['baz'])"
+				'<xsl:template match="FOO"><xsl:if test="@foo != @bar">Foo</xsl:if></xsl:template>',
+				"if(\$node->getAttribute('foo')!==\$node->getAttribute('bar'))"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="@foo = @bar or @baz">Foo</xsl:if></xsl:template>',
+				"if(\$node->getAttribute('foo')===\$node->getAttribute('bar')||\$node->hasAttribute('baz'))"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="not(@foo) and @bar">Foo</xsl:if></xsl:template>',
+				"if(!\$node->hasAttribute('foo')&&\$node->hasAttribute('bar'))"
 			],
 		];
 	}
