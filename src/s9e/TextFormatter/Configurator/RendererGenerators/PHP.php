@@ -48,6 +48,11 @@ class PHP implements RendererGenerator
 	public $filepath;
 
 	/**
+	* @var bool Whether to force non-void, empty elements to use the empty-element tag syntax in XML mode
+	*/
+	public $forceEmptyElements = true;
+
+	/**
 	* @var string Name of the last class generated
 	*/
 	public $lastClassName;
@@ -56,11 +61,6 @@ class PHP implements RendererGenerator
 	* @var string Path to the last file saved
 	*/
 	public $lastFilepath;
-
-	/**
-	* @var bool Whether to force non-void, empty elements to use the empty-element tag syntax in XML mode
-	*/
-	public $forceEmptyElements = true;
 
 	/**
 	* @var string Output method
