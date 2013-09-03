@@ -13,6 +13,13 @@ function Tag(type, name, pos, len)
 	this.pos  = pos;
 	this.len  = len;
 
+	// Invalidate this tag now if any value is not a number, they could wreck
+	// havoc in other parts of the program
+	if (isNaN(type + pos + len))
+	{
+		this.invalidate();
+	}
+
 	this.attributes = {};
 	this.cascade    = [];
 }

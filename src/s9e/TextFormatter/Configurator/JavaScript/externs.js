@@ -37,6 +37,12 @@ function encodeURIComponent(uri) {}
 function escape(str) {}
 /**
  * @param {*} num
+ * @return {boolean}
+ * @nosideeffects
+ */
+function isNaN(num) {}
+/**
+ * @param {*} num
  * @param {number|undefined} base
  * @return {number}
  * @nosideeffects

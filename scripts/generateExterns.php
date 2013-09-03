@@ -8,6 +8,7 @@ $externs = [
 		// functions
 		'function encodeURIComponent(',
 		'function escape(',
+		'function isNaN(',
 		'function parseInt(',
 
 		// Object
