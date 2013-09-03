@@ -24,5 +24,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-**Bold** or _italic_.
+<a href="http://example.org">inline url text</a>
 ```
