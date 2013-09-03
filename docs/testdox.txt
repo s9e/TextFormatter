@@ -2009,6 +2009,15 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntities\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
+s9e\TextFormatter\Tests\Plugins\MarkdownLite\Configurator
+ [x] Turns on automatic paragraph management
+ [x] Automatically creates a "URL" tag
+ [x] Does not overwrite the "URL" tag if it already exists
+
+s9e\TextFormatter\Tests\Plugins\MarkdownLite\Parser
+ [x] Parsing tests
+ [x] Parsing tests (JavaScript)
+
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
  [x] Extends ArrayObject
  [x] Implements ConfigProvider
