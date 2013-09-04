@@ -2,6 +2,8 @@
 
 This plugin implements a Markdown-like syntax, inspired by modern flavors of Markdown.
 
+**Work in progress, not currently usable.**
+
 ## Syntax
 
 ```
