@@ -1024,6 +1024,19 @@ class TagProcessingTest extends Test
 					$parser->addParagraphBreak(3);
 				}
 			],
+			[
+				'foo|bar',
+				'<rt><p>foo</p><i>|</i><p>bar</p></rt>',
+				function ($configurator)
+				{
+					$configurator->rootRules->createParagraphs();
+				},
+				function ($parser)
+				{
+					$parser->addParagraphBreak(3);
+					$parser->addIgnoreTag(3, 1);
+				}
+			],
 		];
 	}
 }
