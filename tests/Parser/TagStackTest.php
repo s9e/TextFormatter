@@ -221,7 +221,7 @@ class TagStackTest extends Test
 	}
 
 	/**
-	* @testdox addIgnoreTag() adds self-closing "i" tag to the stack then returns it
+	* @testdox addIgnoreTag() adds a self-closing "i" tag to the stack then returns it
 	*/
 	public function testAddIgnoreTag()
 	{
@@ -235,6 +235,20 @@ class TagStackTest extends Test
 
 		$this->assertEquals(
 			new Tag(Tag::SELF_CLOSING_TAG, 'i', 12, 34),
+			$tag
+		);
+	}
+
+	/**
+	* @testdox addParagraphBreak() adds a zero-width, self-closing "pb" tag to the stack then returns it
+	*/
+	public function testAddParagraphBreak()
+	{
+		$dummyStack = new DummyStack;
+		$tag = $dummyStack->addParagraphBreak(12);
+
+		$this->assertEquals(
+			new Tag(Tag::SELF_CLOSING_TAG, 'pb', 12, 0),
 			$tag
 		);
 	}

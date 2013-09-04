@@ -227,11 +227,15 @@ trait TagProcessing
 		{
 			$this->outputIgnoreTag($this->currentTag);
 		}
-		else if ($this->currentTag->isBrTag())
+		elseif ($this->currentTag->isBrTag())
 		{
 			$this->outputBrTag($this->currentTag);
 		}
-		else if ($this->currentTag->isStartTag())
+		elseif ($this->currentTag->isParagraphBreak())
+		{
+			$this->outputText($this->currentTag->getPos(), 0, true);
+		}
+		elseif ($this->currentTag->isStartTag())
 		{
 			$this->processStartTag($this->currentTag);
 		}

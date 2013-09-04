@@ -128,6 +128,24 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox isParagraphBreak() returns true if the tag's name is "pb"
+	*/
+	public function testIsParagraphBreakTrue()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'pb', 12, 0);
+		$this->assertTrue($tag->isParagraphBreak());
+	}
+
+	/**
+	* @testdox isParagraphBreak() returns false by default
+	*/
+	public function testIsParagraphBreakFalse()
+	{
+		$tag = new Tag(Tag::SELF_CLOSING_TAG, 'BR', 12, 0);
+		$this->assertFalse($tag->isParagraphBreak());
+	}
+
+	/**
 	* @testdox isStartTag() returns true if the tag's type is Tag::START_TAG
 	*/
 	public function testIsStartTagStart()

@@ -1527,6 +1527,8 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] isBrTag() returns false by default
  [x] isIgnoreTag() returns true if the tag's name is "i"
  [x] isIgnoreTag() returns false by default
+ [x] isParagraphBreak() returns true if the tag's name is "pb"
+ [x] isParagraphBreak() returns false by default
  [x] isStartTag() returns true if the tag's type is Tag::START_TAG
  [x] isStartTag() returns true if the tag's type is Tag::END_TAG
  [x] isStartTag() returns true if the tag's type is Tag::SELF_CLOSING_TAG
@@ -1659,7 +1661,8 @@ s9e\TextFormatter\Tests\Parser\TagStack
  [x] addTagPair() creates both a start tag and an end tag of the same name, paired together
  [x] addTagPair() returns the newly-created start tag
  [x] addBrTag() adds a zero-width, self-closing "br" tag to the stack then returns it
- [x] addIgnoreTag() adds self-closing "i" tag to the stack then returns it
+ [x] addIgnoreTag() adds a self-closing "i" tag to the stack then returns it
+ [x] addParagraphBreak() adds a zero-width, self-closing "pb" tag to the stack then returns it
  [x] sortTags() sorts tags by position descending (tags processed in text order)
  [x] sortTags() tiebreaker sorts tag that start at the same position by sortPriority descending (-10 is processed before 10)
  [x] sortTags() tiebreaker sorts zero-width tags after longer tags at the same position with the same priority (zero-width tags are processed first)

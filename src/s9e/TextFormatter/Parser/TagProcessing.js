@@ -214,6 +214,10 @@ function processCurrentTag()
 	{
 		outputBrTag(currentTag);
 	}
+	else if (currentTag.isParagraphBreak())
+	{
+		outputText(currentTag.getPos(), 0, true);
+	}
 	else if (currentTag.isStartTag())
 	{
 		processStartTag(currentTag);

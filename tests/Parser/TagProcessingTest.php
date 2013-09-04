@@ -1012,6 +1012,18 @@ class TagProcessingTest extends Test
 					$parser->addEndTag('X', 4, 1);
 				}
 			],
+			[
+				'foobar',
+				'<pt><p>foo</p><p>bar</p></pt>',
+				function ($configurator)
+				{
+					$configurator->rootRules->createParagraphs();
+				},
+				function ($parser)
+				{
+					$parser->addParagraphBreak(3);
+				}
+			],
 		];
 	}
 }

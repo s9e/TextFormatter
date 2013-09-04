@@ -323,6 +323,16 @@ class Tag
 	}
 
 	/**
+	* Test whether this tag represents a paragraph break
+	*
+	* @return bool
+	*/
+	public function isParagraphBreak()
+	{
+		return ($this->name === 'pb');
+	}
+
+	/**
 	* Test whether this tag is a self-closing tag
 	*
 	* @return bool

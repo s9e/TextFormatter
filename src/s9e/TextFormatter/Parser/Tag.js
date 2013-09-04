@@ -316,6 +316,16 @@ Tag.prototype.isInvalid = function()
 }
 
 /**
+* Test whether this tag represents a paragraph break
+*
+* @return {!boolean}
+*/
+Tag.prototype.isParagraphBreak = function()
+{
+	return (this.name === 'pb');
+}
+
+/**
 * Test whether this tag is a self-closing tag
 *
 * @return {!boolean}

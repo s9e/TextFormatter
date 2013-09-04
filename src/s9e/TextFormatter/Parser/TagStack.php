@@ -82,6 +82,19 @@ trait TagStack
 	}
 
 	/**
+	* Add a paragraph break at given position
+	*
+	* Uses a zero-width tag that is actually never output in the result
+	*
+	* @param  integer $pos  Position of the tag in the text
+	* @return Tag
+	*/
+	public function addParagraphBreak($pos)
+	{
+		return $this->addTag(Tag::SELF_CLOSING_TAG, 'pb', $pos, 0);
+	}
+
+	/**
 	* Add a tag
 	*
 	* @param  integer $type Tag's type
@@ -97,7 +110,7 @@ trait TagStack
 
 		// Invalidate this tag if it's an unknown tag, a disabled tag or if its length or its
 		// position is negative
-		if (!isset($this->tagsConfig[$name]) && $name !== 'i' && $name !== 'br')
+		if (!isset($this->tagsConfig[$name]) && $name !== 'i' && $name !== 'br' && $name !== 'pb')
 		{
 			$tag->invalidate();
 		}
