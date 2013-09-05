@@ -11,6 +11,7 @@ foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Configurator/Bundles/*.php') 
 	$configurator = $className::getConfigurator();
 
 	$rendererGenerator = $configurator->setRendererGenerator('PHP');
+	$rendererGenerator->useMultibyteStringFunctions = false;
 	$rendererGenerator->forceEmptyElements = false;
 	$rendererGenerator->className = 's9e\\TextFormatter\\Bundles\\' . $bundleName . '\\Renderer';
 	$rendererGenerator->filepath

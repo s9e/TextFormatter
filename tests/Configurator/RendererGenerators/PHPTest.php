@@ -874,7 +874,7 @@ class PHPTest extends Test
 				{
 					if (!function_exists('mb_strlen'))
 					{
-						$test->markTestSkipped('Requires mb_strlen');
+						$test->markTestSkipped('Requires mb_strlen()');
 					}
 
 					$configurator->tags->add('X')->defaultTemplate
@@ -887,7 +887,7 @@ class PHPTest extends Test
 				{
 					if (!function_exists('mb_strlen'))
 					{
-						$test->markTestSkipped('Requires mb_strlen');
+						$test->markTestSkipped('Requires mb_strlen()');
 					}
 
 					$configurator->tags->add('X')->defaultTemplate
@@ -900,6 +900,46 @@ class PHPTest extends Test
 				{
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="string-length(@bar)"/>';
+				}
+			],
+			[
+				'<rt><X foo="ABCDEF0153">..</X></rt>',
+				function ($configurator, $test)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:value-of select="substring(@foo,2,3)"/>';
+				}
+			],
+			[
+				'<rt><X foo="ABCDEF0153">..</X></rt>',
+				function ($configurator, $test)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:value-of select="substring(@foo,0,3)"/>';
+				}
+			],
+			[
+				'<rt><X foo="ABCDEF0153">..</X></rt>',
+				function ($configurator, $test)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:value-of select="substring(@foo,2,-3)"/>';
+				}
+			],
+			[
+				'<rt><X foo="ABCDEF0153" x="3">..</X></rt>',
+				function ($configurator, $test)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:value-of select="substring(@foo,@x)"/>';
+				}
+			],
+			[
+				'<rt><X foo="ABCDEF0153" x="3">..</X></rt>',
+				function ($configurator, $test)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:value-of select="substring(@foo,3,@x)"/>';
 				}
 			],
 		];
@@ -1016,7 +1056,7 @@ class PHPTest extends Test
 				{
 					if (!function_exists('mb_strlen'))
 					{
-						$test->markTestSkipped('Requires mb_strlen');
+						$test->markTestSkipped('Requires mb_strlen()');
 					}
 				}
 			],
@@ -1028,7 +1068,68 @@ class PHPTest extends Test
 				{
 					if (!function_exists('mb_strlen'))
 					{
-						$test->markTestSkipped('Requires mb_strlen');
+						$test->markTestSkipped('Requires mb_strlen()');
+					}
+				}
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="substring(.,1,2)"/></xsl:template>',
+				"mb_substr(\$node->textContent,0,2,'utf-8')",
+				'substring',
+				function ($test)
+				{
+					if (!function_exists('mb_substr'))
+					{
+						$test->markTestSkipped('Requires mb_substr()');
+					}
+				}
+			],
+			[
+				// NOTE: as per XPath specs, the length is adjusted to the negative position
+				'<xsl:template match="X"><xsl:value-of select="substring(.,0,2)"/></xsl:template>',
+				"mb_substr(\$node->textContent,0,1,'utf-8')",
+				'substring',
+				function ($test)
+				{
+					if (!function_exists('mb_substr'))
+					{
+						$test->markTestSkipped('Requires mb_substr()');
+					}
+				}
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="substring(.,@x,1)"/></xsl:template>',
+				"mb_substr(\$node->textContent,max(0,\$node->getAttribute('x')-1),1,'utf-8')",
+				'substring',
+				function ($test)
+				{
+					if (!function_exists('mb_substr'))
+					{
+						$test->markTestSkipped('Requires mb_substr()');
+					}
+				}
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="substring(.,1,@x)"/></xsl:template>',
+				"mb_substr(\$node->textContent,0,max(0,\$node->getAttribute('x')),'utf-8')",
+				'substring',
+				function ($test)
+				{
+					if (!function_exists('mb_substr'))
+					{
+						$test->markTestSkipped('Requires mb_substr()');
+					}
+				}
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="substring(.,2)"/></xsl:template>',
+				"mb_substr(\$node->textContent,1,null,'utf-8')",
+				'substring',
+				function ($test)
+				{
+					if (!function_exists('mb_substr'))
+					{
+						$test->markTestSkipped('Requires mb_substr()');
 					}
 				}
 			],

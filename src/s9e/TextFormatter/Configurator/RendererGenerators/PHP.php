@@ -1174,6 +1174,11 @@ EOT
 				$patterns['strlen'] = 'string-length \\( (?<strlen0>(?&value))? \\)';
 			}
 
+			if (function_exists('mb_substr'))
+			{
+				$patterns['substr'] = 'substring \\( (?<substr0>(?&value)) , (?<substr1>(?&value)) (?:, (?<substr2>(?&value)))? \\)';
+			}
+
 			// Create a regexp that matches values, such as "@foo" or "42"
 			$valueRegexp = '(?<value>';
 			foreach ($patterns as $name => $pattern)
@@ -1258,6 +1263,56 @@ EOT
 				}
 
 				return 'mb_strlen(' . $this->convertXPath($m['strlen0']) . ",'utf-8')";
+			}
+
+			// <xsl:value-of select="substring(@foo, 1, 2)"/>
+			// $this->out .= mb_substring($node->getAttribute('foo'),0,2,'utf-8');
+			//
+			// NOTE: negative values for the second argument do not produce the same result as
+			//       specified in XPath if the argument is not a literal number
+			if (!empty($m['substr']) && $this->useMultibyteStringFunctions)
+			{
+				$php = 'mb_substr(' . $this->convertXPath($m['substr0']) . ',';
+
+				// Hardcode the value if possible
+				if (preg_match('#^\\d+$#D', $m['substr1']))
+				{
+					$php .= max(0, $m['substr1'] - 1);
+				}
+				else
+				{
+					$php .= 'max(0,' . $this->convertXPath($m['substr1']) . '-1)';
+				}
+
+				$php .= ',';
+
+				if (isset($m['substr2']))
+				{
+					if (preg_match('#^\\d+$#D', $m['substr2']))
+					{
+						// Handles substring(0,2) as per XPath
+						if (preg_match('#^\\d+$#D', $m['substr1']) && $m['substr1'] < 1)
+						{
+							$php .= max(0, $m['substr1'] + $m['substr2'] - 1);
+						}
+						else
+						{
+							$php .= max(0, $m['substr2']);
+						}
+					}
+					else
+					{
+						$php .= 'max(0,' . $this->convertXPath($m['substr2']) . ')';
+					}
+				}
+				else
+				{
+					$php .= 'null';
+				}
+
+				$php .= ",'utf-8')";
+
+				return $php;
 			}
 
 			if (!empty($m['cmp1']))
