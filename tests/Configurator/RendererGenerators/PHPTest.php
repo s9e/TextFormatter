@@ -905,7 +905,7 @@ class PHPTest extends Test
 		];
 	}
 
-	protected function runCodeTest($xsl, $contains, $notContains)
+	protected function runCodeTest($xsl, $contains, $notContains, $setup = null)
 	{
 		if (strpos('xsl:output', $xsl) === false)
 		{
@@ -922,6 +922,12 @@ class PHPTest extends Test
 
 		$generator = new PHP;
 		$generator->className = 'foo';
+
+		if (isset($setup))
+		{
+			call_user_func($setup, $generator, $this);
+		}
+
 		$php = $generator->generate($xsl);
 
 		if (isset($contains))
@@ -1097,6 +1103,23 @@ class PHPTest extends Test
 				"if(strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false)"
 			],
 		];
+	}
+
+	/**
+	* @testdox mbstring functions are not used if $useMultibyteStringFunctions is FALSE
+	* @requires mbstring
+	*/
+	public function testNoMbstring()
+	{
+		$this->runCodeTest(
+			'<xsl:template match="X"><xsl:value-of select="string-length(@foo)"/></xsl:template>',
+			'string-length',
+			'mb_strlen',
+			function ($generator)
+			{
+				$generator->useMultibyteStringFunctions = false;
+			}
+		);
 	}
 
 	/**

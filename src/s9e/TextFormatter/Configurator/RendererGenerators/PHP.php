@@ -91,6 +91,11 @@ class PHP implements RendererGenerator
 	public $useEmptyElements = true;
 
 	/**
+	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
+	*/
+	public $useMultibyteStringFunctions = true;
+
+	/**
 	* Constructor
 	*
 	* @param  string $className Name of the class to be created
@@ -1245,7 +1250,7 @@ EOT
 
 			// <xsl:value-of select="string-length(@foo)"/>
 			// $this->out .= mb_strlen($node->getAttribute('foo'),'utf-8');
-			if (!empty($m['strlen']))
+			if (!empty($m['strlen']) && $this->useMultibyteStringFunctions)
 			{
 				if (!isset($m['strlen0']))
 				{
