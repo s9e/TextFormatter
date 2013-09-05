@@ -1164,6 +1164,11 @@ EOT
 				'number' => '-? \\d++'
 			];
 
+			if (function_exists('mb_strlen'))
+			{
+				$patterns['strlen'] = 'string-length \\( (?<strlen0>(?&value))? \\)';
+			}
+
 			// Create a regexp that matches values, such as "@foo" or "42"
 			$valueRegexp = '(?<value>';
 			foreach ($patterns as $name => $pattern)
@@ -1236,6 +1241,18 @@ EOT
 			if (!empty($m['number']))
 			{
 				return "'" . $expr . "'";
+			}
+
+			// <xsl:value-of select="string-length(@foo)"/>
+			// $this->out .= mb_strlen($node->getAttribute('foo'),'utf-8');
+			if (!empty($m['strlen']))
+			{
+				if (!isset($m['strlen0']))
+				{
+					$m['strlen0'] = '.';
+				}
+
+				return 'mb_strlen(' . $this->convertXPath($m['strlen0']) . ",'utf-8')";
 			}
 
 			if (!empty($m['cmp1']))

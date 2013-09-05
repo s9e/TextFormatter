@@ -583,7 +583,7 @@ class PHPTest extends Test
 	public function testEdgeCases($xml, $configuratorSetup, $rendererSetup = null)
 	{
 		$configurator = new Configurator;
-		call_user_func($configuratorSetup, $configurator);
+		call_user_func($configuratorSetup, $configurator, $this);
 
 		$phpRenderer  = $configurator->getRenderer('PHP');
 		$xsltRenderer = $configurator->getRenderer('XSLT');
@@ -868,6 +868,40 @@ class PHPTest extends Test
 						</xsl:choose>';
 				}
 			],
+			[
+				'<rt><X foo="FOO">..</X></rt>',
+				function ($configurator, $test)
+				{
+					if (!function_exists('mb_strlen'))
+					{
+						$test->markTestSkipped('Requires mb_strlen');
+					}
+
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:value-of select="string-length(@foo)"/>';
+				}
+			],
+			[
+				'<rt><X foo="FOO">..</X></rt>',
+				function ($configurator, $test)
+				{
+					if (!function_exists('mb_strlen'))
+					{
+						$test->markTestSkipped('Requires mb_strlen');
+					}
+
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:value-of select="string-length()"/>';
+				}
+			],
+			[
+				'<rt><X foo="FOO">..</X></rt>',
+				function ($configurator, $test)
+				{
+					$configurator->tags->add('X')->defaultTemplate
+						= '<xsl:value-of select="string-length(@bar)"/>';
+				}
+			],
 		];
 	}
 
@@ -911,8 +945,13 @@ class PHPTest extends Test
 	* @dataProvider getXPathTests
 	* @testdox XPath expressions are inlined as PHP whenever possible
 	*/
-	public function testXPath($xsl, $contains = null, $notContains = null)
+	public function testXPath($xsl, $contains = null, $notContains = null, $setup = null)
 	{
+		if (isset($setup))
+		{
+			call_user_func($setup, $this);
+		}
+
 		$this->runCodeTest($xsl, $contains, $notContains);
 	}
 
@@ -962,6 +1001,30 @@ class PHPTest extends Test
 			[
 				'<xsl:template match="*"><xsl:value-of select="not(@bar)"/></xsl:template>',
 				"\$this->xpath->evaluate('not(@bar)',\$node)"
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="string-length(@bar)"/></xsl:template>',
+				"mb_strlen(\$node->getAttribute('bar'),'utf-8')",
+				'string-length',
+				function ($test)
+				{
+					if (!function_exists('mb_strlen'))
+					{
+						$test->markTestSkipped('Requires mb_strlen');
+					}
+				}
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="string-length()"/></xsl:template>',
+				"mb_strlen(\$node->textContent,'utf-8')",
+				'string-length',
+				function ($test)
+				{
+					if (!function_exists('mb_strlen'))
+					{
+						$test->markTestSkipped('Requires mb_strlen');
+					}
+				}
 			],
 			// XPath in conditions
 			[
