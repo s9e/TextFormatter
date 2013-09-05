@@ -41,4 +41,12 @@ class ConfiguratorTest extends Test
 		$this->assertSame($tag,       $this->configurator->tags->get('URL'));
 		$this->assertSame($tagConfig, $tag->asConfig());
 	}
+
+	/**
+	* @testdox asConfig() returns an array
+	*/
+	public function testAsConfig()
+	{
+		$this->assertInternalType('array', $this->configurator->MarkdownLite->asConfig());
+	}
 }
