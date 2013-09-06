@@ -130,6 +130,11 @@ function convertCustom($filepath, &$file)
 			array(
 				'$toks = [];',
 				'$toks = array();'
+			),
+			array(
+				// mb_substr() doesn't like null as third parameter on PHP 5.3
+				"\$php .= 'null';",
+				'$php .= 0x7fffffe;'
 			)
 		),
 		'PHPTest.php' => array(
@@ -148,6 +153,10 @@ function convertCustom($filepath, &$file)
 			array(
 				"unlink(\$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php');",
 				"unlink(\$cacheDir . '/Renderer_33632ba0e17861e90687b5fe2b0552c51f21d192.php');"
+			),
+			array(
+				'"mb_substr(\\$node->textContent,1,null,\'utf-8\')",',
+				'"mb_substr(\\$node->textContent,1,0x7fffffe,\'utf-8\')",'
 			)
 		),
 		'Regexp.php' => array(
