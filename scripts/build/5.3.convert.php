@@ -156,7 +156,7 @@ function convertCustom($filepath, &$file)
 			),
 			array(
 				'"mb_substr(\\$node->textContent,1,null,\'utf-8\')",',
-				'"mb_substr(\\$node->textContent,1,0x7fffffe,\'utf-8\')",'
+				'"mb_substr(\\$node->textContent,1,134217726,\'utf-8\')",'
 			)
 		),
 		'Regexp.php' => array(
