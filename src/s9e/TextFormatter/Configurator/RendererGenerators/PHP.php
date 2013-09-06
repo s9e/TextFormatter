@@ -1166,7 +1166,8 @@ EOT
 				'lname'  => 'local-name\\(\\)',
 				'param'  => '\\$ (?<paramName>\\w+)',
 				'string' => '"[^"]*"|\'[^\']*\'',
-				'number' => '-? \\d++'
+				'number' => '-? \\d++',
+				'contains' => 'contains \\( (?<contains0>(?&value)) , (?<contains1>(?&value)) \\)'
 			];
 
 			if (function_exists('mb_strlen'))
@@ -1313,6 +1314,11 @@ EOT
 				$php .= ",'utf-8')";
 
 				return $php;
+			}
+
+			if (!empty($m['contains']))
+			{
+				return '(strpos(' . $this->convertXPath($m['contains0']) . ',' . $this->convertXPath($m['contains1']) . ')!==false)';
 			}
 
 			if (!empty($m['cmp1']))
