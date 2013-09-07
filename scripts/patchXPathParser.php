@@ -9,7 +9,7 @@ unset($var);
 
 $LocationPath = 'RelativeLocationPath | AbsoluteLocationPath';
 $AbsoluteLocationPath = '//? RelativeLocationPath? | AbbreviatedAbsoluteLocationPath';
-$RelativeLocationPath = 'Step (?://? Step )*';
+$RelativeLocationPath = 'Step | (?<RelativeLocationPath0>(?:Step //?)* Step) //? Step';
 
 $Step = 'AxisSpecifier NodeTest Predicate* | AbbreviatedStep';
 $AxisSpecifier = 'AxisName :: | AbbreviatedAxisSpecifier';
@@ -67,7 +67,8 @@ $tokens = get_defined_vars();
 
 foreach ($tokens as $tokenName => &$expr)
 {
-	$expr = preg_replace('/[A-Z]\\w+/', '(?&$0)', str_replace(' ', '\\s*', $expr));
+	// Turn TokenNames into references, but avoid matching (?<TokenName>)
+	$expr = preg_replace('/(?<![<\\w])[A-Z]\\w+/', '(?&$0)', str_replace(' ', '\\s*', $expr));
 }
 unset($expr);
 
@@ -76,6 +77,8 @@ foreach ($tokens as $tokenName => $expr)
 {
 	$regexp = '(^\\s*(?:' . $expr . ')\\s*$)';
 
+	// Capture the first generation of references, with their name appended with a number. They will
+	// be reparsed at runtime
 	$i = 0;
 	$regexp = preg_replace_callback(
 		'/\\(\\?&(\\w+)\\)/',
@@ -105,7 +108,10 @@ foreach ($tokens as $tokenName => $expr)
 				$defined[$name] = 1;
 				$continue = true;
 
-				return '(?<' . $name . '>' . $tokens[$name] . ')';
+				// Remove named captures from subpatterns
+				$regexp = preg_replace('/\\(\\?<[^>]+>/', '(?:', $tokens[$name]);
+
+				return '(?<' . $name . '>' . $regexp . ')';
 			},
 			$regexp
 		);
