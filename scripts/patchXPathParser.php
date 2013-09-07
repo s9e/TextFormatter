@@ -91,6 +91,7 @@ foreach ($tokens as $tokenName => $expr)
 		$regexp
 	);
 
+	$k = 'a';
 	$defined = [];
 	do
 	{
@@ -98,22 +99,25 @@ foreach ($tokens as $tokenName => $expr)
 
 		$regexp = preg_replace_callback(
 			'/\\(\\?&(\\w+)\\)/',
-			function ($m) use (&$continue, &$defined, $tokens)
+			function ($m) use (&$continue, &$defined, &$k, $tokens)
 			{
 				$name = $m[1];
 
 				if (isset($defined[$name]))
 				{
-					return $m[0];
+					return '(?&' . $defined[$name] . ')';
 				}
 
-				$defined[$name] = 1;
 				$continue = true;
+
+				// Rename the capture to a single letter
+				$defined[$name] = $defined[$k] = $k;
+				++$k;
 
 				// Remove named captures from subpatterns
 				$regexp = preg_replace('/\\(\\?<[^>]+>/', '(?:', $tokens[$name]);
 
-				return '(?<' . $name . '>' . $regexp . ')';
+				return '(?<' . $defined[$name] . '>' . $regexp . ')';
 			},
 			$regexp
 		);
