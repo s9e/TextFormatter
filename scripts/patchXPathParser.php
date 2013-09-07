@@ -29,7 +29,8 @@ $AbbreviatedAxisSpecifier = '@?';
 $Expr = 'OrExpr';
 $PrimaryExpr = 'VariableReference | \\( Expr \\) | Literal | Number | FunctionCall';
 
-$FunctionCall = 'FunctionName \\( (?:Argument (?:, Argument )* )? \\)';
+$FunctionCall = 'FunctionName \\( (?<arguments0>(?&arguments))? \\)';
+$arguments    = 'Argument (?:, (?<arguments0>(?&arguments)))?';
 $Argument     = 'Expr';
 
 $UnionExpr  = 'PathExpr (?:\\| UnionExpr)?';
