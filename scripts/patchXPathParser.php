@@ -120,6 +120,16 @@ foreach ($tokens as $tokenName => $expr)
 	}
 	while ($continue);
 
+	// Collect the names of all references
+	preg_match_all('/\\(\\?&([^)]+)/', $regexp, $m);
+
+	// Remove named captures that are not used as a reference and that do not end with a digit
+	$regexp = preg_replace(
+		'/\\(\\?<(?!' . implode('>|', $m[1]) . '>)\\w+(?<!\\d)>/',
+		'(?:',
+		$regexp
+	);
+
 	$regexps[$tokenName] = $regexp;
 }
 
