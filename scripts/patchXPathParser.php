@@ -74,7 +74,7 @@ unset($expr);
 $regexps = [];
 foreach ($tokens as $tokenName => $expr)
 {
-	$regexp = '(^\\s*' . $expr . '\\s*$)';
+	$regexp = '(^\\s*(?:' . $expr . ')\\s*$)';
 
 	$i = 0;
 	$regexp = preg_replace_callback(

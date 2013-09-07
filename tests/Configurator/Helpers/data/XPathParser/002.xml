@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Expr>
+  <OrExpr>
+    <AndExpr>
+      <EqualityExpr>
+        <RelationalExpr>
+          <AdditiveExpr>
+            <MultiplicativeExpr>
+              <UnaryExpr>
+                <UnionExpr>
+                  <PathExpr>
+                    <FilterExpr>
+                      <PrimaryExpr>
+                        <FunctionCall><FunctionName><QName><UnprefixedName><LocalPart><NCName>concat</NCName></LocalPart></UnprefixedName></QName></FunctionName>(<Argument><Expr><OrExpr><AndExpr><EqualityExpr><RelationalExpr><AdditiveExpr><MultiplicativeExpr><UnaryExpr><UnionExpr><PathExpr><FilterExpr><PrimaryExpr><Literal>'foo'</Literal></PrimaryExpr></FilterExpr></PathExpr></UnionExpr></UnaryExpr></MultiplicativeExpr></AdditiveExpr></RelationalExpr></EqualityExpr></AndExpr></OrExpr></Expr></Argument>, <Argument><Expr><OrExpr><AndExpr><EqualityExpr><RelationalExpr><AdditiveExpr><MultiplicativeExpr><UnaryExpr><UnionExpr><PathExpr><FilterExpr><PrimaryExpr><Literal>'bar'</Literal></PrimaryExpr></FilterExpr></PathExpr></UnionExpr></UnaryExpr></MultiplicativeExpr></AdditiveExpr></RelationalExpr></EqualityExpr></AndExpr></OrExpr></Expr></Argument>)</FunctionCall>
+                      </PrimaryExpr>
+                    </FilterExpr>
+                  </PathExpr>
+                </UnionExpr>
+              </UnaryExpr>
+            </MultiplicativeExpr>
+          </AdditiveExpr>
+        </RelationalExpr>
+      </EqualityExpr>
+    </AndExpr>
+  </OrExpr>
+</Expr>
