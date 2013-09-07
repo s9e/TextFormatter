@@ -7,16 +7,16 @@ foreach (array_keys(get_defined_vars()) as $var)
 }
 unset($var);
 
-$LocationPath = 'RelativeLocationPath | AbsoluteLocationPath';
-$AbsoluteLocationPath = '//? RelativeLocationPath? | AbbreviatedAbsoluteLocationPath';
-$RelativeLocationPath = 'Step | (?<RelativeLocationPath0>(?:Step //?)* Step) //? Step';
+$LocationPath = 'RelativeLocationPath|AbsoluteLocationPath';
+$AbsoluteLocationPath = '//? RelativeLocationPath?|AbbreviatedAbsoluteLocationPath';
+$RelativeLocationPath = 'Step|(?<RelativeLocationPath0>(?:Step //?)* Step) //? Step';
 
-$Step = 'AxisSpecifier NodeTest (?<predicates0>(?&predicates))? | AbbreviatedStep';
-$AxisSpecifier = 'AxisName :: | AbbreviatedAxisSpecifier';
+$Step = 'AxisSpecifier NodeTest (?<predicates0>(?&predicates))?|AbbreviatedStep';
+$AxisSpecifier = 'AxisName ::|AbbreviatedAxisSpecifier';
 
-$AxisName = 'ancestor | ancestor-or-self | attribute | child | descendant | descendant-or-self | following | following-sibling | namespace | parent | preceding | preceding-sibling | self';
+$AxisName = 'ancestor|ancestor-or-self|attribute|child|descendant|descendant-or-self|following|following-sibling|namespace|parent|preceding|preceding-sibling|self';
 
-$NodeTest = 'NameTest | NodeType \\( \\) | processing-instruction \\( Literal \\)';
+$NodeTest = 'NameTest|NodeType \\( \\)|processing-instruction \\( Literal \\)';
 
 $Predicate = '\\[ PredicateExpr \\]';
 $PredicateExpr = 'Expr';
@@ -28,14 +28,14 @@ $AbbreviatedStep = '\\.\\.?';
 $AbbreviatedAxisSpecifier = '@?';
 
 $Expr = 'OrExpr';
-$PrimaryExpr = 'VariableReference | \\( Expr \\) | Literal | Number | FunctionCall';
+$PrimaryExpr = 'VariableReference|\\( Expr \\)|Literal|Number|FunctionCall';
 
 $FunctionCall = 'FunctionName \\( (?<arguments0>(?&arguments))? \\)';
 $arguments    = 'Argument (?:, (?<arguments0>(?&arguments)))?';
 $Argument     = 'Expr';
 
 $UnionExpr  = 'PathExpr (?:\\| UnionExpr)?';
-$PathExpr   = 'FilterExpr (?://? RelativeLocationPath)? | LocationPath';
+$PathExpr   = 'FilterExpr (?://? RelativeLocationPath)?|LocationPath';
 $FilterExpr = 'PrimaryExpr (?<predicates0>(?&predicates))?';
 
 $OrExpr  = 'AndExpr (?:or AndExpr)?';
@@ -45,20 +45,20 @@ $RelationalExpr = 'AdditiveExpr (?:[<>]=? AdditiveExpr)?';
 
 $AdditiveExpr = 'MultiplicativeExpr (?:[-+] MultiplicativeExpr)?';
 $MultiplicativeExpr = 'UnaryExpr (?:(?:MultiplyOperator|div|mod) UnaryExpr)?';
-$UnaryExpr = 'UnionExpr | - UnaryExpr';
+$UnaryExpr = 'UnionExpr|- UnaryExpr';
 
-$Literal = '"[^"]*" | \'[^\']*\'';
-$Number  = 'Digits (?:\\. Digits?)? | \\. Digits';
+$Literal = '"[^"]*"|\'[^\']*\'';
+$Number  = 'Digits (?:\\. Digits?)?|\\. Digits';
 $Digits  = '[0-9]+';
-$Operator = 'OperatorName | MultiplyOperator | //? | \\| | \\+ | - | = | != | <=? | >=?';
-$OperatorName = 'and | or | mod | div';
+$Operator = 'OperatorName|MultiplyOperator|//?|\\||\\+|-|=|!=|<=?|>=?';
+$OperatorName = 'and|or|mod|div';
 $MultiplyOperator = '\\*';
 $FunctionName = '(?!NodeType)QName';
 $VariableReference = '\\$ QName';
-$NameTest = '\\* | NCName : \\* | QName';
-$NodeType = 'comment | text | processing-instruction | node';
+$NameTest = '\\*|NCName : \\*|QName';
+$NodeType = 'comment|text|processing-instruction|node';
 
-$QName          = 'PrefixedName | UnprefixedName';
+$QName          = 'PrefixedName|UnprefixedName';
 $PrefixedName   = 'Prefix : LocalPart';
 $UnprefixedName = 'LocalPart';
 $Prefix         = 'NCName';
