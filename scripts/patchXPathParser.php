@@ -11,7 +11,7 @@ $LocationPath = 'RelativeLocationPath | AbsoluteLocationPath';
 $AbsoluteLocationPath = '//? RelativeLocationPath? | AbbreviatedAbsoluteLocationPath';
 $RelativeLocationPath = 'Step | (?<RelativeLocationPath0>(?:Step //?)* Step) //? Step';
 
-$Step = 'AxisSpecifier NodeTest Predicate* | AbbreviatedStep';
+$Step = 'AxisSpecifier NodeTest (?<predicates0>(?&predicates))? | AbbreviatedStep';
 $AxisSpecifier = 'AxisName :: | AbbreviatedAxisSpecifier';
 
 $AxisName = 'ancestor | ancestor-or-self | attribute | child | descendant | descendant-or-self | following | following-sibling | namespace | parent | preceding | preceding-sibling | self';
@@ -20,6 +20,7 @@ $NodeTest = 'NameTest | NodeType \\( \\) | processing-instruction \\( Literal \\
 
 $Predicate = '\\[ PredicateExpr \\]';
 $PredicateExpr = 'Expr';
+$predicates = 'Predicate (?<predicates0>(?&predicates))?';
 
 $AbbreviatedAbsoluteLocationPath = '// RelativeLocationPath';
 $AbbreviatedRelativeLocationPath = 'Step // RelativeLocationPath';
@@ -35,7 +36,7 @@ $Argument     = 'Expr';
 
 $UnionExpr  = 'PathExpr (?:\\| UnionExpr)?';
 $PathExpr   = 'FilterExpr (?://? RelativeLocationPath)? | LocationPath';
-$FilterExpr = 'PrimaryExpr Predicate*';
+$FilterExpr = 'PrimaryExpr (?<predicates0>(?&predicates))?';
 
 $OrExpr  = 'AndExpr (?:or AndExpr)?';
 $AndExpr = 'EqualityExpr (?:and AndExpr)?';
