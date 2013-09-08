@@ -11,6 +11,14 @@ use s9e\TextFormatter\Tests\Test;
 */
 class XPathParserTest extends Test
 {
+	public function setUp()
+	{
+		if (!empty($_SERVER['travis']) && PCRE_VERSION < 8.11)
+		{
+			$this->markTestSkipped('PCRE < 8.11 seems to segfault on some tests');
+		}
+	}
+
 	/**
 	* @testdox parse() tests
 	* @dataProvider getParseTests
