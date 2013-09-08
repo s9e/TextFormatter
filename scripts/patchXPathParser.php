@@ -134,15 +134,30 @@ foreach ($tokens as $tokenName => $expr)
 		$regexp
 	);
 
-	// Replace non-capturing subpatterns that only contain a reference
-	$regexp = preg_replace('/\\(\\?:(\\(\\?&[^)]+\\))\\)/', '$1', $regexp);
+	$cleanupRegexps = [
+		// Replace non-capturing subpatterns that only contain a reference
+		// (?:(?&foo)) => (?&foo)
+		'/\\(\\?:(\\(\\?&[^)]+\\))\\)/' => '$1',
 
-	// Iteratively replace unnecessary subpatterns that contain a simple expression
+		// Replace unnecessary subpatterns that contain a simple expression
+		// (?:\\w+) => \\w+ but ignores (?:\\w+)?
+		'/\\(\\?:([^(|)]+)(?<!\\\\)\\)(?![?*+])/' => '$1',
+
+		// (?:(?!(?&a))(?&b)) => (?!(?&a))(?&b)
+		'/\\(\\?:(\\(\\?!\\(\\?&\\w+\\)\\)\\(\\?&\\w+\\))\\)(?![*+])/' => '$1'
+	];
+
 	do
 	{
-		$regexp = preg_replace('/\\(\\?:([^(|)]+)(?<!\\\\)\\)(?![?*+])/', '$1', $regexp, -1, $cnt);
+		$continue = false;
+
+		foreach ($cleanupRegexps as $cleanupRegexp => $replacement)
+		{
+			$regexp = preg_replace($cleanupRegexp, $replacement, $regexp, -1, $cnt);
+			$continue |= $cnt;
+		}
 	}
-	while ($cnt);
+	while ($continue);
 
 	$regexps[$tokenName] = $regexp;
 }
