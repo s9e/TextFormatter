@@ -127,12 +127,22 @@ foreach ($tokens as $tokenName => $expr)
 	// Collect the names of all references
 	preg_match_all('/\\(\\?&([^)]+)/', $regexp, $m);
 
-	// Remove named captures that are not used as a reference and that do not end with a digit
+	// Replace named captures that are not used as a reference and that do not end with a digit
 	$regexp = preg_replace(
 		'/\\(\\?<(?!' . implode('>|', $m[1]) . '>)\\w+(?<!\\d)>/',
 		'(?:',
 		$regexp
 	);
+
+	// Replace non-capturing subpatterns that only contain a reference
+	$regexp = preg_replace('/\\(\\?:(\\(\\?&[^)]+\\))\\)/', '$1', $regexp);
+
+	// Iteratively replace unnecessary subpatterns that contain a simple expression
+	do
+	{
+		$regexp = preg_replace('/\\(\\?:([^(|)]+)(?<!\\\\)\\)(?![?*+])/', '$1', $regexp, -1, $cnt);
+	}
+	while ($cnt);
 
 	$regexps[$tokenName] = $regexp;
 }
