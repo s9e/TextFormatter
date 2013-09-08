@@ -7,11 +7,19 @@ foreach (array_keys(get_defined_vars()) as $var)
 }
 unset($var);
 
+// LocationPath ::= RelativeLocationPath | AbsoluteLocationPath
 $LocationPath = 'RelativeLocationPath|AbsoluteLocationPath';
-$AbsoluteLocationPath = '//? RelativeLocationPath?|AbbreviatedAbsoluteLocationPath';
-$RelativeLocationPath = '(?<RelativeLocationPath0>(?:Step //?)* Step) //? (?<RelativeLocationPath1>Step)|Step';
 
+// AbsoluteLocationPath ::= '/' RelativeLocationPath? | AbbreviatedAbsoluteLocationPath
+$AbsoluteLocationPath = '/ RelativeLocationPath?|AbbreviatedAbsoluteLocationPath';
+
+// RelativeLocationPath ::= Step | RelativeLocationPath '/' Step | AbbreviatedRelativeLocationPath
+$RelativeLocationPath = 'Step|(?<RelativeLocationPath0>(?:Step //?)* Step) / Step|AbbreviatedRelativeLocationPath';
+
+// Step ::= AxisSpecifier NodeTest Predicate* | AbbreviatedStep
 $Step = 'AxisSpecifier NodeTest (?<predicates0>(?&predicates))?|AbbreviatedStep';
+
+// AxisSpecifier ::= AxisName '::' | AbbreviatedAxisSpecifier
 $AxisSpecifier = 'AxisName ::|AbbreviatedAxisSpecifier';
 
 $AxisName = 'ancestor|ancestor-or-self|attribute|child|descendant|descendant-or-self|following|following-sibling|namespace|parent|preceding|preceding-sibling|self';
@@ -23,7 +31,9 @@ $PredicateExpr = 'Expr';
 $predicates = 'Predicate (?<predicates0>(?&predicates))?';
 
 $AbbreviatedAbsoluteLocationPath = '// RelativeLocationPath';
-$AbbreviatedRelativeLocationPath = 'Step // RelativeLocationPath';
+
+// AbbreviatedRelativeLocationPath ::= RelativeLocationPath '//' Step
+$AbbreviatedRelativeLocationPath = '(?<RelativeLocationPath0>(?:Step //?)* Step) // Step';
 $AbbreviatedStep = '\\.\\.?';
 $AbbreviatedAxisSpecifier = '@?';
 
