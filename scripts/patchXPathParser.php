@@ -60,7 +60,8 @@ $FilterExpr = 'PrimaryExpr (?<predicates0>(?&predicates))?';
 $OrExpr  = 'AndExpr|(?<OrExpr0>(?:AndExpr or)* AndExpr) or AndExpr';
 
 // AndExpr ::= EqualityExpr | AndExpr 'and' EqualityExpr
-$AndExpr = 'EqualityExpr (?:and AndExpr)?';
+$AndExpr = 'EqualityExpr|(?<AndExpr0>(?:EqualityExpr and)* EqualityExpr) and EqualityExpr';
+
 $EqualityExpr   = 'RelationalExpr (?:!?= RelationalExpr)?';
 $RelationalExpr = 'AdditiveExpr (?:[<>]=? AdditiveExpr)?';
 
