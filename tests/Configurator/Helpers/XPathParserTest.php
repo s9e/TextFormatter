@@ -13,7 +13,7 @@ class XPathParserTest extends Test
 {
 	public function setUp()
 	{
-		if (!empty($_SERVER['travis']) && PCRE_VERSION < 8.11)
+		if (!empty($_SERVER['TRAVIS']) && PCRE_VERSION < 8.11)
 		{
 			$this->markTestSkipped('PCRE < 8.11 seems to segfault on some tests');
 		}
