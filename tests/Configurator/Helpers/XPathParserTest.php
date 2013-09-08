@@ -23,12 +23,13 @@ class XPathParserTest extends Test
 	* @testdox parse() tests
 	* @dataProvider getParseTests
 	*/
-	public function testParse($tokenName, $xsl, $expectedFile)
+	public function testParse($tokenName, $expr, $expectedFile)
 	{
-		$ir = XPathParser::parse($xsl, $tokenName);
+		$ir = XPathParser::parse($expr, $tokenName);
 
 		$this->assertInstanceOf('DOMDocument', $ir);
 		$this->assertXmlStringEqualsXmlFile($expectedFile, $ir->saveXML());
+		$this->assertSame($expr, $ir->textContent);
 	}
 
 	public function getParseTests()
