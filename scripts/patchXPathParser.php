@@ -9,7 +9,7 @@ unset($var);
 
 $LocationPath = 'RelativeLocationPath|AbsoluteLocationPath';
 $AbsoluteLocationPath = '//? RelativeLocationPath?|AbbreviatedAbsoluteLocationPath';
-$RelativeLocationPath = 'Step|(?<RelativeLocationPath0>(?:Step //?)* Step) //? Step';
+$RelativeLocationPath = '(?<RelativeLocationPath0>(?:Step //?)* Step) //? (?<RelativeLocationPath1>Step)|Step';
 
 $Step = 'AxisSpecifier NodeTest (?<predicates0>(?&predicates))?|AbbreviatedStep';
 $AxisSpecifier = 'AxisName ::|AbbreviatedAxisSpecifier';
@@ -79,14 +79,26 @@ foreach ($tokens as $tokenName => $expr)
 {
 	$regexp = '(^\\s*(?:' . $expr . ')\\s*$)';
 
+	// Count the number of each token in use as references
+	$tokenCnt = array_fill_keys(array_keys($tokens), 0);
+	preg_match_all('/\\(\\?<([a-z]+)\\d>/', $expr, $matches);
+	foreach ($matches[1] as $matchName)
+	{
+		++$tokenCnt[$matchName];
+	}
+
 	// Capture the first generation of references, with their name appended with a number. They will
 	// be reparsed at runtime
-	$i = 0;
 	$regexp = preg_replace_callback(
 		'/\\(\\?&(\\w+)\\)/',
-		function ($m) use (&$i)
+		function ($m) use (&$tokenCnt)
 		{
-			return '(?<' . $m[1] . ++$i . '>' . $m[0] . ')';
+			$tokenName = $m[1];
+			$refName   = $tokenName . $tokenCnt[$tokenName];
+
+			++$tokenCnt[$tokenName];
+
+			return '(?<' . $refName . '>' . $m[0] . ')';
 		},
 		$regexp
 	);
