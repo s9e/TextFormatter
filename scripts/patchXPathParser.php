@@ -56,7 +56,10 @@ $PathExpr = 'FilterExpr (?://? RelativeLocationPath)?|LocationPath';
 // FilterExpr ::= PrimaryExpr | FilterExpr Predicate
 $FilterExpr = 'PrimaryExpr (?<predicates0>(?&predicates))?';
 
-$OrExpr  = 'AndExpr (?:or AndExpr)?';
+// OrExpr ::= AndExpr | OrExpr 'or' AndExpr
+$OrExpr  = 'AndExpr|(?<OrExpr0>(?:AndExpr or)* AndExpr) or AndExpr';
+
+// AndExpr ::= EqualityExpr | AndExpr 'and' EqualityExpr
 $AndExpr = 'EqualityExpr (?:and AndExpr)?';
 $EqualityExpr   = 'RelationalExpr (?:!?= RelationalExpr)?';
 $RelationalExpr = 'AdditiveExpr (?:[<>]=? AdditiveExpr)?';
