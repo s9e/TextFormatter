@@ -34,18 +34,26 @@ $AbbreviatedAbsoluteLocationPath = '// RelativeLocationPath';
 
 // AbbreviatedRelativeLocationPath ::= RelativeLocationPath '//' Step
 $AbbreviatedRelativeLocationPath = '(?<RelativeLocationPath0>(?:Step //?)* Step) // Step';
+
+// AbbreviatedStep ::= '.' | '..'
 $AbbreviatedStep = '\\.\\.?';
 $AbbreviatedAxisSpecifier = '@?';
 
 $Expr = 'OrExpr';
 $PrimaryExpr = 'VariableReference|\\( Expr \\)|Literal|Number|FunctionCall';
 
+// FunctionCall ::= FunctionName '(' ( Argument ( ',' Argument )* )? ')'
 $FunctionCall = 'FunctionName \\( (?<arguments0>(?&arguments))? \\)';
 $arguments    = 'Argument (?:, (?<arguments0>(?&arguments)))?';
 $Argument     = 'Expr';
 
-$UnionExpr  = 'PathExpr (?:\\| UnionExpr)?';
-$PathExpr   = 'FilterExpr (?://? RelativeLocationPath)?|LocationPath';
+// UnionExpr ::= PathExpr | UnionExpr '|' PathExpr
+$UnionExpr = 'PathExpr|(?<UnionExpr0>(?:PathExpr \\|)* PathExpr) \\| PathExpr';
+
+// PathExpr ::= LocationPath | FilterExpr | FilterExpr '/' RelativeLocationPath | FilterExpr '//' RelativeLocationPath
+$PathExpr = 'FilterExpr (?://? RelativeLocationPath)?|LocationPath';
+
+// FilterExpr ::= PrimaryExpr | FilterExpr Predicate
 $FilterExpr = 'PrimaryExpr (?<predicates0>(?&predicates))?';
 
 $OrExpr  = 'AndExpr (?:or AndExpr)?';
