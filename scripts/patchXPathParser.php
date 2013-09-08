@@ -48,7 +48,7 @@ $arguments    = 'Argument (?:, (?<arguments0>(?&arguments)))?';
 $Argument     = 'Expr';
 
 // UnionExpr ::= PathExpr | UnionExpr '|' PathExpr
-$UnionExpr = 'PathExpr|(?<UnionExpr0>(?:PathExpr \\|)* PathExpr) \\| PathExpr';
+$UnionExpr = 'PathExpr|(?<UnionExpr0>(?:PathExpr \\|)* PathExpr) (?<Operator0>\\|) PathExpr';
 
 // PathExpr ::= LocationPath | FilterExpr | FilterExpr '/' RelativeLocationPath | FilterExpr '//' RelativeLocationPath
 $PathExpr = 'FilterExpr (?://? RelativeLocationPath)?|LocationPath';
@@ -57,10 +57,10 @@ $PathExpr = 'FilterExpr (?://? RelativeLocationPath)?|LocationPath';
 $FilterExpr = 'PrimaryExpr (?<predicates0>(?&predicates))?';
 
 // OrExpr ::= AndExpr | OrExpr 'or' AndExpr
-$OrExpr  = 'AndExpr|(?<OrExpr0>(?:AndExpr or)* AndExpr) or AndExpr';
+$OrExpr  = 'AndExpr|(?<OrExpr0>(?:AndExpr or)* AndExpr) (?<Operator0>or) AndExpr';
 
 // AndExpr ::= EqualityExpr | AndExpr 'and' EqualityExpr
-$AndExpr = 'EqualityExpr|(?<AndExpr0>(?:EqualityExpr and)* EqualityExpr) and EqualityExpr';
+$AndExpr = 'EqualityExpr|(?<AndExpr0>(?:EqualityExpr and)* EqualityExpr) (?<Operator0>and) EqualityExpr';
 
 $EqualityExpr   = 'RelationalExpr (?:!?= RelationalExpr)?';
 $RelationalExpr = 'AdditiveExpr (?:[<>]=? AdditiveExpr)?';

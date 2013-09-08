@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <Expr>
   <OrExpr>
     <AndExpr>
@@ -7,7 +6,71 @@
           <AdditiveExpr>
             <MultiplicativeExpr>
               <UnaryExpr>
-                <UnionExpr><UnionExpr><UnionExpr><PathExpr><LocationPath><RelativeLocationPath><Step><NodeTest><NameTest><QName><UnprefixedName><LocalPart><NCName>a</NCName></LocalPart></UnprefixedName></QName></NameTest></NodeTest></Step></RelativeLocationPath></LocationPath></PathExpr></UnionExpr>|<PathExpr><LocationPath><RelativeLocationPath><Step><NodeTest><NameTest><QName><UnprefixedName><LocalPart><NCName>b</NCName></LocalPart></UnprefixedName></QName></NameTest></NodeTest></Step></RelativeLocationPath></LocationPath></PathExpr></UnionExpr>|<PathExpr><LocationPath><RelativeLocationPath><Step><NodeTest><NameTest><QName><UnprefixedName><LocalPart><NCName>c</NCName></LocalPart></UnprefixedName></QName></NameTest></NodeTest></Step></RelativeLocationPath></LocationPath></PathExpr></UnionExpr>
+                <UnionExpr>
+                  <UnionExpr>
+                    <UnionExpr>
+                      <PathExpr>
+                        <LocationPath>
+                          <RelativeLocationPath>
+                            <Step>
+                              <NodeTest>
+                                <NameTest>
+                                  <QName>
+                                    <UnprefixedName>
+                                      <LocalPart>
+                                        <NCName>a</NCName>
+                                      </LocalPart>
+                                    </UnprefixedName>
+                                  </QName>
+                                </NameTest>
+                              </NodeTest>
+                            </Step>
+                          </RelativeLocationPath>
+                        </LocationPath>
+                      </PathExpr>
+                    </UnionExpr>
+                    <Operator>|</Operator>
+                    <PathExpr>
+                      <LocationPath>
+                        <RelativeLocationPath>
+                          <Step>
+                            <NodeTest>
+                              <NameTest>
+                                <QName>
+                                  <UnprefixedName>
+                                    <LocalPart>
+                                      <NCName>b</NCName>
+                                    </LocalPart>
+                                  </UnprefixedName>
+                                </QName>
+                              </NameTest>
+                            </NodeTest>
+                          </Step>
+                        </RelativeLocationPath>
+                      </LocationPath>
+                    </PathExpr>
+                  </UnionExpr>
+                  <Operator>|</Operator>
+                  <PathExpr>
+                    <LocationPath>
+                      <RelativeLocationPath>
+                        <Step>
+                          <NodeTest>
+                            <NameTest>
+                              <QName>
+                                <UnprefixedName>
+                                  <LocalPart>
+                                    <NCName>c</NCName>
+                                  </LocalPart>
+                                </UnprefixedName>
+                              </QName>
+                            </NameTest>
+                          </NodeTest>
+                        </Step>
+                      </RelativeLocationPath>
+                    </LocationPath>
+                  </PathExpr>
+                </UnionExpr>
               </UnaryExpr>
             </MultiplicativeExpr>
           </AdditiveExpr>

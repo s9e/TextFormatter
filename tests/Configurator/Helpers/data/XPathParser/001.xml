@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <LocationPath>
   <AbsoluteLocationPath>
     <AbbreviatedAbsoluteLocationPath>//<RelativeLocationPath><Step><NodeTest><NameTest><QName><UnprefixedName><LocalPart><NCName>bar</NCName></LocalPart></UnprefixedName></QName></NameTest></NodeTest></Step></RelativeLocationPath></AbbreviatedAbsoluteLocationPath>
