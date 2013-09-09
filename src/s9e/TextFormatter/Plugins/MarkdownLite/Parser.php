@@ -16,6 +16,24 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
+		$lines = explode("\n", $text);
+		foreach ($lines as $line)
+		{
+			$spn = strspn($line, ' -+*#>0123456789.');
+
+			if (!$spn)
+			{
+				continue;
+			}
+
+			// Blockquote: ">" or "> "
+			// List item:  "* " preceded by any number of spaces
+			// List item:  "- " preceded by any number of spaces
+			// List item:  "+ " preceded by any number of spaces
+			// List item:  at least one digit followed by ". "
+			// HR:         "* * *" or "- - -" or "***" or "---"
+		}
+
 		// Inline links
 		if (strpos($text, '[') !== false)
 		{
