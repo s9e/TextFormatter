@@ -280,7 +280,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add an breakParagraph rule
+	* Add a breakParagraph rule
 	*
 	* @param bool $bool Whether or not this tag breaks current paragraph if applicable
 	*/
@@ -295,7 +295,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add an closeAncestor rule
+	* Add a closeAncestor rule
 	*
 	* @param string $tagName Name of the target tag
 	*/
@@ -305,7 +305,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add an closeParent rule
+	* Add a closeParent rule
 	*
 	* @param string $tagName Name of the target tag
 	*/
@@ -315,7 +315,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add an createParagraphs rule
+	* Add a createParagraphs rule
 	*
 	* @param bool $bool Whether or not paragraphs should automatically be created to handle content
 	*/
@@ -360,7 +360,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add an denyChild rule
+	* Add a denyChild rule
 	*
 	* @param string $tagName Name of the target tag
 	*/
@@ -370,7 +370,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add an denyDescendant rule
+	* Add a denyDescendant rule
 	*
 	* @param string $tagName Name of the target tag
 	*/
@@ -474,7 +474,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add an requireParent rule
+	* Add a requireParent rule
 	*
 	* @param string $tagName Name of the target tag
 	*/
@@ -484,7 +484,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	}
 
 	/**
-	* Add an requireAncestor rule
+	* Add a requireAncestor rule
 	*
 	* @param string $tagName Name of the target tag
 	*/
