@@ -497,10 +497,7 @@ trait TagProcessing
 		// Re-add tags that need to be reopened, at current cursor position
 		foreach ($reopenTags as $startTag)
 		{
-			$newTag = $this->addStartTag($startTag->getName(), $this->pos, 0);
-
-			// Copy the original tag's attributes
-			$newTag->setAttributes($startTag->getAttributes());
+			$newTag = $this->addCopyTag($startTag, $this->pos, 0);
 
 			// Re-pair the new tag
 			$endTag = $startTag->getEndTag();

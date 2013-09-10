@@ -84,6 +84,23 @@ function addParagraphBreak(pos)
 }
 
 /**
+* Add a copy of given tag at given position and length
+*
+* @param  {!Tag}    tag Original tag
+* @param  {!number} pos Copy's position
+* @param  {!number} len Copy's length
+* @return {!Tag}        Copy tag
+*/
+function addCopyTag(tag, pos, len)
+{
+	var copy = addTag(tag.getType(), tag.getName(), pos, len);
+	copy.setAttributes(tag.getAttributes());
+	copy.setSortPriority(tag.getSortPriority());
+
+	return copy;
+}
+
+/**
 * Add a tag
 *
 * @param  {!number} type Tag's type

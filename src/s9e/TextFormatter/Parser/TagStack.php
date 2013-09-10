@@ -95,6 +95,23 @@ trait TagStack
 	}
 
 	/**
+	* Add a copy of given tag at given position and length
+	*
+	* @param  Tag     $tag Original tag
+	* @param  integer $pos Copy's position
+	* @param  integer $len Copy's length
+	* @return Tag          Copy tag
+	*/
+	public function addCopyTag(Tag $tag, $pos, $len)
+	{
+		$copy = $this->addTag($tag->getType(), $tag->getName(), $pos, $len);
+		$copy->setAttributes($tag->getAttributes());
+		$copy->setSortPriority($tag->getSortPriority());
+
+		return $copy;
+	}
+
+	/**
 	* Add a tag
 	*
 	* @param  integer $type Tag's type

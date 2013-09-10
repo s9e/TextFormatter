@@ -254,6 +254,45 @@ class TagStackTest extends Test
 	}
 
 	/**
+	* @testdox addCopyTag() adds a copy of given tag at given position and given length
+	*/
+	public function testAddCopyTag()
+	{
+		$dummyStack = new DummyStack;
+		$original = $dummyStack->addSelfClosingTag('X', 1, 2);
+		$copy     = $dummyStack->addCopyTag($original, 11, 22);
+		$expected = $dummyStack->addSelfClosingTag('X', 11, 22);
+
+		$this->assertEquals($expected, $copy);
+	}
+
+	/**
+	* @testdox addCopyTag() copies the original tag's attributes
+	*/
+	public function testAddCopyTagAttributes()
+	{
+		$dummyStack = new DummyStack;
+		$original = $dummyStack->addSelfClosingTag('X', 1, 2);
+		$original->setAttribute('foo', 'bar');
+		$copy     = $dummyStack->addCopyTag($original, 11, 22);
+
+		$this->assertSame('bar', $copy->getAttribute('foo'));
+	}
+
+	/**
+	* @testdox addCopyTag() copies the original tag's sort priority
+	*/
+	public function testAddCopyTagSortPriority()
+	{
+		$dummyStack = new DummyStack;
+		$original = $dummyStack->addSelfClosingTag('X', 1, 2);
+		$original->setSortPriority(123);
+		$copy     = $dummyStack->addCopyTag($original, 11, 22);
+
+		$this->assertSame(123, $copy->getSortPriority());
+	}
+
+	/**
 	* @testdox sortTags() sorts tags by position descending (tags processed in text order)
 	*/
 	public function testSortTagsByPos()

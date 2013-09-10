@@ -476,10 +476,7 @@ function processEndTag(tag)
 	// Re-add tags that need to be reopened, at current cursor position
 	reopenTags.forEach(function(startTag)
 	{
-		var newTag = addStartTag(startTag.getName(), pos, 0);
-
-		// Copy the original tag's attributes
-		newTag.setAttributes(startTag.getAttributes());
+		var newTag = addCopyTag(startTag, pos, 0);
 
 		// Re-pair the new tag
 		var endTag = startTag.getEndTag();
