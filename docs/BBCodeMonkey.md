@@ -132,10 +132,10 @@ BBCode options can be specified in the opening tag like an attribute, using thei
 
 Tag rules
 ---------
-[Tag rules](Rules.md) can be specified in the opening tag like an attribute, using their name preceded with a `#`. Boolean values can be expressed as `true` and `false` (in lowercase.) For example:
+[Tag rules](Rules.md) can be specified in the opening tag like an attribute, using their name preceded with a `#`. Boolean values can be expressed as `true` and `false` (in lowercase.) Multiple values can be separated with a comma. For example:
 
     [B #autoReopen=true]{TEXT}[/B]
-    [U #denyChild=B #denyChild=I]{TEXT}[/U]
+    [U #denyChild=B,I]{TEXT}[/U]
 
 Templates
 ---------

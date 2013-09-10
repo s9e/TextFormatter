@@ -227,16 +227,20 @@ class BBCodeMonkey
 			{
 				$ruleName = substr($name, 1);
 
-				if ($value === 'true')
+				// Supports #denyChild=foo,bar
+				foreach (explode(',', $value) as $value)
 				{
-					$value = true;
-				}
-				elseif ($value === 'false')
-				{
-					$value = false;
-				}
+					if ($value === 'true')
+					{
+						$value = true;
+					}
+					elseif ($value === 'false')
+					{
+						$value = false;
+					}
 
-				$tag->rules->$ruleName($value);
+					$tag->rules->$ruleName($value);
+				}
 			}
 			else
 			{

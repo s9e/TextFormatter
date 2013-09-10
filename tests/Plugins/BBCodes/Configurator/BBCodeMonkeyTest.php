@@ -1107,6 +1107,16 @@ class BBCodeMonkeyTest extends Test
 					'passthroughToken' => null
 				]
 			],
+			[
+				'[X #closeParent=X,Y]',
+				[
+					'bbcodeName' => 'X',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag(['rules' => ['closeParent' => ['X', 'Y']]]),
+					'tokens'     => [],
+					'passthroughToken' => null
+				]
+			],
 		];
 	}
 
