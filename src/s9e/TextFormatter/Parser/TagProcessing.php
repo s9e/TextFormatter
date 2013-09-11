@@ -68,7 +68,7 @@ trait TagProcessing
 		$tagName = $startTag->getName();
 
 		// Adjust the end tag's position if whitespace is to be minimized
-		if ($this->tagsConfig[$tagName]['rules']['flags'] & self::RULE_TRIM_WHITESPACE)
+		if ($startTag->getFlags() & self::RULE_TRIM_WHITESPACE)
 		{
 			$tagPos = $this->getMagicPos($tagPos);
 		}
@@ -333,11 +333,12 @@ trait TagProcessing
 
 		// If this tag has an autoClose rule and it's not paired with an end tag, we replace it
 		// with a self-closing tag with the same properties
-		if ($tagConfig['rules']['flags'] & self::RULE_AUTO_CLOSE
+		if ($tag->getFlags() & self::RULE_AUTO_CLOSE
 		 && !$tag->getEndTag())
 		{
 			$newTag = new Tag(Tag::SELF_CLOSING_TAG, $tagName, $tag->getPos(), $tag->getLen());
 			$newTag->setAttributes($tag->getAttributes());
+			$newTag->setFlags($tag->getFlags());
 
 			$tag = $newTag;
 		}
@@ -408,7 +409,7 @@ trait TagProcessing
 			// Test whether this tag should be reopened automatically
 			if ($keepReopening)
 			{
-				if ($this->tagsConfig[$openTagName]['rules']['flags'] & self::RULE_AUTO_REOPEN)
+				if ($openTag->getFlags() & self::RULE_AUTO_REOPEN)
 				{
 					$reopenTags[] = $openTag;
 				}
@@ -420,13 +421,15 @@ trait TagProcessing
 
 			// Find the earliest position we can close this open tag
 			$tagPos = $tag->getPos();
-			if ($this->tagsConfig[$openTagName]['rules']['flags'] & self::RULE_TRIM_WHITESPACE)
+			if ($openTag->getFlags() & self::RULE_TRIM_WHITESPACE)
 			{
 				$tagPos = $this->getMagicPos($tagPos);
 			}
 
 			// Output an end tag to close this start tag, then update the context
-			$this->outputTag(new Tag(Tag::END_TAG, $openTagName, $tagPos, 0));
+			$endTag = new Tag(Tag::END_TAG, $openTagName, $tagPos, 0);
+			$endTag->setFlags($openTag->getFlags());
+			$this->outputTag($endTag);
 			$this->popContext();
 		}
 
@@ -531,6 +534,7 @@ trait TagProcessing
 	protected function pushContext(Tag $tag)
 	{
 		$tagName   = $tag->getName();
+		$tagFlags  = $tag->getFlags();
 		$tagConfig = $this->tagsConfig[$tagName];
 
 		++$this->cntTotal[$tagName];
@@ -549,7 +553,7 @@ trait TagProcessing
 
 		// If the tag is transparent, we restrict its allowed children to the same set as its
 		// parent, minus this tag's own disallowed children
-		if ($tagConfig['rules']['flags'] & self::RULE_IS_TRANSPARENT)
+		if ($tagFlags & self::RULE_IS_TRANSPARENT)
 		{
 			$allowedChildren &= $this->context['allowedChildren'];
 		}
@@ -562,8 +566,12 @@ trait TagProcessing
 		$allowedChildren &= $allowedDescendants;
 
 		// Use this tag's flags except for noBrDescendant, which is inherited
-		$flags = $tagConfig['rules']['flags']
-		       | ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT);
+		$flags = $tagFlags;
+
+		if ($this->context['flags'] & self::RULE_NO_BR_DESCENDANT)
+		{
+			$flags |= self::RULE_NO_BR_DESCENDANT;
+		}
 
 		// noBrDescendant is replicated onto noBrChild
 		if ($flags & self::RULE_NO_BR_DESCENDANT)

@@ -418,11 +418,11 @@ class TagStackTest extends Test
 class DummyStack extends Parser
 {
 	public $tagsConfig = [
-		'FOO' => [],
-		'X' => [],
-		'Y' => [],
-		'Z' => [],
-		'DISABLED' => ['isDisabled' => true]
+		'FOO' => ['rules' => ['flags' => 0]],
+		'X' => ['rules' => ['flags' => 0]],
+		'Y' => ['rules' => ['flags' => 0]],
+		'Z' => ['rules' => ['flags' => 0]],
+		'DISABLED' => ['isDisabled' => true, 'rules' => ['flags' => 0]]
 	];
 	public $tagStack = [];
 	public function __construct()

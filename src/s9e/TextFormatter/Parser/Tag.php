@@ -40,6 +40,11 @@ class Tag
 	protected $endTag = null;
 
 	/**
+	* @var integer Bitfield of boolean rules that apply to this tag
+	*/
+	protected $flags = 0;
+
+	/**
 	* @var bool Whether this tag is be invalid
 	*/
 	protected $invalid = false;
@@ -162,6 +167,17 @@ class Tag
 	}
 
 	/**
+	* Set the bitfield of boolean rules that apply to this tag
+	*
+	* @param  integer Bitfield of boolean rules that apply to this tag
+	* @return void
+	*/
+	public function setFlags($flags)
+	{
+		$this->flags = $flags;
+	}
+
+	/**
 	* Set this tag's tiebreaker
 	*
 	* @param  integer $sortPriority
@@ -194,6 +210,16 @@ class Tag
 	public function getEndTag()
 	{
 		return $this->endTag;
+	}
+
+	/**
+	* Return the bitfield of boolean rules that apply to this tag
+	*
+	* @return integer
+	*/
+	public function getFlags()
+	{
+		return $this->flags;
 	}
 
 	/**

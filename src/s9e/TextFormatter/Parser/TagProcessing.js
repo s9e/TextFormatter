@@ -54,7 +54,7 @@ function addMagicEndTag(startTag, tagPos)
 	var tagName = startTag.getName();
 
 	// Adjust the end tag's position if whitespace is to be minimized
-	if (HINT.RULE_TRIM_WHITESPACE && tagsConfig[tagName].rules.flags & RULE_TRIM_WHITESPACE)
+	if (HINT.RULE_TRIM_WHITESPACE && (startTag.getFlags() & RULE_TRIM_WHITESPACE))
 	{
 		tagPos = getMagicPos(tagPos);
 	}
@@ -316,11 +316,12 @@ function processStartTag(tag)
 	// If this tag has an autoClose rule and it's not paired with an end tag, we replace it
 	// with a self-closing tag with the same properties
 	if (HINT.RULE_AUTO_CLOSE
-	 && tagConfig.rules.flags & RULE_AUTO_CLOSE
+	 && tag.getFlags() & RULE_AUTO_CLOSE
 	 && !tag.getEndTag())
 	{
 		var newTag = new Tag(Tag.SELF_CLOSING_TAG, tagName, tag.getPos(), tag.getLen());
 		newTag.setAttributes(tag.getAttributes());
+		newTag.setFlags(tag.getFlags());
 
 		tag = newTag;
 	}
@@ -387,7 +388,7 @@ function processEndTag(tag)
 		// Test whether this tag should be reopened automatically
 		if (keepReopening)
 		{
-			if (tagsConfig[openTagName].rules.flags & RULE_AUTO_REOPEN)
+			if (openTag.getFlags() & RULE_AUTO_REOPEN)
 			{
 				reopenTags.push(openTag);
 			}
@@ -399,13 +400,15 @@ function processEndTag(tag)
 
 		// Find the earliest position we can close this open tag
 		var tagPos = tag.getPos();
-		if (HINT.RULE_TRIM_WHITESPACE && tagsConfig[openTagName].rules.flags & RULE_TRIM_WHITESPACE)
+		if (HINT.RULE_TRIM_WHITESPACE && openTag.getFlags() & RULE_TRIM_WHITESPACE)
 		{
 			tagPos = getMagicPos(tagPos);
 		}
 
 		// Output an end tag to close this start tag, then update the context
-		outputTag(new Tag(Tag.END_TAG, openTagName, tagPos, 0));
+		var endTag = new Tag(Tag.END_TAG, openTagName, tagPos, 0);
+		endTag.setFlags(openTag.getFlags());
+		outputTag(endTag);
 		popContext();
 	});
 
@@ -507,6 +510,7 @@ function popContext()
 function pushContext(tag)
 {
 	var tagName   = tag.getName(),
+		tagFlags  = tag.getFlags(),
 		tagConfig = tagsConfig[tagName];
 
 	++cntTotal[tagName];
@@ -542,7 +546,7 @@ function pushContext(tag)
 
 	// If the tag is transparent, we restrict its allowed children to the same set as its
 	// parent, minus this tag's own disallowed children
-	if (HINT.RULE_IS_TRANSPARENT && tagConfig.rules.flags & RULE_IS_TRANSPARENT)
+	if (HINT.RULE_IS_TRANSPARENT && (tagFlags & RULE_IS_TRANSPARENT))
 	{
 		allowedChildren = contextAnd(allowedChildren, context.allowedChildren);
 	}
@@ -560,7 +564,12 @@ function pushContext(tag)
 	);
 
 	// Use this tag's flags except for noBrDescendant, which is inherited
-	var flags = tagConfig.rules.flags | (context.flags & RULE_NO_BR_DESCENDANT);
+	var flags = tagFlags;
+
+	if (context.flags & RULE_NO_BR_DESCENDANT)
+	{
+		flags |= RULE_NO_BR_DESCENDANT;
+	}
 
 	// noBrDescendant is replicated onto noBrChild
 	if (flags & RULE_NO_BR_DESCENDANT)

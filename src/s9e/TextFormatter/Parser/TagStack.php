@@ -125,6 +125,12 @@ trait TagStack
 		// Create the tag
 		$tag = new Tag($type, $name, $pos, $len);
 
+		// Set this tag's rules bitfield
+		if (isset($this->tagsConfig[$name]))
+		{
+			$tag->setFlags($this->tagsConfig[$name]['rules']['flags']);
+		}
+
 		// Invalidate this tag if it's an unknown tag, a disabled tag or if its length or its
 		// position is negative
 		if (!isset($this->tagsConfig[$name]) && $name !== 'i' && $name !== 'br' && $name !== 'pb')

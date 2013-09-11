@@ -87,12 +87,12 @@ trait OutputHandling
 	{
 		$this->isRich = true;
 
-		$tagName   = $tag->getName();
-		$tagPos    = $tag->getPos();
-		$tagLen    = $tag->getLen();
-		$tagConfig = $this->tagsConfig[$tagName];
+		$tagName  = $tag->getName();
+		$tagPos   = $tag->getPos();
+		$tagLen   = $tag->getLen();
+		$tagFlags = $tag->getFlags();
 
-		if ($tagConfig['rules']['flags'] & self::RULE_TRIM_WHITESPACE)
+		if ($tagFlags & self::RULE_TRIM_WHITESPACE)
 		{
 			$skipBefore = ($tag->isStartTag()) ? 2 : 1;
 			$skipAfter  = ($tag->isEndTag())   ? 2 : 1;
@@ -108,7 +108,7 @@ trait OutputHandling
 		$closeParagraph = false;
 		if ($tag->isStartTag())
 		{
-			if ($tagConfig['rules']['flags'] & self::RULE_BREAK_PARAGRAPH)
+			if ($tagFlags & self::RULE_BREAK_PARAGRAPH)
 			{
 				$closeParagraph = true;
 			}
@@ -130,7 +130,7 @@ trait OutputHandling
 		if ($tag->isStartTag())
 		{
 			// Handle paragraphs before opening the tag
-			if ($tagConfig['rules']['flags'] & self::RULE_BREAK_PARAGRAPH)
+			if ($tagFlags & self::RULE_BREAK_PARAGRAPH)
 			{
 				$this->outputParagraphEnd();
 			}

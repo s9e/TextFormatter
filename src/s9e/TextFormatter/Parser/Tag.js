@@ -150,6 +150,16 @@ Tag.prototype.pairWith = function(tag)
 }
 
 /**
+* Set the bitfield of boolean rules that apply to this tag
+*
+* @param  {!number} flags Bitfield of boolean rules that apply to this tag
+*/
+Tag.prototype.setFlags = function(flags)
+{
+	this.flags = flags;
+}
+
+/**
 * Set this tag's tiebreaker
 *
 * @param  {!number} sortPriority
@@ -187,6 +197,16 @@ Tag.prototype.getAttributes = function()
 Tag.prototype.getEndTag = function()
 {
 	return this.endTag;
+}
+
+/**
+* Return the bitfield of boolean rules that apply to this tag
+*
+* @return {!number}
+*/
+Tag.prototype.getFlags = function()
+{
+	return this.flags;
 }
 
 /**

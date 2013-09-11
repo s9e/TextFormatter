@@ -92,11 +92,11 @@ function outputTag(tag)
 	var tagName    = tag.getName(),
 		tagPos     = tag.getPos(),
 		tagLen     = tag.getLen(),
-		tagConfig  = tagsConfig[tagName],
+		tagFlags   = tag.getFlags(),
 		skipBefore = 0,
 		skipAfter  = 0;
 
-	if (HINT.RULE_TRIM_WHITESPACE && tagConfig.rules.flags & RULE_TRIM_WHITESPACE)
+	if (HINT.RULE_TRIM_WHITESPACE && (tagFlags & RULE_TRIM_WHITESPACE))
 	{
 		skipBefore = (tag.isStartTag()) ? 2 : 1;
 		skipAfter  = (tag.isEndTag())   ? 2 : 1;
@@ -108,7 +108,7 @@ function outputTag(tag)
 	var closeParagraph = false;
 	if (tag.isStartTag())
 	{
-		if (HINT.RULE_BREAK_PARAGRAPH && tagConfig.rules.flags & RULE_BREAK_PARAGRAPH)
+		if (HINT.RULE_BREAK_PARAGRAPH && (tagFlags & RULE_BREAK_PARAGRAPH))
 		{
 			closeParagraph = true;
 		}
@@ -130,7 +130,7 @@ function outputTag(tag)
 	if (tag.isStartTag())
 	{
 		// Handle paragraphs before opening the tag
-		if (HINT.RULE_BREAK_PARAGRAPH && tagConfig.rules.flags & RULE_BREAK_PARAGRAPH)
+		if (HINT.RULE_BREAK_PARAGRAPH && (tagFlags & RULE_BREAK_PARAGRAPH))
 		{
 			outputParagraphEnd();
 		}
