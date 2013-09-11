@@ -1037,6 +1037,19 @@ class TagProcessingTest extends Test
 					$parser->addIgnoreTag(3, 1);
 				}
 			],
+			[
+				"\n\n",
+				"<rt><X><br/>\n</X><X>\n</X></rt>",
+				function ($configurator)
+				{
+					$configurator->tags->add('X');
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('X', 0, 0, 1, 0);
+					$parser->addTagPair('X', 1, 0, 2, 0)->setFlags(Parser::RULE_NO_BR_CHILD);
+				}
+			],
 		];
 	}
 }

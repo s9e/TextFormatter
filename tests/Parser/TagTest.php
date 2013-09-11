@@ -683,4 +683,26 @@ class TagTest extends Test
 
 		$this->assertTrue($endTag->canClose($startTag));
 	}
+
+	/**
+	* @testdox setFlags() sets the tag's flags
+	*/
+	public function testSetFlags()
+	{
+		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$tag->setFlags(4);
+
+		$this->assertAttributeSame(4, 'flags', $tag);
+	}
+
+	/**
+	* @testdox getFlags() returns the tag's flags
+	*/
+	public function testGetFlags()
+	{
+		$tag = new Tag(Tag::START_TAG, 'X', 0, 0);
+		$tag->setFlags(32);
+
+		$this->assertSame(32, $tag->getFlags());
+	}
 }

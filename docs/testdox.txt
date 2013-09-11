@@ -1578,6 +1578,8 @@ s9e\TextFormatter\Tests\Parser\Tag
  [x] canClose() returns FALSE if given tag is paired with another tag
  [x] canClose() returns FALSE if this tag is paired with another tag
  [x] canClose() returns TRUE if the tags are paired together
+ [x] setFlags() sets the tag's flags
+ [x] getFlags() returns the tag's flags
 
 s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] Regression tests
