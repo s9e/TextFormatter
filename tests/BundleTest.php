@@ -10,6 +10,11 @@ use s9e\TextFormatter\Tests\Test;
 */
 class BundleTest extends Test
 {
+	public function setUp()
+	{
+		DummyBundle::_reset($this);
+	}
+
 	/**
 	* @testdox parse() creates a parser, parses the input and returns the output
 	*/
@@ -24,7 +29,6 @@ class BundleTest extends Test
 		     ->with($text)
 		     ->will($this->returnValue($xml));
 
-		DummyBundle::_reset($this);
 		DummyBundle::$_parser = $mock;
 
 		$this->assertSame($xml, DummyBundle::parse($text));
@@ -52,7 +56,6 @@ class BundleTest extends Test
 		     ->with($text2)
 		     ->will($this->returnValue($xml2));
 
-		DummyBundle::_reset($this);
 		DummyBundle::$_parser = $mock;
 
 		$this->assertSame($xml1, DummyBundle::parse($text1));
@@ -74,7 +77,6 @@ class BundleTest extends Test
 		     ->with($xml)
 		     ->will($this->returnValue($html));
 
-		DummyBundle::_reset($this);
 		DummyBundle::$_renderer = $mock;
 
 		$this->assertSame($html, DummyBundle::render($xml));
@@ -95,7 +97,6 @@ class BundleTest extends Test
 		     ->with($xml)
 		     ->will($this->returnValue($html));
 
-		DummyBundle::_reset($this);
 		DummyBundle::$_renderer = $mock;
 
 		$this->assertSame($html, DummyBundle::render($xml));
@@ -121,7 +122,6 @@ class BundleTest extends Test
 		     ->method('setParameters')
 		     ->with($params);
 
-		DummyBundle::_reset($this);
 		DummyBundle::$_renderer = $mock;
 
 		$this->assertSame($html, DummyBundle::render($xml, $params));
@@ -142,7 +142,6 @@ class BundleTest extends Test
 		     ->with([$xml])
 		     ->will($this->returnValue([$html]));
 
-		DummyBundle::_reset($this);
 		DummyBundle::$_renderer = $mock;
 
 		$this->assertSame([$html], DummyBundle::renderMulti([$xml]));
@@ -163,7 +162,6 @@ class BundleTest extends Test
 		     ->with([$xml])
 		     ->will($this->returnValue([$html]));
 
-		DummyBundle::_reset($this);
 		DummyBundle::$_renderer = $mock;
 
 		$this->assertSame([$html], DummyBundle::renderMulti([$xml]));
@@ -189,7 +187,6 @@ class BundleTest extends Test
 		     ->method('setParameters')
 		     ->with($params);
 
-		DummyBundle::_reset($this);
 		DummyBundle::$_renderer = $mock;
 
 		$this->assertSame([$html], DummyBundle::renderMulti([$xml], $params));
