@@ -1102,7 +1102,7 @@ class RegexpBuilderTest extends Test
 				'(?:c|dd[xy]|[ab][xy])',
 				['ax', 'ay', 'bx', 'by', 'c', 'ddx', 'ddy']
 			],
-			// Those two only exist to make sure nothing bad happens (e.g. no infinite loop)
+			// Those three only exist to make sure nothing bad happens (e.g. no infinite loop)
 			[
 				'',
 				['']
@@ -1110,6 +1110,10 @@ class RegexpBuilderTest extends Test
 			[
 				'',
 				['', '']
+			],
+			[
+				'',
+				[]
 			],
 			[
 				'[ab]\\d',

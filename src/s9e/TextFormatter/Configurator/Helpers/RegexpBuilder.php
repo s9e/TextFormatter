@@ -20,6 +20,11 @@ abstract class RegexpBuilder
 	*/
 	public static function fromList(array $words, array $options = [])
 	{
+		if (empty($words))
+		{
+			return '';
+		}
+
 		$options += [
 			'delimiter'       => '/',
 			'caseInsensitive' => false,
