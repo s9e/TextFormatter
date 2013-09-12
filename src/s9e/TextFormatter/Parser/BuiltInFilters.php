@@ -31,7 +31,9 @@ class BuiltInFilters
 	public static function filterColor($attrValue)
 	{
 		return filter_var($attrValue, FILTER_VALIDATE_REGEXP, [
-			'options' => ['regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+)$/Di']
+			'options' => [
+				'regexp' => '/^(?:#[0-9a-f]{3,6}|[a-z]+|rgb\\(\\d{1,3}, *\\d{1,3}, *\\d{1,3}\\))$/Di'
+			]
 		]);
 	}
 

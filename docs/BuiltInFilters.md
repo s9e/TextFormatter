@@ -6,7 +6,7 @@ Built-in filters
 <dd>Alphanumeric value. Matches <code>/^[0-9A-Za-z]+$/</code>.</dd>
 
 <dt>#color</dt>
-<dd>Any string that looks like a CSS color. Matches <code>/^(?:#[0-9a-f]{3,6}|[a-z]+)$/i</code>.</dd>
+<dd>Any string that looks like a CSS color. Matches hex values such as <code>#123</code> or <code>#123456</code>, color names such as <code>red</code> (or any string composed of letters from a to z) and CSS rgb() values such as <code>rgb(12, 34, 56)</code>.</dd>
 
 <dt>#email</dt>
 <dd>A well-formed email address. Uses ext/filter's FILTER_VALIDATE_EMAIL filter. The JavaScript version is much more lenient.</dd>

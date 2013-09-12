@@ -22,7 +22,7 @@ var BuiltInFilters =
 	*/
 	filterColor: function(attrValue)
 	{
-		return /^(?:#[0-9a-f]{3,6}|[a-z]+)$/i.test(attrValue) ? attrValue : false;
+		return /^(?:#[0-9a-f]{3,6}|[a-z]+|rgb\(\d{1,3}, *\d{1,3}, *\d{1,3}\))$/i.test(attrValue) ? attrValue : false;
 	},
 
 	/**

@@ -577,6 +577,8 @@ class BuiltInFiltersTest extends Test
 			[new Identifier, 'a b', false],
 			[new Color, '#123abc', '#123abc'],
 			[new Color, 'red', 'red'],
+			[new Color, 'rgb(12,34,56)', 'rgb(12,34,56)'],
+			[new Color, 'rgb(12, 34, 56)', 'rgb(12, 34, 56)'],
 			[new Color, '#1234567', false],
 			[new Color, 'blue()', false],
 			[
