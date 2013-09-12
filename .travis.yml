@@ -4,7 +4,7 @@ php:
   - "5.4"
   - "5.3.3"
 before_script:
-  - rm /home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/conf.d/xdebug.ini
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.3.3' ]; then rm /home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/conf.d/xdebug.ini; fi"
   - sh -c "wget -O - http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar xzf - -C/tmp compiler.jar"
   - sh -c "printf '\n' | pecl install xslcache-beta"
   - php ./scripts/build/patchSources.php

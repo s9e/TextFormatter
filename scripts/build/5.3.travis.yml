@@ -1,4 +1,6 @@
 language: php
 php: "5.3.3"
-before_script: php -i
+before_script:
+  - rm /home/travis/.phpenv/versions/5.3.3/etc/conf.d/xdebug.ini
+  - php -i
 script: "phpunit --exclude-group needs-network"
