@@ -372,7 +372,7 @@ class BBCodeMonkey
 
 			if (empty($tokens))
 			{
-				throw new RuntimeException('No valid tokens found in ' . $attrName . "'s definition");
+				throw new RuntimeException('No valid tokens found in ' . $attrName . "'s definition " . $definition);
 			}
 
 			// Test whether this attribute has one single all-encompassing token
