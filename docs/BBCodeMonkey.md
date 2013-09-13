@@ -139,17 +139,17 @@ Tag rules
 
 Templates
 ---------
-Templates can consist either as a chunk of XSL (whatever is acceptable within an `<xsl:template/>` tag) or a chunk of HTML (which will be converted to XML, then XSL.) Tokens (from the BBCode usage) that are unique can be used in text nodes or in attribute values. For example, consider the following BBCode usage:
+Templates can consist of either a chunk of XSL (whatever is acceptable within an `<xsl:template/>` tag) or a chunk of HTML (which will be converted to XHTML, then XSL.) Tokens (such as <code>{URL}</code> or <code>{TEXT}</code>) and attribute names (such as <code>{@url}</code> or <code>{@author}</code>) can be used in text nodes or in attribute values. For example, consider the following BBCode usage:
 
-    [url={URL;useContent}]{TEXT}[/url]
+    [link destination={URL;useContent}]{TEXT}[/link]
 
 Its template could look like this:
 
     <a href="{URL}">{TEXT}</a>
 
-Internally, the {URL} token will be replaced with the XPath expression `{@url}` which represents the value of the attribute "url":
+Internally, the {URL} token will be replaced with the XPath expression `{@destination}` which represents the value of the attribute "destination":
 
-    <a href="{@url}"><xsl:apply-templates/></a>
+    <a href="{@destination}"><xsl:apply-templates/></a>
 
 Here, the {TEXT} token is replaced with the XSL element `<xsl:apply-templates/>` which will render the content of this BBCode, including the descendants' markup. This only applies to tokens that represent unfiltered content (by default, {TEXT} and {ANYTHING}) and only if the token is the sole content of a BBCode. Otherwise, any filtered attribute will be output as-is, with no markup. For example, the following BBCode:
 

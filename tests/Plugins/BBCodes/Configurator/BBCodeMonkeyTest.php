@@ -1219,6 +1219,12 @@ class BBCodeMonkeyTest extends Test
 				null,
 				'<div><xsl:value-of select="@foo"/> <xsl:value-of select="@bar"/></div>'
 			],
+			[
+				'<b>{@foo}</div>',
+				[],
+				null,
+				'<b><xsl:value-of select="@foo"/></b>'
+			],
 		];
 	}
 

@@ -277,10 +277,17 @@ class BBCodeMonkey
 	{
 		return TemplateHelper::replaceTokens(
 			$template,
-			'#\\{[A-Z]+[A-Z_0-9]*\\}#',
+			'#\\{(?:[A-Z]+[A-Z_0-9]*|@[-\\w]+)\\}#',
 			function ($m) use ($tokens, $passthroughToken)
 			{
 				$tokenId = substr($m[0], 1, -1);
+
+				// Acknowledge {@foo} as an XPath expression even outside of attribute value
+				// templates
+				if ($tokenId[0] === '@')
+				{
+					return ['expression', $tokenId];
+				}
 
 				// Test whether this is a known token
 				if (isset($tokens[$tokenId]))
