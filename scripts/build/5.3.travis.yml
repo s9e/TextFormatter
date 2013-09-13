@@ -2,5 +2,6 @@ language: php
 php: "5.3.3"
 before_script:
   - rm /home/travis/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/conf.d/xdebug.ini
+  - echo 'zend.enable_gc=off' >> ~/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/php.ini
   - php -i
 script: "phpunit --exclude-group needs-network"
