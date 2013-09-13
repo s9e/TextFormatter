@@ -886,6 +886,42 @@ class RegexpParserTest extends Test
 				]
 			],
 			[
+				'/^((?:left|right)|(?:center))$/',
+				[
+					'l' => true,
+					'(' => false,
+					'|' => false,
+					')' => false
+				]
+			],
+			[
+				'/^(?:left|right)$|^(?:center)$/',
+				[
+					'l' => true,
+					'(' => false,
+					'|' => false,
+					')' => false
+				]
+			],
+			[
+				'/^(?:left|right)$|(?:center)$/',
+				[
+					'l' => true,
+					'(' => true,
+					'|' => true,
+					')' => true
+				]
+			],
+			[
+				'/^(?:left|right)|^(?:center)$/',
+				[
+					'l' => true,
+					'(' => true,
+					'|' => true,
+					')' => true
+				]
+			],
+			[
 				'/^[$]$/',
 				[
 					'$' => true,
@@ -1006,6 +1042,46 @@ class RegexpParserTest extends Test
 					'b' => false,
 					'c' => true,
 					'-' => true
+				]
+			],
+			[
+				'/^$/D',
+				[
+					'^' => false,
+					'$' => false,
+					'x' => false
+				]
+			],
+			[
+				'/^(?J)x$/D',
+				[
+					'J' => false,
+					'$' => false,
+					'x' => true
+				]
+			],
+			[
+				'/^(?!J)x$/D',
+				[
+					'J' => false,
+					'$' => false,
+					'x' => true
+				]
+			],
+			[
+				'/^(?!J)[xy]$/D',
+				[
+					'J' => false,
+					'x' => true,
+					'y' => true
+				]
+			],
+			[
+				'/^(?![xy])J$/D',
+				[
+					'J' => true,
+					'x' => false,
+					'y' => false
 				]
 			],
 		];

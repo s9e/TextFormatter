@@ -221,8 +221,8 @@ abstract class RegexpParser
 			return '//';
 		}
 
-		// Test whether the regexp is anchored to match the whole input
-		if (!self::isAnchored($def['regexp']))
+		if (substr($def['regexp'], 0, 1) !== '^'
+		 || substr($def['regexp'], -1)   !== '$')
 		{
 			return '//';
 		}
@@ -236,24 +236,72 @@ abstract class RegexpParser
 
 		$patterns = [];
 
-		// Collect the literal portions of the source regexp
+		// Collect the literal portions of the source regexp while testing for alternations
 		$literal = '';
-		$pos = 0;
-		$depth = 0;
+		$pos     = 0;
+		$skipPos = 0;
+		$depth   = 0;
 		foreach ($def['tokens'] as $token)
 		{
-			if ($token['pos'] > $pos)
+			// Skip options
+			if ($token['type'] === 'option')
 			{
-				// Append the content between last position and current position
-				$literal .= substr($def['regexp'], $pos, $token['pos'] - $pos);
+				$skipPos = max($skipPos, $token['pos'] + $token['len']);
 			}
 
-			$pos = $token['pos'] + $token['len'];
-
-			if ($token['type'] === 'characterClass')
+			// Skip assertions
+			if (strpos($token['type'], 'AssertionStart') !== false)
 			{
-				$patterns[] = '[' . $token['content'] . ']';
+				$endToken = $def['tokens'][$token['endToken']];
+				$skipPos  = max($skipPos, $endToken['pos'] + $endToken['len']);
 			}
+
+			if ($token['pos'] >= $skipPos)
+			{
+				if ($token['type'] === 'characterClass')
+				{
+					$patterns[] = '[' . $token['content'] . ']';
+				}
+
+				if ($token['pos'] > $pos)
+				{
+					// Capture the content between last position and current position
+					$tmp = substr($def['regexp'], $pos, $token['pos'] - $pos);
+
+					// Append the content to the literal portion
+					$literal .= $tmp;
+
+					// Test for alternations if it's the root of the regexp
+					if (!$depth)
+					{
+						// Remove literal backslashes for convenience
+						$tmp = str_replace('\\\\', '', $tmp);
+
+						// Look for an unescaped | that is not followed by ^
+						if (preg_match('/(?<!\\\\)\\|(?!\\^)/', $tmp))
+						{
+							return '//';
+						}
+
+						// Look for an unescaped | that is not preceded by $
+						if (preg_match('/(?<![$\\\\])\\|/', $tmp))
+						{
+							return '//';
+						}
+					}
+				}
+			}
+
+			if (substr($token['type'], -5) === 'Start')
+			{
+				++$depth;
+			}
+			elseif (substr($token['type'], -3) === 'End')
+			{
+				--$depth;
+			}
+
+			$pos = max($skipPos, $token['pos'] + $token['len']);
 		}
 
 		// Test for the presence of an unescaped dot
@@ -298,6 +346,12 @@ abstract class RegexpParser
 			$patterns[] = '[' . $literal . ']';
 		}
 
+		// Test whether this regexp actually matches anything
+		if (empty($patterns))
+		{
+			return '/^$/D';
+		}
+
 		// Build the allowed characters regexp
 		$regexp = $def['delimiter'] . implode('|', $patterns) . $def['delimiter'];
 
@@ -312,45 +366,5 @@ abstract class RegexpParser
 		}
 
 		return $regexp;
-	}
-
-	/**
-	* Test whether a regexp is anchored
-	*
-	* @param  string $regexp Regexp, without delimiters
-	* @return bool
-	*/
-	protected static function isAnchored($regexp)
-	{
-		// Remove character classes
-		$regexp = preg_replace(
-			'#(?<!\\\\)(?:\\\\\\\\)*\\[.*?(?<!\\\\)((?:\\\\\\\\)*)\\]#s',
-			'',
-			$regexp
-		);
-
-		// Remove subpatterns and assertions
-		$regexp = preg_replace(
-			'#(?<!\\\\)(?:\\\\\\\\)*\\(.*?(?<!\\\\)((?:\\\\\\\\)*)\\)#s',
-			'',
-			$regexp
-		);
-
-		// Remove escaped |
-		$regexp = preg_replace(
-			'#(?<!\\\\)(?:\\\\\\\\)*\\\\\\|#',
-			'',
-			$regexp
-		);
-
-		foreach (explode('|', $regexp) as $pattern)
-		{
-			if (!preg_match('#^\\^.*(?<!\\\\)(?:\\\\\\\\)*\\$$#Ds', $pattern))
-			{
-				return false;
-			}
-		}
-
-		return true;
 	}
 }
