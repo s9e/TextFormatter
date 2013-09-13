@@ -152,6 +152,16 @@ class BBCodeMonkey
 			'passthroughToken' => null
 		];
 
+		// Encode regexps to avoid special characters to interfere with definitions
+		$usage = preg_replace_callback(
+			'#(\\{(?:PARSE|REGEXP)=)((.).*?(?<!\\\\)(?>\\\\\\\\)*\\3[DSUisu]*)#',
+			function ($m)
+			{
+				return $m[1] . base64_encode($m[2]);
+			},
+			$usage
+		);
+
 		$regexp = '#^'
 		        // [BBCODE
 		        . '\\[(?<bbcodeName>.+?)'
@@ -205,6 +215,16 @@ class BBCodeMonkey
 			$pos   = strpos($definition, '=');
 			$name  = substr($definition, 0, $pos);
 			$value = substr($definition, 1 + $pos);
+
+			// Decode base64-encoded regexps
+			$value = preg_replace_callback(
+				'#(\\{(?:PARSE|REGEXP)=)([A-Za-z0-9+/]+=*)#',
+				function ($m)
+				{
+					return $m[1] . base64_decode($m[2]);
+				},
+				$value
+			);
 
 			// If name starts with $ then it's a BBCode options, if it starts with # it's a rule and
 			// otherwise it's an attribute definition

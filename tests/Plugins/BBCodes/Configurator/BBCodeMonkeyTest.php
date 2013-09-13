@@ -497,6 +497,47 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[anchor={REGEXP=/^#?[a-z][-a-z_0-9]{0,}$/i}]{TEXT}[/anchor]',
+				[
+					'bbcodeName' => 'ANCHOR',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'anchor'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'anchor' => [
+								'filterChain' => [new Regexp('/^#?[a-z][-a-z_0-9]{0,}$/i')]
+							]
+						]
+					]),
+					'tokens' => [
+						'REGEXP' => 'anchor'
+					],
+					'passthroughToken' => 'TEXT'
+				]
+			],
+			[
+				'[foo={PARSE=/\\/\\{(?<bar>.)\\}\\//}]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/\\/\\{(?<bar>.)\\}\\//']
+						],
+						'attributes' => [
+							'bar' => [
+								'filterChain' => [new Regexp('/^(?:.)$/D')]
+							]
+						]
+					]),
+					'tokens' => [],
+					'passthroughToken' => null
+				]
+			],
+			[
 				// Ensure that every subpattern creates an attribute with the corresponding regexp
 				'[foo={PARSE=/(?<foo>\\d+)/} foo={PARSE=/(?<bar>\\D+)/}]',
 				[
