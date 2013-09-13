@@ -225,7 +225,7 @@ abstract class AbstractDynamicContentCheck extends TemplateCheck
 	}
 
 	/**
-	* Test whether a select attribute is whether
+	* Test whether a select attribute of a node is safe
 	*
 	* @param  DOMAttr $select Select attribute node
 	* @param  Tag     $tag    Reference tag
