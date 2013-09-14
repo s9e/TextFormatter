@@ -598,6 +598,6 @@ trait TagProcessing
 	{
 		$n = $this->tagsConfig[$tagName]['bitNumber'];
 
-		return (bool) (ord($this->context['allowedChildren'][$n >> 8]) & (1 << ($n & 7)));
+		return (bool) (ord($this->context['allowedChildren'][$n >> 3]) & (1 << ($n & 7)));
 	}
 }

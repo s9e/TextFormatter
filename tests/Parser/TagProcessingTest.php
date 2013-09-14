@@ -1050,6 +1050,25 @@ class TagProcessingTest extends Test
 					$parser->addTagPair('X', 1, 0, 2, 0)->setFlags(Parser::RULE_NO_BR_CHILD);
 				}
 			],
+			[
+				'xxx',
+				"<rt><T8>x<T8>x</T8>x</T8></rt>",
+				function ($configurator)
+				{
+					// Create 9 tags with different rules so that they don't occupy the same bit in
+					// the allowed tags bitfields
+					for ($i = 0; $i <= 8; ++$i)
+					{
+						$j = ($i + 1) % 9;
+						$configurator->tags->add('T' . $i)->rules->denyChild('T' . $j);
+					}
+				},
+				function ($parser)
+				{
+					$parser->addTagPair('T8', 0, 0, 3, 0);
+					$parser->addSelfClosingTag('T8', 1, 1);
+				}
+			],
 		];
 	}
 }
