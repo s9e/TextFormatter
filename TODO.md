@@ -40,3 +40,4 @@ TODO
 - PHP renderer generator: can precompute the value from getParamAsXPath() if the param is not dynamic
 - Consider adding Configurable::__set_state()
 - HINT.RULE_* hints must check for the use of Tag.setFlags()
+- Consider adding one callback opportunity before and after rendering. The callback would receive the XML (before) or HTML (after) and the Renderer instance
