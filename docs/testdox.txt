@@ -1517,6 +1517,9 @@ s9e\TextFormatter\Tests\Configurator\Bundles\F5
 s9e\TextFormatter\Tests\Configurator\Bundles\Forum
  [x] Features
 
+s9e\TextFormatter\Tests\Configurator\Bundles\S18
+ [x] Features
+
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
  [x] getEndTag() returns NULL if the tag has no end tag set
@@ -2206,5 +2209,10 @@ s9e\TextFormatter\Tests\Bundles\F5
  [x] Rendering tests
 
 s9e\TextFormatter\Tests\Bundles\Forum
+ [x] Rendering tests
+
+s9e\TextFormatter\Tests\Bundles\S18
+ [x] s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [quote] with a human-readable date
+ [x] s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [time] with a human-readable date
  [x] Rendering tests
 

@@ -148,6 +148,7 @@
 			<file>tests/Configurator/BundleGeneratorTest.php</file>
 			<file>tests/Configurator/Bundles/F5Test.php</file>
 			<file>tests/Configurator/Bundles/ForumTest.php</file>
+			<file>tests/Configurator/Bundles/S18Test.php</file>
 
 			<!-- Trying to sort by order of dependency  -->
 			<file>tests/Parser/TagTest.php</file>
@@ -212,6 +213,7 @@
 
 			<file>tests/Bundles/F5Test.php</file>
 			<file>tests/Bundles/ForumTest.php</file>
+			<file>tests/Bundles/S18Test.php</file>
 		</testsuite>
 	</testsuites>
 
@@ -221,6 +223,7 @@
 			<exclude>
 				<file>src/s9e/TextFormatter/Bundles/F5/Renderer.php</file>
 				<file>src/s9e/TextFormatter/Bundles/Forum/Renderer.php</file>
+				<file>src/s9e/TextFormatter/Bundles/S18/Renderer.php</file>
 			</exclude>
 		</whitelist>
 	</filter>

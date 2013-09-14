@@ -4,7 +4,6 @@ namespace s9e\TextFormatter\Tests\Bundles;
 
 /**
 * @covers s9e\TextFormatter\Bundles\Forum
-* @covers s9e\TextFormatter\Bundles\Forum\Renderer
 */
 class ForumTest extends AbstractTest
 {
