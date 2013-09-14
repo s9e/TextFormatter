@@ -28,6 +28,18 @@ use s9e\TextFormatter\Tests\Test;
 class BBCodeMonkeyTest extends Test
 {
 	/**
+	* @testdox $bbcodeMonkey->allowedFilters is a publicly-accessible list of callbacks
+	*/
+	public function testAllowedFiltersPublic()
+	{
+		$bbcodeMonkey   = new BBCodeMonkey(new Configurator);
+		$allowedFilters = $bbcodeMonkey->allowedFilters;
+
+		$this->assertInternalType('array', $allowedFilters);
+		$this->assertContains('strrev', $allowedFilters);
+	}
+
+	/**
 	* @testdox parse() works
 	* @dataProvider getBBCodeTests
 	*/

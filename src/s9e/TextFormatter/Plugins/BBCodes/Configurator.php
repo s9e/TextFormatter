@@ -33,7 +33,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	/**
 	* @var BBCodeMonkey Instance of BBCodeMonkey used to parse definitions
 	*/
-	protected $bbcodeMonkey;
+	public $bbcodeMonkey;
 
 	/**
 	* @var BBCodeCollection BBCode collection

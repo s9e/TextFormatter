@@ -24,17 +24,12 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 class BBCodeMonkey
 {
 	/**
-	* @var Configurator Instance of Configurator;
-	*/
-	protected $configurator;
-
-	/**
 	* @var array List of pre- and post- filters that are explicitly allowed in BBCode definitions.
 	*            We use a whitelist approach because there are so many different risky callbacks
 	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
 	*            system, etc...
 	*/
-	protected static $allowedFilters = [
+	public $allowedFilters = [
 		'addslashes',
 		'dechex',
 		'intval',
@@ -55,6 +50,11 @@ class BBCodeMonkey
 		'ucwords',
 		'urlencode'
 	];
+
+	/**
+	* @var Configurator Instance of Configurator;
+	*/
+	protected $configurator;
 
 	/**
 	* @var array Regexps used in the named subpatterns generated automatically for composite
@@ -789,7 +789,7 @@ class BBCodeMonkey
 		foreach (preg_split('#\\s*,\\s*#', $filters) as $filterName)
 		{
 			if (substr($filterName, 0, 1) !== '#'
-			 && !in_array($filterName, self::$allowedFilters, true))
+			 && !in_array($filterName, $this->allowedFilters, true))
 			{
 				throw new RuntimeException("Filter '" . $filterName . "' is not allowed");
 			}

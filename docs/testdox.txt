@@ -1794,6 +1794,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
  [x] asConfig() removes the tagName value of BBCodes where it is the same as the BBCode's name
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
+ [x] $bbcodeMonkey->allowedFilters is a publicly-accessible list of callbacks
  [x] parse() works
  [x] replaceTokens() works
  [x] create() creates and return a BBCode, its name and its tag
@@ -1822,6 +1823,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\RepositoryCollection
  [x] Anything else gets a new instance of Repository to be created
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
+ [x] $plugin->bbcodeMonkey is a publicly-accessible instance of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] Automatically loads its default BBCode repository
  [x] addFromRepository('B') adds BBCode B and its tag from the default repository
  [x] addFromRepository('MYBOLD', 'foo') adds BBCode B and its tag from the 'foo' repository

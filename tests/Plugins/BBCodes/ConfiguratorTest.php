@@ -13,6 +13,17 @@ use s9e\TextFormatter\Tests\Test;
 class ConfiguratorTest extends Test
 {
 	/**
+	* @testdox $plugin->bbcodeMonkey is a publicly-accessible instance of s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
+	*/
+	public function testBBCodeMonkeyPublic()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\BBCodeMonkey',
+			$this->configurator->BBCodes->bbcodeMonkey
+		);
+	}
+
+	/**
 	* @testdox Automatically loads its default BBCode repository
 	*/
 	public function testDefaultRepository()
