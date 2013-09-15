@@ -7,7 +7,7 @@ spl_autoload_register(
 	{
 		if (preg_match('#^s9e\\\\TextFormatter\\\\Tests(\\\\[\\w\\\\]+)$#D', $className, $m))
 		{
-			$path = __DIR__ . '/' . str_replace('\\', DIRECTORY_SEPARATOR, $m[1]) . '.php';
+			$path = __DIR__ . str_replace('\\', '/', $m[1]) . '.php';
 
 			if (file_exists($path))
 			{
