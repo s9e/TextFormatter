@@ -880,6 +880,10 @@ class RegexpParserTest extends Test
 				'/^(left|right|center)$/',
 				[
 					'l' => true,
+					'n' => true,
+					'z' => false,
+					'^' => false,
+					'$' => false,
 					'(' => false,
 					'|' => false,
 					')' => false
@@ -889,6 +893,10 @@ class RegexpParserTest extends Test
 				'/^((?:left|right)|(?:center))$/',
 				[
 					'l' => true,
+					'n' => true,
+					'z' => false,
+					'^' => false,
+					'$' => false,
 					'(' => false,
 					'|' => false,
 					')' => false
@@ -898,6 +906,10 @@ class RegexpParserTest extends Test
 				'/^(?:left|right)$|^(?:center)$/',
 				[
 					'l' => true,
+					'n' => true,
+					'z' => false,
+					'^' => false,
+					'$' => false,
 					'(' => false,
 					'|' => false,
 					')' => false
