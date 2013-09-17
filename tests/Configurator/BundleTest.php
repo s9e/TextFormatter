@@ -14,12 +14,20 @@ class BundleTest extends Test
 	/**
 	* @testdox getConfigurator() returns a configured instance of Configurator
 	*/
-	public function test()
+	public function testGetConfigurator()
 	{
 		$configurator = DummyBundle::getConfigurator();
 
 		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator', $configurator);
 		$this->assertAttributeSame('bar', 'foo', $configurator);
+	}
+
+	/**
+	* @testdox getOptions() returns an empty array
+	*/
+	public function testGetOptions()
+	{
+		$this->assertSame([], Bundle::getOptions());
 	}
 }
 

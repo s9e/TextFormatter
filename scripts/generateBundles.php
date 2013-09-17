@@ -26,7 +26,7 @@ foreach (glob(__DIR__ . '/../src/s9e/TextFormatter/Configurator/Bundles/*.php') 
 	$configurator->saveBundle(
 		's9e\\TextFormatter\\Bundles\\' . $bundleName,
 		$bundlesDir . '/' . $bundleName . '.php',
-		['autoInclude' => false]
+		['autoInclude' => false] + $className::getOptions()
 	);
 }
 

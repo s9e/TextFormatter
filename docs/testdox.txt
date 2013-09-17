@@ -1485,6 +1485,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
 
 s9e\TextFormatter\Tests\Configurator\Bundle
  [x] getConfigurator() returns a configured instance of Configurator
+ [x] getOptions() returns an empty array
 
 s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] generate() returns the bundle's PHP source

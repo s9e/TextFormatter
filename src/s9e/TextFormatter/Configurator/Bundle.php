@@ -33,4 +33,16 @@ abstract class Bundle
 
 		return $configurator;
 	}
+
+	/**
+	* Return extra options to be passed to the bundle generator
+	*
+	* Used by scripts/generateBundles.php
+	*
+	* @return array
+	*/
+	public static function getOptions()
+	{
+		return [];
+	}
 }
