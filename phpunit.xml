@@ -31,7 +31,6 @@
 			<file>tests/Configurator/Traits/ConfigurableTest.php</file>
 			<file>tests/Configurator/Traits/TemplateSafenessTest.php</file>
 
-			<file>tests/BundleTest.php</file>
 			<file>tests/ConfiguratorTest.php</file>
 			<file>tests/Configurator/Collections/AttributeCollectionTest.php</file>
 			<file>tests/Configurator/Collections/AttributeFilterChainTest.php</file>
@@ -211,6 +210,7 @@
 
 			<file>tests/UnparserTest.php</file>
 
+			<file>tests/BundleTest.php</file>
 			<file>tests/Bundles/F5Test.php</file>
 			<file>tests/Bundles/ForumTest.php</file>
 			<file>tests/Bundles/S18Test.php</file>

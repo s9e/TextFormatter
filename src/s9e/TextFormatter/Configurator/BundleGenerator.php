@@ -68,43 +68,89 @@ class BundleGenerator
 		}
 
 		// Start with the standard header
-		$php = "/**\n"
-		     . "* @package   s9e\TextFormatter\n"
-		     . "* @copyright Copyright (c) 2010-2013 The s9e Authors\n"
-		     . "* @license   http://www.opensource.org/licenses/mit-license.php The MIT License\n"
-		     . "*/\n";
+		$php = [];
+		$php[] = '/**';
+		$php[] = '* @package   s9e\TextFormatter';
+		$php[] = '* @copyright Copyright (c) 2010-2013 The s9e Authors';
+		$php[] = '* @license   http://www.opensource.org/licenses/mit-license.php The MIT License';
+		$php[] = '*/';
 
 		if ($namespace)
 		{
-			$php .= 'namespace ' . $namespace . ";\n\n";
+			$php[] = 'namespace ' . $namespace . ';';
+			$php[] = '';
 		}
 
 		// Generate and append the bundle class
-		$php .= 'abstract class ' . $className . " extends \\s9e\\TextFormatter\\Bundle\n";
-		$php .= "{\n";
-		$php .= "	/**\n";
-		$php .= "	* @var Parser Singleton instance used by parse()\n";
-		$php .= "	*/\n";
-		$php .= "	public static \$parser;\n";
-		$php .= "\n";
-		$php .= "	/**\n";
-		$php .= "	* @var Renderer Singleton instance used by render() and renderMulti()\n";
-		$php .= "	*/\n";
-		$php .= "	public static \$renderer;\n";
-		$php .= "\n";
-		$php .= "	/**\n";
-		$php .= "	* {@inheritdoc}\n";
-		$php .= "	*/\n";
-		$php .= "	public static function getParser()\n";
-		$php .= "	{\n";
-		$php .= "		return " . $this->export($parser) . ";\n";
-		$php .= "	}\n";
-		$php .= "\n";
-		$php .= "	/**\n";
-		$php .= "	* {@inheritdoc}\n";
-		$php .= "	*/\n";
-		$php .= "	public static function getRenderer()\n";
-		$php .= "	{\n";
+		$php[] = 'abstract class ' . $className . ' extends \\s9e\\TextFormatter\\Bundle';
+		$php[] = '{';
+		$php[] = '	/**';
+		$php[] = '	* @var s9e\\TextFormatter\\Parser Singleton instance used by parse()';
+		$php[] = '	*/';
+		$php[] = '	public static $parser;';
+		$php[] = '';
+		$php[] = '	/**';
+		$php[] = '	* @var s9e\\TextFormatter\\Renderer Singleton instance used by render() and renderMulti()';
+		$php[] = '	*/';
+		$php[] = '	public static $renderer;';
+		$php[] = '';
+
+		// Add the event callbacks if applicable
+		$events = [
+			'beforeParse'
+				=> 'Callback executed before parse(), receives the original text as argument',
+			'afterParse'
+				=> 'Callback executed after parse(), receives the parsed text as argument',
+			'beforeRender'
+				=> 'Callback executed before render() and on each entry before renderMulti(), receives the parsed text as argument',
+			'afterRender'
+				=> 'Callback executed after render() and on each entry before renderMulti(), receives the output as argument',
+			'beforeUnparse'
+				=> 'Callback executed before unparse(), receives the parsed text as argument',
+			'afterUnparse'
+				=> 'Callback executed after unparse(), receives the original text as argument'
+		];
+		foreach ($events as $eventName => $eventDesc)
+		{
+			if (isset($options[$eventName]))
+			{
+				$php[] = '	/**';
+				$php[] = '	* @var ' . $eventDesc;
+				$php[] = '	*/';
+				$php[] = '	public static $' . $eventName . ' = ' . var_export($options[$eventName], true) . ';';
+				$php[] = '';
+			}
+		}
+
+		$php[] = '	/**';
+		$php[] = '	* Return a new instance of s9e\\TextFormatter\\Parser';
+		$php[] = '	*';
+		$php[] = '	* @return s9e\\TextFormatter\\Parser';
+		$php[] = '	*/';
+		$php[] = '	public static function getParser()';
+		$php[] = '	{';
+
+		if (isset($options['parserSetup']))
+		{
+			$php[] = '		$parser = ' . $this->exportObject($parser) . ';';
+			$php[] = '		' . $this->exportCallback($namespace, $options['parserSetup'], '$parser') . ';';
+			$php[] = '';
+			$php[] = '		return $parser;';
+		}
+		else
+		{
+			$php[] = '		return ' . $this->exportObject($parser) . ';';
+		}
+
+		$php[] = '	}';
+		$php[] = '';
+		$php[] = '	/**';
+		$php[] = '	* Return a new instance of s9e\\TextFormatter\\Renderer';
+		$php[] = '	*';
+		$php[] = '	* @return s9e\\TextFormatter\\Renderer';
+		$php[] = '	*/';
+		$php[] = '	public static function getRenderer()';
+		$php[] = '	{';
 
 		// If this is a PHP renderer and we know where it's saved, automatically load it as needed
 		if (!empty($options['autoInclude'])
@@ -114,19 +160,66 @@ class BundleGenerator
 			$className = get_class($renderer);
 			$filepath  = realpath($this->configurator->rendererGenerator->lastFilepath);
 
-			$php .= "		if (!class_exists(" . var_export($className, true) . ", false)\n";
-			$php .= "		 && file_exists(" . var_export($filepath, true) . "))\n";
-			$php .= "		{\n";
-			$php .= "			include " . var_export($filepath, true) . ";\n";
-			$php .= "		}\n";
-			$php .= "\n";
+			$php[] = '		if (!class_exists(' . var_export($className, true) . ', false)';
+			$php[] = '		 && file_exists(' . var_export($filepath, true) . '))';
+			$php[] = '		{';
+			$php[] = '			include ' . var_export($filepath, true) . ';';
+			$php[] = '		}';
+			$php[] = '';
 		}
 
-		$php .= "		return " . $this->export($renderer) . ";\n";
-		$php .= "	}\n";
-		$php .= '}';
+		if (isset($options['rendererSetup']))
+		{
+			$php[] = '		$renderer = ' . $this->exportObject($renderer) . ';';
+			$php[] = '		' . $this->exportCallback($namespace, $options['rendererSetup'], '$renderer') . ';';
+			$php[] = '';
+			$php[] = '		return $renderer;';
+		}
+		else
+		{
+			$php[] = '		return ' . $this->exportObject($renderer) . ';';
+		}
 
-		return $php;
+		$php[] = '	}';
+		$php[] = '}';
+
+		return implode("\n", $php);
+	}
+
+	/**
+	* Export a given callback as PHP code
+	*
+	* @param  string   $namespace Namespace in which the callback is execute
+	* @param  callable $callback  Original callback
+	* @param  string   $argument  Callback's argument (as PHP code)
+	* @return string              PHP code
+	*/
+	protected function exportCallback($namespace, callable $callback, $argument)
+	{
+		if (is_array($callback) && is_string($callback[0]))
+		{
+			// Replace ['foo', 'bar'] with 'foo::bar'
+			$callback = $callback[0] . '::' . $callback[1];
+		}
+
+		if (!is_string($callback))
+		{
+			return 'call_user_func(' . var_export($callback, true) . ', ' . $argument . ')';
+		}
+
+		// Ensure that the callback starts with a \
+		if ($callback[0] !== '\\')
+		{
+			$callback = '\\' . $callback;
+		}
+
+		// Replace \foo\bar::baz() with bar::baz() if we're in namespace foo
+		if (substr($callback, 0, 2 + strlen($namespace)) === '\\' . $namespace . '\\')
+		{
+			$callback = substr($callback, 2 + strlen($namespace));
+		}
+
+		return $callback . '(' . $argument . ')';
 	}
 
 	/**
@@ -135,7 +228,7 @@ class BundleGenerator
 	* @param  string $obj Original object
 	* @return string      PHP code
 	*/
-	protected function export($obj)
+	protected function exportObject($obj)
 	{
 		// Serialize the object
 		$str = call_user_func($this->serializer, $obj);

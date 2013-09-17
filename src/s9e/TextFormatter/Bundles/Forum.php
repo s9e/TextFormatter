@@ -10,17 +10,19 @@ namespace s9e\TextFormatter\Bundles;
 abstract class Forum extends \s9e\TextFormatter\Bundle
 {
 	/**
-	* @var Parser Singleton instance used by parse()
+	* @var s9e\TextFormatter\Parser Singleton instance used by parse()
 	*/
 	public static $parser;
 
 	/**
-	* @var Renderer Singleton instance used by render() and renderMulti()
+	* @var s9e\TextFormatter\Renderer Singleton instance used by render() and renderMulti()
 	*/
 	public static $renderer;
 
 	/**
-	* {@inheritdoc}
+	* Return a new instance of s9e\TextFormatter\Parser
+	*
+	* @return s9e\TextFormatter\Parser
 	*/
 	public static function getParser()
 	{
@@ -28,7 +30,9 @@ abstract class Forum extends \s9e\TextFormatter\Bundle
 	}
 
 	/**
-	* {@inheritdoc}
+	* Return a new instance of s9e\TextFormatter\Renderer
+	*
+	* @return s9e\TextFormatter\Renderer
 	*/
 	public static function getRenderer()
 	{

@@ -33,7 +33,19 @@ abstract class Bundle
 			static::$parser = static::getParser();
 		}
 
-		return static::$parser->parse($text);
+		if (isset(static::$beforeParse))
+		{
+			$text = call_user_func(static::$beforeParse, $text);
+		}
+
+		$xml = static::$parser->parse($text);
+
+		if (isset(static::$afterParse))
+		{
+			$xml = call_user_func(static::$afterParse, $xml);
+		}
+
+		return $xml;
 	}
 
 	/**
@@ -50,9 +62,24 @@ abstract class Bundle
 			static::$renderer = static::getRenderer();
 		}
 
-		static::$renderer->setParameters($params);
+		if ($params)
+		{
+			static::$renderer->setParameters($params);
+		}
 
-		return static::$renderer->render($xml);
+		if (isset(static::$beforeRender))
+		{
+			$xml = call_user_func(static::$beforeRender, $xml);
+		}
+
+		$output = static::$renderer->render($xml);
+
+		if (isset(static::$afterRender))
+		{
+			$output = call_user_func(static::$afterRender, $output);
+		}
+
+		return $output;
 	}
 
 	/**
@@ -69,9 +96,32 @@ abstract class Bundle
 			static::$renderer = static::getRenderer();
 		}
 
-		static::$renderer->setParameters($params);
+		if ($params)
+		{
+			static::$renderer->setParameters($params);
+		}
 
-		return static::$renderer->renderMulti($arr);
+		if (isset(static::$beforeRender))
+		{
+			foreach ($arr as &$xml)
+			{
+				$xml = call_user_func(static::$beforeRender, $xml);
+			}
+			unset($xml);
+		}
+
+		$arr = static::$renderer->renderMulti($arr);
+
+		if (isset(static::$afterRender))
+		{
+			foreach ($arr as &$output)
+			{
+				$output = call_user_func(static::$afterRender, $output);
+			}
+			unset($output);
+		}
+
+		return $arr;
 	}
 
 	/**
@@ -82,6 +132,18 @@ abstract class Bundle
 	*/
 	public static function unparse($xml)
 	{
-		return Unparser::unparse($xml);
+		if (isset(static::$beforeUnparse))
+		{
+			$xml = call_user_func(static::$beforeUnparse, $xml);
+		}
+
+		$text = Unparser::unparse($xml);
+
+		if (isset(static::$afterUnparse))
+		{
+			$text = call_user_func(static::$afterUnparse, $text);
+		}
+
+		return $text;
 	}
 }

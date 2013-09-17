@@ -183,19 +183,137 @@ class BundleGeneratorTest extends Test
 	}
 
 	/**
-	* @testdox export()
-	* @dataProvider getExportTests
+	* @testdox (before|after)(Parser|Render|Unparse) events are added to the bundle
 	*/
-	public function testExport($original, $expected)
+	public function testEvents()
+	{
+		$events = [
+			'beforeParse',   'afterParse',
+			'beforeRender',  'afterRender',
+			'beforeUnparse', 'afterUnparse'
+		];
+
+		foreach ($events as $event)
+		{
+			$php = $this->configurator->bundleGenerator->generate('Foo', [$event => 'trim']);
+
+			$this->assertContains('public static $' . $event . " = 'trim';", $php);
+
+			foreach ($events as $notEvent)
+			{
+				if ($notEvent !== $event)
+				{
+					$this->assertNotContains($notEvent, $php);
+				}
+			}
+		}
+	}
+
+	/**
+	* @testdox The parserSetup callback is added to the source
+	*/
+	public function testParserSetup()
+	{
+		$this->assertContains(
+			'\\foo\\bar\\baz($parser);',
+			$this->configurator->bundleGenerator->generate(
+				'Foo',
+				['parserSetup' => '\\foo\\bar\\baz']
+			)
+		);
+	}
+
+	/**
+	* @testdox The rendererSetup callback is added to the source
+	*/
+	public function testRendererSetup()
+	{
+		$this->assertContains(
+			'\\foo\\bar\\baz($renderer);',
+			$this->configurator->bundleGenerator->generate(
+				'Foo',
+				['rendererSetup' => '\\foo\\bar\\baz']
+			)
+		);
+	}
+
+	/**
+	* @testdox exportCallback()
+	* @dataProvider getExportCallbackTests
+	*/
+	public function testExportCallback($namespace, $original, $expected)
 	{
 		$generator = new DummyBundleGenerator($this->configurator);
-		$actual    = $generator->export($original);
+		$actual    = $generator->_exportCallback($namespace, $original, '$foo');
+
+		$this->assertSame($expected, $actual);
+	}
+
+	public function getExportCallbackTests()
+	{
+		return [
+			[
+				'',
+				'trim',
+				'\\trim($foo)'
+			],
+			[
+				'',
+				__CLASS__ . '::foo',
+				'\\' . __NAMESPACE__ . '\\BundleGeneratorTest::foo($foo)'
+			],
+			[
+				__NAMESPACE__,
+				__CLASS__ . '::foo',
+				'BundleGeneratorTest::foo($foo)'
+			],
+			[
+				__NAMESPACE__,
+				[__CLASS__, 'foo'],
+				'BundleGeneratorTest::foo($foo)'
+			],
+			[
+				__NAMESPACE__,
+				new DummyCallable,
+				'call_user_func(' . __NAMESPACE__ . "\\DummyCallable::__set_state(array(\n)), \$foo)"
+			],
+			[
+				'',
+				'foo\\bar\\baz',
+				'\\foo\\bar\\baz($foo)'
+			],
+			[
+				'',
+				'\\foo\\bar\\baz',
+				'\\foo\\bar\\baz($foo)'
+			],
+			[
+				'foo',
+				'\\foo\\bar\\baz',
+				'bar\\baz($foo)'
+			],
+			[
+				'foo\\bar',
+				'\\foo\\bar\\baz',
+				'baz($foo)'
+			],
+		];
+	}
+
+	/**
+	* @testdox exportObject()
+	* @dataProvider getExportObjectTests
+	*/
+	public function testExportObject($original, $expected)
+	{
+		$generator = new DummyBundleGenerator($this->configurator);
+		$actual    = $generator->_exportObject($original);
 
 		$this->assertSame($expected, $actual);
 		$this->assertEquals($original, eval('return ' . $actual . ';'), 'Not reversible');
 	}
 
-	public function getExportTests()
+	public function getExportObjectTests()
 	{
 		return [
 			[
@@ -208,12 +326,31 @@ class BundleGeneratorTest extends Test
 			],
 		];
 	}
+
+	public static function foo() {}
 }
 
 class DummyBundleGenerator extends BundleGenerator
 {
-	public function export($obj)
+	public function _exportObject($obj)
 	{
-		return parent::export($obj);
+		return parent::exportObject($obj);
 	}
+	public function _exportCallback($namespace, $callback, $arg)
+	{
+		return parent::exportCallback($namespace, $callback, $arg);
+	}
+}
+
+class DummyCallable
+{
+	public function __invoke()
+	{
+	}
+}
+
+namespace foo\bar;
+
+function baz()
+{
 }

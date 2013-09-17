@@ -50,6 +50,62 @@ function convertCustom($filepath, &$file)
 				'public function isFilter($tokenId)'
 			)
 		),
+		'BundleGenerator.php' => array(
+			array(
+				'protected function exportCallback($namespace, callable $callback, $argument)',
+				'protected function exportCallback($namespace, $callback, $argument)'
+			)
+		),
+		'BundleTest.php' => array(
+			array(
+				'DummyBundle::$beforeParse = function ($arg)',
+				'$test=$this;DummyBundle::$beforeParse = function ($arg) use ($test)'
+			),
+			array(
+				"\$this->assertSame('', \$arg);",
+				"\$test->assertSame('', \$arg);"
+			),
+			array(
+				'DummyBundle::$afterParse = function ($arg)',
+				'$test=$this;DummyBundle::$afterParse = function ($arg) use ($test)'
+			),
+			array(
+				"\$this->assertSame('<pt></pt>', \$arg);",
+				"\$test->assertSame('<pt></pt>', \$arg);"
+			),
+			array(
+				'DummyBundle::$beforeRender = function ($arg)',
+				'$test=$this;DummyBundle::$beforeRender = function ($arg) use ($test)'
+			),
+			array(
+				"\$this->assertSame('<pt></pt>', \$arg);",
+				"\$test->assertSame('<pt></pt>', \$arg);",
+			),
+			array(
+				'DummyBundle::$afterRender = function ($arg)',
+				'$test=$this;DummyBundle::$afterRender = function ($arg) use ($test)'
+			),
+			array(
+				"\$this->assertSame('...', \$arg);",
+				"\$test->assertSame('...', \$arg);"
+			),
+			array(
+				'DummyBundle::$beforeUnparse = function ($arg)',
+				'$test=$this;DummyBundle::$beforeUnparse = function ($arg) use ($test)'
+			),
+			array(
+				"\$this->assertSame('<pt>original</pt>', \$arg);",
+				"\$test->assertSame('<pt>original</pt>', \$arg);"
+			),
+			array(
+				'DummyBundle::$afterUnparse = function ($arg)',
+				'$test=$this;DummyBundle::$afterUnparse = function ($arg) use ($test)'
+			),
+			array(
+				"\$this->assertSame('original', \$arg);",
+				"\$test->assertSame('original', \$arg);"
+			),
+		),
 		'Configurator.php' => array(
 			array(
 				// https://bugs.php.net/52854

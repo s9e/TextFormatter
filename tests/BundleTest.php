@@ -64,6 +64,50 @@ class BundleTest extends Test
 	}
 
 	/**
+	* @testdox parse() executes static::$beforeParse before calling the parser's parse() method
+	*/
+	public function testBeforeParse()
+	{
+		$mock = $this->getMock('stdClass', ['parse']);
+		$mock->expects($this->once())
+		     ->method('parse')
+		     ->with('beforeParse')
+		     ->will($this->returnValue('<pt></pt>'));
+		DummyBundle::$_parser = $mock;
+
+		DummyBundle::$beforeParse = function ($arg)
+		{
+			$this->assertSame('', $arg);
+
+			return 'beforeParse';
+		};
+
+		$this->assertSame('<pt></pt>', DummyBundle::parse(''));
+	}
+
+	/**
+	* @testdox parse() executes static::$afterParse after calling the parser's parse() method
+	*/
+	public function testAfterParse()
+	{
+		$mock = $this->getMock('stdClass', ['parse']);
+		$mock->expects($this->once())
+		     ->method('parse')
+		     ->with('')
+		     ->will($this->returnValue('<pt></pt>'));
+		DummyBundle::$_parser = $mock;
+
+		DummyBundle::$afterParse = function ($arg)
+		{
+			$this->assertSame('<pt></pt>', $arg);
+
+			return '<pt>afterParse</pt>';
+		};
+
+		$this->assertSame('<pt>afterParse</pt>', DummyBundle::parse(''));
+	}
+
+	/**
 	* @testdox render() creates a renderer, renders the input and returns the result
 	*/
 	public function testRender()
@@ -126,6 +170,50 @@ class BundleTest extends Test
 
 		$this->assertSame($html, DummyBundle::render($xml, $params));
 		$this->assertSame(DummyBundle::$calls, ['getParser' => 0, 'getRenderer' => 1]);
+	}
+
+	/**
+	* @testdox render() executes static::$beforeRender before calling the renderer's render() method
+	*/
+	public function testBeforeRender()
+	{
+		$mock = $this->getMock('stdClass', ['render']);
+		$mock->expects($this->once())
+		     ->method('render')
+		     ->with('<pt>beforeRender</pt>')
+		     ->will($this->returnValue('...'));
+		DummyBundle::$_renderer = $mock;
+
+		DummyBundle::$beforeRender = function ($arg)
+		{
+			$this->assertSame('<pt></pt>', $arg);
+
+			return '<pt>beforeRender</pt>';
+		};
+
+		$this->assertSame('...', DummyBundle::render('<pt></pt>'));
+	}
+
+	/**
+	* @testdox render() executes static::$afterRender after calling the renderer's render() method
+	*/
+	public function testAfterRender()
+	{
+		$mock = $this->getMock('stdClass', ['render']);
+		$mock->expects($this->once())
+		     ->method('render')
+		     ->with('')
+		     ->will($this->returnValue('...'));
+		DummyBundle::$_renderer = $mock;
+
+		DummyBundle::$afterRender = function ($arg)
+		{
+			$this->assertSame('...', $arg);
+
+			return 'afterRender';
+		};
+
+		$this->assertSame('afterRender', DummyBundle::render(''));
 	}
 
 	/**
@@ -194,11 +282,111 @@ class BundleTest extends Test
 	}
 
 	/**
+	* @testdox renderMulti() executes static::$beforeRender on every entry before calling the renderer's renderMulti() method
+	*/
+	public function testBeforeRenderMulti()
+	{
+		$mock = $this->getMock('stdClass', ['renderMulti']);
+		$mock->expects($this->once())
+		     ->method('renderMulti')
+		     ->with(['<pt>beforeRender0</pt>', '<pt>beforeRender1</pt>'])
+		     ->will($this->returnValue(['x0x', 'x1x']));
+		DummyBundle::$_renderer = $mock;
+
+		$mock = $this->getMock('stdClass', ['foo']);
+		$mock->expects($this->at(0))
+		     ->method('foo')
+		     ->with('<pt>0</pt>')
+		     ->will($this->returnValue('<pt>beforeRender0</pt>'));
+		$mock->expects($this->at(1))
+		     ->method('foo')
+		     ->with('<pt>1</pt>')
+		     ->will($this->returnValue('<pt>beforeRender1</pt>'));
+		DummyBundle::$beforeRender = [$mock, 'foo'];
+
+		$this->assertSame(
+			[
+				'x0x',
+				'x1x'
+			],
+			DummyBundle::renderMulti([
+				'<pt>0</pt>',
+				'<pt>1</pt>'
+			])
+		);
+	}
+
+	/**
+	* @testdox renderMulti() executes static::$afterRender on every entry after calling the renderer's renderMulti() method
+	*/
+	public function testAfterRenderMulti()
+	{
+		$mock = $this->getMock('stdClass', ['renderMulti']);
+		$mock->expects($this->once())
+		     ->method('renderMulti')
+		     ->with(['<pt>0</pt>', '<pt>1</pt>'])
+		     ->will($this->returnValue(['x0x', 'x1x']));
+		DummyBundle::$_renderer = $mock;
+
+		$mock = $this->getMock('stdClass', ['foo']);
+		$mock->expects($this->at(0))
+		     ->method('foo')
+		     ->with('x0x')
+		     ->will($this->returnValue('afterRender0'));
+		$mock->expects($this->at(1))
+		     ->method('foo')
+		     ->with('x1x')
+		     ->will($this->returnValue('afterRender1'));
+		DummyBundle::$afterRender = [$mock, 'foo'];
+
+		$this->assertSame(
+			[
+				'afterRender0',
+				'afterRender1'
+			],
+			DummyBundle::renderMulti([
+				'<pt>0</pt>',
+				'<pt>1</pt>'
+			])
+		);
+	}
+
+	/**
 	* @testdox unparse() takes the XML representation and returns the original text
 	*/
 	public function testUnparse()
 	{
 		$this->assertSame('Hello', DummyBundle::unparse('<pt>Hello</pt>'));
+	}
+
+	/**
+	* @testdox unparse() executes static::$beforeUnparse before calling the parser's unparse() method
+	*/
+	public function testBeforeUnparse()
+	{
+		DummyBundle::$beforeUnparse = function ($arg)
+		{
+			$this->assertSame('<pt>original</pt>', $arg);
+
+			return '<pt>beforeUnparse</pt>';
+		};
+
+		$this->assertSame('beforeUnparse', DummyBundle::unparse('<pt>original</pt>'));
+	}
+
+	/**
+	* @testdox unparse() executes static::$afterUnparse after calling the parser's unparse() method
+	*/
+	public function testAfterUnparse()
+	{
+		DummyBundle::$afterUnparse = function ($arg)
+		{
+			$this->assertSame('original', $arg);
+
+			return 'afterUnparse';
+		};
+
+		$this->assertSame('afterUnparse', DummyBundle::unparse('<pt>original</pt>'));
 	}
 
 	/**
@@ -226,6 +414,14 @@ class DummyBundle extends Bundle
 	public static $_renderer;
 	public static $parser;
 	public static $renderer;
+	public static $lastEvent;
+
+	public static $beforeParse;
+	public static $afterParse;
+	public static $beforeRender;
+	public static $afterRender;
+	public static $beforeUnparse;
+	public static $afterUnparse;
 
 	public static function _reset(Test $test)
 	{
@@ -241,6 +437,13 @@ class DummyBundle extends Bundle
 		static::$_parser   = $mock;
 		static::$renderer  = null;
 		static::$_renderer = $mock;
+
+		static::$beforeParse   = null;
+		static::$afterParse    = null;
+		static::$beforeRender  = null;
+		static::$afterRender   = null;
+		static::$beforeUnparse = null;
+		static::$afterUnparse  = null;
 	}
 
 	public static function getParser()

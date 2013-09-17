@@ -93,18 +93,6 @@ s9e\TextFormatter\Tests\Configurator\Traits\TemplateSafeness
  [x] markAsSafeInCSS() is chainable
  [x] markAsSafeInJS() is chainable
 
-s9e\TextFormatter\Tests\Bundle
- [x] parse() creates a parser, parses the input and returns the output
- [x] parse() reuses the same parser on consecutive calls
- [x] render() creates a renderer, renders the input and returns the result
- [x] render() reuses the same renderer on consecutive calls
- [x] render() calls setParameters() with its second argument
- [x] renderMulti() creates a renderer, renders the input and returns the result
- [x] renderMulti() reuses the same renderer on consecutive calls
- [x] renderMulti() calls setParameters() with its second argument
- [x] unparse() takes the XML representation and returns the original text
- [x] reset() removes the cached parser and renderer
-
 s9e\TextFormatter\Tests\Configurator
  [x] $configurator->attributeFilters is an instance of AttributeFilterCollection
  [x] $configurator->bundleGenerator is an instance of BundleGenerator
@@ -1509,7 +1497,11 @@ s9e\TextFormatter\Tests\Configurator\BundleGenerator
  [x] Modification made to the renderer via callback appear in the generated bundle
  [x] If the renderer is an instance of the PHP renderer, its source is automatically loaded if the path to its file is known
  [x] Does not attempt to load the renderer's source if autoInclude is false
- [x] export()
+ [x] (before|after)(Parser|Render|Unparse) events are added to the bundle
+ [x] The parserSetup callback is added to the source
+ [x] The rendererSetup callback is added to the source
+ [x] exportCallback()
+ [x] exportObject()
 
 s9e\TextFormatter\Tests\Configurator\Bundles\F5
  [x] Features
@@ -2204,6 +2196,26 @@ s9e\TextFormatter\Tests\Unparser
  [x] unparse('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
  [x] removeFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
  [x] Can unparse representations that were over-escaped
+
+s9e\TextFormatter\Tests\Bundle
+ [x] parse() creates a parser, parses the input and returns the output
+ [x] parse() reuses the same parser on consecutive calls
+ [x] parse() executes static::$beforeParse before calling the parser's parse() method
+ [x] parse() executes static::$afterParse after calling the parser's parse() method
+ [x] render() creates a renderer, renders the input and returns the result
+ [x] render() reuses the same renderer on consecutive calls
+ [x] render() calls setParameters() with its second argument
+ [x] render() executes static::$beforeRender before calling the renderer's render() method
+ [x] render() executes static::$afterRender after calling the renderer's render() method
+ [x] renderMulti() creates a renderer, renders the input and returns the result
+ [x] renderMulti() reuses the same renderer on consecutive calls
+ [x] renderMulti() calls setParameters() with its second argument
+ [x] renderMulti() executes static::$beforeRender on every entry before calling the renderer's renderMulti() method
+ [x] renderMulti() executes static::$afterRender on every entry after calling the renderer's renderMulti() method
+ [x] unparse() takes the XML representation and returns the original text
+ [x] unparse() executes static::$beforeUnparse before calling the parser's unparse() method
+ [x] unparse() executes static::$afterUnparse after calling the parser's unparse() method
+ [x] reset() removes the cached parser and renderer
 
 s9e\TextFormatter\Tests\Bundles\F5
  [x] Rendering tests
