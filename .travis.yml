@@ -5,7 +5,7 @@ php:
   - "5.3.3"
 before_script:
   - phpenv config-rm xdebug.ini
-  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.3.3' ]; then echo 'zend.enable_gc=off' >> ~/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/php.ini; fi"
+  - sh -c "echo 'zend.enable_gc=off' >> ~/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/php.ini"
   - sh -c "wget -O - http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar xzf - -C/tmp compiler.jar"
   - sh -c "printf '\n' | pecl install xslcache-beta"
   - php ./scripts/build/patchSources.php
