@@ -41,3 +41,4 @@ TODO
 - Consider adding Configurable::__set_state()
 - HINT.RULE_* hints must check for the use of Tag.setFlags()
 - Consider adding one callback opportunity before and after rendering. The callback would receive the XML (before) or HTML (after) and the Renderer instance
+- RTE: could use custom (namespaced? or prefixed with x- or s9e-) tags with style="display:none" for metadata, e.g. <s9e:tag name="FOO" attributes='{"bar":1,"baz":2}'>....</s9e:tag> -- could even use <s9e:st/>, <s9e:et/> or <s9e:i/> to map the corresponding tags. Also, investigate wheter node events could be used to detect deletion/insertion (e.g. backspace or cut/paste)
