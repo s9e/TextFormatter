@@ -6,7 +6,7 @@ msg="Synced from master"
 
 for version in 5.4 5.3;
 do
-	branch="tmp/$version"
+	branch="tmp-$version"
 	git branch -D $branch 2> /dev/null
 	git checkout -b $branch master
 	php patchSources.php $version
