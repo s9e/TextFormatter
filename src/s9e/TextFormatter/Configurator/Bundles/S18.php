@@ -394,4 +394,15 @@ class S18 extends Bundle
 			}
 		}
 	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public static function getOptions()
+	{
+		return [
+			'beforeRender'  => 's9e\\TextFormatter\\Bundles\\S18\\Helper::applyTimeformat',
+			'rendererSetup' => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configure'
+		];
+	}
 }

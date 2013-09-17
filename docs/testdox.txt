@@ -1512,6 +1512,7 @@ s9e\TextFormatter\Tests\Configurator\Bundles\Forum
 
 s9e\TextFormatter\Tests\Configurator\Bundles\S18
  [x] Features
+ [x] getOptions() sets the helper's callbacks
 
 s9e\TextFormatter\Tests\Parser\Tag
  [x] getAttributes() returns the tag's attributes as an array
@@ -2224,8 +2225,22 @@ s9e\TextFormatter\Tests\Bundles\F5
 s9e\TextFormatter\Tests\Bundles\Forum
  [x] Rendering tests
 
-s9e\TextFormatter\Tests\Bundles\S18
- [x] s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [quote] with a human-readable date
+s9e\TextFormatter\Tests\Bundles\S18\Helper
+ [x] configure() has no effect if SMF is not loaded
+ [x] configure() set lang strings and parameters if SMF is loaded
+ [x] applyTimeformat() replaces numeric timestamps in [quote] with a human-readable date
  [x] s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [time] with a human-readable date
+ [x] prependFtp() returns ftp:// URLs as-is
+ [x] prependFtp() returns ftps:// URLs as-is
+ [x] prependFtp() prepends ftp:// to non-ftp, non-ftps URLs
+ [x] prependHttp() returns http:// URLs as-is
+ [x] prependHttp() returns https:// URLs as-is
+ [x] prependHttp() prepends http:// to non-http, non-https URLs
+ [x] filterIurl() returns URL fragments as-is
+ [x] filterIurl() returns valid http:// URLs as-is
+ [x] filterIurl() returns valid https:// URLs as-is
+ [x] filterIurl() prepends http:// to non-http, non-https URLs
+
+s9e\TextFormatter\Tests\Bundles\S18
  [x] Rendering tests
 

@@ -66,4 +66,18 @@ class S18Test extends Test
 		$this->assertTrue($configurator->BBCodes->exists('url'));
 		$this->assertTrue($configurator->BBCodes->exists('white'));
 	}
+
+	/**
+	* @testdox getOptions() sets the helper's callbacks
+	*/
+	public function testGetOptions()
+	{
+		$this->assertEquals(
+			[
+				'beforeRender'  => 's9e\\TextFormatter\\Bundles\\S18\\Helper::applyTimeformat',
+				'rendererSetup' => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configure'
+			],
+			S18::getOptions()
+		);
+	}
 }

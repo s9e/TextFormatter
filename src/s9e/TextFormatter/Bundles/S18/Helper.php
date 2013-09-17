@@ -9,9 +9,66 @@ namespace s9e\TextFormatter\Bundles\S18;
 
 use s9e\TextFormatter\Parser\BuiltInFilters;
 use s9e\TextFormatter\Parser\Logger;
+use s9e\TextFormatter\Renderer;
 
 abstract class Helper
 {
+	/**
+	* Format timestamps inside of an XML representation
+	*
+	* NOTE: has no effect if SMF is not loaded
+	*
+	* @param  string $xml XML representation of a parsed text
+	* @return string      XML representation, with human-readable dates
+	*/
+	public static function applyTimeformat($xml)
+	{
+		if (substr($xml, 0, 3) === '<rt' && defined('SMF') && function_exists('timeformat'))
+		{
+			$xml = preg_replace_callback(
+				'/(<(?:QUOT|TIM)E [^>]*?\\b(?:dat|tim)e=")(\\d+)(?=")/',
+				function ($m)
+				{
+					return $m[1] . htmlspecialchars(timeformat($m[2]), ENT_COMPAT);
+				},
+				$xml
+			);
+		}
+
+		return $xml;
+	}
+
+	/**
+	* Configure the given renderer to current SMF environment
+	*
+	* NOTE: has no effect if SMF is not loaded
+	*
+	* @param  Renderer $renderer
+	* @return void
+	*/
+	public static function configure(Renderer $renderer)
+	{
+		global $modSettings, $scripturl, $txt, $user_info;
+
+		if (!defined('SMF'))
+		{
+			return;
+		}
+
+		$renderer->setParameters([
+			'IS_GECKO'      => isBrowser('gecko'),
+			'IS_IE'         => isBrowser('ie'),
+			'IS_OPERA'      => isBrowser('opera'),
+			'L_CODE'        => $txt['code'],
+			'L_CODE_SELECT' => $txt['code_select'],
+			'L_QUOTE'       => $txt['quote'],
+			'L_QUOTE_FROM'  => $txt['quote_from'],
+			'L_SEARCH_ON'   => $txt['search_on'],
+			'SCRIPT_URL'    => $scripturl,
+			'SMILEYS_PATH'  => $modSettings['smileys_url'] . '/' . $user_info['smiley_set'] . '/'
+		]);
+	}
+
 	/**
 	* Prepend the http:// scheme in front of a URL if it's not already present and it doesn't start
 	* with a #, and validate as a URL if it doesn't start with #
@@ -68,24 +125,5 @@ abstract class Helper
 		}
 
 		return $url;
-	}
-
-	/**
-	* Format timestamps inside of an XML representation
-	*
-	* @param  string   $xml      XML representation of a parsed text
-	* @param  callback $callback Formatting callback, will be passed the timestamp as a number
-	* @return string             XML representation, with human-readable dates
-	*/
-	public static function timeformat($xml, $callback = 'timeformat')
-	{
-		return preg_replace_callback(
-			'/(<(?:QUOT|TIM)E [^>]*?(?:dat|tim)e=")(\\d+)(?=")/',
-			function ($m) use ($callback)
-			{
-				return $m[1] . htmlspecialchars($callback($m[2]), ENT_COMPAT);
-			},
-			$xml
-		);
 	}
 }
