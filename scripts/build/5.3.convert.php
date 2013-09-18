@@ -285,7 +285,8 @@ function convertCustom($filepath, &$file)
 
 	foreach ($replacements as $path => $pairs)
 	{
-		if (substr($filepath, -1 - strlen($path)) === '/' . $path)
+		$path = '/' . $path;
+		if (substr($filepath, -strlen($path)) === $path)
 		{
 			foreach ($pairs as $pair)
 			{
