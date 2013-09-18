@@ -1,8 +1,11 @@
 ## Synopsis
 
 This plugin censors text based on a configurable list of words.
-Jokers are accepted: `*` matches any number of letters, `?` matches one letter exactly.
-Censored words are replaced with `****` unless a replacement is specified when the censored word is added to the list.
+
+ * The list is not case-sensitive. If you censor "foo", then "FOO" and "Foo" are also censored.
+ * Jokers are accepted: `*` matches any number of letters or digits, `?` matches one character exactly.
+ * A single space matches any number of whitespace characters, meaning that censoring "b u g" will also censor "bug" or "b  u  g".
+ * Censored words are replaced with `****` unless a replacement is specified when the censored word is added to the list.
 
 ## Example
 

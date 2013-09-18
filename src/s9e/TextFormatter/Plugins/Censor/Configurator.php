@@ -148,7 +148,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		/** @todo "?" should probably become ".?" so that "apple?" matches both "apple" and "apples" */
 		$regexpOptions = [
 			'caseInsensitive' => true,
-			'specialChars'    => ['*' => '[\\pL\\pN]*', '?' => '.']
+			'specialChars'    => [
+				'*' => '[\\pL\\pN]*',
+				'?' => '.',
+				' ' => '\\s*'
+			]
 		];
 		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
 

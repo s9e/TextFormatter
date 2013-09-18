@@ -165,6 +165,24 @@ class ParserTest extends Test
 					$constructor->Censor->add('$0');
 				}
 			],
+			[
+				'You dirty A P P L E',
+				'<rt>You dirty <CENSOR>A P P L E</CENSOR></rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->Censor->add('a p p l e');
+				}
+			],
+			[
+				'You dirty apple',
+				'<rt>You dirty <CENSOR>apple</CENSOR></rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->Censor->add('a p p l e');
+				}
+			],
 		];
 	}
 
