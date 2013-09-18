@@ -2,10 +2,13 @@
 
 ### **Getting started**
   * [Installation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/00_Installation.md)
+  * [Mode of operation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/01_Mode_of_operation.md)
   * **Basic usage**
-    * [Zero-configuration: using predefined bundles](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/00_ZeroConfig.md)
-    * [À la carte: make your own bundle](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/01_CustomBundle.md)
-    * [Expert mode: configure everything yourself](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/02_Expert.md)
+    * **Configuration**
+      * [Zero-configuration: using predefined bundles](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/Configuration/00_ZeroConfig.md)
+      * [À la carte: make your own bundle](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/Configuration/01_CustomBundle.md)
+      * [Expert mode: configure everything yourself](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/Configuration/02_Expert.md)
+    * [Unparsing](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Getting_started/Basic_usage/Unparsing.md)
 
 ### **Miscellaneous**
   * [Automatic rules generation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Miscellaneous/AutomaticRulesGeneration.md)
