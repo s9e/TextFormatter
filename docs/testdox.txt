@@ -2225,6 +2225,9 @@ s9e\TextFormatter\Tests\Bundles\F5
 s9e\TextFormatter\Tests\Bundles\Forum
  [x] Rendering tests
 
+s9e\TextFormatter\Tests\Bundles\S18
+ [x] Rendering tests
+
 s9e\TextFormatter\Tests\Bundles\S18\Helper
  [x] configure() has no effect if SMF is not loaded
  [x] configure() set lang strings and parameters if SMF is loaded
@@ -2240,7 +2243,4 @@ s9e\TextFormatter\Tests\Bundles\S18\Helper
  [x] filterIurl() returns valid http:// URLs as-is
  [x] filterIurl() returns valid https:// URLs as-is
  [x] filterIurl() prepends http:// to non-http, non-https URLs
-
-s9e\TextFormatter\Tests\Bundles\S18
- [x] Rendering tests
 

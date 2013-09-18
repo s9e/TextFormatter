@@ -213,8 +213,8 @@
 			<file>tests/BundleTest.php</file>
 			<file>tests/Bundles/F5Test.php</file>
 			<file>tests/Bundles/ForumTest.php</file>
-			<file>tests/Bundles/S18/HelperTest.php</file>
 			<file>tests/Bundles/S18Test.php</file>
+			<file>tests/Bundles/S18/HelperTest.php</file>
 		</testsuite>
 	</testsuites>
 

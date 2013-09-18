@@ -20,6 +20,11 @@ abstract class S18 extends \s9e\TextFormatter\Bundle
 	public static $renderer;
 
 	/**
+	* @var Callback executed before render() and on each entry before renderMulti(), receives the parsed text as argument
+	*/
+	public static $beforeRender = 's9e\\TextFormatter\\Bundles\\S18\\Helper::applyTimeformat';
+
+	/**
 	* Return a new instance of s9e\TextFormatter\Parser
 	*
 	* @return s9e\TextFormatter\Parser
@@ -36,6 +41,9 @@ abstract class S18 extends \s9e\TextFormatter\Bundle
 	*/
 	public static function getRenderer()
 	{
-		return unserialize("O:38:\"s9e\\TextFormatter\\Bundles\\S18\\Renderer\":3:{s:13:\"\000*\000htmlOutput\";b:1;s:16:\"\000*\000dynamicParams\";a:0:{}s:9:\"\000*\000params\";a:10:{s:8:\"IS_GECKO\";s:0:\"\";s:5:\"IS_IE\";s:0:\"\";s:8:\"IS_OPERA\";s:0:\"\";s:6:\"L_CODE\";s:4:\"Code\";s:13:\"L_CODE_SELECT\";s:8:\"[Select]\";s:7:\"L_QUOTE\";s:5:\"Quote\";s:12:\"L_QUOTE_FROM\";s:10:\"Quote from\";s:11:\"L_SEARCH_ON\";s:2:\"on\";s:10:\"SCRIPT_URL\";s:0:\"\";s:12:\"SMILEYS_PATH\";s:0:\"\";}}");
+		$renderer = unserialize("O:38:\"s9e\\TextFormatter\\Bundles\\S18\\Renderer\":3:{s:13:\"\000*\000htmlOutput\";b:1;s:16:\"\000*\000dynamicParams\";a:0:{}s:9:\"\000*\000params\";a:10:{s:8:\"IS_GECKO\";s:0:\"\";s:5:\"IS_IE\";s:0:\"\";s:8:\"IS_OPERA\";s:0:\"\";s:6:\"L_CODE\";s:4:\"Code\";s:13:\"L_CODE_SELECT\";s:8:\"[Select]\";s:7:\"L_QUOTE\";s:5:\"Quote\";s:12:\"L_QUOTE_FROM\";s:10:\"Quote from\";s:11:\"L_SEARCH_ON\";s:2:\"on\";s:10:\"SCRIPT_URL\";s:0:\"\";s:12:\"SMILEYS_PATH\";s:0:\"\";}}");
+		S18\Helper::configure($renderer);
+
+		return $renderer;
 	}
 }
