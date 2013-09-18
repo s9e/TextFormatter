@@ -194,7 +194,7 @@ function convertCustom($filepath, &$file)
 				'return (preg_match($_this->regexp, $m[1])) ? $m[0] : $m[1];'
 			),
 			array(
-				'$startTag = '<' . $this->tagName;',
+				'$startTag = \'<\' . $this->tagName;',
 				'$startTag = \'<\' . $_this->tagName;'
 			),
 			array(
