@@ -164,7 +164,7 @@ function convertCustom($filepath, &$file)
 				"\n\t\t\t\t\$test->fail"
 			)
 		),
-		'Helper.php' => array(
+		'Censor/Helper.php' => array(
 			array(
 				'return preg_replace_callback(',
 				'$_this=$this;return preg_replace_callback('
@@ -283,18 +283,20 @@ function convertCustom($filepath, &$file)
 		)
 	);
 
-	$filename = basename($filepath);
-	if (isset($replacements[$filename]))
+	foreach ($replacements as $path => $pairs)
 	{
-		foreach ($replacements[$filename] as $pair)
+		if (substr($filepath, -1 - strlen($path)) === '/' . $path)
 		{
-			list($search, $replace) = $pair;
-			$file = str_replace($search, $replace, $file);
+			foreach ($pairs as $pair)
+			{
+				list($search, $replace) = $pair;
+				$file = str_replace($search, $replace, $file);
+			}
 		}
 	}
 
 	// Some class-specific modifications
-	switch ($filename)
+	switch (basename($filepath))
 	{
 		case 'AttributeFilter.php':
 			$block =
