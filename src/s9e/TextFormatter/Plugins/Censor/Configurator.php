@@ -77,6 +77,21 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	}
 
 	/**
+	* Add a word to the censored list
+	*
+	* Technically, add() is already provided by the CollectionProxy trait but in this case we map it
+	* to set() instead because it does not make sense to throw an exception on duplicates
+	*
+	* @param  string $word        Word to censor
+	* @param  string $replacement Replacement
+	* @return void
+	*/
+	public function add($word, $replacement = null)
+	{
+		$this->set($word, $replacement);
+	}
+
+	/**
 	* Return an instance of s9e\TextFormatter\Plugins\Censor\Helper
 	*
 	* @return Helper

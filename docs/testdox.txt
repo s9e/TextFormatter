@@ -1872,6 +1872,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] getTag() returns the tag that is associated with this plugin
  [x] getHelper() returns a configured instance of Helper
  [x] getHelper() returns an instance of Helper even if no words were added
+ [x] add() does not throw an exception on duplicates
 
 s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorHtml() censors text nodes in HTML

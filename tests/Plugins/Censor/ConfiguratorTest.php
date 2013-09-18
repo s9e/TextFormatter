@@ -241,4 +241,13 @@ class ConfiguratorTest extends Test
 			$this->configurator->Censor->getHelper()
 		);
 	}
+
+	/**
+	* @testdox add() does not throw an exception on duplicates
+	*/
+	public function testAddDuplicate()
+	{
+		$this->configurator->Censor->add('foo');
+		$this->configurator->Censor->add('foo');
+	}
 }
