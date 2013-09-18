@@ -101,6 +101,6 @@ Prevents this tag from being used unless it's as a child of X. If multiple requi
 
 <dt>requireAncestor</dt>
 <dd><i>Example:</i> <code>$tag->rules->requireAncestor('X');</code><br/>
-Prevents this tag from being used unless it's as a descendant of X. If multiple requireDescendant rules are set, all of them must be satisfied.</dd>
+Prevents this tag from being used unless it's as a descendant of X. If multiple requireAncestor rules are set, all of them must be satisfied.</dd>
 
 </dl>
