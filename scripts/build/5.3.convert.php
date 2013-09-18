@@ -164,6 +164,24 @@ function convertCustom($filepath, &$file)
 				"\n\t\t\t\t\$test->fail"
 			)
 		),
+		'Helper.php' => array(
+			array(
+				'return preg_replace_callback(',
+				'$_this=$this;return preg_replace_callback('
+			),
+			array(
+				'$xml = preg_replace_callback(',
+				'$_this=$this;$xml = preg_replace_callback('
+			),
+			array(
+				'function ($m)',
+				'function ($m) use ($_this)'
+			),
+			array(
+				'foreach ($this->replacements as list($regexp, $replacement))',
+				'foreach ($_this->replacements as list($regexp, $replacement))'
+			),
+		),
 		'Logger.php' => array(
 			array(
 				'$callback($msg, $context);',
