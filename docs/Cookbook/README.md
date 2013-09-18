@@ -25,6 +25,9 @@
     * [Add BBCodes from the bundled repository](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Plugins/BBCodes/AddFromRepository.md)
     * [Localize strings in a BBCode template](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Plugins/BBCodes/Localize.md)
     * [Use stylesheet parameters in a BBCode template](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Plugins/BBCodes/Parameters.md)
+  * **Censor**
+    * [Using the Censor plugin in plain text and HTML](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Plugins/Censor/CensorText.md)
+    * [Quickly patch old parsed texts for a new list of words](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Plugins/Censor/Reparse.md)
   * **Emoticons**
     * [Add emoticons](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Plugins/Emoticons/AddEmoticons.md)
     * [Change the regexp used for emoticons](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/Plugins/Emoticons/ChangeRegexp.md)

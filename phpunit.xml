@@ -177,6 +177,7 @@
 			<file>tests/Plugins/BBCodes/ParserTest.php</file>
 			<file>tests/Plugins/BBCodes/BBCodesTest.php</file>
 			<file>tests/Plugins/Censor/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Censor/HelperTest.php</file>
 			<file>tests/Plugins/Censor/ParserTest.php</file>
 			<file>tests/Plugins/Emoticons/ConfiguratorTest.php</file>
 			<file>tests/Plugins/Emoticons/Configurator/EmoticonCollectionTest.php</file>

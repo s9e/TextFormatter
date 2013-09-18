@@ -1870,6 +1870,25 @@ s9e\TextFormatter\Tests\Plugins\Censor\Configurator
  [x] asConfig() creates a JavaScript variant for the plugin's regexp
  [x] asConfig() creates a JavaScript variant for the regexps used in replacements
  [x] getTag() returns the tag that is associated with this plugin
+ [x] getHelper() returns a configured instance of Helper
+ [x] getHelper() returns an instance of Helper even if no words were added
+
+s9e\TextFormatter\Tests\Plugins\Censor\Helper
+ [x] censorHtml() censors text nodes in HTML
+ [x] censorHtml() uses custom replacements
+ [x] censorHtml() escapes custom replacements
+ [x] censorHtml() does not replace HTML tag names
+ [x] censorHtml() does not replace HTML attribute names
+ [x] censorHtml() does not replace HTML attribute values
+ [x] censorText() censors plain text
+ [x] censorText() uses custom replacements
+ [x] reparse() preserves old tags
+ [x] reparse() add new tags
+ [x] reparse() uses replacements in new tags
+ [x] reparse() replace the "pt" root node with "rt" if a new match is found
+ [x] reparse() does not replace tag names
+ [x] reparse() does not replace attribute names
+ [x] reparse() does not replace attribute values
 
 s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests

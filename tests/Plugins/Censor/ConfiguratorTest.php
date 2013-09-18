@@ -217,4 +217,28 @@ class ConfiguratorTest extends Test
 			$plugin->getTag()
 		);
 	}
+
+	/**
+	* @testdox getHelper() returns a configured instance of Helper
+	*/
+	public function testGetHelper()
+	{
+		$this->configurator->Censor->add('foo');
+
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Plugins\\Censor\\Helper',
+			$this->configurator->Censor->getHelper()
+		);
+	}
+
+	/**
+	* @testdox getHelper() returns an instance of Helper even if no words were added
+	*/
+	public function testGetHelperNoWords()
+	{
+		$this->assertInstanceOf(
+			's9e\\TextFormatter\\Plugins\\Censor\\Helper',
+			$this->configurator->Censor->getHelper()
+		);
+	}
 }

@@ -11,6 +11,7 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
@@ -73,6 +74,32 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		// Create a template for censored words with custom replacements
 		$tag->templates['@' . $this->attrName]
 			= '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>';
+	}
+
+	/**
+	* Return an instance of s9e\TextFormatter\Plugins\Censor\Helper
+	*
+	* @return Helper
+	*/
+	public function getHelper()
+	{
+		$config = $this->asConfig();
+
+		if ($config === false)
+		{
+			// Use a dummy config with a regexp that doesn't match anything
+			$config = [
+				'attrName' => $this->attrName,
+				'regexp'   => '/(?!)/',
+				'tagName'  => $this->tagName
+			];
+		}
+		else
+		{
+			ConfigHelper::filterVariants($config);
+		}
+
+		return new Helper($config);
 	}
 
 	/**
