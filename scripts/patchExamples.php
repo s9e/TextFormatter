@@ -53,7 +53,7 @@ function patchFile($filepath)
 	}
 	else
 	{
-		echo "Patching $filepath\n";
+		echo "\x1b[1mPatching $filepath\x1b[0m\n";
 		file_put_contents($filepath, $text);
 	}
 }
