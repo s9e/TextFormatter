@@ -153,7 +153,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	{
 		if (!isset($this->tagName))
 		{
-			throw new RuntimeException('Not tag associated with this plugin');
+			throw new RuntimeException('No tag associated with this plugin');
 		}
 
 		return $this->configurator->tags[$this->tagName];

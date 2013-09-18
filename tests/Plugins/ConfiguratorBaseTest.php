@@ -217,7 +217,7 @@ class ConfiguratorBaseTest extends Test
 	/**
 	* @testdox getTag() throws an exception if the plugin does not have a tagName property set
 	* @expectedException RuntimeException
-	* @expectedExceptionMessage Not tag associated with this plugin
+	* @expectedExceptionMessage No tag associated with this plugin
 	*/
 	public function testGetTagError()
 	{
