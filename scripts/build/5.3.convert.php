@@ -181,6 +181,26 @@ function convertCustom($filepath, &$file)
 				'foreach ($this->replacements as list($regexp, $replacement))',
 				'foreach ($_this->replacements as list($regexp, $replacement))'
 			),
+			array(
+				'return htmlspecialchars($this->defaultReplacement);',
+				'return htmlspecialchars($_this->defaultReplacement);'
+			),
+			array(
+				'return $this->defaultReplacement;',
+				'return $_this->defaultReplacement;'
+			),
+			array(
+				'return (preg_match($this->regexp, $m[1])) ? $m[0] : $m[1];',
+				'return (preg_match($_this->regexp, $m[1])) ? $m[0] : $m[1];'
+			),
+			array(
+				'$startTag .= \' \' . $this->attrName . \'="\' . htmlspecialchars($replacement, ENT_QUOTES) . \'"\';',
+				'$startTag .= \' \' . $_this->attrName . \'="\' . htmlspecialchars($replacement, ENT_QUOTES) . \'"\';'
+			),
+			array(
+				'return $startTag . \'>\' . $m[0] . \'</\' . $this->tagName . \'>\';',
+				'return $startTag . \'>\' . $m[0] . \'</\' . $_this->tagName . \'>\';'
+			)
 		),
 		'Logger.php' => array(
 			array(
