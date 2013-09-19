@@ -14,7 +14,7 @@ class NormalizedList extends NormalizedCollection
 	/**
 	* Append a value to this list
 	*
-	* @param  mixed $value
+	* @param  mixed $value Original value
 	* @return mixed        Normalized value
 	*/
 	public function append($value)
@@ -27,18 +27,19 @@ class NormalizedList extends NormalizedCollection
 	}
 
 	/**
-	* Prepend a value to this list
+	* Delete a value from this list and remove gaps in keys
 	*
-	* @param  mixed $value
-	* @return mixed        Normalized value
+	* NOTE: parent::offsetUnset() maps to $this->delete() so this method covers both usages
+	*
+	* @param  string $key
+	* @return void
 	*/
-	public function prepend($value)
+	public function delete($key)
 	{
-		$value = $this->normalizeValue($value);
+		parent::delete($key);
 
-		array_unshift($this->items, $value);
-
-		return $value;
+		// Reindex the array to eliminate any gaps
+		$this->items = array_values($this->items);
 	}
 
 	/**
@@ -58,44 +59,6 @@ class NormalizedList extends NormalizedCollection
 		array_splice($this->items, $offset, 0, [$value]);
 
 		return $value;
-	}
-
-	/**
-	* Custom offsetSet() implementation to allow assignment with a null offset to append to the
-	* chain
-	*
-	* @param  mixed $offset
-	* @param  mixed $value
-	* @return void
-	*/
-	public function offsetSet($offset, $value)
-	{
-		if ($offset === null)
-		{
-			// $list[] = 'foo' maps to $list->append('foo')
-			$this->append($value);
-		}
-		else
-		{
-			// Use the default implementation
-			parent::offsetSet($offset, $value);
-		}
-	}
-
-	/**
-	* Delete a value from this list and remove gaps in keys
-	*
-	* NOTE: parent::offsetUnset() maps to $this->delete() so this method covers both usages
-	*
-	* @param  string $key
-	* @return void
-	*/
-	public function delete($key)
-	{
-		parent::delete($key);
-
-		// Reindex the array to eliminate any gaps
-		$this->items = array_values($this->items);
 	}
 
 	/**
@@ -123,5 +86,42 @@ class NormalizedList extends NormalizedCollection
 		}
 
 		return $normalizedKey;
+	}
+
+	/**
+	* Custom offsetSet() implementation to allow assignment with a null offset to append to the
+	* chain
+	*
+	* @param  mixed $offset
+	* @param  mixed $value
+	* @return void
+	*/
+	public function offsetSet($offset, $value)
+	{
+		if ($offset === null)
+		{
+			// $list[] = 'foo' maps to $list->append('foo')
+			$this->append($value);
+		}
+		else
+		{
+			// Use the default implementation
+			parent::offsetSet($offset, $value);
+		}
+	}
+
+	/**
+	* Prepend a value to this list
+	*
+	* @param  mixed $value
+	* @return mixed        Normalized value
+	*/
+	public function prepend($value)
+	{
+		$value = $this->normalizeValue($value);
+
+		array_unshift($this->items, $value);
+
+		return $value;
 	}
 }
