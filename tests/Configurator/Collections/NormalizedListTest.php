@@ -153,4 +153,77 @@ class NormalizedListTest extends Test
 		$this->assertSame(1, count($this->normalizedList));
 		$this->assertSame(2, $this->normalizedList[0]);
 	}
+
+	/**
+	* @testdox add() adds given value at the end of the list
+	*/
+	public function testAdd()
+	{
+		$this->normalizedList->add(1);
+		$this->normalizedList->add(2);
+
+		$this->assertSame(1, $this->normalizedList[0]);
+		$this->assertSame(2, $this->normalizedList[1]);
+	}
+
+	/**
+	* @testdox remove() removes given value from the collection
+	*/
+	public function testRemove()
+	{
+		$this->normalizedList->add('foo');
+		$this->normalizedList->add('bar');
+		$this->normalizedList->remove('foo');
+
+		$this->assertSame(
+			['bar'],
+			iterator_to_array($this->normalizedList)
+		);
+	}
+
+	/**
+	* @testdox remove() removes all items matching given value
+	*/
+	public function testRemoveMulti()
+	{
+		$this->normalizedList->add('foo');
+		$this->normalizedList->add('bar');
+		$this->normalizedList->add('foo');
+		$this->normalizedList->remove('foo');
+
+		$this->assertSame(
+			['bar'],
+			iterator_to_array($this->normalizedList)
+		);
+	}
+
+	/**
+	* @testdox remove() returns the number of items removed
+	*/
+	public function testRemoveReturn()
+	{
+		$this->normalizedList->add('foo');
+		$this->normalizedList->add('bar');
+		$this->normalizedList->add('foo');
+
+		$this->assertSame(2, $this->normalizedList->remove('foo'));
+		$this->assertSame(1, $this->normalizedList->remove('bar'));
+		$this->assertSame(0, $this->normalizedList->remove('baz'));
+	}
+
+	/**
+	* @testdox remove() reorders the list to remove gaps
+	*/
+	public function testRemoveGaps()
+	{
+		$this->normalizedList->add('foo');
+		$this->normalizedList->add('bar');
+		$this->normalizedList->add('foo');
+		$this->normalizedList->remove('bar');
+
+		$this->assertSame(
+			['foo', 'foo'],
+			iterator_to_array($this->normalizedList)
+		);
+	}
 }

@@ -48,6 +48,11 @@ s9e\TextFormatter\Tests\Configurator\Collections\NormalizedList
  [x] $normalizedList[1] = 'foo' throws an InvalidArgumentException if the list is empty
  [x] $normalizedList['foo'] = 'bar' throws an InvalidArgumentException
  [x] Deleting a value by key reorders the list to remove gaps
+ [x] add() adds given value at the end of the list
+ [x] remove() removes given value from the collection
+ [x] remove() removes all items matching given value
+ [x] remove() returns the number of items removed
+ [x] remove() reorders the list to remove gaps
 
 s9e\TextFormatter\Tests\Configurator\Traits\CollectionProxy
  [x] $proxy->add() gets forwarded to $proxy->collection->add() with all arguments

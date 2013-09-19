@@ -30,15 +30,12 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 
 ### Remove a normalization
 
-You can remove a normalization by index.
-
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
 echo $configurator->templateNormalizer->normalizeTemplate('<![CDATA[ Will be inlined ]]>'), "\n";
 
-$i = $configurator->templateNormalizer->indexOf('InlineCDATA');
-unset($configurator->templateNormalizer[$i]);
+$configurator->templateNormalizer->remove('InlineCDATA');
 
 echo $configurator->templateNormalizer->normalizeTemplate('<![CDATA[ Will not be inlined ]]>');
 ```

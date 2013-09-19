@@ -12,6 +12,20 @@ use InvalidArgumentException;
 class NormalizedList extends NormalizedCollection
 {
 	/**
+	* Add (append) a value to this list
+	*
+	* Alias for append(). Overrides NormalizedCollection::add()
+	*
+	* @param  mixed $value Original value
+	* @param  null  $void  Unused
+	* @return mixed        Normalized value
+	*/
+	public function add($value, $void = null)
+	{
+		return $this->append($value);
+	}
+
+	/**
 	* Append a value to this list
 	*
 	* @param  mixed $value Original value
@@ -123,5 +137,24 @@ class NormalizedList extends NormalizedCollection
 		array_unshift($this->items, $value);
 
 		return $value;
+	}
+
+	/**
+	* Remove all items matching given value
+	*
+	* @param  mixed   $value Original value
+	* @return integer        Number of items removed
+	*/
+	public function remove($value)
+	{
+		$keys = array_keys($this->items, $this->normalizeValue($value));
+		foreach ($keys as $k)
+		{
+			unset($this->items[$k]);
+		}
+
+		$this->items = array_values($this->items);
+
+		return count($keys);
 	}
 }

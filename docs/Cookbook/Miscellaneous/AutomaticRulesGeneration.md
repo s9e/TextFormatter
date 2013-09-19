@@ -26,8 +26,7 @@ foreach ($configurator->rulesGenerator as $i => $generator)
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
-$i = $configurator->rulesGenerator->indexOf('IgnoreTextIfDisallowed');
-unset($configurator->rulesGenerator[$i]);
+$configurator->rulesGenerator->remove('IgnoreTextIfDisallowed');
 ```
 
 ### Add a default generator
@@ -35,5 +34,5 @@ unset($configurator->rulesGenerator[$i]);
 To add the `ManageParagraphs` generator:
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->rulesGenerator->append('ManageParagraphs');
+$configurator->rulesGenerator->add('ManageParagraphs');
 ```
