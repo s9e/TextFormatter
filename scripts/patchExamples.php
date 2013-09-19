@@ -42,7 +42,7 @@ function patchFile($filepath)
 			ob_start();
 			eval($m[2]);
 
-			return $m[1] . "\n" . ob_get_clean() . $m[3];
+			return $m[1] . "\n" . rtrim(ob_get_clean(), "\n") . $m[3];
 		},
 		$file
 	);

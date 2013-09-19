@@ -19,7 +19,6 @@ foreach ($configurator->rulesGenerator as $i => $generator)
 5	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTextIfDisallowed
 6	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
 7	s9e\TextFormatter\Configurator\RulesGenerators\NoBrIfWhitespaceIsPreserved
-
 </pre>
 
 ### Remove a generator

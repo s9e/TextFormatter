@@ -26,7 +26,6 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 10	s9e\TextFormatter\Configurator\TemplateNormalizations\PreserveSingleSpaces
 11	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
 12	s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveInterElementWhitespace
-
 </pre>
 
 ### Remove a normalization
