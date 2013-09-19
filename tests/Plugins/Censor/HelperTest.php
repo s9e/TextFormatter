@@ -160,6 +160,21 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox reparse() escapes replacements
+	*/
+	public function testReparseReplacementEscape()
+	{
+		$this->configurator->Censor->add('bar', '<"BAR">');
+
+		$xml = '<rt>foo bar baz</rt>';
+
+		$this->assertSame(
+			'<rt>foo <CENSOR with="&lt;&quot;BAR&quot;&gt;">bar</CENSOR> baz</rt>',
+			$this->configurator->Censor->getHelper()->reparse($xml)
+		);
+	}
+
+	/**
 	* @testdox reparse() replace the "pt" root node with "rt" if a new match is found
 	*/
 	public function testReparseNewRoot()
