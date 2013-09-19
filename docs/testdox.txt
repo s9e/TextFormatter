@@ -2249,8 +2249,8 @@ s9e\TextFormatter\Tests\Bundles\S18
  [x] Rendering tests
 
 s9e\TextFormatter\Tests\Bundles\S18\Helper
- [x] configure() has no effect if SMF is not loaded
- [x] configure() set lang strings and parameters if SMF is loaded
+ [x] configureRenderer() has no effect if SMF is not loaded
+ [x] configureRenderer() set lang strings and parameters if SMF is loaded
  [x] applyTimeformat() replaces numeric timestamps in [quote] with a human-readable date
  [x] s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [time] with a human-readable date
  [x] prependFtp() returns ftp:// URLs as-is

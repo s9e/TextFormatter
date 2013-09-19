@@ -21,9 +21,9 @@ class HelperTest extends Test
 	}
 
 	/**
-	* @testdox configure() has no effect if SMF is not loaded
+	* @testdox configureRenderer() has no effect if SMF is not loaded
 	*/
-	public function testConfigureNone()
+	public function testConfigureRendererNone()
 	{
 		$renderer = $this->getMock(
 			's9e\\TextFormatter\\Renderer',
@@ -32,13 +32,13 @@ class HelperTest extends Test
 		$renderer->expects($this->never())->method('setParameter');
 		$renderer->expects($this->never())->method('setParameters');
 
-		Helper::configure($renderer);
+		Helper::configureRenderer($renderer);
 	}
 
 	/**
-	* @testdox configure() set lang strings and parameters if SMF is loaded
+	* @testdox configureRenderer() set lang strings and parameters if SMF is loaded
 	*/
-	public function testConfigureSMF()
+	public function testConfigureRendererSMF()
 	{
 		$this->mockSMF();
 
@@ -63,7 +63,7 @@ class HelperTest extends Test
 		         ->method('setParameters')
 		         ->with($params);
 
-		Helper::configure($renderer);
+		Helper::configureRenderer($renderer);
 	}
 
 	/**

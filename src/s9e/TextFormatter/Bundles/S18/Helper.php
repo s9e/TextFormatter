@@ -46,7 +46,7 @@ abstract class Helper
 	* @param  Renderer $renderer
 	* @return void
 	*/
-	public static function configure(Renderer $renderer)
+	public static function configureRenderer(Renderer $renderer)
 	{
 		global $modSettings, $scripturl, $txt, $user_info;
 

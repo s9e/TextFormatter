@@ -402,7 +402,7 @@ class S18 extends Bundle
 	{
 		return [
 			'beforeRender'  => 's9e\\TextFormatter\\Bundles\\S18\\Helper::applyTimeformat',
-			'rendererSetup' => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configure'
+			'rendererSetup' => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configureRenderer'
 		];
 	}
 }

@@ -75,7 +75,7 @@ class S18Test extends Test
 		$this->assertEquals(
 			[
 				'beforeRender'  => 's9e\\TextFormatter\\Bundles\\S18\\Helper::applyTimeformat',
-				'rendererSetup' => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configure'
+				'rendererSetup' => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configureRenderer'
 			],
 			S18::getOptions()
 		);
