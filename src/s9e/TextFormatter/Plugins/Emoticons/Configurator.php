@@ -84,6 +84,9 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		        . RegexpBuilder::fromList($codes, ['delimiter' => $this->regexpStart[0]])
 		        . $this->regexpEnd;
 
+		// Force the regexp to use atomic grouping for performance
+		$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
+
 		$config = [
 			'quickMatch' => $this->quickMatch,
 			'regexp'     => $regexp,
