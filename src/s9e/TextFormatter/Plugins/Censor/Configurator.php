@@ -156,6 +156,10 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		];
 		$regexp = RegexpBuilder::fromList($words, $regexpOptions);
 
+		// Force atomic grouping for performance. Theorically it could prevent some matches but in
+		// practice it shouldn't happen
+		$regexp = preg_replace('/(?<!\\\\)((?>\\\\\\\\)*)\\(\\?:/', '$1(?>', $regexp);
+
 		// Add the regexp to the config, along with a JavaScript variant
 		$config['regexp'] = new Variant('/(?<![\\pL\\pN])' . $regexp . '(?![\\pL\\pN])/iu');
 
