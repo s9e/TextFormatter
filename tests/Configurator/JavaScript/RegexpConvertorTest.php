@@ -378,4 +378,15 @@ class RegexpConvertorTest extends Test
 			RegexpConvertor::toJS('/(?:foo)(?<z>bar)/')
 		);
 	}
+
+	/**
+	* @testdox toJS() converts atomic groups to non-capturing groups
+	*/
+	public function testConvertAtomicGrouping()
+	{
+		$this->assertEquals(
+			'/(?:foo|bar)/',
+			RegexpConvertor::toJS('#(?>foo|bar)#')
+		);
+	}
 }

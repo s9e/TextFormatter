@@ -935,6 +935,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() replaces its second parameter with a list of capturing subpattern names
  [x] toJS() non-named capturing subpatterns leave an empty name in the map
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
+ [x] toJS() converts atomic groups to non-capturing groups
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] get() forwards the call to minify() and returns its result

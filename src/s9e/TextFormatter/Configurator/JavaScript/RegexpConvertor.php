@@ -55,7 +55,7 @@ abstract class RegexpConvertor
 					break;
 
 				case 'nonCapturingSubpatternStart':
-					if ($tok['options'])
+					if (!empty($tok['options']))
 					{
 						throw new RuntimeException('Subpattern options are not supported');
 					}
