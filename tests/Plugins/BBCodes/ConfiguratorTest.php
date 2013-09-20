@@ -385,6 +385,7 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 
 		$this->assertNotContains('(?:', $config['regexp']);
+		$this->assertNotContains('(?>', $config['regexp']);
 	}
 
 	/**
@@ -400,7 +401,7 @@ class ConfiguratorTest extends Test
 
 		$config = $plugin->asConfig();
 
-		$this->assertContains('((?:AA|BB)(?:XXX|YYY))', $config['regexp']);
+		$this->assertContains('((?>AA|BB)(?>XXX|YYY))', $config['regexp']);
 	}
 
 	/**

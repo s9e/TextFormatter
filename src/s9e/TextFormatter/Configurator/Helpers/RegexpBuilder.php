@@ -568,8 +568,11 @@ abstract class RegexpBuilder
 
 		if (isset($regexps[1]))
 		{
-			// There are several branches
-			$regexp = '(?:' . implode('|', $regexps) . ')';
+			// There are several branches, coalesce them
+			$regexp = implode('|', $regexps);
+
+			// Put the expression in a subpattern
+			$regexp = ((self::canUseAtomicGrouping($regexp)) ? '(?>' : '(?:') . $regexp . ')';
 		}
 		else
 		{
@@ -659,7 +662,7 @@ abstract class RegexpBuilder
 
 		if (!$isAtomic)
 		{
-			$regexp = '(?:' . $regexp . ')';
+			$regexp = ((self::canUseAtomicGrouping($regexp)) ? '(?>' : '(?:') . $regexp . ')';
 		}
 
 		$regexp .= '?';
@@ -1047,5 +1050,45 @@ abstract class RegexpBuilder
 		// Anything else is either too complicated and too circumstancial to investigate further so
 		// we'll just return false
 		return false;
+	}
+
+	/**
+	* Test whether given expression can be safely used with atomic grouping
+	*
+	* @param  string $expr
+	* @return bool
+	*/
+	protected static function canUseAtomicGrouping($expr)
+	{
+		if (preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\.#', $expr))
+		{
+			// An unescaped dot should disable atomic grouping. Technically, we could still allow it
+			// depending on what comes next in the regexp but it's a lot of work for something very
+			// situational
+			return false;
+		}
+
+		if (preg_match('#(?<!\\\\)(?>\\\\\\\\)*[+*]#', $expr))
+		{
+			// A quantifier disables atomic grouping. Again, this could be enabled depending on the
+			// context
+			return false;
+		}
+
+		if (preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\(?(?<!\\()\\?#', $expr))
+		{
+			// An unescaped ? is a quantifier, unless it's preceded by an unescaped (
+			return false;
+		}
+
+		if (preg_match('#(?<!\\\\)(?>\\\\\\\\)*\\\\[a-z0-9]#', $expr))
+		{
+			// Escape sequences disable atomic grouping because they might overlap with another
+			// branch
+			return false;
+		}
+
+		// The regexp looks harmless enough to enable atomic grouping
+		return true;
 	}
 }
