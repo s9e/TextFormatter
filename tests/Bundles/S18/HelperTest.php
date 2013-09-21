@@ -36,6 +36,66 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox applyTimeformat() replaces numeric timestamps in [quote] with a human-readable date
+	*/
+	public function testTimeformatQuote()
+	{
+		if (function_exists('timeformat'))
+		{
+			$this->markTestSkipped('timeformat() should not exist');
+		}
+
+		$xml = S18::parse('[quote date=1344833733]Hello[/quote]');
+		$this->assertSame(
+			'<rt><QUOTE date="1344833733"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
+			$xml
+		);
+		$this->assertSame(
+			'<rt><QUOTE date="August 13, 2012, 06:55:33 AM"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
+			Helper::applyTimeformat($xml)
+		);
+	}
+
+	/**
+	* @testdox s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [time] with a human-readable date
+	*/
+	public function testTimeformatTime()
+	{
+		if (function_exists('timeformat'))
+		{
+			$this->markTestSkipped('timeformat() should not exist');
+		}
+
+		$xml = S18::parse('[time]1344833733[/time]');
+		$this->assertSame(
+			'<rt><TIME time="1344833733"><st>[time]</st>1344833733<et>[/time]</et></TIME></rt>',
+			$xml
+		);
+		$this->assertSame(
+			'<rt><TIME time="August 13, 2012, 06:55:33 AM"><st>[time]</st>1344833733<et>[/time]</et></TIME></rt>',
+			Helper::applyTimeformat($xml)
+		);
+	}
+
+	/**
+	* @testdox applyTimeformat() uses timeformat() if it exists
+	*/
+	public function testTimeformatQuoteSMF()
+	{
+		$this->mockSMF();
+
+		$xml = S18::parse('[quote date=1344833733]Hello[/quote]');
+		$this->assertSame(
+			'<rt><QUOTE date="1344833733"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
+			$xml
+		);
+		$this->assertSame(
+			'<rt><QUOTE date="s:10:&quot;1344833733&quot;;"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
+			Helper::applyTimeformat($xml)
+		);
+	}
+
+	/**
 	* @testdox configureRenderer() set lang strings and parameters if SMF is loaded
 	*/
 	public function testConfigureRendererSMF()
@@ -64,42 +124,6 @@ class HelperTest extends Test
 		         ->with($params);
 
 		Helper::configureRenderer($renderer);
-	}
-
-	/**
-	* @testdox applyTimeformat() replaces numeric timestamps in [quote] with a human-readable date
-	*/
-	public function testTimeformatQuote()
-	{
-		$this->mockSMF();
-
-		$xml = S18::parse('[quote date=1344833733]Hello[/quote]');
-		$this->assertSame(
-			'<rt><QUOTE date="1344833733"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
-			$xml
-		);
-		$this->assertSame(
-			'<rt><QUOTE date="s:10:&quot;1344833733&quot;;"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
-			Helper::applyTimeformat($xml)
-		);
-	}
-
-	/**
-	* @testdox s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [time] with a human-readable date
-	*/
-	public function testTimeformatTime()
-	{
-		$this->mockSMF();
-
-		$xml = S18::parse('[time]1344833733[/time]');
-		$this->assertSame(
-			'<rt><TIME time="1344833733"><st>[time]</st>1344833733<et>[/time]</et></TIME></rt>',
-			$xml
-		);
-		$this->assertSame(
-			'<rt><TIME time="s:10:&quot;1344833733&quot;;"><st>[time]</st>1344833733<et>[/time]</et></TIME></rt>',
-			Helper::applyTimeformat($xml)
-		);
 	}
 
 	protected function _testIurl($url, $expected)

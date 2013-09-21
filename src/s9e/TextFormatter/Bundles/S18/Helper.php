@@ -23,13 +23,17 @@ abstract class Helper
 	*/
 	public static function applyTimeformat($xml)
 	{
-		if (substr($xml, 0, 3) === '<rt' && defined('SMF') && function_exists('timeformat'))
+		if (substr($xml, 0, 3) === '<rt')
 		{
 			$xml = preg_replace_callback(
 				'/(<(?:QUOT|TIM)E [^>]*?\\b(?:dat|tim)e=")(\\d+)(?=")/',
 				function ($m)
 				{
-					return $m[1] . htmlspecialchars(timeformat($m[2]), ENT_COMPAT);
+					$datetime = (function_exists('timeformat'))
+					          ? timeformat($m[2])
+					          : strftime('%B %d, %Y, %I:%M:%S %p', $m[2]);
+
+					return $m[1] . htmlspecialchars($datetime, ENT_COMPAT);
 				},
 				$xml
 			);
