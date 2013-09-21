@@ -22,7 +22,7 @@ var BuiltInFilters =
 	*/
 	filterColor: function(attrValue)
 	{
-		return /^(?:#[0-9a-f]{3,6}|[a-z]+|rgb\(\d{1,3}, *\d{1,3}, *\d{1,3}\))$/i.test(attrValue) ? attrValue : false;
+		return /^(?:#[0-9a-f]{3,6}|rgb\(\d{1,3}, *\d{1,3}, *\d{1,3}\)|[a-z]+)$/i.test(attrValue) ? attrValue : false;
 	},
 
 	/**
@@ -379,7 +379,7 @@ var BuiltInFilters =
 	encodeUrlToAscii: function(url)
 	{
 //		if (function_exists('idn_to_ascii')
-//		 && preg_match('#^([^:]+://(?:[^/]+@)?)([^/]+)#i', $url, $m))
+//		 && preg_match('#^([^:]+://(?>[^/@]+@)?)([^/]+)#i', $url, $m))
 //		{
 //			$url = $m[1] . idn_to_ascii($m[2]) . substr($url, strlen($m[0]));
 //		}

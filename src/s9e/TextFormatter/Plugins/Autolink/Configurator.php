@@ -64,7 +64,7 @@ class Configurator extends ConfiguratorBase
 		return [
 			'attrName'   => $this->attrName,
 			'quickMatch' => $this->quickMatch,
-			'regexp'     => '#' . $schemeRegexp . '://\\S(?:[^\\s\\[\\]]*(?:\\[\\w*\\])?)++#iS',
+			'regexp'     => '#' . $schemeRegexp . '://\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
 			'tagName'    => $this->tagName
 		];
 	}

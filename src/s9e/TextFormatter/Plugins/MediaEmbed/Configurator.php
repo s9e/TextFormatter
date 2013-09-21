@@ -235,7 +235,7 @@ class Configurator extends ConfiguratorBase
 		if (isset($attrRegexps['id']))
 		{
 			// Replace the non-capturing subpattern with a named subpattern
-			$attrRegexp = str_replace('^(?:', "^(?'id'", $attrRegexps['id']);
+			$attrRegexp = preg_replace('/\\^\\(\\?[:>]/', "^(?'id'", $attrRegexps['id']);
 			$tag->attributePreprocessors->add('url', $attrRegexp);
 		}
 

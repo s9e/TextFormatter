@@ -48,7 +48,7 @@ class Parser extends ParserBase
 		if ($hasSingleQuote || $hasDoubleQuote || strpos($text, 'x') !== false)
 		{
 			preg_match_all(
-				'/[0-9](?:\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
+				'/[0-9](?>\'s|["\']? ?x(?= ?[0-9])|["\'])/S',
 				$text,
 				$matches,
 				PREG_OFFSET_CAPTURE
@@ -146,7 +146,7 @@ class Parser extends ParserBase
 		if (strpos($text, '(') !== false)
 		{
 			preg_match_all(
-				'/\\((?:c|r|tm)\\)/i',
+				'/\\((?>c|r|tm)\\)/i',
 				$text,
 				$matches,
 				PREG_OFFSET_CAPTURE

@@ -25,7 +25,7 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var string Regexp that matches entities
 	*/
-	protected $regexp = '/&(?:[a-z]+|#[0-9]+|#x[0-9a-f]+);/i';
+	protected $regexp = '/&(?>[a-z]+|#(?>[0-9]+|x[0-9a-f]+));/i';
 
 	/**
 	* @var string Name of the tag used by this plugin

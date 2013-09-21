@@ -64,7 +64,7 @@ class BBCodeMonkey
 	public $tokenRegexp = [
 		'COLOR'      => '[a-zA-Z]+|#[0-9a-fA-F]+',
 		'EMAIL'      => '[^@]+@.+?',
-		'FLOAT'      => '(?:0|-?[1-9]\\d*)(?:\\.\\d+)?(?:e[1-9]\\d*)?',
+		'FLOAT'      => '(?>0|-?[1-9]\\d*)(?>\\.\\d+)?(?>e[1-9]\\d*)?',
 		'ID'         => '[-a-zA-Z0-9_]+',
 		'IDENTIFIER' => '[-a-zA-Z0-9_]+',
 		'INT'        => '0|-?[1-9]\\d*',

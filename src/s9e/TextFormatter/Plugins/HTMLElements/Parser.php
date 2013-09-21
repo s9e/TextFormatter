@@ -48,7 +48,7 @@ class Parser extends ParserBase
 
 			// Capture attributes
 			preg_match_all(
-				'/[a-z][-a-z]*(?:\\s*=\\s*(?:"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i',
+				'/[a-z][-a-z]*(?>\\s*=\\s*(?>"[^"]*"|\'[^\']*\'|[^\\s"\'=<>`]+))?/i',
 				$m[3][0],
 				$attrMatches,
 				PREG_SET_ORDER
