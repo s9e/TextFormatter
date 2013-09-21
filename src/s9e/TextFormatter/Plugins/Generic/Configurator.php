@@ -56,10 +56,9 @@ class Configurator extends ConfiguratorBase
 			throw new InvalidArgumentException('Invalid regexp');
 		}
 
-		// Regexp used to find captures (supported: \1, $1, ${1}) in the replacement. If the version
-		// of PCRE is recent enough (7.2, released 19-Jun-07) we ensure that the captures are not
-		// preceded with an odd number of backslashes (even number is fine)
-		$assertion         = (PCRE_VERSION >= 7.2) ? '(?<!\\\\)(?:\\\\\\\\)*\\K' : '';
+		// Regexp used to find captures (supported: \1, $1, ${1}) in the replacement. We check that
+		// the captures are not preceded with an odd number of backslashes (even number is fine)
+		$assertion         = '(?<!\\\\)(?:\\\\\\\\)*\\K';
 		$captureSubpattern = '(?:\\\\[0-9]+|\\$[0-9]+|\\$\\{[0-9]+\\})';
 		$capturesRegexp    = '#' . $assertion . $captureSubpattern . '#';
 
