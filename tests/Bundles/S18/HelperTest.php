@@ -37,7 +37,6 @@ class HelperTest extends Test
 
 	/**
 	* @testdox configureRenderer() set lang strings and parameters if SMF is loaded
-	* @runInSeparateProcess
 	*/
 	public function testConfigureRendererSMF()
 	{
@@ -69,7 +68,6 @@ class HelperTest extends Test
 
 	/**
 	* @testdox applyTimeformat() replaces numeric timestamps in [quote] with a human-readable date
-	* @runInSeparateProcess
 	*/
 	public function testTimeformatQuote()
 	{
@@ -88,7 +86,6 @@ class HelperTest extends Test
 
 	/**
 	* @testdox s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [time] with a human-readable date
-	* @runInSeparateProcess
 	*/
 	public function testTimeformatTime()
 	{
