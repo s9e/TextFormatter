@@ -19,7 +19,7 @@ $configurator->plugins->load('MarkdownLite');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = '[inline url text](http://example.org)'; 
+$text = '[inline url text](http://example.org)';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

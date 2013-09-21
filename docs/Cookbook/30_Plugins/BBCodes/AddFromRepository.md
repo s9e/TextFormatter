@@ -11,7 +11,7 @@ $configurator->BBCodes->addFromRepository('URL');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Here be [url=http://example.org]the [b]bold[/b] [i]italic[/i] URL[/url].'; 
+$text = 'Here be [url=http://example.org]the [b]bold[/b] [i]italic[/i] URL[/url].';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

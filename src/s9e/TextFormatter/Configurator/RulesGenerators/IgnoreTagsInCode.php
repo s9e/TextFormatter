@@ -24,7 +24,7 @@ class IgnoreTagsInCode implements BooleanRulesGenerator
 		{
 			return ['ignoreTags' => true];
 		}
-		
+
 		return [];
 	}
 }

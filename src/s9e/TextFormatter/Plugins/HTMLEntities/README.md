@@ -13,7 +13,7 @@ $configurator->plugins->load('HTMLEntities');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'I &hearts; HTML.'; 
+$text = 'I &hearts; HTML.';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

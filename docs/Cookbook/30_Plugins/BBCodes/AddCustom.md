@@ -17,7 +17,7 @@ $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
 // Note how values outside of range are automatically adjusted
-$text = '[size=5]Small text[/size], [size=24]big[/size], [size=999]biggest[/size].'; 
+$text = '[size=5]Small text[/size], [size=24]big[/size], [size=999]biggest[/size].';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

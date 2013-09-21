@@ -35,7 +35,7 @@ class RepositoryCollectionTest extends Test
 		$collection->add('foo', __DIR__ . '/../../../../src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml');
 
 		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\Repository', 
+			's9e\\TextFormatter\\Plugins\\BBCodes\\Configurator\\Repository',
 			$collection->get('foo')
 		);
 	}

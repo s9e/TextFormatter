@@ -22,7 +22,7 @@ class TemplateParser
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
-	* @var string Regexp that matches the names of all void elements 
+	* @var string Regexp that matches the names of all void elements
 	* @link http://www.w3.org/TR/html-markup/syntax.html#void-elements
 	*/
 	public static $voidRegexp = '/^(?:area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)$/Di';

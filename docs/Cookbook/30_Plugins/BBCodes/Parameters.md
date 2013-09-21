@@ -26,7 +26,7 @@ $configurator->BBCodes->addCustom(
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = '[noguests]Some [color=red]top secret[/color] info[/noguests]'; 
+$text = '[noguests]Some [color=red]top secret[/color] info[/noguests]';
 $xml  = $parser->parse($text);
 
 // Set up the values before rendering

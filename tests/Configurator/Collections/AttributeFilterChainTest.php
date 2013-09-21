@@ -15,7 +15,7 @@ class AttributeFilterChainTest extends Test
 	public function doNothing() {}
 
 	/**
-	* @testdox append() throws an InvalidArgumentException on invalid callbacks 
+	* @testdox append() throws an InvalidArgumentException on invalid callbacks
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of AttributeFilter
 	*/
@@ -26,7 +26,7 @@ class AttributeFilterChainTest extends Test
 	}
 
 	/**
-	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks 
+	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Filter '*invalid*' is neither callable nor an instance of AttributeFilter
 	*/
@@ -37,7 +37,7 @@ class AttributeFilterChainTest extends Test
 	}
 
 	/**
-	* @testdox append() throws an InvalidArgumentException on uncallable callbacks 
+	* @testdox append() throws an InvalidArgumentException on uncallable callbacks
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage is neither callable nor an instance of AttributeFilter
 	*/
@@ -48,7 +48,7 @@ class AttributeFilterChainTest extends Test
 	}
 
 	/**
-	* @testdox prepend() throws an InvalidArgumentException on uncallable callbacks 
+	* @testdox prepend() throws an InvalidArgumentException on uncallable callbacks
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage is neither callable nor an instance of AttributeFilter
 	*/

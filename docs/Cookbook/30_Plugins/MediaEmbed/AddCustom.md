@@ -7,7 +7,7 @@ To add a site, you'll need to pass as a second argument to `add()` an array that
     * `extract` is a regexp used to extract values from the URL
     * `scrape` is an array that must contain at least one of each:
       * `match` is a regexp used to determine whether to scrape the content of the URL
-      * `extract` is a regexp used to extract values from the scraped page 
+      * `extract` is a regexp used to extract values from the scraped page
   * plus at least one of the following:
     * `iframe`: array that contains the `width`, `height` and `src` of the iframe used to display the embedded content *(other attributes such as "allowfullscreen" are automatically added)*
     * `flash`: array that contains the `width`, `height` and `src` of the flash object used to display the embedded content *(will create a pair of boilerplate `<object>` and `<embed>` elements)*

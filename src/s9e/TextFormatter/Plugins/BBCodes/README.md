@@ -24,7 +24,7 @@ $configurator->BBCodes->addFromRepository('URL');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Here be [url=http://example.org]the [b]bold[/b] URL[/url].'; 
+$text = 'Here be [url=http://example.org]the [b]bold[/b] URL[/url].';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
@@ -48,7 +48,7 @@ $configurator->BBCodes->addCustom(
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = '[color=pink]La vie en rose.[/color]'; 
+$text = '[color=pink]La vie en rose.[/color]';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

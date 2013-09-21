@@ -10,7 +10,7 @@ $configurator->Emoticons->add(':(', '<img src="sad.png" alt=":(" title="Sad">');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Hello world :) :('; 
+$text = 'Hello world :) :(';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

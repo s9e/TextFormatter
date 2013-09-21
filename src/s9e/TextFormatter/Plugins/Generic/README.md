@@ -19,7 +19,7 @@ $configurator->Generic->add(
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = "Twitter's official tweets @Twitter"; 
+$text = "Twitter's official tweets @Twitter";
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
@@ -63,7 +63,7 @@ $configurator->Generic->add('/~(.*?)~/', '<s>$1</s>');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'This is _emphasised ~striked~ text_.'; 
+$text = 'This is _emphasised ~striked~ text_.';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

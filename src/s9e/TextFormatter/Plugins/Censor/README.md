@@ -17,7 +17,7 @@ $configurator->Censor->add('banana*', 'onion');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Putting apples in an applepie. Chopping some bananas on top.'; 
+$text = 'Putting apples in an applepie. Chopping some bananas on top.';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

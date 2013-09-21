@@ -16,7 +16,7 @@ $configurator->Emoticons->add(':)', '<img src="happy.png" alt=":)" title="Happy"
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'The emoticon \\:) becomes :)'; 
+$text = 'The emoticon \\:) becomes :)';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
@@ -37,7 +37,7 @@ $configurator->Escaper->escapeAll();
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 's9e\\TextFormatter -- s9e\\\\TextFormatter'; 
+$text = 's9e\\TextFormatter -- s9e\\\\TextFormatter';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

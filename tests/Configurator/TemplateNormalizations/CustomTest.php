@@ -13,7 +13,7 @@ class CustomTest extends Test
 {
 	/**
 	* @testdox Constructor expects a valid callback
-	* @expectedException PHPUnit_Framework_Error 
+	* @expectedException PHPUnit_Framework_Error
 	* @expectedExceptionMessage Argument 1 passed to s9e\TextFormatter\Configurator\TemplateNormalizations\Custom::__construct() must be callable, string given
 	*/
 	public function testInvalidCallback()

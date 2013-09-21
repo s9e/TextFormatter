@@ -257,7 +257,7 @@ abstract class RulesHelper
 		// Remove unusable tags from the targets
 		foreach ($matrix as $tagName => &$tagMatrix)
 		{
-			$tagMatrix['allowedChildren'] 
+			$tagMatrix['allowedChildren']
 				= array_intersect_key($tagMatrix['allowedChildren'], $usableTags);
 
 			$tagMatrix['allowedDescendants']

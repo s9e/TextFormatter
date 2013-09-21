@@ -99,7 +99,7 @@ class TemplateTest extends Test
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\TemplateNormalizer')
 		             ->disableOriginalConstructor()
 		             ->getMock();
-		
+
 		$template = new Template('<br/>');
 		$template->normalize($mock);
 

@@ -6,7 +6,7 @@ s9e\\TextFormatter is developed on PHP 5.5 and is compatible with PHP 5.3.3 and 
 
 #### PHP 5.3
 ```json
-{   
+{
     "require": {
         "s9e/text-formatter": "dev-dev/php5.3"
     }
@@ -15,7 +15,7 @@ s9e\\TextFormatter is developed on PHP 5.5 and is compatible with PHP 5.3.3 and 
 
 #### PHP 5.4
 ```json
-{   
+{
     "require": {
         "s9e/text-formatter": "dev-dev/php5.4"
     }
@@ -24,7 +24,7 @@ s9e\\TextFormatter is developed on PHP 5.5 and is compatible with PHP 5.3.3 and 
 
 #### PHP 5.5
 ```json
-{   
+{
     "require": {
         "s9e/text-formatter": "dev-master"
     }

@@ -20,7 +20,7 @@ EOT
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = '[spoiler]Gandalf kills Voldermort[/spoiler]'; 
+$text = '[spoiler]Gandalf kills Voldermort[/spoiler]';
 $xml  = $parser->parse($text);
 
 // Set up the values before rendering

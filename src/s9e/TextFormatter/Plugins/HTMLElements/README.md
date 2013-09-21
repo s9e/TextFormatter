@@ -15,7 +15,7 @@ $configurator->HTMLElements->allowElement('i');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = '<b>Bold</b> and <i>italic</i> are allowed, but only <b class="important">bold</b> can use the "class" attribute, not <i class="important">italic</i>.'; 
+$text = '<b>Bold</b> and <i>italic</i> are allowed, but only <b class="important">bold</b> can use the "class" attribute, not <i class="important">italic</i>.';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
@@ -64,7 +64,7 @@ $configurator->HTMLElements->allowUnsafeAttribute('b', 'onmouseover');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = '<script>alert(1)</script><b onmouseover="alert(1)">Hover me</b>.'; 
+$text = '<script>alert(1)</script><b onmouseover="alert(1)">Hover me</b>.';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

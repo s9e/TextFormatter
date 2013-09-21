@@ -72,7 +72,7 @@ class RulesGeneratorTest extends Test
 		foreach ($tags as $tagName => $template)
 		{
 			$tag = $tagCollection->add($tagName);
-			
+
 			if (isset($template))
 			{
 				$tag->defaultTemplate = $template;

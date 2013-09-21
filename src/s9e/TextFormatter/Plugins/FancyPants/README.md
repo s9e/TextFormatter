@@ -11,7 +11,7 @@ $configurator->plugins->load('FancyPants');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Fancy "quotes", symbols (c)(tm), dashes -- and elipsis...'; 
+$text = 'Fancy "quotes", symbols (c)(tm), dashes -- and elipsis...';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

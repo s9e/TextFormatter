@@ -11,7 +11,7 @@ $configurator->plugins->load('Autoemail');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Email me at user@example.org'; 
+$text = 'Email me at user@example.org';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 

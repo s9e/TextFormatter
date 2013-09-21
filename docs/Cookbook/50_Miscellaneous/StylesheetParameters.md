@@ -16,7 +16,7 @@ $configurator->stylesheet->parameters['username'] = 'you';
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Hello [you]'; 
+$text = 'Hello [you]';
 $xml  = $parser->parse($text);
 
 // Let's see how the text is rendered if "username" is not set
@@ -52,7 +52,7 @@ $usedParameters = $configurator->stylesheet->getUsedParameters();
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Are you are logged in? [noguests]Yes you are.[/noguests]'; 
+$text = 'Are you are logged in? [noguests]Yes you are.[/noguests]';
 $xml  = $parser->parse($text);
 
 // First with no value

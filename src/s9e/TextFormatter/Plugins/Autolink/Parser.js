@@ -7,7 +7,7 @@ matches.forEach(function(m)
 
 	// Remove trailing punctuation. We preserve right parentheses if there's a balanced
 	// number of parentheses in the URL, e.g.
-	//   http://en.wikipedia.org/wiki/Mars_(disambiguation) 
+	//   http://en.wikipedia.org/wiki/Mars_(disambiguation)
 	while (1)
 	{
 		// We remove some common ASCII punctuation and whitespace. We don't have access to Unicode

@@ -13,7 +13,7 @@ $configurator->plugins->load('Autolink');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'More info at http://example.org.'; 
+$text = 'More info at http://example.org.';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
@@ -34,7 +34,7 @@ $configurator->urlConfig->allowScheme('irc');
 $parser   = $configurator->getParser();
 $renderer = $configurator->getRenderer();
 
-$text = 'Download from ftp://example.org or come chat at irc://example.org/help.'; 
+$text = 'Download from ftp://example.org or come chat at irc://example.org/help.';
 $xml  = $parser->parse($text);
 $html = $renderer->render($xml);
 
