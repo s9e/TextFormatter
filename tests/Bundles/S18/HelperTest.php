@@ -51,7 +51,7 @@ class HelperTest extends Test
 			$xml
 		);
 		$this->assertSame(
-			'<rt><QUOTE date="August 13, 2012, 06:55:33 AM"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
+			'<rt><QUOTE date="August 13, 2012, 04:55:33 AM"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
 			Helper::applyTimeformat($xml)
 		);
 	}
@@ -72,7 +72,7 @@ class HelperTest extends Test
 			$xml
 		);
 		$this->assertSame(
-			'<rt><TIME time="August 13, 2012, 06:55:33 AM"><st>[time]</st>1344833733<et>[/time]</et></TIME></rt>',
+			'<rt><TIME time="August 13, 2012, 04:55:33 AM"><st>[time]</st>1344833733<et>[/time]</et></TIME></rt>',
 			Helper::applyTimeformat($xml)
 		);
 	}
