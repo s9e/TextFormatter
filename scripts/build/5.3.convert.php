@@ -143,7 +143,7 @@ function convertCustom($filepath, &$file)
 					"\n",
 					'if (!is_callable($callback))
 					{
-						trigger_error("Argument 1 passed to " . __METHOD__ . "() must be an instance of DOMNode, " . gettype($callback) . " given", E_USER_ERROR);
+						trigger_error("Argument 1 passed to " . __METHOD__ . "() must be callable, " . gettype($callback) . " given", E_USER_ERROR);
 					}
 
 					$this->callback = $callback;'
