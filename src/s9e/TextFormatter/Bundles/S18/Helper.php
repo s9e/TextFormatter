@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Bundles\S18;
 
 use s9e\TextFormatter\Parser\BuiltInFilters;
 use s9e\TextFormatter\Parser\Logger;
-//use s9e\TextFormatter\Renderer;
+use s9e\TextFormatter\Renderer as AbstractRenderer;
 
 abstract class Helper
 {
@@ -50,7 +50,7 @@ abstract class Helper
 	* @param  Renderer $renderer
 	* @return void
 	*/
-	public static function configureRenderer(\s9e\TextFormatter\Renderer $renderer)
+	public static function configureRenderer(AbstractRenderer $renderer)
 	{
 		global $modSettings, $scripturl, $txt, $user_info;
 
