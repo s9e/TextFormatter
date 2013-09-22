@@ -7,6 +7,7 @@
 
 namespace s9e\TextFormatter\Bundles\S18;
 
+use s9e\TextFormatter\Parser;
 use s9e\TextFormatter\Parser\BuiltInFilters;
 use s9e\TextFormatter\Parser\Logger;
 use s9e\TextFormatter\Renderer as AbstractRenderer;
@@ -40,6 +41,51 @@ abstract class Helper
 		}
 
 		return $xml;
+	}
+
+	/**
+	* Configure the given parser to current SMF environment
+	*
+	* NOTE: has no effect if SMF is not loaded
+	*
+	* @param  Parser $parser
+	* @return void
+	*/
+	public static function configureParser(Parser $parser)
+	{
+		global $modSettings;
+
+		if (!defined('SMF'))
+		{
+			return;
+		}
+
+		$plugins = [
+			'Autoemail'    => 'autoLinkUrls',
+			'Autolink'     => 'autoLinkUrls',
+			'BBCodes'      => 'enableBBC',
+			'HTMLElements' => 'enablePostHTML'
+		];
+		foreach ($plugins as $pluginName => $settingName)
+		{
+			if (!$modSettings[$settingName])
+			{
+				$parser->disablePlugin($pluginName);
+			}
+		}
+
+		if ($modSettings['disabledBBC'])
+		{
+			foreach (explode(',', strtoupper($modSettings['disabledBBC'])) as $bbcodeName)
+			{
+				$parser->disableTag($bbcodeName);
+			}
+		}
+
+		if (!$modSettings['enableEmbeddedFlash'])
+		{
+			$parser->disableTag('FLASH');
+		}
 	}
 
 	/**

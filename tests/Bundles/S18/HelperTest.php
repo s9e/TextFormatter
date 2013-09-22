@@ -14,10 +14,22 @@ class HelperTest extends Test
 {
 	public function mockSMF()
 	{
-		if (!defined('SMF'))
-		{
-			include __DIR__ . '/env.php';
-		}
+		include __DIR__ . '/env.php';
+	}
+
+	/**
+	* @testdox configureParser() has no effect if SMF is not loaded
+	*/
+	public function testConfigureParserNone()
+	{
+		$parser = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
+		               ->disableOriginalConstructor()
+		               ->getMock();
+
+		$parser->expects($this->never())->method('disablePlugin');
+		$parser->expects($this->never())->method('disableTag');
+
+		Helper::configureParser($parser);
 	}
 
 	/**
@@ -93,6 +105,119 @@ class HelperTest extends Test
 			'<rt><QUOTE date="s:10:&quot;1344833733&quot;;"><st>[quote date=1344833733]</st>Hello<et>[/quote]</et></QUOTE></rt>',
 			Helper::applyTimeformat($xml)
 		);
+	}
+
+	/**
+	* @testdox configureParser() disables the Autoemail and Autolink plugins if $modSettings['autoLinkUrls'] is falsy
+	*/
+	public function testConfigureParserDisableAutoPlugins()
+	{
+		global $modSettings;
+
+		$this->mockSMF();
+		$modSettings['autoLinkUrls'] = 0;
+
+		$parser = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
+		               ->disableOriginalConstructor()
+		               ->getMock();
+
+		$parser->expects($this->at(0))
+		       ->method('disablePlugin')
+		       ->with('Autoemail');
+
+		$parser->expects($this->at(1))
+		       ->method('disablePlugin')
+		       ->with('Autolink');
+
+		Helper::configureParser($parser);
+	}
+
+	/**
+	* @testdox configureParser() disables the BBCodes plugin if $modSettings['enableBBC'] is falsy
+	*/
+	public function testConfigureParserDisableBBCodes()
+	{
+		global $modSettings;
+
+		$this->mockSMF();
+		$modSettings['enableBBC'] = 0;
+
+		$parser = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
+		               ->disableOriginalConstructor()
+		               ->getMock();
+
+		$parser->expects($this->once())
+		       ->method('disablePlugin')
+		       ->with('BBCodes');
+
+		Helper::configureParser($parser);
+	}
+
+	/**
+	* @testdox configureParser() disables the HTMLElements plugin if $modSettings['enablePostHTML'] is falsy
+	*/
+	public function testConfigureParserDisableHTMLElements()
+	{
+		global $modSettings;
+
+		$this->mockSMF();
+		$modSettings['enablePostHTML'] = 0;
+
+		$parser = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
+		               ->disableOriginalConstructor()
+		               ->getMock();
+
+		$parser->expects($this->once())
+		       ->method('disablePlugin')
+		       ->with('HTMLElements');
+
+		Helper::configureParser($parser);
+	}
+
+	/**
+	* @testdox configureParser() disables the BBCodes found in $modSettings['disabledBBC']
+	*/
+	public function testConfigureParserDisableTags()
+	{
+		global $modSettings;
+
+		$this->mockSMF();
+		$modSettings['disabledBBC'] = 'bdo,green';
+
+		$parser = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
+		               ->disableOriginalConstructor()
+		               ->getMock();
+
+		$parser->expects($this->at(0))
+		       ->method('disableTag')
+		       ->with('BDO');
+
+		$parser->expects($this->at(1))
+		       ->method('disableTag')
+		       ->with('GREEN');
+
+		Helper::configureParser($parser);
+	}
+
+	/**
+	* @testdox configureParser() disables the FLASH tag if $modSettings['enableEmbeddedFlash'] is falsy
+	*/
+	public function testConfigureParserDisableFlash()
+	{
+		global $modSettings;
+
+		$this->mockSMF();
+		$modSettings['enableEmbeddedFlash'] = 0;
+
+		$parser = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
+		               ->disableOriginalConstructor()
+		               ->getMock();
+
+		$parser->expects($this->once())
+		       ->method('disableTag')
+		       ->with('FLASH');
+
+		Helper::configureParser($parser);
 	}
 
 	/**

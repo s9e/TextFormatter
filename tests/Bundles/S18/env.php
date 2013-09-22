@@ -24,7 +24,14 @@ if (!function_exists('timeformat'))
 
 global $modSettings, $scripturl, $txt, $user_info;
 
-$modSettings = ['smileys_url' => '/path/to/smileys'];
+$modSettings = [
+	'autoLinkUrls'        => 1,
+	'disabledBBC'         => '',
+	'enableBBC'           => 1,
+	'enableEmbeddedFlash' => 1,
+	'enablePostHTML'      => 1,
+	'smileys_url'         => '/path/to/smileys',
+];
 
 $scripturl = '/path/to/smf';
 

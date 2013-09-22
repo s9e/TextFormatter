@@ -10,6 +10,9 @@
       * [Expert mode: configure everything yourself](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/Basic_usage/Configuration/02_Expert.md)
     * [Unparsing](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/Basic_usage/Unparsing.md)
 
+### **Bundles**
+  * [S18, a bundle compatible with SMF 2.1 markup](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/10_Bundles/S18.md)
+
 ### **Plugins**
   * **BBCodes**
     * [Add custom BBCodes](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/BBCodes/AddCustom.md)

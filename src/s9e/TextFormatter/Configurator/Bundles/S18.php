@@ -182,7 +182,7 @@ class S18 extends Bundle
 				'<em>{TEXT}</em>'
 			],
 			[
-				'[img alt={TEXT;optional} height={NUMBER;optional} width={NUMBER;optional}]{URL}[/img]',
+				'[img alt={TEXT;optional} height={NUMBER;optional} src={URL;useContent} width={NUMBER;optional}]',
 				'<img src="{URL}">
 					<xsl:copy-of select="@alt"/>
 					<xsl:copy-of select="@height"/>
@@ -365,9 +365,7 @@ class S18 extends Bundle
 
 		// Allow some HTML
 		$configurator->HTMLElements->allowElement('a');
-		$configurator->HTMLElements->aliasElement('a', 'URL');
-		$configurator->HTMLElements->allowAttribute('a', 'href');
-		$configurator->HTMLElements->aliasAttribute('a', 'href', 'url');
+		$configurator->HTMLElements->allowAttribute('a', 'href')->required = true;
 		$configurator->HTMLElements->allowElement('b');
 		$configurator->HTMLElements->allowElement('blockquote');
 		$configurator->HTMLElements->allowElement('br');
@@ -376,21 +374,32 @@ class S18 extends Bundle
 		$configurator->HTMLElements->allowElement('hr');
 		$configurator->HTMLElements->allowElement('i');
 		$configurator->HTMLElements->allowElement('img');
-		$configurator->HTMLElements->aliasElement('img', 'IMG');
 		$configurator->HTMLElements->allowAttribute('img', 'alt');
 		$configurator->HTMLElements->allowAttribute('img', 'height');
+		$configurator->HTMLElements->allowAttribute('img', 'src')->required = true;
 		$configurator->HTMLElements->allowAttribute('img', 'width');
 		$configurator->HTMLElements->allowElement('ins');
 		$configurator->HTMLElements->allowElement('pre');
 		$configurator->HTMLElements->allowElement('s');
 		$configurator->HTMLElements->allowElement('u');
 
-		// Configure the HTML elements to require an [html] ancestor
+		// Prevent other tags to appear in [html]
+		$htmlTag = $configurator->tags['HTML'];
+		$htmlTag->rules->defaultChildRule = 'deny';
+		$htmlTag->rules->defaultDescendantRule = 'deny';
+
+		// Allow the HTML elements as descendants to [html] and make them require an [html] ancestor
+		// while preventing any other tag from appearing in [html]
 		foreach ($configurator->tags as $tagName => $tag)
 		{
 			if (substr($tagName, 0, 5) === 'html:')
 			{
 				$tag->rules->requireAncestor('html');
+				$htmlTag->rules->allowDescendant($tagName);
+			}
+			else
+			{
+				$htmlTag->rules->denyDescendant($tagName);
 			}
 		}
 	}
@@ -402,6 +411,7 @@ class S18 extends Bundle
 	{
 		return [
 			'beforeRender'  => 's9e\\TextFormatter\\Bundles\\S18\\Helper::applyTimeformat',
+			'parserSetup'   => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configureParser',
 			'rendererSetup' => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configureRenderer'
 		];
 	}

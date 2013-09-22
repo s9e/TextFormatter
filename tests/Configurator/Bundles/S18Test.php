@@ -19,6 +19,7 @@ class S18Test extends Test
 
 		$this->assertTrue(isset($configurator->Autoemail));
 		$this->assertTrue(isset($configurator->Autolink));
+		$this->assertTrue(isset($configurator->HTMLElements));
 
 		$this->assertTrue($configurator->BBCodes->exists('b'));
 		$this->assertTrue($configurator->BBCodes->exists('bdo'));
@@ -75,6 +76,7 @@ class S18Test extends Test
 		$this->assertEquals(
 			[
 				'beforeRender'  => 's9e\\TextFormatter\\Bundles\\S18\\Helper::applyTimeformat',
+				'parserSetup'   => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configureParser',
 				'rendererSetup' => 's9e\\TextFormatter\\Bundles\\S18\\Helper::configureRenderer'
 			],
 			S18::getOptions()

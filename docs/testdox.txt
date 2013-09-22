@@ -2261,10 +2261,16 @@ s9e\TextFormatter\Tests\Bundles\S18
  [x] Rendering tests
 
 s9e\TextFormatter\Tests\Bundles\S18\Helper
+ [x] configureParser() has no effect if SMF is not loaded
  [x] configureRenderer() has no effect if SMF is not loaded
  [x] applyTimeformat() replaces numeric timestamps in [quote] with a human-readable date
  [x] s9e\TextFormatter\Bundles\S18\Helper::timeformat() replaces numeric timestamps in [time] with a human-readable date
  [x] applyTimeformat() uses timeformat() if it exists
+ [x] configureParser() disables the Autoemail and Autolink plugins if $modSettings['autoLinkUrls'] is falsy
+ [x] configureParser() disables the BBCodes plugin if $modSettings['enableBBC'] is falsy
+ [x] configureParser() disables the HTMLElements plugin if $modSettings['enablePostHTML'] is falsy
+ [x] configureParser() disables the BBCodes found in $modSettings['disabledBBC']
+ [x] configureParser() disables the FLASH tag if $modSettings['enableEmbeddedFlash'] is falsy
  [x] configureRenderer() set lang strings and parameters if SMF is loaded
  [x] prependFtp() returns ftp:// URLs as-is
  [x] prependFtp() returns ftps:// URLs as-is
