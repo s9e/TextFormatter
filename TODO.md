@@ -44,3 +44,4 @@ TODO
 - RTE: could use custom (namespaced? or prefixed with x- or s9e-) tags with style="display:none" for metadata, e.g. <s9e:tag name="FOO" attributes='{"bar":1,"baz":2}'>....</s9e:tag> -- could even use <s9e:st/>, <s9e:et/> or <s9e:i/> to map the corresponding tags. Also, investigate wheter node events could be used to detect deletion/insertion (e.g. backspace or cut/paste)
 - Consider adding an option to abort parsing when tagLimit is exceeded (good for Censor)
 - Class names collisions in s9e\TextFormatter\Bundles\S18\Helper
+- One cheap way to filter a CSS value would be to set an attribute preprocessor for every supported CSS attribute, e.g. /(?<!\w)color\s*:\s*(?<color>#[0-9a-f]+|\w+)/ - could be mentionned in cookbook
