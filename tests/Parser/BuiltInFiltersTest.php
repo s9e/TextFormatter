@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Parser;
 
+use Closure;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
@@ -54,7 +55,7 @@ class BuiltInFiltersTest extends Test
 	* @testdox Filters work
 	* @dataProvider getData
 	*/
-	public function testFilters($filter, $original, $expected, array $logs = [], $setup = null)
+	public function testFilters($filter, $original, $expected, $logs = [], $setup = null)
 	{
 		$logger = new Logger;
 
@@ -62,6 +63,11 @@ class BuiltInFiltersTest extends Test
 			$expected,
 			Hax::filterValue($original, $filter, $logger, $setup)
 		);
+
+		if ($logs instanceof Closure)
+		{
+			$logs = $logs();
+		}
 
 		$this->assertSame($logs, $logger->get(), "Logs don't match");
 	}
@@ -293,18 +299,24 @@ class BuiltInFiltersTest extends Test
 				new Url,
 				"http://evil.example.com.",
 				false,
-				[
-/*
-					[
-						'err',
-						'URL host is not allowed',
-						[
-							'attrValue' => 'http://evil.example.com.',
-							'host'      => 'evil.example.com'
-						]
-					]
-*/
-				],
+				function ()
+				{
+					if (version_compare(PHP_VERSION, '5.5.4', '>='))
+					{
+						return [
+							[
+								'err',
+								'URL host is not allowed',
+								[
+									'attrValue' => 'http://evil.example.com.',
+									'host'      => 'evil.example.com'
+								]
+							]
+						];
+					}
+
+					return [];
+				},
 				function ($configurator)
 				{
 					$configurator->urlConfig->disallowHost('evil.example.com');
@@ -314,18 +326,24 @@ class BuiltInFiltersTest extends Test
 				new Url,
 				"http://evil\xEF\xBD\xA1example.com\xEF\xBD\xA1",
 				false,
-				[
-/*
-					[
-						'err',
-						'URL host is not allowed',
-						[
-							'attrValue' => 'http://evil.example.com.',
-							'host'      => 'evil.example.com'
-						]
-					]
-*/
-				],
+				function ()
+				{
+					if (version_compare(PHP_VERSION, '5.5.4', '>='))
+					{
+						return [
+							[
+								'err',
+								'URL host is not allowed',
+								[
+									'attrValue' => 'http://evil.example.com.',
+									'host'      => 'evil.example.com'
+								]
+							]
+						];
+					}
+
+					return [];
+				},
 				function ($configurator)
 				{
 					$configurator->urlConfig->disallowHost('evil.example.com');
