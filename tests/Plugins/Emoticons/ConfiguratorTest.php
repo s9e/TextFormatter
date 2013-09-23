@@ -2,8 +2,10 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Emoticons;
 
-use s9e\TextFormatter\Tests\Test;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\Emoticons\Configurator;
+use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Plugins\Emoticons\Configurator
@@ -158,31 +160,48 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $plugin->regexpStart can be changed
+	* @testdox $plugin->notAfter can be changed
 	*/
-	public function testRegexpStart()
+	public function testNotAfter()
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->add('x', 'x');
-		$plugin->regexpStart = '/(?<!\\w)';
+		$plugin->notAfter = '\\w';
 
 		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config);
 
 		$this->assertSame('/(?<!\\w)x/S', $config['regexp']);
 	}
 
 	/**
-	* @testdox $plugin->regexpEnd can be changed
+	* @testdox $plugin->notBefore can be changed
 	*/
-	public function testRegexpEnd()
+	public function testNotBefore()
 	{
 		$plugin = $this->configurator->plugins->load('Emoticons');
 		$plugin->add('x', 'x');
-		$plugin->regexpEnd = '(?!\\w)/S';
+		$plugin->notBefore = '\\w';
 
 		$config = $plugin->asConfig();
 
 		$this->assertSame('/x(?!\\w)/S', $config['regexp']);
+	}
+
+	/**
+	* @testdox $plugin->notAfter is removed from the JavaScript regexp and added separately to the config
+	*/
+	public function testNotAfterJavaScript()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add('x', 'x');
+		$plugin->notAfter = '\\w';
+
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config, 'JS');
+
+		$this->assertEquals(new RegExp('x', 'g'),   $config['regexp']);
+		$this->assertEquals(new RegExp('\\w'), $config['notAfter']);
 	}
 
 	/**

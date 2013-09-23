@@ -1921,8 +1921,9 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] Generates a regexp for its config array
  [x] The config array contains the name of the tag
  [x] asConfig() generates a quickMatch if applicable
- [x] $plugin->regexpStart can be changed
- [x] $plugin->regexpEnd can be changed
+ [x] $plugin->notAfter can be changed
+ [x] $plugin->notBefore can be changed
+ [x] $plugin->notAfter is removed from the JavaScript regexp and added separately to the config
  [x] getTemplate() merges identical templates
  [x] finalize() sets the tag's template
  [x] getTag() returns the tag that is associated with this plugin

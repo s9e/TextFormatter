@@ -24,7 +24,7 @@
     * [Quickly patch old parsed texts for a new list of words](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Censor/Reparse.md)
   * **Emoticons**
     * [Add emoticons](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/AddEmoticons.md)
-    * [Change the regexp used for emoticons](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/ChangeRegexp.md)
+    * [How to restrict where emoticons are parsed](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/ChangeRegexp.md)
   * **HTMLElements**
     * [Alias HTML elements to other tags](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/HTMLElements/Aliases.md)
   * **MediaEmbed**

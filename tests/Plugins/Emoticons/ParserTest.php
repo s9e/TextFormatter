@@ -39,6 +39,36 @@ class ParserTest extends Test
 					$constructor->Emoticons->add(':)', '<img src="s.png" alt=":)"/>');
 				}
 			],
+			[
+				':)',
+				'<rt><E>:)</E></rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->Emoticons->notAfter = '\\w';
+					$constructor->Emoticons->add(':)', '<img src="s.png"/>');
+				}
+			],
+			[
+				' :)',
+				'<rt> <E>:)</E></rt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->Emoticons->notAfter = '\\w';
+					$constructor->Emoticons->add(':)', '<img src="s.png"/>');
+				}
+			],
+			[
+				'x:)',
+				'<pt>x:)</pt>',
+				[],
+				function ($constructor)
+				{
+					$constructor->Emoticons->notAfter = '\\w';
+					$constructor->Emoticons->add(':)', '<img src="s.png"/>');
+				}
+			],
 		];
 	}
 

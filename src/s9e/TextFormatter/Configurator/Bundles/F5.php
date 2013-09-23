@@ -193,8 +193,8 @@ class F5 extends Bundle
 			':cool:' => 'cool'
 		];
 
-		$configurator->Emoticons->regexpStart = '%(?<!\\S)';
-		$configurator->Emoticons->regexpEnd   = '(?![\\pL\\pN])%u';
+		$configurator->Emoticons->notAfter  = '\\S';
+		$configurator->Emoticons->notBefore = '\\pL\\pN';
 
 		foreach ($emoticons as $code => $filename)
 		{
