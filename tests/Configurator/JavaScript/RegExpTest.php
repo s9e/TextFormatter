@@ -20,4 +20,13 @@ class RegExpTest extends Test
 			new RegExp('foo', 'i')
 		);
 	}
+
+	/**
+	* @testdox The default map as an empty entry that represents capture #0
+	*/
+	public function testDefaultMap()
+	{
+		$regexp = new RegExp('foo');
+		$this->assertSame([''], $regexp->map);
+	}
 }

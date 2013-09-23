@@ -19,7 +19,7 @@ class RegExp
 	/**
 	* @var array Capturing subpatterns' names
 	*/
-	public $map = [];
+	public $map = [''];
 
 	/**
 	* @var string Regexp
