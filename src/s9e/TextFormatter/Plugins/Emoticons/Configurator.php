@@ -14,7 +14,7 @@ use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Variant;
-use s9e\TextFormatter\Configurator\JavaScript\RegExp;
+use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\Emoticons\Configurator\EmoticonCollection;
@@ -122,13 +122,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 			// length of $this->notAfter plus 1 for the first "/" and 5 for "(?<!)"
 			$lpos = 6 + strlen($this->notAfter);
 			$rpos = strrpos($regexp, '/');
-			$jsRegexp = new RegExp(substr($regexp, $lpos, $rpos - $lpos), 'g');
+			$jsRegexp = RegexpConvertor::toJS('/' . substr($regexp, $lpos, $rpos - $lpos) . '/');
+			$jsRegexp->flags .= 'g';
 
 			$config['regexp'] = new Variant($regexp);
 			$config['regexp']->set('JS', $jsRegexp);
 
 			$config['notAfter'] = new Variant;
-			$config['notAfter']->set('JS', new RegExp($this->notAfter));
+			$config['notAfter']->set('JS', RegexpConvertor::toJS('/' . $this->notAfter . '/'));
 		}
 
 		// Try to find a quickMatch if none is set

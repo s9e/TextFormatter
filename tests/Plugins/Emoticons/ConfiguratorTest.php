@@ -175,6 +175,39 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The plugin's modified JavaScript regexp is correctly converted
+	*/
+	public function testNotAfterPluginJavaScriptConversion()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add('xx', 'xx');
+		$plugin->add('yy', 'yy');
+		$plugin->notAfter = '\\w';
+
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config, 'JS');
+
+		$this->assertEquals(new RegExp('(?:xx|yy)', 'g'), $config['regexp']);
+		$this->assertEquals(new RegExp('\\w'),            $config['notAfter']);
+	}
+
+	/**
+	* @testdox The JavaScript regexp used for notAfter is correctly converted
+	*/
+	public function testNotAfterJavaScriptConversion()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add('x', 'x');
+		$plugin->notAfter = '(?>x)';
+
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config, 'JS');
+
+		$this->assertEquals(new RegExp('x', 'g'), $config['regexp']);
+		$this->assertEquals(new RegExp('(?:x)'),  $config['notAfter']);
+	}
+
+	/**
 	* @testdox $plugin->notBefore can be changed
 	*/
 	public function testNotBefore()

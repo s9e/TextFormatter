@@ -1923,6 +1923,8 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] The config array contains the name of the tag
  [x] asConfig() generates a quickMatch if applicable
  [x] $plugin->notAfter can be changed
+ [x] The plugin's modified JavaScript regexp is correctly converted
+ [x] The JavaScript regexp used for notAfter is correctly converted
  [x] $plugin->notBefore can be changed
  [x] $plugin->notAfter is removed from the JavaScript regexp and added separately to the config
  [x] The regexp has the Unicode modifier if notAfter contains a Unicode property
