@@ -205,6 +205,36 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The regexp has the Unicode modifier if notAfter contains a Unicode property
+	*/
+	public function testNotAfterUnicode()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add('x', 'x');
+		$plugin->notAfter = '\\pL';
+
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config);
+
+		$this->assertSame('/(?<!\\pL)x/Su', $config['regexp']);
+	}
+
+	/**
+	* @testdox The regexp has the Unicode modifier if notBefore contains a Unicode property
+	*/
+	public function testNotBeforeUnicode()
+	{
+		$plugin = $this->configurator->plugins->load('Emoticons');
+		$plugin->add('x', 'x');
+		$plugin->notBefore = '\\pL';
+
+		$config = $plugin->asConfig();
+		ConfigHelper::filterVariants($config);
+
+		$this->assertSame('/x(?!\\pL)/Su', $config['regexp']);
+	}
+
+	/**
 	* @testdox getTemplate() merges identical templates
 	*/
 	public function testGetTemplateMerge()

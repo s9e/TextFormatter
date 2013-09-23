@@ -1924,6 +1924,8 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] $plugin->notAfter can be changed
  [x] $plugin->notBefore can be changed
  [x] $plugin->notAfter is removed from the JavaScript regexp and added separately to the config
+ [x] The regexp has the Unicode modifier if notAfter contains a Unicode property
+ [x] The regexp has the Unicode modifier if notBefore contains a Unicode property
  [x] getTemplate() merges identical templates
  [x] finalize() sets the tag's template
  [x] getTag() returns the tag that is associated with this plugin

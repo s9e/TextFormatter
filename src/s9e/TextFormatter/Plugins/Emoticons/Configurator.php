@@ -99,7 +99,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		$regexp .= '/S';
 
 		// Set the Unicode mode if Unicode properties are used
-		if (preg_match('/\\\\[pP](?>\\{\\^?\\w+\\}|\\w\\w)/', $regexp))
+		if (preg_match('/\\\\[pP](?>\\{\\^?\\w+\\}|\\w\\w?)/', $regexp))
 		{
 			$regexp .= 'u';
 		}
