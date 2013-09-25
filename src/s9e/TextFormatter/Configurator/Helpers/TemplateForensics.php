@@ -351,7 +351,7 @@ class TemplateForensics
 			}
 
 			// If any root node is a block-level element, we'll mark the template as such
-			if (!empty(self::$htmlElements[$elName]['b']))
+			if ($this->hasProperty($elName, 'b', $node))
 			{
 				$this->isBlock = true;
 			}
@@ -445,23 +445,18 @@ class TemplateForensics
 				}
 
 				// Test whether the element is void
-				if (!empty(self::$htmlElements[$elName]['v']))
+				if ($this->hasProperty($elName, 'v', $node))
 				{
 					$isVoid = true;
 				}
 
 				// Test whether the element uses the "empty" content model
-				if (!empty(self::$htmlElements[$elName]['e']))
+				if ($this->hasProperty($elName, 'e', $node))
 				{
-					// Test the XPath condition
-					if (!isset(self::$htmlElements[$elName]['e0'])
-					 || $this->evaluate(self::$htmlElements[$elName]['e0'], $node))
-					{
-						$isEmpty = true;
-					}
+					$isEmpty = true;
 				}
 
-				if (empty(self::$htmlElements[$elName]['t']))
+				if (!$this->hasProperty($elName, 't', $node))
 				{
 					// If the element isn't transparent, we reset its bitfield
 					$branchBitfield = "\0";
@@ -471,22 +466,22 @@ class TemplateForensics
 				}
 
 				// Test whether this element is a formatting element
-				if (empty(self::$htmlElements[$elName]['fe']))
+				if (!$this->hasProperty($elName, 'fe', $node))
 				{
 					$isFormattingElement = false;
 				}
 
 				// Test whether this branch preserves whitespace
-				if (!empty(self::$htmlElements[$elName]['pre']))
+				if ($this->hasProperty($elName, 'pre', $node))
 				{
 					$this->preservesWhitespace = true;
 				}
 
 				// Test whether this branch allows elements
-				$allowsElements = empty(self::$htmlElements[$elName]['to']);
+				$allowsElements = !$this->hasProperty($elName, 'to', $node);
 
 				// Test whether this branch allows text nodes
-				$allowsText = empty(self::$htmlElements[$elName]['nt']);
+				$allowsText = !$this->hasProperty($elName, 'nt', $node);
 
 				// allowChild rules are cumulative if transparent, and reset above otherwise
 				$branchBitfield |= $this->getBitfield($elName, 'ac', $node);
@@ -781,6 +776,29 @@ class TemplateForensics
 		}
 
 		return $bitfield;
+	}
+
+	/**
+	* Test whether given element has given property in context
+	*
+	* @param  string  $elName   Element name
+	* @param  string  $propName Property name, see self::$htmlElements
+	* @param  DOMNode $node     Context node
+	* @return bool
+	*/
+	protected function hasProperty($elName, $propName, DOMNode $node)
+	{
+		if (!empty(self::$htmlElements[$elName][$propName]))
+		{
+			// Test the XPath condition
+			if (!isset(self::$htmlElements[$elName][$propName . '0'])
+			 || $this->evaluate(self::$htmlElements[$elName][$propName . '0'], $node))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
