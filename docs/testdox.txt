@@ -275,10 +275,10 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] noBrDescendant() throws an exception if its argument is not a boolean
  [x] ignoreSurroundingWhitespace() accepts a boolean
  [x] ignoreSurroundingWhitespace() throws an exception if its argument is not a boolean
- [x] requireParent() throws an exception on invalid tag name
- [x] requireParent() normalizes tag name
  [x] requireAncestor() throws an exception on invalid tag name
  [x] requireAncestor() normalizes tag name
+ [x] requireParent() throws an exception on invalid tag name
+ [x] requireParent() normalizes tag name
  [x] merge() accepts a 2D array of rules
  [x] merge() correctly copies the defaultChildRule setting from an array
  [x] merge() correctly copies the defaultDescendantRule setting from an array

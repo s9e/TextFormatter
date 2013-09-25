@@ -624,32 +624,6 @@ class RulesetTest extends Test
 	}
 
 	/**
-	* @testdox requireParent() throws an exception on invalid tag name
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage Invalid tag name 'foo#bar'
-	*/
-	public function testRequireParentInvalidTagName()
-	{
-		$ruleset = new Ruleset;
-		$ruleset->requireParent('foo#bar');
-	}
-
-	/**
-	* @testdox requireParent() normalizes tag name
-	*/
-	public function testRequireParentNormalizesTagName()
-	{
-		$ruleset = new Ruleset;
-
-		$ruleset->requireParent('b');
-
-		$this->assertSame(
-			['requireParent' => ['B']],
-			iterator_to_array($ruleset)
-		);
-	}
-
-	/**
 	* @testdox requireAncestor() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo#bar'
@@ -671,6 +645,32 @@ class RulesetTest extends Test
 
 		$this->assertSame(
 			['requireAncestor' => ['B']],
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
+	* @testdox requireParent() throws an exception on invalid tag name
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
+	*/
+	public function testRequireParentInvalidTagName()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->requireParent('foo#bar');
+	}
+
+	/**
+	* @testdox requireParent() normalizes tag name
+	*/
+	public function testRequireParentNormalizesTagName()
+	{
+		$ruleset = new Ruleset;
+
+		$ruleset->requireParent('b');
+
+		$this->assertSame(
+			['requireParent' => ['B']],
 			iterator_to_array($ruleset)
 		);
 	}
