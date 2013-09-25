@@ -38,6 +38,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection = new RulesGeneratorList;
 		$this->collection->append('AutoCloseIfVoid');
 		$this->collection->append('AutoReopenFormattingElements');
+		$this->collection->append('BlockElementsFosterFormattingElements');
 		$this->collection->append('EnforceContentModels');
 		$this->collection->append('EnforceOptionalEndTags');
 		$this->collection->append('IgnoreTagsInCode');
@@ -99,6 +100,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		unset($rules['root']['breakParagraph']);
 		unset($rules['root']['closeAncestor']);
 		unset($rules['root']['closeParent']);
+		unset($rules['root']['fosterParent']);
 		unset($rules['root']['ignoreSurroundingWhitespace']);
 		unset($rules['root']['isTransparent']);
 		unset($rules['root']['requireAncestor']);

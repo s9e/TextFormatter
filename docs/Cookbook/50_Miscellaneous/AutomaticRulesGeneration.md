@@ -13,12 +13,13 @@ foreach ($configurator->rulesGenerator as $i => $generator)
 <pre>
 0	s9e\TextFormatter\Configurator\RulesGenerators\AutoCloseIfVoid
 1	s9e\TextFormatter\Configurator\RulesGenerators\AutoReopenFormattingElements
-2	s9e\TextFormatter\Configurator\RulesGenerators\EnforceContentModels
-3	s9e\TextFormatter\Configurator\RulesGenerators\EnforceOptionalEndTags
-4	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTagsInCode
-5	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTextIfDisallowed
-6	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
-7	s9e\TextFormatter\Configurator\RulesGenerators\NoBrIfWhitespaceIsPreserved
+2	s9e\TextFormatter\Configurator\RulesGenerators\BlockElementsFosterFormattingElements
+3	s9e\TextFormatter\Configurator\RulesGenerators\EnforceContentModels
+4	s9e\TextFormatter\Configurator\RulesGenerators\EnforceOptionalEndTags
+5	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTagsInCode
+6	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTextIfDisallowed
+7	s9e\TextFormatter\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
+8	s9e\TextFormatter\Configurator\RulesGenerators\NoBrIfWhitespaceIsPreserved
 </pre>
 
 ### Remove a generator

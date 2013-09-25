@@ -131,6 +131,25 @@ class RulesGeneratorTest extends Test
 					]
 				]
 			],
+			[
+				[
+					'B'   => '<b><xsl:apply-templates/></b>',
+					'DIV' => '<div><xsl:apply-templates/></div>'
+				],
+				[
+					'root' => [],
+					'tags' => [
+						'B' => [
+							'autoReopen' => true,
+							'denyChild'  => ['DIV']
+						],
+						'DIV' => [
+							'fosterParent' => ['B'],
+							'ignoreSurroundingWhitespace' => true
+						]
+					]
+				]
+			],
 		];
 	}
 }

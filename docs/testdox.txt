@@ -1007,6 +1007,16 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\AutoReopenFormattingElement
  [x] Does not generate an autoReopen rule for <div>
  [x] Does not generate an autoReopen rule for <div><b>
 
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\BlockElementsCloseFormattingElements
+ [x] <div> has a closeParent rule for <b>
+ [x] <div> does not have a closeParent rule for <div>
+ [x] <b> does not have a closeParent rule for <b>
+
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\BlockElementsFosterFormattingElements
+ [x] <div> has a fosterParent rule for <b>
+ [x] <div> does not have a fosterParent rule for <div>
+ [x] <b> does not have a fosterParent rule for <b>
+
 s9e\TextFormatter\Tests\Configurator\RulesGenerators\EnforceContentModels
  [x] <b> has a denyChild rule for <div>
  [x] <a> has a denyChild and a denyDescendant rule for <a>

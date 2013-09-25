@@ -31,7 +31,6 @@ TODO
 - PHP renderer: consider caching $node->textContent for performance, especially wrt Emoticons
 - Consider *not* removing the source attribute of an attribute preprocessor
 - Conditional comments can create IE-specific exploits. Consider removing them
-- http://wiki.simplemachines.org/smf/Bulletin_board_code#When_Order_Matters_Part_2 -- Is there a way to make the order *not* matter? How often does that happen anyway? -- solvable with fosterParent
 - Renderer::getParameter()
 - Add a {PLAIN_TEXT} token to BBCodeMonkey (same as {TEXT} but with ignoreTags or <xsl:value-of select="."/>)
 - PHP renderer generator: consider support for an external XPath converter (or converters, plural.) Could be used to micro-optimize some conversions (e.g. use custom PHP rather than xpath->evaluate()) and potentially unlock more dynamic rendering
@@ -44,3 +43,4 @@ TODO
 - Consider adding an option to abort parsing when tagLimit is exceeded (good for Censor)
 - Class names collisions in s9e\TextFormatter\Bundles\S18\Helper
 - One cheap way to filter a CSS value would be to set an attribute preprocessor for every supported CSS attribute, e.g. /(?<!\w)color\s*:\s*(?<color>#[0-9a-f]+|\w+)/ - could be mentionned in cookbook
+- Consider declaring span a formatting element in TemplateForensics even though it's not listed in http://www.w3.org/TR/html5/syntax.html#formatting
