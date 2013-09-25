@@ -240,7 +240,7 @@ function processStartTag(tag)
 
 	// 1. Check that this tag has not reached its global limit tagLimit
 	// 2. Execute this tag's filterChain, which will filter/validate its attributes
-	// 3. Apply closeParent and closeAncestor rules
+	// 3. Apply closeParent, closeAncestor and fosterParent rules
 	// 4. Check for nestingLimit
 	// 5. Apply requireAncestor rules
 	//
@@ -271,7 +271,7 @@ function processStartTag(tag)
 		return;
 	}
 
-	if (closeParent(tag) || closeAncestor(tag))
+	if (closeParent(tag) || closeAncestor(tag) || fosterParent(tag))
 	{
 		// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
 		return;

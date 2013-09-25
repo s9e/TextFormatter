@@ -34,7 +34,6 @@ TODO
 - http://wiki.simplemachines.org/smf/Bulletin_board_code#When_Order_Matters_Part_2 -- Is there a way to make the order *not* matter? How often does that happen anyway? -- solvable with fosterParent
 - Renderer::getParameter()
 - Add a {PLAIN_TEXT} token to BBCodeMonkey (same as {TEXT} but with ignoreTags or <xsl:value-of select="."/>)
-- Consider following reopening tags after applying closeAncestor/closeParent. Either as a child of current tag, or as the next sibling -- suspendParent => closeParent + reopen after, fosterParent => closeParent + reopen as child (+ reopen after?). Consider creating a rules generator that applies either to formatting element wrt block elements
 - PHP renderer generator: consider support for an external XPath converter (or converters, plural.) Could be used to micro-optimize some conversions (e.g. use custom PHP rather than xpath->evaluate()) and potentially unlock more dynamic rendering
 - PHP renderer generator: optimize substring() in convertXPath()
 - PHP renderer generator: can precompute the value from getParamAsXPath() if the param is not dynamic

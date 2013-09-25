@@ -254,6 +254,7 @@ class JavaScript
 		$hints = [
 			'closeAncestor'           => 0,
 			'closeParent'             => 0,
+			'fosterParent'            => 0,
 			'postProcessing'          => 1,
 			'regexpLimitActionAbort'  => 0,
 			'regexpLimitActionIgnore' => 0,

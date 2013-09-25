@@ -446,6 +446,31 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox HINT.fosterParent=0 by default
+	*/
+	public function testHintFosterParentFalse()
+	{
+		$this->assertContains(
+			'HINT.fosterParent=0',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
+	* @testdox HINT.fosterParent=1 if any tag has a fosterParent rule
+	*/
+	public function testHintFosterParentTrue()
+	{
+		$this->configurator->tags->add('X')->rules->fosterParent('Y');
+		$this->configurator->tags->add('Y');
+
+		$this->assertContains(
+			'HINT.fosterParent=1',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
 	* @testdox HINT.postProcessing=0 by default
 	*/
 	public function testHintPostProcessingFalse()

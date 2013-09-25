@@ -258,7 +258,7 @@ trait TagProcessing
 
 		// 1. Check that this tag has not reached its global limit tagLimit
 		// 2. Execute this tag's filterChain, which will filter/validate its attributes
-		// 3. Apply closeParent and closeAncestor rules
+		// 3. Apply closeParent, closeAncestor and fosterParent rules
 		// 4. Check for nestingLimit
 		// 5. Apply requireAncestor rules
 		//
@@ -289,7 +289,7 @@ trait TagProcessing
 			return;
 		}
 
-		if ($this->closeParent($tag) || $this->closeAncestor($tag))
+		if ($this->closeParent($tag) || $this->closeAncestor($tag) || $this->fosterParent($tag))
 		{
 			// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
 			return;

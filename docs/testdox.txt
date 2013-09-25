@@ -263,6 +263,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] denyChild() normalizes tag name
  [x] denyDescendant() throws an exception on invalid tag name
  [x] denyDescendant() normalizes tag name
+ [x] fosterParent() throws an exception on invalid tag name
+ [x] fosterParent() normalizes tag name
  [x] ignoreText() accepts a boolean
  [x] ignoreText() throws an exception if its argument is not a boolean
  [x] isTransparent() accepts a boolean
@@ -1459,6 +1461,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] HINT.closeAncestor=1 if any tag has a closeAncestor rule
  [x] HINT.closeParent=0 by default
  [x] HINT.closeParent=1 if any tag has a closeParent rule
+ [x] HINT.fosterParent=0 by default
+ [x] HINT.fosterParent=1 if any tag has a fosterParent rule
  [x] HINT.postProcessing=0 by default
  [x] HINT.postProcessing=1 if "data-s9e-livepreview-postprocess" appears in the stylesheet
  [x] HINT.regexpLimitActionAbort=0 by default

@@ -17,6 +17,9 @@ use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Parser;
 
+/**
+* @see docs/Rules.md
+*/
 class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 {
 	//==========================================================================
@@ -117,7 +120,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		// In order to speed up lookups, we use the tag names as keys
-		foreach (['closeAncestor', 'closeParent'] as $ruleName)
+		foreach (['closeAncestor', 'closeParent', 'fosterParent'] as $ruleName)
 		{
 			if (isset($config[$ruleName]))
 			{
@@ -377,6 +380,16 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	public function denyDescendant($tagName)
 	{
 		$this->items['denyDescendant'][] = TagName::normalize($tagName);
+	}
+
+	/**
+	* Add a fosterParent rule
+	*
+	* @param string $tagName Name of the target tag
+	*/
+	public function fosterParent($tagName)
+	{
+		$this->items['fosterParent'][] = TagName::normalize($tagName);
 	}
 
 	/**

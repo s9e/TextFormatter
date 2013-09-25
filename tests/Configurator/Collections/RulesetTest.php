@@ -498,6 +498,32 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox fosterParent() throws an exception on invalid tag name
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid tag name 'foo#bar'
+	*/
+	public function testFosterParentInvalidTagName()
+	{
+		$ruleset = new Ruleset;
+		$ruleset->fosterParent('foo#bar');
+	}
+
+	/**
+	* @testdox fosterParent() normalizes tag name
+	*/
+	public function testFosterParentNormalizesTagName()
+	{
+		$ruleset = new Ruleset;
+
+		$ruleset->fosterParent('b');
+
+		$this->assertSame(
+			['fosterParent' => ['B']],
+			iterator_to_array($ruleset)
+		);
+	}
+
+	/**
 	* @testdox ignoreText() accepts a boolean
 	*/
 	public function testIgnoreTextValid()
