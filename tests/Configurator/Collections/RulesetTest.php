@@ -202,6 +202,16 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox allowChild() is chainable
+	*/
+	public function testAllowChildChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->allowChild('B'));
+	}
+
+	/**
 	* @testdox allowDescendant() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo#bar'
@@ -227,6 +237,16 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox allowDescendant() is chainable
+	*/
+	public function testAllowDescendantChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->allowDescendant('B'));
+	}
+
+	/**
 	* @testdox autoClose() accepts a boolean
 	*/
 	public function testAutoCloseValid()
@@ -244,6 +264,15 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->autoClose('foo');
+	}
+
+	/**
+	* @testdox autoClose() is chainable
+	*/
+	public function testAutoCloseChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->autoClose());
 	}
 
 	/**
@@ -267,6 +296,15 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox autoReopen() is chainable
+	*/
+	public function testAutoReopenChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->autoReopen());
+	}
+
+	/**
 	* @testdox breakParagraph() accepts a boolean
 	*/
 	public function testBreakParagraphValid()
@@ -284,6 +322,15 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->breakParagraph('foo');
+	}
+
+	/**
+	* @testdox breakParagraph() is chainable
+	*/
+	public function testBreakParagraphChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->breakParagraph());
 	}
 
 	/**
@@ -328,6 +375,16 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox closeParent() is chainable
+	*/
+	public function testCloseParentChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->closeParent('B'));
+	}
+
+	/**
 	* @testdox createParagraphs() accepts a boolean
 	*/
 	public function testCreateParagraphsValid()
@@ -345,6 +402,15 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->createParagraphs('foo');
+	}
+
+	/**
+	* @testdox createParagraphs() is chainable
+	*/
+	public function testCreateParagraphsChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->createParagraphs());
 	}
 
 	/**
@@ -446,6 +512,15 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox ignoreTags() is chainable
+	*/
+	public function testIgnoreTagsChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->ignoreTags());
+	}
+
+	/**
 	* @testdox denyChild() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo#bar'
@@ -469,6 +544,16 @@ class RulesetTest extends Test
 			['denyChild' => ['B']],
 			iterator_to_array($ruleset)
 		);
+	}
+
+	/**
+	* @testdox denyChild() is chainable
+	*/
+	public function testDenyChildChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->denyChild('B'));
 	}
 
 	/**
@@ -498,6 +583,16 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox denyDescendant() is chainable
+	*/
+	public function testDenyDescendantChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->denyDescendant('B'));
+	}
+
+	/**
 	* @testdox fosterParent() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo#bar'
@@ -524,6 +619,16 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox fosterParent() is chainable
+	*/
+	public function testFosterParentChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->fosterParent('B'));
+	}
+
+	/**
 	* @testdox ignoreText() accepts a boolean
 	*/
 	public function testIgnoreTextValid()
@@ -541,6 +646,15 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->ignoreText('foo');
+	}
+
+	/**
+	* @testdox ignoreText() is chainable
+	*/
+	public function testIgnoreTextChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->ignoreText());
 	}
 
 	/**
@@ -564,6 +678,15 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox isTransparent() is chainable
+	*/
+	public function testIsTransparentChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->isTransparent());
+	}
+
+	/**
 	* @testdox noBrChild() accepts a boolean
 	*/
 	public function testNoBrChildValid()
@@ -581,6 +704,15 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->noBrChild('foo');
+	}
+
+	/**
+	* @testdox noBrChild() is chainable
+	*/
+	public function testNoBrChildChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->noBrChild());
 	}
 
 	/**
@@ -604,6 +736,15 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox noBrDescendant() is chainable
+	*/
+	public function testNoBrDescendantChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->noBrDescendant());
+	}
+
+	/**
 	* @testdox ignoreSurroundingWhitespace() accepts a boolean
 	*/
 	public function testIgnoreSurroundingWhitespaceValid()
@@ -621,6 +762,15 @@ class RulesetTest extends Test
 	{
 		$ruleset = new Ruleset;
 		$ruleset->ignoreSurroundingWhitespace('foo');
+	}
+
+	/**
+	* @testdox ignoreSurroundingWhitespace() is chainable
+	*/
+	public function testIgnoreSurroundingWhitespaceChainable()
+	{
+		$ruleset = new Ruleset;
+		$this->assertSame($ruleset, $ruleset->ignoreSurroundingWhitespace());
 	}
 
 	/**
@@ -650,6 +800,16 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox requireAncestor() is chainable
+	*/
+	public function testRequireAncestorChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->requireAncestor('B'));
+	}
+
+	/**
 	* @testdox requireParent() throws an exception on invalid tag name
 	* @expectedException InvalidArgumentException
 	* @expectedExceptionMessage Invalid tag name 'foo#bar'
@@ -673,6 +833,16 @@ class RulesetTest extends Test
 			['requireParent' => ['B']],
 			iterator_to_array($ruleset)
 		);
+	}
+
+	/**
+	* @testdox requireParent() is chainable
+	*/
+	public function testRequireParentChainable()
+	{
+		$ruleset = new Ruleset;
+
+		$this->assertSame($ruleset, $ruleset->requireParent('B'));
 	}
 
 	/**

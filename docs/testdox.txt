@@ -238,19 +238,26 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] remove('denyChild', 'img') normalizes tag name
  [x] allowChild() throws an exception on invalid tag name
  [x] allowChild() normalizes tag name
+ [x] allowChild() is chainable
  [x] allowDescendant() throws an exception on invalid tag name
  [x] allowDescendant() normalizes tag name
+ [x] allowDescendant() is chainable
  [x] autoClose() accepts a boolean
  [x] autoClose() throws an exception if its argument is not a boolean
+ [x] autoClose() is chainable
  [x] autoReopen() accepts a boolean
  [x] autoReopen() throws an exception if its argument is not a boolean
+ [x] autoReopen() is chainable
  [x] breakParagraph() accepts a boolean
  [x] breakParagraph() throws an exception if its argument is not a boolean
+ [x] breakParagraph() is chainable
  [x] closeAncestor() throws an exception on invalid tag name
  [x] closeAncestor() normalizes tag name
  [x] closeParent() normalizes tag name
+ [x] closeParent() is chainable
  [x] createParagraphs() accepts a boolean
  [x] createParagraphs() throws an exception if its argument is not a boolean
+ [x] createParagraphs() is chainable
  [x] defaultChildRule() accepts 'allow'
  [x] defaultChildRule() accepts 'deny'
  [x] defaultChildRule() throws an exception if passed anything else than 'allow' or 'deny'
@@ -259,26 +266,37 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] defaultDescendantRule() throws an exception if passed anything else than 'allow' or 'deny'
  [x] ignoreTags() accepts a boolean
  [x] ignoreTags() throws an exception if its argument is not a boolean
+ [x] ignoreTags() is chainable
  [x] denyChild() throws an exception on invalid tag name
  [x] denyChild() normalizes tag name
+ [x] denyChild() is chainable
  [x] denyDescendant() throws an exception on invalid tag name
  [x] denyDescendant() normalizes tag name
+ [x] denyDescendant() is chainable
  [x] fosterParent() throws an exception on invalid tag name
  [x] fosterParent() normalizes tag name
+ [x] fosterParent() is chainable
  [x] ignoreText() accepts a boolean
  [x] ignoreText() throws an exception if its argument is not a boolean
+ [x] ignoreText() is chainable
  [x] isTransparent() accepts a boolean
  [x] isTransparent() throws an exception if its argument is not a boolean
+ [x] isTransparent() is chainable
  [x] noBrChild() accepts a boolean
  [x] noBrChild() throws an exception if its argument is not a boolean
+ [x] noBrChild() is chainable
  [x] noBrDescendant() accepts a boolean
  [x] noBrDescendant() throws an exception if its argument is not a boolean
+ [x] noBrDescendant() is chainable
  [x] ignoreSurroundingWhitespace() accepts a boolean
  [x] ignoreSurroundingWhitespace() throws an exception if its argument is not a boolean
+ [x] ignoreSurroundingWhitespace() is chainable
  [x] requireAncestor() throws an exception on invalid tag name
  [x] requireAncestor() normalizes tag name
+ [x] requireAncestor() is chainable
  [x] requireParent() throws an exception on invalid tag name
  [x] requireParent() normalizes tag name
+ [x] requireParent() is chainable
  [x] merge() accepts a 2D array of rules
  [x] merge() correctly copies the defaultChildRule setting from an array
  [x] merge() correctly copies the defaultDescendantRule setting from an array

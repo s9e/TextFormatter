@@ -13,6 +13,17 @@ $tag->rules->defaultChildRule('allow');
 $tag->rules->denyChild('X');
 ```
 
+Method calls can be chained for convenience. The same example can be written as
+
+```php
+$configurator = new Configurator;
+
+$tag = $configurator->tags->add('B');
+$tag->rules->autoReopen()
+           ->defaultChildRule('allow')
+           ->denyChild('X');
+```
+
 Rules can be:
 
  * boolean -- they accept <code>true</code> or <code>false</code> as argument, with <code>true</code> being the default

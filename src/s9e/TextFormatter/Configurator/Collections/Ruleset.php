@@ -230,23 +230,58 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	//==========================================================================
 
 	/**
+	* Add a boolean rule
+	*
+	* @param  string $ruleName Name of the rule
+	* @param  bool   $bool     Whether to enable or disable the rule
+	* @return self
+	*/
+	protected function addBooleanRule($ruleName, $bool)
+	{
+		if (!is_bool($bool))
+		{
+			throw new InvalidArgumentException($ruleName . '() expects a boolean');
+		}
+
+		$this->items[$ruleName] = $bool;
+
+		return $this;
+	}
+
+	/**
+	* Add a targeted rule
+	*
+	* @param  string $ruleName Name of the rule
+	* @param  string $tagName  Name of the target tag
+	* @return self
+	*/
+	protected function addTargetedRule($ruleName, $tagName)
+	{
+		$this->items[$ruleName][] = TagName::normalize($tagName);
+
+		return $this;
+	}
+
+	/**
 	* Add an allowChild rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function allowChild($tagName)
 	{
-		$this->items['allowChild'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('allowChild', $tagName);
 	}
 
 	/**
 	* Add an allowDescendant rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function allowDescendant($tagName)
 	{
-		$this->items['allowDescendant'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('allowDescendant', $tagName);
 	}
 
 	/**
@@ -255,87 +290,74 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	* NOTE: this rule exists so that plugins don't have to specifically handle tags whose end tag
 	*       may/must be omitted such as <hr> or [img]
 	*
-	* @param bool $bool Whether or not the tag should automatically be closed if its start tag is not followed by an end tag
+	* @param  bool $bool Whether or not the tag should automatically be closed if its start tag is not followed by an end tag
+	* @return self
 	*/
 	public function autoClose($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('autoClose() expects a boolean');
-		}
-
-		$this->items['autoClose'] = $bool;
+		return $this->addBooleanRule('autoClose', $bool);
 	}
 
 	/**
 	* Add an autoReopen rule
 	*
-	* @param bool $bool Whether or not the tag should automatically be reopened if closed by an end tag of a different name
+	* @param  bool $bool Whether or not the tag should automatically be reopened if closed by an end tag of a different name
+	* @return self
 	*/
 	public function autoReopen($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('autoReopen() expects a boolean');
-		}
-
-		$this->items['autoReopen'] = $bool;
+		return $this->addBooleanRule('autoReopen', $bool);
 	}
 
 	/**
 	* Add a breakParagraph rule
 	*
-	* @param bool $bool Whether or not this tag breaks current paragraph if applicable
+	* @param  bool $bool Whether or not this tag breaks current paragraph if applicable
+	* @return self
 	*/
 	public function breakParagraph($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('breakParagraph() expects a boolean');
-		}
-
-		$this->items['breakParagraph'] = $bool;
+		return $this->addBooleanRule('breakParagraph', $bool);
 	}
 
 	/**
 	* Add a closeAncestor rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function closeAncestor($tagName)
 	{
-		$this->items['closeAncestor'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('closeAncestor', $tagName);
 	}
 
 	/**
 	* Add a closeParent rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function closeParent($tagName)
 	{
-		$this->items['closeParent'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('closeParent', $tagName);
 	}
 
 	/**
 	* Add a createParagraphs rule
 	*
-	* @param bool $bool Whether or not paragraphs should automatically be created to handle content
+	* @param  bool $bool Whether or not paragraphs should automatically be created to handle content
+	* @return self
 	*/
 	public function createParagraphs($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('createParagraphs() expects a boolean');
-		}
-
-		$this->items['createParagraphs'] = $bool;
+		return $this->addBooleanRule('createParagraphs', $bool);
 	}
 
 	/**
 	* Set the default child rule
 	*
-	* @param string $rule Either "allow" or "deny"
+	* @param  string $rule Either "allow" or "deny"
+	* @return self
 	*/
 	public function defaultChildRule($rule)
 	{
@@ -345,12 +367,15 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		$this->items['defaultChildRule'] = $rule;
+
+		return $this;
 	}
 
 	/**
 	* Set the default descendant rule
 	*
-	* @param string $rule Either "allow" or "deny"
+	* @param  string $rule Either "allow" or "deny"
+	* @return self
 	*/
 	public function defaultDescendantRule($rule)
 	{
@@ -360,36 +385,41 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 		}
 
 		$this->items['defaultDescendantRule'] = $rule;
+
+		return $this;
 	}
 
 	/**
 	* Add a denyChild rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function denyChild($tagName)
 	{
-		$this->items['denyChild'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('denyChild', $tagName);
 	}
 
 	/**
 	* Add a denyDescendant rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function denyDescendant($tagName)
 	{
-		$this->items['denyDescendant'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('denyDescendant', $tagName);
 	}
 
 	/**
 	* Add a fosterParent rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function fosterParent($tagName)
 	{
-		$this->items['fosterParent'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('fosterParent', $tagName);
 	}
 
 	/**
@@ -399,110 +429,88 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	* Up to 2 lines outside of a tag pair and 1 line inside of it:
 	*     {2 lines}{START_TAG}{1 line}{CONTENT}{1 line}{END_TAG}{2 lines}
 	*
-	* @param bool $bool Whether whitespace around this tag should be ignored
+	* @param  bool $bool Whether whitespace around this tag should be ignored
+	* @return self
 	*/
 	public function ignoreSurroundingWhitespace($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('ignoreSurroundingWhitespace() expects a boolean');
-		}
-
-		$this->items['ignoreSurroundingWhitespace'] = $bool;
+		return $this->addBooleanRule('ignoreSurroundingWhitespace', $bool);
 	}
 
 	/**
 	* Add an ignoreTags rule
 	*
-	* @param bool $bool Whether to silently ignore all tags until current tag is closed
+	* @param  bool $bool Whether to silently ignore all tags until current tag is closed
+	* @return self
 	*/
 	public function ignoreTags($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('ignoreTags() expects a boolean');
-		}
-
-		$this->items['ignoreTags'] = $bool;
+		return $this->addBooleanRule('ignoreTags', $bool);
 	}
 
 	/**
 	* Add an ignoreText rule
 	*
-	* @param bool $bool Whether or not the tag should ignore text nodes
+	* @param  bool $bool Whether or not the tag should ignore text nodes
+	* @return self
 	*/
 	public function ignoreText($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('ignoreText() expects a boolean');
-		}
-
-		$this->items['ignoreText'] = $bool;
+		return $this->addBooleanRule('ignoreText', $bool);
 	}
 
 	/**
 	* Add a isTransparent rule
 	*
-	* @param bool $bool Whether or not the tag should use the "transparent" content model
+	* @param  bool $bool Whether or not the tag should use the "transparent" content model
+	* @return self
 	*/
 	public function isTransparent($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('isTransparent() expects a boolean');
-		}
-
-		$this->items['isTransparent'] = $bool;
+		return $this->addBooleanRule('isTransparent', $bool);
 	}
 
 	/**
 	* Add a noBrChild rule
 	*
-	* @param bool $bool Whether *not* to convert newlines to <br/> in child text nodes
+	* @param  bool $bool Whether *not* to convert newlines to <br/> in child text nodes
+	* @return self
 	*/
 	public function noBrChild($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('noBrChild() expects a boolean');
-		}
-
-		$this->items['noBrChild'] = $bool;
+		return $this->addBooleanRule('noBrChild', $bool);
 	}
 
 	/**
 	* Add a noBrDescendant rule
 	*
-	* @param bool $bool Whether *not* to convert newlines to <br/> in descendant text nodes
+	* @param  bool $bool Whether *not* to convert newlines to <br/> in descendant text nodes
+	* @return self
 	*/
 	public function noBrDescendant($bool = true)
 	{
-		if (!is_bool($bool))
-		{
-			throw new InvalidArgumentException('noBrDescendant() expects a boolean');
-		}
-
-		$this->items['noBrDescendant'] = $bool;
+		return $this->addBooleanRule('noBrDescendant', $bool);
 	}
 
 	/**
 	* Add a requireParent rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function requireParent($tagName)
 	{
-		$this->items['requireParent'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('requireParent', $tagName);
 	}
 
 	/**
 	* Add a requireAncestor rule
 	*
-	* @param string $tagName Name of the target tag
+	* @param  string $tagName Name of the target tag
+	* @return self
 	*/
 	public function requireAncestor($tagName)
 	{
-		$this->items['requireAncestor'][] = TagName::normalize($tagName);
+		return $this->addTargetedRule('requireAncestor', $tagName);
 	}
 }
