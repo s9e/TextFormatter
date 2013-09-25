@@ -271,7 +271,7 @@ function processStartTag(tag)
 		return;
 	}
 
-	if (closeParent(tag) || closeAncestor(tag) || fosterParent(tag))
+	if (fosterParent(tag) || closeParent(tag) || closeAncestor(tag))
 	{
 		// This tag parent/ancestor needs to be closed, we just return (the tag is still valid)
 		return;

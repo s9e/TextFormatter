@@ -1069,6 +1069,24 @@ class TagProcessingTest extends Test
 					$parser->addSelfClosingTag('T8', 1, 1);
 				}
 			],
+			[
+				'[x][y]..[/y][/x]',
+				'<rt><X><st>[x]</st></X><Y><st>[y]</st><X>..</X><et>[/y]</et></Y><i>[/x]</i></rt>',
+				function ($constructor)
+				{
+					$constructor->tags->add('X')->rules->autoReopen();
+					$constructor->tags->add('Y')->rules
+						->closeParent('X')
+						->fosterParent('X');
+				},
+				function ($parser)
+				{
+					$parser->addStartTag('X', 0, 3);
+					$parser->addStartTag('Y', 3, 3);
+					$parser->addEndTag('Y', 8, 4);
+					$parser->addEndTag('X', 12, 4);
+				}
+			],
 		];
 	}
 }
