@@ -51,8 +51,7 @@ class Helper
 	*/
 	public function censorHtml($text)
 	{
-		// Modify the original regexp so that it only matches text nodes, and only outside of the
-		// tags used by this plugin
+		// Modify the original regexp so that it only matches text nodes
 		$delim  = $this->regexp[0];
 		$pos    = strrpos($this->regexp, $delim);
 		$regexp = substr($this->regexp, 0, $pos)
