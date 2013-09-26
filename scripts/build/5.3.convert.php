@@ -196,6 +196,10 @@ function convertCustom($filepath, &$file)
 			array(
 				'return $this->buildTag($m[0]);',
 				'return $_this->buildTag($m[0]);'
+			),
+			array(
+				'protected function buildTag($word)',
+				'public function buildTag($word)'
 			)
 		),
 		'Logger.php' => array(
