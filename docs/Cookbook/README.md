@@ -39,3 +39,6 @@
     * [Change the default normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/Template_normalization/01_ChangeDefault.md)
     * [Automatically set `rel="nofollow"` on every link](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/Template_normalization/02_SetRelLink.md)
     * [Extend the template syntax through normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/Template_normalization/03_Extends.md)
+  * **URL features**
+    * [Disallow links pointing to a given domain](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/URL_features/DisallowHosts.md)
+    * [Restrict/allow schemes](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/URL_features/Protocols.md)

@@ -112,6 +112,18 @@ class UrlConfig implements ConfigProvider
 	}
 
 	/**
+	* Remove a scheme from the list of allowed URL schemes
+	*
+	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
+	*/
+	public function disallowScheme($scheme)
+	{
+		$scheme = $this->normalizeScheme($scheme);
+
+		$this->allowedSchemes = array_values(array_diff($this->allowedSchemes, [$scheme]));
+	}
+
+	/**
 	* Return the list of allowed URL schemes
 	*
 	* @return array

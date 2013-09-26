@@ -297,6 +297,20 @@ class UrlConfigTest extends Test
 	}
 
 	/**
+	* @testdox disallowScheme() removes a scheme from the list of allowed schemes
+	*/
+	public function testDisallowScheme()
+	{
+		$this->urlConfig->allowScheme('http');
+		$this->urlConfig->disallowScheme('http');
+
+		$this->assertEquals(
+			['https'],
+			$this->urlConfig->getAllowedSchemes()
+		);
+	}
+
+	/**
 	* @testdox allowScheme('ftp') allows "ftp" as scheme
 	*/
 	public function testAllowSchemeFTP()

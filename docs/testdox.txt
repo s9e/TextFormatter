@@ -1410,6 +1410,7 @@ s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] "HTTPS" is an allowed scheme by default
  [x] "ftp" is an allowed scheme by default
  [x] getAllowedSchemes() returns an array containing all the allowed schemes
+ [x] disallowScheme() removes a scheme from the list of allowed schemes
  [x] allowScheme('ftp') allows "ftp" as scheme
  [x] allowScheme('<invalid>') throws an exception
  [x] There is no default scheme by default
