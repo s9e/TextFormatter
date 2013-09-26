@@ -178,8 +178,8 @@ function convertCustom($filepath, &$file)
 				'function ($m) use ($_this)'
 			),
 			array(
-				'foreach ($this->replacements as list($regexp, $replacement))',
-				'foreach ($_this->replacements as list($regexp, $replacement))'
+				'			foreach ($this->replacements as list($regexp, $replacement))',
+				'			foreach ($_this->replacements as list($regexp, $replacement))'
 			),
 			array(
 				'return htmlspecialchars($this->defaultReplacement);',
