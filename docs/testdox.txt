@@ -1928,6 +1928,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] censorText() censors plain text
  [x] censorText() uses custom replacements
  [x] reparse() preserves old tags
+ [x] reparse() updates replacement in old tags
  [x] reparse() add new tags
  [x] reparse() uses replacements in new tags
  [x] reparse() escapes replacements
@@ -1935,6 +1936,7 @@ s9e\TextFormatter\Tests\Plugins\Censor\Helper
  [x] reparse() does not replace tag names
  [x] reparse() does not replace attribute names
  [x] reparse() does not replace attribute values
+ [x] reparse() does not erroneously alter tags whose name resembles Censor's tag name
 
 s9e\TextFormatter\Tests\Plugins\Censor\Parser
  [x] Parsing tests

@@ -190,20 +190,12 @@ function convertCustom($filepath, &$file)
 				'return $_this->defaultReplacement;'
 			),
 			array(
-				'return (preg_match($this->regexp, $m[1])) ? $m[0] : $m[1];',
-				'return (preg_match($_this->regexp, $m[1])) ? $m[0] : $m[1];'
+				'return (preg_match($this->regexp, $m[1])) ? $this->buildTag($m[1]) : $m[1];',
+				'return (preg_match($_this->regexp, $m[1])) ? $_this->buildTag($m[1]) : $m[1];'
 			),
 			array(
-				'$startTag = \'<\' . $this->tagName;',
-				'$startTag = \'<\' . $_this->tagName;'
-			),
-			array(
-				'$startTag .= \' \' . $this->attrName . \'="\' . htmlspecialchars($replacement, ENT_QUOTES) . \'"\';',
-				'$startTag .= \' \' . $_this->attrName . \'="\' . htmlspecialchars($replacement, ENT_QUOTES) . \'"\';'
-			),
-			array(
-				'return $startTag . \'>\' . $m[0] . \'</\' . $this->tagName . \'>\';',
-				'return $startTag . \'>\' . $m[0] . \'</\' . $_this->tagName . \'>\';'
+				'return $this->buildTag($m[0]);',
+				'return $_this->buildTag($m[0]);'
 			)
 		),
 		'Logger.php' => array(

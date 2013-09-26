@@ -112,7 +112,6 @@ class Helper
 	* the whole text as new.
 	*
 	* Will NOT:
-	*  - update the replacements of old censored words
 	*  - match new words in attribute values
 	*  - match HTML entities
 	*  - respect the denyChild/denyDescendant/ignoreTags rules
@@ -131,7 +130,7 @@ class Helper
 				'#<' . $this->tagName . '[^>]*>([^<]+)</' . $this->tagName . '>#',
 				function ($m)
 				{
-					return (preg_match($this->regexp, $m[1])) ? $m[0] : $m[1];
+					return (preg_match($this->regexp, $m[1])) ? $this->buildTag($m[1]) : $m[1];
 				},
 				$xml
 			);
@@ -149,19 +148,7 @@ class Helper
 			$regexp,
 			function ($m)
 			{
-				$startTag = '<' . $this->tagName;
-
-				foreach ($this->replacements as list($regexp, $replacement))
-				{
-					if (preg_match($regexp, $m[0]))
-					{
-						$startTag .= ' ' . $this->attrName . '="' . htmlspecialchars($replacement, ENT_QUOTES) . '"';
-
-						break;
-					}
-				}
-
-				return $startTag . '>' . $m[0] . '</' . $this->tagName . '>';
+				return $this->buildTag($m[0]);
 			},
 			$xml,
 			-1,
@@ -176,5 +163,28 @@ class Helper
 		}
 
 		return $xml;
+	}
+
+	/**
+	* Build and return the censor tag that matches given word
+	*
+	* @param  string $word Word to censor
+	* @return string       Censor tag, complete with its replacement attribute
+	*/
+	protected function buildTag($word)
+	{
+		$startTag = '<' . $this->tagName;
+
+		foreach ($this->replacements as list($regexp, $replacement))
+		{
+			if (preg_match($regexp, $word))
+			{
+				$startTag .= ' ' . $this->attrName . '="' . htmlspecialchars($replacement, ENT_QUOTES) . '"';
+
+				break;
+			}
+		}
+
+		return $startTag . '>' . $word . '</' . $this->tagName . '>';
 	}
 }

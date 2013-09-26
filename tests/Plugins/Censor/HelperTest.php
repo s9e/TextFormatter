@@ -130,6 +130,21 @@ class HelperTest extends Test
 	}
 
 	/**
+	* @testdox reparse() updates replacement in old tags
+	*/
+	public function testReparseOldReplacement()
+	{
+		$this->configurator->Censor->add('bar', 'baz');
+
+		$xml = '<rt>foo <CENSOR>bar</CENSOR> <CENSOR with="****">bar</CENSOR> baz</rt>';
+
+		$this->assertSame(
+			'<rt>foo <CENSOR with="baz">bar</CENSOR> <CENSOR with="baz">bar</CENSOR> baz</rt>',
+			$this->configurator->Censor->getHelper()->reparse($xml)
+		);
+	}
+
+	/**
 	* @testdox reparse() add new tags
 	*/
 	public function testReparseNew()
@@ -230,6 +245,21 @@ class HelperTest extends Test
 
 		$this->assertSame(
 			'<rt>foo <FOO bar="bar"><CENSOR>bar</CENSOR></FOO> baz</rt>',
+			$this->configurator->Censor->getHelper()->reparse($xml)
+		);
+	}
+
+	/**
+	* @testdox reparse() does not erroneously alter tags whose name resembles Censor's tag name
+	*/
+	public function testReparseNoCollision()
+	{
+		$this->configurator->plugins->load('Censor', ['tagName' => 'C']);
+
+		$xml = '<rt>foo <C>bar</C> <CC>bar</CC> </rt>';
+
+		$this->assertSame(
+			'<rt>foo bar <CC>bar</CC> </rt>',
 			$this->configurator->Censor->getHelper()->reparse($xml)
 		);
 	}
