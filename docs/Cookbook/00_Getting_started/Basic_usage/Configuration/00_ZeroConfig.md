@@ -1,6 +1,6 @@
 ## Zero-configuration: using predefined bundles
 
-The fastest way to start using s9e\TextFormatter is to use a predefined bundle. Currently, there is only one bundle, named "Forum", which supports the same kind of formatting that is used in internet forums. Other bundles will become available based on feedback.
+The fastest way to start using s9e\TextFormatter is to use a predefined bundle. In this example, we use the "Forum" bundle, which supports the same kind of formatting that is used in internet forums.
 
 Here is the simplest way to use the Forum bundle:
 
