@@ -48,6 +48,19 @@ class Variant
 	}
 
 	/**
+	* Return this variant's default value as a string
+	*
+	* Variants are primarily used for regexp-related configuration, so it makes sense to allow
+	* variants to be used as strings
+	*
+	* @return string
+	*/
+	public function __toString()
+	{
+		return (string) $this->defaultValue;
+	}
+
+	/**
 	* Get this value, either from preferred variant or the default value
 	*
 	* @param  string $variant Preferred variant

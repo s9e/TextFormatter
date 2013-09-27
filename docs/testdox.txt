@@ -908,6 +908,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Template
  [x] isNormalized(false) sets it to false
 
 s9e\TextFormatter\Tests\Configurator\Items\Variant
+ [x] When cast as a string, returns its default value as a string
  [x] get() returns the default value
  [x] get('JS') returns the 'JS' variant if it exists
  [x] get('JS') returns the default value if the 'JS' variant does not exist

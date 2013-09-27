@@ -11,6 +11,15 @@ use s9e\TextFormatter\Tests\Test;
 class VariantTest extends Test
 {
 	/**
+	* @testdox When cast as a string, returns its default value as a string
+	*/
+	public function testToString()
+	{
+		$variant = new Variant(42);
+		$this->assertSame('42', (string) $variant);
+	}
+
+	/**
 	* @testdox get() returns the default value
 	*/
 	public function testGetDefault()
