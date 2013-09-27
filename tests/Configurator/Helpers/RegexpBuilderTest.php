@@ -116,11 +116,19 @@ class RegexpBuilderTest extends Test
 	}
 
 	/**
-	* @testdox fromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!#$()*+.:<=>?[\\\\\\]{|}^]'
+	* @testdox fromList(['!', '#', '$', '(', ')', '*', '+', '-', '.', '/', ':', '<', '=', '>', '?', '[', '\\', ']', '^', '{', '|', '}']) returns '[-!#$()*+.:<=>?[\\/\\\\\\]{|}^]'
 	*/
-	public function test_C7373394()
+	public function test_F8AE8B35()
 	{
 		$this->fromListTestCase(13);
+	}
+
+	/**
+	* @testdox fromList([':)', ':(', ':]', ':[', ':|', ':/', ':\\']) returns ':[()[\\/\\\\\\]|]'
+	*/
+	public function test_C1DA5669()
+	{
+		$this->fromListTestCase(14);
 	}
 
 	/**
@@ -128,7 +136,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_87D67074()
 	{
-		$this->fromListTestCase(14);
+		$this->fromListTestCase(15);
 	}
 
 	/**
@@ -136,7 +144,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_D9422070()
 	{
-		$this->fromListTestCase(15);
+		$this->fromListTestCase(16);
 	}
 
 	/**
@@ -144,7 +152,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_DE674C00()
 	{
-		$this->fromListTestCase(16);
+		$this->fromListTestCase(17);
 	}
 
 	/**
@@ -152,7 +160,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_632A26D()
 	{
-		$this->fromListTestCase(17);
+		$this->fromListTestCase(18);
 	}
 
 	/**
@@ -160,7 +168,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_7FFB138D()
 	{
-		$this->fromListTestCase(18);
+		$this->fromListTestCase(19);
 	}
 
 	/**
@@ -168,7 +176,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C90B2457()
 	{
-		$this->fromListTestCase(19);
+		$this->fromListTestCase(20);
 	}
 
 	/**
@@ -176,7 +184,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6335367B()
 	{
-		$this->fromListTestCase(20);
+		$this->fromListTestCase(21);
 	}
 
 	/**
@@ -184,7 +192,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_D9B63085()
 	{
-		$this->fromListTestCase(21);
+		$this->fromListTestCase(22);
 	}
 
 	/**
@@ -192,7 +200,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A3CF0B4D()
 	{
-		$this->fromListTestCase(22);
+		$this->fromListTestCase(23);
 	}
 
 	/**
@@ -200,7 +208,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8613531B()
 	{
-		$this->fromListTestCase(23);
+		$this->fromListTestCase(24);
 	}
 
 	/**
@@ -208,7 +216,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4BBAD47D()
 	{
-		$this->fromListTestCase(24);
+		$this->fromListTestCase(25);
 	}
 
 	/**
@@ -216,7 +224,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_596D7420()
 	{
-		$this->fromListTestCase(25);
+		$this->fromListTestCase(26);
 	}
 
 	/**
@@ -224,7 +232,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E644DCEB()
 	{
-		$this->fromListTestCase(26);
+		$this->fromListTestCase(27);
 	}
 
 	/**
@@ -232,7 +240,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_D2FB0462()
 	{
-		$this->fromListTestCase(27);
+		$this->fromListTestCase(28);
 	}
 
 	/**
@@ -240,7 +248,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C36BA6A5()
 	{
-		$this->fromListTestCase(28);
+		$this->fromListTestCase(29);
 	}
 
 	/**
@@ -248,7 +256,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_29BA04C0()
 	{
-		$this->fromListTestCase(29);
+		$this->fromListTestCase(30);
 	}
 
 	/**
@@ -256,7 +264,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4473374B()
 	{
-		$this->fromListTestCase(30);
+		$this->fromListTestCase(31);
 	}
 
 	/**
@@ -264,7 +272,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_B16EB7C4()
 	{
-		$this->fromListTestCase(31);
+		$this->fromListTestCase(32);
 	}
 
 	/**
@@ -272,7 +280,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_560C8444()
 	{
-		$this->fromListTestCase(32);
+		$this->fromListTestCase(33);
 	}
 
 	/**
@@ -280,7 +288,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_F3709BEF()
 	{
-		$this->fromListTestCase(33);
+		$this->fromListTestCase(34);
 	}
 
 	/**
@@ -288,7 +296,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A6EF6E21()
 	{
-		$this->fromListTestCase(34);
+		$this->fromListTestCase(35);
 	}
 
 	/**
@@ -296,7 +304,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_77F7FECB()
 	{
-		$this->fromListTestCase(35);
+		$this->fromListTestCase(36);
 	}
 
 	/**
@@ -304,7 +312,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_127E4B6E()
 	{
-		$this->fromListTestCase(36);
+		$this->fromListTestCase(37);
 	}
 
 	/**
@@ -312,7 +320,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_CDAB507A()
 	{
-		$this->fromListTestCase(37);
+		$this->fromListTestCase(38);
 	}
 
 	/**
@@ -320,7 +328,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E3951234()
 	{
-		$this->fromListTestCase(38);
+		$this->fromListTestCase(39);
 	}
 
 	/**
@@ -328,7 +336,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_91AF5825()
 	{
-		$this->fromListTestCase(39);
+		$this->fromListTestCase(40);
 	}
 
 	/**
@@ -336,7 +344,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_5E3E54F3()
 	{
-		$this->fromListTestCase(40);
+		$this->fromListTestCase(41);
 	}
 
 	/**
@@ -344,7 +352,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_553F87F8()
 	{
-		$this->fromListTestCase(41);
+		$this->fromListTestCase(42);
 	}
 
 	/**
@@ -352,7 +360,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_3B388A82()
 	{
-		$this->fromListTestCase(42);
+		$this->fromListTestCase(43);
 	}
 
 	/**
@@ -360,7 +368,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C7D616C2()
 	{
-		$this->fromListTestCase(43);
+		$this->fromListTestCase(44);
 	}
 
 	/**
@@ -368,7 +376,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C9877394()
 	{
-		$this->fromListTestCase(44);
+		$this->fromListTestCase(45);
 	}
 
 	/**
@@ -376,7 +384,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4619FD0F()
 	{
-		$this->fromListTestCase(45);
+		$this->fromListTestCase(46);
 	}
 
 	/**
@@ -384,7 +392,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_BCD28919()
 	{
-		$this->fromListTestCase(46);
+		$this->fromListTestCase(47);
 	}
 
 	/**
@@ -392,7 +400,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_660FC1A9()
 	{
-		$this->fromListTestCase(47);
+		$this->fromListTestCase(48);
 	}
 
 	/**
@@ -400,7 +408,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_1A58B8A1()
 	{
-		$this->fromListTestCase(48);
+		$this->fromListTestCase(49);
 	}
 
 	/**
@@ -408,7 +416,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_28AB5133()
 	{
-		$this->fromListTestCase(49);
+		$this->fromListTestCase(50);
 	}
 
 	/**
@@ -416,7 +424,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_5CBF14D3()
 	{
-		$this->fromListTestCase(50);
+		$this->fromListTestCase(51);
 	}
 
 	/**
@@ -424,7 +432,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_418D8F44()
 	{
-		$this->fromListTestCase(51);
+		$this->fromListTestCase(52);
 	}
 
 	/**
@@ -432,7 +440,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_1E8614E3()
 	{
-		$this->fromListTestCase(52);
+		$this->fromListTestCase(53);
 	}
 
 	/**
@@ -440,7 +448,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_5B18C2D1()
 	{
-		$this->fromListTestCase(53);
+		$this->fromListTestCase(54);
 	}
 
 	/**
@@ -448,7 +456,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4032006C()
 	{
-		$this->fromListTestCase(54);
+		$this->fromListTestCase(55);
 	}
 
 	/**
@@ -456,7 +464,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A28B3A84()
 	{
-		$this->fromListTestCase(55);
+		$this->fromListTestCase(56);
 	}
 
 	/**
@@ -464,7 +472,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_2F461F5()
 	{
-		$this->fromListTestCase(56);
+		$this->fromListTestCase(57);
 	}
 
 	/**
@@ -472,7 +480,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_7C3B11DD()
 	{
-		$this->fromListTestCase(57);
+		$this->fromListTestCase(58);
 	}
 
 	/**
@@ -480,7 +488,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_3F4CA3E0()
 	{
-		$this->fromListTestCase(58);
+		$this->fromListTestCase(59);
 	}
 
 	/**
@@ -488,7 +496,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_9D02B595()
 	{
-		$this->fromListTestCase(59);
+		$this->fromListTestCase(60);
 	}
 
 	/**
@@ -496,7 +504,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_CDAEB9BF()
 	{
-		$this->fromListTestCase(60);
+		$this->fromListTestCase(61);
 	}
 
 	/**
@@ -504,7 +512,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_58B353C0()
 	{
-		$this->fromListTestCase(61);
+		$this->fromListTestCase(62);
 	}
 
 	/**
@@ -512,7 +520,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6985D5F9()
 	{
-		$this->fromListTestCase(62);
+		$this->fromListTestCase(63);
 	}
 
 	/**
@@ -520,7 +528,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C73BB118()
 	{
-		$this->fromListTestCase(63);
+		$this->fromListTestCase(64);
 	}
 
 	/**
@@ -528,7 +536,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_BC8587F9()
 	{
-		$this->fromListTestCase(64);
+		$this->fromListTestCase(65);
 	}
 
 	/**
@@ -536,7 +544,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C445AC48()
 	{
-		$this->fromListTestCase(65);
+		$this->fromListTestCase(66);
 	}
 
 	/**
@@ -544,7 +552,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_3CD709C9()
 	{
-		$this->fromListTestCase(66);
+		$this->fromListTestCase(67);
 	}
 
 	/**
@@ -552,7 +560,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E13691C4()
 	{
-		$this->fromListTestCase(67);
+		$this->fromListTestCase(68);
 	}
 
 	/**
@@ -560,7 +568,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C1CD7108()
 	{
-		$this->fromListTestCase(68);
+		$this->fromListTestCase(69);
 	}
 
 	/**
@@ -568,7 +576,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_9C89464A()
 	{
-		$this->fromListTestCase(69);
+		$this->fromListTestCase(70);
 	}
 
 	/**
@@ -576,7 +584,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C7A9B0A5()
 	{
-		$this->fromListTestCase(70);
+		$this->fromListTestCase(71);
 	}
 
 	/**
@@ -584,7 +592,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C54CFAF6()
 	{
-		$this->fromListTestCase(71);
+		$this->fromListTestCase(72);
 	}
 
 	/**
@@ -592,7 +600,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_34EFDA6F()
 	{
-		$this->fromListTestCase(72);
+		$this->fromListTestCase(73);
 	}
 
 	/**
@@ -600,7 +608,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_F3C52183()
 	{
-		$this->fromListTestCase(73);
+		$this->fromListTestCase(74);
 	}
 
 	/**
@@ -608,7 +616,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_57BBBDB4()
 	{
-		$this->fromListTestCase(74);
+		$this->fromListTestCase(75);
 	}
 
 	/**
@@ -616,7 +624,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_3C407EB8()
 	{
-		$this->fromListTestCase(75);
+		$this->fromListTestCase(76);
 	}
 
 	/**
@@ -624,7 +632,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_7A1B32CC()
 	{
-		$this->fromListTestCase(76);
+		$this->fromListTestCase(77);
 	}
 
 	/**
@@ -632,7 +640,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_44A90030()
 	{
-		$this->fromListTestCase(77);
+		$this->fromListTestCase(78);
 	}
 
 	/**
@@ -640,7 +648,15 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_16E28B20()
 	{
-		$this->fromListTestCase(78);
+		$this->fromListTestCase(79);
+	}
+
+	/**
+	* @testdox fromList(['fooA', 'fooB', 'foo+'], ["specialChars" => ["A" => "\\A", "B" => "\\B", "+" => ".+"]]) returns 'foo(?:.+|\\A|\\B)'
+	*/
+	public function test_DF7E2648()
+	{
+		$this->fromListTestCase(80);
 	}
 
 	/**
@@ -648,7 +664,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_94F12345()
 	{
-		$this->fromListTestCase(79);
+		$this->fromListTestCase(81);
 	}
 
 	/**
@@ -656,7 +672,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C55ADFEF()
 	{
-		$this->fromListTestCase(80);
+		$this->fromListTestCase(82);
 	}
 
 	/**
@@ -664,7 +680,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_69C9F3E0()
 	{
-		$this->fromListTestCase(81);
+		$this->fromListTestCase(83);
 	}
 
 	/**
@@ -672,7 +688,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6AA5ABFC()
 	{
-		$this->fromListTestCase(82);
+		$this->fromListTestCase(84);
 	}
 
 	/**
@@ -680,7 +696,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_51B52D9E()
 	{
-		$this->fromListTestCase(83);
+		$this->fromListTestCase(85);
 	}
 
 	/**
@@ -688,7 +704,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C29CED5()
 	{
-		$this->fromListTestCase(84);
+		$this->fromListTestCase(86);
 	}
 
 	/**
@@ -696,7 +712,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6AB3A485()
 	{
-		$this->fromListTestCase(85);
+		$this->fromListTestCase(87);
 	}
 
 	/**
@@ -704,7 +720,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8FC43CB0()
 	{
-		$this->fromListTestCase(86);
+		$this->fromListTestCase(88);
 	}
 
 	/**
@@ -712,7 +728,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_9BA9174B()
 	{
-		$this->fromListTestCase(87);
+		$this->fromListTestCase(89);
 	}
 
 	/**
@@ -720,7 +736,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A1628B44()
 	{
-		$this->fromListTestCase(88);
+		$this->fromListTestCase(90);
 	}
 
 	/**
@@ -728,7 +744,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_71D6E963()
 	{
-		$this->fromListTestCase(89);
+		$this->fromListTestCase(91);
 	}
 
 	/**
@@ -736,7 +752,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_4C2C4778()
 	{
-		$this->fromListTestCase(90);
+		$this->fromListTestCase(92);
 	}
 
 	/**
@@ -744,7 +760,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_B05A865()
 	{
-		$this->fromListTestCase(91);
+		$this->fromListTestCase(93);
 	}
 
 	/**
@@ -752,7 +768,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_823A9663()
 	{
-		$this->fromListTestCase(92);
+		$this->fromListTestCase(94);
 	}
 
 	/**
@@ -760,7 +776,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_E58BCD87()
 	{
-		$this->fromListTestCase(93);
+		$this->fromListTestCase(95);
 	}
 
 	/**
@@ -768,7 +784,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_95245C1()
 	{
-		$this->fromListTestCase(94);
+		$this->fromListTestCase(96);
 	}
 
 	/**
@@ -776,7 +792,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_806D7BC7()
 	{
-		$this->fromListTestCase(95);
+		$this->fromListTestCase(97);
 	}
 
 	/**
@@ -784,7 +800,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_2AE97A4F()
 	{
-		$this->fromListTestCase(96);
+		$this->fromListTestCase(98);
 	}
 
 	/**
@@ -792,7 +808,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A1145284()
 	{
-		$this->fromListTestCase(97);
+		$this->fromListTestCase(99);
 	}
 
 	/**
@@ -800,7 +816,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6FC8E8F7()
 	{
-		$this->fromListTestCase(98);
+		$this->fromListTestCase(100);
 	}
 
 	/**
@@ -808,7 +824,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6F5D139E()
 	{
-		$this->fromListTestCase(99);
+		$this->fromListTestCase(101);
 	}
 
 	/**
@@ -816,7 +832,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_34005F32()
 	{
-		$this->fromListTestCase(100);
+		$this->fromListTestCase(102);
 	}
 
 	/**
@@ -824,7 +840,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8DB4D1E0()
 	{
-		$this->fromListTestCase(101);
+		$this->fromListTestCase(103);
 	}
 
 	/**
@@ -832,7 +848,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_2ABBC9E3()
 	{
-		$this->fromListTestCase(102);
+		$this->fromListTestCase(104);
 	}
 
 	/**
@@ -840,7 +856,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8E336686()
 	{
-		$this->fromListTestCase(103);
+		$this->fromListTestCase(105);
 	}
 
 	/**
@@ -848,7 +864,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_8E765F3B()
 	{
-		$this->fromListTestCase(104);
+		$this->fromListTestCase(106);
 	}
 
 	/**
@@ -856,7 +872,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_A55EF35C()
 	{
-		$this->fromListTestCase(105);
+		$this->fromListTestCase(107);
 	}
 
 	/**
@@ -864,7 +880,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_69AB5342()
 	{
-		$this->fromListTestCase(106);
+		$this->fromListTestCase(108);
 	}
 
 	/**
@@ -872,7 +888,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_6367620F()
 	{
-		$this->fromListTestCase(107);
+		$this->fromListTestCase(109);
 	}
 
 	/**
@@ -880,7 +896,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_22FFCA38()
 	{
-		$this->fromListTestCase(108);
+		$this->fromListTestCase(110);
 	}
 
 	/**
@@ -888,7 +904,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_3F5FDC6()
 	{
-		$this->fromListTestCase(109);
+		$this->fromListTestCase(111);
 	}
 
 	/**
@@ -896,7 +912,7 @@ class RegexpBuilderTest extends Test
 	*/
 	public function test_C417EE8E()
 	{
-		$this->fromListTestCase(110);
+		$this->fromListTestCase(112);
 	}
 	// End of content generated by ../../../scripts/patchRegexpBuilderTest.php
 
@@ -980,8 +996,12 @@ class RegexpBuilderTest extends Test
 				['ax', 'axed']
 			],
 			[
-				'[-!#$()*+.:<=>?[\\\\\\]{|}^]',
-				str_split('!#$()*+-.:<=>?[\\]^{|}', 1)
+				'[-!#$()*+.:<=>?[\\/\\\\\\]{|}^]',
+				str_split('!#$()*+-./:<=>?[\\]^{|}', 1)
+			],
+			[
+				':[()[\\/\\\\\\]|]',
+				[':)', ':(', ':]', ':[', ':|', ':/', ':\\']
 			],
 			[
 				'(?>x|^)y',
@@ -1284,6 +1304,11 @@ class RegexpBuilderTest extends Test
 				'foo(?:.+|\\B)',
 				['fooB', 'foo+'],
 				['specialChars' => ['B' => '\\B', '+' => '.+']]
+			],
+			[
+				'foo(?:.+|\\A|\\B)',
+				['fooA', 'fooB', 'foo+'],
+				['specialChars' => ['A' => '\\A', 'B' => '\\B', '+' => '.+']]
 			],
 			[
 				'(?:.+foo.+|foo\\B)',

@@ -729,9 +729,8 @@ abstract class RegexpBuilder
 			return true;
 		}
 
-		// Escaped literals are allowed
-		if (preg_match('#^\\\\.$#Dus', $char)
-		 && $char === preg_quote(substr($char, 1)))
+		// Escaped literals are allowed (escaped sequences excluded)
+		if (preg_match('#^\\\\[^A-Za-z0-9]$#Dus', $char))
 		{
 			return true;
 		}
