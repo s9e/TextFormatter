@@ -1,13 +1,11 @@
 TODO
 ====
 
-- JSParserGenerator: if all the plugins' RLA is the same, remove them from the config and use hints to bypass the if test
 - Investigate the possibility of using an external CSS checker in order to enable a default "css" filter
 - Consider a Twitter BBCode (https://dev.twitter.com/docs/embedded-tweets)
 - Create a way for special XSL to be evaluated at the start/end of a rendering in order to embed resources such as external scripts
 - Create BBCodesConfig::getBBCodeTemplate() that returns the definition of a BBCode, e.g. [URL={URL}]{TEXT}[/URL]
 - Add exception codes to exceptions?
-- Possibly add an "hex" filter for /^[0-9a-f]+$/iD - what would be the return value though, string or integer? does "10" return 10 or 16 (0x10)
 - BBCodesConfig::addBBCodeFromExample() - try to cast defaultValue to the right PHP type
 - Look into properly implementing urlencode() and rawurlencode() in JS
 - Implement the concept of a plugin "tag formatter": give it a tag from the intermediate form and it returns the string that could have generated it. e.g. BBCodes's tag formatter takes <URL url="..."> and returns [URL url="..."] or [URL="..."] -- tag content might be a problem though. Can we format any start/end tag without knowing what's in between?
@@ -17,7 +15,6 @@ TODO
 - Add a date/datetime filter, see http://dev.w3.org/html5/spec/Overview.html#valid-date-string-with-optional-time
 - Consider allowing absolute paths in #url, e.g. "/foo.html" - also, fragment "#foo"
 - Consider a way to disallow HTML elements globally or at the tag-level. For example, a way to globally disable <a> so that BBCodes that produces links are disabled
-- Consider guessing a value for quickMatch based on a plugin's regexp, using its fixed part if applicable [NOTE: gotta identify escape sequences such as \d and modifiers such as a+]
 - Read in phpBB's forum 'maybe you put a threshold on errors -- if there are more than, say, 10, put out an error saying "Too many BBCode formatting errors found; fix the above and Preview the post again."' -- https://area51.phpbb.com/phpBB/viewtopic.php?f=108&t=33021&p=249335#p249335 -- NOTE: kind of sucks when those errors come from false positive from things like Autolink
 - Read and consider https://github.com/Seldaek/fig-standards/blob/logger-interface/proposed/logger-interface.md
 - Add some sort of optional filtering/escaping to the variables used in repositories? htmlspecialchars(), json_encode()
@@ -32,7 +29,6 @@ TODO
 - Consider *not* removing the source attribute of an attribute preprocessor
 - Conditional comments can create IE-specific exploits. Consider removing them
 - Renderer::getParameter()
-- Add a {PLAIN_TEXT} token to BBCodeMonkey (same as {TEXT} but with ignoreTags or <xsl:value-of select="."/>)
 - PHP renderer generator: consider support for an external XPath converter (or converters, plural.) Could be used to micro-optimize some conversions (e.g. use custom PHP rather than xpath->evaluate()) and potentially unlock more dynamic rendering
 - PHP renderer generator: optimize substring() in convertXPath()
 - PHP renderer generator: can precompute the value from getParamAsXPath() if the param is not dynamic
