@@ -10,6 +10,9 @@
 		"ext-filter": "*",
 		"ext-pcre":   "*"
 	},
+	"require-dev": {
+		"satooshi/php-coveralls": "dev-master"
+	},
 	"suggest": {
 		"ext-xsl": "Enables the XSLT renderer"
 	},
@@ -19,9 +22,6 @@
 		}
 	},
 	"scripts": {
-		"post-install-cmd": [
-			"php scripts/build/5.4.convert.php",
-			"php scripts/build/5.3.convert.php"
-		]
+		"post-install-cmd": "php scripts/build/patchSources.php"
 	}
 }
