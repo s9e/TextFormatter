@@ -41,11 +41,11 @@ class Configurator extends ConfiguratorBase
 		'HR'     => '<hr/>',
 		'IMG'    => [
 			'attributes' => [
-				'src' => [
-					'filterChain' => ['#url']
-				]
+				'alt'   => ['required' => false],
+				'src'   => ['filterChain' => ['#url']],
+				'title' => ['required' => false]
 			],
-			'defaultTemplate' => '<img src="{@src}" title="{@title}" alt="{@alt}" />'
+			'defaultTemplate' => '<img alt="{@alt}" src="{@src}" title="{@title}"/>'
 		],
 		'LI'     => '<li><xsl:apply-templates/></li>',
 		'LIST'   => [
