@@ -3,14 +3,15 @@ var alt, contentLen, endTagLen, endTagPos, m, matchLen, matchPos, regexp, startT
 /**
 * Decode a chunk of encoded text to be used as an attribute value
 *
-* Decodes escaped literals and removes slashes
+* Decodes escaped literals and removes slashes and 0x1A characters
 *
-* @param  {!string} str Encoded text
-* @return {!string}     Decoded text
+* @param  {!string}  str      Encoded text
+* @param  {!boolean} unescape Whether to unescape 0x1B sequences
+* @return {!string}           Decoded text
 */
-function decode(str)
+function decode(str, unescape)
 {
-	return str.replace(/\\(.)/g, '$1').replace(
+	return str.replace(/[\\\x1A]/g, '').replace(
 		/\x1B./g,
 		function (str)
 		{
@@ -41,10 +42,13 @@ function overwrite(pos, len)
 	text = text.substr(0, pos) + new Array(1 + len).join("\x1A") + text.substr(pos + len);
 }
 
+var unescape = false;
+
 // Encode escaped literals that have a special meaning otherwise, so that we don't have to
 // take them into account in regexps
 if (text.indexOf('\\') > -1)
 {
+	unescape = true;
 	text = text.replace(
 		/\\[!)*[\\\]^_`~]/g,
 		function (str)
@@ -81,12 +85,12 @@ if (text.indexOf('![') > -1)
 		endTagLen   = matchLen - startTagLen - contentLen;
 
 		startTag = addTagPair('IMG', startTagPos, startTagLen, endTagPos, endTagLen);
-		startTag.setAttribute('alt', decode(m[1]));
-		startTag.setAttribute('src', decode(m[2]));
+		startTag.setAttribute('alt', decode(m[1], unescape));
+		startTag.setAttribute('src', decode(m[2], unescape));
 
 		if (m[3] > '')
 		{
-			startTag.setAttribute('title', decode(m[3]));
+			startTag.setAttribute('title', decode(m[3], unescape));
 		}
 
 		// Overwrite the markup
@@ -110,7 +114,7 @@ if (text.indexOf('[') > -1)
 		endTagLen   = matchLen - startTagLen - contentLen;
 
 		addTagPair('URL', startTagPos, startTagLen, endTagPos, endTagLen)
-			.setAttribute('url', decode(m[2]));
+			.setAttribute('url', decode(m[2], unescape));
 	}
 
 	// Overwrite the markup

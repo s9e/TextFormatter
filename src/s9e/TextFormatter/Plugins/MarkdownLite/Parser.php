@@ -16,10 +16,13 @@ class Parser extends ParserBase
 	*/
 	public function parse($text, array $matches)
 	{
+		$unescape = false;
+
 		// Encode escaped literals that have a special meaning otherwise, so that we don't have to
 		// take them into account in regexps
 		if (strpos($text, '\\') !== false && preg_match('/\\\\[!)*[\\\\\\]^_`~]/', $text))
 		{
+			$unescape = true;
 			$text = strtr(
 				$text,
 				[
@@ -35,12 +38,6 @@ class Parser extends ParserBase
 					'\\~'  => "\x1B9"
 				]
 			);
-
-			$decode = [__CLASS__, 'decode'];
-		}
-		else
-		{
-			$decode = 'stripslashes';
 		}
 
 		$lines = explode("\n", $text);
@@ -82,12 +79,12 @@ class Parser extends ParserBase
 				$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
 				$startTag = $this->parser->addTagPair('IMG', $startTagPos, $startTagLen, $endTagPos, $endTagLen);
-				$startTag->setAttribute('alt', $decode($m[1][0]));
-				$startTag->setAttribute('src', $decode($m[2][0]));
+				$startTag->setAttribute('alt', self::decode($m[1][0], $unescape));
+				$startTag->setAttribute('src', self::decode($m[2][0], $unescape));
 
 				if (isset($m[3]))
 				{
-					$startTag->setAttribute('title', $decode($m[3][0]));
+					$startTag->setAttribute('title', self::decode($m[3][0], $unescape));
 				}
 
 				// Overwrite the markup
@@ -116,7 +113,7 @@ class Parser extends ParserBase
 				$endTagLen   = $matchLen - $startTagLen - $contentLen;
 
 				$this->parser->addTagPair('URL', $startTagPos, $startTagLen, $endTagPos, $endTagLen)
-				             ->setAttribute('url', $decode($m[2][0]));
+				             ->setAttribute('url', self::decode($m[2][0], $unescape));
 			}
 
 			// Overwrite the markup
@@ -127,27 +124,35 @@ class Parser extends ParserBase
 	/**
 	* Decode a chunk of encoded text to be used as an attribute value
 	*
-	* Decodes escaped literals and removes slashes
+	* Decodes escaped literals and removes slashes and 0x1A characters
 	*
-	* @param  string $str Encoded text
-	* @return string      Decoded text
+	* @param  string $str      Encoded text
+	* @param  bool   $unescape Whether to unescape 0x1B sequences
+	* @return string           Decoded text
 	*/
-	protected static function decode($str)
+	protected static function decode($str, $unescape)
 	{
-		$decode = [
-			"\x1B0" => '!',
-			"\x1B1" => ')',
-			"\x1B2" => '*',
-			"\x1B3" => '[',
-			"\x1B4" => '\\',
-			"\x1B5" => ']',
-			"\x1B6" => '^',
-			"\x1B7" => '_',
-			"\x1B8" => '`',
-			"\x1B9" => '~'
-		];
+		$str = stripslashes(str_replace("\x1A", '', $str));
 
-		return strtr(stripslashes($str), $decode);
+		if ($unescape)
+		{
+			$decode = [
+				"\x1B0" => '!',
+				"\x1B1" => ')',
+				"\x1B2" => '*',
+				"\x1B3" => '[',
+				"\x1B4" => '\\',
+				"\x1B5" => ']',
+				"\x1B6" => '^',
+				"\x1B7" => '_',
+				"\x1B8" => '`',
+				"\x1B9" => '~'
+			];
+
+			$str = strtr($str, $decode);
+		}
+
+		return $str;
 	}
 
 	/**
