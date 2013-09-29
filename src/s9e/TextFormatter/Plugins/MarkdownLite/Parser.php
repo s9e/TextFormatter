@@ -20,22 +20,23 @@ class Parser extends ParserBase
 
 		// Encode escaped literals that have a special meaning otherwise, so that we don't have to
 		// take them into account in regexps
-		if (strpos($text, '\\') !== false && preg_match('/\\\\[!)*[\\\\\\]^_`~]/', $text))
+		if (strpos($text, '\\') !== false && preg_match('/\\\\[!")*[\\\\\\]^_`~]/', $text))
 		{
 			$unescape = true;
 			$text = strtr(
 				$text,
 				[
 					'\\!'  => "\x1B0",
-					'\\)'  => "\x1B1",
-					'\\*'  => "\x1B2",
-					'\\['  => "\x1B3",
-					'\\\\' => "\x1B4",
-					'\\]'  => "\x1B5",
-					'\\^'  => "\x1B6",
-					'\\_'  => "\x1B7",
-					'\\`'  => "\x1B8",
-					'\\~'  => "\x1B9"
+					'\\"'  => "\x1B1",
+					'\\)'  => "\x1B2",
+					'\\*'  => "\x1B3",
+					'\\['  => "\x1B4",
+					'\\\\' => "\x1B5",
+					'\\]'  => "\x1B6",
+					'\\^'  => "\x1B7",
+					'\\_'  => "\x1B8",
+					'\\`'  => "\x1B9",
+					'\\~'  => "\x1BA"
 				]
 			);
 		}
@@ -83,7 +84,7 @@ class Parser extends ParserBase
 		if (strpos($text, '![') !== false)
 		{
 			preg_match_all(
-				'/!\\[([^\\]]++)] ?\\(([^ ")]++)(?> "([^)]*)")?\\)/',
+				'/!\\[([^\\x17\\]]++)] ?\\(([^\\x17 ")]++)(?> "([^\\x17"]*+)")?\\)/',
  				$text,
 				$matches,
 				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
@@ -117,7 +118,7 @@ class Parser extends ParserBase
 		if (strpos($text, '[') !== false)
 		{
 			preg_match_all(
-				'/\\[([^\\]]++)] ?\\(([^)]++)\\)/',
+				'/\\[([^\\x17\\]]++)] ?\\(([^\\x17)]++)\\)/',
 				$text,
 				$matches,
 				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
@@ -159,15 +160,16 @@ class Parser extends ParserBase
 		{
 			$decode = [
 				"\x1B0" => '!',
-				"\x1B1" => ')',
-				"\x1B2" => '*',
-				"\x1B3" => '[',
-				"\x1B4" => '\\',
-				"\x1B5" => ']',
-				"\x1B6" => '^',
-				"\x1B7" => '_',
-				"\x1B8" => '`',
-				"\x1B9" => '~'
+				"\x1B1" => '"',
+				"\x1B2" => ')',
+				"\x1B3" => '*',
+				"\x1B4" => '[',
+				"\x1B5" => '\\',
+				"\x1B6" => ']',
+				"\x1B7" => '^',
+				"\x1B8" => '_',
+				"\x1B9" => '`',
+				"\x1BA" => '~'
 			];
 
 			$str = strtr($str, $decode);

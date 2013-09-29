@@ -51,6 +51,10 @@ class ParserTest extends Test
 				'.. ![Alt \\[text\\]](http://example.org/img.png "\\"Image title\\"") ..',
 				'<rt><p>.. <IMG alt="Alt [text]" src="http://example.org/img.png" title="&quot;Image title&quot;"><st>![</st>Alt \\[text\\]<et>](http://example.org/img.png "\\"Image title\\"")</et></IMG> ..</p></rt>'
 			],
+			[
+				'.. ![Alt text](http://example.org/img.png "Image (title)") ..',
+				'<rt><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image (title)"><st>![</st>Alt text<et>](http://example.org/img.png "Image (title)")</et></IMG> ..</p></rt>'
+			],
 			// Images in links
 			[
 				'.. [![Alt text](http://example.org/img.png)](http://example.org/) ..',
