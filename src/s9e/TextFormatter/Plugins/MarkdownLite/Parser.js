@@ -139,3 +139,20 @@ if (text.indexOf('[') > -1)
 	// Overwrite the markup
 	overwrite(matchPos, matchLen);
 }
+
+// Strikethrough
+if (text.indexOf('~~') > -1)
+{
+	regexp = /~~[^\x17]+?~~/g;
+
+	while (m = regexp.exec(text))
+	{
+		matchPos = m['index'];
+		matchLen = m[0].length;
+
+		addTagPair('DEL', matchPos, 2, matchPos + matchLen - 2, 2);
+
+		// Overwrite the markup
+		overwrite(matchPos, matchLen);
+	}
+}

@@ -77,6 +77,23 @@ class ParserTest extends Test
 				'.. `![foo](http://example.org)` ..',
 				'<rt><p>.. <C><st>`</st>![foo](http://example.org)<et>`</et></C> ..</p></rt>'
 			],
+			//Strikethrough
+			[
+				'.. ~~foo~~ ~~bar~~ ..',
+				'<rt><p>.. <DEL><st>~~</st>foo<et>~~</et></DEL> <DEL><st>~~</st>bar<et>~~</et></DEL> ..</p></rt>'
+			],
+			[
+				'.. ~~foo~bar~~ ..',
+				'<rt><p>.. <DEL><st>~~</st>foo~bar<et>~~</et></DEL> ..</p></rt>'
+			],
+			[
+				'.. ~~foo\\~~ ~~bar~~ ..',
+				'<rt><p>.. <DEL><st>~~</st>foo\\~~ <et>~~</et></DEL>bar~~ ..</p></rt>'
+			],
+			[
+				'.. ~~~~ ..',
+				'<pt><p>.. ~~~~ ..</p></pt>'
+			],
 		];
 
 		foreach ($tests as &$test)

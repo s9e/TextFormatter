@@ -141,6 +141,27 @@ class Parser extends ParserBase
 			// Overwrite the markup
 			self::overwrite($text, $matchPos, $matchLen);
 		}
+
+		// Strikethrough
+		if (strpos($text, '~~') !== false)
+		{
+			preg_match_all(
+				'/~~[^\\x17]+?~~/',
+ 				$text,
+				$matches,
+				PREG_OFFSET_CAPTURE
+			);
+
+			foreach ($matches[0] as list($match, $matchPos))
+			{
+				$matchLen = strlen($match);
+
+				$this->parser->addTagPair('DEL', $matchPos, 2, $matchPos + $matchLen - 2, 2);
+
+				// Overwrite the markup
+				self::overwrite($text, $matchPos, $matchLen);
+			}
+		}
 	}
 
 	/**
