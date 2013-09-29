@@ -69,6 +69,23 @@ if (text.indexOf('\\') > -1)
 	);
 }
 
+// Inline code
+if (text.indexOf('`') > -1)
+{
+	regexp = /`[^\x17`]+`/g;
+
+	while (m = regexp.exec(text))
+	{
+		matchPos = m['index'];
+		matchLen = m[0].length;
+
+		addTagPair('C', matchPos, 1, matchPos + matchLen - 1, 1);
+
+		// Overwrite the markup
+		overwrite(matchPos, matchLen);
+	}
+}
+
 // Images
 if (text.indexOf('![') > -1)
 {

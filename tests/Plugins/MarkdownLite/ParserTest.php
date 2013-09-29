@@ -56,6 +56,23 @@ class ParserTest extends Test
 				'.. [![Alt text](http://example.org/img.png)](http://example.org/) ..',
 				'<rt><p>.. <URL url="http://example.org/"><st>[</st><IMG alt="Alt text" src="http://example.org/img.png"><st>![</st>Alt text<et>](http://example.org/img.png)</et></IMG><et>](http://example.org/)</et></URL> ..</p></rt>'
 			],
+			// Inline code
+			[
+				'.. `foo` `bar` ..',
+				'<rt><p>.. <C><st>`</st>foo<et>`</et></C> <C><st>`</st>bar<et>`</et></C> ..</p></rt>'
+			],
+			[
+				'.. `foo\\` \\`b\\\\ar` ..',
+				'<rt><p>.. <C><st>`</st>foo\\` \\`b\\\\ar<et>`</et></C> ..</p></rt>'
+			],
+			[
+				'.. `[foo](http://example.org)` ..',
+				'<rt><p>.. <C><st>`</st>[foo](http://example.org)<et>`</et></C> ..</p></rt>'
+			],
+			[
+				'.. `![foo](http://example.org)` ..',
+				'<rt><p>.. <C><st>`</st>![foo](http://example.org)<et>`</et></C> ..</p></rt>'
+			],
 		];
 
 		foreach ($tests as &$test)

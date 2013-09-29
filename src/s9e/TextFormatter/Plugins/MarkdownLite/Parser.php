@@ -58,6 +58,27 @@ class Parser extends ParserBase
 			// HR:         "* * *" or "- - -" or "***" or "---"
 		}
 
+		// Inline code
+		if (strpos($text, '`') !== false)
+		{
+			preg_match_all(
+				'/`[^\\x17`]++`/',
+ 				$text,
+				$matches,
+				PREG_OFFSET_CAPTURE
+			);
+
+			foreach ($matches[0] as list($match, $matchPos))
+			{
+				$matchLen = strlen($match);
+
+				$this->parser->addTagPair('C', $matchPos, 1, $matchPos + $matchLen - 1, 1);
+
+				// Overwrite the markup
+				self::overwrite($text, $matchPos, $matchLen);
+			}
+		}
+
 		// Images
 		if (strpos($text, '![') !== false)
 		{
