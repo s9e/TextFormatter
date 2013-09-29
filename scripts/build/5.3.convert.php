@@ -208,12 +208,6 @@ function convertCustom($filepath, &$file)
 				'call_user_func_array($callback, array(&$msg, &$context));'
 			)
 		),
-		'MarkdownLite/Parser.php' => array(
-			function ($str)
-			{
-				return str_replace('$decode(', 'call_user_func($decode, ', $str);
-			}
-		),
 		'PHP.php' => array(
 			array(
 				"protected \$dynamicParams=[' . implode(',', \$dynamicParams) . '];",
