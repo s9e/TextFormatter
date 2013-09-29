@@ -115,6 +115,13 @@ Array.prototype.push = function(var_args) {};
  */
 Array.prototype.reverse = function() {};
 /**
+ * @this {{length: number}|Array.<T>}
+ * @modifies {this}
+ * @return {T}
+ * @template T
+ */
+Array.prototype.shift = function() {};
+/**
  * @param {*=} opt_begin Zero-based index at which to begin extraction.  A
  * @param {*=} opt_end Zero-based index at which to end extraction.  slice
  * @return {!Array.<T>}

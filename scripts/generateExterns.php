@@ -24,6 +24,7 @@ $externs = [
 		'Array.prototype.pop',
 		'Array.prototype.push',
 		'Array.prototype.reverse',
+		'Array.prototype.shift',
 		'Array.prototype.slice',
 		'Array.prototype.sort',
 		'Array.prototype.splice',
