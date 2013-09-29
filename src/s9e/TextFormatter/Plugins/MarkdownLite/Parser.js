@@ -1,4 +1,4 @@
-var alt, contentLen, endTagLen, endTagPos, m, matchLen, matchPos, regexp, startTagLen, startTagPos, title, url;
+var contentLen, endTagLen, endTagPos, m, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos;
 
 /**
 * Decode a chunk of encoded text to be used as an attribute value

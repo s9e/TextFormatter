@@ -132,7 +132,7 @@ function addTag(type, name, pos, len)
 			'Tag is disabled',
 			{
 				'tag'     : tag,
-				'tagName' : tagName
+				'tagName' : name
 			}
 		);
 		tag.invalidate();
