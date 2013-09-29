@@ -94,6 +94,11 @@ class ParserTest extends Test
 				'.. ~~~~ ..',
 				'<pt><p>.. ~~~~ ..</p></pt>'
 			],
+			// Superscript
+			[
+				'.. foo^baar^baz 1^2 ..',
+				'<rt><p>.. foo<SUP><st>^</st>baar<SUP><st>^</st>baz</SUP></SUP> 1<SUP><st>^</st>2</SUP> ..</p></rt>'
+			],
 		];
 
 		foreach ($tests as &$test)

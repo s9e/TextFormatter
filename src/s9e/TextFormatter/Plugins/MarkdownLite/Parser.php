@@ -162,6 +162,35 @@ class Parser extends ParserBase
 				self::overwrite($text, $matchPos, $matchLen);
 			}
 		}
+
+		// Superscript
+		if (strpos($text, '^') !== false)
+		{
+			preg_match_all(
+				'/\\^[^\\x17\\s]++/',
+				$text,
+				$matches,
+				PREG_OFFSET_CAPTURE
+			);
+
+			foreach ($matches[0] as list($match, $matchPos))
+			{
+				$matchLen    = strlen($match);
+				$startTagPos = $matchPos;
+				$endTagPos   = $matchPos + $matchLen;
+
+				$parts = explode('^', $match);
+				unset($parts[0]);
+
+				foreach ($parts as $part)
+				{
+					$this->parser->addTagPair('SUP', $startTagPos, 1, $endTagPos, 0);
+					$startTagPos += 1 + strlen($part);
+				}
+			}
+		}
+
+		// TODO: ***x**y* and **_k**_
 	}
 
 	/**

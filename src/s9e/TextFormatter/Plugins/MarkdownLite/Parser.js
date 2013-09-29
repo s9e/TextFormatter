@@ -1,4 +1,4 @@
-var contentLen, endTagLen, endTagPos, m, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos;
+var contentLen, endTagLen, endTagPos, m, match, matchLen, matchPos, regexp, startTag, startTagLen, startTagPos;
 
 /**
 * Decode a chunk of encoded text to be used as an attribute value
@@ -147,12 +147,34 @@ if (text.indexOf('~~') > -1)
 
 	while (m = regexp.exec(text))
 	{
+		match    = m[0];
 		matchPos = m['index'];
-		matchLen = m[0].length;
+		matchLen = match.length;
 
 		addTagPair('DEL', matchPos, 2, matchPos + matchLen - 2, 2);
+	}
+}
 
-		// Overwrite the markup
-		overwrite(matchPos, matchLen);
+// Superscript
+if (text.indexOf('^') > -1)
+{
+	regexp = /\^[^\x17\s]+/g;
+
+	while (m = regexp.exec(text))
+	{
+		match       = m[0];
+		matchPos    = m['index'];
+		matchLen    = match.length;
+		startTagPos = matchPos;
+		endTagPos   = matchPos + matchLen;
+
+		var parts = match.split('^');
+		parts.shift();
+
+		parts.forEach(function(part)
+		{
+			addTagPair('SUP', startTagPos, 1, endTagPos, 0);
+			startTagPos += 1 + part.length;
+		});
 	}
 }

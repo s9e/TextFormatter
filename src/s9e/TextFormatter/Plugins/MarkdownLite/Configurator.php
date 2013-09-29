@@ -70,6 +70,7 @@ class Configurator extends ConfiguratorBase
 		],
 		'QUOTE'  => '<blockquote><xsl:apply-templates/></blockquote>',
 		'STRONG' => '<strong><xsl:apply-templates/></strong>',
+		'SUP'    => '<sup><xsl:apply-templates/></sup>',
 		'URL'    => [
 			'attributes' => [
 				'url' => [
