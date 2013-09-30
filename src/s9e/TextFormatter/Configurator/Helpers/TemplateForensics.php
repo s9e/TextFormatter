@@ -139,7 +139,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template allows a given child
+	* Return whether this template allows a given child
 	*
 	* @param  self $child
 	* @return bool
@@ -169,7 +169,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template allows a given descendant
+	* Return whether this template allows a given descendant
 	*
 	* @param  self $descendant
 	* @return bool
@@ -192,7 +192,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template allows elements as children
+	* Return whether this template allows elements as children
 	*
 	* @return bool
 	*/
@@ -202,7 +202,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template allows text nodes as children
+	* Return whether this template allows text nodes as children
 	*
 	* @return bool
 	*/
@@ -212,7 +212,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template automatically closes given parent template
+	* Return whether this template automatically closes given parent template
 	*
 	* @param  self $parent
 	* @return bool
@@ -253,7 +253,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template should be considered a block-level element
+	* Return whether this template should be considered a block-level element
 	*
 	* @return bool
 	*/
@@ -263,7 +263,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template adds to the list of active formatting elements
+	* Return whether this template adds to the list of active formatting elements
 	*
 	* @return bool
 	*/
@@ -273,7 +273,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template uses the "empty" content model
+	* Return whether this template uses the "empty" content model
 	*
 	* @return bool
 	*/
@@ -283,7 +283,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template uses the "transparent" content model
+	* Return whether this template uses the "transparent" content model
 	*
 	* @return bool
 	*/
@@ -293,7 +293,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether all branches have an ancestor that is a void element
+	* Return whether all branches have an ancestor that is a void element
 	*
 	* @return bool
 	*/
@@ -303,7 +303,7 @@ class TemplateForensics
 	}
 
 	/**
-	* Whether this template preserves the whitespace in its descendants
+	* Return whether this template preserves the whitespace in its descendants
 	*
 	* @return bool
 	*/
