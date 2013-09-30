@@ -99,6 +99,10 @@ class ParserTest extends Test
 				'.. foo^baar^baz 1^2 ..',
 				'<rt><p>.. foo<SUP><st>^</st>baar<SUP><st>^</st>baz</SUP></SUP> 1<SUP><st>^</st>2</SUP> ..</p></rt>'
 			],
+			[
+				'.. \\^_^ ..',
+				'<pt><p>.. \^_^ ..</p></pt>'
+			],
 		];
 
 		foreach ($tests as &$test)
