@@ -566,7 +566,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox addHTML5Rules() add root rules
+	* @testdox addHTML5Rules() adds root rules
 	*/
 	public function testAddHTML5RulesRoot()
 	{
@@ -582,7 +582,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox addHTML5Rules() add tag rules
+	* @testdox addHTML5Rules() adds tag rules
 	*/
 	public function testAddHTML5RulesTags()
 	{
