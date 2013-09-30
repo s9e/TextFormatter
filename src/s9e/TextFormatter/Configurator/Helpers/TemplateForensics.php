@@ -87,6 +87,11 @@ class TemplateForensics
 	protected $isFormattingElement = false;
 
 	/**
+	* @var string Whether this template lets content through via an xsl:apply-templates element
+	*/
+	protected $isPassthrough = false;
+
+	/**
 	* @var bool Whether all branches use the transparent content model (or more accurately, whether
 	*           no branch uses a content model other than transparent)
 	*/
@@ -283,6 +288,16 @@ class TemplateForensics
 	}
 
 	/**
+	* Return whether this template lets content through via an xsl:apply-templates element
+	*
+	* @return bool
+	*/
+	public function isPassthrough()
+	{
+		return $this->isPassthrough;
+	}
+
+	/**
 	* Return whether this template uses the "transparent" content model
 	*
 	* @return bool
@@ -325,6 +340,9 @@ class TemplateForensics
 			$this->contentBitfield |= $this->getBitfield($node->localName, 'c', $node);
 			$this->hasElements = true;
 		}
+
+		// Test whether this template is passthrough
+		$this->isPassthrough = (bool) $this->xpath->evaluate('count(//xsl:apply-templates)');
 	}
 
 	/**
