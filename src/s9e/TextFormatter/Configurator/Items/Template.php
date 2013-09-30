@@ -9,11 +9,17 @@ namespace s9e\TextFormatter\Configurator\Items;
 
 use DOMDocument;
 use InvalidArgumentException;
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\TemplateNormalizer;
 
 class Template
 {
+	/**
+	* @var TemplateForensics Instance of TemplateForensics based on the content of this template
+	*/
+	protected $forensics;
+
 	/**
 	* @var bool Whether this template has been normalized
 	*/
@@ -33,6 +39,18 @@ class Template
 	public function __construct($template)
 	{
 		$this->template = $template;
+	}
+
+	/**
+	* Handle calls to undefined methods
+	*
+	* Forwards calls to this template's TemplateForensics instance
+	*
+	* @return mixed
+	*/
+	public function __call($methodName, $args)
+	{
+		return call_user_func_array([$this->getForensics(), $methodName], $args);
 	}
 
 	/**
@@ -72,6 +90,21 @@ class Template
 	public function getCSSNodes()
 	{
 		return TemplateHelper::getCSSNodes($this->asDOM());
+	}
+
+	/**
+	* Return an instance of TemplateForensics based on this template's content
+	*
+	* @return TemplateForensics
+	*/
+	public function getForensics()
+	{
+		if (!isset($this->forensics))
+		{
+			$this->forensics = new TemplateForensics($this->__toString());
+		}
+
+		return $this->forensics;
 	}
 
 	/**
@@ -130,5 +163,7 @@ class Template
 	{
 		$this->template     = $templateNormalizer->normalizeTemplate($this->template);
 		$this->isNormalized = true;
+
+		unset($this->forensics);
 	}
 }

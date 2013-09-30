@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\Items;
 
+use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Tests\Test;
 
@@ -127,5 +128,47 @@ class TemplateTest extends Test
 		$template->isNormalized(true);
 		$template->isNormalized(false);
 		$this->assertFalse($template->isNormalized());
+	}
+
+	/**
+	* @testdox getForensics() returns an instance of TemplateForensics based on this template's content
+	*/
+	public function testGetForensics()
+	{
+		$template = new Template('<br/>');
+
+		$this->assertEquals(
+			new TemplateForensics('<br/>'),
+			$template->getForensics()
+		);
+	}
+
+	/**
+	* @testdox normalize() resets the cached instance of TemplateForensics
+	*/
+	public function testNormalizeResetsForensics()
+	{
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\TemplateNormalizer')
+		             ->disableOriginalConstructor()
+		             ->getMock();
+
+		$template = new Template('<br/>');
+
+		$instance = $template->getForensics();
+		$this->assertSame($instance, $template->getForensics(), 'The instance was not cached');
+
+		$template->normalize($mock);
+		$this->assertNotSame($instance, $template->getForensics());
+	}
+
+	/**
+	* @testdox Unknown methods such as isBlock() and isPassthrough() are forwarded to this template's TemplateForensics instance
+	*/
+	public function testForensicsMethods()
+	{
+		$template = new Template('<hr/>');
+
+		$this->assertTrue($template->isBlock());
+		$this->assertFalse($template->isPassthrough());
 	}
 }
