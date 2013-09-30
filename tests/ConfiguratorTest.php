@@ -582,6 +582,17 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addHTML5Rules() does not overwrite boolean rules
+	*/
+	public function testAddHTML5RulesRootNoOverwrite()
+	{
+		$this->configurator->rootRules->noBrDescendant(false);
+		$this->configurator->addHTML5Rules(['parentHTML' => '<pre>']);
+
+		$this->assertFalse($this->configurator->rootRules['noBrDescendant']);
+	}
+
+	/**
 	* @testdox addHTML5Rules() adds tag rules
 	*/
 	public function testAddHTML5RulesTags()
@@ -596,6 +607,20 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame(['UL'], $ul->rules['denyChild']);
 		$this->assertSame(['LI'], $li->rules['denyChild']);
+	}
+
+	/**
+	* @testdox addHTML5Rules() does not overwrite boolean tag rules
+	*/
+	public function testAddHTML5RulesTagsNoOverwrite()
+	{
+		$ul = $this->configurator->tags->add('PRE');
+		$ul->defaultTemplate = '<pre><xsl:apply-templates/></pre>';
+		$ul->rules->noBrDescendant(false);
+
+		$this->configurator->addHTML5Rules();
+
+		$this->assertFalse($ul->rules['noBrDescendant']);
 	}
 
 	/**

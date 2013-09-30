@@ -310,12 +310,12 @@ class Configurator implements ConfigProvider
 		$rules = $this->rulesGenerator->getRules($this->tags, $options);
 
 		// Add the rules pertaining to the root
-		$this->rootRules->merge($rules['root']);
+		$this->rootRules->merge($rules['root'], false);
 
 		// Add the rules pertaining to each tag
 		foreach ($rules['tags'] as $tagName => $tagRules)
 		{
-			$this->tags[$tagName]->rules->merge($tagRules);
+			$this->tags[$tagName]->rules->merge($tagRules, false);
 		}
 	}
 
