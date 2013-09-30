@@ -160,9 +160,10 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 	/**
 	* Merge a set of rules into this collection
 	*
-	* @param array|Ruleset $rules 2D array of rule definitions, or instance of Ruleset
+	* @param array|Ruleset $rules     2D array of rule definitions, or instance of Ruleset
+	* @param bool          $overwrite Whether to overwrite scalar rules (e.g. boolean rules)
 	*/
-	public function merge($rules)
+	public function merge($rules, $overwrite = true)
 	{
 		if (!is_array($rules)
 		 && !($rules instanceof self))
@@ -179,7 +180,7 @@ class Ruleset extends Collection implements ArrayAccess, ConfigProvider
 					$this->$action($tagName);
 				}
 			}
-			else
+			elseif ($overwrite || !isset($this->items[$action]))
 			{
 				$this->$action($value);
 			}

@@ -306,6 +306,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
  [x] merge() correctly copies the defaultDescendantRule setting from an instance of Ruleset
  [x] merge() correctly copies the isTransparent setting from an instance of Ruleset
  [x] merge() throws an InvalidArgumentException if its argument is not an array or an instance of Ruleset
+ [x] merge() overwrites boolean rules by default
+ [x] merge() does not overwrite boolean rules if its second argument is FALSE
  [x] asConfig() does not return rules that are not used during parsing
  [x] asConfig() uses target names as keys for closeAncestor
  [x] asConfig() uses target names as keys for closeParent

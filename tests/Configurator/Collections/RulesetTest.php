@@ -977,6 +977,39 @@ class RulesetTest extends Test
 	}
 
 	/**
+	* @testdox merge() overwrites boolean rules by default
+	*/
+	public function testMergeOverwrite()
+	{
+		$ruleset1 = new Ruleset;
+		$ruleset1->isTransparent(true);
+
+		$ruleset2 = new Ruleset;
+		$ruleset2->isTransparent(false);
+		$ruleset2->merge($ruleset1);
+
+		$this->assertEquals($ruleset1, $ruleset2);
+	}
+
+	/**
+	* @testdox merge() does not overwrite boolean rules if its second argument is FALSE
+	*/
+	public function testMergeNoOverwrite()
+	{
+		$ruleset1 = new Ruleset;
+		$ruleset1->isTransparent(true);
+
+		$ruleset2 = new Ruleset;
+		$ruleset2->isTransparent(false);
+		$ruleset2->merge($ruleset1, false);
+
+		$this->assertNotEquals($ruleset1, $ruleset2);
+
+		$ruleset1->isTransparent(false);
+		$this->assertEquals($ruleset1, $ruleset2);
+	}
+
+	/**
 	* @testdox asConfig() does not return rules that are not used during parsing
 	*/
 	public function testAsConfigOmitsUnneededRules()
