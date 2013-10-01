@@ -31,14 +31,17 @@
     * [Add a site from the supported list](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AddBundled.md)
     * [Add a site manually](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AddCustom.md)
 
+### **Templating**
+  * [Introduction](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/00_Introduction.md)
+  * [Stylesheet parameters](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/StylesheetParameters.md)
+  * **Template normalization**
+    * [Change the default normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/Template_normalization/01_ChangeDefault.md)
+    * [Automatically set `rel="nofollow"` on every link](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/Template_normalization/02_SetRelLink.md)
+    * [Extend the template syntax through normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/Template_normalization/03_Extends.md)
+
 ### **Miscellaneous**
   * [Automatic rules generation](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/AutomaticRulesGeneration.md)
   * [Renderers](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/Renderers.md)
-  * [Stylesheet parameters](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/StylesheetParameters.md)
-  * **Template normalization**
-    * [Change the default normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/Template_normalization/01_ChangeDefault.md)
-    * [Automatically set `rel="nofollow"` on every link](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/Template_normalization/02_SetRelLink.md)
-    * [Extend the template syntax through normalization](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/Template_normalization/03_Extends.md)
   * **URL features**
     * [Disallow links pointing to a given domain](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/URL_features/DisallowHosts.md)
     * [Restrict/allow schemes](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/URL_features/Protocols.md)
