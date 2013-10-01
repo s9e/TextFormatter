@@ -1,9 +1,10 @@
 ## À la carte: make your own bundle
 
-Predefined bundles are nice, but they're not configurable. Here's how you can create your own bundle. For convenience, we'll base our custom bundle on the default Forum bundle.
+Predefined bundles are nice, but they're not configurable. Here's how you can create your own bundle. For convenience, we'll base our custom bundle on the default "Forum" bundle.
 
 ```php
-$configurator = s9e\TextFormatter\Configurator\Bundles\Forum::getConfigurator();
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->loadBundle('Forum');
 
 // Add your own BBCode
 $configurator->BBCodes->addCustom(

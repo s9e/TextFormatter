@@ -674,6 +674,25 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox loadBundle('../Invalid') throws an exception
+	* @expectedException InvalidArgumentException
+	* @expectedExceptionMessage Invalid bundle name
+	*/
+	public function testLoadBundleInvalid()
+	{
+		$this->configurator->loadBundle('../Invalid');
+	}
+
+	/**
+	* @testdox loadBundle('Forum') adds the Forum bundle's configuration
+	*/
+	public function testLoadBundle()
+	{
+		$this->configurator->loadBundle('Forum');
+		$this->assertTrue($this->configurator->BBCodes->exists('B'));
+	}
+
+	/**
 	* @testdox saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
 	*/
 	public function testSaveBundle()

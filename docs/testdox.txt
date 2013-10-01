@@ -146,6 +146,8 @@ s9e\TextFormatter\Tests\Configurator
  [x] setRendererGenerator('PHP') sets $configurator->rendererGenerator to an instance of s9e\TextFormatter\Configurator\RendererGenerators\PHP
  [x] setRendererGenerator() passes extra arguments to the generator's constructor
  [x] setRendererGenerator() returns the new instance of RendererGenerator
+ [x] loadBundle('../Invalid') throws an exception
+ [x] loadBundle('Forum') adds the Forum bundle's configuration
  [x] saveBundle('Foo', '/tmp/foo') saves a bundle Foo to /tmp/foo
  [x] saveBundle() returns the number of bytes written to disk
  [x] saveBundle() passes its third parameter to BundleGenerator::generate()

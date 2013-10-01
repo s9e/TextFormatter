@@ -270,6 +270,25 @@ class Configurator implements ConfigProvider
 	}
 
 	/**
+	* Load a bundle into this configuration
+	*
+	* @param  string $bundleName Name of the bundle
+	* @return void
+	*/
+	public function loadBundle($bundleName)
+	{
+		if (!preg_match('#^[A-Z][A-Za-z0-9]+$#D', $bundleName))
+		{
+			throw new InvalidArgumentException("Invalid bundle name '" . $bundleName . "'");
+		}
+
+		$className = __CLASS__ . '\\Bundles\\' . $bundleName;
+
+		$bundle = new $className;
+		$bundle->configure($this);
+	}
+
+	/**
 	* Create and save a bundle based on this configuration
 	*
 	* @param  string $className Name of the bundle class
