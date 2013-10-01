@@ -7,7 +7,7 @@ This plugin censors text based on a configurable list of words.
  * A single space matches any number of whitespace characters, meaning that censoring "b u g" will also censor "bug" or "b  u  g".
  * Censored words are replaced with `****` unless a replacement is specified when the censored word is added to the list.
 
-## Example
+## Examples
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
