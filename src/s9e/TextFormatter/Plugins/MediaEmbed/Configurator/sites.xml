@@ -31,6 +31,17 @@
 		<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id={@id}"/>
 	</site>
 
+	<site id="funnyordie">
+		<name>Funny or Die</name>
+		<homepage>http://www.funnyordie.com/</homepage>
+		<source>http://support.funnyordie.com/discussions/problems/918-embed-user-videos-widget</source>
+		<example>http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</example>
+
+		<host>funnyordie.com</host>
+		<extract>!funnyordie.com/videos/(?'id'[0-9a-f]+)!</extract>
+		<iframe width="640" height="360" src="http://www.funnyordie.com/embed/{@id}"/>
+	</site>
+
 	<site id="liveleak">
 		<name>LiveLeak</name>
 		<homepage>http://www.liveleak.com/</homepage>

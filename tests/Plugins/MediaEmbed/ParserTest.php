@@ -166,6 +166,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
+				'<rt><FUNNYORDIE id="bf313bd8b4">http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</FUNNYORDIE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('funnyordie');
+				}
+			],
+			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
 				'<rt><LIVELEAK id="3dd_1366238099">http://www.liveleak.com/view?i=3dd_1366238099</LIVELEAK></rt>',
 				[],
@@ -373,6 +382,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
+				'<iframe width="640" height="360" src="http://www.funnyordie.com/embed/bf313bd8b4" allowfullscreen=""></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('funnyordie');
+				}
+			],
+			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
 				'<iframe width="560" height="315" src="http://www.liveleak.com/e/3dd_1366238099" allowfullscreen=""></iframe>',
 				[],
@@ -525,7 +543,8 @@ class ParserTest extends Test
 namespace s9e\TextFormatter\Plugins\MediaEmbed;
 
 // Terrible hack ahead: this function will transparently cache the result of file_get_contents
-// when used on HTTP URLs in the MediaEmbed namespace
+// when used on HTTP URLs in the MediaEmbed namespace. NOTE: this may eventually fail depending on
+// the order in which the source is loaded, because function names are resolved at compile time
 function file_get_contents($filepath)
 {
 	if (!preg_match('#^(?:compress\\.zlib://)?(http://.*)#', $filepath, $m))
