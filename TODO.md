@@ -40,3 +40,4 @@ TODO
 - Class names collisions in s9e\TextFormatter\Bundles\S18\Helper
 - One cheap way to filter a CSS value would be to set an attribute preprocessor for every supported CSS attribute, e.g. /(?<!\w)color\s*:\s*(?<color>#[0-9a-f]+|\w+)/ - could be mentionned in cookbook
 - Consider declaring span a formatting element in TemplateForensics even though it's not listed in http://www.w3.org/TR/html5/syntax.html#formatting
+- Fix addBrTag() in context where br tags are disallowed
