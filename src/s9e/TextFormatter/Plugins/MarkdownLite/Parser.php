@@ -48,15 +48,26 @@ class Parser extends ParserBase
 
 			if (!$spn)
 			{
+				// NOTE: might be the continuation of a quote :\
 				continue;
 			}
 
+			preg_match_all(
+				'/> ?|\\* *\\* *\\*[* ]*$|- *- *-[- ]*$|[-*+] |\\d\\. |#+$/S',
+				substr($line, 0, $spn),
+				$matches
+			);
+
 			// Blockquote: ">" or "> "
-			// List item:  "* " preceded by any number of spaces
-			// List item:  "- " preceded by any number of spaces
-			// List item:  "+ " preceded by any number of spaces
+			// List item:  "* "
+			// List item:  "- "
+			// List item:  "+ "
 			// List item:  at least one digit followed by ". "
-			// HR:         "* * *" or "- - -" or "***" or "---"
+			// HR:         At least three * or - alone on a line, with any number of spaces between
+			// Headings:   #+ alone on a line
+			// Headings:   possibly any number of - or = alone on a line
+			//
+			// NOTE: apparently the only elements allowed after a list item are more list items
 		}
 
 		// Inline code
