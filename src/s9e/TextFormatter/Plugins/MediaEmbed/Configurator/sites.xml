@@ -1,4 +1,14 @@
 <sites>
+	<site id="break">
+		<name>Break</name>
+		<homepage>http://www.break.com/</homepage>
+		<example>http://www.break.com/video/video-game-playing-frog-wants-more-2278131</example>
+
+		<host>break.com</host>
+		<extract>!break\.com/video/.*-(?'id'[0-9]+)$!</extract>
+		<iframe width="464" height="290" src="http://www.break.com/embed/{@id}"/>
+	</site>
+
 	<site id="collegehumor">
 		<name>CollegeHumor</name>
 		<homepage>http://www.collegehumor.com/</homepage>

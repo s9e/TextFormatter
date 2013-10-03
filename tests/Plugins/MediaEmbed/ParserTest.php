@@ -130,6 +130,15 @@ class ParserTest extends Test
 			],
 			// Bundled sites
 			[
+				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
+				'<rt><BREAK id="2278131">http://www.break.com/video/video-game-playing-frog-wants-more-2278131</BREAK></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('break');
+				}
+			],
+			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
 				'<rt><COLLEGEHUMOR id="1181601">http://www.collegehumor.com/video/1181601/more-than-friends</COLLEGEHUMOR></rt>',
 				[],
@@ -372,6 +381,15 @@ class ParserTest extends Test
 	public function getRenderingTests()
 	{
 		return [
+			[
+				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
+				'<iframe width="464" height="290" src="http://www.break.com/embed/2278131" allowfullscreen=""></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('break');
+				}
+			],
 			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
 				'<iframe width="600" height="369" src="http://www.collegehumor.com/e/1181601" allowfullscreen=""></iframe>',
