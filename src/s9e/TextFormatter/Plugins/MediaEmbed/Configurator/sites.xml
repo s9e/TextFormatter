@@ -144,6 +144,17 @@
 		<iframe width="560" height="315" src="http://player.vimeo.com/video/{@id}"/>
 	</site>
 
+	<site id="wshh">
+		<name>WorldStarHipHop</name>
+		<homepage>http://www.worldstarhiphop.com/</homepage>
+		<example>http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</example>
+		<example>http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</example>
+
+		<host>worldstarhiphop.com</host>
+		<extract>!worldstarhiphop\.com/video(?:s/video)?\.php\?v=(?'id'[A-Za-z0-9]+)!</extract>
+		<flash width="448" height="374" src="http://www.worldstarhiphop.com/videos/e/16711680/{@id}"/>
+	</site>
+
 	<site id="youtube">
 		<name>YouTube</name>
 		<homepage>http://www.youtube.com/</homepage>

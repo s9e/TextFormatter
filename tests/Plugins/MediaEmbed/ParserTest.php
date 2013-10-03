@@ -276,6 +276,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
+				'<rt><WSHH id="wshhZ8F22UtJ8sLHdja0">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wshh');
+				}
+			],
+			[
+				'http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
+				'<rt><WSHH id="wshh2SXFFe7W14DqQx61">http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wshh');
+				}
+			],
+			[
 				'[media=youtube]-cEzsCAzTak[/media]',
 				'<rt><YOUTUBE id="-cEzsCAzTak">[media=youtube]-cEzsCAzTak[/media]</YOUTUBE></rt>',
 				[],
@@ -470,6 +488,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
+				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="448" height="374" data="http://www.worldstarhiphop.com/videos/e/16711680/wshhZ8F22UtJ8sLHdja0"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.worldstarhiphop.com/videos/e/16711680/wshhZ8F22UtJ8sLHdja0" width="448" height="374" allowfullscreen=""></object>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wshh');
+				}
+			],
+			[
+				'http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="448" height="374" data="http://www.worldstarhiphop.com/videos/e/16711680/wshh2SXFFe7W14DqQx61"><param name="allowFullScreen" value="true"><embed type="application/x-shockwave-flash" src="http://www.worldstarhiphop.com/videos/e/16711680/wshh2SXFFe7W14DqQx61" width="448" height="374" allowfullscreen=""></object>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wshh');
 				}
 			],
 			[
