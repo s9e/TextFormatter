@@ -52,6 +52,16 @@
 		<iframe width="640" height="360" src="http://www.funnyordie.com/embed/{@id}"/>
 	</site>
 
+	<site id="gist">
+		<name>GitHub Gist</name>
+		<homepage>https://gist.github.com/</homepage>
+		<example>https://gist.github.com/s9e/6806305</example>
+
+		<host>github.com</host>
+		<extract>!gist\.github\.com/(?'user'[^/]+)/(?'id'[0-9]+)!</extract>
+		<template><![CDATA[<script src="https://gist.github.com/{@user}/{@id}.js"></script>]]></template>
+	</site>
+
 	<site id="liveleak">
 		<name>LiveLeak</name>
 		<homepage>http://www.liveleak.com/</homepage>

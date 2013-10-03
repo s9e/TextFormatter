@@ -184,6 +184,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://gist.github.com/s9e/6806305',
+				'<rt><GIST id="6806305" user="s9e">https://gist.github.com/s9e/6806305</GIST></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
 				'<rt><LIVELEAK id="3dd_1366238099">http://www.liveleak.com/view?i=3dd_1366238099</LIVELEAK></rt>',
 				[],
@@ -424,6 +433,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('funnyordie');
+				}
+			],
+			[
+				'https://gist.github.com/s9e/6806305',
+				'<script src="https://gist.github.com/s9e/6806305.js"></script>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gist');
 				}
 			],
 			[
