@@ -193,6 +193,33 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
+				'<rt><KICKSTARTER id="1869987317/wish-i-was-here-1">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=</KICKSTARTER></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('kickstarter');
+				}
+			],
+			[
+				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html',
+				'<rt><KICKSTARTER card="card" id="1869987317/wish-i-was-here-1">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html</KICKSTARTER></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('kickstarter');
+				}
+			],
+			[
+				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html',
+				'<rt><KICKSTARTER id="1869987317/wish-i-was-here-1" video="video">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</KICKSTARTER></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('kickstarter');
+				}
+			],
+			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
 				'<rt><LIVELEAK id="3dd_1366238099">http://www.liveleak.com/view?i=3dd_1366238099</LIVELEAK></rt>',
 				[],
@@ -442,6 +469,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
+				'<iframe width="220" height="380" src="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('kickstarter');
+				}
+			],
+			[
+				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html',
+				'<iframe width="480" height="360" src="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('kickstarter');
 				}
 			],
 			[

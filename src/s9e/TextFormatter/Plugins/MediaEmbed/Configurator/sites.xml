@@ -62,6 +62,27 @@
 		<template><![CDATA[<script src="https://gist.github.com/{@user}/{@id}.js"></script>]]></template>
 	</site>
 
+	<site id="kickstarter">
+		<name>Kickstarter</name>
+		<homepage>http://www.kickstarter.com/</homepage>
+		<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1</example>
+		<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html</example>
+		<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</example>
+
+		<host>kickstarter.com</host>
+		<extract>!kickstarter.com/projects/(?'id'[^/]+/[^/?]+)(?>/widget/(?>(?'card'card)|(?'video'video)))?!</extract>
+		<template><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@video">
+					<iframe width="480" height="360" src="http://www.kickstarter.com/projects/{@id}/widget/video.html"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<iframe width="220" height="380" src="http://www.kickstarter.com/projects/{@id}/widget/card.html"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></template>
+	</site>
+
 	<site id="liveleak">
 		<name>LiveLeak</name>
 		<homepage>http://www.liveleak.com/</homepage>
