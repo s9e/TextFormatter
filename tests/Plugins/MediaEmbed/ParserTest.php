@@ -69,15 +69,15 @@ class ParserTest extends Test
 			],
 			[
 				// Ensure that invalid URLs don't get scraped
-				'[media]http://example.org/123?x"> foo="bar[/media]',
-				'<pt>[media]http://example.org/123?x"&gt; foo="bar[/media]</pt>',
+				'[media]http://example.invalid/123?x"> foo="bar[/media]',
+				'<pt>[media]http://example.invalid/123?x"&gt; foo="bar[/media]</pt>',
 				['captureURLs' => false],
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add(
 						'example',
 						[
-							'host'   => 'example.org',
+							'host'   => 'example.invalid',
 							'scrape' => [
 								'match'   => '/./',
 								'extract' => "/(?'id'[0-9]+)/"
@@ -89,15 +89,15 @@ class ParserTest extends Test
 			],
 			[
 				// Ensure that we don't scrape the URL if it doesn't match
-				'[media]http://example.org/123[/media]',
-				'<pt>[media]http://example.org/123[/media]</pt>',
+				'[media]http://example.invalid/123[/media]',
+				'<pt>[media]http://example.invalid/123[/media]</pt>',
 				[],
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add(
 						'example',
 						[
-							'host'   => 'example.org',
+							'host'   => 'example.invalid',
 							'scrape' => [
 								'match'   => '/XXX/',
 								'extract' => "/(?'id'[0-9]+)/"
@@ -120,7 +120,7 @@ class ParserTest extends Test
 							'host'    => 'example.invalid',
 							'extract' => "#/(?'id'[0-9]{2})#",
 							'scrape'  => [
-								'match'   => '.',
+								'match'   => '/./',
 								'extract' => "/(?'id'[0-9]+)/"
 							],
 							'iframe'  => ['width' => 1, 'height' => 1, 'src' => '{@id}']

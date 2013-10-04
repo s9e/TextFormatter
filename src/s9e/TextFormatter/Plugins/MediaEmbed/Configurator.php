@@ -14,6 +14,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
@@ -100,14 +101,28 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		if (!$this->captureURLs || !count($this->collection))
+		if (!$this->captureURLs)
+		{
+			return false;
+		}
+
+		$hosts = [];
+		foreach ($this->collection as $site)
+		{
+			foreach ((array) $site['host'] as $host)
+			{
+				$hosts[] = $host;
+			}
+		}
+
+		if (empty($hosts))
 		{
 			return false;
 		}
 
 		return [
 			'quickMatch' => $this->quickMatch,
-			'regexp'     => $this->regexp
+			'regexp'     => '!https?://(?:\\w+\\.)*' . RegexpBuilder::fromList($hosts) . '/\\S+!'
 		];
 	}
 
