@@ -32,6 +32,24 @@ class ParserTest extends Test
 	{
 		return [
 			[
+				'http://www.indiegogo.com/projects/gameheart-redesigned',
+				'<rt><INDIEGOGO id="513633">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('indiegogo');
+				}
+			],
+			[
+				'http://www.indiegogo.com/projects/5050-years-a-documentary',
+				'<rt><INDIEGOGO id="535215">http://www.indiegogo.com/projects/5050-years-a-documentary</INDIEGOGO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('indiegogo');
+				}
+			],
+			[
 				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
 				'<rt><SLIDESHARE id="21112125">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></rt>',
 				[],
@@ -190,6 +208,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'http://www.indiegogo.com/projects/513633',
+				'<rt><INDIEGOGO id="513633">http://www.indiegogo.com/projects/513633</INDIEGOGO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('indiegogo');
 				}
 			],
 			[
@@ -469,6 +496,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'http://www.indiegogo.com/projects/513633',
+				'<iframe width="224" height="486" src="http://www.indiegogo.com/project/513633/widget" allowfullscreen=""></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('indiegogo');
 				}
 			],
 			[

@@ -62,6 +62,20 @@
 		<template><![CDATA[<script src="https://gist.github.com/{@user}/{@id}.js"></script>]]></template>
 	</site>
 
+	<site id="indiegogo">
+		<name>Indiegogo</name>
+		<homepage>http://www.indiegogo.com/</homepage>
+		<example>http://www.indiegogo.com/projects/gameheart-redesigned</example>
+
+		<host>indiegogo.com</host>
+		<extract>!indiegogo\.com/projects/(?'id'[0-9]+)$!</extract>
+		<scrape>
+			<match>!indiegogo\.com/projects/.!</match>
+			<extract>!indiegogo\.com/projects/(?'id'[0-9]+)/!</extract>
+		</scrape>
+		<iframe width="224" height="486" src="http://www.indiegogo.com/project/{@id}/widget"/>
+	</site>
+
 	<site id="kickstarter">
 		<name>Kickstarter</name>
 		<homepage>http://www.kickstarter.com/</homepage>
