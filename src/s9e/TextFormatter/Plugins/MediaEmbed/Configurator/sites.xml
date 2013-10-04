@@ -84,7 +84,7 @@
 		<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</example>
 
 		<host>kickstarter.com</host>
-		<extract>!kickstarter.com/projects/(?'id'[^/]+/[^/?]+)(?>/widget/(?>(?'card'card)|(?'video'video)))?!</extract>
+		<extract>!kickstarter.com/projects/(?'id'[^/]+/[^/?]+)(?:/widget/(?:(?'card'card)|(?'video'video)))?!</extract>
 		<template><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@video">
