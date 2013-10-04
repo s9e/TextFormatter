@@ -231,7 +231,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
-				'<rt><TED path="talks/eli_pariser_beware_online_filter_bubbles.html">http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</TED></rt>',
+				'<rt><TED id="talks/eli_pariser_beware_online_filter_bubbles.html">http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</TED></rt>',
 				[],
 				function ($configurator)
 				{
@@ -241,7 +241,7 @@ class ParserTest extends Test
 			[
 				// Some people might just copy/paste the embed code
 				'[media]<iframe src="http://embed.ted.com/playlists/26/our_digital_lives.html" width="640" height="360" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>[/media]',
-				'<rt><TED path="playlists/26/our_digital_lives.html">[media]&lt;iframe src="http://embed.ted.com/playlists/26/our_digital_lives.html" width="640" height="360" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen&gt;&lt;/iframe&gt;[/media]</TED></rt>',
+				'<rt><TED id="playlists/26/our_digital_lives.html">[media]&lt;iframe src="http://embed.ted.com/playlists/26/our_digital_lives.html" width="640" height="360" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen&gt;&lt;/iframe&gt;[/media]</TED></rt>',
 				[],
 				function ($configurator)
 				{

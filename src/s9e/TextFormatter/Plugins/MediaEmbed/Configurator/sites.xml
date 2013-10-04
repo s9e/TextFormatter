@@ -119,8 +119,8 @@
 		<example>http://embed.ted.com/playlists/26/our_digital_lives.html</example>
 
 		<host>ted.com</host>
-		<extract>!ted\.com/(?'path'(?:talk|playlist)s/[^\s"]+)!i</extract>
-		<iframe width="560" height="315" src="http://embed.ted.com/{@path}"/>
+		<extract>!ted\.com/(?'id'(?:talk|playlist)s/[^\s"]+)!i</extract>
+		<iframe width="560" height="315" src="http://embed.ted.com/{@id}"/>
 	</site>
 
 	<site id="twitch">
