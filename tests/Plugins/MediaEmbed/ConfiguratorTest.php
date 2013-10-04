@@ -456,8 +456,7 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAsConfigFalseNoSite()
 	{
-		$plugin = $this->configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
-		$plugin->add('youtube');
+		$plugin = $this->configurator->plugins->load('MediaEmbed');
 
 		$config = $plugin->asConfig();
 

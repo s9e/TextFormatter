@@ -100,7 +100,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	public function asConfig()
 	{
-		if (!$this->captureURLs)
+		if (!$this->captureURLs || !count($this->collection))
 		{
 			return false;
 		}
