@@ -384,6 +384,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://vine.co/v/bYwPIluIipH',
+				'<rt><VINE id="bYwPIluIipH">https://vine.co/v/bYwPIluIipH</VINE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vine');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
 				'<rt><WSHH id="wshhZ8F22UtJ8sLHdja0">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></rt>',
 				[],
@@ -659,6 +668,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
+				'https://vine.co/v/bYwPIluIipH',
+				'<iframe width="480" height="480" src="https://vine.co/v/bYwPIluIipH/embed/simple" allowfullscreen="" frameborder="0" scrolling="no"></iframe><script async="" src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vine');
 				}
 			],
 			[

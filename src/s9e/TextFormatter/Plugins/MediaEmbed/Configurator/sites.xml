@@ -225,6 +225,16 @@
 		<iframe width="560" height="315" src="http://player.vimeo.com/video/{@id}"/>
 	</site>
 
+	<site id="vine">
+		<name>Vine</name>
+		<homepage>https://vine.co/</homepage>
+		<example>https://vine.co/v/bYwPIluIipH</example>
+
+		<host>vine.co</host>
+		<extract>!https://vine.co/v/(?'id'[^/]+)!</extract>
+		<template><![CDATA[<iframe width="480" height="480" src="https://vine.co/v/{@id}/embed/simple" allowfullscreen="" frameborder="0" scrolling="no"/><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"/>]]></template>
+	</site>
+
 	<site id="wshh">
 		<name>WorldStarHipHop</name>
 		<homepage>http://www.worldstarhiphop.com/</homepage>
