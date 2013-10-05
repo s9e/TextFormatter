@@ -238,6 +238,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
+				'<rt><IGN id="http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer">http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</IGN></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ign');
+				}
+			],
+			[
 				'http://www.indiegogo.com/projects/513633',
 				'<rt><INDIEGOGO id="513633">http://www.indiegogo.com/projects/513633</INDIEGOGO></rt>',
 				[],
@@ -532,6 +541,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
+				'<iframe width="468" height="263" src="http://widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ign');
 				}
 			],
 			[

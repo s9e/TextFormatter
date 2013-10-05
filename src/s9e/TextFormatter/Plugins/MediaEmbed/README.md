@@ -122,6 +122,11 @@ echo $html;
 		<td>https://gist.github.com/s9e/6806305</td>
 	</tr>
 	<tr>
+		<td><code>ign</code></td>
+		<td>IGN</td>
+		<td>http://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>
+	</tr>
+	<tr>
 		<td><code>indiegogo</code></td>
 		<td>Indiegogo</td>
 		<td>http://www.indiegogo.com/projects/gameheart-redesigned</td>

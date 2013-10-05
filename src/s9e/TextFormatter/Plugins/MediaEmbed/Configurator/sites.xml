@@ -78,6 +78,16 @@
 		<template><![CDATA[<script src="https://gist.github.com/{@user}/{@id}.js"></script>]]></template>
 	</site>
 
+	<site id="ign">
+		<name>IGN</name>
+		<homepage>http://www.ign.com/videos/</homepage>
+		<example>http://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</example>
+
+		<host>ign.com</host>
+		<extract>!(?'id'https?://.*?ign\.com/videos/.+)!</extract>
+		<iframe width="468" height="263" src="http://widgets.ign.com/video/embed/content.html?url={@id}"/>
+	</site>
+
 	<site id="indiegogo">
 		<name>Indiegogo</name>
 		<homepage>http://www.indiegogo.com/</homepage>
