@@ -32,6 +32,15 @@ class ParserTest extends Test
 	{
 		return [
 			[
+				'http://www.gamespot.com/shows/random-encounter/?event=re-volt-20131004',
+				'<rt><GAMESPOT id="6415329">http://www.gamespot.com/shows/random-encounter/?event=re-volt-20131004</GAMESPOT></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gamespot');
+				}
+			],
+			[
 				'http://www.indiegogo.com/projects/gameheart-redesigned',
 				'<rt><INDIEGOGO id="513633">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></rt>',
 				[],
@@ -199,6 +208,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('funnyordie');
+				}
+			],
+			[
+				'http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/',
+				'<rt><GAMESPOT id="6415176">http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/</GAMESPOT></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gamespot');
+				}
+			],
+			[
+				'http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/',
+				'<rt><GAMESPOT id="6412922">http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/</GAMESPOT></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gamespot');
 				}
 			],
 			[
@@ -487,6 +514,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('funnyordie');
+				}
+			],
+			[
+				'http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/',
+				'<iframe width="640" height="360" src="http://www.gamespot.com/videoembed/6415176&amp;mapp=false&amp;ads=0&amp;onsite=0" allowfullscreen=""></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gamespot');
 				}
 			],
 			[
