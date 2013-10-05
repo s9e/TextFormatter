@@ -473,7 +473,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
-				'<iframe width="464" height="290" src="http://www.break.com/embed/2278131" allowfullscreen=""></iframe>',
+				'<iframe width="464" height="290" src="http://www.break.com/embed/2278131" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -482,7 +482,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
-				'<iframe width="600" height="369" src="http://www.collegehumor.com/e/1181601" allowfullscreen=""></iframe>',
+				'<iframe width="600" height="369" src="http://www.collegehumor.com/e/1181601" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -500,7 +500,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
-				'<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id=10100658170103643" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id=10100658170103643" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -509,7 +509,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
-				'<iframe width="640" height="360" src="http://www.funnyordie.com/embed/bf313bd8b4" allowfullscreen=""></iframe>',
+				'<iframe width="640" height="360" src="http://www.funnyordie.com/embed/bf313bd8b4" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -518,7 +518,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/',
-				'<iframe width="640" height="360" src="http://www.gamespot.com/videoembed/6415176&amp;mapp=false&amp;ads=0&amp;onsite=0" allowfullscreen=""></iframe>',
+				'<iframe width="640" height="360" src="http://www.gamespot.com/videoembed/6415176&amp;mapp=false&amp;ads=0&amp;onsite=0" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -536,7 +536,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/513633',
-				'<iframe width="224" height="486" src="http://www.indiegogo.com/project/513633/widget" allowfullscreen=""></iframe>',
+				'<iframe width="224" height="486" src="http://www.indiegogo.com/project/513633/widget" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -545,7 +545,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
-				'<iframe width="220" height="380" src="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html"></iframe>',
+				'<iframe width="220" height="380" src="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -554,7 +554,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html',
-				'<iframe width="480" height="360" allowfullscreen="" src="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html"></iframe>',
+				'<iframe width="480" height="360" src="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -563,7 +563,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.liveleak.com/view?i=3dd_1366238099',
-				'<iframe width="560" height="315" src="http://www.liveleak.com/e/3dd_1366238099" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="http://www.liveleak.com/e/3dd_1366238099" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -572,7 +572,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/',
-				'<iframe width="560" height="315" src="http://www.metacafe.com/embed/10785282/" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="http://www.metacafe.com/embed/10785282/" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -581,7 +581,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
-				'<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/23431564" allowfullscreen=""></iframe>',
+				'<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/23431564" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -591,7 +591,7 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F98282116" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F98282116" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -600,7 +600,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
-				'<iframe width="560" height="315" src="http://embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="http://embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -636,7 +636,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/67207222',
-				'<iframe width="560" height="315" src="http://player.vimeo.com/video/67207222" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="http://player.vimeo.com/video/67207222" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -663,7 +663,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media=youtube]-cEzsCAzTak[/media]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -672,7 +672,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -681,7 +681,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -690,7 +690,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -699,7 +699,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE=http://www.youtube.com/watch?v=-cEzsCAzTak]Hi!',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>Hi!',
+				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>Hi!',
 				[],
 				function ($configurator)
 				{
@@ -708,7 +708,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak',
-				'Check this: <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>',
+				'Check this: <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -717,7 +717,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak and that: http://example.com',
-				'Check this: <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe> and that: <a href="http://example.com">http://example.com</a>',
+				'Check this: <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe> and that: <a href="http://example.com">http://example.com</a>',
 				[],
 				function ($configurator)
 				{

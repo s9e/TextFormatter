@@ -393,7 +393,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<iframe width="123" height="456" src="foo" allowfullscreen=""/>',
+			'<iframe width="123" height="456" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/>',
 			$tag->defaultTemplate
 		);
 	}

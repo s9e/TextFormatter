@@ -272,7 +272,7 @@ class Configurator extends ConfiguratorBase
 					break 2;
 
 				case 'iframe':
-					$tag->defaultTemplate = '<iframe width="' . $siteConfig['iframe']['width'] . '" height="' . $siteConfig['iframe']['height'] . '" src="' . $siteConfig['iframe']['src'] . '" allowfullscreen=""/>';
+					$tag->defaultTemplate = '<iframe width="' . $siteConfig['iframe']['width'] . '" height="' . $siteConfig['iframe']['height'] . '" src="' . $siteConfig['iframe']['src'] . '" allowfullscreen="" frameborder="0" scrolling="no"/>';
 					break 2;
 
 				case 'template':
