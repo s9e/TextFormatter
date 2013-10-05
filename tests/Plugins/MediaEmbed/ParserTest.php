@@ -32,6 +32,15 @@ class ParserTest extends Test
 	{
 		return [
 			[
+				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
+				'<rt><COMEDYCENTRAL id="bc275e2f-48e3-46d9-b095-0254381497ea">http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('comedycentral');
+				}
+			],
+			[
 				'http://www.gamespot.com/shows/random-encounter/?event=re-volt-20131004',
 				'<rt><GAMESPOT id="6415329">http://www.gamespot.com/shows/random-encounter/?event=re-volt-20131004</GAMESPOT></rt>',
 				[],
@@ -65,6 +74,31 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('slideshare');
+				}
+			],
+		];
+	}
+
+	/**
+	* @testdox Scraping+rendering tests
+	* @dataProvider getScrapingRenderingTests
+	* @group needs-network
+	*/
+	public function testScrapingRendering()
+	{
+		call_user_func_array([$this, 'testRendering'], func_get_args());
+	}
+
+	public function getScrapingRenderingTests()
+	{
+		return [
+			[
+				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
+				'<iframe width="512" height="288" src="http://media.mtvnservices.com/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('comedycentral');
 				}
 			],
 		];

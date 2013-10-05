@@ -2154,6 +2154,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Scraping tests
+ [x] Scraping+rendering tests
  [x] Parsing tests
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests

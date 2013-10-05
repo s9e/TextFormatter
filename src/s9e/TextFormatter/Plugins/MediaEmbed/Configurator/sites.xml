@@ -19,6 +19,19 @@
 		<iframe width="600" height="369" src="http://www.collegehumor.com/e/{@id}"/>
 	</site>
 
+	<site id="comedycentral">
+		<name>Comedy Central</name>
+		<homepage>http://www.comedycentral.com/funny-videos</homepage>
+		<example>http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats</example>
+
+		<host>comedycentral.com</host>
+		<scrape>
+			<match>!comedycentral\.com/video-clips/!</match>
+			<extract>!mgid:arc:video:comedycentral.com:(?'id'[-\w]+)!</extract>
+		</scrape>
+		<iframe width="512" height="288" src="http://media.mtvnservices.com/mgid:arc:video:comedycentral.com:{@id}"/>
+	</site>
+
 	<site id="dailymotion">
 		<name>Dailymotion</name>
 		<homepage>http://www.dailymotion.com/</homepage>

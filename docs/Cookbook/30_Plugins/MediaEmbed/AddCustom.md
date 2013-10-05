@@ -46,7 +46,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 ```
 
 ### How to configure the `iframe` renderer
@@ -77,7 +77,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen=""></iframe>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 ```
 
 ### How to configure the `flash` renderer
@@ -193,5 +193,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<iframe width="560" height="315" src="http://www.youtube.com/embed/21112125" allowfullscreen=""></iframe>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/21112125" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 ```
