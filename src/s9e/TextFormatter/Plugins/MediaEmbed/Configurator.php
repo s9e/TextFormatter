@@ -276,6 +276,17 @@ class Configurator extends ConfiguratorBase
 						'data'   => $siteConfig['flash']['src']
 					]);
 					$template .= '<param name="allowFullScreen" value="true"/>';
+					if (isset($siteConfig['flash']['flashvars']))
+					{
+						/**
+						* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
+						*/
+						$template .= '<param name="FlashVars">';
+						$template .= $this->generateAttributes([
+							'value' => $siteConfig['flash']['flashvars']
+						]);
+						$template .= '</param>';
+					}
 					$template .= '<embed type="application/x-shockwave-flash">';
 					$template .= $this->generateAttributes([
 						'src'    => $siteConfig['flash']['src'],
@@ -283,6 +294,12 @@ class Configurator extends ConfiguratorBase
 						'height' => $siteConfig['flash']['height'],
 						'allowfullscreen' => ''
 					]);
+					if (isset($siteConfig['flash']['flashvars']))
+					{
+						$template .= $this->generateAttributes([
+							'flashvars' => $siteConfig['flash']['flashvars']
+						]);
+					}
 					$template .= '</embed></object>';
 
 					$tag->defaultTemplate = $template;

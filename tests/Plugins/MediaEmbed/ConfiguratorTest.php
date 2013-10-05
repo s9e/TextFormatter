@@ -423,6 +423,31 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() sets flashvars if applicable
+	*/
+	public function testAddFlashVars()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'    => 'foo.invalid',
+				'extract' => "!(?'id'[-0-9A-Z_a-z]+)!",
+				'flash'   => [
+					'width'     => 123,
+					'height'    => 456,
+					'src'       => 'foo',
+					'flashvars' => 'foo=1&bar=2'
+				]
+			]
+		);
+
+		$this->assertEquals(
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowFullScreen" value="true"/><param name="FlashVars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen="" flashvars="foo=1&amp;bar=2"/></object>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
 	* @testdox add() checks the tag's safety before adding it
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage disable-output-escaping
