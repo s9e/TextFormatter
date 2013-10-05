@@ -92,6 +92,11 @@ echo $html;
 		<td>http://www.break.com/video/video-game-playing-frog-wants-more-2278131</td>
 	</tr>
 	<tr>
+		<td><code>cbsnews</code></td>
+		<td>CBS News Video</td>
+		<td>http://www.cbsnews.com/video/watch/?id=50156501n</td>
+	</tr>
+	<tr>
 		<td><code>collegehumor</code></td>
 		<td>CollegeHumor</td>
 		<td>http://www.collegehumor.com/video/1181601/more-than-friends</td>

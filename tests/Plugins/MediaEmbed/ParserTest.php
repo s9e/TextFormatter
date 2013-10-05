@@ -200,6 +200,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.cbsnews.com/video/watch/?id=50156501n',
+				'<rt><CBSNEWS id="50156501">http://www.cbsnews.com/video/watch/?id=50156501n</CBSNEWS></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('cbsnews');
+				}
+			],
+			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
 				'<rt><COLLEGEHUMOR id="1181601">http://www.collegehumor.com/video/1181601/more-than-friends</COLLEGEHUMOR></rt>',
 				[],
@@ -530,6 +539,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('break');
+				}
+			],
+			[
+				'http://www.cbsnews.com/video/watch/?id=50156501n',
+				'<object type="application/x-shockwave-flash" typemustmatch="" width="425" height="279" data="http://cnettv.cnet.com/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf"><param name="allowFullScreen" value="true"><param name="FlashVars" value="si=254&amp;contentValue=50156501&amp;shareUrl=http://www.cbsnews.com/video/watch/?id=50156501n"><embed type="application/x-shockwave-flash" src="http://cnettv.cnet.com/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf" width="425" height="279" allowfullscreen="" flashvars="si=254&amp;contentValue=50156501&amp;shareUrl=http://www.cbsnews.com/video/watch/?id=50156501n"></object>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('cbsnews');
 				}
 			],
 			[
