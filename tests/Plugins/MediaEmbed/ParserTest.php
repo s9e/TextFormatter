@@ -76,6 +76,15 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('slideshare');
 				}
 			],
+			[
+				'http://www.twitch.tv/m/269679',
+				'<rt><TWITCH archive_id="467452121" channel="liquidhero">http://www.twitch.tv/m/269679</TWITCH></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
 		];
 	}
 
