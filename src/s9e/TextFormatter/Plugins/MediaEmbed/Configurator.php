@@ -313,51 +313,43 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function getElementConfig(DOMElement $element)
 	{
-		if ($element->childNodes->length > 1)
+		$config = [];
+		foreach ($element->attributes as $attribute)
 		{
-			// Elements with children create a sub-array for their children's values
-			$config = [];
-			foreach ($element->childNodes as $childNode)
-			{
-				if ($childNode->nodeType !== XML_ELEMENT_NODE)
-				{
-					continue;
-				}
+			$config[$attribute->name] = $attribute->value;
+		}
 
-				// Name and value of the configuration setting
-				$name  = $childNode->nodeName;
+		// Group child nodes by name
+		$childNodes = [];
+		foreach ($element->childNodes as $childNode)
+		{
+			if ($childNode->nodeType !== XML_ELEMENT_NODE)
+			{
+				continue;
+			}
+
+			if (!$childNode->attributes->length && $childNode->childNodes->length === 1)
+			{
+				$value = $childNode->nodeValue;
+			}
+			else
+			{
 				$value = $this->getElementConfig($childNode);
-
-				if (isset($config[$name]))
-				{
-					// If several values are set for the same setting, we turn the configuration
-					// into a numerically-indexed array
-					if (!is_array($config[$name]) || !isset($config[$name][0]))
-					{
-						$config[$name] = [$config[$name]];
-					}
-
-					$config[$name][] = $value;
-				}
-				else
-				{
-					$config[$name] = $value;
-				}
 			}
+
+			$childNodes[$childNode->nodeName][] = $value;
 		}
-		elseif ($element->attributes->length)
+
+		foreach ($childNodes as $nodeName => $childNodes)
 		{
-			// Elements with attributes create a sub-array for their attributes' values
-			$config = [];
-			foreach ($element->attributes as $attribute)
+			if (count($childNodes) === 1)
 			{
-				$config[$attribute->name] = $attribute->value;
+				$config[$nodeName] = end($childNodes);
 			}
-		}
-		else
-		{
-			// Use the element's text
-			$config = $element->textContent;
+			else
+			{
+				$config[$nodeName] = $childNodes;
+			}
 		}
 
 		return $config;
