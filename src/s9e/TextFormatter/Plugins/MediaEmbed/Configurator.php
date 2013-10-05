@@ -15,6 +15,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\Regexp;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 
@@ -268,11 +269,32 @@ class Configurator extends ConfiguratorBase
 				* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
 				*/
 				case 'flash':
-					$tag->defaultTemplate = '<object type="application/x-shockwave-flash" typemustmatch="" width="' . $siteConfig['flash']['width'] . '" height="' . $siteConfig['flash']['height'] . '" data="' . $siteConfig['flash']['src'] . '"><param name="allowFullScreen" value="true"/><embed type="application/x-shockwave-flash" src="' . $siteConfig['flash']['src'] . '" width="' . $siteConfig['flash']['width'] . '" height="' . $siteConfig['flash']['height'] . '" allowfullscreen=""></embed></object>';
+					$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
+					$template .= $this->generateAttributes([
+						'width'  => $siteConfig['flash']['width'],
+						'height' => $siteConfig['flash']['height'],
+						'data'   => $siteConfig['flash']['src']
+					]);
+					$template .= '<param name="allowFullScreen" value="true"/>';
+					$template .= '<embed type="application/x-shockwave-flash">';
+					$template .= $this->generateAttributes([
+						'src'    => $siteConfig['flash']['src'],
+						'width'  => $siteConfig['flash']['width'],
+						'height' => $siteConfig['flash']['height'],
+						'allowfullscreen' => ''
+					]);
+					$template .= '</embed></object>';
+
+					$tag->defaultTemplate = $template;
 					break 2;
 
 				case 'iframe':
-					$tag->defaultTemplate = '<iframe width="' . $siteConfig['iframe']['width'] . '" height="' . $siteConfig['iframe']['height'] . '" src="' . $siteConfig['iframe']['src'] . '" allowfullscreen="" frameborder="0" scrolling="no"/>';
+					$attributes = $siteConfig['iframe'];
+					$attributes['allowfullscreen'] = '';
+					$attributes['frameborder']     = '0';
+					$attributes['scrolling']       = 'no';
+
+					$tag->defaultTemplate = '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
 					break 2;
 
 				case 'template':
@@ -303,6 +325,41 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $tag;
+	}
+
+	/**
+	* Generate xsl:attributes elements from an array
+	*
+	* @param  array  $attributes Array of [name => value] where value can be XSL code
+	* @return string             XSL source
+	*/
+	protected function generateAttributes(array $attributes)
+	{
+		$xsl = '';
+		foreach ($attributes as $attrName => $attrValue)
+		{
+			// If the value does not look like XSL, we reconstruct it as XSL
+			if (strpos($attrValue, '<') === false)
+			{
+				$tokens    = TemplateHelper::parseAttributeValueTemplate($attrValue);
+				$attrValue = '';
+				foreach ($tokens as list($type, $content))
+				{
+					if ($type === 'literal')
+					{
+						$attrValue .= htmlspecialchars($content);
+					}
+					else
+					{
+						$attrValue .= '<xsl:value-of select="' . htmlspecialchars($content) . '"/>';
+					}
+				}
+			}
+
+			$xsl .= '<xsl:attribute name="' . htmlspecialchars($attrName) . '">' . $attrValue . '</xsl:attribute>';
+		}
+
+		return $xsl;
 	}
 
 	/**
