@@ -229,7 +229,11 @@ trait TagProcessing
 		}
 		elseif ($this->currentTag->isBrTag())
 		{
-			$this->outputBrTag($this->currentTag);
+			// Output the tag if it's allowed, ignore it otherwise
+			if (!($this->context['flags'] & self::RULE_NO_BR_CHILD))
+			{
+				$this->outputBrTag($this->currentTag);
+			}
 		}
 		elseif ($this->currentTag->isParagraphBreak())
 		{

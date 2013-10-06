@@ -580,6 +580,18 @@ class TagProcessingTest extends Test
 				}
 			],
 			[
+				'xy',
+				'<pt>xy</pt>',
+				function ($constructor)
+				{
+					$constructor->rootRules->noBrDescendant();
+				},
+				function ($parser)
+				{
+					$parser->addBrTag(1);
+				}
+			],
+			[
 				'xx',
 				'<rt><X>x</X><X>x</X></rt>',
 				function ($configurator)

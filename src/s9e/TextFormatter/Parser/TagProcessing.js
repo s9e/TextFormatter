@@ -212,7 +212,11 @@ function processCurrentTag()
 	}
 	else if (currentTag.isBrTag())
 	{
-		outputBrTag(currentTag);
+		// Output the tag if it's allowed, ignore it otherwise
+		if (!(context.flags & RULE_NO_BR_CHILD))
+		{
+			outputBrTag(currentTag);
+		}
 	}
 	else if (currentTag.isParagraphBreak())
 	{
