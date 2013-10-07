@@ -40,4 +40,4 @@ TODO
 - Class names collisions in s9e\TextFormatter\Bundles\S18\Helper
 - One cheap way to filter a CSS value would be to set an attribute preprocessor for every supported CSS attribute, e.g. /(?<!\w)color\s*:\s*(?<color>#[0-9a-f]+|\w+)/ - could be mentionned in cookbook
 - Consider declaring span a formatting element in TemplateForensics even though it's not listed in http://www.w3.org/TR/html5/syntax.html#formatting
-- MediaEmbed: break.com and WSHH. Also, http://www.reddit.com/r/videos/search?q=-site%3Ayoutube.com+-site%3Ayoutu.be+-site%3Aliveleak.com+-site%3Abreak.com+-site%3Afunnyordie.com+-site%3Avimeo.com+-site%3Acollegehumor.com+-site%3Adailymotion.com+&restrict_sr=on&sort=relevance&t=all
+- MediaEmbed: Bandcamp. Also, http://www.reddit.com/r/videos/search?q=-site%3Ayoutube.com+-site%3Ayoutu.be+-site%3Aliveleak.com+-site%3Abreak.com+-site%3Afunnyordie.com+-site%3Avimeo.com+-site%3Acollegehumor.com+-site%3Adailymotion.com+&restrict_sr=on&sort=relevance&t=all

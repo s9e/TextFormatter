@@ -134,9 +134,9 @@ class Configurator extends ConfiguratorBase
 	/**
 	* Add a media site
 	*
-	* @param  string    $siteId     Site's ID
-	* @param  array     $siteConfig Site's config
-	* @return Tag                   T
+	* @param  string $siteId     Site's ID
+	* @param  array  $siteConfig Site's config
+	* @return Tag                Tag created for this site
 	*/
 	public function add($siteId, array $siteConfig = null)
 	{
