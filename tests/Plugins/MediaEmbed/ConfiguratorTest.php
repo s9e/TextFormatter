@@ -417,7 +417,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowFullScreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen=""/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen=""/></object>',
 			$tag->defaultTemplate
 		);
 	}
@@ -442,7 +442,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowFullScreen" value="true"/><param name="FlashVars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen="" flashvars="foo=1&amp;bar=2"/></object>',
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen="" flashvars="foo=1&amp;bar=2"/></object>',
 			$tag->defaultTemplate
 		);
 	}

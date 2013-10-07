@@ -275,13 +275,13 @@ class Configurator extends ConfiguratorBase
 						'height' => $siteConfig['flash']['height'],
 						'data'   => $siteConfig['flash']['src']
 					]);
-					$template .= '<param name="allowFullScreen" value="true"/>';
+					$template .= '<param name="allowfullscreen" value="true"/>';
 					if (isset($siteConfig['flash']['flashvars']))
 					{
 						/**
 						* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
 						*/
-						$template .= '<param name="FlashVars">';
+						$template .= '<param name="flashvars">';
 						$template .= $this->generateAttributes([
 							'value' => $siteConfig['flash']['flashvars']
 						]);
