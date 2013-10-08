@@ -165,7 +165,7 @@ class Configurator implements ConfigProvider
 	*  - returnRenderer:   whether to return an instance of Renderer in the "renderer" key
 	*
 	* @param  array $options
-	* @return void
+	* @return array One "parser" element and one "renderer" element unless specified otherwise
 	*/
 	public function finalize(array $options = [])
 	{
