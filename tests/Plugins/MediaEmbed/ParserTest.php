@@ -77,8 +77,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.twitch.tv/m/269679',
-				'<rt><TWITCH archive_id="467452121" channel="liquidhero">http://www.twitch.tv/m/269679</TWITCH></rt>',
+				'http://www.twitch.tv/m/57217',
+				'<rt><TWITCH archive_id="435873548" channel="wcs_america">http://www.twitch.tv/m/57217</TWITCH></rt>',
 				[],
 				function ($configurator)
 				{
