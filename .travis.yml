@@ -10,4 +10,6 @@ before_script:
   - wait
   - php -i
 script:
-  - phpunit tests/Plugins/Emoticons
+  - phpunit --exclude-group none --coverage-clover /tmp/clover.xml
+after_script:
+  - php vendor/bin/coveralls -v
