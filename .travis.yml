@@ -4,11 +4,10 @@ env:
   - CLOSURE_COMPILER=/tmp/compiler.jar
 before_script:
   - echo "zend.enable_gc=off" >> ~/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/php.ini
-  - sh -c "composer install --dev --no-interaction > /dev/null &"
-  - sh -c "wget -O - http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar xzf - -C/tmp compiler.jar"
-  - sh -c "printf '\n' | pecl install xslcache-beta"
+  - ./scripts/travis/installComposer.sh        >/dev/null 2>&1 &
+  - ./scripts/travis/installClosureCompiler.sh >/dev/null 2>&1 &
+  - ./scripts/travis/installXSLCache.sh        >/dev/null 2>&1 &
+  - wait
   - php -i
 script:
-  - phpunit --exclude-group none --coverage-clover /tmp/clover.xml
-after_script:
-  - php vendor/bin/coveralls -v
+  - phpunit tests/Plugins/Emoticons
