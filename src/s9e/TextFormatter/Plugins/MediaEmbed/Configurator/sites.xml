@@ -88,10 +88,6 @@
 
 		<host>gamespot.com</host>
 		<extract>!gamespot\.com/(?:events/[^/]+|[^/]+/videos)/[^/]+-(?'id'[0-9]+)/!</extract>
-		<scrape>
-			<match>!gamespot\.com/shows/!</match>
-			<extract>!og:video.*?id=(?'id'[0-9]+)!</extract>
-		</scrape>
 		<iframe width="640" height="360" src="http://www.gamespot.com/videoembed/{@id}&amp;mapp=false&amp;ads=0&amp;onsite=0"/>
 	</site>
 

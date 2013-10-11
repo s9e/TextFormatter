@@ -41,15 +41,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.gamespot.com/shows/random-encounter/?event=re-volt-20131004',
-				'<rt><GAMESPOT id="6415329">http://www.gamespot.com/shows/random-encounter/?event=re-volt-20131004</GAMESPOT></rt>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('gamespot');
-				}
-			],
-			[
 				'http://www.indiegogo.com/projects/gameheart-redesigned',
 				'<rt><INDIEGOGO id="513633">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></rt>',
 				[],
