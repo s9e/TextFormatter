@@ -17,25 +17,6 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a JavaScript variant for allowedSchemes
-	*/
-	public function testAsConfigAllowedSchemesVariant()
-	{
-		$this->urlConfig->allowScheme('http');
-		$urlConfig = $this->urlConfig->asConfig();
-
-		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\Items\\Variant',
-			$urlConfig['allowedSchemes']
-		);
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\JavaScript\\RegExp',
-			$urlConfig['allowedSchemes']->get('JS')
-		);
-	}
-
-	/**
 	* @testdox asConfig() returns a JavaScript variant for disallowedHosts
 	*/
 	public function testAsConfigDisallowedHostsVariant()
@@ -247,9 +228,10 @@ class UrlConfigTest extends Test
 	public function testAllowSchemeHTTP()
 	{
 		$urlConfig = $this->urlConfig->asConfig();
+		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegExp($urlConfig['allowedSchemes']->get(), 'http');
+		$this->assertRegExp($regexp, 'http');
 	}
 
 	/**
@@ -258,9 +240,10 @@ class UrlConfigTest extends Test
 	public function testAllowSchemeHTTPS()
 	{
 		$urlConfig = $this->urlConfig->asConfig();
+		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegExp($urlConfig['allowedSchemes']->get(), 'https');
+		$this->assertRegExp($regexp, 'https');
 	}
 
 	/**
@@ -269,20 +252,22 @@ class UrlConfigTest extends Test
 	public function testAllowSchemeHTTPSCaseInsensitive()
 	{
 		$urlConfig = $this->urlConfig->asConfig();
+		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegExp($urlConfig['allowedSchemes']->get(), 'HTTPS');
+		$this->assertRegExp($regexp, 'HTTPS');
 	}
 
 	/**
-	* @testdox "ftp" is an allowed scheme by default
+	* @testdox "ftp" is not an allowed scheme by default
 	*/
 	public function testDisallowedSchemeFTP()
 	{
 		$urlConfig = $this->urlConfig->asConfig();
+		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertNotRegExp($urlConfig['allowedSchemes']->get(), 'ftp');
+		$this->assertNotRegExp($regexp, 'ftp');
 	}
 
 	/**
@@ -317,9 +302,10 @@ class UrlConfigTest extends Test
 	{
 		$this->urlConfig->allowScheme('ftp');
 		$urlConfig = $this->urlConfig->asConfig();
+		$regexp    = (string) $urlConfig['allowedSchemes'];
 
 		$this->assertArrayHasKey('allowedSchemes', $urlConfig);
-		$this->assertRegExp($urlConfig['allowedSchemes']->get(), 'ftp');
+		$this->assertRegExp($regexp, 'ftp');
 	}
 
 	/**

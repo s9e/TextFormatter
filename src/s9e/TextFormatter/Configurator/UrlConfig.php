@@ -10,15 +10,16 @@ namespace s9e\TextFormatter\Configurator;
 use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\HostnameList;
+use s9e\TextFormatter\Configurator\Collections\SchemeList;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class UrlConfig implements ConfigProvider
 {
 	/**
-	* @var array List of allowed schemes
+	* @var SchemeList List of allowed schemes
 	*/
-	protected $allowedSchemes = ['http', 'https'];
+	protected $allowedSchemes;
 
 	/**
 	* @var string Default scheme to be used when validating scheme-less URLs
@@ -50,6 +51,10 @@ class UrlConfig implements ConfigProvider
 	{
 		$this->disallowedHosts       = new HostnameList;
 		$this->resolveRedirectsHosts = new HostnameList;
+
+		$this->allowedSchemes   = new SchemeList;
+		$this->allowedSchemes[] = 'http';
+		$this->allowedSchemes[] = 'https';
 	}
 
 	/**
@@ -57,10 +62,8 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$regexp = RegexpBuilder::fromList($this->allowedSchemes);
-		$regexp = new Regexp('/^' . $regexp . '$/Di');
 		$config = [
-			'allowedSchemes' => $regexp->asConfig(),
+			'allowedSchemes' => $this->allowedSchemes->asConfig(),
 			'requireScheme'  => $this->requireScheme
 		];
 
@@ -89,8 +92,6 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function allowScheme($scheme)
 	{
-		$scheme = $this->normalizeScheme($scheme);
-
 		$this->allowedSchemes[] = $scheme;
 	}
 
@@ -118,9 +119,7 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function disallowScheme($scheme)
 	{
-		$scheme = $this->normalizeScheme($scheme);
-
-		$this->allowedSchemes = array_values(array_diff($this->allowedSchemes, [$scheme]));
+		$this->allowedSchemes->remove($scheme);
 	}
 
 	/**
@@ -130,25 +129,7 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function getAllowedSchemes()
 	{
-		return $this->allowedSchemes;
-	}
-
-	/**
-	* Validate and normalize a scheme name to lowercase, or throw an exception if invalid
-	*
-	* @link http://tools.ietf.org/html/rfc3986#section-3.1
-	*
-	* @param  string $scheme URL scheme, e.g. "file" or "ed2k"
-	* @return string
-	*/
-	protected function normalizeScheme($scheme)
-	{
-		if (!preg_match('#^[a-z][a-z0-9+\\-.]*$#Di', $scheme))
-		{
-			throw new InvalidArgumentException("Invalid scheme name '" . $scheme . "'");
-		}
-
-		return strtolower($scheme);
+		return iterator_to_array($this->allowedSchemes);
 	}
 
 	/**
@@ -189,6 +170,6 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function setDefaultScheme($scheme)
 	{
-		$this->defaultScheme = $this->normalizeScheme($scheme);
+		$this->defaultScheme = $this->allowedSchemes->normalizeValue($scheme);
 	}
 }

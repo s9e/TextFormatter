@@ -41,6 +41,7 @@
 			<file>tests/Configurator/Collections/PluginCollectionTest.php</file>
 			<file>tests/Configurator/Collections/RulesetTest.php</file>
 			<file>tests/Configurator/Collections/RulesGeneratorListTest.php</file>
+			<file>tests/Configurator/Collections/SchemeListTest.php</file>
 			<file>tests/Configurator/Collections/StylesheetParameterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TagFilterChainTest.php</file>
