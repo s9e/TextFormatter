@@ -391,8 +391,8 @@ class BuiltInFilters
 			return false;
 		}
 
-		if (isset($urlConfig['disallowedHosts'])
-		 && preg_match($urlConfig['disallowedHosts'], $host))
+		if ((isset($urlConfig['disallowedHosts']) && preg_match($urlConfig['disallowedHosts'], $host))
+		 || (isset($urlConfig['restrictedHosts']) && !preg_match($urlConfig['restrictedHosts'], $host)))
 		{
 			if (isset($logger))
 			{

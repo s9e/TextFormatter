@@ -46,3 +46,4 @@
   * **URL features**
     * [Disallow links pointing to a given domain](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/URL_features/DisallowHosts.md)
     * [Restrict/allow schemes](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/URL_features/Protocols.md)
+    * [Restrict links and/or images to a set of whitelisted domains](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/50_Miscellaneous/URL_features/RestrictHosts.md)

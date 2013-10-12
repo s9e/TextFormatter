@@ -11,9 +11,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\HostnameList;
 use s9e\TextFormatter\Configurator\Collections\SchemeList;
-use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
-use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class UrlConfig implements ConfigProvider
 {
@@ -38,6 +36,11 @@ class UrlConfig implements ConfigProvider
 	protected $resolveRedirectsHosts;
 
 	/**
+	* @var HostnameList List of allowed hosts
+	*/
+	protected $restrictedHosts;
+
+	/**
 	* @var bool Whether URLs should require a scheme
 	* @link http://tools.ietf.org/html/rfc3986#section-4.2
 	*/
@@ -52,6 +55,7 @@ class UrlConfig implements ConfigProvider
 	{
 		$this->disallowedHosts       = new HostnameList;
 		$this->resolveRedirectsHosts = new HostnameList;
+		$this->restrictedHosts       = new HostnameList;
 
 		$this->allowedSchemes   = new SchemeList;
 		$this->allowedSchemes[] = 'http';
@@ -126,6 +130,25 @@ class UrlConfig implements ConfigProvider
 		if ($matchSubdomains && substr($host, 0, 1) !== '*')
 		{
 			$this->resolveRedirectsHosts[] = '*.' . $host;
+		}
+	}
+
+	/**
+	* Allow a hostname (or hostname mask) to being used in URLs while disallowing everything else
+	*
+	* Can be called multiple times to restricts URLs to a set of given hostnames
+	*
+	* @param  string $host            Hostname or hostmask
+	* @param  bool   $matchSubdomains Whether to match subdomains of given host
+	* @return void
+	*/
+	public function restrictHost($host, $matchSubdomains = true)
+	{
+		$this->restrictedHosts[] = $host;
+
+		if ($matchSubdomains && substr($host, 0, 1) !== '*')
+		{
+			$this->restrictedHosts[] = '*.' . $host;
 		}
 	}
 

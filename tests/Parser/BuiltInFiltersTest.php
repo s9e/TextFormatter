@@ -590,6 +590,75 @@ class BuiltInFiltersTest extends Test
 					Hax::fakeRedirect('http://js.tld', 'javascript:alert');
 				}
 			],
+			[
+				new Url,
+				'http://www.example.org',
+				'http://www.example.org',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->restrictHost('example.org');
+				}
+			],
+			[
+				new Url,
+				'http://www.example.org',
+				'http://www.example.org',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->restrictHost('example.org');
+				}
+			],
+			[
+				new Url,
+				'http://www.example.org',
+				'http://www.example.org',
+				[],
+				function ($configurator)
+				{
+					$configurator->urlConfig->restrictHost('example.org');
+					$configurator->urlConfig->restrictHost('example.com');
+				}
+			],
+			[
+				new Url,
+				'http://evil.example.com',
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => 'http://evil.example.com',
+							'host'      => 'evil.example.com'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->restrictHost('example.org');
+				}
+			],
+			[
+				new Url,
+				'http://example.org.example.com',
+				false,
+				[
+					[
+						'err',
+						'URL host is not allowed',
+						[
+							'attrValue' => 'http://example.org.example.com',
+							'host'      => 'example.org.example.com'
+						]
+					]
+				],
+				function ($configurator)
+				{
+					$configurator->urlConfig->restrictHost('example.org');
+				}
+			],
 			[new Identifier, '123abcABC', '123abcABC'],
 			[new Identifier, '-_-', '-_-'],
 			[new Identifier, 'a b', false],

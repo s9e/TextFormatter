@@ -333,7 +333,8 @@ var BuiltInFilters =
 		*/
 		var host = m[2].replace(/[\u3002\uff0e\uff61]/g, '.').replace(/\.+$/g, '');
 
-		if (urlConfig.disallowedHosts && urlConfig.disallowedHosts.test(host))
+		if ((urlConfig.disallowedHosts && urlConfig.disallowedHosts.test(host))
+		 || (urlConfig.restrictedHosts && !urlConfig.restrictedHosts.test(host)))
 		{
 			if (logger)
 			{
