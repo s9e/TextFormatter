@@ -223,6 +223,26 @@ class UrlConfigTest extends Test
 	}
 
 	/**
+	* @testdox restrictHost('example.org') allows "www.example.org"
+	*/
+	public function testRestrictHostSubdomains()
+	{
+		$this->urlConfig->restrictHost('example.org');
+		$urlConfig = $this->urlConfig->asConfig();
+		$this->assertRegExp($urlConfig['restrictedHosts']->get(), 'www.example.org');
+	}
+
+	/**
+	* @testdox restrictHost('example.org', false) does not allow "www.example.org"
+	*/
+	public function testRestrictHostNoSubdomains()
+	{
+		$this->urlConfig->restrictHost('example.org', false);
+		$urlConfig = $this->urlConfig->asConfig();
+		$this->assertNotRegExp($urlConfig['restrictedHosts']->get(), 'www.example.org');
+	}
+
+	/**
 	* @testdox "http" is an allowed scheme by default
 	*/
 	public function testAllowSchemeHTTP()

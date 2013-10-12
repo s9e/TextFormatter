@@ -1436,6 +1436,8 @@ s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] resolveRedirectsFrom('bit.ly') matches "bit.ly"
  [x] resolveRedirectsFrom('bit.ly') matches "foo.bit.ly"
  [x] resolveRedirectsFrom('bit.ly', false) does not match "foo.bit.ly"
+ [x] restrictHost('example.org') allows "www.example.org"
+ [x] restrictHost('example.org', false) does not allow "www.example.org"
  [x] "http" is an allowed scheme by default
  [x] "https" is an allowed scheme by default
  [x] "HTTPS" is an allowed scheme by default
