@@ -43,3 +43,4 @@ TODO
 - MediaEmbed: Bandcamp. Also, http://www.reddit.com/r/videos/search?q=-site%3Ayoutube.com+-site%3Ayoutu.be+-site%3Aliveleak.com+-site%3Abreak.com+-site%3Afunnyordie.com+-site%3Avimeo.com+-site%3Acollegehumor.com+-site%3Adailymotion.com+&restrict_sr=on&sort=relevance&t=all
 - Create HostnameCollection, use for UrlConfig blacklist. Then implement whitelist
 - Consider a plugin that matches a list of keywords. e.g. movie names link to IMDB (bad example, too many movies in existence) or select keyword get an affiliate link or Hearthstone card names have tooltips
+- Systematically run ConfigHelper::optimizeArray() on a safe subset of the config, such as attribute filters(?)
