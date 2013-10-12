@@ -12,6 +12,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Collections\HostnameList;
 use s9e\TextFormatter\Configurator\Collections\SchemeList;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
+use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 
 class UrlConfig implements ConfigProvider
@@ -62,27 +63,7 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function asConfig()
 	{
-		$config = [
-			'allowedSchemes' => $this->allowedSchemes->asConfig(),
-			'requireScheme'  => $this->requireScheme
-		];
-
-		foreach (['disallowedHosts', 'resolveRedirectsHosts'] as $k)
-		{
-			if (!count($this->$k))
-			{
-				continue;
-			}
-
-			$config[$k] = $this->$k->asConfig();
-		}
-
-		if (isset($this->defaultScheme))
-		{
-			$config['defaultScheme'] = $this->defaultScheme;
-		}
-
-		return $config;
+		return ConfigHelper::toArray(get_object_vars($this));
 	}
 
 	/**
