@@ -210,6 +210,16 @@ s9e\TextFormatter\Tests\Configurator\Collections\AttributePreprocessorCollection
  [x] merge() throws an exception when passed a non-array, non-AttributProcessorCollection
  [x] merge() throws an exception when passed a one-dimensional array
 
+s9e\TextFormatter\Tests\Configurator\Collections\HostnameList
+ [x] asConfig() returns null if the collection is empty
+ [x] asConfig() returns a Variant
+ [x] asConfig() returns a Variant that contains a regexp that matches its hostnames
+ [x] IDNs are punycoded if idn_to_ascii() is available
+ [x] add('*.example.org') matches 'www.example.org'
+ [x] add('example.org') does not match 'www.example.org'
+ [x] add('example.*') matches 'example.org'
+ [x] add('example') does not match 'example.org'
+
 s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] load() can load a stock plugin
  [x] load() throws an exception if the stock plugin does not exist
@@ -1402,8 +1412,8 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
 
 s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] asConfig() creates a JavaScript variant for allowedSchemes
- [x] asConfig() creates a JavaScript variant for disallowedHosts
- [x] asConfig() creates a JavaScript variant for resolveRedirectsHosts
+ [x] asConfig() returns a JavaScript variant for disallowedHosts
+ [x] asConfig() returns a JavaScript variant for resolveRedirectsHosts
  [x] Disallowed IDNs are punycoded
  [x] disallowHost('example.org') disallows "example.org"
  [x] disallowHost('example.org') disallows "EXAMPLE.ORG"

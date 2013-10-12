@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator;
 
 use InvalidArgumentException;
 use RuntimeException;
+use s9e\TextFormatter\Configurator\Collections\HostnameList;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 
@@ -25,20 +26,31 @@ class UrlConfig implements ConfigProvider
 	protected $defaultScheme;
 
 	/**
-	* @var array List of disallowed hosts
+	* @var HostnameList List of disallowed hosts
 	*/
-	protected $disallowedHosts = [];
+	protected $disallowedHosts;
 
 	/**
-	* @var array List of hosts whose URL we check for redirects
+	* @var HostnameList List of hosts whose URL we check for redirects
 	*/
-	protected $resolveRedirectsHosts = [];
+	protected $resolveRedirectsHosts;
 
 	/**
 	* @var bool Whether URLs should require a scheme
 	* @link http://tools.ietf.org/html/rfc3986#section-4.2
 	*/
 	protected $requireScheme = false;
+
+	/**
+	* Constructor
+	*
+	* @return void
+	*/
+	public function __construct()
+	{
+		$this->disallowedHosts       = new HostnameList;
+		$this->resolveRedirectsHosts = new HostnameList;
+	}
 
 	/**
 	* {@inheritdoc}
@@ -54,25 +66,12 @@ class UrlConfig implements ConfigProvider
 
 		foreach (['disallowedHosts', 'resolveRedirectsHosts'] as $k)
 		{
-			if (empty($this->$k))
+			if (!count($this->$k))
 			{
 				continue;
 			}
 
-			$regexp = RegexpBuilder::fromList(
-				$this->$k,
-				// Asterisks * are turned into a catch-all expression, while ^ and $ are preserved
-				[
-					'specialChars' => [
-						'*' => '.*',
-						'^' => '^',
-						'$' => '$'
-					]
-				]
-			);
-			$regexp = new Regexp('/' . $regexp . '/DiS');
-
-			$config[$k] = $regexp->asConfig();
+			$config[$k] = $this->$k->asConfig();
 		}
 
 		if (isset($this->defaultScheme))
@@ -98,16 +97,17 @@ class UrlConfig implements ConfigProvider
 	/**
 	* Disallow a hostname (or hostname mask) from being used in URLs
 	*
-	* @param string $host            Hostname or hostmask
-	* @param bool   $matchSubdomains Whether to match subdomains of given host
+	* @param  string $host            Hostname or hostmask
+	* @param  bool   $matchSubdomains Whether to match subdomains of given host
+	* @return void
 	*/
 	public function disallowHost($host, $matchSubdomains = true)
 	{
-		$this->disallowedHosts[] = $this->normalizeHostmask($host);
+		$this->disallowedHosts[] = $host;
 
 		if ($matchSubdomains && substr($host, 0, 1) !== '*')
 		{
-			$this->disallowedHosts[] = $this->normalizeHostmask('*.' . $host);
+			$this->disallowedHosts[] = '*.' . $host;
 		}
 	}
 
@@ -131,49 +131,6 @@ class UrlConfig implements ConfigProvider
 	public function getAllowedSchemes()
 	{
 		return $this->allowedSchemes;
-	}
-
-	/**
-	* @param  string $host Hostname or hostmask
-	* @return string
-	*/
-	protected function normalizeHostmask($host)
-	{
-		if (preg_match('#[\\x80-\xff]#', $host))
-		{
-			// @codeCoverageIgnoreStart
-			if (!function_exists('idn_to_ascii'))
-			{
-				throw new RuntimeException('Cannot handle IDNs without the Intl PHP extension');
-			}
-			// @codeCoverageIgnoreEnd
-
-			$host = idn_to_ascii($host);
-		}
-
-		if (substr($host, 0, 1) === '*')
-		{
-			// *.example.com => /\.example\.com$/
-			$host = ltrim($host, '*');
-		}
-		else
-		{
-			// example.com => /^example\.com$/
-			$host = '^' . $host;
-		}
-
-		if (substr($host, -1) === '*')
-		{
-			// example.* => /^example\./
-			$host = rtrim($host, '*');
-		}
-		else
-		{
-			// example.com => /^example\.com$/
-			$host .= '$';
-		}
-
-		return $host;
 	}
 
 	/**
@@ -202,11 +159,11 @@ class UrlConfig implements ConfigProvider
 	*/
 	public function resolveRedirectsFrom($host, $matchSubdomains = true)
 	{
-		$this->resolveRedirectsHosts[] = $this->normalizeHostmask($host);
+		$this->resolveRedirectsHosts[] = $host;
 
 		if ($matchSubdomains && substr($host, 0, 1) !== '*')
 		{
-			$this->resolveRedirectsHosts[] = $this->normalizeHostmask('*.' . $host);
+			$this->resolveRedirectsHosts[] = '*.' . $host;
 		}
 	}
 

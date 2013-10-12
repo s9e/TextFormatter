@@ -36,7 +36,7 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a JavaScript variant for disallowedHosts
+	* @testdox asConfig() returns a JavaScript variant for disallowedHosts
 	*/
 	public function testAsConfigDisallowedHostsVariant()
 	{
@@ -55,7 +55,7 @@ class UrlConfigTest extends Test
 	}
 
 	/**
-	* @testdox asConfig() creates a JavaScript variant for resolveRedirectsHosts
+	* @testdox asConfig() returns a JavaScript variant for resolveRedirectsHosts
 	*/
 	public function testAsConfigResolveRedirectsHostsVariant()
 	{

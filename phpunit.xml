@@ -37,6 +37,7 @@
 			<file>tests/Configurator/Collections/AttributeFilterCollectionTest.php</file>
 			<file>tests/Configurator/Collections/AttributeListTest.php</file>
 			<file>tests/Configurator/Collections/AttributePreprocessorCollectionTest.php</file>
+			<file>tests/Configurator/Collections/HostnameListTest.php</file>
 			<file>tests/Configurator/Collections/PluginCollectionTest.php</file>
 			<file>tests/Configurator/Collections/RulesetTest.php</file>
 			<file>tests/Configurator/Collections/RulesGeneratorListTest.php</file>
