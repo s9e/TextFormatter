@@ -44,3 +44,4 @@ TODO
 - Create HostnameCollection, use for UrlConfig blacklist. Then implement whitelist
 - Consider a plugin that matches a list of keywords. e.g. movie names link to IMDB (bad example, too many movies in existence) or select keyword get an affiliate link or Hearthstone card names have tooltips
 - Systematically run ConfigHelper::optimizeArray() on a safe subset of the config, such as attribute filters(?)
+- Move JavaScript\RegExp functionality to Items\Regexp

@@ -12,6 +12,7 @@ use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Items\Regexp as RegexpObject;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
@@ -487,6 +488,11 @@ class JavaScript
 			}
 
 			return json_encode($value);
+		}
+
+		if ($value instanceof RegexpObject)
+		{
+			$value = $value->toJS();
 		}
 
 		if ($value instanceof RegExp
