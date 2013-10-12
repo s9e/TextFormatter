@@ -157,12 +157,6 @@ abstract class ConfigHelper
 
 		foreach ($value as $k => $v)
 		{
-			if (!isset($v) && !$keepNull)
-			{
-				// We don't record NULL values
-				continue;
-			}
-
 			if ($v instanceof ConfigProvider)
 			{
 				$v = $v->asConfig();
@@ -182,6 +176,12 @@ abstract class ConfigHelper
 				      : 'a ' . gettype($v);
 
 				throw new RuntimeException('Cannot convert ' . $type . ' to array');
+			}
+
+			if (!isset($v) && !$keepNull)
+			{
+				// We don't record NULL values
+				continue;
 			}
 
 			if (!$keepEmpty && $v === [])

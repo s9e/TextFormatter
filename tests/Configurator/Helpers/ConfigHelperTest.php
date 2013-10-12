@@ -240,6 +240,17 @@ class ConfigHelperTest extends Test
 	}
 
 	/**
+	* @testdox toArray() omits NULL values from asConfig() calls
+	*/
+	public function testAsConfigNull()
+	{
+		$original = ['foo' => [1], 'bar' => new NullConfigProvider];
+		$expected = ['foo' => [1]];
+
+		$this->assertSame($expected, ConfigHelper::toArray($original));
+	}
+
+	/**
 	* @testdox toArray() preserves NULL values if its third argument is TRUE
 	*/
 	public function testKeepNull()
@@ -291,5 +302,13 @@ class ConfigProviderDummy implements ConfigProvider
 	public function asConfig()
 	{
 		return ['foo' => 42];
+	}
+}
+
+class NullConfigProvider implements ConfigProvider
+{
+	public function asConfig()
+	{
+		return null;
 	}
 }

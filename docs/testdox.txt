@@ -405,6 +405,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\ConfigHelper
  [x] toArray() preserves empty arrays if its second argument is TRUE
  [x] toArray() preserves empty arrays in deep arrays if its second argument is TRUE
  [x] toArray() omits NULL values
+ [x] toArray() omits NULL values from asConfig() calls
  [x] toArray() preserves NULL values if its third argument is TRUE
  [x] toArray() preserves NULL values in deep arrays if its third argument is TRUE
  [x] optimizeArray() reduces the size of a serialized config
