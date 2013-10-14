@@ -26,7 +26,7 @@ class BBCodeMonkey
 	/**
 	* Expression that matches a regexp such as /foo/i
 	*/
-	const REGEXP = '(.).*?(?<!\\\\)(?:\\\\\\\\)*+\\g{-1}[DSUisu]*';
+	const REGEXP = '(.).*?(?<!\\\\)(?>\\\\\\\\)*+\\g{-1}[DSUisu]*';
 
 	/**
 	* @var array List of pre- and post- filters that are explicitly allowed in BBCode definitions.
@@ -159,7 +159,7 @@ class BBCodeMonkey
 
 		// Encode regexps to avoid special characters to interfere with definitions
 		$usage = preg_replace_callback(
-			'#(\\{(?:PARSE|REGEXP)=)((.).*?(?<!\\\\)(?>\\\\\\\\)*\\3[DSUisu]*)#',
+			'#(\\{(?:PARSE|REGEXP)=)(' . self::REGEXP . ')#',
 			function ($m)
 			{
 				return $m[1] . base64_encode($m[2]);
