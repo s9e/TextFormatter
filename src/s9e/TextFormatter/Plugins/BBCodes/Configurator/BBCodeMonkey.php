@@ -24,6 +24,11 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 class BBCodeMonkey
 {
 	/**
+	* Expression that matches a regexp such as /foo/i
+	*/
+	const REGEXP = '(.).*?(?<!\\\\)(?:\\\\\\\\)*+\\g{-1}[DSUisu]*';
+
+	/**
 	* @var array List of pre- and post- filters that are explicitly allowed in BBCode definitions.
 	*            We use a whitelist approach because there are so many different risky callbacks
 	*            that it would be too easy to let something dangerous slip by, e.g.: unlink,
@@ -567,16 +572,12 @@ class BBCodeMonkey
 	*/
 	protected static function parseTokens($definition)
 	{
-		// This regexp should match a regexp, including its delimiters and optionally the i, s
-		// and/or u flags
-		$regexpMatcher = '(.).*?(?<!\\\\)(?:\\\\\\\\)*+\\g{-1}[DSUisu]*';
-
 		$tokenTypes = [
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
 			'map'    => 'MAP[0-9]*=(?<map>.+?)',
-			'parse'  => 'PARSE=(?<regexps>' . $regexpMatcher . '(?:,' . $regexpMatcher . ')*)',
+			'parse'  => 'PARSE=(?<regexps>' . self::REGEXP . '(?:,' . self::REGEXP . ')*)',
 			'range'  => 'RAN(?:DOM|GE)[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
-			'regexp' => 'REGEXP[0-9]*=(?<regexp>' . $regexpMatcher . ')',
+			'regexp' => 'REGEXP[0-9]*=(?<regexp>' . self::REGEXP . ')',
 			'other'  => '(?<other>[A-Z_]+[0-9]*)'
 		];
 
@@ -658,7 +659,7 @@ class BBCodeMonkey
 			{
 				// Match all occurences of a would-be regexp followed by a comma or the end of the
 				// string
-				preg_match_all('#' . $regexpMatcher . '(?:,|$)#', $token['regexps'], $m);
+				preg_match_all('#' . self::REGEXP . '(?:,|$)#', $token['regexps'], $m);
 
 				$regexps = [];
 				foreach ($m[0] as $regexp)
