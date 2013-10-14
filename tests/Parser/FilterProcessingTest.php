@@ -134,7 +134,7 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox executeAttributePreprocessors() returns TRUE even if the no source attribute was present
+	* @testdox executeAttributePreprocessors() returns TRUE even if no source attribute was present
 	*/
 	public function testExecuteAttributePreprocessorsReturnsTrue()
 	{

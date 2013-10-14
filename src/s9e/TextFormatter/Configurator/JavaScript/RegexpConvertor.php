@@ -119,7 +119,6 @@ abstract class RegexpConvertor
 
 		$modifiers = preg_replace('#[DSsu]#', '', $regexpInfo['modifiers']);
 
-
 		$regexp = new RegExp($regexp, $modifiers);
 		$regexp->map = $map;
 
