@@ -648,6 +648,31 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]',
+				[
+					'bbcodeName' => 'NAME',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'name'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['name', '/(?<first>\w+) (?<last>\w+)/'],
+							['name', '/(?<last>\w+), (?<first>\w+)/']
+						],
+						'attributes' => [
+							'first' => [
+								'filterChain' => [new Regexp('/^(?:\\w+)$/D')]
+							],
+							'last' => [
+								'filterChain' => [new Regexp('/^(?:\\w+)$/D')]
+							]
+						]
+					]),
+					'tokens' => [],
+					'passthroughToken' => null
+				]
+			],
+			[
 				'[foo={RANGE=-2,5}/]',
 				[
 					'bbcodeName' => 'FOO',

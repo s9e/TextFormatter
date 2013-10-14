@@ -159,7 +159,7 @@ class BBCodeMonkey
 
 		// Encode regexps to avoid special characters to interfere with definitions
 		$usage = preg_replace_callback(
-			'#(\\{(?:PARSE|REGEXP)=)(' . self::REGEXP . ')#',
+			'#(\\{(?:PARSE|REGEXP)=)(' . self::REGEXP . '(?:,' . self::REGEXP . ')*)#',
 			function ($m)
 			{
 				return $m[1] . base64_encode($m[2]);
