@@ -30,9 +30,10 @@ In the following example we create a special instance of UrlConfig with a differ
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
-// Create a special instance of UrlConfig
+// Create a special instance of UrlConfig that restrict URLs to i.imgur.com and tinypic.com
 $urlConfig = new s9e\TextFormatter\Configurator\UrlConfig;
 $urlConfig->restrictHost('i.imgur.com');
+$urlConfig->restrictHost('tinypic.com');
 
 // Create an [img] BBCode for images and [link] BBCode for links
 $configurator->BBCodes->addCustom(
