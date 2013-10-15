@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed;
 
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Parser\Tag;
 use s9e\TextFormatter\Plugins\MediaEmbed\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavaScriptRunner;
@@ -17,6 +18,16 @@ class ParserTest extends Test
 	use ParsingTestsRunner;
 	use ParsingTestsJavaScriptRunner;
 	use RenderingTestsRunner;
+
+	/**
+	* @testdox scrape() does not do anything if the tag does not have a "url" attribute
+	*/
+	public function testScrapeNoUrl()
+	{
+		$tag = new Tag(Tag::START_TAG, 'MEDIA', 0, 0);
+
+		$this->assertTrue(Parser::scrape($tag, []));
+	}
 
 	/**
 	* @testdox Scraping tests
