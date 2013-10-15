@@ -12,6 +12,58 @@ use s9e\TextFormatter\Tests\Test;
 class BBCodesTest extends Test
 {
 	/**
+	* @testdox Examples from BBCodeMonkey.md
+	* @dataProvider getExamplesTests
+	*/
+	public function testExamples($usage, $text, $expectedXml)
+	{
+		$this->assertParsing(
+			$text,
+			$expectedXml,
+			function ($configurator) use ($usage)
+			{
+				$configurator->BBCodes->addCustom($usage, '');
+			}
+		);
+	}
+
+	public function getExamplesTests()
+	{
+		return [
+			[
+				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/}]',
+				'[name="John Smith"]',
+				'<rt><NAME first="John" last="Smith"><st>[name="John Smith"]</st></NAME></rt>'
+			],
+			[
+				'[name={TEXT} name={PARSE=/(?<first>\w+) (?<last>\w+)/}]',
+				'[name="John Smith"]',
+				'<rt><NAME first="John" last="Smith" name="John Smith"><st>[name="John Smith"]</st></NAME></rt>'
+			],
+			[
+				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]',
+				'[name="John Smith"]',
+				'<rt><NAME first="John" last="Smith"><st>[name="John Smith"]</st></NAME></rt>'
+			],
+			[
+				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]',
+				'[name="Smith, John"]',
+				'<rt><NAME first="John" last="Smith"><st>[name="Smith, John"]</st></NAME></rt>'
+			],
+			[
+				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]',
+				'[name="John Smith"]',
+				'<rt><NAME first="John" last="Smith"><st>[name="John Smith"]</st></NAME></rt>'
+			],
+			[
+				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]',
+				'[name="Smith, John"]',
+				'<rt><NAME first="John" last="Smith"><st>[name="Smith, John"]</st></NAME></rt>'
+			],
+		];
+	}
+
+	/**
 	* @testdox BBCodes from repository.xml render nicely
 	* @dataProvider getPredefinedBBCodesTests
 	*/

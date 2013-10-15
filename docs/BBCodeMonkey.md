@@ -78,7 +78,15 @@ Practically, what will happen during parsing is that
 
     [name first="John" last="Smith"]
 
-Note that values extracted by attribute preprocessors do not overwrite explicit values, and values are only extracted if the attribute preprocessor's regexp matches the attribute's value. Additionally, regardless of whether any match were found, the original value is removed. The following shows how the above BBCode would be interpreted during parsing: (first line is how it's used, followed by how it's interpreted)
+Attribute preprocessors use the same syntax as attributes, but they don't necessarily create an attribute of the same name. In the example above, the value for "name" was not kept because no "name" attribute was defined. If you want to use "name" both as an attribute and as an attribute preprocessor, you need to define both as follows:
+
+    [name={TEXT} name={PARSE=/(?<first>\w+) (?<last>\w+)/}]
+
+Now the same example would be interpreted as:
+
+    [name name="John Smith" first="John" last="Smith"]
+
+Values extracted by attribute preprocessors do not overwrite explicit values, and values are only extracted if the attribute preprocessor's regexp matches the attribute's value. The following shows how the above BBCode would be interpreted during parsing: (first line is how it's used, followed by how it's interpreted)
 
     [name="John Smith"]
     [name first="John" last="Smith"]
@@ -103,7 +111,19 @@ Here's how user input will be interpreted: (user input on top, how it's interpre
     [name first="John" last="Smith"]
 
     [name="Smith, John"]
-    [name last="Smith" first="John"]
+    [name name="John Smith" last="Smith" first="John"]
+
+While an attribute preprocessor won't overwrite other attribute values, it can overwrite its own value. It can be used to clean up an attribute value before processing. Consider the following BBCode:
+
+    [id={PARSE=/^#?(?'id'\d+)$/} id={NUMBER}]
+
+Here's how user input will be interpreted: (user input on top, how it's interpreted below)
+
+    [id=123]
+    [id id=123]
+
+    [id=#123]
+    [id id=123]
 
 Composite attributes
 --------------------

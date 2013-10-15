@@ -28,15 +28,22 @@ function executeAttributePreprocessors(tag, tagConfig)
 			// captured attributes
 			if (m = regexp.exec(attrValue))
 			{
-				// Remove the source attribute
-				tag.removeAttribute(attrName);
-
 				// Set the target attributes
-				map.forEach(function(targetName, k)
+				map.forEach(function(targetName, mIndex)
 				{
-					if (!tag.hasAttribute(targetName))
+					var targetValue = m[mIndex];
+
+					// Skip captures with no targets
+					if (targetName === '')
 					{
-						tag.setAttribute(targetName, m[k]);
+						return;
+					}
+
+					// Attribute preprocessors cannot overwrite other attributes but they can
+					// overwrite themselves
+					if (targetName === attrName || !tag.hasAttribute(targetName))
+					{
+						tag.setAttribute(targetName, targetValue);
 					}
 				});
 			}

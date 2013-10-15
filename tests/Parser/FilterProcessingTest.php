@@ -82,9 +82,9 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox executeAttributePreprocessors() unsets the source attribute on match
+	* @testdox executeAttributePreprocessors() does not unset the source attribute on match
 	*/
-	public function testExecuteAttributePreprocessorsUnsetsSource()
+	public function testExecuteAttributePreprocessorsDoNotUnsetSource()
 	{
 		$tagConfig = new TagConfig;
 		$tagConfig->attributePreprocessors->add('foo', '/^(?<bar>[0-9])(?<baz>[a-z])$/i');
@@ -95,11 +95,11 @@ class FilterProcessingTest extends Test
 		$tag->setAttribute('foo', '2x');
 
 		$this->assertTrue(Parser::executeAttributePreprocessors($tag, $tagConfig));
-		$this->assertFalse($tag->hasAttribute('foo'));
+		$this->assertTrue($tag->hasAttribute('foo'));
 	}
 
 	/**
-	* @testdox executeAttributePreprocessors() can reset the source attribute on match
+	* @testdox executeAttributePreprocessors() can overwrite the source attribute on match
 	*/
 	public function testExecuteAttributePreprocessorsResetSource()
 	{

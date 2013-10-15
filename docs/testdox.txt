@@ -1667,8 +1667,8 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] getRegisteredVars() returns all registered vars
  [x] executeAttributePreprocessors() sets captured attributes on match
  [x] executeAttributePreprocessors() does not overwrite attributes that were already set
- [x] executeAttributePreprocessors() unsets the source attribute on match
- [x] executeAttributePreprocessors() can reset the source attribute on match
+ [x] executeAttributePreprocessors() does not unset the source attribute on match
+ [x] executeAttributePreprocessors() can overwrite the source attribute on match
  [x] executeAttributePreprocessors() does not unset the source attribute if there's no match
  [x] executeAttributePreprocessors() returns TRUE even if no source attribute was present
  [x] executeFilter() correctly passes a value to the callback
@@ -1929,6 +1929,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Parser
  [x] Parsing tests (JavaScript)
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes
+ [x] Examples from BBCodeMonkey.md
  [x] BBCodes from repository.xml render nicely
  [x] BBCodes from repository.xml are parsed identically by the JavaScript parser
 

@@ -26,7 +26,6 @@ TODO
 - Test how conditional comments in templates are rendered
 - Re-enable the optimization that uses <xsl:element name="{translate('ABC','abc',name())}"/>
 - PHP renderer: consider caching $node->textContent for performance, especially wrt Emoticons
-- Consider *not* removing the source attribute of an attribute preprocessor
 - Conditional comments can create IE-specific exploits. Consider removing them
 - Renderer::getParameter()
 - PHP renderer generator: consider support for an external XPath converter (or converters, plural.) Could be used to micro-optimize some conversions (e.g. use custom PHP rather than xpath->evaluate()) and potentially unlock more dynamic rendering

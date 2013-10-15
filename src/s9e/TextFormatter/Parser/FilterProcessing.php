@@ -31,19 +31,23 @@ trait FilterProcessing
 
 				$attrValue = $tag->getAttribute($attrName);
 
-				// If the regexp matches, we remove the source attribute then we add the
-				// captured attributes
+				// If the regexp matches, we add the captured attributes
 				if (preg_match($regexp, $attrValue, $m))
 				{
-					// Remove the source attribute
-					$tag->removeAttribute($attrName);
-
 					// Set the target attributes
-					foreach ($m as $k => $v)
+					foreach ($m as $targetName => $targetValue)
 					{
-						if (!is_numeric($k) && !$tag->hasAttribute($k))
+						// Skip numeric captures
+						if (is_numeric($targetName))
 						{
-							$tag->setAttribute($k, $v);
+							continue;
+						}
+
+						// Attribute preprocessors cannot overwrite other attributes but they can
+						// overwrite themselves
+						if ($targetName === $attrName || !$tag->hasAttribute($targetName))
+						{
+							$tag->setAttribute($targetName, $targetValue);
 						}
 					}
 				}
