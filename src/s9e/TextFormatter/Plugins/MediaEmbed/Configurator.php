@@ -128,7 +128,7 @@ class Configurator extends ConfiguratorBase
 	}
 
 	//==========================================================================
-	// Collection stuff
+	// Public API
 	//==========================================================================
 
 	/**
@@ -272,61 +272,13 @@ class Configurator extends ConfiguratorBase
 				continue;
 			}
 
-			switch ($renderingMethod)
-			{
-				/**
-				* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
-				*/
-				case 'flash':
-					$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
-					$template .= $this->generateAttributes([
-						'width'  => $siteConfig['flash']['width'],
-						'height' => $siteConfig['flash']['height'],
-						'data'   => $siteConfig['flash']['src']
-					]);
-					$template .= '<param name="allowfullscreen" value="true"/>';
-					if (isset($siteConfig['flash']['flashvars']))
-					{
-						/**
-						* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
-						*/
-						$template .= '<param name="flashvars">';
-						$template .= $this->generateAttributes([
-							'value' => $siteConfig['flash']['flashvars']
-						]);
-						$template .= '</param>';
-					}
-					$template .= '<embed type="application/x-shockwave-flash">';
-					$template .= $this->generateAttributes([
-						'src'    => $siteConfig['flash']['src'],
-						'width'  => $siteConfig['flash']['width'],
-						'height' => $siteConfig['flash']['height'],
-						'allowfullscreen' => ''
-					]);
-					if (isset($siteConfig['flash']['flashvars']))
-					{
-						$template .= $this->generateAttributes([
-							'flashvars' => $siteConfig['flash']['flashvars']
-						]);
-					}
-					$template .= '</embed></object>';
+			// 'flash' => 'buildFlash'
+			$methodName = 'build' . ucfirst($renderingMethod);
 
-					$tag->defaultTemplate = $template;
-					break 2;
+			// Set the tag's default template then exit the loop
+			$tag->defaultTemplate = $this->$methodName($siteConfig);
 
-				case 'iframe':
-					$attributes = $siteConfig['iframe'];
-					$attributes['allowfullscreen'] = '';
-					$attributes['frameborder']     = '0';
-					$attributes['scrolling']       = 'no';
-
-					$tag->defaultTemplate = '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
-					break 2;
-
-				case 'template':
-					$tag->defaultTemplate = $siteConfig['template'];
-					break 2;
-			}
+			break;
 		}
 
 		// Normalize the tag's templates
@@ -351,6 +303,86 @@ class Configurator extends ConfiguratorBase
 		}
 
 		return $tag;
+	}
+
+	//==========================================================================
+	// Internal stuff
+	//==========================================================================
+
+	/**
+	* Build a tag's template based on its flash config
+	*
+	* @param  array  $siteConfig
+	* @return string
+	*/
+	protected function buildFlash(array $siteConfig)
+	{
+		/**
+		* @link http://www.whatwg.org/specs/web-apps/current-work/multipage/the-iframe-element.html#the-object-element
+		*/
+		$template = '<object type="application/x-shockwave-flash" typemustmatch="">';
+		$template .= $this->generateAttributes([
+			'width'  => $siteConfig['flash']['width'],
+			'height' => $siteConfig['flash']['height'],
+			'data'   => $siteConfig['flash']['src']
+		]);
+		$template .= '<param name="allowfullscreen" value="true"/>';
+		if (isset($siteConfig['flash']['flashvars']))
+		{
+			/**
+			* @link http://helpx.adobe.com/flash/kb/pass-variables-swfs-flashvars.html
+			*/
+			$template .= '<param name="flashvars">';
+			$template .= $this->generateAttributes([
+				'value' => $siteConfig['flash']['flashvars']
+			]);
+			$template .= '</param>';
+		}
+		$template .= '<embed type="application/x-shockwave-flash">';
+		$template .= $this->generateAttributes([
+			'src'    => $siteConfig['flash']['src'],
+			'width'  => $siteConfig['flash']['width'],
+			'height' => $siteConfig['flash']['height'],
+			'allowfullscreen' => ''
+		]);
+		if (isset($siteConfig['flash']['flashvars']))
+		{
+			$template .= $this->generateAttributes([
+				'flashvars' => $siteConfig['flash']['flashvars']
+			]);
+		}
+		$template .= '</embed></object>';
+
+		return $template;
+	}
+
+	/**
+	* Build a tag's template based on its iframe config
+	*
+	* @param  array  $siteConfig
+	* @return string
+	*/
+	protected function buildIframe(array $siteConfig)
+	{
+		$attributes = $siteConfig['iframe'];
+		$attributes['allowfullscreen'] = '';
+		$attributes['frameborder']     = '0';
+		$attributes['scrolling']       = 'no';
+
+		$template = '<iframe>' . $this->generateAttributes($attributes) . '</iframe>';
+
+		return $template;
+	}
+
+	/**
+	* Build a tag's template based on its template config
+	*
+	* @param  array  $siteConfig
+	* @return string
+	*/
+	protected function buildTemplate(array $siteConfig)
+	{
+		return $siteConfig['template'];
 	}
 
 	/**
