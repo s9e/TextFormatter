@@ -100,122 +100,125 @@ class TemplateForensicsTest extends Test
 	/** @testdox A template composed entirely of a single <xsl:apply-templates/> is considered transparent */
 	public function test70793519() { $this->runCase(18); }
 
+	/** @testdox A template with no <xsl:apply-templates/> is not considered transparent */
+	public function test1A9435FA() { $this->runCase(19); }
+
 	/** @testdox <span> allows <unknownElement> as child */
-	public function test655D9122() { $this->runCase(19); }
+	public function test655D9122() { $this->runCase(20); }
 
 	/** @testdox <unknownElement> allows <span> as child */
-	public function testEE29F1FF() { $this->runCase(20); }
+	public function testEE29F1FF() { $this->runCase(21); }
 
 	/** @testdox <textarea> allows text nodes */
-	public function test2E7367FF() { $this->runCase(21); }
+	public function test2E7367FF() { $this->runCase(22); }
 
 	/** @testdox <style> allows text nodes */
-	public function test19B9DD8B() { $this->runCase(22); }
+	public function test19B9DD8B() { $this->runCase(23); }
 
 	/** @testdox <xsl:apply-templates/> allows text nodes */
-	public function test1457EEC0() { $this->runCase(23); }
+	public function test1457EEC0() { $this->runCase(24); }
 
 	/** @testdox <table> disallows text nodes */
-	public function test6107CF00() { $this->runCase(24); }
+	public function test6107CF00() { $this->runCase(25); }
 
 	/** @testdox <table><tr><td> allows "Hi" */
-	public function test5ED10B0C() { $this->runCase(25); }
+	public function test5ED10B0C() { $this->runCase(26); }
 
 	/** @testdox <div><table> disallows "Hi" */
-	public function test55D2B228() { $this->runCase(26); }
+	public function test55D2B228() { $this->runCase(27); }
 
 	/** @testdox <table> disallows <xsl:value-of/> */
-	public function testAF701A06() { $this->runCase(27); }
+	public function testAF701A06() { $this->runCase(28); }
 
 	/** @testdox <table> disallows <xsl:text>Hi</xsl:text> */
-	public function test069CFF2A() { $this->runCase(28); }
+	public function test069CFF2A() { $this->runCase(29); }
 
 	/** @testdox <table> allows <xsl:text>  </xsl:text> */
-	public function test9F935BDA() { $this->runCase(29); }
+	public function test9F935BDA() { $this->runCase(30); }
 
 	/** @testdox <b> is a formatting element */
-	public function test0FEB502E() { $this->runCase(30); }
+	public function test0FEB502E() { $this->runCase(31); }
 
 	/** @testdox <b><u> is a formatting element */
-	public function test845660E9() { $this->runCase(31); }
+	public function test845660E9() { $this->runCase(32); }
 
 	/** @testdox <div> is not a formatting element */
-	public function testA5F32A8C() { $this->runCase(32); }
+	public function testA5F32A8C() { $this->runCase(33); }
 
 	/** @testdox <div><u> is not a formatting element */
-	public function test2EF441C1() { $this->runCase(33); }
+	public function test2EF441C1() { $this->runCase(34); }
 
 	/** @testdox "Hi" is not a formatting element */
-	public function test14421B19() { $this->runCase(34); }
+	public function test14421B19() { $this->runCase(35); }
 
 	/** @testdox A template composed entirely of a single <xsl:apply-templates/> is not a formatting element */
-	public function testE1E4F3F4() { $this->runCase(35); }
+	public function testE1E4F3F4() { $this->runCase(36); }
 
 	/** @testdox <img> uses the "empty" content model */
-	public function test26941BF9() { $this->runCase(36); }
+	public function test26941BF9() { $this->runCase(37); }
 
 	/** @testdox <hr><xsl:apply-templates/></hr> uses the "empty" content model */
-	public function test11094568() { $this->runCase(37); }
+	public function test11094568() { $this->runCase(38); }
 
 	/** @testdox <div><hr><xsl:apply-templates/></hr></div> uses the "empty" content model */
-	public function testACE6126C() { $this->runCase(38); }
+	public function testACE6126C() { $this->runCase(39); }
 
 	/** @testdox <span> is not empty */
-	public function testBF70FDFF() { $this->runCase(39); }
+	public function testBF70FDFF() { $this->runCase(40); }
 
 	/** @testdox <colgroup span="2"> uses the "empty" content model */
-	public function testAA6266BB() { $this->runCase(40); }
+	public function testAA6266BB() { $this->runCase(41); }
 
 	/** @testdox <colgroup> does not use the "empty" content model */
-	public function test62BCC022() { $this->runCase(41); }
+	public function test62BCC022() { $this->runCase(42); }
 
 	/** @testdox <span> allows elements */
-	public function testB0AA2D8C() { $this->runCase(42); }
+	public function testB0AA2D8C() { $this->runCase(43); }
 
 	/** @testdox <script> does not allow elements even if it has an <xsl:apply-templates/> child */
-	public function test029EA650() { $this->runCase(43); }
+	public function test029EA650() { $this->runCase(44); }
 
 	/** @testdox <script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child */
-	public function testCAAEE63E() { $this->runCase(44); }
+	public function testCAAEE63E() { $this->runCase(45); }
 
 	/** @testdox <script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child */
-	public function testC2B440E5() { $this->runCase(45); }
+	public function testC2B440E5() { $this->runCase(46); }
 
 	/** @testdox <pre> preserves whitespace */
-	public function test3A51B52B() { $this->runCase(46); }
+	public function test3A51B52B() { $this->runCase(47); }
 
 	/** @testdox <pre><code> preserves whitespace */
-	public function test8F524772() { $this->runCase(47); }
+	public function test8F524772() { $this->runCase(48); }
 
 	/** @testdox <span> does not preserve whitespace */
-	public function test9EE485B2() { $this->runCase(48); }
+	public function test9EE485B2() { $this->runCase(49); }
 
 	/** @testdox <img/> is void */
-	public function test5D210713() { $this->runCase(49); }
+	public function test5D210713() { $this->runCase(50); }
 
 	/** @testdox <img> is void even with a <xsl:apply-templates/> child */
-	public function test53CD3F08() { $this->runCase(50); }
+	public function test53CD3F08() { $this->runCase(51); }
 
 	/** @testdox <span> is not void */
-	public function test2218364A() { $this->runCase(51); }
+	public function test2218364A() { $this->runCase(52); }
 
 	/** @testdox <xsl:apply-templates/> is not void */
-	public function test517E8D2B() { $this->runCase(52); }
+	public function test517E8D2B() { $this->runCase(53); }
 
 	/** @testdox <blockquote> is a block-level element */
-	public function test602395E3() { $this->runCase(53); }
+	public function test602395E3() { $this->runCase(54); }
 
 	/** @testdox <span> is not a block-level element */
-	public function testE222869D() { $this->runCase(54); }
+	public function testE222869D() { $this->runCase(55); }
 
 	/** @testdox <br/> is not passthrough */
-	public function test56F3372F() { $this->runCase(55); }
+	public function test56F3372F() { $this->runCase(56); }
 
 	/** @testdox <b/> is not passthrough */
-	public function test64B82909() { $this->runCase(56); }
+	public function test64B82909() { $this->runCase(57); }
 
 	/** @testdox <b><xsl:apply-templates/></b> is passthrough */
-	public function test3FC3E4F9() { $this->runCase(57); }
+	public function test3FC3E4F9() { $this->runCase(58); }
 	// End of content generated by ../../../../scripts/patchTemplateForensicsTest.php
 
 	public function getData()
@@ -332,6 +335,11 @@ class TemplateForensicsTest extends Test
 				'A template composed entirely of a single <xsl:apply-templates/> is considered transparent',
 				'<xsl:apply-templates/>',
 				'isTransparent'
+			],
+			[
+				'A template with no <xsl:apply-templates/> is not considered transparent',
+				'<hr/>',
+				'!isTransparent'
 			],
 			[
 				'<span> allows <unknownElement> as child',

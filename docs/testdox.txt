@@ -431,6 +431,7 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
  [x] <a><span> is not considered transparent
  [x] <span><a> is not considered transparent
  [x] A template composed entirely of a single <xsl:apply-templates/> is considered transparent
+ [x] A template with no <xsl:apply-templates/> is not considered transparent
  [x] <span> allows <unknownElement> as child
  [x] <unknownElement> allows <span> as child
  [x] <textarea> allows text nodes

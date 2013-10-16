@@ -92,10 +92,9 @@ class TemplateForensics
 	protected $isPassthrough = false;
 
 	/**
-	* @var bool Whether all branches use the transparent content model (or more accurately, whether
-	*           no branch uses a content model other than transparent)
+	* @var bool Whether all branches use the transparent content model
 	*/
-	protected $isTransparent = true;
+	protected $isTransparent = false;
 
 	/**
 	* @var bool Whether all branches have an ancestor that is a void element
@@ -411,6 +410,10 @@ class TemplateForensics
 		*/
 		$isFormattingElement = true;
 
+		// Consider this template transparent unless we find out there are no branches or that one
+		// of the branches is not transparent
+		$this->isTransparent = true;
+
 		// For each <xsl:apply-templates/> element...
 		foreach ($this->getXSLElements('apply-templates') as $applyTemplates)
 		{
@@ -542,9 +545,14 @@ class TemplateForensics
 			}
 		}
 
-		// Now we take the bitfield of each branch and reduce them to a single ANDed bitfield
-		if (!empty($branchBitfields))
+		if (empty($branchBitfields))
 		{
+			// No branches => not transparent
+			$this->isTransparent = false;
+		}
+		else
+		{
+			// Take the bitfield of each branch and reduce them to a single ANDed bitfield
 			$this->allowChildBitfield = $branchBitfields[0];
 
 			foreach ($branchBitfields as $branchBitfield)
