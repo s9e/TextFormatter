@@ -49,7 +49,7 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add('youtube') does not createc a [youtube] BBCode if createBBCodes is false
+	* @testdox add('youtube') does not create a [youtube] BBCode if createBBCodes is false
 	*/
 	public function testNoSiteBBCode()
 	{
