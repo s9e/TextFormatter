@@ -136,6 +136,25 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() creates an optional "url" attribute
+	*/
+	public function testAddOptionalUrl()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'example.org',
+				'host'     => 'youtube.com',
+				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
+				'template' => 'YouTube!'
+			]
+		);
+
+		$this->assertTrue($tag->attributes->exists('url'));
+		$this->assertFalse($tag->attributes['url']->required);
+	}
+
+	/**
 	* @testdox add() marks the "id" attribute as non-optional if present
 	*/
 	public function testAddIdRequired()

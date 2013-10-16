@@ -168,6 +168,15 @@ class Configurator extends ConfiguratorBase
 		$tag->rules->autoClose();
 		$tag->rules->ignoreTags();
 
+		// Create an optional attribute to store the original URL if applicable
+		$tag->attributes->add(
+			'url',
+			[
+				'required'    => false,
+				'filterChain' => [$this->configurator->attributeFilters['#url']]
+			]
+		);
+
 		// Store the regexp used in extracted attributes
 		$attrRegexps = [];
 
