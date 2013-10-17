@@ -50,15 +50,11 @@ class HostnameListTest extends Test
 	}
 
 	/**
+	* @requires function idn_to_ascii
 	* @testdox IDNs are punycoded if idn_to_ascii() is available
 	*/
 	public function testIDNsArePunycoded()
 	{
-		if (!function_exists('idn_to_ascii'))
-		{
-			$this->markTestSkipped('idn_to_ascii() is not available');
-		}
-
 		$list = new HostnameList;
 		$list->add('pаypal.com');
 
