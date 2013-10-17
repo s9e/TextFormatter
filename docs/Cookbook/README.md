@@ -31,6 +31,8 @@
   * **MediaEmbed**
     * [Add a site from the supported list](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AddBundled.md)
     * [Add a site manually](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AddCustom.md)
+    * [Add a link to the original URL below the embedded content](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AppendTemplate.md)
+    * [Change the template used to render embedded content](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/ChangeTemplate.md)
 
 ### **Templating**
   * [Introduction](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/40_Templating/00_Introduction.md)

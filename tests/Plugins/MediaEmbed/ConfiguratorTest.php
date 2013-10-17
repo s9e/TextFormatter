@@ -496,6 +496,38 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox appendTemplate() sets a template to be appended to media sites' templates
+	*/
+	public function testAppend()
+	{
+		$template = '<a href="{@url}"><xsl:value-of select="@url"/></a>';
+
+		$this->configurator->MediaEmbed->appendTemplate($template);
+		$this->configurator->MediaEmbed->add('youtube');
+
+		$this->assertContains(
+			$template,
+			(string) $this->configurator->tags['YOUTUBE']->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox appendTemplate() accepts HTML
+	*/
+	public function testAppendHTML()
+	{
+		$template = '<br><a href="{@url}">Original link</a>';
+
+		$this->configurator->MediaEmbed->appendTemplate($template);
+		$this->configurator->MediaEmbed->add('youtube');
+
+		$this->assertContains(
+			'<br/><a href="{@url}">Original link</a>',
+			(string) $this->configurator->tags['YOUTUBE']->defaultTemplate
+		);
+	}
+
+	/**
 	* @testdox asConfig() returns false if no site was added
 	*/
 	public function testAsConfigFalseNoSite()

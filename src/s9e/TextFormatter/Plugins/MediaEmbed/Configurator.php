@@ -22,6 +22,11 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MediaSiteCollection;
 class Configurator extends ConfiguratorBase
 {
 	/**
+	* @var string String to be appended to the templates used to render media sites
+	*/
+	protected $appendTemplate = '';
+
+	/**
 	* @var bool Whether to replace unformatted URLs in text with embedded content
 	*/
 	protected $captureURLs = true;
@@ -276,7 +281,7 @@ class Configurator extends ConfiguratorBase
 			$methodName = 'build' . ucfirst($renderingMethod);
 
 			// Set the tag's default template then exit the loop
-			$tag->defaultTemplate = $this->$methodName($siteConfig);
+			$tag->defaultTemplate = $this->$methodName($siteConfig) . $this->appendTemplate;
 
 			break;
 		}
@@ -383,6 +388,18 @@ class Configurator extends ConfiguratorBase
 	protected function buildTemplate(array $siteConfig)
 	{
 		return $siteConfig['template'];
+	}
+
+	/**
+	* Set a string to be appended to the templates used to render media sites
+	*
+	* @param  string $template
+	* @return void
+	*/
+	public function appendTemplate($template = '')
+	{
+		$this->appendTemplate
+			= $this->configurator->templateNormalizer->normalizeTemplate($template);
 	}
 
 	/**
