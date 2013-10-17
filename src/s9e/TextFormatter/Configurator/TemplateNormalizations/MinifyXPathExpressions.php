@@ -49,7 +49,7 @@ class MinifyXPathExpressions extends TemplateNormalization
 			{
 				if ($token[0] === 'literal')
 				{
-					$attrValue .= preg_replace('/([{}])/', '$1$1', $token[1]);
+					$attrValue .= preg_replace('([{}])', '$0$0', $token[1]);
 				}
 				else
 				{

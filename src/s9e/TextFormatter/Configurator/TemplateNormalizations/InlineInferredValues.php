@@ -71,7 +71,7 @@ class InlineInferredValues extends TemplateNormalization
 					if ($token[0] === 'literal')
 					{
 						// Re-insert literals, don't forget to escape { and }
-						$attrValue .= preg_replace('/[{}]/', '$0$0', $token[1]);
+						$attrValue .= preg_replace('([{}])', '$0$0', $token[1]);
 					}
 					elseif ($token[0] === 'expression')
 					{
@@ -79,7 +79,7 @@ class InlineInferredValues extends TemplateNormalization
 						if ($token[1] === $var)
 						{
 							// Replace the expression with the value, don't forget to escape { and }
-							$attrValue .= preg_replace('/([{}])/', '$1$1', $value);
+							$attrValue .= preg_replace('([{}])', '$0$0', $value);
 						}
 						else
 						{

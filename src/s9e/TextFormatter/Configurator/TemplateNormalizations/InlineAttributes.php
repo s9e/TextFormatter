@@ -39,7 +39,7 @@ class InlineAttributes extends TemplateNormalization
 			{
 				if ($childNode instanceof DOMText)
 				{
-					$value .= preg_replace('#[{}]#', '$0$0', $childNode->textContent);
+					$value .= preg_replace('([{}])', '$0$0', $childNode->textContent);
 				}
 				elseif ($childNode->namespaceURI === self::XMLNS_XSL
 				     && $childNode->localName === 'value-of')
@@ -49,7 +49,7 @@ class InlineAttributes extends TemplateNormalization
 				elseif ($childNode->namespaceURI === self::XMLNS_XSL
 				     && $childNode->localName === 'text')
 				{
-					$value .= preg_replace('#([{}])#', '$1$1', $childNode->textContent);
+					$value .= preg_replace('([{}])', '$0$0', $childNode->textContent);
 				}
 				else
 				{
