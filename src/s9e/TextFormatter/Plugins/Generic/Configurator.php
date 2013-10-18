@@ -195,10 +195,12 @@ class Configurator extends ConfiguratorBase
 				// Record its name so we can alter the original regexp afterwards
 				$newNamedSubpatterns[$attrName] = $token['pos'];
 			}
+			// @codeCoverageIgnoreStart
 			else
 			{
 				throw new LogicException('Tried to create an attribute for an unused capture with no name. Please file a bug');
 			}
+			// @codeCoverageIgnoreEnd
 
 			if (isset($tag->attributes[$attrName]))
 			{

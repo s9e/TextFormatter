@@ -996,7 +996,6 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\RegexpConvertor
  [x] toJS() non-named capturing subpatterns leave an empty name in the map
  [x] toJS() correctly converts /(?:foo)(?<z>bar)/ to /(?:foo)(bar)/
  [x] toJS() converts atomic groups to non-capturing groups
- [x] toJS() throws a RuntimeException on unknown regexp features/tokens
 
 s9e\TextFormatter\Tests\Configurator\JavaScript\Minifier
  [x] get() forwards the call to minify() and returns its result
@@ -1114,7 +1113,6 @@ s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineTextElements
  [x] Works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\InlineInferredValues
- [x] normalize() ignores unknown tokens from TemplateHelper::parseAttributeValueTemplate()
  [x] Works
 
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\MinifyXPathExpressions
@@ -1806,7 +1804,6 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] getTag() throws an exception if the plugin does not have a tagName property set
 
 s9e\TextFormatter\Tests\Plugins\ParserBase
- [x] Has a default empty setUp() method
  [x] Constructor calls setUp()
  [x] Constructor sets up $this->config and $this->parser before calling setUp()
 
@@ -2074,7 +2071,6 @@ s9e\TextFormatter\Tests\Plugins\Generic\Configurator
  [x] add() normalizes the tag's template
  [x] add() checks the safeness of the tag
  [x] add() checks the safeness of the tag before adding it to the configurator's collection
- [x] add() throws a LogicException on unexpected captures
  [x] asConfig() returns FALSE if no replacements were set
  [x] asConfig() returns the regexps in a "generics" array where each element is in the form [<tagName>,<regexp>,<passthrough index>]
  [x] asConfig() creates a JavaScript variant of generics
@@ -2227,7 +2223,6 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] XPath expressions are inlined as PHP whenever possible
  [x] mbstring functions are not used if $useMultibyteStringFunctions is FALSE
  [x] Code optimization tests
- [x] optimizeConcatenations() does not merge incompatible htmlspecialchars() calls
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer

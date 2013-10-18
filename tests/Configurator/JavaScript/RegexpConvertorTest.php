@@ -389,36 +389,4 @@ class RegexpConvertorTest extends Test
 			RegexpConvertor::toJS('#(?>foo|bar)#')
 		);
 	}
-
-	/**
-	* @testdox toJS() throws a RuntimeException on unknown regexp features/tokens
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Unknown token type 'unknown' encountered while parsing regexp
-	* @requires function runkit_method_redefine
-	* @runInSeparateProcess
-	*/
-	public function testUnknownToken()
-	{
-		runkit_method_redefine(
-			's9e\\TextFormatter\\Configurator\\Helpers\\RegexpParser',
-			'parse',
-			'',
-			"return [
-				'delimiter' => '#',
-				'modifiers' => '',
-				'regexp'    => 'foo',
-				'tokens'    => [
-					[
-						'pos'     => 0,
-						'len'     => 1,
-						'type'    => 'unknown',
-						'content' => ''
-					]
-				]
-			];",
-			RUNKIT_ACC_STATIC
-		);
-
-		RegexpConvertor::toJS('#x#');
-	}
 }

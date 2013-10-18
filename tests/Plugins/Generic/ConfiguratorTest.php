@@ -476,36 +476,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox add() throws a LogicException on unexpected captures
-	* @expectedException LogicException
-	* @expectedExceptionMessage Tried to create an attribute for an unused capture with no name. Please file a bug
-	* @requires function runkit_method_redefine
-	* @runInSeparateProcess
-	*/
-	public function testUnknownToken()
-	{
-		class_exists('s9e\\TextFormatter\\Configurator\\Helpers\\RegexpParser');
-
-		// This fairly complicated test has to create a RegexpParser that returns a token that
-		// alternatively claims to have a name and not to have a name, in order to access codepaths
-		// that would otherwise be impossible to reach
-		runkit_method_redefine(
-			's9e\\TextFormatter\\Configurator\\Helpers\\RegexpParser',
-			'parse',
-			'',
-			"return [
-				'delimiter' => '#',
-				'modifiers' => '',
-				'regexp'    => '',
-				'tokens'    => [new " . __NAMESPACE__ . '\\FakeToken]
-			];',
-			RUNKIT_ACC_STATIC
-		);
-
-		$this->configurator->Generic->add('#foo#', '');
-	}
-
-	/**
 	* @testdox asConfig() returns FALSE if no replacements were set
 	*/
 	public function testFalseConfig()
@@ -574,28 +544,5 @@ class ConfiguratorTest extends Test
 			[['GC53BB427', $regexp, 0, $regexp->map]],
 			$config['generics']
 		);
-	}
-}
-
-class FakeToken implements \ArrayAccess
-{
-	public $i = 0;
-
-	public function offsetExists($offset)
-	{
-		return (++$this->i % 2);
-	}
-
-	public function offsetGet($offset)
-	{
-		return 'capturingSubpatternStart';
-	}
-
-	public function offsetSet($offset, $value)
-	{
-	}
-
-	public function offsetUnset($offset)
-	{
 	}
 }

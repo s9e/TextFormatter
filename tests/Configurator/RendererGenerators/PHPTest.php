@@ -1352,30 +1352,4 @@ class PHPTest extends Test
 			],
 		];
 	}
-
-	/**
-	* @testdox optimizeConcatenations() does not merge incompatible htmlspecialchars() calls
-	*/
-	public function testOptimizeConcatenationsNoIncompatibleMerge()
-	{
-		$php = 'if($node->hasAttribute(\'foo\'){$this->out.='
-		     . 'htmlspecialchars($node->textContent,1).'
-		     . 'htmlspecialchars($node->textContent,2);}';
-
-		$generator = new DummyPHPRendererGenerator;
-		$generator->php = $php;
-		$generator->optimizeCode();
-
-		$this->assertSame($php, $generator->php);
-	}
-}
-
-class DummyPHPRendererGenerator extends PHP
-{
-	public $php;
-
-	public function optimizeCode()
-	{
-		parent::optimizeCode();
-	}
 }

@@ -24,7 +24,8 @@ abstract class RegexpConvertor
 	public static function toJS($regexp)
 	{
 		$regexpInfo = RegexpParser::parse($regexp);
-		$dotAll     = (strpos($regexpInfo['modifiers'], 's') !== false);
+
+		$dotAll = (strpos($regexpInfo['modifiers'], 's') !== false);
 
 		$regexp = '';
 		$pos = 0;
@@ -96,8 +97,10 @@ abstract class RegexpConvertor
 					$regexp .= ')';
 					break;
 
+				// @codeCoverageIgnoreStart
 				default:
 					throw new RuntimeException("Unknown token type '" . $tok['type'] . "' encountered while parsing regexp");
+				// @codeCoverageIgnoreEnd
 			}
 
 			$pos = $tok['pos'] + $tok['len'];
