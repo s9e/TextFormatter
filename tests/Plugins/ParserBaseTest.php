@@ -12,6 +12,17 @@ use s9e\TextFormatter\Tests\Test;
 class ParserBaseTest extends Test
 {
 	/**
+	* @testdox Has a default empty setUp() method
+	*/
+	public function testHasSetup()
+	{
+		$parser = new DummyParser;
+		$plugin = new DummyAssertParser($parser, []);
+
+		$plugin->assert($this);
+	}
+
+	/**
 	* @testdox Constructor calls setUp()
 	*/
 	public function testSetup()
@@ -53,6 +64,16 @@ class DummyPluginParser extends ParserBase
 		++$this->called;
 		$this->configWasSet = isset($this->config);
 		$this->parserWasSet = isset($this->parser);
+	}
+
+	public function parse($text, array $matches) {}
+}
+
+class DummyAssertParser extends ParserBase
+{
+	public function assert(Test $test)
+	{
+		$test->assertTrue(is_callable([$this, 'setUp']));
 	}
 
 	public function parse($text, array $matches) {}

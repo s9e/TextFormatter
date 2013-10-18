@@ -87,14 +87,12 @@ class InlineInferredValues extends TemplateNormalization
 							$attrValue .= '{' . $token[1] . '}';
 						}
 					}
-					// @codeCoverageIgnoreStart
 					else
 					{
 						// This cannot actually happen, but if we can't interpret the token, we'll
 						// just abort
 						break 2;
 					}
-					// @codeCoverageIgnoreEnd
 				}
 
 				// Replace the attribute's value with the new inlined version

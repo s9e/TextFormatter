@@ -10,6 +10,8 @@ use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Plugins\Generic\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
+include_once __DIR__ . '/../../bootstrap.php';
+
 /**
 * @covers s9e\TextFormatter\Plugins\Generic\Configurator
 */
@@ -476,6 +478,43 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() throws a LogicException on unexpected captures
+	* @expectedException LogicException
+	* @expectedExceptionMessage Tried to create an attribute for an unused capture with no name. Please file a bug
+	* @runInSeparateProcess
+	* @preserveGlobalState disabled
+	*/
+	public function testUnknownToken()
+	{
+		// This fairly complicated test has to create a RegexpParser that returns a token that
+		// alternatively claims to have a name and not to have a name, in order to access codepaths
+		// that would otherwise be impossible to reach
+		eval(
+			'namespace s9e\\TextFormatter\\Configurator\\Helpers;
+
+			class RegexpParser
+			{
+				public static function parse()
+				{
+					return \\' . __CLASS__ . '::dummyParse();
+				}
+			}'
+		);
+
+		$this->configurator->Generic->add('#foo#', '');
+	}
+
+	public static function dummyParse()
+	{
+		return [
+			'delimiter' => '#',
+			'modifiers' => '',
+			'regexp'    => '',
+			'tokens'    => [new FakeToken]
+		];
+	}
+
+	/**
 	* @testdox asConfig() returns FALSE if no replacements were set
 	*/
 	public function testFalseConfig()
@@ -544,5 +583,28 @@ class ConfiguratorTest extends Test
 			[['GC53BB427', $regexp, 0, $regexp->map]],
 			$config['generics']
 		);
+	}
+}
+
+class FakeToken implements \ArrayAccess
+{
+	public $i = 0;
+
+	public function offsetExists($offset)
+	{
+		return (bool) (++$this->i % 2);
+	}
+
+	public function offsetGet($offset)
+	{
+		return 'capturingSubpatternStart';
+	}
+
+	public function offsetSet($offset, $value)
+	{
+	}
+
+	public function offsetUnset($offset)
+	{
 	}
 }

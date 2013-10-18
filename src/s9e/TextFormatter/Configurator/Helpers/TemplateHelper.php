@@ -62,14 +62,6 @@ abstract class TemplateHelper
 		$success   = $dom->loadHTML($html);
 		libxml_use_internal_errors($useErrors);
 
-		// @codeCoverageIgnoreStart
-		if (!$success)
-		{
-			$error = libxml_get_last_error();
-			throw new InvalidTemplateException('Invalid HTML template - error was: ' . $error->message);
-		}
-		// @codeCoverageIgnoreEnd
-
 		// Now dump the thing as XML and reload it with the proper namespace declaration
 		$xml = self::innerXML($dom->getElementsByTagName('div')->item(0));
 

@@ -5,6 +5,8 @@ namespace s9e\TextFormatter\Tests\Configurator\JavaScript;
 use s9e\TextFormatter\Tests\Test;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 
+include_once __DIR__ . '/../../bootstrap.php';
+
 /**
 * @covers s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor
 */
@@ -388,5 +390,46 @@ class RegexpConvertorTest extends Test
 			'/(?:foo|bar)/',
 			RegexpConvertor::toJS('#(?>foo|bar)#')
 		);
+	}
+
+	/**
+	* @testdox toJS() throws a RuntimeException on unknown regexp features/tokens
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Unknown token type 'unknown' encountered while parsing regexp
+	* @runInSeparateProcess
+	* @preserveGlobalState disabled
+	*/
+	public function testUnknownToken()
+	{
+		eval(
+			'namespace s9e\\TextFormatter\\Configurator\\Helpers;
+
+			class RegexpParser
+			{
+				public static function parse()
+				{
+					return \\' . __CLASS__ . '::dummyParse();
+				}
+			}'
+		);
+
+		RegexpConvertor::toJS('#x#');
+	}
+
+	public static function dummyParse()
+	{
+		return [
+			'delimiter' => '#',
+			'modifiers' => '',
+			'regexp'    => 'foo',
+			'tokens'    => [
+				[
+					'pos'     => 0,
+					'len'     => 1,
+					'type'    => 'unknown',
+					'content' => ''
+				]
+			]
+		];
 	}
 }

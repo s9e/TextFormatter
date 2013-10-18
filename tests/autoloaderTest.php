@@ -15,27 +15,33 @@ class autoloaderTest extends PHPUnit_Framework_TestCase
 	/**
 	* @testdox Can load s9e\TextFormatter\Configurator
 	* @runInSeparateProcess
+	* @preserveGlobalState disabled
 	*/
 	public function testConfigurator()
 	{
+		include __DIR__ . '/bootstrap.php';
 		$this->autoload('s9e\\TextFormatter\\Configurator');
 	}
 
 	/**
 	* @testdox Can load s9e\TextFormatter\Parser\Logger
 	* @runInSeparateProcess
+	* @preserveGlobalState disabled
 	*/
 	public function testParserTag()
 	{
+		include __DIR__ . '/bootstrap.php';
 		$this->autoload('s9e\\TextFormatter\\Parser\\Logger');
 	}
 
 	/**
 	* @testdox Can load s9e\TextFormatter\Plugins\Emoticons\Parser
 	* @runInSeparateProcess
+	* @preserveGlobalState disabled
 	*/
 	public function testEmoticonsParserTag()
 	{
+		include __DIR__ . '/bootstrap.php';
 		$this->autoload('s9e\\TextFormatter\\Plugins\\Emoticons\\Parser');
 	}
 

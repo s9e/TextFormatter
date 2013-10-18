@@ -803,7 +803,7 @@ EOT
 		// Remove the first token, which should be T_OPEN_TAG, aka "<?php"
 		unset($tokens[0]);
 
-		// Rebuild the source;
+		// Rebuild the source
 		$this->php = '';
 		foreach ($tokens as $token)
 		{
@@ -967,12 +967,7 @@ EOT
 
 					continue;
 				}
-
-				// @codeCoverageIgnoreStart
-				// This part is unreachable because it is currently impossible to produce two
-				// consecutive htmlspecialchars() calls with different escape modes
 			}
-			// @codeCoverageIgnoreEnd
 		}
 	}
 
