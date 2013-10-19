@@ -106,6 +106,7 @@
 			<file>tests/Configurator/RulesGenerators/ManageParagraphsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/NoBrIfWhitespaceIsPreservedTest.php</file>
 			<file>tests/Configurator/RulesGeneratorTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/ConvertCurlyExpressionsInTextTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/InlineCDATATest.php</file>

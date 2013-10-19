@@ -1097,6 +1097,9 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerator
  [x] Root does not have a denyChild rule for <li> if parentHTML is <ul>
  [x] Default rules
 
+s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressionsInText
+ [x] Works
+
 s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Custom
  [x] Constructor expects a valid callback
  [x] normalize() calls the user-defined callback with a DOMNode as argument
