@@ -43,3 +43,4 @@ TODO
 - Consider a plugin that matches a list of keywords. e.g. movie names link to IMDB (bad example, too many movies in existence) or select keyword get an affiliate link or Hearthstone card names have tooltips
 - Systematically run ConfigHelper::optimizeArray() on a safe subset of the config, such as attribute filters(?)
 - Move JavaScript\RegExp functionality to Items\Regexp
+- Consider adding a way to control whether a link gets a rel=nofollow based on a hostname list
