@@ -44,3 +44,4 @@ TODO
 - Systematically run ConfigHelper::optimizeArray() on a safe subset of the config, such as attribute filters(?)
 - Move JavaScript\RegExp functionality to Items\Regexp
 - Consider adding a way to control whether a link gets a rel=nofollow based on a hostname list
+- MediaEmbed: make attributes that are present in every extract regexp required
