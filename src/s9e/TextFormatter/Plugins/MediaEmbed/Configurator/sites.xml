@@ -31,7 +31,7 @@
 
 		<host>colbertnation.com</host>
 		<scrape>
-			<match>!colbertnation\.com/[^/]*(?>collection|video)s/!</match>
+			<match>!colbertnation\.com/[^/]*(?:collection|video)s/!</match>
 			<extract>!(?'id'mgid:cms:video:colbertnation\.com:[0-9]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
@@ -82,7 +82,7 @@
 
 		<host>thedailyshow.com</host>
 		<scrape>
-			<match>!thedailyshow\.com/(?>collection|watch)/!</match>
+			<match>!thedailyshow\.com/(?:collection|watch)/!</match>
 			<extract>!(?'id'mgid:cms:video:thedailyshow\.com:[0-9]+)!</extract>
 		</scrape>
 		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
@@ -96,7 +96,7 @@
 		<example>https://www.facebook.com/video/video.php?v=10150451523596807</example>
 
 		<host>facebook.com</host>
-		<extract>!facebook\.com/(?>photo|video/video)\.php\?v=(?'id'[0-9]+)!</extract>
+		<extract>!facebook\.com/(?:photo|video/video)\.php\?v=(?'id'[0-9]+)!</extract>
 		<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id={@id}"/>
 	</site>
 
