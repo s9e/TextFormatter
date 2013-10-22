@@ -108,7 +108,7 @@ abstract class Test extends \PHPUnit_Framework_TestCase
 		$cacheDir           = __DIR__ . '/.cache';
 		$closureCompilerBin = $this->getClosureCompilerBin();
 
-		if (file_exists($cacheDir) && file_exists($closureCompilerBin))
+		if (file_exists($cacheDir) && file_exists($closureCompilerBin) && empty($_SERVER['TRAVIS']))
 		{
 			$this->configurator->javascript
 				->setMinifier('ClosureCompilerApplication', $closureCompilerBin)
