@@ -23,6 +23,21 @@
 		/>
 	</site>
 
+	<site id="colbertnation">
+		<name>Colbert Nation</name>
+		<homepage>http://www.colbertnation.com/</homepage>
+		<example>http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk</example>
+		<example>http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/</example>
+
+		<host>colbertnation.com</host>
+		<scrape>
+			<match>!colbertnation\.com/[^/]*(?>collection|video)s/!</match>
+			<extract>!(?'id'mgid:cms:video:colbertnation\.com:[0-9]+)!</extract>
+		</scrape>
+		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
+		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
+	</site>
+
 	<site id="collegehumor">
 		<name>CollegeHumor</name>
 		<homepage>http://www.collegehumor.com/</homepage>
@@ -41,9 +56,10 @@
 		<host>comedycentral.com</host>
 		<scrape>
 			<match>!comedycentral\.com/video-clips/!</match>
-			<extract>!(?'id'mgid:arc:video:comedycentral.com:[-\w]+)!</extract>
+			<extract>!(?'id'mgid:arc:video:comedycentral\.com:[-\w]+)!</extract>
 		</scrape>
-		<iframe width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
+		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
+		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
 	<site id="dailymotion">
@@ -56,6 +72,21 @@
 		<host>dailymotion.com</host>
 		<extract>!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!</extract>
 		<flash width="560" height="315" src="http://www.dailymotion.com/swf/{@id}"/>
+	</site>
+
+	<site id="dailyshow">
+		<name>The Daily Show with Jon Stewart</name>
+		<homepage>http://www.thedailyshow.com/</homepage>
+		<example>http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-</example>
+		<example>http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508</example>
+
+		<host>thedailyshow.com</host>
+		<scrape>
+			<match>!thedailyshow\.com/(?>collection|watch)/!</match>
+			<extract>!(?'id'mgid:cms:video:thedailyshow\.com:[0-9]+)!</extract>
+		</scrape>
+		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
+		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
 	<site id="facebook">

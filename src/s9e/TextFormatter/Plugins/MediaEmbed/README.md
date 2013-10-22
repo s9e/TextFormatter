@@ -97,6 +97,11 @@ echo $html;
 		<td>http://www.cbsnews.com/video/watch/?id=50156501n</td>
 	</tr>
 	<tr>
+		<td><code>colbertnation</code></td>
+		<td>Colbert Nation</td>
+		<td>http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk<br/>http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/</td>
+	</tr>
+	<tr>
 		<td><code>collegehumor</code></td>
 		<td>CollegeHumor</td>
 		<td>http://www.collegehumor.com/video/1181601/more-than-friends</td>
@@ -110,6 +115,11 @@ echo $html;
 		<td><code>dailymotion</code></td>
 		<td>Dailymotion</td>
 		<td>http://www.dailymotion.com/video/x222z1<br/>http://www.dailymotion.com/user/Dailymotion/2#video=x222z1</td>
+	</tr>
+	<tr>
+		<td><code>dailyshow</code></td>
+		<td>The Daily Show with Jon Stewart</td>
+		<td>http://www.thedailyshow.com/watch/mon-july-16-2012/louis-c-k-<br/>http://www.thedailyshow.com/collection/429537/shutstorm-2013/429508</td>
 	</tr>
 	<tr>
 		<td><code>facebook</code></td>
