@@ -106,6 +106,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/',
+				'<rt><RUTUBE id="6613980" url="http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/">http://rutube.ru/video/b920dc58f1397f1761a226baae4d2f3b/</RUTUBE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('rutube');
+				}
+			],
+			[
 				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
 				'<rt><SLIDESHARE id="21112125" url="http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></rt>',
 				[],
@@ -415,6 +424,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('metacafe');
+				}
+			],
+			[
+				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
+				'<rt><RUTUBE id="4118278" url="http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd">http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</RUTUBE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('rutube');
 				}
 			],
 			[
@@ -730,6 +748,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('metacafe');
+				}
+			],
+			[
+				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
+				'<iframe width="720" height="405" src="http://rutube.ru/video/embed/4118278" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('rutube');
 				}
 			],
 			[
