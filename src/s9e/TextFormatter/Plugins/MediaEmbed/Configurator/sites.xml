@@ -41,9 +41,9 @@
 		<host>comedycentral.com</host>
 		<scrape>
 			<match>!comedycentral\.com/video-clips/!</match>
-			<extract>!mgid:arc:video:comedycentral.com:(?'id'[-\w]+)!</extract>
+			<extract>!(?'id'mgid:arc:video:comedycentral.com:[-\w]+)!</extract>
 		</scrape>
-		<iframe width="512" height="288" src="http://media.mtvnservices.com/mgid:arc:video:comedycentral.com:{@id}"/>
+		<iframe width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
 	</site>
 
 	<site id="dailymotion">
