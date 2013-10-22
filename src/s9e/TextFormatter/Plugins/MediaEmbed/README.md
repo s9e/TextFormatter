@@ -124,7 +124,7 @@ echo $html;
 	<tr>
 		<td><code>facebook</code></td>
 		<td>Facebook</td>
-		<td>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</td>
+		<td>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater<br/>https://www.facebook.com/video/video.php?v=10150451523596807</td>
 	</tr>
 	<tr>
 		<td><code>funnyordie</code></td>

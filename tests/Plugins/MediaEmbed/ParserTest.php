@@ -292,6 +292,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/video/video.php?v=10150451523596807',
+				'<rt><FACEBOOK id="10150451523596807" url="https://www.facebook.com/video/video.php?v=10150451523596807">https://www.facebook.com/video/video.php?v=10150451523596807</FACEBOOK></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
 				'<rt><FUNNYORDIE id="bf313bd8b4" url="http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david">http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</FUNNYORDIE></rt>',
 				[],

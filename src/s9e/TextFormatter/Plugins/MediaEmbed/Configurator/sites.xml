@@ -93,9 +93,10 @@
 		<name>Facebook</name>
 		<homepage>http://www.facebook.com/</homepage>
 		<example>https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</example>
+		<example>https://www.facebook.com/video/video.php?v=10150451523596807</example>
 
 		<host>facebook.com</host>
-		<extract>!facebook\.com/photo\.php\?v=(?'id'[0-9]+)!</extract>
+		<extract>!facebook\.com/(?>photo|video/video)\.php\?v=(?'id'[0-9]+)!</extract>
 		<iframe width="560" height="315" src="https://www.facebook.com/video/embed?video_id={@id}"/>
 	</site>
 
