@@ -807,7 +807,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media=youtube]-cEzsCAzTak[/media]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="315" src="//www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -816,7 +816,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="315" src="//www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -825,7 +825,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="315" src="//www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -834,7 +834,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="315" src="//www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -843,7 +843,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE=http://www.youtube.com/watch?v=-cEzsCAzTak]Hi!',
-				'<iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>Hi!',
+				'<iframe width="560" height="315" src="//www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>Hi!',
 				[],
 				function ($configurator)
 				{
@@ -852,7 +852,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak',
-				'Check this: <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'Check this: <iframe width="560" height="315" src="//www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -861,7 +861,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak and that: http://example.com',
-				'Check this: <iframe width="560" height="315" src="http://www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe> and that: <a href="http://example.com">http://example.com</a>',
+				'Check this: <iframe width="560" height="315" src="//www.youtube.com/embed/-cEzsCAzTak" allowfullscreen="" frameborder="0" scrolling="no"></iframe> and that: <a href="http://example.com">http://example.com</a>',
 				[],
 				function ($configurator)
 				{
