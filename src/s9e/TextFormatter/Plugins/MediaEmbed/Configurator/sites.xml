@@ -318,6 +318,6 @@
 		<host>youtu.be</host>
 		<extract>!youtube\.com/(?:watch\?.*?v=|v/)(?'id'[-0-9A-Z_a-z]+)!</extract>
 		<extract>!youtu\.be/(?'id'[-0-9A-Z_a-z]+)!</extract>
-		<iframe width="560" height="315" src="http://www.youtube.com/embed/{@id}"/>
+		<iframe width="560" height="315" src="//www.youtube.com/embed/{@id}"/>
 	</site>
 </sites>
