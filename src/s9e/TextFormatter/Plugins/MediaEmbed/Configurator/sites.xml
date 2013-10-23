@@ -311,6 +311,20 @@
 		<template><![CDATA[<iframe width="480" height="480" src="https://vine.co/v/{@id}/embed/simple" allowfullscreen="" frameborder="0" scrolling="no"/><script async="" src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"/>]]></template>
 	</site>
 
+	<site id="vk">
+		<name>VK</name>
+		<homepage>https://vk.com/</homepage>
+		<example>http://vk.com/video-7016284_163645555</example>
+
+		<host>vk.com</host>
+		<extract>!vk\.com/video(?'oid'-?[0-9]+)_(?'vid'[0-9]+)!</extract>
+		<scrape>
+			<match>!vk\.com/video-?[0-9]+_[0-9]+!</match>
+			<extract>!embed_hash=(?'hash'[0-9a-f]+)!</extract>
+		</scrape>
+		<iframe width="607" height="360" src="http://vk.com/video_ext.php?oid={@oid}&amp;id={@vid}&amp;hash={@hash}"/>
+	</site>
+
 	<site id="wshh">
 		<name>WorldStarHipHop</name>
 		<homepage>http://www.worldstarhiphop.com/</homepage>

@@ -132,6 +132,15 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('twitch');
 				}
 			],
+			[
+				'http://vk.com/video-7016284_163645555',
+				'<rt><VK hash="eb5d7a5e6e1d8b71" oid="-7016284" url="http://vk.com/video-7016284_163645555" vid="163645555">http://vk.com/video-7016284_163645555</VK></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vk');
+				}
+			],
 		];
 	}
 
