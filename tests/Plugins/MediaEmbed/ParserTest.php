@@ -365,7 +365,25 @@ class ParserTest extends Test
 			],
 			[
 				'https://gist.github.com/s9e/6806305',
-				'<rt><GIST id="6806305" url="https://gist.github.com/s9e/6806305" user="s9e">https://gist.github.com/s9e/6806305</GIST></rt>',
+				'<rt><GIST id="s9e/6806305" url="https://gist.github.com/s9e/6806305">https://gist.github.com/s9e/6806305</GIST></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'https://gist.github.com/6806305',
+				'<rt><GIST id="6806305" url="https://gist.github.com/6806305">https://gist.github.com/6806305</GIST></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599',
+				'<rt><GIST id="s9e/6806305/ad88d904b082c8211afa040162402015aacb8599" url="https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599">https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</GIST></rt>',
 				[],
 				function ($configurator)
 				{

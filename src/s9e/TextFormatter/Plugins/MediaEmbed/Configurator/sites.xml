@@ -126,10 +126,12 @@
 		<name>GitHub Gist</name>
 		<homepage>https://gist.github.com/</homepage>
 		<example>https://gist.github.com/s9e/6806305</example>
+		<example>https://gist.github.com/6806305</example>
+		<example>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</example>
 
 		<host>github.com</host>
-		<extract>!gist\.github\.com/(?'user'[^/]+)/(?'id'[0-9]+)!</extract>
-		<template><![CDATA[<script src="https://gist.github.com/{@user}/{@id}.js"></script>]]></template>
+		<extract>!gist\.github\.com/(?'id'(?:\w+/)?[0-9]+(?:/[0-9a-f]+)?)!</extract>
+		<template><![CDATA[<script src="https://gist.github.com/{@id}.js"></script>]]></template>
 	</site>
 
 	<site id="ign">
