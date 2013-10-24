@@ -322,7 +322,7 @@
 			<match>!vk\.com/video-?[0-9]+_[0-9]+!</match>
 			<extract>!embed_hash=(?'hash'[0-9a-f]+)!</extract>
 		</scrape>
-		<iframe width="607" height="360" src="http://vk.com/video_ext.php?oid={@oid}&amp;id={@vid}&amp;hash={@hash}"/>
+		<iframe width="607" height="360" src="http://vk.com/video_ext.php?oid={@oid}&amp;id={@vid}&amp;hash={@hash}&amp;hd=1"/>
 	</site>
 
 	<site id="wshh">
