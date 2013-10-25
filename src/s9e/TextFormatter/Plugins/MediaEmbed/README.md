@@ -142,6 +142,11 @@ echo $html;
 		<td>https://gist.github.com/s9e/6806305<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
 	</tr>
 	<tr>
+		<td><code>hulu</code></td>
+		<td>Hulu</td>
+		<td>http://www.hulu.com/watch/445716</td>
+	</tr>
+	<tr>
 		<td><code>ign</code></td>
 		<td>IGN</td>
 		<td>http://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>

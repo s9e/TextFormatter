@@ -88,6 +88,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.hulu.com/watch/445716',
+				'<rt><HULU id="lbxMKBY8oOd3pvOBhM8lqQ" url="http://www.hulu.com/watch/445716">http://www.hulu.com/watch/445716</HULU></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('hulu');
+				}
+			],
+			[
 				'http://www.indiegogo.com/projects/gameheart-redesigned',
 				'<rt><INDIEGOGO id="513633" url="http://www.indiegogo.com/projects/gameheart-redesigned">http://www.indiegogo.com/projects/gameheart-redesigned</INDIEGOGO></rt>',
 				[],
