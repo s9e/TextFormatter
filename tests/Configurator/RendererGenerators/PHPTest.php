@@ -1212,6 +1212,10 @@ class PHPTest extends Test
 				"(\$node->hasAttribute('songid')?'songW':'w')"
 			],
 			[
+				'<xsl:template match="FOO"><hr title="{250-210*boolean(@songid)}"/></xsl:template>',
+				"(\$node->hasAttribute('songid')?40:250)"
+			],
+			[
 				'<xsl:template match="FOO"><xsl:value-of select="substring(\'archl\',5-4*boolean(@archive_id|@chapter_id),4)"/></xsl:template>',
 				"(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
 			],

@@ -49,6 +49,9 @@ class PHP implements RendererGenerator
 		"substring('songWw',6-5*boolean(@songid),5)"
 			=> "(\$node->hasAttribute('songid')?'songW':'w')",
 
+		"250-210*boolean(@songid)"
+			=> "(\$node->hasAttribute('songid')?40:250)",
+
 		// MediaEmbed: Twitch
 		"substring('archl',5-4*boolean(@archive_id|@chapter_id),4)"
 			=> "(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
