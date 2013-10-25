@@ -134,6 +134,26 @@
 		<template><![CDATA[<script src="https://gist.github.com/{@id}.js"></script>]]></template>
 	</site>
 
+	<site id="grooveshark">
+		<name>Grooveshark</name>
+		<homepage>http://grooveshark.com/</homepage>
+		<example>http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761</example>
+		<example>http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761</example>
+		<example>http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</example>
+
+		<host>grooveshark.com</host>
+		<extract>%grooveshark\.com(?:/#!?)?/playlist/[^/]+/(?'playlistid'[0-9]+)%</extract>
+		<scrape url="http://grooveshark.com/s/{@path}">
+			<match>%grooveshark\.com/s/(?'path'[^/]+/\w+)%</match>
+			<extract>%songID=(?'songid'[0-9]+)%</extract>
+		</scrape>
+		<flash width="250"
+		       height="{250-210*boolean(@songid)}"
+		       src="http://grooveshark.com/{substring('songWw',6-5*boolean(@songid),5)}idget.swf"
+		       flashvars="playlistID={@playlistid}&amp;songID={@songid}"
+		/>
+	</site>
+
 	<site id="hulu">
 		<name>Hulu</name>
 		<homepage>http://www.hulu.com/</homepage>

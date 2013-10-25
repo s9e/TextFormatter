@@ -142,6 +142,11 @@ echo $html;
 		<td>https://gist.github.com/s9e/6806305<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
 	</tr>
 	<tr>
+		<td><code>grooveshark</code></td>
+		<td>Grooveshark</td>
+		<td>http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761<br/>http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761<br/>http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</td>
+	</tr>
+	<tr>
 		<td><code>hulu</code></td>
 		<td>Hulu</td>
 		<td>http://www.hulu.com/watch/445716</td>
