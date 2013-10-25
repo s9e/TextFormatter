@@ -45,3 +45,4 @@ TODO
 - Move JavaScript\RegExp functionality to Items\Regexp
 - Consider adding a way to control whether a link gets a rel=nofollow based on a hostname list
 - MediaEmbed: make attributes that are present in every extract regexp required
+- MediaEmbed: add an oEmbed helper
