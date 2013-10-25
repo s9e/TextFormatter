@@ -1207,6 +1207,14 @@ class PHPTest extends Test
 				'<xsl:template match="FOO"><xsl:if test="contains(\'upperlowerdecim\',substring(@type,1,5))">Foo</xsl:if></xsl:template>',
 				"if(strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false)"
 			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="substring(\'songWw\',6-5*boolean(@songid),5)"/></xsl:template>',
+				"(\$node->hasAttribute('songid')?'songW':'w')"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:value-of select="substring(\'archl\',5-4*boolean(@archive_id|@chapter_id),4)"/></xsl:template>',
+				"(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
+			],
 		];
 	}
 

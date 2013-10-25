@@ -45,9 +45,13 @@ class PHP implements RendererGenerator
 		"contains('upperlowerdecim',substring(@type,1,5))"
 			=> "strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false",
 
+		// MediaEmbed: Grooveshark
+		"substring('songWw',6-5*boolean(@songid),5)"
+			=> "(\$node->hasAttribute('songid')?'songW':'w')",
+
 		// MediaEmbed: Twitch
 		"substring('archl',5-4*boolean(@archive_id|@chapter_id),4)"
-			=> "((\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id'))?'arch':'l')"
+			=> "(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
 	];
 
 	/**
