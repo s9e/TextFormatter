@@ -189,24 +189,3 @@ function filterTag(tag)
 
 	return isValid;
 }
-
-/**
-* Get all registered vars
-*
-* @return {!Object}
-*/
-function getRegisteredVars()
-{
-	return registeredVars;
-}
-
-/**
-* Set a variable's value for use in filters
-*
-* @param  {!string} name  Variable's name
-* @param  {*}       value Value
-*/
-function registerVar(name, value)
-{
-	registeredVars[name] = value;
-}

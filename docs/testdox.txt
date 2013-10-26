@@ -1521,9 +1521,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] Built-in attribute filters are converted
  [x] An attribute filter that uses a built-in filter as callback is converted
  [x] An attribute filter with no JS representation unconditionally returns false
- [x] The name of a registered vars is expressed in quotes if it wouldn't be legal as a property
- [x] A callback that uses a registered vars whose name wouldn't be legal as a property uses the bracket syntax to access it
- [x] A callback that uses a registered vars whose name is legal as a property uses the dot syntax to access it
+ [x] The name of a registered vars is expressed in quotes
+ [x] Callbacks use the bracket syntax to access registered vars
  [x] isLegalProp() tests
  [x] encode() tests
  [x] HINT.closeAncestor=0 by default
@@ -1670,8 +1669,6 @@ s9e\TextFormatter\Tests\Parser\BuiltInFilters
  [x] filterUrl() can be called without a logger
 
 s9e\TextFormatter\Tests\Parser\FilterProcessing
- [x] registerVar($k, $v) sets registeredVars[$k] to $v
- [x] getRegisteredVars() returns all registered vars
  [x] executeAttributePreprocessors() sets captured attributes on match
  [x] executeAttributePreprocessors() does not overwrite attributes that were already set
  [x] executeAttributePreprocessors() does not unset the source attribute on match

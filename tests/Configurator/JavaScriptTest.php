@@ -249,50 +249,32 @@ class JavaScriptTest extends Test
 	}
 
 	/**
-	* @testdox The name of a registered vars is expressed in quotes if it wouldn't be legal as a property
+	* @testdox The name of a registered vars is expressed in quotes
 	*/
-	public function testRegisteredVarIllegalProp()
+	public function testRegisteredVarBracket()
 	{
-		$this->configurator->registeredVars = ['float' => 'value'];
+		$this->configurator->registeredVars = ['foo' => 'bar'];
 
 		$this->assertContains(
-			'registeredVars={"float":"value"}',
+			'registeredVars={"foo":"bar"}',
 			$this->configurator->javascript->getParser()
 		);
 	}
 
 	/**
-	* @testdox A callback that uses a registered vars whose name wouldn't be legal as a property uses the bracket syntax to access it
+	* @testdox Callbacks use the bracket syntax to access registered vars
 	*/
-	public function testCallbackRegisteredVarIllegalProp()
+	public function testCallbackRegisteredVarBracket()
 	{
-		$this->configurator->registeredVars = ['float' => 'value'];
+		$this->configurator->registeredVars = ['foo' => 'bar'];
 
 		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain
 			->append('strtolower')
 			->resetParameters()
-			->addParameterByName('float');
+			->addParameterByName('foo');
 
 		$this->assertContains(
-			'registeredVars["float"]',
-			$this->configurator->javascript->getParser()
-		);
-	}
-
-	/**
-	* @testdox A callback that uses a registered vars whose name is legal as a property uses the dot syntax to access it
-	*/
-	public function testCallbackRegisteredVarLegalProp()
-	{
-		$this->configurator->registeredVars = ['_float' => 'value'];
-
-		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain
-			->append('strtolower')
-			->resetParameters()
-			->addParameterByName('_float');
-
-		$this->assertContains(
-			'registeredVars._float',
+			'registeredVars["foo"]',
 			$this->configurator->javascript->getParser()
 		);
 	}

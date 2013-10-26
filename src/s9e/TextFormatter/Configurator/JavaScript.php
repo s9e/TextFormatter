@@ -415,7 +415,7 @@ class JavaScript
 	*/
 	protected function getRegisteredVarsConfig()
 	{
-		return new Code(self::encode($this->config['registeredVars']));
+		return new Code(self::encode(new Dictionary($this->config['registeredVars'])));
 	}
 
 	/**
@@ -695,14 +695,7 @@ class JavaScript
 				 && $k !== 'openTags'
 				 && $k !== 'registeredVars')
 				{
-					if (self::isLegalProp($k))
-					{
-						$k = 'registeredVars.' . $k;
-					}
-					else
-					{
-						$k = 'registeredVars[' . json_encode($k) . ']';
-					}
+					$k = 'registeredVars[' . json_encode($k) . ']';
 				}
 
 				$js .= $k;

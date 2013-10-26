@@ -17,34 +17,6 @@ use s9e\TextFormatter\Tests\Test;
 class FilterProcessingTest extends Test
 {
 	/**
-	* @testdox registerVar($k, $v) sets registeredVars[$k] to $v
-	*/
-	public function testRegisterVar()
-	{
-		$dummy = new FilterProcessingDummy;
-		$dummy->registerVar('foo', 'bar');
-
-		$this->assertSame(
-			['foo' => 'bar'],
-			$dummy->registeredVars
-		);
-	}
-
-	/**
-	* @testdox getRegisteredVars() returns all registered vars
-	*/
-	public function testGetRegisteredVars()
-	{
-		$dummy = new FilterProcessingDummy;
-		$dummy->registerVar('foo', 'bar');
-
-		$this->assertSame(
-			['foo' => 'bar'],
-			$dummy->getRegisteredVars()
-		);
-	}
-
-	/**
 	* @testdox executeAttributePreprocessors() sets captured attributes on match
 	*/
 	public function testExecuteAttributePreprocessorsSetAttributesOnMatch()

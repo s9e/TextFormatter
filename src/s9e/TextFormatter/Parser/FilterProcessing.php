@@ -254,26 +254,4 @@ trait FilterProcessing
 
 		return $isValid;
 	}
-
-	/**
-	* Get all registered vars
-	*
-	* @return array
-	*/
-	public function getRegisteredVars()
-	{
-		return $this->registeredVars;
-	}
-
-	/**
-	* Set a variable's value for use in filters
-	*
-	* @param  string $name  Variable's name
-	* @param  mixed  $value Value
-	* @return void
-	*/
-	public function registerVar($name, $value)
-	{
-		$this->registeredVars[$name] = $value;
-	}
 }

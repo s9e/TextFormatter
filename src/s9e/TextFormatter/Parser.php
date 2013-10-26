@@ -47,7 +47,7 @@ class Parser
 	/**
 	* @var array Variables registered for use in filters
 	*/
-	protected $registeredVars = [];
+	public $registeredVars = [];
 
 	/**
 	* @var array Tags' config
