@@ -154,19 +154,19 @@ class FilterProcessingTest extends Test
 	public function testExecuteFilterByValue()
 	{
 		$filter = new ProgrammableCallback(
-			function()
+			function ()
 			{
-				$this->assertSame(
-					[42],
-					func_get_args()
-				);
+				return func_get_args();
 			}
 		);
 		$filter->addParameterByValue(42);
 
-		FilterProcessingDummy::__executeFilter(
-			$filter->asConfig(),
-			[]
+		$this->assertSame(
+			[42],
+			FilterProcessingDummy::__executeFilter(
+				$filter->asConfig(),
+				[]
+			)
 		);
 	}
 
@@ -176,19 +176,19 @@ class FilterProcessingTest extends Test
 	public function testExecuteFilterByName()
 	{
 		$filter = new ProgrammableCallback(
-			function()
+			function ()
 			{
-				$this->assertSame(
-					[42],
-					func_get_args()
-				);
+				return func_get_args();
 			}
 		);
 		$filter->addParameterByName('foo');
 
-		FilterProcessingDummy::__executeFilter(
-			$filter->asConfig(),
-			['foo' => 42]
+		$this->assertSame(
+			[42],
+			FilterProcessingDummy::__executeFilter(
+				$filter->asConfig(),
+				['foo' => 42]
+			)
 		);
 	}
 
@@ -198,19 +198,19 @@ class FilterProcessingTest extends Test
 	public function testExecuteFilterRegisteredVar()
 	{
 		$filter = new ProgrammableCallback(
-			function()
+			function ()
 			{
-				$this->assertSame(
-					[42],
-					func_get_args()
-				);
+				return func_get_args();
 			}
 		);
 		$filter->addParameterByName('foo');
 
-		FilterProcessingDummy::__executeFilter(
-			$filter->asConfig(),
+		$this->assertSame(
+			[42],
+			FilterProcessingDummy::__executeFilter(
+				$filter->asConfig(),
 			['registeredVars' => ['foo' => 42]]
+			)
 		);
 	}
 
