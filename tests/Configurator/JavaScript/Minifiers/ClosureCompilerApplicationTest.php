@@ -145,7 +145,6 @@ class ClosureCompilerApplicationTest extends Test
 
 	/**
 	* @testdox Replaces the default externs with custom externs if compilationLevel is ADVANCED_OPTIMIZATIONS and excludeDefaultExterns is true
-	* @group slow
 	*/
 	public function testReplacesExterns()
 	{
