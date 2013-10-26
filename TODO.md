@@ -47,3 +47,4 @@ TODO
 - MediaEmbed: make attributes that are present in every extract regexp required. Alternatively, invalidate tag if no regexp matched
 - MediaEmbed: add an oEmbed helper
 - JavaScript: check whether registeredVars's keys are preserved. convertCallback() should always use the bracket notation when accessing registeredVars, otherwise registerVar() would not work
+- Add $configurator->cacheDir via getter/setter as an alias for $configurator->registeredVars['cacheDir'] with validation for dir's existence and writability
