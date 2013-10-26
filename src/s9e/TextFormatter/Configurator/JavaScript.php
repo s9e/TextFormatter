@@ -271,7 +271,7 @@ class JavaScript
 		}
 
 		// Test each plugin's regexpLimitAction
-		foreach ($this->config['plugins'] as $k=>$pluginConfig)
+		foreach ($this->config['plugins'] as $pluginConfig)
 		{
 			if (!isset($pluginConfig['regexpLimitAction']))
 			{
