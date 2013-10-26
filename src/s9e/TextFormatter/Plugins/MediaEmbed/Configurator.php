@@ -216,8 +216,15 @@ class Configurator extends ConfiguratorBase
 				$attrNames = array_unique($attrNames);
 				sort($attrNames);
 
+				// Prepare the scrape config and add the URL if applicable
+				$entry = [$scrape['match'], $scrape['extract'], $attrNames];
+				if (isset($scrape['url']))
+				{
+					$entry[] = $scrape['url'];
+				}
+
 				// Add this scrape to the config
-				$scrapeConfig[] = [$scrape['match'], $scrape['extract'], $attrNames];
+				$scrapeConfig[] = $entry;
 			}
 
 			// Add the scrape filter to this tag, execute it right before attributes are filtered,

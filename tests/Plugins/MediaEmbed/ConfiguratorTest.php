@@ -136,6 +136,39 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() saves the "url" attribute of a scrape if applicable
+	*/
+	public function testAddScrapeUrl()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'example.org',
+				'scrape'   => [
+					'url'     => 'http://example.org/{@id}',
+					'match'   => "#/(?'id'\\d+)#",
+					'extract' => "#/(?'vid'\\d+)#"
+				],
+				'template' => 'Example!'
+			]
+		);
+
+		$this->assertEquals(
+			[
+				'scrapeConfig' => [
+					[
+						"#/(?'id'\d+)#",
+						"#/(?'vid'\d+)#",
+						['vid'],
+						'http://example.org/{@id}'
+					]
+				]
+			],
+			$tag->filterChain[1]->getVars()
+		);
+	}
+
+	/**
 	* @testdox add() creates an optional "url" attribute
 	*/
 	public function testAddOptionalUrl()

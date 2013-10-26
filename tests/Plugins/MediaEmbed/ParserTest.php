@@ -97,6 +97,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5',
+				'<rt><GROOVESHARK songid="35292216" url="http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5">http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5</GROOVESHARK></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('grooveshark');
+				}
+			],
+			[
 				'http://www.hulu.com/watch/445716',
 				'<rt><HULU id="lbxMKBY8oOd3pvOBhM8lqQ" url="http://www.hulu.com/watch/445716">http://www.hulu.com/watch/445716</HULU></rt>',
 				[],

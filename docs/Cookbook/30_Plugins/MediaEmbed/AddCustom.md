@@ -195,3 +195,45 @@ echo $html;
 ```html
 <iframe width="560" height="315" src="http://www.youtube.com/embed/21112125" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 ```
+
+### Specify a different URL for scraping
+
+If the URL used for scraping is different from the media's URL, you can specify it in the `url` element of the `scrape` array. You can also use variables in the URL using the familiar syntax `{@id}`. Values for those variables come from named captures in previous `extract` regexp and from the tag's attributes if applicable.
+
+For example: in some places, Grooveshark uses hashbang URLs such as `http://grooveshark.com/#!/s/Soul+Below/4zGL7i`. Fragment identifiers (everything after `#`) are by definition omitted when requesting the page. If we tried to retrieve this URL as-is, the server would return the page that corresponds to `http://grooveshark.com/`.
+
+In the following example, we configure `scrape` with a custom URL by matching everything after the hashbang using a capture named `path` and reconstructing the URL without the hashbang.
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+$configurator->MediaEmbed->add(
+	'grooveshark',
+	[
+		'host'   => 'grooveshark.com',
+		'scrape' => [
+			'match'   => "%grooveshark\\.com(?:/#!?)?/s/(?'path'[^/]+/.+)%",
+			'url'     => 'http://grooveshark.com/s/{@path}',
+			'extract' => "%songID=(?'songid'[0-9]+)%"
+		],
+		'flash' => [
+			'width'     => 250,
+			'height'    => 40,
+			'src'       => 'http://grooveshark.com/songWidget.swf',
+			'flashvars' => 'songID={@songid}'
+		]
+	]
+);
+
+$parser   = $configurator->getParser();
+$renderer = $configurator->getRenderer();
+
+$text = 'http://grooveshark.com/#!/s/Soul+Below/4zGL7i';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<object type="application/x-shockwave-flash" typemustmatch="" width="250" height="40" data="http://grooveshark.com/songWidget.swf"><param name="allowfullscreen" value="true"><param name="flashvars" value="songID=35292216"><embed type="application/x-shockwave-flash" src="http://grooveshark.com/songWidget.swf" width="250" height="40" allowfullscreen="" flashvars="songID=35292216"></object>
+```

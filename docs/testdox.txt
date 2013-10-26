@@ -2161,6 +2161,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] add() accepts an array as second argument
  [x] add() creates an attribute for every named subpattern in extract
  [x] add() creates an attribute for every named subpattern in scrape/extract
+ [x] add() saves the "url" attribute of a scrape if applicable
  [x] add() creates an optional "url" attribute
  [x] add() marks the "id" attribute as non-optional if present
  [x] add() marks non-"id" attributes as optional

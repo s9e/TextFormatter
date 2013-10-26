@@ -127,20 +127,39 @@ class Parser extends ParserBase
 			}
 
 			// Test whether we should skip this URL and whether it matches our regexp
-			if ($skip || !preg_match($matchRegexp, $url))
+			if ($skip || !preg_match($matchRegexp, $url, $vars))
 			{
 				continue;
 			}
 
-			// Scrape the content of this URL
-			if (!isset($content))
+			// Generate the URL used for scraping. Use the one stored in the config if applicable,
+			// or look into the tag otherwise
+			if (isset($scrape[3]))
 			{
-				$content = file_get_contents(
-					'compress.zlib://' . $url,
-					false,
-					stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
+				// Add the tag's attributes to the named captures from the "match" regexp
+				$vars += $tag->getAttributes();
+
+				// Replace {@var} tokens in the URL
+				$scrapeUrl = preg_replace_callback(
+					'#\\{@(\\w+)\\}#',
+					function ($m) use ($vars)
+					{
+						return (isset($vars[$m[1]])) ? $vars[$m[1]] : '';
+					},
+					$scrape[3]
 				);
 			}
+			else
+			{
+				// Use the same URL for scraping
+				$scrapeUrl = $url;
+			}
+
+			$content = file_get_contents(
+				'compress.zlib://' . $scrapeUrl,
+				false,
+				stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
+			);
 
 			// Execute the extract regexp and fill any missing attribute
 			if (preg_match($extractRegexp, $content, $m))

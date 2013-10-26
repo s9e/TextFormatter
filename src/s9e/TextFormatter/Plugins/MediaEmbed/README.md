@@ -144,7 +144,7 @@ echo $html;
 	<tr>
 		<td><code>grooveshark</code></td>
 		<td>Grooveshark</td>
-		<td>http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761<br/>http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761<br/>http://grooveshark.com/s/Soul+Below/4zGL7i?src=5</td>
+		<td>http://grooveshark.com/playlist/Purity+Ring+Shrines/74854761<br/>http://grooveshark.com/#!/playlist/Purity+Ring+Shrines/74854761<br/>http://grooveshark.com/s/Soul+Below/4zGL7i?src=5<br/>http://grooveshark.com/#!/s/Soul+Below/4zGL7i?src=5</td>
 	</tr>
 	<tr>
 		<td><code>hulu</code></td>
