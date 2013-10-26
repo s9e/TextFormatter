@@ -280,6 +280,23 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox Callbacks correctly encode values
+	*/
+	public function testCallbackValue()
+	{
+		$this->configurator->tags->add('FOO')->attributes->add('bar')->filterChain
+			->append('strtolower')
+			->resetParameters()
+			->addParameterByValue('foo')
+			->addParameterByValue(42);
+
+		$this->assertContains(
+			'("foo",42)',
+			$this->configurator->javascript->getParser()
+		);
+	}
+
+	/**
 	* @testdox isLegalProp() tests
 	*/
 	public function testLegalProps()

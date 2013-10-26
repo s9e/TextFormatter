@@ -273,15 +273,13 @@ class JavaScript
 		// Test each plugin's regexpLimitAction
 		foreach ($this->config['plugins'] as $pluginConfig)
 		{
-			if (!isset($pluginConfig['regexpLimitAction']))
+			if (isset($pluginConfig['regexpLimitAction']))
 			{
-				continue;
-			}
-
-			$hintName = 'regexpLimitAction' . ucfirst($pluginConfig['regexpLimitAction']);
-			if (isset($hints[$hintName]))
-			{
-				$hints[$hintName] = 1;
+				$hintName = 'regexpLimitAction' . ucfirst($pluginConfig['regexpLimitAction']);
+				if (isset($hints[$hintName]))
+				{
+					$hints[$hintName] = 1;
+				}
 			}
 		}
 
