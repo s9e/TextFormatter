@@ -215,46 +215,27 @@ class FilterProcessingTest extends Test
 	}
 
 	/**
-	* @testdox executeFilter() does not execute the callback and returns FALSE if a variable is missing
+	* @testdox executeFilter() passes NULL to the callback if a variable is missing
 	*/
 	public function testExecuteFilterMissingVar()
 	{
 		$filter = new ProgrammableCallback(
 			function()
 			{
-				$this->fail('The callback should not have been executed');
+				return func_get_args();
 			}
 		);
+		$filter->addParameterByValue('foo');
 		$filter->addParameterByName('foo');
+		$filter->addParameterByValue(42);
 
-		$this->assertFalse(FilterProcessingDummy::__executeFilter(
-			$filter->asConfig(),
-			['logger' => new Logger]
-		));
-	}
-
-	/**
-	* @testdox executeFilter() logs an error if a variable is missing
-	*/
-	public function testExecuteFilterMissingVarLog()
-	{
-		$filter = new ProgrammableCallback(
-			function()
-			{
-				$this->fail('The callback should not have been executed');
-			}
+		$this->assertSame(
+			['foo', null, 42],
+			FilterProcessingDummy::__executeFilter(
+				$filter->asConfig(),
+				['logger' => new Logger]
+			)
 		);
-		$filter->addParameterByName('foo');
-
-		$logger = $this->getMock('stdClass', ['err']);
-		$logger->expects($this->once())
-		       ->method('err')
-		       ->with('Unknown callback parameter', ['paramName' => 'foo']);
-
-		$this->assertFalse(FilterProcessingDummy::__executeFilter(
-			$filter->asConfig(),
-			['registeredVars' => ['logger' => $logger]]
-		));
 	}
 
 	/**

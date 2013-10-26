@@ -46,3 +46,4 @@ TODO
 - Consider adding a way to control whether a link gets a rel=nofollow based on a hostname list
 - MediaEmbed: make attributes that are present in every extract regexp required. Alternatively, invalidate tag if no regexp matched
 - MediaEmbed: add an oEmbed helper
+- JavaScript: check whether registeredVars's keys are preserved. convertCallback() should always use the bracket notation when accessing registeredVars, otherwise registerVar() would not work

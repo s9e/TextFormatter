@@ -1681,8 +1681,7 @@ s9e\TextFormatter\Tests\Parser\FilterProcessing
  [x] executeFilter() correctly passes a value to the callback
  [x] executeFilter() correctly passes a named var to the callback
  [x] executeFilter() correctly passes a var passed through registeredVars to the callback
- [x] executeFilter() does not execute the callback and returns FALSE if a variable is missing
- [x] executeFilter() logs an error if a variable is missing
+ [x] executeFilter() passes NULL to the callback if a variable is missing
  [x] filterTag() returns TRUE if the tag has an empty filterChain
  [x] filterTag() executes the tag's filterChain and returns TRUE
  [x] filterTag() stops executing the tag's filterChain and returns FALSE if a filter returns FALSE

@@ -150,20 +150,6 @@ function convertCustom($filepath, &$file)
 				)
 			)
 		),
-		'FilterProcessingTest.php' => array(
-			array(
-				"\n\t\t\$filter = new ProgrammableCallback(\n\t\t\tfunction()",
-				"\n\t\t\$test = \$this;\n\t\t\$filter = new ProgrammableCallback(\n\t\t\tfunction() use (\$test)"
-			),
-			array(
-				"\n\t\t\t\t\$this->assert",
-				"\n\t\t\t\t\$test->assert"
-			),
-			array(
-				"\n\t\t\t\t\$this->fail",
-				"\n\t\t\t\t\$test->fail"
-			)
-		),
 		'Censor/Helper.php' => array(
 			array(
 				'return preg_replace_callback(',

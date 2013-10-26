@@ -92,15 +92,7 @@ trait FilterProcessing
 			else
 			{
 				// Unknown param
-				if (isset($vars['registeredVars']['logger']))
-				{
-					$vars['registeredVars']['logger']->err(
-						'Unknown callback parameter',
-						['paramName' => $k]
-					);
-				}
-
-				return false;
+				$args[] = null;
 			}
 		}
 
