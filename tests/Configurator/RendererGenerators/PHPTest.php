@@ -1219,6 +1219,11 @@ class PHPTest extends Test
 				'<xsl:template match="FOO"><xsl:value-of select="substring(\'archl\',5-4*boolean(@archive_id|@chapter_id),4)"/></xsl:template>',
 				"(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
 			],
+			[
+				'<xsl:template match="FOO"><iframe height="{120-78*boolean(@track_num)}"/></xsl:template>',
+				"(\$node->hasAttribute('track_num')?42:120)",
+				'@track_num'
+			],
 		];
 	}
 
