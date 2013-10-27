@@ -114,7 +114,7 @@ class Parser extends ParserBase
 
 		foreach ($scrapeConfig as $scrape)
 		{
-			list($matchRegexp, $extractRegexp, $attrNames) = $scrape;
+			list($matchRegexps, $extractRegexps, $attrNames) = $scrape;
 
 			// Test whether this scrape would help fill any attribute
 			$skip = true;
@@ -126,9 +126,23 @@ class Parser extends ParserBase
 					break;
 				}
 			}
+			if ($skip)
+			{
+				continue;
+			}
 
-			// Test whether we should skip this URL and whether it matches our regexp
-			if ($skip || !preg_match($matchRegexp, $url, $vars))
+			// Test whether this URL matches any regexp
+			$vars = [];
+			$skip = true;
+			foreach ((array) $matchRegexps as $matchRegexp)
+			{
+				if (preg_match($matchRegexp, $url, $m))
+				{
+					$vars += $m;
+					$skip = false;
+				}
+			}
+			if ($skip)
 			{
 				continue;
 			}
@@ -158,14 +172,17 @@ class Parser extends ParserBase
 
 			$content = self::wget($scrapeUrl, $cacheDir);
 
-			// Execute the extract regexp and fill any missing attribute
-			if (preg_match($extractRegexp, $content, $m))
+			// Execute the extract regexps and fill any missing attribute
+			foreach ((array) $extractRegexps as $extractRegexp)
 			{
-				foreach ($attrNames as $attrName)
+				if (preg_match($extractRegexp, $content, $m))
 				{
-					if (isset($m[$attrName]) && !$tag->hasAttribute($attrName))
+					foreach ($attrNames as $attrName)
 					{
-						$tag->setAttribute($attrName, $m[$attrName]);
+						if (isset($m[$attrName]) && !$tag->hasAttribute($attrName))
+						{
+							$tag->setAttribute($attrName, $m[$attrName]);
+						}
 					}
 				}
 			}
