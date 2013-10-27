@@ -194,6 +194,16 @@ function convertCustom($filepath, &$file)
 				'call_user_func_array($callback, array(&$msg, &$context));'
 			)
 		),
+		'MediaEmbed/ParserTest.php' => array(
+			array(
+				'protected static function populateCache($entries)',
+				'public static function populateCache($entries)'
+			),
+			array(
+				"\$configurator->registeredVars['cacheDir'] = self::populateCache([",
+				"\$configurator->registeredVars['cacheDir'] = ParserTest::populateCache(["
+			)
+		),
 		'PHP.php' => array(
 			array(
 				"protected \$dynamicParams=[' . implode(',', \$dynamicParams) . '];",
