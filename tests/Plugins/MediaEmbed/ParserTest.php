@@ -43,6 +43,26 @@ class ParserTest extends Test
 	{
 		return [
 			[
+				'http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725',
+				'<rt><BLIP id="AYOW3REC" url="http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725">http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725</BLIP></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('blip');
+				}
+			],
+			[
+				'http://blip.tv/c18booktracker/full-text-search-quirks-in-google-books-2260037',
+				'<rt><BLIP id="AYGJ%2BSkC" url="http://blip.tv/c18booktracker/full-text-search-quirks-in-google-books-2260037">http://blip.tv/c18booktracker/full-text-search-quirks-in-google-books-2260037</BLIP></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('blip');
+				}
+			],
+			[
 				'http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk',
 				'<rt><COLBERTNATION id="mgid:cms:video:colbertnation.com:429637" url="http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk">http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk</COLBERTNATION></rt>',
 				[],
@@ -327,6 +347,33 @@ class ParserTest extends Test
 				}
 			],
 			// Bundled sites
+			[
+				'http://blip.tv/play/AYKn_x0A',
+				'<rt><BLIP id="AYKn_x0A" url="http://blip.tv/play/AYKn_x0A">http://blip.tv/play/AYKn_x0A</BLIP></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('blip');
+				}
+			],
+			[
+				'http://blip.tv/play/AYGJ%2BSkC',
+				'<rt><BLIP id="AYGJ%2BSkC" url="http://blip.tv/play/AYGJ%2BSkC">http://blip.tv/play/AYGJ%2BSkC</BLIP></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('blip');
+				}
+			],
+			[
+				'http://blip.tv/play/AYGJ+SkC',
+				'<rt><BLIP id="AYGJ+SkC" url="http://blip.tv/play/AYGJ+SkC">http://blip.tv/play/AYGJ+SkC</BLIP></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('blip');
+				}
+			],
 			[
 				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
 				'<rt><BREAK id="2278131" url="http://www.break.com/video/video-game-playing-frog-wants-more-2278131">http://www.break.com/video/video-game-playing-frog-wants-more-2278131</BREAK></rt>',
