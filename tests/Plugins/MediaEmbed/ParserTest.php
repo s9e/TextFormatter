@@ -48,6 +48,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('colbertnation');
 				}
 			],
@@ -57,6 +58,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('colbertnation');
 				}
 			],
@@ -66,6 +68,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('comedycentral');
 				}
 			],
@@ -75,6 +78,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('dailyshow');
 				}
 			],
@@ -84,6 +88,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('dailyshow');
 				}
 			],
@@ -93,6 +98,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('grooveshark');
 				}
 			],
@@ -102,6 +108,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('grooveshark');
 				}
 			],
@@ -111,6 +118,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('hulu');
 				}
 			],
@@ -120,6 +128,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('indiegogo');
 				}
 			],
@@ -129,6 +138,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('indiegogo');
 				}
 			],
@@ -138,6 +148,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('rutube');
 				}
 			],
@@ -147,6 +158,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('slideshare');
 				}
 			],
@@ -156,6 +168,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('twitch');
 				}
 			],
@@ -165,6 +178,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('vk');
 				}
 			],
@@ -190,6 +204,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('colbertnation');
 				}
 			],
@@ -199,6 +214,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('comedycentral');
 				}
 			],
@@ -208,6 +224,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('dailyshow');
 				}
 			],
@@ -217,6 +234,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('grooveshark');
 				}
 			],
@@ -1006,36 +1024,4 @@ class ParserTest extends Test
 			],
 		];
 	}
-}
-
-namespace s9e\TextFormatter\Plugins\MediaEmbed;
-
-// Terrible hack ahead: this function will transparently cache the result of file_get_contents
-// when used on HTTP URLs in the MediaEmbed namespace. NOTE: this may eventually fail depending on
-// the order in which the source is loaded, because function names are resolved at compile time
-function file_get_contents($filepath)
-{
-	if (!preg_match('#^(?:compress\\.zlib://)?(http://.*)#', $filepath, $m))
-	{
-		return call_user_func_array('file_get_contents', func_get_args());
-	}
-
-	$url       = $m[1];
-	$cacheDir  = __DIR__ . '/../../.cache';
-	$cacheFile = $cacheDir . '/http.' . crc32($url);
-
-	$context = stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']]);
-	$url     = 'compress.zlib://' . $url;
-
-	if (file_exists($cacheDir))
-	{
-		if (!file_exists($cacheFile))
-		{
-			copy($url, $cacheFile, $context);
-		}
-
-		return \file_get_contents($cacheFile);
-	}
-
-	return \file_get_contents($url, null, $context);
 }

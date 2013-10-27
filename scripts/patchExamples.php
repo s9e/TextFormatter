@@ -39,8 +39,14 @@ function patchFile($filepath)
 		'#(```php([^`]+)\\n```\\s+(?:```\\w*|<pre>)).*?(\\n(?:```|</pre>)(?:\\n|$))#s',
 		function ($m)
 		{
+			$php = preg_replace(
+				'/\\$configurator =.*/',
+				"\$0\n\$configurator->registeredVars['cacheDir'] = " . var_export(__DIR__ . '/../tests/.cache', true) . ";\n",
+				$m[2]
+			);
+
 			ob_start();
-			eval($m[2]);
+			eval($php);
 
 			return $m[1] . "\n" . rtrim(ob_get_clean(), "\n") . $m[3];
 		},

@@ -262,6 +262,19 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox "cacheDir" is removed from registered vars
+	*/
+	public function testRegisteredVarCacheDir()
+	{
+		$this->configurator->registeredVars = ['cacheDir' => '', 'foo' => 'bar'];
+
+		$src = $this->configurator->javascript->getParser();
+
+		$this->assertContains('registeredVars={"foo":"bar"}', $src);
+		$this->assertNotContains('cacheDir', $src);
+	}
+
+	/**
 	* @testdox Callbacks use the bracket syntax to access registered vars
 	*/
 	public function testCallbackRegisteredVarBracket()

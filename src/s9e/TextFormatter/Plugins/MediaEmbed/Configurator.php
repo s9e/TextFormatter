@@ -234,6 +234,7 @@ class Configurator extends ConfiguratorBase
 			// return true in order to keep the tag valid
 			$tag->filterChain->insert(1, __NAMESPACE__ . '\\Parser::scrape')
 			                 ->addParameterByName('scrapeConfig')
+			                 ->addParameterByName('cacheDir')
 			                 ->setVar('scrapeConfig', $scrapeConfig)
 			                 ->setJS('function(){return true;}');
 		}

@@ -413,7 +413,13 @@ class JavaScript
 	*/
 	protected function getRegisteredVarsConfig()
 	{
-		return new Code(self::encode(new Dictionary($this->config['registeredVars'])));
+		$registeredVars = $this->config['registeredVars'];
+
+		// Remove cacheDir from the registered vars. Not only it is useless in JavaScript, it could
+		// leak some informations about the server
+		unset($registeredVars['cacheDir']);
+
+		return new Code(self::encode(new Dictionary($registeredVars)));
 	}
 
 	/**

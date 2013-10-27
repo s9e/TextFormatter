@@ -176,7 +176,6 @@ class ConfiguratorTest extends Test
 		$tag = $this->configurator->MediaEmbed->add(
 			'example',
 			[
-				'host'     => 'example.org',
 				'host'     => 'youtube.com',
 				'extract'  => "!youtube\\.com/(?<path>v/(?'id'[-0-9A-Z_a-z]+))!",
 				'template' => 'YouTube!'

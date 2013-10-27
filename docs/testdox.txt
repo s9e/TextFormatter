@@ -1522,6 +1522,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] An attribute filter that uses a built-in filter as callback is converted
  [x] An attribute filter with no JS representation unconditionally returns false
  [x] The name of a registered vars is expressed in quotes
+ [x] "cacheDir" is removed from registered vars
  [x] Callbacks use the bracket syntax to access registered vars
  [x] Callbacks correctly encode values
  [x] isLegalProp() tests

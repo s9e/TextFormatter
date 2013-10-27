@@ -92,11 +92,12 @@ class Parser extends ParserBase
 	/**
 	* Scrape the content of an URL to extract some data
 	*
-	* @param  Tag   $tag          Source tag
-	* @param  array $scrapeConfig Array of scrape directives
-	* @return bool                Unconditionally TRUE
+	* @param  Tag    $tag          Source tag
+	* @param  array  $scrapeConfig Array of scrape directives
+	* @param  string $cacheDir     Path to the cache directory
+	* @return bool                 Unconditionally TRUE
 	*/
-	public static function scrape(Tag $tag, array $scrapeConfig)
+	public static function scrape(Tag $tag, array $scrapeConfig, $cacheDir = null)
 	{
 		if (!$tag->hasAttribute('url'))
 		{
@@ -155,11 +156,7 @@ class Parser extends ParserBase
 				$scrapeUrl = $url;
 			}
 
-			$content = file_get_contents(
-				'compress.zlib://' . $scrapeUrl,
-				false,
-				stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
-			);
+			$content = self::wget($scrapeUrl, $cacheDir);
 
 			// Execute the extract regexp and fill any missing attribute
 			if (preg_match($extractRegexp, $content, $m))
@@ -175,5 +172,44 @@ class Parser extends ParserBase
 		}
 
 		return true;
+	}
+
+	/**
+	* Retrieve external content (possibly from the cache)
+	*
+	* If the cache directory exists, the external content will be saved into it. Cached content is
+	* never pruned
+	*
+	* @param  string $url      URL
+	* @param  string $cacheDir Path to the cache directory
+	* @return string           External content
+	*/
+	protected static function wget($url, $cacheDir)
+	{
+		// Return the content from the cache if applicable
+		if (isset($cacheDir) && file_exists($cacheDir))
+		{
+			$cacheFile = $cacheDir . '/http.' . crc32($url) . '.gz';
+
+			if (file_exists($cacheFile))
+			{
+				return file_get_contents('compress.zlib://' . $cacheFile);
+			}
+		}
+
+		// Retrieve the external content from the source
+		$content = file_get_contents(
+			'compress.zlib://' . $url,
+			false,
+			stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
+		);
+
+		// Save to the cache if applicable
+		if (isset($cacheFile))
+		{
+			file_put_contents($cacheFile, gzencode($content, 9));
+		}
+
+		return $content;
 	}
 }
