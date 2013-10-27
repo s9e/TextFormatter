@@ -232,6 +232,26 @@ class ParserTest extends Test
 	{
 		return [
 			[
+				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
+				'<rt><BANDCAMP album_id="1122163921" url="http://proleter.bandcamp.com/album/curses-from-past-times-ep">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bandcamp');
+				}
+			],
+			[
+				'http://proleter.bandcamp.com/track/muhammad-ali',
+				'<rt><BANDCAMP album_id="1122163921" track_num="7" url="http://proleter.bandcamp.com/track/muhammad-ali">http://proleter.bandcamp.com/track/muhammad-ali</BANDCAMP></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bandcamp');
+				}
+			],
+			[
 				'http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725',
 				'<rt><BLIP id="AYOW3REC" url="http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725">http://blip.tv/hilah-cooking/hilah-cooking-vegetable-beef-stew-6663725</BLIP></rt>',
 				[],
@@ -407,6 +427,26 @@ class ParserTest extends Test
 	public function getScrapingRenderingTests()
 	{
 		return [
+			[
+				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
+				'<iframe width="400" height="120" allowfullscreen="" frameborder="0" scrolling="no" src="http://bandcamp.com/EmbeddedPlayer/album=1122163921/size=medium"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bandcamp');
+				}
+			],
+			[
+				'http://proleter.bandcamp.com/track/muhammad-ali',
+				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="http://bandcamp.com/EmbeddedPlayer/album=1122163921/size=small/t=7"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bandcamp');
+				}
+			],
 			[
 				'http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk',
 				'<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/mgid:cms:video:colbertnation.com:429637" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',

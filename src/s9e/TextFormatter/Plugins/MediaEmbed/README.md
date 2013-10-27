@@ -87,6 +87,11 @@ echo $html;
 		<th>Example URLs</th>
 	</tr>
 	<tr>
+		<td><code>bandcamp</code></td>
+		<td>Bandcamp</td>
+		<td>http://proleter.bandcamp.com/album/curses-from-past-times-ep<br/>http://proleter.bandcamp.com/track/april-showers</td>
+	</tr>
+	<tr>
 		<td><code>blip</code></td>
 		<td>Blip</td>
 		<td>http://blip.tv/c18booktracker/full-text-search-quirks-in-google-books-2260037<br/>http://blip.tv/play/g6VTgpjxbQA</td>

@@ -1,4 +1,36 @@
 <sites>
+	<site id="bandcamp">
+		<name>Bandcamp</name>
+		<homepage>http://bandcamp.com/</homepage>
+		<example>http://proleter.bandcamp.com/album/curses-from-past-times-ep</example>
+		<example>http://proleter.bandcamp.com/track/april-showers</example>
+
+		<host>bandcamp.com</host>
+		<scrape>
+			<match>!bandcamp\.com/album/.!</match>
+			<extract>!/album=(?'album_id'\d+)!</extract>
+		</scrape>
+		<scrape>
+			<match>!bandcamp\.com/track/.!</match>
+			<extract>!"album_id":(?'album_id'\d+)!</extract>
+			<extract>!"track_num":(?'track_num'\d+)!</extract>
+		</scrape>
+		<iframe width="400" height="{120-78*boolean(@track_num)}">
+			<src><![CDATA[
+				<xsl:text>http://bandcamp.com/EmbeddedPlayer/album=</xsl:text>
+				<xsl:value-of select="@album_id"/>
+				<xsl:text>/size=</xsl:text>
+				<xsl:choose>
+					<xsl:when test="@track_num">
+						<xsl:text>small/t=</xsl:text>
+						<xsl:value-of select="@track_num"/>
+					</xsl:when>
+					<xsl:otherwise>medium</xsl:otherwise>
+				</xsl:choose>
+			]]></src>
+		</iframe>
+	</site>
+
 	<site id="blip">
 		<name>Blip</name>
 		<homepage>http://blip.tv/</homepage>
