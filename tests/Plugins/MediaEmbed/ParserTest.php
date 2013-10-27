@@ -19,7 +19,7 @@ class ParserTest extends Test
 	use ParsingTestsJavaScriptRunner;
 	use RenderingTestsRunner;
 
-	protected function populateCache($entries)
+	protected static function populateCache($entries)
 	{
 		$cacheDir = __DIR__ . '/../../.cache';
 
@@ -144,7 +144,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->registeredVars['cacheDir'] = $this->populateCache([
+					$configurator->registeredVars['cacheDir'] = self::populateCache([
 						'http://example.invalid/123' => '456'
 					]);
 
@@ -168,7 +168,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->registeredVars['cacheDir'] = $this->populateCache([
+					$configurator->registeredVars['cacheDir'] = self::populateCache([
 						'http://example.invalid/123' => '456'
 					]);
 
@@ -192,7 +192,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					$configurator->registeredVars['cacheDir'] = $this->populateCache([
+					$configurator->registeredVars['cacheDir'] = self::populateCache([
 						'http://example.invalid/123' => '456'
 					]);
 
