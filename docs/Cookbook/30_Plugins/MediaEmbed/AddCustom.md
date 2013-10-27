@@ -176,9 +176,9 @@ $configurator->MediaEmbed->add(
 			'extract' => '!"presentationId":(?<id>[0-9]+)!'
 		],
 		'iframe' => [
-			'width'  => 560,
-			'height' => 315,
-			'src'    => 'http://www.youtube.com/embed/{@id}'
+			'width'  => 427,
+			'height' => 356,
+			'src'    => 'http://www.slideshare.net/slideshow/embed_code/{@id}'
 		]
 	]
 );
@@ -193,7 +193,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<iframe width="560" height="315" src="http://www.youtube.com/embed/21112125" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
+<iframe width="427" height="356" src="http://www.slideshare.net/slideshow/embed_code/21112125" allowfullscreen="" frameborder="0" scrolling="no"></iframe>
 ```
 
 ### Specify a different URL for scraping
