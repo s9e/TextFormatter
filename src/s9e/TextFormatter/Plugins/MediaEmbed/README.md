@@ -202,6 +202,11 @@ echo $html;
 		<td>http://api.soundcloud.com/tracks/98282116</td>
 	</tr>
 	<tr>
+		<td><code>teamcoco</code></td>
+		<td>Team Coco</td>
+		<td>http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</td>
+	</tr>
+	<tr>
 		<td><code>ted</code></td>
 		<td>TED Talks</td>
 		<td>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html<br/>http://embed.ted.com/playlists/26/our_digital_lives.html</td>

@@ -392,6 +392,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt',
+				'<rt><TEAMCOCO id="54003" url="http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt">http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</TEAMCOCO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('teamcoco');
+				}
+			],
+			[
 				'http://www.twitch.tv/m/57217',
 				'<rt><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></rt>',
 				[],

@@ -324,6 +324,19 @@
 		/>
 	</site>
 
+	<site id="teamcoco">
+		<name>Team Coco</name>
+		<homepage>http://teamcoco.com/</homepage>
+		<example>http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</example>
+
+		<host>teamcoco.com</host>
+		<scrape>
+			<match>!teamcoco\.com/video/.!</match>
+			<extract>!teamcoco\.com/embed/v/(?'id'\d+)!</extract>
+		</scrape>
+		<iframe width="640" height="415" src="http://teamcoco.com/embed/v/{@id}"/>
+	</site>
+
 	<site id="ted">
 		<name>TED Talks</name>
 		<homepage>http://www.ted.com/</homepage>
