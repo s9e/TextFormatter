@@ -163,9 +163,10 @@
 		<homepage>http://www.gamespot.com/</homepage>
 		<example>http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/</example>
 		<example>http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/</example>
+		<example>http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</example>
 
 		<host>gamespot.com</host>
-		<extract>!gamespot\.com/(?:events/[^/]+|[^/]+/videos)/[^/]+-(?'id'[0-9]+)/!</extract>
+		<extract>!gamespot\.com.*?/(?:events|videos)/.*?-(?'id'\d+)/(?:[#?].*)?$!</extract>
 		<iframe width="640" height="360" src="http://www.gamespot.com/videoembed/{@id}&amp;mapp=false&amp;ads=0&amp;onsite=0"/>
 	</site>
 

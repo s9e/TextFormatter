@@ -144,7 +144,7 @@ echo $html;
 	<tr>
 		<td><code>gamespot</code></td>
 		<td>Gamespot</td>
-		<td>http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/<br/>http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/</td>
+		<td>http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/<br/>http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/<br/>http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</td>
 	</tr>
 	<tr>
 		<td><code>gist</code></td>

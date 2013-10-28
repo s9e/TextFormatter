@@ -621,6 +621,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/',
+				'<rt><GAMESPOT id="6414307" url="http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/">http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</GAMESPOT></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gamespot');
+				}
+			],
+			[
 				'https://gist.github.com/s9e/6806305',
 				'<rt><GIST id="s9e/6806305" url="https://gist.github.com/s9e/6806305">https://gist.github.com/s9e/6806305</GIST></rt>',
 				[],
