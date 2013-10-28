@@ -4,7 +4,8 @@
 include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
-$configurator->BBCodes->addFromRepository('H2');
+
+$configurator->registeredVars['cacheDir'] = __DIR__ . '/../tests/.cache';
 
 $sites = simplexml_load_file(__DIR__ . '/../src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml');
 
@@ -29,12 +30,20 @@ foreach ($sites->site as $site)
 	}
 }
 
-$out = '';
+$out = '<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>MediaEmbed test page</title>
+	<base href="http://localhost"/>
+</head>
+<body>
+';
 foreach ($siteHtml as $site => $renders)
 {
 	$out .= '<h2>' . $site . "</h2>\n" . implode("\n", array_keys($renders)) . "\n";
 }
-
+$out .= '</body></html>';
 
 file_put_contents('/tmp/MediaEmbed.html', $out);
 
