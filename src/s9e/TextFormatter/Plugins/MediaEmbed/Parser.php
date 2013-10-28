@@ -203,28 +203,32 @@ class Parser extends ParserBase
 	*/
 	protected static function wget($url, $cacheDir)
 	{
+		$prefix = $suffix = $context = null;
+		if (extension_loaded('zlib'))
+		{
+			$prefix  = 'compress.zlib://';
+			$suffix  = '.gz';
+			$context = stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']]);
+		}
+
 		// Return the content from the cache if applicable
 		if (isset($cacheDir) && file_exists($cacheDir))
 		{
-			$cacheFile = $cacheDir . '/http.' . crc32($url) . '.gz';
+			$cacheFile = $cacheDir . '/http.' . crc32($url) . $suffix;
 
 			if (file_exists($cacheFile))
 			{
-				return file_get_contents('compress.zlib://' . $cacheFile);
+				return file_get_contents($prefix . $cacheFile);
 			}
 		}
 
 		// Retrieve the external content from the source
-		$content = file_get_contents(
-			'compress.zlib://' . $url,
-			false,
-			stream_context_create(['http' => ['header' => 'Accept-Encoding: gzip']])
-		);
+		$content = file_get_contents($prefix . $url, false, $context);
 
 		// Save to the cache if applicable
 		if (isset($cacheFile))
 		{
-			file_put_contents($cacheFile, gzencode($content, 9));
+			file_put_contents($prefix . $cacheFile, $content);
 		}
 
 		return $content;
