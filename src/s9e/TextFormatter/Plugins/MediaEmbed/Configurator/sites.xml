@@ -167,7 +167,7 @@
 
 		<host>gamespot.com</host>
 		<extract>!gamespot\.com.*?/(?:events|videos)/.*?-(?'id'\d+)/(?:[#?].*)?$!</extract>
-		<iframe width="640" height="360" src="http://www.gamespot.com/videoembed/{@id}&amp;mapp=false&amp;ads=0&amp;onsite=0"/>
+		<iframe width="640" height="400" src="http://www.gamespot.com/videos/embed/{@id}/"/>
 	</site>
 
 	<site id="gist">

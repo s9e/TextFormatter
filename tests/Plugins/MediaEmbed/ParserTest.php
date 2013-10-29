@@ -1005,7 +1005,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/',
-				'<iframe width="640" height="360" src="http://www.gamespot.com/videoembed/6415176&amp;mapp=false&amp;ads=0&amp;onsite=0" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="640" height="400" src="http://www.gamespot.com/videos/embed/6415176/" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{
