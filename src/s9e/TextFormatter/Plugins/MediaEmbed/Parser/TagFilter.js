@@ -27,18 +27,30 @@ function (tag, tagStack, sites)
 	}
 	else if (tag.hasAttribute('url'))
 	{
-		// Match the start of a URL, keep only the last two parts of the hostname
-		var regexp = /\/\/(?:[^\/]*\.)?([^./]+\.[^\/]+)/,
-			url    = tag.getAttribute('url'),
-			m;
+		// Capture the host part of the URL
+		var p = /\/\/([^\/]+)/.exec(tag.getAttribute('url'));
 
-		if (m = regexp.exec(url))
+		if (p)
 		{
-			var host = m[1];
-			if (sites[host])
+			var host = p[1];
+
+			// Start with the full host then pop domain labels off the start until we get a
+			// match
+			do
 			{
-				tagName = sites[host];
+				if (sites[host])
+				{
+					tagName = sites[host];
+					break;
+				}
+
+				var pos = host.indexOf('.');
+				if (pos > -1)
+				{
+					host = host.substr(1 + pos);
+				}
 			}
+			while (host > '');
 		}
 	}
 

@@ -59,17 +59,30 @@ class Parser extends ParserBase
 		}
 		elseif ($tag->hasAttribute('url'))
 		{
-			// Match the start of a URL, keep only the last two parts of the hostname
-			$regexp = '#//(?:[^/]*\\.)?([^./]+\\.[^/]+)#';
-			$url    = $tag->getAttribute('url');
+			// Capture the host part of the URL
+			$p = parse_url($tag->getAttribute('url'));
 
-			if (preg_match($regexp, $url, $m))
+			if ($p && isset($p['host']))
 			{
-				$host = $m[1];
-				if (isset($sites[$host]))
+				$host = $p['host'];
+
+				// Start with the full host then pop domain labels off the start until we get a
+				// match
+				do
 				{
-					$tagName = $sites[$host];
+					if (isset($sites[$host]))
+					{
+						$tagName = $sites[$host];
+						break;
+					}
+
+					$pos = strpos($host, '.');
+					if ($pos !== false)
+					{
+						$host = substr($host, 1 + $pos);
+					}
 				}
+				while ($host > '');
 			}
 		}
 
