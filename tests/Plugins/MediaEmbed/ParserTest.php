@@ -600,6 +600,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://espn.go.com/video/clip?id=espn:9895232',
+				'<rt><ESPN id="espn:9895232" url="http://espn.go.com/video/clip?id=espn:9895232">http://espn.go.com/video/clip?id=espn:9895232</ESPN></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('espn');
+				}
+			],
+			[
 				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
 				'<rt><FACEBOOK id="10100658170103643" url="https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater">https://www.facebook.com/photo.php?v=10100658170103643&amp;set=vb.20531316728&amp;type=3&amp;theater</FACEBOOK></rt>',
 				[],
@@ -983,6 +992,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('dailymotion');
+				}
+			],
+			[
+				'http://espn.go.com/video/clip?id=espn:9895232',
+				'<script src="http://player.espn.com/player.js?playerBrandingId=4ef8000cbaf34c1687a7d9a26fe0e89e&amp;adSetCode=91cDU6NuXTGKz3OdjOxFdAgJVtQcKJnI&amp;pcode=1kNG061cgaoolOncv54OAO1ceO-I&amp;width=576&amp;height=324&amp;externalId=espn:9895232&amp;thruParam_espn-ui%5BautoPlay%5D=false&amp;thruParam_espn-ui%5BplayRelatedExternally%5D=true"></script>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('espn');
 				}
 			],
 			[
