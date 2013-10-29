@@ -107,6 +107,11 @@ echo $html;
 		<td>http://www.cbsnews.com/video/watch/?id=50156501n</td>
 	</tr>
 	<tr>
+		<td><code>cnn</code></td>
+		<td>CNN</td>
+		<td>http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html<br/>http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</td>
+	</tr>
+	<tr>
 		<td><code>colbertnation</code></td>
 		<td>Colbert Nation</td>
 		<td>http://www.colbertnation.com/the-colbert-report-videos/429637/october-14-2013/5-x-five---colbert-moments--under-the-desk<br/>http://www.colbertnation.com/the-colbert-report-collections/429799/sorry--technical-difficulties/</td>

@@ -590,6 +590,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html',
+				'<rt><CNN id="showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn" url="http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html">http://edition.cnn.com/video/data/2.0/video/showbiz/2013/10/25/spc-preview-savages-stephen-king-thor.cnn.html</CNN></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('cnn');
+				}
+			],
+			[
+				'http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html',
+				'<rt><CNN id="bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn" url="http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html">http://us.cnn.com/video/data/2.0/video/bestoftv/2013/10/23/vo-nr-prince-george-christening-arrival.cnn.html</CNN></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('cnn');
+				}
+			],
+			[
 				'http://www.collegehumor.com/video/1181601/more-than-friends',
 				'<rt><COLLEGEHUMOR id="1181601" url="http://www.collegehumor.com/video/1181601/more-than-friends">http://www.collegehumor.com/video/1181601/more-than-friends</COLLEGEHUMOR></rt>',
 				[],
