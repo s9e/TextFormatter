@@ -239,6 +239,23 @@ class ParserTest extends Test
 					);
 				}
 			],
+			[
+				// Ensure no bad things(tm) happen when there's no match
+				'[media]http://example.org/123[/media]',
+				'<pt>[media]http://example.org/123[/media]</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'x2',
+						[
+							'host'     => 'foo.example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'template' => ''
+						]
+					);
+				}
+			],
 		];
 	}
 

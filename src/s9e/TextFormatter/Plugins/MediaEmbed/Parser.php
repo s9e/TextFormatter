@@ -77,10 +77,12 @@ class Parser extends ParserBase
 					}
 
 					$pos = strpos($host, '.');
-					if ($pos !== false)
+					if ($pos === false)
 					{
-						$host = substr($host, 1 + $pos);
+						break;
 					}
+
+					$host = substr($host, 1 + $pos);
 				}
 				while ($host > '');
 			}

@@ -45,10 +45,12 @@ function (tag, tagStack, sites)
 				}
 
 				var pos = host.indexOf('.');
-				if (pos > -1)
+				if (pos == -1)
 				{
-					host = host.substr(1 + pos);
+					break;
 				}
+
+				host = host.substr(1 + pos);
 			}
 			while (host > '');
 		}
