@@ -463,11 +463,22 @@
 		<source>http://support.google.com/youtube/bin/answer.py?hl=en&amp;answer=171780</source>
 		<example>http://www.youtube.com/watch?v=-cEzsCAzTak</example>
 		<example>http://youtu.be/-cEzsCAzTak</example>
+		<example>http://www.youtube.com/watch?feature=player_detailpage&amp;v=9bZkp7q19f0#t=113</example>
 
 		<host>youtube.com</host>
 		<host>youtu.be</host>
 		<extract>!youtube\.com/(?:watch\?.*?v=|v/)(?'id'[-0-9A-Z_a-z]+)!</extract>
 		<extract>!youtu\.be/(?'id'[-0-9A-Z_a-z]+)!</extract>
-		<iframe width="560" height="315" src="//www.youtube.com/embed/{@id}"/>
+		<extract>![#&amp;?]t=(?'t'\d+)!</extract>
+		<iframe width="560" height="315">
+			<src><![CDATA[
+				<xsl:text>//www.youtube.com/embed/</xsl:text>
+				<xsl:value-of select="@id"/>
+				<xsl:if test="@t">
+					<xsl:text>?start=</xsl:text>
+					<xsl:value-of select="@t"/>
+				</xsl:if>
+			]]></src>
+		</iframe>
 	</site>
 </sites>
