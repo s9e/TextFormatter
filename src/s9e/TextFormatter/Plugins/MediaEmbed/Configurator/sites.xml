@@ -178,7 +178,7 @@
 		<example>http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</example>
 
 		<host>funnyordie.com</host>
-		<extract>!funnyordie.com/videos/(?'id'[0-9a-f]+)!</extract>
+		<extract>!funnyordie\.com/videos/(?'id'[0-9a-f]+)!</extract>
 		<iframe width="640" height="360" src="http://www.funnyordie.com/embed/{@id}"/>
 	</site>
 
@@ -272,7 +272,7 @@
 		<example>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</example>
 
 		<host>kickstarter.com</host>
-		<extract>!kickstarter.com/projects/(?'id'[^/]+/[^/?]+)(?:/widget/(?:(?'card'card)|(?'video'video)))?!</extract>
+		<extract>!kickstarter\.com/projects/(?'id'[^/]+/[^/?]+)(?:/widget/(?:(?'card'card)|(?'video'video)))?!</extract>
 		<template><![CDATA[
 			<xsl:choose>
 				<xsl:when test="@video">
@@ -428,7 +428,7 @@
 		<example>https://vine.co/v/bYwPIluIipH</example>
 
 		<host>vine.co</host>
-		<extract>!https://vine.co/v/(?'id'[^/]+)!</extract>
+		<extract>!vine\.co/v/(?'id'[^/]+)!</extract>
 		<template><![CDATA[<iframe width="480" height="480" src="https://vine.co/v/{@id}/embed/simple" allowfullscreen="" frameborder="0" scrolling="no"/><script async="" src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"/>]]></template>
 	</site>
 
