@@ -156,7 +156,7 @@
 		<host>go.com</host>
 		<extract>!espn\.go\.com/video/clip\?id=(?'id'[:\w]+)!</extract>
 		<template><![CDATA[
-			<script src="http://player.espn.com/player.js?playerBrandingId=4ef8000cbaf34c1687a7d9a26fe0e89e&amp;adSetCode=91cDU6NuXTGKz3OdjOxFdAgJVtQcKJnI&amp;pcode=1kNG061cgaoolOncv54OAO1ceO-I&amp;width=576&amp;height=324&amp;externalId={@id}&amp;thruParam_espn-ui[autoPlay]=false&amp;thruParam_espn-ui[playRelatedExternally]=true"></script>
+			<script src="http://player.espn.com/player.js?playerBrandingId=4ef8000cbaf34c1687a7d9a26fe0e89e&amp;adSetCode=91cDU6NuXTGKz3OdjOxFdAgJVtQcKJnI&amp;pcode=1kNG061cgaoolOncv54OAO1ceO-I&amp;width=576&amp;height=324&amp;externalId={@id}&amp;thruParam_espn-ui%5BautoPlay%5D=false&amp;thruParam_espn-ui%5BplayRelatedExternally%5D=true"></script>
 		]]></template>
 	</site>
 
