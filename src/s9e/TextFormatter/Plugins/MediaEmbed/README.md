@@ -249,6 +249,6 @@ echo $html;
 	<tr>
 		<td><code>youtube</code></td>
 		<td>YouTube</td>
-		<td>http://www.youtube.com/watch?v=-cEzsCAzTak<br/>http://youtu.be/-cEzsCAzTak<br/>http://www.youtube.com/watch?feature=player_detailpage&amp;v=9bZkp7q19f0#t=113</td>
+		<td>http://www.youtube.com/watch?v=-cEzsCAzTak<br/>http://youtu.be/-cEzsCAzTak<br/>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40</td>
 	</tr>
 </table>
