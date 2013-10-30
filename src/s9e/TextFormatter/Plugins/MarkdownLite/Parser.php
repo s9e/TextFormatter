@@ -75,7 +75,7 @@ class Parser extends ParserBase
 		{
 			preg_match_all(
 				'/`[^\\x17`]++`/',
- 				$text,
+				$text,
 				$matches,
 				PREG_OFFSET_CAPTURE
 			);
@@ -96,7 +96,7 @@ class Parser extends ParserBase
 		{
 			preg_match_all(
 				'/!\\[([^\\x17\\]]++)] ?\\(([^\\x17 ")]++)(?> "([^\\x17"]*+)")?\\)/',
- 				$text,
+				$text,
 				$matches,
 				PREG_SET_ORDER | PREG_OFFSET_CAPTURE
 			);
@@ -158,7 +158,7 @@ class Parser extends ParserBase
 		{
 			preg_match_all(
 				'/~~[^\\x17]+?~~/',
- 				$text,
+				$text,
 				$matches,
 				PREG_OFFSET_CAPTURE
 			);

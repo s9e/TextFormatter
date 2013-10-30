@@ -141,7 +141,7 @@ class PHPTest extends Test
 
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
-		$this->assertInstanceOf($className,	$renderer);
+		$this->assertInstanceOf($className, $renderer);
 		$this->assertContains("namespace foo\\bar;\n\nclass renderer_", $renderer->source);
 	}
 

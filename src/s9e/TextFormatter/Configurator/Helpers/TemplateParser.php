@@ -77,7 +77,7 @@ class TemplateParser
 					break;
 
 				default:
-					throw new RuntimeException("Cannot parse node '" . $child->nodeName . "'");
+					throw new RuntimeException("Cannot parse node '" . $child->nodeName . "''");
 			}
 		}
 	}
@@ -85,7 +85,7 @@ class TemplateParser
 	/**
 	* Parse a given node into the internal representation
 	*
-	* @param  DOMNode $ir	Node in the internal representation that represents the node's parent
+	* @param  DOMNode $ir Node in the internal representation that represents the node's parent
 	* @param  DOMNode $node Node to parse
 	* @return void
 	*/
