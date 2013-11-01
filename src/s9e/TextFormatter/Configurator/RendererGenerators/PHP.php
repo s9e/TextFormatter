@@ -1426,6 +1426,10 @@ EOT
 					}
 				}
 
+				// Remove duplicates in $from, as well as the corresponding elements in $to
+				$from = array_unique($from);
+				$to   = array_intersect_key($to, $from);
+
 				// Start building the strtr() call
 				$php = 'strtr(' . $this->convertXPath($m['translate0']) . ',';
 
@@ -1433,10 +1437,8 @@ EOT
 				// are ASCII and with no empty strings. If so, we can use the scalar version of
 				// strtr(), otherwise we have to use the array version
 				if ([1] === array_unique(array_map('strlen', $from))
-				 && [1] === array_unique(array_map('strlen', $to))
-				 && count($from) === count(array_unique($from)))
+				 && [1] === array_unique(array_map('strlen', $to)))
 				{
-					// TODO: duplicates in $from
 					$php .= var_export(implode('', $from), true) . ',' . var_export(implode('', $to), true);
 				}
 				else

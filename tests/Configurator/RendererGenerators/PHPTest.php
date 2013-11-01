@@ -1153,6 +1153,10 @@ class PHPTest extends Test
 				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'abcd\',\'AB\')"/></xsl:template>',
 				"strtr(\$node->getAttribute('bar'),['a'=>'A','b'=>'B','c'=>'','d'=>''])"
 			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'abbd\',\'ABCD\')"/></xsl:template>',
+				"strtr(\$node->getAttribute('bar'),'abd','ABD')"
+			],
 			// XPath in conditions
 			[
 				'<xsl:template match="FOO"><xsl:if test="@foo">Foo</xsl:if></xsl:template>',
