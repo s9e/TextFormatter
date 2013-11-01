@@ -1104,6 +1104,8 @@ EOT
 	*/
 	protected function convertCondition($expr)
 	{
+		$expr = trim($expr);
+
 		// <xsl:if test="@foo">
 		// if ($node->hasAttribute('foo'))
 		if (preg_match('#^@([-\\w]+)$#', $expr, $m))
@@ -1134,7 +1136,7 @@ EOT
 
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a boolean() call
-		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\(#', $expr))
+		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
 		{
 			// <xsl:if test="parent::foo">
 			// if ($this->xpath->evaluate("boolean(parent::foo)",$node))
@@ -1156,6 +1158,8 @@ EOT
 	{
 		static $regexp;
 
+		$expr = trim($expr);
+
 		// Use the custom representation if applicable
 		if (isset($this->customXPath[$expr]))
 		{
@@ -1165,31 +1169,51 @@ EOT
 		if (!isset($regexp))
 		{
 			$patterns = [
-				'attr'   => '@ (?<attrName>[-\\w]+)',
-				'dot'    => '\\.',
-				'not'    => 'not \\( (?&value) \\)',
-				'name'   => 'name\\(\\)',
-				'lname'  => 'local-name\\(\\)',
-				'param'  => '\\$ (?<paramName>\\w+)',
-				'string' => '"[^"]*"|\'[^\']*\'',
-				'number' => '-? \\d++',
-				'contains' => 'contains \\( (?<contains0>(?&value)) , (?<contains1>(?&value)) \\)'
+				'attr'      => ['@', '(?<attrName>[-\\w]+)'],
+				'dot'       => '\\.',
+				'not'       => ['not', '\\(', '(?&value)', '\\)'],
+				'name'      => 'name\\(\\)',
+				'lname'     => 'local-name\\(\\)',
+				'param'     => ['\\$', '(?<paramName>\\w+)'],
+				'string'    => '"[^"]*"|\'[^\']*\'',
+				'number'    => ['-?', '\\d++'],
+				'contains'  => [
+					'contains',
+					'\\(',
+					'(?<contains0>(?&value))',
+					',',
+					'(?<contains1>(?&value))',
+					'\\)'
+				]
 			];
 
 			if (function_exists('mb_strlen'))
 			{
-				$patterns['strlen'] = 'string-length \\( (?<strlen0>(?&value))? \\)';
+				$patterns['strlen'] = ['string-length', '\\(', '(?<strlen0>(?&value))?', '\\)'];
 			}
 
 			if (function_exists('mb_substr'))
 			{
-				$patterns['substr'] = 'substring \\( (?<substr0>(?&value)) , (?<substr1>(?&value)) (?:, (?<substr2>(?&value)))? \\)';
+				$patterns['substr'] = [
+					'substring',
+					'\\(',
+					'(?<substr0>(?&value))',
+					',',
+					'(?<substr1>(?&value))',
+					'(?:, (?<substr2>(?&value)))?',
+					'\\)'
+				];
 			}
 
 			// Create a regexp that matches values, such as "@foo" or "42"
 			$valueRegexp = '(?<value>';
 			foreach ($patterns as $name => $pattern)
 			{
+				if (is_array($pattern))
+				{
+					$pattern = implode(' ', $pattern);
+				}
+
 				$valueRegexp .= '(?<' . $name . '>' . str_replace(' ', '\\s*', $pattern) . ')|';
 			}
 			$valueRegexp = substr($valueRegexp, 0, -1) . ')';
@@ -1244,7 +1268,7 @@ EOT
 			if (!empty($m['lname']))
 			{
 				return '$node->localName';
-				}
+			}
 
 			// <xsl:value-of select="name()"/>
 			// $this->out .= $node->nodeName;
@@ -1371,7 +1395,7 @@ EOT
 
 		// If the condition does not seem to contain a relational expression, or start with a
 		// function call, we wrap it inside of a string() call
-		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-a-z]+\\(#', $expr))
+		if (!preg_match('#[=<>]|\\bor\\b|\\band\\b|^[-\\w]+\\s*\\(#', $expr))
 		{
 			$expr = 'string(' . $expr . ')';
 		}
