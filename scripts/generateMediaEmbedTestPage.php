@@ -4,7 +4,7 @@
 include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
-
+$configurator->plugins->load('MediaEmbed', ['captureURLs' => false]);
 $configurator->registeredVars['cacheDir'] = __DIR__ . '/../tests/.cache';
 
 $sites = simplexml_load_file(__DIR__ . '/../src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml');
@@ -23,6 +23,7 @@ foreach ($sites->site as $site)
 	foreach ($site->example as $example)
 	{
 		$text = '[media]' . $example . '[/media]';
+
 		$xml  = $parser->parse($text);
 		$html = $renderer->render($xml);
 

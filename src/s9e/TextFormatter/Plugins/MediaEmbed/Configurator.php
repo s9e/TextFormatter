@@ -259,12 +259,13 @@ class Configurator extends ConfiguratorBase
 		// Create the attributes filled by the "extract" regexps
 		foreach ($attrRegexps as $attrName => $attrRegexp)
 		{
-			$tag->attributes->add($attrName)->filterChain->append(new Regexp($attrRegexp));
+			$attribute = $tag->attributes->add($attrName);
+			$attribute->filterChain->append(new Regexp($attrRegexp));
 
 			// Non-id attributes are marked as optional
 			if ($attrName !== 'id')
 			{
-				$tag->attributes[$attrName]->required = false;
+				$attribute->required = false;
 			}
 		}
 
