@@ -225,6 +225,14 @@ function convertCustom($filepath, &$file)
 				// mb_substr() doesn't like null as third parameter on PHP 5.3
 				"\$php .= 'null';",
 				'$php .= 0x7fffffe;'
+			),
+			array(
+				"\$php .= '[';",
+				"\$php .= 'array(';"
+			),
+			array(
+				"\$php .= ']';",
+				"\$php .= ')';"
 			)
 		),
 		'PHPTest.php' => array(
@@ -247,6 +255,14 @@ function convertCustom($filepath, &$file)
 			array(
 				'"mb_substr(\\$node->textContent,1,null,\'utf-8\')",',
 				'"mb_substr(\\$node->textContent,1,134217726,\'utf-8\')",'
+			),
+			array(
+				"\"strtr(\\\$node->getAttribute('bar'),['é'=>'É','è'=>'È'])\"",
+				"\"strtr(\\\$node->getAttribute('bar'),array('é'=>'É','è'=>'È'))\""
+			),
+			array(
+				"\"strtr(\\\$node->getAttribute('bar'),['a'=>'A','b'=>'B','c'=>'','d'=>''])\"",
+				"\"strtr(\\\$node->getAttribute('bar'),array('a'=>'A','b'=>'B','c'=>'','d'=>''))\""
 			)
 		),
 		'Regexp.php' => array(

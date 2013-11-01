@@ -1133,6 +1133,26 @@ class PHPTest extends Test
 					}
 				}
 			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="translate(@bar,&quot;abc&quot;,&quot;ABC&quot;)"/></xsl:template>',
+				"strtr(\$node->getAttribute('bar'),'abc','ABC')"
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'abc\',\'ABC\')"/></xsl:template>',
+				"strtr(\$node->getAttribute('bar'),'abc','ABC')"
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'éè\',\'ÉÈ\')"/></xsl:template>',
+				"strtr(\$node->getAttribute('bar'),['é'=>'É','è'=>'È'])"
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'ab\',\'ABC\')"/></xsl:template>',
+				"strtr(\$node->getAttribute('bar'),'ab','AB')"
+			],
+			[
+				'<xsl:template match="X"><xsl:value-of select="translate(@bar,\'abcd\',\'AB\')"/></xsl:template>',
+				"strtr(\$node->getAttribute('bar'),['a'=>'A','b'=>'B','c'=>'','d'=>''])"
+			],
 			// XPath in conditions
 			[
 				'<xsl:template match="FOO"><xsl:if test="@foo">Foo</xsl:if></xsl:template>',

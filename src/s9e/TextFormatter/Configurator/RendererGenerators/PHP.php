@@ -1184,6 +1184,16 @@ EOT
 					',',
 					'(?<contains1>(?&value))',
 					'\\)'
+				],
+				'translate' => [
+					'translate',
+					'\\(',
+					'(?<translate0>(?&value))',
+					',',
+					'(?<translate1>(?&string))',
+					',',
+					'(?<translate2>(?&string))',
+					'\\)'
 				]
 			];
 
@@ -1390,6 +1400,66 @@ EOT
 				];
 
 				return $this->convertCondition($m['bool0']) . $operators[$m['bool1']] . $this->convertCondition($m['bool2']);
+			}
+
+			if (!empty($m['translate']))
+			{
+				preg_match_all('/./u', substr($m['translate1'], 1, -1), $matches);
+				$from = $matches[0];
+
+				preg_match_all('/./u', substr($m['translate2'], 1, -1), $matches);
+				$to = $matches[0];
+
+				// We adjust $to to match the number of elements in $from, either by truncating it
+				// or by padding it with empty strings
+				if (count($to) > count($from))
+				{
+					$to = array_slice($to, 0, count($from));
+				}
+				else
+				{
+					// NOTE: we don't use array_merge() because of potential side-effects when
+					//       translating digits
+					while (count($from) > count($to))
+					{
+						$to[] = '';
+					}
+				}
+
+				// Start building the strtr() call
+				$php = 'strtr(' . $this->convertXPath($m['translate0']) . ',';
+
+				// Test whether all elements in $from and $to are exactly 1 byte long, meaning they
+				// are ASCII and with no empty strings. If so, we can use the scalar version of
+				// strtr(), otherwise we have to use the array version
+				if ([1] === array_unique(array_map('strlen', $from))
+				 && [1] === array_unique(array_map('strlen', $to))
+				 && count($from) === count(array_unique($from)))
+				{
+					// TODO: duplicates in $from
+					$php .= var_export(implode('', $from), true) . ',' . var_export(implode('', $to), true);
+				}
+				else
+				{
+					$php .= '[';
+
+					$cnt = count($from);
+					for ($i = 0; $i < $cnt; ++$i)
+					{
+						if ($i)
+						{
+							$php .= ',';
+						}
+
+						$php .= var_export($from[$i], true) . '=>' . var_export($to[$i], true);
+					}
+
+					$php .= ']';
+				}
+
+				$php .= ')';
+
+				return $php;
 			}
 		}
 
