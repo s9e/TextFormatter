@@ -256,6 +256,23 @@ class ParserTest extends Test
 					);
 				}
 			],
+			[
+				// Test that we don't replace the "id" attribute with an URL
+				'[media=foo]http://example.org/123[/media]',
+				'<rt><FOO id="123" url="http://example.org/123">[media=foo]http://example.org/123[/media]</FOO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'     => 'foo.example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'template' => ''
+						]
+					);
+				}
+			],
 		];
 	}
 

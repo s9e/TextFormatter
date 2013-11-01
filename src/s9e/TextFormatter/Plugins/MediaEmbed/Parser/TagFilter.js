@@ -18,9 +18,12 @@ function (tag, tagStack, sites)
 		// [media=youtube]xxxxxxx[/media]
 		tagName = tag.getAttribute('media');
 
-		// If this tag doesn't have an id attribute, copy the value of the url attribute, so
-		// that the tag acts like [media=youtube id=xxxx]xxxx[/media]
-		if (!tag.hasAttribute('id') && tag.hasAttribute('url'))
+		// If this tag doesn't have an id attribute and the url attribute doesn't really look
+		// like an URL, copy the value of the url attribute, so that the tag acts like
+		// [media=youtube id=xxxx]xxxx[/media]
+		if (!tag.hasAttribute('id')
+		 && tag.hasAttribute('url')
+		 && tag.getAttribute('url').indexOf('://') === -1)
 		{
 			tag.setAttribute('id', tag.getAttribute('url'));
 		}
