@@ -460,6 +460,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.traileraddict.com/trailer/watchmen/feature-trailer',
+				'<rt><TRAILERADDICT id="7376" url="http://www.traileraddict.com/trailer/watchmen/feature-trailer">http://www.traileraddict.com/trailer/watchmen/feature-trailer</TRAILERADDICT></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('traileraddict');
+				}
+			],
+			[
 				'http://www.twitch.tv/m/57217',
 				'<rt><TWITCH archive_id="435873548" channel="wcs_america" url="http://www.twitch.tv/m/57217">http://www.twitch.tv/m/57217</TWITCH></rt>',
 				[],

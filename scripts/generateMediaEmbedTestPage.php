@@ -20,6 +20,11 @@ $renderer = $configurator->getRenderer();
 $siteHtml = [];
 foreach ($sites->site as $site)
 {
+	if (isset($_SERVER['argv'][1]) && $site['id'] != $_SERVER['argv'][1])
+	{
+		continue;
+	}
+
 	foreach ($site->example as $example)
 	{
 		$text = '[media=' . $site['id'] . ']' . $example . '[/media]';

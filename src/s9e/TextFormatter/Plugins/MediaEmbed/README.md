@@ -227,6 +227,11 @@ echo $html;
 		<td>http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html<br/>http://embed.ted.com/playlists/26/our_digital_lives.html</td>
 	</tr>
 	<tr>
+		<td><code>traileraddict</code></td>
+		<td>Trailer Addict</td>
+		<td>http://www.traileraddict.com/trailer/watchmen/feature-trailer</td>
+	</tr>
+	<tr>
 		<td><code>twitch</code></td>
 		<td>Twitch</td>
 		<td>http://www.twitch.tv/minigolf2000<br/>http://www.twitch.tv/minigolf2000/c/2475925<br/>http://www.twitch.tv/minigolf2000/b/361358487<br/>http://www.twitch.tv/m/57217</td>
