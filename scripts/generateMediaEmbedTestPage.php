@@ -22,7 +22,7 @@ foreach ($sites->site as $site)
 {
 	foreach ($site->example as $example)
 	{
-		$text = '[media]' . $example . '[/media]';
+		$text = '[media=' . $site['id'] . ']' . $example . '[/media]';
 
 		$xml  = $parser->parse($text);
 		$html = $renderer->render($xml);

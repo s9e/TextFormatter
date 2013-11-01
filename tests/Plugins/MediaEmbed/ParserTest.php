@@ -851,6 +851,42 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'[spotify]spotify:track:5JunxkcjfCYcY7xJ29tLai[/spotify]',
+				'<rt><SPOTIFY uri="spotify:track:5JunxkcjfCYcY7xJ29tLai"><st>[spotify]</st>spotify:track:5JunxkcjfCYcY7xJ29tLai<et>[/spotify]</et></SPOTIFY></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
+				'[spotify]spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe[/spotify]',
+				'<rt><SPOTIFY uri="spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe"><st>[spotify]</st>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<et>[/spotify]</et></SPOTIFY></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
+				'http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt',
+				'<rt><SPOTIFY path="user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt" url="http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt">http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt</SPOTIFY></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
+				'https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ',
+				'<rt><SPOTIFY path="track/6acKqVtKngFXApjvXsU6mQ" url="https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
 				'<rt><TED id="talks/eli_pariser_beware_online_filter_bubbles.html" url="http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html">http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</TED></rt>',
 				[],
@@ -1198,6 +1234,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'[spotify]spotify:track:5JunxkcjfCYcY7xJ29tLai[/spotify]',
+				'<iframe width="300" height="80" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:track:5JunxkcjfCYcY7xJ29tLai"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
+				'https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz',
+				'<iframe width="300" height="80" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
 				}
 			],
 			[

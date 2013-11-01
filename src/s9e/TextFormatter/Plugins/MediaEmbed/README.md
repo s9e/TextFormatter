@@ -212,6 +212,11 @@ echo $html;
 		<td>http://api.soundcloud.com/tracks/98282116</td>
 	</tr>
 	<tr>
+		<td><code>spotify</code></td>
+		<td>Spotify</td>
+		<td>spotify:track:5JunxkcjfCYcY7xJ29tLai<br/>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<br/>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt<br/>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</td>
+	</tr>
+	<tr>
 		<td><code>teamcoco</code></td>
 		<td>Team Coco</td>
 		<td>http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</td>
