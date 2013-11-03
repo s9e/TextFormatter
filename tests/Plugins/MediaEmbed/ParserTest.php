@@ -852,7 +852,16 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<rt><SOUNDCLOUD id="98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
+				'<rt><SOUNDCLOUD id="http://api.soundcloud.com/tracks/98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'https://soundcloud.com/andrewbird/three-white-horses',
+				'<rt><SOUNDCLOUD id="https://soundcloud.com/andrewbird/three-white-horses" url="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1238,7 +1247,16 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F98282116" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/98282116" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'https://soundcloud.com/andrewbird/three-white-horses',
+				'<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
 				[],
 				function ($configurator)
 				{

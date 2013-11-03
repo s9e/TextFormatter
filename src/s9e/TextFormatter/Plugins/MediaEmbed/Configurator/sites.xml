@@ -340,13 +340,11 @@
 		<homepage>https://soundcloud.com/</homepage>
 		<source>https://soundcloud.com/pages/widgets</source>
 		<example>http://api.soundcloud.com/tracks/98282116</example>
+		<example>https://soundcloud.com/andrewbird/three-white-horses</example>
 
 		<host>soundcloud.com</host>
-		<extract>!soundcloud\.com(?:%2F|/)tracks(?:%2F|/)(?'id'[0-9]+)!</extract>
-		<iframe width="560"
-		        height="166"
-		        src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F{@id}"
-		/>
+		<extract>@(?'id'https?://.*?soundcloud\.com/(?!explore/|pages/)[^/]+/[-/\w]+)@</extract>
+		<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url={@id}"/>
 	</site>
 
 	<site id="spotify">
