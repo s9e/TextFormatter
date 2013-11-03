@@ -187,6 +187,41 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox Extract regexps can contain an "url" capture
+	*/
+	public function testAddCaptureUrl()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'youtube.com',
+				'extract'  => "!(?'url'youtube\\.com/.+)!",
+				'template' => 'YouTube!'
+			]
+		);
+	}
+
+	/**
+	* @testdox The "url" attribute keeps its #url filter instead of a #regexp filter even if it's used in a capture
+	*/
+	public function testAddCaptureUrlFilter()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'example',
+			[
+				'host'     => 'youtube.com',
+				'extract'  => "!(?'url'youtube\\.com/.+)!",
+				'template' => 'YouTube!'
+			]
+		);
+
+		$this->assertEquals(
+			[$this->configurator->attributeFilters['#url']],
+			iterator_to_array($tag->attributes['url']->filterChain)
+		);
+	}
+
+	/**
 	* @testdox add() marks the "id" attribute as non-optional if present
 	*/
 	public function testAddIdRequired()

@@ -173,17 +173,14 @@ class Configurator extends ConfiguratorBase
 		$tag->rules->autoClose();
 		$tag->rules->ignoreTags();
 
-		// Create an optional attribute to store the original URL if applicable
-		$tag->attributes->add(
-			'url',
-			[
-				'required'    => false,
-				'filterChain' => [$this->configurator->attributeFilters['#url']]
+		// Store attributes' configuration, starting with a default "url" attribute to store the
+		// original URL if applicable
+		$attributes = [
+			'url' => [
+				'required' => false,
+				'type'     => 'url'
 			]
-		);
-
-		// Store the regexp used in extracted attributes
-		$attrRegexps = [];
+		];
 
 		// Process the "scrape" directives
 		if (isset($siteConfig['scrape']))
@@ -207,8 +204,8 @@ class Configurator extends ConfiguratorBase
 
 					foreach ($attributePreprocessor->getAttributes() as $attrName => $attrRegexp)
 					{
-						$attrNames[]            = $attrName;
-						$attrRegexps[$attrName] = $attrRegexp;
+						$attrNames[] = $attrName;
+						$attributes[$attrName]['regexp'] = $attrRegexp;
 					}
 				}
 
@@ -245,36 +242,52 @@ class Configurator extends ConfiguratorBase
 			foreach ((array) $siteConfig['extract'] as $regexp)
 			{
 				// Get the attributes filled by this regexp
-				$attributes = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
+				$attrRegexps = $tag->attributePreprocessors->add('url', $regexp)->getAttributes();
 
 				// For each named subpattern in the regexp, ensure that an attribute exists and
 				// create it otherwise, using the subpattern as regexp filter
-				foreach ($attributes as $attrName => $attrRegexp)
+				foreach ($attrRegexps as $attrName => $attrRegexp)
 				{
-					$attrRegexps[$attrName] = $attrRegexp;
+					$attributes[$attrName]['regexp'] = $attrRegexp;
 				}
 			}
 		}
 
-		// Create the attributes filled by the "extract" regexps
-		foreach ($attrRegexps as $attrName => $attrRegexp)
+		// Create the attributes
+		foreach ($attributes as $attrName => $attrConfig)
 		{
 			$attribute = $tag->attributes->add($attrName);
-			$attribute->filterChain->append(new Regexp($attrRegexp));
 
-			// Non-id attributes are marked as optional
-			if ($attrName !== 'id')
+			// Add a filter depending on the attribute's type or regexp
+			if (isset($attrConfig['type']))
 			{
-				$attribute->required = false;
+				// If "type" is "url", get the "#url" filter
+				$filter = $this->configurator->attributeFilters['#' . $attrConfig['type']];
+				$attribute->filterChain->append($filter);
+			}
+			elseif (isset($attrConfig['regexp']))
+			{
+				$attribute->filterChain->append(new Regexp($attrConfig['regexp']));
+			}
+
+			if (isset($attrConfig['required']))
+			{
+				$attribute->required = $attrConfig['required'];
+			}
+			else
+			{
+				// Non-id attributes are marked as optional
+				$attribute->required = ($attrName === 'id');
 			}
 		}
 
 		// If there is an attribute named "id" we'll append its regexp to the list of attribute
 		// preprocessors in order to support both forms [site]<url>[/site] and [site]<id>[/site]
-		if (isset($attrRegexps['id']))
+		if (isset($attributes['id']['regexp']))
 		{
 			// Replace the non-capturing subpattern with a named subpattern
-			$attrRegexp = preg_replace('/\\^\\(\\?[:>]/', "^(?'id'", $attrRegexps['id']);
+			$attrRegexp = preg_replace('/\\^\\(\\?[:>]/', "^(?'id'", $attributes['id']['regexp']);
+
 			$tag->attributePreprocessors->add('url', $attrRegexp);
 		}
 
