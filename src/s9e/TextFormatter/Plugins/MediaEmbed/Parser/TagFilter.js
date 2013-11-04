@@ -30,12 +30,16 @@ function (tag, tagStack, sites)
 	}
 	else if (tag.hasAttribute('url'))
 	{
-		// Capture the host part of the URL
-		var p = /\/\/([^\/]+)/.exec(tag.getAttribute('url'));
+		// Capture the scheme and host of the URL
+		var p = /^(?:([^:]+):)?(?:\/\/([^\/]+))?/.exec(tag.getAttribute('url'));
 
-		if (p)
+		if (p[1] && sites[p[1] + ':'])
 		{
-			var host = p[1];
+			tagName = sites[p[1] + ':'];
+		}
+		else if (p[2])
+		{
+			var host = p[2];
 
 			// Start with the full host then pop domain labels off the start until we get a
 			// match

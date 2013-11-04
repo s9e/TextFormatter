@@ -869,8 +869,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'[spotify]spotify:track:5JunxkcjfCYcY7xJ29tLai[/spotify]',
-				'<rt><SPOTIFY uri="spotify:track:5JunxkcjfCYcY7xJ29tLai"><st>[spotify]</st>spotify:track:5JunxkcjfCYcY7xJ29tLai<et>[/spotify]</et></SPOTIFY></rt>',
+				'spotify:track:5JunxkcjfCYcY7xJ29tLai',
+				'<rt><SPOTIFY uri="spotify:track:5JunxkcjfCYcY7xJ29tLai">spotify:track:5JunxkcjfCYcY7xJ29tLai</SPOTIFY></rt>',
 				[],
 				function ($configurator)
 				{

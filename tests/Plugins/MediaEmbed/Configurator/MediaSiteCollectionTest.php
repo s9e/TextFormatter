@@ -58,6 +58,22 @@ class MediaSiteCollectionTest extends Test
 	}
 
 	/**
+	* @testdox The config contains a map of ['scheme:' => 'site id']
+	*/
+	public function testAsConfigScheme()
+	{
+		$collection = new MediaSiteCollection;
+		$collection['foo'] = ['scheme' => 'bar'];
+
+		$config = $collection->asConfig();
+
+		$this->assertEquals(
+			['bar:' => 'foo'],
+			$config->get()
+		);
+	}
+
+	/**
 	* @testdox Accept "host" as a string or an array of strings
 	*/
 	public function testAsConfigHosts()

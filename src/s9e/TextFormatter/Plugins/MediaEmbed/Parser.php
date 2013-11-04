@@ -62,10 +62,14 @@ class Parser extends ParserBase
 		}
 		elseif ($tag->hasAttribute('url'))
 		{
-			// Capture the host part of the URL
+			// Capture the scheme and (if applicable) host of the URL
 			$p = parse_url($tag->getAttribute('url'));
 
-			if ($p && isset($p['host']))
+			if (isset($p['scheme']) && isset($sites[$p['scheme'] . ':']))
+			{
+				$tagName = $sites[$p['scheme'] . ':'];
+			}
+			elseif (isset($p['host']))
 			{
 				$host = $p['host'];
 

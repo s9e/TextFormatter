@@ -22,9 +22,20 @@ class MediaSiteCollection extends ArrayObject implements ConfigProvider
 		$map = [];
 		foreach ($this as $siteId => $siteConfig)
 		{
-			foreach ((array) $siteConfig['host'] as $host)
+			if (isset($siteConfig['host']))
 			{
-				$map[$host] = $siteId;
+				foreach ((array) $siteConfig['host'] as $host)
+				{
+					$map[$host] = $siteId;
+				}
+			}
+
+			if (isset($siteConfig['scheme']))
+			{
+				foreach ((array) $siteConfig['scheme'] as $scheme)
+				{
+					$map[$scheme . ':'] = $siteId;
+				}
 			}
 		}
 

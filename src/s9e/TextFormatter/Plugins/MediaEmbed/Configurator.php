@@ -42,19 +42,9 @@ class Configurator extends ConfiguratorBase
 	protected $createBBCodes = true;
 
 	/**
-	* {@inheritdoc}
-	*/
-	protected $quickMatch = '://';
-
-	/**
 	* @var array List of rendering methods in order of preference, descending
 	*/
 	protected $preferredRenderingMethods = ['template', 'iframe', 'flash'];
-
-	/**
-	* {@inheritdoc}
-	*/
-	protected $regexp = '#(https?://\\S+)#';
 
 	/**
 	* @var DOMXPath XPath engine pointing to the document containing the predefined sites
@@ -112,23 +102,57 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
-		$hosts = [];
+		$hosts = $schemes = [];
 		foreach ($this->collection as $site)
 		{
-			foreach ((array) $site['host'] as $host)
+			if (isset($site['host']))
 			{
-				$hosts[] = $host;
+				foreach ((array) $site['host'] as $host)
+				{
+					$hosts[] = $host;
+				}
+			}
+
+			if (isset($site['scheme']))
+			{
+				foreach ((array) $site['scheme'] as $scheme)
+				{
+					$schemes[] = (string) $scheme;
+				}
 			}
 		}
 
-		if (empty($hosts))
+		$patterns = [];
+
+		// Build the pattern used to capture stray HTTP(S) links
+		if ($hosts)
+		{
+			$patterns[] = 'https?://(?:[-\\w]+\\.)*' . RegexpBuilder::fromList($hosts) . '/';
+		}
+
+		// Build the pattern that matches the supported schemes
+		if ($schemes)
+		{
+			$patterns[] = RegexpBuilder::fromList($schemes) . ':';
+		}
+
+		if (empty($patterns))
 		{
 			return false;
 		}
 
+		// Build the final regexp
+		$regexp = '#\\b'
+		        . ((count($patterns) > 1) ? '(?>' : '')
+		        . implode('|', $patterns)
+		        . ((count($patterns) > 1) ? ')' : '')
+		        . '[^["\'\\s]+'
+		        . '(?!\\S)'
+		        . '#';
+
 		return [
-			'quickMatch' => $this->quickMatch,
-			'regexp'     => '!https?://(?:\\w+\\.)*' . RegexpBuilder::fromList($hosts) . '/\\S+!'
+			'quickMatch' => ($schemes) ? ':' : '://',
+			'regexp'     => $regexp
 		];
 	}
 

@@ -357,6 +357,7 @@
 		<example>http://open.spotify.com/user/ozmoetr/playlist/4yRrCWNhWOqWZx5lmFqZvt</example>
 		<example>https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz</example>
 
+		<scheme>spotify</scheme>
 		<host>open.spotify.com</host>
 		<host>play.spotify.com</host>
 		<extract>!(?'uri'spotify:(?:album:artist|user|track(?:set)?):[,:\w]+)!</extract>

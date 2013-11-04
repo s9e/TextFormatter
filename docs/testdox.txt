@@ -2149,6 +2149,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MediaSiteCollection
  [x] Implements ConfigProvider
  [x] asConfig() returns a JS variant
  [x] The config contains a map of ['host.tld' => 'site id']
+ [x] The config contains a map of ['scheme:' => 'site id']
  [x] Accept "host" as a string or an array of strings
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
@@ -2184,6 +2185,11 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator
  [x] asConfig() returns false if no site was added
  [x] asConfig() returns a an array containing a "regexp" element by default, if any site was added
  [x] asConfig() returns false if captureURLs is false
+ [x] asConfig() creates a regexp if a site has a "host"
+ [x] asConfig() creates a regexp if a site has a "scheme"
+ [x] asConfig() creates a regexp if a site has both "host" and "scheme"
+ [x] asConfig() returns ':' as quickMatch if it has a site with a "scheme"
+ [x] asConfig() returns '://' as quickMatch if it has no site with a "scheme"
 
 s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] scrape() does not do anything if the tag does not have a "url" attribute

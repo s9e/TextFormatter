@@ -2,7 +2,9 @@
 
 To add a site, you'll need to pass as a second argument to `add()` an array that contains at least 3 elements:
 
-  * `host` is the second-level domain name of the URLs you want to match, e.g. `example.com`
+  * at least one of either:
+    * `host` is the domain name of the URLs you want to match, e.g. `example.com` (including subdomains such as `www.example.com`)
+    * `scheme` is a custom scheme handled by given site, e.g. `spotify` for handling `spotify:` URIs
   * at least one of the following:
     * `extract` is a regexp used to extract values from the URL
     * `scrape` is an array that must contain at least one of each:
@@ -13,7 +15,7 @@ To add a site, you'll need to pass as a second argument to `add()` an array that
     * `flash`: array that contains the `width`, `height` and `src` of the flash object used to display the embedded content *(will create a pair of boilerplate `<object>` and `<embed>` elements)*
     * `template`: a string that contains a custom template
 
-You can specify multiple `host`, `scrape`, `extract` or `match` values using arrays.
+You can specify multiple `host`, `scheme`, `scrape`, `extract` or `match` values using arrays.
 
 ### How to configure multiple `host` and `extract` values
 
