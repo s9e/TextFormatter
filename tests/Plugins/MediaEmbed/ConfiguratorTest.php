@@ -485,6 +485,30 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() treats iframe attributes as attribute value templates
+	*/
+	public function testAddIframeDynamic()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'    => 'youtu.be',
+				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
+				'iframe'  => [
+					'width'  => '{@width}',
+					'height' => '{@height}',
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertEquals(
+			'<iframe width="{@width}" height="{@height}" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
 	* @testdox add() sets the tag's default template to the object defined in the "flash" element if available
 	*/
 	public function testAddFlash()
@@ -504,6 +528,30 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen=""/></object>',
+			$tag->defaultTemplate
+		);
+	}
+
+	/**
+	* @testdox add() treats flash attributes as attribute value templates
+	*/
+	public function testAddFlashDynamic()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'youtube',
+			[
+				'host'    => 'youtu.be',
+				'extract' => "!youtu\\.be/(?'id'[-0-9A-Z_a-z]+)!",
+				'flash'   => [
+					'width'  => '{@width}',
+					'height' => '{@height}',
+					'src'    => 'foo'
+				]
+			]
+		);
+
+		$this->assertEquals(
+			'<object type="application/x-shockwave-flash" typemustmatch="" width="{@width}" height="{@height}" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="{@width}" height="{@height}" allowfullscreen=""/></object>',
 			$tag->defaultTemplate
 		);
 	}
