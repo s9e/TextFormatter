@@ -1252,6 +1252,10 @@ class PHPTest extends Test
 				"(\$node->hasAttribute('track_num')?42:120)",
 				'@track_num'
 			],
+			[
+				"<xsl:template match='FOO'><hr title=\"{380-300*(contains(@uri,':track:')orcontains(@path,'/track/'))}\"/></xsl:template>",
+				"(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'/track/')!==false?80:380)"
+			],
 		];
 	}
 

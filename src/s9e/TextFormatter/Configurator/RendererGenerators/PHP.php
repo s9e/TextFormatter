@@ -56,6 +56,10 @@ class PHP implements RendererGenerator
 		"250-210*boolean(@songid)"
 			=> "(\$node->hasAttribute('songid')?40:250)",
 
+		// MediaEmbed: Spotify
+		"380-300*(contains(@uri,':track:')orcontains(@path,'/track/'))"
+			=> "(strpos(\$node->getAttribute('uri'),':track:')!==false||strpos(\$node->getAttribute('path'),'/track/')!==false?80:380)",
+
 		// MediaEmbed: Twitch
 		"substring('archl',5-4*boolean(@archive_id|@chapter_id),4)"
 			=> "(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
