@@ -1274,7 +1274,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz',
-				'<iframe width="300" height="80" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz"></iframe>',
+				'<iframe width="300" height="380" allowfullscreen="" frameborder="0" scrolling="no" src="https://embed.spotify.com/?uri=spotify:album:5OSzFvFAYuRh93WDNCTLEz"></iframe>',
 				[],
 				function ($configurator)
 				{
