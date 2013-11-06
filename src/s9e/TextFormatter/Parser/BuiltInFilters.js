@@ -296,15 +296,23 @@ var BuiltInFilters =
 			}
 		}
 
-		// Test whether the URL contains only ASCII characters, and encode them if not
-		if (!/^[\u0020-\u007f]+$/.test(attrValue))
-		{
-			attrValue = BuiltInFilters.encodeUrlToAscii(attrValue);
-		}
-
-		// We URL-encode some sensitive characters in case someone would want to use the URL in
-		// some JavaScript thingy, or in CSS
-		attrValue = attrValue.replace(/['"()<>\r\n]/g, escape).replace(/[\u2028\u2029]/g, encodeURIComponent);
+		/**
+		* We URL-encode some sensitive characters in case someone would want to use the URL in
+		* some JavaScript thingy, or in CSS. We also encode illegal characters.
+		*
+		* " and ' to prevent breaking out of quotes (JavaScript or otherwise)
+		* ( and ) to prevent the use of functions in JavaScript (eval()) or CSS (expression())
+		* < and > to prevent breaking out of <script>
+		* \r and \n because they're illegal in JavaScript
+		* [ and ] because the W3 validator rejects and they may be illegal in URIs
+		* Non-ASCII characters as per RFC 3986
+		* Control codes and spaces, which may be illegal in URIs
+		*
+		* @link http://sla.ckers.org/forum/read.php?2,51478
+		* @link http://timelessrepo.com/json-isnt-a-javascript-subset
+		* @link http://www.ietf.org/rfc/rfc3986.txt
+		*/
+		attrValue = attrValue.replace(/["'()<>[\]\x00-\x20\x7F]+/g, escape).replace(/[^\u0020-\u007E]+/g, encodeURIComponent);
 
 		// Parse the URL... kinda
 		var m =/^([a-z\d]+):\/\/(?:[^/]*@)?([^/]+)(?:\/.*)?$/i.exec(attrValue);
@@ -367,25 +375,5 @@ var BuiltInFilters =
 		}
 
 		return attrValue;
-	},
-
-	/**
-	* Encode an UTF-8 URL to ASCII
-	*
-	* No Punycode encoding in JavaScript, only URL-encoding
-	*
-	* @param  {!string} url Original URL
-	* @return {!string}     Encoded URL
-	*/
-	encodeUrlToAscii: function(url)
-	{
-//		if (function_exists('idn_to_ascii')
-//		 && preg_match('#^([^:]+://(?>[^/@]+@)?)([^/]+)#i', $url, $m))
-//		{
-//			$url = $m[1] . idn_to_ascii($m[2]) . substr($url, strlen($m[0]));
-//		}
-
-		// URL-encode non-ASCII stuff
-		return url.replace(/[^\u0020-\u007f]+/g, encodeURIComponent);
 	}
 }

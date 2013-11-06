@@ -36,7 +36,7 @@ class ParserTest extends Test
 			],
 			[
 				'Go to [\\[x\\[x\\]x\\]](http://example.org/?foo[]=1&bar\\[\\]=1) now!',
-				'<rt><p>Go to <URL url="http://example.org/?foo[]=1&amp;bar[]=1"><st>[</st>\\[x\\[x\\]x\\]<et>](http://example.org/?foo[]=1&amp;bar\\[\\]=1)</et></URL> now!</p></rt>'
+				'<rt><p>Go to <URL url="http://example.org/?foo%5B%5D=1&amp;bar%5B%5D=1"><st>[</st>\\[x\\[x\\]x\\]<et>](http://example.org/?foo[]=1&amp;bar\\[\\]=1)</et></URL> now!</p></rt>'
 			],
 			// Images
 			[

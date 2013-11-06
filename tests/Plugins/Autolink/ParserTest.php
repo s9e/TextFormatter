@@ -90,11 +90,11 @@ class ParserTest extends Test
 			],
 			[
 				'Check those out: http://example.com/list.php?cat[]=1&cat[]=2',
-				'<rt>Check those out: <URL url="http://example.com/list.php?cat[]=1&amp;cat[]=2">http://example.com/list.php?cat[]=1&amp;cat[]=2</URL></rt>'
+				'<rt>Check those out: <URL url="http://example.com/list.php?cat%5B%5D=1&amp;cat%5B%5D=2">http://example.com/list.php?cat[]=1&amp;cat[]=2</URL></rt>'
 			],
 			[
 				'Check those out: http://example.com/list.php?cat[1a]=1&cat[1b]=2',
-				'<rt>Check those out: <URL url="http://example.com/list.php?cat[1a]=1&amp;cat[1b]=2">http://example.com/list.php?cat[1a]=1&amp;cat[1b]=2</URL></rt>'
+				'<rt>Check those out: <URL url="http://example.com/list.php?cat%5B1a%5D=1&amp;cat%5B1b%5D=2">http://example.com/list.php?cat[1a]=1&amp;cat[1b]=2</URL></rt>'
 			],
 			[
 				'[url=http://example.com]Non-existent URL tag[/url]',
@@ -106,7 +106,7 @@ class ParserTest extends Test
 			],
 			[
 				'Link in brackets: [http://example.com/foo?a[]=1] --',
-				'<rt>Link in brackets: [<URL url="http://example.com/foo?a[]=1">http://example.com/foo?a[]=1</URL>] --</rt>'
+				'<rt>Link in brackets: [<URL url="http://example.com/foo?a%5B%5D=1">http://example.com/foo?a[]=1</URL>] --</rt>'
 			],
 		];
 	}

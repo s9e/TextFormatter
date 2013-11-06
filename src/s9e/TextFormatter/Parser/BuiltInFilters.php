@@ -325,43 +325,37 @@ class BuiltInFilters
 			}
 		}
 
-		// Test whether the URL contains only ASCII characters, and encode them if not
-		if (!preg_match('#^[[:ascii]]+$#D', $attrValue))
+		// Test whether the URL has a non-ASCII host and encode it to IDN if applicable
+		if (preg_match('#^([^:]+://(?>[^/@]+@)?)([^/]+)#i', $attrValue, $m)
+		 && preg_match('#[^[:ascii:]]#', $m[2])
+		 && function_exists('idn_to_ascii'))
 		{
-			$attrValue = self::encodeUrlToAscii($attrValue);
+			$attrValue = $m[1] . idn_to_ascii($m[2]) . substr($attrValue, strlen($m[0]));
 		}
 
-		// We URL-encode some sensitive characters in case someone would want to use the URL in
-		// some JavaScript thingy, or in CSS
-		$attrValue = strtr(
-			$attrValue,
-			[
-				// Prevents breaking out of quotes
-				'"' => '%22',
-				"'" => '%27',
-
-				// Prevents the use of functions in JS (eval()) and CSS (expression())
-				'(' => '%28',
-				')' => '%29',
-
-				/**
-				* Prevents breaking out of <script>
-				* @link http://sla.ckers.org/forum/read.php?2,51478
-				*/
-				'<' => '%3C',
-				'>' => '%3E',
-
-				/**
-				* Those are illegal in JavaScript
-				* @link http://timelessrepo.com/json-isnt-a-javascript-subset
-				*
-				* NOTE: the Unicode terminators would get escaped by encodeUrlToAscii() anyway
-				*/
-				"\x0A" => '%0A',
-				"\x0D" => '%0D',
-				"\xE2\x80\xA8" => '%E2%80%A8',
-				"\xE2\x80\xA9" => '%E2%80%A9'
-			]
+		/**
+		* We URL-encode some sensitive characters in case someone would want to use the URL in
+		* some JavaScript thingy, or in CSS. We also encode illegal characters.
+		*
+		* " and ' to prevent breaking out of quotes (JavaScript or otherwise)
+		* ( and ) to prevent the use of functions in JavaScript (eval()) or CSS (expression())
+		* < and > to prevent breaking out of <script>
+		* \r and \n because they're illegal in JavaScript
+		* [ and ] because the W3 validator rejects and they may be illegal in URIs
+		* Non-ASCII characters as per RFC 3986
+		* Control codes and spaces, which may be illegal in URIs
+		*
+		* @link http://sla.ckers.org/forum/read.php?2,51478
+		* @link http://timelessrepo.com/json-isnt-a-javascript-subset
+		* @link http://www.ietf.org/rfc/rfc3986.txt
+		*/
+		$attrValue = preg_replace_callback(
+			'/["\'()<>[\\]\\x00-\\x20\\x7F-\\xFF]+/S',
+			function ($m)
+			{
+				return rawurlencode($m[0]);
+			},
+			$attrValue
 		);
 
 		// Validate the URL
@@ -516,33 +510,5 @@ class BuiltInFilters
 		}
 
 		return null;
-	}
-
-	/**
-	* Encode an UTF-8 URL to ASCII
-	*
-	* Requires idn_to_ascii() in order to deal with IDNs. If idn_to_ascii() is not available, the
-	* host part will be URL-encoded with the rest of the URL.
-	*
-	* @param  string $url Original URL
-	* @return Mixed       Encoded URL
-	*/
-	protected static function encodeUrlToAscii($url)
-	{
-		if (function_exists('idn_to_ascii')
-		 && preg_match('#^([^:]+://(?>[^/@]+@)?)([^/]+)#i', $url, $m))
-		{
-			$url = $m[1] . idn_to_ascii($m[2]) . substr($url, strlen($m[0]));
-		}
-
-		// URL-encode non-ASCII stuff
-		return preg_replace_callback(
-			'#[^[:ascii:]]+#',
-			function ($m)
-			{
-				return urlencode($m[0]);
-			},
-			$url
-		);
 	}
 }

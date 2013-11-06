@@ -173,6 +173,9 @@ class BuiltInFiltersTest extends Test
 			[new Url, 'http://example.com/""', 'http://example.com/%22%22'],
 			[new Url, 'http://example.com/(', 'http://example.com/%28'],
 			[new Url, 'http://example.com/)', 'http://example.com/%29'],
+			[new Url, "http://example.com/x\0y", 'http://example.com/x%00y'],
+			[new Url, "http://example.com/x y", 'http://example.com/x%20y'],
+			[new Url, 'http://example.com/foo.php?a[]=1', 'http://example.com/foo.php?a%5B%5D=1'],
 			[new Url, 'http://example.com/</script>', 'http://example.com/%3C/script%3E'],
 			[
 				new Url,
