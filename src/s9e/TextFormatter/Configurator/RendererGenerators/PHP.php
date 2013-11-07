@@ -108,7 +108,7 @@ class PHP implements RendererGenerator
 	/**
 	* @var bool Whether to use the mbstring functions as a replacement for XPath expressions
 	*/
-	public $useMultibyteStringFunctions = true;
+	public $useMultibyteStringFunctions;
 
 	/**
 	* Constructor
@@ -123,6 +123,8 @@ class PHP implements RendererGenerator
 		{
 			$this->cacheDir = $cacheDir;
 		}
+
+		$this->useMultibyteStringFunctions = extension_loaded('mbstring');
 	}
 
 	/**
@@ -1184,6 +1186,7 @@ EOT
 				'param'     => ['\\$', '(?<paramName>\\w+)'],
 				'string'    => '"[^"]*"|\'[^\']*\'',
 				'number'    => ['-?', '\\d++'],
+				'strlen'    => ['string-length', '\\(', '(?<strlen0>(?&value))?', '\\)'],
 				'contains'  => [
 					'contains',
 					'\\(',
@@ -1201,17 +1204,8 @@ EOT
 					',',
 					'(?<translate2>(?&string))',
 					'\\)'
-				]
-			];
-
-			if (function_exists('mb_strlen'))
-			{
-				$patterns['strlen'] = ['string-length', '\\(', '(?<strlen0>(?&value))?', '\\)'];
-			}
-
-			if (function_exists('mb_substr'))
-			{
-				$patterns['substr'] = [
+				],
+				'substr'    => [
 					'substring',
 					'\\(',
 					'(?<substr0>(?&value))',
@@ -1219,8 +1213,8 @@ EOT
 					'(?<substr1>(?&value))',
 					'(?:, (?<substr2>(?&value)))?',
 					'\\)'
-				];
-			}
+				]
+			];
 
 			// Create a regexp that matches values, such as "@foo" or "42"
 			$valueRegexp = '(?<value>';

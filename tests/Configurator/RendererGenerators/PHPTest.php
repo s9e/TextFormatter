@@ -1262,8 +1262,17 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @requires extension mbstring
+	* @testdox useMultibyteStringFunctions is set to TRUE if mbstring is available
+	*/
+	public function testMbstringSet()
+	{
+		$generator = new PHP;
+		$this->assertTrue($generator->useMultibyteStringFunctions);
+	}
+
+	/**
 	* @testdox mbstring functions are not used if $useMultibyteStringFunctions is FALSE
-	* @requires mbstring
 	*/
 	public function testNoMbstring()
 	{

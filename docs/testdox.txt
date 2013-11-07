@@ -2238,6 +2238,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Rendering tests from plugins
  [x] Matches the reference rendering in edge cases
  [x] XPath expressions are inlined as PHP whenever possible
+ [x] useMultibyteStringFunctions is set to TRUE if mbstring is available
  [x] mbstring functions are not used if $useMultibyteStringFunctions is FALSE
  [x] Code optimization tests
  [x] optimizeConcatenations() does not merge incompatible htmlspecialchars() calls
