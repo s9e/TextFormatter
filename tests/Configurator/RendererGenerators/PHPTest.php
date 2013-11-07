@@ -873,9 +873,9 @@ class PHPTest extends Test
 				'<rt><X foo="FOO">..</X></rt>',
 				function ($configurator, $test)
 				{
-					if (!function_exists('mb_strlen'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_strlen()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
 					$configurator->tags->add('X')->defaultTemplate
@@ -886,9 +886,9 @@ class PHPTest extends Test
 				'<rt><X foo="FOO">..</X></rt>',
 				function ($configurator, $test)
 				{
-					if (!function_exists('mb_strlen'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_strlen()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
 					$configurator->tags->add('X')->defaultTemplate
@@ -899,6 +899,11 @@ class PHPTest extends Test
 				'<rt><X foo="FOO">..</X></rt>',
 				function ($configurator, $test)
 				{
+					if (!extension_loaded('mbstring'))
+					{
+						$this->markTestSkipped('Extension mbstring is required.');
+					}
+
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="string-length(@bar)"/>';
 				}
@@ -907,6 +912,11 @@ class PHPTest extends Test
 				'<rt><X foo="ABCDEF0153">..</X></rt>',
 				function ($configurator, $test)
 				{
+					if (!extension_loaded('mbstring'))
+					{
+						$this->markTestSkipped('Extension mbstring is required.');
+					}
+
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="substring(@foo,2,3)"/>';
 				}
@@ -915,6 +925,11 @@ class PHPTest extends Test
 				'<rt><X foo="ABCDEF0153">..</X></rt>',
 				function ($configurator, $test)
 				{
+					if (!extension_loaded('mbstring'))
+					{
+						$this->markTestSkipped('Extension mbstring is required.');
+					}
+
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="substring(@foo,0,3)"/>';
 				}
@@ -923,6 +938,11 @@ class PHPTest extends Test
 				'<rt><X foo="ABCDEF0153">..</X></rt>',
 				function ($configurator, $test)
 				{
+					if (!extension_loaded('mbstring'))
+					{
+						$this->markTestSkipped('Extension mbstring is required.');
+					}
+
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="substring(@foo,2,-3)"/>';
 				}
@@ -931,6 +951,11 @@ class PHPTest extends Test
 				'<rt><X foo="ABCDEF0153" x="3">..</X></rt>',
 				function ($configurator, $test)
 				{
+					if (!extension_loaded('mbstring'))
+					{
+						$this->markTestSkipped('Extension mbstring is required.');
+					}
+
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="substring(@foo,@x)"/>';
 				}
@@ -939,6 +964,11 @@ class PHPTest extends Test
 				'<rt><X foo="ABCDEF0153" x="3">..</X></rt>',
 				function ($configurator, $test)
 				{
+					if (!extension_loaded('mbstring'))
+					{
+						$this->markTestSkipped('Extension mbstring is required.');
+					}
+
 					$configurator->tags->add('X')->defaultTemplate
 						= '<xsl:value-of select="substring(@foo,3,@x)"/>';
 				}
@@ -1056,9 +1086,9 @@ class PHPTest extends Test
 				'string-length',
 				function ($test)
 				{
-					if (!function_exists('mb_strlen'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_strlen()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 				}
 			],
@@ -1068,9 +1098,9 @@ class PHPTest extends Test
 				'string-length',
 				function ($test)
 				{
-					if (!function_exists('mb_strlen'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_strlen()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 				}
 			],
@@ -1080,9 +1110,9 @@ class PHPTest extends Test
 				'substring',
 				function ($test)
 				{
-					if (!function_exists('mb_substr'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_substr()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 				}
 			],
@@ -1093,9 +1123,9 @@ class PHPTest extends Test
 				'substring',
 				function ($test)
 				{
-					if (!function_exists('mb_substr'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_substr()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 				}
 			],
@@ -1105,9 +1135,9 @@ class PHPTest extends Test
 				'substring',
 				function ($test)
 				{
-					if (!function_exists('mb_substr'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_substr()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 				}
 			],
@@ -1117,9 +1147,9 @@ class PHPTest extends Test
 				'substring',
 				function ($test)
 				{
-					if (!function_exists('mb_substr'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_substr()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 				}
 			],
@@ -1129,9 +1159,9 @@ class PHPTest extends Test
 				'substring',
 				function ($test)
 				{
-					if (!function_exists('mb_substr'))
+					if (!extension_loaded('mbstring'))
 					{
-						$test->markTestSkipped('Requires mb_substr()');
+						$this->markTestSkipped('Extension mbstring is required.');
 					}
 				}
 			],
