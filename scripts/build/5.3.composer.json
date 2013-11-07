@@ -12,6 +12,7 @@
 	"suggest": {
 		"ext-intl":      "Allows international URLs to be accepted by the URL filter",
 		"ext-json":      "Enables the generation of a JavaScript parser",
+		"ext-mbstring":  "Enables some optimizations in the PHP renderer",
 		"ext-tokenizer": "Enables optimizations in the PHP renderer",
 		"ext-xsl":       "Enables the XSLT renderer",
 		"ext-zlib":      "Enables gzip compression when scraping content via the MediaEmbed plugin"
