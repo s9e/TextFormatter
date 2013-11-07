@@ -62,6 +62,11 @@ abstract class AbstractTest extends Test
 
 			if (file_exists(substr($filepath, 0, -3) . 'json'))
 			{
+				if (!extension_loaded('json'))
+				{
+					continue;
+				}
+
 				$test[] = json_decode(
 					file_get_contents(substr($filepath, 0, -3) . 'json'),
 					true

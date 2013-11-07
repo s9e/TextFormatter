@@ -6,6 +6,7 @@ use s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @requires extension json
 * @covers s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService
 */
 class ClosureCompilerServiceTest extends Test

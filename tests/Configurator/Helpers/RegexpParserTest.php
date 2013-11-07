@@ -711,12 +711,12 @@ class RegexpParserTest extends Test
 			if ($result)
 			{
 				$methodName = 'assertRegExp';
-				$msg = var_export($regexp, true) . ' should match ' . json_encode($char);
+				$msg = var_export($regexp, true) . ' should match ' . var_export($char, true);
 			}
 			else
 			{
 				$methodName = 'assertNotRegExp';
-				$msg = var_export($regexp, true) . ' should not match ' . json_encode($char);
+				$msg = var_export($regexp, true) . ' should not match ' . var_export($char, true);
 			}
 
 			$this->$methodName($allowedCharRegexp, (string) $char, $msg);

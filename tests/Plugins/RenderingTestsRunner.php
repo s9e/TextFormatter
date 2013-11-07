@@ -7,6 +7,7 @@ use s9e\TextFormatter\Configurator;
 trait RenderingTestsRunner
 {
 	/**
+	* @requires extension xsl
 	* @testdox Parsing+rendering tests
 	* @dataProvider getRenderingTests
 	*/

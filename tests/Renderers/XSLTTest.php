@@ -6,6 +6,7 @@ use s9e\TextFormatter\Tests\RendererTests;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @requires extension xsl
 * @covers s9e\TextFormatter\Renderer
 * @covers s9e\TextFormatter\Renderers\XSLT
 */

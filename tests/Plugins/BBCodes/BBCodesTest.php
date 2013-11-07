@@ -64,6 +64,7 @@ class BBCodesTest extends Test
 	}
 
 	/**
+	* @requires extension xsl
 	* @testdox BBCodes from repository.xml render nicely
 	* @dataProvider getPredefinedBBCodesTests
 	*/

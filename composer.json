@@ -7,14 +7,17 @@
 	"require": {
 		"php":        ">=5.3.3",
 		"ext-dom":    "*",
-		"ext-filter": "*",
-		"ext-pcre":   "*"
+		"ext-filter": "*"
 	},
 	"require-dev": {
 		"satooshi/php-coveralls": "dev-master"
 	},
 	"suggest": {
-		"ext-xsl": "Enables the XSLT renderer"
+		"ext-intl":      "Allows international URLs to be accepted by the URL filter",
+		"ext-json":      "Enables the generation of a JavaScript parser",
+		"ext-tokenizer": "Enables optimizations in the PHP renderer",
+		"ext-xsl":       "Enables the XSLT renderer",
+		"ext-zlib":      "Enables gzip compression when scraping content via the MediaEmbed plugin"
 	},
 	"autoload": {
 		"psr-0": {

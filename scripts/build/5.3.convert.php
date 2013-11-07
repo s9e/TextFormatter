@@ -50,6 +50,24 @@ function convertCustom($filepath, &$file)
 				'public function isFilter($tokenId)'
 			)
 		),
+		'BuiltInFiltersTest.php' => array(
+			function ($file)
+			{
+				return preg_replace(
+					'/public function getData()\\s+\\{(\\s+)/',
+					'$0\\$test = \\$this;$1',
+					$file
+				);
+			},
+			array(
+				'function ()',
+				'function () use ($test)'
+			),
+			array(
+				"\$this->markTestSkipped('Extension intl is required.');",
+				"\$test->markTestSkipped('Extension intl is required.');"
+			)
+		),
 		'BundleGenerator.php' => array(
 			array(
 				'protected function exportCallback($namespace, callable $callback, $argument)',

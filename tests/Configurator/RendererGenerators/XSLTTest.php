@@ -6,6 +6,7 @@ use s9e\TextFormatter\Configurator\RendererGenerators\XSLT;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @requires extension xsl
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\XSLT
 */
 class XSLTTest extends Test

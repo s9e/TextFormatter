@@ -425,7 +425,10 @@ EOT
 		$this->php = $header . 'class ' . $className . $this->php;
 
 		// Optimize the generated code
-		$this->optimizeCode();
+		if (extension_loaded('tokenizer'))
+		{
+			$this->optimizeCode();
+		}
 
 		return $this->php;
 	}

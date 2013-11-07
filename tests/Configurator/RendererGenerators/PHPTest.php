@@ -577,6 +577,7 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @requires extension xsl
 	* @testdox Matches the reference rendering in edge cases
 	* @dataProvider getEdgeCases
 	*/
@@ -988,6 +989,7 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @requires extension tokenizer
 	* @dataProvider getXPathTests
 	* @testdox XPath expressions are inlined as PHP whenever possible
 	*/
@@ -1277,6 +1279,7 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @requires extension tokenizer
 	* @dataProvider getOptimizationTests
 	* @testdox Code optimization tests
 	*/
@@ -1403,6 +1406,7 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @requires extension tokenizer
 	* @testdox optimizeConcatenations() does not merge incompatible htmlspecialchars() calls
 	*/
 	public function testOptimizeConcatenationsNoIncompatibleMerge()

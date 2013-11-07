@@ -77,7 +77,13 @@ class ParserTest extends Test
 				'http://www.xn--lyp-plada.com for http://www.älypää.com',
 				'<rt><URL url="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</URL> for <URL url="http://www.xn--lyp-plada.com">http://www.älypää.com</URL></rt>',
 				[],
-				null,
+				function ()
+				{
+					if (!extension_loaded('intl'))
+					{
+						$this->markTestSkipped('Extension intl is required.');
+					}
+				},
 				'<rt><URL url="http://www.xn--lyp-plada.com">http://www.xn--lyp-plada.com</URL> for <URL url="http://www.%C3%A4lyp%C3%A4%C3%A4.com">http://www.älypää.com</URL></rt>'
 			],
 			[

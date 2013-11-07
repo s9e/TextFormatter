@@ -17,6 +17,7 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @requires extension json
 * @covers s9e\TextFormatter\Configurator\JavaScript
 */
 class JavaScriptTest extends Test

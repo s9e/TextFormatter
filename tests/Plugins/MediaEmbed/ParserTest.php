@@ -23,10 +23,17 @@ class ParserTest extends Test
 	{
 		$cacheDir = __DIR__ . '/../../.cache';
 
+		$prefix = $suffix = '';
+		if (extension_loaded('zlib'))
+		{
+			$prefix  = 'compress.zlib://';
+			$suffix  = '.gz';
+		}
+
 		foreach ($entries as $url => $content)
 		{
 			file_put_contents(
-				'compress.zlib://' . $cacheDir . '/http.' . crc32($url) . '.gz',
+				$prefix . $cacheDir . '/http.' . crc32($url) . $suffix,
 				$content
 			);
 		}

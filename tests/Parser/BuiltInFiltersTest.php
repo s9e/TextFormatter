@@ -140,7 +140,19 @@ class BuiltInFiltersTest extends Test
 				]
 			],
 			[new Range(2, 5), '5x', false],
-			[new Url, 'http://www.älypää.com', 'http://www.xn--lyp-plada.com'],
+			[
+				new Url,
+				'http://www.älypää.com',
+				'http://www.xn--lyp-plada.com',
+				[],
+				function ()
+				{
+					if (!extension_loaded('intl'))
+					{
+						$this->markTestSkipped('Extension intl is required.');
+					}
+				}
+			],
 			[
 				new Url,
 				'http://en.wikipedia.org/wiki/Matti_Nykänen', 'http://en.wikipedia.org/wiki/Matti_Nyk%C3%A4nen'
@@ -152,7 +164,15 @@ class BuiltInFiltersTest extends Test
 			[
 				new Url,
 				'http://älypää.com:älypää.com@älypää.com',
-				'http://%C3%A4lyp%C3%A4%C3%A4.com:%C3%A4lyp%C3%A4%C3%A4.com@xn--lyp-plada.com'
+				'http://%C3%A4lyp%C3%A4%C3%A4.com:%C3%A4lyp%C3%A4%C3%A4.com@xn--lyp-plada.com',
+				[],
+				function ()
+				{
+					if (!extension_loaded('intl'))
+					{
+						$this->markTestSkipped('Extension intl is required.');
+					}
+				}
 			],
 			[new Url, 'javascript:alert()', false],
 			[new Url, 'http://www.example.com', 'http://www.example.com'],
@@ -257,6 +277,11 @@ class BuiltInFiltersTest extends Test
 				],
 				function ($configurator)
 				{
+					if (!extension_loaded('intl'))
+					{
+						$this->markTestSkipped('Extension intl is required.');
+					}
+
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
@@ -276,6 +301,11 @@ class BuiltInFiltersTest extends Test
 				],
 				function ($configurator)
 				{
+					if (!extension_loaded('intl'))
+					{
+						$this->markTestSkipped('Extension intl is required.');
+					}
+
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
@@ -295,6 +325,11 @@ class BuiltInFiltersTest extends Test
 				],
 				function ($configurator)
 				{
+					if (!extension_loaded('intl'))
+					{
+						$this->markTestSkipped('Extension intl is required.');
+					}
+
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
@@ -304,7 +339,8 @@ class BuiltInFiltersTest extends Test
 				false,
 				function ()
 				{
-					if (version_compare(PHP_VERSION, '5.5.4', '>='))
+					if (version_compare(PHP_VERSION, '5.5.4', '>=')
+					 || version_compare(PHP_VERSION, '5.4.21', '>='))
 					{
 						return [
 							[
@@ -331,7 +367,8 @@ class BuiltInFiltersTest extends Test
 				false,
 				function ()
 				{
-					if (version_compare(PHP_VERSION, '5.5.4', '>='))
+					if (version_compare(PHP_VERSION, '5.5.4', '>=')
+					 || version_compare(PHP_VERSION, '5.4.21', '>='))
 					{
 						return [
 							[
@@ -349,6 +386,11 @@ class BuiltInFiltersTest extends Test
 				},
 				function ($configurator)
 				{
+					if (!extension_loaded('intl'))
+					{
+						$this->markTestSkipped('Extension intl is required.');
+					}
+
 					$configurator->urlConfig->disallowHost('evil.example.com');
 				}
 			],
@@ -379,6 +421,11 @@ class BuiltInFiltersTest extends Test
 				],
 				function ($configurator)
 				{
+					if (!extension_loaded('intl'))
+					{
+						$this->markTestSkipped('Extension intl is required.');
+					}
+
 					// This is a paypal homograph
 					$configurator->urlConfig->disallowHost('pаypal.com');
 				}
