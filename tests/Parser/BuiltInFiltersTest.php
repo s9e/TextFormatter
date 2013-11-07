@@ -340,7 +340,7 @@ class BuiltInFiltersTest extends Test
 				function ()
 				{
 					if (version_compare(PHP_VERSION, '5.5.4', '>=')
-					 || version_compare(PHP_VERSION, '5.4.21', '>='))
+					 || (version_compare(PHP_VERSION, '5.4.21', '>=') && version_compare(PHP_VERSION, '5.5', '<')))
 					{
 						return [
 							[
@@ -368,7 +368,7 @@ class BuiltInFiltersTest extends Test
 				function ()
 				{
 					if (version_compare(PHP_VERSION, '5.5.4', '>=')
-					 || version_compare(PHP_VERSION, '5.4.21', '>='))
+					 || (version_compare(PHP_VERSION, '5.4.21', '>=') && version_compare(PHP_VERSION, '5.5', '<')))
 					{
 						return [
 							[
