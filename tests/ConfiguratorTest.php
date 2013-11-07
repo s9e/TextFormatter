@@ -364,7 +364,6 @@ class ConfiguratorTest extends Test
 		);
 	}
 
-
 	/**
 	* @testdox getParser() removes JavaScript-specific data from tag filters
 	*/

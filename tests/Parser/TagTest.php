@@ -273,7 +273,6 @@ class TagTest extends Test
 		$tag2->invalidate();
 	}
 
-
 	/**
 	* @testdox $tag1->cascadeInvalidationTo($tag2) immediately calls $tag2->invalidate() if $tag1 is invalid
 	*/

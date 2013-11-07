@@ -101,7 +101,6 @@ class Variant
 		$this->variants[$variant] = [false, $value];
 	}
 
-
 	/**
 	* Set a dynamic variant for this value
 	*

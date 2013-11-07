@@ -30,7 +30,6 @@ function _array(array $arr)
 	return $php;
 }
 
-
 include __DIR__ . '/../tests/Configurator/Helpers/RegexpBuilderTest.php';
 
 $test = new Configurator\Helpers\RegexpBuilderTest;
