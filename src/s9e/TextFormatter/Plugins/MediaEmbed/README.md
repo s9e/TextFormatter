@@ -94,7 +94,7 @@ echo $html;
 	<tr>
 		<td><code>blip</code></td>
 		<td>Blip</td>
-		<td>http://blip.tv/c18booktracker/full-text-search-quirks-in-google-books-2260037<br/>http://blip.tv/play/g6VTgpjxbQA</td>
+		<td>http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104<br/>http://blip.tv/play/g6VTgpjxbQA</td>
 	</tr>
 	<tr>
 		<td><code>break</code></td>

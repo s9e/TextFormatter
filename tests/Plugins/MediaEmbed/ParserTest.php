@@ -327,8 +327,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://blip.tv/c18booktracker/full-text-search-quirks-in-google-books-2260037',
-				'<rt><BLIP id="AYGJ%2BSkC" url="http://blip.tv/c18booktracker/full-text-search-quirks-in-google-books-2260037">http://blip.tv/c18booktracker/full-text-search-quirks-in-google-books-2260037</BLIP></rt>',
+				'http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104',
+				'<rt><BLIP id="zEiCvv1cAg" url="http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104">http://blip.tv/blip-on-blip/damian-bruno-and-vinyl-rewind-blip-on-blip-58-5226104</BLIP></rt>',
 				[],
 				function ($configurator)
 				{
