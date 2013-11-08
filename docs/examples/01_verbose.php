@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . '/../src/s9e/TextFormatter/autoloader.php';
+include __DIR__ . '/../../src/s9e/TextFormatter/autoloader.php';
 
 $configurator = new s9e\TextFormatter\Configurator;
 
@@ -36,31 +36,27 @@ $configurator->BBCodes->addCustom(
 $configurator->Censor->add('apple*');
 $configurator->Censor->add('bananas', 'oranges');
 
-// Add a couple of emoticons. Normally you would use an <img> tag, but here we'll use HTML entities
-// instead
+// Add a couple of emoticons. You can specify any HTML or XSLT to represent them. Here we create a
+// couple of emoticons mapped to Unicode characters, and one mapped to an image. You could map them
+// to spritesheets or whatever else
 $configurator->Emoticons->add(':)', '&#x263A;');
 $configurator->Emoticons->add(':(', '&#x263B;');
+$configurator->Emoticons->add(':lol:', '<img src="/path/to/lol.png" alt=":lol:"/>');
 
 // We'll also allow a bit of HTML. Specifically, <a> elements with a non-optional href attribute and
 // HTML entities
 $configurator->HTMLElements->allowElement('a');
 $configurator->HTMLElements->allowAttribute('a', 'href')->required = true;
 
-// Automatically linkify URLs in plain text with the Autolink plugin
+// Automatically linkify URLs in plain text with the Autolink plugin, and email addresses with the
+// Autoemail plugin
+$configurator->Autoemail;
 $configurator->Autolink;
-
-// Finally, instead of having to explicitly define what tag is allowed where and how, we'll let the
-// configurator define a bunch of rules based on HTML5
-$configurator->addHTML5Rules();
-
-// ...or uncomment the following for a look at what rules would be created
-//print_r($configurator->rulesGenerator->getRules($configurator->tags));
 
 //==============================================================================
 
 // Done with configuration, now we create a parser and its renderer
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+extract($configurator->finalize());
 
 // The parser and renderer should be cached somewhere so we don't have recreate them every time
 //file_put_contents('/tmp/parser.txt',   serialize($parser));
