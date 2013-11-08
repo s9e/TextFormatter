@@ -1,6 +1,6 @@
 ## À la carte: make your own bundle
 
-Predefined bundles are nice, but they're not configurable. Here's how you can create your own bundle. For convenience, we'll base our custom bundle on the default "Forum" bundle.
+Predefined bundles are nice, but they're not configurable. Here's how you can create your own bundle. For convenience, we'll base our custom bundle on the default "Forum" bundle. We load the bundle in our configurator, extend/reconfigure it and save it under a new name.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
@@ -18,6 +18,10 @@ $configurator->Emoticons->set(':mad:', '<img src="/path/to/mad.png" alt="Mad"/>'
 
 // Also, we want the output to be XHTML, not HTML
 $configurator->stylesheet->outputMethod = 'xml';
+
+// OPTIONAL: we use the PHP renderer instead of the default XSL renderer.
+//           It will create a new class file in the /tmp directory
+$configurator->setRendererGenerator('PHP', '/tmp');
 
 // Save the bundle to /tmp/Bundle.php
 $configurator->saveBundle('My\Bundle', '/tmp/Bundle.php');
