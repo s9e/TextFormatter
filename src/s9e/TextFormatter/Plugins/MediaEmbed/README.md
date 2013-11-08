@@ -169,7 +169,7 @@ echo $html;
 	<tr>
 		<td><code>hulu</code></td>
 		<td>Hulu</td>
-		<td>http://www.hulu.com/watch/445716</td>
+		<td>http://www.hulu.com/watch/484180</td>
 	</tr>
 	<tr>
 		<td><code>ign</code></td>

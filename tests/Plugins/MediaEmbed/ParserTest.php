@@ -407,8 +407,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.hulu.com/watch/445716',
-				'<rt><HULU id="lbxMKBY8oOd3pvOBhM8lqQ" url="http://www.hulu.com/watch/445716">http://www.hulu.com/watch/445716</HULU></rt>',
+				'http://www.hulu.com/watch/484180',
+				'<rt><HULU id="zPFCgxncn97IFkqEnZ-kRA" url="http://www.hulu.com/watch/484180">http://www.hulu.com/watch/484180</HULU></rt>',
 				[],
 				function ($configurator)
 				{
@@ -472,6 +472,7 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('traileraddict');
 				}
 			],
