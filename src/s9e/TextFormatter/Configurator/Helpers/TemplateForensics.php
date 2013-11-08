@@ -107,9 +107,9 @@ class TemplateForensics
 	protected $leafNodes = [];
 
 	/**
-	* @var bool Whether any branch has an element that preserves whitespace by default (e.g. <pre>)
+	* @var bool Whether any branch has an element that preserves new lines by default (e.g. <pre>)
 	*/
-	protected $preservesWhitespace = false;
+	protected $preservesNewLines = false;
 
 	/**
 	* @var array Bitfield of the first HTML element of every branch
@@ -321,9 +321,9 @@ class TemplateForensics
 	*
 	* @return bool
 	*/
-	public function preservesWhitespace()
+	public function preservesNewLines()
 	{
-		return $this->preservesWhitespace;
+		return $this->preservesNewLines;
 	}
 
 	/**
@@ -495,7 +495,7 @@ class TemplateForensics
 				// Test whether this branch preserves whitespace
 				if ($this->hasProperty($elName, 'pre', $node))
 				{
-					$this->preservesWhitespace = true;
+					$this->preservesNewLines = true;
 				}
 
 				// Test whether this branch allows elements

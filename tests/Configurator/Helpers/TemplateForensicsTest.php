@@ -497,17 +497,17 @@ class TemplateForensicsTest extends Test
 			[
 				'<pre> preserves whitespace',
 				'<pre><xsl:apply-templates/></pre>',
-				'preservesWhitespace'
+				'preservesNewLines'
 			],
 			[
 				'<pre><code> preserves whitespace',
 				'<pre><code><xsl:apply-templates/></code></pre>',
-				'preservesWhitespace'
+				'preservesNewLines'
 			],
 			[
 				'<span> does not preserve whitespace',
 				'<span><xsl:apply-templates/></span>',
-				'!preservesWhitespace'
+				'!preservesNewLines'
 			],
 			[
 				'<img/> is void',

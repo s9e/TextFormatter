@@ -17,6 +17,6 @@ class NoBrIfWhitespaceIsPreserved implements BooleanRulesGenerator
 	*/
 	public function generateBooleanRules(TemplateForensics $src)
 	{
-		return ($src->preservesWhitespace()) ? ['noBrDescendant' => true] : [];
+		return ($src->preservesNewLines()) ? ['noBrDescendant' => true] : [];
 	}
 }
