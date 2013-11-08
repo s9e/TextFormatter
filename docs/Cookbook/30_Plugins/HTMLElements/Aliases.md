@@ -20,8 +20,8 @@ $configurator->HTMLElements->aliasAttribute('a', 'href', 'url');
 // Limit the number of URL tags to 3
 $configurator->tags['URL']->tagLimit = 3;
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'http://example.org/1
 [url=http://example.org/2]Second link[/url]

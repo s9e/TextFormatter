@@ -38,8 +38,8 @@ $configurator->MediaEmbed->add(
 	]
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[youtube]http://www.youtube.com/watch?v=-cEzsCAzTak[/youtube]';
 $xml  = $parser->parse($text);
@@ -69,8 +69,8 @@ $configurator->MediaEmbed->add(
 	]
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[media]http://www.youtube.com/watch?v=-cEzsCAzTak[/media]';
 $xml  = $parser->parse($text);
@@ -100,8 +100,8 @@ $configurator->MediaEmbed->add(
 	]
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[media]http://www.dailymotion.com/video/x222z1[/media]';
 $xml  = $parser->parse($text);
@@ -145,8 +145,8 @@ EOT
 	]
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[media]http://www.twitch.tv/minigolf2000/b/419320018[/media]';
 $xml  = $parser->parse($text);
@@ -185,8 +185,8 @@ $configurator->MediaEmbed->add(
 	]
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites';
 $xml  = $parser->parse($text);
@@ -227,8 +227,8 @@ $configurator->MediaEmbed->add(
 	]
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'http://grooveshark.com/#!/s/Soul+Below/4zGL7i';
 $xml  = $parser->parse($text);

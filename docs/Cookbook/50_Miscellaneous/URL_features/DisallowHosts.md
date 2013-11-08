@@ -10,9 +10,12 @@ $configurator->urlConfig->disallowHost('example.org');
 // Test the URL config with the Autolink plugin
 $configurator->Autolink;
 
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
 $text = implode("\n", ['http://example.org', 'http://notexample.org', 'http://www.example.org']);
-$xml  = $configurator->getParser()->parse($text);
-$html = $configurator->getRenderer()->render($xml);
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
 
 echo $html;
 ```
@@ -32,9 +35,12 @@ $configurator->urlConfig->disallowHost('*example*');
 // Test the URL config with the Autolink plugin
 $configurator->Autolink;
 
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
 $text = implode("\n", ['http://example.org', 'http://notexample.org', 'http://www.example.org']);
-$xml  = $configurator->getParser()->parse($text);
-$html = $configurator->getRenderer()->render($xml);
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
 
 echo $html;
 ```

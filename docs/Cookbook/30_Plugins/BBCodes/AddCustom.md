@@ -13,8 +13,8 @@ $configurator->BBCodes->addCustom(
 	'<span style="font-size:{RANGE}px">{TEXT}</span>'
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 // Note how values outside of range are automatically adjusted
 $text = '[size=5]Small text[/size], [size=24]big[/size], [size=999]biggest[/size].';

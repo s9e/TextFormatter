@@ -14,8 +14,8 @@ $configurator->Emoticons->add(':(', '<img src="sad.png" alt=":(" title="Sad">');
 $configurator->Emoticons->notAfter  = '\\S';
 $configurator->Emoticons->notBefore = '\\S';
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = "Emoticons surrounded with whitespace: :) :(\nSame without whitespace:              :):(";
 $xml  = $parser->parse($text);

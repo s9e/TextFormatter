@@ -28,8 +28,8 @@ $tag->defaultTemplate
 $tag->templates['count(ancestor::QUOTE) mod 2']
 	= '<blockquote class="even"><xsl:apply-templates/></blockquote>';
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[quote][quote][quote]...[/quote][/quote][/quote]';
 $xml  = $parser->parse($text);

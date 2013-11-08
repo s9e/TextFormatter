@@ -13,8 +13,8 @@ $configurator->BBCodes->addCustom('[you]', '<xsl:value-of select="$username"/>')
 // Create the stylesheet parameter "username" with default value "you"
 $configurator->stylesheet->parameters['username'] = 'you';
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Hello [you]';
 $xml  = $parser->parse($text);
@@ -49,8 +49,8 @@ $configurator->BBCodes->addCustom(
 // because you'll need it at rendering time
 $usedParameters = $configurator->stylesheet->getUsedParameters();
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Are you are logged in? [noguests]Yes you are.[/noguests]';
 $xml  = $parser->parse($text);

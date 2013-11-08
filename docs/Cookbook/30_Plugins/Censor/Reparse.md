@@ -9,8 +9,8 @@ For the Censor plugin on the other hand, it means that words that were not censo
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Censor;
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 // Create an "old" parsed text that contains no censored words.
 // The result will be: <pt>Hello world</pt>

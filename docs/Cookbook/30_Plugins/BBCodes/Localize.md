@@ -17,8 +17,8 @@ $configurator->BBCodes->addCustom(
 EOT
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[spoiler]Gandalf kills Voldermort[/spoiler]';
 $xml  = $parser->parse($text);

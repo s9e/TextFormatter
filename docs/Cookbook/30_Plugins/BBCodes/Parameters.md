@@ -23,8 +23,8 @@ $configurator->BBCodes->addCustom(
 	</xsl:choose>'
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[noguests]Some [color=red]top secret[/color] info[/noguests]';
 $xml  = $parser->parse($text);

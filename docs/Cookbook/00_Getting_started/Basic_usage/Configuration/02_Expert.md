@@ -50,16 +50,15 @@ $configurator->MediaEmbed->add('youtube');
 $configurator->Emoticons->add(':)', '<img src="/path/to/happy.png" alt=":)" title="Happy" />');
 $configurator->Emoticons->add(':(', '<img src="/path/to/sad.png" alt=":(" title="Sad" />');
 
-// If you want, you can set rules governing which tags are allowed where, using
-// whitelists and blacklists, and you can tell how list items should be closed
-// and a bunch of other rules. Or if you're lazy, you can ask the configurator
-// to figure it out and do it for you
-$configurator->addHTML5Rules();
+// finalize() will return an array that contains an instance of the parser and
+// an instance of the renderer. If you use extract() it will create $parser and
+// $renderer. It will also automatically generate tag rules and finalize the
+// plugins' config
+extract($configurator->finalize());
 
-// Now that we're done configuring, generate a parser and a renderer and save
-// them to the disk wherever you want
-file_put_contents('/tmp/parser.txt',   serialize($configurator->getParser()));
-file_put_contents('/tmp/renderer.txt', serialize($configurator->getRenderer()));
+// We save the parser and the renderer to the disk for easy reuse
+file_put_contents('/tmp/parser.txt',   serialize($parser));
+file_put_contents('/tmp/renderer.txt', serialize($renderer));
 ```
 
 ### Parsing

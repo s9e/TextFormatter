@@ -10,8 +10,8 @@ $configurator->MediaEmbed->appendTemplate(
 );
 $configurator->MediaEmbed->add('youtube');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[youtube]http://www.youtube.com/watch?v=-cEzsCAzTak[/youtube]';
 $xml  = $parser->parse($text);

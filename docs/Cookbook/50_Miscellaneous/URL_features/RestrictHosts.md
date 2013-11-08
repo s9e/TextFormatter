@@ -11,9 +11,12 @@ $configurator->urlConfig->restrictHost('example.org');
 // Test the URL config with the Autolink plugin
 $configurator->Autolink;
 
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
 $text = implode("\n", ['http://example.com', 'http://notexample.org', 'http://www.example.org']);
-$xml  = $configurator->getParser()->parse($text);
-$html = $configurator->getRenderer()->render($xml);
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
 
 echo $html;
 ```
@@ -52,12 +55,15 @@ $configurator
 	->attributes['src']
 	->filterChain[0]->setVar('urlConfig', $urlConfig);
 
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
 // Images should be restricted to i.imgur.com while other links have no restrictions
 $text = "[img=http://i.imgur.com/EMD4m1Q.png /]\n"
       . "[img=http://notimgur.example.org/EMD4m1Q.png /]\n"
       . "[link=http://example.org /]";
-$xml  = $configurator->getParser()->parse($text);
-$html = $configurator->getRenderer()->render($xml);
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
 
 echo $html;
 ```

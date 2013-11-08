@@ -7,8 +7,8 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Emoticons->add(':)', '<img src="happy.png" alt=":)" title="Happy">');
 $configurator->Emoticons->add(':(', '<img src="sad.png" alt=":(" title="Sad">');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Hello world :) :(';
 $xml  = $parser->parse($text);

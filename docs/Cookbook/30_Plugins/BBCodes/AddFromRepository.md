@@ -6,8 +6,8 @@ $configurator->BBCodes->addFromRepository('B');
 $configurator->BBCodes->addFromRepository('I');
 $configurator->BBCodes->addFromRepository('URL');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Here be [url=http://example.org]the [b]bold[/b] [i]italic[/i] URL[/url].';
 $xml  = $parser->parse($text);
@@ -25,8 +25,8 @@ Here be <a href="http://example.org">the <b>bold</b> <i>italic</i> URL</a>.
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->BBCodes->addFromRepository('SIZE', 'default', ['min' => 5, 'max' => 40]);
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = "[size=1]Smallest[/size]\n[size=99]Biggest[/size]";
 $xml  = $parser->parse($text);
