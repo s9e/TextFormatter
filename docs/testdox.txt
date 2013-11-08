@@ -460,9 +460,14 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
  [x] <script> does not allow elements even if it has an <xsl:apply-templates/> child
  [x] <script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child
  [x] <script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child
- [x] <pre> preserves whitespace
- [x] <pre><code> preserves whitespace
- [x] <span> does not preserve whitespace
+ [x] <pre> preserves new lines
+ [x] <pre><code> preserves new lines
+ [x] <span> does not preserve new lines
+ [x] <span style="white-space: pre"> preserves new lines
+ [x] <span><xsl:if test="@foo"><xsl:attribute name="style">white-space:pre</xsl:attribute></xsl:if> preserves new lines
+ [x] <pre style="white-space: normal"> does not preserve new lines
+ [x] <span style="white-space: pre-line"><span style="white-space: inherit"> preserves new lines
+ [x] <span style="white-space: pre"><span style="white-space: normal"> preserves new lines
  [x] <img/> is void
  [x] <img> is void even with a <xsl:apply-templates/> child
  [x] <span> is not void

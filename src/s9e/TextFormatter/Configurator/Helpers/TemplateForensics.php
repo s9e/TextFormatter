@@ -455,6 +455,11 @@ class TemplateForensics
 			*/
 			$leafNode = null;
 
+			/**
+			* @var boolean Whether this branch preserves new lines
+			*/
+			$preservesNewLines = false;
+
 			foreach ($nodes as $node)
 			{
 				$elName = $leafNode = $node->localName;
@@ -492,12 +497,6 @@ class TemplateForensics
 					$isFormattingElement = false;
 				}
 
-				// Test whether this branch preserves whitespace
-				if ($this->hasProperty($elName, 'pre', $node))
-				{
-					$this->preservesNewLines = true;
-				}
-
 				// Test whether this branch allows elements
 				$allowsElements = !$this->hasProperty($elName, 'to', $node);
 
@@ -509,6 +508,40 @@ class TemplateForensics
 
 				// denyDescendant rules are cumulative
 				$this->denyDescendantBitfield |= $this->getBitfield($elName, 'dd', $node);
+
+				// Test whether this branch preserves whitespace by inspecting the current element
+				// and the value of its style attribute. Technically, this block of code also tests
+				// this element's descendants' style attributes but the result is the same as we
+				// need to check every element of this branch in order
+				$style = '';
+
+				if ($this->hasProperty($elName, 'pre', $node))
+				{
+					$style .= 'white-space:pre;';
+				}
+
+				if ($node->hasAttribute('style'))
+				{
+					$style .= $node->getAttribute('style') . ';';
+				}
+
+				$attributes = $this->xpath->query('.//xsl:attribute[@name="style"]', $node);
+				foreach ($attributes as $attribute)
+				{
+					$style .= $attribute->textContent;
+				}
+
+				preg_match_all(
+					'/white-space\\s*:\\s*(no|pre)/i',
+					strtolower($style),
+					$matches
+				);
+				foreach ($matches[1] as $match)
+				{
+					// TRUE:  "pre", "pre-line" and "pre-wrap"
+					// FALSE: "normal", "nowrap"
+					$preservesNewLines = ($match === 'pre');
+				}
 			}
 
 			// Add this branch's bitfield to the list
@@ -542,6 +575,12 @@ class TemplateForensics
 			if (!$isVoid)
 			{
 				$this->isVoid = false;
+			}
+
+			// If any branch preserves new lines, the template preserves new lines
+			if ($preservesNewLines)
+			{
+				$this->preservesNewLines = true;
 			}
 		}
 
