@@ -304,13 +304,14 @@ var BuiltInFilters =
 		* ( and ) to prevent the use of functions in JavaScript (eval()) or CSS (expression())
 		* < and > to prevent breaking out of <script>
 		* \r and \n because they're illegal in JavaScript
-		* [ and ] because the W3 validator rejects and they may be illegal in URIs
+		* [ and ] because the W3 validator rejects and they "should" be escaped as per RFC 3986
 		* Non-ASCII characters as per RFC 3986
-		* Control codes and spaces, which may be illegal in URIs
+		* Control codes and spaces, as per RFC 3986
 		*
 		* @link http://sla.ckers.org/forum/read.php?2,51478
 		* @link http://timelessrepo.com/json-isnt-a-javascript-subset
 		* @link http://www.ietf.org/rfc/rfc3986.txt
+		* @link http://stackoverflow.com/a/1547922
 		*/
 		attrValue = attrValue.replace(/["'()<>[\]\x00-\x20\x7F]+/g, escape).replace(/[^\u0020-\u007E]+/g, encodeURIComponent);
 
