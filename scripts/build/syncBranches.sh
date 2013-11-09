@@ -15,9 +15,6 @@ do
 	git commit -a --no-verify -m"$msg"
 	git checkout dev/php$version
 	git merge -Xtheirs -m"$msg" $branch
-
-	git checkout release/php$version
-	git merge -Xtheirs -m"$msg" dev/php$version
 done
 
 git checkout master
