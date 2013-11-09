@@ -30,7 +30,7 @@ do
 	do
 		if [ -a "$file" ]
 		then
-			git rm -r --cached --quiet "$file"
+			git rm -r --cached --quiet "$file" 2> /dev/null
 		fi
 	done
 
