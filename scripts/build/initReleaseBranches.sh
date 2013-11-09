@@ -30,11 +30,11 @@ do
 	do
 		if [ -a "$file" ]
 		then
-			git rm -r --cached --quiet "$file" > /dev/null
+			git rm -r --cached --quiet "$file"
 		fi
 	done
 
-	git commit -a --no-verify -m"Initialized release branch from $src"
+	git commit -a --no-verify -m"Initialized release branch from $src" --quiet
 done
 
 git checkout master
