@@ -8,7 +8,7 @@ s9e\\TextFormatter is developed on PHP 5.5 and is compatible with PHP 5.3.3 and 
 ```json
 {
     "require": {
-        "s9e/text-formatter": "dev-dev/php5.3"
+        "s9e/text-formatter": "dev-release/php5.3"
     }
 }
 ```
@@ -17,7 +17,7 @@ s9e\\TextFormatter is developed on PHP 5.5 and is compatible with PHP 5.3.3 and 
 ```json
 {
     "require": {
-        "s9e/text-formatter": "dev-dev/php5.4"
+        "s9e/text-formatter": "dev-release/php5.4"
     }
 }
 ```
@@ -26,7 +26,7 @@ s9e\\TextFormatter is developed on PHP 5.5 and is compatible with PHP 5.3.3 and 
 ```json
 {
     "require": {
-        "s9e/text-formatter": "dev-master"
+        "s9e/text-formatter": "dev-release/php5.5"
     }
 }
 ```
@@ -37,7 +37,7 @@ Clone this repository and use the bundled autoloader.
 
 #### PHP 5.3
 ```bash
-git clone https://github.com/s9e/TextFormatter.git -b dev/php5.3
+git clone https://github.com/s9e/TextFormatter.git -b release/php5.3
 ```
 ```php
 include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
@@ -45,7 +45,7 @@ include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
 
 #### PHP 5.4
 ```bash
-git clone https://github.com/s9e/TextFormatter.git -b dev/php5.4
+git clone https://github.com/s9e/TextFormatter.git -b release/php5.4
 ```
 ```php
 include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
@@ -53,7 +53,7 @@ include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
 
 #### PHP 5.5
 ```bash
-git clone https://github.com/s9e/TextFormatter.git -b master
+git clone https://github.com/s9e/TextFormatter.git -b release/php5.5
 ```
 ```php
 include 'TextFormatter/src/s9e/TextFormatter/autoloader.php';
