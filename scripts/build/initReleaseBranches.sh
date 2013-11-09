@@ -30,7 +30,7 @@ do
 	do
 		if [ -a "$file" ]
 		then
-			git rm -r --cached "$file"
+			git rm -r --cached --quiet "$file"
 		fi
 	done
 
