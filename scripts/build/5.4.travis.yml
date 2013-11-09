@@ -1,5 +1,10 @@
 language: php
 php: "5.4"
+branches:
+  except:
+    - release/php5.5
+    - release/php5.4
+    - release/php5.3
 env:
   - CLOSURE_COMPILER=/tmp/compiler.jar
 before_script:
