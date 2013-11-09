@@ -1,8 +1,8 @@
 #!/bin/bash
 
 git checkout master
-ignore=
 
+ignore=
 for file in $(ls -1A);
 do
 	if [[ "$file" != .git* && "$file" != "composer.json" && "$file" != "LICENSE" && "$file" != "README.md" && "$file" != "src" && "$file" != ".travis.yml" ]]
