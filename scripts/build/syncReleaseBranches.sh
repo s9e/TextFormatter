@@ -23,7 +23,7 @@ do
 	fi
 
 	git checkout "$branch"
-	git merge --squash -Xtheirs "$src"
+	git merge --squash -Xours "$src"
 	echo "$ignore" > .gitignore
 
 	for file in $ignore;
