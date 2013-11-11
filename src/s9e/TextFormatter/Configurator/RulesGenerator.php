@@ -43,7 +43,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$this->collection->append('IgnoreTagsInCode');
 		$this->collection->append('IgnoreTextIfDisallowed');
 		$this->collection->append('IgnoreWhitespaceAroundBlockElements');
-		$this->collection->append('NoBrIfWhitespaceIsPreserved');
+		$this->collection->append('NoBrIfNewLinesArePreserved');
 	}
 
 	/**

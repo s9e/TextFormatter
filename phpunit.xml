@@ -104,7 +104,7 @@
 			<file>tests/Configurator/RulesGenerators/IgnoreTextIfDisallowedTest.php</file>
 			<file>tests/Configurator/RulesGenerators/IgnoreWhitespaceAroundBlockElementsTest.php</file>
 			<file>tests/Configurator/RulesGenerators/ManageParagraphsTest.php</file>
-			<file>tests/Configurator/RulesGenerators/NoBrIfWhitespaceIsPreservedTest.php</file>
+			<file>tests/Configurator/RulesGenerators/NoBrIfNewLinesArePreservedTest.php</file>
 			<file>tests/Configurator/RulesGeneratorTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/ConvertCurlyExpressionsInTextTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>

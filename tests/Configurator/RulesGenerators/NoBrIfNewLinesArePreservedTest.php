@@ -3,9 +3,9 @@
 namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 
 /**
-* @covers s9e\TextFormatter\Configurator\RulesGenerators\NoBrIfWhitespaceIsPreserved
+* @covers s9e\TextFormatter\Configurator\RulesGenerators\NoBrIfNewLinesArePreserved
 */
-class NoBrIfWhitespaceIsPreservedTest extends AbstractTest
+class NoBrIfNewLinesArePreservedTest extends AbstractTest
 {
 	/**
 	* @testdox Does not generate a noBrDescendant rule for <ol>

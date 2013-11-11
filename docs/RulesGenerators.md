@@ -71,10 +71,10 @@ Generates an <code>ignoreSurroundingWhitespace</code> rule for tags that render 
 Generates <code>createParagraphs</code> rules for tags that render their content in a "block" element and <code>breakParagraph</code> for elements whose template automatically closes current paragraph as per HTML5's optional tags rules.
 </dd>
 
-<dt>NoBrIfWhitespaceIsPreserved</dt>
+<dt>NoBrIfNewLinesArePreserved</dt>
 <dd>
 <i>Purpose: convenience. Default: enabled.</i><br/>
-Generates a <code>noBrDescendant</code> rule for tags that render their content in an element that defaults to preserving whitespace, such as <code>pre</code>.
+Generates a <code>noBrDescendant</code> rule for tags that render their content in an element that defaults to preserving new lines such as <code>pre</code>, or in an element that has a style attribute that preserves new lines such as <code>&lt;div style="white-space: pre"&gt;</code>.
 </dd>
 
 </dl>

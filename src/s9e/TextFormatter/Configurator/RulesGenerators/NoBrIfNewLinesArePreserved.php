@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Configurator\RulesGenerators;
 use s9e\TextFormatter\Configurator\Helpers\TemplateForensics;
 use s9e\TextFormatter\Configurator\RulesGenerators\Interfaces\BooleanRulesGenerator;
 
-class NoBrIfWhitespaceIsPreserved implements BooleanRulesGenerator
+class NoBrIfNewLinesArePreserved implements BooleanRulesGenerator
 {
 	/**
 	* {@inheritdoc}

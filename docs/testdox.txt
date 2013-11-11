@@ -1091,7 +1091,7 @@ s9e\TextFormatter\Tests\Configurator\RulesGenerators\ManageParagraphs
  [x] Generates a breakParagraph and a createParagraphs rule for <blockquote>
  [x] Generates a breakParagraph rule but no createParagraphs rule for <p>
 
-s9e\TextFormatter\Tests\Configurator\RulesGenerators\NoBrIfWhitespaceIsPreserved
+s9e\TextFormatter\Tests\Configurator\RulesGenerators\NoBrIfNewLinesArePreserved
  [x] Does not generate a noBrDescendant rule for <ol>
  [x] Generates a noBrDescendant rule for <pre>
 
