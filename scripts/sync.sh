@@ -8,6 +8,6 @@ wait
 
 cd ../../s9e.github.io/TextFormatter
 
-git add *
+git add -A *
 git commit -a -m "Synced"
 git push
