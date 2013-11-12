@@ -1032,6 +1032,8 @@ s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService
  [x] The cache key depends on the compilation level
  [x] The cache key depends on whether the default externs are excluded
  [x] If the default externs are excluded, the custom externs are baked into the cache key
+ [x] Throws an exception in case of a request failure
+ [x] Throws an exception if the response isn't valid JSON
  [x] Throws an exception in case of a server error
  [x] Throws an exception in case of a compilation error
 

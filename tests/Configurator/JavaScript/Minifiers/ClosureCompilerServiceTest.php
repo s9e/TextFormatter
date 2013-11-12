@@ -151,6 +151,32 @@ class ClosureCompilerServiceTest extends Test
 	}
 
 	/**
+	* @testdox Throws an exception in case of a request failure
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Could not contact the Closure Compiler service
+	*/
+	public function testRequestFailure()
+	{
+		$minifier = new ClosureCompilerService;
+		$minifier->url = 'data:text/plain,';
+
+		$minifier->minify('alert()');
+	}
+
+	/**
+	* @testdox Throws an exception if the response isn't valid JSON
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Closure Compiler service returned invalid JSON: Syntax error
+	*/
+	public function testJSONError()
+	{
+		$minifier = new ClosureCompilerService;
+		$minifier->url = 'data:text/plain,foo';
+
+		$minifier->minify('alert()');
+	}
+
+	/**
 	* @testdox Throws an exception in case of a server error
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Server error 4: Unknown compression level: UNKNOWN

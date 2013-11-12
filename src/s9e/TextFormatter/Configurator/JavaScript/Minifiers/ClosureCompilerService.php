@@ -82,7 +82,7 @@ class ClosureCompilerService extends Minifier
 		// Got to add dupe variables by hand
 		$content = http_build_query($params) . '&output_info=errors';
 
-		$response = json_decode(file_get_contents(
+		$response = file_get_contents(
 			$this->url,
 			false,
 			stream_context_create([
@@ -94,7 +94,18 @@ class ClosureCompilerService extends Minifier
 					'content' => $content
 				]
 			])
-		), true);
+		);
+
+		if (!$response)
+		{
+			throw new RuntimeException('Could not contact the Closure Compiler service');
+		}
+
+		$response = json_decode($response, true);
+		if (is_null($response))
+		{
+			throw new RuntimeException('Closure Compiler service returned invalid JSON: ' . json_last_error_msg());
+		}
 
 		if (isset($response['serverErrors'][0]))
 		{
