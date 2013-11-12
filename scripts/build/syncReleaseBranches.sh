@@ -1,7 +1,5 @@
 #!/bin/bash
 
-git checkout master
-
 ignore=
 for file in $(ls -1A);
 do
@@ -22,6 +20,7 @@ do
 		src="dev/php$version"
 	fi
 
+	git checkout master
 	git checkout "$branch"
 	git merge --squash -Xours "$src"
 	echo "$ignore" > .gitignore
@@ -30,11 +29,11 @@ do
 	do
 		if [ -a "$file" ]
 		then
-			git rm -r --cached --quiet "$file" 2> /dev/null
+			git rm -r --cached "$file"
 		fi
 	done
 
-	git commit -a --no-verify -m"Synced release branch from $src" --quiet
+	git commit -a --no-verify -m"Synced release branch from $src"
 done
 
 git checkout master
