@@ -1460,6 +1460,8 @@ s9e\TextFormatter\Tests\Configurator\UrlConfig
  [x] disallowScheme() removes a scheme from the list of allowed schemes
  [x] allowScheme('ftp') allows "ftp" as scheme
  [x] allowScheme('<invalid>') throws an exception
+ [x] allowScheme('javascript') throws an exception
+ [x] allowScheme('javaScript') throws an exception
  [x] There is no default scheme by default
  [x] setDefaultScheme('http') sets "http" as default scheme
  [x] setDefaultScheme('<invalid>') throws an exception

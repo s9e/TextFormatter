@@ -74,9 +74,15 @@ class UrlConfig implements ConfigProvider
 	* Allow a URL scheme
 	*
 	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
+	* @return void
 	*/
 	public function allowScheme($scheme)
 	{
+		if (strtolower($scheme) === 'javascript')
+		{
+			throw new RuntimeException('The JavaScript URL scheme cannot be allowed');
+		}
+
 		$this->allowedSchemes[] = $scheme;
 	}
 
@@ -100,7 +106,8 @@ class UrlConfig implements ConfigProvider
 	/**
 	* Remove a scheme from the list of allowed URL schemes
 	*
-	* @param string $scheme URL scheme, e.g. "file" or "ed2k"
+	* @param  string $scheme URL scheme, e.g. "file" or "ed2k"
+	* @return void
 	*/
 	public function disallowScheme($scheme)
 	{

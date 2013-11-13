@@ -340,6 +340,26 @@ class UrlConfigTest extends Test
 	}
 
 	/**
+	* @testdox allowScheme('javascript') throws an exception
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage The JavaScript URL scheme cannot be allowed
+	*/
+	public function testAllowSchemeJavaScript()
+	{
+		$this->urlConfig->allowScheme('javascript');
+	}
+
+	/**
+	* @testdox allowScheme('javaScript') throws an exception
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage The JavaScript URL scheme cannot be allowed
+	*/
+	public function testAllowSchemeJavaScriptCase()
+	{
+		$this->urlConfig->allowScheme('javaScript');
+	}
+
+	/**
 	* @testdox There is no default scheme by default
 	*/
 	public function testNoDefaultScheme()
