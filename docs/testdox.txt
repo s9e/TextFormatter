@@ -446,6 +446,12 @@ s9e\TextFormatter\Tests\Configurator\Helpers\TemplateForensics
  [x] <table> allows <xsl:text>  </xsl:text>
  [x] <b> is a formatting element
  [x] <b><u> is a formatting element
+ [x] <span> is not a formatting element
+ [x] <span class="..."> is a formatting element
+ [x] <span style="..."> is a formatting element
+ [x] <span class=""> is not a formatting element
+ [x] <span style=""> is not a formatting element
+ [x] <span style="..." onclick="..."> is not a formatting element
  [x] <div> is not a formatting element
  [x] <div><u> is not a formatting element
  [x] "Hi" is not a formatting element

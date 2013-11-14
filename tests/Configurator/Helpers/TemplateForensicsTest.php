@@ -145,98 +145,116 @@ class TemplateForensicsTest extends Test
 	/** @testdox <b><u> is a formatting element */
 	public function test845660E9() { $this->runCase(33); }
 
+	/** @testdox <span> is not a formatting element */
+	public function test19D60ECB() { $this->runCase(34); }
+
+	/** @testdox <span class="..."> is a formatting element */
+	public function testC7510D70() { $this->runCase(35); }
+
+	/** @testdox <span style="..."> is a formatting element */
+	public function test08F36A4A() { $this->runCase(36); }
+
+	/** @testdox <span class=""> is not a formatting element */
+	public function test27C4BD88() { $this->runCase(37); }
+
+	/** @testdox <span style=""> is not a formatting element */
+	public function testD9E668BC() { $this->runCase(38); }
+
+	/** @testdox <span style="..." onclick="..."> is not a formatting element */
+	public function testF18E5BC3() { $this->runCase(39); }
+
 	/** @testdox <div> is not a formatting element */
-	public function testA5F32A8C() { $this->runCase(34); }
+	public function testA5F32A8C() { $this->runCase(40); }
 
 	/** @testdox <div><u> is not a formatting element */
-	public function test2EF441C1() { $this->runCase(35); }
+	public function test2EF441C1() { $this->runCase(41); }
 
 	/** @testdox "Hi" is not a formatting element */
-	public function test14421B19() { $this->runCase(36); }
+	public function test14421B19() { $this->runCase(42); }
 
 	/** @testdox A template composed entirely of a single <xsl:apply-templates/> is not a formatting element */
-	public function testE1E4F3F4() { $this->runCase(37); }
+	public function testE1E4F3F4() { $this->runCase(43); }
 
 	/** @testdox <img> uses the "empty" content model */
-	public function test26941BF9() { $this->runCase(38); }
+	public function test26941BF9() { $this->runCase(44); }
 
 	/** @testdox <hr><xsl:apply-templates/></hr> uses the "empty" content model */
-	public function test11094568() { $this->runCase(39); }
+	public function test11094568() { $this->runCase(45); }
 
 	/** @testdox <div><hr><xsl:apply-templates/></hr></div> uses the "empty" content model */
-	public function testACE6126C() { $this->runCase(40); }
+	public function testACE6126C() { $this->runCase(46); }
 
 	/** @testdox <span> is not empty */
-	public function testBF70FDFF() { $this->runCase(41); }
+	public function testBF70FDFF() { $this->runCase(47); }
 
 	/** @testdox <colgroup span="2"> uses the "empty" content model */
-	public function testAA6266BB() { $this->runCase(42); }
+	public function testAA6266BB() { $this->runCase(48); }
 
 	/** @testdox <colgroup> does not use the "empty" content model */
-	public function test62BCC022() { $this->runCase(43); }
+	public function test62BCC022() { $this->runCase(49); }
 
 	/** @testdox <span> allows elements */
-	public function testB0AA2D8C() { $this->runCase(44); }
+	public function testB0AA2D8C() { $this->runCase(50); }
 
 	/** @testdox <script> does not allow elements even if it has an <xsl:apply-templates/> child */
-	public function test029EA650() { $this->runCase(45); }
+	public function test029EA650() { $this->runCase(51); }
 
 	/** @testdox <script> does not allow <span> as a child, even if it has an <xsl:apply-templates/> child */
-	public function testCAAEE63E() { $this->runCase(46); }
+	public function testCAAEE63E() { $this->runCase(52); }
 
 	/** @testdox <script> does not allow <span> as a descendant, even if it has an <xsl:apply-templates/> child */
-	public function testC2B440E5() { $this->runCase(47); }
+	public function testC2B440E5() { $this->runCase(53); }
 
 	/** @testdox <pre> preserves new lines */
-	public function testC726DD16() { $this->runCase(48); }
+	public function testC726DD16() { $this->runCase(54); }
 
 	/** @testdox <pre><code> preserves new lines */
-	public function test824949C9() { $this->runCase(49); }
+	public function test824949C9() { $this->runCase(55); }
 
 	/** @testdox <span> does not preserve new lines */
-	public function test1E3DCEEF() { $this->runCase(50); }
+	public function test1E3DCEEF() { $this->runCase(56); }
 
 	/** @testdox <span style="white-space: pre"> preserves new lines */
-	public function test1B533902() { $this->runCase(51); }
+	public function test1B533902() { $this->runCase(57); }
 
 	/** @testdox <span><xsl:if test="@foo"><xsl:attribute name="style">white-space:pre</xsl:attribute></xsl:if> preserves new lines */
-	public function testDD7861D0() { $this->runCase(52); }
+	public function testDD7861D0() { $this->runCase(58); }
 
 	/** @testdox <pre style="white-space: normal"> does not preserve new lines */
-	public function testEB8BE183() { $this->runCase(53); }
+	public function testEB8BE183() { $this->runCase(59); }
 
 	/** @testdox <span style="white-space: pre-line"><span style="white-space: inherit"> preserves new lines */
-	public function testACA921AF() { $this->runCase(54); }
+	public function testACA921AF() { $this->runCase(60); }
 
 	/** @testdox <span style="white-space: pre"><span style="white-space: normal"> preserves new lines */
-	public function testA1BAD462() { $this->runCase(55); }
+	public function testA1BAD462() { $this->runCase(61); }
 
 	/** @testdox <img/> is void */
-	public function test5D210713() { $this->runCase(56); }
+	public function test5D210713() { $this->runCase(62); }
 
 	/** @testdox <img> is void even with a <xsl:apply-templates/> child */
-	public function test53CD3F08() { $this->runCase(57); }
+	public function test53CD3F08() { $this->runCase(63); }
 
 	/** @testdox <span> is not void */
-	public function test2218364A() { $this->runCase(58); }
+	public function test2218364A() { $this->runCase(64); }
 
 	/** @testdox <xsl:apply-templates/> is not void */
-	public function test517E8D2B() { $this->runCase(59); }
+	public function test517E8D2B() { $this->runCase(65); }
 
 	/** @testdox <blockquote> is a block-level element */
-	public function test602395E3() { $this->runCase(60); }
+	public function test602395E3() { $this->runCase(66); }
 
 	/** @testdox <span> is not a block-level element */
-	public function testE222869D() { $this->runCase(61); }
+	public function testE222869D() { $this->runCase(67); }
 
 	/** @testdox <br/> is not passthrough */
-	public function test56F3372F() { $this->runCase(62); }
+	public function test56F3372F() { $this->runCase(68); }
 
 	/** @testdox <b/> is not passthrough */
-	public function test64B82909() { $this->runCase(63); }
+	public function test64B82909() { $this->runCase(69); }
 
 	/** @testdox <b><xsl:apply-templates/></b> is passthrough */
-	public function test3FC3E4F9() { $this->runCase(64); }
+	public function test3FC3E4F9() { $this->runCase(70); }
 	// End of content generated by ../../../../scripts/patchTemplateForensicsTest.php
 
 	public function getData()
@@ -436,6 +454,36 @@ class TemplateForensicsTest extends Test
 				'<b><u> is a formatting element',
 				'<b><u><xsl:apply-templates/></u></b>',
 				'isFormattingElement'
+			],
+			[
+				'<span> is not a formatting element',
+				'<span><xsl:apply-templates/></span>',
+				'!isFormattingElement'
+			],
+			[
+				'<span class="..."> is a formatting element',
+				'<span class="foo"><xsl:apply-templates/></span>',
+				'isFormattingElement'
+			],
+			[
+				'<span style="..."> is a formatting element',
+				'<span style="color:red"><xsl:apply-templates/></span>',
+				'isFormattingElement'
+			],
+			[
+				'<span class=""> is not a formatting element',
+				'<span class=""><xsl:apply-templates/></span>',
+				'!isFormattingElement'
+			],
+			[
+				'<span style=""> is not a formatting element',
+				'<span style=""><xsl:apply-templates/></span>',
+				'!isFormattingElement'
+			],
+			[
+				'<span style="..." onclick="..."> is not a formatting element',
+				'<span style="color:red" onclick="alert(1)"><xsl:apply-templates/></span>',
+				'!isFormattingElement'
 			],
 			[
 				'<div> is not a formatting element',

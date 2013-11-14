@@ -38,7 +38,6 @@ TODO
 - Consider adding an option to abort parsing when tagLimit is exceeded (good for Censor)
 - Class names collisions in s9e\TextFormatter\Bundles\S18\Helper
 - One cheap way to filter a CSS value would be to set an attribute preprocessor for every supported CSS attribute, e.g. /(?<!\w)color\s*:\s*(?<color>#[0-9a-f]+|\w+)/ - could be mentionned in cookbook
-- Consider declaring span a formatting element in TemplateForensics even though it's not listed in http://www.w3.org/TR/html5/syntax.html#formatting (only if it has @class or @style and no other attributes?)
 - MediaEmbed: http://www.reddit.com/r/videos/search?q=-site%3Ayoutube.com+-site%3Ayoutu.be+-site%3Aliveleak.com+-site%3Abreak.com+-site%3Afunnyordie.com+-site%3Avimeo.com+-site%3Acollegehumor.com+-site%3Adailymotion.com+-site%3Aworldstarhiphop.com+-site%3Acomedycentral.com&restrict_sr=on&sort=relevance&t=all
 - Consider a plugin that matches a list of keywords. e.g. movie names link to IMDB (bad example, too many movies in existence) or select keyword get an affiliate link or Hearthstone card names have tooltips
 - Systematically run ConfigHelper::optimizeArray() on a safe subset of the config, such as attribute filters(?)

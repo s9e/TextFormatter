@@ -492,7 +492,8 @@ class TemplateForensics
 				}
 
 				// Test whether this element is a formatting element
-				if (!$this->hasProperty($elName, 'fe', $node))
+				if (!$this->hasProperty($elName, 'fe', $node)
+				 && !$this->isFormattingSpan($node))
 				{
 					$isFormattingElement = false;
 				}
@@ -629,6 +630,39 @@ class TemplateForensics
 	protected function getXSLElements($elName)
 	{
 		return $this->dom->getElementsByTagNameNS('http://www.w3.org/1999/XSL/Transform', $elName);
+	}
+
+	/**
+	* Test whether given node is a span element used for formatting
+	*
+	* Will return TRUE if the node is a span element with a class attribute and/or a style attribute
+	* and no other attributes
+	*
+	* @param  DOMNode $node
+	* @return boolean
+	*/
+	protected function isFormattingSpan(DOMNode $node)
+	{
+		if ($node->nodeName !== 'span')
+		{
+			return false;
+		}
+
+		if ($node->getAttribute('class') === ''
+		 && $node->getAttribute('style') === '')
+		{
+			return false;
+		}
+
+		foreach ($node->attributes as $attrName => $attribute)
+		{
+			if ($attrName !== 'class' && $attrName !== 'style')
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
