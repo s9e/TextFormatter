@@ -237,6 +237,11 @@ echo $html;
 		<td>http://www.twitch.tv/minigolf2000<br/>http://www.twitch.tv/minigolf2000/c/2475925<br/>http://www.twitch.tv/minigolf2000/b/361358487<br/>http://www.twitch.tv/m/57217</td>
 	</tr>
 	<tr>
+		<td><code>ustream</code></td>
+		<td>Ustream</td>
+		<td>http://www.ustream.tv/channel/ps4-ustream-gameplay<br/>http://www.ustream.tv/baja1000tv<br/>http://www.ustream.tv/recorded/40688256</td>
+	</tr>
+	<tr>
 		<td><code>vimeo</code></td>
 		<td>Vimeo</td>
 		<td>http://vimeo.com/67207222<br/>http://vimeo.com/channels/staffpicks/67207222</td>

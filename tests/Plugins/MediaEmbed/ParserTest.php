@@ -487,6 +487,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
+				'<rt><USTREAM cid="16234409" url="http://www.ustream.tv/channel/ps4-ustream-gameplay">http://www.ustream.tv/channel/ps4-ustream-gameplay</USTREAM></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('ustream');
+				}
+			],
+			[
 				'http://vk.com/video-7016284_163645555',
 				'<rt><VK hash="eb5d7a5e6e1d8b71" oid="-7016284" url="http://vk.com/video-7016284_163645555" vid="163645555">http://vk.com/video-7016284_163645555</VK></rt>',
 				[],
@@ -570,6 +580,16 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('grooveshark');
+				}
+			],
+			[
+				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
+				'<iframe width="480" height="302" allowfullscreen="" frameborder="0" scrolling="no" src="http://www.ustream.tv/embed/16234409"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('ustream');
 				}
 			],
 		];
@@ -958,6 +978,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.ustream.tv/recorded/40771396',
+				'<rt><USTREAM url="http://www.ustream.tv/recorded/40771396" vid="40771396">http://www.ustream.tv/recorded/40771396</USTREAM></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ustream');
+				}
+			],
+			[
 				'http://vimeo.com/channels/staffpicks/67207222',
 				'<rt><VIMEO id="67207222" url="http://vimeo.com/channels/staffpicks/67207222">http://vimeo.com/channels/staffpicks/67207222</VIMEO></rt>',
 				[],
@@ -1323,6 +1352,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'http://www.ustream.tv/recorded/40771396',
+				'<iframe width="480" height="302" allowfullscreen="" frameborder="0" scrolling="no" src="http://www.ustream.tv/embed/recorded/40771396"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ustream');
 				}
 			],
 			[

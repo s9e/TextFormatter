@@ -452,6 +452,30 @@
 		]]></template>
 	</site>
 
+	<site id="ustream">
+		<name>Ustream</name>
+		<homepage>http://www.ustream.tv/</homepage>
+		<example>http://www.ustream.tv/channel/ps4-ustream-gameplay</example>
+		<example>http://www.ustream.tv/baja1000tv</example>
+		<example>http://www.ustream.tv/recorded/40688256</example>
+
+		<host>ustream.tv</host>
+		<extract>!ustream\.tv/recorded/(?'vid'\d+)!</extract>
+		<scrape>
+			<match>#ustream\.tv/(?!explore/|platform/|recorded/|search\?|upcoming$|user/)(?:channel/)?[-\w]+#</match>
+			<extract>!embed/(?'cid'\d+)!</extract>
+		</scrape>
+		<iframe width="480" height="302">
+			<src><![CDATA[
+				<xsl:text>http://www.ustream.tv/embed/</xsl:text>
+				<xsl:choose>
+					<xsl:when test="@vid">recorded/<xsl:value-of select="@vid"/></xsl:when>
+					<xsl:otherwise><xsl:value-of select="@cid"/></xsl:otherwise>
+				</xsl:choose>
+			]]></src>
+		</iframe>
+	</site>
+
 	<site id="vimeo">
 		<name>Vimeo</name>
 		<homepage>http://vimeo.com/</homepage>
