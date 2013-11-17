@@ -102,14 +102,19 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
-		$hosts = $schemes = [];
+		// Unicode char used as a placeholder for the regular expression that marks the beginning of
+		// a URL
+		$char = "\xEE\x80\x80";
+
+		$hasSchemes = false;
+		$patterns   = [];
 		foreach ($this->collection as $site)
 		{
 			if (isset($site['host']))
 			{
 				foreach ((array) $site['host'] as $host)
 				{
-					$hosts[] = $host;
+					$patterns[] = $char . $host . '/';
 				}
 			}
 
@@ -117,23 +122,10 @@ class Configurator extends ConfiguratorBase
 			{
 				foreach ((array) $site['scheme'] as $scheme)
 				{
-					$schemes[] = (string) $scheme;
+					$hasSchemes = true;
+					$patterns[] = $scheme . ':';
 				}
 			}
-		}
-
-		$patterns = [];
-
-		// Build the pattern used to capture stray HTTP(S) links
-		if ($hosts)
-		{
-			$patterns[] = 'https?://(?:[-\\w]+\\.)*' . RegexpBuilder::fromList($hosts) . '/';
-		}
-
-		// Build the pattern that matches the supported schemes
-		if ($schemes)
-		{
-			$patterns[] = RegexpBuilder::fromList($schemes) . ':';
 		}
 
 		if (empty($patterns))
@@ -141,17 +133,27 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
+		// Merge all the patterns
+		$regexp = RegexpBuilder::fromList(
+			$patterns,
+			[
+				'delimiter'    => '#',
+				'specialChars' => [$char => 'https?://(?:[-.\\w]+\\.)?']
+			]
+		);
+
+		// Replace the non-capturing subpattern at the start with an atomic group
+		$regexp = preg_replace('(^\\(\\?:)', '(?>', $regexp);
+
 		// Build the final regexp
 		$regexp = '#\\b'
-		        . ((count($patterns) > 1) ? '(?>' : '')
-		        . implode('|', $patterns)
-		        . ((count($patterns) > 1) ? ')' : '')
+		        . $regexp
 		        . '[^["\'\\s]+'
 		        . '(?!\\S)'
-		        . '#';
+		        . '#S';
 
 		return [
-			'quickMatch' => ($schemes) ? ':' : '://',
+			'quickMatch' => ($hasSchemes) ? ':' : '://',
 			'regexp'     => $regexp
 		];
 	}
