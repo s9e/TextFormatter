@@ -601,6 +601,84 @@ class ParserTest extends Test
 					);
 				}
 			],
+			[
+				'[media]http://example.com/baz[/media]',
+				'<pt>[media]http://example.com/baz[/media]</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'     => 'example.com',
+							'extract'  => [
+								"!example\\.com/(?<foo>foo)!",
+								"!example\\.com/(?<bar>bar)!"
+							],
+							'template' => 'foo'
+						]
+					);
+				}
+			],
+			[
+				'[media]http://example.com/foo[/media]',
+				'<rt><FOO foo="foo" url="http://example.com/foo">[media]http://example.com/foo[/media]</FOO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'     => 'example.com',
+							'extract'  => [
+								"!example\\.com/(?<foo>foo)!",
+								"!example\\.com/(?<bar>bar)!"
+							],
+							'template' => 'foo'
+						]
+					);
+				}
+			],
+			[
+				// @bar is invalid, no match == tag is invalidated
+				'[foo bar=BAR]http://example.com/baz[/foo]',
+				'<pt>[foo bar=BAR]http://example.com/baz[/foo]</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'     => 'example.com',
+							'extract'  => [
+								"!example\\.com/(?<foo>foo)!",
+								"!example\\.com/(?<bar>bar)!"
+							],
+							'template' => 'foo'
+						]
+					);
+				}
+			],
+			[
+				// No match on URL but @bar is valid == tag is kept
+				'[foo bar=bar]http://example.com/baz[/foo]',
+				'<rt><FOO bar="bar" url="http://example.com/baz"><st>[foo bar=bar]</st>http://example.com/baz<et>[/foo]</et></FOO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'     => 'example.com',
+							'extract'  => [
+								"!example\\.com/(?<foo>foo)!",
+								"!example\\.com/(?<bar>bar)!"
+							],
+							'template' => 'foo'
+						]
+					);
+				}
+			],
 			// =================================================================
 			// Bundled sites tests
 			// =================================================================

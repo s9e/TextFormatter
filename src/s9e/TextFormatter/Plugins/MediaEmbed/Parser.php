@@ -112,6 +112,25 @@ class Parser extends ParserBase
 	}
 
 	/**
+	* Test whether a given tag has at least one non-default attribute
+	*
+	* @param  Tag  $tag The original tag
+	* @return bool      Whether the tag contains an attribute not named "url"
+	*/
+	public static function hasNonDefaultAttribute(Tag $tag)
+	{
+		foreach ($tag->getAttributes() as $attrName => $void)
+		{
+			if ($attrName !== 'url')
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	* Scrape the content of an URL to extract some data
 	*
 	* @param  Tag    $tag          Source tag

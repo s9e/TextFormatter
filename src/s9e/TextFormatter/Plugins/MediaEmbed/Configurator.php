@@ -75,7 +75,7 @@ class Configurator extends ConfiguratorBase
 		    ->append([__NAMESPACE__ . '\\Parser', 'filterTag'])
 		    ->addParameterByName('parser')
 		    ->addParameterByName('mediasites')
-		    ->setJS(file_get_contents(__DIR__ . '/Parser/TagFilter.js'));
+		    ->setJS(file_get_contents(__DIR__ . '/Parser/tagFilter.js'));
 
 		// Create a [MEDIA] BBCode if applicable
 		if ($this->createBBCodes)
@@ -278,6 +278,7 @@ class Configurator extends ConfiguratorBase
 		}
 
 		// Create the attributes
+		$hasRequiredAttribute = false;
 		foreach ($attributes as $attrName => $attrConfig)
 		{
 			$attribute = $tag->attributes->add($attrName);
@@ -303,6 +304,8 @@ class Configurator extends ConfiguratorBase
 				// Non-id attributes are marked as optional
 				$attribute->required = ($attrName === 'id');
 			}
+
+			$hasRequiredAttribute |= $attribute->required;
 		}
 
 		// If there is an attribute named "id" we'll append its regexp to the list of attribute
@@ -313,6 +316,16 @@ class Configurator extends ConfiguratorBase
 			$attrRegexp = preg_replace('/\\^\\(\\?[:>]/', "^(?'id'", $attributes['id']['regexp']);
 
 			$tag->attributePreprocessors->add('url', $attrRegexp);
+		}
+
+		// If the tag definition does not have a required attribute, we use a filter to invalidate
+		// the tag at parsing time if it does not have a non-default attribute. In other words, if
+		// no attribute value is extracted, the tag is invalidated
+		if (!$hasRequiredAttribute)
+		{
+			$tag->filterChain
+			    ->append([__NAMESPACE__ . '\\Parser', 'hasNonDefaultAttribute'])
+			    ->setJS(file_get_contents(__DIR__ . '/Parser/hasNonDefaultAttribute.js'));
 		}
 
 		// Create a template for this media site based on the preferred rendering method

@@ -611,6 +611,62 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox add() appends Parser::hasNonDefaultAttribute() to the filter chain if the tag has no required attributes
+	*/
+	public function testAddFilterIfNoRequired()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.com',
+				'extract'  => [
+					"!example\\.com/(?<foo>\\d+)!",
+					"!example\\.com/(?<bar>\\D+)!"
+				],
+				'template' => 'foo'
+			]
+		);
+
+		$expected = 's9e\\TextFormatter\\Plugins\\MediaEmbed\\Parser::hasNonDefaultAttribute';
+		foreach ($tag->filterChain as $filter)
+		{
+			if ($filter->getCallback() === $expected)
+			{
+				return;
+			}
+		}
+
+		$this->fail('Could not find the expected callback');
+	}
+
+	/**
+	* @testdox add() does not test for non-default attributes if the tag has a required attribute
+	*/
+	public function testAddNoFilterIfRequired()
+	{
+		$tag = $this->configurator->MediaEmbed->add(
+			'foo',
+			[
+				'host'     => 'example.com',
+				'extract'  => [
+					"!example\\.com/(?<id>\\d+)!",
+					"!example\\.com/(?<bar>\\D+)!"
+				],
+				'template' => 'foo'
+			]
+		);
+
+		$callback = 's9e\\TextFormatter\\Plugins\\MediaEmbed\\Parser::hasNonDefaultAttribute';
+		foreach ($tag->filterChain as $filter)
+		{
+			if ($filter->getCallback() === $callback)
+			{
+				$this->fail('The filter chain should not contain ' . $callback);
+			}
+		}
+	}
+
+	/**
 	* @testdox appendTemplate() sets a template to be appended to media sites' templates
 	*/
 	public function testAppend()
