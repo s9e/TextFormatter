@@ -64,87 +64,6 @@ class ParserTest extends Test
 	{
 		return [
 			[
-				// Ensure that non-HTTP URLs don't get scraped
-				'[media]invalid://example.org/123[/media]',
-				'<pt>[media]invalid://example.org/123[/media]</pt>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.org',
-							'scrape' => [
-								'match'   => '/./',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				// Ensure that invalid URLs don't get scraped
-				'[media]http://example.invalid/123?x"> foo="bar[/media]',
-				'<pt>[media]http://example.invalid/123?x"&gt; foo="bar[/media]</pt>',
-				['captureURLs' => false],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.invalid',
-							'scrape' => [
-								'match'   => '/./',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				// Ensure that we don't scrape the URL if it doesn't match
-				'[media]http://example.invalid/123[/media]',
-				'<pt>[media]http://example.invalid/123[/media]</pt>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'   => 'example.invalid',
-							'scrape' => [
-								'match'   => '/XXX/',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
-				// Ensure that we don't scrape if the attributes are already filled
-				'http://example.invalid/123',
-				'<rt><EXAMPLE id="12" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></rt>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'example',
-						[
-							'host'    => 'example.invalid',
-							'extract' => "#/(?'id'[0-9]{2})#",
-							'scrape'  => [
-								'match'   => '/./',
-								'extract' => "/(?'id'[0-9]+)/"
-							],
-							'iframe'  => ['width' => 1, 'height' => 1, 'src' => '{@id}']
-						]
-					);
-				}
-			],
-			[
 				// Multiple "match" in scrape
 				'http://example.invalid/123',
 				'<rt><EXAMPLE id="456" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></rt>',
@@ -217,64 +136,6 @@ class ParserTest extends Test
 									'extract' => "!^(?'id'[0-9]+)$!"
 								]
 							],
-							'template' => ''
-						]
-					);
-				}
-			],
-			[
-				'[media]http://foo.example.org/123[/media]',
-				'<rt><X2 id="123" url="http://foo.example.org/123">[media]http://foo.example.org/123[/media]</X2></rt>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'x1',
-						[
-							'host'     => 'example.org',
-							'extract'  => "/(?'id'\\d+)/",
-							'template' => ''
-						]
-					);
-					$configurator->MediaEmbed->add(
-						'x2',
-						[
-							'host'     => 'foo.example.org',
-							'extract'  => "/(?'id'\\d+)/",
-							'template' => ''
-						]
-					);
-				}
-			],
-			[
-				// Ensure no bad things(tm) happen when there's no match
-				'[media]http://example.org/123[/media]',
-				'<pt>[media]http://example.org/123[/media]</pt>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'x2',
-						[
-							'host'     => 'foo.example.org',
-							'extract'  => "/(?'id'\\d+)/",
-							'template' => ''
-						]
-					);
-				}
-			],
-			[
-				// Test that we don't replace the "id" attribute with an URL
-				'[media=foo]http://example.org/123[/media]',
-				'<rt><FOO id="123" url="http://example.org/123">[media=foo]http://example.org/123[/media]</FOO></rt>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add(
-						'foo',
-						[
-							'host'     => 'foo.example.org',
-							'extract'  => "/(?'id'\\d+)/",
 							'template' => ''
 						]
 					);
@@ -598,6 +459,151 @@ class ParserTest extends Test
 	public function getParsingTests()
 	{
 		return [
+			// =================================================================
+			// Abstract tests
+			// =================================================================
+			[
+				// Ensure that non-HTTP URLs don't get scraped
+				'[media]invalid://example.org/123[/media]',
+				'<pt>[media]invalid://example.org/123[/media]</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.org',
+							'scrape' => [
+								'match'   => '/./',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that invalid URLs don't get scraped
+				'[media]http://example.invalid/123?x"> foo="bar[/media]',
+				'<pt>[media]http://example.invalid/123?x"&gt; foo="bar[/media]</pt>',
+				['captureURLs' => false],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.invalid',
+							'scrape' => [
+								'match'   => '/./',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that we don't scrape the URL if it doesn't match
+				'[media]http://example.invalid/123[/media]',
+				'<pt>[media]http://example.invalid/123[/media]</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'   => 'example.invalid',
+							'scrape' => [
+								'match'   => '/XXX/',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe' => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				// Ensure that we don't scrape if the attributes are already filled
+				'http://example.invalid/123',
+				'<rt><EXAMPLE id="12" url="http://example.invalid/123">http://example.invalid/123</EXAMPLE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'example',
+						[
+							'host'    => 'example.invalid',
+							'extract' => "#/(?'id'[0-9]{2})#",
+							'scrape'  => [
+								'match'   => '/./',
+								'extract' => "/(?'id'[0-9]+)/"
+							],
+							'iframe'  => ['width' => 1, 'height' => 1, 'src' => '{@id}']
+						]
+					);
+				}
+			],
+			[
+				'[media]http://foo.example.org/123[/media]',
+				'<rt><X2 id="123" url="http://foo.example.org/123">[media]http://foo.example.org/123[/media]</X2></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'x1',
+						[
+							'host'     => 'example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'template' => ''
+						]
+					);
+					$configurator->MediaEmbed->add(
+						'x2',
+						[
+							'host'     => 'foo.example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'template' => ''
+						]
+					);
+				}
+			],
+			[
+				// Ensure no bad things(tm) happen when there's no match
+				'[media]http://example.org/123[/media]',
+				'<pt>[media]http://example.org/123[/media]</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'x2',
+						[
+							'host'     => 'foo.example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'template' => ''
+						]
+					);
+				}
+			],
+			[
+				// Test that we don't replace the "id" attribute with an URL
+				'[media=foo]http://example.org/123[/media]',
+				'<rt><FOO id="123" url="http://example.org/123">[media=foo]http://example.org/123[/media]</FOO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add(
+						'foo',
+						[
+							'host'     => 'foo.example.org',
+							'extract'  => "/(?'id'\\d+)/",
+							'template' => ''
+						]
+					);
+				}
+			],
+			// =================================================================
+			// Bundled sites tests
+			// =================================================================
 			[
 				'http://blip.tv/play/AYKn_x0A',
 				'<rt><BLIP id="AYKn_x0A" url="http://blip.tv/play/AYKn_x0A">http://blip.tv/play/AYKn_x0A</BLIP></rt>',
