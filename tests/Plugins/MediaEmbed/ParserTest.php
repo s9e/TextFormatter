@@ -1071,6 +1071,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.ustream.tv/explore/education',
+				'<pt>http://www.ustream.tv/explore/education</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ustream');
+				}
+			],
+			[
+				'http://www.ustream.tv/upcoming',
+				'<pt>http://www.ustream.tv/upcoming</pt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('ustream');
+				}
+			],
+			[
 				'http://vimeo.com/channels/staffpicks/67207222',
 				'<rt><VIMEO id="67207222" url="http://vimeo.com/channels/staffpicks/67207222">http://vimeo.com/channels/staffpicks/67207222</VIMEO></rt>',
 				[],
