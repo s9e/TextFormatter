@@ -182,6 +182,11 @@ echo $html;
 		<td>http://www.indiegogo.com/projects/gameheart-redesigned</td>
 	</tr>
 	<tr>
+		<td><code>instagram</code></td>
+		<td>Instagram</td>
+		<td>http://instagram.com/p/gbGaIXBQbn/</td>
+	</tr>
+	<tr>
 		<td><code>kickstarter</code></td>
 		<td>Kickstarter</td>
 		<td>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1<br/>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html<br/>http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</td>

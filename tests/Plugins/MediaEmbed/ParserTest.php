@@ -899,6 +899,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://instagram.com/p/gbGaIXBQbn/',
+				'<rt><INSTAGRAM id="gbGaIXBQbn" url="http://instagram.com/p/gbGaIXBQbn/">http://instagram.com/p/gbGaIXBQbn/</INSTAGRAM></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('instagram');
+				}
+			],
+			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
 				'<rt><KICKSTARTER id="1869987317/wish-i-was-here-1" url="http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=">http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=</KICKSTARTER></rt>',
 				[],

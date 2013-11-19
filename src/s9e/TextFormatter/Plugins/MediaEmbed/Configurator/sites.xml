@@ -264,6 +264,17 @@
 		<iframe width="224" height="486" src="http://www.indiegogo.com/project/{@id}/widget"/>
 	</site>
 
+	<site id="instagram">
+		<name>Instagram</name>
+		<homepage>http://instagram.com/</homepage>
+		<source>http://help.instagram.com/513918941996087</source>
+		<example>http://instagram.com/p/gbGaIXBQbn/</example>
+
+		<host>instagram.com</host>
+		<extract>!instagram\.com/p/(?'id'\w+)!</extract>
+		<iframe width="612" height="710" src="//instagram.com/p/{@id}/embed/"/>
+	</site>
+
 	<site id="kickstarter">
 		<name>Kickstarter</name>
 		<homepage>http://www.kickstarter.com/</homepage>
