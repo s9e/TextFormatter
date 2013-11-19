@@ -440,7 +440,7 @@
 		<extract>#twitch\.tv/(?'channel'(?!m/)\w+)(?:/b/(?'archive_id'[0-9]+)|/c/(?'chapter_id'[0-9]+))?#</extract>
 		<scrape>
 			<match>!twitch\.tv/m/[0-9]+!</match>
-			<extract><![CDATA[!channel=(?'channel'[^&]+)&amp;archive_id=(?'archive_id'[0-9]+)!]]></extract>
+			<extract>!channel=(?'channel'\w+)&amp;.*?archive_id=(?'archive_id'[0-9]+)!</extract>
 		</scrape>
 		<template><![CDATA[
 			<object type="application/x-shockwave-flash"
