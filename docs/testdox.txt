@@ -1805,6 +1805,10 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor calls setUp()
  [x] Constructor calls setUp() after overwriting properties
  [x] An exception is thrown if an unknown property is being set by the constructor
+ [x] Constructor normalizes custom attribute names
+ [x] Constructor normalizes custom tag names
+ [x] Constructor throws an exception if we attempt to set an attribute name but the property does not exist
+ [x] Constructor throws an exception if we attempt to set a tag name but the property does not exist
  [x] getBaseProperties() return the values of quickMatch, regexpLimit and regexpLimitAction
  [x] setQuickMatch() sets the quickMatch property
  [x] setQuickMatch() throws an exception on non-strings

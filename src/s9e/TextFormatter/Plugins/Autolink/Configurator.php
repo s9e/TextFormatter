@@ -8,8 +8,6 @@
 namespace s9e\TextFormatter\Plugins\Autolink;
 
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
-use s9e\TextFormatter\Configurator\Validators\AttributeName;
-use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase
@@ -67,27 +65,5 @@ class Configurator extends ConfiguratorBase
 			'regexp'     => '#' . $schemeRegexp . '://\\S(?>[^\\s\\[\\]]*(?>\\[\\w*\\])?)++#iS',
 			'tagName'    => $this->tagName
 		];
-	}
-
-	/**
-	* Change the attribute name used by this plugin
-	*
-	* @param  string $attrName New attribute name
-	* @return void
-	*/
-	protected function setAttrName($attrName)
-	{
-		$this->attrName = AttributeName::normalize($attrName);
-	}
-
-	/**
-	* Change the tag name used by this plugin
-	*
-	* @param  string $tagName New tag name
-	* @return void
-	*/
-	protected function setTagName($tagName)
-	{
-		$this->tagName = TagName::normalize($tagName);
 	}
 }

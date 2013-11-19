@@ -17,8 +17,6 @@ use s9e\TextFormatter\Configurator\Items\Variant;
 use s9e\TextFormatter\Configurator\JavaScript\RegexpConvertor;
 use s9e\TextFormatter\Configurator\JavaScript\RegExp;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
-use s9e\TextFormatter\Configurator\Validators\AttributeName;
-use s9e\TextFormatter\Configurator\Validators\TagName;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
 class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, Iterator
@@ -182,27 +180,5 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 		}
 
 		return $config;
-	}
-
-	/**
-	* Set the name of the attribute used by this plugin
-	*
-	* @param  string $attrName
-	* @return void
-	*/
-	protected function setAttrName($attrName)
-	{
-		$this->attrName = AttributeName::normalize($attrName);
-	}
-
-	/**
-	* Set the name of the tag used by this plugin
-	*
-	* @param  string $tagName
-	* @return void
-	*/
-	protected function setTagName($tagName)
-	{
-		$this->tagName = TagName::normalize($tagName);
 	}
 }

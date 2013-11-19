@@ -12,6 +12,8 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Validators\AttributeName;
+use s9e\TextFormatter\Configurator\Validators\TagName;
 
 abstract class ConfiguratorBase implements ConfigProvider
 {
@@ -174,6 +176,22 @@ abstract class ConfiguratorBase implements ConfigProvider
 	}
 
 	/**
+	* Set $this->attrName with given attribute name, normalized
+	*
+	* @param  string $attrName New attribute name
+	* @return void
+	*/
+	protected function setAttrName($attrName)
+	{
+		if (!property_exists($this, 'attrName'))
+		{
+			throw new RuntimeException("Unknown property 'attrName'");
+		}
+
+		$this->attrName = AttributeName::normalize($attrName);
+	}
+
+	/**
 	* Set the quickMatch string
 	*
 	* @param  string $quickMatch
@@ -225,5 +243,21 @@ abstract class ConfiguratorBase implements ConfigProvider
 		}
 
 		$this->regexpLimitAction = $action;
+	}
+
+	/**
+	* Set $this->tagName with given tag name, normalized
+	*
+	* @param  string $tagName New tag name
+	* @return void
+	*/
+	protected function setTagName($tagName)
+	{
+		if (!property_exists($this, 'tagName'))
+		{
+			throw new RuntimeException("Unknown property 'tagName'");
+		}
+
+		$this->tagName = TagName::normalize($tagName);
 	}
 }

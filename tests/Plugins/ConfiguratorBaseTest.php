@@ -58,6 +58,44 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
+	* @testdox Constructor normalizes custom attribute names
+	*/
+	public function testAttrNameNormalize()
+	{
+		$dummy = new TagCreatingPluginConfigurator($this->configurator, ['attrName' => 'XXX']);
+		$this->assertSame('xxx', $dummy->attrName);
+	}
+
+	/**
+	* @testdox Constructor normalizes custom tag names
+	*/
+	public function testTagNameNormalize()
+	{
+		$dummy = new TagCreatingPluginConfigurator($this->configurator, ['tagName' => 'xxx']);
+		$this->assertSame('XXX', $dummy->tagName);
+	}
+
+	/**
+	* @testdox Constructor throws an exception if we attempt to set an attribute name but the property does not exist
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Unknown property 'attrName'
+	*/
+	public function testAttrNameNotExist()
+	{
+		new EmptyPluginConfigurator($this->configurator, ['attrName' => 'XXX']);
+	}
+
+	/**
+	* @testdox Constructor throws an exception if we attempt to set a tag name but the property does not exist
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Unknown property 'tagName'
+	*/
+	public function testTagNameNotExist()
+	{
+		new EmptyPluginConfigurator($this->configurator, ['tagName' => 'XXX']);
+	}
+
+	/**
 	* @testdox getBaseProperties() return the values of quickMatch, regexpLimit and regexpLimitAction
 	*/
 	public function testGetBaseProperties()
@@ -247,7 +285,8 @@ class DummyPluginConfigurator extends ConfiguratorBase
 
 class TagCreatingPluginConfigurator extends ConfiguratorBase
 {
-	protected $tagName = 'FOO';
+	public $tagName  = 'FOO';
+	public $attrName = 'BAR';
 
 	protected function setUp()
 	{
