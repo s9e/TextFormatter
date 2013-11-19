@@ -1,6 +1,6 @@
 ## Synopsis
 
-This plugin serves to capture keywords in plain text and render them as a rich element such as a link, a popup or a widget.
+This plugin serves to capture keywords in plain text and render them as a rich element of your choosing such as a link, a popup or a widget.
 
 Examples of use cases:
 
