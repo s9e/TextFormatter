@@ -197,6 +197,8 @@
 			<file>tests/Plugins/HTMLElements/ParserTest.php</file>
 			<file>tests/Plugins/HTMLEntities/ConfiguratorTest.php</file>
 			<file>tests/Plugins/HTMLEntities/ParserTest.php</file>
+			<file>tests/Plugins/Keywords/ConfiguratorTest.php</file>
+			<file>tests/Plugins/Keywords/ParserTest.php</file>
 			<file>tests/Plugins/MarkdownLite/ConfiguratorTest.php</file>
 			<file>tests/Plugins/MarkdownLite/ParserTest.php</file>
 			<file>tests/Plugins/MediaEmbed/Configurator/MediaSiteCollectionTest.php</file>

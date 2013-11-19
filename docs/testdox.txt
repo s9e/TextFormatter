@@ -2153,6 +2153,22 @@ s9e\TextFormatter\Tests\Plugins\HTMLEntities\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
+s9e\TextFormatter\Tests\Plugins\Keywords\Configurator
+ [x] Automatically creates a "KEYWORD" tag
+ [x] The name of the tag used can be changed through the "tagName" constructor option
+ [x] The name of the attribute used can be changed through the "attrName" constructor option
+ [x] asConfig() returns FALSE if no keyword was added
+ [x] The config array contains the name of the tag
+ [x] The config array contains the name of the attribute
+ [x] The config array contains a map of custom values for keywords
+ [x] The map of omits values that are identical to their keyword
+ [x] The config array contains an array of regexps
+ [x] Keywords are split in groups to generate regexps smaller than ~32KB
+
+s9e\TextFormatter\Tests\Plugins\Keywords\Parser
+ [x] Parsing tests
+ [x] Parsing tests (JavaScript)
+
 s9e\TextFormatter\Tests\Plugins\MarkdownLite\Configurator
  [x] Turns on automatic paragraph management
  [x] Automatically creates a "URL" tag
