@@ -11,6 +11,9 @@ Built-in filters
 <dt>#email</dt>
 <dd>A well-formed email address. Uses ext/filter's FILTER_VALIDATE_EMAIL filter. The JavaScript version is much more lenient.</dd>
 
+<dt>#hashmap</dt>
+<dd>Requires a <code>map</code> option that is an associative array. At runtime, the attribute's value is replaced by the map's value of the same name. If no match is found, the original value is returned unless the `strict` option is set, in which case the attribute is invalidated. The map is case-sensitive. Also see <code>#map</code>.</dd>
+
 <dt>#identifier</dt>
 <dd>A string of letters, numbers, dashes and underscores. Matches <code>/^[-0-9A-Za-z_]+$/</code>.</dd>
 
@@ -26,20 +29,20 @@ Built-in filters
 <dt>#ipv6</dt>
 <dd>A valid IPv6 address. Uses ext/filter's FILTER_VALIDATE_IP filter with the FILTER_FLAG_IPV6 flag.</dd>
 
-<dt>#map</dt>
-<dd>Requires a 'map' option that is an associative array with regexps as keys. The map is processed in order, and the first regexp that matches replaces the value with its corresponding element. If no match is found, the original value is returned.</dd>
-
 <dt>#int</dt>
 <dd>An integer value. Uses ext/filter's FILTER_VALIDATE_INT filter. Returns an integer, not a string.</dd>
+
+<dt>#map</dt>
+<dd>Requires a <code>map</code> option that is an associative array with regexps as keys. The map is processed in order, and the first regexp that matches replaces the value with its corresponding element. If no match is found, the original value is returned unless the `strict` option is set, in which case the attribute is invalidated.</dd>
 
 <dt>#number</dt>
 <dd>A string made of digits. Matches <code>/^[0-9]+$/</code>. Note that unlike #int, "0123" is a valid number. Returns a string.</dd>
 
 <dt>#range</dt>
-<dd>An integer value, adjusted for given range. Requires a 'min' option and a 'max' option. Uses ext/filter's FILTER_VALIDATE_INT filter. Values outside of range are adjusted to closest valid value. Returns an integer.</dd>
+<dd>An integer value, adjusted for given range. Requires a <code>min</code> option and a <code>max</code> option. Uses ext/filter's FILTER_VALIDATE_INT filter. Values outside of range are adjusted to closest valid value. Returns an integer.</dd>
 
 <dt>#regexp</dt>
-<dd>A string that matches given regexp. Requires a 'regexp' option.</dd>
+<dd>A string that matches given regexp. Requires a <code>regexp</code> option.</dd>
 
 <dt>#simpletext</dt>
 <dd>A string that matches <code>/^[- +,.0-9A-Za-z_]+$/</code>.</dd>

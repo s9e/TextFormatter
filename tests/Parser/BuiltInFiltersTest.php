@@ -11,6 +11,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\Choice;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Color;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Email;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Float;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Hashmap;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Identifier;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Int;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ip;
@@ -746,6 +747,10 @@ class BuiltInFiltersTest extends Test
 			[new Ipport, '[localhost]:80', false],
 			[new Ipport, '8.8.8.8', false],
 			[new Ipport, 'ff02::1', false],
+			[new Hashmap(['foo' => 'bar']), 'foo', 'bar'],
+			[new Hashmap(['foo' => 'bar']), 'bar', 'bar'],
+			[new Hashmap(['foo' => 'bar'], false), 'bar', 'bar'],
+			[new Hashmap(['foo' => 'bar'], true), 'bar', false],
 		];
 	}
 
