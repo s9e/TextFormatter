@@ -52,3 +52,4 @@ TODO
 - BuiltInFilters: don't encode brackets used in the host part, e.g. IPv6 address. Low priority, as ext/filter does not allow IPv6 addresses in URLs anyway -- https://bugs.php.net/bug.php?id=54629
 - Create an exception used in security checks so that an implementor can log security exceptions differently from other exceptions
 - Keywords: plan for case (in)sensitivity. Would require some normalization to access the map. Consider adding an option to only capture the first occurence of each keyword.
+- Consider adding a flag to Collection to configure whether add() should check for existence or act as an alias to set()
