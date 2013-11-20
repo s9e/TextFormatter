@@ -28,6 +28,8 @@
     * [How to restrict where emoticons are parsed](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/ChangeRegexp.md)
   * **HTMLElements**
     * [Alias HTML elements to other tags](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/HTMLElements/Aliases.md)
+  * **Keywords**
+    * [Automatically link Magic: The Gathering cards](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Keywords/MTG.md)
   * **MediaEmbed**
     * [Add a site from the supported list](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AddBundled.md)
     * [Add a site manually](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AddCustom.md)
