@@ -389,6 +389,16 @@
 		</iframe>
 	</site>
 
+	<site id="strawpoll">
+		<name>Straw Poll</name>
+		<homepage>http://strawpoll.me/</homepage>
+		<example>http://strawpoll.me/738091</example>
+
+		<host>strawpoll.me</host>
+		<extract>!strawpoll\.me/(?'id'\d+)!</extract>
+		<iframe width="600" height="310" src="http://strawpoll.me/embed_1/{@id}"/>
+	</site>
+
 	<site id="teamcoco">
 		<name>Team Coco</name>
 		<homepage>http://teamcoco.com/</homepage>

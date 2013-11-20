@@ -1026,6 +1026,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://strawpoll.me/738091',
+				'<rt><STRAWPOLL id="738091" url="http://strawpoll.me/738091">http://strawpoll.me/738091</STRAWPOLL></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('strawpoll');
+				}
+			],
+			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
 				'<rt><TED id="talks/eli_pariser_beware_online_filter_bubbles.html" url="http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html">http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html</TED></rt>',
 				[],
