@@ -67,6 +67,7 @@
 			<file>tests/Configurator/Items/AttributeFilters/ColorTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/EmailTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/FloatTest.php</file>
+			<file>tests/Configurator/Items/AttributeFilters/HashmapTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/IdentifierTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/IntTest.php</file>
 			<file>tests/Configurator/Items/AttributeFilters/IpTest.php</file>

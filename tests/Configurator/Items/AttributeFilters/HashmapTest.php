@@ -61,7 +61,7 @@ class HashmapTest extends Test
 	}
 
 	/**
-	* @testdox Creates a strict map by default
+	* @testdox Creates a sparse map by default
 	*/
 	public function testSetHashmapStrict()
 	{
@@ -69,19 +69,19 @@ class HashmapTest extends Test
 
 		$vars = $filter->getVars();
 
-		$this->assertTrue($vars['strict']);
+		$this->assertFalse($vars['strict']);
 	}
 
 	/**
-	* @testdox Creates a sparse map if the second argument is FALSE
+	* @testdox Creates a strict map if the second argument is TRUE
 	*/
 	public function testSetHashmapSparse()
 	{
-		$filter = new Hashmap(['foo' => 'bar'], false);
+		$filter = new Hashmap(['foo' => 'bar'], true);
 
 		$vars = $filter->getVars();
 
-		$this->assertFalse($vars['strict']);
+		$this->assertTrue($vars['strict']);
 	}
 
 	/**
@@ -92,5 +92,29 @@ class HashmapTest extends Test
 	public function testStrictNotBool()
 	{
 		new Hashmap(['foo' => 'bar'], 'notbool');
+	}
+
+	/**
+	* @testdox Values identical to their key are optimized away if the map is sparse
+	*/
+	public function testOptimizeSparse()
+	{
+		$filter = new Hashmap(['foo' => 'bar', 'bar' => 'bar']);
+
+		$vars = $filter->getVars();
+
+		$this->assertSame(['foo' => 'bar'], $vars['map']);
+	}
+
+	/**
+	* @testdox Values identical to their key are preserved if the map is strict
+	*/
+	public function testNotOptimizeStrict()
+	{
+		$filter = new Hashmap(['foo' => 'bar', 'bar' => 'bar', 'baz' => 'quux'], true);
+
+		$vars = $filter->getVars();
+
+		$this->assertEquals(['foo' => 'bar', 'bar' => 'bar', 'baz' => 'quux'], $vars['map']);
 	}
 }

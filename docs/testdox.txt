@@ -776,6 +776,17 @@ s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Float
  [x] Is safe in JS
  [x] Is safe in URL
 
+s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Hashmap
+ [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterHashmap()
+ [x] __construct() forwards its arguments to setMap()
+ [x] asConfig() throws an exception if the 'map' var is missing
+ [x] asConfig() returns an array
+ [x] Creates a sparse map by default
+ [x] Creates a strict map if the second argument is TRUE
+ [x] Throws an exception if the second argument is not a boolean
+ [x] Values identical to their key are optimized away if the map is sparse
+ [x] Values identical to their key are preserved if the map is strict
+
 s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Identifier
  [x] Callback is s9e\TextFormatter\Parser\BuiltInFilters::filterIdentifier()
  [x] Is safe in CSS
