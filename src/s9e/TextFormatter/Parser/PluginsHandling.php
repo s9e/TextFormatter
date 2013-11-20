@@ -112,8 +112,8 @@ trait PluginsHandling
 			if (!isset($this->pluginParsers[$pluginName]))
 			{
 				$className = (isset($pluginConfig['className']))
-						   ? $pluginConfig['className']
-						   : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
+				           ? $pluginConfig['className']
+				           : 's9e\\TextFormatter\\Plugins\\' . $pluginName . '\\Parser';
 
 				// Register the parser as a callback
 				$this->pluginParsers[$pluginName] = [
