@@ -22,8 +22,8 @@ $configurator->MediaEmbed->add('dailymotion');
 $configurator->MediaEmbed->add('facebook');
 $configurator->MediaEmbed->add('youtube');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $examples = [
 	'[media]http://www.dailymotion.com/video/x222z1[/media]',
@@ -65,8 +65,8 @@ $configurator->MediaEmbed->add(
 	]
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[youtube]http://www.youtube.com/watch?v=-cEzsCAzTak[/youtube]';
 $xml  = $parser->parse($text);

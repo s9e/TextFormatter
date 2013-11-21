@@ -16,8 +16,8 @@ This plugin implements a Markdown-like syntax, inspired by modern flavors of Mar
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('MarkdownLite');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[inline url text](http://example.org)';
 $xml  = $parser->parse($text);
@@ -26,5 +26,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<a href="http://example.org">inline url text</a>
+<p><a href="http://example.org">inline url text</a></p>
 ```

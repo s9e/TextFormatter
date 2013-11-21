@@ -14,8 +14,8 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Censor->add('apple*');
 $configurator->Censor->add('banana*', 'onion');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Putting apples in an applepie. Chopping some bananas on top.';
 $xml  = $parser->parse($text);

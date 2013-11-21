@@ -28,8 +28,8 @@ $configurator->Keywords->add('Pikachu');
 $configurator->Keywords->getTag()->defaultTemplate
 	= '<a href="http://en.wikipedia.org/wiki/{@value}"><xsl:apply-templates/></a>';
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Bulbasaur and Pikachu';
 $xml  = $parser->parse($text);

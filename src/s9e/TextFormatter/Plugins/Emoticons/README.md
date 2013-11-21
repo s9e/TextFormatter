@@ -9,8 +9,8 @@ Matching is case-sensitive.
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Emoticons->add(':)', '<img src="happy.png" alt=":)" title="Happy">');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Hello world :)';
 $xml  = $parser->parse($text);

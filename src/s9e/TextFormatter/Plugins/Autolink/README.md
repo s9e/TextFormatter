@@ -10,8 +10,8 @@ Note that by default, the only allowed schemes are "http" and "https".
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('Autolink');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'More info at http://example.org.';
 $xml  = $parser->parse($text);
@@ -31,8 +31,8 @@ $configurator->plugins->load('Autolink');
 $configurator->urlConfig->allowScheme('ftp');
 $configurator->urlConfig->allowScheme('irc');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Download from ftp://example.org or come chat at irc://example.org/help.';
 $xml  = $parser->parse($text);

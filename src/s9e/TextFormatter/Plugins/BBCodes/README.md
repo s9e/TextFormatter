@@ -21,8 +21,8 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->BBCodes->addFromRepository('B');
 $configurator->BBCodes->addFromRepository('URL');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Here be [url=http://example.org]the [b]bold[/b] URL[/url].';
 $xml  = $parser->parse($text);
@@ -45,8 +45,8 @@ $configurator->BBCodes->addCustom(
 	'<span style="color:{COLOR}">{TEXT}</span>'
 );
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = '[color=pink]La vie en rose.[/color]';
 $xml  = $parser->parse($text);

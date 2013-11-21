@@ -8,8 +8,8 @@ This plugin provides enhanced typography, aka "fancy Unicode symbols." It is loo
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('FancyPants');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Fancy "quotes", symbols (c)(tm), dashes -- and elipsis...';
 $xml  = $parser->parse($text);

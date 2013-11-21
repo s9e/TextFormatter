@@ -10,8 +10,8 @@ Note: while numeric entities such as `&#160;` are always available, the list of 
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('HTMLEntities');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'I &hearts; HTML.';
 $xml  = $parser->parse($text);

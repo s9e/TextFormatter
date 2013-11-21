@@ -13,8 +13,8 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('Escaper');
 $configurator->Emoticons->add(':)', '<img src="happy.png" alt=":)" title="Happy">');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'The emoticon \\:) becomes :)';
 $xml  = $parser->parse($text);
@@ -34,8 +34,8 @@ By calling `$plugin->escapeAll()`, any character can be escaped. Attention, this
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Escaper->escapeAll();
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 's9e\\TextFormatter -- s9e\\\\TextFormatter';
 $xml  = $parser->parse($text);
@@ -61,8 +61,8 @@ $configurator->plugins->load('Escaper', ['regexp' => '/\\\\(?=[[:ascii:]])\\W/s'
 // We disable line breaks for cosmetic purposes, this is unrelated to escaping
 $configurator->rootRules->noBrDescendant();
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = <<<END
 Backslash before backslash: \\\\

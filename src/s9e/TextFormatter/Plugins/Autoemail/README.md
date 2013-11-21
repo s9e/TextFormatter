@@ -8,8 +8,8 @@ This plugin converts plain-text emails into clickable "mailto:" links.
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->plugins->load('Autoemail');
 
-$parser   = $configurator->getParser();
-$renderer = $configurator->getRenderer();
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
 
 $text = 'Email me at user@example.org';
 $xml  = $parser->parse($text);
