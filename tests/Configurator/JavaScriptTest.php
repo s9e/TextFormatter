@@ -162,7 +162,7 @@ class JavaScriptTest extends Test
 	* @expectedException RuntimeException
 	* @expectedExceptionMessage Cannot encode non-scalar value
 	*/
-	public function testNonScalaConfigException()
+	public function testNonScalarConfigException()
 	{
 		$this->configurator->registeredVars['foo'] = new NonScalarConfigThing;
 		$this->configurator->javascript->getParser();
