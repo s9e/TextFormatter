@@ -54,4 +54,3 @@ TODO
 - Keywords: plan for case (in)sensitivity. Would require some normalization to access the map. Consider adding an option to only capture the first occurence of each keyword.
 - Consider adding a flag to Collection to configure whether add() should check for existence or act as an alias to set()
 - Look into loading multiple copies of the Keywords plugin - is className set?
-- Implement a #hashmap filter, like #map but without regexps
