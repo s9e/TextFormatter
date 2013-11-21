@@ -148,17 +148,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->urlConfig is an instance of UrlConfig
-	*/
-	public function testUrlConfigInstance()
-	{
-		$this->assertInstanceOf(
-			's9e\\TextFormatter\\Configurator\\UrlConfig',
-			$this->configurator->urlConfig
-		);
-	}
-
-	/**
 	* @testdox asConfig() calls every plugin's finalize() before retrieving their config
 	*/
 	public function testAsConfigFinalize()
@@ -451,117 +440,101 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox $configurator->BBCodes returns $configurator->plugins->load('BBCodes') if the plugin hasn't been loaded already
+	* @testdox $configurator->BBCodes returns an instance of the BBCodes plugin's configurator, and loads it if applicable
 	*/
-	public function testMagicGetLoad()
+	public function testMagicGetPlugin()
 	{
-		$mock = $this->getMock('stdClass', ['exists', 'load']);
+		$plugin = $this->configurator->BBCodes;
 
-		$mock->expects($this->once())
-		     ->method('exists')
-		     ->with($this->equalTo('BBCodes'))
-		     ->will($this->returnValue(false));
-
-		$mock->expects($this->once())
-		     ->method('load')
-		     ->with($this->equalTo('BBCodes'))
-		     ->will($this->returnValue('foobar'));
-
-		$this->configurator->plugins = $mock;
-
-		$this->assertSame('foobar', $this->configurator->BBCodes);
+		$this->assertInstanceOf('s9e\\TextFormatter\\Plugins\\BBCodes\\Configurator', $plugin);
+		$this->assertSame($plugin, $this->configurator->BBCodes);
 	}
 
 	/**
-	* @testdox $configurator->BBCodes returns $configurator->plugins->get('BBCodes') if the plugin has already been loaded
+	* @testdox isset($configurator->BBCodes) returns whether the BBCodes plugin is loaded
 	*/
-	public function testMagicGetGet()
-	{
-		$mock = $this->getMock('stdClass', ['exists', 'get']);
-
-		$mock->expects($this->once())
-		     ->method('exists')
-		     ->with($this->equalTo('BBCodes'))
-		     ->will($this->returnValue(true));
-
-		$mock->expects($this->once())
-		     ->method('get')
-		     ->with($this->equalTo('BBCodes'))
-		     ->will($this->returnValue('foobar'));
-
-		$this->configurator->plugins = $mock;
-
-		$this->assertSame('foobar', $this->configurator->BBCodes);
-	}
-
-	/**
-	* @testdox $configurator->foo throws an exception
-	* @expectedException RuntimeException
-	* @expectedExceptionMessage Undefined property
-	*/
-	public function testMagicGetInvalid()
-	{
-		$this->configurator->foo;
-	}
-
-	/**
-	* @testdox isset($configurator->BBCodes) returns $configurator->plugins->exists('BBCodes')
-	*/
-	public function testMagicIsset()
-	{
-		$mock = $this->getMock('stdClass', ['exists']);
-
-		$mock->expects($this->once())
-		     ->method('exists')
-		     ->with($this->equalTo('BBCodes'))
-		     ->will($this->returnValue(false));
-
-		$this->configurator->plugins = $mock;
-
-		$this->assertFalse(isset($this->configurator->BBCodes));
-	}
-
-	/**
-	* @testdox isset($configurator->BBCodes) returns false if the BBCodes plugin is not loaded
-	*/
-	public function testMagicIssetFalse()
+	public function testMagicIssetPlugin()
 	{
 		$this->assertFalse(isset($this->configurator->BBCodes));
-	}
-
-	/**
-	* @testdox isset($configurator->BBCodes) does not load the BBCodes plugin
-	*/
-	public function testMagicIssetNotLoad()
-	{
-		$this->assertFalse(isset($this->configurator->BBCodes));
-		$this->assertFalse($this->configurator->plugins->exists('BBCodes'));
-	}
-
-	/**
-	* @testdox isset($configurator->BBCodes) returns true if the BBCodes plugin is loaded
-	*/
-	public function testMagicIssetTrue()
-	{
-		$this->configurator->plugins->load('BBCodes');
+		$this->configurator->BBCodes;
 		$this->assertTrue(isset($this->configurator->BBCodes));
 	}
 
 	/**
-	* @testdox isset($configurator->foo) returns false if the "foo" property is not set
+	* @testdox unset($configurator->BBCodes) unloads the BBCodes plugin
 	*/
-	public function testMagicIssetPropFalse()
+	public function testMagicUnsetPlugin()
+	{
+		$this->configurator->BBCodes;
+		$this->assertTrue(isset($this->configurator->BBCodes));
+		unset($this->configurator->BBCodes);
+		$this->assertFalse(isset($this->configurator->BBCodes));
+	}
+
+	/**
+	* @testdox Setting $configurator->Foo adds Foo to the plugins collection
+	*/
+	public function testMagicSetPlugin()
+	{
+		$plugin = new \s9e\TextFormatter\Plugins\Keywords\Configurator($this->configurator);
+		$this->configurator->Foo = $plugin;
+		$this->assertSame($plugin, $this->configurator->plugins['Foo']);
+	}
+
+	/**
+	* @testdox isset($configurator->foo) returns false if the var "foo" is not registered
+	*/
+	public function testMagicIssetVarFalse()
 	{
 		$this->assertFalse(isset($this->configurator->foo));
 	}
 
 	/**
-	* @testdox isset($configurator->foo) returns true if the "foo" property is set
+	* @testdox isset($configurator->foo) returns true if $configurator->registeredVars['foo'] exists
 	*/
-	public function testMagicIssetPropTrue()
+	public function testMagicIssetVarTrue()
 	{
-		$this->configurator->foo = 1;
+		$this->configurator->registeredVars['foo'] = 1;
 		$this->assertTrue(isset($this->configurator->foo));
+	}
+
+	/**
+	* @testdox $configurator->foo returns $configurator->registeredVars['foo'] if it exists
+	*/
+	public function testMagicGetVar()
+	{
+		$this->configurator->registeredVars['foo'] = 42;
+		$this->assertSame(42, $this->configurator->foo);
+	}
+
+	/**
+	* @testdox $configurator->foo throws an exception if $configurator->registeredVars['foo'] does not exist
+	* @expectedException RuntimeException
+	* @expectedExceptionMessage Undefined property 's9e\TextFormatter\Configurator::$foo'
+	*/
+	public function testMagicGetInexistentVar()
+	{
+		$this->configurator->foo;
+	}
+
+	/**
+	* @testdox unset($configurator->foo) unsets $configurator->registeredVars['foo']
+	*/
+	public function testMagicUnsetVar()
+	{
+		$this->configurator->registeredVars['foo'] = 1;
+		$this->assertTrue(isset($this->configurator->foo));
+		unset($this->configurator->registeredVars['foo']);
+		$this->assertFalse(isset($this->configurator->foo));
+	}
+
+	/**
+	* @testdox Setting $configurator->foo sets $this->configurator->registeredVars['foo']
+	*/
+	public function testMagicSetVar()
+	{
+		$this->configurator->foo = 42;
+		$this->assertSame(42, $this->configurator->registeredVars['foo']);
 	}
 
 	/**

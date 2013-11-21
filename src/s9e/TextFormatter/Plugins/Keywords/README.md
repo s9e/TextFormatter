@@ -43,5 +43,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<a href="http://en.wikipedia.org/wiki/Bulbasaur">Bulbasaur</a> and <a href="http://en.wikipedia.org/wiki/Pikachu">Pikachu</a>
+<a href="http://bulbapedia.bulbagarden.net/wiki/Bulbasaur">Bulbasaur</a> and <a href="http://bulbapedia.bulbagarden.net/wiki/Pikachu">Pikachu</a>
 ```

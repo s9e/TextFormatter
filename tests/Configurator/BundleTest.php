@@ -19,7 +19,7 @@ class BundleTest extends Test
 		$configurator = DummyBundle::getConfigurator();
 
 		$this->assertInstanceOf('s9e\\TextFormatter\\Configurator', $configurator);
-		$this->assertAttributeSame('bar', 'foo', $configurator);
+		$this->assertSame('bar', $configurator->foo);
 	}
 
 	/**

@@ -89,11 +89,6 @@ class Configurator implements ConfigProvider
 	public $templateNormalizer;
 
 	/**
-	* @var UrlConfig Config options related to URL validation
-	*/
-	public $urlConfig;
-
-	/**
 	* Constructor
 	*
 	* Prepares the collections that hold tags and filters, the UrlConfig object as well as the
@@ -105,20 +100,23 @@ class Configurator implements ConfigProvider
 		$this->bundleGenerator    = new BundleGenerator($this);
 		$this->javascript         = new JavaScript($this);
 		$this->plugins            = new PluginCollection($this);
+		$this->registeredVars     = ['urlConfig' => new UrlConfig];
 		$this->rootRules          = new Ruleset;
 		$this->rulesGenerator     = new RulesGenerator;
 		$this->tags               = new TagCollection;
 		$this->templateChecker    = new TemplateChecker;
 		$this->templateNormalizer = new TemplateNormalizer;
 		$this->stylesheet         = new Stylesheet($this);
-		$this->urlConfig          = new UrlConfig;
-		$this->registeredVars     = ['urlConfig' => $this->urlConfig];
 
 		$this->setRendererGenerator('XSLT');
 	}
 
+	//==========================================================================
+	// Magic methods
+	//==========================================================================
+
 	/**
-	* Magic __get automatically loads plugins, PredefinedTags class
+	* Magic __get automatically loads plugins, returns registered vars
 	*
 	* @param  string $k Property name
 	* @return mixed
@@ -127,16 +125,21 @@ class Configurator implements ConfigProvider
 	{
 		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 		{
-			return ($this->plugins->exists($k))
-			      ? $this->plugins->get($k)
-			      : $this->plugins->load($k);
+			return (isset($this->plugins[$k]))
+			     ? $this->plugins[$k]
+			     : $this->plugins->load($k);
+		}
+
+		if (isset($this->registeredVars[$k]))
+		{
+			return $this->registeredVars[$k];
 		}
 
 		throw new RuntimeException("Undefined property '" . __CLASS__ . '::$' . $k . "'");
 	}
 
 	/**
-	* Magic __isset forwards to the plugins collection when applicable
+	* Magic __isset checks existence in the plugins collection and registered vars
 	*
 	* @param  string $k Property name
 	* @return bool
@@ -145,11 +148,52 @@ class Configurator implements ConfigProvider
 	{
 		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
 		{
-			return $this->plugins->exists($k);
+			return isset($this->plugins[$k]);
 		}
 
-		return isset($this->$k);
+		return isset($this->registeredVars[$k]);
 	}
+
+	/**
+	* Magic __set adds to the plugins collection, registers vars
+	*
+	* @param  string $k Property name
+	* @param  mixed  $v Property value
+	* @return mixed
+	*/
+	public function __set($k, $v)
+	{
+		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
+		{
+			$this->plugins[$k] = $v;
+		}
+		else
+		{
+			$this->registeredVars[$k] = $v;
+		}
+	}
+
+	/**
+	* Magic __set removes plugins from the plugins collection, unregisters vars
+	*
+	* @param  string $k Property name
+	* @return mixed
+	*/
+	public function __unset($k)
+	{
+		if (preg_match('#^[A-Z][A-Za-z_0-9]+$#D', $k))
+		{
+			unset($this->plugins[$k]);
+		}
+		else
+		{
+			unset($this->registeredVars[$k]);
+		}
+	}
+
+	//==========================================================================
+	// API
+	//==========================================================================
 
 	/**
 	* Finalize this configuration and return all the relevant objects
@@ -358,7 +402,6 @@ class Configurator implements ConfigProvider
 		unset($properties['templateChecker']);
 		unset($properties['templateNormalizer']);
 		unset($properties['stylesheet']);
-		unset($properties['urlConfig']);
 
 		// Create the config array
 		$config    = ConfigHelper::toArray($properties);
