@@ -81,7 +81,7 @@ class ConfiguratorTest extends Test
 		$config = $this->configurator->Keywords->asConfig();
 
 		$this->assertArrayHasKey('regexps', $config);
-		$this->assertEquals(['/\bfoo\b/S'], array_map('strval', $config['regexps']));
+		$this->assertEquals(['/\\bfoo\\b/S'], array_map('strval', $config['regexps']));
 	}
 
 	/**
@@ -99,11 +99,38 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey('regexps', $config);
 		$this->assertEquals(
 			[
-				'/\b(?>' . str_repeat('0', 9000) . '|' . str_repeat('1', 9000) . '|' . str_repeat('2', 9000) . ')\b/S',
-				'/\b(?>' . str_repeat('3', 9000) . '|' . str_repeat('4', 9000) . '|' . str_repeat('5', 9000) . ')\b/S',
-				'/\b' . str_repeat('6', 9000) . '\b/S'
+				'/\\b(?>' . str_repeat('0', 9000) . '|' . str_repeat('1', 9000) . '|' . str_repeat('2', 9000) . ')\\b/S',
+				'/\\b(?>' . str_repeat('3', 9000) . '|' . str_repeat('4', 9000) . '|' . str_repeat('5', 9000) . ')\\b/S',
+				'/\\b' . str_repeat('6', 9000) . '\\b/S'
 			],
 			$config['regexps']
 		);
+	}
+
+	/**
+	* @testdox Regexps are case-insensitive if $plugin->caseSensitive is false
+	*/
+	public function testCaseInsensitive()
+	{
+		$this->configurator->Keywords->add('foo');
+		$this->configurator->Keywords->caseSensitive = false;
+
+		$config = $this->configurator->Keywords->asConfig();
+
+		$this->assertArrayHasKey('regexps', $config);
+		$this->assertEquals(['/\\bfoo\\b/Si'], array_map('strval', $config['regexps']));
+	}
+
+	/**
+	* @testdox Regexps that contain a non-ASCII character use Unicode mode
+	*/
+	public function testUnicode()
+	{
+		$this->configurator->Keywords->add('föo');
+
+		$config = $this->configurator->Keywords->asConfig();
+
+		$this->assertArrayHasKey('regexps', $config);
+		$this->assertEquals(['/\\bföo\\b/Su'], array_map('strval', $config['regexps']));
 	}
 }

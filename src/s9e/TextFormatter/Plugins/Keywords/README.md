@@ -9,7 +9,7 @@ Examples of use cases:
 
 This plugin can handle an arbitrary large number of keywords. As a rule of thumb, on PHP 5.5 with OPcache running on commodity hardware it takes about 1.5 ms to search for the names of 13,638 Magic: The Gathering cards in a text of a thousand characters. However, performance is highly dependent on the list of keywords and the content of the text and it is recommended to benchmark your application accordingly.
 
-Keywords are case-sensitive.
+Keywords are case-sensitive by default.
 
 ## When *not* to use this plugin
 
@@ -24,9 +24,14 @@ $configurator = new s9e\TextFormatter\Configurator;
 $configurator->Keywords->add('Bulbasaur');
 $configurator->Keywords->add('Pikachu');
 
+// Keywords are case-sensitive by default but you can make case-insensitive.
+// This is not recommended if the list of keywords contain words that could
+// appear in normal speech, e.g. "Fire", "Air", "The"
+$configurator->Keywords->caseSensitive = false;
+
 // Set the template that renders them
 $configurator->Keywords->getTag()->defaultTemplate
-	= '<a href="http://en.wikipedia.org/wiki/{@value}"><xsl:apply-templates/></a>';
+	= '<a href="http://bulbapedia.bulbagarden.net/wiki/{@value}"><xsl:apply-templates/></a>';
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());

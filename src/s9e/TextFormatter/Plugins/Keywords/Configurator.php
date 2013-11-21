@@ -24,6 +24,11 @@ class Configurator extends ConfiguratorBase
 	protected $attrName = 'value';
 
 	/**
+	* @var bool Whether keywords are case-sensitive
+	*/
+	public $caseSensitive = true;
+
+	/**
 	* @var NormalizedCollection List of [keyword => value]
 	*/
 	protected $collection;
@@ -85,7 +90,23 @@ class Configurator extends ConfiguratorBase
 
 		foreach ($groups as $keywords)
 		{
-			$regexp = '/\\b' . RegexpBuilder::fromList($keywords) . '\\b/S';
+			$regexp = RegexpBuilder::fromList(
+				$keywords,
+				['caseInsensitive' => !$this->caseSensitive]
+			);
+
+			$regexp = '/\\b' . $regexp . '\\b/S';
+
+			if (!$this->caseSensitive)
+			{
+				$regexp .= 'i';
+			}
+
+			if (preg_match('/[^[:ascii:]]/', $regexp))
+			{
+				$regexp .= 'u';
+			}
+
 			$config['regexps'][] = new Regexp($regexp, true);
 		}
 

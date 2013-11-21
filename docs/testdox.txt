@@ -2177,6 +2177,8 @@ s9e\TextFormatter\Tests\Plugins\Keywords\Configurator
  [x] The config array contains the name of the attribute
  [x] The config array contains an array of regexps
  [x] Keywords are split in groups to generate regexps smaller than ~32KB
+ [x] Regexps are case-insensitive if $plugin->caseSensitive is false
+ [x] Regexps that contain a non-ASCII character use Unicode mode
 
 s9e\TextFormatter\Tests\Plugins\Keywords\Parser
  [x] Parsing tests
