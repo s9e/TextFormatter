@@ -276,6 +276,18 @@ class JavaScriptTest extends Test
 	}
 
 	/**
+	* @testdox "className" is removed from the plugins' config
+	*/
+	public function testOmitClassName()
+	{
+		$this->configurator->Autolink;
+
+		$src = $this->configurator->javascript->getParser();
+
+		$this->assertNotContains('className', $src);
+	}
+
+	/**
 	* @testdox Callbacks use the bracket syntax to access registered vars
 	*/
 	public function testCallbackRegisteredVarBracket()

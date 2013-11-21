@@ -250,6 +250,41 @@ class PluginCollectionTest extends Test
 	}
 
 	/**
+	* @testdox asConfig() removes className from the plugin's configuration if it's using its default value
+	*/
+	public function testAsConfigRemoveClassName()
+	{
+		$this->configurator->plugins->load('Autolink');
+
+		$this->assertArrayMatches(
+			[
+				'Autolink' => [
+					'className' => null
+				]
+			],
+			$this->configurator->plugins->asConfig()
+		);
+	}
+
+	/**
+	* @testdox asConfig() preserves className from the plugin's configuration if it's using a custom value
+	*/
+	public function testAsConfigPreservesClassName()
+	{
+		$plugin = new \s9e\TextFormatter\Plugins\Autolink\Configurator($this->configurator);
+		$this->configurator->plugins->add('Foo', $plugin);
+
+		$this->assertArrayMatches(
+			[
+				'Foo' => [
+					'className' => 's9e\\TextFormatter\\Plugins\\Autolink\\Parser'
+				]
+			],
+			$this->configurator->plugins->asConfig()
+		);
+	}
+
+	/**
 	* @testdox finalize() calls every plugin's finalize() method
 	*/
 	public function testFinalize()

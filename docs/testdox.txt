@@ -236,6 +236,8 @@ s9e\TextFormatter\Tests\Configurator\Collections\PluginCollection
  [x] asConfig() removes regexpLimitAction from the plugin's configuration if it does not have a regexp
  [x] asConfig() adds quickMatch to the plugin's configuration if available
  [x] asConfig() omits a plugin's quickMatch if it's false
+ [x] asConfig() removes className from the plugin's configuration if it's using its default value
+ [x] asConfig() preserves className from the plugin's configuration if it's using a custom value
  [x] finalize() calls every plugin's finalize() method
 
 s9e\TextFormatter\Tests\Configurator\Collections\Ruleset
@@ -1549,6 +1551,7 @@ s9e\TextFormatter\Tests\Configurator\JavaScript
  [x] An attribute filter with no JS representation unconditionally returns false
  [x] The name of a registered vars is expressed in quotes
  [x] "cacheDir" is removed from registered vars
+ [x] "className" is removed from the plugins' config
  [x] Callbacks use the bracket syntax to access registered vars
  [x] Callbacks correctly encode values
  [x] isLegalProp() tests
@@ -1820,7 +1823,8 @@ s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor normalizes custom tag names
  [x] Constructor throws an exception if we attempt to set an attribute name but the property does not exist
  [x] Constructor throws an exception if we attempt to set a tag name but the property does not exist
- [x] getBaseProperties() return the values of quickMatch, regexpLimit and regexpLimitAction
+ [x] getBaseProperties() returns the values of quickMatch, regexpLimit and regexpLimitAction
+ [x] getBaseProperties() returns a className value derived from the configurator's class
  [x] setQuickMatch() sets the quickMatch property
  [x] setQuickMatch() throws an exception on non-strings
  [x] disableQuickMatch() sets the quickMatch property to false

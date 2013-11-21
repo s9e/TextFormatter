@@ -96,7 +96,7 @@ class ConfiguratorBaseTest extends Test
 	}
 
 	/**
-	* @testdox getBaseProperties() return the values of quickMatch, regexpLimit and regexpLimitAction
+	* @testdox getBaseProperties() returns the values of quickMatch, regexpLimit and regexpLimitAction
 	*/
 	public function testGetBaseProperties()
 	{
@@ -106,6 +106,21 @@ class ConfiguratorBaseTest extends Test
 		$this->assertArrayHasKey('quickMatch', $config);
 		$this->assertArrayHasKey('regexpLimit', $config);
 		$this->assertArrayHasKey('regexpLimitAction', $config);
+	}
+
+	/**
+	* @testdox getBaseProperties() returns a className value derived from the configurator's class
+	*/
+	public function testGetBasePropertiesClass()
+	{
+		$dummy = new DummyPluginConfigurator($this->configurator);
+		$config = $dummy->getBaseProperties();
+
+		$this->assertArrayHasKey('className', $config);
+		$this->assertSame(
+			's9e\\TextFormatter\\Tests\\Plugins\\DummyPluginParser',
+			$config['className']
+		);
 	}
 
 	/**

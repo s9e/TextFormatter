@@ -344,6 +344,9 @@ class JavaScript
 				continue;
 			}
 
+			// Not needed in JavaScript
+			unset($pluginConfig['className']);
+
 			// Ensure that quickMatch is UTF-8 if present
 			if (isset($pluginConfig['quickMatch']))
 			{

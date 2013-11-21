@@ -114,6 +114,7 @@ abstract class ConfiguratorBase implements ConfigProvider
 	final public function getBaseProperties()
 	{
 		return [
+			'className'         => preg_replace('/Configurator$/', 'Parser', get_class($this)),
 			'quickMatch'        => $this->quickMatch,
 			'regexpLimit'       => $this->regexpLimit,
 			'regexpLimitAction' => $this->regexpLimitAction
