@@ -1280,9 +1280,9 @@ class PHPTest extends Test
 				"(\$node->hasAttribute('archive_id')||\$node->hasAttribute('chapter_id')?'arch':'l')"
 			],
 			[
-				'<xsl:template match="FOO"><iframe height="{120-78*boolean(@track_num)}"/></xsl:template>',
-				"(\$node->hasAttribute('track_num')?42:120)",
-				'@track_num'
+				'<xsl:template match="FOO"><iframe height="{120-78*boolean(@track_id|@track_num)}"/></xsl:template>',
+				"(\$node->hasAttribute('track_id')||\$node->hasAttribute('track_num')?42:120)",
+				'@track_'
 			],
 			[
 				"<xsl:template match='FOO'><hr title=\"{380-300*(contains(@uri,':track:')orcontains(@path,'/track/'))}\"/></xsl:template>",

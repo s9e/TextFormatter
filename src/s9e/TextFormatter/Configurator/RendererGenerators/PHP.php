@@ -46,8 +46,8 @@ class PHP implements RendererGenerator
 			=> "strpos('upperlowerdecim',substr(\$node->getAttribute('type'),0,5))!==false",
 
 		// MediaEmbed: Bandcamp
-		'120-78*boolean(@track_num)'
-			=> "(\$node->hasAttribute('track_num')?42:120)",
+		'120-78*boolean(@track_id|@track_num)'
+			=> "(\$node->hasAttribute('track_id')||\$node->hasAttribute('track_num')?42:120)",
 
 		// MediaEmbed: Grooveshark
 		"substring('songWw',6-5*boolean(@songid),5)"

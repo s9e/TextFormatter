@@ -89,7 +89,7 @@ echo $html;
 	<tr>
 		<td><code>bandcamp</code></td>
 		<td>Bandcamp</td>
-		<td>http://proleter.bandcamp.com/album/curses-from-past-times-ep<br/>http://proleter.bandcamp.com/track/april-showers</td>
+		<td>http://proleter.bandcamp.com/album/curses-from-past-times-ep<br/>http://proleter.bandcamp.com/track/april-showers<br/>http://therunons.bandcamp.com/track/still-feel</td>
 	</tr>
 	<tr>
 		<td><code>blip</code></td>

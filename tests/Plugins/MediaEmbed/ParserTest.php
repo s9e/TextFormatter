@@ -169,7 +169,17 @@ class ParserTest extends Test
 			],
 			[
 				'http://proleter.bandcamp.com/track/muhammad-ali',
-				'<rt><BANDCAMP album_id="1122163921" track_num="7" url="http://proleter.bandcamp.com/track/muhammad-ali">http://proleter.bandcamp.com/track/muhammad-ali</BANDCAMP></rt>',
+				'<rt><BANDCAMP album_id="1122163921" track_id="3496015802" track_num="7" url="http://proleter.bandcamp.com/track/muhammad-ali">http://proleter.bandcamp.com/track/muhammad-ali</BANDCAMP></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bandcamp');
+				}
+			],
+			[
+				'http://therunons.bandcamp.com/track/still-feel',
+				'<rt><BANDCAMP track_id="2146686782" url="http://therunons.bandcamp.com/track/still-feel">http://therunons.bandcamp.com/track/still-feel</BANDCAMP></rt>',
 				[],
 				function ($configurator)
 				{
@@ -396,6 +406,16 @@ class ParserTest extends Test
 			[
 				'http://proleter.bandcamp.com/track/muhammad-ali',
 				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="http://bandcamp.com/EmbeddedPlayer/album=1122163921/size=small/t=7"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bandcamp');
+				}
+			],
+			[
+				'http://therunons.bandcamp.com/track/still-feel',
+				'<iframe width="400" height="42" allowfullscreen="" frameborder="0" scrolling="no" src="http://bandcamp.com/EmbeddedPlayer/track=2146686782/size=small"></iframe>',
 				[],
 				function ($configurator)
 				{
