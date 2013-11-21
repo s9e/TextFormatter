@@ -8,6 +8,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Choice;
+use s9e\TextFormatter\Configurator\Items\AttributeFilters\Hashmap;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Identifier;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Int;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Map;
@@ -944,6 +945,63 @@ class BBCodeMonkeyTest extends Test
 			],
 			[
 				'[foo={MAP=foo:bar,baz}/]',
+				new RuntimeException("Invalid map assignment 'baz'")
+			],
+			[
+				'[foo={HASHMAP=one:uno,two:dos}/]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [
+									new Hashmap([
+										'one' => 'uno',
+										'two' => 'dos'
+									])
+								]
+							]
+						]
+					]),
+					'tokens' => [
+						'HASHMAP' => 'foo'
+					],
+					'passthroughToken' => null
+				]
+			],
+			[
+				'[foo={HASHMAP=one:uno,two:dos;strict}/]',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributes' => [
+							'foo' => [
+								'filterChain' => [
+									new Hashmap(
+										[
+											'one' => 'uno',
+											'two' => 'dos'
+										],
+										true
+									)
+								]
+							]
+						]
+					]),
+					'tokens' => [
+						'HASHMAP' => 'foo'
+					],
+					'passthroughToken' => null
+				]
+			],
+			[
+				'[foo={HASHMAP=foo:bar,baz}/]',
 				new RuntimeException("Invalid map assignment 'baz'")
 			],
 			[

@@ -574,7 +574,7 @@ class BBCodeMonkey
 	{
 		$tokenTypes = [
 			'choice' => 'CHOICE[0-9]*=(?<choices>.+?)',
-			'map'    => 'MAP[0-9]*=(?<map>.+?)',
+			'map'    => '(?:HASH)?MAP[0-9]*=(?<map>.+?)',
 			'parse'  => 'PARSE=(?<regexps>' . self::REGEXP . '(?:,' . self::REGEXP . ')*)',
 			'range'  => 'RAN(?:DOM|GE)[0-9]*=(?<min>-?[0-9]+),(?<max>-?[0-9]+)',
 			'regexp' => 'REGEXP[0-9]*=(?<regexp>' . self::REGEXP . ')',
@@ -595,7 +595,7 @@ class BBCodeMonkey
 		foreach ($matches as $m)
 		{
 			if (isset($m['other'][0])
-			 && preg_match('#^(?:CHOICE|MAP|REGEXP|PARSE|RANDOM|RANGE)#', $m['other'][0]))
+			 && preg_match('#^(?:CHOICE|HASHMAP|MAP|REGEXP|PARSE|RANDOM|RANGE)#', $m['other'][0]))
 			{
 				throw new RuntimeException("Malformed token '" . $m['other'][0] . "'");
 			}
@@ -718,7 +718,7 @@ class BBCodeMonkey
 			);
 			unset($token['options']['caseSensitive']);
 		}
-		elseif ($token['type'] === 'MAP')
+		elseif ($token['type'] === 'HASHMAP' || $token['type'] === 'MAP')
 		{
 			// Build the map from the string
 			$map = [];
@@ -735,12 +735,23 @@ class BBCodeMonkey
 			}
 
 			// Create the filter then append it to the attribute
-			$filter = $this->configurator->attributeFilters->get('#map');
-			$attribute->filterChain->append($filter)->setMap(
-				$map,
-				!empty($token['options']['caseSensitive']),
-				!empty($token['options']['strict'])
-			);
+			if ($token['type'] === 'HASHMAP')
+			{
+				$filter = $this->configurator->attributeFilters->get('#hashmap');
+				$attribute->filterChain->append($filter)->setMap(
+					$map,
+					!empty($token['options']['strict'])
+				);
+			}
+			else
+			{
+				$filter = $this->configurator->attributeFilters->get('#map');
+				$attribute->filterChain->append($filter)->setMap(
+					$map,
+					!empty($token['options']['caseSensitive']),
+					!empty($token['options']['strict'])
+				);
+			}
 
 			// Remove options that are not needed anymore
 			unset($token['options']['caseSensitive']);
