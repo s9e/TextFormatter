@@ -44,8 +44,8 @@ function getMatches(regexp)
 
 	while (m = regexp.exec(text))
 	{
-		// NOTE: using parseInt() here because Closure Compiler thinks pos is a string otherwise
-		var pos   = parseInt(m['index'], 10),
+		// NOTE: coercing m.index to a number because Closure Compiler thinks pos is a string otherwise
+		var pos   = +m['index'],
 			match = [[m[0], pos]],
 			i = 0;
 

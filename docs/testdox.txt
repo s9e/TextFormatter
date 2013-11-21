@@ -2175,8 +2175,6 @@ s9e\TextFormatter\Tests\Plugins\Keywords\Configurator
  [x] asConfig() returns FALSE if no keyword was added
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
- [x] The config array contains a map of custom values for keywords
- [x] The map of omits values that are identical to their keyword
  [x] The config array contains an array of regexps
  [x] Keywords are split in groups to generate regexps smaller than ~32KB
 

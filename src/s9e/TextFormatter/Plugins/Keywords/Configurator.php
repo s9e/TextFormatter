@@ -8,10 +8,9 @@
 namespace s9e\TextFormatter\Plugins\Keywords;
 
 use InvalidArgumentException;
-use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use s9e\TextFormatter\Configurator\Collections\NormalizedList;
 use s9e\TextFormatter\Configurator\Helpers\RegexpBuilder;
 use s9e\TextFormatter\Configurator\Items\Regexp;
-use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 
@@ -39,7 +38,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function setUp()
 	{
-		$this->collection = new NormalizedCollection;
+		$this->collection = new NormalizedList;
 
 		$this->configurator->tags->add($this->tagName)->attributes->add($this->attrName);
 	}
@@ -54,24 +53,15 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
-		$keywords = [];
-		$config   = [
-			'attrName' => $this->attrName,
-			'tagName'  => $this->tagName,
-			'map'      => new Dictionary
-		];
+		$config = parent::asConfig();
 
-		foreach ($this->collection as $keyword => $value)
-		{
-			if (isset($value) && $keyword !== $value)
-			{
-				$config['map'][$keyword] = $value;
-			}
+		// Remove the collection from the config
+		$keywords = $config['collection'];
+		unset($config['collection']);
 
-			$keywords[] = $keyword;
-		}
-
-		// Sort keywords in order to keep keywords that start with the same characters together
+		// Sort keywords in order to keep keywords that start with the same characters together. We
+		// also remove duplicates that would otherwise skew the length computation done below
+		$keywords = array_unique($keywords);
 		sort($keywords);
 
 		// Group keywords by chunks of ~30KB to remain below PCRE's limit

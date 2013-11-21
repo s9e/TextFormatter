@@ -26,14 +26,7 @@ class Parser extends ParserBase
 
 			foreach ($matches[0] as list($value, $pos))
 			{
-				$len = strlen($value);
-
-				if (isset($this->config['map'][$value]))
-				{
-					$value = $this->config['map'][$value];
-				}
-
-				$this->parser->addSelfClosingTag($tagName, $pos, $len)
+				$this->parser->addSelfClosingTag($tagName, $pos, strlen($value))
 				             ->setAttribute($attrName, $value);
 			}
 		}

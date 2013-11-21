@@ -9,16 +9,10 @@ regexps.forEach(function(regexp)
 	regexp.lastIndex = 0;
 	while (m = regexp.exec(text))
 	{
-		// NOTE: using parseInt() here because Closure Compiler thinks pos is a string otherwise
+		// NOTE: coercing m.index to a number because Closure Compiler thinks pos is a string otherwise
 		var value = m[0],
-			pos = parseInt(m['index'], 10),
-			len = value.length;
+			pos   = +m['index'];
 
-		if (config.map && (value in config.map))
-		{
-			value = config.map[value];
-		}
-
-		addSelfClosingTag(tagName, pos, len).setAttribute(attrName, value);
+		addSelfClosingTag(tagName, pos, value.length).setAttribute(attrName, value);
 	}
 });

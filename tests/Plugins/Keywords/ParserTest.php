@@ -48,16 +48,6 @@ class ParserTest extends Test
 					$configurator->Keywords->add('foo');
 				}
 			],
-			[
-				'foo bar baz',
-				'<rt><KEYWORD value="bar">foo</KEYWORD> <KEYWORD value="baz">bar</KEYWORD> baz</rt>',
-				[],
-				function ($configurator)
-				{
-					$configurator->Keywords->add('foo', 'bar');
-					$configurator->Keywords->add('bar', 'baz');
-				}
-			],
 		];
 	}
 }

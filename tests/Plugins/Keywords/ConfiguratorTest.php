@@ -72,41 +72,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox The config array contains a map of custom values for keywords
-	*/
-	public function testConfigMap()
-	{
-		$this->configurator->Keywords->add('foo', 'bar');
-		$this->configurator->Keywords->add('baz', 'quux');
-
-		$config = $this->configurator->Keywords->asConfig();
-
-		$this->assertArrayHasKey('map', $config);
-		$this->assertEquals(
-			['foo' => 'bar', 'baz' => 'quux'],
-			$config['map']->getArrayCopy()
-		);
-	}
-
-	/**
-	* @testdox The map of omits values that are identical to their keyword
-	*/
-	public function testConfigMapSparse()
-	{
-		$this->configurator->Keywords->add('foo', 'bar');
-		$this->configurator->Keywords->add('bar', 'bar');
-		$this->configurator->Keywords->add('baz', 'quux');
-
-		$config = $this->configurator->Keywords->asConfig();
-
-		$this->assertArrayHasKey('map', $config);
-		$this->assertEquals(
-			['foo' => 'bar', 'baz' => 'quux'],
-			$config['map']->getArrayCopy()
-		);
-	}
-
-	/**
 	* @testdox The config array contains an array of regexps
 	*/
 	public function testConfigRegexps()
