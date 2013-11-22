@@ -322,7 +322,7 @@ __LEFT__
 ```
 
 __LIST__  
-`[LIST type={MAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;caseSensitive;optional;postFilter=#simpletext}]{TEXT}[/LIST]`
+`[LIST type={HASHMAP=1:decimal,a:lower-alpha,A:upper-alpha,i:lower-roman,I:upper-roman;optional;postFilter=#simpletext}]{TEXT}[/LIST]`
 ```xsl
 <xsl:choose>
 	<xsl:when test="not(@type)">
