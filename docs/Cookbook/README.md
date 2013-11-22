@@ -30,6 +30,7 @@
     * [Alias HTML elements to other tags](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/HTMLElements/Aliases.md)
   * **Keywords**
     * [Automatically link Magic: The Gathering cards](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Keywords/MTG.md)
+    * [How to map keywords to IDs](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Keywords/Map.md)
   * **MediaEmbed**
     * [Add a site from the supported list](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AddBundled.md)
     * [Add a site manually](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/MediaEmbed/AddCustom.md)
