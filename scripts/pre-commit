@@ -19,6 +19,13 @@ then
 	git update-index --add "src/s9e/TextFormatter/Plugins/MediaEmbed/README.md"
 fi
 
+if [[ -n `git diff --cached --name-only -b src/s9e/TextFormatter/Plugins/BBCodes/Configurator/repository.xml` ]]
+then
+	./scripts/patchBundledBBCodesCookbook.php
+
+	git update-index --add "src/s9e/TextFormatter/Plugins/MediaEmbed/README.md"
+fi
+
 if [[ -n `git diff --cached --name-only -b "src" "tests" | grep php` ]]
 then
 	phpunit --exclude-group none --testdox-text docs/testdox.txt | tee $TMP
