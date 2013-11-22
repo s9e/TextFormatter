@@ -47,6 +47,8 @@ abstract class ConfiguratorBase implements ConfigProvider
 	*/
 	final public function __construct(Configurator $configurator, array $overrideProps = [])
 	{
+		$this->configurator = $configurator;
+
 		foreach ($overrideProps as $k => $v)
 		{
 			$methodName = 'set' . ucfirst($k);
@@ -65,7 +67,6 @@ abstract class ConfiguratorBase implements ConfigProvider
 			}
 		}
 
-		$this->configurator = $configurator;
 		$this->setUp();
 	}
 
