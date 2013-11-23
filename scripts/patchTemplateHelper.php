@@ -40,7 +40,7 @@ foreach ($page->xpath($query) as $a)
 $query = '/html/body/dl/h3[@id="attributes-1"]/following-sibling::table[1]/tbody/tr';
 $page  = getPage(
 	'/tmp/html51attributes.html',
-	'http://www.w3.org/html/wg/drafts/html/master/iana.html'
+	'http://www.w3.org/html/wg/drafts/html/master/text-level-semantics.html'
 );
 
 foreach ($page->xpath($query) as $tr)
