@@ -524,7 +524,7 @@ class ConfiguratorTest extends Test
 	{
 		$this->configurator->registeredVars['foo'] = 1;
 		$this->assertTrue(isset($this->configurator->foo));
-		unset($this->configurator->registeredVars['foo']);
+		unset($this->configurator->foo);
 		$this->assertFalse(isset($this->configurator->foo));
 	}
 
