@@ -18,6 +18,7 @@ class Forum extends Bundle
 	public function configure(Configurator $configurator)
 	{
 		$configurator->BBCodes->addFromRepository('B');
+		$configurator->BBCodes->addFromRepository('CENTER');
 		$configurator->BBCodes->addFromRepository('CODE');
 		$configurator->BBCodes->addFromRepository('COLOR');
 		$configurator->BBCodes->addFromRepository('EMAIL');
@@ -77,9 +78,11 @@ class Forum extends Bundle
 
 		$configurator->MediaEmbed->add('dailymotion');
 		$configurator->MediaEmbed->add('facebook');
+		$configurator->MediaEmbed->add('instagram');
 		$configurator->MediaEmbed->add('liveleak');
 		$configurator->MediaEmbed->add('twitch');
 		$configurator->MediaEmbed->add('vimeo');
+		$configurator->MediaEmbed->add('vine');
 		$configurator->MediaEmbed->add('youtube');
 
 		$configurator->Autoemail;

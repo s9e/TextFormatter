@@ -11,6 +11,7 @@
     * [Unparsing](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/00_Getting_started/Basic_usage/Unparsing.md)
 
 ### **Bundles**
+  * [Forum, a bundle for forum software](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/10_Bundles/Forum.md)
   * [S18, a bundle compatible with SMF 2.1 markup](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/10_Bundles/S18.md)
 
 ### **Plugins**
