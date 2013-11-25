@@ -136,13 +136,15 @@
 	<site id="dailymotion">
 		<name>Dailymotion</name>
 		<homepage>http://www.dailymotion.com/</homepage>
-		<source>http://www.dailymotion.com/doc/api/player</source>
+		<source>http://www.dailymotion.com/doc/api/player.html</source>
 		<example>http://www.dailymotion.com/video/x222z1</example>
 		<example>http://www.dailymotion.com/user/Dailymotion/2#video=x222z1</example>
 
 		<host>dailymotion.com</host>
 		<extract>!dailymotion\.com/(?:video/|user/[^#]+#video=)(?'id'[A-Za-z0-9]+)!</extract>
+		<iframe width="560" height="315" src="http://www.dailymotion.com/embed/video/{@id}"/>
 		<flash width="560" height="315" src="http://www.dailymotion.com/swf/{@id}"/>
+		<oembed url="http://www.dailymotion.com/services/oembed"/>
 	</site>
 
 	<site id="dailyshow">
