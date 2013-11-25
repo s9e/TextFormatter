@@ -25,7 +25,7 @@ abstract class AbstractTest extends Test
 
 	public static function setUpBeforeClass()
 	{
-		$className  = static::getClassName();
+		$className = static::getClassName();
 
 		// Start with a clean parser and renderer
 		$className::reset();
@@ -37,7 +37,14 @@ abstract class AbstractTest extends Test
 	*/
 	public function testRender($text, $html, $params = [])
 	{
-		$className  = static::getClassName();
+		$className = static::getClassName();
+
+		if (!isset($className::$parser))
+		{
+			$className::parse('');
+		}
+
+		$className::$parser->registeredVars['cacheDir'] = __DIR__ . '/../.cache';
 
 		$this->assertSame($html, $className::render($className::parse($text), $params));
 
