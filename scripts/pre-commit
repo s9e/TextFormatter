@@ -14,6 +14,7 @@ fi
 
 if [[ -n `git diff --cached --name-only -b src/s9e/TextFormatter/Plugins/MediaEmbed/Configurator/sites.xml` ]]
 then
+	./scripts/patchExamples.php
 	./scripts/patchMediaEmbedReadme.php
 
 	git update-index --add "src/s9e/TextFormatter/Plugins/MediaEmbed/README.md"
