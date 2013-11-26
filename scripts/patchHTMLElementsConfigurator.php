@@ -21,7 +21,7 @@ function loadPage($url)
 	return $page;
 }
 
-$page = loadPage('http://www.w3.org/html/wg/drafts/html/master/text-level-semantics.html');
+$page = loadPage('http://www.w3.org/html/wg/drafts/html/master/index.html');
 
 $query = '/html/body/h3[@id="attributes-1"]/following-sibling::table[1]/tbody/tr[contains(td[3],"URL")]';
 
