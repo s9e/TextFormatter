@@ -565,19 +565,29 @@
 		<example>http://www.youtube.com/watch?v=-cEzsCAzTak</example>
 		<example>http://youtu.be/-cEzsCAzTak</example>
 		<example>http://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40</example>
+		<example>http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</example>
 
 		<host>youtube.com</host>
 		<host>youtu.be</host>
-		<extract>!youtube\.com/(?:watch\?.*?v=|v/)(?'id'[-0-9A-Z_a-z]+)!</extract>
-		<extract>!youtu\.be/(?'id'[-0-9A-Z_a-z]+)!</extract>
+		<extract>!youtube\.com/(?:watch\?.*?v=|v/)(?'id'[-\w]+)!</extract>
+		<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
 		<extract>![#&amp;?]t=(?'t'\d+)!</extract>
+		<extract>!&amp;list=(?'list'[-\w]+)!</extract>
 		<iframe width="560" height="315">
 			<src><![CDATA[
 				<xsl:text>//www.youtube.com/embed/</xsl:text>
 				<xsl:value-of select="@id"/>
-				<xsl:if test="@t">
-					<xsl:text>?start=</xsl:text>
-					<xsl:value-of select="@t"/>
+				<xsl:if test="@list or @t">
+					<xsl:text>?</xsl:text>
+					<xsl:if test="@list">
+						<xsl:text>list=</xsl:text>
+						<xsl:value-of select="@list"/>
+						<xsl:if test="@t">&amp;</xsl:if>
+					</xsl:if>
+					<xsl:if test="@t">
+						<xsl:text>start=</xsl:text>
+						<xsl:value-of select="@t"/>
+					</xsl:if>
 				</xsl:if>
 			]]></src>
 		</iframe>
