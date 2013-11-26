@@ -54,7 +54,7 @@ function convertCustom($filepath, &$file)
 			function ($file)
 			{
 				return preg_replace(
-					'/public function getData()\\s+\\{(\\s+)/',
+					'/public function getData\\(\\)\\s+\\{(\\s+)/',
 					'$0\\$test = \\$this;$1',
 					$file
 				);
