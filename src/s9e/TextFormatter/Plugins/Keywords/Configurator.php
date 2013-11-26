@@ -58,15 +58,14 @@ class Configurator extends ConfiguratorBase
 			return false;
 		}
 
-		$config = parent::asConfig();
-
-		// Remove the collection from the config
-		$keywords = $config['collection'];
-		unset($config['collection']);
+		$config = [
+			'attrName' => $this->attrName,
+			'tagName'  => $this->tagName
+		];
 
 		// Sort keywords in order to keep keywords that start with the same characters together. We
 		// also remove duplicates that would otherwise skew the length computation done below
-		$keywords = array_unique($keywords);
+		$keywords = array_unique(iterator_to_array($this->collection));
 		sort($keywords);
 
 		// Group keywords by chunks of ~30KB to remain below PCRE's limit
