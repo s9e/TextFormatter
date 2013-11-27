@@ -366,27 +366,40 @@
 		<source>https://soundcloud.com/pages/widgets</source>
 		<example>http://api.soundcloud.com/tracks/98282116</example>
 		<example>https://soundcloud.com/andrewbird/three-white-horses</example>
+		<example>https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</example>
 
 		<host>soundcloud.com</host>
-		<extract>@(?'id'https?://.*?soundcloud\.com/(?!explore/|pages/)[^/]+/[-/\w]+(?:(?:\?secret_token=|/(?=s-))(?'secret_token'[-\w]+))?)@</extract>
-		<extract>@api\.soundcloud\.com(?:/|%2F)tracks(?:/|%2F)(?'track_id'\d+)@</extract>
-		<scrape url="https://api.soundcloud.com/resolve?_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;url={@id}">
+		<extract>@api\.soundcloud\.com(?:/|%2F)(?:playlists(?:/|%2F)(?'playlist_id'\d+)|tracks(?:/|%2F)(?'track_id'\d+))(?:\?secret_token=(?'secret_token'[-\w]+))?@</extract>
+		<extract>@soundcloud\.com/(?!playlists/|tracks/)(?'path'[^/]+/(?:sets/)?[^/]+)(?:/(?=s-)(?'secret_token'[-\w]+))?@</extract>
+		<scrape url="https://api.soundcloud.com/resolve?_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;url={@url}">
 			<!-- Match URLs with a secret token -->
-			<match>@soundcloud\.com/[-\w]+/[-\w]+/s-@</match>
+			<match>@soundcloud\.com/(?!playlists/|tracks/)[^/]+/[^/]+/s-@</match>
 			<extract>@tracks/(?'track_id'\d+)@</extract>
 		</scrape>
 		<iframe width="560" height="166">
 			<src><![CDATA[
-				<xsl:text>https://w.soundcloud.com/player/?url=</xsl:text>
+				<xsl:text>https://w.soundcloud.com/player/?url=https://</xsl:text>
 				<xsl:choose>
-					<xsl:when test="@track_id and @secret_token">
-						<xsl:text>https%3A//api.soundcloud.com/tracks/</xsl:text>
-						<xsl:value-of select="@track_id"/>
-						<xsl:text>%3Fsecret_token%3D</xsl:text>
-						<xsl:value-of select="@secret_token"/>
+					<xsl:when test="@track_id or @playlist_id">
+						<xsl:text>api.soundcloud.com/</xsl:text>
+						<xsl:choose>
+							<xsl:when test="@track_id">
+								<xsl:text>tracks/</xsl:text>
+								<xsl:value-of select="@track_id"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>playlists/</xsl:text>
+								<xsl:value-of select="@playlist_id"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:if test="@secret_token">
+							<xsl:text>%3Fsecret_token%3D</xsl:text>
+							<xsl:value-of select="@secret_token"/>
+						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="@id"/>
+						<xsl:text>soundcloud.com/</xsl:text>
+						<xsl:value-of select="@path"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			]]></src>
