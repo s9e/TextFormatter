@@ -369,19 +369,19 @@
 		<example>https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</example>
 
 		<host>soundcloud.com</host>
-		<extract>@api\.soundcloud\.com(?:/|%2F)(?:playlists(?:/|%2F)(?'playlist_id'\d+)|tracks(?:/|%2F)(?'track_id'\d+))(?:\?secret_token=(?'secret_token'[-\w]+))?@</extract>
-		<extract>@soundcloud\.com/(?!playlists/|tracks/)(?'path'[^/]+/(?:sets/)?[^/]+)(?:/(?=s-)(?'secret_token'[-\w]+))?@</extract>
-		<scrape url="https://api.soundcloud.com/resolve?_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;url={@url}">
+		<extract>@(?'id'https?://(?:api\.soundcloud\.com/(?:playlist|track)s/\d+|soundcloud\.com/[^/]+/(?:sets/)?[^/]+)(?:(?:\?secret_token=|/(?=s-))(?'secret_token'[-\w]+))?)@</extract>
+		<scrape url="https://api.soundcloud.com/resolve?_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;url={@id}">
 			<!-- Match URLs with a secret token -->
 			<match>@soundcloud\.com/(?!playlists/|tracks/)[^/]+/[^/]+/s-@</match>
+			<extract>@playlists/(?'playlist_id'\d+)@</extract>
 			<extract>@tracks/(?'track_id'\d+)@</extract>
 		</scrape>
 		<iframe width="560" height="166">
 			<src><![CDATA[
-				<xsl:text>https://w.soundcloud.com/player/?url=https://</xsl:text>
+				<xsl:text>https://w.soundcloud.com/player/?url=</xsl:text>
 				<xsl:choose>
-					<xsl:when test="@track_id or @playlist_id">
-						<xsl:text>api.soundcloud.com/</xsl:text>
+					<xsl:when test="@secret_token and (@track_id or @playlist_id)">
+						<xsl:text>https://api.soundcloud.com/</xsl:text>
 						<xsl:choose>
 							<xsl:when test="@track_id">
 								<xsl:text>tracks/</xsl:text>
@@ -392,14 +392,11 @@
 								<xsl:value-of select="@playlist_id"/>
 							</xsl:otherwise>
 						</xsl:choose>
-						<xsl:if test="@secret_token">
-							<xsl:text>%3Fsecret_token%3D</xsl:text>
-							<xsl:value-of select="@secret_token"/>
-						</xsl:if>
+						<xsl:text>&amp;secret_token=</xsl:text>
+						<xsl:value-of select="@secret_token"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>soundcloud.com/</xsl:text>
-						<xsl:value-of select="@path"/>
+						<xsl:value-of select="@id"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			]]></src>
