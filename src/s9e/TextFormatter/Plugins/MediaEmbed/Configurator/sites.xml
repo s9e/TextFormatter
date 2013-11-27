@@ -380,18 +380,15 @@
 			<src><![CDATA[
 				<xsl:text>https://w.soundcloud.com/player/?url=</xsl:text>
 				<xsl:choose>
-					<xsl:when test="@secret_token and (@track_id or @playlist_id)">
-						<xsl:text>https://api.soundcloud.com/</xsl:text>
-						<xsl:choose>
-							<xsl:when test="@track_id">
-								<xsl:text>tracks/</xsl:text>
-								<xsl:value-of select="@track_id"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:text>playlists/</xsl:text>
-								<xsl:value-of select="@playlist_id"/>
-							</xsl:otherwise>
-						</xsl:choose>
+					<xsl:when test="@secret_token and @track_id">
+						<xsl:text>https://api.soundcloud.com/tracks/</xsl:text>
+						<xsl:value-of select="@track_id"/>
+						<xsl:text>&amp;secret_token=</xsl:text>
+						<xsl:value-of select="@secret_token"/>
+					</xsl:when>
+					<xsl:when test="@secret_token and @playlist_id">
+						<xsl:text>https://api.soundcloud.com/playlists/</xsl:text>
+						<xsl:value-of select="@playlist_id"/>
 						<xsl:text>&amp;secret_token=</xsl:text>
 						<xsl:value-of select="@secret_token"/>
 					</xsl:when>
