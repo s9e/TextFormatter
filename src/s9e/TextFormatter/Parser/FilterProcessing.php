@@ -37,8 +37,8 @@ trait FilterProcessing
 					// Set the target attributes
 					foreach ($m as $targetName => $targetValue)
 					{
-						// Skip numeric captures
-						if (is_numeric($targetName))
+						// Skip numeric captures and empty captures
+						if (is_numeric($targetName) || $targetValue === '')
 						{
 							continue;
 						}

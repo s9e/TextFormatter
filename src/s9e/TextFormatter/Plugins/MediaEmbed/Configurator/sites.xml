@@ -369,7 +369,7 @@
 		<example>https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/</example>
 
 		<host>soundcloud.com</host>
-		<extract>@(?'id'https?://(?:api\.soundcloud\.com/(?:playlist|track)s/\d+|soundcloud\.com/[^/]+/(?:sets/)?[^/]+)(?:(?:\?secret_token=|/(?=s-))(?'secret_token'[-\w]+))?)@</extract>
+		<extract>@(?'id'https?://(?:api\.soundcloud\.com/(?:playlists/(?'playlist_id'\d+)|tracks/(?'track_id'\d+))|soundcloud\.com/[^/]+/(?:sets/)?[^/]+)(?:(?:\?secret_token=|/(?=s-))(?'secret_token'[-\w]+))?)@</extract>
 		<scrape url="https://api.soundcloud.com/resolve?_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;url={@id}">
 			<!-- Match URLs with a secret token -->
 			<match>@soundcloud\.com/(?!playlists/|tracks/)[^/]+/[^/]+/s-@</match>

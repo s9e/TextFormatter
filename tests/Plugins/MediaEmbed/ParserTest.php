@@ -1013,7 +1013,7 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<rt><SOUNDCLOUD id="http://api.soundcloud.com/tracks/98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
+				'<rt><SOUNDCLOUD id="http://api.soundcloud.com/tracks/98282116" track_id="98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1022,7 +1022,7 @@ class ParserTest extends Test
 			],
 			[
 				'[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]',
-				'<rt><SOUNDCLOUD id="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" secret_token="s-foobar" url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar">[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
+				'<rt><SOUNDCLOUD id="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" secret_token="s-foobar" track_id="12345" url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar">[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1049,7 +1049,7 @@ class ParserTest extends Test
 			],
 			[
 				'[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]',
-				'<rt><SOUNDCLOUD id="https://api.soundcloud.com/playlists/1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></rt>',
+				'<rt><SOUNDCLOUD id="https://api.soundcloud.com/playlists/1919974" playlist_id="1919974" url="https://api.soundcloud.com/playlists/1919974">[soundcloud url="https://api.soundcloud.com/playlists/1919974" width="100%" height="450" iframe="true" /]</SOUNDCLOUD></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1498,7 +1498,7 @@ class ParserTest extends Test
 			],
 			[
 				'[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]',
-				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/12345?secret_token=s-foobar"></iframe>',
+				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/12345&amp;secret_token=s-foobar"></iframe>',
 				[],
 				function ($configurator)
 				{
