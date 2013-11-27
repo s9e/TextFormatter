@@ -370,9 +370,9 @@
 
 		<host>soundcloud.com</host>
 		<extract>@(?'id'https?://(?:(?:api\.soundcloud\.com/(?:playlist|track)s/\d+)|soundcloud\.com/[^/]+/(?:sets/)?[^/]+)(?:(?:\?secret_token=|/(?=s-))(?'secret_token'[-\w]+))?)@</extract>
-		<scrape url="https://api.soundcloud.com/resolve?_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;url={@id}">
+		<scrape url="https://api.soundcloud.com/resolve?url={@id}&amp;_status_code_map%5B302%5D=200&amp;_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;app_version=7a35847b">
 			<!-- Match URLs with a secret token -->
-			<match>@soundcloud\.com/(?!playlists/|tracks/)[^/]+/[^/]+/s-@</match>
+			<match>@soundcloud\.com/(?!playlists/|tracks/)[^/]+/(?:sets/)?[^/]+/s-@</match>
 			<extract>@playlists/(?'playlist_id'\d+)@</extract>
 			<extract>@tracks/(?'track_id'\d+)@</extract>
 		</scrape>
@@ -380,15 +380,15 @@
 			<src><![CDATA[
 				<xsl:text>https://w.soundcloud.com/player/?url=</xsl:text>
 				<xsl:choose>
-					<xsl:when test="@secret_token and @track_id">
-						<xsl:text>https://api.soundcloud.com/tracks/</xsl:text>
-						<xsl:value-of select="@track_id"/>
-						<xsl:text>&amp;secret_token=</xsl:text>
-						<xsl:value-of select="@secret_token"/>
-					</xsl:when>
 					<xsl:when test="@secret_token and @playlist_id">
 						<xsl:text>https://api.soundcloud.com/playlists/</xsl:text>
 						<xsl:value-of select="@playlist_id"/>
+						<xsl:text>&amp;secret_token=</xsl:text>
+						<xsl:value-of select="@secret_token"/>
+					</xsl:when>
+					<xsl:when test="@secret_token and @track_id">
+						<xsl:text>https://api.soundcloud.com/tracks/</xsl:text>
+						<xsl:value-of select="@track_id"/>
 						<xsl:text>&amp;secret_token=</xsl:text>
 						<xsl:value-of select="@secret_token"/>
 					</xsl:when>

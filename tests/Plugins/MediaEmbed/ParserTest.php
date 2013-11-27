@@ -338,6 +338,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://soundcloud.com/swami-john/sets/auto-midnight-scrap-heap/s-0WDep',
+				'<rt><SOUNDCLOUD id="https://soundcloud.com/swami-john/sets/auto-midnight-scrap-heap/s-0WDep" playlist_id="3111458" secret_token="s-0WDep" url="https://soundcloud.com/swami-john/sets/auto-midnight-scrap-heap/s-0WDep">https://soundcloud.com/swami-john/sets/auto-midnight-scrap-heap/s-0WDep</SOUNDCLOUD></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt',
 				'<rt><TEAMCOCO id="54003" url="http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt">http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</TEAMCOCO></rt>',
 				[],
