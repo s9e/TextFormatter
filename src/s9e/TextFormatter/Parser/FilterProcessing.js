@@ -31,13 +31,14 @@ function executeAttributePreprocessors(tag, tagConfig)
 				// Set the target attributes
 				map.forEach(function(targetName, mIndex)
 				{
-					var targetValue = m[mIndex];
-
-					// Skip captures with no targets
-					if (targetName === '')
+					// Skip captures with no targets and targets with no captures (in case of
+					// optional captures)
+					if (targetName === '' || typeof m[mIndex] !== 'string')
 					{
 						return;
 					}
+
+					var targetValue = m[mIndex];
 
 					// Attribute preprocessors cannot overwrite other attributes but they can
 					// overwrite themselves

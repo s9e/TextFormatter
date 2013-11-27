@@ -368,8 +368,29 @@
 		<example>https://soundcloud.com/andrewbird/three-white-horses</example>
 
 		<host>soundcloud.com</host>
-		<extract>@(?'id'https?://.*?soundcloud\.com/(?!explore/|pages/)[^/]+/[-/\w]+)@</extract>
-		<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url={@id}"/>
+		<extract>@(?'id'https?://.*?soundcloud\.com/(?!explore/|pages/)[^/]+/[-/\w]+(?:(?:\?secret_token=|/(?=s-))(?'secret_token'[-\w]+))?)@</extract>
+		<extract>@api\.soundcloud\.com(?:/|%2F)tracks(?:/|%2F)(?'track_id'\d+)@</extract>
+		<scrape url="https://api.soundcloud.com/resolve?_status_format=json&amp;client_id=b45b1aa10f1ac2941910a7f0d10f8e28&amp;url={@id}">
+			<!-- Match URLs with a secret token -->
+			<match>@soundcloud\.com/[-\w]+/[-\w]+/s-@</match>
+			<extract>@tracks/(?'track_id'\d+)@</extract>
+		</scrape>
+		<iframe width="560" height="166">
+			<src><![CDATA[
+				<xsl:text>https://w.soundcloud.com/player/?url=</xsl:text>
+				<xsl:choose>
+					<xsl:when test="@track_id and @secret_token">
+						<xsl:text>https%3A//api.soundcloud.com/tracks/</xsl:text>
+						<xsl:value-of select="@track_id"/>
+						<xsl:text>%3Fsecret_token%3D</xsl:text>
+						<xsl:value-of select="@secret_token"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@id"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			]]></src>
+		</iframe>
 	</site>
 
 	<site id="spotify">

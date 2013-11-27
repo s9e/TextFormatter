@@ -328,6 +328,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm',
+				'<rt><SOUNDCLOUD id="https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm" track_id="51465673" url="https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm">https://soundcloud.com/matt0753/iroh-ii-deep-voice/s-UpqTm</SOUNDCLOUD></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt',
 				'<rt><TEAMCOCO id="54003" url="http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt">http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</TEAMCOCO></rt>',
 				[],
@@ -993,7 +1003,16 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<rt><SOUNDCLOUD id="http://api.soundcloud.com/tracks/98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
+				'<rt><SOUNDCLOUD id="http://api.soundcloud.com/tracks/98282116" track_id="98282116" url="http://api.soundcloud.com/tracks/98282116">[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]',
+				'<rt><SOUNDCLOUD id="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" secret_token="s-foobar" track_id="12345" url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar">[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]</SOUNDCLOUD></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1442,7 +1461,16 @@ class ParserTest extends Test
 			[
 				// Taken from the "WordPress Code" button of the page
 				'[soundcloud url="http://api.soundcloud.com/tracks/98282116" params="" width=" 100%" height="166" iframe="true" /]',
-				'<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/98282116" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=http://api.soundcloud.com/tracks/98282116"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'[soundcloud url="https://api.soundcloud.com/tracks/12345?secret_token=s-foobar" width="100%" height="166" iframe="true" /]',
+				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/12345%3Fsecret_token%3Ds-foobar"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1451,7 +1479,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe width="560" height="166" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses" allowfullscreen="" frameborder="0" scrolling="no"></iframe>',
+				'<iframe width="560" height="166" allowfullscreen="" frameborder="0" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses"></iframe>',
 				[],
 				function ($configurator)
 				{
