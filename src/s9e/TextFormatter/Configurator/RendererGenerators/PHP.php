@@ -1216,8 +1216,10 @@ EOT
 				]
 			];
 
+			$exprs = [];
+
 			// Create a regexp that matches values, such as "@foo" or "42"
-			$valueRegexp = '(?<value>';
+			$valueExprs = [];
 			foreach ($patterns as $name => $pattern)
 			{
 				if (is_array($pattern))
@@ -1225,23 +1227,31 @@ EOT
 					$pattern = implode(' ', $pattern);
 				}
 
-				$valueRegexp .= '(?<' . $name . '>' . str_replace(' ', '\\s*', $pattern) . ')|';
+				$valueExprs[] = '(?<' . $name . '>' . $pattern . ')';
 			}
-			$valueRegexp = substr($valueRegexp, 0, -1) . ')';
+			$exprs[] = '(?<value>' . implode('|', $valueExprs) . ')';
 
 			// Create a regexp that matches a comparison such as "@foo = 1"
 			// NOTE: cannot support < or > because of NaN -- (@foo<5) returns false if @foo=''
-			$cmpRegexp = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
+			$exprs[] = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
+
+			// Match parenthesized expressions on PCRE >= 8.13, previous versions segfault
+			// because of the mutual references
+			$parensMatch = '';
+			if (version_compare(PCRE_VERSION, '8.13', '>='))
+			{
+				$parensMatch = '|(?&parens)';
+
+				// Create a regexp that matches a parenthesized expression
+				// NOTE: could be expanded to support any expression
+				$exprs[] = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
+			}
 
 			// Create a regexp that matches boolean operations
-			$boolRegexp = '(?<bool>(?<bool0>(?&cmp)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&value)|(?&bool)|(?&parens)))';
-
-			// Create a regexp that matches a parenthesized expression
-			// NOTE: should be expanded to support any expression
-			$parensRegexp = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
+			$exprs[] = '(?<bool>(?<bool0>(?&cmp)|(?&value)' . $parensMatch . ') (?<bool1>and|or) (?<bool2>(?&cmp)|(?&value)|(?&bool)' . $parensMatch . '))';
 
 			// Assemble the final regexp
-			$regexp = '#^(?:' . $valueRegexp . '|' . $cmpRegexp . '|' . $boolRegexp . '|' . $parensRegexp . ')$#S';
+			$regexp = '#^(?:' . implode('|', $exprs) . ')$#S';
 
 			// Replace spaces with any amount of whitespace
 			$regexp = str_replace(' ', '\\s*', $regexp);

@@ -281,6 +281,22 @@ function convertCustom($filepath, &$file)
 			array(
 				"\"strtr(\\\$node->getAttribute('bar'),['a'=>'A','b'=>'B','c'=>'','d'=>''])\"",
 				"\"strtr(\\\$node->getAttribute('bar'),array('a'=>'A','b'=>'B','c'=>'','d'=>''))\""
+			),
+			function ($file)
+			{
+				return preg_replace(
+					'/public function getXPathTests\\(\\)\\s+\\{(\\s+)/',
+					'$0\\$test = \\$this;$1',
+					$file
+				);
+			},
+			array(
+				'function ()',
+				'function () use ($test)'
+			),
+			array(
+				'$this->markTestSkipped();',
+				'$test->markTestSkipped();'
 			)
 		),
 		'Regexp.php' => array(

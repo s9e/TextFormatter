@@ -1264,11 +1264,27 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:template match="FOO"><xsl:if test="@foo and (@bar or @baz)">...</xsl:if></xsl:template>',
-				"\$node->hasAttribute('foo')&&(\$node->hasAttribute('bar')||\$node->hasAttribute('baz'))"
+				"\$node->hasAttribute('foo')&&(\$node->hasAttribute('bar')||\$node->hasAttribute('baz'))",
+				null,
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped();
+					}
+				}
 			],
 			[
 				'<xsl:template match="FOO"><xsl:if test="(@a = @b) or (@b = @c)">...</xsl:if></xsl:template>',
-				"(\$node->getAttribute('a')===\$node->getAttribute('b'))||(\$node->getAttribute('b')===\$node->getAttribute('c'))"
+				"(\$node->getAttribute('a')===\$node->getAttribute('b'))||(\$node->getAttribute('b')===\$node->getAttribute('c'))",
+				null,
+				function ()
+				{
+					if (version_compare(PCRE_VERSION, '8.13', '<'))
+					{
+						$this->markTestSkipped();
+					}
+				}
 			],
 			// Custom representations
 			[
