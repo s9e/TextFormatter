@@ -47,7 +47,7 @@ $out = '<!DOCTYPE html>
 ';
 foreach ($siteHtml as $site => $renders)
 {
-	$out .= '<h2>' . $site . "</h2>\n" . implode("\n", array_keys($renders)) . "\n";
+	$out .= '<h2 onclick="var s=this.nextElementSibling.style;s.display=s.display==\'none\'?\'\':\'none\'">' . $site . "</h2>\n<div>" . implode("\n", array_keys($renders)) . "</div>\n";
 }
 $out .= '</body></html>';
 
