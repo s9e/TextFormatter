@@ -1262,6 +1262,14 @@ class PHPTest extends Test
 				'<xsl:template match="FOO"><xsl:if test=" contains( @foo , \'x\' ) ">Foo</xsl:if></xsl:template>',
 				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
 			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="@foo and (@bar or @baz)">...</xsl:if></xsl:template>',
+				"\$node->hasAttribute('foo')&&(\$node->hasAttribute('bar')||\$node->hasAttribute('baz'))"
+			],
+			[
+				'<xsl:template match="FOO"><xsl:if test="(@a = @b) or (@b = @c)">...</xsl:if></xsl:template>',
+				"(\$node->getAttribute('a')===\$node->getAttribute('b'))||(\$node->getAttribute('b')===\$node->getAttribute('c'))"
+			],
 			// Custom representations
 			[
 				'<xsl:template match="FOO"><xsl:if test="contains(\'upperlowerdecim\',substring(@type,1,5))">Foo</xsl:if></xsl:template>',

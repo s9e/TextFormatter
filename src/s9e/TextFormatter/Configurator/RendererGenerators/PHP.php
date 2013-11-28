@@ -1234,10 +1234,14 @@ EOT
 			$cmpRegexp = '(?<cmp>(?<cmp0>(?&value)) (?<cmp1>!?=) (?<cmp2>(?&value)))';
 
 			// Create a regexp that matches boolean operations
-			$boolRegexp = '(?<bool>(?<bool0>(?&cmp)|(?&value)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&value)|(?&bool)))';
+			$boolRegexp = '(?<bool>(?<bool0>(?&cmp)|(?&value)|(?&parens)) (?<bool1>and|or) (?<bool2>(?&cmp)|(?&value)|(?&bool)|(?&parens)))';
+
+			// Create a regexp that matches a parenthesized expression
+			// NOTE: should be expanded to support any expression
+			$parensRegexp = '(?<parens>\\( (?<parens0>(?&bool)|(?&cmp)) \\))';
 
 			// Assemble the final regexp
-			$regexp = '#^(?:' . $valueRegexp . '|' . $cmpRegexp . '|' . $boolRegexp . ')$#S';
+			$regexp = '#^(?:' . $valueRegexp . '|' . $cmpRegexp . '|' . $boolRegexp . '|' . $parensRegexp . ')$#S';
 
 			// Replace spaces with any amount of whitespace
 			$regexp = str_replace(' ', '\\s*', $regexp);
@@ -1401,6 +1405,11 @@ EOT
 				];
 
 				return $this->convertCondition($m['bool0']) . $operators[$m['bool1']] . $this->convertCondition($m['bool2']);
+			}
+
+			if (!empty($m['parens']))
+			{
+				return '(' . $this->convertXPath($m['parens0']) . ')';
 			}
 
 			if (!empty($m['translate']))
