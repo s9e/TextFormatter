@@ -1413,6 +1413,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecker
  [x] Disallows potentially unsafe dynamic URLs by default
  [x] Disallows document() in XPath by default
  [x] Restricts Flash's allowScriptAccess to "sameDomain" (or lower) by default, in objects that use dynamic values
+ [x] Disallows <sax:output/> by default
  [x] checkTag() doesn't check templates that are marked as unsafe
  [x] checkTag() checks all the templates of a tag
  [x] Can be reset and reconfigured with different checks

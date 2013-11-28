@@ -183,6 +183,17 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
+	* @testdox Disallows <sax:output/> by default
+	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
+	* @expectedExceptionMessage Element 'sax:output' is disallowed
+	* @link https://bugs.php.net/bug.php?id=54446
+	*/
+	public function testDefaultSaxOutput()
+	{
+		$this->checkTemplate('<sax:output xmlns:sax="http://icl.com/saxon" />');
+	}
+
+	/**
 	* @testdox checkTag() doesn't check templates that are marked as unsafe
 	*/
 	public function testUnsafeTemplate()

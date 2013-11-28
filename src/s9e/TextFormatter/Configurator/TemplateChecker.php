@@ -14,6 +14,7 @@ use s9e\TextFormatter\Configurator\Collections\TemplateCheckList;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
+use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
 use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
 use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 use s9e\TextFormatter\Configurator\Traits\CollectionProxy;
@@ -53,6 +54,7 @@ class TemplateChecker implements ArrayAccess, Iterator
 		$this->collection->append('DisallowUnsafeDynamicCSS');
 		$this->collection->append('DisallowUnsafeDynamicJS');
 		$this->collection->append('DisallowUnsafeDynamicURL');
+		$this->collection->append(new DisallowElementNS('http://icl.com/saxon', 'output'));
 		$this->collection->append(new DisallowXPathFunction('document'));
 		$this->collection->append(new RestrictFlashScriptAccess('sameDomain', true));
 	}
