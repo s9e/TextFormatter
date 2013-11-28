@@ -267,7 +267,7 @@ class Parser extends ParserBase
 		$content = file_get_contents($prefix . $url, false, $context);
 
 		// Save to the cache if applicable
-		if (isset($cacheFile))
+		if (isset($cacheFile) && $content !== false)
 		{
 			file_put_contents($prefix . $cacheFile, $content);
 		}
