@@ -137,6 +137,31 @@ class Parser
 		$this->tagStackIsSorted = false;
 	}
 
+	/**
+	* Set a tag's option
+	*
+	* This method ensures that the tag's config is a value and not a reference, to prevent
+	* potential side-effects. References contained *inside* the tag's config are left untouched
+	*
+	* @param  string $tagName     Tag's name
+	* @param  string $optionName  Option's name
+	* @param  mixed  $optionValue Option's value
+	* @return void
+	*/
+	protected function setTagOption($tagName, $optionName, $optionValue)
+	{
+		if (isset($this->tagsConfig[$tagName]))
+		{
+			// Copy the tag's config and remove it. That will destroy the reference
+			$tagConfig = $this->tagsConfig[$tagName];
+			unset($this->tagsConfig[$tagName]);
+
+			// Set the new value and replace the tag's config
+			$tagConfig[$optionName]     = $optionValue;
+			$this->tagsConfig[$tagName] = $tagConfig;
+		}
+	}
+
 	//==========================================================================
 	// Public API
 	//==========================================================================
@@ -149,10 +174,7 @@ class Parser
 	*/
 	public function disableTag($tagName)
 	{
-		if (isset($this->tagsConfig[$tagName]))
-		{
-			$this->tagsConfig[$tagName]['isDisabled'] = true;
-		}
+		$this->setTagOption($tagName, 'isDisabled', true);
 	}
 
 	/**
@@ -215,10 +237,7 @@ class Parser
 	*/
 	public function setTagLimit($tagName, $tagLimit)
 	{
-		if (isset($this->tagsConfig[$tagName]))
-		{
-			$this->tagsConfig[$tagName]['tagLimit'] = $tagLimit;
-		}
+		$this->setTagOption($tagName, 'tagLimit', $tagLimit);
 	}
 
 	/**
@@ -232,9 +251,6 @@ class Parser
 	*/
 	public function setNestingLimit($tagName, $nestingLimit)
 	{
-		if (isset($this->tagsConfig[$tagName]))
-		{
-			$this->tagsConfig[$tagName]['nestingLimit'] = $nestingLimit;
-		}
+		$this->setTagOption($tagName, 'nestingLimit', $nestingLimit);
 	}
 }

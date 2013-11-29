@@ -157,6 +157,27 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox disableTag() does not have side-effects due to references
+	*/
+	public function testDisableTagReference()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('FOO');
+		$configurator->tags->add('BAR');
+
+		extract($configurator->finalize([
+			'optimizeConfig' => true,
+			'returnRenderer' => false
+		]));
+
+		$parser->disableTag('FOO');
+
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$this->assertFalse(empty($tagsConfig['FOO']['isDisabled']));
+		$this->assertTrue(empty($tagsConfig['BAR']['isDisabled']));
+	}
+
+	/**
 	* @testdox enableTag('FOO') re-enables tag 'FOO'
 	*/
 	public function testEnableTag()
@@ -234,6 +255,28 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox setTagLimit() does not have side-effects due to references
+	*/
+	public function testSetTagLimitReference()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('FOO');
+		$configurator->tags->add('BAR');
+
+		extract($configurator->finalize([
+			'optimizeConfig' => true,
+			'returnRenderer' => false
+		]));
+
+		$parser->setTagLimit('FOO', 123);
+		$parser->setTagLimit('BAR', 456);
+
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$this->assertSame(123, $tagsConfig['FOO']['tagLimit']);
+		$this->assertSame(456, $tagsConfig['BAR']['tagLimit']);
+	}
+
+	/**
 	* @testdox setNestingLimit('X', 7) set tag X's tagLimit to 7 if it exists
 	*/
 	public function testSetNestingLimit()
@@ -264,5 +307,27 @@ class ParserTest extends Test
 			'<rt><X><X><X><X><X><X><X> </X></X></X></X></X></X></X></rt>',
 			$parser->parse(' ')
 		);
+	}
+
+	/**
+	* @testdox setNestingLimit() does not have side-effects due to references
+	*/
+	public function testSetNestingLimitReference()
+	{
+		$configurator = new Configurator;
+		$configurator->tags->add('FOO');
+		$configurator->tags->add('BAR');
+
+		extract($configurator->finalize([
+			'optimizeConfig' => true,
+			'returnRenderer' => false
+		]));
+
+		$parser->setNestingLimit('FOO', 123);
+		$parser->setNestingLimit('BAR', 456);
+
+		$tagsConfig = $this->readAttribute($parser, 'tagsConfig');
+		$this->assertSame(123, $tagsConfig['FOO']['nestingLimit']);
+		$this->assertSame(456, $tagsConfig['BAR']['nestingLimit']);
 	}
 }

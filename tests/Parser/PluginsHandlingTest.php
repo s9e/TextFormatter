@@ -23,6 +23,28 @@ class PluginsHandlingTest extends Test
 	}
 
 	/**
+	* @testdox disablePlugin() does not have side-effects due to references
+	*/
+	public function testDisablePluginReference()
+	{
+		$pluginsConfig = ['P1' => []];
+		$pluginsConfig['P2'] =& $pluginsConfig['P1'];
+
+		$dummy = new PluginsHandlingDummy;
+		$dummy->pluginsConfig = $pluginsConfig;
+
+		$dummy->disablePlugin('P1');
+
+		$this->assertEquals(
+			[
+				'P1' => ['isDisabled' => true],
+				'P2' => []
+			],
+			$dummy->pluginsConfig
+		);
+	}
+
+	/**
 	* @testdox enablePlugin() re-enables a disabled plugin
 	*/
 	public function testEnablePlugin()

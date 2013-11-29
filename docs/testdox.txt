@@ -160,7 +160,7 @@ s9e\TextFormatter\Tests\Configurator
  [x] finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
  [x] finalize(['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
  [x] finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer
- [x] finalize(['optimizeConfig' => true]) reduces the size of the serialized parser at the cost of not being configurable at runtime
+ [x] finalize(['optimizeConfig' => false]) prevents the parser's config from being optimized
 
 s9e\TextFormatter\Tests\Configurator\Collections\AttributeCollection
  [x] add() returns an instance of s9e\TextFormatter\Configurator\Items\Attribute
@@ -1747,6 +1747,7 @@ s9e\TextFormatter\Tests\Parser\Logger
 
 s9e\TextFormatter\Tests\Parser\PluginsHandling
  [x] disablePlugin() disables given plugin
+ [x] disablePlugin() does not have side-effects due to references
  [x] enablePlugin() re-enables a disabled plugin
  [x] Nothing happens if disablePlugin() is called for an inexistent plugin
  [x] Nothing happens if enablePlugin() is called for an inexistent plugin
@@ -1809,10 +1810,13 @@ s9e\TextFormatter\Tests\Parser
  [x] parse() normalizes \r\n to \n
  [x] parse() removes control characters that aren't allowed in XML
  [x] disableTag('FOO') disables tag 'FOO'
+ [x] disableTag() does not have side-effects due to references
  [x] enableTag('FOO') re-enables tag 'FOO'
  [x] parse() throws an exception if the parser is reset during its execution
  [x] setTagLimit('X', 7) set tag X's tagLimit to 7 if it exists
+ [x] setTagLimit() does not have side-effects due to references
  [x] setNestingLimit('X', 7) set tag X's tagLimit to 7 if it exists
+ [x] setNestingLimit() does not have side-effects due to references
 
 s9e\TextFormatter\Tests\Plugins\ConfiguratorBase
  [x] Constructor overwrites properties with values passed as second argument

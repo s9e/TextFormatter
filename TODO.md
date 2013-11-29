@@ -32,7 +32,6 @@ TODO
 - Consider adding an option to abort parsing when tagLimit is exceeded (good for Censor)
 - Class names collisions in s9e\TextFormatter\Bundles\S18\Helper
 - One cheap way to filter a CSS value would be to set an attribute preprocessor for every supported CSS attribute, e.g. /(?<!\w)color\s*:\s*(?<color>#[0-9a-f]+|\w+)/ - could be mentionned in cookbook
-- Systematically run ConfigHelper::optimizeArray() on a safe subset of the config, such as attribute filters(?)
 - Move JavaScript\RegExp functionality to Items\Regexp
 - Consider adding a way to control whether a link gets a rel=nofollow based on a hostname list
 - MediaEmbed: add an oEmbed helper

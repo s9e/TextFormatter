@@ -203,8 +203,7 @@ class Configurator implements ConfigProvider
 	*  - addHTML5Rules:    whether to call addHTML5Rules()
 	*  - finalizeParser:   callback executed after the parser is created (gets the parser as arg)
 	*  - finalizeRenderer: same with the renderer
-	*  - optimizeConfig:   whether to optimize the parser's config. *DO NOT* use if the parser is
-	*                      modified at runtime
+	*  - optimizeConfig:   whether to optimize the parser's config using references
 	*  - returnParser:     whether to return an instance of Parser in the "parser" key
 	*  - returnRenderer:   whether to return an instance of Renderer in the "renderer" key
 	*
@@ -218,7 +217,7 @@ class Configurator implements ConfigProvider
 		// Add default options
 		$options += [
 			'addHTML5Rules'  => true,
-			'optimizeConfig' => false,
+			'optimizeConfig' => true,
 			'returnParser'   => true,
 			'returnRenderer' => true
 		];

@@ -818,14 +818,14 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox finalize(['optimizeConfig' => true]) reduces the size of the serialized parser at the cost of not being configurable at runtime
+	* @testdox finalize(['optimizeConfig' => false]) prevents the parser's config from being optimized
 	*/
 	public function testFinalizeOptimizeConfig()
 	{
 		$this->configurator->tags->add('X');
 		$this->configurator->tags->add('Y');
 
-		$return1 = $this->configurator->finalize();
+		$return1 = $this->configurator->finalize(['optimizeConfig' => false]);
 		$return2 = $this->configurator->finalize(['optimizeConfig' => true]);
 
 		$this->assertLessThan(

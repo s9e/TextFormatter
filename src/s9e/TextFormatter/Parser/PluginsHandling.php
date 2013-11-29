@@ -32,7 +32,13 @@ trait PluginsHandling
 	{
 		if (isset($this->pluginsConfig[$pluginName]))
 		{
-			$this->pluginsConfig[$pluginName]['isDisabled'] = true;
+			// Copy the plugin's config to remove the reference
+			$pluginConfig = $this->pluginsConfig[$pluginName];
+			unset($this->pluginsConfig[$pluginName]);
+
+			// Update the value and replace the plugin's config
+			$pluginConfig['isDisabled'] = true;
+			$this->pluginsConfig[$pluginName] = $pluginConfig;
 		}
 	}
 
