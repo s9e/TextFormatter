@@ -43,7 +43,7 @@ do
 
 	git checkout master
 	git checkout "$branch"
-	git merge --squash -Xours "$src"
+	git merge --squash -Xtheirs "$src"
 	echo "$ignore" > .gitignore
 
 	for file in $ignore;
