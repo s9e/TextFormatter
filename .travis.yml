@@ -8,7 +8,6 @@ branches:
 env:
   - CLOSURE_COMPILER=/tmp/compiler.jar
 before_script:
-  - echo "zend.enable_gc=off" >> ~/.phpenv/versions/$TRAVIS_PHP_VERSION/etc/php.ini
   - sh -c "./scripts/travis/installComposer.sh 2>&1 &" >/dev/null 2>&1 &
   - ./scripts/travis/installClosureCompiler.sh         >/dev/null 2>&1 &
   - ./scripts/travis/installXSLCache.sh                >/dev/null 2>&1 &
