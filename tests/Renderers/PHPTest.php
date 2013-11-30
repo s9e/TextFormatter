@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Renderers;
 
+use ReflectionObject;
 use s9e\TextFormatter\Tests\RendererTests;
 use s9e\TextFormatter\Tests\Test;
 
@@ -65,5 +66,32 @@ class PHPTest extends Test
 
 		$this->assertObjectHasAttribute('foo', $renderer);
 		$this->assertSame('bar', $renderer->foo);
+	}
+
+	/**
+	* @testdox Internal objects and resources are unset after rendering
+	*/
+	public function testResourcesUnset()
+	{
+		// Create a template that requires XPath
+		$this->configurator->tags->add('FOO')->defaultTemplate = '<xsl:value-of select="lang()"/>';
+
+		$renderer = $this->configurator->getRenderer();
+		$renderer->render('<rt>xxx</rt>');
+
+		$reflection = new ReflectionObject($renderer);
+		foreach ($reflection->getProperties() as $prop)
+		{
+			$this->assertAttributeNotInternalType(
+				'object',
+				$prop->getName(),
+				$renderer
+			);
+			$this->assertAttributeNotInternalType(
+				'resource',
+				$prop->getName(),
+				$renderer
+			);
+		}
 	}
 }

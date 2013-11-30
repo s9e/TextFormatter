@@ -254,6 +254,7 @@ class PHP implements RendererGenerator
 
 		$this->php .= '
 					$this->at($dom->documentElement);
+					unset($this->xpath);
 
 					return $this->out;
 				}
@@ -400,10 +401,17 @@ EOT
 			);
 		}
 
-		// Remove the instantiation of $this->xpath if it's never used
+		// Remove the references to $this->xpath if it's never used
 		if (strpos($this->php, '$this->xpath->') === false)
 		{
-			$this->php = preg_replace('#\\s*\\$this->xpath\\s*=.*#', '', $this->php);
+			$this->php = preg_replace(
+				[
+					'#\\s*\\$this->xpath\\s*=.*#',
+					'#\\s*unset\\(\\$this->xpath\\);#'
+				],
+				'',
+				$this->php
+			);
 		}
 
 		// Close the class definition
