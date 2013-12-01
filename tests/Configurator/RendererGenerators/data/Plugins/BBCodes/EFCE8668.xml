@@ -1,0 +1,8 @@
+<rt><LIST><s>[LIST]</s>
+					<LI><s>[*]</s><LIST><s>[LIST]</s>
+						<LI><s>[*]</s>one.one</LI>
+						<LI><s>[*]</s>one.two</LI>
+					<e>[/LIST]</e></LIST></LI>
+
+					<LI><s>[*]</s>two</LI>
+				<e>[/LIST]</e></LIST></rt>
