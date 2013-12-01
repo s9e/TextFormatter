@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd $(dirname $(realpath "$0"))
+cd $(dirname "$0")
 
 # Install Coveralls on 5.5 and disable XDebug on everything else
 if [ "$TRAVIS_PHP_VERSION" = "5.5" ]
