@@ -24,7 +24,7 @@ do
 	do
 		if [ -a "$file" ]
 		then
-			git rm -rq --cached "$file"
+			git rm -rq --cached "$file" 2> /dev/null
 		fi
 	done
 	echo "$ignore" > .gitignore
