@@ -1,26 +1,10 @@
 #!/bin/bash
 
-cd $(dirname $(realpath $0))
-
-msg="Synced from master"
-
-for version in 5.4 5.3;
-do
-
-	branch="tmp-$version"
-	git branch -D $branch 2> /dev/null
-	git checkout -b $branch master
-	php patchSources.php $version
-	cp $version.composer.json ../../composer.json
-	cp $version.travis.yml ../../.travis.yml
-	git commit -a --no-verify -m"$msg"
-	git checkout dev/php$version
-	git merge -Xtheirs -m"$msg" $branch
-done
+cd $(dirname $(dirname $(dirname "$0")))
 
 git checkout master
+msg="Synced to $(git rev-parse HEAD)"
 
-cd ../..
 ignore=
 for file in $(ls -1A);
 do
@@ -30,21 +14,11 @@ do
 	fi
 done
 
-for version in 5.5 5.4 5.3
+for version in 5.5 5.4 5.3;
 do
-	branch="release/php$version"
-
-	if [ "$version" = "5.5" ]
-	then
-		src="master"
-	else
-		src="dev/php$version"
-	fi
-
-	git checkout master
-	git checkout "$branch"
-	git merge --squash -Xtheirs "$src"
-	echo "$ignore" > .gitignore
+	branch="tmp-$version"
+	git branch -D $branch 2> /dev/null
+	git checkout -b $branch master
 
 	for file in $ignore;
 	do
@@ -53,8 +27,18 @@ do
 			git rm -r --cached "$file"
 		fi
 	done
+	echo "$ignore" > .gitignore
 
-	git commit -a --no-verify -m"Synced release branch from $src"
+	if [ -f "scripts/build/$version.composer.json" ]
+	then
+		cp "scripts/build/$version.composer.json" composer.json
+	fi
+
+	php patchSources.php $version
+
+	git commit -a --no-verify -m"$msg"
+	git checkout "release/php$version"
+	git merge -Xtheirs -m"$msg" $branch
 done
 
 git checkout master
