@@ -18,13 +18,13 @@ for version in 5.5 5.4 5.3;
 do
 	branch="tmp-$version"
 	git branch -D $branch 2> /dev/null
-	git checkout -b $branch master
+	git checkout -b $branch master 2> /dev/null
 
 	for file in $ignore;
 	do
 		if [ -a "$file" ]
 		then
-			git rm -r --cached "$file"
+			git rm -rq --cached "$file"
 		fi
 	done
 	echo "$ignore" > .gitignore
@@ -36,7 +36,7 @@ do
 
 	php patchSources.php $version
 
-	git commit -a --no-verify -m"$msg"
+	git commit -aq --no-verify -m"$msg"
 	git checkout "release/php$version"
 	git merge -Xtheirs -m"$msg" $branch
 done
