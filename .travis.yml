@@ -14,7 +14,7 @@ before_script:
   - ./scripts/travis/setup.sh
   - php -i
 script:
-  - [ "$TRAVIS_PHP_VERSION" = "5.5" ] && phpunit --exclude-group none --coverage-clover /tmp/clover.xml
-  - [ "$TRAVIS_PHP_VERSION" = "5.5" ] || phpunit --exclude-group needs-network
+  - "[ '$TRAVIS_PHP_VERSION' = '5.5' ] && phpunit --exclude-group none --coverage-clover /tmp/clover.xml"
+  - "[ '$TRAVIS_PHP_VERSION' = '5.5' ] || phpunit --exclude-group needs-network"
 after_script:
-  - [ -f vendor/bin/coveralls ] && php vendor/bin/coveralls -v
+  - "[ -f vendor/bin/coveralls ] && php vendor/bin/coveralls -v"
