@@ -1270,7 +1270,7 @@ class PHPTest extends Test
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
-						$this->markTestSkipped();
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
 					}
 				}
 			],
@@ -1282,7 +1282,7 @@ class PHPTest extends Test
 				{
 					if (version_compare(PCRE_VERSION, '8.13', '<'))
 					{
-						$this->markTestSkipped();
+						$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');
 					}
 				}
 			],
