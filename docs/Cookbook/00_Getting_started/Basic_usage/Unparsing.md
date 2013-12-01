@@ -10,7 +10,7 @@ $configurator->BBCodes->addFromRepository('B');
 // Original text
 $text = 'Hello [b]world[/b]!';
 
-// Parsed text: <rt>Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>
+// Parsed text: <rt>Hello <B><s>[b]</s>world<e>[/b]</e></B>!</rt>
 $xml = $configurator->getParser()->parse($text);
 
 // Here's how to unparse the XML back to plain text

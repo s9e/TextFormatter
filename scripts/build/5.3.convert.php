@@ -141,12 +141,12 @@ function convertCustom($filepath, &$file)
 		),
 		'ConfiguratorTest.php' => array(
 			array(
-				"\$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php'",
-				"\$cacheDir . '/Renderer_33632ba0e17861e90687b5fe2b0552c51f21d192.php'"
+				"\$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php'",
+				"\$cacheDir . '/Renderer_f10065ff75977293bc8e4aa708599c230c363dee.php'"
 			),
 			array(
-				"unlink(\$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php');",
-				"unlink(\$cacheDir . '/Renderer_33632ba0e17861e90687b5fe2b0552c51f21d192.php');"
+				"unlink(\$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php');",
+				"unlink(\$cacheDir . '/Renderer_f10065ff75977293bc8e4aa708599c230c363dee.php');"
 			)
 		),
 		'Custom.php' => array(
@@ -255,20 +255,20 @@ function convertCustom($filepath, &$file)
 		),
 		'PHPTest.php' => array(
 			array(
-				"'class Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff',",
-				"'class Renderer_33632ba0e17861e90687b5fe2b0552c51f21d192',"
+				"'class Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b',",
+				"'class Renderer_f10065ff75977293bc8e4aa708599c230c363dee',"
 			),
 			array(
-				"'class Bar_renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff',",
-				"'class Bar_renderer_33632ba0e17861e90687b5fe2b0552c51f21d192',"
+				"'class Bar_renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b',",
+				"'class Bar_renderer_f10065ff75977293bc8e4aa708599c230c363dee',"
 			),
 			array(
-				"\$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php'",
-				"\$cacheDir . '/Renderer_33632ba0e17861e90687b5fe2b0552c51f21d192.php'"
+				"\$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php'",
+				"\$cacheDir . '/Renderer_f10065ff75977293bc8e4aa708599c230c363dee.php'"
 			),
 			array(
-				"unlink(\$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php');",
-				"unlink(\$cacheDir . '/Renderer_33632ba0e17861e90687b5fe2b0552c51f21d192.php');"
+				"unlink(\$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php');",
+				"unlink(\$cacheDir . '/Renderer_f10065ff75977293bc8e4aa708599c230c363dee.php');"
 			),
 			array(
 				'"mb_substr(\\$node->textContent,1,null,\'utf-8\')",',

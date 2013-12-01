@@ -21,7 +21,7 @@ class ParserTest extends Test
 		return [
 			[
 				'x [b]bold[/b] y',
-				'<rt>x <B><st>[b]</st>bold<et>[/b]</et></B> y</rt>',
+				'<rt>x <B><s>[b]</s>bold<e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -31,7 +31,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [B]BOLD[/B] y',
-				'<rt>x <B><st>[B]</st>BOLD<et>[/B]</et></B> y</rt>',
+				'<rt>x <B><s>[B]</s>BOLD<e>[/B]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -91,7 +91,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b]bold[/b] y',
-				'<rt>x <FOO><st>[b]</st>bold<et>[/b]</et></FOO> y</rt>',
+				'<rt>x <FOO><s>[b]</s>bold<e>[/b]</e></FOO> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -101,7 +101,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b y="foo"]bold[/b] y',
-				'<rt>x <B y="foo"><st>[b y="foo"]</st>bold<et>[/b]</et></B> y</rt>',
+				'<rt>x <B y="foo"><s>[b y="foo"]</s>bold<e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -111,7 +111,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b Y="foo"]bold[/b] y',
-				'<rt>x <B y="foo"><st>[b Y="foo"]</st>bold<et>[/b]</et></B> y</rt>',
+				'<rt>x <B y="foo"><s>[b Y="foo"]</s>bold<e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -121,7 +121,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b x="bar" y="foo"]bold[/b] y',
-				'<rt>x <B x="bar" y="foo"><st>[b x="bar" y="foo"]</st>bold<et>[/b]</et></B> y</rt>',
+				'<rt>x <B x="bar" y="foo"><s>[b x="bar" y="foo"]</s>bold<e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -133,7 +133,7 @@ class ParserTest extends Test
 			],
 			[
 				"x [b x='bar' y='foo']bold[/b] y",
-				'<rt>x <B x="bar" y="foo"><st>[b x=\'bar\' y=\'foo\']</st>bold<et>[/b]</et></B> y</rt>',
+				'<rt>x <B x="bar" y="foo"><s>[b x=\'bar\' y=\'foo\']</s>bold<e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -145,7 +145,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b x=bar y=foo]bold[/b] y',
-				'<rt>x <B x="bar" y="foo"><st>[b x=bar y=foo]</st>bold<et>[/b]</et></B> y</rt>',
+				'<rt>x <B x="bar" y="foo"><s>[b x=bar y=foo]</s>bold<e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -157,7 +157,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b=1]bold[/b] y',
-				'<rt>x <B b="1"><st>[b=1]</st>bold<et>[/b]</et></B> y</rt>',
+				'<rt>x <B b="1"><s>[b=1]</s>bold<e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -177,7 +177,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [url=http://example.org/]example[/url] y',
-				'<rt>x <URL url="http://example.org/"><st>[url=http://example.org/]</st>example<et>[/url]</et></URL> y</rt>',
+				'<rt>x <URL url="http://example.org/"><s>[url=http://example.org/]</s>example<e>[/url]</e></URL> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -275,7 +275,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b x][/b] y',
-				'<rt>x <B><st>[b x]</st><et>[/b]</et></B> y</rt>',
+				'<rt>x <B><s>[b x]</s><e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -285,7 +285,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b foo x=1][/b] y',
-				'<rt>x <B x="1"><st>[b foo x=1]</st><et>[/b]</et></B> y</rt>',
+				'<rt>x <B x="1"><s>[b foo x=1]</s><e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -353,7 +353,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [URL]http://localhost[/URL] y',
-				'<rt>x <URL url="http://localhost"><st>[URL]</st>http://localhost<et>[/URL]</et></URL> y</rt>',
+				'<rt>x <URL url="http://localhost"><s>[URL]</s>http://localhost<e>[/URL]</e></URL> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -364,7 +364,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [URL=http://127.0.0.1]http://localhost[/URL] y',
-				'<rt>x <URL url="http://127.0.0.1"><st>[URL=http://127.0.0.1]</st>http://localhost<et>[/URL]</et></URL> y</rt>',
+				'<rt>x <URL url="http://127.0.0.1"><s>[URL=http://127.0.0.1]</s>http://localhost<e>[/URL]</e></URL> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -386,7 +386,7 @@ class ParserTest extends Test
 			],
 			[
 				'[C:123]foo[/C][/C:123]',
-				'<rt><C><st>[C:123]</st>foo[/C]<et>[/C:123]</et></C></rt>',
+				'<rt><C><s>[C:123]</s>foo[/C]<e>[/C:123]</e></C></rt>',
 				[],
 				function ($constructor)
 				{
@@ -396,7 +396,7 @@ class ParserTest extends Test
 			],
 			[
 				'[C]foo[/C:123][/C]',
-				'<rt><C><st>[C]</st>foo[/C:123]<et>[/C]</et></C></rt>',
+				'<rt><C><s>[C]</s>foo[/C:123]<e>[/C]</e></C></rt>',
 				[],
 				function ($constructor)
 				{
@@ -406,7 +406,7 @@ class ParserTest extends Test
 			],
 			[
 				'[C:123]foo[/C][/c:123]',
-				'<rt><C><st>[C:123]</st>foo[/C]<et>[/c:123]</et></C></rt>',
+				'<rt><C><s>[C:123]</s>foo[/C]<e>[/c:123]</e></C></rt>',
 				[],
 				function ($constructor)
 				{
@@ -426,7 +426,7 @@ class ParserTest extends Test
 			],
 			[
 				'[PHP]...[/PHP]',
-				'<rt><CODE lang="php"><st>[PHP]</st>...<et>[/PHP]</et></CODE></rt>',
+				'<rt><CODE lang="php"><s>[PHP]</s>...<e>[/PHP]</e></CODE></rt>',
 				[],
 				function ($constructor)
 				{
@@ -439,7 +439,7 @@ class ParserTest extends Test
 			],
 			[
 				'[PHP lang=php4]...[/PHP]',
-				'<rt><CODE lang="php4"><st>[PHP lang=php4]</st>...<et>[/PHP]</et></CODE></rt>',
+				'<rt><CODE lang="php4"><s>[PHP lang=php4]</s>...<e>[/PHP]</e></CODE></rt>',
 				[],
 				function ($constructor)
 				{
@@ -462,7 +462,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b]...[/b] y',
-				'<rt>x <B><st>[b]</st>...<et>[/b]</et></B> y</rt>',
+				'<rt>x <B><s>[b]</s>...<e>[/b]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -472,7 +472,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b:123]...[/b:123] y',
-				'<rt>x <B><st>[b:123]</st>...<et>[/b:123]</et></B> y</rt>',
+				'<rt>x <B><s>[b:123]</s>...<e>[/b:123]</e></B> y</rt>',
 				[],
 				function ($constructor)
 				{
@@ -502,7 +502,7 @@ class ParserTest extends Test
 			],
 			[
 				'x [b]...[/b] [b]...[/i] y',
-				'<rt>x <B><st>[b]</st>...<et>[/b]</et></B> [b]...[/i] y</rt>',
+				'<rt>x <B><s>[b]</s>...<e>[/b]</e></B> [b]...[/i] y</rt>',
 				[],
 				function ($constructor)
 				{

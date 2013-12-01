@@ -55,7 +55,7 @@ trait RendererTests
 	*/
 	public function testRichText()
 	{
-		$xml = '<rt>Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>';
+		$xml = '<rt>Hello <B><s>[b]</s>world<e>[/b]</e></B>!</rt>';
 
 		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
 
@@ -71,9 +71,9 @@ trait RendererTests
 	public function testMulti()
 	{
 		$parsed = [
-			'<rt>1Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>',
+			'<rt>1Hello <B><s>[b]</s>world<e>[/b]</e></B>!</rt>',
 			'<pt>2Plain text</pt>',
-			'<rt>3Hello <B><st>[b]</st>world<et>[/b]</et></B>!</rt>',
+			'<rt>3Hello <B><s>[b]</s>world<e>[/b]</e></B>!</rt>',
 			'<pt>4Plain text</pt>'
 		];
 

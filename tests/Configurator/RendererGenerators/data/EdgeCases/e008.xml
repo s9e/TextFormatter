@@ -1,5 +1,5 @@
-<rt><QUOTE author="foo"><st>[quote="foo"]</st><br/>
-	<QUOTE><st>[quote]</st>...<et>[/quote]</et></QUOTE><br/>
+<rt><QUOTE author="foo"><s>[quote="foo"]</s><br/>
+	<QUOTE><s>[quote]</s>...<e>[/quote]</e></QUOTE><br/>
 ....<br/>
-<et>[/quote]</et></QUOTE><br/>
+<e>[/quote]</e></QUOTE><br/>
 !!!!		</rt>

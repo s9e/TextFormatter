@@ -183,7 +183,7 @@ function outputTag(tag)
 		}
 		else if (tagLen)
 		{
-			output += '><st>' + tagText + '</st>';
+			output += '><s>' + tagText + '</s>';
 		}
 		else
 		{
@@ -194,7 +194,7 @@ function outputTag(tag)
 	{
 		if (tagLen)
 		{
-			output += '<et>' + tagText + '</et>';
+			output += '<e>' + tagText + '</e>';
 		}
 
 		output += '</' + tagName + '>';

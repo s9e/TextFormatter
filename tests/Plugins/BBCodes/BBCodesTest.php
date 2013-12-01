@@ -33,32 +33,32 @@ class BBCodesTest extends Test
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/}]',
 				'[name="John Smith"]',
-				'<rt><NAME first="John" last="Smith"><st>[name="John Smith"]</st></NAME></rt>'
+				'<rt><NAME first="John" last="Smith"><s>[name="John Smith"]</s></NAME></rt>'
 			],
 			[
 				'[name={TEXT} name={PARSE=/(?<first>\w+) (?<last>\w+)/}]',
 				'[name="John Smith"]',
-				'<rt><NAME first="John" last="Smith" name="John Smith"><st>[name="John Smith"]</st></NAME></rt>'
+				'<rt><NAME first="John" last="Smith" name="John Smith"><s>[name="John Smith"]</s></NAME></rt>'
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]',
 				'[name="John Smith"]',
-				'<rt><NAME first="John" last="Smith"><st>[name="John Smith"]</st></NAME></rt>'
+				'<rt><NAME first="John" last="Smith"><s>[name="John Smith"]</s></NAME></rt>'
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/} name={PARSE=/(?<last>\w+), (?<first>\w+)/}]',
 				'[name="Smith, John"]',
-				'<rt><NAME first="John" last="Smith"><st>[name="Smith, John"]</st></NAME></rt>'
+				'<rt><NAME first="John" last="Smith"><s>[name="Smith, John"]</s></NAME></rt>'
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]',
 				'[name="John Smith"]',
-				'<rt><NAME first="John" last="Smith"><st>[name="John Smith"]</st></NAME></rt>'
+				'<rt><NAME first="John" last="Smith"><s>[name="John Smith"]</s></NAME></rt>'
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]',
 				'[name="Smith, John"]',
-				'<rt><NAME first="John" last="Smith"><st>[name="Smith, John"]</st></NAME></rt>'
+				'<rt><NAME first="John" last="Smith"><s>[name="Smith, John"]</s></NAME></rt>'
 			],
 		];
 	}

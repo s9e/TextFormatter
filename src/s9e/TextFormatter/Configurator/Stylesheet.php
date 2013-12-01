@@ -66,8 +66,8 @@ class Stylesheet
 		$templates = [
 			'p'  => '<p><xsl:apply-templates/></p>',
 			'br' => '<br/>',
-			'st' => '',
-			'et' => '',
+			's'  => '',
+			'e'  => '',
 			'i'  => ''
 		];
 

@@ -712,7 +712,7 @@ class ParserTest extends Test
 			[
 				// No match on URL but @bar is valid == tag is kept
 				'[foo bar=bar]http://example.com/baz[/foo]',
-				'<rt><FOO bar="bar" url="http://example.com/baz"><st>[foo bar=bar]</st>http://example.com/baz<et>[/foo]</et></FOO></rt>',
+				'<rt><FOO bar="bar" url="http://example.com/baz"><s>[foo bar=bar]</s>http://example.com/baz<e>[/foo]</e></FOO></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1077,7 +1077,7 @@ class ParserTest extends Test
 			],
 			[
 				'[spotify]spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe[/spotify]',
-				'<rt><SPOTIFY uri="spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe"><st>[spotify]</st>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<et>[/spotify]</et></SPOTIFY></rt>',
+				'<rt><SPOTIFY uri="spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe"><s>[spotify]</s>spotify:trackset:PREFEREDTITLE:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe<e>[/spotify]</e></SPOTIFY></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1239,7 +1239,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<rt><YOUTUBE id="-cEzsCAzTak"><st>[YOUTUBE]</st>-cEzsCAzTak<et>[/YOUTUBE]</et></YOUTUBE></rt>',
+				'<rt><YOUTUBE id="-cEzsCAzTak"><s>[YOUTUBE]</s>-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1248,7 +1248,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
-				'<rt><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel"><st>[YOUTUBE]</st>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<et>[/YOUTUBE]</et></YOUTUBE></rt>',
+				'<rt><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel"><s>[YOUTUBE]</s>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<e>[/YOUTUBE]</e></YOUTUBE></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1257,7 +1257,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/watch?feature=player_embedded&v=-cEzsCAzTak[/YOUTUBE]',
-				'<rt><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?feature=player_embedded&amp;v=-cEzsCAzTak"><st>[YOUTUBE]</st>http://www.youtube.com/watch?feature=player_embedded&amp;v=-cEzsCAzTak<et>[/YOUTUBE]</et></YOUTUBE></rt>',
+				'<rt><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/watch?feature=player_embedded&amp;v=-cEzsCAzTak"><s>[YOUTUBE]</s>http://www.youtube.com/watch?feature=player_embedded&amp;v=-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1266,7 +1266,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/v/-cEzsCAzTak[/YOUTUBE]',
-				'<rt><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/v/-cEzsCAzTak"><st>[YOUTUBE]</st>http://www.youtube.com/v/-cEzsCAzTak<et>[/YOUTUBE]</et></YOUTUBE></rt>',
+				'<rt><YOUTUBE id="-cEzsCAzTak" url="http://www.youtube.com/v/-cEzsCAzTak"><s>[YOUTUBE]</s>http://www.youtube.com/v/-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1275,7 +1275,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]http://youtu.be/-cEzsCAzTak[/YOUTUBE]',
-				'<rt><YOUTUBE id="-cEzsCAzTak" url="http://youtu.be/-cEzsCAzTak"><st>[YOUTUBE]</st>http://youtu.be/-cEzsCAzTak<et>[/YOUTUBE]</et></YOUTUBE></rt>',
+				'<rt><YOUTUBE id="-cEzsCAzTak" url="http://youtu.be/-cEzsCAzTak"><s>[YOUTUBE]</s>http://youtu.be/-cEzsCAzTak<e>[/YOUTUBE]</e></YOUTUBE></rt>',
 				[],
 				function ($configurator)
 				{

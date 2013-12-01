@@ -1208,7 +1208,7 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowDynamicAttributeName
  [x] Allowed: <b><xsl:attribute name="title"/></b>
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowDynamicElementNames
- [x] Disallowed: <xsl:element name="{st}"/>
+ [x] Disallowed: <xsl:element name="{s}"/>
  [x] Allowed: <xsl:element name="b"/>
 
 s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowElement
@@ -2387,8 +2387,8 @@ s9e\TextFormatter\Tests\Unparser
  [x] removeFormatting('<pt>&lt;Plain text&gt;</pt>') returns '<Plain text>'
  [x] unparse("<mt>a<br />\nb</mt>") returns "a\nb"
  [x] removeFormatting("<mt>a<br />\nb</mt>") returns "a\nb"
- [x] unparse('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
- [x] removeFormatting('<rt><B><st>[b]</st>Rich<et>[/b]</et></B> text <E>:)</E></rt>') returns 'Rich text :)'
+ [x] unparse('<rt><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></rt>') returns '[b]Rich[/b] text :)'
+ [x] removeFormatting('<rt><B><s>[b]</s>Rich<e>[/b]</e></B> text <E>:)</E></rt>') returns 'Rich text :)'
  [x] Can unparse representations that were over-escaped
 
 s9e\TextFormatter\Tests\Bundle

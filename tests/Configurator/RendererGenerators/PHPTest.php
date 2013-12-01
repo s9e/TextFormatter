@@ -82,11 +82,11 @@ class PHPTest extends Test
 				<xsl:output method="html" encoding="utf-8" indent="no"/>
 				<xsl:template match="p"><p><xsl:apply-templates/></p></xsl:template>
 				<xsl:template match="br"><br/></xsl:template>
-				<xsl:template match="et|i|st"/>
+				<xsl:template match="e|i|s"/>
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff',
+			'class Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b',
 			$generator->generate($xsl)
 		);
 	}
@@ -104,11 +104,11 @@ class PHPTest extends Test
 				<xsl:output method="html" encoding="utf-8" indent="no"/>
 				<xsl:template match="p"><p><xsl:apply-templates/></p></xsl:template>
 				<xsl:template match="br"><br/></xsl:template>
-				<xsl:template match="et|i|st"/>
+				<xsl:template match="e|i|s"/>
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Bar_renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff',
+			'class Bar_renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b',
 			$generator->generate($xsl)
 		);
 	}
@@ -181,7 +181,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertFileExists(
-			$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php'
+			$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php'
 		);
 	}
 
@@ -213,7 +213,7 @@ class PHPTest extends Test
 
 		$this->assertFileExists($filepath);
 		$this->assertFileNotExists(
-			$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php'
+			$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php'
 		);
 	}
 
@@ -238,7 +238,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertSame(
-			$cacheDir . '/Renderer_b508f06eee8492e13c62ffc5c3c69011a6a769ff.php',
+			$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php',
 			$generator->lastFilepath
 		);
 	}

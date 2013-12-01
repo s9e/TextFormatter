@@ -18,7 +18,7 @@ class UnformattedTest extends Test
 
 		$this->assertSame(
 			'[b]bold[/b]',
-			$renderer->render("<rt><B><st>[b]</st>bold<et>[/b]</et></B>")
+			$renderer->render("<rt><B><s>[b]</s>bold<e>[/b]</e></B>")
 		);
 	}
 

@@ -27,13 +27,13 @@ class DisallowDynamicElementNamesTest extends Test
 	}
 
 	/**
-	* @testdox Disallowed: <xsl:element name="{st}"/>
+	* @testdox Disallowed: <xsl:element name="{s}"/>
 	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
 	* @expectedExceptionMessage Dynamic <xsl:element/> names are disallowed
 	*/
 	public function testDisallowed()
 	{
-		$node = $this->loadTemplate('<xsl:element name="{st}"/>');
+		$node = $this->loadTemplate('<xsl:element name="{s}"/>');
 
 		try
 		{

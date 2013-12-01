@@ -43,7 +43,7 @@
 	<bbcode name="T4">
 		<usage>[T4]{TEXT}[/T4]</usage>
 		<template><![CDATA[
-			<b title="foo {st} {{baz}}"><xsl:apply-templates /></b>
+			<b title="foo {s} {{baz}}"><xsl:apply-templates /></b>
 		]]></template>
 	</bbcode>
 

@@ -213,7 +213,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				"xxx\n[DIV]\n...\n[/DIV]\nyyy",
-				"<rt>xxx\n<DIV><st>[DIV]</st>\n...\n<et>[/DIV]</et></DIV>\nyyy</rt>",
+				"<rt>xxx\n<DIV><s>[DIV]</s>\n...\n<e>[/DIV]</e></DIV>\nyyy</rt>",
 				function ($constructor)
 				{
 					$constructor->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
@@ -226,7 +226,7 @@ class OutputHandlingTest extends Test
 			],
 			[
 				"xxx\n\n[DIV]\n\n...\n\n[/DIV]\n\nyyy",
-				"<rt>xxx\n\n<DIV><st>[DIV]</st>\n<br/>\n...<br/>\n\n<et>[/DIV]</et></DIV>\n\nyyy</rt>",
+				"<rt>xxx\n\n<DIV><s>[DIV]</s>\n<br/>\n...<br/>\n\n<e>[/DIV]</e></DIV>\n\nyyy</rt>",
 				function ($constructor)
 				{
 					$constructor->tags->add('DIV')->rules->ignoreSurroundingWhitespace();
@@ -248,10 +248,10 @@ class OutputHandlingTest extends Test
 yyy',
 				'<rt>xxx
 
-				<UL><st>[UL]</st>
-					<LI><st>[LI]</st>aaa<et>[/LI]</et></LI>
-					<LI><st>[LI]</st>bbb<et>[/LI]</et></LI>
-				<et>[/UL]</et></UL>
+				<UL><s>[UL]</s>
+					<LI><s>[LI]</s>aaa<e>[/LI]</e></LI>
+					<LI><s>[LI]</s>bbb<e>[/LI]</e></LI>
+				<e>[/UL]</e></UL>
 
 yyy</rt>',
 				function ($constructor)
@@ -310,10 +310,10 @@ yyy</rt>',
 
 ',
 				'<rt>
-<UL><st>[UL]</st>
-	<LI><st>[LI]</st>foo
-	</LI><LI><st>[LI]</st>bar
-</LI><et>[/UL]</et></UL>
+<UL><s>[UL]</s>
+	<LI><s>[LI]</s>foo
+	</LI><LI><s>[LI]</s>bar
+</LI><e>[/UL]</e></UL>
 
 </rt>',
 				function ($constructor)
@@ -345,10 +345,10 @@ yyy</rt>',
 xxx',
 				'<rt><p>...</p>
 
-<UL><st>[UL]</st>
-	<LI><st>[LI]</st>foo
-	</LI><LI><st>[LI]</st>bar
-</LI><et>[/UL]</et></UL>
+<UL><s>[UL]</s>
+	<LI><s>[LI]</s>foo
+	</LI><LI><s>[LI]</s>bar
+</LI><e>[/UL]</e></UL>
 
 <p>xxx</p></rt>',
 				function ($constructor)
@@ -371,7 +371,7 @@ xxx',
 			],
 			[
 				'[b]...[/b]',
-				'<rt><p><B><st>[b]</st>...<et>[/b]</et></B></p></rt>',
+				'<rt><p><B><s>[b]</s>...<e>[/b]</e></B></p></rt>',
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -384,7 +384,7 @@ xxx',
 			],
 			[
 				"\n[b]...[/b]\n",
-				"<rt>\n<p><B><st>[b]</st>...<et>[/b]</et></B></p>\n</rt>",
+				"<rt>\n<p><B><s>[b]</s>...<e>[/b]</e></B></p>\n</rt>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();
@@ -397,7 +397,7 @@ xxx',
 			],
 			[
 				"x\n[b]...[/b]\ny",
-				"<rt><p>x<br/>\n<B><st>[b]</st>...<et>[/b]</et></B><br/>\ny</p></rt>",
+				"<rt><p>x<br/>\n<B><s>[b]</s>...<e>[/b]</e></B><br/>\ny</p></rt>",
 				function ($constructor)
 				{
 					$constructor->rootRules->createParagraphs();

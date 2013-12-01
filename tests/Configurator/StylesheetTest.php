@@ -183,7 +183,7 @@ class StylesheetTest extends Test
 		$configurator = new Configurator;
 
 		$this->assertContains(
-			'<xsl:template match="et|i|st"/>',
+			'<xsl:template match="e|i|s"/>',
 			$configurator->stylesheet->get()
 		);
 	}

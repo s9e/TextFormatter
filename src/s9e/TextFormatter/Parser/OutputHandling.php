@@ -172,7 +172,7 @@ trait OutputHandling
 			}
 			elseif ($tagLen)
 			{
-				$this->output .= '><st>' . $tagText . '</st>';
+				$this->output .= '><s>' . $tagText . '</s>';
 			}
 			else
 			{
@@ -186,7 +186,7 @@ trait OutputHandling
 
 			if ($tagLen)
 			{
-				$this->output .= '<et>' . $tagText . '</et>';
+				$this->output .= '<e>' . $tagText . '</e>';
 			}
 
 			$this->output .= '</' . $tagName . '>';

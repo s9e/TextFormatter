@@ -24,12 +24,12 @@ abstract class Unparser
 		$dom = new DOMDocument;
 		$dom->loadXML($xml);
 
-		foreach ($dom->getElementsByTagName('st') as $tag)
+		foreach ($dom->getElementsByTagName('s') as $tag)
 		{
 			$tag->parentNode->removeChild($tag);
 		}
 
-		foreach ($dom->getElementsByTagName('et') as $tag)
+		foreach ($dom->getElementsByTagName('e') as $tag)
 		{
 			$tag->parentNode->removeChild($tag);
 		}

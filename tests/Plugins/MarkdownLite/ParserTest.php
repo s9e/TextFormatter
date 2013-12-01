@@ -24,71 +24,71 @@ class ParserTest extends Test
 			// Links
 			[
 				'Go to [that site](http://example.org) now!',
-				'<rt><p>Go to <URL url="http://example.org"><st>[</st>that site<et>](http://example.org)</et></URL> now!</p></rt>'
+				'<rt><p>Go to <URL url="http://example.org"><s>[</s>that site<e>](http://example.org)</e></URL> now!</p></rt>'
 			],
 			[
 				'Go to [that site] (http://example.org) now!',
-				'<rt><p>Go to <URL url="http://example.org"><st>[</st>that site<et>] (http://example.org)</et></URL> now!</p></rt>'
+				'<rt><p>Go to <URL url="http://example.org"><s>[</s>that site<e>] (http://example.org)</e></URL> now!</p></rt>'
 			],
 			[
 				'En route to [Mars](http://en.wikipedia.org/wiki/Mars_(disambiguation\))!',
-				'<rt><p>En route to <URL url="http://en.wikipedia.org/wiki/Mars_%28disambiguation%29"><st>[</st>Mars<et>](http://en.wikipedia.org/wiki/Mars_(disambiguation\))</et></URL>!</p></rt>'
+				'<rt><p>En route to <URL url="http://en.wikipedia.org/wiki/Mars_%28disambiguation%29"><s>[</s>Mars<e>](http://en.wikipedia.org/wiki/Mars_(disambiguation\))</e></URL>!</p></rt>'
 			],
 			[
 				'Go to [\\[x\\[x\\]x\\]](http://example.org/?foo[]=1&bar\\[\\]=1) now!',
-				'<rt><p>Go to <URL url="http://example.org/?foo%5B%5D=1&amp;bar%5B%5D=1"><st>[</st>\\[x\\[x\\]x\\]<et>](http://example.org/?foo[]=1&amp;bar\\[\\]=1)</et></URL> now!</p></rt>'
+				'<rt><p>Go to <URL url="http://example.org/?foo%5B%5D=1&amp;bar%5B%5D=1"><s>[</s>\\[x\\[x\\]x\\]<e>](http://example.org/?foo[]=1&amp;bar\\[\\]=1)</e></URL> now!</p></rt>'
 			],
 			// Images
 			[
 				'.. ![Alt text](http://example.org/img.png) ..',
-				'<rt><p>.. <IMG alt="Alt text" src="http://example.org/img.png"><st>![</st>Alt text<et>](http://example.org/img.png)</et></IMG> ..</p></rt>'
+				'<rt><p>.. <IMG alt="Alt text" src="http://example.org/img.png"><s>![</s>Alt text<e>](http://example.org/img.png)</e></IMG> ..</p></rt>'
 			],
 			[
 				'.. ![Alt text](http://example.org/img.png "Image title") ..',
-				'<rt><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image title"><st>![</st>Alt text<et>](http://example.org/img.png "Image title")</et></IMG> ..</p></rt>'
+				'<rt><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image title"><s>![</s>Alt text<e>](http://example.org/img.png "Image title")</e></IMG> ..</p></rt>'
 			],
 			[
 				'.. ![Alt \\[text\\]](http://example.org/img.png "\\"Image title\\"") ..',
-				'<rt><p>.. <IMG alt="Alt [text]" src="http://example.org/img.png" title="&quot;Image title&quot;"><st>![</st>Alt \\[text\\]<et>](http://example.org/img.png "\\"Image title\\"")</et></IMG> ..</p></rt>'
+				'<rt><p>.. <IMG alt="Alt [text]" src="http://example.org/img.png" title="&quot;Image title&quot;"><s>![</s>Alt \\[text\\]<e>](http://example.org/img.png "\\"Image title\\"")</e></IMG> ..</p></rt>'
 			],
 			[
 				'.. ![Alt text](http://example.org/img.png "Image (title)") ..',
-				'<rt><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image (title)"><st>![</st>Alt text<et>](http://example.org/img.png "Image (title)")</et></IMG> ..</p></rt>'
+				'<rt><p>.. <IMG alt="Alt text" src="http://example.org/img.png" title="Image (title)"><s>![</s>Alt text<e>](http://example.org/img.png "Image (title)")</e></IMG> ..</p></rt>'
 			],
 			// Images in links
 			[
 				'.. [![Alt text](http://example.org/img.png)](http://example.org/) ..',
-				'<rt><p>.. <URL url="http://example.org/"><st>[</st><IMG alt="Alt text" src="http://example.org/img.png"><st>![</st>Alt text<et>](http://example.org/img.png)</et></IMG><et>](http://example.org/)</et></URL> ..</p></rt>'
+				'<rt><p>.. <URL url="http://example.org/"><s>[</s><IMG alt="Alt text" src="http://example.org/img.png"><s>![</s>Alt text<e>](http://example.org/img.png)</e></IMG><e>](http://example.org/)</e></URL> ..</p></rt>'
 			],
 			// Inline code
 			[
 				'.. `foo` `bar` ..',
-				'<rt><p>.. <C><st>`</st>foo<et>`</et></C> <C><st>`</st>bar<et>`</et></C> ..</p></rt>'
+				'<rt><p>.. <C><s>`</s>foo<e>`</e></C> <C><s>`</s>bar<e>`</e></C> ..</p></rt>'
 			],
 			[
 				'.. `foo\\` \\`b\\\\ar` ..',
-				'<rt><p>.. <C><st>`</st>foo\\` \\`b\\\\ar<et>`</et></C> ..</p></rt>'
+				'<rt><p>.. <C><s>`</s>foo\\` \\`b\\\\ar<e>`</e></C> ..</p></rt>'
 			],
 			[
 				'.. `[foo](http://example.org)` ..',
-				'<rt><p>.. <C><st>`</st>[foo](http://example.org)<et>`</et></C> ..</p></rt>'
+				'<rt><p>.. <C><s>`</s>[foo](http://example.org)<e>`</e></C> ..</p></rt>'
 			],
 			[
 				'.. `![foo](http://example.org)` ..',
-				'<rt><p>.. <C><st>`</st>![foo](http://example.org)<et>`</et></C> ..</p></rt>'
+				'<rt><p>.. <C><s>`</s>![foo](http://example.org)<e>`</e></C> ..</p></rt>'
 			],
 			//Strikethrough
 			[
 				'.. ~~foo~~ ~~bar~~ ..',
-				'<rt><p>.. <DEL><st>~~</st>foo<et>~~</et></DEL> <DEL><st>~~</st>bar<et>~~</et></DEL> ..</p></rt>'
+				'<rt><p>.. <DEL><s>~~</s>foo<e>~~</e></DEL> <DEL><s>~~</s>bar<e>~~</e></DEL> ..</p></rt>'
 			],
 			[
 				'.. ~~foo~bar~~ ..',
-				'<rt><p>.. <DEL><st>~~</st>foo~bar<et>~~</et></DEL> ..</p></rt>'
+				'<rt><p>.. <DEL><s>~~</s>foo~bar<e>~~</e></DEL> ..</p></rt>'
 			],
 			[
 				'.. ~~foo\\~~ ~~bar~~ ..',
-				'<rt><p>.. <DEL><st>~~</st>foo\\~~ <et>~~</et></DEL>bar~~ ..</p></rt>'
+				'<rt><p>.. <DEL><s>~~</s>foo\\~~ <e>~~</e></DEL>bar~~ ..</p></rt>'
 			],
 			[
 				'.. ~~~~ ..',
@@ -97,7 +97,7 @@ class ParserTest extends Test
 			// Superscript
 			[
 				'.. foo^baar^baz 1^2 ..',
-				'<rt><p>.. foo<SUP><st>^</st>baar<SUP><st>^</st>baz</SUP></SUP> 1<SUP><st>^</st>2</SUP> ..</p></rt>'
+				'<rt><p>.. foo<SUP><s>^</s>baar<SUP><s>^</s>baz</SUP></SUP> 1<SUP><s>^</s>2</SUP> ..</p></rt>'
 			],
 			[
 				'.. \\^_^ ..',

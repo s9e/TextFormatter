@@ -35,7 +35,7 @@ class ParserTest extends Test
 			],
 			[
 				'Some *emphasis*.',
-				'<rt>Some <G86655032><st>*</st>emphasis<et>*</et></G86655032>.</rt>',
+				'<rt>Some <G86655032><s>*</s>emphasis<e>*</e></G86655032>.</rt>',
 				[],
 				function ($constructor)
 				{
@@ -47,7 +47,7 @@ class ParserTest extends Test
 			],
 			[
 				'Markdown [link](http://example.com) style.',
-				'<rt>Markdown <G792685FB _2="http://example.com"><st>[</st>link<et>](http://example.com)</et></G792685FB> style.</rt>',
+				'<rt>Markdown <G792685FB _2="http://example.com"><s>[</s>link<e>](http://example.com)</e></G792685FB> style.</rt>',
 				[],
 				function ($constructor)
 				{
@@ -59,7 +59,7 @@ class ParserTest extends Test
 			],
 			[
 				'Some *_bold_ emphasis* or _*emphasised* boldness_.',
-				'<rt>Some <G86655032><st>*</st><G74E475F4><st>_</st>bold<et>_</et></G74E475F4> emphasis<et>*</et></G86655032> or <G74E475F4><st>_</st><G86655032><st>*</st>emphasised<et>*</et></G86655032> boldness<et>_</et></G74E475F4>.</rt>',
+				'<rt>Some <G86655032><s>*</s><G74E475F4><s>_</s>bold<e>_</e></G74E475F4> emphasis<e>*</e></G86655032> or <G74E475F4><s>_</s><G86655032><s>*</s>emphasised<e>*</e></G86655032> boldness<e>_</e></G74E475F4>.</rt>',
 				[],
 				function ($constructor)
 				{
