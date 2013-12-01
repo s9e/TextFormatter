@@ -295,8 +295,8 @@ function convertCustom($filepath, &$file)
 				'function () use ($test)'
 			),
 			array(
-				'$this->markTestSkipped();',
-				'$test->markTestSkipped();'
+				"\$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');",
+				"\$this->markTestSkipped('This optimization requires PCRE 8.13 or newer');"
 			)
 		),
 		'Regexp.php' => array(
