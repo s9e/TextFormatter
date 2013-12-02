@@ -156,7 +156,6 @@ s9e\TextFormatter\Tests\Configurator
  [x] finalize(['returnRenderer' => false]) does not return a renderer
  [x] finalize() calls addHTML5Rules() by default
  [x] finalize() passes its options to addHTML5Rules()
- [x] finalize() passes a renderer to addHTML5Rules()
  [x] finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
  [x] finalize(['finalizeParser' => $callback]) calls $callback and passes it an instance of Parser
  [x] finalize(['finalizeRenderer' => $callback]) calls $callback and passes it an instance of Renderer

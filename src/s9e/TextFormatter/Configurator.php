@@ -222,8 +222,14 @@ class Configurator implements ConfigProvider
 			'returnRenderer' => true
 		];
 
+		// Add the HTML5 rules if applicable
+		if ($options['addHTML5Rules'])
+		{
+			$this->addHTML5Rules($options);
+		}
+
 		// Create a renderer as needed
-		if ($options['returnRenderer'] || $options['addHTML5Rules'])
+		if ($options['returnRenderer'])
 		{
 			// Create a renderer
 			$renderer = $this->getRenderer();
@@ -234,16 +240,7 @@ class Configurator implements ConfigProvider
 				$options['finalizeRenderer']($renderer);
 			}
 
-			if ($options['returnRenderer'])
-			{
-				$return['renderer'] = $renderer;
-			}
-
-			if ($options['addHTML5Rules'])
-			{
-				// Add the HTML5 rules. Pass the new renderer plus the other options
-				$this->addHTML5Rules(['renderer' => $renderer] + $options);
-			}
+			$return['renderer'] = $renderer;
 		}
 
 		if ($options['returnParser'])

@@ -767,19 +767,6 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
-	* @testdox finalize() passes a renderer to addHTML5Rules()
-	*/
-	public function testFinalizeAddHTML5RulesRenderer()
-	{
-		$configurator = $this->getMock('s9e\\TextFormatter\\Configurator', ['addHTML5Rules']);
-		$configurator->expects($this->once())
-		             ->method('addHTML5Rules')
-		             ->with($this->arrayHasKey('renderer'));
-
-		$configurator->finalize();
-	}
-
-	/**
 	* @testdox finalize(['addHTML5Rules' => false]) does not call addHTML5Rules() by default
 	*/
 	public function testFinalizeNoAddHTML5Rules()
