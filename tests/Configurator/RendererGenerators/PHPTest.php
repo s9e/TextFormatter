@@ -1342,6 +1342,31 @@ class PHPTest extends Test
 	}
 
 	/**
+	* @testdox Calls the optimizer's optimize() method if applicable
+	*/
+	public function testCallsOptimizer()
+	{
+		$mock = $this->getMock('stdClass', ['optimize']);
+		$mock->expects($this->once())->method('optimize');
+
+		$generator = new PHP;
+		$generator->optimizer = $mock;
+
+		$generator->getRenderer($this->configurator->stylesheet);
+	}
+
+	/**
+	* @testdox Can run without an optimizer
+	*/
+	public function testNoOptimizer()
+	{
+		$generator = new PHP;
+		unset($generator->optimizer);
+
+		$generator->getRenderer($this->configurator->stylesheet);
+	}
+
+	/**
 	* @requires extension tokenizer
 	* @dataProvider getOptimizationTests
 	* @testdox Code optimization tests
@@ -1466,32 +1491,5 @@ class PHPTest extends Test
 				'$this->xpath = new \\DOMXPath'
 			],
 		];
-	}
-
-	/**
-	* @requires extension tokenizer
-	* @testdox optimizeConcatenations() does not merge incompatible htmlspecialchars() calls
-	*/
-	public function testOptimizeConcatenationsNoIncompatibleMerge()
-	{
-		$php = 'if($node->hasAttribute(\'foo\'){$this->out.='
-		     . 'htmlspecialchars($node->textContent,1).'
-		     . 'htmlspecialchars($node->textContent,2);}';
-
-		$generator = new DummyPHPRendererGenerator;
-		$generator->php = $php;
-		$generator->optimizeCode();
-
-		$this->assertSame($php, $generator->php);
-	}
-}
-
-class DummyPHPRendererGenerator extends PHP
-{
-	public $php;
-
-	public function optimizeCode()
-	{
-		parent::optimizeCode();
 	}
 }

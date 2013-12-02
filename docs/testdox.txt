@@ -2258,6 +2258,9 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Parsing tests (JavaScript)
  [x] Parsing+rendering tests
 
+s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
+ [x] Code optimization tests
+
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
  [x] get() can be called multiple times with the same stylesheet
@@ -2296,8 +2299,9 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] XPath expressions are inlined as PHP whenever possible
  [x] useMultibyteStringFunctions is set to TRUE if mbstring is available
  [x] mbstring functions are not used if $useMultibyteStringFunctions is FALSE
+ [x] Calls the optimizer's optimize() method if applicable
+ [x] Can run without an optimizer
  [x] Code optimization tests
- [x] optimizeConcatenations() does not merge incompatible htmlspecialchars() calls
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\Unformatted
  [x] Returns an instance of Renderer

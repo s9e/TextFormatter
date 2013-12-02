@@ -15,6 +15,7 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\TemplateHelper;
 use s9e\TextFormatter\Configurator\Helpers\TemplateParser;
 use s9e\TextFormatter\Configurator\RendererGenerator;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
 use s9e\TextFormatter\Configurator\Stylesheet;
 
 /**
@@ -91,6 +92,11 @@ class PHP implements RendererGenerator
 	public $lastFilepath;
 
 	/**
+	* @var Optimizer Optimizer
+	*/
+	public $optimizer;
+
+	/**
 	* @var string Output method
 	*/
 	protected $outputMethod;
@@ -122,6 +128,11 @@ class PHP implements RendererGenerator
 		if (isset($cacheDir))
 		{
 			$this->cacheDir = $cacheDir;
+		}
+
+		if (extension_loaded('tokenizer'))
+		{
+			$this->optimizer = new Optimizer;
 		}
 
 		$this->useMultibyteStringFunctions = extension_loaded('mbstring');
@@ -435,9 +446,9 @@ EOT
 		$this->php = $header . 'class ' . $className . $this->php;
 
 		// Optimize the generated code
-		if (extension_loaded('tokenizer'))
+		if (isset($this->optimizer))
 		{
-			$this->optimizeCode();
+			$this->php = $this->optimizer->optimize($this->php);
 		}
 
 		return $this->php;
@@ -781,300 +792,6 @@ EOT
 			$this->php .= '{';
 			$this->serializeChildren($case);
 			$this->php .= '}';
-		}
-	}
-
-	//==========================================================================
-	// Optimization of the generated code
-	//==========================================================================
-
-	/**
-	* Optimize the generated code
-	*
-	* @return void
-	*/
-	protected function optimizeCode()
-	{
-		$tokens = token_get_all('<?php ' . $this->php);
-
-		// Optimization passes, in order of execution
-		$passes = [
-			'optimizeOutConcatEqual',
-			'optimizeConcatenations',
-			'optimizeHtmlspecialchars'
-		];
-
-		// Limit the number of loops to 10, in case something would make it loop indefinitely
-		$remainingLoops = 10;
-		do
-		{
-			$continue = false;
-
-			foreach ($passes as $pass)
-			{
-				// Count the tokens
-				$cnt = count($tokens);
-
-				// Run the pass
-				$this->$pass($tokens);
-
-				// If the array was modified, reset the keys and keep going
-				if ($cnt !== count($tokens))
-				{
-					$tokens   = array_values($tokens);
-					$continue = true;
-				}
-			}
-		}
-		while ($continue && --$remainingLoops);
-
-		// Remove the first token, which should be T_OPEN_TAG, aka "<?php"
-		unset($tokens[0]);
-
-		// Rebuild the source
-		$this->php = '';
-		foreach ($tokens as $token)
-		{
-			$this->php .= (is_string($token)) ? $token : $token[1];
-		}
-	}
-
-	/**
-	* Optimize T_CONCAT_EQUAL assignments in an array of PHP tokens
-	*
-	* Will only optimize $this->out.= assignments
-	*
-	* @param  array &$tokens PHP tokens from tokens_get_all()
-	* @return void
-	*/
-	protected function optimizeOutConcatEqual(array &$tokens)
-	{
-		$cnt = count($tokens);
-
-		$i = 0;
-		while (++$i < $cnt)
-		{
-			if ($tokens[$i][0] !== T_CONCAT_EQUAL)
-			{
-				continue;
-			}
-
-			// Test whether this T_CONCAT_EQUAL is preceded with $this->out
-			if ($tokens[$i - 1][0] !== T_STRING
-			 || $tokens[$i - 1][1] !== 'out'
-			 || $tokens[$i - 2][0] !== T_OBJECT_OPERATOR
-			 || $tokens[$i - 3][0] !== T_VARIABLE
-			 || $tokens[$i - 3][1] !== '$this')
-			{
-				 continue;
-			}
-
-			while ($i < $cnt)
-			{
-				// Move the cursor to next semicolon
-				while ($tokens[++$i] !== ';');
-
-				// Move the cursor past the semicolon
-				++$i;
-
-				// Test whether the assignment is followed by another $this->out.= assignment
-				if ($tokens[$i    ][0] !== T_VARIABLE
-				 || $tokens[$i    ][1] !== '$this'
-				 || $tokens[$i + 1][0] !== T_OBJECT_OPERATOR
-				 || $tokens[$i + 2][0] !== T_STRING
-				 || $tokens[$i + 2][1] !== 'out'
-				 || $tokens[$i + 3][0] !== T_CONCAT_EQUAL)
-				{
-					 break;
-				}
-
-				// Replace the semicolon between assignments with a concatenation operator
-				$tokens[$i - 1] = '.';
-
-				// Remove the following $this->out.= assignment and move the cursor past it
-				unset($tokens[$i]);
-				unset($tokens[$i + 1]);
-				unset($tokens[$i + 2]);
-				unset($tokens[$i + 3]);
-				$i += 3;
-			}
-		}
-	}
-
-	/**
-	* Optimize concatenations in an array of PHP tokens
-	*
-	* - Will precompute the result of the concatenation of constant strings
-	* - Will replace the concatenation of two compatible htmlspecialchars() calls with one call to
-	*   htmlspecialchars() on the concatenation of their first arguments
-	*
-	* @param  array &$tokens PHP tokens from tokens_get_all()
-	* @return void
-	*/
-	protected function optimizeConcatenations(array &$tokens)
-	{
-		$cnt = count($tokens);
-
-		$i = 0;
-		while (++$i < $cnt)
-		{
-			if ($tokens[$i] !== '.')
-			{
-				continue;
-			}
-
-			// Merge concatenated strings
-			if ($tokens[$i - 1][0]    === T_CONSTANT_ENCAPSED_STRING
-			 && $tokens[$i + 1][0]    === T_CONSTANT_ENCAPSED_STRING
-			 && $tokens[$i - 1][1][0] === $tokens[$i + 1][1][0])
-			{
-				// Merge both strings into the right string
-				$tokens[$i + 1][1] = substr($tokens[$i - 1][1], 0, -1)
-				                   . substr($tokens[$i + 1][1], 1);
-
-				// Unset the tokens that have been optimized away
-				unset($tokens[$i - 1]);
-				unset($tokens[$i]);
-
-				// Advance the cursor
-				++$i;
-
-				continue;
-			}
-
-			// Merge htmlspecialchars() calls
-			if ($tokens[$i + 1][0] === T_STRING
-			 && $tokens[$i + 1][1] === 'htmlspecialchars'
-			 && $tokens[$i + 2]    === '('
-			 && $tokens[$i - 1]    === ')'
-			 && $tokens[$i - 2][0] === T_LNUMBER
-			 && $tokens[$i - 3]    === ',')
-			{
-				// Save the escape mode of the first call
-				$escapeMode = $tokens[$i - 2][1];
-
-				// Save the index of the comma that comes after the first argument of the first call
-				$startIndex = $i - 3;
-
-				// Save the index of the parenthesis that follows the second htmlspecialchars
-				$endIndex = $i + 2;
-
-				// Move the cursor to the first comma of the second call
-				$i = $endIndex;
-				$parens = 0;
-				while (++$i < $cnt)
-				{
-					if ($tokens[$i] === ',' && !$parens)
-					{
-						break;
-					}
-
-					if ($tokens[$i] === '(')
-					{
-						++$parens;
-					}
-					elseif ($tokens[$i] === ')')
-					{
-						--$parens;
-					}
-				}
-
-				if ($tokens[$i + 1][0] === T_LNUMBER
-				 && $tokens[$i + 1][1] === $escapeMode)
-				{
-					// Replace the first comma of the first call with a concatenator operator
-					$tokens[$startIndex] = '.';
-
-					// Move the cursor back to the first comma then advance it and delete
-					// everything up till the parenthesis of the second call, included
-					$i = $startIndex;
-					while (++$i <= $endIndex)
-					{
-						unset($tokens[$i]);
-					}
-
-					continue;
-				}
-			}
-		}
-	}
-
-	/**
-	* Optimize htmlspecialchars() calls
-	*
-	* - The result of htmlspecialchars() on literals is precomputed
-	* - By default, the generator escapes all values, including variables that cannot contain
-	*   special characters such as $node->localName. This pass removes those calls
-	*
-	* @param  array &$tokens PHP tokens from tokens_get_all()
-	* @return void
-	*/
-	protected function optimizeHtmlspecialchars(array &$tokens)
-	{
-		$cnt = count($tokens);
-
-		$i = 0;
-		while (++$i < $cnt)
-		{
-			// Skip this token if it's not the first of the "htmlspecialchars(" sequence
-			if ($tokens[$i    ][0] !== T_STRING
-			 || $tokens[$i    ][1] !== 'htmlspecialchars'
-			 || $tokens[$i + 1]    !== '(')
-			{
-				continue;
-			}
-
-			// Test whether a constant string is being escaped
-			if ($tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
-			 && $tokens[$i + 3]    === ','
-			 && $tokens[$i + 4][0] === T_LNUMBER
-			 && $tokens[$i + 5]    === ')')
-			{
-				// Escape the content of the T_CONSTANT_ENCAPSED_STRING token
-				$tokens[$i + 2][1] = var_export(
-					htmlspecialchars(
-						stripslashes(substr($tokens[$i + 2][1], 1, -1)),
-						$tokens[$i + 4][1]
-					),
-					true
-				);
-
-				// Remove the htmlspecialchars() call, except for the T_CONSTANT_ENCAPSED_STRING
-				// token
-				unset($tokens[$i]);
-				unset($tokens[$i + 1]);
-				unset($tokens[$i + 3]);
-				unset($tokens[$i + 4]);
-				unset($tokens[$i + 5]);
-
-				// Move the cursor past the call
-				$i += 5;
-
-				continue;
-			}
-
-			// Test whether a variable is being escaped
-			if ($tokens[$i + 2][0] === T_VARIABLE
-			 && $tokens[$i + 2][1]  === '$node'
-			 && $tokens[$i + 3][0]  === T_OBJECT_OPERATOR
-			 && $tokens[$i + 4][0]  === T_STRING
-			 && ($tokens[$i + 4][1] === 'localName' || $tokens[$i + 4][1] === 'nodeName')
-			 && $tokens[$i + 5]     === ','
-			 && $tokens[$i + 6][0]  === T_LNUMBER
-			 && $tokens[$i + 7]     === ')')
-			{
-				// Remove the htmlspecialchars() call, except for its first argument
-				unset($tokens[$i]);
-				unset($tokens[$i + 1]);
-				unset($tokens[$i + 5]);
-				unset($tokens[$i + 6]);
-				unset($tokens[$i + 7]);
-
-				// Move the cursor past the call
-				$i += 7;
-
-				continue;
-			}
 		}
 	}
 
