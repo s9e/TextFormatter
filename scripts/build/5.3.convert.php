@@ -239,6 +239,8 @@ function convertCustom($filepath, &$file)
 				'$toks = [];',
 				'$toks = array();'
 			),
+		),
+		'PHP/Serializer.php' => array(
 			array(
 				// mb_substr() doesn't like null as third parameter on PHP 5.3
 				"\$php .= 'null';",
