@@ -1,4 +1,6 @@
 #!/bin/bash
 
-cd $(dirname $(dirname $(dirname "$0")))
+cd "$(dirname $0))"
+cd ../..
+
 composer install --dev -q --no-interaction
