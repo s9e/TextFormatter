@@ -7,7 +7,7 @@ if [ "$TRAVIS_PHP_VERSION" = "5.5" ]
 then
 	# We run this script detached in the background. It'll finish while tests are running
 	echo "Installing Composer dependencies"
-	sh -c "./installComposer.sh 2>&1 &" 2>&1 &
+	sh -c "./installComposer.sh 2>&1 &" >/dev/null 2>&1 &
 
 	# We only install/test XSLCache on 5.5 because people who install PECL extensions usually run
 	# the current version of PHP
