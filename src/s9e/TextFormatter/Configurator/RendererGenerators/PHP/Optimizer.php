@@ -7,6 +7,10 @@
 */
 namespace s9e\TextFormatter\Configurator\RendererGenerators\PHP;
 
+/**
+* This class optimizes the code produced by the PHP rendere. It is not meant to be used on general
+* purpose code
+*/
 class Optimizer
 {
 	/**

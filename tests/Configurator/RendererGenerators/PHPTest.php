@@ -11,6 +11,7 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP
+* @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\Serializer
 */
 class PHPTest extends Test
 {
