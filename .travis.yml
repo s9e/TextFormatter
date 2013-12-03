@@ -16,4 +16,4 @@ before_script:
 script:
   - ./scripts/travis/run-tests.sh
 after_script:
-  - "[ -f vendor/bin/coveralls ] && php vendor/bin/coveralls -v"
+  - "[ -f vendor/bin/coveralls ] && php vendor/bin/coveralls --exclude-no-stmt -n -v"
