@@ -338,9 +338,15 @@ class PHP implements RendererGenerator
 					 $conditions[0] = substr($conditions[0], 1, -1);
 				}
 
+				$php = $this->serializer->serializeChildren($ir->documentElement);
+				if (isset($this->optimizer))
+				{
+					$php = $this->optimizer->optimize($php);
+				}
+
 				$this->php .= 'if(' . implode('||', $conditions) . ')';
 				$this->php .= '{';
-				$this->php .= $this->serializer->serializeChildren($ir->documentElement);
+				$this->php .= $php;
 				$this->php .= '}';
 			}
 		}
@@ -427,12 +433,6 @@ EOT
 
 		// Prepend the header and the class name
 		$this->php = $header . 'class ' . $className . $this->php;
-
-		// Optimize the generated code
-		if (isset($this->optimizer))
-		{
-			$this->php = $this->optimizer->optimize($this->php);
-		}
 
 		return $this->php;
 	}

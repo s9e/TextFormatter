@@ -87,7 +87,7 @@ class PHPTest extends Test
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b',
+			'class Renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45',
 			$generator->generate($xsl)
 		);
 	}
@@ -109,7 +109,7 @@ class PHPTest extends Test
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Bar_renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b',
+			'class Bar_renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45',
 			$generator->generate($xsl)
 		);
 	}
@@ -182,7 +182,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertFileExists(
-			$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php'
+			$cacheDir . '/Renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45.php'
 		);
 	}
 
@@ -214,7 +214,7 @@ class PHPTest extends Test
 
 		$this->assertFileExists($filepath);
 		$this->assertFileNotExists(
-			$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php'
+			$cacheDir . '/Renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45.php'
 		);
 	}
 
@@ -239,7 +239,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertSame(
-			$cacheDir . '/Renderer_05b3d7aaaf8d870c52df642023ba7ac55e6a825b.php',
+			$cacheDir . '/Renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45.php',
 			$generator->lastFilepath
 		);
 	}
@@ -1348,7 +1348,7 @@ class PHPTest extends Test
 	public function testCallsOptimizer()
 	{
 		$mock = $this->getMock('stdClass', ['optimize']);
-		$mock->expects($this->once())->method('optimize');
+		$mock->expects($this->atLeastOnce())->method('optimize');
 
 		$generator = new PHP;
 		$generator->optimizer = $mock;
