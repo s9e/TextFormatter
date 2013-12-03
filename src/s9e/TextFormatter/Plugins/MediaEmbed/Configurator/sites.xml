@@ -448,9 +448,11 @@
 	<site id="teamcoco">
 		<name>Team Coco</name>
 		<homepage>http://teamcoco.com/</homepage>
-		<example>http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</example>
+		<example>http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</example>
+		<example>http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</example>
 
 		<host>teamcoco.com</host>
+		<extract>!teamcoco\.com/video/(?'id'\d+)!</extract>
 		<scrape>
 			<match>!teamcoco\.com/video/.!</match>
 			<extract>!teamcoco\.com/embed/v/(?'id'\d+)!</extract>

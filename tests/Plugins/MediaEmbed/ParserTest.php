@@ -348,8 +348,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt',
-				'<rt><TEAMCOCO id="54003" url="http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt">http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</TEAMCOCO></rt>',
+				'http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode',
+				'<rt><TEAMCOCO id="73784" url="http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode">http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</TEAMCOCO></rt>',
 				[],
 				function ($configurator)
 				{
@@ -1109,6 +1109,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('strawpoll');
+				}
+			],
+			[
+				'http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien',
+				'<rt><TEAMCOCO id="73784" url="http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien">http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</TEAMCOCO></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('teamcoco');
 				}
 			],
 			[

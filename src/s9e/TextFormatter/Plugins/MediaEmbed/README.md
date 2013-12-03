@@ -229,7 +229,7 @@ echo $html;
 	<tr>
 		<td><code>teamcoco</code></td>
 		<td>Team Coco</td>
-		<td>http://teamcoco.com/video/conan-highlight-gigolos-mug-hunt</td>
+		<td>http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode<br/>http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</td>
 	</tr>
 	<tr>
 		<td><code>ted</code></td>
