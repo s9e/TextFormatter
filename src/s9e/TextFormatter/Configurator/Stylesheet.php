@@ -92,7 +92,7 @@ class Stylesheet
 				foreach ($this->configurator->tags as $tagName => $tag)
 				{
 					// Ensure that the tag is in the right namespace
-					if (strncmp($tagName, $prefix . ':', strlen($prefix) + 1))
+					if (strpos($tagName, $prefix . ':') !== 0)
 					{
 						continue;
 					}
