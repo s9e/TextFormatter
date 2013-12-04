@@ -95,6 +95,43 @@ class Tag implements ConfigProvider
 	}
 
 	/**
+	* {@inheritdoc}
+	*/
+	public function asConfig()
+	{
+		$vars = get_object_vars($this);
+
+		// Remove properties that are not needed during parsing
+		unset($vars['defaultChildRule']);
+		unset($vars['defaultDescendantRule']);
+		unset($vars['templates']);
+
+		// If there are no attribute preprocessors defined, we can remove the step from this tag's
+		// filterChain
+		if (!count($this->attributePreprocessors))
+		{
+			$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
+
+			// We operate on a copy of the filterChain, without modifying the original
+			$filterChain = clone $vars['filterChain'];
+
+			// Process the chain in reverse order so that we don't skip indices
+			$i = count($filterChain);
+			while (--$i >= 0)
+			{
+				if ($filterChain[$i]->getCallback() === $callback)
+				{
+					unset($filterChain[$i]);
+				}
+			}
+
+			$vars['filterChain'] = $filterChain;
+		}
+
+		return ConfigHelper::toArray($vars);
+	}
+
+	/**
 	* Return this tag's default template
 	*
 	* @return string
@@ -102,6 +139,16 @@ class Tag implements ConfigProvider
 	public function getDefaultTemplate()
 	{
 		return $this->templates->get('');
+	}
+
+	/**
+	* Test whether this tag has a default template
+	*
+	* @return bool
+	*/
+	public function issetDefaultTemplate()
+	{
+		return $this->templates->exists('');
 	}
 
 	/**
@@ -209,42 +256,5 @@ class Tag implements ConfigProvider
 	public function unsetDefaultTemplate()
 	{
 		$this->templates->delete('');
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function asConfig()
-	{
-		$vars = get_object_vars($this);
-
-		// Remove properties that are not needed during parsing
-		unset($vars['defaultChildRule']);
-		unset($vars['defaultDescendantRule']);
-		unset($vars['templates']);
-
-		// If there are no attribute preprocessors defined, we can remove the step from this tag's
-		// filterChain
-		if (!count($this->attributePreprocessors))
-		{
-			$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
-
-			// We operate on a copy of the filterChain, without modifying the original
-			$filterChain = clone $vars['filterChain'];
-
-			// Process the chain in reverse order so that we don't skip indices
-			$i = count($filterChain);
-			while (--$i >= 0)
-			{
-				if ($filterChain[$i]->getCallback() === $callback)
-				{
-					unset($filterChain[$i]);
-				}
-			}
-
-			$vars['filterChain'] = $filterChain;
-		}
-
-		return ConfigHelper::toArray($vars);
 	}
 }

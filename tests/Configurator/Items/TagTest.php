@@ -304,6 +304,19 @@ class TagTest extends Test
 	}
 
 	/**
+	* @testdox isset($tag->defaultTemplate) is supported
+	*/
+	public function testIssetDefaultTemplate()
+	{
+		$tag = new Tag;
+		$tag->templates->set('', 'foo');
+
+		$this->assertTrue(isset($tag->defaultTemplate));
+		$tag->templates->delete('');
+		$this->assertFalse(isset($tag->defaultTemplate));
+	}
+
+	/**
 	* @testdox asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
 	*/
 	public function testAsConfig()

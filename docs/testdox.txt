@@ -939,6 +939,7 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] $tag->defaultTemplate maps to $tag->templates->get('')
  [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
  [x] unset($tag->defaultTemplate) is supported
+ [x] isset($tag->defaultTemplate) is supported
  [x] asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
  [x] $tag->filterChain starts with Parser::executeAttributePreprocessors by default
  [x] $tag->filterChain contains Parser::filterAttributes by default

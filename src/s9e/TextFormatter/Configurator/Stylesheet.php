@@ -98,7 +98,7 @@ class Stylesheet
 					}
 
 					// Only check for safeness if the tag has no default template set
-					if (!$tag->templates->exists(''))
+					if (!isset($tag->defaultTemplate))
 					{
 						$this->configurator->templateChecker->checkTemplate($template, $tag);
 					}
