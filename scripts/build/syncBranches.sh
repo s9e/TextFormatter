@@ -34,7 +34,7 @@ do
 		cp "scripts/build/$version.composer.json" composer.json
 	fi
 
-	php patchSources.php $version
+	php scripts/build/patchSources.php $version
 
 	git commit -aq --no-verify -m"$msg"
 	git checkout "release/php$version"
