@@ -133,4 +133,43 @@ class ConfiguratorTest extends Test
 		$this->assertArrayHasKey('regexps', $config);
 		$this->assertEquals(['/\\bföo\\b/Su'], array_map('strval', $config['regexps']));
 	}
+
+	/**
+	* @testdox asConfig() does not return an entry for onlyFirst by default
+	*/
+	public function testOnlyFirstDefault()
+	{
+		$this->configurator->Keywords->add('foo');
+
+		$config = $this->configurator->Keywords->asConfig();
+
+		$this->assertArrayNotHasKey('onlyFirst', $config);
+	}
+
+	/**
+	* @testdox asConfig() has an entry for onlyFirst if it's true
+	*/
+	public function testOnlyFirstTrue()
+	{
+		$this->configurator->Keywords->add('foo');
+		$this->configurator->Keywords->onlyFirst = true;
+
+		$config = $this->configurator->Keywords->asConfig();
+
+		$this->assertArrayHasKey('onlyFirst', $config);
+		$this->assertTrue($config['onlyFirst']);
+	}
+
+	/**
+	* @testdox asConfig() does not return an entry for onlyFirst if it's false
+	*/
+	public function testOnlyFirstFalse()
+	{
+		$this->configurator->Keywords->add('foo');
+		$this->configurator->Keywords->onlyFirst = false;
+
+		$config = $this->configurator->Keywords->asConfig();
+
+		$this->assertArrayNotHasKey('onlyFirst', $config);
+	}
 }

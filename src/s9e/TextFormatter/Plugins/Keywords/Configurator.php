@@ -34,6 +34,11 @@ class Configurator extends ConfiguratorBase
 	protected $collection;
 
 	/**
+	* @var boolean Whether to capture only the first occurence of each keyword
+	*/
+	public $onlyFirst = false;
+
+	/**
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'KEYWORD';
@@ -62,6 +67,11 @@ class Configurator extends ConfiguratorBase
 			'attrName' => $this->attrName,
 			'tagName'  => $this->tagName
 		];
+
+		if (!empty($this->onlyFirst))
+		{
+			$config['onlyFirst'] = $this->onlyFirst;
+		}
 
 		// Sort keywords in order to keep keywords that start with the same characters together. We
 		// also remove duplicates that would otherwise skew the length computation done below

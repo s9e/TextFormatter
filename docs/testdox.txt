@@ -2184,6 +2184,9 @@ s9e\TextFormatter\Tests\Plugins\Keywords\Configurator
  [x] Keywords are split in groups to generate regexps smaller than ~32KB
  [x] Regexps are case-insensitive if $plugin->caseSensitive is false
  [x] Regexps that contain a non-ASCII character use Unicode mode
+ [x] asConfig() does not return an entry for onlyFirst by default
+ [x] asConfig() has an entry for onlyFirst if it's true
+ [x] asConfig() does not return an entry for onlyFirst if it's false
 
 s9e\TextFormatter\Tests\Plugins\Keywords\Parser
  [x] Parsing tests

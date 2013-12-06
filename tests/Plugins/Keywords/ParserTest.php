@@ -48,6 +48,36 @@ class ParserTest extends Test
 					$configurator->Keywords->add('foo');
 				}
 			],
+			[
+				'foo foo foo',
+				'<rt><KEYWORD value="foo">foo</KEYWORD> <KEYWORD value="foo">foo</KEYWORD> <KEYWORD value="foo">foo</KEYWORD></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Keywords->add('foo');
+				}
+			],
+			[
+				'foo foo foo',
+				'<rt><KEYWORD value="foo">foo</KEYWORD> foo foo</rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Keywords->add('foo');
+					$configurator->Keywords->onlyFirst = true;
+				}
+			],
+			[
+				'foo foo bar bar',
+				'<rt><KEYWORD value="foo">foo</KEYWORD> foo <KEYWORD value="bar">bar</KEYWORD> bar</rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Keywords->add('foo');
+					$configurator->Keywords->add('bar');
+					$configurator->Keywords->onlyFirst = true;
+				}
+			],
 		];
 	}
 }
