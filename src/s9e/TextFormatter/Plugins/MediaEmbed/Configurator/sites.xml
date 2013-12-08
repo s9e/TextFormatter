@@ -208,6 +208,22 @@
 		<iframe width="640" height="400" src="http://www.gamespot.com/videos/embed/{@id}/"/>
 	</site>
 
+	<site id="gametrailers">
+		<name>GameTrailers</name>
+		<homepage>http://www.gametrailers.com/</homepage>
+		<example>http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</example>
+		<example>http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review</example>
+		<example>http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village</example>
+
+		<host>gametrailers.com</host>
+		<scrape>
+			<match>!gametrailers\.com/(?:full-episode|review|video)s/!</match>
+			<extract>!(?'id'mgid:arc:(?:episode|video):gametrailers\.com:[-\w]+)!</extract>
+		</scrape>
+		<iframe width="512" height="288" src="http://media.mtvnservices.com/embed/{@id}"/>
+		<flash width="512" height="288" src="http://media.mtvnservices.com/{@id}"/>
+	</site>
+
 	<site id="gist">
 		<name>GitHub Gist</name>
 		<homepage>https://gist.github.com/</homepage>

@@ -157,6 +157,11 @@ echo $html;
 		<td>http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/<br/>http://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/<br/>http://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</td>
 	</tr>
 	<tr>
+		<td><code>gametrailers</code></td>
+		<td>GameTrailers</td>
+		<td>http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-<br/>http://www.gametrailers.com/reviews/zalxz0/crimson-dragon-review<br/>http://www.gametrailers.com/full-episodes/zdzfok/pop-fiction-episode-40--jak-ii--sandover-village</td>
+	</tr>
+	<tr>
 		<td><code>gist</code></td>
 		<td>GitHub Gist</td>
 		<td>https://gist.github.com/s9e/6806305<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
