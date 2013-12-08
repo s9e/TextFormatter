@@ -1367,6 +1367,15 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
+			[
+				'http://www.youtube.com/watch_popup?v=qybUFnY7Y8w',
+				'<rt><YOUTUBE id="qybUFnY7Y8w" url="http://www.youtube.com/watch_popup?v=qybUFnY7Y8w">http://www.youtube.com/watch_popup?v=qybUFnY7Y8w</YOUTUBE></rt>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
 		];
 	}
 
