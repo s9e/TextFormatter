@@ -122,4 +122,10 @@ function optimizeFile($filepath)
 	}
 }
 
+// PHP 5.3 compatibility
+if (!defined('T_TRAIT'))
+{
+	define('T_TRAIT', 357);
+}
+
 optimizeDir(realpath(__DIR__ . '/../../src/s9e/TextFormatter'));
