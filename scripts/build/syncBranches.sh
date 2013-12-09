@@ -35,6 +35,7 @@ do
 	fi
 
 	php scripts/build/patchSources.php $version
+	php scripts/build/optimizeSources.php
 
 	git commit -aq --no-verify -m"$msg"
 	git checkout "release/php$version"

@@ -28,4 +28,7 @@ mkdir ../../tests/.cache
 # Patch the sources for current PHP version
 php ../build/patchSources.php
 
+# Optimize the sources
+php ../build/optimizeSources.php
+
 wait
