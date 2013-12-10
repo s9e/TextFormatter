@@ -71,9 +71,7 @@ function optimizeFile($filepath)
 	// PREG_SET_ORDER => \PREG_SET_ORDER
 	foreach ($tokens as $i => &$token)
 	{
-		if ($token[0] !== T_STRING
-		 || !preg_match('(^[A-Z_]+$)D', $token[1])
-		 || !defined($token[1]))
+		if ($token[0] !== T_STRING || !defined($token[1]))
 		{
 			continue;
 		}
