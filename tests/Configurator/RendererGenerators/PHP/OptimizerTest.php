@@ -13,7 +13,7 @@ class OptimizerTest extends Test
 {
 	/**
 	* @dataProvider getOptimizationTests
-	* @testdox Code optimization tests
+	* @testdox optimize() tests
 	*/
 	public function testOptimizations($original, $expected)
 	{
@@ -76,6 +76,115 @@ class OptimizerTest extends Test
 			[
 				'$this->out.=htmlspecialchars($node->nodeName,0);',
 				'$this->out.=$node->nodeName;',
+			],
+		];
+	}
+
+	/**
+	* @dataProvider getControlStructureOptimizationTests
+	* @testdox optimize() tests
+	*/
+	public function testControlStructureOptimization($original, $expected)
+	{
+		$optimizer = new Optimizer;
+
+		$this->assertSame($expected, $optimizer->optimizeControlStructures($original));
+	}
+
+	public function getControlStructureOptimizationTests()
+	{
+		return [
+			[
+				'if ($foo) { bar(); }',
+				'if ($foo) bar();'
+			],
+			[
+				'if(($foo)){bar();}',
+				'if(($foo))bar();'
+			],
+			[
+				'if ($foo) { bar(); } else { baz(); }',
+				'if ($foo) bar(); else baz();'
+			],
+			[
+				'if($foo){bar();}else{baz();}',
+				'if($foo)bar();else baz();'
+			],
+			[
+				'if ($foo) { bar(); baz(); }',
+				'if ($foo) { bar(); baz(); }'
+			],
+			[
+				'while (--$i) { }',
+				'while (--$i);'
+			],
+			[
+				'if ($foo)
+				{
+					if ($bar)
+					{
+						bar();
+					}
+					elseif ($baz)
+					{
+						baz();
+					}
+					else
+					{
+						nope();
+					}
+				}',
+				'if ($foo)
+
+					if ($bar)
+
+						bar();
+
+					elseif ($baz)
+
+						baz();
+
+					else
+
+						nope();
+
+'
+			],
+			[
+				'if(1){if(2){}else{a();}}',
+				'if(1)if(2);else a();'
+			],
+			[
+				'if(1){if(2){}}else{a();}',
+				'if(1){if(2);}else a();'
+			],
+			[
+				'if(1){if(2){}} else{a();}',
+				'if(1){if(2);} else a();'
+			],
+			[
+				'if(1){if(2){if(3){}}}else{a();}',
+				'if(1){if(2)if(3);}else a();'
+			],
+			[
+				'if(1){if(2){if(3){}else{a();}}else{b();}',
+				'if(1){if(2)if(3);else a();else b();'
+			],
+			[
+				'if(1){while(0){}}else{a();}',
+				'if(1)while(0);else a();'
+			],
+			[
+				'do{a();}while(1);',
+				'do{a();}while(1);'
+			],
+			[
+				'foreach($foo as $bar){}',
+				'foreach($foo as $bar);'
+			],
+			[
+				'for ($i = 0; $i < ; ++$i){}',
+				'for ($i = 0; $i < ; ++$i);'
 			],
 		];
 	}

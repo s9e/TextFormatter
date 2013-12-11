@@ -2263,7 +2263,7 @@ s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser
  [x] Parsing+rendering tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Optimizer
- [x] Code optimization tests
+ [x] optimize() tests
 
 s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] Returns an instance of Renderer
@@ -2303,7 +2303,7 @@ s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP
  [x] XPath expressions are inlined as PHP whenever possible
  [x] useMultibyteStringFunctions is set to TRUE if mbstring is available
  [x] mbstring functions are not used if $useMultibyteStringFunctions is FALSE
- [x] Calls the optimizer's optimize() method if applicable
+ [x] Calls the optimizer's optimize() and optimizeControlStructures() methods if applicable
  [x] Can run without an optimizer
  [x] Code optimization tests
 

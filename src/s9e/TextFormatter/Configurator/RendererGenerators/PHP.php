@@ -417,6 +417,12 @@ EOT
 		// Close the class definition
 		$this->php .= "\n}";
 
+		// Finally, optimize the control structures
+		if (isset($this->optimizer))
+		{
+			$this->php = $this->optimizer->optimizeControlStructures($this->php);
+		}
+
 		// Generate a name for that class if necessary, and save it
 		$className = (isset($this->className))
 		           ? $this->className

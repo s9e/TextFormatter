@@ -87,7 +87,7 @@ class PHPTest extends Test
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45',
+			'class Renderer_39146046ecfa238797afeb6aa9dbef23414e0886',
 			$generator->generate($xsl)
 		);
 	}
@@ -109,7 +109,7 @@ class PHPTest extends Test
 			</xsl:stylesheet>';
 
 		$this->assertContains(
-			'class Bar_renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45',
+			'class Bar_renderer_39146046ecfa238797afeb6aa9dbef23414e0886',
 			$generator->generate($xsl)
 		);
 	}
@@ -182,7 +182,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertFileExists(
-			$cacheDir . '/Renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45.php'
+			$cacheDir . '/Renderer_39146046ecfa238797afeb6aa9dbef23414e0886.php'
 		);
 	}
 
@@ -214,7 +214,7 @@ class PHPTest extends Test
 
 		$this->assertFileExists($filepath);
 		$this->assertFileNotExists(
-			$cacheDir . '/Renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45.php'
+			$cacheDir . '/Renderer_39146046ecfa238797afeb6aa9dbef23414e0886.php'
 		);
 	}
 
@@ -239,7 +239,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertSame(
-			$cacheDir . '/Renderer_14407b8dd08aa1749ffced1bd14e2d27f2bcba45.php',
+			$cacheDir . '/Renderer_39146046ecfa238797afeb6aa9dbef23414e0886.php',
 			$generator->lastFilepath
 		);
 	}
@@ -1343,12 +1343,15 @@ class PHPTest extends Test
 	}
 
 	/**
-	* @testdox Calls the optimizer's optimize() method if applicable
+	* @testdox Calls the optimizer's optimize() and optimizeControlStructures() methods if applicable
 	*/
 	public function testCallsOptimizer()
 	{
-		$mock = $this->getMock('stdClass', ['optimize']);
+		$mock = $this->getMock('stdClass', ['optimize', 'optimizeControlStructures']);
 		$mock->expects($this->atLeastOnce())->method('optimize');
+		$mock->expects($this->atLeastOnce())
+		     ->method('optimizeControlStructures')
+		     ->will($this->returnArgument(0));
 
 		$generator = new PHP;
 		$generator->optimizer = $mock;
@@ -1386,7 +1389,7 @@ class PHPTest extends Test
 			],
 			[
 				'<xsl:template match="FOO"><xsl:text/></xsl:template>',
-				"if(\$nodeName==='FOO'){}",
+				"if(\$nodeName==='FOO')",
 				"\$this->out.='';"
 			],
 			[
@@ -1396,8 +1399,8 @@ class PHPTest extends Test
 						<xsl:otherwise><xsl:text/></xsl:otherwise>
 					</xsl:choose>
 				</xsl:template>',
-				"{if(\$node->hasAttribute('foo')){\$this->out.='foo';}}",
-				['else{}', "\$this->out.=''"]
+				"{if(\$node->hasAttribute('foo'))\$this->out.='foo';}",
+				['else{}', 'else;', "\$this->out.=''"]
 			],
 			[
 				'<xsl:template match="html:*">

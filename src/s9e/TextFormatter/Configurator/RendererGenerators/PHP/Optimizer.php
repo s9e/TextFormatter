@@ -72,6 +72,209 @@ class Optimizer
 	}
 
 	/**
+	* Optimize the control structures of a script
+	*
+	* Removes brackets in control structures wherever possible. Prevents the generation of EXT_STMT
+	* opcodes where they're not strictly required.
+	*
+	* @return string $php
+	* @return string
+	*/
+	public function optimizeControlStructures($php)
+	{
+		$tokens = token_get_all('<?php ' . $php);
+
+		// Root context
+		$context = [
+			'braces'      => 0,
+			'index'       => -1,
+			'parent'      => [],
+			'preventElse' => false,
+			'statements'  => 0
+		];
+
+		$i       = 0;
+		$cnt     = count($tokens);
+		$braces  = 0;
+		$rebuild = false;
+
+		while (++$i < $cnt)
+		{
+			if ($tokens[$i][0] !== T_ELSE
+			 && $tokens[$i][0] !== T_ELSEIF
+			 && $tokens[$i][0] !== T_FOR
+			 && $tokens[$i][0] !== T_FOREACH
+			 && $tokens[$i][0] !== T_IF
+			 && $tokens[$i][0] !== T_WHILE)
+			{
+				if ($tokens[$i] === ';')
+				{
+					++$context['statements'];
+				}
+				elseif ($tokens[$i] === '{')
+				{
+					++$braces;
+				}
+				elseif ($tokens[$i] === '}')
+				{
+					if ($context['braces'] === $braces)
+					{
+						// Test whether we should avoid removing the braces because it's followed by
+						// an else/elseif that would become part of an inner if/elseif
+						if ($context['preventElse'] && $i < $cnt + 3)
+						{
+							// Compute the index of the next non-whitespace token
+							$j = $i + 1;
+
+							if ($tokens[$j][0] === T_WHITESPACE)
+							{
+								++$j;
+							}
+
+							if ($tokens[$j][0] === T_ELSE
+							 || $tokens[$j][0] === T_ELSEIF)
+							{
+								// Bump the number of statements to prevent the braces from being
+								// removed
+								$context['statements'] = 2;
+							}
+						}
+
+						if ($context['statements'] < 2)
+						{
+							// Replace the first brace with the saved replacement
+							$tokens[$context['index']] = $context['replacement'];
+
+							// Remove the second brace or replace it with a semicolon if there are
+							// no statements in this block
+							$tokens[$i] = ($context['statements']) ? '' : ';';
+
+							// Fix the whitespace before braces. This is mainly cosmetic. Only
+							// spaces and tabs are removed in order to preserve line numbers
+							foreach ([$context['index'] - 1, $i - 1] as $tokenIndex)
+							{
+								if (is_array($tokens[$tokenIndex])
+								 && $tokens[$tokenIndex][0] === T_WHITESPACE)
+								{
+									$tokens[$tokenIndex][1] = rtrim($tokens[$tokenIndex][1], "\t ");
+								}
+							}
+
+							$rebuild = true;
+						}
+
+						$context = $context['parent'];
+
+						// Propagate the "preventElse" property upwards to handle multiple nested
+						// if statements
+						$context['parent']['preventElse'] = $context['preventElse'];
+					}
+
+					--$braces;
+				}
+
+				continue;
+			}
+
+			// Save the index so we can rewind back to it in case of failure
+			$savedIndex = $i;
+
+			// Count this control structure in this context's statements unless it's an elseif/else
+			// in which case it's already been counted as part of the if
+			if ($tokens[$i][0] !== T_ELSE && $tokens[$i][0] !== T_ELSEIF)
+			{
+				++$context['statements'];
+			}
+
+			if ($tokens[$i][0] !== T_ELSE)
+			{
+				// Move to the next (
+				while (++$i < $cnt && $tokens[$i] !== '(');
+
+				$parens = 0;
+				while (++$i < $cnt)
+				{
+					if ($tokens[$i] === ')')
+					{
+						if ($parens)
+						{
+							--$parens;
+						}
+						else
+						{
+							break;
+						}
+					}
+					elseif ($tokens[$i] === '(')
+					{
+						++$parens;
+					}
+				}
+			}
+
+			// Skip whitespace
+			while (++$i < $cnt && $tokens[$i][0] === T_WHITESPACE);
+
+			// Update context if we're inside of a new block
+			if ($tokens[$i] === '{')
+			{
+				++$braces;
+
+				// Replacement for the first brace
+				$replacement = '';
+
+				// Add a space after "else" if the brace is removed
+				if ($tokens[$savedIndex    ][0] === T_ELSE
+				 && $tokens[$savedIndex + 1][0] !== T_WHITESPACE)
+				{
+					$replacement = ' ';
+				}
+
+				// If the new block is an if or elseif block, prevent an else statement from parent
+				// context to immediately follow it
+				if ($tokens[$savedIndex][0] === T_IF
+				 || $tokens[$savedIndex][0] === T_ELSEIF)
+				{
+					$context['preventElse'] = true;
+				}
+				else
+				{
+					$context['preventElse'] = false;
+				}
+
+				$context = [
+					'braces'      => $braces,
+					'index'       => $i,
+					'parent'      => $context,
+					'preventElse' => false,
+					'replacement' => $replacement,
+					'statements'  => 0
+				];
+			}
+			else
+			{
+				// Rewind all the way to the original token
+				$i = $savedIndex;
+			}
+		}
+
+		// Remove the first token, which should be T_OPEN_TAG, aka "<?php"
+		unset($tokens[0]);
+
+		// Rebuild the source
+		if ($rebuild)
+		{
+			$php = '';
+			foreach ($tokens as $token)
+			{
+				$php .= (is_string($token)) ? $token : $token[1];
+			}
+		}
+
+		return $php;
+	}
+
+	/**
 	* Optimize T_CONCAT_EQUAL assignments in an array of PHP tokens
 	*
 	* Will only optimize $this->out.= assignments
