@@ -17,6 +17,9 @@ This script is called by scripts/travis/setup.sh so that tests are run on the "o
 
 namespace s9e\TextFormatter\Build\Optimize;
 
+include __DIR__ . '/../../src/s9e/TextFormatter/Configurator/RendererGenerators/PHP/Optimizer.php';
+$optimizer = new \s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;
+
 function optimizeDir($dir)
 {
 	foreach (glob($dir . '/*', GLOB_ONLYDIR) as $sub)
@@ -32,8 +35,12 @@ function optimizeDir($dir)
 
 function optimizeFile($filepath)
 {
-	$tokens = token_get_all(file_get_contents($filepath));
-	$save   = false;
+	global $optimizer;
+
+	$old    = file_get_contents($filepath);
+	$new    = $optimizer->optimizeControlStructures($old);
+	$save   = ($new !== $old);
+	$tokens = token_get_all($new);
 
 	// strpos() => \strpos()
 	foreach ($tokens as $i => &$token)
@@ -98,12 +105,6 @@ function optimizeFile($filepath)
 
 		$token[1] = '\\' . $token[1];
 		$save = true;
-	}
-	unset($token);
-
-	// if (1) { foo(); } => if (1) foo();
-	foreach ($tokens as $i => &$token)
-	{
 	}
 	unset($token);
 
