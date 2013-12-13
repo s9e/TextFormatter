@@ -336,7 +336,9 @@ s9e\TextFormatter\Tests\Configurator\Collections\RulesGeneratorList
  [x] append() adds objects as-is
 
 s9e\TextFormatter\Tests\Configurator\Collections\SchemeList
- [x] asConfig() returns an instance of Regexp
+ [x] asConfig() returns an instance of Variant
+ [x] asConfig() returns a regexp that matches all the allowed schemes in the default variant
+ [x] asConfig() returns an instance of RegExp as the JS variant
  [x] asConfig() creates a case-insensitive regexp that matches the schemes in the collection
  [x] add('*invalid*') throws an exception
  [x] add() normalizes schemes to lowercase

@@ -20,7 +20,9 @@ class SchemeList extends NormalizedList
 	*/
 	public function asConfig()
 	{
-		return new Regexp('/^' . RegexpBuilder::fromList($this->items) . '$/Di');
+		$regexp = new Regexp('/^' . RegexpBuilder::fromList($this->items) . '$/Di');
+
+		return $regexp->asConfig();
 	}
 
 	/**
