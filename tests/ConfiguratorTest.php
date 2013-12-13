@@ -434,9 +434,9 @@ class ConfiguratorTest extends Test
 		$renderer = $this->configurator->getRenderer('PHP', $cacheDir);
 
 		$this->assertFileExists(
-			$cacheDir . '/Renderer_39146046ecfa238797afeb6aa9dbef23414e0886.php'
+			$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php'
 		);
-		unlink($cacheDir . '/Renderer_39146046ecfa238797afeb6aa9dbef23414e0886.php');
+		unlink($cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php');
 	}
 
 	/**

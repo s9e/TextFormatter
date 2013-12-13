@@ -149,14 +149,13 @@ class Optimizer
 							// no statements in this block
 							$tokens[$i] = ($context['statements']) ? '' : ';';
 
-							// Fix the whitespace before braces. This is mainly cosmetic. Only
-							// spaces and tabs are removed in order to preserve line numbers
+							// Remove the whitespace before braces. This is mainly cosmetic
 							foreach ([$context['index'] - 1, $i - 1] as $tokenIndex)
 							{
 								if (is_array($tokens[$tokenIndex])
 								 && $tokens[$tokenIndex][0] === T_WHITESPACE)
 								{
-									$tokens[$tokenIndex][1] = rtrim($tokens[$tokenIndex][1], "\t ");
+									unset($tokens[$tokenIndex]);
 								}
 							}
 

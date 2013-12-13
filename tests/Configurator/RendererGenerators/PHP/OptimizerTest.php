@@ -135,20 +135,12 @@ class OptimizerTest extends Test
 					}
 				}',
 				'if ($foo)
-
 					if ($bar)
-
 						bar();
-
 					elseif ($baz)
-
 						baz();
-
 					else
-
-						nope();
-
-'
+						nope();'
 			],
 			[
 				'if(1){if(2){}else{a();}}',
