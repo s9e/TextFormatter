@@ -178,6 +178,30 @@ class OptimizerTest extends Test
 				'for ($i = 0; $i < ; ++$i){}',
 				'for ($i = 0; $i < ; ++$i);'
 			],
+			[
+				'if (1)
+				{
+					// foo
+					foo();
+				}',
+				'if (1)
+					// foo
+					foo();'
+			],
+			[
+				'if (1)
+				{
+					/**
+					* @foo
+					*/
+					foo();
+				}',
+				'if (1)
+					/**
+					* @foo
+					*/
+					foo();'
+			],
 		];
 	}
 }
