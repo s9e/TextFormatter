@@ -542,10 +542,10 @@ class ConfiguratorTest extends Test
 	*/
 	public function testAddHTML5RulesRoot()
 	{
-		$this->configurator->tags->add('UL')->defaultTemplate
+		$this->configurator->tags->add('UL')->template
 			= '<ul><xsl:apply-templates/></ul>';
 
-		$this->configurator->tags->add('LI')->defaultTemplate
+		$this->configurator->tags->add('LI')->template
 			= '<li><xsl:apply-templates/></li>';
 
 		$this->configurator->addHTML5Rules();
@@ -570,10 +570,10 @@ class ConfiguratorTest extends Test
 	public function testAddHTML5RulesTags()
 	{
 		$ul = $this->configurator->tags->add('UL');
-		$ul->defaultTemplate = '<ul><xsl:apply-templates/></ul>';
+		$ul->template = '<ul><xsl:apply-templates/></ul>';
 
 		$li = $this->configurator->tags->add('LI');
-		$li->defaultTemplate = '<li><xsl:apply-templates/></li>';
+		$li->template = '<li><xsl:apply-templates/></li>';
 
 		$this->configurator->addHTML5Rules();
 
@@ -587,7 +587,7 @@ class ConfiguratorTest extends Test
 	public function testAddHTML5RulesTagsNoOverwrite()
 	{
 		$ul = $this->configurator->tags->add('PRE');
-		$ul->defaultTemplate = '<pre><xsl:apply-templates/></pre>';
+		$ul->template = '<pre><xsl:apply-templates/></pre>';
 		$ul->rules->noBrDescendant(false);
 
 		$this->configurator->addHTML5Rules();
@@ -601,10 +601,10 @@ class ConfiguratorTest extends Test
 	public function testAddHTML5RulesOptions()
 	{
 		$ul = $this->configurator->tags->add('UL');
-		$ul->defaultTemplate = '<ul><xsl:apply-templates/></ul>';
+		$ul->template = '<ul><xsl:apply-templates/></ul>';
 
 		$li = $this->configurator->tags->add('LI');
-		$li->defaultTemplate = '<li><xsl:apply-templates/></li>';
+		$li->template = '<li><xsl:apply-templates/></li>';
 
 		$this->configurator->addHTML5Rules(['parentHTML' => '<ul>']);
 

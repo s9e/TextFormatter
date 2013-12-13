@@ -310,7 +310,7 @@ class Configurator extends ConfiguratorBase
 			$template = new UnsafeTemplate($template);
 		}
 
-		$tag->defaultTemplate = $template;
+		$tag->template = $template;
 	}
 
 	/**

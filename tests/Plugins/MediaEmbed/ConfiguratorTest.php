@@ -457,7 +457,7 @@ class ConfiguratorTest extends Test
 			]
 		);
 
-		$this->assertEquals('YouTube!', $tag->defaultTemplate);
+		$this->assertEquals('YouTube!', $tag->template);
 	}
 
 	/**
@@ -480,7 +480,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<iframe width="123" height="456" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -504,7 +504,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<iframe width="{@width}" height="{@height}" src="foo" allowfullscreen="" frameborder="0" scrolling="no"/>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -528,7 +528,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen=""/></object>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -552,7 +552,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<object type="application/x-shockwave-flash" typemustmatch="" width="{@width}" height="{@height}" data="foo"><param name="allowfullscreen" value="true"/><embed type="application/x-shockwave-flash" src="foo" width="{@width}" height="{@height}" allowfullscreen=""/></object>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -577,7 +577,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<object type="application/x-shockwave-flash" typemustmatch="" width="123" height="456" data="foo"><param name="allowfullscreen" value="true"/><param name="flashvars" value="foo=1&amp;bar=2"/><embed type="application/x-shockwave-flash" src="foo" width="123" height="456" allowfullscreen="" flashvars="foo=1&amp;bar=2"/></object>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -678,7 +678,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertContains(
 			$template,
-			(string) $this->configurator->tags['YOUTUBE']->defaultTemplate
+			(string) $this->configurator->tags['YOUTUBE']->template
 		);
 	}
 
@@ -694,7 +694,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertContains(
 			'<br/><a href="{@url}">Original link</a>',
-			(string) $this->configurator->tags['YOUTUBE']->defaultTemplate
+			(string) $this->configurator->tags['YOUTUBE']->template
 		);
 	}
 

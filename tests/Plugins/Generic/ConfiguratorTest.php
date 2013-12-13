@@ -146,7 +146,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -162,7 +162,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<xsl:value-of select="@w"/>,<xsl:value-of select="@h"/>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -212,7 +212,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -228,7 +228,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -244,7 +244,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<xsl:value-of select="@_1"/>,<xsl:value-of select="@_2"/>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -265,7 +265,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<xsl:value-of select="@_1"/>,\\1',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -286,7 +286,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'\\<xsl:value-of select="@_1"/>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -307,7 +307,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<xsl:value-of select="@_1"/>,$1',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -323,7 +323,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<a href="https://twitter.com/{@_1}"><xsl:value-of select="."/></a>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -342,7 +342,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<em><xsl:apply-templates/></em>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -361,7 +361,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<a href="{@_2}"><xsl:apply-templates/></a>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -380,7 +380,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<b title="{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}"><xsl:apply-templates/></b>',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -398,7 +398,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<a href="{@_1}"><xsl:apply-templates/></a>',
-			$this->configurator->tags[$tagName]->defaultTemplate
+			$this->configurator->tags[$tagName]->template
 		);
 	}
 
@@ -417,7 +417,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'xy',
-			$tag->defaultTemplate
+			$tag->template
 		);
 	}
 
@@ -448,7 +448,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<hr/>',
-			$this->configurator->tags[$tagName]->defaultTemplate
+			$this->configurator->tags[$tagName]->template
 		);
 	}
 

@@ -57,7 +57,7 @@ trait RendererTests
 	{
 		$xml = '<rt>Hello <B><s>[b]</s>world<e>[/b]</e></B>!</rt>';
 
-		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
 		$this->assertSame(
 			'Hello <b>world</b>!',
@@ -84,7 +84,7 @@ trait RendererTests
 			'4Plain text'
 		];
 
-		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
 		$this->assertSame(
 			$expected,
@@ -115,7 +115,7 @@ trait RendererTests
 			'6Six'
 		];
 
-		$this->configurator->tags->add('B')->defaultTemplate = '<b><xsl:apply-templates/></b>';
+		$this->configurator->tags->add('B')->template = '<b><xsl:apply-templates/></b>';
 
 		$this->assertSame(
 			$expected,
@@ -160,7 +160,7 @@ trait RendererTests
 	*/
 	public function testSetParameter()
 	{
-		$this->configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->stylesheet->parameters->add('foo');
 
 		$renderer = $this->configurator->getRenderer();
@@ -177,7 +177,7 @@ trait RendererTests
 	*/
 	public function testSetParameters()
 	{
-		$this->configurator->tags->add('X')->defaultTemplate
+		$this->configurator->tags->add('X')->template
 			= '<xsl:value-of select="$foo"/><xsl:value-of select="$bar"/>';
 		$this->configurator->stylesheet->parameters->add('foo');
 		$this->configurator->stylesheet->parameters->add('bar');
@@ -199,7 +199,7 @@ trait RendererTests
 	*/
 	public function testSetParameterBothQuotes()
 	{
-		$this->configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->stylesheet->parameters->add('foo');
 		$renderer = $this->configurator->getRenderer();
 

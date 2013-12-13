@@ -103,16 +103,11 @@ class BBCodeMonkey
 	* Create a BBCode and its underlying tag and template(s) based on its reference usage
 	*
 	* @param  string $usage     BBCode usage, e.g. [B]{TEXT}[/b]
-	* @param  mixed  $templates Template, or an array of [predicate => template]
+	* @param  string $template  Tag's template
 	* @return array             An array containing three elements: 'bbcode', 'bbcodeName' and 'tag'
 	*/
-	public function create($usage, $templates)
+	public function create($usage, $template)
 	{
-		if (!is_array($templates))
-		{
-			$templates = ['' => $templates];
-		}
-
 		// Parse the BBCode usage
 		$config = $this->parse($usage);
 
@@ -123,18 +118,12 @@ class BBCodeMonkey
 			'tag'        => $config['tag']
 		];
 
-		// Set the templates for this BBCode's tag
-		foreach ($templates as $predicate => $template)
-		{
-			$return['tag']->templates->set(
-				$predicate,
-				$this->replaceTokens(
-					$template,
-					$config['tokens'],
-					$config['passthroughToken']
-				)
-			);
-		}
+		// Set the template for this BBCode's tag
+		$return['tag']->template = $this->replaceTokens(
+			$template,
+			$config['tokens'],
+			$config['passthroughToken']
+		);
 
 		return $return;
 	}

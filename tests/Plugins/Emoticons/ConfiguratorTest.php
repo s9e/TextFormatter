@@ -288,10 +288,10 @@ class ConfiguratorTest extends Test
 	public function testFinalize()
 	{
 		$this->configurator->Emoticons;
-		$this->assertCount(0, $this->configurator->tags['E']->templates);
+		$this->assertFalse(isset($this->configurator->tags['E']->template));
 
 		$this->configurator->Emoticons->finalize();
-		$this->assertCount(1, $this->configurator->tags['E']->templates);
+		$this->assertTrue(isset($this->configurator->tags['E']->template));
 	}
 
 	/**

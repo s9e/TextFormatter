@@ -93,7 +93,7 @@ class XSLTTest extends Test
 	*/
 	public function testSetParameterBothQuotes()
 	{
-		$this->configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$this->configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 		$this->configurator->stylesheet->parameters->add('foo');
 		$renderer = $this->configurator->getRenderer();
 
@@ -117,7 +117,7 @@ class XSLTTest extends Test
 	*/
 	public function testNoEmbedEndTag()
 	{
-		$this->configurator->tags->add('X')->defaultTemplate
+		$this->configurator->tags->add('X')->template
 			= '<object><embed src="foo"/></object>';
 
 		$this->assertSame(

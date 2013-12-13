@@ -47,7 +47,7 @@ class UnsafeTemplateExceptionTest extends Test
 	{
 		$configurator = new Configurator;
 		$tag = new Tag;
-		$tag->defaultTemplate = $template;
+		$tag->template = $template;
 
 		try
 		{

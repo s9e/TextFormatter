@@ -58,12 +58,9 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	*/
 	public function normalizeTag(Tag $tag)
 	{
-		foreach ($tag->templates as $template)
+		if (isset($tag->template) && !$tag->template->isNormalized())
 		{
-			if (!$template->isNormalized())
-			{
-				$template->normalize($this);
-			}
+			$tag->template->normalize($this);
 		}
 	}
 

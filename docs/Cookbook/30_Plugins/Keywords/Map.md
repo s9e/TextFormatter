@@ -26,7 +26,7 @@ foreach ($cards as $name => $id)
 $tag = $configurator->Keywords->getTag();
 
 // Set the template used to render cards
-$tag->defaultTemplate
+$tag->template
 	= '<span class="cardPreview" data-cardcode="{@value}">'
 	. '<xsl:apply-templates/>'
 	. '</span>';

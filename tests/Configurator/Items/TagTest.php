@@ -4,7 +4,6 @@ namespace s9e\TextFormatter\Tests\Configurator\Items;
 
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
-use s9e\TextFormatter\Configurator\Collections\TemplateCollection;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Tests\Test;
@@ -208,123 +207,65 @@ class TagTest extends Test
 	}
 
 	/**
-	* @testdox $tag->templates can be assigned an array of templates
+	* @testdox $tag->template = 'foo' set the tag's template to an instance of Template
 	*/
-	public function testTemplatesArray()
+	public function testSetTemplate()
 	{
-		$templates = [
-			''     => 'first',
-			'@foo' => 'second'
-		];
-
 		$tag = new Tag;
-		$tag->templates = $templates;
+		$tag->template = 'foo';
 
-		$this->assertEquals($templates, iterator_to_array($tag->templates));
+		$this->assertAttributeInstanceOf(
+			's9e\\TextFormatter\\Configurator\\Items\\Template',
+			'template',
+			$tag
+		);
 	}
 
 	/**
-	* @testdox $tag->templates can be assigned an instance of TemplateCollection to copy its content
+	* @testdox $tag->template returns the tag's template
 	*/
-	public function testTemplatesInstanceOfTemplateCollection()
+	public function testGetTemplate()
 	{
 		$tag = new Tag;
+		$tag->template = 'foo';
 
-		$templates = new TemplateCollection;
-		$templates->set('', 'foo');
-
-		$tag->templates = $templates;
-
-		$this->assertEquals($templates, $tag->templates);
-		$this->assertNotSame($templates, $tag->templates, '$tag->templates should not have been replaced with $templates');
+		$this->assertSame('foo', (string) $tag->template);
 	}
 
 	/**
-	* @testdox Setting $tag->templates clears previous templates
-	* @depends testTemplatesArray
+	* @testdox isset($tag->template) is supported
 	*/
-	public function testTemplatesArrayClears()
+	public function testIssetTemplate()
 	{
-		$templates = [
-			''     => 'first',
-			'@foo' => 'second'
-		];
-
 		$tag = new Tag;
-		$tag->templates = ['' => 'deleteme'];
-		$tag->templates = $templates;
 
-		$this->assertEquals($templates, iterator_to_array($tag->templates));
+		$this->assertFalse(isset($tag->template));
+		$tag->template = 'foo';
+		$this->assertTrue(isset($tag->template));
 	}
 
 	/**
-	* @testdox setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of TemplateCollection
-	* @expectedException InvalidArgumentException
-	* @expectedExceptionMessage setTemplates() expects an array or an instance of TemplateCollection
+	* @testdox unset($tag->template) is supported
 	*/
-	public function testSetTemplatesInvalid()
+	public function testUnsetTemplate()
 	{
 		$tag = new Tag;
-		$tag->templates = false;
+		$tag->template = 'foo';
+
+		$this->assertTrue(isset($tag->template));
+		unset($tag->template);
+		$this->assertFalse(isset($tag->template));
 	}
 
 	/**
-	* @testdox $tag->defaultTemplate maps to $tag->templates->get('')
-	*/
-	public function testGetDefaultTemplate()
-	{
-		$tag = new Tag;
-		$tag->templates->set('', 'foo');
-
-		$this->assertSame('foo', (string) $tag->defaultTemplate);
-	}
-
-	/**
-	* @testdox $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
-	*/
-	public function testSetDefaultTemplate()
-	{
-		$tag = new Tag;
-		$tag->defaultTemplate = 'foo';
-
-		$this->assertSame('foo', (string) $tag->templates->get(''));
-	}
-
-	/**
-	* @testdox unset($tag->defaultTemplate) is supported
-	*/
-	public function testUnsetDefaultTemplate()
-	{
-		$tag = new Tag;
-		$tag->templates->set('', 'foo');
-
-		$this->assertTrue(isset($tag->templates['']));
-		unset($tag->defaultTemplate);
-		$this->assertFalse(isset($tag->templates['']));
-	}
-
-	/**
-	* @testdox isset($tag->defaultTemplate) is supported
-	*/
-	public function testIssetDefaultTemplate()
-	{
-		$tag = new Tag;
-		$tag->templates->set('', 'foo');
-
-		$this->assertTrue(isset($tag->defaultTemplate));
-		$tag->templates->delete('');
-		$this->assertFalse(isset($tag->defaultTemplate));
-	}
-
-	/**
-	* @testdox asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
+	* @testdox asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and template
 	*/
 	public function testAsConfig()
 	{
 		$tag = new Tag;
 		$tag->defaultChildRule      = 'allow';
 		$tag->defaultDescendantRule = 'allow';
-		$tag->defaultTemplate       = '';
+		$tag->template       = '';
 		$tag->nestingLimit          = 3;
 		$tag->tagLimit              = 99;
 
@@ -338,13 +279,13 @@ class TagTest extends Test
 
 		$this->assertArrayNotHasKey('defaultChildRule', $config);
 		$this->assertArrayNotHasKey('defaultDescendantRule', $config);
-		$this->assertArrayNotHasKey('templates', $config);
+		$this->assertArrayNotHasKey('template', $config);
 	}
 
 	/**
 	* @testdox $tag->filterChain starts with Parser::executeAttributePreprocessors by default
 	*/
-	public function testFilterChainDefault1()
+	public function testFilterChain1()
 	{
 		$callback = 's9e\\TextFormatter\\Parser::executeAttributePreprocessors';
 
@@ -355,7 +296,7 @@ class TagTest extends Test
 	/**
 	* @testdox $tag->filterChain contains Parser::filterAttributes by default
 	*/
-	public function testFilterChainDefault2()
+	public function testFilterChain2()
 	{
 		$callback = 's9e\\TextFormatter\\Parser::filterAttributes';
 

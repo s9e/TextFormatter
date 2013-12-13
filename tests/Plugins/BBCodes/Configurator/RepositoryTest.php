@@ -141,7 +141,7 @@ class RepositoryTest extends Test
 		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
 		$config = $repository->get('FOO', ['text' => 'Hello']);
 
-		$this->assertSame('Hello', (string) $config['tag']->defaultTemplate);
+		$this->assertSame('Hello', (string) $config['tag']->template);
 	}
 
 	/**
@@ -170,7 +170,7 @@ class RepositoryTest extends Test
 		$this->assertTrue(isset($config['tag']->attributes['y']));
 		$this->assertFalse(isset($config['tag']->attributes['attr1']));
 		$this->assertFalse(isset($config['tag']->attributes['attr2']));
-		$this->assertSame('Hello', (string) $config['tag']->defaultTemplate);
+		$this->assertSame('Hello', (string) $config['tag']->template);
 	}
 
 	/**
@@ -193,7 +193,7 @@ class RepositoryTest extends Test
 
 		$this->assertSame(
 			'<b>foo</b>',
-			(string) $config['tag']->defaultTemplate
+			(string) $config['tag']->template
 		);
 	}
 
@@ -264,29 +264,6 @@ class RepositoryTest extends Test
 		$config = $repository->get('FOO');
 
 		$this->assertTrue($config['tag']->rules['ignoreTags']);
-	}
-
-	/**
-	* @testdox Multiple templates can be set
-	*/
-	public function testMultipleTemplates()
-	{
-		$dom = new DOMDocument;
-		$dom->loadXML(
-			'<repository>
-				<bbcode name="FOO">
-					<usage>[FOO]</usage>
-					<template>default</template>
-					<template predicate="ancestor::BAR">bar</template>
-				</bbcode>
-			</repository>'
-		);
-
-		$repository = new Repository($dom, new BBCodeMonkey(new Configurator));
-		$config = $repository->get('FOO');
-
-		$this->assertSame('default', (string) $config['tag']->templates->get(''));
-		$this->assertSame('bar',     (string) $config['tag']->templates->get('ancestor::BAR'));
 	}
 
 	/**

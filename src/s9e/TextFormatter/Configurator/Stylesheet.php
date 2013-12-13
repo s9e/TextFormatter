@@ -98,7 +98,7 @@ class Stylesheet
 					}
 
 					// Only check for safeness if the tag has no default template set
-					if (!isset($tag->defaultTemplate))
+					if (!isset($tag->template))
 					{
 						$this->configurator->templateChecker->checkTemplate($template, $tag);
 					}
@@ -113,32 +113,26 @@ class Stylesheet
 		// Iterate over the tags to collect their templates and their prefix
 		foreach ($this->configurator->tags as $tagName => $tag)
 		{
+			if (!isset($tag->template))
+			{
+				continue;
+			}
+
 			// Normalize this tag's templates
 			$this->configurator->templateNormalizer->normalizeTag($tag);
 
 			// Check the safeness of this tag's templates
 			$this->configurator->templateChecker->checkTag($tag);
 
-			foreach ($tag->templates as $predicate => $template)
+			// Record the tag's prefix
+			$pos = strpos($tagName, ':');
+			if ($pos !== false)
 			{
-				// Build the match rule used by this template
-				$match = $tagName;
-				if ($predicate !== '')
-				{
-					// Append this template's predicate
-					$match .= '[' . $predicate . ']';
-				}
-
-				// Record the tag's prefix
-				$pos = strpos($tagName, ':');
-				if ($pos !== false)
-				{
-					$prefixes[substr($tagName, 0, $pos)] = 1;
-				}
-
-				// Record the template as a string
-				$templates[$match] = (string) $template;
+				$prefixes[substr($tagName, 0, $pos)] = 1;
 			}
+
+			// Record the template as a string
+			$templates[$tagName] = (string) $tag->template;
 		}
 
 		// Declare all the namespaces in use at the top
@@ -229,16 +223,9 @@ class Stylesheet
 		// Collect all the parameters used by tags' templates and assign them an empty string
 		foreach ($this->configurator->tags as $tag)
 		{
-			foreach ($tag->templates as $predicate => $template)
+			if (isset($tag->template))
 			{
-				// Collect the params from the template's predicate
-				foreach (TemplateHelper::getVariablesFromXPath($predicate) as $paramName)
-				{
-					$params[$paramName] = "''";
-				}
-
-				// Collect the params from the template's content
-				foreach ($template->getParameters() as $paramName)
+				foreach ($tag->template->getParameters() as $paramName)
 				{
 					$params[$paramName] = "''";
 				}

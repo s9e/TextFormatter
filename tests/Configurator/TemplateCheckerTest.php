@@ -177,7 +177,7 @@ class TemplateCheckerTest extends Test
 
 		$tag = new Tag;
 		$tag->attributes->add('url')->filterChain->append(new Url);
-		$tag->defaultTemplate = '<embed allowScriptAccess="always" src="{@url}"/>';
+		$tag->template = '<embed allowScriptAccess="always" src="{@url}"/>';
 
 		$templateChecker->checkTag($tag);
 	}
@@ -194,27 +194,24 @@ class TemplateCheckerTest extends Test
 	}
 
 	/**
-	* @testdox checkTag() doesn't check templates that are marked as unsafe
+	* @testdox checkTag() doesn't do anything if the template is safe
 	*/
-	public function testUnsafeTemplate()
+	public function testSafe()
 	{
 		$tag = new Tag;
-		$tag->defaultTemplate = new UnsafeTemplate('<b disable-output-escaping="1"/>');
+		$tag->template = '<br/>';
 
 		$templateChecker = new TemplateChecker;
 		$templateChecker->checkTag($tag);
 	}
 
 	/**
-	* @testdox checkTag() checks all the templates of a tag
-	* @expectedException s9e\TextFormatter\Configurator\Exceptions\UnsafeTemplateException
-	* @expectedExceptionMessage The template contains a 'disable-output-escaping' attribute
+	* @testdox checkTag() doesn't check templates that are marked as unsafe
 	*/
-	public function testAllTemplates()
+	public function testUnsafeTemplate()
 	{
 		$tag = new Tag;
-		$tag->templates->add('',     '<b/>');
-		$tag->templates->add('@foo', '<b disable-output-escaping="1"/>/>');
+		$tag->template = new UnsafeTemplate('<b disable-output-escaping="1"/>');
 
 		$templateChecker = new TemplateChecker;
 		$templateChecker->checkTag($tag);

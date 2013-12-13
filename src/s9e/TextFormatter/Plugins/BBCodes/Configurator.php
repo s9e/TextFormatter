@@ -68,15 +68,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*
 	* @see s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey
 	*
-	* @param  string       $usage    BBCode's usage
-	* @param  array|string $template BBCode's template, or array of [predicate => template]
-	* @param  array        $options  Supported: 'tagName' and 'rules'
-	* @return BBCode                 Newly-created BBCode
+	* @param  string          $usage    BBCode's usage
+	* @param  string|Template $template BBCode's template
+	* @param  array           $options  Supported: 'tagName' and 'rules'
+	* @return BBCode                    Newly-created BBCode
 	*/
 	public function addCustom($usage, $template, array $options = [])
 	{
-		$templates = (is_array($template)) ? $template : ['' => $template];
-		$config    = $this->bbcodeMonkey->create($usage, $templates);
+		$config = $this->bbcodeMonkey->create($usage, $template);
 
 		if (isset($options['tagName']))
 		{

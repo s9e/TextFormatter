@@ -46,7 +46,7 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName);
 
 		// Create a template that replaces its content with the replacement chat
-		$tag->defaultTemplate
+		$tag->template
 			= '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>';
 	}
 

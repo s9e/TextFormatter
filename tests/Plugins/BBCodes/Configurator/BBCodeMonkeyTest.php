@@ -92,38 +92,10 @@ class BBCodeMonkeyTest extends Test
 				'bbcodeName' => 'FOO',
 				'bbcode'     => new BBCode,
 				'tag'        => new Tag([
-					'defaultTemplate' => '<b><xsl:apply-templates/></b>'
+					'template' => '<b><xsl:apply-templates/></b>'
 				])
 			],
 			$bm->create('[FOO]{TEXT}[/FOO]', '<b>{TEXT}</b>')
-		);
-	}
-
-	/**
-	* @testdox create() accepts an array of [predicate => template] as second argument
-	*/
-	public function testCreateMultipleTemplates()
-	{
-		$bm = new BBCodeMonkey(new Configurator);
-
-		$this->assertEquals(
-			[
-				'bbcodeName' => 'FOO',
-				'bbcode'     => new BBCode,
-				'tag'        => new Tag([
-					'templates' => [
-						''            => '<b><xsl:apply-templates/></b>',
-						'parent::BAR' => '<i><xsl:apply-templates/></i>'
-					]
-				])
-			],
-			$bm->create(
-				'[FOO]{TEXT}[/FOO]',
-				[
-						''            => '<b>{TEXT}</b>',
-						'parent::BAR' => '<i>{TEXT}</i>'
-				]
-			)
 		);
 	}
 

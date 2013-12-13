@@ -139,25 +139,11 @@ class StylesheetTest extends Test
 		$configurator = new Configurator;
 		$tag = $configurator->tags->add('foo:X');
 		$tag->attributes->add('bar');
-		$tag->defaultTemplate = 'FOO';
+		$tag->template = 'FOO';
 
 		$configurator->stylesheet->setWildcardTemplate('foo', '<a href="{@bar}">_</a>');
 
 		$configurator->stylesheet->get();
-	}
-
-	/**
-	* @testdox get() correctly escapes predicates
-	*/
-	public function testGetEscapesPredicates()
-	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->templates['.>""'] = 'BAR';
-
-		$this->assertContains(
-			'match="X[.&gt;&quot;&quot;]"',
-			$configurator->stylesheet->get()
-		);
 	}
 
 	/**
@@ -166,8 +152,8 @@ class StylesheetTest extends Test
 	public function testGetMergesDuplicateTemplates()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = 'X';
-		$configurator->tags->add('Y')->defaultTemplate = 'X';
+		$configurator->tags->add('X')->template = 'X';
+		$configurator->tags->add('Y')->template = 'X';
 
 		$this->assertContains(
 			'<xsl:template match="X|Y">X</xsl:template>',
@@ -194,8 +180,8 @@ class StylesheetTest extends Test
 	public function testGetDeclaresNamespaces()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X:A')->defaultTemplate = 'X';
-		$configurator->tags->add('Y:B')->defaultTemplate = 'Y';
+		$configurator->tags->add('X:A')->template = 'X';
+		$configurator->tags->add('Y:B')->template = 'Y';
 
 		$this->assertContains(
 			'xmlns:X="urn:s9e:TextFormatter:X" xmlns:Y="urn:s9e:TextFormatter:Y"',
@@ -209,8 +195,8 @@ class StylesheetTest extends Test
 	public function testGetExcludesPrefixes()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X:A')->defaultTemplate = 'X';
-		$configurator->tags->add('Y:B')->defaultTemplate = 'Y';
+		$configurator->tags->add('X:A')->template = 'X';
+		$configurator->tags->add('Y:B')->template = 'Y';
 
 		$this->assertContains(
 			'exclude-result-prefixes="X Y"',
@@ -273,7 +259,7 @@ class StylesheetTest extends Test
 	{
 		$configurator = new Configurator;
 		$configurator->plugins->add('Dummy', __NAMESPACE__ . '\\DummyStylesheetPluginConfigurator');
-		$configurator->tags->add('FOO')->defaultTemplate = 'BAR';
+		$configurator->tags->add('FOO')->template = 'BAR';
 
 		$xsl = $configurator->stylesheet->get();
 
@@ -301,7 +287,7 @@ class StylesheetTest extends Test
 	public function testGetNormalizeTags()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('FOO')->defaultTemplate = '<FOO/>';
+		$configurator->tags->add('FOO')->template = '<FOO/>';
 
 		$xsl = $configurator->stylesheet->get();
 
@@ -329,26 +315,11 @@ class StylesheetTest extends Test
 	public function testGetUsedParametersUndefinedFromTemplates()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
-		$configurator->tags->add('Y')->defaultTemplate = '<xsl:value-of select="$S_OK"/>';
+		$configurator->tags->add('X')->template = '<xsl:value-of select="$L_FOO"/>';
+		$configurator->tags->add('Y')->template = '<xsl:value-of select="$S_OK"/>';
 
 		$this->assertSame(
 			['L_FOO' => "''", 'S_OK' => "''"],
-			$configurator->stylesheet->getUsedParameters()
-		);
-	}
-
-	/**
-	* @testdox getUsedParameters() returns undefined parameters used in tags' templates' predicates
-	*/
-	public function testGetUsedParametersUndefinedFromTemplatesPredicates()
-	{
-		$configurator = new Configurator;
-		$configurator->tags->add('X')->templates['$foo'] = '';
-		$configurator->tags->add('Y')->templates['not($bar)'] = '';
-
-		$this->assertEquals(
-			['foo' => "''", 'bar' => "''"],
 			$configurator->stylesheet->getUsedParameters()
 		);
 	}
@@ -375,7 +346,7 @@ class StylesheetTest extends Test
 	public function testGetOutputsUndefinedParameters()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$L_FOO"/>';
+		$configurator->tags->add('X')->template = '<xsl:value-of select="$L_FOO"/>';
 
 		$this->assertContains(
 			'<xsl:param name="L_FOO"',
@@ -414,6 +385,6 @@ class DummyStylesheetPluginConfigurator extends ConfiguratorBase
 {
 	public function finalize()
 	{
-		$this->configurator->tags['FOO']->defaultTemplate = 'BAZ';
+		$this->configurator->tags['FOO']->template = 'BAZ';
 	}
 }

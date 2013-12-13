@@ -39,7 +39,7 @@ class Configurator extends ConfiguratorBase
 	{
 		$tag = $this->configurator->tags->add($this->tagName);
 		$tag->attributes->add($this->attrName);
-		$tag->defaultTemplate
+		$tag->template
 			= '<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>';
 	}
 }

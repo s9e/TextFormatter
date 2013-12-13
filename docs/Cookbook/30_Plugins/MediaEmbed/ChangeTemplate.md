@@ -7,9 +7,9 @@ $configurator = new s9e\TextFormatter\Configurator;
 
 $tag = $configurator->MediaEmbed->add('youtube');
 
-$tag->defaultTemplate = '<div class="embed-youtube">'
-                      . $tag->defaultTemplate
-                      . '</div>';
+$tag->template = '<div class="embed-youtube">'
+               . $tag->template
+               . '</div>';
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());

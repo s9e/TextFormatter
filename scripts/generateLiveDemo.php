@@ -34,7 +34,7 @@ $configurator->HTMLEntities;
 $configurator->FancyPants;
 
 $configurator->MediaEmbed->add('youtube');
-$configurator->tags['YOUTUBE']->defaultTemplate = '<iframe width="240" height="180" src="http://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
+$configurator->tags['YOUTUBE']->template = '<iframe width="240" height="180" src="http://www.youtube.com/embed/{@id}" allowfullscreen=""/>';
 
 $configurator->addHTML5Rules();
 

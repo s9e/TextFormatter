@@ -93,7 +93,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertSame(
 			'<b title="bar"><xsl:apply-templates/></b>',
-			(string) $this->configurator->tags['B']->defaultTemplate
+			(string) $this->configurator->tags['B']->template
 		);
 	}
 
@@ -155,7 +155,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<hr/>',
-			$this->configurator->tags['X']->defaultTemplate
+			$this->configurator->tags['X']->template
 		);
 	}
 
@@ -240,33 +240,7 @@ class ConfiguratorTest extends Test
 		$this->assertTrue($this->configurator->tags->exists('B'));
 		$this->assertEquals(
 			'<b><xsl:apply-templates/></b>',
-			$this->configurator->tags['B']->templates->get('')
-		);
-	}
-
-	/**
-	* @testdox addCustom() accepts an array of [predicate => template] as its second argument
-	*/
-	public function testAddCustomTemplates()
-	{
-		$plugin = $this->configurator->plugins->load('BBCodes');
-
-		$plugin->addCustom(
-			'[B]{TEXT}[/B]',
-			[
-				''     => '<b>{TEXT}</b>',
-				'@foo' => '<strong>{TEXT}</strong>'
-			]
-		);
-
-		$this->assertTrue($this->configurator->tags->exists('B'));
-		$this->assertEquals(
-			'<b><xsl:apply-templates/></b>',
-			$this->configurator->tags['B']->templates->get('')
-		);
-		$this->assertEquals(
-			'<strong><xsl:apply-templates/></strong>',
-			$this->configurator->tags['B']->templates->get('@foo')
+			$this->configurator->tags['B']->template
 		);
 	}
 
@@ -279,7 +253,7 @@ class ConfiguratorTest extends Test
 
 		$this->assertEquals(
 			'<hr/>',
-			$this->configurator->tags['X']->defaultTemplate
+			$this->configurator->tags['X']->template
 		);
 	}
 

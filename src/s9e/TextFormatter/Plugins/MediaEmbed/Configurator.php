@@ -342,7 +342,7 @@ class Configurator extends ConfiguratorBase
 			$methodName = 'build' . ucfirst($renderingMethod);
 
 			// Set the tag's default template then exit the loop
-			$tag->defaultTemplate = $this->$methodName($siteConfig) . $this->appendTemplate;
+			$tag->template = $this->$methodName($siteConfig) . $this->appendTemplate;
 
 			break;
 		}

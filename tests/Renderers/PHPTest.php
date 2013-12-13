@@ -74,7 +74,7 @@ class PHPTest extends Test
 	public function testResourcesUnset()
 	{
 		// Create a template that requires XPath
-		$this->configurator->tags->add('FOO')->defaultTemplate = '<xsl:value-of select="lang()"/>';
+		$this->configurator->tags->add('FOO')->template = '<xsl:value-of select="lang()"/>';
 
 		$renderer = $this->configurator->getRenderer();
 		$renderer->render('<rt>xxx</rt>');

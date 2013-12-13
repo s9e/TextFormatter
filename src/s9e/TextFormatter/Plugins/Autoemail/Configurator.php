@@ -51,7 +51,7 @@ class Configurator extends ConfiguratorBase
 		$tag->attributes->add($this->attrName)->filterChain->append($filter);
 
 		// Set the default template
-		$tag->defaultTemplate
+		$tag->template
 			= '<a href="mailto:{@' . $this->attrName . '}"><xsl:apply-templates/></a>';
 	}
 }

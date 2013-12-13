@@ -12,9 +12,9 @@ use s9e\TextFormatter\Configurator\Collections\AttributeCollection;
 use s9e\TextFormatter\Configurator\Collections\AttributePreprocessorCollection;
 use s9e\TextFormatter\Configurator\Collections\Ruleset;
 use s9e\TextFormatter\Configurator\Collections\TagFilterChain;
-use s9e\TextFormatter\Configurator\Collections\TemplateCollection;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
+use s9e\TextFormatter\Configurator\Items\Template;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
 class Tag implements ConfigProvider
@@ -52,9 +52,9 @@ class Tag implements ConfigProvider
 	protected $tagLimit = 1000;
 
 	/**
-	* @var TemplateCollection Templates associated with this tag
+	* @var Template Template associated with this tag
 	*/
-	protected $templates;
+	protected $template;
 
 	/**
 	* Constructor
@@ -68,7 +68,6 @@ class Tag implements ConfigProvider
 		$this->attributePreprocessors = new AttributePreprocessorCollection;
 		$this->filterChain            = new TagFilterChain;
 		$this->rules                  = new Ruleset;
-		$this->templates              = new TemplateCollection($this);
 
 		// Start the filterChain with the default processing
 		$this->filterChain->append('s9e\\TextFormatter\\Parser::executeAttributePreprocessors')
@@ -83,8 +82,8 @@ class Tag implements ConfigProvider
 
 		if (isset($options))
 		{
-			// Sort the options by name so that attributes are set before templates, which is
-			// necessary to evaluate whether the templates are safe
+			// Sort the options by name so that attributes are set before the template, which is
+			// necessary to evaluate whether the template is safe
 			ksort($options);
 
 			foreach ($options as $optionName => $optionValue)
@@ -104,7 +103,7 @@ class Tag implements ConfigProvider
 		// Remove properties that are not needed during parsing
 		unset($vars['defaultChildRule']);
 		unset($vars['defaultDescendantRule']);
-		unset($vars['templates']);
+		unset($vars['template']);
 
 		// If there are no attribute preprocessors defined, we can remove the step from this tag's
 		// filterChain
@@ -132,23 +131,23 @@ class Tag implements ConfigProvider
 	}
 
 	/**
-	* Return this tag's default template
+	* Return this tag's template
 	*
-	* @return string
+	* @return Template
 	*/
-	public function getDefaultTemplate()
+	public function getTemplate()
 	{
-		return $this->templates->get('');
+		return $this->template;
 	}
 
 	/**
-	* Test whether this tag has a default template
+	* Test whether this tag has a template
 	*
 	* @return bool
 	*/
-	public function issetDefaultTemplate()
+	public function issetTemplate()
 	{
-		return $this->templates->exists('');
+		return isset($this->template);
 	}
 
 	/**
@@ -216,45 +215,28 @@ class Tag implements ConfigProvider
 	}
 
 	/**
-	* Set all templates associated with this tag
+	* Set the template associated with this tag
 	*
-	* @param  array|TemplateCollection $templates
+	* @param  mixed    $template Either a string or an instance of Template
 	* @return void
 	*/
-	public function setTemplates($templates)
+	public function setTemplate($template)
 	{
-		if (!is_array($templates)
-		 && !($templates instanceof TemplateCollection))
+		if (!($template instanceof Template))
 		{
-			throw new InvalidArgumentException('setTemplates() expects an array or an instance of TemplateCollection');
+			$template = new Template($template);
 		}
 
-		$this->templates->clear();
-
-		foreach ($templates as $predicate => $template)
-		{
-			$this->templates->set($predicate, $template);
-		}
+		$this->template = $template;
 	}
 
 	/**
-	* Set the default template for this tag
-	*
-	* @param  string $template
-	* @return void
-	*/
-	public function setDefaultTemplate($template)
-	{
-		$this->templates->set('', $template);
-	}
-
-	/**
-	* Unset the default template set for this tag
+	* Unset this tag's template
 	*
 	* @return void
 	*/
-	public function unsetDefaultTemplate()
+	public function unsetTemplate()
 	{
-		$this->templates->delete('');
+		unset($this->template);
 	}
 }

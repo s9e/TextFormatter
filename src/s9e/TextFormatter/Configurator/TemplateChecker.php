@@ -67,12 +67,9 @@ class TemplateChecker implements ArrayAccess, Iterator
 	*/
 	public function checkTag(Tag $tag)
 	{
-		foreach ($tag->templates as $template)
+		if (isset($tag->template) && !($tag->template instanceof UnsafeTemplate))
 		{
-			if (!($template instanceof UnsafeTemplate))
-			{
-				$this->checkTemplate($template, $tag);
-			}
+			$this->checkTemplate($tag->template, $tag);
 		}
 	}
 

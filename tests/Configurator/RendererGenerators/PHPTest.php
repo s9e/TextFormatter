@@ -353,7 +353,7 @@ class PHPTest extends Test
 	{
 		$configurator = new Configurator;
 		$configurator->stylesheet->parameters->add('foo');
-		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 
 		$renderer = $configurator->getRenderer('PHP');
 
@@ -376,7 +376,7 @@ class PHPTest extends Test
 	{
 		$configurator = new Configurator;
 		$configurator->stylesheet->parameters['foo'] = new DynamicStylesheetParameter('count(//X)');
-		$configurator->tags->add('X')->defaultTemplate = '<xsl:value-of select="$foo"/>';
+		$configurator->tags->add('X')->template = '<xsl:value-of select="$foo"/>';
 
 		$renderer = $configurator->getRenderer('PHP');
 
@@ -390,7 +390,7 @@ class PHPTest extends Test
 	public function testForceEmptyElementsTrue()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<div><xsl:apply-templates/></div>';
+		$configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
 		$configurator->stylesheet->setOutputMethod('xml');
 
 		$configurator->setRendererGenerator('PHP');
@@ -405,7 +405,7 @@ class PHPTest extends Test
 	public function testForceEmptyElementsFalse()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<div><xsl:apply-templates/></div>';
+		$configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
 		$configurator->stylesheet->setOutputMethod('xml');
 
 		$configurator->setRendererGenerator('PHP')->forceEmptyElements = false;
@@ -420,7 +420,7 @@ class PHPTest extends Test
 	public function testForceEmptyElementsTrueUseEmptyElementsFalse()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<div><xsl:apply-templates/></div>';
+		$configurator->tags->add('X')->template = '<div><xsl:apply-templates/></div>';
 		$configurator->stylesheet->setOutputMethod('xml');
 
 		$generator = $configurator->setRendererGenerator('PHP');
@@ -438,7 +438,7 @@ class PHPTest extends Test
 	public function testUseEmptyElementsTrue()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<div></div>';
+		$configurator->tags->add('X')->template = '<div></div>';
 		$configurator->stylesheet->setOutputMethod('xml');
 
 		$configurator->setRendererGenerator('PHP');
@@ -453,7 +453,7 @@ class PHPTest extends Test
 	public function testUseEmptyElementsFalse()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<div></div>';
+		$configurator->tags->add('X')->template = '<div></div>';
 		$configurator->stylesheet->setOutputMethod('xml');
 
 		$configurator->setRendererGenerator('PHP')->useEmptyElements = false;
@@ -468,7 +468,7 @@ class PHPTest extends Test
 	public function testUseEmptyElementsFalseVoidTrue()
 	{
 		$configurator = new Configurator;
-		$configurator->tags->add('X')->defaultTemplate = '<hr></hr>';
+		$configurator->tags->add('X')->template = '<hr></hr>';
 		$configurator->stylesheet->setOutputMethod('xml');
 
 		$configurator->setRendererGenerator('PHP')->useEmptyElements = false;
@@ -609,7 +609,7 @@ class PHPTest extends Test
 				"<rt>x <B/> y</rt>",
 				function ($configurator)
 				{
-					$configurator->tags->add('B')->defaultTemplate
+					$configurator->tags->add('B')->template
 						= '<b><xsl:apply-templates/></b>';
 				}
 			],
@@ -617,7 +617,7 @@ class PHPTest extends Test
 				"<rt>x <B/> y</rt>",
 				function ($configurator)
 				{
-					$configurator->tags->add('B')->defaultTemplate = new UnsafeTemplate(
+					$configurator->tags->add('B')->template = new UnsafeTemplate(
 						'<xsl:element name="{translate(name(),\'B\',\'b\')}"><xsl:apply-templates/></xsl:element>'
 					);
 				}
@@ -626,7 +626,7 @@ class PHPTest extends Test
 				"<rt>x <HR/> y</rt>",
 				function ($configurator)
 				{
-					$configurator->tags->add('HR')->defaultTemplate = new UnsafeTemplate(
+					$configurator->tags->add('HR')->template = new UnsafeTemplate(
 						'<xsl:element name="{translate(name(),\'HR\',\'hr\')}" />'
 					);
 				}
@@ -636,7 +636,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo', "'FOO'");
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$foo"/>';
 				}
 			],
@@ -645,7 +645,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo', "count(//X)");
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$foo"/>';
 				}
 			],
@@ -654,7 +654,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$foo"/>';
 				}
 			],
@@ -663,7 +663,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$foo"/>';
 				},
 				function ($renderer)
@@ -676,7 +676,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:if test="$foo">!</xsl:if>';
 				}
 			],
@@ -685,7 +685,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:if test="not($foo)">!</xsl:if>';
 				}
 			],
@@ -694,7 +694,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:if test="$foo">!</xsl:if>';
 				},
 				function ($renderer)
@@ -707,7 +707,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo');
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:if test="not($foo)">!</xsl:if>';
 				},
 				function ($renderer)
@@ -720,7 +720,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('foo', 3);
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:if test="$foo &lt; 5">!</xsl:if>';
 				}
 			],
@@ -729,7 +729,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('xxx', 3);
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:if test="$xxx &lt; 1">!</xsl:if>';
 				}
 			],
@@ -738,7 +738,7 @@ class PHPTest extends Test
 				function ($configurator)
 				{
 					$configurator->stylesheet->parameters->add('xxx', '//Y');
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="$xxx"/>';
 				}
 			],
@@ -746,7 +746,7 @@ class PHPTest extends Test
 				'<rt xmlns:html="urn:s9e:TextFormatter:html"><html:b>...</html:b></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('html:b')->defaultTemplate
+					$configurator->tags->add('html:b')->template
 						= '<b><xsl:apply-templates /></b>';
 				}
 			],
@@ -754,33 +754,13 @@ class PHPTest extends Test
 				'<rt xmlns:x="urn:s9e:TextFormatter:x"><x:b>...</x:b><x:c>!!!</x:c></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('x:b')->defaultTemplate
+					$configurator->tags->add('x:b')->template
 						= '<b><xsl:apply-templates /></b>';
 
 					$configurator->stylesheet->setWildcardTemplate(
 						'x',
 						'<span><xsl:apply-templates /></span>'
 					);
-				}
-			],
-			[
-				'<rt><X/><X i="8"/><X i="4"/><X i="2"/></rt>',
-				function ($configurator)
-				{
-					$tag = $configurator->tags->add('X');
-					$tag->defaultTemplate = 'default';
-					$tag->templates['@i < 5'] = '5';
-					$tag->templates['@i < 3'] = '3';
-				}
-			],
-			[
-				'<rt><X/><X i="8"/><X i="4"/><X i="2"/></rt>',
-				function ($configurator)
-				{
-					$tag = $configurator->tags->add('X');
-					$tag->defaultTemplate = 'default';
-					$tag->templates['@i < 3'] = '3';
-					$tag->templates['@i < 5'] = '5';
 				}
 			],
 			[
@@ -797,7 +777,7 @@ class PHPTest extends Test
 				'<rt><E>:)</E><E>:(</E></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('E')->defaultTemplate
+					$configurator->tags->add('E')->template
 						= '<xsl:choose><xsl:when test=".=\':)\'"><img src="happy.png" alt=":)"/></xsl:when><xsl:when test=".=\':(\'"><img src="sad.png" alt=":("/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
 				}
 			],
@@ -805,7 +785,7 @@ class PHPTest extends Test
 				'<rt><E>:)</E><E>:(</E><E>:-)</E></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('E')->defaultTemplate
+					$configurator->tags->add('E')->template
 						= '<xsl:choose><xsl:when test=".=\':)\'or.=\':-)\'"><img src="happy.png" alt=":)"/></xsl:when><xsl:when test=".=\':(\'"><img src="sad.png" alt=":("/></xsl:when><xsl:otherwise><xsl:value-of select="."/></xsl:otherwise></xsl:choose>';
 				}
 			],
@@ -813,7 +793,7 @@ class PHPTest extends Test
 				'<rt>x <X/> y</rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:text>&amp;foo</xsl:text>';
 				}
 			],
@@ -821,7 +801,7 @@ class PHPTest extends Test
 				'<rt>x <X>...</X> y</rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<b>x <i>i</i> <u>u</u> y</b>';
 				}
 			],
@@ -829,7 +809,7 @@ class PHPTest extends Test
 				'<rt><X foo="FOO"/></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->defaultTemplate =
+					$configurator->tags->add('X')->template =
 						'<b><xsl:attribute name="title">
 							<xsl:choose>
 								<xsl:when test="@foo">foo=<xsl:value-of select="@foo"/>;</xsl:when>
@@ -842,7 +822,7 @@ class PHPTest extends Test
 				'<rt><X foo="FOO"/></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->defaultTemplate =
+					$configurator->tags->add('X')->template =
 						'<b><xsl:attribute name="title">
 							<xsl:if test="@foo">foo=<xsl:value-of select="@foo"/>;</xsl:if>
 							<xsl:if test="@bar">bar=<xsl:value-of select="@bar"/>;</xsl:if>
@@ -853,7 +833,7 @@ class PHPTest extends Test
 				'<rt><X foo="FOO"/></rt>',
 				function ($configurator)
 				{
-					$configurator->tags->add('X')->defaultTemplate =
+					$configurator->tags->add('X')->template =
 						'<xsl:choose>
 							<xsl:when test="contains(.,\'a\')">
 								<xsl:choose>
@@ -879,7 +859,7 @@ class PHPTest extends Test
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="string-length(@foo)"/>';
 				}
 			],
@@ -892,7 +872,7 @@ class PHPTest extends Test
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="string-length()"/>';
 				}
 			],
@@ -905,7 +885,7 @@ class PHPTest extends Test
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="string-length(@bar)"/>';
 				}
 			],
@@ -918,7 +898,7 @@ class PHPTest extends Test
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="substring(@foo,2,3)"/>';
 				}
 			],
@@ -931,7 +911,7 @@ class PHPTest extends Test
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="substring(@foo,0,3)"/>';
 				}
 			],
@@ -944,7 +924,7 @@ class PHPTest extends Test
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="substring(@foo,2,-3)"/>';
 				}
 			],
@@ -957,7 +937,7 @@ class PHPTest extends Test
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="substring(@foo,@x)"/>';
 				}
 			],
@@ -970,7 +950,7 @@ class PHPTest extends Test
 						$this->markTestSkipped('Extension mbstring is required.');
 					}
 
-					$configurator->tags->add('X')->defaultTemplate
+					$configurator->tags->add('X')->template
 						= '<xsl:value-of select="substring(@foo,3,@x)"/>';
 				}
 			],

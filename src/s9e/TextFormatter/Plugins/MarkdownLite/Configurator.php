@@ -23,7 +23,7 @@ class Configurator extends ConfiguratorBase
 					'required'    => false
 				]
 			],
-			'defaultTemplate' =>
+			'template' =>
 				'<pre>
 					<code class="{@lang}">
 						<xsl:apply-templates />
@@ -45,7 +45,7 @@ class Configurator extends ConfiguratorBase
 				'src'   => ['filterChain' => ['#url']],
 				'title' => ['required' => false]
 			],
-			'defaultTemplate' => '<img alt="{@alt}" src="{@src}" title="{@title}"/>'
+			'template' => '<img alt="{@alt}" src="{@src}" title="{@title}"/>'
 		],
 		'LI'     => '<li><xsl:apply-templates/></li>',
 		'LIST'   => [
@@ -55,7 +55,7 @@ class Configurator extends ConfiguratorBase
 					'required'    => false
 				]
 			],
-			'defaultTemplate' =>
+			'template' =>
 				'<xsl:choose>
 					<xsl:when test="not(@type)">
 						<ul><xsl:apply-templates /></ul>
@@ -77,7 +77,7 @@ class Configurator extends ConfiguratorBase
 					'filterChain' => ['#url']
 				]
 			],
-			'defaultTemplate' => '<a href="{@url}"><xsl:apply-templates/></a>'
+			'template' => '<a href="{@url}"><xsl:apply-templates/></a>'
 		]
 	];
 
@@ -99,7 +99,7 @@ class Configurator extends ConfiguratorBase
 			// If the tag's config is a single string, it's really its default template
 			if (is_string($tagConfig))
 			{
-				$tagConfig = ['defaultTemplate' => $tagConfig];
+				$tagConfig = ['template' => $tagConfig];
 			}
 
 			// Replace default filters in the definition

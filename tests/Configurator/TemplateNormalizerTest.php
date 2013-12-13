@@ -68,7 +68,7 @@ class TemplateNormalizerTest extends Test
 		     ->with($templateNormalizer);
 
 		$tag = new Tag;
-		$tag->defaultTemplate = $mock;
+		$tag->template = $mock;
 
 		$templateNormalizer->normalizeTag($tag);
 	}
@@ -96,7 +96,7 @@ class TemplateNormalizerTest extends Test
 		     ->method('normalize');
 
 		$tag = new Tag;
-		$tag->defaultTemplate = $mock;
+		$tag->template = $mock;
 
 		$templateNormalizer->normalizeTag($tag);
 	}

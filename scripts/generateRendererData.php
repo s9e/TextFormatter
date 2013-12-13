@@ -187,7 +187,7 @@ foreach ($void as $voidType => $case)
 			$configurator = new Configurator;
 			$configurator->stylesheet->outputMethod = $mode;
 
-			$configurator->tags->add('FOO')->defaultTemplate = new UnsafeTemplate(
+			$configurator->tags->add('FOO')->template = new UnsafeTemplate(
 				'<xsl:element name="' . $elName . '"><xsl:attribute name="id">foo</xsl:attribute>' . $content . '</xsl:element>'
 			);
 

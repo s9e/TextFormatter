@@ -299,7 +299,7 @@ class Configurator extends ConfiguratorBase
 		);
 
 		// Now that all attributes have been created we can assign the template
-		$tag->defaultTemplate = $template;
+		$tag->template = $template;
 
 		// Normalize the tag's templates
 		$this->configurator->templateNormalizer->normalizeTag($tag);

@@ -73,19 +73,10 @@ class RulesGenerator implements ArrayAccess, Iterator
 		$templateForensics = [];
 		foreach ($tags as $tagName => $tag)
 		{
-			// Collect the tag's templates
-			$templates = iterator_to_array($tag->templates);
-
-			if (empty($templates))
-			{
-				// If the tag has no template, it uses XSLT's implicit default
-				$template = '<xsl:apply-templates/>';
-			}
-			else
-			{
-				// Concatenate all of the tag's templates
-				$template = implode('', $templates);
-			}
+			// Use the tag's template if applicable or XSLT's implicit default otherwise
+			$template = (isset($tag->template))
+			          ? $tag->template
+			          : '<xsl:apply-templates/>';
 
 			$templateForensics[$tagName] = new TemplateForensics($template);
 		}

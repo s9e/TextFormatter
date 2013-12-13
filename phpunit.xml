@@ -47,7 +47,6 @@
 			<file>tests/Configurator/Collections/TagFilterChainTest.php</file>
 			<file>tests/Configurator/Collections/TagListTest.php</file>
 			<file>tests/Configurator/Collections/TemplateCheckListTest.php</file>
-			<file>tests/Configurator/Collections/TemplateCollectionTest.php</file>
 			<file>tests/Configurator/Collections/TemplateNormalizationListTest.php</file>
 			<file>tests/Configurator/Exceptions/UnsafeTemplateExceptionTest.php</file>
 			<file>tests/Configurator/Helpers/ConfigHelperTest.php</file>

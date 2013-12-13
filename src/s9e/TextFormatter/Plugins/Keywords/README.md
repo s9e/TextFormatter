@@ -30,7 +30,7 @@ $configurator->Keywords->add('Pikachu');
 $configurator->Keywords->caseSensitive = false;
 
 // Set the template that renders them
-$configurator->Keywords->getTag()->defaultTemplate
+$configurator->Keywords->getTag()->template
 	= '<a href="http://bulbapedia.bulbagarden.net/wiki/{@value}"><xsl:apply-templates/></a>';
 
 // Get an instance of the parser and the renderer
@@ -61,7 +61,7 @@ $configurator->Keywords->add('Raichu');
 $configurator->Keywords->onlyFirst = true;
 
 // Set the template that renders them
-$configurator->Keywords->getTag()->defaultTemplate
+$configurator->Keywords->getTag()->template
 	= '<a href="http://bulbapedia.bulbagarden.net/wiki/{@value}"><xsl:apply-templates/></a>';
 
 // Get an instance of the parser and the renderer

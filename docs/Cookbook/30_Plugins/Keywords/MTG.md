@@ -23,7 +23,7 @@ foreach ($cards as $card)
 }
 
 // Define how the names are rendered. Here, as a link to Gatherer
-$configurator->Keywords->getTag()->defaultTemplate
+$configurator->Keywords->getTag()->template
 	= '<a href="http://gatherer.wizards.com/Pages/Search/Default.aspx?name=+[m/^{@value}$/]"><xsl:apply-templates/></a>';
 
 // Get an instance of the parser and the renderer

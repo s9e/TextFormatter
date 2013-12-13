@@ -375,11 +375,6 @@ s9e\TextFormatter\Tests\Configurator\Collections\TemplateCheckList
  [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\TemplateChecks
  [x] append() adds instances of s9e\TextFormatter\Configurator\TemplateCheck as-is
 
-s9e\TextFormatter\Tests\Configurator\Collections\TemplateCollection
- [x] set() accepts a string and returns an instance of Template
- [x] set() accepts an instance of Template, which it returns
- [x] Minifies predicates
-
 s9e\TextFormatter\Tests\Configurator\Collections\TemplateNormalizationList
  [x] append() normalizes a callback into an instance of s9e\TextFormatter\Configurator\TemplateNormalizations\Custom
  [x] append() normalizes a string into an instance of a class of the same name in s9e\TextFormatter\Configurator\TemplateNormalizations
@@ -932,15 +927,11 @@ s9e\TextFormatter\Tests\Configurator\Items\Tag
  [x] $tag->tagLimit accepts '10' and casts it as an integer
  [x] $tag->tagLimit rejects non-numbers
  [x] $tag->tagLimit rejects numbers less than 1
- [x] $tag->templates can be assigned an array of templates
- [x] $tag->templates can be assigned an instance of TemplateCollection to copy its content
- [x] Setting $tag->templates clears previous templates
- [x] setTemplates() throws an InvalidArgumentException if its argument is not an array or an instance of TemplateCollection
- [x] $tag->defaultTemplate maps to $tag->templates->get('')
- [x] $tag->defaultTemplate = 'foo' maps to $tag->templates->set('', 'foo')
- [x] unset($tag->defaultTemplate) is supported
- [x] isset($tag->defaultTemplate) is supported
- [x] asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and templates
+ [x] $tag->template = 'foo' set the tag's template to an instance of Template
+ [x] $tag->template returns the tag's template
+ [x] isset($tag->template) is supported
+ [x] unset($tag->template) is supported
+ [x] asConfig() produces a config array, omitting properties that are not needed during parsing: defaultChildRule, defaultDescendantRule and template
  [x] $tag->filterChain starts with Parser::executeAttributePreprocessors by default
  [x] $tag->filterChain contains Parser::filterAttributes by default
  [x] asConfig() omits 'Parser::executeAttributePreprocessors' from the returned filterChain if no attribute preprocessor is defined
@@ -1414,8 +1405,8 @@ s9e\TextFormatter\Tests\Configurator\TemplateChecker
  [x] Disallows document() in XPath by default
  [x] Restricts Flash's allowScriptAccess to "sameDomain" (or lower) by default, in objects that use dynamic values
  [x] Disallows <sax:output/> by default
+ [x] checkTag() doesn't do anything if the template is safe
  [x] checkTag() doesn't check templates that are marked as unsafe
- [x] checkTag() checks all the templates of a tag
  [x] Can be reset and reconfigured with different checks
  [x] disable() disables all checks
  [x] enable() re-enables all checks
@@ -1432,7 +1423,6 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() tests the wildcard templates' safeness
  [x] get() only tests the wildcard templates' safeness against tags in its namespace
  [x] get() only tests the wildcard templates' safeness against tags that do not have a default template
- [x] get() correctly escapes predicates
  [x] get() merges duplicate templates
  [x] get() represents empty templates with a self-closing element
  [x] get() generates the namespace declarations necessary for prefixed tags
@@ -1445,7 +1435,6 @@ s9e\TextFormatter\Tests\Configurator\Stylesheet
  [x] get() normalizes tags' templates before assembling the stylesheet
  [x] getUsedParameters() returns parameters that were formally defined
  [x] getUsedParameters() returns undefined parameters used in tags' templates
- [x] getUsedParameters() returns undefined parameters used in tags' templates' predicates
  [x] getUsedParameters() returns undefined parameters used in wildcard templates
  [x] get() outputs <xsl:param/> elements for undefined parameters used in templates
  [x] Creates a default template for <br/>
@@ -1918,7 +1907,6 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
  [x] create() creates and return a BBCode, its name and its tag
- [x] create() accepts an array of [predicate => template] as second argument
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] __construct() accepts the path to an XML file as argument
@@ -1935,7 +1923,6 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] Custom tagName is correctly set
  [x] Rules targetting tags are correctly set
  [x] Boolean rules are set to their default value
- [x] Multiple templates can be set
  [x] predefinedAttributes is correctly set
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\RepositoryCollection
@@ -1956,7 +1943,6 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator
  [x] addFromRepository() returns the newly-created BBCode
  [x] addCustom() returns the newly-created BBCode
  [x] addCustom() accepts a single string as its second argument, representing the default template
- [x] addCustom() accepts an array of [predicate => template] as its second argument
  [x] addCustom() normalizes the tag's template
  [x] addCustom() checks that the tag is safe before adding it
  [x] addCustom() accepts a custom "tagName" in options

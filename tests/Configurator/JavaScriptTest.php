@@ -516,7 +516,7 @@ class JavaScriptTest extends Test
 	*/
 	public function testHintPostProcessingTrue()
 	{
-		$this->configurator->tags->add('X')->defaultTemplate
+		$this->configurator->tags->add('X')->template
 			= '<hr data-s9e-livepreview-postprocess="foo(this)"/>';
 
 		$this->assertContains(

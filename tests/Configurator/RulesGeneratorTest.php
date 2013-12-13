@@ -34,7 +34,7 @@ class RulesGeneratorTest extends Test
 	{
 		$rulesGenerator = new RulesGenerator;
 		$tagCollection  = new TagCollection;
-		$tagCollection->add('LI')->defaultTemplate = '<li><xsl:apply-templates/></li>';
+		$tagCollection->add('LI')->template = '<li><xsl:apply-templates/></li>';
 
 		$rules = $rulesGenerator->getRules($tagCollection);
 
@@ -53,7 +53,7 @@ class RulesGeneratorTest extends Test
 	{
 		$rulesGenerator = new RulesGenerator;
 		$tagCollection  = new TagCollection;
-		$tagCollection->add('LI')->defaultTemplate = '<li><xsl:apply-templates/></li>';
+		$tagCollection->add('LI')->template = '<li><xsl:apply-templates/></li>';
 
 		$rules = $rulesGenerator->getRules($tagCollection, ['parentHTML' => '<ul>']);
 
@@ -75,7 +75,7 @@ class RulesGeneratorTest extends Test
 
 			if (isset($template))
 			{
-				$tag->defaultTemplate = $template;
+				$tag->template = $template;
 			}
 		}
 
