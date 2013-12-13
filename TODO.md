@@ -42,3 +42,4 @@ TODO
 - Create an exception used in security checks so that an implementor can log security exceptions differently from other exceptions
 - Consider adding a flag to Collection to configure whether add() should check for existence or act as an alias to set()
 - Test whether closures use more memory than static methods
+- Consider removing #<[ies]>[^>]+</[ies]># in Renderer#render(). Caveat: prevents using <xsl:value-of select="s"/>
