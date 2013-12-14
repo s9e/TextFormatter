@@ -166,4 +166,19 @@ class Template
 
 		unset($this->forensics);
 	}
+
+	/**
+	* Replace parts of this template that match given regexp
+	*
+	* @param  array    $regexp   Regexp for matching parts that need replacement
+	* @param  callback $fn       Callback used to get the replacement
+	* @return void
+	*/
+	public function replaceTokens($regexp, $fn)
+	{
+		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
+		$this->isNormalized = false;
+
+		unset($this->forensics);
+	}
 }

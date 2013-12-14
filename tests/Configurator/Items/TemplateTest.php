@@ -162,6 +162,55 @@ class TemplateTest extends Test
 	}
 
 	/**
+	* @testdox replaceTokens() performs regexp-based replacements on the template's content
+	*/
+	public function testReplaceTokens()
+	{
+		$template = new Template('{FOO}');
+
+		$template->replaceTokens(
+			'/\\{.*\\}/',
+			function ($m)
+			{
+				return ['literal', ucfirst(strtolower(trim($m[0], '{}')))];
+			}
+		);
+
+		$this->assertSame('Foo', (string) $template);
+	}
+
+	/**
+	* @testdox replaceTokens() resets the cached instance of TemplateForensics
+	*/
+	public function testReplaceTokensResetsForensics()
+	{
+		$template = new Template('<br/>');
+
+		$instance = $template->getForensics();
+		$this->assertSame($instance, $template->getForensics(), 'The instance was not cached');
+
+		$template->replaceTokens('//', function () {});
+		$this->assertNotSame($instance, $template->getForensics());
+	}
+
+	/**
+	* @testdox replaceTokens() resets isNormalized
+	*/
+	public function testReplaceTokensResetsIsNormalized()
+	{
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\TemplateNormalizer')
+		             ->disableOriginalConstructor()
+		             ->getMock();
+
+		$template = new Template('<br/>');
+		$template->normalize($mock);
+
+		$this->assertTrue($template->isNormalized());
+		$template->replaceTokens('//', function () {});
+		$this->assertFalse($template->isNormalized());
+	}
+
+	/**
 	* @testdox Unknown methods such as isBlock() and isPassthrough() are forwarded to this template's TemplateForensics instance
 	*/
 	public function testForensicsMethods()
