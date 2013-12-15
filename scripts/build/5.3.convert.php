@@ -34,8 +34,8 @@ function convertCustom($filepath, &$file)
 	$replacements = array(
 		'BBCodeMonkey.php' => array(
 			array(
-				'return TemplateHelper::replaceTokens(',
-				'$_this=$this;return TemplateHelper::replaceTokens('
+				'$template->replaceTokens(',
+				'$_this=$this;$template->replaceTokens('
 			),
 			array(
 				'function ($m) use ($tokens, $passthroughToken)',
