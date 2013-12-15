@@ -1,6 +1,8 @@
 #!/usr/bin/php
 <?php
 
+namespace s9e\TextFormatter\Build\Optimize;
+
 /*
 
 This script automatically micro-optimizes sources by trading readability for better opcodes. For
@@ -14,8 +16,6 @@ if it ends up making it better.
 This script is called by scripts/travis/setup.sh so that tests are run on the "optimized" codebase.
 
 */
-
-namespace s9e\TextFormatter\Build\Optimize;
 
 include __DIR__ . '/../../src/s9e/TextFormatter/Configurator/RendererGenerators/PHP/Optimizer.php';
 $optimizer = new \s9e\TextFormatter\Configurator\RendererGenerators\PHP\Optimizer;

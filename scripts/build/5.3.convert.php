@@ -4,7 +4,7 @@ namespace s9e\TextFormatter\Build\PHP53;
 
 $version = (isset($_SERVER['argv'][1])) ? $_SERVER['argv'][1] : PHP_VERSION;
 
-if (version_compare($version, '5.3.99', '>'))
+if (version_compare($version, '5.4', '>='))
 {
 	echo 'No need to run ', __FILE__, ' on PHP ', $version, "\n";
 	return;
