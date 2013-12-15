@@ -1912,6 +1912,7 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] parse() works
  [x] replaceTokens() works
  [x] create() creates and return a BBCode, its name and its tag
+ [x] create() accepts an instance of UnsafeTemplate as second argument
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] __construct() accepts the path to an XML file as argument

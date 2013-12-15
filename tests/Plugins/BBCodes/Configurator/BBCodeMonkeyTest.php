@@ -19,6 +19,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\Simpletext;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Uint;
 use s9e\TextFormatter\Configurator\Items\AttributeFilters\Url;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
+use s9e\TextFormatter\Configurator\Items\UnsafeTemplate;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCode;
 use s9e\TextFormatter\Plugins\BBCodes\Configurator\BBCodeMonkey;
 use s9e\TextFormatter\Tests\Test;
@@ -96,6 +97,24 @@ class BBCodeMonkeyTest extends Test
 				])
 			],
 			$bm->create('[FOO]{TEXT}[/FOO]', '<b>{TEXT}</b>')
+		);
+	}
+
+	/**
+	* @testdox create() accepts an instance of UnsafeTemplate as second argument
+	*/
+	public function testCreateUnsafeTemplate()
+	{
+		$bm = new BBCodeMonkey(new Configurator);
+		$template = new UnsafeTemplate('<xsl:value-of select="." disable-output-escaping=""/>');
+
+		$this->assertEquals(
+			[
+				'bbcodeName' => 'FOO',
+				'bbcode'     => new BBCode,
+				'tag'        => new Tag(['template' => $template])
+			],
+			$bm->create('[FOO]{TEXT}[/FOO]', $template)
 		);
 	}
 

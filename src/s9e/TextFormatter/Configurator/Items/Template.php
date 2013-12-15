@@ -161,10 +161,9 @@ class Template
 	*/
 	public function normalize(TemplateNormalizer $templateNormalizer)
 	{
+		$this->forensics    = null;
 		$this->template     = $templateNormalizer->normalizeTemplate($this->template);
 		$this->isNormalized = true;
-
-		unset($this->forensics);
 	}
 
 	/**
@@ -176,9 +175,8 @@ class Template
 	*/
 	public function replaceTokens($regexp, $fn)
 	{
+		$this->forensics    = null;
 		$this->template     = TemplateHelper::replaceTokens($this->template, $regexp, $fn);
 		$this->isNormalized = false;
-
-		unset($this->forensics);
 	}
 }

@@ -20,6 +20,7 @@ use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
 use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
 use s9e\TextFormatter\Configurator\Items\Tag;
+use s9e\TextFormatter\Configurator\Items\Template;
 
 class BBCodeMonkey
 {
@@ -102,14 +103,24 @@ class BBCodeMonkey
 	/**
 	* Create a BBCode and its underlying tag and template(s) based on its reference usage
 	*
-	* @param  string $usage     BBCode usage, e.g. [B]{TEXT}[/b]
-	* @param  string $template  Tag's template
-	* @return array             An array containing three elements: 'bbcode', 'bbcodeName' and 'tag'
+	* @param  string          $usage    BBCode usage, e.g. [B]{TEXT}[/b]
+	* @param  string|Template $template BBCode's template
+	* @return array                     An array containing three elements: 'bbcode', 'bbcodeName'
+	*                                   and 'tag'
 	*/
 	public function create($usage, $template)
 	{
 		// Parse the BBCode usage
 		$config = $this->parse($usage);
+
+		// Create a template object for manipulation
+		if (!($template instanceof Template))
+		{
+			$template = new Template($template);
+		}
+
+		// Replace the passthrough token in the BBCode's template
+		$this->replaceTokens($template, $config['tokens'], $config['passthroughToken']);
 
 		// Prepare the return array
 		$return = [
@@ -119,11 +130,7 @@ class BBCodeMonkey
 		];
 
 		// Set the template for this BBCode's tag
-		$return['tag']->template = $this->replaceTokens(
-			$template,
-			$config['tokens'],
-			$config['passthroughToken']
-		);
+		$return['tag']->template = $template;
 
 		return $return;
 	}
@@ -282,15 +289,21 @@ class BBCodeMonkey
 	/**
 	* Replace tokens in a template
 	*
-	* @param  string $template         Original template
-	* @param  array  $tokens           Array of [tokenId => attrName]
-	* @param  string $passthroughToken Token ID of the token that represents the BBCode's contents
-	* @return string                   Processed template
+	* @param  string|Template $template         Original template
+	* @param  array           $tokens           Array of [tokenId => attrName]
+	* @param  string          $passthroughToken Token ID of the token that represents the BBCode's
+	*                                           contents
+	* @return Template                          Processed template
 	*/
 	public function replaceTokens($template, array $tokens, $passthroughToken)
 	{
-		return TemplateHelper::replaceTokens(
-			$template,
+		// Create a template object for manipulation
+		if (!($template instanceof Template))
+		{
+			$template = new Template($template);
+		}
+
+		$template->replaceTokens(
 			'#\\{(?:[A-Z]+[A-Z_0-9]*|@[-\\w]+)\\}#',
 			function ($m) use ($tokens, $passthroughToken)
 			{
@@ -327,6 +340,8 @@ class BBCodeMonkey
 				return ['expression', '$' . $tokenId];
 			}
 		);
+
+		return (string) $template;
 	}
 
 	/**
