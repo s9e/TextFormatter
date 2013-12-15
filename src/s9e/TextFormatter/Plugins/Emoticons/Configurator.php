@@ -39,6 +39,11 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	public $notBefore = '';
 
 	/**
+	* @var string XPath expression that, if true, forces emoticons to be rendered as text
+	*/
+	public $notIfCondition;
+
+	/**
 	* @var string Name of the tag used by this plugin
 	*/
 	protected $tagName = 'E';
@@ -65,7 +70,12 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 	*/
 	public function finalize()
 	{
-		$this->configurator->tags[$this->tagName]->template = $this->getTemplate();
+		$tag = $this->getTag();
+		
+		if (!isset($tag->template))
+		{
+			$tag->template = $this->getTemplate();
+		}
 	}
 
 	/**
@@ -158,6 +168,14 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 
 		// Build the <xsl:choose> node
 		$xsl = '<xsl:choose>';
+
+		// First, test whether the emoticon should be rendered as text if applicable
+		if (!empty($this->notIfCondition))
+		{
+			$xsl .= '<xsl:when test="' . htmlspecialchars($this->notIfCondition) . '">'
+			      . '<xsl:value-of select="."/>'
+			      . '</xsl:when>';
+		}
 
 		// Iterate over codes, create an <xsl:when> for each group of codes
 		foreach ($templates as $template => $codes)

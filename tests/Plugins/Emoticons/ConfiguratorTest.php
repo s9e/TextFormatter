@@ -306,4 +306,18 @@ class ConfiguratorTest extends Test
 			$plugin->getTag()
 		);
 	}
+
+	/**
+	* @testdox notIfCondition appears first in the template
+	*/
+	public function testNotIfCondition()
+	{
+		$this->configurator->Emoticons->add(':)', '<img/>');
+		$this->configurator->Emoticons->notIfCondition = '$foo';
+
+		$this->assertStringStartsWith(
+			'<xsl:choose><xsl:when test="$foo"><xsl:value-of select="."/></xsl:when>',
+			$this->configurator->Emoticons->getTemplate()
+		);
+	}
 }

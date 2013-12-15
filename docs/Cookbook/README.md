@@ -27,6 +27,7 @@
   * **Emoticons**
     * [Add emoticons](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/AddEmoticons.md)
     * [How to restrict where emoticons are parsed](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/ChangeRegexp.md)
+    * [How to toggle whether emoticons should be displayed](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/Emoticons/ToggleRendering.md)
   * **HTMLElements**
     * [Alias HTML elements to other tags](https://github.com/s9e/TextFormatter/blob/master/docs/Cookbook/30_Plugins/HTMLElements/Aliases.md)
   * **Keywords**

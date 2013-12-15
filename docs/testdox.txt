@@ -2037,6 +2037,7 @@ s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator
  [x] getTemplate() merges identical templates
  [x] finalize() sets the tag's template
  [x] getTag() returns the tag that is associated with this plugin
+ [x] notIfCondition appears first in the template
 
 s9e\TextFormatter\Tests\Plugins\Emoticons\Configurator\EmoticonCollection
  [x] Normalizes HTML templates
