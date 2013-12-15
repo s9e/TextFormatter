@@ -38,8 +38,8 @@ function convertCustom($filepath, &$file)
 				'$_this=$this;$template->replaceTokens('
 			),
 			array(
-				'function ($m) use ($tokens, $passthroughToken)',
-				'function ($m) use ($_this, $tokens, $passthroughToken)'
+				'function ($m) use ($config)',
+				'function ($m) use ($_this, $config)'
 			),
 			array(
 				'if ($this->isFilter($tokenId))',
