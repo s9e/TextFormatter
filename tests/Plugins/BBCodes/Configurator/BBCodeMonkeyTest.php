@@ -42,49 +42,9 @@ class BBCodeMonkeyTest extends Test
 	}
 
 	/**
-	* @testdox parse() works
-	* @dataProvider getBBCodeTests
-	*/
-	public function testBBCodes($usage, $expected)
-	{
-		if ($expected instanceof Exception)
-		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
-		}
-
-		$bbcodeMonkey = new BBCodeMonkey(new Configurator);
-		$actual = $bbcodeMonkey->parse($usage);
-
-		if (!($expected instanceof Exception))
-		{
-			$this->assertEquals($expected, $actual);
-		}
-	}
-
-	/**
-	* @testdox replaceTokens() works
-	* @dataProvider getTemplateTests
-	*/
-	public function testTemplates($template, $tokens, $passthroughToken, $expected)
-	{
-		if ($expected instanceof Exception)
-		{
-			$this->setExpectedException(get_class($expected), $expected->getMessage());
-		}
-
-		$bm     = new BBCodeMonkey(new Configurator);
-		$actual = $bm->replaceTokens($template, $tokens, $passthroughToken);
-
-		if (!($expected instanceof Exception))
-		{
-			$this->assertSame($expected, $actual);
-		}
-	}
-
-	/**
 	* @testdox create() creates and return a BBCode, its name and its tag
 	*/
-	public function testCreate()
+	public function testCreateReturn()
 	{
 		$bm = new BBCodeMonkey(new Configurator);
 
@@ -118,27 +78,52 @@ class BBCodeMonkeyTest extends Test
 		);
 	}
 
-	public function getBBCodeTests()
+	/**
+	* @testdox create() tests
+	* @dataProvider getCreateTests
+	*/
+	public function testCreate($usage, $template, $expected)
+	{
+		if ($expected instanceof Exception)
+		{
+			$this->setExpectedException(get_class($expected), $expected->getMessage());
+		}
+
+		$bbcodeMonkey = new BBCodeMonkey(new Configurator);
+		$actual = $bbcodeMonkey->create($usage, $template);
+
+		if (!($expected instanceof Exception))
+		{
+			$this->assertEquals($expected, $actual);
+		}
+	}
+
+	public function getCreateTests()
 	{
 		return [
 			[
 				'*invalid*',
+				'',
 				new InvalidArgumentException('Cannot interpret the BBCode definition')
 			],
 			[
 				'[föö]',
+				'',
 				new InvalidArgumentException("Invalid BBCode name 'föö'")
 			],
 			[
 				'[foo bar=TEXT]{TEXT}[/foo]',
+				'',
 				new RuntimeException("No valid tokens found in bar's definition")
 			],
 			[
 				'[foo bar={TEXT} bar={INT}]{TEXT}[/foo]',
+				'',
 				new RuntimeException("Attribute 'bar' is declared twice")
 			],
 			[
 				'[foo bar={TEXT} baz={TEXT}]{TEXT}[/foo]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -148,14 +133,14 @@ class BBCodeMonkeyTest extends Test
 						'attributes' => [
 							'bar' => [],
 							'baz' => []
-						]
-					]),
-					'tokens' => [],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[URL={URL}]{TEXT}[/URL]',
+				'{TEXT}',
 				[
 					'bbcodeName' => 'URL',
 					'bbcode' => new BBCode([
@@ -166,67 +151,60 @@ class BBCodeMonkeyTest extends Test
 							'url' => [
 								'filterChain' => [new Url]
 							]
-						]
-					]),
-					'tokens' => [
-						'URL' => 'url'
-					],
-					'passthroughToken' => 'TEXT'
+						],
+						'template' => '<xsl:apply-templates/>'
+					])
 				]
 			],
 			[
 				'[URL]{URL}[/URL]',
+				'{URL}',
 				[
 					'bbcodeName' => 'URL',
-					'bbcode' => new BBCode([
+					'bbcode'     => new BBCode([
 						'contentAttributes' => ['content'],
 						'defaultAttribute'  => 'content'
 					]),
-					'tag'    => new Tag([
+					'tag'        => new Tag([
 						'attributes' => [
 							'content' => [
 								'filterChain' => [new Url]
 							]
-						]
-					]),
-					'tokens' => [
-						'URL' => 'content'
-					],
-					'passthroughToken' => null
+						],
+						'template' => '<xsl:value-of select="@content"/>'
+					])
 				]
 			],
 			[
 				'[b]{TEXT}[/B]',
+				'<b>{TEXT}</b>',
 				[
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode,
-					'tag'        => new Tag,
-					'tokens'     => [],
-					'passthroughToken' => 'TEXT'
+					'tag'        => new Tag(['template' => '<b><xsl:apply-templates/></b>'])
 				]
 			],
 			[
 				'[b]{ANYTHING}[/B]',
+				'<b>{ANYTHING}</b>',
 				[
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode,
-					'tag'        => new Tag,
-					'tokens'     => [],
-					'passthroughToken' => 'ANYTHING'
+					'tag'        => new Tag(['template' => '<b><xsl:apply-templates/></b>'])
 				]
 			],
 			[
 				'[b]{ANYTHING2}[/B]',
+				'<b>{ANYTHING2}</b>',
 				[
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode,
-					'tag'        => new Tag,
-					'tokens'     => [],
-					'passthroughToken' => 'ANYTHING2'
+					'tag'        => new Tag(['template' => '<b><xsl:apply-templates/></b>'])
 				]
 			],
 			[
 				'[b title={TEXT1}]{TEXT2}[/B]',
+				'<b title="{TEXT1}">{TEXT2}</b>',
 				[
 					'bbcodeName' => 'B',
 					'bbcode' => new BBCode([
@@ -235,16 +213,14 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'title' => []
-						]
-					]),
-					'tokens' => [
-						'TEXT1' => 'title'
-					],
-					'passthroughToken' => 'TEXT2'
+						],
+						'template' => '<b title="{@title}"><xsl:apply-templates/></b>'
+					])
 				]
 			],
 			[
 				'[b title={TEXT1;optional;required;optional}]{TEXT2}[/B]',
+				'',
 				[
 					'bbcodeName' => 'B',
 					'bbcode' => new BBCode([
@@ -253,16 +229,14 @@ class BBCodeMonkeyTest extends Test
 					'tag'    => new Tag([
 						'attributes' => [
 							'title' => []
-						]
-					]),
-					'tokens' => [
-						'TEXT1' => 'title'
-					],
-					'passthroughToken' => 'TEXT2'
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[b title={TEXT1;defaultValue=Title;optional}]{TEXT2}[/B]',
+				'',
 				[
 					'bbcodeName' => 'B',
 					'bbcode' => new BBCode([
@@ -274,46 +248,41 @@ class BBCodeMonkeyTest extends Test
 								'defaultValue' => 'Title',
 								'required'     => false
 							]
-						]
-					]),
-					'tokens' => [
-						'TEXT1' => 'title'
-					],
-					'passthroughToken' => 'TEXT2'
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[hr]',
+				'',
 				[
 					'bbcodeName' => 'HR',
-					'bbcode' => new BBCode,
-					'tag'    => new Tag,
-					'tokens' => [],
-					'passthroughToken' => null
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag(['template' => ''])
 				]
 			],
 			[
 				'[hr][/hr]',
+				'',
 				[
 					'bbcodeName' => 'HR',
-					'bbcode' => new BBCode,
-					'tag'    => new Tag,
-					'tokens' => [],
-					'passthroughToken' => null
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag(['template' => ''])
 				]
 			],
 			[
 				'[hr/]',
+				'',
 				[
 					'bbcodeName' => 'HR',
-					'bbcode' => new BBCode,
-					'tag'    => new Tag,
-					'tokens' => [],
-					'passthroughToken' => null
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag(['template' => ''])
 				]
 			],
 			[
 				'[IMG src={URL;useContent}]',
+				'',
 				[
 					'bbcodeName' => 'IMG',
 					'bbcode' => new BBCode([
@@ -325,14 +294,14 @@ class BBCodeMonkeyTest extends Test
 							'src' => [
 								'filterChain' => [new Url]
 							]
-						]
-					]),
-					'tokens' => ['URL' => 'src'],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[url={URL;useContent}]{TEXT}[/url]',
+				'<a href="{URL}">{TEXT}</a>',
 				[
 					'bbcodeName' => 'URL',
 					'bbcode' => new BBCode([
@@ -344,16 +313,14 @@ class BBCodeMonkeyTest extends Test
 							'url' => [
 								'filterChain' => [new Url]
 							]
-						]
-					]),
-					'tokens' => [
-						'URL' => 'url'
-					],
-					'passthroughToken' => 'TEXT'
+						],
+						'template' => '<a href="{@url}"><xsl:apply-templates/></a>'
+					])
 				]
 			],
 			[
 				'[foo={INT;preFilter=strtolower,strtotime}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -364,16 +331,14 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => ['strtolower', 'strtotime', new Int]
 							]
-						]
-					]),
-					'tokens' => [
-						'INT' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])	
 				]
 			],
 			[
 				'[foo={SIMPLETEXT;postFilter=strtolower,ucwords}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -384,16 +349,14 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => [new Simpletext, 'strtolower', 'ucwords']
 							]
-						]
-					]),
-					'tokens' => [
-						'SIMPLETEXT' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={INT;postFilter=#identifier}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -404,24 +367,24 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => [new Int, new Identifier]
 							]
-						]
-					]),
-					'tokens' => [
-						'INT' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={INT;preFilter=eval}/]',
+				'',
 				new RuntimeException("Filter 'eval' is not allowed")
 			],
 			[
 				'[foo={INT;postFilter=eval}/]',
+				'',
 				new RuntimeException("Filter 'eval' is not allowed")
 			],
 			[
 				'[foo={REGEXP=/^foo$/}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -432,16 +395,14 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => [new Regexp('/^foo$/')]
 							]
-						]
-					]),
-					'tokens' => [
-						'REGEXP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={REGEXP=#^foo$#}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -452,16 +413,14 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => [new Regexp('#^foo$#')]
 							]
-						]
-					]),
-					'tokens' => [
-						'REGEXP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={REGEXP=#^foo$#iusDSU}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -472,16 +431,14 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => [new Regexp('#^foo$#iusDSU')]
 							]
-						]
-					]),
-					'tokens' => [
-						'REGEXP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={REGEXP=/[a-z]{3}\\//}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -492,16 +449,14 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => [new Regexp('/[a-z]{3}\\//')]
 							]
-						]
-					]),
-					'tokens' => [
-						'REGEXP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[anchor={REGEXP=/^#?[a-z][-a-z_0-9]{0,}$/i}]{TEXT}[/anchor]',
+				'',
 				[
 					'bbcodeName' => 'ANCHOR',
 					'bbcode' => new BBCode([
@@ -512,16 +467,14 @@ class BBCodeMonkeyTest extends Test
 							'anchor' => [
 								'filterChain' => [new Regexp('/^#?[a-z][-a-z_0-9]{0,}$/i')]
 							]
-						]
-					]),
-					'tokens' => [
-						'REGEXP' => 'anchor'
-					],
-					'passthroughToken' => 'TEXT'
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={PARSE=/\\/\\{(?<bar>.)\\}\\//}]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -535,15 +488,15 @@ class BBCodeMonkeyTest extends Test
 							'bar' => [
 								'filterChain' => [new Regexp('/^(?:.)$/D')]
 							]
-						]
-					]),
-					'tokens' => [],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				// Ensure that every subpattern creates an attribute with the corresponding regexp
 				'[foo={PARSE=/(?<foo>\\d+)/} foo={PARSE=/(?<bar>\\D+)/}]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -561,14 +514,14 @@ class BBCodeMonkeyTest extends Test
 							'bar' => [
 								'filterChain' => [new Regexp('/^(?:\\D+)$/D')]
 							]
-						]
-					]),
-					'tokens' => [],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={PARSE=/(?<foo>\\d+)/uD}]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -582,15 +535,15 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => [new Regexp('/^(?:\\d+)$/uD')]
 							]
-						]
-					]),
-					'tokens' => [],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				// Ensure that every subpattern creates an attribute with the corresponding regexp
 				'[foo={PARSE=/(?<foo>\\d+)/,/(?<bar>\\D+)/}]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -608,14 +561,14 @@ class BBCodeMonkeyTest extends Test
 							'bar' => [
 								'filterChain' => [new Regexp('/^(?:\\D+)$/D')]
 							]
-						]
-					]),
-					'tokens' => [],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={PARSE=/,\\/(?<foo>\\d+)/u,/,(?<bar>\\D+)\\/,/u}]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -633,14 +586,14 @@ class BBCodeMonkeyTest extends Test
 							'bar' => [
 								'filterChain' => [new Regexp('/^(?:\\D+)$/uD')]
 							]
-						]
-					]),
-					'tokens' => [],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[name={PARSE=/(?<first>\w+) (?<last>\w+)/,/(?<last>\w+), (?<first>\w+)/}]',
+				'',
 				[
 					'bbcodeName' => 'NAME',
 					'bbcode' => new BBCode([
@@ -658,14 +611,14 @@ class BBCodeMonkeyTest extends Test
 							'last' => [
 								'filterChain' => [new Regexp('/^(?:\\w+)$/D')]
 							]
-						]
-					]),
-					'tokens' => [],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={RANGE=-2,5}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -676,16 +629,14 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'filterChain' => [new Range(-2, 5)]
 							]
-						]
-					]),
-					'tokens' => [
-						'RANGE' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={RANDOM=1000,9999}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -696,16 +647,14 @@ class BBCodeMonkeyTest extends Test
 							'foo' => [
 								'generator' => $this->getProgrammableCallback('mt_rand', 1000, 9999)
 							]
-						]
-					]),
-					'tokens' => [
-						'RANDOM' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={CHOICE=one,two}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -718,16 +667,14 @@ class BBCodeMonkeyTest extends Test
 									new Choice(['one', 'two'])
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'CHOICE' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={CHOICE=pokémon,yugioh}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -740,16 +687,14 @@ class BBCodeMonkeyTest extends Test
 									new Choice(['pokémon', 'yugioh'])
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'CHOICE' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={CHOICE=Pokémon,YuGiOh;caseSensitive}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -762,16 +707,14 @@ class BBCodeMonkeyTest extends Test
 									new Choice(['Pokémon', 'YuGiOh'], true)
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'CHOICE' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={MAP=one:uno,two:dos}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -787,16 +730,14 @@ class BBCodeMonkeyTest extends Test
 									])
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'MAP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={MAP=one:uno,two:dos;caseSensitive}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -816,16 +757,14 @@ class BBCodeMonkeyTest extends Test
 									)
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'MAP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={MAP=one:uno,two:dos;strict}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -845,16 +784,14 @@ class BBCodeMonkeyTest extends Test
 									)
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'MAP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={MAP=pokémon:Pikachu,yugioh:Yugi}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -870,16 +807,14 @@ class BBCodeMonkeyTest extends Test
 									])
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'MAP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={MAP=Pokémon:Pikachu,YuGiOh:Yugi;caseSensitive}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -898,16 +833,14 @@ class BBCodeMonkeyTest extends Test
 									)
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'MAP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={NUMBER1},{NUMBER2} foo={NUMBER2};{NUMBER1}/]',
+				'{NUMBER1}{NUMBER2}',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -925,21 +858,19 @@ class BBCodeMonkeyTest extends Test
 							'foo1' => [
 								'filterChain' => [new Number]
 							]
-						]
-					]),
-					'tokens' => [
-						'NUMBER1' => 'foo0',
-						'NUMBER2' => 'foo1'
-					],
-					'passthroughToken' => null
+						],
+						'template' => '<xsl:value-of select="@foo0"/><xsl:value-of select="@foo1"/>'
+					])
 				]
 			],
 			[
 				'[foo={MAP=foo:bar,baz}/]',
+				'',
 				new RuntimeException("Invalid map assignment 'baz'")
 			],
 			[
 				'[foo={HASHMAP=one:uno,two:dos}/]',
+				'{HASHMAP}',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -955,16 +886,14 @@ class BBCodeMonkeyTest extends Test
 									])
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'HASHMAP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => '<xsl:value-of select="@foo"/>'
+					])
 				]
 			],
 			[
 				'[foo={HASHMAP=one:uno,two:dos;strict}/]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -983,16 +912,14 @@ class BBCodeMonkeyTest extends Test
 									)
 								]
 							]
-						]
-					]),
-					'tokens' => [
-						'HASHMAP' => 'foo'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={HASHMAP=foo:bar,baz}/]',
+				'',
 				new RuntimeException("Invalid map assignment 'baz'")
 			],
 			[
@@ -1000,6 +927,7 @@ class BBCodeMonkeyTest extends Test
 				* @link https://www.phpbb.com/community/viewtopic.php?f=46&t=2127991
 				*/
 				'[flash={NUMBER1},{NUMBER2}]{URL}[/flash]',
+				'<object width="{NUMBER1}" height="{NUMBER2}"/>',
 				[
 					'bbcodeName' => 'FLASH',
 					'bbcode' => new BBCode([
@@ -1020,18 +948,14 @@ class BBCodeMonkeyTest extends Test
 							'flash1' => [
 								'filterChain' => [new Number]
 							]
-						]
-					]),
-					'tokens' => [
-						'NUMBER1' => 'flash0',
-						'NUMBER2' => 'flash1',
-						'URL' => 'content'
-					],
-					'passthroughToken' => null
+						],
+						'template' => '<object width="{@flash0}" height="{@flash1}"/>'
+					])
 				]
 			],
 			[
 				'[flash={NUMBER1},{NUMBER2} width={NUMBER1} height={NUMBER2} url={URL;useContent}]',
+				'<object width="{NUMBER1}" height="{NUMBER2}"/>',
 				[
 					'bbcodeName' => 'FLASH',
 					'bbcode' => new BBCode([
@@ -1052,14 +976,9 @@ class BBCodeMonkeyTest extends Test
 							'height' => [
 								'filterChain' => [new Number]
 							]
-						]
-					]),
-					'tokens' => [
-						'NUMBER1' => 'width',
-						'NUMBER2' => 'height',
-						'URL' => 'url'
-					],
-					'passthroughToken' => null
+						],
+						'template' => '<object width="{@width}" height="{@height}"/>'
+					])
 				]
 			],
 			[
@@ -1067,6 +986,7 @@ class BBCodeMonkeyTest extends Test
 				* @link https://www.vbulletin.com/forum/misc.php?do=bbcode#quote
 				*/
 				'[quote={PARSE=/(?<author>.+?)(?:;(?<id>\\d+))?/} author={TEXT1;optional} id={UINT;optional}]{TEXT2}[/quote]',
+				'',
 				[
 					'bbcodeName' => 'QUOTE',
 					'bbcode' => new BBCode([
@@ -1084,42 +1004,45 @@ class BBCodeMonkeyTest extends Test
 								'filterChain' => [new Uint],
 								'required' => false
 							]
-						]
-					]),
-					'tokens' => [
-						'TEXT1' => 'author',
-						'UINT'  => 'id'
-					],
-					'passthroughToken' => 'TEXT2'
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo={PARSE=/bar/},{PARSE=/baz/}/]',
+				'',
 				new RuntimeException("{PARSE} tokens can only be used has the sole content of an attribute")
 			],
 			[
 				// Here, we don't know to which attribute the token {INT} in attribute c correponds
 				'[foo a={INT} b={INT} c={INT},{NUMBER} /]',
+				'',
 				new RuntimeException("Token {INT} used in attribute 'c' is ambiguous")
 			],
 			[
 				'[foo={NUMBER},{NUMBER} /]',
+				'',
 				new RuntimeException("Token {NUMBER} used multiple times in attribute foo's definition")
 			],
 			[
 				'[foo={PARSE=/(?<bar>\\d+)/} foo={PARSE=/(?<bar>\\D+)/}]',
+				'',
 				new RuntimeException("Ambiguous attribute 'bar' created using different regexps needs to be explicitly defined")
 			],
 			[
 				'[foo={PARSE}]',
+				'',
 				new RuntimeException("Malformed token 'PARSE'")
 			],
 			[
 				'[foo={RANGE1}]',
+				'',
 				new RuntimeException("Malformed token 'RANGE1'")
 			],
 			[
 				'[foo]{NUMBER1},{NUMBER2}[/foo]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -1137,17 +1060,14 @@ class BBCodeMonkeyTest extends Test
 							'content1' => [
 								'filterChain' => [new Number]
 							]
-						]
-					]),
-					'tokens' => [
-						'NUMBER1' => 'content0',
-						'NUMBER2' => 'content1'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo]{NUMBER1} * {NUMBER2}[/foo]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode' => new BBCode([
@@ -1165,192 +1085,264 @@ class BBCodeMonkeyTest extends Test
 							'content1' => [
 								'filterChain' => [new Number]
 							]
-						]
-					]),
-					'tokens' => [
-						'NUMBER1' => 'content0',
-						'NUMBER2' => 'content1'
-					],
-					'passthroughToken' => null
+						],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[foo $tagName=bar]',
+				'',
 				[
 					'bbcodeName' => 'FOO',
 					'bbcode'     => new BBCode(['tagName' => 'BAR']),
-					'tag'        => new Tag,
-					'tokens'     => [],
-					'passthroughToken' => null
+					'tag'        => new Tag(['template' => ''])
 				]
 			],
 			[
 				'[B $forceLookahead=false]{TEXT}[/B]',
+				'',
 				[
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode(['forceLookahead' => false]),
-					'tag'        => new Tag,
-					'tokens'     => [],
-					'passthroughToken' => 'TEXT'
+					'tag'        => new Tag(['template' => ''])
 				]
 			],
 			[
 				'[B $forceLookahead=true]{TEXT}[/B]',
+				'',
 				[
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode(['forceLookahead' => true]),
-					'tag'        => new Tag,
-					'tokens'     => [],
-					'passthroughToken' => 'TEXT'
+					'tag'        => new Tag(['template' => ''])
 				]
 			],
 			[
 				'[B #autoReopen=false]{TEXT}[/B]',
+				'',
 				[
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode,
-					'tag'        => new Tag(['rules' => ['autoReopen' => false]]),
-					'tokens'     => [],
-					'passthroughToken' => 'TEXT'
+					'tag'        => new Tag([
+						'rules'    => ['autoReopen' => false],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[B #autoReopen=true]{TEXT}[/B]',
+				'',
 				[
 					'bbcodeName' => 'B',
 					'bbcode'     => new BBCode,
-					'tag'        => new Tag(['rules' => ['autoReopen' => true]]),
-					'tokens'     => [],
-					'passthroughToken' => 'TEXT'
+					'tag'        => new Tag([
+						'rules'    => ['autoReopen' => true],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[X #closeParent=X #closeParent=Y]',
+				'',
 				[
 					'bbcodeName' => 'X',
 					'bbcode'     => new BBCode,
-					'tag'        => new Tag(['rules' => ['closeParent' => ['X', 'Y']]]),
-					'tokens'     => [],
-					'passthroughToken' => null
+					'tag'        => new Tag([
+						'rules'    => ['closeParent' => ['X', 'Y']],
+						'template' => ''
+					])
 				]
 			],
 			[
 				'[X #closeParent=X,Y]',
+				'',
 				[
 					'bbcodeName' => 'X',
 					'bbcode'     => new BBCode,
-					'tag'        => new Tag(['rules' => ['closeParent' => ['X', 'Y']]]),
-					'tokens'     => [],
-					'passthroughToken' => null
+					'tag'        => new Tag([
+						'rules'    => ['closeParent' => ['X', 'Y']],
+						'template' => ''
+					])
 				]
 			],
-		];
-	}
-
-	public function getTemplateTests()
-	{
-		return [
 			[
-				'<b>{TEXT}</b>',
-				[],
-				'TEXT',
-				'<b><xsl:apply-templates/></b>'
-			],
-			[
+				'[b]{TEXT}[/b]',
 				'<b>{L_FOO}</b>',
-				[],
-				null,
-				'<b><xsl:value-of select="$L_FOO"/></b>'
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag([
+						'template' => '<b><xsl:value-of select="$L_FOO"/></b>'
+					])
+				]
 			],
 			[
+				'[b]{TEXT}[/b]',
 				'<b>{TEXT2}</b>',
-				[],
-				null,
 				new RuntimeException('Token {TEXT2} is ambiguous or undefined')
 			],
 			[
+				'[b]{TEXT}[/b]',
 				'<b>{NUMBER1}</b>',
-				[],
-				null,
 				new RuntimeException('Token {NUMBER1} is ambiguous or undefined')
 			],
 			[
+				'[x]{NUMBER}[/x]',
 				'<span title="{TEXT}"/>',
-				[],
-				null,
 				new RuntimeException('Token {TEXT} is ambiguous or undefined')
 			],
 			[
+				'[b]{TEXT}[/b]',
 				'<span title="{NUMBER}"/>',
-				[],
-				null,
 				new RuntimeException('Token {NUMBER} is ambiguous or undefined')
 			],
 			[
+				'[b]{TEXT}[/b]',
 				'<span title="{L_FOO}">...</span>',
-				[],
-				null,
-				'<span title="{$L_FOO}">...</span>'
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag([
+						'template' => '<span title="{$L_FOO}">...</span>'
+					])
+				]
 			],
 			[
+				'[url={URL}]{TEXT}[/url]',
 				'<a href="{URL}">{TEXT}</a>',
-				['URL' => 'url'],
-				'TEXT',
-				'<a href="{@url}"><xsl:apply-templates/></a>'
+				[
+					'bbcodeName' => 'URL',
+					'bbcode'     => new BBCode([
+						'defaultAttribute' => 'url'
+					]),
+					'tag'        => new Tag([
+						'attributes' => [
+							'url' => [
+								'filterChain' => [new Url]
+							]
+						],
+						'template'   => '<a href="{@url}"><xsl:apply-templates/></a>'
+					])
+				]
 			],
 			[
+				'[b]{TEXT}[/b]',
 				'<b title="{TEXT}">{TEXT}</b>',
-				[],
-				'TEXT',
-				'<b title="{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}"><xsl:apply-templates/></b>'
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode	,
+					'tag'        => new Tag([
+						'template' => '<b title="{substring(.,1+string-length(st),string-length()-(string-length(st)+string-length(et)))}"><xsl:apply-templates/></b>'
+					])
+				]
 			],
 			[
-				'<span title="{ID}{ID}"/>',
-				['ID' => 'id'],
-				'TEXT',
-				'<span title="{@id}{@id}"/>'
+				'[b id={IDENTIFIER}]{TEXT}[/b]',
+				'<span title="{IDENTIFIER}{IDENTIFIER}"/>',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode(['defaultAttribute' => 'id']),
+					'tag'        => new Tag([
+						'attributes' => [
+							'id' => [
+								'filterChain' => [new Identifier]
+							]
+						],
+						'template'   => '<span title="{@id}{@id}"/>'
+					])
+				]
 			],
 			[
+				'[b]{TEXT}[/b]',
 				'foo',
-				[],
-				'TEXT',
-				'foo'
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag([
+						'template' => 'foo'
+					])
+				]
 			],
 			[
+				'[b]{TEXT}[/b]',
 				'foo{TEXT}bar',
-				[],
-				'TEXT',
-				'foo<xsl:apply-templates/>bar'
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag([
+						'template' => 'foo<xsl:apply-templates/>bar'
+					])
+				]
 			],
 			[
-				'<hr><img src={IMG}><br>',
-				['IMG' => 'url'],
-				'TEXT',
-				'<hr/><img src="{@url}"/><br/>',
+				'[b url={URL}]{TEXT}[/b]',
+				'<hr><img src={URL}><br>',
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode(['defaultAttribute' => 'url']),
+					'tag'        => new Tag([
+						'attributes' => [
+							'url' => [
+								'filterChain' => [new Url]
+							]
+						],
+						'template' => '<hr/><img src="{@url}"/><br/>'
+					])
+				]
 			],
 			[
+				'[b]{TEXT}[/b]',
 				'',
-				[],
-				null,
-				''
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode,
+					'tag'        => new Tag([
+						'template' => ''
+					])
+				]
 			],
 			[
+				'[b username={TEXT}]',
 				'Hello {TEXT}',
-				['TEXT' => 'username'],
-				null,
-				'Hello <xsl:value-of select="@username"/>'
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode(['defaultAttribute' => 'username']),
+					'tag'        => new Tag([
+						'attributes' => [
+							'username' => []
+						],
+						'template' => 'Hello <xsl:value-of select="@username"/>'
+					])
+				]
 			],
 			[
+				'[b foo={TEXT1} bar={TEXT2}]',
 				'<div>{TEXT1} {TEXT2}</div>',
-				['TEXT1' => 'foo', 'TEXT2' => 'bar'],
-				null,
-				'<div><xsl:value-of select="@foo"/> <xsl:value-of select="@bar"/></div>'
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode(['defaultAttribute' => 'foo']),
+					'tag'        => new Tag([
+						'attributes' => [
+							'foo' => [],
+							'bar' => []
+						],
+						'template' => '<div><xsl:value-of select="@foo"/> <xsl:value-of select="@bar"/></div>'
+					])
+				]
 			],
 			[
+				'[b foo={TEXT}]',
 				'<b>{@foo}</div>',
-				[],
-				null,
-				'<b><xsl:value-of select="@foo"/></b>'
+				[
+					'bbcodeName' => 'B',
+					'bbcode'     => new BBCode(['defaultAttribute' => 'foo']),
+					'tag'        => new Tag([
+						'attributes' => [
+							'foo' => []
+						],
+						'template' => '<b><xsl:value-of select="@foo"/></b>'
+					])
+				]
 			],
 		];
 	}

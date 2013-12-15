@@ -120,7 +120,43 @@ class BBCodeMonkey
 		}
 
 		// Replace the passthrough token in the BBCode's template
-		$this->replaceTokens($template, $config['tokens'], $config['passthroughToken']);
+		$template->replaceTokens(
+			'#\\{(?:[A-Z]+[A-Z_0-9]*|@[-\\w]+)\\}#',
+			function ($m) use ($config)
+			{
+				$tokenId = substr($m[0], 1, -1);
+
+				// Acknowledge {@foo} as an XPath expression even outside of attribute value
+				// templates
+				if ($tokenId[0] === '@')
+				{
+					return ['expression', $tokenId];
+				}
+
+				// Test whether this is a known token
+				if (isset($config['tokens'][$tokenId]))
+				{
+					// Replace with the corresponding attribute
+					return ['expression', '@' . $config['tokens'][$tokenId]];
+				}
+
+				// Test whether the token is used as passthrough
+				if ($tokenId === $config['passthroughToken'])
+				{
+					// Use substring() to exclude the <st/> and <et/> children
+					return ['passthrough', false];
+				}
+
+				// Undefined token. If it's the name of a filter, consider it's an error
+				if ($this->isFilter($tokenId))
+				{
+					throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
+				}
+
+				// Use the token's name as parameter name
+				return ['expression', '$' . $tokenId];
+			}
+		);
 
 		// Prepare the return array
 		$return = [
@@ -141,7 +177,7 @@ class BBCodeMonkey
 	* @param  string $usage BBCode usage, e.g. [B]{TEXT}[/b]
 	* @return array
 	*/
-	public function parse($usage)
+	protected function parse($usage)
 	{
 		$tag    = new Tag;
 		$bbcode = new BBCode;
@@ -284,64 +320,6 @@ class BBCodeMonkey
 		$config['tokens'] = array_filter($tokens);
 
 		return $config;
-	}
-
-	/**
-	* Replace tokens in a template
-	*
-	* @param  string|Template $template         Original template
-	* @param  array           $tokens           Array of [tokenId => attrName]
-	* @param  string          $passthroughToken Token ID of the token that represents the BBCode's
-	*                                           contents
-	* @return Template                          Processed template
-	*/
-	public function replaceTokens($template, array $tokens, $passthroughToken)
-	{
-		// Create a template object for manipulation
-		if (!($template instanceof Template))
-		{
-			$template = new Template($template);
-		}
-
-		$template->replaceTokens(
-			'#\\{(?:[A-Z]+[A-Z_0-9]*|@[-\\w]+)\\}#',
-			function ($m) use ($tokens, $passthroughToken)
-			{
-				$tokenId = substr($m[0], 1, -1);
-
-				// Acknowledge {@foo} as an XPath expression even outside of attribute value
-				// templates
-				if ($tokenId[0] === '@')
-				{
-					return ['expression', $tokenId];
-				}
-
-				// Test whether this is a known token
-				if (isset($tokens[$tokenId]))
-				{
-					// Replace with the corresponding attribute
-					return ['expression', '@' . $tokens[$tokenId]];
-				}
-
-				// Test whether the token is used as passthrough
-				if ($tokenId === $passthroughToken)
-				{
-					// Use substring() to exclude the <st/> and <et/> children
-					return ['passthrough', false];
-				}
-
-				// Undefined token. If it's the name of a filter, consider it's an error
-				if ($this->isFilter($tokenId))
-				{
-					throw new RuntimeException('Token {' . $tokenId . '} is ambiguous or undefined');
-				}
-
-				// Use the token's name as parameter name
-				return ['expression', '$' . $tokenId];
-			}
-		);
-
-		return (string) $template;
 	}
 
 	/**

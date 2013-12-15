@@ -1909,10 +1909,9 @@ s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeCollection
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] $bbcodeMonkey->allowedFilters is a publicly-accessible list of callbacks
- [x] parse() works
- [x] replaceTokens() works
  [x] create() creates and return a BBCode, its name and its tag
  [x] create() accepts an instance of UnsafeTemplate as second argument
+ [x] create() tests
 
 s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\Repository
  [x] __construct() accepts the path to an XML file as argument
