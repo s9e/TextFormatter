@@ -392,7 +392,7 @@ function convertUse($filepath, &$file)
 	}
 
 	$file = preg_replace_callback(
-		'#^\\tuse ([^;]+);#m',
+		'#^\\tuse ([^;]+);\\n*#m',
 		function ($m) use ($namespace, &$table)
 		{
 			$fqn  = (isset($table[$m[1]])) ? $table[$m[1]] : $namespace . '\\' . $m[1];
@@ -416,7 +416,7 @@ function convertUse($filepath, &$file)
 
 			preg_match('#\\n{\\n(.*)\\n}$#s', $file, $m);
 
-			return $m[1] . "\n";
+			return $m[1] . "\n\n";
 		},
 		$file
 	);
