@@ -416,7 +416,7 @@ function convertUse($filepath, &$file)
 
 			preg_match('#\\n{\\n(.*)\\n}$#s', $file, $m);
 
-			return $m[1];
+			return $m[1] . "\n";
 		},
 		$file
 	);
