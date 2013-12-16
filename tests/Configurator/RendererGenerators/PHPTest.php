@@ -86,8 +86,8 @@ class PHPTest extends Test
 				<xsl:template match="e|i|s"/>
 			</xsl:stylesheet>';
 
-		$this->assertContains(
-			'class Renderer_be60beaefecaa0631e5fc8259954246f828671b0',
+		$this->assertRegexp(
+			'/class Renderer_\\w+/',
 			$generator->generate($xsl)
 		);
 	}
@@ -108,8 +108,8 @@ class PHPTest extends Test
 				<xsl:template match="e|i|s"/>
 			</xsl:stylesheet>';
 
-		$this->assertContains(
-			'class Bar_renderer_be60beaefecaa0631e5fc8259954246f828671b0',
+		$this->assertRegexp(
+			'/class Bar_renderer_\\w+/',
 			$generator->generate($xsl)
 		);
 	}
@@ -180,10 +180,10 @@ class PHPTest extends Test
 		$cacheDir  = sys_get_temp_dir();
 		$generator = new PHP($cacheDir);
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
+		$filepath  = $cacheDir . '/' . get_class($renderer) . '.php';
 
-		$this->assertFileExists(
-			$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php'
-		);
+		$this->assertFileExists($filepath);
+		unlink($filepath);
 	}
 
 	/**
@@ -213,9 +213,7 @@ class PHPTest extends Test
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
 		$this->assertFileExists($filepath);
-		$this->assertFileNotExists(
-			$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php'
-		);
+		$this->assertFileNotExists($cacheDir . '/' . get_class($renderer) . '.php');
 	}
 
 	/**
@@ -238,8 +236,8 @@ class PHPTest extends Test
 		$generator = new PHP($cacheDir);
 		$renderer  = $generator->getRenderer($this->configurator->stylesheet);
 
-		$this->assertSame(
-			$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php',
+		$this->assertRegexp(
+			'(^' . preg_quote($cacheDir) . '/Renderer_\\w+\\.php$)',
 			$generator->lastFilepath
 		);
 	}

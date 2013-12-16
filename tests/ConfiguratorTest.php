@@ -432,11 +432,10 @@ class ConfiguratorTest extends Test
 	{
 		$cacheDir = sys_get_temp_dir();
 		$renderer = $this->configurator->getRenderer('PHP', $cacheDir);
+		$filepath = $cacheDir . '/' . get_class($renderer) . '.php';
 
-		$this->assertFileExists(
-			$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php'
-		);
-		unlink($cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php');
+		$this->assertFileExists($filepath);
+		unlink($filepath);
 	}
 
 	/**

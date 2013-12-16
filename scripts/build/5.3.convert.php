@@ -139,16 +139,6 @@ function convertCustom($filepath, &$file)
 				'call_user_func($options[\'finalizeRenderer\'], $renderer);'
 			)
 		),
-		'ConfiguratorTest.php' => array(
-			array(
-				"\$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php'",
-				"\$cacheDir . '/Renderer_2a06f367fe068ef179a1e4db2d75f6939e75bd9d.php'"
-			),
-			array(
-				"unlink(\$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php');",
-				"unlink(\$cacheDir . '/Renderer_2a06f367fe068ef179a1e4db2d75f6939e75bd9d.php');"
-			)
-		),
 		'Custom.php' => array(
 			array(
 				'public function __construct(callable $callback)',
@@ -256,22 +246,6 @@ function convertCustom($filepath, &$file)
 			)
 		),
 		'PHPTest.php' => array(
-			array(
-				"'class Renderer_be60beaefecaa0631e5fc8259954246f828671b0',",
-				"'class Renderer_2a06f367fe068ef179a1e4db2d75f6939e75bd9d',"
-			),
-			array(
-				"'class Bar_renderer_be60beaefecaa0631e5fc8259954246f828671b0',",
-				"'class Bar_renderer_2a06f367fe068ef179a1e4db2d75f6939e75bd9d',"
-			),
-			array(
-				"\$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php'",
-				"\$cacheDir . '/Renderer_2a06f367fe068ef179a1e4db2d75f6939e75bd9d.php'"
-			),
-			array(
-				"unlink(\$cacheDir . '/Renderer_be60beaefecaa0631e5fc8259954246f828671b0.php');",
-				"unlink(\$cacheDir . '/Renderer_2a06f367fe068ef179a1e4db2d75f6939e75bd9d.php');"
-			),
 			array(
 				'"mb_substr(\\$node->textContent,1,null,\'utf-8\')",',
 				'"mb_substr(\\$node->textContent,1,134217726,\'utf-8\')",'
