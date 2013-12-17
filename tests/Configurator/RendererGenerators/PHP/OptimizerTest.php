@@ -111,6 +111,10 @@ class OptimizerTest extends Test
 				'if($foo)bar();else baz();'
 			],
 			[
+				'if($foo){bar();}else{$baz=1;}',
+				'if($foo)bar();else$baz=1;'
+			],
+			[
 				'if ($foo) { bar(); baz(); }',
 				'if ($foo) { bar(); baz(); }'
 			],

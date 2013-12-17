@@ -222,9 +222,11 @@ class Optimizer
 				// Replacement for the first brace
 				$replacement = '';
 
-				// Add a space after "else" if the brace is removed
-				if ($tokens[$savedIndex    ][0] === T_ELSE
-				 && $tokens[$savedIndex + 1][0] !== T_WHITESPACE)
+				// Add a space after "else" if the brace is removed and it's not followed by
+				// whitespace or a variable
+				if ($tokens[$savedIndex][0] === T_ELSE
+				 && $tokens[$i + 1][0]      !== T_VARIABLE
+				 && $tokens[$i + 1][0]      !== T_WHITESPACE)
 				{
 					$replacement = ' ';
 				}
